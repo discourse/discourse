@@ -6,6 +6,9 @@
 module TestSetup
   # This is run before each test and before each before_all block
   def self.test_setup(x = nil)
+    # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
+    DB.test_transaction = ActiveRecord::Base.connection.current_transaction
+
     RateLimiter.disable
     PostActionNotifier.disable
     SearchIndexer.disable

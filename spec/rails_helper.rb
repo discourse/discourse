@@ -142,8 +142,6 @@ RSpec.configure do |config|
     # Rebase the seeded DB settings as defaults, then swap in the in-memory provider.
     TestLocalProcessProvider.install!
 
-    DiscourseConnectHelpers.provider_port = 9100 + ENV["TEST_ENV_NUMBER"].to_i
-
     WebMock.disable_net_connect!(
       allow_localhost: true,
       allow: [
@@ -159,11 +157,7 @@ RSpec.configure do |config|
 
   config.after(:suite) { Downloads.clear }
 
-  config.before :each do
-    # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
-    DB.test_transaction = ActiveRecord::Base.connection.current_transaction
-    TestSetup.test_setup
-  end
+  config.before :each { TestSetup.test_setup }
 
   # Match the request hostname to the value in `database.yml`
   config.before(:each, type: %i[request multisite system]) { host! "test.localhost" }
@@ -298,12 +292,4 @@ RSpec.configure do |config|
       raise capybara_timeout_error
     end
   end
-end
-
-def has_trigger?(trigger_name)
-  DB.exec(<<~SQL) != 0
-    SELECT 1
-    FROM INFORMATION_SCHEMA.TRIGGERS
-    WHERE trigger_name = '#{trigger_name}'
-  SQL
 end

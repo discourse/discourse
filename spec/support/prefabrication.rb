@@ -16,10 +16,7 @@ else
   require "test_prof/before_all/adapters/active_record"
 
   TestProf::BeforeAll.configure do |config|
-    config.after(:begin) do
-      DB.test_transaction = ActiveRecord::Base.connection.current_transaction
-      TestSetup.test_setup
-    end
+    config.after(:begin) { TestSetup.test_setup }
   end
 
   module Prefabrication
