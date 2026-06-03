@@ -8,8 +8,10 @@ import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { number } from "discourse/lib/formatter";
+import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import { eq } from "discourse/truth-helpers";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class ActivityByCategory extends Component {
@@ -19,6 +21,14 @@ export default class ActivityByCategory extends Component {
   @tracked sortBy = "share";
   @tracked sortDir = "desc";
 
+  constructor() {
+    super(...arguments);
+
+    this.selectedCategories = (this.args.activity?.rows ?? [])
+      .map((row) => Category.findById(row.category_id))
+      .filter(Boolean);
+  }
+
   get activity() {
     return this.overrideActivity ?? this.args.activity;
   }
@@ -27,6 +37,7 @@ export default class ActivityByCategory extends Component {
     const rows = this.activity?.rows ?? [];
     const decorated = rows.map((row) => ({
       ...row,
+      category: Category.findById(row.category_id),
       topicsFormatted: I18n.toNumber(row.topics, { precision: 0 }),
       postsFormatted: I18n.toNumber(row.posts, { precision: 0 }),
       pageViewsFormatted: number(row.page_views),
@@ -184,12 +195,16 @@ export default class ActivityByCategory extends Component {
             {{#each this.rows as |row|}}
               <tr>
                 <td class="db-activity-table__cell-category">
-                  <span
-                    class="db-activity-table__swatch"
-                    style={{row.swatchStyle}}
-                    aria-hidden="true"
-                  ></span>
-                  {{row.name}}
+                  {{#if row.category}}
+                    {{dCategoryBadge row.category}}
+                  {{else}}
+                    <span
+                      class="db-activity-table__swatch"
+                      style={{row.swatchStyle}}
+                      aria-hidden="true"
+                    ></span>
+                    {{row.name}}
+                  {{/if}}
                 </td>
                 <td
                   class="db-activity-table__cell-number"
