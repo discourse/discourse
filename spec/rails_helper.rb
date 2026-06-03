@@ -250,12 +250,12 @@ RSpec.configure do |config|
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
   end
 
-  # Registered last so that, running in reverse order, they execute before the
-  # teardown hook above (and the timeout check stays its own hook so its raise
-  # doesn't abort the others).
-  config.after(:each, type: :system) { MessageBusTestSync.stop }
-
+  # Registered last so that, running in reverse order, it executes before the
+  # teardown hook above. `MessageBusTestSync.stop` must come before the timeout
+  # re-raise, otherwise the raise would skip it.
   config.after(:each, type: :system) do |example|
+    MessageBusTestSync.stop
+
     # If test passed, but we had a capybara finder timeout, raise it now
     if example.exception.nil? &&
          (capybara_timeout_error = example.metadata[:_capybara_timeout_exception])
