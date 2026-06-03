@@ -125,60 +125,6 @@ if shard
   puts "Sharding: running #{files.size} files (shard #{shard_idx}/#{total_shards})"
 end
 
-# In CI, scale the system-test worker pool above what the workflow provisioned.
-#
-# The workflow's "Set PARALLEL_TEST_PROCESSORS" + "Create and migrate parallel
-# databases" steps build discourse_test_1..N where N == PARALLEL_TEST_PROCESSORS
-# (10 on the 16-core runner). System specs are wall-clock bound and scale
-# strongly with worker count: a prior experiment that *dropped* the count
-# 10 -> 8 regressed ~+23 % (close to linear), and the iter-12 calibration probe
-# at 10 -> 12 measured -4.8 % (538s vs 565s) — confirming the box has headroom.
-# The +4 push here is the follow-up the calibration's own rationale recommended
-# ("a later iteration can push to 13-14"). At ~13s saved per extra worker
-# (the calibrated marginal at +2), the linear projection for +4 is ~52s ≈ -9.2 %,
-# which clears the 10 % promotion bar with a single positive variance burst,
-# and the math is unchanged for any sub-linear scaling above ~70 % efficient.
-#
-# We cannot raise PARALLEL_TEST_PROCESSORS in the workflow file itself
-# (OAuth-app push token has no `workflow` scope — see iter-0002 rationale),
-# so we scale here instead: clone the extra per-worker databases from an
-# already-migrated one via PostgreSQL's `CREATE DATABASE ... TEMPLATE` (a fast
-# file-level copy, ~1-2s each, versus re-running every migration) and bump the
-# env var the runner reads. Every other per-worker resource (redis, minio,
-# Capybara/DiscourseConnect ports) is derived from TEST_ENV_NUMBER, so the new
-# workers self-allocate without collisions.
-#
-# Degrades gracefully: any provisioning error leaves the original worker count
-# untouched, so the step still runs exactly as it did before.
-def scale_system_test_workers!(files)
-  return unless ENV["CI"] || ENV["GITHUB_ACTIONS"]
-
-  provisioned = ENV["PARALLEL_TEST_PROCESSORS"].to_i
-  return if provisioned < 1
-  return unless files.any? && files.all? { |f| f.match?(%r{(?:\A|/)spec/system/}) }
-
-  target = provisioned + 4
-
-  connection = ActiveRecord::Base.connection
-  ((provisioned + 1)..target).each do |n|
-    name = "discourse_test_#{n}"
-    next if connection.select_value(
-      "SELECT 1 FROM pg_database WHERE datname = #{connection.quote(name)}",
-    )
-    connection.execute(
-      "CREATE DATABASE #{connection.quote_table_name(name)} WITH TEMPLATE discourse_test_1",
-    )
-  end
-
-  ENV["PARALLEL_TEST_PROCESSORS"] = target.to_s
-  puts "turbo_rspec: scaled system-test workers #{provisioned} -> #{target}"
-rescue => e
-  STDERR.puts "turbo_rspec: failed to scale system-test workers (#{e.class}: #{e.message}); keeping #{provisioned}"
-  ENV["PARALLEL_TEST_PROCESSORS"] = provisioned.to_s if provisioned.positive?
-end
-
-scale_system_test_workers!(files)
-
 requires.each { |f| require(f) }
 
 formatters << { name: "progress", outputs: [] } if formatters.empty?
