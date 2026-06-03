@@ -74,11 +74,11 @@ module PageObjects
       def scroll_to_top
         3.times do
           page.execute_script(<<~JS)
-            const s = document.querySelector("#{PageObjects::Components::Chat::Messages::SELECTOR}");
-            s.scrollTop = -s.scrollHeight;
-            s.dispatchEvent(new Event("scroll"));
+            const scroller = document.querySelector("#{PageObjects::Components::Chat::Messages::SELECTOR}");
+            scroller.scrollTop = -scroller.scrollHeight;
+            scroller.dispatchEvent(new Event("scroll"));
           JS
-          sleep 0.3
+          sleep 0.1
         end
       end
 
