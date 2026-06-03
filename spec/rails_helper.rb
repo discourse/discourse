@@ -22,7 +22,6 @@ require "fabrication"
 require "mocha/api"
 require "certified"
 require "webmock/rspec"
-require "minio_runner"
 
 CHROME_REMOTE_DEBUGGING_PORT = (ENV["CHROME_REMOTE_DEBUGGING_PORT"] || 50_062).to_s
 CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "127.0.0.1"
@@ -304,37 +303,6 @@ RSpec.configure do |config|
     end
 
     SiteSetting.provider = TestLocalProcessProvider.new
-
-    # Used for S3 system specs, see also setup_s3_system_test.
-    MinioRunner.config do |minio_runner_config|
-      minio_runner_config.minio_domain = ENV["MINIO_RUNNER_MINIO_DOMAIN"] || "minio.local"
-      minio_runner_config.buckets =
-        (
-          if ENV["MINIO_RUNNER_BUCKETS"]
-            ENV["MINIO_RUNNER_BUCKETS"].split(",")
-          else
-            ["discoursetest"]
-          end
-        )
-      minio_runner_config.public_buckets =
-        (
-          if ENV["MINIO_RUNNER_PUBLIC_BUCKETS"]
-            ENV["MINIO_RUNNER_PUBLIC_BUCKETS"].split(",")
-          else
-            ["discoursetest"]
-          end
-        )
-
-      test_i = ENV["TEST_ENV_NUMBER"].to_i
-
-      data_dir = "#{Rails.root.join("tmp/test_data_#{test_i}/minio")}"
-      FileUtils.rm_rf(data_dir)
-      FileUtils.mkdir_p(data_dir)
-      minio_runner_config.minio_data_directory = data_dir
-
-      minio_runner_config.minio_port = 9_000 + 2 * test_i
-      minio_runner_config.minio_console_port = 9_001 + 2 * test_i
-    end
 
     DiscourseConnectHelpers.provider_port = 9100 + ENV["TEST_ENV_NUMBER"].to_i
 
@@ -635,7 +603,6 @@ RSpec.configure do |config|
 
   config.after(:suite) do
     Downloads.clear
-    MinioRunner.stop
   end
 
   if ENV["CI"]
