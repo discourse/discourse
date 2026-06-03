@@ -14,7 +14,7 @@ module SystemDrivers
   def self.preload_model_schemas!
     return if @schemas_preloaded
 
-    ActiveRecord::Base.connection.data_sources.map do |table|
+    ActiveRecord::Base.connection.data_sources.each do |table|
       ActiveRecord::Base.connection.schema_cache.add(table)
     end
 

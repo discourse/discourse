@@ -92,6 +92,9 @@ RSpec.configure do |config|
   config.include FastImageHelpers
   config.include ServiceMatchers
   config.include I18nHelpers
+  config.include TimeHelpers
+  config.include AuthHelpers
+  config.include LoggingHelpers
 
   config.order = "random"
   config.infer_spec_type_from_file_location!
