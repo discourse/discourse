@@ -76,6 +76,10 @@ module PageObjects
           self
         end
 
+        def has_title_link_href?(href)
+          has_css?(".event-info .name a[href='#{href}']")
+        end
+
         def has_location?(text)
           has_css?(".event-location", text:)
         end
