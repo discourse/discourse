@@ -39,6 +39,8 @@ describe "Upcoming Events" do
 
     it "filters non-recurring goings out of future occurrences",
        time: Time.utc(2026, 5, 12, 12, 0) do
+      set_subfolder "/discuss"
+
       post =
         create_post(
           user: admin,
@@ -55,12 +57,13 @@ describe "Upcoming Events" do
       )
       DiscoursePostEvent::Invitee.create_attendance!(going_once_user.id, event.id, :going)
 
-      upcoming_events.visit
+      upcoming_events.visit("/discuss")
       upcoming_events.click_event_on("2026-05-14")
 
       expect(post_event_page).to have_going_count(2)
       expect(post_event_page).to have_invitee_avatar(going_recurring_user.username)
       expect(post_event_page).to have_invitee_avatar(going_once_user.username)
+      expect(post_event_page).to have_title_link_href(post.relative_url)
 
       post_event_page.close_popup
       upcoming_events.click_event_on("2026-05-21")
