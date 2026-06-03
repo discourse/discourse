@@ -68,8 +68,6 @@ end
 
 SiteSetting.automatically_download_gravatars = false
 
-BROWSER_READ_TIMEOUT = 30
-
 RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
@@ -157,25 +155,6 @@ RSpec.configure do |config|
       ].compact,
     )
 
-    if ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].present?
-      Capybara.default_max_wait_time = ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].to_i
-    else
-      Capybara.default_max_wait_time = 4
-    end
-
-    Capybara.threadsafe = true
-    Capybara.disable_animation = true
-
-    # Click offsets is calculated from top left of element
-    Capybara.w3c_click_offset = false
-
-    Capybara.configure do |capybara_config|
-      capybara_config.server_host = ENV["CAPYBARA_SERVER_HOST"].presence || "localhost"
-
-      capybara_config.server_port =
-        (ENV["CAPYBARA_SERVER_PORT"].presence || "31_337").to_i + ENV["TEST_ENV_NUMBER"].to_i
-    end
-
     config.before(:each) do |example|
       if example.metadata[:type] != :system
         EmberCli.stubs(:read_manifest!).returns(nil)
@@ -201,32 +180,6 @@ RSpec.configure do |config|
            (capybara_timeout_error = example.metadata[:_capybara_timeout_exception])
         raise capybara_timeout_error
       end
-    end
-
-    if ENV["CI"].present?
-      [
-        [PostAction, :post_action_type_id],
-        [Reviewable, :target_id],
-        [ReviewableHistory, :reviewable_id],
-        [ReviewableScore, :reviewable_id],
-        [ReviewableScore, :reviewable_score_type],
-        [SidebarSectionLink, :linkable_id],
-        [SidebarSectionLink, :sidebar_section_id],
-        [User, :last_seen_reviewable_id],
-        [User, :required_fields_version],
-      ].each do |model, column|
-        DB.exec("ALTER TABLE #{model.table_name} ALTER #{column} TYPE bigint")
-        model.reset_column_information
-      end
-
-      # Sets sequence's value to be greater than the max value that an INT column can hold. This is done to prevent
-      # type mismatches for foreign keys that references a column of type BIGINT. We set the value to 10_000_000_000
-      # instead of 2**31-1 so that the values are easier to read.
-      DB
-        .query("SELECT sequence_name FROM information_schema.sequences WHERE data_type = 'bigint'")
-        .each do |row|
-          DB.exec "SELECT setval('#{row.sequence_name}', GREATEST((SELECT last_value FROM #{row.sequence_name}), 10000000000))"
-        end
     end
 
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
@@ -344,52 +297,10 @@ RSpec.configure do |config|
   end
 end
 
-def global_setting(name, value)
-  SiteSetting.hidden_settings_provider.remove_hidden(name)
-  SiteSetting.shadowed_settings.delete(name)
-  GlobalSetting.reset_s3_cache!
-
-  GlobalSetting.stubs(name).returns(value)
-
-  before_next_spec do
-    SiteSetting.hidden_settings_provider.remove_hidden(name)
-    SiteSetting.shadowed_settings.delete(name)
-    GlobalSetting.reset_s3_cache!
-  end
-end
-
-def set_cdn_url(cdn_url)
-  global_setting :cdn_url, cdn_url
-  Rails.configuration.action_controller.asset_host = cdn_url
-  ActionController::Base.asset_host = cdn_url
-
-  before_next_spec do
-    Rails.configuration.action_controller.asset_host = nil
-    ActionController::Base.asset_host = nil
-  end
-end
-
 def has_trigger?(trigger_name)
   DB.exec(<<~SQL) != 0
     SELECT 1
     FROM INFORMATION_SCHEMA.TRIGGERS
     WHERE trigger_name = '#{trigger_name}'
   SQL
-end
-
-def stub_deprecated_settings!(override:)
-  SiteSetting.load_settings("#{Rails.root.join("spec/fixtures/site_settings/deprecated_test.yml")}")
-
-  stub_const(
-    SiteSettings::DeprecatedSettings,
-    "SETTINGS",
-    [["old_one", "new_one", override, "0.0.1"]],
-  ) do
-    SiteSetting.setup_deprecated_methods
-    yield
-  end
-
-  defaults = SiteSetting.defaults.instance_variable_get(:@defaults)
-  defaults.each { |_, hash| hash.delete(:old_one) }
-  defaults.each { |_, hash| hash.delete(:new_one) }
 end

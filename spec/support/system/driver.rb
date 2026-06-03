@@ -95,3 +95,26 @@ module SystemDrivers
   end
   private_class_method :apply_base_chrome_args
 end
+
+RSpec.configure do |config|
+  config.before(:suite) do
+    if ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].present?
+      Capybara.default_max_wait_time = ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].to_i
+    else
+      Capybara.default_max_wait_time = 4
+    end
+
+    Capybara.threadsafe = true
+    Capybara.disable_animation = true
+
+    # Click offsets is calculated from top left of element
+    Capybara.w3c_click_offset = false
+
+    Capybara.configure do |capybara_config|
+      capybara_config.server_host = ENV["CAPYBARA_SERVER_HOST"].presence || "localhost"
+
+      capybara_config.server_port =
+        (ENV["CAPYBARA_SERVER_PORT"].presence || "31_337").to_i + ENV["TEST_ENV_NUMBER"].to_i
+    end
+  end
+end
