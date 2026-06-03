@@ -3,10 +3,9 @@ import { module, test } from "qunit";
 import getURL, { setPrefix } from "discourse/lib/get-url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-// These templates deliberately use RAW href/src values with no manual `getURL`.
+// These templates deliberately use raw href values with no manual `getURL`.
 // The auto-get-url build transform should wrap them so the subfolder base path
-// ("/forum" here) is present in the rendered attribute — the behaviour that
-// keeps middle-click / "open in new tab" working on subfolder sites.
+// ("/forum" here) is present in the rendered attribute.
 module("Integration | lib | auto-get-url transform", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -33,12 +32,6 @@ module("Integration | lib | auto-get-url transform", function (hooks) {
     assert.dom("a").hasAttribute("href", "/forum/about");
   });
 
-  test("prefixes a raw img src binding", async function (assert) {
-    this.src = "/images/logo.png";
-    await render(<template><img src={{this.src}} alt="logo" /></template>);
-    assert.dom("img").hasAttribute("src", "/forum/images/logo.png");
-  });
-
   test("prefixes a literal+binding concat href", async function (assert) {
     this.id = 123;
     await render(
@@ -56,6 +49,26 @@ module("Integration | lib | auto-get-url transform", function (hooks) {
       </template>
     );
     assert.dom("a").hasAttribute("href", "/forum/already");
+  });
+
+  test("omits the attribute for a nullish binding", async function (assert) {
+    this.url = null;
+    await render(
+      <template>
+        <a href={{this.url}}>x</a>
+      </template>
+    );
+    assert.dom("a").doesNotHaveAttribute("href");
+  });
+
+  test("keeps an empty string binding empty", async function (assert) {
+    this.url = "";
+    await render(
+      <template>
+        <a href={{this.url}}>x</a>
+      </template>
+    );
+    assert.dom("a").hasAttribute("href", "");
   });
 
   test("leaves external urls untouched", async function (assert) {
@@ -78,10 +91,13 @@ module("Integration | lib | auto-get-url transform", function (hooks) {
     assert.dom("#mail").hasAttribute("href", "mailto:a@b.com");
   });
 
-  test("does not prefix a component @arg", async function (assert) {
-    // The value passed to a component is the component's responsibility; the
-    // transform must not touch @args. We assert the raw, unprefixed value is
-    // what the child receives by rendering it into a plain href downstream.
+  test("leaves img src untouched while the scope is a[href] only", async function (assert) {
+    this.src = "/images/logo.png";
+    await render(<template><img src={{this.src}} alt="logo" /></template>);
+    assert.dom("img").hasAttribute("src", "/images/logo.png");
+  });
+
+  test("does not prefix non-url attributes", async function (assert) {
     this.url = "/t/slug/123";
     await render(
       <template>

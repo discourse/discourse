@@ -35,38 +35,43 @@ async function compile(templateBody) {
 }
 
 test.each([
-  ["<a href={{this.url}}>x</a>", "<a href={{getURL this.url}}>x</a>"],
-  ['<a href="/about">x</a>', '<a href={{getURL "/about"}}>x</a>'],
-  ["<img src={{@logoUrl}}>", "<img src={{getURL @logoUrl}}>"],
+  [
+    "<a href={{this.url}}>x</a>",
+    "<a href={{getURLForAttribute this.url}}>x</a>",
+  ],
+  ['<a href="/about">x</a>', '<a href={{getURLForAttribute "/about"}}>x</a>'],
   [
     '<a href={{concat "/t/" id}}>x</a>',
-    '<a href={{getURL (concat "/t/" id)}}>x</a>',
+    '<a href={{getURLForAttribute (concat "/t/" id)}}>x</a>',
   ],
   [
     '<a href="/t/{{this.id}}">x</a>',
-    '<a href={{getURL (concat "/t/" this.id)}}>x</a>',
+    '<a href={{getURLForAttribute (concat "/t/" this.id)}}>x</a>',
   ],
-  ["<a href={{if x a b}}>x</a>", "<a href={{getURL (if x a b)}}>x</a>"],
   [
-    '<video src={{@v}} poster="/p.png"></video>',
-    '<video src={{getURL @v}} poster={{getURL "/p.png"}}></video>',
+    "<a href={{if x a b}}>x</a>",
+    "<a href={{getURLForAttribute (if x a b)}}>x</a>",
   ],
 ])("wraps %s", async (input, expected) => {
   const { template, code } = await compile(input);
   expect(template).toBe(expected);
-  expect(code).toContain('import getURL from "discourse/lib/get-url"');
+  expect(code).toContain(
+    'import { getURLForAttribute } from "discourse/lib/get-url"'
+  );
 });
 
 test.each([
   ["<a href={{getURL this.url}}>x</a>"],
   ['<a href="https://example.com">x</a>'],
-  ['<img src="//cdn/x.png">'],
   ['<a href="#top">x</a>'],
   ['<a href="mailto:a@b.c">x</a>'],
-  ['<img src="images/x.png">'],
   ['<base href="/discuss/">'],
   ['<a href="https://x/{{id}}">x</a>'],
   ["<MyLink @href={{this.url}} />"],
+  ["<img src={{@logoUrl}}>"],
+  ['<img src="/a.png" srcset="/a-2x.png 2x">'],
+  ['<video src={{@v}} poster="/p.png"></video>'],
+  ['<form action="/post">x</form>'],
 ])("leaves %s untouched", async (input) => {
   const { template, code } = await compile(input);
   expect(template).toBe(input);
@@ -78,15 +83,8 @@ test("only wraps the url attribute, not siblings", async () => {
     "<a data-url={{this.url}} href={{this.url}}>x</a>"
   );
   expect(template).toBe(
-    "<a data-url={{this.url}} href={{getURL this.url}}>x</a>"
+    "<a data-url={{this.url}} href={{getURLForAttribute this.url}}>x</a>"
   );
-});
-
-test("does not touch srcset", async () => {
-  const { template } = await compile(
-    '<img src="/a.png" srcset="/a-2x.png 2x">'
-  );
-  expect(template).toBe('<img src={{getURL "/a.png"}} srcset="/a-2x.png 2x">');
 });
 
 test("imports concat when synthesizing one for a literal+binding href", async () => {

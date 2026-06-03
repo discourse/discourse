@@ -1,53 +1,38 @@
 // A Glimmer AST transform that automatically wraps URL-bearing attribute values
-// on native elements in `getURL`, so the subfolder base path is preserved for
-// every rendered link/image — including for middle-click and "open in new tab",
-// which follow the raw href and bypass `DiscourseURL.routeTo`.
+// on native elements in `getURLForAttribute`, so the subfolder base path is
+// preserved for every rendered link — including for middle-click and "open in
+// new tab", which follow the raw href and bypass `DiscourseURL.routeTo`.
 //
-// Before:  <a href={{event.post.url}}>      <a href="/about">      <img src="/t/{{id}}">
-// After:   <a href={{getURL event.post.url}}>  <a href={{getURL "/about"}}>  <img src={{getURL (concat "/t/" id)}}>
+// Before:  <a href={{event.post.url}}>      <a href="/about">      <a href="/t/{{id}}">
+// After:   <a href={{getURL event.post.url}}>  <a href={{getURL "/about"}}>  <a href={{getURL (concat "/t/" id)}}>
 //
-// `getURL` is idempotent and a no-op on external/already-prefixed URLs, so
-// applying it here can never double-prefix or rewrite an external link. The
-// import is injected via `jsutils.bindImport`, which adds a lexical scope
-// binding that resolves in both strict-mode (.gjs) and loose-mode (.hbs)
-// templates.
+// `getURLForAttribute` delegates non-empty strings to `getURL` and preserves
+// every other value, so Glimmer's attribute-omission semantics for null and
+// undefined bindings are unchanged. `getURL` is idempotent and a no-op on
+// external or already-prefixed URLs, so the rewrite can never double-prefix or
+// rewrite an external link. The import is injected via `jsutils.bindImport`,
+// which adds a lexical scope binding that resolves in both strict-mode (.gjs)
+// and loose-mode (.hbs) templates.
+//
+// The initial scope is limited to anchor `href` attributes, which is where the
+// middle-click/new-tab 404s come from. Other URL slots (`img[src]`,
+// `form[action]`, `video[poster]`, ...) can be added to `URL_ATTRS_BY_TAG`
+// once this has proven itself in production. Keying by tag means only real DOM
+// URL slots are ever touched, never a component.
 
-// Native elements and the attributes on them that carry a navigable/loadable
-// URL. We deliberately key by tag so we only ever touch real DOM URL slots and
-// never a component (which receives URLs via `@args` and prefixes them itself).
 const URL_ATTRS_BY_TAG = {
   a: ["href"],
-  area: ["href"],
-  link: ["href"],
-  img: ["src"],
-  source: ["src"], // `srcset` is intentionally excluded (multi-URL syntax)
-  track: ["src"],
-  iframe: ["src"],
-  embed: ["src"],
-  audio: ["src"],
-  video: ["src", "poster"],
-  script: ["src"],
-  input: ["src", "formaction"],
-  button: ["formaction"],
-  form: ["action"],
-  use: ["href"], // SVG
-  image: ["href"], // SVG <image>
 };
 
-// Helper heads whose output is already base-path-aware. Skipping these keeps the
-// emitted markup clean (no redundant double wrap) even though getURL would be a
-// safe no-op anyway.
 const SAFE_MUSTACHE_HEADS = new Set([
   "getURL",
+  "getURLForAttribute",
   "getURLWithCDN",
   "get-url",
   "userPath",
   "groupPath",
 ]);
 
-// A root-relative internal path is the only literal we prefix. Anything else —
-// external (`https://`), protocol-relative (`//cdn`), anchors (`#x`), schemes
-// (`mailto:`), or genuinely relative (`images/x`) — is left untouched.
 function isInternalLiteral(raw) {
   const value = raw.trim();
   if (!value) {
@@ -63,8 +48,6 @@ module.exports = function autoGetUrl(env) {
   const { builders: b } = env.syntax;
   const jsutils = env.meta && env.meta.jsutils;
 
-  // Without jsutils we cannot inject the import, so we no-op rather than emit a
-  // broken reference. This keeps any build path that lacks the helper safe.
   if (!jsutils) {
     return { name: "auto-get-url", visitor: {} };
   }
@@ -74,17 +57,16 @@ module.exports = function autoGetUrl(env) {
     if (!boundGetURL) {
       boundGetURL = jsutils.bindImport(
         "discourse/lib/get-url",
-        "default",
+        "getURLForAttribute",
         target,
-        { nameHint: "getURL" }
+        { nameHint: "getURLForAttribute" }
       );
     }
     return b.path(boundGetURL);
   }
 
-  // `concat` is not an auto-scoped keyword in strict-mode (.gjs) templates, so
-  // when we synthesize a `(concat ...)` for a literal+binding href we must
-  // import it. bindImport also adds the binding harmlessly in loose mode.
+  // `concat` is not auto-scoped in strict-mode templates, so a synthesized
+  // `(concat ...)` needs its own import.
   let boundConcat;
   function concatPath(target) {
     if (!boundConcat) {
@@ -95,9 +77,6 @@ module.exports = function autoGetUrl(env) {
     return b.path(boundConcat);
   }
 
-  // Convert a MustacheStatement (an attribute binding or a concat part) into an
-  // expression usable as a helper param: a bare path stays a path, anything with
-  // params/hash becomes a sub-expression.
   function mustacheToExpression(node) {
     if (node.params.length === 0 && node.hash.pairs.length === 0) {
       return node.path;
@@ -126,7 +105,6 @@ module.exports = function autoGetUrl(env) {
 
           const value = attr.value;
 
-          // href="/t/123"
           if (value.type === "TextNode") {
             if (isInternalLiteral(value.chars)) {
               attr.value = wrap(b.string(value.chars), path);
@@ -134,7 +112,6 @@ module.exports = function autoGetUrl(env) {
             continue;
           }
 
-          // href={{event.post.url}} / href={{concat ...}} / href={{if ...}}
           if (value.type === "MustacheStatement") {
             const head = value.path.head?.name ?? value.path.original;
             if (SAFE_MUSTACHE_HEADS.has(head)) {
@@ -144,8 +121,6 @@ module.exports = function autoGetUrl(env) {
             continue;
           }
 
-          // href="/t/{{this.id}}" — a literal/binding mix parses to a concat.
-          // Only prefix when the leading literal is an internal path.
           if (value.type === "ConcatStatement") {
             const first = value.parts[0];
             if (first?.type === "TextNode" && isInternalLiteral(first.chars)) {
@@ -163,7 +138,5 @@ module.exports = function autoGetUrl(env) {
   };
 };
 
-// Participate in template-compiler caching so edits to this file bust stale
-// compiled templates (mirrors transform-action-syntax.js).
 module.exports.baseDir = () => __dirname;
 module.exports.cacheKey = () => "auto-get-url";

@@ -33,6 +33,16 @@ export default function getURL(url) {
   return baseUri + url;
 }
 
+// Used by the auto-get-url build transform. Unlike `getURL`, which maps falsy
+// input to the base URI, this preserves non-string and empty values so
+// Glimmer's attribute-omission semantics are unchanged by the rewrite.
+export function getURLForAttribute(url) {
+  if (typeof url !== "string" || url === "") {
+    return url;
+  }
+  return getURL(url);
+}
+
 export function getURLWithCDN(url) {
   url = getURL(url);
   // only relative urls
