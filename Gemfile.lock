@@ -288,7 +288,7 @@ GEM
       image_size (>= 1.5, < 4)
       in_threads (~> 1.3)
       progress (~> 3.0, >= 3.0.1)
-    image_size (3.5.0)
+    image_size (3.6.0)
     in_threads (1.6.0)
     inflection (1.0.0)
     io-console (0.8.2)
@@ -1077,7 +1077,7 @@ CHECKSUMS
   http_accept_language (2.1.1) sha256=0043f0d55a148cf45b604dbdd197cb36437133e990016c68c892d49dbea31634
   i18n (1.14.8) sha256=285778639134865c5e0f6269e0b818256017e8cde89993fdfcbfb64d088824a5
   image_optim (0.31.4) sha256=5bffd0891268e8d189d46ee4b8599918581bba1032d244e6ace4779a434776c0
-  image_size (3.5.0) sha256=c3aa1ab398624a5f86578c04cc1344ef18ee1ade109c6d06b7dcbc5c775963e8
+  image_size (3.6.0) sha256=1b9c4196cb658bf503a887920543a3991e927a4b767a5c770fb9665bce0dcb28
   in_threads (1.6.0) sha256=91a7e6138d279dc632f59b8a9a409e47148948e297c0f69c92f9a2479a182149
   inflection (1.0.0) sha256=ceba9b26fc28b9af82e33e822d28f78a4312af75687efec81d5ef1062498d355
   io-console (0.8.2) sha256=d6e3ae7a7cc7574f4b8893b4fca2162e57a825b223a177b7afa236c5ef9814cc
