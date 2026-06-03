@@ -86,6 +86,15 @@ export default class Blocks extends Service {
    */
   #lastKnownRegistrySize = 0;
 
+  /**
+   * Tracks the most recent prepare for each scope so a new prepare can abort the
+   * one it supersedes. Keyed per scope (an outlet name): preparing one outlet
+   * never cancels another's in-flight resolution.
+   *
+   * @type {Map<string, AbortController>}
+   */
+  #prepareControllers = new Map();
+
   /*
    * Block Outlet Methods
    */
@@ -369,6 +378,42 @@ export default class Blocks extends Service {
    * @returns {Promise<void>}
    */
   async prepareData(scope, options = {}) {
+    return this.#prepareData(scope, options);
+  }
+
+  /**
+   * Route-facing entry point for `prepareData` that owns the abort lifecycle, so
+   * a route only names its outlet and awaits.
+   *
+   * Each call supersedes the previous prepare of the same scope: it aborts the
+   * prior in-flight resolution (e.g. when a query-param refresh re-enters the
+   * route) before starting a fresh one, so a superseded load can't keep running.
+   *
+   * Await it from a route's `model()` / `afterModel()` so the transition waits
+   * for the data and the route's loading substate covers it.
+   *
+   * @param {string} scope - The outlet name whose blocks to resolve.
+   * @param {Object} [options]
+   * @param {Object} [options.params] - Route params (available to future descriptor logic).
+   * @returns {Promise<void>}
+   */
+  async prepareDataForRoute(scope, options = {}) {
+    this.#prepareControllers.get(scope)?.abort();
+
+    const controller = new AbortController();
+    this.#prepareControllers.set(scope, controller);
+
+    try {
+      await this.#prepareData(scope, { ...options, signal: controller.signal });
+    } finally {
+      // Leave a newer prepare's controller in place: only clear our own.
+      if (this.#prepareControllers.get(scope) === controller) {
+        this.#prepareControllers.delete(scope);
+      }
+    }
+  }
+
+  async #prepareData(scope, options = {}) {
     const layoutPromise = _getValidatedLayout(scope);
     if (!layoutPromise) {
       return;
