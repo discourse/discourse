@@ -103,79 +103,6 @@ end
 
 SiteSetting.automatically_download_gravatars = false
 
-module TestSetup
-  # This is run before each test and before each before_all block
-  def self.test_setup(x = nil)
-    RateLimiter.disable
-    PostActionNotifier.disable
-    SearchIndexer.disable
-    UserActionManager.disable
-    NotificationEmailer.disable
-    SiteIconManager.disable
-    WordWatcher.disable_cache
-    UpcomingChanges.clear_caches!
-
-    SiteSetting.provider.all.each { |setting| SiteSetting.remove_override!(setting.name) }
-
-    # Set some standard overrides for tests. Some for performance, some to make the tests easier,
-    # and some because their default was changed, and we didn't want to refactor all the relevant specs.
-    {
-      s3_upload_bucket: "bucket",
-      min_post_length: 5,
-      min_first_post_length: 5,
-      min_personal_message_post_length: 10,
-      download_remote_images_to_local: false,
-      unique_posts_mins: 0,
-      max_consecutive_replies: 0,
-      allow_uncategorized_topics: true,
-    }.each { |k, v| SiteSetting.set(k, v) }
-
-    SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
-    SiteSetting.refresh_site_setting_group_ids!
-
-    # very expensive IO operations
-    SiteSetting.automatically_download_gravatars = false
-
-    Discourse.clear_readonly!
-    Sidekiq::Worker.clear_all
-
-    I18n.locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
-
-    # Database is rolled back between specs, but I18n override cache doesn't.
-    # Flush it if there were any TranslationOverrides created.
-    overrides_by_site = I18n.instance_variable_get(:@overrides_by_site) || {}
-    I18n.reload! if overrides_by_site.values.flat_map(&:values).any?(&:any?)
-
-    RspecErrorTracker.clear_exceptions
-
-    if $test_cleanup_callbacks
-      $test_cleanup_callbacks.reverse_each(&:call)
-      $test_cleanup_callbacks = nil
-    end
-
-    # in test this is very expensive, we explicitly enable when needed
-    Topic.update_featured_topics = false
-
-    # Running jobs are expensive and most of our tests are not concern with
-    # code that runs inside jobs. run_later! means they are put on the redis
-    # queue and never processed.
-    Jobs.run_later!
-
-    # Don't track ApplicationRequests in test mode unless opted in
-    ApplicationRequest.disable
-
-    # Don't queue badge grant in test mode
-    BadgeGranter.disable_queue
-
-    OmniAuth.config.test_mode = false
-
-    Middleware::AnonymousCache.disable_anon_cache
-    BlockRequestsMiddleware.allow_requests!
-    BlockRequestsMiddleware.current_example_location = nil
-    ApplicationSerializer.fragment_cache.clear
-  end
-end
-
 BROWSER_READ_TIMEOUT = 30
 
 RSpec.configure do |config|
@@ -251,39 +178,6 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
-    CachedCounting.disable
-
-    begin
-      ActiveRecord::Migration.check_all_pending!
-    rescue ActiveRecord::PendingMigrationError
-      raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
-    end
-
-    Sidekiq.default_configuration.error_handlers.clear
-
-    # No-op handler to suppress Sidekiq's `p ["!!!!!", ex]` fallback.
-    Sidekiq.default_configuration.error_handlers << ->(_ex, _ctx, _config) {}
-
-    # Quiet seed-fu output produced by specs that call `Model.seed`.
-    SeedFu.quiet = true
-
-    # json-schema's MultiJSON support is deprecated.
-    JSON::Validator.use_multi_json = false
-
-    # Ugly, but needed until we have a user creator
-    User.skip_callback(:create, :after, :ensure_in_trust_level_group)
-
-    DiscoursePluginRegistry.reset! if ENV["LOAD_PLUGINS"] != "1"
-    Discourse.current_user_provider = TestCurrentUserProvider
-    Discourse::Application.load_tasks
-
-    SystemThemesManager.clear_system_theme_user_history!
-    ThemeField.delete_all
-    ThemeSettingsMigration.delete_all
-    JavascriptCache.delete_all
-    ThemeSiteSetting.delete_all
-    SiteSetting.refresh!
-
     # Rebase the seeded DB settings as defaults, then swap in the in-memory provider.
     TestLocalProcessProvider.install!
 
@@ -798,10 +692,6 @@ RSpec.configure do |config|
     Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
   end
-end
-
-def before_next_spec(&callback)
-  ($test_cleanup_callbacks ||= []) << callback
 end
 
 def global_setting(name, value)
