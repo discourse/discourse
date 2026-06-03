@@ -7064,7 +7064,6 @@ en:
             error: "Couldn't load top countries. Try refreshing the page."
           top_referrers:
             title: "Top referrers"
-            direct: "Direct"
             empty: "No referrer data for this period."
             error: "Couldn't load top referrers. Try refreshing the page."
           series:

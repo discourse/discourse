@@ -327,13 +327,11 @@ export default class DashboardTraffic extends Component {
                               rel="noopener noreferrer nofollow ugc"
                               target="_blank"
                             >
-                              {{row.normalized_referrer}}
+                              {{row.referrer_label}}
                             </a>
                           {{else}}
                             <span class="db-traffic__name">
-                              {{i18n
-                                "admin.dashboard.site_traffic.top_referrers.direct"
-                              }}
+                              {{row.referrer_label}}
                             </span>
                           {{/if}}
                           <span class="db-traffic__metric">
