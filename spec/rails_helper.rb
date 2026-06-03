@@ -25,38 +25,6 @@ require "webmock/rspec"
 
 require_relative "support/server_error_tracking"
 
-class PlaywrightLogger
-  attr_reader :logs
-
-  def initialize(page)
-    @logs = []
-
-    page.on(
-      "console",
-      ->(msg) do
-        @logs << {
-          level: msg.type,
-          message: msg.text,
-          timestamp: Time.now.to_i * 1000,
-          source: "console-api",
-        }
-      end,
-    )
-
-    page.on(
-      "pageerror",
-      ->(error) do
-        @logs << {
-          level: "error",
-          message: error.message,
-          timestamp: Time.now.to_i * 1000,
-          source: "pageerror-api",
-        }
-      end,
-    )
-  end
-end
-
 ENV["RAILS_ENV"] ||= "test"
 ENV["ENABLE_LOGSTASH_LOGGER"] ||= "1"
 require File.expand_path("../../config/environment", __FILE__)
@@ -416,29 +384,8 @@ RSpec.configure do |config|
 
     # Recommended that this is not disabled, since it makes debugging
     # failed system tests a lot trickier.
-    if ENV["PLAYWRIGHT_DISABLE_VERBOSE_JS_LOGS"].blank? && $playwright_logger
-      if example.exception
-        lines << "~~~~~~~ JS LOGS ~~~~~~~"
-
-        if $playwright_logger.logs.empty?
-          lines << "(no logs)"
-        else
-          $playwright_logger.logs.each do |log|
-            # System specs are full of image load errors that are just noise, no need
-            # to log this.
-            if (
-                 log[:message].include?("Failed to load resource: net::ERR_CONNECTION_REFUSED") &&
-                   (log[:message].include?("uploads") || log[:message].include?("images"))
-               ) || log[:message].include?("favicon.ico")
-              next
-            end
-
-            lines << log[:message]
-          end
-        end
-
-        lines << "~~~~~ END JS LOGS ~~~~~"
-      end
+    if ENV["PLAYWRIGHT_DISABLE_VERBOSE_JS_LOGS"].blank? && $playwright_logger && example.exception
+      $playwright_logger.append_failure_logs(lines)
     end
 
     deprecation_error =
