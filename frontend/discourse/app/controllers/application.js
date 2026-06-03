@@ -17,6 +17,7 @@ export default class ApplicationController extends Controller {
   @service scrollState;
   @service sidebarState;
   @service siteSettings;
+  @service rightSidebar;
 
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
   showTop = true;
@@ -89,6 +90,10 @@ export default class ApplicationController extends Controller {
 
   get showPoweredBy() {
     return this.showFooter && this.siteSettings.enable_powered_by_discourse;
+  }
+
+  get rightSidebarEnabled() {
+    return this.rightSidebar.isOpen;
   }
 
   @computed

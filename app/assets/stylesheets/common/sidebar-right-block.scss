@@ -1,0 +1,28 @@
+.sidebar-right {
+  position: sticky;
+  top: var(--main-outlet-offset);
+  background: var(--d-sidebar-background);
+  height: calc(var(--composer-vh, 1dvh) * 100 - var(--main-outlet-offset, 0px));
+  align-self: start;
+  overflow-y: auto;
+
+  &__container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  &__layout {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__block {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+  }
+}
