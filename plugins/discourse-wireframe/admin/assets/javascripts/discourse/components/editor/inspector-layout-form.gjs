@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -17,7 +18,8 @@ import { GRID_TEMPLATES, parseGridAreas } from "../../lib/grid-templates";
  * FormKit form would show a bag of fields (mode, columns,
  * gap, ...) where most aren't relevant for the current mode. This
  * form swaps in mode-specific controls and uses richer affordances
- * (segmented selectors, steppers, sliders) instead of bare inputs.
+ * (segmented selectors, a template dropdown, sliders) instead of bare
+ * inputs.
  *
  * Live updates flow through `wireframe.updateSelectedArg`, same
  * channel the generic form uses — the canvas reflects changes
@@ -55,13 +57,12 @@ export default class InspectorLayoutForm extends Component {
   @service dialog;
 
   /**
-   * Predicate the template-chip render uses to grey out templates
-   * that can't fit the current layout (a template with fewer slots
-   * than there are existing children). Delegates to the service so
-   * the refusal logic lives next to `applyGridTemplate` and the two
-   * stay in lockstep.
+   * Predicate the template menu uses to grey out templates that can't
+   * fit the current layout (one with fewer spaces than the layout has
+   * content blocks). Delegates to the service so the refusal logic
+   * lives next to `applyGridTemplate` and the two stay in lockstep.
    */
-  canApplyTemplate = (template) => {
+  #canApplyTemplate = (template) => {
     const data = this.wireframe.selectedBlockData;
     if (!data?.key) {
       return false;
@@ -71,6 +72,61 @@ export default class InspectorLayoutForm extends Component {
       template,
     });
   };
+
+  /**
+   * The preset template whose shape matches the current grid, or `null`
+   * when none does — derived from geometry by the service, so it tracks
+   * hand edits without a stored id. Drives the Free / Template control
+   * and the active-preset highlight in the dropdown.
+   *
+   * @returns {Object|null}
+   */
+  get #activeTemplate() {
+    const data = this.wireframe.selectedBlockData;
+    if (!data?.key) {
+      return null;
+    }
+    return this.wireframe.activeGridTemplate(data.key);
+  }
+
+  /**
+   * `true` when the grid has no matching preset — i.e. it's a plain
+   * free grid. The Free control is selected and the column / row fields
+   * show in this state.
+   *
+   * @returns {boolean}
+   */
+  get isFree() {
+    return !this.#activeTemplate;
+  }
+
+  /**
+   * Translated label for the template dropdown button: the active
+   * preset's name, or a "choose a template" prompt when free.
+   *
+   * @returns {string}
+   */
+  get templateButtonLabel() {
+    const active = this.#activeTemplate;
+    return active
+      ? i18n(`wireframe.inspector.layout.templates.${active.i18nKey}`)
+      : i18n("wireframe.inspector.layout.choose_template");
+  }
+
+  /**
+   * The preset rows for the dropdown menu: each template with whether it
+   * fits the current content and whether it's the active one.
+   *
+   * @returns {Array<{template: Object, canApply: boolean, isActive: boolean}>}
+   */
+  get templateOptions() {
+    const active = this.#activeTemplate;
+    return GRID_TEMPLATES.map((template) => ({
+      template,
+      canApply: this.#canApplyTemplate(template),
+      isActive: template.id === active?.id,
+    }));
+  }
 
   /**
    * Slot keys whose placements fall OUTSIDE the current grid's
@@ -150,10 +206,6 @@ export default class InspectorLayoutForm extends Component {
     return `wireframe.inspector.layout.auto_collapse_help_${this.autoCollapse}`;
   }
 
-  get gridTemplates() {
-    return GRID_TEMPLATES;
-  }
-
   @action
   setMode(mode) {
     this.#set("mode", mode);
@@ -170,15 +222,44 @@ export default class InspectorLayoutForm extends Component {
   }
 
   @action
-  bumpColumns(delta) {
-    const next = clamp(this.columns + delta, COLUMNS_MIN, COLUMNS_MAX);
+  setColumns(event) {
+    const raw = parseInt(event.target.value, 10);
+    if (!Number.isFinite(raw)) {
+      return;
+    }
+    const next = clamp(raw, COLUMNS_MIN, COLUMNS_MAX);
     this.#applyDimensionChange({ columns: next, rows: this.rows });
   }
 
   @action
-  bumpRows(delta) {
-    const next = clamp(this.rows + delta, ROWS_MIN, ROWS_MAX);
+  setRows(event) {
+    const raw = parseInt(event.target.value, 10);
+    if (!Number.isFinite(raw)) {
+      return;
+    }
+    const next = clamp(raw, ROWS_MIN, ROWS_MAX);
     this.#applyDimensionChange({ columns: this.columns, rows: next });
+  }
+
+  /**
+   * Switches the layout into free mode at its current dimensions:
+   * content reflows into a plain `columns × rows` grid (a preset's
+   * spans collapse to single cells). No-op when already free.
+   */
+  @action
+  chooseFree() {
+    if (this.isFree) {
+      return;
+    }
+    const data = this.wireframe.selectedBlockData;
+    if (!data?.key) {
+      return;
+    }
+    this.wireframe.applyFreeGrid({
+      gridKey: data.key,
+      columns: this.columns,
+      rows: this.rows,
+    });
   }
 
   /**
@@ -235,7 +316,7 @@ export default class InspectorLayoutForm extends Component {
     }
     // Templates always switch the layout into `grid` mode — applying
     // one to a stack/row layout is the natural way to "convert" it.
-    // The service handles the args overwrite atomically.
+    // The service reflows existing content into the new shape.
     this.wireframe.applyGridTemplate({
       gridKey: data.key,
       template,
@@ -357,24 +438,77 @@ export default class InspectorLayoutForm extends Component {
       {{/unless}}
 
       {{#if this.isGrid}}
-        <div class="wireframe-layout-form__pair">
-          <Stepper
-            @label={{i18n "wireframe.inspector.layout.columns"}}
-            @value={{this.columns}}
-            @min={{COLUMNS_MIN}}
-            @max={{COLUMNS_MAX}}
-            @onBump={{this.bumpColumns}}
-          />
-          <Stepper
-            @label={{i18n "wireframe.inspector.layout.rows"}}
-            @value={{this.rows}}
-            @min={{ROWS_MIN}}
-            @max={{ROWS_MAX}}
-            @onBump={{this.bumpRows}}
-          />
+        {{! Source: a free grid (you pick the column / row count) or a
+          preset template (picked from the dropdown). The active option
+          is derived from the grid's current shape, so it reflects hand
+          edits too — a uniform grid reads as Free. }}
+        <div class="wireframe-layout-form__field">
+          <span class="wireframe-layout-form__legend">
+            {{i18n "wireframe.inspector.layout.source_legend"}}
+          </span>
+          <div class="wireframe-layout-form__source" role="radiogroup">
+            <DButton
+              class={{dConcatClass
+                "wireframe-layout-form__source-option"
+                (if this.isFree "--active")
+              }}
+              @ariaPressed={{this.isFree}}
+              @icon="table-cells"
+              @label="wireframe.inspector.layout.free"
+              @action={{this.chooseFree}}
+            />
+            <DMenu
+              @identifier="wireframe-grid-templates"
+              @placement="bottom-start"
+              @icon="chevron-down"
+              @label={{this.templateButtonLabel}}
+              class={{dConcatClass
+                "wireframe-layout-form__source-option"
+                "wireframe-layout-form__template-dropdown"
+                (unless this.isFree "--active")
+              }}
+            >
+              <:content as |args|>
+                <TemplateMenuList
+                  @options={{this.templateOptions}}
+                  @onPick={{this.applyTemplate}}
+                  @close={{args.close}}
+                />
+              </:content>
+            </DMenu>
+          </div>
         </div>
 
-        {{! Loaded-with-bad-data warning: some slots reference cells
+        {{#if this.isFree}}
+          <div class="wireframe-layout-form__pair">
+            <label class="wireframe-layout-form__number">
+              <span class="wireframe-layout-form__legend">
+                {{i18n "wireframe.inspector.layout.columns"}}
+              </span>
+              <input
+                type="number"
+                min={{COLUMNS_MIN}}
+                max={{COLUMNS_MAX}}
+                value={{this.columns}}
+                {{on "change" this.setColumns}}
+              />
+            </label>
+            <label class="wireframe-layout-form__number">
+              <span class="wireframe-layout-form__legend">
+                {{i18n "wireframe.inspector.layout.rows"}}
+              </span>
+              <input
+                type="number"
+                min={{ROWS_MIN}}
+                max={{ROWS_MAX}}
+                value={{this.rows}}
+                {{on "change" this.setRows}}
+              />
+            </label>
+          </div>
+        {{/if}}
+
+        {{! Loaded-with-bad-data warning: some cells reference positions
           outside the current grid. We can't auto-clamp on load (the
           user might have just opened a saved layout and not yet
           touched anything), so show a banner with a manual "Fix"
@@ -436,42 +570,6 @@ export default class InspectorLayoutForm extends Component {
       </div>
 
       {{#if this.isGrid}}
-        <div class="wireframe-layout-form__field">
-          <span class="wireframe-layout-form__legend">
-            {{i18n "wireframe.inspector.layout.templates_legend"}}
-          </span>
-          <div class="wireframe-layout-form__templates">
-            {{#each this.gridTemplates as |template|}}
-              <DButton
-                class={{dConcatClass
-                  "wireframe-layout-form__template-chip"
-                  (unless (this.canApplyTemplate template) "--disabled")
-                }}
-                @disabled={{unless (this.canApplyTemplate template) true}}
-                @translatedTitle={{if
-                  (this.canApplyTemplate template)
-                  (i18n
-                    (concat
-                      "wireframe.inspector.layout.templates." template.i18nKey
-                    )
-                  )
-                  (i18n "wireframe.inspector.layout.template_cant_fit")
-                }}
-                @action={{fn this.applyTemplate template}}
-              >
-                <span class="wireframe-layout-form__template-preview">
-                  <TemplatePreview @template={{template}} />
-                </span>
-                <span>{{i18n
-                    (concat
-                      "wireframe.inspector.layout.templates." template.i18nKey
-                    )
-                  }}</span>
-              </DButton>
-            {{/each}}
-          </div>
-        </div>
-
         {{! Disclosure body holds inputs/buttons by design. The
             <summary> is the disclosure trigger; its descendants
             stand on their own as form controls once expanded. }}
@@ -528,48 +626,56 @@ export default class InspectorLayoutForm extends Component {
 }
 
 /**
- * Inline stepper helper. Renders a label + ◀ / value / ▶. Used for
- * the integer args (columns, rows).
+ * Body of the template-picker dropdown (rendered inside `<DMenu>`'s
+ * `:content`). Takes `@options` (each `{template, canApply, isActive}`),
+ * an `@onPick` callback, and FloatKit's `@close`. Each row shows the
+ * template's preview + name; the active one is marked, and rows that
+ * can't hold the current content are disabled with an explanatory
+ * title. Picking a row applies the template and closes the menu.
  */
-class Stepper extends Component {
-  get canDecrement() {
-    return this.args.value > this.args.min;
-  }
-
-  get canIncrement() {
-    return this.args.value < this.args.max;
-  }
-
+class TemplateMenuList extends Component {
   @action
-  decrement() {
-    this.args.onBump(-1);
-  }
-
-  @action
-  increment() {
-    this.args.onBump(1);
+  pick(template) {
+    this.args.onPick?.(template);
+    this.args.close?.();
   }
 
   <template>
-    <div class="wireframe-layout-form__stepper">
-      <span class="wireframe-layout-form__legend">{{@label}}</span>
-      <div class="wireframe-layout-form__stepper-controls">
+    <div class="wireframe-template-menu" role="menu">
+      {{#each @options as |option|}}
         <DButton
-          class="wireframe-layout-form__stepper-btn"
-          @icon="chevron-left"
-          @disabled={{unless this.canDecrement true}}
-          @action={{this.decrement}}
-        />
-        <span class="wireframe-layout-form__stepper-value">
-          {{@value}}
-        </span>
-        <DButton
-          class="wireframe-layout-form__stepper-btn"
-          @icon="chevron-right"
-          @disabled={{unless this.canIncrement true}}
-          @action={{this.increment}}
-        />
-      </div>
+          class={{dConcatClass
+            "wireframe-template-menu__item"
+            (if option.isActive "--active")
+            (unless option.canApply "--disabled")
+          }}
+          role="menuitemradio"
+          @ariaPressed={{option.isActive}}
+          @disabled={{unless option.canApply true}}
+          @translatedTitle={{if
+            option.canApply
+            (i18n
+              (concat
+                "wireframe.inspector.layout.templates." option.template.i18nKey
+              )
+            )
+            (i18n "wireframe.inspector.layout.template_cant_fit")
+          }}
+          @action={{fn this.pick option.template}}
+        >
+          <span class="wireframe-template-menu__preview">
+            <TemplatePreview @template={{option.template}} />
+          </span>
+          <span class="wireframe-template-menu__label">{{i18n
+              (concat
+                "wireframe.inspector.layout.templates." option.template.i18nKey
+              )
+            }}</span>
+          {{#if option.isActive}}
+            {{dIcon "check" class="wireframe-template-menu__check"}}
+          {{/if}}
+        </DButton>
+      {{/each}}
     </div>
   </template>
 }

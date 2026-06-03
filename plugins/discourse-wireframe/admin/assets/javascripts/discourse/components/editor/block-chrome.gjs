@@ -319,11 +319,11 @@ export default class BlockChrome extends Component {
    * container blocks we default to `"stack"` since their children
    * stack vertically.
    *
-   * @returns {"stack"|"row"|"grid"|null}
+   * @returns {"stack"|"row"|"cell"|"grid"|"grid-cell-leaf"|null}
    */
   get containerDropMode() {
-    if (this.isSlot) {
-      return "slot";
+    if (this.isEmptyCell) {
+      return "cell";
     }
     if (!this.isContainer) {
       // Leaves in a parent grid still need to BE a drop target so
@@ -505,7 +505,7 @@ export default class BlockChrome extends Component {
   /**
    * The layout axis of this block's parent — `"horizontal"` for a
    * `wf:layout` in row mode, `"vertical"` for stack mode (the default),
-   * `null` otherwise (outlet root, grid slot, non-layout container).
+   * `null` otherwise (outlet root, grid cell, non-layout container).
    *
    * Drives the orientation of the `--before` / `--after` sibling drop
    * zones: horizontal axis = vertical strips on the left/right;
@@ -759,17 +759,17 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * `wf:slot` entries are template-defined drop targets. The chrome
-   * wraps them like any other block (selection, drag, resize via the
-   * existing grid handle), but the inner render area becomes a
-   * "Pick a block" placeholder instead of the slot's no-op template,
-   * and drops route through `fillSlot` / `moveBlockIntoSlot` so the
-   * slot is REPLACED by content rather than inserted-as-sibling.
+   * `wf:cell` entries are empty grid cells. The chrome wraps them
+   * like any other block (selection, drag, resize via the existing
+   * grid handle), but the inner render area becomes a "Pick a block"
+   * placeholder instead of the cell's no-op template, and drops route
+   * through `placeBlockInCell` / `moveBlockIntoCell` so the cell is
+   * filled by content rather than inserted-as-sibling.
    *
    * @returns {boolean}
    */
-  get isSlot() {
-    return this.args.blockName === "wf:slot";
+  get isEmptyCell() {
+    return this.args.blockName === "wf:cell";
   }
 
   /**
@@ -915,16 +915,17 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Fills this slot with the block the user picked from the palette
-   * placeholder. Routes through `fillSlot` so the slot entry is
-   * REPLACED by the new block rather than inserted alongside it.
+   * Fills this empty cell with the block the user picked from the
+   * palette placeholder. Routes through `placeBlockInCell` so the cell
+   * entry is REPLACED by the new block rather than inserted alongside
+   * it.
    *
    * @param {{name: string}} blockEntry - Palette entry the user selected.
    */
   @action
-  pickBlockForSlot(blockEntry) {
-    this.wireframe.fillSlot({
-      slotKey: this.args.blockKey,
+  pickBlockForCell(blockEntry) {
+    this.wireframe.placeBlockInCell({
+      cellKey: this.args.blockKey,
       blockName: blockEntry.name,
     });
   }
@@ -950,7 +951,7 @@ export default class BlockChrome extends Component {
    * Selects this block. Wired to the empty-drop placeholder's
    * `@onActivate`: clicking the placeholder stops propagation (so the
    * chrome's own `onClick` selection never runs), so we re-select here
-   * to keep the inspector pointed at the container / slot being filled.
+   * to keep the inspector pointed at the container / cell being filled.
    */
   @action
   selectSelf() {
@@ -1367,7 +1368,7 @@ export default class BlockChrome extends Component {
             (if this.hasUnresolvedImageArg "--unresolved-image")
             (if @isGhost "--ghost")
             (if @isError "--error")
-            (if this.isSlot "--slot")
+            (if this.isEmptyCell "--cell")
           }}
           data-wf-block-name={{@blockName}}
           data-wf-block-key={{@blockKey}}
@@ -1438,16 +1439,16 @@ export default class BlockChrome extends Component {
             </span>
           {{/if}}
 
-          {{#if this.isSlot}}
+          {{#if this.isEmptyCell}}
             <div
               class="wireframe-block-chrome__content"
               style={{this.contentStyle}}
             >
               <EditorEmptyDropPlaceholder
-                @hint={{i18n "wireframe.canvas.empty_slot_hint"}}
+                @hint={{i18n "wireframe.canvas.empty_cell_hint"}}
                 @palette={{this.palette}}
                 @onActivate={{this.selectSelf}}
-                @onPick={{this.pickBlockForSlot}}
+                @onPick={{this.pickBlockForCell}}
               />
             </div>
           {{else if this.isGridCell}}

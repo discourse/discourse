@@ -105,6 +105,150 @@ export function unoccupiedCells(occupied, columns, rows) {
 }
 
 /**
+ * Builds the ordered list of single-cell "spaces" for a free-form grid
+ * — every cell of a `columns × rows` grid in reading order (row-major:
+ * top to bottom, left to right). Each space is a `{column, row}` rect in
+ * CSS Grid line shorthand. Used when reflowing content into a free grid
+ * (one with no preset shape): each content block lands in the next cell.
+ *
+ * @param {number} columns
+ * @param {number} rows
+ * @returns {Array<{column: string, row: string}>}
+ */
+export function spacesForFree(columns, rows) {
+  const spaces = [];
+  for (let row = 1; row <= rows; row++) {
+    for (let column = 1; column <= columns; column++) {
+      spaces.push({ column: `${column}`, row: `${row}` });
+    }
+  }
+  return spaces;
+}
+
+/**
+ * Reassigns a grid layout's content children onto an ordered list of
+ * target `spaces`, in reading order, padding the leftover *multi-cell*
+ * spaces with empty `wf:cell` entries. This is the one primitive behind
+ * switching templates, toggling free mode, and reordering via the
+ * outline: the grid's *shape* changes and existing content is rearranged
+ * to fit it top to bottom, left to right.
+ *
+ * Content is placed in its current reading order (by `row` start, then
+ * `column` start — matching the layout block's own `sortedChildren`), so
+ * the block that reads first stays first. Fill direction is left to CSS:
+ * under `dir="rtl"` the grid flips column 1 to the right automatically,
+ * so ascending line numbers read correctly in both directions — no JS
+ * reversal needed.
+ *
+ * Each placed child keeps its other `containerArgs.grid` props (align /
+ * justify) and only has its `column` / `row` overwritten with the space's
+ * rect, so a child reflowed into a spanning space adopts the span.
+ * Leftover *single-cell* spaces get no entry — the grid overlay surfaces
+ * those geometrically — but leftover *spanning* spaces become `wf:cell`
+ * entries so the span survives save / load.
+ *
+ * Returns `null` — refusing the reflow — when there is more content than
+ * spaces, so callers can disable the action rather than drop blocks.
+ *
+ * @param {Array<Object>} contentChildren - The layout's content entries
+ *   (exclude empty `wf:cell` entries before calling).
+ * @param {Array<{column: string, row: string}>} spaces - Target rects in
+ *   reading order.
+ * @returns {Array<Object>|null} The new `children` array, or `null` when
+ *   the content does not fit.
+ */
+export function reflowChildrenIntoSpaces(contentChildren, spaces) {
+  const content = [...(contentChildren ?? [])].sort(readingOrder);
+  if (content.length > spaces.length) {
+    return null;
+  }
+  const children = [];
+  for (let i = 0; i < spaces.length; i++) {
+    const space = spaces[i];
+    const child = content[i];
+    if (child) {
+      children.push({
+        ...child,
+        containerArgs: {
+          ...child.containerArgs,
+          grid: {
+            ...child.containerArgs?.grid,
+            column: space.column,
+            row: space.row,
+          },
+        },
+      });
+    } else if (isMultiCellSpace(space)) {
+      children.push({
+        block: "wf:cell",
+        containerArgs: {
+          grid: {
+            column: space.column,
+            row: space.row,
+            align: "stretch",
+            justify: "stretch",
+          },
+        },
+      });
+    }
+  }
+  return children;
+}
+
+/**
+ * Re-derives a grid's content placements from document (array) order:
+ * the content children, taken in array order, are reassigned to the
+ * positions they currently occupy sorted in reading order (top to
+ * bottom, left to right). Empty `wf:cell` entries keep their rects.
+ *
+ * This is what makes reordering the children array — e.g. dragging a
+ * row in the outline — actually move blocks in the grid: array order
+ * becomes reading order, so the first child reads top-left. The set of
+ * occupied positions is unchanged (no block moves to a new cell that
+ * wasn't already in use), only which block sits in each; spanning
+ * positions are preserved, so a block reassigned to a spanning slot
+ * adopts the span. A no-op when there are fewer than two content
+ * children (nothing to reorder).
+ *
+ * @param {Array<Object>} children - The grid's children, in array order.
+ * @returns {Array<Object>} New children with content placements resynced.
+ */
+export function syncContentToArrayOrder(children) {
+  const list = children ?? [];
+  const content = list.filter((child) => child.block !== "wf:cell");
+  if (content.length < 2) {
+    return list;
+  }
+  // The positions content currently occupies, in reading order.
+  const rects = content
+    .map((child) => ({
+      column: child.containerArgs?.grid?.column ?? "auto",
+      row: child.containerArgs?.grid?.row ?? "auto",
+    }))
+    .sort(rectReadingOrder);
+  // Walk the array; each content child (in array order) claims the next
+  // reading-order position. `wf:cell` placeholders pass through untouched.
+  let cursor = 0;
+  return list.map((child) => {
+    if (child.block === "wf:cell") {
+      return child;
+    }
+    const rect = rects[cursor++];
+    return {
+      ...child,
+      containerArgs: {
+        ...child.containerArgs,
+        grid: {
+          ...child.containerArgs?.grid,
+          column: rect.column,
+          row: rect.row,
+        },
+      },
+    };
+  });
+}
+
+/**
  * Resolves the cell `{column, row}` under a pointer event, given the
  * grid container's bounding rect. Used by the drag handlers to compute
  * snap targets.
@@ -610,4 +754,51 @@ function cellKey(row, column) {
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
+}
+
+/**
+ * Reading-order comparator for grid children: top row first, then left
+ * column. Mirrors the layout block's `sortedChildren` so the editor and
+ * the rendered DOM agree on order. Auto / unset placements sort as the
+ * first cell.
+ */
+function readingOrder(a, b) {
+  const pa = parsePlacement(a.containerArgs);
+  const pb = parsePlacement(b.containerArgs);
+  const ar = pa.row.start ?? 1;
+  const br = pb.row.start ?? 1;
+  if (ar !== br) {
+    return ar - br;
+  }
+  return (pa.column.start ?? 1) - (pb.column.start ?? 1);
+}
+
+/**
+ * Reading-order comparator for `{column, row}` rect spaces (the same
+ * order as `readingOrder`, but keyed off plain rect objects rather than
+ * entries). Top row first, then left column.
+ */
+function rectReadingOrder(a, b) {
+  const pa = parsePlacement({ grid: a });
+  const pb = parsePlacement({ grid: b });
+  const ar = pa.row.start ?? 1;
+  const br = pb.row.start ?? 1;
+  if (ar !== br) {
+    return ar - br;
+  }
+  return (pa.column.start ?? 1) - (pb.column.start ?? 1);
+}
+
+/**
+ * True when a `{column, row}` space covers more than one cell on either
+ * axis. A bare line ("2") spans one cell; a range ("1 / 4") spans more.
+ */
+function isMultiCellSpace(space) {
+  const placement = parsePlacement({ grid: space });
+  const colSpan =
+    (placement.column.end ?? placement.column.start + 1) -
+    placement.column.start;
+  const rowSpan =
+    (placement.row.end ?? placement.row.start + 1) - placement.row.start;
+  return colSpan > 1 || rowSpan > 1;
 }

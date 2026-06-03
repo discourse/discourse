@@ -25,9 +25,9 @@ const EDGE_BAND = 12;
  *    dispatch payloads so the service knows which container is the
  *    drop target. `null` (or omitted) for the outlet boundary.
  *  - `outletName` — the outlet the container lives in.
- *  - `mode` — `"stack"`, `"row"`, `"slot"`, `"grid"`, `"grid-cell-leaf"`,
+ *  - `mode` — `"stack"`, `"row"`, `"cell"`, `"grid"`, `"grid-cell-leaf"`,
  *    or `null`. Drives axis math and registration:
- *      - `"stack"` / `"row"` / `"slot"`: register as a drop target.
+ *      - `"stack"` / `"row"` / `"cell"`: register as a drop target.
  *      - `"grid"`: GridOverlay owns the grid div directly; no-op here.
  *      - `"grid-cell-leaf"`: drops on a leaf in a grid cell bubble
  *        up via PDND's "closest ancestor target" resolution to the
@@ -68,7 +68,7 @@ export default class ContainerDropTargetModifier extends Modifier {
     }
 
     const { wireframe } = this;
-    const isSlot = mode === "slot";
+    const isCell = mode === "cell";
     const axis = mode === "row" ? "x" : "y";
 
     // Find the container element where block-chrome-wrappers are
@@ -84,7 +84,7 @@ export default class ContainerDropTargetModifier extends Modifier {
     //   div.outletName__container → div.outletName__layout →
     //   wrappers). Can't use a hardcoded selector because the
     //   classnames are outlet-specific.
-    // - For slots: there's no inner container, the chrome IS the
+    // - For empty cells: there's no inner container, the chrome IS the
     //   drop area.
     //
     // Walk strategy: find any descendant chrome with
@@ -94,7 +94,7 @@ export default class ContainerDropTargetModifier extends Modifier {
     // there are no descendant blocks (empty container case).
     let containerElement = null;
     const resolveContainer = () => {
-      if (isSlot) {
+      if (isCell) {
         return chromeElement;
       }
       if (containerElement && chromeElement.contains(containerElement)) {
@@ -128,18 +128,18 @@ export default class ContainerDropTargetModifier extends Modifier {
     // PDND's resolution, which then walks up to the next ancestor
     // target — exactly the "fall through to parent" semantics we
     // want. The outlet boundary (containerKey === null) is the
-    // root, so there's no parent to defer to; slot chromes also
-    // opt out since slots are always single-cell inside a grid and
-    // the grid owns sibling moves at the parent level.
+    // root, so there's no parent to defer to; empty-cell chromes
+    // also opt out since the grid owns sibling moves at the parent
+    // level.
     const shouldDeferToParent = (input) => {
-      // The outlet root (no parent) and slots (the grid owns their sibling
+      // The outlet root (no parent) and cells (the grid owns their sibling
       // moves) never defer — only nested container chromes do. The implicit
       // root layout IS the outlet, so it doesn't defer either: there's no
       // sibling level above it to fall through to, and deferring would leave
       // a dead band along its edges where drops vanish.
       if (
         containerKey == null ||
-        isSlot ||
+        isCell ||
         wireframe.isOutletRoot(containerKey)
       ) {
         return false;
@@ -148,8 +148,8 @@ export default class ContainerDropTargetModifier extends Modifier {
     };
 
     const descriptorFor = (source, input) => {
-      if (isSlot) {
-        return buildSlotChromeDescriptor({
+      if (isCell) {
+        return buildCellChromeDescriptor({
           wireframe,
           chromeElement,
           containerKey,
@@ -209,7 +209,7 @@ export default class ContainerDropTargetModifier extends Modifier {
  *      of child `i` and the first third of child `i + 1` resolve to
  *      the SAME boundary, so a single "between A and B" zone replaces
  *      the old separate "after A" / "before B" pair.
- *   4. A `middle` → REPLACE (slot) / INSIDE (container) / nothing
+ *   4. A `middle` → REPLACE (cell) / INSIDE (container) / nothing
  *      (leaf), by block type.
  *
  * Returns `null` when the source can't legally land (self-drop into
@@ -265,14 +265,14 @@ export function computeDescriptor({
     });
   }
 
-  // Middle third — INSIDE (container) / REPLACE (slot) / nothing (leaf).
+  // Middle third — INSIDE (container) / REPLACE (cell) / nothing (leaf).
   const child = children[result.index];
   const rect = child.wrapper.getBoundingClientRect();
   const targetKey = child.chrome.getAttribute("data-wf-block-key");
   const blockName = child.chrome.getAttribute("data-wf-block-name");
 
-  if (blockName === "wf:slot") {
-    return buildReplaceSlotDescriptor({
+  if (blockName === "wf:cell") {
+    return buildReplaceCellDescriptor({
       wireframe,
       rect,
       targetKey,
@@ -487,16 +487,16 @@ function buildInsideDescriptor({
 }
 
 /**
- * Builds the descriptor for a drop directly onto a `wf:slot`
+ * Builds the descriptor for a drop directly onto a `wf:cell`
  * chrome (the chrome IS the drop area; there's no inner
- * container to project onto). Slots are always a single REPLACE
- * landing, regardless of where the cursor sits within the chrome.
+ * container to project onto). An empty cell is always a single
+ * REPLACE landing, regardless of where the cursor sits within it.
  *
- * Mirrors `buildReplaceSlotDescriptor` (used when a sibling
- * dragover hits a slot child) but reads geometry off the chrome
- * itself, since the modifier is attached to the slot's chrome.
+ * Mirrors `buildReplaceCellDescriptor` (used when a sibling
+ * dragover hits a cell child) but reads geometry off the chrome
+ * itself, since the modifier is attached to the cell's chrome.
  */
-function buildSlotChromeDescriptor({
+function buildCellChromeDescriptor({
   wireframe,
   chromeElement,
   containerKey,
@@ -515,14 +515,14 @@ function buildSlotChromeDescriptor({
     },
     kind: "replace",
     validity: "valid",
-    label: replaceSlotLabel({ wireframe, source }),
-    dispatch: replaceSlotDispatch({ source, targetKey: containerKey }),
+    label: cellDropLabel({ wireframe, source }),
+    dispatch: cellDropDispatch({ source, targetKey: containerKey }),
   };
 }
 
-function buildReplaceSlotDescriptor({ wireframe, rect, targetKey, source }) {
-  // Slot replace — no validation gate beyond "source isn't the
-  // slot itself", since the slot's only purpose is to be filled.
+function buildReplaceCellDescriptor({ wireframe, rect, targetKey, source }) {
+  // Cell replace — no validation gate beyond "source isn't the
+  // cell itself", since an empty cell's only purpose is to be filled.
   if (source.type === "wf-block" && source.data.blockKey === targetKey) {
     return null;
   }
@@ -535,8 +535,8 @@ function buildReplaceSlotDescriptor({ wireframe, rect, targetKey, source }) {
     },
     kind: "replace",
     validity: "valid",
-    label: replaceSlotLabel({ wireframe, source }),
-    dispatch: replaceSlotDispatch({ source, targetKey }),
+    label: cellDropLabel({ wireframe, source }),
+    dispatch: cellDropDispatch({ source, targetKey }),
   };
 }
 
@@ -641,11 +641,11 @@ function insideLabel({ wireframe, source, blockName, targetKey }) {
       });
 }
 
-function replaceSlotLabel({ wireframe, source }) {
+function cellDropLabel({ wireframe, source }) {
   const name = sourceDisplayName(wireframe, source);
   return source.type === "wf-palette-block"
-    ? translate("wireframe.canvas.drop_preview.fill_slot", { name })
-    : translate("wireframe.canvas.drop_preview.move_into_slot", { name });
+    ? translate("wireframe.canvas.drop_preview.add_to_cell", { name })
+    : translate("wireframe.canvas.drop_preview.move_to_cell", { name });
 }
 
 /* Dispatch payload builders — `dispatchActiveDrop` on the service
@@ -703,22 +703,22 @@ function insideDispatch({ source, targetKey }) {
   };
 }
 
-function replaceSlotDispatch({ source, targetKey }) {
+function cellDropDispatch({ source, targetKey }) {
   if (source.type === "wf-palette-block") {
     return {
-      action: "fillSlot",
+      action: "placeBlockInCell",
       args: {
-        slotKey: targetKey,
+        cellKey: targetKey,
         blockName: source.data.blockName,
         defaultArgs: source.data.defaultArgs,
       },
     };
   }
   return {
-    action: "moveBlockIntoSlot",
+    action: "moveBlockIntoCell",
     args: {
       sourceKey: source.data.blockKey,
-      slotKey: targetKey,
+      cellKey: targetKey,
     },
   };
 }

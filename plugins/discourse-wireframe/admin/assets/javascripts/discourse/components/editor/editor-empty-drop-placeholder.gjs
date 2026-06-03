@@ -11,7 +11,7 @@ import EditorBlockPickerMenu from "./editor-block-picker-menu";
 /**
  * Unified empty-state placeholder shown wherever the editor needs an
  * "insert a block here" affordance: an empty outlet, an empty non-grid
- * container, an unfilled `wf:slot`, and each unoccupied cell of a grid
+ * container, an empty `wf:cell`, and each unoccupied cell of a grid
  * `wf:layout`.
  *
  * Visual: a single clickable bar with a `+` icon and a contextual hint.

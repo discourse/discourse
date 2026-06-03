@@ -6,23 +6,26 @@ import {
   computeZone,
   computeZoneCollapsed,
   formatTrack,
+  reflowChildrenIntoSpaces,
+  spacesForFree,
+  syncContentToArrayOrder,
   unoccupiedCells,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 
-// A grid slot fixture. `entryKey` (used internally by computeShiftPlan) keys
-// an entry as `"${block}:${__stableKey}"`, so a slot named "k" resolves to
-// the key "wf:slot:k". `column` / `row` accept CSS Grid shorthand ("2",
+// A grid cell fixture. `entryKey` (used internally by computeShiftPlan) keys
+// an entry as `"${block}:${__stableKey}"`, so a cell named "k" resolves to
+// the key "wf:cell:k". `column` / `row` accept CSS Grid shorthand ("2",
 // "1 / 3", "auto").
 function slot(key, column, row) {
   return {
     __stableKey: key,
-    block: "wf:slot",
+    block: "wf:cell",
     containerArgs: { grid: { column, row } },
   };
 }
 
 function keyOf(k) {
-  return `wf:slot:${k}`;
+  return `wf:cell:${k}`;
 }
 
 // The placement *parsers* (parseTrack / parseSlotPlacement / parsePlacement)
@@ -371,6 +374,197 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
         null,
         "neither dropSlotKey nor dropCell"
       );
+    });
+  });
+
+  module("spacesForFree", function () {
+    test("returns every cell row-major as line shorthand", function (assert) {
+      assert.deepEqual(spacesForFree(3, 2), [
+        { column: "1", row: "1" },
+        { column: "2", row: "1" },
+        { column: "3", row: "1" },
+        { column: "1", row: "2" },
+        { column: "2", row: "2" },
+        { column: "3", row: "2" },
+      ]);
+    });
+  });
+
+  module("reflowChildrenIntoSpaces", function () {
+    test("places content into spaces in reading order", function (assert) {
+      // Two blocks at (col2,row1) and (col1,row1) — reading order puts
+      // the col1 block first, so it lands in the first space.
+      const a = {
+        block: "wf:heading",
+        __stableKey: "a",
+        containerArgs: { grid: { column: "2", row: "1" } },
+      };
+      const b = {
+        block: "wf:paragraph",
+        __stableKey: "b",
+        containerArgs: { grid: { column: "1", row: "1" } },
+      };
+      const result = reflowChildrenIntoSpaces([a, b], spacesForFree(2, 1));
+      assert.strictEqual(result.length, 2);
+      assert.strictEqual(result[0].__stableKey, "b");
+      assert.deepEqual(result[0].containerArgs.grid, { column: "1", row: "1" });
+      assert.strictEqual(result[1].__stableKey, "a");
+      assert.deepEqual(result[1].containerArgs.grid, { column: "2", row: "1" });
+    });
+
+    test("a child reflowed into a spanning space adopts the span", function (assert) {
+      const a = {
+        block: "wf:heading",
+        __stableKey: "a",
+        containerArgs: { grid: { column: "1", row: "1" } },
+      };
+      const spaces = [
+        { column: "1 / 4", row: "1" },
+        { column: "1", row: "2" },
+      ];
+      const result = reflowChildrenIntoSpaces([a], spaces);
+      assert.strictEqual(result[0].containerArgs.grid.column, "1 / 4");
+    });
+
+    test("pads spanning leftover spaces with wf:cell, leaves single cells derived", function (assert) {
+      // hero + 3: one spanning space, three single cells. With zero
+      // content, only the spanning space materialises as an entry.
+      const spaces = [
+        { column: "1 / 4", row: "1" },
+        { column: "1", row: "2" },
+        { column: "2", row: "2" },
+        { column: "3", row: "2" },
+      ];
+      const result = reflowChildrenIntoSpaces([], spaces);
+      assert.strictEqual(result.length, 1);
+      assert.strictEqual(result[0].block, "wf:cell");
+      assert.strictEqual(result[0].containerArgs.grid.column, "1 / 4");
+    });
+
+    test("preserves align / justify on placed children", function (assert) {
+      const a = {
+        block: "wf:heading",
+        __stableKey: "a",
+        containerArgs: {
+          grid: { column: "1", row: "1", align: "center", justify: "end" },
+        },
+      };
+      const result = reflowChildrenIntoSpaces([a], [{ column: "2", row: "1" }]);
+      assert.deepEqual(result[0].containerArgs.grid, {
+        column: "2",
+        row: "1",
+        align: "center",
+        justify: "end",
+      });
+    });
+
+    test("refuses when content outnumbers spaces", function (assert) {
+      const children = [
+        {
+          block: "wf:heading",
+          __stableKey: "a",
+          containerArgs: { grid: { column: "1", row: "1" } },
+        },
+        {
+          block: "wf:paragraph",
+          __stableKey: "b",
+          containerArgs: { grid: { column: "2", row: "1" } },
+        },
+      ];
+      assert.strictEqual(
+        reflowChildrenIntoSpaces(children, [{ column: "1", row: "1" }]),
+        null
+      );
+    });
+  });
+
+  module("syncContentToArrayOrder", function () {
+    test("reassigns content to reading-order positions by array order", function (assert) {
+      // Array order [A, B], but A sits at col2 and B at col1. Syncing
+      // should give the first array child (A) the reading-first position
+      // (col1) and B the next (col2).
+      const children = [
+        {
+          block: "wf:heading",
+          __stableKey: "A",
+          containerArgs: { grid: { column: "2", row: "1" } },
+        },
+        {
+          block: "wf:paragraph",
+          __stableKey: "B",
+          containerArgs: { grid: { column: "1", row: "1" } },
+        },
+      ];
+      const result = syncContentToArrayOrder(children);
+      assert.strictEqual(result[0].__stableKey, "A");
+      assert.strictEqual(result[0].containerArgs.grid.column, "1");
+      assert.strictEqual(result[1].__stableKey, "B");
+      assert.strictEqual(result[1].containerArgs.grid.column, "2");
+    });
+
+    test("leaves wf:cell entries' rects untouched", function (assert) {
+      const children = [
+        {
+          block: "wf:paragraph",
+          __stableKey: "B",
+          containerArgs: { grid: { column: "3", row: "1" } },
+        },
+        {
+          block: "wf:cell",
+          containerArgs: { grid: { column: "2", row: "1" } },
+        },
+        {
+          block: "wf:heading",
+          __stableKey: "A",
+          containerArgs: { grid: { column: "1", row: "1" } },
+        },
+      ];
+      const result = syncContentToArrayOrder(children);
+      // Content positions in use are col1 and col3 (the wf:cell holds col2).
+      // Array order is [B, A], so B takes the reading-first content slot.
+      assert.strictEqual(result[0].__stableKey, "B");
+      assert.strictEqual(result[0].containerArgs.grid.column, "1");
+      assert.strictEqual(result[1].block, "wf:cell");
+      assert.strictEqual(result[1].containerArgs.grid.column, "2");
+      assert.strictEqual(result[2].__stableKey, "A");
+      assert.strictEqual(result[2].containerArgs.grid.column, "3");
+    });
+
+    test("preserves a spanning content position", function (assert) {
+      const children = [
+        {
+          block: "wf:paragraph",
+          __stableKey: "B",
+          containerArgs: { grid: { column: "4", row: "1" } },
+        },
+        {
+          block: "wf:heading",
+          __stableKey: "A",
+          containerArgs: { grid: { column: "1 / 4", row: "1" } },
+        },
+      ];
+      const result = syncContentToArrayOrder(children);
+      // B is first in the array, so it takes the reading-first position —
+      // the spanning "1 / 4" — and adopts the span.
+      assert.strictEqual(result[0].__stableKey, "B");
+      assert.strictEqual(result[0].containerArgs.grid.column, "1 / 4");
+      assert.strictEqual(result[1].__stableKey, "A");
+      assert.strictEqual(result[1].containerArgs.grid.column, "4");
+    });
+
+    test("no-op with fewer than two content children", function (assert) {
+      const children = [
+        {
+          block: "wf:heading",
+          __stableKey: "A",
+          containerArgs: { grid: { column: "2", row: "1" } },
+        },
+        {
+          block: "wf:cell",
+          containerArgs: { grid: { column: "1", row: "1" } },
+        },
+      ];
+      assert.strictEqual(syncContentToArrayOrder(children), children);
     });
   });
 });

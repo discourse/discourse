@@ -156,7 +156,7 @@ function readVeThemeParam(url) {
  * child entries are recursively turned into ghost components (each
  * routed back through the `BLOCK_DEBUG` hook, so each child gets its
  * own chrome + `WFGhostBlock`). This is what lets authors see and
- * edit nested failing entries (e.g. four broken `wf:slot` rows
+ * edit nested failing entries (e.g. four broken `wf:cell` rows
  * inside a failing layout container).
  *
  * Mirrors core's dev-tools `createGhostChildren` (in
@@ -207,7 +207,7 @@ function installGhostChildrenCreator() {
           const blockKey = `${blockName}:${childEntry.__stableKey ?? "no-key"}`;
           // Recurse into the unknown block's children even though the
           // block itself is unresolved. The children are often still
-          // valid (e.g. a `wf:button-link` inside a removed `wf:slot`
+          // valid (e.g. a `wf:button-link` inside a removed `wf:layout`
           // container) — surfacing them keeps the author's work
           // editable, so they can drag the salvageable pieces out
           // before deleting the broken parent.
@@ -405,7 +405,7 @@ function installBlockChrome(editor) {
             // below) they arrive as an array of `{Component, key}` ghost
             // descriptors. Forward them so `WFGhostBlock` can render
             // them inside its own silhouette — that's how nested
-            // failing entries (e.g. unknown `wf:slot` rows inside a
+            // failing entries (e.g. unknown `wf:cell` rows inside a
             // failing layout) surface as separately editable rows.
             ghostChildren: blockData.children ?? null,
           },

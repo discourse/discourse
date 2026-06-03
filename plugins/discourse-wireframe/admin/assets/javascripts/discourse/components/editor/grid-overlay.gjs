@@ -509,11 +509,13 @@ export default class GridOverlay extends Component {
       });
     }
     if (kind === "replace") {
+      // Dropping onto an empty `wf:cell` entry reads the same as
+      // dropping into any other empty cell — one affordance.
       return source.type === "wf-palette-block"
-        ? i18n("wireframe.canvas.drop_preview.fill_slot", {
+        ? i18n("wireframe.canvas.drop_preview.add_to_cell", {
             name: sourceName,
           })
-        : i18n("wireframe.canvas.drop_preview.move_into_slot", {
+        : i18n("wireframe.canvas.drop_preview.move_to_cell", {
             name: sourceName,
           });
     }

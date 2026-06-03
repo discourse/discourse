@@ -1,4 +1,9 @@
 // @ts-check
+import { parsePlacement } from "discourse/blocks";
+import {
+  computeOccupation,
+  unoccupiedCells,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 
 /**
  * Preset grid layouts surfaced by the inspector's layout form.
@@ -14,13 +19,14 @@
  *
  * `parseGridAreas` turns the string into `{columns, rows, slots}`
  * where each slot is a `{column, row}` rect in CSS Grid line syntax.
- * `resolveTemplateLayout` merges the parsed frame with the
- * template's static `args` and returns the slot entries the service
- * will write into the `wf:layout`'s `children` on apply.
+ * `resolveTemplateLayout` merges the parsed frame with the template's
+ * static `args` and returns those rects; the service reflows the
+ * layout's existing content into them in reading order on apply, and
+ * any still-empty spanning rects become `wf:cell` entries.
  *
  * Frame-only templates (no `areas` — e.g. "12-column") set the grid
- * dimensions only; they don't auto-place slots, and the inspector's
- * apply path leaves existing children alone for them.
+ * dimensions only; the service treats every cell of the grid as a
+ * space and reflows content into them.
  *
  * `args` carries the non-positional config (mode, gap, alignment).
  * Columns / rows for templates with areas come from the parsed
@@ -202,9 +208,10 @@ export function parseGridAreas(areasString) {
 
 /**
  * Resolves a template's full layout payload — the frame args (mode,
- * columns, rows, gap, align, ...) plus the slot entries to write
- * into the parent layout's `children`. Frame-only templates return
- * `slotEntries: []` so the service knows to leave children alone.
+ * columns, rows, gap, align, ...) plus the rect entries the service
+ * reflows content into on apply. Frame-only templates return
+ * `slotEntries: []`; the service then treats every cell of the
+ * `columns × rows` grid as a space instead.
  *
  * @param {Object} template
  * @returns {{args: Object, slotEntries: Array<Object>}}
@@ -223,7 +230,7 @@ export function resolveTemplateLayout(template) {
     rowTemplate: baseArgs.rowTemplate ?? "",
   };
   const slotEntries = parsed.slots.map((slot) => ({
-    block: "wf:slot",
+    block: "wf:cell",
     containerArgs: {
       grid: {
         column: slot.column,
@@ -234,4 +241,83 @@ export function resolveTemplateLayout(template) {
     },
   }));
   return { args, slotEntries };
+}
+
+/**
+ * Canonical key for a `{column, row}` rect — `colStart/colEnd/rowStart/rowEnd`
+ * with end lines resolved, so `"1"` and `"1 / 2"` (both single cells) and
+ * equivalent spans compare equal regardless of how they were written.
+ *
+ * @param {{column?: string, row?: string}} rect
+ * @returns {string}
+ */
+function rectKey(rect) {
+  const placement = parsePlacement({ grid: rect ?? {} });
+  const cs = placement.column.start ?? 1;
+  const ce = placement.column.end ?? cs + 1;
+  const rs = placement.row.start ?? 1;
+  const re = placement.row.end ?? rs + 1;
+  return `${cs}/${ce}/${rs}/${re}`;
+}
+
+/**
+ * The set of rect keys a grid currently occupies: every child's rect
+ * (content and empty `wf:cell` alike) plus the single cells no child
+ * covers (the overlay's derived empties). Together these describe the
+ * grid's shape regardless of how its cells are filled.
+ *
+ * @param {Array<Object>} children
+ * @param {number} columns
+ * @param {number} rows
+ * @returns {Set<string>}
+ */
+function gridRectKeys(children, columns, rows) {
+  const keys = new Set();
+  for (const child of children ?? []) {
+    keys.add(rectKey(child.containerArgs?.grid));
+  }
+  const occupied = computeOccupation(children ?? [], columns, rows);
+  for (const cell of unoccupiedCells(occupied, columns, rows)) {
+    keys.add(rectKey({ column: `${cell.column}`, row: `${cell.row}` }));
+  }
+  return keys;
+}
+
+/**
+ * Finds the preset template whose shape matches a grid's current shape,
+ * or `null` when none does (which the inspector reads as "Free"). The
+ * match is on geometry — same dimensions and same set of rects — not on
+ * how the cells are filled, so a half-built "Hero + 3" still matches.
+ *
+ * Frame-only / uniform presets are skipped: a plain `columns × rows`
+ * grid of single cells IS free mode, so only presets with a distinctive
+ * spanning shape claim a grid. This is why a uniform 3×1 grid reads as
+ * "Free" rather than "3 tiles" — they are geometrically identical.
+ *
+ * @param {Array<Object>} children - The grid layout's children.
+ * @param {number} columns
+ * @param {number} rows
+ * @returns {Object|null} The matching template, or `null` for Free.
+ */
+export function matchGridTemplate(children, columns, rows) {
+  const current = gridRectKeys(children, columns, rows);
+  for (const template of GRID_TEMPLATES) {
+    const { args, slotEntries } = resolveTemplateLayout(template);
+    if (slotEntries.length === 0) {
+      continue;
+    }
+    if ((args.columns ?? 0) !== columns || (args.rows ?? 0) !== rows) {
+      continue;
+    }
+    const templateKeys = new Set(
+      slotEntries.map((entry) => rectKey(entry.containerArgs.grid))
+    );
+    if (
+      templateKeys.size === current.size &&
+      [...templateKeys].every((key) => current.has(key))
+    ) {
+      return template;
+    }
+  }
+  return null;
 }

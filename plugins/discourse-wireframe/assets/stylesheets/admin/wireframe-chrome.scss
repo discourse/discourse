@@ -97,26 +97,24 @@ body.wireframe-active {
 
     /* Hover — dotted lighter-orange outline + subtle tint. Scoped to the
        innermost hovered chrome: `:has()` suppresses every ancestor that
-       contains a hovered chrome or slot wrapper, so only one block reads
-       as "under the cursor" at a time even in deeply nested layouts. The
-       leading `:not()` skips chromes that already have a state-specific
-       visual treatment (selection, ghost preview, unfilled slot, error,
-       overlap) — those rules paint their own outline that hover shouldn't
-       repaint. `.--selected` is in there so the selected style wins when
-       you hover the currently-selected block. `.--outlet-root` is in there
-       so the outlet keeps its amber frame on hover instead of flashing the
+       contains a hovered chrome, so only one block reads as "under the
+       cursor" at a time even in deeply nested layouts. The leading
+       `:not()` skips chromes that already have a state-specific visual
+       treatment (selection, ghost preview, empty cell, error, overlap) —
+       those rules paint their own outline that hover shouldn't repaint.
+       `.--selected` is in there so the selected style wins when you hover
+       the currently-selected block. `.--outlet-root` is in there so the
+       outlet keeps its amber frame on hover instead of flashing the
        generic block orange. */
 
     &:not(
         .--selected,
         .--ghost,
-        .--slot,
+        .--cell,
         .--error,
         .--overlapping,
         .--outlet-root
-      ):hover:not(
-        :has(.wireframe-block-chrome:hover, .wireframe-transparent-slot:hover)
-      ) {
+      ):hover:not(:has(.wireframe-block-chrome:hover)) {
       outline: var(--wireframe-container-border-width) dotted
         var(--wireframe-block-color);
       background: rgb(217 119 6 / var(--wireframe-bg-opacity));
@@ -763,9 +761,7 @@ body.wireframe-active {
      outline / tint gating so a hovered nested block doesn't also
      reveal every ancestor's bar) or when the block is selected. */
 
-  .wireframe-block-chrome:hover:not(
-      :has(.wireframe-block-chrome:hover, .wireframe-transparent-slot:hover)
-    )
+  .wireframe-block-chrome:hover:not(:has(.wireframe-block-chrome:hover))
     > .wireframe-block-toolbar,
   .wireframe-block-chrome.--selected > .wireframe-block-toolbar {
     opacity: 1;
@@ -812,9 +808,7 @@ body.wireframe-active {
        the innermost (the `:has()` guard) so hovering a child block reacts on
        the child, not the outlet frame — matching the base hover convention. */
 
-    &:hover:not(
-        :has(.wireframe-block-chrome:hover, .wireframe-transparent-slot:hover)
-      ),
+    &:hover:not(:has(.wireframe-block-chrome:hover)),
     &.--selected {
       outline-style: solid;
     }
@@ -2797,45 +2791,67 @@ body.wireframe-active
     }
   }
 
-  &__stepper {
+  /* Source picker: two side-by-side options — a "Free" toggle and the
+     template dropdown. The active one (free vs. a matched preset) reads
+     like the segmented control's `--active` segment. */
+
+  &__source {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1px;
+    background: var(--primary-very-low);
+    border-radius: 4px;
+    padding: 2px;
+  }
+
+  &__source-option {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    background: transparent;
+    border: none;
+    padding: 0.45rem 0.6rem;
+    font-size: var(--font-down-2);
+    font-weight: 500;
+    color: var(--primary-medium);
+    border-radius: 3px;
+    cursor: pointer;
+
+    .d-icon {
+      font-size: 0.85rem;
+    }
+
+    &:hover:not(.--active) {
+      color: var(--primary);
+    }
+
+    &.--active {
+      background: var(--secondary);
+      color: var(--primary);
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+    }
+  }
+
+  /* The template option carries the active preset's name and a trailing
+     chevron, so it reads as a dropdown trigger rather than a plain
+     toggle. */
+
+  &__template-dropdown {
+    justify-content: space-between;
+    flex-direction: row-reverse;
+  }
+
+  /* Editable column / row count fields shown in free mode. */
+  &__number {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-  }
 
-  &__stepper-controls {
-    display: inline-flex;
-    align-items: center;
-    background: var(--secondary);
-    border: 1px solid var(--primary-low);
-    border-radius: 4px;
-    overflow: hidden;
-    min-height: 30px;
-  }
-
-  &__stepper-btn {
-    background: transparent;
-    border: none;
-    padding: 0.25rem 0.5rem;
-    color: var(--primary);
-    cursor: pointer;
-
-    &:hover:not([disabled]) {
-      background: var(--primary-low);
+    input[type="number"] {
+      margin: 0;
+      width: 100%;
     }
-
-    &[disabled] {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-  }
-
-  &__stepper-value {
-    flex: 1 1 auto;
-    text-align: center;
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-    padding: 0 0.25rem;
   }
 
   &__slider-row {
@@ -2887,41 +2903,7 @@ body.wireframe-active
     }
   }
 
-  /* Template presets. Small chips with a miniature SVG preview of each
-     layout's grid + tile arrangement. Clicking a chip applies the
-     template via the service's `applyGridTemplate`. */
-
-  &__templates {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.35rem;
-  }
-
-  &__template-chip {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.4rem 0.45rem;
-    background: var(--secondary);
-    border: 1px solid var(--primary-low);
-    border-radius: 4px;
-    cursor: pointer;
-    color: var(--primary);
-    font-size: var(--font-down-2);
-    text-align: center;
-
-    &:hover {
-      background: var(--primary-very-low);
-      border-color: var(--primary-low-mid);
-    }
-  }
-
-  &__template-preview {
-    width: 100%;
-    height: 36px;
-  }
-
+  /* Miniature grid preview used inside the template dropdown rows. */
   &__preview {
     width: 100%;
     height: 100%;
@@ -2935,6 +2917,63 @@ body.wireframe-active
     border-radius: 1px;
     min-width: 4px;
     min-height: 4px;
+  }
+}
+
+/* Preset picker opened from the layout form's template dropdown. One
+   row per template: a miniature preview, the name, and a check on the
+   active one. Disabled rows (presets that can't hold the current
+   content) dim out. */
+
+.wireframe-template-menu {
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+  padding: 0.25rem;
+
+  &__item {
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.35rem 0.5rem;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    text-align: left;
+    color: var(--primary);
+    font-size: var(--font-down-1);
+    cursor: pointer;
+
+    &:hover:not([disabled]) {
+      background: var(--primary-very-low);
+    }
+
+    &.--active {
+      background: var(--tertiary-low);
+    }
+
+    &.--disabled,
+    &[disabled] {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  &__preview {
+    width: 40px;
+    height: 28px;
+  }
+
+  &__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__check {
+    color: var(--tertiary);
   }
 }
 
@@ -3938,14 +3977,14 @@ body.wireframe-active {
     background: rgb(220 53 69 / 0.06);
   }
 
-  /* Slot chrome — a `wf:slot` entry is a template-defined drop target.
-     Always visible (unlike normal blocks, an empty slot is meaningless
+  /* Empty-cell chrome — a `wf:cell` entry is an empty grid cell.
+     Always visible (unlike normal blocks, an empty cell is meaningless
      without an affordance pointing it out). Dashed amber outline + tinted
      background mirror the grid overlay's auto-empty cells so the two read
      as the same affordance. The chrome's inner `__content` carries the
      `EditorEmptyDropPlaceholder`, so this is just the frame around it. */
 
-  .wireframe-block-chrome.--slot {
+  .wireframe-block-chrome.--cell {
     outline: var(--wireframe-container-border-width) dashed
       var(--wireframe-block-outlet-color);
     background: rgb(245 158 11 / 0.06);
@@ -3956,12 +3995,12 @@ body.wireframe-active {
     }
   }
 
-  /* Slot's content area centers the placeholder. Override the
+  /* The cell's content area centers the placeholder. Override the
      grid-cell `place-items` (set by the chrome's `contentStyle`
      getter for align/justify) so the + button sits in the middle of
-     the slot rect regardless of the slot's stored alignment. */
+     the cell rect regardless of the cell's stored alignment. */
 
-  .wireframe-block-chrome.--slot > .wireframe-block-chrome__content {
+  .wireframe-block-chrome.--cell > .wireframe-block-chrome__content {
     place-items: center;
     min-height: 60px;
   }
@@ -4213,6 +4252,14 @@ body.wireframe-active .fk-d-menu[data-identifier="d-icon-grid-picker"] {
   --icon-grid-cell: 36px;
   --icon-grid-gap: 2px;
   --icon-grid-h-padding: 0.5rem;
+}
+
+/* The inspector's layout-template picker is a `<DMenu>`; like every
+   FloatKit menu in the editor it must clear the wireframe chrome's
+   stacking (1000 / 1100), or it renders behind the inspector panel. */
+
+body.wireframe-active .fk-d-menu[data-identifier="wireframe-grid-templates"] {
+  z-index: 1500;
 }
 
 /* Inline URL edit — the rendered link element (an `<a>` inside DButton

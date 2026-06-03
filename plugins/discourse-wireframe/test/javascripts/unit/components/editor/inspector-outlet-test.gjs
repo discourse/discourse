@@ -53,6 +53,12 @@ class StubWireframeService extends Service {
     return false;
   }
 
+  activeGridTemplate() {
+    return null;
+  }
+
+  applyFreeGrid() {}
+
   outOfBoundsSlotsIn() {
     return [];
   }

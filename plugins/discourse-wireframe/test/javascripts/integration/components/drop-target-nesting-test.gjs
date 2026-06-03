@@ -283,10 +283,10 @@ module(
     });
 
     /*
-     * row → slot : a wf:slot child. Its middle third is a REPLACE landing,
-     * never a seam.
+     * row → cell : an empty wf:cell child. Its middle third is a REPLACE
+     * landing, never a seam.
      */
-    test("a wf:slot child's middle third resolves to 'replace'", async function (assert) {
+    test("a wf:cell child's middle third resolves to 'replace'", async function (assert) {
       await render(
         <template>
           <div
@@ -296,8 +296,8 @@ module(
             <div class="wireframe-block-chrome-wrapper" style="height: 90px;">
               <div
                 class="wireframe-block-chrome"
-                data-wf-block-key="SLOT"
-                data-wf-block-name="wf:slot"
+                data-wf-block-key="CELL"
+                data-wf-block-name="wf:cell"
               ></div>
             </div>
           </div>
@@ -317,8 +317,8 @@ module(
         source: PALETTE,
       });
       assert.strictEqual(descriptor.kind, "replace");
-      assert.strictEqual(descriptor.dispatch.action, "fillSlot");
-      assert.strictEqual(descriptor.dispatch.args.slotKey, "SLOT");
+      assert.strictEqual(descriptor.dispatch.action, "placeBlockInCell");
+      assert.strictEqual(descriptor.dispatch.args.cellKey, "CELL");
     });
 
     test("a leaf child's middle third has no landing (overlay hidden)", async function (assert) {

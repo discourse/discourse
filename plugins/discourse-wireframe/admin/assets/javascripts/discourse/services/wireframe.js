@@ -33,9 +33,15 @@ import { prefersReducedMotion } from "discourse/lib/utilities";
 import {
   computeShiftPlan,
   placementsOverlap,
+  reflowChildrenIntoSpaces,
+  spacesForFree,
+  syncContentToArrayOrder,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-renderer";
-import { resolveTemplateLayout } from "../lib/grid-templates";
+import {
+  matchGridTemplate,
+  resolveTemplateLayout,
+} from "../lib/grid-templates";
 import IconEditState from "../lib/icon-edit-state";
 import InlineEditState from "../lib/inline-edit-state";
 import LinkEditState from "../lib/link-edit-state";
@@ -195,8 +201,8 @@ export default class WireframeService extends Service {
    *   // Caller-private dispatch payload — read at drop time so the
    *   // drop handler can act on the same descriptor the user saw.
    *   dispatch: {
-   *     action: "insertBlock" | "moveBlock" | "fillSlot" |
-   *             "moveBlockIntoSlot" | "insertBlockAtCell" |
+   *     action: "insertBlock" | "moveBlock" | "placeBlockInCell" |
+   *             "moveBlockIntoCell" | "insertBlockAtCell" |
    *             "moveBlockToCell" | "swapSlotPlacements" | ...,
    *     args: Object,
    *   },
@@ -1137,16 +1143,16 @@ export default class WireframeService extends Service {
       if (!layout) {
         return false;
       }
-      // Multi-cell placements get preserved as `wf:slot` drop targets
+      // Multi-cell placements get preserved as empty `wf:cell` entries
       // on delete — that keeps the author's layout shape (a hero
       // spanning 3 columns, a sidebar rail, etc.) intact even when
       // the content inside it is removed. Single-cell deletes fall
       // through to a normal removal; the grid overlay's auto-empty
       // cell rendering already surfaces those positions as drop
       // targets.
-      const result = this.#shouldRestoreAsSlot(layout, located.entry, blockKey)
+      const result = this.#shouldRestoreAsCell(layout, located.entry, blockKey)
         ? replaceEntryInPlace(layout, blockKey, {
-            block: "wf:slot",
+            block: "wf:cell",
             containerArgs: located.entry.containerArgs,
           })
         : removeEntry(layout, blockKey);
@@ -3174,25 +3180,16 @@ export default class WireframeService extends Service {
 
   /**
    * Applies a preset grid template to an existing `wf:layout` block.
-   * The template's `areas` string is parsed into `{columns, rows,
-   * slots}`; each slot becomes a `wf:slot` entry positioned at its
-   * rect.
-   *
-   * Apply algorithm:
-   *
-   *  - **Frame-only template** (no `areas`, e.g. "12-column"): write
-   *    the frame args, leave existing children alone. The author may
-   *    end up with out-of-bounds placements; that's handled by the
-   *    existing `--out-of-bounds` warning + "Snap blocks into bounds"
-   *    fix.
-   *  - **Template with `s` slots, existing child count `n`**:
-   *    - `n === 0`: insert the slot entries as children, apply silently.
-   *    - `0 < n ≤ s`: preserve existing children, fit them into the
-   *      first `n` slots in document order — each child's
-   *      `containerArgs.grid` is overwritten with the slot's rect.
-   *      Append `wf:slot` entries for the remaining `(s - n)` slots.
-   *    - `n > s`: refuse. Returns `false` so the inspector can disable
-   *      the chip with a "more blocks than cells" tooltip.
+   * The template resolves to an ordered list of `spaces` (its declared
+   * rects, or — for a frame-only preset like "12-column" — every cell
+   * of its `columns × rows` grid). Existing content is reflowed into
+   * those spaces in reading order; a block dropped into a spanning
+   * space adopts the span. Leftover spanning spaces become empty
+   * `wf:cell` entries; leftover single cells are surfaced by the grid
+   * overlay. The only refusal is "more content than the template has
+   * room for", so switching between templates stays free as long as
+   * the content fits — no template disables another just by being
+   * applied.
    *
    * Wrapped in a single structural-undo entry so the whole switch
    * can be reverted with one Cmd+Z.
@@ -3210,12 +3207,10 @@ export default class WireframeService extends Service {
       return false;
     }
     const { args: templateArgs, slotEntries } = resolveTemplateLayout(template);
-    const existingChildren = located.entry.children ?? [];
-    // n > s: refuse before mutating anything.
-    if (
-      slotEntries.length > 0 &&
-      existingChildren.length > slotEntries.length
-    ) {
+    const spaces = this.#spacesFor(templateArgs, slotEntries);
+    const content = this.#contentChildren(located.entry);
+    // More content than the template can hold: refuse before mutating.
+    if (content.length > spaces.length) {
       return false;
     }
     return this.recordStructural([located.outletName], () => {
@@ -3223,33 +3218,10 @@ export default class WireframeService extends Service {
       if (!layout) {
         return false;
       }
-      let nextChildren;
-      if (slotEntries.length === 0) {
-        // Frame-only — leave children alone.
-        nextChildren = located.entry.children;
-      } else {
-        // Pair each existing child with a slot (document order), then
-        // pad with empty `wf:slot` entries for the leftover slots.
-        // Each paired child gets the slot's rect on its
-        // `containerArgs.grid`, overwriting whatever was there.
-        nextChildren = slotEntries.map((slotEntry, i) => {
-          const existing = existingChildren[i];
-          if (existing) {
-            return {
-              ...existing,
-              containerArgs: {
-                ...existing.containerArgs,
-                grid: { ...slotEntry.containerArgs.grid },
-              },
-            };
-          }
-          return slotEntry;
-        });
-      }
       const result = replaceEntryInPlace(layout, gridKey, {
         ...located.entry,
         args: { ...located.entry.args, ...templateArgs },
-        children: nextChildren,
+        children: this.#reflowIntoSpaces(content, spaces),
       });
       if (!result.changed) {
         return false;
@@ -3260,12 +3232,12 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Returns `true` when `applyGridTemplate` would succeed for the
-   * given template against the currently-selected `wf:layout`.
-   * Pure-read; the inspector calls this to enable / disable each
-   * template chip (a chip is disabled when the template can't fit
-   * the current content). Mirrors the refusal predicate inside
-   * `applyGridTemplate` itself.
+   * Returns `true` when `applyGridTemplate` would succeed for the given
+   * template against the currently-selected `wf:layout` — i.e. the
+   * layout's content fits the template's number of spaces. Pure-read;
+   * the inspector calls this to disable a template option that can't
+   * hold the current content. Mirrors the refusal predicate inside
+   * `applyGridTemplate`.
    *
    * @param {{gridKey: string, template: Object}} args
    * @returns {boolean}
@@ -3278,43 +3250,160 @@ export default class WireframeService extends Service {
     if (!located) {
       return false;
     }
-    const { slotEntries } = resolveTemplateLayout(template);
-    if (slotEntries.length === 0) {
-      // Frame-only templates always apply.
-      return true;
-    }
-    const existing = located.entry.children?.length ?? 0;
-    return existing <= slotEntries.length;
+    const { args: templateArgs, slotEntries } = resolveTemplateLayout(template);
+    const spaces = this.#spacesFor(templateArgs, slotEntries);
+    return this.#contentChildren(located.entry).length <= spaces.length;
   }
 
   /**
-   * Moves a canvas block onto a `wf:slot`, removing the source and
-   * replacing the slot with the moved block's data — the moved
-   * block adopts the slot's `containerArgs.grid` so it lands at the
-   * slot's rect. Same-outlet only for now; cross-outlet move-into-slot
-   * is a future iteration.
+   * The preset template whose shape matches the given grid's current
+   * shape, or `null` when it matches none (which the inspector reads as
+   * "Free"). Pure-read; drives the inspector's Free / Template control
+   * and the active-preset highlight. Derived from geometry rather than a
+   * stored id, so it never goes stale against hand edits.
    *
-   * @param {{sourceKey: string, slotKey: string}} args
+   * @param {string} gridKey
+   * @returns {Object|null}
+   */
+  activeGridTemplate(gridKey) {
+    const located = this.findEntryAndOutletSync(gridKey);
+    if (!located) {
+      return null;
+    }
+    const columns = Number(located.entry.args?.columns) || 1;
+    const rows = Number(located.entry.args?.rows) || 1;
+    return matchGridTemplate(located.entry.children ?? [], columns, rows);
+  }
+
+  /**
+   * Switches a `wf:layout` into free mode at the given dimensions: the
+   * grid becomes `columns × rows` single cells and existing content is
+   * reflowed into them in reading order. This is the "Free" counterpart
+   * to `applyGridTemplate` — picking Free, or changing the column / row
+   * count while in Free, both route here so blocks rearrange to fit
+   * rather than spilling out of bounds. Refuses when there's more
+   * content than `columns × rows` cells.
+   *
+   * @param {{gridKey: string, columns: number, rows: number}} args
    * @returns {boolean}
    */
   @action
-  moveBlockIntoSlot({ sourceKey, slotKey }) {
-    if (sourceKey === slotKey) {
+  applyFreeGrid({ gridKey, columns, rows }) {
+    const located = this.findEntryAndOutletSync(gridKey);
+    if (!located) {
+      return false;
+    }
+    const spaces = spacesForFree(columns, rows);
+    const content = this.#contentChildren(located.entry);
+    if (content.length > spaces.length) {
+      return false;
+    }
+    return this.recordStructural([located.outletName], () => {
+      const layout = this.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const result = replaceEntryInPlace(layout, gridKey, {
+        ...located.entry,
+        args: { ...located.entry.args, mode: "grid", columns, rows },
+        children: this.#reflowIntoSpaces(content, spaces),
+      });
+      if (!result.changed) {
+        return false;
+      }
+      this.publishStructuralChange(located.outletName, result.layout);
+      return true;
+    });
+  }
+
+  /**
+   * The layout entry's content children — everything except the empty
+   * `wf:cell` placeholders, which are regenerated by the reflow rather
+   * than carried across.
+   *
+   * @param {Object} entry
+   * @returns {Array<Object>}
+   */
+  #contentChildren(entry) {
+    return (entry.children ?? []).filter((child) => child.block !== "wf:cell");
+  }
+
+  /**
+   * The ordered list of target rects for a template's resolved args.
+   * A template with declared areas hands back its slot rects; a
+   * frame-only preset (no areas) fills every cell of its grid.
+   *
+   * @param {Object} templateArgs
+   * @param {Array<Object>} slotEntries
+   * @returns {Array<{column: string, row: string}>}
+   */
+  #spacesFor(templateArgs, slotEntries) {
+    if (slotEntries.length > 0) {
+      return slotEntries.map((entry) => ({
+        column: entry.containerArgs.grid.column,
+        row: entry.containerArgs.grid.row,
+      }));
+    }
+    return spacesForFree(templateArgs.columns ?? 6, templateArgs.rows ?? 1);
+  }
+
+  /**
+   * Reflows `content` into `spaces`, with a container-validity guard:
+   * a grid must have at least one child, but the reflow leaves single-
+   * cell empties derived (no entry). When the result would be empty
+   * (no content and only single cells), materialise every space as an
+   * empty `wf:cell` so the grid keeps a body and shows its shape.
+   *
+   * @param {Array<Object>} content
+   * @param {Array<{column: string, row: string}>} spaces
+   * @returns {Array<Object>}
+   */
+  #reflowIntoSpaces(content, spaces) {
+    const reflowed = reflowChildrenIntoSpaces(content, spaces);
+    if (reflowed && reflowed.length > 0) {
+      return reflowed;
+    }
+    return spaces.map((space) => ({
+      block: "wf:cell",
+      containerArgs: {
+        grid: {
+          column: space.column,
+          row: space.row,
+          align: "stretch",
+          justify: "stretch",
+        },
+      },
+    }));
+  }
+
+  /**
+   * Moves a canvas block onto an empty `wf:cell`, removing the source
+   * and replacing the cell with the moved block's data — the moved
+   * block adopts the cell's `containerArgs.grid` so it lands at the
+   * cell's rect. Same-outlet only for now; cross-outlet move-into-cell
+   * is a future iteration.
+   *
+   * @param {{sourceKey: string, cellKey: string}} args
+   * @returns {boolean}
+   */
+  @action
+  moveBlockIntoCell({ sourceKey, cellKey }) {
+    if (sourceKey === cellKey) {
       return false;
     }
     const sourceLocated = this.findEntryAndOutletSync(sourceKey);
-    const slotLocated = this.findEntryAndOutletSync(slotKey);
-    if (!sourceLocated || !slotLocated) {
+    const cellLocated = this.findEntryAndOutletSync(cellKey);
+    if (!sourceLocated || !cellLocated) {
       return false;
     }
-    if (sourceLocated.outletName !== slotLocated.outletName) {
+    if (sourceLocated.outletName !== cellLocated.outletName) {
       return false;
     }
-    if (slotLocated.entry.block !== "wf:slot") {
+    if (cellLocated.entry.block !== "wf:cell") {
       return false;
     }
-    return this.recordStructural([slotLocated.outletName], () => {
-      const layout = this.readResolvedLayout(slotLocated.outletName);
+    return this.recordStructural([cellLocated.outletName], () => {
+      const layout = this.readResolvedLayout(cellLocated.outletName);
       if (!layout) {
         return false;
       }
@@ -3322,42 +3411,42 @@ export default class WireframeService extends Service {
       if (!removal.changed || !removal.removed) {
         return false;
       }
-      // Drop the source's `__stableKey` — the slot's stableKey wins
+      // Drop the source's `__stableKey` — the cell's stableKey wins
       // (`replaceEntryInPlace` preserves the matched entry's stableKey
       // on the swap), which is the right identity for re-render
-      // continuity at the slot's position.
+      // continuity at the cell's position.
       const { __stableKey, ...sourceData } = removal.removed;
       void __stableKey;
       const movedEntry = {
         ...sourceData,
-        containerArgs: slotLocated.entry.containerArgs,
+        containerArgs: cellLocated.entry.containerArgs,
       };
       const replacement = replaceEntryInPlace(
         removal.layout,
-        slotKey,
+        cellKey,
         movedEntry
       );
       if (!replacement.changed) {
         return false;
       }
-      this.publishStructuralChange(slotLocated.outletName, replacement.layout);
+      this.publishStructuralChange(cellLocated.outletName, replacement.layout);
       return true;
     });
   }
 
   /**
-   * Replaces a `wf:slot` entry with a real block. The new entry
-   * inherits the slot's `containerArgs.grid` so it lands at the
-   * same rect; CSS Grid then places the rendered block exactly
-   * where the slot was.
+   * Replaces an empty `wf:cell` entry with a real block. The new entry
+   * inherits the cell's `containerArgs.grid` so it lands at the same
+   * rect; CSS Grid then places the rendered block exactly where the
+   * cell was.
    *
-   * @param {{slotKey: string, blockName: string, defaultArgs?: Object}} args
+   * @param {{cellKey: string, blockName: string, defaultArgs?: Object}} args
    * @returns {boolean}
    */
   @action
-  fillSlot({ slotKey, blockName, defaultArgs = {} }) {
-    const located = this.findEntryAndOutletSync(slotKey);
-    if (!located || located.entry.block !== "wf:slot") {
+  placeBlockInCell({ cellKey, blockName, defaultArgs = {} }) {
+    const located = this.findEntryAndOutletSync(cellKey);
+    if (!located || located.entry.block !== "wf:cell") {
       return false;
     }
     if (
@@ -3378,7 +3467,7 @@ export default class WireframeService extends Service {
         args: { ...defaultArgs },
         containerArgs: located.entry.containerArgs,
       };
-      const result = replaceEntryInPlace(layout, slotKey, newEntry);
+      const result = replaceEntryInPlace(layout, cellKey, newEntry);
       if (!result.changed) {
         return false;
       }
@@ -3848,20 +3937,20 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Returns true when removing `entry` from `layout` should leave a
-   * `wf:slot` placeholder at the same position instead of clearing
+   * Returns true when removing `entry` from `layout` should leave an
+   * empty `wf:cell` entry at the same position instead of clearing
    * the cell entirely. All four conditions must hold:
    *
-   *   1. The entry isn't already a `wf:slot` — deleting a slot is the
-   *      author saying "I don't want this drop target", not "regenerate
-   *      one".
+   *   1. The entry isn't already a `wf:cell` — deleting an empty cell
+   *      is the author saying "I don't want this region", not
+   *      "regenerate one".
    *   2. The placement spans more than one cell (column span > 1 OR
    *      row span > 1). Single-cell positions are already discoverable
    *      via the grid overlay's auto-empty cell rendering; we only
-   *      need an explicit slot when the rect is too large for the
-   *      auto-detection to reconstruct.
+   *      need an explicit cell entry when the rect is too large for
+   *      the auto-detection to reconstruct.
    *   3. The placement fits within the parent grid's `columns` /
-   *      `rows`. Restoring a slot that overflows the grid would just
+   *      `rows`. Restoring a cell that overflows the grid would just
    *      produce another `--out-of-bounds` warning.
    *   4. The placement doesn't overlap any sibling's placement.
    *      Stacking two cells at the same rect is already a
@@ -3872,8 +3961,8 @@ export default class WireframeService extends Service {
    * @param {string} entryKeyValue - The entry's composite key.
    * @returns {boolean}
    */
-  #shouldRestoreAsSlot(layout, entry, entryKeyValue) {
-    if (!entry || entry.block === "wf:slot") {
+  #shouldRestoreAsCell(layout, entry, entryKeyValue) {
+    if (!entry || entry.block === "wf:cell") {
       return false;
     }
     const placement = parsePlacement(entry.containerArgs);
@@ -4327,15 +4416,69 @@ export default class WireframeService extends Service {
       if (!insertion.changed) {
         return false;
       }
-      this.publishStructuralChange(outletName, insertion.layout);
+      this.publishStructuralChange(
+        outletName,
+        this.#syncDestGridOrder(insertion.layout, targetKey, position)
+      );
       return true;
     }
     const result = moveEntry(layout, sourceKey, targetKey, position);
     if (!result.changed) {
       return false;
     }
-    this.publishStructuralChange(outletName, result.layout);
+    this.publishStructuralChange(
+      outletName,
+      this.#syncDestGridOrder(result.layout, targetKey, position)
+    );
     return true;
+  }
+
+  /**
+   * When a within-outlet move lands in a grid layout, re-derive that
+   * grid's content placements from the new array order (see
+   * `syncContentToArrayOrder`) so reordering rows in the outline moves
+   * blocks in the grid rather than just shuffling an invisible array.
+   * A no-op for stack / row destinations, where array order already IS
+   * the visual order.
+   *
+   * @param {Array<Object>} layout
+   * @param {string} targetKey - The move's target (sibling for
+   *   before / after, the container itself for inside).
+   * @param {"before"|"after"|"inside"} position
+   * @returns {Array<Object>} The layout, with the destination grid's
+   *   content resynced when applicable.
+   */
+  #syncDestGridOrder(layout, targetKey, position) {
+    const gridKey =
+      position === "inside" ? targetKey : this.#parentKeyOf(layout, targetKey);
+    if (!gridKey) {
+      return layout;
+    }
+    const grid = findEntry(layout, gridKey);
+    if (!grid || grid.args?.mode !== "grid") {
+      return layout;
+    }
+    const result = replaceEntryInPlace(layout, gridKey, {
+      ...grid,
+      children: syncContentToArrayOrder(grid.children ?? []),
+    });
+    return result.changed ? result.layout : layout;
+  }
+
+  /**
+   * The composite key of `key`'s parent entry, or `null` when `key` is
+   * top-level (no enclosing container) or can't be found.
+   *
+   * @param {Array<Object>} layout
+   * @param {string} key
+   * @returns {string|null}
+   */
+  #parentKeyOf(layout, key) {
+    const chain = findAncestryPath(layout, key);
+    if (!chain || chain.length < 2) {
+      return null;
+    }
+    return entryKey(chain[chain.length - 2]);
   }
 
   #moveAcrossOutlets({
