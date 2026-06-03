@@ -1174,17 +1174,6 @@
     .nested-view__mobile-focus {
       overflow-x: clip;
 
-      &.--forward {
-        .nested-view__mobile-focused-branch {
-          animation: nested-mobile-slide-forward 180ms ease-out both;
-        }
-
-        .nested-view__mobile-ancestors,
-        .nested-view__mobile-focus-back {
-          animation: nested-mobile-fade-in 160ms ease-out both;
-        }
-      }
-
       &.--back {
         .nested-view__mobile-focused-branch {
           animation: nested-mobile-slide-back 180ms ease-out both;
@@ -1343,18 +1332,6 @@
     .nested-post__content {
       overflow-x: auto;
     }
-  }
-}
-
-@keyframes nested-mobile-slide-forward {
-  from {
-    opacity: 0;
-    transform: translateX(18px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
   }
 }
 
