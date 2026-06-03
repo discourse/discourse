@@ -13,31 +13,26 @@ describe Reports::TopReferrersByBrowserPageviews do
       Report.find("top_referrers_by_browser_pageviews", start_date: start_date, end_date: end_date)
     end
 
-    it "pins direct first and shares one denominator with external referrers, excluding the own host" do
-      6.times { Fabricate(:browser_pageview_event, normalized_referrer: nil) }
-      3.times { Fabricate(:browser_pageview_event, normalized_referrer: "google.com") }
-      1.times { Fabricate(:browser_pageview_event, normalized_referrer: "reddit.com") }
-      5.times { Fabricate(:browser_pageview_event, normalized_referrer: "forum.example.com/t/1") }
+    it "ranks referrers by event count and computes each percent as a share of referred pageviews" do
+      3.times do
+        Fabricate(:browser_pageview_event, normalized_referrer: "news.ycombinator.com/item?id=1")
+      end
+      1.times { Fabricate(:browser_pageview_event, normalized_referrer: "reddit.com/r/discourse") }
 
-      direct_label = I18n.t("reports.top_referrers_by_browser_pageviews.direct")
-
-      expect(report.data).to eq(
-        [
-          { normalized_referrer: nil, referrer_label: direct_label, count: 6, percent: 60 },
-          {
-            normalized_referrer: "google.com",
-            referrer_label: "google.com",
-            count: 3,
-            percent: 30,
-          },
-          {
-            normalized_referrer: "reddit.com",
-            referrer_label: "reddit.com",
-            count: 1,
-            percent: 10,
-          },
-        ],
+      data = report.data
+      expect(data.map { |row| row[:normalized_referrer] }).to eq(
+        %w[news.ycombinator.com/item?id=1 reddit.com/r/discourse],
       )
+      expect(data.map { |row| row[:percent] }).to eq([75, 25])
+    end
+
+    it "excludes direct (no-referrer) pageviews from both numerator and percent denominator" do
+      2.times { Fabricate(:browser_pageview_event, normalized_referrer: "google.com") }
+      2.times { Fabricate(:browser_pageview_event, normalized_referrer: nil) }
+
+      data = report.data
+      expect(data.map { |row| row[:normalized_referrer] }).to eq(["google.com"])
+      expect(data.first[:percent]).to eq(100)
     end
 
     it "excludes same-host bare, path-prefixed, and query-prefixed referrers from numerator and denominator" do
@@ -97,7 +92,7 @@ describe Reports::TopReferrersByBrowserPageviews do
     end
 
     it "returns empty data when no qualifying events exist" do
-      Fabricate(:browser_pageview_event, normalized_referrer: "forum.example.com/t/1")
+      Fabricate(:browser_pageview_event, normalized_referrer: nil)
       expect(report.data).to eq([])
     end
 
