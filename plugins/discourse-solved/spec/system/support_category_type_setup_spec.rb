@@ -10,9 +10,9 @@ RSpec.describe "Support Category Type Setup" do
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:toast) { PageObjects::Components::Toasts.new }
 
-  # The form binds site-text fields by a collision-safe hex encoding of the
-  # i18n key (dots and dashes aren't FormKit-safe), so derive it the same way.
-  let(:shared_issue_field) { "site_texts.st_#{"js.solved.shared_issue.label".unpack1("H*")}" }
+  # The form binds site-text fields by a separator-free version of the i18n key
+  # (dots and dashes aren't FormKit-safe), so derive it the same way.
+  let(:shared_issue_field) { "site_texts.#{"js.solved.shared_issue.label".gsub(/\W/, "_")}" }
 
   before { sign_in(admin) }
 

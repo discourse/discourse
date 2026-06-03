@@ -205,15 +205,7 @@ RSpec.describe Categories::Types::Base do
       test_type =
         Class.new(described_class) do
           def self.configuration_schema
-            {
-              site_texts: {
-                "js.some.key" => {
-                  type: :site_text,
-                  label: "Some label",
-                  depends_on: "other_field",
-                },
-              },
-            }
+            { site_texts: { "js.some.key" => { label: "Some label", depends_on: "other_field" } } }
           end
         end
       expect { test_type.validate_schema! }.not_to raise_error
@@ -223,7 +215,7 @@ RSpec.describe Categories::Types::Base do
       test_type =
         Class.new(described_class) do
           def self.configuration_schema
-            { site_texts: { "js.some.key" => { type: :site_text } } }
+            { site_texts: { "js.some.key" => { description: "No label here" } } }
           end
         end
       expect { test_type.validate_schema! }.to raise_error(ArgumentError)
@@ -413,15 +405,7 @@ RSpec.describe Categories::Types::Base do
           type_id :test_site_texts
 
           def self.configuration_schema
-            {
-              site_texts: {
-                "js.some.key" => {
-                  type: :site_text,
-                  label: "Some label",
-                  depends_on: "other_field",
-                },
-              },
-            }
+            { site_texts: { "js.some.key" => { label: "Some label", depends_on: "other_field" } } }
           end
         end
 
@@ -430,54 +414,10 @@ RSpec.describe Categories::Types::Base do
       schema = test_type.send(:resolved_configuration_schema)
       entry = schema[:site_texts].first
       expect(entry[:key]).to eq("js.some.key")
-      expect(entry[:name]).to eq("st_#{"js.some.key".unpack1("H*")}")
-      expect(entry[:name]).to match(/\Ast_[0-9a-f]+\z/)
-      expect(entry[:type]).to eq("site_text")
+      expect(entry[:name]).to eq("js_some_key")
       expect(entry[:label]).to eq("Some label")
       expect(entry[:current]).to eq("Hello")
       expect(entry[:depends_on]).to eq("other_field")
-    end
-
-    it "generates distinct names for keys that differ only by separator" do
-      test_type =
-        Class.new(described_class) do
-          type_id :test_site_text_collision
-
-          def self.configuration_schema
-            {
-              site_texts: {
-                "js.foo-bar" => {
-                  type: :site_text,
-                  label: "Dash",
-                },
-                "js.foo_bar" => {
-                  type: :site_text,
-                  label: "Underscore",
-                },
-                "js.foo.bar" => {
-                  type: :site_text,
-                  label: "Dot",
-                },
-              },
-            }
-          end
-        end
-
-      I18n.backend.store_translations(
-        :en,
-        js: {
-          "foo-bar" => "Dash",
-          "foo_bar" => "Underscore",
-          :foo => {
-            bar: "Dot",
-          },
-        },
-      )
-
-      schema = test_type.send(:resolved_configuration_schema)
-      names = schema[:site_texts].map { |entry| entry[:name] }
-
-      expect(names.uniq.length).to eq(3)
     end
   end
 

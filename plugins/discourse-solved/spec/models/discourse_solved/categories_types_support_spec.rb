@@ -133,7 +133,7 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
 
     it "declares the shared issue label as a dependent site text" do
       label = described_class.configuration_schema[:site_texts]["js.solved.shared_issue.label"]
-      expect(label[:type]).to eq(:site_text)
+      expect(label[:label]).to be_present
       expect(label[:depends_on]).to eq(DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD)
     end
   end

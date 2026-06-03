@@ -117,7 +117,6 @@ module DiscourseSolved
               },
               site_texts: {
                 "js.solved.shared_issue.label" => {
-                  type: :site_text,
                   label: I18n.t("discourse_solved.category_type.shared_issue_label.label"),
                   description:
                     I18n.t("discourse_solved.category_type.shared_issue_label.description"),

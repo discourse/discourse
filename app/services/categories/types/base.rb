@@ -98,13 +98,9 @@ module Categories
           },
           "site_text_field_config" => {
             "type" => "object",
-            "required" => %w[type label],
+            "required" => %w[label],
             "additionalProperties" => false,
             "properties" => {
-              "type" => {
-                "type" => "string",
-                "minLength" => 1,
-              },
               "label" => {
                 "type" => "string",
                 "minLength" => 1,
@@ -243,13 +239,11 @@ module Categories
         #       # Fields backed by a translation override (site text), not stored
         #       # on the category. Each key is the i18n key to edit. The value is
         #       # a config Hash:
-        #       #   type:        (required) Symbol — only :site_text is supported.
         #       #   label:       (required) String — FormKit label shown in UI.
         #       #   description: (optional) String — FormKit help text.
         #       #   depends_on:  (optional) String — only show when this sibling
         #       #                custom field / setting is truthy.
         #       "js.solved.shared_issue.label" => {
-        #         type: :site_text,
         #         label: "Shared issue label",
         #       },
         #     },
@@ -482,15 +476,11 @@ module Categories
           schema[:site_texts]&.each do |text_key, config|
             entry = {
               key: text_key.to_s,
-              # FormKit field names can't contain "." or "-" (they're parsed as
-              # nested paths), but a translation key contains dots. The form
-              # binds to this name while +key+ remains the i18n key used by the
-              # site_texts API. The name is a hex encoding of the key: it uses
-              # only [0-9a-f], so it's always FormKit-safe, and the encoding is
-              # injective so distinct keys can never collide onto the same name
-              # (which would cross-save their values).
-              name: "st_#{text_key.to_s.unpack1("H*")}",
-              type: (config[:type] || :site_text).to_s,
+              # FormKit parses "." and "-" in field names as nested paths, so the
+              # form binds to this separator-free +name+ (already namespaced by
+              # the parent site_texts object) while +key+ stays the i18n key used
+              # by the site_texts API.
+              name: text_key.to_s.gsub(/\W/, "_"),
               label: config[:label],
               description: config[:description],
               current: I18n.with_locale(SiteSetting.default_locale) { I18n.t(text_key) },

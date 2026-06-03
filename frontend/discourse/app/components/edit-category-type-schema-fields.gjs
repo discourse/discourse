@@ -114,32 +114,6 @@ class SchemaFormField extends Component {
       >
         <field.Control min={{@entry.min}} max={{@entry.max}} />
       </@formObject.Field>
-    {{else if (eq @entry.type "site_text")}}
-      <@formObject.Field
-        @name={{@entry.name}}
-        @type="input"
-        @title={{@entry.label}}
-        @description={{@entry.description}}
-        @validation={{if @entry.required "required"}}
-        @disabled={{@disabled}}
-        @labelFormat="full"
-        @format="large"
-        as |field|
-      >
-        <div class="schema-site-text">
-          {{#if @availableLocales}}
-            <ComboBox
-              @valueProperty="value"
-              @content={{@availableLocales}}
-              @value={{@siteTextsLocale}}
-              @onChange={{@switchSiteTextsLocale}}
-              @options={{hash filterable=true}}
-              class="schema-site-text__locale"
-            />
-          {{/if}}
-          <field.Control />
-        </div>
-      </@formObject.Field>
     {{else}}
       <@formObject.Field
         @name={{@entry.key}}
@@ -287,15 +261,30 @@ export default class EditCategoryTypeSchemaFields extends Component {
           <@form.Object @name="site_texts" as |siteTexts|>
             {{#each this.schema.site_texts as |entry|}}
               {{#if (this.isFieldVisible entry)}}
-                <SchemaFormField
-                  @category={{@category}}
-                  @entry={{entry}}
-                  @formObject={{siteTexts}}
-                  @availableLocales={{@availableLocales}}
-                  @siteTextsLocale={{@siteTextsLocale}}
-                  @switchSiteTextsLocale={{@switchSiteTextsLocale}}
+                <siteTexts.Field
+                  @name={{entry.name}}
+                  @type="input"
+                  @title={{entry.label}}
+                  @description={{entry.description}}
                   @disabled={{@isLoadingSiteTextsLocale}}
-                />
+                  @labelFormat="full"
+                  @format="large"
+                  as |field|
+                >
+                  <div class="schema-site-text">
+                    {{#if @availableLocales}}
+                      <ComboBox
+                        @valueProperty="value"
+                        @content={{@availableLocales}}
+                        @value={{@siteTextsLocale}}
+                        @onChange={{@switchSiteTextsLocale}}
+                        @options={{hash filterable=true}}
+                        class="schema-site-text__locale"
+                      />
+                    {{/if}}
+                    <field.Control />
+                  </div>
+                </siteTexts.Field>
               {{/if}}
             {{/each}}
           </@form.Object>
