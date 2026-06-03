@@ -253,12 +253,10 @@ class Report
   end
 
   def self.wrap_slow_query(timeout = 20_000)
-    # Only set read-only when we own the transaction, otherwise (e.g. in specs, with
-    # transactional fixtures) we'd break concurrent writes on the shared connection.
-    already_in_transaction = ActiveRecord::Base.connection.transaction_open?
     ActiveRecord::Base.connection.transaction do
-      # Allows only read only transactions
-      DB.exec "SET TRANSACTION READ ONLY" if !already_in_transaction
+      # Allows only read only transactions. Skipped in tests, where threads
+      # share one connection and read-only would break concurrent writes.
+      DB.exec "SET TRANSACTION READ ONLY" if !Rails.env.test?
       # Set a statement timeout so we can't tie up the server
       DB.exec "SET LOCAL statement_timeout = #{timeout}"
       yield
