@@ -4,6 +4,8 @@ import { helper } from "@ember/component/helper";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -182,6 +184,29 @@ export default class Nested extends Component {
     };
   }
 
+  @action
+  scrollMobileFocusToTop(element) {
+    if (!this.isMobileFocused || this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    const target = element.querySelector(".nested-view__mobile-focus-back");
+    if (!target) {
+      return;
+    }
+
+    const rect = target.getBoundingClientRect();
+    window.scrollTo({
+      top: window.scrollY + rect.top - this.#stickyHeaderBottom(),
+      behavior: "auto",
+    });
+  }
+
+  #stickyHeaderBottom() {
+    const headerWrap = document.querySelector(".d-header-wrap");
+    return Math.max(0, headerWrap?.getBoundingClientRect().bottom || 0);
+  }
+
   <template>
     <div
       class={{this.viewClass}}
@@ -214,7 +239,11 @@ export default class Nested extends Component {
       />
 
       {{#if this.isMobileFocused}}
-        <div class={{this.mobileFocusClass}}>
+        <div
+          class={{this.mobileFocusClass}}
+          {{didInsert this.scrollMobileFocusToTop}}
+          {{didUpdate this.scrollMobileFocusToTop this.focusedPath}}
+        >
           <button
             type="button"
             class="nested-view__mobile-focus-back"

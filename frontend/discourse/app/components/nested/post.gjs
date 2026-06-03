@@ -275,6 +275,10 @@ export default class NestedPost extends Component {
   }
 
   get depthLineLabel() {
+    if (this.site.mobileView && !this.args.forceExpanded) {
+      return i18n("nested_replies.collapse");
+    }
+
     if (this.depthLineCollapsed) {
       return this.expandLabel;
     }
@@ -308,10 +312,33 @@ export default class NestedPost extends Component {
     });
   }
 
+  collapsePost() {
+    if (this.hasReplies) {
+      this.expanded = false;
+    }
+
+    this.collapsed = true;
+    this.lineHighlighted = false;
+    this.args.expansionState?.set(this.args.post.post_number, {
+      expanded: this.expanded,
+      collapsed: this.collapsed,
+    });
+  }
+
   @action
   handleReplies() {
     if (this.mobileFocusEnabled) {
       this.args.focusPost(this.childPath);
+      return;
+    }
+
+    this.toggleExpanded();
+  }
+
+  @action
+  handleDepthLine() {
+    if (this.site.mobileView && !this.args.forceExpanded) {
+      this.collapsePost();
       return;
     }
 
@@ -483,7 +510,7 @@ export default class NestedPost extends Component {
                   this.depthLineCollapsed "nested-post__depth-line--collapsed"
                 )
               }}
-              {{on "click" this.toggleExpanded}}
+              {{on "click" this.handleDepthLine}}
               {{on "mouseenter" this.highlightLine}}
               {{on "mouseleave" this.unhighlightLine}}
               aria-label={{this.depthLineLabel}}

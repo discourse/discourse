@@ -161,6 +161,15 @@ module PageObjects
         JS
       end
 
+      def mobile_focus_back_viewport_top
+        page.evaluate_script(<<~JS)
+          document
+            .querySelector(".nested-view__mobile-focus-back")
+            .getBoundingClientRect()
+            .top
+        JS
+      end
+
       def has_depth_line_for?(post)
         has_css?(depth_line_selector(post))
       end

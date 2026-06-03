@@ -301,6 +301,23 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_root_post(sibling_root_reply)
     end
 
+    it "brings the all replies control into view after opening hidden replies", mobile: true do
+      great_grandchild_reply.update!(
+        raw: "A great-grandchild post\n\n#{("More focused branch content.\n\n" * 30).strip}",
+      )
+      great_grandchild_reply.rebake!
+
+      nested_view.visit_nested(topic)
+      nested_view.scroll_post_near_top(grandchild_reply)
+
+      nested_view.click_replies_toggle(grandchild_reply)
+
+      expect(nested_view).to have_mobile_focus
+      try_until_success(reason: "focused view scroll runs after render") do
+        expect(nested_view.mobile_focus_back_viewport_top).to be_between(-1, 120).inclusive
+      end
+    end
+
     it "collapses a root branch from the depth line", mobile: true do
       nested_view.visit_nested(topic)
 
@@ -320,6 +337,20 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_no_mobile_focus
       expect(nested_view).to have_collapsed_bar_for(child_reply)
       expect(nested_view).to have_no_children_visible_for(child_reply)
+      expect(nested_view).to have_root_post(sibling_root_reply)
+    end
+
+    it "collapses a branch with hidden replies from the depth line", mobile: true do
+      nested_view.visit_nested(topic)
+
+      expect(nested_view).to have_replies_toggle_for(grandchild_reply)
+      expect(nested_view).to have_no_post(great_grandchild_reply)
+
+      nested_view.click_depth_line(grandchild_reply)
+
+      expect(nested_view).to have_no_mobile_focus
+      expect(nested_view).to have_collapsed_bar_for(grandchild_reply)
+      expect(nested_view).to have_no_post(great_grandchild_reply)
       expect(nested_view).to have_root_post(sibling_root_reply)
     end
   end
