@@ -162,29 +162,10 @@ RSpec.configure do |config|
   # Match the request hostname to the value in `database.yml`
   config.before(:each, type: %i[request multisite system]) { host! "test.localhost" }
 
-  system_tests_initialized = false
-
   config.before(:each, type: :system) do |example|
-    if !system_tests_initialized
-      # On Rails 7, we have seen instances of deadlocks between the lock in [ActiveRecord::ConnectionAdapters::AbstractAdapter](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/connection_adapters/abstract_adapter.rb#L86)
-      # and the lock in [ActiveRecord::ModelSchema](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/model_schema.rb#L550).
-      # To work around this problem, we are going to preload all the model schemas before running any system tests so that
-      # the lock in ActiveRecord::ModelSchema is not acquired at runtime. This is a temporary workaround while we report
-      # the issue to the Rails.
-      ActiveRecord::Base.connection.data_sources.map do |table|
-        ActiveRecord::Base.connection.schema_cache.add(table)
-      end
-
-      system_tests_initialized = true
-    end
-
+    SystemDrivers.preload_model_schemas!
     SystemDrivers.register!(color_scheme: example.metadata[:color_scheme])
-
-    driver = [:playwright]
-    driver << :mobile if example.metadata[:mobile]
-    driver << :chrome
-
-    driven_by driver.join("_").to_sym
+    driven_by SystemDrivers.driver_for(example)
 
     setup_system_test
 
@@ -230,15 +211,7 @@ RSpec.configure do |config|
          (
            backtraces = RSpec.current_example.metadata[:_capybara_server_threads_backtraces]
          ).present?
-      lines << "~~~~~~~ SERVER THREADS BACKTRACES ~~~~~~~"
-
-      backtraces.each_with_index do |backtrace, index|
-        lines << "\n" if index != 0
-        backtrace.each { |line| lines << line }
-      end
-
-      lines << "~~~~~~~ END SERVER THREADS BACKTRACES ~~~~~~~"
-      lines << "\n"
+      CapybaraTimeoutExtension.append_server_thread_backtraces(lines, backtraces)
     end
 
     # Recommended that this is not disabled, since it makes debugging

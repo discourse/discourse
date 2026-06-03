@@ -6,6 +6,29 @@ CHROME_REMOTE_DEBUGGING_PORT = (ENV["CHROME_REMOTE_DEBUGGING_PORT"] || 50_062).t
 CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "127.0.0.1"
 
 module SystemDrivers
+  # On Rails 7, we have seen instances of deadlocks between the lock in [ActiveRecord::ConnectionAdapters::AbstractAdapter](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/connection_adapters/abstract_adapter.rb#L86)
+  # and the lock in [ActiveRecord::ModelSchema](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/model_schema.rb#L550).
+  # To work around this problem, we are going to preload all the model schemas before running any system tests so that
+  # the lock in ActiveRecord::ModelSchema is not acquired at runtime. This is a temporary workaround while we report
+  # the issue to the Rails.
+  def self.preload_model_schemas!
+    return if @schemas_preloaded
+
+    ActiveRecord::Base.connection.data_sources.map do |table|
+      ActiveRecord::Base.connection.schema_cache.add(table)
+    end
+
+    @schemas_preloaded = true
+  end
+
+  # Builds the registered driver name for the example (mobile vs desktop chrome).
+  def self.driver_for(example)
+    driver = [:playwright]
+    driver << :mobile if example.metadata[:mobile]
+    driver << :chrome
+    driver.join("_").to_sym
+  end
+
   def self.register!(color_scheme:)
     driver_options = {
       browser_type: :chromium,
