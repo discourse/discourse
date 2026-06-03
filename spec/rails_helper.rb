@@ -153,33 +153,6 @@ RSpec.configure do |config|
       ].compact,
     )
 
-    config.before(:each) do |example|
-      if example.metadata[:type] != :system
-        EmberCli.stubs(:read_manifest!).returns(nil)
-        EmberCli.stubs(:script_chunks).returns({})
-      end
-    end
-
-    config.before(:each, type: :system) { MessageBusTestSync.start }
-    config.after(:each, type: :system) { MessageBusTestSync.stop }
-
-    config.before(:each, type: :system) do |example|
-      EmberDeprecations.set_raise_on_deprecation!(example)
-
-      if example.metadata[:time]
-        freeze_time(example.metadata[:time])
-        BrowserTime.freeze(page, example.metadata[:time])
-      end
-    end
-
-    config.after(:each, type: :system) do |example|
-      # If test passed, but we had a capybara finder timeout, raise it now
-      if example.exception.nil? &&
-           (capybara_timeout_error = example.metadata[:_capybara_timeout_exception])
-        raise capybara_timeout_error
-      end
-    end
-
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!
   end
@@ -292,6 +265,38 @@ RSpec.configure do |config|
 
     Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
+  end
+
+  # These per-example hooks are registered last on purpose. before(:each) hooks
+  # run in registration order, so registering after the driver-setup hook above
+  # means the system ones run once the driver/page exists. after(:each) hooks run
+  # in reverse, so these run before the teardown hooks above.
+  config.before(:each) do |example|
+    if example.metadata[:type] != :system
+      EmberCli.stubs(:read_manifest!).returns(nil)
+      EmberCli.stubs(:script_chunks).returns({})
+    end
+  end
+
+  config.before(:each, type: :system) { MessageBusTestSync.start }
+
+  config.before(:each, type: :system) do |example|
+    EmberDeprecations.set_raise_on_deprecation!(example)
+
+    if example.metadata[:time]
+      freeze_time(example.metadata[:time])
+      BrowserTime.freeze(page, example.metadata[:time])
+    end
+  end
+
+  config.after(:each, type: :system) { MessageBusTestSync.stop }
+
+  config.after(:each, type: :system) do |example|
+    # If test passed, but we had a capybara finder timeout, raise it now
+    if example.exception.nil? &&
+         (capybara_timeout_error = example.metadata[:_capybara_timeout_exception])
+      raise capybara_timeout_error
+    end
   end
 end
 
