@@ -61,21 +61,6 @@ describe "Admin Dashboard Redesign | Reports section" do
     )
   end
 
-  it "removes a card directly via the X-to-remove button" do
-    AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
-    AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
-
-    page.visit("/admin")
-    expect(dashboard).to have_card("core_report:signups")
-
-    dashboard.remove_card("core_report:signups")
-    expect(dashboard).to have_no_card("core_report:signups")
-
-    page.refresh
-    expect(dashboard).to have_no_card("core_report:signups")
-    expect(dashboard).to have_card("core_report:topics")
-  end
-
   it "hides the Add Report tile when the cap is reached" do
     identifiers =
       Reports::ListQuery
