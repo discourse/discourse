@@ -1,5 +1,11 @@
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
+import {
+  inputForRun,
+  latestRunWithInput,
+  latestRunWithOutput,
+  outputForRun,
+} from "./data-schema";
 
 function compactObject(object) {
   return Object.fromEntries(
@@ -44,22 +50,6 @@ function targetInputIndexForConnection(connection) {
   return (
     connection.targetInputIndex ?? portIndexFromKey(connection.targetInput)
   );
-}
-
-function latestPortItems(runs, portKey, portIndex) {
-  const run = [...(runs || [])]
-    .reverse()
-    .find(
-      (candidate) =>
-        candidate.status === "success" &&
-        (candidate[portKey] || []).some(
-          (port) => port.index === portIndex && Array.isArray(port.items)
-        )
-    );
-  const port = (run?.[portKey] || []).find(
-    (candidate) => candidate.index === portIndex
-  );
-  return port?.items;
 }
 
 export default class WorkflowEditorSession {
@@ -132,13 +122,15 @@ export default class WorkflowEditorSession {
         const inputIndex = targetInputIndexForConnection(connection);
         const outputIndex = sourceOutputIndexForConnection(connection);
         const sourceNode = this.nodeForClientId(connection.sourceClientId);
-        const currentInput = this.inputItemsForNode(node, inputIndex);
+        const currentInput = this.inputItemsForNode(node, inputIndex, {
+          sourceNode,
+          outputIndex,
+        });
 
         return {
           sourceNodeId: connection.sourceClientId,
           inputIndex,
-          items:
-            currentInput ?? this.outputItemsForNode(sourceNode, outputIndex),
+          items: currentInput,
         };
       })
       .filter((input) => input.items !== undefined);
@@ -149,8 +141,7 @@ export default class WorkflowEditorSession {
     if (Object.keys(sourceNodeOutputs).length === 0) {
       return {
         available: false,
-        reason:
-          "No upstream execution preview output is available for this node",
+        reason: "No input execution preview is available for this node",
       };
     }
 
@@ -290,13 +281,24 @@ export default class WorkflowEditorSession {
       }
     }
 
-    const runs = this.lastExecutionRunData?.[node?.name];
-    return latestPortItems(runs, "outputs", outputIndex);
+    const run = latestRunWithOutput(this.lastExecutionRunData, node?.name, {
+      node,
+    });
+    return outputForRun(run, outputIndex)?.items;
   }
 
-  inputItemsForNode(node, inputIndex = 0) {
-    const runs = this.lastExecutionRunData?.[node?.name];
-    return latestPortItems(runs, "inputs", inputIndex);
+  inputItemsForNode(
+    node,
+    inputIndex = 0,
+    { sourceNode, outputIndex = 0 } = {}
+  ) {
+    const run = latestRunWithInput(this.lastExecutionRunData, node?.name, {
+      inputIndex,
+      node,
+      sourceNode,
+      outputIndex,
+    });
+    return inputForRun(run, inputIndex, { sourceNode, outputIndex })?.items;
   }
 
   nodeForClientId(clientId) {
