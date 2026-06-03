@@ -61,6 +61,10 @@ module("Unit | Utility | workflows property engine", function () {
       propertyPlaceholder("trigger:webhook", "path"),
       "my-webhook"
     );
+    assert.strictEqual(
+      propertyPlaceholder("trigger:reviewable_approved", "reviewable_types"),
+      "All types"
+    );
   });
 
   test("resolves dynamic value hints for expression fields", function (assert) {

@@ -513,6 +513,7 @@ en:
       reviewable_approved:
         reviewable_types: "Reviewable types"
         reviewable_types_description: "Only trigger for these reviewable types"
+        reviewable_types_placeholder: "All types"
       schedule:
         rule: "Trigger rules"
         add_rule: "Add rule"
