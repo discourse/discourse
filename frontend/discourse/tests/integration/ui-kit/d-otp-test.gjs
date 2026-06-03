@@ -1,5 +1,5 @@
 import { next } from "@ember/runloop";
-import { render, settled } from "@ember/test-helpers";
+import { focus, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DOtp from "discourse/ui-kit/d-otp";
@@ -83,15 +83,18 @@ module("Integration | ui-kit | DOtp", function (hooks) {
   test("@autoFocus", async function (assert) {
     await render(<template><DOtp /></template>);
 
-    assert.dom(".d-otp-slot[data-index='0'].--is-focused").exists();
+    assert.dom(".d-otp-input").isFocused("autofocuses the input by default");
 
     await render(<template><DOtp @autoFocus={{false}} /></template>);
 
-    assert.dom(".d-otp-slot[data-index='0'].--is-focused").doesNotExist();
+    assert
+      .dom(".d-otp-input")
+      .isNotFocused("does not autofocus when @autoFocus is false");
   });
 
   test("shows placeholder dashes for empty slots", async function (assert) {
     await render(<template><DOtp /></template>);
+    await focus(".d-otp-input");
 
     assert.dom(".d-otp-slot:nth-child(1)").hasText("​");
     assert.dom(".d-otp-slot:nth-child(2)").hasText("​ -");
@@ -148,6 +151,7 @@ module("Integration | ui-kit | DOtp", function (hooks) {
     await render(<template><DOtp /></template>);
 
     const input = this.element.querySelector(".d-otp-input");
+    await focus(input);
     input.value = "123456";
     input.dispatchEvent(new Event("input"));
 
