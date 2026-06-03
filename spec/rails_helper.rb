@@ -177,32 +177,6 @@ module TestSetup
   end
 end
 
-if ENV["PREFABRICATION"] == "0"
-  module Prefabrication
-    def fab!(name, fabricator_name = nil, **opts, &blk)
-      blk ||= proc { Fabricate(fabricator_name || name) }
-      let!(name, &blk)
-    end
-  end
-else
-  require "test_prof/recipes/rspec/let_it_be"
-  require "test_prof/before_all/adapters/active_record"
-
-  TestProf::BeforeAll.configure do |config|
-    config.after(:begin) do
-      DB.test_transaction = ActiveRecord::Base.connection.current_transaction
-      TestSetup.test_setup
-    end
-  end
-
-  module Prefabrication
-    def fab!(name, fabricator_name = nil, **opts, &blk)
-      blk ||= proc { Fabricate(fabricator_name || name) }
-      let_it_be(name, refind: true, **opts, &blk)
-    end
-  end
-end
-
 PER_SPEC_TIMEOUT_SECONDS = 45
 BROWSER_READ_TIMEOUT = 30
 
@@ -224,7 +198,6 @@ RSpec.configure do |config|
   config.fail_fast = ENV["RSPEC_FAIL_FAST"] == "1"
   config.silence_filter_announcements = ENV["RSPEC_SILENCE_FILTER_ANNOUNCEMENTS"] == "1"
   config.extend RedisSnapshotHelper
-  config.extend Prefabrication
   config.include Helpers
   config.include MessageBus
   config.include RSpecHtmlMatchers
