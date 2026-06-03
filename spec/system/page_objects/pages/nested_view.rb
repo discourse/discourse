@@ -84,6 +84,10 @@ module PageObjects
         has_css?("[data-post-number='#{post.post_number}']")
       end
 
+      def has_post_text?(text)
+        has_css?(".nested-post__article", text: text)
+      end
+
       def has_no_post?(post)
         has_no_css?("[data-post-number='#{post.post_number}']")
       end

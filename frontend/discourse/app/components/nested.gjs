@@ -95,6 +95,18 @@ export default class Nested extends Component {
     return `nested-view__mobile-focus --${this.focusDirection}`;
   }
 
+  get collapseFromDepth() {
+    if (this.args.collapseReplies) {
+      return 0;
+    }
+
+    if (this.site.mobileView) {
+      return 2;
+    }
+
+    return null;
+  }
+
   get rootScrollAnchor() {
     return this.mobileReturnAnchor || this.args.scrollAnchor;
   }
@@ -276,7 +288,7 @@ export default class Nested extends Component {
                 @getCloakingData={{this.viewportTracker.getCloakingData}}
                 @cloakAbove={{this.cloakAbove}}
                 @cloakBelow={{this.cloakBelow}}
-                @collapseFromDepth={{if @collapseReplies 0}}
+                @collapseFromDepth={{this.collapseFromDepth}}
                 @focusPost={{this.focusPath}}
                 @forceExpanded={{true}}
               />
@@ -372,7 +384,7 @@ export default class Nested extends Component {
               @getCloakingData={{this.viewportTracker.getCloakingData}}
               @cloakAbove={{this.cloakAbove}}
               @cloakBelow={{this.cloakBelow}}
-              @collapseFromDepth={{if @collapseReplies 0}}
+              @collapseFromDepth={{this.collapseFromDepth}}
               @focusPost={{this.focusPath}}
             />
             <PluginOutlet

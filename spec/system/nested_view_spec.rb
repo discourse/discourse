@@ -266,32 +266,60 @@ RSpec.describe "Nested view" do
       )
     end
 
+    fab!(:great_grandchild_reply) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: Fabricate(:user),
+        raw: "A great-grandchild post",
+        reply_to_post_number: grandchild_reply.post_number,
+      )
+    end
+
     it "lets the user drill into reply branches without leaving the topic", mobile: true do
-      nested_view.visit_nested(topic, query: "collapse_replies=true")
-      nested_path = %r{/n/#{topic.slug}/#{topic.id}\?collapse_replies=true}
+      nested_view.visit_nested(topic)
+      nested_path = %r{/n/#{topic.slug}/#{topic.id}}
 
-      nested_view.scroll_post_near_top(root_reply)
-      root_reply_top = nested_view.post_viewport_top(root_reply)
+      expect(nested_view).to have_post(child_reply)
+      expect(nested_view).to have_post(grandchild_reply)
+      expect(nested_view).to have_replies_toggle_for(grandchild_reply)
+      expect(nested_view).to have_no_post(great_grandchild_reply)
 
-      nested_view.click_replies_toggle(root_reply)
+      nested_view.click_replies_toggle(grandchild_reply)
 
       expect(page).to have_current_path(nested_path)
       expect(nested_view).to have_mobile_focus
-      expect(nested_view).to have_post(child_reply)
-      expect(nested_view).to have_no_root_post(sibling_root_reply)
-
-      nested_view.click_replies_toggle(child_reply)
-
-      expect(page).to have_current_path(nested_path)
       expect(nested_view).to have_mobile_ancestor(root_reply)
-      expect(nested_view).to have_post(grandchild_reply)
+      expect(nested_view).to have_mobile_ancestor(child_reply)
+      expect(nested_view).to have_post(great_grandchild_reply)
+      expect(nested_view).to have_no_root_post(sibling_root_reply)
 
       nested_view.click_mobile_focus_back
 
       expect(page).to have_current_path(nested_path)
       expect(nested_view).to have_no_mobile_focus
       expect(nested_view).to have_root_post(sibling_root_reply)
-      expect(nested_view.post_viewport_top(root_reply)).to be_within(5).of(root_reply_top)
+    end
+
+    it "lets the user open a root branch from the depth line", mobile: true do
+      nested_view.visit_nested(topic)
+
+      nested_view.click_depth_line(root_reply)
+
+      expect(nested_view).to have_mobile_focus
+      expect(nested_view).to have_post(child_reply)
+      expect(nested_view).to have_no_root_post(sibling_root_reply)
+    end
+
+    it "lets the user open a child branch from the depth line", mobile: true do
+      nested_view.visit_nested(topic)
+
+      nested_view.click_depth_line(child_reply)
+
+      expect(nested_view).to have_mobile_focus
+      expect(nested_view).to have_mobile_ancestor(root_reply)
+      expect(nested_view).to have_post(grandchild_reply)
+      expect(nested_view).to have_no_root_post(sibling_root_reply)
     end
   end
 

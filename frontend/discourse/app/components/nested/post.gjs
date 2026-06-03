@@ -106,7 +106,7 @@ export default class NestedPost extends Component {
     this.appEvents.trigger("nested-replies:post-unregistered", this.args.post);
   }
 
-  _onChildCreated({ parentPostNumber }) {
+  _onChildCreated({ post: childPost, parentPostNumber, isOwnPost }) {
     if (parentPostNumber !== this.args.post.post_number) {
       return;
     }
@@ -123,6 +123,10 @@ export default class NestedPost extends Component {
         expanded: true,
         collapsed: false,
       });
+    }
+
+    if (isOwnPost && this.mobileFocusEnabled) {
+      this.args.focusPost(this.childPathWithNewChild(childPost));
     }
   }
 
@@ -216,6 +220,25 @@ export default class NestedPost extends Component {
     ];
   }
 
+  childPathWithNewChild(childPost) {
+    const children = this.args.children || [];
+    const hasChild = children.some(
+      (node) =>
+        node.post?.id === childPost?.id ||
+        node.post?.post_number === childPost?.post_number
+    );
+
+    return [
+      ...(this.args.path || []),
+      {
+        post: this.args.post,
+        children: hasChild
+          ? children
+          : [{ post: childPost, children: [] }, ...children],
+      },
+    ];
+  }
+
   get mobileFocusEnabled() {
     return this.site.mobileView && this.args.focusPost;
   }
@@ -287,6 +310,16 @@ export default class NestedPost extends Component {
   @action
   handleReplies() {
     if (this.mobileFocusEnabled) {
+      this.args.focusPost(this.childPath);
+      return;
+    }
+
+    this.toggleExpanded();
+  }
+
+  @action
+  handleDepthLine() {
+    if (this.mobileFocusEnabled && this.hasReplies) {
       this.args.focusPost(this.childPath);
       return;
     }
@@ -459,7 +492,7 @@ export default class NestedPost extends Component {
                   this.depthLineCollapsed "nested-post__depth-line--collapsed"
                 )
               }}
-              {{on "click" this.toggleExpanded}}
+              {{on "click" this.handleDepthLine}}
               {{on "mouseenter" this.highlightLine}}
               {{on "mouseleave" this.unhighlightLine}}
               aria-label={{this.depthLineLabel}}
