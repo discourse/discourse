@@ -45,9 +45,7 @@ module CapybaraTimeoutExtension
         retry
       end
 
-      if mb_behind&.any?
-        warn "[MessageBusTestSync] client never caught up on: #{mb_behind.inspect}"
-      end
+      warn "[MessageBusTestSync] client never caught up on: #{mb_behind.inspect}" if mb_behind&.any?
 
       # This error will only have been raised if the timer expired
       effective_seconds =

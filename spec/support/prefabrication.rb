@@ -15,9 +15,7 @@ else
   require "test_prof/recipes/rspec/let_it_be"
   require "test_prof/before_all/adapters/active_record"
 
-  TestProf::BeforeAll.configure do |config|
-    config.after(:begin) { TestSetup.test_setup }
-  end
+  TestProf::BeforeAll.configure { |config| config.after(:begin) { TestSetup.test_setup } }
 
   module Prefabrication
     def fab!(name, fabricator_name = nil, **opts, &blk)
