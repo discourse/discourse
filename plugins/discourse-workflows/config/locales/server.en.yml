@@ -6,24 +6,6 @@ en:
           attributes:
             error_workflow_id:
               cannot_be_self: "cannot be set to the workflow itself"
-  discourse_ai:
-    ai_bot:
-      tool_summary:
-        workflow_ask_questions: "Ask clarification questions"
-        workflow_authoring_result: "Return workflow authoring result"
-        workflow_resolve_entity: "Resolve workflow entity"
-        workflow_node_catalog: "Read workflow node catalog"
-        workflow_graph_context: "Read workflow graph context"
-        workflow_validate_patch: "Validate workflow patch"
-        search_chat_channels: "Search chat channels"
-      tool_description:
-        workflow_ask_questions: "Prepared clarification questions for the workflow request"
-        workflow_authoring_result: "Returned the workflow authoring result"
-        workflow_resolve_entity: "Looked up a Discourse entity for workflow configuration"
-        workflow_node_catalog: "Checked workflow node parameters, schemas, and examples"
-        workflow_graph_context: "Checked the current workflow graph"
-        workflow_validate_patch: "Dry-ran the workflow patch and checked validation errors"
-        search_chat_channels: "Searched open chat channels for workflow configuration"
   discourse_workflows:
     ai:
       default_code_node_name: "Code"
@@ -97,7 +79,7 @@ en:
         unknown_operation: "Unknown operation: %{operation}."
         invalid_filter: "Invalid post filter fragment: %{fragments}."
       send_private_message:
-        no_recipients: "At least one private message recipient is required."
+        no_recipients: "At least one personal message recipient is required."
       credential:
         missing_required_field: "is missing required field '%{field}'"
       wait:
