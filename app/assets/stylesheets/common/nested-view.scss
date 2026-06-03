@@ -1289,6 +1289,10 @@
       grid-column: 1 / -1;
     }
 
+    .nested-post__collapsed-bar {
+      padding-inline: 0;
+    }
+
     // Mobile strips desktop connector hooks, so the desktop padding used to
     // make room for those hooks must not shift the post's internal grid math.
     &:not(.--depth-0) {
