@@ -284,17 +284,8 @@ RSpec.configure do |config|
     ThemeSiteSetting.delete_all
     SiteSetting.refresh!
 
-    # Rebase defaults
-    #
-    # We nuke the DB storage provider from site settings, so need to yank out the existing settings
-    #  and pretend they are default.
-    # There are a bunch of settings that are seeded, they must be loaded as defaults
-    SiteSetting.current.each do |k, v|
-      # skip setting defaults for settings that are in unloaded plugins
-      SiteSetting.defaults.set_regardless_of_locale(k, v) if SiteSetting.respond_to? k
-    end
-
-    SiteSetting.provider = TestLocalProcessProvider.new
+    # Rebase the seeded DB settings as defaults, then swap in the in-memory provider.
+    TestLocalProcessProvider.install!
 
     DiscourseConnectHelpers.provider_port = 9100 + ENV["TEST_ENV_NUMBER"].to_i
 
@@ -582,15 +573,6 @@ RSpec.configure do |config|
 
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!
-  end
-
-  class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
-    attr_accessor :current_site
-
-    def initialize
-      super
-      self.current_site = "test"
-    end
   end
 
   config.after(:suite) do
