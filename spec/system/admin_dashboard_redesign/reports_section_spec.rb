@@ -13,6 +13,18 @@ describe "Admin Dashboard Redesign | Reports section" do
     sign_in(current_user)
   end
 
+  it "shows drag controls only once more than one report is enabled" do
+    AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
+
+    page.visit("/admin")
+    dashboard.open_manage_reports_via_cog
+    expect(modal).to have_open
+    expect(modal).to have_no_drag_controls
+
+    modal.toggle("core_report:admin_logins")
+    expect(modal).to have_drag_controls
+  end
+
   it "lets admins customize the reports section via the manage-reports modal" do
     AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
     AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)

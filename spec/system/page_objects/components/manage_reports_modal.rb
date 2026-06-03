@@ -62,6 +62,15 @@ module PageObjects
         self
       end
 
+      def has_drag_controls?
+        has_css?("#{MODAL} .manage-reports__list.--reorderable")
+      end
+
+      def has_no_drag_controls?
+        has_css?("#{MODAL} .manage-reports__list") &&
+          has_no_css?("#{MODAL} .manage-reports__list.--reorderable")
+      end
+
       def has_counter?(count, max)
         has_css?(
           "#{MODAL} .manage-reports__counter",
