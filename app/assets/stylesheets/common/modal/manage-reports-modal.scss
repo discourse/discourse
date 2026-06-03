@@ -31,6 +31,13 @@
     gap: var(--space-3);
     padding: var(--space-3) var(--space-6);
     background: var(--secondary);
+    box-shadow:
+      inset 0 2px 0 0 transparent,
+      inset 0 -2px 0 0 transparent;
+
+    .manage-reports__list.--dragging & {
+      transition: box-shadow 0.1s ease;
+    }
 
     &:not(:last-child) {
       border-bottom: 1px solid var(--primary-low);
@@ -38,6 +45,24 @@
 
     &[draggable="true"] {
       cursor: grab;
+    }
+
+    &.dragging {
+      opacity: 0.5;
+    }
+
+    &.drag-below,
+    &:not(.dragging):has(+ .manage-reports__row.drag-above) {
+      box-shadow:
+        inset 0 2px 0 0 transparent,
+        inset 0 -2px 0 0 var(--tertiary);
+    }
+
+    &:first-child.drag-above,
+    .manage-reports__row.dragging + &.drag-above {
+      box-shadow:
+        inset 0 2px 0 0 var(--tertiary),
+        inset 0 -2px 0 0 transparent;
     }
 
     @include viewport.until(sm) {
