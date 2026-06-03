@@ -135,6 +135,7 @@ en:
         "trigger:topic_created": "Topic created"
         "trigger:topic_category_changed": "Topic category changed"
         "trigger:topic_tag_changed": "Topic tag changed"
+        "trigger:reviewable_approved": "Approved reviewable"
         "trigger:webhook": "Webhook"
         "trigger:manual": "Manual trigger"
         "condition:if": "If"
@@ -171,6 +172,7 @@ en:
         "trigger:topic_created": "Fires when a new topic is created"
         "trigger:topic_category_changed": "Fires when a topic is moved to a different category"
         "trigger:topic_tag_changed": "Fires when tags are added to or removed from a topic"
+        "trigger:reviewable_approved": "Fires when a reviewable is approved"
         "trigger:webhook": "Fires when an external service sends a webhook request"
         "trigger:manual": "Fires when triggered manually by an admin"
         "condition:if": "Branch the workflow based on a condition"
@@ -508,6 +510,9 @@ en:
       topic_tag_changed:
         category_id: "Category"
         category_id_description: "Only trigger for topics in this category"
+      reviewable_approved:
+        reviewable_types: "Reviewable types"
+        reviewable_types_description: "Only trigger for these reviewable types"
       schedule:
         rule: "Trigger rules"
         add_rule: "Add rule"
