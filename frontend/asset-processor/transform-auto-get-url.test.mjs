@@ -48,6 +48,11 @@ test.each([
     "<a href={{if x a b}}>x</a>",
     "<a href={{getURLForAttribute (if x a b)}}>x</a>",
   ],
+  ["<img src={{@logoUrl}}>", "<img src={{getURLForAttribute @logoUrl}}>"],
+  [
+    '<img src="/a.png" srcset="/a-2x.png 2x">',
+    '<img src={{getURLForAttribute "/a.png"}} srcset="/a-2x.png 2x">',
+  ],
 ])("wraps %s", async (input, expected) => {
   const { template, code } = await compile(input);
   expect(template).toBe(expected);
@@ -64,8 +69,7 @@ test.each([
   ['<base href="/discuss/">'],
   ['<a href="https://x/{{id}}">x</a>'],
   ["<MyLink @href={{this.url}} />"],
-  ["<img src={{@logoUrl}}>"],
-  ['<img src="/a.png" srcset="/a-2x.png 2x">'],
+  ['<img src="https://cdn.example.com/a.png">'],
   ['<video src={{@v}} poster="/p.png"></video>'],
   ['<form action="/post">x</form>'],
 ])("leaves %s untouched", async (input) => {

@@ -91,10 +91,10 @@ module("Integration | lib | auto-get-url transform", function (hooks) {
     assert.dom("#mail").hasAttribute("href", "mailto:a@b.com");
   });
 
-  test("leaves img src untouched while the scope is a[href] only", async function (assert) {
+  test("prefixes a raw img src binding", async function (assert) {
     this.src = "/images/logo.png";
     await render(<template><img src={{this.src}} alt="logo" /></template>);
-    assert.dom("img").hasAttribute("src", "/images/logo.png");
+    assert.dom("img").hasAttribute("src", "/forum/images/logo.png");
   });
 
   test("does not prefix non-url attributes", async function (assert) {

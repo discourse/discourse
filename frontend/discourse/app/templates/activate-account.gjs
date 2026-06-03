@@ -105,7 +105,7 @@ export default class extends Component {
         {{#if this.accountActivated}}
           <div class="account-activated">
             <div class="tada-image">
-              <img src={{getURL "/images/wizard/tada.svg"}} alt="tada emoji" />
+              <img src="/images/wizard/tada.svg" alt="tada emoji" />
             </div>
             {{#if this.needsApproval}}
               <p>{{i18n "user.activate_account.approval_required"}}</p>

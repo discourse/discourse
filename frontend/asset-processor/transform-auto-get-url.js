@@ -14,14 +14,14 @@
 // which adds a lexical scope binding that resolves in both strict-mode (.gjs)
 // and loose-mode (.hbs) templates.
 //
-// The initial scope is limited to anchor `href` attributes, which is where the
-// middle-click/new-tab 404s come from. Other URL slots (`img[src]`,
-// `form[action]`, `video[poster]`, ...) can be added to `URL_ATTRS_BY_TAG`
-// once this has proven itself in production. Keying by tag means only real DOM
-// URL slots are ever touched, never a component.
+// The scope is limited to anchor `href` and image `src` attributes for now.
+// Other URL slots (`form[action]`, `video[poster]`, ...) can be added to
+// `URL_ATTRS_BY_TAG` once this has proven itself in production. Keying by tag
+// means only real DOM URL slots are ever touched, never a component.
 
 const URL_ATTRS_BY_TAG = {
   a: ["href"],
+  img: ["src"],
 };
 
 const SAFE_MUSTACHE_HEADS = new Set([
