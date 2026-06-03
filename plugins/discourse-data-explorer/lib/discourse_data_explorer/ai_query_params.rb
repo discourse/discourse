@@ -47,15 +47,15 @@ module DiscourseDataExplorer
       when :user_id
         current_user.username
       when :post_id
-        Post.where(deleted_at: nil).select(:id).first&.id.to_s
+        Post.where(deleted_at: nil).order(:id).pick(:id).to_s
       when :topic_id
-        Topic.where(deleted_at: nil).select(:id).first&.id.to_s
+        Topic.where(deleted_at: nil).order(:id).pick(:id).to_s
       when :category_id
-        Category.where(read_restricted: false).select(:id).first&.id.to_s
+        Category.where(read_restricted: false).order(:id).pick(:id).to_s
       when :group_id
-        Group.select(:name).first&.name.to_s
+        Group.order(:name).pick(:name).to_s
       when :badge_id
-        Badge.select(:id).first&.id.to_s
+        Badge.order(:id).pick(:id).to_s
       when :int_list
         "1,2"
       when :string_list
@@ -63,7 +63,7 @@ module DiscourseDataExplorer
       when :user_list
         current_user.username
       when :group_list
-        Group.select(:name).first&.name.to_s
+        Group.order(:name).pick(:name).to_s
       end
     end
 
