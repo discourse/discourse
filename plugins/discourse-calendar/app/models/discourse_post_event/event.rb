@@ -443,6 +443,28 @@ module DiscoursePostEvent
       end
     end
 
+    SUGGESTED_USERS_LIMIT = 10
+
+    # Users that could be invited to this event, ranked by how closely their
+    # username matches +filter+ (exact match first). Already-invited users are
+    # excluded, optionally narrowed to a given attendance +type+.
+    def suggested_users(filter, type: nil)
+      excluded = type ? invitees.with_status(type) : invitees
+
+      missing_users(excluded.select(:user_id))
+        .where(
+          "LOWER(username) LIKE :filter",
+          filter: "%#{User.sanitize_sql_like(filter.downcase)}%",
+        )
+        .order(
+          DB.sql_fragment(
+            "CASE WHEN LOWER(username) = ? THEN 0 ELSE 1 END ASC, LOWER(username) ASC",
+            filter.downcase,
+          ),
+        )
+        .limit(SUGGESTED_USERS_LIMIT)
+    end
+
     def update_with_params!(params)
       case params[:status] ? params[:status].to_i : status
       when Event.statuses[:private]
