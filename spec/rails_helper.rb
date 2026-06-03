@@ -1041,26 +1041,6 @@ def stub_deprecated_settings!(override:)
   defaults.each { |_, hash| hash.delete(:new_one) }
 end
 
-def silence_stdout
-  STDOUT.stubs(:write)
-  yield
-ensure
-  STDOUT.unstub(:write)
-end
-
-def Rails.logger=(logger)
-  raise "Setting Rails.logger is not allowed as it can lead to unexpected behavior in tests. Use `fake_logger = track_log_messages { ... }` instead."
-end
-
-def track_log_messages
-  logger = FakeLogger.new
-  Rails.logger.broadcast_to(logger)
-  yield logger
-  logger
-ensure
-  Rails.logger.stop_broadcasting_to(logger)
-end
-
 def apply_base_chrome_args(args = [])
   base_args = %w[
     --disable-search-engine-choice-screen
