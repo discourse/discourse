@@ -161,10 +161,10 @@ module PageObjects
         JS
       end
 
-      def mobile_focus_back_viewport_top
+      def mobile_ancestor_viewport_top(post)
         page.evaluate_script(<<~JS)
           document
-            .querySelector(".nested-view__mobile-focus-back")
+            .querySelector("[data-test-nested-mobile-ancestor='#{post.post_number}']")
             .getBoundingClientRect()
             .top
         JS

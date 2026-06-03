@@ -301,7 +301,7 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_root_post(sibling_root_reply)
     end
 
-    it "brings the all replies control into view after opening hidden replies", mobile: true do
+    it "brings the parent branch control into view after opening hidden replies", mobile: true do
       great_grandchild_reply.update!(
         raw: "A great-grandchild post\n\n#{("More focused branch content.\n\n" * 30).strip}",
       )
@@ -314,7 +314,10 @@ RSpec.describe "Nested view" do
 
       expect(nested_view).to have_mobile_focus
       try_until_success(reason: "focused view scroll runs after render") do
-        expect(nested_view.mobile_focus_back_viewport_top).to be_between(-1, 120).inclusive
+        expect(nested_view.mobile_ancestor_viewport_top(child_reply)).to be_between(
+          -1,
+          120,
+        ).inclusive
       end
     end
 

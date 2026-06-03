@@ -185,12 +185,17 @@ export default class Nested extends Component {
   }
 
   @action
-  scrollMobileFocusToTop(element) {
+  scrollMobileFocusIntoContext(element) {
     if (!this.isMobileFocused || this.isDestroying || this.isDestroyed) {
       return;
     }
 
-    const target = element.querySelector(".nested-view__mobile-focus-back");
+    const ancestorRows = element.querySelectorAll(
+      ".nested-view__mobile-ancestor"
+    );
+    const target =
+      ancestorRows[ancestorRows.length - 1] ||
+      element.querySelector(".nested-view__mobile-focus-back");
     if (!target) {
       return;
     }
@@ -241,8 +246,8 @@ export default class Nested extends Component {
       {{#if this.isMobileFocused}}
         <div
           class={{this.mobileFocusClass}}
-          {{didInsert this.scrollMobileFocusToTop}}
-          {{didUpdate this.scrollMobileFocusToTop this.focusedPath}}
+          {{didInsert this.scrollMobileFocusIntoContext}}
+          {{didUpdate this.scrollMobileFocusIntoContext this.focusedPath}}
         >
           <button
             type="button"
