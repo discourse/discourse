@@ -26,7 +26,7 @@ en:
     discourse_assign:
       add_unassigned_filter: "Add 'unassigned' filter to category"
       additional_assign_allowed_groups: "Additional groups with assignment permission"
-      additional_assign_allowed_groups_description: "Members of these groups can assign and be assigned to topics in this category. Groups already allowed globally are shown and cannot be removed here. Parent category settings do not apply to subcategories."
+      additional_assign_allowed_groups_description: "Members of these groups can assign topics in this category. Groups already allowed globally are shown and cannot be removed here. Parent category settings do not apply to subcategories."
       cant_act: "You cannot act on flags that have been assigned to other users"
       cant_act_unclaimed: "You must claim this topic before acting on flags."
       topic_search_placeholder: "Search topics by title or post content"
