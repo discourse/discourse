@@ -579,3 +579,4 @@ en:
       invite_user_or_group:
         title: "Notify user(s) or group(s)"
         invite: "Send"
+        success: "Invitation sent"
