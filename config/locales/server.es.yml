@@ -5017,10 +5017,6 @@ es:
       invalid:
         one: "La etiqueta que seleccionó no se puede usar"
         other: "No se puede utilizar ninguna de las etiquetas que seleccionaste"
-      in_this_category: '«%{tag_name}» no puede ser usada en esta categoría'
-      restricted_to:
-        one: '"%{tag_name}" está restringida a la categoría "%{category_names}"'
-        other: '«%{tag_name}» está restringida a las siguientes categorías: %{category_names}'
       has_synonyms: '"%{tag_name}" no se puede utilizar porque tiene sinónimos.'
       restricted_tags_cannot_be_used_in_category:
         one: 'La etiqueta «%{tags}» no puede usarse en la categoría «%{category}». Por favor, quítala.'

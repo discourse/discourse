@@ -2760,10 +2760,6 @@ zh_TW:
     minimum_required_tags:
       other: "您必須至少選擇%{count}個標籤"
     upload_row_too_long: "CSV檔案每一行應該有一個標籤，可選，標籤後面可以是逗號，然後是標籤群組名稱。"
-    forbidden:
-      in_this_category: '「%{tag_name}」不能被使用在這個分類'
-      restricted_to:
-        other: '「%{tag_name}」只能被「%{category_name}」類別使用。'
   rss_by_tag: "主題標籤 %{tag}"
   finish_installation:
     congratulations: "祝賀，你已經安裝好了 Discourse！"

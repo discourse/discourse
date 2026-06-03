@@ -5105,12 +5105,6 @@ he:
         two: "לא ניתן להשתמש באף אחת מהתגיות שבחרת"
         many: "לא ניתן להשתמש באף אחת מהתגיות שבחרת"
         other: "לא ניתן להשתמש באף אחת מהתגיות שבחרת"
-      in_this_category: 'אי אפשר להשתמש ב־„%{tag_name}” בקטגוריה הזו'
-      restricted_to:
-        one: '„%{tag_name}” מוגבלת לקטגוריה הבאה: %{category_names}'
-        two: '„%{tag_name}” מוגבלת לקטגוריות הבאות: %{category_names}'
-        many: '„%{tag_name}” מוגבלת לקטגוריות הבאות: %{category_names}'
-        other: '„%{tag_name}” מוגבלת לקטגוריות הבאות: %{category_names}'
       has_synonyms: 'לא ניתן להשתמש ב־„%{tag_name}” כיוון שיש לו מילים נרדפות.'
       restricted_tags_cannot_be_used_in_category:
         one: 'לא ניתן להשתמש בתגית „%{tags}” בקטגוריה „%{category}”. נא להסיר אותה.'

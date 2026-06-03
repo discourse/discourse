@@ -5375,18 +5375,7 @@ uk:
         few: "Жоден із вибраних вами теґів не може бути використаний"
         many: "Жоден із вибраних вами теґів не може бути використаний"
         other: "Жоден із вибраних вами теґів не може бути використаний"
-      in_this_category: '"%{tag_name}" не можна використовувати в цьому розділі'
-      not_allowed: '"%{tag_name}" не можна використовувати'
-      restricted_to:
-        one: '"%{tag_name}" обмежений розділом "%{category_names}"'
-        few: '"%{tag_name}" обмежено такими розділами: %{category_names}'
-        many: '"%{tag_name}" обмежено такими розділами: %{category_names}'
-        other: '"%{tag_name}" обмежено такими розділами: %{category_names}'
-      restricted_to_truncated: '«%{tag_name}» обмежено такими категоріями: %{category_names} та %{more_count} інші'
-      synonym: 'Це синонім "%{tag_name}". Натомість використовуйте "%{tag_name}".'
       has_synonyms: '"%{tag_name}" не можна використовувати, оскільки він має синоніми.'
-      one_tag_per_topic_group: 'У кожній темі дозволено використовувати лише один тег з групи "%{tag_group_name}"'
-      missing_parent_tag: 'Для використання тегів з групи «%{tag_group_name}» потрібен тег «%{parent_tag_name}»'
       restricted_tags_cannot_be_used_in_category:
         one: 'Теґ «%{tags}» не можна використовувати в розділі «%{category}». Будь ласка, видаліть його.'
         few: 'Наступні теґи не можна використовувати в розділі «%{category}»: %{tags}. Будь ласка, видаліть їх.'

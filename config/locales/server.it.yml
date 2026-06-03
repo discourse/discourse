@@ -4353,10 +4353,6 @@ it:
       invalid:
         one: "Non si può usare l'etichetta selezionata"
         other: "Non si può usare nessuna delle etichette selezionate"
-      in_this_category: 'Non si può usare ''%{tag_name}'' in questa categoria'
-      restricted_to:
-        one: '"%{tag_name}" è limitato alla categoria "%{category_names}"'
-        other: '"%{tag_name}" è limitato alle seguenti categorie: %{category_names}'
       has_synonyms: '"%{tag_name}" non può essere utilizzato perché ha dei sinonimi.'
       restricted_tags_cannot_be_used_in_category:
         one: 'L''etichetta "%{tags}" non può essere usata nella categoria "%{category}". Rimuovila.'

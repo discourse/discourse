@@ -5573,19 +5573,7 @@ ar:
         few: "لا يمكن استخدام أي من الوسوم التي حدَّدتها"
         many: "لا يمكن استخدام أي من الوسوم التي حدَّدتها"
         other: "لا يمكن استخدام أي من الوسوم التي حدَّدتها"
-      in_this_category: 'لا يمكن استخدام "%{tag_name}" في هذه الفئة'
-      restricted_to:
-        zero: '"%{tag_name}" مقصور على الفئة التالية: %{category_names}'
-        one: '"%{tag_name}" مقصور على الفئة "%{category_names}"'
-        two: '"%{tag_name}" مقصور على الفئتَين التاليتَين: %{category_names}'
-        few: '"%{tag_name}" مقصور على الفئات التالية: %{category_names}'
-        many: '"%{tag_name}" مقصور على الفئات التالية: %{category_names}'
-        other: '"%{tag_name}" مقصور على الفئات التالية: %{category_names}'
-      restricted_to_truncated: 'يقتصر استخدام الوسم "%{tag_name}" على الفئات التالية: %{category_names}، بالإضافة إلى %{more_count} من الفئات الأخرى'
-      synonym: 'هذا الوسم مرادف لـ "%{tag_name}"؛ يُرجى استخدام "%{tag_name}" بدلاً منه.'
       has_synonyms: 'لا يمكن استخدام "%{tag_name}" لأنه يحتوي على مرادفات.'
-      one_tag_per_topic_group: 'يسمح باستخدام وسم واحد فقط من مجموعة "%{tag_group_name}" لكل موضوع'
-      missing_parent_tag: 'يتطلب استخدام وسم "%{parent_tag_name}" لاستخدام الوسوم من مجموعة "%{tag_group_name}"'
       restricted_tags_cannot_be_used_in_category:
         zero: 'لا يمكن استخدام الوسم "%{tags}" في فئة "%{category}". يُرجى إزالته.'
         one: 'لا يمكن استخدام الوسم "%{tags}" في فئة "%{category}". يُرجى إزالته.'

@@ -4308,12 +4308,6 @@ cs:
         few: "Žádný z vybraných štítků nelze použít"
         many: "Žádný z vybraných štítků nelze použít"
         other: "Žádný z vybraných štítků nelze použít"
-      in_this_category: '"%{tag_name}" nelze v této kategorii použít'
-      restricted_to:
-        one: '„%{tag_name}“ je omezen na kategorii „%{category_names}“'
-        few: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
-        many: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
-        other: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
       has_synonyms: '"%{tag_name}" nelze použít, protože má synonyma.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Štítek "%{tags}" nelze použít v kategorii "%{category}". Odstraňte jej prosím.'

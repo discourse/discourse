@@ -3960,10 +3960,6 @@ sv:
       invalid:
         one: "Den valda taggen kan inte användas"
         other: "Ingen av taggarna som du har valt kan användas"
-      in_this_category: '"%{tag_name}" kan inte användas i denna kategori'
-      restricted_to:
-        one: '"%{tag_name}" är begränsad till kategorin %{category_names}'
-        other: '"%{tag_name}" är begränsad till följande kategorier: %{category_names}'
       has_synonyms: '"%{tag_name}" kan inte användas eftersom den har synonymer.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Taggen "%{tags}" kan inte användas i kategorin "%{category}". Ta bort den.'
