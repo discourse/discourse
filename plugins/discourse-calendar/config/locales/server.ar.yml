@@ -44,7 +44,6 @@ ar:
     map_events_to_color: "تعيين لون لكل وسم أو فئة."
     map_events_title: "يستبدل \"الأحداث\" في عنوان الشريط الجانبي \"الأحداث القادمة\" لكل فئة."
     calendar_enabled: "قم بتفعيل المكوِّن الإضافي لتقويم Discourse. سيضيف ذلك دعمًا لعلامة [calendar][/calendar] في أول منشور في الموضوع."
-    discourse_post_event_enabled: "يفعِّل ميزات الحدث. ملاحظة: يحتاج أيضًا إلى تفعيل `calendar enabled`."
     displayed_invitees_limit: "يحد من أعداد المدعوين المعروضة في حدث."
     display_post_event_date_on_topic_title: "يعرض تاريخ الحدث بعد عنوان الموضوع."
     use_local_event_date: "استخدام التاريخ المحلي بعد عنوان الموضوع بدلًا من الوقت النسبي."
@@ -70,7 +69,6 @@ ar:
     event_participation_buttons: "قائمة أزرار المشاركة في الأحداث التي يمكن للمستخدمين استخدامها."
     sidebar_show_upcoming_events: "عرض رابط الأحداث القادمة في الشريط الجانبي ضمن \"المزيد\"."
     calendar_first_day_of_week: "حدد اليوم الأول من الأسبوع لعرض التقويم. الخيارات المتاحة هي السبت، أو الأحد، أو الاثنين."
-    enable_events_category_type_setup: "يُفعّل خيار نوع فئة \"الأحداث\" أثناء إعداد إنشاء الفئات. لاحظ أن خيار \"تفعيل إنشاء الفئات المبسّط\" يجب أن يكون مفعّلًا حتى يسري هذا الإعداد."
   discourse_calendar:
     category_type:
       default_calendar_view:

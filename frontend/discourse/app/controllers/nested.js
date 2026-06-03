@@ -280,18 +280,16 @@ export default class NestedController extends Controller {
   @action
   selectText() {
     const tc = this.#topicController;
-    const { postId, buffer, opts } = this.quoteState;
-    this.#ensurePostInStream(postId);
-    tc.quoteState.selected(postId, buffer, opts);
+    this.#ensurePostInStream(this.quoteState.postId);
+    tc.quoteState.copyFrom(this.quoteState);
     return tc.selectText();
   }
 
   @action
   buildQuoteMarkdown() {
     const tc = this.#topicController;
-    const { postId, buffer, opts } = this.quoteState;
-    this.#ensurePostInStream(postId);
-    tc.quoteState.selected(postId, buffer, opts);
+    this.#ensurePostInStream(this.quoteState.postId);
+    tc.quoteState.copyFrom(this.quoteState);
     return tc.buildQuoteMarkdown();
   }
 
@@ -483,6 +481,7 @@ export default class NestedController extends Controller {
 
   #onPostRegistered(post) {
     if (post?.post_number != null) {
+      this.topic?.postStream?.storePost(post);
       this.postRegistry.set(post.post_number, post);
     }
   }
@@ -536,8 +535,7 @@ export default class NestedController extends Controller {
         return;
       }
 
-      const post = this.store.createRecord("post", postData);
-      post.topic = this.topic;
+      const { post } = this.#processNode({ ...postData, children: [] });
 
       const replyTo = postData.reply_to_post_number;
       const isRoot = !replyTo || replyTo === 1;
@@ -648,10 +646,7 @@ export default class NestedController extends Controller {
     const newNodes = [];
     for (const result of results) {
       if (result.status === "fulfilled") {
-        const postData = result.value;
-        const post = this.store.createRecord("post", postData);
-        post.topic = this.topic;
-        newNodes.push({ post, children: [] });
+        newNodes.push(this.#processNode({ ...result.value, children: [] }));
       }
     }
 

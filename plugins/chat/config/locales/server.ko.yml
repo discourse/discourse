@@ -66,6 +66,10 @@ ko:
     scriptables:
       send_chat_message:
         title: 채팅 메시지 보내기
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "승인"
+      default_deny_label: "거부"
   reviewable_score_types:
     needs_review:
       title: "검토 필요"

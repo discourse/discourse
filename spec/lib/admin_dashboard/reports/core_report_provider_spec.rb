@@ -64,13 +64,21 @@ RSpec.describe AdminDashboard::Reports::CoreReportProvider do
       expect(described_class.list_all(search: "zzzz_no_match_zzzz")).to be_empty
     end
 
-    it "respects offset and limit" do
-      first_two = described_class.list_all(offset: 0, limit: 2)
-      next_two = described_class.list_all(offset: 2, limit: 2)
-
+    it "returns a title-sorted page and resumes after the cursor" do
+      first_two = described_class.list_all(limit: 2)
       expect(first_two.size).to eq(2)
+
+      titles = described_class.list_all.map { |report| report.title.to_s.downcase }
+      expect(titles).to eq(titles.sort)
+
+      after = { title: first_two.last.title, key: first_two.last.key }
+      next_two = described_class.list_all(after: after, limit: 2)
+
       expect(next_two.size).to eq(2)
       expect(first_two.map(&:identifier)).not_to include(*next_two.map(&:identifier))
+      expect(
+        described_class.sort_key(next_two.first) <=> described_class.sort_key(first_two.last),
+      ).to eq(1)
     end
   end
 

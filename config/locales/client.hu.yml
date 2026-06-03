@@ -457,7 +457,7 @@ hu:
       launch_in_easy_steps: "Indítás %{step_count} egyszerű lépésben"
       congrats_onboarding_complete: "Gratulálunk a bevezetési folyamat elvégzéséhez!"
       select_theme:
-        enabled: "Bekapcsolva"
+        enabled: "Kiválasztott"
       invite_collaborators:
         title: "Együttműködők meghívása"
         description: "Az első tagok segítenek életre kelteni a közösségedet."
@@ -2927,7 +2927,7 @@ hu:
       users_placeholder: "Felhasználók vagy csoportok hozzáadása"
       title_placeholder: "Mi lesz a témája ennek a beszélgetésnek egy rövid mondatban?"
       title_or_link_placeholder: "Írja be a címet, vagy illesszen be ide egy hivatkozást"
-      edit_reason_placeholder: "miért szerkeszt?"
+      edit_reason_placeholder: "Miért szerkeszti?"
       topic_featured_link_placeholder: "Írja be a címmel megjelenített hivatkozást."
       remove_featured_link: "Hivatkozás eltávolítása a témából."
       reply_placeholder: "Ide írjon. A formázáshoz használhat Markdownt, BBCode-ot vagy HTML-t. Idehúzhat vagy beilleszthet képeket."
@@ -2996,6 +2996,7 @@ hu:
       collapse: "Szerkesztő panel minimalizálása"
       open: "Szerkesztő panel megnyitása"
       abandon: "Szerkesztő bezárása és a vázlat elvetése"
+      edit_reason: "Miért szerkeszti?"
       enter_fullscreen: "Belépés a teljes képernyős szerkesztőbe"
       exit_fullscreen: "Kilépés a teljes képernyős szerkesztőből"
       exit_fullscreen_prompt: "Nyomja meg a <kbd>ESC</kbd> gombot a teljes képernyőről való kilépéshez"
@@ -3030,25 +3031,24 @@ hu:
           desc: Új üzenet létrehozása azonos címzettekkel
         reply_to_topic:
           label: Válasz a témára
+          trigger: Téma
           desc: Válasz a témára, nem konkrét bejegyzésre
         toggle_whisper:
           label: Suttogás be/ki
-          desc: A suttogások csak a stáb tagjai számára láthatók
         create_topic:
-          label: "Új téma"
           desc: Új téma létrehozása
         create_personal_message:
-          label: "Új üzenet"
           desc: "Új személyes üzenet létrehozása"
         shared_draft:
           label: "Megosztott vázlat"
           desc: "Témavázlat készítése, amely csak az engedélyezett felhasználók számára látható"
         toggle_topic_bump:
-          label: "Téma előrehozása be/ki"
           desc: "Válasz a legutóbbi válasz dátumának módosítása nélkül"
         toggle_unlisted:
           label: Nem listázott állapot be/ki
           desc: "A nem listázott témák csak közvetlen linken keresztül érhetők el."
+        edit_post: "Bejegyzés szerkesztése"
+        unknown_user: "Felhasználó"
       reload: "Újratöltés"
       ignore: "Letiltás"
       image_alt_text:
@@ -3445,6 +3445,15 @@ hu:
         also_dismiss_topics: "Ezen témák követésének leállítása, így sosem fognak olvasatlanként megjelenni"
         dismiss_new_topics: "Új témák elvetése"
         dismiss_new_replies: "Új válaszok elvetése"
+        dismiss_new_topics_with_selected:
+          one: "Elvetés (%{count})"
+          other: "Elvetés (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Elvetés (%{count})"
+          other: "Elvetés (%{count})"
+        dismiss_all_with_selected:
+          one: "Elvetés (%{count})"
+          other: "Elvetés (%{count})"
         dismiss_new: "Újak elvetése"
         dismiss_new_modal:
           title: "Újak elvetése"
@@ -5405,7 +5414,7 @@ hu:
           title: "Tábla szerkesztése"
           cancel: "mégse"
           create: "Mentés"
-          reason: "miért szerkeszti?"
+          reason: "Miért szerkeszti?"
           trigger_reason: "Add meg a szerkesztés okát"
         default_edit_reason: "Tábla frissítése táblázatszerkesztővel"
       default_header:

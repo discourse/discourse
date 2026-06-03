@@ -218,7 +218,9 @@ uk:
       apply: "Застосувати"
       start_date: "Дата початку"
       end_date: "Дата закінчення"
+      date_placeholder: "yyyy/mm/dd"
       presets:
+        label: "Попередні налаштування діапазону дат"
         last_7_days: "Останні 7 днів"
         last_30_days: "Останні 30 днів"
         last_3_months: "Останні 3 місяців"
@@ -544,9 +546,9 @@ uk:
         description: "Виберіть початкову тему для вашої спільноти"
         action: "Виберіть тему"
         modal_title: "Виберіть тему"
-        use_theme: "Використовуйте цю тему"
-        enabled: "Включено"
-        theme_set: "%{theme} тепер ваша тема за замовчуванням"
+        use_theme: "Використати вибрану тему"
+        enabled: "Вибрано"
+        applying_theme: "Застосування теми..."
         browse_all: "Керування темами"
         show_light_screenshot: "Показувати світлий скріншот"
         show_dark_screenshot: "Показати темний скріншот"
@@ -3329,7 +3331,7 @@ uk:
       users_placeholder: "Додайте користувачів або групи"
       title_placeholder: "Про що це обговорення, в одному короткому реченні?"
       title_or_link_placeholder: "Введіть назву, або вставте тут посилання"
-      edit_reason_placeholder: "чому ви редагуєте допис?"
+      edit_reason_placeholder: "Чому ви редагуєте допис?"
       topic_featured_link_placeholder: "Введіть посилання, що показується з заголовком."
       remove_featured_link: "Видалити посилання з теми."
       reply_placeholder: "Пишіть тут. Для форматування використовуйте Markdown, BBCode або HTML. Перетягніть або вставте зображення."
@@ -3399,7 +3401,7 @@ uk:
       collapse: "Згорнути панель редактора"
       open: "Відкрити панель редактора"
       abandon: "Закрити панель редактора та видалити чернетку"
-      edit_reason: "Додайте причину редагування"
+      edit_reason: "Чому ви редагуєте допис?"
       enter_fullscreen: "Панель редактора на весь екран"
       exit_fullscreen: "Вийти з повноекранного режиму редактора"
       exit_fullscreen_prompt: "Натисніть <kbd>ESC</kbd>, щоб вийти з повноекранного режиму"
@@ -3434,25 +3436,24 @@ uk:
           desc: Створіть нове повідомлення, з тими самими одержувачами
         reply_to_topic:
           label: Відповісти на тему
+          trigger: Тема
           desc: Відповідь на тему, а не який-небудь конкретний допис
         toggle_whisper:
           label: Увімкнути шепіт
-          desc: Шепіт бачать лише члени команди обслуговування
         create_topic:
-          label: "Нова тема"
           desc: Створити нову тему
         create_personal_message:
-          label: "Сворити нове"
           desc: "Створити нове приватне повідомлення"
         shared_draft:
           label: "Спільна чернетка"
           desc: "Створіть тему, яку бачитимуть лише обрані користувачі"
         toggle_topic_bump:
-          label: "Не піднімати тему"
           desc: "Відповісти без зміни дати останньої відповіді"
         toggle_unlisted:
           label: Перемикання між приватністю
           desc: "Теми, які не вказані в списку, доступні лише за прямим посиланням"
+        edit_post: "Редагування допису"
+        unknown_user: "Користувач"
       reload: "Перезавантажити"
       ignore: "Ігнорувати"
       image_alt_text:
@@ -3929,8 +3930,26 @@ uk:
           other: "Відхилити (%{count})…"
         dismiss_tooltip: "Відхилити нові дописи, або перестати стежити за цими темами"
         also_dismiss_topics: "Перестати стежити за цими темами, щоб вони ніколи більше не показувались як непрочитані"
+        dismiss_all: "Відхилити все"
         dismiss_new_topics: "Відхилити нові теми"
         dismiss_new_replies: "Відхиляти нові відповіді"
+        dismiss_new_topics_with_selected:
+          one: "Відхилити (%{count})"
+          few: "Відхилити (%{count})"
+          many: "Відхилити (%{count})"
+          other: "Відхилити (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Відхилити (%{count})"
+          few: "Відхилити (%{count})"
+          many: "Відхилити (%{count})"
+          other: "Відхилити (%{count})"
+        dismiss_all_with_selected:
+          one: "Відхилити (%{count})"
+          few: "Відхилити (%{count})"
+          many: "Відхилити (%{count})"
+          other: "Відхилити (%{count})"
+        dismiss_new_menu: "Відхилити параметри"
+        dismiss_and_stop_tracking: "Відхилити і зупинити відстеження"
         dismiss_new: "Відхилити Нові"
         dismiss_new_modal:
           title: "Відхилити нові"
@@ -4172,6 +4191,7 @@ uk:
         few: "%{count} відповіді"
         many: "%{count} відповідей"
         other: "%{count} відповідь"
+      collapsed_post: "Згорнутий допис"
       collapse: "Згорнути"
       collapse_parent: "Згорнути батьківський потік"
       focused_path: "Сфокусований шлях відповіді"
@@ -6350,7 +6370,7 @@ uk:
           title: "Редагувати таблицю"
           cancel: "скасувати"
           create: "Зберегти"
-          reason: "чому ви редагуєте допис?"
+          reason: "Чому ви редагуєте допис?"
           trigger_reason: "Додати причину для редагування"
         default_edit_reason: "Оновлення таблиці за допомогою редактора таблиць"
       default_header:
@@ -7178,15 +7198,19 @@ uk:
                 title: "Поки що недостатньо активності, щоб підсумувати залученість."
                 summary: "Виберіть довший діапазон дат або поверніться, коли у вашій спільноті буде більше активності."
         reports_section:
+          description: "Закріпити стандартні звіти або запити Data Explorer, щоб відстежувати, що має значення для вашої спільноти."
           add: "Додати звіт"
           remove: "Видалити звіт"
           no_data: "Немає даних для відображення"
           modal:
             title: "Керування звітами"
             search_placeholder: "Пошук звітів"
+            counter: "%{count} / %{max} додано звітів"
             enabled_heading: "Включено"
             all_heading: "Всі звіти"
             apply: "Застосувати"
+            enable: "Увімкнути %{title}"
+            disable: "Відключити %{title}"
             move_up: "Перемістити %{title} вгору"
             move_down: "Перемістити %{title} вниз"
         configure:

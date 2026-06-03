@@ -302,8 +302,6 @@ sq:
       pill: "Sugjeruar"
       pm_title: "Mesazhet e sugjeruara"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Aktivizuar"
       start_posting:
         back: "Kthehu mbrapa"
     about:
@@ -2488,7 +2486,7 @@ sq:
       users_placeholder: "Shtoni përdorues ose grupe"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
-      edit_reason_placeholder: "pse jeni duke e redaktuar?"
+      edit_reason_placeholder: "Pse jeni duke e redaktuar?"
       topic_featured_link_placeholder: "Shkruani lidhjen e treguar me titullin."
       remove_featured_link: "Hiqni lidhjen nga tema."
       reply_placeholder: "Shkruani këtu. Mund të përdorni Markdown, BBCode, ose kod HTML për formatimin. Tërhiqni (drag and drop) ose kopjoni dhe ngjisni imazhet. "
@@ -2523,6 +2521,7 @@ sq:
         attribute_value: "Vlera"
         apply: "Apliko"
       help: "Ndihmë mbi Markdown"
+      edit_reason: "Pse jeni duke e redaktuar?"
       exit_fullscreen_prompt: "Shtypni <kbd>ESC</kbd> për të dalë nga ekrani i plotë"
       modal_ok: "OK"
       cant_send_pm: "Na vjen keq, nuk mund t'i dërgoni mesazh privat anëtarit %{username}."
@@ -2552,18 +2551,18 @@ sq:
           desc: Krijo mesazh të ri duke filluar me të njëjtët marrës
         reply_to_topic:
           label: Përgjigju temës
+          trigger: Topic
           desc: Përgjigju temës, jo ndonjë postimi specifik
         toggle_whisper:
           label: Ndërroni pëshpëritjen
-          desc: Pashërritjet janë të dukshme vetëm për anëtarët e stafit
         create_topic:
           desc: Krijoni një temë të re
         shared_draft:
           label: "Drafti i përbashkët"
           desc: "Hartoni një temë që do të jetë e dukshme vetëm për përdoruesit e lejuar"
         toggle_topic_bump:
-          label: "Ndryshoni përplasjen e temës"
           desc: "Përgjigjuni pa ndryshuar datën e fundit të përgjigjes"
+        unknown_user: "User"
       reload: "Ringarkoni"
       ignore: "Injoroni"
       image_alt_text:
@@ -2914,6 +2913,15 @@ sq:
         also_dismiss_topics: "Mos i gjurmo më këto tema që të mos afishohen më si të palexuara për mua"
         dismiss_new_topics: "Hiqni temat e reja"
         dismiss_new_replies: "Hiqni përgjigjet e reja"
+        dismiss_new_topics_with_selected:
+          one: "Hiq (%{count})"
+          other: "Hiq (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Hiq (%{count})"
+          other: "Hiq (%{count})"
+        dismiss_all_with_selected:
+          one: "Hiq (%{count})"
+          other: "Hiq (%{count})"
         dismiss_new: "Hiqni të Rejat"
         dismiss_new_modal:
           title: "Hiqni të Rejat"
@@ -3932,7 +3940,7 @@ sq:
         modal:
           cancel: "anulo"
           create: "Ruaj"
-          reason: "pse jeni duke e redaktuar?"
+          reason: "Pse jeni duke e redaktuar?"
       spreadsheet:
         show: "Shfaq"
         about: "Rreth"

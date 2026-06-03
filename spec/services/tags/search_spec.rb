@@ -107,9 +107,11 @@ RSpec.describe(Tags::Search) do
         expect(disabled.map { |t| t[:name] }).to include("gamma")
       end
 
-      it "includes the one_per_topic reason" do
+      it "names the conflicting tag in the one_per_topic reason" do
         disabled = result[:tags].find { |t| t[:name] == "gamma" && t[:disabled] }
-        expect(disabled[:title]).to include("Exclusive Group")
+        expect(disabled[:title]).to eq(
+          I18n.t("tags.forbidden.one_tag_per_topic_group", tag_names: "alpha"),
+        )
       end
     end
 
@@ -132,6 +134,12 @@ RSpec.describe(Tags::Search) do
       it "includes the missing parent tag reason" do
         disabled = result[:tags].find { |t| t[:name] == "childtag" && t[:disabled] }
         expect(disabled[:title]).to include("parent")
+      end
+
+      it "does not surface the tag when the term only matches mid-word" do
+        result =
+          described_class.call(params: { q: "hildtag", filterForInput: true }, **dependencies)
+        expect(result[:tags].map { |t| t[:name] }).not_to include("childtag")
       end
     end
 

@@ -46,13 +46,37 @@ puts "Merge base: #{merge_base}"
 # Read versions.json from main branch to find backport targets
 versions = JSON.parse(run("git", "show", "origin/main:versions.json").stdout)
 
-# Find versions that are both supported and released
+# Optional target versions can be supplied, space- or comma-separated, each with
+# an optional "v" prefix: "@discoursebot backport 2026.5, v2026.4"
+target_versions =
+  ENV["COMMENT_BODY"].to_s[/@discoursebot\s+backport\b(.*)/i, 1]
+    .to_s
+    .split(/[\s,]+/)
+    .reject(&:empty?)
+    .map { |v| v.sub(/\Av/i, "") }
+
 backport_versions =
-  versions
-    .select { |version, info| info["supported"] == true && info["released"] == true }
-    .keys
-    .sort
-    .reverse
+  if target_versions.any?
+    unknown = target_versions.reject { |v| versions.key?(v) }
+    if unknown.any?
+      gh(
+        "pr",
+        "comment",
+        pr_number,
+        "--body",
+        "Unknown version(s): #{unknown.join(", ")}. Known versions: #{versions.keys.sort.reverse.join(", ")}.",
+      )
+      exit 0
+    end
+    target_versions.uniq.sort.reverse
+  else
+    # Find versions that are both supported and released
+    versions
+      .select { |version, info| info["supported"] == true && info["released"] == true }
+      .keys
+      .sort
+      .reverse
+  end
 
 puts "Will backport to versions: #{backport_versions.join(", ")}"
 

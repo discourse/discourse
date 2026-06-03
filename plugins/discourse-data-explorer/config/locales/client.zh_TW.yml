@@ -36,3 +36,9 @@ zh_TW:
       search_placeholder: "搜尋..."
     group:
       reports: "報告"
+    discourse_workflows:
+      sql:
+        param_value: "價值"
+        output:
+          results: "結果"
+          no_results: "沒有結果"

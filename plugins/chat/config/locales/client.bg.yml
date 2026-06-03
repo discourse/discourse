@@ -223,3 +223,8 @@ bg:
       panels:
         chat:
           label: "Чат"
+    discourse_workflows:
+      send_chat_message:
+        message: "Съобщение"
+      chat_approval:
+        message: "Съобщение"

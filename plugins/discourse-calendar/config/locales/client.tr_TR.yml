@@ -445,6 +445,8 @@ tr_TR:
         name_placeholder: "Etkinlik adı"
         location_placeholder: "Konum veya URL ekle"
         description_placeholder: "Etkinlik açıklaması ekle"
+        event_title_placeholder: "Etkinlik adı"
+        create_event_button: "Etkinlik oluştur"
         reminder:
           units:
             minutes:
@@ -459,6 +461,9 @@ tr_TR:
             weeks:
               one: "hafta"
               other: "hafta"
+      composer_actions:
+        create_event:
+          label: "Etkinlik oluştur"
       builder_modal:
         custom_fields:
           label: "Özel Alanlar"

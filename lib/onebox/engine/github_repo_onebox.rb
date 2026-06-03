@@ -22,6 +22,20 @@ module Onebox
         "https://api.github.com/repos/#{match[:org]}/#{match[:repository]}"
       end
 
+      def inline_data
+        return if github_auth_header(match[:org]).blank?
+
+        result = raw(github_auth_header(match[:org]))
+        title = "GitHub - #{result["full_name"]}"
+        title += " - #{Onebox::Helpers.truncate(result["description"])}" if result[
+          "description"
+        ].present?
+        { title: title }
+      rescue StandardError => e
+        Rails.logger.warn("Inline GitHub repo onebox error for #{@url}: #{e.message}")
+        nil
+      end
+
       private
 
       def match

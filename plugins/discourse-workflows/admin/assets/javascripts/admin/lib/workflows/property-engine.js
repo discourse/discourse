@@ -291,6 +291,7 @@ export function propertyOptionLabel(nodeDefinitionOrType, fieldName, option) {
   return (
     translatedOrNull(`${base}.${key}_${valueKey}`) ||
     translatedOrNull(`${base}.${key}s.${valueKey}`) ||
+    (option.label_key ? translatedOrNull(option.label_key) : null) ||
     option.label ||
     option.name ||
     option.value

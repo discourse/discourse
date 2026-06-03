@@ -26,6 +26,10 @@ pl_PL:
       error_no_sql_returned: "Sztuczna inteligencja nie zwróciła prawidłowego zapytania SQL. Spróbuj ponownie lub wpisz zapytanie ręcznie."
     errors:
       tool_not_allowed: "Nie masz uprawnień do korzystania z tego narzędzia"
+    discourse_workflows:
+      sql_action:
+        no_query_selected: "Nie wybrano zapytania."
+        no_sql_provided: "Nie podano zapytania SQL."
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

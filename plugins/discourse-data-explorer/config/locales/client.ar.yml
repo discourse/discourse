@@ -123,6 +123,17 @@ ar:
           descriptions:
             data_explorer:
               run_queries: "تشغيل استعلامات مستكشف البيانات. يمكنك تقييد مفتاح واجهة برمجة التطبيقات (API) إلى مجموعة من الاستعلامات عن طريق تحديد معرِّفات الاستعلامات."
+    discourse_workflows:
+      nodes:
+        "action:sql": "مستكشف البيانات"
+      sql:
+        queries: "الاستعلامات"
+        query_id: "استعلام"
+        add_param: "إضافة معلمة"
+        param_value: "القيمة"
+        output:
+          results: "النتائج"
+          no_results: "لا توجد نتائج"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

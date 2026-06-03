@@ -61,6 +61,10 @@ module("Unit | Utility | workflows property engine", function () {
       propertyPlaceholder("trigger:webhook", "path"),
       "my-webhook"
     );
+    assert.strictEqual(
+      propertyPlaceholder("trigger:reviewable_approved", "reviewable_types"),
+      "All types"
+    );
   });
 
   test("resolves dynamic value hints for expression fields", function (assert) {
@@ -169,6 +173,13 @@ module("Unit | Utility | workflows property engine", function () {
         value: "cronExpression",
       }),
       "Custom (Cron)"
+    );
+    assert.strictEqual(
+      propertyOptionLabel("trigger:post_edited", "trust_levels", {
+        value: "0",
+        label_key: "trust_levels.names.newuser",
+      }),
+      "new user"
     );
   });
 

@@ -4,7 +4,7 @@ module DiscourseWorkflows
   module Nodes
     module Topic
       class V1 < NodeType
-        OPERATIONS = %w[create get list].freeze
+        OPERATIONS = %w[create get list close].freeze
         MAX_LIMIT = 100
         DEFAULT_LIMIT = 30
 
@@ -31,7 +31,7 @@ module DiscourseWorkflows
               required: true,
               display_options: {
                 show: {
-                  operation: ["get"],
+                  operation: %w[get close],
                 },
               },
             },
@@ -82,7 +82,7 @@ module DiscourseWorkflows
             },
             query: {
               type: :string,
-              required: true,
+              required: false,
               ui: {
                 control: :filter_query,
               },
@@ -96,6 +96,16 @@ module DiscourseWorkflows
               type: :integer,
               required: false,
               default: DEFAULT_LIMIT,
+              display_options: {
+                show: {
+                  operation: ["list"],
+                },
+              },
+            },
+            offset: {
+              type: :integer,
+              required: false,
+              default: 0,
               display_options: {
                 show: {
                   operation: ["list"],
@@ -126,6 +136,7 @@ module DiscourseWorkflows
                 "tag_names" => exec_ctx.get_node_parameter("tag_names", item_index),
                 "query" => exec_ctx.get_node_parameter("query", item_index),
                 "limit" => exec_ctx.get_node_parameter("limit", item_index, default: DEFAULT_LIMIT),
+                "offset" => exec_ctx.get_node_parameter("offset", item_index, default: 0),
               }
 
               Array.wrap(execute_with_config(exec_ctx, config, item_index))
@@ -144,6 +155,8 @@ module DiscourseWorkflows
             wrap(get_topic(exec_ctx, config, item_index))
           when "list"
             list_topics(exec_ctx, config, item_index).map { |data| wrap(data) }
+          when "close"
+            wrap(close_topic(exec_ctx, config, item_index))
           else
             raise_node_error!(
               I18n.t(
@@ -194,16 +207,29 @@ module DiscourseWorkflows
 
         def list_topics(exec_ctx, config, item_index)
           limit = [[Integer(config["limit"] || DEFAULT_LIMIT), 1].max, MAX_LIMIT].min
+          offset = [Integer(config["offset"] || 0), 0].max
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
-          topic_query = TopicQuery.new(actor, q: config["query"], per_page: limit)
+          topic_query =
+            TopicQuery.new(actor, q: config["query"], per_page: [limit + offset, MAX_LIMIT].min)
           topic_list = topic_query.list_filter
 
-          posts = topic_list.topics.map(&:first_post).compact
+          topics = topic_list.topics.slice(offset, limit) || []
+          posts = topics.map(&:first_post).compact
           if posts.any?
             ActiveRecord::Associations::Preloader.new(records: posts, associations: :user).call
           end
 
-          topic_list.topics.map { |topic| { topic: topic_data(topic, actor.guardian) } }
+          topics.map { |topic| { topic: topic_data(topic, actor.guardian) } }
+        end
+
+        def close_topic(exec_ctx, config, item_index)
+          topic = ::Topic.find(config["topic_id"])
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          actor.guardian.ensure_can_close_topic!(topic)
+
+          topic.update_status("closed", true, actor)
+
+          { topic: topic_data(topic.reload, actor.guardian) }
         end
 
         def topic_data(topic, guardian)

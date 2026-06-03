@@ -27,7 +27,6 @@ fr:
     oauth2_json_email_verified_path: "Chemin dans le JSON de l'utilisateur OAuth2 vers l'état de vérification de l'adresse e-mail de l'utilisateur (p. ex., user.email.verified). L'attribut oauth2_email_verified doit être désactivé pour que ce paramètre prenne effet."
     oauth2_json_avatar_path: "Chemin dans le JSON de l'utilisateur OAuth2 vers l'avatar de l'utilisateur (p. ex., user.avatar_url)"
     oauth2_email_verified: "Cochez cette case si le site OAuth2 a vérifié l'adresse e-mail"
-    oauth2_overrides_email: "Remplacez l'adresse e-mail Discourse par l'adresse e-mail distante à chaque connexion. Fonctionne de la même manière que le paramètre « auth_overrides_email », mais reste spécifique aux connexions OAuth2."
     oauth2_send_auth_header: "Envoyer les informations d'identification du client dans un en-tête d'autorisation HTTP"
     oauth2_send_auth_body: "Envoyer les informations d'identification du client dans le corps de la requête"
     oauth2_debug_auth: "Inclure des informations de débogage riches dans vos journaux"

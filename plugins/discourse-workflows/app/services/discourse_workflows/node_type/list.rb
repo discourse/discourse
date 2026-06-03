@@ -12,7 +12,7 @@ module DiscourseWorkflows
 
     private
 
-    def fetch_node_types
+    def fetch_node_types(guardian:)
       DiscourseWorkflows::Registry
         .nodes
         .uniq(&:identifier)
@@ -23,6 +23,7 @@ module DiscourseWorkflows
           NodeTypeSerializer.new(
             identifier: identifier,
             available_versions: Registry.available_versions(identifier),
+            guardian: guardian,
           ).to_h
         end
     end

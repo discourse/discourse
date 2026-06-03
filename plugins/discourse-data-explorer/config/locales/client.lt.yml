@@ -37,3 +37,8 @@ lt:
       search_placeholder: "Paieška..."
     group:
       reports: "Pranešimai"
+    discourse_workflows:
+      sql:
+        param_value: "Reikšmė"
+        output:
+          results: "Rezultatai"

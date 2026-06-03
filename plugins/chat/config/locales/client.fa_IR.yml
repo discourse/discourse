@@ -435,3 +435,10 @@ fa_IR:
       panels:
         chat:
           label: "گفتگو"
+    discourse_workflows:
+      send_chat_message:
+        channel_id: "کانال"
+        message: "پیام"
+      chat_approval:
+        message: "پیام"
+        channel_id: "کانال"

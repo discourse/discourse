@@ -31,3 +31,8 @@ bg:
       query_description: "Описание"
       reset_params: "Нулиране"
       search_placeholder: "Търсене ... "
+    discourse_workflows:
+      sql:
+        param_value: "Стойност"
+        output:
+          results: "Резултати"

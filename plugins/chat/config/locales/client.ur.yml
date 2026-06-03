@@ -412,3 +412,10 @@ ur:
     sidebar:
       start_new_dm:
         text: نیا ذاتی پیغام بنائیں
+    discourse_workflows:
+      send_chat_message:
+        channel_id: "چَینل"
+        message: "پیغام"
+      chat_approval:
+        message: "پیغام"
+        channel_id: "چَینل"

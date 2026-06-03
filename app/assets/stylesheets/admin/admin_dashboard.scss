@@ -355,7 +355,6 @@
   }
 
   &__row-block-title {
-    position: relative;
     color: var(--primary);
     font-weight: bold;
     font-size: var(--font-down-1-rem);
@@ -366,10 +365,22 @@
       margin-inline-start: var(--space-4);
     }
 
-    &:is(a):hover {
+    // The drill-down link is either this element (a bare anchor) or a nested
+    // anchor when the title is wrapped in a heading for screen-reader semantics.
+    &:is(a),
+    a {
+      position: relative;
+      display: inline-block;
       color: var(--primary);
 
-      .db-link-arrow {
+      &:hover,
+      &:focus,
+      &:visited,
+      &:active {
+        color: var(--primary);
+      }
+
+      &:hover .db-link-arrow {
         opacity: 1;
         transform: translateX(0);
       }

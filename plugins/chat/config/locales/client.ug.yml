@@ -753,3 +753,12 @@ ug:
       panels:
         chat:
           label: "سۆھبەت"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "سۆھبەت ئۇچۇرى يوللا"
+      send_chat_message:
+        channel_id: "قانال"
+        message: "ئۇچۇر"
+      chat_approval:
+        message: "ئۇچۇر"
+        channel_id: "قانال"

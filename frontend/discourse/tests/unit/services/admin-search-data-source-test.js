@@ -251,6 +251,59 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
     let results = this.subject.search("exact      setting");
     assert.deepEqual(results[0].label, "Page about whatever");
   });
+
+  test("urlForSetting - resolves a setting's primary area to its config page", function (assert) {
+    assert.strictEqual(
+      this.subject.urlForSetting({ setting: "title", primaryArea: "about" }),
+      "/admin/config/about?filter=title"
+    );
+  });
+
+  test("urlForSetting - appends /settings for multi-tabbed area pages", function (assert) {
+    assert.strictEqual(
+      this.subject.urlForSetting({
+        setting: "allow_flagging",
+        primaryArea: "flags",
+      }),
+      "/admin/config/flags/settings?filter=allow_flagging"
+    );
+  });
+
+  test("urlForSetting - resolves a setting's category when it has no area", function (assert) {
+    assert.strictEqual(
+      this.subject.urlForSetting({
+        setting: "min_post_length",
+        category: "security",
+      }),
+      "/admin/config/security?filter=min_post_length"
+    );
+  });
+
+  test("urlForSetting - prefers the area over the category", function (assert) {
+    assert.strictEqual(
+      this.subject.urlForSetting({
+        setting: "title",
+        primaryArea: "about",
+        category: "security",
+      }),
+      "/admin/config/about?filter=title"
+    );
+  });
+
+  test("urlForSetting - falls back to the all-settings page when nothing matches", function (assert) {
+    assert.strictEqual(
+      this.subject.urlForSetting({ setting: "some_unmapped_setting" }),
+      "/admin/site_settings/category/all_results?filter=some_unmapped_setting"
+    );
+  });
+
+  test("urlForSetting - works without buildMap having been called", function (assert) {
+    assert.false(this.subject._mapCached);
+    assert.strictEqual(
+      this.subject.urlForSetting({ setting: "title", primaryArea: "about" }),
+      "/admin/config/about?filter=title"
+    );
+  });
 });
 
 module(

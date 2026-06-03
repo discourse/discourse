@@ -58,11 +58,10 @@ module AdminDashboard
       end
       private_class_method :with_empty_flag
 
-      def self.list_all(search: nil, offset: 0, limit: nil)
+      def self.list_all(search: nil, after: nil, limit: nil)
         entries = ::Reports::ListQuery.call(guardian: Guardian.new(Discourse.system_user))
         entries = filter_by_search(entries, search) if search.present?
-        sliced = limit ? entries[offset, limit] : entries[offset..]
-        Array(sliced).map { |entry| build_resolved(entry) }
+        seek(entries.map { |entry| build_resolved(entry) }, after: after, limit: limit)
       end
 
       def self.build_resolved(entry)

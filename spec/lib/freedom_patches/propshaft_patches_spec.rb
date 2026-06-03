@@ -26,7 +26,7 @@ RSpec.describe Propshaft::Helper do
       missing_asset_path = "__nonexistent_propshaft_asset__.js"
 
       expect(helper.compute_asset_path(missing_asset_path)).to eq(
-        "/assets/__nonexistent_propshaft_asset__-aaaaaaaa.js",
+        "/assets/__nonexistent_propshaft_asset__.js",
       )
     end
   end

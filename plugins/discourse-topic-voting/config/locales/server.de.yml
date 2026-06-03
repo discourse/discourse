@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 de:
+  category_types:
+    ideas:
+      name: "Ideen"
+      title: "Ideen"
+      description: "Hier können Mitglieder Ideen einreichen und für die abstimmen, die ihnen am besten gefallen."
   site_settings:
     topic_voting_enabled: 'Benutzern erlauben, für Themen zu stimmen?'
     topic_voting_enable_vote_limits: 'Begrenze die Anzahl der Stimmen pro Benutzer auf Basis der Vertrauensstufe'
@@ -17,6 +22,25 @@ de:
     topic_voting_show_votes_on_profile: 'Benutzern erlauben, ihre Stimmen in ihrem Aktivitätsfeed zu sehen?'
     topic_voting_alert_votes_left: 'Benutzer benachrichtigen, wenn so viele Stimmen übrig sind'
   topic_voting:
+    category_type:
+      show_who_voted:
+        label: "Anzeigen, wer abgestimmt hat"
+      show_votes_on_profile:
+        label: "Stimmen im Profil anzeigen"
+      enable_vote_limits:
+        label: "Mitgliederstimmen begrenzen"
+      tl0_vote_limit:
+        label: "TL0 Stimmenlimit"
+      tl1_vote_limit:
+        label: "TL1 Stimmenlimit"
+      tl2_vote_limit:
+        label: "TL2 Stimmenlimit"
+      tl3_vote_limit:
+        label: "TL3 Stimmenlimit"
+      tl4_vote_limit:
+        label: "TL4 Stimmenlimit"
+      alert_votes_left:
+        label: "Warnung, wenn noch Stimmen verbleiben"
     votes_moved:
       one: "Eine Stimme wurde verschoben."
       other: "%{count} Stimmen wurden verschoben."
@@ -29,3 +53,20 @@ de:
         topic_votes_max: "Maximale Anzahl von Stimmen für ein Thema"
         order_topic_votes: "Themen nach Anzahl der Stimmen sortieren (am meisten zuerst)"
         order_topic_votes_asc: "Themen nach Anzahl der Stimmen sortieren (am wenigsten zuerst)"
+  badges:
+    daydreamer:
+      name: "Tagträumer"
+      description: "Erhalte eine Stimme zu deinem Thema"
+      long_description: "Dieses Abzeichen erhältst du, wenn eines deiner Themen eine Stimme bekommt. :white_check_mark: Tolle Idee. :+1:"
+    brainstormer:
+      name: "Brainstormer"
+      description: "Erhalte 5 Stimmen zu deinem Thema"
+      long_description: "Dieses Abzeichen erhältst du, wenn eines deiner Themen 5 Stimmen bekommt. :white_check_mark: Dein Thema findet Anklang."
+    innovator:
+      name: "Innovator"
+      description: "Erhalte 15 Stimmen zu deinem Thema"
+      long_description: "Dieses Abzeichen erhältst du, wenn eines deiner Themen 15 Stimmen bekommt. :white_check_mark: Es ist so gut, man muss es sich einfach anschauen."
+    visionary:
+      name: "Visionär"
+      description: "Erhalte 25 Stimmen zu deinem Thema"
+      long_description: "Dieses Abzeichen erhältst du, wenn eines deiner Themen 25 Stimmen bekommt. :white_check_mark: Gib den Leuten, was sie wollen! :clap:"

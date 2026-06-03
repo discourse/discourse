@@ -172,7 +172,7 @@ class CurrentUserSerializer < BasicUserSerializer
   def include_show_site_owner_onboarding?
     SiteSetting.enable_site_owner_onboarding && object.admin? &&
       User.where(admin: true).human_users.minimum(:id) == object.id &&
-      Topic.minimum(:created_at)&.after?(SiteSetting.site_owner_onboarding_max_days.days.ago)
+      object.created_at.after?(SiteSetting.site_owner_onboarding_max_days.days.ago)
   end
 
   def show_site_owner_onboarding

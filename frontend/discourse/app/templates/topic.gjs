@@ -586,28 +586,32 @@ export default <template>
               />
             </span>
 
-            <TopicFooterButtons
-              @topic={{@controller.model}}
-              @toggleMultiSelect={{@controller.toggleMultiSelect}}
-              @showTopicSlowModeUpdate={{routeAction "showTopicSlowModeUpdate"}}
-              @deleteTopic={{@controller.deleteTopic}}
-              @recoverTopic={{@controller.recoverTopic}}
-              @toggleClosed={{@controller.toggleClosed}}
-              @toggleArchived={{@controller.toggleArchived}}
-              @toggleVisibility={{@controller.toggleVisibility}}
-              @showTopicTimerModal={{routeAction "showTopicTimerModal"}}
-              @showFeatureTopic={{routeAction "showFeatureTopic"}}
-              @showChangeTimestamp={{routeAction "showChangeTimestamp"}}
-              @resetBumpDate={{@controller.resetBumpDate}}
-              @convertToPublicTopic={{@controller.convertToPublicTopic}}
-              @convertToPrivateMessage={{@controller.convertToPrivateMessage}}
-              @toggleBookmark={{@controller.toggleBookmark}}
-              @showFlagTopic={{routeAction "showFlagTopic"}}
-              @toggleArchiveMessage={{@controller.toggleArchiveMessage}}
-              @editFirstPost={{@controller.editFirstPost}}
-              @deferTopic={{@controller.deferTopic}}
-              @replyToPost={{@controller.replyToPost}}
-            />
+            {{#if @controller.showTopicFooterButtons}}
+              <TopicFooterButtons
+                @topic={{@controller.model}}
+                @toggleMultiSelect={{@controller.toggleMultiSelect}}
+                @showTopicSlowModeUpdate={{routeAction
+                  "showTopicSlowModeUpdate"
+                }}
+                @deleteTopic={{@controller.deleteTopic}}
+                @recoverTopic={{@controller.recoverTopic}}
+                @toggleClosed={{@controller.toggleClosed}}
+                @toggleArchived={{@controller.toggleArchived}}
+                @toggleVisibility={{@controller.toggleVisibility}}
+                @showTopicTimerModal={{routeAction "showTopicTimerModal"}}
+                @showFeatureTopic={{routeAction "showFeatureTopic"}}
+                @showChangeTimestamp={{routeAction "showChangeTimestamp"}}
+                @resetBumpDate={{@controller.resetBumpDate}}
+                @convertToPublicTopic={{@controller.convertToPublicTopic}}
+                @convertToPrivateMessage={{@controller.convertToPrivateMessage}}
+                @toggleBookmark={{@controller.toggleBookmark}}
+                @showFlagTopic={{routeAction "showFlagTopic"}}
+                @toggleArchiveMessage={{@controller.toggleArchiveMessage}}
+                @editFirstPost={{@controller.editFirstPost}}
+                @deferTopic={{@controller.deferTopic}}
+                @replyToPost={{@controller.replyToPost}}
+              />
+            {{/if}}
           {{else}}
             <AnonymousTopicFooterButtons @topic={{@controller.model}} />
           {{/if}}

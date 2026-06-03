@@ -104,7 +104,7 @@ class Group < ActiveRecord::Base
     admins: 1,
     moderators: 2,
     staff: 3,
-    anonymous: 4,
+    anonymous_users: 4,
     logged_in_users: 5,
     trust_level_0: 10,
     trust_level_1: 11,
@@ -157,7 +157,7 @@ class Group < ActiveRecord::Base
       (
         AUTO_GROUPS.values -
           [
-            Group::AUTO_GROUPS[:anonymous],
+            Group::AUTO_GROUPS[:anonymous_users],
             Group::AUTO_GROUPS[:logged_in_users],
             Group::AUTO_GROUPS[:everyone],
           ]
@@ -182,7 +182,7 @@ class Group < ActiveRecord::Base
             groups =
               groups.where(
                 "groups.id NOT IN (:ids)",
-                ids: [Group::AUTO_GROUPS[:anonymous], Group::AUTO_GROUPS[:logged_in_users]],
+                ids: [Group::AUTO_GROUPS[:anonymous_users], Group::AUTO_GROUPS[:logged_in_users]],
               )
           end
 
@@ -246,7 +246,7 @@ class Group < ActiveRecord::Base
             groups =
               groups.where(
                 "groups.id NOT IN (:ids)",
-                ids: [Group::AUTO_GROUPS[:anonymous], Group::AUTO_GROUPS[:logged_in_users]],
+                ids: [Group::AUTO_GROUPS[:anonymous_users], Group::AUTO_GROUPS[:logged_in_users]],
               )
           end
 
@@ -549,11 +549,11 @@ class Group < ActiveRecord::Base
       group.name = default_name
     end
 
-    # the everyone, anonymous, and logged_in_users groups are special — they
+    # the everyone, anonymous_users, and logged_in_users groups are special — they
     # represent implicit populations (unauthenticated visitors, or all logged-in
     # users) that cannot be enumerated via group_users rows.
     case name
-    when :everyone, :anonymous, :logged_in_users
+    when :everyone, :anonymous_users, :logged_in_users
       group.visibility_level = Group.visibility_levels[:staff]
       group.save!
       return group

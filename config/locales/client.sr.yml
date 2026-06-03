@@ -357,9 +357,6 @@ sr:
         description: "Izaberite početnu temu za svoju zajednicu"
         action: "Izaberi temu"
         modal_title: "Izaberite temu"
-        use_theme: "Koristi ovu temu"
-        enabled: "Omogućeno"
-        theme_set: "%{theme} je sada vaša podrazumevana tema"
         browse_all: "Upravljanje temama"
         show_light_screenshot: "Prikaži svetli snimak ekrana"
         show_dark_screenshot: "Prikaži tamni snimak ekrana"
@@ -1808,7 +1805,7 @@ sr:
       create_topic: "Kreiraj temu"
       discard: "Odbaci"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
-      edit_reason_placeholder: "zašto izmenjujete?"
+      edit_reason_placeholder: "Zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
       reply_placeholder_choose_category: "Odaberi kategoriju pre nego ovde pišeš"
       view_new_post: "Pogledajte svoju novu poruku."
@@ -1835,6 +1832,7 @@ sr:
         attribute_value: "Vriednost"
         apply: "Primeni"
       help: "Markdown pomoć pri izmenama"
+      edit_reason: "Zašto izmenjujete?"
       modal_ok: "U redu"
       yourself_confirm:
         title: "Da li ste zaboravili da dodate primaoce?"
@@ -1846,6 +1844,10 @@ sr:
         reply_as_new_topic:
           desc: Kreiraj novu temu povezanu na ovu temu
           confirm: Imate novi nacrt teme sačuvan, koji će biti obrisan ako stvorite povezanu temu.
+        reply_to_topic:
+          trigger: Tema
+        edit_post: "Uređivanje objave"
+        unknown_user: "Korisnik"
       image: "slika"
     notifications:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
@@ -2753,7 +2755,7 @@ sr:
         modal:
           cancel: "otkaži"
           create: "Sačuvaj"
-          reason: "zašto izmenjujete?"
+          reason: "Zašto izmenjujete?"
       spreadsheet:
         show: "Pokaži"
         about: "O nama"

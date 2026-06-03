@@ -133,7 +133,10 @@ zh_CN:
     date_range_picker:
       apply: "应用"
       start_date: "开始日期"
+      end_date: "结束日期"
+      date_placeholder: "yyyy/mm/dd"
       presets:
+        label: "日期范围预设"
         last_7_days: "过去 7 天"
         last_30_days: "过去 30 天"
         last_3_months: "过去 3 个月"
@@ -311,6 +314,8 @@ zh_CN:
       search_placeholder: "搜索"
     impersonation:
       notice: "您正在模拟 %{username}"
+      time_left:
+        other: "（还剩 %{count} 分钟）"
       stop: "停止模拟"
     themes:
       default_description: "默认"
@@ -341,6 +346,13 @@ zh_CN:
         condition_debugging: "条件调试"
       plugin_outlet_debug:
         find_on_github: "在 GitHub 上查找"
+        wrapper: "(wrapper)"
+        outlet_args: "Outlet 参数"
+        no_outlet_args: "此 Outlet 未传入任何参数"
+        aliases: "别名"
+        deprecated: "已弃用"
+        deprecated_outlet: "此 Outlet 已弃用，将在未来版本中移除。"
+        since: "（自 %{version} 起）"
       toggle_safe_mode: "切换安全模式"
       toggle_verbose_localization: "切换详细本地化"
       disable_dev_tools: "禁用开发者工具"
@@ -431,7 +443,14 @@ zh_CN:
       launch_in_easy_steps: "只需 %{step_count} 个简单步骤启动"
       congrats_onboarding_complete: "恭喜您完成入门流程！"
       select_theme:
-        enabled: "已启用"
+        title: "自定义您的站点"
+        description: "为您的社区选择一个起始主题"
+        action: "选择主题"
+        modal_title: "选择一个主题"
+        enabled: "已选择"
+        browse_all: "管理主题"
+        show_light_screenshot: "显示浅色截图"
+        show_dark_screenshot: "显示深色截图"
       invite_collaborators:
         title: "邀请协作者"
         description: "早期成员有助于让您的社区充满活力"
@@ -630,7 +649,15 @@ zh_CN:
       editing_post: "正在编辑帖子"
       reply_placeholder: "撰写回复…"
       signin_flow:
+        share_session_title: "登录到 %{site_name}"
+        share_session_message: "要继续， %{site_name} 需要获得您当前会话的权限才能在此页面中使用。请点击下方按钮允许访问。"
+        signin_required_title: "登录到 %{site_name}"
+        signin_required_message: "我们没有找到现有的 %{site_name} 会话。请打开新标签页登录或注册，然后返回此处继续。"
+        open_signin_tab: "打开登录标签页"
+        waiting_title: "等待登录"
+        waiting_message: "请在新标签页中完成登录。完成后，此页面将自动更新。"
         cancel: "取消"
+        sign_in_to_reply: "登录后回复"
     topic_count_all:
       other: "查看 %{count} 个新话题"
     topic_count_categories:
@@ -1419,6 +1446,7 @@ zh_CN:
           in_specific_groups: "用户属于此更改所需的特定群组"
           enabled_for_everyone: "此更改已对所有成员启用"
           enabled_for_no_one: "此更改已对所有成员禁用"
+        enable_available_notifications: "即将推出的更改可供预览时，请通知我。"
       user_notifications:
         filters:
           filter_by: "筛选依据"
@@ -1441,6 +1469,7 @@ zh_CN:
         normal_option: "常规"
         normal_option_title: "如果此用户回复、引用或提到您，您将收到通知。"
       notification_schedule:
+        title: "通知时间表"
         label: "启用自定义通知时间表"
         tip: "在这些时间以外，将暂停您的通知。"
         midnight: "午夜"
@@ -1484,8 +1513,13 @@ zh_CN:
       notifications: "通知"
       statistics: "统计信息"
       desktop_notifications:
+        label: "实时通知"
         not_supported: "抱歉，此浏览器不支持通知。"
+        perm_default: "启用通知"
+        perm_denied_btn: "权限被拒绝"
         perm_denied_expl: "您拒绝了通知的权限。通过您的浏览器设置允许通知。"
+        disable: "禁用通知"
+        enable: "启用通知"
         each_browser_note: "注意：您必须在使用的每个浏览器上更改此设置。如果您从用户菜单暂停通知，则无论此设置如何，所有通知都将被禁用。"
         consent_prompt: "当其他人回复您的帖子时是否接收实时通知？"
       dismiss: "忽略"
@@ -2144,7 +2178,9 @@ zh_CN:
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
           description: "描述"
+          description_help: "可帮助您识别此邀请的备注。"
           restrict: "限制为"
+          restrict_help: "输入电子邮件或电子邮件域，以限制谁可以接受此邀请。"
           restrict_email: "仅限电子邮件"
           restrict_domain: "仅限网域"
           email_or_domain_placeholder: "name@example.com 或者 example.com"
@@ -2154,6 +2190,7 @@ zh_CN:
           expires_at: "到期时间"
           expires_after: "有效截止时间"
           custom_message: "自定义消息"
+          custom_message_help: "包含在邀请邮件中。"
           custom_message_placeholder: "在您的邀请中添加个人备注"
           send_invite_email: "保存并发送电子邮件"
           send_invite_email_instructions: "限制只允许电子邮件邀请并发送邀请电子邮件"
@@ -2822,7 +2859,7 @@ zh_CN:
       users_placeholder: "选择用户或群组"
       title_placeholder: "用一句话概括讨论内容…"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
-      edit_reason_placeholder: "编辑原因"
+      edit_reason_placeholder: "为何进行编辑？"
       topic_featured_link_placeholder: "输入标题中显示的链接。"
       remove_featured_link: "从话题中移除链接。"
       reply_placeholder: "在此处输入。使用 Markdown、BBCode 或 HTML 进行排版。拖放或粘贴图片以插入。"
@@ -2892,7 +2929,7 @@ zh_CN:
       collapse: "最小化编辑器面板"
       open: "打开编辑器面板"
       abandon: "关闭编辑器并舍弃草稿"
-      edit_reason: "添加您的编辑理由"
+      edit_reason: "为何进行编辑？"
       enter_fullscreen: "进入全屏编辑器"
       exit_fullscreen: "退出全屏编辑器"
       exit_fullscreen_prompt: "按 <kbd>ESC</kbd> 退出全屏"
@@ -2927,25 +2964,24 @@ zh_CN:
           desc: 创建以相同收件人开头的新消息
         reply_to_topic:
           label: 回复话题
+          trigger: 话题
           desc: 回复话题，不是任何特定的帖子
         toggle_whisper:
           label: 切换密语
-          desc: 密语仅对管理人员可见
         create_topic:
-          label: "新建话题"
           desc: 创建新话题
         create_personal_message:
-          label: "新建消息"
           desc: "创建新的个人消息"
         shared_draft:
           label: "共享草稿"
           desc: "起草一个仅对允许的用户可见的话题"
         toggle_topic_bump:
-          label: "切换话题顶帖"
           desc: "回复但不更改最新回复日期"
         toggle_unlisted:
           label: 切换取消公开
           desc: "不公开的话题只能通过直接链接访问"
+        edit_post: "正在编辑帖子"
+        unknown_user: "用户"
       reload: "重新加载"
       ignore: "忽略"
       image_alt_text:
@@ -3335,6 +3371,12 @@ zh_CN:
         dismiss_all: "全部忽略"
         dismiss_new_topics: "忽略新话题"
         dismiss_new_replies: "忽略新回复"
+        dismiss_new_topics_with_selected:
+          other: "忽略（%{count} 个）"
+        dismiss_new_replies_with_selected:
+          other: "忽略（%{count} 个）"
+        dismiss_all_with_selected:
+          other: "忽略（%{count} 个）"
         dismiss_new_menu: "忽略选项"
         dismiss_and_stop_tracking: "忽略并停止跟踪"
         dismiss_new: "忽略新话题"
@@ -3495,6 +3537,7 @@ zh_CN:
         other: "%{count} 条新回复"
       collapsed_replies:
         other: "%{count} 条回复"
+      collapsed_post: "已折叠的帖子"
       collapse: "收起"
       collapse_parent: "收起父消息串"
       category_settings:

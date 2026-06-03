@@ -9,6 +9,7 @@
  */
 // eslint-discourse keep-array-sorted
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
+  "composer-actions-on-select",
   "composer-position:correct-scroll-position",
   "composer-position:editor-touch-move",
   "custom-homepage-model",
@@ -43,6 +44,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "category-display-name",
   "category-sort-orders",
   "category-text-color",
+  "composer-actions-content",
   "composer-editor-quoted-post-avatar-template",
   "composer-editor-reply-placeholder",
   "composer-force-editor-mode",
@@ -116,6 +118,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "topic-list-item-expand-pinned",
   "topic-list-item-mobile-layout",
   "topic-list-item-style",
+  "topic-show-footer-buttons",
   "user-field-components",
   "user-menu-notification-item-acting-user-avatar",
   "user-notes-modal-subtitle",

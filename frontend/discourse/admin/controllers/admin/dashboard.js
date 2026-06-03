@@ -7,7 +7,7 @@ import {
   DEFAULT_PERIOD,
   PERIOD_CUSTOM,
   VALID_PERIODS,
-} from "discourse/admin/components/dashboard/date-range";
+} from "discourse/admin/lib/dashboard-date-range";
 import AdminDashboard from "discourse/admin/models/admin-dashboard";
 import VersionCheck from "discourse/admin/models/version-check";
 import { ajax } from "discourse/lib/ajax";

@@ -40,7 +40,6 @@ fr:
     map_events_to_color: "Assigner une couleur à chaque étiquette ou catégorie."
     map_events_title: "Remplace « Événements » dans le titre de la barre latérale « Événements à venir » par catégorie."
     calendar_enabled: "Activer l'extension discourse-calendar. Ceci ajoutera la prise en charge de l'étiquette [calendar][/calendar] dans le premier message d'un sujet."
-    discourse_post_event_enabled: "Active les fonctionnalités d'événement. Remarque : il faut également que « calendrier activé » soit activé."
     displayed_invitees_limit: "Limite le nombre d'invités affichés sur un événement."
     display_post_event_date_on_topic_title: "Affiche la date de l'événement après le titre du sujet."
     use_local_event_date: "Utiliser la date locale après le titre du sujet au lieu de l'heure relative."
