@@ -157,7 +157,7 @@ export default class ChatUsage extends Component {
                     {{#each this.favoriteChannels as |channel|}}
                       <a
                         class="chat-channel-link"
-                        href={{getURL (concat "/chat/c/-/" channel.channel_id)}}
+                        href={{concat "/chat/c/-/" channel.channel_id}}
                       >
                         <span
                           class="chat-channel-link__name"

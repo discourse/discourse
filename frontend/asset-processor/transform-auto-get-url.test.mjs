@@ -1,3 +1,4 @@
+/* eslint-disable qunit/require-expect */
 import { transformAsync } from "@babel/core";
 import { expect, test } from "vitest";
 import autoGetUrl from "./transform-auto-get-url.js";

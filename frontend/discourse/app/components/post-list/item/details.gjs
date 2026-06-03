@@ -4,7 +4,6 @@ import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicStatus from "discourse/components/topic-status";
 import lazyHash from "discourse/helpers/lazy-hash";
-import getURL from "discourse/lib/get-url";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -69,7 +68,7 @@ export default class PostListItemDetails extends Component {
         <span class="title">
           {{#if this.url}}
             <a
-              href={{getURL this.url}}
+              href={{this.url}}
               aria-label={{this.titleAriaLabel}}
             >{{this.topicTitle}}</a>
           {{else if @isDraft}}
