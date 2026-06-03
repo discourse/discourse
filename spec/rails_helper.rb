@@ -193,7 +193,7 @@ RSpec.configure do |config|
 
   config.after(:each) do |example|
     if example.exception && RspecErrorTracker.exceptions.present?
-      lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= +"")
+      lines = (example.metadata[:extra_failure_lines] ||= +"")
       RspecErrorTracker.append_failure_dump(lines)
     end
 
@@ -208,12 +208,10 @@ RSpec.configure do |config|
   config.after(:each, type: :system) do |example|
     SystemArtifacts.stop_trace(page, example)
 
-    lines = RSpec.current_example.metadata[:extra_failure_lines]
+    lines = example.metadata[:extra_failure_lines]
 
     if example.exception &&
-         (
-           backtraces = RSpec.current_example.metadata[:_capybara_server_threads_backtraces]
-         ).present?
+         (backtraces = example.metadata[:_capybara_server_threads_backtraces]).present?
       CapybaraTimeoutExtension.append_server_thread_backtraces(lines, backtraces)
     end
 
