@@ -165,6 +165,13 @@ RSpec.configure do |config|
   # Match the request hostname to the value in `database.yml`
   config.before(:each, type: %i[request multisite system]) { host! "test.localhost" }
 
+  config.before(:each) do |example|
+    if example.metadata[:type] != :system
+      EmberCli.stubs(:read_manifest!).returns(nil)
+      EmberCli.stubs(:script_chunks).returns({})
+    end
+  end
+
   config.before(:each, type: :system) do |example|
     SystemDrivers.preload_model_schemas!
     SystemDrivers.register!(color_scheme: example.metadata[:color_scheme])
@@ -188,6 +195,14 @@ RSpec.configure do |config|
       if (tz = example.metadata[:timezone])
         BrowserTime.override_timezone(pw_page, tz)
       end
+    end
+
+    MessageBusTestSync.start
+    EmberDeprecations.set_raise_on_deprecation!(example)
+
+    if example.metadata[:time]
+      freeze_time(example.metadata[:time])
+      BrowserTime.freeze(page, example.metadata[:time])
     end
   end
 
@@ -235,28 +250,9 @@ RSpec.configure do |config|
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
   end
 
-  # These per-example hooks are registered last on purpose. before(:each) hooks
-  # run in registration order, so registering after the driver-setup hook above
-  # means the system ones run once the driver/page exists. after(:each) hooks run
-  # in reverse, so these run before the teardown hooks above.
-  config.before(:each) do |example|
-    if example.metadata[:type] != :system
-      EmberCli.stubs(:read_manifest!).returns(nil)
-      EmberCli.stubs(:script_chunks).returns({})
-    end
-  end
-
-  config.before(:each, type: :system) { MessageBusTestSync.start }
-
-  config.before(:each, type: :system) do |example|
-    EmberDeprecations.set_raise_on_deprecation!(example)
-
-    if example.metadata[:time]
-      freeze_time(example.metadata[:time])
-      BrowserTime.freeze(page, example.metadata[:time])
-    end
-  end
-
+  # Registered last so that, running in reverse order, they execute before the
+  # teardown hook above (and the timeout check stays its own hook so its raise
+  # doesn't abort the others).
   config.after(:each, type: :system) { MessageBusTestSync.stop }
 
   config.after(:each, type: :system) do |example|
