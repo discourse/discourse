@@ -11,17 +11,17 @@ module PageObjects
       end
 
       def visit_topic(topic, post_number: nil)
-        page.visit(topic.url(post_number))
+        visit(topic.url(post_number))
         self
       end
 
       def open_new_topic
-        page.visit "/new-topic"
+        visit "/new-topic"
         self
       end
 
       def open_new_message
-        page.visit "/new-message"
+        visit "/new-message"
         self
       end
 
@@ -399,7 +399,7 @@ module PageObjects
       end
 
       def move_to_public_modal
-        find(".modal.convert-to-public-topic")
+        find(".d-modal.convert-to-public-topic")
       end
 
       def has_no_flag_button?

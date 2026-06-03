@@ -9,10 +9,22 @@ describe "chat transcripts in rich editor" do
     )
   end
   fab!(:channel, :chat_channel)
+  fab!(:channel_with_quotation_marks) do
+    Fabricate(:chat_channel, name: 'Channel with a "special" name')
+  end
   fab!(:message_1) do
     Fabricate(:chat_message, user: current_user, chat_channel: channel, created_at: 2.days.ago)
   end
   fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel, created_at: 1.day.ago) }
+
+  fab!(:message_3) do
+    Fabricate(
+      :chat_message,
+      user: current_user,
+      chat_channel: channel_with_quotation_marks,
+      created_at: 2.days.ago,
+    )
+  end
 
   let(:cdp) { PageObjects::CDP.new }
   let(:composer) { PageObjects::Components::Composer.new }
@@ -46,6 +58,31 @@ describe "chat transcripts in rich editor" do
       text: message_1.user.username,
     )
     expect(rich).to have_css(".chat-transcript .chat-transcript-messages", text: message_1.message)
+  end
+
+  it "works for channel name with quotation marks in its name" do
+    page.visit "/new-topic"
+    expect(composer).to be_opened
+    composer.focus
+
+    markdown =
+      Chat::TranscriptService.new(
+        channel_with_quotation_marks,
+        current_user,
+        messages_or_ids: [message_3],
+      ).generate_markdown
+
+    cdp.copy_paste(
+      markdown,
+      css_selector: PageObjects::Components::Composer.new.composer_input_selector,
+    )
+
+    expect(rich).to have_css(".chat-transcript", text: channel_with_quotation_marks.name)
+    expect(rich).to have_css(
+      ".chat-transcript .chat-transcript-user .chat-transcript-username",
+      text: message_3.user.username,
+    )
+    expect(rich).to have_css(".chat-transcript .chat-transcript-messages", text: message_3.message)
   end
 
   it "works for multiple messages" do

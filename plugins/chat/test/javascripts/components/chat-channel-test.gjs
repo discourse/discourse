@@ -8,7 +8,7 @@ import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 import ChatChannel from "discourse/plugins/chat/discourse/components/chat-channel";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Component | chat-channel | status on mentions", function (hooks) {
+module("Component | ChatChannel | status on mentions", function (hooks) {
   setupRenderingTest(hooks);
 
   const channelId = 1;

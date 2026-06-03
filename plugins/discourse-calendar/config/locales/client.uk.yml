@@ -400,7 +400,7 @@ uk:
       upcoming_events_list:
         title: "Майбутні події"
         empty: "Немає майбутніх подій"
-        all_day: "Увесь день"
+        all_day: "Цілий день"
         error: "Не вдалося отримати події"
         try_again: "Спробуйте ще раз"
         view_all: "Переглянути всі"
@@ -468,6 +468,8 @@ uk:
           other: "Макс. %{count} учасників"
         no_rsvps_label: "Не збирається інформація про відвідуваність"
         description_placeholder: "Додати опис події"
+        event_title_placeholder: "Назва події"
+        create_event_button: "Створити подію"
         all_day: "Цілий день"
         reminder:
           units:
@@ -496,6 +498,9 @@ uk:
           notification_title: "Повідомляти учасників"
           bump_topic_title: "Тема автоматичного виведення"
           remove: "Видалити нагадування"
+      composer_actions:
+        create_event:
+          label: "Створити подію"
       builder_modal:
         custom_fields:
           label: "Користувацькі поля"
@@ -524,7 +529,6 @@ uk:
           label: "Дата закінчення"
         all_day:
           label: "Подія на цілий день"
-          description: "Подія на цілий день не матиме конкретного часу, лише дату. Подія триватиме від початку до кінця дня."
         reminders:
           label: "Нагадування"
           types:

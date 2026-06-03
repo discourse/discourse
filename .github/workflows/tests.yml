@@ -182,16 +182,15 @@ jobs:
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
-      - name: Create and migrate database
+      - name: Create and migrate databases
         run: |
-          bin/rake db:create
-          bin/rake db:migrate
-
-      - name: Create and migrate parallel databases
-        if: env.USES_PARALLEL_DATABASES == 'true'
-        run: |
-          bin/rake parallel:create
-          bin/rake parallel:migrate
+          if [ "$USES_PARALLEL_DATABASES" = "true" ]; then
+            parallel --halt now,fail=1 --line-buffer ::: \
+              'bin/rake db:create db:migrate' \
+              'bin/rake parallel:create parallel:migrate'
+          else
+            bin/rake db:create db:migrate
+          fi
 
       - name: Fetch turbo_rspec_runtime.log cache
         uses: actions/cache@v5

@@ -127,6 +127,11 @@ lv:
       previous_month: "Iepriekšējais mēnesis"
       next_month: "Nākamais mēnesis"
       placeholder: datums
+    date_range_picker:
+      apply: "Pielietot"
+      presets:
+        last_7_days: "Pēdējās 7 dienas"
+        last_30_days: "Pēdējās 30 dienas"
     share:
       topic_html: 'Temats: <span class="topic-title">%{topicTitle}</span>'
       close: "aizvērt"
@@ -258,8 +263,6 @@ lv:
     suggested_topics:
       pm_title: "Ieteiktās ziņas"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Ieslēgts"
       start_posting:
         back: "Atpakaļ"
     about:
@@ -1684,7 +1687,7 @@ lv:
       discard: "Izmest"
       title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
-      edit_reason_placeholder: "kāpēc jūs rediģējat?"
+      edit_reason_placeholder: "Kāpēc jūs rediģējat?"
       topic_featured_link_placeholder: "Ievadiet saiti, kas redzama virsrakstā."
       reply_placeholder: "Rakstiet šeit. Izmantojiet Markdown, BBCode, vai HTML formatēšanai. Velciet vai ielīmējiet bildes."
       view_new_post: "Apskatīt jūsu jauno ierakstu."
@@ -1712,6 +1715,7 @@ lv:
         attribute_value: "Vērtība"
         apply: "Pielietot"
       help: "Palīdzība ar formatēšanu, izmantojot Markdown"
+      edit_reason: "Kāpēc jūs rediģējat?"
       modal_ok: "Labi"
       cant_send_pm: "Atvainojiet, jūs nevarat sūtīt ziņu %{username}."
       yourself_confirm:
@@ -1721,6 +1725,9 @@ lv:
       composer_actions:
         reply: Atbilde
         edit: Labot
+        reply_to_topic:
+          trigger: Tēmas
+        unknown_user: "Lietotājs"
       ignore: "Ignorēt"
       image: "attēls"
     notifications:
@@ -1877,6 +1884,18 @@ lv:
         dismiss_button: "Nerādīt..."
         dismiss_tooltip: "Nerādīt tikai jaunos ierakstus vai pārtraukt sekot tēmām"
         also_dismiss_topics: "Pārtraukt sekot šīm tēmām, lai tās man vairs nekad nerādītos kā neizlasītas"
+        dismiss_new_topics_with_selected:
+          zero: "Noraidīt (%{count})"
+          one: "Noraidīt (%{count})"
+          other: "Noraidīt (%{count})"
+        dismiss_new_replies_with_selected:
+          zero: "Noraidīt (%{count})"
+          one: "Noraidīt (%{count})"
+          other: "Noraidīt (%{count})"
+        dismiss_all_with_selected:
+          zero: "Noraidīt (%{count})"
+          one: "Noraidīt (%{count})"
+          other: "Noraidīt (%{count})"
         dismiss_new: "Nerādīt jaunus"
         toggle: "darbības ar vairākām tēmām"
         actions: "Darbības ar vairumu"
@@ -2824,7 +2843,7 @@ lv:
         modal:
           cancel: "atcelt"
           create: "Saglabāt"
-          reason: "kāpēc jūs rediģējat?"
+          reason: "Kāpēc jūs rediģējat?"
       spreadsheet:
         show: "Parādīt"
         about: "Par"

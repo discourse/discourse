@@ -397,7 +397,6 @@ nl:
       upcoming_events_list:
         title: "Aankomende evenementen"
         empty: "Geen aankomende evenementen"
-        all_day: "Hele dag"
         error: "Ophalen van evenementen mislukt"
         try_again: "Opnieuw proberen"
         view_all: "Alles weergeven"
@@ -446,6 +445,8 @@ nl:
         name_placeholder: "Evenementnaam"
         location_placeholder: "Locatie of URL toevoegen"
         description_placeholder: "Evenementbeschrijving toevoegen"
+        event_title_placeholder: "Evenementnaam"
+        create_event_button: "Evenement maken"
         reminder:
           units:
             minutes:
@@ -460,6 +461,9 @@ nl:
             weeks:
               one: "week"
               other: "weken"
+      composer_actions:
+        create_event:
+          label: "Evenement maken"
       builder_modal:
         custom_fields:
           label: "Aangepaste velden"
@@ -486,7 +490,6 @@ nl:
           label: "Begindatum"
         all_day:
           label: "Evenement dat de hele dag duurt"
-          description: "Een evenement dat de hele dag duurt heeft geen specifieke tijden, alleen een datum. Het evenement duurt van de start van de dag tot het einde van de dag."
         reminders:
           label: "Herinneringen"
           units:

@@ -381,7 +381,6 @@ fi:
       upcoming_events_list:
         title: "Tulevat tapahtumat"
         empty: "Ei tulevia tapahtumia"
-        all_day: "Koko päivä"
         error: "Tapahtumien hakeminen epäonnistui"
         try_again: "Yritä uudelleen"
         view_all: "Näytä kaikki"
@@ -427,6 +426,8 @@ fi:
               description: "Yksityiseen tapahtumaan voivat liittyä vain kutsutut käyttäjät."
       composer:
         name_placeholder: "Tapahtuman nimi"
+        event_title_placeholder: "Tapahtuman nimi"
+        create_event_button: "Luo tapahtuma"
         reminder:
           units:
             minutes:
@@ -441,6 +442,9 @@ fi:
             weeks:
               one: "viikko"
               other: "viikkoa"
+      composer_actions:
+        create_event:
+          label: "Luo tapahtuma"
       builder_modal:
         custom_fields:
           label: "Mukautetut kentät"

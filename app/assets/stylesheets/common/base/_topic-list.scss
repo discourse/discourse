@@ -326,7 +326,7 @@
     padding-right: var(--space-1);
   }
 
-  .num {
+  .topic-list-data.num {
     text-align: center;
     font-size: var(--d-topic-list-data-font-size);
 
@@ -474,7 +474,8 @@
 }
 
 .table-heading {
-  border-bottom: 3px solid var(--primary-low);
+  border-bottom: var(--d-table-border-top-height) solid
+    var(--table-border-color);
 }
 
 // This is not what we want:

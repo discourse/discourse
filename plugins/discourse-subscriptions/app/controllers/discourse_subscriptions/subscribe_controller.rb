@@ -42,6 +42,8 @@ module DiscourseSubscriptions
 
     def show
       params.require(:id)
+      ensure_published_product!(params[:id])
+
       begin
         product = ::Stripe::Product.retrieve(params[:id], stripe_request_opts)
         plans = ::Stripe::Price.list({ active: true, product: params[:id] }, stripe_request_opts)
@@ -57,13 +59,14 @@ module DiscourseSubscriptions
     def create
       params.require(%i[source plan])
       begin
+        plan = fetch_published_plan(params[:plan])
+
         customer =
           find_or_create_customer(
             params[:source],
             params[:cardholder_name],
             params[:cardholder_address],
           )
-        plan = ::Stripe::Price.retrieve(params[:plan], stripe_request_opts)
 
         if params[:promo].present?
           promo_code = ::Stripe::PromotionCode.list({ code: params[:promo] }, stripe_request_opts)
@@ -155,10 +158,10 @@ module DiscourseSubscriptions
       raise Discourse::InvalidAccess if pending.blank?
 
       begin
+        plan = fetch_published_plan(pending[:plan_id])
         transaction = retrieve_transaction(pending[:transaction_id])
         raise Discourse::InvalidAccess unless transaction_ok(transaction)
 
-        plan = ::Stripe::Price.retrieve(pending[:plan_id], stripe_request_opts)
         finalize_transaction(transaction, plan)
 
         server_session.delete("pending_subscription")
@@ -274,6 +277,23 @@ module DiscourseSubscriptions
 
     def metadata_user
       { user_id: current_user.id, username: current_user.username_lower }
+    end
+
+    def fetch_published_plan(plan_id)
+      plan = ::Stripe::Price.retrieve(plan_id, stripe_request_opts)
+      ensure_published_product!(price_product_id(plan))
+      plan
+    end
+
+    def ensure_published_product!(product_id)
+      raise Discourse::NotFound unless Product.exists?(external_id: product_id)
+    end
+
+    def price_product_id(price)
+      product = price[:product]
+      return product if product.is_a?(String) || product.nil?
+
+      product[:id]
     end
 
     def transaction_ok(transaction)

@@ -61,3 +61,11 @@ sl:
       no_search_results: "Oprostite, nismo našli nobenega zadetka, ki bi ustrezal vaši poizvedbi."
     group:
       reports: "Poročila"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Raziskovalec podatkov"
+      sql:
+        query_id: "Poizvedba"
+        param_value: "Stanje"
+        output:
+          results: "Rezultati"

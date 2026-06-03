@@ -142,6 +142,11 @@ te:
       placeholder: తేదీ
       from_placeholder: "తేదీ నుండి"
       to_placeholder: "ఇప్పటి వరకు"
+    date_range_picker:
+      apply: "దరఖాస్తు చేసుకోండి"
+      presets:
+        last_3_months: "గత 3 నెలలు"
+        last_6_months: "గత 6 నెలలు"
     share:
       topic_html: 'విషయం: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username}ద్వారా పోస్ట్ #%{postNumber}"
@@ -294,7 +299,7 @@ te:
       pm_title: "సూచించిన సందేశాలు"
     admin_onboarding_banner:
       select_theme:
-        enabled: "ప్రారంభించబడింది"
+        enabled: "ఎంపిక చేయబడినవి"
       start_posting:
         back: "వెనుకకు"
     about:
@@ -2259,6 +2264,7 @@ te:
         attribute_value: "విలువ"
         apply: "దరఖాస్తు చేసుకోండి"
       help: "మార్క్ డైన్ సవరణ సహాయం"
+      edit_reason: "మీరెందుకు సవరిస్తున్నారు?"
       exit_fullscreen_prompt: "పూర్తి స్క్రీన్ నుండి నిష్క్రమించడానికి <kbd>ESC</kbd> నొక్కండి"
       modal_ok: "సరే"
       cant_send_pm: "క్షమించండి, మీరు %{username}కి సందేశం పంపలేరు."
@@ -2287,18 +2293,18 @@ te:
           desc: అదే గ్రహీతలతో ప్రారంభించి కొత్త సందేశాన్ని సృష్టించండి
         reply_to_topic:
           label: విషయానికి ప్రత్యుత్తరం ఇవ్వండి
+          trigger: విషయం
           desc: విషయానికి ప్రత్యుత్తరం ఇవ్వండి, ఏదైనా నిర్దిష్ట పోస్ట్ కాదు
         toggle_whisper:
           label: గుసగుసలను టోగుల్ చేయండి
-          desc: గుసగుసలు సిబ్బందికి మాత్రమే కనిపిస్తాయి
         create_topic:
           desc: కొత్త విషయం సృష్టించండి
         shared_draft:
           label: "షేర్ చేసిన చిత్తుప్రతి"
           desc: "అనుమతించబడిన సబ్యులకు మాత్రమే కనిపించే విషయాన్ని రాయండి"
         toggle_topic_bump:
-          label: "విషయం బంప్ను టోగుల్ చేయండి"
           desc: "తాజా ప్రత్యుత్తర తేదీని మార్చకుండా ప్రత్యుత్తరం ఇవ్వండి"
+        unknown_user: "సభ్యుడు"
       reload: "రీలోడ్ చేయండి"
       ignore: "విస్మరించండి"
       image_alt_text:
@@ -2634,6 +2640,15 @@ te:
         also_dismiss_topics: "ఈ విషయాలను ట్రాక్ చేయడం ఆపివేయండి, తద్వారా అవి నాకు చదవనివిగా మళ్లీ కనిపించవు"
         dismiss_new_topics: "కొత్త విషయాలను తీసివేయండి"
         dismiss_new_replies: "కొత్త ప్రత్యుత్తరాలను తీసివేయండి"
+        dismiss_new_topics_with_selected:
+          one: "తీసివేయండి (%{count})"
+          other: "తీసివేయండి (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "తీసివేయండి (%{count})"
+          other: "తీసివేయండి (%{count})"
+        dismiss_all_with_selected:
+          one: "తీసివేయండి (%{count})"
+          other: "తీసివేయండి (%{count})"
         dismiss_new: "కొత్తవి తుడువు"
         dismiss_new_modal:
           title: "కొత్తది తీసివేయండి"

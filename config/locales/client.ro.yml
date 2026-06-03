@@ -171,6 +171,12 @@ ro:
       placeholder: dată
       from_placeholder: "din data"
       to_placeholder: "până la data"
+    date_range_picker:
+      apply: "Aplică"
+      presets:
+        last_7_days: "Ultimele 7 zile"
+        last_30_days: "Ultimele 30 de zile"
+        last_year: "Anul trecut"
     languages:
       ar:
         name: Arabă
@@ -440,8 +446,6 @@ ro:
       pill: "Sugerate"
       pm_title: "Mesaje sugerate"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Activate"
       start_posting:
         back: "Înapoi"
     about:
@@ -2236,7 +2240,7 @@ ro:
       users_placeholder: "Adaugă utilizatori sau grupuri"
       title_placeholder: "Despre ce este vorba în acest subiect, pe scurt?"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
-      edit_reason_placeholder: "de ce editezi?"
+      edit_reason_placeholder: "De ce editezi?"
       topic_featured_link_placeholder: "Introdu link afișat cu titlu."
       remove_featured_link: "Eliminați link-ul din discuție"
       reply_placeholder: "Scrie aici. Utilizează formatarea Markdown, BBCode sau HTML. Trage sau lipește imagini."
@@ -2289,6 +2293,7 @@ ro:
       collapse: "Minimizează panoul de compunere"
       open: "Deschide panoul de compunere"
       abandon: "Închide compozitorul și renunță la ciornă"
+      edit_reason: "De ce editezi?"
       enter_fullscreen: "Folosește ecranul complet al compozitorului"
       exit_fullscreen: "Ieși din ecranul complet al compozitorului"
       show_toolbar: "Arată bara de instrumente a compozitorului"
@@ -2308,17 +2313,14 @@ ro:
           desc: Creați o discuție nouă legată de această discuție
         reply_to_topic:
           label: Răspunde la subiect
+          trigger: Subiect
           desc: Răspundeți subiectului, nu unei anumite postări
-        create_topic:
-          label: "Subiect nou"
         create_personal_message:
-          label: "Mesaj nou"
           desc: "Creează un mesaj personal nou"
-        toggle_topic_bump:
-          label: "Comută bump pentru subiect"
         toggle_unlisted:
           label: Comută la nelistate
           desc: "Subiectele nelistate sunt accesibile doar prin legătură directă"
+        unknown_user: "Utilizator"
       reload: "Reîncarcă"
       ignore: "Ignoră"
       image_alt_text:
@@ -3800,7 +3802,7 @@ ro:
           title: "Editează tabel"
           cancel: "anulează"
           create: "Salvează"
-          reason: "de ce editezi?"
+          reason: "De ce editezi?"
           trigger_reason: "Adăugă motiv pentru editare"
         default_edit_reason: "Actualizează tabel cu editor de tabele"
       default_header:
@@ -4262,13 +4264,9 @@ ro:
           modal:
             title: "Gestionare rapoarte"
             search_placeholder: "Caută rapoarte"
-            counter: "%{count} / %{max} rapoarte"
             enabled_heading: "Activate"
             all_heading: "Toate rapoartele"
             apply: "Aplică"
-            toggle: "Comută raport"
-            move_up: "Mută sus"
-            move_down: "Mută jos"
         site_traffic:
           series:
             anonymous: "Anonimi"

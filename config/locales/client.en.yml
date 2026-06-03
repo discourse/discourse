@@ -178,6 +178,18 @@ en:
       placeholder: date
       from_placeholder: "from date"
       to_placeholder: "to date"
+    date_range_picker:
+      apply: "Apply"
+      start_date: "Start date"
+      end_date: "End date"
+      date_placeholder: "yyyy/mm/dd"
+      presets:
+        label: "Date range presets"
+        last_7_days: "Last 7 days"
+        last_30_days: "Last 30 days"
+        last_3_months: "Last 3 months"
+        last_6_months: "Last 6 months"
+        last_year: "Last year"
     languages:
       ar:
         name: Arabic
@@ -510,9 +522,9 @@ en:
         description: "Choose a starting theme for your community"
         action: "Select theme"
         modal_title: "Choose a theme"
-        use_theme: "Use this theme"
-        enabled: "Enabled"
-        theme_set: "%{theme} is now your default theme"
+        use_theme: "Use selected theme"
+        enabled: "Selected"
+        applying_theme: "Applying theme..."
         browse_all: "Manage themes"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
@@ -3240,7 +3252,7 @@ en:
       users_placeholder: "Add users or groups"
       title_placeholder: "What is this discussion about in one brief sentence?"
       title_or_link_placeholder: "Type title, or paste a link here"
-      edit_reason_placeholder: "why are you editing?"
+      edit_reason_placeholder: "Why are you editing?"
       topic_featured_link_placeholder: "Enter link shown with title."
       remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
@@ -3311,7 +3323,10 @@ en:
       collapse: "Minimize the composer panel"
       open: "Open the composer panel"
       abandon: "Close composer and discard draft"
-      edit_reason: "Add your reason for editing"
+      edit_reason: "Why are you editing?"
+      whisper_indicator:
+        public: "Visible"
+        whispering: "Whispering"
       enter_fullscreen: "Enter fullscreen composer"
       exit_fullscreen: "Exit fullscreen composer"
       exit_fullscreen_prompt: "Press <kbd>ESC</kbd> to exit full screen"
@@ -3348,25 +3363,30 @@ en:
           desc: Create new message starting with same recipients
         reply_to_topic:
           label: Reply to topic
+          trigger: Topic
           desc: Reply to the topic, not any specific post
         toggle_whisper:
           label: Toggle whisper
-          desc: Whispers are only visible to staff members
+          desc: Whispers are only visible to allowed groups
         create_topic:
-          label: "New topic"
+          label: Create topic
           desc: Create a new topic
         create_personal_message:
-          label: "New message"
+          label: Create message
           desc: "Create a new personal message"
         shared_draft:
           label: "Shared Draft"
           desc: "Draft a topic that will only be visible to allowed users"
         toggle_topic_bump:
-          label: "Toggle topic bump"
+          label: "Do not bump"
           desc: "Reply without changing latest reply date"
+        create_unlisted_topic: "Unlisted topic"
         toggle_unlisted:
           label: Toggle unlisted
           desc: "Unlisted topics are only accessible by direct link"
+        edit_post: "Editing post"
+        no_actions_available: "No actions available"
+        unknown_user: "User"
 
       reload: "Reload"
       ignore: "Ignore"
@@ -3808,6 +3828,15 @@ en:
         dismiss_all: "Dismiss all"
         dismiss_new_topics: "Dismiss new topics"
         dismiss_new_replies: "Dismiss new replies"
+        dismiss_new_topics_with_selected:
+          one: "Dismiss (%{count})"
+          other: "Dismiss (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Dismiss (%{count})"
+          other: "Dismiss (%{count})"
+        dismiss_all_with_selected:
+          one: "Dismiss (%{count})"
+          other: "Dismiss (%{count})"
         dismiss_new_menu: "Dismiss options"
         dismiss_and_stop_tracking: "Dismiss and stop tracking"
         dismiss_new: "Dismiss New"
@@ -3990,8 +4019,6 @@ en:
     nested_replies:
       nested_view: "Nested view"
       flat_view: "Flat view"
-      view_as_nested: "View as nested"
-      view_as_flat: "View as flat"
       sort:
         label: "Sort by"
         top: "Top"
@@ -4008,6 +4035,7 @@ en:
       collapsed_replies:
         one: "%{count} reply"
         other: "%{count} replies"
+      collapsed_post: "Collapsed post"
       collapse: "Collapse"
       collapse_parent: "Collapse parent thread"
       focused_path: "Focused reply path"
@@ -6116,7 +6144,7 @@ en:
           title: "Edit Table"
           cancel: "cancel"
           create: "Save"
-          reason: "why are you editing?"
+          reason: "Why are you editing?"
           trigger_reason: "Add reason for edit"
         default_edit_reason: "Update Table with Table Editor"
       default_header:
@@ -6953,6 +6981,7 @@ en:
                 summary: "Pick a longer date range or come back once your community has more activity."
 
         reports_section:
+          description: "Pin standard reports or Data Explorer queries to track what matters to your community."
           add: "Add report"
           remove: "Remove report"
           no_data: "No data to display"

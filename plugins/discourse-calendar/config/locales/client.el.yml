@@ -293,7 +293,6 @@ el:
       upcoming_events_list:
         title: "Προσεχείς εκδηλώσεις"
         empty: "Δεν υπάρχουν προσεχείς εκδηλώσεις"
-        all_day: "Όλη μέρα"
         error: "Αποτυχία ανάκτησης εκδηλώσεων"
         try_again: "Δοκιμάστε ξανά"
         view_all: "Προβολή όλων"
@@ -345,6 +344,8 @@ el:
         name_placeholder: "Όνομα εκδήλωσης"
         location_placeholder: "Προσθέστε τοποθεσία ή URL"
         description_placeholder: "Προσθήκη περιγραφής εκδήλωσης"
+        event_title_placeholder: "Όνομα εκδήλωσης"
+        create_event_button: "Δημιουργία εκδήλωσης"
         reminder:
           units:
             minutes:
@@ -359,6 +360,9 @@ el:
             weeks:
               one: "εβδομάδα"
               other: "εβδομάδες"
+      composer_actions:
+        create_event:
+          label: "Δημιουργία εκδήλωσης"
       builder_modal:
         custom_fields:
           label: "Προσαρμοσμένα πεδία"
@@ -385,7 +389,6 @@ el:
           label: "Ημερομηνία έναρξης"
         all_day:
           label: "Ολοήμερη εκδήλωση"
-          description: "Μια ολοήμερη εκδήλωση δεν θα έχει συγκεκριμένες ώρες, μόνο ημερομηνία. Η εκδήλωση θα διαρκέσει από την αρχή έως το τέλος της ημέρας."
         reminders:
           label: "Υπενθυμίσεις"
           units:

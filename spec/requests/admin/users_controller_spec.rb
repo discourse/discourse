@@ -73,6 +73,21 @@ RSpec.describe Admin::UsersController do
         expect(response.parsed_body).to be_present
       end
 
+      it "doesn't return staged user emails when moderators_view_emails is disabled" do
+        SiteSetting.moderators_view_emails = false
+        staged_user = Fabricate(:staged, email: "staged@example.com")
+        Fabricate(:secondary_email, user: staged_user, email: "staged-secondary@example.com")
+
+        get "/admin/users/list.json", params: { query: "staged", show_emails: "true" }
+
+        expect(response.status).to eq(200)
+        listed_user =
+          response.parsed_body.find { |listed_user| listed_user["id"] == staged_user.id }
+        expect(listed_user).to be_present
+        expect(listed_user["email"]).to eq(nil)
+        expect(listed_user["secondary_emails"]).to eq(nil)
+      end
+
       it "returns users with the same IP as a user" do
         target_user = Fabricate(:user, ip_address: "42.42.42.42")
         same_ip_user = Fabricate(:user, ip_address: "42.42.42.42")
@@ -286,6 +301,18 @@ RSpec.describe Admin::UsersController do
             target_user_id: evil_trout.id,
           ).count,
         ).to eq(1)
+      end
+
+      it "approves a user whose previous reviewable was rejected" do
+        evil_trout.update!(active: true)
+        reviewable =
+          Fabricate(:reviewable_user, target: evil_trout, status: Reviewable.statuses[:rejected])
+
+        put "/admin/users/#{evil_trout.id}/approve.json"
+
+        expect(response.status).to eq(200)
+        expect(evil_trout.reload).to be_approved
+        expect(reviewable.reload).to be_approved
       end
     end
 

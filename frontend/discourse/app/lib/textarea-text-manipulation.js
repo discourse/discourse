@@ -423,7 +423,7 @@ export default class TextareaTextManipulation {
   }
 
   @bind
-  paste(e) {
+  async paste(e) {
     const isComposer = this.textarea === e.target;
 
     if (!isComposer && !isTesting()) {
@@ -498,7 +498,9 @@ export default class TextareaTextManipulation {
     }
 
     if (canPasteHtml && !handled) {
-      let markdown = toMarkdown(html);
+      e.preventDefault();
+
+      let markdown = await toMarkdown(html);
 
       if (!plainText || plainText.length < markdown.length) {
         if (isInlinePasting) {
@@ -515,6 +517,11 @@ export default class TextareaTextManipulation {
             : this.insertText(markdown);
           handled = true;
         }
+      } else if (plainText && isComposer) {
+        this.eventPrefix
+          ? this.appEvents.trigger(`${this.eventPrefix}:insert-text`, plainText)
+          : this.insertText(plainText);
+        handled = true;
       }
     }
 

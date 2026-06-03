@@ -387,7 +387,6 @@ he:
       upcoming_events_list:
         title: "אירועים קרובים"
         empty: "אין אירועים בקרוב"
-        all_day: "יום שלם"
         error: "משיכת האירועים נכשלה"
         try_again: "ניסיון נוסף"
         view_all: "להציג הכול"
@@ -442,6 +441,8 @@ he:
               description: "לאירוע פרטי יכולים להצטרף רק משתמשים שהוזמנו."
       composer:
         name_placeholder: "שם האירוע"
+        event_title_placeholder: "שם האירוע"
+        create_event_button: "יצירת אירוע"
         reminder:
           units:
             minutes:
@@ -464,6 +465,9 @@ he:
               two: "שבועות"
               many: "שבועות"
               other: "שבועות"
+      composer_actions:
+        create_event:
+          label: "יצירת אירוע"
       builder_modal:
         custom_fields:
           label: "שדות משלך"

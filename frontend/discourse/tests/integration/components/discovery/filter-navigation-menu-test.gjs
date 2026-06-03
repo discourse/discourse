@@ -11,7 +11,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module(
-  "Integration | Component | discovery | FilterNavigationMenu",
+  "Integration | Component | Discovery | FilterNavigationMenu",
   function (hooks) {
     setupRenderingTest(hooks);
 

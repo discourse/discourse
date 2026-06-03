@@ -2,11 +2,13 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import NestedActivityLog from "discourse/components/modal/nested-activity-log";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import QuoteState from "discourse/lib/quote-state";
 import Composer from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
@@ -129,7 +131,37 @@ export default class NestedController extends Controller {
 
   @action
   changeSort(newSort) {
-    this.router.transitionTo({ queryParams: { sort: newSort } });
+    if (newSort === this.sort) {
+      return;
+    }
+
+    const shouldScrollToRoots = !this.contextMode;
+
+    this.router.transitionTo({ queryParams: { sort: newSort } }).then(() => {
+      if (shouldScrollToRoots) {
+        schedule("afterRender", this, this.#scrollToRoots);
+      }
+    });
+  }
+
+  #scrollToRoots() {
+    const roots = document.querySelector(
+      ".nested-view:not(.nested-context-view) > .nested-view__roots"
+    );
+
+    if (!roots) {
+      return;
+    }
+
+    const controls = document.querySelector(
+      ".nested-view:not(.nested-context-view) > .nested-view__controls"
+    );
+    const controlsHeight = controls?.offsetHeight || 0;
+    const rect = roots.getBoundingClientRect();
+
+    window.scrollTo({
+      top: window.scrollY + rect.top - headerOffset() - controlsHeight,
+    });
   }
 
   @action
@@ -248,18 +280,16 @@ export default class NestedController extends Controller {
   @action
   selectText() {
     const tc = this.#topicController;
-    const { postId, buffer, opts } = this.quoteState;
-    this.#ensurePostInStream(postId);
-    tc.quoteState.selected(postId, buffer, opts);
+    this.#ensurePostInStream(this.quoteState.postId);
+    tc.quoteState.copyFrom(this.quoteState);
     return tc.selectText();
   }
 
   @action
   buildQuoteMarkdown() {
     const tc = this.#topicController;
-    const { postId, buffer, opts } = this.quoteState;
-    this.#ensurePostInStream(postId);
-    tc.quoteState.selected(postId, buffer, opts);
+    this.#ensurePostInStream(this.quoteState.postId);
+    tc.quoteState.copyFrom(this.quoteState);
     return tc.buildQuoteMarkdown();
   }
 
@@ -451,6 +481,7 @@ export default class NestedController extends Controller {
 
   #onPostRegistered(post) {
     if (post?.post_number != null) {
+      this.topic?.postStream?.storePost(post);
       this.postRegistry.set(post.post_number, post);
     }
   }
@@ -504,8 +535,7 @@ export default class NestedController extends Controller {
         return;
       }
 
-      const post = this.store.createRecord("post", postData);
-      post.topic = this.topic;
+      const { post } = this.#processNode({ ...postData, children: [] });
 
       const replyTo = postData.reply_to_post_number;
       const isRoot = !replyTo || replyTo === 1;
@@ -616,10 +646,7 @@ export default class NestedController extends Controller {
     const newNodes = [];
     for (const result of results) {
       if (result.status === "fulfilled") {
-        const postData = result.value;
-        const post = this.store.createRecord("post", postData);
-        post.topic = this.topic;
-        newNodes.push({ post, children: [] });
+        newNodes.push(this.#processNode({ ...result.value, children: [] }));
       }
     }
 

@@ -93,4 +93,39 @@ module("Unit | Utility | text-area-manipulation", function (hooks) {
 
     assert.strictEqual(textarea.value, "hello :smile:");
   });
+
+  test("falls back to plain text when rich HTML converts to empty markdown", async function (assert) {
+    const textarea = document.createElement("textarea");
+    document.body.appendChild(textarea);
+    textarea.setSelectionRange(0, 0);
+
+    const manipulation = new TextareaTextManipulation(getOwner(this), {
+      eventPrefix: null,
+      textarea,
+    });
+    manipulation.siteSettings.enable_rich_text_paste = true;
+
+    let prevented = false;
+    await manipulation.paste({
+      target: textarea,
+      preventDefault() {
+        prevented = true;
+      },
+      clipboardData: {
+        files: [],
+        types: ["text/plain", "text/html"],
+        getData(type) {
+          if (type === "text/plain") {
+            return "plain fallback";
+          }
+          if (type === "text/html") {
+            return "<span></span>";
+          }
+        },
+      },
+    });
+
+    assert.true(prevented, "native paste is prevented for handled rich paste");
+    assert.strictEqual(textarea.value, "plain fallback");
+  });
 });

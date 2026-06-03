@@ -332,3 +332,10 @@ da:
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Meddelelse"
+      chat_approval:
+        message: "Meddelelse"
+        channel_id: "Kanal"

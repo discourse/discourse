@@ -36,7 +36,13 @@ class Report
     page_view_logged_in_reqs
   ]
 
-  ADMIN_ONLY_REPORTS = %w[admin_logins top_uploads topic_view_stats]
+  ADMIN_ONLY_REPORTS = %w[
+    admin_logins
+    top_uploads
+    topic_view_stats
+    top_referrers_by_browser_pageviews
+    top_countries_by_browser_pageviews
+  ]
   IP_ADDRESS_REPORTS = %w[suspicious_logins]
   BROWSER_PAGEVIEW_REPORTS = %w[
     top_countries_by_browser_pageviews
@@ -45,7 +51,9 @@ class Report
 
   def self.hidden?(type, guardian:)
     return true if !guardian.is_admin? && ADMIN_ONLY_REPORTS.include?(type)
-    return true if BROWSER_PAGEVIEW_REPORTS.include?(type)
+    if BROWSER_PAGEVIEW_REPORTS.include?(type) && !SiteSetting.persist_browser_pageview_events
+      return true
+    end
 
     hidden_reports =
       SiteSetting.use_legacy_pageviews ? HIDDEN_PAGEVIEW_REPORTS : HIDDEN_LEGACY_PAGEVIEW_REPORTS

@@ -10,6 +10,7 @@ import AccessibleDiscoveryHeading from "discourse/components/discovery/accessibl
 import ReorderCategories from "discourse/components/modal/reorder-categories";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
+import categoryColorVariable from "discourse/helpers/category-color-variable";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
@@ -100,7 +101,10 @@ export default class DiscoveryNavigation extends Component {
         @outletArgs={{lazyHash category=@category tag=@tag}}
       />
 
-      <section class={{this.headingClasses}}>
+      <section
+        class={{this.headingClasses}}
+        style={{categoryColorVariable @category.color}}
+      >
         {{#if @category.uploaded_logo.url}}
           <CategoryLogo
             @category={{@category}}

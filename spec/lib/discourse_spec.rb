@@ -204,6 +204,13 @@ RSpec.describe Discourse do
       plugin1.register_asset_filter { |type, request, opts| false }
       expect(Discourse.find_plugin_css_assets({}).length).to eq(1)
     end
+
+    it "includes admin plugin css assets when include_admin is true" do
+      plugin2.enabled = true
+
+      expect(Discourse.find_plugin_css_assets(include_admin: true).length).to eq(4)
+      expect(Discourse.find_plugin_css_assets({}).length).to eq(2)
+    end
   end
 
   describe "authenticators" do

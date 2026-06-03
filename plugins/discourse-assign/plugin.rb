@@ -22,6 +22,12 @@ require_relative "lib/discourse_assign/engine"
 require_relative "lib/validators/assign_statuses_validator"
 
 after_initialize do
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      require_relative "lib/discourse_workflows/nodes/assign_topic/v1"
+      DiscourseWorkflows::Nodes::AssignTopic::V1
+    end
+  end
   UserUpdater::OPTION_ATTR.push(:notification_level_when_assigned)
 
   reloadable_patch do |plugin|
@@ -949,6 +955,47 @@ after_initialize do
     results
   end
 
+  register_modifier(:posts_filter_options) do |results, guardian|
+    if SiteSetting.assign_enabled && (guardian.can_assign? || SiteSetting.assigns_public)
+      results << {
+        name: "assigned_to:",
+        description: I18n.t("discourse_assign.filter.description.assigned"),
+        type: "username",
+        extra_entries: [
+          { name: "nobody", description: I18n.t("discourse_assign.filter.description.nobody") },
+          { name: "*", description: I18n.t("discourse_assign.filter.description.anyone") },
+        ],
+        priority: 1,
+      }
+    end
+    results
+  end
+
+  PostsFilter.add_filter("assigned_to") do |scope, filter_values, guardian|
+    if !SiteSetting.assign_enabled || !(guardian.can_assign? || SiteSetting.assigns_public)
+      raise Discourse::InvalidAccess.new(
+              "Assigns are not enabled or you do not have permission to see assigns.",
+            )
+    end
+
+    names =
+      filter_values.compact.flat_map { |value| value.to_s.split(",") }.map(&:strip).reject(&:blank?)
+    next scope if names.blank?
+
+    next scope.where.not(topic_id: Assignment.active.select(:topic_id)) if names.include?("nobody")
+
+    next scope.where(topic_id: Assignment.active.select(:topic_id)) if names.include?("*")
+
+    user_ids = User.where(username_lower: names.map(&:downcase)).select(:id)
+    scope.where(
+      topic_id:
+        Assignment
+          .active
+          .where(assigned_to_type: "User", assigned_to_id: user_ids)
+          .select(:topic_id),
+    )
+  end
+
   register_search_advanced_filter(/in:assigned/) do |posts|
     next if !@guardian.can_assign?
 
@@ -1021,6 +1068,8 @@ after_initialize do
 
     on(:unaccepted_solution) do |post|
       next if SiteSetting.assignment_status_on_unsolve.blank?
+      next if post.topic.reload.solved.present?
+
       assignments = Assignment.includes(:target).where(topic: post.topic)
       assignments.each do |assignment|
         assigned_user = User.find_by(id: assignment.assigned_to_id)

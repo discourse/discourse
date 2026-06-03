@@ -4,7 +4,7 @@ import TagInfo from "discourse/components/tag-info";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
-module("Integration | Component | tag-info", function (hooks) {
+module("Integration | Component | TagInfo", function (hooks) {
   setupRenderingTest(hooks);
 
   function buildTagInfo(store, attrs = {}) {

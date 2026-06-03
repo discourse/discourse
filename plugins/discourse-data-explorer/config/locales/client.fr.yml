@@ -82,6 +82,16 @@ fr:
           descriptions:
             data_explorer:
               run_queries: "Exécutez des requêtes de l'explorateur de données. Limitez la clé d'API à un ensemble de requêtes en spécifiant des ID de requêtes."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Explorateur de données"
+      sql:
+        query_id: "Requête"
+        add_param: "Ajouter un paramètre"
+        param_value: "Valeur"
+        output:
+          results: "Résultats"
+          no_results: "Aucun résultat"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

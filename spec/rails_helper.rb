@@ -507,6 +507,13 @@ RSpec.configure do |config|
 
     Capybara::Node::Base.prepend(CapybaraTimeoutExtension)
 
+    config.before(:each) do |example|
+      if example.metadata[:type] != :system
+        EmberCli.stubs(:read_manifest!).returns(nil)
+        EmberCli.stubs(:script_chunks).returns({})
+      end
+    end
+
     config.before(:each, type: :system) do |example|
       # Only set ENV["EMBER_RAISE_ON_DEPRECATION"] if not already set
       if ENV["EMBER_RAISE_ON_DEPRECATION"].nil?
@@ -542,7 +549,19 @@ RSpec.configure do |config|
       if example.metadata[:time]
         freeze_time(example.metadata[:time])
         page.driver.with_playwright_page do |pw_page|
-          pw_page.clock.set_fixed_time(example.metadata[:time])
+          # Install the clock at the desired time and immediately resume it so
+          # the browser starts at `example.metadata[:time]` but `Date.now()`
+          # keeps advancing with the wall clock.
+          #
+          # `set_fixed_time` pins `Date.now()` forever, which breaks Ember's runloop: `next()`/`later()`
+          # schedule timers via `Date.now() + wait` and only fire them once
+          # `Date.now()` has advanced past that, so any action deferred through
+          # the runloop (e.g. DButton, which uses `next()` to optimise INP)
+          # would silently never run.
+          #
+          # Playwright warns about this "stuck page" behaviour for pinned clocks too.
+          pw_page.clock.install(time: example.metadata[:time])
+          pw_page.clock.resume
         end
       end
     end

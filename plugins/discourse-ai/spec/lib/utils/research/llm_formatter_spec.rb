@@ -5,7 +5,7 @@ describe DiscourseAi::Utils::Research::LlmFormatter do
   fab!(:topic) { Fabricate(:topic, title: "This is a Test Topic", user: user) }
   fab!(:post) { Fabricate(:post, topic: topic, user: user) }
   let(:tokenizer) { DiscourseAi::Tokenizer::OpenAiTokenizer }
-  let(:filter) { DiscourseAi::Utils::Research::Filter.new("@#{user.username}") }
+  let(:filter) { PostsFilter.new("username:#{user.username}") }
 
   before { enable_current_plugin }
 

@@ -214,6 +214,15 @@ ru:
       placeholder: дата
       from_placeholder: "с даты"
       to_placeholder: "по дату"
+    date_range_picker:
+      apply: "Применить"
+      start_date: "Дата начала"
+      presets:
+        last_7_days: "За последние 7 дней"
+        last_30_days: "За последние 30 дней"
+        last_3_months: "За последние 3 месяцев"
+        last_6_months: "За последние 6 месяцев"
+        last_year: "За последний год"
     languages:
       ar:
         name: Арабский
@@ -514,7 +523,7 @@ ru:
       launch_in_easy_steps: "Запуск в %{step_count} простых шагах"
       congrats_onboarding_complete: "Поздравляем с завершением процесса адаптации!"
       select_theme:
-        enabled: "Включено"
+        enabled: "Выбрано"
       invite_collaborators:
         title: "Пригласить соавторов"
         description: "Первые участники помогают оживить ваше сообщество."
@@ -3276,7 +3285,7 @@ ru:
       collapse: "Свернуть панель редактора"
       open: "Открыть панель редактора"
       abandon: "Закрыть редактор и удалить черновик"
-      edit_reason: "Укажите причину редактирования."
+      edit_reason: "Причина редактирования…"
       enter_fullscreen: "Включить полноэкранный режим редактора"
       exit_fullscreen: "Выключить полноэкранный режима редактора"
       exit_fullscreen_prompt: "<kbd>ESC</kbd> — выход из полноэкранного режима"
@@ -3311,24 +3320,23 @@ ru:
           desc: Создать новое сообщение с теми же получателями
         reply_to_topic:
           label: Ответить на тему
+          trigger: Тема
           desc: Ответить на тему в целом, а не на конкретное сообщение
         toggle_whisper:
           label: Скрытое сообщение
-          desc: Скрытые сообщения доступны только персоналу
         create_topic:
-          label: "Новая тема"
           desc: Создать новую тему
         create_personal_message:
-          label: "Личное сообщение"
           desc: "Создать новое личное сообщение"
         shared_draft:
           label: "Общий черновик"
           desc: "Черновик темы, который будет виден только пользователям с необходимыми правами доступа"
         toggle_topic_bump:
-          label: "Не поднимать тему"
           desc: "Ответить без изменения даты последнего ответа"
         toggle_unlisted:
           label: Скрыть тему
+        edit_post: "Редактирование поста"
+        unknown_user: "Пользователь"
       reload: "Обновить"
       ignore: "Игнорировать"
       image_alt_text:
@@ -3772,6 +3780,21 @@ ru:
         also_dismiss_topics: "Перестать следить за этими темами, чтобы они никогда больше не высвечивались как непрочитанные"
         dismiss_new_topics: "Отклонить новые темы"
         dismiss_new_replies: "Закрыть новые ответы"
+        dismiss_new_topics_with_selected:
+          one: "Отложить (%{count})"
+          few: "Отложить (%{count})"
+          many: "Отложить (%{count})"
+          other: "Отложить (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Отложить (%{count})"
+          few: "Отложить (%{count})"
+          many: "Отложить (%{count})"
+          other: "Отложить (%{count})"
+        dismiss_all_with_selected:
+          one: "Отложить (%{count})"
+          few: "Отложить (%{count})"
+          many: "Отложить (%{count})"
+          other: "Отложить (%{count})"
         dismiss_new: "Отложить новые"
         dismiss_new_modal:
           title: "Отклонить новые"
@@ -6653,8 +6676,6 @@ ru:
             enabled_heading: "Включено"
             all_heading: "Все отчеты"
             apply: "Применить"
-            move_up: "Вверх"
-            move_down: "Вниз"
         configure:
           button: "Настроить"
         site_traffic:

@@ -200,6 +200,15 @@ sk:
       placeholder: Dátum
       from_placeholder: "od dátumu"
       to_placeholder: "k dnešnému dňu"
+    date_range_picker:
+      apply: "Použi"
+      start_date: "Dátum začiatku"
+      presets:
+        last_7_days: "Posledných 7 dní"
+        last_30_days: "Posledných 30 dní"
+        last_3_months: "Posledných 3 mesiacov"
+        last_6_months: "Posledných 6 mesiacov"
+        last_year: "Minulý rok"
     share:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "príspevok č.%{postNumber} od @%{username}"
@@ -370,7 +379,7 @@ sk:
       pm_title: "Odporúčané správy"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Povolené"
+        enabled: "Vybrané"
       start_posting:
         back: "Späť"
     about:
@@ -2914,7 +2923,7 @@ sk:
       users_placeholder: "Pridanie používateľov alebo skupín"
       title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
       title_or_link_placeholder: "Napíšte názov témy alebo tu skopírujte odkaz"
-      edit_reason_placeholder: "prečo upravujete?"
+      edit_reason_placeholder: "Prečo upravujete?"
       topic_featured_link_placeholder: "Zadajte odkaz zobrazený s názvom."
       remove_featured_link: "Odstrániť odkaz z témy."
       reply_placeholder: "Píšte sem. Formátujte pomocou Markdown, BBCode alebo HTML. Pretiahnite alebo vložte obrázky."
@@ -2967,6 +2976,7 @@ sk:
         attribute_value: "Hodnota"
         apply: "Použi"
       help: "Nápoveda úprav pre Markdown"
+      edit_reason: "Prečo upravujete?"
       exit_fullscreen_prompt: "Stlačením <kbd>ESC</kbd> ukončíte celú obrazovku"
       modal_ok: "OK"
       cant_send_pm: "Ľutujeme, nemôžete poslať správu používateľovi %{username}."
@@ -2996,23 +3006,20 @@ sk:
           desc: Vytvorenie novej správy začínajúcej s rovnakými príjemcami
         reply_to_topic:
           label: Odpovedať na tému
+          trigger: Téma
           desc: Odpovedzte na tému, nie na konkrétny príspevok
         toggle_whisper:
           label: Prepnúť šepot
-          desc: Šepot je viditeľný iba pre zamestnancov
         create_topic:
-          label: "Nová téma"
           desc: Vytvorte novú tému
-        create_personal_message:
-          label: "Nová správa"
         shared_draft:
           label: "Zdieľaný koncept"
           desc: "Navrhnite tému, ktorá bude viditeľná iba pre povolených používateľov"
         toggle_topic_bump:
-          label: "Prepnúť tému bump"
           desc: "Odpoveď bez zmeny dátumu poslednej odpovede"
         toggle_unlisted:
           label: Prepínanie nezaradených
+        unknown_user: "Používateľ"
       reload: "Znovu načítať"
       ignore: "Ignorovať"
       image_alt_text:
@@ -3430,6 +3437,21 @@ sk:
         also_dismiss_topics: "Prestať pozorovať tieto témy. Už sa nikdy nebudú ukazovať medzi neprečítanými"
         dismiss_new_topics: "Zamietnuť nové témy"
         dismiss_new_replies: "Skryť nové odpovede"
+        dismiss_new_topics_with_selected:
+          one: "Zamietnuť (%{count})"
+          few: "Zamietnuť (%{count})"
+          many: "Zamietnuť (%{count})"
+          other: "Zamietnuť (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Zamietnuť (%{count})"
+          few: "Zamietnuť (%{count})"
+          many: "Zamietnuť (%{count})"
+          other: "Zamietnuť (%{count})"
+        dismiss_all_with_selected:
+          one: "Zamietnuť (%{count})"
+          few: "Zamietnuť (%{count})"
+          many: "Zamietnuť (%{count})"
+          other: "Zamietnuť (%{count})"
         dismiss_new: "Zahodiť. Nová"
         dismiss_new_modal:
           title: "Zamietnuť nové"
@@ -5413,7 +5435,7 @@ sk:
           title: "Upraviť tabuľku"
           cancel: "zrušiť"
           create: "Uložiť"
-          reason: "prečo upravujete?"
+          reason: "Prečo upravujete?"
           trigger_reason: "Pridať dôvod úpravy"
         default_edit_reason: "Aktualizujte tabuľku pomocou editora tabuliek"
       default_header:
@@ -6042,8 +6064,6 @@ sk:
             enabled_heading: "Povolené"
             all_heading: "Všetky hlásenia"
             apply: "Použi"
-            move_up: "Posunúť sa nahor"
-            move_down: "Posunúť sa nadol"
         configure:
           button: "Konfigurovať"
         site_traffic:

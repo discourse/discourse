@@ -4,7 +4,7 @@ import SecretValueList from "discourse/admin/components/secret-value-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
-module("Integration | Component | secret-value-list", function (hooks) {
+module("Integration | Component | SecretValueList", function (hooks) {
   setupRenderingTest(hooks);
 
   test("adding a value", async function (assert) {

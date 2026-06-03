@@ -385,7 +385,6 @@ ja:
       upcoming_events_list:
         title: "今後のイベント"
         empty: "今後のイベントはありません"
-        all_day: "終日"
         error: "イベントの取得に失敗しました"
         try_again: "やり直す"
         view_all: "すべて表示"
@@ -430,6 +429,8 @@ ja:
         name_placeholder: "イベント名"
         location_placeholder: "場所または URL を追加"
         description_placeholder: "イベントの説明を追加"
+        event_title_placeholder: "イベント名"
+        create_event_button: "イベントを作成"
         reminder:
           units:
             minutes:
@@ -440,6 +441,9 @@ ja:
               other: "日"
             weeks:
               other: "週間"
+      composer_actions:
+        create_event:
+          label: "イベントを作成"
       builder_modal:
         custom_fields:
           label: "カスタムフィールド"

@@ -31,3 +31,6 @@ id:
     edit_assignments_modal:
       topic: "Topik"
       post: "Postingan"
+    discourse_workflows:
+      assign_topic:
+        topic_id: "ID Topik"

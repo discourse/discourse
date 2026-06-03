@@ -131,7 +131,7 @@ RSpec.describe "Nested view replying" do
 
     it "shows the depth line on the parent without refresh" do
       nested_view.visit_nested(topic)
-      expect(nested_view).to have_no_depth_line_for(root_reply)
+      expect(nested_view).to have_leaf_depth_line_for(root_reply)
 
       nested_view.click_reply_on_post(root_reply)
       composer.fill_content("First child reply")
@@ -139,6 +139,7 @@ RSpec.describe "Nested view replying" do
       expect(composer).to be_closed
 
       expect(nested_view).to have_depth_line_for(root_reply)
+      expect(nested_view).to have_no_leaf_depth_line_for(root_reply)
     end
   end
 

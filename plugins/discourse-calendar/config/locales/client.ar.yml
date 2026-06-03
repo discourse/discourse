@@ -401,7 +401,6 @@ ar:
       upcoming_events_list:
         title: "الأحداث القادمة"
         empty: "لا توجد أحداث قادمة"
-        all_day: "طوال اليوم"
         error: "فشل استرداد الأحداث"
         try_again: "إعادة المحاولة"
         view_all: "عرض الكل"
@@ -466,6 +465,8 @@ ar:
         name_placeholder: "اسم الحدث"
         location_placeholder: "أضف الموقع أو عنوان URL"
         description_placeholder: "أضف وصفًا للحدث"
+        event_title_placeholder: "اسم الحدث"
+        create_event_button: "إنشاء حدث"
         reminder:
           units:
             minutes:
@@ -496,6 +497,9 @@ ar:
               few: "أسابيع"
               many: "أسابيع"
               other: "أسابيع"
+      composer_actions:
+        create_event:
+          label: "إنشاء حدث"
       builder_modal:
         custom_fields:
           label: "الحقول المخصَّصة"
@@ -522,7 +526,6 @@ ar:
           label: "تاريخ البدء"
         all_day:
           label: "حدث يستمر طوال اليوم"
-          description: "لن يتضمن الحدث الذي يستمر طوال اليوم أوقاتًا محددة، بل تاريخًا فقط. وسيستمر الحدث من بداية اليوم حتى نهايته."
         reminders:
           label: "التذكيرات"
           units:

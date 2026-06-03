@@ -331,6 +331,11 @@ pl_PL:
         other: "Masz %{count} nieprzeczytanych dyskusji"
       scroll_to_bottom: "Przewiń na dół"
       scroll_to_new_messages: "Zobacz nowe wiadomości"
+      new_messages:
+        one: "%{count} nowa wiadomość"
+        few: "%{count} nowe wiadomości"
+        many: "%{count} nowych wiadomości"
+        other: "%{count} nowych wiadomości"
       sound:
         title: "Dźwięk powiadomienia czatu na pulpicie"
       sounds:
@@ -849,3 +854,29 @@ pl_PL:
       panels:
         chat:
           label: "Czat"
+    discourse_workflows:
+      node_unavailable:
+        requires_chat: "Wymaga włączenia wtyczki czatu"
+      nodes:
+        "action:send_chat_message": "Wyślij wiadomość czatu"
+        "action:chat_approval": "Zatwierdzenie czatu"
+      node_descriptions:
+        "action:send_chat_message": "Wyślij wiadomość do kanału czatu"
+        "action:chat_approval": "Wyślij prośbę o zatwierdzenie na kanał czatu i czekaj na odpowiedź"
+      send_chat_message:
+        channel_id: "Kanał"
+        message: "Wiadomość"
+      chat_approval:
+        message: "Wiadomość"
+        approve_label: "Zatwierdź etykietę przycisku"
+        approve_label_description: "Jeśli pole pozostanie puste, domyślnie zostanie wybrane „Zatwierdź”."
+        deny_label: "Etykieta przycisku odmowy"
+        deny_label_description: "Jeśli pole pozostanie puste, domyślnie zostanie wybrane „Odmów”."
+        channel_id: "Kanał"
+        channel_id_description: "Kanał czatu, na który należy wysłać wiadomość z zatwierdzeniem."
+        timeout_minutes: "Limit czasu (minuty)"
+        timeout_minutes_description: "Pozostaw puste, aby nie przekroczyć limitu czasu."
+        timeout_action: "Po upływie limitu czasu"
+        timeout_action_description: "Co się stanie, gdy upłynie limit czasu zatwierdzenia?"
+        timeout_action_deny: "Wznów jako odrzucony"
+        timeout_action_fail: "Niepowodzenie przepływu pracy"

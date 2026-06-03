@@ -22,6 +22,10 @@ sr:
       chat_reply:
         title: Odgovori
         placeholder: Odgovori...
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Odobri"
+      default_deny_label: "Odbij"
   unsubscribe:
     chat_summary:
       never: Nikad

@@ -26,6 +26,7 @@ export default class AiConversationsSidebarManager extends Service {
   @service router;
   @service menu;
   @service capabilities;
+  @service currentUser;
   @service siteSettings;
 
   @tracked topics = [];
@@ -486,7 +487,8 @@ export default class AiConversationsSidebarManager extends Service {
   _conversationLink(topic) {
     const isStarred = !!topic.ai_conversation_starred;
     const canShowConversationMenu =
-      this.siteSettings.enable_ai_bot_starred_conversations &&
+      (this.siteSettings.enable_ai_bot_starred_conversations ||
+        this.currentUser?.can_share_ai_bot_conversations) &&
       !this.capabilities.isIpadOS;
 
     return {

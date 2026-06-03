@@ -399,7 +399,6 @@ ru:
       upcoming_events_list:
         title: "Предстоящие мероприятия"
         empty: "Нет предстоящих мероприятий"
-        all_day: "Весь день"
         error: "Не удалось получить мероприятия"
         try_again: "Попробовать снова"
         view_all: "Просмотреть все"
@@ -456,6 +455,8 @@ ru:
         name_placeholder: "Название события"
         location_placeholder: "Добавить местоположение или URL"
         description_placeholder: "Добавить описание события"
+        event_title_placeholder: "Название события"
+        create_event_button: "Создать мероприятие"
         reminder:
           units:
             minutes:
@@ -478,6 +479,9 @@ ru:
               few: "нед."
               many: "нед."
               other: "нед."
+      composer_actions:
+        create_event:
+          label: "Создать мероприятие"
       builder_modal:
         custom_fields:
           label: "Настраиваемые поля"
@@ -504,7 +508,6 @@ ru:
           label: "Дата начала"
         all_day:
           label: "Мероприятие на весь день"
-          description: "Мероприятие, рассчитанное на весь день, не будет иметь определенного расписания, только дату. Мероприятие будет проходить с начала дня до конца дня."
         reminders:
           label: "Напоминания"
           units:

@@ -938,6 +938,25 @@ RSpec.describe Middleware::RequestTracker do
           expect(event.ip_address.to_s).to eq("1.2.3.4")
         end
 
+        it "skips persisted browser pageviews without a URL" do
+          session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+
+          data =
+            Middleware::RequestTracker.get_data(
+              env(
+                "HTTP_DISCOURSE_TRACK_VIEW_DEFERRED" => "1",
+                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
+                "action_dispatch.remote_ip" => "1.2.3.4",
+              ),
+              ["204", {}],
+              0.2,
+            )
+
+          expect { Middleware::RequestTracker.log_request(data) }.not_to change {
+            BrowserPageviewEvent.count
+          }
+        end
+
         it "populates normalized_referrer via BrowserPageviewReferrerInspector" do
           session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
 

@@ -27,12 +27,13 @@ The `valueCallback` will be passed two named arguments: the original value, and 
 
 Callbacks can access the provided context for the current transformer hook, or they can reference other data sources. Many value transformers are executed in autotracking contexts, which means that referencing reactive state will cause the transformer to be automatically re-evaluated when that state changes.
 
-For example, to modify the link URL of the logo on mobile devices:
+For example, to modify the link URL of the logo on small screen devices:
 
 ```js
 api.registerValueTransformer("home-logo-href", ({ value, context }) => {
-  const site = api.container.lookup("service:site");
-  if (site.mobileView) {
+  const capabilities = api.container.lookup("service:capabilities");
+  if (!capabilities.viewport.sm) {
+    // viewport narrower than the `sm` breakpoint
     return "/latest";
   } else {
     return value;

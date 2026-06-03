@@ -26,6 +26,14 @@ RSpec.describe ReviewableUser, type: :model do
       expect(actions.has?(:delete_user_block)).to eq(false)
     end
 
+    it "still allows approving in the rejected state" do
+      reviewable.status = Reviewable.statuses[:rejected]
+      actions = reviewable.actions_for(Guardian.new(moderator))
+      expect(actions.has?(:approve_user)).to eq(true)
+      expect(actions.has?(:delete_user)).to eq(false)
+      expect(actions.has?(:delete_user_block)).to eq(false)
+    end
+
     it "doesn't ask for a rejection reason when deleting a user who was flagged as a possible spammer" do
       reviewable.reviewable_scores.build(user: admin, reason: "suspect_user")
 
@@ -100,6 +108,21 @@ RSpec.describe ReviewableUser, type: :model do
             reviewable_id: reviewable.id,
           ).count
         }.by(1)
+      end
+
+      it "transitions disagreed scores back to agreed when re-approving a rejected reviewable" do
+        score =
+          reviewable.reviewable_scores.create!(
+            user: admin,
+            reviewable_score_type: ReviewableScore.types[:needs_approval],
+            status: ReviewableScore.statuses[:disagreed],
+          )
+        reviewable.update!(status: Reviewable.statuses[:rejected])
+
+        reviewable.perform(moderator, :approve_user)
+
+        expect(reviewable.reload).to be_approved
+        expect(score.reload.status).to eq("agreed")
       end
     end
 

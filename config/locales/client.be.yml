@@ -198,6 +198,8 @@ be:
       placeholder: дата
       from_placeholder: "з даты"
       to_placeholder: "па дату"
+    date_range_picker:
+      apply: "Прымяніць"
     languages:
       ar:
         name: Арабская
@@ -1326,7 +1328,7 @@ be:
       create_topic: "Стварыць тэму"
       title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
       title_or_link_placeholder: "Увядзіце загаловак, або ўстаўце тут спасылку"
-      edit_reason_placeholder: "прычына рэдагавання"
+      edit_reason_placeholder: "Чаму вы рэдагуеце допіс?"
       reply_placeholder: "Увядзіце тэкст тут. Выкарыстоўвайце для фармаціравання Markdown, BBCode або HTML. Перацягвайце або ўстаўляйце відарысы."
       reply_placeholder_no_images: "Увядзіце тэкст тут. Выкарыстоўвайце для фармаціравання Markdown, BBCode або HTML."
       view_new_post: "Праглядзець новы допіс."
@@ -1350,14 +1352,17 @@ be:
         attribute_value: "значэнне"
         apply: "Прымяніць"
       help: "Даведка па рэдагаванні Markdown"
+      edit_reason: "Чаму вы рэдагуеце допіс?"
       modal_ok: "ОК"
       admin_options_title: "Неабавязковыя налады каманды для гэтай тэмы"
       composer_actions:
         reply: Адказаць
         edit: Рэдагаваць
+        reply_to_topic:
+          trigger: Тэма
         create_personal_message:
-          label: "Новае паведамленне"
           desc: "Напісаць новае асабістае паведамленне"
+        unknown_user: "Карыстальнік"
       ignore: "Ігнараваць"
       image: "відарыс"
     notifications:
@@ -1990,7 +1995,7 @@ be:
         modal:
           cancel: "скасаваць"
           create: "Захаваць"
-          reason: "чаму вы рэдагуеце допіс?"
+          reason: "Чаму вы рэдагуеце допіс?"
       spreadsheet:
         about: "Пра сайт"
     filter:

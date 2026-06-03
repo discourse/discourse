@@ -396,7 +396,6 @@ zh_CN:
       upcoming_events_list:
         title: "近期活动"
         empty: "无近期活动"
-        all_day: "全天"
         error: "无法检索活动"
         try_again: "重试"
         view_all: "查看全部"
@@ -444,6 +443,8 @@ zh_CN:
         name_placeholder: "活动名称"
         location_placeholder: "添加位置或网址"
         description_placeholder: "添加活动描述"
+        event_title_placeholder: "活动名称"
+        create_event_button: "创建活动"
         reminder:
           units:
             minutes:
@@ -454,6 +455,9 @@ zh_CN:
               other: "天"
             weeks:
               other: "周"
+      composer_actions:
+        create_event:
+          label: "创建活动"
       builder_modal:
         custom_fields:
           label: "自定义字段"
@@ -480,7 +484,6 @@ zh_CN:
           label: "开始日期"
         all_day:
           label: "全天事件"
-          description: "全天事件没有具体时间，只有日期。事件将从当天开始持续到当天结束。"
         reminders:
           label: "提醒"
           units:

@@ -10,10 +10,7 @@ RSpec.describe "Support Category Type Setup" do
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:toast) { PageObjects::Components::Toasts.new }
 
-  before do
-    SiteSetting.enable_support_category_type_setup = true
-    sign_in(admin)
-  end
+  before { sign_in(admin) }
 
   it "works with correct defaults and configures site settings and category custom field automatically" do
     visit("/new-category/setup")

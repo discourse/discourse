@@ -255,8 +255,10 @@ RSpec.describe "Drawer" do
       thread_list_page.open_thread(thread)
       thread_page.send_message
 
-      expect(tested_context.dig(:context, :post_ids)).to eq([post1.id, post2.id])
-      expect(tested_context.dig(:context, :topic_id)).to eq(post1.topic_id)
+      try_until_success do
+        expect(tested_context.dig(:context, :post_ids)).to eq([post1.id, post2.id])
+        expect(tested_context.dig(:context, :topic_id)).to eq(post1.topic_id)
+      end
     ensure
       DiscourseEvent.off(:chat_message_created, &blk)
     end

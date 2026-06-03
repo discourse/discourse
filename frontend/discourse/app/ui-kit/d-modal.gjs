@@ -337,9 +337,7 @@ export default class DModal extends Component {
       {{/unless}}
       <this.dynamicElement
         class={{dConcatClass
-          "modal"
-          "d-modal"
-          (if @inline "-inline")
+          "modal d-modal"
           (if this.animating "is-animating")
         }}
         data-keyboard="false"

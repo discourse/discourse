@@ -151,6 +151,15 @@ ur:
       placeholder: تاریخ
       from_placeholder: "تاریخ سے"
       to_placeholder: "تاریخ تک"
+    date_range_picker:
+      apply: "لاگو کریں"
+      start_date: "تاریخِ آغاز"
+      presets:
+        last_7_days: "پچھلے 7 دن"
+        last_30_days: "پچھلے 30 دن"
+        last_3_months: "گزشتہ 3 ماہ"
+        last_6_months: "گزشتہ 6 ماہ"
+        last_year: "گزشتہ سال"
     languages:
       ar:
         name: عربی
@@ -423,7 +432,7 @@ ur:
       pm_title: "تجویز کردہ پیغامات"
     admin_onboarding_banner:
       select_theme:
-        enabled: "فعال شدہ"
+        enabled: "منتخب"
       start_posting:
         back: "واپس"
     about:
@@ -2926,6 +2935,7 @@ ur:
       collapse: "کمپوزر پینل کو مختصر کریں"
       open: "کمپوزر پینل کھولیں"
       abandon: "کمپوزر بند کریں اور ڈرافٹ تلف کریں"
+      edit_reason: "آپ ترمیم کیوں کر رہے ہیں؟"
       enter_fullscreen: "پوری اسکرین والا کمپوزر کھولیں"
       exit_fullscreen: "پوری سکرین والا کمپوزر بند کریں"
       exit_fullscreen_prompt: "پوری اسکرین سے باہر نکلنے کے لیے <kbd>ESC</kbd> دبائیں"
@@ -2960,25 +2970,24 @@ ur:
           desc: ایک ہی وصول کنندگان سے شروع ہونے والا نیا پیغام بنائیں
         reply_to_topic:
           label: موضوع کو جواب
+          trigger: ٹاپک
           desc: موضوع کو جواب دیں، کسی مخصوص دھاگے پر نہیں
         toggle_whisper:
           label: سرگوشی ٹَوگل کریں
-          desc: سرگوشیاں صرف سٹاف اراکین کو نظر آتی ہیں
         create_topic:
-          label: "نیا موضوع"
           desc: ایک نیا موضوع بنائیں
         create_personal_message:
-          label: "نیا پیغام"
           desc: "نیا ذاتی پیغام بنائیں"
         shared_draft:
           label: "مشترکہ مسودہ"
           desc: "ایسے موضوع کا مسودہ تیار کریں جو صرف اجازت شدہ اراکین کو نظر آئے"
         toggle_topic_bump:
-          label: "موضوع بَمپ ٹَوگل کریں"
           desc: "تازہ ترین جواب کی تاریخ تبدیل کیے بغیر جواب دیں"
         toggle_unlisted:
           label: غیر مندرج ٹوگل
           desc: "غیر اندراج شدہ عنوانات صرف براہ راست لنک سے قابل رسائی ہیں"
+        edit_post: "پوسٹ میں ترمیم جاری"
+        unknown_user: "رکن"
       reload: "دوبارہ لوڈ"
       ignore: "نظر انداز کریں"
       image_alt_text:
@@ -3368,6 +3377,15 @@ ur:
         also_dismiss_topics: "ان موضوعات کو نہ ڈھونڈیں تاکہ وہ کبھی دوبارہ میرے لیے \"بغیر پڑھے\"میں نظر نہ آئیں"
         dismiss_new_topics: "نئے موضوعات کو برخاست"
         dismiss_new_replies: "نئے جوابات کو برخاست"
+        dismiss_new_topics_with_selected:
+          one: "برخاست (%{count})"
+          other: "برخاست (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "برخاست (%{count})"
+          other: "برخاست (%{count})"
+        dismiss_all_with_selected:
+          one: "برخاست (%{count})"
+          other: "برخاست (%{count})"
         dismiss_new: "نیا برخاست کریں"
         dismiss_new_modal:
           title: "نیا برخاست کریں"
@@ -5801,6 +5819,8 @@ ur:
         sections:
           reports:
             title: "گزارشات"
+          traffic:
+            title: "سائٹ پر آمدو رفت"
           engagement:
             activity_by_category:
               category: "زُمرَہ"
@@ -5822,8 +5842,6 @@ ur:
             enabled_heading: "فعال شدہ"
             all_heading: "تمام رپورٹیں"
             apply: "لاگو کریں"
-            move_up: "اوپر جائیں"
-            move_down: "نیچے جائیں"
         site_traffic:
           series:
             anonymous: "گمنام"

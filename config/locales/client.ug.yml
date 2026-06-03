@@ -153,6 +153,13 @@ ug:
       placeholder: چېسلا
       from_placeholder: "باشلانغان ۋاقىت"
       to_placeholder: "ئاخىرلىشىدىغان ۋاقىت"
+    date_range_picker:
+      apply: "قوللان"
+      start_date: "باشلىنىش ۋاقتى"
+      presets:
+        last_3_months: "ئۆتكەن 3 ئاي"
+        last_6_months: "ئۆتكەن 6 ئاي"
+        last_year: "ئۆتكەن يىل"
     languages:
       ar:
         name: ئەرەبچە
@@ -427,7 +434,7 @@ ug:
       pm_title: "تەۋسىيە ئۇچۇر"
     admin_onboarding_banner:
       select_theme:
-        enabled: "قوزغىتىلدى"
+        enabled: "تاللاندى"
       invite_collaborators:
         action: "تەكلىپ قۇر"
       start_posting:
@@ -2922,6 +2929,7 @@ ug:
       collapse: "تەھرىرلىگۈچ تاختىنى كىچىكلەت"
       open: "تەھرىرلىگۈچ تاختىنى ئاچ"
       abandon: "تەھرىرلىگۈچنى تاقاپ دەسلەپكى نۇسخىنى تاشلىۋەت"
+      edit_reason: "نېمىشقا تەھرىرلىدىڭىز؟"
       enter_fullscreen: "پۈتۈن ئېكرانلىق تەھرىرلىگۈچكە كىر"
       exit_fullscreen: "پۈتۈن ئېكرانلىق تەھرىرلىگۈچتىن چېكىن"
       exit_fullscreen_prompt: "<kbd>ESC</kbd> بېسىلسا پۈتۈن ئېكراندىن چېكىنىدۇ"
@@ -2956,25 +2964,24 @@ ug:
           desc: ئوخشاش تاپشۇرۇۋالغۇچىدىن باشلانغان يېڭى ئۇچۇر قورىدۇ
         reply_to_topic:
           label: تېمىغا جاۋاب
+          trigger: تېما
           desc: تېمىغا جاۋاب، بەلگىلەنگەن يازمىغا ئەمەس
         toggle_whisper:
           label: پىچىر ئالماشتۇر
-          desc: پىچىرلاش پەقەت باشقۇرغۇچى ئەزالارغىلا كۆرۈنىدۇ
         create_topic:
-          label: "يېڭى تېما"
           desc: يېڭى تېما قۇر
         create_personal_message:
-          label: "يېڭى ئۇچۇر"
           desc: "يېڭى بىر شەخسىي ئۇچۇر قورىدۇ"
         shared_draft:
           label: "دەسلەپكى نۇسخا ھەمبەھىر"
           desc: "پەقەت ئىجازەت بېرىلگەن ئىشلەتكۈچىلا كۆرەلەيدىغان تېمىدىن بىرگە قەلەم تەۋرىتىدۇ"
         toggle_topic_bump:
-          label: "تېما چوققىلاشنى ئالماشتۇرىدۇ"
           desc: "ئاخىرقى جاۋاب ۋاقتىنى ئۆزگەرتمەي جاۋاب قايتۇرىدۇ"
         toggle_unlisted:
           label: تىزىلمىغاننى ئالماشتۇر
           desc: "تىزىلمىغان تېمىنى پەقەت بىۋاستە ئۇلانما ئارقىلىق زىيارەت قىلغىلى بولىدۇ"
+        edit_post: "يازما تەھرىرلىنىۋاتىدۇ"
+        unknown_user: "ئىشلەتكۈچى"
       reload: "قايتا يۈكلە"
       ignore: "پەرۋا قىلما"
       image_alt_text:
@@ -3360,6 +3367,15 @@ ug:
         also_dismiss_topics: "بۇ تېمىلارنى ئىزلاشنى توختىتىپ ئۇلارنى ئوقۇلمىغانلاردا قايتا كۆرسەتمەيدۇ"
         dismiss_new_topics: "يېڭى تېمىغا پەرۋا قىلما"
         dismiss_new_replies: "يېڭى جاۋابقا پەرۋا قىلما"
+        dismiss_new_topics_with_selected:
+          one: "پەرۋا قىلما (%{count})"
+          other: "پەرۋا قىلما (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "پەرۋا قىلما (%{count})"
+          other: "پەرۋا قىلما (%{count})"
+        dismiss_all_with_selected:
+          one: "پەرۋا قىلما (%{count})"
+          other: "پەرۋا قىلما (%{count})"
         dismiss_new: "يېڭىغا پەرۋا قىلما"
         dismiss_new_modal:
           title: "يېڭىغا پەرۋا قىلما"
@@ -5236,7 +5252,7 @@ ug:
           title: "جەدۋەل تەھرىر"
           cancel: "ۋاز كەچ"
           create: "ساقلا"
-          reason: "نېمىشقا تەھرىرلەيسىز؟"
+          reason: "نېمىشقا تەھرىرلىدىڭىز؟"
           trigger_reason: "تەھرىرلەش سەۋەبى قوشۇلىدۇ"
         default_edit_reason: "جەدۋەل تەھرىرلىگۈچتە جەدۋەلنى يېڭىلايدۇ"
       default_header:
@@ -5919,8 +5935,6 @@ ug:
             enabled_heading: "قوزغىتىلدى"
             all_heading: "بارلىق دوكلات"
             apply: "قوللان"
-            move_up: "ئۈستىگە يۆتكەل"
-            move_down: "ئاستىغا يۆتكەل"
         configure:
           button: "سەپلە"
         site_traffic:

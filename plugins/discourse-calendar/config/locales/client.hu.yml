@@ -386,7 +386,6 @@ hu:
       upcoming_events_list:
         title: "Közelgő események"
         empty: "Nincsenek közelgő események"
-        all_day: "Egész nap"
         error: "Nem sikerült lekérni az eseményeket"
         try_again: "Próbáld újra"
         view_all: "Összes megtekintése"
@@ -435,6 +434,8 @@ hu:
         name_placeholder: "Esemény neve"
         location_placeholder: "Helyszín vagy URL hozzáadása"
         description_placeholder: "Esemény leírásának hozzáadása"
+        event_title_placeholder: "Esemény neve"
+        create_event_button: "Esemény létrehozása"
         reminder:
           units:
             minutes:
@@ -449,6 +450,9 @@ hu:
             weeks:
               one: "hét"
               other: "hetek"
+      composer_actions:
+        create_event:
+          label: "Esemény létrehozása"
       builder_modal:
         custom_fields:
           label: "Egyéni mezők"

@@ -791,3 +791,12 @@ pt_BR:
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Enviar mensagem de chat"
+      send_chat_message:
+        channel_id: "Canal"
+        message: "Mensagem"
+      chat_approval:
+        message: "Mensagem"
+        channel_id: "Canal"

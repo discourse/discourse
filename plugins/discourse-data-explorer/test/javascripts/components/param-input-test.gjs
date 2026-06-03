@@ -149,7 +149,7 @@ const InputTestCases = [
   },
 ];
 
-module("Component | param-input", function (hooks) {
+module("Component | ParamInput", function (hooks) {
   setupRenderingTest(hooks);
 
   for (const testcase of InputTestCases) {

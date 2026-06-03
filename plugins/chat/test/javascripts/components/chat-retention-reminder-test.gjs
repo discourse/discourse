@@ -5,7 +5,7 @@ import { i18n } from "discourse-i18n";
 import ChatRetentionReminder from "discourse/plugins/chat/discourse/components/chat-retention-reminder";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
-module("Component | chat-retention-reminder", function (hooks) {
+module("Component | ChatRetentionReminder", function (hooks) {
   setupRenderingTest(hooks);
 
   test("display retention info", async function (assert) {

@@ -21,7 +21,6 @@ it:
     chat_minimum_message_length: "Numero minimo di caratteri per un messaggio di chat."
     chat_allow_uploads: "Consenti caricamenti nei canali di chat pubblici e nei canali di messaggistica diretta."
     chat_archive_destination_topic_status: "Lo stato che dovrebbe avere l'argomento di destinazione una volta completata l'archiviazione di un canale. Questa opzione si applica solo quando l'argomento di destinazione è nuovo, non già esistente."
-    direct_message_enabled_groups: "Consenti agli utenti all'interno di questi gruppi di creare chat personali da utente a utente. Nota: lo staff può sempre creare chat personali e gli utenti potranno rispondere alle chat personali avviate da utenti che dispongono dell'autorizzazione per crearle."
     chat_message_flag_allowed_groups: "Agli utenti di questi gruppi è consentito segnalare i messaggi in chat. N.B. Ad amministratori e moderatori è sempre consentito segnalare i messaggi in chat."
     max_mentions_per_chat_message: "Numero massimo di notifiche @name che un utente può utilizzare in un messaggio di chat."
     chat_max_direct_message_users: "Gli utenti non possono aggiungere più utenti di quelli indicati da questa opzione durante la creazione di un nuovo messaggio diretto. Impostare l'opzione a 0 per consentire solo i messaggi a se stessi. Questa impostazione non si applica allo staff."
@@ -30,7 +29,6 @@ it:
     chat_editing_grace_period_max_diff_low_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 0 e 1)."
     chat_editing_grace_period_max_diff_high_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 2 e superiori)."
     chat_preferred_index: "Scheda preferita per il caricamento di /chat."
-    allow_chat_in_anonymous_mode: "Abilita questa impostazione per consentire agli utenti che navigano sul tuo sito in modo anonimo di utilizzare la chat. Questa impostazione richiede che l'opzione \"Consenti modalità anonima\" sia abilitata."
     errors:
       chat_default_channel: "Il canale di chat predefinito deve essere un canale pubblico."
       direct_message_enabled_groups_invalid: "Devi specificare almeno un gruppo per questa impostazione. Se non vuoi che nessuno al di fuori dello staff possa inviare messaggi diretti, scegli il gruppo dello staff."
@@ -218,6 +216,10 @@ it:
     scriptables:
       send_chat_message:
         title: Invia messaggio di chat
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Approva"
+      default_deny_label: "Nega"
   reviewable_score_types:
     needs_review:
       title: "Necessita di revisione"
