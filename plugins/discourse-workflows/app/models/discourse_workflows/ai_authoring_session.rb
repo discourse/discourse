@@ -45,3 +45,29 @@ module DiscourseWorkflows
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: discourse_workflows_ai_authoring_sessions
+#
+#  id                       :bigint           not null, primary key
+#  applied_at               :datetime
+#  base_graph_digest        :string(64)
+#  latest_request           :text
+#  latest_response          :jsonb            not null
+#  messages                 :jsonb            not null
+#  proposed_patch           :jsonb            not null
+#  risk_level               :string(20)
+#  status                   :string(40)       default("drafting"), not null
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  base_workflow_version_id :string(36)
+#  user_id                  :integer          not null
+#  workflow_id              :bigint
+#
+# Indexes
+#
+#  idx_dwf_ai_sessions_on_status_updated_at  (status,updated_at)
+#  idx_dwf_ai_sessions_on_user_id            (user_id)
+#  idx_dwf_ai_sessions_on_workflow_id        (workflow_id)
+#
