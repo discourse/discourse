@@ -156,19 +156,39 @@ export function extractDataAttribute(str) {
 // as oneboxer.rb when dealing with these formats
 function videoHTML(token) {
   const src = token.attrGet("src");
+  const attrs = [`data-video-src="${src}"`];
   const origSrc = token.attrGet("data-orig-src");
-  const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
-  return `<div class="video-placeholder-container" data-video-src="${src}" ${dataOrigSrcAttr}>
+  const base62Sha1 = token.attrGet("data-base62-sha1");
+
+  if (origSrc !== null) {
+    attrs.push(`data-orig-src="${origSrc}"`);
+  }
+  if (base62Sha1 !== null) {
+    attrs.push(`data-base62-sha1="${base62Sha1}"`);
+  }
+
+  return `<div class="video-placeholder-container" ${attrs.join(" ")}>
   </div>`;
 }
 
 function audioHTML(token) {
   const src = token.attrGet("src");
+  const sourceAttrs = [`src="${src}"`];
+  const linkAttrs = [`href="${src}"`];
   const origSrc = token.attrGet("data-orig-src");
-  const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
+  const base62Sha1 = token.attrGet("data-base62-sha1");
+
+  if (origSrc !== null) {
+    sourceAttrs.push(`data-orig-src="${origSrc}"`);
+  }
+  if (base62Sha1 !== null) {
+    sourceAttrs.push(`data-base62-sha1="${base62Sha1}"`);
+    linkAttrs.push(`data-base62-sha1="${base62Sha1}"`);
+  }
+
   return `<audio preload="metadata" controls>
-    <source src="${src}" ${dataOrigSrcAttr}>
-    <a href="${src}">${src}</a>
+    <source ${sourceAttrs.join(" ")}>
+    <a ${linkAttrs.join(" ")}>${src}</a>
   </audio>`;
 }
 
