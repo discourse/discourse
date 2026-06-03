@@ -555,8 +555,7 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
-  setCustomField(field, value, { set }) {
-    set(`customFields.${field}`, value);
+  setCustomField(field, value) {
     this.event.customFields[field] = value;
   }
 
