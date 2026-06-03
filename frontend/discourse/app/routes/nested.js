@@ -1,16 +1,17 @@
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import Route from "@ember/routing/route";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import EmbedMode from "discourse/lib/embed-mode";
 import PreloadStore from "discourse/lib/preload-store";
+import topicTitleToken from "discourse/lib/topic-title-token";
 import Draft from "discourse/models/draft";
+import DiscourseRoute from "discourse/routes/discourse";
 import processNode from "../lib/process-node";
 
-export default class NestedRoute extends Route {
+export default class NestedRoute extends DiscourseRoute {
   @service composer;
   @service header;
   @service nestedViewCache;
@@ -28,6 +29,10 @@ export default class NestedRoute extends Route {
 
   buildRouteInfoMetadata() {
     return { scrollOnTransition: false };
+  }
+
+  titleToken() {
+    return topicTitleToken(this.currentModel?.topic, this.siteSettings);
   }
 
   async model(params) {
