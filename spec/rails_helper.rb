@@ -22,7 +22,6 @@ require "fabrication"
 require "mocha/api"
 require "certified"
 require "webmock/rspec"
-require "minio_runner"
 
 CHROME_REMOTE_DEBUGGING_PORT = (ENV["CHROME_REMOTE_DEBUGGING_PORT"] || 50_062).to_s
 CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "127.0.0.1"
@@ -177,41 +176,7 @@ module TestSetup
   end
 end
 
-if ENV["PREFABRICATION"] == "0"
-  module Prefabrication
-    def fab!(name, fabricator_name = nil, **opts, &blk)
-      blk ||= proc { Fabricate(fabricator_name || name) }
-      let!(name, &blk)
-    end
-  end
-else
-  require "test_prof/recipes/rspec/let_it_be"
-  require "test_prof/before_all/adapters/active_record"
-
-  TestProf::BeforeAll.configure do |config|
-    config.after(:begin) do
-      DB.test_transaction = ActiveRecord::Base.connection.current_transaction
-      TestSetup.test_setup
-    end
-  end
-
-  module Prefabrication
-    def fab!(name, fabricator_name = nil, **opts, &blk)
-      blk ||= proc { Fabricate(fabricator_name || name) }
-      let_it_be(name, refind: true, **opts, &blk)
-    end
-  end
-end
-
-PER_SPEC_TIMEOUT_SECONDS = 45
 BROWSER_READ_TIMEOUT = 30
-
-# To avoid erasing `any_instance` from Mocha
-require "rspec/mocks/syntax"
-RSpec::Mocks::Syntax.singleton_class.define_method(:enable_should) { |*| nil }
-RSpec::Mocks::Syntax.singleton_class.define_method(:disable_should) { |*| nil }
-
-RSpec::Mocks::ArgumentMatchers.remove_method(:hash_including) # We’re currently relying on the version from Webmock
 
 RSpec.configure do |config|
   config.expect_with :rspec do |c|
@@ -224,7 +189,6 @@ RSpec.configure do |config|
   config.fail_fast = ENV["RSPEC_FAIL_FAST"] == "1"
   config.silence_filter_announcements = ENV["RSPEC_SILENCE_FILTER_ANNOUNCEMENTS"] == "1"
   config.extend RedisSnapshotHelper
-  config.extend Prefabrication
   config.include Helpers
   config.include MessageBus
   config.include RSpecHtmlMatchers
@@ -243,22 +207,6 @@ RSpec.configure do |config|
 
   config.order = "random"
   config.infer_spec_type_from_file_location!
-
-  config.mock_with :rspec do |mocks|
-    mocks.verify_partial_doubles = true
-    mocks.verify_doubled_constant_names = true
-    mocks.syntax = :expect
-  end
-  config.mock_with MultiMock::Adapter.for(:mocha, :rspec)
-
-  config.include Mocha::API
-
-  if ENV["GITHUB_ACTIONS"]
-    # Enable color output in GitHub Actions
-    # This eventually will be `config.color_mode = :on` in RSpec 4?
-    config.tty = true
-    config.color = true
-  end
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -336,48 +284,8 @@ RSpec.configure do |config|
     ThemeSiteSetting.delete_all
     SiteSetting.refresh!
 
-    # Rebase defaults
-    #
-    # We nuke the DB storage provider from site settings, so need to yank out the existing settings
-    #  and pretend they are default.
-    # There are a bunch of settings that are seeded, they must be loaded as defaults
-    SiteSetting.current.each do |k, v|
-      # skip setting defaults for settings that are in unloaded plugins
-      SiteSetting.defaults.set_regardless_of_locale(k, v) if SiteSetting.respond_to? k
-    end
-
-    SiteSetting.provider = TestLocalProcessProvider.new
-
-    # Used for S3 system specs, see also setup_s3_system_test.
-    MinioRunner.config do |minio_runner_config|
-      minio_runner_config.minio_domain = ENV["MINIO_RUNNER_MINIO_DOMAIN"] || "minio.local"
-      minio_runner_config.buckets =
-        (
-          if ENV["MINIO_RUNNER_BUCKETS"]
-            ENV["MINIO_RUNNER_BUCKETS"].split(",")
-          else
-            ["discoursetest"]
-          end
-        )
-      minio_runner_config.public_buckets =
-        (
-          if ENV["MINIO_RUNNER_PUBLIC_BUCKETS"]
-            ENV["MINIO_RUNNER_PUBLIC_BUCKETS"].split(",")
-          else
-            ["discoursetest"]
-          end
-        )
-
-      test_i = ENV["TEST_ENV_NUMBER"].to_i
-
-      data_dir = "#{Rails.root.join("tmp/test_data_#{test_i}/minio")}"
-      FileUtils.rm_rf(data_dir)
-      FileUtils.mkdir_p(data_dir)
-      minio_runner_config.minio_data_directory = data_dir
-
-      minio_runner_config.minio_port = 9_000 + 2 * test_i
-      minio_runner_config.minio_console_port = 9_001 + 2 * test_i
-    end
+    # Rebase the seeded DB settings as defaults, then swap in the in-memory provider.
+    TestLocalProcessProvider.install!
 
     DiscourseConnectHelpers.provider_port = 9100 + ENV["TEST_ENV_NUMBER"].to_i
 
@@ -667,130 +575,7 @@ RSpec.configure do |config|
     SiteIconManager.clear_cache!
   end
 
-  class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
-    attr_accessor :current_site
-
-    def initialize
-      super
-      self.current_site = "test"
-    end
-  end
-
-  config.after(:suite) do
-    FileUtils.remove_dir(concurrency_safe_tmp_dir, true) if SpecSecureRandom.value
-    Downloads.clear
-    MinioRunner.stop
-  end
-
-  if ENV["CI"]
-    class SpecTimeoutError < StandardError
-    end
-
-    mutex = Mutex.new
-    condition_variable = ConditionVariable.new
-    test_running = false
-    is_waiting = false
-
-    backtrace_logger =
-      Thread.new do
-        loop do
-          mutex.synchronize do
-            is_waiting = true
-            condition_variable.wait(mutex)
-            is_waiting = false
-          end
-
-          sleep PER_SPEC_TIMEOUT_SECONDS - 1
-
-          if mutex.synchronize { test_running }
-            puts "::group::[#{Process.pid}] Threads backtraces 1 second before timeout"
-
-            Thread.list.each do |thread|
-              puts "\n"
-              thread.backtrace.each { |line| puts line }
-              puts "\n"
-            end
-
-            puts "::endgroup::"
-          end
-        rescue StandardError => e
-          puts "Error in backtrace logger: #{e}"
-        end
-      end
-
-    config.around do |example_procsy|
-      Timeout.timeout(
-        PER_SPEC_TIMEOUT_SECONDS,
-        SpecTimeoutError,
-        "Spec timed out after #{PER_SPEC_TIMEOUT_SECONDS} seconds",
-      ) do
-        mutex.synchronize do
-          test_running = true
-          condition_variable.signal
-        end
-
-        example_procsy.run
-      rescue SpecTimeoutError
-        puts "--- Potential timeout example ---"
-        puts example_procsy.example.metadata
-        puts "---"
-      ensure
-        mutex.synchronize { test_running = false }
-        backtrace_logger.wakeup
-        sleep 0.01 while !mutex.synchronize { is_waiting }
-      end
-    end
-
-    # This is a monkey patch for the `Capybara.using_session` method in `capybara`. For some
-    # unknown reasons on Github Actions, we are seeing system tests failing intermittently with the error
-    # `Socket::ResolutionError: getaddrinfo: Temporary failure in name resolution` when the app tries to resolve
-    # `localhost` from within a `Capybara#using_session` block.
-    #
-    # Too much time has been spent trying to debug this issue and the root cause is still unknown so we are just dropping
-    # this workaround for now where we will retry the block once before raising the error.
-    #
-    # Potentially related: https://bugs.ruby-lang.org/issues/20172
-    module Capybara
-      class << self
-        def using_session_with_localhost_resolution(name, &block)
-          attempts = 0
-          _using_session(name, &block)
-        rescue Socket::ResolutionError
-          puts "Socket::ResolutionError error encountered... Current thread count: #{Thread.list.size}"
-          attempts += 1
-          attempts <= 1 ? retry : raise
-        end
-      end
-    end
-
-    Capybara.singleton_class.class_eval do
-      alias_method :_using_session, :using_session
-      alias_method :using_session, :using_session_with_localhost_resolution
-    end
-  end
-
-  if ENV["DISCOURSE_RSPEC_PROFILE_EACH_EXAMPLE"]
-    config.around :each do |example|
-      measurement = Benchmark.measure { example.run }
-      RSpec.current_example.metadata[:run_duration_ms] = (measurement.real * 1000).round(2)
-    end
-  end
-
-  if ENV["GITHUB_ACTIONS"]
-    config.around :each, capture_log: true do |example|
-      original_logger = ActiveRecord::Base.logger
-      io = StringIO.new
-      io_logger = Logger.new(io)
-      io_logger.level = Logger::DEBUG
-      ActiveRecord::Base.logger = io_logger
-
-      example.run
-
-      RSpec.current_example.metadata[:active_record_debug_logs] = io.string
-    ensure
-      ActiveRecord::Base.logger = original_logger
-    end
-  end
+  config.after(:suite) { Downloads.clear }
 
   config.before :each do
     # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
@@ -1044,66 +829,6 @@ def set_cdn_url(cdn_url)
   end
 end
 
-def file_from_fixtures(
-  filename,
-  directory = "images",
-  root_path = "#{Rails.root.join("spec/fixtures")}"
-)
-  tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
-  FileUtils.cp("#{root_path}/#{directory}/#{filename}", tmp_file_path)
-  File.new(tmp_file_path)
-end
-
-def plugin_file_from_fixtures(filename, directory = "images")
-  # We [1] here instead of [0] because the first caller is the current method.
-  #
-  # /home/mb/repos/discourse-ai/spec/lib/modules/ai_bot/tools/discourse_meta_search_spec.rb:17:in `block (2 levels) in <main>'
-  first_non_gem_caller = caller_locations.select { |loc| !loc.to_s.match?(/gems/) }[1]&.path
-  raise StandardError.new("Could not find caller for fixture #{filename}") if !first_non_gem_caller
-
-  # This is the full path of the plugin spec file that needs a fixture.
-  # realpath makes sure we follow symlinks.
-  #
-  # #<Pathname:/home/mb/repos/discourse-ai/spec/lib/modules/ai_bot/tools/discourse_meta_search_spec.rb>
-  plugin_caller_path = Pathname.new(first_non_gem_caller).realpath
-
-  plugin_match =
-    Discourse.plugins.find do |plugin|
-      # realpath makes sure we follow symlinks
-      plugin_caller_path.to_s.starts_with?(Pathname.new(plugin.root_dir).realpath.to_s)
-    end
-
-  if !plugin_match
-    raise StandardError.new(
-            "Could not find matching plugin for #{plugin_caller_path} and fixture #{filename}",
-          )
-  end
-
-  file_from_fixtures(filename, directory, "#{plugin_match.root_dir}/spec/fixtures")
-end
-
-def file_from_contents(contents, filename, directory = "images")
-  tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
-  File.write(tmp_file_path, contents)
-  File.new(tmp_file_path)
-end
-
-def plugin_from_fixtures(plugin_name)
-  tmp_plugins_dir = File.join(concurrency_safe_tmp_dir, "plugins")
-
-  FileUtils.mkdir(tmp_plugins_dir) if !Dir.exist?(tmp_plugins_dir)
-  FileUtils.cp_r("#{Rails.root.join("spec/fixtures/plugins/#{plugin_name}")}", tmp_plugins_dir)
-
-  Plugin::Instance.parse_from_source(File.join(tmp_plugins_dir, plugin_name, "plugin.rb"))
-end
-
-def concurrency_safe_tmp_dir
-  SpecSecureRandom.value ||= SecureRandom.hex
-  dir_path = File.join(Dir.tmpdir, "rspec_#{Process.pid}_#{SpecSecureRandom.value}")
-  FileUtils.mkdir_p(dir_path) unless Dir.exist?(dir_path)
-  dir_path
-end
-
 def has_trigger?(trigger_name)
   DB.exec(<<~SQL) != 0
     SELECT 1
@@ -1127,26 +852,6 @@ def stub_deprecated_settings!(override:)
   defaults = SiteSetting.defaults.instance_variable_get(:@defaults)
   defaults.each { |_, hash| hash.delete(:old_one) }
   defaults.each { |_, hash| hash.delete(:new_one) }
-end
-
-def silence_stdout
-  STDOUT.stubs(:write)
-  yield
-ensure
-  STDOUT.unstub(:write)
-end
-
-def Rails.logger=(logger)
-  raise "Setting Rails.logger is not allowed as it can lead to unexpected behavior in tests. Use `fake_logger = track_log_messages { ... }` instead."
-end
-
-def track_log_messages
-  logger = FakeLogger.new
-  Rails.logger.broadcast_to(logger)
-  yield logger
-  logger
-ensure
-  Rails.logger.stop_broadcasting_to(logger)
 end
 
 def apply_base_chrome_args(args = [])
@@ -1188,10 +893,4 @@ def apply_base_chrome_args(args = [])
   end
 
   base_args + args
-end
-
-class SpecSecureRandom
-  class << self
-    attr_accessor :value
-  end
 end
