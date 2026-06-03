@@ -327,7 +327,15 @@ export default class ChatChannel extends Component {
   processMessages(channel, result) {
     const messages = [];
     let foundFirstNew = false;
-    channel.newestMessage = null;
+
+    // Only compute the newest message marker on a full load.
+    // In an already loaded list we need to preserve the "last visit" line.
+    const hasNewest = this.messagesManager.messages.some(
+      (m) => m.id === channel.newestMessage?.id
+    );
+    if (!hasNewest) {
+      channel.newestMessage = null;
+    }
 
     result?.messages?.forEach((messageData, index) => {
       messageData.firstOfResults = index === 0;
@@ -353,6 +361,7 @@ export default class ChatChannel extends Component {
       // newest has to be in after fetch callback as we don't want to make it
       // dynamic or it will make the pane jump around, it will disappear on reload
       if (
+        !hasNewest &&
         !foundFirstNew &&
         messageData.id > this.currentUserMembership?.lastReadMessageId
       ) {
