@@ -277,26 +277,8 @@ RSpec.configure do |config|
     # they click things in the composer.
     SiteSetting.educate_until_posts = 0
 
-    if example.metadata[:video]
-      Capybara.current_session.driver.on_save_screenrecord do |video|
-        saved_path =
-          File.join(
-            Capybara.save_path,
-            "#{example.metadata[:full_description].parameterize}-screenrecord.webm",
-          )
-
-        FileUtils.mv(video, saved_path)
-
-        if !ENV["CI"]
-          puts "\n🎥 Recorded video for: #{example.metadata[:full_description]}\n"
-          puts "#{saved_path}\n"
-        end
-      end
-    end
-
-    if example.metadata[:trace]
-      page.driver.start_tracing(screenshots: true, snapshots: true, sources: true)
-    end
+    SystemArtifacts.record_video(example)
+    SystemArtifacts.start_trace(page, example)
 
     page.driver.with_playwright_page do |pw_page|
       $playwright_logger = PlaywrightLogger.new(pw_page)
@@ -322,19 +304,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :system) do |example|
-    if example.metadata[:trace]
-      path =
-        File.join(
-          Capybara.save_path,
-          "#{example.metadata[:full_description].parameterize}-trace.zip",
-        )
-      page.driver.stop_tracing(path:)
-
-      if !ENV["CI"]
-        puts "\n🧭 Recorded trace for: #{example.metadata[:full_description]}\n"
-        puts "Open with `pnpm playwright show-trace #{path}`\n"
-      end
-    end
+    SystemArtifacts.stop_trace(page, example)
 
     lines = RSpec.current_example.metadata[:extra_failure_lines]
 
