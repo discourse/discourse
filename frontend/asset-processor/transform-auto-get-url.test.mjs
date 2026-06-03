@@ -2,36 +2,31 @@ import { transformAsync } from "@babel/core";
 import { expect, test } from "vitest";
 import autoGetUrl from "./transform-auto-get-url.js";
 
-// Compile a template through the real production pipeline (babel +
-// ember-template-compilation + our transform) and return both the emitted
-// module code and the rewritten template body. `targetFormat: "hbs"` keeps the
-// template as a readable string literal in the output, which we extract and
-// unescape so we can assert on the exact rewrite.
-async function compile(templateBody) {
-  const source =
-    `import { precompileTemplate } from '@ember/template-compilation';\n` +
-    `export default precompileTemplate(${JSON.stringify(
-      templateBody
-    )}, { strictMode: true });`;
-
-  const { code } = await transformAsync(source, {
-    filename: "test.js",
-    configFile: false,
-    babelrc: false,
-    plugins: [
-      [
-        "babel-plugin-ember-template-compilation",
-        {
-          compilerPath: "ember-source/ember-template-compiler/index.js",
-          targetFormat: "hbs",
-          transforms: [autoGetUrl],
-        },
-      ],
+const BABEL_OPTIONS = {
+  configFile: false,
+  plugins: [
+    [
+      "babel-plugin-ember-template-compilation",
+      {
+        compilerPath: "ember-source/ember-template-compiler/index.js",
+        targetFormat: "hbs",
+        transforms: [autoGetUrl],
+      },
     ],
-  });
+  ],
+};
 
-  const match = code.match(/precompileTemplate\(\s*("(?:[^"\\]|\\.)*")/);
-  return { code, template: JSON.parse(match[1]) };
+// `targetFormat: "hbs"` keeps the compiled template as a readable string
+// literal, which we extract and unescape to assert on the exact rewrite.
+async function compile(templateBody) {
+  const source = `import { precompileTemplate } from '@ember/template-compilation';
+export default precompileTemplate(${JSON.stringify(templateBody)}, { strictMode: true });`;
+
+  const { code } = await transformAsync(source, BABEL_OPTIONS);
+  const template = JSON.parse(
+    code.match(/precompileTemplate\(\s*("(?:[^"\\]|\\.)*")/)[1]
+  );
+  return { code, template };
 }
 
 test.each([
