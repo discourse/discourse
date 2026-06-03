@@ -98,7 +98,13 @@ module DiscourseWorkflows
     def load_options_methods_for_field(definition)
       return [] unless definition.is_a?(Hash)
 
-      methods = Array(definition.dig(:type_options, :load_options_method)).compact
+      type_options = definition[:type_options] || definition["type_options"] || {}
+      methods =
+        if load_options_dependencies?(type_options)
+          []
+        else
+          Array(type_options[:load_options_method] || type_options["load_options_method"]).compact
+        end
 
       nested_definitions = schema_field_definitions(definition[:item_schema])
       nested_definitions += schema_field_definitions(definition[:extra_item_schema])
@@ -109,6 +115,13 @@ module DiscourseWorkflows
         end
 
       methods + nested_definitions.flat_map { |field| load_options_methods_for_field(field) }
+    end
+
+    def load_options_dependencies?(type_options)
+      dependencies =
+        type_options[:load_options_depends_on] || type_options["load_options_depends_on"]
+
+      Array(dependencies).present?
     end
 
     def schema_field_definitions(schema)

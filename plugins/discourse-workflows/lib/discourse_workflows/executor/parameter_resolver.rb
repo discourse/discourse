@@ -4,6 +4,7 @@ module DiscourseWorkflows
   class Executor
     class ParameterResolver
       MISSING = Object.new.freeze
+      BOOLEAN_TYPE = ActiveModel::Type::Boolean.new
 
       def initialize(parameters:, property_schema:, resolver:, input_items:, runtime_state:)
         @parameters = parameters
@@ -78,15 +79,18 @@ module DiscourseWorkflows
         return value if no_data_expression?(schema)
         return resolve_fixed_collection_value(value, schema) if fixed_collection_schema?(schema)
 
-        case value
-        when Hash
-          resolve_hash_parameter_value(value, schema)
-        when Array
-          item_schema = schema_value(schema, :item_schema)
-          value.map { |entry| resolve_parameter_value(entry, item_schema) }
-        else
-          @resolver.resolve(value)
-        end
+        resolved_value =
+          case value
+          when Hash
+            resolve_hash_parameter_value(value, schema)
+          when Array
+            item_schema = schema_value(schema, :item_schema)
+            value.map { |entry| resolve_parameter_value(entry, item_schema) }
+          else
+            @resolver.resolve(value)
+          end
+
+        coerce_parameter_value(resolved_value, schema)
       end
 
       def resolve_hash_parameter_value(value, schema)
@@ -182,6 +186,12 @@ module DiscourseWorkflows
 
       def no_data_expression?(schema)
         schema_value(schema, :no_data_expression) == true
+      end
+
+      def coerce_parameter_value(value, schema)
+        return value if schema_value(schema, :type) != :boolean
+
+        BOOLEAN_TYPE.cast(value) == true
       end
 
       def schema_value(schema, key)

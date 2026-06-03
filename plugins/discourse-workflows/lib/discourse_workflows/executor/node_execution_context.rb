@@ -28,6 +28,21 @@ module DiscourseWorkflows
         ).deep_symbolize_keys
       end
 
+      def self.serialize_topic(
+        topic,
+        guardian: Discourse.system_user.guardian,
+        custom_field_names: []
+      )
+        MultiJson.load(
+          DiscourseWorkflows::TopicSerializer.new(
+            topic,
+            scope: guardian,
+            root: false,
+            custom_field_names: custom_field_names,
+          ).to_json,
+        ).deep_symbolize_keys
+      end
+
       class RuntimeState
         attr_reader :condition_step_details, :execution_hints, :log, :metadata, :wait_request
 
@@ -300,6 +315,10 @@ module DiscourseWorkflows
         include_cooked: false
       )
         self.class.serialize_post(post, guardian:, include_raw:, include_cooked:)
+      end
+
+      def serialize_topic(topic, guardian: Discourse.system_user.guardian, custom_field_names: [])
+        self.class.serialize_topic(topic, guardian:, custom_field_names:)
       end
 
       def put_execution_to_wait(waiting_until = nil)
