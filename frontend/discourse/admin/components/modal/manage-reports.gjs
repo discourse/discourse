@@ -9,7 +9,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
-import { eq } from "discourse/truth-helpers";
+import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DLoadMore from "discourse/ui-kit/d-load-more";
@@ -88,6 +88,10 @@ export default class ManageReports extends Component {
 
   get atCap() {
     return this.enabledOrder.length >= VISIBLE_CAP;
+  }
+
+  get reorderable() {
+    return this.enabledOrder.length > 1;
   }
 
   cacheItems(items) {
@@ -294,7 +298,12 @@ export default class ManageReports extends Component {
       <:body>
 
         {{#if this.visibleRows.length}}
-          <ul class="manage-reports__list">
+          <ul
+            class={{dConcatClass
+              "manage-reports__list"
+              (if this.reorderable "--reorderable")
+            }}
+          >
             {{#each this.visibleRows key="key" as |row index|}}
               <li
                 class={{dConcatClass
@@ -302,7 +311,7 @@ export default class ManageReports extends Component {
                   (if row.enabled "--enabled")
                 }}
                 data-identifier={{row.key}}
-                draggable={{row.enabled}}
+                draggable={{and row.enabled this.reorderable}}
                 {{on "dragstart" (fn this.onDragStart row)}}
                 {{on "dragover" this.onDragOver}}
                 {{on "drop" (fn this.onDrop row)}}
