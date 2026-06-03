@@ -29,6 +29,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import nestedPostUrl from "../../lib/nested-post-url";
+import processNode from "../../lib/process-node";
 import NestedPostChildren from "./post-children";
 
 export default class NestedPost extends Component {
@@ -38,6 +39,7 @@ export default class NestedPost extends Component {
   @service modal;
   @service site;
   @service siteSettings;
+  @service store;
 
   @tracked expanded;
   @tracked lineHighlighted = false;
@@ -45,6 +47,7 @@ export default class NestedPost extends Component {
   @tracked showDeletedContent = false;
   @tracked showIgnoredContent = false;
   @tracked loadingIgnoredContent = false;
+  @tracked loadingReplies = false;
 
   restoreScroll = modifier((element) => {
     const anchor = this.args.scrollAnchor;
@@ -221,6 +224,13 @@ export default class NestedPost extends Component {
     ];
   }
 
+  childPathWithChildren(children) {
+    return [
+      ...(this.args.path || []),
+      { post: this.args.post, children: children || [] },
+    ];
+  }
+
   childPathWithNewChild(childPost) {
     const children = this.args.children || [];
     const hasChild = children.some(
@@ -242,6 +252,10 @@ export default class NestedPost extends Component {
 
   get mobileFocusEnabled() {
     return this.site.mobileView && this.args.focusPost;
+  }
+
+  get childDepth() {
+    return this.args.depth + 1;
   }
 
   get effectiveExpanded() {
@@ -325,10 +339,60 @@ export default class NestedPost extends Component {
     });
   }
 
+  async childrenForMobileFocus() {
+    const cached = this.args.fetchedChildrenCache?.get(
+      this.args.post.post_number
+    );
+    if (cached) {
+      return cached.childNodes;
+    }
+
+    if ((this.args.children?.length ?? 0) > 0 || !this.hasReplies) {
+      return this.args.children || [];
+    }
+
+    this.loadingReplies = true;
+    try {
+      const data = await ajax(
+        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.post.post_number}.json?sort=${this.args.sort || "top"}&depth=${this.childDepth}`
+      );
+      if (this.isDestroying || this.isDestroyed) {
+        return null;
+      }
+
+      const childNodes = (data.children || []).map((child) =>
+        processNode(this.store, this.args.topic, child)
+      );
+      this.args.fetchedChildrenCache?.set(this.args.post.post_number, {
+        childNodes,
+        page: data.page,
+        hasMore: data.has_more || false,
+        fetchedFromServer: true,
+      });
+      return childNodes;
+    } catch (e) {
+      if (!(this.isDestroying || this.isDestroyed)) {
+        popupAjaxError(e);
+      }
+      return null;
+    } finally {
+      if (!(this.isDestroying || this.isDestroyed)) {
+        this.loadingReplies = false;
+      }
+    }
+  }
+
   @action
-  handleReplies() {
+  async handleReplies() {
+    if (this.loadingReplies) {
+      return;
+    }
+
     if (this.mobileFocusEnabled) {
-      this.args.focusPost(this.childPath);
+      const children = await this.childrenForMobileFocus();
+      if (children && !(this.isDestroying || this.isDestroyed)) {
+        this.args.focusPost(this.childPathWithChildren(children));
+      }
       return;
     }
 
@@ -706,6 +770,8 @@ export default class NestedPost extends Component {
                     {{#if this.showExpandRepliesButton}}
                       <NestedRepliesExpandButton
                         @replyCount={{this.replyCount}}
+                        @disabled={{this.loadingReplies}}
+                        @isLoading={{this.loadingReplies}}
                         @onClick={{this.handleReplies}}
                       />
                     {{/if}}

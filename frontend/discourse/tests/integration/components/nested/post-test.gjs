@@ -5,6 +5,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import NestedPost from "discourse/components/nested/post";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
 
 const noop = () => {};
@@ -39,6 +40,7 @@ function renderComponent(context) {
         @unhidePost={{noop}}
         @expansionState={{context.expansionState}}
         @fetchedChildrenCache={{context.fetchedChildrenCache}}
+        @focusPost={{context.focusPost}}
         @registerPost={{registerPost}}
       />
     </template>
@@ -138,5 +140,67 @@ module("Integration | Component | Nested | Post", function (hooks) {
     assert
       .dom(".nested-post__collapsed-avatar .avatar")
       .exists("renders the post avatar in the mobile collapsed bar");
+  });
+
+  test("mobile focus waits for unloaded children before focusing", async function (assert) {
+    const site = getOwner(this).lookup("service:site");
+    sinon.stub(site, "mobileView").value(true);
+
+    this.post.set("direct_reply_count", 1);
+    this.post.set("total_descendant_count", 1);
+
+    let focusedPath;
+    let requestedChildren = false;
+    this.focusPost = (path) => {
+      focusedPath = path;
+    };
+
+    pretender.get("/n/nested-topic/1/children/2.json", (request) => {
+      requestedChildren = true;
+      assert.strictEqual(
+        focusedPath,
+        undefined,
+        "does not enter focused mode before children are fetched"
+      );
+      assert.strictEqual(request.queryParams.sort, "top");
+      assert.strictEqual(request.queryParams.depth, "1");
+
+      return response({
+        children: [
+          {
+            id: 3,
+            post_number: 3,
+            topic_id: 1,
+            user_id: 3,
+            username: "child-user",
+            avatar_template: "/letter_avatar_proxy/v4/letter/c/25/48.png",
+            cooked: "<p>Child post</p>",
+            created_at: "2026-01-01T00:00:00.000Z",
+            actions_summary: [],
+            direct_reply_count: 0,
+            total_descendant_count: 0,
+            children: [],
+          },
+        ],
+        has_more: false,
+        page: 0,
+      });
+    });
+
+    await renderComponent(this);
+    await click(".nested-post__expand-replies");
+
+    assert.true(requestedChildren, "fetches the missing children first");
+    assert.strictEqual(focusedPath.length, 1, "focuses after the request");
+    assert.strictEqual(
+      focusedPath[0].children[0].post.post_number,
+      3,
+      "hydrates the focused path with the fetched child"
+    );
+    assert.strictEqual(
+      this.fetchedChildrenCache.get(2).childNodes,
+      focusedPath[0].children,
+      "stores the fetched children in the shared cache"
+    );
   });
 });
