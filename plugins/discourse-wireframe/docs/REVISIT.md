@@ -5,64 +5,41 @@ entry: what, why deferred, and what'd unblock it.
 
 ## Editor-only CSS actually shipping only to staff
 
-**Status**: ⚠️ Open for CSS. ✅ Resolved for JS (commit `500978517cd`).
+**Status**: ✅ Resolved for CSS (PR #40345). ✅ Resolved for JS (commit
+`500978517cd`).
 
-**What**: The plugin's editor-only **CSS** still ships to every user
-on every page. The editor-only **JS** was migrated to the gated admin
-bundle: every editor service, modifier, chrome component, and
-editor-only lib helper now lives under
-`plugins/discourse-wireframe/admin/assets/javascripts/` and only
-downloads when `staff?` is true.
+**What**: Both the plugin's editor-only **JS** and editor-only **CSS**
+now download only when `staff?` is true.
 
-The CSS is split into `wireframe.scss` (universal block content)
-and `admin/wireframe-chrome.scss` (editor chrome) for
-**organization only** — both files load for every user.
+- **JS**: every editor service, modifier, chrome component, and
+  editor-only lib helper lives under
+  `plugins/discourse-wireframe/admin/assets/javascripts/`, which is
+  auto-detected and compiled into the staff-gated admin entrypoint.
+- **CSS**: `admin/wireframe-chrome.scss` (editor chrome) is registered
+  with the `:admin` target in `plugin.rb`, so it compiles into the
+  `discourse-wireframe_admin` bundle and is served only when `staff?`.
+  `wireframe.scss` (universal block content rendered on live pages)
+  stays unconditional.
 
-**Why CSS is deferred**: Discourse's plugin **stylesheet** pipeline
-doesn't expose a per-asset staff gate, while the **JS** pipeline does.
+**How CSS was unblocked**: PR #40345 ("DEV: Allow plugins to register
+admin-panel-specific CSS") added an `:admin` target to `register_asset`
+— exactly the core change this note called for. CSS registered with
+`:admin` routes into a per-plugin `<plugin>_admin` bundle
+(`DiscoursePluginRegistry.admin_stylesheets`,
+`lib/discourse_plugin_registry.rb`) that
+`Discourse.find_plugin_css_assets` emits only when `include_admin` is
+set, and the stylesheet views pass `include_admin: staff?`. We adopted
+it by changing the registration to:
 
-- `register_asset` (`lib/plugin/instance.rb:783`) routes stylesheets by
-  `:mobile` / `:desktop` / `:color_definitions` only. There's no
-  `:admin` or `:staff` flag, and the `stylesheets/admin/` path
-  convention is purely organizational —
-  `lib/discourse_plugin_registry.rb:188-211` does not switch on path.
-- Plugin stylesheets are injected via `Discourse.find_plugin_css_assets`
-  (`lib/discourse.rb:432`) and
-  `app/views/common/_discourse_stylesheet.html.erb` lines 21-37 — those
-  filter by mobile/desktop only, not by user permission.
-- The `:admin` bundle in core (`_discourse_stylesheet.html.erb:12-14`)
-  IS gated by `if staff?`, but that's for core's own
-  `app/assets/stylesheets/admin.scss`, not for plugin stylesheets.
-- `register_asset_filter` exists (`lib/plugin/instance.rb:756`) but
-  filters the ENTIRE plugin's asset set — too coarse for our per-file
-  need.
-- For comparison, the JS side already worked: files under
-  `admin/assets/javascripts/` are auto-detected by
-  `Plugin::JsManager.admin_js_asset_exists?`
-  (`lib/plugin/js_manager.rb:13-16`), compiled as a separate `:admin`
-  entrypoint, included via `include_admin_asset: staff?` in
-  `app/views/layouts/application.html.erb:28`. The CSS side needs a
-  parallel mechanism.
+```ruby
+register_asset "stylesheets/admin/wireframe-chrome.scss", :admin
+```
 
-**What'd unblock CSS**:
+The file already lived at the conventional `assets/stylesheets/admin/`
+path, so no file move was needed.
 
-1. **Core change**: either
-   - Add an `:admin` (or `:staff`) flag to `register_asset` for CSS
-     that routes to a staff-gated bundle, or
-   - Match the JS-side convention: auto-detect files under
-     `admin/assets/stylesheets/` and emit them only for staff via a
-     parallel `discourse_stylesheet_link_tag(:plugin_admin, ...)`
-     block in `_discourse_stylesheet.html.erb`.
-2. **Plan B (no core change)**: ship the editor chrome CSS via
-   JS-injected `<style>` element on `WireframeService.enter()`,
-   removed on `exit()`. Plumbing precedent in
-   `frontend/discourse/app/instance-initializers/current-user-mention-css.js`.
-   Loses SCSS preprocessing — the chrome SCSS would need to live as a
-   JS template literal or go through a build-time transform.
-
-**Action**: check with the team whether core can grow a real per-asset
-staff gate for plugin CSS. If yes, adopt. If no, plan B is the runtime
-injection.
+**Note**: the gate is `staff?` (not strictly `admin?`), matching the
+editor JS gate, so CSS and JS delivery stay symmetric.
 
 ## Per-arg responsive overrides
 

@@ -7,13 +7,8 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-wireframe
 
 register_asset "stylesheets/wireframe.scss"
-# Editor chrome — organizational split from `wireframe.scss`. Both
-# files currently ship to every user; the `stylesheets/admin/` path is
-# a naming convention only, NOT an automatic staff gate. Discourse's
-# plugin stylesheet pipeline (`lib/discourse.rb:find_plugin_css_assets`)
-# doesn't filter by user permission. Per-asset staff gating is tracked
-# as a follow-up — see docs/REVISIT.md.
-register_asset "stylesheets/admin/wireframe-chrome.scss"
+register_asset "stylesheets/admin/wireframe-chrome.scss", :admin
+
 enabled_site_setting :wireframe_enabled
 
 # Icons used by block-metadata `icon:` fields and inspector UI that
