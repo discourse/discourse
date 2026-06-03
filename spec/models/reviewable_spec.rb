@@ -501,6 +501,7 @@ RSpec.describe Reviewable, type: :model do
           created_post_id: perform_result.created_post.id,
           created_post_topic_id: perform_result.created_post_topic.id,
           remove_reviewable_ids: [reviewable.id],
+          refresh_reviewable_ids: [],
           version: 1,
           reviewable_count: 0,
           unseen_reviewable_count: 0,
@@ -528,6 +529,7 @@ RSpec.describe Reviewable, type: :model do
         {
           success: true,
           remove_reviewable_ids: [reviewable.id],
+          refresh_reviewable_ids: [],
           version: 1,
           reviewable_count: 0,
           unseen_reviewable_count: 0,

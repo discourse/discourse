@@ -398,9 +398,19 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateStatus(data) {
-    if (data.remove_reviewable_ids?.includes(this.reviewable.id)) {
-      delete data.remove_reviewable_ids;
-      this._performResult(data, {}, this.reviewable);
+    if (
+      data.remove_reviewable_ids?.includes(this.reviewable.id) ||
+      data.refresh_reviewable_ids?.includes(this.reviewable.id)
+    ) {
+      this._performResult(
+        {
+          ...data,
+          remove_reviewable_ids: undefined,
+          refresh_reviewable_ids: undefined,
+        },
+        {},
+        this.reviewable
+      );
     }
   }
 
@@ -484,6 +494,13 @@ export default class ReviewableItem extends Component {
     if (performableAction.completed_message) {
       this.toasts.success({
         data: { message: performableAction.completed_message },
+      });
+    }
+
+    if (result.refresh_reviewable_ids?.length > 0) {
+      this.store.findAll("reviewable", {
+        ids: result.refresh_reviewable_ids,
+        status: "all",
       });
     }
 

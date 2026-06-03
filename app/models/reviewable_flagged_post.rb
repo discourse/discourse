@@ -187,13 +187,21 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
+    refresh_reviewable_ids = related_reviewable_ids_for_deleted_user
+
     super
-    agree(performed_by, args)
+    result = agree(performed_by, args)
+    result.refresh_reviewable_ids |= refresh_reviewable_ids
+    result
   end
 
   def perform_delete_and_block_user(performed_by, args)
+    refresh_reviewable_ids = related_reviewable_ids_for_deleted_user
+
     super
-    agree(performed_by, args)
+    result = agree(performed_by, args)
+    result.refresh_reviewable_ids |= refresh_reviewable_ids
+    result
   end
 
   def perform_agree_and_hide(performed_by, args)
@@ -344,6 +352,17 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   private
+
+  def related_reviewable_ids_for_deleted_user
+    return [] if target_created_by_id.blank?
+
+    Reviewable
+      .pending
+      .where(target_created_by_id: target_created_by_id)
+      .where(type: %w[ReviewableFlaggedPost ReviewablePost])
+      .where.not(id: id)
+      .pluck(:id)
+  end
 
   def destroyer(performed_by, post)
     PostDestroyer.new(performed_by, post, reviewable_id: id)

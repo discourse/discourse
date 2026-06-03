@@ -71,6 +71,43 @@ describe "Reviewables" do
     end
   end
 
+  describe "when deleting a spammer with multiple flagged posts" do
+    fab!(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:spammer) { Fabricate(:user, refresh_auto_groups: true) }
+
+    it "resolves the spammer's other flags in the open review queue and in other tabs" do
+      flagged_post_reviewable =
+        PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
+      sibling_reviewable =
+        PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
+
+      using_session(:other_tab) do
+        sign_in(admin)
+        visit("/review")
+
+        expect(review_page).to have_reviewable_items(count: 2)
+      end
+
+      visit("/review")
+
+      expect(review_page).to have_reviewable_items(count: 2)
+
+      review_page.select_bundled_action(
+        flagged_post_reviewable,
+        "post-delete_user_block",
+        bundle_index: 1,
+      )
+
+      expect(review_page).to have_reviewable_with_approved_status(flagged_post_reviewable)
+      expect(review_page).to have_reviewable_with_approved_status(sibling_reviewable)
+
+      using_session(:other_tab) do
+        expect(review_page).to have_reviewable_with_approved_status(flagged_post_reviewable)
+        expect(review_page).to have_reviewable_with_approved_status(sibling_reviewable)
+      end
+    end
+  end
+
   describe "when there is a queued post reviewable with a short post" do
     fab!(:short_queued_reviewable, :reviewable_queued_post)
 

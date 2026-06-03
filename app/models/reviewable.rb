@@ -380,7 +380,7 @@ class Reviewable < ActiveRecord::Base
           :notify_reviewable,
           reviewable_id: id,
           performing_username: performed_by.username,
-          updated_reviewable_ids: result.remove_reviewable_ids,
+          updated_reviewable_ids: result.remove_reviewable_ids | result.refresh_reviewable_ids,
         )
       end
 
