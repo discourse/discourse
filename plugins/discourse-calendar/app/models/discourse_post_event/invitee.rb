@@ -18,6 +18,13 @@ module DiscoursePostEvent
         .where.not(users: { id: nil })
     end
     scope :with_status, ->(status) { where(status: Invitee.statuses[status]) }
+    scope :matching_username,
+          ->(filter) do
+            where(
+              "LOWER(users.username) LIKE :filter",
+              filter: "%#{sanitize_sql_like(filter.downcase)}%",
+            )
+          end
 
     before_save :clear_recurring_unless_going
     after_commit :sync_chat_channel_members
