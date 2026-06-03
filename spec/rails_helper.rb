@@ -575,9 +575,7 @@ RSpec.configure do |config|
     SiteIconManager.clear_cache!
   end
 
-  config.after(:suite) do
-    Downloads.clear
-  end
+  config.after(:suite) { Downloads.clear }
 
   config.before :each do
     # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
