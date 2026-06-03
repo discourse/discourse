@@ -7,6 +7,7 @@ import {
   trackedMap,
   trackedSet,
 } from "@ember/reactive/collections";
+import { cancel, schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import {
   parsePlacement,
@@ -22,9 +23,11 @@ import {
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { VALID_BLOCK_ID_PATTERN } from "discourse/lib/blocks/-internals/patterns";
 import discourseDebounce from "discourse/lib/debounce";
+import discourseLater from "discourse/lib/later";
 import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
 import PreloadStore from "discourse/lib/preload-store";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import { prefersReducedMotion } from "discourse/lib/utilities";
 // `grid-math` holds the editor-only grid geometry. Absolute addon path
 // because this admin service crosses into the plugin's universal bundle.
 import {
@@ -58,6 +61,10 @@ import { inferSchemaFromValues } from "../lib/schema-to-fields";
 import { mountedOutletNames } from "../lib/walk-layout";
 
 const FLUSH_DELAY_MS = 200;
+
+// Duration of the just-selected flash; mirror the CSS animation length in
+// `wireframe-chrome.scss` (`.wireframe-block-chrome.--just-selected`).
+const FLASH_DURATION_MS = 1100;
 
 /**
  * Editor service. Holds the editor's session state and mediates the
@@ -386,6 +393,11 @@ export default class WireframeService extends Service {
    * @type {Map<string, *>}
    */
   #pendingArgs = new Map();
+
+  // Tracks the in-flight just-selected flash so a new flash can cancel the
+  // previous one's pending class removal (see `flashBlock`).
+  #flashTimer = null;
+  #flashedEl = null;
 
   /**
    * Pristine clones of every drafted outlet's layout, captured at `enter()`
@@ -1521,6 +1533,109 @@ export default class WireframeService extends Service {
     // tear down the input the user is typing in and trigger
     // "@name=... already in use" errors on rapid reselect.
     this.selectedBlockData = this.#withInferredMetadata(liveData);
+
+    // Bring the freshly selected block into view (outline selection,
+    // insert auto-select, undo/redo restore). No-ops when it's already
+    // visible, so clicking a block on the canvas doesn't jolt the page.
+    this.#scrollSelectionIntoView(this.selectedBlockKey);
+  }
+
+  /**
+   * Scrolls the rendered element for the given block key into view.
+   *
+   * Centers the block when it fits within the viewport; when the block is
+   * taller than the viewport it aligns to the top instead, so the start of
+   * the block is shown rather than its middle. Skips scrolling when the
+   * block is already adequately visible, so selecting a block that's
+   * already on screen (for example clicking it) doesn't jolt the page.
+   *
+   * Scheduled in `afterRender` so a just-inserted block's element exists
+   * before the lookup. Respects the reduced-motion preference.
+   *
+   * @param {string|null} blockKey - The composite key of the selected block.
+   */
+  #scrollSelectionIntoView(blockKey) {
+    if (!blockKey) {
+      return;
+    }
+
+    schedule("afterRender", () => {
+      const el = document.querySelector(
+        `[data-wf-block-key="${CSS.escape(blockKey)}"]`
+      );
+      if (!el) {
+        return;
+      }
+
+      const rect = el.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const behavior = prefersReducedMotion() ? "auto" : "smooth";
+
+      // A block taller than the viewport can never be fully centered, so we
+      // align to its top and let the user scroll down through it.
+      if (rect.height > viewportHeight) {
+        const topVisible = rect.top >= 0 && rect.top <= viewportHeight;
+        if (topVisible) {
+          return;
+        }
+        el.scrollIntoView({ block: "start", behavior });
+        return;
+      }
+
+      const fullyVisible = rect.top >= 0 && rect.bottom <= viewportHeight;
+      if (fullyVisible) {
+        return;
+      }
+      el.scrollIntoView({ block: "center", behavior });
+    });
+  }
+
+  /**
+   * Briefly flashes the rendered element for the given block key to draw the
+   * eye to it — used when selection originates somewhere other than a direct
+   * click on the block (outline selection, insert auto-select), where the
+   * block may have just scrolled into view.
+   *
+   * Toggling the class with a forced reflow replays the one-shot animation
+   * even when the same block is re-selected. A cancelable timer removes the
+   * class so the next selection can replay it. Scheduled in `afterRender` so
+   * a just-inserted block's element exists before the lookup.
+   *
+   * @param {string|null} blockKey - The composite key of the block to flash.
+   */
+  flashBlock(blockKey) {
+    if (!blockKey) {
+      return;
+    }
+
+    schedule("afterRender", () => {
+      const el = document.querySelector(
+        `[data-wf-block-key="${CSS.escape(blockKey)}"]`
+      );
+      if (!el) {
+        return;
+      }
+
+      // Cancel any in-flight flash (possibly on a different block) so its
+      // pending removal doesn't strip the class we're about to add.
+      if (this.#flashTimer) {
+        cancel(this.#flashTimer);
+        this.#flashedEl?.classList.remove("--just-selected");
+      }
+
+      // Removing the class and forcing a reflow lets re-adding it replay the
+      // one-shot animation, even when re-selecting the same block.
+      el.classList.remove("--just-selected");
+      void el.offsetWidth;
+      el.classList.add("--just-selected");
+      this.#flashedEl = el;
+
+      this.#flashTimer = discourseLater(() => {
+        el.classList.remove("--just-selected");
+        this.#flashTimer = null;
+        this.#flashedEl = null;
+      }, FLASH_DURATION_MS);
+    });
   }
 
   /**
@@ -4129,6 +4244,9 @@ export default class WireframeService extends Service {
       return;
     }
     this.restoreSelection(key);
+    // Flash the freshly inserted block so the eye lands on it, the same way
+    // outline selection does.
+    this.flashBlock(key);
   }
 
   /**

@@ -244,6 +244,9 @@ export default class OutlinePanel extends Component {
       outletName,
       metadata: this.lookupMetadataFor(row.blockName),
     });
+    // Flash the block on the canvas so the eye lands on it after it scrolls
+    // into view — the outline row is far from the rendered block.
+    this.wireframe.flashBlock(row.blockKey);
   }
 
   /**

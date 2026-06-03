@@ -80,6 +80,12 @@ body.wireframe-active {
       outline-color 80ms ease-out,
       background-color 80ms ease-out;
 
+    /* Clear the fixed toolbar AND the selected block's handle badge (which
+       sits above the block's top edge) when scrolling a block to the top of
+       the viewport. The ~2rem allowance covers the badge height plus a small
+       gap. */
+    scroll-margin-top: calc(var(--wf-toolbar-height) + 2rem);
+
     /* Empty container chrome needs a baseline height so the empty-state
        placeholder has somewhere to live; block-level layouts collapse to
        zero height when they render no children, leaving the placeholder
@@ -124,6 +130,14 @@ body.wireframe-active {
       outline: var(--wireframe-container-border-width) solid
         var(--wireframe-block-hover-color);
       background: rgb(217 119 6 / var(--wireframe-bg-opacity));
+    }
+
+    /* Brief attention flash when a block is selected from somewhere other
+       than a direct click (outline, insert auto-select): a soft ring flares
+       and fades, layering over the resting selection outline. */
+
+    &.--just-selected {
+      animation: wireframe-block-flash 1.1s ease-out;
     }
 
     /* When the chrome sits inside a `wf:slot` (grid cell), zero out the
@@ -863,7 +877,7 @@ body.wireframe-active {
      The error banner row collapses to zero height when no error is present
      because the only thing in it would be the .wireframe-save-error
      div, which is not rendered when saveErrorMessage is null. */
-  grid-template-rows: 48px auto 1fr;
+  grid-template-rows: var(--wf-toolbar-height) auto 1fr;
   pointer-events: none;
 
   > * {
@@ -1252,7 +1266,12 @@ body.wireframe-active {
      correctly when the user collapses one or both rails. */
   --wf-left-rail: 280px;
   --wf-right-rail: 320px;
-  padding-top: 48px;
+
+  /* Height of the fixed editor toolbar. Single source of truth: the shell's
+     grid row, this top padding, and the block scroll clearance all derive
+     from it. */
+  --wf-toolbar-height: 48px;
+  padding-top: var(--wf-toolbar-height);
   padding-left: var(--wf-left-rail);
   padding-right: var(--wf-right-rail);
   box-sizing: border-box;
@@ -2534,6 +2553,24 @@ body.wireframe-active
       -12px 100%,
       0 -12px,
       100% 12px;
+  }
+}
+
+/* Just-selected attention flash (see `.wireframe-block-chrome.--just-selected`).
+   Matches the amber the selection outline uses (`--wireframe-block-color`). */
+@keyframes wireframe-block-flash {
+  from {
+    box-shadow: 0 0 0 16px rgb(217 119 6 / 0.55);
+  }
+
+  to {
+    box-shadow: 0 0 0 16px rgb(217 119 6 / 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.wireframe-active .wireframe-block-chrome.--just-selected {
+    animation: none;
   }
 }
 
