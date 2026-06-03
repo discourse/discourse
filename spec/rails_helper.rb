@@ -66,8 +66,6 @@ if ENV["LOAD_PLUGINS"] == "1"
   Dir[Rails.root.join("plugins/*/spec/system/page_objects/**/*.rb")].each { |f| require f }
 end
 
-SiteSetting.automatically_download_gravatars = false
-
 RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
