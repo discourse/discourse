@@ -187,36 +187,7 @@ RSpec.configure do |config|
     config.after(:each, type: :system) { MessageBusTestSync.stop }
 
     config.before(:each, type: :system) do |example|
-      # Only set ENV["EMBER_RAISE_ON_DEPRECATION"] if not already set
-      if ENV["EMBER_RAISE_ON_DEPRECATION"].nil?
-        example_file_path = example.metadata[:rerun_file_path]
-
-        if example_file_path
-          match =
-            example_file_path.to_s.match(
-              %r{^#{Regexp.escape(Rails.root.to_s)}/(plugins|themes|spec)/([^/]+)/},
-            )
-
-          if match
-            should_set_raise_on_deprecation =
-              begin
-                type_dir, extension_name = match.captures
-
-                case type_dir
-                when "spec"
-                  true
-                when "plugins"
-                  Discourse.preinstalled_plugins.any? { |p| p.directory_name == extension_name }
-                when "themes"
-                  # Preinstalled themes don't have a .git directory
-                  !Rails.root.join(type_dir, extension_name, ".git").exist?
-                end
-              end
-
-            ENV["EMBER_RAISE_ON_DEPRECATION"] = "1" if should_set_raise_on_deprecation
-          end
-        end
-      end
+      EmberDeprecations.set_raise_on_deprecation!(example)
 
       if example.metadata[:time]
         freeze_time(example.metadata[:time])
@@ -388,30 +359,10 @@ RSpec.configure do |config|
       $playwright_logger.append_failure_logs(lines)
     end
 
-    deprecation_error =
-      $playwright_logger
-        &.logs
-        &.filter_map do |log|
-          if log[:level] == "trace"
-            error = JSON.parse(log[:message][/^fatal_deprecation:(.+)$/, 1])
-            "~~~~~~~ JS ERROR ~~~~~~~\n#{error}\n~~~~~ END JS ERROR ~~~~~"
-          end
-        end
-        &.first
-
+    deprecation_error = EmberDeprecations.fatal_error($playwright_logger&.logs)
     expect(deprecation_error).to be_nil, deprecation_error
 
-    expected_deprecations = RSpec.current_example.metadata[:expected_js_deprecations] || []
-
-    $playwright_logger&.logs&.each do |log|
-      next if log[:level] != "count"
-      deprecation_id = log[:message][/^deprecation_id:(.+?):\s*\d+$/, 1]
-      next if deprecation_id.nil?
-      next if expected_deprecations.include?(deprecation_id)
-
-      deprecations = RSpec.current_example.metadata[:js_deprecations] ||= Hash.new(0)
-      deprecations[deprecation_id] += 1
-    end
+    EmberDeprecations.record_counts($playwright_logger&.logs, example.metadata)
 
     page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
 
