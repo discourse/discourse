@@ -1,11 +1,23 @@
 import { module, test } from "qunit";
 import {
-  __resetHolds,
-  holdSplashScreen,
+  __resetWaiters,
+  registerSplashScreenWaiter,
   removeSplashScreen,
 } from "discourse/lib/splash-screen";
 
-module("Unit | lib | splash-screen", function (hooks) {
+module("Unit | Lib | splash-screen", function (hooks) {
+  function deferred() {
+    let resolve;
+    let reject;
+
+    const promise = new Promise((promiseResolve, promiseReject) => {
+      resolve = promiseResolve;
+      reject = promiseReject;
+    });
+
+    return { promise, resolve, reject };
+  }
+
   hooks.beforeEach(function () {
     const splash = document.createElement("div");
     splash.id = "d-splash";
@@ -14,93 +26,76 @@ module("Unit | lib | splash-screen", function (hooks) {
 
   hooks.afterEach(function () {
     document.querySelector("#d-splash")?.remove();
-    __resetHolds();
+    __resetWaiters();
   });
 
-  test("removeSplashScreen removes #d-splash when there are no holds", function (assert) {
-    removeSplashScreen();
+  test("removeSplashScreen removes #d-splash when there are no waiters", async function (assert) {
+    const waiter = deferred();
+    registerSplashScreenWaiter(() => waiter.promise);
 
-    assert.strictEqual(
-      document.querySelector("#d-splash"),
-      null,
-      "The splash screen should be removed when there are no holds"
-    );
-  });
-
-  test("removeSplashScreen does not remove #d-splash when holds are active", function (assert) {
-    const release = holdSplashScreen("test-hold");
-    removeSplashScreen();
+    const removal = removeSplashScreen();
 
     assert.notStrictEqual(
       document.querySelector("#d-splash"),
       null,
-      "The splash screen should not be removed when holds are active"
+      "The splash screen should not be removed while waiters are pending"
     );
 
-    release();
-  });
-
-  test("the splash is removed only after every hold is released", function (assert) {
-    const release1 = holdSplashScreen("hold-1");
-    const release2 = holdSplashScreen("hold-2");
-
-    release1();
-
-    assert.notStrictEqual(
-      document.querySelector("#d-splash"),
-      null,
-      "The splash screen should not be removed until all holds are released"
-    );
-
-    release2();
+    waiter.resolve();
+    await removal;
 
     assert.strictEqual(
       document.querySelector("#d-splash"),
       null,
-      "The splash screen should be removed after all holds are released"
+      "The splash screen should be removed when there are no waiters"
     );
   });
 
-  test("release functions can only release their own hold once", function (assert) {
-    const release1 = holdSplashScreen("hold-1");
-    const release2 = holdSplashScreen("hold-2");
+  test("removeSplashScreen waits for every registered waiter", async function (assert) {
+    const waiter1 = deferred();
+    const waiter2 = deferred();
 
-    release1();
-    release1();
+    registerSplashScreenWaiter(() => waiter1.promise);
+    registerSplashScreenWaiter(() => waiter2.promise);
+
+    const removal = removeSplashScreen();
+
+    waiter1.resolve();
+    await Promise.resolve();
 
     assert.notStrictEqual(
       document.querySelector("#d-splash"),
       null,
-      "The splash screen should not be removed until all holds are released"
+      "The splash screen should not be removed until all waiters are resolved"
     );
 
-    release2();
+    waiter2.resolve();
+    await removal;
 
     assert.strictEqual(
       document.querySelector("#d-splash"),
       null,
-      "The splash screen should be removed after all holds are released"
+      "The splash screen should be removed when all waiters are resolved"
     );
   });
 
-  test("holds with the same name are tracked separately", function (assert) {
-    const release1 = holdSplashScreen("same-name");
-    const release2 = holdSplashScreen("same-name");
+  test("removeSplashScreen removes #d-splash even if some waiters reject", async function (assert) {
+    const waiter1 = deferred();
+    const waiter2 = deferred();
 
-    release1();
+    registerSplashScreenWaiter(() => waiter1.promise);
+    registerSplashScreenWaiter(() => waiter2.promise);
 
-    assert.notStrictEqual(
-      document.querySelector("#d-splash"),
-      null,
-      "The splash screen should not be removed until all holds are released"
-    );
+    const removal = removeSplashScreen();
 
-    release2();
+    waiter1.reject(new Error("Something went wrong"));
+    waiter2.resolve();
+    await removal;
 
     assert.strictEqual(
       document.querySelector("#d-splash"),
       null,
-      "The splash screen should be removed after all holds are released"
+      "The splash screen should be removed even if some waiters reject"
     );
   });
 });

@@ -1,23 +1,20 @@
-let holds = new Map();
+const waiters = new Set();
 
-export function holdSplashScreen(name) {
-  const token = Symbol(name);
-  holds.set(token, name);
+export function registerSplashScreenWaiter(callback) {
+  waiters.add(callback);
 
   return function release() {
-    holds.delete(token);
-    removeSplashScreen();
+    waiters.delete(callback);
   };
 }
 
-export function removeSplashScreen() {
-  if (holds.size > 0) {
-    return;
-  }
+export async function removeSplashScreen() {
+  const promises = [...waiters].map((callback) => callback());
 
+  await Promise.allSettled(promises);
   document.querySelector("#d-splash")?.remove();
 }
 
-export function __resetHolds() {
-  holds = new Map();
+export function __resetWaiters() {
+  waiters.clear();
 }
