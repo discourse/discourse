@@ -4930,10 +4930,6 @@ pt_BR:
       invalid:
         one: "A etiqueta que você selecionou não pode ser usada"
         other: "Nenhuma das etiquetas que você selecionou pode ser usada"
-      in_this_category: '"%{tag_name}" não pode ser usado nesta categoria'
-      restricted_to:
-        one: '"%{tag_name}" é restrito à categoria "%{category_names}"'
-        other: '"%{tag_name}" é restrito às seguintes categorias: %{category_names}'
       has_synonyms: '"%{tag_name}" não pode ser usado porque tem sinônimos.'
       restricted_tags_cannot_be_used_in_category:
         one: 'A etiqueta "%{tags}" não pode ser usada na categoria "%{category}". Remova.'

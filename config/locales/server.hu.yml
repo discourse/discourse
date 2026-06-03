@@ -4869,10 +4869,6 @@ hu:
       invalid:
         one: "A kiválasztott címke nem használható"
         other: "A kiválasztott címkék nem használhatóak"
-      in_this_category: 'A(z) „%{tag_name}” címke nem használható ebben a kategóriában'
-      restricted_to:
-        one: 'A(z) „%{tag_name}” címke a(z) „%{category_names}” kategóriára korlátozott'
-        other: 'A(z) „%{tag_name}” címke a következő kategóriákra korlátozott: %{category_names}'
       has_synonyms: '"%{tag_name}" nem használható, mert szinonimái vannak.'
       restricted_tags_cannot_be_used_in_category:
         one: '"%{tags}" címke nem használható ebben a kategóriában: "%{category}". Kérjük távolítsa el.'

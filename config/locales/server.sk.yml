@@ -4975,12 +4975,6 @@ sk:
         few: "Žiadnu z vybraných značiek nie je možné použiť"
         many: "Žiadnu z vybraných značiek nie je možné použiť"
         other: "Žiadnu vybrané značky nie je možné použiť"
-      in_this_category: '"%{tag_name}" nemožno použiť v tejto kategórii'
-      restricted_to:
-        one: '"%{tag_name}" je obmedzená na kategóriu "%{category_names}"'
-        few: '"%{tag_name}" je obmedzená na tieto kategórie: %{category_names}'
-        many: '"%{tag_name}" je obmedzená na tieto kategórie: %{category_names}'
-        other: '"%{tag_name}" je obmedzená na tieto kategórie: %{category_names}'
       has_synonyms: '"%{tag_name}" nemožno použiť, pretože má synonymá.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Značku "%{tags}" nemožno použiť v kategórii "%{category}". Odstráňte ju, prosím.'

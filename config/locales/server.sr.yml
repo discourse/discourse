@@ -663,8 +663,6 @@ sr:
     groups:
       errors:
         empty_permissions: "Grupa oznaka mora imati najmanje jedno ovlašćenje."
-    forbidden:
-      not_allowed: '"%{tag_name}" se ne može koristiti'
   wizard:
     step:
       setup:

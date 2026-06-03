@@ -5112,15 +5112,7 @@ de:
       invalid:
         one: "Das ausgewählte Schlagwort kann nicht genutzt werden."
         other: "Keines der ausgewählten Schlagwörter kann genutzt werden"
-      in_this_category: '„%{tag_name}“ kann in dieser Kategorie nicht verwendet werden'
-      restricted_to:
-        one: '„%{tag_name}“ ist beschränkt auf die Kategorie „%{category_names}“'
-        other: '„%{tag_name}“ ist beschränkt auf folgende Kategorien: %{category_names}'
-      restricted_to_truncated: '„%{tag_name}“ beschränkt auf folgende Kategorien: %{category_names} und %{more_count} weitere'
-      synonym: 'Dies ist ein Synonym für „%{tag_name}“. Verwende stattdessen „%{tag_name}“.'
       has_synonyms: 'Schlagwort „%{tag_name}“ kann nicht verwendet werden, da es Synonyme hat.'
-      one_tag_per_topic_group: 'Pro Thema ist nur ein Schlagwort aus der Gruppe „%{tag_group_name}“ erlaubt.'
-      missing_parent_tag: 'Erfordert das Schlagwort „%{parent_tag_name}“, um Schlagwörter aus der Gruppe „%{tag_group_name}“ zu verwenden'
       restricted_tags_cannot_be_used_in_category:
         one: 'Das Schlagwort „%{tags}“ kann nicht in der Kategorie „%{category}“ verwendet werden. Bitte entferne es.'
         other: 'Die folgenden Schlagwörter können nicht in der Kategorie „%{category}“ verwendet werden: %{tags}. Bitte entferne sie.'

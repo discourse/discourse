@@ -4763,9 +4763,6 @@ ja:
     forbidden:
       invalid:
         other: "選択したタブはどれも使用できません"
-      in_this_category: '"%{tag_name}" をこのカテゴリで使用できません'
-      restricted_to:
-        other: '"%{tag_name}" は次のカテゴリに制限されています: %{category_names}'
       has_synonyms: '"%{tag_name}" は同義語が含まれるため使用できません。'
       restricted_tags_cannot_be_used_in_category:
         other: '次のタグは "%{category}" カテゴリで使用できません: %{tags}。削除してください。'
