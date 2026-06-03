@@ -20,6 +20,9 @@ class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
       SiteSetting.defaults.set_regardless_of_locale(k, v) if SiteSetting.respond_to? k
     end
 
+    # Gravatar downloads hit the network, so force the default off.
+    SiteSetting.defaults.set_regardless_of_locale(:automatically_download_gravatars, false)
+
     SiteSetting.provider = new
   end
 end
