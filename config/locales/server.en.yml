@@ -1591,6 +1591,7 @@ en:
     top_referrers_by_browser_pageviews:
       title: "Top referrers"
       description: "External sites referring the most browser pageviews to your forum in the selected period."
+      direct: "Direct"
       labels:
         normalized_referrer: "Referrer"
         count: "Visits"

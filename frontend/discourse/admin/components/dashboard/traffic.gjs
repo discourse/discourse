@@ -320,14 +320,20 @@ export default class DashboardTraffic extends Component {
                     <ul class="db-traffic__list">
                       {{#each @traffic.top_referrers.rows as |row|}}
                         <li class="db-traffic__list-row">
-                          <a
-                            class="db-traffic__link"
-                            href={{concat "https://" row.normalized_referrer}}
-                            rel="noopener noreferrer nofollow ugc"
-                            target="_blank"
-                          >
-                            {{row.normalized_referrer}}
-                          </a>
+                          {{#if row.normalized_referrer}}
+                            <a
+                              class="db-traffic__link"
+                              href={{concat "https://" row.normalized_referrer}}
+                              rel="noopener noreferrer nofollow ugc"
+                              target="_blank"
+                            >
+                              {{row.referrer_label}}
+                            </a>
+                          {{else}}
+                            <span class="db-traffic__name">
+                              {{row.referrer_label}}
+                            </span>
+                          {{/if}}
                           <span class="db-traffic__metric">
                             <span class="db-traffic__percent">
                               {{row.percent}}%

@@ -11,7 +11,7 @@ module Reports::TopReferrersByBrowserPageviews
 
       report.labels = [
         {
-          property: :normalized_referrer,
+          property: :referrer_label,
           type: :text,
           title: I18n.t("reports.top_referrers_by_browser_pageviews.labels.normalized_referrer"),
         },
@@ -37,10 +37,11 @@ module Reports::TopReferrersByBrowserPageviews
           FROM browser_pageview_referrer_daily_rollups
           WHERE date >= :start_date
             AND date < :end_date_exclusive
-            AND normalized_referrer IS NOT NULL
-            AND normalized_referrer <> :host_exact
-            AND normalized_referrer NOT LIKE :host_path_prefix ESCAPE '\\'
-            AND normalized_referrer NOT LIKE :host_query_prefix ESCAPE '\\'
+            AND (normalized_referrer IS NULL OR (
+              normalized_referrer <> :host_exact
+              AND normalized_referrer NOT LIKE :host_path_prefix ESCAPE '\\'
+              AND normalized_referrer NOT LIKE :host_query_prefix ESCAPE '\\'
+            ))
           GROUP BY normalized_referrer
           HAVING SUM(#{count_expr}) > 0
         )
@@ -48,7 +49,7 @@ module Reports::TopReferrersByBrowserPageviews
                CASE WHEN total = 0 THEN 0
                     ELSE ROUND((count::numeric / total) * 100)::integer END AS percent
         FROM ranked
-        ORDER BY count DESC, normalized_referrer ASC
+        ORDER BY (normalized_referrer IS NULL) DESC, count DESC, normalized_referrer ASC
         LIMIT :limit
       SQL
 
@@ -64,7 +65,14 @@ module Reports::TopReferrersByBrowserPageviews
             limit: MAX_ROWS,
           )
           .map do |row|
-            { normalized_referrer: row.normalized_referrer, count: row.count, percent: row.percent }
+            {
+              normalized_referrer: row.normalized_referrer,
+              referrer_label:
+                row.normalized_referrer ||
+                  I18n.t("reports.top_referrers_by_browser_pageviews.direct"),
+              count: row.count,
+              percent: row.percent,
+            }
           end
     end
   end
