@@ -329,7 +329,6 @@ RSpec.describe Admin::DashboardController do
 
           expect(response.status).to eq(200)
           expect(reports_data["items"]).to eq([])
-          expect(reports_data).to have_key("show_labels")
         end
 
         it "serializes configured rows resolved via the registered providers" do

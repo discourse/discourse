@@ -11,8 +11,8 @@ RSpec.describe AdminDashboard::Reports::CoreReportProvider do
   end
 
   describe ".label" do
-    it "returns the localized provider label" do
-      expect(described_class.label).to eq(I18n.t("dashboard.reports_section.providers.core_report"))
+    it "is nil because the standard provider's reports render without a pill" do
+      expect(described_class.label).to be_nil
     end
   end
 
@@ -26,7 +26,7 @@ RSpec.describe AdminDashboard::Reports::CoreReportProvider do
       expect(resolved.source).to eq("core_report")
       expect(resolved.identifier).to eq("signups")
       expect(resolved.title).to be_present
-      expect(resolved.label).to eq(described_class.label)
+      expect(resolved.label).to be_nil
     end
 
     it "omits identifiers that don't correspond to a built-in report" do
