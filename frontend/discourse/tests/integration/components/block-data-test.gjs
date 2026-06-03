@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
-import { render, settled } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { render, settled, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
 import BlockOutlet from "discourse/blocks/block-outlet";
@@ -49,8 +50,14 @@ module("Integration | Blocks | block data", function (hooks) {
       api.renderBlocks("hero-blocks", [{ block: DataSkeletonBlock }])
     );
 
-    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+    // A pending TrackedAsyncData keeps the run loop busy, so `settled()` would
+    // block while the data loads. Wait for the rendered DOM instead, assert the
+    // loading state, then resolve and let the render settle.
+    const renderPromise = render(
+      <template><BlockOutlet @name="hero-blocks" /></template>
+    );
 
+    await waitFor(".d-block-skeleton");
     assert
       .dom(".d-block-skeleton")
       .exists("the skeleton is shown while loading");
@@ -58,12 +65,79 @@ module("Integration | Blocks | block data", function (hooks) {
     assert.strictEqual(resolveCalls, 1, "the resolver ran once");
 
     resolveFetch("hello");
+    await renderPromise;
     await settled();
 
     assert.dom(".d-block-skeleton").doesNotExist("the skeleton is gone");
     assert
       .dom(".resolved-content")
       .hasText("hello", "the resolved data is rendered");
+  });
+
+  test("a descriptor arg change refetches and shows the skeleton instead of the stale data", async function (assert) {
+    // Drive the descriptor off a tracked value the test controls, so changing
+    // it mimics editing a data-affecting arg (a new key, hence a refetch).
+    const state = new (class {
+      @tracked count = 1;
+    })();
+    let resolveCalls = 0;
+    const pendingResolvers = [];
+
+    @block("data-refetch-block", {
+      data: {
+        request: () => ({ kind: "refetch", count: state.count }),
+        resolve: () => {
+          resolveCalls++;
+          return new Promise((resolve) => pendingResolvers.push(resolve));
+        },
+        skeleton: () => ({ rows: 1 }),
+      },
+    })
+    class DataRefetchBlock extends Component {
+      <template>
+        {{#if @data}}
+          <div class="resolved-content">{{@data}}</div>
+        {{/if}}
+      </template>
+    }
+
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [{ block: DataRefetchBlock }])
+    );
+
+    const renderPromise = render(
+      <template><BlockOutlet @name="hero-blocks" /></template>
+    );
+
+    await waitFor(".d-block-skeleton");
+    pendingResolvers[0]("first");
+    await renderPromise;
+    await settled();
+    assert
+      .dom(".resolved-content")
+      .hasText("first", "the initial data is rendered");
+
+    // Change the data-affecting arg: a new descriptor key, so a refetch starts.
+    // The pending refetch keeps the run loop busy, so wait for the skeleton DOM
+    // rather than `settled()`.
+    state.count = 2;
+    await waitFor(".d-block-skeleton");
+
+    assert
+      .dom(".d-block-skeleton")
+      .exists("the skeleton shows during the refetch");
+    assert
+      .dom(".resolved-content")
+      .doesNotExist("the stale data is not retained while refetching");
+    assert.strictEqual(resolveCalls, 2, "the new descriptor triggered a fetch");
+
+    pendingResolvers[1]("second");
+    await settled();
+
+    assert.dom(".d-block-skeleton").doesNotExist("the skeleton is gone");
+    assert
+      .dom(".resolved-content")
+      .hasText("second", "the refetched data is rendered");
   });
 
   test("uses a preloaded payload immediately without fetching or showing a skeleton", async function (assert) {
@@ -192,5 +266,8 @@ module("Integration | Blocks | block data", function (hooks) {
     assert
       .dom(".resolved-content")
       .doesNotExist("content is not shown for a failed resolution");
+    assert
+      .dom(".hero-blocks__block .alert-error")
+      .exists("the failure surfaces as an inline error rather than hanging");
   });
 });

@@ -64,10 +64,14 @@ export async function fetchTopicList({
   const filter = buildFilterPath(filterType, categoryId, tag);
   const requestParams = solved ? { solved } : {};
 
-  const topicList = await store.findFiltered("topicList", {
-    filter,
-    params: requestParams,
-  });
+  // `ignoreUnsent: false` so a failed request (including offline) rejects
+  // rather than hanging unsettled — the block's loading boundary then surfaces
+  // the error instead of showing the skeleton or stale data forever.
+  const topicList = await store.findFiltered(
+    "topicList",
+    { filter, params: requestParams },
+    { ignoreUnsent: false }
+  );
 
   if (!topicList?.topics?.length) {
     return null;

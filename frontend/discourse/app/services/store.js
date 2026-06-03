@@ -86,11 +86,11 @@ export default class StoreService extends Service {
   }
 
   // Mostly for legacy, things like TopicList without ResultSets
-  findFiltered(type, findArgs) {
+  findFiltered(type, findArgs, opts) {
     const adapter = this.adapterFor(type);
     findArgs = cleanNullQueryParams(findArgs);
     return adapter
-      .find(this, type, findArgs)
+      .find(this, type, findArgs, opts)
       .then((result) => this._build(type, result))
       .then(async (result) => {
         await adapter.applyTransformations?.([result]);

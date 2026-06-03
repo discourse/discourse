@@ -165,11 +165,11 @@ class WrappedBlockLayout extends Component {
       {{#if this.blockData}}
         {{! Block declares data: own the loading boundary so the block stays a
             pure renderer of @data. Resolved-up-front data (preloaded or prepared
-            in a route transition) paints content immediately with no skeleton. }}
-        <DAsyncContent
-          @asyncData={{this.blockData}}
-          @retainWhileReloading={{true}}
-        >
+            in a route transition) paints content immediately with no skeleton.
+            A pending state — first paint, or a refetch after a descriptor arg
+            changes — shows the skeleton rather than retaining the prior data,
+            so the placeholder always reflects what's actually loading. }}
+        <DAsyncContent @asyncData={{this.blockData}}>
           <:loading>
             <DBlockSkeleton
               @rows={{this.skeletonShape.rows}}
