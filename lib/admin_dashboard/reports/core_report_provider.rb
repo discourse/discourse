@@ -20,10 +20,7 @@ module AdminDashboard
         return {} if guardian.nil?
 
         index =
-          ::Reports::ListQuery
-            .call(guardian: guardian)
-            .map { |entry| build_resolved(entry) }
-            .index_by(&:identifier)
+          dashboard_entries(guardian).map { |entry| build_resolved(entry) }.index_by(&:identifier)
         identifiers.each_with_object({}) do |identifier, hash|
           key = identifier.to_s
           resolved = index[key]
@@ -59,10 +56,17 @@ module AdminDashboard
       private_class_method :with_empty_flag
 
       def self.list_all(search: nil, after: nil, limit: nil)
-        entries = ::Reports::ListQuery.call(guardian: Guardian.new(Discourse.system_user))
+        entries = dashboard_entries(Guardian.new(Discourse.system_user))
         entries = filter_by_search(entries, search) if search.present?
         seek(entries.map { |entry| build_resolved(entry) }, after: after, limit: limit)
       end
+
+      def self.dashboard_entries(guardian)
+        ::Reports::ListQuery
+          .call(guardian: guardian)
+          .reject { |entry| ::Report.dashboard_excluded_report_types.include?(entry[:type]) }
+      end
+      private_class_method :dashboard_entries
 
       def self.build_resolved(entry)
         AdminDashboard::Reports::ResolvedReport.new(

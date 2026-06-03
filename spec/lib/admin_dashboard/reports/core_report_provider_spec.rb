@@ -82,6 +82,17 @@ RSpec.describe AdminDashboard::Reports::CoreReportProvider do
     end
   end
 
+  describe "reports excluded from the dashboard" do
+    after { Report.dashboard_excluded_report_types.delete("signups") }
+
+    it "omits them from both list_all and resolve_many" do
+      Report.dashboard_excluded_report_types << "signups"
+
+      expect(described_class.list_all.map(&:identifier)).not_to include("signups")
+      expect(described_class.resolve_many(%w[signups], guardian: guardian)).to be_empty
+    end
+  end
+
   describe ".fetch_many" do
     it "returns report payloads keyed by identifier" do
       result = described_class.fetch_many(%w[signups], guardian: guardian, filters: {})

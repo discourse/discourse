@@ -1,6 +1,20 @@
 # frozen_string_literal: true
 
 RSpec.describe Report do
+  describe ".add_report" do
+    after { Report.remove_report("my_custom_report") }
+
+    it "records report types flagged as excluded from the dashboard" do
+      Report.add_report("my_custom_report", exclude_from_dashboard: true) { |report| }
+      expect(Report.dashboard_excluded_report_types).to include("my_custom_report")
+    end
+
+    it "does not record report types by default" do
+      Report.add_report("my_custom_report") { |report| }
+      expect(Report.dashboard_excluded_report_types).not_to include("my_custom_report")
+    end
+  end
+
   let(:user) { Fabricate(:user) }
   let(:category_1) { Fabricate(:category, user: user) }
   let(:category_2) { Fabricate(:category, parent_category: category_1, user: user) } # id: 2
