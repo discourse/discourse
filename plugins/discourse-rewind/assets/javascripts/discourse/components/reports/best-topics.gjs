@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
@@ -44,7 +43,7 @@ export default class BestTopics extends Component {
                 </span>
 
                 <div class="best-topics__metadata">
-                  <a href={{concat "/t/-/" topic.topic_id}}>
+                  <a href="/t/-/{{topic.topic_id}}">
                     {{i18n "discourse_rewind.reports.best_topics.view_topic"}}
                   </a>
                 </div>

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, fn } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { eq } from "discourse/truth-helpers";
@@ -54,7 +54,7 @@ export default class MostViewedCategories extends Component {
                 "folder-wrapper"
                 (if (eq this.openedCategoryId data.category_id) "--opened" "")
               }}
-              href={{concat "/c/-/" data.category_id}}
+              href="/c/-/{{data.category_id}}"
               {{on "click" (fn this.handleFolderClick data.category_id)}}
             >
               <span class="folder-tab"></span>

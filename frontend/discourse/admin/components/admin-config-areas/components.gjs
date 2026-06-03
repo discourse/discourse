@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array, concat, hash } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
@@ -561,7 +561,7 @@ class ComponentRow extends Component {
                     rel="noopener noreferrer"
                     @label="admin.config_areas.themes_and_components.components.preview"
                     @icon="desktop"
-                    @href={{concat "/admin/themes/" @component.id "/preview"}}
+                    @href="/admin/themes/{{@component.id}}/preview"
                   />
                 </dropdown.item>
                 {{#if @component.remote_theme.is_git}}
@@ -592,11 +592,7 @@ class ComponentRow extends Component {
                     rel="noopener noreferrer"
                     @label="admin.config_areas.themes_and_components.components.export"
                     @icon="download"
-                    @href={{concat
-                      "/admin/customize/themes/"
-                      @component.id
-                      "/export"
-                    }}
+                    @href="/admin/customize/themes/{{@component.id}}/export"
                   />
                 </dropdown.item>
                 <dropdown.item>
