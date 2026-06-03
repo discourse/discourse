@@ -26,6 +26,8 @@ RSpec.describe PresenceChannel do
         PresenceChannel::Config.new(allowed_group_ids: [group.id])
       when "/test/everyonegroup"
         PresenceChannel::Config.new(allowed_group_ids: [Group::AUTO_GROUPS[:everyone]])
+      when "/test/loggedingroup"
+        PresenceChannel::Config.new(allowed_group_ids: [Group::AUTO_GROUPS[:logged_in_users]])
       when "/test/noaccess"
         PresenceChannel::Config.new
       when "/test/countonly"
@@ -219,6 +221,7 @@ RSpec.describe PresenceChannel do
     expect(PresenceChannel.new("/test/securegroup").can_view?(user_id: nil)).to eq(false)
     expect(PresenceChannel.new("/test/noaccess").can_view?(user_id: nil)).to eq(false)
     expect(PresenceChannel.new("/test/everyonegroup").can_view?(user_id: nil)).to eq(false)
+    expect(PresenceChannel.new("/test/loggedingroup").can_view?(user_id: nil)).to eq(false)
   end
 
   it "handles security correctly for a user" do
@@ -234,6 +237,7 @@ RSpec.describe PresenceChannel do
     expect(PresenceChannel.new("/test/alloweduser").can_view?(user_id: user.id)).to eq(true)
     expect(PresenceChannel.new("/test/allowedgroup").can_view?(user_id: user.id)).to eq(true)
     expect(PresenceChannel.new("/test/everyonegroup").can_view?(user_id: user.id)).to eq(true)
+    expect(PresenceChannel.new("/test/loggedingroup").can_view?(user_id: user.id)).to eq(true)
     expect(PresenceChannel.new("/test/noaccess").can_view?(user_id: user.id)).to eq(false)
   end
 
