@@ -92,9 +92,10 @@ module PageObjects
 
           rows.each_with_index.all? do |row, index|
             nth = ".db-traffic__list-row:nth-child(#{index + 1})"
+            next false unless has_css?("#{nth} a.db-traffic__link", text: row[:referrer])
+            next true unless row.key?(:percent)
 
-            has_css?("#{nth} .db-traffic__name, #{nth} a.db-traffic__link", text: row[:referrer]) &&
-              has_css?("#{nth} .db-traffic__percent", text: "#{row[:percent]}%")
+            has_css?("#{nth} .db-traffic__percent", text: "#{row[:percent]}%")
           end
         end
       end
