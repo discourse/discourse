@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# One-time suite bootstrap: disable expensive subsystems, alert on pending
-# migrations, quiet noisy output, wire the test current-user provider, and
-# reset themes.
+# One-time suite bootstrap: disable expensive subsystems, check for pending
+# migrations, (on CI) widen INT foreign-key columns to BIGINT, quiet noisy
+# output, wire the test current-user provider, and reset themes.
 RSpec.configure do |config|
   config.before(:suite) do
     CachedCounting.disable
