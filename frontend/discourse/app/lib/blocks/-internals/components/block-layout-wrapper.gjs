@@ -14,11 +14,9 @@ import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
 import cssIdentifier from "discourse/helpers/css-identifier";
+/** @type {import("discourse/lib/blocks/-internals/components/block-data.gjs")} */
+import BlockData from "discourse/lib/blocks/-internals/components/block-data";
 import { getBlockData } from "discourse/lib/blocks/-internals/data-coordinator";
-/** @type {import("discourse/ui-kit/d-async-content.gjs")} */
-import DAsyncContent from "discourse/ui-kit/d-async-content";
-/** @type {import("discourse/ui-kit/d-block-skeleton.gjs")} */
-import DBlockSkeleton from "discourse/ui-kit/d-block-skeleton";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 /**
@@ -42,7 +40,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
  *   applies whatever style the parent computes.
  * @property {Object|null} [dataMeta] - The block's declared data dependency
  *   ({ request, resolve, hydrate?, skeleton? }) when it has one, else null.
- *   Present means the wrapper owns the block's loading boundary.
+ *   Present means the block receives a bound `BlockData` boundary as `@Data`.
  * @property {Object|null} [dataArgs] - The block's reactive args object, used to
  *   derive the request descriptor. Reading named keys keeps the lookup reactive.
  */
@@ -139,15 +137,39 @@ class WrappedBlockLayout extends Component {
   }
 
   /**
-   * The placeholder shape for the loading state, from the block's optional
-   * `skeleton(args)` hint. Defaults to an empty shape so the skeleton falls
-   * back to its own defaults.
+   * The reserved-space shape for the loading skeleton, from the block's
+   * optional `skeleton(args)` hint, used as the default skeleton when the block
+   * doesn't supply its own `:loading`. Defaults to an empty shape so the
+   * skeleton falls back to its own defaults.
    *
    * @returns {Object}
    */
   get skeletonShape() {
     const skeleton = this.args.dataMeta?.skeleton;
     return skeleton ? skeleton(this.args.dataArgs) : {};
+  }
+
+  /**
+   * The data-region boundary handed to the block as `@Data`, or `undefined`
+   * when the block declares no `data`. It is `BlockData` curried with this
+   * block's live data state and reserved-space shape, so the block places the
+   * boundary around its data region without wiring the state itself. Currying
+   * here (rather than in the block) keeps the state private and the block a
+   * pure renderer of its chrome plus the yielded value.
+   *
+   * @returns {import("ember-curry-component").CurriedComponent|undefined}
+   */
+  @cached
+  get dataComponent() {
+    if (!this.blockData) {
+      return undefined;
+    }
+
+    return curryComponent(
+      BlockData,
+      { state: this.blockData, skeletonShape: this.skeletonShape },
+      getOwner(this)
+    );
   }
 
   <template>
@@ -162,27 +184,10 @@ class WrappedBlockLayout extends Component {
       data-block-name={{@name}}
       data-block-namespace={{@namespace}}
     >
-      {{#if this.blockData}}
-        {{! Block declares data: own the loading boundary so the block stays a
-            pure renderer of @data. Resolved-up-front data (preloaded or prepared
-            in a route transition) paints content immediately with no skeleton.
-            A pending state — first paint, or a refetch after a descriptor arg
-            changes — shows the skeleton rather than retaining the prior data,
-            so the placeholder always reflects what's actually loading. }}
-        <DAsyncContent @asyncData={{this.blockData}}>
-          <:loading>
-            <DBlockSkeleton
-              @rows={{this.skeletonShape.rows}}
-              @title={{this.skeletonShape.title}}
-            />
-          </:loading>
-          <:content as |data|>
-            <@Component @data={{data}} />
-          </:content>
-        </DAsyncContent>
-      {{else}}
-        <@Component />
-      {{/if}}
+      {{! A block that declares data receives `@Data` — a bound boundary it
+          places around its data region (chrome stays outside, visible while
+          loading). Blocks without data get `@Data` undefined and just render. }}
+      <@Component @Data={{this.dataComponent}} />
     </div>
   </template>
 }

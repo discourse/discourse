@@ -111,12 +111,14 @@ import { i18n } from "discourse-i18n";
         solved: descriptor.solved,
         count: descriptor.count,
       }),
-    skeleton: (args) => ({ rows: args.count ?? 5, title: !!args.title }),
+    skeleton: (args) => ({ variant: "rect", count: args.count ?? 5 }),
   },
 })
 export default class RecentTopics extends Component {
   <template>
     <div class="d-block-recent-topics">
+      {{! Chrome: the header (title + link) renders from args, so it stays
+          visible while the list loads. Only the list below is in the boundary. }}
       {{#if @title}}
         <div class="d-block-recent-topics__header">
           <h2 class="d-block-recent-topics__title">{{@title}}</h2>
@@ -130,23 +132,26 @@ export default class RecentTopics extends Component {
         </div>
       {{/if}}
 
-      {{#if @data}}
-        <div class="d-block-recent-topics__list">
-          <BasicTopicList @topics={{@data}} @showPosters="true" />
+      <@Data>
+        <:content as |topics|>
+          <div class="d-block-recent-topics__list">
+            <BasicTopicList @topics={{topics}} @showPosters="true" />
 
-          {{#if @linkHref}}
-            <div class="d-block-recent-topics__footer">
-              <a class="d-block-recent-topics__all-link" href={{@linkHref}}>
-                {{@linkLabel}}
-              </a>
-            </div>
-          {{/if}}
-        </div>
-      {{else}}
-        <div class="d-block-recent-topics__empty">
-          {{i18n "topics.none.latest"}}
-        </div>
-      {{/if}}
+            {{#if @linkHref}}
+              <div class="d-block-recent-topics__footer">
+                <a class="d-block-recent-topics__all-link" href={{@linkHref}}>
+                  {{@linkLabel}}
+                </a>
+              </div>
+            {{/if}}
+          </div>
+        </:content>
+        <:empty>
+          <div class="d-block-recent-topics__empty">
+            {{i18n "topics.none.latest"}}
+          </div>
+        </:empty>
+      </@Data>
     </div>
   </template>
 }

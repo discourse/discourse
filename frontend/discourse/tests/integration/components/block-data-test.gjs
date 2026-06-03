@@ -23,7 +23,7 @@ module("Integration | Blocks | block data", function (hooks) {
     resetBlockData();
   });
 
-  test("shows the skeleton while loading, then the resolved data", async function (assert) {
+  test("keeps chrome visible and shows the default skeleton while loading", async function (assert) {
     let resolveFetch;
     let resolveCalls = 0;
     const fetchPromise = new Promise((resolve) => (resolveFetch = resolve));
@@ -35,14 +35,17 @@ module("Integration | Blocks | block data", function (hooks) {
           resolveCalls++;
           return fetchPromise;
         },
-        skeleton: () => ({ rows: 2 }),
+        skeleton: () => ({ variant: "rect", count: 2 }),
       },
     })
     class DataSkeletonBlock extends Component {
       <template>
-        {{#if @data}}
-          <div class="resolved-content">{{@data}}</div>
-        {{/if}}
+        <div class="block-chrome">chrome</div>
+        <@Data>
+          <:content as |value|>
+            <div class="resolved-content">{{value}}</div>
+          </:content>
+        </@Data>
       </template>
     }
 
@@ -51,16 +54,21 @@ module("Integration | Blocks | block data", function (hooks) {
     );
 
     // A pending TrackedAsyncData keeps the run loop busy, so `settled()` would
-    // block while the data loads. Wait for the rendered DOM instead, assert the
-    // loading state, then resolve and let the render settle.
+    // block while the data loads. Wait for the rendered DOM instead.
     const renderPromise = render(
       <template><BlockOutlet @name="hero-blocks" /></template>
     );
 
-    await waitFor(".d-block-skeleton");
+    await waitFor(".d-skeleton");
     assert
-      .dom(".d-block-skeleton")
-      .exists("the skeleton is shown while loading");
+      .dom(".block-chrome")
+      .exists("the block's chrome stays visible while loading");
+    assert
+      .dom(".d-skeleton")
+      .exists("the default reserved-space skeleton is shown");
+    assert
+      .dom(".block-data")
+      .hasAttribute("aria-busy", "true", "the data region reports it is busy");
     assert.dom(".resolved-content").doesNotExist("no content yet");
     assert.strictEqual(resolveCalls, 1, "the resolver ran once");
 
@@ -68,76 +76,87 @@ module("Integration | Blocks | block data", function (hooks) {
     await renderPromise;
     await settled();
 
-    assert.dom(".d-block-skeleton").doesNotExist("the skeleton is gone");
+    assert.dom(".d-skeleton").doesNotExist("the skeleton is gone");
+    assert.dom(".block-chrome").exists("the chrome is still there");
+    assert
+      .dom(".block-data")
+      .hasAttribute("aria-busy", "false", "the region is no longer busy");
     assert
       .dom(".resolved-content")
       .hasText("hello", "the resolved data is rendered");
   });
 
-  test("a descriptor arg change refetches and shows the skeleton instead of the stale data", async function (assert) {
-    // Drive the descriptor off a tracked value the test controls, so changing
-    // it mimics editing a data-affecting arg (a new key, hence a refetch).
-    const state = new (class {
-      @tracked count = 1;
-    })();
-    let resolveCalls = 0;
-    const pendingResolvers = [];
+  test("a block's :loading block overrides the default skeleton", async function (assert) {
+    let resolveFetch;
+    const fetchPromise = new Promise((resolve) => (resolveFetch = resolve));
 
-    @block("data-refetch-block", {
+    @block("data-custom-loading-block", {
       data: {
-        request: () => ({ kind: "refetch", count: state.count }),
-        resolve: () => {
-          resolveCalls++;
-          return new Promise((resolve) => pendingResolvers.push(resolve));
-        },
-        skeleton: () => ({ rows: 1 }),
+        request: () => DESCRIPTOR,
+        resolve: () => fetchPromise,
       },
     })
-    class DataRefetchBlock extends Component {
+    class DataCustomLoadingBlock extends Component {
       <template>
-        {{#if @data}}
-          <div class="resolved-content">{{@data}}</div>
-        {{/if}}
+        <@Data>
+          <:loading><div class="custom-skeleton">loading…</div></:loading>
+          <:content as |value|>
+            <div class="resolved-content">{{value}}</div>
+          </:content>
+        </@Data>
       </template>
     }
 
     withPluginApi((api) =>
-      api.renderBlocks("hero-blocks", [{ block: DataRefetchBlock }])
+      api.renderBlocks("hero-blocks", [{ block: DataCustomLoadingBlock }])
     );
 
     const renderPromise = render(
       <template><BlockOutlet @name="hero-blocks" /></template>
     );
 
-    await waitFor(".d-block-skeleton");
-    pendingResolvers[0]("first");
+    await waitFor(".custom-skeleton");
+    assert.dom(".custom-skeleton").exists("the custom loading block renders");
+    assert
+      .dom(".d-skeleton")
+      .doesNotExist("the default skeleton is not used when :loading is given");
+
+    resolveFetch("done");
     await renderPromise;
     await settled();
-    assert
-      .dom(".resolved-content")
-      .hasText("first", "the initial data is rendered");
 
-    // Change the data-affecting arg: a new descriptor key, so a refetch starts.
-    // The pending refetch keeps the run loop busy, so wait for the skeleton DOM
-    // rather than `settled()`.
-    state.count = 2;
-    await waitFor(".d-block-skeleton");
+    assert.dom(".resolved-content").hasText("done");
+  });
+
+  test("a resolved empty value renders the :empty block", async function (assert) {
+    @block("data-empty-block", {
+      data: {
+        request: () => DESCRIPTOR,
+        resolve: () => Promise.resolve(null),
+      },
+    })
+    class DataEmptyBlock extends Component {
+      <template>
+        <@Data>
+          <:content as |value|>
+            <div class="resolved-content">{{value}}</div>
+          </:content>
+          <:empty><div class="empty-content">nothing here</div></:empty>
+        </@Data>
+      </template>
+    }
+
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [{ block: DataEmptyBlock }])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
     assert
-      .dom(".d-block-skeleton")
-      .exists("the skeleton shows during the refetch");
-    assert
-      .dom(".resolved-content")
-      .doesNotExist("the stale data is not retained while refetching");
-    assert.strictEqual(resolveCalls, 2, "the new descriptor triggered a fetch");
-
-    pendingResolvers[1]("second");
-    await settled();
-
-    assert.dom(".d-block-skeleton").doesNotExist("the skeleton is gone");
-    assert
-      .dom(".resolved-content")
-      .hasText("second", "the refetched data is rendered");
+      .dom(".empty-content")
+      .exists("the empty block renders for null data");
+    assert.dom(".resolved-content").doesNotExist("no content for empty data");
+    assert.dom(".d-skeleton").doesNotExist("no skeleton once resolved");
   });
 
   test("uses a preloaded payload immediately without fetching or showing a skeleton", async function (assert) {
@@ -156,9 +175,11 @@ module("Integration | Blocks | block data", function (hooks) {
     })
     class DataPreloadBlock extends Component {
       <template>
-        {{#if @data}}
-          <div class="resolved-content">{{@data}}</div>
-        {{/if}}
+        <@Data>
+          <:content as |value|>
+            <div class="resolved-content">{{value}}</div>
+          </:content>
+        </@Data>
       </template>
     }
 
@@ -171,7 +192,7 @@ module("Integration | Blocks | block data", function (hooks) {
     assert
       .dom(".resolved-content")
       .hasText("preloaded", "the preloaded payload is rendered");
-    assert.dom(".d-block-skeleton").doesNotExist("no skeleton was shown");
+    assert.dom(".d-skeleton").doesNotExist("no skeleton was shown");
     assert.strictEqual(resolveCalls, 0, "the resolver did not run");
     assert.false(PreloadStore.has(key), "the preload key was consumed");
   });
@@ -190,9 +211,11 @@ module("Integration | Blocks | block data", function (hooks) {
     })
     class DataPrepareBlock extends Component {
       <template>
-        {{#if @data}}
-          <div class="resolved-content">{{@data}}</div>
-        {{/if}}
+        <@Data>
+          <:content as |value|>
+            <div class="resolved-content">{{value}}</div>
+          </:content>
+        </@Data>
       </template>
     }
 
@@ -212,7 +235,7 @@ module("Integration | Blocks | block data", function (hooks) {
       .dom(".resolved-content")
       .hasText("prepared", "the prepared data is rendered immediately");
     assert
-      .dom(".d-block-skeleton")
+      .dom(".d-skeleton")
       .doesNotExist("no skeleton, the data was already resolved");
     assert.strictEqual(
       resolveCalls,
@@ -221,7 +244,103 @@ module("Integration | Blocks | block data", function (hooks) {
     );
   });
 
-  test("a block that declares no data renders without a loading boundary", async function (assert) {
+  test("a descriptor arg change refetches and shows the skeleton instead of the stale data", async function (assert) {
+    // Drive the descriptor off a tracked value the test controls, so changing
+    // it mimics editing a data-affecting arg (a new key, hence a refetch).
+    const state = new (class {
+      @tracked count = 1;
+    })();
+    let resolveCalls = 0;
+    const pendingResolvers = [];
+
+    @block("data-refetch-block", {
+      data: {
+        request: () => ({ kind: "refetch", count: state.count }),
+        resolve: () => {
+          resolveCalls++;
+          return new Promise((resolve) => pendingResolvers.push(resolve));
+        },
+      },
+    })
+    class DataRefetchBlock extends Component {
+      <template>
+        <@Data>
+          <:content as |value|>
+            <div class="resolved-content">{{value}}</div>
+          </:content>
+        </@Data>
+      </template>
+    }
+
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [{ block: DataRefetchBlock }])
+    );
+
+    const renderPromise = render(
+      <template><BlockOutlet @name="hero-blocks" /></template>
+    );
+
+    await waitFor(".d-skeleton");
+    pendingResolvers[0]("first");
+    await renderPromise;
+    await settled();
+    assert
+      .dom(".resolved-content")
+      .hasText("first", "the initial data is rendered");
+
+    // Change the data-affecting arg: a new descriptor key, so a refetch starts.
+    state.count = 2;
+    await waitFor(".d-skeleton");
+
+    assert.dom(".d-skeleton").exists("the skeleton shows during the refetch");
+    assert
+      .dom(".resolved-content")
+      .doesNotExist("the stale data is not retained while refetching");
+    assert.strictEqual(resolveCalls, 2, "the new descriptor triggered a fetch");
+
+    pendingResolvers[1]("second");
+    await settled();
+
+    assert.dom(".d-skeleton").doesNotExist("the skeleton is gone");
+    assert
+      .dom(".resolved-content")
+      .hasText("second", "the refetched data is rendered");
+  });
+
+  test("a failed resolution surfaces an inline error while chrome stays", async function (assert) {
+    @block("data-error-block", {
+      data: {
+        request: () => DESCRIPTOR,
+        resolve: () => Promise.reject(new Error("nope")),
+      },
+    })
+    class DataErrorBlock extends Component {
+      <template>
+        <div class="block-chrome">chrome</div>
+        <@Data>
+          <:content as |value|>
+            <div class="resolved-content">{{value}}</div>
+          </:content>
+        </@Data>
+      </template>
+    }
+
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [{ block: DataErrorBlock }])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+    assert.dom(".block-chrome").exists("the chrome stays visible on failure");
+    assert
+      .dom(".resolved-content")
+      .doesNotExist("content is not shown for a failed resolution");
+    assert
+      .dom(".hero-blocks__block .alert-error")
+      .exists("the failure surfaces as an inline error rather than hanging");
+  });
+
+  test("a block that declares no data renders without a boundary", async function (assert) {
     @block("no-data-block")
     class NoDataBlock extends Component {
       <template>
@@ -236,38 +355,6 @@ module("Integration | Blocks | block data", function (hooks) {
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
     assert.dom(".plain-content").hasText("plain");
-    assert
-      .dom(".d-block-skeleton")
-      .doesNotExist("no skeleton for a plain block");
-  });
-
-  test("a failed resolution surfaces an error without crashing the outlet", async function (assert) {
-    @block("data-error-block", {
-      data: {
-        request: () => DESCRIPTOR,
-        resolve: () => Promise.reject(new Error("nope")),
-      },
-    })
-    class DataErrorBlock extends Component {
-      <template>
-        <div class="resolved-content">{{@data}}</div>
-      </template>
-    }
-
-    withPluginApi((api) =>
-      api.renderBlocks("hero-blocks", [{ block: DataErrorBlock }])
-    );
-
-    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
-
-    assert
-      .dom(".hero-blocks__block")
-      .exists("the block wrapper still rendered (no crash)");
-    assert
-      .dom(".resolved-content")
-      .doesNotExist("content is not shown for a failed resolution");
-    assert
-      .dom(".hero-blocks__block .alert-error")
-      .exists("the failure surfaces as an inline error rather than hanging");
+    assert.dom(".d-skeleton").doesNotExist("no skeleton for a plain block");
   });
 });

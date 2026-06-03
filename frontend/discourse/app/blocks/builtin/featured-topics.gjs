@@ -101,48 +101,53 @@ import { i18n } from "discourse-i18n";
         tag: descriptor.tag,
         count: descriptor.count,
       }),
-    skeleton: (args) => ({ rows: args.count ?? 5, title: !!args.title }),
+    skeleton: (args) => ({ variant: "rect", count: args.count ?? 5 }),
   },
 })
 export default class FeaturedTopics extends Component {
   <template>
     <div class="d-block-featured-topics">
+      {{! Chrome: the title renders from args, so it stays visible while the
+          list loads. Only the data region below is wrapped in the boundary. }}
       {{#if @title}}
         <h3 class="d-block-featured-topics__title">{{@title}}</h3>
       {{/if}}
 
-      {{#if @data}}
-        <ul class="d-block-featured-topics__list">
-          {{#each @data as |topic|}}
-            <li class="d-block-featured-topics__item">
-              <a
-                class="d-block-featured-topics__topic-link"
-                href={{topic.lastUnreadUrl}}
-              >{{trustHTML topic.fancyTitle}}</a>
-              <div class="d-block-featured-topics__meta">
-                {{#if topic.category}}
-                  {{dCategoryLink topic.category}}
-                {{/if}}
-                <span class="d-block-featured-topics__age">{{dAgeWithTooltip
-                    topic.bumpedAt
-                  }}</span>
-              </div>
-            </li>
-          {{/each}}
-        </ul>
+      <@Data>
+        <:content as |topics|>
+          <ul class="d-block-featured-topics__list">
+            {{#each topics as |topic|}}
+              <li class="d-block-featured-topics__item">
+                <a
+                  class="d-block-featured-topics__topic-link"
+                  href={{topic.lastUnreadUrl}}
+                >{{trustHTML topic.fancyTitle}}</a>
+                <div class="d-block-featured-topics__meta">
+                  {{#if topic.category}}
+                    {{dCategoryLink topic.category}}
+                  {{/if}}
+                  <span class="d-block-featured-topics__age">{{dAgeWithTooltip
+                      topic.bumpedAt
+                    }}</span>
+                </div>
+              </li>
+            {{/each}}
+          </ul>
 
-        {{#if @linkHref}}
-          <div class="d-block-featured-topics__footer">
-            <a class="d-block-featured-topics__all-link" href={{@linkHref}}>
-              {{@linkLabel}}
-            </a>
+          {{#if @linkHref}}
+            <div class="d-block-featured-topics__footer">
+              <a class="d-block-featured-topics__all-link" href={{@linkHref}}>
+                {{@linkLabel}}
+              </a>
+            </div>
+          {{/if}}
+        </:content>
+        <:empty>
+          <div class="d-block-featured-topics__empty">
+            {{i18n "topics.none.latest"}}
           </div>
-        {{/if}}
-      {{else}}
-        <div class="d-block-featured-topics__empty">
-          {{i18n "topics.none.latest"}}
-        </div>
-      {{/if}}
+        </:empty>
+      </@Data>
     </div>
   </template>
 }

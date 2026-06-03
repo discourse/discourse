@@ -1,0 +1,28 @@
+.d-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+
+  &__item {
+    // A static fill so the placeholder still reads when the shimmer is
+    // suppressed (prefers-reduced-motion, or `@animated={{false}}`);
+    // `.placeholder-animation` layers the moving gradient on top when motion is
+    // allowed.
+    background: var(--primary-very-low);
+    border-radius: var(--d-border-radius, 0.25em);
+
+    &--text {
+      height: 1em;
+    }
+
+    &--rect {
+      height: 2.5em;
+    }
+
+    &--circle {
+      width: 2em;
+      height: 2em;
+      border-radius: 50%;
+    }
+  }
+}
