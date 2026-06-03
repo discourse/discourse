@@ -4,8 +4,6 @@ class AdminDashboardSectionConfiguration
   KNOWN_SECTIONS = %w[highlights reports traffic engagement].freeze
 
   def self.sections
-    ensure_seeded!
-
     AdminDashboardSection
       .where(section_id: KNOWN_SECTIONS)
       .order(:position)
@@ -52,27 +50,4 @@ class AdminDashboardSectionConfiguration
 
     sections
   end
-
-  # inserts rows for any known sections not yet in the table
-  def self.ensure_seeded!
-    existing = AdminDashboardSection.pluck(:section_id)
-    missing = KNOWN_SECTIONS - existing
-    return if missing.empty?
-
-    next_position = (AdminDashboardSection.maximum(:position) || -1) + 1
-    now = Time.zone.now
-    rows =
-      missing.each_with_index.map do |section_id, index|
-        {
-          section_id:,
-          position: next_position + index,
-          visible: true,
-          created_at: now,
-          updated_at: now,
-        }
-      end
-
-    AdminDashboardSection.insert_all(rows, unique_by: :section_id)
-  end
-  private_class_method :ensure_seeded!
 end

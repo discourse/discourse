@@ -4,7 +4,7 @@ describe AdminDashboardSectionConfiguration do
   fab!(:admin)
 
   describe ".sections" do
-    it "seeds every known section, all visible, in canonical order on an empty table" do
+    it "returns every seeded section, all visible, in canonical order by default" do
       expect(described_class.sections).to eq(
         [
           { id: "highlights", visible: true },
@@ -13,13 +13,6 @@ describe AdminDashboardSectionConfiguration do
           { id: "engagement", visible: true },
         ],
       )
-    end
-
-    it "is idempotent and does not duplicate rows across reads" do
-      described_class.sections
-      described_class.sections
-
-      expect(AdminDashboardSection.count).to eq(described_class::KNOWN_SECTIONS.size)
     end
 
     it "keeps each section's stored position, independent of visibility" do
@@ -33,7 +26,6 @@ describe AdminDashboardSectionConfiguration do
         actor: admin,
       )
 
-      # highlights is hidden but must stay in first position
       expect(described_class.sections).to eq(
         [
           { id: "highlights", visible: false },
@@ -42,14 +34,6 @@ describe AdminDashboardSectionConfiguration do
           { id: "engagement", visible: true },
         ],
       )
-    end
-
-    it "auto-seeds a newly-introduced known section at the end" do
-      AdminDashboardSection.where(section_id: "engagement").delete_all
-
-      sections = described_class.sections
-      expect(sections.map { |s| s[:id] }).to eq(described_class::KNOWN_SECTIONS)
-      expect(sections.last).to eq({ id: "engagement", visible: true })
     end
   end
 

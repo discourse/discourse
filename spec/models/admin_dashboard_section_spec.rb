@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe AdminDashboardSection do
+  before { described_class.delete_all }
+
   it "requires a section_id" do
     expect(described_class.new(position: 0, visible: true)).not_to be_valid
   end
