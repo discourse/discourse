@@ -73,6 +73,7 @@
   padding: var(--space-half) var(--space-2);
   background: var(--primary-low);
   color: var(--primary-medium);
+  white-space: nowrap;
 
   &.--pos {
     background: var(--success-low);
@@ -346,10 +347,14 @@
     justify-content: space-between;
     margin-bottom: var(--space-2);
 
+    .select-kit.combo-box.category-chooser {
+      width: 100%;
+      max-width: 300px;
+    }
+
     .db-whos-posting &,
     .db-activity & {
-      flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
       gap: var(--space-2);
     }
   }
@@ -409,6 +414,10 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: var(--space-4);
+
+      @include viewport.until(sm) {
+        grid-template-columns: 1fr;
+      }
     }
 
     &.--row {
@@ -533,6 +542,7 @@
     flex-direction: column;
     align-items: flex-end;
     gap: var(--space-1);
+    flex-grow: 1;
   }
 
   &__subcategories {
@@ -797,6 +807,7 @@
 
     @include viewport.until(sm) {
       position: relative;
+      padding-inline: 0;
     }
   }
 
@@ -805,6 +816,10 @@
     align-items: center;
     gap: var(--space-2);
     flex: 0 0 auto;
+
+    @include viewport.until(sm) {
+      padding-inline: var(--space-4);
+    }
   }
 
   &__name {
@@ -855,8 +870,8 @@
     .admin-report-chart,
     .chart-canvas-container,
     .chart-canvas {
-      width: 100%;
-      height: 100%;
+      width: 100% !important; // no other way to overrule the JS inline styling
+      height: 100% !important;
     }
   }
 
