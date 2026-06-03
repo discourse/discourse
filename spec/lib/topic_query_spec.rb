@@ -1275,6 +1275,24 @@ RSpec.describe TopicQuery do
       end
     end
 
+    context "with a small action at the tail of an unread topic" do
+      it "keeps the topic in the unread list" do
+        topic = create_post(raw: "the original post", title: "super amazing title").topic
+        topic.add_small_action(Discourse.system_user, "closed.enabled")
+        topic.update_columns(updated_at: Time.zone.now, bumped_at: 1.year.ago)
+
+        TopicUser.change(
+          user.id,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:tracking],
+        )
+        TopicUser.update_last_read(user, topic.id, 1, 1, 1)
+        user.user_stat.update!(first_unread_at: 1.minute.ago)
+
+        expect(TopicQuery.new(user).list_unread.topics).to include(topic)
+      end
+    end
+
     context "with read data" do
       fab!(:partially_read) { Fabricate(:post, user: creator).topic }
       fab!(:fully_read) { Fabricate(:post, user: creator).topic }

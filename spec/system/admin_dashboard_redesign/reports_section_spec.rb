@@ -13,6 +13,18 @@ describe "Admin Dashboard Redesign | Reports section" do
     sign_in(current_user)
   end
 
+  it "shows drag controls only once more than one report is enabled" do
+    AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
+
+    page.visit("/admin")
+    dashboard.open_manage_reports_via_cog
+    expect(modal).to have_open
+    expect(modal).to have_no_drag_controls
+
+    modal.toggle("core_report:admin_logins")
+    expect(modal).to have_drag_controls
+  end
+
   it "lets admins customize the reports section via the manage-reports modal" do
     AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
     AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
@@ -61,21 +73,6 @@ describe "Admin Dashboard Redesign | Reports section" do
     )
   end
 
-  it "removes a card directly via the X-to-remove button" do
-    AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
-    AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
-
-    page.visit("/admin")
-    expect(dashboard).to have_card("core_report:signups")
-
-    dashboard.remove_card("core_report:signups")
-    expect(dashboard).to have_no_card("core_report:signups")
-
-    page.refresh
-    expect(dashboard).to have_no_card("core_report:signups")
-    expect(dashboard).to have_card("core_report:topics")
-  end
-
   it "hides the Add Report tile when the cap is reached" do
     identifiers =
       Reports::ListQuery
@@ -100,7 +97,7 @@ describe "Admin Dashboard Redesign | Reports section" do
     expect(dashboard).to have_no_add_tile
   end
 
-  it "hides provider label pills when only one provider is registered" do
+  it "does not render a label pill for standard reports" do
     AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
 
     page.visit("/admin")

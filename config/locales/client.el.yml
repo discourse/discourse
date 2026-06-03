@@ -468,9 +468,7 @@ el:
         description: "Επιλέξτε ένα αρχικό θέμα για την κοινότητά σας"
         action: "Επιλογή θέματος"
         modal_title: "Επιλέξτε ένα θέμα"
-        use_theme: "Χρησιμοποιήστε αυτό το θέμα"
-        enabled: "Ενεργοποιημένα"
-        theme_set: "Το %{theme} είναι πλέον το προεπιλεγμένο θέμα σας"
+        enabled: "Επιλεγμένα"
         browse_all: "Διαχείριση θεμάτων"
         show_light_screenshot: "Εμφάνιση φωτεινού στιγμιότυπου οθόνης"
         show_dark_screenshot: "Εμφάνιση σκοτεινού στιγμιότυπου οθόνης"
@@ -2947,7 +2945,7 @@ el:
       users_placeholder: "Προσθήκη χρηστών ή ομάδων"
       title_placeholder: "Τι αφορά αυτή η συζήτησης σε μία σύντομη πρόταση;"
       title_or_link_placeholder: "Πληκτρολόγησε τίτλο, ή κάνε επικόλληση ένα σύνδεσμο εδώ"
-      edit_reason_placeholder: "γιατί κάνετε επεξεργασία;"
+      edit_reason_placeholder: "Γιατί κάνετε επεξεργασία;"
       topic_featured_link_placeholder: "Εισάγετε τον συνδέσμο που εμφανίζεται με τον τίτλο."
       remove_featured_link: "Αφαιρέστε σύνδεσμο από το θέμα."
       reply_placeholder: "Πληκτρολόγησε εδώ. Χρησιμοποίησε Markdown, BBCode, ή HTML για μορφοποίηση. Σύρε ή επικόλλησε εικόνες."
@@ -3017,6 +3015,7 @@ el:
       collapse: "Ελαχιστοποίηση του επεξεργαστή κειμένου"
       open: "Άνοιγμα του επεξεργαστή κειμένου"
       abandon: "Κλείσιμο του επεξεργαστή κειμένου και απόρριψη του προσχεδίου"
+      edit_reason: "Γιατί κάνετε επεξεργασία;"
       enter_fullscreen: "Μετάβαση σε επεξεργαστή κειμένου πλήρους οθόνης"
       exit_fullscreen: "Έξοδος από επεξεργαστή κειμένου πλήρους οθόνης"
       exit_fullscreen_prompt: "Πατήστε <kbd>ESC</kbd> για έξοδο από την πλήρη οθόνη"
@@ -3050,22 +3049,21 @@ el:
           desc: Δημιουργία νέου μηνύματος ξεκινώντας με τους ίδιους παραλήπτες
         reply_to_topic:
           label: Απάντηση στο θέμα
+          trigger: Νήμα
           desc: Απάντηση στο θέμα, όχι σε συγκεκριμένη ανάρτηση
         toggle_whisper:
           label: Εναλλαγή ψιθύρων
-          desc: Οι ψίθυροι είναι ορατοί μόνο στα μέλη του προσωπικού
         create_topic:
-          label: "Νέο θέμα"
           desc: Δημιουργία νέου θέματος
         create_personal_message:
-          label: "Νέο μήνυμα"
           desc: "Δημιουργήστε ένα νέο προσωπικό μήνυμα"
         shared_draft:
           label: "Κοινόχρηστο προσχέδιο"
           desc: "Προσχέδιο ενός θέματος που θα είναι ορατό μόνο σε επιτρεπτούς χρήστες"
         toggle_topic_bump:
-          label: "Εναλλαγή ώθησης θέματος"
           desc: "Απάντηση χωρίς αλλαγή της τελευταίας ημερομηνίας απάντησης"
+        edit_post: "Γίνεται επεξεργασία ανάρτησης"
+        unknown_user: "Χρήστης"
       reload: "Ανανέωση"
       ignore: "Αγνόηση"
       image_alt_text:
@@ -3481,6 +3479,15 @@ el:
         also_dismiss_topics: "Διακοπή παρακολούθησης αυτών των θεμάτων ώστε να μην εμφανιστούν ξανά ως αδιάβαστα σε εμένα"
         dismiss_new_topics: "Παράβλεψη νέων θεμάτων"
         dismiss_new_replies: "Παράβλεψη νέων απαντήσεων"
+        dismiss_new_topics_with_selected:
+          one: "Παράβλεψε (%{count})"
+          other: "Παράβλεψε (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Παράβλεψε (%{count})"
+          other: "Παράβλεψε (%{count})"
+        dismiss_all_with_selected:
+          one: "Παράβλεψε (%{count})"
+          other: "Παράβλεψε (%{count})"
         dismiss_new: "Παράβλεψη Νέων"
         dismiss_new_modal:
           title: "Παράβλεψη νέων"
@@ -5521,7 +5528,7 @@ el:
           title: "Επεξεργασία Πίνακα"
           cancel: "ακύρωση"
           create: "Αποθήκευση"
-          reason: "γιατί αναθεωρείς;"
+          reason: "Γιατί κάνετε επεξεργασία;"
           trigger_reason: "Προσθήκη λόγου επεξεργασίας"
         default_edit_reason: "Ενημέρωση πίνακα με τον επεξεργαστή πίνακα"
       default_header:

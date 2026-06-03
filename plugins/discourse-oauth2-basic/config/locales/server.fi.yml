@@ -27,7 +27,6 @@ fi:
     oauth2_json_email_verified_path: "Polku OAuth2:n käyttäjän JSON:ssä käyttäjän sähköpostin vahvistustilaan. Esim.: user.email.verified. oauth2_email_verified täytyy poistaa käytöstä, jotta tällä asetuksella olisi vaikutusta."
     oauth2_json_avatar_path: "Polku OAuth2:n käyttäjän JSON:ssä käyttäjän avatariin. esim.: user.avatar_url"
     oauth2_email_verified: "Tarkasta, onko tämä OAuth2 sivusto varmistanut sähköpostin"
-    oauth2_overrides_email: "Ohita Discoursen sähköpostiosoite etäsähköpostilla jokaisen kirjautumisen yhteydessä. Toimii samalla tavalla kuin `auth_overrides_email`-asetus, mutta koskee OAuth2-kirjautumisia."
     oauth2_send_auth_header: "Lähetä asiakkaan tunnistetiedot HTTP Authorization -otsikkotiedoissa"
     oauth2_send_auth_body: "Lähetä asiakkaan tunnistetiedot pyynnön tekstiosassa"
     oauth2_debug_auth: "Sisällytä lokeihin laajat virheenkorjaustiedot"

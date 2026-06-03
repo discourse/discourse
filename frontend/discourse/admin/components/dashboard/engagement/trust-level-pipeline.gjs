@@ -53,9 +53,7 @@ export default class TrustLevelPipeline extends Component {
       return null;
     }
     if (trend.direction === "stable") {
-      return i18n(
-        "admin.dashboard.sections.engagement.trust_level_pipeline.trend.stable"
-      );
+      return i18n("admin.dashboard.stable");
     }
     return i18n(
       `admin.dashboard.sections.engagement.trust_level_pipeline.trend.${trend.direction}`,
@@ -112,7 +110,7 @@ export default class TrustLevelPipeline extends Component {
                     </div>
                   {{else}}
                     <span class="db-pill">{{i18n
-                        "admin.dashboard.sections.engagement.trust_level_pipeline.trend.stable"
+                        "admin.dashboard.stable"
                       }}</span>
                   {{/if}}
                 </div>
@@ -135,7 +133,7 @@ export default class TrustLevelPipeline extends Component {
                       ↑</span>
                   {{else}}
                     <span class="db-pill">{{i18n
-                        "admin.dashboard.sections.engagement.trust_level_pipeline.trend.stable"
+                        "admin.dashboard.stable"
                       }}</span>
                   {{/if}}
                 </div>

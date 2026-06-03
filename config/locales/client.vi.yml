@@ -396,7 +396,7 @@ vi:
       pm_title: "Tin nhắn gợi ý"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Đã bật"
+        enabled: "Đã chọn"
       start_posting:
         back: "Quay lại"
     about:
@@ -2704,7 +2704,7 @@ vi:
       users_placeholder: "Thêm người dùng hoặc nhóm"
       title_placeholder: "Tóm tắt chủ đề này trong một câu ngắn gọn"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán link vào đây"
-      edit_reason_placeholder: "Lý do bạn sửa?"
+      edit_reason_placeholder: "Lý do bạn sửa"
       topic_featured_link_placeholder: "Nhập liên kết hiển thị với tiêu đề."
       remove_featured_link: "Xóa liên kết khỏi chủ đề."
       reply_placeholder: "Nhập ở đây. Định dạng bằng Markdown, BBCode, hoặc HTML. Kéo thả hoặc dán hình ảnh."
@@ -2772,6 +2772,7 @@ vi:
       collapse: "Thu nhỏ trình soạn thảo"
       open: "Mở rộng trình soạn thảo"
       abandon: "Đóng trình soạn thảo và xóa bản nháp"
+      edit_reason: "Lý do bạn sửa"
       enter_fullscreen: "Phóng to trình soạn thảo"
       exit_fullscreen: "Thoát khỏi trình soạn toàn màn hình"
       exit_fullscreen_prompt: "Nhấn <kbd>ESC</kbd> để thoát khỏi chế độ toàn màn hình"
@@ -2806,25 +2807,24 @@ vi:
           desc: Tạo tin nhắn mới bắt đầu với cùng người nhận
         reply_to_topic:
           label: Trả lời chủ đề
+          trigger: Chủ đề
           desc: Trả lời chủ đề, không ảnh hưởng bất kỳ tút nào
         toggle_whisper:
           label: Chuyển đổi nói thầm
-          desc: Những lời thì thầm chỉ hiển thị với MOD
         create_topic:
-          label: "Chủ đề mới"
           desc: Tạo một chủ đề mới
         create_personal_message:
-          label: "Tin nhắn mới"
           desc: "Tạo một tin nhắn cá nhân mới"
         shared_draft:
           label: "Bản nháp được Chia sẻ"
           desc: "Nháp một chủ đề sẽ chỉ hiển thị cho người dùng được phép"
         toggle_topic_bump:
-          label: "Bật/tắt đẩy chủ đề"
           desc: "Trả lời mà không thay đổi ngày trả lời gần nhất"
         toggle_unlisted:
           label: Bật/tắt chế độ không công khai
           desc: "Các chủ đề không công khai chỉ có thể truy cập thông qua link trực tiếp"
+        edit_post: "Đang chỉnh sửa tút"
+        unknown_user: "Người dùng"
       reload: "Nạp lại"
       ignore: "Bỏ qua"
       image_alt_text:
@@ -3186,6 +3186,12 @@ vi:
         also_dismiss_topics: "Ngừng theo dõi các chủ đề này để không hiển thị lại là chủ đề chưa đọc"
         dismiss_new_topics: "Bỏ qua các chủ đề mới"
         dismiss_new_replies: "Bỏ qua các trả lời mới"
+        dismiss_new_topics_with_selected:
+          other: "Loại bỏ (%{count})"
+        dismiss_new_replies_with_selected:
+          other: "Loại bỏ (%{count})"
+        dismiss_all_with_selected:
+          other: "Loại bỏ (%{count})"
         dismiss_new: "Bỏ qua tất cả"
         dismiss_new_modal:
           title: "Bỏ qua mục mới"

@@ -738,3 +738,12 @@ hu:
       panels:
         chat:
           label: "Csevegés"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Csevegőüzenet küldése"
+      send_chat_message:
+        channel_id: "Csatorna"
+        message: "Üzenet"
+      chat_approval:
+        message: "Üzenet"
+        channel_id: "Csatorna"

@@ -9,7 +9,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
-import { eq } from "discourse/truth-helpers";
+import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DLoadMore from "discourse/ui-kit/d-load-more";
@@ -98,7 +98,7 @@ class ManageReportsRow extends Component {
         this.dragCssClass
       }}
       data-identifier={{@row.key}}
-      draggable={{@row.enabled}}
+      draggable={{and @row.enabled @reorderable}}
       {{on "dragstart" this.dragStart}}
       {{on "dragover" this.dragOver}}
       {{on "dragenter" this.dragEnter}}
@@ -140,9 +140,9 @@ class ManageReportsRow extends Component {
       <div class="manage-reports__row-text">
         <div class="manage-reports__row-heading">
           <span class="manage-reports__title">{{@row.title}}</span>
-          {{#if @showLabels}}
+          {{#if @row.label}}
             <span
-              class="manage-reports__label"
+              class="db-report__label"
               data-source={{@row.source}}
             >{{@row.label}}</span>
           {{/if}}
@@ -190,10 +190,6 @@ export default class ManageReports extends Component {
     this.load();
   }
 
-  get showLabels() {
-    return this.providers.length > 1;
-  }
-
   get enabledKeys() {
     return new Set(this.enabledOrder);
   }
@@ -233,6 +229,10 @@ export default class ManageReports extends Component {
 
   get atCap() {
     return this.enabledOrder.length >= VISIBLE_CAP;
+  }
+
+  get reorderable() {
+    return this.enabledOrder.length > 1;
   }
 
   cacheItems(items) {
@@ -444,14 +444,15 @@ export default class ManageReports extends Component {
           <ul
             class={{dConcatClass
               "manage-reports__list"
-              (if this.draggedId "manage-reports__list--dragging")
+              (if this.draggedId "--dragging")
+              (if this.reorderable "--reorderable")
             }}
           >
             {{#each this.visibleRows key="key" as |row index|}}
               <ManageReportsRow
                 @row={{row}}
                 @index={{index}}
-                @showLabels={{this.showLabels}}
+                @reorderable={{this.reorderable}}
                 @toggleDisabled={{this.toggleDisabled row}}
                 @onToggle={{this.toggle}}
                 @onMoveUp={{this.moveUp}}

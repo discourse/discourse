@@ -117,6 +117,17 @@ ru:
           descriptions:
             data_explorer:
               run_queries: "Выполнение запросов проводника данных. Ограничьте ключ API набором запросов, указав идентификаторы запросов."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Проводник данных"
+      sql:
+        queries: "Запросы"
+        query_id: "Запрос"
+        add_param: "Добавить параметр"
+        param_value: "Значение"
+        output:
+          results: "Результаты"
+          no_results: "Нет результатов"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

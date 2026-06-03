@@ -28,3 +28,6 @@ lv:
       query_description: "Apraksts"
       reset_params: "Atlikt"
       search_placeholder: "Meklēt..."
+    discourse_workflows:
+      sql:
+        param_value: "Vērtība"

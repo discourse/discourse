@@ -36,6 +36,8 @@ uk:
       topic_search_placeholder: "Пошук тем за назвою або змістом публікації"
       sidebar_name_filter_placeholder: "Ім'я/Ім'я користувача"
       assigned: "Призначено"
+      group_no_assignments_title: "Немає завдань"
+      group_no_assignments_body: "Наразі для цієї групи немає активних завдань."
       group_everyone: "Усі"
       assigned_to: "Призначено для"
       assigned_topic_to: "Призначена тема для <a href='%{path}'>%{username}</a>"
@@ -206,3 +208,12 @@ uk:
       title: "Редагувати призначення"
       topic: "Тема"
       post: "Допис"
+    discourse_workflows:
+      nodes:
+        "action:assign_topic": "Призначити тему"
+      assign_topic:
+        operations:
+          assign: "Призначити"
+          unassign: "Скасувати призначення"
+        topic_id: "ID теми"
+        assignee: "Правонаступник"

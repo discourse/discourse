@@ -50,6 +50,9 @@ ru:
             delete_ai_secret: "Удалить секрет ИИ"
             update_ai_spam_settings: "Обновить настройки AI-антиспама"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_agent": "ИИ Агент"
     discourse_automation:
       scriptables:
         llm_report:
@@ -217,6 +220,9 @@ ru:
               description: "Разрешить добавление тегов к сообщениям, созданным пользователем системы."
     discourse_ai:
       title: "AI"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Агент"
       default_llm:
         title: "Модель LLM по умолчанию"
         description: "Модель LLM по умолчанию для всех ИИ функций. Используется, если в настройке функции или персоны не указана конкретная модель LLM. При отсутствии модели по умолчанию используется последняя добавленная LLM."

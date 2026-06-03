@@ -56,6 +56,7 @@ module Jobs
         ::DiscourseAutomation::Logger.error(
           "Error sending pending PM '#{pending_pm.title}': #{e.message}",
         )
+        pending_pm.destroy!
       end
 
       def run_pending_automation(pending_automation)

@@ -1753,7 +1753,7 @@ RSpec.describe TagsController do
           expect(result).to be_present
           expect(result["disabled"]).to eq(true)
           expect(result["title"]).to eq(
-            I18n.t("tags.forbidden.one_tag_per_topic_group", tag_group_name: "Workflow"),
+            I18n.t("tags.forbidden.one_tag_per_topic_group", tag_names: "todo"),
           )
         end
 
@@ -1761,6 +1761,20 @@ RSpec.describe TagsController do
           get "/tags/filter/search.json",
               params: {
                 q: "ready",
+                filterForInput: true,
+                selected_tag_ids: [workflow_tag1.id],
+              }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body["results"].find { |t| t["name"] == "ready-to-deploy" }
+          expect(result).to be_present
+          expect(result["disabled"]).to eq(true)
+        end
+
+        it "returns sibling tag as disabled when the term matches a later word" do
+          get "/tags/filter/search.json",
+              params: {
+                q: "deploy",
                 filterForInput: true,
                 selected_tag_ids: [workflow_tag1.id],
               }

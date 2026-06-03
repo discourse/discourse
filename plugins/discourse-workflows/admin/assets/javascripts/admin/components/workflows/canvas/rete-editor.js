@@ -33,8 +33,7 @@ export class ReteEditorBridge {
       ConnectionPlugin,
       ConnectionPresets,
       Zoom,
-      AutoArrangePlugin,
-      ArrangePresets,
+      dagre,
       classicConnectionPath,
       getElementCenter,
     } = await loadRete();
@@ -112,13 +111,9 @@ export class ReteEditorBridge {
 
     connectionPlugin.addPreset(ConnectionPresets.classic.setup());
 
-    const arrange = new AutoArrangePlugin();
-    arrange.addPreset(ArrangePresets.classic.setup());
-
     editor.use(area);
     area.use(connectionPlugin);
     area.use(renderer);
-    area.use(arrange);
     area.area.setZoomHandler(new Zoom(0.05));
 
     AreaExtensions.simpleNodesOrder(area);
@@ -185,7 +180,7 @@ export class ReteEditorBridge {
       selector,
       selectableNodes,
       connectionPlugin,
-      arrange,
+      dagre,
       container,
       callbacks,
       WorkflowNode,
@@ -216,7 +211,7 @@ export class ReteEditorBridge {
     selector,
     selectableNodes,
     connectionPlugin,
-    arrange,
+    dagre,
     container,
     callbacks,
     WorkflowNode,
@@ -235,7 +230,7 @@ export class ReteEditorBridge {
     this.selector = selector;
     this.selectableNodes = selectableNodes;
     this.connectionPlugin = connectionPlugin;
-    this.arrange = arrange;
+    this.dagre = dagre;
     this.container = container;
     this.callbacks = callbacks;
     this.accumulating = accumulating;
@@ -741,13 +736,10 @@ export class ReteEditorBridge {
         await this.editor.removeConnection(conn.id);
       }
 
-      await this.arrange.layout({
-        options: {
-          "elk.algorithm": "layered",
-          "elk.direction": "RIGHT",
-          "elk.spacing.nodeNode": "30",
-          "elk.layered.spacing.nodeNodeBetweenLayers": "20",
-        },
+      await this.runDagreLayout({
+        rankdir: "LR",
+        nodesep: 30,
+        ranksep: 20,
       });
 
       for (const conn of removedConns) {
@@ -817,6 +809,42 @@ export class ReteEditorBridge {
     } finally {
       this.isAutoArranging = false;
     }
+  }
+
+  async runDagreLayout({ rankdir = "LR", nodesep = 30, ranksep = 20 } = {}) {
+    const graph = new this.dagre.graphlib.Graph();
+    graph.setGraph({ rankdir, nodesep, ranksep });
+    graph.setDefaultEdgeLabel(() => ({}));
+
+    const nodes = this.editor.getNodes();
+    for (const node of nodes) {
+      graph.setNode(node.id, {
+        width: node.width || NODE_WIDTH,
+        height: node.height || 90,
+      });
+    }
+
+    for (const conn of this.editor.getConnections()) {
+      if (
+        conn.source !== conn.target &&
+        graph.hasNode(conn.source) &&
+        graph.hasNode(conn.target)
+      ) {
+        graph.setEdge(conn.source, conn.target);
+      }
+    }
+
+    this.dagre.layout(graph);
+
+    await Promise.all(
+      nodes.map((node) => {
+        const { x, y, width, height } = graph.node(node.id);
+        return this.area.translate(node.id, {
+          x: x - width / 2,
+          y: y - height / 2,
+        });
+      })
+    );
   }
 
   get areaContentElement() {

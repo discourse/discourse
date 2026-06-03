@@ -27,44 +27,7 @@ require "minio_runner"
 CHROME_REMOTE_DEBUGGING_PORT = (ENV["CHROME_REMOTE_DEBUGGING_PORT"] || 50_062).to_s
 CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "127.0.0.1"
 
-class RspecErrorTracker
-  def self.exceptions
-    @exceptions ||= []
-  end
-
-  def self.clear_exceptions
-    @exceptions&.clear
-  end
-
-  def self.report_exception(path, exception)
-    exceptions << [path, exception]
-  end
-
-  def initialize(app, config = {})
-    @app = app
-  end
-
-  def call(env)
-    @app.call(env)
-
-    # This is a little repetitive, but since WebMock::NetConnectNotAllowedError
-    # and also Mocha::ExpectationError inherit from Exception instead of StandardError
-    # they do not get captured by the rescue => e shorthand :(
-  rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
-    RspecErrorTracker.report_exception(env["PATH_INFO"], e)
-    raise e
-  end
-end
-
-# Some errors are caught by `Discourse.warn_exception` and don't reach
-# `RspecErrorTracker`, for example errors in hijacked responses.
-module RspecWarnExceptionCapture
-  def warn_exception(e, message: "", env: nil)
-    path = env&.[]("PATH_INFO") || "(no request path)"
-    RspecErrorTracker.report_exception(path, e)
-    super
-  end
-end
+require_relative "support/server_error_tracking"
 
 class PlaywrightLogger
   attr_reader :logs
@@ -140,10 +103,6 @@ if ENV["LOAD_PLUGINS"] == "1"
 end
 
 SiteSetting.automatically_download_gravatars = false
-
-# we need this env var to ensure that we can impersonate in test
-# this enable integration_helpers sign_in helper
-ENV["DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE"] = "1"
 
 module TestSetup
   # This is run before each test and before each before_all block
@@ -475,31 +434,45 @@ RSpec.configure do |config|
       def synchronize(seconds = nil, errors: nil)
         return super if session.synchronized # Nested synchronize. We only want our logic on the outermost call.
 
+        mb_behind = nil
+
         begin
           super
         rescue StandardError => e
-          seconds = session_options.default_max_wait_time if [nil, true].include? seconds
-          if catch_error?(e, errors) && seconds != 0
-            # This error will only have been raised if the timer expired
-            timeout_error = CapybaraTimedOut.new(seconds, e)
-            if RSpec.current_example
-              # Store timeout for later, we'll only raise it if the test otherwise passes
-              RSpec.current_example.metadata[:_capybara_timeout_exception] ||= timeout_error
+          raise unless catch_error?(e, errors) && seconds != 0
 
-              if RSpec.current_example.metadata[:dump_threads_on_failure]
-                RSpec.current_example.metadata[:_capybara_server_threads_backtraces] = Thread
-                  .list
-                  .reduce([]) { |array, thread| array << thread.backtrace }
-                  .uniq
-              end
+          # On timeout, give a pending MessageBus publish one chance to land,
+          # then retry the matcher once. Cap the retry's wait so the original
+          # wait + flush + retry can't blow PER_SPEC_TIMEOUT_SECONDS.
+          if mb_behind.nil? && MessageBusTestSync.pending?
+            mb_behind = MessageBusTestSync.flush!(session, timeout: 2)
+            seconds = 5
+            retry
+          end
 
-              raise # re-raise original error
-            else
-              # Outside an example... maybe a `before(:all)` hook?
-              raise timeout_error
+          if mb_behind&.any?
+            warn "[MessageBusTestSync] client never caught up on: #{mb_behind.inspect}"
+          end
+
+          # This error will only have been raised if the timer expired
+          effective_seconds =
+            [nil, true].include?(seconds) ? session_options.default_max_wait_time : seconds
+          timeout_error = CapybaraTimedOut.new(effective_seconds, e)
+          if RSpec.current_example
+            # Store timeout for later, we'll only raise it if the test otherwise passes
+            RSpec.current_example.metadata[:_capybara_timeout_exception] ||= timeout_error
+
+            if RSpec.current_example.metadata[:dump_threads_on_failure]
+              RSpec.current_example.metadata[:_capybara_server_threads_backtraces] = Thread
+                .list
+                .reduce([]) { |array, thread| array << thread.backtrace }
+                .uniq
             end
+
+            raise # re-raise original error
           else
-            raise
+            # Outside an example... maybe a `before(:all)` hook?
+            raise timeout_error
           end
         end
       end
@@ -513,6 +486,9 @@ RSpec.configure do |config|
         EmberCli.stubs(:script_chunks).returns({})
       end
     end
+
+    config.before(:each, type: :system) { MessageBusTestSync.start }
+    config.after(:each, type: :system) { MessageBusTestSync.stop }
 
     config.before(:each, type: :system) do |example|
       # Only set ENV["EMBER_RAISE_ON_DEPRECATION"] if not already set
@@ -548,21 +524,7 @@ RSpec.configure do |config|
 
       if example.metadata[:time]
         freeze_time(example.metadata[:time])
-        page.driver.with_playwright_page do |pw_page|
-          # Install the clock at the desired time and immediately resume it so
-          # the browser starts at `example.metadata[:time]` but `Date.now()`
-          # keeps advancing with the wall clock.
-          #
-          # `set_fixed_time` pins `Date.now()` forever, which breaks Ember's runloop: `next()`/`later()`
-          # schedule timers via `Date.now() + wait` and only fire them once
-          # `Date.now()` has advanced past that, so any action deferred through
-          # the runloop (e.g. DButton, which uses `next()` to optimise INP)
-          # would silently never run.
-          #
-          # Playwright warns about this "stuck page" behaviour for pinned clocks too.
-          pw_page.clock.install(time: example.metadata[:time])
-          pw_page.clock.resume
-        end
+        BrowserTime.freeze(page, example.metadata[:time])
       end
     end
 
@@ -718,14 +680,6 @@ RSpec.configure do |config|
     FileUtils.remove_dir(concurrency_safe_tmp_dir, true) if SpecSecureRandom.value
     Downloads.clear
     MinioRunner.stop
-  end
-
-  config.around :each do |example|
-    before_event_count = DiscourseEvent.events.values.sum(&:count)
-    example.run
-    after_event_count = DiscourseEvent.events.values.sum(&:count)
-    expect(before_event_count).to eq(after_event_count),
-    "DiscourseEvent registrations were not cleaned up"
   end
 
   if ENV["CI"]
@@ -947,13 +901,8 @@ RSpec.configure do |config|
     page.driver.with_playwright_page do |pw_page|
       $playwright_logger = PlaywrightLogger.new(pw_page)
 
-      # Apply timezone override via CDP if timezone metadata is present.
-      # We use CDP instead of the driver's timezoneId option because the driver
-      # instance is cached and reused between tests, so timezoneId only affects
-      # the first test. CDP override works at runtime for each test.
       if (tz = example.metadata[:timezone])
-        cdp = pw_page.context.new_cdp_session(pw_page)
-        cdp.send_message("Emulation.setTimezoneOverride", params: { timezoneId: tz })
+        BrowserTime.override_timezone(pw_page, tz)
       end
     end
   end
@@ -961,38 +910,7 @@ RSpec.configure do |config|
   config.after :each do |example|
     if example.exception && RspecErrorTracker.exceptions.present?
       lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= +"")
-
-      lines << "\n"
-      lines << "~~~~~~~ SERVER EXCEPTIONS ~~~~~~~"
-      lines << "\n"
-
-      RspecErrorTracker.exceptions.each_with_index do |(path, ex), index|
-        lines << "\n"
-        lines << "Error encountered while processing #{path}.\n"
-        lines << "  #{ex.class}: #{ex.message}\n"
-        framework_lines_excluded = 0
-
-        ex.backtrace.each_with_index do |line, backtrace_index|
-          # This behaviour is enabled by default, to include gems in
-          # the backtrace set DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE=1
-          if ENV["DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE"] != "1"
-            if line.match?(%r{/gems/})
-              framework_lines_excluded += 1
-              next
-            else
-              if framework_lines_excluded.positive?
-                lines << "    ...(#{framework_lines_excluded} framework line(s) excluded)\n"
-                framework_lines_excluded = 0
-              end
-            end
-          end
-          lines << "    #{line}\n"
-        end
-      end
-
-      lines << "\n"
-      lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
-      lines << "\n"
+      RspecErrorTracker.append_failure_dump(lines)
     end
 
     unfreeze_time
@@ -1095,54 +1013,6 @@ RSpec.configure do |config|
     Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
   end
-
-  config.before(:each, type: :multisite) do
-    Rails.configuration.multisite = true # rubocop:disable Discourse/NoDirectMultisiteManipulation
-
-    RailsMultisite::ConnectionManagement.config_filename = "spec/fixtures/multisite/two_dbs.yml"
-
-    RailsMultisite::ConnectionManagement.establish_connection(db: "default")
-  end
-
-  config.after(:each, type: :multisite) do
-    ActiveRecord::Base.connection_handler.clear_all_connections!
-    Rails.configuration.multisite = false # rubocop:disable Discourse/NoDirectMultisiteManipulation
-    RailsMultisite::ConnectionManagement.clear_settings!
-    ActiveRecord::Base.establish_connection
-  end
-
-  class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
-    def log_on_user(user, session, cookies, opts = {})
-      # Try using the main session as `session` sometimes is a server session
-      (cookies.try(:request).try(:session) || session)[:current_user_id] = user.id
-      super
-    end
-
-    def log_off_user(session, cookies, push_subscription: nil)
-      # Try using the main session as `session` sometimes is a server session
-      (cookies.try(:request).try(:session) || session).delete(:current_user_id)
-      super
-    end
-  end
-
-  # Normally we `use_transactional_fixtures` to clear out a database after a test
-  # runs. However, this does not apply to tests done for multisite. The second time
-  # a test runs you can end up with stale data that breaks things. This method will
-  # force a rollback after using a multisite connection.
-  def test_multisite_connection(name)
-    RailsMultisite::ConnectionManagement.with_connection(name) do
-      ActiveRecord::Base.transaction(joinable: false) do
-        yield
-        raise ActiveRecord::Rollback
-      end
-    end
-  end
-end
-
-class TrackTimeStub
-  def self.stubbed
-    false
-  end
 end
 
 def before_next_spec(&callback)
@@ -1172,54 +1042,6 @@ def set_cdn_url(cdn_url)
     Rails.configuration.action_controller.asset_host = nil
     ActionController::Base.asset_host = nil
   end
-end
-
-# Time.now can cause flaky tests, especially in cases like
-# leap days. This method freezes time at a "safe" specific
-# time (the Discourse 1.1 release date), so it will not be
-# affected by further temporal disruptions.
-def freeze_time_safe
-  freeze_time(DateTime.parse("2014-08-26 12:00:00"))
-end
-
-def freeze_time(now = Time.now)
-  time = now
-  datetime = now
-
-  if Time === now
-    datetime = now.to_datetime
-  elsif DateTime === now
-    time = now.to_time
-  else
-    datetime = DateTime.parse(now.to_s)
-    time = Time.parse(now.to_s)
-  end
-
-  if block_given?
-    raise "nested freeze time not supported" if TrackTimeStub.stubbed
-  end
-
-  DateTime.stubs(:now).returns(datetime)
-  Time.stubs(:now).returns(time)
-  Date.stubs(:today).returns(datetime.to_date)
-  TrackTimeStub.stubs(:stubbed).returns(true)
-
-  if block_given?
-    begin
-      yield
-    ensure
-      unfreeze_time
-    end
-  else
-    time
-  end
-end
-
-def unfreeze_time
-  DateTime.unstub(:now)
-  Time.unstub(:now)
-  Date.unstub(:today)
-  TrackTimeStub.unstub(:stubbed)
 end
 
 def file_from_fixtures(
@@ -1325,43 +1147,6 @@ def track_log_messages
   logger
 ensure
   Rails.logger.stop_broadcasting_to(logger)
-end
-
-# this takes a string and returns a copy where 2 different
-# characters are swapped.
-# e.g.
-#   swap_2_different_characters("abc") => "bac"
-#   swap_2_different_characters("aac") => "caa"
-def swap_2_different_characters(str)
-  swap1 = 0
-  swap2 = str.split("").find_index { |c| c != str[swap1] }
-  # if the string is made up of 1 character
-  return str if !swap2
-  str = str.dup
-  str[swap1], str[swap2] = str[swap2], str[swap1]
-  str
-end
-
-def create_request_env(path: nil)
-  env = Rails.application.env_config.dup.merge("rack.session" => ActionController::TestSession.new)
-  env.merge!(Rack::MockRequest.env_for(path)) if path
-  env
-end
-
-def create_auth_cookie(token:, user_id: nil, trust_level: nil, issued_at: Time.current)
-  data = { token: token, user_id: user_id, trust_level: trust_level, issued_at: issued_at.to_i }
-  jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
-  jar.encrypted[:_t] = { value: data }
-  CGI.escape(jar[:_t])
-end
-
-def decrypt_auth_cookie(cookie)
-  ActionDispatch::Cookies::CookieJar.build(
-    ActionDispatch::TestRequest.create,
-    { _t: cookie },
-  ).encrypted[
-    :_t
-  ].with_indifferent_access
 end
 
 def apply_base_chrome_args(args = [])

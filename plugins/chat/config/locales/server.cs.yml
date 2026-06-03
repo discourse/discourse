@@ -21,7 +21,6 @@ cs:
     chat_minimum_message_length: "Minimální počet znaků pro zprávu chatu."
     chat_allow_uploads: "Povolit nahrávání ve veřejných chatovacích kanálech a kanálech pro přímé zprávy."
     chat_archive_destination_topic_status: "Stav, ve kterém se má nacházet cílové téma po dokončení archivace kanálu. To platí pouze v případě, že cílové téma je nové, nikoliv existující."
-    direct_message_enabled_groups: "Povolit uživatelům v těchto skupinách vytvářet soukromé chaty mezi uživateli. Poznámka: Redaktoři mohou vždy vytvářet soukromé chaty a uživatelé budou moci odpovídat na soukromé chaty iniciované uživateli, kteří mají oprávnění je vytvářet."
     chat_message_flag_allowed_groups: "Uživatelé v těchto skupinách mohou zprávy chatu nahlásit. Upozorňujeme, že správci a moderátoři mohou zprávy chatu nahásit vždy."
     max_mentions_per_chat_message: "Maximální počet zmínek @name, která může uživatel použít ve zprávě chatu."
     chat_max_direct_message_users: "Uživatelé nemohou při vytváření nové přímé zprávy přidat více než tento počet dalších uživatelů. Nastavením na 0 povolíte zprávy pouze sobě. Redaktoři jsou z tohoto nastavení vyňati."
@@ -30,7 +29,6 @@ cs:
     chat_editing_grace_period_max_diff_low_trust: "Maximální počet povolených změn znaků v době odkladu úpravy chatu, pokud se změní více, zobrazí se značka (upraveno) u zprávy chatu (úroveň důvěry 0 a 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximální počet povolených změn znaků v době odkladu úpravy chatu, pokud se změní více, zobrazí se značka (upraveno) u zprávy chatu (úroveň důvěry 2 a vyšší)."
     chat_preferred_index: "Preferovaný panel při načítání /chat"
-    allow_chat_in_anonymous_mode: "Povolením tohoto nastavení umožníte uživatelům, kteří procházejí vaše stránky anonymně, používat chat. Toto nastavení vyžaduje, aby bylo povoleno nastavení `allow anonymous mode`."
     chat_search_enabled: "Povolením tohoto nastavení umožníte uživatelům prohledávat zprávy chatu."
     errors:
       chat_default_channel: "Výchozí kanál chatu musí být veřejný kanál."
@@ -260,6 +258,10 @@ cs:
     scriptables:
       send_chat_message:
         title: Odeslat zprávu chatu
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Schválení"
+      default_deny_label: "Odmítnout"
   reviewable_score_types:
     needs_review:
       title: "Potřebuje revizi"

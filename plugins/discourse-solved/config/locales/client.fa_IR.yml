@@ -5,13 +5,6 @@
 # https://translate.discourse.org/
 
 fa_IR:
-  admin_js:
-    admin:
-      dashboard:
-        highlights:
-          kpi:
-            accepted_solutions:
-              label: "راه حل مورد قبول"
   js:
     notifications:
       alt:

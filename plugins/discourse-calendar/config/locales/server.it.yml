@@ -33,7 +33,6 @@ it:
     map_events_to_color: "Assegna un colore a ciascuna etichetta o categoria."
     map_events_title: "Sovrascrive \"Eventi\" nel titolo della barra laterale \"Prossimi eventi\" per categoria."
     calendar_enabled: "Abilita il plugin del calendario di discourse. Questo permetterà di supportare un tag [calendar][/calendar] nel primo messaggio di un argomento."
-    discourse_post_event_enabled: "Abilita le funzionalità dell'evento. Nota: è necessario che anche l'impostazione `calendario abilitato` sia abilitata."
     displayed_invitees_limit: "Limita il numero di invitati visualizzati in un evento."
     display_post_event_date_on_topic_title: "Visualizza la data dell'evento dopo il titolo dell'argomento."
     use_local_event_date: "Usa la data locale dopo il titolo dell'argomento invece dell'orario relativo."

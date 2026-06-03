@@ -10,11 +10,6 @@ fi:
       site_settings:
         categories:
           discourse_solved: "Discoursen ratkaistu"
-      dashboard:
-        highlights:
-          kpi:
-            accepted_solutions:
-              label: "Hyväksytyt ratkaisut"
   js:
     notifications:
       alt:

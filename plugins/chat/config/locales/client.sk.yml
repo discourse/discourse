@@ -818,3 +818,12 @@ sk:
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Odoslať chatovú správu"
+      send_chat_message:
+        channel_id: "Kanál"
+        message: "Správa"
+      chat_approval:
+        message: "Správa"
+        channel_id: "Kanál"

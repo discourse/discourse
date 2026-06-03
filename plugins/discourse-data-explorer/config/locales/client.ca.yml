@@ -58,3 +58,11 @@ ca:
       no_search_results: "Ho sentim, no hem trobat cap resultat que coincideixi amb el vostre text."
     group:
       reports: "Reports"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Explorador de dades"
+      sql:
+        query_id: "Consulta"
+        param_value: "Valor"
+        output:
+          results: "Resultats"

@@ -105,8 +105,9 @@ class Admin::DashboardController < Admin::StaffController
 
   def available_reports
     search = params[:search]
+    cursor = params.permit(cursor: %i[title key])[:cursor]&.to_h&.symbolize_keys
     enabled = AdminDashboard::Reports::Section.build(guardian: guardian, search: search)[:items]
-    listing = AdminDashboard::Reports::Listing.call(cursor: params[:cursor], search: search)
+    listing = AdminDashboard::Reports::Listing.call(cursor: cursor, search: search)
 
     render json: {
              providers: listing[:providers],

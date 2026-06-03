@@ -41,7 +41,6 @@ tr_TR:
     solved_add_schema_markup: "HTML'ye QAPage şema işaretlemesi ekleyin."
     enable_solved_tags: "Kullanıcıların çözüm seçmesine olanak tanıyacak etiketler."
     prioritize_solved_topics_in_search: "Arama sonuçlarında çözülmüş konulara öncelik verin."
-    enable_support_category_type_setup: "Kategori oluşturma ayarları sırasında \"Destek\" kategori türü seçeneğini etkinleştirir. Bunun geçerli olabilmesi için \"basitleştirilmiş kategori oluşturma\" seçeneğinin etkinleştirilmiş olması gerektiğini unutmayın."
     show_who_marked_solved: "Konuyu kimin çözülmüş olarak işaretlediğini gösterin. Bu, konunun ilk gönderisinde ve cevap gönderisinde bir ipucu olarak belirtilir."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"

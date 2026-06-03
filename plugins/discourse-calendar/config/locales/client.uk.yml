@@ -468,6 +468,8 @@ uk:
           other: "Макс. %{count} учасників"
         no_rsvps_label: "Не збирається інформація про відвідуваність"
         description_placeholder: "Додати опис події"
+        event_title_placeholder: "Назва події"
+        create_event_button: "Створити подію"
         all_day: "Цілий день"
         reminder:
           units:
@@ -496,6 +498,9 @@ uk:
           notification_title: "Повідомляти учасників"
           bump_topic_title: "Тема автоматичного виведення"
           remove: "Видалити нагадування"
+      composer_actions:
+        create_event:
+          label: "Створити подію"
       builder_modal:
         custom_fields:
           label: "Користувацькі поля"

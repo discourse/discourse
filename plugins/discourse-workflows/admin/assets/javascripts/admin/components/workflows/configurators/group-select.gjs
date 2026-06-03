@@ -8,6 +8,10 @@ import ExpressionWrapper from "./expression-wrapper";
 export default class GroupSelect extends ComboBoxField {
   @service router;
 
+  get clearable() {
+    return !this.args.schema?.required;
+  }
+
   @action
   manageGroups() {
     this.router.transitionTo("groups");
@@ -33,6 +37,7 @@ export default class GroupSelect extends ComboBoxField {
             filterable=this.filterable
             none=this.none
             castInteger=this.castInteger
+            clearable=this.clearable
           }}
         />
         {{#unless @field.value}}

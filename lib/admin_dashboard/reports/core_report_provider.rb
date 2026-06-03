@@ -9,8 +9,11 @@ module AdminDashboard
         SOURCE_NAME
       end
 
+      # The standard/default provider intentionally has no label, so its
+      # reports render without a pill. Labels exist only to distinguish
+      # non-standard (plugin-contributed) sources.
       def self.label
-        I18n.t("dashboard.reports_section.providers.core_report")
+        nil
       end
 
       def self.resolve_many(identifiers, guardian:)
@@ -55,11 +58,10 @@ module AdminDashboard
       end
       private_class_method :with_empty_flag
 
-      def self.list_all(search: nil, offset: 0, limit: nil)
+      def self.list_all(search: nil, after: nil, limit: nil)
         entries = ::Reports::ListQuery.call(guardian: Guardian.new(Discourse.system_user))
         entries = filter_by_search(entries, search) if search.present?
-        sliced = limit ? entries[offset, limit] : entries[offset..]
-        Array(sliced).map { |entry| build_resolved(entry) }
+        seek(entries.map { |entry| build_resolved(entry) }, after: after, limit: limit)
       end
 
       def self.build_resolved(entry)

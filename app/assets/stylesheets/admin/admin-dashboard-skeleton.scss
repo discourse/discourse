@@ -270,7 +270,7 @@
     overflow: hidden;
   }
 
-  &.-animation {
+  &.--animation {
     *[class*="db-skeleton__"]:not(
         .db-skeleton__section,
         .db-skeleton__section-wrapper,

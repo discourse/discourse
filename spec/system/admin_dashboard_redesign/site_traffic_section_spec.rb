@@ -222,13 +222,51 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       )
     end
 
-    it "shows an empty state in both cards when no events qualify",
+    it "shows an empty state in both cards but keeps the headers as drill-down links when no events qualify",
        time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
       dashboard.visit
       traffic = dashboard.site_traffic
 
       expect(traffic).to have_top_countries_empty_state
       expect(traffic).to have_top_referrers_empty_state
+      expect(traffic).to have_top_referrers_drilldown
+      expect(traffic).to have_top_countries_drilldown
+    end
+
+    it "drills into the full top referrers report scoped to the dashboard period",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      Fabricate(
+        :browser_pageview_event,
+        normalized_referrer: "news.ycombinator.com/item?id=42",
+        created_at: "2026-05-12",
+      )
+      BrowserPageviewReferrerDailyRollup.aggregate(
+        start_date: "2026-05-01".to_date,
+        end_date: "2026-05-14".to_date,
+      )
+
+      dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
+      dashboard.site_traffic.click_top_referrers_drilldown
+
+      expect(page).to have_current_path(
+        "/admin/reports/top_referrers_by_browser_pageviews?end_date=2026-05-12&start_date=2026-05-01",
+      )
+    end
+
+    it "drills into the full top countries report scoped to the dashboard period",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      Fabricate(:browser_pageview_event, country_code: "US", created_at: "2026-05-12")
+      BrowserPageviewCountryDailyRollup.aggregate(
+        start_date: "2026-05-01".to_date,
+        end_date: "2026-05-14".to_date,
+      )
+
+      dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
+      dashboard.site_traffic.click_top_countries_drilldown
+
+      expect(page).to have_current_path(
+        "/admin/reports/top_countries_by_browser_pageviews?end_date=2026-05-12&start_date=2026-05-01",
+      )
     end
   end
 end

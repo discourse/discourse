@@ -459,7 +459,7 @@ de:
       launch_in_easy_steps: "Starte in %{step_count} einfachen Schritten"
       congrats_onboarding_complete: "Herzlichen Glückwunsch zum Abschluss des Onboarding-Prozesses!"
       select_theme:
-        enabled: "Aktiviert"
+        enabled: "Ausgewählt"
       invite_collaborators:
         title: "Mitwirkende einladen"
         description: "Die ersten Mitglieder tragen dazu bei, deine Community zum Leben zu erwecken"
@@ -3042,7 +3042,7 @@ de:
       collapse: "Editor minimieren"
       open: "Editor öffnen"
       abandon: "Editor schließen und Entwurf verwerfen"
-      edit_reason: "Füge den Bearbeitungsgrund hinzu"
+      edit_reason: "Welchen Grund gibt es für die Bearbeitung?"
       enter_fullscreen: "Vollbild-Editor öffnen"
       exit_fullscreen: "Vollbild-Editor verlassen"
       exit_fullscreen_prompt: "Drücke <kbd>ESC</kbd>, um den Vollbildmodus zu verlassen"
@@ -3077,25 +3077,24 @@ de:
           desc: Neue Nachricht erstellen, beginnend mit denselben Empfängern
         reply_to_topic:
           label: Auf Thema antworten
+          trigger: Thema
           desc: Antworte auf das Thema, nicht auf einen bestimmten Beitrag
         toggle_whisper:
           label: Flüstermodus umschalten
-          desc: Ein geflüsterter Beitrag ist nur für Team-Mitglieder sichtbar
         create_topic:
-          label: "Neues Thema"
           desc: Erstelle ein neues Thema
         create_personal_message:
-          label: "Neue Nachricht"
           desc: "Erstelle eine neue persönliche Nachricht"
         shared_draft:
           label: "Gemeinsamer Entwurf"
           desc: "Entwurf eines Themas, das nur für erlaubte Benutzer sichtbar ist"
         toggle_topic_bump:
-          label: "„Nach oben verschieben“ für Thema umschalten"
           desc: "Antworten, ohne das Datum der neuesten Antwort zu ändern"
         toggle_unlisted:
           label: Sichtbarkeit umschalten
           desc: "Nicht aufgelistete Themen sind nur über einen direkten Link zugänglich"
+        edit_post: "Beitrag wird bearbeitet "
+        unknown_user: "Nutzer"
       reload: "Neu laden"
       ignore: "Ignorieren"
       image_alt_text:
@@ -3508,6 +3507,15 @@ de:
         also_dismiss_topics: "Diese Themen nicht mehr verfolgen, sodass mir diese nicht mehr als ungelesen angezeigt werden"
         dismiss_new_topics: "Neue Themen verwerfen"
         dismiss_new_replies: "Neue Antworten verwerfen"
+        dismiss_new_topics_with_selected:
+          one: "Ignorieren (%{count}) "
+          other: "Ignorieren (%{count}) "
+        dismiss_new_replies_with_selected:
+          one: "Ignorieren (%{count}) "
+          other: "Ignorieren (%{count}) "
+        dismiss_all_with_selected:
+          one: "Ignorieren (%{count}) "
+          other: "Ignorieren (%{count}) "
         dismiss_new: "Neue Themen ignorieren"
         dismiss_new_modal:
           title: "Neue verwerfen"

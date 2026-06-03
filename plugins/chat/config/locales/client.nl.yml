@@ -313,6 +313,9 @@ nl:
         other: "Je hebt %{count} ongelezen discussies"
       scroll_to_bottom: "Naar beneden scrollen"
       scroll_to_new_messages: "Nieuwe berichten weergeven"
+      new_messages:
+        one: "%{count} nieuw bericht"
+        other: "%{count} nieuw berichten"
       sound:
         title: "Geluid bureaubladmelding chat"
       sounds:
@@ -791,3 +794,12 @@ nl:
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Chatbericht sturen"
+      send_chat_message:
+        channel_id: "Kanaal"
+        message: "Bericht"
+      chat_approval:
+        message: "Bericht"
+        channel_id: "Kanaal"
