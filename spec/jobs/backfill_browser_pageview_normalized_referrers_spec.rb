@@ -80,6 +80,46 @@ RSpec.describe Jobs::BackfillBrowserPageviewNormalizedReferrers do
       expect(BrowserPageviewEvent.where(normalized_referrer_version: nil).count).to eq(1)
     end
 
+    it "skips rows older than the retention cutoff when cleanup is enabled" do
+      SiteSetting.clean_up_browser_pageview_events = true
+      prunable =
+        Fabricate(
+          :browser_pageview_event_with_unnormalized_referrer,
+          referrer: "https://www.reddit.com/",
+          created_at: (Jobs::CleanUpBrowserPageviewEvents::RETENTION_PERIOD + 1.day).ago,
+        )
+      recent =
+        Fabricate(
+          :browser_pageview_event_with_unnormalized_referrer,
+          referrer: "https://www.reddit.com/",
+        )
+
+      job.execute({})
+
+      prunable.reload
+      expect(prunable.normalized_referrer).to be_nil
+      expect(prunable.normalized_referrer_version).to be_nil
+      expect(recent.reload.normalized_referrer_version).to eq(
+        BrowserPageviewReferrerInspector::VERSION,
+      )
+    end
+
+    it "backfills rows older than the retention period when cleanup is disabled" do
+      SiteSetting.clean_up_browser_pageview_events = false
+      event =
+        Fabricate(
+          :browser_pageview_event_with_unnormalized_referrer,
+          referrer: "https://www.reddit.com/",
+          created_at: (Jobs::CleanUpBrowserPageviewEvents::RETENTION_PERIOD + 1.day).ago,
+        )
+
+      job.execute({})
+
+      expect(event.reload.normalized_referrer_version).to eq(
+        BrowserPageviewReferrerInspector::VERSION,
+      )
+    end
+
     it "repairs the affected rollups to match a fresh aggregation, including the NULL bucket" do
       date = 3.days.ago.to_date
       Fabricate(

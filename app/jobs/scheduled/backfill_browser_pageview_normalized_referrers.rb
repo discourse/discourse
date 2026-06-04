@@ -24,7 +24,17 @@ module Jobs
     private
 
     def next_batch
-      DB.query(<<~SQL, version: BrowserPageviewReferrerInspector::VERSION, limit: batch_size)
+      params = { version: BrowserPageviewReferrerInspector::VERSION, limit: batch_size }
+
+      retention_clause = ""
+      if SiteSetting.clean_up_browser_pageview_events
+        retention_clause = "AND created_at >= :retention_cutoff"
+        params[
+          :retention_cutoff
+        ] = Jobs::CleanUpBrowserPageviewEvents::RETENTION_PERIOD.ago.beginning_of_day
+      end
+
+      DB.query(<<~SQL, params)
         SELECT id, referrer
         FROM browser_pageview_events
         WHERE referrer IS NOT NULL
@@ -32,6 +42,7 @@ module Jobs
             normalized_referrer_version IS NULL
             OR normalized_referrer_version < :version
           )
+          #{retention_clause}
         LIMIT :limit
       SQL
     end
