@@ -61,5 +61,3 @@ module AuthHelpers
     str
   end
 end
-
-RSpec.configure { |config| config.include(AuthHelpers) }

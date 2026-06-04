@@ -20,8 +20,6 @@ module LoggingHelpers
   end
 end
 
-RSpec.configure { |config| config.include(LoggingHelpers) }
-
 # Block direct assignment to Rails.logger in tests; use `track_log_messages` instead.
 def Rails.logger=(logger)
   raise "Setting Rails.logger is not allowed as it can lead to unexpected behavior in tests. Use `fake_logger = track_log_messages { ... }` instead."

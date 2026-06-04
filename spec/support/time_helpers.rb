@@ -58,8 +58,6 @@ module TimeHelpers
   end
 end
 
-RSpec.configure { |config| config.include(TimeHelpers) }
-
 module BrowserTime
   # Install the clock at the desired time and immediately resume it so
   # the browser starts at `time` but `Date.now()` keeps advancing with the
