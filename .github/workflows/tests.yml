@@ -290,6 +290,15 @@ jobs:
           # Unknown keys are silently ignored on older jemalloc, so this is
           # safe regardless of the discourse_test image's so.1 vs so.2 build.
           MALLOC_CONF: "narenas:2,background_thread:true"
+          # Gate `spec/rails_helper.rb` to skip require chains that this
+          # step's `spec/system/**` input never reaches: rbtrace / pry /
+          # pry-rails (interactive-debug only), shoulda-matchers + its
+          # `Shoulda::Matchers.configure` walk (model-spec matchers, none
+          # invoked from system specs), and the `spec/requests/examples/*`
+          # shared-example require glob (controller-spec helpers). Every
+          # one of the ~10 system-test workers stops paying their require /
+          # boot-side initialization cost.
+          DISCOURSE_SYSTEM_TESTS_ONLY: "1"
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
