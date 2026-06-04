@@ -80,6 +80,11 @@ module PageObjects
           has_css?(".event-info .name a[href='#{href}']")
         end
 
+        def open_invite_user_or_group_modal
+          open_more_menu { locator(".dropdown-menu__item.invite-user-or-group").click }
+          self
+        end
+
         def has_location?(text)
           has_css?(".event-location", text:)
         end
