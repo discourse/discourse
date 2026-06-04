@@ -102,6 +102,14 @@ export class ComposerActionItemBuilder {
     return prioritizeNameFallback(post.name, post.username) || fallback;
   }
 
+  // Replying to the whole topic reads as "reply to the private message" when
+  // the target is a PM, otherwise "reply to topic".
+  #replyToTopicKeyPrefix(topic) {
+    return topic?.isPrivateMessage
+      ? "composer.composer_actions.reply_to_message"
+      : "composer.composer_actions.reply_to_topic";
+  }
+
   #replyAsNewTopic() {
     if (
       this.action === REPLY &&
@@ -177,9 +185,12 @@ export class ComposerActionItemBuilder {
             this.replyOptions?.topicLink))) ||
       (this.action === PRIVATE_MESSAGE && this.snapshotTopic)
     ) {
+      const keyPrefix = this.#replyToTopicKeyPrefix(
+        this.topic ?? this.snapshotTopic
+      );
       return {
-        name: i18n("composer.composer_actions.reply_to_topic.label"),
-        description: i18n("composer.composer_actions.reply_to_topic.desc"),
+        name: i18n(`${keyPrefix}.label`),
+        description: i18n(`${keyPrefix}.desc`),
         icon: "share",
         id: "reply_to_topic",
       };
@@ -201,9 +212,10 @@ export class ComposerActionItemBuilder {
 
   #replyToSnapshottedTopic() {
     if (this.snapshotTopic) {
+      const keyPrefix = this.#replyToTopicKeyPrefix(this.snapshotTopic);
       return {
-        name: i18n("composer.composer_actions.reply_to_topic.label"),
-        description: i18n("composer.composer_actions.reply_to_topic.desc"),
+        name: i18n(`${keyPrefix}.label`),
+        description: i18n(`${keyPrefix}.desc`),
         icon: "share",
         id: "reply_to_topic",
       };
