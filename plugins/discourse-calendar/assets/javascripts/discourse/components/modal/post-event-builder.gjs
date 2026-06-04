@@ -17,6 +17,7 @@ import DDateInput from "discourse/ui-kit/d-date-input";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import { recurrenceContext } from "../../lib/event-recurrence";
 import {
   attendanceTransition,
   buildParams,
@@ -306,16 +307,7 @@ export default class PostEventBuilder extends Component {
   }
 
   get availableRecurrences() {
-    const ref = this.startsAt || moment();
-    const weekday = ref.format("dddd");
-    const dayOfMonth = ref.date();
-    const isLast = dayOfMonth + 7 > ref.daysInMonth();
-    const ordinalKey = isLast
-      ? "last"
-      : ["first", "second", "third", "fourth"][Math.ceil(dayOfMonth / 7) - 1];
-    const ordinal = i18n(
-      `discourse_post_event.builder_modal.recurrence.ordinals.${ordinalKey}`
-    );
+    const { weekday, ordinal } = recurrenceContext(this.startsAt || moment());
 
     return [
       {
