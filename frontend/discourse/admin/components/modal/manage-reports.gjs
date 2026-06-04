@@ -128,6 +128,7 @@ class ManageReportsRow extends Component {
           <DButton
             @icon="arrow-down"
             @action={{fn @onMoveDown @row}}
+            @disabled={{eq @index @lastEnabledIndex}}
             @translatedAriaLabel={{i18n
               "admin.dashboard.reports_section.modal.move_down"
               title=@row.title
@@ -233,6 +234,10 @@ export default class ManageReports extends Component {
 
   get reorderable() {
     return this.enabledOrder.length > 1;
+  }
+
+  get lastEnabledIndex() {
+    return this.filteredEnabledRows.length - 1;
   }
 
   cacheItems(items) {
@@ -452,6 +457,7 @@ export default class ManageReports extends Component {
               <ManageReportsRow
                 @row={{row}}
                 @index={{index}}
+                @lastEnabledIndex={{this.lastEnabledIndex}}
                 @reorderable={{this.reorderable}}
                 @toggleDisabled={{this.toggleDisabled row}}
                 @onToggle={{this.toggle}}
