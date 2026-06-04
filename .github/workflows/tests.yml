@@ -290,6 +290,18 @@ jobs:
           # Unknown keys are silently ignored on older jemalloc, so this is
           # safe regardless of the discourse_test image's so.1 vs so.2 build.
           MALLOC_CONF: "narenas:2,background_thread:true"
+          # Complement iter-40's static Ruby GC limits with the three
+          # growth-rate / old-object-count knobs iter-40 left at default.
+          # OLDOBJECT_LIMIT_FACTOR=4.0 (vs default 2.0) quadruples (instead
+          # of doubles) the old-object-count threshold between major GCs,
+          # pushing 1-2 major GCs past a 60s worker's lifetime. The two
+          # GROWTH_FACTOR bumps (1.4 -> 2.0, 1.2 -> 2.0) reach iter-40's
+          # high `_MAX` ceilings (1 GB / 2 GB) in ~4-5 minor GCs instead of
+          # 9-16, retiring the malloc-based major-GC triggers from the
+          # worker's warmup phase.
+          RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR: "4.0"
+          RUBY_GC_MALLOC_LIMIT_GROWTH_FACTOR: "2.0"
+          RUBY_GC_OLDMALLOC_LIMIT_GROWTH_FACTOR: "2.0"
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
