@@ -146,12 +146,14 @@ module PageObjects
       # Requires open_notification_settings to be called first
       def set_notification_level(level)
         find(".chat-channel-sidebar-link-menu__notification-level-#{level}").click
+        has_no_css?(".chat-channel-sidebar-link-menu__notification-level-#{level}")
         self
       end
 
       # Requires open_notification_settings to be called first
       def toggle_mute_channel
         find(".chat-channel-sidebar-link-menu__mute-channel").click
+        has_no_css?(".chat-channel-sidebar-link-menu__mute-channel")
         self
       end
     end
