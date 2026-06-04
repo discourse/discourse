@@ -15,21 +15,9 @@ if ENV["COVERAGE"]
 end
 
 require "rubygems"
-
-# The Core System Tests CI step runs `bin/turbo_rspec spec/system` and sets
-# `DISCOURSE_SYSTEM_TESTS_ONLY=1` in its env. None of the system specs (or
-# their support / page_object / fabricator dependencies) reference rbtrace,
-# pry, or pry-rails — they are debugger / live-introspection gems that
-# matter only in interactive local runs. Skipping the requires drops the
-# files those gems load + their per-boot initialization (Pry.config,
-# CommandSet, plugin discovery, rbtrace's C-ext signal handlers) off every
-# system-test worker's boot path.
-if ENV["DISCOURSE_SYSTEM_TESTS_ONLY"] != "1"
-  require "rbtrace" if RUBY_ENGINE == "ruby"
-  require "pry"
-  require "pry-rails"
-end
-
+require "rbtrace" if RUBY_ENGINE == "ruby"
+require "pry"
+require "pry-rails"
 require "fabrication"
 require "mocha/api"
 require "certified"
@@ -60,42 +48,24 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
 end
 
 require "rspec/rails"
-
-# shoulda-matchers exposes matchers (`validate_presence_of`, `have_db_column`,
-# etc.) used exclusively by model / contract / lib specs. No spec under
-# spec/system/** references it — verified with
-# `rg 'validate_|allow_value|Shoulda' spec/system`. The `Shoulda::Matchers
-# .configure` block below walks `ActiveRecord` / `ActiveModel` to register
-# matchers, which is wasted work on every system-test worker. Skip both
-# the require and the configure when the run is gated as system-tests-only.
-require "shoulda-matchers" if ENV["DISCOURSE_SYSTEM_TESTS_ONLY"] != "1"
-
+require "shoulda-matchers"
 require "sidekiq/testing"
 require "capybara/rails"
 
 # The shoulda-matchers gem no longer detects the test framework
 # you're using or mixes itself into that framework automatically.
-if ENV["DISCOURSE_SYSTEM_TESTS_ONLY"] != "1"
-  Shoulda::Matchers.configure do |config|
-    config.integrate do |with|
-      with.test_framework :rspec
-      with.library :active_record
-      with.library :active_model
-    end
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :active_record
+    with.library :active_model
   end
 end
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
-
-# `spec/requests/examples/*.rb` holds shared examples consumed only by
-# `spec/requests/**` (controller / API request specs). System specs never
-# include them. Skip the directory glob + per-file require chain when the
-# run is gated as system-tests-only.
-if ENV["DISCOURSE_SYSTEM_TESTS_ONLY"] != "1"
-  Dir[Rails.root.join("spec/requests/examples/*.rb")].each { |f| require f }
-end
+Dir[Rails.root.join("spec/requests/examples/*.rb")].each { |f| require f }
 
 Dir[Rails.root.join("spec/system/helpers/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
