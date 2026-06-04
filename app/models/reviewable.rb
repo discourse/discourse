@@ -381,6 +381,7 @@ class Reviewable < ActiveRecord::Base
           reviewable_id: id,
           performing_username: performed_by.username,
           updated_reviewable_ids: result.remove_reviewable_ids | result.refresh_reviewable_ids,
+          remove_reviewable_ids: result.remove_reviewable_ids_for_update,
         )
       end
 

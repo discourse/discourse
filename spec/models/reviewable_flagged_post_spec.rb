@@ -270,6 +270,14 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
             target_created_by: spammer,
           )
         user_reviewable = ReviewableUser.create_for(spammer)
+        created_reviewable =
+          Fabricate(
+            :reviewable_queued_post,
+            created_by: spammer,
+            target_created_by: Fabricate(:user),
+          )
+        created_and_targeted_reviewable =
+          Fabricate(:reviewable_queued_post, created_by: spammer, target_created_by: spammer)
 
         result = nil
         messages =
@@ -277,16 +285,34 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
             result = reviewable.perform(moderator, action)
           end
 
-        expect(result.refresh_reviewable_ids).to include(
+        expect(
+          result.refresh_reviewable_ids &
+            [
+              reviewable.id,
+              queued_post_reviewable.id,
+              user_reviewable.id,
+              created_reviewable.id,
+              created_and_targeted_reviewable.id,
+            ],
+        ).to contain_exactly(reviewable.id, queued_post_reviewable.id, user_reviewable.id)
+        expect(result.remove_reviewable_ids).to contain_exactly(
+          created_reviewable.id,
+          created_and_targeted_reviewable.id,
+        )
+        expect(messages.last.data[:refresh_reviewable_ids]).to include(
+          reviewable.id,
           queued_post_reviewable.id,
           user_reviewable.id,
         )
-        expect(messages.last.data[:refresh_reviewable_ids]).to include(
-          queued_post_reviewable.id,
-          user_reviewable.id,
+        expect(messages.last.data[:remove_reviewable_ids]).to include(
+          created_reviewable.id,
+          created_and_targeted_reviewable.id,
         )
         expect(queued_post_reviewable.reload).to be_rejected
         expect(user_reviewable.reload).to be_rejected
+        expect(
+          Reviewable.exists?(id: [created_reviewable.id, created_and_targeted_reviewable.id]),
+        ).to eq(false)
       end
     end
 

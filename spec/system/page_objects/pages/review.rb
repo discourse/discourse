@@ -64,6 +64,10 @@ module PageObjects
         page.has_css?(".review-item", count: count)
       end
 
+      def has_no_reviewable?(reviewable)
+        page.has_no_css?(".review-item[data-reviewable-id=\"#{reviewable.id}\"]")
+      end
+
       def has_reviewable_with_rejection_reason?(reviewable, rejection_reason)
         reviewable_by_id(reviewable.id).has_css?(
           ".reviewable-user-details.reject-reason .value",

@@ -398,15 +398,19 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateStatus(data) {
-    if (
-      data.remove_reviewable_ids?.includes(this.reviewable.id) ||
-      data.refresh_reviewable_ids?.includes(this.reviewable.id)
-    ) {
+    const shouldRemove = data.remove_reviewable_ids?.includes(
+      this.reviewable.id
+    );
+    const shouldRefresh = data.refresh_reviewable_ids?.includes(
+      this.reviewable.id
+    );
+
+    if (shouldRemove || shouldRefresh) {
       this._performResult(
         {
           ...data,
-          remove_reviewable_ids: undefined,
-          refresh_reviewable_ids: undefined,
+          remove_reviewable_ids: shouldRemove ? [this.reviewable.id] : [],
+          refresh_reviewable_ids: shouldRefresh ? [this.reviewable.id] : [],
         },
         {},
         this.reviewable
@@ -504,9 +508,11 @@ export default class ReviewableItem extends Component {
       });
     }
 
-    if (this.remove && result.remove_reviewable_ids?.length > 0) {
-      this.remove(result.remove_reviewable_ids);
-    } else {
+    if (result.remove_reviewable_ids?.length > 0) {
+      this.remove?.(result.remove_reviewable_ids);
+    }
+
+    if (!result.remove_reviewable_ids?.includes(reviewable.id)) {
       return this.store.find("reviewable", reviewable.id);
     }
   }

@@ -37,7 +37,11 @@ export default class ReviewIndexRefresh extends Component {
             <div class="reviewables">
               {{#each @controller.reviewables.content as |r|}}
                 {{#if (this.reviewableComponentExists r)}}
-                  <ReviewableItem @reviewable={{r}} @showHelp={{false}} />
+                  <ReviewableItem
+                    @reviewable={{r}}
+                    @showHelp={{false}}
+                    @remove={{@controller.remove}}
+                  />
                 {{/if}}
               {{/each}}
             </div>

@@ -9,6 +9,7 @@ class Jobs::NotifyReviewable < ::Jobs::Base
     return unless reviewable = Reviewable.find_by(id: args[:reviewable_id])
 
     @contacted = Set.new
+    @remove_reviewable_ids = args[:remove_reviewable_ids] || []
 
     all_updates = Hash.new { |h, k| h[k] = {} }
 
@@ -73,6 +74,10 @@ class Jobs::NotifyReviewable < ::Jobs::Base
   end
 
   def notify_user(user, updates)
-    user.publish_reviewable_counts(updates.present? ? { updates: updates } : nil)
+    data = {}
+    data[:updates] = updates if updates.present?
+    data[:remove_reviewable_ids] = @remove_reviewable_ids if @remove_reviewable_ids.present?
+
+    user.publish_reviewable_counts(data.presence)
   end
 end

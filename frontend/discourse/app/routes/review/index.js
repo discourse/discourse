@@ -72,6 +72,10 @@ export default class ReviewIndex extends DiscourseRoute {
 
   @bind
   _updateReviewables(data) {
+    if (data.remove_reviewable_ids) {
+      this.controller.remove(data.remove_reviewable_ids);
+    }
+
     if (data.updates) {
       this.controller.reviewables.content.forEach((reviewable) => {
         const updates = data.updates[reviewable.id];
