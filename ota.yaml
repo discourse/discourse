@@ -2,9 +2,15 @@ version: 1
 metadata:
   ota:
     minimum_version: "1.6.18"
+# Pressure-test note (local branch):
+# - Remove the mixed-stack frontend pressure lane (`setup:frontend`, `build:frontend`) before an
+#   upstream PR unless it is fully proven and we want the PR to claim Ruby + pnpm repo truth
+#   rather than the narrower Ruby/Bundler baseline slice.
+# - Remove the toolchain ownership migration before an upstream PR if the target PR must remain on
+#   an older Ota release that does not ship the same toolchain behavior.
 project:
   name: discourse
-  description: Discourse readiness slice covering Ruby/Bundler runtime and lock integrity checks
+  description: Discourse readiness slice covering Ruby/Bundler baseline plus a provisional pnpm frontend build lane
 execution:
   default_context: host
   contexts:
@@ -14,52 +20,107 @@ execution:
       backend: container
       lifecycle: ephemeral
       container:
-        image: ruby:3.4-bookworm
+        image: docker.io/discourse/discourse_dev:20260521-0047
         engines:
           - docker
           - podman
       attachments:
         isolated_paths:
           - vendor/bundle
-runtimes:
-  ruby: '3.4'
-tools:
-  bundler: '2.6.4'
+toolchains:
+  ruby:
+    provider: ruby
+    version: '>=3.4,<3.5'
+    package_managers:
+      bundler: '2.6.4'
+  node:
+    provider: corepack
+    version: '>=20'
+    package_managers:
+      pnpm: '10.28.0'
 tasks:
   setup:
     context: host
     category: setup
     description: Verify Bundler is available for this repo slice.
-    run: bundle --version
+    run: bin/bundle --version
     execution:
       default_mode: native
       modes:
         native:
           context: host
-          run: bundle --version
+          run: bin/bundle --version
         container:
           context: app
-          run: bundle --version
+          run: bin/bundle --version
+    requirements:
+      toolchains:
+        - ruby
     notes: Validate Bundler availability before lock checks.
     internal: true
   test:
     context: host
     category: test
     description: Verify declared Ruby platform from Bundler contract metadata.
-    run: bundle platform --ruby
+    run: bin/bundle platform --ruby
     execution:
       default_mode: native
       modes:
         native:
           context: host
-          run: bundle platform --ruby
+          run: bin/bundle platform --ruby
         container:
           context: app
-          run: bundle platform --ruby
+          run: bin/bundle platform --ruby
     depends_on:
       - setup
+    requirements:
+      toolchains:
+        - ruby
     safe_for_agent: true
     notes: Checks that Bundler reads the repo contract metadata and resolved Ruby platform.
+  setup:frontend:
+    context: host
+    category: setup
+    description: Install Discourse frontend dependencies with pnpm.
+    run: pnpm install --frozen-lockfile
+    execution:
+      default_mode: native
+      modes:
+        native:
+          context: host
+          run: pnpm install --frozen-lockfile
+    requirements:
+      toolchains:
+        - node
+    effects:
+      network: true
+      network_kind: dependency_hydration
+    notes: |
+      Install frontend dependencies for the repo's pnpm-managed JavaScript workspace.
+      This is a provisional mixed-stack pressure lane intended to exercise Ota against a real Ruby
+      plus pnpm repository shape.
+    internal: true
+  build:frontend:
+    context: host
+    category: build
+    description: Build the Discourse frontend assets.
+    run: pnpm build
+    execution:
+      default_mode: native
+      modes:
+        native:
+          context: host
+          run: pnpm build
+    depends_on:
+      - setup:frontend
+    requirements:
+      toolchains:
+        - node
+    notes: |
+      Build the frontend assets using the root pnpm build script.
+      This is a provisional pressure-test lane and should not be upstreamed unless the mixed-stack
+      native build path is proven and intentionally claimed.
   verify:
     context: host
     category: test
@@ -76,6 +137,9 @@ tasks:
           run: "true"
     depends_on:
       - test
+    requirements:
+      toolchains:
+        - ruby
     safe_for_agent: true
     notes: Contract-level verification path for this Discourse slice.
 workflows:
@@ -135,3 +199,6 @@ agent:
     Use `ota tasks --safe --use` to inspect the approved agent task surface before execution.
     Use `ota validate` before changes and `ota doctor` after edits.
     Use `ota run verify` for the contract verification path.
+    The pnpm frontend tasks in this local branch are pressure-only mixed-stack lanes; remove them
+    before PR unless we intentionally want the upstream contract to claim Ruby + frontend build
+    coverage.
