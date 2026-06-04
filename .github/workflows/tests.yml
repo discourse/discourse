@@ -290,23 +290,6 @@ jobs:
           # Unknown keys are silently ignored on older jemalloc, so this is
           # safe regardless of the discourse_test image's so.1 vs so.2 build.
           MALLOC_CONF: "narenas:2,background_thread:true"
-          # Tune Ruby 3.4 GC for Discourse RSpec workers (large eager-loaded
-          # heap, sustained allocator pressure across a worker's spec shard).
-          # Pre-allocate slots so boot skips repeated heap-grow + GC cycles,
-          # raise the old-malloc limit so major GCs fire ~4x less often, and
-          # smooth out the steady-state heap growth curve. Same envelope
-          # shipped in Discourse's production unicorn launchers for years.
-          # Previously promoted as iter-40 (-5.1% from baseline 629s -> 597s)
-          # but the change was dropped from the rebase chain by iter-41; this
-          # restores it, orthogonal to the surviving iter-42/43/45 promotes.
-          RUBY_GC_HEAP_INIT_SLOTS: "2000000"
-          RUBY_GC_HEAP_FREE_SLOTS: "600000"
-          RUBY_GC_HEAP_GROWTH_FACTOR: "1.1"
-          RUBY_GC_HEAP_GROWTH_MAX_SLOTS: "300000"
-          RUBY_GC_MALLOC_LIMIT: "67108864"
-          RUBY_GC_MALLOC_LIMIT_MAX: "1073741824"
-          RUBY_GC_OLDMALLOC_LIMIT: "67108864"
-          RUBY_GC_OLDMALLOC_LIMIT_MAX: "2147483648"
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
