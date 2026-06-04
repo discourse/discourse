@@ -56,25 +56,6 @@ jobs:
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
-      # Tune per-session Postgres parameters for the parallel RSpec workload.
-      # libpq applies PGOPTIONS as SET statements on every new connection, so
-      # this covers all 11 worker processes (10 regular + 1 multisite parent)
-      # and every AR / psql connection they open, without needing to edit
-      # script/start_test_db.rb, restart postgres, or change shared_buffers.
-      # - jit=off: Postgres 12+ enables LLVM JIT for queries above jit_above_cost
-      #   (default 100000). JIT compile costs 20-100ms per query; net loss for
-      #   the short OLTP queries Discourse system specs run thousands of times.
-      # - work_mem=16MB (default 4MB): pushes more sorts / hash joins into
-      #   memory instead of spilling to temp files.
-      # - maintenance_work_mem=256MB (default 64MB): speeds up CREATE INDEX
-      #   during parallel:migrate.
-      # - random_page_cost=1.1 (default 4.0): planner default assumes
-      #   rotational disk; cdck-linux-16-core uses local NVMe SSD.
-      # - effective_cache_size=8GB (default 4GB): better cardinality estimates
-      #   on the 16-core runner's 32GB RAM.
-      # - track_activities=off, track_io_timing=off: drop per-query stats
-      #   collection overhead that nothing in the test path consumes.
-      PGOPTIONS: "-c jit=off -c work_mem=16MB -c maintenance_work_mem=256MB -c random_page_cost=1.1 -c effective_cache_size=8GB -c track_activities=off -c track_io_timing=off"
 
     strategy:
       fail-fast: false
