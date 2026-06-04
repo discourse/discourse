@@ -37,6 +37,8 @@ export default class NestedRoute extends DiscourseRoute {
 
   async model(params) {
     const { topic_id, slug, post_number } = params;
+    this._teardownCurrentTopic(topic_id);
+
     const sort =
       params.sort || this.siteSettings.nested_replies_default_sort || "top";
 
@@ -163,6 +165,19 @@ export default class NestedRoute extends DiscourseRoute {
 
   _saveToCache(controller) {
     controller.saveToCache(this._findScrollAnchor());
+  }
+
+  _teardownCurrentTopic(nextTopicId) {
+    const controller = this.controllerFor("nested");
+    const currentTopicId = controller.topic?.id;
+
+    if (!currentTopicId || String(currentTopicId) === String(nextTopicId)) {
+      return;
+    }
+
+    this._saveToCache(controller);
+    controller.unsubscribe();
+    this.screenTrack.stop();
   }
 
   _findScrollAnchor() {

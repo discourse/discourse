@@ -136,8 +136,11 @@ export default class NestedPost extends Component {
     this.appEvents.trigger("nested-replies:post-registered", this.args.post);
   }
 
-  _onChildCreated({ post: childPost, parentPostNumber, isOwnPost }) {
-    if (parentPostNumber !== this.args.post.post_number) {
+  _onChildCreated({ topicId, post: childPost, parentPostNumber, isOwnPost }) {
+    if (
+      String(topicId) !== String(this.args.topic?.id) ||
+      parentPostNumber !== this.args.post.post_number
+    ) {
       return;
     }
 

@@ -85,8 +85,11 @@ export default class NestedPostChildren extends Component {
     });
   }
 
-  _onChildCreated({ post, parentPostNumber }) {
-    if (parentPostNumber !== this.args.parentPostNumber) {
+  _onChildCreated({ topicId, post, parentPostNumber }) {
+    if (
+      String(topicId) !== String(this.args.topic?.id) ||
+      parentPostNumber !== this.args.parentPostNumber
+    ) {
       return;
     }
 

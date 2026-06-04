@@ -528,14 +528,22 @@ export default class NestedController extends Controller {
   }
 
   #onPostRegistered(post) {
-    if (post?.post_number != null) {
+    const topicId = this.topic?.id;
+    if (
+      post?.post_number != null &&
+      topicId != null &&
+      String(post.topic?.id) === String(topicId)
+    ) {
       this.topic?.postStream?.storePost(post);
       this.postRegistry.set(post.post_number, post);
     }
   }
 
   #onPostUnregistered(post) {
-    if (post?.post_number != null) {
+    if (
+      post?.post_number != null &&
+      this.postRegistry.get(post.post_number) === post
+    ) {
       this.postRegistry.delete(post.post_number);
     }
   }
@@ -596,6 +604,7 @@ export default class NestedController extends Controller {
         }
       } else {
         this.appEvents.trigger("nested-replies:child-created", {
+          topicId,
           post,
           parentPostNumber: replyTo,
           isOwnPost: data.user_id === this.currentUser?.id,
