@@ -98,6 +98,44 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
         "true",
       )
     end
+
+    it "enables shared issues by default" do
+      described_class.configure_category(category, guardian: admin.guardian)
+
+      expect(category.custom_fields[DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD]).to eq(
+        "true",
+      )
+      expect(category.shared_issues_enabled?).to eq(true)
+    end
+
+    it "uses provided configuration_values for shared issues" do
+      described_class.configure_category(
+        category,
+        guardian: admin.guardian,
+        configuration_values: {
+          DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD => "false",
+        },
+      )
+
+      expect(category.shared_issues_enabled?).to eq(false)
+    end
+  end
+
+  describe "configuration_schema" do
+    it "passes schema validation with the shared issues fields" do
+      expect { described_class.validate_schema! }.not_to raise_error
+    end
+
+    it "declares the shared issues toggle as a category custom field" do
+      keys = described_class.configuration_schema[:category_custom_fields].keys
+      expect(keys).to include(DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD)
+    end
+
+    it "declares the shared issue label as a dependent site text" do
+      label = described_class.configuration_schema[:site_texts]["js.solved.shared_issue.label"]
+      expect(label[:label]).to be_present
+      expect(label[:depends_on]).to eq(DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD)
+    end
   end
 
   describe ".unconfigure_category" do
