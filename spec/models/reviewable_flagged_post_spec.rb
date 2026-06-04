@@ -260,6 +260,36 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(User.find_by(id: reviewable.target_created_by_id)).to be_blank
     end
 
+    %i[delete_user delete_user_block].each do |action|
+      it "resolves other pending reviewables for a spammer handled with #{action}" do
+        spammer = reviewable.target_created_by
+        queued_post_reviewable =
+          Fabricate(
+            :reviewable_queued_post,
+            created_by: Discourse.system_user,
+            target_created_by: spammer,
+          )
+        user_reviewable = ReviewableUser.create_for(spammer)
+
+        result = nil
+        messages =
+          MessageBus.track_publish("/reviewable_action") do
+            result = reviewable.perform(moderator, action)
+          end
+
+        expect(result.refresh_reviewable_ids).to include(
+          queued_post_reviewable.id,
+          user_reviewable.id,
+        )
+        expect(messages.last.data[:refresh_reviewable_ids]).to include(
+          queued_post_reviewable.id,
+          user_reviewable.id,
+        )
+        expect(queued_post_reviewable.reload).to be_rejected
+        expect(user_reviewable.reload).to be_rejected
+      end
+    end
+
     it "sends email when deleting a spammer" do
       SiteSetting.simple_email_subject = true
       expect { reviewable.perform(moderator, :delete_user) }.to change {

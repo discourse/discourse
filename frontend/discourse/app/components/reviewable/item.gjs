@@ -478,7 +478,7 @@ export default class ReviewableItem extends Component {
     return this.#unclaimAutomaticReviewable();
   }
 
-  _performResult(result, performableAction, reviewable) {
+  async _performResult(result, performableAction, reviewable) {
     // "fast track" to update the current user's reviewable count before the message bus finds out.
     if (result.reviewable_count !== undefined) {
       this.currentUser.updateReviewableCount(result.reviewable_count);
@@ -498,7 +498,7 @@ export default class ReviewableItem extends Component {
     }
 
     if (result.refresh_reviewable_ids?.length > 0) {
-      this.store.findAll("reviewable", {
+      await this.store.findAll("reviewable", {
         ids: result.refresh_reviewable_ids,
         status: "all",
       });

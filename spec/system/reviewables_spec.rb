@@ -82,17 +82,24 @@ describe "Reviewables" do
         PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
       sibling_reviewable =
         PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
+      queued_post_reviewable =
+        Fabricate(
+          :reviewable_queued_post,
+          created_by: Discourse.system_user,
+          target_created_by: spammer,
+        )
+      user_reviewable = ReviewableUser.create_for(spammer)
 
       using_session(:other_tab) do
         sign_in(admin)
         visit("/review")
 
-        expect(review_page).to have_reviewable_items(count: 2)
+        expect(review_page).to have_reviewable_items(count: 4)
       end
 
       visit("/review")
 
-      expect(review_page).to have_reviewable_items(count: 2)
+      expect(review_page).to have_reviewable_items(count: 4)
 
       review_page.select_bundled_action(
         flagged_post_reviewable,
@@ -102,10 +109,14 @@ describe "Reviewables" do
 
       expect(review_page).to have_reviewable_with_approved_status(flagged_post_reviewable)
       expect(review_page).to have_reviewable_with_approved_status(sibling_reviewable)
+      expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+      expect(review_page).to have_reviewable_with_rejected_status(user_reviewable)
 
       using_session(:other_tab) do
         expect(review_page).to have_reviewable_with_approved_status(flagged_post_reviewable)
         expect(review_page).to have_reviewable_with_approved_status(sibling_reviewable)
+        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+        expect(review_page).to have_reviewable_with_rejected_status(user_reviewable)
       end
     end
   end

@@ -187,20 +187,22 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    refresh_reviewable_ids = related_reviewable_ids_for_deleted_user
+    related_reviewables = related_reviewables_for_deleted_user.to_a
+    resolve_related_reviewables_for_deleted_user(related_reviewables, performed_by)
 
     super
     result = agree(performed_by, args)
-    result.refresh_reviewable_ids |= refresh_reviewable_ids
+    result.refresh_reviewable_ids |= related_reviewables.map(&:id)
     result
   end
 
   def perform_delete_and_block_user(performed_by, args)
-    refresh_reviewable_ids = related_reviewable_ids_for_deleted_user
+    related_reviewables = related_reviewables_for_deleted_user.to_a
+    resolve_related_reviewables_for_deleted_user(related_reviewables, performed_by)
 
     super
     result = agree(performed_by, args)
-    result.refresh_reviewable_ids |= refresh_reviewable_ids
+    result.refresh_reviewable_ids |= related_reviewables.map(&:id)
     result
   end
 
@@ -353,15 +355,27 @@ class ReviewableFlaggedPost < Reviewable
 
   private
 
-  def related_reviewable_ids_for_deleted_user
-    return [] if target_created_by_id.blank?
+  def related_reviewables_for_deleted_user
+    return Reviewable.none if target_created_by_id.blank?
 
     Reviewable
       .pending
-      .where(target_created_by_id: target_created_by_id)
-      .where(type: %w[ReviewableFlaggedPost ReviewablePost])
       .where.not(id: id)
-      .pluck(:id)
+      .where(
+        "target_created_by_id = :user_id OR (target_type = 'User' AND target_id = :user_id)",
+        user_id: target_created_by_id,
+      )
+  end
+
+  def resolve_related_reviewables_for_deleted_user(reviewables, performed_by)
+    reviewables.each do |reviewable|
+      case reviewable
+      when ReviewableQueuedPost
+        reviewable.perform(performed_by, :reject_post)
+      when ReviewableUser
+        reviewable.transition_to(:rejected, performed_by)
+      end
+    end
   end
 
   def destroyer(performed_by, post)

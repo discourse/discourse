@@ -32,10 +32,16 @@ RSpec.describe Jobs::NotifyReviewable do
 
       # Content for moderators
       moderator_reviewable = Fabricate(:reviewable, reviewable_by_moderator: true)
+      reviewed_moderator_reviewable = Fabricate(:reviewable, reviewable_by_moderator: true)
+      reviewed_moderator_reviewable.update!(status: :approved)
 
       messages =
         MessageBus.track_publish do
-          described_class.new.execute(reviewable_id: moderator_reviewable.id)
+          described_class.new.execute(
+            reviewable_id: moderator_reviewable.id,
+            performing_username: moderator.username,
+            updated_reviewable_ids: [reviewed_moderator_reviewable.id],
+          )
         end
       expect(messages.size).to eq(2)
 
@@ -44,12 +50,20 @@ RSpec.describe Jobs::NotifyReviewable do
       expect(admin_message.channel).to eq("/reviewable_counts/#{admin.id}")
       expect(admin_message.data[:reviewable_count]).to eq(2)
       expect(admin_message.data[:unseen_reviewable_count]).to eq(1)
+      expect(admin_message.data[:updates][reviewed_moderator_reviewable.id]).to eq(
+        last_performing_username: moderator.username,
+        status: Reviewable.statuses[:approved],
+      )
 
       moderator_message = messages.find { |m| m.user_ids == [moderator.id] }
 
       expect(moderator_message.channel).to eq("/reviewable_counts/#{moderator.id}")
       expect(moderator_message.data[:reviewable_count]).to eq(1)
       expect(moderator_message.data[:unseen_reviewable_count]).to eq(1)
+      expect(moderator_message.data[:updates][reviewed_moderator_reviewable.id]).to eq(
+        last_performing_username: moderator.username,
+        status: Reviewable.statuses[:approved],
+      )
 
       moderator.update!(last_seen_reviewable_id: moderator_reviewable.id)
 
