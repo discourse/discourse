@@ -362,6 +362,58 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.strictEqual(this.formApi.get("entries.values").length, 1);
   });
 
+  test("renders assignment collections without clear action", async function (assert) {
+    this.setProperties({
+      configuration: {
+        assignments: {
+          assignments: [
+            {
+              id: "status-assignment",
+              name: "status",
+              type: "string",
+              value: "open",
+            },
+          ],
+        },
+      },
+      nodeType: "action:set_fields",
+      schema: {
+        assignments: {
+          type: "assignment_collection",
+          type_options: {
+            assignment_types: ["string"],
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".workflows-property-engine__collection-row")
+      .exists("existing assignments are rendered");
+    assert
+      .dom(
+        ".workflows-property-engine__block-actions .workflows-property-engine__add-attrs-btn .d-icon-plus"
+      )
+      .exists("the add field action uses the centered block action UI");
+    assert
+      .dom(".workflows-property-engine__block-actions .d-icon-xmark")
+      .doesNotExist("the clear fields action is not rendered");
+  });
+
   test("renders condition builder controls inside the property engine", async function (assert) {
     this.setProperties({
       configuration: {
