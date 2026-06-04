@@ -5114,15 +5114,7 @@ nl:
       invalid:
         one: "De geselecteerde tag kan niet worden gebruikt"
         other: "Geen van de geselecteerde tags kan worden gebruikt"
-      in_this_category: '"%{tag_name}" kan niet gebruikt worden in deze categorie'
-      restricted_to:
-        one: '"%{tag_name}" is beperkt tot de categorie "%{category_names}"'
-        other: '"%{tag_name}" is beperkt tot de volgende categorieën: %{category_names}'
-      restricted_to_truncated: '"%{tag_name}" is beperkt tot de volgende categorieën: %{category_names} en nog %{more_count}'
-      synonym: 'Dit is een synoniem voor ''%{tag_name}''. Gebruik in plaats daarvan ''%{tag_name}''.'
       has_synonyms: '''%{tag_name}'' kan niet worden gebruikt, omdat deze geen synoniemen heeft.'
-      one_tag_per_topic_group: 'Per topic is slechts één tag uit de groep ''%{tag_group_name}'' toegestaan.'
-      missing_parent_tag: 'Vereist de tag ''%{parent_tag_name}'' om tags uit de groep ''%{tag_group_name}'' te gebruiken'
       restricted_tags_cannot_be_used_in_category:
         one: 'De tag "%{tags}" kan niet worden gebruikt in de categorie "%{category}". Verwijder deze alsjeblieft.'
         other: 'De volgende tags kunnen niet worden gebruikt in de categorie "%{category}": %{tags}. Verwijder deze alsjeblieft.'

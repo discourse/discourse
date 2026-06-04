@@ -4657,10 +4657,6 @@ fi:
       invalid:
         one: "Valitsemaasi tunnistetta ei voi käyttää"
         other: "Mitään valitsemistasi tunnisteista ei voi käyttää"
-      in_this_category: 'Tunnistetta "%{tag_name}" ei voi käyttää tällä alueella'
-      restricted_to:
-        one: 'Tunnistetta "%{tag_name}" voi käyttää ainoastaan alueella %{category_names}'
-        other: 'Tunnistetta "%{tag_name}" voi käyttää ainoastaan seuraavilla alueilla: %{category_names}'
       has_synonyms: 'Tunnistetta "%{tag_name}" ei voi käyttää, koska sillä on synonyymejä.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Tunnistetta "%{tags}" ei voi käyttää alueella "%{category}". Poista se.'

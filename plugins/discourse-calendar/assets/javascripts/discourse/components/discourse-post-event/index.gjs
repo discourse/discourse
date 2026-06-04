@@ -7,6 +7,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -214,7 +215,7 @@ export default class DiscoursePostEvent extends Component {
                   <span class="name">
                     {{#if @linkToPost}}
                       <a
-                        href={{event.post.url}}
+                        href={{getURL event.post.url}}
                         rel="noopener noreferrer"
                       >{{dReplaceEmoji this.eventName}}</a>
                     {{else}}

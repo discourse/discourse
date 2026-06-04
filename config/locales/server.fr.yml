@@ -4762,10 +4762,6 @@ fr:
       invalid:
         one: "L'étiquette que vous avez sélectionnée ne peut pas être utilisée"
         other: "Aucune des étiquettes que vous avez sélectionnées ne peut être utilisée"
-      in_this_category: 'L''étiquette « %{tag_name} » ne peut pas être utilisée dans cette catégorie'
-      restricted_to:
-        one: 'L''étiquette « %{tag_name} » est réservée à la catégorie « %{category_names} »'
-        other: 'L''étiquette « %{tag_name} » est réservée aux catégories suivantes : %{category_names}'
       has_synonyms: 'L''étiquette « %{tag_name} » ne peut pas être utilisée car elle a des synonymes.'
       restricted_tags_cannot_be_used_in_category:
         one: 'L''étiquette « %{tags} » ne peut pas être utilisée dans la catégorie « %{category} ». Veuillez la supprimer.'

@@ -9,7 +9,7 @@ en:
           kpi:
             accepted_solutions:
               label: "Accepted solutions"
-              tooltip: "The number of topics that had a post marked as the solution in this period."
+              tooltip: "The number of topics that had a post marked as the solution."
   js:
     notifications:
       alt:

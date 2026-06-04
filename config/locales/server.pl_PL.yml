@@ -2877,6 +2877,31 @@ pl_PL:
     results_page: "Wyniki wyszukiwania dla '%{term}'"
     audio: "[dźwięk]"
     video: "[wideo]"
+  posts_filter:
+    description:
+      category: "Pokaż wpisy w określonej kategorii"
+      category_any: "Pokaż wpisy w dowolnej z określonych kategorii (rozdzielone przecinkami)"
+      exclude_category: "Wyklucz wpisy z określonej kategorii"
+      category_without_subcategories: "Pokaż wpisy tylko w kategorii nadrzędnej, z wyłączeniem podkategorii"
+      exclude_category_without_subcategories: "Wyklucz wpisy tylko z kategorii nadrzędnej, a nie z podkategorii"
+      tag: "Pokaż wpisy z określonym tagiem"
+      tags_any: "Pokaż wpisy z dowolnym ze wskazanych tagów (rozdzielone przecinkami)"
+      exclude_tag: "Wyklucz wpisy z określonym tagiem"
+      username: "Pokaż wpisy konkretnego użytkownika"
+      usernames_any: "Pokaż wpisy dowolnego ze wskazanych użytkowników (rozdzielone przecinkami)"
+      group: "Pokaż wpisy członków grupy"
+      groups_any: "Pokaż wpisy członków dowolnej określonej grupy (rozdzielone przecinkami)"
+      topic: "Pokaż wpisy w określonych tematach"
+      after: "Pokaż wpisy utworzone po określonej dacie (RRRR-MM-DD lub dni temu)"
+      before: "Pokaż wpisy utworzone przed datą (RRRR-MM-DD lub dni temu)"
+      topic_after: "Pokaż wpisy w tematach utworzonych po określonej dacie (RRRR-MM-DD lub dni temu)"
+      topic_before: "Pokaż wpisy w tematach utworzonych przed datą (RRRR-MM-DD lub dni temu)"
+      keywords: "Pokaż wpisy zawierające dowolne ze wskazanych słów kluczowych"
+      topic_keywords: "Pokaż wpisy w tematach zawierających dowolne ze wskazanych słów kluczowych"
+      post_type: "Pokaż pierwsze wpisy lub odpowiedzi"
+      status: "Filtruj wpisy według statusu tematu"
+      order: "Sortuj wpisy"
+      max_results: "Maksymalna liczba wpisów do zwrócenia"
   filter:
     description:
       status: "Filtruj tematy według ich statusu"
@@ -5495,18 +5520,18 @@ pl_PL:
         few: "Nie można użyć wybranych tagów"
         many: "Nie można użyć wybranych tagów"
         other: "Nie można użyć wybranych tagów"
-      in_this_category: '"%{tag_name}" nie może być użyty w tej kategorii'
-      not_allowed: 'Nie można użyć „%{tag_name}”'
+      in_this_category: "Nie można używać w tej kategorii"
+      not_allowed: "Nie można używać"
       restricted_to:
-        one: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'
-        few: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'
-        many: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'
-        other: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'
-      restricted_to_truncated: '„%{tag_name}” jest ograniczony do następujących kategorii: %{category_names} i %{more_count} więcej'
-      synonym: 'To synonim „%{tag_name}”. Zamiast tego użyj „%{tag_name}”.'
+        one: 'Dostępne tylko w kategorii „%{category_names}”'
+        few: "Dostępne tylko w: %{category_names}"
+        many: "Dostępne tylko w: %{category_names}"
+        other: "Dostępne tylko w: %{category_names}"
+      restricted_to_truncated: "Dostępne tylko w: %{category_names} i %{more_count} więcej"
+      synonym: 'Zamiast tego użyj „%{tag_name}”'
       has_synonyms: 'Nie można użyć "%{tag_name}", ponieważ zawiera synonimy.'
-      one_tag_per_topic_group: 'W jednym temacie dozwolony jest tylko jeden tag z grupy „%{tag_group_name}”'
-      missing_parent_tag: 'Wymaga znacznika „%{parent_tag_name}”, aby używać znaczników z grupy „%{tag_group_name}”'
+      one_tag_per_topic_group: 'Konflikty z „%{tag_names}” (dozwolony tylko jeden na temat)'
+      missing_parent_tag: 'Dostępne po dodaniu znacznika „%{parent_tag_name}”'
       restricted_tags_cannot_be_used_in_category:
         one: 'Tag "%{tags}" nie może być użyty w kategorii "%{category}". Usuń go.'
         few: 'Następujące tagi nie mogą być używane w kategorii "%{category}": %{tags}. Usuń je.'

@@ -1932,12 +1932,6 @@ sl:
     submit_button: "Pošlji e-sporočilo"
   tags:
     title: "Oznake"
-    forbidden:
-      restricted_to:
-        one: '"%{tag_name}" oznaka je omejena za kategorijo "%{category_names}"'
-        two: '"%{tag_name}" oznaka je omejena samo za naslednji kategoriji: %{category_names}'
-        few: '"%{tag_name}" oznaka je omejena samo za naslednje kategorije: %{category_names}'
-        other: '"%{tag_name}" oznaka je omejena samo za naslednje kategorije: %{category_names}'
   finish_installation:
     register:
       button: "Registracija"

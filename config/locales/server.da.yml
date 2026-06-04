@@ -3097,10 +3097,6 @@ da:
       invalid:
         one: "Det mærke, du valgte, kan ikke bruges"
         other: "Ingen af de tags, du har valgt, kan bruges"
-      in_this_category: '"%{tag_name}" kan ikke bruges i denne kategori'
-      restricted_to:
-        one: '"%{tag_name}" er begrænset til kategorien "%{category_names}"'
-        other: '"%{tag_name}" er begrænset til følgende kategorier: %{category_names}'
       has_synonyms: '"%{tag_name}" kan ikke bruges, fordi den har synonymer.'
     invalid_target_tag: "kan ikke være synonym for et synonym"
     synonyms_exist: "er ikke tilladt, mens synonymer eksisterer"

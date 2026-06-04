@@ -501,6 +501,45 @@ describe "Post event" do
     end
   end
 
+  context "when inviting a user or group" do
+    let!(:post) do
+      PostCreator.create(
+        admin,
+        title: "My test meetup event",
+        raw: "[event name='cool-event' status='public' start='2222-02-22 00:00' ]\n[/event]",
+      )
+    end
+
+    fab!(:invitable_user, :user)
+
+    it "notifies the invited user and closes the modal" do
+      visit(post.topic.url)
+
+      post_event_page.open_invite_user_or_group_modal
+
+      chooser =
+        PageObjects::Components::SelectKit.new(
+          ".post-event-invite-user-or-group .email-group-user-chooser",
+        )
+      chooser.expand
+      chooser.search(invitable_user.username)
+      chooser.select_row_by_value(invitable_user.username)
+      chooser.collapse
+
+      find(".post-event-invite-user-or-group .d-modal__footer .btn-primary").click
+
+      expect(page).to have_no_css(".post-event-invite-user-or-group")
+      expect(PageObjects::Components::Toasts.new).to have_success(
+        I18n.t("js.discourse_post_event.invite_user_or_group.success"),
+      )
+      expect(
+        invitable_user.notifications.where(
+          notification_type: Notification.types[:event_invitation],
+        ),
+      ).to be_present
+    end
+  end
+
   context "with add to calendar from more menu" do
     it "includes rrule for recurring events" do
       admin.user_option.update!(default_calendar: "ics")

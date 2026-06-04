@@ -217,7 +217,7 @@ module("Integration | Component | Dashboard | KpiTile", function (hooks) {
     assert
       .dom(".fk-d-tooltip__content")
       .includesText(
-        "Accounts created in this period, including unactivated and staged accounts."
+        "Accounts created, including unactivated and staged accounts."
       );
   });
 

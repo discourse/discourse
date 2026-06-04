@@ -4526,10 +4526,6 @@ ug:
       invalid:
         one: "سىز تاللىغان بەلگىنى ئىشلەتكىلى بولمايدۇ"
         other: "سىز تاللىغان بەلگىنى ئىشلەتكىلى بولمايدۇ"
-      in_this_category: 'بۇ سەھىپىدە «%{tag_name}» نى ئىشلەتكىلى بولمايدۇ'
-      restricted_to:
-        one: '«%{tag_name}» تۆۋەندىكى سەھىپىدىلا ئىشلتىلىدۇ: %{category_names}'
-        other: '«%{tag_name}» تۆۋەندىكى سەھىپىدىلا ئىشلتىلىدۇ: %{category_names}'
       has_synonyms: '«%{tag_name}» ئىشلەتكىلى بولمايدۇ چۈنكى ئۇنىڭ مەنىداش سۆزى بار.'
       restricted_tags_cannot_be_used_in_category:
         one: 'بۇ «%{tags}» بەلگىنى «%{category}» سەھىپىدە ئىشلىتىشكە بولمايدۇ. ئۇنى چىقىرىۋېتىڭ.'

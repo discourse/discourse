@@ -4355,18 +4355,6 @@ dashboard:
       - reports
       - features
     area: "reports"
-  admin_dashboard_sections:
-    type: list
-    list_type: compact
-    default: "highlights|reports|traffic|engagement"
-    allow_any: false
-    choices:
-      - highlights
-      - reports
-      - traffic
-      - engagement
-    area: "reports"
-    hidden: true
   dashboard_general_tab_activity_metrics:
     client: true
     type: list

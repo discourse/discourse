@@ -211,7 +211,7 @@ export default class DashboardTraffic extends Component {
                 <DTooltip
                   class="db-section__info"
                   @identifier="site-traffic-comparison-tooltip"
-                  @icon="circle-question"
+                  @icon="far-circle-question"
                 >
                   <:content>{{this.comparisonTooltipText}}</:content>
                 </DTooltip>
@@ -237,7 +237,7 @@ export default class DashboardTraffic extends Component {
                   <DTooltip
                     class="db-section__info"
                     @identifier="site-traffic-logged-in-share-tooltip"
-                    @icon="circle-question"
+                    @icon="far-circle-question"
                   >
                     <:content>
                       {{i18n
