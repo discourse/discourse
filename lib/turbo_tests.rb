@@ -7,7 +7,20 @@ require "fileutils"
 require "json"
 require "rspec"
 require "rails"
+
+# The orchestrator process only spawns and supervises worker subprocesses;
+# each worker boots Rails (and eager-loads) via `rails_helper.rb` in its
+# own child. `config/environments/test.rb` keys `config.eager_load` off
+# `ENV["CI"]`, so temporarily unset `CI` across the parent's Rails boot to
+# skip the parent's eager-load pass (pure overhead on the orchestrator's
+# critical path — no Discourse class is referenced by the parent's run
+# loop, formatters, or the FakeExample wrapper; whatever it does touch
+# autoloads cleanly once initializers have run). `ENV["CI"]` is restored
+# before any child is spawned via `Open3.popen3`, so workers still
+# inherit `CI=1` and continue to eager-load as before.
+saved_ci_for_turbo_rspec_parent_boot = ENV.delete("CI")
 require File.expand_path("../../config/environment", __FILE__)
+ENV["CI"] = saved_ci_for_turbo_rspec_parent_boot if saved_ci_for_turbo_rspec_parent_boot
 
 require "parallel_tests"
 require "parallel_tests/rspec/runner"
