@@ -137,7 +137,22 @@ module TurboTests
     end
 
     def start_multisite_subprocess(tests, **opts)
-      start_subprocess({}, %w[--tag type:multisite], tests, "multisite", **opts)
+      # System specs (under `spec/system/**` or `plugins/**/spec/system/**`)
+      # never carry `type: :multisite` by convention. When the input file list
+      # is entirely system specs, the multisite worker would otherwise boot
+      # the full Rails stack, parse every input file to scan for the tag, and
+      # exit without running a single example. Pass an empty list in that
+      # case so `start_subprocess` short-circuits via its `if tests.empty?`
+      # branch — no rspec process spawns, the exit accounting stays correct,
+      # and the CPU it would have consumed during the boot phase stays free
+      # for the regular workers.
+      multisite_tests = system_specs_only?(tests) ? [] : tests
+      start_subprocess({}, %w[--tag type:multisite], multisite_tests, "multisite", **opts)
+    end
+
+    def system_specs_only?(tests)
+      return false if tests.empty?
+      tests.all? { |f| f.match?(%r{(?:\A|/)(?:spec|plugins/[^/]+/spec)/system/}) }
     end
 
     def start_regular_subprocess(tests, process_id, **opts)
