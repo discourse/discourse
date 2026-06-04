@@ -29,6 +29,24 @@ ENV["RAILS_ENV"] ||= "test"
 ENV["ENABLE_LOGSTASH_LOGGER"] ||= "1"
 require File.expand_path("../../config/environment", __FILE__)
 Discourse.singleton_class.prepend(RspecWarnExceptionCapture)
+
+# In CI, neutralize ActiveRecord query log tags + verbose query logs. Both
+# enabled in `config/environments/test.rb`, but their output is unreachable
+# under `RAILS_TEST_LOG_LEVEL=error`. The compute cost is not: every AR
+# query runs the `request_path` / `Thread.current.object_id` lambdas and
+# builds an SQL comment, and `verbose_query_logs` walks the Ruby stack via
+# caller_locations on every log emit. Override `QueryLogs.comment` to a
+# constant nil so the prepended `call(sql, connection)` exits in one branch
+# without iterating handlers or touching the execution context.
+if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
+  ActiveRecord.verbose_query_logs = false
+
+  if defined?(ActiveRecord::QueryLogs)
+    ActiveRecord::QueryLogs.tags = []
+    ActiveRecord::QueryLogs.singleton_class.define_method(:comment) { |_connection| nil }
+  end
+end
+
 require "rspec/rails"
 require "shoulda-matchers"
 require "sidekiq/testing"
