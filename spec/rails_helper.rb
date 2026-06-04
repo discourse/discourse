@@ -60,48 +60,6 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
   # `Notifications.subscribed { ... }` to attach a transient subscriber for
   # the duration of a block, so query-counting tests still work unchanged.
   ActiveSupport::Notifications.notifier.unsubscribe("sql.active_record")
-
-  # Short-circuit lograge's per-request payload build for all controllers
-  # except `PageviewController` in CI.
-  #
-  # `config/initializers/101-lograge.rb` registers a
-  # `process_action.action_controller` subscriber that, for every HTTP
-  # request the test Puma serves, runs:
-  #
-  #   • Lograge's `extract_request` (5 hash merges over
-  #     initial_data/status/allocations/runtimes/location/unpermitted),
-  #   • Discourse's `custom_payload` lambda
-  #     (`controller.current_user`, `request.remote_ip` with rescues),
-  #   • Discourse's `custom_options` lambda
-  #     (`params.except(*).to_query`, `RailsMultisite::ConnectionManagement.current_db`,
-  #     optional `MethodProfiler` and `GC.stat` digs),
-  #   • `Lograge::Formatters::Logstash#call`
-  #     (`LogStash::Event.new(data)` + `to_json`),
-  #   • `logger.error(formatted_message)` →
-  #     `DiscourseLogstashLogger#add_with_opts`, which JSON-parses the
-  #     formatted message, re-merges fields into an event hash, and
-  #     `@logdev.write`s a JSON line to `log/test.log`.
-  #
-  # `Lograge.ignore?(event)` is checked at the *top* of
-  # `Lograge::LogSubscribers::Base#process_main_event` — when any
-  # registered ignore lambda returns truthy, the subscriber returns
-  # immediately and every step above is skipped (including the disk
-  # write). The `Notifications::Event` allocation + dispatch into the
-  # subscriber still happens, but the per-request body of work is
-  # eliminated.
-  #
-  # `spec/system/request_tracker_spec.rb` is the only system spec that
-  # reads from `log/test.log` (via `capture_log_entries`), and it only
-  # asserts on `PageviewController` piggyback / beacon entries fabricated
-  # by `Middleware::RequestTracker#instrument_browser_page_view`. Keeping
-  # `PageviewController` events un-ignored preserves that flow.
-  if defined?(Lograge)
-    Lograge.ignore(
-      lambda do |event|
-        (controller = event.payload[:controller]) && controller != "PageviewController"
-      end,
-    )
-  end
 end
 
 require "rspec/rails"
