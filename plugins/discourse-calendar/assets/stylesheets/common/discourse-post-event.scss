@@ -148,7 +148,7 @@ $show-interested: inherit;
 
     .month {
       text-align: center;
-      color: red;
+      color: var(--primary);
       font-size: var(--font-down-2);
       font-weight: 400;
       text-transform: uppercase;
