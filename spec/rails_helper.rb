@@ -184,6 +184,15 @@ RSpec.configure do |config|
 
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!
+
+    # Mark the process as post-boot: full GC + compact, promote all currently
+    # live objects (Rails framework, Discourse app, every required spec/support
+    # file, fabricators, page objects, gems) to the old generation so future
+    # major GCs don't re-mark them, and trim malloc free space back to the OS.
+    # Workers run for ~8-9 minutes each; paying a one-time ~100-500ms compact
+    # cost at the boundary between boot-time allocation and test-time
+    # allocation shrinks the GC pressure profile for the rest of the run.
+    Process.warmup if ENV["CI"] && Process.respond_to?(:warmup)
   end
 
   config.after(:suite) { Downloads.clear }
