@@ -293,6 +293,49 @@ export function inputForRun(
   return input;
 }
 
+function connectedSourceOutputForInput(
+  runData,
+  nodeName,
+  { node, sourceNode, outputIndex = 0 } = {}
+) {
+  if (latestSuccessfulRun(runData, nodeName, { node }) || !sourceNode?.name) {
+    return null;
+  }
+
+  const sourceRun = latestRunWithOutput(runData, sourceNode.name, {
+    node: sourceNode,
+  });
+  return outputForRun(sourceRun, outputIndex);
+}
+
+function inputPreviewPort(
+  runData,
+  nodeName,
+  { inputIndex = 0, node, sourceNode, outputIndex = 0 } = {}
+) {
+  const run = latestRunWithInput(runData, nodeName, {
+    inputIndex,
+    node,
+    sourceNode,
+    outputIndex,
+  });
+  const input = inputForRun(run, inputIndex, { sourceNode, outputIndex });
+  if (input) {
+    return { port: input, source: "input" };
+  }
+
+  const output = connectedSourceOutputForInput(runData, nodeName, {
+    node,
+    sourceNode,
+    outputIndex,
+  });
+  if (output) {
+    return { port: output, source: "source_output" };
+  }
+
+  return { port: null, source: null };
+}
+
 export function schemaFieldsForNodeOutput(
   runData,
   nodeName,
@@ -308,14 +351,13 @@ export function schemaFieldsForNodeInput(
   nodeName,
   { inputIndex = 0, prefix = "$json", node, sourceNode, outputIndex = 0 } = {}
 ) {
-  const run = latestRunWithInput(runData, nodeName, {
+  const { port } = inputPreviewPort(runData, nodeName, {
     inputIndex,
     node,
     sourceNode,
     outputIndex,
   });
-  const input = inputForRun(run, inputIndex, { sourceNode, outputIndex });
-  return schemaFieldsForItems(input?.items || [], { prefix });
+  return schemaFieldsForItems(port?.items || [], { prefix });
 }
 
 function portSummary(port, indexKey) {
@@ -346,16 +388,17 @@ export function inputSummaryForNode(
   inputIndex = 0,
   { node, sourceNode, outputIndex = 0 } = {}
 ) {
-  const run = latestRunWithInput(runData, nodeName, {
+  const { port, source } = inputPreviewPort(runData, nodeName, {
     inputIndex,
     node,
     sourceNode,
     outputIndex,
   });
-  return portSummary(
-    inputForRun(run, inputIndex, { sourceNode, outputIndex }),
-    "inputIndex"
-  );
+  const summary = portSummary(port, "inputIndex");
+  if (summary && source === "source_output") {
+    summary.inputIndex = inputIndex;
+  }
+  return summary;
 }
 
 function combinedPortSummary(ports, itemCount) {

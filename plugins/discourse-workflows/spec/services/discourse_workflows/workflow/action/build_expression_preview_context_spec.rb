@@ -127,8 +127,54 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
           context "when the current node has no recorded input data" do
             let(:node_id) { "action-1" }
 
-            it "uses the default input context" do
-              expect(context["$json"]).to eq({})
+            it "uses the connected upstream output for input context" do
+              expect(context["$json"]).to eq({ "title" => "From past run" })
+              expect(context["__input_item"]).to eq(items.first)
+              expect(context["__input_items"]).to eq(items)
+              expect(context["__input_sources"]).to eq(
+                [{ "node_name" => "Topic created", "output_index" => 0 }],
+              )
+            end
+          end
+
+          context "when the current node only has a skipped run" do
+            let(:node_id) { "action-1" }
+
+            before do
+              execution.execution_data.update!(
+                data: {
+                  "entries" => {
+                  },
+                  "context" => {
+                  },
+                  "node_contexts" => {
+                  },
+                  "run_data" =>
+                    run_data_for(
+                      "trigger-1",
+                      node_name: "Topic created",
+                      node_type: "trigger:topic_created",
+                      items: items,
+                    ).deep_merge(
+                      run_data_for(
+                        "action-1",
+                        node_name: "Tag topic",
+                        node_type: "action:topic_tags",
+                        items: items,
+                        status: "skipped",
+                      ),
+                    ),
+                },
+              )
+            end
+
+            it "uses the connected upstream output for input context" do
+              expect(context["$json"]).to eq({ "title" => "From past run" })
+              expect(context["__input_item"]).to eq(items.first)
+              expect(context["__input_items"]).to eq(items)
+              expect(context["__input_sources"]).to eq(
+                [{ "node_name" => "Topic created", "output_index" => 0 }],
+              )
             end
           end
 

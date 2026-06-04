@@ -294,12 +294,10 @@ module(
       ].map((el) => el.textContent.trim());
 
       assert.true(firstTitle.includes("First Step"));
-      assert.false(firstTitle.includes("1 item"));
+      assert.true(firstTitle.includes("1 item"));
       assert.dom(".workflows-context-panel__item-title").doesNotExist();
-      assert.false(keys.includes("result"));
-      assert
-        .dom(".workflows-context-panel__empty")
-        .hasText("No input data yet. It will appear after the first run.");
+      assert.true(keys.includes("result"));
+      assert.dom(".workflows-context-panel__empty").doesNotExist();
     });
 
     test("shows an empty input state when the input has no JSON fields", async function (assert) {
