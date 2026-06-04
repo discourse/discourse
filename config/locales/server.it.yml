@@ -1628,9 +1628,6 @@ it:
       maxmind_db_configuration: 'Il server è stato configurato in modo da usare i database MaxMind per la ricerca inversa dell''indirizzo IP, ma non è stato ancora configurato un ID account MaxMind. Di conseguenza, in futuro potrebbe non essere possibile scaricare i database MaxMind. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Consulta questa guida per approfondimenti</a>.'
       admin_sidebar_deprecation: "Il vecchio layout di amministrazione è deprecato in favore del nuovo layout della <a href='https://meta.discourse.org/t/-/289281'>barra laterale</a> e verrà rimosso nella prossima versione. Puoi <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurare</a> il nuovo layout della barra laterale ora per aderire prima di allora."
     back_from_logster_text: "Torna al sito"
-    reports_section:
-      providers:
-        core_report: "Standard"
   site_settings:
     allow_bulk_invite: "Consenti inviti di massa caricando un file CSV"
     disabled: "disabilitato"

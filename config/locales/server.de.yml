@@ -1681,9 +1681,6 @@ de:
       admin_sidebar_deprecation: "Das alte Admin-Layout wird vom neuen <a href='https://meta.discourse.org/t/-/289281'>Seitenleisten-Layout</a> abgelöst und in der nächsten Version entfernt. Du kannst das neue Seitenleisten-Layout jetzt <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>konfigurieren</a>, um es vorher zu aktivieren."
       starttls_disabled: "In der Konfiguration für ausgehende E-Mails ist STARTTLS deaktiviert. Das ist fast nie notwendig. Erwäge, <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> aus deiner Umgebung zu entfernen. Weitere Informationen findest du in <a href='https://meta.discourse.org/t/387286'>diesem Thema</a>."
     back_from_logster_text: "Zurück zur Website"
-    reports_section:
-      providers:
-        core_report: "Standard"
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
     disabled: "deaktiviert"

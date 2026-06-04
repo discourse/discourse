@@ -1884,9 +1884,6 @@ pl_PL:
       admin_sidebar_deprecation: "Stary układ administracyjny jest przestarzały na rzecz nowego <a href='https://meta.discourse.org/t/-/289281'>układu paska bocznego</a> i zostanie usunięty w następnej wersji. Możesz <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>skonfigurować</a> nowy układ paska bocznego już teraz, aby wcześniej się na niego przełączyć."
       starttls_disabled: "W konfiguracji poczty wychodzącej wyłączono protokół STARTTLS. Jest to prawie nigdy konieczne. Rozważ usunięcie <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> ze swojego środowiska. Więcej informacji znajdziesz w <a href='https://meta.discourse.org/t/387286'>tym temacie</a> ."
     back_from_logster_text: "Powrót do strony"
-    reports_section:
-      providers:
-        core_report: "Standardowe"
   site_settings:
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"
@@ -2704,7 +2701,6 @@ pl_PL:
     dashboard_hidden_reports: "Zezwalaj na ukrycie określonych raportów z panelu administracyjnego."
     dashboard_visible_tabs: "Wybierz, które karty panelu administracyjnego są widoczne."
     dashboard_general_tab_activity_metrics: "Wybierz raporty, które mają być wyświetlane jako metryki aktywności na karcie ogólne."
-    admin_dashboard_sections: "Sekcje wyświetlane na przeprojektowanym panelu administracyjnym w kolejności wyświetlania. Zarządzane za pomocą menu konfiguracji na panelu."
     gravatar_enabled: "Użyj usługi <a href='https://gravatar.com/'>Gravatar</a> dla awatarów użytkowników. Wyłączenie tej opcji uniemożliwi użytkownikom przełączanie się na Gravatar dla swoich awatarów, ale nie wpłynie to na użytkowników, którzy już z niej korzystają."
     gravatar_name: "Podaj nazwę dostawcy usługi Gravatar. Ta nazwa jest zwykle używana do identyfikacji źródła dostarczającego awatary Gravatar do witryny."
     gravatar_base_url: "Podaj adres URL umożliwiający dostęp do API serwisu Gravatar. To ustawienie jest niezbędne do konwersji adresów e-mail na adresy URL Gravatar, gdzie przechowywane są obrazy awatarów."

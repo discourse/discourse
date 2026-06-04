@@ -1663,9 +1663,6 @@ hu:
       admin_sidebar_deprecation: "A régi adminisztrátori elrendezés elavult, az új <a href='https://meta.discourse.org/t/-/289281'>oldalsávelrendezés helyett</a> , és a következő kiadásban eltávolítjuk. Most már <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>konfigurálhatja</a> az új oldalsáv-elrendezést, hogy azelőtt bekapcsolódjon."
       starttls_disabled: "A kimenő e-mail konfigurációban a STARTTLS le van tiltva. Erre szinte soha nincs szükség. Fontolja meg a <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> eltávolítását a környezetéből. További részletekért tekintse meg <a href='https://meta.discourse.org/t/387286'>ezt a témát</a> ."
     back_from_logster_text: "Vissza az oldalra"
-    reports_section:
-      providers:
-        core_report: "Szabványos"
   site_settings:
     allow_bulk_invite: "Tömeges meghívók engedélyezése CSV-fájl feltöltésével"
     disabled: "kikapcsolva"

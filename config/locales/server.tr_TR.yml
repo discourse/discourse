@@ -1681,9 +1681,6 @@ tr_TR:
       admin_sidebar_deprecation: "Eski yönetici düzeni, yeni <a href='https://meta.discourse.org/t/-/289281'>kenar çubuğu düzeni</a> lehine kullanımdan kaldırıldı ve bir sonraki sürümde kaldırılacak. Bundan önce katılmak için şimdi yeni kenar çubuğu düzenini <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>yapılandırabilirsiniz</a>."
       starttls_disabled: "Giden e-posta yapılandırmasında STARTTLS devre dışı bırakılmıştır. Bu neredeyse hiçbir zaman gerekli değildir. Ortamınızdan <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> öğesini kaldırmayı düşünün. Daha fazla ayrıntı için lütfen <a href='https://meta.discourse.org/t/387286'>bu konuya</a> bakın."
     back_from_logster_text: "Siteye geri dön"
-    reports_section:
-      providers:
-        core_report: "Standart"
   site_settings:
     allow_bulk_invite: "Bir CSV dosyası yükleyerek toplu davetlere izin verin"
     disabled: "devre dışı"

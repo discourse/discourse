@@ -6555,6 +6555,7 @@ cs:
         too_many_requests: Tuto akci jste provedli příliš mnohokrát. Počkejte prosím před dalším pokusem.
         not_found_error: Omlouváme se, tato sestava neexistuje
         custom_date_range: Vlastní období
+        stable: "stabilní"
         sections:
           reports:
             title: "Sestav"
@@ -6576,8 +6577,6 @@ cs:
                 "2": "Člen"
                 "3": "Stálý člen"
                 "4": "Leader"
-              trend:
-                stable: "stabilní"
         reports_section:
           no_data: "Žádná data k zobrazení"
           modal:

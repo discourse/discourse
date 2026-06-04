@@ -1299,9 +1299,6 @@ da:
       out_of_date_themes: "Opdateringer er tilgængelige for følgende temaer:%{themes_list}"
       google_analytics_version: "Din Discourse bruger i øjeblikket Google Analytics 3, som ikke længere vil blive understøttet efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Opgrader til Google Analytics 4</a> nu for fortsat at modtage værdifulde indsigter og analyser af dit websteds ydeevne."
     back_from_logster_text: "Tilbage til webstedet"
-    reports_section:
-      providers:
-        core_report: "Standard"
   site_settings:
     disabled: "deaktiveret"
     display_local_time_in_user_card: "Vis den lokale tid baseret på en brugers tidszone, når deres brugerkort åbnes."

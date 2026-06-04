@@ -6666,6 +6666,7 @@ he:
         too_many_requests: ביצעת את הפעולה הזו פעמים רבות מדי. נא להמתין בטרם ביצוע ניסיון חוזר.
         not_found_error: הדוח אינו קיים, עמך הסליחה
         custom_date_range: טווח תאריכים מותאם אישית
+        stable: "יציב"
         sections:
           reports:
             title: "דוחות"
@@ -6690,8 +6691,6 @@ he:
                 "2": "חברים"
                 "3": "רגילה"
                 "4": "מובילים"
-              trend:
-                stable: "יציב"
         reports_section:
           no_data: "אין נתונים להצגה"
           modal:
