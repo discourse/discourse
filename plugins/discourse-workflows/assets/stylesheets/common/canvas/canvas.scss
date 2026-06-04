@@ -309,8 +309,7 @@
 
   &__ai-title-row {
     display: flex;
-    align-items: center;
-    gap: var(--space-3);
+    flex-direction: column;
     min-width: 0;
 
     h3 {
@@ -326,6 +325,12 @@
       font-size: var(--font-down-2);
       line-height: 1.25;
     }
+  }
+
+  &__ai-title {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
   }
 
   &__ai-title-icon {
