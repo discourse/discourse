@@ -41,7 +41,7 @@ module Jobs
       ids = rows.map(&:id)
 
       store_normalized_referrers(rows)
-      BrowserPageviewReferrerDailyRollup.recompute(touched_dates(ids))
+      BrowserPageviewReferrerDailyRollup.recompute(recomputable_dates(ids))
       stamp_version(ids)
     end
 
@@ -86,11 +86,43 @@ module Jobs
       SQL
     end
 
-    def touched_dates(ids)
-      DB.query_single(<<~SQL, ids: ids)
-        SELECT DISTINCT created_at::date
-        FROM browser_pageview_events
-        WHERE id IN (:ids)
+    def recomputable_dates(ids)
+      params = { ids: ids, version: BrowserPageviewReferrerInspector::VERSION }
+
+      retention_clause = ""
+      if SiteSetting.clean_up_browser_pageview_events
+        retention_clause = "AND e.created_at >= :retention_cutoff"
+        params[:retention_cutoff] = BrowserPageviewEvent.retention_cutoff + 1.day
+      end
+
+      DB.query_single(<<~SQL, params)
+        WITH batch_ids AS (
+          SELECT unnest(ARRAY[:ids]::bigint[]) AS id
+        ),
+        touched_dates AS (
+          SELECT DISTINCT created_at::date AS date
+          FROM browser_pageview_events
+          WHERE id IN (:ids)
+        )
+        SELECT touched_dates.date
+        FROM touched_dates
+        WHERE NOT EXISTS (
+          SELECT 1
+          FROM browser_pageview_events e
+          WHERE e.created_at >= touched_dates.date
+            AND e.created_at < touched_dates.date + 1
+            AND e.referrer IS NOT NULL
+            AND NOT EXISTS (
+              SELECT 1
+              FROM batch_ids
+              WHERE batch_ids.id = e.id
+            )
+            AND (
+              e.normalized_referrer_version IS NULL
+              OR e.normalized_referrer_version < :version
+            )
+            #{retention_clause}
+        )
       SQL
     end
 
