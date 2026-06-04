@@ -8,7 +8,15 @@ describe "Admin Dashboard Redesign | Reports section" do
 
   before do
     SiteSetting.dashboard_improvements = true
-    SiteSetting.admin_dashboard_sections = "reports"
+    AdminDashboardSectionConfiguration.update(
+      [
+        { id: "reports", visible: true },
+        { id: "highlights", visible: false },
+        { id: "traffic", visible: false },
+        { id: "engagement", visible: false },
+      ],
+      actor: current_user,
+    )
     AdminDashboardReport.delete_all
     sign_in(current_user)
   end
