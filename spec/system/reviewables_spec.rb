@@ -80,7 +80,7 @@ describe "Reviewables" do
     it "resolves the spammer's other flags in the open review queue and in other tabs" do
       flagged_post_reviewable =
         PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
-      sibling_reviewable =
+      other_flagged_post_reviewable =
         PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
       queued_post_reviewable =
         Fabricate(
@@ -110,14 +110,14 @@ describe "Reviewables" do
       )
 
       expect(review_page).to have_reviewable_with_approved_status(flagged_post_reviewable)
-      expect(review_page).to have_reviewable_with_approved_status(sibling_reviewable)
+      expect(review_page).to have_reviewable_with_approved_status(other_flagged_post_reviewable)
       expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
       expect(review_page).to have_reviewable_with_rejected_status(user_reviewable)
       expect(review_page).to have_no_reviewable(created_reviewable)
 
       using_session(:other_tab) do
         expect(review_page).to have_reviewable_with_approved_status(flagged_post_reviewable)
-        expect(review_page).to have_reviewable_with_approved_status(sibling_reviewable)
+        expect(review_page).to have_reviewable_with_approved_status(other_flagged_post_reviewable)
         expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
         expect(review_page).to have_reviewable_with_rejected_status(user_reviewable)
         expect(review_page).to have_no_reviewable(created_reviewable)
@@ -133,7 +133,7 @@ describe "Reviewables" do
         )
       flagged_post_reviewable =
         PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
-      sibling_reviewable =
+      other_flagged_post_reviewable =
         PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
       created_reviewable =
         Fabricate(:reviewable_queued_post, created_by: spammer, target_created_by: Fabricate(:user))
@@ -153,13 +153,13 @@ describe "Reviewables" do
 
       expect(review_page).to have_no_reviewable(queued_post_reviewable)
       expect(review_page).to have_reviewable_with_approved_status(flagged_post_reviewable)
-      expect(review_page).to have_reviewable_with_approved_status(sibling_reviewable)
+      expect(review_page).to have_reviewable_with_approved_status(other_flagged_post_reviewable)
       expect(review_page).to have_no_reviewable(created_reviewable)
 
       using_session(:other_tab) do
         expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
         expect(review_page).to have_reviewable_with_approved_status(flagged_post_reviewable)
-        expect(review_page).to have_reviewable_with_approved_status(sibling_reviewable)
+        expect(review_page).to have_reviewable_with_approved_status(other_flagged_post_reviewable)
         expect(review_page).to have_no_reviewable(created_reviewable)
       end
     end
