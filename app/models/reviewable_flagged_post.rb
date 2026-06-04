@@ -187,26 +187,20 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    remove_reviewable_ids = reviewable_ids_created_by_deleted_user
-    related_reviewables =
-      related_reviewables_for_deleted_user(except_ids: remove_reviewable_ids).to_a
-    resolve_related_reviewables_for_deleted_user(related_reviewables, performed_by)
-
-    super
+    delete_result = super
     result = agree(performed_by, args)
-    add_deleted_user_reviewable_updates(result, related_reviewables, remove_reviewable_ids)
+    copy_deleted_user_reviewable_updates(result, delete_result)
+    result.remove_reviewable_ids -= [id]
+    result.refresh_reviewable_ids |= [id]
     result
   end
 
   def perform_delete_and_block_user(performed_by, args)
-    remove_reviewable_ids = reviewable_ids_created_by_deleted_user
-    related_reviewables =
-      related_reviewables_for_deleted_user(except_ids: remove_reviewable_ids).to_a
-    resolve_related_reviewables_for_deleted_user(related_reviewables, performed_by)
-
-    super
+    delete_result = super
     result = agree(performed_by, args)
-    add_deleted_user_reviewable_updates(result, related_reviewables, remove_reviewable_ids)
+    copy_deleted_user_reviewable_updates(result, delete_result)
+    result.remove_reviewable_ids -= [id]
+    result.refresh_reviewable_ids |= [id]
     result
   end
 
@@ -358,42 +352,6 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   private
-
-  def related_reviewables_for_deleted_user(except_ids: [])
-    return Reviewable.none if target_created_by_id.blank?
-
-    Reviewable
-      .pending
-      .where.not(id: [id, *except_ids])
-      .where(
-        "target_created_by_id = :user_id OR (target_type = 'User' AND target_id = :user_id)",
-        user_id: target_created_by_id,
-      )
-  end
-
-  def reviewable_ids_created_by_deleted_user
-    return [] if target_created_by_id.blank?
-
-    Reviewable.where(created_by_id: target_created_by_id).where.not(id: id).pluck(:id)
-  end
-
-  def add_deleted_user_reviewable_updates(result, related_reviewables, remove_reviewable_ids)
-    result.remove_reviewable_ids -= [id]
-    result.remove_reviewable_ids |= remove_reviewable_ids
-    result.remove_reviewable_ids_for_update |= remove_reviewable_ids
-    result.refresh_reviewable_ids |= [id, *related_reviewables.map(&:id)]
-  end
-
-  def resolve_related_reviewables_for_deleted_user(reviewables, performed_by)
-    reviewables.each do |reviewable|
-      case reviewable
-      when ReviewableQueuedPost
-        reviewable.perform(performed_by, :reject_post)
-      when ReviewableUser
-        reviewable.transition_to(:rejected, performed_by)
-      end
-    end
-  end
 
   def destroyer(performed_by, post)
     PostDestroyer.new(performed_by, post, reviewable_id: id)

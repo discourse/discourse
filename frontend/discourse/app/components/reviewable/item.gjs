@@ -398,19 +398,16 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateStatus(data) {
-    const shouldRemove = data.remove_reviewable_ids?.includes(
-      this.reviewable.id
-    );
     const shouldRefresh = data.refresh_reviewable_ids?.includes(
       this.reviewable.id
     );
 
-    if (shouldRemove || shouldRefresh) {
+    if (shouldRefresh) {
       this._performResult(
         {
           ...data,
-          remove_reviewable_ids: shouldRemove ? [this.reviewable.id] : [],
-          refresh_reviewable_ids: shouldRefresh ? [this.reviewable.id] : [],
+          remove_reviewable_ids: [],
+          refresh_reviewable_ids: [this.reviewable.id],
         },
         {},
         this.reviewable
@@ -512,7 +509,10 @@ export default class ReviewableItem extends Component {
       this.remove?.(result.remove_reviewable_ids);
     }
 
-    if (!result.remove_reviewable_ids?.includes(reviewable.id)) {
+    if (
+      !result.remove_reviewable_ids?.includes(reviewable.id) ||
+      !this.remove
+    ) {
       return this.store.find("reviewable", reviewable.id);
     }
   }

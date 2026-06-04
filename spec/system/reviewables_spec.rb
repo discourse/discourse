@@ -123,6 +123,46 @@ describe "Reviewables" do
         expect(review_page).to have_no_reviewable(created_reviewable)
       end
     end
+
+    it "resolves the spammer's flags when deleting from a queued post" do
+      queued_post_reviewable =
+        Fabricate(
+          :reviewable_queued_post,
+          created_by: Discourse.system_user,
+          target_created_by: spammer,
+        )
+      flagged_post_reviewable =
+        PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
+      sibling_reviewable =
+        PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
+      created_reviewable =
+        Fabricate(:reviewable_queued_post, created_by: spammer, target_created_by: Fabricate(:user))
+
+      using_session(:other_tab) do
+        sign_in(admin)
+        visit("/review")
+
+        expect(review_page).to have_reviewable_items(count: 4)
+      end
+
+      visit("/review")
+
+      expect(review_page).to have_reviewable_items(count: 4)
+
+      review_page.select_bundled_action(queued_post_reviewable, "delete_user")
+
+      expect(review_page).to have_no_reviewable(queued_post_reviewable)
+      expect(review_page).to have_reviewable_with_approved_status(flagged_post_reviewable)
+      expect(review_page).to have_reviewable_with_approved_status(sibling_reviewable)
+      expect(review_page).to have_no_reviewable(created_reviewable)
+
+      using_session(:other_tab) do
+        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+        expect(review_page).to have_reviewable_with_approved_status(flagged_post_reviewable)
+        expect(review_page).to have_reviewable_with_approved_status(sibling_reviewable)
+        expect(review_page).to have_no_reviewable(created_reviewable)
+      end
+    end
   end
 
   describe "when there is a queued post reviewable with a short post" do

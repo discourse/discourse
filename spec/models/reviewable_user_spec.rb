@@ -160,6 +160,33 @@ RSpec.describe ReviewableUser, type: :model do
         expect(ScreenedIpAddress.should_block?(ip)).to eq(true)
       end
 
+      it "resolves other pending reviewables when rejecting deletes the user" do
+        spammer = reviewable.target
+        queued_post_reviewable =
+          Fabricate(
+            :reviewable_queued_post,
+            created_by: Discourse.system_user,
+            target_created_by: spammer,
+          )
+        created_reviewable =
+          Fabricate(
+            :reviewable_queued_post,
+            created_by: spammer,
+            target_created_by: Fabricate(:user),
+          )
+
+        result = reviewable.perform(moderator, :delete_user, reject_reason: "reject reason")
+
+        expect(result.remove_reviewable_ids).to contain_exactly(
+          reviewable.id,
+          created_reviewable.id,
+        )
+        expect(result.remove_reviewable_ids_for_update).to contain_exactly(created_reviewable.id)
+        expect(result.refresh_reviewable_ids).to contain_exactly(queued_post_reviewable.id)
+        expect(queued_post_reviewable.reload).to be_rejected
+        expect(Reviewable.exists?(id: created_reviewable.id)).to eq(false)
+      end
+
       it "is not sending email to the user about rejection" do
         SiteSetting.must_approve_users = true
         Jobs::CriticalUserEmail.any_instance.expects(:execute).never

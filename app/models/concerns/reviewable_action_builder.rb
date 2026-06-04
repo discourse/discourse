@@ -69,16 +69,26 @@ module ReviewableActionBuilder
   end
 
   def perform_delete_user(performed_by, args, &)
+    affected_reviewables = reviewables_affected_by_deleted_user
+    resolve_reviewables_affected_by_deleted_user(affected_reviewables, performed_by)
+
     delete_user(target_user, delete_opts, performed_by) if target_user
-    create_result(:success, :rejected, [], false, &)
+    result = create_result(:success, :rejected, [], false, &)
+    add_deleted_user_reviewable_updates(result, affected_reviewables)
+    result
   end
 
   def perform_delete_and_block_user(performed_by, args, &)
     delete_options = delete_opts
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
+    affected_reviewables = reviewables_affected_by_deleted_user
+    resolve_reviewables_affected_by_deleted_user(affected_reviewables, performed_by)
+
     delete_user(target_user, delete_options, performed_by) if target_user
-    create_result(:success, :rejected, [], false, &)
+    result = create_result(:success, :rejected, [], false, &)
+    add_deleted_user_reviewable_updates(result, affected_reviewables)
+    result
   end
 
   def perform_delete_post(performed_by, _args)
@@ -153,6 +163,47 @@ module ReviewableActionBuilder
 
     message = UserNotifications.account_deleted(email, self)
     Email::Sender.new(message, :account_deleted).send
+  end
+
+  def reviewables_affected_by_deleted_user
+    return { remove_ids: [], refresh_reviewables: [] } if target_user.blank?
+
+    remove_ids = Reviewable.where(created_by_id: target_user.id).where.not(id: id).pluck(:id)
+    refresh_reviewables =
+      Reviewable
+        .pending
+        .where.not(id: [id, *remove_ids])
+        .where(
+          "target_created_by_id = :user_id OR (target_type = 'User' AND target_id = :user_id)",
+          user_id: target_user.id,
+        )
+        .to_a
+
+    { remove_ids: remove_ids, refresh_reviewables: refresh_reviewables }
+  end
+
+  def resolve_reviewables_affected_by_deleted_user(affected_reviewables, performed_by)
+    affected_reviewables[:refresh_reviewables].each do |reviewable|
+      case reviewable
+      when ReviewableQueuedPost
+        reviewable.perform(performed_by, :reject_post)
+      when ReviewableUser
+        reviewable.transition_to(:rejected, performed_by)
+      end
+    end
+  end
+
+  def add_deleted_user_reviewable_updates(result, affected_reviewables)
+    result.remove_reviewable_ids |= affected_reviewables[:remove_ids]
+    result.remove_reviewable_ids_for_update |= affected_reviewables[:remove_ids]
+    result.refresh_reviewable_ids |= affected_reviewables[:refresh_reviewables].map(&:id)
+  end
+
+  def copy_deleted_user_reviewable_updates(result, source_result)
+    result.remove_reviewable_ids = source_result.remove_reviewable_ids
+    result.remove_reviewable_ids_for_update = source_result.remove_reviewable_ids_for_update
+    result.refresh_reviewable_ids = source_result.refresh_reviewable_ids
+    result
   end
 
   def map_reviewable_status_to_flag_status(status)

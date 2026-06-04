@@ -103,7 +103,12 @@ class ReviewableUser < Reviewable
 
   def perform_delete_user(performed_by, args)
     # We'll delete the user if we can
+    affected_reviewables = nil
+    deleted_user_id = nil
+
     if target.present?
+      affected_reviewables = reviewables_affected_by_deleted_user
+      deleted_user_id = target.id
       destroyer = UserDestroyer.new(performed_by)
 
       DiscourseEvent.trigger(:suspect_user_deleted, target) if is_a_suspect_user?
@@ -140,7 +145,14 @@ class ReviewableUser < Reviewable
       end
     end
 
-    create_result(:success, :rejected)
+    result = create_result(:success, :rejected)
+
+    if affected_reviewables && User.find_by(id: deleted_user_id).blank?
+      resolve_reviewables_affected_by_deleted_user(affected_reviewables, performed_by)
+      add_deleted_user_reviewable_updates(result, affected_reviewables)
+    end
+
+    result
   end
 
   def perform_delete_user_block(performed_by, args)
