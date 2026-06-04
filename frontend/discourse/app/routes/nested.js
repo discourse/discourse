@@ -185,6 +185,7 @@ export default class NestedRoute extends DiscourseRoute {
         postNumber: controller.postNumber,
         contextMode: controller.contextMode,
         contextChain: controller.contextChain,
+        initialFocusedPath: controller.initialFocusedPath,
         targetPostNumber: controller.targetPostNumber,
         contextNoAncestors: controller.contextNoAncestors,
         ancestorsTruncated: controller.ancestorsTruncated,
@@ -265,6 +266,7 @@ export default class NestedRoute extends DiscourseRoute {
       postNumber: params.post_number ? Number(params.post_number) : null,
       contextMode: false,
       contextChain: null,
+      initialFocusedPath: [],
       targetPostNumber: null,
       contextNoAncestors: false,
       ancestorsTruncated: false,
@@ -307,8 +309,14 @@ export default class NestedRoute extends DiscourseRoute {
 
     // Nest ancestors outermost-first so target ends up as the chain leaf.
     let chainTip = targetNode;
+    const focusedPath = [targetNode];
     for (let i = ancestors.length - 1; i >= 0; i--) {
-      chainTip = { post: ancestors[i], children: [chainTip] };
+      chainTip = {
+        post: ancestors[i],
+        children: [chainTip],
+        _renderKey: ancestors[i].id,
+      };
+      focusedPath.unshift(chainTip);
     }
 
     // Force full NestedPost rebuild on every fetch: NestedPostChildren reads
@@ -326,12 +334,13 @@ export default class NestedRoute extends DiscourseRoute {
       postNumber: Number(params.post_number),
       contextMode: true,
       contextChain: chainTip,
+      initialFocusedPath: focusedPath,
       targetPostNumber: Number(params.post_number),
       contextNoAncestors: noAncestors,
       ancestorsTruncated: data.ancestors_truncated || false,
       topAncestorPostNumber:
         ancestors.length > 0 ? ancestors[0].post_number : null,
-      rootNodes: [],
+      rootNodes: [chainTip],
       page: 0,
       hasMoreRoots: false,
       newRootPostIds: [],

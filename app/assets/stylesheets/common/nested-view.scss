@@ -897,50 +897,6 @@
   }
 }
 
-// ── Context view ──────────────────────────────────────────────────
-.nested-context-view {
-  &__banner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5em;
-    padding: 0.75em 1em;
-    margin-bottom: 1em;
-    background: var(--tertiary-very-low);
-    border: 1px solid var(--tertiary-low);
-    border-radius: var(--d-border-radius);
-    font-size: var(--font-down-1);
-    position: sticky;
-    top: var(--header-offset, 0);
-    z-index: 9;
-  }
-
-  &__banner-icon {
-    color: var(--tertiary);
-
-    .d-icon {
-      width: 1em;
-      height: 1em;
-    }
-  }
-
-  &__banner-text {
-    color: var(--primary-high);
-    margin-right: auto;
-  }
-
-  &__nav {
-    display: flex;
-    gap: 0.5em;
-    align-items: center;
-  }
-
-  &__chain {
-    border-left: 3px solid var(--tertiary-low);
-    padding-left: 0.75em;
-  }
-}
-
 // ── Deep-link highlight animation ──────────────────────────────────
 .nested-post--highlighted {
   animation: nested-post-highlight 2s ease-out;
@@ -1044,14 +1000,6 @@
 
   .nested-view__controls-left {
     flex-wrap: wrap;
-  }
-
-  .nested-context-view__banner {
-    margin-left: -0.5em;
-    margin-right: -0.5em;
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
   }
 
   // Full-width cards: break out of container side padding

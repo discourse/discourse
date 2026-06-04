@@ -287,7 +287,9 @@ RSpec.describe "Nested view" do
 
       nested_view.click_replies_toggle(grandchild_reply)
 
-      expect(page).to have_current_path(nested_path)
+      expect(page).to have_current_path(
+        %r{/n/#{topic.slug}/#{topic.id}/#{grandchild_reply.post_number}},
+      )
       expect(nested_view).to have_mobile_focus
       expect(nested_view).to have_mobile_ancestor(root_reply)
       expect(nested_view).to have_mobile_ancestor(child_reply)
@@ -299,6 +301,24 @@ RSpec.describe "Nested view" do
       expect(page).to have_current_path(nested_path)
       expect(nested_view).to have_no_mobile_focus
       expect(nested_view).to have_root_post(sibling_root_reply)
+    end
+
+    it "uses the focused branch UI for direct post URLs", mobile: true do
+      nested_view.visit_nested_context(topic, post_number: grandchild_reply.post_number)
+
+      expect(page).to have_current_path(
+        %r{/n/#{topic.slug}/#{topic.id}/#{grandchild_reply.post_number}},
+      )
+      expect(nested_view).to have_mobile_focus
+      expect(nested_view).to have_mobile_ancestor(root_reply)
+      expect(nested_view).to have_mobile_ancestor(child_reply)
+      expect(nested_view).to have_post(great_grandchild_reply)
+
+      nested_view.click_mobile_ancestor(child_reply)
+
+      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}/#{child_reply.post_number}})
+      expect(nested_view).to have_mobile_ancestor(root_reply)
+      expect(nested_view).to have_no_mobile_ancestor(child_reply)
     end
 
     it "brings the parent branch control into view after opening hidden replies", mobile: true do

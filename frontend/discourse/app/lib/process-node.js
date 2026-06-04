@@ -9,5 +9,5 @@ export default function processNode(store, topic, nodeData) {
   const children = (nodeData.children || []).map((child) =>
     processNode(store, topic, child)
   );
-  return { post, children };
+  return { post, children, _renderKey: nodeData._renderKey || post.id };
 }

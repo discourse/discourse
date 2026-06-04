@@ -37,6 +37,7 @@ export default class NestedController extends Controller {
   @tracked postNumber;
   @tracked contextMode = false;
   @tracked contextChain = null;
+  @tracked initialFocusedPath = [];
   @tracked targetPostNumber = null;
   @tracked contextNoAncestors = false;
   @tracked ancestorsTruncated = false;
@@ -170,6 +171,12 @@ export default class NestedController extends Controller {
     this.router.transitionTo("nested", this.topic.slug, this.topic.id, {
       queryParams: { sort: this.sort, context: null },
     });
+  }
+
+  @action
+  setFocusedPostNumber(postNumber) {
+    this.postNumber = postNumber;
+    this.targetPostNumber = postNumber;
   }
 
   @action
