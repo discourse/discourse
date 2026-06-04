@@ -18,7 +18,7 @@ function renderComponent(context) {
         @post={{context.post}}
         @children={{context.children}}
         @topic={{context.topic}}
-        @depth={{0}}
+        @depth={{context.depth}}
         @path={{context.path}}
         @sort="top"
         @replyToPost={{noop}}
@@ -42,6 +42,7 @@ function renderComponent(context) {
         @fetchedChildrenCache={{context.fetchedChildrenCache}}
         @focusPost={{context.focusPost}}
         @registerPost={{registerPost}}
+        @collapseFromDepth={{context.collapseFromDepth}}
       />
     </template>
   );
@@ -60,6 +61,8 @@ module("Integration | Component | Nested | Post", function (hooks) {
     });
     this.path = [];
     this.children = [];
+    this.depth = 0;
+    this.collapseFromDepth = null;
     this.expansionState = new Map();
     this.fetchedChildrenCache = new Map();
     this.post = this.store.createRecord("post", {
@@ -142,6 +145,32 @@ module("Integration | Component | Nested | Post", function (hooks) {
       .exists("renders the post avatar in the mobile collapsed bar");
   });
 
+  test("post registration can update post topic", async function (assert) {
+    const appEvents = getOwner(this).lookup("service:app-events");
+    const updatedTopic = this.store.createRecord("topic", {
+      id: 99,
+      slug: "updated-topic",
+      user_id: 1,
+    });
+    let registered = false;
+    const register = (post) => {
+      post.topic;
+      post.topic = updatedTopic;
+      registered = true;
+    };
+
+    appEvents.on("nested-replies:post-registered", this, register);
+
+    try {
+      await renderComponent(this);
+
+      assert.true(registered, "registers the post");
+      assert.strictEqual(this.post.topic, updatedTopic, "updates the topic");
+    } finally {
+      appEvents.off("nested-replies:post-registered", this, register);
+    }
+  });
+
   test("mobile focus waits for unloaded children before focusing", async function (assert) {
     const site = getOwner(this).lookup("service:site");
     sinon.stub(site, "mobileView").value(true);
@@ -202,5 +231,32 @@ module("Integration | Component | Nested | Post", function (hooks) {
       focusedPath[0].children,
       "stores the fetched children in the shared cache"
     );
+  });
+
+  test("reply counts below the mobile depth cap do not preload missing children", async function (assert) {
+    this.depth = 3;
+    this.collapseFromDepth = 4;
+    this.post.set("direct_reply_count", 1);
+    this.post.set("total_descendant_count", 1);
+
+    pretender.get("/n/nested-topic/1/children/2.json", () => {
+      assert.step("requested children");
+
+      return response({
+        children: [],
+        has_more: false,
+        page: 0,
+      });
+    });
+
+    await renderComponent(this);
+
+    assert
+      .dom(".nested-post__expand-replies")
+      .exists("shows the explicit expansion affordance");
+    assert
+      .dom(".nested-post-children")
+      .doesNotExist("does not mount the child loader");
+    assert.verifySteps([], "does not request children while rendering");
   });
 });

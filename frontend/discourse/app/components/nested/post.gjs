@@ -4,6 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { cancel, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import ShareTopicModal from "discourse/components/modal/share-topic";
@@ -48,7 +49,6 @@ export default class NestedPost extends Component {
   @tracked showIgnoredContent = false;
   @tracked loadingIgnoredContent = false;
   @tracked loadingReplies = false;
-
   restoreScroll = modifier((element) => {
     const anchor = this.args.scrollAnchor;
     if (anchor?.postNumber !== this.args.post.post_number) {
@@ -66,6 +66,8 @@ export default class NestedPost extends Component {
       this.appEvents.trigger("nested-replies:scroll-restored");
     });
   });
+  #postRegistered = false;
+  #postRegistrationTimer;
 
   @tracked _childWasCreated = false;
 
@@ -77,13 +79,8 @@ export default class NestedPost extends Component {
       this.expanded = cached.expanded;
       this.collapsed = cached.collapsed;
     } else {
-      const shouldLoadRepliesBeforeCollapse =
-        this.args.collapseFromDepth != null &&
-        this.args.depth < this.args.collapseFromDepth &&
-        (this.args.post.direct_reply_count || 0) > 0;
       const wouldExpand =
         (this.args.children?.length ?? 0) > 0 ||
-        shouldLoadRepliesBeforeCollapse ||
         this.args.post.deleted_post_placeholder === true ||
         this.args.post.ignored_post_placeholder === true;
 
@@ -106,17 +103,37 @@ export default class NestedPost extends Component {
       this,
       this._onChildCreated
     );
-    this.appEvents.trigger("nested-replies:post-registered", this.args.post);
+    this.#postRegistrationTimer = scheduleOnce(
+      "afterRender",
+      this,
+      this.#registerPost
+    );
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
+    cancel(this.#postRegistrationTimer);
     this.appEvents.off(
       "nested-replies:child-created",
       this,
       this._onChildCreated
     );
-    this.appEvents.trigger("nested-replies:post-unregistered", this.args.post);
+
+    if (this.#postRegistered) {
+      this.appEvents.trigger(
+        "nested-replies:post-unregistered",
+        this.args.post
+      );
+    }
+  }
+
+  #registerPost() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    this.#postRegistered = true;
+    this.appEvents.trigger("nested-replies:post-registered", this.args.post);
   }
 
   _onChildCreated({ post: childPost, parentPostNumber, isOwnPost }) {
