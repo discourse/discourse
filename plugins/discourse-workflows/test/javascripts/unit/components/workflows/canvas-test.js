@@ -58,6 +58,42 @@ module("Unit | Component | workflows canvas", function (hooks) {
     );
   });
 
+  test("AI proposal exposes created agent resources", function (assert) {
+    const canvas = Object.create(WorkflowCanvas.prototype);
+
+    canvas.aiResponse = {
+      status: "proposed_patch",
+      response: {
+        proposal: {
+          operations: [
+            {
+              op: "create_ai_agent",
+              client_id: "triage-agent",
+              agent: {
+                name: "Workflow triage agent",
+                description: "Classifies support posts.",
+                system_prompt: "Classify Discourse posts.",
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    assert.deepEqual(
+      canvas.aiCreatedAgentResources,
+      [
+        {
+          key: "triage-agent-Workflow triage agent",
+          name: "Workflow triage agent",
+          description: "Classifies support posts.",
+          systemPrompt: "Classify Discourse posts.",
+        },
+      ],
+      "created AI agents are available for proposal review"
+    );
+  });
+
   test("AI clarification questions advance one at a time", async function (assert) {
     const canvas = Object.create(WorkflowCanvas.prototype);
 

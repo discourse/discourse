@@ -351,6 +351,37 @@ export default class WorkflowCanvas extends Component {
       .filter(Boolean);
   }
 
+  get aiCreatedAgentResources() {
+    const resources = this.aiProposal?.created_resources || [];
+    const resourcesByClientId = new Map(
+      resources
+        .filter(
+          (resource) => resource?.type === "ai_agent" && resource.client_id
+        )
+        .map((resource) => [resource.client_id, resource])
+    );
+
+    return (this.aiProposal?.operations || [])
+      .filter((operation) => operation?.op === "create_ai_agent")
+      .map((operation, index) => {
+        const agent = operation.agent || operation.ai_agent || {};
+        const resource = resourcesByClientId.get(operation.client_id) || {};
+        const name = resource.name || agent.name;
+
+        if (!name) {
+          return null;
+        }
+
+        return {
+          key: `${operation.client_id || index}-${name}`,
+          name,
+          description: resource.description || agent.description,
+          systemPrompt: resource.system_prompt || agent.system_prompt,
+        };
+      })
+      .filter(Boolean);
+  }
+
   get aiShowingProgress() {
     return this.aiGenerating && this.aiProgressEvents.length > 0;
   }
@@ -1785,6 +1816,32 @@ export default class WorkflowCanvas extends Component {
                   <div class="workflows-canvas__ai-proposal">
                     <h4>{{this.aiProposal.title}}</h4>
                     <p>{{this.aiProposal.summary}}</p>
+
+                    {{#if this.aiCreatedAgentResources.length}}
+                      <section class="workflows-canvas__ai-created-agents">
+                        <h5>{{i18n
+                            "discourse_workflows.ai.created_agents"
+                          }}</h5>
+                        <ul>
+                          {{#each this.aiCreatedAgentResources as |agent|}}
+                            <li class="workflows-canvas__ai-created-agent">
+                              <strong>{{agent.name}}</strong>
+                              {{#if agent.description}}
+                                <p>{{agent.description}}</p>
+                              {{/if}}
+                              {{#if agent.systemPrompt}}
+                                <details>
+                                  <summary>{{i18n
+                                      "discourse_workflows.ai.created_agent_system_prompt"
+                                    }}</summary>
+                                  <pre><code>{{agent.systemPrompt}}</code></pre>
+                                </details>
+                              {{/if}}
+                            </li>
+                          {{/each}}
+                        </ul>
+                      </section>
+                    {{/if}}
 
                     {{#if this.aiCodePreviews.length}}
                       <div class="workflows-canvas__ai-code-previews">

@@ -13,6 +13,7 @@ RSpec.describe DiscourseWorkflows::AiWorkflowAuthor do
       DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog,
       DiscourseWorkflows::Ai::Tools::WorkflowGraphContext,
       DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch,
+      DiscourseWorkflows::Ai::Tools::WorkflowAiAgentCatalog,
       DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult,
     )
   end
@@ -24,6 +25,8 @@ RSpec.describe DiscourseWorkflows::AiWorkflowAuthor do
     expect(author.system_prompt).to include(
       "Do not write a final prose, markdown, or JSON answer",
       "call workflow_authoring_result exactly once",
+      "Use workflow_ai_agent_catalog before adding action:ai_agent nodes",
+      "create_ai_agent",
     )
   end
 

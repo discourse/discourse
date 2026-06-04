@@ -115,6 +115,58 @@ RSpec.describe DiscourseWorkflows::AiAuthoringController do
       expect(session.reload.status).to eq("applied")
     end
 
+    it "applies proposals that create AI agents", :aggregate_failures do
+      agent_operations = [
+        {
+          op: "create_ai_agent",
+          client_id: "triage-agent",
+          agent: {
+            name: "Workflow apply triage agent",
+            description: "Classifies workflow posts during apply.",
+            system_prompt: "You classify Discourse posts during workflow execution.",
+          },
+        },
+        {
+          op: "add_node",
+          client_id: "classify-post",
+          node: {
+            type: "action:ai_agent",
+            name: "Classify post",
+            parameters: {
+              agent_id: {
+                "$ref" => "triage-agent",
+              },
+              prompt: "={{ $json.post.raw }}",
+            },
+          },
+        },
+      ]
+      session =
+        Fabricate(
+          :discourse_workflows_ai_authoring_session,
+          user: admin,
+          workflow: workflow,
+          status: "proposal_ready",
+          proposed_patch: {
+            "operations" => agent_operations,
+          },
+          base_graph_digest: DiscourseWorkflows::Ai::GraphDigest.call(workflow),
+        )
+
+      post "/admin/plugins/discourse-workflows/workflows/#{workflow.id}/ai/apply.json",
+           params: {
+             session_id: session.id,
+           }
+      created_agent = AiAgent.find_by(name: "Workflow apply triage agent")
+      node =
+        workflow.reload.nodes.find { |workflow_node| workflow_node["type"] == "action:ai_agent" }
+
+      expect(response).to have_http_status(:ok)
+      expect(created_agent).to be_present
+      expect(node.dig("parameters", "agent_id")).to eq(created_agent.id)
+      expect(session.reload.status).to eq("applied")
+    end
+
     it "rejects proposals that are not ready" do
       session =
         Fabricate(

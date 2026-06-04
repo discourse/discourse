@@ -59,6 +59,9 @@ module DiscourseWorkflows
             "channel_id" => "integer",
             "message" => "string",
           },
+          "action:ai_agent" => {
+            "result" => "string",
+          },
         }.freeze
 
         EXAMPLES = {
@@ -183,6 +186,17 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:ai_agent" => [
+            {
+              name: "Classify the trigger post with an existing agent",
+              parameters: {
+                agent_id: 123,
+                agent_name: "Post classifier",
+                prompt:
+                  "=Classify this Discourse post and return a short label: {{ $json.post.raw }}",
+              },
+            },
+          ],
           "action:topic_tags" => [
             {
               name: "Add a tag to the trigger topic",
@@ -210,6 +224,7 @@ module DiscourseWorkflows
 
         SEARCH_ALIASES = {
           "action:send_private_message" => "dm direct message pm personal private message",
+          "action:ai_agent" => "ai agent bot llm classify summarize generate sentiment triage",
           "condition:user_in_group" => "group membership member belongs friend friends",
         }.freeze
 
