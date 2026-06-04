@@ -276,24 +276,48 @@ RSpec.describe "Nested view" do
       )
     end
 
+    fab!(:fifth_level_reply) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: Fabricate(:user),
+        raw: "A fifth-level post",
+        reply_to_post_number: great_grandchild_reply.post_number,
+      )
+    end
+
+    fab!(:sixth_level_reply) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: Fabricate(:user),
+        raw: "A sixth-level post",
+        reply_to_post_number: fifth_level_reply.post_number,
+      )
+    end
+
     it "lets the user drill into reply branches without leaving the topic", mobile: true do
       nested_view.visit_nested(topic)
       nested_path = %r{/n/#{topic.slug}/#{topic.id}}
 
       expect(nested_view).to have_post(child_reply)
       expect(nested_view).to have_post(grandchild_reply)
-      expect(nested_view).to have_replies_toggle_for(grandchild_reply)
-      expect(nested_view).to have_no_post(great_grandchild_reply)
+      expect(nested_view).to have_post(great_grandchild_reply)
+      expect(nested_view).to have_post(fifth_level_reply)
+      expect(nested_view).to have_replies_toggle_for(fifth_level_reply)
+      expect(nested_view).to have_no_post(sixth_level_reply)
 
-      nested_view.click_replies_toggle(grandchild_reply)
+      nested_view.click_replies_toggle(fifth_level_reply)
 
       expect(page).to have_current_path(
-        %r{/n/#{topic.slug}/#{topic.id}/#{grandchild_reply.post_number}},
+        %r{/n/#{topic.slug}/#{topic.id}/#{fifth_level_reply.post_number}},
       )
       expect(nested_view).to have_mobile_focus
       expect(nested_view).to have_mobile_ancestor(root_reply)
       expect(nested_view).to have_mobile_ancestor(child_reply)
-      expect(nested_view).to have_post(great_grandchild_reply)
+      expect(nested_view).to have_mobile_ancestor(grandchild_reply)
+      expect(nested_view).to have_mobile_ancestor(great_grandchild_reply)
+      expect(nested_view).to have_post(sixth_level_reply)
       expect(nested_view).to have_no_root_post(sibling_root_reply)
 
       nested_view.click_mobile_focus_back
@@ -310,11 +334,11 @@ RSpec.describe "Nested view" do
 
       page.visit("/latest")
       nested_view.visit_nested(topic)
-      nested_view.scroll_post_near_top(grandchild_reply)
+      nested_view.scroll_post_near_top(fifth_level_reply)
 
-      previous_scroll_y = nested_view.trigger_replies_toggle(grandchild_reply)
+      previous_scroll_y = nested_view.trigger_replies_toggle(fifth_level_reply)
       expect(page).to have_current_path(
-        %r{/n/#{topic.slug}/#{topic.id}/#{grandchild_reply.post_number}},
+        %r{/n/#{topic.slug}/#{topic.id}/#{fifth_level_reply.post_number}},
       )
       expect(nested_view).to have_mobile_focus
 
@@ -345,20 +369,33 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_no_mobile_ancestor(child_reply)
     end
 
+    it "does not open the user card when tapping a focused path avatar", mobile: true do
+      nested_view.visit_nested_context(topic, post_number: grandchild_reply.post_number)
+
+      expect(nested_view).to have_mobile_ancestor(child_reply)
+      expect(nested_view).to have_no_mobile_ancestor_user_card_trigger(child_reply)
+
+      nested_view.click_mobile_ancestor_avatar(child_reply)
+
+      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}/#{child_reply.post_number}})
+      expect(nested_view).to have_no_mobile_ancestor(child_reply)
+      expect(page).to have_no_css(".user-card.show")
+    end
+
     it "brings the parent branch control into view after opening hidden replies", mobile: true do
-      great_grandchild_reply.update!(
-        raw: "A great-grandchild post\n\n#{("More focused branch content.\n\n" * 30).strip}",
+      sixth_level_reply.update!(
+        raw: "A sixth-level post\n\n#{("More focused branch content.\n\n" * 30).strip}",
       )
-      great_grandchild_reply.rebake!
+      sixth_level_reply.rebake!
 
       nested_view.visit_nested(topic)
-      nested_view.scroll_post_near_top(grandchild_reply)
+      nested_view.scroll_post_near_top(fifth_level_reply)
 
-      nested_view.click_replies_toggle(grandchild_reply)
+      nested_view.click_replies_toggle(fifth_level_reply)
 
       expect(nested_view).to have_mobile_focus
       try_until_success(reason: "focused view scroll runs after render") do
-        expect(nested_view.mobile_ancestor_viewport_top(child_reply)).to be_between(
+        expect(nested_view.mobile_ancestor_viewport_top(great_grandchild_reply)).to be_between(
           -1,
           120,
         ).inclusive
@@ -390,14 +427,14 @@ RSpec.describe "Nested view" do
     it "collapses a branch with hidden replies from the depth line", mobile: true do
       nested_view.visit_nested(topic)
 
-      expect(nested_view).to have_replies_toggle_for(grandchild_reply)
-      expect(nested_view).to have_no_post(great_grandchild_reply)
+      expect(nested_view).to have_replies_toggle_for(fifth_level_reply)
+      expect(nested_view).to have_no_post(sixth_level_reply)
 
-      nested_view.click_depth_line(grandchild_reply)
+      nested_view.click_depth_line(fifth_level_reply)
 
       expect(nested_view).to have_no_mobile_focus
-      expect(nested_view).to have_collapsed_bar_for(grandchild_reply)
-      expect(nested_view).to have_no_post(great_grandchild_reply)
+      expect(nested_view).to have_collapsed_bar_for(fifth_level_reply)
+      expect(nested_view).to have_no_post(sixth_level_reply)
       expect(nested_view).to have_root_post(sibling_root_reply)
     end
   end

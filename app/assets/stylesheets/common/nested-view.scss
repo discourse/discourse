@@ -1037,6 +1037,7 @@
   }
 
   .nested-view__mobile-focus {
+    --nested-mobile-ancestor-avatar-size: 24px;
     display: flex;
     flex-direction: column;
     gap: 0;
@@ -1058,7 +1059,7 @@
     gap: 0.5em;
     width: 100%;
     min-width: 0;
-    min-height: calc(var(--nested-avatar-size) + 1em);
+    min-height: calc(var(--nested-mobile-ancestor-avatar-size) + 1em);
     padding: 0.5em;
     color: var(--primary-medium);
     background: var(--secondary);
@@ -1087,8 +1088,24 @@
   .nested-view__mobile-ancestor {
     border-top: 1px solid var(--primary-low);
     font-size: var(--font-down-1);
-    min-height: calc(var(--nested-avatar-size) + 0.75em);
+    min-height: calc(var(--nested-mobile-ancestor-avatar-size) + 0.75em);
     padding-block: 0.375em;
+  }
+
+  .nested-view__mobile-ancestor-avatar {
+    display: flex;
+    flex: 0 0 var(--nested-mobile-ancestor-avatar-size);
+    align-items: center;
+    justify-content: center;
+    width: var(--nested-mobile-ancestor-avatar-size);
+    height: var(--nested-mobile-ancestor-avatar-size);
+
+    .avatar {
+      width: var(--nested-mobile-ancestor-avatar-size);
+      height: var(--nested-mobile-ancestor-avatar-size);
+      max-width: var(--nested-mobile-ancestor-avatar-size);
+      max-height: var(--nested-mobile-ancestor-avatar-size);
+    }
   }
 
   .nested-view__mobile-ancestor-meta {
@@ -1160,16 +1177,16 @@
   }
 
   // ── Individual nested post overrides ──
-  // Gutter becomes an avatar-width rail column. The post article spans the
-  // rail and content columns because mobile renders the avatar inline in the
-  // header, while children remain indented in the content column.
+  // Gutter becomes a compact rail column. The post article spans the rail and
+  // content columns because mobile renders the avatar inline in the header,
+  // while children remain indented in the content column.
   .nested-post {
-    --nested-line-gutter: var(--nested-avatar-size);
-    --nested-column-gap: var(--space-2);
-    --nested-mobile-line-offset: calc(var(--nested-avatar-size) / 2);
+    --nested-line-gutter: 14px;
+    --nested-column-gap: var(--space-1);
+    --nested-mobile-line-offset: calc(var(--nested-line-gutter) / 2);
     --nested-mobile-line-start: calc(var(--nested-avatar-size) + 6px);
     --nested-mobile-content-indent: calc(
-      var(--nested-avatar-size) + var(--nested-column-gap)
+      var(--nested-avatar-size) + var(--space-1)
     );
     grid-template-columns: var(--nested-line-gutter) 1fr;
 

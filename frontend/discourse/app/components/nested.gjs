@@ -10,7 +10,6 @@ import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import PostAvatar from "discourse/components/post/avatar";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
@@ -19,6 +18,7 @@ import { and, gt, includes, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import NestedFloatingActions from "./nested/floating-actions";
@@ -34,6 +34,9 @@ const postExcerpt = helper(([post]) => {
 
   return element.textContent?.replace(/\s+/g, " ").trim();
 });
+
+// Depth is zero-based; depth 4 gives mobile users five visible levels including root.
+const MOBILE_ROOT_VIEW_COLLAPSE_DEPTH = 4;
 
 export default class Nested extends Component {
   @service appEvents;
@@ -149,7 +152,7 @@ export default class Nested extends Component {
     }
 
     if (this.site.mobileView) {
-      return 2;
+      return MOBILE_ROOT_VIEW_COLLAPSE_DEPTH;
     }
 
     return null;
@@ -563,7 +566,17 @@ export default class Nested extends Component {
                   {{on "click" (fn this.returnToAncestor index)}}
                 >
                   {{dIcon "chevron-left"}}
-                  <PostAvatar @post={{ancestorNode.post}} @size="small" />
+                  <span
+                    class="nested-view__mobile-ancestor-avatar"
+                    aria-hidden="true"
+                  >
+                    {{! PostAvatar renders a user link; keep this avatar non-interactive inside the ancestor button. }}
+                    {{dAvatar
+                      ancestorNode.post
+                      imageSize="small"
+                      hideTitle=true
+                    }}
+                  </span>
                   <span class="nested-view__mobile-ancestor-meta">
                     <span
                       class="nested-view__mobile-ancestor-username"

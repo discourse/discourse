@@ -139,6 +139,10 @@ module PageObjects
         has_no_css?("[data-test-nested-mobile-ancestor='#{post.post_number}']")
       end
 
+      def has_no_mobile_ancestor_user_card_trigger?(post)
+        has_no_css?("[data-test-nested-mobile-ancestor='#{post.post_number}'] [data-user-card]")
+      end
+
       def post_viewport_top(post)
         page.evaluate_script(<<~JS)
           document
@@ -388,6 +392,13 @@ module PageObjects
 
       def click_mobile_ancestor(post)
         find("[data-test-nested-mobile-ancestor='#{post.post_number}']").click
+        self
+      end
+
+      def click_mobile_ancestor_avatar(post)
+        find(
+          "[data-test-nested-mobile-ancestor='#{post.post_number}'] .nested-view__mobile-ancestor-avatar",
+        ).click
         self
       end
 
