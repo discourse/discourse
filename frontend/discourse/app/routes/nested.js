@@ -162,39 +162,7 @@ export default class NestedRoute extends DiscourseRoute {
   }
 
   _saveToCache(controller) {
-    if (!controller.topic) {
-      return;
-    }
-
-    const cacheKey = this.nestedViewCache.buildKey(controller.topic.id, {
-      sort: controller.sort,
-      post_number: controller.postNumber,
-      context: controller.contextNoAncestors ? 0 : undefined,
-    });
-
-    this.nestedViewCache.save(cacheKey, {
-      modelData: {
-        topic: controller.topic,
-        opPost: controller.opPost,
-        rootNodes: controller.rootNodes,
-        page: controller.page,
-        hasMoreRoots: controller.hasMoreRoots,
-        sort: controller.sort,
-        messageBusLastId: controller.messageBusLastId,
-        pinnedPostIds: controller.pinnedPostIds,
-        postNumber: controller.postNumber,
-        contextMode: controller.contextMode,
-        contextChain: controller.contextChain,
-        initialFocusedPath: controller.initialFocusedPath,
-        targetPostNumber: controller.targetPostNumber,
-        contextNoAncestors: controller.contextNoAncestors,
-        ancestorsTruncated: controller.ancestorsTruncated,
-        topAncestorPostNumber: controller.topAncestorPostNumber,
-      },
-      expansionState: new Map(controller.expansionState),
-      fetchedChildrenCache: new Map(controller.fetchedChildrenCache),
-      scrollAnchor: this._findScrollAnchor(),
-    });
+    controller.saveToCache(this._findScrollAnchor());
   }
 
   _findScrollAnchor() {

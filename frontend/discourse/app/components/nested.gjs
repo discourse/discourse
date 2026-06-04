@@ -12,7 +12,7 @@ import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostAvatar from "discourse/components/post/avatar";
 import lazyHash from "discourse/helpers/lazy-hash";
-import getURL from "discourse/lib/get-url";
+import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { and, gt, includes, not } from "discourse/truth-helpers";
@@ -50,16 +50,19 @@ export default class Nested extends Component {
   @tracked mobileReturnAnchor = null;
   viewportTracker = new PostStreamViewportTracker();
   #initialFocusedPathKey = null;
+  #focusedPathsByPostNumber = new Map();
   #scrollAttempts = 0;
   #maxScrollAttempts = 20;
   #nextTimer = null;
   #retryTimer = null;
   #highlightTimer = null;
   #lastScrollKey = null;
+  #onPopstate = () => next(this, this.syncFocusFromURL);
 
   constructor() {
     super(...arguments);
     this.applyInitialFocusedPath();
+    window.addEventListener("popstate", this.#onPopstate);
     this.appEvents.on("keyboard:move-selection", this, this.maybeLoadMoreRoots);
     this.appEvents.on(
       "nested:scroll-to-target",
@@ -93,6 +96,7 @@ export default class Nested extends Component {
     cancel(this.#nextTimer);
     cancel(this.#retryTimer);
     clearTimeout(this.#highlightTimer);
+    window.removeEventListener("popstate", this.#onPopstate);
     this.viewportTracker.destroy();
   }
 
@@ -182,19 +186,24 @@ export default class Nested extends Component {
   }
 
   @action
-  focusPath(path) {
+  focusPath(path, returnAnchor) {
     if (!this.site.mobileView) {
       return;
     }
 
     if (!this.isMobileFocused) {
-      this.mobileReturnAnchor = this.scrollAnchorForPath(path);
+      this.mobileReturnAnchor =
+        returnAnchor ||
+        this.findScrollAnchor() ||
+        this.scrollAnchorForPath(path);
+      this.args.saveScrollPosition?.(this.mobileReturnAnchor);
     }
 
     this.focusDirection =
       path.length >= this.focusedPath.length ? "forward" : "back";
     this.focusedPath = path;
-    this.#replaceURLForFocusedPath(path);
+    this.#registerFocusedPath(path);
+    this.#pushURLForFocusedPath(path);
   }
 
   @action
@@ -220,6 +229,35 @@ export default class Nested extends Component {
     this.mobileReturnAnchor = null;
   }
 
+  @action
+  captureScrollAnchor() {
+    return this.findScrollAnchor();
+  }
+
+  findScrollAnchor() {
+    const articles = document.querySelectorAll(
+      ".nested-view__roots .nested-post [data-post-number]"
+    );
+    let best = null;
+    let bestDistance = Infinity;
+
+    for (const article of articles) {
+      const postElement = article.closest(".nested-post") || article;
+      const rect = postElement.getBoundingClientRect();
+      const distance = Math.abs(rect.top);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        best = {
+          postNumber: Number(article.dataset.postNumber),
+          offsetFromTop: rect.top,
+          scrollY: window.scrollY,
+        };
+      }
+    }
+
+    return best;
+  }
+
   scrollAnchorForPath(path) {
     const rootNode = path?.[0];
     const postNumber = rootNode?.post?.post_number;
@@ -238,6 +276,7 @@ export default class Nested extends Component {
     return {
       postNumber,
       offsetFromTop: element.getBoundingClientRect().top,
+      scrollY: window.scrollY,
     };
   }
 
@@ -283,12 +322,94 @@ export default class Nested extends Component {
     this.#initialFocusedPathKey = key;
     this.focusDirection = "forward";
     this.focusedPath = this.args.initialFocusedPath;
+    this.#registerFocusedPath(this.focusedPath);
+  }
+
+  @action
+  syncFocusFromURL() {
+    if (this.isDestroying || this.isDestroyed || !this.site.mobileView) {
+      return;
+    }
+
+    const postNumber = this.#postNumberFromCurrentURL();
+    if (postNumber === undefined) {
+      return;
+    }
+
+    this.args.setFocusedPostNumber?.(postNumber);
+
+    if (!postNumber) {
+      if (this.focusedPath.length > 0) {
+        this.focusDirection = "back";
+        this.mobileReturnAnchor ??= this.scrollAnchorForPath(this.focusedPath);
+        this.focusedPath = [];
+      }
+      return;
+    }
+
+    const path = this.#focusedPathsByPostNumber.get(postNumber);
+    if (!path) {
+      return;
+    }
+
+    this.focusDirection =
+      path.length >= this.focusedPath.length ? "forward" : "back";
+    this.focusedPath = path;
+  }
+
+  #pushURLForFocusedPath(path) {
+    const postNumber = path.at(-1)?.post?.post_number || null;
+    this.args.setFocusedPostNumber?.(postNumber);
+    const url = this.#nestedURL(postNumber);
+
+    if (this.#currentURLMatches(url)) {
+      return;
+    }
+
+    DiscourseURL.pushState(url);
   }
 
   #replaceURLForFocusedPath(path) {
     const postNumber = path.at(-1)?.post?.post_number || null;
     this.args.setFocusedPostNumber?.(postNumber);
-    DiscourseURL.replaceState(this.#nestedURL(postNumber));
+    const url = this.#nestedURL(postNumber);
+
+    if (this.#currentURLMatches(url)) {
+      return;
+    }
+
+    DiscourseURL.replaceState(url);
+  }
+
+  #registerFocusedPath(path) {
+    path.forEach((node, index) => {
+      const postNumber = node.post?.post_number;
+      if (postNumber) {
+        this.#focusedPathsByPostNumber.set(
+          postNumber,
+          path.slice(0, index + 1)
+        );
+      }
+    });
+  }
+
+  #postNumberFromCurrentURL() {
+    const path = withoutPrefix(window.location.pathname);
+    const match = /^\/n\/[^/]+\/(\d+)(?:\/(\d+))?/.exec(path);
+    if (!match || String(match[1]) !== String(this.args.topic.id)) {
+      return undefined;
+    }
+
+    return match[2] ? Number(match[2]) : null;
+  }
+
+  #currentURLMatches(url) {
+    const current = withoutPrefix(
+      `${window.location.pathname}${window.location.search}`
+    );
+    const target = withoutPrefix(url);
+
+    return current === target;
   }
 
   @action
@@ -491,6 +612,7 @@ export default class Nested extends Component {
                 @cloakBelow={{this.cloakBelow}}
                 @collapseFromDepth={{this.collapseFromDepth}}
                 @focusPost={{this.focusPath}}
+                @captureScrollAnchor={{this.captureScrollAnchor}}
                 @forceExpanded={{true}}
               />
             </div>
@@ -587,6 +709,7 @@ export default class Nested extends Component {
               @cloakBelow={{this.cloakBelow}}
               @collapseFromDepth={{this.collapseFromDepth}}
               @focusPost={{this.focusPath}}
+              @captureScrollAnchor={{this.captureScrollAnchor}}
             />
             <PluginOutlet
               @name="nested-roots-between"

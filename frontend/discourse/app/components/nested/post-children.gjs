@@ -245,6 +245,7 @@ export default class NestedPostChildren extends Component {
             @registerPost={{@registerPost}}
             @collapseFromDepth={{@collapseFromDepth}}
             @focusPost={{@focusPost}}
+            @captureScrollAnchor={{@captureScrollAnchor}}
           />
         {{/each}}
 

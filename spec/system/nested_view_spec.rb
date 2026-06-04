@@ -303,6 +303,30 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_root_post(sibling_root_reply)
     end
 
+    it "browser back returns from a focused branch to the full nested topic and restores scroll",
+       mobile: true do
+      child_reply.update!(raw: "A child post\n\n#{("Scrollable child content.\n\n" * 30).strip}")
+      child_reply.rebake!
+
+      page.visit("/latest")
+      nested_view.visit_nested(topic)
+      nested_view.scroll_post_near_top(grandchild_reply)
+
+      previous_scroll_y = nested_view.trigger_replies_toggle(grandchild_reply)
+      expect(page).to have_current_path(
+        %r{/n/#{topic.slug}/#{topic.id}/#{grandchild_reply.post_number}},
+      )
+      expect(nested_view).to have_mobile_focus
+
+      page.go_back
+
+      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}$})
+      expect(nested_view).to have_no_mobile_focus
+      try_until_success(reason: "scroll anchor restores after focused view closes") do
+        expect(page.evaluate_script("window.scrollY")).to be_within(250).of(previous_scroll_y)
+      end
+    end
+
     it "uses the focused branch UI for direct post URLs", mobile: true do
       nested_view.visit_nested_context(topic, post_number: grandchild_reply.post_number)
 

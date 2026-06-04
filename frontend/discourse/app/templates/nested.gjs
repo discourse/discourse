@@ -41,6 +41,7 @@ export default <template>
     @targetPostNumber={{@controller.targetPostNumber}}
     @initialFocusedPath={{@controller.initialFocusedPath}}
     @setFocusedPostNumber={{@controller.setFocusedPostNumber}}
+    @saveScrollPosition={{@controller.saveScrollPosition}}
     @viewFullThread={{@controller.viewFullThread}}
     @pinnedPostIds={{@controller.pinnedPostIds}}
     @newRootPostCount={{@controller.newRootPostIds.length}}

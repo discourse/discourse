@@ -62,7 +62,7 @@ export default class NestedController extends Controller {
   // Populated by NestedPostChildren on every mutation, read on restoration.
   fetchedChildrenCache = new Map();
 
-  // Scroll anchor for cache restoration: { postNumber, offsetFromTop }
+  // Scroll anchor for cache restoration: { postNumber, offsetFromTop, scrollY? }
   scrollAnchor = null;
 
   quoteState = new QuoteState();
@@ -177,6 +177,47 @@ export default class NestedController extends Controller {
   setFocusedPostNumber(postNumber) {
     this.postNumber = postNumber;
     this.targetPostNumber = postNumber;
+  }
+
+  @action
+  saveScrollPosition(scrollAnchor) {
+    this.saveToCache(scrollAnchor);
+  }
+
+  saveToCache(scrollAnchor) {
+    if (!this.topic) {
+      return;
+    }
+
+    const cacheKey = this.nestedViewCache.buildKey(this.topic.id, {
+      sort: this.sort,
+      post_number: this.postNumber,
+      context: this.contextNoAncestors ? 0 : undefined,
+    });
+
+    this.nestedViewCache.save(cacheKey, {
+      modelData: {
+        topic: this.topic,
+        opPost: this.opPost,
+        rootNodes: this.rootNodes,
+        page: this.page,
+        hasMoreRoots: this.hasMoreRoots,
+        sort: this.sort,
+        messageBusLastId: this.messageBusLastId,
+        pinnedPostIds: this.pinnedPostIds,
+        postNumber: this.postNumber,
+        contextMode: this.contextMode,
+        contextChain: this.contextChain,
+        initialFocusedPath: this.initialFocusedPath,
+        targetPostNumber: this.targetPostNumber,
+        contextNoAncestors: this.contextNoAncestors,
+        ancestorsTruncated: this.ancestorsTruncated,
+        topAncestorPostNumber: this.topAncestorPostNumber,
+      },
+      expansionState: new Map(this.expansionState),
+      fetchedChildrenCache: new Map(this.fetchedChildrenCache),
+      scrollAnchor,
+    });
   }
 
   @action

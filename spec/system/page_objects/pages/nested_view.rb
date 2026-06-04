@@ -332,6 +332,24 @@ module PageObjects
         self
       end
 
+      def trigger_replies_toggle(post)
+        page.evaluate_script(<<~JS)
+          (() => {
+            const button = document.querySelector(
+              "[data-post-number='#{post.post_number}'] .nested-post__expand-replies"
+            );
+            document
+              .querySelectorAll(".nested-view__roots .nested-post [data-post-number]")
+              .forEach((article) =>
+                (article.closest(".nested-post") || article).getBoundingClientRect()
+              );
+            const scrollY = window.scrollY;
+            button.click();
+            return scrollY;
+          })()
+        JS
+      end
+
       def scroll_post_near_top(post, offset: 80)
         page.execute_script(<<~JS)
           const post = document.querySelector("[data-post-number='#{post.post_number}']");

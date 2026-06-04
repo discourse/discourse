@@ -54,8 +54,12 @@ export default class NestedPost extends Component {
     if (anchor?.postNumber !== this.args.post.post_number) {
       return;
     }
-    const rect = element.getBoundingClientRect();
-    window.scrollTo(0, window.scrollY + rect.top - anchor.offsetFromTop);
+    if (Number.isFinite(anchor.scrollY)) {
+      window.scrollTo(0, anchor.scrollY);
+    } else {
+      const rect = element.getBoundingClientRect();
+      window.scrollTo(0, window.scrollY + rect.top - anchor.offsetFromTop);
+    }
 
     // Defer the event to avoid backtracking re-render errors during the render phase
     Promise.resolve().then(() => {
@@ -389,9 +393,10 @@ export default class NestedPost extends Component {
     }
 
     if (this.mobileFocusEnabled) {
+      const returnAnchor = this.args.captureScrollAnchor?.();
       const children = await this.childrenForMobileFocus();
       if (children && !(this.isDestroying || this.isDestroyed)) {
-        this.args.focusPost(this.childPathWithChildren(children));
+        this.args.focusPost(this.childPathWithChildren(children), returnAnchor);
       }
       return;
     }
@@ -840,6 +845,7 @@ export default class NestedPost extends Component {
               @registerPost={{@registerPost}}
               @collapseFromDepth={{@collapseFromDepth}}
               @focusPost={{@focusPost}}
+              @captureScrollAnchor={{@captureScrollAnchor}}
             />
           {{/if}}
         </div>
