@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, fn, get } from "@ember/helper";
-import { on } from "@ember/modifier";
+import { concat, fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
@@ -119,6 +118,8 @@ export default class PostEventBuilder extends Component {
       timezone: this.event.timezone ?? null,
       // clone so the form draft owns its own reminders
       reminders: (this.event.reminders ?? []).map((r) => ({ ...r })),
+      // clone so the form draft owns the custom fields
+      customFields: { ...(this.event.customFields ?? {}) },
     };
   }
 
@@ -554,8 +555,8 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
-  setCustomField(field, e) {
-    this.event.customFields[field] = e.target.value;
+  setCustomField(field, value) {
+    this.event.customFields[field] = value;
   }
 
   @action
@@ -1223,26 +1224,24 @@ export default class PostEventBuilder extends Component {
                     }}
                     @format="full"
                   >
-                    {{#each this.allowedCustomFields as |allowedCustomField|}}
-                      <span class="label custom-field-label">
-                        {{allowedCustomField}}
-                      </span>
-                      <input
-                        type="text"
-                        class="custom-field-input"
-                        value={{get
-                          @model.event.customFields
-                          allowedCustomField
-                        }}
-                        {{on
-                          "input"
-                          (fn this.setCustomField allowedCustomField)
-                        }}
-                        placeholder={{i18n
-                          "discourse_post_event.builder_modal.custom_fields.placeholder"
-                        }}
-                      />
-                    {{/each}}
+                    <form.Object @name="customFields" as |customFields|>
+                      {{#each this.allowedCustomFields as |allowedCustomField|}}
+                        <customFields.Field
+                          @name={{allowedCustomField}}
+                          @title={{allowedCustomField}}
+                          @type="input"
+                          @format="full"
+                          @onSet={{fn this.setCustomField allowedCustomField}}
+                          as |field|
+                        >
+                          <field.Control
+                            placeholder={{i18n
+                              "discourse_post_event.builder_modal.custom_fields.placeholder"
+                            }}
+                          />
+                        </customFields.Field>
+                      {{/each}}
+                    </form.Object>
                   </form.Container>
                 {{/if}}
 
