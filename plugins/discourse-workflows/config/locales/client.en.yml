@@ -45,7 +45,7 @@ en:
       ai:
         button: "Build with AI"
         title: "Workflow assistant"
-        subtitle: "Draft changes before they touch your workflow"
+        subtitle: "Create automatic drafts. Publishing stays manual."
         close: "Close workflow assistant"
         description: "Describe a change, then generate a draft to review. Publishing stays manual."
         review_description: "Review this draft, then apply it when it looks right."

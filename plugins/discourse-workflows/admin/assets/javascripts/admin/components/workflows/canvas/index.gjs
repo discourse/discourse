@@ -1530,7 +1530,7 @@ export default class WorkflowCanvas extends Component {
               {{#if this.aiAuthoringAvailable}}
                 <DButton
                   @action={{this.openAiPanel}}
-                  @icon="bolt"
+                  @icon="discourse-sparkles"
                   @translatedLabel={{i18n "discourse_workflows.ai.button"}}
                   class="btn-default workflows-canvas__ai-btn"
                 />
@@ -1634,15 +1634,21 @@ export default class WorkflowCanvas extends Component {
             >
               <div class="workflows-canvas__ai-panel-header">
                 <div class="workflows-canvas__ai-title-row">
-                  <span class="workflows-canvas__ai-title-icon">
-                    {{dIcon "bolt"}}
-                  </span>
-                  <div>
+                  <div class="workflows-canvas__ai-title">
                     <h3 id="workflow-ai-panel-title">
                       {{i18n "discourse_workflows.ai.title"}}
                     </h3>
-                    <p>{{i18n "discourse_workflows.ai.subtitle"}}</p>
+                    <span
+                      class={{dConcatClass
+                        "workflows-canvas__ai-status"
+                        this.aiStatusClass
+                      }}
+                    >
+                      {{this.aiStatusLabel}}
+                    </span>
+
                   </div>
+                  <p>{{i18n "discourse_workflows.ai.subtitle"}}</p>
                 </div>
                 <DButton
                   @action={{this.closeAiPanel}}
@@ -1650,20 +1656,6 @@ export default class WorkflowCanvas extends Component {
                   @title="discourse_workflows.ai.close"
                   class="btn-transparent workflows-canvas__ai-close"
                 />
-              </div>
-
-              <div class="workflows-canvas__ai-status-row">
-                <span
-                  class={{dConcatClass
-                    "workflows-canvas__ai-status"
-                    this.aiStatusClass
-                  }}
-                >
-                  {{this.aiStatusLabel}}
-                </span>
-                <span class="workflows-canvas__ai-panel-description">
-                  {{this.aiStepDescription}}
-                </span>
               </div>
 
               {{#if this.aiShowingClarification}}
@@ -1792,7 +1784,6 @@ export default class WorkflowCanvas extends Component {
 
                     <DButton
                       @action={{this.continueAiClarificationQuestion}}
-                      @icon="bolt"
                       @translatedLabel={{this.aiClarificationContinueLabel}}
                       @isLoading={{this.aiGenerating}}
                       @disabled={{this.aiClarificationCurrentQuestionDisabled}}
@@ -1941,7 +1932,6 @@ export default class WorkflowCanvas extends Component {
 
                   <DButton
                     @action={{this.submitAiPrompt}}
-                    @icon="bolt"
                     @translatedLabel={{i18n "discourse_workflows.ai.generate"}}
                     @isLoading={{this.aiGenerating}}
                     @disabled={{this.aiSubmitDisabled}}
