@@ -380,9 +380,6 @@ en:
         include_fields_placeholder: "company, id"
         exclude_fields: "Fields to exclude"
         exclude_fields_placeholder: "debug, internal.notes"
-        options: "Options"
-        dot_notation: "Support dot notation"
-        ignore_conversion_errors: "Ignore type conversion errors"
         type_string: "String"
         type_number: "Number"
         type_boolean: "Boolean"
@@ -427,7 +424,6 @@ en:
         add_item: "Add item"
         add_option: "Add option"
         add_field: "Add field"
-        clear_fields: "Clear fields"
         remove_item: "Remove item"
         dynamic_hint: "Must resolve to %{value}."
         dynamic_values:

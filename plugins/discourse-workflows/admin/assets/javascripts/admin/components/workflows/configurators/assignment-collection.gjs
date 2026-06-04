@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
@@ -12,9 +11,6 @@ import {
 import Field from "./field";
 
 export default class AssignmentCollection extends Component {
-  @tracked
-  itemCount = (this.args.formApi?.get(this.assignmentsPath) || []).length;
-
   get assignmentsPath() {
     return `${this.args.fieldName}.assignments`;
   }
@@ -68,10 +64,6 @@ export default class AssignmentCollection extends Component {
     };
   }
 
-  get showEmptyState() {
-    return this.itemCount === 0;
-  }
-
   @action
   emptyAssignment() {
     return {
@@ -88,21 +80,13 @@ export default class AssignmentCollection extends Component {
       this.assignmentsPath,
       this.emptyAssignment()
     );
-    this.itemCount++;
     this.args.onChange?.();
   }
 
   @action
   removeAssignment(removeFn, index) {
     removeFn(index);
-    this.itemCount--;
     this.args.onChange?.();
-  }
-
-  @action
-  clearAssignments() {
-    this.args.formApi.set(this.assignmentsPath, []);
-    this.itemCount = 0;
   }
 
   @action
@@ -216,19 +200,8 @@ export default class AssignmentCollection extends Component {
           @translatedLabel={{i18n
             "discourse_workflows.property_engine.add_field"
           }}
-          class="btn-default"
+          class="btn-default workflows-property-engine__add-attrs-btn"
         />
-
-        {{#unless this.showEmptyState}}
-          <DButton
-            @action={{this.clearAssignments}}
-            @icon="xmark"
-            @translatedLabel={{i18n
-              "discourse_workflows.property_engine.clear_fields"
-            }}
-            class="btn-flat"
-          />
-        {{/unless}}
       </div>
     </@form.Section>
   </template>
