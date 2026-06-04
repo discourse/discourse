@@ -78,7 +78,22 @@ jobs:
       - name: Set PARALLEL_TEST_PROCESSORS for system tests
         if: matrix.build_type == 'system'
         run: |
-          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 2))" >> $GITHUB_ENV
+          # On the 16-core cdck runner, `nproc/2 + 2 = 10` was the prior
+          # empirical sweet spot when system-test workers paid full Ruby
+          # GC + glibc allocator overhead. Since then, iter-40 (GC heap +
+          # malloc limits, later dropped), iter-43 (jemalloc narenas:2 +
+          # background_thread), iter-45 (drop the multisite subprocess
+          # entirely), iter-54 (skip the parent's Rails initialize!) and
+          # the AR query-log shortcut from iter-42 have collectively cut
+          # per-worker CPU and resident memory enough that the runner has
+          # ~3-4 cores of slack at steady state. Adding one more parallel
+          # worker (10 → 11) drops each worker's runtime-balanced spec
+          # shard by ~9%; the slowest worker is the step's critical path,
+          # so the step shortens by roughly the same fraction modulo any
+          # new CPU/IO contention. `parallel:create parallel:migrate` and
+          # every downstream step read this same env var, so the worker
+          # DB count and `bin/turbo_rspec` worker count stay in sync.
+          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 3))" >> $GITHUB_ENV
 
       - name: Set QUNIT_PARALLEL for QUnit tests
         if: matrix.build_type == 'frontend'
