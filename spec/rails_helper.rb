@@ -1,18 +1,5 @@
 # frozen_string_literal: true
 
-# Enable YJIT for CI test workers. Discourse's production default
-# (`config/discourse_defaults.conf`) keeps `yjit_enabled = false`, and no
-# test config flips it on, so every system-test worker runs the
-# interpreter unaccelerated. Toggling it on at the top of `rails_helper`
-# JIT-compiles Rails dispatch, the Capybara Puma server's request path,
-# fabricator object creation, `let_it_be` setup, the per-example
-# `TestSetup.test_setup` hook, and the Ruby side of the Capybara /
-# Playwright bridge — all hot per-spec code paths that the worker
-# executes thousands of times during a CI run.
-if ENV["CI"] && defined?(RubyVM::YJIT) && RubyVM::YJIT.respond_to?(:enable)
-  RubyVM::YJIT.enable
-end
-
 if ENV["COVERAGE"]
   require "simplecov"
   if ENV["TEST_ENV_NUMBER"]
