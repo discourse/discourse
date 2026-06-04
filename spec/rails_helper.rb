@@ -154,6 +154,16 @@ RSpec.configure do |config|
       ].compact,
     )
 
+    # Registering this from inside before(:suite) makes it run at the end of the
+    # before(:each) chain. It must run after the specs' `sign_in`, so the auth
+    # cookie is made using the correct (current) time.
+    config.before(:each, type: :system) do |example|
+      if example.metadata[:time]
+        freeze_time(example.metadata[:time])
+        BrowserTime.freeze(page, example.metadata[:time])
+      end
+    end
+
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!
   end
@@ -164,13 +174,6 @@ RSpec.configure do |config|
 
   # Match the request hostname to the value in `database.yml`
   config.before(:each, type: %i[request multisite system]) { host! "test.localhost" }
-
-  config.before(:each) do |example|
-    if example.metadata[:type] != :system
-      EmberCli.stubs(:read_manifest!).returns(nil)
-      EmberCli.stubs(:script_chunks).returns({})
-    end
-  end
 
   config.before(:each, type: :system) do |example|
     SystemDrivers.preload_model_schemas!
@@ -196,14 +199,19 @@ RSpec.configure do |config|
         BrowserTime.override_timezone(pw_page, tz)
       end
     end
+  end
 
-    MessageBusTestSync.start
-    EmberDeprecations.set_raise_on_deprecation!(example)
-
-    if example.metadata[:time]
-      freeze_time(example.metadata[:time])
-      BrowserTime.freeze(page, example.metadata[:time])
+  config.before(:each) do |example|
+    if example.metadata[:type] != :system
+      EmberCli.stubs(:read_manifest!).returns(nil)
+      EmberCli.stubs(:script_chunks).returns({})
     end
+  end
+
+  config.before(:each, type: :system) { MessageBusTestSync.start }
+
+  config.before(:each, type: :system) do |example|
+    EmberDeprecations.set_raise_on_deprecation!(example)
   end
 
   config.after(:each) do |example|
