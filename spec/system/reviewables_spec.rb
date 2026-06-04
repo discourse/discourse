@@ -75,6 +75,8 @@ describe "Reviewables" do
     fab!(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:spammer) { Fabricate(:user, refresh_auto_groups: true) }
 
+    before { Jobs.run_immediately! }
+
     it "resolves the spammer's other flags in the open review queue and in other tabs" do
       flagged_post_reviewable =
         PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
