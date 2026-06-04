@@ -46,8 +46,10 @@ en:
       channel_exception: "An unknown error occurred when a message was last sent to this channel."
       group_mention_template: "Mentions of: @%{name}"
       group_message_template: "Messages to: @%{name}"
+      group_filter_template: "Posts by: @%{name}"
       choose_group: "(Choose a group)"
       all_categories: "(All categories)"
+      all_groups: "(All groups)"
       all_tags: "(All tags)"
       create_rule: "Create rule"
       add_channel: "Add channel"
@@ -102,6 +104,7 @@ en:
           filter: "Notification level. Mute overrides other matching rules"
           category: "This rule will only apply to topics in the specified category"
           group: "This rule will apply to posts referencing this group"
+          group_filter: "If specified, this rule will only apply to posts made by members of this group"
           tags: "If specified, this rule will only apply to topics which have at least one of these tags"
 
       provider:

@@ -129,6 +129,7 @@ en:
 
     group_mention_template: "mentions of: @%{name}"
     group_message_template: "messages to: @%{name}"
+    group_filter_template: "posts by: @%{name}"
 
     topic_tag_changed:
       added_and_removed: "Added %{added} and removed %{removed}"

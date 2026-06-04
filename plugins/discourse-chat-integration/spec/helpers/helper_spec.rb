@@ -228,6 +228,20 @@ RSpec.describe DiscourseChatIntegration::Manager do
         string = DiscourseChatIntegration::Helper.status_for_channel(chan1)
         expect(string.scan("with tags").size).to eq(1)
       end
+
+      it "displays the group filter on normal rules" do
+        DiscourseChatIntegration::Rule.create!(
+          channel: chan1,
+          filter: "watch",
+          category_id: category.id,
+          group_id: group.id,
+        )
+
+        string = DiscourseChatIntegration::Helper.status_for_channel(chan1)
+        expect(string).to include(
+          I18n.t("chat_integration.group_filter_template", name: group.name),
+        )
+      end
     end
   end
 
@@ -370,6 +384,52 @@ RSpec.describe DiscourseChatIntegration::Manager do
         )
       expect(val).to eq(:updated)
       expect(DiscourseChatIntegration::Rule.all.size).to eq(1)
+    end
+
+    it "doesn't update or destroy rules with a group filter" do
+      group = Fabricate(:group)
+      group_rule =
+        DiscourseChatIntegration::Rule.create!(
+          channel: chan1,
+          filter: "watch",
+          category_id: category.id,
+          group_id: group.id,
+        )
+
+      val =
+        DiscourseChatIntegration::Helper.smart_create_rule(
+          channel: chan1,
+          filter: "mute",
+          category_id: category.id,
+        )
+
+      expect(val).to eq(:created)
+      expect(DiscourseChatIntegration::Rule.all.size).to eq(2)
+      expect(group_rule.reload.filter).to eq("watch")
+    end
+
+    it "doesn't merge tags into rules with a group filter" do
+      group = Fabricate(:group)
+      group_rule =
+        DiscourseChatIntegration::Rule.create!(
+          channel: chan1,
+          filter: "watch",
+          category_id: category.id,
+          tags: [tag1.name],
+          group_id: group.id,
+        )
+
+      val =
+        DiscourseChatIntegration::Helper.smart_create_rule(
+          channel: chan1,
+          filter: "watch",
+          category_id: category.id,
+          tags: [tag2.name],
+        )
+
+      expect(val).to eq(:created)
+      expect(DiscourseChatIntegration::Rule.all.size).to eq(2)
+      expect(group_rule.reload.tags).to eq([tag1.name])
     end
 
     it "returns false on error" do

@@ -193,13 +193,12 @@ RSpec.describe DiscourseChatIntegration::Rule do
       expect(rule.valid?).to eq(false)
     end
 
-    it "doesn't allow both category and group to be set" do
+    it "allows an optional group on normal rules" do
       expect(rule.valid?).to eq(true)
       rule.group_id = group.id
-      expect(rule.valid?).to eq(false)
-      rule.category_id = nil
-      rule.type = "group_message"
       expect(rule.valid?).to eq(true)
+      rule.group_id = -99
+      expect(rule.valid?).to eq(false)
     end
 
     it "validates group correctly" do
@@ -208,6 +207,8 @@ RSpec.describe DiscourseChatIntegration::Rule do
       rule.type = "group_message"
       expect(rule.valid?).to eq(true)
       rule.group_id = -99
+      expect(rule.valid?).to eq(false)
+      rule.group_id = nil
       expect(rule.valid?).to eq(false)
     end
 

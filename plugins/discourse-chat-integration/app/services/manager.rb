@@ -68,6 +68,13 @@ module DiscourseChatIntegration
           end
       end
 
+      # Throw away normal rules with a group specified, unless the post author is a member of that group
+      matching_rules =
+        matching_rules.select do |rule|
+          next true if rule.type != "normal" || rule.group_id.nil?
+          GroupUser.exists?(group_id: rule.group_id, user_id: post.user_id)
+        end
+
       # Sort by order of precedence
       t_prec = { "group_message" => 0, "group_mention" => 1, "normal" => 2 } # Group things win
       f_prec = { "mute" => 0, "thread" => 1, "watch" => 2, "follow" => 3 } #(mute always wins; thread beats watch beats follow)

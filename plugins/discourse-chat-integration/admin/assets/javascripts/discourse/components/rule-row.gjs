@@ -65,6 +65,14 @@ export default class RuleRow extends Component {
           {{else}}
             {{i18n "chat_integration.all_categories"}}
           {{/if}}
+          {{#if @rule.group_name}}
+            <span class="rule-group">
+              {{i18n
+                "chat_integration.group_filter_template"
+                name=@rule.group_name
+              }}
+            </span>
+          {{/if}}
         {{else if this.isMention}}
           {{i18n
             "chat_integration.group_mention_template"

@@ -156,6 +156,13 @@ acceptance("Chat Integration", function (needs) {
       .exists("modal opens on edit");
     assert.dom("#save-rule").isEnabled();
 
+    assert
+      .dom("#chat-integration-edit-rule-modal [data-name='category_id']")
+      .exists("category field is shown for normal rules");
+    assert
+      .dom("#chat-integration-edit-rule-modal [data-name='group_id']")
+      .exists("group field is shown for normal rules");
+
     await click("#save-rule");
 
     assert

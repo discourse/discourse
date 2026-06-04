@@ -108,6 +108,17 @@ module DiscourseChatIntegration
               category_name = I18n.t("chat_integration.deleted_category")
             end
           end
+
+          if rule.group_id
+            group = Group.find_by(id: rule.group_id)
+            group_label =
+              if group
+                I18n.t("chat_integration.group_filter_template", name: group.name)
+              else
+                I18n.t("chat_integration.deleted_group")
+              end
+            category_name = "#{category_name} (#{group_label})"
+          end
         when "group_mention", "group_message"
           group = Group.find_by(id: rule.group_id)
           if group
@@ -156,7 +167,13 @@ module DiscourseChatIntegration
     #     :created if a new rule has been created
     #     false if there was an error
     def self.smart_create_rule(channel:, filter:, category_id: nil, tags: nil)
-      existing_rules = DiscourseChatIntegration::Rule.with_channel(channel).with_type("normal")
+      # Slash commands cannot specify a group filter, so rules restricted to a
+      # group are never duplicates of the rule being created - leave them alone
+      existing_rules =
+        DiscourseChatIntegration::Rule
+          .with_channel(channel)
+          .with_type("normal")
+          .select { |rule| rule.group_id.nil? }
 
       # Select the ones that have the same category
       same_category = existing_rules.select { |rule| rule.category_id == category_id }

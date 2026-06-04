@@ -115,11 +115,9 @@ class DiscourseChatIntegration::Rule < DiscourseChatIntegration::PluginModel
   end
 
   def group_valid?
-    if type == "normal" && !group_id.nil?
-      errors.add(:group_id, "cannot be specified for that type of rule")
-    end
-
-    return if type == "normal"
+    # Optional for normal rules (restricts the rule to posts made by group members),
+    # required for group_message/group_mention rules
+    return if type == "normal" && group_id.nil?
 
     if !Group.where(id: group_id).exists?
       errors.add(:group_id, "#{group_id} is not a valid group id")

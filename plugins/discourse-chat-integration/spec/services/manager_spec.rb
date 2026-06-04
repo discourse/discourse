@@ -350,6 +350,43 @@ RSpec.describe DiscourseChatIntegration::Manager do
       end
     end
 
+    describe "with a group filter" do
+      it "should only notify when the post author is a member of the group" do
+        DiscourseChatIntegration::Rule.create!(
+          channel: chan1,
+          filter: "watch",
+          category_id: category.id,
+          group_id: group.id,
+        )
+
+        manager.trigger_notifications(first_post.id)
+        expect(provider.sent_to_channel_ids).to contain_exactly
+
+        group.add(first_post.user)
+        manager.trigger_notifications(first_post.id)
+        expect(provider.sent_to_channel_ids).to contain_exactly(chan1.id)
+      end
+
+      it "should only mute posts made by group members when a mute rule has a group" do
+        DiscourseChatIntegration::Rule.create!(channel: chan1, filter: "watch", category_id: nil)
+        DiscourseChatIntegration::Rule.create!(
+          channel: chan1,
+          filter: "mute",
+          category_id: nil,
+          group_id: group.id,
+        )
+
+        # Author is not in the group, so the mute rule doesn't apply
+        manager.trigger_notifications(first_post.id)
+        expect(provider.sent_to_channel_ids).to contain_exactly(chan1.id)
+
+        # Author is in the group, so the mute rule wins and nothing new is sent
+        group.add(first_post.user)
+        manager.trigger_notifications(first_post.id)
+        expect(provider.sent_to_channel_ids).to contain_exactly(chan1.id)
+      end
+    end
+
     describe "with whispers and actions enabled" do
       before do
         SiteSetting.create_post_for_category_and_tag_changes = true

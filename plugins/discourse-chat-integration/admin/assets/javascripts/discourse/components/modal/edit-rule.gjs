@@ -26,6 +26,18 @@ export default class EditRule extends Component {
     return this.type === "normal";
   }
 
+  get groupInstructions() {
+    return this.isNormalType
+      ? i18n("chat_integration.edit_rule_modal.instructions.group_filter")
+      : i18n("chat_integration.edit_rule_modal.instructions.group");
+  }
+
+  get groupNoneLabel() {
+    return this.isNormalType
+      ? "chat_integration.all_groups"
+      : "chat_integration.choose_group";
+  }
+
   get title() {
     return this.args.model.rule.id
       ? i18n("chat_integration.edit_rule_modal.edit_title")
@@ -64,7 +76,7 @@ export default class EditRule extends Component {
       type: this.type,
       filter: this.filter,
       category_id: this.type === "normal" ? this.category_id : null,
-      group_id: this.type !== "normal" ? this.group_id : null,
+      group_id: this.group_id,
       tags: this.tags.map((tag) => getTagName(tag)),
     });
 
@@ -172,27 +184,25 @@ export default class EditRule extends Component {
                 />
               </field.Control>
             </form.Field>
-          {{else}}
-            <form.Field
-              @type="custom"
-              @name="group_id"
-              @title={{i18n "chat_integration.edit_rule_modal.group"}}
-              @description={{i18n
-                "chat_integration.edit_rule_modal.instructions.group"
-              }}
-              as |field|
-            >
-              <field.Control>
-                <ComboBox
-                  @content={{@model.groups}}
-                  @valueProperty="id"
-                  @value={{this.group_id}}
-                  @onChange={{this.onGroupChange}}
-                  @options={{hash none="chat_integration.choose_group"}}
-                />
-              </field.Control>
-            </form.Field>
           {{/if}}
+
+          <form.Field
+            @type="custom"
+            @name="group_id"
+            @title={{i18n "chat_integration.edit_rule_modal.group"}}
+            @description={{this.groupInstructions}}
+            as |field|
+          >
+            <field.Control>
+              <ComboBox
+                @content={{@model.groups}}
+                @valueProperty="id"
+                @value={{this.group_id}}
+                @onChange={{this.onGroupChange}}
+                @options={{hash none=this.groupNoneLabel}}
+              />
+            </field.Control>
+          </form.Field>
 
           {{#if this.siteSettings.tagging_enabled}}
             <form.Field
