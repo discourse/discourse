@@ -298,22 +298,6 @@ jobs:
           # serial-prefix on the step's critical path shrinks by the
           # parent's `Discourse::Application.initialize!` time.
           TURBO_RSPEC_SKIP_MIGRATIONS_CHECK: "1"
-          # Enable Ruby YJIT for the rspec workers spawned by this step.
-          # `RUBY_YJIT_ENABLE=1` flips YJIT on at MRI startup — earlier
-          # than `RubyVM::YJIT.enable` in rails_helper.rb, which only fires
-          # after Bootsnap+Rails have already loaded thousands of methods
-          # without JIT. With CI's CRuby 3.4.x, YJIT compiles hot Ruby
-          # frames (ActiveRecord dispatch, fabricator object construction,
-          # Capybara/Playwright Ruby-side bridge, the per-spec
-          # `TestSetup.test_setup` hook, RSpec's example runner) once and
-          # reuses native code across the worker's ~25-spec shard. The
-          # variable is inherited by `Open3.popen3`-spawned workers from
-          # `bin/turbo_rspec`, so every parallel rspec process opts in.
-          # Discourse production has `yjit_enabled` as a runtime knob
-          # (`config/discourse_defaults.conf`) but the CI test env has
-          # never enabled YJIT — workers run the bytecode interpreter on
-          # the same Ruby that production tunes for JIT.
-          RUBY_YJIT_ENABLE: "1"
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
