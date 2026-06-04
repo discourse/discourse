@@ -744,6 +744,45 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
+  describe "#serialize_topic" do
+    fab!(:user)
+    fab!(:topic) { Fabricate(:topic, user: user) }
+
+    it "serializes a topic for workflow output" do
+      topic.custom_fields["workflow_key"] = "workflow value"
+      topic.custom_fields["other_key"] = "other value"
+      topic.save_custom_fields
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      result =
+        ctx.serialize_topic(
+          topic.reload,
+          guardian: user.guardian,
+          custom_field_names: ["workflow_key"],
+        )
+
+      expect(result).to include(
+        id: topic.id,
+        title: topic.title,
+        category_id: topic.category_id,
+        custom_fields: {
+          workflow_key: "workflow value",
+        },
+      )
+      expect(result[:custom_fields]).not_to include(:other_key)
+    end
+
+    it "omits custom fields by default" do
+      topic.custom_fields["workflow_key"] = "workflow value"
+      topic.save_custom_fields
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      result = ctx.serialize_topic(topic, guardian: user.guardian)
+
+      expect(result).not_to include(:custom_fields)
+    end
+  end
+
   describe "#http_request" do
     it "returns a parsed response object" do
       stub_request(:get, "https://api.example.com/data").to_return(

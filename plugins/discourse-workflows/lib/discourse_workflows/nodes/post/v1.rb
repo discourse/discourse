@@ -355,8 +355,8 @@ module DiscourseWorkflows
               exec_ctx.serialize_post(
                 post,
                 guardian: actor.guardian,
-                include_raw: truthy?(config["include_raw"]),
-                include_cooked: truthy?(config["include_cooked"]),
+                include_raw: config["include_raw"],
+                include_cooked: config["include_cooked"],
               ),
           }
         end
@@ -384,8 +384,8 @@ module DiscourseWorkflows
                 exec_ctx.serialize_post(
                   post,
                   guardian: actor.guardian,
-                  include_raw: truthy?(config["include_raw"]),
-                  include_cooked: truthy?(config["include_cooked"]),
+                  include_raw: config["include_raw"],
+                  include_cooked: config["include_cooked"],
                 ),
             }
           end
@@ -404,13 +404,13 @@ module DiscourseWorkflows
             parts,
             "category",
             config["categories"],
-            exact: truthy?(config["exact_category_match"]),
+            exact: config["exact_category_match"],
           )
           add_category_part(
             parts,
             "exclude_category",
             config["exclude_categories"],
-            exact: truthy?(config["exact_category_match"]),
+            exact: config["exact_category_match"],
           )
           add_query_part(parts, "tag", config["tags"])
           add_query_part(parts, "exclude_tag", config["exclude_tags"])
@@ -475,10 +475,6 @@ module DiscourseWorkflows
           integer
         rescue ArgumentError, TypeError
           default
-        end
-
-        def truthy?(value)
-          value == true || value.to_s == "true" || value.to_s == "1"
         end
       end
     end
