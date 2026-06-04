@@ -355,9 +355,8 @@ export default class Nested extends Component {
       return;
     }
 
-    this.args.setFocusedPostNumber?.(postNumber);
-
     if (!postNumber) {
+      this.args.setFocusedPostNumber?.(null, []);
       if (this.focusedPath.length > 0) {
         this.focusDirection = "back";
         this.mobileReturnAnchor ??= this.scrollAnchorForPath(this.focusedPath);
@@ -371,6 +370,7 @@ export default class Nested extends Component {
       return;
     }
 
+    this.args.setFocusedPostNumber?.(postNumber, path);
     this.focusDirection =
       path.length >= this.focusedPath.length ? "forward" : "back";
     this.focusedPath = path;
@@ -378,7 +378,7 @@ export default class Nested extends Component {
 
   #pushURLForFocusedPath(path) {
     const postNumber = path.at(-1)?.post?.post_number || null;
-    this.args.setFocusedPostNumber?.(postNumber);
+    this.args.setFocusedPostNumber?.(postNumber, path);
     const url = this.#nestedURL(postNumber);
 
     if (this.#currentURLMatches(url)) {
@@ -390,7 +390,7 @@ export default class Nested extends Component {
 
   #replaceURLForFocusedPath(path) {
     const postNumber = path.at(-1)?.post?.post_number || null;
-    this.args.setFocusedPostNumber?.(postNumber);
+    this.args.setFocusedPostNumber?.(postNumber, path);
     const url = this.#nestedURL(postNumber);
 
     if (this.#currentURLMatches(url)) {

@@ -174,9 +174,10 @@ export default class NestedController extends Controller {
   }
 
   @action
-  setFocusedPostNumber(postNumber) {
+  setFocusedPostNumber(postNumber, focusedPath = []) {
     this.postNumber = postNumber;
     this.targetPostNumber = postNumber;
+    this.initialFocusedPath = focusedPath;
   }
 
   @action
@@ -591,14 +592,15 @@ export default class NestedController extends Controller {
         return;
       }
 
-      const { post } = this.#processNode({ ...postData, children: [] });
+      const node = this.#processNode({ ...postData, children: [] });
+      const { post } = node;
 
       const replyTo = postData.reply_to_post_number;
       const isRoot = !replyTo || replyTo === 1;
 
       if (isRoot) {
         if (data.user_id === this.currentUser?.id) {
-          this.rootNodes = [{ post, children: [] }, ...this.rootNodes];
+          this.rootNodes = [node, ...this.rootNodes];
         } else {
           this.newRootPostIds = [...this.newRootPostIds, data.id];
         }
