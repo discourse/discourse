@@ -367,6 +367,25 @@ RSpec.describe DiscourseChatIntegration::Manager do
         expect(provider.sent_to_channel_ids).to contain_exactly(chan1.id)
       end
 
+      it "should filter replies by the reply author's group membership" do
+        DiscourseChatIntegration::Rule.create!(
+          channel: chan1,
+          filter: "watch",
+          category_id: category.id,
+          group_id: group.id,
+        )
+
+        # The reply author is not a group member, so no notification
+        manager.trigger_notifications(second_post.id)
+        expect(provider.sent_to_channel_ids).to contain_exactly
+
+        # Membership is checked per post: the reply notifies once its author
+        # joins the group, even though the topic starter is not a member
+        group.add(second_post.user)
+        manager.trigger_notifications(second_post.id)
+        expect(provider.sent_to_channel_ids).to contain_exactly(chan1.id)
+      end
+
       it "should only mute posts made by group members when a mute rule has a group" do
         DiscourseChatIntegration::Rule.create!(channel: chan1, filter: "watch", category_id: nil)
         DiscourseChatIntegration::Rule.create!(
