@@ -17,7 +17,7 @@ describe "Topic page" do
 
     find("#toc-h2-testing .anchor", visible: :all).click
 
-    expect(current_url).to match("/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
+    expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}#toc-h2-testing}, url: true)
   end
 
   context "with a subfolder setup" do
@@ -28,7 +28,10 @@ describe "Topic page" do
 
       find("#toc-h2-testing .anchor", visible: :all).click
 
-      expect(current_url).to match("/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
+      expect(page).to have_current_path(
+        %r{/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing},
+        url: true,
+      )
     end
   end
 
