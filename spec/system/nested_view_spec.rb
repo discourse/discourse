@@ -303,20 +303,19 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_post(child_reply)
       expect(nested_view).to have_post(grandchild_reply)
       expect(nested_view).to have_post(great_grandchild_reply)
-      expect(nested_view).to have_post(fifth_level_reply)
-      expect(nested_view).to have_replies_toggle_for(fifth_level_reply)
-      expect(nested_view).to have_no_post(sixth_level_reply)
+      expect(nested_view).to have_replies_toggle_for(great_grandchild_reply)
+      expect(nested_view).to have_no_post(fifth_level_reply)
 
-      nested_view.click_replies_toggle(fifth_level_reply)
+      nested_view.click_replies_toggle(great_grandchild_reply)
 
       expect(page).to have_current_path(
-        %r{/n/#{topic.slug}/#{topic.id}/#{fifth_level_reply.post_number}},
+        %r{/n/#{topic.slug}/#{topic.id}/#{great_grandchild_reply.post_number}},
       )
       expect(nested_view).to have_mobile_focus
       expect(nested_view).to have_mobile_ancestor(root_reply)
       expect(nested_view).to have_mobile_ancestor(child_reply)
       expect(nested_view).to have_mobile_ancestor(grandchild_reply)
-      expect(nested_view).to have_mobile_ancestor(great_grandchild_reply)
+      expect(nested_view).to have_post(fifth_level_reply)
       expect(nested_view).to have_post(sixth_level_reply)
       expect(nested_view).to have_no_root_post(sibling_root_reply)
 
@@ -334,11 +333,11 @@ RSpec.describe "Nested view" do
 
       page.visit("/latest")
       nested_view.visit_nested(topic)
-      nested_view.scroll_post_near_top(fifth_level_reply)
+      nested_view.scroll_post_near_top(great_grandchild_reply)
 
-      previous_scroll_y = nested_view.trigger_replies_toggle(fifth_level_reply)
+      previous_scroll_y = nested_view.trigger_replies_toggle(great_grandchild_reply)
       expect(page).to have_current_path(
-        %r{/n/#{topic.slug}/#{topic.id}/#{fifth_level_reply.post_number}},
+        %r{/n/#{topic.slug}/#{topic.id}/#{great_grandchild_reply.post_number}},
       )
       expect(nested_view).to have_mobile_focus
 
@@ -369,6 +368,19 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_no_mobile_ancestor(child_reply)
     end
 
+    it "returns from direct post URLs to all replies", mobile: true do
+      nested_view.visit_nested_context(topic, post_number: grandchild_reply.post_number)
+
+      expect(nested_view).to have_mobile_focus
+
+      nested_view.click_mobile_focus_back
+
+      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}(?:\?.*)?$})
+      expect(nested_view).to have_no_mobile_focus
+      expect(nested_view).to have_root_post(root_reply)
+      expect(nested_view).to have_root_post(sibling_root_reply)
+    end
+
     it "does not open the user card when tapping a focused path avatar", mobile: true do
       nested_view.visit_nested_context(topic, post_number: grandchild_reply.post_number)
 
@@ -389,13 +401,13 @@ RSpec.describe "Nested view" do
       sixth_level_reply.rebake!
 
       nested_view.visit_nested(topic)
-      nested_view.scroll_post_near_top(fifth_level_reply)
+      nested_view.scroll_post_near_top(great_grandchild_reply)
 
-      nested_view.click_replies_toggle(fifth_level_reply)
+      nested_view.click_replies_toggle(great_grandchild_reply)
 
       expect(nested_view).to have_mobile_focus
       try_until_success(reason: "focused view scroll runs after render") do
-        expect(nested_view.mobile_ancestor_viewport_top(great_grandchild_reply)).to be_between(
+        expect(nested_view.mobile_ancestor_viewport_top(grandchild_reply)).to be_between(
           -1,
           120,
         ).inclusive
@@ -427,14 +439,14 @@ RSpec.describe "Nested view" do
     it "collapses a branch with hidden replies from the depth line", mobile: true do
       nested_view.visit_nested(topic)
 
-      expect(nested_view).to have_replies_toggle_for(fifth_level_reply)
-      expect(nested_view).to have_no_post(sixth_level_reply)
+      expect(nested_view).to have_replies_toggle_for(great_grandchild_reply)
+      expect(nested_view).to have_no_post(fifth_level_reply)
 
-      nested_view.click_depth_line(fifth_level_reply)
+      nested_view.click_depth_line(great_grandchild_reply)
 
       expect(nested_view).to have_no_mobile_focus
-      expect(nested_view).to have_collapsed_bar_for(fifth_level_reply)
-      expect(nested_view).to have_no_post(sixth_level_reply)
+      expect(nested_view).to have_collapsed_bar_for(great_grandchild_reply)
+      expect(nested_view).to have_no_post(fifth_level_reply)
       expect(nested_view).to have_root_post(sibling_root_reply)
     end
   end

@@ -35,8 +35,8 @@ const postExcerpt = helper(([post]) => {
   return element.textContent?.replace(/\s+/g, " ").trim();
 });
 
-// Depth is zero-based; depth 4 gives mobile users five visible levels including root.
-const MOBILE_ROOT_VIEW_COLLAPSE_DEPTH = 4;
+// Depth is zero-based; depth 3 matches the server's root preload depth.
+const MOBILE_ROOT_VIEW_COLLAPSE_DEPTH = 3;
 
 export default class Nested extends Component {
   @service appEvents;
@@ -175,7 +175,7 @@ export default class Nested extends Component {
   }
 
   get initialFocusedPathKey() {
-    return this.args.initialFocusedPath?.map((node) => node.post?.id).join(":");
+    return this.#focusedPathKey(this.args.initialFocusedPath);
   }
 
   get targetScrollKey() {
@@ -313,12 +313,22 @@ export default class Nested extends Component {
 
   @action
   applyInitialFocusedPath() {
-    if (!this.site.mobileView || !this.args.initialFocusedPath?.length) {
+    if (!this.site.mobileView) {
       return;
     }
 
     const key = this.initialFocusedPathKey;
-    if (!key || key === this.#initialFocusedPathKey) {
+
+    if (!this.args.initialFocusedPath?.length) {
+      this.#initialFocusedPathKey = key;
+      if (this.focusedPath.length > 0) {
+        this.focusDirection = "back";
+        this.focusedPath = [];
+      }
+      return;
+    }
+
+    if (key === this.#initialFocusedPathKey) {
       return;
     }
 
@@ -326,6 +336,12 @@ export default class Nested extends Component {
     this.focusDirection = "forward";
     this.focusedPath = this.args.initialFocusedPath;
     this.#registerFocusedPath(this.focusedPath);
+  }
+
+  #focusedPathKey(path) {
+    return (path || [])
+      .map((node) => `${node._renderKey || node.post?.id}:${node.post?.id}`)
+      .join(":");
   }
 
   @action
