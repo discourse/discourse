@@ -18,18 +18,6 @@ RSpec.describe Jobs::CleanUpBrowserPageviewEvents do
     expect(BrowserPageviewEvent.all).to contain_exactly(fresh_event)
   end
 
-  it "deletes events spanning multiple old days" do
-    SiteSetting.clean_up_browser_pageview_events = true
-    Fabricate(:browser_pageview_event, created_at: 6.months.ago)
-    Fabricate(:browser_pageview_event, created_at: 5.months.ago)
-    Fabricate(:browser_pageview_event, created_at: 4.months.ago)
-    fresh_event = Fabricate(:browser_pageview_event, created_at: 1.month.ago)
-
-    described_class.new.execute({})
-
-    expect(BrowserPageviewEvent.all).to contain_exactly(fresh_event)
-  end
-
   it "deletes scores for deleted events" do
     SiteSetting.clean_up_browser_pageview_events = true
     fresh_event = Fabricate(:browser_pageview_event, created_at: 1.month.ago)

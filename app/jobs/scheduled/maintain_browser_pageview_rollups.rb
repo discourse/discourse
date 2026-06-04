@@ -1,27 +1,49 @@
 # frozen_string_literal: true
 
 module Jobs
-  class BackfillBrowserPageviewNormalizedReferrers < ::Jobs::Scheduled
+  class MaintainBrowserPageviewRollups < ::Jobs::Scheduled
     every 10.minutes
-
-    sidekiq_options queue: "low"
 
     cluster_concurrency 1
 
     def execute(_args)
       return if !SiteSetting.persist_browser_pageview_events
 
+      aggregate
+      backfill
+    end
+
+    private
+
+    def aggregate
+      start_date, end_date = aggregation_window
+      return if start_date.nil?
+
+      BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
+      BrowserPageviewReferrerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
+    end
+
+    def aggregation_window
+      end_date = Time.zone.today
+
+      if BrowserPageviewCountryDailyRollup.none? && BrowserPageviewReferrerDailyRollup.none?
+        earliest_event_date = BrowserPageviewEvent.minimum(:created_at)&.to_date
+        [earliest_event_date, end_date]
+      else
+        [1.day.ago.to_date, end_date]
+      end
+    end
+
+    def backfill
       rows = next_batch
       return if rows.empty?
 
       ids = rows.map(&:id)
 
       store_normalized_referrers(rows)
-      repair_rollups(touched_dates(ids))
+      BrowserPageviewReferrerDailyRollup.recompute(touched_dates(ids))
       stamp_version(ids)
     end
-
-    private
 
     def next_batch
       params = { version: BrowserPageviewReferrerInspector::VERSION, limit: batch_size }
@@ -29,9 +51,10 @@ module Jobs
       retention_clause = ""
       if SiteSetting.clean_up_browser_pageview_events
         retention_clause = "AND created_at >= :retention_cutoff"
-        params[
-          :retention_cutoff
-        ] = Jobs::CleanUpBrowserPageviewEvents::RETENTION_PERIOD.ago.beginning_of_day
+        # CleanUpBrowserPageviewEvents computes its own cutoff, so around
+        # midnight the two cutoffs can differ by a day. The extra day ensures
+        # the backfill never rebuilds a day that cleanup may be deleting.
+        params[:retention_cutoff] = BrowserPageviewEvent.retention_cutoff + 1.day
       end
 
       DB.query(<<~SQL, params)
@@ -69,15 +92,6 @@ module Jobs
         FROM browser_pageview_events
         WHERE id IN (:ids)
       SQL
-    end
-
-    def repair_rollups(dates)
-      return if dates.empty?
-
-      DistributedMutex.synchronize(
-        Jobs::AggregateBrowserPageviewDailyRollups::LOCK_KEY,
-        validity: 10.minutes,
-      ) { BrowserPageviewReferrerDailyRollup.recompute(dates) }
     end
 
     def stamp_version(ids)

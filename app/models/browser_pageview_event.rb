@@ -6,8 +6,13 @@ class BrowserPageviewEvent < ActiveRecord::Base
   MAX_REFERRER_LENGTH = 2000
   MAX_USER_AGENT_LENGTH = 1000
   MAX_NORMALIZED_REFERRER_LENGTH = 2000
+  RETENTION_PERIOD = 3.months
 
   has_one :browser_pageview_event_score, foreign_key: :event_id, dependent: :delete
+
+  def self.retention_cutoff
+    RETENTION_PERIOD.ago.beginning_of_day
+  end
 
   before_save :truncate_fields
 

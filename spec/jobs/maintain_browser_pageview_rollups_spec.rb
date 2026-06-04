@@ -1,11 +1,62 @@
 # frozen_string_literal: true
 
-RSpec.describe Jobs::BackfillBrowserPageviewNormalizedReferrers do
+RSpec.describe Jobs::MaintainBrowserPageviewRollups do
   subject(:job) { described_class.new }
 
   before { SiteSetting.persist_browser_pageview_events = true }
 
   describe "#execute" do
+    it "does nothing when persist_browser_pageview_events is disabled" do
+      SiteSetting.persist_browser_pageview_events = false
+      event =
+        Fabricate(
+          :browser_pageview_event_with_unnormalized_referrer,
+          referrer: "https://reddit.com/",
+          country_code: "US",
+        )
+
+      job.execute({})
+
+      expect(BrowserPageviewCountryDailyRollup.count).to eq(0)
+      expect(BrowserPageviewReferrerDailyRollup.count).to eq(0)
+      expect(event.reload.normalized_referrer_version).to be_nil
+    end
+  end
+
+  describe "aggregation" do
+    it "aggregates both country and referrer rollups from recent pageview events" do
+      Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
+
+      job.execute({})
+
+      expect(BrowserPageviewCountryDailyRollup.where(country_code: "US").sum(:count)).to eq(1)
+      expect(
+        BrowserPageviewReferrerDailyRollup.where(normalized_referrer: "google.com").sum(:count),
+      ).to eq(1)
+    end
+
+    it "backfills from the earliest event date on the first run when rollups are empty" do
+      Fabricate(:browser_pageview_event, country_code: "US", created_at: 60.days.ago)
+      Fabricate(:browser_pageview_event, country_code: "GB", created_at: 5.days.ago)
+
+      job.execute({})
+
+      expect(BrowserPageviewCountryDailyRollup.pluck(:country_code)).to contain_exactly("US", "GB")
+    end
+
+    it "only aggregates yesterday and today once historical rollups are populated" do
+      Fabricate(:browser_pageview_event, country_code: "US", created_at: 60.days.ago)
+      job.execute({}) # first run backfills everything
+
+      Fabricate(:browser_pageview_event, country_code: "GB", created_at: 60.days.ago) # late old event
+      Fabricate(:browser_pageview_event, country_code: "FR") # today
+      job.execute({}) # second run only does yesterday + today
+
+      expect(BrowserPageviewCountryDailyRollup.pluck(:country_code)).to contain_exactly("US", "FR")
+    end
+  end
+
+  describe "backfill" do
     it "normalizes historical rows using the inspector and stamps the current version" do
       raw = "https://www.reddit.com/r/discourse/"
       event = Fabricate(:browser_pageview_event_with_unnormalized_referrer, referrer: raw)
@@ -16,19 +67,6 @@ RSpec.describe Jobs::BackfillBrowserPageviewNormalizedReferrers do
         BrowserPageviewReferrerInspector.normalize(raw),
       )
       expect(event.normalized_referrer_version).to eq(BrowserPageviewReferrerInspector::VERSION)
-    end
-
-    it "does nothing when persist_browser_pageview_events is disabled" do
-      SiteSetting.persist_browser_pageview_events = false
-      event =
-        Fabricate(
-          :browser_pageview_event_with_unnormalized_referrer,
-          referrer: "https://reddit.com/",
-        )
-
-      job.execute({})
-
-      expect(event.reload.normalized_referrer_version).to be_nil
     end
 
     it "leaves rows without a referrer untouched and does not let them block completion" do
@@ -80,13 +118,19 @@ RSpec.describe Jobs::BackfillBrowserPageviewNormalizedReferrers do
       expect(BrowserPageviewEvent.where(normalized_referrer_version: nil).count).to eq(1)
     end
 
-    it "skips rows older than the retention cutoff when cleanup is enabled" do
+    it "skips rows within a day of the retention cutoff when cleanup is enabled" do
       SiteSetting.clean_up_browser_pageview_events = true
       prunable =
         Fabricate(
           :browser_pageview_event_with_unnormalized_referrer,
           referrer: "https://www.reddit.com/",
-          created_at: (Jobs::CleanUpBrowserPageviewEvents::RETENTION_PERIOD + 1.day).ago,
+          created_at: (BrowserPageviewEvent::RETENTION_PERIOD + 1.day).ago,
+        )
+      near_cutoff =
+        Fabricate(
+          :browser_pageview_event_with_unnormalized_referrer,
+          referrer: "https://www.reddit.com/",
+          created_at: BrowserPageviewEvent::RETENTION_PERIOD.ago,
         )
       recent =
         Fabricate(
@@ -99,6 +143,7 @@ RSpec.describe Jobs::BackfillBrowserPageviewNormalizedReferrers do
       prunable.reload
       expect(prunable.normalized_referrer).to be_nil
       expect(prunable.normalized_referrer_version).to be_nil
+      expect(near_cutoff.reload.normalized_referrer_version).to be_nil
       expect(recent.reload.normalized_referrer_version).to eq(
         BrowserPageviewReferrerInspector::VERSION,
       )
@@ -110,7 +155,7 @@ RSpec.describe Jobs::BackfillBrowserPageviewNormalizedReferrers do
         Fabricate(
           :browser_pageview_event_with_unnormalized_referrer,
           referrer: "https://www.reddit.com/",
-          created_at: (Jobs::CleanUpBrowserPageviewEvents::RETENTION_PERIOD + 1.day).ago,
+          created_at: (BrowserPageviewEvent::RETENTION_PERIOD + 1.day).ago,
         )
 
       job.execute({})
@@ -184,7 +229,9 @@ RSpec.describe Jobs::BackfillBrowserPageviewNormalizedReferrers do
 
       expect(event.reload.normalized_referrer).to eq("google.com")
       expect(event.normalized_referrer_version).to be_nil
-      expect(BrowserPageviewReferrerDailyRollup.where(date:)).to be_empty
+      expect(
+        BrowserPageviewReferrerDailyRollup.where(date:).pluck(:normalized_referrer, :count),
+      ).to eq([[nil, 1]])
 
       BrowserPageviewReferrerDailyRollup.unstub(:recompute)
       job.execute({})
@@ -192,7 +239,9 @@ RSpec.describe Jobs::BackfillBrowserPageviewNormalizedReferrers do
       expect(event.reload.normalized_referrer_version).to eq(
         BrowserPageviewReferrerInspector::VERSION,
       )
-      expect(BrowserPageviewReferrerDailyRollup.where(date:).sum(:count)).to eq(1)
+      expect(
+        BrowserPageviewReferrerDailyRollup.where(date:).pluck(:normalized_referrer, :count),
+      ).to eq([["google.com", 1]])
     end
 
     it "re-normalizes rows stamped with an older version and repairs their rollups" do
