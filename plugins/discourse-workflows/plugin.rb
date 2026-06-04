@@ -101,6 +101,7 @@ after_initialize do
     require_relative "lib/discourse_workflows/ai/graph_digest"
     require_relative "lib/discourse_workflows/ai/progress_publisher"
     require_relative "lib/discourse_workflows/ai/tools/workflow_node_catalog"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_ai_agent_catalog"
     require_relative "lib/discourse_workflows/ai/tools/workflow_graph_context"
     require_relative "lib/discourse_workflows/ai/tools/workflow_validate_patch"
     require_relative "lib/discourse_workflows/ai/tools/workflow_ask_questions"

@@ -82,6 +82,112 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
     )
   end
 
+  it "validates proposed AI agents and agent output schemas", :aggregate_failures do
+    operations = [
+      {
+        op: "create_ai_agent",
+        client_id: "sentiment-agent",
+        agent: {
+          name: "Workflow sentiment agent",
+          description: "Determines whether a post needs follow up.",
+          system_prompt: "Return positive, neutral, or negative for each Discourse post.",
+        },
+      },
+      {
+        op: "add_node",
+        client_id: "post-created",
+        node: {
+          type: "trigger:post_created",
+          typeVersion: "1.0",
+          name: "Post created",
+          position: {
+            x: 0,
+            y: 0,
+          },
+          parameters: {
+          },
+          credentials: {
+          },
+        },
+      },
+      {
+        op: "add_node",
+        client_id: "classify-post",
+        node: {
+          type: "action:ai_agent",
+          typeVersion: "1.0",
+          name: "Classify post",
+          position: {
+            x: 280,
+            y: 0,
+          },
+          parameters: {
+            agent_id: {
+              "$ref" => "sentiment-agent",
+            },
+            prompt: "=Classify this post: {{ $json.post.raw }}",
+          },
+          credentials: {
+          },
+        },
+      },
+      {
+        op: "add_node",
+        client_id: "write-log",
+        node: {
+          type: "action:log",
+          typeVersion: "1.0",
+          name: "Log classification",
+          position: {
+            x: 560,
+            y: 0,
+          },
+          parameters: {
+            entries: {
+              values: [{ key: "classification", value: "={{ $json.result }}" }],
+            },
+          },
+          credentials: {
+          },
+        },
+      },
+      {
+        op: "add_connection",
+        from: "post-created",
+        to: "classify-post",
+        output_index: 0,
+        input_index: 0,
+        connection_type: "main",
+      },
+      {
+        op: "add_connection",
+        from: "classify-post",
+        to: "write-log",
+        output_index: 0,
+        input_index: 0,
+        connection_type: "main",
+      },
+    ]
+
+    result = invoke_tool(operations)
+    schemas_by_name = result[:node_schemas].index_by { |schema| schema[:node_name] }
+
+    expect(result).to include(status: "success", valid: true, errors: [])
+    expect(result[:created_resources]).to contain_exactly(
+      include(
+        "type" => "ai_agent",
+        "client_id" => "sentiment-agent",
+        "name" => "Workflow sentiment agent",
+      ),
+    )
+    expect(schemas_by_name.dig("Classify post", :output_schema)).to include(
+      "$json.result" => "string",
+    )
+    expect(schemas_by_name.dig("Log classification", :input_schema)).to include(
+      "$json.result" => "string",
+    )
+  end
+
   it "passes schemas through group checks into private messages", :aggregate_failures do
     operations = [
       {

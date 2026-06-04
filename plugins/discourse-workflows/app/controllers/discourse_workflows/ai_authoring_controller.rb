@@ -176,6 +176,9 @@ module DiscourseWorkflows
     end
 
     def log_ai_patch_applied(workflow, session, result)
+      created_ai_agent_count =
+        Array.wrap(result[:created_resources]).count { |resource| resource["type"] == "ai_agent" }
+
       StaffActionLogger.new(current_user).log_custom(
         "discourse_workflows_ai_proposal_applied",
         subject: workflow.name,
@@ -183,6 +186,7 @@ module DiscourseWorkflows
         ai_authoring_session_id: session.id,
         risk_level: session.risk_level,
         operation_count: result.dig(:diff, :operation_count),
+        created_ai_agent_count: created_ai_agent_count,
       )
     end
   end

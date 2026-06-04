@@ -113,6 +113,8 @@ module Jobs
           context_tools: {
             workflow_node_catalog:
               "Call this with targeted queries for node parameters, output schemas, capabilities, and examples.",
+            workflow_ai_agent_catalog:
+              "Call this before adding action:ai_agent nodes to find existing enabled AI agents to reuse. If none fit, propose create_ai_agent with name, description, and system_prompt.",
             workflow_graph_context:
               "Call this with workflow_id when you need the current graph nodes and connections.",
             workflow_validate_patch:
@@ -165,7 +167,7 @@ module Jobs
       def parse_json_hash(candidate)
         parsed = JSON.parse(candidate)
         parsed if parsed.is_a?(Hash)
-      rescue JSON::ParserError
+      rescue JSON::ParserError, Oj::ParseError
         nil
       end
 
@@ -359,6 +361,9 @@ module Jobs
 
         validation = validate_patch_operations(proposal, operations)
         proposal["patch_validation"] = validation
+        proposal["created_resources"] = validation["created_resources"] if validation[
+          "created_resources"
+        ].present?
 
         if !validation["valid"]
           return(
@@ -478,6 +483,7 @@ module Jobs
           "graph_errors" => Array.wrap(result[:graph_errors]),
           "expression_errors" => Array.wrap(result[:expression_errors]),
           "diff" => result[:diff],
+          "created_resources" => Array.wrap(result[:created_resources]),
         }
       end
 

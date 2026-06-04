@@ -61,6 +61,8 @@ en:
         start_over: "Start over"
         applied: "AI workflow proposal applied to the draft. Publish when you're ready."
         risks: "Risks"
+        created_agents: "AI agents to create"
+        created_agent_system_prompt: "System prompt"
         questions: "Questions"
         status_idle: "Ready"
         status_working: "Working"

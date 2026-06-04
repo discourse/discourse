@@ -3,6 +3,8 @@
 RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
   fab!(:admin)
 
+  before { SiteSetting.discourse_ai_enabled = true }
+
   def invoke_tool(query: nil, include_examples: false)
     context = DiscourseAi::Agents::BotContext.new(messages: [], user: admin)
     described_class.new(
@@ -71,6 +73,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "post.id" => "integer",
       "post.post_url" => "string",
     )
+    expect(nodes_by_type.dig("action:ai_agent", :output_schema)).to include("result" => "string")
   end
 
   it "matches broad multi-term catalog queries", :aggregate_failures do

@@ -8,7 +8,7 @@ module DiscourseWorkflows
           {
             name: name,
             description:
-              "Dry-runs a workflow patch and returns validation errors, normalized graph data, inferred node input/output schemas, and a diff summary without saving anything.",
+              "Dry-runs a workflow patch and returns validation errors, normalized graph data, inferred node input/output schemas, proposed created resources, and a diff summary without saving anything.",
             json_schema: {
               type: "object",
               additionalProperties: false,
@@ -74,6 +74,7 @@ module DiscourseWorkflows
               result[:valid] ? { nodes: result[:nodes], connections: result[:connections] } : nil,
             node_schemas: schemas,
             diff: result[:diff],
+            created_resources: Array.wrap(result[:created_resources]),
           }
         end
 
@@ -340,7 +341,7 @@ module DiscourseWorkflows
         def parse_json_hash(candidate)
           parsed = JSON.parse(candidate)
           parsed if parsed.is_a?(Hash)
-        rescue JSON::ParserError
+        rescue JSON::ParserError, Oj::ParseError
           nil
         end
 
