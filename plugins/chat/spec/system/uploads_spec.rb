@@ -76,7 +76,7 @@ describe "Uploading files in chat messages" do
       expect(channel_page).to have_no_css(".chat-composer-upload")
 
       upload = nil
-      try_until_success do
+      try_until_success(reason: "wait for the upload to be processed") do
         upload = Chat::Message.last.uploads.first
         expect(upload.thumbnail&.url).to be_present
       end
