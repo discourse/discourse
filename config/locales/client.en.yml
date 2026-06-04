@@ -7601,9 +7601,11 @@ en:
           your_organization: "Your organization"
           your_organization_description: "We'll use this information in the Terms of Service and Privacy Notice to show who operates the site and under which jurisdiction."
           company_name: "Name"
-          company_name_placeholder: "Acme Organization"
+          company_name_placeholder: "ExampleCo"
           company_name_warning: |
             If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
+          company_url: "Website"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Governing law"
           governing_law_placeholder: "Province, State, or Country"
           governing_law_help: |

@@ -122,6 +122,9 @@ required:
   company_name:
     default: ""
     area: "about|legal"
+  company_url:
+    default: ""
+    area: "about|legal"
   governing_law:
     default: ""
     area: "about|legal"
