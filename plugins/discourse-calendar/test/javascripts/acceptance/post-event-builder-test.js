@@ -147,3 +147,53 @@ acceptance("Post event - composer", function (needs) {
     }
   });
 });
+
+acceptance("Post event - composer - custom fields", function (needs) {
+  needs.user({ admin: true, can_create_discourse_post_event: true });
+  needs.settings({
+    discourse_local_dates_enabled: true,
+    discourse_calendar_enabled: true,
+    discourse_post_event_enabled: true,
+    discourse_post_event_allowed_on_groups: "",
+    discourse_post_event_allowed_custom_fields: "fancy_field",
+  });
+
+  test("custom fields render and save", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(2);
+    await click(".toolbar-menu__options-trigger");
+    await click(
+      `button[title='${i18n("discourse_post_event.builder_modal.attach")}']`
+    );
+
+    await click(".d-editor-preview .composer-event__more-dropdown button");
+
+    const modal = ".post-event-builder-modal";
+
+    assert
+      .dom(`${modal} [data-name="customFields.fancy_field"] input`)
+      .exists("the allowed custom field renders as a form field");
+
+    await fillIn(`${modal} .from input[type=date]`, "2022-07-01");
+    const fromTime = selectKit(`${modal} .from .d-time-input .select-kit`);
+    await fromTime.expand();
+    await fromTime.selectRowByName("12:00 PM");
+
+    await fillIn(
+      `${modal} [data-name="customFields.fancy_field"] input`,
+      "hello world"
+    );
+
+    await click(`${modal} .d-modal__footer .btn-primary`);
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        /fancyField="hello world"/,
+        "the custom field is written to the event bbcode"
+      );
+  });
+});

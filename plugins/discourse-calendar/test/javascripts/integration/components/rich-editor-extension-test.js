@@ -65,4 +65,19 @@ module("Integration | Component | rich-editor-extension", function (hooks) {
       });
     });
   });
+
+  test("event preserves allowed custom fields", async function (assert) {
+    this.siteSettings.rich_editor = true;
+    this.siteSettings.discourse_post_event_allowed_custom_fields =
+      "fancy_field";
+
+    await testMarkdown(
+      assert,
+      `[event start="2025-03-21 15:41" status="public" timezone="Europe/Paris" fancyField="hello world"]\n[/event]\n`,
+      (a) => {
+        a.dom(".composer-event-node").exists("Event node should be rendered");
+      },
+      `[event start="2025-03-21 15:41" status=public timezone=Europe/Paris fancyField="hello world"]\n[/event]\n`
+    );
+  });
 });
