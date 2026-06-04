@@ -45,6 +45,21 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
     ActiveRecord::QueryLogs.tags = []
     ActiveRecord::QueryLogs.singleton_class.define_method(:comment) { |_connection| nil }
   end
+
+  # Mirror the production-only optimization from config/initializers/300-perf.rb
+  # into CI test runs. Every AR query passes through
+  # `ActiveSupport::Notifications.instrument("sql.active_record", payload)`.
+  # With AR's LogSubscriber attached, that path allocates a notification
+  # `Event`, dispatches start/finish across all subscribers, and ends in
+  # `ActiveRecord::LogSubscriber#sql` — which immediately exits because
+  # `RAILS_TEST_LOG_LEVEL=error` keeps `logger.level` above the subscriber's
+  # `:debug` threshold. With no subscribers, the `instrument` call short-
+  # circuits via `@notifier.listening?(name)` and just yields the block,
+  # skipping the Event allocation and the per-query subscriber lifecycle.
+  # `spec/support/helpers.rb#track_sql_queries` uses
+  # `Notifications.subscribed { ... }` to attach a transient subscriber for
+  # the duration of a block, so query-counting tests still work unchanged.
+  ActiveSupport::Notifications.notifier.unsubscribe("sql.active_record")
 end
 
 require "rspec/rails"
