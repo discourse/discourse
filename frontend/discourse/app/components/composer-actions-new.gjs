@@ -119,6 +119,12 @@ export default class ComposerActions extends Component {
     return this.topic?.slow_mode_seconds > 0;
   }
 
+  get isPrivateMessage() {
+    return Boolean(
+      this.composerModel?.privateMessage || this.topic?.isPrivateMessage
+    );
+  }
+
   @cached
   get templateData() {
     const { action: currentAction, isInSlowMode, isEditing } = this;
@@ -191,7 +197,9 @@ export default class ComposerActions extends Component {
       if (isReplyingToPost) {
         return this._postDisplayName(this.post);
       }
-      return i18n("composer.composer_actions.reply_to_topic.trigger");
+      return this.isPrivateMessage
+        ? i18n("composer.composer_actions.reply_to_message.trigger")
+        : i18n("composer.composer_actions.reply_to_topic.trigger");
     }
 
     return i18n("composer.composer_actions.create_topic.label");
@@ -320,7 +328,9 @@ export default class ComposerActions extends Component {
         postNumber: this.post.post_number,
       });
     }
-    return i18n("composer.composer_actions.reply_to_topic.label");
+    return this.isPrivateMessage
+      ? i18n("composer.composer_actions.reply_to_message.label")
+      : i18n("composer.composer_actions.reply_to_topic.label");
   }
 
   @action

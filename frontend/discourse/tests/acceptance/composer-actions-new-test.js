@@ -387,6 +387,18 @@ acceptance(`Composer Actions (new composer actions)`, function (needs) {
       .includesText("codinghorror", "shows reply to post label");
   });
 
+  test("trigger shows the private message label when replying in a PM", async function (assert) {
+    await visit("/t/lorem-ipsum-dolor-sit-amet/130");
+    await click(".create.reply");
+
+    assert
+      .dom(".composer-actions-trigger")
+      .includesText(
+        i18n("composer.composer_actions.reply_to_message.trigger"),
+        "shows the private message reply label, not the topic label"
+      );
+  });
+
   test("trigger shows correct label for create topic mode", async function (assert) {
     await visit("/");
     await click("#create-topic");
@@ -619,6 +631,8 @@ acceptance(`Slow Mode (new composer actions)`, function (needs) {
   needs.pretender((server, helper) => {
     server.get("/t/130.json", () => {
       const json = cloneJSON(topicFixtures["/t/130.json"]);
+      // The 130 fixture is a PM; slow mode only applies to regular topics.
+      json.archetype = "regular";
       json.slow_mode_seconds = 600;
       json.slow_mode_enabled_until = "2040-01-01T04:00:00.000Z";
       return helper.response(json);
@@ -637,6 +651,33 @@ acceptance(`Slow Mode (new composer actions)`, function (needs) {
       .includesText(
         i18n("composer.composer_actions.reply_to_topic.trigger"),
         "falls back to the standard reply-to-topic trigger label"
+      );
+  });
+});
+
+acceptance(`Private Messages (new composer actions)`, function (needs) {
+  needs.user();
+  needs.settings({ enable_new_composer_actions: true });
+  needs.pretender((server, helper) => {
+    server.get("/t/280.json", () => {
+      const json = cloneJSON(topicFixtures["/t/280/1.json"]);
+      json.archetype = "private_message";
+      return helper.response(json);
+    });
+  });
+
+  test("dropdown reply-to-thread item uses the private message label", async function (assert) {
+    const composerActions = composerActionsDropdown();
+
+    await visit("/t/internationalization-localization/280");
+    await click("article#post_3 button.reply");
+    await composerActions.expand();
+
+    assert
+      .dom(".composer-actions-dropdown [data-action-id='reply_to_topic']")
+      .includesText(
+        i18n("composer.composer_actions.reply_to_message.label"),
+        "offers replying to the private message, not the topic"
       );
   });
 });

@@ -3365,6 +3365,10 @@ en:
           label: Reply to topic
           trigger: Topic
           desc: Reply to the topic, not any specific post
+        reply_to_message:
+          label: Reply to message
+          trigger: Message
+          desc: Reply to the message, not any specific post
         toggle_whisper:
           label: Toggle whisper
           desc: Whispers are only visible to allowed groups
