@@ -6323,6 +6323,7 @@ de:
         too_many_requests: Du hast diese Aktion zu oft ausgeführt. Bitte warte, bevor du es erneut probierst.
         not_found_error: Entschuldige bitte, dieser Bericht existiert nicht
         custom_date_range: Benutzerdefinierter Datumsbereich
+        stable: "stabil"
         sections:
           reports:
             title: "Berichte"
@@ -6345,8 +6346,6 @@ de:
                 "2": "Mitglied"
                 "3": "Regulär"
                 "4": "Anführer"
-              trend:
-                stable: "stabil"
         reports_section:
           no_data: "Keine Daten anzuzeigen"
           modal:

@@ -1613,9 +1613,6 @@ zh_CN:
       admin_sidebar_deprecation: "旧的管理布局已被替换为新的<a href='https://meta.discourse.org/t/-/289281'>边栏布局</a>，旧布局将在下一个版本中移除。您现在可以选择<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>配置</a>新的边栏布局。"
       starttls_disabled: "外发电子邮件配置已禁用 STARTTLS。这几乎没有必要。考虑从您的环境中移除 <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre>。有关详情，请参阅<a href='https://meta.discourse.org/t/387286'>此话题</a>。"
     back_from_logster_text: "返回网站"
-    reports_section:
-      providers:
-        core_report: "标准"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"

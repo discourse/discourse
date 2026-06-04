@@ -5698,6 +5698,7 @@ vi:
         too_many_requests: Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi trước khi thử lại.
         not_found_error: Xin lỗi, báo cáo này không tồn tại
         custom_date_range: Khoảng thời gian tùy chỉnh
+        stable: "ổn định"
         sections:
           reports:
             title: "Báo cáo"
@@ -5717,8 +5718,6 @@ vi:
                 "2": "Nâng Cao"
                 "3": "Tích Cực"
                 "4": "Nhà Lãnh Đạo"
-              trend:
-                stable: "ổn định"
         reports_section:
           no_data: "Không có dữ liệu để hiển thị"
           modal:

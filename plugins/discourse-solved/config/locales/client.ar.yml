@@ -10,6 +10,11 @@ ar:
       site_settings:
         categories:
           discourse_solved: "حل بواسطة Discourse"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "الحلول المقبولة"
   js:
     notifications:
       alt:

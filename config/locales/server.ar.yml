@@ -2011,9 +2011,6 @@ ar:
       admin_sidebar_deprecation: "تم إلغاء التخطيط القديم للمسؤول لصالح <a href='https://meta.discourse.org/t/-/289281'>تخطيط الشريط الجانبي</a> الجديد، وستتم إزالته في الإصدار التالي. يمكنك <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>تكوين</a> تخطيط الشريط الجانبي الجديد الآن للاشتراك قبل ذلك."
       starttls_disabled: "تم تعطيل بروتوكول STARTTLS في إعدادات البريد الصادر. عادةً ما لا يكون هذا ضروريًا. يُنصح بإزالة <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> من بيئة النظام لديك. لمزيد من التفاصيل، يرجى الرجوع إلى <a href='https://meta.discourse.org/t/387286'>هذا الموضوع</a>."
     back_from_logster_text: "العودة إلى الموقع"
-    reports_section:
-      providers:
-        core_report: "النمط القياسي"
   site_settings:
     allow_bulk_invite: "السماح بالدعوات الجماعية عن طريق تحميل ملف CSV"
     disabled: "متوقف"

@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 et:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Aktsepteeritud lahendused"
   js:
     notifications:
       alt:

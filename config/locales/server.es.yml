@@ -1676,9 +1676,6 @@ es:
       admin_sidebar_deprecation: "El antiguo diseño de administración está obsoleto en favor del nuevo <a href='https://meta.discourse.org/t/-/289281'>diseño de barra lateral</a> y se eliminará en la próxima versión. Puedes <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurar</a> el nuevo diseño de la barra lateral ahora para optar antes por él."
       starttls_disabled: "La configuración de correo saliente tiene STARTTLS desactivado. Esto casi nunca es necesario. Considera eliminar <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> de tu entorno. Consulta <a href='https://meta.discourse.org/t/387286'>este tema</a> para obtener más detalles."
     back_from_logster_text: "Volver al sitio"
-    reports_section:
-      providers:
-        core_report: "Standard"
   site_settings:
     allow_bulk_invite: "Permitir invitaciones en masa subiendo un archivo CSV"
     disabled: "desactivado"

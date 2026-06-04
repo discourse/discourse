@@ -6323,6 +6323,7 @@ nl:
         too_many_requests: Je hebt deze actie te vaak uitgevoerd. Wacht voordat je het opnieuw probeert.
         not_found_error: Dit rapport bestaat niet
         custom_date_range: Aangepast datumbereik
+        stable: "stabiel"
         sections:
           reports:
             title: "Rapporten"
@@ -6345,8 +6346,6 @@ nl:
                 "2": "Lid"
                 "3": "Normaal"
                 "4": "Leider"
-              trend:
-                stable: "stabiel"
         reports_section:
           no_data: "Geen gegevens om weer te geven"
           modal:

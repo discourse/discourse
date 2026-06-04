@@ -1681,9 +1681,6 @@ nl:
       admin_sidebar_deprecation: "De oude beheerlay-out is verouderd ten gunste van de nieuwe <a href='https://meta.discourse.org/t/-/289281'>zijbalklay-out</a> en wordt verwijderd in de volgende versie. Je kunt de nieuwe zijbalklay-out <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configureren</a> om je voor die tijd aan te melden ervoor."
       starttls_disabled: "De uitgaande e-mailconfiguratie heeft STARTTLS uitgeschakeld. Dit is bijna nooit nodig. Overweeg om <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> uit je omgeving te verwijderen. Zie <a <a href='https://meta.discourse.org/t/387286'>dit topic </a> voor meer informatie."
     back_from_logster_text: "Terug naar site"
-    reports_section:
-      providers:
-        core_report: "Standaard"
   site_settings:
     allow_bulk_invite: "Bulkuitnodigingen toestaan door een CSV-bestand te uploaden"
     disabled: "uitgeschakeld"

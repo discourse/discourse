@@ -1575,9 +1575,6 @@ ja:
       admin_sidebar_deprecation: "古い管理者レイアウトは使用できなくなり、新しい<a href='https://meta.discourse.org/t/-/289281'>サイドバーレイアウト</a>に代わります。古いレイアウトは次のリリースで削除されます。その前に新しいサイドバーレイアウトを使用し始める場合は、今すぐ<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>構成</a>してください。"
       starttls_disabled: "送信メールの構成では STARTTLS が無効になっています。これはほとんど必要ありません。環境から <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> を削除することを検討してください。詳細については、<a href='https://meta.discourse.org/t/387286'>こちらのトピック</a>をご覧ください。"
     back_from_logster_text: "サイトに戻る"
-    reports_section:
-      providers:
-        core_report: "標準"
   site_settings:
     allow_bulk_invite: "CSV ファイルのアップロードによる一括招待を許可する"
     disabled: "無効"

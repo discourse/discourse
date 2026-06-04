@@ -132,6 +132,8 @@ ur:
               label: ٹیگز
             restricted_categories:
               label: اقسام
+            restricted_archetype:
+              description: اختیاری، صرف موضوعات یا ذاتی پیغامات پر متحرک ہونے کی اجازت دیں
           created: بنایا گیا
           with_images: تصاویر
           with_links: رابطے

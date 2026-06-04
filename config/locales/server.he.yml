@@ -1812,9 +1812,6 @@ he:
       maxmind_db_configuration: 'השרת הוגדר להשתמש במסד הנתונים של MaxMind לאיתור IP הפוך אך לא הוגדר מזהה חשבון ב־MaxMind מה שעלול לגרום לכשל בהורדת מסד הנתונים של MaxMind. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">המדריך הזה יסביר קצת מעבר</a>.'
       admin_sidebar_deprecation: "פריסת הניהול הישנה הוצאה משימוש לטובת <a href='https://meta.discourse.org/t/-/289281'>פריסת סרגל הצד החדשה</a> ותוסר בגרסה הבאה. ניתן <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>להגדיר</a> את פריסת סרגל הצד החדשה כעת כדי להצטרף לפני כן."
     back_from_logster_text: "חזרה לאתר"
-    reports_section:
-      providers:
-        core_report: "רגיל"
   site_settings:
     allow_bulk_invite: "לאפשר הזמנות במרוכז על ידי העלאת קובץ CSV"
     disabled: "מושבת"

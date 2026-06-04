@@ -6254,6 +6254,7 @@ es:
         too_many_requests: Has realizado esta acción demasiadas veces. Por favor, espera antes de intentarlo de nuevo.
         not_found_error: Lo sentimos, este informe no existe
         custom_date_range: Rango de fechas personalizado
+        stable: "estable"
         sections:
           reports:
             title: "Informes"
@@ -6276,8 +6277,6 @@ es:
                 "2": "Miembro"
                 "3": "Habitual"
                 "4": "Líder"
-              trend:
-                stable: "estable"
         reports_section:
           no_data: "No hay datos que mostrar"
           modal:

@@ -1803,9 +1803,6 @@ cs:
       maxmind_db_configuration: 'Server byl nakonfigurován tak, aby používal databáze MaxMind pro reverzní vyhledávání IP, ale nebylo nakonfigurováno platné ID účtu MaxMind, což může vést k tomu, že se databáze MaxMind v budoucnu nepodaří stáhnout. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Více informací naleznete v této příručce</a>.'
       admin_sidebar_deprecation: "Staré rozvržení administrace je zastaralé ve prospěch nového <a href='https://meta.discourse.org/t/-/289281'>rozvržení postranního panelu</a> a bude odstraněno v příští verzi. Nové rozvržení postranního panelu můžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovat</a> již nyní a rozhodnout se pro něj dříve."
     back_from_logster_text: "Zpět na web"
-    reports_section:
-      providers:
-        core_report: "Standardní"
   site_settings:
     allow_bulk_invite: "Povolit hromadné pozvánky nahráním CSV souboru"
     disabled: "vypnuto"

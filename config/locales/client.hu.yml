@@ -6131,6 +6131,7 @@ hu:
         too_many_requests: Túl sokszor hajtotta végre ezt a műveletet. Az újabb próbálkozás előtt várjon.
         not_found_error: Sajnos ez a jelentés nem létezik
         custom_date_range: Egyéni dátumtartomány
+        stable: "stabil"
         sections:
           reports:
             title: "Jelentések"
@@ -6153,8 +6154,6 @@ hu:
                 "2": "Tag"
                 "3": "Átlagos"
                 "4": "Vezető"
-              trend:
-                stable: "stabil"
         reports_section:
           no_data: "Nincs megjeleníthető adat"
           modal:
