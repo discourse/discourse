@@ -145,7 +145,9 @@ class UserDestroyer
     ReviewableFlaggedPost
       .where(target_created_by: user)
       .find_each do |reviewable|
-        if reviewable.actions_for(@guardian).has?(:agree_and_keep)
+        actions = reviewable.actions_for(@guardian)
+
+        if actions.has?(:agree_and_keep) || actions.has?(:agree_and_keep_hidden)
           reviewable.perform(@actor, :agree_and_keep)
         end
       end

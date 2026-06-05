@@ -196,11 +196,11 @@ module PageObjects
       end
 
       def has_reviewable_with_approved_status?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--approved") }
+        reviewable_has_status?(reviewable, :approved)
       end
 
       def has_reviewable_with_rejected_status?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--rejected") }
+        reviewable_has_status?(reviewable, :rejected)
       end
 
       def has_rejected_item_in_timeline?(reviewable)
@@ -208,15 +208,21 @@ module PageObjects
       end
 
       def has_reviewable_with_pending_status?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--pending") }
+        reviewable_has_status?(reviewable, :pending)
       end
 
       def has_reviewable_with_ignored_status?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--ignored") }
+        reviewable_has_status?(reviewable, :ignored)
       end
 
       def has_approved_item_in_timeline?(reviewable)
         within(reviewable_by_id(reviewable.id)) { page.has_text?("Approved by") }
+      end
+
+      def reviewable_has_status?(reviewable, status)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_css?(".review-item__header > .review-item__status.--#{status}", count: 1)
+        end
       end
 
       def has_reviewables?(reviewables)

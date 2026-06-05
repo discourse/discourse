@@ -105,6 +105,9 @@ export default class ReviewableItem extends Component {
 
   updating = null;
   editing = false;
+
+  #subscribedToReviewableAction = false;
+
   _updates = null;
   _previousReviewableId = null;
 
@@ -112,13 +115,20 @@ export default class ReviewableItem extends Component {
     super(...arguments);
     this._previousReviewableId = this.reviewable?.id;
     this.messageBus.subscribe("/reviewable_claimed", this._updateClaimedBy);
-    this.messageBus.subscribe("/reviewable_action", this._updateStatus);
+
+    if (this.#shouldSubscribeToReviewableAction()) {
+      this.messageBus.subscribe("/reviewable_action", this._updateStatus);
+      this.#subscribedToReviewableAction = true;
+    }
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
     this.messageBus.unsubscribe("/reviewable_claimed", this._updateClaimedBy);
-    this.messageBus.unsubscribe("/reviewable_action", this._updateStatus);
+
+    if (this.#subscribedToReviewableAction) {
+      this.messageBus.unsubscribe("/reviewable_action", this._updateStatus);
+    }
   }
 
   didUpdateAttrs() {
@@ -128,6 +138,10 @@ export default class ReviewableItem extends Component {
       this.activeTab = "timeline";
       this.insightsOpened = false;
     }
+  }
+
+  #shouldSubscribeToReviewableAction() {
+    return !this.remove && !this.replaceReviewables;
   }
 
   @computed("reviewable.claimed_by.automatic")
@@ -398,20 +412,13 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateStatus(data) {
-    const shouldRefresh = data.refresh_reviewable_ids?.includes(
-      this.reviewable.id
-    );
+    if (!this.#shouldSubscribeToReviewableAction()) {
+      return;
+    }
 
-    if (shouldRefresh) {
-      this._performResult(
-        {
-          ...data,
-          remove_reviewable_ids: [],
-          refresh_reviewable_ids: [this.reviewable.id],
-        },
-        {},
-        this.reviewable
-      );
+    if (data.refresh_reviewable_ids?.includes(this.reviewable.id)) {
+      this._updateReviewableCounts(data);
+      return this.store.find("reviewable", this.reviewable.id);
     }
   }
 
@@ -480,6 +487,39 @@ export default class ReviewableItem extends Component {
   }
 
   async _performResult(result, performableAction, reviewable) {
+    this._updateReviewableCounts(result);
+
+    if (performableAction.completed_message) {
+      this.toasts.success({
+        data: { message: performableAction.completed_message },
+      });
+    }
+
+    const refreshReviewableIds = result.refresh_reviewable_ids || [];
+
+    if (refreshReviewableIds.length > 0 && this.replaceReviewables) {
+      const reviewables = await this.store.findAll("reviewable", {
+        ids: refreshReviewableIds,
+        status: "all",
+      });
+      this.replaceReviewables(reviewables.content);
+    }
+
+    if (result.remove_reviewable_ids?.length > 0) {
+      this.remove?.(result.remove_reviewable_ids);
+    }
+
+    const reviewableWasRemoved =
+      this.remove && result.remove_reviewable_ids?.includes(reviewable.id);
+    const reviewableWasRefreshed =
+      this.replaceReviewables && refreshReviewableIds.includes(reviewable.id);
+
+    if (!reviewableWasRemoved && !reviewableWasRefreshed) {
+      return this.store.find("reviewable", reviewable.id);
+    }
+  }
+
+  _updateReviewableCounts(result) {
     // "fast track" to update the current user's reviewable count before the message bus finds out.
     if (result.reviewable_count !== undefined) {
       this.currentUser.updateReviewableCount(result.reviewable_count);
@@ -490,31 +530,6 @@ export default class ReviewableItem extends Component {
         "unseen_reviewable_count",
         result.unseen_reviewable_count
       );
-    }
-
-    if (performableAction.completed_message) {
-      this.toasts.success({
-        data: { message: performableAction.completed_message },
-      });
-    }
-
-    if (result.refresh_reviewable_ids?.length > 0) {
-      const reviewables = await this.store.findAll("reviewable", {
-        ids: result.refresh_reviewable_ids,
-        status: "all",
-      });
-      this.replaceReviewables?.(reviewables.content);
-    }
-
-    if (result.remove_reviewable_ids?.length > 0) {
-      this.remove?.(result.remove_reviewable_ids);
-    }
-
-    if (
-      !result.remove_reviewable_ids?.includes(reviewable.id) ||
-      !this.remove
-    ) {
-      return this.store.find("reviewable", reviewable.id);
     }
   }
 
