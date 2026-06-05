@@ -7,6 +7,7 @@ import {
   computeZone,
   computeZoneCollapsed,
   formatTrack,
+  nextFreeCellInReadingOrder,
   reflowChildrenIntoCells,
   resizeColumnFractions,
   syncContentToArrayOrder,
@@ -374,6 +375,151 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
         }),
         null,
         "neither dropSlotKey nor dropCell"
+      );
+    });
+  });
+
+  module("computeShiftPlan — growth (allowGrow)", function () {
+    test("a hole in the row absorbs the cascade — no growth", function (assert) {
+      // A at 1, hole at 2, B at 3. Drop left of A.
+      const slots = [slot("A", "1", "1"), slot("B", "3", "1")];
+      const plan = computeShiftPlan({
+        slots,
+        sourceKey: null,
+        dropSlotKey: keyOf("A"),
+        direction: "left",
+        gridDims: { columns: 3, rows: 1 },
+        allowGrow: true,
+      });
+      assert.deepEqual(plan.sourceLanding, { column: "1", row: "1" });
+      assert.deepEqual(
+        plan.moves,
+        [{ slotKey: keyOf("A"), column: "2", row: "1" }],
+        "A slides into the hole at column 2; B is untouched"
+      );
+    });
+
+    test("a full row grows a column to absorb the cascade", function (assert) {
+      // A, B, C fill a 3x1 grid. Drop left of A.
+      const slots = [
+        slot("A", "1", "1"),
+        slot("B", "2", "1"),
+        slot("C", "3", "1"),
+      ];
+      const plan = computeShiftPlan({
+        slots,
+        sourceKey: null,
+        dropSlotKey: keyOf("A"),
+        direction: "left",
+        gridDims: { columns: 3, rows: 1 },
+        allowGrow: true,
+      });
+      assert.deepEqual(plan.sourceLanding, { column: "1", row: "1" });
+      assert.deepEqual(
+        plan.moves.find((m) => m.slotKey === keyOf("C")),
+        { slotKey: keyOf("C"), column: "4", row: "1" },
+        "C cascades into a freshly grown column 4"
+      );
+    });
+
+    test("without allowGrow, a full row still returns null", function (assert) {
+      const slots = [
+        slot("A", "1", "1"),
+        slot("B", "2", "1"),
+        slot("C", "3", "1"),
+      ];
+      assert.strictEqual(
+        computeShiftPlan({
+          slots,
+          sourceKey: null,
+          dropSlotKey: keyOf("A"),
+          direction: "left",
+          gridDims: { columns: 3, rows: 1 },
+        }),
+        null,
+        "the default (no growth) denies a cascade off the full row"
+      );
+    });
+
+    test("drop before the leftmost cell grows instead of landing without making room", function (assert) {
+      // hole at col 1, B spans cols 2–3 in a 3-col grid. Drop a foreign
+      // block before col 1 (left edge). The forward cascade overflows at 3
+      // columns, and scanning backward from col 1 finds nothing — a
+      // zero-move "plan" that would drop the source at col 1 and leave B
+      // untouched. That's wrong: B must shift right and the grid grows.
+      const slots = [slot("B", "2 / 4", "1")];
+      const plan = computeShiftPlan({
+        slots,
+        sourceKey: null,
+        dropCell: { column: 1, row: 1 },
+        direction: "left",
+        gridDims: { columns: 3, rows: 1 },
+        allowGrow: true,
+      });
+      assert.deepEqual(plan.sourceLanding, { column: "1", row: "1" });
+      assert.deepEqual(
+        plan.moves,
+        [{ slotKey: keyOf("B"), column: "3 / 5", row: "1" }],
+        "B shifts right one column (keeping its span) into a grown column 4"
+      );
+    });
+
+    test("a full column grows a row (vertical axis mirror)", function (assert) {
+      // A, B, C stacked in a 1x3 grid. Drop above A.
+      const slots = [
+        slot("A", "1", "1"),
+        slot("B", "1", "2"),
+        slot("C", "1", "3"),
+      ];
+      const plan = computeShiftPlan({
+        slots,
+        sourceKey: null,
+        dropSlotKey: keyOf("A"),
+        direction: "up",
+        gridDims: { columns: 1, rows: 3 },
+        allowGrow: true,
+      });
+      assert.deepEqual(plan.sourceLanding, { column: "1", row: "1" });
+      assert.deepEqual(
+        plan.moves.find((m) => m.slotKey === keyOf("C")),
+        { slotKey: keyOf("C"), column: "1", row: "4" },
+        "C cascades into a freshly grown row 4"
+      );
+    });
+  });
+
+  module("nextFreeCellInReadingOrder", function () {
+    test("an empty grid yields the top-left cell", function (assert) {
+      assert.deepEqual(
+        nextFreeCellInReadingOrder([], { columns: 3, rows: 2 }),
+        {
+          column: 1,
+          row: 1,
+        }
+      );
+    });
+
+    test("skips occupied cells in reading order", function (assert) {
+      const children = [slot("A", "1", "1")];
+      assert.deepEqual(
+        nextFreeCellInReadingOrder(children, { columns: 3, rows: 2 }),
+        { column: 2, row: 1 }
+      );
+    });
+
+    test("advances down a single-column grid", function (assert) {
+      const children = [slot("A", "1", "1")];
+      assert.deepEqual(
+        nextFreeCellInReadingOrder(children, { columns: 1, rows: 3 }),
+        { column: 1, row: 2 }
+      );
+    });
+
+    test("returns null when every cell is occupied", function (assert) {
+      const children = [slot("A", "1", "1"), slot("B", "2", "1")];
+      assert.strictEqual(
+        nextFreeCellInReadingOrder(children, { columns: 2, rows: 1 }),
+        null
       );
     });
   });

@@ -10,11 +10,17 @@ import { gridDimensions, parsePlacement } from "discourse/blocks";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 import { GRID_LAYOUT_SELECTOR } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-dom-contract";
+// `grid-drop` is the single rule chokepoint shared with the service: the
+// overlay's drop-validity check asks it whether an edge drop can cascade.
+import {
+  decideGridDrop,
+  GRID_DROP_ACTIONS,
+  GRID_DROP_GESTURES,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/grid-drop";
 // `grid-math` is the plugin's editor-only geometry; admin-only consumer,
 // so cross-bundle imports use absolute addon paths.
 import {
   computeOccupation,
-  computeShiftPlan,
   computeZone,
   computeZoneCollapsed,
   resizeColumnFractions,
@@ -1045,46 +1051,32 @@ export default class GridOverlay extends Component {
       return false;
     }
     if (descriptor.kind === "line-column" || descriptor.kind === "line-row") {
-      const dropCell =
+      const cell =
         descriptor.kind === "line-column"
-          ? {
-              column: descriptor.line,
-              row: descriptor.row?.start ?? 1,
-            }
-          : {
-              column: descriptor.column?.start ?? 1,
-              row: descriptor.line,
-            };
-      const direction = descriptor.kind === "line-column" ? "left" : "up";
-      const sourceKey =
-        source?.type === "wf-block" ? source.data?.blockKey : null;
-      // Only same-grid sources free a cell; cross-grid arrivals don't.
-      let sourceInGrid = null;
-      if (sourceKey) {
-        const located = this.wireframe.findEntryAndOutletSync?.(sourceKey);
-        if (located?.outletName === this.#outletName(this.args.gridKey)) {
-          for (const slot of this.slots) {
-            if (entryKey(slot) === sourceKey) {
-              sourceInGrid = sourceKey;
-              break;
-            }
-          }
-        }
-      }
-      const plan = computeShiftPlan({
-        slots: this.slots,
-        sourceKey: sourceInGrid,
-        dropCell,
-        direction,
-        gridDims: { columns: this.columns, rows: this.rows },
+          ? { column: descriptor.line, row: descriptor.row?.start ?? 1 }
+          : { column: descriptor.column?.start ?? 1, row: descriptor.line };
+      const decision = decideGridDrop({
+        children: this.slots,
+        // `this.columns` / `this.rows` are already the effective size; the
+        // decider re-derives effective from declared, so passing them as
+        // declared is a no-op that keeps this validity check self-contained.
+        declared: { columns: this.columns, rows: this.rows },
+        source: {
+          kind: source?.type === "wf-palette-block" ? "new" : "existing",
+          key: source?.type === "wf-block" ? source.data?.blockKey : null,
+        },
+        drop: {
+          gesture: GRID_DROP_GESTURES.BESIDE,
+          cell,
+          direction: descriptor.kind === "line-column" ? "left" : "up",
+        },
       });
-      return plan != null;
+      // The edge drop is valid when it yields a real cascade (which grows
+      // the axis on commit if the line is full); any other outcome means
+      // there's no room to make.
+      return decision.action === GRID_DROP_ACTIONS.CASCADE;
     }
     return true;
-  }
-
-  #outletName(blockKey) {
-    return this.wireframe.findEntryAndOutletSync?.(blockKey)?.outletName;
   }
 
   /**

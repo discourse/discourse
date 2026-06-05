@@ -744,6 +744,921 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
   });
 
+  module("moveBlockToCell (cross-grid, same outlet)", function (innerHooks) {
+    innerHooks.beforeEach(async function () {
+      withTestBlockRegistration(() => registerBlock(TestTile));
+      // Two grid layouts in one outlet. The source grid holds a
+      // full-width tile (placed lower than the destination's resident, so
+      // an array-order reflow would swap their placements); the
+      // destination grid holds one narrow top-left tile.
+      await _renderBlocks(
+        "homepage-blocks",
+        [
+          {
+            block: Layout,
+            args: { mode: "grid", columns: 3, rows: 2 },
+            children: [
+              {
+                block: TestTile,
+                args: { title: "Source" },
+                containerArgs: {
+                  grid: {
+                    column: "1 / 4",
+                    row: "2",
+                    align: "stretch",
+                    justify: "stretch",
+                  },
+                },
+              },
+            ],
+          },
+          {
+            block: Layout,
+            args: { mode: "grid", columns: 3, rows: 3 },
+            children: [
+              {
+                block: TestTile,
+                args: { title: "Resident" },
+                containerArgs: {
+                  grid: {
+                    column: "1",
+                    row: "1",
+                    align: "stretch",
+                    justify: "stretch",
+                  },
+                },
+              },
+            ],
+          },
+        ],
+        getOwner(this)
+      );
+      this.editor.siteSettings.wireframe_enabled = true;
+      logIn(getOwner(this));
+      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor.enter();
+    });
+
+    test("dropping a block into a destination cell leaves the destination's existing cells in place", function (assert) {
+      const root = this.editor.readResolvedLayout("homepage-blocks")[0];
+      const [sourceGrid, destGrid] = root.children;
+      const destGridKey = `layout:${destGrid.__stableKey}`;
+      const sourceTile = sourceGrid.children[0];
+      const sourceKey = `wf:svc-test-tile:${sourceTile.__stableKey}`;
+
+      const ok = this.editor.moveBlockToCell({
+        gridKey: destGridKey,
+        sourceKey,
+        column: 1,
+        row: 3,
+      });
+      assert.true(ok);
+
+      const afterRoot = this.editor.readResolvedLayout("homepage-blocks")[0];
+      const afterDest = afterRoot.children.find(
+        (c) => c.__stableKey === destGrid.__stableKey
+      );
+      const resident = afterDest.children.find(
+        (c) => c.args?.title === "Resident"
+      );
+      const moved = afterDest.children.find((c) => c.args?.title === "Source");
+
+      // The resident keeps its own top-left single cell — it must not
+      // inherit the dragged tile's full-width span through an array-order
+      // reflow that a cell drop should never trigger.
+      assert.strictEqual(resident.containerArgs.grid.column, "1");
+      assert.strictEqual(resident.containerArgs.grid.row, "1");
+      // The dragged tile lands at the dropped cell.
+      assert.strictEqual(moved.containerArgs.grid.column, "1");
+      assert.strictEqual(moved.containerArgs.grid.row, "3");
+    });
+  });
+
+  module(
+    "outline drop across grids (regression: span reset, no overflow, no dup)",
+    function (innerHooks) {
+      innerHooks.beforeEach(async function () {
+        withTestBlockRegistration(() => registerBlock(TestTile));
+        // Grid A is 4 columns wide with a full-width tile ("1 / 5"); grid B
+        // is only 3 columns with one resident at top-left. Dragging the
+        // full-width tile into grid B via the outline (a before/after move,
+        // NOT a precise cell drop) reproduces the live breakages: the tile
+        // carries its "1 / 5" span into a 3-column grid (overflow + grow),
+        // and the array-order reflow shuffles the resident's placement.
+        await _renderBlocks(
+          "homepage-blocks",
+          [
+            {
+              block: Layout,
+              args: { mode: "grid", columns: 4, rows: 2 },
+              children: [
+                {
+                  block: TestTile,
+                  args: { title: "Source" },
+                  containerArgs: {
+                    grid: {
+                      column: "1 / 5",
+                      row: "1",
+                      align: "stretch",
+                      justify: "stretch",
+                    },
+                  },
+                },
+              ],
+            },
+            {
+              block: Layout,
+              args: { mode: "grid", columns: 3, rows: 2 },
+              children: [
+                {
+                  block: TestTile,
+                  args: { title: "Resident" },
+                  containerArgs: {
+                    grid: {
+                      column: "1",
+                      row: "1",
+                      align: "stretch",
+                      justify: "stretch",
+                    },
+                  },
+                },
+              ],
+            },
+          ],
+          getOwner(this)
+        );
+        this.editor.siteSettings.wireframe_enabled = true;
+        logIn(getOwner(this));
+        this.editor = getOwner(this).lookup("service:wireframe");
+        this.editor.enter();
+      });
+
+      // Performs the outline-style move (drop the source tile before the
+      // resident cell of grid B) and returns the post-move grids.
+      function dropSourceBeforeResident(editor) {
+        const root = editor.readResolvedLayout("homepage-blocks")[0];
+        const [sourceGrid, destGrid] = root.children;
+        const residentKey = `wf:svc-test-tile:${destGrid.children[0].__stableKey}`;
+        const sourceKey = `wf:svc-test-tile:${sourceGrid.children[0].__stableKey}`;
+        const ok = editor.moveBlock({
+          sourceKey,
+          targetKey: residentKey,
+          position: "before",
+          targetOutletName: "homepage-blocks",
+        });
+        const afterRoot = editor.readResolvedLayout("homepage-blocks")[0];
+        return {
+          ok,
+          destGridKey: `layout:${destGrid.__stableKey}`,
+          sourceGrid: afterRoot.children.find(
+            (c) => c.__stableKey === sourceGrid.__stableKey
+          ),
+          destGrid: afterRoot.children.find(
+            (c) => c.__stableKey === destGrid.__stableKey
+          ),
+        };
+      }
+
+      test("R1: the moved block enters as a single cell (foreign span discarded)", function (assert) {
+        const { destGrid } = dropSourceBeforeResident(this.editor);
+        const sources = destGrid.children.filter(
+          (c) => c.args?.title === "Source"
+        );
+        assert.strictEqual(
+          sources.length,
+          1,
+          "the source tile is present in the destination grid"
+        );
+        assert.false(
+          sources[0].containerArgs.grid.column.includes("/"),
+          `the carried "1 / 5" span is discarded (got "${sources[0].containerArgs.grid.column}")`
+        );
+      });
+
+      test("R5: the destination grid does not grow to contain a foreign span", function (assert) {
+        const { destGridKey } = dropSourceBeforeResident(this.editor);
+        assert.strictEqual(
+          this.editor.gridSizeFor(destGridKey).columns,
+          3,
+          "grid B stays 3 columns wide"
+        );
+      });
+
+      test("R2: dropping before a cell cascades it to the right (not an array-order reflow swap)", function (assert) {
+        const { destGrid } = dropSourceBeforeResident(this.editor);
+        const resident = destGrid.children.find(
+          (c) => c.args?.title === "Resident"
+        );
+        const moved = destGrid.children.find((c) => c.args?.title === "Source");
+        // Dropping before the resident lands the source at the resident's
+        // cell and shifts the resident one column right (into the free
+        // column 2 — no growth). The resident does NOT inherit a span.
+        assert.strictEqual(moved.containerArgs.grid.column, "1");
+        assert.strictEqual(moved.containerArgs.grid.row, "1");
+        assert.strictEqual(resident.containerArgs.grid.column, "2");
+        assert.strictEqual(resident.containerArgs.grid.row, "1");
+      });
+
+      test("R4: the source is moved, not duplicated", function (assert) {
+        const { sourceGrid, destGrid } = dropSourceBeforeResident(this.editor);
+        const inSource = (sourceGrid?.children ?? []).filter(
+          (c) => c.args?.title === "Source"
+        ).length;
+        const inDest = destGrid.children.filter(
+          (c) => c.args?.title === "Source"
+        ).length;
+        assert.strictEqual(inSource, 0, "the source tile left grid A");
+        assert.strictEqual(inDest, 1, "exactly one copy landed in grid B");
+      });
+
+      test("R4: the source grid keeps its declared size", function (assert) {
+        const { sourceGrid } = dropSourceBeforeResident(this.editor);
+        assert.strictEqual(sourceGrid.args.columns, 4);
+        assert.strictEqual(sourceGrid.args.rows, 2);
+      });
+    }
+  );
+
+  module(
+    "grid growth via drops (R2 cascade / R3 add-row)",
+    function (innerHooks) {
+      // A full 2×1 grid plus a loose tile in the outlet's root stack, so a
+      // drop into the grid has nowhere free and must grow an axis.
+      innerHooks.beforeEach(async function () {
+        withTestBlockRegistration(() => registerBlock(TestTile));
+        await _renderBlocks(
+          "homepage-blocks",
+          [
+            {
+              block: Layout,
+              args: { mode: "grid", columns: 2, rows: 1 },
+              children: [
+                {
+                  block: TestTile,
+                  args: { title: "A" },
+                  containerArgs: {
+                    grid: {
+                      column: "1",
+                      row: "1",
+                      align: "stretch",
+                      justify: "stretch",
+                    },
+                  },
+                },
+                {
+                  block: TestTile,
+                  args: { title: "B" },
+                  containerArgs: {
+                    grid: {
+                      column: "2",
+                      row: "1",
+                      align: "stretch",
+                      justify: "stretch",
+                    },
+                  },
+                },
+              ],
+            },
+            { block: TestTile, args: { title: "X" } },
+          ],
+          getOwner(this)
+        );
+        this.editor.siteSettings.wireframe_enabled = true;
+        logIn(getOwner(this));
+        this.editor = getOwner(this).lookup("service:wireframe");
+        this.editor.enter();
+      });
+
+      function refs(editor) {
+        const root = editor.readResolvedLayout("homepage-blocks")[0];
+        const grid = root.children.find((c) => c.args?.mode === "grid");
+        const loose = root.children.find((c) => c.args?.title === "X");
+        const cellOf = (title) =>
+          grid.children.find((c) => c.args?.title === title);
+        return {
+          grid,
+          gridKey: `layout:${grid.__stableKey}`,
+          xKey: `wf:svc-test-tile:${loose.__stableKey}`,
+          aKey: `wf:svc-test-tile:${cellOf("A").__stableKey}`,
+        };
+      }
+
+      test("dropping before a cell in a full row grows a column (R2)", function (assert) {
+        const { gridKey, xKey, aKey } = refs(this.editor);
+        const ok = this.editor.moveBlock({
+          sourceKey: xKey,
+          targetKey: aKey,
+          position: "before",
+          targetOutletName: "homepage-blocks",
+        });
+        assert.true(ok);
+
+        const grid = this.editor
+          .readResolvedLayout("homepage-blocks")[0]
+          .children.find((c) => c.args?.mode === "grid");
+        assert.strictEqual(grid.args.columns, 3, "declared columns grew 2 → 3");
+        const col = (title) =>
+          grid.children.find((c) => c.args?.title === title).containerArgs.grid
+            .column;
+        assert.strictEqual(col("X"), "1", "X landed at the drop column");
+        assert.strictEqual(col("A"), "2", "A cascaded right");
+        assert.strictEqual(col("B"), "3", "B cascaded into the grown column");
+        // R5: declared now matches the effective size (no drift).
+        assert.deepEqual(this.editor.gridSizeFor(gridKey), {
+          columns: 3,
+          rows: 1,
+        });
+      });
+
+      test("a generic drop into a full grid adds a row (R3)", function (assert) {
+        const { gridKey, xKey } = refs(this.editor);
+        const ok = this.editor.moveBlock({
+          sourceKey: xKey,
+          targetKey: gridKey,
+          position: "inside",
+          targetOutletName: "homepage-blocks",
+        });
+        assert.true(ok);
+
+        const grid = this.editor
+          .readResolvedLayout("homepage-blocks")[0]
+          .children.find((c) => c.args?.mode === "grid");
+        assert.strictEqual(grid.args.rows, 2, "declared rows grew 1 → 2");
+        const x = grid.children.find((c) => c.args?.title === "X");
+        assert.strictEqual(
+          x.containerArgs.grid.row,
+          "2",
+          "X landed on a new row"
+        );
+        assert.deepEqual(this.editor.gridSizeFor(gridKey), {
+          columns: 2,
+          rows: 2,
+        });
+      });
+    }
+  );
+
+  module("swapSlotPlacements — cross-grid trade (R1)", function (innerHooks) {
+    innerHooks.beforeEach(async function () {
+      withTestBlockRegistration(() => registerBlock(TestTile));
+      await _renderBlocks(
+        "homepage-blocks",
+        [
+          {
+            block: Layout,
+            args: { mode: "grid", columns: 3, rows: 2 },
+            children: [
+              {
+                block: TestTile,
+                args: { title: "A1" },
+                containerArgs: {
+                  grid: {
+                    column: "1",
+                    row: "1",
+                    align: "stretch",
+                    justify: "stretch",
+                  },
+                },
+              },
+            ],
+          },
+          {
+            block: Layout,
+            args: { mode: "grid", columns: 3, rows: 2 },
+            children: [
+              {
+                block: TestTile,
+                args: { title: "B1" },
+                containerArgs: {
+                  grid: {
+                    column: "2",
+                    row: "1",
+                    align: "stretch",
+                    justify: "stretch",
+                  },
+                },
+              },
+            ],
+          },
+        ],
+        getOwner(this)
+      );
+      this.editor.siteSettings.wireframe_enabled = true;
+      logIn(getOwner(this));
+      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor.enter();
+    });
+
+    test("dropping a block onto an occupied cell in another grid trades places", function (assert) {
+      const root = this.editor.readResolvedLayout("homepage-blocks")[0];
+      const [gridA, gridB] = root.children;
+      const a1Key = `wf:svc-test-tile:${gridA.children[0].__stableKey}`;
+      const b1Key = `wf:svc-test-tile:${gridB.children[0].__stableKey}`;
+
+      // Drag A1 onto B1 (the occupant). slotKeyA = occupant, slotKeyB =
+      // dragged, matching the overlay's center-on-occupied dispatch.
+      const ok = this.editor.swapSlotPlacements({
+        slotKeyA: b1Key,
+        slotKeyB: a1Key,
+      });
+      assert.true(ok);
+
+      const after = this.editor.readResolvedLayout("homepage-blocks")[0];
+      const afterA = after.children.find(
+        (c) => c.__stableKey === gridA.__stableKey
+      );
+      const afterB = after.children.find(
+        (c) => c.__stableKey === gridB.__stableKey
+      );
+      const titlesIn = (grid) => grid.children.map((c) => c.args?.title).sort();
+      // A1 moved into grid B (taking B1's cell), B1 moved into grid A.
+      assert.deepEqual(titlesIn(afterA), ["B1"], "grid A now holds B1");
+      assert.deepEqual(titlesIn(afterB), ["A1"], "grid B now holds A1");
+      const cell = (grid, title) =>
+        grid.children.find((c) => c.args?.title === title).containerArgs.grid;
+      assert.strictEqual(cell(afterB, "A1").column, "2", "A1 took B1's column");
+      assert.strictEqual(cell(afterA, "B1").column, "1", "B1 took A1's column");
+    });
+  });
+
+  module(
+    "insertWithShift — source paths (no duplication)",
+    function (innerHooks) {
+      // Two grids in one outlet so we can exercise the same-grid,
+      // cross-grid-same-outlet, and palette source paths. The cross-grid
+      // same-outlet case is the one that previously DUPLICATED the block.
+      innerHooks.beforeEach(async function () {
+        withTestBlockRegistration(() => registerBlock(TestTile));
+        const cell = (title, column) => ({
+          block: TestTile,
+          args: { title },
+          containerArgs: {
+            grid: { column, row: "1", align: "stretch", justify: "stretch" },
+          },
+        });
+        await _renderBlocks(
+          "homepage-blocks",
+          [
+            {
+              block: Layout,
+              args: { mode: "grid", columns: 3, rows: 1 },
+              children: [cell("A1", "1"), cell("A2", "2")],
+            },
+            {
+              block: Layout,
+              args: { mode: "grid", columns: 3, rows: 1 },
+              children: [cell("B1", "1")],
+            },
+          ],
+          getOwner(this)
+        );
+        this.editor.siteSettings.wireframe_enabled = true;
+        logIn(getOwner(this));
+        this.editor = getOwner(this).lookup("service:wireframe");
+        this.editor.enter();
+      });
+
+      // Total content blocks across both grids — conservation guard.
+      function countContent(editor) {
+        const root = editor.readResolvedLayout("homepage-blocks")[0];
+        return root.children.reduce(
+          (n, grid) =>
+            n + (grid.children ?? []).filter((c) => c.args?.title).length,
+          0
+        );
+      }
+
+      function refs(editor) {
+        const root = editor.readResolvedLayout("homepage-blocks")[0];
+        const [gridA, gridB] = root.children;
+        const keyIn = (grid, title) =>
+          `wf:svc-test-tile:${
+            grid.children.find((c) => c.args?.title === title).__stableKey
+          }`;
+        return {
+          gridA,
+          gridB,
+          gridAKey: `layout:${gridA.__stableKey}`,
+          gridBKey: `layout:${gridB.__stableKey}`,
+          keyIn,
+        };
+      }
+
+      function titlesByGrid(editor) {
+        const root = editor.readResolvedLayout("homepage-blocks")[0];
+        return root.children.map((grid) =>
+          (grid.children ?? [])
+            .map((c) => c.args?.title)
+            .filter(Boolean)
+            .sort()
+        );
+      }
+
+      test("a cross-grid edge drop (same outlet) relocates the block without duplicating it", function (assert) {
+        const before = countContent(this.editor);
+        const { gridA, gridB, gridBKey, keyIn } = refs(this.editor);
+        const ok = this.editor.insertWithShift({
+          gridKey: gridBKey,
+          dropSlotKey: keyIn(gridB, "B1"),
+          direction: "right",
+          sourceKey: keyIn(gridA, "A1"),
+        });
+        assert.true(ok);
+        assert.strictEqual(
+          countContent(this.editor),
+          before,
+          "no block was duplicated"
+        );
+        assert.deepEqual(
+          titlesByGrid(this.editor),
+          [["A2"], ["A1", "B1"]],
+          "A1 left grid A and joined grid B exactly once"
+        );
+      });
+
+      test("a same-grid edge drop rotates without duplicating", function (assert) {
+        const before = countContent(this.editor);
+        const { gridA, gridAKey, keyIn } = refs(this.editor);
+        const ok = this.editor.insertWithShift({
+          gridKey: gridAKey,
+          dropSlotKey: keyIn(gridA, "A1"),
+          direction: "left",
+          sourceKey: keyIn(gridA, "A2"),
+        });
+        assert.true(ok);
+        assert.strictEqual(countContent(this.editor), before, "no duplication");
+        assert.deepEqual(
+          titlesByGrid(this.editor)[0],
+          ["A1", "A2"],
+          "both cells still present in grid A"
+        );
+      });
+
+      test("a palette edge drop mints exactly one new block", function (assert) {
+        const before = countContent(this.editor);
+        const { gridB, gridBKey, keyIn } = refs(this.editor);
+        const ok = this.editor.insertWithShift({
+          gridKey: gridBKey,
+          dropSlotKey: keyIn(gridB, "B1"),
+          direction: "right",
+          paletteBlockName: "wf:svc-test-tile",
+          paletteDefaultArgs: { title: "New" },
+        });
+        assert.true(ok);
+        assert.strictEqual(
+          countContent(this.editor),
+          before + 1,
+          "exactly one new block was added"
+        );
+      });
+    }
+  );
+
+  module(
+    "drop before an empty cell (R2.3 — encodes the rule)",
+    function (innerHooks) {
+      // Row: [derived empty at col 1] [Important spanning cols 2-3], plus a
+      // loose stack tile A. Per R2, dropping A *before* the empty cell should
+      // land A at col 1, push the empty + Important right, and grow a column:
+      // A · empty · Important(2-span). This pins the RULE outcome (the
+      // service + computeShiftPlan), independent of the overlay's cursor→
+      // action mapping.
+      innerHooks.beforeEach(async function () {
+        withTestBlockRegistration(() => registerBlock(TestTile));
+        await _renderBlocks(
+          "homepage-blocks",
+          [
+            {
+              block: Layout,
+              args: { mode: "grid", columns: 3, rows: 1 },
+              children: [
+                {
+                  block: TestTile,
+                  args: { title: "Important" },
+                  containerArgs: {
+                    grid: {
+                      column: "2 / 4",
+                      row: "1",
+                      align: "stretch",
+                      justify: "stretch",
+                    },
+                  },
+                },
+              ],
+            },
+            { block: TestTile, args: { title: "A" } },
+          ],
+          getOwner(this)
+        );
+        this.editor.siteSettings.wireframe_enabled = true;
+        logIn(getOwner(this));
+        this.editor = getOwner(this).lookup("service:wireframe");
+        this.editor.enter();
+      });
+
+      test("dropping A before the empty cell yields A · empty · Important(2-span), grown to 4 columns", function (assert) {
+        const root = this.editor.readResolvedLayout("homepage-blocks")[0];
+        const grid = root.children.find((c) => c.args?.mode === "grid");
+        const gridKey = `layout:${grid.__stableKey}`;
+        const aKey = `wf:svc-test-tile:${
+          root.children.find((c) => c.args?.title === "A").__stableKey
+        }`;
+
+        // Drop A before the empty cell at column 1, row 1 (left edge → cascade).
+        const ok = this.editor.insertWithShift({
+          gridKey,
+          dropCell: { column: 1, row: 1 },
+          direction: "left",
+          sourceKey: aKey,
+        });
+        assert.true(ok);
+
+        const after = this.editor
+          .readResolvedLayout("homepage-blocks")[0]
+          .children.find((c) => c.args?.mode === "grid");
+        const at = (title) =>
+          after.children.find((c) => c.args?.title === title).containerArgs.grid
+            .column;
+        assert.strictEqual(at("A"), "1", "A lands at column 1");
+        assert.strictEqual(
+          at("Important"),
+          "3 / 5",
+          "Important is pushed right, keeping its 2-span"
+        );
+        assert.strictEqual(after.args.columns, 4, "the grid grew to 4 columns");
+      });
+    }
+  );
+
+  module(
+    "conservation battery — no move duplicates a block",
+    function (innerHooks) {
+      // One outlet, two grids + a loose stack tile + an empty wf:cell, so a
+      // single seed can exercise every move/insert method across source
+      // contexts. The universal invariant: after the op, no content block
+      // appears more than once (no duplication) and the total count changes
+      // by exactly the operation's expected delta.
+      const OUTLET = "homepage-blocks";
+
+      innerHooks.beforeEach(async function () {
+        withTestBlockRegistration(() => registerBlock(TestTile));
+        const cell = (title, column, row) => ({
+          block: TestTile,
+          args: { title },
+          containerArgs: {
+            grid: { column, row, align: "stretch", justify: "stretch" },
+          },
+        });
+        await _renderBlocks(
+          OUTLET,
+          [
+            {
+              block: Layout,
+              args: { mode: "grid", columns: 3, rows: 2 },
+              children: [cell("A1", "1", "1"), cell("A2", "2", "1")],
+            },
+            {
+              block: Layout,
+              args: { mode: "grid", columns: 3, rows: 2 },
+              children: [
+                cell("B1", "1", "1"),
+                {
+                  block: "wf:cell",
+                  containerArgs: {
+                    grid: {
+                      column: "3",
+                      row: "1",
+                      align: "stretch",
+                      justify: "stretch",
+                    },
+                  },
+                },
+              ],
+            },
+            { block: TestTile, args: { title: "S" } },
+          ],
+          getOwner(this)
+        );
+        this.editor.siteSettings.wireframe_enabled = true;
+        logIn(getOwner(this));
+        this.editor = getOwner(this).lookup("service:wireframe");
+        this.editor.enter();
+      });
+
+      // Resolves the keys each operation needs from the seeded layout.
+      function keys(editor) {
+        const root = editor.readResolvedLayout(OUTLET)[0];
+        const [gridA, gridB] = root.children;
+        const loose = root.children.find((c) => c.args?.title === "S");
+        const tile = (grid, title) =>
+          `wf:svc-test-tile:${
+            grid.children.find((c) => c.args?.title === title).__stableKey
+          }`;
+        const emptyCell = gridB.children.find((c) => c.block === "wf:cell");
+        return {
+          gridA: `layout:${gridA.__stableKey}`,
+          gridB: `layout:${gridB.__stableKey}`,
+          a1: tile(gridA, "A1"),
+          a2: tile(gridA, "A2"),
+          b1: tile(gridB, "B1"),
+          emptyCell: `wf:cell:${emptyCell.__stableKey}`,
+          s: `wf:svc-test-tile:${loose.__stableKey}`,
+        };
+      }
+
+      // Title → occurrence count across the whole outlet tree.
+      function titleCounts(editor) {
+        const counts = {};
+        const walk = (entries) => {
+          for (const entry of entries ?? []) {
+            if (entry.args?.title) {
+              counts[entry.args.title] = (counts[entry.args.title] ?? 0) + 1;
+            }
+            walk(entry.children);
+          }
+        };
+        walk(editor.readResolvedLayout(OUTLET)[0].children);
+        return counts;
+      }
+
+      // Each entry relocates or inserts a block; `delta` is the expected
+      // change in total content blocks (0 = relocate, +1 = new, -1 = removes
+      // a target). Every case asserts NO block is duplicated.
+      const OPERATIONS = [
+        {
+          name: "moveBlock — cross-grid, same outlet (outline before)",
+          delta: 0,
+          run: (e, k) =>
+            e.moveBlock({
+              sourceKey: k.a1,
+              targetKey: k.b1,
+              position: "before",
+              targetOutletName: OUTLET,
+            }),
+        },
+        {
+          name: "moveBlock — from stack into a grid (inside)",
+          delta: 0,
+          run: (e, k) =>
+            e.moveBlock({
+              sourceKey: k.s,
+              targetKey: k.gridA,
+              position: "inside",
+              targetOutletName: OUTLET,
+            }),
+        },
+        {
+          name: "moveBlock — same-grid before a cell (cascade, not reflow)",
+          delta: 0,
+          run: (e, k) =>
+            e.moveBlock({
+              sourceKey: k.a2,
+              targetKey: k.a1,
+              position: "before",
+              targetOutletName: OUTLET,
+            }),
+        },
+        {
+          name: "moveBlockToCell — cross-grid, same outlet",
+          delta: 0,
+          run: (e, k) =>
+            e.moveBlockToCell({
+              gridKey: k.gridB,
+              sourceKey: k.a1,
+              column: 3,
+              row: 2,
+            }),
+        },
+        {
+          name: "moveBlockIntoCell — cross-grid empty cell",
+          delta: 0,
+          run: (e, k) =>
+            e.moveBlockIntoCell({ sourceKey: k.a1, cellKey: k.emptyCell }),
+        },
+        {
+          name: "insertWithShift — cross-grid existing source",
+          delta: 0,
+          run: (e, k) =>
+            e.insertWithShift({
+              gridKey: k.gridB,
+              dropSlotKey: k.b1,
+              direction: "right",
+              sourceKey: k.a1,
+            }),
+        },
+        {
+          name: "insertWithShift — same-grid rotation",
+          delta: 0,
+          run: (e, k) =>
+            e.insertWithShift({
+              gridKey: k.gridA,
+              dropSlotKey: k.a1,
+              direction: "left",
+              sourceKey: k.a2,
+            }),
+        },
+        {
+          name: "swapSlotPlacements — cross-grid trade",
+          delta: 0,
+          run: (e, k) =>
+            e.swapSlotPlacements({ slotKeyA: k.b1, slotKeyB: k.a1 }),
+        },
+        {
+          name: "insertWithShift — palette (new block)",
+          delta: 1,
+          run: (e, k) =>
+            e.insertWithShift({
+              gridKey: k.gridB,
+              dropSlotKey: k.b1,
+              direction: "right",
+              paletteBlockName: "wf:svc-test-tile",
+              paletteDefaultArgs: { title: "New" },
+            }),
+        },
+        {
+          name: "insertBlockAtCell — palette",
+          delta: 1,
+          run: (e, k) =>
+            e.insertBlockAtCell({
+              gridKey: k.gridB,
+              blockName: "wf:svc-test-tile",
+              defaultArgs: { title: "New2" },
+              column: 3,
+              row: 2,
+            }),
+        },
+        {
+          name: "replaceSlot — same grid (removes the target)",
+          delta: -1,
+          run: (e, k) =>
+            e.replaceSlot({ targetSlotKey: k.a2, sourceSlotKey: k.a1 }),
+        },
+      ];
+
+      for (const op of OPERATIONS) {
+        test(op.name, function (assert) {
+          const before = Object.values(titleCounts(this.editor)).reduce(
+            (n, c) => n + c,
+            0
+          );
+          const ok = op.run(this.editor, keys(this.editor));
+          assert.true(ok, "the operation succeeded");
+
+          const counts = titleCounts(this.editor);
+          const duplicated = Object.entries(counts)
+            .filter(([, c]) => c > 1)
+            .map(([title]) => title);
+          assert.deepEqual(duplicated, [], "no block is duplicated");
+
+          const after = Object.values(counts).reduce((n, c) => n + c, 0);
+          assert.strictEqual(
+            after,
+            before + op.delta,
+            `total block count changed by exactly ${op.delta}`
+          );
+        });
+      }
+    }
+  );
+
+  module("drop-action coverage (exhaustiveness guard)", function () {
+    // Tripwire: every service method that mutates grid placement must be a
+    // known drop action so it can't silently bypass the placement rules. A
+    // new mutator turns this red, forcing a deliberate decision about its
+    // rule coverage. Introspects the prototype rather than a static list
+    // that drifts.
+    test("no unrecognized grid-mutating method exists", function (assert) {
+      const editor = getOwner(this).lookup("service:wireframe");
+      const expected = [
+        "insertBlock",
+        "insertBlockAtCell",
+        "insertWithShift",
+        "moveBlock",
+        "moveBlockDown",
+        "moveBlockIntoCell",
+        "moveBlockToCell",
+        "moveBlockUp",
+        "placeBlockInCell",
+        "replaceSelectedEntryRaw",
+        "replaceSlot",
+        "setSlotPlacement",
+        "swapSlotPlacements",
+      ];
+      const pattern = /^(move|insert|place|swap|replace|setSlot)/;
+      const found = Object.getOwnPropertyNames(
+        Object.getPrototypeOf(editor)
+      ).filter(
+        (name) => pattern.test(name) && typeof editor[name] === "function"
+      );
+      assert.deepEqual(
+        found.sort(),
+        expected,
+        "grid-mutating methods match the known set — add new ones here AND " +
+          "confirm they route through the placement rules"
+      );
+    });
+  });
+
   module("inlineEdit.applyChange — entry without args", function (innerHooks) {
     innerHooks.beforeEach(async function () {
       withTestBlockRegistration(() => registerBlock(TestTile));

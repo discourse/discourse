@@ -105,6 +105,24 @@ export function unoccupiedCells(occupied, columns, rows) {
 }
 
 /**
+ * The next free cell in reading order (row-major: top to bottom, left to
+ * right) for a grid of the given size, or `null` when every cell is
+ * occupied. Wraps `computeOccupation` + the row-major scan so callers that
+ * only have the children + dimensions get the "where does the next block
+ * land" answer without reaching into the occupation internals. This is the
+ * single source of the "next free slot" placement rule.
+ *
+ * @param {Array<Object>} children - The grid's current children (exclude
+ *   the entering block, so it doesn't occupy its own target).
+ * @param {{columns: number, rows: number}} dims
+ * @returns {{column: number, row: number}|null}
+ */
+export function nextFreeCellInReadingOrder(children, { columns, rows }) {
+  const occupied = computeOccupation(children, columns, rows);
+  return nextFreeCell(occupied, columns, rows, { row: 1, column: 1 });
+}
+
+/**
  * Builds the ordered list of cells for a free-form grid — every cell of
  * a `columns × rows` grid in reading order (row-major: top to bottom,
  * left to right). Each cell is a `{column, row}` rect in CSS Grid line
@@ -439,6 +457,13 @@ export function placementsOverlap(a, b) {
  * shift can't fit (cascade walks off the grid, or a shifted slot
  * collides with a non-cascadable neighbour).
  *
+ * With `allowGrow`, a cascade that would otherwise run off the trailing
+ * edge instead GROWS that axis by one track (a column for a horizontal
+ * cascade, a row for a vertical one) and lands there — the "add a column
+ * when the row is full" rule. Growth is a fallback: it only fires when
+ * neither the forward nor the backward cascade fits at the current size,
+ * so an empty cell within the grid still absorbs the cascade first.
+ *
  * Edge / direction mapping:
  *
  *  - `"left"` → source lands at dropSlot's leftmost cell; dropSlot and
@@ -463,7 +488,8 @@ export function placementsOverlap(a, b) {
  *   sourceKey: string|null,
  *   dropSlotKey: string,
  *   direction: "left"|"right"|"up"|"down",
- *   gridDims: {columns: number, rows: number}
+ *   gridDims: {columns: number, rows: number},
+ *   allowGrow?: boolean
  * }} args
  * @returns {{
  *   moves: Array<{slotKey: string, column: string, row: string}>,
@@ -477,6 +503,7 @@ export function computeShiftPlan({
   dropCell,
   direction,
   gridDims,
+  allowGrow = false,
 }) {
   const maxCol = gridDims.columns;
   const maxRow = gridDims.rows;
@@ -542,6 +569,11 @@ export function computeShiftPlan({
     axis = "row";
   }
 
+  // Remember the un-clamped landing so a grow-retry can place the source
+  // in the freshly added track rather than the clamped trailing edge.
+  const rawLandingCol = landingCol;
+  const rawLandingRow = landingRow;
+
   // Clamp out-of-bounds landings to the trailing edge of the grid.
   // Without this, dropping on the right edge of the LAST column
   // (e.g. "after C" in a 3-col grid → landingCol = 4) would return
@@ -576,7 +608,7 @@ export function computeShiftPlan({
   if (forward) {
     return forward;
   }
-  return _attemptCascade({
+  const backward = _attemptCascade({
     rects,
     landingCol,
     landingRow,
@@ -585,6 +617,38 @@ export function computeShiftPlan({
     maxCol,
     maxRow,
   });
+  // A backward cascade only earns its keep when it actually displaces
+  // something (rotating a neighbour into the cell the source vacated, or
+  // rippling into a hole behind the drop). A ZERO-move backward "plan"
+  // means scanning behind the landing found nothing — it would drop the
+  // source in place and leave content ahead of it untouched, e.g. dropping
+  // before the leftmost cell while a block ahead overflows the row. That's
+  // not "make room"; reject it so the drop grows the axis (below) instead.
+  // An empty plan is only ever legitimate from the forward cascade (a drop
+  // into genuinely free space with nothing to shift).
+  if (backward && backward.moves.length > 0) {
+    return backward;
+  }
+  if (allowGrow) {
+    // The line is full at the current size — grow the cascade axis by one
+    // and retry forward, landing at the un-clamped drop position so the
+    // source occupies the freshly added track.
+    const grownMaxCol = axis === "column" ? maxCol + 1 : maxCol;
+    const grownMaxRow = axis === "row" ? maxRow + 1 : maxRow;
+    const grown = _attemptCascade({
+      rects,
+      landingCol: Math.min(rawLandingCol, grownMaxCol),
+      landingRow: Math.min(rawLandingRow, grownMaxRow),
+      axis,
+      cascadeForward: true,
+      maxCol: grownMaxCol,
+      maxRow: grownMaxRow,
+    });
+    if (grown) {
+      return grown;
+    }
+  }
+  return null;
 }
 
 /**
