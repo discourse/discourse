@@ -12,7 +12,7 @@ import Category from "discourse/models/category";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
-import { chartability, looksLikeDate } from "../lib/chart-helpers";
+import { chartability, defaultView, looksLikeDate } from "../lib/chart-helpers";
 import DataExplorerChart from "./data-explorer-chart";
 import QueryChartEmptyState from "./query-chart-empty-state";
 import QueryResultDownloadButtons from "./query-result-download-buttons";
@@ -64,9 +64,7 @@ export default class QueryResult extends Component {
     if (stored === "chart" || stored === "table") {
       this.internalView = stored;
     } else {
-      this.internalView = chartability(this.args.content).chartable
-        ? "chart"
-        : "table";
+      this.internalView = defaultView(this.args.content);
     }
   }
 
@@ -98,10 +96,6 @@ export default class QueryResult extends Component {
 
   @action
   checkOverflow(element) {
-    if (!this.chartVisible) {
-      this.tableExpanded = true;
-      return;
-    }
     this.hasOverflow = element.scrollHeight > element.clientHeight;
   }
 
