@@ -207,7 +207,7 @@ export default class TopicRoute extends DiscourseRoute {
         multiSelect: topicController.multiSelect,
         selectedPostsCount: post ? 1 : topicController.selectedPostsCount,
         selectedPostIds: post ? [post.id] : topicController.selectedPostIds,
-        selectedPostUsername:
+        selectedPostsUsername:
           post?.username ?? topicController.selectedPostsUsername,
         toggleMultiSelect: topicController.toggleMultiSelect,
         topic: post?.topic ?? this.modelFor("topic"),

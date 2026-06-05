@@ -199,6 +199,27 @@
     }
   }
 
+  &__op-article {
+    .select-posts {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      white-space: nowrap;
+
+      button {
+        background-color: var(--primary-low);
+        color: var(--primary);
+        box-shadow: var(--shadow-dropdown);
+      }
+    }
+
+    &.selected .select-posts button.select-post {
+      background-color: var(--tertiary);
+      color: var(--secondary);
+      border-color: var(--tertiary);
+    }
+  }
+
   &__op-row {
     display: flex;
     gap: 0.75em;
@@ -600,6 +621,25 @@
     .topic-meta-data {
       padding: 0;
     }
+
+    .select-posts {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      white-space: nowrap;
+
+      button {
+        background-color: var(--primary-low);
+        color: var(--primary);
+        box-shadow: var(--shadow-dropdown);
+      }
+    }
+  }
+
+  &.selected &__article .select-posts button.select-post {
+    background-color: var(--tertiary);
+    color: var(--secondary);
+    border-color: var(--tertiary);
   }
 
   &__header {
@@ -623,6 +663,7 @@
 
     .post-infos {
       order: 1;
+      margin-inline-start: auto;
       font-size: var(--font-down-2);
       color: var(--primary-medium);
       transform: translateY(1px); // optical alignment with username baseline

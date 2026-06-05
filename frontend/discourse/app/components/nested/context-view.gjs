@@ -191,6 +191,11 @@ export default class NestedContextView extends Component {
         @toggleWiki={{@toggleWiki}}
         @unhidePost={{@unhidePost}}
         @registerPost={{this.viewportTracker.registerPost}}
+        @multiSelect={{@multiSelect}}
+        @togglePostSelection={{@togglePostSelection}}
+        @selectReplies={{@selectReplies}}
+        @selectBelow={{@selectBelow}}
+        @postSelected={{@postSelected}}
       />
 
       <div class="nested-view__controls">
@@ -272,6 +277,11 @@ export default class NestedContextView extends Component {
               @cloakAbove={{this.cloakAbove}}
               @cloakBelow={{this.cloakBelow}}
               @collapseFromDepth={{this.effectiveCollapseFromDepth}}
+              @multiSelect={{@multiSelect}}
+              @togglePostSelection={{@togglePostSelection}}
+              @selectReplies={{@selectReplies}}
+              @selectBelow={{@selectBelow}}
+              @postSelected={{@postSelected}}
             />
           {{/each}}
         </div>

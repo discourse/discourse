@@ -279,6 +279,11 @@ export default class Nested extends Component {
                 @collapseFromDepth={{if @collapseReplies 0}}
                 @focusPost={{this.focusPath}}
                 @forceExpanded={{true}}
+                @multiSelect={{@multiSelect}}
+                @togglePostSelection={{@togglePostSelection}}
+                @selectReplies={{@selectReplies}}
+                @selectBelow={{@selectBelow}}
+                @postSelected={{@postSelected}}
               />
             </div>
           {{/each}}
@@ -303,6 +308,11 @@ export default class Nested extends Component {
           @unhidePost={{@unhidePost}}
           @showPostMenu={{true}}
           @registerPost={{this.viewportTracker.registerPost}}
+          @multiSelect={{@multiSelect}}
+          @togglePostSelection={{@togglePostSelection}}
+          @selectReplies={{@selectReplies}}
+          @selectBelow={{@selectBelow}}
+          @postSelected={{@postSelected}}
         />
 
         {{#if this.currentUser}}
@@ -374,6 +384,11 @@ export default class Nested extends Component {
               @cloakBelow={{this.cloakBelow}}
               @collapseFromDepth={{if @collapseReplies 0}}
               @focusPost={{this.focusPath}}
+              @multiSelect={{@multiSelect}}
+              @togglePostSelection={{@togglePostSelection}}
+              @selectReplies={{@selectReplies}}
+              @selectBelow={{@selectBelow}}
+              @postSelected={{@postSelected}}
             />
             <PluginOutlet
               @name="nested-roots-between"
