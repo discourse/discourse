@@ -266,26 +266,53 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       end
 
       context "with delete_user" do
-        %i[delete_user delete_user_block].each do |action|
-          it "deletes the user and resolves affected reviewables with #{action}" do
-            spammer = reviewable.target_created_by
-            other_reviewable = Fabricate(:reviewable_queued_post, created_by: spammer)
-            flagged_reviewable = Fabricate(:reviewable_flagged_post, target_created_by: spammer)
+        def fabricate_affected_reviewables_for_spammer_deletion(spammer)
+          {
+            other_reviewable: Fabricate(:reviewable_queued_post, created_by: spammer),
+            flagged_reviewable: Fabricate(:reviewable_flagged_post, target_created_by: spammer),
+          }
+        end
 
-            result = reviewable.perform(moderator, action)
-            expect(result.success?).to eq(true)
-            expect(User.find_by(id: spammer.id)).to be_blank
+        it "deletes the user and resolves affected reviewables with delete_user" do
+          spammer = reviewable.target_created_by
+          affected_reviewables = fabricate_affected_reviewables_for_spammer_deletion(spammer)
+          other_reviewable = affected_reviewables[:other_reviewable]
+          flagged_reviewable = affected_reviewables[:flagged_reviewable]
 
-            expect(result.remove_reviewable_ids).to contain_exactly(
-              reviewable.id,
-              other_reviewable.id,
-            )
-            expect(result.refresh_reviewable_ids).to contain_exactly(flagged_reviewable.id)
+          result = reviewable.perform(moderator, :delete_user)
+          expect(result.success?).to eq(true)
+          expect(User.find_by(id: spammer.id)).to be_blank
 
-            expect(reviewable.reload).to be_rejected
-            expect(flagged_reviewable.reload).to be_approved
-            expect(ReviewableQueuedPost.exists?(id: other_reviewable.id)).to eq(false)
-          end
+          expect(result.remove_reviewable_ids).to contain_exactly(
+            reviewable.id,
+            other_reviewable.id,
+          )
+          expect(result.refresh_reviewable_ids).to contain_exactly(flagged_reviewable.id)
+
+          expect(reviewable.reload).to be_rejected
+          expect(flagged_reviewable.reload).to be_approved
+          expect(ReviewableQueuedPost.exists?(id: other_reviewable.id)).to eq(false)
+        end
+
+        it "deletes the user and resolves affected reviewables with delete_user_block" do
+          spammer = reviewable.target_created_by
+          affected_reviewables = fabricate_affected_reviewables_for_spammer_deletion(spammer)
+          other_reviewable = affected_reviewables[:other_reviewable]
+          flagged_reviewable = affected_reviewables[:flagged_reviewable]
+
+          result = reviewable.perform(moderator, :delete_user_block)
+          expect(result.success?).to eq(true)
+          expect(User.find_by(id: spammer.id)).to be_blank
+
+          expect(result.remove_reviewable_ids).to contain_exactly(
+            reviewable.id,
+            other_reviewable.id,
+          )
+          expect(result.refresh_reviewable_ids).to contain_exactly(flagged_reviewable.id)
+
+          expect(reviewable.reload).to be_rejected
+          expect(flagged_reviewable.reload).to be_approved
+          expect(ReviewableQueuedPost.exists?(id: other_reviewable.id)).to eq(false)
         end
       end
     end

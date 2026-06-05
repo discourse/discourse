@@ -102,10 +102,10 @@ class ReviewableUser < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    # We'll delete the user if we can
     affected_reviewables = nil
     deleted_user_id = nil
 
+    # We'll delete the user if we can
     if target.present?
       affected_reviewables = reviewables_affected_by_deleted_user
       deleted_user_id = target.id

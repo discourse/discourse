@@ -495,7 +495,20 @@ export default class ReviewableItem extends Component {
       });
     }
 
-    const refreshReviewableIds = result.refresh_reviewable_ids || [];
+    let refreshReviewableIds = result.refresh_reviewable_ids || [];
+    let removeReviewableIds = result.remove_reviewable_ids || [];
+
+    if (
+      this.replaceReviewables &&
+      removeReviewableIds.length === 1 &&
+      removeReviewableIds.includes(reviewable.id) &&
+      !refreshReviewableIds.includes(reviewable.id)
+    ) {
+      refreshReviewableIds = [...refreshReviewableIds, reviewable.id];
+      removeReviewableIds = removeReviewableIds.filter((id) => {
+        return id !== reviewable.id;
+      });
+    }
 
     if (refreshReviewableIds.length > 0 && this.replaceReviewables) {
       const reviewables = await this.store.findAll("reviewable", {
@@ -505,12 +518,12 @@ export default class ReviewableItem extends Component {
       this.replaceReviewables(reviewables.content);
     }
 
-    if (result.remove_reviewable_ids?.length > 0) {
-      this.remove?.(result.remove_reviewable_ids);
+    if (removeReviewableIds.length > 0) {
+      this.remove?.(removeReviewableIds);
     }
 
     const reviewableWasRemoved =
-      this.remove && result.remove_reviewable_ids?.includes(reviewable.id);
+      this.remove && removeReviewableIds.includes(reviewable.id);
     const reviewableWasRefreshed =
       this.replaceReviewables && refreshReviewableIds.includes(reviewable.id);
 
