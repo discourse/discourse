@@ -57,6 +57,8 @@ pt_BR:
       confirm_solved_removal: "Esta alteração desativará as soluções para este tópico e removerá a solução aceita."
       confirm_solved_removal_confirm: "Confirmar"
       confirm_solved_removal_cancel: "Cancelar"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Sua pergunta foi respondida?
         description: "Destaque a resposta e ajude as outras pessoas ao usar o botão de solução abaixo para responder corretamente."

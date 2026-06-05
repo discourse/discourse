@@ -338,7 +338,7 @@ de:
       page_publishing_requirements: "Die Seitenveröffentlichung kann nicht aktiviert werden, wenn sichere Uploads aktiviert sind."
       s3_backup_requires_s3_settings: "Du kannst S3 nicht als Backup-Ort verwenden, solange du „%{setting_name}“ nicht festgelegt hast."
       s3_bucket_reused: "Du kannst nicht denselben Bucket für „s3_upload_bucket“ und „s3_backup_bucket“ verwenden. Bitte verwende einen anderen Bucket oder verwende für jeden Bucket einen anderen Pfad."
-      secure_uploads_requirements: "S3-Uploads und S3-ACLs müssen aktiviert sein, bevor du sichere Uploads aktivieren kannst."
+      secure_uploads_requirements: "S3-Uploads müssen vor dem Aktivieren sicherer Uploads aktiviert sein."
       share_quote_facebook_requirements: "Du musst eine Facebook-App-ID festlegen, um das Teilen von Zitaten für Facebook zu aktivieren."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kannst 2FA nicht erzwingen, wenn lokale Anmeldungen deaktiviert sind."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Du kannst 2FA nicht erzwingen, wenn DiscourseConnect aktiviert ist."

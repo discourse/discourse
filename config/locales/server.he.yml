@@ -386,7 +386,7 @@ he:
       page_publishing_requirements: "לא ניתן להפעיל פרסום עמודים אם העלאות מאובטחות פעילות."
       s3_backup_requires_s3_settings: "לא ניתן להשתמש ב־S3 כמיקום לגיבוי אלמלא סיפקת את ‚%{setting_name}’."
       s3_bucket_reused: "אין לך אפשרות להשתמש באותו הדלי עבור ‚s3_upload_bucket’ וגם ‚s3_backup_bucket’. נא לבחור בדלי שונה או להשתמש בנתיב שונה לכל דלי."
-      secure_uploads_requirements: "יש להפעיל העלאה ל־S3 ובקרות גישה (ACLs) של S3 בטרם הפעלת העלאות מאובטחות."
+      secure_uploads_requirements: "יש להפעיל העלאה ל־S3 בטרם הפעלת העלאות מאובטחות."
       share_quote_facebook_requirements: "עליך להגדיר מזהה יישומון פייסבוק כדי להפעיל שיתוף ציטוטים עבור פייסבוק"
       second_factor_cannot_be_enforced_with_disabled_local_login: "אי אפשר לאכוף אימות דו־שלבי אם כניסה מקומית מושבתת."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "אי אפשר לאכוף אימות דו־שלבי אם מופעל DiscourseConnect."

@@ -2851,6 +2851,8 @@ fr:
           label: Répondre au sujet
           trigger: Sujet
           desc: Répondre au sujet, pas à un message spécifique
+        reply_to_message:
+          trigger: Message
         toggle_whisper:
           label: Activer/désactiver le murmure
         create_topic:
@@ -6195,9 +6197,10 @@ fr:
           your_organization: "Votre organisation"
           your_organization_description: "Nous utiliserons ces informations dans les Conditions d'utilisation et l'Avis de confidentialité pour indiquer qui exploite le site et sous quelle juridiction."
           company_name: "Nom"
-          company_name_placeholder: "Organisation Acme"
           company_name_warning: |
             Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis.
+          company_url: "Site Web"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Droit applicable"
           governing_law_placeholder: "Province, État ou pays"
           governing_law_help: |

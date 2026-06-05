@@ -3436,6 +3436,10 @@ pl_PL:
           label: Odpowiedz na temat
           trigger: Temat
           desc: Odpowiedz na temat, a nie żaden konkretny wpis
+        reply_to_message:
+          label: Odpowiedz na wiadomość
+          trigger: Wiadomość
+          desc: Odpowiedz na wiadomość, a nie na konkretny wpis
         toggle_whisper:
           label: Przełącz szept
           desc: Szepty są widoczne tylko dla uprawnionych grup
@@ -7835,9 +7839,11 @@ pl_PL:
           your_organization: "Twoja organizacja"
           your_organization_description: "Informacje te zostaną wykorzystane w Warunkach korzystania z usługi i Polityce prywatności, aby wskazać, kto zarządza witryną i w ramach jakiej jurysdykcji."
           company_name: "Nazwa"
-          company_name_placeholder: "Organizacja Acme"
+          company_name_placeholder: "PrzykładowaSA"
           company_name_warning: |
             Jeśli pozostawisz to pole puste, nie zostaną dostarczone standardowe warunki świadczenia usług ani polityka prywatności.
+          company_url: "Strona internetowa"
+          company_url_placeholder: "https://przykładowa-sa.pl"
           governing_law: "Obowiązujące prawo"
           governing_law_placeholder: "Prowincja, stan lub kraj"
           governing_law_help: |

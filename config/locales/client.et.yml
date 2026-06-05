@@ -1522,6 +1522,8 @@ et:
         reply_to_topic:
           label: Vasta teemale
           trigger: Teema
+        reply_to_message:
+          trigger: Sõnum
         shared_draft:
           label: "Jagatud mustand"
         unknown_user: "Kasutaja"
@@ -3115,6 +3117,8 @@ et:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nimi"
+          company_url: "Veebileht"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Rühmad"
           optional: "(valikuline)"

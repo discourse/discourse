@@ -387,7 +387,6 @@ cs:
       page_publishing_requirements: "Publikování stránek nelze povolit, pokud je povoleno zabezpečené nahrávání."
       s3_backup_requires_s3_settings: "S3 nemůžete použít jako umístění zálohy, pokud nezadáte '%{setting_name}'."
       s3_bucket_reused: "Nemůžete použít stejný segment pro 's3_upload_bucket' a 's3_backup_bucket'. Vyberte jiný bucket nebo použijte pro každý bucket jinou cestu."
-      secure_uploads_requirements: "Nahrávání S3 a seznamy ACL S3 musí být před povolením zabezpečeného nahrávání povoleny."
       share_quote_facebook_requirements: "Chcete-li povolit sdílení citací pro Facebook, musíte nastavit Facebook app id."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Nemůžete vynutit 2FA, pokud je zakázáno lokální přihlašování."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Nemůžete vynutit 2FA, pokud je povoleno DiscourseConnect."

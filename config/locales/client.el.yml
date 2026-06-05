@@ -3051,6 +3051,8 @@ el:
           label: Απάντηση στο θέμα
           trigger: Νήμα
           desc: Απάντηση στο θέμα, όχι σε συγκεκριμένη ανάρτηση
+        reply_to_message:
+          trigger: Μήνυμα
         toggle_whisper:
           label: Εναλλαγή ψιθύρων
         create_topic:
@@ -6712,7 +6714,8 @@ el:
             Η ομάδα που λαμβάνει πρόσκληση σε όλα τα αυτομάτως αποστέλλοντα προσωπικά μηνύματα.
           your_organization: "Ο οργανισμός σας"
           company_name: "Όνομα"
-          company_name_placeholder: "Οργανισμός Acme"
+          company_url: "Website"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Εφαρμοστέο δίκαιο"
           governing_law_placeholder: "Επαρχία, Πολιτεία ή Χώρα"
           governing_law_help: |

@@ -3090,6 +3090,8 @@ tr_TR:
           label: Konuyu yanıtla
           trigger: Konu
           desc: Belirli bir gönderiye değil, konuya yanıt verin
+        reply_to_message:
+          trigger: Mesaj
         toggle_whisper:
           label: Fısıltıyı Aç/Kapat
         create_topic:
@@ -6886,9 +6888,10 @@ tr_TR:
           your_organization: "Organizasyonunuz"
           your_organization_description: "Bu bilgileri, siteyi kimin işlettiğini ve hangi yargı yetkisi kapsamında işlettiğini göstermek için Hizmet Koşulları ve Gizlilik Bildiriminde kullanırız."
           company_name: "Ad"
-          company_name_placeholder: "Acme Organizasyonu"
           company_name_warning: |
             Boş bırakılırsa Hizmet Şartları veya Gizlilik Bildirimine ilişkin ortak metin sağlanmaz
+          company_url: "Web sitesi"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Geçerli kanun"
           governing_law_placeholder: "İl, Eyalet veya Ülke"
           governing_law_help: |

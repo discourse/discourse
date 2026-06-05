@@ -3079,6 +3079,8 @@ nl:
           label: Antwoorden op topic
           trigger: Topic
           desc: Antwoord op het topic, niet een bepaald bericht
+        reply_to_message:
+          trigger: Bericht
         toggle_whisper:
           label: Fluisteren in-/uitschakelen
         create_topic:
@@ -6872,9 +6874,10 @@ nl:
           your_organization: "Je organisatie"
           your_organization_description: "We gebruiken deze informatie in de Gebruiksvoorwaarden en Privacyverklaring om aan te geven wie de site beheert en in welk rechtsgebied."
           company_name: "Naam"
-          company_name_placeholder: "Acme-organisatie"
           company_name_warning: |
             Als dit leeg wordt gelaten worden er geen standaard Gebruiksvoorwaarden of Privacyverklaring verstrekt.
+          company_url: "Website"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Toepasselijk recht"
           governing_law_placeholder: "Provincie, staat of land"
           governing_law_help: |

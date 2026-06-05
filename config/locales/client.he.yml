@@ -3294,6 +3294,8 @@ he:
           label: הגב לנושא
           trigger: נושא
           desc: הגב לנושא, לא פוסט ספציפי
+        reply_to_message:
+          trigger: הודעה
         toggle_whisper:
           label: החלפת מצב לחישה
         create_topic:
@@ -7244,9 +7246,10 @@ he:
           your_organization: "הארגון שלך"
           your_organization_description: "אנו נשתמש במידע זה בתנאי השירות ובהצהרת הפרטיות כדי להראות מי מפעיל את האתר ותחת איזו סמכות שיפוט."
           company_name: "שם"
-          company_name_placeholder: "עמותת לקט ישראל"
           company_name_warning: |
             אם השדה יישאר ריק, לא יסופקו תנאי שירות או הצהרת פרטיות ראשוניים.
+          company_url: "אתר"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "החוק המחייב"
           governing_law_placeholder: "מחוז, מדינה או ארץ"
           governing_law_help: |

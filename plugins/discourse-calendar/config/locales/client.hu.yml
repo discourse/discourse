@@ -521,3 +521,4 @@ hu:
       invite_user_or_group:
         title: "Felhasználók vagy csoportok értesítése"
         invite: "Küldés"
+        success: "Meghívó elküldve"

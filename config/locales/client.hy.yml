@@ -2311,6 +2311,8 @@ hy:
           label: Պատասխանել թեմային
           trigger: Թեմա
           desc: Պատասխանել թեմային, այլ ոչ թե որոշակի գրառման
+        reply_to_message:
+          trigger: Ուղարկել
         toggle_whisper:
           label: Փոխանջատել շշնջումը
         create_personal_message:
@@ -4248,6 +4250,8 @@ hy:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Անուն"
+          company_url: "Վեբ կայք"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Խմբեր"
           optional: "(ընտրովի)"

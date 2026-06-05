@@ -161,7 +161,6 @@ te:
       page_publishing_requirements: "సురక్షిత అప్‌లోడ్‌లు ప్రారంభించబడితే పేజీ ప్రచురణ ప్రారంభించబడదు."
       s3_backup_requires_s3_settings: "మీరు '%{setting_name}'ని అందించకపోతే S3ని బ్యాకప్ స్థానంగా ఉపయోగించలేరు."
       s3_bucket_reused: "మీరు 's3_upload_bucket' మరియు 's3_backup_bucket' కోసం ఒకే బకెట్‌ని ఉపయోగించలేరు. వేరొక బకెట్‌ని ఎంచుకోండి లేదా ప్రతి బకెట్‌కు వేరే మార్గాన్ని ఉపయోగించండి."
-      secure_uploads_requirements: "సురక్షిత అప్‌లోడ్‌లను ప్రారంభించే ముందు S3 అప్‌లోడ్‌లు మరియు S3 ACLలు తప్పనిసరిగా ప్రారంభించబడాలి."
       share_quote_facebook_requirements: "Facebook కోసం కోట్ షేరింగ్‌ని ప్రారంభించడానికి మీరు తప్పనిసరిగా Facebook యాప్ ఐడిని సెట్ చేయాలి."
       second_factor_cannot_be_enforced_with_disabled_local_login: "స్థానిక లాగిన్‌లు నిలిపివేయబడినట్లయితే మీరు 2FAని అమలు చేయలేరు."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "డిస్కోర్సెకనెక్ట్ ప్రారంభించబడితే మీరు 2FA ను అమలు చేయలేరు."

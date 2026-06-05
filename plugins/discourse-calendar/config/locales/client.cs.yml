@@ -539,3 +539,4 @@ cs:
       invite_user_or_group:
         title: "Oznámit uživatelům nebo skupinám"
         invite: "Odeslat"
+        success: "Pozvánka odeslána"

@@ -1757,6 +1757,8 @@ bs_BA:
           label: Odgovori na temu
           trigger: Topic
           desc: Odgovori na temu, ne ciljajući na neku posebnu objavu
+        reply_to_message:
+          trigger: Privatna Poruka
         toggle_whisper:
           label: Uključi Šapat
         create_personal_message:
@@ -3582,6 +3584,8 @@ bs_BA:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Ime"
+          company_url: "Web stranica"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Groups"
           optional: "(opciono)"

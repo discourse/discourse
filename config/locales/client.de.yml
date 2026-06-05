@@ -3079,6 +3079,8 @@ de:
           label: Auf Thema antworten
           trigger: Thema
           desc: Antworte auf das Thema, nicht auf einen bestimmten Beitrag
+        reply_to_message:
+          trigger: Nachricht
         toggle_whisper:
           label: Flüstermodus umschalten
         create_topic:
@@ -6872,9 +6874,10 @@ de:
           your_organization: "Deine Organisation"
           your_organization_description: "Wir verwenden diese Informationen in den Nutzungsbedingungen und im Datenschutzhinweis, um zu zeigen, wer die Website betreibt und unter welcher Gerichtsbarkeit."
           company_name: "Name"
-          company_name_placeholder: "Acme-Organisation"
           company_name_warning: |
             Wenn du nichts angibst, werden keine vorgefertigten allgemeinen Geschäftsbedingungen oder eine entsprechende Datenschutzrichtlinie bereitgestellt.
+          company_url: "Website"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Anzuwendendes Recht"
           governing_law_placeholder: "Provinz, Bundesland oder Land"
           governing_law_help: |

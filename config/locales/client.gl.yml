@@ -1887,6 +1887,8 @@ gl:
           label: Responder ao tema
           trigger: Tema
           desc: Responder ao tema, non a ningunha publicación específica
+        reply_to_message:
+          trigger: Mensaxe
         toggle_whisper:
           label: Trocar rumor
         create_personal_message:
@@ -3879,6 +3881,8 @@ gl:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nome"
+          company_url: "Sitio web"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupos"
           optional: "(opcional)"

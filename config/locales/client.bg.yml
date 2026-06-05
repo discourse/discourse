@@ -2155,6 +2155,8 @@ bg:
           label: Отговорете на тема
           trigger: Тема
           desc: Отговорете на темата, а не на конкретен пост
+        reply_to_message:
+          trigger: Съобщение
         toggle_whisper:
           label: Превключете шепот
         create_personal_message:
@@ -3754,6 +3756,7 @@ bg:
       config_areas:
         about:
           company_name: "Име"
+          company_url: "Уебсайт"
           extra_groups:
             groups: "Групи"
           optional: "(по избор)"

@@ -2134,6 +2134,8 @@ ko:
           label: 댓글 쓰기
           trigger: 글
           desc: 특정 댓글이 아닌 본 글에 댓글 작성
+        reply_to_message:
+          trigger: 메시지 보내기
         toggle_whisper:
           label: 귓속말 토글
         create_topic:
@@ -4309,6 +4311,8 @@ ko:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "조직"
           company_name: "그룹명"
+          company_url: "웹 사이트"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "그룹"
           optional: "(선택 사항)"

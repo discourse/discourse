@@ -2566,6 +2566,8 @@ zh_TW:
           label: 回應話題
           trigger: 話題
           desc: 回應本話題而非特定貼文
+        reply_to_message:
+          trigger: 訊息
         toggle_whisper:
           label: 切換為悄悄話
         create_topic:
@@ -5528,9 +5530,10 @@ zh_TW:
             受邀接收所有自動發送的私人訊息的群組。
           your_organization_description: "我們將在《服務條款》和《隱私聲明》中顯示此資訊來表明此網站的運營方和司法管轄區。"
           company_name: "名字"
-          company_name_placeholder: "Acme 組織"
           company_name_warning: |
             如果留空，則不會提供模板服務條款或隱私權通知。
+          company_url: "網站"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "適用於法律"
           governing_law_placeholder: "省、州或國家"
           governing_law_help: |

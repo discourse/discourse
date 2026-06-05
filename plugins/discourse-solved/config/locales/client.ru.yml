@@ -57,6 +57,7 @@ ru:
       confirm_solved_removal_confirm: "Подтвердить"
       confirm_solved_removal_cancel: "Нет"
       shared_issue:
+        label_with_count: "%{label} (%{count})"
         title: "Я тоже столкнулся с этой проблемой."
         author_title: "Вы начали эту тему."
       no_answer:

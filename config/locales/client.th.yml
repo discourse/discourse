@@ -1522,6 +1522,8 @@ th:
         reply_to_topic:
           label: ตอบกลับกระทู้
           trigger: หัวข้อ
+        reply_to_message:
+          trigger: ข้อความ
         create_personal_message:
           desc: "สร้างข้อความส่วนตัวใหม่"
         shared_draft:
@@ -2920,6 +2922,7 @@ th:
       config_areas:
         about:
           company_name: "ชื่อ"
+          company_url: "เว็บไซต์"
           extra_groups:
             groups: "กลุ่ม"
           optional: "(ทางเลือก)"

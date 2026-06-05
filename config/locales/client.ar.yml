@@ -3688,6 +3688,8 @@ ar:
           label: الرد على الموضوع
           trigger: الموضوع
           desc: الرد على الموضوع، وليس أي منشور محدَّد
+        reply_to_message:
+          trigger: رسالة
         toggle_whisper:
           label: تفعيل الهمس
         create_topic:
@@ -8170,9 +8172,10 @@ ar:
           your_organization: "مؤسستك"
           your_organization_description: "سنستخدم هذه المعلومات في شروط الخدمة وإشعار الخصوصية لتوضيح المسؤول عن تشغيل الموقع وتحت أي ولاية قضائية."
           company_name: "الاسم"
-          company_name_placeholder: "مؤسسة Acme"
           company_name_warning: |
             إذا تُرك فارغًا، فلن يتم توفير شروط خدمة أو إشعار خصوصية نمطية.
+          company_url: "الموقع الإلكتروني"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "القانون الحاكم"
           governing_law_placeholder: "المقاطعة أو الولاية أو البلد"
           governing_law_help: |

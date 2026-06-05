@@ -17,6 +17,8 @@ gl:
       move_post_cancel: "Cancelar"
       confirm_solved_removal_confirm: "Confirmar"
       confirm_solved_removal_cancel: "Cancelar"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
     discourse_automation:
       triggerables:
         first_accepted_solution:

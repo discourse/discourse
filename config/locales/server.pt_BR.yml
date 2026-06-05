@@ -338,7 +338,7 @@ pt_BR:
       page_publishing_requirements: "A publicação da página não pode ser ativada se houver envios seguros ativados."
       s3_backup_requires_s3_settings: "Você não pode usar o S3 como local de backup, a não ser que você tenha informado o \"%{setting_name}\"."
       s3_bucket_reused: "Você não pode usar o mesmo bucket para \"s3_upload_bucket\" e \"s3_backup_bucke\"'. Escolha um bucket diferente ou use um caminho diferente para cada bucket."
-      secure_uploads_requirements: "Envios S3 e ACLs S3 devem ser ativados antes dos envios seguros."
+      secure_uploads_requirements: "Envios S3 devem ser ativados antes dos envios seguros."
       share_quote_facebook_requirements: "É preciso definir uma id do app Facebook para permitir o compartilhamento de citação para Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Você não pode impor a 2FA se a autenticação local estiver desativada."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Não é possível aplicar 2FA se o DiscourseConnect estiver ativado."

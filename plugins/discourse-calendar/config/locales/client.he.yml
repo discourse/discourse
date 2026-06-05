@@ -535,3 +535,4 @@ he:
       invite_user_or_group:
         title: "להודיע למשתמשים או לקבוצות"
         invite: "שליחה"
+        success: "נשלחה הזמנה"

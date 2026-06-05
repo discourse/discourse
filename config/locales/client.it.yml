@@ -2833,6 +2833,8 @@ it:
           label: Rispondi all'argomento
           trigger: Argomento
           desc: Rispondi all'argomento, non a uno specifico messaggio
+        reply_to_message:
+          trigger: Messaggio
         toggle_whisper:
           label: Attiva/disattiva sussurri
         create_topic:
@@ -6166,9 +6168,10 @@ it:
           your_organization: "La tua organizzazione"
           your_organization_description: "Utilizzeremo queste informazioni nei Termini di servizio e nell'Informativa sulla privacy per indicare chi gestisce il sito e sotto quale giurisdizione."
           company_name: "Nome"
-          company_name_placeholder: "Organizzazione Acme"
           company_name_warning: |
             Se non compilato, non avrai a disposizione Termini di servizio o Informativa sulla privacy standard.
+          company_url: "Sito web"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Diritto applicabile"
           governing_law_placeholder: "Provincia, Stato o Paese"
           governing_law_help: |
