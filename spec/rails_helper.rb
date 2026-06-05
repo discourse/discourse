@@ -89,6 +89,40 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
     end
   end
 
+  # Neutralize MethodProfiler in CI. `Middleware::RequestTracker` wraps every
+  # controller request the in-process test server handles with
+  # `MethodProfiler.start` / `.stop`, and `Hijack` / `Jobs::Base` do the same
+  # for hijacked responses and jobs. While a profiler is active, the prepended
+  # patches on `PG::Connection`, `Redis::Client`, `RedisClient::RubyConnection`,
+  # `Net::HTTP` and `Excon::Connection` record every call with two
+  # `Process.clock_gettime`s plus a hash mutation — and a Discourse topic/list
+  # request fans out into dozens of SQL queries and Redis calls, so that is
+  # paid hundreds of times per page the system specs drive. On top of that,
+  # `MethodProfiler.start` builds a full `GC.stat` Hash (~30 entries) on every
+  # request, and lograge's `custom_options` reads `GC.stat[:heap_live_slots]`
+  # again to compute the per-request slot delta — two whole-Hash `GC.stat`
+  # allocations per request feeding allocation/GC pressure during the
+  # CPU-bound request-handling phase that system specs block on.
+  #
+  # In CI that timing data only ever surfaces in the `X-Runtime` header and
+  # lograge's `db`/`redis`/`net` fields (emitted at `error` level under
+  # `RAILS_TEST_LOG_LEVEL=error`) — nothing any system spec asserts on. No-op
+  # `start` so `Thread.current[:_method_profiler]` stays nil: every patched
+  # DB/Redis/Net call takes MethodProfiler's single thread-local nil-check fast
+  # path, the per-request `GC.stat`s are skipped, and `stop`/`transfer` return
+  # nil. Every consumer (`RequestTracker`, `Hijack`, `Jobs::Base`, lograge) is
+  # already nil-guarded on that path, so behaviour is unchanged. Set
+  # DISCOURSE_KEEP_METHOD_PROFILER=1 to restore instrumentation for debugging.
+  if !ENV["DISCOURSE_KEEP_METHOD_PROFILER"] && defined?(MethodProfiler)
+    MethodProfiler.singleton_class.prepend(
+      Module.new do
+        def start(_transfer = nil)
+          nil
+        end
+      end,
+    )
+  end
+
   # `UpcomingChanges.clear_caches!` is called per spec via `TestSetup.test_setup`
   # (the `config.before :each` hook). The upstream implementation pays three
   # serial Redis round-trips — two `Discourse.cache.delete` calls plus a
