@@ -27,36 +27,7 @@ require_relative "support/server_error_tracking"
 
 ENV["RAILS_ENV"] ||= "test"
 ENV["ENABLE_LOGSTASH_LOGGER"] ||= "1"
-
-if ENV["DISCOURSE_SKIP_EAGER_LOAD"] == "1"
-  # In CI, `config/environments/test.rb` sets `config.eager_load = ENV["CI"].present?`,
-  # so every spec worker eager-loads the entire Discourse app (~thousands of files)
-  # during `Rails.application.initialize!`. For the Core System Tests step this is pure
-  # boot overhead: ~10 workers all run the full single-threaded eager-load at once at the
-  # start of the step, producing a synchronized CPU spike on the (oversubscribed) 16-core
-  # runner during which no examples run. Eager-load correctness is already verified by the
-  # backend matrix (which keeps eager_load on plus the dedicated "Check Zeitwerk reloading"
-  # step), so the system workers don't need to re-prove it — they just run specs. With
-  # `cache_classes = true` and eager_load off, Zeitwerk autoloads each constant on first
-  # reference and caches it (the same mode every developer runs system tests in locally),
-  # spreading the load cost into the idle gaps while other workers wait on the browser and
-  # eliminating the startup spike that fattens the step's tail.
-  #
-  # `eager_load` is set from `ENV["CI"]` and — in the test environment — that is the only
-  # boot-time reader of `CI` (the two initializers that reference it are
-  # `Rails.env.development?`-guarded). Hide `CI` for the duration of the environment require
-  # so `test.rb` computes `eager_load = false`, then restore it immediately so every
-  # post-boot, CI-gated branch in this file (bigint column widening, query-log neutralizing,
-  # Chrome args, …) sees the real value.
-  saved_ci = ENV.delete("CI")
-  begin
-    require File.expand_path("../../config/environment", __FILE__)
-  ensure
-    ENV["CI"] = saved_ci unless saved_ci.nil?
-  end
-else
-  require File.expand_path("../../config/environment", __FILE__)
-end
+require File.expand_path("../../config/environment", __FILE__)
 Discourse.singleton_class.prepend(RspecWarnExceptionCapture)
 
 # In CI, neutralize ActiveRecord query log tags + verbose query logs. Both

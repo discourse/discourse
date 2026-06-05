@@ -298,19 +298,6 @@ jobs:
           # serial-prefix on the step's critical path shrinks by the
           # parent's `Discourse::Application.initialize!` time.
           TURBO_RSPEC_SKIP_MIGRATIONS_CHECK: "1"
-          # Skip the full-app eager-load in each spec worker (see the
-          # `DISCOURSE_SKIP_EAGER_LOAD` handling in spec/rails_helper.rb).
-          # `config/environments/test.rb` turns eager_load on whenever CI is
-          # set, so all ~10 workers would otherwise run the single-threaded
-          # eager-load of the whole Discourse app simultaneously at the start
-          # of this step — a synchronized CPU spike on the oversubscribed
-          # 16-core runner during which no examples run. Eager-load
-          # correctness is already proven by the backend matrix; the system
-          # workers only need to run specs, and Zeitwerk autoload-on-demand
-          # (with cache_classes on) spreads the same load cost into the idle
-          # gaps where workers wait on the browser, shrinking the step's boot
-          # prefix and tightening its sample spread.
-          DISCOURSE_SKIP_EAGER_LOAD: "1"
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
