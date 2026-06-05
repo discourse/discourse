@@ -61,6 +61,34 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
   # the duration of a block, so query-counting tests still work unchanged.
   ActiveSupport::Notifications.notifier.unsubscribe("sql.active_record")
 
+  # Same idea for the MiniSql path. Every `DB.query`/`DB.exec` flows through
+  # `MiniSqlMultisiteConnection#run`, which unconditionally builds the
+  # `sql.mini_sql` notification payload — and the `sql:` value is
+  # `sql_fragment(sql, *params)`, which for any parameterized query runs
+  # `ActiveRecord::Base.sanitize_sql_array` (regex parameter interpolation).
+  # Because that payload is a positional argument, it is computed eagerly on
+  # *every* query before `instrument` even gets to check for listeners, so the
+  # encode + hash allocation are paid in full even though nothing consumes the
+  # event. Unlike AR's path there is no LogSubscriber to unsubscribe (MiniSql
+  # ships none), so we gate the whole instrument behind `listening?` instead.
+  # `track_sql_queries` attaches a transient `sql.mini_sql` subscriber, so when
+  # a query-counting block is active the check is true and behaviour is
+  # byte-identical; in the common case nobody listens and the per-query
+  # `sanitize_sql_array` + notification dispatch are skipped entirely.
+  MiniSqlMultisiteConnection.class_eval do
+    def run(sql, params)
+      if ActiveSupport::Notifications.notifier.listening?("sql.mini_sql")
+        ActiveSupport::Notifications.instrument(
+          "sql.mini_sql",
+          sql: sql_fragment(sql, *params),
+          name: "MiniSql",
+        )
+      end
+
+      super
+    end
+  end
+
   # `UpcomingChanges.clear_caches!` is called per spec via `TestSetup.test_setup`
   # (the `config.before :each` hook). The upstream implementation pays three
   # serial Redis round-trips — two `Discourse.cache.delete` calls plus a
