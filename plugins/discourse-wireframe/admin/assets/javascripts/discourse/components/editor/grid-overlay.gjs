@@ -6,7 +6,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { parsePlacement } from "discourse/blocks";
+import { gridDimensions, parsePlacement } from "discourse/blocks";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 import { GRID_LAYOUT_SELECTOR } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-dom-contract";
@@ -17,10 +17,12 @@ import {
   computeShiftPlan,
   computeZone,
   computeZoneCollapsed,
+  resizeColumnFractions,
   unoccupiedCells,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import { entryKey } from "../../lib/mutate-layout";
 import { buildBlockPalette } from "../../lib/palette";
+import gridTrackResize from "../../modifiers/grid-track-resize";
 import EditorEmptyDropPlaceholder from "./editor-empty-drop-placeholder";
 
 /**
@@ -165,6 +167,13 @@ export default class GridOverlay extends Component {
   acceptedDropKinds = ["wf-block", "wf-palette-block"];
 
   /**
+   * The grid container element, resolved lazily for the resize modifier
+   * (the overlay's `didInsert` has captured it by drag time).
+   *
+   * @returns {Element|null}
+   */
+  getGridElement = () => this.gridElement;
+  /**
    * Per-drag geometry cache. Populated lazily on the first dragover
    * of a session (keyed on the drag source's reference identity in
    * `dragAndDrop.currentDrag`); refreshed when the window resizes or
@@ -233,12 +242,110 @@ export default class GridOverlay extends Component {
     return this.wireframe.findEntryAndOutletSync(this.args.gridKey)?.entry;
   }
 
+  /**
+   * Effective column / row counts — the larger of the declared args and
+   * what the children occupy (core's `gridDimensions`), so the overlay's
+   * empty-cell math and resize handles always agree with the rendered
+   * grid rather than a bare default. Reads `gridEntry` for its
+   * `structuralVersion` dependency.
+   */
   get columns() {
-    return Number(this.gridEntry?.args?.columns ?? 6);
+    const entry = this.gridEntry;
+    return gridDimensions(
+      { columns: entry?.args?.columns ?? 3, rows: entry?.args?.rows ?? 2 },
+      entry?.children
+    ).columns;
   }
 
   get rows() {
-    return Number(this.gridEntry?.args?.rows ?? 2);
+    const entry = this.gridEntry;
+    return gridDimensions(
+      { columns: entry?.args?.columns ?? 3, rows: entry?.args?.rows ?? 2 },
+      entry?.children
+    ).rows;
+  }
+
+  /**
+   * Descriptors for the column resize handles. For each interior line we
+   * walk the rows and merge contiguous rows where the line actually
+   * divides two cells (no block spans across it there) into ONE run, so
+   * the handle is a continuous line that only breaks where a span
+   * interrupts it. Each run is `{line, rowStart, rowEnd, leftTrack}`;
+   * dragging any run on a line resizes that one column pair (the width is
+   * global). Empty when the grid has one column or is `@container`-
+   * collapsed (resolved track widths aren't a usable basis then).
+   *
+   * @returns {Array<{line: number, rowStart: number, rowEnd: number, leftTrack: number}>}
+   */
+  get columnHandles() {
+    if (this.isCollapsed || this.columns < 2) {
+      return [];
+    }
+    const children = this.gridEntry?.children ?? [];
+    const spansAcross = (line, row) =>
+      children.some((child) => {
+        const { column, row: childRow } = parsePlacement(child.containerArgs);
+        return (
+          column.start != null &&
+          column.end != null &&
+          column.start < line &&
+          column.end > line &&
+          childRow.start != null &&
+          childRow.end != null &&
+          childRow.start <= row &&
+          childRow.end > row
+        );
+      });
+    const handles = [];
+    for (let line = 2; line <= this.columns; line++) {
+      let runStart = null;
+      for (let row = 1; row <= this.rows; row++) {
+        const isBoundary = !spansAcross(line, row);
+        if (isBoundary && runStart === null) {
+          runStart = row;
+        }
+        // Close the run at a span (this row breaks it) or at the last row.
+        if (runStart !== null && (!isBoundary || row === this.rows)) {
+          const rowEnd = isBoundary ? row : row - 1;
+          handles.push({
+            line,
+            rowStart: runStart,
+            rowEnd,
+            leftTrack: line - 2,
+          });
+          runStart = null;
+        }
+      }
+    }
+    return handles;
+  }
+
+  /**
+   * Inline style placing a column handle run at grid line `line` across
+   * rows `rowStart`–`rowEnd` (a continuous strip down that gutter). The
+   * strip is centred on the line via CSS (see the stylesheet), so no
+   * pixel measurement is needed here.
+   *
+   * @param {{line: number, rowStart: number, rowEnd: number}} handle
+   * @returns {ReturnType<typeof trustHTML>}
+   */
+  columnHandleStyle(handle) {
+    return trustHTML(
+      `grid-column: ${handle.line}; grid-row: ${handle.rowStart} / ${handle.rowEnd + 1};`
+    );
+  }
+
+  /**
+   * Persists resized column widths once a gridline drag ends.
+   *
+   * @param {number[]} fractions
+   */
+  @action
+  commitColumnFractions(fractions) {
+    this.wireframe.setColumnFractions({
+      gridKey: this.args.gridKey,
+      fractions,
+    });
   }
 
   get slots() {
@@ -512,10 +619,10 @@ export default class GridOverlay extends Component {
       // Dropping onto an empty `wf:cell` entry reads the same as
       // dropping into any other empty cell — one affordance.
       return source.type === "wf-palette-block"
-        ? i18n("wireframe.canvas.drop_preview.add_to_cell", {
+        ? i18n("wireframe.canvas.drop_preview.add_here", {
             name: sourceName,
           })
-        : i18n("wireframe.canvas.drop_preview.move_to_cell", {
+        : i18n("wireframe.canvas.drop_preview.move_here", {
             name: sourceName,
           });
     }
@@ -543,10 +650,10 @@ export default class GridOverlay extends Component {
     }
     // occupy / fallback
     return source.type === "wf-palette-block"
-      ? i18n("wireframe.canvas.drop_preview.add_to_cell", {
+      ? i18n("wireframe.canvas.drop_preview.add_here", {
           name: sourceName,
         })
-      : i18n("wireframe.canvas.drop_preview.move_to_cell", {
+      : i18n("wireframe.canvas.drop_preview.move_here", {
           name: sourceName,
         });
   }
@@ -1479,7 +1586,7 @@ export default class GridOverlay extends Component {
             data-row={{cell.row}}
           >
             <EditorEmptyDropPlaceholder
-              @hint={{i18n "wireframe.canvas.empty_cell_hint"}}
+              @hint={{i18n "wireframe.canvas.empty_hint"}}
               @palette={{this.palette}}
               @onActivate={{this.selectGrid}}
               @onPick={{fn this.pickBlockForCell cell}}
@@ -1492,6 +1599,22 @@ export default class GridOverlay extends Component {
           aria-hidden="true"
           {{didInsert this.captureGhost}}
         ></div>
+
+        {{! Interior column gridline handles — drag to resize the two
+          adjacent columns (persisted as `columnFractions`). }}
+        {{#each this.columnHandles as |handle|}}
+          <div
+            class="wireframe-grid-track-handle wireframe-grid-track-handle--column"
+            style={{this.columnHandleStyle handle}}
+            {{gridTrackResize
+              this.getGridElement
+              handle.leftTrack
+              resizeColumnFractions
+              this.commitColumnFractions
+              this.selectGrid
+            }}
+          ></div>
+        {{/each}}
         {{! No local drop overlay — the shell-mounted `<DropPreview>`
           is the single indicator. The dragover handler publishes
           the unified descriptor directly to

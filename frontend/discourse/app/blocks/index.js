@@ -21,6 +21,8 @@ export {
 // `discourse/lib/blocks`) so consumers in other bundles can reach them
 // through this stable public facade rather than a concrete internal path.
 export {
+  gridDimensions,
+  normalizeFractions,
   parsePlacement,
   parseSlotPlacement,
 } from "discourse/lib/blocks/-internals/grid-placement";

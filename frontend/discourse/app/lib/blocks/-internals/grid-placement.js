@@ -54,6 +54,63 @@ export function parsePlacement(containerArgs) {
 }
 
 /**
+ * The effective dimensions of a grid layout — the larger of its declared
+ * `columns` / `rows` and what its children actually occupy. A grid must
+ * always contain its content: a child placed at `column: "2 / 4"` needs
+ * three columns regardless of the declared count, so the grid reports
+ * three. This is the single source of truth for "how big is this grid",
+ * so the rendered track count, any consumer that reports the grid's size,
+ * and the stored args can never drift apart (a bare `args.columns ??
+ * default` read in one place and a different default in another is
+ * exactly the mismatch this prevents).
+ *
+ * @param {{columns?: number, rows?: number}} [declared] - The declared
+ *   `columns` / `rows`. Callers pass the value already defaulted (e.g.
+ *   `args.columns ?? 3`) so an empty grid still reports its default size.
+ * @param {Array<Object>} [children] - The grid's child entries; each
+ *   contributes its placement's far edge to the extent.
+ * @returns {{columns: number, rows: number}}
+ */
+export function gridDimensions(declared, children) {
+  let columns = Math.max(1, Math.trunc(declared?.columns) || 1);
+  let rows = Math.max(1, Math.trunc(declared?.rows) || 1);
+  for (const child of children ?? []) {
+    const { column, row } = parsePlacement(child.containerArgs);
+    // `parseTrack` always resolves a set start to an end (single cell →
+    // `end = start + 1`), so the far edge is `end - 1` columns / rows.
+    if (column.end != null) {
+      columns = Math.max(columns, column.end - 1);
+    }
+    if (row.end != null) {
+      rows = Math.max(rows, row.end - 1);
+    }
+  }
+  return { columns, rows };
+}
+
+/**
+ * Coerces a column-fractions array to exactly `count` positive numbers —
+ * padding short arrays with `1` (a balanced track) and truncating long
+ * ones. This is what makes the fractions model immune to the count drift
+ * that an opaque `grid-template-columns` string suffers: however the
+ * stored array got out of step with the column count (a column added,
+ * a reflow), the rendered track list always has exactly one entry per
+ * column. Non-finite / non-positive entries fall back to `1`.
+ *
+ * @param {Array<number>} [fractions]
+ * @param {number} count - The grid's effective column count.
+ * @returns {number[]} Exactly `count` positive fraction values.
+ */
+export function normalizeFractions(fractions, count) {
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    const value = Number(fractions?.[i]);
+    out.push(Number.isFinite(value) && value > 0 ? value : 1);
+  }
+  return out;
+}
+
+/**
  * Parses a single CSS Grid line shorthand. Examples:
  *
  *  - `"1 / 4"` → `{start: 1, end: 4}`

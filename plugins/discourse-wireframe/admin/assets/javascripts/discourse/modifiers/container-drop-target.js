@@ -644,8 +644,8 @@ function insideLabel({ wireframe, source, blockName, targetKey }) {
 function cellDropLabel({ wireframe, source }) {
   const name = sourceDisplayName(wireframe, source);
   return source.type === "wf-palette-block"
-    ? translate("wireframe.canvas.drop_preview.add_to_cell", { name })
-    : translate("wireframe.canvas.drop_preview.move_to_cell", { name });
+    ? translate("wireframe.canvas.drop_preview.add_here", { name })
+    : translate("wireframe.canvas.drop_preview.move_here", { name });
 }
 
 /* Dispatch payload builders — `dispatchActiveDrop` on the service

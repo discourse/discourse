@@ -169,12 +169,21 @@ export default class InspectorLayoutForm extends Component {
     return this.mode === "grid";
   }
 
+  /**
+   * Effective column / row counts — the larger of the declared args and
+   * what the grid's children occupy, read from the service so the fields
+   * always match the rendered grid (never a bare default that drifts).
+   *
+   * @returns {number}
+   */
   get columns() {
-    return this.#args.columns ?? 6;
+    const data = this.wireframe.selectedBlockData;
+    return data?.key ? this.wireframe.gridSizeFor(data.key).columns : 3;
   }
 
   get rows() {
-    return this.#args.rows ?? 2;
+    const data = this.wireframe.selectedBlockData;
+    return data?.key ? this.wireframe.gridSizeFor(data.key).rows : 2;
   }
 
   get gap() {
@@ -479,34 +488,35 @@ export default class InspectorLayoutForm extends Component {
           </div>
         </div>
 
-        {{#if this.isFree}}
-          <div class="wireframe-layout-form__pair">
-            <label class="wireframe-layout-form__number">
-              <span class="wireframe-layout-form__legend">
-                {{i18n "wireframe.inspector.layout.columns"}}
-              </span>
-              <input
-                type="number"
-                min={{COLUMNS_MIN}}
-                max={{COLUMNS_MAX}}
-                value={{this.columns}}
-                {{on "change" this.setColumns}}
-              />
-            </label>
-            <label class="wireframe-layout-form__number">
-              <span class="wireframe-layout-form__legend">
-                {{i18n "wireframe.inspector.layout.rows"}}
-              </span>
-              <input
-                type="number"
-                min={{ROWS_MIN}}
-                max={{ROWS_MAX}}
-                value={{this.rows}}
-                {{on "change" this.setRows}}
-              />
-            </label>
-          </div>
-        {{/if}}
+        {{! Column / row counts stay editable in both Free and template
+          mode — editing a dimension diverges the shape from any matched
+          preset, so the control falls back to Free on its own. }}
+        <div class="wireframe-layout-form__pair">
+          <label class="wireframe-layout-form__number">
+            <span class="wireframe-layout-form__legend">
+              {{i18n "wireframe.inspector.layout.columns"}}
+            </span>
+            <input
+              type="number"
+              min={{COLUMNS_MIN}}
+              max={{COLUMNS_MAX}}
+              value={{this.columns}}
+              {{on "change" this.setColumns}}
+            />
+          </label>
+          <label class="wireframe-layout-form__number">
+            <span class="wireframe-layout-form__legend">
+              {{i18n "wireframe.inspector.layout.rows"}}
+            </span>
+            <input
+              type="number"
+              min={{ROWS_MIN}}
+              max={{ROWS_MAX}}
+              value={{this.rows}}
+              {{on "change" this.setRows}}
+            />
+          </label>
+        </div>
 
         {{! Loaded-with-bad-data warning: some cells reference positions
           outside the current grid. We can't auto-clamp on load (the

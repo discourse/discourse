@@ -178,6 +178,8 @@ export {
  * auto-placement.
  */
 export {
+  gridDimensions,
+  normalizeFractions,
   parsePlacement,
   parseSlotPlacement,
 } from "discourse/lib/blocks/-internals/grid-placement";

@@ -2,7 +2,11 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
-import { parsePlacement } from "discourse/lib/blocks";
+import {
+  gridDimensions,
+  normalizeFractions,
+  parsePlacement,
+} from "discourse/lib/blocks";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -63,7 +67,7 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
     // Grid args. Ignored by stack / row modes.
     columns: {
       type: "number",
-      default: 6,
+      default: 3,
       integer: true,
       min: 1,
       max: 24,
@@ -85,6 +89,15 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
         label: i18n("blocks.builtin.layout.column_template"),
         placeholder: i18n("blocks.builtin.layout.column_template_placeholder"),
       },
+    },
+    // Per-column width ratios (e.g. `[1, 2, 1]` → `1fr 2fr 1fr`), set by
+    // edit-driven tooling; always normalised to one entry per column at
+    // render so it can't desync from the count. `columnTemplate` (the raw
+    // string escape hatch) takes precedence when both are set.
+    columnFractions: {
+      type: "array",
+      itemType: "number",
+      default: [],
     },
     rowTemplate: {
       type: "string",
@@ -347,16 +360,36 @@ export default class Layout extends Component {
     const align = this.args.align ?? "stretch";
 
     if (mode === "grid") {
-      const columns = this.args.columns ?? 6;
-      const rows = this.args.rows ?? 2;
+      // Derive the track count from the declared args AND the children's
+      // placements — a child spanning past the declared count would
+      // otherwise spill into implicit (auto-sized) tracks, breaking the
+      // column widths. This is the same `gridDimensions` consumers read,
+      // so the rendered grid and any mirrored size never drift.
+      const { columns, rows } = gridDimensions(
+        { columns: this.args.columns ?? 3, rows: this.args.rows ?? 2 },
+        this.args.children
+      );
       const columnTemplate = (this.args.columnTemplate ?? "").trim();
       const rowTemplate = (this.args.rowTemplate ?? "").trim();
       const rowHeight =
         (this.args.rowHeight ?? "minmax(80px, auto)").trim() ||
         "minmax(80px, auto)";
 
-      const gridTemplateColumns =
-        columnTemplate.length > 0 ? columnTemplate : `repeat(${columns}, 1fr)`;
+      // Column track sizing, in precedence order: the raw `columnTemplate`
+      // escape hatch, then the edit-managed `columnFractions` (always
+      // normalised to one entry per column so it can't desync), then an
+      // even `repeat`.
+      const fractions = this.args.columnFractions;
+      let gridTemplateColumns;
+      if (columnTemplate.length > 0) {
+        gridTemplateColumns = columnTemplate;
+      } else if (Array.isArray(fractions) && fractions.length > 0) {
+        gridTemplateColumns = normalizeFractions(fractions, columns)
+          .map((f) => `${f}fr`)
+          .join(" ");
+      } else {
+        gridTemplateColumns = `repeat(${columns}, 1fr)`;
+      }
       const gridTemplateRows =
         rowTemplate.length > 0 ? rowTemplate : `repeat(${rows}, ${rowHeight})`;
 

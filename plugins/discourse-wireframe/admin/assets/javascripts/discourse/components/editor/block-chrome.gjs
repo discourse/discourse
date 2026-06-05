@@ -1445,7 +1445,7 @@ export default class BlockChrome extends Component {
               style={{this.contentStyle}}
             >
               <EditorEmptyDropPlaceholder
-                @hint={{i18n "wireframe.canvas.empty_cell_hint"}}
+                @hint={{i18n "wireframe.canvas.empty_hint"}}
                 @palette={{this.palette}}
                 @onActivate={{this.selectSelf}}
                 @onPick={{this.pickBlockForCell}}
@@ -1519,7 +1519,7 @@ export default class BlockChrome extends Component {
 
           {{#if this.isEmptyContainer}}
             <EditorEmptyDropPlaceholder
-              @hint={{i18n "wireframe.canvas.empty_container_hint"}}
+              @hint={{i18n "wireframe.canvas.empty_hint"}}
               @palette={{this.palette}}
               @onActivate={{this.selectSelf}}
               @onPick={{this.pickBlockForContainer}}

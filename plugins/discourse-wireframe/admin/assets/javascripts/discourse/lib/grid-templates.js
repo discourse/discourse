@@ -24,29 +24,22 @@ import {
  * layout's existing content into them in reading order on apply, and
  * any still-empty spanning rects become `wf:cell` entries.
  *
- * Frame-only templates (no `areas` — e.g. "12-column") set the grid
- * dimensions only; the service treats every cell of the grid as a
- * space and reflows content into them.
+ * A template without an `areas` string would set the grid dimensions
+ * only, and the service would reflow content into the grid's individual
+ * cells; every preset here declares `areas`.
  *
  * `args` carries the non-positional config (mode, gap, alignment).
  * Columns / rows for templates with areas come from the parsed
  * shape, not `args`.
  */
 
+// Only presets with a distinctive spanning shape earn a place here. A
+// uniform `columns × rows` grid of single cells IS free mode, so those
+// (a plain N-column row, a stack of full-width sections) are reached via
+// the Free control + the column / row fields, not a template. This keeps
+// the catalog aligned with `matchGridTemplate`, which skips shapes with
+// no span — so every template here is matchable and gets highlighted.
 export const GRID_TEMPLATES = Object.freeze([
-  {
-    id: "twelve-col",
-    i18nKey: "twelve_col",
-    args: {
-      mode: "grid",
-      columns: 12,
-      rows: 1,
-      gap: 1,
-      align: "stretch",
-      columnTemplate: "",
-      rowTemplate: "",
-    },
-  },
   {
     id: "hero-plus-three",
     i18nKey: "hero_plus_three",
@@ -73,30 +66,6 @@ export const GRID_TEMPLATES = Object.freeze([
     args: { mode: "grid", gap: 1, align: "stretch" },
   },
   {
-    id: "two-column",
-    i18nKey: "two_column",
-    areas: `
-      a b
-    `,
-    args: { mode: "grid", gap: 1, align: "stretch" },
-  },
-  {
-    id: "three-tile",
-    i18nKey: "three_tile",
-    areas: `
-      a b c
-    `,
-    args: { mode: "grid", gap: 1, align: "stretch" },
-  },
-  {
-    id: "card-row",
-    i18nKey: "card_row",
-    areas: `
-      a b c d
-    `,
-    args: { mode: "grid", gap: 1, align: "stretch" },
-  },
-  {
     id: "magazine",
     i18nKey: "magazine",
     areas: `
@@ -112,16 +81,6 @@ export const GRID_TEMPLATES = Object.freeze([
       hero hero
       a    b
       c    d
-    `,
-    args: { mode: "grid", gap: 1, align: "stretch" },
-  },
-  {
-    id: "stacked-sections",
-    i18nKey: "stacked_sections",
-    areas: `
-      a
-      b
-      c
     `,
     args: { mode: "grid", gap: 1, align: "stretch" },
   },
@@ -209,9 +168,9 @@ export function parseGridAreas(areasString) {
 /**
  * Resolves a template's full layout payload — the frame args (mode,
  * columns, rows, gap, align, ...) plus the rect entries the service
- * reflows content into on apply. Frame-only templates return
- * `slotEntries: []`; the service then treats every cell of the
- * `columns × rows` grid as a space instead.
+ * reflows content into on apply. A template without `areas` returns
+ * `slotEntries: []`; the service then reflows content into the grid's
+ * individual cells instead.
  *
  * @param {Object} template
  * @returns {{args: Object, slotEntries: Array<Object>}}

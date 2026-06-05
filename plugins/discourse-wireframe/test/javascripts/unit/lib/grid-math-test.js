@@ -1,13 +1,14 @@
 import { module, test } from "qunit";
 import {
   cellAt,
+  cellsForFree,
   computeOccupation,
   computeShiftPlan,
   computeZone,
   computeZoneCollapsed,
   formatTrack,
-  reflowChildrenIntoSpaces,
-  spacesForFree,
+  reflowChildrenIntoCells,
+  resizeColumnFractions,
   syncContentToArrayOrder,
   unoccupiedCells,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
@@ -377,9 +378,9 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
     });
   });
 
-  module("spacesForFree", function () {
+  module("cellsForFree", function () {
     test("returns every cell row-major as line shorthand", function (assert) {
-      assert.deepEqual(spacesForFree(3, 2), [
+      assert.deepEqual(cellsForFree(3, 2), [
         { column: "1", row: "1" },
         { column: "2", row: "1" },
         { column: "3", row: "1" },
@@ -390,10 +391,10 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
     });
   });
 
-  module("reflowChildrenIntoSpaces", function () {
-    test("places content into spaces in reading order", function (assert) {
+  module("reflowChildrenIntoCells", function () {
+    test("places content into cells in reading order", function (assert) {
       // Two blocks at (col2,row1) and (col1,row1) — reading order puts
-      // the col1 block first, so it lands in the first space.
+      // the col1 block first, so it lands in the first cell.
       const a = {
         block: "wf:heading",
         __stableKey: "a",
@@ -404,7 +405,7 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
         __stableKey: "b",
         containerArgs: { grid: { column: "1", row: "1" } },
       };
-      const result = reflowChildrenIntoSpaces([a, b], spacesForFree(2, 1));
+      const result = reflowChildrenIntoCells([a, b], cellsForFree(2, 1));
       assert.strictEqual(result.length, 2);
       assert.strictEqual(result[0].__stableKey, "b");
       assert.deepEqual(result[0].containerArgs.grid, { column: "1", row: "1" });
@@ -412,30 +413,30 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
       assert.deepEqual(result[1].containerArgs.grid, { column: "2", row: "1" });
     });
 
-    test("a child reflowed into a spanning space adopts the span", function (assert) {
+    test("a child reflowed into a spanning cell adopts the span", function (assert) {
       const a = {
         block: "wf:heading",
         __stableKey: "a",
         containerArgs: { grid: { column: "1", row: "1" } },
       };
-      const spaces = [
+      const cells = [
         { column: "1 / 4", row: "1" },
         { column: "1", row: "2" },
       ];
-      const result = reflowChildrenIntoSpaces([a], spaces);
+      const result = reflowChildrenIntoCells([a], cells);
       assert.strictEqual(result[0].containerArgs.grid.column, "1 / 4");
     });
 
-    test("pads spanning leftover spaces with wf:cell, leaves single cells derived", function (assert) {
-      // hero + 3: one spanning space, three single cells. With zero
-      // content, only the spanning space materialises as an entry.
-      const spaces = [
+    test("pads spanning leftover cells with wf:cell, leaves single cells derived", function (assert) {
+      // hero + 3: one spanning cell, three single cells. With zero
+      // content, only the spanning cell materialises as an entry.
+      const cells = [
         { column: "1 / 4", row: "1" },
         { column: "1", row: "2" },
         { column: "2", row: "2" },
         { column: "3", row: "2" },
       ];
-      const result = reflowChildrenIntoSpaces([], spaces);
+      const result = reflowChildrenIntoCells([], cells);
       assert.strictEqual(result.length, 1);
       assert.strictEqual(result[0].block, "wf:cell");
       assert.strictEqual(result[0].containerArgs.grid.column, "1 / 4");
@@ -449,7 +450,7 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
           grid: { column: "1", row: "1", align: "center", justify: "end" },
         },
       };
-      const result = reflowChildrenIntoSpaces([a], [{ column: "2", row: "1" }]);
+      const result = reflowChildrenIntoCells([a], [{ column: "2", row: "1" }]);
       assert.deepEqual(result[0].containerArgs.grid, {
         column: "2",
         row: "1",
@@ -458,7 +459,7 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
       });
     });
 
-    test("refuses when content outnumbers spaces", function (assert) {
+    test("refuses when content outnumbers cells", function (assert) {
       const children = [
         {
           block: "wf:heading",
@@ -472,7 +473,7 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
         },
       ];
       assert.strictEqual(
-        reflowChildrenIntoSpaces(children, [{ column: "1", row: "1" }]),
+        reflowChildrenIntoCells(children, [{ column: "1", row: "1" }]),
         null
       );
     });
@@ -565,6 +566,40 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
         },
       ];
       assert.strictEqual(syncContentToArrayOrder(children), children);
+    });
+  });
+
+  module("resizeColumnFractions", function () {
+    test("a balanced grid stays [1, 1, …]", function (assert) {
+      assert.deepEqual(resizeColumnFractions([100, 100], 0, 0), [1, 1]);
+    });
+
+    test("moves width between the two adjacent tracks", function (assert) {
+      // 100/100, drag the line between col 1 and col 2 right by 20px.
+      assert.deepEqual(resizeColumnFractions([100, 100], 0, 20), [1.2, 0.8]);
+    });
+
+    test("only the two adjacent tracks change", function (assert) {
+      // 3 equal columns; dragging line 1↔2 leaves column 3 at 1fr.
+      assert.deepEqual(
+        resizeColumnFractions([100, 100, 100], 0, 50),
+        [1.5, 0.5, 1]
+      );
+    });
+
+    test("clamps so neither track drops below minPx", function (assert) {
+      // Drag far past the right track's min (24px): left grows to 176,
+      // right pinned at 24 → 1.76 / 0.24 ratios, snapped to 0.05.
+      assert.deepEqual(
+        resizeColumnFractions([100, 100], 0, 999, 24),
+        [1.75, 0.25]
+      );
+    });
+
+    test("an out-of-range line returns a balanced grid", function (assert) {
+      // Line index past the last interior line — guard, never happens
+      // in practice.
+      assert.deepEqual(resizeColumnFractions([100, 100], 1, 10), [1, 1]);
     });
   });
 });

@@ -10,6 +10,7 @@ import {
 import { cancel, schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import {
+  gridDimensions,
   parsePlacement,
   registerBlockArgRenderer,
   resetBlockArgRenderer,
@@ -31,10 +32,10 @@ import { prefersReducedMotion } from "discourse/lib/utilities";
 // `grid-math` holds the editor-only grid geometry. Absolute addon path
 // because this admin service crosses into the plugin's universal bundle.
 import {
+  cellsForFree,
   computeShiftPlan,
   placementsOverlap,
-  reflowChildrenIntoSpaces,
-  spacesForFree,
+  reflowChildrenIntoCells,
   syncContentToArrayOrder,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-renderer";
@@ -3180,16 +3181,14 @@ export default class WireframeService extends Service {
 
   /**
    * Applies a preset grid template to an existing `wf:layout` block.
-   * The template resolves to an ordered list of `spaces` (its declared
-   * rects, or — for a frame-only preset like "12-column" — every cell
-   * of its `columns × rows` grid). Existing content is reflowed into
-   * those spaces in reading order; a block dropped into a spanning
-   * space adopts the span. Leftover spanning spaces become empty
-   * `wf:cell` entries; leftover single cells are surfaced by the grid
-   * overlay. The only refusal is "more content than the template has
-   * room for", so switching between templates stays free as long as
-   * the content fits — no template disables another just by being
-   * applied.
+   * The template resolves to an ordered list of cells (its declared
+   * rects). Existing content is reflowed into those cells in reading
+   * order; a block dropped into a spanning cell adopts the span.
+   * Leftover spanning cells become empty `wf:cell` entries; leftover
+   * single cells are surfaced by the grid overlay. The only refusal is
+   * "more content than the template has room for", so switching between
+   * templates stays free as long as the content fits — no template
+   * disables another just by being applied.
    *
    * Wrapped in a single structural-undo entry so the whole switch
    * can be reverted with one Cmd+Z.
@@ -3207,10 +3206,10 @@ export default class WireframeService extends Service {
       return false;
     }
     const { args: templateArgs, slotEntries } = resolveTemplateLayout(template);
-    const spaces = this.#spacesFor(templateArgs, slotEntries);
+    const cells = this.#cellsFor(templateArgs, slotEntries);
     const content = this.#contentChildren(located.entry);
     // More content than the template can hold: refuse before mutating.
-    if (content.length > spaces.length) {
+    if (content.length > cells.length) {
       return false;
     }
     return this.recordStructural([located.outletName], () => {
@@ -3220,8 +3219,10 @@ export default class WireframeService extends Service {
       }
       const result = replaceEntryInPlace(layout, gridKey, {
         ...located.entry,
-        args: { ...located.entry.args, ...templateArgs },
-        children: this.#reflowIntoSpaces(content, spaces),
+        // Drop any resized `columnFractions` — the new shape defines its
+        // own (even) tracks.
+        args: { ...located.entry.args, ...templateArgs, columnFractions: [] },
+        children: this.#reflowIntoCells(content, cells),
       });
       if (!result.changed) {
         return false;
@@ -3234,7 +3235,7 @@ export default class WireframeService extends Service {
   /**
    * Returns `true` when `applyGridTemplate` would succeed for the given
    * template against the currently-selected `wf:layout` — i.e. the
-   * layout's content fits the template's number of spaces. Pure-read;
+   * layout's content fits the template's number of cells. Pure-read;
    * the inspector calls this to disable a template option that can't
    * hold the current content. Mirrors the refusal predicate inside
    * `applyGridTemplate`.
@@ -3251,8 +3252,8 @@ export default class WireframeService extends Service {
       return false;
     }
     const { args: templateArgs, slotEntries } = resolveTemplateLayout(template);
-    const spaces = this.#spacesFor(templateArgs, slotEntries);
-    return this.#contentChildren(located.entry).length <= spaces.length;
+    const cells = this.#cellsFor(templateArgs, slotEntries);
+    return this.#contentChildren(located.entry).length <= cells.length;
   }
 
   /**
@@ -3270,9 +3271,27 @@ export default class WireframeService extends Service {
     if (!located) {
       return null;
     }
-    const columns = Number(located.entry.args?.columns) || 1;
-    const rows = Number(located.entry.args?.rows) || 1;
+    const { columns, rows } = this.gridSizeFor(gridKey);
     return matchGridTemplate(located.entry.children ?? [], columns, rows);
+  }
+
+  /**
+   * The effective `{columns, rows}` of a grid layout — the larger of its
+   * declared args and what its children occupy (see core's
+   * `gridDimensions`). The inspector reads this for its column / row
+   * fields and for shape-matching, so the displayed size always matches
+   * the rendered grid rather than a bare default that can drift.
+   *
+   * @param {string} gridKey
+   * @returns {{columns: number, rows: number}}
+   */
+  gridSizeFor(gridKey) {
+    const located = this.findEntryAndOutletSync(gridKey);
+    const args = located?.entry.args ?? {};
+    return gridDimensions(
+      { columns: args.columns ?? 3, rows: args.rows ?? 2 },
+      located?.entry.children
+    );
   }
 
   /**
@@ -3293,9 +3312,9 @@ export default class WireframeService extends Service {
     if (!located) {
       return false;
     }
-    const spaces = spacesForFree(columns, rows);
+    const cells = cellsForFree(columns, rows);
     const content = this.#contentChildren(located.entry);
-    if (content.length > spaces.length) {
+    if (content.length > cells.length) {
       return false;
     }
     return this.recordStructural([located.outletName], () => {
@@ -3305,8 +3324,47 @@ export default class WireframeService extends Service {
       }
       const result = replaceEntryInPlace(layout, gridKey, {
         ...located.entry,
-        args: { ...located.entry.args, mode: "grid", columns, rows },
-        children: this.#reflowIntoSpaces(content, spaces),
+        // Free mode is even tracks — drop any resized `columnFractions`.
+        args: {
+          ...located.entry.args,
+          mode: "grid",
+          columns,
+          rows,
+          columnFractions: [],
+        },
+        children: this.#reflowIntoCells(content, cells),
+      });
+      if (!result.changed) {
+        return false;
+      }
+      this.publishStructuralChange(located.outletName, result.layout);
+      return true;
+    });
+  }
+
+  /**
+   * Persists resized column widths as `columnFractions` (one ratio per
+   * column). Written by the grid's column resize handles on pointerup.
+   * The render normalises the array to the live column count, so it can
+   * never desync from `columns` the way a raw template string could.
+   *
+   * @param {{gridKey: string, fractions: number[]}} args
+   * @returns {boolean}
+   */
+  @action
+  setColumnFractions({ gridKey, fractions }) {
+    const located = this.findEntryAndOutletSync(gridKey);
+    if (!located) {
+      return false;
+    }
+    return this.recordStructural([located.outletName], () => {
+      const layout = this.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const result = replaceEntryInPlace(layout, gridKey, {
+        ...located.entry,
+        args: { ...located.entry.args, columnFractions: fractions },
       });
       if (!result.changed) {
         return false;
@@ -3329,46 +3387,46 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * The ordered list of target rects for a template's resolved args.
-   * A template with declared areas hands back its slot rects; a
-   * frame-only preset (no areas) fills every cell of its grid.
+   * The ordered list of target cells for a template's resolved args.
+   * A template with declared areas hands back its rects; a frame-only
+   * preset (no areas) fills every cell of its grid.
    *
    * @param {Object} templateArgs
    * @param {Array<Object>} slotEntries
    * @returns {Array<{column: string, row: string}>}
    */
-  #spacesFor(templateArgs, slotEntries) {
+  #cellsFor(templateArgs, slotEntries) {
     if (slotEntries.length > 0) {
       return slotEntries.map((entry) => ({
         column: entry.containerArgs.grid.column,
         row: entry.containerArgs.grid.row,
       }));
     }
-    return spacesForFree(templateArgs.columns ?? 6, templateArgs.rows ?? 1);
+    return cellsForFree(templateArgs.columns ?? 3, templateArgs.rows ?? 1);
   }
 
   /**
-   * Reflows `content` into `spaces`, with a container-validity guard:
-   * a grid must have at least one child, but the reflow leaves single-
-   * cell empties derived (no entry). When the result would be empty
-   * (no content and only single cells), materialise every space as an
-   * empty `wf:cell` so the grid keeps a body and shows its shape.
+   * Reflows `content` into `cells`, with a container-validity guard: a
+   * grid must have at least one child, but the reflow leaves single
+   * empty cells derived (no entry). When the result would be empty (no
+   * content and only single cells), materialise every cell as an empty
+   * `wf:cell` so the grid keeps a body and shows its shape.
    *
    * @param {Array<Object>} content
-   * @param {Array<{column: string, row: string}>} spaces
+   * @param {Array<{column: string, row: string}>} cells
    * @returns {Array<Object>}
    */
-  #reflowIntoSpaces(content, spaces) {
-    const reflowed = reflowChildrenIntoSpaces(content, spaces);
+  #reflowIntoCells(content, cells) {
+    const reflowed = reflowChildrenIntoCells(content, cells);
     if (reflowed && reflowed.length > 0) {
       return reflowed;
     }
-    return spaces.map((space) => ({
+    return cells.map((cell) => ({
       block: "wf:cell",
       containerArgs: {
         grid: {
-          column: space.column,
-          row: space.row,
+          column: cell.column,
+          row: cell.row,
           align: "stretch",
           justify: "stretch",
         },

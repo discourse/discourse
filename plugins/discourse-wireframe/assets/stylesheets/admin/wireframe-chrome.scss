@@ -2596,6 +2596,60 @@ body.wireframe-active
   }
 }
 
+/* Column resize handles. The overlay renders one run per contiguous
+   stretch of rows where line N actually divides two cells (see
+   `columnHandles`): a continuous strip down that gutter that breaks only
+   where a block spans the line, so it never strikes through a span. Each
+   run is centred on the line by a translate of half the handle plus half
+   the gap.
+
+   The element is a wide (12px) hit area so the boundary is grabbable
+   across the segment; its `::before` is the visible stroke — a faint
+   hairline idle (discoverable) that brightens and thickens on hover /
+   while dragging.
+
+   `pointer-events: auto` opts back into interaction: the editor grid is
+   `pointer-events: none` so stray clicks fall through to block selection,
+   and the interactive overlay bits (empty cells, these handles) each
+   re-enable it. */
+
+.wireframe-grid-track-handle {
+  pointer-events: auto;
+  z-index: 6;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+
+  &::before {
+    content: "";
+    width: 2px;
+    background: var(--tertiary);
+    border-radius: 2px;
+    opacity: 0.4;
+    transition:
+      opacity 80ms ease-out,
+      width 80ms ease-out;
+  }
+
+  &:hover::before,
+  &.--dragging::before {
+    opacity: 1;
+    width: 4px;
+  }
+
+  &--column {
+    width: 12px;
+    justify-self: start;
+
+    // Placed at the start of column N (the right edge of the gutter);
+    // shift left by half the handle AND half the gap so the stroke sits
+    // in the centre of the gutter between the two columns.
+    transform: translateX(calc(-50% - var(--d-block-layout-gap, 0rem) / 2));
+    cursor: ew-resize;
+    touch-action: none;
+  }
+}
+
 /* Drop-preview overlay — one element per grid that the editor
    repositions during a drag to mark the proposed drop target. Two
    shapes:

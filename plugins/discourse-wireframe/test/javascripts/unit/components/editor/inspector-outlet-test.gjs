@@ -57,6 +57,10 @@ class StubWireframeService extends Service {
     return null;
   }
 
+  gridSizeFor() {
+    return { columns: 3, rows: 2 };
+  }
+
   applyFreeGrid() {}
 
   outOfBoundsSlotsIn() {

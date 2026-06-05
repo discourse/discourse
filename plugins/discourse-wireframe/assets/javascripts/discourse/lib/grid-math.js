@@ -105,30 +105,30 @@ export function unoccupiedCells(occupied, columns, rows) {
 }
 
 /**
- * Builds the ordered list of single-cell "spaces" for a free-form grid
- * — every cell of a `columns × rows` grid in reading order (row-major:
- * top to bottom, left to right). Each space is a `{column, row}` rect in
- * CSS Grid line shorthand. Used when reflowing content into a free grid
- * (one with no preset shape): each content block lands in the next cell.
+ * Builds the ordered list of cells for a free-form grid — every cell of
+ * a `columns × rows` grid in reading order (row-major: top to bottom,
+ * left to right). Each cell is a `{column, row}` rect in CSS Grid line
+ * shorthand. Used when reflowing content into a free grid (one with no
+ * preset shape): each content block lands in the next cell.
  *
  * @param {number} columns
  * @param {number} rows
  * @returns {Array<{column: string, row: string}>}
  */
-export function spacesForFree(columns, rows) {
-  const spaces = [];
+export function cellsForFree(columns, rows) {
+  const cells = [];
   for (let row = 1; row <= rows; row++) {
     for (let column = 1; column <= columns; column++) {
-      spaces.push({ column: `${column}`, row: `${row}` });
+      cells.push({ column: `${column}`, row: `${row}` });
     }
   }
-  return spaces;
+  return cells;
 }
 
 /**
  * Reassigns a grid layout's content children onto an ordered list of
- * target `spaces`, in reading order, padding the leftover *multi-cell*
- * spaces with empty `wf:cell` entries. This is the one primitive behind
+ * target `cells`, in reading order, padding the leftover *spanning*
+ * cells with empty `wf:cell` entries. This is the one primitive behind
  * switching templates, toggling free mode, and reordering via the
  * outline: the grid's *shape* changes and existing content is rearranged
  * to fit it top to bottom, left to right.
@@ -141,30 +141,30 @@ export function spacesForFree(columns, rows) {
  * reversal needed.
  *
  * Each placed child keeps its other `containerArgs.grid` props (align /
- * justify) and only has its `column` / `row` overwritten with the space's
- * rect, so a child reflowed into a spanning space adopts the span.
- * Leftover *single-cell* spaces get no entry — the grid overlay surfaces
- * those geometrically — but leftover *spanning* spaces become `wf:cell`
- * entries so the span survives save / load.
+ * justify) and only has its `column` / `row` overwritten with the cell's
+ * rect, so a child reflowed into a spanning cell adopts the span.
+ * Leftover single cells get no entry — the grid overlay surfaces those
+ * geometrically — but leftover spanning cells become `wf:cell` entries
+ * so the span survives save / load.
  *
  * Returns `null` — refusing the reflow — when there is more content than
- * spaces, so callers can disable the action rather than drop blocks.
+ * cells, so callers can disable the action rather than drop blocks.
  *
  * @param {Array<Object>} contentChildren - The layout's content entries
  *   (exclude empty `wf:cell` entries before calling).
- * @param {Array<{column: string, row: string}>} spaces - Target rects in
+ * @param {Array<{column: string, row: string}>} cells - Target rects in
  *   reading order.
  * @returns {Array<Object>|null} The new `children` array, or `null` when
  *   the content does not fit.
  */
-export function reflowChildrenIntoSpaces(contentChildren, spaces) {
+export function reflowChildrenIntoCells(contentChildren, cells) {
   const content = [...(contentChildren ?? [])].sort(readingOrder);
-  if (content.length > spaces.length) {
+  if (content.length > cells.length) {
     return null;
   }
   const children = [];
-  for (let i = 0; i < spaces.length; i++) {
-    const space = spaces[i];
+  for (let i = 0; i < cells.length; i++) {
+    const cell = cells[i];
     const child = content[i];
     if (child) {
       children.push({
@@ -173,18 +173,18 @@ export function reflowChildrenIntoSpaces(contentChildren, spaces) {
           ...child.containerArgs,
           grid: {
             ...child.containerArgs?.grid,
-            column: space.column,
-            row: space.row,
+            column: cell.column,
+            row: cell.row,
           },
         },
       });
-    } else if (isMultiCellSpace(space)) {
+    } else if (isMultiCell(cell)) {
       children.push({
         block: "wf:cell",
         containerArgs: {
           grid: {
-            column: space.column,
-            row: space.row,
+            column: cell.column,
+            row: cell.row,
             align: "stretch",
             justify: "stretch",
           },
@@ -246,6 +246,49 @@ export function syncContentToArrayOrder(children) {
       },
     };
   });
+}
+
+/**
+ * Computes new column fractions when the gridline between two adjacent
+ * columns is dragged (split-pane feel). `deltaPx` pixels move from the
+ * right track onto the left one (positive grows the left column); both
+ * tracks are clamped so neither falls below `minPx`. The resulting pixel
+ * widths are converted to `fr` ratios normalised so an evenly-split grid
+ * reads `[1, 1, …]`, then snapped to a 0.05 step to keep stored values
+ * clean. Returns all-`1` (a balanced grid) when the line index is out of
+ * range — callers only ever pass interior lines, this is just a guard.
+ *
+ * @param {number[]} pxWidths - Current resolved column widths, in px.
+ * @param {number} leftTrack - 0-indexed track on the LEFT of the dragged
+ *   line (the line sits between `leftTrack` and `leftTrack + 1`).
+ * @param {number} deltaPx - Pixels to shift onto the left track.
+ * @param {number} [minPx=24] - Minimum width either track may take.
+ * @returns {number[]} A fraction per column, length `pxWidths.length`.
+ */
+export function resizeColumnFractions(
+  pxWidths,
+  leftTrack,
+  deltaPx,
+  minPx = 24
+) {
+  const widths = (pxWidths ?? []).map((w) =>
+    Number.isFinite(w) && w > 0 ? w : 0
+  );
+  const n = widths.length;
+  if (leftTrack < 0 || leftTrack + 1 >= n) {
+    return widths.map(() => 1);
+  }
+  const maxGrow = Math.max(0, widths[leftTrack + 1] - minPx);
+  const maxShrink = Math.max(0, widths[leftTrack] - minPx);
+  const delta = clamp(deltaPx, -maxShrink, maxGrow);
+  widths[leftTrack] += delta;
+  widths[leftTrack + 1] -= delta;
+  const total = widths.reduce((sum, w) => sum + w, 0) || n;
+  // Normalise so the average track is `1fr` (a balanced grid → all 1s),
+  // then snap to a 0.05 step so a drag leaves a clean, stable value.
+  // (`* 20 / 20` rather than `/ 0.05 * 0.05` — the latter reintroduces
+  // float noise, e.g. `24 * 0.05 === 1.2000000000000002`.)
+  return widths.map((w) => Math.round((w / total) * n * 20) / 20);
 }
 
 /**
@@ -774,7 +817,7 @@ function readingOrder(a, b) {
 }
 
 /**
- * Reading-order comparator for `{column, row}` rect spaces (the same
+ * Reading-order comparator for `{column, row}` cell rects (the same
  * order as `readingOrder`, but keyed off plain rect objects rather than
  * entries). Top row first, then left column.
  */
@@ -790,11 +833,12 @@ function rectReadingOrder(a, b) {
 }
 
 /**
- * True when a `{column, row}` space covers more than one cell on either
- * axis. A bare line ("2") spans one cell; a range ("1 / 4") spans more.
+ * True when a `{column, row}` cell covers more than one grid track on
+ * either axis. A bare line ("2") spans one track; a range ("1 / 4")
+ * spans more.
  */
-function isMultiCellSpace(space) {
-  const placement = parsePlacement({ grid: space });
+function isMultiCell(cell) {
+  const placement = parsePlacement({ grid: cell });
   const colSpan =
     (placement.column.end ?? placement.column.start + 1) -
     placement.column.start;
