@@ -132,10 +132,15 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
       );
   });
 
-  test("renders HTML links in the description instead of escaping them", async function (assert) {
+  test("renders setting links in the description and rewrites their href via the modifier", async function (assert) {
+    const rewrittenURL = "/admin/config/category/settings?filter=other_setting";
+    const dataSource = this.owner.lookup("service:admin-search-data-source");
+    dataSource.urlForSetting = ({ setting }) =>
+      setting === "other_setting" ? rewrittenURL : null;
+
     const change = buildChange({
       description:
-        'Enables the thing. Note that <a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=other_setting" data-setting-name="other_setting">Other setting</a> must be enabled.',
+        'Enables the thing. Note that <a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=other_setting" data-setting-name="other_setting" data-setting-category="category">Other setting</a> must be enabled.',
     });
 
     await render(
@@ -149,7 +154,12 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
     assert
       .dom(".upcoming-change__description a.site-setting-link")
       .exists("renders the setting link as an anchor element")
-      .hasText("Other setting", "renders the link text");
+      .hasText("Other setting", "renders the link text")
+      .hasAttribute(
+        "href",
+        rewrittenURL,
+        "rewrites the href to the setting's config page via the modifier"
+      );
 
     assert
       .dom(".upcoming-change__description")
