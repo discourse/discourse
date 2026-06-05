@@ -43,7 +43,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Template::V1 do
     it "renders a single output from all input items" do
       result =
         execute_template(
-          "{{#items}}{{name}} {{/items}}",
+          "{% for item in items %}{{ item.name }} {% endfor %}",
           input_items: [{ "json" => { "name" => "Alice" } }, { "json" => { "name" => "Bob" } }],
         )
 
@@ -55,7 +55,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Template::V1 do
 
       result =
         execute_template(
-          "{{name}} {{item_index}}/{{items_count}} {{site_settings.title}}",
+          "{{ item.name }} {{ item.item_index }}/{{ items_count }} {{ site_settings.title }}",
           mode: "runOnceForEachItem",
           input_items: [
             { "json" => { "name" => "Alice", "item_index" => 99 } },
@@ -93,10 +93,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Template::V1 do
 
       result =
         execute_template(
-          "{{#items}}{{name}} {{/items}}" \
-            "count={{items_count}} var={{vars.project}} " \
-            "workflow={{workflow.name}} execution={{execution.id}} " \
-            "{{#items}}item={{item.json.name}} index={{item_index}} {{/items}}",
+          "{% for item in items %}{{ item.name }} {% endfor %}" \
+            "count={{ items_count }} var={{ vars.project }} " \
+            "workflow={{ workflow.name }} execution={{ execution.id }} " \
+            "{% for item in items %}item={{ item.item.json.name }} index={{ item.item_index }} {% endfor %}",
           input_items: input_items,
           vars: {
             "project" => "Workflows",
@@ -113,24 +113,24 @@ RSpec.describe DiscourseWorkflows::Nodes::Template::V1 do
     end
 
     it "exposes site settings and filters private settings" do
-      SiteSetting.title = "Mustache Forum"
+      SiteSetting.title = "Liquid Forum"
 
       result =
         execute_template(
-          "title={{site_settings.title}} " \
-            "secret={{site_settings.discourse_connect_secret}} " \
-            "hidden={{site_settings.vapid_public_key}}",
+          "title={{ site_settings.title }} " \
+            "secret={{ site_settings.discourse_connect_secret }} " \
+            "hidden={{ site_settings.vapid_public_key }}",
         )
 
       expect(result.first["json"]).to eq(
-        "template" => "title=Mustache Forum secret=[FILTERED] hidden=[FILTERED]",
+        "template" => "title=Liquid Forum secret=[FILTERED] hidden=[FILTERED]",
       )
     end
 
     it "emits only the template field" do
       result =
         execute_template(
-          "{{#items}}{{name}}{{/items}}",
+          "{% for item in items %}{{ item.name }}{% endfor %}",
           input_items: [{ "json" => { "name" => "Alice", "extra" => "ignored" } }],
         )
 
@@ -140,7 +140,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Template::V1 do
     it "links the output item to every source item" do
       result =
         execute_template(
-          "{{#items}}{{name}}{{/items}}",
+          "{% for item in items %}{{ item.name }}{% endfor %}",
           input_items: [{ "json" => { "name" => "Alice" } }, { "json" => { "name" => "Bob" } }],
         )
 
@@ -148,19 +148,19 @@ RSpec.describe DiscourseWorkflows::Nodes::Template::V1 do
     end
 
     it "renders missing variables as blank strings" do
-      result = execute_template("Hello {{missing}}")
+      result = execute_template("Hello {{ missing }}")
 
       expect(result.first["json"]).to eq("template" => "Hello ")
     end
 
-    it "uses default Mustache escaping rules" do
+    it "uses default Liquid output rules" do
       result =
         execute_template(
-          "{{#items}}{{value}} {{{value}}}{{/items}}",
+          "{% for item in items %}{{ item.value }}{% endfor %}",
           input_items: [{ "json" => { "value" => "<b>bold</b>" } }],
         )
 
-      expect(result.first["json"]).to eq("template" => "&lt;b&gt;bold&lt;/b&gt; <b>bold</b>")
+      expect(result.first["json"]).to eq("template" => "<b>bold</b>")
     end
 
     it "defaults to a template showing item loop syntax" do
@@ -176,10 +176,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Template::V1 do
         TEXT
     end
 
-    it "raises a node error for invalid Mustache syntax" do
-      expect { execute_template("{{#items}}") }.to raise_error(
+    it "raises a node error for invalid Liquid syntax" do
+      expect { execute_template("{% for item in items %}") }.to raise_error(
         DiscourseWorkflows::NodeError,
-        /Invalid Mustache template/,
+        /Invalid template/,
       )
     end
 

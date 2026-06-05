@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-require "mustache"
+require "liquid"
 
 module DiscourseWorkflows
   module Nodes
     module Template
       class V1 < NodeType
-        DEFAULT_TEMPLATE = <<~MUSTACHE
+        DEFAULT_TEMPLATE = <<~LIQUID
           Items:
-          {{#items}}
-          - {{item_index}}: {{name}}
-          {{/items}}
-        MUSTACHE
+          {% for item in items -%}
+          - {{ item.item_index }}: {{ item.name }}
+          {% endfor -%}
+        LIQUID
 
         RUN_ONCE_FOR_ALL_ITEMS = "runOnceForAllItems"
         RUN_ONCE_FOR_EACH_ITEM = "runOnceForEachItem"
@@ -120,8 +120,8 @@ module DiscourseWorkflows
         end
 
         def render_template(template, context)
-          Mustache.render(template, context)
-        rescue Mustache::Parser::SyntaxError => e
+          Liquid::Template.parse(template).render!(context)
+        rescue Liquid::Error => e
           raise_node_error!(
             I18n.t("discourse_workflows.errors.template.invalid_template"),
             description: e.message,
@@ -140,11 +140,9 @@ module DiscourseWorkflows
         end
 
         def item_template_context(base_context, input_item, item_index)
-          input_item
-            .fetch("json") { {} }
-            .deep_stringify_keys
-            .merge(base_context)
-            .merge("item" => input_item.deep_stringify_keys, "item_index" => item_index + 1)
+          item = template_item(input_item, item_index)
+
+          item.merge(base_context).merge("item" => item, "item_index" => item_index + 1)
         end
 
         def site_settings_context
@@ -164,11 +162,15 @@ module DiscourseWorkflows
 
         def input_items(exec_ctx)
           exec_ctx.input_items.map.with_index do |input_item, item_index|
-            input_item
-              .fetch("json") { {} }
-              .deep_stringify_keys
-              .merge("item" => input_item.deep_stringify_keys, "item_index" => item_index + 1)
+            template_item(input_item, item_index)
           end
+        end
+
+        def template_item(input_item, item_index)
+          input_item
+            .fetch("json") { {} }
+            .deep_stringify_keys
+            .merge("item" => input_item.deep_stringify_keys, "item_index" => item_index + 1)
         end
 
         def paired_items(exec_ctx)
