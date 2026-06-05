@@ -247,6 +247,8 @@ module DiscourseWorkflows
             if condition[:leftValue].blank?
               hint = condition.key?(:left) ? " Use leftValue instead of left." : ""
               errors << "#{node_label(node)} condition #{condition_index} must set leftValue.#{hint}"
+            elsif invalid_condition_value?(condition[:leftValue])
+              errors << "#{node_label(node)} condition #{condition_index} leftValue must be a scalar or expression string, not an object."
             end
 
             operator = condition[:operator].respond_to?(:to_h) ? condition[:operator].to_h : {}
@@ -261,10 +263,16 @@ module DiscourseWorkflows
             if !operator[:singleValue] && !condition.key?(:rightValue)
               hint = condition.key?(:right) ? " Use rightValue instead of right." : ""
               errors << "#{node_label(node)} condition #{condition_index} must set rightValue for #{operator[:operation].presence || "this"} comparisons.#{hint}"
+            elsif condition.key?(:rightValue) && invalid_condition_value?(condition[:rightValue])
+              errors << "#{node_label(node)} condition #{condition_index} rightValue must be a scalar or expression string, not an object."
             end
 
             errors
           end
+        end
+
+        def invalid_condition_value?(value)
+          value.is_a?(Hash) || value.is_a?(Array)
         end
 
         def parameter_values(value, prefix = nil)
