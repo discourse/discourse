@@ -6,10 +6,11 @@
   grid-template-columns: max-content 1fr;
   background: var(--secondary);
   min-width: 0;
+  box-sizing: border-box;
 
   @include viewport.from(sm) {
-    width: 50rem;
-    max-width: 100%;
+    width: 40rem;
+    max-width: 100vw;
   }
 
   @include viewport.until(sm) {
@@ -22,7 +23,7 @@
     flex-direction: column;
     padding: var(--space-2) 0;
     border-right: 1px solid var(--primary-low);
-    min-width: 8.75rem;
+    min-width: min-content;
 
     @include viewport.until(sm) {
       flex-direction: row;
@@ -63,8 +64,7 @@
 
     &.is-active {
       background: var(--tertiary-low);
-      color: var(--tertiary);
-      font-weight: 500;
+      font-weight: 700;
     }
 
     @include viewport.until(sm) {
@@ -90,20 +90,6 @@
     position: absolute;
     inset-block-start: 0;
     width: var(--d-date-range-picker-nav-size);
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: 0;
-    padding: 0;
-    cursor: pointer;
-    color: var(--primary-medium);
-    border-radius: var(--space-1);
-
-    &:first-child {
-      inset-inline-start: 0;
-    }
 
     &:last-child {
       inset-inline-end: 0;
@@ -117,7 +103,7 @@
 
   &__months {
     display: flex;
-    gap: var(--space-8);
+    gap: var(--space-4);
     min-width: 0;
 
     @include viewport.until(sm) {
@@ -163,12 +149,14 @@
     background: transparent;
     border: 0;
     padding: 0;
-    cursor: pointer;
     border-radius: var(--space-1);
-    font: inherit;
-    font-size: var(--font-down-2);
     color: var(--primary);
     aspect-ratio: 1;
+    font-size: var(--font-down-2-rem);
+
+    @include viewport.until(sm) {
+      font-size: var(--font-down-1-rem);
+    }
 
     &:hover:not(.--disabled) {
       background: var(--tertiary-low);
@@ -184,13 +172,7 @@
     }
 
     &.--hover-preview {
-      background: repeating-linear-gradient(
-        45deg,
-        var(--tertiary-very-low, var(--tertiary-low)),
-        var(--tertiary-very-low, var(--tertiary-low)) 4px,
-        var(--secondary) 4px,
-        var(--secondary) 8px
-      );
+      background: var(--tertiary-low);
     }
 
     &.--start,

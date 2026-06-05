@@ -455,7 +455,7 @@ export default class DashboardDateRangePicker extends Component {
         >
           <button
             type="button"
-            class="d-date-range-picker__nav"
+            class="btn btn-transparent d-date-range-picker__nav"
             aria-label={{i18n "dates.previous_month"}}
             {{on "click" (fn this.shiftMonth -1)}}
           >
@@ -513,7 +513,7 @@ export default class DashboardDateRangePicker extends Component {
 
           <button
             type="button"
-            class="d-date-range-picker__nav"
+            class="btn btn-transparent d-date-range-picker__nav"
             aria-label={{i18n "dates.next_month"}}
             {{on "click" (fn this.shiftMonth 1)}}
           >
