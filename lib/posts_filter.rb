@@ -129,6 +129,19 @@ class PostsFilter
     end
   end
 
+  def self.option_value_info(filter_name, values)
+    values.map do |value|
+      {
+        name: "#{filter_name}:#{value}",
+        description:
+          I18n.t(
+            "posts_filter.description.#{filter_name}_#{value}",
+            default: value.to_s.tr("_", " ").capitalize,
+          ),
+      }
+    end
+  end
+
   def self.option_info(guardian)
     results = [
       {
@@ -204,21 +217,13 @@ class PostsFilter
       {
         name: "post_type:",
         description: I18n.t("posts_filter.description.post_type"),
-        type: "string",
-        extra_entries: POST_TYPE_VALUES.map { |value| { name: value } },
+        priority: 1,
       },
-      {
-        name: "status:",
-        description: I18n.t("posts_filter.description.status"),
-        type: "string",
-        extra_entries: STATUS_VALUES.map { |value| { name: value } },
-      },
-      {
-        name: "order:",
-        description: I18n.t("posts_filter.description.order"),
-        type: "string",
-        extra_entries: ORDER_VALUES.map { |value| { name: value } },
-      },
+      *option_value_info("post_type", POST_TYPE_VALUES),
+      { name: "status:", description: I18n.t("posts_filter.description.status"), priority: 1 },
+      *option_value_info("status", STATUS_VALUES),
+      { name: "order:", description: I18n.t("posts_filter.description.order"), priority: 1 },
+      *option_value_info("order", ORDER_VALUES),
       {
         name: "max_results:",
         description: I18n.t("posts_filter.description.max_results"),
