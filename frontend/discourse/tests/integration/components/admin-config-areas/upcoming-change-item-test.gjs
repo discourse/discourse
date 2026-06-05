@@ -132,6 +132,33 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
       );
   });
 
+  test("renders HTML links in the description instead of escaping them", async function (assert) {
+    const change = buildChange({
+      description:
+        'Enables the thing. Note that <a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=other_setting" data-setting-name="other_setting">Other setting</a> must be enabled.',
+    });
+
+    await render(
+      <template>
+        <table>
+          <tbody><UpcomingChangeItem @change={{change}} /></tbody>
+        </table>
+      </template>
+    );
+
+    assert
+      .dom(".upcoming-change__description a.site-setting-link")
+      .exists("renders the setting link as an anchor element")
+      .hasText("Other setting", "renders the link text");
+
+    assert
+      .dom(".upcoming-change__description")
+      .doesNotIncludeText(
+        "<a",
+        "does not render the link markup as escaped text"
+      );
+  });
+
   test("renders the permanent soon notice when status is stable", async function (assert) {
     const change = buildChange({
       upcoming_change: {
