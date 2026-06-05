@@ -59,7 +59,7 @@ module DiscourseWorkflows
               },
               display_options: {
                 show: {
-                  category_id: [{ _cnd: { exists: true } }],
+                  category_id: [{ condition: { exists: true } }],
                 },
               },
             },

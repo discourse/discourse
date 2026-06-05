@@ -26,6 +26,19 @@ module DiscourseWorkflows
                 control: :category,
               },
             },
+            include_subcategories: {
+              type: :boolean,
+              required: false,
+              default: true,
+              ui: {
+                control: :checkbox,
+              },
+              display_options: {
+                show: {
+                  category_id: [{ condition: { exists: true } }],
+                },
+              },
+            },
             tag_names: {
               type: :string,
               required: false,
@@ -44,17 +57,25 @@ module DiscourseWorkflows
         def self.trigger_data_for(trigger_ctx)
           hours = trigger_ctx.get_node_parameter("hours", 24)
           category_id = trigger_ctx.get_node_parameter("category_id").presence&.to_i
+          include_subcategories = trigger_ctx.get_node_parameter("include_subcategories", true)
           tag_names = normalize_tag_names(trigger_ctx.get_node_parameter("tag_names"))
 
           stale_topics(
             hours: hours,
             category_id: category_id,
+            include_subcategories: include_subcategories,
             tag_names: tag_names,
             limit: MAX_TOPICS_PER_RUN,
           ).map { |topic| { topic: topic_data(topic) } }
         end
 
-        def self.stale_topics(hours:, category_id: nil, tag_names: [], limit:)
+        def self.stale_topics(
+          hours:,
+          category_id: nil,
+          include_subcategories: true,
+          tag_names: [],
+          limit:
+        )
           threshold = hours.to_i.clamp(1..).hours.ago
 
           scope =
@@ -64,7 +85,12 @@ module DiscourseWorkflows
               .where("topics.archetype = ?", Archetype.default)
               .includes(first_post: :user)
 
-          scope = scope.where(category_id: category_id) if category_id
+          if category_id
+            category_ids =
+              include_subcategories == false ? category_id : ::Category.subcategory_ids(category_id)
+            scope = scope.where(category_id: category_ids)
+          end
+
           scope = scope.joins(:tags).where(tags: { name: tag_names }).distinct if tag_names.any?
 
           scope.limit(limit).to_a

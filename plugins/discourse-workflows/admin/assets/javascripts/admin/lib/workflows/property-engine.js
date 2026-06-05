@@ -436,7 +436,7 @@ function matchesRule(expected, value) {
 }
 
 function matchesCondition(condition, value) {
-  const operator = condition?._cnd;
+  const operator = condition?.condition;
   if (!operator) {
     return condition === value;
   }
