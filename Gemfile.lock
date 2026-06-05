@@ -867,7 +867,6 @@ DEPENDENCIES
   image_optim
   inflection
   iso8601
-  jmespath
   json
   json_schemer
   landlock

@@ -109,9 +109,13 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     result.extra_data = { provider: auth_token[:provider], uid: auth_token[:uid] }
     result.user = association.user
 
-    if SiteSetting.jmespath_group_mapping_enabled
-      result.associated_groups = Auth::JmesPathGroupExtractor.extract_groups(auth_token)
-    end
+    result.associated_groups =
+      DiscoursePluginRegistry.apply_modifier(
+        :auth_managed_authenticator_associated_groups,
+        result.associated_groups,
+        auth_token,
+        result,
+      )
 
     result
   end
