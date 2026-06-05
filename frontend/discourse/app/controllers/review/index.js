@@ -140,25 +140,6 @@ export default class ReviewIndexController extends Controller {
   }
 
   @action
-  replaceReviewables(reviewables) {
-    if (!reviewables?.length) {
-      return;
-    }
-
-    const replacements = new Map(
-      reviewables.map((reviewable) => [reviewable.id, reviewable])
-    );
-
-    this.reviewables.content.splice(
-      0,
-      Infinity,
-      ...this.reviewables.content.map((reviewable) => {
-        return replacements.get(reviewable.id) || reviewable;
-      })
-    );
-  }
-
-  @action
   resetTopic() {
     this.set("topic_id", null);
     this.refreshModel();

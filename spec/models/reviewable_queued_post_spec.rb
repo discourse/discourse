@@ -286,8 +286,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(result.remove_reviewable_ids).to contain_exactly(
             reviewable.id,
             other_reviewable.id,
+            flagged_reviewable.id,
           )
-          expect(result.refresh_reviewable_ids).to contain_exactly(flagged_reviewable.id)
 
           expect(reviewable.reload).to be_rejected
           expect(flagged_reviewable.reload).to be_approved
@@ -307,8 +307,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(result.remove_reviewable_ids).to contain_exactly(
             reviewable.id,
             other_reviewable.id,
+            flagged_reviewable.id,
           )
-          expect(result.refresh_reviewable_ids).to contain_exactly(flagged_reviewable.id)
 
           expect(reviewable.reload).to be_rejected
           expect(flagged_reviewable.reload).to be_approved

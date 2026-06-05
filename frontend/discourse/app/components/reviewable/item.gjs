@@ -141,7 +141,7 @@ export default class ReviewableItem extends Component {
   }
 
   #shouldSubscribeToReviewableAction() {
-    return !this.remove && !this.replaceReviewables;
+    return !this.remove;
   }
 
   @computed("reviewable.claimed_by.automatic")
@@ -416,9 +416,9 @@ export default class ReviewableItem extends Component {
       return;
     }
 
-    if (data.refresh_reviewable_ids?.includes(this.reviewable.id)) {
-      this._updateReviewableCounts(data);
-      return this.store.find("reviewable", this.reviewable.id);
+    if (data.remove_reviewable_ids?.includes(this.reviewable.id)) {
+      delete data.remove_reviewable_ids;
+      this._performResult(data, {}, this.reviewable);
     }
   }
 
@@ -486,7 +486,7 @@ export default class ReviewableItem extends Component {
     return this.#unclaimAutomaticReviewable();
   }
 
-  async _performResult(result, performableAction, reviewable) {
+  _performResult(result, performableAction, reviewable) {
     this._updateReviewableCounts(result);
 
     if (performableAction.completed_message) {
@@ -495,39 +495,9 @@ export default class ReviewableItem extends Component {
       });
     }
 
-    let refreshReviewableIds = result.refresh_reviewable_ids || [];
-    let removeReviewableIds = result.remove_reviewable_ids || [];
-
-    if (
-      this.replaceReviewables &&
-      removeReviewableIds.length === 1 &&
-      removeReviewableIds.includes(reviewable.id) &&
-      !refreshReviewableIds.includes(reviewable.id)
-    ) {
-      refreshReviewableIds = [...refreshReviewableIds, reviewable.id];
-      removeReviewableIds = removeReviewableIds.filter((id) => {
-        return id !== reviewable.id;
-      });
-    }
-
-    if (refreshReviewableIds.length > 0 && this.replaceReviewables) {
-      const reviewables = await this.store.findAll("reviewable", {
-        ids: refreshReviewableIds,
-        status: "all",
-      });
-      this.replaceReviewables(reviewables.content);
-    }
-
-    if (removeReviewableIds.length > 0) {
-      this.remove?.(removeReviewableIds);
-    }
-
-    const reviewableWasRemoved =
-      this.remove && removeReviewableIds.includes(reviewable.id);
-    const reviewableWasRefreshed =
-      this.replaceReviewables && refreshReviewableIds.includes(reviewable.id);
-
-    if (!reviewableWasRemoved && !reviewableWasRefreshed) {
+    if (this.remove && result.remove_reviewable_ids?.length > 0) {
+      this.remove(result.remove_reviewable_ids);
+    } else {
       return this.store.find("reviewable", reviewable.id);
     }
   }

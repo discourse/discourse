@@ -8,8 +8,6 @@ class Reviewable < ActiveRecord::Base
     attr_accessor(
       :transition_to,
       :remove_reviewable_ids,
-      :remove_reviewable_ids_for_update,
-      :refresh_reviewable_ids,
       :errors,
       :recalculate_score,
       :update_flag_stats,
@@ -20,8 +18,6 @@ class Reviewable < ActiveRecord::Base
       @status = status
       @reviewable = reviewable
       @remove_reviewable_ids = success? ? [reviewable.id] : []
-      @remove_reviewable_ids_for_update = []
-      @refresh_reviewable_ids = []
     end
 
     def created_post=(created_post)

@@ -297,25 +297,18 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
           result = reviewable.perform(moderator, :delete_user)
         end
 
-      expect(result.refresh_reviewable_ids).to contain_exactly(
+      expected_removed_reviewable_ids = [
         reviewable.id,
         other_flagged_post_reviewable.id,
         queued_post_reviewable.id,
         user_reviewable.id,
-      )
-      expect(result.remove_reviewable_ids).to contain_exactly(
         created_reviewable.id,
         created_and_targeted_reviewable.id,
-      )
-      expect(messages.last.data[:refresh_reviewable_ids]).to contain_exactly(
-        reviewable.id,
-        other_flagged_post_reviewable.id,
-        queued_post_reviewable.id,
-        user_reviewable.id,
-      )
+      ]
+
+      expect(result.remove_reviewable_ids).to contain_exactly(*expected_removed_reviewable_ids)
       expect(messages.last.data[:remove_reviewable_ids]).to contain_exactly(
-        created_reviewable.id,
-        created_and_targeted_reviewable.id,
+        *expected_removed_reviewable_ids,
       )
       expect(other_flagged_post_reviewable.reload).to be_approved
       expect(queued_post_reviewable.reload).to be_rejected
@@ -340,25 +333,18 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
           result = reviewable.perform(moderator, :delete_user_block)
         end
 
-      expect(result.refresh_reviewable_ids).to contain_exactly(
+      expected_removed_reviewable_ids = [
         reviewable.id,
         other_flagged_post_reviewable.id,
         queued_post_reviewable.id,
         user_reviewable.id,
-      )
-      expect(result.remove_reviewable_ids).to contain_exactly(
         created_reviewable.id,
         created_and_targeted_reviewable.id,
-      )
-      expect(messages.last.data[:refresh_reviewable_ids]).to contain_exactly(
-        reviewable.id,
-        other_flagged_post_reviewable.id,
-        queued_post_reviewable.id,
-        user_reviewable.id,
-      )
+      ]
+
+      expect(result.remove_reviewable_ids).to contain_exactly(*expected_removed_reviewable_ids)
       expect(messages.last.data[:remove_reviewable_ids]).to contain_exactly(
-        created_reviewable.id,
-        created_and_targeted_reviewable.id,
+        *expected_removed_reviewable_ids,
       )
       expect(other_flagged_post_reviewable.reload).to be_approved
       expect(queued_post_reviewable.reload).to be_rejected

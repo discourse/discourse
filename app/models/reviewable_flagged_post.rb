@@ -190,8 +190,6 @@ class ReviewableFlaggedPost < Reviewable
     delete_result = super
     result = agree(performed_by, args)
     copy_deleted_user_reviewable_updates(result, delete_result)
-    result.remove_reviewable_ids -= [id]
-    result.refresh_reviewable_ids |= [id]
     result
   end
 
@@ -199,8 +197,6 @@ class ReviewableFlaggedPost < Reviewable
     delete_result = super
     result = agree(performed_by, args)
     copy_deleted_user_reviewable_updates(result, delete_result)
-    result.remove_reviewable_ids -= [id]
-    result.refresh_reviewable_ids |= [id]
     result
   end
 

@@ -77,7 +77,7 @@ describe "Reviewables" do
 
     before { Jobs.run_immediately! }
 
-    it "resolves the spammer's other visible flagged posts in the open review queue and in other tabs" do
+    it "removes the spammer's affected reviewables from loaded pending review queues" do
       acted_flagged_post_reviewable =
         PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
       other_flagged_post_reviewable =
@@ -96,12 +96,28 @@ describe "Reviewables" do
         sign_in(admin)
         visit("/review")
 
-        expect(review_page).to have_reviewable_items(count: 5)
+        expect(review_page).to have_reviewables(
+          [
+            acted_flagged_post_reviewable,
+            other_flagged_post_reviewable,
+            queued_post_reviewable,
+            user_reviewable,
+            created_reviewable,
+          ],
+        )
       end
 
       visit("/review")
 
-      expect(review_page).to have_reviewable_items(count: 5)
+      expect(review_page).to have_reviewables(
+        [
+          acted_flagged_post_reviewable,
+          other_flagged_post_reviewable,
+          queued_post_reviewable,
+          user_reviewable,
+          created_reviewable,
+        ],
+      )
 
       review_page.select_bundled_action(
         acted_flagged_post_reviewable,
@@ -109,22 +125,22 @@ describe "Reviewables" do
         bundle_index: 1,
       )
 
-      expect(review_page).to have_reviewable_with_approved_status(acted_flagged_post_reviewable)
-      expect(review_page).to have_reviewable_with_approved_status(other_flagged_post_reviewable)
-      expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
-      expect(review_page).to have_reviewable_with_rejected_status(user_reviewable)
+      expect(review_page).to have_no_reviewable(acted_flagged_post_reviewable)
+      expect(review_page).to have_no_reviewable(other_flagged_post_reviewable)
+      expect(review_page).to have_no_reviewable(queued_post_reviewable)
+      expect(review_page).to have_no_reviewable(user_reviewable)
       expect(review_page).to have_no_reviewable(created_reviewable)
 
       using_session(:other_tab) do
-        expect(review_page).to have_reviewable_with_approved_status(acted_flagged_post_reviewable)
-        expect(review_page).to have_reviewable_with_approved_status(other_flagged_post_reviewable)
-        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
-        expect(review_page).to have_reviewable_with_rejected_status(user_reviewable)
+        expect(review_page).to have_no_reviewable(acted_flagged_post_reviewable)
+        expect(review_page).to have_no_reviewable(other_flagged_post_reviewable)
+        expect(review_page).to have_no_reviewable(queued_post_reviewable)
+        expect(review_page).to have_no_reviewable(user_reviewable)
         expect(review_page).to have_no_reviewable(created_reviewable)
       end
     end
 
-    it "resolves the spammer's other hidden flagged posts in the open review queue and in other tabs" do
+    it "removes the spammer's affected reviewables when flagged posts are hidden" do
       acted_hidden_flagged_post_reviewable =
         PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
       other_hidden_flagged_post_reviewable =
@@ -155,12 +171,28 @@ describe "Reviewables" do
         sign_in(admin)
         visit("/review")
 
-        expect(review_page).to have_reviewable_items(count: 5)
+        expect(review_page).to have_reviewables(
+          [
+            acted_hidden_flagged_post_reviewable,
+            other_hidden_flagged_post_reviewable,
+            queued_post_reviewable,
+            user_reviewable,
+            created_reviewable,
+          ],
+        )
       end
 
       visit("/review")
 
-      expect(review_page).to have_reviewable_items(count: 5)
+      expect(review_page).to have_reviewables(
+        [
+          acted_hidden_flagged_post_reviewable,
+          other_hidden_flagged_post_reviewable,
+          queued_post_reviewable,
+          user_reviewable,
+          created_reviewable,
+        ],
+      )
 
       review_page.select_bundled_action(
         acted_hidden_flagged_post_reviewable,
@@ -168,25 +200,17 @@ describe "Reviewables" do
         bundle_index: 1,
       )
 
-      expect(review_page).to have_reviewable_with_approved_status(
-        acted_hidden_flagged_post_reviewable,
-      )
-      expect(review_page).to have_reviewable_with_approved_status(
-        other_hidden_flagged_post_reviewable,
-      )
-      expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
-      expect(review_page).to have_reviewable_with_rejected_status(user_reviewable)
+      expect(review_page).to have_no_reviewable(acted_hidden_flagged_post_reviewable)
+      expect(review_page).to have_no_reviewable(other_hidden_flagged_post_reviewable)
+      expect(review_page).to have_no_reviewable(queued_post_reviewable)
+      expect(review_page).to have_no_reviewable(user_reviewable)
       expect(review_page).to have_no_reviewable(created_reviewable)
 
       using_session(:other_tab) do
-        expect(review_page).to have_reviewable_with_approved_status(
-          acted_hidden_flagged_post_reviewable,
-        )
-        expect(review_page).to have_reviewable_with_approved_status(
-          other_hidden_flagged_post_reviewable,
-        )
-        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
-        expect(review_page).to have_reviewable_with_rejected_status(user_reviewable)
+        expect(review_page).to have_no_reviewable(acted_hidden_flagged_post_reviewable)
+        expect(review_page).to have_no_reviewable(other_hidden_flagged_post_reviewable)
+        expect(review_page).to have_no_reviewable(queued_post_reviewable)
+        expect(review_page).to have_no_reviewable(user_reviewable)
         expect(review_page).to have_no_reviewable(created_reviewable)
       end
     end
@@ -209,24 +233,38 @@ describe "Reviewables" do
         sign_in(admin)
         visit("/review")
 
-        expect(review_page).to have_reviewable_items(count: 4)
+        expect(review_page).to have_reviewables(
+          [
+            queued_post_reviewable,
+            flagged_post_reviewable,
+            other_flagged_post_reviewable,
+            created_reviewable,
+          ],
+        )
       end
 
       visit("/review")
 
-      expect(review_page).to have_reviewable_items(count: 4)
+      expect(review_page).to have_reviewables(
+        [
+          queued_post_reviewable,
+          flagged_post_reviewable,
+          other_flagged_post_reviewable,
+          created_reviewable,
+        ],
+      )
 
       review_page.select_bundled_action(queued_post_reviewable, "delete_user")
 
       expect(review_page).to have_no_reviewable(queued_post_reviewable)
-      expect(review_page).to have_reviewable_with_approved_status(flagged_post_reviewable)
-      expect(review_page).to have_reviewable_with_approved_status(other_flagged_post_reviewable)
+      expect(review_page).to have_no_reviewable(flagged_post_reviewable)
+      expect(review_page).to have_no_reviewable(other_flagged_post_reviewable)
       expect(review_page).to have_no_reviewable(created_reviewable)
 
       using_session(:other_tab) do
-        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
-        expect(review_page).to have_reviewable_with_approved_status(flagged_post_reviewable)
-        expect(review_page).to have_reviewable_with_approved_status(other_flagged_post_reviewable)
+        expect(review_page).to have_no_reviewable(queued_post_reviewable)
+        expect(review_page).to have_no_reviewable(flagged_post_reviewable)
+        expect(review_page).to have_no_reviewable(other_flagged_post_reviewable)
         expect(review_page).to have_no_reviewable(created_reviewable)
       end
     end

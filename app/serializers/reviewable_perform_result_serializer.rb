@@ -6,7 +6,6 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
     :created_post_id,
     :created_post_topic_id,
     :remove_reviewable_ids,
-    :refresh_reviewable_ids,
     :version,
     :reviewable_count,
     :unseen_reviewable_count,

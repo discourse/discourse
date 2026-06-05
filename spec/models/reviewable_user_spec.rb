@@ -180,9 +180,8 @@ RSpec.describe ReviewableUser, type: :model do
         expect(result.remove_reviewable_ids).to contain_exactly(
           reviewable.id,
           created_reviewable.id,
+          queued_post_reviewable.id,
         )
-        expect(result.remove_reviewable_ids_for_update).to contain_exactly(created_reviewable.id)
-        expect(result.refresh_reviewable_ids).to contain_exactly(queued_post_reviewable.id)
         expect(queued_post_reviewable.reload).to be_rejected
         expect(Reviewable.exists?(id: created_reviewable.id)).to eq(false)
       end

@@ -766,7 +766,6 @@ RSpec.describe ReviewablesController do
           {
             success: true,
             remove_reviewable_ids: [reviewable_phony.id],
-            refresh_reviewable_ids: [],
             version: 1,
             reviewable_count: 0,
             unseen_reviewable_count: 0,
