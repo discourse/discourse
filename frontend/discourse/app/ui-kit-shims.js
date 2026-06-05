@@ -152,6 +152,9 @@ loaderShim("discourse/components/highlighted-code", () =>
 loaderShim("discourse/components/horizontal-overflow-nav", () =>
   importSync("discourse/ui-kit/d-horizontal-overflow-nav")
 );
+loaderShim("discourse/components/horizon-site-skeleton", () =>
+  importSync("./components/horizon-site-skeleton")
+);
 loaderShim("discourse/components/html-with-links", () =>
   importSync("discourse/ui-kit/d-html-with-links")
 );
