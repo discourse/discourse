@@ -60,6 +60,27 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
   # `Notifications.subscribed { ... }` to attach a transient subscriber for
   # the duration of a block, so query-counting tests still work unchanged.
   ActiveSupport::Notifications.notifier.unsubscribe("sql.active_record")
+
+  # `UpcomingChanges.clear_caches!` is called per spec via `TestSetup.test_setup`
+  # (the `config.before :each` hook). The upstream implementation pays three
+  # serial Redis round-trips — two `Discourse.cache.delete` calls plus a
+  # `Discourse.redis.del` inside `DiscourseUpdates.clear_latest_new_feature_created_at_cache`.
+  # Even on a localhost socket each round-trip costs ~50-100us of syscall +
+  # protocol overhead, and the keys are almost always already gone (the global
+  # `after :each` calls `Discourse.redis.flushdb` at the end of every spec,
+  # so the next spec's `test_setup` is DEL'ing nonexistent keys). Collapse
+  # the three DELs into a single multi-key DEL so workers pay one round-trip
+  # per spec instead of three, with byte-identical post-condition.
+  module UpcomingChangesBatchedClearCaches
+    def clear_caches!
+      Discourse.redis.del(
+        Discourse.cache.normalize_key(current_statuses_cache_key),
+        Discourse.cache.normalize_key(permanent_upcoming_changes_cache_key),
+        DiscourseUpdates.send(:latest_new_feature_created_at_key),
+      )
+    end
+  end
+  UpcomingChanges.singleton_class.prepend(UpcomingChangesBatchedClearCaches)
 end
 
 require "rspec/rails"
