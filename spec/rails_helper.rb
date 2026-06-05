@@ -61,6 +61,40 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
   # the duration of a block, so query-counting tests still work unchanged.
   ActiveSupport::Notifications.notifier.unsubscribe("sql.active_record")
 
+  # Removing the `sql.active_record` subscriber (above) stops the LogSubscriber
+  # work, but it does NOT make the per-query instrument dispatch free. The
+  # ActiveSupport guard that short-circuits an unsubscribed event lives in the
+  # *module-level* `ActiveSupport::Notifications.instrument`, which checks
+  # `notifier.listening?(name)` before building anything. AR's hot path skips
+  # that guard: `AbstractAdapter#log` (wrapping every SQL query) and
+  # `instantiate_records` (`instantiation.active_record`, once per result set)
+  # both grab `ActiveSupport::Notifications.instrumenter` and call
+  # `instrumenter.instrument(...)` *directly*. `Instrumenter#instrument` has no
+  # `listening?` check, so it still allocates a `Fanout::Handle`, looks up the
+  # (now empty) listener groups, and runs `start`/`finish` over them on every
+  # single query — pure dispatch overhead with no subscriber to consume it.
+  #
+  # Mirror the module-level guard into the instrumenter itself: when nothing is
+  # listening for `name`, yield the block directly and skip the handle. With a
+  # listener present (e.g. lograge on `process_action.action_controller`, or a
+  # `track_sql_queries` block that transiently subscribes) the check is true and
+  # we fall through to the original implementation, so behaviour is identical —
+  # no subscriber can observe whether the skipped handle's `start`/`finish`
+  # ran. `Instrumenter#instrument` builds a local handle (it does not touch the
+  # `start`/`finish` handle stack), so short-circuiting cannot unbalance it.
+  # Set DISCOURSE_KEEP_AR_QUERY_LOGS=1 to restore full instrument dispatch.
+  ActiveSupport::Notifications::Instrumenter.prepend(
+    Module.new do
+      def instrument(name, payload = {}, &block)
+        if !ActiveSupport::Notifications.notifier.listening?(name)
+          return block ? yield(payload) : nil
+        end
+
+        super
+      end
+    end,
+  )
+
   # Same idea for the MiniSql path. Every `DB.query`/`DB.exec` flows through
   # `MiniSqlMultisiteConnection#run`, which unconditionally builds the
   # `sql.mini_sql` notification payload — and the `sql:` value is
