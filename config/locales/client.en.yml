@@ -8044,6 +8044,7 @@ en:
           finish_install: "Finish Theme Installation"
           last_attempt: "Installation process did not finish, last attempted:"
           remote_branch: "Branch name (optional)"
+          remote_branch_placeholder: "Choose a specific branch or keep empty"
           public_key: "Grant the following public key access to the repo:"
           install: "Install"
           installed: "Installed"
