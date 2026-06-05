@@ -81,6 +81,48 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
     end
   end
   UpcomingChanges.singleton_class.prepend(UpcomingChangesBatchedClearCaches)
+
+  # `Discourse.clear_readonly!` is called per spec via `TestSetup.test_setup`.
+  # Upstream it unconditionally fires `redis.del(LAST_POSTGRES_READONLY_KEY)`
+  # (one round-trip to the per-worker redis), a `DistributedCache#clear`
+  # publish on the postgres_last_read_only channel, and a second MessageBus
+  # publish from `Site.clear_anon_cache!` on `/site_json`. Greps confirm
+  # nothing under `spec/system/**` ever calls `received_redis_readonly!` or
+  # `received_postgres_readonly!`, and the production callers
+  # (DiscourseRedis fallback + PG failover) require an actual Redis/PG
+  # outage that the per-worker localhost instances don't experience.
+  # Track whether either setter has fired in the worker; while it hasn't,
+  # short-circuit `clear_readonly!` to `return true` — byte-identical return
+  # value, zero Redis/MessageBus traffic. Specs that deliberately exercise
+  # the readonly path (e.g. `spec/lib/discourse_spec.rb`,
+  # `spec/requests/forums_controller_spec.rb`) call a setter first, which
+  # flips the flag back on so the next `clear_readonly!` runs the full
+  # super chain unchanged.
+  module DiscourseClearReadonlyTrack
+    @set = false
+    class << self
+      attr_accessor :set
+    end
+  end
+
+  module DiscourseTrackReadonlyState
+    def received_redis_readonly!
+      DiscourseClearReadonlyTrack.set = true
+      super
+    end
+
+    def received_postgres_readonly!
+      DiscourseClearReadonlyTrack.set = true
+      super
+    end
+
+    def clear_readonly!
+      return true unless DiscourseClearReadonlyTrack.set
+      DiscourseClearReadonlyTrack.set = false
+      super
+    end
+  end
+  Discourse.singleton_class.prepend(DiscourseTrackReadonlyState)
 end
 
 require "rspec/rails"
