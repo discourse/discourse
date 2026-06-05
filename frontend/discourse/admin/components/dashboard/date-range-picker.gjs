@@ -114,21 +114,19 @@ export default class DashboardDateRangePicker extends Component {
   }
 
   get hoverRangeEnd() {
-    if (this.committed || this.pendingEnd || !this.hoveredDay) {
+    if (
+      this.committed ||
+      this.pendingEnd ||
+      !this.hoveredDay ||
+      this.hoveredDay.isBefore(this.pendingStart, "day")
+    ) {
       return null;
     }
-    return this.hoveredDay.isBefore(this.pendingStart, "day")
-      ? this.pendingStart
-      : this.hoveredDay;
+    return this.hoveredDay;
   }
 
   get hoverRangeStart() {
-    if (this.committed || this.pendingEnd || !this.hoveredDay) {
-      return null;
-    }
-    return this.hoveredDay.isBefore(this.pendingStart, "day")
-      ? this.hoveredDay
-      : this.pendingStart;
+    return this.hoverRangeEnd ? this.pendingStart : null;
   }
 
   @action

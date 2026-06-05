@@ -52,7 +52,7 @@ export default class DashboardDateRange extends Component {
       @triggerClass="db-date-range__trigger"
       @modalForMobile={{true}}
       @placement="bottom-end"
-      @maxWidth={{680}}
+      @maxWidth={{800}}
       @contentClass="db-date-range__popover"
     >
       <:trigger>

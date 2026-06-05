@@ -1,10 +1,16 @@
 @use "lib/viewport";
 
 .d-date-range-picker {
+  --d-date-range-picker-nav-size: 2.5rem;
   display: grid;
   grid-template-columns: max-content 1fr;
   background: var(--secondary);
   min-width: 0;
+
+  @include viewport.from(sm) {
+    width: 50rem;
+    max-width: 100%;
+  }
 
   @include viewport.until(sm) {
     grid-template-columns: 1fr;
@@ -20,7 +26,6 @@
 
     @include viewport.until(sm) {
       flex-direction: row;
-      flex-wrap: nowrap;
       gap: var(--space-1);
       padding: var(--space-2) var(--space-4);
       border-right: none;
@@ -43,7 +48,6 @@
   }
 
   &__preset {
-    width: 100%;
     text-align: left;
     background: transparent;
     border: 0;
@@ -64,7 +68,6 @@
     }
 
     @include viewport.until(sm) {
-      width: auto;
       flex-shrink: 0;
       border: 1px solid var(--primary-low);
       border-radius: var(--space-1);
@@ -75,23 +78,36 @@
   &__body {
     display: flex;
     flex-direction: column;
-    padding: var(--space-4);
+    padding: var(--space-2);
     min-width: 0;
   }
 
   &__calendar {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-2);
+    position: relative;
   }
 
   &__nav {
+    position: absolute;
+    inset-block-start: 0;
+    width: var(--d-date-range-picker-nav-size);
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: transparent;
     border: 0;
-    padding: var(--space-2);
+    padding: 0;
     cursor: pointer;
     color: var(--primary-medium);
     border-radius: var(--space-1);
+
+    &:first-child {
+      inset-inline-start: 0;
+    }
+
+    &:last-child {
+      inset-inline-end: 0;
+    }
 
     &:hover {
       background: var(--primary-low);
@@ -102,9 +118,7 @@
   &__months {
     display: flex;
     gap: var(--space-8);
-    flex: 1;
     min-width: 0;
-    align-items: stretch;
 
     @include viewport.until(sm) {
       gap: 0;
@@ -117,9 +131,12 @@
   }
 
   &__month-header {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--d-date-range-picker-nav-size);
     font-weight: 500;
-    padding: var(--space-1) 0 var(--space-2);
+    padding-bottom: var(--space-2);
   }
 
   &__weekdays {
@@ -145,11 +162,11 @@
   &__day {
     background: transparent;
     border: 0;
-    padding: var(--space-1) 0;
+    padding: 0;
     cursor: pointer;
     border-radius: var(--space-1);
     font: inherit;
-    font-size: var(--font-down-1);
+    font-size: var(--font-down-2);
     color: var(--primary);
     aspect-ratio: 1;
 
@@ -160,7 +177,6 @@
     &.--disabled {
       color: var(--primary-low-mid);
       cursor: not-allowed;
-      background: transparent;
     }
 
     &.--in-range {
@@ -189,32 +205,22 @@
     }
 
     // range cells form a continuous strip, rounded only where the strip ends:
-    // at a row edge or a month edge (muted days render as empty spans)
-    &.--in-range,
-    &.--hover-preview,
-    &.--start,
-    &.--end {
+    // at a cap, a row edge, or a month edge (muted days render as empty spans);
+    // :where keeps this reset below the corner rules' specificity
+    &:where(.--in-range, .--hover-preview, .--start, .--end) {
       border-radius: 0;
-
-      &:first-child,
-      span + & {
-        border-start-start-radius: var(--space-1);
-        border-end-start-radius: var(--space-1);
-      }
-
-      &:last-child,
-      &:has(+ span) {
-        border-start-end-radius: var(--space-1);
-        border-end-end-radius: var(--space-1);
-      }
     }
 
-    &.--start {
+    &.--start,
+    &:first-child,
+    span + & {
       border-start-start-radius: var(--space-1);
       border-end-start-radius: var(--space-1);
     }
 
-    &.--end {
+    &.--end,
+    &:last-child,
+    &:has(+ span) {
       border-start-end-radius: var(--space-1);
       border-end-end-radius: var(--space-1);
     }
