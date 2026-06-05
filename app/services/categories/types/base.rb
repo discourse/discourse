@@ -364,8 +364,15 @@ module Categories
           if enables_plugin?
             result[:required_plugin] = Categories::TypeRegistry.plugin_display_name(type_id)
             result[:can_enable_plugin] = available_for?(guardian)
+            if !result[:can_enable_plugin]
+              result[:contact_admin_username] = most_recently_active_admin&.username
+            end
           end
           result.merge(additional_metadata)
+        end
+
+        def most_recently_active_admin
+          User.real.admins.where(active: true).order(last_seen_at: :desc).first
         end
 
         private

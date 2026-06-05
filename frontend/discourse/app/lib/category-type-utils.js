@@ -17,3 +17,13 @@ export function unavailableBadgeText(type) {
   }
   return i18n("category.choose_type.unavailable");
 }
+
+export function showAskAdminMessage(type) {
+  return type.required_plugin && !type.can_enable_plugin;
+}
+
+export function askAdminToEnablePluginText(type) {
+  return i18n("category.choose_type.ask_admin_to_enable_plugin", {
+    plugin_name: type.required_plugin,
+  });
+}
