@@ -4,8 +4,8 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import MiniMasonry from "minimasonry";
 import GifsResult from "discourse/components/gifs/result";
+import loadMiniMasonry from "discourse/lib/load-minimasonry";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 
@@ -24,7 +24,9 @@ export default class GifsResultList extends Component {
   }
 
   @action
-  setup() {
+  async setup() {
+    const MiniMasonry = await loadMiniMasonry();
+
     this.masonry = new MiniMasonry({
       container: ".gifs-result-list",
       baseWidth: this.site.mobileView ? 145 : 200,
@@ -36,7 +38,7 @@ export default class GifsResultList extends Component {
 
   @action
   update() {
-    schedule("afterRender", () => this.masonry.layout());
+    schedule("afterRender", () => this.masonry?.layout());
   }
 
   <template>
