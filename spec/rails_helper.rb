@@ -255,7 +255,19 @@ RSpec.configure do |config|
 
     unfreeze_time
     ActionMailer::Base.deliveries.clear
-    Discourse.redis.flushdb
+    # `FLUSHDB ASYNC` returns immediately and lets Redis reclaim the old
+    # dict on its background thread. The DB's keyspace is swapped atomically
+    # so the next spec still observes an empty DB — semantically identical
+    # to the synchronous form, but the worker no longer blocks on the
+    # server-side delete. For system specs that loaded a page (and therefore
+    # populated fragment cache, anonymous-cache entries, rate-limiter keys,
+    # MessageBus backlog, the SiteSetting cache key and session entries),
+    # the sync `FLUSHDB` is a 2-15ms round-trip — and a fat tail when a
+    # heavy spec leaves hundreds of keys behind. Passed as a positional
+    # hash so DiscourseRedis#method_missing forwards it to redis-rb 5.x as
+    # `options[:async]` rather than as a Ruby 3 kwarg, which the
+    # redis-rb signature `flushdb(options = nil)` would reject.
+    Discourse.redis.flushdb({ async: true })
     Scheduler::Defer.do_all_work
     clear_mocked_upcoming_change_metadata
     clear_mocked_upcoming_change_default_overrides
