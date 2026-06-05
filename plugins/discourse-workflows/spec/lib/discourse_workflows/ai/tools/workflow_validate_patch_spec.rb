@@ -450,6 +450,78 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
     )
   end
 
+  it "rejects object-shaped condition values from AI drafts", :aggregate_failures do
+    operations = [
+      {
+        op: "add_node",
+        client_id: "post-created",
+        node: {
+          type: "trigger:post_created",
+          typeVersion: "1.0",
+          name: "Post created",
+          position: {
+            x: 0,
+            y: 0,
+          },
+          parameters: {
+          },
+          credentials: {
+          },
+        },
+      },
+      {
+        op: "add_node",
+        client_id: "bad-condition",
+        node: {
+          type: "condition:filter",
+          typeVersion: "1.0",
+          name: "Bad condition",
+          position: {
+            x: 260,
+            y: 0,
+          },
+          parameters: {
+            combinator: "and",
+            conditions: [
+              {
+                leftValue: {
+                  type: "number",
+                  value: "user.trust_level",
+                },
+                operator: {
+                  operation: "lte",
+                  type: "number",
+                },
+                rightValue: {
+                  type: "number",
+                  value: 1,
+                },
+              },
+            ],
+          },
+          credentials: {
+          },
+        },
+      },
+      {
+        op: "add_connection",
+        from: "post-created",
+        to: "bad-condition",
+        output_index: 0,
+        input_index: 0,
+        connection_type: "main",
+      },
+    ]
+
+    result = invoke_tool(operations)
+
+    expect(result[:valid]).to eq(false)
+    expect(result[:expression_errors]).to contain_exactly(
+      "Bad condition condition 1 leftValue must be a scalar or expression string, not an object.",
+      "Bad condition condition 1 rightValue must be a scalar or expression string, not an object.",
+    )
+  end
+
   it "rejects invalid output connection types", :aggregate_failures do
     operations = [
       {
