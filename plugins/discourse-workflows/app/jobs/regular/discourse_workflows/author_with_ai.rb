@@ -7,13 +7,13 @@ module Jobs
 
       AI_RESPONSE_STATUSES = %w[needs_clarification proposed_patch explanation error].freeze
       TRIGGER_AUTHOR_FIELD_FACTS = [
-        "trigger:topic_created exposes the topic creator/first-post author under post.*. Use exact paths such as post.trust_level for trust-level checks, post.username for the username, post.user_id for the user ID, post.post_url for a link to the post, and post.admin/post.moderator/post.staff for staff checks.",
-        "trigger:post_created exposes the created post author under post.*. Use exact paths such as post.trust_level for trust-level checks, post.username for the username, post.user_id for the user ID, post.post_url for a link to the post, and post.admin/post.moderator/post.staff for staff checks.",
+        "trigger:topic_created exposes the topic creator/first-post author under post.* and does not expose a top-level user object. Use exact paths such as post.username for the username, post.user_id for the user ID, and post.post_url for a link to the post.",
+        "trigger:post_created exposes the created post under post.* and the post author under user.*. Use exact paths such as user.trust_level for trust-level checks, user.username for the username, user.id for the user ID, user.admin/user.moderator/user.staff for staff checks, and post.post_url for a link to the post.",
         "For generic requests like 'when someone posts' or 'when anyone posts', trigger:post_created covers all regular posts, including first posts and replies. Do not ask to distinguish replies from topic starters unless the request explicitly says replies only or new topics only.",
-        "trigger:topic_closed exposes only the closed topic under topic.*. When a closed-topic workflow needs the topic creator/first-post author trust level or a post link, add action:topic with operation get and topic_id ={{ $json.topic.id }} immediately after the trigger. The topic get action exposes the first post under post.* including post.trust_level, post.username, and post.post_url.",
-        "Do not ask whether trust level is available for trigger:topic_created or trigger:post_created; it is available as post.trust_level.",
+        "trigger:topic_closed exposes only the closed topic under topic.*. When a closed-topic workflow needs a first-post link, add action:topic with operation get and topic_id ={{ $json.topic.id }} immediately after the trigger. Use the exact fields returned by workflow_validate_patch for any first-post author data; do not assume post.trust_level is available.",
+        "Do not ask whether trust level is available for trigger:post_created or trigger:post_edited; it is available as user.trust_level.",
         "Do not generate fallback chains for undocumented author aliases; use the exact post.* fields from the node catalog output_schema.",
-        "For named group membership checks, use workflow_resolve_entity to resolve the group, then use condition:user_in_group with username ={{ $json.post.username }} and the resolved group_id. Do not use a Code node for simple group membership.",
+        "For named group membership checks, use workflow_resolve_entity to resolve the group, then use condition:user_in_group with username ={{ $json.user.username }} when the input schema includes user.username, otherwise use the exact username field from the current input schema. Do not use a Code node for simple group membership.",
         "For private messages, DMs, direct messages, or PM notifications, use action:send_private_message with recipient_usernames, title, raw, and sender_username. Resolve named recipients with workflow_resolve_entity(kind: user).",
       ].freeze
 
@@ -107,21 +107,32 @@ module Jobs
       end
 
       def authoring_context_instructions
+        context_tools = {
+          workflow_node_catalog:
+            "Call this with targeted queries for node parameters, output schemas, capabilities, and examples.",
+          workflow_ai_agent_catalog:
+            "Call this before adding action:ai_agent nodes to find existing enabled AI agents to reuse. If none fit, propose create_ai_agent with name, description, and system_prompt.",
+          workflow_graph_context:
+            "Call this with workflow_id when you need the current graph nodes and connections.",
+          workflow_validate_patch:
+            "Call this to dry-run candidate operations and inspect inferred node_schemas.",
+          workflow_script_context:
+            "Call this before writing Code node JavaScript to inspect the runtime API and mode rules.",
+          workflow_validate_script:
+            "Call this with exact Code node mode and code; repair any errors before returning a proposal.",
+          workflow_authoring_result:
+            "Call this exactly once when authoring is complete; it is the final response.",
+        }
+        if ::DiscourseWorkflows::Ai::Tools::SearchChatChannels.available?
+          context_tools[
+            :search_chat_channels
+          ] = "Call this before asking the admin to choose a chat channel or before setting action:send_chat_message channel_id. Use returned matches; never invent channel names or IDs."
+        end
+
         payload = {
           workflow: workflow_summary,
           trigger_author_field_facts: TRIGGER_AUTHOR_FIELD_FACTS,
-          context_tools: {
-            workflow_node_catalog:
-              "Call this with targeted queries for node parameters, output schemas, capabilities, and examples.",
-            workflow_ai_agent_catalog:
-              "Call this before adding action:ai_agent nodes to find existing enabled AI agents to reuse. If none fit, propose create_ai_agent with name, description, and system_prompt.",
-            workflow_graph_context:
-              "Call this with workflow_id when you need the current graph nodes and connections.",
-            workflow_validate_patch:
-              "Call this to dry-run candidate operations and inspect inferred node_schemas.",
-            workflow_authoring_result:
-              "Call this exactly once when authoring is complete; it is the final response.",
-          },
+          context_tools: context_tools,
         }
 
         <<~TEXT
@@ -335,7 +346,7 @@ module Jobs
           return(
             parsed.merge(
               "status" => "error",
-              "message" => I18n.t("discourse_workflows.ai.error_invalid_script"),
+              "message" => invalid_script_message(validations),
               "proposal" => json_safe(proposal),
             )
           )
@@ -386,6 +397,25 @@ module Jobs
         operations = normalized_patch_operations(proposal_for(parsed)[:operations])
         operations.any? do |operation|
           code_script_for_operation(normalized_hash(operation)).present?
+        end
+      end
+
+      def invalid_script_message(validations)
+        details =
+          validations
+            .select { |validation| !validation["valid"] }
+            .flat_map do |validation|
+              node_name =
+                validation["node_name"].presence ||
+                  I18n.t("discourse_workflows.ai.default_code_node_name")
+              Array.wrap(validation["errors"]).map { |error| "#{node_name}: #{error}" }
+            end
+            .join("; ")
+
+        if details.present?
+          I18n.t("discourse_workflows.ai.error_invalid_script_with_errors", errors: details)
+        else
+          I18n.t("discourse_workflows.ai.error_invalid_script")
         end
       end
 

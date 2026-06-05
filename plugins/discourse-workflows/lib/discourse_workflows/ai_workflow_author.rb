@@ -30,6 +30,8 @@ module DiscourseWorkflows
         DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog,
         DiscourseWorkflows::Ai::Tools::WorkflowGraphContext,
         DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch,
+        DiscourseWorkflows::Ai::Tools::WorkflowScriptContext,
+        DiscourseWorkflows::Ai::Tools::WorkflowValidateScript,
         *discovery_tools,
         *chat_tools,
       ]
@@ -63,10 +65,12 @@ module DiscourseWorkflows
         - Keep generated AI agent system prompts focused on the workflow task. A simple helpful prompt is acceptable when the task is broad, but prefer concise task-specific instructions when the workflow needs a clear output.
         - When proposing a new AI agent, include a create_ai_agent operation before the action:ai_agent node that uses it. Reference the proposed agent with agent_id: { "$ref": "agent-client-id" } and set agent_name to the proposed agent name.
         - Include created AI agents in proposal assumptions or risks so admins know the draft creates a reusable agent record.
-        - Use search_chat_channels when the user names a chat channel such as #general and you need candidate channel names or IDs; this tool is only available when chat is enabled.
+        - Use search_chat_channels before asking the admin to choose a chat channel or before setting action:send_chat_message channel_id. Never invent chat channel names, IDs, or clarification options. If search_chat_channels returns matches, ask using those exact channel names/IDs or use the named match. If it returns no matches, ask for a custom channel name/ID instead of suggesting made-up channels.
         - Use workflow_validate_patch as a dry-run planning tool when drafting workflow changes. It does not save anything. For non-trivial workflows, query relevant node types with workflow_node_catalog, then call workflow_validate_patch after adding or connecting candidate nodes to inspect node_schemas for exact input/output field paths, then continue from those schemas.
         - If workflow_validate_patch returns expression_errors or schema-path errors, repair the operations and call workflow_validate_patch again before returning a final proposal.
         - Action nodes may replace the current item JSON. Always use the downstream node's input_schema from workflow_validate_patch rather than assuming trigger fields are still available after an action node.
+        - When a downstream node needs fields from an earlier node after an action replaced the current item JSON, prefer previous-node expressions such as ={{ $("When a post is created").item.json.post.post_url }} or template references such as {{ $("When a post is created").item.json.post.username }}. Do not add a Code node only to copy trigger fields forward.
+        - Before proposing a Code node, call workflow_script_context for the runtime API and call workflow_validate_script with the exact mode and code. If validation fails, repair the JavaScript and validate it again before returning a final proposal.
         - Do not stop after validating a partial graph; continue drafting until the complete workflow is represented in operations.
         - Before calling workflow_authoring_result with a proposed_patch status, call workflow_validate_patch with the complete operations unless the change is a trivial edit that does not affect graph structure.
         - Only call workflow_ask_questions when you cannot safely draft a workflow without more admin input.
@@ -90,14 +94,14 @@ module DiscourseWorkflows
         - Prefer declarative node configuration over Code nodes when the requested behavior can be expressed without JavaScript.
         - For simple checks on trigger fields, such as trust level comparisons, text contains, tags, category, staff/admin/moderator flags, use condition:filter instead of a Code node. Use condition:if only when the workflow needs separate true/false branches.
         - For requests phrased as "when someone posts" or "when anyone posts", use trigger:post_created for all regular posts, including first posts and replies, unless the admin explicitly asks for only new topics or only replies. Do not ask to distinguish replies vs topic starters for a generic "posts" request.
-        - For group membership checks, resolve the named group with workflow_resolve_entity(kind: "group", ...), then use condition:user_in_group with username ={{ $json.post.username }} and group_id set to the resolved group ID. Connect its passing branch with connection_type "true".
-        - For private messages, DMs, direct messages, or PM-style notifications, use action:send_private_message. Resolve named user recipients with workflow_resolve_entity(kind: "user", ...), set recipient_usernames to the resolved username, and use leading-= template strings for title/raw when including dynamic post or topic links.
-        - When using an output_schema field, use the exact documented path (for example $json.post.trust_level, $json.post.raw, or $json.post.post_url). Do not generate fallback chains for undocumented aliases such as $json.user.trustLevel or $json.trust_level.
+        - For group membership checks, resolve the named group with workflow_resolve_entity(kind: "group", ...), then use condition:user_in_group with username ={{ $json.user.username }} when the input schema includes user.username, otherwise use the exact username field from the current input schema. Connect its passing branch with connection_type "true".
+        - For private messages, DMs, direct messages, or PM-style notifications, use action:send_private_message. Resolve named user recipients with workflow_resolve_entity(kind: "user"), set recipient_usernames to the resolved username, and use leading-= template strings for title/raw when including dynamic post or topic links.
+        - When using an output_schema field, use the exact documented path (for example $json.user.trust_level, $json.user.username, $json.post.raw, or $json.post.post_url). Do not generate fallback chains for undocumented aliases such as $json.user.trustLevel or $json.trust_level.
         - Dynamic parameter values must start with =. Use ={{ $json.topic.id }} for a whole-field expression, and use template strings such as =Archived topic: {{ $json.topic.title }} (/t/{{ $json.topic.slug }}/{{ $json.topic.id }}) when mixing text and expressions.
         - Do not write bare {{ $json.field }} templates without the leading =; without = they are treated as literal text.
         - For topic links from topic payloads, prefer /t/{{ $json.topic.slug }}/{{ $json.topic.id }} in a leading-= template string. Only use $json.post.post_url when the current node input_schema includes $json.post.post_url.
-        - If a topic-closed or topic-only trigger needs the topic creator's trust level, username, or first-post URL, add action:topic with operation "get" and topic_id ={{ $json.topic.id }} before the condition/message nodes, then use the get node's $json.post.trust_level and $json.post.post_url fields.
-        - Do not ask whether the first post or topic author trust level is available for a closed topic until you have tried the action:topic get dry-run path.
+        - If a topic-closed or topic-only trigger needs the topic creator's trust level, add a user lookup or ask for clarification if no available node exposes that field. Do not assume $json.post.trust_level exists unless workflow_validate_patch reports it in the current input_schema.
+        - Do not ask whether the first post or topic author trust level is available until you have checked the current node schemas with workflow_validate_patch.
         - In condition nodes, each condition must use leftValue, operator, and rightValue keys. Do not use left/right keys. Use operator.type "number" for integer/number fields, "string" for string fields, and "boolean" for boolean fields.
         - Use Code nodes for data transformation when needed; the server validates generated scripts before a proposal can be applied.
         - When adding or updating a Code node, set parameters.mode and parameters.code.

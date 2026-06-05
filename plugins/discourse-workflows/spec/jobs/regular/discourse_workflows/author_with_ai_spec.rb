@@ -130,6 +130,9 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
       authoring_result_raw_context(response)
     end
     allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
+    allow(DiscourseWorkflows::Ai::Tools::SearchChatChannels).to receive(:available?).and_return(
+      true,
+    )
 
     described_class.new.execute(
       session_id: session.id,
@@ -138,9 +141,9 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     )
 
     expect(captured_custom_instructions).to include(
-      "trigger:post_created exposes the created post author under post.*",
-      "post.trust_level",
-      "action:topic with operation get",
+      "trigger:post_created exposes the created post under post.*",
+      "user.trust_level",
+      "do not assume post.trust_level",
       "Full graph and node catalog are intentionally not preloaded",
       "Do not ask whether trust level is available",
     )
@@ -150,6 +153,8 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     expect(payload).not_to have_key("workflow_graph")
     expect(payload.dig("context_tools", "workflow_node_catalog")).to include("node parameters")
     expect(payload.dig("context_tools", "workflow_graph_context")).to include("current graph")
+    expect(payload.dig("context_tools", "search_chat_channels")).to include("never invent")
+    expect(payload.dig("context_tools", "workflow_validate_script")).to include("exact Code node")
     expect(payload.dig("context_tools", "workflow_authoring_result")).to include("final response")
     expect(payload["trigger_author_field_facts"]).to include(
       a_string_including("trigger:post_created"),
@@ -305,6 +310,62 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
       "message" => I18n.t("discourse_workflows.ai.tool_call_proposal_message"),
     )
     expect(session.proposed_patch.dig("patch_validation", "valid")).to eq(true)
+  end
+
+  it "stores Code node validation errors in the response", :aggregate_failures do
+    session =
+      Fabricate(
+        :discourse_workflows_ai_authoring_session,
+        user: admin,
+        messages: [{ "type" => "user", "content" => "Create a workflow with code" }],
+      )
+    operations = [
+      {
+        op: "add_node",
+        client_id: "bad-code",
+        node: {
+          type: "action:code",
+          name: "Merge post data with result",
+          parameters: {
+            mode: "runOnceForEachItem",
+            code: "var items = $input.all();\nreturn items;",
+          },
+        },
+      },
+    ]
+    response = {
+      status: "proposed_patch",
+      message: "Create a workflow with code",
+      questions: [],
+      proposal: {
+        title: "Code workflow",
+        summary: "Adds a Code node.",
+        risk_level: "medium",
+        operations: operations,
+      },
+    }
+    fake_bot = double
+
+    allow(fake_bot).to receive(:reply).and_return(authoring_result_raw_context(response))
+    allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
+
+    described_class.new.execute(
+      session_id: session.id,
+      user_id: admin.id,
+      generation_id: SecureRandom.hex,
+    )
+
+    expect(session.reload).to have_attributes(status: "error")
+    expect(session.latest_response["message"]).to include(
+      "Merge post data with result: $input.all is only available in runOnceForAllItems mode",
+    )
+    expect(session.proposed_patch["script_validations"]).to contain_exactly(
+      include(
+        "node_name" => "Merge post data with result",
+        "valid" => false,
+        "errors" => ["$input.all is only available in runOnceForAllItems mode"],
+      ),
+    )
   end
 
   it "requires a tool call for the final authoring result" do

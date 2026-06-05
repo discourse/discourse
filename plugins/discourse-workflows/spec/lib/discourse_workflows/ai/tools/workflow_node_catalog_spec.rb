@@ -23,26 +23,39 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     expect(nodes_by_type.dig("trigger:topic_created", :output_schema)).to include(
       "post.user_id" => "integer",
       "post.username" => "string",
-      "post.display_username" => "string",
-      "post.trust_level" => "integer",
       "post.post_number" => "integer",
       "post.topic_id" => "integer",
       "post.post_url" => "string",
-      "post.admin" => "boolean",
-      "post.moderator" => "boolean",
-      "post.staff" => "boolean",
+    )
+    expect(nodes_by_type.dig("trigger:topic_created", :output_schema)).not_to include(
+      "post.trust_level",
+      "user.trust_level",
     )
     expect(nodes_by_type.dig("trigger:post_created", :output_schema)).to include(
       "post.user_id" => "integer",
       "post.username" => "string",
-      "post.display_username" => "string",
-      "post.trust_level" => "integer",
       "post.post_number" => "integer",
       "post.topic_id" => "integer",
       "post.post_url" => "string",
-      "post.admin" => "boolean",
-      "post.moderator" => "boolean",
-      "post.staff" => "boolean",
+      "user.id" => "integer",
+      "user.username" => "string",
+      "user.trust_level" => "integer",
+      "user.trust_level_name" => "string",
+      "user.admin" => "boolean",
+      "user.moderator" => "boolean",
+      "user.staff" => "boolean",
+    )
+    expect(nodes_by_type.dig("trigger:post_created", :output_schema)).not_to include(
+      "post.trust_level",
+      "post.admin",
+      "post.moderator",
+      "post.staff",
+    )
+    expect(nodes_by_type.dig("trigger:post_edited", :output_schema)).to include(
+      "post.id" => "integer",
+      "post.raw" => "string",
+      "user.trust_level" => "integer",
+      "user.trust_level_name" => "string",
     )
     expect(nodes_by_type.dig("trigger:topic_closed", :output_schema)).to include(
       "topic.id" => "integer",
@@ -55,9 +68,9 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "topic.id" => "integer",
       "topic.slug" => "string",
       "topic.archived" => "boolean",
-      "post.trust_level" => "integer",
       "post.post_url" => "string",
     )
+    expect(nodes_by_type.dig("action:topic", :output_schema)).not_to include("post.trust_level")
     expect(nodes_by_type.dig("action:topic_tags", :output_schema)).to include(
       "topic_id" => "integer",
       "tag_names" => "array<string>",
@@ -107,18 +120,16 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     cake_example =
       filter_node[:examples].find { |example| example[:name] == "Keep TL1 posts mentioning cake" }
     trust_level_example =
-      filter_node[:examples].find do |example|
-        example[:name] == "Keep TL1-or-lower topic authors after topic lookup"
-      end
+      filter_node[:examples].find { |example| example[:name] == "Keep TL1-or-lower post authors" }
 
     expect(cake_example[:parameters]).to include(combinator: "and")
     expect(cake_example.dig(:parameters, :conditions)).to contain_exactly(
-      include(leftValue: "={{ $json.post.trust_level }}", rightValue: "1"),
+      include(leftValue: "={{ $json.user.trust_level }}", rightValue: "1"),
       include(leftValue: "={{ $json.post.raw }}", rightValue: "cake"),
     )
     expect(trust_level_example.dig(:parameters, :conditions)).to contain_exactly(
       include(
-        leftValue: "={{ $json.post.trust_level }}",
+        leftValue: "={{ $json.user.trust_level }}",
         rightValue: "1",
         operator: include(operation: "lte", type: "number"),
       ),
@@ -127,7 +138,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       include(parameters: include(operation: "get", topic_id: "={{ $json.topic.id }}")),
     )
     expect(user_in_group_node[:examples]).to contain_exactly(
-      include(parameters: include(username: "={{ $json.post.username }}", group_id: 123)),
+      include(parameters: include(username: "={{ $json.user.username }}", group_id: 123)),
     )
     expect(private_message_node[:examples]).to contain_exactly(
       include(
@@ -139,7 +150,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       ),
     )
     expect(if_node[:examples].first.dig(:parameters, :conditions)).to contain_exactly(
-      include(leftValue: "={{ $json.post.trust_level }}", rightValue: "1"),
+      include(leftValue: "={{ $json.user.trust_level }}", rightValue: "1"),
     )
   end
 end

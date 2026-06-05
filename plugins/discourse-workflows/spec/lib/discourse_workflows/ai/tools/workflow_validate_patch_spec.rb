@@ -66,17 +66,21 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
 
     expect(result).to include(status: "success", valid: true, errors: [])
     expect(schemas_by_name.dig("When post is created", :output_schema)).to include(
-      "$json.post.trust_level" => "integer",
+      "$json.user.trust_level" => "integer",
+      "$json.user.trust_level_name" => "string",
       "$json.post.raw" => "string",
       "$json.post.post_url" => "string",
     )
+    expect(schemas_by_name.dig("When post is created", :output_schema)).not_to include(
+      "$json.post.trust_level",
+    )
     expect(schemas_by_name.dig("Filter TL1 cake posts", :input_schema)).to include(
-      "$json.post.trust_level" => "integer",
+      "$json.user.trust_level" => "integer",
       "$json.post.raw" => "string",
       "$json.post.post_url" => "string",
     )
     expect(schemas_by_name.dig("Filter TL1 cake posts", :output_schema)).to include(
-      "$json.post.trust_level" => "integer",
+      "$json.user.trust_level" => "integer",
       "$json.post.raw" => "string",
       "$json.post.post_url" => "string",
     )
@@ -414,7 +418,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
             combinator: "and",
             conditions: [
               {
-                left: "={{ $json.post.trust_level }}",
+                left: "={{ $json.user.trust_level }}",
                 operator: {
                   operation: "lte",
                   type: "number",
@@ -530,7 +534,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
     )
   end
 
-  it "uses topic get schemas to expose first-post author fields after topic-closed triggers",
+  it "does not advertise unavailable first-post trust fields after topic lookups",
      :aggregate_failures do
     operations = [
       {
@@ -577,7 +581,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
         node: {
           type: "condition:filter",
           typeVersion: "1.0",
-          name: "Keep TL1 or lower topic authors",
+          name: "Keep known topic authors",
           position: {
             x: 520,
             y: 0,
@@ -586,14 +590,14 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
             combinator: "and",
             conditions: [
               {
-                id: "topic_author_trust_level",
-                leftValue: "={{ $json.post.trust_level }}",
+                id: "topic_author_user_id",
+                leftValue: "={{ $json.post.user_id }}",
                 operator: {
-                  operation: "lte",
+                  operation: "gt",
                   type: "number",
                   singleValue: false,
                 },
-                rightValue: "1",
+                rightValue: "0",
               },
             ],
           },
@@ -627,12 +631,15 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
       "$json.post.trust_level",
     )
     expect(schemas_by_name.dig("Get closed topic", :output_schema)).to include(
-      "$json.post.trust_level" => "integer",
       "$json.post.post_url" => "string",
+      "$json.post.user_id" => "integer",
     )
-    expect(schemas_by_name.dig("Keep TL1 or lower topic authors", :input_schema)).to include(
-      "$json.post.trust_level" => "integer",
+    expect(schemas_by_name.dig("Get closed topic", :output_schema)).not_to include(
+      "$json.post.trust_level",
+    )
+    expect(schemas_by_name.dig("Keep known topic authors", :input_schema)).to include(
       "$json.post.post_url" => "string",
+      "$json.post.user_id" => "integer",
     )
   end
 
