@@ -156,7 +156,7 @@ export default class PenalizeUser extends Component {
 
   <template>
     <DModal
-      class="{{@model.penaltyType}}-user-modal"
+      class="{{@model.penaltyType}}-user-modal --large"
       @title={{i18n this.modalTitle}}
       @closeModal={{this.warnBeforeClosing}}
       @flash={{this.flash}}
@@ -220,9 +220,9 @@ export default class PenalizeUser extends Component {
             <div class="cant-silence">{{i18n "admin.user.cant_silence"}}</div>
           {{/if}}
         {{/if}}
+        <div class="penalty-history">{{trustHTML this.penaltyHistory}}</div>
       </:body>
       <:footer>
-        <div class="penalty-history">{{trustHTML this.penaltyHistory}}</div>
         <DButton
           class="btn-danger perform-penalize"
           @action={{this.penalizeUser}}
