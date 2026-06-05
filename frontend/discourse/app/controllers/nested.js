@@ -614,7 +614,6 @@ export default class NestedController extends Controller {
 
   #onPostRegistered(post) {
     if (post?.post_number != null) {
-      registerPostInTopicPostStream(this.topic, post);
       this.postRegistry.set(post.post_number, post);
     }
   }
