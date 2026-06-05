@@ -143,38 +143,6 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
     end
   end
   UpcomingChanges.singleton_class.prepend(UpcomingChangesBatchedClearCaches)
-
-  # Detach lograge's per-request access log in CI. With ENABLE_LOGSTASH_LOGGER=1
-  # (set above), `config/initializers/101-lograge.rb` attaches
-  # `Lograge::LogSubscribers::ActionController` to `process_action.action_controller`
-  # and points its logger at `log/#{Rails.env}.log`. In the in-process Capybara
-  # test server every controller request the browser drives (HTML boot + each
-  # XHR the Ember app fires) fans into that subscriber, which builds the full
-  # Logstash payload — `params.to_query`, `controller.current_user`, the ~12-field
-  # event hash and a JSON encode — then writes one line to `log/test.log`. That
-  # `Logger::LogDevice` opens the file with `sync = true`, so the write is an
-  # unbuffered `write()` syscall on the request's critical path (which the
-  # browser blocks on via `clientSettled`), and all ~10 parallel workers share
-  # the single `log/test.log` path — a per-request synchronous-I/O hotspot whose
-  # contention under runner load is exactly the kind of long-tail variance the
-  # step suffers from. No system spec reads this request log (app warnings/errors
-  # still reach `log/test.log` via the separate `Logster.logger.subscribe`
-  # bridge), so detach just this subscriber. Once it's gone nothing listens on
-  # `process_action.action_controller`, so `ActiveSupport::Notifications.instrument`
-  # short-circuits the whole dispatch — no Event allocation, no payload build, no
-  # synced disk write — mirroring the `sql.active_record` unsubscribe above. Set
-  # DISCOURSE_KEEP_LOGRAGE=1 to restore the per-request access log for debugging.
-  if !ENV["DISCOURSE_KEEP_LOGRAGE"] && defined?(Lograge::LogSubscribers::ActionController)
-    ActiveSupport::Notifications
-      .notifier
-      .all_listeners_for("process_action.action_controller")
-      .each do |listener|
-        delegate = listener.instance_variable_get(:@delegate)
-        if delegate.is_a?(Lograge::LogSubscribers::ActionController)
-          ActiveSupport::Notifications.unsubscribe(listener)
-        end
-      end
-  end
 end
 
 require "rspec/rails"
