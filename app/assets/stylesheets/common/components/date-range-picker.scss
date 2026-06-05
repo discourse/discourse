@@ -75,7 +75,7 @@
   &__body {
     display: flex;
     flex-direction: column;
-    padding: var(--space-3);
+    padding: var(--space-4);
     min-width: 0;
   }
 
@@ -125,7 +125,6 @@
   &__weekdays {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 2px;
     color: var(--primary-medium);
     font-size: var(--font-down-2);
     text-align: center;
@@ -135,13 +134,12 @@
   &__grid {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: var(--space-1);
   }
 
   &__week {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 2px;
   }
 
   &__day {
@@ -151,6 +149,7 @@
     cursor: pointer;
     border-radius: var(--space-1);
     font: inherit;
+    font-size: var(--font-down-1);
     color: var(--primary);
     aspect-ratio: 1;
 
@@ -166,7 +165,6 @@
 
     &.--in-range {
       background: var(--tertiary-very-low, var(--tertiary-low));
-      border-radius: 0;
     }
 
     &.--hover-preview {
@@ -177,7 +175,6 @@
         var(--secondary) 4px,
         var(--secondary) 8px
       );
-      border-radius: 0;
     }
 
     &.--start,
@@ -189,6 +186,37 @@
       &:hover {
         background: var(--tertiary-hover, var(--tertiary));
       }
+    }
+
+    // range cells form a continuous strip, rounded only where the strip ends:
+    // at a row edge or a month edge (muted days render as empty spans)
+    &.--in-range,
+    &.--hover-preview,
+    &.--start,
+    &.--end {
+      border-radius: 0;
+
+      &:first-child,
+      span + & {
+        border-start-start-radius: var(--space-1);
+        border-end-start-radius: var(--space-1);
+      }
+
+      &:last-child,
+      &:has(+ span) {
+        border-start-end-radius: var(--space-1);
+        border-end-end-radius: var(--space-1);
+      }
+    }
+
+    &.--start {
+      border-start-start-radius: var(--space-1);
+      border-end-start-radius: var(--space-1);
+    }
+
+    &.--end {
+      border-start-end-radius: var(--space-1);
+      border-end-end-radius: var(--space-1);
     }
 
     &:focus-visible {
