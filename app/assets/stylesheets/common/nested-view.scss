@@ -1,5 +1,11 @@
 @use "lib/viewport";
 
+.selected-posts.nested-view__selected-posts {
+  @include viewport.from(sm) {
+    width: min(18rem, calc(100vw - 2rem));
+  }
+}
+
 // ── Top-level nested view ──────────────────────────────────────────
 .nested-view {
   background: var(--secondary);

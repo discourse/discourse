@@ -12,7 +12,10 @@ export default <template>
     @topic={{@controller.topic}}
   />
 
-  <div class="selected-posts {{unless @controller.multiSelect 'hidden'}}">
+  <div
+    class="selected-posts nested-view__selected-posts
+      {{unless @controller.multiSelect 'hidden'}}"
+  >
     <SelectedPosts
       @selectedPostsCount={{@controller.selectedPostsCount}}
       @canSelectAll={{@controller.canSelectAll}}
