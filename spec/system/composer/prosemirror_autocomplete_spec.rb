@@ -34,11 +34,15 @@ describe "Composer - ProseMirror - Autocomplete" do
     composer.send_keys(:up, :up)
     composer.type_content(" :smi")
 
-    expect(composer).to have_emoji_autocomplete
+    expect(composer).to have_emoji_autocomplete_selected(1)
 
     composer.send_keys(:down)
 
-    expect(composer).to have_emoji_autocomplete
+    expect(composer).to have_emoji_autocomplete_selected(2)
+
+    composer.send_keys(:up)
+
+    expect(composer).to have_emoji_autocomplete_selected(1)
   end
 
   it "strips partially written emoji when using 'more' emoji modal" do
