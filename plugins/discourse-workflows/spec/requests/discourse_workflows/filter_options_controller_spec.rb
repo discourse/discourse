@@ -24,7 +24,14 @@ RSpec.describe DiscourseWorkflows::FilterOptionsController do
       expect(response).to have_http_status(:ok)
       option_names = response.parsed_body["filter_option_info"].map { |option| option["name"] }
 
-      expect(option_names).to include("category:", "keywords:", "post_type:")
+      expect(option_names).to include(
+        "category:",
+        "keywords:",
+        "post_type:",
+        "post_type:first",
+        "status:open",
+        "order:latest",
+      )
     end
   end
 end

@@ -59,6 +59,21 @@ RSpec.describe PostsFilter do
       .pluck(:id)
   end
 
+  it "returns enum filter values as server-supplied suggestions" do
+    options = described_class.option_info(user.guardian)
+
+    expect(options).to include(
+      { name: "order:", description: I18n.t("posts_filter.description.order"), priority: 1 },
+      { name: "order:latest", description: I18n.t("posts_filter.description.order_latest") },
+      { name: "status:open", description: I18n.t("posts_filter.description.status_open") },
+      { name: "post_type:first", description: I18n.t("posts_filter.description.post_type_first") },
+    )
+    expect(options.find { |option| option[:name] == "order:" }).not_to include(
+      :type,
+      :extra_entries,
+    )
+  end
+
   it "filters posts by tags and categories" do
     expect(filtered_post_ids("tag:feature")).to contain_exactly(
       feature_post.id,
