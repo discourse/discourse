@@ -250,26 +250,36 @@ export function syncContentToArrayOrder(children) {
 
 /**
  * Computes new column fractions when the gridline between two adjacent
- * columns is dragged (split-pane feel). `deltaPx` pixels move from the
- * right track onto the left one (positive grows the left column); both
- * tracks are clamped so neither falls below `minPx`. The resulting pixel
- * widths are converted to `fr` ratios normalised so an evenly-split grid
- * reads `[1, 1, …]`, then snapped to a 0.05 step to keep stored values
- * clean. Returns all-`1` (a balanced grid) when the line index is out of
- * range — callers only ever pass interior lines, this is just a guard.
+ * columns is dragged. `deltaPx` is the pixels the left track grows by
+ * (negative shrinks it). Two modes:
+ *
+ *  - **split-pane** (default): the delta moves between the two tracks
+ *    adjacent to the line only — the left grows, the immediate right
+ *    shrinks, every other track untouched.
+ *  - **proportional** (`opts.proportional`): the left track grows by the
+ *    delta and ALL tracks to its right shrink in proportion to their
+ *    current size (keeping their relative ratios); tracks to the LEFT of
+ *    the line are untouched.
+ *
+ * The drag is clamped so no affected track falls below `minPx`. The
+ * resulting pixel widths are converted to `fr` ratios normalised so an
+ * evenly-split grid reads `[1, 1, …]`, then snapped to a 0.05 step to
+ * keep stored values clean. Returns all-`1` (a balanced grid) when the
+ * line index is out of range — callers only ever pass interior lines,
+ * this is just a guard. (For a two-column grid the modes coincide.)
  *
  * @param {number[]} pxWidths - Current resolved column widths, in px.
  * @param {number} leftTrack - 0-indexed track on the LEFT of the dragged
  *   line (the line sits between `leftTrack` and `leftTrack + 1`).
- * @param {number} deltaPx - Pixels to shift onto the left track.
- * @param {number} [minPx=24] - Minimum width either track may take.
+ * @param {number} deltaPx - Pixels the left track grows by.
+ * @param {{minPx?: number, proportional?: boolean}} [opts]
  * @returns {number[]} A fraction per column, length `pxWidths.length`.
  */
 export function resizeColumnFractions(
   pxWidths,
   leftTrack,
   deltaPx,
-  minPx = 24
+  { minPx = 24, proportional = false } = {}
 ) {
   const widths = (pxWidths ?? []).map((w) =>
     Number.isFinite(w) && w > 0 ? w : 0
@@ -278,11 +288,29 @@ export function resizeColumnFractions(
   if (leftTrack < 0 || leftTrack + 1 >= n) {
     return widths.map(() => 1);
   }
-  const maxGrow = Math.max(0, widths[leftTrack + 1] - minPx);
   const maxShrink = Math.max(0, widths[leftTrack] - minPx);
-  const delta = clamp(deltaPx, -maxShrink, maxGrow);
-  widths[leftTrack] += delta;
-  widths[leftTrack + 1] -= delta;
+  if (proportional) {
+    // Grow the left track against ALL tracks to its right, kept in
+    // proportion. The most the right side can give up is everything
+    // above each track's minimum.
+    const rightCount = n - (leftTrack + 1);
+    let rightTotal = 0;
+    for (let j = leftTrack + 1; j < n; j++) {
+      rightTotal += widths[j];
+    }
+    const maxGrow = Math.max(0, rightTotal - rightCount * minPx);
+    const delta = clamp(deltaPx, -maxShrink, maxGrow);
+    widths[leftTrack] += delta;
+    const scale = rightTotal > 0 ? (rightTotal - delta) / rightTotal : 1;
+    for (let j = leftTrack + 1; j < n; j++) {
+      widths[j] *= scale;
+    }
+  } else {
+    const maxGrow = Math.max(0, widths[leftTrack + 1] - minPx);
+    const delta = clamp(deltaPx, -maxShrink, maxGrow);
+    widths[leftTrack] += delta;
+    widths[leftTrack + 1] -= delta;
+  }
   const total = widths.reduce((sum, w) => sum + w, 0) || n;
   // Normalise so the average track is `1fr` (a balanced grid → all 1s),
   // then snap to a 0.05 step so a drag leaves a clean, stable value.

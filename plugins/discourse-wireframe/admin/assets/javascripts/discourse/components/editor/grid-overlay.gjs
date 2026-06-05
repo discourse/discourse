@@ -1601,10 +1601,12 @@ export default class GridOverlay extends Component {
         ></div>
 
         {{! Interior column gridline handles — drag to resize the two
-          adjacent columns (persisted as `columnFractions`). }}
+          adjacent columns (persisted as `columnFractions`); hold Alt to
+          shrink the columns to the right proportionally instead. }}
         {{#each this.columnHandles as |handle|}}
           <div
             class="wireframe-grid-track-handle wireframe-grid-track-handle--column"
+            title={{i18n "wireframe.canvas.resize_column_hint"}}
             style={{this.columnHandleStyle handle}}
             {{gridTrackResize
               this.getGridElement

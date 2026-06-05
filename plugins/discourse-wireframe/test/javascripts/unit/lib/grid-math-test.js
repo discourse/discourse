@@ -591,7 +591,7 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
       // Drag far past the right track's min (24px): left grows to 176,
       // right pinned at 24 → 1.76 / 0.24 ratios, snapped to 0.05.
       assert.deepEqual(
-        resizeColumnFractions([100, 100], 0, 999, 24),
+        resizeColumnFractions([100, 100], 0, 999, { minPx: 24 }),
         [1.75, 0.25]
       );
     });
@@ -600,6 +600,47 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
       // Line index past the last interior line — guard, never happens
       // in practice.
       assert.deepEqual(resizeColumnFractions([100, 100], 1, 10), [1, 1]);
+    });
+
+    test("proportional grows the left track against all columns to its right", function (assert) {
+      // 3 equal columns; grow col 1 by 60px. Split-pane would take it all
+      // from col 2 ([1.6, 0.4, 1]); proportional spreads it across cols 2
+      // AND 3 (each loses 30px), leaving them equal.
+      assert.deepEqual(
+        resizeColumnFractions([100, 100, 100], 0, 60, { proportional: true }),
+        [1.6, 0.7, 0.7]
+      );
+    });
+
+    test("proportional leaves columns to the LEFT of the line untouched", function (assert) {
+      // 3 equal columns; drag line 2↔3 right by 60. Col 1 (left of the
+      // line) stays 1fr; col 2 grows, col 3 absorbs it.
+      const result = resizeColumnFractions([100, 100, 100], 1, 60, {
+        proportional: true,
+      });
+      assert.strictEqual(result[0], 1, "left column unchanged");
+      assert.true(result[1] > 1, "dragged column grew");
+      assert.true(result[2] < 1, "right column shrank");
+    });
+
+    test("proportional on a two-column grid equals split-pane", function (assert) {
+      assert.deepEqual(
+        resizeColumnFractions([100, 100], 0, 20, { proportional: true }),
+        resizeColumnFractions([100, 100], 0, 20)
+      );
+    });
+
+    test("proportional clamps the right side at minPx", function (assert) {
+      // Grow col 1 of a 3-col grid past what the right side can give:
+      // cols 2 and 3 bottom out at 24px each (Δ clamped to 152), so the
+      // widths become 252 / 24 / 24 → 2.5 / 0.25 / 0.25 after normalising.
+      assert.deepEqual(
+        resizeColumnFractions([100, 100, 100], 0, 999, {
+          minPx: 24,
+          proportional: true,
+        }),
+        [2.5, 0.25, 0.25]
+      );
     });
   });
 });

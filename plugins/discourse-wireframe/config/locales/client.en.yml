@@ -296,6 +296,7 @@ en:
         drop_inside: "Drop here to add inside"
         drag_handle_title: "Drag to move this block"
         delete_block_title: "Delete this block"
+        resize_column_hint: "Drag to resize · hold Alt for proportional"
         edit_url: "Edit URL"
         empty_hint: "Drag a block here"
         image_empty_label: "Add an image"

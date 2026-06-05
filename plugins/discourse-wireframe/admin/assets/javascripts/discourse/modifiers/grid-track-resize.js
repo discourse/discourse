@@ -2,11 +2,11 @@
 import { modifier } from "ember-modifier";
 
 /**
- * Pointer-drag handler for a column gridline handle. Resizes the two
- * columns adjacent to one interior grid line (split-pane feel): the line
- * follows the pointer, growing the left column and shrinking the right
- * (or vice versa), and the result persists as the layout's
- * `columnFractions`.
+ * Pointer-drag handler for a column gridline handle. The line follows
+ * the pointer, growing the left column; by default the immediate right
+ * column shrinks to match (split-pane), and with Alt held the columns to
+ * the right all shrink in proportion instead. The result persists as the
+ * layout's `columnFractions`.
  *
  * Live preview is written to the grid element's `--d-block-layout-cols`
  * custom property. During a drag nothing mutates the layout's tracked
@@ -21,7 +21,8 @@ import { modifier } from "ember-modifier";
  *   2. `leftTrack` — 0-indexed column on the LEFT of this line (the line
  *      sits between `leftTrack` and `leftTrack + 1`).
  *   3. `computeFractions` — `(pxWidths, leftTrack, deltaPx) => number[]`,
- *      the pure resize math (`resizeColumnFractions`).
+ *      the pure resize math (`resizeColumnFractions`); the 4th arg
+ *      carries `{ proportional }`, set from the live Alt key.
  *   4. `onCommit` — `(fractions) => void`, called once on pointerup.
  *   5. `onStart` — `() => void`, called on pointerdown; selects the
  *      layout being resized.
@@ -72,10 +73,15 @@ export default modifier(
       if (pointerId == null || !pxWidths) {
         return;
       }
+      // Read `altKey` per move so toggling it mid-drag flips the preview
+      // between split-pane and proportional.
       nextFractions = computeFractions(
         pxWidths,
         leftTrack,
-        event.clientX - originX
+        event.clientX - originX,
+        {
+          proportional: event.altKey,
+        }
       );
       if (gridEl) {
         gridEl.style.setProperty(
