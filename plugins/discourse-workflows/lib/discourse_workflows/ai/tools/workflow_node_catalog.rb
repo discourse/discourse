@@ -21,40 +21,64 @@ module DiscourseWorkflows
           "topic.bumped_at" => "datetime",
         }.freeze
 
-        WEBHOOK_POST_SCHEMA = {
-          "post" => "WebHookPostSerializer payload",
+        POST_SCHEMA = {
+          "post" => "DiscourseWorkflows::PostSerializer payload",
           "post.id" => "integer",
           "post.raw" => "string",
           "post.post_number" => "integer",
+          "post.reply_to_post_number" => "integer|null",
           "post.topic_id" => "integer",
           "post.topic_slug" => "string",
           "post.topic_title" => "string",
           "post.post_url" => "string",
           "post.category_id" => "integer",
-          "post.category_slug" => "string",
+          "post.category_name" => "string|null",
           "post.user_id" => "integer",
           "post.username" => "string",
-          "post.display_username" => "string",
-          "post.trust_level" => "integer",
-          "post.admin" => "boolean",
-          "post.moderator" => "boolean",
-          "post.staff" => "boolean",
+          "post.created_at" => "datetime",
+          "post.updated_at" => "datetime",
+          "post.excerpt" => "string",
+          "post.like_count" => "integer",
+          "post.reply_count" => "integer",
+          "post.score" => "number|null",
+          "post.tags" => "array<string>",
+        }.freeze
+
+        WEBHOOK_POST_SCHEMA =
+          POST_SCHEMA.except(
+            "post.category_name",
+            "post.excerpt",
+            "post.like_count",
+            "post.tags",
+          ).merge("post" => "WebHookPostSerializer payload", "post.category_slug" => "string")
+
+        USER_SCHEMA = {
+          "user" => "Basic safe user attributes for the post author",
+          "user.id" => "integer",
+          "user.username" => "string",
+          "user.name" => "string|null",
+          "user.trust_level" => "integer",
+          "user.trust_level_name" => "string",
+          "user.admin" => "boolean",
+          "user.moderator" => "boolean",
+          "user.staff" => "boolean",
         }.freeze
 
         OUTPUT_SCHEMAS = {
           "trigger:manual" => {
           },
           "trigger:topic_admin_button" => TOPIC_LIST_ITEM_SCHEMA,
-          "trigger:topic_created" => TOPIC_LIST_ITEM_SCHEMA.merge(WEBHOOK_POST_SCHEMA),
-          "trigger:post_created" => WEBHOOK_POST_SCHEMA.merge(TOPIC_LIST_ITEM_SCHEMA),
+          "trigger:topic_created" => TOPIC_LIST_ITEM_SCHEMA.merge(POST_SCHEMA),
+          "trigger:post_created" => POST_SCHEMA.merge(TOPIC_LIST_ITEM_SCHEMA).merge(USER_SCHEMA),
+          "trigger:post_edited" => POST_SCHEMA.merge(TOPIC_LIST_ITEM_SCHEMA).merge(USER_SCHEMA),
           "trigger:topic_closed" => TOPIC_LIST_ITEM_SCHEMA,
           "action:topic" => TOPIC_LIST_ITEM_SCHEMA.merge(WEBHOOK_POST_SCHEMA),
           "action:topic_tags" => {
             "topic_id" => "integer",
             "tag_names" => "array<string>",
           },
-          "action:create_post" => WEBHOOK_POST_SCHEMA,
-          "action:send_private_message" => TOPIC_LIST_ITEM_SCHEMA.merge(WEBHOOK_POST_SCHEMA),
+          "action:create_post" => POST_SCHEMA,
+          "action:send_private_message" => TOPIC_LIST_ITEM_SCHEMA.merge(POST_SCHEMA),
           "action:send_chat_message" => {
             "channel_id" => "integer",
             "message" => "string",
@@ -85,7 +109,7 @@ module DiscourseWorkflows
                 conditions: [
                   {
                     id: "author_trust_level",
-                    leftValue: "={{ $json.post.trust_level }}",
+                    leftValue: "={{ $json.user.trust_level }}",
                     operator: {
                       operation: "equals",
                       type: "number",
@@ -107,13 +131,13 @@ module DiscourseWorkflows
               },
             },
             {
-              name: "Keep TL1-or-lower topic authors after topic lookup",
+              name: "Keep TL1-or-lower post authors",
               parameters: {
                 combinator: "and",
                 conditions: [
                   {
-                    id: "topic_author_trust_level",
-                    leftValue: "={{ $json.post.trust_level }}",
+                    id: "post_author_trust_level",
+                    leftValue: "={{ $json.user.trust_level }}",
                     operator: {
                       operation: "lte",
                       type: "number",
@@ -127,13 +151,13 @@ module DiscourseWorkflows
           ],
           "condition:if" => [
             {
-              name: "Branch on TL1-or-lower topic authors after topic lookup",
+              name: "Branch on TL1-or-lower post authors",
               parameters: {
                 combinator: "and",
                 conditions: [
                   {
-                    id: "topic_author_trust_level",
-                    leftValue: "={{ $json.post.trust_level }}",
+                    id: "post_author_trust_level",
+                    leftValue: "={{ $json.user.trust_level }}",
                     operator: {
                       operation: "lte",
                       type: "number",
@@ -149,7 +173,7 @@ module DiscourseWorkflows
             {
               name: "Keep posts from members of a group",
               parameters: {
-                username: "={{ $json.post.username }}",
+                username: "={{ $json.user.username }}",
                 group_id: 123,
                 actor_username: "system",
               },

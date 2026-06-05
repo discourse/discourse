@@ -13,6 +13,8 @@ RSpec.describe DiscourseWorkflows::AiWorkflowAuthor do
       DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog,
       DiscourseWorkflows::Ai::Tools::WorkflowGraphContext,
       DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch,
+      DiscourseWorkflows::Ai::Tools::WorkflowScriptContext,
+      DiscourseWorkflows::Ai::Tools::WorkflowValidateScript,
       DiscourseWorkflows::Ai::Tools::WorkflowAiAgentCatalog,
       DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult,
     )
@@ -26,6 +28,9 @@ RSpec.describe DiscourseWorkflows::AiWorkflowAuthor do
       "Do not write a final prose, markdown, or JSON answer",
       "call workflow_authoring_result exactly once",
       "Use workflow_ai_agent_catalog before adding action:ai_agent nodes",
+      "Use search_chat_channels before asking the admin to choose a chat channel",
+      "call workflow_validate_script with the exact mode and code",
+      "Do not add a Code node only to copy trigger fields forward",
       "create_ai_agent",
     )
   end
