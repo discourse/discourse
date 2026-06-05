@@ -499,10 +499,11 @@ export default class ReviewableItem extends Component {
     }
 
     if (result.refresh_reviewable_ids?.length > 0) {
-      await this.store.findAll("reviewable", {
+      const reviewables = await this.store.findAll("reviewable", {
         ids: result.refresh_reviewable_ids,
         status: "all",
       });
+      this.replaceReviewables?.(reviewables.content);
     }
 
     if (result.remove_reviewable_ids?.length > 0) {

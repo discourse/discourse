@@ -41,6 +41,7 @@ export default class ReviewIndexRefresh extends Component {
                     @reviewable={{r}}
                     @showHelp={{false}}
                     @remove={{@controller.remove}}
+                    @replaceReviewables={{@controller.replaceReviewables}}
                   />
                 {{/if}}
               {{/each}}

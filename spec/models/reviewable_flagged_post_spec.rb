@@ -263,6 +263,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     %i[delete_user delete_user_block].each do |action|
       it "resolves other pending reviewables for a spammer handled with #{action}" do
         spammer = reviewable.target_created_by
+        other_flagged_post_reviewable =
+          PostActionCreator.spam(user, Fabricate(:post, user: spammer)).reviewable
         queued_post_reviewable =
           Fabricate(
             :reviewable_queued_post,
@@ -285,29 +287,27 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
             result = reviewable.perform(moderator, action)
           end
 
-        expect(
-          result.refresh_reviewable_ids &
-            [
-              reviewable.id,
-              queued_post_reviewable.id,
-              user_reviewable.id,
-              created_reviewable.id,
-              created_and_targeted_reviewable.id,
-            ],
-        ).to contain_exactly(reviewable.id, queued_post_reviewable.id, user_reviewable.id)
+        expect(result.refresh_reviewable_ids).to contain_exactly(
+          reviewable.id,
+          other_flagged_post_reviewable.id,
+          queued_post_reviewable.id,
+          user_reviewable.id,
+        )
         expect(result.remove_reviewable_ids).to contain_exactly(
           created_reviewable.id,
           created_and_targeted_reviewable.id,
         )
-        expect(messages.last.data[:refresh_reviewable_ids]).to include(
+        expect(messages.last.data[:refresh_reviewable_ids]).to contain_exactly(
           reviewable.id,
+          other_flagged_post_reviewable.id,
           queued_post_reviewable.id,
           user_reviewable.id,
         )
-        expect(messages.last.data[:remove_reviewable_ids]).to include(
+        expect(messages.last.data[:remove_reviewable_ids]).to contain_exactly(
           created_reviewable.id,
           created_and_targeted_reviewable.id,
         )
+        expect(other_flagged_post_reviewable.reload).to be_approved
         expect(queued_post_reviewable.reload).to be_rejected
         expect(user_reviewable.reload).to be_rejected
         expect(
