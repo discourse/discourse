@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { reactionsHiddenForUser } from "../lib/hidden-post";
 import DiscourseReactionsActions from "./discourse-reactions-actions";
 
 export default class ReactionsActionSummary extends Component {
@@ -13,7 +14,7 @@ export default class ReactionsActionSummary extends Component {
       return false;
     }
 
-    if (args.post.hidden && !args.post.can_see_hidden_post) {
+    if (reactionsHiddenForUser(args.post)) {
       return false;
     }
 

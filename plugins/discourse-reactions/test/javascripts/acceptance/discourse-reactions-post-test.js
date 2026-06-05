@@ -108,19 +108,31 @@ acceptance("Post - hidden reactions", function (needs) {
 
   needs.pretender((server, helper) => {
     const topic = structuredClone(ReactionsTopics["/t/374.json"]);
-    topic.post_stream.posts[0].hidden = true;
-    topic.post_stream.posts[0].cooked_hidden = true;
-    topic.post_stream.posts[0].can_see_hidden_post = false;
+    const post = topic.post_stream.posts[0];
+    // A staff member or the author can always see a hidden post, so the denied
+    // case is only reachable for a non-owner, non-staff viewer.
+    post.yours = false;
+    post.admin = false;
+    post.staff = false;
+    post.moderator = false;
+    post.user_id = 999;
+    post.hidden = true;
+    post.cooked_hidden = true;
+    post.can_see_hidden_post = false;
 
     server.get("/t/374.json", () => helper.response(topic));
   });
 
-  test("does not show the reactions counter for hidden posts", async function (assert) {
+  test("hides reaction affordances for hidden posts", async function (assert) {
     await visit("/t/topic_with_reactions_and_likes/374");
 
     assert
       .dom("#post_1 .discourse-reactions-counter")
       .doesNotExist("hides the counter to prevent opening the reactions list");
+
+    assert
+      .dom("#post_1 .discourse-reactions-reaction-button")
+      .doesNotExist("hides the reaction button that would hit a 403");
   });
 });
 
@@ -137,17 +149,27 @@ acceptance("Post - hidden reactions with hidden-post access", function (needs) {
 
   needs.pretender((server, helper) => {
     const topic = structuredClone(ReactionsTopics["/t/374.json"]);
-    topic.post_stream.posts[0].hidden = true;
-    topic.post_stream.posts[0].can_see_hidden_post = true;
+    const post = topic.post_stream.posts[0];
+    post.yours = false;
+    post.admin = false;
+    post.staff = false;
+    post.moderator = false;
+    post.user_id = 999;
+    post.hidden = true;
+    post.can_see_hidden_post = true;
 
     server.get("/t/374.json", () => helper.response(topic));
   });
 
-  test("shows the reactions counter for hidden posts", async function (assert) {
+  test("keeps reaction affordances for hidden posts", async function (assert) {
     await visit("/t/topic_with_reactions_and_likes/374");
 
     assert
       .dom("#post_1 .discourse-reactions-counter .reactions-counter")
       .hasText("209", "allows the reactions list to be opened");
+
+    assert
+      .dom("#post_1 .discourse-reactions-reaction-button")
+      .exists("keeps the reaction button for viewers who can see the post");
   });
 });
