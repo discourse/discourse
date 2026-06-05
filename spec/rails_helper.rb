@@ -81,50 +81,6 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
     end
   end
   UpcomingChanges.singleton_class.prepend(UpcomingChangesBatchedClearCaches)
-
-  # `Theme.expire_site_setting_cache!` is called per spec via
-  # `TestSetup.test_setup` → `SiteSetting.refresh!(refresh_theme_site_settings:
-  # true)` → `clear_cache!(expire_theme_site_setting_cache: true)`. The
-  # upstream implementation pays per spec:
-  #
-  #   1. `Theme.not_components.pluck(:id)` — a `SELECT id FROM themes WHERE
-  #      component = false` round-trip to PG.
-  #   2. One `Discourse.cache.delete` (== `redis.del(namespace:key)`) per
-  #      non-component theme — typically two seeded themes (Foundation,
-  #      Horizon) in CI.
-  #   3. One trailing `Discourse.cache.delete` for the `theme_id = nil`
-  #      ("notheme") key.
-  #
-  # That's ~4 serial localhost round-trips per spec for cache keys that
-  # `flushdb` has typically already emptied. The theme-id set is stable
-  # across specs: `Theme` records aren't touched by `test_setup`, the
-  # transactional fixture wraps each spec body so any per-spec theme
-  # create/delete is rolled back, and the only `before(:suite)` mutators
-  # (`SystemThemesManager.clear_system_theme_user_history!`,
-  # `ThemeField.delete_all`, `ThemeSettingsMigration.delete_all`,
-  # `JavascriptCache.delete_all`, `ThemeSiteSetting.delete_all`) don't
-  # touch the `themes` table. Memoize the id list per worker process and
-  # collapse the per-theme `Discourse.cache.delete` calls — plus the
-  # trailing nil-id one — into a single multi-key `Discourse.redis.del`
-  # round-trip, with byte-identical post-condition.
-  module ThemeBatchedExpireSiteSettingCache
-    def expire_site_setting_cache!
-      @_non_component_theme_ids ||= Theme.not_components.pluck(:id)
-
-      keys =
-        @_non_component_theme_ids.map do |theme_id|
-          Discourse.cache.normalize_key(
-            SiteSettingExtension.theme_site_settings_cache_key(theme_id),
-          )
-        end
-      keys << Discourse.cache.normalize_key(
-        SiteSettingExtension.theme_site_settings_cache_key(nil),
-      )
-
-      Discourse.redis.del(*keys)
-    end
-  end
-  Theme.singleton_class.prepend(ThemeBatchedExpireSiteSettingCache)
 end
 
 require "rspec/rails"
