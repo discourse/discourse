@@ -554,4 +554,49 @@ RSpec.describe Categories::Types::Base do
       Categories::TypeRegistry.all.delete(:no_schema_test)
     end
   end
+
+  describe ".most_recently_active_admin" do
+    it "returns the most recently active admin" do
+      admin.update!(last_seen_at: 1.week.ago)
+      admin2 = Fabricate(:admin, last_seen_at: 1.hour.ago)
+
+      expect(described_class.most_recently_active_admin).to eq(admin2)
+    end
+
+    it "excludes inactive admins" do
+      Fabricate(:admin, last_seen_at: 1.minute.ago, active: false)
+      admin.update!(last_seen_at: 1.day.ago)
+
+      expect(described_class.most_recently_active_admin).to eq(admin)
+    end
+  end
+
+  describe ".metadata contact_admin_username" do
+    fab!(:moderator)
+
+    it "includes contact_admin_username when user cannot enable plugin" do
+      admin.update!(last_seen_at: 1.minute.ago)
+      test_type = build_test_type(:plugin_contact, enable_plugin: true, plugin_enabled: false)
+      Categories::TypeRegistry.register(test_type, plugin_identifier: "discourse-test-contact")
+
+      metadata = test_type.metadata(guardian: moderator.guardian)
+
+      expect(metadata[:can_enable_plugin]).to eq(false)
+      expect(metadata[:contact_admin_username]).to eq(admin.username)
+    ensure
+      Categories::TypeRegistry.all.delete(:plugin_contact)
+    end
+
+    it "does not include contact_admin_username when user can enable plugin" do
+      test_type = build_test_type(:plugin_admin, enable_plugin: true, plugin_enabled: false)
+      Categories::TypeRegistry.register(test_type, plugin_identifier: "discourse-test-admin")
+
+      metadata = test_type.metadata(guardian: admin.guardian)
+
+      expect(metadata[:can_enable_plugin]).to eq(true)
+      expect(metadata).not_to have_key(:contact_admin_username)
+    ensure
+      Categories::TypeRegistry.all.delete(:plugin_admin)
+    end
+  end
 end
