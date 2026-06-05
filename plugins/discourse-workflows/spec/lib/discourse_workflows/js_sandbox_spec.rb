@@ -132,6 +132,9 @@ RSpec.describe DiscourseWorkflows::JsSandbox do
   describe "workflow budget" do
     it "shares elapsed sandbox time through workflow context" do
       budget_state = {}
+
+      Process.stubs(:clock_gettime).returns(0.0)
+
       first_sandbox =
         described_class.new(
           workflow_context,
