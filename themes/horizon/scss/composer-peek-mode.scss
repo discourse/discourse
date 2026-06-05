@@ -14,7 +14,7 @@
       }
 
       .full-width-enabled.peek-mode-active {
-        --composer-peek-width: 40vw;
+        --composer-peek-min-width: 30em;
 
         #reply-control.hide-preview {
           transition: none;
@@ -47,11 +47,14 @@
           grid-template-columns:
             var(--d-sidebar-width)
             minmax(0, 1fr)
-            var(--composer-peek-width);
+            minmax(var(--composer-peek-min-width), 1fr);
         }
 
         &:not(.has-sidebar-page) #main-outlet-wrapper {
-          grid-template-columns: 0 minmax(0, 1fr) var(--composer-peek-width);
+          grid-template-columns:
+            0
+            minmax(0, 1fr)
+            minmax(var(--composer-peek-min-width), 1fr);
         }
 
         .sidebar-wrapper .sidebar-container {
