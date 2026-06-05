@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe WebHookUserSerializer do
+  fab!(:featured_topic, :topic)
   let(:user) do
-    user = Fabricate(:user)
+    user = Fabricate(:user).tap { |u| u.user_profile.update!(featured_topic:) }
     SingleSignOnRecord.create!(user_id: user.id, external_id: "12345", last_payload: "")
     user
   end

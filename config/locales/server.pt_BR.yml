@@ -1660,9 +1660,6 @@ pt_BR:
       admin_sidebar_deprecation: "O layout antigo da administração foi preterido em benefício do novo <a href='https://meta.discourse.org/t/-/289281'>layout de barra de ferramentas</a> e será removido na próxima versão. Você pode <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurar</a> o layout da nova barra lateral antes disso."
       starttls_disabled: "A configuração de e-mail de saída está com a opção STARTTLS desativada. Isso quase nunca é necessário. Considere remover a opção <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> do seu ambiente. Consulte <a href='https://meta.discourse.org/t/387286'>este tópico</a> para mais informações."
     back_from_logster_text: "Voltar para o site"
-    reports_section:
-      providers:
-        core_report: "Padrão"
   site_settings:
     allow_bulk_invite: "Permitir convites em massa com o uso de um arquivo CSV"
     disabled: "desativado(a)"
@@ -4930,10 +4927,6 @@ pt_BR:
       invalid:
         one: "A etiqueta que você selecionou não pode ser usada"
         other: "Nenhuma das etiquetas que você selecionou pode ser usada"
-      in_this_category: '"%{tag_name}" não pode ser usado nesta categoria'
-      restricted_to:
-        one: '"%{tag_name}" é restrito à categoria "%{category_names}"'
-        other: '"%{tag_name}" é restrito às seguintes categorias: %{category_names}'
       has_synonyms: '"%{tag_name}" não pode ser usado porque tem sinônimos.'
       restricted_tags_cannot_be_used_in_category:
         one: 'A etiqueta "%{tags}" não pode ser usada na categoria "%{category}". Remova.'

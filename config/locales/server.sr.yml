@@ -510,7 +510,6 @@ sr:
     default_email_mailing_list_mode: "Podrazumevano šalji email za svaku novu poruku"
     default_email_previous_replies: "Podrazumevano uključi prethodne odgovore u email poruku"
     default_other_external_links_in_new_tab: "Podrazumevano otvori spoljne veze u novoj kartici "
-    admin_dashboard_sections: "Odeljci prikazani na redizajniranoj administratorskoj kontrolnoj tabli, po redosledu prikazivanja. Upravlja se preko menija \"Konfiguriši\" na kontrolnoj tabli."
     enable_new_defaults_for_trust_level_3_requirements: "Ažurirali smo podrazumevane zahteve za TL3 kako bi bili razumniji za članove velikih, aktivnih zajednica. Ako ste prethodno poništili ova podešavanja, ova predstojeća promena neće imati efekta."
     enable_horizon_high_context_topic_cards: "Prikaži bogatije kartice tema u Horizon temi, uključujući izvode tema, oznake i informacije iz dodataka."
     dashboard_improvements: "Poboljšanja navigacije, dizajna i upotrebljivosti administratorske kontrolne table Discourse-a."
@@ -663,8 +662,6 @@ sr:
     groups:
       errors:
         empty_permissions: "Grupa oznaka mora imati najmanje jedno ovlašćenje."
-    forbidden:
-      not_allowed: '"%{tag_name}" se ne može koristiti'
   wizard:
     step:
       setup:

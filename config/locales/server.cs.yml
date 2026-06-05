@@ -1803,9 +1803,6 @@ cs:
       maxmind_db_configuration: 'Server byl nakonfigurován tak, aby používal databáze MaxMind pro reverzní vyhledávání IP, ale nebylo nakonfigurováno platné ID účtu MaxMind, což může vést k tomu, že se databáze MaxMind v budoucnu nepodaří stáhnout. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Více informací naleznete v této příručce</a>.'
       admin_sidebar_deprecation: "Staré rozvržení administrace je zastaralé ve prospěch nového <a href='https://meta.discourse.org/t/-/289281'>rozvržení postranního panelu</a> a bude odstraněno v příští verzi. Nové rozvržení postranního panelu můžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovat</a> již nyní a rozhodnout se pro něj dříve."
     back_from_logster_text: "Zpět na web"
-    reports_section:
-      providers:
-        core_report: "Standardní"
   site_settings:
     allow_bulk_invite: "Povolit hromadné pozvánky nahráním CSV souboru"
     disabled: "vypnuto"
@@ -4308,12 +4305,6 @@ cs:
         few: "Žádný z vybraných štítků nelze použít"
         many: "Žádný z vybraných štítků nelze použít"
         other: "Žádný z vybraných štítků nelze použít"
-      in_this_category: '"%{tag_name}" nelze v této kategorii použít'
-      restricted_to:
-        one: '„%{tag_name}“ je omezen na kategorii „%{category_names}“'
-        few: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
-        many: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
-        other: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
       has_synonyms: '"%{tag_name}" nelze použít, protože má synonyma.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Štítek "%{tags}" nelze použít v kategorii "%{category}". Odstraňte jej prosím.'

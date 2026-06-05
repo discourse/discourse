@@ -10,6 +10,14 @@ RSpec.describe Admin::DashboardController do
     Jobs::CallDiscourseHub.any_instance.stubs(:execute).returns(true)
   end
 
+  def configure_dashboard_sections(visible_ids)
+    hidden = AdminDashboardSectionConfiguration::KNOWN_SECTIONS - visible_ids
+    ordered =
+      visible_ids.map { |id| { id: id, visible: true } } +
+        hidden.map { |id| { id: id, visible: false } }
+    AdminDashboardSectionConfiguration.update(ordered, actor: Discourse.system_user)
+  end
+
   def populate_new_features(date1 = nil, date2 = nil)
     sample_features = [
       {
@@ -108,7 +116,6 @@ RSpec.describe Admin::DashboardController do
     describe "sections payload" do
       before do
         SiteSetting.dashboard_improvements = true
-        SiteSetting.admin_dashboard_sections = "highlights|reports|traffic|engagement"
         Discourse.cache.clear
         sign_in(admin)
       end
@@ -292,7 +299,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "returns the sections as an ordered array of {id, data}" do
-        SiteSetting.admin_dashboard_sections = "reports|highlights"
+        configure_dashboard_sections(%w[reports highlights])
 
         get "/admin/dashboard.json"
 
@@ -301,7 +308,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "omits hidden sections from the data payload" do
-        SiteSetting.admin_dashboard_sections = "highlights|reports"
+        configure_dashboard_sections(%w[highlights reports])
 
         get "/admin/dashboard.json"
 
@@ -310,7 +317,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "includes built engagement data when the section is enabled" do
-        SiteSetting.admin_dashboard_sections = "highlights|engagement"
+        configure_dashboard_sections(%w[highlights engagement])
         get "/admin/dashboard.json"
 
         engagement = response.parsed_body["sections"].find { |s| s["id"] == "engagement" }
@@ -329,7 +336,6 @@ RSpec.describe Admin::DashboardController do
 
           expect(response.status).to eq(200)
           expect(reports_data["items"]).to eq([])
-          expect(reports_data).to have_key("show_labels")
         end
 
         it "serializes configured rows resolved via the registered providers" do
@@ -393,7 +399,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "is included for admins and lists every known section with a visibility flag" do
-        SiteSetting.admin_dashboard_sections = "highlights|reports"
+        configure_dashboard_sections(%w[highlights reports])
         sign_in(admin)
 
         get "/admin/dashboard.json"
@@ -429,12 +435,9 @@ RSpec.describe Admin::DashboardController do
   end
 
   describe "#update_configuration" do
-    before do
-      SiteSetting.dashboard_improvements = true
-      SiteSetting.admin_dashboard_sections = "highlights|reports|traffic|engagement"
-    end
+    before { SiteSetting.dashboard_improvements = true }
 
-    it "returns 204 and writes the site setting for admins" do
+    it "persists the configuration and returns 204 for admins" do
       sign_in(admin)
 
       put "/admin/dashboard/configuration.json",
@@ -443,11 +446,31 @@ RSpec.describe Admin::DashboardController do
               { id: "reports", visible: true },
               { id: "highlights", visible: true },
               { id: "traffic", visible: false },
+              { id: "engagement", visible: false },
             ],
           }
 
       expect(response.status).to eq(204)
-      expect(SiteSetting.admin_dashboard_sections).to eq("reports|highlights")
+      expect(AdminDashboardSectionConfiguration.visible_section_ids).to eq(%w[reports highlights])
+    end
+
+    it "keeps a section's position when it is toggled off" do
+      sign_in(admin)
+
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [
+              { id: "highlights", visible: false },
+              { id: "reports", visible: true },
+              { id: "traffic", visible: true },
+              { id: "engagement", visible: true },
+            ],
+          }
+
+      expect(response.status).to eq(204)
+      expect(AdminDashboardSectionConfiguration.sections.first).to eq(
+        { id: "highlights", visible: false },
+      )
     end
 
     it "drops unknown section ids silently" do
@@ -459,7 +482,9 @@ RSpec.describe Admin::DashboardController do
           }
 
       expect(response.status).to eq(204)
-      expect(SiteSetting.admin_dashboard_sections).to eq("highlights")
+      expect(AdminDashboardSectionConfiguration.sections.map { |s| s[:id] }).to match_array(
+        %w[highlights reports traffic engagement],
+      )
     end
 
     it "coerces non-boolean visible values" do
@@ -471,28 +496,13 @@ RSpec.describe Admin::DashboardController do
               { id: "highlights", visible: "true" },
               { id: "reports", visible: "false" },
               { id: "engagement", visible: "1" },
+              { id: "traffic", visible: "0" },
             ],
           }
 
-      expect(SiteSetting.admin_dashboard_sections).to eq("highlights|engagement")
-    end
-
-    it "treats an empty sections array as hide-everything" do
-      sign_in(admin)
-
-      put "/admin/dashboard/configuration.json", params: { sections: [] }
-
-      expect(response.status).to eq(204)
-      expect(SiteSetting.admin_dashboard_sections).to eq("")
-    end
-
-    it "treats a missing sections key the same as an empty array" do
-      sign_in(admin)
-
-      put "/admin/dashboard/configuration.json"
-
-      expect(response.status).to eq(204)
-      expect(SiteSetting.admin_dashboard_sections).to eq("")
+      expect(AdminDashboardSectionConfiguration.visible_section_ids).to eq(
+        %w[highlights engagement],
+      )
     end
 
     it "returns 404 for moderators" do
@@ -520,7 +530,12 @@ RSpec.describe Admin::DashboardController do
 
       put "/admin/dashboard/configuration.json",
           params: {
-            sections: [{ id: "highlights", visible: true }],
+            sections: [
+              { id: "highlights", visible: true },
+              { id: "reports", visible: false },
+              { id: "traffic", visible: false },
+              { id: "engagement", visible: false },
+            ],
           }
 
       sign_in(moderator)

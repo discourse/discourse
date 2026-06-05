@@ -5694,6 +5694,7 @@ ja:
         too_many_requests: この操作の実行回数が多すぎます。しばらくしてからもう一度お試しください。
         not_found_error: このレポートは存在しません
         custom_date_range: カスタムの日付範囲
+        stable: "安定"
         sections:
           reports:
             title: "レポート"
@@ -5715,8 +5716,6 @@ ja:
                 "2": "メンバー"
                 "3": "レギュラー"
                 "4": "リーダー"
-              trend:
-                stable: "安定"
         reports_section:
           modal:
             enabled_heading: "有効"

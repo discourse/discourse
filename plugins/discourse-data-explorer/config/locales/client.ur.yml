@@ -56,7 +56,7 @@ ur:
       query_user: "نے بنایا"
       reset_params: "رِی سَیٹ"
       search_placeholder: "تلاش کریں..."
-      no_search_results: "معذرت، ہمیں آپ کے متن سے ملتے ہوے کوئی نتائج نہ مل سکے۔"
+      no_search_results: "معذرت، ہمیں آپ کے متن سے ملتے ہوے کوئی نتائج نہیں ملے۔"
     group:
       reports: "رپورٹیں"
     discourse_workflows:

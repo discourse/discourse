@@ -168,6 +168,29 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(enqueued_trigger_node_ids).not_to include("trust-level-mismatch", "tag-mismatch")
   end
 
+  it "only enqueues reviewable approved workflows matching the reviewable type" do
+    create_published_workflow(
+      "matching-trigger",
+      "trigger:reviewable_approved",
+      configuration: {
+        "reviewable_types" => ["ReviewableFlaggedPost"],
+      },
+    )
+    create_published_workflow(
+      "type-mismatch",
+      "trigger:reviewable_approved",
+      configuration: {
+        "reviewable_types" => ["ReviewableUser"],
+      },
+    )
+
+    reviewable = Fabricate(:reviewable_flagged_post)
+    described_class.handle(DiscourseWorkflows::Nodes::ReviewableApproved::V1, :approved, reviewable)
+
+    expect(enqueued_trigger_node_ids).to include("matching-trigger")
+    expect(enqueued_trigger_node_ids).not_to include("type-mismatch")
+  end
+
   it "does not enqueue post edited workflows for replies by default" do
     create_post(topic: topic)
     create_published_workflow("first-post-only", "trigger:post_edited")

@@ -208,6 +208,14 @@ module DiscourseWorkflows
       )
     end
 
+    def serialize_topic(topic, guardian: Discourse.system_user.guardian, custom_field_names: [])
+      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_topic(
+        topic,
+        guardian: guardian,
+        custom_field_names: custom_field_names,
+      )
+    end
+
     def with_paired_item(item, paired_item)
       Item.with_paired_item(item, paired_item)
     end

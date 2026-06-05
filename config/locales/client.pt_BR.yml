@@ -6141,6 +6141,7 @@ pt_BR:
         too_many_requests: Você realizou esta ação muitas vezes. Aguarde antes de tentar novamente.
         not_found_error: Desculpe, este relatório não existe
         custom_date_range: Intervalo de datas personalizado
+        stable: "estável"
         sections:
           reports:
             title: "Relatórios"
@@ -6163,8 +6164,6 @@ pt_BR:
                 "2": "Membro"
                 "3": "Regular"
                 "4": "Líder"
-              trend:
-                stable: "estável"
         reports_section:
           no_data: "Nenhum dado para exibir"
           modal:

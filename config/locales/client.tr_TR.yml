@@ -6337,6 +6337,7 @@ tr_TR:
         too_many_requests: Bu eylemi birçok kez gerçekleştirdiniz. Tekrar denemeden önce lütfen bekleyin.
         not_found_error: Üzgünüz, bu rapor mevcut değil
         custom_date_range: Özel tarih aralığı
+        stable: "stabil"
         sections:
           reports:
             title: "Rapor"
@@ -6359,8 +6360,6 @@ tr_TR:
                 "2": "Üye"
                 "3": "Normal"
                 "4": "Lider"
-              trend:
-                stable: "stabil"
         reports_section:
           no_data: "Gösterilecek veri yok"
           modal:

@@ -1681,9 +1681,6 @@ tr_TR:
       admin_sidebar_deprecation: "Eski yönetici düzeni, yeni <a href='https://meta.discourse.org/t/-/289281'>kenar çubuğu düzeni</a> lehine kullanımdan kaldırıldı ve bir sonraki sürümde kaldırılacak. Bundan önce katılmak için şimdi yeni kenar çubuğu düzenini <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>yapılandırabilirsiniz</a>."
       starttls_disabled: "Giden e-posta yapılandırmasında STARTTLS devre dışı bırakılmıştır. Bu neredeyse hiçbir zaman gerekli değildir. Ortamınızdan <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> öğesini kaldırmayı düşünün. Daha fazla ayrıntı için lütfen <a href='https://meta.discourse.org/t/387286'>bu konuya</a> bakın."
     back_from_logster_text: "Siteye geri dön"
-    reports_section:
-      providers:
-        core_report: "Standart"
   site_settings:
     allow_bulk_invite: "Bir CSV dosyası yükleyerek toplu davetlere izin verin"
     disabled: "devre dışı"
@@ -5073,15 +5070,7 @@ tr_TR:
       invalid:
         one: "Seçtiğiniz etiket kullanılamaz"
         other: "Seçtiğiniz etiketlerden hiçbiri kullanılamaz"
-      in_this_category: '"%{tag_name}" bu kategoride kullanılamaz'
-      restricted_to:
-        one: '"%{tag_name}", "%{category_names}" kategorisiyle sınırlıdır'
-        other: '"%{tag_name}" şu kategorilerle sınırlıdır: %{category_names}'
-      restricted_to_truncated: '"%{tag_name}" yalnızca şu kategorilerle sınırlıdır: %{category_names} ve %{more_count} tane daha'
-      synonym: 'Bu, "%{tag_name}" ifadesinin eşanlamlısıdır. Bunun yerine "%{tag_name}" ifadesini kullanın.'
       has_synonyms: '"%{tag_name}" eş anlamlıları olduğu için kullanılamıyor.'
-      one_tag_per_topic_group: 'Her konu için "%{tag_group_name}" grubundan yalnızca bir etiket kullanılmasına izin verilir'
-      missing_parent_tag: '"%{parent_tag_name}" etiketinin "%{tag_group_name}" grubundaki etiketleri kullanması gerekir'
       restricted_tags_cannot_be_used_in_category:
         one: '"%{tags}" etiketi "%{category}" kategorisinde kullanılamaz. Lütfen kaldırın.'
         other: 'Şu etiketler "%{category}" kategorisinde kullanılamaz: %{tags}. Lütfen kaldırın.'

@@ -50,6 +50,7 @@ class Admin::Config::AboutController < Admin::AdminController
 
     if your_organization = params[:your_organization]
       settings << { setting_name: "company_name", value: your_organization[:company_name] }
+      settings << { setting_name: "company_url", value: your_organization[:company_url] }
       settings << { setting_name: "governing_law", value: your_organization[:governing_law] }
       settings << {
         setting_name: "city_for_disputes",

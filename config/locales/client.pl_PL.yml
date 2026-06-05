@@ -7121,6 +7121,7 @@ pl_PL:
         not_found_error: Przepraszamy, ten raport nie istnieje.
         custom_date_range: Niestandardowy zakres dat
         loading: "Ładowanie pulpitu nawigacyjnego…"
+        stable: "stabilna"
         sections:
           highlights:
             title: "Najważniejsze wydarzenia"
@@ -7168,7 +7169,6 @@ pl_PL:
                   few: "-%{count} spada"
                   many: "-%{count} spada"
                   other: "-%{count} spada"
-                stable: "stabilna"
               moves_in_aria:
                 one: "%{count} członek przesunął się w górę"
                 few: "%{count} członków przesunęło się w górę"
@@ -7199,6 +7199,10 @@ pl_PL:
               no_signal:
                 title: "Za mało aktywności, aby podsumować zaangażowanie."
                 summary: "Wybierz dłuższy okres lub wróć, gdy w Twojej społeczności będzie więcej aktywności."
+              metrics:
+                new_signups: "Nowe rejestracje"
+                dau_mau: "Lepkość DAU / MAU"
+                daily_engaged_users: "Codziennie zaangażowani"
         reports_section:
           description: "Przypinaj standardowe raporty lub zapytania Eksploratora danych, aby śledzić kwestie istotne dla Twojej społeczności."
           add: "Dodaj raport"
@@ -7230,16 +7234,16 @@ pl_PL:
           kpi:
             new_signups:
               label: "Nowe rejestracje"
-              tooltip: "Konta utworzone w tym okresie, wliczając w to konta nieaktywowane i tymczasowe."
+              tooltip: "Utworzone konta, łącznie z kontami nieaktywowanymi i tymczasowymi."
             dau_mau:
               label: "Lepkość DAU / MAU"
-              tooltip: 'Odsetek aktywnych użytkowników miesięcznie, którzy powrócili do społeczności w ciągu ostatniego dnia. Pokazuje, jak „lepka” jest Twoja społeczność na podstawie częstotliwości powracania.'
+              tooltip: 'Odsetek aktywnych użytkowników miesięcznie, którzy powrócili do społeczności. Pokazuje, jak „przyczepna” jest Twoja społeczność na podstawie częstotliwości powracania.'
             new_contributors:
               label: "Nowi współtwórcy"
-              tooltip: "Liczba członków, którzy zamieścili swój pierwszy wpis w tym okresie."
+              tooltip: "Liczba członków, którzy zamieścili swój pierwszy wpis."
             daily_engaged_users:
               label: "Codziennie zaangażowani"
-              tooltip: "Liczba członków, którzy polubili lub zamieścili wpisy w społeczności w ciągu ostatniego dnia."
+              tooltip: "Średnia liczba członków, którzy polubili lub opublikowali wpisy w społeczności każdego dnia."
           comparison:
             last_7_days: "w porównaniu z ostatnimi 7 dniami"
             last_30_days: "w porównaniu z ostatnimi 30 dniami"

@@ -1634,9 +1634,6 @@ fr:
       maxmind_db_configuration: 'Le serveur a été configuré pour utiliser les bases de données MaxMind pour les recherches IP inversées, mais aucun identifiant de compte MaxMind valide n''a été configuré, ce qui pourrait empêcher le téléchargement des bases de données MaxMind à l''avenir. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Consultez ce guide pour en savoir plus</a>.'
       admin_sidebar_deprecation: "L'ancienne disposition d'administration est obsolète au profit de la nouvelle <a href='https://meta.discourse.org/t/-/289281'>disposition de la barre latérale</a> et sera supprimée dans la prochaine version. Vous pouvez <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurer</a> la nouvelle disposition de la barre latérale maintenant pour l'activer avant cette suppression."
     back_from_logster_text: "Retour au site"
-    reports_section:
-      providers:
-        core_report: "Standard"
   site_settings:
     allow_bulk_invite: "Autoriser l'envoi d'invitations multiples via l'importation d'un fichier CSV"
     disabled: "désactivé"
@@ -4762,10 +4759,6 @@ fr:
       invalid:
         one: "L'étiquette que vous avez sélectionnée ne peut pas être utilisée"
         other: "Aucune des étiquettes que vous avez sélectionnées ne peut être utilisée"
-      in_this_category: 'L''étiquette « %{tag_name} » ne peut pas être utilisée dans cette catégorie'
-      restricted_to:
-        one: 'L''étiquette « %{tag_name} » est réservée à la catégorie « %{category_names} »'
-        other: 'L''étiquette « %{tag_name} » est réservée aux catégories suivantes : %{category_names}'
       has_synonyms: 'L''étiquette « %{tag_name} » ne peut pas être utilisée car elle a des synonymes.'
       restricted_tags_cannot_be_used_in_category:
         one: 'L''étiquette « %{tags} » ne peut pas être utilisée dans la catégorie « %{category} ». Veuillez la supprimer.'

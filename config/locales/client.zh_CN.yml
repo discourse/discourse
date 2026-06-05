@@ -6085,6 +6085,7 @@ zh_CN:
         too_many_requests: 您执行此操作的次数过多。请稍后再试。
         not_found_error: 抱歉，此报告不存在
         custom_date_range: 自定义日期范围
+        stable: "稳定"
         sections:
           reports:
             title: "举报"
@@ -6107,8 +6108,6 @@ zh_CN:
                 "2": "成员"
                 "3": "常规"
                 "4": "领导者"
-              trend:
-                stable: "稳定"
         reports_section:
           modal:
             enabled_heading: "已启用"

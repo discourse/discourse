@@ -5906,6 +5906,7 @@ ug:
         too_many_requests: بۇ مەشغۇلاتنى بەك كۆپ قىلدىڭىز. سەل كۈتۈپ ئاندىن قايتا سىناڭ.
         not_found_error: كەچۈرۈڭ، بۇ دوكلات مەۋجۇت ئەمەس
         custom_date_range: ئىختىيارى چېسلا دائىرىسى
+        stable: "مۇقىم"
         sections:
           reports:
             title: "دوكلات"
@@ -5927,8 +5928,6 @@ ug:
                 "2": "ئەزا"
                 "3": "ئادەتتىكى"
                 "4": "باشلىق"
-              trend:
-                stable: "مۇقىم"
         reports_section:
           no_data: "كۆرسىتىدىغان سانلىق مەلۇمات يوق"
           modal:

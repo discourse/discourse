@@ -135,6 +135,33 @@ module("Unit | lib | discourse-workflows | data-schema", function () {
     });
   });
 
+  test("schemaFieldsForNodeOutput ignores runs for another node with the same name", function (assert) {
+    const runData = {
+      Log: [
+        {
+          node_id: "old-log",
+          node_type: "action:log",
+          status: "success",
+          outputs: [
+            { index: 0, items: [{ json: { stale: true } }], item_count: 1 },
+          ],
+        },
+      ],
+    };
+    const node = { id: "new-log", name: "Log", type: "action:log" };
+
+    assert.deepEqual(
+      schemaFieldsForNodeOutput(runData, "Log", { node }),
+      [],
+      "does not expose output from a different node id"
+    );
+    assert.strictEqual(
+      outputSummaryForNode(runData, "Log", 0, { node }),
+      null,
+      "does not expose summary from a different node id"
+    );
+  });
+
   test("outputForRun keeps output indexes positional", function (assert) {
     const run = {
       outputs: [{ index: 0, items: [{ json: { primary: true } }] }],
@@ -200,6 +227,126 @@ module("Unit | lib | discourse-workflows | data-schema", function () {
       truncated: false,
     });
     assert.strictEqual(inputForRun(runData["Node 1"][0], 0), null);
+  });
+
+  test("schemaFieldsForNodeInput ignores recorded inputs from another source", function (assert) {
+    const currentNode = { id: "log", name: "Log", type: "action:log" };
+    const sourceNode = {
+      id: "post-moved",
+      name: "Post moved",
+      type: "trigger:post_moved",
+    };
+    const runData = {
+      Log: [
+        {
+          node_id: "log",
+          node_type: "action:log",
+          status: "success",
+          inputs: [
+            {
+              index: 0,
+              items: [{ json: { reviewable: { id: 1 } } }],
+              item_count: 1,
+              source: { node_name: "Approved reviewable", output_index: 0 },
+            },
+          ],
+        },
+      ],
+      "Post moved": [
+        {
+          node_id: "post-moved",
+          node_type: "trigger:post_moved",
+          status: "success",
+          outputs: [
+            { index: 0, items: [{ json: { post: { id: 1 } } }], item_count: 1 },
+          ],
+        },
+      ],
+    };
+
+    assert.deepEqual(
+      schemaFieldsForNodeInput(runData, "Log", {
+        node: currentNode,
+        sourceNode,
+        outputIndex: 0,
+      }),
+      [],
+      "does not expose input fields from a stale source"
+    );
+    assert.strictEqual(
+      inputSummaryForNode(runData, "Log", 0, {
+        node: currentNode,
+        sourceNode,
+        outputIndex: 0,
+      }),
+      null,
+      "does not expose input summary from a stale source"
+    );
+  });
+
+  test("schemaFieldsForNodeInput previews connected upstream output before the current node succeeds", function (assert) {
+    const currentNode = {
+      id: "create-post",
+      name: "Create post",
+      type: "action:create_post",
+    };
+    const sourceNode = {
+      id: "template",
+      name: "Template",
+      type: "action:template",
+    };
+    const runData = {
+      Template: [
+        {
+          node_id: "template",
+          node_type: "action:template",
+          status: "success",
+          outputs: [
+            {
+              index: 0,
+              items: [{ json: { template: "Rendered body" } }],
+              item_count: 1,
+            },
+          ],
+        },
+      ],
+      "Create post": [
+        {
+          node_id: "create-post",
+          node_type: "action:create_post",
+          status: "skipped",
+          inputs: [
+            {
+              index: 0,
+              items: [{ json: { template: "Rendered body" } }],
+              item_count: 1,
+              source: null,
+            },
+          ],
+        },
+      ],
+    };
+
+    assert.deepEqual(
+      schemaFieldsForNodeInput(runData, "Create post", {
+        node: currentNode,
+        sourceNode,
+        outputIndex: 0,
+      }).map((field) => field.key),
+      ["template"]
+    );
+    assert.deepEqual(
+      inputSummaryForNode(runData, "Create post", 0, {
+        node: currentNode,
+        sourceNode,
+        outputIndex: 0,
+      }),
+      {
+        inputIndex: 0,
+        itemCount: 1,
+        truncated: false,
+      }
+    );
   });
 
   test("nodeItemJsonPath escapes node names for expressions", function (assert) {

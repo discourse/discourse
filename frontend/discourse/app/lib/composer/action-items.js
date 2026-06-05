@@ -177,9 +177,12 @@ export class ComposerActionItemBuilder {
             this.replyOptions?.topicLink))) ||
       (this.action === PRIVATE_MESSAGE && this.snapshotTopic)
     ) {
+      const keyPrefix = (this.topic ?? this.snapshotTopic)?.isPrivateMessage
+        ? "composer.composer_actions.reply_to_message"
+        : "composer.composer_actions.reply_to_topic";
       return {
-        name: i18n("composer.composer_actions.reply_to_topic.label"),
-        description: i18n("composer.composer_actions.reply_to_topic.desc"),
+        name: i18n(`${keyPrefix}.label`),
+        description: i18n(`${keyPrefix}.desc`),
         icon: "share",
         id: "reply_to_topic",
       };
@@ -201,9 +204,12 @@ export class ComposerActionItemBuilder {
 
   #replyToSnapshottedTopic() {
     if (this.snapshotTopic) {
+      const keyPrefix = this.snapshotTopic?.isPrivateMessage
+        ? "composer.composer_actions.reply_to_message"
+        : "composer.composer_actions.reply_to_topic";
       return {
-        name: i18n("composer.composer_actions.reply_to_topic.label"),
-        description: i18n("composer.composer_actions.reply_to_topic.desc"),
+        name: i18n(`${keyPrefix}.label`),
+        description: i18n(`${keyPrefix}.desc`),
         icon: "share",
         id: "reply_to_topic",
       };

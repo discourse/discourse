@@ -7,7 +7,15 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
   before do
     SiteSetting.dashboard_improvements = true
-    SiteSetting.admin_dashboard_sections = "traffic"
+    AdminDashboardSectionConfiguration.update(
+      [
+        { id: "traffic", visible: true },
+        { id: "highlights", visible: false },
+        { id: "reports", visible: false },
+        { id: "engagement", visible: false },
+      ],
+      actor: current_user,
+    )
     SiteSetting.use_legacy_pageviews = false
     SiteSetting.embed_topics_list = true
     sign_in(current_user)

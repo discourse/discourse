@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -14,7 +14,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -37,10 +37,6 @@ export default class DashboardReports extends Component {
 
   get items() {
     return this.args.data?.items ?? [];
-  }
-
-  get showLabels() {
-    return this.args.data?.show_labels ?? false;
   }
 
   get canEdit() {
@@ -143,22 +139,15 @@ export default class DashboardReports extends Component {
         {{#each this.cards key="key" as |card|}}
           <div class="db-report__card" data-identifier={{card.key}}>
             <div class="db-report__header">
-              <span class="db-report__name">{{card.title}}</span>
-              {{#if this.showLabels}}
+              <a href={{card.url}} class="db-report__name">{{card.title}}</a>
+              {{#if card.label}}
                 <div
-                  class="db-report__label"
+                  class={{dConcatClass
+                    "db-report__label"
+                    (concat "--" card.source)
+                  }}
                   data-source={{card.source}}
                 >{{card.label}}</div>
-              {{/if}}
-              {{#if this.canEdit}}
-                <DButton
-                  @icon="xmark"
-                  @translatedAriaLabel={{i18n
-                    "admin.dashboard.reports_section.remove"
-                  }}
-                  @action={{fn this.removeReport card}}
-                  class="db-report__remove btn-transparent btn-small"
-                />
               {{/if}}
             </div>
             <div class="db-report__chart">

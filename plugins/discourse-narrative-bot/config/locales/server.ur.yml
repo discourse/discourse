@@ -44,7 +44,7 @@ ur:
     dice:
       trigger: "رول"
       invalid: |-
-        معذرت، پانسہ کے اس مجموعہ کو چلانا ریاضی کے اصولوں کے حساب سے ناممکن ہے۔ :confounded:
+        مجھے افسوس ہے، ریاضی کے اعتبار سے ان پاسوں کے اس امتزاج کو رول کرنا ناممکن ہے۔ :confounded:
       out_of_range: |-
         کیا آپ جانتے تھے کہ ریاضی کے حساب سے منصفانہ پانسہ کیلئے [اطراف کی زیادہ سے زیادہ تعداد] (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) 120 ہے؟
       results: |-
@@ -148,7 +148,7 @@ ur:
         second_response: |-
           اوہ، معذرت۔ مجھے ابھی بھی سمجھ نہیں آیاہے۔ :anguished:
 
-          میں صرف ایک بوٹ ہوں، لیکن اگر آپ کسی حقیقی شخص تک پہنچنا چاہتے ہیں تو دیکھیں [ہمارا رابطہ صفحہ](%{base_path}/about)۔
+          میں صرف ایک بوٹ ہوں، لیکن اگر آپ کسی حقیقی شخص تک پہنچنا چاہتے ہیں تو دیکھیں [ہمارا رابطہ کا صفحہ](%{base_path}/about)۔
 
           اس دوران، میں آپ کے راستے سے دور رہوں گا۔
     new_user_narrative:
@@ -290,7 +290,7 @@ ur:
 
           - اگر آپ کے پاس اصل :keyboard: ہے، تو ہمارے آسان کی بورڈ شارٹ کٹس دیکھنے کیلئے <kbd>؟</kbd>دبائیں۔
         not_found: |-
-          ہمم... لگتا ہے جیسے آپ کو کوئی مسئلہ درپیش ہے۔ اس کیلئے معذرت۔ کیا آپ نے اصطلاح **کَیپی&#8203;بارا** سرچ <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> کی؟
+          ہمم... لگتا ہے جیسے آپ کو کوئی مسئلہ درپیش ہے۔ اس کیلئے معذرت۔ کیا آپ نے اصطلاح **گلہری** سرچ <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> کی؟
       end:
         message: |-
           میرے ساتھ رہنے کا شکریہ @%{username}! میں نے آپ کیلئے یہ بنایا، میں سمجھتا ہوں کہ آپ اِس کے مستحق ہیں:

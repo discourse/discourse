@@ -3498,9 +3498,6 @@ ko:
     forbidden:
       invalid:
         other: "선택한 태그를 사용할 수 없음"
-      in_this_category: '이 카테고리에서는 ''%{tag_name}'' 태그를 사용할 수 없습니다'
-      restricted_to:
-        other: '''%{tag_name}'' 태그는 다음 카테고리로 제한됩니다. %{category_names}'
       has_synonyms: '''%{tag_name}''에는 동의어가 있으므로 사용할 수 없습니다.'
     required_tags_from_group:
       other: "최소 %{count}개의 %{tag_group_name} 태그를 포함해야 합니다. 이 그룹의 태그는 %{tags}입니다. %{tags}."

@@ -22,6 +22,7 @@ hu:
     chat_minimum_message_length: "A csevegőüzenetek minimális karakterszáma."
     chat_allow_uploads: "Feltöltés engedélyezése a nyilvános csevegőcsatornákon és a privát üzenetek csatornáin."
     chat_archive_destination_topic_status: "Az az állapot, amelyet a céltéma a csatornaarchiválás befejezése után fog kapni. Ez csak akkor érvényes, ha a céltéma egy új téma, nem pedig egy meglévő."
+    direct_message_enabled_groups: "A következő csoportokba tartozó felhasználók számára engedélyezi a felhasználók közötti Személyes Csevegések létrehozását. Megjegyzés: a stábtagok mindig létrehozhatnak Személyes Csevegéseket, és a felhasználók válaszolhatnak olyan Személyes Csevegésekre, amelyeket olyan felhasználók kezdeményeztek, akiknek jogosultságuk van azok létrehozására."
     chat_message_flag_allowed_groups: "A következő csoportok felhasználói megjelölhetnek csevegőüzeneteket. Vegye figyelembe, hogy az adminisztrátorok és moderátorok mindig megjelölhetik a csevegési üzeneteket."
     chat_pinning_messages_allowed_groups: "Ezen csoportok tagjai rögzíthetnek csevegőüzeneteket azokban a csatornákban, amelyekhez hozzáférésük van. Megjegyzés: az adminisztrátorok és moderátorok mindig rögzíthetnek csevegőüzeneteket. Csoportos csevegések vagy közvetlen üzenetváltások (PÜ) esetén bármely tag rögzíthet ott üzeneteket."
     max_mentions_per_chat_message: "A chat üzenetben használható @név értesítések maximális száma felhasználónként."

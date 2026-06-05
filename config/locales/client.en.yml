@@ -3365,6 +3365,10 @@ en:
           label: Reply to topic
           trigger: Topic
           desc: Reply to the topic, not any specific post
+        reply_to_message:
+          label: Reply to message
+          trigger: Message
+          desc: Reply to the message, not any specific post
         toggle_whisper:
           label: Toggle whisper
           desc: Whispers are only visible to allowed groups
@@ -6908,6 +6912,7 @@ en:
         not_found_error: Sorry, this report doesn’t exist
         custom_date_range: Custom date range
         loading: "Loading dashboard…"
+        stable: "stable"
 
         sections:
           highlights:
@@ -6952,7 +6957,6 @@ en:
                 dropping:
                   one: "-%{count} dropping"
                   other: "-%{count} dropping"
-                stable: "stable"
               moves_in_aria:
                 one: "%{count} member moved up"
                 other: "%{count} members moved up"
@@ -6979,7 +6983,10 @@ en:
               no_signal:
                 title: "Not enough activity yet to summarise engagement."
                 summary: "Pick a longer date range or come back once your community has more activity."
-
+              metrics:
+                new_signups: "New sign-ups"
+                dau_mau: "DAU / MAU stickiness"
+                daily_engaged_users: "Daily engaged"
         reports_section:
           description: "Pin standard reports or Data Explorer queries to track what matters to your community."
           add: "Add report"
@@ -7013,16 +7020,16 @@ en:
           kpi:
             new_signups:
               label: "New sign-ups"
-              tooltip: "Accounts created in this period, including unactivated and staged accounts."
+              tooltip: "Accounts created, including unactivated and staged accounts."
             dau_mau:
               label: "DAU / MAU stickiness"
-              tooltip: 'The share of monthly active users who returned to the community in the last day. This shows how "sticky" your community is based on how often people come back.'
+              tooltip: 'The share of monthly active users who returned to the community. This shows how "sticky" your community is based on how often people come back.'
             new_contributors:
               label: "New contributors"
-              tooltip: "The number of members who made their first post in this period."
+              tooltip: "The number of members who made their first post."
             daily_engaged_users:
               label: "Daily engaged"
-              tooltip: "The number of members who liked or posted in the community in the last day."
+              tooltip: "The average number of members who liked or posted in the community each day."
           comparison:
             last_7_days: "vs last 7 days"
             last_30_days: "vs last 30 days"
@@ -7598,9 +7605,11 @@ en:
           your_organization: "Your organization"
           your_organization_description: "We'll use this information in the Terms of Service and Privacy Notice to show who operates the site and under which jurisdiction."
           company_name: "Name"
-          company_name_placeholder: "Acme Organization"
+          company_name_placeholder: "ExampleCo"
           company_name_warning: |
             If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
+          company_url: "Website"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Governing law"
           governing_law_placeholder: "Province, State, or Country"
           governing_law_help: |

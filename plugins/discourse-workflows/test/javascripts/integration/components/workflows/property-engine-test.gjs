@@ -70,6 +70,183 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.dom("input").isFocused();
   });
 
+  test("renders checkbox controls from metadata", async function (assert) {
+    this.setProperties({
+      configuration: {
+        category_id: 1,
+        include_subcategories: true,
+      },
+      formApi: null,
+      nodeType: "trigger:topic_created",
+      schema: {
+        category_id: {
+          type: "integer",
+        },
+        include_subcategories: {
+          type: "boolean",
+          ui: {
+            control: "checkbox",
+          },
+          display_options: {
+            show: {
+              category_id: [{ _cnd: { exists: true } }],
+            },
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom("input[type='checkbox']").isChecked();
+
+    await click("input[type='checkbox']");
+
+    assert.false(this.formApi.get("include_subcategories"));
+  });
+
+  test("can clear optional category controls", async function (assert) {
+    this.setProperties({
+      configuration: {
+        category_id: 2,
+      },
+      formApi: null,
+      nodeType: "trigger:topic_created",
+      schema: {
+        category_id: {
+          type: "integer",
+          required: false,
+          ui: {
+            control: "category",
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const categoryChooser = selectKit(".category-chooser");
+    const header = categoryChooser.header();
+
+    assert.strictEqual(header.value(), "2");
+    assert.dom(".btn-clear", header.el()).exists();
+
+    await click(header.el().querySelector(".btn-clear"));
+
+    assert.strictEqual(this.formApi.get("category_id"), "");
+  });
+
+  test("can clear optional group controls", async function (assert) {
+    this.setProperties({
+      configuration: {
+        group_inbox_id: 2,
+      },
+      formApi: null,
+      nodeType: "trigger:topic_created",
+      nodeTypes: [
+        {
+          identifier: "trigger:topic_created",
+          metadata: {
+            groups: [
+              { id: 1, name: "support" },
+              { id: 2, name: "moderators" },
+            ],
+          },
+        },
+      ],
+      schema: {
+        group_inbox_id: {
+          type: "integer",
+          required: false,
+          type_options: {
+            load_options_method: "groups",
+          },
+          ui: {
+            control: "group_select",
+          },
+          control_options: {
+            filterable: true,
+            name_property: "name",
+            value_property: "id",
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const groupSelector = selectKit(".combo-box");
+    const header = groupSelector.header();
+
+    assert.strictEqual(header.value(), "2");
+    assert.dom(".btn-clear", header.el()).exists();
+
+    await click(header.el().querySelector(".btn-clear"));
+
+    assert.strictEqual(this.formApi.get("group_inbox_id"), null);
+  });
+
   test("preserves focus for collection fields while typing", async function (assert) {
     this.setProperties({
       configuration: {
@@ -194,6 +371,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       node: {
         clientId: "branch",
         type: "condition:if",
+        name: "Branch",
       },
       nodes: [
         {
@@ -260,6 +438,27 @@ module("Integration | Component | workflows property engine", function (hooks) {
               index: 0,
               items: [{ json: { secondary_status: "ok" } }],
               item_count: 1,
+            },
+          ],
+        },
+      ],
+      Branch: [
+        {
+          status: "success",
+          inputs: [
+            {
+              index: 0,
+              items: [
+                { json: { status: "ok", "topic title": { "post-count": 2 } } },
+              ],
+              item_count: 1,
+              source: { node_name: "Trigger", output_index: 0 },
+            },
+            {
+              index: 1,
+              items: [{ json: { secondary_status: "ok" } }],
+              item_count: 1,
+              source: { node_name: "Secondary", output_index: 0 },
             },
           ],
         },
@@ -696,5 +895,97 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     assert.strictEqual(String(this.formApi.get("agent_id")), "1");
     assert.strictEqual(this.formApi.get("agent_name"), "Support Bot");
+  });
+
+  test("renders remote multi-select options from load options", async function (assert) {
+    const requests = [];
+    pretender.post(
+      "/admin/plugins/discourse-workflows/dynamic-node-parameters/options.json",
+      (request) => {
+        const body = JSON.parse(request.requestBody);
+        requests.push(body);
+
+        return response([{ id: "foo", name: "foo" }]);
+      }
+    );
+
+    this.setProperties({
+      configuration: {
+        operation: "get",
+        topic_id: "21",
+        custom_field_names: [],
+      },
+      formApi: null,
+      node: {
+        clientId: "node-1",
+        type: "action:topic",
+        typeVersion: "1.0",
+      },
+      nodeType: "action:topic",
+      nodeTypes: [
+        {
+          identifier: "action:topic",
+          name: "action:topic",
+          version: "1.0",
+          metadata: {
+            topic_custom_fields: [{ id: "system", name: "system" }],
+          },
+        },
+      ],
+      schema: {
+        custom_field_names: {
+          type: "multi_options",
+          options: [],
+          type_options: {
+            load_options_depends_on: ["operation", "topic_id"],
+            load_options_method: "topic_custom_fields",
+          },
+          control_options: {
+            filterable: true,
+            name_property: "name",
+            value_property: "id",
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @node={{this.node}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const selector = selectKit(".multi-select");
+    await selector.expand();
+    await waitFor(".multi-select .select-kit-row[data-value='foo']");
+    await selector.selectRowByValue("foo");
+
+    assert.deepEqual(this.formApi.get("custom_field_names"), ["foo"]);
+    assert.strictEqual(selector.header().label(), "foo");
+    assert.true(requests.length >= 1);
+    assert.strictEqual(requests[0].methodName, "topic_custom_fields");
+    assert.deepEqual(requests[0].currentNodeParameters, {
+      operation: "get",
+      topic_id: "21",
+      custom_field_names: [],
+    });
   });
 });

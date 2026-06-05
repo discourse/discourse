@@ -56,6 +56,21 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       expect(badge_node.dig("metadata", "badges")).to all(include("id", "name"))
     end
 
+    it "does not preload load options metadata that depends on node parameters" do
+      topic = Fabricate(:topic)
+      TopicCustomField.create!(topic: topic, name: "workflow_key", value: "value")
+
+      get "/admin/plugins/discourse-workflows/node-types.json"
+
+      topic_node =
+        response.parsed_body["node_types"].find { |nt| nt["identifier"] == "action:topic" }
+
+      expect(topic_node.dig("properties", "custom_field_names", "type_options")).to include(
+        "load_options_depends_on",
+      )
+      expect(topic_node.fetch("metadata", {})).not_to have_key("topic_custom_fields")
+    end
+
     it "returns descriptor fields used by the admin client" do
       get "/admin/plugins/discourse-workflows/node-types.json"
 
