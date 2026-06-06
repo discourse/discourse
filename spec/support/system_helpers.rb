@@ -424,6 +424,14 @@ module SystemHelpers
     log = Rails.root.join("log", "#{Rails.env}.log")
     File.truncate(log, 0) if File.exist?(log)
 
+    # In CI, `spec/rails_helper.rb` registers a `Lograge.ignore` that drops every
+    # per-request log line unless `$capture_log_entries` is set, so the shared
+    # `log/test.log` isn't written (or contended on) for the whole suite. Flip it
+    # on around the block so the requests we want to assert on are logged, and
+    # restore the prior value afterwards (the `read` below reads those lines).
+    previous_capture_log_entries = $capture_log_entries
+    $capture_log_entries = true
+
     yield
 
     read =
@@ -445,5 +453,7 @@ module SystemHelpers
 
     try_until_success { raise Capybara::ExpectationNotMet if read.call.size < entries }
     read.call
+  ensure
+    $capture_log_entries = previous_capture_log_entries
   end
 end

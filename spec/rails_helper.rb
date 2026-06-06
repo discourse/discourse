@@ -143,6 +143,34 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
     end
   end
   UpcomingChanges.singleton_class.prepend(UpcomingChangesBatchedClearCaches)
+
+  # Skip lograge's per-request Logstash work in CI by default. `rails_helper`
+  # forces `ENABLE_LOGSTASH_LOGGER=1` (above), so `config/initializers/101-lograge.rb`
+  # attaches a `process_action.action_controller` subscriber that fires on
+  # *every* controller request the in-process test server handles for the
+  # browser — dozens per page the system specs drive. For each one
+  # `process_main_event` builds the data hash (`custom_options` runs
+  # `event.payload[:params].to_query`, `custom_payload` reads `current_user` /
+  # `remote_ip`), serializes it to Logstash JSON via the formatter, and appends
+  # a line to the shared `log/test.log`. Under `RAILS_TEST_LOG_LEVEL=error`
+  # that line is still emitted, yet the *only* consumer is
+  # `request_tracker_spec`, through the `capture_log_entries` helper. On top of
+  # the per-request CPU, 12 workers appending JSON to one file add write
+  # contention on the CPU-bound request path the specs block on — a per-run
+  # variance source as well as a median cost.
+  #
+  # `Lograge.ignore?` is checked as the first line of `process_main_event`,
+  # before the hash build / JSON encode / file write, so a catch-all ignore
+  # eliminates all of that work. Gate it behind `$capture_log_entries` (a
+  # process-global, visible from the in-process server threads that run the
+  # subscriber) so the helper can re-enable logging around its `yield` — see
+  # `spec/support/system_helpers.rb#capture_log_entries`. The subscriber stays
+  # wired and the existing 418-hijack ignore still composes, so the one spec
+  # that reads the log keeps working while every other request skips the work.
+  # Set DISCOURSE_KEEP_LOGRAGE=1 to restore per-request logstash logging.
+  if !ENV["DISCOURSE_KEEP_LOGRAGE"] && defined?(Lograge)
+    Lograge.ignore(->(_event) { !$capture_log_entries })
+  end
 end
 
 require "rspec/rails"
