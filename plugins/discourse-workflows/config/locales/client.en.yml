@@ -485,6 +485,7 @@ en:
         description: "Fires when a topic has had no replies for the specified number of hours"
         category_id: "Category"
         category_id_description: "Only consider topics in this category"
+        include_subcategories: "Include subcategories"
         tag_names: "Tags"
         tag_names_description: "Only consider topics that have at least one of these tags"
       topic_closed:

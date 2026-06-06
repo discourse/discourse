@@ -275,7 +275,7 @@ module("Unit | Utility | workflows property engine", function () {
   test("supports the exists condition for empty checks", function (assert) {
     const schema = {
       type: "notice",
-      display_options: { hide: { columns: [{ _cnd: { exists: true } }] } },
+      display_options: { hide: { columns: [{ condition: { exists: true } }] } },
     };
 
     assert.true(fieldVisible(schema, {}));
@@ -286,7 +286,7 @@ module("Unit | Utility | workflows property engine", function () {
     assert.false(fieldVisible(schema, { columns: "value" }));
 
     const presentSchema = {
-      display_options: { show: { columns: [{ _cnd: { exists: true } }] } },
+      display_options: { show: { columns: [{ condition: { exists: true } }] } },
     };
     assert.false(fieldVisible(presentSchema, {}));
     assert.true(fieldVisible(presentSchema, { columns: [{ header: "A" }] }));
@@ -294,7 +294,9 @@ module("Unit | Utility | workflows property engine", function () {
 
   test("supports the not condition", function (assert) {
     const schema = {
-      display_options: { show: { operation: [{ _cnd: { not: "delete" } }] } },
+      display_options: {
+        show: { operation: [{ condition: { not: "delete" } }] },
+      },
     };
     assert.true(fieldVisible(schema, { operation: "insert" }));
     assert.true(fieldVisible(schema, {}));

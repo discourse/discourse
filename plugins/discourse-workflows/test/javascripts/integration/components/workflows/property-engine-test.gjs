@@ -89,7 +89,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
           },
           display_options: {
             show: {
-              category_id: [{ _cnd: { exists: true } }],
+              category_id: [{ condition: { exists: true } }],
             },
           },
         },
