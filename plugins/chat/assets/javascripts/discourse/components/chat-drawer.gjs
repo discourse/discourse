@@ -24,6 +24,8 @@ export default class ChatDrawer extends Component {
   @service chatDrawerSize;
   @service chatStateManager;
   @service chatDrawerRouter;
+  @service currentUser;
+  @service siteSettings;
 
   loading = false;
   sizeTimer = null;
@@ -34,7 +36,7 @@ export default class ChatDrawer extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    if (!this.chat.userCanChat) {
+    if (!this.chat.userCanChat && !this.anonymousUserCanViewPublicChat) {
       return;
     }
 
@@ -59,7 +61,7 @@ export default class ChatDrawer extends Component {
   willDestroyElement() {
     super.willDestroyElement(...arguments);
 
-    if (!this.chat.userCanChat) {
+    if (!this.chat.userCanChat && !this.anonymousUserCanViewPublicChat) {
       return;
     }
 
@@ -102,6 +104,13 @@ export default class ChatDrawer extends Component {
     let style = `width: ${escapeExpression((width || "0").toString())}px;`;
     style += `height: ${escapeExpression((height || "0").toString())}px;`;
     this.set("drawerStyle", trustHTML(style));
+  }
+
+  get anonymousUserCanViewPublicChat() {
+    return (
+      !this.currentUser &&
+      this.siteSettings.chat_allow_anonymous_public_channel_access
+    );
   }
 
   get drawerActions() {

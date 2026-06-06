@@ -503,6 +503,8 @@ module Chat
     def self.permissions(channel)
       group_ids = channel.allowed_group_ids.presence
       if group_ids.blank? && channel.category_channel? && !channel.read_restricted?
+        return {} if SiteSetting.chat_allow_anonymous_public_channel_access
+
         group_ids = chat_allowed_group_ids
       end
 

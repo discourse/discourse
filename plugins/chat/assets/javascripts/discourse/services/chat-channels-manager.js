@@ -108,6 +108,10 @@ export default class ChatChannelsManager extends Service {
   }
 
   async follow(model) {
+    if (!this.currentUser || !model.currentUserMembership) {
+      return model;
+    }
+
     this.chatSubscriptionsManager.startChannelSubscription(model);
 
     if (!model.currentUserMembership.following) {
@@ -165,12 +169,21 @@ export default class ChatChannelsManager extends Service {
     );
   }
 
+  get anonymousUserCanViewPublicChat() {
+    return (
+      !this.currentUser &&
+      this.siteSettings.chat_allow_anonymous_public_channel_access
+    );
+  }
+
   @cached
   get publicMessageChannels() {
     return this.#sortChannelsByProperty(
       this.channels.filter(
         (channel) =>
-          channel.isCategoryChannel && channel.currentUserMembership.following
+          channel.isCategoryChannel &&
+          (channel.currentUserMembership?.following ||
+            this.anonymousUserCanViewPublicChat)
       ),
       "slug"
     );
@@ -208,7 +221,8 @@ export default class ChatChannelsManager extends Service {
       this.channels.filter(
         (channel) =>
           channel.isCategoryChannel &&
-          channel.currentUserMembership?.following &&
+          (channel.currentUserMembership?.following ||
+            this.anonymousUserCanViewPublicChat) &&
           !channel.currentUserMembership?.starred
       )
     );
@@ -390,7 +404,8 @@ export default class ChatChannelsManager extends Service {
       this.channels.filter(
         (channel) =>
           channel.isCategoryChannel &&
-          channel.currentUserMembership?.following &&
+          (channel.currentUserMembership?.following ||
+            this.anonymousUserCanViewPublicChat) &&
           !channel.currentUserMembership?.starred
       ),
       "slug"

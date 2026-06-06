@@ -18,7 +18,7 @@ export default class ChatDirectMessagesRoute extends DiscourseRoute {
       } else {
         // there should be at least one dm channel
         // we can reroute using the last channel id
-        const id = this.currentUser.custom_fields.last_chat_channel_id;
+        const id = this.currentUser?.custom_fields?.last_chat_channel_id;
         this.chatChannelsManager.find(id).then((c) => {
           return this.router.replaceWith("chat.channel", ...c.routeModels);
         });

@@ -226,7 +226,7 @@ export default class ChatChannel {
   }
 
   get isFollowing() {
-    return this.currentUserMembership.following;
+    return this.currentUserMembership?.following;
   }
 
   get canJoin() {

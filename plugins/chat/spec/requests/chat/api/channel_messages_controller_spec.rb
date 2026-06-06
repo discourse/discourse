@@ -24,6 +24,25 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           message_1.id,
         )
       end
+
+      context "as anonymous user" do
+        before do
+          sign_out
+          SiteSetting.chat_allow_anonymous_public_channel_access = true
+        end
+
+        it "returns messages for a public category channel" do
+          thread = Fabricate(:chat_thread, channel:, original_message: message_1)
+          thread_reply = Fabricate(:chat_message, chat_channel: channel, thread:)
+
+          get "/chat/api/channels/#{channel.id}/messages"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["messages"].map { |message| message["id"] }).to eq(
+            [message_1.id, thread_reply.id],
+          )
+        end
+      end
     end
 
     context "when params are invalid" do

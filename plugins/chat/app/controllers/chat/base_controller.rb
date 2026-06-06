@@ -4,13 +4,17 @@ module Chat
   class BaseController < ::ApplicationController
     requires_plugin PLUGIN_NAME
 
-    before_action :ensure_logged_in
-    before_action :ensure_can_chat
+    before_action :ensure_logged_in, unless: :allow_anonymous_public_chat_access?
+    before_action :ensure_can_chat, unless: :allow_anonymous_public_chat_access?
 
     private
 
     def ensure_can_chat
       guardian.ensure_can_chat!
+    end
+
+    def allow_anonymous_public_chat_access?
+      false
     end
 
     def set_channel_and_chatable_with_access_check(chat_channel_id: nil)
