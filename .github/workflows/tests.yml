@@ -78,23 +78,7 @@ jobs:
       - name: Set PARALLEL_TEST_PROCESSORS for system tests
         if: matrix.build_type == 'system'
         run: |
-          # Each system-test worker is heavyweight: it drives both an
-          # in-process Puma test server (Ruby: RSpec main thread + Puma
-          # threads + MessageBus reactor) AND a multi-process Chromium
-          # (browser + renderer + GPU/network/utility processes). On the
-          # 16-core runner, `nproc / 2 + 2` = 10 such workers oversubscribe
-          # the CPU. The step's wall-clock is gated by the slowest (long-pole)
-          # worker, and the captured DONE timings show that worker finishing
-          # ~25-45s above the pack with a bimodal fast/slow split — the
-          # signature of CPU contention, not of split imbalance. When workers
-          # exceed effective core capacity the makespan is machine-bound
-          # (~W/cores) plus a scheduler/context-switch overhead that grows
-          # with worker count, so trimming one oversubscribed worker shaves
-          # that overhead and tightens the worker-finish distribution (lower
-          # max-of-N tail) without paying a per-worker work penalty. Drop from
-          # `+ 2` to `+ 1` (10 -> 9 on a 16-core runner) as a conservative
-          # single-step de-oversubscription.
-          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 1))" >> $GITHUB_ENV
+          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 2))" >> $GITHUB_ENV
 
       - name: Set QUNIT_PARALLEL for QUnit tests
         if: matrix.build_type == 'frontend'
