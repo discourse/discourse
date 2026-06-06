@@ -28,7 +28,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
       )
     end
 
-    memberships = Chat::ChannelMembershipManager.all_for_user(current_user)
+    memberships = current_user ? Chat::ChannelMembershipManager.all_for_user(current_user) : []
     channels = Chat::ChannelFetcher.secured_public_channels(guardian, options)
     serialized_channels =
       channels.map do |channel|
@@ -130,6 +130,11 @@ class Chat::Api::ChannelsController < Chat::ApiController
   end
 
   private
+
+  def allow_anonymous_public_chat_access?
+    action_name == "index" && !current_user &&
+      SiteSetting.chat_allow_anonymous_public_channel_access
+  end
 
   def channel_from_params
     @channel ||=

@@ -26,6 +26,7 @@ export default class Chat extends Service {
   @service chatStateManager;
   @service presence;
   @service router;
+  @service siteSettings;
   @service chatChannelsManager;
   @service chatTrackingStateManager;
   @service chatPanePendingManager;
@@ -200,7 +201,8 @@ export default class Chat extends Service {
     this.chatSubscriptionsManager.startChannelsSubscriptions(
       channelsView.meta.message_bus_last_ids
     );
-    this.presenceChannel.subscribe(channelsView.global_presence_channel_state);
+
+    this.presenceChannel?.subscribe(channelsView.global_presence_channel_state);
 
     this.chatChannelsManager.userHasThreads = channelsView.has_threads ?? false;
 
@@ -229,7 +231,7 @@ export default class Chat extends Service {
         return;
       }
 
-      if (this.currentUser.user_option?.hide_presence) {
+      if (!this.currentUser || this.currentUser.user_option?.hide_presence) {
         return;
       }
 

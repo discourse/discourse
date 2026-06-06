@@ -13,6 +13,9 @@ chat:
   enable_public_channels:
     default: true
     client: true
+  chat_allow_anonymous_public_channel_access:
+    default: false
+    client: true
   chat_allowed_groups:
     type: group_list
     list_type: compact

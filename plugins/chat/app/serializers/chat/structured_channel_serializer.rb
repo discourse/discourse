@@ -36,10 +36,11 @@ module Chat
             chat_message_bus_last_ids[Chat::Publisher.kick_users_message_bus_channel(channel.id)],
           channel_message_bus_last_id:
             chat_message_bus_last_ids[Chat::Publisher.root_message_bus_channel(channel.id)],
-          # NOTE: This is always true because the public channels passed into this serializer
-          # have been fetched with [Chat::ChannelFetcher], which only returns channels that
-          # the user has access to based on category permissions.
-          can_join_chat_channel: true,
+          # NOTE: This is true for authenticated users because the public channels passed into
+          # this serializer have been fetched with [Chat::ChannelFetcher], which only returns
+          # channels that the user has access to based on category permissions. Anonymous users
+          # can preview these channels but cannot join them.
+          can_join_chat_channel: !scope.anonymous?,
           post_allowed_category_ids: @options[:post_allowed_category_ids],
         )
       end

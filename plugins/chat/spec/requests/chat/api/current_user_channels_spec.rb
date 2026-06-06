@@ -14,6 +14,25 @@ describe Chat::Api::CurrentUserChannelsController do
         get "/chat/api/me/channels"
         expect(response.status).to eq(403)
       end
+
+      context "when anonymous users can view public chat channels" do
+        before { SiteSetting.chat_allow_anonymous_public_channel_access = true }
+
+        it "returns public category channels without direct message channels" do
+          public_channel = Fabricate(:category_channel)
+          Fabricate(:private_category_channel)
+          Fabricate(:direct_message_channel)
+
+          get "/chat/api/me/channels"
+
+          expect(response.status).to eq(200)
+          public_channels = response.parsed_body["public_channels"]
+
+          expect(public_channels.map { |channel| channel["id"] }).to eq([public_channel.id])
+          expect(public_channels.first["meta"]["can_join_chat_channel"]).to eq(false)
+          expect(response.parsed_body["direct_message_channels"]).to be_blank
+        end
+      end
     end
 
     context "as disallowed user" do
