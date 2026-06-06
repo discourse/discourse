@@ -277,33 +277,6 @@ jobs:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
           path: ./frontend/discourse/test-execution-*.json
 
-      - name: Warm bootsnap compile cache for system test workers
-        # `config.eager_load = ENV["CI"]` (config/environments/test.rb) makes
-        # every one of the ~12 `bin/turbo_rspec` workers eager-load the full
-        # Discourse app at boot. Bootsnap caches the ISeq compilation to
-        # `tmp/cache/bootsnap`, but `actions/checkout` rewrites every file's
-        # mtime, so that on-disk cache is cold at step start — even when the
-        # container image ships one. The result is that all 12 workers compile
-        # the same thousands of app files' ISeq *simultaneously* during the
-        # synchronized boot spike, thrashing CPU on the 16-core runner (the same
-        # contention that makes a 13th worker regress) and inflating the boot
-        # prefix that sits on the Core System Tests step's critical path.
-        #
-        # Booting the app once here, in a single uncontended process, populates
-        # the shared bootsnap ISeq cache for the whole eager-load set. The
-        # `Create and migrate databases` step above only boots via rake (no
-        # eager_load), so it warms the boot path but not controllers,
-        # serializers, components, jobs, etc. — exactly the delta the workers
-        # pay for. Same job, same checkout (so mtimes match) and same cache dir
-        # mean every worker's boot then reads the warm cache instead of
-        # recompiling. This runs *before* the measured step, so its cost lands
-        # in `job_sec`, not `step_sec`; only the cheaper, less-contended worker
-        # boots land inside the step. Best-effort: a boot failure here must
-        # never block the run, hence `continue-on-error`.
-        if: matrix.build_type == 'system' && matrix.target == 'core'
-        continue-on-error: true
-        run: bin/rails runner 'Rails.application.eager_load!'
-
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
