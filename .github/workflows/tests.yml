@@ -298,24 +298,6 @@ jobs:
           # serial-prefix on the step's critical path shrinks by the
           # parent's `Discourse::Application.initialize!` time.
           TURBO_RSPEC_SKIP_MIGRATIONS_CHECK: "1"
-          # Enable YJIT for the parent and every spawned rspec worker. The
-          # worker-count scaling curve (iter-87/90/91: 572s@9 -> 510s@12)
-          # proved this step is CPU-bound on the 16-core runner, so cutting
-          # Ruby CPU cycles per unit of work translates directly into
-          # wall-clock. Two hot Ruby workloads dominate each worker: (1) the
-          # in-process Puma that serves every browser request through the full
-          # Discourse controller + ActiveModel serializer stack, and (2) the
-          # ActiveRecord fabrication each spec runs in before hooks. Both are
-          # exactly the long-lived, repeatedly-called paths YJIT compiles after
-          # its call-threshold warmup, and each worker lives ~480s / ~156 specs
-          # — far past warmup — so the 128 MiB default code cache amortizes
-          # cleanly. We set RUBY_YJIT_ENABLE at the interpreter level rather
-          # than via `config.yjit = GlobalSetting.yjit_enabled` because the test
-          # env forces GlobalSetting onto BlankProvider, which ignores
-          # DISCOURSE_* env + discourse.conf and always returns the
-          # `yjit_enabled = false` default, so the Rails-managed post-boot
-          # enable can never fire here.
-          RUBY_YJIT_ENABLE: "1"
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
