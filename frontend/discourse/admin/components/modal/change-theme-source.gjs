@@ -16,7 +16,7 @@ export default class ChangeThemeSourceModal extends Component {
   @tracked loading = false;
   @tracked generateNewKey = false;
   @tracked remoteUrl = this.args.model.theme.remote_theme?.remote_url || "";
-  @tracked formApi = null;
+  formApi = null;
 
   @cached
   get data() {
@@ -41,9 +41,8 @@ export default class ChangeThemeSourceModal extends Component {
   }
 
   @action
-  onRemoteUrlChange(value, { set, name }) {
+  onRemoteUrlChange(value) {
     this.remoteUrl = value;
-    set(name, value);
   }
 
   @action
