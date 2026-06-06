@@ -61,6 +61,44 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
   # the duration of a block, so query-counting tests still work unchanged.
   ActiveSupport::Notifications.notifier.unsubscribe("sql.active_record")
 
+  # The unsubscribe above removes the *subscriber*, so AR's per-query
+  # `instrument("sql.active_record", payload)` no longer dispatches an Event or
+  # walks the LogSubscriber. But `AbstractAdapter#log` builds the payload
+  # *eagerly* — an 8-key Hash plus a `current_transaction.user_transaction`
+  # lookup — and passes it positionally *before* `Instrumenter#instrument` ever
+  # checks `listening?`. So every `exec_query` / `exec_insert` / `exec_delete`
+  # still allocates that Hash and probes the transaction state for an event
+  # nobody consumes. Discourse fans out into dozens of AR queries per request
+  # (serializers, model loads), and the system specs drive hundreds of requests
+  # per worker, so this is paid tens of thousands of times.
+  #
+  # Mirror iter-77's MiniSql gate onto the AR path: when there is no
+  # `sql.active_record` listener, skip `super`'s eager 8-key payload Hash, the
+  # `current_transaction.user_transaction` lookup and the `instrument` dispatch
+  # entirely. The adapter's `raw_execute` block writes `:row_count` (and, on the
+  # prepared path, `:statement_name`) into the yielded notification payload and
+  # never reads it back, so we hand it a throwaway 2-key Hash instead — the
+  # actual `ActiveRecord::Result` is built from the native result, independent
+  # of that payload. The adapter translates native errors to StatementInvalid
+  # *inside* the block (via `with_raw_connection`), so the same
+  # StatementInvalid → `set_query` decoration the original `log` applies is
+  # preserved here. When `track_sql_queries` (or any query-count helper)
+  # attaches a transient subscriber, `listening?` is true and we fall through to
+  # the original `super`, so behaviour is byte-identical there.
+  ActiveRecord::ConnectionAdapters::AbstractAdapter.prepend(
+    Module.new do
+      def log(sql, name = "SQL", binds = [], type_casted_binds = [], async: false, &block)
+        if ActiveSupport::Notifications.notifier.listening?("sql.active_record")
+          super
+        else
+          yield({})
+        end
+      rescue ActiveRecord::StatementInvalid => ex
+        raise ex.set_query(sql, binds)
+      end
+    end,
+  )
+
   # Same idea for the MiniSql path. Every `DB.query`/`DB.exec` flows through
   # `MiniSqlMultisiteConnection#run`, which unconditionally builds the
   # `sql.mini_sql` notification payload — and the `sql:` value is
