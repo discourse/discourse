@@ -13,6 +13,14 @@ For more information on
 
 **please read our [Discourse Development Contribution Guidelines](https://meta.discourse.org/t/discourse-development-contribution-guidelines/3823)**
 
+## Ota
+
+If you use [Ota](https://ota.run/docs/install) for repo readiness and task execution:
+
+- run `ota doctor .` to inspect blockers and declared requirements
+- run `ota up --workflow verify .` for the baseline Ruby and Bundler verification path
+- run `ota tasks --use .` last to discover the rest of the declared task surface
+
 ## Everything Else
 
 There are many other ways to contribute to Discourse besides code. We've outlined the most common ones below.
