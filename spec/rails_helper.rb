@@ -143,6 +143,30 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
     end
   end
   UpcomingChanges.singleton_class.prepend(UpcomingChangesBatchedClearCaches)
+
+  # Silence lograge in CI. `rails_helper` forces `ENABLE_LOGSTASH_LOGGER=1`
+  # (above), so `config/initializers/101-lograge.rb` attaches a
+  # `process_action.action_controller` subscriber whose `process_main_event`
+  # fires on *every* controller request the in-process test server handles for
+  # the browser — dozens per page the system specs drive. For each one lograge
+  # builds its data hash (including `event.payload[:params].to_query` plus a
+  # `current_user` / `remote_ip` custom payload), serializes it to Logstash
+  # JSON, and writes a line to the shared `log/test.log`. Under
+  # `RAILS_TEST_LOG_LEVEL=error` that line is still emitted (lograge logs at the
+  # logger's own level, not Rails'), yet nothing any system spec asserts on —
+  # and 12 workers appending JSON to a single file add write contention on the
+  # CPU-bound request path the specs block on.
+  #
+  # Register a catch-all `Lograge.ignore` so `Lograge.ignore?` short-circuits
+  # `process_main_event` *before* the hash build / JSON encode / file write,
+  # eliminating that per-request work and the shared-file contention. This uses
+  # lograge's own ignore hook rather than unsubscribing the listener: the
+  # subscriber stays wired (so `redirect_to` / unpermitted-param bookkeeping and
+  # any `Notifications.subscribed` log assertions still behave), and we avoid
+  # the notifier mutation that made the direct-detach attempt fail. Set
+  # DISCOURSE_KEEP_LOGRAGE=1 to restore per-request logstash logging for
+  # debugging.
+  Lograge.ignore(->(_event) { true }) if !ENV["DISCOURSE_KEEP_LOGRAGE"] && defined?(Lograge)
 end
 
 require "rspec/rails"
