@@ -298,37 +298,6 @@ jobs:
           # serial-prefix on the step's critical path shrinks by the
           # parent's `Discourse::Application.initialize!` time.
           TURBO_RSPEC_SKIP_MIGRATIONS_CHECK: "1"
-          # Ruby GC tuning for the ~12 system-test worker processes. The
-          # worker-count scaling curve (572s@9 .. 510s@12, regressing at 13)
-          # shows the runner is at its parallelism knee: at 12 workers the
-          # active (non-IPC-blocked) phases now contend for CPU, which is why
-          # iter-77 (sql.mini_sql instrument guard, -0.4%) and iter-80
-          # (MethodProfiler no-op, -0.5%) — both pure per-request CPU cuts —
-          # promoted while raising to 13 workers regressed. Ruby's default GC
-          # thresholds are tiny (malloc/oldmalloc increase limits both 16MB),
-          # so an allocation-heavy Discourse request that fans into dozens of
-          # AR/serializer objects triggers frequent minor GCs and — via
-          # oldmalloc growth — stop-the-world major GCs, on every one of the
-          # 12 workers, stealing CPU from the others (and from the 12 Chromium
-          # renderers) during exactly those contended active phases. Unlike
-          # YJIT (iter-94, neutral: its JIT-compile CPU washes out the
-          # execution speedup in short, contended worker lifetimes), GC tuning
-          # is pure subtraction with no warmup cost. Mirror the heap pre-grow /
-          # growth-cap / old-object factor that Discourse's own `script/bench.rb`
-          # uses for this app's workload, and lift the malloc/oldmalloc GC
-          # trigger limits 4x to cut minor+major GC frequency. The tradeoff is
-          # higher transient RSS per worker (deferred collection); values are
-          # kept modest (~64-128MB extra ceiling/worker) so the ~12-worker peak
-          # stays well under the runner's headroom that already hosts 12 Rails
-          # + 12 Chromium. If the step regresses (e.g. the runner is memory-
-          # bound and the larger heaps tip it into swap), this reverts.
-          RUBY_GC_HEAP_INIT_SLOTS: "400000"
-          RUBY_GC_HEAP_GROWTH_MAX_SLOTS: "40000"
-          RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR: "1.5"
-          RUBY_GC_MALLOC_LIMIT: "64000000"
-          RUBY_GC_MALLOC_LIMIT_MAX: "128000000"
-          RUBY_GC_OLDMALLOC_LIMIT: "64000000"
-          RUBY_GC_OLDMALLOC_LIMIT_MAX: "128000000"
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
