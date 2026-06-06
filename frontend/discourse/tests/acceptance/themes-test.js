@@ -1,10 +1,17 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, find, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 acceptance("Theme", function (needs) {
   needs.user();
+
+  let lastSubmittedSourceUrl = null;
+
+  needs.hooks.beforeEach(() => {
+    lastSubmittedSourceUrl = null;
+  });
 
   needs.pretender((server, helper) => {
     const themes = [
@@ -97,6 +104,67 @@ acceptance("Theme", function (needs) {
             branch: null,
             remote_updated_at: null,
             updated_at: "2022-01-01T12:00:00.000Z",
+            last_error_text: null,
+            is_git: true,
+            license_url: null,
+            about_url: null,
+            authors: null,
+            theme_version: null,
+            minimum_discourse_version: null,
+            maximum_discourse_version: null,
+          },
+          translations: [],
+        },
+      });
+    });
+
+    server.put("/admin/themes/42/source", (request) => {
+      const data = helper.parsePostData(request.requestBody);
+      lastSubmittedSourceUrl = data.remote_url;
+
+      if (data.remote_url === "https://github.com/wrong/repo.git") {
+        return helper.response(422, {
+          errors: [
+            "Error cloning git repository, access is denied or repository is not found",
+          ],
+        });
+      }
+
+      return helper.response(200, {
+        theme: {
+          id: 42,
+          name: "discourse-incomplete-theme",
+          created_at: "2022-01-01T12:00:00.000Z",
+          updated_at: "2022-01-01T12:00:00.000Z",
+          component: false,
+          color_scheme: null,
+          color_scheme_id: null,
+          user_selectable: false,
+          auto_update: true,
+          remote_theme_id: 42,
+          settings: [],
+          supported: true,
+          description: null,
+          enabled: true,
+          user: {
+            id: 1,
+            username: "foo",
+            name: null,
+            avatar_template:
+              "/letter_avatar_proxy/v4/letter/f/3be4f8/{size}.png",
+          },
+          theme_fields: [],
+          child_themes: [],
+          parent_themes: [],
+          remote_theme: {
+            id: 42,
+            remote_url: data.remote_url,
+            remote_version: "0000000000000000000000000000000000000000",
+            local_version: "0000000000000000000000000000000000000000",
+            commits_behind: 0,
+            branch: data.branch || null,
+            remote_updated_at: "2022-01-01T12:00:30.000Z",
+            updated_at: "2022-01-01T12:00:30.000Z",
             last_error_text: null,
             is_git: true,
             license_url: null,
@@ -215,5 +283,80 @@ acceptance("Theme", function (needs) {
     assert
       .dom(".control-unit .btn-primary.finish-install")
       .doesNotExist("does not show finish install button");
+  });
+
+  test("change source submits the typed URL, not the original", async function (assert) {
+    await visit("/admin/customize/themes/42");
+    await click(find(".d-icon-code-branch").closest("button"));
+
+    assert
+      .dom(".admin-change-theme-source-modal")
+      .exists("change source modal opens");
+
+    const urlField = formKit(".admin-change-theme-source-modal form").field(
+      "remoteUrl"
+    );
+
+    await urlField.fillIn(
+      "https://github.com/discourse/discourse-updated-theme.git"
+    );
+
+    await click(
+      ".admin-change-theme-source-modal .d-modal__footer .btn-primary"
+    );
+
+    assert.strictEqual(
+      lastSubmittedSourceUrl,
+      "https://github.com/discourse/discourse-updated-theme.git",
+      "submits the newly typed URL, not the original"
+    );
+    assert
+      .dom(".admin-change-theme-source-modal")
+      .doesNotExist("modal closes after successful update");
+  });
+
+  test("change source retrying after a failed submission uses the corrected URL", async function (assert) {
+    await visit("/admin/customize/themes/42");
+    await click(find(".d-icon-code-branch").closest("button"));
+
+    assert
+      .dom(".admin-change-theme-source-modal")
+      .exists("change source modal opens");
+
+    const wrongUrlField = formKit(
+      ".admin-change-theme-source-modal form"
+    ).field("remoteUrl");
+
+    await wrongUrlField.fillIn("https://github.com/wrong/repo.git");
+
+    await click(
+      ".admin-change-theme-source-modal .d-modal__footer .btn-primary"
+    );
+
+    assert
+      .dom(".dialog-body")
+      .exists("error dialog appears after failed request");
+    await click(".dialog-footer .btn-primary");
+
+    const correctedUrlField = formKit(
+      ".admin-change-theme-source-modal form"
+    ).field("remoteUrl");
+
+    await correctedUrlField.fillIn(
+      "https://github.com/discourse/discourse-updated-theme.git"
+    );
+
+    await click(
+      ".admin-change-theme-source-modal .d-modal__footer .btn-primary"
+    );
+
+    assert.strictEqual(
+      lastSubmittedSourceUrl,
+      "https://github.com/discourse/discourse-updated-theme.git",
+      "retried submission uses the corrected URL, not the previously failed one"
+    );
+    assert
+      .dom(".admin-change-theme-source-modal")
+      .doesNotExist("modal closes after successful retry");
   });
 });
