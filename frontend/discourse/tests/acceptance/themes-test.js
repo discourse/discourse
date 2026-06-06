@@ -57,6 +57,10 @@ acceptance("Theme", function (needs) {
       return helper.response(200, { themes });
     });
 
+    server.get("/admin/themes/42", () => {
+      return helper.response(200, { theme: themes[0] });
+    });
+
     server.post("/admin/themes/import", (request) => {
       const data = helper.parsePostData(request.requestBody);
 
