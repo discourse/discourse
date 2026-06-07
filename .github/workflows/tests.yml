@@ -298,33 +298,7 @@ jobs:
           # serial-prefix on the step's critical path shrinks by the
           # parent's `Discourse::Application.initialize!` time.
           TURBO_RSPEC_SKIP_MIGRATIONS_CHECK: "1"
-        run: |
-          # Disable eager loading for the IPC-bound system-test workers.
-          # `config/environments/test.rb` gates `config.eager_load` on
-          # `ENV["CI"]`, so in CI every one of the 12 workers eager-loads the
-          # entire app (thousands of model/controller/serializer files) at
-          # boot. Those loads land as a *synchronized* CPU spike at t=0 — the
-          # single worst contention window of the whole step, because the boot
-          # phase has no browser round-trips to overlap, so all 12 workers
-          # fight for cores at once with nothing to hide the cost behind.
-          #
-          # The worker-count scaling curve already established these workers
-          # are IPC-bound: they sit idle on Chromium round-trips during the
-          # active phase, leaving spare cores (that's why 12 workers beat 10).
-          # Switching them to lazy autoload (cache_classes stays true — this is
-          # the exact config developers run system specs under locally, where
-          # ENV["CI"] is blank) removes the boot-time eager-load spike and
-          # defers each class's load to first use, spreading that same CPU work
-          # across the active phase where it fills the idle IPC-wait windows
-          # instead of piling into one contended burst. Net: shorter serial
-          # boot prefix on every worker's critical path, same total work.
-          #
-          # `config/environments/test.rb` is out of scope; override via a
-          # runtime initializer, which the bootstrap loads after the
-          # environment config and before the `:eager_load!` step reads it.
-          mkdir -p config/initializers
-          echo 'Rails.application.config.eager_load = false' > config/initializers/zzz_autoresearch_disable_eager_load.rb
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
