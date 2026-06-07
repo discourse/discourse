@@ -34,28 +34,20 @@ module TurboTests
       #
       # @param [Array<RSpec::Core::Example>] failed_examples
       def self.remove_example(failed_examples)
-        # The parallel flaky rerun (see `TurboTests::Runner#rerun_failed_examples`)
-        # has every chunk process call this concurrently, so guard the
-        # read-modify-write with an exclusive file lock. We keep the file in
-        # place (truncated when empty) rather than deleting it so a sibling
-        # process holding the same handle never races on a vanished path.
-        File.open(PATH, File::RDWR) do |file|
-          file.flock(File::LOCK_EX)
-
-          content = file.read
-          flaky_tests =
-            (content.empty? ? [] : JSON.parse(content)).reject do |failed_example|
+        flaky_tests =
+          JSON
+            .parse(File.read(PATH))
+            .reject do |failed_example|
               failed_examples.any? do |example|
                 failed_example["location_rerun_argument"] == example.location_rerun_argument
               end
             end
 
-          file.rewind
-          file.truncate(0)
-          file.write(flaky_tests.to_json) unless flaky_tests.empty?
+        if flaky_tests.empty?
+          File.delete(PATH)
+        else
+          File.write(PATH, flaky_tests.to_json)
         end
-      rescue Errno::ENOENT
-        # The flaky log was never written (no failures) or already consumed.
       end
     end
   end

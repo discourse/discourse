@@ -132,39 +132,6 @@ module TurboTests
     end
 
     def rerun_failed_examples(failed_examples)
-      rerun_arguments = Flaky::Manager.potential_flaky_tests
-
-      # A single failure can't be parallelized, so keep the plain serial rerun.
-      return run_rerun_process(rerun_arguments) if rerun_arguments.length <= 1
-
-      # This flaky retry runs *inside* the timed CI step. The serial rerun
-      # cold-boots Rails once and then replays up to ten slow system specs
-      # back-to-back, adding ~100s+ to any run that happens to hit a flake —
-      # the dominant source of the suite's long tail (a flaky run finishes
-      # ~100s slower than a clean one). Spread the failed examples across the
-      # worker databases already created for the main run so the rerun's
-      # wall-clock collapses from (boot + sum of specs) to (boot + slowest
-      # spec). Each example carries its own `location_rerun_argument`, so the
-      # split is order-independent; every chunk's FlakyDetectorFormatter still
-      # prunes the (now lock-guarded) flaky log down to the genuinely flaky
-      # examples, and the suite is green iff every chunk passes — identical
-      # semantics to the serial rerun, just parallel.
-      num_processes = [@num_processes, rerun_arguments.length].min
-      slice_size = (rerun_arguments.length.to_f / num_processes).ceil
-
-      pids =
-        rerun_arguments
-          .each_slice(slice_size)
-          .with_index
-          .map { |chunk, index| run_rerun_process(chunk, test_env_number: index + 1, wait: false) }
-
-      pids.map { |pid| Process.wait2(pid).last.success? }.all?
-    rescue StandardError => e
-      STDERR.puts "Parallel flaky rerun failed (#{e.class}: #{e.message}); falling back to serial rerun."
-      run_rerun_process(Flaky::Manager.potential_flaky_tests)
-    end
-
-    def run_rerun_process(rerun_arguments, test_env_number: nil, wait: true)
       command = [
         "bundle",
         "exec",
@@ -173,13 +140,10 @@ module TurboTests
         "documentation",
         "--format",
         "TurboTests::Flaky::FlakyDetectorFormatter",
-        *rerun_arguments,
+        *Flaky::Manager.potential_flaky_tests,
       ]
 
-      env = {}
-      env["TEST_ENV_NUMBER"] = test_env_number.to_s if test_env_number
-
-      wait ? system(env, *command) : Process.spawn(env, *command)
+      system(*command)
     end
 
     def start_multisite_subprocess(tests, **opts)
