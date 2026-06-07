@@ -283,25 +283,13 @@ jobs:
           CHECKOUT_TIMEOUT: 10
           # Tune jemalloc (LD_PRELOAD'd via /etc/ld.so.preload) for steady
           # RSpec-worker allocation pressure on this 16-core runner. Default
-          # narenas = 4 * ncpus = 64 per process. The measured arena gradient
-          # is monotone toward fewer arenas: the 64 default and narenas:4
-          # (iter-104, +4.7%) both lost to narenas:2 (iter-43, promoted).
-          # iter-104 raised the count specifically to give Capybara's Puma
-          # 0:4 thread pool its own arenas and STILL regressed, which proves
-          # arena-mutex contention is not the bottleneck here: the Puma
-          # threads allocate in short request bursts that phase against the
-          # otherwise-idle RSpec main thread (blocked on the browser between
-          # actions). With contention ruled out, the cost that remains scales
-          # with arena count -- per-arena dirty-page sets, bin metadata, and
-          # split working sets that hurt cache/TLB locality and inflate RSS on
-          # the memory-pressured runner. narenas:1 is the endpoint of that
-          # winning gradient: one arena, minimum bookkeeping, tightest
-          # locality, smallest RSS. Being a pure allocator knob it can only
-          # no-op or speed up, never fail. The discourse_test image's jemalloc
-          # is 3.6 (libjemalloc.so.1), which silently ignores the 5.x
-          # background_thread/decay knobs (confirmed by iter-122), so the dead
-          # background_thread:true is dropped rather than carried as noise.
-          MALLOC_CONF: "narenas:1"
+          # narenas = 4 * ncpus = 64 per process; cap at 2 since spec workers
+          # have only ~2-3 long-lived allocating threads (RSpec main + Puma
+          # server + MessageBus reactor). Enable background_thread so
+          # dirty/muzzy page decay runs off the foreground allocator path.
+          # Unknown keys are silently ignored on older jemalloc, so this is
+          # safe regardless of the discourse_test image's so.1 vs so.2 build.
+          MALLOC_CONF: "narenas:2,background_thread:true"
           # The prior `Create and migrate databases` step already runs
           # `parallel:create parallel:migrate` for every worker DB, so
           # `bin/turbo_rspec`'s own `check_for_migrations` is redundant
