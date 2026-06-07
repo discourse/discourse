@@ -285,11 +285,32 @@ jobs:
           # RSpec-worker allocation pressure on this 16-core runner. Default
           # narenas = 4 * ncpus = 64 per process; cap at 2 since spec workers
           # have only ~2-3 long-lived allocating threads (RSpec main + Puma
-          # server + MessageBus reactor). Enable background_thread so
-          # dirty/muzzy page decay runs off the foreground allocator path.
-          # Unknown keys are silently ignored on older jemalloc, so this is
-          # safe regardless of the discourse_test image's so.1 vs so.2 build.
-          MALLOC_CONF: "narenas:2,background_thread:true"
+          # server + MessageBus reactor).
+          #
+          # IMPORTANT: the discourse_test image preloads `libjemalloc.so.1`,
+          # i.e. jemalloc 3.6 (soname `.1`; 4.x/5.x ship `.so.2`). The CI log
+          # confirms this — every worker prints `<jemalloc>: Invalid conf pair:
+          # background_thread:true`, because `background_thread` (and the
+          # decay-based purge knobs `dirty_decay_ms` / `muzzy_decay_ms`) only
+          # exist in jemalloc 4.0+/5.0+. So the prior page-purge experiments
+          # (decay_ms:-1, muzzy_decay_ms:10000) were silent no-ops on this
+          # build, and `background_thread:true` here did nothing but spam a
+          # warning per process.
+          #
+          # The 3.6-correct purge control is `lg_dirty_mult`: jemalloc keeps
+          # up to `active >> lg_dirty_mult` dirty (freed-but-mapped) pages per
+          # arena before it madvise(DONTNEED)s some back to the kernel. 3.6
+          # has no background purge thread, so that madvise — and the minor
+          # page fault when the extent is next reused — runs inline on the
+          # allocating thread. Under the 12 workers' constant AR-object
+          # fabricate/free churn on this CPU-saturated runner, that foreground
+          # purge/refault is pure contention. Default is `lg_dirty_mult:3`
+          # (purge above active/8). Drop to `0` (purge above active/1): ~8x
+          # fewer purge/refault cycles, with RSS still bounded at ~2x active
+          # (these throwaway worker DBs/processes don't care about RSS). `-1`
+          # would disable purging entirely but risks unbounded RSS across 12
+          # workers, so `0` is the bounded-RSS sweet spot.
+          MALLOC_CONF: "narenas:2,lg_dirty_mult:0"
           # The prior `Create and migrate databases` step already runs
           # `parallel:create parallel:migrate` for every worker DB, so
           # `bin/turbo_rspec`'s own `check_for_migrations` is redundant
