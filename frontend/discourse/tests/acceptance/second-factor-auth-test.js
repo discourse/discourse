@@ -1,4 +1,10 @@
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  visit,
+  waitUntil,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -248,6 +254,20 @@ acceptance("Second Factor Auth Page", function (needs) {
         "This is an additional description that can be customized per action",
         "action description is rendered on the page"
       );
+  });
+
+  test("TOTP input is focused on load", async function (assert) {
+    await visit("/session/2fa?nonce=ok110111");
+
+    await waitUntil(
+      () =>
+        document.activeElement ===
+        document.querySelector("form.totp-token .d-otp-input")
+    );
+
+    assert
+      .dom("form.totp-token .d-otp-input")
+      .isFocused("focuses the TOTP input");
   });
 
   test("error when submitting 2FA form", async function (assert) {

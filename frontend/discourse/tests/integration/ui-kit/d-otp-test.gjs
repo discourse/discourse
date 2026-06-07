@@ -1,5 +1,5 @@
 import { next } from "@ember/runloop";
-import { focus, render, settled } from "@ember/test-helpers";
+import { focus, render, settled, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DOtp from "discourse/ui-kit/d-otp";
@@ -82,6 +82,11 @@ module("Integration | ui-kit | DOtp", function (hooks) {
 
   test("@autoFocus", async function (assert) {
     await render(<template><DOtp /></template>);
+
+    await waitUntil(
+      () =>
+        document.activeElement === this.element.querySelector(".d-otp-input")
+    );
 
     assert.dom(".d-otp-input").isFocused("autofocuses the input by default");
 
