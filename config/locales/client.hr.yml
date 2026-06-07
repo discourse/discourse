@@ -329,6 +329,7 @@ hr:
     skip_to_main_content: "Preskoči na glavni sadržaj"
     skip_user_nav: "Preskoči na sadržaj profila"
     emails_are_disabled: "Administrator je globalno onemogućio sav odlazni e-mail. Neće se slati nikakve obavijesti putem e-maila."
+    emails_are_disabled_no_smtp: "Sva odlazna e-pošta je onemogućena jer nije konfiguriran SMTP poslužitelj. Nije moguće slati e-poštu bilo koje vrste."
     emails_are_disabled_non_staff: "Odlazni e-mail je onemogućen za korisnike koji nisu osoblje."
     software_update_prompt:
       message: "Ažurirali smo ovu stranicu, <span>molimo osvježite</span> kako bi sve nesmetano funkcioniralo."
@@ -341,6 +342,10 @@ hr:
       search_placeholder: "Pretraživanje"
     impersonation:
       notice: "Lažno se predstavljaš kao %{username}"
+      time_left:
+        one: "( preostala %{count} minuta)"
+        few: "(preostale %{count} minute)"
+        other: "( preostalo %{count} minuta)"
       stop: "Prestani se lažno predstavljati"
     themes:
       default_description: "Zadano"
@@ -715,6 +720,7 @@ hr:
         reviewable_known_source: "%{reviewableType} (iz '%{pluginName}' plugina)"
         ignore_all: "Zanemari sve"
         enable_plugins: "Omogući pluginove"
+        ignore_success: "Svi sadržaji za moderaciju koje su stvorili onemogućeni plugini su obrisani."
       explain:
         why: "objasnite zašto je ta stavka završila u redu čekanja"
         formula: "Formula"
@@ -5441,6 +5447,8 @@ hr:
         name: "Ime"
         enabled: "Omogućeno"
         select_groups: "Odaberite grupe"
+        permanent_notice: "Ova promjena je sada trajna i uskoro će biti uklonjena. Više ne možete odustati."
+        permanent_soon_notice: "Ova će promjena uskoro postati trajna. Više nećete moći odustati."
         preview: "Pregled"
         enabled_for_options:
           everyone: "Svi"
@@ -6225,7 +6233,11 @@ hr:
             Korisničko ime osoblja za slanje svih automatiziranih poruka. Ako je ostavljeno prazno, koristit će se zadani račun sustava.
           site_contact_group_help: |
             Grupa koja je pozvana na sve automatski poslane osobne poruke.
+          your_organization_description: "Ove podatke ćemo koristiti u Uvjetima pružanja usluge i Obavijesti o privatnosti kako bismo pokazali tko upravlja stranicom i pod kojom jurisdikcijom."
           company_name: "Ime"
+          company_name_warning: |
+            Ako se ostavi prazno, neće se pružiti standardni Uvjeti pružanja usluge ili Obavijest o privatnosti.
+          governing_law: "Mjerodavno pravo i nadležnost"
           city_for_disputes_placeholder: "Grad"
           extra_groups:
             groups: "Grupe"
@@ -6248,6 +6260,8 @@ hr:
             topic: "tema"
             post: "objave"
             chat_message: "poruke u chatu"
+            non_editable: "Ne možete uređivati ovu zastavicu jer je to sistemska zastavica ili je već korištena u sustavu za pregled, no i dalje je možete onemogućiti."
+            non_deletable: "Ne možete izbrisati ovu zastavicu jer je to sistemska zastavica ili je već korištena u sustavu za pregled, no i dalje je možete onemogućiti."
             auto_action_type: "Automatsko skrivanje označenog sadržaja"
           more_options:
             title: "Više opcija"
@@ -6280,6 +6294,7 @@ hr:
             edit: "Uredi"
             preview: "Pregled"
             check_update: "Provjeri ažuriranja"
+            update_available: "Dostupna ažuriranja!"
             export: "Izvoz"
             convert: "Pretvoriti"
             delete: "Pobriši"
@@ -6559,6 +6574,8 @@ hr:
           check_for_updates: "Provjeri ažuriranja"
           up_to_date: "Tema je ažurirana, zadnja provjera:"
           has_overwritten_history: "Trenutna verzija teme više ne postoji jer je povijest Gita prepisana prisilnim pritiskom."
+          change_source:
+            has_existing_key: "Ova tema ima konfiguriran postojeći SSH ključ."
           add: "Dodaj"
           no_settings: "Ova tema nema postavke."
           empty: "Nema stvari"
@@ -7358,6 +7375,10 @@ hr:
         not_found: "Postavke nisu pronađene"
       site_settings:
         title: "Postavke web-mjesta"
+        depends_on_notice:
+          one: "Ova se postavka primjenjuje samo kada je omogućena opcija %{dependencyLinks}."
+          few: "Ova se postavka primjenjuje samo kada je omogućena opcija %{dependencyLinks}."
+          other: "Ova se postavka primjenjuje samo kada su omogućene opcije %{dependencyLinks}."
         emoji_list:
           invalid_input: "Emotikona lista treba sadržavati samo važeća imena emoji, npr.: zagrljaji"
           add_emoji_button:
@@ -7562,6 +7583,7 @@ hr:
         blocked_embed_selectors: "CSS selektor za elemente koji su uklonjeni iz ugrađivača"
         allowed_embed_classnames: "Dopušteni nazivi CSS klasa"
         save: "Spremi"
+        posts_and_topics_settings_saved: "Postavke objava i tema spremljene"
         host_form:
           save: "Spremi"
         nav:
