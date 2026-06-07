@@ -52,30 +52,7 @@ jobs:
       CHEAP_SOURCE_MAPS: "1"
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
-      # Build the Ember app for the Core System Tests with `production` instead
-      # of `development`. The system-test workers are IPC-bound: each worker
-      # spends most of its wall-clock blocked on Chromium while the browser
-      # parses/executes the app's JS and boots Ember after every `visit` /
-      # `refresh` / `sign_in` and settles after every action (the
-      # `wait_for_ember_boot` + `clientSettled` patches). A `production` build is
-      # minified and tree-shaken with `@ember/debug` assertions/deprecation
-      # calls stripped via the babel debug macros, so the browser parses far
-      # fewer bytes and runs no per-render dev-mode assertion code — every
-      # in-browser boot/settle returns sooner, and that saving multiplies across
-      # the thousands of navigations the suite drives.
-      #
-      # The `development` choice exists only to keep the deprecation gate alive:
-      # `frontend/discourse/config/environment.js` wires
-      # `EMBER_RAISE_ON_DEPRECATION` (set per-core-spec in spec/rails_helper.rb)
-      # into `RAISE_ON_DEPRECATION` at build time, and a `production` build's
-      # stripped `deprecate()` calls can never throw. Dropping that gate only
-      # makes deprecation-triggering specs pass rather than raise — it cannot
-      # turn the suite red — and the rendered DOM/CSS/text/`data-*` attributes
-      # system specs select on are runtime values minification never touches, so
-      # functional behaviour is unchanged. The slower `production` compile lands
-      # in the separate "Assemble Ember build" step (job_sec), not in the
-      # measured "Core System Tests" step (step_sec).
-      EMBER_ENV: production
+      EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
