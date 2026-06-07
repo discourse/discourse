@@ -298,27 +298,6 @@ jobs:
           # serial-prefix on the step's critical path shrinks by the
           # parent's `Discourse::Application.initialize!` time.
           TURBO_RSPEC_SKIP_MIGRATIONS_CHECK: "1"
-          # Cap the image toolchain's nested parallelism. System tests render
-          # pages full of users, and every distinct username's letter avatar is
-          # generated on demand by the in-process Puma server via ImageMagick
-          # `convert` (LetterAvatar#generate -> OptimizedImage.resize) followed
-          # by `oxipng` (FileHelper.optimize_image!). Transactional-rollback
-          # fixtures mint fresh sequenced usernames constantly, so these tiny
-          # (<=360px) converts/optimizations fire continuously across all
-          # workers. ImageMagick (OpenMP) and oxipng (rayon) each default to
-          # one thread PER CORE = 16 here, so a single avatar can spin up 16
-          # threads, and 12 workers hitting avatars at once oversubscribe the
-          # 16-core runner many times over. The worker-count scaling curve
-          # (572s@9 -> 510s@12) already proved cross-worker CPU contention is
-          # the dominant cost once IPC waits overlap; this is the same enemy
-          # from a different source. Pinning both tools to a single thread
-          # removes the per-op thread-pool spawn overhead (a net win on tiny
-          # images, where OpenMP setup costs more than it saves) AND eliminates
-          # the coincident image-op spikes that lengthen the long-pole worker
-          # and stretch the slow-sample tail. Output bytes are unchanged, so no
-          # spec that asserts on dimensions/content is affected.
-          MAGICK_THREAD_LIMIT: "1"
-          RAYON_NUM_THREADS: "1"
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
