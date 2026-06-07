@@ -298,24 +298,7 @@ jobs:
           # serial-prefix on the step's critical path shrinks by the
           # parent's `Discourse::Application.initialize!` time.
           TURBO_RSPEC_SKIP_MIGRATIONS_CHECK: "1"
-        # Use the `progress` reporter (one `.` per example) instead of
-        # `documentation` (a full ANSI-wrapped description line + `output.flush`
-        # per example) for the *parent* turbo_rspec process. The parent's
-        # `handle_messages` loop is single-threaded: it pops every worker's
-        # per-example message off one queue and writes it to the GitHub Actions
-        # log pipe serially. On this 16-core runner saturated by 12 workers +
-        # their Chromium processes, that parent thread is frequently
-        # descheduled, so each blocking line-write/flush to the GHA log stalls,
-        # and because 12 workers complete examples faster than one thread can
-        # emit full lines, an output backlog accrues that must drain before the
-        # step can finish. `progress` cuts the per-example parent output ~100x
-        # (1 byte, no formatter-side flush) so the reporter keeps pace and the
-        # end-of-run backlog shrinks — trimming both the median and the
-        # load-sensitive tail. Failures are unaffected: `dump_failures` /
-        # `dump_summary` run once from `reporter.finish` via the shared
-        # `BaseTextFormatter`, and the flaky retry+log path keys off
-        # `failed_examples`, not the live per-example formatter.
-        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format progress spec/system
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
