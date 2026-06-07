@@ -2,11 +2,6 @@
 
 module TurboTests
   class Runner
-    # Canonical runtime log consumed by parallel_tests when splitting the
-    # next run's specs into balanced groups. It is gitignored, so in CI its
-    # only source is the GitHub Actions cache saved at the end of the run.
-    RUNTIME_LOG = "tmp/turbo_rspec_runtime.log"
-
     def self.run(opts = {})
       files = opts[:files]
       formatters = opts[:formatters]
@@ -67,7 +62,7 @@ module TurboTests
       @num_processes = ParallelTests.determine_number_of_processes(nil)
 
       group_opts = {}
-      group_opts[:runtime_log] = RUNTIME_LOG if @use_runtime_info
+      group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log" if @use_runtime_info
 
       tests_in_groups =
         ParallelTests::RSpec::Runner.tests_in_groups(@files, @num_processes, **group_opts)
@@ -91,8 +86,6 @@ module TurboTests
       @reporter.finish
 
       @threads.each(&:join)
-
-      merge_runtime_logs if @use_runtime_info
 
       if @retry_and_log_flaky_tests && !@reporter.failed_examples.empty?
         retry_failed_examples_threshold = 10
@@ -135,42 +128,7 @@ module TurboTests
       rescue Errno::ENOENT
       end
 
-      # Drop any per-worker runtime logs left over from a previous run so the
-      # merge can't pick up stale timings for a worker that doesn't run again.
-      FileUtils.rm_f(Dir[worker_runtime_log("*")])
-
       FileUtils.mkdir_p("tmp/test-pipes/")
-    end
-
-    # Each worker records its own timings to a private file, so workers never
-    # race to truncate a shared `--out` handle (parallel_tests' RuntimeLogger
-    # opens the path with `"w"` in every process's `initialize`, which under
-    # parallelism leaves only a fraction of the suite's specs in the saved
-    # log — corrupting the next run's load balancing). After all workers exit
-    # the parent merges the private files into the canonical `RUNTIME_LOG`.
-    def worker_runtime_log(process_id)
-      "tmp/turbo_rspec_runtime-#{process_id}.log"
-    end
-
-    def merge_runtime_logs
-      combined = {}
-
-      Dir[worker_runtime_log("*")].each do |path|
-        File.foreach(path) do |line|
-          file, separator, time = line.rpartition(":")
-          next if separator.empty? || file.empty?
-          combined[file] = time.to_f
-        end
-      rescue Errno::ENOENT
-      end
-
-      return if combined.empty?
-
-      File.open(RUNTIME_LOG, "w") do |io|
-        combined
-          .sort_by { |_, time| -time }
-          .each { |file, time| io.puts("#{file}:#{[time, 0].max}") }
-      end
     end
 
     def rerun_failed_examples(failed_examples)
@@ -238,12 +196,7 @@ module TurboTests
 
         record_runtime_options =
           if record_runtime
-            [
-              "--format",
-              "ParallelTests::RSpec::RuntimeLogger",
-              "--out",
-              worker_runtime_log(process_id),
-            ]
+            %w[--format ParallelTests::RSpec::RuntimeLogger --out tmp/turbo_rspec_runtime.log]
           else
             []
           end
