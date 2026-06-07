@@ -2553,6 +2553,8 @@ sq:
           label: Përgjigju temës
           trigger: Topic
           desc: Përgjigju temës, jo ndonjë postimi specifik
+        reply_to_message:
+          trigger: Mesazh
         toggle_whisper:
           label: Ndërroni pëshpëritjen
         create_topic:
@@ -4279,6 +4281,7 @@ sq:
         about:
           your_organization: "Organizata juaj"
           company_name: "Emri"
+          company_url: "Faqja e internetit"
           extra_groups:
             groups: "Grupet"
           saved: "u ruajt!"

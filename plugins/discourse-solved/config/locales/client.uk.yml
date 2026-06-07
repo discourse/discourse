@@ -69,12 +69,8 @@ uk:
       confirm_solved_removal_confirm: "Підтвердити"
       confirm_solved_removal_cancel: "Скасувати"
       shared_issue:
-        label_zero: "Я теж"
-        label:
-          one: "Я теж (%{count})"
-          few: "Я теж (%{count})"
-          many: "Я теж (%{count})"
-          other: "Я теж (%{count})"
+        label: "Я теж"
+        label_with_count: "%{label} (%{count})"
         title: "Я також стикаюся з цією проблемою"
         author_title: "Ви розпочали цю тему"
       no_answer:

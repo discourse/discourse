@@ -332,7 +332,7 @@ fi:
       page_publishing_requirements: "Sivun julkaisua ei voi ottaa käyttöön, jos suojatut lataukset verkkoon ovat käytössä."
       s3_backup_requires_s3_settings: "Et voi käyttää S3:a varmuuskopiosijaintina, ellei %{setting_name} ei ole määritetty."
       s3_bucket_reused: "Sama säiliö ei voi olla sekä 's3_upload_bucket' että 's3_backup_bucket'. Valitse eri säiliö tai määritä eri polku jokaiselle säiliölle."
-      secure_uploads_requirements: "S3-lataukset ja S3 ACL:t täytyy ottaa käyttöön ennen suojattujen latausten käyttöönottoa."
+      secure_uploads_requirements: "S3-lataukset täytyy ottaa käyttöön ennen suojattujen latausten käyttöönottoa."
       share_quote_facebook_requirements: "Facebook-sovellustunnus on määritettävä, jotta lainausten jakaminen Facebookiin on mahdollista."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Et voi pakottaa kaksivaiheista tunnistusta, jos paikallinen kirjautuminen on pois käytöstä."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Et voi pakottaa 2FA-asetusta käyttöön kun DiscourseConnect on aktiivisena."

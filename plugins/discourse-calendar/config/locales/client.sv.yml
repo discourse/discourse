@@ -446,3 +446,4 @@ sv:
       invite_user_or_group:
         title: "Meddela användare eller grupp(er)"
         invite: "Skicka"
+        success: "Inbjudan skickad"

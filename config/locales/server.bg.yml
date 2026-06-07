@@ -123,7 +123,6 @@ bg:
       invalid_choice:
         one: "„%{name}“ е невалиден избор."
         other: "'%{name}' са невалидни избори."
-      secure_uploads_requirements: "S3 качванията и S3 ACL трябва да бъдат активирани, преди да се активират защитени качвания."
   custom_fields:
     validations:
       max_items: "Достигнат е максималният брой персонализирани полета за този обект (%{max_items_number})"

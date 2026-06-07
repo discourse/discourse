@@ -1323,6 +1323,8 @@ sw:
           label: Jibu mada
           trigger: Mada
           desc: Jibu mada, sio chapisho lolote tu
+        reply_to_message:
+          trigger: Ujumbe
         create_personal_message:
           desc: "Tengeneza ujumbe binafsi mpya"
         shared_draft:
@@ -2751,6 +2753,7 @@ sw:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Jina"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Makundi"
           optional: "(sio muhimu)"

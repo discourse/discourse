@@ -1846,6 +1846,8 @@ sr:
           confirm: Imate novi nacrt teme sačuvan, koji će biti obrisan ako stvorite povezanu temu.
         reply_to_topic:
           trigger: Tema
+        reply_to_message:
+          trigger: Privatna poruka
         edit_post: "Uređivanje objave"
         unknown_user: "Korisnik"
       image: "slika"
@@ -3185,6 +3187,7 @@ sr:
       config_areas:
         about:
           company_name: "Ime foruma"
+          company_url: "Website"
           extra_groups:
             groups: "Grupe"
           optional: "(opciono)"

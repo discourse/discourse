@@ -391,7 +391,7 @@ ru:
       page_publishing_requirements: "Публикацию страниц невозможно включить, если включена безопасная загрузка."
       s3_backup_requires_s3_settings: "Нельзя включить резервные копии на S3, пока не задана настройка «%{setting_name}»."
       s3_bucket_reused: "Нельзя использовать одну и ту же корзину для «s3_upload_bucket» и «s3_backup_bucket». Выберите другую корзину или используйте различные пути для каждой корзины."
-      secure_uploads_requirements: "Перед тем как ограничить доступ к загружаемому контенту, необходимо включить загрузку в S3 и S3 ACL"
+      secure_uploads_requirements: "Перед тем как ограничить доступ к загружаемому контенту, необходимо включить загрузку в S3"
       share_quote_facebook_requirements: "Вы должны установить идентификатор приложения, чтобы включить публикацию цитат для Фейсбука."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Применить двухфакторную аутентификацию нельзя, если локальный вход отключен."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Вы не можете применить двухфакторную аутентификацию, если используется технология единого входа DiscourseConnect."

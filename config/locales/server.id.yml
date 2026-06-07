@@ -199,7 +199,7 @@ id:
       enable_s3_uploads_is_required: "Anda tidak dapat mengaktifkan penggunaan inventaris S3 kecuali Anda telah mengaktifkan unggahan S3."
       s3_backup_requires_s3_settings: "Anda tidak dapat menggunakan S3 sebagai lokasi cadangan kecuali Anda telah memberikan '%{setting_name}'."
       s3_bucket_reused: "Anda tidak dapat menggunakan keranjang yang sama untuk 's3_upload_bucket' dan 's3_backup_bucket'. Pilih keranjang yang berbeda atau gunakan jalur yang berbeda untuk setiap keranjang."
-      secure_uploads_requirements: "Unggahan S3 dan ACL S3 harus diaktifkan sebelum mengaktifkan unggahan aman."
+      secure_uploads_requirements: "Unggahan S3 harus diaktifkan sebelum mengaktifkan unggahan aman."
       share_quote_facebook_requirements: "Anda harus mengatur id app Facebook untuk mengaktifkan berbagi kutipan untuk Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Anda tidak dapat menerapkan 2FA jika login lokal dinonaktifkan."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Anda tidak dapat menerapkan 2FA jika DiscourseConnect diaktifkan."

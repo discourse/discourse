@@ -17,6 +17,8 @@ sq:
       move_post_cancel: "Anulo"
       confirm_solved_removal_confirm: "Konfirmoni"
       confirm_solved_removal_cancel: "Anulo"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
     discourse_automation:
       triggerables:
         first_accepted_solution:

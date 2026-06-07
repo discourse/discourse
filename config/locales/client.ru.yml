@@ -3332,6 +3332,8 @@ ru:
           label: Ответить на тему
           trigger: Тема
           desc: Ответить на тему в целом, а не на конкретное сообщение
+        reply_to_message:
+          trigger: Сообщение
         toggle_whisper:
           label: Скрытое сообщение
         create_topic:
@@ -7245,9 +7247,10 @@ ru:
           your_organization: "Ваша организация"
           your_organization_description: "Мы будем использовать эту информацию в Условиях использования и Уведомлении о конфиденциальности, чтобы показать, кто управляет сайтом и под какой юрисдикцией."
           company_name: "Название"
-          company_name_placeholder: "ООО «Организация»"
           company_name_warning: |
             Если оставить это поле пустым, то шаблонных Условий использования и Уведомлений о конфиденциальности предоставляться не будет.
+          company_url: "Веб-сайт"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Регулирующее законодательство"
           governing_law_placeholder: "Провинция, штат или страна"
           governing_law_help: |

@@ -2836,6 +2836,8 @@ fi:
           label: Vastaa ketjuun
           trigger: Ketju
           desc: Vastaa ketjuun, muttei mihinkään tiettyyn viestiin
+        reply_to_message:
+          trigger: Viesti
         toggle_whisper:
           label: Kuiskaus päälle/pois
         create_topic:
@@ -6167,9 +6169,10 @@ fi:
           your_organization: "Organisaatiosi"
           your_organization_description: "Käytämme näitä tietoja käyttöehdoissa ja tietosuojailmoituksessa näyttääksemme, kuka ylläpitää sivustoa ja millä lainkäyttöalueella."
           company_name: "Nimi"
-          company_name_placeholder: "Esimerkkiorganisaatio"
           company_name_warning: |
             Jos tämä jätetään tyhjäksi, käyttöehtojen tai tietosuojailmoituksen pohjaa ei tarjota.
+          company_url: "Verkkosivusto"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Sovellettava lainsäädäntö"
           governing_law_placeholder: "Maakunta, osavaltio tai maa"
           governing_law_help: |

@@ -538,3 +538,4 @@ tr_TR:
       invite_user_or_group:
         title: "Kullanıcıları veya grupları bilgilendir"
         invite: "Gönder"
+        success: "Davet gönderildi"

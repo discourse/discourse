@@ -1758,6 +1758,8 @@ ca:
           label: Respon al tema
           trigger: Tema
           desc: Respon al tema, no a cap publicació específica
+        reply_to_message:
+          trigger: Missatge
         toggle_whisper:
           label: Commuta xiuxiueig
         create_personal_message:
@@ -3525,6 +3527,8 @@ ca:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nom"
+          company_url: "Lloc web"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grups"
           optional: "(opcional)"

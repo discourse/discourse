@@ -1727,6 +1727,8 @@ lv:
         edit: Labot
         reply_to_topic:
           trigger: Tēmas
+        reply_to_message:
+          trigger: Ziņa
         unknown_user: "Lietotājs"
       ignore: "Ignorēt"
       image: "attēls"
@@ -3209,6 +3211,7 @@ lv:
       config_areas:
         about:
           company_name: "Vārds"
+          company_url: "Vietne"
           extra_groups:
             groups: "Grupas"
           optional: "(pēc izvēles)"

@@ -2966,6 +2966,8 @@ zh_CN:
           label: 回复话题
           trigger: 话题
           desc: 回复话题，不是任何特定的帖子
+        reply_to_message:
+          trigger: 发送私信
         toggle_whisper:
           label: 切换密语
         create_topic:
@@ -6626,9 +6628,10 @@ zh_CN:
           your_organization: "您的组织"
           your_organization_description: "我们将在《服务条款》和《隐私声明》中显示此信息来表明此网站的运营方和司法管辖区。"
           company_name: "名称"
-          company_name_placeholder: "Acme 组织"
           company_name_warning: |
             如果留空，将不提供样板《服务条款》或《隐私声明》。
+          company_url: "网站"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "适用法律"
           governing_law_placeholder: "省、州或国家/地区"
           governing_law_help: |

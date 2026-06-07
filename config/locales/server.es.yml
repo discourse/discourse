@@ -338,7 +338,7 @@ es:
       page_publishing_requirements: "No se puede activar la publicación de páginas si está activada la subida segura."
       s3_backup_requires_s3_settings: "No puedes usar S3 como método de respaldo salvo que hayas rellenado «%{setting_name}»."
       s3_bucket_reused: "No puedes usar el mismo bucket para «s3_upload_bucket» y «s3_backup_bucket». Selecciona otro bucket o usa una ruta diferente para cada bucket."
-      secure_uploads_requirements: "Las subidas en S3 y las ACL de S3 deben estar activadas antes de activar las subidas seguras."
+      secure_uploads_requirements: "Las subidas en S3 deben estar activadas antes de activar las subidas seguras."
       share_quote_facebook_requirements: "Debes establecer la app id de Facebook para activar compartir citas en Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "No puedes obligar a usar la autenticación de dos factores si los inicios de sesión locales están desactivados."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "No puedes obligar el uso de 2FA si DiscourseConnect está activado."

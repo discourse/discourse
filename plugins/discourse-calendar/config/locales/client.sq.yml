@@ -86,3 +86,5 @@ sq:
         event_type:
           public:
             title: "Publike"
+      invite_user_or_group:
+        success: "Ftesa u dërgua"

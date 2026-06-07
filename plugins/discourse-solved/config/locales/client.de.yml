@@ -62,6 +62,8 @@ de:
       confirm_solved_removal: "Durch diese Änderung werden Lösungen für dieses Thema deaktiviert und die akzeptierte Lösung entfernt."
       confirm_solved_removal_confirm: "Bestätigen"
       confirm_solved_removal_cancel: "Abbrechen"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Wurde deine Frage beantwortet?
         description: "Hebe die Antwort hervor und hilf anderen, indem du die Lösungsschaltfläche unter der richtigen Antwort verwendest."

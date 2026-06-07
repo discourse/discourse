@@ -3008,6 +3008,8 @@ sk:
           label: Odpovedať na tému
           trigger: Téma
           desc: Odpovedzte na tému, nie na konkrétny príspevok
+        reply_to_message:
+          trigger: Správa
         toggle_whisper:
           label: Prepnúť šepot
         create_topic:
@@ -6594,9 +6596,10 @@ sk:
           your_organization: "Vaša organizácia"
           your_organization_description: "Tieto informácie použijeme v podmienkach používania služby a v oznámení o ochrane osobných údajov, aby sme uviedli, kto prevádzkuje stránku a pod akou jurisdikciou."
           company_name: "Meno"
-          company_name_placeholder: "Organizácia Acme"
           company_name_warning: |
             Ak zostane prázdne, nebudú poskytnuté žiadne všeobecné podmienky služby ani oznámenie o ochrane osobných údajov.
+          company_url: "Webová stránka"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Platné právo"
           governing_law_placeholder: "Provincia, štát alebo krajina"
           governing_law_help: |

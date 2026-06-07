@@ -604,3 +604,4 @@ pl_PL:
       invite_user_or_group:
         title: "Powiadom użytkowników lub grupy"
         invite: "Wyślij"
+        success: "Zaproszenie wysłane"

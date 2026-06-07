@@ -3075,6 +3075,8 @@ es:
           label: Responder al tema
           trigger: Tema
           desc: Responder al tema, no a una publicación específica
+        reply_to_message:
+          trigger: Mensaje
         toggle_whisper:
           label: Activar/desactivar susurro
         create_topic:
@@ -6802,9 +6804,9 @@ es:
           your_organization: "Tu organización"
           your_organization_description: "Utilizaremos esta información en los Términos del servicio y en el Aviso de privacidad para mostrar quién opera el sitio y bajo qué jurisdicción."
           company_name: "Nombre"
-          company_name_placeholder: "Organización Acme"
           company_name_warning: |
             Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad.
+          company_url: "Página web"
           governing_law: "Ley que rige"
           governing_law_placeholder: "Provincia, Estado o País"
           governing_law_help: |

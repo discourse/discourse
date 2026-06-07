@@ -2833,6 +2833,8 @@ pt:
           label: Responder ao tópico
           trigger: Tópico
           desc: Responder ao tópico, não a uma publicação especifica
+        reply_to_message:
+          trigger: Mensagem
         toggle_whisper:
           label: Alternar sussurro
         create_topic:
@@ -5070,6 +5072,8 @@ pt:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nome"
+          company_url: "site"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupos"
           optional: "(opcional)"

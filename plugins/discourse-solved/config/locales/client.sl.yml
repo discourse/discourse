@@ -46,6 +46,8 @@ sl:
       move_post_cancel: "Prekliči"
       confirm_solved_removal_confirm: "Potrdi"
       confirm_solved_removal_cancel: "Prekliči"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Ste dobili odgovor na vaše vprašanje?
         description: "Z izbiro gumba za potrditev pod ustrezno objavo izpostavite odgovor in s tem pomagajte drugim."

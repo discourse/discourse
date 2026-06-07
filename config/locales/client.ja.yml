@@ -2806,6 +2806,8 @@ ja:
           label: トピックへ返信
           trigger: トピック
           desc: 特定の投稿ではなく、トピックに返信する
+        reply_to_message:
+          trigger: メッセージ
         toggle_whisper:
           label: ささやきを切り替える
         create_topic:
@@ -6230,9 +6232,10 @@ ja:
           your_organization: "あなたの組織"
           your_organization_description: "この情報は、サイトの運営者と管轄地域を示すために、利用規約とプライバシーに関する通知に使用されます。"
           company_name: "名前"
-          company_name_placeholder: "あいうえお組織"
           company_name_warning: |
             空白の場合、定型の利用規約またはプライバシーに関する通知は提供されません。
+          company_url: "ウェブサイト"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "準拠法"
           governing_law_placeholder: "都道府県または国"
           governing_law_help: |

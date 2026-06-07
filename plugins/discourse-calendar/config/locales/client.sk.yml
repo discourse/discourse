@@ -524,3 +524,4 @@ sk:
       invite_user_or_group:
         title: "Upozorniť používateľa (používateľov) alebo skupinu (skupiny)"
         invite: "Odoslať"
+        success: "Pozvánka bola odoslaná"

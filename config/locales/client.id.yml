@@ -1680,6 +1680,8 @@ id:
           label: Balas ke topik
           trigger: Topik
           desc: Membalas topik, bukan tulisan tertentu
+        reply_to_message:
+          trigger: pesan
         create_personal_message:
           desc: "Buat pesan pribadi baru"
         shared_draft:
@@ -2596,6 +2598,7 @@ id:
           community_name: "Nama komunitas"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nama"
+          company_url: "Situs web"
           extra_groups:
             groups: "Grup"
           optional: "(opsional)"

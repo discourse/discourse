@@ -538,3 +538,4 @@ nl:
       invite_user_or_group:
         title: "Gebruiker(s) of groep(en) informeren"
         invite: "Sturen"
+        success: "Uitnodiging gestuurd"

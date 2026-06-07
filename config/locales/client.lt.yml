@@ -2487,6 +2487,8 @@ lt:
           label: Atsakyti į temą
           trigger: Tema
           desc: Atsakykite į temą, o ne į konkretų įrašą
+        reply_to_message:
+          trigger: Žinutės
         toggle_whisper:
           label: Visiškas gandas
         create_personal_message:
@@ -4630,6 +4632,8 @@ lt:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Vardas"
+          company_url: "Interneto svetainė"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupės"
           optional: "(pasoronktinai)"
