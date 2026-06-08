@@ -725,7 +725,7 @@ RSpec.describe ThemeField do
       expected_local_js_cache_url = js_field.javascript_cache.local_url
       expect(expected_local_js_cache_url).to start_with("/theme-javascripts/")
       expect(theme.reload.cached_settings).to include(
-        hello: "world",
+        :hello => "world",
         "theme_uploads" => {
           "test_js" => js_field.upload.url,
         },
