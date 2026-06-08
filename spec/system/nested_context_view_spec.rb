@@ -42,18 +42,10 @@ RSpec.describe "Nested context view" do
       expect(nested_view).to have_post(chain_posts[2])
     end
 
-    it "shows 'View full thread' link but not 'View parent context'" do
+    it "marks direct post URLs as context routes" do
       nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
 
-      expect(nested_view).to have_view_full_thread_link
-      expect(nested_view).to have_no_view_parent_context_link
-    end
-
-    it "does not show 'View parent context' for a direct reply to the OP" do
-      nested_view.visit_nested_context(topic, post_number: chain_posts[0].post_number)
-
-      expect(nested_view).to have_view_full_thread_link
-      expect(nested_view).to have_no_view_parent_context_link
+      expect(nested_view).to have_context_view
     end
 
     it "highlights the target post" do
@@ -74,49 +66,11 @@ RSpec.describe "Nested context view" do
       expect(nested_view).to have_no_post(chain_posts[2])
     end
 
-    it "shows 'View parent context' link" do
-      nested_view.visit_nested_context(topic, post_number: chain_posts[3].post_number, context: 0)
-
-      expect(nested_view).to have_view_parent_context_link
-    end
-
-    it "clicking 'View parent context' shows full ancestor chain" do
-      nested_view.visit_nested_context(topic, post_number: chain_posts[3].post_number, context: 0)
-      nested_view.click_view_parent_context
-
-      expect(nested_view).to have_context_view
-      expect(nested_view).to have_post(chain_posts[0])
-      expect(nested_view).to have_post(chain_posts[1])
-      expect(nested_view).to have_post(chain_posts[2])
-      expect(nested_view).to have_post(chain_posts[3])
-    end
-  end
-
-  describe "navigation" do
-    it "clicking 'View full thread' returns to root view" do
-      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
-      nested_view.click_view_full_thread
-
-      expect(nested_view).to have_nested_view
-      expect(nested_view).to have_no_css(".nested-context-view")
-    end
-
-    it "full navigation flow: context=0 → parent context → full thread" do
+    it "keeps the target as the branch root" do
       nested_view.visit_nested_context(topic, post_number: chain_posts[3].post_number, context: 0)
 
       expect(nested_view).to have_no_post(chain_posts[0])
       expect(nested_view).to have_post_at_depth(chain_posts[3], depth: 0)
-
-      nested_view.click_view_parent_context
-
-      expect(nested_view).to have_post(chain_posts[0])
-      expect(nested_view).to have_post(chain_posts[3])
-
-      nested_view.click_view_full_thread
-
-      expect(nested_view).to have_nested_view
-      expect(nested_view).to have_no_css(".nested-context-view")
-      expect(nested_view).to have_root_post(chain_posts[0])
     end
   end
 
@@ -150,32 +104,17 @@ RSpec.describe "Nested context view" do
       expect(nested_view).to have_no_post(deep_chain[1])
     end
 
-    it "shows 'View parent context' when ancestors are truncated" do
+    it "marks truncated contexts as targeted nested views" do
       nested_view.visit_nested_context(topic, post_number: deep_chain[12].post_number)
-
-      expect(nested_view).to have_view_parent_context_link
-    end
-
-    it "clicking 'View parent context' shifts window up to topmost ancestor" do
-      nested_view.visit_nested_context(topic, post_number: deep_chain[12].post_number)
-      nested_view.click_view_parent_context
 
       expect(nested_view).to have_context_view
-      expect(nested_view).to have_post(deep_chain[2])
-      expect(nested_view).to have_no_post(deep_chain[12])
     end
 
-    it "navigating up from context=0 shows windowed ancestors" do
+    it "context=0 starts at the target even when ancestors would be truncated" do
       nested_view.visit_nested_context(topic, post_number: deep_chain[12].post_number, context: 0)
 
       expect(nested_view).to have_post_at_depth(deep_chain[12], depth: 0)
       expect(nested_view).to have_no_post(deep_chain[11])
-
-      nested_view.click_view_parent_context
-
-      expect(nested_view).to have_post(deep_chain[12])
-      expect(nested_view).to have_post(deep_chain[3])
-      expect(nested_view).to have_view_parent_context_link
     end
   end
 

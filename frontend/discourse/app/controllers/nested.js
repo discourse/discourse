@@ -8,6 +8,12 @@ import NestedActivityLog from "discourse/components/modal/nested-activity-log";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import {
+  NESTED_VIEW_CACHE_FORMAT_VERSION,
+  snapshotExpansionState,
+  snapshotFetchedChildrenCache,
+  snapshotNestedModelData,
+} from "discourse/lib/nested-view-cache-snapshot";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import QuoteState from "discourse/lib/quote-state";
 import Composer from "discourse/models/composer";
@@ -40,6 +46,7 @@ export default class NestedController extends Controller {
   @tracked postNumber;
   @tracked contextMode = false;
   @tracked contextChain = null;
+  @tracked initialFocusedPath = [];
   @tracked targetPostNumber = null;
   @tracked contextNoAncestors = false;
   @tracked ancestorsTruncated = false;
@@ -64,7 +71,7 @@ export default class NestedController extends Controller {
   // Populated by NestedPostChildren on every mutation, read on restoration.
   fetchedChildrenCache = new Map();
 
-  // Scroll anchor for cache restoration: { postNumber, offsetFromTop }
+  // Scroll anchor for cache restoration: { postNumber, offsetFromTop, scrollY? }
   scrollAnchor = null;
 
   quoteState = new QuoteState();
@@ -110,6 +117,10 @@ export default class NestedController extends Controller {
 
   get selectedPostsCount() {
     return this.#topicController.selectedPostsCount;
+  }
+
+  get newRootPostCount() {
+    return this.contextMode ? 0 : this.newRootPostIds.length;
   }
 
   get canSelectAll() {
@@ -302,6 +313,65 @@ export default class NestedController extends Controller {
     this.nestedViewCache.useNextTransition();
     this.router.transitionTo("nested", this.topic.slug, this.topic.id, {
       queryParams: { sort: this.sort, context: null },
+    });
+  }
+
+  @action
+  setFocusedPostNumber(postNumber, focusedPath = []) {
+    this.postNumber = postNumber;
+    this.targetPostNumber = postNumber;
+    this.initialFocusedPath = focusedPath;
+  }
+
+  @action
+  saveScrollPosition(scrollAnchor) {
+    this.saveToCache(scrollAnchor);
+  }
+
+  @action
+  clearScrollAnchor() {
+    this.scrollAnchor = null;
+  }
+
+  saveToCache(scrollAnchor) {
+    if (!this.topic) {
+      return;
+    }
+
+    const cacheKey = this.nestedViewCache.buildKey(this.topic.id, {
+      sort: this.sort,
+      post_number: this.postNumber,
+      context: this.contextNoAncestors ? 0 : undefined,
+    });
+
+    const modelData = {
+      topic: this.topic,
+      opPost: this.opPost,
+      rootNodes: this.rootNodes,
+      page: this.page,
+      hasMoreRoots: this.hasMoreRoots,
+      sort: this.sort,
+      messageBusLastId: this.messageBusLastId,
+      pinnedPostIds: this.pinnedPostIds,
+      postNumber: this.postNumber,
+      contextMode: this.contextMode,
+      contextChain: this.contextChain,
+      initialFocusedPath: this.initialFocusedPath,
+      targetPostNumber: this.targetPostNumber,
+      contextNoAncestors: this.contextNoAncestors,
+      ancestorsTruncated: this.ancestorsTruncated,
+      topAncestorPostNumber: this.topAncestorPostNumber,
+      newRootPostIds: this.newRootPostIds,
+    };
+
+    this.nestedViewCache.save(cacheKey, {
+      formatVersion: NESTED_VIEW_CACHE_FORMAT_VERSION,
+      modelData: snapshotNestedModelData(modelData),
+      expansionState: snapshotExpansionState(this.expansionState),
+      fetchedChildrenCache: snapshotFetchedChildrenCache(
+        this.fetchedChildrenCache
+      ),
+      scrollAnchor,
     });
   }
 
@@ -613,13 +683,22 @@ export default class NestedController extends Controller {
   }
 
   #onPostRegistered(post) {
-    if (post?.post_number != null) {
+    const topicId = this.topic?.id;
+    if (
+      post?.post_number != null &&
+      topicId != null &&
+      String(post.topic?.id) === String(topicId)
+    ) {
+      this.topic?.postStream?.storePost(post);
       this.postRegistry.set(post.post_number, post);
     }
   }
 
   #onPostUnregistered(post) {
-    if (post?.post_number != null) {
+    if (
+      post?.post_number != null &&
+      this.postRegistry.get(post.post_number) === post
+    ) {
       this.postRegistry.delete(post.post_number);
     }
   }
@@ -667,20 +746,25 @@ export default class NestedController extends Controller {
         return;
       }
 
-      const { post } = this.#processNode({ ...postData, children: [] });
-
       const replyTo = postData.reply_to_post_number;
       const isRoot = !replyTo || replyTo === 1;
 
       if (isRoot) {
+        if (this.contextMode) {
+          return;
+        }
+
+        const node = this.#processNode({ ...postData, children: [] });
         if (data.user_id === this.currentUser?.id) {
-          this.rootNodes = [{ post, children: [] }, ...this.rootNodes];
+          this.rootNodes = [node, ...this.rootNodes];
         } else {
           this.newRootPostIds = [...this.newRootPostIds, data.id];
         }
       } else {
+        const node = this.#processNode({ ...postData, children: [] });
         this.appEvents.trigger("nested-replies:child-created", {
-          post,
+          topicId,
+          post: node.post,
           parentPostNumber: replyTo,
           isOwnPost: data.user_id === this.currentUser?.id,
         });
@@ -763,6 +847,11 @@ export default class NestedController extends Controller {
 
   @action
   async loadNewRoots() {
+    if (this.contextMode) {
+      this.newRootPostIds = [];
+      return;
+    }
+
     const ids = [...this.newRootPostIds];
     this.newRootPostIds = [];
 
