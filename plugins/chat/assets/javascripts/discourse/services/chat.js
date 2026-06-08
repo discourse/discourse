@@ -198,11 +198,15 @@ export default class Chat extends Service {
   }
 
   setupWithPreloadedChannels(channelsView) {
-    this.chatSubscriptionsManager.startChannelsSubscriptions(
-      channelsView.meta.message_bus_last_ids
-    );
+    if (this.currentUser) {
+      this.chatSubscriptionsManager.startChannelsSubscriptions(
+        channelsView.meta.message_bus_last_ids
+      );
 
-    this.presenceChannel?.subscribe(channelsView.global_presence_channel_state);
+      this.presenceChannel?.subscribe(
+        channelsView.global_presence_channel_state
+      );
+    }
 
     this.chatChannelsManager.userHasThreads = channelsView.has_threads ?? false;
 
@@ -217,12 +221,16 @@ export default class Chat extends Service {
           channelsView.unread_thread_overview[storedChannel.id];
       }
 
-      return this.chatChannelsManager.follow(storedChannel);
+      if (this.currentUser) {
+        return this.chatChannelsManager.follow(storedChannel);
+      }
     });
 
-    this.chatTrackingStateManager.setupWithPreloadedState(
-      channelsView.tracking
-    );
+    if (channelsView.tracking) {
+      this.chatTrackingStateManager.setupWithPreloadedState(
+        channelsView.tracking
+      );
+    }
   }
 
   updatePresence() {

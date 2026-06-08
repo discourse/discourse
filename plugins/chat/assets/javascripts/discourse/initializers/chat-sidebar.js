@@ -75,7 +75,7 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
     get classNames() {
       const classes = [];
 
-      if (this.channel.currentUserMembership.muted) {
+      if (this.channel.currentUserMembership?.muted) {
         classes.push("sidebar-section-link--muted");
       }
 
@@ -244,13 +244,17 @@ export default {
   name: "chat-sidebar",
   initialize(container) {
     this.chatService = container.lookup("service:chat");
+    this.siteSettings = container.lookup("service:site-settings");
+    this.currentUser = container.lookup("service:current-user");
 
-    if (!this.chatService.userCanChat) {
+    const anonymousUserCanViewPublicChat =
+      !this.currentUser &&
+      this.siteSettings.chat_allow_anonymous_public_channel_access;
+
+    if (!this.chatService.userCanChat && !anonymousUserCanViewPublicChat) {
       return;
     }
 
-    this.siteSettings = container.lookup("service:site-settings");
-    this.currentUser = container.lookup("service:current-user");
     this.capabilities = container.lookup("service:capabilities");
 
     withPluginApi((api) => {
@@ -269,7 +273,13 @@ export default {
           }
       );
 
-      initSidebarState(api, api.getCurrentUser());
+      if (anonymousUserCanViewPublicChat) {
+        api.setCombinedSidebarMode();
+        api.showSidebarSwitchPanelButtons();
+        this.chatService.loadChannels();
+      } else {
+        initSidebarState(api, api.getCurrentUser());
+      }
     });
 
     withPluginApi((api) => {
@@ -278,7 +288,7 @@ export default {
       );
       const chatStateManager = container.lookup("service:chat-state-manager");
 
-      if (this.siteSettings.chat_search_enabled) {
+      if (this.siteSettings.chat_search_enabled && this.currentUser) {
         api.addSidebarSection(
           (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
             const SidebarChatSearchSectionLink = class extends BaseCustomSidebarSectionLink {
@@ -513,6 +523,10 @@ export default {
               }
 
               get hoverValue() {
+                if (!this.currentUser) {
+                  return;
+                }
+
                 return this.capabilities.isIpadOS ? null : "ellipsis-vertical";
               }
 
@@ -523,7 +537,7 @@ export default {
               get classNames() {
                 const classes = [];
 
-                if (this.channel.currentUserMembership.muted) {
+                if (this.channel.currentUserMembership?.muted) {
                   classes.push("sidebar-section-link--muted");
                 }
 
@@ -647,6 +661,7 @@ export default {
                       channel,
                       chatService: this.chatService,
                       menuService: this.menuService,
+                      currentUser: this.currentUser,
                       siteSettings: this.siteSettings,
                       capabilities: this.capabilities,
                     })
@@ -782,7 +797,7 @@ export default {
               get classNames() {
                 const classes = [];
 
-                if (this.channel.currentUserMembership.muted) {
+                if (this.channel.currentUserMembership?.muted) {
                   classes.push("sidebar-section-link--muted");
                 }
 
