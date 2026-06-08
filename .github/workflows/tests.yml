@@ -281,33 +281,6 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
-          # Disable the Logstash request access-log for the core system-test
-          # workers. `spec/rails_helper.rb` forces `ENABLE_LOGSTASH_LOGGER ||= "1"`,
-          # which makes `config/initializers/101-lograge.rb` wire up lograge's
-          # `process_action.action_controller` subscriber. That subscriber fires
-          # on EVERY controller action the in-process Puma test server handles —
-          # and each system-test navigation drives many dynamic requests (the
-          # bootstrap JSON, `/t/:id.json`, `/categories.json`, `/session`, and a
-          # steady stream of MessageBus long-polls). For each one lograge eagerly
-          # builds the request payload (Discourse's `custom_options` lambda runs
-          # `params.to_query`, a `current_user` read and a `GC.stat` delta),
-          # allocates a `LogStash::Event`, serializes it to JSON and writes a line
-          # to `log/test.log` via `DiscourseLogstashLogger` — on lograge's own
-          # logger, so `RAILS_TEST_LOG_LEVEL=error` does NOT suppress it.
-          #
-          # Because the workers are IPC-bound, the Puma server sits on the critical
-          # path: the browser's `clientSettled` wait can only resolve once the
-          # in-flight XHRs return, so any per-request CPU/IO the server spends
-          # formatting + writing access logs directly lengthens the active phase
-          # across all 12 contending workers. Nothing in the system suite reads
-          # this access log — failures are debugged via RspecErrorTracker server
-          # dumps, the Playwright JS logs and Capybara screenshots/traces, none of
-          # which flow through lograge — so gating the whole initializer off via
-          # its documented `DiscourseLograge.enabled?` switch removes the work at
-          # the source. This is the clean ENV path (the same toggle local runs use),
-          # NOT iter-138's runtime `Lograge.ignore(->{true})` monkey-patch, which
-          # left the subscriber attached and went red.
-          ENABLE_LOGSTASH_LOGGER: "0"
           # Tune jemalloc (LD_PRELOAD'd via /etc/ld.so.preload) for steady
           # RSpec-worker allocation pressure on this 16-core runner. Default
           # narenas = 4 * ncpus = 64 per process; cap at 2 since spec workers
