@@ -32,8 +32,6 @@ RSpec.describe Jobs::NotifyReviewable do
 
       # Content for moderators
       moderator_reviewable = Fabricate(:reviewable, reviewable_by_moderator: true)
-      reviewed_moderator_reviewable = Fabricate(:reviewable, reviewable_by_moderator: true)
-      reviewed_moderator_reviewable.update!(status: :approved)
       removed_moderator_reviewable = Fabricate(:reviewable, reviewable_by_moderator: true)
       removed_moderator_reviewable_id = removed_moderator_reviewable.id
       removed_moderator_reviewable.destroy!
@@ -43,7 +41,6 @@ RSpec.describe Jobs::NotifyReviewable do
           described_class.new.execute(
             reviewable_id: moderator_reviewable.id,
             performing_username: moderator.username,
-            updated_reviewable_ids: [reviewed_moderator_reviewable.id],
             remove_reviewable_ids: [removed_moderator_reviewable_id],
           )
         end
@@ -54,10 +51,6 @@ RSpec.describe Jobs::NotifyReviewable do
       expect(admin_message.channel).to eq("/reviewable_counts/#{admin.id}")
       expect(admin_message.data[:reviewable_count]).to eq(2)
       expect(admin_message.data[:unseen_reviewable_count]).to eq(1)
-      expect(admin_message.data[:updates][reviewed_moderator_reviewable.id]).to eq(
-        last_performing_username: moderator.username,
-        status: Reviewable.statuses[:approved],
-      )
       expect(admin_message.data[:remove_reviewable_ids]).to contain_exactly(
         removed_moderator_reviewable_id,
       )
@@ -67,10 +60,6 @@ RSpec.describe Jobs::NotifyReviewable do
       expect(moderator_message.channel).to eq("/reviewable_counts/#{moderator.id}")
       expect(moderator_message.data[:reviewable_count]).to eq(1)
       expect(moderator_message.data[:unseen_reviewable_count]).to eq(1)
-      expect(moderator_message.data[:updates][reviewed_moderator_reviewable.id]).to eq(
-        last_performing_username: moderator.username,
-        status: Reviewable.statuses[:approved],
-      )
       expect(moderator_message.data[:remove_reviewable_ids]).to contain_exactly(
         removed_moderator_reviewable_id,
       )

@@ -11,35 +11,11 @@ class Jobs::NotifyReviewable < ::Jobs::Base
     @contacted = Set.new
     @remove_reviewable_ids = args[:remove_reviewable_ids] || []
 
-    all_updates = Hash.new { |h, k| h[k] = {} }
-
-    if args[:updated_reviewable_ids].present?
-      Reviewable
-        .where(id: args[:updated_reviewable_ids])
-        .each do |r|
-          payload = {
-            last_performing_username: args[:performing_username],
-            status: Reviewable.statuses[r.status],
-          }
-
-          all_updates[:admins][r.id] = payload
-          all_updates[:moderators][r.id] = payload if r.reviewable_by_moderator?
-
-          if SiteSetting.enable_category_group_moderation? && r.category.present?
-            r
-              .category
-              .moderating_groups
-              .pluck(:id)
-              .each { |group_id| all_updates[group_id][r.id] = payload }
-          end
-        end
-    end
-
     DistributedMutex.synchronize("notify_reviewable_job", validity: 120) do
-      notify_users(User.real.admins, all_updates[:admins])
+      notify_users(User.real.admins)
 
       if reviewable.reviewable_by_moderator?
-        notify_users(User.real.moderators.where.not(id: @contacted), all_updates[:moderators])
+        notify_users(User.real.moderators.where.not(id: @contacted))
       end
 
       if SiteSetting.enable_category_group_moderation? && reviewable.category.present?
@@ -54,13 +30,7 @@ class Jobs::NotifyReviewable < ::Jobs::Base
             .where.not(id: @contacted)
             .distinct
 
-        users.find_each do |user|
-          updates = {}
-          user.group_users.each { |gu| updates.merge!(all_updates[gu.group_id]) }
-
-          notify_user(user, updates)
-        end
-
+        users.find_each { |user| notify_user(user) }
         @contacted += users.pluck(:id)
       end
     end
@@ -68,14 +38,13 @@ class Jobs::NotifyReviewable < ::Jobs::Base
 
   protected
 
-  def notify_users(users, updates)
-    users.find_each { |user| notify_user(user, updates) }
+  def notify_users(users)
+    users.find_each { |user| notify_user(user) }
     @contacted += users.pluck(:id)
   end
 
-  def notify_user(user, updates)
+  def notify_user(user)
     data = {}
-    data[:updates] = updates if updates.present?
     data[:remove_reviewable_ids] = @remove_reviewable_ids if @remove_reviewable_ids.present?
 
     user.publish_reviewable_counts(data.presence)
