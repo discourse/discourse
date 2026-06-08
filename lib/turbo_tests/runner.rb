@@ -2,11 +2,6 @@
 
 module TurboTests
   class Runner
-    # Canonical runtime log consumed by parallel_tests when splitting the next
-    # run's specs into balanced groups. It is gitignored, so in CI its only
-    # source is the GitHub Actions cache saved at the end of each run.
-    RUNTIME_LOG = "tmp/turbo_rspec_runtime.log"
-
     def self.run(opts = {})
       files = opts[:files]
       formatters = opts[:formatters]
@@ -67,10 +62,7 @@ module TurboTests
       @num_processes = ParallelTests.determine_number_of_processes(nil)
 
       group_opts = {}
-      if @use_runtime_info
-        prepare_runtime_log(@files)
-        group_opts[:runtime_log] = RUNTIME_LOG
-      end
+      group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log" if @use_runtime_info
 
       tests_in_groups =
         ParallelTests::RSpec::Runner.tests_in_groups(@files, @num_processes, **group_opts)
@@ -94,8 +86,6 @@ module TurboTests
       @reporter.finish
 
       @threads.each(&:join)
-
-      merge_runtime_logs if @use_runtime_info
 
       if @retry_and_log_flaky_tests && !@reporter.failed_examples.empty?
         retry_failed_examples_threshold = 10
@@ -138,99 +128,7 @@ module TurboTests
       rescue Errno::ENOENT
       end
 
-      # Drop any per-worker runtime logs left over from a previous run so the
-      # merge can't pick up stale timings for a worker that doesn't run again.
-      FileUtils.rm_f(Dir[worker_runtime_log("*")])
-
       FileUtils.mkdir_p("tmp/test-pipes/")
-    end
-
-    # Each worker records its own timings to a private file, so workers never
-    # race to truncate a shared `--out` handle. parallel_tests' RuntimeLogger
-    # opens the path with `"w"` in every process's initialize, which under
-    # parallelism leaves only a fraction of the suite's specs in the saved log
-    # (locally, just 5 of 259 system files survived) — so the next run's
-    # `runtimes.size * 1.5 > tests.size` check fails and balancing silently
-    # falls back to file size, a poor proxy for browser-round-trip-bound
-    # system specs. The parent merges the private files after all workers exit.
-    def worker_runtime_log(process_id)
-      "tmp/turbo_rspec_runtime-#{process_id}.log"
-    end
-
-    def merge_runtime_logs
-      combined = {}
-
-      # Seed with any pre-existing canonical log so coverage accumulates rather
-      # than being replaced by whatever subset ran this time.
-      read_runtime_log(RUNTIME_LOG, combined)
-      Dir[worker_runtime_log("*")].each { |path| read_runtime_log(path, combined) }
-
-      return if combined.empty?
-
-      File.open(RUNTIME_LOG, "w") do |io|
-        combined.sort_by { |_, time| -time }.each { |file, time| io.puts("#{file}:#{[time, 0].max}") }
-      end
-    rescue => e
-      STDERR.puts "Failed to merge runtime logs: #{e.message}"
-    end
-
-    # When the restored runtime log is too sparse for parallel_tests to use it
-    # (its threshold needs timings for >2/3 of files), it discards the data and
-    # balances by file size. Rather than throw away the real timings we have,
-    # synthesise a complete log: keep the measured runtimes and estimate the
-    # rest from each file's byte size scaled by the measured runtime-per-byte of
-    # the known files. The estimates preserve the file-size ordering for unknown
-    # files (so balance is never worse than the file-size fallback) while
-    # placing the known-heavy files by their real cost — so even the first run
-    # after a truncated cache balances by runtime instead of size.
-    def prepare_runtime_log(tests)
-      return unless File.exist?(RUNTIME_LOG)
-
-      known = {}
-      read_runtime_log(RUNTIME_LOG, known)
-      return if known.empty?
-
-      # Already dense enough for parallel_tests to use directly — leave it be.
-      return if known.size * 1.5 > tests.size
-
-      total_bytes = 0.0
-      total_time = 0.0
-      known.each do |file, time|
-        next unless File.file?(file)
-        total_bytes += File.size(file)
-        total_time += time
-      end
-      return if total_bytes <= 0
-
-      ratio = total_time / total_bytes
-      combined = known.dup
-      tests.each do |file|
-        next if combined.key?(file)
-        size =
-          begin
-            File.size(file)
-          rescue SystemCallError
-            next
-          end
-        combined[file] = [size * ratio, 0.01].max
-      end
-
-      File.open(RUNTIME_LOG, "w") do |io|
-        combined.sort_by { |_, time| -time }.each { |file, time| io.puts("#{file}:#{time}") }
-      end
-    rescue => e
-      # On any error leave the existing log untouched; parallel_tests then
-      # falls back to its normal file-size split — no worse than today.
-      STDERR.puts "Failed to prepare runtime log: #{e.message}"
-    end
-
-    def read_runtime_log(path, into)
-      File.foreach(path) do |line|
-        file, separator, time = line.rpartition(":")
-        next if separator.empty? || file.empty?
-        into[file] = time.to_f
-      end
-    rescue Errno::ENOENT
     end
 
     def rerun_failed_examples(failed_examples)
@@ -298,12 +196,7 @@ module TurboTests
 
         record_runtime_options =
           if record_runtime
-            [
-              "--format",
-              "ParallelTests::RSpec::RuntimeLogger",
-              "--out",
-              worker_runtime_log(process_id),
-            ]
+            %w[--format ParallelTests::RSpec::RuntimeLogger --out tmp/turbo_rspec_runtime.log]
           else
             []
           end
