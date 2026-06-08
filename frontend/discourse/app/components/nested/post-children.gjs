@@ -58,6 +58,7 @@ export default class NestedPostChildren extends Component {
         ? this.args.totalDescendantCount || this.args.directReplyCount || 0
         : this.args.directReplyCount || 0;
       this.hasMore = expectedCount > this.args.preloadedChildren.length;
+      this._reportToCache();
     } else if (this.args.directReplyCount > 0) {
       this.loadChildren();
     }

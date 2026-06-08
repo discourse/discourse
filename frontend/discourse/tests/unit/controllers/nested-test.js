@@ -322,24 +322,33 @@ module("Unit | Controller | nested", function (hooks) {
       "stores the current cache snapshot format"
     );
     assert.deepEqual(
-      cached.modelData.initialFocusedPath.map((node) => node.post.post_number),
-      [2],
-      "keeps enough focused-path data to restore the mobile drill-down URL"
+      cached.payload.response.target_post.post_number,
+      2,
+      "keeps enough target-post data to restore the mobile drill-down URL"
+    );
+    assert.deepEqual(
+      cached.payload.response.ancestor_chain,
+      [],
+      "stores focused-path ancestors separately from the target payload"
     );
     assert.notStrictEqual(
-      cached.modelData.initialFocusedPath[0].post,
+      cached.payload.response.target_post,
       focusedPost,
-      "stores a post snapshot instead of the live post record"
-    );
-    assert.notStrictEqual(
-      cached.modelData.topic,
-      topic,
-      "stores a topic snapshot instead of the live topic record"
+      "stores a post payload instead of the live post record"
     );
     assert.strictEqual(
-      cached.modelData.postNumber,
-      2,
-      "stores the post URL cache entry under the focused post number"
+      cached.payload.response.target_post.store,
+      undefined,
+      "does not persist Ember record internals"
+    );
+    assert.notStrictEqual(
+      cached.payload.response.topic,
+      topic,
+      "stores a topic payload instead of the live topic record"
+    );
+    assert.true(
+      cached.payload.contextMode,
+      "stores the cache entry as a context payload for focused URLs"
     );
   });
 });

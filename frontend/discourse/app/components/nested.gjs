@@ -159,7 +159,7 @@ export default class Nested extends Component {
   }
 
   get rootScrollAnchor() {
-    return this.mobileReturnAnchor || this.args.scrollAnchor;
+    return this.args.scrollAnchor || this.mobileReturnAnchor;
   }
 
   get focusedNode() {
@@ -199,6 +199,7 @@ export default class Nested extends Component {
         returnAnchor ||
         this.findScrollAnchor() ||
         this.scrollAnchorForPath(path);
+      this.args.setFocusedPostNumber?.(null, path);
       this.args.saveScrollPosition?.(this.mobileReturnAnchor);
     }
 

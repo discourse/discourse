@@ -8,12 +8,7 @@ import NestedActivityLog from "discourse/components/modal/nested-activity-log";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
-import {
-  NESTED_VIEW_CACHE_FORMAT_VERSION,
-  snapshotExpansionState,
-  snapshotFetchedChildrenCache,
-  snapshotNestedModelData,
-} from "discourse/lib/nested-view-cache-snapshot";
+import { buildNestedViewCacheEntry } from "discourse/lib/nested-view-cache-snapshot";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import QuoteState from "discourse/lib/quote-state";
 import Composer from "discourse/models/composer";
@@ -324,8 +319,8 @@ export default class NestedController extends Controller {
   }
 
   @action
-  saveScrollPosition(scrollAnchor) {
-    this.saveToCache(scrollAnchor);
+  saveScrollPosition(scrollAnchor, focusedPath = this.initialFocusedPath) {
+    this.saveToCache(scrollAnchor, { focusedPath });
   }
 
   @action
@@ -333,7 +328,7 @@ export default class NestedController extends Controller {
     this.scrollAnchor = null;
   }
 
-  saveToCache(scrollAnchor) {
+  saveToCache(scrollAnchor, { focusedPath = this.initialFocusedPath } = {}) {
     if (!this.topic) {
       return;
     }
@@ -356,7 +351,7 @@ export default class NestedController extends Controller {
       postNumber: this.postNumber,
       contextMode: this.contextMode,
       contextChain: this.contextChain,
-      initialFocusedPath: this.initialFocusedPath,
+      initialFocusedPath: focusedPath,
       targetPostNumber: this.targetPostNumber,
       contextNoAncestors: this.contextNoAncestors,
       ancestorsTruncated: this.ancestorsTruncated,
@@ -364,15 +359,14 @@ export default class NestedController extends Controller {
       newRootPostIds: this.newRootPostIds,
     };
 
-    this.nestedViewCache.save(cacheKey, {
-      formatVersion: NESTED_VIEW_CACHE_FORMAT_VERSION,
-      modelData: snapshotNestedModelData(modelData),
-      expansionState: snapshotExpansionState(this.expansionState),
-      fetchedChildrenCache: snapshotFetchedChildrenCache(
-        this.fetchedChildrenCache
-      ),
-      scrollAnchor,
-    });
+    this.nestedViewCache.save(
+      cacheKey,
+      buildNestedViewCacheEntry(modelData, {
+        expansionState: this.expansionState,
+        fetchedChildrenCache: this.fetchedChildrenCache,
+        scrollAnchor,
+      })
+    );
   }
 
   @action

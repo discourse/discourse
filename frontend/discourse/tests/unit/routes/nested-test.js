@@ -2,10 +2,7 @@ import EmberObject from "@ember/object";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
-import {
-  hydrateNestedModelData,
-  NESTED_VIEW_CACHE_FORMAT_VERSION,
-} from "discourse/lib/nested-view-cache-snapshot";
+import { NESTED_VIEW_CACHE_FORMAT_VERSION } from "discourse/lib/nested-view-cache-snapshot";
 import PreloadStore from "discourse/lib/preload-store";
 
 module("Unit | Route | nested", function (hooks) {
@@ -87,7 +84,7 @@ module("Unit | Route | nested", function (hooks) {
     const cachedEntry = { modelData: { topic: { id: 42 } } };
     sinon.stub(route.nestedViewCache, "get").returns(cachedEntry);
     sinon
-      .stub(route, "_hydrateCachedEntry")
+      .stub(route, "_restoreCachedEntry")
       .returns({ modelData: cachedModel });
 
     const model = await route.model(
@@ -117,7 +114,7 @@ module("Unit | Route | nested", function (hooks) {
     const cachedEntry = { modelData: { topic: { id: 42 } } };
     sinon.stub(route.nestedViewCache, "get").returns(cachedEntry);
     sinon
-      .stub(route, "_hydrateCachedEntry")
+      .stub(route, "_restoreCachedEntry")
       .returns({ modelData: cachedModel });
 
     const model = await route.model(
@@ -147,7 +144,7 @@ module("Unit | Route | nested", function (hooks) {
     const cachedEntry = { modelData: { topic: { id: 42 } } };
     sinon.stub(route.nestedViewCache, "get").returns(cachedEntry);
     sinon
-      .stub(route, "_hydrateCachedEntry")
+      .stub(route, "_restoreCachedEntry")
       .returns({ modelData: cachedModel });
 
     const model = await route.model(
@@ -165,56 +162,65 @@ module("Unit | Route | nested", function (hooks) {
     assert.strictEqual(model, cachedModel, "returns the cache service result");
   });
 
-  test("hydrates cached snapshots into fresh records", function (assert) {
+  test("restores cached payload entries through the route response processor", function (assert) {
     const route = this.owner.lookup("route:nested");
     const cached = {
       formatVersion: NESTED_VIEW_CACHE_FORMAT_VERSION,
-      modelData: {
-        topic: {
-          id: 42,
-          slug: "nested-topic",
-          title: "Nested topic",
-          details: { can_create_post: true },
-        },
-        opPost: { id: 1, post_number: 1, cooked: "<p>op</p>" },
-        rootNodes: [
-          {
-            post: { id: 2, post_number: 2, cooked: "<p>root</p>" },
-            children: [],
-            _renderKey: 2,
-          },
-        ],
-        page: 0,
-        hasMoreRoots: false,
-        sort: "top",
-        pinnedPostIds: [],
-        postNumber: null,
+      payload: {
         contextMode: false,
-        initialFocusedPath: [],
-        newRootPostIds: [],
-      },
-      expansionState: [[2, { expanded: false, collapsed: true }]],
-      fetchedChildrenCache: [
-        [
-          2,
-          {
-            childNodes: [
-              {
-                post: { id: 3, post_number: 3, cooked: "<p>child</p>" },
-                children: [],
-                _renderKey: 3,
-              },
-            ],
-            page: 0,
-            hasMore: false,
-            fetchedFromServer: true,
+        response: {
+          topic: {
+            id: 42,
+            slug: "nested-topic",
+            title: "Nested topic",
+            details: { can_create_post: true },
           },
+          op_post: { id: 1, post_number: 1, cooked: "<p>op</p>" },
+          roots: [
+            {
+              id: 2,
+              post_number: 2,
+              cooked: "<p>root</p>",
+              children: [],
+              _renderKey: 2,
+            },
+          ],
+          page: 0,
+          has_more_roots: false,
+          sort: "top",
+          pinned_post_ids: [],
+        },
+      },
+      uiState: {
+        expansionState: [[2, { expanded: false, collapsed: true }]],
+        fetchedChildren: [
+          [
+            2,
+            {
+              children: [
+                {
+                  id: 3,
+                  post_number: 3,
+                  cooked: "<p>child</p>",
+                  children: [],
+                  _renderKey: 3,
+                },
+              ],
+              page: 0,
+              hasMore: false,
+              fetchedFromServer: true,
+            },
+          ],
         ],
-      ],
-      scrollAnchor: { postNumber: 2, offsetFromTop: 40 },
+        scrollAnchor: { postNumber: 2, offsetFromTop: 40 },
+      },
     };
 
-    const restored = route._hydrateCachedEntry(cached);
+    const restored = route._restoreCachedEntry(
+      cached,
+      { topic_id: 42, slug: "nested-topic" },
+      "top"
+    );
     const restoredTopic = restored.modelData.topic;
     const restoredRootPost = restored.modelData.rootNodes[0].post;
     const restoredChildPost =
@@ -222,7 +228,7 @@ module("Unit | Route | nested", function (hooks) {
 
     assert.notStrictEqual(
       restoredTopic,
-      cached.modelData.topic,
+      cached.payload.response.topic,
       "creates a fresh topic record"
     );
     assert.true(restoredTopic.is_nested_view, "marks restored topic as nested");
@@ -243,42 +249,55 @@ module("Unit | Route | nested", function (hooks) {
     );
     assert.deepEqual(
       restored.scrollAnchor,
-      cached.scrollAnchor,
+      cached.uiState.scrollAnchor,
       "restores scroll anchor"
     );
   });
 
-  test("hydrates cached snapshots without reusing stale store records", function (assert) {
+  test("hydrates cached payloads without reusing stale store records", function (assert) {
     const route = this.owner.lookup("route:nested");
     const stalePost = route.store.createRecord("post", {
       id: 2,
       post_number: 2,
       deleted_post_placeholder: true,
     });
-    const snapshot = {
-      topic: {
-        id: 42,
-        slug: "nested-topic",
-        title: "Nested topic",
-        details: { can_create_post: true },
-      },
-      opPost: { id: 1, post_number: 1, cooked: "<p>op</p>" },
-      rootNodes: [
-        {
-          post: {
-            id: 2,
-            post_number: 2,
-            cooked: "<p>restored root</p>",
-            created_at: "2026-06-08T17:00:00.000Z",
+    const cached = {
+      formatVersion: NESTED_VIEW_CACHE_FORMAT_VERSION,
+      payload: {
+        contextMode: false,
+        response: {
+          topic: {
+            id: 42,
+            slug: "nested-topic",
+            title: "Nested topic",
+            details: { can_create_post: true },
           },
-          children: [],
-          _renderKey: 2,
+          op_post: { id: 1, post_number: 1, cooked: "<p>op</p>" },
+          roots: [
+            {
+              id: 2,
+              post_number: 2,
+              cooked: "<p>restored root</p>",
+              created_at: "2026-06-08T17:00:00.000Z",
+              children: [],
+              _renderKey: 2,
+            },
+          ],
+          page: 0,
+          has_more_roots: false,
+          sort: "top",
+          pinned_post_ids: [],
         },
-      ],
+      },
+      uiState: {},
     };
 
-    const restored = hydrateNestedModelData(route.store, snapshot);
-    const restoredPost = restored.rootNodes[0].post;
+    const restored = route._restoreCachedEntry(
+      cached,
+      { topic_id: 42, slug: "nested-topic" },
+      "top"
+    );
+    const restoredPost = restored.modelData.rootNodes[0].post;
 
     assert.notStrictEqual(
       restoredPost,
@@ -293,7 +312,7 @@ module("Unit | Route | nested", function (hooks) {
     assert.strictEqual(
       restoredPost.created_at,
       "2026-06-08T17:00:00.000Z",
-      "keeps the snapshot timestamp for relative date rendering"
+      "keeps the payload timestamp for relative date rendering"
     );
   });
 

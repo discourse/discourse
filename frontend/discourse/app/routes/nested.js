@@ -6,20 +6,12 @@ import { isEmpty } from "@ember/utils";
 import MoveToTopicModal from "discourse/components/modal/move-to-topic";
 import { ajax } from "discourse/lib/ajax";
 import EmbedMode from "discourse/lib/embed-mode";
-import {
-  hydrateExpansionState,
-  hydrateFetchedChildrenCache,
-  hydrateNestedModelData,
-  isValidNestedViewCacheSnapshot,
-  NESTED_VIEW_CACHE_FORMAT_VERSION,
-} from "discourse/lib/nested-view-cache-snapshot";
+import { restoreNestedViewCacheEntry } from "discourse/lib/nested-view-cache-snapshot";
 import PreloadStore from "discourse/lib/preload-store";
 import topicTitleToken from "discourse/lib/topic-title-token";
 import Draft from "discourse/models/draft";
 import DiscourseRoute from "discourse/routes/discourse";
-import processNode, {
-  registerPostInTopicPostStream,
-} from "../lib/process-node";
+import { registerPostInTopicPostStream } from "../lib/process-node";
 
 export default class NestedRoute extends DiscourseRoute {
   @service composer;
@@ -66,7 +58,7 @@ export default class NestedRoute extends DiscourseRoute {
     ) {
       const cached = this.nestedViewCache.get(cacheKey);
       if (cached) {
-        const restored = this._hydrateCachedEntry(cached);
+        const restored = this._restoreCachedEntry(cached, params, sort);
         if (restored) {
           this._restoringFromCache = restored;
           return restored.modelData;
@@ -153,6 +145,11 @@ export default class NestedRoute extends DiscourseRoute {
       });
     }
 
+    if (Number.isFinite(restoringFromCache?.scrollAnchor?.scrollY)) {
+      const scrollY = restoringFromCache.scrollAnchor.scrollY;
+      schedule("afterRender", () => this._restoreScrollY(scrollY));
+    }
+
     if (!restoringFromCache && !model.contextMode) {
       // Nested opts out of the global scroll manager for cache restoration,
       // so fresh root-topic entries need their own top reset.
@@ -170,6 +167,16 @@ export default class NestedRoute extends DiscourseRoute {
     controller.unsubscribe();
     this.screenTrack.stop();
     controller.topic = null;
+  }
+
+  _restoreScrollY(scrollY, attempt = 0) {
+    window.scrollTo(0, scrollY);
+
+    if (Math.abs(window.scrollY - scrollY) <= 250 || attempt >= 20) {
+      return;
+    }
+
+    requestAnimationFrame(() => this._restoreScrollY(scrollY, attempt + 1));
   }
 
   @action
@@ -257,37 +264,216 @@ export default class NestedRoute extends DiscourseRoute {
     return best;
   }
 
-  _hydrateCachedEntry(cached) {
-    if (
-      cached.formatVersion !== NESTED_VIEW_CACHE_FORMAT_VERSION ||
-      !isValidNestedViewCacheSnapshot(cached.modelData)
-    ) {
+  _restoreCachedEntry(cached, params, sort) {
+    const restored = restoreNestedViewCacheEntry(cached);
+    if (!restored) {
       return null;
     }
 
-    const modelData = hydrateNestedModelData(this.store, cached.modelData);
+    let payload = restored.payload;
+    if (!payload.contextMode && restored.focusedPath?.length) {
+      payload = {
+        ...payload,
+        response: this._mergeFocusedPathIntoRootResponse(
+          payload.response,
+          restored.focusedPath
+        ),
+      };
+    }
+
+    const modelData = payload.contextMode
+      ? this._processContextResponse(
+          payload.response,
+          params,
+          payload.sort || sort,
+          { freshRecords: true }
+        )
+      : this._processResponse(payload.response, params, {
+          freshRecords: true,
+        });
+
+    const expansionState = restored.expansionState;
+    if (restored.scrollAnchor?.postNumber) {
+      this._expandPathToPost(
+        modelData.rootNodes,
+        restored.scrollAnchor.postNumber,
+        expansionState
+      );
+    }
 
     return {
       modelData,
-      expansionState: hydrateExpansionState(cached.expansionState),
-      fetchedChildrenCache: hydrateFetchedChildrenCache(
-        this.store,
+      expansionState,
+      fetchedChildrenCache: this._restoreFetchedChildrenCache(
         modelData.topic,
-        cached.fetchedChildrenCache
+        restored.fetchedChildren
       ),
-      scrollAnchor: cached.scrollAnchor,
+      scrollAnchor: restored.scrollAnchor,
     };
   }
 
-  _processResponse(data, params) {
+  _mergeFocusedPathIntoRootResponse(response, focusedPath) {
+    const [focusedRoot] = focusedPath || [];
+    if (!focusedRoot) {
+      return response;
+    }
+
+    return {
+      ...response,
+      roots: (response.roots || []).map((root) =>
+        root.post_number === focusedRoot.post_number
+          ? this._mergePayloadNode(root, focusedRoot)
+          : root
+      ),
+    };
+  }
+
+  _mergePayloadNode(baseNode, focusedNode) {
+    const focusedChildren = focusedNode.children || [];
+    const baseChildren = baseNode.children || [];
+
+    if (focusedChildren.length === 0) {
+      return { ...baseNode, children: baseChildren };
+    }
+
+    const childrenByPostNumber = new Map(
+      baseChildren.map((child) => [child.post_number, child])
+    );
+
+    return {
+      ...baseNode,
+      children: focusedChildren.map((focusedChild) =>
+        this._mergePayloadNode(
+          childrenByPostNumber.get(focusedChild.post_number) || focusedChild,
+          focusedChild
+        )
+      ),
+    };
+  }
+
+  _expandPathToPost(nodes, postNumber, expansionState) {
+    if (!postNumber || !expansionState) {
+      return false;
+    }
+
+    for (const node of nodes || []) {
+      if (node.post?.post_number === postNumber) {
+        return true;
+      }
+
+      if (this._expandPathToPost(node.children, postNumber, expansionState)) {
+        expansionState.set(node.post.post_number, {
+          expanded: true,
+          collapsed: false,
+        });
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  _restoreFetchedChildrenCache(topic, fetchedChildren) {
+    return new Map(
+      (fetchedChildren || []).map(([postNumber, entry]) => [
+        postNumber,
+        {
+          childNodes: (entry.children || []).map((child) =>
+            this._processNode(topic, child, { freshRecords: true })
+          ),
+          page: entry.page,
+          hasMore: entry.hasMore,
+          fetchedFromServer: entry.fetchedFromServer,
+        },
+      ])
+    );
+  }
+
+  _createTopic(topicData, { freshRecords = false } = {}) {
+    let topicAttrs = topicData;
+    let topicDetails;
+
+    if (freshRecords) {
+      topicAttrs = { ...topicData };
+      topicDetails = topicAttrs.details;
+      delete topicAttrs.details;
+    }
+
+    const topic = this._createRecord("topic", topicAttrs, { freshRecords });
+
+    if (topicDetails) {
+      topic.details = topicDetails;
+    }
+
+    topic.set("is_nested_view", true);
+
+    if (freshRecords) {
+      this._setFreshPostStream(topic);
+    }
+
+    return topic;
+  }
+
+  _createPost(topic, postData, { freshRecords = false } = {}) {
+    const post = this._createRecord("post", postData, { freshRecords });
+    post.topic = topic;
+    return post;
+  }
+
+  _processNode(topic, nodeData, { freshRecords = false } = {}) {
+    const createdPost = this._createRecord("post", nodeData, { freshRecords });
+    const post =
+      registerPostInTopicPostStream(topic, createdPost) || createdPost;
+
+    if (post.topic !== topic) {
+      post.topic = topic;
+    }
+
+    const children = (nodeData.children || []).map((child) =>
+      this._processNode(topic, child, { freshRecords })
+    );
+
+    return {
+      post,
+      children,
+      _renderKey: freshRecords
+        ? crypto.randomUUID()
+        : nodeData._renderKey || post.id,
+    };
+  }
+
+  _createRecord(type, attrs, { freshRecords = false } = {}) {
+    if (freshRecords) {
+      // Cache restoration represents a prior rendered route tree. Do not use
+      // Store#createRecord here: records with ids go through the public
+      // identity map and can pull stale topic/post state from the previous
+      // visit into the restored cache payload.
+      return this.store._build(type, { ...attrs });
+    }
+
+    return this.store.createRecord(type, attrs);
+  }
+
+  _setFreshPostStream(topic) {
+    const postStream = this.store._build("postStream", {
+      id: topic.id,
+      topic,
+    });
+
+    Object.defineProperty(topic, "postStream", {
+      configurable: true,
+      value: postStream,
+    });
+  }
+
+  _processResponse(data, params, { freshRecords = false } = {}) {
     // Match Topic.find: seed the site category store from the topic
     // payload so lazy_load_categories installs can resolve category
     // badges on the topic itself and on piggybacked suggested/related
     // rows that only carry category_id.
     data.topic?.categories?.forEach((c) => this.site.updateCategory(c));
 
-    const topic = this.store.createRecord("topic", data.topic);
-    topic.set("is_nested_view", true);
+    const topic = this._createTopic(data.topic, { freshRecords });
 
     // Suggested/related are piggybacked at top-level on whichever
     // response has has_more_roots=false — here, a short topic that
@@ -303,16 +489,13 @@ export default class NestedRoute extends DiscourseRoute {
       }
     }
 
-    const assignTopic = (postData) => {
-      const post = this.store.createRecord("post", postData);
-      post.topic = topic;
-      return post;
-    };
+    const assignTopic = (postData) =>
+      this._createPost(topic, postData, { freshRecords });
 
     const opPost = data.op_post ? assignTopic(data.op_post) : null;
 
     const rootNodes = (data.roots || []).map((root) =>
-      processNode(this.store, topic, root)
+      this._processNode(topic, root, { freshRecords })
     );
 
     return {
@@ -337,11 +520,10 @@ export default class NestedRoute extends DiscourseRoute {
     };
   }
 
-  _processContextResponse(data, params, sort) {
+  _processContextResponse(data, params, sort, { freshRecords = false } = {}) {
     data.topic?.categories?.forEach((c) => this.site.updateCategory(c));
 
-    const topic = this.store.createRecord("topic", data.topic);
-    topic.set("is_nested_view", true);
+    const topic = this._createTopic(data.topic, { freshRecords });
 
     for (const key of [
       "suggested_topics",
@@ -354,15 +536,14 @@ export default class NestedRoute extends DiscourseRoute {
       }
     }
 
-    const assignTopic = (postData) => {
-      const post = this.store.createRecord("post", postData);
-      post.topic = topic;
-      return post;
-    };
+    const assignTopic = (postData) =>
+      this._createPost(topic, postData, { freshRecords });
 
     const opPost = data.op_post ? assignTopic(data.op_post) : null;
 
-    const targetNode = processNode(this.store, topic, data.target_post);
+    const targetNode = this._processNode(topic, data.target_post, {
+      freshRecords,
+    });
     const ancestors = (data.ancestor_chain || []).map((a) => assignTopic(a));
     const targetReplyTo = targetNode.post.reply_to_post_number;
     const hasParentContext = targetReplyTo && targetReplyTo !== 1;

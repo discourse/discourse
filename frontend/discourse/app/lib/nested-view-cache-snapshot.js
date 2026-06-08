@@ -1,6 +1,145 @@
-import { enumerateTrackedEntries } from "discourse/lib/tracked-tools";
+export const NESTED_VIEW_CACHE_FORMAT_VERSION = 4;
 
-export const NESTED_VIEW_CACHE_FORMAT_VERSION = 2;
+const TOPIC_CACHE_FIELDS = [
+  "id",
+  "slug",
+  "title",
+  "fancy_title",
+  "archetype",
+  "category_id",
+  "tags",
+  "created_at",
+  "deleted_at",
+  "deleted_by",
+  "visible",
+  "closed",
+  "archived",
+  "pinned",
+  "pinned_globally",
+  "pinned_until",
+  "unpinned",
+  "unpinned_globally",
+  "views",
+  "posts_count",
+  "reply_count",
+  "highest_post_number",
+  "last_read_post_number",
+  "last_posted_at",
+  "bumped_at",
+  "chunk_size",
+  "bookmarks",
+  "draft",
+  "draft_key",
+  "draft_sequence",
+  "details",
+  "suggested_topics",
+  "related_topics",
+  "related_messages",
+  "suggested_group_name",
+];
+
+const TOPIC_DETAILS_CACHE_FIELDS = [
+  "id",
+  "allowed_groups",
+  "allowed_users",
+  "can_create_post",
+  "can_delete",
+  "can_edit",
+  "can_edit_staff_notes",
+  "can_permanently_delete",
+  "can_publish_page",
+  "can_split_merge_topic",
+  "created_by",
+  "loaded",
+  "notification_level",
+  "notifications_reason_id",
+  "participants",
+];
+
+const POST_CACHE_FIELDS = [
+  "id",
+  "post_number",
+  "topic_id",
+  "reply_to_post_number",
+  "reply_count",
+  "direct_reply_count",
+  "total_descendant_count",
+  "username",
+  "name",
+  "user_id",
+  "user_title",
+  "avatar_template",
+  "primary_group_name",
+  "trust_level",
+  "created_at",
+  "updated_at",
+  "version",
+  "cooked",
+  "cooked_hidden",
+  "excerpt",
+  "actions_summary",
+  "action_code",
+  "action_code_path",
+  "action_code_who",
+  "admin",
+  "badges_granted",
+  "bookmarked",
+  "can_delete",
+  "can_edit",
+  "can_permanently_delete",
+  "can_recover",
+  "can_see_hidden_post",
+  "can_view_edit_history",
+  "deleted_at",
+  "deleted_by",
+  "deleted_post_placeholder",
+  "ignored_post_placeholder",
+  "group_moderator",
+  "hidden",
+  "is_auto_generated",
+  "is_localized",
+  "language",
+  "last_wiki_edit",
+  "link_counts",
+  "localization_outdated",
+  "localized_oneboxes",
+  "locked",
+  "moderator",
+  "notice",
+  "notice_created_by_user",
+  "post_localizations",
+  "post_type",
+  "quoted",
+  "read",
+  "readers_count",
+  "reply_to_user",
+  "staff",
+  "staged",
+  "title_is_group",
+  "user_custom_fields",
+  "user_deleted",
+  "user_suspended",
+  "via_email",
+  "wiki",
+  "yours",
+];
+
+const ACTION_SUMMARY_CACHE_FIELDS = [
+  "id",
+  "count",
+  "hidden",
+  "can_act",
+  "acted",
+  "can_undo",
+  "can_defer_flags",
+];
+
+const SUGGESTED_TOPIC_KEYS = [
+  "suggested_topics",
+  "related_topics",
+  "related_messages",
+  "suggested_group_name",
+];
 
 const EXCLUDED_RECORD_KEYS = new Set([
   "__munge",
@@ -9,6 +148,8 @@ const EXCLUDED_RECORD_KEYS = new Set([
   "_details",
   "actionByName",
   "actionType",
+  "children",
+  "likeAction",
   "post",
   "post_stream",
   "postStream",
@@ -16,59 +157,58 @@ const EXCLUDED_RECORD_KEYS = new Set([
   "topic",
 ]);
 
-export function snapshotNestedModelData(modelData) {
+export function buildNestedViewCacheEntry(
+  modelData,
+  { expansionState, fetchedChildrenCache, scrollAnchor } = {}
+) {
   return {
-    topic: snapshotRecord(modelData.topic, { includeDetails: true }),
-    opPost: snapshotRecord(modelData.opPost),
-    rootNodes: snapshotNodes(modelData.rootNodes),
-    page: modelData.page,
-    hasMoreRoots: modelData.hasMoreRoots,
-    sort: modelData.sort,
-    messageBusLastId: modelData.messageBusLastId,
-    pinnedPostIds: snapshotValue(modelData.pinnedPostIds),
-    postNumber: modelData.postNumber,
-    contextMode: modelData.contextMode,
-    contextChain: snapshotNode(modelData.contextChain),
-    initialFocusedPath: snapshotNodes(modelData.initialFocusedPath),
-    targetPostNumber: modelData.targetPostNumber,
-    contextNoAncestors: modelData.contextNoAncestors,
-    ancestorsTruncated: modelData.ancestorsTruncated,
-    topAncestorPostNumber: modelData.topAncestorPostNumber,
-    newRootPostIds: snapshotValue(modelData.newRootPostIds),
+    formatVersion: NESTED_VIEW_CACHE_FORMAT_VERSION,
+    payload: snapshotNestedPayload(modelData),
+    uiState: {
+      expansionState: snapshotExpansionState(expansionState),
+      fetchedChildren: snapshotFetchedChildrenCache(fetchedChildrenCache),
+      focusedPath: snapshotNodesAsPayload(modelData.initialFocusedPath),
+      scrollAnchor: snapshotValue(scrollAnchor),
+    },
   };
 }
 
-export function hydrateNestedModelData(store, snapshot) {
-  const topicSnapshot = { ...snapshot.topic };
-  const topicDetails = topicSnapshot.details;
-  delete topicSnapshot.details;
-
-  const topic = createFreshRecord(store, "topic", topicSnapshot);
-  if (topicDetails) {
-    topic.details = topicDetails;
+export function restoreNestedViewCacheEntry(entry) {
+  if (!isValidNestedViewCacheEntry(entry)) {
+    return null;
   }
-  topic.set("is_nested_view", true);
-  setFreshPostStream(store, topic);
-  topic.details.set("topic", topic);
 
   return {
-    topic,
-    opPost: hydratePost(store, topic, snapshot.opPost),
-    rootNodes: hydrateNodes(store, topic, snapshot.rootNodes),
-    page: snapshot.page,
-    hasMoreRoots: snapshot.hasMoreRoots,
-    sort: snapshot.sort,
-    messageBusLastId: snapshot.messageBusLastId,
-    pinnedPostIds: snapshotValue(snapshot.pinnedPostIds) || [],
-    postNumber: snapshot.postNumber,
-    contextMode: snapshot.contextMode,
-    contextChain: hydrateNode(store, topic, snapshot.contextChain),
-    initialFocusedPath: hydrateNodes(store, topic, snapshot.initialFocusedPath),
-    targetPostNumber: snapshot.targetPostNumber,
-    contextNoAncestors: snapshot.contextNoAncestors,
-    ancestorsTruncated: snapshot.ancestorsTruncated,
-    topAncestorPostNumber: snapshot.topAncestorPostNumber,
-    newRootPostIds: snapshotValue(snapshot.newRootPostIds) || [],
+    payload: cloneCacheValue(entry.payload),
+    expansionState: restoreExpansionState(entry.uiState?.expansionState),
+    fetchedChildren: cloneCacheValue(entry.uiState?.fetchedChildren) || [],
+    focusedPath: cloneCacheValue(entry.uiState?.focusedPath) || [],
+    scrollAnchor: cloneCacheValue(entry.uiState?.scrollAnchor),
+  };
+}
+
+export function isValidNestedViewCacheEntry(entry) {
+  return Boolean(
+    entry?.formatVersion === NESTED_VIEW_CACHE_FORMAT_VERSION &&
+    isValidNestedPayload(entry.payload) &&
+    isValidMapSnapshot(entry.uiState?.expansionState) &&
+    isValidMapSnapshot(entry.uiState?.fetchedChildren) &&
+    isValidFocusedPathSnapshot(entry.uiState?.focusedPath)
+  );
+}
+
+export function snapshotNestedPayload(modelData) {
+  if (modelData.contextMode || modelData.postNumber) {
+    return {
+      contextMode: true,
+      sort: modelData.sort,
+      response: snapshotContextResponse(modelData),
+    };
+  }
+
+  return {
+    contextMode: false,
+    response: snapshotRootResponse(modelData),
   };
 }
 
@@ -78,7 +218,7 @@ export function snapshotExpansionState(expansionState) {
   );
 }
 
-export function hydrateExpansionState(snapshot) {
+export function restoreExpansionState(snapshot) {
   return new Map(
     (snapshot || []).map(([postNumber, state]) => [
       postNumber,
@@ -92,7 +232,7 @@ export function snapshotFetchedChildrenCache(fetchedChildrenCache) {
     ([postNumber, entry]) => [
       postNumber,
       {
-        childNodes: snapshotNodes(entry.childNodes),
+        children: snapshotNodesAsPayload(entry.childNodes),
         page: entry.page,
         hasMore: entry.hasMore,
         fetchedFromServer: entry.fetchedFromServer,
@@ -101,167 +241,200 @@ export function snapshotFetchedChildrenCache(fetchedChildrenCache) {
   );
 }
 
-export function hydrateFetchedChildrenCache(store, topic, snapshot) {
-  return new Map(
-    (snapshot || []).map(([postNumber, entry]) => [
-      postNumber,
-      {
-        childNodes: hydrateNodes(store, topic, entry.childNodes),
-        page: entry.page,
-        hasMore: entry.hasMore,
-        fetchedFromServer: entry.fetchedFromServer,
-      },
-    ])
-  );
-}
-
-function snapshotNodes(nodes) {
-  return nodes?.map((node) => snapshotNode(node)).filter(Boolean) || [];
-}
-
-function snapshotNode(node) {
-  if (!node) {
-    return null;
-  }
-
-  return {
-    post: snapshotRecord(node.post),
-    children: snapshotNodes(node.children),
-    _renderKey: node._renderKey,
+function snapshotRootResponse(modelData) {
+  const response = {
+    topic: snapshotTopic(modelData.topic),
+    op_post: snapshotPost(modelData.opPost),
+    roots: snapshotNodesAsPayload(modelData.rootNodes),
+    page: modelData.page,
+    has_more_roots: modelData.hasMoreRoots,
+    sort: modelData.sort,
+    message_bus_last_id: modelData.messageBusLastId,
+    pinned_post_ids: snapshotValue(modelData.pinnedPostIds) || [],
   };
+
+  copySuggestedTopicKeys(modelData.topic, response);
+  return response;
 }
 
-function hydrateNodes(store, topic, nodes) {
+function snapshotContextResponse(modelData) {
+  const response = {
+    topic: snapshotTopic(modelData.topic),
+    op_post: snapshotPost(modelData.opPost),
+    target_post: snapshotNodeAsPayload(findTargetNode(modelData)),
+    ancestor_chain: snapshotAncestorChain(modelData),
+    ancestors_truncated: modelData.ancestorsTruncated,
+    message_bus_last_id: modelData.messageBusLastId,
+  };
+
+  copySuggestedTopicKeys(modelData.topic, response);
+  return response;
+}
+
+function copySuggestedTopicKeys(topic, response) {
+  for (const key of SUGGESTED_TOPIC_KEYS) {
+    if (topic?.[key] !== undefined) {
+      response[key] = snapshotValue(topic[key]);
+    }
+  }
+}
+
+function findTargetNode(modelData) {
+  const targetPostNumber = modelData.targetPostNumber || modelData.postNumber;
+
   return (
-    nodes?.map((node) => hydrateNode(store, topic, node)).filter(Boolean) || []
+    findNodeByPostNumber(modelData.contextChain, targetPostNumber) ||
+    findNodeByPostNumber(modelData.initialFocusedPath, targetPostNumber) ||
+    findNodeByPostNumber(modelData.rootNodes?.[0], targetPostNumber) ||
+    modelData.contextChain ||
+    modelData.rootNodes?.[0]
   );
 }
 
-function hydrateNode(store, topic, node) {
-  if (!node) {
+function findNodeByPostNumber(nodeOrNodes, postNumber) {
+  if (!nodeOrNodes || postNumber == null) {
     return null;
   }
 
-  const post = hydratePost(store, topic, node.post);
-  return {
-    post,
-    children: hydrateNodes(store, topic, node.children),
-    _renderKey: node._renderKey || post?.id,
-  };
-}
-
-function hydratePost(store, topic, snapshot) {
-  if (!snapshot) {
-    return null;
-  }
-
-  const post = createFreshRecord(store, "post", snapshot);
-  post.topic = topic;
-  return registerFreshPostInTopicPostStream(topic, post);
-}
-
-function snapshotRecord(record, { includeDetails = false } = {}) {
-  if (!record) {
-    return null;
-  }
-
-  const snapshot = {};
-  const entries = [
-    ...Object.keys(record).map((key) => [key, record[key]]),
-    ...enumerateTrackedEntries(record),
-  ];
-
-  for (const [key, value] of entries) {
-    if (
-      EXCLUDED_RECORD_KEYS.has(key) ||
-      value === undefined ||
-      typeof value === "function"
-    ) {
-      continue;
+  const nodes = Array.isArray(nodeOrNodes) ? nodeOrNodes : [nodeOrNodes];
+  for (const node of nodes) {
+    if (node?.post?.post_number === postNumber) {
+      return node;
     }
 
-    snapshot[key] = snapshotValue(value);
+    const childMatch = findNodeByPostNumber(node?.children, postNumber);
+    if (childMatch) {
+      return childMatch;
+    }
   }
 
-  if (includeDetails) {
-    snapshot.details = snapshotRecord(record.details);
+  return null;
+}
+
+function snapshotAncestorChain(modelData) {
+  const targetPostNumber = modelData.targetPostNumber || modelData.postNumber;
+  return (modelData.initialFocusedPath || [])
+    .filter((node) => node?.post?.post_number !== targetPostNumber)
+    .map((node) => snapshotPost(node.post))
+    .filter(Boolean);
+}
+
+function isValidNestedPayload(payload) {
+  return Boolean(
+    payload &&
+    typeof payload === "object" &&
+    typeof payload.contextMode === "boolean" &&
+    isValidNestedResponsePayload(payload.response, payload.contextMode)
+  );
+}
+
+function isValidNestedResponsePayload(response, contextMode) {
+  if (!response?.topic || !isPlainCacheRecord(response.topic)) {
+    return false;
+  }
+
+  if (response.op_post && !isPlainCacheRecord(response.op_post)) {
+    return false;
+  }
+
+  if (contextMode) {
+    return Boolean(
+      isValidPayloadNode(response.target_post) &&
+      Array.isArray(response.ancestor_chain || []) &&
+      (response.ancestor_chain || []).every(isPlainCacheRecord)
+    );
+  }
+
+  return (
+    Array.isArray(response.roots) && response.roots.every(isValidPayloadNode)
+  );
+}
+
+function snapshotTopic(topic) {
+  const snapshot = snapshotRecord(topic, TOPIC_CACHE_FIELDS);
+
+  if (topic?.details) {
+    snapshot.details = snapshotRecord(
+      topic.details,
+      TOPIC_DETAILS_CACHE_FIELDS
+    );
   }
 
   return snapshot;
 }
 
-export function isValidNestedViewCacheSnapshot(snapshot) {
-  return Boolean(
-    snapshot?.topic &&
-    isPlainCacheRecord(snapshot.topic) &&
-    Array.isArray(snapshot.rootNodes) &&
-    snapshot.rootNodes.every(isValidSnapshotNode)
+function snapshotPost(post) {
+  const snapshot = snapshotRecord(post, POST_CACHE_FIELDS);
+
+  if (Array.isArray(post?.actions_summary)) {
+    snapshot.actions_summary = post.actions_summary.map((summary) =>
+      snapshotRecord(summary, ACTION_SUMMARY_CACHE_FIELDS)
+    );
+  }
+
+  return snapshot;
+}
+
+function snapshotNodesAsPayload(nodes) {
+  return (
+    nodes?.map((node) => snapshotNodeAsPayload(node)).filter(Boolean) || []
   );
 }
 
-function isValidSnapshotNode(node) {
-  return Boolean(
-    node &&
-    isPlainCacheRecord(node.post) &&
-    Array.isArray(node.children) &&
-    node.children.every(isValidSnapshotNode)
-  );
-}
-
-function isPlainCacheRecord(record) {
-  return Boolean(
-    record &&
-    typeof record === "object" &&
-    !record.store &&
-    !record.__type &&
-    typeof record.get !== "function"
-  );
-}
-
-function createFreshRecord(store, type, attrs) {
-  return store._build(type, { ...attrs });
-}
-
-function setFreshPostStream(store, topic) {
-  const postStream = createFreshRecord(store, "postStream", {
-    id: topic.id,
-    topic,
-  });
-
-  Object.defineProperty(topic, "postStream", {
-    configurable: true,
-    value: postStream,
-  });
-}
-
-function registerFreshPostInTopicPostStream(topic, post) {
-  const postStream = topic?.postStream;
-  if (!postStream) {
-    return post;
+function snapshotNodeAsPayload(node) {
+  if (!node) {
+    return null;
   }
 
-  const storedPost = postStream.storePost(post);
-  if (!storedPost) {
-    return storedPost;
+  return {
+    ...snapshotPost(node.post),
+    children: snapshotNodesAsPayload(node.children),
+    _renderKey: node._renderKey,
+  };
+}
+
+function snapshotRecord(record, fields) {
+  if (!record) {
+    return null;
   }
 
-  if (postStream.posts && !postStream.posts.includes(storedPost)) {
-    postStream.posts.push(storedPost);
+  const snapshot = {};
+  const keys = new Set([...Object.keys(record), ...fields]);
+
+  for (const key of keys) {
+    if (!shouldSnapshotRecordKey(record, key)) {
+      continue;
+    }
+
+    snapshot[key] = snapshotValue(record[key]);
   }
 
-  if (
-    postStream.stream &&
-    storedPost.id != null &&
-    !postStream.stream.includes(storedPost.id)
-  ) {
-    postStream.stream.push(storedPost.id);
+  return snapshot;
+}
+
+function shouldSnapshotRecordKey(record, key) {
+  if (EXCLUDED_RECORD_KEYS.has(key) || key.startsWith("__")) {
+    return false;
   }
 
-  return storedPost;
+  const value = record[key];
+  return value !== undefined && typeof value !== "function";
+}
+
+function cloneCacheValue(value) {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  return JSON.parse(JSON.stringify(value));
 }
 
 function snapshotValue(value, seen = new WeakSet()) {
-  if (value === null || value === undefined || typeof value !== "object") {
+  if (value === undefined || typeof value === "function") {
+    return undefined;
+  }
+
+  if (value === null || typeof value !== "object") {
     return value;
   }
 
@@ -275,28 +448,52 @@ function snapshotValue(value, seen = new WeakSet()) {
   seen.add(value);
 
   if (Array.isArray(value)) {
-    return value.map((item) => snapshotValue(item, seen));
-  }
-
-  if (value instanceof Map) {
-    return [...value.entries()].map(([key, item]) => [
-      key,
-      snapshotValue(item, seen),
-    ]);
+    return value
+      .map((item) => snapshotValue(item, seen))
+      .filter((item) => item !== undefined);
   }
 
   const snapshot = {};
-  for (const [key, item] of Object.entries(value)) {
-    if (
-      EXCLUDED_RECORD_KEYS.has(key) ||
-      typeof item === "function" ||
-      item === undefined
-    ) {
+  for (const key of Object.keys(value)) {
+    if (EXCLUDED_RECORD_KEYS.has(key) || key.startsWith("__")) {
       continue;
     }
 
-    snapshot[key] = snapshotValue(item, seen);
+    const item = snapshotValue(value[key], seen);
+    if (item !== undefined) {
+      snapshot[key] = item;
+    }
   }
-
   return snapshot;
+}
+
+function isValidPayloadNode(node) {
+  return Boolean(
+    node &&
+    isPlainCacheRecord(node) &&
+    Array.isArray(node.children) &&
+    node.children.every(isValidPayloadNode)
+  );
+}
+
+function isPlainCacheRecord(record) {
+  return Boolean(
+    record &&
+    typeof record === "object" &&
+    !Array.isArray(record) &&
+    !record.store &&
+    !record.__type &&
+    typeof record.get !== "function"
+  );
+}
+
+function isValidFocusedPathSnapshot(snapshot) {
+  return (
+    snapshot === undefined ||
+    (Array.isArray(snapshot) && snapshot.every(isValidPayloadNode))
+  );
+}
+
+function isValidMapSnapshot(snapshot) {
+  return snapshot === undefined || Array.isArray(snapshot);
 }
