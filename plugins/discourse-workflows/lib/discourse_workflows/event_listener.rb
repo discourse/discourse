@@ -9,6 +9,7 @@ module DiscourseWorkflows
       return unless trigger.valid?
 
       trigger_data = nil
+      user_id = trigger.user_id if trigger.respond_to?(:user_id)
 
       DiscourseWorkflows::Workflow::Action::FindPublishedTriggers
         .call(
@@ -23,6 +24,7 @@ module DiscourseWorkflows
           DiscourseWorkflows::TriggerDispatcher.enqueue(
             published_trigger,
             trigger_data: (trigger_data ||= trigger.output),
+            user_id: user_id,
           )
         rescue => e
           Rails.logger.error(

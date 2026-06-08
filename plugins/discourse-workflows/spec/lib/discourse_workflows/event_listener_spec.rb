@@ -191,6 +191,61 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(enqueued_trigger_node_ids).not_to include("type-mismatch")
   end
 
+  it "only enqueues user logged in workflows matching the trigger setting" do
+    create_published_workflow("matching-trigger", "trigger:user_logged_in")
+    create_published_workflow(
+      "every-login-trigger",
+      "trigger:user_logged_in",
+      configuration: {
+        "trigger_on" => "every_login",
+      },
+    )
+    create_published_workflow(
+      "returning-user-trigger",
+      "trigger:user_logged_in",
+      configuration: {
+        "trigger_on" => "previous_visit_more_than",
+        "previous_visit_amount" => 1,
+        "previous_visit_unit" => "days",
+      },
+    )
+
+    described_class.handle(DiscourseWorkflows::Nodes::UserLoggedIn::V1, user)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("matching-trigger", "every-login-trigger")
+    expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first["user_id"]).to eq(
+      user.id,
+    )
+  end
+
+  it "enqueues user logged in workflows for returning users" do
+    user.update_last_seen!(2.days.ago)
+    create_published_workflow("new-user-trigger", "trigger:user_logged_in")
+    create_published_workflow(
+      "every-login-trigger",
+      "trigger:user_logged_in",
+      configuration: {
+        "trigger_on" => "every_login",
+      },
+    )
+    create_published_workflow(
+      "returning-user-trigger",
+      "trigger:user_logged_in",
+      configuration: {
+        "trigger_on" => "previous_visit_more_than",
+        "previous_visit_amount" => 1,
+        "previous_visit_unit" => "days",
+      },
+    )
+
+    described_class.handle(DiscourseWorkflows::Nodes::UserLoggedIn::V1, user)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly(
+      "every-login-trigger",
+      "returning-user-trigger",
+    )
+  end
+
   it "does not enqueue post edited workflows for replies by default" do
     create_post(topic: topic)
     create_published_workflow("first-post-only", "trigger:post_edited")
