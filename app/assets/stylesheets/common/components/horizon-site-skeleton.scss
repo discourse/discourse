@@ -3,25 +3,24 @@
   --horizon-skeleton-accent-soft: light-dark(#7776d7, #9f9ef4);
   --horizon-skeleton-bg: light-dark(#e9edfc, #10131e);
   --horizon-skeleton-content-bg: light-dark(#fff, #181b25);
-  --horizon-skeleton-text: light-dark(#2f3437, #e9ebf3);
   --horizon-skeleton-muted: light-dark(#666, #b3b7c6);
-  --horizon-skeleton-faint: light-dark(#8c8c8c, #8f94a5);
   --horizon-skeleton-border: light-dark(#d9d9d9, #333848);
   --horizon-skeleton-sidebar-border: light-dark(#c7cde8, #30364c);
   --horizon-skeleton-sidebar-active: light-dark(#d2d9fa, #292f50);
   --horizon-skeleton-search-bg: light-dark(#fff, #202431);
+  --horizon-skeleton-line: light-dark(#c3cbe0, #2c3243);
+  --horizon-skeleton-line-strong: light-dark(#aab4d2, #39415a);
   --horizon-skeleton-scrim: light-dark(
-    rgb(233, 237, 252, 0.18),
-    rgb(16, 19, 30, 0.18)
+    rgb(233 237 252 / 0.18),
+    rgb(16 19 30 / 0.18)
   );
   --horizon-skeleton-sweep: light-dark(
-    rgb(255, 255, 255, 0.62),
-    rgb(255, 255, 255, 0.12)
+    rgb(255 255 255 / 0.62),
+    rgb(255 255 255 / 0.12)
   );
   position: fixed;
   inset: 0;
   z-index: 0;
-  color: var(--horizon-skeleton-text);
   background: var(--horizon-skeleton-bg);
   filter: saturate(0.72);
   opacity: 0.78;
@@ -38,6 +37,7 @@
   backdrop-filter: blur(1.5px);
 }
 
+// Sweeping highlight that gives every placeholder bar its shimmer.
 .horizon-site-skeleton::before {
   content: "";
   position: absolute;
@@ -52,6 +52,61 @@
     transparent 100%
   );
   animation: horizonSiteSkeletonSweep 3.8s ease-in-out infinite;
+}
+
+// Generic placeholder bar that stands in for any line of text.
+.horizon-site-skeleton__bar {
+  display: block;
+  width: 55%;
+  height: 0.62rem;
+  border-radius: 999px;
+  background: var(--horizon-skeleton-line);
+
+  &.--xs {
+    width: 22%;
+  }
+
+  &.--sm {
+    width: 38%;
+  }
+
+  &.--md {
+    width: 55%;
+  }
+
+  &.--lg {
+    width: 78%;
+  }
+
+  &.--full {
+    width: 100%;
+  }
+
+  &.--title {
+    width: 34%;
+    height: 0.46rem;
+  }
+
+  &.--strong {
+    height: 0.85rem;
+    background: var(--horizon-skeleton-line-strong);
+  }
+
+  &.--heading {
+    height: 1rem;
+    border-radius: 6px;
+    background: var(--horizon-skeleton-line-strong);
+  }
+
+  &.--brand {
+    width: 92px;
+    height: 0.7rem;
+  }
+
+  &.--accent {
+    background: var(--horizon-skeleton-accent);
+    opacity: 0.85;
+  }
 }
 
 .horizon-site-skeleton__header {
@@ -73,7 +128,6 @@
   align-items: center;
   gap: 1.25rem;
   padding: 0 1.65rem;
-  font-weight: 800;
 }
 
 .horizon-site-skeleton__menu {
@@ -82,11 +136,6 @@
   color: var(--horizon-skeleton-accent-soft);
   font-size: 1.35rem;
   line-height: 1;
-}
-
-.horizon-site-skeleton__name {
-  font-size: 1.1rem;
-  letter-spacing: 0;
 }
 
 .horizon-site-skeleton__chat {
@@ -100,24 +149,12 @@
 }
 
 .horizon-site-skeleton__avatar {
-  display: grid;
-  place-items: center;
   grid-column: 4;
   width: 2.25rem;
   height: 2.25rem;
-  overflow: hidden;
   border-radius: 50%;
   margin-right: 1.25rem;
-  background: light-dark(#c8b49b, #5f5145);
-  color: #fff;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.horizon-site-skeleton__avatar .user-profile-avatar,
-.horizon-site-skeleton__avatar img.avatar {
-  width: 2.25rem;
-  height: 2.25rem;
+  background: var(--horizon-skeleton-line-strong);
 }
 
 .horizon-site-skeleton__body {
@@ -138,8 +175,6 @@
   flex-direction: column;
   gap: 0.35rem;
   padding: 0.25rem 1.3rem 1rem;
-  color: var(--horizon-skeleton-muted);
-  font-size: 1rem;
 }
 
 .horizon-site-skeleton__new-topic {
@@ -150,8 +185,6 @@
   margin: 0.1rem 0 1.45rem;
   border-radius: 999px;
   background: var(--horizon-skeleton-accent);
-  color: #fff;
-  font-size: 1rem;
 }
 
 .horizon-site-skeleton__nav-item,
@@ -167,8 +200,6 @@
 
 .horizon-site-skeleton__nav-item.--active {
   background: var(--horizon-skeleton-sidebar-active);
-  color: var(--horizon-skeleton-text);
-  font-weight: 700;
 }
 
 .horizon-site-skeleton__nav-icon {
@@ -189,12 +220,7 @@
 }
 
 .horizon-site-skeleton__sidebar-title {
-  padding: 0 0.55rem 0.55rem;
-  color: var(--horizon-skeleton-muted);
-  font-size: 0.76rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  padding: 0 0.55rem 0.7rem;
 }
 
 .horizon-site-skeleton__category-dot {
@@ -242,75 +268,6 @@
   background: var(--horizon-skeleton-content-bg);
 }
 
-.horizon-site-skeleton__setup-banner {
-  position: relative;
-  width: min(72%, 954px);
-  margin: 0 auto 4rem;
-  padding: 1.7rem 2rem;
-  border-radius: 18px;
-  background: var(--horizon-skeleton-accent);
-  color: #fff;
-  opacity: 0.8;
-}
-
-.horizon-site-skeleton__setup-banner button {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  border: 0;
-  background: transparent;
-  color: #fff;
-  font-size: 1.2rem;
-}
-
-.horizon-site-skeleton__setup-banner h3 {
-  margin: 0 0 1rem;
-  font-size: 1.45rem;
-  line-height: 1.2;
-}
-
-.horizon-site-skeleton__setup-steps {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 2rem;
-}
-
-.horizon-site-skeleton__setup-steps div {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-
-.horizon-site-skeleton__setup-steps strong {
-  font-size: 1rem;
-}
-
-.horizon-site-skeleton__setup-steps strong::before {
-  content: "";
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  margin-right: 0.55rem;
-  border: 2px solid #fff;
-  border-radius: 2px;
-  vertical-align: -1px;
-}
-
-.horizon-site-skeleton__setup-steps span {
-  max-width: 15rem;
-  line-height: 1.4;
-}
-
-.horizon-site-skeleton__setup-steps em {
-  align-self: flex-start;
-  margin-top: 0.45rem;
-  padding: 0.45rem 0.8rem;
-  border-radius: 999px;
-  background: var(--horizon-skeleton-content-bg);
-  color: var(--horizon-skeleton-text);
-  font-style: normal;
-}
-
 .horizon-site-skeleton__welcome-row {
   display: grid;
   grid-template-columns: 1fr 1.25fr;
@@ -322,13 +279,11 @@
   border-bottom: 1px solid var(--horizon-skeleton-border);
 }
 
-.horizon-site-skeleton__welcome-row h3 {
-  margin: 0;
-  color: var(--horizon-skeleton-accent-soft);
-  font-size: 2rem;
-  font-weight: 500;
-  line-height: 1.15;
-  text-align: center;
+.horizon-site-skeleton__welcome-greeting {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
 }
 
 .horizon-site-skeleton__search {
@@ -342,8 +297,6 @@
   border: 1px solid var(--horizon-skeleton-border);
   border-radius: 7px;
   background: var(--horizon-skeleton-search-bg);
-  color: var(--horizon-skeleton-faint);
-  font-size: 1rem;
 }
 
 .horizon-site-skeleton__search-icon {
@@ -351,7 +304,7 @@
   align-items: center;
   justify-content: center;
   width: 1rem;
-  color: var(--horizon-skeleton-text);
+  color: var(--horizon-skeleton-muted);
   flex: 0 0 auto;
   font-size: 0.95rem;
   line-height: 1;
@@ -359,7 +312,6 @@
 
 .horizon-site-skeleton__search-icon.--filters {
   margin-left: auto;
-  color: var(--horizon-skeleton-faint);
 }
 
 .horizon-site-skeleton__tabs {
@@ -368,28 +320,23 @@
   gap: 1.55rem;
   width: min(72%, 954px);
   margin: 0 auto 1.2rem;
-  color: var(--horizon-skeleton-text);
-  font-size: 1rem;
 }
 
-.horizon-site-skeleton__tabs span {
+.horizon-site-skeleton__tabs > span {
   padding: 0.8rem 0;
 }
 
-.horizon-site-skeleton__tabs .--active {
-  color: var(--horizon-skeleton-accent-soft);
+.horizon-site-skeleton__tabs > .--active {
   border-bottom: 2px solid var(--horizon-skeleton-accent-soft);
 }
 
 .horizon-site-skeleton__tabs button {
+  width: 6rem;
+  height: 2.1rem;
   margin-left: auto;
-  padding: 0.45rem 0.8rem;
   border: 1px solid var(--horizon-skeleton-border);
   border-radius: 7px;
   background: var(--horizon-skeleton-content-bg);
-  color: var(--horizon-skeleton-text);
-  font-size: 1rem;
-  font-weight: 700;
 }
 
 .horizon-site-skeleton__topic-list {
@@ -454,54 +401,38 @@
 .horizon-site-skeleton__topic-main {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.35rem;
   min-width: 0;
 }
 
-.horizon-site-skeleton__topic-main > span {
-  color: var(--horizon-skeleton-faint);
-  font-size: 0.9rem;
-}
-
-.horizon-site-skeleton__topic-main strong {
-  color: var(--horizon-skeleton-text);
-  font-size: 1.18rem;
-  line-height: 1.2;
-}
-
-.horizon-site-skeleton__topic-main p {
-  max-width: 100%;
-  margin: 0.6rem 0 0;
-  padding-bottom: 0.75rem;
+.horizon-site-skeleton__topic-excerpt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.7rem 0 0;
+  padding-bottom: 0.85rem;
   border-bottom: 1px solid var(--horizon-skeleton-border);
-  color: var(--horizon-skeleton-muted);
-  font-size: 1rem;
-  line-height: 1.25;
 }
 
-.horizon-site-skeleton__topic-main em {
+.horizon-site-skeleton__topic-tag {
   align-self: flex-start;
-  margin-top: 0.55rem;
-  padding: 0.2rem 0.45rem;
+  width: 3.4rem;
+  height: 1.15rem;
+  margin-top: 0.65rem;
   border-radius: 4px;
   background: light-dark(#d5f2fb, #143a45);
-  color: light-dark(#001f2d, #cdeff8);
-  font-size: 0.84rem;
-  font-style: normal;
 }
 
-.horizon-site-skeleton__topic-main em.--staff {
+.horizon-site-skeleton__topic-tag.--staff {
   background: light-dark(#ffe2d8, #4a261e);
 }
 
 .horizon-site-skeleton__topic-pin {
   align-self: start;
-  padding: 0.25rem 0.55rem;
+  width: 3.2rem;
+  height: 1.5rem;
   border: 1px solid var(--horizon-skeleton-border);
   border-radius: 7px;
-  color: var(--horizon-skeleton-muted);
-  font-size: 0.78rem;
-  font-weight: 700;
 }
 
 @keyframes horizonSiteSkeletonSweep {

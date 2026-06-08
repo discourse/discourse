@@ -1,265 +1,185 @@
-import Component from "@glimmer/component";
-import { trustHTML } from "@ember/template";
-import UserProfileAvatar from "discourse/components/user-profile-avatar";
-import { escapeExpression } from "discourse/lib/utilities";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { i18n } from "discourse-i18n";
 
-export default class HorizonSiteSkeleton extends Component {
-  get siteName() {
-    return this.args.siteName || "your-community";
-  }
-
-  get username() {
-    return this.args.user?.username || "member";
-  }
-
-  get avatarInitial() {
-    return this.username[0];
-  }
-
-  get welcomeBack() {
-    return i18n("horizon_site_skeleton.welcome_back", {
-      username: escapeExpression(this.username),
-    });
-  }
-
-  <template>
-    <div class="horizon-site-skeleton" aria-hidden="true">
-      <div class="horizon-site-skeleton__header">
-        <div class="horizon-site-skeleton__brand">
-          <span class="horizon-site-skeleton__menu">
-            {{dIcon "bars"}}
-          </span>
-          <span class="horizon-site-skeleton__name">{{this.siteName}}</span>
-        </div>
-        <span class="horizon-site-skeleton__chat">
-          {{dIcon "comment"}}
+// Decorative, inert loading skeleton — content is placeholder bars, not text.
+<template>
+  <div class="horizon-site-skeleton" aria-hidden="true">
+    <div class="horizon-site-skeleton__header">
+      <div class="horizon-site-skeleton__brand">
+        <span class="horizon-site-skeleton__menu">
+          {{dIcon "bars"}}
         </span>
-        <span class="horizon-site-skeleton__avatar">
-          {{#if @user}}
-            <UserProfileAvatar @user={{@user}} />
-          {{else}}
-            {{this.avatarInitial}}
-          {{/if}}
-        </span>
+        <span class="horizon-site-skeleton__bar --brand"></span>
       </div>
+      <span class="horizon-site-skeleton__chat">
+        {{dIcon "comment"}}
+      </span>
+      <span class="horizon-site-skeleton__avatar"></span>
+    </div>
 
-      <div class="horizon-site-skeleton__body">
-        <aside class="horizon-site-skeleton__sidebar">
-          <div class="horizon-site-skeleton__new-topic">
-            {{i18n "horizon_site_skeleton.new_topic"}}
-          </div>
+    <div class="horizon-site-skeleton__body">
+      <aside class="horizon-site-skeleton__sidebar">
+        <div class="horizon-site-skeleton__new-topic"></div>
 
-          <div class="horizon-site-skeleton__nav-item --active">
-            <span class="horizon-site-skeleton__nav-icon">
-              {{dIcon "layer-group"}}
-            </span>
-            {{i18n "horizon_site_skeleton.nav.topics"}}
-          </div>
-          <div class="horizon-site-skeleton__nav-item">
-            <span class="horizon-site-skeleton__nav-icon">
-              {{dIcon "user"}}
-            </span>
-            {{i18n "horizon_site_skeleton.nav.my_posts"}}
-          </div>
-          <div class="horizon-site-skeleton__nav-item">
-            <span class="horizon-site-skeleton__nav-icon">
-              {{dIcon "inbox"}}
-            </span>
-            {{i18n "horizon_site_skeleton.nav.my_messages"}}
-          </div>
-          <div class="horizon-site-skeleton__nav-item">
-            <span class="horizon-site-skeleton__nav-icon">
-              {{dIcon "flag"}}
-            </span>
-            {{i18n "horizon_site_skeleton.nav.review"}}
-          </div>
-          <div class="horizon-site-skeleton__nav-item">
-            <span class="horizon-site-skeleton__nav-icon">
-              {{dIcon "wrench"}}
-            </span>
-            {{i18n "horizon_site_skeleton.nav.admin"}}
-          </div>
-          <div class="horizon-site-skeleton__nav-item">
-            <span class="horizon-site-skeleton__nav-icon">
-              {{dIcon "paper-plane"}}
-            </span>
-            {{i18n "horizon_site_skeleton.nav.invite"}}
-          </div>
+        <div class="horizon-site-skeleton__nav-item --active">
+          <span class="horizon-site-skeleton__nav-icon">
+            {{dIcon "layer-group"}}
+          </span>
+          <span class="horizon-site-skeleton__bar --accent --md"></span>
+        </div>
+        <div class="horizon-site-skeleton__nav-item">
+          <span class="horizon-site-skeleton__nav-icon">
+            {{dIcon "user"}}
+          </span>
+          <span class="horizon-site-skeleton__bar --lg"></span>
+        </div>
+        <div class="horizon-site-skeleton__nav-item">
+          <span class="horizon-site-skeleton__nav-icon">
+            {{dIcon "inbox"}}
+          </span>
+          <span class="horizon-site-skeleton__bar --md"></span>
+        </div>
+        <div class="horizon-site-skeleton__nav-item">
+          <span class="horizon-site-skeleton__nav-icon">
+            {{dIcon "flag"}}
+          </span>
+          <span class="horizon-site-skeleton__bar --sm"></span>
+        </div>
+        <div class="horizon-site-skeleton__nav-item">
+          <span class="horizon-site-skeleton__nav-icon">
+            {{dIcon "wrench"}}
+          </span>
+          <span class="horizon-site-skeleton__bar --md"></span>
+        </div>
+        <div class="horizon-site-skeleton__nav-item">
+          <span class="horizon-site-skeleton__nav-icon">
+            {{dIcon "paper-plane"}}
+          </span>
+          <span class="horizon-site-skeleton__bar --sm"></span>
+        </div>
 
-          <div class="horizon-site-skeleton__sidebar-section">
-            <div class="horizon-site-skeleton__sidebar-title">
-              {{i18n "horizon_site_skeleton.categories_title"}}
-            </div>
-            <div class="horizon-site-skeleton__category">
-              <span class="horizon-site-skeleton__category-dot --blue"></span>
-              {{i18n "horizon_site_skeleton.categories.general"}}
-            </div>
-            <div class="horizon-site-skeleton__category">
-              <span
-                class="horizon-site-skeleton__category-dot --light-blue"
-              ></span>
-              {{i18n "horizon_site_skeleton.categories.site_feedback"}}
-            </div>
-            <div class="horizon-site-skeleton__category">
-              <span class="horizon-site-skeleton__category-dot --staff"></span>
-              {{i18n "horizon_site_skeleton.categories.staff"}}
-            </div>
-            <div class="horizon-site-skeleton__category">
-              <span class="horizon-site-skeleton__nav-icon">
-                {{dIcon "list"}}
-              </span>
-              {{i18n "horizon_site_skeleton.categories.all"}}
-            </div>
+        <div class="horizon-site-skeleton__sidebar-section">
+          <div class="horizon-site-skeleton__sidebar-title">
+            <span class="horizon-site-skeleton__bar --title"></span>
           </div>
+          <div class="horizon-site-skeleton__category">
+            <span class="horizon-site-skeleton__category-dot --blue"></span>
+            <span class="horizon-site-skeleton__bar --md"></span>
+          </div>
+          <div class="horizon-site-skeleton__category">
+            <span
+              class="horizon-site-skeleton__category-dot --light-blue"
+            ></span>
+            <span class="horizon-site-skeleton__bar --lg"></span>
+          </div>
+          <div class="horizon-site-skeleton__category">
+            <span class="horizon-site-skeleton__category-dot --staff"></span>
+            <span class="horizon-site-skeleton__bar --sm"></span>
+          </div>
+          <div class="horizon-site-skeleton__category">
+            <span class="horizon-site-skeleton__nav-icon">
+              {{dIcon "list"}}
+            </span>
+            <span class="horizon-site-skeleton__bar --md"></span>
+          </div>
+        </div>
 
-          <div class="horizon-site-skeleton__sidebar-section">
-            <div class="horizon-site-skeleton__category">
-              <span class="horizon-site-skeleton__nav-icon">
+        <div class="horizon-site-skeleton__sidebar-section">
+          <div class="horizon-site-skeleton__category">
+            <span class="horizon-site-skeleton__nav-icon">
+              {{dIcon "magnifying-glass"}}
+            </span>
+            <span class="horizon-site-skeleton__bar --md"></span>
+          </div>
+        </div>
+
+        <div class="horizon-site-skeleton__sidebar-section">
+          <div class="horizon-site-skeleton__sidebar-title">
+            <span class="horizon-site-skeleton__bar --title"></span>
+          </div>
+          <div class="horizon-site-skeleton__category">
+            <span class="horizon-site-skeleton__channel --blue"></span>
+            <span class="horizon-site-skeleton__bar --md"></span>
+          </div>
+          <div class="horizon-site-skeleton__category">
+            <span class="horizon-site-skeleton__channel --red"></span>
+            <span class="horizon-site-skeleton__bar --sm"></span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="horizon-site-skeleton__content">
+        <section class="horizon-site-skeleton__card">
+          <div class="horizon-site-skeleton__welcome-row">
+            <div class="horizon-site-skeleton__welcome-greeting">
+              <span class="horizon-site-skeleton__bar --heading --lg"></span>
+              <span class="horizon-site-skeleton__bar --heading --md"></span>
+            </div>
+            <div class="horizon-site-skeleton__search">
+              <span class="horizon-site-skeleton__search-icon">
                 {{dIcon "magnifying-glass"}}
               </span>
-              {{i18n "horizon_site_skeleton.search_chat"}}
+              <span class="horizon-site-skeleton__bar --sm"></span>
+              <span class="horizon-site-skeleton__search-icon --filters">
+                {{dIcon "sliders"}}
+              </span>
             </div>
           </div>
 
-          <div class="horizon-site-skeleton__sidebar-section">
-            <div class="horizon-site-skeleton__sidebar-title">
-              {{i18n "horizon_site_skeleton.channels_title"}}
+          <div class="horizon-site-skeleton__tabs">
+            <span class="--active">
+              <span class="horizon-site-skeleton__bar --accent --sm"></span>
+            </span>
+            <span>
+              <span class="horizon-site-skeleton__bar --sm"></span>
+            </span>
+            <span>
+              <span class="horizon-site-skeleton__bar --sm"></span>
+            </span>
+            <button type="button" tabindex="-1"></button>
+          </div>
+
+          <div class="horizon-site-skeleton__topic-list">
+            <div class="horizon-site-skeleton__topic">
+              <span class="horizon-site-skeleton__topic-avatar --system"></span>
+              <div class="horizon-site-skeleton__topic-main">
+                <span class="horizon-site-skeleton__bar --sm"></span>
+                <span class="horizon-site-skeleton__bar --strong --lg"></span>
+                <div class="horizon-site-skeleton__topic-excerpt">
+                  <span class="horizon-site-skeleton__bar --full"></span>
+                  <span class="horizon-site-skeleton__bar --full"></span>
+                  <span class="horizon-site-skeleton__bar --lg"></span>
+                </div>
+                <span class="horizon-site-skeleton__topic-tag"></span>
+              </div>
+              <span class="horizon-site-skeleton__topic-pin"></span>
             </div>
-            <div class="horizon-site-skeleton__category">
-              <span class="horizon-site-skeleton__channel --blue"></span>
-              {{i18n "horizon_site_skeleton.channels.general"}}
+            <div class="horizon-site-skeleton__topic">
+              <span class="horizon-site-skeleton__topic-avatar --system"></span>
+              <div class="horizon-site-skeleton__topic-main">
+                <span class="horizon-site-skeleton__bar --sm"></span>
+                <span class="horizon-site-skeleton__bar --strong --md"></span>
+                <div class="horizon-site-skeleton__topic-excerpt">
+                  <span class="horizon-site-skeleton__bar --full"></span>
+                  <span class="horizon-site-skeleton__bar --md"></span>
+                </div>
+                <span class="horizon-site-skeleton__topic-tag --staff"></span>
+              </div>
             </div>
-            <div class="horizon-site-skeleton__category">
-              <span class="horizon-site-skeleton__channel --red"></span>
-              {{i18n "horizon_site_skeleton.channels.staff"}}
+            <div class="horizon-site-skeleton__topic">
+              <span class="horizon-site-skeleton__topic-avatar --system"></span>
+              <div class="horizon-site-skeleton__topic-main">
+                <span class="horizon-site-skeleton__bar --sm"></span>
+                <span class="horizon-site-skeleton__bar --strong --lg"></span>
+                <div class="horizon-site-skeleton__topic-excerpt">
+                  <span class="horizon-site-skeleton__bar --full"></span>
+                  <span class="horizon-site-skeleton__bar --lg"></span>
+                </div>
+                <span class="horizon-site-skeleton__topic-tag --staff"></span>
+              </div>
             </div>
           </div>
-        </aside>
-
-        <main class="horizon-site-skeleton__content">
-          <section class="horizon-site-skeleton__card">
-            <div class="horizon-site-skeleton__setup-banner">
-              <button type="button" tabindex="-1">{{dIcon "xmark"}}</button>
-              <h3>{{i18n "horizon_site_skeleton.setup.title"}}</h3>
-              <div class="horizon-site-skeleton__setup-steps">
-                <div>
-                  <strong>{{i18n
-                      "horizon_site_skeleton.setup.customize.title"
-                    }}</strong>
-                  <span>{{i18n
-                      "horizon_site_skeleton.setup.customize.description"
-                    }}</span>
-                  <em>{{i18n
-                      "horizon_site_skeleton.setup.customize.action"
-                    }}</em>
-                </div>
-                <div>
-                  <strong>{{i18n
-                      "horizon_site_skeleton.setup.invite.title"
-                    }}</strong>
-                  <span>{{i18n
-                      "horizon_site_skeleton.setup.invite.description"
-                    }}</span>
-                  <em>{{i18n "horizon_site_skeleton.setup.invite.action"}}</em>
-                </div>
-                <div>
-                  <strong>{{i18n
-                      "horizon_site_skeleton.setup.post.title"
-                    }}</strong>
-                  <span>{{i18n
-                      "horizon_site_skeleton.setup.post.description"
-                    }}</span>
-                  <em>{{i18n "horizon_site_skeleton.setup.post.action"}}</em>
-                </div>
-              </div>
-            </div>
-
-            <div class="horizon-site-skeleton__welcome-row">
-              <h3>{{trustHTML this.welcomeBack}}</h3>
-              <div class="horizon-site-skeleton__search">
-                <span class="horizon-site-skeleton__search-icon">
-                  {{dIcon "magnifying-glass"}}
-                </span>
-                {{i18n "horizon_site_skeleton.search_placeholder"}}
-                <span class="horizon-site-skeleton__search-icon --filters">
-                  {{dIcon "sliders"}}
-                </span>
-              </div>
-            </div>
-
-            <div class="horizon-site-skeleton__tabs">
-              <span class="--active">{{i18n
-                  "horizon_site_skeleton.tabs.latest"
-                }}</span>
-              <span>{{i18n "horizon_site_skeleton.tabs.hot"}}</span>
-              <span>{{i18n "horizon_site_skeleton.tabs.categories"}}</span>
-              <button type="button" tabindex="-1">{{i18n
-                  "horizon_site_skeleton.tabs.categories"
-                }}</button>
-            </div>
-
-            <div class="horizon-site-skeleton__topic-list">
-              <div class="horizon-site-skeleton__topic">
-                <span
-                  class="horizon-site-skeleton__topic-avatar --system"
-                ></span>
-                <div class="horizon-site-skeleton__topic-main">
-                  <span>{{i18n "horizon_site_skeleton.topic.meta"}}</span>
-                  <strong>{{i18n
-                      "horizon_site_skeleton.topic.welcome.title"
-                      site_name=this.siteName
-                    }}</strong>
-                  <p>
-                    {{i18n "horizon_site_skeleton.topic.welcome.excerpt"}}
-                  </p>
-                  <em>{{i18n
-                      "horizon_site_skeleton.topic.welcome.category"
-                    }}</em>
-                </div>
-                <span class="horizon-site-skeleton__topic-pin">{{i18n
-                    "horizon_site_skeleton.topic.pinned"
-                  }}</span>
-              </div>
-              <div class="horizon-site-skeleton__topic">
-                <span
-                  class="horizon-site-skeleton__topic-avatar --system"
-                ></span>
-                <div class="horizon-site-skeleton__topic-main">
-                  <span>{{i18n "horizon_site_skeleton.topic.meta"}}</span>
-                  <strong>{{i18n
-                      "horizon_site_skeleton.topic.admin_guide.title"
-                    }}</strong>
-                  <p>
-                    {{i18n "horizon_site_skeleton.topic.admin_guide.excerpt"}}
-                  </p>
-                  <em class="--staff">{{i18n
-                      "horizon_site_skeleton.topic.admin_guide.category"
-                    }}</em>
-                </div>
-              </div>
-              <div class="horizon-site-skeleton__topic">
-                <span
-                  class="horizon-site-skeleton__topic-avatar --system"
-                ></span>
-                <div class="horizon-site-skeleton__topic-main">
-                  <span>{{i18n "horizon_site_skeleton.topic.meta"}}</span>
-                  <strong>{{i18n
-                      "horizon_site_skeleton.topic.guidelines.title"
-                    }}</strong>
-                  <p>
-                    {{i18n "horizon_site_skeleton.topic.guidelines.excerpt"}}
-                  </p>
-                  <em class="--staff">{{i18n
-                      "horizon_site_skeleton.topic.guidelines.category"
-                    }}</em>
-                </div>
-              </div>
-            </div>
-          </section>
-        </main>
-      </div>
+        </section>
+      </main>
     </div>
-  </template>
-}
+  </div>
+</template>
