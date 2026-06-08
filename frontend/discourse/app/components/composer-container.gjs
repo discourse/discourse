@@ -40,18 +40,22 @@ import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 const trackFieldsHeight = modifier((element) => {
-  const target = element.closest("#reply-control");
+  const target = document.getElementById("reply-control");
   if (!target) {
     return;
   }
 
-  const observer = new ResizeObserver(([entry]) => {
-    const height =
-      entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height;
+  const update = (height) => {
     target.style.setProperty(
       "--composer-fields-height",
       `${Math.round(height)}px`
     );
+  };
+
+  update(element.offsetHeight);
+
+  const observer = new ResizeObserver(([entry]) => {
+    update(entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height);
   });
   observer.observe(element);
 
