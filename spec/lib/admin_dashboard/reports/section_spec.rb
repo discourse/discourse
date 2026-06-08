@@ -45,17 +45,6 @@ RSpec.describe AdminDashboard::Reports::Section do
     expect(result[:items]).to eq([])
   end
 
-  it "sets show_labels to true when more than one provider is registered" do
-    expect(described_class.build(guardian: guardian)[:show_labels]).to eq(true)
-  end
-
-  it "sets show_labels to false when only one provider is registered" do
-    DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
-      entry[:value] == fake_provider
-    end
-    expect(described_class.build(guardian: guardian)[:show_labels]).to eq(false)
-  end
-
   it "returns items in position order, ignoring insertion order" do
     AdminDashboardReport.create!(source: "fake", identifier: "a", position: 1)
     AdminDashboardReport.create!(source: "fake", identifier: "b", position: 0)

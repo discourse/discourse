@@ -62,4 +62,4 @@ jobs:
       - name: Check JS Licenses
         if: ${{ !cancelled() }}
         run: |
-          pnpm licensee --errors-only
+          script/run-licensee

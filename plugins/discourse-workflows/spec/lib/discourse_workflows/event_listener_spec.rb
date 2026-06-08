@@ -134,6 +134,73 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(enqueued_trigger_node_ids).not_to include("category-mismatch", "tag-mismatch")
   end
 
+  it "only enqueues post edited workflows matching topic category, tags, and trust levels" do
+    topic.tags << tag
+    create_published_workflow(
+      "matching-trigger",
+      "trigger:post_edited",
+      configuration: {
+        "category_id" => category.id.to_s,
+        "tag_names" => [tag.name],
+        "trust_levels" => ["1"],
+      },
+    )
+    create_published_workflow(
+      "trust-level-mismatch",
+      "trigger:post_edited",
+      configuration: {
+        "trust_levels" => ["2"],
+      },
+    )
+    create_published_workflow(
+      "tag-mismatch",
+      "trigger:post_edited",
+      configuration: {
+        "tag_names" => ["missing"],
+      },
+    )
+
+    post = create_post(user: Fabricate(:user, trust_level: TrustLevel[1]), category: category)
+    post.topic.tags << tag
+    described_class.handle(DiscourseWorkflows::Nodes::PostEdited::V1, post, "<p>Cooked</p>")
+
+    expect(enqueued_trigger_node_ids).to include("matching-trigger")
+    expect(enqueued_trigger_node_ids).not_to include("trust-level-mismatch", "tag-mismatch")
+  end
+
+  it "only enqueues reviewable approved workflows matching the reviewable type" do
+    create_published_workflow(
+      "matching-trigger",
+      "trigger:reviewable_approved",
+      configuration: {
+        "reviewable_types" => ["ReviewableFlaggedPost"],
+      },
+    )
+    create_published_workflow(
+      "type-mismatch",
+      "trigger:reviewable_approved",
+      configuration: {
+        "reviewable_types" => ["ReviewableUser"],
+      },
+    )
+
+    reviewable = Fabricate(:reviewable_flagged_post)
+    described_class.handle(DiscourseWorkflows::Nodes::ReviewableApproved::V1, :approved, reviewable)
+
+    expect(enqueued_trigger_node_ids).to include("matching-trigger")
+    expect(enqueued_trigger_node_ids).not_to include("type-mismatch")
+  end
+
+  it "does not enqueue post edited workflows for replies by default" do
+    create_post(topic: topic)
+    create_published_workflow("first-post-only", "trigger:post_edited")
+
+    post = create_post(user: Fabricate(:user, trust_level: TrustLevel[1]), topic: topic)
+    described_class.handle(DiscourseWorkflows::Nodes::PostEdited::V1, post, "<p>Cooked</p>")
+
+    expect(enqueued_trigger_node_ids).not_to include("first-post-only")
+  end
+
   def create_published_workflow(trigger_node_id, trigger_type, configuration: {})
     graph =
       build_workflow_graph do |g|

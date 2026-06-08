@@ -2,10 +2,11 @@
 
 module DiscourseWorkflows
   class NodeTypeSerializer
-    def initialize(identifier:, available_versions:)
+    def initialize(identifier:, available_versions:, guardian: nil)
       @identifier = identifier
       @available_versions = available_versions
       @latest_version = available_versions.last
+      @guardian = guardian
     end
 
     def to_h
@@ -33,6 +34,7 @@ module DiscourseWorkflows
     def serializable_version(klass, version)
       properties = klass.property_schema
       webhooks = serializable_webhooks(klass)
+      metadata = load_options_metadata(klass, properties)
       description =
         klass.description.merge(
           displayName: klass.label_key,
@@ -64,11 +66,66 @@ module DiscourseWorkflows
         operations: klass.operations,
         available: klass.available?,
         unavailable_reason_key: (klass.unavailable_reason_key unless klass.available?),
+        metadata: metadata.presence,
       }.compact
     end
 
     def serializable_webhooks(klass)
       klass.webhooks.map { |webhook| webhook.except(:handler) }
+    end
+
+    def load_options_metadata(klass, properties)
+      return {} unless klass.respond_to?(:load_options_context)
+
+      load_options_methods(properties)
+        .index_with do |method_name|
+          context =
+            LoadOptionsContext.new(
+              method_name: method_name,
+              node_class: klass,
+              guardian: @guardian,
+              user: @guardian&.user,
+            )
+          klass.load_options_context(context)
+        end
+        .compact
+    end
+
+    def load_options_methods(properties)
+      properties.values.flat_map { |definition| load_options_methods_for_field(definition) }.uniq
+    end
+
+    def load_options_methods_for_field(definition)
+      return [] unless definition.is_a?(Hash)
+
+      type_options = definition[:type_options] || definition["type_options"] || {}
+      methods =
+        if load_options_dependencies?(type_options)
+          []
+        else
+          Array(type_options[:load_options_method] || type_options["load_options_method"]).compact
+        end
+
+      nested_definitions = schema_field_definitions(definition[:item_schema])
+      nested_definitions += schema_field_definitions(definition[:extra_item_schema])
+
+      nested_definitions +=
+        Array(definition[:options]).flat_map do |option|
+          option.is_a?(Hash) && option[:values].is_a?(Hash) ? option[:values].values : []
+        end
+
+      methods + nested_definitions.flat_map { |field| load_options_methods_for_field(field) }
+    end
+
+    def load_options_dependencies?(type_options)
+      dependencies =
+        type_options[:load_options_depends_on] || type_options["load_options_depends_on"]
+
+      Array(dependencies).present?
+    end
+
+    def schema_field_definitions(schema)
+      schema.is_a?(Hash) ? schema.values : []
     end
   end
 end

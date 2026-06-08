@@ -215,6 +215,10 @@ module PageObjects
         has_no_css?(AUTOCOMPLETE_MENU)
       end
 
+      def has_emoji_autocomplete_selected?(index)
+        has_css?("#{AUTOCOMPLETE_MENU} ul li:nth-child(#{index}) a.selected")
+      end
+
       EMOJI_SUGGESTION_SELECTOR = "#{AUTOCOMPLETE_MENU} .emoji-shortname"
 
       def has_emoji_suggestion?(emoji)

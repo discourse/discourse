@@ -1687,7 +1687,7 @@ lv:
       discard: "Izmest"
       title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
-      edit_reason_placeholder: "kāpēc jūs rediģējat?"
+      edit_reason_placeholder: "Kāpēc jūs rediģējat?"
       topic_featured_link_placeholder: "Ievadiet saiti, kas redzama virsrakstā."
       reply_placeholder: "Rakstiet šeit. Izmantojiet Markdown, BBCode, vai HTML formatēšanai. Velciet vai ielīmējiet bildes."
       view_new_post: "Apskatīt jūsu jauno ierakstu."
@@ -1715,6 +1715,7 @@ lv:
         attribute_value: "Vērtība"
         apply: "Pielietot"
       help: "Palīdzība ar formatēšanu, izmantojot Markdown"
+      edit_reason: "Kāpēc jūs rediģējat?"
       modal_ok: "Labi"
       cant_send_pm: "Atvainojiet, jūs nevarat sūtīt ziņu %{username}."
       yourself_confirm:
@@ -1724,6 +1725,11 @@ lv:
       composer_actions:
         reply: Atbilde
         edit: Labot
+        reply_to_topic:
+          trigger: Tēmas
+        reply_to_message:
+          trigger: Ziņa
+        unknown_user: "Lietotājs"
       ignore: "Ignorēt"
       image: "attēls"
     notifications:
@@ -2839,7 +2845,7 @@ lv:
         modal:
           cancel: "atcelt"
           create: "Saglabāt"
-          reason: "kāpēc jūs rediģējat?"
+          reason: "Kāpēc jūs rediģējat?"
       spreadsheet:
         show: "Parādīt"
         about: "Par"
@@ -3205,6 +3211,7 @@ lv:
       config_areas:
         about:
           company_name: "Vārds"
+          company_url: "Vietne"
           extra_groups:
             groups: "Grupas"
           optional: "(pēc izvēles)"

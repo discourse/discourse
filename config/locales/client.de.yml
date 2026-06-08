@@ -3042,7 +3042,7 @@ de:
       collapse: "Editor minimieren"
       open: "Editor öffnen"
       abandon: "Editor schließen und Entwurf verwerfen"
-      edit_reason: "Füge den Bearbeitungsgrund hinzu"
+      edit_reason: "Welchen Grund gibt es für die Bearbeitung?"
       enter_fullscreen: "Vollbild-Editor öffnen"
       exit_fullscreen: "Vollbild-Editor verlassen"
       exit_fullscreen_prompt: "Drücke <kbd>ESC</kbd>, um den Vollbildmodus zu verlassen"
@@ -3077,25 +3077,26 @@ de:
           desc: Neue Nachricht erstellen, beginnend mit denselben Empfängern
         reply_to_topic:
           label: Auf Thema antworten
+          trigger: Thema
           desc: Antworte auf das Thema, nicht auf einen bestimmten Beitrag
+        reply_to_message:
+          trigger: Nachricht
         toggle_whisper:
           label: Flüstermodus umschalten
-          desc: Ein geflüsterter Beitrag ist nur für Team-Mitglieder sichtbar
         create_topic:
-          label: "Neues Thema"
           desc: Erstelle ein neues Thema
         create_personal_message:
-          label: "Neue Nachricht"
           desc: "Erstelle eine neue persönliche Nachricht"
         shared_draft:
           label: "Gemeinsamer Entwurf"
           desc: "Entwurf eines Themas, das nur für erlaubte Benutzer sichtbar ist"
         toggle_topic_bump:
-          label: "„Nach oben verschieben“ für Thema umschalten"
           desc: "Antworten, ohne das Datum der neuesten Antwort zu ändern"
         toggle_unlisted:
           label: Sichtbarkeit umschalten
           desc: "Nicht aufgelistete Themen sind nur über einen direkten Link zugänglich"
+        edit_post: "Beitrag wird bearbeitet "
+        unknown_user: "Nutzer"
       reload: "Neu laden"
       ignore: "Ignorieren"
       image_alt_text:
@@ -6324,6 +6325,7 @@ de:
         too_many_requests: Du hast diese Aktion zu oft ausgeführt. Bitte warte, bevor du es erneut probierst.
         not_found_error: Entschuldige bitte, dieser Bericht existiert nicht
         custom_date_range: Benutzerdefinierter Datumsbereich
+        stable: "stabil"
         sections:
           reports:
             title: "Berichte"
@@ -6346,8 +6348,6 @@ de:
                 "2": "Mitglied"
                 "3": "Regulär"
                 "4": "Anführer"
-              trend:
-                stable: "stabil"
         reports_section:
           no_data: "Keine Daten anzuzeigen"
           modal:
@@ -6874,9 +6874,10 @@ de:
           your_organization: "Deine Organisation"
           your_organization_description: "Wir verwenden diese Informationen in den Nutzungsbedingungen und im Datenschutzhinweis, um zu zeigen, wer die Website betreibt und unter welcher Gerichtsbarkeit."
           company_name: "Name"
-          company_name_placeholder: "Acme-Organisation"
           company_name_warning: |
             Wenn du nichts angibst, werden keine vorgefertigten allgemeinen Geschäftsbedingungen oder eine entsprechende Datenschutzrichtlinie bereitgestellt.
+          company_url: "Website"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Anzuwendendes Recht"
           governing_law_placeholder: "Provinz, Bundesland oder Land"
           governing_law_help: |

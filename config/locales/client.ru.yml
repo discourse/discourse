@@ -217,6 +217,8 @@ ru:
     date_range_picker:
       apply: "Применить"
       start_date: "Дата начала"
+      end_date: "Дата окончания"
+      date_placeholder: "ггггг/мм/дд"
       presets:
         last_7_days: "За последние 7 дней"
         last_30_days: "За последние 30 дней"
@@ -682,6 +684,9 @@ ru:
       topic_bookmark: "Тема"
       post_bookmark: "Cообщение #%{post_number}"
       jump_to_post: "Перейти к сообщению %{post_number}"
+      bookmark_topic: "Добавить тему в закладки"
+      edit_topic_bookmark: "Изменить закладку"
+      delete_topic_bookmark: "Удалить закладку"
       remove_reminder_keep_bookmark: "Удалить напоминание, но оставить закладку"
       created_with_reminder: "Вы добавили это сообщение в закладки с напоминанием %{date}: «%{name}»"
       created_with_reminder_generic: "Добавлено в закладки с напоминанием %{date}: «%{name}»"
@@ -1705,6 +1710,7 @@ ru:
       desktop_notifications:
         not_supported: "Уведомления этим браузером не поддерживаются."
         perm_denied_expl: "Вы запретили уведомления в браузере. Разрешите уведомления в настройках браузера."
+        enable: "Включить уведомления"
         each_browser_note: "Примечание: этот параметр необходимо изменить в каждом используемом браузере. Если приостановить уведомления в меню пользователя, они будут отключены независимо от этого параметра."
         consent_prompt: "Вы хотите получать уведомления в реальном времени, когда пользователи отвечают на ваши сообщения?"
       dismiss: "Пометить прочитанными"
@@ -3064,7 +3070,11 @@ ru:
         categories_admin_dropdown:
           title: "Управление категориями"
         tag_category_admin_dropdown:
+          title: "Настройки категорий и тегов"
+          edit_category: "Редактировать категорию"
+          edit_category_description: "Настройка параметров для %{badge}"
           edit_tag: "Редактировать тег"
+          edit_tag_description: "Настройка параметров для %{badge}"
         bulk_select_topics_dropdown:
           title: "Массовые действия"
         bulk_select_bookmarks_dropdown:
@@ -3285,7 +3295,7 @@ ru:
       collapse: "Свернуть панель редактора"
       open: "Открыть панель редактора"
       abandon: "Закрыть редактор и удалить черновик"
-      edit_reason: "Укажите причину редактирования."
+      edit_reason: "Причина редактирования…"
       enter_fullscreen: "Включить полноэкранный режим редактора"
       exit_fullscreen: "Выключить полноэкранный режима редактора"
       exit_fullscreen_prompt: "<kbd>ESC</kbd> — выход из полноэкранного режима"
@@ -3320,24 +3330,25 @@ ru:
           desc: Создать новое сообщение с теми же получателями
         reply_to_topic:
           label: Ответить на тему
+          trigger: Тема
           desc: Ответить на тему в целом, а не на конкретное сообщение
+        reply_to_message:
+          trigger: Сообщение
         toggle_whisper:
           label: Скрытое сообщение
-          desc: Скрытые сообщения доступны только персоналу
         create_topic:
-          label: "Новая тема"
           desc: Создать новую тему
         create_personal_message:
-          label: "Личное сообщение"
           desc: "Создать новое личное сообщение"
         shared_draft:
           label: "Общий черновик"
           desc: "Черновик темы, который будет виден только пользователям с необходимыми правами доступа"
         toggle_topic_bump:
-          label: "Не поднимать тему"
           desc: "Ответить без изменения даты последнего ответа"
         toggle_unlisted:
           label: Скрыть тему
+        edit_post: "Редактирование поста"
+        unknown_user: "Пользователь"
       reload: "Обновить"
       ignore: "Игнорировать"
       image_alt_text:
@@ -3367,6 +3378,8 @@ ru:
         link_copied: "Ссылка скопирована!"
       onebox_toolbar:
         copy: "Копировать ссылку"
+        visit: "Открыть ссылку"
+        remove_preview: "Удалить предпросмотр"
         link_copied: "Ссылка скопирована!"
       unsupported_token: "Расширенный текстовый редактор не поддерживает все функции, использованные в этом сообщении; в этом случае вам будет предложено переключиться на редактор Markdown."
     notifications:
@@ -3756,6 +3769,8 @@ ru:
         confirm: "Подтвердить"
         select_all: "Выбрать всё"
         clear_all: "Отменить выбор"
+        unlist_topics: "Скрыть темы"
+        unpin_topics: "Открепить темы"
         reset_bump_dates: "Сбросить даты поднятия"
         defer: "Отметить как непрочитанное"
         delete: "Удалить темы"
@@ -3887,10 +3902,12 @@ ru:
       relist_topics:
         name: "Показать повторно"
       manage_tags:
+        name: "Управление тегами"
         add:
           title: "Добавить теги"
         remove:
           title: "Удалить теги"
+          all_toggle: "Удалить все теги"
         replace:
           title: "Заменить теги"
       delete_topics:
@@ -3944,6 +3961,7 @@ ru:
         many: "%{count} сообщений в теме"
         other: "%{count} сообщения в теме"
       create: "Создать тему"
+      create_shared_draft: "Новый общий черновик"
       create_long: "Создать новую тему"
       create_group: "Новая тема и черновики"
       open_draft: "Открыть черновик"
@@ -4090,6 +4108,7 @@ ru:
         publish_to: "Опубликовать в:"
         when: "Когда:"
         time_frame_required: "Выберите период времени"
+        category_required: "Пожалуйста, выберите категорию."
         min_duration: "Период времени должен быть больше 0"
         max_duration: "Период времени не может быть более 20 лет"
         duration: "Продолжительность"
@@ -4569,6 +4588,7 @@ ru:
           confirm_delete: "Действительно удалить переводы для «%{languageCode}»?"
         success: "Переводы успешно обновлены"
         post_language_selector:
+          title: "Язык поста"
           none: "Не установлено"
         edit_warning:
           message: "Это переведённый пост.<br><br>Вы хотите отредактировать оригинальный пост в %{language} или отредактировать этот конкретный перевод?"
@@ -4873,6 +4893,7 @@ ru:
       icon: "Значок"
       emoji: "Эмодзи"
       select_emoji: "Выберите эмодзи"
+      select_icon: "Выбрать иконку"
       background_color: "Цвет"
       foreground_color: "Цвет текста"
       color_validations:
@@ -5357,13 +5378,23 @@ ru:
         up_down: "Переместить выделение &uarr; &darr;"
       application:
         title: "Форум"
+        notifications: "Открыть уведомления"
+        hamburger_menu: "Открыть меню навигации"
+        user_profile_menu: "Открыть меню пользователя"
+        show_incoming_updated_topics: "Показать обновлённые темы"
         search: "Искать"
         log_out: "Выйти"
       composing:
         title: "Редактирование"
+        bold: "Жирный"
+        italic: "Курсив"
         link: "Вставить ссылку"
         preformatted: "Текст «как есть» (без применения форматирования)"
         paragraph: "Абзац"
+        heading_1: "Заголовок 1"
+        heading_2: "Заголовок 2"
+        heading_3: "Заголовок 3"
+        heading_4: "Заголовок 4"
         blockquote: "Впишите сюда текст цитаты"
       bookmarks:
         title: "Создание закладки"
@@ -6166,6 +6197,8 @@ ru:
           impact_type_other: "Разное"
           status_conceptual: "Концептуальный"
           status_experimental: "Экспериментальная функция"
+          status_alpha: "Альфа"
+          status_beta: "Бета"
           status_permanent: "Постоянный"
           impact_role_all: "Все значимые роли"
           impact_role_admins: "Администраторы"
@@ -6648,6 +6681,7 @@ ru:
         too_many_requests: Вы выполняете это действие слишком часто. Подождите, прежде чем пытаться снова.
         not_found_error: Этого отчёта не существует
         custom_date_range: Свой диапазон дат
+        stable: "стабильный"
         sections:
           reports:
             title: "отчетов"
@@ -6669,8 +6703,6 @@ ru:
                 "2": "Участник"
                 "3": "Активный пользователь"
                 "4": "Лидер"
-              trend:
-                stable: "стабильный"
         reports_section:
           no_data: "Нет данных для отображения"
           modal:
@@ -7215,9 +7247,10 @@ ru:
           your_organization: "Ваша организация"
           your_organization_description: "Мы будем использовать эту информацию в Условиях использования и Уведомлении о конфиденциальности, чтобы показать, кто управляет сайтом и под какой юрисдикцией."
           company_name: "Название"
-          company_name_placeholder: "ООО «Организация»"
           company_name_warning: |
             Если оставить это поле пустым, то шаблонных Условий использования и Уведомлений о конфиденциальности предоставляться не будет.
+          company_url: "Веб-сайт"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Регулирующее законодательство"
           governing_law_placeholder: "Провинция, штат или страна"
           governing_law_help: |

@@ -338,7 +338,7 @@ tr_TR:
       page_publishing_requirements: "Güvenli yüklemeler etkinleştirilirse sayfa yayınlama etkinleştirilemez."
       s3_backup_requires_s3_settings: "\"%{setting_name}\" değerini sağlamadığınız sürece S3'ü yedekleme konumu olarak kullanamazsınız."
       s3_bucket_reused: "\"s3_upload_bucket\" ve \"s3_backup_bucket\" için aynı kovayı kullanamazsınız. Farklı bir kova seçin veya her kova için farklı bir yol kullanın."
-      secure_uploads_requirements: "Güvenli yüklemeler etkinleştirilmeden önce S3 yüklemeleri ve S3 ACL'leri etkinleştirilmelidir."
+      secure_uploads_requirements: "Güvenli yüklemeler etkinleştirilmeden önce S3 yüklemeleri etkinleştirilmeli."
       share_quote_facebook_requirements: "Facebook için alıntı paylaşımını etkinleştirmek üzere bir Facebook uygulama kimliği belirlemeniz gerekiyor."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Yerel girişler devre dışı bırakılmışsa 2 adımlı kimlik doğrulamayı zorlayamazsınız."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "DiscourseConnect etkinleştirilmişse 2 adımlı kimlik doğrulamayı zorlayamazsınız."
@@ -615,7 +615,6 @@ tr_TR:
       admins: "yöneticiler"
       moderators: "moderatörler"
       staff: "personel"
-      anonymous: "anonim"
       trust_level_0: "güven_seviyesi_0"
       trust_level_1: "güven_seviyesi_1"
       trust_level_2: "güven_seviyesi_2"
@@ -1651,7 +1650,6 @@ tr_TR:
       upcoming_change_stable_opted_out: 'Siteniz "%{upcoming_change}" yaklaşan değişiklikten vazgeçmiştir. Bu değişiklik artık "Kararlı" durumuna ulaşmıştır ve yakında kaldırılabilir veya kalıcı hale getirilebilir. Bu değişiklikle ilgili ayrıntıları incelemek için <a href="%{base_path}/admin/config/upcoming-changes">yaklaşan değişiklikler sayfasını</a> ziyaret edin.'
       rails_env: "Sunucunuz %{env} modunda çalışıyor."
       host_names: "config/database.yml dosyanız varsayılan localhost sunucu adını kullanıyor. Sitenizin sunucu adını kullanmak için bunu güncelleyin."
-      sidekiq: 'Sidekiq çalışmıyor. E-posta göndermek gibi birçok görev Sidekiq tarafından eş zamansız olarak yürütülür. Lütfen en az bir Sidekiq işleminin çalıştığından emin olun. <a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq hakkında buradan bilgi edinin</a>.'
       queue_size: "Sıraya alınan işlerin sayısı %{queue_size} ve bu, yüksek bir değer. Bu, Sidekiq işlem(ler)inde bir sorun olduğunu gösterebilir veya daha fazla Sidekiq çalışanı eklemeniz gerekebilir."
       ram: "Sunucunuz 1 GB'den az toplam bellekle çalışıyor. En az 1 GB bellek önerilir."
       google_oauth2_config: 'Sunucu, Google OAuth2 (enable_google_oauth2_logins) ile kaydolmaya ve giriş yapmaya izin verecek şekilde yapılandırılmış ancak istemci kimliği ve istemci gizli değerleri ayarlanmamış. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> bölümüne gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Daha fazla bilgi edinmek için bu kılavuza bakın</a>.'
@@ -1683,9 +1681,6 @@ tr_TR:
       admin_sidebar_deprecation: "Eski yönetici düzeni, yeni <a href='https://meta.discourse.org/t/-/289281'>kenar çubuğu düzeni</a> lehine kullanımdan kaldırıldı ve bir sonraki sürümde kaldırılacak. Bundan önce katılmak için şimdi yeni kenar çubuğu düzenini <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>yapılandırabilirsiniz</a>."
       starttls_disabled: "Giden e-posta yapılandırmasında STARTTLS devre dışı bırakılmıştır. Bu neredeyse hiçbir zaman gerekli değildir. Ortamınızdan <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> öğesini kaldırmayı düşünün. Daha fazla ayrıntı için lütfen <a href='https://meta.discourse.org/t/387286'>bu konuya</a> bakın."
     back_from_logster_text: "Siteye geri dön"
-    reports_section:
-      providers:
-        core_report: "Standart"
   site_settings:
     allow_bulk_invite: "Bir CSV dosyası yükleyerek toplu davetlere izin verin"
     disabled: "devre dışı"
@@ -5075,15 +5070,7 @@ tr_TR:
       invalid:
         one: "Seçtiğiniz etiket kullanılamaz"
         other: "Seçtiğiniz etiketlerden hiçbiri kullanılamaz"
-      in_this_category: '"%{tag_name}" bu kategoride kullanılamaz'
-      restricted_to:
-        one: '"%{tag_name}", "%{category_names}" kategorisiyle sınırlıdır'
-        other: '"%{tag_name}" şu kategorilerle sınırlıdır: %{category_names}'
-      restricted_to_truncated: '"%{tag_name}" yalnızca şu kategorilerle sınırlıdır: %{category_names} ve %{more_count} tane daha'
-      synonym: 'Bu, "%{tag_name}" ifadesinin eşanlamlısıdır. Bunun yerine "%{tag_name}" ifadesini kullanın.'
       has_synonyms: '"%{tag_name}" eş anlamlıları olduğu için kullanılamıyor.'
-      one_tag_per_topic_group: 'Her konu için "%{tag_group_name}" grubundan yalnızca bir etiket kullanılmasına izin verilir'
-      missing_parent_tag: '"%{parent_tag_name}" etiketinin "%{tag_group_name}" grubundaki etiketleri kullanması gerekir'
       restricted_tags_cannot_be_used_in_category:
         one: '"%{tags}" etiketi "%{category}" kategorisinde kullanılamaz. Lütfen kaldırın.'
         other: 'Şu etiketler "%{category}" kategorisinde kullanılamaz: %{tags}. Lütfen kaldırın.'

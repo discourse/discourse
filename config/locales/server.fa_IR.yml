@@ -324,7 +324,7 @@ fa_IR:
       page_publishing_requirements: "اگر آپلودهای ایمن فعال باشد، انتشار صفحه نمی تواند فعال شود."
       s3_backup_requires_s3_settings: "شما نمی توانید از S3 به عنوان مکان پشتیبان استفاده کنید مگر اینکه «%{setting_name}» را ارائه کرده باشید."
       s3_bucket_reused: "شما نمی توانید از یک مخزن برای \"s3_upload_bucket\" و \"s3_backup_bucket\" استفاده کنید. یک مخزن متفاوت انتخاب کنید یا برای هر مخزن از مسیر متفاوتی استفاده کنید."
-      secure_uploads_requirements: "قبل از فعال کردن آپلودهای ایمن، آپلودهای S3 و ACLهای S3 باید فعال شوند."
+      secure_uploads_requirements: "قبل از فعال کردن بارگذاری‌های ایمن، بارگذاری‌های S3 باید فعال شوند."
       share_quote_facebook_requirements: "برای فعال کردن اشتراک‌گذاری نقل قول برای فیس‌بوک، باید یک شناسه برنامه فیسبوک تنظیم کنید."
       second_factor_cannot_be_enforced_with_disabled_local_login: "اگر ورود به سیستم محلی غیرفعال باشد، نمی توانید 2FA را اعمال کنید."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "اگر DiscourseConnect فعال باشد، نمی توانید 2FA را اعمال کنید."
@@ -586,7 +586,6 @@ fa_IR:
       admins: "مدیران ارشد"
       moderators: "مدیران"
       staff: "همکاران"
-      anonymous: "ناشناس"
       trust_level_0: "سطح اعتماد 0"
       trust_level_1: "سطح اعتماد 1"
       trust_level_2: "سطح اعتماد 2"
@@ -1477,16 +1476,12 @@ fa_IR:
       group_email_credentials: 'مشکلی در اعتبار نامه ایمیل برای گروه <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>وجود داشت. تا زمانی که این مشکل برطرف نشود، هیچ ایمیلی از صندوق ورودی گروه ارسال نخواهد شد. %{error}'
       rails_env: "سرور شما در حالت %{env} در حال اجراست"
       host_names: "config/database.yml فایل شما از اسم هاست پیش فرض localhost استفاده کرده. برای استفاده از نام سایتتان این قسمت را به‌روز کنید."
-      sidekiq: 'Sidekiq کار نمی کند. کار‌های زیادی مثل ارسال ایمیل ها، برای اجرا نیازمند sidekiq هستند. لطفا مطمئن شوید که حداقل یک پروسه sidekiq کار می‌کند. <a href="https://github.com/mperham/sidekiq" target="_blank"> درباره Sidekiq بیشتر بدانید.</a>'
       queue_size: "تعداد کار های زمانبندی شده %{queue_size}، که مقدار بالاییست. این مسئله می‌تواند باعث بروز مشکل در پردازش(های) Sidekiq شود، یا می‌توانید عامل‌های Sidekiq بیشتری اضافه کنید."
       ram: "سرور شما با کمتر از ۱ گیگایابت رم راه‌اندازی شده است. برای دیسکورس حداقل ۱ گیگابایت رم لازم است تا به درستی کار کند."
       subfolder_ends_in_slash: "تنظیمات زیرپوشه نادرست است، مقدار DISCOURSE_RELATIVE_URL_ROOT با نویسه‌ی slash تمام می‌شود."
       poll_pop3_timeout: "اتصال به سرور POP3 انجام نشد. ایمیل‌های ورودی ممکن است دریافت نشوند. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3 </a>و فراهم کننده خدمات را بررسی کنید."
       poll_pop3_auth_error: "اتصال به سرور POP3 ناموفق بود، خطای اعتبار سنجی. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3</a> را بررسی کنید."
     back_from_logster_text: "بازگشت به سایت"
-    reports_section:
-      providers:
-        core_report: "استاندارد"
   site_settings:
     allow_bulk_invite: "با آپلود یک فایل CSV، دعوت‌های انبوه را مجاز کنید"
     disabled: "غیرفعال شده"

@@ -1479,7 +1479,7 @@ et:
       edit_shared_draft: "Muuda jagatud mustandit"
       title_placeholder: "Kuidas seda vestlust ühe lausega kirjeldada?"
       title_or_link_placeholder: "Kirjuta pealkiri või kleebi link siia"
-      edit_reason_placeholder: "miks sa seda muudad?"
+      edit_reason_placeholder: "Miks sa seda muudad?"
       topic_featured_link_placeholder: "Järgi pealkirjas näidatud viidet."
       remove_featured_link: "Eemalda teemast link."
       reply_placeholder: "Kirjuta siia. Vormindamiseks kasuta Markdowni, BBCode'i, või HTML-i. Pildid võid siia lohistada või kleepida."
@@ -1508,6 +1508,7 @@ et:
         attribute_value: "Väärtus"
         apply: "Rakenda"
       help: "Markdowni redigeerimisspikker"
+      edit_reason: "Miks sa seda muudad?"
       modal_ok: "Sobib"
       cant_send_pm: "Kahjuks ei saa sa kasutajale %{username} sõnumit saata."
       yourself_confirm:
@@ -1520,10 +1521,12 @@ et:
         edit: Muuda
         reply_to_topic:
           label: Vasta teemale
-        create_personal_message:
-          label: "Uus sõnum"
+          trigger: Teema
+        reply_to_message:
+          trigger: Sõnum
         shared_draft:
           label: "Jagatud mustand"
+        unknown_user: "Kasutaja"
       ignore: "Ignoreeri"
       image: "pilt"
     notifications:
@@ -2704,7 +2707,7 @@ et:
         modal:
           cancel: "tühista"
           create: "Salvesta"
-          reason: "miks sa seda muudad?"
+          reason: "Miks sa seda muudad?"
       spreadsheet:
         show: "Näita"
         about: "Teave"
@@ -3114,6 +3117,8 @@ et:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nimi"
+          company_url: "Veebileht"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Rühmad"
           optional: "(valikuline)"

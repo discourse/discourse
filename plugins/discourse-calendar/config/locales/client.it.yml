@@ -509,3 +509,4 @@ it:
       invite_user_or_group:
         title: "Notifica utenti o gruppi"
         invite: "Invia"
+        success: "Invito inviato"

@@ -256,7 +256,6 @@ be:
       admins: "адміны"
       moderators: "мадэратары"
       staff: "персанал"
-      anonymous: "ананімны"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -2252,8 +2251,6 @@ be:
   tags:
     title: "тэгі"
     upload_row_too_long: "Файл CSV павінен быць адзін тэг у кожнай радку. Неабавязкова тэг можа суправаджацца коскі, то імя тэга групы."
-    forbidden:
-      in_this_category: '"% {Tag_name}» не могуць быць выкарыстаны ў гэтай катэгорыі'
   rss_by_tag: "Тэмы з тэгамі% {пазнака}"
   finish_installation:
     congratulations: "Віншую, вы ўсталявалі Развага!"

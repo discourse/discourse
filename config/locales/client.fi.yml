@@ -2748,7 +2748,7 @@ fi:
       users_placeholder: "Lisää käyttäjiä tai ryhmiä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä keskustelussa on kyse?"
       title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
-      edit_reason_placeholder: "miksi muokkaat viestiä?"
+      edit_reason_placeholder: "Miksi muokkaat viestiä?"
       topic_featured_link_placeholder: "Kirjoita otsikossa näkyvä linkki."
       remove_featured_link: "Poista linkki ketjusta."
       reply_placeholder: "Kirjoita tähän. Käytä Markdownia, BBCodea tai HTML:ää muotoiluun. Vedä tai pudota kuvia."
@@ -2804,6 +2804,7 @@ fi:
         attribute_value: "Arvo"
         apply: "Käytä"
       help: "Markdown-muokkausohje"
+      edit_reason: "Miksi muokkaat viestiä?"
       exit_fullscreen_prompt: "Poistu koko näytön tilasta painamalla <kbd>Esc</kbd>-näppäintä"
       modal_ok: "OK"
       cant_send_pm: "Et voi valitettavasti lähettää viestiä käyttäjälle %{username}."
@@ -2833,24 +2834,24 @@ fi:
           desc: Luo uusi viesti aloittaen samoista vastaanottajista
         reply_to_topic:
           label: Vastaa ketjuun
+          trigger: Ketju
           desc: Vastaa ketjuun, muttei mihinkään tiettyyn viestiin
+        reply_to_message:
+          trigger: Viesti
         toggle_whisper:
           label: Kuiskaus päälle/pois
-          desc: Kuiskaukset näkyvät vain henkilökunnan jäsenille
         create_topic:
-          label: "Uusi ketju"
           desc: Aloita uusi ketju
         create_personal_message:
-          label: "Uusi viesti"
           desc: "Luo uusi yksityisviesti"
         shared_draft:
           label: "Jaettu luonnos"
           desc: "Luonnostele ketju, joka näkyy vain määrätyille käyttäjille"
         toggle_topic_bump:
-          label: "Ketjun nosto päälle/pois"
           desc: "Vastaa muuttamatta ketjun viimeisimmän vastauksen päivämäärää"
         toggle_unlisted:
           label: Listaus päälle/pois
+        unknown_user: "Käyttäjä"
       reload: "Lataa uudelleen"
       ignore: "Ohita"
       image_alt_text:
@@ -5031,7 +5032,7 @@ fi:
           title: "Muokkaa taulukkoa"
           cancel: "peruuta"
           create: "Tallenna"
-          reason: "miksi muokkaat viestiä?"
+          reason: "Miksi muokkaat viestiä?"
           trigger_reason: "Lisää muokkauksen syy"
         default_edit_reason: "Päivitä taulukko taulukkoeditorilla"
       default_header:
@@ -6168,9 +6169,10 @@ fi:
           your_organization: "Organisaatiosi"
           your_organization_description: "Käytämme näitä tietoja käyttöehdoissa ja tietosuojailmoituksessa näyttääksemme, kuka ylläpitää sivustoa ja millä lainkäyttöalueella."
           company_name: "Nimi"
-          company_name_placeholder: "Esimerkkiorganisaatio"
           company_name_warning: |
             Jos tämä jätetään tyhjäksi, käyttöehtojen tai tietosuojailmoituksen pohjaa ei tarjota.
+          company_url: "Verkkosivusto"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Sovellettava lainsäädäntö"
           governing_law_placeholder: "Maakunta, osavaltio tai maa"
           governing_law_help: |

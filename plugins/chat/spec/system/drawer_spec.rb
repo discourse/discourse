@@ -178,6 +178,8 @@ RSpec.describe "Drawer" do
       chat_page.minimize_full_page
       drawer_page.maximize
 
+      expect(page).to have_css(".chat-channel.--loaded[data-id='#{channel_1.id}']")
+
       Fabricate(
         :chat_message,
         chat_channel: channel_1,

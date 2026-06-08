@@ -364,7 +364,7 @@ en:
       page_publishing_requirements: "Page publishing cannot be enabled if secure uploads is enabled."
       s3_backup_requires_s3_settings: "You cannot use S3 as backup location unless you've provided the '%{setting_name}'."
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
-      secure_uploads_requirements: "S3 uploads and S3 ACLs must be enabled before enabling secure uploads."
+      secure_uploads_requirements: "S3 uploads must be enabled before enabling secure uploads."
       share_quote_facebook_requirements: "You must set a Facebook app id to enable quote sharing for Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "You cannot enforce 2FA if local logins are disabled."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "You cannot enforce 2FA if DiscourseConnect is enabled."
@@ -1824,9 +1824,6 @@ en:
       admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
       starttls_disabled: "The outgoing email configuration has STARTTLS disabled. This is almost never necessary. Consider removing <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> from your environment. Please refer to <a href='https://meta.discourse.org/t/387286'>this topic</a> for more details."
     back_from_logster_text: "Back to site"
-    reports_section:
-      providers:
-        core_report: "Standard"
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -2784,6 +2781,7 @@ en:
     default_watched_precedence_over_muted: "Notify users about topics in categories or tags that they are watching that also belong to one they have muted"
 
     company_name: "Name of your company or organization. If left blank, no boilerplate Terms of Service or Privacy Notice will be provided."
+    company_url: "Website URL for your company or organization. Optional."
     governing_law: "Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Policy. This is typically the country or state where the company operating the site is registered or conducts business."
     city_for_disputes: "Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service."
 
@@ -2809,7 +2807,6 @@ en:
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
-    admin_dashboard_sections: "Sections shown on the redesigned admin dashboard, in display order. Managed via the Configure menu on the dashboard."
 
     gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
     gravatar_name: "Specify the name of the Gravatar service provider. This name is typically used to identify the source providing Gravatar avatars to the site."
@@ -2985,6 +2982,44 @@ en:
     results_page: "Search results for '%{term}'"
     audio: "[audio]"
     video: "[video]"
+
+  posts_filter:
+    description:
+      category: "Show posts in a specific category"
+      category_any: "Show posts in any of the specified categories (comma-separated)"
+      exclude_category: "Exclude posts from a specific category"
+      category_without_subcategories: "Show posts only in the parent category, excluding subcategories"
+      exclude_category_without_subcategories: "Exclude posts only from the parent category, not subcategories"
+      tag: "Show posts with a specific tag"
+      tags_any: "Show posts with any of the specified tags (comma-separated)"
+      exclude_tag: "Exclude posts with a specific tag"
+      username: "Show posts by a specific user"
+      usernames_any: "Show posts by any of the specified users (comma-separated)"
+      group: "Show posts by members of a group"
+      groups_any: "Show posts by members of any specified group (comma-separated)"
+      topic: "Show posts in specific topics"
+      after: "Show posts created after a date (YYYY-MM-DD or days ago)"
+      before: "Show posts created before a date (YYYY-MM-DD or days ago)"
+      topic_after: "Show posts in topics created after a date (YYYY-MM-DD or days ago)"
+      topic_before: "Show posts in topics created before a date (YYYY-MM-DD or days ago)"
+      keywords: "Show posts containing any of the specified keywords"
+      topic_keywords: "Show posts in topics containing any of the specified keywords"
+      post_type: "Show first posts or replies"
+      post_type_first: "First posts only"
+      post_type_reply: "Replies only"
+      status: "Filter posts by topic status"
+      status_open: "Open topics"
+      status_closed: "Closed topics"
+      status_archived: "Archived topics"
+      status_noreplies: "Topics with no replies"
+      status_single_user: "Topics with a single user"
+      order: "Sort posts"
+      order_latest: "Latest posts"
+      order_oldest: "Oldest posts"
+      order_latest_topic: "Latest topics"
+      order_oldest_topic: "Oldest topics"
+      order_likes: "Most liked"
+      max_results: "Maximum number of posts to return"
 
   filter:
     description:
@@ -5727,16 +5762,16 @@ en:
       invalid:
         one: "The tag you selected cannot be used"
         other: "None of the tags you selected can be used"
-      in_this_category: '"%{tag_name}" cannot be used in this category'
-      not_allowed: '"%{tag_name}" cannot be used'
+      in_this_category: "Can't be used in this category"
+      not_allowed: "Can't be used"
       restricted_to:
-        one: '"%{tag_name}" is restricted to the "%{category_names}" category'
-        other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
-      restricted_to_truncated: '"%{tag_name}" is restricted to the following categories: %{category_names}, and %{more_count} more'
-      synonym: 'This is a synonym for "%{tag_name}". Use "%{tag_name}" instead.'
+        one: 'Only available in the "%{category_names}" category'
+        other: "Only available in: %{category_names}"
+      restricted_to_truncated: "Only available in: %{category_names}, and %{more_count} more"
+      synonym: 'Please use "%{tag_name}" instead'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
-      one_tag_per_topic_group: 'Only one tag from the "%{tag_group_name}" group is allowed per topic'
-      missing_parent_tag: 'Requires the "%{parent_tag_name}" tag to use tags from the "%{tag_group_name}" group'
+      one_tag_per_topic_group: 'Conflicts with "%{tag_names}" (only one allowed per topic)'
+      missing_parent_tag: 'Available after adding the "%{parent_tag_name}" tag'
       restricted_tags_cannot_be_used_in_category:
         one: 'The "%{tags}" tag cannot be used in the "%{category}" category. Please remove it.'
         other: 'The following tags cannot be used in the "%{category}" category: %{tags}. Please remove them.'

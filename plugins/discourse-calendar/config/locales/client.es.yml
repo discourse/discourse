@@ -536,3 +536,4 @@ es:
       invite_user_or_group:
         title: "Notificar a usuario(s) o grupo(s)"
         invite: "Enviar"
+        success: "Invitación enviada"

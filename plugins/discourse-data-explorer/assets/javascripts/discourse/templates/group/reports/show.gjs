@@ -35,7 +35,8 @@ export default <template>
             @action={{@controller.toggleBookmark}}
             @translatedLabel={{@controller.bookmarkLabel}}
             @icon={{@controller.bookmarkIcon}}
-            class={{@controller.bookmarkClassName}}
+            class="btn-default query-group-bookmark
+              {{if @controller.queryGroupBookmark 'bookmarked'}}"
           />
         </div>
 

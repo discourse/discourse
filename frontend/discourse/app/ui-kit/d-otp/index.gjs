@@ -4,10 +4,10 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
-import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 /** @type {import("./slot.gjs").default} */
 import Slot from "./slot";
@@ -54,6 +54,23 @@ export default class DOTP extends Component {
 
   get value() {
     return this.otp.join("");
+  }
+
+  @action
+  focusInput(element) {
+    if (!this.autoFocus) {
+      return;
+    }
+
+    element.autofocus = true;
+
+    requestAnimationFrame(() => {
+      if (!element.isConnected) {
+        return;
+      }
+
+      element.focus({ preventScroll: true });
+    });
   }
 
   /**
@@ -187,7 +204,7 @@ export default class DOTP extends Component {
           {{on "blur" this.onBlur}}
           {{on "paste" this.onPaste}}
           aria-label={{i18n "d_otp.screen_reader" count=this.slots}}
-          {{(if this.autoFocus (modifier dAutoFocus))}}
+          {{didInsert this.focusInput}}
           ...attributes
         />
       </div>

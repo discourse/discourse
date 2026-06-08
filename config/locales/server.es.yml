@@ -338,7 +338,7 @@ es:
       page_publishing_requirements: "No se puede activar la publicación de páginas si está activada la subida segura."
       s3_backup_requires_s3_settings: "No puedes usar S3 como método de respaldo salvo que hayas rellenado «%{setting_name}»."
       s3_bucket_reused: "No puedes usar el mismo bucket para «s3_upload_bucket» y «s3_backup_bucket». Selecciona otro bucket o usa una ruta diferente para cada bucket."
-      secure_uploads_requirements: "Las subidas en S3 y las ACL de S3 deben estar activadas antes de activar las subidas seguras."
+      secure_uploads_requirements: "Las subidas en S3 deben estar activadas antes de activar las subidas seguras."
       share_quote_facebook_requirements: "Debes establecer la app id de Facebook para activar compartir citas en Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "No puedes obligar a usar la autenticación de dos factores si los inicios de sesión locales están desactivados."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "No puedes obligar el uso de 2FA si DiscourseConnect está activado."
@@ -613,7 +613,6 @@ es:
       admins: "administradores"
       moderators: "moderadores"
       staff: "personal"
-      anonymous: "anónimas"
       trust_level_0: "nivel_de_confianza_0"
       trust_level_1: "nivel_de_confianza_1"
       trust_level_2: "nivel_de_confianza_2"
@@ -1646,7 +1645,6 @@ es:
       upcoming_change_stable_opted_out: 'Tu sitio ha descartado el próximo cambio «%{upcoming_change}». Este cambio ha alcanzado el estado «Estable» y puede que pronto se elimine o se haga permanente. Visita <a href="%{base_path}/admin/config/upcoming-changes">la página de próximos cambios</a> para revisar los detalles sobre este cambio.'
       rails_env: "Tu servidor está funcionando en modo de %{env}."
       host_names: "Tu archivo config/database.yml está utilizando el hostname localhost predeterminado. Actualízalo para usar el hostname de tu sitio."
-      sidekiq: 'Sidekiq no se está ejecutando. Muchas tareas, como el envío de correos electrónicos, se ejecutan de forma asíncrona por Sidekiq. Asegúrate de que al menos un proceso de Sidekiq se está ejecutando. <a href="https://github.com/mperham/sidekiq" target="_blank">Más información sobre Sidekiq aquí</a>.'
       queue_size: "El número de tareas en cola es %{queue_size}, que es una cifra alta. Esto podría indicar un problema en el proceso (o procesos) de Sidekiq, o tal vez deberías añadir más trabajadores de Sidekiq."
       ram: "Tu servidor está funcionando con menos de 1 GB de memoria total. Se recomienda una memoria de al menos 1 GB de capacidad."
       google_oauth2_config: 'El servidor está configurado para permitir el registro y el inicio de sesión con Google OAuth2 (enable_google_oauth2_logins), pero los valores de ID de cliente y secreto de cliente no están configurados. Ve a <a href="%{base_path}/admin/site_settings">Ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Consulta esta guía para obtener más información</a>.'
@@ -1678,9 +1676,6 @@ es:
       admin_sidebar_deprecation: "El antiguo diseño de administración está obsoleto en favor del nuevo <a href='https://meta.discourse.org/t/-/289281'>diseño de barra lateral</a> y se eliminará en la próxima versión. Puedes <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurar</a> el nuevo diseño de la barra lateral ahora para optar antes por él."
       starttls_disabled: "La configuración de correo saliente tiene STARTTLS desactivado. Esto casi nunca es necesario. Considera eliminar <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> de tu entorno. Consulta <a href='https://meta.discourse.org/t/387286'>este tema</a> para obtener más detalles."
     back_from_logster_text: "Volver al sitio"
-    reports_section:
-      providers:
-        core_report: "Standard"
   site_settings:
     allow_bulk_invite: "Permitir invitaciones en masa subiendo un archivo CSV"
     disabled: "desactivado"
@@ -5019,10 +5014,6 @@ es:
       invalid:
         one: "La etiqueta que seleccionó no se puede usar"
         other: "No se puede utilizar ninguna de las etiquetas que seleccionaste"
-      in_this_category: '«%{tag_name}» no puede ser usada en esta categoría'
-      restricted_to:
-        one: '"%{tag_name}" está restringida a la categoría "%{category_names}"'
-        other: '«%{tag_name}» está restringida a las siguientes categorías: %{category_names}'
       has_synonyms: '"%{tag_name}" no se puede utilizar porque tiene sinónimos.'
       restricted_tags_cannot_be_used_in_category:
         one: 'La etiqueta «%{tags}» no puede usarse en la categoría «%{category}». Por favor, quítala.'

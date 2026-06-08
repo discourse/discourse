@@ -666,6 +666,123 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
+  describe "#create_post" do
+    fab!(:admin)
+    fab!(:user)
+    fab!(:first_post) { Fabricate(:post, user: user, raw: "First post", post_number: 1) }
+    fab!(:topic) { first_post.topic }
+
+    it "creates a reply as the provided user" do
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect do
+        post =
+          ctx.create_post(
+            user: admin,
+            raw: "Workflow reply",
+            topic_id: topic.id,
+            reply_to_post_number: first_post.post_number,
+          )
+
+        expect(post.raw).to eq("Workflow reply")
+        expect(post.user_id).to eq(admin.id)
+        expect(post.reply_to_post_number).to eq(first_post.post_number)
+      end.to change { topic.posts.count }.by(1)
+    end
+
+    it "requires the user to see the topic" do
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      hidden_topic = Fabricate(:topic, category: private_category)
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect do
+        ctx.create_post(user: user, raw: "Hidden reply", topic_id: hidden_topic.id)
+      end.to raise_error(Discourse::InvalidAccess).and not_change { hidden_topic.posts.count }
+    end
+
+    it "raises a node error when the topic is closed or archived" do
+      topic.update!(closed: true)
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect do
+        ctx.create_post(user: admin, raw: "Workflow reply", topic_id: topic.id)
+      end.to raise_error(
+        DiscourseWorkflows::NodeError,
+        /Cannot create a post in a closed or archived topic/,
+      )
+    end
+  end
+
+  describe "#serialize_post" do
+    fab!(:user)
+    fab!(:post) { Fabricate(:post, user: user, raw: "Workflow post body") }
+
+    it "serializes a post for workflow output" do
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      result = ctx.serialize_post(post, guardian: user.guardian, include_cooked: true)
+
+      expect(result).to include(
+        id: post.id,
+        topic_id: post.topic_id,
+        topic_title: post.topic.title,
+        post_number: post.post_number,
+        username: user.username,
+        raw: "Workflow post body",
+        cooked: post.cooked,
+      )
+    end
+
+    it "can omit raw and cooked body fields" do
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      result =
+        ctx.serialize_post(post, guardian: user.guardian, include_raw: false, include_cooked: false)
+
+      expect(result).not_to include(:raw, :cooked)
+    end
+  end
+
+  describe "#serialize_topic" do
+    fab!(:user)
+    fab!(:topic) { Fabricate(:topic, user: user) }
+
+    it "serializes a topic for workflow output" do
+      topic.custom_fields["workflow_key"] = "workflow value"
+      topic.custom_fields["other_key"] = "other value"
+      topic.save_custom_fields
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      result =
+        ctx.serialize_topic(
+          topic.reload,
+          guardian: user.guardian,
+          custom_field_names: ["workflow_key"],
+        )
+
+      expect(result).to include(
+        id: topic.id,
+        title: topic.title,
+        category_id: topic.category_id,
+        custom_fields: {
+          workflow_key: "workflow value",
+        },
+      )
+      expect(result[:custom_fields]).not_to include(:other_key)
+    end
+
+    it "omits custom fields by default" do
+      topic.custom_fields["workflow_key"] = "workflow value"
+      topic.save_custom_fields
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      result = ctx.serialize_topic(topic, guardian: user.guardian)
+
+      expect(result).not_to include(:custom_fields)
+    end
+  end
+
   describe "#http_request" do
     it "returns a parsed response object" do
       stub_request(:get, "https://api.example.com/data").to_return(

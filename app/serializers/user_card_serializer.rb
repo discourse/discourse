@@ -223,6 +223,10 @@ class UserCardSerializer < BasicUserSerializer
     object.flair_group&.flair_color
   end
 
+  def include_featured_topic?
+    scope.can_see_topic?(object.user_profile.featured_topic)
+  end
+
   def featured_topic
     BasicTopicSerializer.new(object.user_profile.featured_topic, scope: scope, root: false).as_json
   end

@@ -10,6 +10,11 @@ ar:
       site_settings:
         categories:
           discourse_solved: "حل بواسطة Discourse"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "الحلول المقبولة"
   js:
     notifications:
       alt:
@@ -69,6 +74,8 @@ ar:
       confirm_solved_removal: "سيؤدي هذا التغيير إلى تعطيل الحلول لهذا الموضوع وإزالة الحل المقبول."
       confirm_solved_removal_confirm: "تأكيد"
       confirm_solved_removal_cancel: "ألغِ"
+      shared_issue:
+        label_with_count: "‏%{label} ‏(%{count})"
       no_answer:
         title: هل تمت الإجابة على سؤالك؟
         description: "ميِّز الإجابة وساعد الآخرين عن طريق استخدام زر الحل أسفل الرد الصحيح."

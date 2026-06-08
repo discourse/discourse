@@ -2945,7 +2945,7 @@ el:
       users_placeholder: "Προσθήκη χρηστών ή ομάδων"
       title_placeholder: "Τι αφορά αυτή η συζήτησης σε μία σύντομη πρόταση;"
       title_or_link_placeholder: "Πληκτρολόγησε τίτλο, ή κάνε επικόλληση ένα σύνδεσμο εδώ"
-      edit_reason_placeholder: "γιατί κάνετε επεξεργασία;"
+      edit_reason_placeholder: "Γιατί κάνετε επεξεργασία;"
       topic_featured_link_placeholder: "Εισάγετε τον συνδέσμο που εμφανίζεται με τον τίτλο."
       remove_featured_link: "Αφαιρέστε σύνδεσμο από το θέμα."
       reply_placeholder: "Πληκτρολόγησε εδώ. Χρησιμοποίησε Markdown, BBCode, ή HTML για μορφοποίηση. Σύρε ή επικόλλησε εικόνες."
@@ -3015,6 +3015,7 @@ el:
       collapse: "Ελαχιστοποίηση του επεξεργαστή κειμένου"
       open: "Άνοιγμα του επεξεργαστή κειμένου"
       abandon: "Κλείσιμο του επεξεργαστή κειμένου και απόρριψη του προσχεδίου"
+      edit_reason: "Γιατί κάνετε επεξεργασία;"
       enter_fullscreen: "Μετάβαση σε επεξεργαστή κειμένου πλήρους οθόνης"
       exit_fullscreen: "Έξοδος από επεξεργαστή κειμένου πλήρους οθόνης"
       exit_fullscreen_prompt: "Πατήστε <kbd>ESC</kbd> για έξοδο από την πλήρη οθόνη"
@@ -3048,22 +3049,23 @@ el:
           desc: Δημιουργία νέου μηνύματος ξεκινώντας με τους ίδιους παραλήπτες
         reply_to_topic:
           label: Απάντηση στο θέμα
+          trigger: Νήμα
           desc: Απάντηση στο θέμα, όχι σε συγκεκριμένη ανάρτηση
+        reply_to_message:
+          trigger: Μήνυμα
         toggle_whisper:
           label: Εναλλαγή ψιθύρων
-          desc: Οι ψίθυροι είναι ορατοί μόνο στα μέλη του προσωπικού
         create_topic:
-          label: "Νέο θέμα"
           desc: Δημιουργία νέου θέματος
         create_personal_message:
-          label: "Νέο μήνυμα"
           desc: "Δημιουργήστε ένα νέο προσωπικό μήνυμα"
         shared_draft:
           label: "Κοινόχρηστο προσχέδιο"
           desc: "Προσχέδιο ενός θέματος που θα είναι ορατό μόνο σε επιτρεπτούς χρήστες"
         toggle_topic_bump:
-          label: "Εναλλαγή ώθησης θέματος"
           desc: "Απάντηση χωρίς αλλαγή της τελευταίας ημερομηνίας απάντησης"
+        edit_post: "Γίνεται επεξεργασία ανάρτησης"
+        unknown_user: "Χρήστης"
       reload: "Ανανέωση"
       ignore: "Αγνόηση"
       image_alt_text:
@@ -5528,7 +5530,7 @@ el:
           title: "Επεξεργασία Πίνακα"
           cancel: "ακύρωση"
           create: "Αποθήκευση"
-          reason: "γιατί αναθεωρείς;"
+          reason: "Γιατί κάνετε επεξεργασία;"
           trigger_reason: "Προσθήκη λόγου επεξεργασίας"
         default_edit_reason: "Ενημέρωση πίνακα με τον επεξεργαστή πίνακα"
       default_header:
@@ -6160,6 +6162,7 @@ el:
         too_many_requests: Έχετε εκτελέσει αυτήν την ενέργεια πάρα πολλές φορές. Περιμένετε πριν δοκιμάσετε ξανά.
         not_found_error: Λυπάμαι, αυτή η αναφορά δεν υπάρχει
         custom_date_range: Προσαρμοσμένο εύρος ημερομηνιών
+        stable: "σταθερή"
         sections:
           reports:
             title: "Αναφορές"
@@ -6181,8 +6184,9 @@ el:
                 "2": "Μέλος"
                 "3": "Τακτικός"
                 "4": "Ηγέτης"
-              trend:
-                stable: "σταθερή"
+            headline:
+              metrics:
+                new_signups: "Νέες εγγραφές"
         reports_section:
           no_data: "Δεν υπάρχουν δεδομένα για προβολή"
           modal:
@@ -6710,7 +6714,8 @@ el:
             Η ομάδα που λαμβάνει πρόσκληση σε όλα τα αυτομάτως αποστέλλοντα προσωπικά μηνύματα.
           your_organization: "Ο οργανισμός σας"
           company_name: "Όνομα"
-          company_name_placeholder: "Οργανισμός Acme"
+          company_url: "Website"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Εφαρμοστέο δίκαιο"
           governing_law_placeholder: "Επαρχία, Πολιτεία ή Χώρα"
           governing_law_help: |

@@ -2393,7 +2393,7 @@ da:
       users_placeholder: "Tilføj brugere eller grupper"
       title_placeholder: "Hvad handler diskussionen om i korte træk?"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
-      edit_reason_placeholder: "hvorfor redigerer du?"
+      edit_reason_placeholder: "Hvorfor redigerer du?"
       topic_featured_link_placeholder: "Indtast link som vises med titel."
       remove_featured_link: "Fjern link fra emne."
       reply_placeholder: "Skriv her. Brug Markdown, BBCode eller HTML til at formattere. Træk eller indsæt billeder."
@@ -2446,6 +2446,7 @@ da:
         attribute_value: "værdi"
         apply: "Anvend"
       help: "Hjælp til Markdown-redigering"
+      edit_reason: "Hvorfor redigerer du?"
       exit_fullscreen_prompt: "Tryk på <kbd>ESC</kbd> for at afslutte fuld skærm"
       modal_ok: "OK"
       cant_send_pm: "Beklager, du kan ikke sende en besked til %{username}."
@@ -2470,22 +2471,22 @@ da:
           label: Svar som ny gruppemeddelelse
         reply_to_topic:
           label: Besvar emne
+          trigger: Emne
           desc: Besvar emnet, ikke noget specifikt indlæg
+        reply_to_message:
+          trigger: Meddelelse
         toggle_whisper:
           label: Slå hvisken til/fra
-          desc: Hvisken er kun synlige for hjælperteam medlemmer
         create_topic:
-          label: "Nyt emne"
           desc: Opret et nyt emne
         create_personal_message:
-          label: "Ny meddelelse"
           desc: "Opret en ny privat besked"
         shared_draft:
           label: "Delt Kladde"
           desc: "Lav en udkast til et emne, der kun er synligt for tilladte brugere"
         toggle_topic_bump:
-          label: "Slå emne 'bump' til/fra"
           desc: "Svar uden at ændre den seneste svardato"
+        unknown_user: "Bruger"
       reload: "Genindlæs"
       ignore: "Ignorér"
       image_alt_text:
@@ -4259,7 +4260,7 @@ da:
           title: "Rediger tabel"
           cancel: "annuller"
           create: "Gem"
-          reason: "hvorfor redigerer du?"
+          reason: "Hvorfor redigerer du?"
           trigger_reason: "Tilføj årsag til redigering"
       default_header:
         col_1: "Kolonne 1"
@@ -5003,7 +5004,7 @@ da:
           site_contact_name: "Navn på websteds kontaktperson"
           your_organization: "Din organisation"
           company_name: "Navn"
-          company_name_placeholder: "Eksempel-firma"
+          company_url: "Hjemmeside"
           governing_law: "Gældende lov"
           governing_law_placeholder: "Provins, stat eller land"
           city_for_disputes: "By for tvister"

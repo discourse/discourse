@@ -250,8 +250,8 @@ class Plugin::Instance
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def add_report(name, &block)
-    reloadable_patch { |plugin| Report.add_report(name, &block) }
+  def add_report(name, exclude_from_dashboard: false, &block)
+    reloadable_patch { |plugin| Report.add_report(name, exclude_from_dashboard:, &block) }
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?

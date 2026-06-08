@@ -386,7 +386,7 @@ he:
       page_publishing_requirements: "לא ניתן להפעיל פרסום עמודים אם העלאות מאובטחות פעילות."
       s3_backup_requires_s3_settings: "לא ניתן להשתמש ב־S3 כמיקום לגיבוי אלמלא סיפקת את ‚%{setting_name}’."
       s3_bucket_reused: "אין לך אפשרות להשתמש באותו הדלי עבור ‚s3_upload_bucket’ וגם ‚s3_backup_bucket’. נא לבחור בדלי שונה או להשתמש בנתיב שונה לכל דלי."
-      secure_uploads_requirements: "יש להפעיל העלאה ל־S3 ובקרות גישה (ACLs) של S3 בטרם הפעלת העלאות מאובטחות."
+      secure_uploads_requirements: "יש להפעיל העלאה ל־S3 בטרם הפעלת העלאות מאובטחות."
       share_quote_facebook_requirements: "עליך להגדיר מזהה יישומון פייסבוק כדי להפעיל שיתוף ציטוטים עבור פייסבוק"
       second_factor_cannot_be_enforced_with_disabled_local_login: "אי אפשר לאכוף אימות דו־שלבי אם כניסה מקומית מושבתת."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "אי אפשר לאכוף אימות דו־שלבי אם מופעל DiscourseConnect."
@@ -695,7 +695,6 @@ he:
       admins: "מנהלים"
       moderators: "מפקחים"
       staff: "סגל"
-      anonymous: "אלמוני"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -1782,7 +1781,6 @@ he:
       group_email_credentials: 'הייתה תקלה בפרטי הגישה לדוא״ל לקבוצה <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. לא תישלחנה הודעות מתיבת הדואר הנכנס של הקבוצה עד לטיפול בבעיה הזאת. %{error}'
       rails_env: "השרת שלך רץ במצב %{env}."
       host_names: "הקובץ config/database.yml אצלך משתמש בכתובת ברירת המחדל - localhost. נא לעדכן אותה להשתמש בכתובת השרת שלך."
-      sidekiq: 'Sidekiq לא רץ. משימות רבות, כמו שליחת דוא״ל, מבוצעות אסינכרונית באמצעות Sidekiq. נא לוודא שלפחות תהליך אחד של Sidekiq רץ. <a href="https://github.com/mperham/sidekiq" target="_blank">כאן יש מידע נוסף על Sidekiq</a>.'
       queue_size: "מספר העבודות בתור הוא %{queue_size}, שהוא גבוה. זה עלול להצביע על בעיה עם תהליך(י) Sidekiq, או שייתכן שאתם צריכים יותר Sidekiq workers."
       ram: "בשרת שלך יש פחות מגיגה זיכרון בסך הכול. מומלץ לפחות גיגה של זיכרון."
       google_oauth2_config: 'השרת מוגדר לאפשר הרשמה דרך OAuth2 עם Google‏ (enable_google_oauth2_logins), אך לא הוגדרו ערכים למזהה לקוח ולסוד לקוח. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">מדריך זה יסביר לך כיצד</a>.'
@@ -1814,9 +1812,6 @@ he:
       maxmind_db_configuration: 'השרת הוגדר להשתמש במסד הנתונים של MaxMind לאיתור IP הפוך אך לא הוגדר מזהה חשבון ב־MaxMind מה שעלול לגרום לכשל בהורדת מסד הנתונים של MaxMind. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">המדריך הזה יסביר קצת מעבר</a>.'
       admin_sidebar_deprecation: "פריסת הניהול הישנה הוצאה משימוש לטובת <a href='https://meta.discourse.org/t/-/289281'>פריסת סרגל הצד החדשה</a> ותוסר בגרסה הבאה. ניתן <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>להגדיר</a> את פריסת סרגל הצד החדשה כעת כדי להצטרף לפני כן."
     back_from_logster_text: "חזרה לאתר"
-    reports_section:
-      providers:
-        core_report: "רגיל"
   site_settings:
     allow_bulk_invite: "לאפשר הזמנות במרוכז על ידי העלאת קובץ CSV"
     disabled: "מושבת"
@@ -5107,12 +5102,6 @@ he:
         two: "לא ניתן להשתמש באף אחת מהתגיות שבחרת"
         many: "לא ניתן להשתמש באף אחת מהתגיות שבחרת"
         other: "לא ניתן להשתמש באף אחת מהתגיות שבחרת"
-      in_this_category: 'אי אפשר להשתמש ב־„%{tag_name}” בקטגוריה הזו'
-      restricted_to:
-        one: '„%{tag_name}” מוגבלת לקטגוריה הבאה: %{category_names}'
-        two: '„%{tag_name}” מוגבלת לקטגוריות הבאות: %{category_names}'
-        many: '„%{tag_name}” מוגבלת לקטגוריות הבאות: %{category_names}'
-        other: '„%{tag_name}” מוגבלת לקטגוריות הבאות: %{category_names}'
       has_synonyms: 'לא ניתן להשתמש ב־„%{tag_name}” כיוון שיש לו מילים נרדפות.'
       restricted_tags_cannot_be_used_in_category:
         one: 'לא ניתן להשתמש בתגית „%{tags}” בקטגוריה „%{category}”. נא להסיר אותה.'

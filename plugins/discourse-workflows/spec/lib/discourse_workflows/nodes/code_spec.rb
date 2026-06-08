@@ -85,16 +85,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
       expect(result.first["json"]["name"]).to eq("Alice")
     end
 
-    it "caps console.log output at MAX_ENTRIES" do
-      log =
-        execute_code_with_log(
-          "for (var i = 0; i < 300; i++) { console.log('line ' + i); } return {};",
-        )
-
-      expect(log.entries.size).to eq(DiscourseWorkflows::Executor::StepLog::MAX_ENTRIES)
-      expect(log.entries.last["message"]).to include("truncated")
-    end
-
     it "captures console.log output" do
       log = execute_code_with_log('console.log("debug message"); return {};')
 

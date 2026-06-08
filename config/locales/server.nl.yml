@@ -338,7 +338,7 @@ nl:
       page_publishing_requirements: "Paginapublicatie kan niet worden ingeschakeld als beveiligde uploads is ingeschakeld."
       s3_backup_requires_s3_settings: "Je kunt S3 niet als back-uplocatie gebruiken voordat je een '%{setting_name}' hebt opgegeven."
       s3_bucket_reused: "Je kunt niet dezelfde bucket voor 's3_upload_bucket' en 's3_backup_bucket' gebruiken. Kies een andere bucket of gebruik een ander pad voor elke bucket."
-      secure_uploads_requirements: "S3-uploads en S3-ACL's moeten zijn ingeschakeld voordat beveiligde uploads worden ingeschakeld."
+      secure_uploads_requirements: "S3-uploads moeten zijn ingeschakeld voordat beveiligde uploads worden ingeschakeld."
       share_quote_facebook_requirements: "Je moet een Facebook-app-ID instellen om het delen van citaten in te schakelen voor Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Je kunt geen 2FA afdwingen als lokale aanmeldingen zijn uitgeschakeld."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Je kunt 2FA niet afdwingen als DiscourseConnect is ingeschakeld."
@@ -615,7 +615,6 @@ nl:
       admins: "beheerders"
       moderators: "moderators"
       staff: "medewerkers"
-      anonymous: "anoniem"
       trust_level_0: "vertrouwensniveau_0"
       trust_level_1: "vertrouwensniveau_1"
       trust_level_2: "vertrouwensniveau_2"
@@ -1651,7 +1650,6 @@ nl:
       upcoming_change_stable_opted_out: 'Je site heeft zich afgemeld voor de aankomende wijziging ''%{upcoming_change}''. Deze wijziging heeft nu de status ''Stabiel'' bereikt en wordt mogelijk binnenkort verwijderd of permanent gemaakt. Ga naar<a href="%{base_path}/admin/config/upcoming-changes">de pagina met aankomende wijzigingen</a> voor meer informatie over deze wijziging.'
       rails_env: "Je server werkt in de modus %{env}."
       host_names: "Je bestand config/database.yml gebruikt de standaard hostnaam localhost. Wijzig deze in de hostnaam van je website."
-      sidekiq: 'Sidekiq is niet actief. Veel taken, zoals het verzenden van e-mail, worden door Sidekiq asynchroon uitgevoerd. Zorg dat er minstens één Sidekiq-proces actief is. <a href="https://github.com/mperham/sidekiq" target="_blank">Lees hier meer over Sidekiq</a>.'
       queue_size: "Het aantal taken in de wachtrij is %{queue_size}, wat hoog is. Dit kan op een probleem met de Sidekiq-processen duiden, of mogelijk moet je meer Sidekiq-werkers toevoegen."
       ram: "Je server werkt met minder dan 1 GB aan geheugen in totaal. Minimaal 1 GB geheugen wordt aanbevolen."
       google_oauth2_config: 'De server is geconfigureerd om registratie en aanmelding via Google OAuth2 toe te staan (enable_google_oauth2_logins), maar de waarden voor client-ID en clientgeheim zijn niet ingesteld. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Bekijk deze handleiding voor meer info</a>.'
@@ -1683,9 +1681,6 @@ nl:
       admin_sidebar_deprecation: "De oude beheerlay-out is verouderd ten gunste van de nieuwe <a href='https://meta.discourse.org/t/-/289281'>zijbalklay-out</a> en wordt verwijderd in de volgende versie. Je kunt de nieuwe zijbalklay-out <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configureren</a> om je voor die tijd aan te melden ervoor."
       starttls_disabled: "De uitgaande e-mailconfiguratie heeft STARTTLS uitgeschakeld. Dit is bijna nooit nodig. Overweeg om <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> uit je omgeving te verwijderen. Zie <a <a href='https://meta.discourse.org/t/387286'>dit topic </a> voor meer informatie."
     back_from_logster_text: "Terug naar site"
-    reports_section:
-      providers:
-        core_report: "Standaard"
   site_settings:
     allow_bulk_invite: "Bulkuitnodigingen toestaan door een CSV-bestand te uploaden"
     disabled: "uitgeschakeld"
@@ -5116,15 +5111,7 @@ nl:
       invalid:
         one: "De geselecteerde tag kan niet worden gebruikt"
         other: "Geen van de geselecteerde tags kan worden gebruikt"
-      in_this_category: '"%{tag_name}" kan niet gebruikt worden in deze categorie'
-      restricted_to:
-        one: '"%{tag_name}" is beperkt tot de categorie "%{category_names}"'
-        other: '"%{tag_name}" is beperkt tot de volgende categorieën: %{category_names}'
-      restricted_to_truncated: '"%{tag_name}" is beperkt tot de volgende categorieën: %{category_names} en nog %{more_count}'
-      synonym: 'Dit is een synoniem voor ''%{tag_name}''. Gebruik in plaats daarvan ''%{tag_name}''.'
       has_synonyms: '''%{tag_name}'' kan niet worden gebruikt, omdat deze geen synoniemen heeft.'
-      one_tag_per_topic_group: 'Per topic is slechts één tag uit de groep ''%{tag_group_name}'' toegestaan.'
-      missing_parent_tag: 'Vereist de tag ''%{parent_tag_name}'' om tags uit de groep ''%{tag_group_name}'' te gebruiken'
       restricted_tags_cannot_be_used_in_category:
         one: 'De tag "%{tags}" kan niet worden gebruikt in de categorie "%{category}". Verwijder deze alsjeblieft.'
         other: 'De volgende tags kunnen niet worden gebruikt in de categorie "%{category}": %{tags}. Verwijder deze alsjeblieft.'

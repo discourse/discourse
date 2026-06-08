@@ -254,8 +254,9 @@ class Report
 
   def self.wrap_slow_query(timeout = 20_000)
     ActiveRecord::Base.connection.transaction do
-      # Allows only read only transactions
-      DB.exec "SET TRANSACTION READ ONLY"
+      # Allows only read only transactions. Skipped in tests, where threads
+      # share one connection and read-only would break concurrent writes.
+      DB.exec "SET TRANSACTION READ ONLY" if !Rails.env.test?
       # Set a statement timeout so we can't tie up the server
       DB.exec "SET LOCAL statement_timeout = #{timeout}"
       yield
@@ -319,13 +320,21 @@ class Report
     end
   end
 
-  def Report.add_report(name, &block)
+  def Report.add_report(name, exclude_from_dashboard: false, &block)
     singleton_class.instance_eval { define_method("report_#{name}", &block) }
+    dashboard_excluded_report_types << name.to_s if exclude_from_dashboard
   end
 
   # Only used for testing.
   def Report.remove_report(name)
     singleton_class.instance_eval { remove_method("report_#{name}") }
+    dashboard_excluded_report_types.delete(name.to_s)
+  end
+
+  # Report types a plugin has marked as not mountable on the customisable
+  # admin dashboard. They remain available on the regular reports page.
+  def Report.dashboard_excluded_report_types
+    @dashboard_excluded_report_types ||= Set.new
   end
 
   def self._get(type, opts = nil)

@@ -10,6 +10,11 @@ it:
       site_settings:
         categories:
           discourse_solved: "Risoluzione Discourse"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Soluzioni accettate"
   js:
     notifications:
       alt:
@@ -42,6 +47,8 @@ it:
       move_post_cancel: "Annulla"
       confirm_solved_removal_confirm: "Conferma"
       confirm_solved_removal_cancel: "Annulla"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: La tua domanda ha avuto risposta?
         description: "Evidenzia la risposta e aiuta gli altri utilizzando il pulsante della soluzione sotto la risposta corretta."

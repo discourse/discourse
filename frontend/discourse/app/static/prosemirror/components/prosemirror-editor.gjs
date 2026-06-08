@@ -40,7 +40,7 @@ import placeholder from "../extensions/placeholder";
 import * as utils from "../lib/plugin-utils";
 import TextManipulation from "../lib/text-manipulation";
 
-const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
+const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab", "ArrowDown", "ArrowUp"];
 
 /**
  * @typedef ProsemirrorEditorArgs
@@ -251,7 +251,7 @@ export default class ProsemirrorEditor extends Component {
         },
       },
       handleKeyDown: (view, event) => {
-        // suppress if Enter/Tab and the autocomplete is open
+        // suppress if the autocomplete is open
         return (
           AUTOCOMPLETE_KEY_DOWN_SUPPRESS.includes(event.key) &&
           !!document.querySelector(".autocomplete")

@@ -85,6 +85,17 @@ describe "Solved | Shared issue button" do
     expect(shared_issue_button).to have_no_shared_issue_button
   end
 
+  it "hides the button when shared issues are disabled for the category" do
+    support_category.upsert_custom_fields(
+      DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD => "false",
+    )
+
+    sign_in(member)
+    topic_page.visit_topic(topic)
+
+    expect(shared_issue_button).to have_no_shared_issue_button
+  end
+
   it "prompts anonymous visitors to log in" do
     topic_page.visit_topic(topic)
 

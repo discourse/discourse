@@ -387,7 +387,6 @@ cs:
       page_publishing_requirements: "Publikování stránek nelze povolit, pokud je povoleno zabezpečené nahrávání."
       s3_backup_requires_s3_settings: "S3 nemůžete použít jako umístění zálohy, pokud nezadáte '%{setting_name}'."
       s3_bucket_reused: "Nemůžete použít stejný segment pro 's3_upload_bucket' a 's3_backup_bucket'. Vyberte jiný bucket nebo použijte pro každý bucket jinou cestu."
-      secure_uploads_requirements: "Nahrávání S3 a seznamy ACL S3 musí být před povolením zabezpečeného nahrávání povoleny."
       share_quote_facebook_requirements: "Chcete-li povolit sdílení citací pro Facebook, musíte nastavit Facebook app id."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Nemůžete vynutit 2FA, pokud je zakázáno lokální přihlašování."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Nemůžete vynutit 2FA, pokud je povoleno DiscourseConnect."
@@ -700,7 +699,6 @@ cs:
       admins: "administratori"
       moderators: "moderatori"
       staff: "redakce"
-      anonymous: "anonymní"
       trust_level_0: "uroven_duvery_0"
       trust_level_1: "uroven_duvery_1"
       trust_level_2: "uroven_duvery_2"
@@ -1773,7 +1771,6 @@ cs:
       group_email_credentials: 'Došlo k problému s e-mailovými přihlašovacími údaji pro skupinu <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Dokud nebude tento problém vyřešen, nebudou ze skupinové schránky odesílány žádné e-maily. %{error}'
       rails_env: "Váš server běží v módu %{env}."
       host_names: "Vaše konfigurace v souboru config/database.yml používá 'localhost' jako jméno hostitele. Změňte toto nastavení na doménu vašeho webu."
-      sidekiq: 'Neběží Sidekiq. Mnoho úkolů, jako je odesílání e-mailů, provádí Sidekiq asynchronně. Ujistěte se, že je spuštěn alespoň jeden proces Sidekiq. <a href="https://github.com/mperham/sidekiq" target="_blank">Více informací o Sidekiq zde</a>.'
       queue_size: "Počet čekajících úloh je %{queue_size}, což je příliš mnoho. Mohlo by to indikovat problém se službou Sidekiq, nebo je zapotřebí spustit více Sidekiq worker procesů."
       ram: "Váš server má méně než 1 GB paměti. Doporučená konfigurace je alespoň 1 GB paměti."
       google_oauth2_config: 'Server je nakonfigurován tak, aby umožňoval registraci a přihlášení pomocí Google OAuth2 (enable_google_oauth2_logins), ale hodnoty client id a client secret nejsou nastaveny. Přejděte do <a href="%{base_path}/admin/site_settings">nastavení webu</a> a aktualizujte nastavení. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Více informací naleznete v této příručce</a>.'
@@ -1805,9 +1802,6 @@ cs:
       maxmind_db_configuration: 'Server byl nakonfigurován tak, aby používal databáze MaxMind pro reverzní vyhledávání IP, ale nebylo nakonfigurováno platné ID účtu MaxMind, což může vést k tomu, že se databáze MaxMind v budoucnu nepodaří stáhnout. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Více informací naleznete v této příručce</a>.'
       admin_sidebar_deprecation: "Staré rozvržení administrace je zastaralé ve prospěch nového <a href='https://meta.discourse.org/t/-/289281'>rozvržení postranního panelu</a> a bude odstraněno v příští verzi. Nové rozvržení postranního panelu můžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovat</a> již nyní a rozhodnout se pro něj dříve."
     back_from_logster_text: "Zpět na web"
-    reports_section:
-      providers:
-        core_report: "Standardní"
   site_settings:
     allow_bulk_invite: "Povolit hromadné pozvánky nahráním CSV souboru"
     disabled: "vypnuto"
@@ -4310,12 +4304,6 @@ cs:
         few: "Žádný z vybraných štítků nelze použít"
         many: "Žádný z vybraných štítků nelze použít"
         other: "Žádný z vybraných štítků nelze použít"
-      in_this_category: '"%{tag_name}" nelze v této kategorii použít'
-      restricted_to:
-        one: '„%{tag_name}“ je omezen na kategorii „%{category_names}“'
-        few: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
-        many: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
-        other: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
       has_synonyms: '"%{tag_name}" nelze použít, protože má synonyma.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Štítek "%{tags}" nelze použít v kategorii "%{category}". Odstraňte jej prosím.'

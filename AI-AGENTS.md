@@ -36,12 +36,11 @@ bin/qunit path/to/test-file.js  # Run all tests in file
 bin/qunit path/to/tests/directory # Run all tests in directory
 
 # Linting
-bin/lint path/to/file path/to/another/file
 bin/lint --fix path/to/file path/to/another/file
 bin/lint --fix --recent # Lint all recently changed files
 ```
 
-ALWAYS lint any changes you make
+ALWAYS lint any changes you make with `bin/lint --fix`
 
 ## Site Settings
 - Configured in `config/site_settings.yml` or `config/settings.yml` for plugins

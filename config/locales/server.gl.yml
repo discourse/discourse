@@ -393,7 +393,6 @@ gl:
       admins: "administradores"
       moderators: "moderadores"
       staff: "equipo"
-      anonymous: "anónimo"
       trust_level_0: "nivel_de_confianza_0"
       trust_level_1: "nivel_de_confianza_1"
       trust_level_2: "nivel_de_confianza_2"
@@ -3376,10 +3375,6 @@ gl:
       invalid:
         one: "A etiqueta que seleccionou non pode ser utilizada"
         other: "Ningunha das etiquetas que seleccionou pode ser utilizada"
-      in_this_category: '"%{tag_name}" non se pode utilizar nesta categoría'
-      restricted_to:
-        one: '«%{tag_name}» está restrinxida á categoría «%{category_names}»'
-        other: '"%{tag_name}" está restrinxida ás seguintes categorías: %{category_names}'
       has_synonyms: '"%{tag_name}" non se pode utilizar porque ten sinónimos.'
     invalid_target_tag: "non pode ser o sinónimo dun sinónimo"
     synonyms_exist: "non está permitido mentres existan sinónimos"

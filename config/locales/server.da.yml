@@ -423,7 +423,6 @@ da:
       admins: "admins"
       moderators: "moderatorer"
       staff: "personale"
-      anonymous: "anonym"
       trust_level_0: "tillidsniveau_0"
       trust_level_1: "tillidsniveau_1"
       trust_level_2: "tillidsniveau_2"
@@ -1300,9 +1299,6 @@ da:
       out_of_date_themes: "Opdateringer er tilgængelige for følgende temaer:%{themes_list}"
       google_analytics_version: "Din Discourse bruger i øjeblikket Google Analytics 3, som ikke længere vil blive understøttet efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Opgrader til Google Analytics 4</a> nu for fortsat at modtage værdifulde indsigter og analyser af dit websteds ydeevne."
     back_from_logster_text: "Tilbage til webstedet"
-    reports_section:
-      providers:
-        core_report: "Standard"
   site_settings:
     disabled: "deaktiveret"
     display_local_time_in_user_card: "Vis den lokale tid baseret på en brugers tidszone, når deres brugerkort åbnes."
@@ -3098,10 +3094,6 @@ da:
       invalid:
         one: "Det mærke, du valgte, kan ikke bruges"
         other: "Ingen af de tags, du har valgt, kan bruges"
-      in_this_category: '"%{tag_name}" kan ikke bruges i denne kategori'
-      restricted_to:
-        one: '"%{tag_name}" er begrænset til kategorien "%{category_names}"'
-        other: '"%{tag_name}" er begrænset til følgende kategorier: %{category_names}'
       has_synonyms: '"%{tag_name}" kan ikke bruges, fordi den har synonymer.'
     invalid_target_tag: "kan ikke være synonym for et synonym"
     synonyms_exist: "er ikke tilladt, mens synonymer eksisterer"

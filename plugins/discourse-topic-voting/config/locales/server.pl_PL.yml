@@ -11,6 +11,7 @@ pl_PL:
       title: "pomysły"
       description: "Miejsce, w którym członkowie mogą zgłaszać pomysły i głosować na te, które najbardziej im odpowiadają."
   site_settings:
+    enable_ideas_category_type_setup: "Włącz opcję typu kategorii Pomysły podczas konfiguracji tworzenia kategorii."
     topic_voting_enabled: 'Pozwolić użytkownikom głosować na tematy?'
     topic_voting_enable_vote_limits: 'Ogranicz liczbę głosów na użytkownika na podstawie poziomu zaufania'
     topic_voting_tl0_vote_limit: 'Ile głosów mogą oddać użytkownicy TL0?'

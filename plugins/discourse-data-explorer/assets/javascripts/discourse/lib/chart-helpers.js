@@ -24,6 +24,18 @@ export function isNumericColumn(rows, colIndex) {
   return false;
 }
 
+// Picks the view to show when the user hasn't expressed a preference. A chart
+// is only a good default when every non-label column can be plotted; if
+// charting would silently drop columns (e.g. "user, username, reason, sum"),
+// the table is more honest. Users can still toggle to the chart.
+export function defaultView(content) {
+  const ability = chartability(content);
+  if (!ability.chartable || ability.ignoredColumns.length > 0) {
+    return "table";
+  }
+  return "chart";
+}
+
 export function chartability(content) {
   const { rows, columns, colrender = {} } = content ?? {};
   if (!rows?.length) {

@@ -446,7 +446,7 @@ ar:
       page_publishing_requirements: "لا يمكن تفعيل نشر الصفحة في حال تفعيل عمليات التحميل الآمنة."
       s3_backup_requires_s3_settings: "لا يمكنك استخدام S3 كمكان للنسخ الاحتياطي ما لم تُدخِل \"%{setting_name}\"."
       s3_bucket_reused: "لا يمكنك استخدام الحاوية نفسها لـ \"s3_upload_bucket\" و\"s3_backup_bucket\" معًا. اختر حاويةً أخرى أو استخدم مسارًا مختلفًا لكل حاوية."
-      secure_uploads_requirements: "يجب تفعيل التحميل إلى S3 وقوائم التحكم في الوصول (ACL) إلى S3 قبل تفعيل التحميلات الآمنة."
+      secure_uploads_requirements: "يجب تفعيل التحميل إلى S3 قبل تفعيل التحميلات الآمنة."
       share_quote_facebook_requirements: "يجب عليك تعيين معرِّف تطبيق Facebook لتفعيل مشاركة الاقتباسات على Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "لا يمكنك فرض المصادقة الثنائية في حال إيقاف عمليات تسجيل الدخول المحلية."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "لا يمكنك فرض المصادقة الثنائية في حال إيقاف عمليات تسجيل الدخول من خلال DiscourseConnect."
@@ -807,7 +807,6 @@ ar:
       admins: "المسؤولون"
       moderators: "المشرفون"
       staff: "فريق العمل"
-      anonymous: "مجهول"
       logged_in_users: "logged_in_users"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
@@ -817,7 +816,7 @@ ar:
     default_descriptions:
       everyone: "مجموعة تلقائية تضم جميع الأعضاء"
       staff: "مجموعة تلقائية تضم المسؤولين والمشرفين"
-      anonymous: "مجموعة افتراضية تلقائية تمثل المستخدمين غير المسجّلين"
+      anonymous_users: "مجموعة افتراضية تلقائية تمثل المستخدمين غير المسجّلين"
       logged_in_users: "مجموعة افتراضية تلقائية تشمل جميع المستخدمين المسجّلين"
       admins: "مسؤول عن تكوين هذا الموقع وصيانته، مع الوصول إلى جميع بيانات الأعضاء والنشاط"
       moderators: "مسؤول عن الرد على البلاغات، والإشراف على المناقشات، ومساعدة الأعضاء فيما يتعلَّق بحساباتهم"
@@ -1977,7 +1976,6 @@ ar:
       upcoming_change_stable_opted_out: 'لقد اختار موقعك عدم الانضمام إلى التغيير القادم "%{upcoming_change}". لقد وصل هذا التغيير الآن إلى حالة "المستقرة" وقد يتم إزالته قريبًا أو تثبيته بشكل دائم. تفضل بزيارة <a href="%{base_path}/admin/config/upcoming-changes">صفحة التغييرات القادمة</a> لمراجعة التفاصيل المتعلقة بهذا التغيير.'
       rails_env: "الخادم يعمل في وضع %{env}."
       host_names: "يستخدم ملف config/database.yml اسم المضيف الافتراضي localhost. حدِّثه لاستخدام اسم مضيف موقعك."
-      sidekiq: 'Sidekiq لا يعمل. يتم تنفيذ العديد من المهام، مثل إرسال رسائل البريد الإلكتروني، بشكلٍ غير متزامن بواسطة Sidekiq. يُرجى التأكَّدمن تشغيل عملية Sidekiq واحدة على الأقل. <a href="https://github.com/mperham/sidekiq" target="_blank">تعرف على Sidekiq هنا</a>.'
       queue_size: "عدد المهام في قائمة الانتظار هو %{queue_size}، وهذا رقم كبير. قد يكون ذلك مؤشرًا على وجود مشكلة في عمليات Sidekiq، أو قد تحتاج إلى إضافة المزيد من عمال Sidekiq."
       ram: "يعمل الخادم بإجمالي ذاكرة أقل من 1 غ.ب. يوصى بتوفُّر 1 غ.ب من الذاكرة على الأقل."
       google_oauth2_config: 'تم إعداد الخادم للسماح بالتسجيل وتسجيل الدخول باستخدام Google OAuth2 (enable_google_oauth2_logins)، ولكن لم يتم تعيين قيم معرِّف العميل والمفتاح السري للعميل. انتقل إلى <a href="%{base_path}/admin/site_settings">إعدادات الموقع</a> وقم بتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">راجع هذا الدليل لمعرفة المزيد</a>.'
@@ -2013,9 +2011,6 @@ ar:
       admin_sidebar_deprecation: "تم إلغاء التخطيط القديم للمسؤول لصالح <a href='https://meta.discourse.org/t/-/289281'>تخطيط الشريط الجانبي</a> الجديد، وستتم إزالته في الإصدار التالي. يمكنك <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>تكوين</a> تخطيط الشريط الجانبي الجديد الآن للاشتراك قبل ذلك."
       starttls_disabled: "تم تعطيل بروتوكول STARTTLS في إعدادات البريد الصادر. عادةً ما لا يكون هذا ضروريًا. يُنصح بإزالة <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> من بيئة النظام لديك. لمزيد من التفاصيل، يرجى الرجوع إلى <a href='https://meta.discourse.org/t/387286'>هذا الموضوع</a>."
     back_from_logster_text: "العودة إلى الموقع"
-    reports_section:
-      providers:
-        core_report: "النمط القياسي"
   site_settings:
     allow_bulk_invite: "السماح بالدعوات الجماعية عن طريق تحميل ملف CSV"
     disabled: "متوقف"
@@ -2819,7 +2814,6 @@ ar:
     enable_simplified_category_creation: "يُفعّل هذا الإعداد إنشاء الفئات بطريقة مبسطة مع تقليل عدد الخيارات وتوفير واجهة أكثر نظافة ووضوحًا."
     modernize_foundation_theme: "يطرح هذا التغيير تعديلات تصميمية على سمة Foundation في Discourse."
     reporting_improvements: "تحسينات على التنقل والتصميم وسهولة الاستخدام لتقارير مسؤول Discourse."
-    granular_anonymous_and_logged_in_groups_permissions: "يجعل هذا الأمر أذونات إعدادات الموقع القائمة على المجموعات تتعامل مع \"الجميع\" على أنه \"جميع المستخدمين المسجلين\"، كما يفعّل المجموعتين الافتراضيتين الجديدتين \"anonymous\" و\"logged_in_users\"، ما يتيح للمسؤلين استهداف الزوار غير المسجّلين والمستخدمين المسجّلين بشكل صريح."
     dashboard_improvements: "تحسينات على أدوات التنقل، والتصميم، وسهولة الاستخدام في لوحة معلومات مسؤول Discourse."
     errors:
       invalid_css_color: "لون غير صالح. أدخِل اسم لون أو قيمة سداسية عشرية."
@@ -5576,19 +5570,7 @@ ar:
         few: "لا يمكن استخدام أي من الوسوم التي حدَّدتها"
         many: "لا يمكن استخدام أي من الوسوم التي حدَّدتها"
         other: "لا يمكن استخدام أي من الوسوم التي حدَّدتها"
-      in_this_category: 'لا يمكن استخدام "%{tag_name}" في هذه الفئة'
-      restricted_to:
-        zero: '"%{tag_name}" مقصور على الفئة التالية: %{category_names}'
-        one: '"%{tag_name}" مقصور على الفئة "%{category_names}"'
-        two: '"%{tag_name}" مقصور على الفئتَين التاليتَين: %{category_names}'
-        few: '"%{tag_name}" مقصور على الفئات التالية: %{category_names}'
-        many: '"%{tag_name}" مقصور على الفئات التالية: %{category_names}'
-        other: '"%{tag_name}" مقصور على الفئات التالية: %{category_names}'
-      restricted_to_truncated: 'يقتصر استخدام الوسم "%{tag_name}" على الفئات التالية: %{category_names}، بالإضافة إلى %{more_count} من الفئات الأخرى'
-      synonym: 'هذا الوسم مرادف لـ "%{tag_name}"؛ يُرجى استخدام "%{tag_name}" بدلاً منه.'
       has_synonyms: 'لا يمكن استخدام "%{tag_name}" لأنه يحتوي على مرادفات.'
-      one_tag_per_topic_group: 'يسمح باستخدام وسم واحد فقط من مجموعة "%{tag_group_name}" لكل موضوع'
-      missing_parent_tag: 'يتطلب استخدام وسم "%{parent_tag_name}" لاستخدام الوسوم من مجموعة "%{tag_group_name}"'
       restricted_tags_cannot_be_used_in_category:
         zero: 'لا يمكن استخدام الوسم "%{tags}" في فئة "%{category}". يُرجى إزالته.'
         one: 'لا يمكن استخدام الوسم "%{tags}" في فئة "%{category}". يُرجى إزالته.'

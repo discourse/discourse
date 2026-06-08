@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .chat-channel {
   display: flex;
   flex-direction: column;
@@ -9,6 +11,15 @@
   min-width: 250px;
 
   @include chat-height(var(--chat-header-offset, 0));
+
+  .peek-mode-active & {
+    @include viewport.from(xl) {
+      height: calc(
+        var(--composer-vh, 1vh) * 100 - var(--main-outlet-offset, 0px) -
+          1px - var(--chat-header-offset, 0)
+      );
+    }
+  }
 
   .join-channel-btn.in-float {
     position: absolute;

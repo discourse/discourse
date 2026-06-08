@@ -231,7 +231,7 @@ sv:
       page_publishing_requirements: "Sidpublicering kan inte aktiveras om säkra uppladdningar är aktiverade."
       s3_backup_requires_s3_settings: "Du kan inte använda S3 som säkerhetskopieringsplats innan du har angivit '%{setting_name}'."
       s3_bucket_reused: "Du kan inte använda samma behållare för 's3_upload_bucket' och 's3_backup_bucket'. Välj en annan behållare eller använd en annan sökväg för varje behållare."
-      secure_uploads_requirements: "S3-uppladdningar och S3 ACL:er måste ha aktiverats innan säkra uppladdningar aktiveras."
+      secure_uploads_requirements: "S3-uppladdningar måste ha aktiverats innan du aktiverar säkra uppladdningar."
       share_quote_facebook_requirements: "Du måste ange ett Facebook-app-id för att möjliggöra delning av citat på Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kan inte genomdriva 2FA om lokala inloggningar är inaktiverade."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Du kan inte genomdriva 2FA om DiscourseConnect har aktiverats."
@@ -486,7 +486,6 @@ sv:
       admins: "administratörer"
       moderators: "moderatorer"
       staff: "personal"
-      anonymous: "anonym"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -3961,10 +3960,6 @@ sv:
       invalid:
         one: "Den valda taggen kan inte användas"
         other: "Ingen av taggarna som du har valt kan användas"
-      in_this_category: '"%{tag_name}" kan inte användas i denna kategori'
-      restricted_to:
-        one: '"%{tag_name}" är begränsad till kategorin %{category_names}'
-        other: '"%{tag_name}" är begränsad till följande kategorier: %{category_names}'
       has_synonyms: '"%{tag_name}" kan inte användas eftersom den har synonymer.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Taggen "%{tags}" kan inte användas i kategorin "%{category}". Ta bort den.'

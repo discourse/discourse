@@ -2859,7 +2859,7 @@ zh_CN:
       users_placeholder: "选择用户或群组"
       title_placeholder: "用一句话概括讨论内容…"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
-      edit_reason_placeholder: "编辑原因"
+      edit_reason_placeholder: "为何进行编辑？"
       topic_featured_link_placeholder: "输入标题中显示的链接。"
       remove_featured_link: "从话题中移除链接。"
       reply_placeholder: "在此处输入。使用 Markdown、BBCode 或 HTML 进行排版。拖放或粘贴图片以插入。"
@@ -2929,7 +2929,7 @@ zh_CN:
       collapse: "最小化编辑器面板"
       open: "打开编辑器面板"
       abandon: "关闭编辑器并舍弃草稿"
-      edit_reason: "添加您的编辑理由"
+      edit_reason: "为何进行编辑？"
       enter_fullscreen: "进入全屏编辑器"
       exit_fullscreen: "退出全屏编辑器"
       exit_fullscreen_prompt: "按 <kbd>ESC</kbd> 退出全屏"
@@ -2964,25 +2964,26 @@ zh_CN:
           desc: 创建以相同收件人开头的新消息
         reply_to_topic:
           label: 回复话题
+          trigger: 话题
           desc: 回复话题，不是任何特定的帖子
+        reply_to_message:
+          trigger: 发送私信
         toggle_whisper:
           label: 切换密语
-          desc: 密语仅对管理人员可见
         create_topic:
-          label: "新建话题"
           desc: 创建新话题
         create_personal_message:
-          label: "新建消息"
           desc: "创建新的个人消息"
         shared_draft:
           label: "共享草稿"
           desc: "起草一个仅对允许的用户可见的话题"
         toggle_topic_bump:
-          label: "切换话题顶帖"
           desc: "回复但不更改最新回复日期"
         toggle_unlisted:
           label: 切换取消公开
           desc: "不公开的话题只能通过直接链接访问"
+        edit_post: "正在编辑帖子"
+        unknown_user: "用户"
       reload: "重新加载"
       ignore: "忽略"
       image_alt_text:
@@ -6086,6 +6087,7 @@ zh_CN:
         too_many_requests: 您执行此操作的次数过多。请稍后再试。
         not_found_error: 抱歉，此报告不存在
         custom_date_range: 自定义日期范围
+        stable: "稳定"
         sections:
           reports:
             title: "举报"
@@ -6108,8 +6110,6 @@ zh_CN:
                 "2": "成员"
                 "3": "常规"
                 "4": "领导者"
-              trend:
-                stable: "稳定"
         reports_section:
           modal:
             enabled_heading: "已启用"
@@ -6628,9 +6628,10 @@ zh_CN:
           your_organization: "您的组织"
           your_organization_description: "我们将在《服务条款》和《隐私声明》中显示此信息来表明此网站的运营方和司法管辖区。"
           company_name: "名称"
-          company_name_placeholder: "Acme 组织"
           company_name_warning: |
             如果留空，将不提供样板《服务条款》或《隐私声明》。
+          company_url: "网站"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "适用法律"
           governing_law_placeholder: "省、州或国家/地区"
           governing_law_help: |

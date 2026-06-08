@@ -455,7 +455,7 @@ describe "Post event" do
     find(".group-selector").click
     find(".d-multi-select__search-input").send_keys(group.name)
     find(".d-multi-select__result", text: group.name).click
-    find(".d-modal .custom-field-input").fill_in(with: "custom value")
+    form.field("customFields.custom").fill_in("custom value")
     form.field("recurrence").select("every_day")
     find(".d-modal .recurrence-until .date-picker").fill_in(with: "#{1.year.from_now.year}-12-30")
     find(".d-modal .btn-primary").click
@@ -469,7 +469,7 @@ describe "Post event" do
     form = PageObjects::Components::FormKit.new(".d-modal form")
     expect(form.field("eventType")).to have_value("private")
     expect(find(".group-selector .d-multi-select-trigger__selection")).to have_text(group.name)
-    expect(find(".d-modal .custom-field-input").value).to eq("custom value")
+    expect(form.field("customFields.custom")).to have_value("custom value")
     expect(page).to have_selector(".d-modal .recurrence-until .date-picker") do |input|
       input.value == "#{1.year.from_now.year}-12-30"
     end
@@ -498,6 +498,45 @@ describe "Post event" do
         .send_invites
 
       expect(bulk_invite_modal_page).to be_closed
+    end
+  end
+
+  context "when inviting a user or group" do
+    let!(:post) do
+      PostCreator.create(
+        admin,
+        title: "My test meetup event",
+        raw: "[event name='cool-event' status='public' start='2222-02-22 00:00' ]\n[/event]",
+      )
+    end
+
+    fab!(:invitable_user, :user)
+
+    it "notifies the invited user and closes the modal" do
+      visit(post.topic.url)
+
+      post_event_page.open_invite_user_or_group_modal
+
+      chooser =
+        PageObjects::Components::SelectKit.new(
+          ".post-event-invite-user-or-group .email-group-user-chooser",
+        )
+      chooser.expand
+      chooser.search(invitable_user.username)
+      chooser.select_row_by_value(invitable_user.username)
+      chooser.collapse
+
+      find(".post-event-invite-user-or-group .d-modal__footer .btn-primary").click
+
+      expect(page).to have_no_css(".post-event-invite-user-or-group")
+      expect(PageObjects::Components::Toasts.new).to have_success(
+        I18n.t("js.discourse_post_event.invite_user_or_group.success"),
+      )
+      expect(
+        invitable_user.notifications.where(
+          notification_type: Notification.types[:event_invitation],
+        ),
+      ).to be_present
     end
   end
 

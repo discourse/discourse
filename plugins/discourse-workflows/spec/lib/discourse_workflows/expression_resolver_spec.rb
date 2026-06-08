@@ -545,6 +545,8 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
     end
 
     it "propagates workflow budget errors from the shared sandbox" do
+      Process.stubs(:clock_gettime).returns(0.0)
+
       sandbox =
         DiscourseWorkflows::JsSandbox.new(
           {},

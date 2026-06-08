@@ -2769,6 +2769,7 @@ ja:
       collapse: "作成ツールパネルを最小化する"
       open: "作成ツールパネルを開く"
       abandon: "作成ツールを閉じて下書きを破棄する"
+      edit_reason: "編集する理由は？"
       enter_fullscreen: "作成ツールの全画面表示を開始する"
       exit_fullscreen: "作成ツールの全画面表示を終了する"
       exit_fullscreen_prompt: "<kbd>ESC</kbd> を押して全画面表示を終了"
@@ -2803,25 +2804,26 @@ ja:
           desc: 同じ受信者で始まる新しいメッセージを作成します
         reply_to_topic:
           label: トピックへ返信
+          trigger: トピック
           desc: 特定の投稿ではなく、トピックに返信する
+        reply_to_message:
+          trigger: メッセージ
         toggle_whisper:
           label: ささやきを切り替える
-          desc: ささやきはスタッフメンバーにのみ表示されます
         create_topic:
-          label: "新規トピック"
           desc: 新しいトピックを作成します
         create_personal_message:
-          label: "新規メッセージ"
           desc: "新しい個人メッセージを作成する"
         shared_draft:
           label: "共有の下書き"
           desc: "許可されたユーザーにのみ表示されるトピックの下書きを作成します"
         toggle_topic_bump:
-          label: "トピックのバンプを切り替える"
           desc: "最新の返信日を変更せずに返信します"
         toggle_unlisted:
           label: 非表示の切り替え
           desc: "非表示のトピックはダイレクトリンクのみでアクセスできます"
+        edit_post: "投稿を編集中"
+        unknown_user: "ユーザー"
       reload: "再読み込み"
       ignore: "無視する"
       image_alt_text:
@@ -5694,6 +5696,7 @@ ja:
         too_many_requests: この操作の実行回数が多すぎます。しばらくしてからもう一度お試しください。
         not_found_error: このレポートは存在しません
         custom_date_range: カスタムの日付範囲
+        stable: "安定"
         sections:
           reports:
             title: "レポート"
@@ -5715,8 +5718,6 @@ ja:
                 "2": "メンバー"
                 "3": "レギュラー"
                 "4": "リーダー"
-              trend:
-                stable: "安定"
         reports_section:
           modal:
             enabled_heading: "有効"
@@ -6231,9 +6232,10 @@ ja:
           your_organization: "あなたの組織"
           your_organization_description: "この情報は、サイトの運営者と管轄地域を示すために、利用規約とプライバシーに関する通知に使用されます。"
           company_name: "名前"
-          company_name_placeholder: "あいうえお組織"
           company_name_warning: |
             空白の場合、定型の利用規約またはプライバシーに関する通知は提供されません。
+          company_url: "ウェブサイト"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "準拠法"
           governing_law_placeholder: "都道府県または国"
           governing_law_help: |

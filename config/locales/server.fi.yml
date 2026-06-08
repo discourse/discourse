@@ -332,7 +332,7 @@ fi:
       page_publishing_requirements: "Sivun julkaisua ei voi ottaa käyttöön, jos suojatut lataukset verkkoon ovat käytössä."
       s3_backup_requires_s3_settings: "Et voi käyttää S3:a varmuuskopiosijaintina, ellei %{setting_name} ei ole määritetty."
       s3_bucket_reused: "Sama säiliö ei voi olla sekä 's3_upload_bucket' että 's3_backup_bucket'. Valitse eri säiliö tai määritä eri polku jokaiselle säiliölle."
-      secure_uploads_requirements: "S3-lataukset ja S3 ACL:t täytyy ottaa käyttöön ennen suojattujen latausten käyttöönottoa."
+      secure_uploads_requirements: "S3-lataukset täytyy ottaa käyttöön ennen suojattujen latausten käyttöönottoa."
       share_quote_facebook_requirements: "Facebook-sovellustunnus on määritettävä, jotta lainausten jakaminen Facebookiin on mahdollista."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Et voi pakottaa kaksivaiheista tunnistusta, jos paikallinen kirjautuminen on pois käytöstä."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Et voi pakottaa 2FA-asetusta käyttöön kun DiscourseConnect on aktiivisena."
@@ -603,7 +603,6 @@ fi:
       admins: "ylläpitäjät"
       moderators: "valvojat"
       staff: "henkilökunta"
-      anonymous: "anonyymeja"
       trust_level_0: "luottamustaso_0"
       trust_level_1: "luottamustaso_1"
       trust_level_2: "luottamustaso_2"
@@ -1606,7 +1605,6 @@ fi:
       group_email_credentials: 'Ryhmän <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a> sähköpostitunnistetiedoissa havaittiin ongelma, eikä ryhmän postilaatikosta lähetetä viestejä ennen kuin se on korjattu. %{error}'
       rails_env: "Palvelintasi ajetaan tilassa %{env}."
       host_names: "Sivuston config/database.yml tiedosto käyttää oletusarvoista localhost-isäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
-      sidekiq: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti Sidekiqin avulla. Varmista, että vähintään yksi Sidekiq-prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Lue lisää Sidekiqista täällä</a>.'
       queue_size: "Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq-prosesseissa, tai sinun voi täytyä lisätä Sidekiqin workerien määrää."
       ram: "Palvelimella on alle 1 Gt muistia. Vähintään 1 Gt muistia on suositeltavaa."
       google_oauth2_config: 'Palvelin on määritetty hyväksymään rekisteröityminen ja kirjautuminen Google OAuth2:n kautta (enable_google_oauth2_logins), mutta client id- ja client secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Lue lisää tästä oppaasta</a>.'
@@ -1636,9 +1634,6 @@ fi:
       maxmind_db_configuration: 'Palvelin on määritetty käyttämään MaxMind-tietokantoja käänteisissä IP-hauissa, mutta kelvollista MaxMind-tilin tunnusta ei ole määritetty, mikä saattaa johtaa siihen, että MaxMind-tietokantoja ei voi ladata jatkossa. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Katso tästä oppaasta lisätietoja</a>.'
       admin_sidebar_deprecation: "Vanha ylläpitäjien asettelu on vanhentunut ja korvataan uudella <a href='https://meta.discourse.org/t/-/289281'>sivupalkkiasettelulla</a>. Se poistetaan seuraavassa julkaisuversiossa. Voit <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>määrittää</a> uuden sivupalkkiasettelun nyt ottaaksesi sen käyttöön ennen sitä."
     back_from_logster_text: "Takaisin sivustolle"
-    reports_section:
-      providers:
-        core_report: "Standardi"
   site_settings:
     allow_bulk_invite: "Salli joukkokutsut lataamalla CSV-tiedosto"
     disabled: "poistettu käytöstä"
@@ -4659,10 +4654,6 @@ fi:
       invalid:
         one: "Valitsemaasi tunnistetta ei voi käyttää"
         other: "Mitään valitsemistasi tunnisteista ei voi käyttää"
-      in_this_category: 'Tunnistetta "%{tag_name}" ei voi käyttää tällä alueella'
-      restricted_to:
-        one: 'Tunnistetta "%{tag_name}" voi käyttää ainoastaan alueella %{category_names}'
-        other: 'Tunnistetta "%{tag_name}" voi käyttää ainoastaan seuraavilla alueilla: %{category_names}'
       has_synonyms: 'Tunnistetta "%{tag_name}" ei voi käyttää, koska sillä on synonyymejä.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Tunnistetta "%{tags}" ei voi käyttää alueella "%{category}". Poista se.'

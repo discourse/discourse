@@ -10,6 +10,11 @@ zh_CN:
       site_settings:
         categories:
           discourse_solved: "Discourse Solved"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "已被接受的解决方案"
   js:
     notifications:
       alt:
@@ -54,6 +59,8 @@ zh_CN:
       confirm_solved_removal: "此更改将禁用此话题的解决方案，并移除已接受的解决方案。"
       confirm_solved_removal_confirm: "确认"
       confirm_solved_removal_cancel: "取消"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: 您的问题是否已被解答？
         description: "在正确回复下方使用解决方案按钮高亮显示回答并帮助他人。"

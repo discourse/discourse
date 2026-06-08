@@ -74,6 +74,7 @@ gem "email_reply_trimmer"
 gem "image_optim"
 gem "multi_json"
 gem "mustache"
+gem "liquid", "5.12.0"
 gem "nokogiri"
 gem "loofah"
 gem "css_parser", require: false
@@ -277,19 +278,10 @@ gem "iso8601"
 gem "rrule"
 
 group :migrations, optional: true do
-  gem "extralite-bundle", require: "extralite"
-
-  # auto-loading
-  gem "zeitwerk"
-
-  # databases
-  gem "trilogy"
-
-  # CLI
-  gem "ruby-progressbar"
-
-  # non-cryptographic hashing algorithm for generating placeholder IDs
-  gem "digest-xxhash"
+  gem "migrations-core", path: "migrations/core"
+  gem "migrations-tooling", path: "migrations/tooling"
+  gem "migrations-converters", path: "migrations/converters"
+  gem "migrations-importer", path: "migrations/importer"
 end
 
 gem "dry-initializer", "~> 3.1"

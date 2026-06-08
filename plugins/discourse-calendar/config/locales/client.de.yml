@@ -539,3 +539,4 @@ de:
       invite_user_or_group:
         title: "Benachrichtige Benutzer oder Gruppe(n)"
         invite: "Senden"
+        success: "Einladung gesendet"

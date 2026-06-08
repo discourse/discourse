@@ -31,12 +31,44 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       expect(identifiers).to include("condition:if")
     end
 
-    it "does not include metadata key in node type response" do
+    it "returns List posts query control metadata" do
+      get "/admin/plugins/discourse-workflows/node-types.json"
+
+      post_node =
+        response.parsed_body["node_types"].find do |node_type|
+          node_type["identifier"] == "action:post"
+        end
+      properties = post_node["properties"]
+
+      expect(properties["query"]).to include(
+        "type" => "string",
+        "ui" => include("control" => "filter_query", "filter" => "posts"),
+      )
+      expect(properties["categories"]["ui"]).to include("hidden" => true)
+      expect(properties["advanced_filter"]["ui"]).to include("hidden" => true)
+    end
+
+    it "includes load options metadata in node type response" do
       get "/admin/plugins/discourse-workflows/node-types.json"
 
       badge_node =
         response.parsed_body["node_types"].find { |nt| nt["identifier"] == "action:badge" }
-      expect(badge_node).not_to have_key("metadata")
+      expect(badge_node.dig("metadata", "badges")).to all(include("id", "name"))
+    end
+
+    it "does not preload load options metadata that depends on node parameters" do
+      topic = Fabricate(:topic)
+      TopicCustomField.create!(topic: topic, name: "workflow_key", value: "value")
+
+      get "/admin/plugins/discourse-workflows/node-types.json"
+
+      topic_node =
+        response.parsed_body["node_types"].find { |nt| nt["identifier"] == "action:topic" }
+
+      expect(topic_node.dig("properties", "custom_field_names", "type_options")).to include(
+        "load_options_depends_on",
+      )
+      expect(topic_node.fetch("metadata", {})).not_to have_key("topic_custom_fields")
     end
 
     it "returns descriptor fields used by the admin client" do

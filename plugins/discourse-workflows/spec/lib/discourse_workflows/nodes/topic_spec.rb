@@ -10,8 +10,61 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
 
   before { SiteSetting.tagging_enabled = true }
 
+  describe ".load_options_context" do
+    fab!(:topic_with_custom_fields) { Fabricate(:topic, category: category) }
+    fab!(:other_topic_with_custom_fields) { Fabricate(:topic, category: category) }
+
+    def load_options(filter: nil)
+      context =
+        DiscourseWorkflows::LoadOptionsContext.new(
+          method_name: "topic_custom_fields",
+          filter: filter,
+          node_class: described_class,
+        )
+
+      described_class.load_options_context(context)
+    end
+
+    before do
+      topic_with_custom_fields.custom_fields["workflow_key"] = "first"
+      topic_with_custom_fields.save_custom_fields
+      other_topic_with_custom_fields.custom_fields["workflow_key"] = "second"
+      other_topic_with_custom_fields.custom_fields["other_key"] = "other"
+      other_topic_with_custom_fields.save_custom_fields
+    end
+
+    it "returns distinct topic custom field names for the chooser" do
+      expect(load_options).to contain_exactly(
+        { id: "other_key", name: "other_key" },
+        { id: "workflow_key", name: "workflow_key" },
+      )
+    end
+
+    it "filters topic custom field names by the filter term" do
+      expect(load_options(filter: "workflow")).to contain_exactly(
+        { id: "workflow_key", name: "workflow_key" },
+      )
+    end
+
+    it "limits topic custom field names returned to the chooser" do
+      101.times do |index|
+        TopicCustomField.create!(
+          topic: topic_with_custom_fields,
+          name: "workflow_key_#{index}",
+          value: "value",
+        )
+      end
+
+      expect(load_options.length).to eq(described_class::CUSTOM_FIELD_OPTIONS_LIMIT)
+    end
+  end
+
   describe "#execute" do
     let(:item) { { "json" => {} } }
+
+    def custom_field_entries(*rows)
+      { "values" => rows }
+    end
 
     context "with operation 'create'" do
       it "creates a topic for the configured actor" do
@@ -152,6 +205,48 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         )
       end
 
+      it "returns selected custom fields when requested" do
+        topic.custom_fields["workflow_key"] = "workflow value"
+        topic.custom_fields["other_key"] = "other value"
+        topic.save_custom_fields
+
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "get",
+              "topic_id" => topic.id.to_s,
+              "custom_field_names" => ["workflow_key"],
+            },
+            item: {
+              "json" => {
+                "topic_id" => topic.id.to_s,
+              },
+            },
+          )
+
+        expect(result["topic"]["custom_fields"]).to eq("workflow_key" => "workflow value")
+      end
+
+      it "omits custom fields by default" do
+        topic.custom_fields["workflow_key"] = "workflow value"
+        topic.save_custom_fields
+
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "get",
+              "topic_id" => topic.id.to_s,
+            },
+            item: {
+              "json" => {
+                "topic_id" => topic.id.to_s,
+              },
+            },
+          )
+
+        expect(result["topic"]).not_to have_key("custom_fields")
+      end
+
       it "raises when topic is not found" do
         expect do
           execute_node(
@@ -218,6 +313,15 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         )
       end
 
+      it "returns topics when query is not provided" do
+        result = execute_list(configuration: { "operation" => "list", "limit" => "10" })
+
+        expect(result.map { |output_item| output_item["json"]["topic"]["id"] }).to include(
+          topic_1.id,
+          topic_2.id,
+        )
+      end
+
       it "respects the limit parameter" do
         result =
           execute_list(
@@ -229,6 +333,30 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
           )
 
         expect(result.length).to eq(1)
+      end
+
+      it "respects the offset parameter" do
+        unoffset_result =
+          execute_list(
+            configuration: {
+              "operation" => "list",
+              "query" => "category:#{category.slug}",
+              "limit" => "2",
+            },
+          )
+        offset_result =
+          execute_list(
+            configuration: {
+              "operation" => "list",
+              "query" => "category:#{category.slug}",
+              "limit" => "1",
+              "offset" => "1",
+            },
+          )
+
+        expect(offset_result.map { |output_item| output_item["json"]["topic"]["id"] }).to eq(
+          [unoffset_result[1]["json"]["topic"]["id"]],
+        )
       end
 
       it "defaults limit to 30 when not provided" do
@@ -270,6 +398,42 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         expect(topic_data["like_count"]).to be_present
         expect(topic_data["created_at"]).to be_present
         expect(topic_data["bumped_at"]).to be_present
+      end
+
+      it "preloads selected custom fields when requested" do
+        topic_1.custom_fields["workflow_key"] = "first"
+        topic_1.custom_fields["other_key"] = "ignored"
+        topic_1.save_custom_fields
+        topic_2.custom_fields["workflow_key"] = "second"
+        topic_2.custom_fields["other_key"] = "ignored"
+        topic_2.save_custom_fields
+
+        custom_field_queries =
+          track_sql_queries do
+            result =
+              execute_list(
+                configuration: {
+                  "operation" => "list",
+                  "query" => "category:#{category.slug}",
+                  "limit" => "10",
+                  "custom_field_names" => ["workflow_key"],
+                },
+              )
+
+            custom_fields =
+              result.map { |output_item| output_item.dig("json", "topic", "custom_fields") }
+            expect(custom_fields).to include(
+              include("workflow_key" => "first"),
+              include("workflow_key" => "second"),
+            )
+            custom_fields.each { |fields| expect(fields).not_to include("other_key") }
+          end.select do |query|
+            query.include?("topic_custom_fields") && query.include?("workflow_key")
+          end
+
+        expect(custom_field_queries.count).to eq(1)
+        expect(custom_field_queries.first).to include("topic_id in")
+        expect(custom_field_queries.first).to include("name in")
       end
 
       it "returns empty array when no topics match" do
@@ -335,6 +499,101 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
           )
 
         expect(result.length).to eq(0)
+      end
+    end
+
+    context "with operation 'close'" do
+      fab!(:topic) { Fabricate(:topic, category: category, user: user) }
+      fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+
+      it "closes the topic as the configured actor" do
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "close",
+              "topic_id" => topic.id.to_s,
+              "actor_username" => admin.username,
+            },
+            item: item,
+          )
+
+        expect(topic.reload).to be_closed
+        expect(result["topic"]).to include("id" => topic.id, "closed" => true)
+      end
+
+      it "raises when actor_username cannot close the topic" do
+        expect do
+          execute_node(
+            configuration: {
+              "operation" => "close",
+              "topic_id" => topic.id.to_s,
+              "actor_username" => user.username,
+            },
+            item: item,
+          )
+        end.to raise_error(Discourse::InvalidAccess)
+
+        expect(topic.reload).not_to be_closed
+      end
+    end
+
+    context "with operation 'set_custom_fields'" do
+      fab!(:topic) { Fabricate(:topic, category: category, user: user) }
+      fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+
+      it "sets topic custom fields as the configured actor" do
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "set_custom_fields",
+              "topic_id" => topic.id.to_s,
+              "custom_fields" =>
+                custom_field_entries(
+                  { "key" => "foo", "value" => "bar" },
+                  { "key" => "answer", "value" => "42" },
+                ),
+              "actor_username" => admin.username,
+            },
+            item: item,
+          )
+
+        expect(topic.reload.custom_fields["foo"]).to eq("bar")
+        expect(topic.custom_fields["answer"]).to eq("42")
+        expect(result["topic"]["custom_fields"]).to eq("foo" => "bar", "answer" => "42")
+      end
+
+      it "resolves expressions in custom field values" do
+        execute_node(
+          configuration: {
+            "operation" => "set_custom_fields",
+            "topic_id" => topic.id.to_s,
+            "custom_fields" =>
+              custom_field_entries({ "key" => "foo", "value" => "={{ $json.value }}" }),
+          },
+          item: {
+            "json" => {
+              "value" => "dynamic value",
+            },
+          },
+        )
+
+        expect(topic.reload.custom_fields["foo"]).to eq("dynamic value")
+      end
+
+      it "raises when actor_username cannot edit the topic" do
+        expect do
+          execute_node(
+            configuration: {
+              "operation" => "set_custom_fields",
+              "topic_id" => topic.id.to_s,
+              "custom_fields" => custom_field_entries({ "key" => "foo", "value" => "bar" }),
+              "actor_username" => other_user.username,
+            },
+            item: item,
+          )
+        end.to raise_error(Discourse::InvalidAccess)
+
+        expect(topic.reload.custom_fields["foo"]).to be_nil
       end
     end
   end

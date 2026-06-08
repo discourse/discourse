@@ -296,6 +296,11 @@ html.composer-open:not(.has-full-page-chat) {
       align-items: center;
       width: 100%;
       max-width: 100%;
+      overflow: hidden;
+
+      .topic-link {
+        @include ellipsis;
+      }
     }
 
     .composer-controls {

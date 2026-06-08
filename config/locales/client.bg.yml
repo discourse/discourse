@@ -2092,7 +2092,7 @@ bg:
       discard: "Отхвърляне"
       title_placeholder: "За какво става дума в дискусията с едно изречение?"
       title_or_link_placeholder: "Напишете заглавие или поставете линк тук"
-      edit_reason_placeholder: "защо редактирате ?"
+      edit_reason_placeholder: "Защо редактирате ?"
       topic_featured_link_placeholder: "Въведете връзка, показана със заглавие."
       remove_featured_link: "Премахнете връзката от темата."
       reply_placeholder: "Пиши тук. Използвай Markdown, BBCode, или HTML за форматиране. Издърпайте или поставете изображенията."
@@ -2128,6 +2128,7 @@ bg:
         attribute_value: "Стойност"
         apply: "Приложи"
       help: "Помощ с Markdown"
+      edit_reason: "Защо редактирате ?"
       modal_ok: "Ок"
       cant_send_pm: "Съжеляваме, но неможете да изпращате съобщения до %{username}."
       yourself_confirm:
@@ -2152,13 +2153,15 @@ bg:
           desc: Създайте ново съобщение, започващо със същите получатели
         reply_to_topic:
           label: Отговорете на тема
+          trigger: Тема
           desc: Отговорете на темата, а не на конкретен пост
+        reply_to_message:
+          trigger: Съобщение
         toggle_whisper:
           label: Превключете шепот
-          desc: Шепотът се вижда само от служителите
         create_personal_message:
-          label: "Ново съобщение"
           desc: "Създайте ново лично съобщение"
+        unknown_user: "Потребител"
       ignore: "Игнорирай"
       image: "изображение"
     notifications:
@@ -3418,7 +3421,7 @@ bg:
         modal:
           cancel: "прекрати"
           create: "Запази "
-          reason: "защо редактирате ?"
+          reason: "Защо редактирате ?"
       spreadsheet:
         show: "Покажи"
         about: "Относно"
@@ -3753,6 +3756,7 @@ bg:
       config_areas:
         about:
           company_name: "Име"
+          company_url: "Уебсайт"
           extra_groups:
             groups: "Групи"
           optional: "(по избор)"

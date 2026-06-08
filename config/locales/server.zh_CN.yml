@@ -311,7 +311,7 @@ zh_CN:
       page_publishing_requirements: "如果启用了安全上传，则无法启用页面发布。"
       s3_backup_requires_s3_settings: "除非提供 '%{setting_name}'，否则无法将 S3 用作备份位置。"
       s3_bucket_reused: "您无法将同一个存储桶同时用作 's3_upload_bucket' 和 's3_backup_bucket'。请选择一个不同的存储桶或为每个存储桶使用不同的路径。"
-      secure_uploads_requirements: "在启用安全上传之前，必须先启用 S3 上传和 S3 ACL。"
+      secure_uploads_requirements: "必须先启用 S3 上传，然后才能启用安全上传。"
       share_quote_facebook_requirements: "您必须设置 Facebook 应用 ID 才能为 Facebook 启用引用共享。"
       second_factor_cannot_be_enforced_with_disabled_local_login: "如果禁用本地登录，则无法强制执行双重身份验证。"
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "如果启用了 DiscourseConnect，则无法强制执行双重身份验证。"
@@ -567,7 +567,6 @@ zh_CN:
       admins: "管理员"
       moderators: "版主"
       staff: "管理人员"
-      anonymous: "匿名"
       logged_in_users: "已登录用户"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
@@ -577,7 +576,7 @@ zh_CN:
     default_descriptions:
       everyone: "包括所有成员的自动群组"
       staff: "包括管理员和版主的自动群组"
-      anonymous: "匿名访客自动用户组"
+      anonymous_users: "匿名访客自动用户组"
       logged_in_users: "包含所有已登录用户的自动用户组"
       admins: "负责配置和维护此站点，并有权访问所有成员和活动数据"
       moderators: "负责回应举报、主持讨论并帮助成员管理帐户"
@@ -1582,7 +1581,6 @@ zh_CN:
       upcoming_change_stable_opted_out: '您的网站已选择退出即将推出的更改“%{upcoming_change}”。此更改现已进入“稳定”状态，可能很快就会被移除或设为永久。请访问<a href="%{base_path}/admin/config/upcoming-changes">"即将推出的更改页面</a>，查看有关此更改的详细信息。'
       rails_env: "您的服务器正在以%{env}模式运行。"
       host_names: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请将其更新为您的网站的主机名。"
-      sidekiq: 'Sidekiq 未运行。许多任务（例如发送电子邮件）都是由 Sidekiq 异步执行的。请确保至少一个 Sidekiq 进程正在运行。<a href="https://github.com/mperham/sidekiq" target="_blank">在此处了解 Sidekiq</a>。'
       queue_size: "队列中有 %{queue_size} 个作业，比较多。这可能表明 Sidekiq 进程存在问题，或者需要添加更多 Sidekiq 工作进程。"
       ram: "您的服务器运行的总内存不足 1 GB。建议使用至少 1 GB 的内存。"
       google_oauth2_config: '服务器被配置为允许通过 Google OAuth2 注册和登录 (enable_google_oauth2_logins)，但是没有设置客户端 ID 和客户端密钥值。前往<a href="%{base_path}/admin/site_settings">网站设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">请参阅此指南以了解详情</a>。'
@@ -1615,9 +1613,6 @@ zh_CN:
       admin_sidebar_deprecation: "旧的管理布局已被替换为新的<a href='https://meta.discourse.org/t/-/289281'>边栏布局</a>，旧布局将在下一个版本中移除。您现在可以选择<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>配置</a>新的边栏布局。"
       starttls_disabled: "外发电子邮件配置已禁用 STARTTLS。这几乎没有必要。考虑从您的环境中移除 <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre>。有关详情，请参阅<a href='https://meta.discourse.org/t/387286'>此话题</a>。"
     back_from_logster_text: "返回网站"
-    reports_section:
-      providers:
-        core_report: "标准"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
@@ -2516,6 +2511,11 @@ zh_CN:
     results_page: "'%{term}' 的搜索结果"
     audio: "[音频]"
     video: "[视频]"
+  posts_filter:
+    description:
+      category: "显示指定类别下的帖子"
+      category_any: "显示任意指定类别（以逗号分隔）中的帖子"
+      exclude_category: "排除指定类别中的帖子"
   filter:
     description:
       status: "按状态筛选话题"
@@ -5020,14 +5020,7 @@ zh_CN:
     forbidden:
       invalid:
         other: "您选择的标签均无法使用"
-      in_this_category: '“%{tag_name}”不能用于此类别'
-      restricted_to:
-        other: '“%{tag_name}”仅限于以下类别：%{category_names}'
-      restricted_to_truncated: '“%{tag_name}”仅限于以下类别：%{category_names}和其他 %{more_count} 个'
-      synonym: '这是“%{tag_name}”的同义词。请改用“%{tag_name}”。'
       has_synonyms: '无法使用“%{tag_name}”，因为有同义词。'
-      one_tag_per_topic_group: '每个话题只允许使用“%{tag_group_name}”群组中的一个标签'
-      missing_parent_tag: '需要使用“%{parent_tag_name}”标签才能使用“%{tag_group_name}”群组中的标签'
       restricted_tags_cannot_be_used_in_category:
         other: '“%{tags}”标签不能在“%{category}”类别中使用。请将其移除。'
       category_does_not_allow_tags:

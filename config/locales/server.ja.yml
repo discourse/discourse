@@ -308,7 +308,7 @@ ja:
       page_publishing_requirements: "セキュリティで保護されているアップロードが有効である場合、ページの公開を有効にできません。"
       s3_backup_requires_s3_settings: "'%{setting_name}' が入力されていない場合、S3 をバックアップとして使用することはできません。"
       s3_bucket_reused: "'s3_upload_bucket' and 's3_backup_bucket' に同じバケットを使用することはできません。別のバケットを選択するか、バケットごとに異なるパスを使用してください。"
-      secure_uploads_requirements: "安全なアップロードを有効にする前に、S3 アップロードと S3 ACL を有効にする必要があります。"
+      secure_uploads_requirements: "安全なアップロードを有効にする前に、S3 アップロードを有効にする必要があります。"
       share_quote_facebook_requirements: "Facebook に引用を共有できるようにするには、Facebook アプリの ID を設定する必要があります。"
       second_factor_cannot_be_enforced_with_disabled_local_login: "ログインが無効になっている場合、2FA を適用することはできません。"
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "DiscourseConnect が有効になっている場合、2FA を適用することはできません。"
@@ -560,7 +560,6 @@ ja:
       admins: "管理者"
       moderators: "モデレーター"
       staff: "スタッフ"
-      anonymous: "匿名ユーザー"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -1547,7 +1546,6 @@ ja:
       upcoming_change_stable_opted_out: 'あなたのサイトは「%{upcoming_change}」の次回の変更をオプトアウトしていますが、この変更は「安定」ステータスに達したため、まもなく削除されるか正式に公開されます。この変更の詳細については、<a href="%{base_path}/admin/config/upcoming-changes">次回の変更ページ</a>をご覧ください。'
       rails_env: "サーバーは %{env} モードで実行中です。"
       host_names: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"
-      sidekiq: 'Sidekiq が実行していません。メール送信などの多くのタスクは sidekiq により非同期に実行されます。少なくとも 1 つの sidekiq プロセスが実行していることを確認してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらをご覧ください</a>。'
       queue_size: "キューに入れられたジョブの数は %{queue_size} で、これは高い数字です。Sidekiq プロセスに問題があるか、Sidekiq ワーカーを増やす必要があります。"
       ram: "現在サーバーは 1 GB 未満の総メモリで実行しています。推奨メモリサイズは 1 GB 以上です。"
       google_oauth2_config: 'サーバーは Google OAuth2 を使った登録とログインを許可 (enable_google_oauth2_logins) するように構成されていますが、クライアント ID とクライアントシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
@@ -1577,9 +1575,6 @@ ja:
       admin_sidebar_deprecation: "古い管理者レイアウトは使用できなくなり、新しい<a href='https://meta.discourse.org/t/-/289281'>サイドバーレイアウト</a>に代わります。古いレイアウトは次のリリースで削除されます。その前に新しいサイドバーレイアウトを使用し始める場合は、今すぐ<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>構成</a>してください。"
       starttls_disabled: "送信メールの構成では STARTTLS が無効になっています。これはほとんど必要ありません。環境から <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> を削除することを検討してください。詳細については、<a href='https://meta.discourse.org/t/387286'>こちらのトピック</a>をご覧ください。"
     back_from_logster_text: "サイトに戻る"
-    reports_section:
-      providers:
-        core_report: "標準"
   site_settings:
     allow_bulk_invite: "CSV ファイルのアップロードによる一括招待を許可する"
     disabled: "無効"
@@ -4765,9 +4760,6 @@ ja:
     forbidden:
       invalid:
         other: "選択したタブはどれも使用できません"
-      in_this_category: '"%{tag_name}" をこのカテゴリで使用できません'
-      restricted_to:
-        other: '"%{tag_name}" は次のカテゴリに制限されています: %{category_names}'
       has_synonyms: '"%{tag_name}" は同義語が含まれるため使用できません。'
       restricted_tags_cannot_be_used_in_category:
         other: '次のタグは "%{category}" カテゴリで使用できません: %{tags}。削除してください。'

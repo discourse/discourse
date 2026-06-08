@@ -386,7 +386,6 @@ sk:
       page_publishing_requirements: "Publikovanie stránky nie je možné povoliť, ak je povolené zabezpečené nahrávanie."
       s3_backup_requires_s3_settings: "S3 nemôžete použiť ako umiestnenie zálohy, pokiaľ nezadáte '%{setting_name}'."
       s3_bucket_reused: "Nemôžete použiť rovnaký bucket pre 's3_upload_bucket' a 's3_backup_bucket'. Vyberte iný bucket alebo použite iné cesty pre každý bucket."
-      secure_uploads_requirements: "Pred povolením zabezpečeného odosielania je potrebné povoliť odosielanie na S3 a S3 ACL."
       share_quote_facebook_requirements: "Ak chcete povoliť zdieľanie citácií pre Facebook, musíte nastaviť id aplikácie Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Ak sú miestne prihlásenia zakázané, nie je možné vynútiť 2FA."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Ak je zapnutá funkcia DiscourseConnect, nie je možné vynútiť 2FA."
@@ -699,7 +698,6 @@ sk:
       admins: "administrátori"
       moderators: "moderátori"
       staff: "personál"
-      anonymous: "anonymný"
       trust_level_0: "stupen_dovery_0"
       trust_level_1: "stupen_dovery_1"
       trust_level_2: "stupen_dovery_2"
@@ -1754,7 +1752,6 @@ sk:
       group_email_credentials: 'Vyskytol sa problém s e-mailovými poverenciami pre skupinu <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Z doručenej pošty skupiny nebudú odosielané žiadne e-maily, kým sa tento problém nevyrieši. %{error}'
       rails_env: "Váš server beží v %{env} móde"
       host_names: "Váš súbor config/database.yml používa lokálne meno hostiteľa. Aktualizujte ho menom Vašej stránky."
-      sidekiq: 'Sidekiq nebeží. Mnoho úloh, ako napríklad odosielanie e-mailov, je vykonávaných asynchrónne pomocou Sidekiq. Prosím, uisti sa, že beží aspoň jeden proces Sidekiq. <a href="https://github.com/mperham/sidekiq" target="_blank">Tu sa dozvieš viac o Sidekiq</a>.'
       queue_size: "Počet úloh v zásobníku je %{queue_size}, čo je dosť veľa. To môže byť príznakom problému s procesom (procesmi) Sidekiq, alebo by ste mali spustiť viac Sidekiq procesov."
       ram: "Váš server beží s menej než 1 GB pamäte. Odporúča sa minimálne 1GB. "
       google_oauth2_config: 'Server je nakonfigurovaný tak, aby umožňoval registráciu a prihlásenie pomocou Google OAuth2 (enable_google_oauth2_logins), ale hodnoty client id a client secret nie sú nastavené. Prejdite do <a href="%{base_path}/admin/site_settings">Nastavení stránky</a> a aktualizujte nastavenia. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Viac informácií nájdete v tejto príručke</a>.'
@@ -1786,9 +1783,6 @@ sk:
       maxmind_db_configuration: 'Server bol nakonfigurovaný na používanie databáz MaxMind pre reverzné vyhľadávanie IP adries, ale nebolo nakonfigurované platné ID účtu MaxMind, čo môže mať za následok, že databázy MaxMind sa v budúcnosti nebudú sťahovať. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Viac informácií nájdete v tejto príručke</a>.'
       admin_sidebar_deprecation: "Staré rozvrhnutie administrátora je zastarané v prospech nového <a href='https://meta.discourse.org/t/-/289281'>rozvrhnutia bočného panela</a> a bude odstránené v nasledujúcej verzii. Nové rozvrhnutie bočného panela môžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovať</a> už teraz, aby ste sa rozhodli preň skôr."
     back_from_logster_text: "Späť na stránku"
-    reports_section:
-      providers:
-        core_report: "Štandardné"
   site_settings:
     allow_bulk_invite: "Umožniť hromadné pozvania nahraním súboru CSV"
     disabled: "vypnuté"
@@ -4977,12 +4971,6 @@ sk:
         few: "Žiadnu z vybraných značiek nie je možné použiť"
         many: "Žiadnu z vybraných značiek nie je možné použiť"
         other: "Žiadnu vybrané značky nie je možné použiť"
-      in_this_category: '"%{tag_name}" nemožno použiť v tejto kategórii'
-      restricted_to:
-        one: '"%{tag_name}" je obmedzená na kategóriu "%{category_names}"'
-        few: '"%{tag_name}" je obmedzená na tieto kategórie: %{category_names}'
-        many: '"%{tag_name}" je obmedzená na tieto kategórie: %{category_names}'
-        other: '"%{tag_name}" je obmedzená na tieto kategórie: %{category_names}'
       has_synonyms: '"%{tag_name}" nemožno použiť, pretože má synonymá.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Značku "%{tags}" nemožno použiť v kategórii "%{category}". Odstráňte ju, prosím.'

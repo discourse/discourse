@@ -354,7 +354,6 @@ lt:
       admins: "administratoriai"
       moderators: "moderatoriai"
       staff: "personalas"
-      anonymous: "anonimas"
       trust_level_0: "pasitikėjimo_lygis_0"
       trust_level_1: "pasitikėjimo_lygis_1"
       trust_level_2: "pasitikėjimo_lygis_2"
@@ -1218,9 +1217,6 @@ lt:
   dashboard:
     problem:
       rails_env: "Jūsų serveris veikia %{env} režimu."
-    reports_section:
-      providers:
-        core_report: "Standartinis"
   site_settings:
     disabled: "uždrausta"
     display_local_time_in_user_card: "Rodyti vietinį laiką pagal vartotojo laiko juostą, kai atidaroma vartotojo kortelė."
@@ -2527,7 +2523,6 @@ lt:
     restricted_tag_disallowed: 'Jūs negalite naudoti žymos „%{tag}“.'
     restricted_tag_remove_disallowed: 'Negalite pašalinti žymos „%{tag}“.'
     forbidden:
-      in_this_category: '„%{tag_name}“ šioje kategorijoje negali būti naudojamas'
       has_synonyms: '„%{tag_name}“ negalima naudoti, nes jis turi sinonimų.'
     invalid_target_tag: "negali būti sinonimo sinonimas"
     synonyms_exist: "neleidžiama, kol yra sinonimų"

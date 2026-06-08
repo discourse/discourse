@@ -509,3 +509,4 @@ fi:
       invite_user_or_group:
         title: "Ilmoita käyttäjille tai ryhmille"
         invite: "Lähetä"
+        success: "Kutsu lähetetty"

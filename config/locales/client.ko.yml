@@ -2068,7 +2068,7 @@ ko:
       users_placeholder: "사용자 또는 그룹 추가"
       title_placeholder: "토론 주제를 한 문장으로 적으세요"
       title_or_link_placeholder: "여기에 제목을 입력하거나 링크를 붙여 넣으세요"
-      edit_reason_placeholder: "편집 이유"
+      edit_reason_placeholder: "왜 편집 중입니까?"
       topic_featured_link_placeholder: "제목과 함께 표시된 링크를 입력하세요."
       remove_featured_link: "글에서 링크를 제거하십시오."
       reply_placeholder: "여기에 입력하세요. 포맷은 Markdown, BBCode 또는 HTML을 지원합니다. 이미지를 드래그하거나 붙여 넣을 수 있습니다."
@@ -2106,6 +2106,7 @@ ko:
         attribute_value: "값"
         apply: "적용"
       help: "Markdown 편집 도움말"
+      edit_reason: "왜 편집 중입니까?"
       exit_fullscreen_prompt: "전체 화면에서 나가려면 <kbd>ESC</kbd>를 누르세요."
       modal_ok: "확인"
       cant_send_pm: "%{username} 님에게 메시지를 보낼 수 없습니다."
@@ -2131,22 +2132,22 @@ ko:
           desc: 동일한 수신자에게 새 메시지를 작성합니다
         reply_to_topic:
           label: 댓글 쓰기
+          trigger: 글
           desc: 특정 댓글이 아닌 본 글에 댓글 작성
+        reply_to_message:
+          trigger: 메시지 보내기
         toggle_whisper:
           label: 귓속말 토글
-          desc: 귓속말은 운영진만 볼 수 있습니다
         create_topic:
-          label: "새 글"
           desc: 새글 쓰기
         create_personal_message:
-          label: "새 메시지"
           desc: "새 개인 메시지 쓰기"
         shared_draft:
           label: "공유 초안"
           desc: "허용된 사용자만 볼 수 있는 글 초안 작성"
         toggle_topic_bump:
-          label: "글 끌어 올리기 전환"
           desc: "최신 댓글 날짜를 변경하지 않고 댓글을 답니다"
+        unknown_user: "사용자"
       reload: "리로드"
       ignore: "무시"
       image_alt_text:
@@ -4310,6 +4311,8 @@ ko:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "조직"
           company_name: "그룹명"
+          company_url: "웹 사이트"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "그룹"
           optional: "(선택 사항)"

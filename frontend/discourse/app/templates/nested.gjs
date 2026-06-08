@@ -1,6 +1,7 @@
 import Nested from "discourse/components/nested";
 import NestedContextView from "discourse/components/nested/context-view";
 import PostTextSelection from "discourse/components/post-text-selection";
+import SelectedPosts from "discourse/components/selected-posts";
 
 export default <template>
   <PostTextSelection
@@ -10,6 +11,26 @@ export default <template>
     @editPost={{@controller.editPost}}
     @topic={{@controller.topic}}
   />
+
+  <div
+    class="selected-posts nested-view__selected-posts
+      {{unless @controller.multiSelect 'hidden'}}"
+  >
+    <SelectedPosts
+      @selectedPostsCount={{@controller.selectedPostsCount}}
+      @canSelectAll={{@controller.canSelectAll}}
+      @canDeselectAll={{@controller.canDeselectAll}}
+      @canDeleteSelected={{@controller.canDeleteSelected}}
+      @canMergeTopic={{@controller.canMergeTopic}}
+      @canChangeOwner={{@controller.canChangeOwner}}
+      @canMergePosts={{@controller.canMergePosts}}
+      @toggleMultiSelect={{@controller.toggleMultiSelect}}
+      @mergePosts={{@controller.mergePosts}}
+      @deleteSelected={{@controller.deleteSelected}}
+      @deselectAll={{@controller.deselectAll}}
+      @selectAll={{@controller.selectAll}}
+    />
+  </div>
 
   {{#if @controller.contextMode}}
     <NestedContextView
@@ -55,6 +76,11 @@ export default <template>
       @scrollAnchor={{@controller.scrollAnchor}}
       @showActivityLog={{@controller.showActivityLog}}
       @collapseReplies={{@controller.collapseReplies}}
+      @multiSelect={{@controller.multiSelect}}
+      @togglePostSelection={{@controller.togglePostSelection}}
+      @selectReplies={{@controller.selectReplies}}
+      @selectBelow={{@controller.selectBelow}}
+      @postSelected={{@controller.postSelected}}
     />
   {{else}}
     <Nested
@@ -102,6 +128,11 @@ export default <template>
       @scrollAnchor={{@controller.scrollAnchor}}
       @showActivityLog={{@controller.showActivityLog}}
       @collapseReplies={{@controller.collapseReplies}}
+      @multiSelect={{@controller.multiSelect}}
+      @togglePostSelection={{@controller.togglePostSelection}}
+      @selectReplies={{@controller.selectReplies}}
+      @selectBelow={{@controller.selectBelow}}
+      @postSelected={{@controller.postSelected}}
     />
   {{/if}}
 </template>

@@ -312,7 +312,6 @@ hy:
       admins: "ադմինները"
       moderators: "մոդերատորներ"
       staff: "անձնակազմ"
-      anonymous: "անանուն"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -2734,11 +2733,6 @@ hy:
   tags:
     title: "Թեգեր"
     upload_row_too_long: "CSV ֆայլը պետք է ունենա մեկ թեգ յուրաքանչյուր տողում: Ըստ ցանկության՝ թեգը կարող է շարունակվել ստորակետով և ապա՝ թեգի խմբի անվանմանմբ:"
-    forbidden:
-      in_this_category: '"%{tag_name}" -ը չի կարող օգտագործվել այս կատեգորիայում'
-      restricted_to:
-        one: '"%{tag_name}"-ը արգելված է "%{category_names}" կատեգորիայում:'
-        other: '"%{tag_name}" -ը արգելված է հետևյալ կատեգորիաներում՝ %{category_names}'
   rss_by_tag: "%{tag} թեգով թեմաներ "
   finish_installation:
     congratulations: "Շնորհավորում ենք, Դուք տեղադրել եք Discourse -ը!"

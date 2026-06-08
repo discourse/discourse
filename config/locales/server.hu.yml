@@ -338,7 +338,7 @@ hu:
       page_publishing_requirements: "Oldal közzéttételét nem lehet engedélyezni, amíg a biztonságos feltöltés engedélyezve van."
       s3_backup_requires_s3_settings: "Az S3 nem használható biztonsági mentés helyeként, hacsak nem adta meg a %{setting_name} értékét."
       s3_bucket_reused: "Nem használhatja ugyanazt a tárolót az „s3_upload_bucket” és az „s3_backup_bucket” számára. Válasszon másik gyűjtőzónát, vagy használjon más útvonalat minden egyes csoporthoz."
-      secure_uploads_requirements: "A biztonságos feltöltés engedélyezése előtt engedélyezni kell az S3 feltöltéseket és az S3 ACL-eket."
+      secure_uploads_requirements: "A biztonságos feltöltés engedélyezése előtt engedélyezni kell az S3 feltöltést."
       share_quote_facebook_requirements: "Be kell állítania egy Facebook-alkalmazás azonosítót, hogy engedélyezhesse a megosztást Facebookon."
       second_factor_cannot_be_enforced_with_disabled_local_login: "A 2FA nem kényszeríthető, ha a helyi bejelentkezés le van tiltva."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "A 2FA nem kényszeríthető, ha a DiscourseConnect engedélyezett."
@@ -612,7 +612,6 @@ hu:
       admins: "adminisztrátorok"
       moderators: "moderátorok"
       staff: "stáb"
-      anonymous: "névtelen"
       trust_level_0: "bizalmi_szint_0"
       trust_level_1: "bizalmi_szint_1"
       trust_level_2: "bizalmi_szint_2"
@@ -1633,7 +1632,6 @@ hu:
       upcoming_change_stable_opted_out: 'Webhelye elutasította a(z) „%{upcoming_change}” várható módosítást. Ez a változtatás mostanra elérte a „Stabil” állapotot, és hamarosan véglegessé válhat, vagy eltávolításra kerülhet a beállítási lehetőségek közül. A részletek áttekintéséhez látogasson el a <a href="%{base_path}/admin/config/upcoming-changes">várható módosítások oldalára</a>.'
       rails_env: "A kiszolgáló jelenleg %{env} módban fut."
       host_names: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
-      sidekiq: 'Sidekiq nem fut. Sok feladatot, például az e-mailek küldését, a Sidekiq aszinkron módon hajtja végre. Győződjön meg arról, hogy legalább egy Sidekiq-folyamat fut. <a href="https://github.com/mperham/sidekiq" target="_blank">Tudjon meg többet a Sidekiqről itt</a>.'
       queue_size: "A sorba állított feladatok száma %{queue_size}, ami magas. Ez a Sidekiq-folyamat(ok) problémáját jelezheti, vagy több Sidekiq-kezelőt kell hozzáadni."
       ram: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
       google_oauth2_config: 'A szerver úgy van beállítva, hogy engedélyezze a regisztrációt és a bejelentkezést a Google OAuth2 használatával (enable_google_oauth2_logins), de az ügyfélazonosító és az ügyfél titkossága nincs beállítva. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">További információért tekintse meg ezt az útmutatót</a>.'
@@ -1665,9 +1663,6 @@ hu:
       admin_sidebar_deprecation: "A régi adminisztrátori elrendezés elavult, az új <a href='https://meta.discourse.org/t/-/289281'>oldalsávelrendezés helyett</a> , és a következő kiadásban eltávolítjuk. Most már <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>konfigurálhatja</a> az új oldalsáv-elrendezést, hogy azelőtt bekapcsolódjon."
       starttls_disabled: "A kimenő e-mail konfigurációban a STARTTLS le van tiltva. Erre szinte soha nincs szükség. Fontolja meg a <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> eltávolítását a környezetéből. További részletekért tekintse meg <a href='https://meta.discourse.org/t/387286'>ezt a témát</a> ."
     back_from_logster_text: "Vissza az oldalra"
-    reports_section:
-      providers:
-        core_report: "Szabványos"
   site_settings:
     allow_bulk_invite: "Tömeges meghívók engedélyezése CSV-fájl feltöltésével"
     disabled: "kikapcsolva"
@@ -4871,10 +4866,6 @@ hu:
       invalid:
         one: "A kiválasztott címke nem használható"
         other: "A kiválasztott címkék nem használhatóak"
-      in_this_category: 'A(z) „%{tag_name}” címke nem használható ebben a kategóriában'
-      restricted_to:
-        one: 'A(z) „%{tag_name}” címke a(z) „%{category_names}” kategóriára korlátozott'
-        other: 'A(z) „%{tag_name}” címke a következő kategóriákra korlátozott: %{category_names}'
       has_synonyms: '"%{tag_name}" nem használható, mert szinonimái vannak.'
       restricted_tags_cannot_be_used_in_category:
         one: '"%{tags}" címke nem használható ebben a kategóriában: "%{category}". Kérjük távolítsa el.'

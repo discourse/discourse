@@ -11,8 +11,8 @@ RSpec.describe AdminDashboard::Reports::CoreReportProvider do
   end
 
   describe ".label" do
-    it "returns the localized provider label" do
-      expect(described_class.label).to eq(I18n.t("dashboard.reports_section.providers.core_report"))
+    it "is nil because the standard provider's reports render without a pill" do
+      expect(described_class.label).to be_nil
     end
   end
 
@@ -26,7 +26,7 @@ RSpec.describe AdminDashboard::Reports::CoreReportProvider do
       expect(resolved.source).to eq("core_report")
       expect(resolved.identifier).to eq("signups")
       expect(resolved.title).to be_present
-      expect(resolved.label).to eq(described_class.label)
+      expect(resolved.label).to be_nil
     end
 
     it "omits identifiers that don't correspond to a built-in report" do
@@ -64,13 +64,32 @@ RSpec.describe AdminDashboard::Reports::CoreReportProvider do
       expect(described_class.list_all(search: "zzzz_no_match_zzzz")).to be_empty
     end
 
-    it "respects offset and limit" do
-      first_two = described_class.list_all(offset: 0, limit: 2)
-      next_two = described_class.list_all(offset: 2, limit: 2)
-
+    it "returns a title-sorted page and resumes after the cursor" do
+      first_two = described_class.list_all(limit: 2)
       expect(first_two.size).to eq(2)
+
+      titles = described_class.list_all.map { |report| report.title.to_s.downcase }
+      expect(titles).to eq(titles.sort)
+
+      after = { title: first_two.last.title, key: first_two.last.key }
+      next_two = described_class.list_all(after: after, limit: 2)
+
       expect(next_two.size).to eq(2)
       expect(first_two.map(&:identifier)).not_to include(*next_two.map(&:identifier))
+      expect(
+        described_class.sort_key(next_two.first) <=> described_class.sort_key(first_two.last),
+      ).to eq(1)
+    end
+  end
+
+  describe "reports excluded from the dashboard" do
+    after { Report.dashboard_excluded_report_types.delete("signups") }
+
+    it "omits them from both list_all and resolve_many" do
+      Report.dashboard_excluded_report_types << "signups"
+
+      expect(described_class.list_all.map(&:identifier)).not_to include("signups")
+      expect(described_class.resolve_many(%w[signups], guardian: guardian)).to be_empty
     end
   end
 

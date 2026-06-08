@@ -330,7 +330,6 @@ ca:
       admins: "administradors"
       moderators: "moderadors"
       staff: "equip responsable"
-      anonymous: "anònim"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -2726,10 +2725,6 @@ ca:
       invalid:
         one: "No es pot fer servir l'etiqueta que heu seleccionat"
         other: "No es pot fer servir cap de les etiquetes que heu seleccionat"
-      in_this_category: '"%{tag_name}" no es pot utilitzar en aquesta categoria'
-      restricted_to:
-        one: '"%{tag_name}" està restringit a la categoria "%{category_names}"'
-        other: '"%{tag_name}" és restringit a les següents categories: %{category_names}'
   rss_by_tag: "Temes etiquetats amb %{tag}"
   finish_installation:
     congratulations: "Enhorabona, heu instal·lat Discourse!"

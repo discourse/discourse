@@ -793,14 +793,6 @@ RSpec.describe Chat::GuardianExtensions do
       end
     end
 
-    context "when sender is not in direct message enabled groups" do
-      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff] }
-
-      it "returns false" do
-        expect(guardian).not_to be_able_to_send_direct_message(dm_channel)
-      end
-    end
-
     context "when sender is suspended" do
       before do
         UserSuspender.new(

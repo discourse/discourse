@@ -332,7 +332,7 @@ fr:
       page_publishing_requirements: "La publication de pages ne peut pas être activée si les téléversements sécurisés sont activés."
       s3_backup_requires_s3_settings: "Utiliser S3 comme emplacement de sauvegarde nécessite de renseigner le paramètre « %{setting_name} »."
       s3_bucket_reused: "Il n'est pas possible d'utiliser le même bucket pour « s3_upload_bucket » et « s3_backup_bucket ». Choisissez un autre bucket ou utilisez un chemin d'accès différent pour chaque bucket."
-      secure_uploads_requirements: "Les téléversements S3 et les ACL S3 doivent être activés avant d'activer les téléversements sécurisés."
+      secure_uploads_requirements: "Les téléversements S3 doivent être activés avant d'activer les téléversements sécurisés."
       share_quote_facebook_requirements: "Vous devez définir un identifiant d'application Facebook pour activer le partage de citation vers Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Vous ne pouvez pas rendre obligatoire l'authentification à deux facteurs lorsque les connexions locales sont désactivées."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Vous ne pouvez pas appliquer 2FA si DiscourseConnect est activé."
@@ -603,7 +603,6 @@ fr:
       admins: "administrateurs"
       moderators: "modérateurs"
       staff: "responsables"
-      anonymous: "anonymes"
       trust_level_0: "niveau_confiance_0"
       trust_level_1: "niveau_confiance_1"
       trust_level_2: "niveau_confiance_2"
@@ -1606,7 +1605,6 @@ fr:
       group_email_credentials: 'Un problème est survenu avec les identifiants de messagerie du groupe <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Aucun e-mail ne sera envoyé depuis la boîte de réception du groupe tant que ce problème ne sera pas résolu. %{error}'
       rails_env: "Votre serveur fonctionne dans l'environnement de %{env}."
       host_names: "Votre fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
-      sidekiq: 'Sidekiq n''est pas en cours d''exécution. De nombreuses tâches, comme l''envoi d''e-mails, sont exécutées de manière asynchrone par Sidekiq. Veuillez vous assurer qu''au moins un processus Sidekiq est en cours d''exécution. <a href="https://github.com/mperham/sidekiq" target="_blank">En savoir plus sur Sidekiq ici</a>.'
       queue_size: "Il y a %{queue_size} tâches dans la file d'attente, ce qui est assez élevé. Cela peut indiquer un problème avec les processus Sidekiq ou que ces derniers ne sont pas assez nombreux pour traiter efficacement les tâches."
       ram: "Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé."
       google_oauth2_config: 'Le serveur est configuré pour permettre l''authentification via Google Oauth2 (enable_google_oauth2_logins), mais les valeurs de l''identifiant client et le secret client ne sont pas renseignés. Accédez aux <a href="%{base_path}/admin/site_settings">paramètres du site</a> et configurez ces valeurs. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Consultez ce guide pour en savoir plus</a>.'
@@ -1636,9 +1634,6 @@ fr:
       maxmind_db_configuration: 'Le serveur a été configuré pour utiliser les bases de données MaxMind pour les recherches IP inversées, mais aucun identifiant de compte MaxMind valide n''a été configuré, ce qui pourrait empêcher le téléchargement des bases de données MaxMind à l''avenir. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Consultez ce guide pour en savoir plus</a>.'
       admin_sidebar_deprecation: "L'ancienne disposition d'administration est obsolète au profit de la nouvelle <a href='https://meta.discourse.org/t/-/289281'>disposition de la barre latérale</a> et sera supprimée dans la prochaine version. Vous pouvez <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurer</a> la nouvelle disposition de la barre latérale maintenant pour l'activer avant cette suppression."
     back_from_logster_text: "Retour au site"
-    reports_section:
-      providers:
-        core_report: "Standard"
   site_settings:
     allow_bulk_invite: "Autoriser l'envoi d'invitations multiples via l'importation d'un fichier CSV"
     disabled: "désactivé"
@@ -4764,10 +4759,6 @@ fr:
       invalid:
         one: "L'étiquette que vous avez sélectionnée ne peut pas être utilisée"
         other: "Aucune des étiquettes que vous avez sélectionnées ne peut être utilisée"
-      in_this_category: 'L''étiquette « %{tag_name} » ne peut pas être utilisée dans cette catégorie'
-      restricted_to:
-        one: 'L''étiquette « %{tag_name} » est réservée à la catégorie « %{category_names} »'
-        other: 'L''étiquette « %{tag_name} » est réservée aux catégories suivantes : %{category_names}'
       has_synonyms: 'L''étiquette « %{tag_name} » ne peut pas être utilisée car elle a des synonymes.'
       restricted_tags_cannot_be_used_in_category:
         one: 'L''étiquette « %{tags} » ne peut pas être utilisée dans la catégorie « %{category} ». Veuillez la supprimer.'
