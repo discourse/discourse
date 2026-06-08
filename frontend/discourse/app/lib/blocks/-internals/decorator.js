@@ -28,6 +28,7 @@ import {
   validateAndParseBlockName,
   validateBlockDataOption,
   validateBlockOptions,
+  validateBlockParts,
   validateDisplayMetadata,
   validateOutletRestrictions,
 } from "discourse/lib/blocks/-internals/validation/block-decorator";
@@ -90,6 +91,9 @@ const AUTH_TOKEN = Symbol("block-auth-token");
  * @property {boolean} transparent - When true, the block is treated as
  *   structural scaffolding rather than a user-facing block (children
  *   expanded inline). See the `transparent` option on `block()`.
+ * @property {ReadonlyArray<{id: string, block: string|Function, args: Object|null, lock: true|string[]|null}>|null} parts -
+ *   The code-defined inner composition, or null. See the `parts` option on
+ *   `block()`.
  */
 
 /**
@@ -218,6 +222,28 @@ const BlockComponentManager = new Proxy(
  */
 
 /**
+ * Deeply freezes a validated `parts` composition for storage on block
+ * metadata, so the code-defined defaults can't be mutated at runtime. Freezes
+ * the array, each part, and each part's `args` / `lock`.
+ *
+ * @param {Array<Object>} parts - The validated parts array.
+ * @returns {ReadonlyArray<Object>} The frozen parts.
+ */
+function freezeParts(parts) {
+  return Object.freeze(
+    parts.map((part) =>
+      Object.freeze({
+        ...part,
+        args: part.args ? Object.freeze({ ...part.args }) : null,
+        lock: Array.isArray(part.lock)
+          ? Object.freeze([...part.lock])
+          : (part.lock ?? null),
+      })
+    )
+  );
+}
+
+/**
  * Decorator that transforms a Glimmer component into a block component.
  *
  * Block components have special authorization constraints:
@@ -292,6 +318,18 @@ const BlockComponentManager = new Proxy(
  *   into render-ready data; optional `hydrate(rawJson, { owner })` adapts a
  *   server-preloaded payload; optional `skeleton(args)` shapes the placeholder.
  *
+ * @param {Array<{id: string, block: string|Function, args?: Object, lock?: true|string[]}>} [options.parts] -
+ *   A code-defined inner composition: an ordered list of inner blocks the
+ *   block renders when an entry referencing it supplies no `children` of its
+ *   own. Each part names an inner block (by registered name or class
+ *   reference), carries default `args`, and is addressed by a stable, unique
+ *   `id`. An instance may override a part's own args by part id (locked args
+ *   excepted). A part may set `lock` to `true` (the whole part is locked) or a
+ *   list of arg names that can't be overridden in place. Declaring `parts`
+ *   makes the block render as a container; when an entry supplies its own
+ *   `children`, the composition is bypassed and it renders as a plain
+ *   container.
+ *
  * @returns {Function} Decorator function that returns the decorated class
  *
  * @example
@@ -312,7 +350,7 @@ export function block(name, options = {}) {
 
   // Extract all options with defaults
   const {
-    container: isContainer = false,
+    container: containerOption = false,
     classNames: decoratorClassNames = null,
     description = "",
     args: argsSchema = null,
@@ -329,7 +367,17 @@ export function block(name, options = {}) {
     paletteHidden = false,
     transparent = false,
     data: dataDeclaration = null,
+    parts = null,
   } = options;
+
+  // A block that declares a `parts` composition renders inner blocks, so it
+  // behaves as a container (it yields children) regardless of the explicit
+  // `container` flag. When such an entry supplies its own `children` it is
+  // treated as a plain container instead (the composition is bypassed).
+  const isContainer = containerOption === true || parts != null;
+
+  // Validate the optional inner composition.
+  validateBlockParts(name, parts);
 
   // Validate arg schema structure and types
   validateArgsSchema(argsSchema, name);
@@ -413,6 +461,7 @@ export function block(name, options = {}) {
       namespace: parsed.namespace,
       namespaceType: parsed.type,
       paletteHidden: paletteHidden === true,
+      parts: parts ? freezeParts(parts) : null,
       previewArgs: previewArgs ? Object.freeze({ ...previewArgs }) : null,
       shortName: parsed.name,
       thumbnail,

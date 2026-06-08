@@ -570,6 +570,14 @@ export default class BlockChrome extends Component {
     const entry = this.wireframe.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
+    // A composite renders a code-defined composition when it carries no
+    // `children` of its own; that's not an empty container needing a drop
+    // hint. (Synthesized parts have no persisted entry, so `entry` is null —
+    // still composed.) A detached composite has an explicit `children` array
+    // and falls through to the normal empty check below.
+    if (this.metadata?.parts && entry?.children == null) {
+      return false;
+    }
     return !entry?.children?.length;
   }
 

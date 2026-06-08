@@ -3,6 +3,7 @@ import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
 /** @type {import("discourse/blocks/block-outlet.gjs")} */
 import { _getValidatedLayout, _hasLayout } from "discourse/blocks/block-outlet";
+import { synthesizePartEntries } from "discourse/lib/blocks/-internals/composite";
 import { loadBlockData } from "discourse/lib/blocks/-internals/data-coordinator";
 import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
@@ -470,10 +471,21 @@ export default class Blocks extends Service {
         }
       }
 
+      // Walk into children the same way the render pipeline does: explicit
+      // children when present, otherwise the synthesized parts of a
+      // composition. This keeps a data-owning part (at any nesting depth)
+      // prefetched even when the composite supplies no children of its own.
+      let children;
       if (entry.children?.length) {
+        children = entry.children;
+      } else if (metadata?.parts && entry.children == null) {
+        children = synthesizePartEntries(entry, metadata);
+      }
+
+      if (children?.length) {
         await this.#collectBlockDataPromises(
           scope,
-          entry.children,
+          children,
           owner,
           signal,
           out

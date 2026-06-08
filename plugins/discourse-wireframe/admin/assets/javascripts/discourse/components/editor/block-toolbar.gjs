@@ -157,6 +157,24 @@ export default class BlockToolbar extends Component {
     this.wireframe.removeBlock(this.args.blockKey);
   }
 
+  /**
+   * `true` when this block is a composed composite (renders a code-defined
+   * `parts` composition) and can therefore be detached into explicit,
+   * freely-editable children.
+   *
+   * @returns {boolean}
+   */
+  get canDetach() {
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.wireframe.structuralVersion;
+    return this.wireframe.isComposedComposite(this.args.blockKey);
+  }
+
+  @action
+  detach() {
+    this.wireframe.detachSelectedComposite();
+  }
+
   @action
   toggleBold() {
     this.inlineController?.toggleMark("strong");
@@ -321,6 +339,15 @@ export default class BlockToolbar extends Component {
               @ariaLabel="wireframe.canvas.toolbar.duplicate"
               @action={{this.duplicate}}
             />
+            {{#if this.canDetach}}
+              <DButton
+                class="btn-flat wireframe-block-toolbar__btn"
+                @icon="object-group"
+                @title="wireframe.canvas.toolbar.detach"
+                @ariaLabel="wireframe.canvas.toolbar.detach"
+                @action={{this.detach}}
+              />
+            {{/if}}
           {{/unless}}
           {{#if this.canForceExpand}}
             <DButton

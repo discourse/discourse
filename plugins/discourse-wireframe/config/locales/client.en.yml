@@ -331,6 +331,7 @@ en:
           move_up: "Move up"
           move_down: "Move down"
           duplicate: "Duplicate"
+          detach: "Detach into blocks"
           delete: "Delete"
           expand_for_editing: "Expand for editing"
           collapse_for_preview: "Collapse to preview narrow layout"

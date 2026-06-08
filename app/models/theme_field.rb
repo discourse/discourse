@@ -558,6 +558,23 @@ class ThemeField < ActiveRecord::Base
         raise "Each entry requires a non-empty \"block\" string at #{entry_path}."
       end
 
+      # A block may declare a code-defined inner composition; an entry that
+      # references one can carry per-part argument overrides keyed by a
+      # dot-delimited part-id path. Each value is that inner block's own args
+      # (an object). The structure is opaque here beyond being an object of
+      # objects — the client owns the merge/lock semantics.
+      overrides = entry["overrides"]
+      unless overrides.nil?
+        unless overrides.is_a?(Hash)
+          raise "\"overrides\" must be an object at #{entry_path}.overrides."
+        end
+        overrides.each do |part_path, part_args|
+          unless part_args.is_a?(Hash)
+            raise "Override at #{entry_path}.overrides[\"#{part_path}\"] must be an object."
+          end
+        end
+      end
+
       children = entry["children"]
       next if children.nil?
 

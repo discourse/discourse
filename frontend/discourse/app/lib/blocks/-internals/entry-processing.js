@@ -13,6 +13,7 @@
  * @module discourse/lib/blocks/-internals/entry-processing
  */
 import { trackedObject } from "@ember/reactive/collections";
+import { synthesizePartEntries } from "discourse/lib/blocks/-internals/composite";
 import {
   buildContainerPath,
   createGhostBlock,
@@ -278,10 +279,27 @@ export function processBlockEntries({
     // For containers with children, recursively process children FIRST
     // This creates the child components at the root level, so containers
     // receive pre-processed children via @children arg instead of raw entries.
-    let processedChildren;
+    //
+    // A block that declares a `parts` composition and supplies no children of
+    // its own renders those parts: they are synthesized into render-only child
+    // entries here (never persisted). A part that is itself a composition
+    // re-synthesizes on the next recursion level, so nesting needs no special
+    // casing. An entry that supplies its own children bypasses the composition
+    // and renders as a plain container.
+    let childEntries;
     if (isContainer && entry.children?.length) {
+      childEntries = entry.children;
+    } else if (isContainer && blockMeta?.parts && entry.children == null) {
+      // Composed: a `parts` block with no `children` of its own renders its
+      // composition. An entry that supplies its own `children` array — even an
+      // empty one — bypasses the composition and renders as a plain container.
+      childEntries = synthesizePartEntries(entry, blockMeta);
+    }
+
+    let processedChildren;
+    if (childEntries?.length) {
       processedChildren = processBlockEntries({
-        entries: entry.children,
+        entries: childEntries,
         cache, // Same root cache for all levels
         owner,
         baseHierarchy: containerPath,

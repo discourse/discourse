@@ -39,7 +39,16 @@ export const VALID_BLOCK_OPTIONS = Object.freeze([
   "paletteHidden",
   "transparent",
   "data",
+  "parts",
 ]);
+
+/**
+ * Valid keys for a single entry in the `parts` option (one inner block of a
+ * code-defined composition).
+ *
+ * @constant {ReadonlyArray<string>}
+ */
+const VALID_PART_KEYS = Object.freeze(["id", "block", "args", "lock"]);
 
 /**
  * Valid keys for the `data` option (a block's declared data dependency).
@@ -184,6 +193,113 @@ export function validateBlockDataOption(name, data) {
       raiseBlockError(`Block "${name}": "data.${key}" must be a function.`);
     }
   }
+}
+
+/**
+ * Validates the optional `parts` declaration: a block's code-defined inner
+ * composition. Each part names an inner block (by registry name or class
+ * reference), carries default `args`, and is addressed by a stable, unique
+ * `id`. A part may mark args as locked (`lock`) so instances can't override
+ * them in place. Validation is structural and runs at decoration time for
+ * fail-fast behaviour; inner-block resolution happens lazily at render.
+ *
+ * @param {string} name - The block name (for error messages).
+ * @param {*} parts - The decorator's `parts` option.
+ */
+export function validateBlockParts(name, parts) {
+  if (parts == null) {
+    return;
+  }
+
+  if (!Array.isArray(parts) || parts.length === 0) {
+    raiseBlockError(`Block "${name}": "parts" must be a non-empty array.`);
+  }
+
+  const seenIds = new Set();
+  parts.forEach((part, index) => {
+    const isPlainObject =
+      part != null && typeof part === "object" && !Array.isArray(part);
+    if (!isPlainObject) {
+      raiseBlockError(
+        `Block "${name}": parts[${index}] must be an object with "id" and "block".`
+      );
+    }
+
+    const unknownKeys = Object.keys(part).filter(
+      (key) => !VALID_PART_KEYS.includes(key)
+    );
+    if (unknownKeys.length > 0) {
+      const suggestions = unknownKeys
+        .map((key) => formatWithSuggestion(key, VALID_PART_KEYS))
+        .join(", ");
+      raiseBlockError(
+        `Block "${name}": parts[${index}] has unknown key(s): ${suggestions}. ` +
+          `Valid keys are: ${VALID_PART_KEYS.join(", ")}.`
+      );
+    }
+
+    if (typeof part.id !== "string" || part.id.trim() === "") {
+      raiseBlockError(
+        `Block "${name}": parts[${index}] requires a non-empty string "id".`
+      );
+    }
+
+    // The id becomes a segment of a dot-delimited override path
+    // (e.g. `action.label`), so it must not contain the path separator.
+    if (part.id.includes(".")) {
+      raiseBlockError(
+        `Block "${name}": part id "${part.id}" must not contain a "." ` +
+          `(ids are joined with "." to address nested parts).`
+      );
+    }
+
+    if (seenIds.has(part.id)) {
+      raiseBlockError(
+        `Block "${name}": duplicate part id "${part.id}". Part ids must be unique.`
+      );
+    }
+    seenIds.add(part.id);
+
+    const blockRef = part.block;
+    if (
+      blockRef == null ||
+      (typeof blockRef !== "string" && typeof blockRef !== "function")
+    ) {
+      raiseBlockError(
+        `Block "${name}": parts[${index}] ("${part.id}") requires a "block" ` +
+          `(a registered block name or a block class).`
+      );
+    }
+    if (typeof blockRef === "string" && blockRef.trim() === "") {
+      raiseBlockError(
+        `Block "${name}": parts[${index}] ("${part.id}") has an empty "block" name.`
+      );
+    }
+
+    if (part.args != null) {
+      const argsIsPlainObject =
+        typeof part.args === "object" && !Array.isArray(part.args);
+      if (!argsIsPlainObject) {
+        raiseBlockError(
+          `Block "${name}": parts[${index}] ("${part.id}") "args" must be a plain object.`
+        );
+      }
+    }
+
+    // `lock` is either `true` (the whole part is locked) or a list of arg
+    // names that can't be overridden in place.
+    if (part.lock != null && part.lock !== true) {
+      const lockIsStringArray =
+        Array.isArray(part.lock) &&
+        part.lock.every((arg) => typeof arg === "string");
+      if (!lockIsStringArray) {
+        raiseBlockError(
+          `Block "${name}": parts[${index}] ("${part.id}") "lock" must be ` +
+            `true or an array of arg-name strings.`
+        );
+      }
+    }
+  });
 }
 
 /**

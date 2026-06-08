@@ -107,6 +107,46 @@ blocks. Reasonable triggers: a theme author asks for it; we see
 authors building duplicate blocks just to vary content; the editor's
 own demo content needs it.
 
+## Patterns (editor-time reusable compositions)
+
+**Status**: ⏸️ Planned, deferred. Full implementation plan drafted; shelved to
+explore code-defined composite blocks first (the two concepts are related — a
+pattern is the runtime/author-saved version of what a composite block hardwires).
+
+**What**: PLAN.md Phase 8 "Patterns" — select a block subtree on the canvas, save
+it as a named reusable composition that appears in the palette's (currently empty)
+`Patterns` tab; dragging it into a layout expands its blocks at the drop point.
+
+**Confirmed design decisions** (so we don't re-litigate on resume):
+
+- **Detached copy semantics.** Inserting deep-copies the subtree into the layout as
+  ordinary entries — no ongoing link to the pattern definition. This makes patterns
+  a purely editor-time, staff-only construct: nothing about them ships to the live
+  page or to non-staff users. (Rejected the synced/linked alternative for v1.)
+- **Per-theme storage** via a new `block_pattern` ThemeField type (sibling to
+  `block_layout` = type 9), so patterns ride the theme export/import/Git bundle and
+  inherit the `-customizations` Git-import child redirect. Value shape:
+  `{schema_version, title, icon, description, blocks: [...]}`, where `blocks` is the
+  same entry shape as a `block_layout` `layout` array (so the existing recursive
+  validator and the `BlockLayoutUploads` walker apply unchanged). One field per
+  pattern; the field `name` is a stable slug, the human title lives in `value`.
+- **Name + icon + description palette rows** (no live thumbnail in v1 — that would
+  depend on the unbuilt preview-token work).
+
+**Implementation sketch**: mirror the block-layout plumbing —
+`Themes::SaveBlockPattern` / `DeleteBlockPattern` services + an
+`Admin::BlockPatternsController` (`index`/`create`/`destroy`) reusing
+`SaveBlockLayout`'s `-customizations` redirect; client-side a `patterns.js` service,
+a "Save as pattern" button in `block-toolbar.gjs`, a third `Patterns` left-rail tab
+in `shell.gjs` with a `patterns-panel.gjs` (modeled on `palette-panel.gjs`), and a
+new `wf-palette-pattern` drag type whose drop clones the subtree in with fresh
+stable keys. Capture/insert reuse `serializeEntryForSave` / `cloneLayoutForDraft`
+from `lib/mutate-layout.js`.
+
+**Why deferred**: exploring code-defined composite blocks first — that exploration
+may reshape how a "saved composition" is represented, so patterns shouldn't be built
+until that lands.
+
 ## Other items (add here as they come up)
 
 _None yet._

@@ -21,6 +21,7 @@ import {
   _setLayoutLayer,
   LAYOUT_LAYERS,
 } from "discourse/blocks/block-outlet";
+import { PART_KEY_SEGMENT } from "discourse/lib/blocks/-internals/composite";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { VALID_BLOCK_ID_PATTERN } from "discourse/lib/blocks/-internals/patterns";
 import discourseDebounce from "discourse/lib/debounce";
@@ -49,9 +50,11 @@ import LinkEditState from "../lib/link-edit-state";
 import {
   cloneEntryForPaste,
   cloneLayoutForDraft,
+  detachComposite,
   entryKey,
   findAncestryPath,
   findEntry,
+  findEntryByStableKey,
   findEntrySiblings,
   insertEntryAt,
   moveEntry,
@@ -62,6 +65,7 @@ import {
   replaceEntryInPlace,
   revalidateEntryStamps,
   serializeEntryForSave,
+  setPartOverride,
   wrapAsOutletRoot,
 } from "../lib/mutate-layout";
 import { inferSchemaFromValues } from "../lib/schema-to-fields";
@@ -3069,6 +3073,103 @@ export default class WireframeService extends Service {
     return this.findEntryAndOutletSync(key)?.entry ?? null;
   }
 
+  /**
+   * Resolves a synthesized part's selection key to the composite that owns it.
+   * A part has no persisted entry — its key encodes the owning composite's
+   * stable key plus a dot-path of part ids (e.g. `heading:42::part::title` or
+   * `button-link:42::part::actions::part::primary`). Returns the composite
+   * entry, its key, the outlet, and the override path, or null when the key
+   * isn't a part key (or the composite can't be found).
+   *
+   * @param {string} key
+   * @returns {{compositeEntry: Object, compositeKey: string, outletName: string, idPath: string[], partPath: string}|null}
+   */
+  resolvePartContext(key) {
+    if (!key || !key.includes(PART_KEY_SEGMENT)) {
+      return null;
+    }
+    const segments = key.split(PART_KEY_SEGMENT);
+    // The head is `${leafBlockName}:${compositeStableKey}`; the block name may
+    // itself contain ":" (plugin/theme blocks), so take the last ":" segment.
+    const head = segments[0];
+    const compositeStableKey = head.slice(head.lastIndexOf(":") + 1);
+    const idPath = segments.slice(1);
+
+    const layoutMap = _getOutletLayouts();
+    for (const [outletName, record] of layoutMap) {
+      if (!record.layout) {
+        continue;
+      }
+      const compositeEntry = findEntryByStableKey(
+        record.layout,
+        compositeStableKey
+      );
+      if (compositeEntry) {
+        return {
+          compositeEntry,
+          compositeKey: entryKey(compositeEntry),
+          outletName,
+          idPath,
+          partPath: idPath.join("."),
+        };
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Whether the block at `blockKey` is a *composed* composite — a block that
+   * declares a `parts` composition and renders it (no `children` of its own).
+   * Drives the "Detach" affordance: only composed composites can be detached.
+   * A synthesized part (no persisted entry) and a detached composite (explicit
+   * `children`) both return false.
+   *
+   * @param {string} blockKey
+   * @returns {boolean}
+   */
+  isComposedComposite(blockKey) {
+    const entry = this.findEntryAndOutletSync(blockKey)?.entry;
+    if (!entry || entry.children != null) {
+      return false;
+    }
+    const name = this.blockNameOf(entry);
+    const metadata = name ? this.#metadataForName(name) : null;
+    return !!metadata?.parts;
+  }
+
+  /**
+   * Detaches the selected composite: materialises its code-defined parts (with
+   * current overrides) into explicit `children` and drops the override map, so
+   * it becomes a plain container the author can restructure. Peels exactly one
+   * layer — a composite child stays composed. Structural commit (undo/redo +
+   * draft re-publish). Manual only; never automatic.
+   *
+   * @returns {boolean}
+   */
+  @action
+  detachSelectedComposite() {
+    const key = this.selectedBlockKey;
+    if (!key) {
+      return false;
+    }
+    const located = this.findEntryAndOutletSync(key);
+    if (!located) {
+      return false;
+    }
+    return this.recordStructural([located.outletName], () => {
+      const layout = this.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const result = detachComposite(layout, key);
+      if (!result.changed) {
+        return false;
+      }
+      this.publishStructuralChange(located.outletName, result.layout);
+      return true;
+    });
+  }
+
   metadataFor(entry) {
     if (!entry?.block) {
       return null;
@@ -3712,6 +3813,14 @@ export default class WireframeService extends Service {
     const pending = [...this.#pendingArgs.entries()];
     this.#pendingArgs.clear();
 
+    // A selected composite part has no persisted entry: its edits are written
+    // to the owning composite's per-part override map (a structural commit),
+    // not into a tracked entry's args.
+    const partContext = this.resolvePartContext(key);
+    if (partContext) {
+      return this.#flushPendingPartArgs(partContext, pending);
+    }
+
     const located = await this.findEntryAndOutlet(key);
     if (!located) {
       return false;
@@ -3737,6 +3846,49 @@ export default class WireframeService extends Service {
     this.redoStack.length = 0;
 
     return true;
+  }
+
+  /**
+   * Commits a batch of pending arg edits for a selected composite part by
+   * merging them into the owning composite entry's per-part override map. This
+   * is a structural commit (the synthesis reads `entry.overrides` at render
+   * time, and synthesized part args aren't tracked objects), so it routes
+   * through `recordStructural` for undo/redo and re-publishes the draft layer.
+   * Setting an arg to `null`/`undefined` removes it from the override (reverting
+   * that arg to the part's code default).
+   *
+   * @param {{compositeKey: string, outletName: string, partPath: string}} partContext
+   * @param {Array<[string, *]>} pending
+   * @returns {boolean}
+   */
+  #flushPendingPartArgs({ compositeKey, outletName, partPath }, pending) {
+    return this.recordStructural([outletName], () => {
+      const layout = this.readResolvedLayout(outletName);
+      if (!layout) {
+        return false;
+      }
+      const result = setPartOverride(
+        layout,
+        compositeKey,
+        partPath,
+        (current) => {
+          const merged = { ...current };
+          for (const [argName, value] of pending) {
+            if (value == null) {
+              delete merged[argName];
+            } else {
+              merged[argName] = value;
+            }
+          }
+          return merged;
+        }
+      );
+      if (!result.changed) {
+        return false;
+      }
+      this.publishStructuralChange(outletName, result.layout);
+      return true;
+    });
   }
 
   /**

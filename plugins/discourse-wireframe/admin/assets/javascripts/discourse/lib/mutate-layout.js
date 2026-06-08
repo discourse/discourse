@@ -17,7 +17,13 @@
  * These helpers are pure logic — no Glimmer, no service injection — so the
  * editor service stays small and the helpers stay testable in isolation.
  */
+import {
+  applyLock,
+  splitPartPath,
+  synthesizePartEntries,
+} from "discourse/lib/blocks/-internals/composite";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
+import { tryResolveBlock } from "discourse/lib/blocks/-internals/registry/block";
 import { collectEntryFailures } from "discourse/lib/blocks/-internals/validation/layout";
 // `entryKey` lives in its own file in the UNIVERSAL bundle so the
 // live-page `grid-math.js` can use it without dragging mutate-layout
@@ -48,6 +54,33 @@ export function findEntry(layout, key) {
     }
     if (entry.children?.length) {
       const found = findEntry(entry.children, key);
+      if (found) {
+        return found;
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * Walks a layout looking for the entry whose `__stableKey` matches (compared
+ * as a string). Used to resolve a composite from the stable-key prefix encoded
+ * in a synthesized part's key, where the part itself has no persisted entry.
+ *
+ * @param {Array<Object>} layout
+ * @param {string} stableKey - The composite entry's stable key, as a string.
+ * @returns {Object|null}
+ */
+export function findEntryByStableKey(layout, stableKey) {
+  if (!layout) {
+    return null;
+  }
+  for (const entry of layout) {
+    if (String(entry.__stableKey) === stableKey) {
+      return entry;
+    }
+    if (entry.children?.length) {
+      const found = findEntryByStableKey(entry.children, stableKey);
       if (found) {
         return found;
       }
@@ -553,6 +586,157 @@ function containsKey(entry, key) {
 }
 
 /**
+ * Resolves the part definition addressed by an id path beneath a composite
+ * entry, walking the parts metadata level by level (resolving each nested
+ * composite's block). Returns the leaf part definition (with its `block`,
+ * default `args`, and `lock`), or null if the path doesn't resolve.
+ *
+ * @param {Object} entry - The composite layout entry.
+ * @param {string[]} idPath - The part-id path (e.g. ["actions", "primary"]).
+ * @returns {{id: string, block: string|Function, args: Object|null, lock: true|string[]|null}|null}
+ */
+export function resolvePartDef(entry, idPath) {
+  let block = entry?.block;
+  let part = null;
+  for (const id of idPath) {
+    const resolved = block ? tryResolveBlock(block) : null;
+    const meta = resolved ? getBlockMetadata(resolved) : null;
+    part = meta?.parts?.find((p) => p.id === id) ?? null;
+    if (!part) {
+      return null;
+    }
+    block = part.block;
+  }
+  return part;
+}
+
+/**
+ * Returns a new layout where the composite entry matching `compositeKey` has
+ * the override for one part path replaced by `updater(currentOverrideArgs)`.
+ * The override is keyed by the dot-delimited `partPath` and holds that inner
+ * block's own args. Locked args are dropped defensively (the edit surface
+ * should already refuse them). An update that resolves to an empty object
+ * removes the override key entirely (back to the part's code default).
+ *
+ * Mirrors `replaceEntryArgs`: untouched ancestors keep their identity.
+ *
+ * @param {Array<Object>} layout
+ * @param {string} compositeKey - The composite entry's key.
+ * @param {string} partPath - Dot-delimited part-id path (e.g. "actions.primary").
+ * @param {(currentArgs: Object) => Object} updater
+ * @returns {{layout: Array<Object>, changed: boolean}}
+ */
+export function setPartOverride(layout, compositeKey, partPath, updater) {
+  let changed = false;
+
+  function walk(entries) {
+    let subtreeChanged = false;
+    const result = entries.map((entry) => {
+      if (entryKey(entry) === compositeKey) {
+        changed = true;
+        subtreeChanged = true;
+        const current = entry.overrides?.[partPath] ?? {};
+        const updated = stripNullish({ ...updater({ ...current }) });
+        const partDef = resolvePartDef(entry, splitPartPath(partPath));
+        const allowed = applyLock(updated, partDef?.lock) ?? {};
+        const overrides = { ...(entry.overrides ?? {}) };
+        if (Object.keys(allowed).length > 0) {
+          overrides[partPath] = allowed;
+        } else {
+          delete overrides[partPath];
+        }
+        return cloneEntryShell(entry, { overrides });
+      }
+      if (entry.children?.length) {
+        const newChildren = walk(entry.children);
+        if (newChildren !== entry.children) {
+          subtreeChanged = true;
+          return cloneEntryShell(entry, { children: newChildren });
+        }
+      }
+      return entry;
+    });
+    return subtreeChanged ? result : entries;
+  }
+
+  const newLayout = walk(layout);
+  return { layout: newLayout, changed };
+}
+
+/**
+ * Returns a new layout where the composite entry matching `compositeKey` is
+ * detached: its code-defined parts are materialised into explicit `children`
+ * (resolved args ⊕ overrides) and its `overrides` map is dropped, so it
+ * thereafter renders as a plain container the author can freely restructure.
+ *
+ * Detach peels exactly ONE layer: a child that is itself a composite keeps its
+ * remaining (deeper) overrides, so it stays composed and can be detached in
+ * turn. The wrapper entry keeps its `__stableKey`; the new children get fresh
+ * keys minted at publish time.
+ *
+ * No-op when the entry is not a composite or already has explicit children.
+ *
+ * @param {Array<Object>} layout
+ * @param {string} compositeKey
+ * @returns {{layout: Array<Object>, changed: boolean}}
+ */
+export function detachComposite(layout, compositeKey) {
+  let changed = false;
+
+  function walk(entries) {
+    let subtreeChanged = false;
+    const result = entries.map((entry) => {
+      if (entryKey(entry) === compositeKey) {
+        const resolved = entry.block ? tryResolveBlock(entry.block) : null;
+        const meta = resolved ? getBlockMetadata(resolved) : null;
+        if (!meta?.parts || entry.children?.length) {
+          // Not a composable composite, or already detached — leave as-is.
+          return entry;
+        }
+        changed = true;
+        subtreeChanged = true;
+        const children = synthesizePartEntries(entry, meta).map(
+          detachedChildFromSynthesized
+        );
+        const next = cloneEntryShell(entry, { children });
+        // Detached: the composition no longer drives this entry.
+        delete next.overrides;
+        return next;
+      }
+      if (entry.children?.length) {
+        const newChildren = walk(entry.children);
+        if (newChildren !== entry.children) {
+          subtreeChanged = true;
+          return cloneEntryShell(entry, { children: newChildren });
+        }
+      }
+      return entry;
+    });
+    return subtreeChanged ? result : entries;
+  }
+
+  const newLayout = walk(layout);
+  return { layout: newLayout, changed };
+}
+
+/**
+ * Turns one synthesized part entry into a real, persistable child entry:
+ * keeps the block, the resolved args, and any deeper overrides (so a composite
+ * child stays composed — detach peels one layer), and drops the synthetic
+ * markers and derived key so a fresh `__stableKey` mints at publish.
+ *
+ * @param {Object} synthesized - A `synthesizePartEntries` result.
+ * @returns {Object}
+ */
+function detachedChildFromSynthesized(synthesized) {
+  const child = { block: synthesized.block, args: { ...synthesized.args } };
+  if (synthesized.overrides && Object.keys(synthesized.overrides).length > 0) {
+    child.overrides = cloneOverrides(synthesized.overrides);
+  }
+  return child;
+}
+
+/**
  * Returns a structural deep clone of a layout suitable for publishing as a
  * `session-draft` layer. The clone preserves each entry's `__stableKey` and
  * passes through immutable references (block class, conditions, id) by
@@ -590,6 +774,11 @@ function cloneEntryForDraft(entry) {
   clone.args = stripNullish({ ...(entry.args ?? {}) });
   if (entry.containerArgs) {
     clone.containerArgs = cloneContainerArgs(entry.containerArgs);
+  }
+  // A composite's per-part overrides must be cloned so draft edits to one
+  // part's override don't leak back into the underlying layer.
+  if (entry.overrides) {
+    clone.overrides = cloneOverrides(entry.overrides);
   }
   if (entry.children?.length) {
     clone.children = entry.children.map(cloneEntryForDraft);
@@ -849,8 +1038,35 @@ export function serializeEntryForSave(entry) {
   if (entry.conditions != null) {
     out.conditions = entry.conditions;
   }
+  // Per-part overrides for a composite (a block that renders a code-defined
+  // composition). Keyed by a dot-delimited part-id path, each value the inner
+  // block's own args. Persisted only for entries that aren't detached — a
+  // detached composite carries explicit `children` instead.
+  if (entry.overrides && Object.keys(entry.overrides).length > 0) {
+    out.overrides = cloneOverrides(entry.overrides);
+  }
   if (entry.children?.length) {
     out.children = entry.children.map(serializeEntryForSave);
   }
   return out;
+}
+
+/**
+ * Shallow-per-path clone of a composite's `overrides` map: a fresh top-level
+ * object whose values (each a part's own args object) are themselves copied,
+ * so a draft can mutate one part's override without leaking into the source.
+ *
+ * @param {Object} overrides
+ * @returns {Object}
+ */
+function cloneOverrides(overrides) {
+  const clone = {};
+  for (const path of Object.keys(overrides)) {
+    const argsForPath = overrides[path];
+    clone[path] =
+      argsForPath && typeof argsForPath === "object"
+        ? { ...argsForPath }
+        : argsForPath;
+  }
+  return clone;
 }
