@@ -6,16 +6,12 @@ module DiscourseAssign
       return false if user.blank?
       return can_assign_target?(target) if target
 
-      return @can_assign if defined?(@can_assign)
-
-      @can_assign = can_assign_globally? || scoped_assign_group_ids_for_user.present?
+      @can_assign ||= can_assign_globally? || scoped_assign_group_ids_for_user.present?
     end
 
     def can_assign_globally?
       return false if user.blank?
-      return @can_assign_globally if defined?(@can_assign_globally)
-
-      @can_assign_globally =
+      @can_assign_globally ||=
         if user.admin?
           true
         else
