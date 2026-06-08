@@ -79,6 +79,17 @@ module Discourse
 
     def write(example)
       @output.puts(JSON.generate(Serializer.serialize(example, example.metadata[:perf])))
+    rescue StandardError => error
+      @output.puts(
+        JSON.generate(
+          example_id: example.location_rerun_argument,
+          status: example.execution_result.status.to_s,
+          error: {
+            class: error.class.name,
+            message: error.message.to_s,
+          },
+        ),
+      )
     end
 
     module Capture
@@ -94,6 +105,8 @@ module Discourse
         logger = ->(env, data) do
           group = RequestGroup.build(env, data)
           groups << group if group
+        rescue StandardError
+          nil
         end
         Middleware::RequestTracker.register_detailed_request_logger(logger)
         yield
@@ -115,16 +128,27 @@ module Discourse
     module Serializer
       def self.serialize(example, perf)
         perf = normalize(perf)
-        {
+        execution = example.execution_result
+        result = {
           example_id: example.location_rerun_argument,
           description: example.full_description,
           location: example.location,
-          status: example.execution_result.status.to_s,
+          status: execution.status.to_s,
           totals: perf[:totals],
           sql: perf[:sql],
           redis: perf[:redis],
           net: perf[:net],
           requests: perf[:requests],
+        }
+        result[:error] = error_for(execution.exception) if execution.exception
+        result
+      end
+
+      def self.error_for(exception)
+        {
+          class: exception.class.name,
+          message: exception.message.to_s,
+          backtrace: Array(exception.backtrace).first(10),
         }
       end
 

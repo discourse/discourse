@@ -75,6 +75,21 @@ RSpec.describe MethodProfiler do
           ],
         )
       end
+
+      it "scrubs invalid utf-8 bytes so itemized commands stay json-safe" do
+        MethodProfiler.start
+
+        Discourse.redis.set("method_profiler_binary_test", "\xC2".b)
+
+        result = MethodProfiler.stop
+
+        item =
+          result[:redis][:items].find do |entry|
+            entry[:command].include?("method_profiler_binary_test")
+          end
+        expect(item[:command]).to be_valid_encoding
+        expect { JSON.generate(item) }.not_to raise_error
+      end
     end
 
     context "when itemize_enabled is false" do

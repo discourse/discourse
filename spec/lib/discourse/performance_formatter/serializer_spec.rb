@@ -3,12 +3,12 @@
 require "ostruct"
 
 RSpec.describe Discourse::PerformanceFormatter::Serializer do
-  def build_example(status: :passed)
+  def build_example(status: :passed, exception: nil)
     OpenStruct.new(
       location_rerun_argument: "./spec/foo_spec.rb:12",
       full_description: "Foo does a thing",
       location: "./spec/foo_spec.rb:12",
-      execution_result: OpenStruct.new(status: status),
+      execution_result: OpenStruct.new(status: status, exception: exception),
     )
   end
 
@@ -72,6 +72,26 @@ RSpec.describe Discourse::PerformanceFormatter::Serializer do
       from_json = described_class.serialize(build_example, round_tripped)
 
       expect(from_json).to eq(from_symbols)
+    end
+
+    context "when the example failed" do
+      it "includes the error class, message and backtrace" do
+        exception =
+          begin
+            raise StandardError, "boom"
+          rescue StandardError => error
+            error
+          end
+
+        result = described_class.serialize(build_example(status: :failed, exception:), perf)
+
+        expect(result[:status]).to eq("failed")
+        expect(result[:error]).to match(
+          class: "StandardError",
+          message: "boom",
+          backtrace: a_kind_of(Array),
+        )
+      end
     end
 
     context "when the example has no captured perf data" do
