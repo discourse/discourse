@@ -99,26 +99,7 @@ jobs:
           git config --global user.name "Discourse CI"
 
       - name: Start redis
-        # The CI test redis is fully ephemeral: every system example flushes
-        # its keyspace (rails_helper `after(:each)` runs `Discourse.redis.flushdb`)
-        # and the whole instance is discarded when the job ends, so RDB
-        # snapshots are never read back. But `/etc/redis/redis.conf` carries no
-        # `save` directive, which means redis 7.4 falls back to its *built-in*
-        # save points (`save 3600 1 300 100 60 10000`). During the ~8.5-minute
-        # Core System Tests run, all 12 turbo_rspec workers hammer one shared
-        # redis (MessageBus publishes on every `Site.clear_anon_cache!`, the
-        # per-setting cache busts in `TestSetup.test_setup`, the per-example
-        # `flushdb`), so the `60s / 10000 changes` threshold trips repeatedly
-        # and redis keeps forking a bgsave child to serialize `dump.rdb` to
-        # disk. Each fork briefly stalls the redis main thread (copy-on-write
-        # page-table duplication) — injecting non-deterministic latency into
-        # every worker's redis round-trip on the clientSettled critical path —
-        # and the serializing child burns a core + disk I/O on a runner whose
-        # 16 cores are already oversubscribed by 12 Ruby workers + 12 Chromiums.
-        # Pass `--save ''` to clear the save points so the ephemeral test redis
-        # stays purely in-memory: no fork-pause spikes, no dump I/O, no child
-        # CPU. Purely removes work no spec depends on.
-        run: redis-server /etc/redis/redis.conf --save '' &
+        run: redis-server /etc/redis/redis.conf &
 
       - name: Start Postgres
         run: |
