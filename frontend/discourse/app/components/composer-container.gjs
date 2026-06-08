@@ -8,6 +8,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { modifier } from "ember-modifier";
 import ComposerActionTitle from "discourse/components/composer-action-title";
 import ComposerBody from "discourse/components/composer-body";
 import ComposerEditor from "discourse/components/composer-editor";
@@ -37,6 +38,28 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
+
+const trackFieldsHeight = modifier((element) => {
+  const target = element.closest("#reply-control");
+  if (!target) {
+    return;
+  }
+
+  const observer = new ResizeObserver(([entry]) => {
+    const height =
+      entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height;
+    target.style.setProperty(
+      "--composer-fields-height",
+      `${Math.round(height)}px`
+    );
+  });
+  observer.observe(element);
+
+  return () => {
+    observer.disconnect();
+    target.style.removeProperty("--composer-fields-height");
+  };
+});
 
 export default class ComposerContainer extends Component {
   @service composer;
@@ -291,7 +314,7 @@ export default class ComposerContainer extends Component {
             </div>
 
             <ComposerEditor @toolbarPortalTarget={{this.toolbarPortalTarget}}>
-              <div class="composer-fields">
+              <div class="composer-fields" {{trackFieldsHeight}}>
                 <PluginOutlet
                   @name="before-composer-fields"
                   @outletArgs={{lazyHash model=this.composer.model}}
