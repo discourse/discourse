@@ -92,6 +92,26 @@ describe Jobs::ProcessLocalizedCooked do
     expect(post_localization.cooked).to include("onebox")
   end
 
+  describe "recook" do
+    it "re-cooks the localization from its raw before processing when recook is true" do
+      post_localization.update!(raw: "新しい本文です。", cooked: "<p>古いHTML</p>")
+
+      job.execute(post_localization_id: post_localization.id, recook: true)
+
+      post_localization.reload
+      expect(post_localization.cooked).to include("新しい本文です。")
+      expect(post_localization.cooked).not_to include("古いHTML")
+    end
+
+    it "uses the stored cooked when recook is not set" do
+      post_localization.update!(raw: "新しい本文です。", cooked: "<p>古いHTML</p>")
+
+      job.execute(post_localization_id: post_localization.id)
+
+      expect(post_localization.reload.cooked).to include("古いHTML")
+    end
+  end
+
   describe "topic localization excerpt" do
     fab!(:topic)
     fab!(:first_post) { Fabricate(:post, topic: topic, post_number: 1) }

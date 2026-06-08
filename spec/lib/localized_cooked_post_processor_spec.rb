@@ -68,6 +68,47 @@ RSpec.describe LocalizedCookedPostProcessor do
       end
     end
 
+    context "with an internal topic onebox" do
+      fab!(:linked_topic) { Fabricate(:topic, title: "Sun Tzu's strategies", locale: "en") }
+      fab!(:linked_post) do
+        Fabricate(
+          :post,
+          topic: linked_topic,
+          post_number: 1,
+          locale: "en",
+          raw: "Subdue the enemy without fighting.",
+        )
+      end
+
+      let(:onebox_localization) do
+        raw = linked_topic.url
+        Fabricate(
+          :post_localization,
+          post: post,
+          locale: "ja",
+          raw: raw,
+          cooked: PrettyText.cook(raw),
+        )
+      end
+
+      before do
+        SiteSetting.content_localization_enabled = true
+        Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+        Fabricate(:post_localization, post: linked_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+      end
+
+      it "renders the onebox card in the localization's locale" do
+        processor = LocalizedCookedPostProcessor.new(onebox_localization, post)
+        processor.post_process_oneboxes
+
+        html = processor.html
+        expect(html).to include("孫子の兵法")
+        expect(html).to include("戦わずして勝つ")
+        expect(html).not_to include("Sun Tzu")
+        expect(html).not_to include("Subdue the enemy")
+      end
+    end
+
     context "when secure uploads is enabled" do
       before do
         setup_s3

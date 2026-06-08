@@ -878,6 +878,8 @@ class Post < ActiveRecord::Base
     TopicLink.extract_from(self)
     QuotedPost.extract_from(self)
 
+    rebake_localizations!
+
     trigger_post_process(bypass_bump: true, priority:)
 
     # Skip publishing if invalidating oneboxes - the ProcessPost job will
@@ -887,6 +889,14 @@ class Post < ActiveRecord::Base
     publish_change_to_clients!(:rebaked) if should_publish
 
     new_cooked != old_cooked
+  end
+
+  def rebake_localizations!
+    return if !SiteSetting.content_localization_enabled
+
+    localizations.find_each do |localization|
+      Jobs.enqueue(:process_localized_cooked, post_localization_id: localization.id, recook: true)
+    end
   end
 
   def set_owner(new_user, actor, skip_revision = false)

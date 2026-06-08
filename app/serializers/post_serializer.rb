@@ -101,7 +101,8 @@ class PostSerializer < BasicPostSerializer
              :locale,
              :is_localized,
              :language,
-             :localization_outdated
+             :localization_outdated,
+             :localized_oneboxes
 
   def initialize(object, opts)
     super(object, opts)
@@ -275,6 +276,16 @@ class PostSerializer < BasicPostSerializer
       result[:clicks] = link[:clicks] || 0
       result
     end
+  end
+
+  def localized_oneboxes
+    @topic_view.localized_oneboxes[object.id]
+  end
+
+  def include_localized_oneboxes?
+    SiteSetting.content_localization_enabled && @topic_view.present? &&
+      !ContentLocalization.show_original?(scope) &&
+      @topic_view.localized_oneboxes[object.id].present?
   end
 
   def read
