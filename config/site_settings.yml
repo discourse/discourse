@@ -2750,22 +2750,16 @@ trust:
     max: 100
     area: "trust_levels"
   tl3_requires_topics_viewed_cap:
-    default: 500
+    default: 250
     area: "trust_levels"
-    upcoming_change_default_override:
-      upcoming_change: "enable_new_defaults_for_trust_level_3_requirements"
-      new_default: 250
   tl3_requires_posts_read:
     default: 25
     max: 100
     area: "trust_levels"
   tl3_requires_posts_read_cap:
-    default: 20000
+    default: 2000
     max: 99000
     area: "trust_levels"
-    upcoming_change_default_override:
-      upcoming_change: "enable_new_defaults_for_trust_level_3_requirements"
-      new_default: 2000
   tl3_requires_topics_viewed_all_time:
     default: 200
     area: "trust_levels"
@@ -2776,12 +2770,9 @@ trust:
     default: 5
     area: "trust_levels"
   tl3_promotion_min_duration:
-    default: 14
+    default: 100
     max: 10000
     area: "trust_levels"
-    upcoming_change_default_override:
-      upcoming_change: "enable_new_defaults_for_trust_level_3_requirements"
-      new_default: 100
   tl3_requires_likes_given:
     default: 30
     area: "trust_levels"
@@ -4493,7 +4484,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/397098"
       allow_enabled_for:
