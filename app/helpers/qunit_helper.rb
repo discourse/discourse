@@ -17,6 +17,7 @@ module QunitHelper
   def fake_preload_data
     preloaded = {}
     preloaded.merge!(theme_settings_preload_data)
+    preloaded.merge!(site_settings_preload_data)
     return "" if preloaded.empty?
 
     tag.div("", id: "data-preloaded", data: { preloaded: preloaded.to_json })
@@ -30,5 +31,12 @@ module QunitHelper
 
     activated_themes = { theme.id => { name: theme.name, settings: theme.cached_default_settings } }
     { "activatedThemes" => activated_themes.to_json }
+  end
+
+  def site_settings_preload_data
+    {
+      "siteSettings" => SiteSetting.client_settings_json_uncached(return_defaults: true),
+      "themeSiteSettingOverrides" => SiteSetting.theme_site_settings_json_uncached(nil),
+    }
   end
 end
