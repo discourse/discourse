@@ -25,7 +25,9 @@ module("Integration | Component | Dashboard | DateRange", function (hooks) {
       <template><DashboardDateRange @period="last_30_days" /></template>
     );
 
-    assert.dom(".db-date-range__trigger-label").hasText("Last 30 days");
+    assert
+      .dom(".db-date-range__trigger .d-button-label")
+      .hasText("Last 30 days");
   });
 
   test("trigger label names a six-month preset rather than showing its dates", async function (assert) {
@@ -33,7 +35,9 @@ module("Integration | Component | Dashboard | DateRange", function (hooks) {
       <template><DashboardDateRange @period="last_6_months" /></template>
     );
 
-    assert.dom(".db-date-range__trigger-label").hasText("Last 6 months");
+    assert
+      .dom(".db-date-range__trigger .d-button-label")
+      .hasText("Last 6 months");
   });
 
   test("trigger label is the literal formatted range for hand-picked custom periods", async function (assert) {
@@ -50,14 +54,18 @@ module("Integration | Component | Dashboard | DateRange", function (hooks) {
       </template>
     );
 
-    assert.dom(".db-date-range__trigger-label").includesText("Mar 1");
-    assert.dom(".db-date-range__trigger-label").includesText("Apr 28");
+    assert.dom(".db-date-range__trigger .d-button-label").includesText("Mar 1");
+    assert
+      .dom(".db-date-range__trigger .d-button-label")
+      .includesText("Apr 28");
   });
 
   test("trigger label falls back to default when in custom mode with missing dates", async function (assert) {
     await render(<template><DashboardDateRange @period="custom" /></template>);
 
-    assert.dom(".db-date-range__trigger-label").hasText("Last 30 days");
+    assert
+      .dom(".db-date-range__trigger .d-button-label")
+      .hasText("Last 30 days");
   });
 
   test("trigger label reacts to @period changes", async function (assert) {
@@ -70,11 +78,15 @@ module("Integration | Component | Dashboard | DateRange", function (hooks) {
       <template><DashboardDateRange @period={{state.period}} /></template>
     );
 
-    assert.dom(".db-date-range__trigger-label").hasText("Last 30 days");
+    assert
+      .dom(".db-date-range__trigger .d-button-label")
+      .hasText("Last 30 days");
 
     state.period = "last_7_days";
     await settled();
 
-    assert.dom(".db-date-range__trigger-label").hasText("Last 7 days");
+    assert
+      .dom(".db-date-range__trigger .d-button-label")
+      .hasText("Last 7 days");
   });
 });
