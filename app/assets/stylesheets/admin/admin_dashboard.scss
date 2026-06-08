@@ -253,6 +253,10 @@
     font-size: var(--font-down-2-rem);
     color: var(--primary-medium);
 
+    a {
+      color: inherit;
+    }
+
     @include viewport.until(sm) {
       white-space: wrap;
     }
@@ -359,44 +363,23 @@
     }
   }
 
-  &__row-block-title {
+  &__row-block-title,
+  &__row-block-title > a {
     color: var(--primary);
     font-weight: bold;
     font-size: var(--font-down-1-rem);
+
+    &:hover,
+    &:focus,
+    &:visited,
+    &:active {
+      color: var(--primary);
+    }
 
     .db-link-arrow {
       top: 0;
       inset-inline-end: calc(var(--space-6) * -1);
       margin-inline-start: var(--space-4);
-    }
-
-    // The drill-down link is either this element (a bare anchor) or a nested
-    // anchor when the title is wrapped in a heading for screen-reader semantics.
-    &:is(a),
-    a {
-      position: relative;
-      display: inline-block;
-      color: var(--primary);
-
-      &:hover,
-      &:focus,
-      &:visited,
-      &:active {
-        color: var(--primary);
-      }
-
-      &:hover .db-link-arrow {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    &.--label {
-      font-size: var(--font-down-2-rem);
-      font-weight: 600;
-      color: var(--primary-medium);
-      text-transform: uppercase;
-      letter-spacing: 1px;
     }
   }
 
@@ -482,14 +465,10 @@
 .db-activity-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--font-down-1-rem);
 
   thead th {
-    color: var(--primary-medium);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: var(--font-down-2-rem);
+    color: var(--primary-high);
+    font-size: var(--font-down-1-rem);
   }
 
   &__col-number,

@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { eq } from "discourse/truth-helpers";
 import I18n, { i18n } from "discourse-i18n";
@@ -55,11 +56,18 @@ class MetricItem extends Component {
     <div class="db-section__metric">
       <div class="db-section__metric-number">{{this.displayValue}}</div>
       <div class="db-section__metric-label">
-        {{i18n
-          (concat
-            "admin.dashboard.sections.engagement.headline.metrics." @metric.type
-          )
-        }}
+        <LinkTo
+          @route="adminReports.show"
+          @model={{@metric.report_type}}
+          @query={{@metric.report_query}}
+        >
+          {{i18n
+            (concat
+              "admin.dashboard.sections.engagement.headline.metrics."
+              @metric.type
+            )
+          }}
+        </LinkTo>
         <DTooltip
           class="db-section__info"
           @identifier={{concat "engagement-headline-" @metric.type "-tooltip"}}
