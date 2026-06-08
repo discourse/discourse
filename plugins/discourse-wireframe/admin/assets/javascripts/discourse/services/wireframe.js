@@ -2598,51 +2598,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Updates the `column` / `row` placement of a grid-cell entry. Used by
-   * the grid overlay's pointer-drag handlers to commit a new placement
-   * on drop.
-   *
-   * Routes through `recordStructural` so the placement change rides
-   * the same Cmd+Z stack as inserts and removes — undoing a drag
-   * reverts the tile to its previous cell.
-   *
-   * @param {{slotKey: string, column: string, row: string}} args
-   * @returns {boolean}
-   */
-  @action
-  setSlotPlacement({ slotKey, column, row }) {
-    const located = this.findEntryAndOutletSync(slotKey);
-    if (!located || !this.isGridCellEntry(located.entry)) {
-      return false;
-    }
-    return this.recordStructural([located.outletName], () => {
-      const layout = this.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
-      }
-      const result = replaceEntryContainerArgs(
-        layout,
-        slotKey,
-        "grid",
-        (current) => ({ ...current, column, row })
-      );
-      if (!result.changed) {
-        return false;
-      }
-      // A placement that reaches past the declared size (e.g. resizing a
-      // span to the edge) grows the grid's declared columns / rows to match.
-      const gridKey = this.#parentKeyOf(result.layout, slotKey);
-      this.publishStructuralChange(
-        located.outletName,
-        gridKey
-          ? this.gridManipulator.syncDeclaredToUsage(result.layout, gridKey)
-          : result.layout
-      );
-      return true;
-    });
-  }
-
-  /**
    * The dispatch entry for every grid drop. Drop surfaces (the grid overlay,
    * the container drop target) hand a request that DESCRIBES the drop — the
    * target grid, the gesture, and the source — without choosing an action.
@@ -2968,38 +2923,6 @@ export default class WireframeService extends Service {
           columnFractions: [],
         },
         children: this.#reflowIntoCells(content, cells),
-      });
-      if (!result.changed) {
-        return false;
-      }
-      this.publishStructuralChange(located.outletName, result.layout);
-      return true;
-    });
-  }
-
-  /**
-   * Persists resized column widths as `columnFractions` (one ratio per
-   * column). Written by the grid's column resize handles on pointerup.
-   * The render normalises the array to the live column count, so it can
-   * never desync from `columns` the way a raw template string could.
-   *
-   * @param {{gridKey: string, fractions: number[]}} args
-   * @returns {boolean}
-   */
-  @action
-  setColumnFractions({ gridKey, fractions }) {
-    const located = this.findEntryAndOutletSync(gridKey);
-    if (!located) {
-      return false;
-    }
-    return this.recordStructural([located.outletName], () => {
-      const layout = this.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
-      }
-      const result = replaceEntryInPlace(layout, gridKey, {
-        ...located.entry,
-        args: { ...located.entry.args, columnFractions: fractions },
       });
       if (!result.changed) {
         return false;

@@ -183,6 +183,81 @@ export default class GridManipulator {
   }
 
   /**
+   * Persists resized column widths as `columnFractions` (one ratio per
+   * column). Written by the grid's column resize handles on pointerup; the
+   * render normalizes the array to the live column count, so it can never
+   * desync from `columns`. A deterministic resize, not a drop — no decider.
+   *
+   * @param {{gridKey: string, fractions: number[]}} args
+   * @returns {boolean}
+   */
+  resizeColumns({ gridKey, fractions }) {
+    const svc = this.service;
+    const located = svc.findEntryAndOutletSync(gridKey);
+    if (!located) {
+      return false;
+    }
+    return svc.recordStructural([located.outletName], () => {
+      const layout = svc.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const result = replaceEntryInPlace(layout, gridKey, {
+        ...located.entry,
+        args: { ...located.entry.args, columnFractions: fractions },
+      });
+      if (!result.changed) {
+        return false;
+      }
+      svc.publishStructuralChange(located.outletName, result.layout);
+      return true;
+    });
+  }
+
+  /**
+   * Updates a grid cell's `column` / `row` placement. Written by the cell's
+   * resize handle on pointerup, so a span dragged past the declared size
+   * grows the grid's declared dimensions to match. A deterministic resize of
+   * one cell against an explicit rect, not a drop — no decider.
+   *
+   * @param {{slotKey: string, column: string, row: string}} args
+   * @returns {boolean}
+   */
+  resizeSlot({ slotKey, column, row }) {
+    const svc = this.service;
+    const located = svc.findEntryAndOutletSync(slotKey);
+    if (!located || !svc.isGridCellEntry(located.entry)) {
+      return false;
+    }
+    return svc.recordStructural([located.outletName], () => {
+      const layout = svc.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const result = replaceEntryContainerArgs(
+        layout,
+        slotKey,
+        "grid",
+        (current) => ({ ...current, column, row })
+      );
+      if (!result.changed) {
+        return false;
+      }
+      // A placement reaching past the declared size (e.g. a span dragged to
+      // the edge) grows the grid's declared columns / rows to match.
+      const parent = svc.findEntryParent(slotKey);
+      const gridKey = parent ? entryKey(parent) : null;
+      svc.publishStructuralChange(
+        located.outletName,
+        gridKey
+          ? this.syncDeclaredToUsage(result.layout, gridKey)
+          : result.layout
+      );
+      return true;
+    });
+  }
+
+  /**
    * Writes a grid's declared `args.columns` / `args.rows` up to match what its
    * children actually occupy (per core's `gridDimensions`), so the rendered
    * (effective) size never exceeds the declared size and no out-of-bounds

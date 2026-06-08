@@ -700,7 +700,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
     });
 
-    test("setSlotPlacement updates a cell's column/row and is undoable", async function (assert) {
+    test("resizeSlot updates a cell's column/row and is undoable", async function (assert) {
       const draft = this.editor.readResolvedLayout("homepage-blocks");
       const gridKey = `layout:${draft[0].__stableKey}`;
 
@@ -722,7 +722,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const cellKey = `wf:svc-test-tile:${cell.__stableKey}`;
       assert.strictEqual(cell.containerArgs.grid.column, "2");
 
-      const ok = this.editor.setSlotPlacement({
+      const ok = this.editor.gridManipulator.resizeSlot({
         slotKey: cellKey,
         column: "3",
         row: "2",
@@ -1694,7 +1694,6 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "moveBlockUp",
         "placeBlockInCell",
         "replaceSelectedEntryRaw",
-        "setSlotPlacement",
       ];
       const pattern = /^(move|insert|place|swap|replace|setSlot)/;
       const found = Object.getOwnPropertyNames(

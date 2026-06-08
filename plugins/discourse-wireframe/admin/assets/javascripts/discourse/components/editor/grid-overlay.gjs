@@ -348,7 +348,7 @@ export default class GridOverlay extends Component {
    */
   @action
   commitColumnFractions(fractions) {
-    this.wireframe.setColumnFractions({
+    this.wireframe.gridManipulator.resizeColumns({
       gridKey: this.args.gridKey,
       fractions,
     });

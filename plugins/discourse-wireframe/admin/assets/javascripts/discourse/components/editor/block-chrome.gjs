@@ -979,7 +979,7 @@ export default class BlockChrome extends Component {
    */
   @action
   commitSelfResize(placement) {
-    this.wireframe.setSlotPlacement({
+    this.wireframe.gridManipulator.resizeSlot({
       slotKey: this.args.blockKey,
       column: placement.column,
       row: placement.row,
