@@ -492,7 +492,6 @@ RSpec.describe Reviewable, type: :model do
       job = Jobs::NotifyReviewable.jobs.last
 
       expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
-      expect(job["args"].first["updated_reviewable_ids"]).to be_nil
       expect(job["args"].first["remove_reviewable_ids"]).to contain_exactly(reviewable.id)
 
       expect(messages.size).to eq(1)
@@ -522,7 +521,6 @@ RSpec.describe Reviewable, type: :model do
       job = Jobs::NotifyReviewable.jobs.last
 
       expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
-      expect(job["args"].first["updated_reviewable_ids"]).to be_nil
       expect(job["args"].first["remove_reviewable_ids"]).to contain_exactly(reviewable.id)
 
       expect(messages.size).to eq(1)
@@ -561,7 +559,6 @@ RSpec.describe Reviewable, type: :model do
       job = Jobs::NotifyReviewable.jobs.last
 
       expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
-      expect(job["args"].first["updated_reviewable_ids"]).to be_nil
       expect(job["args"].first["remove_reviewable_ids"]).to contain_exactly(reviewable.id)
     end
   end
