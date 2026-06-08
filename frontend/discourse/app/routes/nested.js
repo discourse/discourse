@@ -41,8 +41,6 @@ export default class NestedRoute extends DiscourseRoute {
 
   async model(params) {
     const { topic_id, slug, post_number } = params;
-    this._teardownCurrentTopic(topic_id);
-
     const sort =
       params.sort || this.siteSettings.nested_replies_default_sort || "top";
 
@@ -151,7 +149,6 @@ export default class NestedRoute extends DiscourseRoute {
     this._resetTopicControllerBulkSelection();
     controller.unsubscribe();
     this.screenTrack.stop();
-    controller.topic = null;
   }
 
   @action
@@ -202,20 +199,34 @@ export default class NestedRoute extends DiscourseRoute {
       return;
     }
 
-    controller.saveToCache(this._findScrollAnchor());
-  }
+    const cacheKey = this.nestedViewCache.buildKey(controller.topic.id, {
+      sort: controller.sort,
+      post_number: controller.postNumber,
+      context: controller.contextNoAncestors ? 0 : undefined,
+    });
 
-  _teardownCurrentTopic(nextTopicId) {
-    const controller = this.controllerFor("nested");
-    const currentTopicId = controller.topic?.id;
-
-    if (!currentTopicId || String(currentTopicId) === String(nextTopicId)) {
-      return;
-    }
-
-    this._saveToCache(controller);
-    controller.unsubscribe();
-    this.screenTrack.stop();
+    this.nestedViewCache.save(cacheKey, {
+      modelData: {
+        topic: controller.topic,
+        opPost: controller.opPost,
+        rootNodes: controller.rootNodes,
+        page: controller.page,
+        hasMoreRoots: controller.hasMoreRoots,
+        sort: controller.sort,
+        messageBusLastId: controller.messageBusLastId,
+        pinnedPostIds: controller.pinnedPostIds,
+        postNumber: controller.postNumber,
+        contextMode: controller.contextMode,
+        contextChain: controller.contextChain,
+        targetPostNumber: controller.targetPostNumber,
+        contextNoAncestors: controller.contextNoAncestors,
+        ancestorsTruncated: controller.ancestorsTruncated,
+        topAncestorPostNumber: controller.topAncestorPostNumber,
+      },
+      expansionState: new Map(controller.expansionState),
+      fetchedChildrenCache: new Map(controller.fetchedChildrenCache),
+      scrollAnchor: this._findScrollAnchor(),
+    });
   }
 
   _findScrollAnchor() {
@@ -287,7 +298,6 @@ export default class NestedRoute extends DiscourseRoute {
       postNumber: params.post_number ? Number(params.post_number) : null,
       contextMode: false,
       contextChain: null,
-      initialFocusedPath: [],
       targetPostNumber: null,
       contextNoAncestors: false,
       ancestorsTruncated: false,
@@ -330,14 +340,8 @@ export default class NestedRoute extends DiscourseRoute {
 
     // Nest ancestors outermost-first so target ends up as the chain leaf.
     let chainTip = targetNode;
-    const focusedPath = [targetNode];
     for (let i = ancestors.length - 1; i >= 0; i--) {
-      chainTip = {
-        post: ancestors[i],
-        children: [chainTip],
-        _renderKey: ancestors[i].id,
-      };
-      focusedPath.unshift(chainTip);
+      chainTip = { post: ancestors[i], children: [chainTip] };
     }
 
     // Force full NestedPost rebuild on every fetch: NestedPostChildren reads
@@ -355,13 +359,12 @@ export default class NestedRoute extends DiscourseRoute {
       postNumber: Number(params.post_number),
       contextMode: true,
       contextChain: chainTip,
-      initialFocusedPath: focusedPath,
       targetPostNumber: Number(params.post_number),
       contextNoAncestors: noAncestors,
       ancestorsTruncated: data.ancestors_truncated || false,
       topAncestorPostNumber:
         ancestors.length > 0 ? ancestors[0].post_number : null,
-      rootNodes: [chainTip],
+      rootNodes: [],
       page: 0,
       hasMoreRoots: false,
       newRootPostIds: [],

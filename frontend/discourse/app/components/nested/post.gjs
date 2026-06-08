@@ -4,7 +4,6 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { cancel, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import ShareTopicModal from "discourse/components/modal/share-topic";
@@ -25,12 +24,10 @@ import { nativeShare } from "discourse/lib/pwa-utils";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import nestedPostUrl from "../../lib/nested-post-url";
-import processNode from "../../lib/process-node";
 import NestedPostChildren from "./post-children";
 
 export default class NestedPost extends Component {
@@ -40,7 +37,6 @@ export default class NestedPost extends Component {
   @service modal;
   @service site;
   @service siteSettings;
-  @service store;
 
   @tracked expanded;
   @tracked lineHighlighted = false;
@@ -48,26 +44,20 @@ export default class NestedPost extends Component {
   @tracked showDeletedContent = false;
   @tracked showIgnoredContent = false;
   @tracked loadingIgnoredContent = false;
-  @tracked loadingReplies = false;
+
   restoreScroll = modifier((element) => {
     const anchor = this.args.scrollAnchor;
     if (anchor?.postNumber !== this.args.post.post_number) {
       return;
     }
-    if (Number.isFinite(anchor.scrollY)) {
-      window.scrollTo(0, anchor.scrollY);
-    } else {
-      const rect = element.getBoundingClientRect();
-      window.scrollTo(0, window.scrollY + rect.top - anchor.offsetFromTop);
-    }
+    const rect = element.getBoundingClientRect();
+    window.scrollTo(0, window.scrollY + rect.top - anchor.offsetFromTop);
 
     // Defer the event to avoid backtracking re-render errors during the render phase
     Promise.resolve().then(() => {
       this.appEvents.trigger("nested-replies:scroll-restored");
     });
   });
-  #postRegistered = false;
-  #postRegistrationTimer;
 
   @tracked _childWasCreated = false;
 
@@ -103,44 +93,21 @@ export default class NestedPost extends Component {
       this,
       this._onChildCreated
     );
-    this.#postRegistrationTimer = scheduleOnce(
-      "afterRender",
-      this,
-      this.#registerPost
-    );
+    this.appEvents.trigger("nested-replies:post-registered", this.args.post);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    cancel(this.#postRegistrationTimer);
     this.appEvents.off(
       "nested-replies:child-created",
       this,
       this._onChildCreated
     );
-
-    if (this.#postRegistered) {
-      this.appEvents.trigger(
-        "nested-replies:post-unregistered",
-        this.args.post
-      );
-    }
+    this.appEvents.trigger("nested-replies:post-unregistered", this.args.post);
   }
 
-  #registerPost() {
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    this.#postRegistered = true;
-    this.appEvents.trigger("nested-replies:post-registered", this.args.post);
-  }
-
-  _onChildCreated({ topicId, post: childPost, parentPostNumber, isOwnPost }) {
-    if (
-      String(topicId) !== String(this.args.topic?.id) ||
-      parentPostNumber !== this.args.post.post_number
-    ) {
+  _onChildCreated({ parentPostNumber }) {
+    if (parentPostNumber !== this.args.post.post_number) {
       return;
     }
 
@@ -156,10 +123,6 @@ export default class NestedPost extends Component {
         expanded: true,
         collapsed: false,
       });
-    }
-
-    if (isOwnPost && this.mobileFocusEnabled) {
-      this.args.focusPost(this.childPathWithNewChild(childPost));
     }
   }
 
@@ -253,38 +216,8 @@ export default class NestedPost extends Component {
     ];
   }
 
-  childPathWithChildren(children) {
-    return [
-      ...(this.args.path || []),
-      { post: this.args.post, children: children || [] },
-    ];
-  }
-
-  childPathWithNewChild(childPost) {
-    const children = this.args.children || [];
-    const hasChild = children.some(
-      (node) =>
-        node.post?.id === childPost?.id ||
-        node.post?.post_number === childPost?.post_number
-    );
-
-    return [
-      ...(this.args.path || []),
-      {
-        post: this.args.post,
-        children: hasChild
-          ? children
-          : [{ post: childPost, children: [] }, ...children],
-      },
-    ];
-  }
-
   get mobileFocusEnabled() {
     return this.site.mobileView && this.args.focusPost;
-  }
-
-  get childDepth() {
-    return this.args.depth + 1;
   }
 
   get effectiveExpanded() {
@@ -322,10 +255,6 @@ export default class NestedPost extends Component {
   }
 
   get depthLineLabel() {
-    if (this.site.mobileView && !this.args.forceExpanded) {
-      return i18n("nested_replies.collapse");
-    }
-
     if (this.depthLineCollapsed) {
       return this.expandLabel;
     }
@@ -359,84 +288,10 @@ export default class NestedPost extends Component {
     });
   }
 
-  collapsePost() {
-    if (this.hasReplies) {
-      this.expanded = false;
-    }
-
-    this.collapsed = true;
-    this.lineHighlighted = false;
-    this.args.expansionState?.set(this.args.post.post_number, {
-      expanded: this.expanded,
-      collapsed: this.collapsed,
-    });
-  }
-
-  async childrenForMobileFocus() {
-    const cached = this.args.fetchedChildrenCache?.get(
-      this.args.post.post_number
-    );
-    if (cached) {
-      return cached.childNodes;
-    }
-
-    if ((this.args.children?.length ?? 0) > 0 || !this.hasReplies) {
-      return this.args.children || [];
-    }
-
-    this.loadingReplies = true;
-    try {
-      const data = await ajax(
-        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.post.post_number}.json?sort=${this.args.sort || "top"}&depth=${this.childDepth}`
-      );
-      if (this.isDestroying || this.isDestroyed) {
-        return null;
-      }
-
-      const childNodes = (data.children || []).map((child) =>
-        processNode(this.store, this.args.topic, child)
-      );
-      this.args.fetchedChildrenCache?.set(this.args.post.post_number, {
-        childNodes,
-        page: data.page,
-        hasMore: data.has_more || false,
-        fetchedFromServer: true,
-      });
-      return childNodes;
-    } catch (e) {
-      if (!(this.isDestroying || this.isDestroyed)) {
-        popupAjaxError(e);
-      }
-      return null;
-    } finally {
-      if (!(this.isDestroying || this.isDestroyed)) {
-        this.loadingReplies = false;
-      }
-    }
-  }
-
   @action
-  async handleReplies() {
-    if (this.loadingReplies) {
-      return;
-    }
-
+  handleReplies() {
     if (this.mobileFocusEnabled) {
-      const returnAnchor = this.args.captureScrollAnchor?.();
-      const children = await this.childrenForMobileFocus();
-      if (children && !(this.isDestroying || this.isDestroyed)) {
-        this.args.focusPost(this.childPathWithChildren(children), returnAnchor);
-      }
-      return;
-    }
-
-    this.toggleExpanded();
-  }
-
-  @action
-  handleDepthLine() {
-    if (this.site.mobileView && !this.args.forceExpanded) {
-      this.collapsePost();
+      this.args.focusPost(this.childPath);
       return;
     }
 
@@ -624,7 +479,7 @@ export default class NestedPost extends Component {
                   this.depthLineCollapsed "nested-post__depth-line--collapsed"
                 )
               }}
-              {{on "click" this.handleDepthLine}}
+              {{on "click" this.toggleExpanded}}
               {{on "mouseenter" this.highlightLine}}
               {{on "mouseleave" this.unhighlightLine}}
               aria-label={{this.depthLineLabel}}
@@ -645,18 +500,6 @@ export default class NestedPost extends Component {
               data-post-number={{@post.post_number}}
               {{on "click" this.toggleExpanded}}
             >
-              {{#if this.isMobile}}
-                <span class="nested-post__collapsed-avatar" aria-hidden="true">
-                  {{#if this.isDeletedPlaceholder}}
-                    {{dIcon "trash-can"}}
-                  {{else if this.renderIgnoredPlaceholder}}
-                    {{dIcon "far-eye-slash"}}
-                  {{else}}
-                    {{! PostAvatar renders a user link; keep this avatar non-interactive inside the collapsed button. }}
-                    {{dAvatar @post imageSize="small" hideTitle=true}}
-                  {{/if}}
-                </span>
-              {{/if}}
               {{dIcon "discourse-circle-plus"}}
               {{#if this.isDeletedPlaceholder}}
                 <span class="nested-post__collapsed-username">{{i18n
@@ -825,8 +668,6 @@ export default class NestedPost extends Component {
                     {{#if this.showExpandRepliesButton}}
                       <NestedRepliesExpandButton
                         @replyCount={{this.replyCount}}
-                        @disabled={{this.loadingReplies}}
-                        @isLoading={{this.loadingReplies}}
                         @onClick={{this.handleReplies}}
                       />
                     {{/if}}
@@ -895,7 +736,6 @@ export default class NestedPost extends Component {
               @registerPost={{@registerPost}}
               @collapseFromDepth={{@collapseFromDepth}}
               @focusPost={{@focusPost}}
-              @captureScrollAnchor={{@captureScrollAnchor}}
               @multiSelect={{@multiSelect}}
               @togglePostSelection={{@togglePostSelection}}
               @selectReplies={{@selectReplies}}
