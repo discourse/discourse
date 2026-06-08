@@ -28,8 +28,13 @@ class MethodProfiler
 
           item_capture = ""
           item_capture = <<~RUBY if itemize
-          if prof[:__itemize] && (__mp_item = MethodProfiler.__#{name}_item(self, args))
-            (data[:items] ||= []) << __mp_item.merge!(duration_ms: __mp_elapsed * 1000.0)
+          if prof[:__itemize]
+            begin
+              if (__mp_item = MethodProfiler.__#{name}_item(self, args))
+                (data[:items] ||= []) << __mp_item.merge!(duration_ms: __mp_elapsed * 1000.0)
+              end
+            rescue StandardError
+            end
           end
         RUBY
 
@@ -61,41 +66,47 @@ class MethodProfiler
     klass.class_eval patches
   end
 
+  def self.utf8(value)
+    value.to_s.dup.force_encoding(Encoding::UTF_8).scrub("?")
+  end
+
   def self.__sql_item(_receiver, args)
-    { sql: args[0].to_s }
+    { sql: utf8(args[0]) }
   end
 
   def self.__redis_item(_receiver, args)
     command = args[0]
-    return { command: command.to_s } unless command.is_a?(Array)
+    return { command: utf8(command) } unless command.is_a?(Array)
     commands = command.first.is_a?(Array) ? command : [command]
     { command: commands.map { |entry| __redis_command(entry) }.join("; ") }
   end
 
   def self.__redis_command(command)
-    return command.to_s unless command.is_a?(Array)
-    [command.first.to_s.upcase, *Array(command[1..]).map(&:to_s)].join(" ").strip
+    return utf8(command) unless command.is_a?(Array)
+    [utf8(command.first).upcase, *Array(command[1..]).map { |arg| utf8(arg) }].join(" ").strip
   end
 
   def self.__net_item(receiver, args)
     if defined?(Net::HTTP) && receiver.is_a?(Net::HTTP)
       request = args[0]
       {
-        method: request.method,
-        url: __http_url(receiver.use_ssl?, receiver.address, receiver.port, request.path),
+        method: utf8(request.method),
+        url: utf8(__http_url(receiver.use_ssl?, receiver.address, receiver.port, request.path)),
       }
     elsif defined?(Excon::Connection) && receiver.is_a?(Excon::Connection)
       params = args[0] || {}
       data = receiver.respond_to?(:data) ? receiver.data.to_h : {}
-      method = (params[:method] || data[:method]).to_s.upcase
+      method = utf8(params[:method] || data[:method]).upcase
       {
         method:,
         url:
-          __http_url(
-            data[:scheme].to_s == "https",
-            data[:host],
-            data[:port],
-            params[:path] || data[:path],
+          utf8(
+            __http_url(
+              data[:scheme].to_s == "https",
+              data[:host],
+              data[:port],
+              params[:path] || data[:path],
+            ),
           ),
       }
     else
