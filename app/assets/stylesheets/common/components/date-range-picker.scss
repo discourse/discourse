@@ -1,7 +1,7 @@
 @use "lib/viewport";
 
 .d-date-range-picker {
-  --d-date-range-picker-nav-size: 2.5rem;
+  --d-date-range-picker-nav-size: var(--space-10);
   display: grid;
   grid-template-columns: max-content 1fr;
   background: var(--secondary);
@@ -194,23 +194,23 @@
     }
 
     // range cells form a continuous strip, rounded only where the strip ends:
-    // at a cap, a row edge, or a month edge (muted days render as empty spans);
+    // at a cap, a row edge, or a month edge;
     // :where keeps this reset below the corner rules' specificity
     &:where(.--in-range, .--hover-preview, .--hover-end, .--start, .--end) {
       border-radius: 0;
     }
 
     &.--start,
-    &:first-child,
-    span + & {
+    &.--month-start,
+    &:first-child {
       border-start-start-radius: var(--space-1);
       border-end-start-radius: var(--space-1);
     }
 
     &.--end,
     &.--hover-end,
-    &:last-child,
-    &:has(+ span) {
+    &.--month-end,
+    &:last-child {
       border-start-end-radius: var(--space-1);
       border-end-end-radius: var(--space-1);
     }

@@ -156,6 +156,16 @@ export default class DashboardDateRangePicker extends Component {
   }
 
   @action
+  isMonthStartDay(day) {
+    return day.date() === 1;
+  }
+
+  @action
+  isMonthEndDay(day) {
+    return day.date() === day.daysInMonth();
+  }
+
+  @action
   isDisabledDay(day) {
     return day.isAfter(this.maxDate, "day");
   }
@@ -240,6 +250,12 @@ export default class DashboardDateRangePicker extends Component {
     }
     if (this.isHoverEndDay(day)) {
       classes.push("--hover-end");
+    }
+    if (this.isMonthStartDay(day)) {
+      classes.push("--month-start");
+    }
+    if (this.isMonthEndDay(day)) {
+      classes.push("--month-end");
     }
     return classes.join(" ");
   }
