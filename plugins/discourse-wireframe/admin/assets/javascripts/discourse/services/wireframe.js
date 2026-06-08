@@ -29,14 +29,6 @@ import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
 import PreloadStore from "discourse/lib/preload-store";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { prefersReducedMotion } from "discourse/lib/utilities";
-// `grid-drop` is the single rule chokepoint: it decides which action a drop
-// into a grid takes and where the source lands. Every placement path routes
-// through it so the rules live in one tested place.
-import {
-  decideGridDrop,
-  GRID_DROP_ACTIONS,
-  GRID_DROP_GESTURES,
-} from "discourse/plugins/discourse-wireframe/discourse/lib/grid-drop";
 // `grid-math` holds the editor-only grid geometry. Absolute addon path
 // because this admin service crosses into the plugin's universal bundle.
 import {
@@ -210,9 +202,8 @@ export default class WireframeService extends Service {
    *   // Caller-private dispatch payload — read at drop time so the
    *   // drop handler can act on the same descriptor the user saw.
    *   dispatch: {
-   *     action: "insertBlock" | "moveBlock" | "placeBlockInCell" |
-   *             "moveBlockIntoCell" | "insertBlockAtCell" |
-   *             "moveBlockToCell" | "swapSlotPlacements" | ...,
+   *     action: "insertBlock" | "moveBlock" | "applyGridDrop" |
+   *             "placeBlockInCell" | "moveBlockIntoCell" | ...,
    *     args: Object,
    *   },
    * }
@@ -2515,7 +2506,7 @@ export default class WireframeService extends Service {
           position
         );
       }
-      return this.#moveAcrossOutlets({
+      return this.moveAcrossOutlets({
         sourceOutletName: source.outletName,
         targetOutletName,
         sourceEntry: source.entry,
@@ -2601,7 +2592,7 @@ export default class WireframeService extends Service {
       // mounts without the author having to click first).
       // `publishStructuralChange` runs `assignStableKeys`, so `entry`
       // has a `__stableKey` by the time this fires.
-      this.#selectInsertedEntry(entry);
+      this.selectInsertedEntry(entry);
       return true;
     });
   }
@@ -2621,7 +2612,7 @@ export default class WireframeService extends Service {
   @action
   setSlotPlacement({ slotKey, column, row }) {
     const located = this.findEntryAndOutletSync(slotKey);
-    if (!located || !this.#isGridCellEntry(located.entry)) {
+    if (!located || !this.isGridCellEntry(located.entry)) {
       return false;
     }
     return this.recordStructural([located.outletName], () => {
@@ -2652,350 +2643,20 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Swaps two grid cells. Within one grid this just trades their
-   * `column` / `row`; ACROSS two grids (same outlet) each block moves into
-   * the other's grid and takes the other's cell — the non-destructive
-   * "trade places" behavior for dropping a block onto an occupied cell.
-   * One `recordStructural` entry so swap-then-undo restores both atomically.
+   * The dispatch entry for every grid drop. Drop surfaces (the grid overlay,
+   * the container drop target) hand a request that DESCRIBES the drop — the
+   * target grid, the gesture, and the source — without choosing an action.
+   * This delegates to the grid manipulator, which routes the request through
+   * `decideGridDrop` and into the matching executor. Wired into the
+   * `{action, args}` drop channel as the single grid action, so no drop
+   * surface can place into a grid without the decider.
    *
-   * @param {{slotKeyA: string, slotKeyB: string}} args
+   * @param {Object} request - See `GridManipulator#drop`.
    * @returns {boolean}
    */
   @action
-  swapSlotPlacements({ slotKeyA, slotKeyB }) {
-    if (!slotKeyA || !slotKeyB || slotKeyA === slotKeyB) {
-      return false;
-    }
-    const a = this.findEntryAndOutletSync(slotKeyA);
-    const b = this.findEntryAndOutletSync(slotKeyB);
-    if (!a || !b || a.outletName !== b.outletName) {
-      return false;
-    }
-    if (!this.#isGridCellEntry(a.entry) || !this.#isGridCellEntry(b.entry)) {
-      return false;
-    }
-    const aGrid = {
-      column: a.entry.containerArgs?.grid?.column ?? "auto",
-      row: a.entry.containerArgs?.grid?.row ?? "auto",
-    };
-    const bGrid = {
-      column: b.entry.containerArgs?.grid?.column ?? "auto",
-      row: b.entry.containerArgs?.grid?.row ?? "auto",
-    };
-    const layout0 = this.readResolvedLayout(a.outletName);
-    const aParent = this.#parentKeyOf(layout0, slotKeyA);
-    const bParent = this.#parentKeyOf(layout0, slotKeyB);
-
-    // Cross-grid trade: relocate each block into the other's grid at the
-    // other's cell, so dropping onto an occupied cell never overlaps.
-    if (aParent && bParent && aParent !== bParent) {
-      return this.recordStructural([a.outletName], () => {
-        let layout = this.readResolvedLayout(a.outletName);
-        const removalA = removeEntry(layout, slotKeyA);
-        if (!removalA.changed || !removalA.removed) {
-          return false;
-        }
-        const removalB = removeEntry(removalA.layout, slotKeyB);
-        if (!removalB.changed || !removalB.removed) {
-          return false;
-        }
-        // A takes B's cell in B's grid; B takes A's cell in A's grid.
-        const insA = insertEntryAt(
-          removalB.layout,
-          bParent,
-          this.#withGridPlacement(removalA.removed, bGrid),
-          "inside"
-        );
-        if (!insA.changed) {
-          return false;
-        }
-        const insB = insertEntryAt(
-          insA.layout,
-          aParent,
-          this.#withGridPlacement(removalB.removed, aGrid),
-          "inside"
-        );
-        if (!insB.changed) {
-          return false;
-        }
-        this.publishStructuralChange(a.outletName, insB.layout);
-        return true;
-      });
-    }
-
-    return this.recordStructural([a.outletName], () => {
-      let layout = this.readResolvedLayout(a.outletName);
-      const firstSwap = replaceEntryContainerArgs(
-        layout,
-        slotKeyA,
-        "grid",
-        (current) => ({ ...current, column: bGrid.column, row: bGrid.row })
-      );
-      if (!firstSwap.changed) {
-        return false;
-      }
-      layout = firstSwap.layout;
-      const secondSwap = replaceEntryContainerArgs(
-        layout,
-        slotKeyB,
-        "grid",
-        (current) => ({ ...current, column: aGrid.column, row: aGrid.row })
-      );
-      if (!secondSwap.changed) {
-        return false;
-      }
-      this.publishStructuralChange(a.outletName, secondSwap.layout);
-      return true;
-    });
-  }
-
-  /**
-   * Returns a copy of `entry` with its `containerArgs.grid` column / row
-   * overwritten (other grid props like align / justify preserved). Used to
-   * re-place a detached entry during a cross-grid trade.
-   *
-   * @param {Object} entry
-   * @param {{column: string, row: string}} placement
-   * @returns {Object}
-   */
-  #withGridPlacement(entry, { column, row }) {
-    return {
-      ...entry,
-      containerArgs: {
-        ...(entry.containerArgs ?? {}),
-        grid: {
-          align: "stretch",
-          justify: "stretch",
-          ...(entry.containerArgs?.grid ?? {}),
-          column,
-          row,
-        },
-      },
-    };
-  }
-
-  /**
-   * Removes the target grid cell occupant and re-places the source
-   * cell at the target's old `column` / `row` — atomically, under one
-   * structural-undo entry. Used for the Shift-held "replace" gesture:
-   * target dies, source takes its cell.
-   *
-   * Both entries must live in the same outlet and both must be grid
-   * cell occupants (i.e. the source drag came from a grid block, not
-   * a palette).
-   *
-   * @param {{targetSlotKey: string, sourceSlotKey: string}} args
-   * @returns {boolean}
-   */
-  @action
-  replaceSlot({ targetSlotKey, sourceSlotKey }) {
-    if (!targetSlotKey || !sourceSlotKey || targetSlotKey === sourceSlotKey) {
-      return false;
-    }
-    const target = this.findEntryAndOutletSync(targetSlotKey);
-    const source = this.findEntryAndOutletSync(sourceSlotKey);
-    if (
-      !target ||
-      !source ||
-      target.outletName !== source.outletName ||
-      !this.#isGridCellEntry(target.entry) ||
-      !this.#isGridCellEntry(source.entry)
-    ) {
-      return false;
-    }
-    const targetCol = target.entry.containerArgs?.grid?.column ?? "auto";
-    const targetRow = target.entry.containerArgs?.grid?.row ?? "auto";
-    return this.recordStructural([target.outletName], () => {
-      let layout = this.readResolvedLayout(target.outletName);
-      const removal = removeEntry(layout, targetSlotKey);
-      if (!removal.changed) {
-        return false;
-      }
-      layout = removal.layout;
-      const moved = replaceEntryContainerArgs(
-        layout,
-        sourceSlotKey,
-        "grid",
-        (current) => ({ ...current, column: targetCol, row: targetRow })
-      );
-      if (!moved.changed) {
-        return false;
-      }
-      this.publishStructuralChange(target.outletName, moved.layout);
-      return true;
-    });
-  }
-
-  /**
-   * Inserts a new block at the edge of `dropSlotKey`, cascading existing
-   * slots in the appropriate direction to make room. Wraps the entire
-   * sequence (cascade + insert) into one structural-undo entry.
-   *
-   * The source can be:
-   *  - an existing slot in this grid (`sourceKey` set, `paletteBlockName`
-   *    null) — its cell is freed during planning so it can absorb the
-   *    cascade tail (enables rotations like `A, B, C → C, A, B`).
-   *  - a fresh palette block (`sourceKey` null, `paletteBlockName` /
-   *    `paletteDefaultArgs` set) — a new slot is minted at the landing
-   *    cell with the named block inside.
-   *  - a slot from another grid or container — wrapped/unwrapped via
-   *    the existing `#transformForDestination` path, then re-targeted
-   *    to the landing cell.
-   *
-   * Returns false (no commit) when the shift plan is invalid (cascade
-   * runs off-grid, or shifted slots would overlap a span).
-   *
-   * @param {{
-   *   gridKey: string,
-   *   dropSlotKey: string,
-   *   direction: "left"|"right"|"up"|"down",
-   *   sourceKey: string|null,
-   *   paletteBlockName: string|null,
-   *   paletteDefaultArgs: Object|null,
-   * }} args
-   * @returns {boolean}
-   */
-  @action
-  insertWithShift({
-    gridKey,
-    dropSlotKey = null,
-    dropCell = null,
-    direction,
-    sourceKey = null,
-    paletteBlockName = null,
-    paletteDefaultArgs = null,
-  }) {
-    const grid = this.findEntryAndOutletSync(gridKey);
-    if (!grid || !this.#isGridContainer(grid.entry)) {
-      return false;
-    }
-    const sourceLocated = sourceKey
-      ? this.findEntryAndOutletSync(sourceKey)
-      : null;
-    // Whether the source is an existing cell of THIS grid. Only a same-grid
-    // source frees a cell during planning and is re-placed in situ below;
-    // cross-grid / palette sources are new arrivals.
-    const sourceInGrid =
-      sourceLocated &&
-      sourceLocated.outletName === grid.outletName &&
-      this.#isCellInGrid(sourceLocated.entry, gridKey)
-        ? sourceKey
-        : null;
-    // The cascade plan comes from the single decider — `insertWithShift` is
-    // the BESIDE executor, so it only proceeds on a `cascade` outcome. The
-    // decider credits a same-grid source's cell as free (via `inGrid`) the
-    // same way the old `sourceInGrid` argument did.
-    const decision = decideGridDrop({
-      children: grid.entry.children ?? [],
-      declared: {
-        columns: Number(grid.entry.args?.columns ?? 3),
-        rows: Number(grid.entry.args?.rows ?? 2),
-      },
-      source: { kind: paletteBlockName ? "new" : "existing", key: sourceKey },
-      drop: {
-        gesture: GRID_DROP_GESTURES.BESIDE,
-        anchorKey: dropSlotKey,
-        cell: dropCell,
-        direction,
-      },
-    });
-    if (decision.action !== GRID_DROP_ACTIONS.CASCADE) {
-      return false;
-    }
-    const outletsAffected =
-      sourceLocated && sourceLocated.outletName !== grid.outletName
-        ? [sourceLocated.outletName, grid.outletName]
-        : [grid.outletName];
-    return this.recordStructural(outletsAffected, () => {
-      // Apply the cascade first so subsequent inserts / placements
-      // see the post-shift occupancy.
-      for (const move of decision.moves) {
-        const layout = this.readResolvedLayout(grid.outletName);
-        const result = replaceEntryContainerArgs(
-          layout,
-          move.slotKey,
-          "grid",
-          (current) => ({ ...current, column: move.column, row: move.row })
-        );
-        if (!result.changed) {
-          return false;
-        }
-        this.publishStructuralChange(grid.outletName, result.layout);
-      }
-      // Now place the source at the landing cell.
-      const { column, row } = decision.placement;
-      if (sourceKey && sourceInGrid) {
-        // Same-grid existing cell: just re-place it.
-        const layout = this.readResolvedLayout(grid.outletName);
-        const result = replaceEntryContainerArgs(
-          layout,
-          sourceKey,
-          "grid",
-          (current) => ({ ...current, column, row })
-        );
-        if (!result.changed) {
-          return false;
-        }
-        this.publishStructuralChange(grid.outletName, result.layout);
-      } else if (sourceKey) {
-        // Cross-container source: move it into the target grid, then
-        // re-place at the landing cell. `autoPosition: false` because we
-        // set the exact landing cell below; the move just relocates the
-        // entry (and removes it from its source — same outlet included).
-        const moved = this.#moveAcrossOutlets({
-          sourceOutletName: sourceLocated.outletName,
-          targetOutletName: grid.outletName,
-          sourceKey,
-          targetKey: gridKey,
-          position: "inside",
-          autoPosition: false,
-        });
-        if (!moved) {
-          return false;
-        }
-        const layout = this.readResolvedLayout(grid.outletName);
-        const result = replaceEntryContainerArgs(
-          layout,
-          sourceKey,
-          "grid",
-          (current) => ({ ...current, column, row })
-        );
-        if (result.changed) {
-          this.publishStructuralChange(grid.outletName, result.layout);
-        }
-      } else if (paletteBlockName) {
-        // Palette drop: mint a fresh cell occupant at the landing cell.
-        const layout = this.readResolvedLayout(grid.outletName);
-        if (!layout) {
-          return false;
-        }
-        const cellEntry = {
-          block: paletteBlockName,
-          args: { ...(paletteDefaultArgs ?? {}) },
-          containerArgs: {
-            grid: { column, row, align: "stretch", justify: "stretch" },
-          },
-        };
-        const insertion = insertEntryAt(layout, gridKey, cellEntry, "inside");
-        if (!insertion.changed) {
-          return false;
-        }
-        this.publishStructuralChange(grid.outletName, insertion.layout);
-        this.#selectInsertedEntry(cellEntry);
-      } else {
-        return false;
-      }
-      // A grown cascade left a cell past the declared size — sync the
-      // grid's declared columns / rows up to match.
-      this.publishStructuralChange(
-        grid.outletName,
-        this.gridManipulator.syncDeclaredToUsage(
-          this.readResolvedLayout(grid.outletName),
-          gridKey
-        )
-      );
-      return true;
-    });
+  applyGridDrop(request) {
+    return this.gridManipulator.drop(request);
   }
 
   /**
@@ -3014,12 +2675,12 @@ export default class WireframeService extends Service {
    */
   outOfBoundsSlotsIn(gridKey, maxColumns, maxRows) {
     const located = this.findEntryAndOutletSync(gridKey);
-    if (!located || !this.#isGridContainer(located.entry)) {
+    if (!located || !this.isGridContainer(located.entry)) {
       return [];
     }
     const offenders = [];
     for (const slot of located.entry.children ?? []) {
-      if (!this.#isGridCellEntry(slot)) {
+      if (!this.isGridCellEntry(slot)) {
         continue;
       }
       const placement = parsePlacement(slot.containerArgs);
@@ -3057,7 +2718,7 @@ export default class WireframeService extends Service {
   @action
   clampGridSlotPlacements({ gridKey, maxColumns, maxRows }) {
     const located = this.findEntryAndOutletSync(gridKey);
-    if (!located || !this.#isGridContainer(located.entry)) {
+    if (!located || !this.isGridContainer(located.entry)) {
       return false;
     }
     const offenders = this.outOfBoundsSlotsIn(gridKey, maxColumns, maxRows);
@@ -3066,7 +2727,7 @@ export default class WireframeService extends Service {
     }
     return this.recordStructural([located.outletName], () => {
       for (const slot of located.entry.children ?? []) {
-        if (!this.#isGridCellEntry(slot)) {
+        if (!this.isGridCellEntry(slot)) {
           continue;
         }
         const placement = parsePlacement(slot.containerArgs);
@@ -3151,159 +2812,6 @@ export default class WireframeService extends Service {
       return false;
     }
     return path.some((entry) => entryKey(entry) === ancestorKey);
-  }
-
-  /**
-   * Moves an existing block to a specific cell of a grid layout.
-   *
-   * Two cases:
-   *  - Source already lives directly inside the target grid → update
-   *    its `containerArgs.grid.column / .row` via `setSlotPlacement`.
-   *  - Cross-container source → move it into the grid (which annotates
-   *    `containerArgs.grid` with `auto / auto`), then re-target the
-   *    same entry's placement to the requested cell.
-   *
-   * @param {{
-   *   gridKey: string,
-   *   sourceKey: string,
-   *   column: number,
-   *   row: number,
-   * }} args
-   * @returns {boolean}
-   */
-  @action
-  moveBlockToCell({ gridKey, sourceKey, column, row }) {
-    const grid = this.findEntryAndOutletSync(gridKey);
-    if (!grid || !this.#isGridContainer(grid.entry)) {
-      return false;
-    }
-    const sourceLocated = this.findEntryAndOutletSync(sourceKey);
-    if (!sourceLocated) {
-      return false;
-    }
-    const sourceParent = this.findEntryParent(sourceKey);
-    const sourceParentKey = sourceParent ? entryKey(sourceParent) : null;
-
-    // Same-grid source: the entry IS the cell occupant. Update placement.
-    if (
-      this.#isGridCellEntry(sourceLocated.entry) &&
-      sourceParentKey === gridKey
-    ) {
-      return this.setSlotPlacement({
-        slotKey: sourceKey,
-        column: `${column}`,
-        row: `${row}`,
-      });
-    }
-
-    // Cross-container case: move into the grid + apply the cell placement
-    // as ONE structural-undo entry so a single Cmd+Z reverts the whole
-    // drag, not just the placement. The move now preserves entry
-    // identity (annotate-in-place via `#transformForDestination`), so we
-    // re-target the same `sourceKey` afterward.
-    const outletsAffected =
-      sourceLocated.outletName === grid.outletName
-        ? [grid.outletName]
-        : [sourceLocated.outletName, grid.outletName];
-
-    return this.recordStructural(outletsAffected, () => {
-      // Call the inner movers directly to avoid the nested
-      // `recordStructural` that `moveBlock` would impose.
-      const moved =
-        sourceLocated.outletName === grid.outletName
-          ? this.#moveWithinOutlet(
-              grid.outletName,
-              sourceKey,
-              gridKey,
-              "inside",
-              // A cell drop targets one exact cell — its placement is set
-              // explicitly below, so skip both the array-order reflow (for
-              // outline reordering) and the next-free placement (for
-              // imprecise enters); either would fight the explicit cell.
-              { syncGridOrder: false, placeEntering: false }
-            )
-          : this.#moveAcrossOutlets({
-              sourceOutletName: sourceLocated.outletName,
-              targetOutletName: grid.outletName,
-              sourceKey,
-              targetKey: gridKey,
-              position: "inside",
-              // The exact cell is set right after; don't auto-position.
-              autoPosition: false,
-            });
-      if (!moved) {
-        return false;
-      }
-      const updatedLayout = this.readResolvedLayout(grid.outletName);
-      const result = replaceEntryContainerArgs(
-        updatedLayout,
-        sourceKey,
-        "grid",
-        (current) => ({
-          ...current,
-          column: `${column}`,
-          row: `${row}`,
-        })
-      );
-      if (result.changed) {
-        // Grow the grid's declared size if the dropped cell lands past it
-        // (e.g. into a new row), so render and declared stay in step.
-        this.publishStructuralChange(
-          grid.outletName,
-          this.gridManipulator.syncDeclaredToUsage(result.layout, gridKey)
-        );
-      }
-      return true;
-    });
-  }
-
-  @action
-  insertBlockAtCell({ gridKey, blockName, defaultArgs = {}, column, row }) {
-    const located = this.findEntryAndOutletSync(gridKey);
-    if (!located || !this.#isGridContainer(located.entry)) {
-      return false;
-    }
-    if (
-      !this.canInsertBlockAt({
-        blockName,
-        targetOutletName: located.outletName,
-      })
-    ) {
-      return false;
-    }
-    return this.recordStructural([located.outletName], () => {
-      const layout = this.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
-      }
-      const cellEntry = {
-        block: blockName,
-        args: { ...defaultArgs },
-        containerArgs: {
-          grid: {
-            column: `${column}`,
-            row: `${row}`,
-            align: "stretch",
-            justify: "stretch",
-          },
-        },
-      };
-      // Insert as the first child of the grid. CSS Grid honours the
-      // explicit column / row regardless of DOM order.
-      const insertion = insertEntryAt(layout, gridKey, cellEntry, "inside");
-      if (!insertion.changed) {
-        return false;
-      }
-      this.publishStructuralChange(
-        located.outletName,
-        this.gridManipulator.syncDeclaredToUsage(insertion.layout, gridKey)
-      );
-      // Auto-select the new cell so the inspector immediately shows its
-      // content args (and the placement section for the parent grid's
-      // childArgs schema).
-      this.#selectInsertedEntry(cellEntry);
-      return true;
-    });
   }
 
   /**
@@ -3657,7 +3165,7 @@ export default class WireframeService extends Service {
         return false;
       }
       this.publishStructuralChange(located.outletName, result.layout);
-      this.#selectInsertedEntry(newEntry);
+      this.selectInsertedEntry(newEntry);
       return true;
     });
   }
@@ -4512,7 +4020,7 @@ export default class WireframeService extends Service {
    * @param {Object} entry - The original entry reference passed into the
    *   layout; will have its `__stableKey` set by the publish step.
    */
-  #selectInsertedEntry(entry) {
+  selectInsertedEntry(entry) {
     const key = entryKey(entry);
     if (!key) {
       return;
@@ -4525,15 +4033,15 @@ export default class WireframeService extends Service {
 
   /**
    * Whether `entry` is a grid-cell occupant whose direct parent is the
-   * layout identified by `gridKey`. Used by `insertWithShift` to decide
-   * whether to credit the source's cell as free during planning.
+   * layout identified by `gridKey`. Used by the grid manipulator to tell a
+   * same-grid source (re-placed in situ) from one arriving from elsewhere.
    *
    * @param {Object} entry
    * @param {string} gridKey
    * @returns {boolean}
    */
-  #isCellInGrid(entry, gridKey) {
-    if (!this.#isGridCellEntry(entry)) {
+  isCellInGrid(entry, gridKey) {
+    if (!this.isGridCellEntry(entry)) {
       return false;
     }
     const parent = this.findEntryParent(entryKey(entry));
@@ -4701,7 +4209,7 @@ export default class WireframeService extends Service {
       targetKey,
       position,
     });
-    return this.#isGridContainer(parent) ? entryKey(parent) : null;
+    return this.isGridContainer(parent) ? entryKey(parent) : null;
   }
 
   /**
@@ -4752,7 +4260,7 @@ export default class WireframeService extends Service {
     return entryKey(chain[chain.length - 2]);
   }
 
-  #moveAcrossOutlets({
+  moveAcrossOutlets({
     sourceOutletName,
     targetOutletName,
     sourceKey,
@@ -4765,7 +4273,7 @@ export default class WireframeService extends Service {
     // copies (the cross-outlet path below) would insert into a copy that
     // still holds the not-yet-removed source — duplicating the block. This
     // path is reached when a grid cell is dragged into a DIFFERENT grid in
-    // the same outlet (e.g. via `insertWithShift`).
+    // the same outlet (e.g. via a cross-grid drop).
     if (sourceOutletName === targetOutletName) {
       const layout = this.readResolvedLayout(sourceOutletName);
       if (!layout) {
@@ -4896,7 +4404,7 @@ export default class WireframeService extends Service {
       targetKey,
       position,
     });
-    const enteringGrid = this.#isGridContainer(parent);
+    const enteringGrid = this.isGridContainer(parent);
 
     if (enteringGrid) {
       // Overwrite (don't merge) the grid bag so a carried span is dropped.
@@ -4975,7 +4483,7 @@ export default class WireframeService extends Service {
    * @param {Object|null} entry
    * @returns {boolean}
    */
-  #isGridContainer(entry) {
+  isGridContainer(entry) {
     if (this.blockNameOf(entry) !== "layout") {
       return false;
     }
@@ -4992,7 +4500,7 @@ export default class WireframeService extends Service {
    * @param {Object|null} entry
    * @returns {boolean}
    */
-  #isGridCellEntry(entry) {
+  isGridCellEntry(entry) {
     return entry?.containerArgs?.grid != null;
   }
 }

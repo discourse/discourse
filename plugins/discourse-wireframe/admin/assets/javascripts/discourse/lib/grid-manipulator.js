@@ -2,10 +2,14 @@
 import { gridDimensions, normalizeFractions } from "discourse/blocks";
 import {
   decideGridDrop,
+  GRID_DROP_ACTIONS,
   GRID_DROP_GESTURES,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-drop";
 import {
+  entryKey,
   findEntry,
+  insertEntryAt,
+  removeEntry,
   replaceEntryContainerArgs,
   replaceEntryInPlace,
 } from "./mutate-layout";
@@ -31,6 +35,117 @@ export default class GridManipulator {
    */
   constructor(service) {
     this.service = service;
+  }
+
+  /**
+   * The single entry point for dropping a block into a grid. Callers
+   * describe the drop — the target grid, the gesture (into / beside /
+   * generic) and its anchor, and the source — and this routes it through
+   * `decideGridDrop` (the rule chokepoint) and into the matching private
+   * executor. There is no other way to place into a grid, so a drop can't
+   * skip the rules.
+   *
+   * The whole operation is one structural-undo entry. Returns false (no
+   * commit) when the grid / source can't be resolved or the decision is a
+   * no-op (e.g. a palette block onto an occupied cell).
+   *
+   * @param {{
+   *   targetGridKey: string,
+   *   gesture: string,
+   *   cell?: {column: number, row: number}|null,
+   *   anchorKey?: string|null,
+   *   direction?: "left"|"right"|"up"|"down",
+   *   shift?: boolean,
+   *   source: {
+   *     kind: "new"|"existing",
+   *     key?: string|null,
+   *     blockName?: string|null,
+   *     defaultArgs?: Object|null,
+   *   },
+   * }} request
+   * @returns {boolean}
+   */
+  drop(request) {
+    const svc = this.service;
+    const {
+      targetGridKey,
+      gesture,
+      cell,
+      anchorKey,
+      direction,
+      shift,
+      source,
+    } = request;
+    const grid = svc.findEntryAndOutletSync(targetGridKey);
+    if (!grid || !svc.isGridContainer(grid.entry)) {
+      return false;
+    }
+    // Resolve an existing source up front (palette sources have no entry
+    // yet). A cross-outlet source widens the affected-outlet set so undo
+    // restores both sides atomically.
+    const sourceLocated =
+      source?.kind === "existing" && source.key
+        ? svc.findEntryAndOutletSync(source.key)
+        : null;
+    if (source?.kind === "existing" && !sourceLocated) {
+      return false;
+    }
+    if (source?.kind === "new") {
+      if (
+        !source.blockName ||
+        !svc.canInsertBlockAt({
+          blockName: source.blockName,
+          targetOutletName: grid.outletName,
+        })
+      ) {
+        return false;
+      }
+    }
+    const outletsAffected =
+      sourceLocated && sourceLocated.outletName !== grid.outletName
+        ? [sourceLocated.outletName, grid.outletName]
+        : [grid.outletName];
+
+    return svc.recordStructural(outletsAffected, () => {
+      const layout = svc.readResolvedLayout(grid.outletName);
+      const gridEntry = layout && findEntry(layout, targetGridKey);
+      if (!gridEntry) {
+        return false;
+      }
+      const decision = decideGridDrop({
+        children: gridEntry.children ?? [],
+        declared: {
+          columns: Number(gridEntry.args?.columns ?? 3),
+          rows: Number(gridEntry.args?.rows ?? 2),
+        },
+        source: { kind: source.kind, key: source.key ?? null },
+        drop: { gesture, cell, anchorKey, direction, shift },
+      });
+      switch (decision.action) {
+        case GRID_DROP_ACTIONS.FILL:
+        case GRID_DROP_ACTIONS.APPEND:
+        case GRID_DROP_ACTIONS.CASCADE:
+          return this.#place(
+            grid.outletName,
+            targetGridKey,
+            source,
+            sourceLocated,
+            decision
+          );
+        case GRID_DROP_ACTIONS.SWAP:
+          return this.#swap(grid.outletName, source, sourceLocated, decision);
+        case GRID_DROP_ACTIONS.REPLACE:
+          return this.#replace(
+            grid.outletName,
+            targetGridKey,
+            source,
+            sourceLocated,
+            decision
+          );
+        default:
+          return false;
+      }
+    });
   }
 
   /**
@@ -191,5 +306,294 @@ export default class GridManipulator {
       };
     }
     return { gesture: GRID_DROP_GESTURES.GENERIC };
+  }
+
+  /**
+   * Lands the dropped source at `placement`, handling all three source
+   * shapes: a new palette block is minted and inserted; a same-grid cell is
+   * re-placed in situ; a cell arriving from another grid / outlet is first
+   * relocated into the target grid (foreign span discarded) and then placed.
+   * Publishes each step; the caller syncs declared dimensions afterward.
+   *
+   * @param {string} outletName
+   * @param {string} gridKey
+   * @param {Object} source - The drop request's `source`.
+   * @param {{entry: Object, outletName: string}|null} sourceLocated
+   * @param {{column: string, row: string}} placement
+   * @returns {boolean}
+   */
+  #landSourceAt(outletName, gridKey, source, sourceLocated, placement) {
+    const svc = this.service;
+    const { column, row } = placement;
+
+    if (source.kind === "new") {
+      const layout = svc.readResolvedLayout(outletName);
+      if (!layout) {
+        return false;
+      }
+      const cellEntry = {
+        block: source.blockName,
+        args: { ...(source.defaultArgs ?? {}) },
+        containerArgs: {
+          grid: { column, row, align: "stretch", justify: "stretch" },
+        },
+      };
+      const insertion = insertEntryAt(layout, gridKey, cellEntry, "inside");
+      if (!insertion.changed) {
+        return false;
+      }
+      svc.publishStructuralChange(outletName, insertion.layout);
+      svc.selectInsertedEntry(cellEntry);
+      return true;
+    }
+
+    // An existing cell already in this grid is just re-placed; one arriving
+    // from elsewhere is relocated in first (without auto-positioning — the
+    // exact landing cell is written right after).
+    const sameGrid =
+      sourceLocated.outletName === outletName &&
+      svc.isCellInGrid(sourceLocated.entry, gridKey);
+    if (!sameGrid) {
+      const moved = svc.moveAcrossOutlets({
+        sourceOutletName: sourceLocated.outletName,
+        targetOutletName: outletName,
+        sourceKey: source.key,
+        targetKey: gridKey,
+        position: "inside",
+        autoPosition: false,
+      });
+      if (!moved) {
+        return false;
+      }
+    }
+    const layout = svc.readResolvedLayout(outletName);
+    const result = replaceEntryContainerArgs(
+      layout,
+      source.key,
+      "grid",
+      (current) => ({ ...current, column, row })
+    );
+    if (result.changed) {
+      svc.publishStructuralChange(outletName, result.layout);
+    }
+    return true;
+  }
+
+  /**
+   * Executes a `fill` / `append` / `cascade` decision: apply the cascade
+   * displacements (if any) so the landing sees post-shift occupancy, land
+   * the source at the decision's placement, then grow the grid's declared
+   * size to match usage.
+   *
+   * @param {string} outletName
+   * @param {string} gridKey
+   * @param {Object} source
+   * @param {{entry: Object, outletName: string}|null} sourceLocated
+   * @param {import("discourse/plugins/discourse-wireframe/discourse/lib/grid-drop").GridDropDecision} decision
+   * @returns {boolean}
+   */
+  #place(outletName, gridKey, source, sourceLocated, decision) {
+    const svc = this.service;
+    for (const move of decision.moves) {
+      const layout = svc.readResolvedLayout(outletName);
+      const result = replaceEntryContainerArgs(
+        layout,
+        move.slotKey,
+        "grid",
+        (current) => ({ ...current, column: move.column, row: move.row })
+      );
+      if (!result.changed) {
+        return false;
+      }
+      svc.publishStructuralChange(outletName, result.layout);
+    }
+    if (
+      !this.#landSourceAt(
+        outletName,
+        gridKey,
+        source,
+        sourceLocated,
+        decision.placement
+      )
+    ) {
+      return false;
+    }
+    svc.publishStructuralChange(
+      outletName,
+      this.syncDeclaredToUsage(svc.readResolvedLayout(outletName), gridKey)
+    );
+    return true;
+  }
+
+  /**
+   * Executes a `replace` decision (Shift-held drop onto an occupied cell):
+   * remove the occupant, then land the source at the freed cell.
+   *
+   * @param {string} outletName
+   * @param {string} gridKey
+   * @param {Object} source
+   * @param {{entry: Object, outletName: string}|null} sourceLocated
+   * @param {import("discourse/plugins/discourse-wireframe/discourse/lib/grid-drop").GridDropDecision} decision
+   * @returns {boolean}
+   */
+  #replace(outletName, gridKey, source, sourceLocated, decision) {
+    const svc = this.service;
+    const layout = svc.readResolvedLayout(outletName);
+    const removal = removeEntry(layout, decision.swapWith);
+    if (!removal.changed) {
+      return false;
+    }
+    svc.publishStructuralChange(outletName, removal.layout);
+    if (
+      !this.#landSourceAt(
+        outletName,
+        gridKey,
+        source,
+        sourceLocated,
+        decision.placement
+      )
+    ) {
+      return false;
+    }
+    svc.publishStructuralChange(
+      outletName,
+      this.syncDeclaredToUsage(svc.readResolvedLayout(outletName), gridKey)
+    );
+    return true;
+  }
+
+  /**
+   * Executes a `swap` decision: the source trades places with the cell's
+   * occupant. Within one grid the two cells trade `column` / `row`; across
+   * two grids each block moves into the other's grid and takes its cell, so
+   * the drop never overlaps. Only grid-cell sources can swap — a source from
+   * a non-grid container has no cell to give up, so it no-ops.
+   *
+   * @param {string} outletName
+   * @param {Object} source
+   * @param {{entry: Object, outletName: string}|null} sourceLocated
+   * @param {import("discourse/plugins/discourse-wireframe/discourse/lib/grid-drop").GridDropDecision} decision
+   * @returns {boolean}
+   */
+  #swap(outletName, source, sourceLocated, decision) {
+    const svc = this.service;
+    const occupant = svc.findEntryAndOutletSync(decision.swapWith);
+    if (
+      !sourceLocated ||
+      !occupant ||
+      occupant.outletName !== outletName ||
+      !svc.isGridCellEntry(sourceLocated.entry) ||
+      !svc.isGridCellEntry(occupant.entry)
+    ) {
+      return false;
+    }
+    const sourcePlacement = {
+      column: sourceLocated.entry.containerArgs?.grid?.column ?? "auto",
+      row: sourceLocated.entry.containerArgs?.grid?.row ?? "auto",
+    };
+    const occupantPlacement = {
+      column: occupant.entry.containerArgs?.grid?.column ?? "auto",
+      row: occupant.entry.containerArgs?.grid?.row ?? "auto",
+    };
+    const layout0 = svc.readResolvedLayout(outletName);
+    const sourceParent = svc.findEntryParent(source.key);
+    const occupantParent = svc.findEntryParent(decision.swapWith);
+    const sourceParentKey = sourceParent ? entryKey(sourceParent) : null;
+    const occupantParentKey = occupantParent ? entryKey(occupantParent) : null;
+
+    // Cross-grid trade: relocate each block into the other's grid at the
+    // other's cell.
+    if (
+      sourceParentKey &&
+      occupantParentKey &&
+      sourceParentKey !== occupantParentKey
+    ) {
+      const removalSource = removeEntry(layout0, source.key);
+      if (!removalSource.changed || !removalSource.removed) {
+        return false;
+      }
+      const removalOccupant = removeEntry(
+        removalSource.layout,
+        decision.swapWith
+      );
+      if (!removalOccupant.changed || !removalOccupant.removed) {
+        return false;
+      }
+      const insSource = insertEntryAt(
+        removalOccupant.layout,
+        occupantParentKey,
+        this.#withGridPlacement(removalSource.removed, occupantPlacement),
+        "inside"
+      );
+      if (!insSource.changed) {
+        return false;
+      }
+      const insOccupant = insertEntryAt(
+        insSource.layout,
+        sourceParentKey,
+        this.#withGridPlacement(removalOccupant.removed, sourcePlacement),
+        "inside"
+      );
+      if (!insOccupant.changed) {
+        return false;
+      }
+      svc.publishStructuralChange(outletName, insOccupant.layout);
+      return true;
+    }
+
+    // Same-grid placement swap.
+    const first = replaceEntryContainerArgs(
+      layout0,
+      source.key,
+      "grid",
+      (current) => ({
+        ...current,
+        column: occupantPlacement.column,
+        row: occupantPlacement.row,
+      })
+    );
+    if (!first.changed) {
+      return false;
+    }
+    const second = replaceEntryContainerArgs(
+      first.layout,
+      decision.swapWith,
+      "grid",
+      (current) => ({
+        ...current,
+        column: sourcePlacement.column,
+        row: sourcePlacement.row,
+      })
+    );
+    if (!second.changed) {
+      return false;
+    }
+    svc.publishStructuralChange(outletName, second.layout);
+    return true;
+  }
+
+  /**
+   * Returns a copy of `entry` with its `containerArgs.grid` column / row
+   * overwritten (other grid props like align / justify preserved). Used to
+   * re-place a detached entry during a cross-grid trade.
+   *
+   * @param {Object} entry
+   * @param {{column: string, row: string}} placement
+   * @returns {Object}
+   */
+  #withGridPlacement(entry, { column, row }) {
+    return {
+      ...entry,
+      containerArgs: {
+        ...(entry.containerArgs ?? {}),
+        grid: {
+          align: "stretch",
+          justify: "stretch",
+          ...(entry.containerArgs?.grid ?? {}),
+          column,
+          row,
+        },
+      },
+    };
   }
 }

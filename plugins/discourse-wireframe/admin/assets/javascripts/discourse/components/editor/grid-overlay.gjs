@@ -482,11 +482,11 @@ export default class GridOverlay extends Component {
 
   @action
   pickBlockForCell(cell, blockEntry) {
-    this.wireframe.insertBlockAtCell({
-      gridKey: this.args.gridKey,
-      blockName: blockEntry.name,
-      column: cell.column,
-      row: cell.row,
+    this.wireframe.applyGridDrop({
+      targetGridKey: this.args.gridKey,
+      gesture: GRID_DROP_GESTURES.INTO,
+      cell: { column: cell.column, row: cell.row },
+      source: { kind: "new", blockName: blockEntry.name },
     });
   }
 
@@ -687,101 +687,67 @@ export default class GridOverlay extends Component {
 
   /**
    * Builds the `{action, args}` dispatch payload for a grid drop
-   * descriptor. The service's `dispatchActiveDrop` looks up
-   * `service[action]` and calls it with `args` — same contract the
-   * linear pipeline uses, so grid drops route through the same
-   * channel after this phase.
+   * descriptor. The overlay does NOT choose the action: it describes the
+   * drop — the gesture (BESIDE for an edge line, INTO for a cell rect), its
+   * anchor, and the source — as a single `applyGridDrop` request. The
+   * service's `dispatchActiveDrop` runs it, and the grid manipulator routes
+   * it through `decideGridDrop`, which decides fill / swap / replace /
+   * cascade / append. So the cursor zone can't disagree with the rules.
    *
    * Returns `null` when the descriptor doesn't carry enough info to
-   * dispatch (e.g. unresolved column / row, or unsupported variant /
-   * source kind). The mirror call above feeds `null` through to
-   * `setActiveDropPreview`, where `dispatchActiveDrop` will then
-   * no-op at drop time.
+   * dispatch (e.g. an unresolved cell). The mirror call above feeds `null`
+   * through to `setActiveDropPreview`, where `dispatchActiveDrop` no-ops at
+   * drop time.
    */
   #buildDispatch(descriptor, source) {
     if (!descriptor || !source) {
       return null;
     }
-    const gridKey = this.args.gridKey;
+    const gridSource =
+      source.type === "wf-palette-block"
+        ? {
+            kind: "new",
+            blockName: source.data?.blockName,
+            defaultArgs: source.data?.defaultArgs,
+          }
+        : { kind: "existing", key: source.data?.blockKey };
 
+    // An edge line is a BESIDE cascade, anchored on the cell the line sits
+    // against; the cascade axis follows the line orientation.
     if (descriptor.kind === "line-column" || descriptor.kind === "line-row") {
-      const dropCell =
+      const cell =
         descriptor.kind === "line-column"
-          ? {
-              column: descriptor.line,
-              row: descriptor.row?.start ?? 1,
-            }
-          : {
-              column: descriptor.column?.start ?? 1,
-              row: descriptor.line,
-            };
+          ? { column: descriptor.line, row: descriptor.row?.start ?? 1 }
+          : { column: descriptor.column?.start ?? 1, row: descriptor.line };
       return {
-        action: "insertWithShift",
+        action: "applyGridDrop",
         args: {
-          gridKey,
-          dropCell,
+          targetGridKey: this.args.gridKey,
+          gesture: GRID_DROP_GESTURES.BESIDE,
+          cell,
           direction: descriptor.kind === "line-column" ? "left" : "up",
-          sourceKey: source.type === "wf-block" ? source.data?.blockKey : null,
-          paletteBlockName:
-            source.type === "wf-palette-block" ? source.data?.blockName : null,
-          paletteDefaultArgs:
-            source.type === "wf-palette-block"
-              ? source.data?.defaultArgs
-              : null,
+          source: gridSource,
         },
       };
     }
 
-    if (descriptor.kind === "rect" && descriptor.variant === "swap") {
-      return {
-        action: "swapSlotPlacements",
-        args: {
-          slotKeyA: this.#slotKeyAtPlacement(descriptor),
-          slotKeyB: source.data?.blockKey ?? null,
-        },
-      };
-    }
-
-    if (descriptor.kind === "rect" && descriptor.variant === "replace") {
-      return {
-        action: "replaceSlot",
-        args: {
-          targetSlotKey: this.#slotKeyAtPlacement(descriptor),
-          sourceSlotKey: source.data?.blockKey ?? null,
-        },
-      };
-    }
-
-    // `rect` / `move` — palette → insertBlockAtCell, wf-block → moveBlockToCell.
+    // A cell rect is an INTO drop. Shift (the `replace` variant) asks the
+    // decider to remove the occupant rather than swap with it.
     const column = descriptor.column?.start;
     const row = descriptor.row?.start;
     if (column == null || row == null) {
       return null;
     }
-    if (source.type === "wf-palette-block") {
-      return {
-        action: "insertBlockAtCell",
-        args: {
-          gridKey,
-          blockName: source.data?.blockName,
-          defaultArgs: source.data?.defaultArgs,
-          column,
-          row,
-        },
-      };
-    }
-    if (source.type === "wf-block") {
-      return {
-        action: "moveBlockToCell",
-        args: {
-          gridKey,
-          sourceKey: source.data?.blockKey,
-          column,
-          row,
-        },
-      };
-    }
-    return null;
+    return {
+      action: "applyGridDrop",
+      args: {
+        targetGridKey: this.args.gridKey,
+        gesture: GRID_DROP_GESTURES.INTO,
+        cell: { column, row },
+        shift: descriptor.variant === "replace",
+        source: gridSource,
+      },
+    };
   }
 
   /**
@@ -801,22 +767,6 @@ export default class GridOverlay extends Component {
     }
     this.#lastIntermediate = intermediate;
     this.#publishUnified(intermediate, source);
-  }
-
-  /**
-   * Finds the slot whose placement matches the rect-descriptor's
-   * `column` / `row` (the slot being swapped / replaced). Returns its
-   * block key, or `null` if no slot covers that rectangle.
-   */
-  #slotKeyAtPlacement(descriptor) {
-    if (!descriptor?.column || !descriptor?.row) {
-      return null;
-    }
-    const slot = this.#slotAtCell({
-      column: descriptor.column.start,
-      row: descriptor.row.start,
-    });
-    return slot ? entryKey(slot) : null;
   }
 
   /**
