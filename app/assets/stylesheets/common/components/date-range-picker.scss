@@ -82,17 +82,15 @@
     min-width: 0;
   }
 
-  &__calendar {
-    position: relative;
-  }
-
   &__nav {
-    position: absolute;
-    inset-block-start: 0;
     width: var(--d-date-range-picker-nav-size);
 
-    &:last-child {
-      inset-inline-end: 0;
+    &.--prev {
+      grid-column: 1;
+    }
+
+    &.--next {
+      grid-column: 3;
     }
 
     &:hover {
@@ -117,12 +115,20 @@
   }
 
   &__month-header {
-    display: flex;
+    display: grid;
+    grid-template-columns:
+      var(--d-date-range-picker-nav-size)
+      1fr
+      var(--d-date-range-picker-nav-size);
     align-items: center;
-    justify-content: center;
     min-height: var(--d-date-range-picker-nav-size);
     font-weight: 500;
     padding-bottom: var(--space-2);
+  }
+
+  &__month-title {
+    grid-column: 2;
+    text-align: center;
   }
 
   &__weekdays {
@@ -171,7 +177,8 @@
       background: var(--tertiary-very-low, var(--tertiary-low));
     }
 
-    &.--hover-preview {
+    &.--hover-preview,
+    &.--hover-end {
       background: var(--tertiary-low);
     }
 
@@ -189,7 +196,7 @@
     // range cells form a continuous strip, rounded only where the strip ends:
     // at a cap, a row edge, or a month edge (muted days render as empty spans);
     // :where keeps this reset below the corner rules' specificity
-    &:where(.--in-range, .--hover-preview, .--start, .--end) {
+    &:where(.--in-range, .--hover-preview, .--hover-end, .--start, .--end) {
       border-radius: 0;
     }
 
@@ -201,6 +208,7 @@
     }
 
     &.--end,
+    &.--hover-end,
     &:last-child,
     &:has(+ span) {
       border-start-end-radius: var(--space-1);
