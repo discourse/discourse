@@ -277,6 +277,31 @@ jobs:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
           path: ./frontend/discourse/test-execution-*.json
 
+      - name: Pre-warm bootsnap compile cache for system test workers
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        # In CI `config.eager_load` is true, so every one of the
+        # `PARALLEL_TEST_PROCESSORS` (12) system-test workers eager-loads the
+        # whole core app on boot. The earlier `Create and migrate databases`
+        # step boots Rails for the rake tasks but does NOT eager-load `app/` /
+        # `lib/`, so those files' Ruby->iseq compilation is cold when the
+        # workers start. Because all 12 workers spawn at once and march through
+        # the same eager-load file list in lockstep, they each compile the same
+        # ~thousands of source files at the same moment — the bootsnap iseq
+        # cache (shared `tmp/cache/bootsnap`) isn't written yet, so the compile
+        # happens up to 12x redundantly inside one synchronized CPU-saturating
+        # burst on the 16-core runner. That burst is a serial prefix paid before
+        # any spec runs (it inflates the step's median) and a contention spike
+        # (it widens run-to-run variance).
+        #
+        # Eager-load the app once here, single-threaded and uncontended, so the
+        # shared bootsnap cache is fully warm. The workers then read cached iseq
+        # on boot instead of each recompiling — collapsing the 12x redundant
+        # compile to 1x and de-contending the boot phase. `eager_load!` is
+        # called explicitly so it runs regardless of the `runner` command's
+        # default eager-load behaviour; the DB is already migrated and redis is
+        # already up by this point, so the boot succeeds.
+        run: bin/rails runner 'Rails.application.eager_load!'
+
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
