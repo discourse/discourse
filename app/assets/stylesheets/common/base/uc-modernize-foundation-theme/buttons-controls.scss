@@ -114,4 +114,12 @@
     height: var(--d-control-height);
     padding-block: 0;
   }
+
+  .search-input {
+    .search-context {
+      height: calc(
+        var(--d-control-height) - var(--space-2)
+      ) !important; // overrides very specific btn selector at the top of this file
+    }
+  }
 }
