@@ -893,10 +893,8 @@ RSpec.describe TopicTrackingState do
       expect(report).to eq({ new: 0, unread: 0 })
     end
 
-    it "respects new_new_view_enabled" do
-      new_new_group = Fabricate(:group)
-      SiteSetting.experimental_new_new_view_groups = new_new_group.name
-      user.groups << new_new_group
+    it "respects unified_new_enabled" do
+      SiteSetting.enable_unified_new = true
 
       report = TopicTrackingState.report_totals(user)
       expect(report).to eq({ new: 0 })

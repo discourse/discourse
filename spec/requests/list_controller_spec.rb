@@ -1936,7 +1936,7 @@ RSpec.describe ListController do
       response.parsed_body["topic_list"]["topics"].map { |topics| topics["id"] }
     end
 
-    context "when the user is part of the `experimental_new_new_view_groups` site setting group" do
+    context "when unified new is enabled for the user" do
       fab!(:category)
       fab!(:tag)
 
@@ -1961,8 +1961,7 @@ RSpec.describe ListController do
       before do
         TopicUser.update_last_read(user, topic.id, 1, 1, 1)
 
-        SiteSetting.experimental_new_new_view_groups = group.name
-        group.add(user)
+        SiteSetting.enable_unified_new = true
 
         sign_in(user)
       end

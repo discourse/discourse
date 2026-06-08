@@ -31,7 +31,7 @@ export default class NavigationItem extends Component {
     return (
       !this.active &&
       this.currentUser &&
-      !this.currentUser.new_new_view_enabled &&
+      !this.currentUser.unified_new_enabled &&
       this.currentUser.trust_level > 0 &&
       (this.content?.name === "new" || this.content?.name === "unread") &&
       this.content?.count < 1

@@ -815,7 +815,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
   });
 
   test("adds unread incoming to the new topic list if new new view is enabled", async function (assert) {
-    this.currentUser.new_new_view_enabled = true;
+    this.currentUser.unified_new_enabled = true;
 
     this.trackingState.trackIncoming("new");
     await publishToMessageBus("/unread", unreadTopicPayload);
@@ -833,7 +833,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
   });
 
   test("doesn't add unread incoming to the new topic list if new new view is disabled", async function (assert) {
-    this.currentUser.new_new_view_enabled = false;
+    this.currentUser.unified_new_enabled = false;
 
     this.trackingState.trackIncoming("new");
     await publishToMessageBus("/unread", unreadTopicPayload);

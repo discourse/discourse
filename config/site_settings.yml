@@ -286,22 +286,13 @@ basic:
     type: list
     list_type: simple
     default: "latest|new|unread|hot|categories"
-    regex: "latest"
-    regex_error: "site_settings.errors.must_include_latest"
-    validator: RegexPresenceValidator
+    validator: "TopMenuValidator"
     allow_any: false
-    choices:
-      - latest
-      - new
-      - unread
-      - unseen
-      - top
-      - categories
-      - read
-      - posted
-      - bookmarks
-      - hot
+    choices: "TopMenu.choices"
     area: "interface"
+    upcoming_change_default_override:
+      upcoming_change: "enable_unified_new"
+      new_default: "latest|new|hot|categories"
   post_menu:
     client: true
     type: list
@@ -4450,14 +4441,15 @@ experimental:
     default: 15
     hidden: true
     area: "experimental"
-  experimental_new_new_view_groups:
+  enable_unified_new:
+    default: false
+    hidden: true
     client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
     refresh: true
-    area: "group_permissions|navigation|experimental"
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/404728"
   enable_rich_text_paste:
     client: true
     default: true
