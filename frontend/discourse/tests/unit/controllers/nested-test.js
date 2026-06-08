@@ -315,10 +315,20 @@ module("Unit | Controller | nested", function (hooks) {
       this.nestedViewCache.buildKey(topic.id, { sort: "top", post_number: 2 })
     );
 
-    assert.strictEqual(
-      cached.modelData.initialFocusedPath,
-      focusedPath,
-      "keeps enough focused-path state to restore the mobile drill-down URL"
+    assert.deepEqual(
+      cached.modelData.initialFocusedPath.map((node) => node.post.post_number),
+      [2],
+      "keeps enough focused-path data to restore the mobile drill-down URL"
+    );
+    assert.notStrictEqual(
+      cached.modelData.initialFocusedPath[0].post,
+      focusedPost,
+      "stores a post snapshot instead of the live post record"
+    );
+    assert.notStrictEqual(
+      cached.modelData.topic,
+      topic,
+      "stores a topic snapshot instead of the live topic record"
     );
     assert.strictEqual(
       cached.modelData.postNumber,

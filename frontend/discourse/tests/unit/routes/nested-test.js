@@ -69,6 +69,178 @@ module("Unit | Route | nested", function (hooks) {
     assert.false(stopScreenTrack.called, "keeps screen tracking active");
   });
 
+  test("passes route-family context into the cache traversal check", async function (assert) {
+    const route = this.owner.lookup("route:nested");
+    const cachedModel = { topic: { id: 42 } };
+
+    sinon.stub(route.historyStore, "isPoppedState").get(() => false);
+    sinon.stub(route.nestedViewCache, "buildKey").returns("cache-key");
+    const consumeTraversal = sinon
+      .stub(route.nestedViewCache, "consumeTraversal")
+      .returns(true);
+    const cachedEntry = { modelData: { topic: { id: 42 } } };
+    sinon.stub(route.nestedViewCache, "get").returns(cachedEntry);
+    sinon
+      .stub(route, "_hydrateCachedEntry")
+      .returns({ modelData: cachedModel });
+
+    const model = await route.model(
+      { topic_id: 42, slug: "nested-topic" },
+      { from: { name: "discovery.latest" } }
+    );
+
+    assert.true(
+      consumeTraversal.calledOnceWith({
+        allowLocalSignal: false,
+        isPoppedState: false,
+      }),
+      "normal navigations from outside nested cannot inherit stale popstate signals"
+    );
+    assert.strictEqual(model, cachedModel, "returns the cache service result");
+  });
+
+  test("allows cache traversal signals within the nested route family", async function (assert) {
+    const route = this.owner.lookup("route:nested");
+    const cachedModel = { topic: { id: 42 } };
+
+    sinon.stub(route.historyStore, "isPoppedState").get(() => false);
+    sinon.stub(route.nestedViewCache, "buildKey").returns("cache-key");
+    const consumeTraversal = sinon
+      .stub(route.nestedViewCache, "consumeTraversal")
+      .returns(true);
+    const cachedEntry = { modelData: { topic: { id: 42 } } };
+    sinon.stub(route.nestedViewCache, "get").returns(cachedEntry);
+    sinon
+      .stub(route, "_hydrateCachedEntry")
+      .returns({ modelData: cachedModel });
+
+    const model = await route.model(
+      { topic_id: 42, slug: "nested-topic" },
+      { from: { name: "nestedPost" } }
+    );
+
+    assert.true(
+      consumeTraversal.calledOnceWith({
+        allowLocalSignal: true,
+        isPoppedState: false,
+      }),
+      "browser traversal between nested routes can restore from cache"
+    );
+    assert.strictEqual(model, cachedModel, "returns the cache service result");
+  });
+
+  test("allows history-store popped transitions from outside nested", async function (assert) {
+    const route = this.owner.lookup("route:nested");
+    const cachedModel = { topic: { id: 42 } };
+
+    sinon.stub(route.historyStore, "isPoppedState").get(() => true);
+    sinon.stub(route.nestedViewCache, "buildKey").returns("cache-key");
+    const consumeTraversal = sinon
+      .stub(route.nestedViewCache, "consumeTraversal")
+      .returns(true);
+    const cachedEntry = { modelData: { topic: { id: 42 } } };
+    sinon.stub(route.nestedViewCache, "get").returns(cachedEntry);
+    sinon
+      .stub(route, "_hydrateCachedEntry")
+      .returns({ modelData: cachedModel });
+
+    const model = await route.model(
+      { topic_id: 42, slug: "nested-topic" },
+      { from: { name: "discovery.latest" } }
+    );
+
+    assert.true(
+      consumeTraversal.calledOnceWith({
+        allowLocalSignal: false,
+        isPoppedState: true,
+      }),
+      "browser forward/back from the topic list can restore from cache"
+    );
+    assert.strictEqual(model, cachedModel, "returns the cache service result");
+  });
+
+  test("hydrates cached snapshots into fresh records", function (assert) {
+    const route = this.owner.lookup("route:nested");
+    const cached = {
+      modelData: {
+        topic: {
+          id: 42,
+          slug: "nested-topic",
+          title: "Nested topic",
+          details: { can_create_post: true },
+        },
+        opPost: { id: 1, post_number: 1, cooked: "<p>op</p>" },
+        rootNodes: [
+          {
+            post: { id: 2, post_number: 2, cooked: "<p>root</p>" },
+            children: [],
+            _renderKey: 2,
+          },
+        ],
+        page: 0,
+        hasMoreRoots: false,
+        sort: "top",
+        pinnedPostIds: [],
+        postNumber: null,
+        contextMode: false,
+        initialFocusedPath: [],
+        newRootPostIds: [],
+      },
+      expansionState: [[2, { expanded: false, collapsed: true }]],
+      fetchedChildrenCache: [
+        [
+          2,
+          {
+            childNodes: [
+              {
+                post: { id: 3, post_number: 3, cooked: "<p>child</p>" },
+                children: [],
+                _renderKey: 3,
+              },
+            ],
+            page: 0,
+            hasMore: false,
+            fetchedFromServer: true,
+          },
+        ],
+      ],
+      scrollAnchor: { postNumber: 2, offsetFromTop: 40 },
+    };
+
+    const restored = route._hydrateCachedEntry(cached);
+    const restoredTopic = restored.modelData.topic;
+    const restoredRootPost = restored.modelData.rootNodes[0].post;
+    const restoredChildPost =
+      restored.fetchedChildrenCache.get(2).childNodes[0].post;
+
+    assert.notStrictEqual(
+      restoredTopic,
+      cached.modelData.topic,
+      "creates a fresh topic record"
+    );
+    assert.true(restoredTopic.is_nested_view, "marks restored topic as nested");
+    assert.strictEqual(
+      restoredRootPost.topic,
+      restoredTopic,
+      "wires restored root posts to the fresh topic"
+    );
+    assert.strictEqual(
+      restoredChildPost.topic,
+      restoredTopic,
+      "wires restored cached children to the fresh topic"
+    );
+    assert.deepEqual(
+      restored.expansionState.get(2),
+      { expanded: false, collapsed: true },
+      "restores expansion state"
+    );
+    assert.deepEqual(
+      restored.scrollAnchor,
+      cached.scrollAnchor,
+      "restores scroll anchor"
+    );
+  });
+
   test("selected-post route actions open modals through the topic route", function (assert) {
     const nestedRoute = this.owner.lookup("route:nested");
     const topicRoute = this.owner.lookup("route:topic");

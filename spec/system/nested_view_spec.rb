@@ -10,6 +10,7 @@ RSpec.describe "Nested view" do
   fab!(:op) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
 
   let(:nested_view) { PageObjects::Pages::NestedView.new }
+  let(:topic_list) { PageObjects::Components::TopicList.new }
 
   before do
     SiteSetting.nested_replies_enabled = true
@@ -40,6 +41,56 @@ RSpec.describe "Nested view" do
 
       expect(nested_view).to have_op_post
       expect(page).to have_css(".nested-view__op", text: "This is the original post content")
+    end
+  end
+
+  describe "topic list navigation" do
+    fab!(:nested_topic_record) { Fabricate(:nested_topic, topic: topic) }
+    fab!(:root_reply) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: Fabricate(:user),
+        raw: "Root reply\n\n#{("Scrollable root reply content.\n\n" * 30).strip}",
+      )
+    end
+
+    it "lets the user reopen a nested topic after going back to the list" do
+      page.visit("/latest")
+      expect(topic_list).to have_topic(topic)
+
+      topic_list.visit_topic(topic)
+      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
+      expect(nested_view).to have_nested_view
+      expect(nested_view).to have_root_post(root_reply)
+
+      page.go_back
+      expect(topic_list).to have_topic(topic)
+
+      topic_list.visit_topic(topic)
+      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
+      expect(nested_view).to have_nested_view
+      expect(nested_view).to have_root_post(root_reply)
+    end
+
+    it "returns the user to their previous position with browser forward" do
+      page.visit("/latest")
+      expect(topic_list).to have_topic(topic)
+
+      topic_list.visit_topic(topic)
+      expect(nested_view).to have_nested_view
+
+      nested_view.scroll_post_near_top(root_reply)
+      previous_scroll_y = page.evaluate_script("window.scrollY")
+
+      page.go_back
+      expect(topic_list).to have_topic(topic)
+
+      page.go_forward
+      expect(nested_view).to have_nested_view
+      try_until_success(reason: "nested topic cache restores after browser forward") do
+        expect(page.evaluate_script("window.scrollY")).to be_within(250).of(previous_scroll_y)
+      end
     end
   end
 

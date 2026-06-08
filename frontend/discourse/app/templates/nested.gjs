@@ -82,6 +82,7 @@ export default <template>
       @expansionState={{@controller.expansionState}}
       @fetchedChildrenCache={{@controller.fetchedChildrenCache}}
       @scrollAnchor={{@controller.scrollAnchor}}
+      @clearScrollAnchor={{@controller.clearScrollAnchor}}
       @showActivityLog={{@controller.showActivityLog}}
       @collapseReplies={{@controller.collapseReplies}}
       @multiSelect={{@controller.multiSelect}}

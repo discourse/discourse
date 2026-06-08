@@ -8,6 +8,11 @@ import NestedActivityLog from "discourse/components/modal/nested-activity-log";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import {
+  snapshotExpansionState,
+  snapshotFetchedChildrenCache,
+  snapshotNestedModelData,
+} from "discourse/lib/nested-view-cache-snapshot";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import QuoteState from "discourse/lib/quote-state";
 import Composer from "discourse/models/composer";
@@ -322,6 +327,11 @@ export default class NestedController extends Controller {
     this.saveToCache(scrollAnchor);
   }
 
+  @action
+  clearScrollAnchor() {
+    this.scrollAnchor = null;
+  }
+
   saveToCache(scrollAnchor) {
     if (!this.topic) {
       return;
@@ -333,28 +343,32 @@ export default class NestedController extends Controller {
       context: this.contextNoAncestors ? 0 : undefined,
     });
 
+    const modelData = {
+      topic: this.topic,
+      opPost: this.opPost,
+      rootNodes: this.rootNodes,
+      page: this.page,
+      hasMoreRoots: this.hasMoreRoots,
+      sort: this.sort,
+      messageBusLastId: this.messageBusLastId,
+      pinnedPostIds: this.pinnedPostIds,
+      postNumber: this.postNumber,
+      contextMode: this.contextMode,
+      contextChain: this.contextChain,
+      initialFocusedPath: this.initialFocusedPath,
+      targetPostNumber: this.targetPostNumber,
+      contextNoAncestors: this.contextNoAncestors,
+      ancestorsTruncated: this.ancestorsTruncated,
+      topAncestorPostNumber: this.topAncestorPostNumber,
+      newRootPostIds: this.newRootPostIds,
+    };
+
     this.nestedViewCache.save(cacheKey, {
-      modelData: {
-        topic: this.topic,
-        opPost: this.opPost,
-        rootNodes: this.rootNodes,
-        page: this.page,
-        hasMoreRoots: this.hasMoreRoots,
-        sort: this.sort,
-        messageBusLastId: this.messageBusLastId,
-        pinnedPostIds: this.pinnedPostIds,
-        postNumber: this.postNumber,
-        contextMode: this.contextMode,
-        contextChain: this.contextChain,
-        initialFocusedPath: this.initialFocusedPath,
-        targetPostNumber: this.targetPostNumber,
-        contextNoAncestors: this.contextNoAncestors,
-        ancestorsTruncated: this.ancestorsTruncated,
-        topAncestorPostNumber: this.topAncestorPostNumber,
-        newRootPostIds: this.newRootPostIds,
-      },
-      expansionState: new Map(this.expansionState),
-      fetchedChildrenCache: new Map(this.fetchedChildrenCache),
+      modelData: snapshotNestedModelData(modelData),
+      expansionState: snapshotExpansionState(this.expansionState),
+      fetchedChildrenCache: snapshotFetchedChildrenCache(
+        this.fetchedChildrenCache
+      ),
       scrollAnchor,
     });
   }

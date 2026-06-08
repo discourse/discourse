@@ -230,6 +230,7 @@ export default class Nested extends Component {
   @action
   clearMobileReturnAnchor() {
     this.mobileReturnAnchor = null;
+    this.args.clearScrollAnchor?.();
   }
 
   @action

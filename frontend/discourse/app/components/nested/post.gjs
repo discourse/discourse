@@ -54,6 +54,17 @@ export default class NestedPost extends Component {
     if (anchor?.postNumber !== this.args.post.post_number) {
       return;
     }
+
+    const anchorKey = [
+      anchor.postNumber,
+      anchor.scrollY ?? "",
+      anchor.offsetFromTop ?? "",
+    ].join(":");
+    if (anchorKey === this.#restoredScrollAnchorKey) {
+      return;
+    }
+    this.#restoredScrollAnchorKey = anchorKey;
+
     if (Number.isFinite(anchor.scrollY)) {
       window.scrollTo(0, anchor.scrollY);
     } else {
@@ -66,6 +77,8 @@ export default class NestedPost extends Component {
       this.appEvents.trigger("nested-replies:scroll-restored");
     });
   });
+  #restoredScrollAnchorKey = null;
+
   #postRegistered = false;
   #postRegistrationTimer;
 

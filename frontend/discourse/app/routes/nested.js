@@ -6,6 +6,11 @@ import { isEmpty } from "@ember/utils";
 import MoveToTopicModal from "discourse/components/modal/move-to-topic";
 import { ajax } from "discourse/lib/ajax";
 import EmbedMode from "discourse/lib/embed-mode";
+import {
+  hydrateExpansionState,
+  hydrateFetchedChildrenCache,
+  hydrateNestedModelData,
+} from "discourse/lib/nested-view-cache-snapshot";
 import PreloadStore from "discourse/lib/preload-store";
 import topicTitleToken from "discourse/lib/topic-title-token";
 import Draft from "discourse/models/draft";
@@ -17,6 +22,7 @@ import processNode, {
 export default class NestedRoute extends DiscourseRoute {
   @service composer;
   @service header;
+  @service historyStore;
   @service modal;
   @service nestedViewCache;
   @service router;
@@ -39,7 +45,7 @@ export default class NestedRoute extends DiscourseRoute {
     return topicTitleToken(this.currentModel?.topic, this.siteSettings);
   }
 
-  async model(params) {
+  async model(params, transition) {
     const { topic_id, slug, post_number } = params;
     this._teardownCurrentTopic(topic_id);
 
@@ -50,11 +56,17 @@ export default class NestedRoute extends DiscourseRoute {
       ...params,
       sort,
     });
-    if (this.nestedViewCache.consumeTraversal()) {
+    if (
+      this.nestedViewCache.consumeTraversal({
+        allowLocalSignal: transition?.from?.name?.startsWith("nested"),
+        isPoppedState: this.historyStore.isPoppedState,
+      })
+    ) {
       const cached = this.nestedViewCache.get(cacheKey);
       if (cached) {
-        this._restoringFromCache = cached;
-        return cached.modelData;
+        const restored = this._hydrateCachedEntry(cached);
+        this._restoringFromCache = restored;
+        return restored.modelData;
       }
     }
     this._restoringFromCache = null;
@@ -237,6 +249,21 @@ export default class NestedRoute extends DiscourseRoute {
       }
     }
     return best;
+  }
+
+  _hydrateCachedEntry(cached) {
+    const modelData = hydrateNestedModelData(this.store, cached.modelData);
+
+    return {
+      modelData,
+      expansionState: hydrateExpansionState(cached.expansionState),
+      fetchedChildrenCache: hydrateFetchedChildrenCache(
+        this.store,
+        modelData.topic,
+        cached.fetchedChildrenCache
+      ),
+      scrollAnchor: cached.scrollAnchor,
+    };
   }
 
   _processResponse(data, params) {
