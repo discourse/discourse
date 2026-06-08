@@ -104,7 +104,27 @@ jobs:
       - name: Start Postgres
         run: |
           chown -R postgres /var/run/postgresql
-          sudo -E -u postgres script/start_test_db.rb
+          # Initialise the cluster but don't start it yet, so we can layer
+          # extra config on top of script/start_test_db.rb's defaults before
+          # the server reads postgresql.conf.
+          sudo -E -u postgres script/start_test_db.rb --skip-run
+          # Tune Postgres for the all-in-RAM parallel system-test workload.
+          # The 12 turbo_rspec workers share one cluster (one DB each), and
+          # per-spec fabrication + the in-process Puma request handling that
+          # every browser navigation drives both sit on the critical path.
+          # script/start_test_db.rb already disables durability (fsync /
+          # synchronous_commit / full_page_writes off); these knobs cut CPU on
+          # top of that: a 32MB work_mem keeps the serializer / topic-list
+          # ORDER BY sorts and hash-joins in memory instead of spilling to
+          # on-disk temp files (real CPU + I/O on the saturated 16-core
+          # runner), a 1GB shared_buffers keeps the 12 DBs' hot pages resident
+          # instead of churning the 500MB default, and effective_cache_size
+          # lets the planner pick index plans knowing the data is effectively
+          # all cached. Postgres uses the last value seen in postgresql.conf,
+          # so these override the script's earlier defaults.
+          printf 'work_mem = 32MB\nshared_buffers = 1GB\neffective_cache_size = 4GB\n' \
+            | sudo -u postgres tee -a /tmp/test_data/pg/postgresql.conf
+          sudo -E -u postgres script/start_test_db.rb --skip-setup
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
       - name: Symlink vendor/bundle from image
