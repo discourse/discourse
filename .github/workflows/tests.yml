@@ -158,6 +158,34 @@ jobs:
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
+      - name: Fetch bootsnap compile cache
+        uses: actions/cache@v5
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        with:
+          # Persist Bootsnap's iseq/YAML compile cache across runs. Bootsnap is
+          # enabled in test (config/boot.rb requires bootsnap/setup unless
+          # DISABLE_BOOTSNAP=1) and writes to tmp/cache/bootsnap, but that dir is
+          # populated by a fresh `actions/checkout` only — nothing seeds it, and
+          # vendor/bundle is symlinked from the image without a bootsnap cache.
+          # So every run starts cold: the parent migrate boot plus all 12
+          # parallel turbo_rspec workers each cold-compile the whole app + gem
+          # tree to iseq at once, a 12x-redundant CPU + cache-write burst on the
+          # synchronized boot prefix that sits *inside* the measured Core System
+          # Tests step. Restoring a recent cache lets every worker read compiled
+          # iseq instead of recompiling, shrinking the boot prefix and removing
+          # the cold-compile spike's run-to-run jitter. Bootsnap validates each
+          # entry by path + content (FNV) hash, so a cache from a prior commit is
+          # reused for unchanged files and only the iteration's diff recompiles —
+          # safe to carry forward. Keyed per run_id (always saves a fresh copy)
+          # with a prefix restore-key, exactly like the runtime-log cache below.
+          # This differs from iter-147's in-job eager-load pre-warm (which paid a
+          # full extra boot in the job and only sampled once at 556s): there is no
+          # in-job warm boot here, and the restore lands in a setup step so it
+          # cannot add to step_sec — the step can only get faster or stay flat.
+          path: tmp/cache/bootsnap
+          key: bootsnap-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
+          restore-keys: bootsnap-${{ matrix.build_type }}-${{ matrix.target }}-
+
       - name: Create and migrate databases
         run: |
           if [ "$USES_PARALLEL_DATABASES" = "true" ]; then
