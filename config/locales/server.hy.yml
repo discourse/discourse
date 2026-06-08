@@ -1474,6 +1474,10 @@ hy:
       topic: "Արդյունքներ"
       user: "Օգտատերեր"
     results_page: "Որոնման արդյունքներ '%{term}' -ի համար"
+  posts_filter:
+    description:
+      order_latest: "Վերջին գրառումները"
+      order_latest_topic: "Վերջին թեմաները"
   discourse_connect:
     login_error: "Մուտքի Սխալ"
     not_found: "Ձեր հաշիվը չի գտնվել: Խնդրում ենք կապվել կայքի ադմինիստրատորի հետ:"

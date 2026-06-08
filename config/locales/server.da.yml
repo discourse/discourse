@@ -1620,6 +1620,10 @@ da:
     results_page: "Søgeresultater for '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Seneste indlæg"
+      order_latest_topic: "Seneste emner"
   discourse_connect:
     login_error: "Login fejl"
     not_found: "Din konto blev ikke fundet. Kontakt venligst webstedets administrator."

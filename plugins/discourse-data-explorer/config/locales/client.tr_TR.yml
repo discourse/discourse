@@ -43,7 +43,6 @@ tr_TR:
         description_hint: "Ne istediğinizi basit bir dille açıklayın. SQL sorgusunu, adı ve açıklamayı sizin için biz oluşturacağız."
         description_placeholder: "Örneğin: Zaman içindeki kayıtları göster"
         generate: "Oluştur"
-        regenerate: "Yeniden oluştur"
         generating: "AI ile sorgu oluşturuluyor..."
         generation_timeout: "AI sorgu oluşturma işlemi zaman aşımına uğradı. SQL sorgusunu manuel olarak yazabilirsiniz."
         generation_error: "Sorgu oluşturulurken bir hata oluştu."

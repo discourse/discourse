@@ -2729,6 +2729,10 @@ ru:
     results_page: "Результаты поиска по запросу «%{term}»"
     audio: "[аудио]"
     video: "[видео]"
+  posts_filter:
+    description:
+      order_latest: "Последние публикации"
+      order_latest_topic: "Последние темы"
   filter:
     description:
       status: "Фильтровать темы по статусу"

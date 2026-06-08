@@ -1581,6 +1581,10 @@ ca:
     results_page: "Resultats de la cerca per a '%{term}'"
     audio: "[àudio]"
     video: "[vídeo]"
+  posts_filter:
+    description:
+      order_latest: "Publicacions més recents"
+      order_latest_topic: "Temes més recents"
   discourse_connect:
     login_error: "Error d'inici de sessió"
     not_found: "No s'ha trobat el vostre compte. Contacteu amb l'administrador del lloc web."

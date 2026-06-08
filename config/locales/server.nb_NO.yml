@@ -1050,6 +1050,10 @@ nb_NO:
       topic: "Resultater"
       user: "Brukere"
     results_page: "Søkeresultater for \"%{term}\""
+  posts_filter:
+    description:
+      order_latest: "Siste innlegg"
+      order_latest_topic: "Siste emner"
   most_recent_poster: "Ferskeste innlegg av"
   redirected_to_top_reasons:
     new_user: "Velkommen til felleskapet vårt! Dette er de mest populære emnene for tiden. "

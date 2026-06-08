@@ -2577,6 +2577,10 @@ de:
     results_page: "Suchergebnisse für „%{term}“"
     audio: "[Audio]"
     video: "[Video]"
+  posts_filter:
+    description:
+      order_latest: "Letzte Beiträge"
+      order_latest_topic: "Aktuelle Themen"
   filter:
     description:
       status: "Themen nach ihrem Status filtern"

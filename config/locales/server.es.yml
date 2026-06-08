@@ -2560,6 +2560,10 @@ es:
     results_page: "Resultados de búsqueda para «%{term}»"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Últimas publicaciones"
+      order_latest_topic: "Temas recientes"
   filter:
     description:
       status: "Filtrar temas por estado"

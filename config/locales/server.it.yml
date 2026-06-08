@@ -2451,6 +2451,10 @@ it:
     results_page: "Risultati della ricerca per '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Ultimi messaggi"
+      order_latest_topic: "Argomenti più recenti"
   filter:
     description:
       status: "Filtra gli argomenti in base al loro stato"

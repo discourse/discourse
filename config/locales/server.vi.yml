@@ -1381,6 +1381,10 @@ vi:
       topic: "Kết quả"
       user: "Thành viên"
     results_page: "Search results for '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "Tút mới nhất"
+      order_latest_topic: "Chủ đề mới nhất"
   filter:
     description:
       status: "Lọc chủ đề theo trạng thái của chúng"

@@ -43,7 +43,6 @@ nl:
         description_hint: "Beschrijf in eenvoudige taal wat je wilt. Wij genereren de SQL-query, de naam en de beschrijving voor jou."
         description_placeholder: "bijvoorbeeld Toon me aanmeldingen in de loop van de tijd"
         generate: "Genereren"
-        regenerate: "Opnieuw genereren"
         generating: "Query genereren met AI..."
         generation_timeout: "Time-out AI-querygeneratie. Je kunt de SQL handmatig schrijven."
         generation_error: "Er is iets misgegaan bij het genereren van de query."

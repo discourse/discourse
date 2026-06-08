@@ -2540,6 +2540,10 @@ hu:
     results_page: "Találatok erre: „%{term}”"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Legújabb bejegyzések"
+      order_latest_topic: "Legutóbbi témák"
   filter:
     description:
       status: "Témák szűrése állapotuk szerint"

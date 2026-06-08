@@ -1820,6 +1820,10 @@ ko:
     results_page: "&#39;%{term}&#39;에 대한 검색 결과"
     audio: "[오디오]"
     video: "[비디오]"
+  posts_filter:
+    description:
+      order_latest: "최근 글"
+      order_latest_topic: "최신 토픽"
   filter:
     description:
       status: "글의 상태별 필터링"
