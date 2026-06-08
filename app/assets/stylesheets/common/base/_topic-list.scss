@@ -340,7 +340,7 @@
       display: inline-block;
 
       @include viewport.from(sm) {
-        padding: var(--space-3)  var(--space);
+        padding: var(--space-3) var(--space);
       }
     }
   }
