@@ -12,6 +12,7 @@ export function extendTopicModel(api) {
         @tracked assigned_to_user_id;
         @tracked assignment_note;
         @tracked assignment_status;
+        @tracked can_assign;
         @tracked indirectly_assigned_to;
 
         assignees() {
