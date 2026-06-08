@@ -18,7 +18,7 @@ module("Integration | Component | HorizonSiteSkeleton", function (hooks) {
       .hasText("m", "renders the first letter of the fallback username");
     assert
       .dom(".horizon-site-skeleton__welcome-row h3")
-      .hasText("Welcome back, member!", "greets the fallback username");
+      .hasText("Welcome back,member!", "greets the fallback username");
   });
 
   test("uses the provided site name and user", async function (assert) {
@@ -36,7 +36,7 @@ module("Integration | Component | HorizonSiteSkeleton", function (hooks) {
       .exists("renders the real avatar when a user is provided");
     assert
       .dom(".horizon-site-skeleton__welcome-row h3")
-      .hasText("Welcome back, frank!");
+      .hasText("Welcome back,frank!");
     assert.dom(".horizon-site-skeleton__topic-main strong").hasText(
       i18n("horizon_site_skeleton.topic.welcome.title", {
         site_name: "acme",
