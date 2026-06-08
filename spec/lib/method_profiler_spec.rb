@@ -37,4 +37,56 @@ RSpec.describe MethodProfiler do
 
     expect(result[:at_beach][:calls]).to eq(2)
   end
+
+  describe ".stop" do
+    before { MethodProfiler.ensure_discourse_instrumentation! }
+
+    after { MethodProfiler.itemize_enabled = false }
+
+    context "when itemize_enabled is true" do
+      before { MethodProfiler.itemize_enabled = true }
+
+      it "records each sql statement and redis command in order" do
+        MethodProfiler.start
+
+        ActiveRecord::Base.connection.execute("SELECT 1")
+        ActiveRecord::Base.connection.execute("SELECT 1")
+        Discourse.redis.get("method_profiler_itemize_test")
+
+        result = MethodProfiler.stop
+
+        expect(result[:sql]).to match(
+          calls: 2,
+          duration: a_kind_of(Float),
+          items: [
+            { sql: a_string_starting_with("SELECT 1"), duration_ms: a_kind_of(Numeric) },
+            { sql: a_string_starting_with("SELECT 1"), duration_ms: a_kind_of(Numeric) },
+          ],
+        )
+
+        expect(result[:redis]).to match(
+          calls: 1,
+          duration: a_kind_of(Float),
+          items: [
+            {
+              command: "GET #{Discourse.redis.namespace_key("method_profiler_itemize_test")}",
+              duration_ms: a_kind_of(Numeric),
+            },
+          ],
+        )
+      end
+    end
+
+    context "when itemize_enabled is false" do
+      it "records only counts and duration, with no items" do
+        MethodProfiler.start
+
+        ActiveRecord::Base.connection.execute("SELECT 1")
+
+        result = MethodProfiler.stop
+
+        expect(result[:sql]).to match(calls: a_kind_of(Integer), duration: a_kind_of(Float))
+      end
+    end
+  end
 end

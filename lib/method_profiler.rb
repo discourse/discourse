@@ -2,7 +2,21 @@
 
 # see https://samsaffron.com/archive/2017/10/18/fastest-way-to-profile-a-method-in-ruby
 class MethodProfiler
+  ITEMIZED_NAMES = %i[sql redis net].freeze
+
+  @@itemize_enabled = false
+
+  def self.itemize_enabled
+    @@itemize_enabled
+  end
+
+  def self.itemize_enabled=(value)
+    @@itemize_enabled = value
+  end
+
   def self.patch(klass, methods, name, no_recurse: false)
+    itemize = ITEMIZED_NAMES.include?(name)
+
     patches =
       methods
         .map do |method_name|
@@ -10,6 +24,13 @@ class MethodProfiler
           recurse_protection = <<~RUBY if no_recurse
           return #{method_name}__mp_unpatched(*args, **kwargs, &blk) if @mp_recurse_protect_#{method_name}
           @mp_recurse_protect_#{method_name} = true
+        RUBY
+
+          item_capture = ""
+          item_capture = <<~RUBY if itemize
+          if prof[:__itemize] && (__mp_item = MethodProfiler.__#{name}_item(self, args))
+            (data[:items] ||= []) << __mp_item.merge!(duration_ms: __mp_elapsed * 1000.0)
+          end
         RUBY
 
           <<~RUBY
@@ -21,12 +42,14 @@ class MethodProfiler
           end
           #{recurse_protection}
           begin
-            start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+            __mp_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
             #{method_name}__mp_unpatched(*args, **kwargs, &blk)
           ensure
+            __mp_elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - __mp_start
             data = (prof[:#{name}] ||= {duration: 0.0, calls: 0})
-            data[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+            data[:duration] += __mp_elapsed
             data[:calls] += 1
+            #{item_capture}
             #{"@mp_recurse_protect_#{method_name} = false" if no_recurse}
           end
         end
@@ -36,6 +59,57 @@ class MethodProfiler
         .join("\n")
 
     klass.class_eval patches
+  end
+
+  def self.__sql_item(_receiver, args)
+    { sql: args[0].to_s }
+  end
+
+  def self.__redis_item(_receiver, args)
+    command = args[0]
+    return { command: command.to_s } unless command.is_a?(Array)
+    commands = command.first.is_a?(Array) ? command : [command]
+    { command: commands.map { |entry| __redis_command(entry) }.join("; ") }
+  end
+
+  def self.__redis_command(command)
+    return command.to_s unless command.is_a?(Array)
+    [command.first.to_s.upcase, *Array(command[1..]).map(&:to_s)].join(" ").strip
+  end
+
+  def self.__net_item(receiver, args)
+    if defined?(Net::HTTP) && receiver.is_a?(Net::HTTP)
+      request = args[0]
+      {
+        method: request.method,
+        url: __http_url(receiver.use_ssl?, receiver.address, receiver.port, request.path),
+      }
+    elsif defined?(Excon::Connection) && receiver.is_a?(Excon::Connection)
+      params = args[0] || {}
+      data = receiver.respond_to?(:data) ? receiver.data.to_h : {}
+      method = (params[:method] || data[:method]).to_s.upcase
+      {
+        method:,
+        url:
+          __http_url(
+            data[:scheme].to_s == "https",
+            data[:host],
+            data[:port],
+            params[:path] || data[:path],
+          ),
+      }
+    else
+      { method: "", url: "" }
+    end
+  rescue StandardError
+    { method: "", url: "" }
+  end
+
+  def self.__http_url(ssl, host, port, path)
+    scheme = ssl ? "https" : "http"
+    default_port = ssl ? 443 : 80
+    authority = port.nil? || port == default_port ? host : "#{host}:#{port}"
+    "#{scheme}://#{authority}#{path}"
   end
 
   def self.patch_with_debug_sql(klass, methods, name, no_recurse: false)
@@ -89,11 +163,18 @@ class MethodProfiler
   end
 
   def self.start(transfer = nil)
-    Thread.current[:_method_profiler] = transfer ||
-      {
-        __start: Process.clock_gettime(Process::CLOCK_MONOTONIC),
-        __start_gc_heap_live_slots: GC.stat[:heap_live_slots],
-      }
+    prof =
+      transfer ||
+        {
+          __start: Process.clock_gettime(Process::CLOCK_MONOTONIC),
+          __start_gc_heap_live_slots: GC.stat[:heap_live_slots],
+        }
+    if @@itemize_enabled
+      prof[:__itemize] = true
+    else
+      prof.delete(:__itemize)
+    end
+    Thread.current[:_method_profiler] = prof
   end
 
   def self.clear
