@@ -1208,15 +1208,19 @@ body.has-sidebar-page {
     padding-block: var(--space-2);
     border-top-left-radius: var(--d-border-radius-large);
     border-top-right-radius: var(--d-border-radius-large);
+
+    ~ .reply-area {
+      height: calc(100% - 21px) !important;
+    }
   }
 
   .reply-to {
-    padding-bottom: var(--space-2);
+    padding: 0 var(--space-4) var(--space-2);
     margin: 0 !important;
   }
 
   .reply-area {
-    padding-top: 0 !important;
+    padding: 0 !important;
   }
 
   .composer-controls {
@@ -1278,7 +1282,7 @@ body.has-sidebar-page {
         }
 
         .d-icon-tag {
-          color: var(--primary-high) !important;
+          color: var(--tertiary) !important;
         }
       }
     }
@@ -1340,20 +1344,26 @@ body.has-sidebar-page {
     &.in-focus {
       outline: none;
       border: 0;
-      margin-top: calc(
-        (var(--composer-fields-height, 0px) + (var(--header-offset, 0px) / 3)) *
-          -1
-      );
-      z-index: z("composer", "dropdown") + 1;
-      box-shadow: 0 -12px 12px 0 rgb(var(--primary-rgb), 0.15);
-      border-top-left-radius: var(--d-border-radius-large);
-      border-top-right-radius: var(--d-border-radius-large);
-      padding-top: var(--space-4);
+
+      @include viewport.until(sm) {
+        margin-top: calc(
+          (
+              var(--composer-fields-height, 0px) +
+                (var(--header-offset, 0px) / 3)
+            ) *
+            -1
+        );
+        z-index: z("composer", "dropdown") + 1;
+        box-shadow: 0 -12px 12px 0 rgb(var(--primary-rgb), 0.15);
+        border-top-left-radius: var(--d-border-radius-large);
+        border-top-right-radius: var(--d-border-radius-large);
+        padding-top: var(--space-4);
+      }
     }
   }
 
   .d-editor-input {
-    padding-top: 0 !important;
+    padding-inline: var(--space-4);
 
     @include viewport.until(sm) {
       padding-inline: var(--space-4);
@@ -1365,6 +1375,11 @@ body.has-sidebar-page {
     align-items: center;
     flex-wrap: nowrap;
     gap: var(--space-2);
+
+    @include viewport.from(sm) {
+      padding: var(--space-2) var(--space-4);
+      border-top: 1px solid var(--primary-low);
+    }
 
     @include viewport.until(sm) {
       flex-direction: column;
@@ -1396,6 +1411,7 @@ body.has-sidebar-page {
 
       &__scroll-btn {
         color: var(--primary-medium);
+        font-size: var(--font-down-1-rem);
       }
 
       .btn,
@@ -1406,9 +1422,10 @@ body.has-sidebar-page {
     }
 
     .submit-panel {
+      margin: 0 !important;
+
       @include viewport.until(sm) {
         align-self: flex-end;
-        margin: 0 !important;
       }
     }
 
