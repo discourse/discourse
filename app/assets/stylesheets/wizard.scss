@@ -103,7 +103,7 @@ body.wizard {
   }
 
   // Clean takeover when the skeleton is the backdrop.
-  &:has(.horizon-site-skeleton) {
+  &:has(.site-skeleton) {
     &::before {
       display: none;
     }
