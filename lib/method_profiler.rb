@@ -66,19 +66,26 @@ class MethodProfiler
     klass.class_eval patches
   end
 
+  MAX_ITEM_LENGTH = 2000
+
   def self.utf8(value)
     value.to_s.dup.force_encoding(Encoding::UTF_8).scrub("?")
   end
 
+  def self.truncate(string)
+    return string if string.length <= MAX_ITEM_LENGTH
+    "#{string[0, MAX_ITEM_LENGTH]}…(truncated, #{string.bytesize} bytes)"
+  end
+
   def self.__sql_item(_receiver, args)
-    { sql: utf8(args[0]) }
+    { sql: truncate(utf8(args[0])) }
   end
 
   def self.__redis_item(_receiver, args)
     command = args[0]
-    return { command: utf8(command) } unless command.is_a?(Array)
+    return { command: truncate(utf8(command)) } unless command.is_a?(Array)
     commands = command.first.is_a?(Array) ? command : [command]
-    { command: commands.map { |entry| __redis_command(entry) }.join("; ") }
+    { command: truncate(commands.map { |entry| __redis_command(entry) }.join("; ")) }
   end
 
   def self.__redis_command(command)
@@ -89,26 +96,19 @@ class MethodProfiler
   def self.__net_item(receiver, args)
     if defined?(Net::HTTP) && receiver.is_a?(Net::HTTP)
       request = args[0]
-      {
-        method: utf8(request.method),
-        url: utf8(__http_url(receiver.use_ssl?, receiver.address, receiver.port, request.path)),
-      }
+      url = __http_url(receiver.use_ssl?, receiver.address, receiver.port, request.path)
+      { method: utf8(request.method), url: truncate(utf8(url)) }
     elsif defined?(Excon::Connection) && receiver.is_a?(Excon::Connection)
       params = args[0] || {}
       data = receiver.respond_to?(:data) ? receiver.data.to_h : {}
-      method = utf8(params[:method] || data[:method]).upcase
-      {
-        method:,
-        url:
-          utf8(
-            __http_url(
-              data[:scheme].to_s == "https",
-              data[:host],
-              data[:port],
-              params[:path] || data[:path],
-            ),
-          ),
-      }
+      url =
+        __http_url(
+          data[:scheme].to_s == "https",
+          data[:host],
+          data[:port],
+          params[:path] || data[:path],
+        )
+      { method: utf8(params[:method] || data[:method]).upcase, url: truncate(utf8(url)) }
     else
       { method: "", url: "" }
     end

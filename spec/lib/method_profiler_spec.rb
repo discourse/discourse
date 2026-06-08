@@ -90,6 +90,21 @@ RSpec.describe MethodProfiler do
         expect(item[:command]).to be_valid_encoding
         expect { JSON.generate(item) }.not_to raise_error
       end
+
+      it "truncates very long itemized values so the output stays bounded" do
+        MethodProfiler.start
+
+        Discourse.redis.set("method_profiler_long_test", "x" * 5000)
+
+        result = MethodProfiler.stop
+
+        item =
+          result[:redis][:items].find do |entry|
+            entry[:command].include?("method_profiler_long_test")
+          end
+        expect(item[:command].length).to be <= 2100
+        expect(item[:command]).to include("(truncated")
+      end
     end
 
     context "when itemize_enabled is false" do
