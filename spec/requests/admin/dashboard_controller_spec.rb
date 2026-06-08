@@ -256,7 +256,7 @@ RSpec.describe Admin::DashboardController do
         end
       end
 
-      it "is omitted when dashboard_improvements is disabled" do
+      it "is omitted when enabled for no one" do
         SiteSetting.dashboard_improvements = false
 
         get "/admin/dashboard.json"
@@ -266,8 +266,32 @@ RSpec.describe Admin::DashboardController do
         expect(response.parsed_body["configuration"]).to be_nil
       end
 
-      it "is returned when version=alt and dashboard_improvements is disabled" do
-        SiteSetting.dashboard_improvements = false
+      it "is omitted when enabled for a group the admin is not in" do
+        group = Fabricate(:group)
+        Fabricate(:site_setting_group, name: "dashboard_improvements", group_ids: group.id.to_s)
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"]).to be_nil
+        expect(response.parsed_body["configuration"]).to be_nil
+      end
+
+      it "is returned when enabled for the admin's group" do
+        group = Fabricate(:group)
+        group.add(admin)
+        Fabricate(:site_setting_group, name: "dashboard_improvements", group_ids: group.id.to_s)
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"]).to be_present
+        expect(response.parsed_body["configuration"]).to be_present
+      end
+
+      it "is returned with version=alt when the admin is not included" do
+        group = Fabricate(:group)
+        Fabricate(:site_setting_group, name: "dashboard_improvements", group_ids: group.id.to_s)
 
         get "/admin/dashboard.json", params: { version: "alt" }
 
@@ -276,7 +300,7 @@ RSpec.describe Admin::DashboardController do
         expect(response.parsed_body["configuration"]).to be_present
       end
 
-      it "is omitted when version=alt and dashboard_improvements is enabled" do
+      it "is omitted with version=alt when enabled for the admin" do
         get "/admin/dashboard.json", params: { version: "alt" }
 
         expect(response.status).to eq(200)
@@ -371,7 +395,7 @@ RSpec.describe Admin::DashboardController do
         )
       end
 
-      it "omits version_check when the flag is on" do
+      it "omits version_check when enabled for the admin" do
         SiteSetting.version_checks = true
         DiscourseUpdates.expects(:check_version).never
 
@@ -381,8 +405,9 @@ RSpec.describe Admin::DashboardController do
         expect(response.parsed_body).not_to have_key("version_check")
       end
 
-      it "still includes version_check when the flag is off" do
-        SiteSetting.dashboard_improvements = false
+      it "includes version_check when the admin is not included" do
+        group = Fabricate(:group)
+        Fabricate(:site_setting_group, name: "dashboard_improvements", group_ids: group.id.to_s)
         SiteSetting.version_checks = true
 
         get "/admin/dashboard.json"
@@ -423,8 +448,9 @@ RSpec.describe Admin::DashboardController do
         expect(response.parsed_body).not_to have_key("configuration")
       end
 
-      it "is omitted when dashboard_improvements is disabled" do
-        SiteSetting.dashboard_improvements = false
+      it "is omitted when the admin is not included" do
+        group = Fabricate(:group)
+        Fabricate(:site_setting_group, name: "dashboard_improvements", group_ids: group.id.to_s)
         sign_in(admin)
 
         get "/admin/dashboard.json"
