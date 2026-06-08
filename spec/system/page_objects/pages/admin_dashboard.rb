@@ -35,12 +35,12 @@ module PageObjects
         if period == "custom"
           page.current_url.include?("range=custom")
         else
-          has_css?(".db-date-range__trigger-label", text: preset_label(period))
+          has_css?(".db-date-range__trigger .d-button-label", text: preset_label(period))
         end
       end
 
       def has_custom_label?(text)
-        has_css?(".db-date-range__trigger-label", exact_text: text)
+        has_css?(".db-date-range__trigger .d-button-label", exact_text: text)
       end
 
       def date_range_picker

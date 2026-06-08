@@ -10,7 +10,6 @@ import {
   PRESET_LABEL_KEYS,
 } from "discourse/admin/lib/dashboard-date-range";
 import DMenu from "discourse/float-kit/components/d-menu";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class DashboardDateRange extends Component {
@@ -49,16 +48,14 @@ export default class DashboardDateRange extends Component {
   <template>
     <DMenu
       @identifier="db-date-range-menu"
-      @triggerClass="db-date-range__trigger"
+      @triggerClass="btn-default db-date-range__trigger"
       @modalForMobile={{true}}
       @placement="bottom-end"
       @maxWidth={{800}}
       @contentClass="db-date-range__popover"
+      @icon="calendar-days"
+      @label={{this.triggerLabel}}
     >
-      <:trigger>
-        {{dIcon "calendar-days"}}
-        <span class="db-date-range__trigger-label">{{this.triggerLabel}}</span>
-      </:trigger>
       <:content as |args|>
         <DashboardDateRangePicker
           @from={{@startDate}}
