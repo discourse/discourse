@@ -1257,6 +1257,10 @@ body.has-sidebar-page {
 }
 
 .uc-enable-composer-redesign {
+  .composer-actions-trigger {
+    background: var(--secondary);
+  }
+
   .grippie,
   .reply-to {
     background: var(--primary-very-low) !important;
