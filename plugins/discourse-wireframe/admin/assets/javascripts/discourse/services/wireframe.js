@@ -2993,104 +2993,29 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Moves a canvas block onto an empty `wf:cell`, removing the source
-   * and replacing the cell with the moved block's data — the moved
-   * block adopts the cell's `containerArgs.grid` so it lands at the
-   * cell's rect. Same-outlet only for now; cross-outlet move-into-cell
-   * is a future iteration.
+   * Dispatch shim for moving a canvas block onto an empty `wf:cell` — the
+   * collapsed-grid drop channel calls this by name. The logic lives in the
+   * grid manipulator (`moveIntoCell`).
    *
    * @param {{sourceKey: string, cellKey: string}} args
    * @returns {boolean}
    */
   @action
-  moveBlockIntoCell({ sourceKey, cellKey }) {
-    if (sourceKey === cellKey) {
-      return false;
-    }
-    const sourceLocated = this.findEntryAndOutletSync(sourceKey);
-    const cellLocated = this.findEntryAndOutletSync(cellKey);
-    if (!sourceLocated || !cellLocated) {
-      return false;
-    }
-    if (sourceLocated.outletName !== cellLocated.outletName) {
-      return false;
-    }
-    if (cellLocated.entry.block !== "wf:cell") {
-      return false;
-    }
-    return this.recordStructural([cellLocated.outletName], () => {
-      const layout = this.readResolvedLayout(cellLocated.outletName);
-      if (!layout) {
-        return false;
-      }
-      const removal = removeEntry(layout, sourceKey);
-      if (!removal.changed || !removal.removed) {
-        return false;
-      }
-      // Drop the source's `__stableKey` — the cell's stableKey wins
-      // (`replaceEntryInPlace` preserves the matched entry's stableKey
-      // on the swap), which is the right identity for re-render
-      // continuity at the cell's position.
-      const { __stableKey, ...sourceData } = removal.removed;
-      void __stableKey;
-      const movedEntry = {
-        ...sourceData,
-        containerArgs: cellLocated.entry.containerArgs,
-      };
-      const replacement = replaceEntryInPlace(
-        removal.layout,
-        cellKey,
-        movedEntry
-      );
-      if (!replacement.changed) {
-        return false;
-      }
-      this.publishStructuralChange(cellLocated.outletName, replacement.layout);
-      return true;
-    });
+  moveBlockIntoCell(args) {
+    return this.gridManipulator.moveIntoCell(args);
   }
 
   /**
-   * Replaces an empty `wf:cell` entry with a real block. The new entry
-   * inherits the cell's `containerArgs.grid` so it lands at the same
-   * rect; CSS Grid then places the rendered block exactly where the
-   * cell was.
+   * Dispatch shim for replacing an empty `wf:cell` with a fresh block — the
+   * collapsed-grid drop channel and the empty-cell picker call this by name.
+   * The logic lives in the grid manipulator (`placeInCell`).
    *
    * @param {{cellKey: string, blockName: string, defaultArgs?: Object}} args
    * @returns {boolean}
    */
   @action
-  placeBlockInCell({ cellKey, blockName, defaultArgs = {} }) {
-    const located = this.findEntryAndOutletSync(cellKey);
-    if (!located || located.entry.block !== "wf:cell") {
-      return false;
-    }
-    if (
-      !this.canInsertBlockAt({
-        blockName,
-        targetOutletName: located.outletName,
-      })
-    ) {
-      return false;
-    }
-    return this.recordStructural([located.outletName], () => {
-      const layout = this.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
-      }
-      const newEntry = {
-        block: blockName,
-        args: { ...defaultArgs },
-        containerArgs: located.entry.containerArgs,
-      };
-      const result = replaceEntryInPlace(layout, cellKey, newEntry);
-      if (!result.changed) {
-        return false;
-      }
-      this.publishStructuralChange(located.outletName, result.layout);
-      this.selectInsertedEntry(newEntry);
-      return true;
-    });
+  placeBlockInCell(args) {
+    return this.gridManipulator.placeInCell(args);
   }
 
   /**

@@ -15,12 +15,15 @@ import {
 } from "./mutate-layout";
 
 /**
- * Owns every mutation of a grid `wf:layout` so the grid drop rules can't be
+ * Owns block placement into a grid `wf:layout` so the drop rules can't be
  * bypassed. Drops are described, not chosen: callers hand a request to a
- * single entry point that routes it through `decideGridDrop` (the rule
- * chokepoint) and into private executors. Non-drop manipulations (resizing a
- * cell or the column tracks, applying a template) also live here, but those
- * are deterministic and do not consult the decider.
+ * single entry point (`drop`) that routes it through `decideGridDrop` (the
+ * rule chokepoint) and into private executors. The placement-adjacent
+ * deterministic ops live here too — resizing a cell (`resizeSlot`) or the
+ * column tracks (`resizeColumns`), and filling an explicit `wf:cell`
+ * placeholder (`placeInCell` / `moveIntoCell`) — but those target an
+ * explicit rect, so they don't consult the decider. (Whole-grid template /
+ * dimension reshaping stays on the service as its own subsystem.)
  *
  * The editor service instantiates one of these and delegates to it, the same
  * way it does for `InlineEditState` / `IconEditState`. The manipulator calls
@@ -145,6 +148,103 @@ export default class GridManipulator {
         default:
           return false;
       }
+    });
+  }
+
+  /**
+   * Moves an existing block onto an empty `wf:cell`, removing the source and
+   * replacing the placeholder with the moved block's data — the block adopts
+   * the cell's `containerArgs.grid` (and its span / identity) so it lands at
+   * the cell's exact rect. Same-outlet only for now. A deterministic
+   * replace-in-place against a chosen placeholder, not a decided placement.
+   *
+   * @param {{sourceKey: string, cellKey: string}} args
+   * @returns {boolean}
+   */
+  moveIntoCell({ sourceKey, cellKey }) {
+    const svc = this.service;
+    if (sourceKey === cellKey) {
+      return false;
+    }
+    const sourceLocated = svc.findEntryAndOutletSync(sourceKey);
+    const cellLocated = svc.findEntryAndOutletSync(cellKey);
+    if (!sourceLocated || !cellLocated) {
+      return false;
+    }
+    if (sourceLocated.outletName !== cellLocated.outletName) {
+      return false;
+    }
+    if (cellLocated.entry.block !== "wf:cell") {
+      return false;
+    }
+    return svc.recordStructural([cellLocated.outletName], () => {
+      const layout = svc.readResolvedLayout(cellLocated.outletName);
+      if (!layout) {
+        return false;
+      }
+      const removal = removeEntry(layout, sourceKey);
+      if (!removal.changed || !removal.removed) {
+        return false;
+      }
+      // Drop the source's `__stableKey` — the cell's stableKey wins
+      // (`replaceEntryInPlace` keeps the matched entry's stableKey), the
+      // right identity for re-render continuity at the cell's position.
+      const { __stableKey, ...sourceData } = removal.removed;
+      void __stableKey;
+      const movedEntry = {
+        ...sourceData,
+        containerArgs: cellLocated.entry.containerArgs,
+      };
+      const replacement = replaceEntryInPlace(
+        removal.layout,
+        cellKey,
+        movedEntry
+      );
+      if (!replacement.changed) {
+        return false;
+      }
+      svc.publishStructuralChange(cellLocated.outletName, replacement.layout);
+      return true;
+    });
+  }
+
+  /**
+   * Replaces an empty `wf:cell` placeholder with a fresh block. The new
+   * entry inherits the cell's `containerArgs.grid`, so it lands at the same
+   * (possibly spanning) rect. A deterministic replace-in-place against a
+   * chosen placeholder, not a decided placement.
+   *
+   * @param {{cellKey: string, blockName: string, defaultArgs?: Object}} args
+   * @returns {boolean}
+   */
+  placeInCell({ cellKey, blockName, defaultArgs = {} }) {
+    const svc = this.service;
+    const located = svc.findEntryAndOutletSync(cellKey);
+    if (!located || located.entry.block !== "wf:cell") {
+      return false;
+    }
+    if (
+      !svc.canInsertBlockAt({ blockName, targetOutletName: located.outletName })
+    ) {
+      return false;
+    }
+    return svc.recordStructural([located.outletName], () => {
+      const layout = svc.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const newEntry = {
+        block: blockName,
+        args: { ...defaultArgs },
+        containerArgs: located.entry.containerArgs,
+      };
+      const result = replaceEntryInPlace(layout, cellKey, newEntry);
+      if (!result.changed) {
+        return false;
+      }
+      svc.publishStructuralChange(located.outletName, result.layout);
+      svc.selectInsertedEntry(newEntry);
+      return true;
     });
   }
 
