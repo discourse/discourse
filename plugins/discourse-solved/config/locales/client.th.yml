@@ -28,6 +28,8 @@ th:
         solved: "แก้ไขแล้ว"
       move_post_cancel: "ยกเลิก"
       confirm_solved_removal_cancel: "ยกเลิก"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
     discourse_automation:
       triggerables:
         first_accepted_solution:

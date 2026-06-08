@@ -447,6 +447,7 @@ export default class DockedComposer extends Component {
         {{willDestroy this.teardown}}
       >
         {{#if this.resizable}}
+          {{! eslint-disable ember/template-no-pointer-down-event-binding }}
           <div
             class="docked-composer__resize-handle"
             role="separator"
@@ -456,7 +457,6 @@ export default class DockedComposer extends Component {
             aria-valuemin="0"
             aria-valuemax={{this.resizeAriaMax}}
             tabindex="0"
-            {{! template-lint-disable no-pointer-down-event-binding }}
             {{on "pointerdown" this.onResizeStart}}
             {{on "pointermove" this.onResizeMove}}
             {{on "pointerup" this.onResizeEnd}}

@@ -7,7 +7,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import Sharing from "discourse/lib/sharing";
-import { clipboardCopy, postUrl } from "discourse/lib/utilities";
+import { clipboardCopyAsync, postUrl } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -69,8 +69,11 @@ export default class PostTextSelectionToolbar extends Component {
 
   @action
   async copyQuoteToClipboard() {
-    const text = await this.args.data.buildQuote();
-    clipboardCopy(text);
+    await clipboardCopyAsync(() =>
+      this.args.data
+        .buildQuote()
+        .then((text) => new Blob([text], { type: "text/plain" }))
+    );
     this.toasts.success({
       duration: "short",
       data: { message: i18n("post.quote_copied_to_clipboard") },

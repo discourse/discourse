@@ -4,7 +4,7 @@ import LatestTopicListItem from "discourse/components/topic-list/latest-topic-li
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | latest-topic-list-item", function (hooks) {
+module("Integration | Component | LatestTopicListItem", function (hooks) {
   setupRenderingTest(hooks);
 
   test("latest-topic-list-item-class value transformer", async function (assert) {

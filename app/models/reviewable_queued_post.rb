@@ -13,9 +13,8 @@ class ReviewableQueuedPost < Reviewable
   end
 
   after_save do
-    if saved_change_to_payload? && self.status.to_sym == :pending &&
-         self.payload&.[]("raw").present?
-      upload_ids = Upload.extract_upload_ids(self.payload["raw"])
+    if saved_change_to_payload? && status.to_sym == :pending && payload&.[]("raw").present?
+      upload_ids = Upload.extract_upload_ids(payload["raw"])
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
@@ -30,12 +29,6 @@ class ReviewableQueuedPost < Reviewable
       revise_feedback: params[:revise_feedback],
       revise_custom_reason: params[:revise_custom_reason],
     }
-  end
-
-  def updatable_reviewable_scores
-    # Approvals are possible for already rejected queued posts. We need the
-    # scores to be updated when this happens.
-    reviewable_scores.pending.or(reviewable_scores.disagreed)
   end
 
   def build_combined_actions(actions, guardian, args)
@@ -115,11 +108,11 @@ class ReviewableQueuedPost < Reviewable
     save
 
     if target_created_by.silenced?
-      UserSilencer.unsilence(target_created_by, performed_by, reviewable_id: self.id)
+      UserSilencer.unsilence(target_created_by, performed_by, reviewable_id: id)
     end
 
     if performed_by.staff?
-      StaffActionLogger.new(performed_by).log_post_approved(created_post, reviewable_id: self.id)
+      StaffActionLogger.new(performed_by).log_post_approved(created_post, reviewable_id: id)
     end
 
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
@@ -159,7 +152,7 @@ class ReviewableQueuedPost < Reviewable
 
   def perform_revise_and_reject_post(performed_by, args)
     has_contact_user = SiteSetting.site_contact_username.present?
-    is_new_topic = self.topic.blank?
+    is_new_topic = topic.blank?
 
     edit_instructions_key =
       if is_new_topic && has_contact_user
@@ -173,18 +166,17 @@ class ReviewableQueuedPost < Reviewable
       end
 
     pm_translation_args = {
-      topic_title: self.topic&.title || self.payload["title"],
-      topic_url: self.topic&.url,
+      topic_title: topic&.title || payload["title"],
+      topic_url: topic&.url,
       reason: args[:revise_custom_reason].presence || args[:revise_reason],
       feedback: args[:revise_feedback],
-      original_post: self.payload["raw"],
+      original_post: payload["raw"],
       site_name: SiteSetting.title,
-      edit_instructions:
-        I18n.t(edit_instructions_key, locale: self.target_created_by.effective_locale),
+      edit_instructions: I18n.t(edit_instructions_key, locale: target_created_by.effective_locale),
     }
 
     SystemMessage.create(
-      self.target_created_by,
+      target_created_by,
       (
         if is_new_topic
           :reviewable_queued_post_revise_and_reject_new_topic

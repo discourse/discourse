@@ -75,3 +75,9 @@ ca:
     edit_assignments_modal:
       topic: "Tema"
       post: "Publicació"
+    discourse_workflows:
+      assign_topic:
+        operations:
+          assign: "Assigna"
+          unassign: "Desassigna"
+        topic_id: "ID de tema"

@@ -115,9 +115,9 @@ ur:
             restricted_group:
               label: گروپ تک محدود
             trust_level_transition:
-              label: اعتماد کی سطح کی منتقلی
+              label: فعالیت کے درجہ کی منتقلی
           trust_levels:
-            ALL: "اعتماد کی تمام سطحیں۔"
+            ALL: "فعالیت کے تمام درجات"
             TL01: "TL0 سے TL1"
             TL12: "TL1 سے TL2"
             TL23: "TL2 سے TL3"
@@ -132,6 +132,8 @@ ur:
               label: ٹیگز
             restricted_categories:
               label: اقسام
+            restricted_archetype:
+              description: اختیاری، صرف موضوعات یا ذاتی پیغامات پر متحرک ہونے کی اجازت دیں
           created: بنایا گیا
           with_images: تصاویر
           with_links: رابطے
@@ -160,6 +162,10 @@ ur:
             restricted_tags:
               label: ٹیگز
       scriptables:
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: ویب ہُک یو آر ایل
         auto_tag_topic:
           fields:
             tags:

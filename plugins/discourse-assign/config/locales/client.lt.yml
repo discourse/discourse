@@ -44,3 +44,6 @@ lt:
     edit_assignments_modal:
       topic: "Tema"
       post: "Įrašai"
+    discourse_workflows:
+      assign_topic:
+        topic_id: "Temos ID"

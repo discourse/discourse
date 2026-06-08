@@ -42,6 +42,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { parseAttributesString } from "discourse/lib/wrap-utils";
 import Category from "discourse/models/category";
 import Composer, {
+  CREATE_SHARED_DRAFT,
   CREATE_TOPIC,
   EDIT,
   NEW_PRIVATE_MESSAGE_KEY,
@@ -106,6 +107,7 @@ export function addComposerSaveErrorCallback(callback) {
 export default class ComposerService extends Service {
   @service appEvents;
   @service capabilities;
+  @service composerActionState;
   @service currentUser;
   @service dialog;
   @service keyValueStore;
@@ -223,6 +225,14 @@ export default class ComposerService extends Service {
   @computed("model.creatingTopic", "isStaffUser")
   get canUnlistTopic() {
     return this.model?.creatingTopic && this.isStaffUser;
+  }
+
+  @computed("model.action", "isStaffUser", "currentUser.trust_level")
+  get canToggleNoBump() {
+    return (
+      this.model?.action === Composer.REPLY &&
+      (this.isStaffUser || this.currentUser?.trust_level === 4)
+    );
   }
 
   @computed("replyingToWhisper", "model.whisper")
@@ -426,11 +436,6 @@ export default class ComposerService extends Service {
     return this.model?.editingPost && !this.model?.topic?.canEditTags;
   }
 
-  @computed("canWhisper", "replyingToWhisper")
-  get showWhisperToggle() {
-    return this.canWhisper && !this.replyingToWhisper;
-  }
-
   @computed("model.post")
   get replyingToWhisper() {
     return (
@@ -439,13 +444,23 @@ export default class ComposerService extends Service {
     );
   }
 
-  @computed("model.action", "isWhispering", "model.privateMessage")
+  @computed(
+    "model.action",
+    "isWhispering",
+    "model.privateMessage",
+    "model.category"
+  )
   get saveIcon() {
     if (this.isWhispering) {
       return "far-eye-slash";
     }
     if (this.model?.privateMessage && this.model?.action === Composer.REPLY) {
       return "envelope";
+    }
+
+    const custom = this.model?.customizationFor("saveIcon");
+    if (custom) {
+      return custom;
     }
 
     return SAVE_ICONS[this.model?.action];
@@ -496,6 +511,14 @@ export default class ComposerService extends Service {
   @computed("whisperer", "model.action")
   get canWhisper() {
     return this.whisperer && this.model?.action === Composer.REPLY;
+  }
+
+  @computed("canWhisper", "model.post.post_type", "site.post_types.whisper")
+  get canToggleWhisper() {
+    return (
+      this.canWhisper &&
+      this.model?.post?.post_type !== this.site.post_types?.whisper
+    );
   }
 
   _setupPopupMenuOption(option) {
@@ -1411,6 +1434,7 @@ export default class ComposerService extends Service {
         if (result.responseJson.route_to) {
           // TODO: await this:
           this.destroyDraft();
+          this.composerActionState.clear();
           if (result.responseJson.message) {
             return this.dialog.alert({
               message: result.responseJson.message,
@@ -1661,17 +1685,25 @@ export default class ComposerService extends Service {
 
   @action
   async openNewTopic({ title, body, category, tags, formTemplate } = {}) {
-    const readOnlyCategoryId = !category?.canCreateTopic ? category?.id : null;
+    const sharedDraftsCategoryId = this.site.shared_drafts_category_id;
+    const isSharedDraftCategory =
+      !!sharedDraftsCategoryId && category?.id === sharedDraftsCategoryId;
+    const categoryId = isSharedDraftCategory ? null : category?.id;
+    const readOnlyCategoryId =
+      !isSharedDraftCategory && !category?.canCreateTopic ? category?.id : null;
+
     tags = await this.filterTags(tags);
 
+    this.composerActionState.clear();
+
     return this.open({
-      prioritizedCategoryId: category?.id,
-      topicCategoryId: category?.id,
+      prioritizedCategoryId: categoryId,
+      topicCategoryId: categoryId,
       formTemplateId: formTemplate?.id,
       topicTitle: title,
       topicBody: body,
       topicTags: tags,
-      action: CREATE_TOPIC,
+      action: isSharedDraftCategory ? CREATE_SHARED_DRAFT : CREATE_TOPIC,
       draftKey: this.topicDraftKey,
       draftSequence: 0,
       locale: null,
@@ -1682,6 +1714,9 @@ export default class ComposerService extends Service {
   @action
   async openNewMessage({ title, body, recipients, hasGroups, tags }) {
     tags = await this.filterTags(tags);
+
+    this.composerActionState.clear();
+
     return this.open({
       action: Composer.PRIVATE_MESSAGE,
       recipients,
@@ -2052,6 +2087,8 @@ export default class ComposerService extends Service {
 
     // This is a temporary solution to reset the saved form template state while we don't store drafts
     this.set("formTemplateInitialValues", undefined);
+
+    this.composerActionState.clear();
   }
 
   @computed("model.action")

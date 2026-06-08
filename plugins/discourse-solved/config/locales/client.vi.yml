@@ -41,6 +41,8 @@ vi:
       move_post_cancel: "Hủy"
       confirm_solved_removal_confirm: "Xác nhận"
       confirm_solved_removal_cancel: "Hủy"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Câu hỏi của bạn đã được giải đáp chưa?
         description: "Hãy đánh dấu câu trả lời và giúp đỡ người khác bằng cách sử dụng nút \"Giải pháp\" bên dưới câu trả lời đúng."

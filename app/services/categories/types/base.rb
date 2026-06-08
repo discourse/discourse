@@ -10,7 +10,7 @@ module Categories
           "general_category_settings" => {
             "type" => "object",
             "additionalProperties" => {
-              "$ref" => "#/$defs/field_config",
+              "$ref" => "#/$defs/general_field_config",
             },
           },
           "site_settings" => {
@@ -28,8 +28,35 @@ module Categories
               "$ref" => "#/$defs/field_config",
             },
           },
+          "site_texts" => {
+            "type" => "object",
+            "additionalProperties" => {
+              "$ref" => "#/$defs/site_text_field_config",
+            },
+          },
         },
         "$defs" => {
+          "general_field_config" => {
+            "type" => "object",
+            "required" => %w[default type],
+            "additionalProperties" => false,
+            "properties" => {
+              "default" => true,
+              "type" => {
+                "type" => "string",
+                "minLength" => 1,
+              },
+              "required" => {
+                "type" => "boolean",
+              },
+              "show_on_create" => {
+                "type" => "boolean",
+              },
+              "show_on_edit" => {
+                "type" => "boolean",
+              },
+            },
+          },
           "field_config" => {
             "type" => "object",
             "required" => %w[default type label],
@@ -51,11 +78,39 @@ module Categories
               "description" => {
                 "type" => "string",
               },
+              "choices" => {
+                "type" => "array",
+              },
+              "required" => {
+                "type" => "boolean",
+              },
+              "depends_on" => {
+                "type" => "string",
+                "minLength" => 1,
+              },
               "show_on_create" => {
                 "type" => "boolean",
               },
               "show_on_edit" => {
                 "type" => "boolean",
+              },
+            },
+          },
+          "site_text_field_config" => {
+            "type" => "object",
+            "required" => %w[label],
+            "additionalProperties" => false,
+            "properties" => {
+              "label" => {
+                "type" => "string",
+                "minLength" => 1,
+              },
+              "description" => {
+                "type" => "string",
+              },
+              "depends_on" => {
+                "type" => "string",
+                "minLength" => 1,
               },
             },
           },
@@ -115,6 +170,16 @@ module Categories
           raise NotImplementedError
         end
 
+        # Returns the current per-category +category_settings+ values for
+        # the given category. Used by the serializer to preload the edit
+        # form with stored values instead of schema defaults.
+        #
+        # This SHOULD be overridden by category types that declare
+        # +category_settings+.
+        def read_category_settings(category)
+          {}
+        end
+
         # Returns a hash describing the configuration schema for this category type.
         # This schema drives both the UI (what settings are shown to admins in the
         # category creator) and the site-setting update allowlist.
@@ -168,6 +233,19 @@ module Categories
         #
         #     category_settings: {
         #       # Same structure as category_custom_fields above.
+        #     },
+        #
+        #     site_texts: {
+        #       # Fields backed by a translation override (site text), not stored
+        #       # on the category. Each key is the i18n key to edit. The value is
+        #       # a config Hash:
+        #       #   label:       (required) String — FormKit label shown in UI.
+        #       #   description: (optional) String — FormKit help text.
+        #       #   depends_on:  (optional) String — only show when this sibling
+        #       #                custom field / setting is truthy.
+        #       "js.solved.shared_issue.label" => {
+        #         label: "Shared issue label",
+        #       },
         #     },
         #   }
         #
@@ -242,8 +320,11 @@ module Categories
         #
         # This SHOULD NOT be overridden by category types.
         def configure_custom_fields(category, guardian:, configuration_values: {})
+          if configuration_values.is_a?(Hash)
+            configuration_values = configuration_values.symbolize_keys
+          end
           configuration_schema[:category_custom_fields]&.each do |field_name, config|
-            value = configuration_values.fetch(field_name.to_s, config[:default])
+            value = configuration_values.fetch(field_name.to_sym, config[:default])
             category.custom_fields[field_name.to_s] = value.to_s
           end
 
@@ -257,12 +338,15 @@ module Categories
         #
         # This SHOULD NOT be overridden by category types.
         def configure_site_settings(category, guardian:, configuration_values: {})
+          if configuration_values.is_a?(Hash)
+            configuration_values = configuration_values.symbolize_keys
+          end
           category_type_settings =
             configuration_schema[:site_settings]&.map do |setting_name, config|
               default_value = config.is_a?(Hash) ? config[:default] : config
               {
                 setting_name: setting_name.to_s,
-                value: configuration_values.fetch(setting_name.to_s, default_value),
+                value: configuration_values.fetch(setting_name.to_sym, default_value),
               }
             end
 
@@ -310,6 +394,7 @@ module Categories
             site_settings: [],
             category_settings: [],
             category_custom_fields: [],
+            site_texts: [],
           }
 
           schema[:general_category_settings]&.each do |setting_name, config|
@@ -327,9 +412,13 @@ module Categories
             if target_value.is_a?(Hash)
               default = target_value[:default]
               custom_label = target_value[:label]
+              custom_type = target_value[:type]
+              custom_choices = target_value[:choices]
             else
               default = target_value
               custom_label = nil
+              custom_type = nil
+              custom_choices = nil
             end
 
             meta = SiteSetting.setting_metadata_hash(setting_name)
@@ -338,8 +427,9 @@ module Categories
               key: setting_name.to_s,
               default:,
               current: SiteSetting.public_send(setting_name),
-              type: meta[:type],
+              type: custom_type || meta[:type],
               label: custom_label || meta[:humanized_name],
+              choices: custom_choices || meta[:choices],
               description: meta[:description],
               required: false,
               show_on_create: true,
@@ -358,6 +448,7 @@ module Categories
               type: config[:type].to_s,
               label: config[:label],
               subtype: config[:subtype]&.to_s,
+              choices: config[:choices],
               description: config[:description],
               required: config[:required],
               show_on_create: config[:show_on_create].nil? ? true : config[:show_on_create],
@@ -366,17 +457,38 @@ module Categories
           end
 
           schema[:category_custom_fields]&.each do |field_name, config|
-            entries[:category_custom_fields] << {
+            entry = {
               key: field_name.to_s,
               default: config[:default],
               type: config[:type].to_s,
               subtype: config[:subtype]&.to_s,
               label: config[:label],
               description: config[:description],
+              choices: config[:choices],
               required: config[:required],
               show_on_create: config[:show_on_create].nil? ? true : config[:show_on_create],
               show_on_edit: config[:show_on_edit].nil? ? true : config[:show_on_edit],
             }
+            entry[:depends_on] = config[:depends_on].to_s if config[:depends_on]
+            entries[:category_custom_fields] << entry
+          end
+
+          schema[:site_texts]&.each do |text_key, config|
+            entry = {
+              key: text_key.to_s,
+              # FormKit parses "." and "-" in field names as nested paths, so the
+              # form binds to this separator-free +name+ (already namespaced by
+              # the parent site_texts object) while +key+ stays the i18n key used
+              # by the site_texts API.
+              name: text_key.to_s.gsub(/\W/, "_"),
+              label: config[:label],
+              description: config[:description],
+              current: I18n.with_locale(SiteSetting.default_locale) { I18n.t(text_key) },
+              show_on_create: true,
+              show_on_edit: true,
+            }
+            entry[:depends_on] = config[:depends_on].to_s if config[:depends_on]
+            entries[:site_texts] << entry
           end
 
           entries

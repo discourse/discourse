@@ -66,13 +66,13 @@ class TagGroup < ActiveRecord::Base
 
   # TODO: long term we can cache this if TONs of tag groups exist
   def self.find_id_by_slug(slug)
-    self.pluck(:id, :name).each { |id, name| return id if Slug.for(name) == slug }
+    pluck(:id, :name).each { |id, name| return id if Slug.for(name) == slug }
     nil
   end
 
   # Same as Tag#find_by_name
   def self.find_by_name_insensitive(name)
-    self.find_by("lower(name) = ?", name.downcase)
+    find_by("lower(name) = ?", name.downcase)
   end
 
   def self.resolve_permissions(permissions)

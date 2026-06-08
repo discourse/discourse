@@ -23,7 +23,7 @@ export default class PostMetadataUserNotes extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <span class="user-notes-icon" {{on "click" this.showNotes}}>
       {{#if this.siteSettings.enable_emoji}}
         {{dEmoji "memo"}}

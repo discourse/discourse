@@ -234,12 +234,13 @@ export default class DModal extends Component {
     }
 
     // Prevent keyboard events from leaking to elements behind the modal.
-    // Allow events when focus is inside a float-kit portal (menu/tooltip)
-    // opened from this modal, since those render outside the modal DOM.
+    // Allow events when focus is inside another modal stacked above this one,
+    // or inside a float-kit portal (menu/tooltip) opened from this modal,
+    // since those render outside the modal DOM.
     if (
       !this.wrapperElement.contains(document.activeElement) &&
       !document.activeElement?.closest(
-        ".fk-d-menu, .fk-d-menu-modal, .fk-d-tooltip"
+        ".d-modal, .fk-d-menu, .fk-d-menu-modal, .fk-d-tooltip"
       )
     ) {
       event.stopPropagation();
@@ -325,7 +326,7 @@ export default class DModal extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
 
     <DConditionalInElement
       @element={{this.modal.containerElement}}
@@ -337,9 +338,7 @@ export default class DModal extends Component {
       {{/unless}}
       <this.dynamicElement
         class={{dConcatClass
-          "modal"
-          "d-modal"
-          (if @inline "-inline")
+          "modal d-modal"
           (if this.animating "is-animating")
         }}
         data-keyboard="false"
@@ -449,6 +448,10 @@ export default class DModal extends Component {
             {{/if}}
           </div>
 
+          {{#if (and (has-block "aboveFooter") (not @hideFooter))}}
+            {{yield to="aboveFooter"}}
+          {{/if}}
+
           {{#if (and (has-block "footer") (not @hideFooter))}}
             <div class="d-modal__footer">
               {{yield to="footer"}}
@@ -459,6 +462,7 @@ export default class DModal extends Component {
         </div>
       </this.dynamicElement>
       {{#unless @inline}}
+        {{! eslint-disable ember/template-no-pointer-down-event-binding }}
         <div
           class="d-modal__backdrop"
           {{dSwipe
@@ -467,7 +471,6 @@ export default class DModal extends Component {
             enabled=this.dismissable
           }}
           {{on "click" this.handleWrapperClick}}
-          {{! template-lint-disable no-pointer-down-event-binding }}
           {{on "pointerdown" this.handleWrapperPointerDown}}
         ></div>
       {{/unless}}

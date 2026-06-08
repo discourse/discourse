@@ -455,7 +455,7 @@ describe "About page" do
 
       about_page.edit_link.click
 
-      expect(current_url).to end_with("/admin/config/about")
+      expect(page).to have_current_path("/admin/config/about")
     end
 
     it "doesn't appear for moderators" do

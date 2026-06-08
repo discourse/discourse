@@ -3,7 +3,7 @@
 describe DiscourseAi::Configuration::Module do
   fab!(:fake_plugin) do
     plugin = Plugin::Instance.new
-    plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+    plugin.path = "#{Rails.root.join("spec/fixtures/plugins/my_plugin/plugin.rb")}"
     plugin
   end
 

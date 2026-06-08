@@ -6,7 +6,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module(
-  "Integration | Component | select-kit/form-template-chooser",
+  "Integration | Component | SelectKit | FormTemplateChooser",
   function (hooks) {
     setupRenderingTest(hooks);
 

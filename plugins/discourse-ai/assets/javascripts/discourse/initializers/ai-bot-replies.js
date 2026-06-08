@@ -7,7 +7,7 @@ import AiCancelStreamingButton from "../components/post-menu/ai-cancel-streaming
 import AiDebugButton from "../components/post-menu/ai-debug-button";
 import AiRetryStreamingButton from "../components/post-menu/ai-retry-streaming-button";
 import AiShareButton from "../components/post-menu/ai-share-button";
-import { isGPTBot, showShareConversationModal } from "../lib/ai-bot-helper";
+import { isGPTBot } from "../lib/ai-bot-helper";
 import {
   cleanupStreamingData,
   streamPostText,
@@ -38,6 +38,34 @@ function attachHeaderIcon(api) {
 
 function initializeAIBotReplies(api) {
   const siteSettings = api.container.lookup("service:site-settings");
+  const appEvents = api.container.lookup("service:app-events");
+
+  function scrollUserPostToTopWhenReady(userPostNumber) {
+    let cancelled = false;
+    const cancel = () => {
+      cancelled = true;
+      appEvents.off("page:changed", cancel);
+    };
+    appEvents.on("page:changed", cancel);
+
+    let attempts = 0;
+    function tryScroll() {
+      if (cancelled) {
+        return;
+      }
+      const el = document.querySelector(`#post_${userPostNumber}`);
+      if (el) {
+        appEvents.off("page:changed", cancel);
+        const top = el.getBoundingClientRect().top + window.scrollY - 10;
+        window.scrollTo({ top: Math.max(0, top) });
+      } else if (++attempts < 60) {
+        requestAnimationFrame(tryScroll);
+      } else {
+        appEvents.off("page:changed", cancel);
+      }
+    }
+    requestAnimationFrame(tryScroll);
+  }
 
   initializePauseButton(api);
 
@@ -76,8 +104,21 @@ function initializeAIBotReplies(api) {
 
       if (data?.done) {
         streamingState?.markFinishedAfterRender(topicId, data?.post_id);
+        if (siteSettings.ai_bot_enable_docked_composer) {
+          appEvents.trigger("discourse-ai:bot-reply-finished", {
+            topicId,
+            postId: data?.post_id,
+          });
+        }
       } else {
+        const isNewStream = !streamingState?.isStreamingForTopic(topicId);
         streamingState?.markStarted(topicId, data?.post_id);
+        if (isNewStream && siteSettings.ai_bot_enable_docked_composer) {
+          appEvents.trigger("discourse-ai:bot-reply-started", {
+            topicId,
+            postId: data?.post_id,
+          });
+        }
       }
 
       streamPostText(this.model.postStream, data);
@@ -121,6 +162,12 @@ function initializeAIBotReplies(api) {
       this.messageBus.unsubscribe("discourse-ai/ai-bot/topic/*");
       this._super();
     },
+  });
+
+  api.onAppEvent("discourse-ai:post-submitted", ({ userPostNumber }) => {
+    if (siteSettings.ai_bot_enable_docked_composer) {
+      scrollUserPostToTopWhenReady(userPostNumber);
+    }
   });
 
   // When a user triggers a reply on a bot PM (via the `r` shortcut, the
@@ -217,26 +264,20 @@ function initializeShareButton(api) {
   );
 }
 
-function initializeShareTopicButton(api) {
-  const modal = api.container.lookup("service:modal");
-  const currentUser = api.container.lookup("service:current-user");
+function initializeFooterButtonsVisibility(api) {
+  const siteSettings = api.container.lookup("service:site-settings");
 
-  api.registerTopicFooterButton({
-    id: "share-ai-conversation",
-    icon: "share-nodes",
-    label: "discourse_ai.ai_bot.share_ai_conversation.name",
-    title: "discourse_ai.ai_bot.share_ai_conversation.title",
-    action() {
-      showShareConversationModal(modal, this.topic.id);
-    },
-    classNames: ["share-ai-conversation-button"],
-    dependentKeys: ["topic.ai_agent_name"],
-    displayed() {
-      return (
-        currentUser?.can_share_ai_bot_conversations && this.topic.ai_agent_name
-      );
-    },
-  });
+  api.registerValueTransformer(
+    "topic-show-footer-buttons",
+    ({ value, context: { topic } }) => {
+      // On AI bot PMs the docked composer replaces the topic footer, so its
+      // buttons (reply, admin wrench, etc.) are redundant — skip rendering it.
+      if (siteSettings.ai_bot_enable_docked_composer && topic?.is_bot_pm) {
+        return false;
+      }
+      return value;
+    }
+  );
 }
 
 export default {
@@ -254,7 +295,7 @@ export default {
         initializeAgentDecorator(api);
         initializeDebugButton(api, container);
         initializeShareButton(api, container);
-        initializeShareTopicButton(api, container);
+        initializeFooterButtonsVisibility(api);
         initializeRetryButton(api);
       });
     }

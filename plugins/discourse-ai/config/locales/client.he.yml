@@ -219,8 +219,7 @@ he:
           name: "בוט"
           description: "צ׳אט בוט שיכול לענות על שאלות ולסייע למשתמשים בהודעות אישיות, בפורום ובצ׳אט"
         nav:
-          configured: "מוגדר"
-          unconfigured: "לא מוגדר"
+          enabled: "פעיל"
         filters:
           all: "הכול"
           no_results: "לא נמצאו יכולות שתואמות למסננים שלך."
@@ -885,6 +884,7 @@ he:
           last_30_days: "30 הימים האחרונים"
           upload_files: "העלאת קבצים"
           uploads_in_progress: "לא ניתן להגיש תוך כדי שמתבצעות העלאות"
+          editing_post: "רשומה נערכת"
       sentiments:
         dashboard:
           title: "רגש"

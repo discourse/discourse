@@ -23,3 +23,65 @@ export function isNumericColumn(rows, colIndex) {
   }
   return false;
 }
+
+// Picks the view to show when the user hasn't expressed a preference. A chart
+// is only a good default when every non-label column can be plotted; if
+// charting would silently drop columns (e.g. "user, username, reason, sum"),
+// the table is more honest. Users can still toggle to the chart.
+export function defaultView(content) {
+  const ability = chartability(content);
+  if (!ability.chartable || ability.ignoredColumns.length > 0) {
+    return "table";
+  }
+  return "chart";
+}
+
+export function chartability(content) {
+  const { rows, columns, colrender = {} } = content ?? {};
+  if (!rows?.length) {
+    return {
+      chartable: false,
+      numericIndices: [],
+      ignoredColumns: [],
+      reason: "no-rows",
+    };
+  }
+  if (!columns?.length || columns.length < 2) {
+    return {
+      chartable: false,
+      numericIndices: [],
+      ignoredColumns: [],
+      reason: "no-numeric",
+    };
+  }
+
+  const numericIndices = [];
+  const ignoredColumns = [];
+  for (let i = 1; i < columns.length; i++) {
+    if (colrender[i]) {
+      ignoredColumns.push(columns[i]);
+      continue;
+    }
+    if (typeof rows[0][i] === "number" || isNumericColumn(rows, i)) {
+      numericIndices.push(i);
+    } else {
+      ignoredColumns.push(columns[i]);
+    }
+  }
+
+  if (numericIndices.length === 0) {
+    return {
+      chartable: false,
+      numericIndices,
+      ignoredColumns,
+      reason: "no-numeric",
+    };
+  }
+
+  return {
+    chartable: true,
+    numericIndices,
+    ignoredColumns,
+    reason: ignoredColumns.length ? "chartable-with-ignored" : "chartable",
+  };
+}

@@ -70,6 +70,18 @@ module PageObjects
         has_no_css?(".chat-skeleton")
       end
 
+      # Scrolls to the top to load the previous page of messages.
+      def scroll_to_top
+        3.times do
+          page.execute_script(<<~JS)
+            const scroller = document.querySelector("#{PageObjects::Components::Chat::Messages::SELECTOR}");
+            scroller.scrollTop = -scroller.scrollHeight;
+            scroller.dispatchEvent(new Event("scroll"));
+          JS
+          sleep 0.1
+        end
+      end
+
       def has_selection_management?
         has_css?(".chat-selection-management")
       end

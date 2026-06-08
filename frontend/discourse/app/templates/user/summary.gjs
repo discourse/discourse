@@ -208,7 +208,7 @@ export default <template>
           <ul>
             {{#each @controller.model.links as |link|}}
               <li>
-                {{! template-lint-disable link-rel-noopener }}
+                {{! eslint-disable ember/template-link-rel-noopener }}
                 <a
                   class="domain"
                   href={{link.url}}
@@ -223,7 +223,7 @@ export default <template>
                 >
                   {{shortenUrl link.url}}
                 </a>
-                {{! template-lint-enable link-rel-noopener }}
+                {{! eslint-enable ember/template-link-rel-noopener }}
                 <br />
 
                 <a href={{link.post_url}}>

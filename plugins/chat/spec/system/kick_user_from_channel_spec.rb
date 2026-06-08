@@ -52,7 +52,7 @@ describe "Kick user from chat channel" do
 
     it "removes it from their sidebar and does not redirect" do
       publish_kick
-      expect(sidebar_page.channels_section).not_to have_css(
+      expect(sidebar_page.channels_section).to have_no_css(
         ".sidebar-section-link.channel-#{channel_1.id}",
       )
     end

@@ -19,9 +19,9 @@ register_asset "stylesheets/common/ai-blinking-animation.scss"
 register_asset "stylesheets/common/ai-user-settings.scss"
 register_asset "stylesheets/common/ai-features.scss"
 
-register_asset "stylesheets/admin/ai-features-editor.scss"
+register_asset "stylesheets/admin/ai-features-editor.scss", :admin
 
-register_asset "stylesheets/modules/translation/common/admin-translations.scss"
+register_asset "stylesheets/modules/translation/admin/translations.scss", :admin
 
 register_asset "stylesheets/modules/ai-helper/common/ai-helper.scss"
 register_asset "stylesheets/modules/ai-helper/desktop/ai-helper-fk-modals.scss", :desktop
@@ -101,9 +101,16 @@ after_initialize do
   require_relative "discourse_automation/llm_agent_triage"
   require_relative "discourse_automation/llm_tagger"
 
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      require_relative "discourse_workflows/nodes/ai_agent/v1"
+      DiscourseWorkflows::Nodes::AiAgent::V1
+    end
+  end
+
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })
 
-  register_seedfu_fixtures(Rails.root.join("plugins", "discourse-ai", "db", "fixtures", "agents"))
+  register_seedfu_fixtures(Rails.root.join("plugins/discourse-ai/db/fixtures/agents"))
 
   [
     DiscourseAi::Embeddings::EntryPoint.new,
@@ -140,6 +147,11 @@ after_initialize do
     Guardian.prepend DiscourseAi::GuardianExtensions
     Topic.prepend DiscourseAi::TopicExtensions
     Post.prepend DiscourseAi::PostExtensions
+  end
+
+  # AI bots reply via `skip_guardian: true`, so the reachability warning is misleading.
+  register_modifier(:composer_mention_user_reason) do |reason, user|
+    DiscourseAi::AiBot::EntryPoint.all_bot_ids.include?(user.id) ? nil : reason
   end
 
   register_modifier(:post_should_secure_uploads?) do |_, _, topic|

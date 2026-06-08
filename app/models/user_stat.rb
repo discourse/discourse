@@ -211,7 +211,7 @@ class UserStat < ActiveRecord::Base
   end
 
   def update_distinct_badge_count
-    self.class.update_distinct_badge_count([self.user_id])
+    self.class.update_distinct_badge_count([user_id])
   end
 
   def self.update_draft_count(user_id = nil)
@@ -252,12 +252,13 @@ class UserStat < ActiveRecord::Base
       AND topics.user_id <> posts.user_id
       AND posts.deleted_at IS NULL AND topics.deleted_at IS NULL
       AND topics.archetype <> 'private_message'
+      AND posts.post_type <> #{Post.types[:small_action]}
       #{start_time.nil? ? "" : "AND posts.created_at > ?"}
     SQL
     if start_time.nil?
-      DB.query_single(sql, self.user_id).first
+      DB.query_single(sql, user_id).first
     else
-      DB.query_single(sql, self.user_id, start_time).first
+      DB.query_single(sql, user_id, start_time).first
     end
   end
 
@@ -313,7 +314,7 @@ class UserStat < ActiveRecord::Base
   protected
 
   def trigger_badges
-    BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: self.user)
+    BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: user)
   end
 end
 

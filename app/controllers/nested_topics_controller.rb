@@ -1,13 +1,17 @@
 # frozen_string_literal: true
 
 class NestedTopicsController < ApplicationController
+  include EmbedModeHandler
+
   skip_before_action :check_xhr, only: %i[show context]
 
   before_action :ensure_nested_replies_enabled
   before_action :find_topic_with_topic_view, only: %i[show children context]
   before_action :find_topic, only: %i[pin toggle activity]
   before_action :ensure_not_pm
+  before_action :set_embed_class, only: %i[show context]
   after_action :track_visit, only: %i[show context]
+  after_action :allow_embed_mode, only: %i[show context]
 
   # GET /n/:slug/:topic_id (HTML + JSON)
   # HTML: preloads initial data into the Ember shell (crawlers redirect to flat view)
@@ -222,9 +226,35 @@ class NestedTopicsController < ApplicationController
     user_id = current_user&.id
     ip = request.remote_ip
 
-    TopicsController.defer_track_visit(topic_id, user_id) if should_track_visit?
+    if should_track_visit?
+      TopicsController.defer_track_visit(topic_id, user_id)
+      self.class.defer_mark_caught_up(topic_id, user_id) if @topic.nested_view?
+    end
 
     TopicsController.defer_topic_view(topic_id, ip, user_id)
+  end
+
+  # Screen-tracking only advances last_read for posts the viewport renders,
+  # so collapsed/hidden replies leave a nested topic stuck unread in the
+  # sidebar. Treat the visit itself as catching up.
+  def self.defer_mark_caught_up(topic_id, user_id)
+    Scheduler::Defer.later "Nested Topic Catch Up" do
+      user = User.find_by(id: user_id)
+      topic = Topic.find_by(id: topic_id)
+      next if user.blank? || topic.blank?
+      next unless topic.nested_view?
+
+      highest =
+        if user.whisperer?
+          [topic.highest_staff_post_number.to_i, topic.highest_post_number.to_i].max
+        else
+          topic.highest_post_number.to_i
+        end
+      next if highest < 1
+
+      TopicUser.update_last_read(user, topic_id, highest, 0, 0)
+      Notification.mark_posts_read(user, topic_id, (1..highest).to_a)
+    end
   end
 
   def should_track_visit?

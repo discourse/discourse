@@ -43,6 +43,11 @@ module PageObjects
         self
       end
 
+      def open_composer_actions_new
+        find(".composer-actions-trigger").click
+        self
+      end
+
       def click_toolbar_button(button_class)
         find(".d-editor-button-bar button.#{button_class}").click
         self
@@ -122,8 +127,17 @@ module PageObjects
         !actions.include?(action)
       end
 
+      def has_no_action_id?(action_id)
+        has_no_css?(".composer-actions-dropdown [data-action-id='#{action_id}']")
+      end
+
       def select_action(action)
         find(action(action)).click
+        self
+      end
+
+      def select_action_by_id(action_id)
+        find(".composer-actions-dropdown [data-action-id='#{action_id}']").click
         self
       end
 
@@ -199,6 +213,10 @@ module PageObjects
 
       def has_no_emoji_autocomplete?
         has_no_css?(AUTOCOMPLETE_MENU)
+      end
+
+      def has_emoji_autocomplete_selected?(index)
+        has_css?("#{AUTOCOMPLETE_MENU} ul li:nth-child(#{index}) a.selected")
       end
 
       EMOJI_SUGGESTION_SELECTOR = "#{AUTOCOMPLETE_MENU} .emoji-shortname"

@@ -2,12 +2,14 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import round from "discourse/lib/round";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -51,6 +53,7 @@ export default class PollComponent extends Component {
   @tracked
   showResults =
     !(this.poll.results === ON_CLOSE && !this.closed) &&
+    !(this.staffOnly && !this.isStaff) &&
     (this.hasSavedVote ||
       (this.topicArchived && !this.staffOnly) ||
       (this.closed && !this.staffOnly));
@@ -320,13 +323,28 @@ export default class PollComponent extends Component {
   }
 
   @action
-  toggleOption(option, rank = 0) {
+  async toggleOption(option, rank = 0) {
     if (this.closed) {
       return;
     }
 
     if (!this.currentUser) {
-      // unlikely, handled by template logic
+      // Archived topics reject votes server-side, so don't queue them.
+      // Closed topics still accept votes from regular users, so let anon
+      // queue and replay after login.
+      if (this.post?.topic?.archived) {
+        return;
+      }
+      if (!this.isMultiple && !this.isRankedChoice) {
+        return deferAnonymousAction(this, "vote_poll", {
+          post_id: this.post.id,
+          poll_name: this.poll.name,
+          options: [option.id],
+        });
+      }
+      // Multi-choice / ranked-choice anonymous votes can't be saved on a
+      // single click since the selection isn't complete until "Cast Votes".
+      getOwner(this).lookup("route:application").send("showLogin");
       return;
     }
 

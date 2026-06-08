@@ -299,6 +299,47 @@ RSpec.describe PostValidator do
     end
   end
 
+  describe "max_quotes_validator" do
+    before { SiteSetting.max_quotes_per_post = 3 }
+
+    it "is invalid when the post has more quote openers than the limit" do
+      post.raw = ([%([quote="user, post:1, topic:1"]), "[/quote]"] * 4).join("\n")
+      validator.max_quotes_validator(post)
+      expect(post.errors[:base]).to be_present
+    end
+
+    it "is valid when the post has quote openers at or below the limit" do
+      post.raw = ([%([quote="user, post:1, topic:1"]), "[/quote]"] * 3).join("\n")
+      validator.max_quotes_validator(post)
+      expect(post.errors[:base]).to be_blank
+    end
+
+    it "counts unbalanced openers, not balanced quote pairs" do
+      post.raw = %([quote="a, post:1, topic:1"]\n) * 4
+      validator.max_quotes_validator(post)
+      expect(post.errors[:base]).to be_present
+    end
+
+    it "counts plain [quote] openers too" do
+      post.raw = "[quote]\n" * 4
+      validator.max_quotes_validator(post)
+      expect(post.errors[:base]).to be_present
+    end
+
+    it "is case-insensitive" do
+      post.raw = "[QUOTE=foo]\n" * 4
+      validator.max_quotes_validator(post)
+      expect(post.errors[:base]).to be_present
+    end
+
+    it "is disabled when max_quotes_per_post is 0" do
+      SiteSetting.max_quotes_per_post = 0
+      post.raw = %([quote="a, post:1, topic:1"]\n) * 50
+      validator.max_quotes_validator(post)
+      expect(post.errors[:base]).to be_blank
+    end
+  end
+
   describe "max_embedded_media_validator" do
     fab!(:new_user) { Fabricate(:newuser, refresh_auto_groups: true) }
 

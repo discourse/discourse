@@ -7,10 +7,7 @@ describe "Admin Site Texts Page" do
 
   before { sign_in(admin) }
 
-  after do
-    TranslationOverride.delete_all
-    I18n.reload!
-  end
+  after { I18n.reload! }
 
   it "can search for client text using the default locale" do
     site_texts_page.visit
@@ -126,7 +123,7 @@ describe "Admin Site Texts Page" do
     site_texts_page.visit
     site_texts_page.click_replace_text_button
 
-    expect(page.all(".modal label span").map(&:text)).to eq(["Uncategorized"])
+    expect(page.all(".d-modal label span").map(&:text)).to eq(["Uncategorized"])
   end
 
   it "can load more results" do

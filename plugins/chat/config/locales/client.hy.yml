@@ -170,3 +170,10 @@ hy:
           fields:
             message:
               label: Նոր Հաղորդագրություն
+    discourse_workflows:
+      send_chat_message:
+        channel_id: "Ալիք"
+        message: "Ուղարկել"
+      chat_approval:
+        message: "Ուղարկել"
+        channel_id: "Ալիք"

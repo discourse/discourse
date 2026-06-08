@@ -21,6 +21,10 @@
 }
 
 .header-topic-title-suffix-outlet {
+  &.event-date-container {
+    vertical-align: text-bottom;
+  }
+
   .event-date {
     display: inline-flex;
     align-items: center;

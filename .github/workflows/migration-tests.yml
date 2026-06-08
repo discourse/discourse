@@ -21,6 +21,28 @@ permissions:
   contents: read
 
 jobs:
+  gems:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    name: Gems
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+
+      - name: RSpec (isolated, no Rails)
+        run: |
+          for gem in core tooling converters importer; do
+            echo "== migrations-$gem =="
+            (cd "migrations/$gem" && bundle install --jobs $(($(nproc) - 1)) && bundle exec rspec --tag ~rails)
+          done
+
   tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: Tests
@@ -72,54 +94,21 @@ jobs:
       - name: pnpm install
         run: pnpm install --frozen-lockfile
 
-      - name: Get CPU cores
-        id: cpu-info
-        run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
-
-      - name: Fetch app state cache
-        uses: actions/cache@v5
-        id: app-cache
-        with:
-          path: tmp/app-cache
-          key: >-
-            ${{ runner.os }}-
-            ${{ steps.cpu-info.outputs.cpu-cores }}-
-            ${{ hashFiles('.github/workflows/migration-tests.yml') }}-
-            ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
-            ${{ hashFiles('config/environments/test.rb') }}
-
-      - name: Restore database from cache
-        if: steps.app-cache.outputs.cache-hit == 'true'
-        run: script/silence_successful_output psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
-
-      - name: Restore uploads from cache
-        if: steps.app-cache.outputs.cache-hit == 'true'
-        run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
-
       - name: Create and migrate database
-        if: steps.app-cache.outputs.cache-hit != 'true'
         run: |
           bin/rake db:create
           script/silence_successful_output bin/rake db:migrate
 
-      - name: Dump database for cache
-        if: steps.app-cache.outputs.cache-hit != 'true'
-        run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
-
-      - name: Dump uploads for cache
-        if: steps.app-cache.outputs.cache-hit != 'true'
-        run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
-
       - name: Validate IntermediateDB schema
         run: |
           # Show structured differences between DSL config and database
-          migrations/bin/cli schema diff --db=intermediate_db || true
+          migrations/bin/disco schema diff --db intermediate_db || true
 
           # Regenerate schema from DSL config
-          migrations/bin/cli schema generate --db=intermediate_db
+          migrations/bin/disco schema generate --db intermediate_db
 
           # Check if generated output matches what's committed
-          if [ ! -z "$(git status --porcelain migrations/db/intermediate_db_schema/ migrations/lib/database/intermediate_db/ migrations/lib/database/intermediate_db/enums/)" ]; then
+          if [ ! -z "$(git status --porcelain migrations/core/db/intermediate_db_schema/ migrations/core/lib/migrations/database/intermediate_db/)" ]; then
             echo ""
             echo "=========================================="
             echo "IntermediateDB schema is not up to date."
@@ -130,19 +119,25 @@ jobs:
             echo "structure changed without regenerating."
             echo ""
             echo "To fix:"
-            echo "  1. Run: migrations/bin/cli schema diff"
+            echo "  1. Run: migrations/bin/disco schema diff"
             echo "     to see what changed between config and database"
-            echo "  2. Update config files in migrations/config/schema/intermediate_db/"
-            echo "     - New tables: migrations/bin/cli schema add <table>"
-            echo "     - Ignore tables: migrations/bin/cli schema ignore <table> --reason '...'"
+            echo "  2. Update config files in migrations/tooling/config/schema/intermediate_db/"
+            echo "     - New tables: migrations/bin/disco schema add <table>"
+            echo "     - Ignore tables: migrations/bin/disco schema ignore <table> --reason '...'"
             echo "     - New columns: add to the table's include list or ignore with reason"
-            echo "  3. Run: migrations/bin/cli schema generate"
+            echo "  3. Run: migrations/bin/disco schema generate"
             echo "  4. Commit the updated config and generated files"
             echo ""
             echo "Generated file diff:"
-            git -c color.ui=always diff -- migrations/db/intermediate_db_schema/ migrations/lib/database/intermediate_db/ migrations/lib/database/intermediate_db/enums/
+            git -c color.ui=always diff -- migrations/core/db/intermediate_db_schema/ migrations/core/lib/migrations/database/intermediate_db/
             exit 1
           fi
 
-      - name: RSpec
-        run: bin/rspec --default-path migrations/spec
+      - name: RSpec (Rails integration)
+        env:
+          MIGRATIONS_RAILS: "1"
+        run: |
+          for gem in core tooling converters importer; do
+            echo "== migrations-$gem (Rails integration) =="
+            (cd "migrations/$gem" && BUNDLE_GEMFILE="$GITHUB_WORKSPACE/Gemfile" bundle exec rspec --tag rails)
+          done

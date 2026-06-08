@@ -49,15 +49,16 @@ class UserAvatarsController < ApplicationController
     params.require(:version)
     params.require(:size)
 
+    # Don't try to proxy avatars in tests. The timeout could block the single worker. (QUnit case)
+    return render_blank if disable_proxy?
+
     hijack do
-      begin
-        proxy_avatar(
-          "https://avatars.discourse-cdn.com/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png",
-          Time.new(1990, 01, 01),
-        )
-      rescue OpenURI::HTTPError
-        render_blank
-      end
+      proxy_avatar(
+        "https://avatars.discourse-cdn.com/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png",
+        Time.new(1990, 01, 01),
+      )
+    rescue OpenURI::HTTPError
+      render_blank
     end
   end
 
@@ -218,15 +219,14 @@ class UserAvatarsController < ApplicationController
     send_file path, disposition: nil
   end
 
-  protected
-
-  # consider removal of hacks some time in 2019
-
   def get_optimized_image(upload, size)
     return if !upload
     return upload if upload.extension == "svg"
 
     upload.get_optimized_image(size, size)
-    # TODO decide if we want to detach here
+  end
+
+  def disable_proxy?
+    Rails.env.test?
   end
 end

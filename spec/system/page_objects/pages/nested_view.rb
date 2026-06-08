@@ -3,8 +3,10 @@
 module PageObjects
   module Pages
     class NestedView < PageObjects::Pages::Base
-      def visit_nested(topic)
-        page.visit("/n/#{topic.slug}/#{topic.id}")
+      def visit_nested(topic, query: nil)
+        url = "/n/#{topic.slug}/#{topic.id}"
+        url += "?#{query}" if query
+        page.visit(url)
         self
       end
 
@@ -60,18 +62,6 @@ module PageObjects
         has_css?(".nested-context-view")
       end
 
-      def has_view_full_thread_link?
-        has_css?(".nested-context-view__full-thread")
-      end
-
-      def has_view_parent_context_link?
-        has_css?(".nested-context-view__parent-context")
-      end
-
-      def has_no_view_parent_context_link?
-        has_no_css?(".nested-context-view__parent-context")
-      end
-
       # ── Post assertions ───────────────────────────────────────────
 
       def has_post_at_depth?(post, depth:)
@@ -80,6 +70,10 @@ module PageObjects
 
       def has_post?(post)
         has_css?("[data-post-number='#{post.post_number}']")
+      end
+
+      def has_post_text?(text)
+        has_css?(".nested-post__article", text: text)
       end
 
       def has_no_post?(post)
@@ -126,59 +120,90 @@ module PageObjects
         has_no_css?("[data-post-number='#{post.post_number}'] .post-action-menu__show-replies")
       end
 
+      def has_mobile_focus?
+        has_css?(".nested-view__mobile-focus")
+      end
+
+      def has_no_mobile_focus?
+        has_no_css?(".nested-view__mobile-focus")
+      end
+
+      def has_mobile_ancestor?(post)
+        has_css?(
+          "[data-test-nested-mobile-ancestor='#{post.post_number}']",
+          text: post.user.username,
+        )
+      end
+
+      def has_no_mobile_ancestor?(post)
+        has_no_css?("[data-test-nested-mobile-ancestor='#{post.post_number}']")
+      end
+
+      def has_no_mobile_ancestor_user_card_trigger?(post)
+        has_no_css?("[data-test-nested-mobile-ancestor='#{post.post_number}'] [data-user-card]")
+      end
+
+      def post_viewport_top(post)
+        page.evaluate_script(<<~JS)
+          document
+            .querySelector("[data-post-number='#{post.post_number}']")
+            .closest(".nested-post")
+            .getBoundingClientRect()
+            .top
+        JS
+      end
+
+      def mobile_ancestor_viewport_top(post)
+        page.evaluate_script(<<~JS)
+          document
+            .querySelector("[data-test-nested-mobile-ancestor='#{post.post_number}']")
+            .getBoundingClientRect()
+            .top
+        JS
+      end
+
       def has_depth_line_for?(post)
-        has_css?(wrapper_selector(post, ".nested-post__gutter .nested-post__depth-line"))
+        has_css?(depth_line_selector(post))
       end
 
       def has_no_depth_line_for?(post)
-        has_no_css?(wrapper_selector(post, ".nested-post__gutter .nested-post__depth-line"))
+        has_no_css?(depth_line_selector(post))
+      end
+
+      def has_leaf_depth_line_for?(post)
+        has_css?(leaf_depth_line_selector(post))
+      end
+
+      def has_no_leaf_depth_line_for?(post)
+        has_no_css?(leaf_depth_line_selector(post))
       end
 
       def has_children_visible_for?(post)
-        has_css?(wrapper_selector(post, ".nested-post-children"))
+        has_css?(wrapper_selector(post, "> .nested-post__main > .nested-post-children"))
       end
 
       def has_no_children_visible_for?(post)
-        has_no_css?(wrapper_selector(post, ".nested-post-children"))
+        has_no_css?(wrapper_selector(post, "> .nested-post__main > .nested-post-children"))
       end
 
       def has_collapsed_bar_for?(post)
-        has_css?(wrapper_selector(post, ".nested-post__collapsed-bar"))
+        has_css?(wrapper_selector(post, "> .nested-post__main > .nested-post__collapsed-bar"))
       end
 
       def has_no_collapsed_bar_for?(post)
-        has_no_css?(wrapper_selector(post, ".nested-post__collapsed-bar"))
+        has_no_css?(wrapper_selector(post, "> .nested-post__main > .nested-post__collapsed-bar"))
       end
 
       def has_post_content_visible_for?(post)
-        has_css?(wrapper_selector(post, ".nested-post__article"))
+        has_css?(wrapper_selector(post, "> .nested-post__main > .nested-post__article"))
       end
 
       def has_no_post_content_visible_for?(post)
-        has_no_css?(wrapper_selector(post, ".nested-post__article"))
-      end
-
-      def has_flat_view_link?
-        has_css?(".nested-view__flat-link")
-      end
-
-      def has_no_flat_view_link?
-        has_no_css?(".nested-view__flat-link")
-      end
-
-      def has_view_as_nested_link?
-        has_css?(".nested-view-link")
-      end
-
-      def has_no_view_as_nested_link?
-        has_no_css?(".nested-view-link")
+        has_no_css?(wrapper_selector(post, "> .nested-post__main > .nested-post__article"))
       end
 
       def has_sort_active?(sort)
-        has_css?(
-          ".nested-sort-selector button.active",
-          text: I18n.t("js.nested_replies.sort.#{sort}"),
-        )
+        has_css?(".nested-sort-selector__trigger", text: I18n.t("js.nested_replies.sort.#{sort}"))
       end
 
       def has_op_post?
@@ -197,12 +222,46 @@ module PageObjects
         has_no_css?(".edit-topic-title")
       end
 
+      def has_topic_title_in_site_header?(topic)
+        has_css?(
+          "header.d-header .header-title .topic-link[data-topic-id='#{topic.id}']",
+          text: topic.title,
+        )
+      end
+
+      def has_no_topic_title_in_site_header?(topic)
+        has_no_css?(
+          "header.d-header .header-title .topic-link[data-topic-id='#{topic.id}']",
+          text: topic.title,
+        )
+      end
+
       def has_topic_map?
-        has_css?(".nested-view__topic-map .topic-map__contents")
+        has_css?(".nested-view__op > .nested-view__topic-map .topic-map__contents")
       end
 
       def has_no_top_replies_button?
-        has_no_css?(".nested-view__topic-map .top-replies")
+        has_no_css?(".nested-view__op > .nested-view__topic-map .top-replies")
+      end
+
+      def has_topic_actions_above_controls?
+        has_css?(".nested-view__topic-actions + .nested-view__controls")
+      end
+
+      def has_share_topic_action?
+        has_css?(".nested-view__topic-actions #topic-footer-button-share-and-invite")
+      end
+
+      def has_bookmark_topic_action?
+        has_css?(".nested-view__topic-actions .bookmark-menu__trigger")
+      end
+
+      def has_flag_topic_action?
+        has_css?(".nested-view__topic-actions #topic-footer-button-flag")
+      end
+
+      def has_no_topic_action_reply_button?
+        has_no_css?(".nested-view__topic-actions .create")
       end
 
       def has_floating_reply_button?
@@ -272,6 +331,45 @@ module PageObjects
         self
       end
 
+      def click_replies_toggle(post)
+        find("[data-post-number='#{post.post_number}'] .nested-post__expand-replies").click
+        self
+      end
+
+      def trigger_replies_toggle(post)
+        page.evaluate_script(<<~JS)
+          (() => {
+            const button = document.querySelector(
+              "[data-post-number='#{post.post_number}'] .nested-post__expand-replies"
+            );
+            document
+              .querySelectorAll(".nested-view__roots .nested-post [data-post-number]")
+              .forEach((article) =>
+                (article.closest(".nested-post") || article).getBoundingClientRect()
+              );
+            const scrollY = window.scrollY;
+            button.click();
+            return scrollY;
+          })()
+        JS
+      end
+
+      def scroll_post_near_top(post, offset: 80)
+        page.execute_script(<<~JS)
+          const post = document.querySelector("[data-post-number='#{post.post_number}']");
+          post.scrollIntoView();
+          window.scrollBy(0, -#{offset});
+        JS
+        self
+      end
+
+      def scroll_past_topic_title
+        page.execute_script(<<~JS)
+          window.scrollTo(0, document.body.scrollHeight);
+        JS
+        self
+      end
+
       def click_reply_on_op
         find(".nested-view__op .post-action-menu__reply").click
         self
@@ -283,22 +381,29 @@ module PageObjects
       end
 
       def click_depth_line(post)
-        find(wrapper_selector(post, ".nested-post__depth-line")).click
+        find(depth_line_selector(post)).click
         self
       end
 
       def click_collapsed_bar(post)
-        find(wrapper_selector(post, ".nested-post__collapsed-bar")).click
+        find(wrapper_selector(post, "> .nested-post__main > .nested-post__collapsed-bar")).click
         self
       end
 
-      def click_view_full_thread
-        find(".nested-context-view__full-thread").click
+      def click_mobile_ancestor(post)
+        find("[data-test-nested-mobile-ancestor='#{post.post_number}']").click
         self
       end
 
-      def click_view_parent_context
-        find(".nested-context-view__parent-context").click
+      def click_mobile_ancestor_avatar(post)
+        find(
+          "[data-test-nested-mobile-ancestor='#{post.post_number}'] .nested-view__mobile-ancestor-avatar",
+        ).click
+        self
+      end
+
+      def click_mobile_focus_back
+        find(".nested-view__mobile-focus-back").click
         self
       end
 
@@ -348,13 +453,9 @@ module PageObjects
         self
       end
 
-      def click_flat_view_link
-        find(".nested-view__flat-link").click
-        self
-      end
-
       def click_sort(sort)
-        find(".nested-sort-selector button", text: I18n.t("js.nested_replies.sort.#{sort}")).click
+        find(".nested-sort-selector__trigger").click
+        find(".dropdown-menu .btn", text: I18n.t("js.nested_replies.sort.#{sort}")).click
         self
       end
 
@@ -499,6 +600,14 @@ module PageObjects
         # to avoid matching ancestor .nested-post wrappers in the nested tree.
         base = ".nested-post:has(> .nested-post__main > [data-post-number='#{post.post_number}'])"
         child_selector ? "#{base} #{child_selector}" : base
+      end
+
+      def depth_line_selector(post)
+        wrapper_selector(post, "> .nested-post__gutter .nested-post__depth-line")
+      end
+
+      def leaf_depth_line_selector(post)
+        wrapper_selector(post, "> .nested-post__gutter .nested-post__depth-line--leaf")
       end
     end
   end

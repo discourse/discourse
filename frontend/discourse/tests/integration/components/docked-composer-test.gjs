@@ -4,7 +4,7 @@ import DockedComposer from "discourse/components/docked-composer";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
-module("Integration | Component | docked-composer", function (hooks) {
+module("Integration | Component | DockedComposer", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

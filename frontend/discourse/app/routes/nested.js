@@ -1,16 +1,33 @@
+import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import Route from "@ember/routing/route";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import MoveToTopicModal from "discourse/components/modal/move-to-topic";
 import { ajax } from "discourse/lib/ajax";
 import EmbedMode from "discourse/lib/embed-mode";
+import {
+  hydrateExpansionState,
+  hydrateFetchedChildrenCache,
+  hydrateNestedModelData,
+  isValidNestedViewCacheSnapshot,
+  NESTED_VIEW_CACHE_FORMAT_VERSION,
+} from "discourse/lib/nested-view-cache-snapshot";
 import PreloadStore from "discourse/lib/preload-store";
+import topicTitleToken from "discourse/lib/topic-title-token";
 import Draft from "discourse/models/draft";
-import processNode from "../lib/process-node";
+import DiscourseRoute from "discourse/routes/discourse";
+import processNode, {
+  registerPostInTopicPostStream,
+} from "../lib/process-node";
 
-export default class NestedRoute extends Route {
+export default class NestedRoute extends DiscourseRoute {
   @service composer;
+  @service header;
+  @service historyStore;
+  @service modal;
   @service nestedViewCache;
+  @service router;
   @service screenTrack;
   @service site;
   @service siteSettings;
@@ -26,8 +43,14 @@ export default class NestedRoute extends Route {
     return { scrollOnTransition: false };
   }
 
-  async model(params) {
+  titleToken() {
+    return topicTitleToken(this.currentModel?.topic, this.siteSettings);
+  }
+
+  async model(params, transition) {
     const { topic_id, slug, post_number } = params;
+    this._teardownCurrentTopic(topic_id);
+
     const sort =
       params.sort || this.siteSettings.nested_replies_default_sort || "top";
 
@@ -35,11 +58,21 @@ export default class NestedRoute extends Route {
       ...params,
       sort,
     });
-    if (this.nestedViewCache.consumeTraversal()) {
+    if (
+      this.nestedViewCache.consumeTraversal({
+        allowLocalSignal: transition?.from?.name?.startsWith("nested"),
+        isPoppedState: this.historyStore.isPoppedState,
+      })
+    ) {
       const cached = this.nestedViewCache.get(cacheKey);
       if (cached) {
-        this._restoringFromCache = cached;
-        return cached.modelData;
+        const restored = this._hydrateCachedEntry(cached);
+        if (restored) {
+          this._restoringFromCache = restored;
+          return restored.modelData;
+        }
+
+        this.nestedViewCache.remove(cacheKey);
       }
     }
     this._restoringFromCache = null;
@@ -68,11 +101,12 @@ export default class NestedRoute extends Route {
   }
 
   setupController(controller, model) {
-    if (this._restoringFromCache) {
-      controller.expansionState = this._restoringFromCache.expansionState;
-      controller.fetchedChildrenCache =
-        this._restoringFromCache.fetchedChildrenCache;
-      controller.scrollAnchor = this._restoringFromCache.scrollAnchor;
+    const restoringFromCache = this._restoringFromCache;
+
+    if (restoringFromCache) {
+      controller.expansionState = restoringFromCache.expansionState;
+      controller.fetchedChildrenCache = restoringFromCache.fetchedChildrenCache;
+      controller.scrollAnchor = restoringFromCache.scrollAnchor;
       this._restoringFromCache = null;
     } else {
       controller.expansionState = new Map();
@@ -85,7 +119,9 @@ export default class NestedRoute extends Route {
 
     // Hydrate the topic controller so core components that do
     // lookup("controller:topic") (e.g. share modal) find valid state.
-    this.controllerFor("topic").set("model", model.topic);
+    const topicController = this.controllerFor("topic");
+    topicController.set("model", model.topic);
+    this._resetTopicControllerBulkSelection(topicController);
 
     // Set the topic route's currentModel so route actions that call
     // this.modelFor("topic") (e.g. showFeatureTopic, showTopicTimerModal)
@@ -97,11 +133,12 @@ export default class NestedRoute extends Route {
     // topic.details.updateNotifications() can construct the correct URL.
     model.topic.details.set("topic", model.topic);
 
-    // Store the OP in the postStream so core components that call
-    // postStream.findLoadedPost() (e.g. share modal's "reply as new topic")
-    // find a valid post instead of undefined.
+    this.header.enterTopic(model.topic, !model.contextMode);
+
+    // Store the OP in the postStream so core components that read loaded posts
+    // (e.g. share modal's "reply as new topic", bulk selection) find it.
     if (model.opPost && model.topic.postStream) {
-      model.topic.postStream.storePost(model.opPost);
+      registerPostInTopicPostStream(model.topic, model.opPost);
     }
 
     this.screenTrack.start(model.topic.id, controller);
@@ -115,6 +152,12 @@ export default class NestedRoute extends Route {
         topic: model.topic,
       });
     }
+
+    if (!restoringFromCache && !model.contextMode) {
+      // Nested opts out of the global scroll manager for cache restoration,
+      // so fresh root-topic entries need their own top reset.
+      schedule("afterRender", () => window.scrollTo(0, 0));
+    }
   }
 
   deactivate() {
@@ -123,8 +166,53 @@ export default class NestedRoute extends Route {
     const controller = this.controller;
     this._saveToCache(controller);
 
+    this._resetTopicControllerBulkSelection();
     controller.unsubscribe();
     this.screenTrack.stop();
+    controller.topic = null;
+  }
+
+  @action
+  willTransition(transition) {
+    transition.followRedirects().finally(() => {
+      const routeName = this.router.currentRouteName;
+
+      if (
+        !routeName?.startsWith("topic.") &&
+        !routeName?.startsWith("nested")
+      ) {
+        this.header.clearTopic();
+      }
+    });
+
+    return true;
+  }
+
+  @action
+  moveToTopic() {
+    const topicController = this.controllerFor("topic");
+    this.modal.show(MoveToTopicModal, {
+      model: {
+        topic: this.modelFor("topic"),
+        selectedPostsCount: topicController.selectedPostsCount,
+        selectedAllPosts: false,
+        selectedPosts: topicController.selectedPosts,
+        selectedPostIds: topicController.selectedPostIds,
+        toggleMultiSelect: topicController.toggleMultiSelect,
+      },
+    });
+  }
+
+  @action
+  changeOwner(post = null) {
+    return getOwner(this).lookup("route:topic").changeOwner(post);
+  }
+
+  _resetTopicControllerBulkSelection(
+    topicController = this.controllerFor("topic")
+  ) {
+    topicController.set("multiSelect", false);
+    topicController.selectedPostIds = [];
   }
 
   _saveToCache(controller) {
@@ -132,34 +220,20 @@ export default class NestedRoute extends Route {
       return;
     }
 
-    const cacheKey = this.nestedViewCache.buildKey(controller.topic.id, {
-      sort: controller.sort,
-      post_number: controller.postNumber,
-      context: controller.contextNoAncestors ? 0 : undefined,
-    });
+    controller.saveToCache(this._findScrollAnchor());
+  }
 
-    this.nestedViewCache.save(cacheKey, {
-      modelData: {
-        topic: controller.topic,
-        opPost: controller.opPost,
-        rootNodes: controller.rootNodes,
-        page: controller.page,
-        hasMoreRoots: controller.hasMoreRoots,
-        sort: controller.sort,
-        messageBusLastId: controller.messageBusLastId,
-        pinnedPostIds: controller.pinnedPostIds,
-        postNumber: controller.postNumber,
-        contextMode: controller.contextMode,
-        contextChain: controller.contextChain,
-        targetPostNumber: controller.targetPostNumber,
-        contextNoAncestors: controller.contextNoAncestors,
-        ancestorsTruncated: controller.ancestorsTruncated,
-        topAncestorPostNumber: controller.topAncestorPostNumber,
-      },
-      expansionState: new Map(controller.expansionState),
-      fetchedChildrenCache: new Map(controller.fetchedChildrenCache),
-      scrollAnchor: this._findScrollAnchor(),
-    });
+  _teardownCurrentTopic(nextTopicId) {
+    const controller = this.controllerFor("nested");
+    const currentTopicId = controller.topic?.id;
+
+    if (!currentTopicId || String(currentTopicId) === String(nextTopicId)) {
+      return;
+    }
+
+    this._saveToCache(controller);
+    controller.unsubscribe();
+    this.screenTrack.stop();
   }
 
   _findScrollAnchor() {
@@ -181,6 +255,28 @@ export default class NestedRoute extends Route {
       }
     }
     return best;
+  }
+
+  _hydrateCachedEntry(cached) {
+    if (
+      cached.formatVersion !== NESTED_VIEW_CACHE_FORMAT_VERSION ||
+      !isValidNestedViewCacheSnapshot(cached.modelData)
+    ) {
+      return null;
+    }
+
+    const modelData = hydrateNestedModelData(this.store, cached.modelData);
+
+    return {
+      modelData,
+      expansionState: hydrateExpansionState(cached.expansionState),
+      fetchedChildrenCache: hydrateFetchedChildrenCache(
+        this.store,
+        modelData.topic,
+        cached.fetchedChildrenCache
+      ),
+      scrollAnchor: cached.scrollAnchor,
+    };
   }
 
   _processResponse(data, params) {
@@ -231,6 +327,7 @@ export default class NestedRoute extends Route {
       postNumber: params.post_number ? Number(params.post_number) : null,
       contextMode: false,
       contextChain: null,
+      initialFocusedPath: [],
       targetPostNumber: null,
       contextNoAncestors: false,
       ancestorsTruncated: false,
@@ -273,8 +370,14 @@ export default class NestedRoute extends Route {
 
     // Nest ancestors outermost-first so target ends up as the chain leaf.
     let chainTip = targetNode;
+    const focusedPath = [targetNode];
     for (let i = ancestors.length - 1; i >= 0; i--) {
-      chainTip = { post: ancestors[i], children: [chainTip] };
+      chainTip = {
+        post: ancestors[i],
+        children: [chainTip],
+        _renderKey: ancestors[i].id,
+      };
+      focusedPath.unshift(chainTip);
     }
 
     // Force full NestedPost rebuild on every fetch: NestedPostChildren reads
@@ -292,12 +395,13 @@ export default class NestedRoute extends Route {
       postNumber: Number(params.post_number),
       contextMode: true,
       contextChain: chainTip,
+      initialFocusedPath: focusedPath,
       targetPostNumber: Number(params.post_number),
       contextNoAncestors: noAncestors,
       ancestorsTruncated: data.ancestors_truncated || false,
       topAncestorPostNumber:
         ancestors.length > 0 ? ancestors[0].post_number : null,
-      rootNodes: [],
+      rootNodes: [chainTip],
       page: 0,
       hasMoreRoots: false,
       newRootPostIds: [],

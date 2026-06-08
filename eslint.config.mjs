@@ -3,8 +3,10 @@ import DiscourseRecommended from "@discourse/lint-configs/eslint";
 export default [
   ...DiscourseRecommended,
   {
-    rules: {},
-    // custom overrides go here
+    rules: {
+      "ember/template-no-capital-arguments": "off",
+      "ember/template-require-button-type": "off",
+    },
   },
   {
     ignores: [
@@ -25,6 +27,15 @@ export default [
       globals: {
         settings: "readonly",
         themePrefix: "readonly",
+      },
+    },
+  },
+  {
+    languageOptions: {
+      parserOptions: {
+        babelOptions: {
+          configFile: false,
+        },
       },
     },
   },

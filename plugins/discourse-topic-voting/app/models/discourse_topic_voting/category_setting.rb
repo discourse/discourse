@@ -11,7 +11,7 @@ module DiscourseTopicVoting
     after_save :reset_voting_cache
 
     def unarchive_votes
-      DB.exec(<<~SQL, { category_id: self.category_id })
+      DB.exec(<<~SQL, { category_id: category_id })
         UPDATE topic_voting_votes
         SET archive=false
         FROM topics
@@ -24,7 +24,7 @@ module DiscourseTopicVoting
     end
 
     def archive_votes
-      DB.exec(<<~SQL, { category_id: self.category_id })
+      DB.exec(<<~SQL, { category_id: category_id })
         UPDATE topic_voting_votes
         SET archive=true
         FROM topics

@@ -10,6 +10,7 @@ import PostCookedHtml from "discourse/components/post/cooked-html";
 import PostLinks from "discourse/components/post/links";
 import PostMenu from "discourse/components/post/menu";
 import PostMetaData from "discourse/components/post/meta-data";
+import TopicMap from "discourse/components/topic-map";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
@@ -86,6 +87,25 @@ export default class NestedOp extends Component {
     return this.currentUser && this.args.topic?.details?.can_create_post;
   }
 
+  get selected() {
+    return this.args.multiSelect && this.args.postSelected?.(this.args.post);
+  }
+
+  @action
+  togglePostSelection() {
+    return this.args.togglePostSelection?.(this.args.post);
+  }
+
+  @action
+  selectReplies() {
+    return this.args.selectReplies?.(this.args.post);
+  }
+
+  @action
+  selectBelow() {
+    return this.args.selectBelow?.(this.args.post);
+  }
+
   @action
   showLogin() {
     getOwner(this).lookup("route:application").send("showLogin");
@@ -94,10 +114,11 @@ export default class NestedOp extends Component {
   <template>
     {{#if @post}}
       <div class="nested-view__op">
-        {{#let (lazyHash post=@post) as |postOutletArgs|}}
+        {{#let (lazyHash post=@post nestedReplyView=true) as |postOutletArgs|}}
           <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
             <article
-              class="nested-view__op-article boxed"
+              class="nested-view__op-article boxed
+                {{if this.selected 'selected'}}"
               data-post-id={{@post.id}}
               data-post-number={{@post.post_number}}
               {{@registerPost @post}}
@@ -116,7 +137,12 @@ export default class NestedOp extends Component {
                       <PostMetaData
                         @post={{@post}}
                         @editPost={{fn @editPost @post}}
+                        @multiSelect={{@multiSelect}}
+                        @selected={{this.selected}}
+                        @selectBelow={{this.selectBelow}}
+                        @selectReplies={{this.selectReplies}}
                         @showHistory={{fn @showHistory @post}}
+                        @togglePostSelection={{this.togglePostSelection}}
                       />
                     </PluginOutlet>
                     <div class="nested-view__op-content">
@@ -137,6 +163,20 @@ export default class NestedOp extends Component {
                           @copyLink={{this.copyLink}}
                           @replyToPost={{@replyToPost}}
                           @editPost={{fn @editPost @post}}
+                          @changeNotice={{fn @changeNotice @post}}
+                          @changePostOwner={{fn @changePostOwner @post}}
+                          @grantBadge={{fn @grantBadge @post}}
+                          @lockPost={{fn @lockPost @post}}
+                          @unlockPost={{fn @unlockPost @post}}
+                          @permanentlyDeletePost={{fn
+                            @permanentlyDeletePost
+                            @post
+                          }}
+                          @rebakePost={{fn @rebakePost @post}}
+                          @showPagePublish={{@showPagePublish}}
+                          @togglePostType={{fn @togglePostType @post}}
+                          @toggleWiki={{fn @toggleWiki @post}}
+                          @unhidePost={{fn @unhidePost @post}}
                           @share={{this.share}}
                           @toggleLike={{this.toggleLike}}
                           @showLogin={{this.showLogin}}
@@ -155,6 +195,14 @@ export default class NestedOp extends Component {
             </article>
           </PluginOutlet>
         {{/let}}
+
+        <div class="nested-view__topic-map topic-map">
+          <TopicMap
+            @model={{@topic}}
+            @topicDetails={{@topic.details}}
+            @showPMMap={{@topic.isPrivateMessage}}
+          />
+        </div>
       </div>
     {{/if}}
   </template>

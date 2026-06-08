@@ -14,6 +14,7 @@ import { i18n } from "discourse-i18n";
 export default class EmbedModeComposer extends Component {
   @service appEvents;
   @service currentUser;
+  @service embedAuthFlow;
   @service site;
   @service store;
 
@@ -75,6 +76,13 @@ export default class EmbedModeComposer extends Component {
       return false;
     }
     return this.currentUser && this.args.topic?.details?.can_create_post;
+  }
+
+  get showSigninCta() {
+    if (!EmbedMode.enabled || this.currentUser) {
+      return false;
+    }
+    return this.embedAuthFlow.isActive;
   }
 
   get showFloatingTimelineButton() {
@@ -140,6 +148,11 @@ export default class EmbedModeComposer extends Component {
   cancelEditing() {
     this.editingPost = null;
     this.#composerApi?.setReply("");
+  }
+
+  @action
+  handleSigninCtaClick() {
+    this.embedAuthFlow.requestAccess({ intent: "login" });
   }
 
   @action
@@ -249,7 +262,15 @@ export default class EmbedModeComposer extends Component {
   }
 
   <template>
-    {{#if this.show}}
+    {{#if this.showSigninCta}}
+      <div class="embed-mode-composer embed-mode-composer--signin-cta">
+        <DButton
+          @action={{this.handleSigninCtaClick}}
+          @label="embed_mode.signin_flow.sign_in_to_reply"
+          class="btn-primary embed-mode-composer__signin-cta"
+        />
+      </div>
+    {{else if this.show}}
       <div class="embed-mode-composer" {{this.setupEvents}}>
         {{#if this.showFloatingTimelineButton}}
           <div class="embed-floating-buttons">

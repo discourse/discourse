@@ -130,6 +130,18 @@ zh_CN:
       placeholder: 日期
       from_placeholder: "起始日期"
       to_placeholder: "截止日期"
+    date_range_picker:
+      apply: "应用"
+      start_date: "开始日期"
+      end_date: "结束日期"
+      date_placeholder: "yyyy/mm/dd"
+      presets:
+        label: "日期范围预设"
+        last_7_days: "过去 7 天"
+        last_30_days: "过去 30 天"
+        last_3_months: "过去 3 个月"
+        last_6_months: "过去 6 个月"
+        last_year: "去年"
     languages:
       ar:
         name: 阿拉伯语
@@ -302,6 +314,8 @@ zh_CN:
       search_placeholder: "搜索"
     impersonation:
       notice: "您正在模拟 %{username}"
+      time_left:
+        other: "（还剩 %{count} 分钟）"
       stop: "停止模拟"
     themes:
       default_description: "默认"
@@ -332,9 +346,15 @@ zh_CN:
         condition_debugging: "条件调试"
       plugin_outlet_debug:
         find_on_github: "在 GitHub 上查找"
+        wrapper: "(wrapper)"
+        outlet_args: "Outlet 参数"
+        no_outlet_args: "此 Outlet 未传入任何参数"
+        aliases: "别名"
+        deprecated: "已弃用"
+        deprecated_outlet: "此 Outlet 已弃用，将在未来版本中移除。"
+        since: "（自 %{version} 起）"
       toggle_safe_mode: "切换安全模式"
       toggle_verbose_localization: "切换详细本地化"
-      toggle_mobile_view: "切换移动视图"
       disable_dev_tools: "禁用开发者工具"
       toggle_upcoming_changes_debug: "切换即将推出的更改调试"
     s3:
@@ -392,8 +412,6 @@ zh_CN:
     tos: "服务条款"
     rules: "规则"
     conduct: "行为准则"
-    mobile_view: "移动版视图"
-    desktop_view: "桌面版视图"
     now: "刚刚"
     read_more: "阅读更多"
     more: "更多"
@@ -424,6 +442,15 @@ zh_CN:
     admin_onboarding_banner:
       launch_in_easy_steps: "只需 %{step_count} 个简单步骤启动"
       congrats_onboarding_complete: "恭喜您完成入门流程！"
+      select_theme:
+        title: "自定义您的站点"
+        description: "为您的社区选择一个起始主题"
+        action: "选择主题"
+        modal_title: "选择一个主题"
+        enabled: "已选择"
+        browse_all: "管理主题"
+        show_light_screenshot: "显示浅色截图"
+        show_dark_screenshot: "显示深色截图"
       invite_collaborators:
         title: "邀请协作者"
         description: "早期成员有助于让您的社区充满活力"
@@ -451,11 +478,6 @@ zh_CN:
           what_is_your_favorite_food:
             title: "你最喜欢吃什么？"
             body: "与社区分享你最喜爱的食物！我先说：我喜欢披萨，尤其是加了奶酪和意大利辣香肠的披萨。"
-      spread_the_word:
-        title: "广而告之！"
-        description: "将链接分享给你社交网络中的所有人"
-        action: "复制链接"
-        copied_to_clipboard: "链接已复制到剪贴板！"
     about:
       edit: "编辑此页面"
       simple_title: "关于"
@@ -626,6 +648,16 @@ zh_CN:
       replying_to: "正在回复 %{username}"
       editing_post: "正在编辑帖子"
       reply_placeholder: "撰写回复…"
+      signin_flow:
+        share_session_title: "登录到 %{site_name}"
+        share_session_message: "要继续， %{site_name} 需要获得您当前会话的权限才能在此页面中使用。请点击下方按钮允许访问。"
+        signin_required_title: "登录到 %{site_name}"
+        signin_required_message: "我们没有找到现有的 %{site_name} 会话。请打开新标签页登录或注册，然后返回此处继续。"
+        open_signin_tab: "打开登录标签页"
+        waiting_title: "等待登录"
+        waiting_message: "请在新标签页中完成登录。完成后，此页面将自动更新。"
+        cancel: "取消"
+        sign_in_to_reply: "登录后回复"
     topic_count_all:
       other: "查看 %{count} 个新话题"
     topic_count_categories:
@@ -1414,6 +1446,7 @@ zh_CN:
           in_specific_groups: "用户属于此更改所需的特定群组"
           enabled_for_everyone: "此更改已对所有成员启用"
           enabled_for_no_one: "此更改已对所有成员禁用"
+        enable_available_notifications: "即将推出的更改可供预览时，请通知我。"
       user_notifications:
         filters:
           filter_by: "筛选依据"
@@ -2145,7 +2178,9 @@ zh_CN:
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
           description: "描述"
+          description_help: "可帮助您识别此邀请的备注。"
           restrict: "限制为"
+          restrict_help: "输入电子邮件或电子邮件域，以限制谁可以接受此邀请。"
           restrict_email: "仅限电子邮件"
           restrict_domain: "仅限网域"
           email_or_domain_placeholder: "name@example.com 或者 example.com"
@@ -2155,6 +2190,7 @@ zh_CN:
           expires_at: "到期时间"
           expires_after: "有效截止时间"
           custom_message: "自定义消息"
+          custom_message_help: "包含在邀请邮件中。"
           custom_message_placeholder: "在您的邀请中添加个人备注"
           send_invite_email: "保存并发送电子邮件"
           send_invite_email_instructions: "限制只允许电子邮件邀请并发送邀请电子邮件"
@@ -2823,7 +2859,7 @@ zh_CN:
       users_placeholder: "选择用户或群组"
       title_placeholder: "用一句话概括讨论内容…"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
-      edit_reason_placeholder: "编辑原因"
+      edit_reason_placeholder: "为何进行编辑？"
       topic_featured_link_placeholder: "输入标题中显示的链接。"
       remove_featured_link: "从话题中移除链接。"
       reply_placeholder: "在此处输入。使用 Markdown、BBCode 或 HTML 进行排版。拖放或粘贴图片以插入。"
@@ -2893,7 +2929,7 @@ zh_CN:
       collapse: "最小化编辑器面板"
       open: "打开编辑器面板"
       abandon: "关闭编辑器并舍弃草稿"
-      edit_reason: "添加您的编辑理由"
+      edit_reason: "为何进行编辑？"
       enter_fullscreen: "进入全屏编辑器"
       exit_fullscreen: "退出全屏编辑器"
       exit_fullscreen_prompt: "按 <kbd>ESC</kbd> 退出全屏"
@@ -2928,25 +2964,26 @@ zh_CN:
           desc: 创建以相同收件人开头的新消息
         reply_to_topic:
           label: 回复话题
+          trigger: 话题
           desc: 回复话题，不是任何特定的帖子
+        reply_to_message:
+          trigger: 发送私信
         toggle_whisper:
           label: 切换密语
-          desc: 密语仅对管理人员可见
         create_topic:
-          label: "新建话题"
           desc: 创建新话题
         create_personal_message:
-          label: "新建消息"
           desc: "创建新的个人消息"
         shared_draft:
           label: "共享草稿"
           desc: "起草一个仅对允许的用户可见的话题"
         toggle_topic_bump:
-          label: "切换话题顶帖"
           desc: "回复但不更改最新回复日期"
         toggle_unlisted:
           label: 切换取消公开
           desc: "不公开的话题只能通过直接链接访问"
+        edit_post: "正在编辑帖子"
+        unknown_user: "用户"
       reload: "重新加载"
       ignore: "忽略"
       image_alt_text:
@@ -3248,6 +3285,7 @@ zh_CN:
           placeholder: 最大值
           aria_label: 按最大浏览量筛选
     hamburger_menu: "导航菜单"
+    header_panel: "标头"
     new_item: "新"
     go_back: "返回"
     not_logged_in_user: "包含当前活动和偏好设置总结的用户页面"
@@ -3332,6 +3370,17 @@ zh_CN:
           other: "忽略（%{count} 个）…"
         dismiss_tooltip: "仅忽略新帖子或停止跟踪话题"
         also_dismiss_topics: "停止跟踪这些话题，以便它们不再显示为我的未读话题"
+        dismiss_all: "全部忽略"
+        dismiss_new_topics: "忽略新话题"
+        dismiss_new_replies: "忽略新回复"
+        dismiss_new_topics_with_selected:
+          other: "忽略（%{count} 个）"
+        dismiss_new_replies_with_selected:
+          other: "忽略（%{count} 个）"
+        dismiss_all_with_selected:
+          other: "忽略（%{count} 个）"
+        dismiss_new_menu: "忽略选项"
+        dismiss_and_stop_tracking: "忽略并停止跟踪"
         dismiss_new: "忽略新话题"
         dismiss_new_modal:
           title: "关闭新话题"
@@ -3470,13 +3519,13 @@ zh_CN:
         description: "取消置顶所有被置顶到一个类别或全局置顶的所选话题"
       enable_nested_replies:
         name: "启用嵌套回复"
+        description: "将所选话题切换到嵌套视图。回复将以线程形式显示。"
       disable_nested_replies:
         name: "禁用嵌套回复"
+        description: "将选中的话题切换回平铺视图。"
     nested_replies:
       nested_view: "嵌套视图"
       flat_view: "平面视图"
-      view_as_nested: "以嵌套方式查看"
-      view_as_flat: "以平面方式查看"
       sort:
         label: "排序依据"
         top: "热门"
@@ -3490,6 +3539,7 @@ zh_CN:
         other: "%{count} 条新回复"
       collapsed_replies:
         other: "%{count} 条回复"
+      collapsed_post: "已折叠的帖子"
       collapse: "收起"
       collapse_parent: "收起父消息串"
       category_settings:
@@ -4223,7 +4273,6 @@ zh_CN:
         name_placeholder: "此书签有什么用？"
         name_input_label: "书签名称"
         set_reminder: "提醒我"
-        options: "选项"
         actions:
           delete_bookmark:
             name: "删除书签"
@@ -4761,110 +4810,62 @@ zh_CN:
       title: "键盘快捷键"
       short_title: "快捷键"
       search_ctrl_f_tip: "要搜索整个论坛，请按 <kbd>/</kbd>"
+      description_header: "描述"
+      key_header: "键"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "跳到"
-        home: "%{shortcut} 首页"
-        latest: "%{shortcut} 最新"
-        new: "%{shortcut} 新"
-        unread: "%{shortcut} 未读"
-        unseen: "%{shortcut} 未读"
-        categories: "%{shortcut} 类别"
-        top: "%{shortcut} 排行榜"
-        bookmarks: "%{shortcut} 书签"
-        profile: "%{shortcut} 个人资料"
-        messages: "%{shortcut} 消息"
-        drafts: "%{shortcut} 草稿"
-        next: "%{shortcut} 下一个话题"
-        previous: "%{shortcut} 上一个话题"
+        home: "首页"
+        latest: "最新"
+        new: "新"
+        unread: "未读"
+        unseen: "未读"
+        categories: "类别"
+        top: "排行榜"
+        bookmarks: "书签"
+        profile: "资料"
+        messages: "消息"
+        drafts: "草稿"
       navigation:
         title: "导航"
-        jump: "%{shortcut} 转到帖子 #"
-        back: "%{shortcut} 返回"
-        up_down: "%{shortcut} 移动选择 &uarr; &darr;"
-        open: "%{shortcut} 打开所选话题"
-        open_new_window: "%{shortcut} 在新标签页/窗口中打开所选话题"
-        next_prev: "%{shortcut} 下一个/上一个部分"
-        go_to_unread_post: "%{shortcut} 转到第一个未读帖子"
+        back: "返回"
+        up_down: "移动选择 &uarr; &darr;"
       application:
         title: "应用程序"
-        create: "%{shortcut} 创建新话题或个人消息"
-        notifications: "%{shortcut} 打开通知"
-        hamburger_menu: "%{shortcut} 打开导航菜单"
-        user_profile_menu: "%{shortcut} 打开用户菜单"
-        show_incoming_updated_topics: "%{shortcut} 显示更新的话题"
-        search: "%{shortcut} 搜索"
-        filter_sidebar: "%{shortcut} 筛选边栏"
-        help: "%{shortcut} 打开键盘帮助"
-        toggle_bulk_select: "%{shortcut} 切换批量选择"
-        dismiss: "%{shortcut} 忽略所选话题"
-        x: "%{shortcut} 切换选择 (批量选择模式下)"
-        log_out: "%{shortcut} 退出"
+        search: "搜索"
+        log_out: "退出"
       composing:
         title: "撰写"
-        return: "%{shortcut} 返回编辑器"
-        minimize: "%{shortcut} 最小化输入框"
-        create_or_reply: "%{shortcut} 创建话题或帖子回复"
-        fullscreen: "%{shortcut} 全屏编辑器"
-        insert_current_time: "%{shortcut} 插入当前时间"
-        bold: "%{shortcut} 粗体"
-        italic: "%{shortcut} 斜体"
-        link: "%{shortcut} 插入链接"
-        preformatted: "%{shortcut} 预格式化文本"
-        paragraph: "%{shortcut} 段落"
-        heading_1: "%{shortcut} 标题 1"
-        heading_2: "%{shortcut} 标题 2"
-        heading_3: "%{shortcut} 标题 3"
-        heading_4: "%{shortcut} 标题 4"
-        toggle_direction: "%{shortcut} 切换文本方向"
-        ordered_list: "%{shortcut} 有序列表"
-        unordered_list: "%{shortcut} 无序列表"
-        blockquote: "%{shortcut} 块引用"
+        link: "插入链接"
+        preformatted: "预先格式化的文本"
+        paragraph: "段落"
+        blockquote: "块引用"
       bookmarks:
         title: "书签"
-        enter: "%{shortcut} 保存并关闭"
-        later_today: "%{shortcut} 今天晚些时候"
-        later_this_week: "%{shortcut} 本周晚些时候"
-        tomorrow: "%{shortcut} 明天"
-        next_week: "%{shortcut} 下周"
-        next_month: "%{shortcut} 下个月"
-        next_business_week: "%{shortcut} 下周开始"
-        next_business_day: "%{shortcut} 下一个工作日"
-        custom: "%{shortcut} 自定义日期和时间"
-        none: "%{shortcut} 无提醒"
-        delete: "%{shortcut} 删除书签"
+        enter: "保存并关闭"
+        later_today: "今天晚些时候"
+        later_this_week: "本周晚些时候"
+        tomorrow: "明天"
+        next_week: "下周"
+        next_month: "下个月"
+        next_business_day: "下一个工作日"
+        custom: "自定义日期和时间"
+        delete: "删除书签"
       actions:
         title: "操作"
-        bookmark_topic: "%{shortcut} 切换书签话题"
-        pin_unpin_topic: "%{shortcut} 置顶/取消置顶话题"
-        share_topic: "%{shortcut} 分享话题"
-        share_post: "%{shortcut} 分享帖子"
-        reply_as_new_topic: "%{shortcut} 作为链接话题回复"
-        reply_topic: "%{shortcut} 回复话题"
-        reply_post: "%{shortcut} 回复帖子"
-        quote_post: "%{shortcut} 引用帖子"
-        like: "%{shortcut} 点赞帖子"
-        flag: "%{shortcut} 举报帖子"
-        bookmark: "%{shortcut} 将帖子添加为书签"
-        edit: "%{shortcut} 编辑帖子"
-        delete: "%{shortcut} 删除帖子"
-        mark_muted: "%{shortcut} 将话题设为免打扰"
-        mark_regular: "%{shortcut} 常规（默认）话题"
-        mark_tracking: "%{shortcut} 跟踪话题"
-        mark_watching: "%{shortcut} 关注话题"
-        print: "%{shortcut} 打印话题"
-        defer: "%{shortcut} 将话题记为未读"
-        topic_admin_actions: "%{shortcut} 打开话题管理员操作"
-        archive_private_message: "%{shortcut} 切换归档个人信息"
+        reply_as_new_topic: "作为链接话题回复"
+        reply_topic: "回复话题"
+        flag: "标记帖子"
+        edit: "编辑帖子"
+        delete: "删除帖子"
+        mark_tracking: "跟踪话题"
+        mark_watching: "关注话题"
+        defer: "将话题标记为未读"
       search_menu:
         title: "搜索菜单"
-        prev_next: "%{shortcut} 上下移动所选内容"
-        insert_url: "%{shortcut} 将所选内容插入到打开的编辑器"
-        full_page_search: "%{shortcut} 启动完整页面搜索"
       admin:
         title: "管理员"
-        search_prev_next: "%{shortcut} 上下移动所选内容"
-        search_open: "%{shortcut} 打开管理员界面的搜索"
-        search_full_page: "%{shortcut} 打开全页管理员搜索"
     badges:
       earned_n_times:
         other: "已获得此徽章 %{count} 次"
@@ -4927,15 +4928,8 @@ zh_CN:
       staff_info: "要添加限制，请将此标签放入<a href=%{basePath}/tag_groups>标签组</a>。"
       category_restricted: "此标签仅限于您无权访问的类别。"
       synonyms: "同义词"
-      synonyms_description: "使用以下标签时，它们将被替换为 <b>%{base_tag_name}</b>。"
       synonyms_inline: "这些同义词将被替换为 %{base_tag_name}："
       save: "保存标签的名称和描述"
-      tag_groups_info:
-        other: "此标签属于以下组：%{tag_groups}。"
-      tag_groups_info_prefix:
-        other: "此标签属于群组： "
-      category_restrictions:
-        other: "它只能用于以下类别："
       restricted_to: "限于"
       no_synonyms: "此标签没有同义词。"
       edit_synonyms: "编辑同义词"
@@ -6093,6 +6087,7 @@ zh_CN:
         too_many_requests: 您执行此操作的次数过多。请稍后再试。
         not_found_error: 抱歉，此报告不存在
         custom_date_range: 自定义日期范围
+        stable: "稳定"
         sections:
           reports:
             title: "举报"
@@ -6100,6 +6095,34 @@ zh_CN:
             title: "网站流量"
           engagement:
             title: "参与度"
+            activity_by_category:
+              category: "类别"
+              topics: "话题"
+              posts: "帖子"
+              share: "分享"
+            whos_posting:
+              all_categories: "所有类别"
+              staff: "管理人员"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "新"
+                "1": "基本用户"
+                "2": "成员"
+                "3": "常规"
+                "4": "领导者"
+        reports_section:
+          modal:
+            enabled_heading: "已启用"
+            all_heading: "所有报告"
+            apply: "应用"
+        configure:
+          button: "配置"
+        site_traffic:
+          series:
+            anonymous: "匿名"
+            embedded: "嵌入式页面浏览量"
+            crawlers: "抓取工具"
+          see_details: "查看详情"
         period:
           last_7_days: "过去 7 天"
           last_30_days: "过去 30 天"
@@ -6605,9 +6628,10 @@ zh_CN:
           your_organization: "您的组织"
           your_organization_description: "我们将在《服务条款》和《隐私声明》中显示此信息来表明此网站的运营方和司法管辖区。"
           company_name: "名称"
-          company_name_placeholder: "Acme 组织"
           company_name_warning: |
             如果留空，将不提供样板《服务条款》或《隐私声明》。
+          company_url: "网站"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "适用法律"
           governing_law_placeholder: "省、州或国家/地区"
           governing_law_help: |

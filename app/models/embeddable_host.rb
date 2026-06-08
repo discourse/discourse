@@ -9,8 +9,8 @@ class EmbeddableHost < ActiveRecord::Base
   after_destroy :reset_embedding_settings
 
   before_validation do
-    self.host.sub!(%r{\Ahttps?://}, "")
-    self.host.sub!(%r{/.*\z}, "")
+    host.sub!(%r{\Ahttps?://}, "")
+    host.sub!(%r{/.*\z}, "")
   end
 
   def self.record_for_url(uri)

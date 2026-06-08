@@ -22,6 +22,10 @@ module UpcomingChanges
 
       true
     end
+
+    def self.should_display_enable_horizon_high_context_topic_cards?
+      Themes::Action::HorizonHighContextTopicCardsToggled.should_display_upcoming_change?
+    end
   end
 
   def self.user_enabled_reasons
@@ -55,17 +59,16 @@ module UpcomingChanges
   end
 
   def self.previous_status_value(status)
-    status_value = self.statuses[status.to_sym]
-    self.statuses.values.select { |value| value < status_value }.max || -100
+    status_value = statuses[status.to_sym]
+    statuses.values.select { |value| value < status_value }.max || -100
   end
 
   def self.previous_status(status)
-    self.statuses.keys.select { |key| self.statuses[key] < self.statuses[status.to_sym] }.last ||
-      :conceptual
+    statuses.keys.select { |key| statuses[key] < statuses[status.to_sym] }.last || :conceptual
   end
 
   def self.image_exists?(change_setting_name)
-    File.exist?(File.join(Rails.public_path, self.image_path(change_setting_name)))
+    File.exist?(File.join(Rails.public_path, image_path(change_setting_name)))
   end
 
   def self.image_path(change_setting_name)
@@ -364,7 +367,7 @@ module UpcomingChanges
   # to save time in other places in the codebase when we have to figure out
   # when an upcoming change moved to its current status.
   #
-  # This cache is automatically cleared when UpcomingChanges::Action::TrackNotifyStatusChanges
+  # This cache is automatically cleared when UpcomingChanges::Action::TrackStatusChanges
   # is called, since that adds new UpcomingChangeEvent records.
   def self.current_statuses
     Discourse

@@ -32,14 +32,14 @@ module DiscourseReactions
     delegate :name, to: :user, allow_nil: true
 
     def can_undo?
-      self.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
+      created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
     end
 
     def post_action_like
       @post_action_like ||=
         PostAction.find_by(
-          user_id: self.user_id,
-          post_id: self.post_id,
+          user_id: user_id,
+          post_id: post_id,
           post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
         )
     end

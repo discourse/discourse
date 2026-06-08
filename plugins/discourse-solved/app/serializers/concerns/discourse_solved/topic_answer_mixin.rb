@@ -7,7 +7,7 @@ module DiscourseSolved
     end
 
     def has_accepted_answer
-      object&.solved.present?
+      object.topic_answers.any?
     end
 
     def include_has_accepted_answer?

@@ -275,7 +275,7 @@ export default class CategoryRow extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-pointer-down-event-binding }}
+    {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     <div
       class={{dConcatClass
         "category-row"

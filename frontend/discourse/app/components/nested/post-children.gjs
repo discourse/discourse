@@ -73,11 +73,11 @@ export default class NestedPostChildren extends Component {
     this._reportToCache();
   }
 
-  _reportToCache() {
-    if (!this.loaded || !this.args.fetchedChildrenCache) {
+  _reportToCache(parentPostNumber = this.args.parentPostNumber) {
+    if (!this.loaded || !parentPostNumber || !this.args.fetchedChildrenCache) {
       return;
     }
-    this.args.fetchedChildrenCache.set(this.args.parentPostNumber, {
+    this.args.fetchedChildrenCache.set(parentPostNumber, {
       childNodes: this.childNodes,
       page: this.page,
       hasMore: this.hasMore,
@@ -85,8 +85,11 @@ export default class NestedPostChildren extends Component {
     });
   }
 
-  _onChildCreated({ post, parentPostNumber }) {
-    if (parentPostNumber !== this.args.parentPostNumber) {
+  _onChildCreated({ topicId, post, parentPostNumber }) {
+    if (
+      String(topicId) !== String(this.args.topic?.id) ||
+      parentPostNumber !== this.args.parentPostNumber
+    ) {
       return;
     }
 
@@ -216,6 +219,7 @@ export default class NestedPostChildren extends Component {
             @children={{node.children}}
             @topic={{@topic}}
             @depth={{this.childDepth}}
+            @path={{@path}}
             @sort={{@sort}}
             @replyToPost={{@replyToPost}}
             @editPost={{@editPost}}
@@ -223,6 +227,17 @@ export default class NestedPostChildren extends Component {
             @recoverPost={{@recoverPost}}
             @showFlags={{@showFlags}}
             @showHistory={{@showHistory}}
+            @changeNotice={{@changeNotice}}
+            @changePostOwner={{@changePostOwner}}
+            @grantBadge={{@grantBadge}}
+            @lockPost={{@lockPost}}
+            @unlockPost={{@unlockPost}}
+            @permanentlyDeletePost={{@permanentlyDeletePost}}
+            @rebakePost={{@rebakePost}}
+            @showPagePublish={{@showPagePublish}}
+            @togglePostType={{@togglePostType}}
+            @toggleWiki={{@toggleWiki}}
+            @unhidePost={{@unhidePost}}
             @collapseParent={{@collapseParent}}
             @highlightParentLine={{@highlightParentLine}}
             @unhighlightParentLine={{@unhighlightParentLine}}
@@ -232,6 +247,13 @@ export default class NestedPostChildren extends Component {
             @scrollAnchor={{@scrollAnchor}}
             @registerPost={{@registerPost}}
             @collapseFromDepth={{@collapseFromDepth}}
+            @focusPost={{@focusPost}}
+            @captureScrollAnchor={{@captureScrollAnchor}}
+            @multiSelect={{@multiSelect}}
+            @togglePostSelection={{@togglePostSelection}}
+            @selectReplies={{@selectReplies}}
+            @selectBelow={{@selectBelow}}
+            @postSelected={{@postSelected}}
           />
         {{/each}}
 

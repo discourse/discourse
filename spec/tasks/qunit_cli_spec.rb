@@ -20,10 +20,10 @@ describe "bin/qunit" do
   end
 
   let(:core_test_file) do
-    Dir.glob("#{Rails.root}/frontend/discourse/tests/integration/**/*-test.js").first
+    Dir.glob("#{Rails.root.join("frontend/discourse/tests/integration/**/*-test.js")}").first
   end
 
-  let(:chat_test_file) { Dir.glob("#{Rails.root}/plugins/chat/test/**/*-test.js").first }
+  let(:chat_test_file) { Dir.glob("#{Rails.root.join("plugins/chat/test/**/*-test.js")}").first }
 
   it "runs all core tests by default" do
     result = run
@@ -36,7 +36,7 @@ describe "bin/qunit" do
         "ember",
         "exam",
         "--query",
-        "target=core",
+        "target=core&testem=1",
         "--random",
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",
@@ -61,9 +61,9 @@ describe "bin/qunit" do
         "ember",
         "exam",
         "--query",
-        "target=core",
+        "target=core&testem=1",
         "--file-path",
-        core_test_file.sub("#{Rails.root}/frontend/discourse/", ""),
+        core_test_file.sub("#{Rails.root.join("frontend/discourse/tests/")}", ""),
         "--random",
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",
@@ -87,6 +87,8 @@ describe "bin/qunit" do
         "pnpm",
         "ember",
         "exam",
+        "--query",
+        "testem=1",
         "--random",
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",
@@ -111,6 +113,8 @@ describe "bin/qunit" do
         "pnpm",
         "ember",
         "exam",
+        "--query",
+        "testem=1",
         "--random",
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",
@@ -136,10 +140,10 @@ describe "bin/qunit" do
         "ember",
         "exam",
         "--query",
-        "target=chat",
+        "target=chat&testem=1",
         "--file-path",
         chat_test_file.sub(
-          "#{Rails.root}/plugins/chat/test/javascripts/",
+          "#{Rails.root.join("plugins/chat/test/javascripts/")}",
           "discourse/plugins/chat/",
         ),
         "--random",

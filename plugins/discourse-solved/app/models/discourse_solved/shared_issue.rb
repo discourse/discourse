@@ -11,7 +11,7 @@ module DiscourseSolved
     validates :user_id, presence: true
 
     def self.count_for(topic)
-      where(topic: topic).count + 1 # topic author is implicitly counted
+      where(topic: topic).count
     end
   end
 end

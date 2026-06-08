@@ -39,6 +39,8 @@ ca:
       move_post_cancel: "Cancel·la"
       confirm_solved_removal_confirm: "Confirma"
       confirm_solved_removal_cancel: "Cancel·la"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
     topic_statuses:
       solved:

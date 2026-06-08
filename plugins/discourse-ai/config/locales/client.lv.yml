@@ -45,6 +45,8 @@ lv:
           zero: "(vēl %{count})"
           one: "(vēl %{count})"
           other: "(vēl %{count})"
+        nav:
+          enabled: "Ieslēgts"
         filters:
           all: "Visi"
           reset: "Atlikt"

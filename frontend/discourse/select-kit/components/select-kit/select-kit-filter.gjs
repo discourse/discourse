@@ -146,7 +146,6 @@ export default class SelectKitFilter extends Component {
   <template>
     {{#unless this.isHidden}}
       {{! filter-input-search prevents 1password from attempting autocomplete }}
-      {{! template-lint-disable no-pointer-down-event-binding }}
 
       <Input
         tabindex={{0}}

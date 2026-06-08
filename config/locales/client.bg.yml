@@ -142,6 +142,11 @@ bg:
       placeholder: дата
       from_placeholder: "от дата"
       to_placeholder: "до дата"
+    date_range_picker:
+      apply: "Приложи"
+      presets:
+        last_7_days: "Последните 7 дни"
+        last_30_days: "Последните 30 дни"
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "публикация #%{postNumber} от @%{username}"
@@ -260,8 +265,6 @@ bg:
     tos: "Правила за ползване"
     rules: "Правила"
     conduct: "Правила за поведение"
-    mobile_view: "Мобилен изглед"
-    desktop_view: "Десктоп изглед"
     now: "преди малко"
     read_more: "прочетете повече"
     more: "Повече"
@@ -369,6 +372,9 @@ bg:
       remove_confirmation: "Сигурни ли сте, че искате да изтриете тази чернова?"
       new_topic: "Проект на нова тема"
       new_private_message: "Нова чернова на лично съобщение"
+    embed_mode:
+      signin_flow:
+        cancel: "Отмени"
     topic_count_all:
       one: "Вижте %{count} нова тема"
       other: "Вижте %{count} нови теми"
@@ -1051,7 +1057,6 @@ bg:
         normal_option: "Нормален"
         normal_option_title: "Ще бъдете уведомени, ако този потребител ви отговори, цитира ви или ви спомене."
       notification_schedule:
-        title: "График за уведомяване"
         label: "Активирайте персонализиран график за известия"
         tip: "Извън тези часове известията ви ще бъдат спрени на пауза."
         midnight: "Полунощ"
@@ -1092,13 +1097,8 @@ bg:
       notifications: "Известия"
       statistics: "Статистика"
       desktop_notifications:
-        label: "Известявания в реално време"
         not_supported: "Известията не се поддържат от този браузър. Съжаляваме."
-        perm_default: "Включване на Известията"
-        perm_denied_btn: "Разрешението е отказано"
         perm_denied_expl: "Вие сте забранили известията. Моля разрешете ги чрез настройките на браузъра си."
-        disable: "Деактивиране на Известията"
-        enable: "Активиране на Известията"
         each_browser_note: "Забележка: Трябва да промените тази настройка във всеки браузър, който използвате. Всички известия ще бъдат деактивирани, ако поставите на пауза известията от потребителското меню, независимо от тази настройка."
         consent_prompt: "Искате ли известявания в реално време, когато хората отговарят на вашите публикации?"
       dismiss: "Отмени"
@@ -2092,7 +2092,7 @@ bg:
       discard: "Отхвърляне"
       title_placeholder: "За какво става дума в дискусията с едно изречение?"
       title_or_link_placeholder: "Напишете заглавие или поставете линк тук"
-      edit_reason_placeholder: "защо редактирате ?"
+      edit_reason_placeholder: "Защо редактирате ?"
       topic_featured_link_placeholder: "Въведете връзка, показана със заглавие."
       remove_featured_link: "Премахнете връзката от темата."
       reply_placeholder: "Пиши тук. Използвай Markdown, BBCode, или HTML за форматиране. Издърпайте или поставете изображенията."
@@ -2128,6 +2128,7 @@ bg:
         attribute_value: "Стойност"
         apply: "Приложи"
       help: "Помощ с Markdown"
+      edit_reason: "Защо редактирате ?"
       modal_ok: "Ок"
       cant_send_pm: "Съжеляваме, но неможете да изпращате съобщения до %{username}."
       yourself_confirm:
@@ -2152,13 +2153,15 @@ bg:
           desc: Създайте ново съобщение, започващо със същите получатели
         reply_to_topic:
           label: Отговорете на тема
+          trigger: Тема
           desc: Отговорете на темата, а не на конкретен пост
+        reply_to_message:
+          trigger: Съобщение
         toggle_whisper:
           label: Превключете шепот
-          desc: Шепотът се вижда само от служителите
         create_personal_message:
-          label: "Ново съобщение"
           desc: "Създайте ново лично съобщение"
+        unknown_user: "Потребител"
       ignore: "Игнорирай"
       image: "изображение"
     notifications:
@@ -2346,6 +2349,7 @@ bg:
           placeholder: минимум
         max_views:
           placeholder: максимум
+    header_panel: "Хедър"
     new_item: "нови"
     go_back: "Назад "
     not_logged_in_user: "Потребителска страница с история на текущата дейност и предпочитания"
@@ -2896,7 +2900,6 @@ bg:
         name_placeholder: "За какво е тази отметка?"
         name_input_label: "Име на отметка"
         set_reminder: "Напомни ми"
-        options: "Опции"
         actions:
           delete_bookmark:
             name: "Изтриване на отметка"
@@ -3178,54 +3181,49 @@ bg:
       next: "Напред (стрелка надясно)"
     keyboard_shortcuts_help:
       title: "Бързи клавиши"
+      description_header: "Описание"
+      key_header: "Ключ"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Премини към"
-        home: "%{shortcut} Начало"
-        latest: "%{shortcut} Последни"
-        new: "%{shortcut} Нови"
-        unread: "%{shortcut} Непрочетени"
-        categories: "%{shortcut} Категории"
-        top: "%{shortcut} Топ"
-        bookmarks: "%{shortcut} Отметки"
-        profile: "%{shortcut} Профил"
-        messages: "%{shortcut} Съобщения"
+        home: "Начало"
+        latest: "Последни"
+        new: "Нов"
+        unread: "Непрочетени"
+        unseen: "Непрегледани"
+        categories: "Категории"
+        top: "Топ"
+        bookmarks: "Отметки"
+        profile: "Профил"
+        messages: "Съобщения"
+        drafts: "Чернови"
       navigation:
         title: "Навигация"
-        jump: "%{shortcut} Към публикация #"
-        back: "%{shortcut} Назад"
-        up_down: "%{shortcut} Преместване на селекцията &uarr; &darr;"
-        open: "%{shortcut} Отворяне на избраната тема"
-        next_prev: "%{shortcut} Следваща/Предишна секция "
+        back: "Назад"
+        up_down: "Преместване на селекцията &uarr; &darr;"
       application:
         title: "Приложение"
-        notifications: "%{shortcut} Отворяне на известията"
-        user_profile_menu: "%{shortcut} Отваряне на потребителското меню"
-        show_incoming_updated_topics: "%{shortcut} Показване на обновените теми"
-        search: "%{shortcut} Отписване"
-        help: "%{shortcut} Помощ с клавиатурата "
-        log_out: "%{shortcut} Отписване"
+        search: "Търсене"
+        log_out: "Изход "
       composing:
         title: "Съставяне"
-        return: "%{shortcut} Връщане към редактора"
-        insert_current_time: "%{shortcut} Вмъкване на текущото време"
+        preformatted: "Форматиран текст"
+        blockquote: "Текстов блок"
+      bookmarks:
+        later_today: "По-късно днес"
+        later_this_week: "По-късно тази седмица"
+        tomorrow: "Утре"
+        next_week: "Следваща седмица"
+        next_month: "Следващия месец"
+        next_business_day: "Следващия работен ден"
+        custom: "Друга дата и час"
+        delete: "Изтриване на отметка"
       actions:
         title: "Действия"
-        bookmark_topic: "%{shortcut} Отменете статуса на темата в отментки."
-        pin_unpin_topic: "%{shortcut} Pin/Unpin на темата "
-        share_topic: "%{shortcut} Споделете тема "
-        share_post: "%{shortcut} Споделете публикация"
-        reply_as_new_topic: "%{shortcut} Отговор с нова тема"
-        reply_topic: "%{shortcut} Отговорете на тема"
-        reply_post: "%{shortcut} Отговорете на публикация"
-        quote_post: "%{shortcut} Цитат"
-        like: "%{shortcut} Харесване"
-        flag: "%{shortcut} Сигнал"
-        bookmark: "%{shortcut} Отметка"
-        edit: "%{shortcut} Редакция"
-        delete: "%{shortcut} Изтриване"
-        mark_muted: "%{shortcut} Заглушете темата"
-        mark_tracking: "%{shortcut} Следете темата"
-        mark_watching: "%{shortcut} Наблюдаване на темата"
+        reply_as_new_topic: "Отговорете като свързана тема"
+        reply_topic: "Отговорете на тема"
+        delete: "Изтрий публикацията"
       admin:
         title: "Администратор"
     badges:
@@ -3423,7 +3421,7 @@ bg:
         modal:
           cancel: "прекрати"
           create: "Запази "
-          reason: "защо редактирате ?"
+          reason: "Защо редактирате ?"
       spreadsheet:
         show: "Покажи"
         about: "Относно"
@@ -3602,6 +3600,30 @@ bg:
         security_tab: "Сигурност"
         report_filter_any: "всеки"
         disabled: Деактивирани
+        sections:
+          engagement:
+            activity_by_category:
+              category: "Категория"
+              topics: "Теми"
+              posts: "Публикации"
+              share: "Споделяне"
+            whos_posting:
+              all_categories: "Всички категории"
+              staff: "Персонал"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Нов"
+                "1": "Основно "
+                "2": "Член"
+                "3": "Редовен"
+                "4": "лидер "
+        reports_section:
+          modal:
+            enabled_heading: "Да е включен"
+            apply: "Приложи"
+        site_traffic:
+          series:
+            anonymous: "Анонимен"
         period:
           last_7_days: "Последните 7 дни"
           last_30_days: "Последните 30 дни"
@@ -3734,6 +3756,7 @@ bg:
       config_areas:
         about:
           company_name: "Име"
+          company_url: "Уебсайт"
           extra_groups:
             groups: "Групи"
           optional: "(по избор)"

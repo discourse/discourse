@@ -2,7 +2,7 @@
 
 module JsLocaleHelper
   def self.plugin_client_files(locale_str)
-    files = Dir["#{Rails.root}/plugins/*/config/locales/client*.#{locale_str}.yml"]
+    files = Dir["#{Rails.root.join("plugins/*/config/locales/client*.#{locale_str}.yml")}"]
     I18n::Backend::DiscourseI18n.sort_locale_files(files)
   end
 
@@ -35,7 +35,7 @@ module JsLocaleHelper
       locale_str = locale.to_s
 
       # load default translations
-      yml_file = "#{Rails.root}/config/locales/client.#{locale_str}.yml"
+      yml_file = "#{Rails.root.join("config/locales/client.#{locale_str}.yml")}"
       if File.exist?(yml_file)
         translations = YAML.load_file(yml_file)
       else
@@ -216,8 +216,8 @@ module JsLocaleHelper
     end
 
     result << <<~JS
-      localeData.configureMoment = function () {
-        if (!globalThis.moment) {
+      localeData.configureMoment = function() {
+        if(!globalThis.moment){
           throw new Error("globalThis.moment not defined. Failed to initialize locales.")
         }
         #{moment_locale(locale_str)}
@@ -275,10 +275,11 @@ module JsLocaleHelper
 
   def self.find_moment_locale(locale_chain, timezone_names: false)
     if timezone_names
-      path = "#{Rails.root}/node_modules/@discourse/moment-timezone-names-translations/locales"
+      path =
+        "#{Rails.root.join("node_modules/@discourse/moment-timezone-names-translations/locales")}"
       type = :moment_js_timezones
     else
-      path = "#{Rails.root}/frontend/discourse/node_modules/moment/locale"
+      path = "#{Rails.root.join("frontend/discourse/node_modules/moment/locale")}"
       type = :moment_js
     end
 

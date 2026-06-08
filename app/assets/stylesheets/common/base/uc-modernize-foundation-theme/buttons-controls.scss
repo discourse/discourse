@@ -1,5 +1,5 @@
 .uc-modernize-foundation-theme {
-  --d-button-default-bg-color: transparent;
+  --d-button-default-bg-color: var(--secondary);
   --d-button-default-border: 1px solid var(--primary-200);
   --d-button-default-border--hover: 1px solid var(--primary-300);
   --d-button-default-bg-color--hover: var(--primary-200);
@@ -39,7 +39,9 @@
       .back-button,
       .composer-actions-btn,
       .language-switcher-trigger,
-      .d-multi-select-trigger__expand-btn
+      .d-multi-select-trigger__expand-btn,
+      .emoji-picker-trigger,
+      .topic-list-header-tab
     ) {
       padding-block: 0;
       height: var(--d-control-height);
@@ -50,11 +52,13 @@
   .btn.no-text.btn-icon {
     &:not(
       .topic-voting-menu-trigger,
+      .voting-wrapper__button,
       .user-menu-tab,
       .user-menu-tab-active,
       .composer-actions-btn,
       .dropdown-select-box-header,
-      .d-multi-select-trigger__expand-btn
+      .d-multi-select-trigger__expand-btn,
+      .emoji-picker-trigger
     ) {
       width: var(--d-control-height);
     }

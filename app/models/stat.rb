@@ -27,7 +27,7 @@ class Stat
   private
 
   def build_key(key)
-    "#{@name}_#{key}".to_sym
+    :"#{@name}_#{key}"
   end
 
   def self._all_stats

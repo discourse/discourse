@@ -184,3 +184,10 @@ fi:
       title: "Muokkaa osoituksia"
       topic: "Ketju"
       post: "Viesti"
+    discourse_workflows:
+      assign_topic:
+        operations:
+          assign: "Osoita"
+          unassign: "Peru osoitus"
+        topic_id: "Ketjun tunnus"
+        assignee: "Osoituksensaaja"

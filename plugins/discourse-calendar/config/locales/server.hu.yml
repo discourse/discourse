@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 hu:
+  category_types:
+    events:
+      name: "Események"
+      title: "események"
   reports:
     currently_away:
       title: Jelenleg távol lévő felhasználók
@@ -37,7 +41,6 @@ hu:
     map_events_to_color: "Rendeljen hozzá egy színt minden egyes címkéhez vagy kategóriához."
     map_events_title: "Kategóriánként felülírja az „Események” kifejezést a „Közelgő események” oldalsáv címében."
     calendar_enabled: "A discourse-calendar bővítmény engedélyezése. Ez támogatást biztosít a [calendar][/calendar] címkéhez a témák első hozzászólásában."
-    discourse_post_event_enabled: "Engedélyezi az eseményfunkciókat. Megjegyzés: a „calendar enabled” beállításnak is engedélyezve kell lennie."
     displayed_invitees_limit: "Korlátozza az eseményen megjelenített meghívottak számát."
     display_post_event_date_on_topic_title: "Az esemény dátumát a téma címe után jeleníti meg."
     use_local_event_date: "Helyi dátum használata a téma címe után a relatív idő helyett."
@@ -64,6 +67,12 @@ hu:
     sidebar_show_upcoming_events: "Közelgő események linkjének megjelenítése az oldalsávon a „Továbbiak” alatt."
     calendar_first_day_of_week: "A hét első napjának beállítása a naptár megjelenítéséhez. Választható lehetőségek: szombat, vasárnap vagy hétfő."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Nap"
+        week: "Utolsó 7 nap"
+        month: "Utolsó 30 nap"
+        year: "Elmúlt év"
     invite_user_notification: "%{username} meghívta erre: %{description}"
     calendar_must_be_in_first_post: "A naptár címke csak a téma első bejegyzésében használható."
     more_than_one_calendar: "Egy bejegyzésben nem lehet több naptár."

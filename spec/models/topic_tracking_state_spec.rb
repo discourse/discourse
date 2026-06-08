@@ -761,7 +761,9 @@ RSpec.describe TopicTrackingState do
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
       row = report[0]
-      expect(row.tags.map { |t| t["name"] }).to contain_exactly("apples", "bananas")
+      expect(row.tags.map { |t| t["id"] }).to contain_exactly(
+        *Tag.where(name: %w[apples bananas]).pluck(:id),
+      )
     end
   end
 
@@ -811,6 +813,20 @@ RSpec.describe TopicTrackingState do
 
     expect(TopicTrackingState.report(post.user)).to be_empty
     expect(TopicTrackingState.report(user)).to be_empty
+  end
+
+  it "does not report a topic as unread when its only new post is a small action" do
+    TopicUser.change(
+      user.id,
+      topic.id,
+      notification_level: TopicUser.notification_levels[:tracking],
+      last_read_post_number: 1,
+    )
+
+    topic.add_small_action(Discourse.system_user, "closed.enabled")
+
+    expect(topic.reload.highest_post_number).to eq(1)
+    expect(TopicTrackingState.report(user).map(&:topic_id)).not_to include(topic.id)
   end
 
   describe ".report" do

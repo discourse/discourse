@@ -32,11 +32,14 @@ class UpcomingChanges::NotifyPromotion
   policy :should_notify_admins
 
   try do
-    step :log_promotion
-    model :existing_notifications, optional: true
-    model :bulk_notification_new_records
-    step :notify_admins
-    step :create_event
+    transaction do
+      step :log_promotion
+      model :existing_notifications, optional: true
+      model :bulk_notification_new_records
+      step :notify_admins
+      step :create_event
+    end
+
     step :trigger_discourse_event
   end
 
@@ -97,7 +100,7 @@ class UpcomingChanges::NotifyPromotion
         notification_type: Notification.types[:upcoming_change_automatically_promoted],
         data:
           UpcomingChanges::Action::NotificationDataMerger.call(
-            existing_notification: existing_by_user[admin_id],
+            existing_notification_data: existing_by_user[admin_id]&.data,
             new_change_name: params.setting_name,
           ).to_json,
       }

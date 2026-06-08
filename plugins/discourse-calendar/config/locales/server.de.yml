@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 de:
+  category_types:
+    events:
+      name: "Ereignisse"
+      title: "ereignisse"
   user_api_key:
     scopes:
       "discourse-calendar:events_calendar": "Feed mit Kalenderereignissen lesen"
@@ -40,7 +44,6 @@ de:
     map_events_to_color: "Weise jedem Schlagwort oder jeder Kategorie eine Farbe zu."
     map_events_title: "Überschreibt „Ereignisse“ im Titel der Seitenleiste „Anstehende Ereignisse“ pro Kategorie."
     calendar_enabled: "Aktiviere das discourse-calendar-Plug-in. Dadurch wird Unterstützung für einen [calendar][/calendar]-Tag im ersten Beitrag eines Themas hinzugefügt."
-    discourse_post_event_enabled: "Aktiviert die Ereignisfunktionen. Hinweis: `calendar enabled` muss ebenfalls aktiviert sein."
     displayed_invitees_limit: "Begrenzt die Anzahl der eingeladenen Personen, die für ein Ereignis angezeigt werden."
     display_post_event_date_on_topic_title: "Zeigt das Datum des Ereignisses nach dem Thementitel an."
     use_local_event_date: "Verwende das lokale Datum nach dem Titel des Themas anstatt der relativen Zeit."
@@ -67,6 +70,15 @@ de:
     sidebar_show_upcoming_events: "Zeige den Link für anstehende Ereignisse in der Seitenleiste unter „Mehr“."
     calendar_first_day_of_week: "Lege den ersten Wochentag für die Kalenderanzeige fest. Zur Auswahl stehen Samstag, Sonntag oder Montag."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Tag"
+        week: "Woche"
+        month: "Monat"
+        year: "Jahr"
+    calendar_subscriptions:
+      all_events_feed_name: "%{site_title} - Alle Ereignisse"
+      my_events_feed_name: "%{site_title} - Meine Ereignisse"
     invite_user_notification: "%{username} lädt dich ein zu: %{description}"
     calendar_must_be_in_first_post: "Kalender-Tag kann nur im ersten Beitrag eines Themas verwendet werden."
     more_than_one_calendar: "Ein Beitrag kann nicht mehr als einen Kalender enthalten."

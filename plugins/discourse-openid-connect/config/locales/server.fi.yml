@@ -18,7 +18,6 @@ fi:
     openid_connect_allow_association_change: "Salli käyttäjien katkaista Discourse-tilinsä yhteys OpenID Connect -palveluntarjoajaan ja yhdistää se uudelleen"
     openid_connect_verbose_logging: "Kirjaa yksityiskohtaiset openid-connect-todennustiedot /logs-polkuun. Älä pidä tätä käytössä normaalin käytön aikana."
     openid_connect_authorize_parameters: "URL-parametrit, jotka sisällytetään uudelleenohjaukseen /auth/oidc:stä IDP:n valtuutuspäätepisteeseen"
-    openid_connect_overrides_email: "Korvaa jokaisen kirjautumisen yhteydessä käyttäjän sähköpostiosoite openid-connect-arvolla. Toimii samalla tavalla kuin \"auth_overrides_email\" -asetus, mutta koskee OpenID Connect -kirjautumisia."
     openid_connect_claims: "Määritä käytettävät vaatimukset palveluntarjoajilla, jotka eivät lähetä tietoja takaisin alueiden perusteella. (JSON)"
     openid_connect_match_by_email: "Yhdistä OpenID Connect -todennukset olemassa oleviin Discourse-tileihin sähköpostiosoitteiden perusteella."
     openid_connect_use_pkce: "Ota käyttöön Proof Key for Code Exchange (PKCE) OpenID Connect -todennuksessa."

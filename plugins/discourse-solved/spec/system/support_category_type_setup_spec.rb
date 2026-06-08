@@ -10,11 +10,11 @@ RSpec.describe "Support Category Type Setup" do
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:toast) { PageObjects::Components::Toasts.new }
 
-  before do
-    SiteSetting.enable_simplified_category_creation = true
-    SiteSetting.enable_support_category_type_setup = true
-    sign_in(admin)
-  end
+  # The form binds site-text fields by a separator-free version of the i18n key
+  # (dots and dashes aren't FormKit-safe), so derive it the same way.
+  let(:shared_issue_field) { "site_texts.#{"js.solved.shared_issue.label".gsub(/\W/, "_")}" }
+
+  before { sign_in(admin) }
 
   it "works with correct defaults and configures site settings and category custom field automatically" do
     visit("/new-category/setup")
@@ -54,26 +54,6 @@ RSpec.describe "Support Category Type Setup" do
     expect(page).to have_css(".d-nav-submenu__tabs .edit-category-support")
   end
 
-  context "when the support category type setup is disabled" do
-    before { SiteSetting.enable_support_category_type_setup = false }
-
-    it "does not show the support category type" do
-      visit("/new-category/setup")
-      expect(page).not_to have_content(I18n.t("js.category.create_with_type", typeName: "support"))
-      expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
-    end
-
-    it "does not show the tab for the support category type when editing an existing category" do
-      support_category = Fabricate(:category, name: "Support")
-      DiscourseSolved::Categories::Types::Support.configure_category(
-        support_category,
-        guardian: admin.guardian,
-      )
-      visit("/c/#{support_category.slug}/edit/support")
-      expect(page).to have_no_css(".d-nav-submenu__tabs .edit-category-support")
-    end
-  end
-
   context "for an existing category with no support category type" do
     fab!(:category)
 
@@ -83,7 +63,6 @@ RSpec.describe "Support Category Type Setup" do
       category_type_selector.expand
       category_type_selector.option(".category-type-selector__result.--category-type-support").click
       banner.click_save
-      expect(toast).to have_success(I18n.t("js.saved"))
       expect(page).to have_css(".nav-pills .edit-category-support")
       category.reload
       expect(category.category_types.keys).to eq(%i[discussion support])
@@ -143,6 +122,35 @@ RSpec.describe "Support Category Type Setup" do
       expect(category.custom_fields["empty_box_on_unsolved"]).to eq("false")
       expect(category.custom_fields["solved_topics_auto_close_hours"]).to eq("72")
       expect(SiteSetting.show_who_marked_solved).to eq(true)
+    end
+
+    it "edits the shared issue label as a translation override when enabled" do
+      visit("/c/#{category.slug}/edit/support")
+
+      expect(form.field("custom_fields.enable_shared_issues").value).to be_truthy
+      expect(form.field(shared_issue_field).value).to eq("Me too")
+
+      form.field(shared_issue_field).fill_in("We have this too")
+      banner.click_save
+
+      expect(form.field(shared_issue_field).value).to eq("We have this too")
+
+      override =
+        TranslationOverride.find_by(
+          locale: SiteSetting.default_locale,
+          translation_key: "js.solved.shared_issue.label",
+        )
+      expect(override.value).to eq("We have this too")
+    end
+
+    it "hides the shared issue label field when shared issues are disabled" do
+      visit("/c/#{category.slug}/edit/support")
+
+      expect(form).to have_field_with_name(shared_issue_field)
+
+      form.field("custom_fields.enable_shared_issues").toggle
+
+      expect(form).to have_no_field_with_name(shared_issue_field)
     end
 
     it "can remove the support category type" do

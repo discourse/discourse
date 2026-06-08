@@ -723,6 +723,7 @@ class BulkImport::Base
     category_id
     visible
     closed
+    archived
     pinned_at
     pinned_until
     pinned_globally
@@ -879,7 +880,8 @@ class BulkImport::Base
 
   GAMIFICATION_SCORE_EVENT_COLUMNS = %i[user_id date points description created_at updated_at]
 
-  SOLVED_TOPIC_COLUMNS = %i[topic_id answer_post_id accepter_user_id created_at updated_at]
+  SOLVED_TOPIC_COLUMNS = %i[topic_id created_at updated_at]
+  TOPIC_ANSWER_COLUMNS = %i[solved_topic_id answer_post_id accepter_user_id created_at updated_at]
 
   POST_EVENT_COLUMNS = %i[
     id
@@ -1203,6 +1205,10 @@ class BulkImport::Base
 
   def create_solved_topic(rows, &block)
     create_records(rows, "discourse_solved_solved_topics", SOLVED_TOPIC_COLUMNS, &block)
+  end
+
+  def create_topic_answers(rows, &block)
+    create_records(rows, "discourse_solved_topic_answers", TOPIC_ANSWER_COLUMNS, &block)
   end
 
   def create_post_events(rows, &block)
@@ -1556,7 +1562,7 @@ class BulkImport::Base
     category[:name_lower] = name_lower
 
     slug_next_number = 1
-    original_slug = slug = (category[:slug] || Slug.for(name_lower, ""))
+    original_slug = slug = category[:slug] || Slug.for(name_lower, "")
 
     while !@category_slugs.add?(slug.downcase)
       slug = "#{original_slug}-#{slug_next_number}"
@@ -1968,8 +1974,14 @@ class BulkImport::Base
   def process_discourse_solved_solved_topics(solved_topic)
     solved_topic[:created_at] ||= NOW
     solved_topic[:updated_at] ||= NOW
-    solved_topic[:accepter_user_id] ||= Discourse::SYSTEM_USER_ID
     solved_topic
+  end
+
+  def process_discourse_solved_topic_answers(topic_answer)
+    topic_answer[:created_at] ||= NOW
+    topic_answer[:updated_at] ||= NOW
+    topic_answer[:accepter_user_id] ||= Discourse::SYSTEM_USER_ID
+    topic_answer
   end
 
   def process_discourse_post_event_events(post_event)
@@ -2188,24 +2200,20 @@ class BulkImport::Base
       begin
         @raw_connection.copy_data(sql, @encoder) do
           rows.each do |row|
-            begin
-              if (mapped = yield(row))
-                processed = send(process_method_name, mapped)
-                imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
-                imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
-                unless processed[:skip]
-                  @raw_connection.put_copy_data columns.map { |c| processed[c] }
-                end
-              end
-              rows_created += 1
-              if rows_created % 100 == 0
-                print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)]
-              end
-            rescue => e
-              puts "\n"
-              puts "ERROR: #{e.message}"
-              puts e.backtrace.join("\n")
+            if (mapped = yield(row))
+              processed = send(process_method_name, mapped)
+              imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
+              imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
+              @raw_connection.put_copy_data columns.map { |c| processed[c] } unless processed[:skip]
             end
+            rows_created += 1
+            if rows_created % 100 == 0
+              print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)]
+            end
+          rescue => e
+            puts "\n"
+            puts "ERROR: #{e.message}"
+            puts e.backtrace.join("\n")
           end
         end
       rescue => e

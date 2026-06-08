@@ -96,7 +96,7 @@ class ComposerController < ApplicationController
     # Non-staff users can see only basic information why the users cannot see the topic.
     reason = nil if !guardian.is_staff? && reason != :private && reason != :category
 
-    reason
+    DiscoursePluginRegistry.apply_modifier(:composer_mention_user_reason, reason, user)
   end
 
   def group_reason(group)

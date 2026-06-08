@@ -33,6 +33,7 @@ class Middleware::RequestTracker
   MAX_SESSION_ID_LENGTH = 32
   MAX_USER_AGENT_LENGTH = 1000
   MAX_IP_ADDRESS_LENGTH = 45
+  REQUIRED_BROWSER_PAGEVIEW_EVENT_FIELDS = %i[url ip_address user_agent session_id]
 
   # register callbacks for detailed request loggers called on every request
   # example:
@@ -405,11 +406,9 @@ class Middleware::RequestTracker
       limiters.each(&:rollback!)
 
       env["DISCOURSE_ASSET_RATE_LIMITERS"].each do |limiter|
-        begin
-          limiter.performed!
-        rescue RateLimiter::LimitExceeded
-          # skip
-        end
+        limiter.performed!
+      rescue RateLimiter::LimitExceeded
+        # skip
       end
     end
 
@@ -421,14 +420,12 @@ class Middleware::RequestTracker
 
   def log_later(data, env, request)
     Scheduler::Defer.later("Track view") do
-      begin
-        unless Discourse.pg_readonly_mode?
-          self.class.log_request(data)
-          instrument_browser_page_view(env, request, data)
-        end
-      rescue ActiveRecord::ReadOnlyError
-        # Just noop if ActiveRecord is preventing writes
+      unless Discourse.pg_readonly_mode?
+        self.class.log_request(data)
+        instrument_browser_page_view(env, request, data)
       end
+    rescue ActiveRecord::ReadOnlyError
+      # Just noop if ActiveRecord is preventing writes
     end
   end
 
@@ -624,9 +621,16 @@ class Middleware::RequestTracker
     # or a subsequent XHR from inside the embed iframe which sets the header below.
     # Use `request.GET` (query-string only) rather than `request.params` so a missing
     # or malformed request body cannot raise from here.
+    embed_mode_param =
+      begin
+        request.GET["embed_mode"]
+      rescue Rack::QueryParser::ParameterTypeError, Rack::QueryParser::InvalidParameterError
+        # malformed query string — Rails will turn this into a 400 downstream
+        nil
+      end
+
     is_embed =
-      request.GET["embed_mode"] == "true" ||
-        %w[1 true].include?(env["HTTP_DISCOURSE_TRACK_VIEW_EMBED"])
+      embed_mode_param == "true" || %w[1 true].include?(env["HTTP_DISCOURSE_TRACK_VIEW_EMBED"])
 
     {
       track_view: track_view,
@@ -718,12 +722,19 @@ class Middleware::RequestTracker
   private_class_method :trigger_browser_pageview_event
 
   def self.persist_browser_pageview_event(payload)
+    if REQUIRED_BROWSER_PAGEVIEW_EVENT_FIELDS.any? { |key| payload[key].blank? }
+      Rails.logger.debug("Discarding BrowserPageviewEvent: incomplete payload")
+      return
+    end
+
     Scheduler::Defer.later "Create BrowserPageviewEvent" do
       BrowserPageviewEvent.create!(
         url: payload[:url],
         ip_address: payload[:ip_address],
         country_code: payload[:country_code],
+        asn: payload[:asn],
         referrer: payload[:referrer],
+        normalized_referrer: BrowserPageviewReferrerInspector.normalize(payload[:referrer]),
         user_agent: payload[:user_agent],
         session_id: payload[:session_id],
         user_id: payload[:user_id],
@@ -731,8 +742,13 @@ class Middleware::RequestTracker
         created_at: payload[:occurred_at],
       )
     rescue ActiveRecord::StatementInvalid => e
-      raise unless e.cause.is_a?(PG::NotNullViolation) && e.cause.message.include?("ip_address")
-      Rails.logger.debug("Discarding BrowserPageviewEvent: invalid IP #{payload[:ip_address]}")
+      if e.cause.is_a?(PG::ReadOnlySqlTransaction)
+        # Skip recording browser pageviews when PostgreSQL is in read-only transaction mode.
+      elsif e.cause.is_a?(PG::NotNullViolation) && e.cause.message.include?("ip_address")
+        Rails.logger.debug("Discarding BrowserPageviewEvent: invalid IP #{payload[:ip_address]}")
+      else
+        raise
+      end
     rescue => e
       Rails.logger.error(
         "Failed to create BrowserPageviewEvent with payload #{payload}: #{e.message}",
@@ -749,11 +765,13 @@ class Middleware::RequestTracker
   private_class_method :trigger_beacon_browser_pageview_event
 
   def self.build_browser_pageview_event_payload(data)
+    ip_info = DiscourseIpInfo.get(data[:request_remote_ip])
     {
       user_id: data[:current_user_id],
       url: data[:tracking_url],
       ip_address: data[:request_remote_ip],
-      country_code: DiscourseIpInfo.get(data[:request_remote_ip])[:country_code],
+      country_code: ip_info[:country_code],
+      asn: ip_info[:asn],
       user_agent: data[:user_agent],
       referrer: data[:tracking_referrer],
       session_id: data[:tracking_session_id],

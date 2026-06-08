@@ -10,6 +10,9 @@ gl:
       default_query: "Predeterminado"
       or: "ou"
       create: "Crear"
+      ai:
+        generate: "Xerar"
+        optional: "opcional"
       import:
         label: "Importar"
       help:
@@ -20,8 +23,6 @@ gl:
         bool:
           yes: "Si"
           no: "Non"
-      export: "Exportar"
-      edit: "Editar"
       delete: "Eliminar"
       query_groups: "Grupos"
       query_description: "Descrición"
@@ -30,3 +31,8 @@ gl:
       search_placeholder: "Buscar..."
     group:
       reports: "Informes"
+    discourse_workflows:
+      sql:
+        param_value: "Valor"
+        output:
+          results: "Resultados"

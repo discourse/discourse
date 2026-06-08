@@ -122,6 +122,9 @@ required:
   company_name:
     default: ""
     area: "about|legal"
+  company_url:
+    default: ""
+    area: "about|legal"
   governing_law:
     default: ""
     area: "about|legal"
@@ -392,10 +395,6 @@ basic:
     min: 2
     max: 3
     hidden: true
-  enable_mobile_theme:
-    client: true
-    default: true
-    hidden: true
   enable_direct_s3_uploads:
     client: true
     default: false
@@ -610,10 +609,16 @@ basic:
     hidden: true
     client: true
   persist_browser_pageview_events:
-    default: false
+    default: true
     hidden: true
   clean_up_browser_pageview_events:
     default: false
+    hidden: true
+  experimental_detect_crawler_pageviews:
+    default: false
+    hidden: true
+  crawler_automation_user_agents:
+    default: "HeadlessChrome|Playwright|Puppeteer|Selenium|PhantomJS|jsdom"
     hidden: true
   interface_color_selector:
     client: true
@@ -1474,6 +1479,10 @@ posting:
   max_mentions_per_post:
     default: 10
     area: "notifications"
+  max_quotes_per_post:
+    default: 50
+    min: 0
+    area: "posts_and_topics"
   max_users_notified_per_group_mention:
     default: 100
     client: true
@@ -1543,6 +1552,10 @@ posting:
     client: true
     default: false
     area: "posts_and_topics"
+  hide_disabled_create_topic_button:
+    client: true
+    default: false
+    hidden: true
   show_pinned_excerpt_mobile:
     client: true
     default: true
@@ -1889,17 +1902,6 @@ nested_replies:
     min: 1
     max: 10000
     hidden: true
-  nested_replies_toggle_mode_groups:
-    type: group_list
-    list_type: compact
-    default: "3"
-    allow_any: false
-    refresh: true
-    disallowed_groups: "4"
-    area: "posts_and_topics"
-    depends_on:
-      - "nested_replies_enabled"
-    depends_behavior: "hidden"
 
 email:
   email_time_window_mins:
@@ -2543,8 +2545,13 @@ files:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/402705"
       allow_enabled_for:
         - everyone
+  composer_media_optimization_image_wasm_decode_enabled:
+    default: false
+    hidden: true
+    client: true
   composer_media_optimization_gif_conversion_threshold:
     default: 512000
     hidden: true
@@ -2743,22 +2750,16 @@ trust:
     max: 100
     area: "trust_levels"
   tl3_requires_topics_viewed_cap:
-    default: 500
+    default: 250
     area: "trust_levels"
-    upcoming_change_default_override:
-      upcoming_change: "enable_new_defaults_for_trust_level_3_requirements"
-      new_default: 250
   tl3_requires_posts_read:
     default: 25
     max: 100
     area: "trust_levels"
   tl3_requires_posts_read_cap:
-    default: 20000
+    default: 2000
     max: 99000
     area: "trust_levels"
-    upcoming_change_default_override:
-      upcoming_change: "enable_new_defaults_for_trust_level_3_requirements"
-      new_default: 2000
   tl3_requires_topics_viewed_all_time:
     default: 200
     area: "trust_levels"
@@ -2769,12 +2770,9 @@ trust:
     default: 5
     area: "trust_levels"
   tl3_promotion_min_duration:
-    default: 14
+    default: 100
     max: 10000
     area: "trust_levels"
-    upcoming_change_default_override:
-      upcoming_change: "enable_new_defaults_for_trust_level_3_requirements"
-      new_default: 100
   tl3_requires_likes_given:
     default: 30
     area: "trust_levels"
@@ -2877,9 +2875,15 @@ security:
   crawler_check_bypass_agents:
     hidden: true
     default: "cubot|MetaIAB"
+  # 16509/14618=AWS, 396982=Google Cloud, 15169/36040=Google, 8075=Microsoft,
+  # 714=Apple, 13238=Yandex, 32934=Meta, 13335=Cloudflare,
+  # 140577=Ahrefs, 210743=Babbar, 7941=Internet Archive,
+  # 16276=OVH, 24940=Hetzner, 136907=Huawei Cloud, 51747=Internet Vikings,
+  # 4134/4837=China Telecom/Unicom, 5089=Virgin, 55836=Reliance Jio,
+  # 5410=Bouygues, 701=Verizon, 6805=Telefonica, 45899=VNPT
   crawler_asns:
     hidden: true
-    default: "55967"
+    default: "16509|16276|714|13238|14618|136907|32934|15169|4134|4837|24940|396982|8075|51747|140577|45899|210743|13335|36040|5089|55836|5410|701|7941|6805"
     type: list
     list_type: compact
   cors_origins:
@@ -3147,6 +3151,10 @@ rate_limits:
     default: 30
   max_topics_per_day: 20
   max_personal_messages_per_day: 20
+  limit_admin_personal_messages_per_day:
+    default: 0
+    min: 0
+    hidden: true
   max_likes_per_day: 50
   max_bookmarks_per_day: 20
   max_flags_per_day:
@@ -3320,9 +3328,6 @@ developer:
     default: 50
     hidden: true
     client: true
-  viewport_based_mobile_mode:
-    default: true
-    client: true
   site_setting_verbose_client_logging:
     default: false
     client: true
@@ -3360,6 +3365,10 @@ navigation:
 embedding:
   embed_full_app:
     default: false
+    client: true
+    area: "embedding"
+  embed_full_app_signin_flow:
+    default: true
     client: true
     area: "embedding"
   suppress_third_party_analytics_in_embed:
@@ -4344,18 +4353,6 @@ dashboard:
       - reports
       - features
     area: "reports"
-  admin_dashboard_sections:
-    type: list
-    list_type: compact
-    default: "highlights|reports|traffic|engagement"
-    allow_any: false
-    choices:
-      - highlights
-      - reports
-      - traffic
-      - engagement
-    area: "reports"
-    hidden: true
   dashboard_general_tab_activity_metrics:
     client: true
     type: list
@@ -4408,16 +4405,18 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "stable"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403284"
   enable_new_post_reactions_menu:
     default: false
     client: true
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/389820"
   enable_composer_redesign:
     default: false
     client: true
@@ -4426,6 +4425,15 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "other,all_members"
+  enable_new_composer_actions:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403635"
   rename_faq_to_guidelines:
     default: false
     hidden: true
@@ -4468,7 +4476,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/387322"
   enable_simplified_category_creation:
@@ -4484,7 +4492,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "beta"
+      status: "permanent"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/397098"
       allow_enabled_for:
@@ -4501,13 +4509,24 @@ experimental:
       impact: "feature,all_members"
       status: "beta"
       learn_more_url: "https://meta.discourse.org/t/-/395331"
+  enable_horizon_high_context_topic_cards:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "beta"
+      impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/402843"
+      allow_enabled_for:
+        - everyone
   granular_anonymous_and_logged_in_groups_permissions:
     default: false
     client: true
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/402273"
       allow_enabled_for:
@@ -4519,3 +4538,6 @@ experimental:
     upcoming_change:
       status: "conceptual"
       impact: "feature,admins"
+  admin_dashboard_reports_seeded:
+    default: false
+    hidden: true

@@ -1,0 +1,26 @@
+.workflows-admin-table {
+  &__toolbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  &__table {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+
+    th {
+      border-bottom: 1px solid var(--primary-low);
+    }
+  }
+
+  &__checkbox-cell {
+    white-space: nowrap;
+  }
+
+  &__checkbox {
+    cursor: pointer;
+    margin: 0;
+  }
+}

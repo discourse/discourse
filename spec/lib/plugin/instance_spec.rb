@@ -64,12 +64,12 @@ TEXT
 
   describe "find_all" do
     it "can find plugins correctly" do
-      plugins = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")
-      expect(plugins.count).to eq(5)
+      plugins = Plugin::Instance.find_all("#{Rails.root.join("spec/fixtures/plugins")}")
+      expect(plugins.count).to eq(6)
       plugin = plugins[3]
 
       expect(plugin.name).to eq("plugin-name")
-      expect(plugin.path).to eq("#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb")
+      expect(plugin.path).to eq("#{Rails.root.join("spec/fixtures/plugins/my_plugin/plugin.rb")}")
 
       plugin.git_repo.stubs(:latest_local_commit).returns("123456")
       plugin.git_repo.stubs(:url).returns("http://github.com/discourse/discourse-plugin")
@@ -80,7 +80,7 @@ TEXT
     end
 
     it "does not blow up on missing directory" do
-      plugins = Plugin::Instance.find_all("#{Rails.root}/frank_zappa")
+      plugins = Plugin::Instance.find_all("#{Rails.root.join("frank_zappa")}")
       expect(plugins.count).to eq(0)
     end
   end
@@ -139,7 +139,7 @@ TEXT
   describe "git repo details" do
     describe ".discourse_owned?" do
       it "returns true if the plugin is on github in discourse-org or discourse orgs" do
-        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin = Plugin::Instance.find_all("#{Rails.root.join("spec/fixtures/plugins")}")[3]
         plugin.git_repo.stubs(:latest_local_commit).returns("123456")
         plugin.git_repo.stubs(:url).returns("http://github.com/discourse/discourse-plugin")
         expect(plugin.discourse_owned?).to eq(true)
@@ -152,13 +152,13 @@ TEXT
       end
 
       it "returns false if the commit_url is missing because of git command issues" do
-        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin = Plugin::Instance.find_all("#{Rails.root.join("spec/fixtures/plugins")}")[3]
         plugin.git_repo.stubs(:latest_local_commit).returns(nil)
         expect(plugin.discourse_owned?).to eq(false)
       end
 
       it "returns false if the commit_url has a nil path" do
-        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin = Plugin::Instance.find_all("#{Rails.root.join("spec/fixtures/plugins")}")[3]
         plugin.git_repo.stubs(:latest_local_commit).returns("123456")
         plugin.git_repo.stubs(:url).returns("invalid://url")
         parsed_url = URI.parse("invalid://url")
@@ -170,7 +170,7 @@ TEXT
 
     describe ".preinstalled?" do
       it "returns true when the plugin directory has no .git directory" do
-        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin = Plugin::Instance.find_all("#{Rails.root.join("spec/fixtures/plugins")}")[3]
         expect(plugin.preinstalled?).to eq(true)
       end
 
@@ -439,6 +439,7 @@ TEXT
       plugin.register_asset("mobile.css", :mobile)
       plugin.register_asset("desktop.css", :desktop)
       plugin.register_asset("desktop2.css", :desktop)
+      plugin.register_asset("admin.css", :admin)
 
       plugin.activate!
 
@@ -446,6 +447,7 @@ TEXT
       expect(DiscoursePluginRegistry.desktop_stylesheets[plugin.directory_name].count).to eq(2)
       expect(DiscoursePluginRegistry.stylesheets[plugin.directory_name].count).to eq(2)
       expect(DiscoursePluginRegistry.mobile_stylesheets[plugin.directory_name].count).to eq(1)
+      expect(DiscoursePluginRegistry.admin_stylesheets[plugin.directory_name].count).to eq(1)
     end
   end
 
@@ -598,12 +600,12 @@ TEXT
 
       expect(locale[:fallbackLocale]).to eq("pt_BR")
       expect(locale[:moment_js]).to eq(
-        ["pt-br", "#{Rails.root}/frontend/discourse/node_modules/moment/locale/pt-br.js"],
+        ["pt-br", "#{Rails.root.join("frontend/discourse/node_modules/moment/locale/pt-br.js")}"],
       )
       expect(locale[:moment_js_timezones]).to eq(
         [
           "pt",
-          "#{Rails.root}/node_modules/@discourse/moment-timezone-names-translations/locales/pt.js",
+          "#{Rails.root.join("node_modules/@discourse/moment-timezone-names-translations/locales/pt.js")}",
         ],
       )
       expect(locale[:plural]).to be_nil
@@ -619,7 +621,7 @@ TEXT
 
       expect(locale[:fallbackLocale]).to be_nil
       expect(locale[:moment_js]).to eq(
-        ["tlh", "#{Rails.root}/frontend/discourse/node_modules/moment/locale/tlh.js"],
+        ["tlh", "#{Rails.root.join("frontend/discourse/node_modules/moment/locale/tlh.js")}"],
       )
       expect(locale[:plural]).to eq(plural.with_indifferent_access)
 
@@ -1069,6 +1071,65 @@ TEXT
       UserDestroyer.new(Discourse.system_user).destroy(user, {})
 
       expect(callback_called).to eq(false)
+    end
+  end
+
+  describe "#register_admin_dashboard_report_source" do
+    let(:plugin) { Plugin::Instance.new }
+    let(:fake_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) { def self.source_name = "fake_source" }
+    end
+
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
+        entry[:value] == fake_provider
+      end
+    end
+
+    it "raises when the argument isn't a SourceProvider subclass" do
+      expect { plugin.register_admin_dashboard_report_source(Object) }.to raise_error(
+        ArgumentError,
+        /AdminDashboard::Reports::SourceProvider/,
+      )
+    end
+
+    it "raises when the argument isn't a class at all" do
+      expect { plugin.register_admin_dashboard_report_source("nope") }.to raise_error(
+        ArgumentError,
+        /AdminDashboard::Reports::SourceProvider/,
+      )
+    end
+
+    it "raises when a different provider already claims the source_name" do
+      plugin.register_admin_dashboard_report_source(fake_provider)
+
+      conflicting =
+        Class.new(AdminDashboard::Reports::SourceProvider) { def self.source_name = "fake_source" }
+
+      expect { plugin.register_admin_dashboard_report_source(conflicting) }.to raise_error(
+        ArgumentError,
+        /already registered/,
+      )
+    end
+
+    it "is idempotent when the same class is registered twice (e.g. plugin reload)" do
+      plugin.register_admin_dashboard_report_source(fake_provider)
+
+      expect do plugin.register_admin_dashboard_report_source(fake_provider) end.not_to change {
+        DiscoursePluginRegistry._raw_admin_dashboard_report_sources.count do |entry|
+          entry[:value] == fake_provider
+        end
+      }
+    end
+
+    it "raises against core source_name collisions too" do
+      core_clash =
+        Class.new(AdminDashboard::Reports::SourceProvider) { def self.source_name = "core_report" }
+
+      expect { plugin.register_admin_dashboard_report_source(core_clash) }.to raise_error(
+        ArgumentError,
+        /already registered/,
+      )
     end
   end
 

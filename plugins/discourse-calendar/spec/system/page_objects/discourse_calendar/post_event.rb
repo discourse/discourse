@@ -19,8 +19,69 @@ module PageObjects
           self
         end
 
+        def has_going_menu?
+          has_css?(".discourse-post-event-going-menu-trigger")
+        end
+
+        def has_no_going_menu?
+          has_no_css?(".discourse-post-event-going-menu-trigger")
+        end
+
+        def has_going_button?
+          has_css?(".going-button")
+        end
+
+        def has_going_status?
+          has_css?(".event-status.status-going")
+        end
+
+        def has_going_count?(count)
+          has_css?(".event-invitees-icon .going", text: count.to_s)
+        end
+
+        def has_invitee_avatar?(username)
+          has_css?(".event-invitees-avatars [data-user-card='#{username}']")
+        end
+
+        def has_no_invitee_avatar?(username)
+          has_no_css?(".event-invitees-avatars [data-user-card='#{username}']")
+        end
+
+        def close_popup
+          locator(".discourse-post-event-close").click
+          has_no_css?("[data-identifier='post-event-menu']")
+          self
+        end
+
+        def open_going_menu
+          locator(".discourse-post-event-going-menu-trigger").click
+          has_css?(".discourse-post-event-going-menu-content")
+          self
+        end
+
+        def going_this_event
+          open_going_menu
+          locator(".discourse-post-event-going-menu-content .going-once").click
+          self
+        end
+
+        def going_all_following
+          open_going_menu
+          locator(".discourse-post-event-going-menu-content .going-all").click
+          self
+        end
+
         def open_bulk_invite_modal
           open_more_menu { locator(".dropdown-menu__item.bulk-invite").click }
+          self
+        end
+
+        def has_title_link_href?(href)
+          has_css?(".event-info .name a[href='#{href}']")
+        end
+
+        def open_invite_user_or_group_modal
+          open_more_menu { locator(".dropdown-menu__item.invite-user-or-group").click }
           self
         end
 

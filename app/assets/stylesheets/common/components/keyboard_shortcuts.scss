@@ -6,7 +6,17 @@
 }
 
 .featured-topic.selected,
-.topic-post.selected {
+.topic-post.selected,
+.nested-view__op-article[data-keyboard-selected],
+.nested-post[data-keyboard-selected]
+  > .nested-post__main
+  > .nested-post__article,
+.nested-post[data-keyboard-selected]
+  > .nested-post__main
+  > .nested-post__collapsed-bar,
+.nested-post[data-keyboard-selected]
+  > .nested-post__main
+  > .nested-post__placeholder {
   box-shadow: -3px 0 0 var(--d-nav-color--active);
 }
 
@@ -16,6 +26,8 @@
 .topic-post,
 .post-stream--cloaked,
 .latest-topic-list-item.selected,
+.nested-view__op-article[data-keyboard-selected],
+.nested-post[data-keyboard-selected],
 .search-results .fps-result.selected {
   &:focus-visible {
     outline: none;
@@ -30,7 +42,7 @@
   background-color: inherit;
 }
 
-.keyboard-shortcuts-modal.d-modal.-max {
+.keyboard-shortcuts-modal.d-modal.--max {
   .d-modal__container {
     max-width: 70vw;
   }
@@ -43,6 +55,7 @@
     font-size: var(--font-0);
     background-color: var(--primary-very-low);
     padding: 0.5rem 1rem;
+    margin: 0;
   }
 }
 
@@ -78,24 +91,31 @@
     }
   }
 
-  ul {
-    list-style: none;
-    margin: 0;
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
 
-    li {
-      align-items: center;
-      display: flex;
-      flex-wrap: nowrap;
-      flex-direction: row-reverse;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--content-border-color);
-      padding: 0.25rem 1rem;
-    }
+  tbody tr {
+    border-bottom: 1px solid var(--content-border-color);
+  }
+
+  td {
+    padding: 0.25rem 1rem;
+    vertical-align: middle;
+  }
+
+  .shortcut-description {
+    width: 100%;
+  }
+
+  .shortcut-key {
+    text-align: right;
+    white-space: nowrap;
 
     span {
       border-radius: 3px;
       display: inline-flex;
-      margin: 0 6px;
       padding: 2px 1px 4px;
     }
 
@@ -111,10 +131,10 @@
       display: revert;
       text-align: right;
     }
+  }
 
-    kbd {
-      font-family: var(--d-font-family--monospace);
-      font-weight: bold;
-    }
+  kbd {
+    font-family: var(--d-font-family--monospace);
+    font-weight: bold;
   }
 }

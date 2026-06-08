@@ -2,7 +2,7 @@
 
 require "uri"
 
-Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each { |f| require f }
+Dir["#{Rails.root.join("lib/onebox/engine/*_onebox.rb")}"].sort.each { |f| require f }
 
 module Oneboxer
   ONEBOX_CSS_CLASS = "onebox"
@@ -410,22 +410,49 @@ module Oneboxer
 
       PrettyText.cook(quote)
     else
+      title, excerpt = localized_topic_onebox_content(topic, post, opts[:locale])
+
       args = {
         topic_id: topic.id,
         post_number: post.post_number,
         avatar: PrettyText.avatar_img(post.user.avatar_template_url, "tiny"),
         original_url: url,
-        title: PrettyText.unescape_emoji(CGI.escapeHTML(topic.title)),
+        title: PrettyText.unescape_emoji(CGI.escapeHTML(title)),
         category_html: CategoryBadge.html_for(topic.category),
-        quote:
-          PrettyText.unescape_emoji(
-            post.excerpt(SiteSetting.post_onebox_maxlength, keep_svg: true),
-          ),
+        quote: PrettyText.unescape_emoji(excerpt),
       }
 
       template = template("discourse_topic_onebox")
       Mustache.render(template, args)
     end
+  end
+
+  # Returns the [title, excerpt] for an internal topic onebox card, localized to
+  # +locale+ when a translation exists. The title and excerpt fall back to the
+  # original independently, so a translated title can sit above an untranslated
+  # preview. Used while cooking a translated post (see LocalizedCookedPostProcessor).
+  def self.localized_topic_onebox_content(topic, post, locale)
+    title = topic.title
+    excerpt = post.excerpt(SiteSetting.post_onebox_maxlength, keep_svg: true)
+
+    return title, excerpt if locale.blank? || !SiteSetting.content_localization_enabled
+
+    if (topic_localization = topic.get_localization(locale, fallback: false))
+      title = topic_localization.title.presence || title
+    end
+
+    if (post_localization = post.get_localization(locale, fallback: false)) &&
+         post_localization.cooked.present?
+      excerpt =
+        Post.excerpt(
+          post_localization.cooked,
+          SiteSetting.post_onebox_maxlength,
+          keep_svg: true,
+          post: post,
+        )
+    end
+
+    [title, excerpt]
   end
 
   def self.local_user_html(url, route)
@@ -604,7 +631,7 @@ module Oneboxer
   def self.template(template_name)
     @template_cache ||= {}
     @template_cache[template_name] ||= begin
-      full_path = "#{Rails.root}/lib/onebox/templates/#{template_name}.mustache"
+      full_path = "#{Rails.root.join("lib/onebox/templates/#{template_name}.mustache")}"
       File.read(full_path)
     end
   end

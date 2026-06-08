@@ -2,7 +2,7 @@
 import ClassicComponent from "@ember/component";
 
 const empty = <template>
-  {{! template-lint-disable no-yield-only}}{{yield}}
+  {{! eslint-disable ember/template-no-yield-only }}{{yield}}
 </template>;
 const shortcuts = {
   div: <template>

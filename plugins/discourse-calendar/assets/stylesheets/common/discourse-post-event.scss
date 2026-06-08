@@ -148,7 +148,7 @@ $show-interested: inherit;
 
     .month {
       text-align: center;
-      color: red;
+      color: var(--primary);
       font-size: var(--font-down-2);
       font-weight: 400;
       text-transform: uppercase;
@@ -244,11 +244,20 @@ $show-interested: inherit;
         flex: 1;
       }
 
+      .going-button.d-combo-button {
+        flex: 1;
+
+        .d-combo-button-menu {
+          flex: 0 0 auto;
+        }
+      }
+
       .interested-button {
         display: $show-interested;
       }
 
-      &.status-going .going-button .d-icon {
+      &.status-going .going-button > .d-icon,
+      &.status-going .going-button .d-combo-button-button .d-icon {
         color: var(--success);
       }
 
@@ -492,6 +501,12 @@ $show-interested: inherit;
     align-items: center;
     justify-content: center;
     color: var(--primary-medium);
+  }
+}
+
+.discourse-post-event-going-menu-content {
+  .--selected .d-icon {
+    color: var(--success);
   }
 }
 

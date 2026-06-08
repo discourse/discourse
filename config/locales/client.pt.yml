@@ -144,6 +144,11 @@ pt:
       placeholder: data
       from_placeholder: "a partir da data"
       to_placeholder: "até à data"
+    date_range_picker:
+      apply: "Aplicar"
+      presets:
+        last_7_days: "Últimos 7 Dias"
+        last_30_days: "Últimos 30 Dias"
     languages:
       ar:
         name: Árabe
@@ -382,8 +387,6 @@ pt:
     tos: "Termos do Serviço"
     rules: "Regras"
     conduct: "Código de Conduta"
-    mobile_view: "Visualização Móvel"
-    desktop_view: "Visualização PC"
     now: "ainda agora"
     read_more: "ler mais"
     more: "Mais"
@@ -417,8 +420,6 @@ pt:
     admin_onboarding_banner:
       start_posting:
         back: "Anterior"
-      spread_the_word:
-        action: "Copiar hiperligação"
     about:
       edit: "Editar esta página"
       simple_title: "Acerca"
@@ -591,6 +592,9 @@ pt:
         other_drafts:
           one: "+%{count} outro rascunho"
           other: "+%{count} outros rascunhos"
+    embed_mode:
+      signin_flow:
+        cancel: "Cancelar"
     topic_count_all:
       one: "Ver %{count} tópico novo"
       other: "Ver %{count} tópicos novos"
@@ -1366,7 +1370,6 @@ pt:
         normal_option: "Normal"
         normal_option_title: "Será notificado se este usuário lhe responder, citar ou mencionar."
       notification_schedule:
-        title: "Agendamento de Notificações"
         label: "Activar agendamento de notificações personalizado"
         tip: "Fora deste horário, as suas notificações serão pausadas."
         midnight: "Meia-noite"
@@ -1410,13 +1413,8 @@ pt:
       notifications: "Notificações"
       statistics: "Estatísticas"
       desktop_notifications:
-        label: "Notificações Instantâneas"
         not_supported: "Não são suportadas notificações neste navegador. Desculpe."
-        perm_default: "Ligar Notificações"
-        perm_denied_btn: "Permissão Negada"
         perm_denied_expl: "Negou a permissão para as notificações. Autorize as notificações através das configurações do seu navegador."
-        disable: "Desativar Notificações"
-        enable: "Ativar Notificações"
         each_browser_note: "Nota: precisa de alterar esta configuração em todos os navegadores que utilizar. Todas as notificações serão desativadas se pausar as notificações no menu do utilizador, independentemente desta definição."
         consent_prompt: "Quer receber notificações instantâneas quando outras pessoas responderem às suas publicações?"
       dismiss: "Marcar como visto"
@@ -2802,6 +2800,7 @@ pt:
       collapse: "Minimizar o painel de compositor"
       open: "Abrir o painel de compositor"
       abandon: "Fechar compositor e ignorar rascunho"
+      edit_reason: "Porque está a editar?"
       enter_fullscreen: "Entrar no modo de ecrã completo do compositor"
       exit_fullscreen: "Sair do modo de ecrã completo do compositor"
       exit_fullscreen_prompt: "Pressione <kbd>ESC</kbd> para sair do ecrã completo"
@@ -2832,22 +2831,22 @@ pt:
           desc: Criar nova mensagem começando com os mesmos destinatários
         reply_to_topic:
           label: Responder ao tópico
+          trigger: Tópico
           desc: Responder ao tópico, não a uma publicação especifica
+        reply_to_message:
+          trigger: Mensagem
         toggle_whisper:
           label: Alternar sussurro
-          desc: Os sussurros são apenas visíveis para os membros da equipa
         create_topic:
-          label: "Novo tópico"
           desc: Criar um novo tópico
         create_personal_message:
-          label: "Nova mensagem"
           desc: "Crie uma nova mensagem privada"
         shared_draft:
           label: "Rascunho Partilhado"
           desc: "Escrever um rascunho de tópico que só pode ser visível para usuários permitidos"
         toggle_topic_bump:
-          label: "Alterar possibilidade de bump de tópico"
           desc: "Responder sem alterar a data de última resposta"
+        unknown_user: "Utilizador"
       reload: "Recarregar"
       ignore: "Ignorar"
       image_alt_text:
@@ -3115,6 +3114,7 @@ pt:
         max_views:
           placeholder: máximo
     hamburger_menu: "Menu de Navegação"
+    header_panel: "Cabeçalho"
     new_item: "novo"
     go_back: "voltar atrás"
     not_logged_in_user: "página de utilizador com resumo da atividade atual e preferências "
@@ -3148,6 +3148,16 @@ pt:
           other: "Descartar (%{count})…"
         dismiss_tooltip: "rejeitar apenas as novas mensagens ou deixar de seguir os tópicos"
         also_dismiss_topics: "Parar de seguir estes tópicos para que estes nunca me apareçam como não lidos novamente"
+        dismiss_new_replies: "Descartar respostas novas"
+        dismiss_new_topics_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_all_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
         dismiss_new: "Marcar Visto Novos"
         dismiss_new_modal:
           posts: "Descartar respostas novas"
@@ -3822,7 +3832,6 @@ pt:
         name_placeholder: "Para que serve este marcador?"
         name_input_label: "Nome do marcador"
         set_reminder: "Lembrar-me"
-        options: "Opções"
         actions:
           delete_bookmark:
             name: "Eliminar marcador"
@@ -4177,79 +4186,59 @@ pt:
       shortcut_key_delimiter_comma: ", "
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Atalhos de Teclado"
+      description_header: "Descrição"
+      key_header: "Chave"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Ir Para"
-        home: "%{shortcut} Início"
-        latest: "%{shortcut} Recentes"
-        new: "%{shortcut} Novo"
-        unread: "%{shortcut} Não lido"
-        categories: "%{shortcut} Categorias"
-        top: "%{shortcut} Topo"
-        bookmarks: "%{shortcut} Marcadores"
-        profile: "%{shortcut} Perfil"
-        messages: "%{shortcut} Mensagens"
-        drafts: "%{shortcut} Esboços"
-        next: "%{shortcut} Próximo Tópico"
-        previous: "%{shortcut} Tópico Anterior"
+        home: "Início"
+        latest: "Mais Recente"
+        new: "Novo"
+        unread: "Não Lido"
+        unseen: "Por ler"
+        categories: "Categorias"
+        top: "Os Melhores"
+        bookmarks: "Marcadores"
+        profile: "Perfil"
+        messages: "Mensagens"
+        drafts: "Rascunhos"
       navigation:
         title: "Navegação"
-        jump: "%{shortcut} Ir para a publicação #"
-        back: "%{shortcut} Retroceder"
-        up_down: "%{shortcut} Mover seleção &uarr; &darr;"
-        open: "%{shortcut} Abrir tópico selecionado"
-        next_prev: "%{shortcut} Secção seguinte/anterior"
-        go_to_unread_post: "%{shortcut} Ir para a primeira publicação não lida"
+        back: "Anterior"
+        up_down: "Mover seleção &uarr; &darr;"
       application:
         title: "Aplicação"
-        notifications: "%{shortcut} Abrir notificações"
-        user_profile_menu: "%{shortcut} Abrir menu de utilizador"
-        show_incoming_updated_topics: "%{shortcut} Mostrar tópicos atualizados"
-        search: "%{shortcut} Pesquisar"
-        help: "%{shortcut} Abrir ajuda do teclado"
-        log_out: "%{shortcut} Sair"
+        search: "Procurar"
+        log_out: "Sair"
       composing:
         title: "Composição"
-        return: "%{shortcut} Retornar ao compositor"
-        fullscreen: "%{shortcut} Compositor em tela cheia"
+        link: "Inserir hiperligação"
+        preformatted: "Texto pré-formatado"
+        paragraph: "Parágrafo"
+        blockquote: "Bloco de Citação"
       bookmarks:
         title: "Favoritos"
-        enter: "%{shortcut} Salvar e fechar"
-        later_today: "%{shortcut} Hoje mais tarde"
-        later_this_week: "%{shortcut} Nesta semana mais tarde"
-        tomorrow: "%{shortcut} Amanhã"
-        next_week: "%{shortcut} Semana que vem"
-        next_month: "%{shortcut} Próximo mês"
-        next_business_week: "%{shortcut} Início da próxima semana"
-        next_business_day: "%{shortcut} Próximo dia útil"
-        custom: "%{shortcut} Data e hora personalizadas"
-        none: "%{shortcut} Sem lembrete"
-        delete: "%{shortcut} Excluir favorito"
+        enter: "Guardar e fechar"
+        later_today: "Hoje, mais tarde"
+        later_this_week: "No final desta semana"
+        tomorrow: "Amanhã"
+        next_week: "Próxima semana"
+        next_month: "Próximo mês"
+        next_business_day: "Próximo dia útil"
+        custom: "Data e hora personalizadas"
+        delete: "Eliminar marcador"
       actions:
         title: "Ações"
-        bookmark_topic: "%{shortcut} Alternar marcador de tópico"
-        pin_unpin_topic: "%{shortcut} Afixar/Desafixar tópico"
-        share_topic: "%{shortcut} Partilhar tópico"
-        share_post: "%{shortcut} Partilhar publicação"
-        reply_as_new_topic: "%{shortcut} Responder como tópico ligado"
-        reply_topic: "%{shortcut} Responder ao tópico"
-        reply_post: "%{shortcut} Responder à publicação"
-        quote_post: "%{shortcut} Citar publicação"
-        like: "%{shortcut} Gostar da publicação"
-        flag: "%{shortcut} Sinalizar publicação"
-        bookmark: "%{shortcut} Adicionar mensagem aos marcadores"
-        edit: "%{shortcut} Editar publicação"
-        delete: "%{shortcut} Eliminar publicação"
-        mark_muted: "%{shortcut} Silenciar tópico"
-        mark_tracking: "%{shortcut} Seguir tópico"
-        mark_watching: "%{shortcut} Vigiar tópico"
-        print: "%{shortcut} Imprimir tópico"
+        reply_as_new_topic: "Responder como tópico relacionado"
+        reply_topic: "Responder ao tópico"
+        mark_tracking: "Acompanhar o tópico"
+        mark_watching: "Ver tópico"
+        defer: "Marcar tópico como não lido"
       search_menu:
         title: "Menu de Busca"
-        prev_next: "%{shortcut} Mover seleção para cima e para baixo"
-        insert_url: "%{shortcut} Inserir seleção no compositor aberto"
       admin:
         title: "Administração"
-        search_prev_next: "%{shortcut} Mover seleção para cima e para baixo"
     badges:
       earned_n_times:
         one: "Ganhou este distintivo %{count} vez"
@@ -4302,13 +4291,6 @@ pt:
       choose_for_topic: "tags opcionais"
       category_restricted: "Esta tag é restrita a categorias que você não tem permissão para acessar."
       synonyms: "Sinônimos"
-      synonyms_description: "Quando as tags seguintes forem usadas, elas serão substituídas por <b>%{base_tag_name}</b>."
-      tag_groups_info:
-        one: 'Esta tag pertence ao grupo "%{tag_groups}".'
-        other: "Esta tag pertence a estes grupos: %{tag_groups}."
-      category_restrictions:
-        one: "Só pode ser usado nesta categoria:"
-        other: "Só pode ser usado nessas categorias:"
       add_synonyms_label: "Adicionar sinônimos:"
       add_synonyms: "Adicionar"
       remove_synonym: "Remover Sinônimo"
@@ -4812,6 +4794,31 @@ pt:
         sections:
           reports:
             title: "Relatórios"
+          engagement:
+            activity_by_category:
+              category: "Categoria"
+              topics: "Tópicos"
+              posts: "Mensagens"
+              share: "Partilhar"
+            whos_posting:
+              all_categories: "Todas as categorias"
+              staff: "Pessoal"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Novo"
+                "1": "Básico"
+                "2": "Membro"
+                "3": "Habitual"
+                "4": "Líder"
+        reports_section:
+          no_data: "Sem dados para exibir"
+          modal:
+            enabled_heading: "Ativado"
+            all_heading: "Todos os relatórios"
+            apply: "Aplicar"
+        site_traffic:
+          series:
+            anonymous: "Anónimo"
         period:
           last_7_days: "Últimos 7 Dias"
           last_30_days: "Últimos 30 Dias"
@@ -5065,6 +5072,8 @@ pt:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nome"
+          company_url: "site"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupos"
           optional: "(opcional)"

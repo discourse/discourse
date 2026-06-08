@@ -36,6 +36,7 @@ module CookedProcessorMixin
             invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
             user_id: @model&.user_id,
             category_id: @category_id,
+            locale: @opts[:locale],
           )
 
         @has_oneboxes = true if onebox.present?
@@ -429,7 +430,7 @@ module CookedProcessorMixin
 
     original_width, original_height = nil
 
-    if (upload.present?)
+    if upload.present?
       original_width = upload.width || 0
       original_height = upload.height || 0
     else

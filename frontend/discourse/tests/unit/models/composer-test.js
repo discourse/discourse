@@ -135,6 +135,25 @@ module("Unit | Model | composer", function (hooks) {
     );
   });
 
+  test("fires composer:category-changed when the category changes", function (assert) {
+    const composer = createComposer.call(this, { action: CREATE_TOPIC });
+    const appEvents = getOwner(this).lookup("service:app-events");
+
+    let firedWith;
+    appEvents.on("composer:category-changed", (model) => (firedWith = model));
+
+    composer.set("categoryId", 12345);
+    assert.strictEqual(firedWith, composer, "fires with the composer model");
+
+    firedWith = undefined;
+    composer.set("categoryId", 12345);
+    assert.strictEqual(
+      firedWith,
+      undefined,
+      "does not fire when the category is unchanged"
+    );
+  });
+
   test("missingTitleCharacters", function (assert) {
     const missingTitleCharacters = (val, isPM, expected, message) => {
       const composer = createComposer.call(this, {

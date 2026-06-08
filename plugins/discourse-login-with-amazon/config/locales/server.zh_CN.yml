@@ -6,7 +6,6 @@
 
 zh_CN:
   site_settings:
-    enable_login_with_amazon: "启用“使用 Amazon 登录”身份验证，需要 `login with amazon client id` 和 `login with amazon client secret`。"
     login_with_amazon_client_id: "使用 Amazon 客户端 ID 登录"
     login_with_amazon_client_secret: "使用 Amazon 客户端密钥登录"
     login_with_amazon_scope: "使用 Amazon OAuth2 范围登录（空格分隔）"

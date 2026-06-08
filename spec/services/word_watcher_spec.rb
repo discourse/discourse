@@ -52,6 +52,34 @@ RSpec.describe WordWatcher do
     end
   end
 
+  describe ".regexps_for_action" do
+    before { SiteSetting.watched_words_regular_expressions = true }
+
+    it "maps valid words to their attrs and drops words whose regex is invalid" do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "hello",
+        replacement: "hi",
+      )
+      Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "+1")
+
+      result = nil
+      fake_logger = track_log_messages { result = described_class.regexps_for_action(:replace) }
+
+      expect(result).to eq("(hello)" => { word: "hello", replacement: "hi", case_sensitive: false })
+      expect(fake_logger.warnings).to eq(
+        [
+          "Watched word '+1' has invalid regex '(+1)' for replace: target of repeat operator is not specified: /(+1)/",
+        ],
+      )
+    end
+
+    it "returns nil when no watched words exist for the action" do
+      expect(described_class.regexps_for_action(:replace)).to be_nil
+    end
+  end
+
   describe ".compiled_regexps_for_action" do
     let!(:word1) { Fabricate(:watched_word, action: WatchedWord.actions[:block]).word }
     let!(:word2) { Fabricate(:watched_word, action: WatchedWord.actions[:block]).word }

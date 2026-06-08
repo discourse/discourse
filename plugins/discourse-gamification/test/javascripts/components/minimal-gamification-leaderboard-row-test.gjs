@@ -4,7 +4,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import MinimalGamificationLeaderboardRow from "../discourse/components/minimal-gamification-leaderboard-row";
 
 module(
-  "Discourse Gamification | Component | minimal-gamification-leaderboard-row",
+  "Discourse Gamification | Component | MinimalGamificationLeaderboardRow",
   function (hooks) {
     setupRenderingTest(hooks);
 

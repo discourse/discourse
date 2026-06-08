@@ -5,30 +5,239 @@
 # https://translate.discourse.org/
 
 nl:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
+      placeholder: Discourse Rewind
+      title: Rewind
+      loading: "Splines retirculeren..."
+      viewing_other_user: "Je bekijkt het Discourse Rewind-rapport van <strong>%{username}</strong> ."
+      cannot_view_rewind: >
+        Je kunt dit Discourse Rewind-rapport niet bekijken. Misschien heeft de eigenaar het niet openbaar gedeeld?<br><br> $> _<br><br>
+      preferences:
+        enable_rewind: "Schakel Discourse Rewind in. Hierdoor wordt het eindejaarsoverzicht van de activiteiten weergegeven in je profiel en op je avatar."
+        share_publicly: "Deel je Discourse Rewind-overzicht met andere forumleden. Elk forumlid kan je Discourse Rewind-overzicht bekijken."
+        cannot_share_when_profile_hidden: "Om Rewind te kunnen delen, moet je anderen toestaan je openbare profiel te bekijken."
+      profile_link: "Bekijk je Discourse Rewind voor %{rewindYear}"
       share:
         toggle_label:
           private: "Privé"
           public: "Openbaar"
+        confirm: "Zorg ervoor dat je je Rewind even controleert voordat je deze deelt, het kan gegevens uit privéberichten bevatten. Je kunt het op elk moment weer privé maken."
+        confirm_button:
+          enable: "Openbaar maken"
+          disable: "Privé houden"
+        enabled_success: "Je Rewind-profiel is nu deelbaar met andere forumleden."
+        disabled_success: "Je Rewind is nu privé."
       reports:
+        activity_calendar:
+          title: Activiteitenkalender
+          cell_title:
+            visited_no_posts: "Je hebt op %{date} een kijkje genomen, maar geen berichten geplaatst."
+            visited_no_posts_others: "%{username} heeft op %{date} een kijkje genomen, maar geen berichten geplaatst."
+            visited_with_posts:
+              one: "Je hebt %{count} bericht geplaatst op %{date}."
+              other: "Je hebt %{count} berichten geplaatst op %{date}."
+            visited_with_posts_others:
+              one: "%{username} heeft %{count} bericht geplaatst op %{date}."
+              other: "%{username} heeft %{count} berichten geplaatst op %{date}."
+            no_activity: "Je was er niet op %{date}."
+            no_activity_others: "%{username} was er niet op %{date}."
+        top_words:
+          title: Woordgebruik
         reading_time:
           title: Leestijd
+          book_comparison: "Je hebt <code>%{readingTime}</code> lezend op onze site doorgebracht! Dat is precies de tijd die je nodig zou hebben om helemaal <i>%{bookTitle}</i> te lezen"
+          book_comparison_others: "%{username} heeft <code>%{readingTime}</code> lezend op onze site doorgebracht! Dat is precies de tijd die je nodig zou hebben om helemaal <i>%{bookTitle}</i> te lezen"
+        post_used_reactions:
+          title: Meest gebruikte reacties in topics
+          total_number: "Totaal aantal reacties: %{count}"
+        post_received_reactions:
+          title: Meest ontvangen reacties in topics
+        fbff:
+          title: Je FBFF (beste forumvriend voor altijd)
+          title_others: "FBFF van %{username}(beste forumvriend voor altijd)"
+        most_viewed_categories:
+          title:
+            one: Je meest bekeken categorie
+            other: Je %{count} meest bekeken categorieën
+          title_others:
+            one: "De meest bekeken categorie van %{username}n"
+            other: "De %{count} meest bekeken categorieën van %{username}"
+        most_viewed_tags:
+          title:
+            one: Je meest bekeken tag
+            other: Je %{count} meest bekeken tags
+          title_others:
+            one: "De meest bekeken tag van %{username}n"
+            other: "De %{count} meest bekeken tags van %{username}"
+        best_topics:
+          view_topic: Topic bekijken
+          title:
+            one: Je beste topic
+            other: Je %{count} beste topics
+          title_others:
+            one: "De beste topic van %{username}"
+            other: "De %{count} beste topics van %{username}"
+        best_posts:
+          view_post: Bericht bekijken
+          title:
+            one: Je beste bericht
+            other: Je %{count} beste berichten
+          title_others:
+            one: "Het beste bericht van %{username}"
+            other: "De %{count} beste berichten van %{username}"
+        ai_usage:
+          title: AI-gebruik
+          total_requests: Totaal aantal verzoeken
+          total_tokens: Totaal aantal tokens
+          success_rate: Succespercentage
+          favorite_features: Meest gebruikte functies
+          favorite_models: Meest gebruikte AI-modellen
+          wake_up: "Wakker worden %{username}..."
+          system_title: "AI-GEBRUIK GEDETECTEERD"
+          section_features: "TOPFUNCTIES"
+          section_models: "TOPMODELLEN"
         assignments:
           title: Toewijzingen
+          total_assigned: Toegewezen aan mij
           total_assigned_others: "Toegewezen aan %{username}"
+          completed: Voltooide toewijzingen
+          pending: Toewijzingen in behandeling
+          assigned_by_user: Gegeven toewijzingen
+          completion_rate: Voltooiingspercentage
         chat_usage:
+          title: Chatactiviteit
+          total_messages: Totaal aantal berichten
+          dm_messages: Directe berichten
+          unique_dm_channels: Conversaties via directe berichten
+          reactions_received: Ontvangen reacties
+          avg_message_length: Gemiddelde berichtlengte
+          favorite_channels: Favoriete kanalen
           messages: berichten
+          bot_name: XxRewindBotxX
           author: Jij
           author_others: "%{username}"
+          channel_title: "#chat-activiteit"
           status_online: "● online"
+          message_1:
+            one: "Je hebt dit jaar <strong>%{count}</strong> bericht verzonden!"
+            other: "Je hebt dit jaar <strong>%{count}</strong> berichten verzonden!"
+          reply_1: "lol geweldig B-)"
+          message_2_MF: |
+            Je had { dm_count, plural,
+                one {<strong>#</strong> direct-berichtconversatie}
+              other {<strong>#</strong> direct-berichtconversaties}
+            } met { channel_count, plural,
+                one {<strong>#</strong> persoon of groep}
+              other {<strong>#</strong> verschillende mensen of groepen}
+            }.
+          reply_2: "cOo0oL :D"
+          message_3:
+            one: "Mensen vinden je berichten geweldig! Je hebt <strong>%{count}</strong> reactie ❤️"
+            other: "Mensen vinden je berichten geweldig! Je hebt <strong>%{count}</strong> reacties ❤️"
+          reply_3: "r0fl rAwr 8-)"
+          message_4: "Je gemiddelde berichtlengte is <strong>%{length}</strong> tekens"
+          message_5: "Je favoriete kanalen:"
+          dancing_baby_alt: "Dansende baby"
+        favorite_gifs:
+          title:
+            one: Je favoriete GIF
+            other: Je %{count} favoriete GIF's
+          title_others:
+            one: "De favoriete GIF van %{username}"
+            other: "De %{count} favoriete GIF's van %{username}"
+          total_usage:
+            one: '%{count} keer gebruikt'
+            other: '%{count} keer gebruikt'
         invites:
           title: Uitnodigingen
+          total_invites: Totaal aantal verzonden uitnodigingen
+          redeemed: Geaccepteerde uitnodigingen
+          redemption_rate: Acceptatiepercentage
+          avg_trust_level: Gemiddeld vertrouwensniveau
+          invitee_impact: Impact van je uitgenodigden
+          invitee_impact_others: "Impact van de uitgenodigden van %{username}"
           invitee_posts: Gemaakte berichten
+          invitee_topics: Gestarte topics
           invitee_likes: Gegeven likes
+          most_active_invitee: Meest actieve uitgenodigde
+          guest_book_title: Gastenboek
+          guest_book_subtitle: Je community-uitnodigingen
+          guest_book_subtitle_others: "De community-uitnodigingen van %{username}"
           label_invitations_sent: "Uitnodigingen gestuurd:"
+          label_guests_joined: "Geaccepteerd uitnodigingen:"
+          label_acceptance_rate: "Acceptatiepercentage:"
+          section_contributions: Bijdragen van uitgenodigden
+          label_posts_written: "Geschreven berichten:"
+          label_topics_started: "Gestarte topics:"
+          label_likes_given: "Gegeven likes:"
+          section_most_active: Meest actieve gast
         new_user_interactions:
+          title: Nieuwe gebruikers mentoreren
+          subtitle:
+            one: Je hebt dit jaar %{count} nieuwe gebruiker geholpen
+            other: Je hebt dit jaar %{count} nieuwe gebruikers geholpen
+          subtitle_others:
+            one: "%{username} heeft dit jaar %{count} nieuwe gebruiker geholpen"
+            other: "%{username} heeft dit jaar %{count} nieuwe gebruikers geholpen"
+          new_member:
+            one: "%{count} nieuw lid"
+            other: "%{count} nieuwe leden"
+          total_interactions: Totaal aantal interacties
+          unique_new_users: Unieke nieuwe gebruikers
           likes_given: Gegeven likes
+          replies: Antwoorden op berichten
           mentions: Vermeldingen
+          topics_with_new_users: Topics met nieuwe gebruikers
+          contributions_helped: je bijdragen hielpen
+          contributions_helped_others: "De bijdragen van %{username} hielpen"
+        time_of_day_activity:
+          title: Dagelijks activiteitenritme
+          play_button: Speel je activiteit af als geluid
+          play_button_others: "Speel de activiteit van %{username} af als geluid"
+          stop_button: Audio afspelen stoppen
         writing_analysis:
+          title: Analyse schrijven
+          menu_file: Bestand
           menu_other: Overig
+          menu_additional: Extra
+          menu_opening: OPENEN
+          help_text: Druk op F1 voor hulp.
+          app_name: DiscoStar Professional
+          release_info: Release %{rewindYear} van CDCK
+          total_words: Totaal aantal woorden
+          total_posts: Totaal aantal berichten
+          avg_post_length: Gemiddelde berichtlengte
+          readability_score_label: Leesbaarheidsscore
+          readability_level: Leesbaarheidsniveau
+          readability_score:
+            over_80:
+              1: "Ernest Hemingway"
+              2: "Raymond Carver"
+              3: "Michael Crichton"
+              4: "Roald Dahl"
+            over_60:
+              1: "C.S. Lewis"
+              2: "Stephen King"
+              3: "Agatha Christie"
+              4: "George R.R. Martin"
+            over_40:
+              1: "George Orwell"
+              2: "F. Scott Fitzgerald"
+              3: "Aldous Huxley"
+              4: "Joan Didion"
+            over_20:
+              1: "Cormac McCarthy"
+              2: "William Faulkner"
+              3: "Virgina Woolf"
+              4: "Gabriel Garcia Marquez"
+            over_0:
+              1: "James Joyce"
+              2: "Thomas Pynchon"
+              3: "David Foster Wallace"
+              4: "Fyodor Dostoevsky"

@@ -14,7 +14,9 @@ export default class NestedRepliesExpandButton extends Component {
       class="nested-post__expand-replies btn-flat"
       ...attributes
       @action={{@onClick}}
-      @icon="nested-circle-plus"
+      @disabled={{@disabled}}
+      @icon="discourse-circle-plus"
+      @isLoading={{@isLoading}}
       @translatedLabel={{this.label}}
     />
   </template>

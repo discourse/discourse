@@ -1,91 +1,32 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
+import { concat } from "@ember/helper";
 import { service } from "@ember/service";
 import ConfigureMenu from "discourse/admin/components/dashboard/configure-menu";
 import DashboardDateRange from "discourse/admin/components/dashboard/date-range";
 import DashboardEngagement from "discourse/admin/components/dashboard/engagement";
 import DashboardHighlights from "discourse/admin/components/dashboard/highlights";
 import DashboardReports from "discourse/admin/components/dashboard/reports";
+import DashboardSkeleton from "discourse/admin/components/dashboard/skeleton";
 import DashboardTraffic from "discourse/admin/components/dashboard/traffic";
 import DMenu from "discourse/float-kit/components/d-menu";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { deepEqual } from "discourse/lib/object";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-
-function buildPending(committed) {
-  return committed?.map((s) => ({ ...s })) ?? [];
-}
 
 export default class RedesignedAdminDashboard extends Component {
   @service currentUser;
 
-  @tracked pendingSections;
-
-  _saving = false;
-  _opened = false;
-
-  constructor() {
-    super(...arguments);
-    this.pendingSections = buildPending(this.committedSections);
-  }
-
-  get committedSections() {
-    return this.args.configuration?.sections ?? [];
-  }
-
-  @action
-  onMenuOpen() {
-    this._opened = true;
-    this.pendingSections = buildPending(this.committedSections);
-  }
-
-  @action
-  toggleVisibility(id) {
-    this.pendingSections = this.pendingSections.map((s) =>
-      s.id === id ? { ...s, visible: !s.visible } : s
-    );
-  }
-
-  @action
-  reorder(fromIndex, toIndex) {
-    const next = [...this.pendingSections];
-    const [moved] = next.splice(fromIndex, 1);
-    next.splice(toIndex, 0, moved);
-    this.pendingSections = next;
-  }
-
-  @action
-  onMenuClose() {
-    if (this._saving || !this._opened) {
-      return;
-    }
-    if (deepEqual(this.pendingSections, this.committedSections)) {
-      return;
-    }
-
-    this._saving = true;
-    this.args
-      .updateConfiguration(this.pendingSections)
-      .catch((e) => {
-        popupAjaxError(e);
-        this.pendingSections = buildPending(this.committedSections);
-      })
-      .finally(() => {
-        this._saving = false;
-      });
+  get configurationSections() {
+    return this.args.loadedSections?.configuration?.sections ?? [];
   }
 
   <template>
-    <div class="db-toolbar">
-      <h1>Dashboard</h1>
-
-      <div class="db-toolbar__actions">
+    <div class="db-header">
+      <h1 class="db-header__title">Dashboard</h1>
+      <div class="db-header__actions">
         <DashboardDateRange
-          @period={{@period}}
-          @startDate={{@startDate}}
-          @endDate={{@endDate}}
+          @period={{@requestedPeriod}}
+          @startDate={{@requestedStartDate}}
+          @endDate={{@requestedEndDate}}
           @setPeriod={{@setPeriod}}
           @setCustomDateRange={{@setCustomDateRange}}
         />
@@ -98,14 +39,12 @@ export default class RedesignedAdminDashboard extends Component {
             @title={{i18n "admin.dashboard.configure.tooltip"}}
             @triggerClass="btn-default"
             @modalForMobile={{true}}
-            @onClose={{this.onMenuClose}}
-            @onShow={{this.onMenuOpen}}
           >
             <:content>
               <ConfigureMenu
-                @sections={{this.pendingSections}}
-                @onReorder={{this.reorder}}
-                @onToggleVisibility={{this.toggleVisibility}}
+                @sections={{this.configurationSections}}
+                @onReorder={{@reorderSections}}
+                @onToggleVisibility={{@toggleSection}}
               />
             </:content>
           </DMenu>
@@ -114,39 +53,65 @@ export default class RedesignedAdminDashboard extends Component {
     </div>
 
     <div class="db-main">
-      {{#each @sections key="id" as |section|}}
-        <div class="db-main__section" data-section-id={{section.id}}>
+      {{#if @loadedSections}}
+        {{#each @loadedSections.sections key="id" as |section|}}
           {{#if (eq section.id "highlights")}}
             <DashboardHighlights
+              class={{concat "--" section.id}}
+              data-section-id={{section.id}}
               @highlights={{section.data}}
-              @period={{@period}}
+              @period={{@loadedSections.period}}
               @loading={{@loadingSections}}
               @fetchError={{@sectionsFetchError}}
-              @startDate={{@startDate}}
-              @endDate={{@endDate}}
+              @startDate={{@loadedSections.startDate}}
+              @endDate={{@loadedSections.endDate}}
             />
           {{else if (eq section.id "reports")}}
-            <DashboardReports @startDate={{@startDate}} @endDate={{@endDate}} />
+            <DashboardReports
+              class={{concat "--" section.id}}
+              data-section-id={{section.id}}
+              @data={{section.data}}
+              @startDate={{@loadedSections.startDate}}
+              @endDate={{@loadedSections.endDate}}
+              @refreshSections={{@refreshSections}}
+            />
           {{else if (eq section.id "traffic")}}
-            <DashboardTraffic @startDate={{@startDate}} @endDate={{@endDate}} />
+            <DashboardTraffic
+              class={{concat "--" section.id}}
+              data-section-id={{section.id}}
+              @traffic={{section.data}}
+              @period={{@loadedSections.period}}
+              @loading={{@loadingSections}}
+              @fetchError={{@sectionsFetchError}}
+              @startDate={{@loadedSections.startDate}}
+              @endDate={{@loadedSections.endDate}}
+            />
           {{else if (eq section.id "engagement")}}
             <DashboardEngagement
-              @startDate={{@startDate}}
-              @endDate={{@endDate}}
+              class={{concat "--" section.id}}
+              data-section-id={{section.id}}
+              @engagement={{section.data}}
+              @period={{@loadedSections.period}}
+              @loading={{@loadingSections}}
+              @fetchError={{@sectionsFetchError}}
+              @startDate={{@loadedSections.startDate}}
+              @endDate={{@loadedSections.endDate}}
             />
           {{/if}}
-        </div>
-      {{/each}}
+        {{/each}}
 
-      {{#unless @sections.length}}
-        <div class="db-main__empty" role="status" aria-live="polite">
-          {{#if this.currentUser.admin}}
-            {{i18n "admin.dashboard.configure.empty_state_admin"}}
-          {{else}}
-            {{i18n "admin.dashboard.configure.empty_state_moderator"}}
-          {{/if}}
-        </div>
-      {{/unless}}
+        {{#unless @loadedSections.sections.length}}
+          <div class="db-main__empty" role="status" aria-live="polite">
+            {{#if this.currentUser.admin}}
+              {{i18n "admin.dashboard.configure.empty_state_admin"}}
+            {{else}}
+              {{i18n "admin.dashboard.configure.empty_state_moderator"}}
+            {{/if}}
+          </div>
+        {{/unless}}
+      {{else if @loadingSections}}
+        <DashboardSkeleton />
+      {{/if}}
     </div>
   </template>
 }

@@ -135,7 +135,13 @@ const extension = {
     table(state, node) {
       state.flushClose(1);
 
-      let headerBuffer = state.delim;
+      // Normalize table structure
+      node = normalizeTable(node);
+
+      if (!node.textContent.trim()) {
+        return;
+      }
+
       const prevInTable = state.inTable;
       state.inTable = true;
 
@@ -145,8 +151,19 @@ const extension = {
       }
 
       // group is table_head or table_body
-      node.forEach((group, groupOffset, groupIndex) => {
-        group.forEach((row) => {
+      let isFirstRow = true;
+      node.forEach((group) => {
+        const isHead = group.type.name === "table_head";
+
+        group.forEach((row, rowOffset, rowIndex) => {
+          const shouldTreatAsHeader =
+            isHead ||
+            (isFirstRow &&
+              rowIndex === 0 &&
+              row.childCount > 0 &&
+              row.firstChild?.type.name === "table_header_cell");
+          let headerBuffer = shouldTreatAsHeader ? state.delim : undefined;
+
           row.forEach((cell, cellOffset, cellIndex) => {
             if (state.delim && state.atBlank()) {
               state.out += state.delim;
@@ -155,8 +172,7 @@ const extension = {
 
             state.renderInline(cell);
 
-            // if table_head
-            if (groupIndex === 0) {
+            if (headerBuffer !== undefined) {
               if (cell.attrs.alignment === "center") {
                 headerBuffer += "|:---:";
               } else if (cell.attrs.alignment === "left") {
@@ -171,11 +187,11 @@ const extension = {
 
           state.out += " |\n";
 
-          if (headerBuffer) {
+          if (headerBuffer !== undefined) {
             state.out += `${headerBuffer}|\n`;
-            headerBuffer = undefined;
           }
         });
+        isFirstRow = false;
       });
       state.out += "\n";
       state.inTable = prevInTable;
@@ -187,90 +203,27 @@ const extension = {
     table_cell() {},
   },
   plugins({ pmState: { Plugin }, pmModel: { Slice, Fragment } }) {
-    function findMaxColumns(tbody) {
-      let maxColumns = 0;
-      tbody.forEach((row) => {
-        maxColumns = Math.max(maxColumns, row.childCount);
-      });
-      return maxColumns;
-    }
-
-    function createHeaderRow(firstRow, maxColumns, schema) {
-      const headerCells = [];
-      for (let i = 0; i < maxColumns; i++) {
-        if (i < firstRow.childCount) {
-          const cell = firstRow.child(i);
-          headerCells.push(
-            schema.nodes.table_header_cell.create(cell.attrs, cell.content)
-          );
-        } else {
-          headerCells.push(schema.nodes.table_header_cell.create());
-        }
-      }
-      return schema.nodes.table_row.create({}, headerCells);
-    }
-
-    function createBodyRows(tbody, maxColumns, schema) {
-      const bodyRows = [];
-      tbody.content.content.slice(1).forEach((row) => {
-        const cells = [];
-        for (let i = 0; i < maxColumns; i++) {
-          if (i < row.childCount) {
-            cells.push(row.child(i));
-          } else {
-            cells.push(schema.nodes.table_cell.create());
-          }
-        }
-        bodyRows.push(schema.nodes.table_row.create({}, cells));
-      });
-      return bodyRows;
-    }
-
-    function normalizeTable(tableNode, schema) {
-      let tbody, thead;
-      tableNode.descendants((node) => {
-        if (node.type.name === "table_body") {
-          tbody = node;
-          return false;
-        }
-        if (node.type.name === "table_head") {
-          thead = node;
+    function hasTableNodes(fragment) {
+      let found = false;
+      fragment.descendants((node) => {
+        if (node.type.name === "table") {
+          found = true;
           return false;
         }
       });
-
-      if (thead || !tbody) {
-        return tableNode;
-      }
-
-      const maxColumns = findMaxColumns(tbody);
-      const firstRow = tbody.firstChild;
-
-      if (!firstRow || maxColumns === 0) {
-        return tableNode;
-      }
-
-      const header = schema.nodes.table_head.create(
-        {},
-        createHeaderRow(firstRow, maxColumns, schema)
-      );
-
-      const body = schema.nodes.table_body.create(
-        {},
-        createBodyRows(tbody, maxColumns, schema)
-      );
-
-      return schema.nodes.table.create({}, [header, body]);
+      return found;
     }
 
     return new Plugin({
       props: {
-        transformPasted(paste, view) {
-          const schema = view.state.schema;
+        transformPasted(paste) {
+          if (!hasTableNodes(paste.content)) {
+            return paste;
+          }
 
           function transformNode(node) {
             if (node.type.name === "table") {
-              return normalizeTable(node, schema);
+              return normalizeTable(node);
             }
 
             if (node.content?.size > 0) {
@@ -293,5 +246,80 @@ const extension = {
     });
   },
 };
+
+function findMaxColumns(tbody) {
+  let maxColumns = 0;
+  tbody.forEach((row) => {
+    maxColumns = Math.max(maxColumns, row.childCount);
+  });
+  return maxColumns;
+}
+
+function createHeaderRow(firstRow, maxColumns, schema) {
+  const headerCells = [];
+  for (let i = 0; i < maxColumns; i++) {
+    if (i < firstRow.childCount) {
+      const cell = firstRow.child(i);
+      headerCells.push(
+        schema.nodes.table_header_cell.create(cell.attrs, cell.content)
+      );
+    } else {
+      headerCells.push(schema.nodes.table_header_cell.create());
+    }
+  }
+  return schema.nodes.table_row.create({}, headerCells);
+}
+
+function createBodyRows(tbody, startIndex, maxColumns, schema) {
+  const bodyRows = [];
+  tbody.content.content.slice(startIndex).forEach((row) => {
+    const cells = [];
+    for (let i = 0; i < maxColumns; i++) {
+      if (i < row.childCount) {
+        cells.push(row.child(i));
+      } else {
+        cells.push(schema.nodes.table_cell.create());
+      }
+    }
+    bodyRows.push(schema.nodes.table_row.create({}, cells));
+  });
+  return bodyRows;
+}
+
+function normalizeTable(tableNode) {
+  const schema = tableNode.type.schema;
+  let tbody, thead;
+
+  tableNode.descendants((node) => {
+    if (node.type.name === "table_body") {
+      tbody = node;
+      return false;
+    }
+    if (node.type.name === "table_head") {
+      thead = node;
+      return false;
+    }
+  });
+
+  if (thead || !tbody) {
+    return tableNode;
+  }
+
+  const maxColumns = findMaxColumns(tbody);
+  const firstRow = tbody.firstChild;
+
+  if (!firstRow || maxColumns === 0) {
+    return tableNode;
+  }
+
+  const header = schema.nodes.table_head.create(
+    {},
+    createHeaderRow(firstRow, maxColumns, schema)
+  );
+
+  const bodyRows = createBodyRows(tbody, 1, maxColumns, schema);
+  const body = schema.nodes.table_body.create({}, bodyRows);
+  return schema.nodes.table.create({}, [header, body]);
+}
 
 export default extension;

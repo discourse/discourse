@@ -136,6 +136,7 @@ class PostDestroyer
     if @post.is_first_post?
       UserActionManager.topic_created(@topic)
       DiscourseEvent.trigger(:topic_recovered, @topic, @user)
+
       if @user.id != @post.user_id
         StaffActionLogger.new(@user).log_topic_delete_recover(
           @topic,
@@ -143,9 +144,12 @@ class PostDestroyer
           @opts.slice(:context),
         )
       end
+
       if SiteSetting.tos_topic_id == @topic.id || SiteSetting.privacy_topic_id == @topic.id
         Discourse.clear_urls!
       end
+    else
+      StaffActionLogger.new(@user).log_post_recover(@post) if @user.id != @post.user_id
     end
   end
 
@@ -330,7 +334,7 @@ class PostDestroyer
         .select(:created_at, :user_id, :post_number)
         .where("topic_id = ? and id <> ?", @post.topic_id, @post.id)
         .where.not(user_id: nil)
-        .where.not(post_type: Post.types[:whisper])
+        .where.not(post_type: [Post.types[:whisper], Post.types[:small_action]])
         .order("created_at desc")
         .first
 

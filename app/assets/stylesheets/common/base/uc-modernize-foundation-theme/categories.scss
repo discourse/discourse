@@ -9,4 +9,8 @@
   .category-boxes-with-topics .category-box {
     --category-badge-title-color: var(--primary);
   }
+
+  .category-list tbody .category {
+    border-left-width: var(--d-category-border-accent-width);
+  }
 }

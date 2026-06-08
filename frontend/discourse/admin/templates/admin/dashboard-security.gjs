@@ -9,10 +9,12 @@ export default <template>
     />
 
     <div class="main-section">
-      <AdminReport
-        @dataSourceName="suspicious_logins"
-        @filters={{@controller.lastWeekFilters}}
-      />
+      {{#if @controller.currentUser.can_see_ip}}
+        <AdminReport
+          @dataSourceName="suspicious_logins"
+          @filters={{@controller.lastWeekFilters}}
+        />
+      {{/if}}
 
       {{#if @controller.currentUser.admin}}
         <AdminReport

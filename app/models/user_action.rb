@@ -274,45 +274,43 @@ class UserAction < ActiveRecord::Base
     require_parameters(hash, *required_parameters)
 
     transaction(requires_new: true) do
-      begin
-        # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
+      # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
 
-        # protect against dupes, for some reason this is failing in some cases
-        action = self.find_by(hash.select { |k, _| required_parameters.include?(k) })
-        return action if action
+      # protect against dupes, for some reason this is failing in some cases
+      action = find_by(hash.select { |k, _| required_parameters.include?(k) })
+      return action if action
 
-        action = self.new(hash)
+      action = new(hash)
 
-        action.created_at = hash[:created_at] if hash[:created_at]
-        action.save!
+      action.created_at = hash[:created_at] if hash[:created_at]
+      action.save!
 
-        user_id = hash[:user_id]
+      user_id = hash[:user_id]
 
-        topic = Topic.includes(:category).find_by(id: hash[:target_topic_id])
+      topic = Topic.includes(:category).find_by(id: hash[:target_topic_id])
 
-        update_like_count(user_id, hash[:action_type], 1) if topic && !topic.private_message?
+      update_like_count(user_id, hash[:action_type], 1) if topic && !topic.private_message?
 
-        user_ids = user_id != action.acting_user_id ? [user_id] : nil
+      user_ids = user_id != action.acting_user_id ? [user_id] : nil
 
-        group_ids = nil
-        if topic&.category&.read_restricted
-          group_ids = [Group::AUTO_GROUPS[:admins]] | topic.category.groups.pluck("groups.id")
-        end
-
-        if action.user && (user_ids.present? || group_ids.present?)
-          MessageBus.publish(
-            "/u/#{action.user.username_lower}",
-            action.id,
-            user_ids: user_ids,
-            group_ids: group_ids,
-          )
-        end
-
-        action
-      rescue ActiveRecord::RecordNotUnique
-        # can happen, don't care already logged
-        raise ActiveRecord::Rollback
+      group_ids = nil
+      if topic&.category&.read_restricted
+        group_ids = [Group::AUTO_GROUPS[:admins]] | topic.category.groups.pluck("groups.id")
       end
+
+      if action.user && (user_ids.present? || group_ids.present?)
+        MessageBus.publish(
+          "/u/#{action.user.username_lower}",
+          action.id,
+          user_ids: user_ids,
+          group_ids: group_ids,
+        )
+      end
+
+      action
+    rescue ActiveRecord::RecordNotUnique
+      # can happen, don't care already logged
+      raise ActiveRecord::Rollback
     end
   end
 
@@ -384,7 +382,7 @@ class UserAction < ActiveRecord::Base
   end
 
   def self.ensure_consistency!(limit = nil)
-    self.synchronize_target_topic_ids(nil, limit: limit)
+    synchronize_target_topic_ids(nil, limit: limit)
   end
 
   def self.update_like_count(user_id, action_type, delta)
@@ -405,10 +403,10 @@ class UserAction < ActiveRecord::Base
 
       current_user_id = -2
       current_user_id = guardian.user.id if guardian.user
-      builder.where(
-        "NOT COALESCE(p.hidden, false) OR p.user_id = :current_user_id",
-        current_user_id: current_user_id,
-      )
+      builder.where(<<~SQL, current_user_id: current_user_id)
+        NOT COALESCE(p.hidden, p2.hidden, false) OR
+        CASE WHEN p.id IS NULL THEN p2.user_id ELSE p.user_id END = :current_user_id
+      SQL
     end
 
     visible_post_types = Topic.visible_post_types(guardian.user)
@@ -417,7 +415,9 @@ class UserAction < ActiveRecord::Base
       visible_post_types: visible_post_types,
     )
 
-    builder.where("t.visible") if guardian.user&.id != user_id && !guardian.is_staff?
+    if !guardian.is_staff? && (guardian.user.nil? || guardian.user.id != user_id)
+      builder.where("t.visible")
+    end
 
     filter_private_messages(builder, user_id, guardian, ignore_private_messages)
     filter_categories(builder, guardian)

@@ -30,7 +30,7 @@ module DiscourseAi
 
       def available_prompts(user)
         key = "prompt_cache_#{I18n.locale}"
-        prompts = self.class.prompt_cache.fetch(key) { self.all_prompts }
+        prompts = self.class.prompt_cache.fetch(key) { all_prompts }
 
         prompts
           .map do |prompt|

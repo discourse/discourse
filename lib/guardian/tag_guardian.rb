@@ -28,9 +28,7 @@ module TagGuardian
     return false if !authenticated?
     return true if @user.is_system_user?
 
-    group_ids = SiteSetting.pm_tags_allowed_for_groups_map
-    group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
-      @user.group_users.exists?(group_id: group_ids)
+    @user.in_any_groups?(SiteSetting.pm_tags_allowed_for_groups_map)
   end
 
   def can_admin_tags?
@@ -43,12 +41,10 @@ module TagGuardian
 
   def hidden_tag_names
     @hidden_tag_names ||=
-      begin
-        if SiteSetting.tagging_enabled && !is_admin?
-          DiscourseTagging.hidden_tag_names(self)
-        else
-          []
-        end
+      if SiteSetting.tagging_enabled && !is_admin?
+        DiscourseTagging.hidden_tag_names(self)
+      else
+        []
       end
   end
 end

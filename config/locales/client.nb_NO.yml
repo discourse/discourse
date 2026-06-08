@@ -143,6 +143,11 @@ nb_NO:
       placeholder: dato
       from_placeholder: "fra dato"
       to_placeholder: "til dato"
+    date_range_picker:
+      apply: "Bruk"
+      presets:
+        last_7_days: "Siste 7 dager"
+        last_30_days: "Siste 30 dager"
     languages:
       be:
         name: Hviterussisk
@@ -268,8 +273,6 @@ nb_NO:
     tos: "Bruksvilkår"
     rules: "Regler"
     conduct: "Regler for god oppførsel"
-    mobile_view: "Mobilvisning"
-    desktop_view: "Skrivebordsvisning"
     now: "akkurat nå"
     read_more: "les mer"
     more: "Mer"
@@ -442,6 +445,9 @@ nb_NO:
       remove_confirmation: "Er du sikker på at du vil slette dette utkastet?"
       new_topic: "Nytt emneutkast"
       new_private_message: "Nytt personlig meldingsutkast"
+    embed_mode:
+      signin_flow:
+        cancel: "Avbryt"
     topic_count_all:
       one: "Se %{count} nytt emne"
       other: "Se %{count} nye emner"
@@ -1145,7 +1151,6 @@ nb_NO:
         normal_option: "Normal"
         normal_option_title: "Du vil bli varslet hvis denne brukeren svarer på deg, siterer deg eller nevner deg."
       notification_schedule:
-        title: "Tidsplan for varsling"
         label: "Aktiver egendefinert meldingsplan"
         tip: "Utenom disse tidene vil varslene dine bli satt på pause."
         midnight: "Midnatt"
@@ -1189,13 +1194,8 @@ nb_NO:
       notifications: "Varsler"
       statistics: "Statistikk"
       desktop_notifications:
-        label: "Skrivebordsvarsler"
         not_supported: "Varsler er ikke støttet på denne nettleseren. Beklager."
-        perm_default: "Slå på varslinger"
-        perm_denied_btn: "Tillatelse avslått"
         perm_denied_expl: "Du tillot ikke varsler. Tillat varsler via innstillingene i din nettleser."
-        disable: "Slå av varslinger"
-        enable: "Slå på varslinger"
         each_browser_note: "Merk: Du må endre denne innstillingen i hver nettleser du bruker. Alle varsler deaktiveres hvis du setter varsler på pause fra brukermenyen, uavhengig av denne innstillingen."
         consent_prompt: "Ønsker du å motta skrivebordsvarsler når andre svarer på dine innlegg?"
       dismiss: "Avslå"
@@ -2413,7 +2413,7 @@ nb_NO:
       users_placeholder: "Legg til brukere eller grupper"
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       title_or_link_placeholder: "Skriv inn tittel eller lim inn en lenke her"
-      edit_reason_placeholder: "hvorfor endrer du?"
+      edit_reason_placeholder: "Hvorfor endrer du?"
       topic_featured_link_placeholder: "Skriv inn lenke vist med tittel."
       remove_featured_link: "Fjern lenke fra emnet."
       reply_placeholder: "Skriv her. Bruk Markdown, BBCode eller HTML for å formatere innholdet. Dra bilder hit eller lim dem inn."
@@ -2449,6 +2449,7 @@ nb_NO:
         attribute_value: "Verdi"
         apply: "Bruk"
       help: "Hjelp for redigering i Markdown"
+      edit_reason: "Hvorfor endrer du?"
       exit_fullscreen_prompt: "Trykk <kbd>ESC</kbd> for å gå ut av fullskjerm"
       modal_ok: "OK"
       cant_send_pm: "Beklager, du kan ikke sende privat melding til %{username}."
@@ -2478,21 +2479,22 @@ nb_NO:
           desc: Opprett ny melding som starter med samme mottakere
         reply_to_topic:
           label: Svar på emnet
+          trigger: Emne
           desc: Svar på emnet, ikke et spesifikt innlegg
+        reply_to_message:
+          trigger: Send
         toggle_whisper:
           label: Veksle hvisking
-          desc: Hvisking er kun synlig for stab
         create_topic:
           desc: Opprett et nytt emne
         create_personal_message:
-          label: "Ny melding"
           desc: "Opprett en ny personlig melding"
         shared_draft:
           label: "Delt utkast"
           desc: "Lag et emne som bare vil være synlig for tillatte brukere"
         toggle_topic_bump:
-          label: "Slå på/av at emnet flyttes øverst"
           desc: "Svar uten å endre siste svardato"
+        unknown_user: "Bruker"
       reload: "Oppdater"
       ignore: "Ignorer"
       image_alt_text:
@@ -2758,6 +2760,7 @@ nb_NO:
         max_views:
           placeholder: maksimum
           aria_label: filtrer etter maksimal antall visninger
+    header_panel: "Hode"
     new_item: "ny"
     go_back: "gå tilbake"
     not_logged_in_user: "brukerside med oppsummering av nåværende aktivtet og innstillinger"
@@ -2835,6 +2838,17 @@ nb_NO:
           other: "Avvis (%{count}) …"
         dismiss_tooltip: "Avvis kun nye innlegg eller slutt å overvåke emner"
         also_dismiss_topics: "Slutt å overvåke disse emnene slik at de aldri igjen vises til meg som ulest"
+        dismiss_new_topics: "Avvis nye emner"
+        dismiss_new_replies: "Avvis nye svar"
+        dismiss_new_topics_with_selected:
+          one: "Avvis (%{count}) "
+          other: "Avvis (%{count}) "
+        dismiss_new_replies_with_selected:
+          one: "Avvis (%{count}) "
+          other: "Avvis (%{count}) "
+        dismiss_all_with_selected:
+          one: "Avvis (%{count}) "
+          other: "Avvis (%{count}) "
         dismiss_new: "Avvis nye"
         dismiss_new_modal:
           title: "Avvis nye"
@@ -3576,7 +3590,6 @@ nb_NO:
         name_placeholder: "Hva er bokmerket etter?"
         name_input_label: "Navn på bokmerke"
         set_reminder: "Påminn meg"
-        options: "Alternativer"
         actions:
           delete_bookmark:
             name: "Slett bokmerke"
@@ -3974,80 +3987,53 @@ nb_NO:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Tastatursnarveier"
+      description_header: "Beskrivelse"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Hopp til"
-        home: "%{shortcut} Hjem"
-        latest: "%{shortcut} Siste"
-        new: "%{shortcut} Nye"
-        unread: "%{shortcut} Uleste"
-        categories: "%{shortcut} Kategorier"
-        top: "%{shortcut} Topp"
-        bookmarks: "%{shortcut} Bokmerker"
-        profile: "%{shortcut} Profil"
-        messages: "%{shortcut} Meldinger"
-        drafts: "%{shortcut} Utkast"
-        next: "%{shortcut} neste emne"
-        previous: "%{shortcut} forrige emne"
+        home: "Hjem"
+        latest: "Siste"
+        new: "Ny"
+        unread: "Uleste"
+        unseen: "Usette"
+        categories: "Kategorier"
+        top: "Aktive"
+        bookmarks: "Bokmerker"
+        profile: "Profil"
+        messages: "Meldinger"
+        drafts: "Utkast"
       navigation:
         title: "Navigasjon"
-        jump: "%{shortcut} Gå til innlegg #"
-        back: "%{shortcut} Tilbake"
-        up_down: "%{shortcut} Flytt utvalg &uarr; &darr;"
-        open: "%{shortcut} Åpne valgt emne"
-        next_prev: "%{shortcut} Neste/forrige del"
-        go_to_unread_post: "%{shortcut} Gå til første uleste innlegg"
+        back: "Forrige"
+        up_down: "Flytt utvalg &uarr; &darr;"
       application:
         title: "Applikasjon"
-        notifications: "%{shortcut} Åpne varsler"
-        user_profile_menu: "%{shortcut} Åpne brukermenyen"
-        show_incoming_updated_topics: "%{shortcut} Vis oppdaterte emner"
-        search: "%{shortcut} Søk"
-        help: "%{shortcut} Åpne tastaturhjelp"
-        log_out: "%{shortcut} Logg ut"
+        search: "Søk"
+        log_out: "Logg ut"
       composing:
         title: "Skriving"
-        return: "%{shortcut} Gå tilbake til redigeringspanelet"
-        fullscreen: "%{shortcut} fullskjerm komponist"
+        preformatted: "Kodeutsnitt"
+        blockquote: "Sitatramme"
       bookmarks:
         title: "Bokmerking"
-        enter: "%{shortcut} Lagre og lukk"
-        later_today: "%{shortcut} Senere i dag"
-        later_this_week: "%{shortcut} Senere denne uken"
-        tomorrow: "%{shortcut} I morgen"
-        next_week: "%{shortcut} Neste uke"
-        next_month: "%{shortcut} Neste måned"
-        next_business_week: "%{shortcut} Start på neste uke"
-        next_business_day: "%{shortcut} Neste virkedag"
-        custom: "%{shortcut} Egendefinert dato og klokkeslett"
-        none: "%{shortcut} Ingen påminnelse"
-        delete: "%{shortcut} Slett bokmerke"
+        later_today: "Senere i dag"
+        later_this_week: "Senere denne uken"
+        tomorrow: "I morgen"
+        next_week: "Neste uke"
+        next_month: "Neste måned"
+        next_business_day: "Neste virkedag"
+        custom: "Egendefinert dato og tid"
+        delete: "Slett bokmerke"
       actions:
         title: "Handlinger"
-        bookmark_topic: "%{shortcut} Legg til/fjern bokmerke for emne"
-        pin_unpin_topic: "%{shortcut} Fest/fjern feste for emne"
-        share_topic: "%{shortcut} Del emne"
-        share_post: "%{shortcut} Del innlegg"
-        reply_as_new_topic: "%{shortcut} Svar som lenket emne"
-        reply_topic: "%{shortcut} Svar på emne"
-        reply_post: "%{shortcut} Svar på innlegg"
-        quote_post: "%{shortcut} Siter innlegg"
-        like: "%{shortcut} Lik innlegg"
-        flag: "%{shortcut} Rapporter innlegg"
-        bookmark: "%{shortcut} Bokmerk innlegg"
-        edit: "%{shortcut} Rediger innlegg"
-        delete: "%{shortcut} Slett innlegg"
-        mark_muted: "%{shortcut} Ignorer emne"
-        mark_tracking: "%{shortcut} Overvåk emne"
-        mark_watching: "%{shortcut} Følg emne"
-        print: "%{shortcut} Skriv ut emne"
-        topic_admin_actions: "%{shortcut} Åpne tema admin handlinger"
+        reply_as_new_topic: "Svar med lenket emne"
+        reply_topic: "Svar på emnet"
+        defer: "Merk emnet som ulest"
       search_menu:
         title: "Søk i menyen"
-        prev_next: "%{shortcut} Flytt utvalg opp og ned"
-        insert_url: "%{shortcut} Sett inn utvalg i åpen komponist"
       admin:
         title: "Admin"
-        search_prev_next: "%{shortcut} Flytt utvalg opp og ned"
     badges:
       earned_n_times:
         one: "Har gjort seg fortjent til dette merket"
@@ -4090,13 +4076,6 @@ nb_NO:
       choose_for_topic: "valgfrie stikkord"
       category_restricted: "Denne taggen er begrenset til kategorier du ikke har tilgang til tilgang."
       synonyms: "Synonymer"
-      synonyms_description: "Når følgende merkelapper brukes, vil de bli erstattet med <b>%{base_tag_name}</b>."
-      tag_groups_info:
-        one: 'Denne taggen tilhører gruppen "%{tag_groups}.'
-        other: "Denne taggen tilhører disse gruppene: %{tag_groups}."
-      category_restrictions:
-        one: "Den kan bare brukes i denne kategorien:"
-        other: "Den kan kun brukes i disse kategoriene:"
       add_synonyms_label: "Legg til synonymer:"
       add_synonyms: "Legg til"
       add_synonyms_explanation:
@@ -4316,7 +4295,7 @@ nb_NO:
         modal:
           cancel: "avbryt"
           create: "Lagre"
-          reason: "hvorfor endrer du?"
+          reason: "Hvorfor endrer du?"
       spreadsheet:
         show: "Vis"
         about: "Om"
@@ -4549,6 +4528,31 @@ nb_NO:
         sections:
           reports:
             title: "Rapporter"
+          engagement:
+            activity_by_category:
+              category: "Kategori"
+              topics: "Emner"
+              posts: "Innlegg"
+              share: "Del"
+            whos_posting:
+              all_categories: "Alle kategorier"
+              staff: "Stab"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Ny"
+                "1": "Basic"
+                "2": "Medlem"
+                "3": "Aktivt medlem"
+                "4": "Leder"
+        reports_section:
+          no_data: "Ingen data å vise"
+          modal:
+            enabled_heading: "Aktivert"
+            all_heading: "Alle rapporter"
+            apply: "Bruk"
+        site_traffic:
+          series:
+            anonymous: "Anonym"
         period:
           last_7_days: "Siste 7 dager"
           last_30_days: "Siste 30 dager"
@@ -4764,6 +4768,7 @@ nb_NO:
       config_areas:
         about:
           company_name: "Navn"
+          company_url: "Nettside"
           extra_groups:
             groups: "Grupper"
           optional: "(valgfritt)"

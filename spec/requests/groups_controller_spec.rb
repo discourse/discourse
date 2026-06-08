@@ -384,7 +384,7 @@ RSpec.describe GroupsController do
               Group::AUTO_GROUP_IDS.keys -
                 [
                   Group::AUTO_GROUPS[:everyone],
-                  Group::AUTO_GROUPS[:anonymous],
+                  Group::AUTO_GROUPS[:anonymous_users],
                   Group::AUTO_GROUPS[:logged_in_users],
                 ],
             )
@@ -498,7 +498,7 @@ RSpec.describe GroupsController do
 
           groups = Group::AUTO_GROUPS.keys
           groups.delete(:everyone)
-          groups.delete(:anonymous)
+          groups.delete(:anonymous_users)
           groups.delete(:logged_in_users)
           groups.push(group.name)
 
@@ -602,6 +602,37 @@ RSpec.describe GroupsController do
       expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
     end
 
+    it "omits hidden mentions from other users", :aggregate_failures do
+      visible_post = Fabricate(:post, user: user, raw: "visible group mention")
+      hidden_post = Fabricate(:post, user: user, raw: "private hidden group mention", hidden: true)
+      GroupMention.create!(post: visible_post, group: group)
+      GroupMention.create!(post: hidden_post, group: group)
+
+      sign_in(user2)
+      get "/groups/#{group.name}/mentions.json"
+
+      post_ids = response.parsed_body["posts"].map { |post| post["id"] }
+
+      expect(response.status).to eq(200)
+      expect(post_ids).to contain_exactly(visible_post.id)
+      expect(response.body).not_to include(hidden_post.raw)
+    end
+
+    it "returns hidden mentions to the author", :aggregate_failures do
+      hidden_post =
+        Fabricate(:post, user: user, raw: "author visible hidden group mention", hidden: true)
+      GroupMention.create!(post: hidden_post, group: group)
+
+      sign_in(user)
+      get "/groups/#{group.name}/mentions.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].map { |post| post["id"] }).to contain_exactly(
+        hidden_post.id,
+      )
+      expect(response.body).to include(hidden_post.raw)
+    end
+
     it "supports pagination using before (date)" do
       post = Fabricate(:post)
       GroupMention.create!(post: post, group: group)
@@ -676,6 +707,74 @@ RSpec.describe GroupsController do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
+    end
+
+    it "omits hidden posts from other users", :aggregate_failures do
+      visible_post = Fabricate(:post, user: user, raw: "visible group post")
+      hidden_post = Fabricate(:post, user: user, raw: "private hidden group post", hidden: true)
+
+      sign_in(user2)
+      get "/groups/#{group.name}/posts.json"
+
+      post_ids = response.parsed_body["posts"].map { |post| post["id"] }
+
+      expect(response.status).to eq(200)
+      expect(post_ids).to contain_exactly(visible_post.id)
+      expect(response.body).not_to include(hidden_post.raw)
+    end
+
+    it "returns hidden posts to staff", :aggregate_failures do
+      hidden_post =
+        Fabricate(:post, user: user, raw: "staff visible hidden group post", hidden: true)
+
+      sign_in(moderator)
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].map { |post| post["id"] }).to contain_exactly(
+        hidden_post.id,
+      )
+      expect(response.body).to include(hidden_post.raw)
+    end
+
+    it "returns hidden posts to category moderators", :aggregate_failures do
+      SiteSetting.enable_category_group_moderation = true
+      moderated_category = Fabricate(:category)
+      moderation_group = Fabricate(:group)
+      category_moderator = Fabricate(:user)
+      moderation_group.add(category_moderator)
+      Fabricate(:category_moderation_group, category: moderated_category, group: moderation_group)
+      hidden_post =
+        Fabricate(
+          :post,
+          user: user,
+          topic: Fabricate(:topic, category: moderated_category),
+          raw: "category moderator visible hidden group post",
+          hidden: true,
+        )
+
+      sign_in(category_moderator)
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].map { |post| post["id"] }).to contain_exactly(
+        hidden_post.id,
+      )
+      expect(response.body).to include(hidden_post.raw)
+    end
+
+    it "does not include names when names are disabled" do
+      SiteSetting.enable_names = false
+      user.update!(name: "Hidden Full Name")
+      sign_in(user)
+      Fabricate(:post, user: user)
+
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      post_response = response.parsed_body["posts"].first
+      expect(post_response["username"]).to eq(user.username)
+      expect(post_response).not_to have_key("name")
     end
 
     it "returns moderator actions" do
@@ -2581,6 +2680,29 @@ RSpec.describe GroupsController do
         end
       end
 
+      it "does not expose email setting values in history logs" do
+        group.update!(
+          email_password: "secret_smtp_pass",
+          email_username: "group@example.com",
+          smtp_server: "smtp.example.com",
+          smtp_port: 587,
+          smtp_ssl_mode: "starttls",
+        )
+        GroupActionLogger.new(admin, group).log_change_group_settings
+
+        get "/groups/#{group.name}/logs.json"
+
+        expect(response.status).to eq(200)
+
+        logs = response.parsed_body["logs"]
+        redacted = I18n.t("staff_action_logs.redacted")
+
+        %w[email_password email_username smtp_server smtp_port smtp_ssl_mode].each do |subject|
+          entry = logs.find { |log| log["subject"] == subject }
+          expect(entry["new_value"]).to eq(redacted)
+        end
+      end
+
       it "should not be allowed to view history of an automatic group" do
         group = Group.find_by(id: Group::AUTO_GROUPS[:admins])
 
@@ -2760,7 +2882,7 @@ RSpec.describe GroupsController do
         expected_ids = Group::AUTO_GROUPS.map { |name, id| id }
         expected_ids.delete(Group::AUTO_GROUPS[:everyone])
         expected_ids.delete(Group::AUTO_GROUPS[:logged_in_users])
-        expected_ids.delete(Group::AUTO_GROUPS[:anonymous])
+        expected_ids.delete(Group::AUTO_GROUPS[:anonymous_users])
         expected_ids << group.id
 
         expect(groups.map { |group| group["id"] }).to contain_exactly(*expected_ids)
@@ -2827,7 +2949,7 @@ RSpec.describe GroupsController do
             automatic_ids -
               [
                 Group::AUTO_GROUPS[:everyone],
-                Group::AUTO_GROUPS[:anonymous],
+                Group::AUTO_GROUPS[:anonymous_users],
                 Group::AUTO_GROUPS[:logged_in_users],
               ]
           ),
@@ -2843,7 +2965,10 @@ RSpec.describe GroupsController do
         expect(groups.map { |group| group["id"] }).to contain_exactly(
           group.id,
           hidden_group.id,
-          *(automatic_ids - [Group::AUTO_GROUPS[:anonymous], Group::AUTO_GROUPS[:logged_in_users]]),
+          *(
+            automatic_ids -
+              [Group::AUTO_GROUPS[:anonymous_users], Group::AUTO_GROUPS[:logged_in_users]]
+          ),
         )
 
         get "/groups/search.json?include_pseudogroups=true"

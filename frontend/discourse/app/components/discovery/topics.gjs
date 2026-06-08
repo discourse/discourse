@@ -144,6 +144,10 @@ export default class DiscoveryTopics extends Component {
     return this.args.tag || this.args.category;
   }
 
+  get showBottomDismissButtons() {
+    return this.allLoaded;
+  }
+
   @action
   loadMore() {
     applyBehaviorTransformer(
@@ -304,15 +308,18 @@ export default class DiscoveryTopics extends Component {
             model=@model
           }}
         >
-          <TopicDismissButtons
-            @position="bottom"
-            @selectedTopics={{@bulkSelectHelper.selected}}
-            @model={{@model}}
-            @showResetNew={{@showResetNew}}
-            @showDismissRead={{@showDismissRead}}
-            @resetNew={{@resetNew}}
-            @dismissRead={{@dismissRead}}
-          />
+          {{#if this.showBottomDismissButtons}}
+            <TopicDismissButtons
+              @position="bottom"
+              @selectedTopics={{@bulkSelectHelper.selected}}
+              @model={{@model}}
+              @showResetNew={{@showResetNew}}
+              @showNewDismissCombo={{this.showTopicsAndRepliesToggle}}
+              @showDismissRead={{@showDismissRead}}
+              @resetNew={{@resetNew}}
+              @dismissRead={{@dismissRead}}
+            />
+          {{/if}}
 
           {{#if this.showEmptyFilterEducationInFooter}}
             <EmptyTopicFilter

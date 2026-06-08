@@ -7,7 +7,7 @@ def write_template(path, task_name, template)
   JS
 
   basename = File.basename(path)
-  output_path = "#{Rails.root}/frontend/#{path}"
+  output_path = "#{Rails.root.join("frontend/#{path}")}"
 
   File.write(output_path, "#{header}\n\n#{template}")
   puts "#{basename} created"
@@ -17,6 +17,9 @@ end
 
 task "javascript:update_constants" => :environment do
   task_name = "update_constants"
+
+  category_additional_assign_allowed_groups =
+    DiscourseAssign::AssignmentPermissions::CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS
 
   auto_groups =
     Group::AUTO_GROUPS.inject({}) do |result, (group_name, group_id)|
@@ -65,6 +68,8 @@ task "javascript:update_constants" => :environment do
     export const CATEGORY_STYLE_TYPES = #{Category.style_types.to_json};
 
     export const CATEGORY_TEXT_COLORS = #{Category::DEFAULT_TEXT_COLORS};
+
+    export const CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS = "#{category_additional_assign_allowed_groups}";
 
     // NOTE: Group names are changed based on the site's locale, see
     // Group.refresh_automatic_group! for more details

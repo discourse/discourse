@@ -34,11 +34,11 @@ Once you've created this file, you should restart your local server and the plug
 
 ### An important Gotcha!
 
-If you're used to regular rails development you might notice that plugins aren't quite as nice when it comes to reloading. In general, when you make changes to your plugin, you should <kbd>Ctrl</kbd>+<kbd>c</kbd> the server to stop it running, then run it again using `bin/ember-cli -u`.
+If you're used to regular rails development you might notice that plugins aren't quite as nice when it comes to reloading. In general, when you make changes to your plugin, you should <kbd>Ctrl</kbd>+<kbd>c</kbd> the server to stop it running, then run it again using `bin/dev`.
 
 ### My changes weren't picked up! :warning:
 
-Sometimes the cache isn't cleared fully, especially when you create new files or delete old files. To get around this issue, remove your `tmp` folder and start rails again. On a mac you can do it in one command: `rm -rf tmp; bin/ember-cli -u`.
+Sometimes the cache isn't cleared fully, especially when you create new files or delete old files. To get around this issue, remove your `tmp` folder and start rails again. On a mac you can do it in one command: `rm -rf tmp; bin/dev`.
 
 ### Checking that your plugin was loaded
 

@@ -169,6 +169,7 @@ export default class Post extends RestModel {
   @tracked likeAction;
   @tracked link_counts;
   @tracked localization_outdated;
+  @tracked localized_oneboxes;
   @tracked locked;
   @tracked moderator;
   @tracked name;

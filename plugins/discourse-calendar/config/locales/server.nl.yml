@@ -5,9 +5,17 @@
 # https://translate.discourse.org/
 
 nl:
+  category_types:
+    events:
+      name: "Gebeurtenissen"
+      title: "gebeurtenissen"
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "Kalenderevenementenfeed lezen"
   reports:
     currently_away:
       title: Gebruikers die momenteel afwezig zijn
+      description: "Gebruikers die momenteel met vakantie of verlof zijn, die kunnen worden gefilterd op groep."
       labels:
         username: Gebruikersnaam
   discourse_automation:
@@ -36,7 +44,6 @@ nl:
     map_events_to_color: "Wijs een kleur toe aan elke tag of categorie."
     map_events_title: "Overschrijft 'Evenementen' in de zijbalktitel 'Aankomende evenementen' per categorie."
     calendar_enabled: "Schakel de Discourse-Kalender-plug-in in. Dit voegt ondersteuning toe voor een [calendar][/calendar]-tag in het eerste bericht van een topic."
-    discourse_post_event_enabled: "Schakelt de evenementfuncties in. Opmerking: hiervoor moet ook 'calendar enabled' ingeschakeld zijn."
     displayed_invitees_limit: "Beperkt het aantal genodigden van een evenement."
     display_post_event_date_on_topic_title: "Geeft de datum van het evenement weer na de topictitel."
     use_local_event_date: "Gebruik lokale datum na topictitel in plaats van relatieve tijd."
@@ -49,6 +56,7 @@ nl:
     all_day_event_start_time: "Evenementen waarvoor geen begintijd is opgegeven, beginnen op deze tijd. De notatie is Hh:mm. Voor 6:00 uur voer je 06:00 in"
     all_day_event_end_time: "Evenementen waarvoor geen eindtijd is opgegeven, eindigen op deze tijd. De notatie is HH:mm. Voor 18:00 uur voer je 18:00 in"
     all_day_event_time_error: "Ongeldige tijd. Notatie moet HH:mm zijn (bijvoorbeeld 08:00)."
+    calendar_categories: "Toon een kalender bovenaan een categorie. categoryId is verplicht. bijvoorbeeld: categoryId=6;weekends=false;defaultView=year;\n Andere geldige instellingen: weekends(true/false) en defaultView(day,week,month,year)."
     calendar_categories_outlet: "Hiermee kun je veranderen welke outlet de categoriekalender moet weergeven."
     working_days: "Stel werkdagen in. Je kunt de beschikbaarheid van een groep weergeven met de 'timezones'-tag in een bericht, bijvoorbeeld: '[timezones group=admins][timezones]'"
     working_day_start_hour: "Begintijd van werkdag."
@@ -60,7 +68,17 @@ nl:
     calendar_automatic_holidays_enabled: "Stel automatisch de feestdagstatus in op basis van een gebruikersregio (opmerking: je kunt specifieke automatische feestdagen uitschakelen in de plug-in-instellingen)"
     event_participation_buttons: "Lijst met knoppen voor evenementdeelname die gebruikers kunnen gebruiken."
     sidebar_show_upcoming_events: "Geef een link naar aankomende evenementen weer in de zijbalk onder 'Meer'."
+    calendar_first_day_of_week: "Stel de eerste dag van de week in voor de kalenderweergave. Opties zijn zaterdag, zondag en maandag."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Dag"
+        week: "Week"
+        month: "Maand"
+        year: "Jaar"
+    calendar_subscriptions:
+      all_events_feed_name: "%{site_title} - Alle evenementen"
+      my_events_feed_name: "%{site_title} - Mijn evenementen"
     invite_user_notification: "%{username} heeft je uitgenodigd voor: %{description}"
     calendar_must_be_in_first_post: "Calendar-tag kan alleen worden gebruikt in het eerste bericht van een topic."
     more_than_one_calendar: "Je kunt niet meer dan één kalender hebben in een topic."
@@ -85,6 +103,7 @@ nl:
           raw_invitees:
             only_group: "Een evenement accepteert alleen groepsnamen."
           ends_at_before_starts_at: "Een evenement kan niet eindigen voordat het begint."
+          max_attendees_reached: "Dit evenement is vol."
           start_must_be_present_and_a_valid_date: "Een evenement vereist een geldige begindatum."
           end_must_be_a_valid_date: "Einddatum moet een geldige datum zijn."
           invalid_recurrence: "Herhaling moet een van de volgende zijn: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."

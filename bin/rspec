@@ -14,7 +14,14 @@ ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../Gemfile", Pathname.new(__FILE_
 require "rubygems"
 require "bundler/setup"
 
-if ENV["LOAD_PLUGINS"].nil? && ARGV.any? { |pattern| pattern.include?("plugins/") }
+if ENV["LOAD_PLUGINS"].nil? &&
+     ARGV.any? { |pattern|
+       pattern.include?("plugins/") ||
+         (
+           ENV.key?("DISCOURSE_REPO_BASE_DIRECTORY") &&
+             !pattern.include?(ENV["DISCOURSE_REPO_BASE_DIRECTORY"] + "/spec")
+         )
+     }
   STDERR.puts "Detected plugin spec path, setting LOAD_PLUGINS to 1"
   ENV["LOAD_PLUGINS"] = "1"
 end

@@ -32,7 +32,6 @@ hu:
     chat_editing_grace_period_max_diff_low_trust: "A szerkesztési türelmi időszakban megengedett karakterváltoztatások maximális száma. Ha ennél több változik, megjelenik a (szerkesztve) címke a chat üzenet mellett (0-s és 1-es bizalmi szint esetén)."
     chat_editing_grace_period_max_diff_high_trust: "A szerkesztési türelmi időszakban megengedett karakterváltoztatások maximális száma. Ha ennél több változik, megjelenik a (szerkesztve) címke a chat üzenet mellett (2-es és nagyobb bizalmi szint)."
     chat_preferred_index: "Előnyben részesített lap a /chat betöltésekor."
-    allow_chat_in_anonymous_mode: "Engedélyezze ezt a beállítást, hogy a webhelyét névtelenül böngésző felhasználók használhassák a csevegést. Ehhez a beállításhoz engedélyezni kell a `engedélyezd az anonim módot` beállítást."
     chat_search_enabled: "Engedélyezze ezt a beállítást, hogy a felhasználók kereshessenek a csevegési üzenetekben."
     errors:
       chat_default_channel: "Az alapértelmezett csevegőcsatornának nyilvános csatornának kell lennie."
@@ -239,6 +238,10 @@ hu:
     scriptables:
       send_chat_message:
         title: Csevegőüzenet küldése
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Jóváhagyás"
+      default_deny_label: "Tiltás"
   reviewable_score_types:
     needs_review:
       title: "Felülvizsgálatra szorul"

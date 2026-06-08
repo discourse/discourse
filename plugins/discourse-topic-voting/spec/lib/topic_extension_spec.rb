@@ -38,18 +38,18 @@ describe DiscourseTopicVoting::TopicExtension do
   end
 
   describe "#who_voted" do
-    it "returns recent active voters up to the requested limit" do
-      DiscourseTopicVoting::Vote.create!(user: user, topic: topic, created_at: 2.hours.ago)
-      DiscourseTopicVoting::Vote.create!(user: user2, topic: topic, created_at: 1.hour.ago)
-      archived_user = Fabricate(:user)
-      DiscourseTopicVoting::Vote.create!(
-        user: archived_user,
-        topic: topic,
-        archive: true,
-        created_at: Time.zone.now,
-      )
+    it "returns the most recent voters up to the limit" do
+      DiscourseTopicVoting::Vote.create!(user:, topic:, created_at: 2.hours.ago)
+      DiscourseTopicVoting::Vote.create!(user: user2, topic:, created_at: 1.hour.ago)
 
       expect(topic.who_voted(limit: 1)).to eq([user2])
+    end
+
+    it "includes voters whose votes were archived (e.g. closed topics)" do
+      archived_user = Fabricate(:user)
+      DiscourseTopicVoting::Vote.create!(user: archived_user, topic:, archive: true)
+
+      expect(topic.who_voted(limit: 10)).to eq([archived_user])
     end
   end
 

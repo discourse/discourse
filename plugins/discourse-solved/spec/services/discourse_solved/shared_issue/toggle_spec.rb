@@ -48,9 +48,24 @@ RSpec.describe DiscourseSolved::SharedIssue::Toggle do
       context "when the topic is already solved" do
         fab!(:answer_post) { Fabricate(:post, topic:) }
 
-        before { Fabricate(:solved_topic, topic:, answer_post:, accepter: author) }
+        before do
+          solved_topic = Fabricate(:solved_topic, topic:)
+          Fabricate(:topic_answer, solved_topic:, post: answer_post, accepter: author)
+        end
 
         it { is_expected.to fail_a_policy(:can_create_shared_issue) }
+
+        context "when allow_multiple_solutions is enabled" do
+          before { SiteSetting.solved_allow_multiple_solutions = true }
+
+          it { is_expected.to run_successfully }
+
+          it "creates a shared issue record" do
+            expect { result }.to change {
+              DiscourseSolved::SharedIssue.where(topic:, user: acting_user).count
+            }.by(1)
+          end
+        end
       end
 
       context "when the acting user is the topic author" do
@@ -136,7 +151,7 @@ RSpec.describe DiscourseSolved::SharedIssue::Toggle do
       it "publishes a shared issue message indicating the user created a shared issue" do
         expect(messages).to include(
           an_object_having_attributes(
-            data: a_hash_including(type: :shared_issue, count: 2, user_created_shared_issue: true),
+            data: a_hash_including(type: :shared_issue, count: 1, user_created_shared_issue: true),
           ),
         )
       end
@@ -172,7 +187,7 @@ RSpec.describe DiscourseSolved::SharedIssue::Toggle do
       it "publishes a shared issue message indicating the user withdrew their shared issue" do
         expect(messages).to include(
           an_object_having_attributes(
-            data: a_hash_including(type: :shared_issue, count: 1, user_created_shared_issue: false),
+            data: a_hash_including(type: :shared_issue, count: 0, user_created_shared_issue: false),
           ),
         )
       end

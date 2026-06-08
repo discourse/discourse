@@ -32,6 +32,48 @@ describe "Upcoming Events" do
     end
   end
 
+  describe "popup invitees on recurring events" do
+    fab!(:going_recurring_user, :user)
+    fab!(:going_once_user, :user)
+    let(:post_event_page) { PageObjects::Pages::DiscourseCalendar::PostEvent.new }
+
+    it "filters non-recurring goings out of future occurrences",
+       time: Time.utc(2026, 5, 12, 12, 0) do
+      set_subfolder "/discuss"
+
+      post =
+        create_post(
+          user: admin,
+          category:,
+          title: "Weekly stand-up event",
+          raw: "[event status='public' start='2026-05-14 14:00' recurrence='every_week']\n[/event]",
+        )
+      event = DiscoursePostEvent::Event.find(post.id)
+      DiscoursePostEvent::Invitee.create_attendance!(
+        going_recurring_user.id,
+        event.id,
+        :going,
+        recurring: true,
+      )
+      DiscoursePostEvent::Invitee.create_attendance!(going_once_user.id, event.id, :going)
+
+      upcoming_events.visit("/discuss")
+      upcoming_events.click_event_on("2026-05-14")
+
+      expect(post_event_page).to have_going_count(2)
+      expect(post_event_page).to have_invitee_avatar(going_recurring_user.username)
+      expect(post_event_page).to have_invitee_avatar(going_once_user.username)
+      expect(post_event_page).to have_title_link_href(post.relative_url)
+
+      post_event_page.close_popup
+      upcoming_events.click_event_on("2026-05-21")
+
+      expect(post_event_page).to have_going_count(1)
+      expect(post_event_page).to have_invitee_avatar(going_recurring_user.username)
+      expect(post_event_page).to have_no_invitee_avatar(going_once_user.username)
+    end
+  end
+
   describe "event description in popup" do
     let(:post_event_page) { PageObjects::Pages::DiscourseCalendar::PostEvent.new }
 

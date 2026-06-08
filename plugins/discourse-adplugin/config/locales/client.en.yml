@@ -70,3 +70,6 @@ en:
           topic_list_between:
             title: "Between topics"
             description: "Ads to show in between topics, after every N topics."
+          nested_roots_between:
+            title: "Between nested roots"
+            description: "Ads to show in between root replies in the nested replies view, after every N roots."

@@ -200,6 +200,15 @@ sk:
       placeholder: Dátum
       from_placeholder: "od dátumu"
       to_placeholder: "k dnešnému dňu"
+    date_range_picker:
+      apply: "Použi"
+      start_date: "Dátum začiatku"
+      presets:
+        last_7_days: "Posledných 7 dní"
+        last_30_days: "Posledných 30 dní"
+        last_3_months: "Posledných 3 mesiacov"
+        last_6_months: "Posledných 6 mesiacov"
+        last_year: "Minulý rok"
     share:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "príspevok č.%{postNumber} od @%{username}"
@@ -332,8 +341,6 @@ sk:
     tos: "Podmienky používania"
     rules: "Pravidlá"
     conduct: "Kódex správania"
-    mobile_view: "Mobilná verzia"
-    desktop_view: "Zobrazenie pre počítač"
     now: "práve teraz"
     read_more: "čítaj ďalej"
     more: "Viac"
@@ -371,11 +378,10 @@ sk:
       pill: "Odporúčané"
       pm_title: "Odporúčané správy"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Vybrané"
       start_posting:
         back: "Späť"
-      spread_the_word:
-        action: "Kopírovať odkaz"
-        copied_to_clipboard: "Odkaz bol skopírovaný do schránky!"
     about:
       edit: "Upraviť túto stránku"
       simple_title: "O fóre"
@@ -579,6 +585,9 @@ sk:
           few: "+%{count} ďalších návrhov"
           many: "+%{count} ďalších návrhov"
           other: "+%{count} ďalšie návrhy"
+    embed_mode:
+      signin_flow:
+        cancel: "Zrušiť"
     topic_count_all:
       one: "Pozrieť %{count} novú tému."
       few: "Pozrieť %{count} nových tém."
@@ -1418,7 +1427,6 @@ sk:
         normal_option: "Normálne"
         normal_option_title: "Budete upozornení, ak vám tento používateľ odpovie, cituje vás alebo sa o vás zmieni."
       notification_schedule:
-        title: "Harmonogram upozornení"
         label: "Povoliť vlastný plán upozornení"
         tip: "Mimo týchto hodín budú vaše upozornenia pozastavené."
         midnight: "Polnoc"
@@ -1462,13 +1470,8 @@ sk:
       notifications: "Upozornenia"
       statistics: "Štatistiky"
       desktop_notifications:
-        label: "Upozornenia na pracovnej ploche"
         not_supported: "Ľutujeme, tento prehliadač nepodporuje upozornenia."
-        perm_default: "Zapnúť upozornenia"
-        perm_denied_btn: "Prístup zamietnutý"
         perm_denied_expl: "Povolenie pre zobrazenie notifikácií ste zakázali. Notifikácie povolíte v nastaveniach vášho prehliadača."
-        disable: "Zakázať upozornenia"
-        enable: "Povoliť upozornenia"
         each_browser_note: "Poznámka: Toto nastavenie musíte zmeniť v každom prehliadači, ktorý používate. Všetky upozornenia budú zakázané, ak pozastavíte upozornenia z používateľskej ponuky, bez ohľadu na toto nastavenie."
         consent_prompt: "Prajete si dostávať upozornenia na pracovnej ploche hneď keď niekto odpovie na váš príspevok?"
       dismiss: "Zahodiť"
@@ -2920,7 +2923,7 @@ sk:
       users_placeholder: "Pridanie používateľov alebo skupín"
       title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
       title_or_link_placeholder: "Napíšte názov témy alebo tu skopírujte odkaz"
-      edit_reason_placeholder: "prečo upravujete?"
+      edit_reason_placeholder: "Prečo upravujete?"
       topic_featured_link_placeholder: "Zadajte odkaz zobrazený s názvom."
       remove_featured_link: "Odstrániť odkaz z témy."
       reply_placeholder: "Píšte sem. Formátujte pomocou Markdown, BBCode alebo HTML. Pretiahnite alebo vložte obrázky."
@@ -2973,6 +2976,7 @@ sk:
         attribute_value: "Hodnota"
         apply: "Použi"
       help: "Nápoveda úprav pre Markdown"
+      edit_reason: "Prečo upravujete?"
       exit_fullscreen_prompt: "Stlačením <kbd>ESC</kbd> ukončíte celú obrazovku"
       modal_ok: "OK"
       cant_send_pm: "Ľutujeme, nemôžete poslať správu používateľovi %{username}."
@@ -3002,23 +3006,22 @@ sk:
           desc: Vytvorenie novej správy začínajúcej s rovnakými príjemcami
         reply_to_topic:
           label: Odpovedať na tému
+          trigger: Téma
           desc: Odpovedzte na tému, nie na konkrétny príspevok
+        reply_to_message:
+          trigger: Správa
         toggle_whisper:
           label: Prepnúť šepot
-          desc: Šepot je viditeľný iba pre zamestnancov
         create_topic:
-          label: "Nová téma"
           desc: Vytvorte novú tému
-        create_personal_message:
-          label: "Nová správa"
         shared_draft:
           label: "Zdieľaný koncept"
           desc: "Navrhnite tému, ktorá bude viditeľná iba pre povolených používateľov"
         toggle_topic_bump:
-          label: "Prepnúť tému bump"
           desc: "Odpoveď bez zmeny dátumu poslednej odpovede"
         toggle_unlisted:
           label: Prepínanie nezaradených
+        unknown_user: "Používateľ"
       reload: "Znovu načítať"
       ignore: "Ignorovať"
       image_alt_text:
@@ -3334,6 +3337,7 @@ sk:
           placeholder: maximum
           aria_label: filtrovať podľa maximálneho počtu zobrazení
     hamburger_menu: "Navigačné menu"
+    header_panel: "Hlavička"
     new_item: "nový"
     go_back: "späť"
     not_logged_in_user: "používateľská stránka so súhrnom aktivít a nastavení"
@@ -3433,6 +3437,23 @@ sk:
           other: "Odmietnuť (%{count})…"
         dismiss_tooltip: "Zahoď iba nové príspevky, alebo prestaň pozorovať témy"
         also_dismiss_topics: "Prestať pozorovať tieto témy. Už sa nikdy nebudú ukazovať medzi neprečítanými"
+        dismiss_new_topics: "Zamietnuť nové témy"
+        dismiss_new_replies: "Skryť nové odpovede"
+        dismiss_new_topics_with_selected:
+          one: "Zamietnuť (%{count})"
+          few: "Zamietnuť (%{count})"
+          many: "Zamietnuť (%{count})"
+          other: "Zamietnuť (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Zamietnuť (%{count})"
+          few: "Zamietnuť (%{count})"
+          many: "Zamietnuť (%{count})"
+          other: "Zamietnuť (%{count})"
+        dismiss_all_with_selected:
+          one: "Zamietnuť (%{count})"
+          few: "Zamietnuť (%{count})"
+          many: "Zamietnuť (%{count})"
+          other: "Zamietnuť (%{count})"
         dismiss_new: "Zahodiť. Nová"
         dismiss_new_modal:
           title: "Zamietnuť nové"
@@ -4332,7 +4353,6 @@ sk:
         name_placeholder: "Na čo slúži táto záložka?"
         name_input_label: "Názov záložky"
         set_reminder: "Pripomeň mi"
-        options: "Možnosti"
         actions:
           delete_bookmark:
             name: "Odstrániť záložku"
@@ -4841,105 +4861,61 @@ sk:
       title: "Klávesové skratky"
       short_title: "Skratky"
       search_ctrl_f_tip: "Ak chcete vyhľadávať v celom tomto fóre, stlačte tlačidlo <kbd>/</kbd>"
+      description_header: "Popis"
+      key_header: "Kľúč"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Choď na"
-        home: "%{shortcut} Domov"
-        latest: "%{shortcut} Najnovšie"
-        new: "%{shortcut} Nové"
-        unread: "%{shortcut} Neprečítané"
-        categories: "%{shortcut} Kategórie"
-        top: "%{shortcut} Top"
-        bookmarks: "%{shortcut} Záložky"
-        profile: "%{shortcut} Profil"
-        messages: "%{shortcut} Správy"
-        drafts: "%{shortcut} Koncepty"
-        next: "%{shortcut} Ďalšia téma"
-        previous: "%{shortcut} Predchádzajúca téma"
+        home: "Domov"
+        latest: "Najnovšie"
+        new: "Nový"
+        unread: "Neprečítané"
+        unseen: "Nevidené"
+        categories: "Kategórie"
+        top: "Najlepšie"
+        bookmarks: "Záložky"
+        profile: "Profil"
+        messages: "Správy"
+        drafts: "Koncepty"
       navigation:
         title: "Navigácia"
-        jump: "%{shortcut} Choď na príspevok #"
-        back: "%{shortcut} Späť"
-        up_down: "%{shortcut} Presuň označené &uarr; &darr;"
-        open: "%{shortcut}Otvoriť zvolenú tému"
-        next_prev: "%{shortcut} Nasledujúca/predchádzajúca sekcia"
-        go_to_unread_post: "%{shortcut} Prejsť na prvý neprečítaný príspevok"
+        back: "Späť"
+        up_down: "Presuň označené &uarr; &darr;"
       application:
         title: "Aplikácia"
-        notifications: "%{shortcut} Otvor upozornenia"
-        hamburger_menu: "%{shortcut} Otvorenie navigačného menu"
-        user_profile_menu: "%{shortcut} Otvor užívateľské menu"
-        show_incoming_updated_topics: "%{shortcut} Zobraz aktualizované témy"
-        search: "%{shortcut} Vyhľadávanie"
-        filter_sidebar: "%{shortcut} Bočný panel filtra"
-        help: "%{shortcut} Pomoc s klávesovými skratkami"
-        toggle_bulk_select: "%{shortcut} Prepnúť hromadný výber"
-        dismiss: "%{shortcut} Zrušiť vybraté témy"
-        x: "%{shortcut} Prepnúť výber (v režime hromadného výberu)"
-        log_out: "%{shortcut} Odhlásiť sa"
+        search: "Hľadať"
+        log_out: "Odhlásiť sa"
       composing:
         title: "Vytváranie"
-        return: "%{shortcut} Návrat k editora správ"
-        fullscreen: "%{shortcut} Režim celoobrazovkového editora"
-        insert_current_time: "%{shortcut} Vložiť aktuálny čas"
-        bold: "%{shortcut} Tučné písmo"
-        italic: "%{shortcut} Kurzíva"
-        link: "%{shortcut} Vložiť odkaz"
-        preformatted: "%{shortcut} Predformátovaný text"
-        paragraph: "%{shortcut} Odsek"
-        heading_1: "%{shortcut} Nadpis 1"
-        heading_2: "%{shortcut} Nadpis 2"
-        heading_3: "%{shortcut} Nadpis 3"
-        heading_4: "%{shortcut} Nadpis 4"
-        toggle_direction: "%{shortcut} Prepnúť smer textu"
-        ordered_list: "%{shortcut} Zoradený zoznam"
-        unordered_list: "%{shortcut} Neusporiadaný zoznam"
-        blockquote: "%{shortcut} Bloková citácia"
+        link: "Vložiť odkaz"
+        preformatted: "Preformátovaný text"
+        paragraph: "Odsek"
+        blockquote: "Úvodzovky"
       bookmarks:
         title: "Záložky"
-        enter: "%{shortcut} Uložiť a zatvoriť"
-        later_today: "%{shortcut} Neskôr dnes"
-        later_this_week: "%{shortcut} Neskôr tento týždeň"
-        tomorrow: "%{shortcut} Zajtra"
-        next_week: "%{shortcut} Budúci týždeň"
-        next_month: "%{shortcut} Budúci mesiac"
-        next_business_week: "%{shortcut} Začiatok budúceho týždňa"
-        next_business_day: "%{shortcut} Nasledujúci pracovný deň"
-        custom: "%{shortcut} Vlastný dátum a čas"
-        none: "%{shortcut} Žiadna pripomienka"
-        delete: "%{shortcut} Odstrániť záložku"
+        later_today: "Neskôr dnes"
+        later_this_week: "Neskôr tento týždeň"
+        tomorrow: "Zajtra"
+        next_week: "Budúci týždeň"
+        next_month: "Budúci mesiac"
+        next_business_day: "Nasledujúci pracovný deň"
+        custom: "Vlastný dátum a čas"
+        none: "Žiadna pripomienka"
+        delete: "Odstrániť záložku"
       actions:
         title: "Akcie"
-        bookmark_topic: "%{shortcut} Prepnúť zazáložkovanie témy"
-        pin_unpin_topic: "%{shortcut} Pripnúť/Odopnúť tému"
-        share_topic: "%{shortcut} Zdielať tému"
-        share_post: "%{shortcut} Zdielať príspevok"
-        reply_as_new_topic: "%{shortcut} Odpovedať formou prepojenej témy"
-        reply_topic: "%{shortcut} Odpovedať na tému"
-        reply_post: "%{shortcut} Odpovedať na príspevok"
-        quote_post: "%{shortcut} Citovať príspevok"
-        like: "%{shortcut} Označiť príspevok \"Páči sa\""
-        flag: "%{shortcut} Nahlásiť príspevok "
-        bookmark: "%{shortcut} Pridať príspevok do záložiek"
-        edit: "%{shortcut} Upraviť príspevok"
-        delete: "%{shortcut} Zmazať príspevok"
-        mark_muted: "%{shortcut} Umlčať tému"
-        mark_regular: "%{shortcut} Normálna (predvolená) téma"
-        mark_tracking: "%{shortcut} Pozorovať tému"
-        mark_watching: "%{shortcut} Pozorovať tému"
-        print: "%{shortcut} Vytlačiť tému"
-        defer: "%{shortcut} Označiť tému ako neprečítanú"
-        topic_admin_actions: "%{shortcut} Akcie správcu otvorenej témy"
-        archive_private_message: "%{shortcut} Prepnúť archiváciu osobnej správy"
+        reply_as_new_topic: "Odpovedať ako prepojené téma"
+        reply_topic: "Odpovedať na tému"
+        flag: "Príspevok s vlajkou"
+        delete: "Odstrániť príspevok"
+        mark_tracking: "Sledovať tému"
+        mark_watching: "Sledujte tému"
+        defer: "Označiť tému ako neprečítanú"
       search_menu:
         title: "Ponuka vyhľadávania"
-        prev_next: "%{shortcut} Presun výberu nahor a nadol"
-        insert_url: "%{shortcut} Vložiť výber do otvoreného editora"
-        full_page_search: "%{shortcut} Spustí vyhľadávanie na celej stránke"
       admin:
         title: "Admin"
-        search_prev_next: "%{shortcut} Presun výberu nahor a nadol"
-        search_open: "%{shortcut} Otvorenie vyhľadávania v rozhraní správcu"
-        search_full_page: "%{shortcut} Otvoriť celú stránku administrátorského vyhľadávania"
     badges:
       earned_n_times:
         one: "Získal tento odkaz %{count}-krát"
@@ -5021,18 +4997,7 @@ sk:
       staff_info: "Ak chcete pridať obmedzenia, vložte túto značku do skupiny značiek <a href=%{basePath}/tag_groups></a>."
       category_restricted: "Táto značka je obmedzená na kategórie, ku ktorým nemáte oprávnenie na prístup."
       synonyms: "Synonymá"
-      synonyms_description: "Ak sa použijú nasledujúce značky, nahradia sa týmito značkami <b>%{base_tag_name}</b>."
       save: "Uloženie názvu a popisu značky"
-      tag_groups_info:
-        one: 'Táto značka patrí do skupiny "%{tag_groups}".'
-        few: "Táto značka patrí do skupín \"%{tag_groups}\"."
-        many: "Táto značka patrí do skupín \"%{tag_groups}\"."
-        other: "Táto značka patrí do týchto skupín: %{tag_groups}."
-      category_restrictions:
-        one: "Môže sa používať len v tejto kategórii:"
-        few: "Môže sa používať len v týchto kategóriách:"
-        many: "Môže sa používať len v týchto kategóriách:"
-        other: "Môže sa používať len v týchto kategóriách:"
       edit_synonyms: "Upraviť synonymá"
       add_synonyms_label: "Pridajte synonymá:"
       add_synonyms: "Pridať"
@@ -5472,7 +5437,7 @@ sk:
           title: "Upraviť tabuľku"
           cancel: "zrušiť"
           create: "Uložiť"
-          reason: "prečo upravujete?"
+          reason: "Prečo upravujete?"
           trigger_reason: "Pridať dôvod úpravy"
         default_edit_reason: "Aktualizujte tabuľku pomocou editora tabuliek"
       default_header:
@@ -6079,6 +6044,34 @@ sk:
             title: "Hlásení"
           traffic:
             title: "Návštevnosť stránky"
+          engagement:
+            activity_by_category:
+              category: "Kategória"
+              topics: "Témy"
+              posts: "Príspevky"
+              share: "Zdieľať"
+            whos_posting:
+              all_categories: "Všetky kategórie"
+              staff: "Personál"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nový"
+                "1": "Základné"
+                "2": "Člen"
+                "3": "Bežné"
+                "4": "Vodca"
+        reports_section:
+          no_data: "Žiadne údaje na zobrazenie"
+          modal:
+            enabled_heading: "Povolené"
+            all_heading: "Všetky hlásenia"
+            apply: "Použi"
+        configure:
+          button: "Konfigurovať"
+        site_traffic:
+          series:
+            anonymous: "Anonymný"
+            crawlers: "Crawlery"
         period:
           last_7_days: "Posledných 7 dní"
           last_30_days: "Posledných 30 dní"
@@ -6603,9 +6596,10 @@ sk:
           your_organization: "Vaša organizácia"
           your_organization_description: "Tieto informácie použijeme v podmienkach používania služby a v oznámení o ochrane osobných údajov, aby sme uviedli, kto prevádzkuje stránku a pod akou jurisdikciou."
           company_name: "Meno"
-          company_name_placeholder: "Organizácia Acme"
           company_name_warning: |
             Ak zostane prázdne, nebudú poskytnuté žiadne všeobecné podmienky služby ani oznámenie o ochrane osobných údajov.
+          company_url: "Webová stránka"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Platné právo"
           governing_law_placeholder: "Provincia, štát alebo krajina"
           governing_law_help: |

@@ -1,0 +1,254 @@
+@use "lib/viewport";
+
+.d-date-range-picker {
+  --d-date-range-picker-nav-size: var(--space-10);
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  background: var(--secondary);
+  min-width: 0;
+  box-sizing: border-box;
+
+  @include viewport.from(sm) {
+    width: 40rem;
+    max-width: 100vw;
+  }
+
+  @include viewport.until(sm) {
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content 1fr;
+  }
+
+  &__presets {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2) 0;
+    border-right: 1px solid var(--primary-low);
+    min-width: min-content;
+
+    @include viewport.until(sm) {
+      flex-direction: row;
+      gap: var(--space-1);
+      padding: var(--space-2) var(--space-4);
+      border-right: none;
+      border-bottom: 1px solid var(--primary-low);
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        black var(--space-4),
+        black calc(100% - var(--space-6)),
+        transparent 100%
+      );
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+
+  &__preset {
+    text-align: left;
+    background: transparent;
+    border: 0;
+    padding: var(--space-2) var(--space-3);
+    font: inherit;
+    color: var(--primary);
+    cursor: pointer;
+    border-radius: 0;
+
+    &:hover {
+      background: var(--primary-low);
+    }
+
+    &.is-active {
+      background: var(--tertiary-low);
+      font-weight: 700;
+    }
+
+    @include viewport.until(sm) {
+      flex-shrink: 0;
+      border: 1px solid var(--primary-low);
+      border-radius: var(--space-1);
+      white-space: nowrap;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2);
+    min-width: 0;
+  }
+
+  &__nav {
+    width: var(--d-date-range-picker-nav-size);
+
+    &.--prev {
+      grid-column: 1;
+    }
+
+    &.--next {
+      grid-column: 3;
+    }
+
+    &:hover {
+      background: var(--primary-low);
+      color: var(--primary);
+    }
+  }
+
+  &__months {
+    display: flex;
+    gap: var(--space-4);
+    min-width: 0;
+
+    @include viewport.until(sm) {
+      gap: 0;
+    }
+  }
+
+  &__month {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__month-header {
+    display: grid;
+    grid-template-columns:
+      var(--d-date-range-picker-nav-size)
+      1fr
+      var(--d-date-range-picker-nav-size);
+    align-items: center;
+    min-height: var(--d-date-range-picker-nav-size);
+    font-weight: 500;
+    padding-bottom: var(--space-2);
+  }
+
+  &__month-title {
+    grid-column: 2;
+    text-align: center;
+  }
+
+  &__weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    text-align: center;
+    padding-bottom: var(--space-1);
+  }
+
+  &__grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  &__week {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+
+  &__day {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    border-radius: var(--space-1);
+    color: var(--primary);
+    aspect-ratio: 1;
+    font-size: var(--font-down-2-rem);
+
+    @include viewport.until(sm) {
+      font-size: var(--font-down-1-rem);
+    }
+
+    &:hover:not(.--disabled) {
+      background: var(--tertiary-low);
+    }
+
+    &.--disabled {
+      color: var(--primary-low-mid);
+      cursor: not-allowed;
+    }
+
+    &.--in-range {
+      background: var(--tertiary-very-low, var(--tertiary-low));
+    }
+
+    &.--hover-preview,
+    &.--hover-end {
+      background: var(--tertiary-low);
+    }
+
+    &.--start,
+    &.--end {
+      background: var(--tertiary);
+      color: var(--secondary);
+      font-weight: 600;
+
+      &:hover {
+        background: var(--tertiary-hover, var(--tertiary));
+      }
+    }
+
+    // range cells form a continuous strip, rounded only where the strip ends:
+    // at a cap, a row edge, or a month edge;
+    // :where keeps this reset below the corner rules' specificity
+    &:where(.--in-range, .--hover-preview, .--hover-end, .--start, .--end) {
+      border-radius: 0;
+    }
+
+    &.--start,
+    &.--month-start,
+    &:first-child {
+      border-start-start-radius: var(--space-1);
+      border-end-start-radius: var(--space-1);
+    }
+
+    &.--end,
+    &.--hover-end,
+    &.--month-end,
+    &:last-child {
+      border-start-end-radius: var(--space-1);
+      border-end-end-radius: var(--space-1);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: -2px;
+    }
+  }
+
+  &__inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+
+  &__input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--primary-low);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--space-1);
+    background: var(--secondary);
+    color: var(--primary);
+    font-size: var(--font-down-1);
+    min-height: 1.75rem;
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: -1px;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+}

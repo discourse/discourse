@@ -46,6 +46,8 @@ sr:
           few: "(još %{count} člana)"
           other: "(još %{count} članova)"
         collapse_list: "(pokaži manje)"
+        nav:
+          enabled: "Omogućeno"
         filters:
           all: "Sve"
           reset: "Reset"
@@ -179,6 +181,7 @@ sr:
           today: "Danas"
           last_7_days: "Последњих 7 дана"
           last_30_days: "Последњих 30 дана"
+          editing_post: "Uređivanje objave"
       sentiments:
         sentiment_analysis:
           filter_types:

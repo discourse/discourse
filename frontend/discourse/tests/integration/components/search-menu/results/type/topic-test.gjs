@@ -6,7 +6,7 @@ import TopicResultComponent from "discourse/components/search-menu/results/type/
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module(
-  "Integration | Component | search-menu/results/type/topic",
+  "Integration | Component | SearchMenu | Results | Type | Topic",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -74,6 +74,77 @@ module(
       assert
         .dom(".topic-status .d-icon-envelope")
         .doesNotExist("PM icon not shown for regular topic");
+    });
+
+    test("does not wrap title in an anchor without @withTopicUrl", async function (assert) {
+      const store = getOwner(this).lookup("service:store");
+      const topic = store.createRecord("topic", {
+        id: 4,
+        title: "Topic Without URL",
+      });
+
+      await render(
+        <template>
+          <TopicResultComponent @result={{hash topic=topic url="/t/foo/4"}} />
+        </template>
+      );
+
+      assert
+        .dom(".topic-title a")
+        .doesNotExist(
+          "title is not wrapped in an anchor when @withTopicUrl is not passed"
+        );
+    });
+
+    test("wraps title in an anchor with @withTopicUrl", async function (assert) {
+      const store = getOwner(this).lookup("service:store");
+      const topic = store.createRecord("topic", {
+        id: 5,
+        title: "Topic With URL",
+      });
+
+      await render(
+        <template>
+          <TopicResultComponent
+            @result={{hash topic=topic url="/t/foo/5"}}
+            @withTopicUrl={{true}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".topic-title a")
+        .hasAttribute(
+          "href",
+          "/t/foo/5",
+          "title is wrapped in an anchor pointing to result.url"
+        );
+    });
+
+    test("bookmark status icon is not an anchor in the search dropdown", async function (assert) {
+      const store = getOwner(this).lookup("service:store");
+      const bookmarkedTopic = store.createRecord("topic", {
+        id: 6,
+        title: "Bookmarked Topic",
+        bookmarked: true,
+      });
+
+      await render(
+        <template>
+          <TopicResultComponent
+            @result={{hash topic=bookmarkedTopic url="/t/foo/6"}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".topic-status.--bookmarked")
+        .exists("bookmark icon renders for bookmarked topic");
+      assert
+        .dom("a.topic-status.--bookmarked")
+        .doesNotExist(
+          "bookmark icon is not an anchor when actions are disabled"
+        );
     });
   }
 );

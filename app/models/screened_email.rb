@@ -53,7 +53,7 @@ class ScreenedEmail < ActiveRecord::Base
 
   def self.levenshtein(first, second)
     matrix = [(0..first.length).to_a]
-    (1..second.length).each { |j| matrix << [j] + [0] * (first.length) }
+    (1..second.length).each { |j| matrix << [j] + [0] * first.length }
 
     (1..second.length).each do |i|
       (1..first.length).each do |j|

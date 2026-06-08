@@ -30,7 +30,6 @@ ja:
     chat_editing_grace_period_max_diff_low_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 0 と 1)。"
     chat_editing_grace_period_max_diff_high_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 2 以上)。"
     chat_preferred_index: "/chat を読み込む際の優先タブ。"
-    allow_chat_in_anonymous_mode: "この設定を有効にすると、匿名でサイトを閲覧しているユーザーがチャットを使用できるようになります。この設定には、`allow anonymous mode` を有効にする必要があります。"
     chat_search_enabled: "この設定を有効にすると、ユーザーはチャットメッセージを検索できるようになります。"
     errors:
       chat_default_channel: "デフォルトのチャットチャンネルは公開チャンネルである必要があります。"
@@ -220,6 +219,10 @@ ja:
     scriptables:
       send_chat_message:
         title: チャットメッセージを送信する
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "承認"
+      default_deny_label: "拒否"
   reviewable_score_types:
     needs_review:
       title: "要レビュー"

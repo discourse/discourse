@@ -5,8 +5,14 @@
 # https://translate.discourse.org/
 
 nl:
+  category_types:
+    ideas:
+      name: "Ideeën"
+      title: "ideeën"
+      description: "Waar leden ideeën kunnen verzenden en kunnen stemmen op de ideeën die ze het leukst vinden."
   site_settings:
     topic_voting_enabled: 'Toestaan dat gebruikers op topics kunnen stemmen?'
+    topic_voting_enable_vote_limits: 'Beperk het aantal stemmen per gebruiker op basis van het vertrouwensniveau'
     topic_voting_tl0_vote_limit: 'Hoeveel actieve stemmen mogen TL0-gebruikers hebben?'
     topic_voting_tl1_vote_limit: 'Hoeveel actieve stemmen mogen TL1-gebruikers hebben?'
     topic_voting_tl2_vote_limit: 'Hoeveel actieve stemmen mogen TL2-gebruikers hebben?'
@@ -16,9 +22,51 @@ nl:
     topic_voting_show_votes_on_profile: 'Toestaan dat gebruikers hun stemmen zien in hun activiteitfeed?'
     topic_voting_alert_votes_left: 'Gebruiker waarschuwen als zoveel stemmen resteren'
   topic_voting:
+    category_type:
+      show_who_voted:
+        label: "Weergeven wie er heeft gestemd"
+      show_votes_on_profile:
+        label: "Stemmen weergeven in profiel"
+      enable_vote_limits:
+        label: "Stemmen van leden beperken"
+      tl0_vote_limit:
+        label: "TL0 stemlimiet"
+      tl1_vote_limit:
+        label: "TL1 stemlimiet"
+      tl2_vote_limit:
+        label: "TL2 stemlimiet"
+      tl3_vote_limit:
+        label: "TL3 stemlimiet"
+      tl4_vote_limit:
+        label: "TL4 stemlimiet"
+      alert_votes_left:
+        label: "Waarschuwen als er nog stemmen over zijn"
     votes_moved:
       one: "Een stem is verplaatst."
       other: "%{count} stemmen zijn verplaatst."
     duplicated_votes:
       one: "Een stem kon niet worden verplaatst, omdat de gebruiker al in het andere topic heeft gestemd."
       other: "%{count} stemmen konden niet worden verplaatst, omdat de gebruikers ervan al in het andere topic hebben gestemd."
+    filter:
+      description:
+        topic_votes_min: "Minimaal aantal topicstemmen"
+        topic_votes_max: "Maximaal aantal topicstemmen"
+        order_topic_votes: "Topics sorteren op meeste stemmen"
+        order_topic_votes_asc: "Topics sorteren op minste stemmen"
+  badges:
+    daydreamer:
+      name: "Dagdromer"
+      description: "Krijg een stem op jouw topic"
+      long_description: "Deze badge krijg je als je een stem hebt gekregen op een van je topics. :white_check_mark: Leuk idee. :+1:"
+    brainstormer:
+      name: "Brainstormer"
+      description: "Ontvang 5 stemmen op jouw topic"
+      long_description: "Deze badge krijg je als je 5 stemmen hebt gekregen op een van je onderwerpen. :white_check_mark: Je topic begint aan te slaan."
+    innovator:
+      name: "Vernieuwer"
+      description: "Ontvang 15 stemmen op jouw topic"
+      long_description: "Deze badge krijg je als je 15 stemmen hebt gekregen op een van je onderwerpen. :white_check_mark: Zo goed dat je er niet omheen kunt."
+    visionary:
+      name: "Visionair"
+      description: "Ontvang 25 stemmen op jouw topic"
+      long_description: "Deze badge krijg je als je 25 stemmen hebt gekregen op een van je onderwerpen. :white_check_mark: Geef de mensen wat ze willen! :clap:"

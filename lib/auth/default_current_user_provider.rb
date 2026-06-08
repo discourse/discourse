@@ -369,12 +369,12 @@ class Auth::DefaultCurrentUserProvider
   # api has special rights return true if api was detected
   def is_api?
     current_user
-    !!(@env[API_KEY_ENV])
+    !!@env[API_KEY_ENV]
   end
 
   def is_user_api?
     current_user
-    !!(@env[USER_API_KEY_ENV])
+    !!@env[USER_API_KEY_ENV]
   end
 
   def has_auth_cookie?
@@ -485,12 +485,10 @@ class Auth::DefaultCurrentUserProvider
     return @auth_token if defined?(@auth_token)
 
     @auth_token =
-      begin
-        if v0 = self.class.find_v0_auth_cookie(@request)
-          v0
-        elsif v1 = self.class.find_v1_auth_cookie(@env)
-          v1[:token] if v1[:issued_at] >= SiteSetting.maximum_session_age.hours.ago.to_i
-        end
+      if v0 = self.class.find_v0_auth_cookie(@request)
+        v0
+      elsif v1 = self.class.find_v1_auth_cookie(@env)
+        v1[:token] if v1[:issued_at] >= SiteSetting.maximum_session_age.hours.ago.to_i
       end
   end
 end
