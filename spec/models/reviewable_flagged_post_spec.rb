@@ -348,8 +348,33 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         end
 
       expected_removed_reviewable_ids = [reviewable.id, queued_post_reviewable.id]
+      result_shape = {
+        success: result.success?,
+        status: result.status,
+        transition_to: result.transition_to,
+        errors: result.errors,
+        recalculate_score: result.recalculate_score,
+        update_flag_stats: result.update_flag_stats,
+        after_commit: result.after_commit,
+        created_post: result.created_post,
+        created_post_topic: result.created_post_topic,
+        remove_reviewable_ids: result.remove_reviewable_ids.sort,
+      }
 
-      expect(result.remove_reviewable_ids).to contain_exactly(*expected_removed_reviewable_ids)
+      expect(result_shape).to eq(
+        {
+          success: true,
+          status: :success,
+          transition_to: :approved,
+          errors: nil,
+          recalculate_score: nil,
+          update_flag_stats: nil,
+          after_commit: nil,
+          created_post: nil,
+          created_post_topic: nil,
+          remove_reviewable_ids: expected_removed_reviewable_ids.sort,
+        },
+      )
       expect(messages.last.data[:remove_reviewable_ids]).to contain_exactly(
         *expected_removed_reviewable_ids,
       )

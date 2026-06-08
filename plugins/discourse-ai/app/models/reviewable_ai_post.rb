@@ -3,12 +3,15 @@
 require_dependency "reviewable"
 
 class ReviewableAiPost < Reviewable
+  include ReviewableActionBuilder
+
   # Penalties are handled by the modal after the action is performed
   def self.action_aliases
     {
       agree_and_keep_hidden: :agree_and_keep,
       agree_and_silence: :agree_and_keep,
       agree_and_suspend: :agree_and_keep,
+      delete_user_block: :delete_and_block_user,
       disagree_and_restore: :disagree,
     }
   end
@@ -150,19 +153,17 @@ class ReviewableAiPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    UserDestroyer.new(performed_by).destroy(post.user, delete_opts.merge(reviewable_id: id))
-
-    agree
+    delete_result = super
+    result = agree
+    copy_deleted_user_reviewable_updates(result, delete_result)
+    result
   end
 
-  def perform_delete_user_block(performed_by, args)
-    delete_options = delete_opts.merge(reviewable_id: id)
-
-    delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
-
-    UserDestroyer.new(performed_by).destroy(post.user, delete_options)
-
-    agree
+  def perform_delete_and_block_user(performed_by, args)
+    delete_result = super
+    result = agree
+    copy_deleted_user_reviewable_updates(result, delete_result)
+    result
   end
 
   private
@@ -190,6 +191,10 @@ class ReviewableAiPost < Reviewable
       delete_as_spammer: true,
       context: "review",
     }
+  end
+
+  def delete_user(user, delete_options, performed_by)
+    UserDestroyer.new(performed_by).destroy(user, delete_options.merge(reviewable_id: id))
   end
 
   def build_action(

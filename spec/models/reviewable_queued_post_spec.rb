@@ -5,6 +5,16 @@ RSpec.describe ReviewableQueuedPost, type: :model do
   fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
   fab!(:admin)
 
+  describe "#resolve_affected_by_target_user_deletion" do
+    it "rejects the queued post reviewable" do
+      reviewable = Fabricate(:reviewable_queued_post)
+
+      reviewable.resolve_affected_by_target_user_deletion(moderator)
+
+      expect(reviewable.reload).to be_rejected
+    end
+  end
+
   describe "creating a post" do
     let!(:topic) { Fabricate(:topic, category: category) }
     let(:reviewable) { Fabricate(:reviewable_queued_post, topic: topic) }

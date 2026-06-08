@@ -9,6 +9,16 @@ RSpec.describe ReviewableUser, type: :model do
   end
   fab!(:admin)
 
+  describe "#resolve_affected_by_target_user_deletion" do
+    fab!(:reviewable)
+
+    it "rejects the user reviewable" do
+      reviewable.resolve_affected_by_target_user_deletion(moderator)
+
+      expect(reviewable.reload).to be_rejected
+    end
+  end
+
   describe "#actions_for" do
     fab!(:reviewable)
 

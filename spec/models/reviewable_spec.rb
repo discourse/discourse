@@ -838,6 +838,19 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  describe "#resolve_affected_by_target_user_deletion" do
+    fab!(:moderator)
+
+    it "leaves reviewables pending by default" do
+      reviewable = Reviewable.new(status: Reviewable.statuses[:pending])
+
+      expect { reviewable.resolve_affected_by_target_user_deletion(moderator) }.not_to change {
+        reviewable.status
+      }
+      expect(reviewable).to be_pending
+    end
+  end
+
   describe ".unseen_reviewable_count" do
     fab!(:group)
     fab!(:category)

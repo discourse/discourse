@@ -135,6 +135,51 @@ describe ReviewableAiPost do
       )
     end
 
+    def perform_result_shape(result)
+      {
+        success: result.success?,
+        status: result.status,
+        transition_to: result.transition_to,
+        errors: result.errors,
+        recalculate_score: result.recalculate_score,
+        update_flag_stats: result.update_flag_stats,
+        after_commit: result.after_commit,
+        created_post: result.created_post,
+        created_post_topic: result.created_post_topic,
+        remove_reviewable_ids: result.remove_reviewable_ids.sort,
+      }
+    end
+
+    def fabricate_affected_reviewables_for_user_deletion(user)
+      {
+        queued_post_reviewable:
+          Fabricate(
+            :reviewable_queued_post,
+            created_by: Discourse.system_user,
+            target_created_by: user,
+          ),
+        user_reviewable: ReviewableUser.create_for(user),
+      }
+    end
+
+    def expected_delete_user_result_shape(expected_removed_reviewable_ids)
+      {
+        success: true,
+        status: :success,
+        transition_to: :approved,
+        errors: nil,
+        recalculate_score: true,
+        update_flag_stats: {
+          status: :agreed,
+          user_ids: [reviewable.created_by_id],
+        },
+        after_commit: nil,
+        created_post: nil,
+        created_post_topic: nil,
+        remove_reviewable_ids: expected_removed_reviewable_ids.sort,
+      }
+    end
+
     describe "agree variations" do
       it "hides the topic when performing the agree_and_hide action" do
         result = reviewable.perform(admin, :agree_and_hide)
@@ -228,11 +273,44 @@ describe ReviewableAiPost do
     end
 
     describe "delete user variations" do
-      it "deletes the user and agrees with the reviewable" do
-        result = reviewable.perform(admin, :delete_user)
+      it "deletes the user, agrees with the reviewable, and resolves affected reviewables" do
+        affected_reviewables = fabricate_affected_reviewables_for_user_deletion(target.user)
+        queued_post_reviewable = affected_reviewables[:queued_post_reviewable]
+        user_reviewable = affected_reviewables[:user_reviewable]
 
-        expect(result.transition_to).to eq :approved
+        result = reviewable.perform(admin, :delete_user)
+        expected_removed_reviewable_ids = [
+          reviewable.id,
+          queued_post_reviewable.id,
+          user_reviewable.id,
+        ]
+
+        expect(perform_result_shape(result)).to eq(
+          expected_delete_user_result_shape(expected_removed_reviewable_ids),
+        )
         expect { target.user.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(queued_post_reviewable.reload).to be_rejected
+        expect(user_reviewable.reload).to be_rejected
+      end
+
+      it "deletes and blocks the user, agrees with the reviewable, and resolves affected reviewables" do
+        affected_reviewables = fabricate_affected_reviewables_for_user_deletion(target.user)
+        queued_post_reviewable = affected_reviewables[:queued_post_reviewable]
+        user_reviewable = affected_reviewables[:user_reviewable]
+
+        result = reviewable.perform(admin, :delete_user_block)
+        expected_removed_reviewable_ids = [
+          reviewable.id,
+          queued_post_reviewable.id,
+          user_reviewable.id,
+        ]
+
+        expect(perform_result_shape(result)).to eq(
+          expected_delete_user_result_shape(expected_removed_reviewable_ids),
+        )
+        expect { target.user.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(queued_post_reviewable.reload).to be_rejected
+        expect(user_reviewable.reload).to be_rejected
       end
 
       it "links the staff action log to the reviewable" do
