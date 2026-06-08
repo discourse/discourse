@@ -2326,6 +2326,10 @@ cs:
       user: "Uživatelé"
     results_page: "Výsledky hledání pro '%{term}'"
     audio: "[zvuky]"
+  posts_filter:
+    description:
+      order_latest: "Nejnovější příspěvky"
+      order_latest_topic: "Nejnovější témata"
   filter:
     description:
       status: "Filtrovat témata podle jejich stavu"

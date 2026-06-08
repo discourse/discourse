@@ -1295,6 +1295,10 @@ id:
       category: "Kategori"
       topic: "Hasil"
       user: "Pengguna"
+  posts_filter:
+    description:
+      order_latest: "Pos terbaru"
+      order_latest_topic: "Topik Terbaru"
   publish_page:
     slug_errors:
       blank: "tidak boleh kosong"

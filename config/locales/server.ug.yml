@@ -2444,6 +2444,10 @@ ug:
     results_page: "«%{term}» نىڭ ئىزدەش نەتىجىسى"
     audio: "[ئۈن]"
     video: "[سىن]"
+  posts_filter:
+    description:
+      order_latest: "ئاخىرقى يازما"
+      order_latest_topic: "ئاخىرقى تېما"
   filter:
     description:
       status: "تېمىنى ھالىتىگە ئاساسەن سۈزىدۇ"

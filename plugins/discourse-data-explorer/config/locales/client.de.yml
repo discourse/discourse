@@ -43,7 +43,6 @@ de:
         description_hint: "Beschreibe in einfachen Worten, was du möchtest. Wir erstellen dann die SQL-Anweisung, den Namen und die Beschreibung für dich."
         description_placeholder: "z. B. Zeig mir die Registrierungen im Zeitverlauf"
         generate: "Erzeugen"
-        regenerate: "Neu generieren"
         generating: "Abfrage wird mit KI generiert …"
         generation_timeout: "Eine Zeitüberschreitung ist bei der Generierung der KI-Abfrage aufgetreten. Du kannst die SQL-Abfrage manuell eingeben."
         generation_error: "Beim Erstellen der Abfrage ist etwas schiefgelaufen."

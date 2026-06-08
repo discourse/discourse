@@ -2925,6 +2925,10 @@ ar:
     results_page: "نتائج البحث عن \"%{term}\""
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "آخر المنشورات"
+      order_latest_topic: "أحدث الموضوعات"
   filter:
     description:
       status: "تصفية الموضوعات حسب حالتها"

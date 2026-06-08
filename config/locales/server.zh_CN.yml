@@ -2516,6 +2516,8 @@ zh_CN:
       category: "显示指定类别下的帖子"
       category_any: "显示任意指定类别（以逗号分隔）中的帖子"
       exclude_category: "排除指定类别中的帖子"
+      order_latest: "最新帖子"
+      order_latest_topic: "最新话题"
   filter:
     description:
       status: "按状态筛选话题"

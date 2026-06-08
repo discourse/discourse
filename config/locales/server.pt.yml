@@ -1311,6 +1311,10 @@ pt:
       topic: "Resultados"
       user: "Utilizadores"
     results_page: "Resultados da pesquisa por '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "Últimas mensagens"
+      order_latest_topic: "Tópicos recentes"
   filter:
     description:
       in: "Filtrar tópicos nas listas pessoais"

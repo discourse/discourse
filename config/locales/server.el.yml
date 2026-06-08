@@ -1564,6 +1564,10 @@ el:
       topic: "Αποτελέσματα"
       user: "Χρήστες"
     results_page: "Αποτελέσματα αναζήτησης για '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "Τελευταίες αναρτήσεις"
+      order_latest_topic: "Τελευταία θέματα"
   filter:
     description:
       status_deleted: "Εμφάνιση διαγραμμένων θεμάτων (αν έχετε δικαίωμα)"

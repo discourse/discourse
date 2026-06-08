@@ -864,6 +864,10 @@ sq:
       category: "Categories"
       topic: "Results"
       user: "Users"
+  posts_filter:
+    description:
+      order_latest: "Postimet e fundit"
+      order_latest_topic: "Temat e fundit"
   original_poster: "Postuesi fillestar"
   most_recent_poster: "Postuesi i përgjigjes së fundit"
   frequent_poster: "Postues i shpeshtë"

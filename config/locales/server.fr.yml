@@ -2458,6 +2458,10 @@ fr:
     results_page: "Résultats de recherche pour « %{term} »"
     audio: "[audio]"
     video: "[vidéo]"
+  posts_filter:
+    description:
+      order_latest: "Dernières publications"
+      order_latest_topic: "Sujets récents"
   filter:
     description:
       status: "Filtrer les sujets en fonction de leur statut"

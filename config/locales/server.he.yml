@@ -2661,6 +2661,10 @@ he:
     results_page: "תוצאות לחיפוש אחר ‚%{term}’"
     audio: "[שמע]"
     video: "[וידאו]"
+  posts_filter:
+    description:
+      order_latest: "פוסטים אחרונים"
+      order_latest_topic: "נושאים אחרונים"
   filter:
     description:
       status: "סינון נושאים לפי המצב שלהם"

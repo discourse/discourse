@@ -2428,6 +2428,10 @@ ja:
     results_page: "'%{term}' の検索結果"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "最新の投稿"
+      order_latest_topic: "最新のトピック"
   filter:
     description:
       status: "ステータスでトピックを絞り込みます"

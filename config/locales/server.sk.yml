@@ -2606,6 +2606,10 @@ sk:
     results_page: "Výsledky vyhľadávania pre '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Najnovšie príspevky"
+      order_latest_topic: "Najnovšie témy"
   filter:
     description:
       status: "Filtrovať témy podľa ich stavu"
