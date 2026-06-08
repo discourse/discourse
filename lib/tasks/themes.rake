@@ -474,15 +474,15 @@ task "themes:pull_compatible_all" do |t|
       next unless File.directory?(theme_path + "/.git")
 
       theme_name = File.basename(theme_path)
-      checkout_version = Discourse.find_compatible_git_resource(theme_path)
+      checkout = Discourse.find_compatible_git_resource(theme_path)
 
       # Checkout value of the version compat
-      if checkout_version
-        puts "checking out compatible #{theme_name} version: #{checkout_version}"
+      if checkout
+        puts "checking out compatible #{theme_name} version: #{checkout}"
 
         update_status =
           system(
-            "git -C '#{theme_path}' cat-file -e #{checkout_version} || git -C '#{theme_path}' fetch --depth 1 $(git -C '#{theme_path}' rev-parse --symbolic-full-name @{upstream} | awk -F '/' '{print $3}') #{checkout_version}; git -C '#{theme_path}' reset --hard #{checkout_version}",
+            "git -C '#{theme_path}' cat-file -e #{checkout} || git -C '#{theme_path}' fetch --depth 1 $(git -C '#{theme_path}' rev-parse --symbolic-full-name @{upstream} | awk -F '/' '{print $3}') #{checkout}; git -C '#{theme_path}' reset --hard #{checkout}",
           )
 
         abort("Unable to checkout a compatible theme version") unless update_status
