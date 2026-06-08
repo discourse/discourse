@@ -35,25 +35,6 @@
   }
 }
 
-.db-date-range {
-  &__trigger {
-    height: var(--space-9);
-    padding: var(--space-1) var(--space-3);
-    border-radius: var(--d-border-radius);
-    border: 1px solid var(--primary-low);
-    background: var(--secondary);
-    color: var(--primary-high);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-
-    &:hover {
-      background: var(--primary-very-low);
-      color: var(--primary);
-    }
-  }
-}
-
 .db-delta {
   font-size: var(--font-down-2-rem);
   font-weight: bold;
