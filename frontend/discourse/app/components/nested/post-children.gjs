@@ -85,11 +85,8 @@ export default class NestedPostChildren extends Component {
     });
   }
 
-  _onChildCreated({ topicId, post, parentPostNumber }) {
-    if (
-      String(topicId) !== String(this.args.topic?.id) ||
-      parentPostNumber !== this.args.parentPostNumber
-    ) {
+  _onChildCreated({ post, parentPostNumber }) {
+    if (parentPostNumber !== this.args.parentPostNumber) {
       return;
     }
 
@@ -248,7 +245,6 @@ export default class NestedPostChildren extends Component {
             @registerPost={{@registerPost}}
             @collapseFromDepth={{@collapseFromDepth}}
             @focusPost={{@focusPost}}
-            @captureScrollAnchor={{@captureScrollAnchor}}
             @multiSelect={{@multiSelect}}
             @togglePostSelection={{@togglePostSelection}}
             @selectReplies={{@selectReplies}}

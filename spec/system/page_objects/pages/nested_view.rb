@@ -62,6 +62,18 @@ module PageObjects
         has_css?(".nested-context-view")
       end
 
+      def has_view_full_thread_link?
+        has_css?(".nested-context-view__full-thread")
+      end
+
+      def has_view_parent_context_link?
+        has_css?(".nested-context-view__parent-context")
+      end
+
+      def has_no_view_parent_context_link?
+        has_no_css?(".nested-context-view__parent-context")
+      end
+
       # ── Post assertions ───────────────────────────────────────────
 
       def has_post_at_depth?(post, depth:)
@@ -70,10 +82,6 @@ module PageObjects
 
       def has_post?(post)
         has_css?("[data-post-number='#{post.post_number}']")
-      end
-
-      def has_post_text?(text)
-        has_css?(".nested-post__article", text: text)
       end
 
       def has_no_post?(post)
@@ -139,24 +147,11 @@ module PageObjects
         has_no_css?("[data-test-nested-mobile-ancestor='#{post.post_number}']")
       end
 
-      def has_no_mobile_ancestor_user_card_trigger?(post)
-        has_no_css?("[data-test-nested-mobile-ancestor='#{post.post_number}'] [data-user-card]")
-      end
-
       def post_viewport_top(post)
         page.evaluate_script(<<~JS)
           document
             .querySelector("[data-post-number='#{post.post_number}']")
             .closest(".nested-post")
-            .getBoundingClientRect()
-            .top
-        JS
-      end
-
-      def mobile_ancestor_viewport_top(post)
-        page.evaluate_script(<<~JS)
-          document
-            .querySelector("[data-test-nested-mobile-ancestor='#{post.post_number}']")
             .getBoundingClientRect()
             .top
         JS
@@ -336,24 +331,6 @@ module PageObjects
         self
       end
 
-      def trigger_replies_toggle(post)
-        page.evaluate_script(<<~JS)
-          (() => {
-            const button = document.querySelector(
-              "[data-post-number='#{post.post_number}'] .nested-post__expand-replies"
-            );
-            document
-              .querySelectorAll(".nested-view__roots .nested-post [data-post-number]")
-              .forEach((article) =>
-                (article.closest(".nested-post") || article).getBoundingClientRect()
-              );
-            const scrollY = window.scrollY;
-            button.click();
-            return scrollY;
-          })()
-        JS
-      end
-
       def scroll_post_near_top(post, offset: 80)
         page.execute_script(<<~JS)
           const post = document.querySelector("[data-post-number='#{post.post_number}']");
@@ -395,15 +372,18 @@ module PageObjects
         self
       end
 
-      def click_mobile_ancestor_avatar(post)
-        find(
-          "[data-test-nested-mobile-ancestor='#{post.post_number}'] .nested-view__mobile-ancestor-avatar",
-        ).click
+      def click_mobile_focus_back
+        find(".nested-view__mobile-focus-back").click
         self
       end
 
-      def click_mobile_focus_back
-        find(".nested-view__mobile-focus-back").click
+      def click_view_full_thread
+        find(".nested-context-view__full-thread").click
+        self
+      end
+
+      def click_view_parent_context
+        find(".nested-context-view__parent-context").click
         self
       end
 
