@@ -11,7 +11,6 @@ import { cancel, schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import {
   gridDimensions,
-  normalizeFractions,
   parsePlacement,
   registerBlockArgRenderer,
   resetBlockArgRenderer,
@@ -47,6 +46,7 @@ import {
   syncContentToArrayOrder,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-renderer";
+import GridManipulator from "../lib/grid-manipulator";
 import {
   matchGridTemplate,
   resolveTemplateLayout,
@@ -319,6 +319,17 @@ export default class WireframeService extends Service {
    * @type {LinkEditState}
    */
   linkEdit = new LinkEditState(this);
+
+  /**
+   * Owns every grid `wf:layout` mutation. Drops route through it so they
+   * can't bypass the `decideGridDrop` rule chokepoint; non-drop grid ops
+   * (cell / column resize) live here too. Same separate-object split as the
+   * inline editors, reaching service primitives back through `this`. See
+   * `../lib/grid-manipulator.js`.
+   *
+   * @type {GridManipulator}
+   */
+  gridManipulator = new GridManipulator(this);
 
   /**
    * Undo / redo stacks for in-memory edits. Entries are discriminated by
@@ -2633,7 +2644,7 @@ export default class WireframeService extends Service {
       this.publishStructuralChange(
         located.outletName,
         gridKey
-          ? this.#syncDeclaredToUsage(result.layout, gridKey)
+          ? this.gridManipulator.syncDeclaredToUsage(result.layout, gridKey)
           : result.layout
       );
       return true;
@@ -2978,7 +2989,7 @@ export default class WireframeService extends Service {
       // grid's declared columns / rows up to match.
       this.publishStructuralChange(
         grid.outletName,
-        this.#syncDeclaredToUsage(
+        this.gridManipulator.syncDeclaredToUsage(
           this.readResolvedLayout(grid.outletName),
           gridKey
         )
@@ -3239,7 +3250,7 @@ export default class WireframeService extends Service {
         // (e.g. into a new row), so render and declared stay in step.
         this.publishStructuralChange(
           grid.outletName,
-          this.#syncDeclaredToUsage(result.layout, gridKey)
+          this.gridManipulator.syncDeclaredToUsage(result.layout, gridKey)
         );
       }
       return true;
@@ -3285,7 +3296,7 @@ export default class WireframeService extends Service {
       }
       this.publishStructuralChange(
         located.outletName,
-        this.#syncDeclaredToUsage(insertion.layout, gridKey)
+        this.gridManipulator.syncDeclaredToUsage(insertion.layout, gridKey)
       );
       // Auto-select the new cell so the inspector immediately shows its
       // content args (and the placement section for the parent grid's
@@ -4584,13 +4595,13 @@ export default class WireframeService extends Service {
     // this grid — cascades the row to make room (R2: shift right, grow a
     // column when the row is full). Same-grid cascades in place: grids
     // position by `containerArgs.grid`, not array order, so no remove /
-    // insert is needed. `#positionEntering` routes through the decider, so
-    // same-grid and entering cascades share one rule path. `placeEntering:
-    // false` callers set an exact cell themselves and opt out.
+    // insert is needed. `gridManipulator.positionEntering` routes through the
+    // decider, so same-grid and entering cascades share one rule path.
+    // `placeEntering: false` callers set an exact cell themselves and opt out.
     if (sameGrid && besideCell && placeEntering) {
       this.publishStructuralChange(
         outletName,
-        this.#positionEntering(
+        this.gridManipulator.positionEntering(
           layout,
           destGridKey,
           sourceKey,
@@ -4649,7 +4660,7 @@ export default class WireframeService extends Service {
       // (the precise cell-drop path) opt out via `placeEntering: false`.
       const finalLayout =
         enteringGrid && placeEntering
-          ? this.#positionEntering(
+          ? this.gridManipulator.positionEntering(
               insertion.layout,
               destGridKey,
               sourceKey,
@@ -4691,167 +4702,6 @@ export default class WireframeService extends Service {
       position,
     });
     return this.#isGridContainer(parent) ? entryKey(parent) : null;
-  }
-
-  /**
-   * Positions a block that just entered a grid (its foreign span already
-   * discarded by `#annotateForDestination`). The gesture is read from how
-   * it was dropped — a "before" / "after" drop relative to a specific cell
-   * is a BESIDE cascade; an "inside" / container-level drop is a GENERIC
-   * append — and the actual placement is decided by `decideGridDrop`, the
-   * single rule chokepoint. The decision is then applied to the layout.
-   *
-   * @param {Array<Object>} layout
-   * @param {string} gridKey
-   * @param {string} entryKeyValue - The just-inserted entry's key.
-   * @param {string|null} targetKey - The cell the drop was relative to.
-   * @param {"before"|"after"|"inside"} position
-   * @returns {Array<Object>}
-   */
-  #positionEntering(layout, gridKey, entryKeyValue, targetKey, position) {
-    const grid = findEntry(layout, gridKey);
-    if (!grid) {
-      return layout;
-    }
-    const decision = decideGridDrop({
-      children: grid.children ?? [],
-      declared: {
-        columns: grid.args?.columns ?? 3,
-        rows: grid.args?.rows ?? 2,
-      },
-      // The entry is already a child of the grid at this point, so it
-      // counts as an in-grid source (its auto cell is credited as free).
-      source: { kind: "existing", key: entryKeyValue },
-      drop: this.#classifyGridDrop(gridKey, targetKey, position),
-    });
-    return this.#applyGridDecision(layout, gridKey, entryKeyValue, decision);
-  }
-
-  /**
-   * Classifies an enter-style drop (`before` / `after` / `inside` a target)
-   * into the normalized gesture `decideGridDrop` consumes. A before / after
-   * drop beside a specific cell is BESIDE, anchored on that cell (so a
-   * spanning anchor's full rect drives the cascade); everything else —
-   * including a drop on the grid container itself — is GENERIC.
-   *
-   * @param {string} gridKey
-   * @param {string|null} targetKey
-   * @param {"before"|"after"|"inside"} position
-   * @returns {{gesture: string, anchorKey?: string, direction?: string}}
-   */
-  #classifyGridDrop(gridKey, targetKey, position) {
-    if (
-      (position === "before" || position === "after") &&
-      targetKey &&
-      targetKey !== gridKey
-    ) {
-      return {
-        gesture: GRID_DROP_GESTURES.BESIDE,
-        anchorKey: targetKey,
-        direction: position === "before" ? "left" : "right",
-      };
-    }
-    return { gesture: GRID_DROP_GESTURES.GENERIC };
-  }
-
-  /**
-   * Applies a `decideGridDrop` decision that places a single entry inside a
-   * grid — the `fill` / `append` / `cascade` outcomes, where the entry is
-   * already a child and only its placement (and any cascaded neighbours')
-   * changes. Cascaded neighbours move first, then the source lands at the
-   * decision's placement, then the grid's declared size is synced to usage.
-   * `swap` / `replace` are two-entry trades handled by their own methods, so
-   * they don't pass through here.
-   *
-   * @param {Array<Object>} layout
-   * @param {string} gridKey
-   * @param {string} entryKeyValue - The entry being placed.
-   * @param {import("discourse/plugins/discourse-wireframe/discourse/lib/grid-drop").GridDropDecision} decision
-   * @returns {Array<Object>}
-   */
-  #applyGridDecision(layout, gridKey, entryKeyValue, decision) {
-    let next = layout;
-    for (const move of decision.moves) {
-      const result = replaceEntryContainerArgs(
-        next,
-        move.slotKey,
-        "grid",
-        (current) => ({ ...current, column: move.column, row: move.row })
-      );
-      if (result.changed) {
-        next = result.layout;
-      }
-    }
-    if (decision.placement) {
-      const placed = replaceEntryContainerArgs(
-        next,
-        entryKeyValue,
-        "grid",
-        (current) => ({
-          align: "stretch",
-          justify: "stretch",
-          ...current,
-          column: decision.placement.column,
-          row: decision.placement.row,
-        })
-      );
-      if (placed.changed) {
-        next = placed.layout;
-      }
-    }
-    return this.#syncDeclaredToUsage(next, gridKey);
-  }
-
-  /**
-   * Writes a grid's declared `args.columns` / `args.rows` up to match what
-   * its children actually occupy (per core's `gridDimensions`), so the
-   * rendered (effective) size never exceeds the declared size and no
-   * out-of-bounds badge can arise from an editor operation. Only ever
-   * grows — a deliberate dimension-field shrink below content is left
-   * alone so its warning still surfaces. When columns grow, the stored
-   * `columnFractions` are renormalized to the new count so the rendered
-   * track list can't desync.
-   *
-   * @param {Array<Object>} layout
-   * @param {string} gridKey
-   * @returns {Array<Object>}
-   */
-  #syncDeclaredToUsage(layout, gridKey) {
-    const grid = findEntry(layout, gridKey);
-    if (!grid) {
-      return layout;
-    }
-    const declared = {
-      columns: grid.args?.columns ?? 3,
-      rows: grid.args?.rows ?? 2,
-    };
-    const effective = gridDimensions(declared, grid.children);
-    if (
-      effective.columns === declared.columns &&
-      effective.rows === declared.rows
-    ) {
-      return layout;
-    }
-    const nextArgs = {
-      ...grid.args,
-      columns: effective.columns,
-      rows: effective.rows,
-    };
-    if (
-      effective.columns !== declared.columns &&
-      Array.isArray(grid.args?.columnFractions) &&
-      grid.args.columnFractions.length > 0
-    ) {
-      nextArgs.columnFractions = normalizeFractions(
-        grid.args.columnFractions,
-        effective.columns
-      );
-    }
-    const result = replaceEntryInPlace(layout, gridKey, {
-      ...grid,
-      args: nextArgs,
-    });
-    return result.changed ? result.layout : layout;
   }
 
   /**
@@ -4947,7 +4797,7 @@ export default class WireframeService extends Service {
       );
       const final =
         autoPosition && destGridKey
-          ? this.#positionEntering(
+          ? this.gridManipulator.positionEntering(
               insertion.layout,
               destGridKey,
               sourceKey,
@@ -4998,7 +4848,7 @@ export default class WireframeService extends Service {
     );
     const targetFinal =
       autoPosition && destGridKey
-        ? this.#positionEntering(
+        ? this.gridManipulator.positionEntering(
             insertion.layout,
             destGridKey,
             sourceKey,
