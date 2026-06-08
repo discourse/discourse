@@ -108,13 +108,43 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
       expect(described_class.list_all(search: "zz_no_match_zz")).to be_empty
     end
 
-    it "respects offset and limit, paginating across persisted + defaults" do
-      first = described_class.list_all(offset: 0, limit: 1)
-      second = described_class.list_all(offset: 1, limit: 1)
+    it "returns a title-sorted page and resumes after the cursor across persisted + defaults" do
+      all = described_class.list_all
+      titles = all.map { |report| report.title.to_s.downcase }
+      expect(titles).to eq(titles.sort)
 
+      first = described_class.list_all(limit: 1)
       expect(first.size).to eq(1)
+
+      after = { title: first.first.title, key: first.first.key }
+      second = described_class.list_all(after: after, limit: 1)
+
       expect(second.size).to eq(1)
-      expect(first.first.identifier).not_to eq(second.first.identifier)
+      expect(second.first.identifier).not_to eq(first.first.identifier)
+      expect(
+        described_class.sort_key(second.first) <=> described_class.sort_key(first.first),
+      ).to eq(1)
+    end
+
+    it "orders by byte value so an emoji-titled query never re-appears after its own cursor" do
+      lettered =
+        Fabricate(:query, name: "alpha query", sql: "SELECT 1 AS value", hidden: false, user: admin)
+      emoji =
+        Fabricate(
+          :query,
+          name: "🦁 lion query",
+          sql: "SELECT 1 AS value",
+          hidden: false,
+          user: admin,
+        )
+
+      identifiers = described_class.list_all.map(&:identifier)
+      expect(identifiers.index(lettered.id.to_s)).to be < identifiers.index(emoji.id.to_s)
+
+      after = { title: emoji.name, key: "data_explorer_query:#{emoji.id}" }
+      expect(described_class.list_all(after: after).map(&:identifier)).not_to include(
+        lettered.id.to_s,
+      )
     end
   end
 

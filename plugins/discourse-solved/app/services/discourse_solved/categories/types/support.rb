@@ -29,6 +29,7 @@ module DiscourseSolved
             configuration_values.reverse_merge!(
               DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD => "true",
               DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD => "true",
+              DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD => "true",
             )
             configuration_values.merge!(
               DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => "true",
@@ -105,6 +106,21 @@ module DiscourseSolved
                   default: true,
                   type: :bool,
                   label: I18n.t("discourse_solved.category_type.empty_box_on_unsolved.label"),
+                },
+                DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD => {
+                  default: true,
+                  type: :bool,
+                  label: I18n.t("discourse_solved.category_type.enable_shared_issues.label"),
+                  description:
+                    I18n.t("discourse_solved.category_type.enable_shared_issues.description"),
+                },
+              },
+              site_texts: {
+                "js.solved.shared_issue.label" => {
+                  label: I18n.t("discourse_solved.category_type.shared_issue_label.label"),
+                  description:
+                    I18n.t("discourse_solved.category_type.shared_issue_label.description"),
+                  depends_on: DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD,
                 },
               },
             }

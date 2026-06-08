@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, get } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -8,92 +8,14 @@ import { modifier } from "ember-modifier";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-
-export const PRESET_LAST_7_DAYS = "last_7_days";
-export const PRESET_LAST_30_DAYS = "last_30_days";
-export const PRESET_LAST_3_MONTHS = "last_3_months";
-export const PRESET_LAST_6_MONTHS = "last_6_months";
-export const PRESET_LAST_YEAR = "last_year";
-
-export const ALL_PRESETS = [
-  PRESET_LAST_7_DAYS,
-  PRESET_LAST_30_DAYS,
-  PRESET_LAST_3_MONTHS,
-  PRESET_LAST_6_MONTHS,
-  PRESET_LAST_YEAR,
-];
-
-const PRESET_RANGES = {
-  [PRESET_LAST_7_DAYS]: (today) => ({
-    from: today.clone().subtract(6, "days"),
-    to: today.clone(),
-  }),
-  [PRESET_LAST_30_DAYS]: (today) => ({
-    from: today.clone().subtract(29, "days"),
-    to: today.clone(),
-  }),
-  [PRESET_LAST_3_MONTHS]: (today) => ({
-    from: today.clone().subtract(3, "months").add(1, "day"),
-    to: today.clone(),
-  }),
-  [PRESET_LAST_6_MONTHS]: (today) => ({
-    from: today.clone().subtract(6, "months").add(1, "day"),
-    to: today.clone(),
-  }),
-  [PRESET_LAST_YEAR]: (today) => ({
-    from: today.clone().subtract(1, "year").add(1, "day"),
-    to: today.clone(),
-  }),
-};
-
-const PRESET_LABEL_KEYS = {
-  [PRESET_LAST_7_DAYS]: "date_range_picker.presets.last_7_days",
-  [PRESET_LAST_30_DAYS]: "date_range_picker.presets.last_30_days",
-  [PRESET_LAST_3_MONTHS]: "date_range_picker.presets.last_3_months",
-  [PRESET_LAST_6_MONTHS]: "date_range_picker.presets.last_6_months",
-  [PRESET_LAST_YEAR]: "date_range_picker.presets.last_year",
-};
-
-export function presetRange(preset, today = moment().startOf("day")) {
-  return PRESET_RANGES[preset](today.clone().startOf("day"));
-}
-
-export function formatRange(from, to) {
-  if (!from || !to) {
-    return "";
-  }
-  const fromM = moment(from);
-  const toM = moment(to);
-  if (fromM.isSame(toM, "day")) {
-    return fromM.format("ll");
-  }
-  return `${fromM.format("ll")} – ${toM.format("ll")}`;
-}
 
 function toDayMoment(value) {
   return value ? moment(value).startOf("day") : null;
 }
 
-function fmt(value, pattern) {
+function formatDate(value, pattern) {
   return value ? moment(value).format(pattern) : "";
-}
-
-function ymd(value) {
-  return value ? moment(value).format("YYYY-MM-DD") : null;
-}
-
-export function matchingPreset(from, to, presets, today = moment()) {
-  const fromYmd = ymd(from);
-  const toYmd = ymd(to);
-  const todayStart = today.clone().startOf("day");
-  return (
-    presets.find((preset) => {
-      const range = PRESET_RANGES[preset](todayStart);
-      return ymd(range.from) === fromYmd && ymd(range.to) === toYmd;
-    }) ?? null
-  );
 }
 
 export default class DashboardDateRangePicker extends Component {
@@ -124,8 +46,12 @@ export default class DashboardDateRangePicker extends Component {
       activeRect.left - railRect.left - (railRect.width - activeRect.width) / 2;
   });
 
-  get presets() {
-    return this.args.presets ?? ALL_PRESETS;
+  get presetItems() {
+    const activeId = this.committed ? (this.args.activePreset ?? null) : null;
+    return (this.args.presets ?? []).map((preset) => ({
+      ...preset,
+      active: preset.id === activeId,
+    }));
   }
 
   get maxDate() {
@@ -144,20 +70,16 @@ export default class DashboardDateRangePicker extends Component {
     return this.committed ? toDayMoment(this.args.to) : this.pendingEnd;
   }
 
-  get activePreset() {
-    if (!this.committed) {
-      return null;
-    }
-    return matchingPreset(this.args.from, this.args.to, this.presets);
-  }
-
   get applyDisabled() {
     if (!this.pendingStart || !this.pendingEnd) {
       return true;
     }
+    if (!this.args.from || !this.args.to) {
+      return false;
+    }
     return (
-      ymd(this.pendingStart) === ymd(this.args.from) &&
-      ymd(this.pendingEnd) === ymd(this.args.to)
+      this.pendingStart.isSame(toDayMoment(this.args.from), "day") &&
+      this.pendingEnd.isSame(toDayMoment(this.args.to), "day")
     );
   }
 
@@ -165,49 +87,24 @@ export default class DashboardDateRangePicker extends Component {
     return !this.site.mobileView;
   }
 
-  get monthSpanCount() {
-    const start = toDayMoment(this.args.from);
-    const end = toDayMoment(this.args.to);
-    if (!start || !end) {
-      return 0;
-    }
-    return end
-      .clone()
-      .startOf("month")
-      .diff(start.clone().startOf("month"), "months");
-  }
-
-  get useLongRangeLayout() {
-    return (
-      !this.viewStartMonthOverride &&
-      this.showTwoMonths &&
-      this.monthSpanCount > 1
-    );
-  }
-
   get viewStartMonth() {
     if (this.viewStartMonthOverride) {
       return this.viewStartMonthOverride;
     }
-    const anchor = toDayMoment(this.args.to) ?? moment().startOf("day");
-    if (this.showTwoMonths) {
-      return anchor.clone().subtract(1, "month").startOf("month");
-    }
+    const anchor = toDayMoment(this.args.from) ?? moment().startOf("day");
     return anchor.clone().startOf("month");
   }
 
   get visibleMonths() {
-    if (this.useLongRangeLayout) {
-      return [
-        toDayMoment(this.args.from).clone().startOf("month"),
-        toDayMoment(this.args.to).clone().startOf("month"),
-      ];
-    }
     const months = [this.viewStartMonth.clone()];
     if (this.showTwoMonths) {
       months.push(this.viewStartMonth.clone().add(1, "month"));
     }
     return months;
+  }
+
+  get lastMonthIndex() {
+    return this.visibleMonths.length - 1;
   }
 
   get effectiveFocusedDay() {
@@ -221,21 +118,19 @@ export default class DashboardDateRangePicker extends Component {
   }
 
   get hoverRangeEnd() {
-    if (this.committed || this.pendingEnd || !this.hoveredDay) {
+    if (
+      this.committed ||
+      this.pendingEnd ||
+      !this.hoveredDay ||
+      this.hoveredDay.isBefore(this.pendingStart, "day")
+    ) {
       return null;
     }
-    return this.hoveredDay.isBefore(this.pendingStart, "day")
-      ? this.pendingStart
-      : this.hoveredDay;
+    return this.hoveredDay;
   }
 
   get hoverRangeStart() {
-    if (this.committed || this.pendingEnd || !this.hoveredDay) {
-      return null;
-    }
-    return this.hoveredDay.isBefore(this.pendingStart, "day")
-      ? this.hoveredDay
-      : this.pendingStart;
+    return this.hoverRangeEnd ? this.pendingStart : null;
   }
 
   @action
@@ -258,6 +153,16 @@ export default class DashboardDateRangePicker extends Component {
   @action
   isMutedDay(day, monthStart) {
     return !day.isSame(monthStart, "month");
+  }
+
+  @action
+  isMonthStartDay(day) {
+    return day.date() === 1;
+  }
+
+  @action
+  isMonthEndDay(day) {
+    return day.date() === day.daysInMonth();
   }
 
   @action
@@ -298,6 +203,16 @@ export default class DashboardDateRangePicker extends Component {
   }
 
   @action
+  isHoverEndDay(day) {
+    return (
+      this.hoverRangeStart &&
+      this.hoverRangeEnd &&
+      day.isSame(this.hoverRangeEnd, "day") &&
+      day.isAfter(this.hoverRangeStart, "day")
+    );
+  }
+
+  @action
   isFocusedDay(day) {
     return day.isSame(this.effectiveFocusedDay, "day");
   }
@@ -333,17 +248,21 @@ export default class DashboardDateRangePicker extends Component {
     if (this.isHoverPreviewDay(day)) {
       classes.push("--hover-preview");
     }
+    if (this.isHoverEndDay(day)) {
+      classes.push("--hover-end");
+    }
+    if (this.isMonthStartDay(day)) {
+      classes.push("--month-start");
+    }
+    if (this.isMonthEndDay(day)) {
+      classes.push("--month-end");
+    }
     return classes.join(" ");
   }
 
   @action
   selectPreset(preset) {
-    const { from, to } = presetRange(preset);
-    this.args.onApply?.({
-      preset,
-      from: from.toDate(),
-      to: to.toDate(),
-    });
+    this.args.onApply?.({ preset: preset.id });
   }
 
   @action
@@ -511,6 +430,27 @@ export default class DashboardDateRangePicker extends Component {
   }
 
   @action
+  focusStartInput() {
+    const start = this.currentStart;
+    if (!start) {
+      return;
+    }
+    this.viewStartMonthOverride = start.clone().startOf("month");
+  }
+
+  @action
+  focusEndInput() {
+    const end = this.currentEnd;
+    if (!end) {
+      return;
+    }
+    const month = end.clone().startOf("month");
+    this.viewStartMonthOverride = this.showTwoMonths
+      ? month.clone().subtract(1, "month")
+      : month;
+  }
+
+  @action
   commitInputOnEnter(event) {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -526,17 +466,17 @@ export default class DashboardDateRangePicker extends Component {
         aria-label={{i18n "date_range_picker.presets.label"}}
         {{this.scrollActivePresetIntoView}}
       >
-        {{#each this.presets as |preset|}}
+        {{#each this.presetItems as |preset|}}
           <button
             type="button"
             class={{dConcatClass
               "d-date-range-picker__preset"
-              (if (eq this.activePreset preset) "is-active")
+              (if preset.active "is-active")
             }}
-            aria-current={{if (eq this.activePreset preset) "true"}}
+            aria-current={{if preset.active "true"}}
             {{on "click" (fn this.selectPreset preset)}}
           >
-            {{i18n (get PRESET_LABEL_KEYS preset)}}
+            {{preset.label}}
           </button>
         {{/each}}
       </div>
@@ -546,20 +486,29 @@ export default class DashboardDateRangePicker extends Component {
           class="d-date-range-picker__calendar"
           {{on "mouseleave" this.leaveGrid}}
         >
-          <button
-            type="button"
-            class="d-date-range-picker__nav"
-            aria-label={{i18n "dates.previous_month"}}
-            {{on "click" (fn this.shiftMonth -1)}}
-          >
-            {{dIcon "chevron-left"}}
-          </button>
-
           <div class="d-date-range-picker__months">
-            {{#each this.visibleMonths as |month|}}
+            {{#each this.visibleMonths as |month index|}}
               <div class="d-date-range-picker__month">
                 <div class="d-date-range-picker__month-header">
-                  {{fmt month "MMMM YYYY"}}
+                  {{#if (eq index 0)}}
+                    <DButton
+                      class="btn-transparent d-date-range-picker__nav --prev"
+                      @icon="chevron-left"
+                      @ariaLabel="dates.previous_month"
+                      @action={{fn this.shiftMonth -1}}
+                    />
+                  {{/if}}
+                  <span class="d-date-range-picker__month-title">
+                    {{formatDate month "MMMM YYYY"}}
+                  </span>
+                  {{#if (eq index this.lastMonthIndex)}}
+                    <DButton
+                      class="btn-transparent d-date-range-picker__nav --next"
+                      @icon="chevron-right"
+                      @ariaLabel="dates.next_month"
+                      @action={{fn this.shiftMonth 1}}
+                    />
+                  {{/if}}
                 </div>
                 <div class="d-date-range-picker__weekdays" aria-hidden="true">
                   {{#each this.weekdayLabels as |dow|}}
@@ -569,7 +518,7 @@ export default class DashboardDateRangePicker extends Component {
                 <div
                   class="d-date-range-picker__grid"
                   role="grid"
-                  aria-label={{fmt month "MMMM YYYY"}}
+                  aria-label={{formatDate month "MMMM YYYY"}}
                   {{on "keydown" this.handleKeyDown}}
                 >
                   {{#each (this.weeksFor month) as |week|}}
@@ -585,7 +534,7 @@ export default class DashboardDateRangePicker extends Component {
                             tabindex={{if (this.isFocusedDay day) "0" "-1"}}
                             aria-selected={{this.isAriaSelected day}}
                             aria-disabled={{if (this.isDisabledDay day) "true"}}
-                            aria-label={{fmt day "LL"}}
+                            aria-label={{formatDate day "LL"}}
                             disabled={{this.isDisabledDay day}}
                             {{this.focusDay
                               (this.shouldProgrammaticallyFocusDay day)
@@ -593,7 +542,7 @@ export default class DashboardDateRangePicker extends Component {
                             {{on "click" (fn this.clickDay day)}}
                             {{on "mouseenter" (fn this.hoverDay day)}}
                           >
-                            {{fmt day "D"}}
+                            {{formatDate day "D"}}
                           </button>
                         {{/if}}
                       {{/each}}
@@ -603,15 +552,6 @@ export default class DashboardDateRangePicker extends Component {
               </div>
             {{/each}}
           </div>
-
-          <button
-            type="button"
-            class="d-date-range-picker__nav"
-            aria-label={{i18n "dates.next_month"}}
-            {{on "click" (fn this.shiftMonth 1)}}
-          >
-            {{dIcon "chevron-right"}}
-          </button>
         </div>
 
         <div class="d-date-range-picker__inputs">
@@ -623,6 +563,7 @@ export default class DashboardDateRangePicker extends Component {
             placeholder={{i18n "date_range_picker.date_placeholder"}}
             aria-label={{i18n "date_range_picker.start_date"}}
             value={{this.startInputValue}}
+            {{on "focus" this.focusStartInput}}
             {{on "change" this.commitStartInput}}
             {{on "keydown" this.commitInputOnEnter}}
           />
@@ -634,6 +575,7 @@ export default class DashboardDateRangePicker extends Component {
             placeholder={{i18n "date_range_picker.date_placeholder"}}
             aria-label={{i18n "date_range_picker.end_date"}}
             value={{this.endInputValue}}
+            {{on "focus" this.focusEndInput}}
             {{on "change" this.commitEndInput}}
             {{on "keydown" this.commitInputOnEnter}}
           />

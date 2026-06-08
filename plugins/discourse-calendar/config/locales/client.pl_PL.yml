@@ -468,6 +468,9 @@ pl_PL:
           other: "Maksymalnie %{count} uczestników"
         no_rsvps_label: "Nieodnotowywanie obecności"
         description_placeholder: "Dodaj opis wydarzenia"
+        event_title_placeholder: "Nazwa wydarzenia"
+        create_event_button: "Utwórz wydarzenie"
+        action_title: "Utwórz nowe wydarzenie"
         all_day: "Cały dzień"
         reminder:
           units:
@@ -496,6 +499,13 @@ pl_PL:
           notification_title: "Powiadom uczestników"
           bump_topic_title: "Automatycznie podbij temat"
           remove: "Usuń przypomnienie"
+      composer_actions:
+        create_event:
+          label: "Utwórz wydarzenie"
+          desc: "Utwórz nowe wydarzenie w tej kategorii"
+        create_topic:
+          label: "Utwórz temat"
+          desc: "Utwórz regularny temat zamiast wydarzenia"
       builder_modal:
         custom_fields:
           label: "Pola niestandardowe"
@@ -594,3 +604,4 @@ pl_PL:
       invite_user_or_group:
         title: "Powiadom użytkowników lub grupy"
         invite: "Wyślij"
+        success: "Zaproszenie wysłane"

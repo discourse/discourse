@@ -1,67 +1,43 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import DashboardDateRangePicker, {
+import DashboardDateRangePicker from "discourse/admin/components/dashboard/date-range-picker";
+import {
   ALL_PRESETS,
+  DEFAULT_PERIOD,
   formatRange,
-  PRESET_LAST_3_MONTHS,
-  PRESET_LAST_7_DAYS,
-  PRESET_LAST_30_DAYS,
-} from "discourse/admin/components/dashboard/date-range-picker";
-import DMenu from "discourse/float-kit/components/d-menu";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { i18n } from "discourse-i18n";
-
-export const PERIOD_LAST_7_DAYS = PRESET_LAST_7_DAYS;
-export const PERIOD_LAST_30_DAYS = PRESET_LAST_30_DAYS;
-export const PERIOD_LAST_3_MONTHS = PRESET_LAST_3_MONTHS;
-export const PERIOD_CUSTOM = "custom";
-
-export const DEFAULT_PERIOD = PERIOD_LAST_30_DAYS;
-
-export const VALID_PERIODS = [
-  PERIOD_LAST_7_DAYS,
-  PERIOD_LAST_30_DAYS,
-  PERIOD_LAST_3_MONTHS,
   PERIOD_CUSTOM,
-];
-
-const TOP_TIER_PRESET_I18N_KEYS = {
-  [PERIOD_LAST_7_DAYS]: "date_range_picker.presets.last_7_days",
-  [PERIOD_LAST_30_DAYS]: "date_range_picker.presets.last_30_days",
-  [PERIOD_LAST_3_MONTHS]: "date_range_picker.presets.last_3_months",
-};
-
-const TOP_TIER_PRESETS = new Set(Object.keys(TOP_TIER_PRESET_I18N_KEYS));
-
-export function calculatePresetStartDate(period) {
-  const today = moment();
-  switch (period) {
-    case PERIOD_LAST_7_DAYS:
-      return today.subtract(6, "days").startOf("day").toDate();
-    case PERIOD_LAST_3_MONTHS:
-      return today.subtract(3, "months").add(1, "day").startOf("day").toDate();
-    case PERIOD_LAST_30_DAYS:
-    default:
-      return today.subtract(29, "days").startOf("day").toDate();
-  }
-}
+  PRESET_LABEL_KEYS,
+} from "discourse/admin/lib/dashboard-date-range";
+import DMenu from "discourse/float-kit/components/d-menu";
+import { i18n } from "discourse-i18n";
 
 export default class DashboardDateRange extends Component {
   get triggerLabel() {
     const { period, startDate, endDate } = this.args;
-    if (TOP_TIER_PRESET_I18N_KEYS[period]) {
-      return i18n(TOP_TIER_PRESET_I18N_KEYS[period]);
+    if (PRESET_LABEL_KEYS[period]) {
+      return i18n(PRESET_LABEL_KEYS[period]);
     }
     if (period === PERIOD_CUSTOM && startDate && endDate) {
       return formatRange(startDate, endDate);
     }
-    return i18n(TOP_TIER_PRESET_I18N_KEYS[DEFAULT_PERIOD]);
+    return i18n(PRESET_LABEL_KEYS[DEFAULT_PERIOD]);
+  }
+
+  get presets() {
+    return ALL_PRESETS.map((id) => ({
+      id,
+      label: i18n(PRESET_LABEL_KEYS[id]),
+    }));
+  }
+
+  get activePreset() {
+    return PRESET_LABEL_KEYS[this.args.period] ? this.args.period : null;
   }
 
   @action
   handleApply(close, { preset, from, to }) {
-    if (preset && TOP_TIER_PRESETS.has(preset)) {
+    if (preset) {
       this.args.setPeriod?.(preset);
     } else {
       this.args.setCustomDateRange?.(from, to);
@@ -72,21 +48,20 @@ export default class DashboardDateRange extends Component {
   <template>
     <DMenu
       @identifier="db-date-range-menu"
-      @triggerClass="db-date-range__trigger"
+      @triggerClass="btn-default db-date-range__trigger"
       @modalForMobile={{true}}
       @placement="bottom-end"
-      @maxWidth={{680}}
+      @maxWidth={{800}}
       @contentClass="db-date-range__popover"
+      @icon="calendar-days"
+      @label={{this.triggerLabel}}
     >
-      <:trigger>
-        {{dIcon "calendar-days"}}
-        <span class="db-date-range__trigger-label">{{this.triggerLabel}}</span>
-      </:trigger>
       <:content as |args|>
         <DashboardDateRangePicker
           @from={{@startDate}}
           @to={{@endDate}}
-          @presets={{ALL_PRESETS}}
+          @presets={{this.presets}}
+          @activePreset={{this.activePreset}}
           @onApply={{fn this.handleApply args.close}}
           @onCancel={{args.close}}
         />

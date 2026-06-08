@@ -453,6 +453,21 @@ div.edit-category {
       flex-direction: column;
       gap: 1em;
     }
+
+    .schema-site-text {
+      display: flex;
+      gap: var(--space-2);
+      align-items: center;
+
+      .schema-site-text__locale {
+        flex: 0 0 auto;
+        width: auto;
+      }
+
+      .form-kit__control-input-wrapper {
+        flex: 1 1 auto;
+      }
+    }
   }
 }
 
@@ -609,7 +624,7 @@ div.edit-category {
     }
 
     .cell,
-    .btn-flat {
+    .options.actionable .btn.btn-flat {
       width: 33%;
       padding: 0.5em;
     }

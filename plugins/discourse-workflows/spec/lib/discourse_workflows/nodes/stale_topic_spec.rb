@@ -25,7 +25,9 @@ RSpec.describe DiscourseWorkflows::Nodes::StaleTopic::V1 do
 
     context "with category filter" do
       fab!(:category)
+      fab!(:subcategory) { Fabricate(:category, parent_category: category) }
       fab!(:other_category, :category)
+
       fab!(:stale_topic_in_category) do
         Fabricate(
           :topic,
@@ -34,6 +36,16 @@ RSpec.describe DiscourseWorkflows::Nodes::StaleTopic::V1 do
           last_posted_at: 48.hours.ago,
         )
       end
+
+      fab!(:stale_topic_in_subcategory) do
+        Fabricate(
+          :topic,
+          category: subcategory,
+          created_at: 48.hours.ago,
+          last_posted_at: 48.hours.ago,
+        )
+      end
+
       fab!(:stale_topic_in_other_category) do
         Fabricate(
           :topic,
@@ -54,7 +66,19 @@ RSpec.describe DiscourseWorkflows::Nodes::StaleTopic::V1 do
         }
       end
 
-      it "only returns topics in the configured category" do
+      it "returns topics in the configured category and subcategories by default" do
+        items = described_class.trigger_data_for(trigger_context)
+
+        topic_ids = items.map { |item| item[:topic][:id] }
+        expect(topic_ids).to contain_exactly(
+          stale_topic_in_category.id,
+          stale_topic_in_subcategory.id,
+        )
+      end
+
+      it "only returns topics in the configured category when subcategories are excluded" do
+        trigger_node["parameters"]["include_subcategories"] = false
+
         items = described_class.trigger_data_for(trigger_context)
 
         topic_ids = items.map { |item| item[:topic][:id] }

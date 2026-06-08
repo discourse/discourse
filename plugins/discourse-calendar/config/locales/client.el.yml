@@ -344,6 +344,8 @@ el:
         name_placeholder: "Όνομα εκδήλωσης"
         location_placeholder: "Προσθέστε τοποθεσία ή URL"
         description_placeholder: "Προσθήκη περιγραφής εκδήλωσης"
+        event_title_placeholder: "Όνομα εκδήλωσης"
+        create_event_button: "Δημιουργία εκδήλωσης"
         reminder:
           units:
             minutes:
@@ -358,6 +360,9 @@ el:
             weeks:
               one: "εβδομάδα"
               other: "εβδομάδες"
+      composer_actions:
+        create_event:
+          label: "Δημιουργία εκδήλωσης"
       builder_modal:
         custom_fields:
           label: "Προσαρμοσμένα πεδία"
@@ -430,3 +435,4 @@ el:
       invite_user_or_group:
         title: "Ειδοποίηση χρήστη/ών ή ομάδας/ών"
         invite: "Αποστολή"
+        success: "Η πρόσκληση στάλθηκε"

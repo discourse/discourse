@@ -34,7 +34,11 @@ module Chat
       group_permissions = ALLOWED_GROUP_PERMISSIONS
       users_removed_map = Hash.new { |h, k| h[k] = [] }
 
-      if !group_ids.include?(Group::AUTO_GROUPS[:everyone])
+      everyone_allowed =
+        group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+          group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
+
+      if !everyone_allowed
         sql = <<~SQL
           -- event = #{params.event}
           DELETE FROM user_chat_channel_memberships uccm

@@ -218,7 +218,9 @@ pl_PL:
       apply: "Zastosuj"
       start_date: "Data rozpoczęcia"
       end_date: "Data zakończenia"
+      date_placeholder: "rrrr/mm/dd"
       presets:
+        label: "Predefiniowane zakresy dat"
         last_7_days: "Ostatnie 7 dni"
         last_30_days: "Ostatnie 30 dni"
         last_3_months: "Ostatnie 3 miesiące"
@@ -544,9 +546,9 @@ pl_PL:
         description: "Wybierz motyw początkowy dla swojej społeczności"
         action: "Wybierz motyw"
         modal_title: "Wybierz motyw"
-        use_theme: "Użyj tego motywu"
-        enabled: "Włączona"
-        theme_set: "%{theme} jest teraz Twoim domyślnym motywem"
+        use_theme: "Użyj wybranego motywu"
+        enabled: "Wybrany"
+        applying_theme: "Stosowanie motywu..."
         browse_all: "Zarządzaj motywami"
         show_light_screenshot: "Pokaż jasny zrzut ekranu"
         show_dark_screenshot: "Pokaż ciemny zrzut ekranu"
@@ -3324,7 +3326,7 @@ pl_PL:
       users_placeholder: "Dodaj użytkowników lub grupy"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
       title_or_link_placeholder: "Tutaj wpisz tytuł lub wklej link"
-      edit_reason_placeholder: "powód edycji?"
+      edit_reason_placeholder: "Powód edycji?"
       topic_featured_link_placeholder: "Wstaw link pod nazwą "
       remove_featured_link: "Usuń link z tematu."
       reply_placeholder: "Pisz w tym miejscu. Wspierane formatowanie to Markdown, BBCode lub HTML. Możesz też przeciągnąć tu obrazek."
@@ -3394,7 +3396,10 @@ pl_PL:
       collapse: "Zminimalizuj panel kompozytora"
       open: "Otwórz panel kompozytora"
       abandon: "Zamknij kompozytor i odrzuć szkic"
-      edit_reason: "Dodaj powód edycji"
+      edit_reason: "Powód edycji?"
+      whisper_indicator:
+        public: "Widoczny"
+        whispering: "Szeptanie"
       enter_fullscreen: "Przejdź do pełnoekranowego kompozytora"
       exit_fullscreen: "Wyjdź z trybu pełnoekranowego kompozytora"
       exit_fullscreen_prompt: "Naciśnij <kbd>ESC</kbd>, aby wyjść z pełnego ekranu"
@@ -3429,25 +3434,34 @@ pl_PL:
           desc: Utwórz nową wiadomość zaczynając od tych samych odbiorców
         reply_to_topic:
           label: Odpowiedz na temat
+          trigger: Temat
           desc: Odpowiedz na temat, a nie żaden konkretny wpis
+        reply_to_message:
+          label: Odpowiedz na wiadomość
+          trigger: Wiadomość
+          desc: Odpowiedz na wiadomość, a nie na konkretny wpis
         toggle_whisper:
           label: Przełącz szept
-          desc: Szepty są widoczne tylko dla zespołu zarządzającego
+          desc: Szepty są widoczne tylko dla uprawnionych grup
         create_topic:
-          label: "Nowy temat"
+          label: Utwórz temat
           desc: Utwórz nowy temat
         create_personal_message:
-          label: "Nowa wiadomość"
+          label: Utwórz wiadomość
           desc: "Utwórz nową prywatną wiadomość"
         shared_draft:
           label: "Udostępniony szkic"
           desc: "Szkicuj temat, który będzie widoczny tylko dla uprawnionych użytkowników"
         toggle_topic_bump:
-          label: "Przełącz podbicie tematu"
+          label: "Nie podbijaj tematu"
           desc: "Odpowiedz bez zmiany ostatniej daty odpowiedzi"
+        create_unlisted_topic: "Temat usunięty z listy"
         toggle_unlisted:
           label: Przełącz zastrzeżone
           desc: "Dostęp do tematów niewymienionych na liście jest możliwy wyłącznie za pośrednictwem bezpośredniego łącza"
+        edit_post: "Edycja wpisu"
+        no_actions_available: "Brak dostępnych działań"
+        unknown_user: "Użytkownik"
       reload: "Przeładuj"
       ignore: "Ignoruj"
       image_alt_text:
@@ -3927,6 +3941,21 @@ pl_PL:
         dismiss_all: "Odrzuć wszystko"
         dismiss_new_topics: "Odrzuć nowe tematy"
         dismiss_new_replies: "Odrzuć nowe odpowiedzi"
+        dismiss_new_topics_with_selected:
+          one: "Odrzuć (%{count})Dismiss "
+          few: "Odrzuć (%{count})"
+          many: "Odrzuć (%{count})"
+          other: "Odrzuć (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Odrzuć (%{count})"
+          few: "Odrzuć (%{count})"
+          many: "Odrzuć (%{count})"
+          other: "Odrzuć (%{count})"
+        dismiss_all_with_selected:
+          one: "Odrzuć (%{count})"
+          few: "Odrzuć (%{count})"
+          many: "Odrzuć (%{count})"
+          other: "Odrzuć (%{count})"
         dismiss_new_menu: "Odrzuć opcje"
         dismiss_and_stop_tracking: "Odrzuć i zatrzymaj śledzenie"
         dismiss_new: "Wyczyść nowe"
@@ -3947,10 +3976,10 @@ pl_PL:
           replies: "Odrzuć nowe odpowiedzi"
           untrack: "Przestań śledzić te tematy, aby przestały pojawiać się na mojej nowej liście"
         dismiss_new_with_selected:
-          one: "Oddalenie nowe (%{count})"
-          few: "Oddalenie nowe (%{count})"
-          many: "Oddalenie nowe (%{count})"
-          other: "Oddalenie nowe (%{count})"
+          one: "Odrzuć nowe (%{count})"
+          few: "Odrzuć nowe (%{count})"
+          many: "Odrzuć nowe (%{count})"
+          other: "Odrzuć nowe (%{count})"
         toggle: "włącz grupowe zaznaczanie tematów"
         actions: "Operacje grupowe"
         change_category: "Aktualizuj kategorię"
@@ -4170,6 +4199,7 @@ pl_PL:
         few: "%{count} odpowiedzi"
         many: "%{count} odpowiedzi"
         other: "%{count} odpowiedzi"
+      collapsed_post: "Zwinięty wpis"
       collapse: "Zwiń"
       collapse_parent: "Zwiń wątek nadrzędny"
       focused_path: "Skoncentrowana ścieżka odpowiedzi"
@@ -6029,7 +6059,7 @@ pl_PL:
       back: "Poprzednia"
       forward: "Do przodu"
       share: "Udostępnij"
-      dismiss: "Wyczyść"
+      dismiss: "Odrzuć"
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
     theme_preview_notice: "Aktualnie wyświetlany jest podgląd motywu. Zamknij tę kartę lub okno przeglądarki, aby powrócić do normalnej konfiguracji witryny."
@@ -6346,7 +6376,7 @@ pl_PL:
           title: "Edytuj tabelę"
           cancel: "anuluj"
           create: "Zapisz"
-          reason: "dlaczego edytujesz?"
+          reason: "Powód edycji?"
           trigger_reason: "Dodaj powód edycji"
         default_edit_reason: "Zaktualizuj tabelę za pomocą edytora tabel"
       default_header:
@@ -7095,6 +7125,7 @@ pl_PL:
         not_found_error: Przepraszamy, ten raport nie istnieje.
         custom_date_range: Niestandardowy zakres dat
         loading: "Ładowanie pulpitu nawigacyjnego…"
+        stable: "stabilna"
         sections:
           highlights:
             title: "Najważniejsze wydarzenia"
@@ -7142,7 +7173,6 @@ pl_PL:
                   few: "-%{count} spada"
                   many: "-%{count} spada"
                   other: "-%{count} spada"
-                stable: "stabilna"
               moves_in_aria:
                 one: "%{count} członek przesunął się w górę"
                 few: "%{count} członków przesunęło się w górę"
@@ -7173,7 +7203,12 @@ pl_PL:
               no_signal:
                 title: "Za mało aktywności, aby podsumować zaangażowanie."
                 summary: "Wybierz dłuższy okres lub wróć, gdy w Twojej społeczności będzie więcej aktywności."
+              metrics:
+                new_signups: "Nowe rejestracje"
+                dau_mau: "Lepkość DAU / MAU"
+                daily_engaged_users: "Codziennie zaangażowani"
         reports_section:
+          description: "Przypinaj standardowe raporty lub zapytania Eksploratora danych, aby śledzić kwestie istotne dla Twojej społeczności."
           add: "Dodaj raport"
           remove: "Usuń raport"
           no_data: "Brak danych do wyświetlenia"
@@ -7203,16 +7238,16 @@ pl_PL:
           kpi:
             new_signups:
               label: "Nowe rejestracje"
-              tooltip: "Konta utworzone w tym okresie, wliczając w to konta nieaktywowane i tymczasowe."
+              tooltip: "Utworzone konta, łącznie z kontami nieaktywowanymi i tymczasowymi."
             dau_mau:
               label: "Lepkość DAU / MAU"
-              tooltip: 'Odsetek aktywnych użytkowników miesięcznie, którzy powrócili do społeczności w ciągu ostatniego dnia. Pokazuje, jak „lepka” jest Twoja społeczność na podstawie częstotliwości powracania.'
+              tooltip: 'Odsetek aktywnych użytkowników miesięcznie, którzy powrócili do społeczności. Pokazuje, jak „przyczepna” jest Twoja społeczność na podstawie częstotliwości powracania.'
             new_contributors:
               label: "Nowi współtwórcy"
-              tooltip: "Liczba członków, którzy zamieścili swój pierwszy wpis w tym okresie."
+              tooltip: "Liczba członków, którzy zamieścili swój pierwszy wpis."
             daily_engaged_users:
               label: "Codziennie zaangażowani"
-              tooltip: "Liczba członków, którzy polubili lub zamieścili wpisy w społeczności w ciągu ostatniego dnia."
+              tooltip: "Średnia liczba członków, którzy polubili lub opublikowali wpisy w społeczności każdego dnia."
           comparison:
             last_7_days: "w porównaniu z ostatnimi 7 dniami"
             last_30_days: "w porównaniu z ostatnimi 30 dniami"
@@ -7804,9 +7839,11 @@ pl_PL:
           your_organization: "Twoja organizacja"
           your_organization_description: "Informacje te zostaną wykorzystane w Warunkach korzystania z usługi i Polityce prywatności, aby wskazać, kto zarządza witryną i w ramach jakiej jurysdykcji."
           company_name: "Nazwa"
-          company_name_placeholder: "Organizacja Acme"
+          company_name_placeholder: "PrzykładowaSA"
           company_name_warning: |
             Jeśli pozostawisz to pole puste, nie zostaną dostarczone standardowe warunki świadczenia usług ani polityka prywatności.
+          company_url: "Strona internetowa"
+          company_url_placeholder: "https://przykładowa-sa.pl"
           governing_law: "Obowiązujące prawo"
           governing_law_placeholder: "Prowincja, stan lub kraj"
           governing_law_help: |
@@ -8241,6 +8278,7 @@ pl_PL:
           finish_install: "Zakończ instalację motywu"
           last_attempt: "Proces instalacji nie został zakończony, ostatnia próba:"
           remote_branch: "Nazwa oddziału (opcjonalnie)"
+          remote_branch_placeholder: "Wybierz konkretną gałąź lub pozostaw puste"
           public_key: "Podaj następujący klucz publiczny pozwalający na dostęp do repozytorium:"
           install: "Zainstaluj"
           installed: "Zainstalowana"

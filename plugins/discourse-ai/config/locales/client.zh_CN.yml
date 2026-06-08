@@ -50,6 +50,9 @@ zh_CN:
             delete_ai_secret: "删除 AI 秘密"
             update_ai_spam_settings: "更新 AI 垃圾信息设置"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_agent": "AI 智能体"
     discourse_automation:
       scriptables:
         llm_report:
@@ -226,6 +229,9 @@ zh_CN:
               description: "允许为系统用户创建的帖子添加标签。"
     discourse_ai:
       title: "AI"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "智能体"
       default_llm:
         title: "默认 LLM 模型"
         description: "所有 AI 智能体使用的默认 LLM 模型。如果功能配置或智能体中未指定 LLM，将使用此模型。如果未指定默认 LLM，将使用最后创建的 LLM。"

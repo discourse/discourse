@@ -446,6 +446,8 @@ de:
         name_placeholder: "Name des Ereignisses"
         location_placeholder: "Ort oder URL hinzufügen"
         description_placeholder: "Beschreibung hinzufügen"
+        event_title_placeholder: "Name des Ereignisses"
+        create_event_button: "Ereignis erstellen"
         reminder:
           units:
             minutes:
@@ -460,6 +462,9 @@ de:
             weeks:
               one: "Woche"
               other: "Wochen"
+      composer_actions:
+        create_event:
+          label: "Ereignis erstellen"
       builder_modal:
         custom_fields:
           label: "Benutzerdefinierte Felder"
@@ -534,3 +539,4 @@ de:
       invite_user_or_group:
         title: "Benachrichtige Benutzer oder Gruppe(n)"
         invite: "Senden"
+        success: "Einladung gesendet"

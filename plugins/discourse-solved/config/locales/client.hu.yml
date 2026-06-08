@@ -57,6 +57,8 @@ hu:
       confirm_solved_removal: "Ez a módosítás letiltja a témakör megoldásait, és eltávolítja az elfogadott megoldást."
       confirm_solved_removal_confirm: "Megerősítés"
       confirm_solved_removal_cancel: "Mégse"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Megválaszolták a kérdését?
         description: "Emelje ki a választ, és segítsen másoknak is a helyes válasz alatti megoldás gomb segítségével."

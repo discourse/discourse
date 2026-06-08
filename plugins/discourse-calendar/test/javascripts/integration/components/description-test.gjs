@@ -30,4 +30,17 @@ module("Integration | Component | Description", function (hooks) {
       .hasAttribute("href", "https://example.com")
       .hasText("https://example.com");
   });
+
+  test("falls back to plain text @description when @descriptionHtml is absent", async function (assert) {
+    await render(
+      <template>
+        <Description @description="Plain text via legacy argument" />
+      </template>
+    );
+
+    assert
+      .dom(".event-description__text")
+      .hasText("Plain text via legacy argument");
+    assert.dom(".event-description__text a").doesNotExist();
+  });
 });

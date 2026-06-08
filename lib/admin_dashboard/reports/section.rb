@@ -16,7 +16,7 @@ module AdminDashboard
         items = visible_items.map { |_row, resolved| serialize(resolved) }
         items = filter_by_search(items) if @search
 
-        { items: items, show_labels: AdminDashboard::Reports::Registry.providers.length > 1 }
+        { items: items }
       end
 
       private

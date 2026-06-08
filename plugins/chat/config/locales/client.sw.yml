@@ -159,3 +159,10 @@ sw:
           fields:
             message:
               label: Ujumbe
+    discourse_workflows:
+      send_chat_message:
+        channel_id: "Chaneli"
+        message: "Ujumbe"
+      chat_approval:
+        message: "Ujumbe"
+        channel_id: "Chaneli"

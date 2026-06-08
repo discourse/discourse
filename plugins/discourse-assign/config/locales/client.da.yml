@@ -92,3 +92,9 @@ da:
     edit_assignments_modal:
       topic: "Emne"
       post: "Indlæg"
+    discourse_workflows:
+      assign_topic:
+        operations:
+          assign: "Tildel"
+          unassign: "Fjern tildeling"
+        topic_id: "Emne ID"

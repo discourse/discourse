@@ -236,7 +236,6 @@ module("Unit | Service | workflows-node-types", function (hooks) {
       name: "Upstream",
       type: "trigger:topic",
     };
-    const upstreamOutput = [{ json: { username: "sam" } }];
     const runData = {
       Upstream: [
         {
@@ -244,8 +243,8 @@ module("Unit | Service | workflows-node-types", function (hooks) {
           outputs: [
             {
               index: 0,
-              items: upstreamOutput,
-              item_count: upstreamOutput.length,
+              items: [{ json: { username: "sam" } }],
+              item_count: 1,
             },
           ],
         },
@@ -293,17 +292,15 @@ module("Unit | Service | workflows-node-types", function (hooks) {
     assert.strictEqual(payload.workflowId, 7);
     assert.strictEqual(payload.filter, "staff");
     assert.deepEqual(payload.inputContext, {
-      available: true,
-      item: upstreamOutput[0],
-      items: upstreamOutput,
-      source_node_outputs: { "node-0": upstreamOutput },
+      available: false,
+      reason: "No input execution preview is available for this node",
     });
     assert.deepEqual(payload.executionContext, {
       last_node_outputs: runData,
     });
   });
 
-  test("input context uses source output keys when output indexes are not stored", function (assert) {
+  test("input context uses recorded input source keys when output indexes are not stored", function (assert) {
     const upstreamNode = {
       clientId: "node-0",
       name: "Branch",
@@ -315,7 +312,7 @@ module("Unit | Service | workflows-node-types", function (hooks) {
       type: "action:log",
       typeVersion: "1.0",
     };
-    const rejectedOutput = [{ json: { matched: false } }];
+    const rejectedInput = [{ json: { matched: false } }];
 
     const session = new WorkflowEditorSession({
       workflowId: 7,
@@ -331,8 +328,21 @@ module("Unit | Service | workflows-node-types", function (hooks) {
               },
               {
                 index: 1,
-                items: rejectedOutput,
+                items: rejectedInput,
                 item_count: 1,
+              },
+            ],
+          },
+        ],
+        Log: [
+          {
+            status: "success",
+            inputs: [
+              {
+                index: 0,
+                items: rejectedInput,
+                item_count: 1,
+                source: { node_name: "Branch", output_index: 1 },
               },
             ],
           },
@@ -353,13 +363,13 @@ module("Unit | Service | workflows-node-types", function (hooks) {
 
     assert.deepEqual(session.inputContextForNode(node), {
       available: true,
-      item: rejectedOutput[0],
-      items: rejectedOutput,
-      source_node_outputs: { "node-0": rejectedOutput },
+      item: rejectedInput[0],
+      items: rejectedInput,
+      source_node_outputs: { "node-0": rejectedInput },
     });
   });
 
-  test("input context prefers current node inputs over upstream outputs", function (assert) {
+  test("input context uses current node inputs when upstream output differs", function (assert) {
     const upstreamNode = {
       clientId: "node-0",
       name: "Logger",
@@ -412,6 +422,52 @@ module("Unit | Service | workflows-node-types", function (hooks) {
     });
   });
 
+  test("input context ignores recorded inputs from another source", function (assert) {
+    const upstreamNode = {
+      clientId: "post-moved",
+      name: "Post moved",
+      type: "trigger:post_moved",
+    };
+    const node = {
+      clientId: "log",
+      name: "Log",
+      type: "action:log",
+      typeVersion: "1.0",
+    };
+    const staleInput = [{ json: { reviewable: { id: 1 } } }];
+
+    const session = new WorkflowEditorSession({
+      workflowId: 7,
+      lastExecutionRunData: {
+        Log: [
+          {
+            node_id: "log",
+            node_type: "action:log",
+            status: "success",
+            inputs: [
+              {
+                index: 0,
+                items: staleInput,
+                item_count: staleInput.length,
+                source: { node_name: "Approved reviewable", output_index: 0 },
+              },
+            ],
+          },
+        ],
+      },
+    });
+    session.setEditingContext(
+      node,
+      [upstreamNode, node],
+      [{ sourceClientId: "post-moved", targetClientId: "log" }]
+    );
+
+    assert.deepEqual(session.inputContextForNode(node), {
+      available: false,
+      reason: "No input execution preview is available for this node",
+    });
+  });
+
   test("outputItemsForNode returns the latest empty output", function (assert) {
     const node = { clientId: "node-1", name: "Node 1" };
 
@@ -433,6 +489,27 @@ module("Unit | Service | workflows-node-types", function (hooks) {
     });
 
     assert.deepEqual(session.outputItemsForNode(node), []);
+  });
+
+  test("outputItemsForNode ignores runs for another node with the same name", function (assert) {
+    const node = { clientId: "new-node", name: "Node 1", type: "action:log" };
+
+    const session = new WorkflowEditorSession({
+      lastExecutionRunData: {
+        "Node 1": [
+          {
+            node_id: "old-node",
+            node_type: "action:log",
+            status: "success",
+            outputs: [
+              { index: 0, items: [{ json: { stale: true } }], item_count: 1 },
+            ],
+          },
+        ],
+      },
+    });
+
+    assert.strictEqual(session.outputItemsForNode(node), undefined);
   });
 
   test("dynamic options use full node parameters even inside nested configurators", function (assert) {

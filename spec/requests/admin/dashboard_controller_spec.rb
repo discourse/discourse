@@ -10,6 +10,14 @@ RSpec.describe Admin::DashboardController do
     Jobs::CallDiscourseHub.any_instance.stubs(:execute).returns(true)
   end
 
+  def configure_dashboard_sections(visible_ids)
+    hidden = AdminDashboardSectionConfiguration::KNOWN_SECTIONS - visible_ids
+    ordered =
+      visible_ids.map { |id| { id: id, visible: true } } +
+        hidden.map { |id| { id: id, visible: false } }
+    AdminDashboardSectionConfiguration.update(ordered, actor: Discourse.system_user)
+  end
+
   def populate_new_features(date1 = nil, date2 = nil)
     sample_features = [
       {
@@ -108,7 +116,6 @@ RSpec.describe Admin::DashboardController do
     describe "sections payload" do
       before do
         SiteSetting.dashboard_improvements = true
-        SiteSetting.admin_dashboard_sections = "highlights|reports|traffic|engagement"
         Discourse.cache.clear
         sign_in(admin)
       end
@@ -292,7 +299,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "returns the sections as an ordered array of {id, data}" do
-        SiteSetting.admin_dashboard_sections = "reports|highlights"
+        configure_dashboard_sections(%w[reports highlights])
 
         get "/admin/dashboard.json"
 
@@ -301,7 +308,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "omits hidden sections from the data payload" do
-        SiteSetting.admin_dashboard_sections = "highlights|reports"
+        configure_dashboard_sections(%w[highlights reports])
 
         get "/admin/dashboard.json"
 
@@ -310,7 +317,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "includes built engagement data when the section is enabled" do
-        SiteSetting.admin_dashboard_sections = "highlights|engagement"
+        configure_dashboard_sections(%w[highlights engagement])
         get "/admin/dashboard.json"
 
         engagement = response.parsed_body["sections"].find { |s| s["id"] == "engagement" }
@@ -329,7 +336,6 @@ RSpec.describe Admin::DashboardController do
 
           expect(response.status).to eq(200)
           expect(reports_data["items"]).to eq([])
-          expect(reports_data).to have_key("show_labels")
         end
 
         it "serializes configured rows resolved via the registered providers" do
@@ -393,7 +399,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "is included for admins and lists every known section with a visibility flag" do
-        SiteSetting.admin_dashboard_sections = "highlights|reports"
+        configure_dashboard_sections(%w[highlights reports])
         sign_in(admin)
 
         get "/admin/dashboard.json"
@@ -429,12 +435,9 @@ RSpec.describe Admin::DashboardController do
   end
 
   describe "#update_configuration" do
-    before do
-      SiteSetting.dashboard_improvements = true
-      SiteSetting.admin_dashboard_sections = "highlights|reports|traffic|engagement"
-    end
+    before { SiteSetting.dashboard_improvements = true }
 
-    it "returns 204 and writes the site setting for admins" do
+    it "persists the configuration and returns 204 for admins" do
       sign_in(admin)
 
       put "/admin/dashboard/configuration.json",
@@ -443,11 +446,31 @@ RSpec.describe Admin::DashboardController do
               { id: "reports", visible: true },
               { id: "highlights", visible: true },
               { id: "traffic", visible: false },
+              { id: "engagement", visible: false },
             ],
           }
 
       expect(response.status).to eq(204)
-      expect(SiteSetting.admin_dashboard_sections).to eq("reports|highlights")
+      expect(AdminDashboardSectionConfiguration.visible_section_ids).to eq(%w[reports highlights])
+    end
+
+    it "keeps a section's position when it is toggled off" do
+      sign_in(admin)
+
+      put "/admin/dashboard/configuration.json",
+          params: {
+            sections: [
+              { id: "highlights", visible: false },
+              { id: "reports", visible: true },
+              { id: "traffic", visible: true },
+              { id: "engagement", visible: true },
+            ],
+          }
+
+      expect(response.status).to eq(204)
+      expect(AdminDashboardSectionConfiguration.sections.first).to eq(
+        { id: "highlights", visible: false },
+      )
     end
 
     it "drops unknown section ids silently" do
@@ -459,7 +482,9 @@ RSpec.describe Admin::DashboardController do
           }
 
       expect(response.status).to eq(204)
-      expect(SiteSetting.admin_dashboard_sections).to eq("highlights")
+      expect(AdminDashboardSectionConfiguration.sections.map { |s| s[:id] }).to match_array(
+        %w[highlights reports traffic engagement],
+      )
     end
 
     it "coerces non-boolean visible values" do
@@ -471,28 +496,13 @@ RSpec.describe Admin::DashboardController do
               { id: "highlights", visible: "true" },
               { id: "reports", visible: "false" },
               { id: "engagement", visible: "1" },
+              { id: "traffic", visible: "0" },
             ],
           }
 
-      expect(SiteSetting.admin_dashboard_sections).to eq("highlights|engagement")
-    end
-
-    it "treats an empty sections array as hide-everything" do
-      sign_in(admin)
-
-      put "/admin/dashboard/configuration.json", params: { sections: [] }
-
-      expect(response.status).to eq(204)
-      expect(SiteSetting.admin_dashboard_sections).to eq("")
-    end
-
-    it "treats a missing sections key the same as an empty array" do
-      sign_in(admin)
-
-      put "/admin/dashboard/configuration.json"
-
-      expect(response.status).to eq(204)
-      expect(SiteSetting.admin_dashboard_sections).to eq("")
+      expect(AdminDashboardSectionConfiguration.visible_section_ids).to eq(
+        %w[highlights engagement],
+      )
     end
 
     it "returns 404 for moderators" do
@@ -520,7 +530,12 @@ RSpec.describe Admin::DashboardController do
 
       put "/admin/dashboard/configuration.json",
           params: {
-            sections: [{ id: "highlights", visible: true }],
+            sections: [
+              { id: "highlights", visible: true },
+              { id: "reports", visible: false },
+              { id: "traffic", visible: false },
+              { id: "engagement", visible: false },
+            ],
           }
 
       sign_in(moderator)
@@ -940,11 +955,11 @@ RSpec.describe Admin::DashboardController do
         def self.label = "Fake"
 
         def self.universe
-          %w[a b c].map do |id|
+          [%w[banana Banana], %w[date Date], %w[fig Fig]].map do |id, fruit|
             AdminDashboard::Reports::ResolvedReport.new(
               source: source_name,
               identifier: id,
-              title: "Fakey #{id}",
+              title: "Zfruit #{fruit}",
               description: "Desc #{id}",
               label: label,
               url: "/fake/#{id}",
@@ -952,13 +967,12 @@ RSpec.describe Admin::DashboardController do
           end
         end
 
-        def self.list_all(search: nil, offset: 0, limit: nil)
+        def self.list_all(search: nil, after: nil, limit: nil)
           items = universe
           if search.present?
             items = items.select { |item| item.title.downcase.include?(search.downcase) }
           end
-          sliced = limit ? items[offset, limit] : items[offset..]
-          Array(sliced)
+          seek(items, after: after, limit: limit)
         end
 
         def self.resolve_many(identifiers, guardian:)
@@ -969,28 +983,63 @@ RSpec.describe Admin::DashboardController do
       end
     end
 
-    let(:wide_provider) do
+    let(:alt_provider) do
       Class.new(AdminDashboard::Reports::SourceProvider) do
-        def self.source_name = "a_wide_source"
-        def self.label = "Wide"
+        def self.source_name = "b_alt_source"
+        def self.label = "Alt"
 
-        def self.list_all(search: nil, offset: 0, limit: nil)
-          items =
-            (1..40).map do |index|
-              AdminDashboard::Reports::ResolvedReport.new(
-                source: source_name,
-                identifier: "row_#{index}",
-                title: "Wideprefix Row #{index}",
-                description: nil,
-                label: label,
-                url: nil,
-              )
-            end
+        def self.universe
+          [%w[apple Apple], %w[cherry Cherry], %w[egg Egg]].map do |id, fruit|
+            AdminDashboard::Reports::ResolvedReport.new(
+              source: source_name,
+              identifier: id,
+              title: "Zfruit #{fruit}",
+              description: nil,
+              label: label,
+              url: nil,
+            )
+          end
+        end
+
+        def self.list_all(search: nil, after: nil, limit: nil)
+          items = universe
           if search.present?
             items = items.select { |item| item.title.downcase.include?(search.downcase) }
           end
-          sliced = limit ? items[offset, limit] : items[offset..]
-          Array(sliced)
+          seek(items, after: after, limit: limit)
+        end
+
+        def self.resolve_many(_identifiers, guardian:)
+          {}
+        end
+      end
+    end
+
+    let(:wide_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) do
+        def self.source_name = "c_wide_source"
+        def self.label = "Wide"
+
+        def self.universe
+          (1..40).map do |index|
+            padded = format("%02d", index)
+            AdminDashboard::Reports::ResolvedReport.new(
+              source: source_name,
+              identifier: "row_#{padded}",
+              title: "Widerow #{padded}",
+              description: nil,
+              label: label,
+              url: nil,
+            )
+          end
+        end
+
+        def self.list_all(search: nil, after: nil, limit: nil)
+          items = universe
+          if search.present?
+            items = items.select { |item| item.title.downcase.include?(search.downcase) }
+          end
+          seek(items, after: after, limit: limit)
         end
 
         def self.resolve_many(_identifiers, guardian:)
@@ -1003,7 +1052,7 @@ RSpec.describe Admin::DashboardController do
 
     after do
       DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
-        [fake_provider, wide_provider].include?(entry[:value])
+        [fake_provider, alt_provider, wide_provider].include?(entry[:value])
       end
     end
 
@@ -1028,9 +1077,9 @@ RSpec.describe Admin::DashboardController do
 
       it "returns enabled, available, and providers" do
         DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
-        AdminDashboardReport.create!(source: "a_fake_source", identifier: "b", position: 0)
+        AdminDashboardReport.create!(source: "a_fake_source", identifier: "banana", position: 0)
 
-        get "/admin/dashboard/reports/available.json", params: { search: "Fakey" }
+        get "/admin/dashboard/reports/available.json", params: { search: "Zfruit" }
         expect(response.status).to eq(200)
 
         body = response.parsed_body
@@ -1038,36 +1087,59 @@ RSpec.describe Admin::DashboardController do
         fake_summary = body["providers"].find { |provider| provider["source"] == "a_fake_source" }
         expect(fake_summary["label"]).to eq("Fake")
 
-        expect(body["enabled"].map { |item| item["identifier"] }).to eq(["b"])
+        expect(body["enabled"].map { |item| item["identifier"] }).to eq(["banana"])
         expect(body["enabled"].first["label"]).to eq("Fake")
 
         fake_available = body["available"].select { |item| item["source"] == "a_fake_source" }
-        expect(fake_available.map { |item| item["identifier"] }).to contain_exactly("a", "b", "c")
+        expect(fake_available.map { |item| item["identifier"] }).to contain_exactly(
+          "banana",
+          "date",
+          "fig",
+        )
       end
 
-      it "includes already-enabled identifiers in the all list" do
+      it "includes already-enabled identifiers in the available list" do
         DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
-        AdminDashboardReport.create!(source: "a_fake_source", identifier: "a", position: 0)
-        AdminDashboardReport.create!(source: "a_fake_source", identifier: "b", position: 1)
+        AdminDashboardReport.create!(source: "a_fake_source", identifier: "banana", position: 0)
+        AdminDashboardReport.create!(source: "a_fake_source", identifier: "date", position: 1)
 
-        get "/admin/dashboard/reports/available.json", params: { search: "Fakey" }
+        get "/admin/dashboard/reports/available.json", params: { search: "Zfruit" }
         body = response.parsed_body
         fake_available = body["available"].select { |item| item["source"] == "a_fake_source" }
-        expect(fake_available.map { |item| item["identifier"] }).to contain_exactly("a", "b", "c")
+        expect(fake_available.map { |item| item["identifier"] }).to contain_exactly(
+          "banana",
+          "date",
+          "fig",
+        )
+      end
+
+      it "interleaves providers alphabetically by title rather than grouping them" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(alt_provider, plugin)
+
+        get "/admin/dashboard/reports/available.json", params: { search: "Zfruit" }
+        body = response.parsed_body
+
+        expect(body["available"].map { |item| item["identifier"] }).to eq(
+          %w[apple banana cherry date egg fig],
+        )
+        expect(body["available"].map { |item| item["source"] }).to eq(
+          %w[b_alt_source a_fake_source b_alt_source a_fake_source b_alt_source a_fake_source],
+        )
       end
 
       it "paginates 30 items per response and emits a cursor when more exist" do
         DiscoursePluginRegistry.register_admin_dashboard_report_source(wide_provider, plugin)
 
-        get "/admin/dashboard/reports/available.json", params: { search: "Wideprefix" }
+        get "/admin/dashboard/reports/available.json", params: { search: "Widerow" }
         expect(response.status).to eq(200)
 
         body = response.parsed_body
-        wide = body["available"].select { |item| item["source"] == "a_wide_source" }
+        wide = body["available"].select { |item| item["source"] == "c_wide_source" }
         expect(wide.size).to eq(AdminDashboard::Reports::Listing::PAGE_SIZE)
-        expect(wide.first["identifier"]).to eq("row_1")
+        expect(wide.first["identifier"]).to eq("row_01")
         expect(body["has_more"]).to eq(true)
-        expect(body["cursor"]).to eq("a_wide_source:30")
+        expect(body["cursor"]).to eq("title" => "Widerow 30", "key" => "c_wide_source:row_30")
       end
 
       it "returns the next batch when the cursor from a previous response is sent back" do
@@ -1075,48 +1147,43 @@ RSpec.describe Admin::DashboardController do
 
         get "/admin/dashboard/reports/available.json",
             params: {
-              search: "Wideprefix",
-              cursor: "a_wide_source:30",
+              search: "Widerow",
+              cursor: {
+                title: "Widerow 30",
+                key: "c_wide_source:row_30",
+              },
             }
         body = response.parsed_body
-        wide = body["available"].select { |item| item["source"] == "a_wide_source" }
+        wide = body["available"].select { |item| item["source"] == "c_wide_source" }
 
-        expect(wide.map { |item| item["identifier"] }).to eq((31..40).map { |n| "row_#{n}" })
+        expect(wide.map { |item| item["identifier"] }).to eq(
+          (31..40).map { |number| "row_#{number}" },
+        )
         expect(body["has_more"]).to eq(false)
         expect(body["cursor"]).to be_nil
       end
 
-      it "ignores a cursor whose source is not registered" do
+      it "treats a malformed cursor as the first page" do
         DiscoursePluginRegistry.register_admin_dashboard_report_source(wide_provider, plugin)
 
-        get "/admin/dashboard/reports/available.json", params: { cursor: "ghost_source:0" }
-
-        expect(response.parsed_body["available"]).to be_empty
-        expect(response.parsed_body["has_more"]).to eq(false)
-        expect(response.parsed_body["cursor"]).to be_nil
-      end
-
-      it "crosses provider boundaries via cursor instead of asking each provider at the same offset" do
-        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
-        DiscoursePluginRegistry.register_admin_dashboard_report_source(wide_provider, plugin)
-
-        get "/admin/dashboard/reports/available.json", params: { cursor: "a_fake_source:0" }
+        get "/admin/dashboard/reports/available.json",
+            params: {
+              search: "Widerow",
+              cursor: "garbage",
+            }
         body = response.parsed_body
-        sources = body["available"].map { |item| item["source"] }
 
-        expect(sources.first(3)).to eq(%w[a_fake_source a_fake_source a_fake_source])
-        expect(sources.last).to eq("a_wide_source")
+        expect(body["available"].first["identifier"]).to eq("row_01")
         expect(body["has_more"]).to eq(true)
-        expect(body["cursor"]).to start_with("a_wide_source:")
       end
 
       it "filters by the search param" do
         DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
 
-        get "/admin/dashboard/reports/available.json", params: { search: "Fakey a" }
+        get "/admin/dashboard/reports/available.json", params: { search: "Zfruit ba" }
         body = response.parsed_body
         fake_available = body["available"].select { |item| item["source"] == "a_fake_source" }
-        expect(fake_available.map { |item| item["identifier"] }).to eq(["a"])
+        expect(fake_available.map { |item| item["identifier"] }).to eq(["banana"])
       end
     end
   end

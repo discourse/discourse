@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -36,14 +35,6 @@ export default class ComboBoxField extends Component {
   @service router;
   @service workflowsNodeTypes;
 
-  @tracked _remoteOptions = [];
-  _remoteOptionsRequestKey = null;
-
-  constructor(owner, args) {
-    super(owner, args);
-    this.ensureRemoteOptions();
-  }
-
   get methodName() {
     return this.args.schema?.type_options?.load_options_method;
   }
@@ -65,8 +56,21 @@ export default class ComboBoxField extends Component {
     );
   }
 
+  get hasLoadOptionsDependencies() {
+    const dependencies =
+      this.args.schema?.type_options?.load_options_depends_on;
+
+    return Array.isArray(dependencies)
+      ? dependencies.length > 0
+      : Boolean(dependencies);
+  }
+
   get usesRemoteOptions() {
-    return Boolean(this.methodName && this.identifier && !this.localOptions);
+    return Boolean(
+      this.methodName &&
+      this.identifier &&
+      (!this.localOptions || this.hasLoadOptionsDependencies)
+    );
   }
 
   get metadataOptions() {
@@ -76,8 +80,7 @@ export default class ComboBoxField extends Component {
     if (this.localOptions) {
       return this.localOptions;
     }
-    this.ensureRemoteOptions();
-    return this._remoteOptions;
+    return [];
   }
 
   get controlOptions() {
@@ -179,49 +182,10 @@ export default class ComboBoxField extends Component {
     return this.args.session?.nodeParameterOptionsContext(context) || context;
   }
 
-  remoteOptionsRequestKey(filter = null) {
-    return JSON.stringify({
-      methodName: this.methodName,
-      identifier: this.identifier,
-      typeVersion: this.typeVersion,
-      context: this.remoteOptionsContext(filter),
-    });
-  }
-
-  ensureRemoteOptions(filter = null) {
-    if (!this.usesRemoteOptions) {
-      return;
-    }
-
-    const requestKey = this.remoteOptionsRequestKey(filter);
-    if (this._remoteOptionsRequestKey === requestKey) {
-      return;
-    }
-
-    this._remoteOptionsRequestKey = requestKey;
-    this.workflowsNodeTypes
-      .loadNodeParameterOptions(
-        this.identifier,
-        this.methodName,
-        this.typeVersion,
-        this.remoteOptionsContext(filter)
-      )
-      .then((options) => {
-        if (this._remoteOptionsRequestKey === requestKey) {
-          this._remoteOptions = options;
-        }
-      });
-  }
-
   @action
   async loadRemoteOptions(filter = null) {
     if (!this.usesRemoteOptions) {
       return null;
-    }
-
-    // Mutating _remoteOptions here loops via the ComboBox didReceiveAttrs hook.
-    if (!filter) {
-      return this.formatOptions(this._remoteOptions);
     }
 
     const options = await this.workflowsNodeTypes.loadNodeParameterOptions(

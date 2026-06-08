@@ -4,6 +4,7 @@ module DiscourseWorkflows
   class Executor
     MAX_ITERATIONS = 1000
     MAX_WAIT_DURATION_SECONDS = 30.days.to_i
+    MAX_NODE_OUTPUT_BYTES = 50.megabytes
 
     class WaitRequested < StandardError
       attr_reader :waiting_until
@@ -266,8 +267,8 @@ module DiscourseWorkflows
         end
 
         step_log = collect_step_log(exec_ctx, resolver)
-        attach_step_log(step, step_log)
         if step_log&.errors?
+          attach_step_log(step, step_log)
           step.fail!(step_log.error_summary)
           raise StandardError, step.error
         end
@@ -275,6 +276,8 @@ module DiscourseWorkflows
         ports = node_type_class.ports(node.parameters)
         output_arrays = normalize_result(result, node, ports, input_groups)
         output_arrays = apply_always_output_data(output_arrays, node, input_groups)
+        output_arrays = enforce_node_output_budget(output_arrays, step_log)
+        attach_step_log(step, step_log)
         all_items = output_arrays.flatten(1)
         primary_empty = output_arrays.fetch(0) { [] }.empty?
 
@@ -295,11 +298,10 @@ module DiscourseWorkflows
       rescue WaitRequested
         raise
       rescue => e
-        unless step.metadata&.key?("logs")
-          attach_step_log(step, collect_step_log(exec_ctx, resolver))
-        end
-
         if (handled_outputs = continued_error_outputs(node, input_groups, e))
+          step_log = collect_step_log(exec_ctx, resolver)
+          handled_outputs = enforce_node_output_budget(handled_outputs, step_log)
+          attach_step_log(step, step_log)
           step.add_metadata("handled_error", error_metadata(e))
           all_items = handled_outputs.flatten(1)
           step.succeed!(output: all_items)
@@ -313,6 +315,10 @@ module DiscourseWorkflows
           )
           route_downstream(node, handled_outputs)
           return
+        end
+
+        unless step.metadata&.key?("logs")
+          attach_step_log(step, collect_step_log(exec_ctx, resolver))
         end
 
         step.fail!(e.message) unless step.error?
@@ -469,6 +475,39 @@ module DiscourseWorkflows
       apply_item_linking_defaults!(result, input_groups:)
       ItemContract.validate_output_arrays!(result, source: source, ports: ports)
       result
+    end
+
+    def enforce_node_output_budget(output_arrays, step_log)
+      total_bytes = 0
+      truncated = false
+
+      bounded_arrays =
+        output_arrays.map do |items|
+          bounded_items = []
+
+          items.each do |item|
+            item_bytes = JSON.generate(item).bytesize
+
+            if total_bytes + item_bytes > MAX_NODE_OUTPUT_BYTES
+              truncated = true
+              break
+            end
+
+            total_bytes += item_bytes
+            bounded_items << item
+          end
+
+          bounded_items
+        end
+
+      if truncated
+        step_log&.warn(
+          "Node output truncated at #{bounded_arrays.flatten(1).length} items because serialized " \
+            "output exceeded #{MAX_NODE_OUTPUT_BYTES} bytes",
+        )
+      end
+
+      bounded_arrays
     end
 
     def apply_item_linking_defaults!(output_arrays, input_groups:)

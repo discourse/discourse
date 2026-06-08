@@ -11,6 +11,7 @@ import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import { tagSuggestionParams } from "../lib/ai-helper-suggestions";
 
 export default class AiSplitTopicSuggester extends Component {
   @service site;
@@ -40,9 +41,18 @@ export default class AiSplitTopicSuggester extends Component {
 
     this.loading = true;
 
+    const data = { text: this.input };
+
+    if (this.args.mode === this.SUGGESTION_TYPES.tag) {
+      Object.assign(
+        data,
+        tagSuggestionParams(this.args.categoryId, this.args.currentValue)
+      );
+    }
+
     ajax(`/discourse-ai/ai-helper/${this.args.mode}`, {
       method: "POST",
-      data: { text: this.input },
+      data,
     })
       .then((result) => {
         if (this.args.mode === this.SUGGESTION_TYPES.title) {

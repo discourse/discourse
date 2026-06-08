@@ -1,18 +1,25 @@
+import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import Route from "@ember/routing/route";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import MoveToTopicModal from "discourse/components/modal/move-to-topic";
 import { ajax } from "discourse/lib/ajax";
 import EmbedMode from "discourse/lib/embed-mode";
 import PreloadStore from "discourse/lib/preload-store";
+import topicTitleToken from "discourse/lib/topic-title-token";
 import Draft from "discourse/models/draft";
-import processNode from "../lib/process-node";
+import DiscourseRoute from "discourse/routes/discourse";
+import processNode, {
+  registerPostInTopicPostStream,
+} from "../lib/process-node";
 
-export default class NestedRoute extends Route {
+export default class NestedRoute extends DiscourseRoute {
   @service composer;
   @service header;
+  @service modal;
   @service nestedViewCache;
+  @service router;
   @service screenTrack;
   @service site;
   @service siteSettings;
@@ -26,6 +33,10 @@ export default class NestedRoute extends Route {
 
   buildRouteInfoMetadata() {
     return { scrollOnTransition: false };
+  }
+
+  titleToken() {
+    return topicTitleToken(this.currentModel?.topic, this.siteSettings);
   }
 
   async model(params) {
@@ -88,7 +99,9 @@ export default class NestedRoute extends Route {
 
     // Hydrate the topic controller so core components that do
     // lookup("controller:topic") (e.g. share modal) find valid state.
-    this.controllerFor("topic").set("model", model.topic);
+    const topicController = this.controllerFor("topic");
+    topicController.set("model", model.topic);
+    this._resetTopicControllerBulkSelection(topicController);
 
     // Set the topic route's currentModel so route actions that call
     // this.modelFor("topic") (e.g. showFeatureTopic, showTopicTimerModal)
@@ -102,11 +115,10 @@ export default class NestedRoute extends Route {
 
     this.header.enterTopic(model.topic, !model.contextMode);
 
-    // Store the OP in the postStream so core components that call
-    // postStream.findLoadedPost() (e.g. share modal's "reply as new topic")
-    // find a valid post instead of undefined.
+    // Store the OP in the postStream so core components that read loaded posts
+    // (e.g. share modal's "reply as new topic", bulk selection) find it.
     if (model.opPost && model.topic.postStream) {
-      model.topic.postStream.storePost(model.opPost);
+      registerPostInTopicPostStream(model.topic, model.opPost);
     }
 
     this.screenTrack.start(model.topic.id, controller);
@@ -134,9 +146,52 @@ export default class NestedRoute extends Route {
     const controller = this.controller;
     this._saveToCache(controller);
 
+    this._resetTopicControllerBulkSelection();
     controller.unsubscribe();
     this.screenTrack.stop();
-    this.header.clearTopic();
+  }
+
+  @action
+  willTransition(transition) {
+    transition.followRedirects().finally(() => {
+      const routeName = this.router.currentRouteName;
+
+      if (
+        !routeName?.startsWith("topic.") &&
+        !routeName?.startsWith("nested")
+      ) {
+        this.header.clearTopic();
+      }
+    });
+
+    return true;
+  }
+
+  @action
+  moveToTopic() {
+    const topicController = this.controllerFor("topic");
+    this.modal.show(MoveToTopicModal, {
+      model: {
+        topic: this.modelFor("topic"),
+        selectedPostsCount: topicController.selectedPostsCount,
+        selectedAllPosts: false,
+        selectedPosts: topicController.selectedPosts,
+        selectedPostIds: topicController.selectedPostIds,
+        toggleMultiSelect: topicController.toggleMultiSelect,
+      },
+    });
+  }
+
+  @action
+  changeOwner(post = null) {
+    return getOwner(this).lookup("route:topic").changeOwner(post);
+  }
+
+  _resetTopicControllerBulkSelection(
+    topicController = this.controllerFor("topic")
+  ) {
+    topicController.set("multiSelect", false);
+    topicController.selectedPostIds = [];
   }
 
   _saveToCache(controller) {

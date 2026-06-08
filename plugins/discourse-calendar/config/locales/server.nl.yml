@@ -44,7 +44,6 @@ nl:
     map_events_to_color: "Wijs een kleur toe aan elke tag of categorie."
     map_events_title: "Overschrijft 'Evenementen' in de zijbalktitel 'Aankomende evenementen' per categorie."
     calendar_enabled: "Schakel de Discourse-Kalender-plug-in in. Dit voegt ondersteuning toe voor een [calendar][/calendar]-tag in het eerste bericht van een topic."
-    discourse_post_event_enabled: "Schakelt de evenementfuncties in. Opmerking: hiervoor moet ook 'calendar enabled' ingeschakeld zijn."
     displayed_invitees_limit: "Beperkt het aantal genodigden van een evenement."
     display_post_event_date_on_topic_title: "Geeft de datum van het evenement weer na de topictitel."
     use_local_event_date: "Gebruik lokale datum na topictitel in plaats van relatieve tijd."
@@ -70,7 +69,6 @@ nl:
     event_participation_buttons: "Lijst met knoppen voor evenementdeelname die gebruikers kunnen gebruiken."
     sidebar_show_upcoming_events: "Geef een link naar aankomende evenementen weer in de zijbalk onder 'Meer'."
     calendar_first_day_of_week: "Stel de eerste dag van de week in voor de kalenderweergave. Opties zijn zaterdag, zondag en maandag."
-    enable_events_category_type_setup: "Schakelt de optie Type evenementcategorie in tijdens het instellen van categorieën. 'Vereenvoudigd categorieën maken inschakelen' moet zijn ingeschakeld om dit effect te laten hebben."
   discourse_calendar:
     category_type:
       default_calendar_view:

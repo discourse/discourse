@@ -376,8 +376,6 @@ describe Chat::ChannelUnreadsQuery do
     fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
     let(:channel_ids) { [dm_channel.id] }
 
-    before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
-
     it "counts reply messages in DM threads as unread_count" do
       first_message = Fabricate(:chat_message, chat_channel: dm_channel, user: other_user)
       dm_channel.membership_for(current_user).mark_read!(first_message.id)

@@ -558,6 +558,25 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(result[:top_referrers][:error]).to be_nil
       end
 
+      it "caps each card at the top 5 rows on both the fresh and cached paths" do
+        %w[US GB DE FR JP CA].each do |code|
+          Fabricate(
+            :browser_pageview_event,
+            country_code: code,
+            normalized_referrer: "#{code.downcase}.example.com",
+          )
+        end
+        aggregate_rollups
+
+        fresh = described_class.build(start_date: nil, end_date: nil)
+        expect(fresh[:top_countries][:rows].size).to eq(5)
+        expect(fresh[:top_referrers][:rows].size).to eq(5)
+
+        cached = described_class.build(start_date: nil, end_date: nil)
+        expect(cached[:top_countries][:rows].size).to eq(5)
+        expect(cached[:top_referrers][:rows].size).to eq(5)
+      end
+
       it "returns empty rows when no events match the date range" do
         result = described_class.build(start_date: nil, end_date: nil)
         expect(result[:top_countries]).to eq(rows: [], error: nil)

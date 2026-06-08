@@ -44,12 +44,6 @@ export default class Highlights extends Component {
           {{/each}}
         {{/if}}
       </:default>
-
-      <:footer>
-        {{#if this.hasKpis}}
-          <div class="db-highlights__comparison">{{this.comparisonLabel}}</div>
-        {{/if}}
-      </:footer>
     </DashboardSection>
   </template>
 }

@@ -59,6 +59,7 @@ module DiscourseWorkflows
       control
       dynamic_value
       expression
+      filter
       flat
       format
       hidden
@@ -86,6 +87,7 @@ module DiscourseWorkflows
     KNOWN_UI_CONTROLS = %i[
       boolean
       category
+      checkbox
       code
       combo_box
       condition_builder

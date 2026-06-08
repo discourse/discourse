@@ -34,16 +34,21 @@ RSpec.describe User do
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
     end
 
-    it "never returns true for the 'anonymous' auto group — logged-in users are not anonymous" do
+    it "never returns true for the 'anonymous_users' auto group — logged-in users are not anonymous" do
       GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
       Discourse.system_user.reload
-      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
-      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(
+        false,
+      )
     end
 
-    it "returns true for the 'anonymous' auto group for anonymous users" do
+    it "returns true for the 'anonymous_users' auto group for anonymous users" do
       expect(
-        Guardian.new.instance_variable_get(:@user).in_any_groups?([Group::AUTO_GROUPS[:anonymous]]),
+        Guardian
+          .new
+          .instance_variable_get(:@user)
+          .in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]]),
       ).to eq(true)
     end
 
@@ -66,11 +71,13 @@ RSpec.describe User do
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
     end
 
-    it "never returns true for the 'anonymous' auto group — logged-in users are not anonymous" do
+    it "never returns true for the 'anonymous_users' auto group — logged-in users are not anonymous" do
       GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
       Discourse.system_user.reload
-      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
-      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(
+        false,
+      )
     end
 
     context "with granular_anonymous_and_logged_in_groups_permissions enabled" do

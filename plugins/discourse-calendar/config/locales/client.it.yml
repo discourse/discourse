@@ -426,6 +426,8 @@ it:
               description: "Solo gli utenti invitati possono partecipare a un evento privato."
       composer:
         name_placeholder: "Nome dell'evento"
+        event_title_placeholder: "Nome dell'evento"
+        create_event_button: "Crea evento"
         reminder:
           units:
             minutes:
@@ -440,6 +442,9 @@ it:
             weeks:
               one: "settimana"
               other: "settimane"
+      composer_actions:
+        create_event:
+          label: "Crea evento"
       builder_modal:
         custom_fields:
           label: "Campi personalizzati"
@@ -504,3 +509,4 @@ it:
       invite_user_or_group:
         title: "Notifica utenti o gruppi"
         invite: "Invia"
+        success: "Invito inviato"

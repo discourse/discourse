@@ -52,6 +52,11 @@ body.has-ai-conversations-sidebar {
     display: none;
   }
 
+  // "Powered by Discourse" is redundant chrome on the AI conversations surface
+  .powered-by-discourse {
+    display: none;
+  }
+
   // topic elements
   #topic-footer-button-share-and-invite,
   body:not(.staff) #topic-footer-button-archive,
@@ -375,10 +380,6 @@ body.has-ai-conversations-sidebar {
     .sidebar-footer-wrapper {
       display: flex;
 
-      .powered-by-discourse {
-        display: block;
-      }
-
       button {
         display: none;
       }
@@ -422,18 +423,6 @@ body.has-ai-conversations-sidebar {
     }
   }
 
-  @include viewport.until(sm) {
-    .share-ai-conversation-button {
-      .d-icon {
-        margin: 0;
-      }
-
-      .d-button-label {
-        display: none;
-      }
-    }
-  }
-
   // custom user card link
   .user-card-meta__profile-link {
     display: block;
@@ -450,16 +439,6 @@ body.has-ai-conversations-sidebar {
     display: none;
   }
 
-  .topic-footer-main-buttons {
-    button:not(
-      .create,
-      .share-ai-conversation-button,
-      .topic-admin-menu-trigger
-    ) {
-      display: none;
-    }
-  }
-
   .topic-map {
     box-sizing: border-box;
     width: 100%;
@@ -474,8 +453,10 @@ body.has-ai-conversations-sidebar {
       display: none;
     }
 
+    // The bottom topic map (participants + invite) is redundant on the AI
+    // conversation page — the docked composer sits where it would render.
     &.--bottom {
-      padding-top: 0;
+      display: none;
     }
 
     section {

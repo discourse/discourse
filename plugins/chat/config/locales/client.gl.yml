@@ -170,3 +170,10 @@ gl:
           fields:
             message:
               label: Mensaxe
+    discourse_workflows:
+      send_chat_message:
+        channel_id: "Canle"
+        message: "Mensaxe"
+      chat_approval:
+        message: "Mensaxe"
+        channel_id: "Canle"

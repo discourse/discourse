@@ -92,6 +92,57 @@ export default {
         }
       });
 
+      api.registerValueTransformer(
+        "composer-actions-content",
+        ({ value, context }) => {
+          const { action, composerModel } = context;
+
+          if (action === CREATE_TOPIC) {
+            if (
+              composerModel.createAsPostVoting &&
+              !composerModel.onlyPostVotingInThisCategory
+            ) {
+              value.push({
+                name: i18n(
+                  "composer.composer_actions.remove_as_post_voting.label"
+                ),
+                description: i18n(
+                  "composer.composer_actions.remove_as_post_voting.desc"
+                ),
+                icon: "plus",
+                id: "togglePostVoting",
+              });
+            } else if (!composerModel.onlyPostVotingInThisCategory) {
+              value.push({
+                name: i18n(
+                  "composer.composer_actions.create_as_post_voting.label"
+                ),
+                description: i18n(
+                  "composer.composer_actions.create_as_post_voting.desc"
+                ),
+                icon: "plus",
+                id: "togglePostVoting",
+              });
+            }
+          }
+
+          return value;
+        }
+      );
+
+      api.registerBehaviorTransformer(
+        "composer-actions-on-select",
+        ({ context, next }) => {
+          if (context.actionId === "togglePostVoting") {
+            context.model.toggleProperty("createAsPostVoting");
+            context.model.notifyPropertyChange("replyOptions");
+            context.model.notifyPropertyChange("action");
+          } else {
+            next();
+          }
+        }
+      );
+
       api.modifyClass("model:composer", {
         pluginId: "discourse-post-voting",
 

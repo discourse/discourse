@@ -35,55 +35,26 @@ module PageObjects
         if period == "custom"
           page.current_url.include?("range=custom")
         else
-          has_css?(".db-date-range__trigger-label", text: preset_label(period))
+          has_css?(".db-date-range__trigger .d-button-label", text: preset_label(period))
         end
       end
 
-      def select_preset(period)
-        open_custom_date_range
-        find(".d-date-range-picker__preset", text: preset_label(period)).click
-        self
+      def has_custom_label?(text)
+        has_css?(".db-date-range__trigger .d-button-label", exact_text: text)
       end
 
-      def has_custom_label_text?(text)
-        has_css?(".db-date-range__trigger-label", text: text)
+      def date_range_picker
+        PageObjects::Components::AdminDashboardDateRangePicker.new
       end
 
       def open_custom_date_range
         find(".db-date-range__trigger").click
-        has_css?(".d-date-range-picker")
-        self
+        date_range_picker.tap(&:open?)
       end
 
-      def select_sidebar_preset(label)
-        find(".d-date-range-picker__preset", text: label).click
+      def select_preset(period)
+        open_custom_date_range.select_preset(preset_label(period))
         self
-      end
-
-      def pick_calendar_day(date)
-        moment_date = Date.parse(date.to_s)
-        aria_label = moment_date.strftime("%B %-d, %Y")
-        find(".d-date-range-picker__day[aria-label='#{aria_label}']:not(.--muted)").click
-        self
-      end
-
-      def apply_custom_range
-        find(".d-date-range-picker__apply").click
-        self
-      end
-
-      def cancel_custom_range
-        find(".d-date-range-picker__cancel").click
-        self
-      end
-
-      def dismiss_picker_via_escape
-        find(".d-date-range-picker").send_keys :escape
-        self
-      end
-
-      def has_no_picker_open?
-        has_no_css?(".d-date-range-picker")
       end
 
       def has_configure_button?
@@ -165,6 +136,10 @@ module PageObjects
           "Last 30 days"
         when "last_3_months"
           "Last 3 months"
+        when "last_6_months"
+          "Last 6 months"
+        when "last_year"
+          "Last year"
         end
       end
     end

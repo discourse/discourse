@@ -32,6 +32,8 @@ et:
         solved: "lahendatud"
       move_post_cancel: "Loobu"
       confirm_solved_removal_cancel: "Loobu"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
     topic_statuses:
       solved:
         help: "ellel teemal on lahendus"

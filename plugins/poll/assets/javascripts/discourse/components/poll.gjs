@@ -53,6 +53,7 @@ export default class PollComponent extends Component {
   @tracked
   showResults =
     !(this.poll.results === ON_CLOSE && !this.closed) &&
+    !(this.staffOnly && !this.isStaff) &&
     (this.hasSavedVote ||
       (this.topicArchived && !this.staffOnly) ||
       (this.closed && !this.staffOnly));

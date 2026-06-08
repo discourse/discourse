@@ -1072,8 +1072,7 @@ RSpec.describe Category do
 
       expect(category.auto_bump_topic!).to eq(true)
       expect(Topic.where(bumped_at: time).count).to eq(1)
-      # our extra bump message
-      expect(post1.topic.reload.posts_count).to eq(2)
+      expect(post1.topic.reload.posts_count).to eq(1)
 
       time = freeze_time 13.hours.from_now
 

@@ -441,6 +441,8 @@ he:
               description: "לאירוע פרטי יכולים להצטרף רק משתמשים שהוזמנו."
       composer:
         name_placeholder: "שם האירוע"
+        event_title_placeholder: "שם האירוע"
+        create_event_button: "יצירת אירוע"
         reminder:
           units:
             minutes:
@@ -463,6 +465,9 @@ he:
               two: "שבועות"
               many: "שבועות"
               other: "שבועות"
+      composer_actions:
+        create_event:
+          label: "יצירת אירוע"
       builder_modal:
         custom_fields:
           label: "שדות משלך"
@@ -530,3 +535,4 @@ he:
       invite_user_or_group:
         title: "להודיע למשתמשים או לקבוצות"
         invite: "שליחה"
+        success: "נשלחה הזמנה"

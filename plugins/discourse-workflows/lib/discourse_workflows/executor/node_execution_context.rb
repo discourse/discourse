@@ -11,6 +11,38 @@ module DiscourseWorkflows
       JobResult = Data.define(:ok, :result, :error)
       WaitRequest = Data.define(:waiting_until)
 
+      def self.serialize_post(
+        post,
+        guardian: Discourse.system_user.guardian,
+        include_raw: true,
+        include_cooked: false
+      )
+        MultiJson.load(
+          DiscourseWorkflows::PostSerializer.new(
+            post,
+            scope: guardian,
+            root: false,
+            include_raw: include_raw,
+            include_cooked: include_cooked,
+          ).to_json,
+        ).deep_symbolize_keys
+      end
+
+      def self.serialize_topic(
+        topic,
+        guardian: Discourse.system_user.guardian,
+        custom_field_names: []
+      )
+        MultiJson.load(
+          DiscourseWorkflows::TopicSerializer.new(
+            topic,
+            scope: guardian,
+            root: false,
+            custom_field_names: custom_field_names,
+          ).to_json,
+        ).deep_symbolize_keys
+      end
+
       class RuntimeState
         attr_reader :condition_step_details, :execution_hints, :log, :metadata, :wait_request
 
@@ -255,6 +287,38 @@ module DiscourseWorkflows
 
       def http_request(method:, url:, headers: {}, body: nil, options: {}, item_index: 0)
         HttpClient.new(self, item_index).request(method:, url:, headers:, body:, options:)
+      end
+
+      def create_post(user:, raw:, topic_id:, reply_to_post_number: nil)
+        topic = ::Topic.find(topic_id)
+        user.guardian.ensure_can_see!(topic)
+
+        if topic.closed? || topic.archived?
+          raise DiscourseWorkflows::NodeError,
+                I18n.t("discourse_workflows.errors.create_post.topic_closed_or_archived")
+        end
+
+        post_args = {
+          topic_id: topic.id,
+          raw: raw,
+          reply_to_post_number: reply_to_post_number.presence,
+          skip_workflows: true,
+        }.compact
+
+        PostCreator.new(user, post_args).create!
+      end
+
+      def serialize_post(
+        post,
+        guardian: Discourse.system_user.guardian,
+        include_raw: true,
+        include_cooked: false
+      )
+        self.class.serialize_post(post, guardian:, include_raw:, include_cooked:)
+      end
+
+      def serialize_topic(topic, guardian: Discourse.system_user.guardian, custom_field_names: [])
+        self.class.serialize_topic(topic, guardian:, custom_field_names:)
       end
 
       def put_execution_to_wait(waiting_until = nil)

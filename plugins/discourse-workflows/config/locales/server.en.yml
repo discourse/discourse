@@ -42,6 +42,9 @@ en:
       topic:
         create_failed: "Failed to create topic."
         unknown_operation: "Unknown operation: %{operation}."
+      post:
+        unknown_operation: "Unknown operation: %{operation}."
+        invalid_filter: "Invalid post filter fragment: %{fragments}."
       credential:
         missing_required_field: "is missing required field '%{field}'"
       wait:
@@ -66,6 +69,8 @@ en:
       set_fields:
         json_blank: "JSON string is blank."
         json_must_be_object: "JSON must be an object."
+      template:
+        invalid_template: "Invalid template"
       http_request:
         url_required: "URL is required."
         unsupported_scheme: "Only HTTP and HTTPS URLs are supported."

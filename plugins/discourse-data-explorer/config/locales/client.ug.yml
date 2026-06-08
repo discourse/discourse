@@ -36,3 +36,9 @@ ug:
       reset_params: "ئەسلىگە قايتۇر"
     group:
       reports: "دوكلات"
+    discourse_workflows:
+      sql:
+        param_value: "قىممەت"
+        output:
+          results: "نەتىجە"
+          no_results: "نەتىجە يوق"

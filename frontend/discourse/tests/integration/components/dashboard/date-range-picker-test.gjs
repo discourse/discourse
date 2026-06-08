@@ -1,43 +1,30 @@
-import { tracked } from "@glimmer/tracking";
-import { click, fillIn, render } from "@ember/test-helpers";
+import { click, fillIn, focus, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DashboardDateRangePicker, {
-  ALL_PRESETS,
-  formatRange,
-  matchingPreset,
-  PRESET_LAST_6_MONTHS,
-  PRESET_LAST_7_DAYS,
-  PRESET_LAST_30_DAYS,
-  presetRange,
-} from "discourse/admin/components/dashboard/date-range-picker";
+import DashboardDateRangePicker from "discourse/admin/components/dashboard/date-range-picker";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 
 const TODAY = "2026-05-26 12:00";
 
-class RangeState {
-  @tracked from;
-  @tracked to;
-  @tracked applied = [];
-  @tracked cancelled = 0;
-
-  apply = (payload) => {
-    this.applied = [...this.applied, payload];
-  };
-
-  cancel = () => {
-    this.cancelled++;
-  };
-
-  constructor(from, to) {
-    this.from = from;
-    this.to = to;
-  }
-}
+const START_DATE_INPUT = ".d-date-range-picker__input[aria-label='Start date']";
+const END_DATE_INPUT = ".d-date-range-picker__input[aria-label='End date']";
 
 function dayButton(dateString) {
   const m = moment(dateString);
   return `.d-date-range-picker__day[aria-label="${m.format("LL")}"]:not(.--muted)`;
+}
+
+function monthHeaders() {
+  return [
+    ...document.querySelectorAll(".d-date-range-picker__month-title"),
+  ].map((el) => el.textContent.trim());
+}
+
+function activePreset() {
+  return [...document.querySelectorAll(".d-date-range-picker__preset")].find(
+    (el) => el.classList.contains("is-active")
+  );
 }
 
 module(
@@ -55,98 +42,78 @@ module(
       clock?.restore();
     });
 
-    test("highlights the active period on the calendar and in the sidebar", async function (assert) {
-      const { from, to } = presetRange(PRESET_LAST_30_DAYS);
-      const state = new RangeState(from.toDate(), to.toDate());
+    test("highlights the start and end days of the active range", async function (assert) {
+      const from = moment("2026-04-27");
+      const to = moment("2026-05-26");
 
       await render(
         <template>
-          <DashboardDateRangePicker
-            @from={{state.from}}
-            @to={{state.to}}
-            @presets={{ALL_PRESETS}}
-            @onApply={{state.apply}}
-            @onCancel={{state.cancel}}
-          />
+          <DashboardDateRangePicker @from={{from}} @to={{to}} />
         </template>
       );
 
       assert
         .dom(dayButton(from))
-        .hasClass(
-          "--start",
-          "the start day of the active period is highlighted as the start"
-        );
+        .hasClass("--start", "the start day is highlighted as the start");
       assert
         .dom(dayButton(to))
-        .hasClass(
-          "--end",
-          "the end day of the active period is highlighted as the end"
-        );
-
-      const activePreset = [
-        ...document.querySelectorAll(".d-date-range-picker__preset"),
-      ].find((el) => el.classList.contains("is-active"));
-      assert.strictEqual(
-        activePreset?.textContent.trim(),
-        "Last 30 days",
-        "the sidebar preset matching the active range is highlighted"
-      );
+        .hasClass("--end", "the end day is highlighted as the end");
     });
 
-    test("clicking a sidebar preset emits onApply with the preset and its range", async function (assert) {
-      const { from, to } = presetRange(PRESET_LAST_30_DAYS);
-      const state = new RangeState(from.toDate(), to.toDate());
+    test("marks the active preset in the sidebar", async function (assert) {
+      const presets = [
+        { id: "last_7_days", label: "Last 7 days" },
+        { id: "last_30_days", label: "Last 30 days" },
+      ];
 
       await render(
         <template>
           <DashboardDateRangePicker
-            @from={{state.from}}
-            @to={{state.to}}
-            @presets={{ALL_PRESETS}}
-            @onApply={{state.apply}}
-            @onCancel={{state.cancel}}
+            @presets={{presets}}
+            @activePreset="last_30_days"
           />
         </template>
       );
 
-      const sixMonthsPreset = [
-        ...document.querySelectorAll(".d-date-range-picker__preset"),
-      ].find((el) => el.textContent.trim() === "Last 6 months");
-      await click(sixMonthsPreset);
+      assert.strictEqual(
+        activePreset()?.textContent.trim(),
+        "Last 30 days",
+        "the preset matching the active range is highlighted"
+      );
+    });
 
-      assert.strictEqual(state.applied.length, 1, "onApply is called once");
-      const payload = state.applied[0];
-      assert.strictEqual(
-        payload.preset,
-        PRESET_LAST_6_MONTHS,
-        "the preset constant is emitted"
+    test("clicking a preset emits onApply with its id", async function (assert) {
+      const presets = [{ id: "last_6_months", label: "Last 6 months" }];
+      const applied = [];
+      const onApply = (payload) => applied.push(payload);
+
+      await render(
+        <template>
+          <DashboardDateRangePicker @presets={{presets}} @onApply={{onApply}} />
+        </template>
       );
-      const expected = presetRange(PRESET_LAST_6_MONTHS);
-      assert.strictEqual(
-        moment(payload.from).format("YYYY-MM-DD"),
-        expected.from.format("YYYY-MM-DD"),
-        "the emitted from matches the preset start"
-      );
-      assert.strictEqual(
-        moment(payload.to).format("YYYY-MM-DD"),
-        expected.to.format("YYYY-MM-DD"),
-        "the emitted to matches the preset end"
+
+      await click(".d-date-range-picker__preset");
+
+      assert.deepEqual(
+        applied,
+        [{ preset: "last_6_months" }],
+        "the clicked preset's id is emitted, leaving the range for the parent"
       );
     });
 
     test("hand-picking a range: click start, click end, Apply commits", async function (assert) {
-      const { from, to } = presetRange(PRESET_LAST_30_DAYS);
-      const state = new RangeState(from.toDate(), to.toDate());
+      const from = moment("2026-04-27");
+      const to = moment("2026-05-26");
+      const applied = [];
+      const onApply = (payload) => applied.push(payload);
 
       await render(
         <template>
           <DashboardDateRangePicker
-            @from={{state.from}}
-            @to={{state.to}}
-            @presets={{ALL_PRESETS}}
-            @onApply={{state.apply}}
-            @onCancel={{state.cancel}}
+            @from={{from}}
+            @to={{to}}
+            @onApply={{onApply}}
           />
         </template>
       );
@@ -190,8 +157,8 @@ module(
 
       await click(".d-date-range-picker__apply");
 
-      assert.strictEqual(state.applied.length, 1, "onApply is called once");
-      const payload = state.applied[0];
+      assert.strictEqual(applied.length, 1, "onApply is called once");
+      const payload = applied[0];
       assert.strictEqual(payload.preset, null, "no preset is emitted");
       assert.strictEqual(
         moment(payload.from).format("YYYY-MM-DD"),
@@ -206,29 +173,23 @@ module(
     });
 
     test("typing dates in YYYY/MM/DD into the inputs updates the selection", async function (assert) {
-      const { from, to } = presetRange(PRESET_LAST_30_DAYS);
-      const state = new RangeState(from.toDate(), to.toDate());
+      const from = moment("2026-04-27");
+      const to = moment("2026-05-26");
+      const applied = [];
+      const onApply = (payload) => applied.push(payload);
 
       await render(
         <template>
           <DashboardDateRangePicker
-            @from={{state.from}}
-            @to={{state.to}}
-            @presets={{ALL_PRESETS}}
-            @onApply={{state.apply}}
-            @onCancel={{state.cancel}}
+            @from={{from}}
+            @to={{to}}
+            @onApply={{onApply}}
           />
         </template>
       );
 
-      await fillIn(
-        ".d-date-range-picker__input[aria-label='Start date']",
-        "2026/05/02"
-      );
-      await fillIn(
-        ".d-date-range-picker__input[aria-label='End date']",
-        "2026/05/18"
-      );
+      await fillIn(START_DATE_INPUT, "2026/05/02");
+      await fillIn(END_DATE_INPUT, "2026/05/18");
 
       assert
         .dom(dayButton("2026-05-02"))
@@ -240,7 +201,7 @@ module(
 
       await click(".d-date-range-picker__apply");
 
-      const payload = state.applied[0];
+      const payload = applied[0];
       assert.strictEqual(
         moment(payload.from).format("YYYY-MM-DD"),
         "2026-05-02"
@@ -249,28 +210,19 @@ module(
     });
 
     test("an invalid typed date reverts the input to the current selection", async function (assert) {
-      const { from, to } = presetRange(PRESET_LAST_30_DAYS);
-      const state = new RangeState(from.toDate(), to.toDate());
+      const from = moment("2026-04-27");
+      const to = moment("2026-05-26");
 
       await render(
         <template>
-          <DashboardDateRangePicker
-            @from={{state.from}}
-            @to={{state.to}}
-            @presets={{ALL_PRESETS}}
-            @onApply={{state.apply}}
-            @onCancel={{state.cancel}}
-          />
+          <DashboardDateRangePicker @from={{from}} @to={{to}} />
         </template>
       );
 
-      await fillIn(
-        ".d-date-range-picker__input[aria-label='Start date']",
-        "not-a-date"
-      );
+      await fillIn(START_DATE_INPUT, "not-a-date");
 
       assert
-        .dom(".d-date-range-picker__input[aria-label='Start date']")
+        .dom(START_DATE_INPUT)
         .hasValue(
           moment(from).format("YYYY/MM/DD"),
           "the field reverts to the active start when the input is invalid"
@@ -278,18 +230,12 @@ module(
     });
 
     test("clicking a date earlier than the pending start re-anchors the start", async function (assert) {
-      const { from, to } = presetRange(PRESET_LAST_30_DAYS);
-      const state = new RangeState(from.toDate(), to.toDate());
+      const from = moment("2026-04-27");
+      const to = moment("2026-05-26");
 
       await render(
         <template>
-          <DashboardDateRangePicker
-            @from={{state.from}}
-            @to={{state.to}}
-            @presets={{ALL_PRESETS}}
-            @onApply={{state.apply}}
-            @onCancel={{state.cancel}}
-          />
+          <DashboardDateRangePicker @from={{from}} @to={{to}} />
         </template>
       );
 
@@ -313,18 +259,12 @@ module(
     });
 
     test("clicking a day after both endpoints are picked starts a fresh pending selection", async function (assert) {
-      const { from, to } = presetRange(PRESET_LAST_30_DAYS);
-      const state = new RangeState(from.toDate(), to.toDate());
+      const from = moment("2026-04-27");
+      const to = moment("2026-05-26");
 
       await render(
         <template>
-          <DashboardDateRangePicker
-            @from={{state.from}}
-            @to={{state.to}}
-            @presets={{ALL_PRESETS}}
-            @onApply={{state.apply}}
-            @onCancel={{state.cancel}}
-          />
+          <DashboardDateRangePicker @from={{from}} @to={{to}} />
         </template>
       );
 
@@ -353,18 +293,12 @@ module(
     });
 
     test("Apply remains disabled when the pending range equals the active range", async function (assert) {
-      const { from, to } = presetRange(PRESET_LAST_30_DAYS);
-      const state = new RangeState(from.toDate(), to.toDate());
+      const from = moment("2026-04-27");
+      const to = moment("2026-05-26");
 
       await render(
         <template>
-          <DashboardDateRangePicker
-            @from={{state.from}}
-            @to={{state.to}}
-            @presets={{ALL_PRESETS}}
-            @onApply={{state.apply}}
-            @onCancel={{state.cancel}}
-          />
+          <DashboardDateRangePicker @from={{from}} @to={{to}} />
         </template>
       );
 
@@ -379,17 +313,20 @@ module(
     });
 
     test("Cancel discards pending selection and calls onCancel", async function (assert) {
-      const { from, to } = presetRange(PRESET_LAST_30_DAYS);
-      const state = new RangeState(from.toDate(), to.toDate());
+      const from = moment("2026-04-27");
+      const to = moment("2026-05-26");
+      const applied = [];
+      let cancelled = 0;
+      const onApply = (payload) => applied.push(payload);
+      const onCancel = () => (cancelled += 1);
 
       await render(
         <template>
           <DashboardDateRangePicker
-            @from={{state.from}}
-            @to={{state.to}}
-            @presets={{ALL_PRESETS}}
-            @onApply={{state.apply}}
-            @onCancel={{state.cancel}}
+            @from={{from}}
+            @to={{to}}
+            @onApply={{onApply}}
+            @onCancel={{onCancel}}
           />
         </template>
       );
@@ -397,27 +334,17 @@ module(
       await click(dayButton("2026-05-01"));
       await click(".d-date-range-picker__cancel");
 
-      assert.strictEqual(state.cancelled, 1, "onCancel is called");
-      assert.strictEqual(
-        state.applied.length,
-        0,
-        "no commit happens on Cancel"
-      );
+      assert.strictEqual(cancelled, 1, "onCancel is called");
+      assert.strictEqual(applied.length, 0, "no commit happens on Cancel");
     });
 
     test("future dates are not selectable", async function (assert) {
-      const { from, to } = presetRange(PRESET_LAST_30_DAYS);
-      const state = new RangeState(from.toDate(), to.toDate());
+      const from = moment("2026-04-27");
+      const to = moment("2026-05-26");
 
       await render(
         <template>
-          <DashboardDateRangePicker
-            @from={{state.from}}
-            @to={{state.to}}
-            @presets={{ALL_PRESETS}}
-            @onApply={{state.apply}}
-            @onCancel={{state.cancel}}
-          />
+          <DashboardDateRangePicker @from={{from}} @to={{to}} />
         </template>
       );
 
@@ -426,83 +353,127 @@ module(
         .dom(dayButton("2026-05-27"))
         .hasAttribute("aria-disabled", "true", "future days are aria-disabled");
     });
-  }
-);
 
-module(
-  "Integration | Component | Dashboard | DateRangePicker | preset math",
-  function (hooks) {
-    setupRenderingTest(hooks);
+    test("on open it shows two consecutive months anchored on the start month", async function (assert) {
+      const from = moment("2026-01-15");
+      const to = moment("2026-04-20");
 
-    let clock;
-
-    hooks.beforeEach(function () {
-      clock = fakeTime(TODAY, null, true);
-    });
-
-    hooks.afterEach(function () {
-      clock?.restore();
-    });
-
-    test("preset ranges are computed with today inclusive", function (assert) {
-      const cases = [
-        [PRESET_LAST_7_DAYS, "2026-05-20", "2026-05-26"],
-        [PRESET_LAST_30_DAYS, "2026-04-27", "2026-05-26"],
-      ];
-      for (const [preset, expectedFrom, expectedTo] of cases) {
-        const range = presetRange(preset);
-        assert.strictEqual(
-          range.from.format("YYYY-MM-DD"),
-          expectedFrom,
-          `${preset} start is ${expectedFrom}`
-        );
-        assert.strictEqual(
-          range.to.format("YYYY-MM-DD"),
-          expectedTo,
-          `${preset} end is ${expectedTo}`
-        );
-      }
-    });
-
-    test("matchingPreset matches by exact start/end equality", function (assert) {
-      const { from, to } = presetRange(PRESET_LAST_30_DAYS);
-      assert.strictEqual(
-        matchingPreset(from.toDate(), to.toDate(), ALL_PRESETS),
-        PRESET_LAST_30_DAYS
+      await render(
+        <template>
+          <DashboardDateRangePicker @from={{from}} @to={{to}} />
+        </template>
       );
-      assert.strictEqual(
-        matchingPreset(
-          moment(from).subtract(1, "day").toDate(),
-          to.toDate(),
-          ALL_PRESETS
-        ),
-        null,
-        "an off-by-one range does not match a preset"
+
+      assert.deepEqual(
+        monthHeaders(),
+        ["January 2026", "February 2026"],
+        "the start month and the following month are shown, not a start/end split"
       );
     });
+
+    test("focusing the end input brings the end month into the right panel", async function (assert) {
+      const from = moment("2026-01-15");
+      const to = moment("2026-04-20");
+
+      await render(
+        <template>
+          <DashboardDateRangePicker @from={{from}} @to={{to}} />
+        </template>
+      );
+
+      await focus(END_DATE_INPUT);
+
+      assert.deepEqual(
+        monthHeaders(),
+        ["March 2026", "April 2026"],
+        "the end month sits in the right panel with the preceding month on the left"
+      );
+    });
+
+    test("focusing the start input brings the start month into the left panel", async function (assert) {
+      const from = moment("2026-01-15");
+      const to = moment("2026-04-20");
+
+      await render(
+        <template>
+          <DashboardDateRangePicker @from={{from}} @to={{to}} />
+        </template>
+      );
+
+      await focus(END_DATE_INPUT);
+      await focus(START_DATE_INPUT);
+
+      assert.deepEqual(
+        monthHeaders(),
+        ["January 2026", "February 2026"],
+        "the start month returns to the left panel when the start input is focused"
+      );
+    });
+
+    test("the month navigation arrows still move the view", async function (assert) {
+      const from = moment("2026-01-15");
+      const to = moment("2026-04-20");
+
+      await render(
+        <template>
+          <DashboardDateRangePicker @from={{from}} @to={{to}} />
+        </template>
+      );
+
+      const navButtons = document.querySelectorAll(".d-date-range-picker__nav");
+      await click(navButtons[navButtons.length - 1]);
+
+      assert.deepEqual(
+        monthHeaders(),
+        ["February 2026", "March 2026"],
+        "the next arrow advances the visible window past the start anchor"
+      );
+    });
+
+    test("focusing the end input on a same-month range keeps the end month in the right panel", async function (assert) {
+      const from = moment("2026-03-10");
+      const to = moment("2026-03-25");
+
+      await render(
+        <template>
+          <DashboardDateRangePicker @from={{from}} @to={{to}} />
+        </template>
+      );
+
+      await focus(END_DATE_INPUT);
+
+      assert.deepEqual(
+        monthHeaders(),
+        ["February 2026", "March 2026"],
+        "the end month stays in the right panel even when both endpoints share a month"
+      );
+    });
+
+    test("on mobile the single panel anchors on the start month and follows the focused input", async function (assert) {
+      forceMobile();
+
+      const from = moment("2026-01-15");
+      const to = moment("2026-04-20");
+
+      await render(
+        <template>
+          <DashboardDateRangePicker @from={{from}} @to={{to}} />
+        </template>
+      );
+
+      assert.deepEqual(
+        monthHeaders(),
+        ["January 2026"],
+        "a single month, the start month, is shown on open"
+      );
+
+      await focus(END_DATE_INPUT);
+
+      assert.deepEqual(
+        monthHeaders(),
+        ["April 2026"],
+        "focusing the end input shows the end month itself in the single panel"
+      );
+    });
   }
 );
-
-module("Unit | Dashboard | DateRangePicker | formatRange", function () {
-  test("same-year range omits the year on the first endpoint and includes it on the second", function (assert) {
-    const formatted = formatRange("2026-03-01", "2026-04-28");
-    assert.true(
-      formatted.includes("2026"),
-      "the formatted range includes the year"
-    );
-  });
-
-  test("cross-year range includes the year on both endpoints", function (assert) {
-    const formatted = formatRange("2025-11-27", "2026-05-26");
-    assert.true(formatted.includes("2025"), "the from year is shown");
-    assert.true(formatted.includes("2026"), "the to year is shown");
-  });
-
-  test("same-day range collapses to a single date", function (assert) {
-    const formatted = formatRange("2026-05-26", "2026-05-26");
-    assert.false(
-      formatted.includes("–"),
-      "the formatted same-day range does not include a dash separator"
-    );
-  });
-});

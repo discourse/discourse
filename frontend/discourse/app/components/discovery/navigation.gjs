@@ -24,6 +24,7 @@ export default class DiscoveryNavigation extends Component {
   @service currentUser;
   @service modal;
   @service router;
+  @service siteSettings;
 
   get filterMode() {
     return calculateFilterMode({
@@ -38,7 +39,18 @@ export default class DiscoveryNavigation extends Component {
   }
 
   get canCreateTopic() {
-    return this.currentUser?.can_create_topic;
+    if (!this.currentUser?.can_create_topic) {
+      return false;
+    }
+
+    if (
+      this.siteSettings.hide_disabled_create_topic_button &&
+      this.args.createTopicDisabled
+    ) {
+      return false;
+    }
+
+    return true;
   }
 
   get bodyClass() {

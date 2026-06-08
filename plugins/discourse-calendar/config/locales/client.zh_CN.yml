@@ -443,6 +443,8 @@ zh_CN:
         name_placeholder: "活动名称"
         location_placeholder: "添加位置或网址"
         description_placeholder: "添加活动描述"
+        event_title_placeholder: "活动名称"
+        create_event_button: "创建活动"
         reminder:
           units:
             minutes:
@@ -453,6 +455,9 @@ zh_CN:
               other: "天"
             weeks:
               other: "周"
+      composer_actions:
+        create_event:
+          label: "创建活动"
       builder_modal:
         custom_fields:
           label: "自定义字段"
@@ -527,3 +532,4 @@ zh_CN:
       invite_user_or_group:
         title: "通知用户或群组"
         invite: "发送"
+        success: "邀请已发送"

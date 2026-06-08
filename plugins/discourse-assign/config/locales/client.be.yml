@@ -33,3 +33,6 @@ be:
     edit_assignments_modal:
       topic: "Тэма"
       post: "пост"
+    discourse_workflows:
+      assign_topic:
+        topic_id: "Номер тэмы"

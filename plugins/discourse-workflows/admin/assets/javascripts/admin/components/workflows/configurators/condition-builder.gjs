@@ -15,7 +15,6 @@ import {
   outputIndexForConnection,
   previousNodeForConnection,
   schemaFieldsForNodeInput,
-  schemaFieldsForNodeOutput,
 } from "../../../lib/workflows/data-schema";
 import { isExpression } from "../../../lib/workflows/property-engine";
 import Collection from "./collection";
@@ -170,7 +169,11 @@ export default class ConditionBuilder extends Component {
       const inputIndex = inputIndexForConnection(connection);
       const outputIndex = outputIndexForConnection(connection);
       const currentInputSummary = this.args.node
-        ? inputSummaryForNode(runData, this.args.node.name, inputIndex)
+        ? inputSummaryForNode(runData, this.args.node.name, inputIndex, {
+            node: this.args.node,
+            sourceNode: previousNode,
+            outputIndex,
+          })
         : null;
       const prefix = inputFieldPrefixForConnection(connection, previousNode, {
         primaryConnection,
@@ -178,12 +181,12 @@ export default class ConditionBuilder extends Component {
       const fields = currentInputSummary
         ? schemaFieldsForNodeInput(runData, this.args.node.name, {
             inputIndex,
-            prefix,
-          })
-        : schemaFieldsForNodeOutput(runData, previousNode.name, {
+            node: this.args.node,
+            sourceNode: previousNode,
             outputIndex,
             prefix,
-          });
+          })
+        : [];
       const labelPrefix =
         inputConnections.length > 1 ? previousNode.name || null : null;
 
