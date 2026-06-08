@@ -95,6 +95,8 @@ module DiscourseWorkflows
     # to the serializer's guardian, mirroring UserSerializer#groups. This keeps
     # hidden/private group membership from leaking through workflow outputs,
     # conditions, or logs when a post is serialized under a limited actor.
+    # It returns an array of [id, name] pairs for the groups.
+    # For example, [[1, "staff"], [2, "moderators"]].
     def author_visible_groups
       return @author_visible_groups if defined?(@author_visible_groups)
 
