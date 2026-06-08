@@ -143,32 +143,6 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
     end
   end
   UpcomingChanges.singleton_class.prepend(UpcomingChangesBatchedClearCaches)
-
-  # Neutralize lograge's per-request access logging in CI. `ENABLE_LOGSTASH_LOGGER`
-  # is forced to "1" above, so `config/initializers/101-lograge.rb` wires up
-  # lograge's `process_action.action_controller` subscriber. That subscriber runs
-  # on EVERY Rails controller action the in-process test server handles — and the
-  # system suite drives tens of thousands of XHRs (every `/t/:id.json`,
-  # `/categories.json`, `/session`, bootstrap, etc. behind each visit/click). For
-  # each one it eagerly builds the request hash (Discourse's `custom_options`
-  # lambda runs `params.to_query` + a `current_user` read), allocates a
-  # `LogStash::Event`, serializes it to JSON, and writes a line to `log/test.log`
-  # via `DiscourseLogstashLogger` — all at `error` level (so it isn't even
-  # suppressed by `RAILS_TEST_LOG_LEVEL=error`). Nothing in the system suite
-  # asserts on that access log; only the on-failure dumps (RspecErrorTracker
-  # server errors, browser JS logs) and Logster/`Rails.logger` error output are
-  # used for debugging, and those flow through the separate Logster bridge, not
-  # `process_main_event`.
-  #
-  # `Lograge.process_main_event` does `return if Lograge.ignore?(event)` before
-  # any of that work, and `ignore?` is `ignore_tests.any? { |t| t.call(event) }`.
-  # Pushing an always-true test makes every controller action short-circuit at
-  # that guard — no payload build, no LogStash::Event, no JSON, no file write —
-  # for one cheap lambda call instead. Error logging is untouched. Set
-  # DISCOURSE_KEEP_LOGRAGE=1 to restore per-request access logs for debugging.
-  if defined?(Lograge) && !ENV["DISCOURSE_KEEP_LOGRAGE"]
-    Lograge.ignore(->(_event) { true })
-  end
 end
 
 require "rspec/rails"
