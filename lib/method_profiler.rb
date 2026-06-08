@@ -33,7 +33,8 @@ class MethodProfiler
               if (__mp_item = MethodProfiler.__#{name}_item(self, args))
                 (data[:items] ||= []) << __mp_item.merge!(duration_ms: __mp_elapsed * 1000.0)
               end
-            rescue StandardError
+            rescue => __mp_error
+              (data[:items] ||= []) << MethodProfiler.__item_error(__mp_error)
             end
           end
         RUBY
@@ -77,6 +78,10 @@ class MethodProfiler
     "#{string[0, MAX_ITEM_LENGTH]}…(truncated, #{string.bytesize} bytes)"
   end
 
+  def self.__item_error(error)
+    { error: truncate(utf8("#{error.class}: #{error.message}")) }
+  end
+
   def self.__sql_item(_receiver, args)
     { sql: truncate(utf8(args[0])) }
   end
@@ -112,8 +117,6 @@ class MethodProfiler
     else
       { method: "", url: "" }
     end
-  rescue StandardError
-    { method: "", url: "" }
   end
 
   def self.__http_url(ssl, host, port, path)

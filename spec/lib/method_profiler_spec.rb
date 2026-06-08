@@ -91,6 +91,18 @@ RSpec.describe MethodProfiler do
         expect { JSON.generate(item) }.not_to raise_error
       end
 
+      it "records a capture error instead of breaking the call or swallowing it" do
+        MethodProfiler.stubs(:__sql_item).raises(StandardError.new("boom"))
+        MethodProfiler.start
+
+        expect { ActiveRecord::Base.connection.execute("SELECT 1") }.not_to raise_error
+
+        result = MethodProfiler.stop
+        expect(result[:sql][:items].map { |item| item[:error] }).to include(
+          a_string_including("boom"),
+        )
+      end
+
       it "truncates very long itemized values so the output stays bounded" do
         MethodProfiler.start
 
