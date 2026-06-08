@@ -8073,6 +8073,7 @@ en:
           updating: "Updating…"
           update_success: "%{theme} Update complete"
           up_to_date: "Theme is up-to-date, last checked:"
+          up_to_date_branch: "Theme is up-to-date with %{branch}, last checked:"
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           change_source:
             button: "Change source"
@@ -8096,6 +8097,9 @@ en:
           commits_behind:
             one: "Theme is %{count} commit behind!"
             other: "Theme is %{count} commits behind!"
+          commits_behind_branch:
+            one: "Theme is %{count} commit behind %{branch}"
+            other: "Theme is %{count} commits behind %{branch}"
           compare_commits: "(See new commits)"
           remote_theme_edits: "If you want to edit this theme, you must <a href='%{repoURL}' target='_blank'>submit a change on its repository</a>"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"

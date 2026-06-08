@@ -7808,7 +7808,9 @@ CREATE TABLE public.remote_themes (
     authors character varying,
     theme_version character varying,
     minimum_discourse_version character varying,
-    maximum_discourse_version character varying
+    maximum_discourse_version character varying,
+    local_compat_ref character varying,
+    remote_compat_ref character varying
 );
 
 
@@ -21850,6 +21852,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260608104742'),
 ('20260604052235'),
 ('20260603115312'),
 ('20260603115200'),
