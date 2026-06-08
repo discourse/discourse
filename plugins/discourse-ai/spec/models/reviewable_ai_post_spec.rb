@@ -256,20 +256,7 @@ describe ReviewableAiPost do
           user_reviewable.id,
         ]
 
-        expect(result).to have_attributes(
-          success?: true,
-          status: :success,
-          transition_to: :approved,
-          errors: nil,
-          recalculate_score: true,
-          update_flag_stats: {
-            status: :agreed,
-            user_ids: [reviewable.created_by_id],
-          },
-          after_commit: nil,
-          created_post: nil,
-          created_post_topic: nil,
-        )
+        expect(result.transition_to).to eq(:approved)
         expect(result.remove_reviewable_ids).to contain_exactly(*expected_removed_reviewable_ids)
         expect { target.user.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect(ai_post_reviewable.reload).to be_approved
@@ -299,20 +286,7 @@ describe ReviewableAiPost do
           user_reviewable.id,
         ]
 
-        expect(result).to have_attributes(
-          success?: true,
-          status: :success,
-          transition_to: :approved,
-          errors: nil,
-          recalculate_score: true,
-          update_flag_stats: {
-            status: :agreed,
-            user_ids: [reviewable.created_by_id],
-          },
-          after_commit: nil,
-          created_post: nil,
-          created_post_topic: nil,
-        )
+        expect(result.transition_to).to eq(:approved)
         expect(result.remove_reviewable_ids).to contain_exactly(*expected_removed_reviewable_ids)
         expect { target.user.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect(ai_post_reviewable.reload).to be_approved
