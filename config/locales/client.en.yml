@@ -372,6 +372,62 @@ en:
         anonymous_members: ""
       search_placeholder: "Search"
 
+    horizon_site_skeleton:
+      new_topic: "New Topic"
+      nav:
+        topics: "Topics"
+        my_posts: "My posts"
+        my_messages: "My messages"
+        review: "Review"
+        admin: "Admin"
+        invite: "Invite"
+      categories_title: "Categories"
+      categories:
+        general: "General"
+        site_feedback: "Site Feedback"
+        staff: "Staff"
+        all: "All categories"
+      search_chat: "Search chat"
+      channels_title: "Channels"
+      channels:
+        general: "General"
+        staff: "Staff"
+      setup:
+        title: "Launch in 3 easy steps"
+        customize:
+          title: "Customize your site"
+          description: "Choose a starting theme for your community"
+          action: "Select theme"
+        invite:
+          title: "Invite collaborators"
+          description: "Early members help bring your community to life"
+          action: "Create invite"
+        post:
+          title: "Start posting"
+          description: "Give people something to talk about together"
+          action: "See ideas"
+      welcome_back: "Welcome back,<br>%{username}!"
+      search_placeholder: "Search"
+      tabs:
+        latest: "Latest"
+        hot: "Hot"
+        categories: "Categories"
+      topic:
+        meta: "posted Jun 1 by @system"
+        pinned: "Pinned"
+        welcome:
+          title: "Welcome to %{site_name}!"
+          excerpt: "We are so glad you joined us. Here are some things you can do to get started: Introduce yourself by adding your picture and information about yourself..."
+          category: "General"
+        admin_guide:
+          title: "Admin Guide: Getting started"
+          excerpt: "Welcome to your new community, and thank you for choosing Discourse! Invite your team. Start some conversations..."
+          category: "Staff"
+        guidelines:
+          title: "Guidelines"
+          excerpt: "This is a civilized place for public discussion. Please treat this discussion forum with the same respect..."
+          category: "Staff"
+
     impersonation:
       notice: "You are impersonating %{username}"
       time_left:

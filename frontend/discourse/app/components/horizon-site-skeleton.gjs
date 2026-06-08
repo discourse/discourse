@@ -1,6 +1,9 @@
 import Component from "@glimmer/component";
+import { trustHTML } from "@ember/template";
 import UserProfileAvatar from "discourse/components/user-profile-avatar";
+import { escapeExpression } from "discourse/lib/utilities";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
 export default class HorizonSiteSkeleton extends Component {
   get siteName() {
@@ -13,6 +16,12 @@ export default class HorizonSiteSkeleton extends Component {
 
   get avatarInitial() {
     return this.username[0];
+  }
+
+  get welcomeBack() {
+    return i18n("horizon_site_skeleton.welcome_back", {
+      username: escapeExpression(this.username),
+    });
   }
 
   <template>
@@ -29,7 +38,7 @@ export default class HorizonSiteSkeleton extends Component {
         </span>
         <span class="horizon-site-skeleton__avatar">
           {{#if @user}}
-            <UserProfileAvatar @user={{@user}} @tagName="" />
+            <UserProfileAvatar @user={{@user}} />
           {{else}}
             {{this.avatarInitial}}
           {{/if}}
@@ -38,68 +47,70 @@ export default class HorizonSiteSkeleton extends Component {
 
       <div class="horizon-site-skeleton__body">
         <aside class="horizon-site-skeleton__sidebar">
-          <div class="horizon-site-skeleton__new-topic">New Topic</div>
+          <div class="horizon-site-skeleton__new-topic">
+            {{i18n "horizon_site_skeleton.new_topic"}}
+          </div>
 
           <div class="horizon-site-skeleton__nav-item --active">
             <span class="horizon-site-skeleton__nav-icon">
               {{dIcon "layer-group"}}
             </span>
-            Topics
+            {{i18n "horizon_site_skeleton.nav.topics"}}
           </div>
           <div class="horizon-site-skeleton__nav-item">
             <span class="horizon-site-skeleton__nav-icon">
               {{dIcon "user"}}
             </span>
-            My posts
+            {{i18n "horizon_site_skeleton.nav.my_posts"}}
           </div>
           <div class="horizon-site-skeleton__nav-item">
             <span class="horizon-site-skeleton__nav-icon">
               {{dIcon "inbox"}}
             </span>
-            My messages
+            {{i18n "horizon_site_skeleton.nav.my_messages"}}
           </div>
           <div class="horizon-site-skeleton__nav-item">
             <span class="horizon-site-skeleton__nav-icon">
               {{dIcon "flag"}}
             </span>
-            Review
+            {{i18n "horizon_site_skeleton.nav.review"}}
           </div>
           <div class="horizon-site-skeleton__nav-item">
             <span class="horizon-site-skeleton__nav-icon">
               {{dIcon "wrench"}}
             </span>
-            Admin
+            {{i18n "horizon_site_skeleton.nav.admin"}}
           </div>
           <div class="horizon-site-skeleton__nav-item">
             <span class="horizon-site-skeleton__nav-icon">
               {{dIcon "paper-plane"}}
             </span>
-            Invite
+            {{i18n "horizon_site_skeleton.nav.invite"}}
           </div>
 
           <div class="horizon-site-skeleton__sidebar-section">
             <div class="horizon-site-skeleton__sidebar-title">
-              Categories
+              {{i18n "horizon_site_skeleton.categories_title"}}
             </div>
             <div class="horizon-site-skeleton__category">
               <span class="horizon-site-skeleton__category-dot --blue"></span>
-              General
+              {{i18n "horizon_site_skeleton.categories.general"}}
             </div>
             <div class="horizon-site-skeleton__category">
               <span
                 class="horizon-site-skeleton__category-dot --light-blue"
               ></span>
-              Site Feedback
+              {{i18n "horizon_site_skeleton.categories.site_feedback"}}
             </div>
             <div class="horizon-site-skeleton__category">
               <span class="horizon-site-skeleton__category-dot --staff"></span>
-              Staff
+              {{i18n "horizon_site_skeleton.categories.staff"}}
             </div>
             <div class="horizon-site-skeleton__category">
               <span class="horizon-site-skeleton__nav-icon">
                 {{dIcon "list"}}
               </span>
-              All categories
+              {{i18n "horizon_site_skeleton.categories.all"}}
             </div>
           </div>
 
@@ -108,21 +119,21 @@ export default class HorizonSiteSkeleton extends Component {
               <span class="horizon-site-skeleton__nav-icon">
                 {{dIcon "magnifying-glass"}}
               </span>
-              Search chat
+              {{i18n "horizon_site_skeleton.search_chat"}}
             </div>
           </div>
 
           <div class="horizon-site-skeleton__sidebar-section">
             <div class="horizon-site-skeleton__sidebar-title">
-              Channels
+              {{i18n "horizon_site_skeleton.channels_title"}}
             </div>
             <div class="horizon-site-skeleton__category">
               <span class="horizon-site-skeleton__channel --blue"></span>
-              General
+              {{i18n "horizon_site_skeleton.channels.general"}}
             </div>
             <div class="horizon-site-skeleton__category">
               <span class="horizon-site-skeleton__channel --red"></span>
-              Staff
+              {{i18n "horizon_site_skeleton.channels.staff"}}
             </div>
           </div>
         </aside>
@@ -130,34 +141,48 @@ export default class HorizonSiteSkeleton extends Component {
         <main class="horizon-site-skeleton__content">
           <section class="horizon-site-skeleton__card">
             <div class="horizon-site-skeleton__setup-banner">
-              <button type="button" tabindex="-1">x</button>
-              <h3>Launch in 3 easy steps</h3>
+              <button type="button" tabindex="-1">{{dIcon "xmark"}}</button>
+              <h3>{{i18n "horizon_site_skeleton.setup.title"}}</h3>
               <div class="horizon-site-skeleton__setup-steps">
                 <div>
-                  <strong>Customize your site</strong>
-                  <span>Choose a starting theme for your community</span>
-                  <em>Select theme</em>
+                  <strong>{{i18n
+                      "horizon_site_skeleton.setup.customize.title"
+                    }}</strong>
+                  <span>{{i18n
+                      "horizon_site_skeleton.setup.customize.description"
+                    }}</span>
+                  <em>{{i18n
+                      "horizon_site_skeleton.setup.customize.action"
+                    }}</em>
                 </div>
                 <div>
-                  <strong>Invite Collaborators</strong>
-                  <span>Early members help bring your community to life</span>
-                  <em>Create invite</em>
+                  <strong>{{i18n
+                      "horizon_site_skeleton.setup.invite.title"
+                    }}</strong>
+                  <span>{{i18n
+                      "horizon_site_skeleton.setup.invite.description"
+                    }}</span>
+                  <em>{{i18n "horizon_site_skeleton.setup.invite.action"}}</em>
                 </div>
                 <div>
-                  <strong>Start Posting</strong>
-                  <span>Give people something to talk about together</span>
-                  <em>See ideas</em>
+                  <strong>{{i18n
+                      "horizon_site_skeleton.setup.post.title"
+                    }}</strong>
+                  <span>{{i18n
+                      "horizon_site_skeleton.setup.post.description"
+                    }}</span>
+                  <em>{{i18n "horizon_site_skeleton.setup.post.action"}}</em>
                 </div>
               </div>
             </div>
 
             <div class="horizon-site-skeleton__welcome-row">
-              <h3>Welcome back,<br />{{this.username}}!</h3>
+              <h3>{{trustHTML this.welcomeBack}}</h3>
               <div class="horizon-site-skeleton__search">
                 <span class="horizon-site-skeleton__search-icon">
                   {{dIcon "magnifying-glass"}}
                 </span>
-                Search
+                {{i18n "horizon_site_skeleton.search_placeholder"}}
                 <span class="horizon-site-skeleton__search-icon --filters">
                   {{dIcon "sliders"}}
                 </span>
@@ -165,10 +190,14 @@ export default class HorizonSiteSkeleton extends Component {
             </div>
 
             <div class="horizon-site-skeleton__tabs">
-              <span class="--active">Latest</span>
-              <span>Hot</span>
-              <span>Categories</span>
-              <button type="button" tabindex="-1">categories</button>
+              <span class="--active">{{i18n
+                  "horizon_site_skeleton.tabs.latest"
+                }}</span>
+              <span>{{i18n "horizon_site_skeleton.tabs.hot"}}</span>
+              <span>{{i18n "horizon_site_skeleton.tabs.categories"}}</span>
+              <button type="button" tabindex="-1">{{i18n
+                  "horizon_site_skeleton.tabs.categories"
+                }}</button>
             </div>
 
             <div class="horizon-site-skeleton__topic-list">
@@ -177,29 +206,37 @@ export default class HorizonSiteSkeleton extends Component {
                   class="horizon-site-skeleton__topic-avatar --system"
                 ></span>
                 <div class="horizon-site-skeleton__topic-main">
-                  <span>posted Jun 1 by @system</span>
-                  <strong>Welcome to {{this.siteName}}!</strong>
+                  <span>{{i18n "horizon_site_skeleton.topic.meta"}}</span>
+                  <strong>{{i18n
+                      "horizon_site_skeleton.topic.welcome.title"
+                      site_name=this.siteName
+                    }}</strong>
                   <p>
-                    We are so glad you joined us. Here are some things you can
-                    do to get started: Introduce yourself by adding your picture
-                    and information about yourself...
+                    {{i18n "horizon_site_skeleton.topic.welcome.excerpt"}}
                   </p>
-                  <em>General</em>
+                  <em>{{i18n
+                      "horizon_site_skeleton.topic.welcome.category"
+                    }}</em>
                 </div>
-                <span class="horizon-site-skeleton__topic-pin">Pinned</span>
+                <span class="horizon-site-skeleton__topic-pin">{{i18n
+                    "horizon_site_skeleton.topic.pinned"
+                  }}</span>
               </div>
               <div class="horizon-site-skeleton__topic">
                 <span
                   class="horizon-site-skeleton__topic-avatar --system"
                 ></span>
                 <div class="horizon-site-skeleton__topic-main">
-                  <span>posted Jun 1 by @system</span>
-                  <strong>Admin Guide: Getting Started</strong>
+                  <span>{{i18n "horizon_site_skeleton.topic.meta"}}</span>
+                  <strong>{{i18n
+                      "horizon_site_skeleton.topic.admin_guide.title"
+                    }}</strong>
                   <p>
-                    Welcome to your new community, and thank you for choosing
-                    Discourse! Invite your team. Start some conversations...
+                    {{i18n "horizon_site_skeleton.topic.admin_guide.excerpt"}}
                   </p>
-                  <em class="--staff">Staff</em>
+                  <em class="--staff">{{i18n
+                      "horizon_site_skeleton.topic.admin_guide.category"
+                    }}</em>
                 </div>
               </div>
               <div class="horizon-site-skeleton__topic">
@@ -207,13 +244,16 @@ export default class HorizonSiteSkeleton extends Component {
                   class="horizon-site-skeleton__topic-avatar --system"
                 ></span>
                 <div class="horizon-site-skeleton__topic-main">
-                  <span>posted Jun 1 by @system</span>
-                  <strong>Guidelines</strong>
+                  <span>{{i18n "horizon_site_skeleton.topic.meta"}}</span>
+                  <strong>{{i18n
+                      "horizon_site_skeleton.topic.guidelines.title"
+                    }}</strong>
                   <p>
-                    This is a civilized place for public discussion. Please
-                    treat this discussion forum with the same respect...
+                    {{i18n "horizon_site_skeleton.topic.guidelines.excerpt"}}
                   </p>
-                  <em class="--staff">Staff</em>
+                  <em class="--staff">{{i18n
+                      "horizon_site_skeleton.topic.guidelines.category"
+                    }}</em>
                 </div>
               </div>
             </div>
