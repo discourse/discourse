@@ -305,12 +305,14 @@ describe "Admin Customize Themes" do
       theme
     end
 
-    it "shows the change source button for git themes" do
-      theme_page.visit(git_theme)
-      expect(page).to have_button(I18n.t("admin_js.admin.customize.theme.change_source.button"))
-    end
+    it "opens the change source modal with pre-filled values, and allows submitting" do
+      # Stub the git fetch so the update succeeds without hitting a real remote.
+      allow_any_instance_of(RemoteTheme).to receive(:update_from_remote) do |remote_theme|
+        remote_theme.save!
+      end
 
-    it "opens the change source modal with pre-filled values" do
+      new_url = "https://github.com/discourse/some-other-theme.git"
+
       theme_page.visit(git_theme)
       find("button", text: I18n.t("admin_js.admin.customize.theme.change_source.button")).click
 
@@ -319,6 +321,12 @@ describe "Admin Customize Themes" do
         "https://github.com/discourse/example-theme.git",
       )
       expect(find(".admin-change-theme-source-modal input.branch").value).to eq("main")
+
+      find(".admin-change-theme-source-modal input.repo-url").fill_in(with: new_url)
+      find(".admin-change-theme-source-modal button.btn-primary").click
+
+      expect(page).to have_no_css(".admin-change-theme-source-modal")
+      expect(git_theme.reload.remote_theme.remote_url).to eq(new_url)
     end
 
     it "does not show the change source button for local themes" do
