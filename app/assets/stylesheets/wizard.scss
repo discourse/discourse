@@ -1,11 +1,11 @@
 @use "lib/viewport";
 
 :root {
-  --wizard-primary: #{$discourse-brand};
-  --wizard-primary-100: #{$discourse-brand-100};
-  --wizard-primary-300: #{$discourse-brand-300};
-  --wizard-primary-400: #{$discourse-brand-400};
-  --wizard-primary-800: #{$discourse-brand-800};
+  --wizard-primary: var(--tertiary);
+  --wizard-primary-100: var(--tertiary-low);
+  --wizard-primary-300: var(--tertiary-medium);
+  --wizard-primary-400: var(--tertiary-hover);
+  --wizard-primary-800: var(--tertiary-high);
   --wizard-bg-color: light-dark(#{$discourse-bg-light}, #{$discourse-bg-dark});
   --wizard-bg-color-2: light-dark(
     #{$discourse-brand-light},
@@ -389,7 +389,7 @@ body.wizard {
 
     &.--selected {
       .wizard-container__label {
-        background-color: light-dark(var(--wizard-primary-100), transparent);
+        background-color: var(--wizard-primary-100);
         border-color: var(--wizard-primary);
         border-width: 2px;
         margin: 0;
