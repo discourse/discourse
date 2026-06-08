@@ -521,6 +521,7 @@ class Category < ActiveRecord::Base
           AND topics.visible = true
           AND posts.deleted_at IS NULL
           AND posts.user_deleted = false
+          AND posts.post_type <> #{Post.types[:small_action]}
           #{c.topic_id ? "AND topics.id != :topic_id" : ""}
       SQL
 

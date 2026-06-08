@@ -3566,6 +3566,13 @@ RSpec.describe Topic do
 
       expect(Topic.reset_highest(topic.id)).to eq(2)
     end
+
+    it "excludes small action posts from both the public and staff highest post number" do
+      third_post.update!(post_type: Post.types[:small_action])
+
+      expect(Topic.reset_highest(topic.id)).to eq(2)
+      expect(topic.reload.highest_staff_post_number).to eq(2)
+    end
   end
 
   describe "#update_statistics!" do

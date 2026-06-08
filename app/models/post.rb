@@ -200,6 +200,10 @@ class Post < ActiveRecord::Base
     post_type == Post.types[:whisper]
   end
 
+  def small_action?
+    post_type == Post.types[:small_action]
+  end
+
   def add_detail(key, value, extra = nil)
     post_details.build(key: key, value: value, extra: extra)
   end
