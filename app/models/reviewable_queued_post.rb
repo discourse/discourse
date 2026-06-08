@@ -194,6 +194,10 @@ class ReviewableQueuedPost < Reviewable
     create_result(:success, :deleted)
   end
 
+  def resolve_affected_by_target_user_deletion(performed_by)
+    perform(performed_by, :reject_post) if pending?
+  end
+
   def perform_delete_user(performed_by, args)
     result = super
     update_column(:target_created_by_id, nil)

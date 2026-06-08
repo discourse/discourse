@@ -60,6 +60,9 @@ class Reviewable < ActiveRecord::Base
     {}
   end
 
+  def resolve_affected_by_target_user_deletion(_performed_by)
+  end
+
   # This number comes from looking at forums in the wild and what numbers work.
   # As the site accumulates real data it'll be based on the site activity instead.
   def self.typical_sensitivity

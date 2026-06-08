@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableFlaggedPost, type: :model do
+  class ::ReviewableUnhandledUserTarget < Reviewable
+    def build_actions(actions, _guardian, _args)
+      actions
+    end
+  end
+
   def pending_count
     ReviewableFlaggedPost.default_visible.pending.count
   end
@@ -316,6 +322,40 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(
         Reviewable.exists?(id: [created_reviewable.id, created_and_targeted_reviewable.id]),
       ).to eq(false)
+    end
+
+    it "keeps unresolved reviewables visible when deleting a spammer" do
+      spammer = reviewable.target_created_by
+      queued_post_reviewable =
+        Fabricate(
+          :reviewable_queued_post,
+          created_by: Discourse.system_user,
+          target_created_by: spammer,
+        )
+      unhandled_user_target_reviewable =
+        Fabricate(
+          :reviewable,
+          type: "ReviewableUnhandledUserTarget",
+          created_by: Discourse.system_user,
+          target_type: "User",
+          target_id: spammer.id,
+        )
+
+      result = nil
+      messages =
+        MessageBus.track_publish("/reviewable_action") do
+          result = reviewable.perform(moderator, :delete_user)
+        end
+
+      expected_removed_reviewable_ids = [reviewable.id, queued_post_reviewable.id]
+
+      expect(result.remove_reviewable_ids).to contain_exactly(*expected_removed_reviewable_ids)
+      expect(messages.last.data[:remove_reviewable_ids]).to contain_exactly(
+        *expected_removed_reviewable_ids,
+      )
+      expect(reviewable.reload).to be_approved
+      expect(queued_post_reviewable.reload).to be_rejected
+      expect(unhandled_user_target_reviewable.reload).to be_pending
     end
 
     it "resolves other pending reviewables for a spammer handled with delete_user_block" do

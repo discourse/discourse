@@ -184,18 +184,28 @@ module ReviewableActionBuilder
 
   def resolve_reviewables_affected_by_deleted_user(affected_reviewables, performed_by)
     affected_reviewables[:resolve_reviewables].each do |reviewable|
-      case reviewable
-      when ReviewableQueuedPost
-        reviewable.perform(performed_by, :reject_post)
-      when ReviewableUser
-        reviewable.transition_to(:rejected, performed_by)
-      end
+      reviewable.resolve_affected_by_target_user_deletion(performed_by)
     end
   end
 
   def add_deleted_user_reviewable_updates(result, affected_reviewables)
     result.remove_reviewable_ids |= affected_reviewables[:remove_ids]
-    result.remove_reviewable_ids |= affected_reviewables[:resolve_reviewables].map(&:id)
+    result.remove_reviewable_ids |=
+      resolved_or_deleted_reviewable_ids(affected_reviewables[:resolve_reviewables])
+  end
+
+  def resolved_or_deleted_reviewable_ids(reviewables)
+    reviewable_ids = reviewables.map(&:id)
+    return [] if reviewable_ids.blank?
+
+    existing_reviewable_ids = Reviewable.where(id: reviewable_ids).pluck(:id)
+    resolved_reviewable_ids =
+      Reviewable
+        .where(id: existing_reviewable_ids)
+        .where.not(status: Reviewable.statuses[:pending])
+        .pluck(:id)
+
+    resolved_reviewable_ids + (reviewable_ids - existing_reviewable_ids)
   end
 
   def copy_deleted_user_reviewable_updates(result, source_result)

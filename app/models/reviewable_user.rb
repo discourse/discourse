@@ -161,6 +161,10 @@ class ReviewableUser < Reviewable
     perform_delete_user(performed_by, args)
   end
 
+  def resolve_affected_by_target_user_deletion(performed_by)
+    transition_to(:rejected, performed_by) if pending?
+  end
+
   # Update's the user's fields for approval but does not save. This
   # can be used when generating a new user that is approved on create
   def self.set_approved_fields!(user, approved_by)
