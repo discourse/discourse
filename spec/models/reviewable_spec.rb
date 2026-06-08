@@ -492,7 +492,8 @@ RSpec.describe Reviewable, type: :model do
       job = Jobs::NotifyReviewable.jobs.last
 
       expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
-      expect(job["args"].first["updated_reviewable_ids"]).to contain_exactly(reviewable.id)
+      expect(job["args"].first["updated_reviewable_ids"]).to be_nil
+      expect(job["args"].first["remove_reviewable_ids"]).to contain_exactly(reviewable.id)
 
       expect(messages.size).to eq(1)
       expect(messages.first.data).to eq(
@@ -521,7 +522,8 @@ RSpec.describe Reviewable, type: :model do
       job = Jobs::NotifyReviewable.jobs.last
 
       expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
-      expect(job["args"].first["updated_reviewable_ids"]).to contain_exactly(reviewable.id)
+      expect(job["args"].first["updated_reviewable_ids"]).to be_nil
+      expect(job["args"].first["remove_reviewable_ids"]).to contain_exactly(reviewable.id)
 
       expect(messages.size).to eq(1)
       expect(messages.first.data).to eq(
@@ -549,7 +551,7 @@ RSpec.describe Reviewable, type: :model do
       expect { reviewable.perform(moderator, :edit_post) }.to raise_error(Reviewable::InvalidAction)
     end
 
-    it "triggers a notification on reject -> approve to update status" do
+    it "triggers a notification on reject -> approve" do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:rejected])
 
       expect do reviewable.perform(moderator, :approve_post) end.to change {
@@ -559,7 +561,8 @@ RSpec.describe Reviewable, type: :model do
       job = Jobs::NotifyReviewable.jobs.last
 
       expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
-      expect(job["args"].first["updated_reviewable_ids"]).to contain_exactly(reviewable.id)
+      expect(job["args"].first["updated_reviewable_ids"]).to be_nil
+      expect(job["args"].first["remove_reviewable_ids"]).to contain_exactly(reviewable.id)
     end
   end
 
