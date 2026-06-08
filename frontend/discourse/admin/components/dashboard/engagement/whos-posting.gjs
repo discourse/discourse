@@ -53,7 +53,7 @@ export default class WhosPosting extends Component {
   get rows() {
     const rows = this.posters?.rows ?? [];
     const byType = Object.fromEntries(rows.map((r) => [r.type, r]));
-    return ROW_ORDER.map((type, index) => {
+    return ROW_ORDER.map((type) => {
       const row = byType[type] ?? { type, count: 0, share: 0 };
       return {
         type,
@@ -62,7 +62,6 @@ export default class WhosPosting extends Component {
         shareFormatted: `${Math.round(row.share)}%`,
         segmentStyle: trustHTML(`width: ${row.share}%`),
         segmentClass: `--${type.replace("_", "-")}`,
-        legendIndex: index,
       };
     });
   }
@@ -170,34 +169,25 @@ export default class WhosPosting extends Component {
 
       {{#if this.hasData}}
         <div
-          class="db-whos-posting__bar"
+          class="db-whos-posting__bars"
           role="img"
           aria-label={{this.ariaLabel}}
         >
           {{#each this.rows as |row|}}
-            {{#if row.share}}
+            <div class="db-whos-posting__bar-row">
+              <span class="db-whos-posting__bar-label">{{row.label}}</span>
+              <span class="db-whos-posting__bar-track">
+                <span
+                  class="db-whos-posting__bar-fill {{row.segmentClass}}"
+                  style={{row.segmentStyle}}
+                ></span>
+              </span>
               <span
-                class="db-whos-posting__segment {{row.segmentClass}}"
-                style={{row.segmentStyle}}
-              ></span>
-            {{/if}}
+                class="db-whos-posting__bar-share"
+              >{{row.shareFormatted}}</span>
+            </div>
           {{/each}}
         </div>
-
-        <ul class="db-whos-posting__legend">
-          {{#each this.rows as |row|}}
-            <li class="db-whos-posting__legend-item">
-              <span
-                class="db-whos-posting__legend-dot {{row.segmentClass}}"
-                aria-hidden="true"
-              ></span>
-              <span class="db-whos-posting__legend-label">{{row.label}}</span>
-              <span
-                class="db-whos-posting__legend-share"
-              >{{row.shareFormatted}}</span>
-            </li>
-          {{/each}}
-        </ul>
       {{else}}
         <p class="db-whos-posting__empty">
           {{i18n "admin.dashboard.sections.engagement.whos_posting.empty"}}
