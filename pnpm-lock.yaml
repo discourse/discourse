@@ -124,8 +124,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1(postcss@8.5.15)
       '@rollup/browser':
-        specifier: ^4.60.4
-        version: 4.60.4
+        specifier: ^4.61.0
+        version: 4.61.0
       '@rollup/plugin-babel':
         specifier: ^7.0.0
         version: 7.1.0(@babel/core@7.29.7)
@@ -2540,8 +2540,8 @@ packages:
   '@rolldown/pluginutils@1.0.1':
     resolution: {integrity: sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==}
 
-  '@rollup/browser@4.60.4':
-    resolution: {integrity: sha512-EB98mRvrN5Vc1WOj3Ovgvcq+dnknhJARutDthQiYjcoFgDjqNfed9RQcwCcaaxrW1kE1FCb0fa2YOPQ4REoAXw==}
+  '@rollup/browser@4.61.0':
+    resolution: {integrity: sha512-qYIZusF3q51I5RMY0hgnuh+C/co68Kq2H4VaryNCVmQxPNbbhVqruBuFT60xzgtwUYWHRBo4iTwRl6H96FQJMg==}
 
   '@rollup/plugin-babel@7.1.0':
     resolution: {integrity: sha512-h9Y+xYha6p4wKO+FwdiPIkE+eIYCm8MzZPpX1iARIoFBnmKP9CnpT1p9dDf/DTFm6fyN8PmuLyRI5qZgchnitw==}
@@ -2652,9 +2652,6 @@ packages:
 
   '@types/esrecurse@4.3.1':
     resolution: {integrity: sha512-xJBAbDifo5hpffDBuHl0Y8ywswbiAp/Wi7Y/GtAgSlZyIABppyurxVueOPE8LUQOxdlgi6Zqce7uoEpqNTeiUw==}
-
-  '@types/estree@1.0.8':
-    resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
   '@types/estree@1.0.9':
     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
@@ -10232,9 +10229,9 @@ snapshots:
 
   '@rolldown/pluginutils@1.0.1': {}
 
-  '@rollup/browser@4.60.4':
+  '@rollup/browser@4.61.0':
     dependencies:
-      '@types/estree': 1.0.8
+      '@types/estree': 1.0.9
 
   '@rollup/plugin-babel@7.1.0(@babel/core@7.29.7)':
     dependencies:
@@ -10342,8 +10339,6 @@ snapshots:
   '@types/deep-eql@4.0.2': {}
 
   '@types/esrecurse@4.3.1': {}
-
-  '@types/estree@1.0.8': {}
 
   '@types/estree@1.0.9': {}
 
