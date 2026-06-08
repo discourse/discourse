@@ -4,6 +4,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default class ChatDirectMessagesRoute extends DiscourseRoute {
   @service chat;
   @service chatChannelsManager;
+  @service currentUser;
   @service router;
 
   activate() {
@@ -11,6 +12,10 @@ export default class ChatDirectMessagesRoute extends DiscourseRoute {
   }
 
   beforeModel() {
+    if (!this.currentUser) {
+      return this.router.replaceWith("chat.channels");
+    }
+
     if (this.site.desktopView) {
       if (this.chatChannelsManager.directMessageChannels.length === 0) {
         // first time browsing chat and the preferred index is dms

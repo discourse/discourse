@@ -4,6 +4,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import { anonymousUserCanViewPublicChat } from "discourse/plugins/chat/discourse/lib/anonymous-public-chat-access";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 import {
   CHAT_PANEL,
@@ -121,9 +122,6 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   get anonymousUserCanViewPublicChat() {
-    return (
-      !this.currentUser &&
-      this.siteSettings.chat_allow_anonymous_public_channel_access
-    );
+    return anonymousUserCanViewPublicChat(this.currentUser, this.siteSettings);
   }
 }

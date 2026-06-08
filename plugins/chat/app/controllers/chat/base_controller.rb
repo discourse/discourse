@@ -17,6 +17,10 @@ module Chat
       false
     end
 
+    def anonymous_public_chat_access_enabled?
+      !current_user && Chat.anonymous_public_channel_access_allowed?
+    end
+
     def set_channel_and_chatable_with_access_check(chat_channel_id: nil)
       params.require(:chat_channel_id) if chat_channel_id.blank?
       id_or_name = chat_channel_id || params[:chat_channel_id]

@@ -12,6 +12,7 @@ import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
+import { anonymousUserCanViewPublicChat } from "discourse/plugins/chat/discourse/lib/anonymous-public-chat-access";
 
 const CHAT_ONLINE_OPTIONS = {
   userUnseenTime: 300000, // 5 minutes seconds with no interaction
@@ -72,10 +73,7 @@ export default class Chat extends Service {
   }
 
   get anonymousUserCanViewPublicChat() {
-    return (
-      !this.currentUser &&
-      this.siteSettings.chat_allow_anonymous_public_channel_access
-    );
+    return anonymousUserCanViewPublicChat(this.currentUser, this.siteSettings);
   }
 
   get canSubscribeToChat() {

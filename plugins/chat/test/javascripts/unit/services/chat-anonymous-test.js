@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Unit | Service | chat | anonymous", function (hooks) {
@@ -17,7 +18,8 @@ module("Unit | Service | chat | anonymous", function (hooks) {
     this.siteSettings = owner.lookup("service:site-settings");
     this.fabricators = new ChatFabricators(owner);
 
-    this.siteSettings.chat_allow_anonymous_public_channel_access = true;
+    this.siteSettings.chat_allowed_groups =
+      AUTO_GROUPS.anonymous_users.id.toString();
 
     sinon.stub(this.chatSubscriptionsManager, "startChannelsSubscriptions");
     sinon.stub(this.chatSubscriptionsManager, "startChannelSubscription");

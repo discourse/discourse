@@ -15,7 +15,10 @@ RSpec.describe Chat::Api::ChannelsController do
       end
 
       context "when anonymous users can view public chat channels" do
-        before { SiteSetting.chat_allow_anonymous_public_channel_access = true }
+        before do
+          SiteSetting.chat_allowed_groups =
+            "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        end
 
         it "returns an error" do
           Fabricate(:category_channel)

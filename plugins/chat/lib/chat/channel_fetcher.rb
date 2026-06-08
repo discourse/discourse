@@ -45,7 +45,7 @@ module Chat
 
     def self.generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: false)
       category_scope =
-        if guardian.anonymous? && SiteSetting.chat_allow_anonymous_public_channel_access
+        if guardian.anonymous? && Chat.anonymous_public_channel_access_allowed?
           Category.secured(guardian)
         else
           Category.post_create_allowed(guardian)

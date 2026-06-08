@@ -18,6 +18,6 @@ class Chat::Api::CurrentUserChannelsController < Chat::ApiController
   private
 
   def allow_anonymous_public_chat_access?
-    !current_user && SiteSetting.chat_allow_anonymous_public_channel_access
+    anonymous_public_chat_access_enabled?
   end
 end

@@ -14,6 +14,7 @@ import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import ChatChannelSidebarContextMenu from "discourse/plugins/chat/discourse/components/chat-channel-sidebar-context-menu";
 import ChatSidebarIndicators from "discourse/plugins/chat/discourse/components/chat-sidebar-indicators";
+import { anonymousUserCanViewPublicChat } from "discourse/plugins/chat/discourse/lib/anonymous-public-chat-access";
 import {
   CHAT_PANEL,
   initSidebarState,
@@ -247,11 +248,12 @@ export default {
     this.siteSettings = container.lookup("service:site-settings");
     this.currentUser = container.lookup("service:current-user");
 
-    const anonymousUserCanViewPublicChat =
-      !this.currentUser &&
-      this.siteSettings.chat_allow_anonymous_public_channel_access;
+    const canViewPublicChatAnonymously = anonymousUserCanViewPublicChat(
+      this.currentUser,
+      this.siteSettings
+    );
 
-    if (!this.chatService.userCanChat && !anonymousUserCanViewPublicChat) {
+    if (!this.chatService.userCanChat && !canViewPublicChatAnonymously) {
       return;
     }
 
@@ -273,7 +275,7 @@ export default {
           }
       );
 
-      if (anonymousUserCanViewPublicChat) {
+      if (canViewPublicChatAnonymously) {
         api.setCombinedSidebarMode();
         api.showSidebarSwitchPanelButtons();
         this.chatService.loadChannels();

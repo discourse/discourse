@@ -4,6 +4,7 @@ import Service, { service } from "@ember/service";
 import Promise from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { debounce } from "discourse/lib/decorators";
+import { anonymousUserCanViewPublicChat } from "discourse/plugins/chat/discourse/lib/anonymous-public-chat-access";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
@@ -170,10 +171,7 @@ export default class ChatChannelsManager extends Service {
   }
 
   get anonymousUserCanViewPublicChat() {
-    return (
-      !this.currentUser &&
-      this.siteSettings.chat_allow_anonymous_public_channel_access
-    );
+    return anonymousUserCanViewPublicChat(this.currentUser, this.siteSettings);
   }
 
   @cached

@@ -28,7 +28,8 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       context "as anonymous user" do
         before do
           sign_out
-          SiteSetting.chat_allow_anonymous_public_channel_access = true
+          SiteSetting.chat_allowed_groups =
+            "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
         end
 
         it "returns messages for a public category channel" do

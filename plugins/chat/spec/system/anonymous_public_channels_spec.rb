@@ -14,12 +14,12 @@ RSpec.describe "Anonymous public chat channels" do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
-  let(:chat_sidebar_page) { PageObjects::Pages::ChatSidebar.new }
   let(:login_page) { PageObjects::Pages::Login.new }
 
   before do
     chat_system_bootstrap
-    SiteSetting.chat_allow_anonymous_public_channel_access = true
+    SiteSetting.chat_allowed_groups =
+      "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
   end
 
   it "lets visitors read public channel activity without write or browse controls" do
@@ -50,7 +50,10 @@ RSpec.describe "Anonymous public chat channels" do
     SiteSetting.navigation_menu = "sidebar"
 
     visit("/")
-    chat_sidebar_page.open_channel(public_channel)
+    chat_page.open_from_header
+    expect(chat_drawer_page).to have_open_channels
+
+    chat_drawer_page.open_channel(public_channel)
     expect(chat_drawer_page).to have_open_channel(public_channel)
 
     live_message =
@@ -79,5 +82,13 @@ RSpec.describe "Anonymous public chat channels" do
     visit("/chat/browse/open")
 
     expect(page).to have_current_path("/chat/channels")
+  end
+
+  it "renders threaded public channels for visitors" do
+    public_channel.update!(threading_enabled: true)
+
+    chat_page.visit_channels
+
+    expect(chat_page).to have_public_channel(public_channel)
   end
 end

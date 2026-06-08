@@ -16,7 +16,10 @@ describe Chat::Api::CurrentUserChannelsController do
       end
 
       context "when anonymous users can view public chat channels" do
-        before { SiteSetting.chat_allow_anonymous_public_channel_access = true }
+        before do
+          SiteSetting.chat_allowed_groups =
+            "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        end
 
         it "returns public category channels without direct message channels" do
           public_channel = Fabricate(:category_channel)
@@ -32,6 +35,15 @@ describe Chat::Api::CurrentUserChannelsController do
           expect(public_channels.map { |channel| channel["id"] }).to eq([public_channel.id])
           expect(public_channels.first["meta"]["can_join_chat_channel"]).to eq(true)
           expect(response.parsed_body["direct_message_channels"]).to be_blank
+        end
+
+        it "returns an error when public channels are disabled" do
+          SiteSetting.enable_public_channels = false
+          Fabricate(:category_channel)
+
+          get "/chat/api/me/channels"
+
+          expect(response.status).to eq(403)
         end
       end
     end

@@ -46,6 +46,19 @@ class ChatSetupInit {
       });
 
       if (!this.chatService.userCanChat) {
+        if (
+          this.chatService.anonymousUserCanViewPublicChat &&
+          !EmbedMode.enabled
+        ) {
+          document.body.classList.add("chat-enabled");
+          this.chatService.loadChannels();
+          api.addCardClickListenerSelector(".chat-drawer-outlet");
+          api.headerIcons.add("chat", ChatHeaderIcon, {
+            after: "search",
+            before: "hamburger",
+          });
+        }
+
         return;
       }
 

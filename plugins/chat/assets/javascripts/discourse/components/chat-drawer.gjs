@@ -15,6 +15,7 @@ import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { anonymousUserCanViewPublicChat } from "discourse/plugins/chat/discourse/lib/anonymous-public-chat-access";
 import chatResizableNode from "discourse/plugins/chat/discourse/modifiers/chat/resizable-node";
 
 @tagName("")
@@ -107,10 +108,7 @@ export default class ChatDrawer extends Component {
   }
 
   get anonymousUserCanViewPublicChat() {
-    return (
-      !this.currentUser &&
-      this.siteSettings.chat_allow_anonymous_public_channel_access
-    );
+    return anonymousUserCanViewPublicChat(this.currentUser, this.siteSettings);
   }
 
   get drawerActions() {
