@@ -18,6 +18,9 @@ module("Unit | Controller | nested", function (hooks) {
   hooks.afterEach(function () {
     this.controller.unsubscribe();
     this.controller.topic = null;
+    this.controller.contextMode = false;
+    this.controller.rootNodes = [];
+    this.controller.newRootPostIds = [];
   });
 
   function buildTopic(store, id) {
@@ -123,6 +126,177 @@ module("Unit | Controller | nested", function (hooks) {
       [],
       "does not queue own root replies behind the new replies banner"
     );
+  });
+
+  test("context view ignores live root replies", async function (assert) {
+    const topic = buildTopic(this.store, 724);
+    const contextRoot = buildPost(this.store, topic, 1001, 2);
+    const ownPostId = 2001;
+    const otherPostId = 2002;
+
+    this.controller.topic = topic;
+    this.controller.contextMode = true;
+    this.controller.rootNodes = [{ post: contextRoot, children: [] }];
+    this.controller.newRootPostIds = [];
+
+    pretender.get(`/posts/${ownPostId}.json`, () =>
+      response({
+        id: ownPostId,
+        post_number: 3,
+        topic_id: topic.id,
+        user_id: this.currentUser.id,
+        username: this.currentUser.username,
+        avatar_template: this.currentUser.avatar_template,
+        cooked: "<p>Own root reply</p>",
+        created_at: "2026-01-01T00:00:00.000Z",
+        actions_summary: [],
+        direct_reply_count: 0,
+        total_descendant_count: 0,
+        reply_to_post_number: null,
+        children: [],
+      })
+    );
+    pretender.get(`/posts/${otherPostId}.json`, () =>
+      response({
+        id: otherPostId,
+        post_number: 4,
+        topic_id: topic.id,
+        user_id: 999,
+        username: "other-user",
+        avatar_template: "/letter_avatar_proxy/v4/letter/o/25/48.png",
+        cooked: "<p>Other root reply</p>",
+        created_at: "2026-01-01T00:00:00.000Z",
+        actions_summary: [],
+        direct_reply_count: 0,
+        total_descendant_count: 0,
+        reply_to_post_number: null,
+        children: [],
+      })
+    );
+
+    this.controller._onMessage(
+      { type: "created", id: ownPostId, user_id: this.currentUser.id },
+      null,
+      123
+    );
+    this.controller._onMessage(
+      { type: "created", id: otherPostId, user_id: 999 },
+      null,
+      124
+    );
+    await settled();
+
+    assert.deepEqual(
+      this.controller.rootNodes.map((node) => node.post.id),
+      [contextRoot.id],
+      "keeps the context branch isolated from new root replies"
+    );
+    assert.deepEqual(
+      this.controller.newRootPostIds,
+      [],
+      "does not show the new root replies banner in context mode"
+    );
+    assert.strictEqual(
+      this.controller.newRootPostCount,
+      0,
+      "reports no visible new root replies in context mode"
+    );
+  });
+
+  test("context view ignores queued new root replies", async function (assert) {
+    const topic = buildTopic(this.store, 724);
+    const contextRoot = buildPost(this.store, topic, 1001, 2);
+
+    this.controller.topic = topic;
+    this.controller.contextMode = true;
+    this.controller.rootNodes = [{ post: contextRoot, children: [] }];
+    this.controller.newRootPostIds = [2001];
+
+    assert.strictEqual(
+      this.controller.newRootPostCount,
+      0,
+      "hides queued root replies while rendering context"
+    );
+
+    await this.controller.loadNewRoots();
+
+    assert.deepEqual(
+      this.controller.newRootPostIds,
+      [],
+      "clears stale queued roots without loading them"
+    );
+    assert.deepEqual(
+      this.controller.rootNodes.map((node) => node.post.id),
+      [contextRoot.id],
+      "keeps the context branch unchanged"
+    );
+  });
+
+  test("context view still dispatches live child replies", async function (assert) {
+    const topic = buildTopic(this.store, 724);
+    const childPostId = 2001;
+    let childCreatedEvent;
+    const captureChildCreated = (event) => {
+      childCreatedEvent = event;
+    };
+
+    this.controller.topic = topic;
+    this.controller.contextMode = true;
+    this.appEvents.on(
+      "nested-replies:child-created",
+      this,
+      captureChildCreated
+    );
+
+    pretender.get(`/posts/${childPostId}.json`, () =>
+      response({
+        id: childPostId,
+        post_number: 3,
+        topic_id: topic.id,
+        user_id: this.currentUser.id,
+        username: this.currentUser.username,
+        avatar_template: this.currentUser.avatar_template,
+        cooked: "<p>Child reply</p>",
+        created_at: "2026-01-01T00:00:00.000Z",
+        actions_summary: [],
+        direct_reply_count: 0,
+        total_descendant_count: 0,
+        reply_to_post_number: 2,
+        children: [],
+      })
+    );
+
+    try {
+      this.controller._onMessage(
+        { type: "created", id: childPostId, user_id: this.currentUser.id },
+        null,
+        123
+      );
+      await settled();
+
+      assert.strictEqual(
+        childCreatedEvent?.topicId,
+        topic.id,
+        "dispatches the update for the current topic"
+      );
+      assert.strictEqual(
+        childCreatedEvent?.parentPostNumber,
+        2,
+        "targets the parent post"
+      );
+      assert.strictEqual(
+        childCreatedEvent?.post.id,
+        childPostId,
+        "passes the fetched child post"
+      );
+      assert.true(childCreatedEvent?.isOwnPost, "marks own replies");
+    } finally {
+      this.appEvents.off(
+        "nested-replies:child-created",
+        this,
+        captureChildCreated
+      );
+    }
   });
 
   test("focused post cache entries include the mobile focused path", function (assert) {

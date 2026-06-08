@@ -209,4 +209,48 @@ module("Unit | Route | nested", function (hooks) {
       "clears stale selected post ids"
     );
   });
+
+  test("deactivate clears stale nested topic before a later entry", function (assert) {
+    const nestedRoute = this.owner.lookup("route:nested");
+    const nestedController = this.owner.lookup("controller:nested");
+    const saveToCache = sinon.stub(nestedRoute, "_saveToCache");
+    const unsubscribe = sinon.stub(nestedController, "unsubscribe");
+    const stopScreenTrack = sinon.stub(nestedRoute.screenTrack, "stop");
+
+    nestedRoute.controller = nestedController;
+    nestedController.topic = { id: 509 };
+
+    nestedRoute.deactivate();
+
+    assert.true(
+      saveToCache.calledOnceWith(nestedController),
+      "stores the active nested topic before leaving"
+    );
+    assert.true(unsubscribe.calledOnce, "unsubscribes from the active topic");
+    assert.true(stopScreenTrack.calledOnce, "stops screen tracking");
+    assert.strictEqual(
+      nestedController.topic,
+      null,
+      "clears the inactive topic reference"
+    );
+
+    saveToCache.resetHistory();
+    unsubscribe.resetHistory();
+    stopScreenTrack.resetHistory();
+
+    nestedRoute._teardownCurrentTopic(724);
+
+    assert.false(
+      saveToCache.called,
+      "does not overwrite cache from a non-nested page"
+    );
+    assert.false(
+      unsubscribe.called,
+      "does not unsubscribe an already inactive nested topic"
+    );
+    assert.false(
+      stopScreenTrack.called,
+      "does not stop screen tracking a second time"
+    );
+  });
 });

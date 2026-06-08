@@ -151,6 +151,7 @@ export default class NestedRoute extends DiscourseRoute {
     this._resetTopicControllerBulkSelection();
     controller.unsubscribe();
     this.screenTrack.stop();
+    controller.topic = null;
   }
 
   @action

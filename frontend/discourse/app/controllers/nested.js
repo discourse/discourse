@@ -113,6 +113,10 @@ export default class NestedController extends Controller {
     return this.#topicController.selectedPostsCount;
   }
 
+  get newRootPostCount() {
+    return this.contextMode ? 0 : this.newRootPostIds.length;
+  }
+
   get canSelectAll() {
     return this.#nestedSelectablePostIds().some(
       (id) => !this.#topicController.selectedPostIds.includes(id)
@@ -347,6 +351,7 @@ export default class NestedController extends Controller {
         contextNoAncestors: this.contextNoAncestors,
         ancestorsTruncated: this.ancestorsTruncated,
         topAncestorPostNumber: this.topAncestorPostNumber,
+        newRootPostIds: this.newRootPostIds,
       },
       expansionState: new Map(this.expansionState),
       fetchedChildrenCache: new Map(this.fetchedChildrenCache),
@@ -725,22 +730,25 @@ export default class NestedController extends Controller {
         return;
       }
 
-      const node = this.#processNode({ ...postData, children: [] });
-      const { post } = node;
-
       const replyTo = postData.reply_to_post_number;
       const isRoot = !replyTo || replyTo === 1;
 
       if (isRoot) {
+        if (this.contextMode) {
+          return;
+        }
+
+        const node = this.#processNode({ ...postData, children: [] });
         if (data.user_id === this.currentUser?.id) {
           this.rootNodes = [node, ...this.rootNodes];
         } else {
           this.newRootPostIds = [...this.newRootPostIds, data.id];
         }
       } else {
+        const node = this.#processNode({ ...postData, children: [] });
         this.appEvents.trigger("nested-replies:child-created", {
           topicId,
-          post,
+          post: node.post,
           parentPostNumber: replyTo,
           isOwnPost: data.user_id === this.currentUser?.id,
         });
@@ -823,6 +831,11 @@ export default class NestedController extends Controller {
 
   @action
   async loadNewRoots() {
+    if (this.contextMode) {
+      this.newRootPostIds = [];
+      return;
+    }
+
     const ids = [...this.newRootPostIds];
     this.newRootPostIds = [];
 

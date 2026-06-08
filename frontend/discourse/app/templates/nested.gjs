@@ -67,7 +67,7 @@ export default <template>
       @saveScrollPosition={{@controller.saveScrollPosition}}
       @viewFullThread={{@controller.viewFullThread}}
       @pinnedPostIds={{@controller.pinnedPostIds}}
-      @newRootPostCount={{@controller.newRootPostIds.length}}
+      @newRootPostCount={{@controller.newRootPostCount}}
       @loadNewRoots={{@controller.loadNewRoots}}
       @editingTopic={{@controller.editingTopic}}
       @startEditingTopic={{@controller.startEditingTopic}}
