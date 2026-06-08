@@ -338,7 +338,10 @@
       font-weight: 700;
       color: inherit;
       display: inline-block;
-      padding: 15px 5px;
+
+      @include viewport.from(sm) {
+        padding: 15px 5px;
+      }
     }
   }
 
