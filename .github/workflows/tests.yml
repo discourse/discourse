@@ -290,6 +290,26 @@ jobs:
           # Unknown keys are silently ignored on older jemalloc, so this is
           # safe regardless of the discourse_test image's so.1 vs so.2 build.
           MALLOC_CONF: "narenas:2,background_thread:true"
+          # Enable YJIT for the system-test workers. The CI image ships Ruby
+          # 3.4 with YJIT compiled in but OFF by default (Discourse only turns
+          # it on in production via DISCOURSE_YJIT_ENABLED), so every test
+          # process currently interprets the dominant server-side Ruby work:
+          # each browser navigation drives the in-process Puma through dozens
+          # of controller actions, hundreds of AR/mini_sql queries and the
+          # serializer fan-out, and every spec fabricates users/topics/posts
+          # through AR callbacks. With 12 long-lived workers + 12 Chromiums
+          # oversubscribing the 16 cores (13 workers already regressed, so CPU
+          # is the binding constraint), per-request Ruby CPU is exactly what
+          # the workers contend for. YJIT's default call threshold means the
+          # one-shot boot path stays interpreted (no exec-mem waste) while the
+          # controllers/serializers hit thousands of times per worker JIT early
+          # and stay hot for the whole group, cutting CPU time per request and
+          # relieving the core contention that bounds the step. YJIT is
+          # semantically transparent (it's how Discourse runs in prod) so it
+          # cannot change test outcomes, only speed. Set via RUBY_YJIT_ENABLE
+          # (read at VM start) so it applies uniformly to the parent and every
+          # `bundle exec rspec` worker it spawns through inherited env.
+          RUBY_YJIT_ENABLE: "1"
           # The prior `Create and migrate databases` step already runs
           # `parallel:create parallel:migrate` for every worker DB, so
           # `bin/turbo_rspec`'s own `check_for_migrations` is redundant
