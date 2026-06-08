@@ -31,6 +31,7 @@ export default class UppyComposerUpload {
   @service siteSettings;
   @service appEvents;
   @service currentUser;
+  @service site;
   @service capabilities;
   @service messageBus;
   @service composer;
@@ -41,6 +42,7 @@ export default class UppyComposerUpload {
   uppyId = "composer-editor-uppy";
   uploadType = "composer";
   editorInputClass = ".d-editor-input";
+  mobileFileUploaderId = "mobile-file-upload";
   fileUploadElementId;
 
   composerEventPrefix;
@@ -122,6 +124,7 @@ export default class UppyComposerUpload {
       this.uppyWrapper.uppyInstance = null;
     }
 
+    this.#unbindMobileUploadButton();
     this.#uploadTargetBound = false;
   }
 
@@ -421,6 +424,7 @@ export default class UppyComposerUpload {
     this.uppyWrapper.uppyInstance.use(DropTarget, { target: element });
 
     this.#uploadTargetBound = true;
+    this.#bindMobileUploadButton();
   }
 
   @bind
@@ -595,6 +599,31 @@ export default class UppyComposerUpload {
         id: "discourse.upload.uppy-add-files-error",
       });
     }
+  }
+
+  #bindMobileUploadButton() {
+    if (this.site.mobileView) {
+      this.mobileUploadButton = document.getElementById(
+        this.mobileFileUploaderId
+      );
+      this.mobileUploadButton?.addEventListener(
+        "click",
+        this._mobileUploadButtonEventListener,
+        false
+      );
+    }
+  }
+
+  @bind
+  _mobileUploadButtonEventListener() {
+    this.#fileInputEl.click();
+  }
+
+  #unbindMobileUploadButton() {
+    this.mobileUploadButton?.removeEventListener(
+      "click",
+      this._mobileUploadButtonEventListener
+    );
   }
 
   #findMatchingUploadHandler(fileName) {

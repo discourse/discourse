@@ -4418,6 +4418,14 @@ experimental:
     upcoming_change:
       status: "beta"
       impact: "feature,all_members"
+  enable_composer_redesign:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "other,all_members"
   rename_faq_to_guidelines:
     default: false
     hidden: true

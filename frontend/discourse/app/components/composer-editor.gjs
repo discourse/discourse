@@ -932,7 +932,13 @@ export default class ComposerEditor extends Component {
 
   @action
   extraButtons(toolbar) {
-    if (this.composer.allowUpload && this.composer.uploadIcon) {
+    const composerRedesign = this.siteSettings.enable_composer_redesign;
+
+    if (
+      this.composer.allowUpload &&
+      this.composer.uploadIcon &&
+      (composerRedesign || this.site.desktopView)
+    ) {
       toolbar.addButton({
         id: "upload",
         group: "insertions",
@@ -945,7 +951,7 @@ export default class ComposerEditor extends Component {
     toolbar.addButton({
       id: "options",
       group: "extras",
-      icon: "discourse-circle-plus",
+      icon: composerRedesign ? "discourse-circle-plus" : "circle-plus",
       title: "composer.options",
       sendAction: this.onExpandPopupMenuOptions.bind(this),
       popupMenu: {

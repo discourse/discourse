@@ -3222,7 +3222,8 @@ en:
       draft_saved: "Draft saved!"
 
       users_placeholder: "Add users or groups"
-      title_placeholder: "Title"
+      title_placeholder: "What is this discussion about in one brief sentence?"
+      title_placeholder_redesign: "Title"
       title_or_link_placeholder: "Type title, or paste a link here"
       edit_reason_placeholder: "why are you editing?"
       topic_featured_link_placeholder: "Enter link shown with title."
