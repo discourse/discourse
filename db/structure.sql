@@ -1918,7 +1918,7 @@ CREATE TABLE public.browser_pageview_events (
     asn integer,
     score integer,
     normalized_referrer character varying(2000),
-    normalized_referrer_version integer
+    normalized_referrer_version smallint
 );
 
 
