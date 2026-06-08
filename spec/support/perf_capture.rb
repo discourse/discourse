@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "discourse/performance_formatter"
-
 RSpec.configure do |config|
   config.before(:suite) do
     if Discourse::PerformanceFormatter.enabled?

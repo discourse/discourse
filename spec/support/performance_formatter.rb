@@ -2,9 +2,7 @@
 
 module Discourse
   class PerformanceFormatter
-    if defined?(RSpec::Core::Formatters)
-      RSpec::Core::Formatters.register(self, :example_passed, :example_failed, :example_pending)
-    end
+    RSpec::Core::Formatters.register(self, :example_passed, :example_failed, :example_pending)
 
     @active = false
 

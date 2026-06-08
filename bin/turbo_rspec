@@ -107,6 +107,7 @@ formatters.each { |formatter| formatter[:outputs] << "-" if formatter[:outputs].
 
 if formatters.any? { |formatter| formatter[:name] == "Discourse::PerformanceFormatter" }
   ENV["DISCOURSE_RSPEC_PERF"] = "1"
+  require "./spec/support/performance_formatter"
 end
 
 puts "::group::Run turbo_rspec" if ENV["GITHUB_ACTIONS"]
