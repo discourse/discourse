@@ -1,10 +1,16 @@
 function setupMarkdownIt(helper) {
-  helper.registerOptions((opts) => {
-    opts.features["preview-alert"] = true;
-    opts.features["hidden-alert"] = true;
+  helper.registerOptions((opts, siteSettings) => {
+    opts.features["livestream-preview"] = !!siteSettings.livestream_enabled;
   });
 
   helper.registerPlugin((md) => {
+    // Gated on livestream_enabled so that when it is disabled the standalone
+    // discourse-livestream plugin (if installed) owns these bbcode tags
+    // instead, avoiding duplicate registration.
+    if (!md.options.discourse.features["livestream-preview"]) {
+      return;
+    }
+
     md.inline.bbcode.ruler.push("preview", {
       tag: "preview",
       wrap: "span.preview",
