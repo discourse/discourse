@@ -311,25 +311,6 @@ RSpec.configure do |config|
     page.driver.with_playwright_page do |pw_page|
       $playwright_logger = PlaywrightLogger.new(pw_page)
 
-      # Emulate `prefers-reduced-motion: reduce` for every system spec.
-      # Discourse gates its motion behind this media query in ~50 rule blocks
-      # (modal, dialog, header/menu, sidebar, composer, float-kit toasts, the
-      # 2.5s post-highlight fade, the `d-animation` mixin, …) and the matching
-      # JS paths skip their animated branch via `prefersReducedMotion()`. With
-      # transforms/positions jumping to their final value instantly, Playwright's
-      # per-action actionability check — which blocks until an element holds a
-      # stable bounding box across two animation frames — stops waiting out
-      # every modal/menu/sidebar tween before a click, and `wait_for_animation`
-      # resolves on its first poll. Only the in-between motion is removed; final
-      # DOM/visual state is identical, so assertions are unaffected.
-      #
-      # Applied here via the page-level emulation (same per-test CDP mechanism
-      # `override_timezone` uses) rather than the driver's `reducedMotion:`
-      # context option, because the Playwright driver is cached and reused
-      # across specs, so a context option would only take effect for the first
-      # test each worker runs.
-      pw_page.emulate_media(reducedMotion: "reduce")
-
       if (tz = example.metadata[:timezone])
         BrowserTime.override_timezone(pw_page, tz)
       end
