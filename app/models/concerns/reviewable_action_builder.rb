@@ -68,27 +68,15 @@ module ReviewableActionBuilder
     create_result(:success, :rejected)
   end
 
-  def perform_delete_user(performed_by, args, &)
-    affected_reviewables = reviewables_affected_by_deleted_user
-    resolve_reviewables_affected_by_deleted_user(affected_reviewables, performed_by)
-
-    delete_user(target_user, delete_opts, performed_by) if target_user
-    result = create_result(:success, :rejected, [], false, &)
-    add_deleted_user_reviewable_updates(result, affected_reviewables)
-    result
+  def perform_delete_user(performed_by, args)
+    perform_delete_user_with_options(delete_opts, performed_by, args)
   end
 
-  def perform_delete_and_block_user(performed_by, args, &)
+  def perform_delete_and_block_user(performed_by, args)
     delete_options = delete_opts
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
-    affected_reviewables = reviewables_affected_by_deleted_user
-    resolve_reviewables_affected_by_deleted_user(affected_reviewables, performed_by)
-
-    delete_user(target_user, delete_options, performed_by) if target_user
-    result = create_result(:success, :rejected, [], false, &)
-    add_deleted_user_reviewable_updates(result, affected_reviewables)
-    result
+    perform_delete_user_with_options(delete_options, performed_by, args)
   end
 
   def perform_delete_post(performed_by, _args)
@@ -118,6 +106,20 @@ module ReviewableActionBuilder
   end
 
   private
+
+  def perform_delete_user_with_options(delete_options, performed_by, args)
+    affected_reviewables = reviewables_affected_by_deleted_user
+    resolve_reviewables_affected_by_deleted_user(affected_reviewables, performed_by)
+
+    delete_user(target_user, delete_options, performed_by) if target_user
+    result = delete_user_result(performed_by, args)
+    add_deleted_user_reviewable_updates(result, affected_reviewables)
+    result
+  end
+
+  def delete_user_result(_performed_by, _args)
+    create_result(:success, :rejected, [], false)
+  end
 
   # Returns the user associated with the reviewable, if applicable.
   # For most reviewables, this will be the user who created the reviewable target.
@@ -206,11 +208,6 @@ module ReviewableActionBuilder
         .pluck(:id)
 
     resolved_reviewable_ids + (reviewable_ids - existing_reviewable_ids)
-  end
-
-  def copy_deleted_user_reviewable_updates(result, source_result)
-    result.remove_reviewable_ids = source_result.remove_reviewable_ids
-    result
   end
 
   def map_reviewable_status_to_flag_status(status)

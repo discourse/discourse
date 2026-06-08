@@ -152,18 +152,8 @@ class ReviewableAiPost < Reviewable
     agree
   end
 
-  def perform_delete_user(performed_by, args)
-    delete_result = super
-    result = agree
-    copy_deleted_user_reviewable_updates(result, delete_result)
-    result
-  end
-
-  def perform_delete_and_block_user(performed_by, args)
-    delete_result = super
-    result = agree
-    copy_deleted_user_reviewable_updates(result, delete_result)
-    result
+  def resolve_affected_by_target_user_deletion(performed_by)
+    perform(performed_by, :agree_and_keep) if pending?
   end
 
   private
@@ -181,6 +171,10 @@ class ReviewableAiPost < Reviewable
       result.update_flag_stats = { status: :agreed, user_ids: [created_by_id] }
       result.recalculate_score = true
     end
+  end
+
+  def delete_user_result(_performed_by, _args)
+    agree
   end
 
   def delete_opts

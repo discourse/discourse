@@ -152,6 +152,11 @@ describe ReviewableAiPost do
 
     def fabricate_affected_reviewables_for_user_deletion(user)
       {
+        ai_post_reviewable:
+          described_class.needs_review!(
+            target: Fabricate(:post, user: user),
+            created_by: Discourse.system_user,
+          ),
         queued_post_reviewable:
           Fabricate(
             :reviewable_queued_post,
@@ -273,14 +278,22 @@ describe ReviewableAiPost do
     end
 
     describe "delete user variations" do
+      it "agrees with the AI post reviewable when its target user is deleted" do
+        reviewable.resolve_affected_by_target_user_deletion(admin)
+
+        expect(reviewable.reload).to be_approved
+      end
+
       it "deletes the user, agrees with the reviewable, and resolves affected reviewables" do
         affected_reviewables = fabricate_affected_reviewables_for_user_deletion(target.user)
+        ai_post_reviewable = affected_reviewables[:ai_post_reviewable]
         queued_post_reviewable = affected_reviewables[:queued_post_reviewable]
         user_reviewable = affected_reviewables[:user_reviewable]
 
         result = reviewable.perform(admin, :delete_user)
         expected_removed_reviewable_ids = [
           reviewable.id,
+          ai_post_reviewable.id,
           queued_post_reviewable.id,
           user_reviewable.id,
         ]
@@ -289,18 +302,21 @@ describe ReviewableAiPost do
           expected_delete_user_result_shape(expected_removed_reviewable_ids),
         )
         expect { target.user.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(ai_post_reviewable.reload).to be_approved
         expect(queued_post_reviewable.reload).to be_rejected
         expect(user_reviewable.reload).to be_rejected
       end
 
       it "deletes and blocks the user, agrees with the reviewable, and resolves affected reviewables" do
         affected_reviewables = fabricate_affected_reviewables_for_user_deletion(target.user)
+        ai_post_reviewable = affected_reviewables[:ai_post_reviewable]
         queued_post_reviewable = affected_reviewables[:queued_post_reviewable]
         user_reviewable = affected_reviewables[:user_reviewable]
 
         result = reviewable.perform(admin, :delete_user_block)
         expected_removed_reviewable_ids = [
           reviewable.id,
+          ai_post_reviewable.id,
           queued_post_reviewable.id,
           user_reviewable.id,
         ]
@@ -309,6 +325,7 @@ describe ReviewableAiPost do
           expected_delete_user_result_shape(expected_removed_reviewable_ids),
         )
         expect { target.user.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(ai_post_reviewable.reload).to be_approved
         expect(queued_post_reviewable.reload).to be_rejected
         expect(user_reviewable.reload).to be_rejected
       end

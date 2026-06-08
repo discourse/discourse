@@ -186,18 +186,8 @@ class ReviewableFlaggedPost < Reviewable
     agree(performed_by, args)
   end
 
-  def perform_delete_user(performed_by, args)
-    delete_result = super
-    result = agree(performed_by, args)
-    copy_deleted_user_reviewable_updates(result, delete_result)
-    result
-  end
-
-  def perform_delete_and_block_user(performed_by, args)
-    delete_result = super
-    result = agree(performed_by, args)
-    copy_deleted_user_reviewable_updates(result, delete_result)
-    result
+  def resolve_affected_by_target_user_deletion(performed_by)
+    perform(performed_by, :agree_and_keep) if pending?
   end
 
   def perform_agree_and_hide(performed_by, args)
@@ -280,6 +270,10 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   protected
+
+  def delete_user_result(performed_by, args)
+    agree(performed_by, args)
+  end
 
   def agree(performed_by, args)
     actions =

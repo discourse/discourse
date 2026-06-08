@@ -266,6 +266,13 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(User.find_by(id: reviewable.target_created_by_id)).to be_blank
     end
 
+    it "agrees with the flagged post reviewable when its target user is deleted" do
+      reviewable.resolve_affected_by_target_user_deletion(moderator)
+
+      expect(reviewable.reload).to be_approved
+      expect(score.reload).to be_agreed
+    end
+
     def fabricate_affected_reviewables_for_spammer_deletion(spammer)
       {
         other_flagged_post_reviewable:
