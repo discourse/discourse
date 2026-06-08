@@ -2,12 +2,18 @@ import EmberObject from "@ember/object";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import {
+  hydrateNestedModelData,
+  NESTED_VIEW_CACHE_FORMAT_VERSION,
+} from "discourse/lib/nested-view-cache-snapshot";
+import PreloadStore from "discourse/lib/preload-store";
 
 module("Unit | Route | nested", function (hooks) {
   setupTest(hooks);
 
   hooks.afterEach(function () {
     sinon.restore();
+    PreloadStore.reset();
   });
 
   test("contributes topic title tokens", function (assert) {
@@ -162,6 +168,7 @@ module("Unit | Route | nested", function (hooks) {
   test("hydrates cached snapshots into fresh records", function (assert) {
     const route = this.owner.lookup("route:nested");
     const cached = {
+      formatVersion: NESTED_VIEW_CACHE_FORMAT_VERSION,
       modelData: {
         topic: {
           id: 42,
@@ -238,6 +245,103 @@ module("Unit | Route | nested", function (hooks) {
       restored.scrollAnchor,
       cached.scrollAnchor,
       "restores scroll anchor"
+    );
+  });
+
+  test("hydrates cached snapshots without reusing stale store records", function (assert) {
+    const route = this.owner.lookup("route:nested");
+    const stalePost = route.store.createRecord("post", {
+      id: 2,
+      post_number: 2,
+      deleted_post_placeholder: true,
+    });
+    const snapshot = {
+      topic: {
+        id: 42,
+        slug: "nested-topic",
+        title: "Nested topic",
+        details: { can_create_post: true },
+      },
+      opPost: { id: 1, post_number: 1, cooked: "<p>op</p>" },
+      rootNodes: [
+        {
+          post: {
+            id: 2,
+            post_number: 2,
+            cooked: "<p>restored root</p>",
+            created_at: "2026-06-08T17:00:00.000Z",
+          },
+          children: [],
+          _renderKey: 2,
+        },
+      ],
+    };
+
+    const restored = hydrateNestedModelData(route.store, snapshot);
+    const restoredPost = restored.rootNodes[0].post;
+
+    assert.notStrictEqual(
+      restoredPost,
+      stalePost,
+      "creates a fresh post instead of reusing the store identity map"
+    );
+    assert.strictEqual(
+      restoredPost.deleted_post_placeholder,
+      undefined,
+      "does not inherit placeholder state from a stale post record"
+    );
+    assert.strictEqual(
+      restoredPost.created_at,
+      "2026-06-08T17:00:00.000Z",
+      "keeps the snapshot timestamp for relative date rendering"
+    );
+  });
+
+  test("ignores and removes unversioned cache entries", async function (assert) {
+    const route = this.owner.lookup("route:nested");
+
+    sinon.stub(route.historyStore, "isPoppedState").get(() => true);
+    sinon.stub(route.nestedViewCache, "buildKey").returns("cache-key");
+    route.nestedViewCache.save("cache-key", {
+      modelData: {
+        topic: route.store.createRecord("topic", {
+          id: 42,
+          slug: "stale-topic",
+          title: "Stale topic",
+        }),
+        rootNodes: [],
+      },
+    });
+    const remove = sinon.spy(route.nestedViewCache, "remove");
+
+    PreloadStore.store("nested_topic_42", {
+      topic: {
+        id: 42,
+        slug: "nested-topic",
+        title: "Fresh topic",
+        details: { can_create_post: true },
+      },
+      op_post: { id: 1, post_number: 1, cooked: "<p>op</p>" },
+      roots: [],
+      page: 0,
+      has_more_roots: false,
+      sort: "top",
+      pinned_post_ids: [],
+    });
+
+    const model = await route.model(
+      { topic_id: 42, slug: "nested-topic" },
+      { from: { name: "discovery.latest" } }
+    );
+
+    assert.true(
+      remove.calledOnceWith("cache-key"),
+      "removes the incompatible cache entry"
+    );
+    assert.strictEqual(
+      model.topic.title,
+      "Fresh topic",
+      "falls back to the preloaded fresh topic payload"
     );
   });
 

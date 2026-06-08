@@ -9,6 +9,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import {
+  NESTED_VIEW_CACHE_FORMAT_VERSION,
   snapshotExpansionState,
   snapshotFetchedChildrenCache,
   snapshotNestedModelData,
@@ -364,6 +365,7 @@ export default class NestedController extends Controller {
     };
 
     this.nestedViewCache.save(cacheKey, {
+      formatVersion: NESTED_VIEW_CACHE_FORMAT_VERSION,
       modelData: snapshotNestedModelData(modelData),
       expansionState: snapshotExpansionState(this.expansionState),
       fetchedChildrenCache: snapshotFetchedChildrenCache(

@@ -1,7 +1,6 @@
-import processNode, {
-  registerPostInTopicPostStream,
-} from "discourse/lib/process-node";
 import { enumerateTrackedEntries } from "discourse/lib/tracked-tools";
+
+export const NESTED_VIEW_CACHE_FORMAT_VERSION = 2;
 
 const EXCLUDED_RECORD_KEYS = new Set([
   "__munge",
@@ -40,8 +39,16 @@ export function snapshotNestedModelData(modelData) {
 }
 
 export function hydrateNestedModelData(store, snapshot) {
-  const topic = store.createRecord("topic", snapshot.topic);
+  const topicSnapshot = { ...snapshot.topic };
+  const topicDetails = topicSnapshot.details;
+  delete topicSnapshot.details;
+
+  const topic = createFreshRecord(store, "topic", topicSnapshot);
+  if (topicDetails) {
+    topic.details = topicDetails;
+  }
   topic.set("is_nested_view", true);
+  setFreshPostStream(store, topic);
   topic.details.set("topic", topic);
 
   return {
@@ -135,11 +142,12 @@ function hydrateNode(store, topic, node) {
     return null;
   }
 
-  return processNode(store, topic, {
-    ...node.post,
-    children: node.children || [],
-    _renderKey: node._renderKey,
-  });
+  const post = hydratePost(store, topic, node.post);
+  return {
+    post,
+    children: hydrateNodes(store, topic, node.children),
+    _renderKey: node._renderKey || post?.id,
+  };
 }
 
 function hydratePost(store, topic, snapshot) {
@@ -147,9 +155,9 @@ function hydratePost(store, topic, snapshot) {
     return null;
   }
 
-  const post = store.createRecord("post", snapshot);
+  const post = createFreshRecord(store, "post", snapshot);
   post.topic = topic;
-  return registerPostInTopicPostStream(topic, post) || post;
+  return registerFreshPostInTopicPostStream(topic, post);
 }
 
 function snapshotRecord(record, { includeDetails = false } = {}) {
@@ -164,7 +172,11 @@ function snapshotRecord(record, { includeDetails = false } = {}) {
   ];
 
   for (const [key, value] of entries) {
-    if (EXCLUDED_RECORD_KEYS.has(key) || typeof value === "function") {
+    if (
+      EXCLUDED_RECORD_KEYS.has(key) ||
+      value === undefined ||
+      typeof value === "function"
+    ) {
       continue;
     }
 
@@ -176,6 +188,76 @@ function snapshotRecord(record, { includeDetails = false } = {}) {
   }
 
   return snapshot;
+}
+
+export function isValidNestedViewCacheSnapshot(snapshot) {
+  return Boolean(
+    snapshot?.topic &&
+    isPlainCacheRecord(snapshot.topic) &&
+    Array.isArray(snapshot.rootNodes) &&
+    snapshot.rootNodes.every(isValidSnapshotNode)
+  );
+}
+
+function isValidSnapshotNode(node) {
+  return Boolean(
+    node &&
+    isPlainCacheRecord(node.post) &&
+    Array.isArray(node.children) &&
+    node.children.every(isValidSnapshotNode)
+  );
+}
+
+function isPlainCacheRecord(record) {
+  return Boolean(
+    record &&
+    typeof record === "object" &&
+    !record.store &&
+    !record.__type &&
+    typeof record.get !== "function"
+  );
+}
+
+function createFreshRecord(store, type, attrs) {
+  return store._build(type, { ...attrs });
+}
+
+function setFreshPostStream(store, topic) {
+  const postStream = createFreshRecord(store, "postStream", {
+    id: topic.id,
+    topic,
+  });
+
+  Object.defineProperty(topic, "postStream", {
+    configurable: true,
+    value: postStream,
+  });
+}
+
+function registerFreshPostInTopicPostStream(topic, post) {
+  const postStream = topic?.postStream;
+  if (!postStream) {
+    return post;
+  }
+
+  const storedPost = postStream.storePost(post);
+  if (!storedPost) {
+    return storedPost;
+  }
+
+  if (postStream.posts && !postStream.posts.includes(storedPost)) {
+    postStream.posts.push(storedPost);
+  }
+
+  if (
+    postStream.stream &&
+    storedPost.id != null &&
+    !postStream.stream.includes(storedPost.id)
+  ) {
+    postStream.stream.push(storedPost.id);
+  }
+
+  return storedPost;
 }
 
 function snapshotValue(value, seen = new WeakSet()) {

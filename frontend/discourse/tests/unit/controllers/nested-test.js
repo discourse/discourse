@@ -1,6 +1,7 @@
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { NESTED_VIEW_CACHE_FORMAT_VERSION } from "discourse/lib/nested-view-cache-snapshot";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
@@ -315,6 +316,11 @@ module("Unit | Controller | nested", function (hooks) {
       this.nestedViewCache.buildKey(topic.id, { sort: "top", post_number: 2 })
     );
 
+    assert.strictEqual(
+      cached.formatVersion,
+      NESTED_VIEW_CACHE_FORMAT_VERSION,
+      "stores the current cache snapshot format"
+    );
     assert.deepEqual(
       cached.modelData.initialFocusedPath.map((node) => node.post.post_number),
       [2],

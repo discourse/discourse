@@ -10,6 +10,8 @@ import {
   hydrateExpansionState,
   hydrateFetchedChildrenCache,
   hydrateNestedModelData,
+  isValidNestedViewCacheSnapshot,
+  NESTED_VIEW_CACHE_FORMAT_VERSION,
 } from "discourse/lib/nested-view-cache-snapshot";
 import PreloadStore from "discourse/lib/preload-store";
 import topicTitleToken from "discourse/lib/topic-title-token";
@@ -65,8 +67,12 @@ export default class NestedRoute extends DiscourseRoute {
       const cached = this.nestedViewCache.get(cacheKey);
       if (cached) {
         const restored = this._hydrateCachedEntry(cached);
-        this._restoringFromCache = restored;
-        return restored.modelData;
+        if (restored) {
+          this._restoringFromCache = restored;
+          return restored.modelData;
+        }
+
+        this.nestedViewCache.remove(cacheKey);
       }
     }
     this._restoringFromCache = null;
@@ -252,6 +258,13 @@ export default class NestedRoute extends DiscourseRoute {
   }
 
   _hydrateCachedEntry(cached) {
+    if (
+      cached.formatVersion !== NESTED_VIEW_CACHE_FORMAT_VERSION ||
+      !isValidNestedViewCacheSnapshot(cached.modelData)
+    ) {
+      return null;
+    }
+
     const modelData = hydrateNestedModelData(this.store, cached.modelData);
 
     return {
