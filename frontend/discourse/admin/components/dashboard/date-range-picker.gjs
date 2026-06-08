@@ -5,9 +5,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 function toDayMoment(value) {
@@ -103,6 +103,10 @@ export default class DashboardDateRangePicker extends Component {
     return months;
   }
 
+  get lastMonthIndex() {
+    return this.visibleMonths.length - 1;
+  }
+
   get effectiveFocusedDay() {
     return (
       this.focusedDay ?? toDayMoment(this.args.to) ?? moment().startOf("day")
@@ -114,21 +118,19 @@ export default class DashboardDateRangePicker extends Component {
   }
 
   get hoverRangeEnd() {
-    if (this.committed || this.pendingEnd || !this.hoveredDay) {
+    if (
+      this.committed ||
+      this.pendingEnd ||
+      !this.hoveredDay ||
+      this.hoveredDay.isBefore(this.pendingStart, "day")
+    ) {
       return null;
     }
-    return this.hoveredDay.isBefore(this.pendingStart, "day")
-      ? this.pendingStart
-      : this.hoveredDay;
+    return this.hoveredDay;
   }
 
   get hoverRangeStart() {
-    if (this.committed || this.pendingEnd || !this.hoveredDay) {
-      return null;
-    }
-    return this.hoveredDay.isBefore(this.pendingStart, "day")
-      ? this.hoveredDay
-      : this.pendingStart;
+    return this.hoverRangeEnd ? this.pendingStart : null;
   }
 
   @action
@@ -151,6 +153,16 @@ export default class DashboardDateRangePicker extends Component {
   @action
   isMutedDay(day, monthStart) {
     return !day.isSame(monthStart, "month");
+  }
+
+  @action
+  isMonthStartDay(day) {
+    return day.date() === 1;
+  }
+
+  @action
+  isMonthEndDay(day) {
+    return day.date() === day.daysInMonth();
   }
 
   @action
@@ -191,6 +203,16 @@ export default class DashboardDateRangePicker extends Component {
   }
 
   @action
+  isHoverEndDay(day) {
+    return (
+      this.hoverRangeStart &&
+      this.hoverRangeEnd &&
+      day.isSame(this.hoverRangeEnd, "day") &&
+      day.isAfter(this.hoverRangeStart, "day")
+    );
+  }
+
+  @action
   isFocusedDay(day) {
     return day.isSame(this.effectiveFocusedDay, "day");
   }
@@ -225,6 +247,15 @@ export default class DashboardDateRangePicker extends Component {
     }
     if (this.isHoverPreviewDay(day)) {
       classes.push("--hover-preview");
+    }
+    if (this.isHoverEndDay(day)) {
+      classes.push("--hover-end");
+    }
+    if (this.isMonthStartDay(day)) {
+      classes.push("--month-start");
+    }
+    if (this.isMonthEndDay(day)) {
+      classes.push("--month-end");
     }
     return classes.join(" ");
   }
@@ -455,20 +486,29 @@ export default class DashboardDateRangePicker extends Component {
           class="d-date-range-picker__calendar"
           {{on "mouseleave" this.leaveGrid}}
         >
-          <button
-            type="button"
-            class="d-date-range-picker__nav"
-            aria-label={{i18n "dates.previous_month"}}
-            {{on "click" (fn this.shiftMonth -1)}}
-          >
-            {{dIcon "chevron-left"}}
-          </button>
-
           <div class="d-date-range-picker__months">
-            {{#each this.visibleMonths as |month|}}
+            {{#each this.visibleMonths as |month index|}}
               <div class="d-date-range-picker__month">
                 <div class="d-date-range-picker__month-header">
-                  {{formatDate month "MMMM YYYY"}}
+                  {{#if (eq index 0)}}
+                    <DButton
+                      class="btn-transparent d-date-range-picker__nav --prev"
+                      @icon="chevron-left"
+                      @ariaLabel="dates.previous_month"
+                      @action={{fn this.shiftMonth -1}}
+                    />
+                  {{/if}}
+                  <span class="d-date-range-picker__month-title">
+                    {{formatDate month "MMMM YYYY"}}
+                  </span>
+                  {{#if (eq index this.lastMonthIndex)}}
+                    <DButton
+                      class="btn-transparent d-date-range-picker__nav --next"
+                      @icon="chevron-right"
+                      @ariaLabel="dates.next_month"
+                      @action={{fn this.shiftMonth 1}}
+                    />
+                  {{/if}}
                 </div>
                 <div class="d-date-range-picker__weekdays" aria-hidden="true">
                   {{#each this.weekdayLabels as |dow|}}
@@ -512,15 +552,6 @@ export default class DashboardDateRangePicker extends Component {
               </div>
             {{/each}}
           </div>
-
-          <button
-            type="button"
-            class="d-date-range-picker__nav"
-            aria-label={{i18n "dates.next_month"}}
-            {{on "click" (fn this.shiftMonth 1)}}
-          >
-            {{dIcon "chevron-right"}}
-          </button>
         </div>
 
         <div class="d-date-range-picker__inputs">

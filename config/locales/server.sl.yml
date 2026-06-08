@@ -753,6 +753,9 @@ sl:
       topic: "Rezultati"
       user: "Uporabniki"
     results_page: "Zadetki iskanja za '%{term}'"
+  posts_filter:
+    description:
+      order_latest_topic: "Zadnje teme"
   original_poster: "Originalni avtor"
   most_recent_poster: "Zadnji odgovarja"
   frequent_poster: "Pogosto odgovarja"

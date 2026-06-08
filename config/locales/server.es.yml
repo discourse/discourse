@@ -338,7 +338,7 @@ es:
       page_publishing_requirements: "No se puede activar la publicación de páginas si está activada la subida segura."
       s3_backup_requires_s3_settings: "No puedes usar S3 como método de respaldo salvo que hayas rellenado «%{setting_name}»."
       s3_bucket_reused: "No puedes usar el mismo bucket para «s3_upload_bucket» y «s3_backup_bucket». Selecciona otro bucket o usa una ruta diferente para cada bucket."
-      secure_uploads_requirements: "Las subidas en S3 y las ACL de S3 deben estar activadas antes de activar las subidas seguras."
+      secure_uploads_requirements: "Las subidas en S3 deben estar activadas antes de activar las subidas seguras."
       share_quote_facebook_requirements: "Debes establecer la app id de Facebook para activar compartir citas en Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "No puedes obligar a usar la autenticación de dos factores si los inicios de sesión locales están desactivados."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "No puedes obligar el uso de 2FA si DiscourseConnect está activado."
@@ -1676,9 +1676,6 @@ es:
       admin_sidebar_deprecation: "El antiguo diseño de administración está obsoleto en favor del nuevo <a href='https://meta.discourse.org/t/-/289281'>diseño de barra lateral</a> y se eliminará en la próxima versión. Puedes <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurar</a> el nuevo diseño de la barra lateral ahora para optar antes por él."
       starttls_disabled: "La configuración de correo saliente tiene STARTTLS desactivado. Esto casi nunca es necesario. Considera eliminar <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> de tu entorno. Consulta <a href='https://meta.discourse.org/t/387286'>este tema</a> para obtener más detalles."
     back_from_logster_text: "Volver al sitio"
-    reports_section:
-      providers:
-        core_report: "Standard"
   site_settings:
     allow_bulk_invite: "Permitir invitaciones en masa subiendo un archivo CSV"
     disabled: "desactivado"
@@ -2563,6 +2560,10 @@ es:
     results_page: "Resultados de búsqueda para «%{term}»"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Últimas publicaciones"
+      order_latest_topic: "Temas recientes"
   filter:
     description:
       status: "Filtrar temas por estado"

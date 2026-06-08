@@ -2809,6 +2809,8 @@ vi:
           label: Trả lời chủ đề
           trigger: Chủ đề
           desc: Trả lời chủ đề, không ảnh hưởng bất kỳ tút nào
+        reply_to_message:
+          trigger: Nhắn tin
         toggle_whisper:
           label: Chuyển đổi nói thầm
         create_topic:
@@ -5698,6 +5700,7 @@ vi:
         too_many_requests: Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi trước khi thử lại.
         not_found_error: Xin lỗi, báo cáo này không tồn tại
         custom_date_range: Khoảng thời gian tùy chỉnh
+        stable: "ổn định"
         sections:
           reports:
             title: "Báo cáo"
@@ -5717,8 +5720,6 @@ vi:
                 "2": "Nâng Cao"
                 "3": "Tích Cực"
                 "4": "Nhà Lãnh Đạo"
-              trend:
-                stable: "ổn định"
         reports_section:
           no_data: "Không có dữ liệu để hiển thị"
           modal:
@@ -6232,9 +6233,10 @@ vi:
           your_organization: "Tổ chức của bạn"
           your_organization_description: "Chúng tôi sẽ sử dụng thông tin này trong Điều khoản dịch vụ và Thông báo bảo mật để nêu rõ ai là người vận hành trang web và thuộc thẩm quyền nào."
           company_name: "Tên"
-          company_name_placeholder: "Tổ chức Acme"
           company_name_warning: |
             Nếu để trống, sẽ không cung cấp các điều khoản dịch vụ hoặc thông báo về quyền riêng tư mẫu.
+          company_url: "Trang web"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Luật áp dụng"
           governing_law_placeholder: "Tỉnh, Thành phố hoặc Quốc gia"
           governing_law_help: |

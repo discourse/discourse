@@ -2323,6 +2323,8 @@ sv:
           label: Svara på ämne
           trigger: Ämne
           desc: Svara på ämnet, inte ett specifikt inlägg
+        reply_to_message:
+          trigger: Meddelande
         toggle_whisper:
           label: Växla viskning
         create_topic:
@@ -5010,7 +5012,8 @@ sv:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "Din organisation"
           company_name: "Namn"
-          company_name_placeholder: "Acme Organization"
+          company_url: "Webbplats"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Gällande lag"
           city_for_disputes: "Domstol vid tvister"
           extra_groups:

@@ -1082,9 +1082,6 @@ zh_TW:
       poll_pop3_auth_error: "至 POP3 伺服器的連接驗證失敗。請檢查<a href='%{base_path}/admin/site_settings/category/email'>POP3 設置</a>。"
       force_https: "伺服器設置使用SSL，但<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>並未在伺服器設置中啟用。"
       google_analytics_version: "您的 Discourse 目前正在使用 Google Analytics 3，將在 2023 年 7 月後失去支援。 <a href='https://meta.discourse.org/t/260498'>立即升級到 Google Analytics 4</a> 以繼續接收有關您網站性能的寶貴見解和分析。"
-    reports_section:
-      providers:
-        core_report: "標準"
   site_settings:
     disabled: "停用"
     censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
@@ -1492,6 +1489,10 @@ zh_TW:
       topic: "結果"
       user: "使用者"
     results_page: "「%{term}」的搜尋結果"
+  posts_filter:
+    description:
+      order_latest: " 最近貼文"
+      order_latest_topic: "最新討論話題"
   discourse_connect:
     login_error: "登入錯誤"
     not_found: "無法找到你的帳號。請聯絡網站管理人員。"

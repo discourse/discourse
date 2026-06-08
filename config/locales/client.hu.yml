@@ -3033,6 +3033,8 @@ hu:
           label: Válasz a témára
           trigger: Téma
           desc: Válasz a témára, nem konkrét bejegyzésre
+        reply_to_message:
+          trigger: Üzenet
         toggle_whisper:
           label: Suttogás be/ki
         create_topic:
@@ -6131,6 +6133,7 @@ hu:
         too_many_requests: Túl sokszor hajtotta végre ezt a műveletet. Az újabb próbálkozás előtt várjon.
         not_found_error: Sajnos ez a jelentés nem létezik
         custom_date_range: Egyéni dátumtartomány
+        stable: "stabil"
         sections:
           reports:
             title: "Jelentések"
@@ -6153,8 +6156,6 @@ hu:
                 "2": "Tag"
                 "3": "Átlagos"
                 "4": "Vezető"
-              trend:
-                stable: "stabil"
         reports_section:
           no_data: "Nincs megjeleníthető adat"
           modal:
@@ -6678,9 +6679,10 @@ hu:
           your_organization: "Az Ön szervezete"
           your_organization_description: "Az Általános Szerződési Feltételekben és az Adatvédelmi közleményben szereplő információkat arra használjuk, hogy megmutassuk, ki üzemelteti a webhelyet, és milyen joghatóság alatt."
           company_name: "Név"
-          company_name_placeholder: "Példa szervezet"
           company_name_warning: |
             Ha üresen hagyja, akkor a szolgáltatási feltételek vagy az adatvédelmi nyilatkozat nem jelenik meg.
+          company_url: "Weboldal"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Irányadó jog"
           governing_law_placeholder: "Tartomány, állam vagy ország"
           governing_law_help: |

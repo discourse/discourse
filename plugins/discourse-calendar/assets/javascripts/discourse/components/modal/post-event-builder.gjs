@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, fn, get } from "@ember/helper";
-import { on } from "@ember/modifier";
+import { concat, fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
@@ -18,6 +17,7 @@ import DDateInput from "discourse/ui-kit/d-date-input";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import { recurrenceContext } from "../../lib/event-recurrence";
 import {
   attendanceTransition,
   buildParams,
@@ -119,6 +119,8 @@ export default class PostEventBuilder extends Component {
       timezone: this.event.timezone ?? null,
       // clone so the form draft owns its own reminders
       reminders: (this.event.reminders ?? []).map((r) => ({ ...r })),
+      // clone so the form draft owns the custom fields
+      customFields: { ...(this.event.customFields ?? {}) },
     };
   }
 
@@ -305,16 +307,7 @@ export default class PostEventBuilder extends Component {
   }
 
   get availableRecurrences() {
-    const ref = this.startsAt || moment();
-    const weekday = ref.format("dddd");
-    const dayOfMonth = ref.date();
-    const isLast = dayOfMonth + 7 > ref.daysInMonth();
-    const ordinalKey = isLast
-      ? "last"
-      : ["first", "second", "third", "fourth"][Math.ceil(dayOfMonth / 7) - 1];
-    const ordinal = i18n(
-      `discourse_post_event.builder_modal.recurrence.ordinals.${ordinalKey}`
-    );
+    const { weekday, ordinal } = recurrenceContext(this.startsAt || moment());
 
     return [
       {
@@ -554,8 +547,8 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
-  setCustomField(field, e) {
-    this.event.customFields[field] = e.target.value;
+  setCustomField(field, value) {
+    this.event.customFields[field] = value;
   }
 
   @action
@@ -1223,26 +1216,24 @@ export default class PostEventBuilder extends Component {
                     }}
                     @format="full"
                   >
-                    {{#each this.allowedCustomFields as |allowedCustomField|}}
-                      <span class="label custom-field-label">
-                        {{allowedCustomField}}
-                      </span>
-                      <input
-                        type="text"
-                        class="custom-field-input"
-                        value={{get
-                          @model.event.customFields
-                          allowedCustomField
-                        }}
-                        {{on
-                          "input"
-                          (fn this.setCustomField allowedCustomField)
-                        }}
-                        placeholder={{i18n
-                          "discourse_post_event.builder_modal.custom_fields.placeholder"
-                        }}
-                      />
-                    {{/each}}
+                    <form.Object @name="customFields" as |customFields|>
+                      {{#each this.allowedCustomFields as |allowedCustomField|}}
+                        <customFields.Field
+                          @name={{allowedCustomField}}
+                          @title={{allowedCustomField}}
+                          @type="input"
+                          @format="full"
+                          @onSet={{fn this.setCustomField allowedCustomField}}
+                          as |field|
+                        >
+                          <field.Control
+                            placeholder={{i18n
+                              "discourse_post_event.builder_modal.custom_fields.placeholder"
+                            }}
+                          />
+                        </customFields.Field>
+                      {{/each}}
+                    </form.Object>
                   </form.Container>
                 {{/if}}
 

@@ -10,6 +10,11 @@ nl:
       site_settings:
         categories:
           discourse_solved: "Discourse opgelost"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Geaccepteerde oplossingen"
   js:
     notifications:
       alt:
@@ -57,6 +62,8 @@ nl:
       confirm_solved_removal: "Deze wijziging schakelt oplossingen voor dit topic uit en verwijdert de geaccepteerde oplossing."
       confirm_solved_removal_confirm: "Bevestigen"
       confirm_solved_removal_cancel: "Annuleren"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Is je vraag beantwoord?
         description: "Markeer het antwoord en help anderen door de oplossingsknop onder het juiste antwoord te gebruiken."

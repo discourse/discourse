@@ -252,6 +252,7 @@ class UserStat < ActiveRecord::Base
       AND topics.user_id <> posts.user_id
       AND posts.deleted_at IS NULL AND topics.deleted_at IS NULL
       AND topics.archetype <> 'private_message'
+      AND posts.post_type <> #{Post.types[:small_action]}
       #{start_time.nil? ? "" : "AND posts.created_at > ?"}
     SQL
     if start_time.nil?

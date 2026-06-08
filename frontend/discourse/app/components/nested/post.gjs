@@ -299,6 +299,10 @@ export default class NestedPost extends Component {
     return this.args.post.user_id === this.args.topic?.user_id;
   }
 
+  get selected() {
+    return this.args.multiSelect && this.args.postSelected?.(this.args.post);
+  }
+
   get contextUrl() {
     return getURL(
       `/n/${this.args.topic.slug}/${this.args.topic.id}/${this.args.post.post_number}?context=0`
@@ -535,6 +539,21 @@ export default class NestedPost extends Component {
   }
 
   @action
+  togglePostSelection() {
+    return this.args.togglePostSelection?.(this.args.post);
+  }
+
+  @action
+  selectReplies() {
+    return this.args.selectReplies?.(this.args.post);
+  }
+
+  @action
+  selectBelow() {
+    return this.args.selectBelow?.(this.args.post);
+  }
+
+  @action
   showLogin() {
     getOwner(this).lookup("route:application").send("showLogin");
   }
@@ -550,6 +569,7 @@ export default class NestedPost extends Component {
         (if @post.isWhisper "nested-post--whisper")
         (if (or @post.deleted @post.user_deleted) "nested-post--deleted")
         (if this.cloakingData.active "nested-post--cloaked")
+        (if this.selected "selected")
       }}
       style={{this.cloakingData.style}}
       {{this.restoreScroll}}
@@ -737,7 +757,12 @@ export default class NestedPost extends Component {
                         <PostMetaData
                           @post={{@post}}
                           @editPost={{fn @editPost @post}}
+                          @multiSelect={{@multiSelect}}
+                          @selected={{this.selected}}
+                          @selectBelow={{this.selectBelow}}
+                          @selectReplies={{this.selectReplies}}
                           @showHistory={{fn @showHistory @post}}
+                          @togglePostSelection={{this.togglePostSelection}}
                         />
                       </PluginOutlet>
                       {{#if this.isOP}}
@@ -871,6 +896,11 @@ export default class NestedPost extends Component {
               @collapseFromDepth={{@collapseFromDepth}}
               @focusPost={{@focusPost}}
               @captureScrollAnchor={{@captureScrollAnchor}}
+              @multiSelect={{@multiSelect}}
+              @togglePostSelection={{@togglePostSelection}}
+              @selectReplies={{@selectReplies}}
+              @selectBelow={{@selectBelow}}
+              @postSelected={{@postSelected}}
             />
           {{/if}}
         </div>

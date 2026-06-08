@@ -332,7 +332,7 @@ it:
       page_publishing_requirements: "La pubblicazione di pagine non può essere attivata se sono attivati i caricamenti sicuri."
       s3_backup_requires_s3_settings: "Non è possibile utilizzare S3 per i backup a meno che non sia stato fornito '%{setting_name}'."
       s3_bucket_reused: "Non puoi usare lo stesso bucket per 's3_upload_bucket' e 's3_backup_bucket'. Scegli un bucket differente, o un percorso diverso per ciascun bucket."
-      secure_uploads_requirements: "I caricamenti e gli ACL S3 devono essere abilitati prima di abilitare i caricamenti sicuri."
+      secure_uploads_requirements: "I caricamenti S3 devono essere abilitati prima di abilitare i caricamenti sicuri."
       share_quote_facebook_requirements: "Devi impostare un ID app Facebook per attivare la condivisione delle citazioni per Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Non è possibile applicare l'autenticazione a due fattori se gli accessi locali sono disabilitati."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Non è possibile attivare l'autenticazione a due fattori quando DiscourseConnect è abilitato."
@@ -1628,9 +1628,6 @@ it:
       maxmind_db_configuration: 'Il server è stato configurato in modo da usare i database MaxMind per la ricerca inversa dell''indirizzo IP, ma non è stato ancora configurato un ID account MaxMind. Di conseguenza, in futuro potrebbe non essere possibile scaricare i database MaxMind. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Consulta questa guida per approfondimenti</a>.'
       admin_sidebar_deprecation: "Il vecchio layout di amministrazione è deprecato in favore del nuovo layout della <a href='https://meta.discourse.org/t/-/289281'>barra laterale</a> e verrà rimosso nella prossima versione. Puoi <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurare</a> il nuovo layout della barra laterale ora per aderire prima di allora."
     back_from_logster_text: "Torna al sito"
-    reports_section:
-      providers:
-        core_report: "Standard"
   site_settings:
     allow_bulk_invite: "Consenti inviti di massa caricando un file CSV"
     disabled: "disabilitato"
@@ -2454,6 +2451,10 @@ it:
     results_page: "Risultati della ricerca per '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Ultimi messaggi"
+      order_latest_topic: "Argomenti più recenti"
   filter:
     description:
       status: "Filtra gli argomenti in base al loro stato"

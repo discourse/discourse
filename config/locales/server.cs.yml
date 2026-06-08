@@ -387,7 +387,6 @@ cs:
       page_publishing_requirements: "Publikování stránek nelze povolit, pokud je povoleno zabezpečené nahrávání."
       s3_backup_requires_s3_settings: "S3 nemůžete použít jako umístění zálohy, pokud nezadáte '%{setting_name}'."
       s3_bucket_reused: "Nemůžete použít stejný segment pro 's3_upload_bucket' a 's3_backup_bucket'. Vyberte jiný bucket nebo použijte pro každý bucket jinou cestu."
-      secure_uploads_requirements: "Nahrávání S3 a seznamy ACL S3 musí být před povolením zabezpečeného nahrávání povoleny."
       share_quote_facebook_requirements: "Chcete-li povolit sdílení citací pro Facebook, musíte nastavit Facebook app id."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Nemůžete vynutit 2FA, pokud je zakázáno lokální přihlašování."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Nemůžete vynutit 2FA, pokud je povoleno DiscourseConnect."
@@ -1803,9 +1802,6 @@ cs:
       maxmind_db_configuration: 'Server byl nakonfigurován tak, aby používal databáze MaxMind pro reverzní vyhledávání IP, ale nebylo nakonfigurováno platné ID účtu MaxMind, což může vést k tomu, že se databáze MaxMind v budoucnu nepodaří stáhnout. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Více informací naleznete v této příručce</a>.'
       admin_sidebar_deprecation: "Staré rozvržení administrace je zastaralé ve prospěch nového <a href='https://meta.discourse.org/t/-/289281'>rozvržení postranního panelu</a> a bude odstraněno v příští verzi. Nové rozvržení postranního panelu můžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovat</a> již nyní a rozhodnout se pro něj dříve."
     back_from_logster_text: "Zpět na web"
-    reports_section:
-      providers:
-        core_report: "Standardní"
   site_settings:
     allow_bulk_invite: "Povolit hromadné pozvánky nahráním CSV souboru"
     disabled: "vypnuto"
@@ -2330,6 +2326,10 @@ cs:
       user: "Uživatelé"
     results_page: "Výsledky hledání pro '%{term}'"
     audio: "[zvuky]"
+  posts_filter:
+    description:
+      order_latest: "Nejnovější příspěvky"
+      order_latest_topic: "Nejnovější témata"
   filter:
     description:
       status: "Filtrovat témata podle jejich stavu"

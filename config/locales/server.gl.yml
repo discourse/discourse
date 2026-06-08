@@ -1764,6 +1764,10 @@ gl:
     results_page: "Buscar resultados para '%{term}'"
     audio: "[audio]"
     video: "[vídeo]"
+  posts_filter:
+    description:
+      order_latest: "Últimas publicacións"
+      order_latest_topic: "Últimos temas"
   discourse_connect:
     login_error: "Erro ao iniciar sesión"
     not_found: "Non se puido atopar a súa conta. Contacte co administrador do sitio."

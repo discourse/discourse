@@ -116,3 +116,4 @@ ur:
             title: "عوامی"
       invite_user_or_group:
         invite: "بھیجیں"
+        success: "دعوت نامہ بھیج دیا گیا"

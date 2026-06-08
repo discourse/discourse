@@ -2295,6 +2295,8 @@ te:
           label: విషయానికి ప్రత్యుత్తరం ఇవ్వండి
           trigger: విషయం
           desc: విషయానికి ప్రత్యుత్తరం ఇవ్వండి, ఏదైనా నిర్దిష్ట పోస్ట్ కాదు
+        reply_to_message:
+          trigger: సందేశం పంపించండి
         toggle_whisper:
           label: గుసగుసలను టోగుల్ చేయండి
         create_topic:
@@ -4963,7 +4965,8 @@ te:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "మీ సంస్థ"
           company_name: "పేరు"
-          company_name_placeholder: "ఆక్మే సంస్థ"
+          company_url: "వెబ్సైట్"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "పాలక చట్టం"
           city_for_disputes: "వివాదాలకు నగరం"
           extra_groups:

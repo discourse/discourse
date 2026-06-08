@@ -128,7 +128,7 @@ RSpec.describe UserCardSerializer do
 
     before { user.user_profile.update(featured_topic_id: featured_topic.id) }
 
-    it "includes the featured topic" do
+    it "includes the featured topic when viewer can see it" do
       serializer = described_class.new(user, scope: Guardian.new(user), root: false)
       json = serializer.as_json
 
@@ -142,6 +142,34 @@ RSpec.describe UserCardSerializer do
         :slug,
         :posts_count,
       )
+    end
+
+    it "does not include the featured topic when viewer cannot see it" do
+      restricted_category = Fabricate(:category, read_restricted: true)
+      viewer = Fabricate(:user)
+
+      serializer = described_class.new(user, scope: Guardian.new(viewer), root: false)
+      json = serializer.as_json
+
+      expect(json[:featured_topic]).not_to be_nil
+
+      featured_topic.update!(category: restricted_category)
+      user.reload
+
+      serializer = described_class.new(user, scope: Guardian.new(viewer), root: false)
+      json = serializer.as_json
+
+      expect(json[:featured_topic]).to be_nil
+    end
+
+    it "does not include the featured topic for anonymous users when topic is restricted" do
+      restricted_category = Fabricate(:category, read_restricted: true)
+      featured_topic.update!(category: restricted_category)
+
+      serializer = described_class.new(user, scope: Guardian.new, root: false)
+      json = serializer.as_json
+
+      expect(json[:featured_topic]).to be_nil
     end
   end
 

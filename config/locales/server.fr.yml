@@ -332,7 +332,7 @@ fr:
       page_publishing_requirements: "La publication de pages ne peut pas être activée si les téléversements sécurisés sont activés."
       s3_backup_requires_s3_settings: "Utiliser S3 comme emplacement de sauvegarde nécessite de renseigner le paramètre « %{setting_name} »."
       s3_bucket_reused: "Il n'est pas possible d'utiliser le même bucket pour « s3_upload_bucket » et « s3_backup_bucket ». Choisissez un autre bucket ou utilisez un chemin d'accès différent pour chaque bucket."
-      secure_uploads_requirements: "Les téléversements S3 et les ACL S3 doivent être activés avant d'activer les téléversements sécurisés."
+      secure_uploads_requirements: "Les téléversements S3 doivent être activés avant d'activer les téléversements sécurisés."
       share_quote_facebook_requirements: "Vous devez définir un identifiant d'application Facebook pour activer le partage de citation vers Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Vous ne pouvez pas rendre obligatoire l'authentification à deux facteurs lorsque les connexions locales sont désactivées."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Vous ne pouvez pas appliquer 2FA si DiscourseConnect est activé."
@@ -1634,9 +1634,6 @@ fr:
       maxmind_db_configuration: 'Le serveur a été configuré pour utiliser les bases de données MaxMind pour les recherches IP inversées, mais aucun identifiant de compte MaxMind valide n''a été configuré, ce qui pourrait empêcher le téléchargement des bases de données MaxMind à l''avenir. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Consultez ce guide pour en savoir plus</a>.'
       admin_sidebar_deprecation: "L'ancienne disposition d'administration est obsolète au profit de la nouvelle <a href='https://meta.discourse.org/t/-/289281'>disposition de la barre latérale</a> et sera supprimée dans la prochaine version. Vous pouvez <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurer</a> la nouvelle disposition de la barre latérale maintenant pour l'activer avant cette suppression."
     back_from_logster_text: "Retour au site"
-    reports_section:
-      providers:
-        core_report: "Standard"
   site_settings:
     allow_bulk_invite: "Autoriser l'envoi d'invitations multiples via l'importation d'un fichier CSV"
     disabled: "désactivé"
@@ -2461,6 +2458,10 @@ fr:
     results_page: "Résultats de recherche pour « %{term} »"
     audio: "[audio]"
     video: "[vidéo]"
+  posts_filter:
+    description:
+      order_latest: "Dernières publications"
+      order_latest_topic: "Sujets récents"
   filter:
     description:
       status: "Filtrer les sujets en fonction de leur statut"

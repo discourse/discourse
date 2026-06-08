@@ -1224,7 +1224,7 @@ RSpec.describe PostCreator do
         expect(topic.posts.where(post_type: Post.types[:small_action]).count).to eq(i)
       end
 
-      expect(topic.word_count).to eq(0)
+      expect(topic.word_count).to be_nil
 
       p2 = Fabricate(:post, topic: topic)
       Topic.reset_highest(topic.id)
@@ -1239,7 +1239,7 @@ RSpec.describe PostCreator do
       expect(topic.word_count).to eq([p1, p2, p3].sum(&:word_count))
     end
 
-    it "does not bump highest_post_number for small_action posts in PMs" do
+    it "does not bump any post number counter for small_action posts" do
       topic = Fabricate(:private_message_topic, user: Fabricate(:user, refresh_auto_groups: true))
       Fabricate(:post, topic: topic)
       topic.reload
@@ -1258,7 +1258,7 @@ RSpec.describe PostCreator do
       topic.reload
 
       expect(topic.highest_post_number).to eq(1)
-      expect(topic.highest_staff_post_number).to eq(2)
+      expect(topic.highest_staff_post_number).to eq(1)
     end
   end
 

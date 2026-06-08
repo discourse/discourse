@@ -3332,6 +3332,8 @@ ru:
           label: Ответить на тему
           trigger: Тема
           desc: Ответить на тему в целом, а не на конкретное сообщение
+        reply_to_message:
+          trigger: Сообщение
         toggle_whisper:
           label: Скрытое сообщение
         create_topic:
@@ -6679,6 +6681,7 @@ ru:
         too_many_requests: Вы выполняете это действие слишком часто. Подождите, прежде чем пытаться снова.
         not_found_error: Этого отчёта не существует
         custom_date_range: Свой диапазон дат
+        stable: "стабильный"
         sections:
           reports:
             title: "отчетов"
@@ -6700,8 +6703,6 @@ ru:
                 "2": "Участник"
                 "3": "Активный пользователь"
                 "4": "Лидер"
-              trend:
-                stable: "стабильный"
         reports_section:
           no_data: "Нет данных для отображения"
           modal:
@@ -7246,9 +7247,10 @@ ru:
           your_organization: "Ваша организация"
           your_organization_description: "Мы будем использовать эту информацию в Условиях использования и Уведомлении о конфиденциальности, чтобы показать, кто управляет сайтом и под какой юрисдикцией."
           company_name: "Название"
-          company_name_placeholder: "ООО «Организация»"
           company_name_warning: |
             Если оставить это поле пустым, то шаблонных Условий использования и Уведомлений о конфиденциальности предоставляться не будет.
+          company_url: "Веб-сайт"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Регулирующее законодательство"
           governing_law_placeholder: "Провинция, штат или страна"
           governing_law_help: |

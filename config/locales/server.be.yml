@@ -1268,6 +1268,10 @@ be:
       topic: "вынікі"
       user: "карыстальнікаў"
     results_page: "Вынікі пошуку для '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "Апошнія паведамленні"
+      order_latest_topic: "Апошнія тэмы"
   discourse_connect:
     login_error: "Памылка ўваходу"
     not_found: "Ваш уліковы запіс не можа быць знойдзены. Калі ласка, звярніцеся да адміністратара сайта."

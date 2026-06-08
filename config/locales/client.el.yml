@@ -3051,6 +3051,8 @@ el:
           label: Απάντηση στο θέμα
           trigger: Νήμα
           desc: Απάντηση στο θέμα, όχι σε συγκεκριμένη ανάρτηση
+        reply_to_message:
+          trigger: Μήνυμα
         toggle_whisper:
           label: Εναλλαγή ψιθύρων
         create_topic:
@@ -6160,6 +6162,7 @@ el:
         too_many_requests: Έχετε εκτελέσει αυτήν την ενέργεια πάρα πολλές φορές. Περιμένετε πριν δοκιμάσετε ξανά.
         not_found_error: Λυπάμαι, αυτή η αναφορά δεν υπάρχει
         custom_date_range: Προσαρμοσμένο εύρος ημερομηνιών
+        stable: "σταθερή"
         sections:
           reports:
             title: "Αναφορές"
@@ -6181,8 +6184,9 @@ el:
                 "2": "Μέλος"
                 "3": "Τακτικός"
                 "4": "Ηγέτης"
-              trend:
-                stable: "σταθερή"
+            headline:
+              metrics:
+                new_signups: "Νέες εγγραφές"
         reports_section:
           no_data: "Δεν υπάρχουν δεδομένα για προβολή"
           modal:
@@ -6710,7 +6714,8 @@ el:
             Η ομάδα που λαμβάνει πρόσκληση σε όλα τα αυτομάτως αποστέλλοντα προσωπικά μηνύματα.
           your_organization: "Ο οργανισμός σας"
           company_name: "Όνομα"
-          company_name_placeholder: "Οργανισμός Acme"
+          company_url: "Website"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Εφαρμοστέο δίκαιο"
           governing_law_placeholder: "Επαρχία, Πολιτεία ή Χώρα"
           governing_law_help: |

@@ -44,6 +44,72 @@ module("Integration | Component | Post | PostCookedHtml", function (hooks) {
     assert.dom("blockquote").hasText("abcd");
   });
 
+  test("localizes internal onebox cards using localized_oneboxes", async function (assert) {
+    this.post.cooked = `<aside class="quote" data-post="2" data-topic="55">
+      <div class="title">
+        <div class="quote-controls"></div>
+        <div class="quote-title__text-content"><a href="/t/sun/55/2">Original Title</a></div>
+      </div>
+      <blockquote>Original preview</blockquote>
+    </aside>`;
+    this.post.localized_oneboxes = [
+      {
+        topic_id: 55,
+        post_number: 2,
+        title: "孫子の兵法",
+        excerpt: "戦わずして勝つ",
+      },
+    ];
+
+    await renderComponent(this.post);
+
+    assert
+      .dom("aside.quote .title")
+      .includesText("孫子の兵法")
+      .doesNotIncludeText("Original Title");
+    assert.dom("aside.quote blockquote").includesText("戦わずして勝つ");
+  });
+
+  test("swaps only the title when no excerpt is provided", async function (assert) {
+    this.post.cooked = `<aside class="quote" data-post="1" data-topic="55">
+      <div class="title">
+        <div class="quote-controls"></div>
+        <div class="quote-title__text-content"><a href="/t/sun/55/1">Original Title</a></div>
+      </div>
+      <blockquote>Original preview</blockquote>
+    </aside>`;
+    this.post.localized_oneboxes = [
+      { topic_id: 55, post_number: 1, title: "孫子の兵法" },
+    ];
+
+    await renderComponent(this.post);
+
+    assert.dom("aside.quote .title").includesText("孫子の兵法");
+    assert.dom("aside.quote blockquote").includesText("Original preview");
+  });
+
+  test("leaves same-topic inline quotes (with data-username) untouched", async function (assert) {
+    this.post.cooked = `<aside class="quote" data-username="sun" data-post="2" data-topic="55">
+      <div class="title"><div class="quote-controls"></div>sun:</div>
+      <blockquote>Original preview</blockquote>
+    </aside>`;
+    this.post.localized_oneboxes = [
+      {
+        topic_id: 55,
+        post_number: 2,
+        title: "孫子の兵法",
+        excerpt: "戦わずして勝つ",
+      },
+    ];
+
+    await renderComponent(this.post);
+
+    assert
+      .dom("aside.quote blockquote")
+      .includesText("Original preview")
+      .doesNotIncludeText("戦わずして勝つ");
+  });
+
   test("it keeps the opened state of the `details` tag between renders", async function (assert) {
     this.post.cooked = `<details><summary>Quote Summary</summary><p>Quote Content</p></details>`;
 

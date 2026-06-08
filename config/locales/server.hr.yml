@@ -1204,9 +1204,6 @@ hr:
       ram: "Server vam radi s manje od 1 GB ukupne memorije. Barem 1 GB se preporuča."
       out_of_date_themes: "Dostupna su ažuriranja sljedećih tema:%{themes_list}"
       unreachable_themes: "Nismo uspjeli provjeriti ima li ažuriranja sljedećih tema:%{themes_list}"
-    reports_section:
-      providers:
-        core_report: "Standard"
   site_settings:
     disabled: "onemogućen"
     allow_user_locale: "Dopustite korisnicima da odaberu vlastite postavke jezika sučelja"
@@ -1515,6 +1512,10 @@ hr:
       topic: "Rezultati"
       user: "Korisnici"
     results_page: "Rezultati pretraživanja za '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "Najnovije objave"
+      order_latest_topic: "Posljednje teme"
   discourse_connect:
     account_not_approved: "Vaš račun čeka odobrenje. Primit ćete obavijest e-poštom kada budete odobreni."
     unknown_error: "Postoji problem s vašim računom. Molimo kontaktirajte administratora stranice."

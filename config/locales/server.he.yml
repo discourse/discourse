@@ -386,7 +386,7 @@ he:
       page_publishing_requirements: "לא ניתן להפעיל פרסום עמודים אם העלאות מאובטחות פעילות."
       s3_backup_requires_s3_settings: "לא ניתן להשתמש ב־S3 כמיקום לגיבוי אלמלא סיפקת את ‚%{setting_name}’."
       s3_bucket_reused: "אין לך אפשרות להשתמש באותו הדלי עבור ‚s3_upload_bucket’ וגם ‚s3_backup_bucket’. נא לבחור בדלי שונה או להשתמש בנתיב שונה לכל דלי."
-      secure_uploads_requirements: "יש להפעיל העלאה ל־S3 ובקרות גישה (ACLs) של S3 בטרם הפעלת העלאות מאובטחות."
+      secure_uploads_requirements: "יש להפעיל העלאה ל־S3 בטרם הפעלת העלאות מאובטחות."
       share_quote_facebook_requirements: "עליך להגדיר מזהה יישומון פייסבוק כדי להפעיל שיתוף ציטוטים עבור פייסבוק"
       second_factor_cannot_be_enforced_with_disabled_local_login: "אי אפשר לאכוף אימות דו־שלבי אם כניסה מקומית מושבתת."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "אי אפשר לאכוף אימות דו־שלבי אם מופעל DiscourseConnect."
@@ -1812,9 +1812,6 @@ he:
       maxmind_db_configuration: 'השרת הוגדר להשתמש במסד הנתונים של MaxMind לאיתור IP הפוך אך לא הוגדר מזהה חשבון ב־MaxMind מה שעלול לגרום לכשל בהורדת מסד הנתונים של MaxMind. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">המדריך הזה יסביר קצת מעבר</a>.'
       admin_sidebar_deprecation: "פריסת הניהול הישנה הוצאה משימוש לטובת <a href='https://meta.discourse.org/t/-/289281'>פריסת סרגל הצד החדשה</a> ותוסר בגרסה הבאה. ניתן <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>להגדיר</a> את פריסת סרגל הצד החדשה כעת כדי להצטרף לפני כן."
     back_from_logster_text: "חזרה לאתר"
-    reports_section:
-      providers:
-        core_report: "רגיל"
   site_settings:
     allow_bulk_invite: "לאפשר הזמנות במרוכז על ידי העלאת קובץ CSV"
     disabled: "מושבת"
@@ -2664,6 +2661,10 @@ he:
     results_page: "תוצאות לחיפוש אחר ‚%{term}’"
     audio: "[שמע]"
     video: "[וידאו]"
+  posts_filter:
+    description:
+      order_latest: "פוסטים אחרונים"
+      order_latest_topic: "נושאים אחרונים"
   filter:
     description:
       status: "סינון נושאים לפי המצב שלהם"

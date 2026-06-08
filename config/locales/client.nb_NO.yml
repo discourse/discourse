@@ -2481,6 +2481,8 @@ nb_NO:
           label: Svar på emnet
           trigger: Emne
           desc: Svar på emnet, ikke et spesifikt innlegg
+        reply_to_message:
+          trigger: Send
         toggle_whisper:
           label: Veksle hvisking
         create_topic:
@@ -4766,6 +4768,7 @@ nb_NO:
       config_areas:
         about:
           company_name: "Navn"
+          company_url: "Nettside"
           extra_groups:
             groups: "Grupper"
           optional: "(valgfritt)"

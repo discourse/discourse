@@ -510,10 +510,11 @@ module Chat
     end
 
     def self.chat_allowed_group_ids
+      pseudo_everyone_ids = [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:logged_in_users]]
       Chat
         .allowed_group_ids
         .map do |group_id|
-          group_id == Group::AUTO_GROUPS[:everyone] ? Group::AUTO_GROUPS[:trust_level_0] : group_id
+          pseudo_everyone_ids.include?(group_id) ? Group::AUTO_GROUPS[:trust_level_0] : group_id
         end
         .uniq
     end

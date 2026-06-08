@@ -249,6 +249,11 @@ export default class NestedPostChildren extends Component {
             @collapseFromDepth={{@collapseFromDepth}}
             @focusPost={{@focusPost}}
             @captureScrollAnchor={{@captureScrollAnchor}}
+            @multiSelect={{@multiSelect}}
+            @togglePostSelection={{@togglePostSelection}}
+            @selectReplies={{@selectReplies}}
+            @selectBelow={{@selectBelow}}
+            @postSelected={{@postSelected}}
           />
         {{/each}}
 

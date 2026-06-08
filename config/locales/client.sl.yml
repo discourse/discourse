@@ -2087,6 +2087,8 @@ sl:
           label: Odgovori v temi
           trigger: Tema
           desc: Odgovori v temi, ne na posamezen prispevek
+        reply_to_message:
+          trigger: Opozorilo
         toggle_whisper:
           label: Preklopi šepet
         create_personal_message:
@@ -4130,6 +4132,7 @@ sl:
       config_areas:
         about:
           company_name: "Ime"
+          company_url: "Spletna stran"
           extra_groups:
             groups: "Skupine"
           optional: "(neobvezno)"

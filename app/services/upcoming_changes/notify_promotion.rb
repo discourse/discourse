@@ -32,11 +32,14 @@ class UpcomingChanges::NotifyPromotion
   policy :should_notify_admins
 
   try do
-    step :log_promotion
-    model :existing_notifications, optional: true
-    model :bulk_notification_new_records
-    step :notify_admins
-    step :create_event
+    transaction do
+      step :log_promotion
+      model :existing_notifications, optional: true
+      model :bulk_notification_new_records
+      step :notify_admins
+      step :create_event
+    end
+
     step :trigger_discourse_event
   end
 

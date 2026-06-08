@@ -250,7 +250,7 @@ RSpec.describe "Managing Posts solved status" do
       expect(category.auto_bump_topic!).to eq(false)
 
       expect(post.topic.reload.posts_count).to eq(2)
-      expect(post2.topic.reload.posts_count).to eq(2)
+      expect(post2.topic.reload.posts_count).to eq(1)
     end
   end
 

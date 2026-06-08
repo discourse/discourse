@@ -430,3 +430,4 @@ da:
       invite_user_or_group:
         title: "Underret bruger(e) eller gruppe(r)"
         invite: "Send"
+        success: "Invitation sendt"

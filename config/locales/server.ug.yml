@@ -332,7 +332,6 @@ ug:
       page_publishing_requirements: "ئەگەر بىخەتەر يۈكلەش قوزغىتىلغان بولسا بەت ئېلان قىلىشنى قوزغاتقىلى بولمايدۇ."
       s3_backup_requires_s3_settings: "«%{setting_name}» نى تەمىنلىمىگۈچە S3 نى زاپاسلاش ئورنى سۈپىتىدە ئىشلىتەلمەيسىز."
       s3_bucket_reused: "ئوخشاش بىر ساقلاش چىلىكىنى «s3_upload_bucket» ۋە «3_backup_bucket'» غا ئىشلىتەلمەيسىز. پەرقلىق چىلەك تاللاڭ ياكى ھەر بىر چىلەككە پەرقلىق يول ئىشلىتىڭ."
-      secure_uploads_requirements: "بىخەتەر يۈكلەشنى قوزغىتىشتىن ئىلگىرى S3 يۈكلەش ۋە S3 ACL نى قوزغىتىش كېرەك."
       share_quote_facebook_requirements: "سىز Facebook ئەپ كىملىكىنى تەڭشىسىڭىز ئاندىن Facebook قا نەقىل ئېلىپ ھەمبەھىرلىيەلەيسىز."
       second_factor_cannot_be_enforced_with_disabled_local_login: "ئەگەر يەرلىك تىزىمغا كىرىش چەكلەنگەن بولسا ئىككى ئامىللىق دەلىللەشنى مەجبۇرىي ئىجرا قىلالمايسىز."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "ئەگەر DiscourseConnect قوزغىتىلغان بولسا ئىككى ئامىللىق دەلىللەشنى مەجبۇرىي ئىجرا قىلالمايسىز."
@@ -1633,9 +1632,6 @@ ug:
       maxmind_db_configuration: 'مۇلازىمېتىر MaxMind ساندان ئىشلىتىپ ئەكسى IP تەكشۈرۈشكە تەڭشەلدى، ئەمما ئىناۋەتلىك MaxMind ھېسابات كىملىكى سەپلەنمىدى، بۇ بەلكىم MaxMind ساندانىنى كەلگۈسىدە چۈشۈرگىلى بولماسلىقنى كەلتۈرۈپ چىقىرىشى مۇمكىن. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">مەزكۇر يېتەكچىدىن تەپسىلاتىنى كۆرۈڭ</a>.'
       admin_sidebar_deprecation: "كونا نەشرىدىكى باشقۇرغۇچى ئېكرانىنىڭ جايلاشتۇرۇلۇشى يېڭى <a href='https://meta.discourse.org/t/-/289281'>يان بالداق جايلاشتۇرۇش</a>قا ئالماشتۇرۇلدى، كونا نەشرىدىكى جايلاشتۇرۇش كېيىنكى نەشرىدە چىقىرىۋېتىلىدۇ. سىز يېڭى يان بالداق جايلاشتۇرۇشنى <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>سەپلە</a>يەلەيسىز."
     back_from_logster_text: "بېكەتكە قايت"
-    reports_section:
-      providers:
-        core_report: "ئۆلچەملىك"
   site_settings:
     allow_bulk_invite: "بىر CSV ھۆججەتنى يۈكلەش ئارقىلىق توپ تەكلىپكە يول قويىدۇ"
     disabled: "چەكلەندى"
@@ -2448,6 +2444,10 @@ ug:
     results_page: "«%{term}» نىڭ ئىزدەش نەتىجىسى"
     audio: "[ئۈن]"
     video: "[سىن]"
+  posts_filter:
+    description:
+      order_latest: "ئاخىرقى يازما"
+      order_latest_topic: "ئاخىرقى تېما"
   filter:
     description:
       status: "تېمىنى ھالىتىگە ئاساسەن سۈزىدۇ"

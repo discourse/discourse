@@ -3365,6 +3365,10 @@ en:
           label: Reply to topic
           trigger: Topic
           desc: Reply to the topic, not any specific post
+        reply_to_message:
+          label: Reply to message
+          trigger: Message
+          desc: Reply to the message, not any specific post
         toggle_whisper:
           label: Toggle whisper
           desc: Whispers are only visible to allowed groups
@@ -7597,9 +7601,11 @@ en:
           your_organization: "Your organization"
           your_organization_description: "We'll use this information in the Terms of Service and Privacy Notice to show who operates the site and under which jurisdiction."
           company_name: "Name"
-          company_name_placeholder: "Acme Organization"
+          company_name_placeholder: "ExampleCo"
           company_name_warning: |
             If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
+          company_url: "Website"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Governing law"
           governing_law_placeholder: "Province, State, or Country"
           governing_law_help: |
@@ -8034,6 +8040,7 @@ en:
           finish_install: "Finish Theme Installation"
           last_attempt: "Installation process did not finish, last attempted:"
           remote_branch: "Branch name (optional)"
+          remote_branch_placeholder: "Choose a specific branch or keep empty"
           public_key: "Grant the following public key access to the repo:"
           install: "Install"
           installed: "Installed"

@@ -77,7 +77,7 @@ module DiscourseWorkflows
       return if current_node.nil? || current_node["name"].blank?
 
       run = Array(node_runs[current_node["name"]]).last
-      return unless run
+      return input_from_connected_source(node_runs, primary_upstream_connection) unless run
 
       input_index = (primary_upstream_connection&.target_input_index || 0).to_i
       return unless input_source_matches_connection?(run, input_index, primary_upstream_connection)
@@ -86,6 +86,25 @@ module DiscourseWorkflows
       return unless items
 
       { "items" => Array(items), "input_sources" => Array(run["input_sources"]) }
+    end
+
+    def input_from_connected_source(node_runs, connection)
+      return unless connection
+
+      source_node = workflow_snapshot.source_node(connection)
+      return if source_node.blank? || source_node.name.blank?
+
+      run = Array(node_runs[source_node.name]).last
+      return unless run
+
+      output_index = connection.source_output_index.to_i
+      items = run.dig("outputs", output_index)
+      return unless items
+
+      {
+        "items" => Array(items),
+        "input_sources" => [{ "node_name" => source_node.name, "output_index" => output_index }],
+      }
     end
 
     def overlay_current_input(context, current_input)

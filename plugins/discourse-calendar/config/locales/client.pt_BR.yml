@@ -523,3 +523,4 @@ pt_BR:
       invite_user_or_group:
         title: "Notificar usuário(s) ou grupo(s)"
         invite: "Enviar"
+        success: "Convite enviado"

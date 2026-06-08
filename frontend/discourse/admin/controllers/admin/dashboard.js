@@ -11,6 +11,7 @@ import {
 import AdminDashboard from "discourse/admin/models/admin-dashboard";
 import VersionCheck from "discourse/admin/models/version-check";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 
 const PROBLEMS_CHECK_MINUTES = 1;
@@ -38,6 +39,8 @@ export default class AdminDashboardController extends Controller {
   dashboardFetchedAt = null;
   _sectionsLoadId = 0;
   _sectionsLoadingCount = 0;
+  _configSaveId = 0;
+  _sectionDataCache = new Map();
 
   get safePeriod() {
     if (!VALID_PERIODS.includes(this.range)) {
@@ -86,13 +89,64 @@ export default class AdminDashboardController extends Controller {
   }
 
   @action
-  async updateConfiguration(sections) {
-    await ajax("/admin/dashboard/configuration.json", {
-      type: "PUT",
-      contentType: "application/json",
-      data: JSON.stringify({ sections }),
-    });
-    await this.fetchSections();
+  toggleSection(id) {
+    const previous = this.loadedSections;
+    const current = previous?.configuration?.sections ?? [];
+    const wasVisible = current.find((s) => s.id === id)?.visible;
+    const nextConfig = current.map((s) =>
+      s.id === id ? { ...s, visible: !s.visible } : s
+    );
+
+    this.#applyConfigOptimistically(nextConfig);
+
+    const needsRefetch = !wasVisible && !this._sectionDataCache.has(id);
+    this.#persistConfiguration(nextConfig, previous, { needsRefetch });
+  }
+
+  @action
+  reorderSections(fromIndex, toIndex) {
+    const previous = this.loadedSections;
+    const nextConfig = [...(previous?.configuration?.sections ?? [])];
+    const [moved] = nextConfig.splice(fromIndex, 1);
+    nextConfig.splice(toIndex, 0, moved);
+
+    this.#applyConfigOptimistically(nextConfig);
+    this.#persistConfiguration(nextConfig, previous, { needsRefetch: false });
+  }
+
+  #applyConfigOptimistically(nextConfig) {
+    for (const section of this.loadedSections?.sections ?? []) {
+      this._sectionDataCache.set(section.id, section.data);
+    }
+
+    this.loadedSections = {
+      ...this.loadedSections,
+      sections: nextConfig
+        .filter((s) => s.visible && this._sectionDataCache.has(s.id))
+        .map((s) => ({ id: s.id, data: this._sectionDataCache.get(s.id) })),
+      configuration: { sections: nextConfig },
+    };
+  }
+
+  async #persistConfiguration(sections, revertTo, { needsRefetch } = {}) {
+    const saveId = ++this._configSaveId;
+
+    try {
+      await ajax("/admin/dashboard/configuration.json", {
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify({ sections }),
+      });
+
+      if (needsRefetch && saveId === this._configSaveId) {
+        await this.fetchSections();
+      }
+    } catch (e) {
+      if (saveId === this._configSaveId) {
+        this.loadedSections = revertTo;
+      }
+      popupAjaxError(e);
+    }
   }
 
   @action

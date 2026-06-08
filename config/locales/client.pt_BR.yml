@@ -3042,6 +3042,8 @@ pt_BR:
           label: Responder ao tópico
           trigger: Tópico
           desc: Responder ao tópico, não a uma postagem específica
+        reply_to_message:
+          trigger: Mensagem
         toggle_whisper:
           label: Alternar sussurro
         create_topic:
@@ -6141,6 +6143,7 @@ pt_BR:
         too_many_requests: Você realizou esta ação muitas vezes. Aguarde antes de tentar novamente.
         not_found_error: Desculpe, este relatório não existe
         custom_date_range: Intervalo de datas personalizado
+        stable: "estável"
         sections:
           reports:
             title: "Relatórios"
@@ -6163,8 +6166,6 @@ pt_BR:
                 "2": "Membro"
                 "3": "Regular"
                 "4": "Líder"
-              trend:
-                stable: "estável"
         reports_section:
           no_data: "Nenhum dado para exibir"
           modal:
@@ -6690,9 +6691,10 @@ pt_BR:
           your_organization: "Sua organização"
           your_organization_description: "Essas informações serão usadas nos Termos de Serviço e Contrato de Privacidade para mostrar que administra o site e a jurisdição em que isso acontece."
           company_name: "Nome"
-          company_name_placeholder: "Acme Organization"
           company_name_warning: |
             Se deixado em branco, os Termos de Serviço ou Aviso de Privacidade padrão não serão fornecidos.
+          company_url: "Site"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Lei aplicável"
           governing_law_placeholder: "Província, estado ou país"
           governing_law_help: |

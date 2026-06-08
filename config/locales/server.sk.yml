@@ -386,7 +386,6 @@ sk:
       page_publishing_requirements: "Publikovanie stránky nie je možné povoliť, ak je povolené zabezpečené nahrávanie."
       s3_backup_requires_s3_settings: "S3 nemôžete použiť ako umiestnenie zálohy, pokiaľ nezadáte '%{setting_name}'."
       s3_bucket_reused: "Nemôžete použiť rovnaký bucket pre 's3_upload_bucket' a 's3_backup_bucket'. Vyberte iný bucket alebo použite iné cesty pre každý bucket."
-      secure_uploads_requirements: "Pred povolením zabezpečeného odosielania je potrebné povoliť odosielanie na S3 a S3 ACL."
       share_quote_facebook_requirements: "Ak chcete povoliť zdieľanie citácií pre Facebook, musíte nastaviť id aplikácie Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Ak sú miestne prihlásenia zakázané, nie je možné vynútiť 2FA."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Ak je zapnutá funkcia DiscourseConnect, nie je možné vynútiť 2FA."
@@ -1784,9 +1783,6 @@ sk:
       maxmind_db_configuration: 'Server bol nakonfigurovaný na používanie databáz MaxMind pre reverzné vyhľadávanie IP adries, ale nebolo nakonfigurované platné ID účtu MaxMind, čo môže mať za následok, že databázy MaxMind sa v budúcnosti nebudú sťahovať. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Viac informácií nájdete v tejto príručke</a>.'
       admin_sidebar_deprecation: "Staré rozvrhnutie administrátora je zastarané v prospech nového <a href='https://meta.discourse.org/t/-/289281'>rozvrhnutia bočného panela</a> a bude odstránené v nasledujúcej verzii. Nové rozvrhnutie bočného panela môžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovať</a> už teraz, aby ste sa rozhodli preň skôr."
     back_from_logster_text: "Späť na stránku"
-    reports_section:
-      providers:
-        core_report: "Štandardné"
   site_settings:
     allow_bulk_invite: "Umožniť hromadné pozvania nahraním súboru CSV"
     disabled: "vypnuté"
@@ -2610,6 +2606,10 @@ sk:
     results_page: "Výsledky vyhľadávania pre '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Najnovšie príspevky"
+      order_latest_topic: "Najnovšie témy"
   filter:
     description:
       status: "Filtrovať témy podľa ich stavu"

@@ -231,7 +231,7 @@ sv:
       page_publishing_requirements: "Sidpublicering kan inte aktiveras om säkra uppladdningar är aktiverade."
       s3_backup_requires_s3_settings: "Du kan inte använda S3 som säkerhetskopieringsplats innan du har angivit '%{setting_name}'."
       s3_bucket_reused: "Du kan inte använda samma behållare för 's3_upload_bucket' och 's3_backup_bucket'. Välj en annan behållare eller använd en annan sökväg för varje behållare."
-      secure_uploads_requirements: "S3-uppladdningar och S3 ACL:er måste ha aktiverats innan säkra uppladdningar aktiveras."
+      secure_uploads_requirements: "S3-uppladdningar måste ha aktiverats innan du aktiverar säkra uppladdningar."
       share_quote_facebook_requirements: "Du måste ange ett Facebook-app-id för att möjliggöra delning av citat på Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kan inte genomdriva 2FA om lokala inloggningar är inaktiverade."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Du kan inte genomdriva 2FA om DiscourseConnect har aktiverats."
@@ -2081,6 +2081,10 @@ sv:
     results_page: "Sökresultat för '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Senaste inläggen"
+      order_latest_topic: "Aktuella ämnen"
   discourse_connect:
     login_error: "Inloggningsfel"
     not_found: "Ditt konto kunde inte hittas. Vi ber dig kontakta forumets administratör."

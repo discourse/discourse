@@ -324,7 +324,7 @@ fa_IR:
       page_publishing_requirements: "اگر آپلودهای ایمن فعال باشد، انتشار صفحه نمی تواند فعال شود."
       s3_backup_requires_s3_settings: "شما نمی توانید از S3 به عنوان مکان پشتیبان استفاده کنید مگر اینکه «%{setting_name}» را ارائه کرده باشید."
       s3_bucket_reused: "شما نمی توانید از یک مخزن برای \"s3_upload_bucket\" و \"s3_backup_bucket\" استفاده کنید. یک مخزن متفاوت انتخاب کنید یا برای هر مخزن از مسیر متفاوتی استفاده کنید."
-      secure_uploads_requirements: "قبل از فعال کردن آپلودهای ایمن، آپلودهای S3 و ACLهای S3 باید فعال شوند."
+      secure_uploads_requirements: "قبل از فعال کردن بارگذاری‌های ایمن، بارگذاری‌های S3 باید فعال شوند."
       share_quote_facebook_requirements: "برای فعال کردن اشتراک‌گذاری نقل قول برای فیس‌بوک، باید یک شناسه برنامه فیسبوک تنظیم کنید."
       second_factor_cannot_be_enforced_with_disabled_local_login: "اگر ورود به سیستم محلی غیرفعال باشد، نمی توانید 2FA را اعمال کنید."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "اگر DiscourseConnect فعال باشد، نمی توانید 2FA را اعمال کنید."
@@ -1482,9 +1482,6 @@ fa_IR:
       poll_pop3_timeout: "اتصال به سرور POP3 انجام نشد. ایمیل‌های ورودی ممکن است دریافت نشوند. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3 </a>و فراهم کننده خدمات را بررسی کنید."
       poll_pop3_auth_error: "اتصال به سرور POP3 ناموفق بود، خطای اعتبار سنجی. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3</a> را بررسی کنید."
     back_from_logster_text: "بازگشت به سایت"
-    reports_section:
-      providers:
-        core_report: "استاندارد"
   site_settings:
     allow_bulk_invite: "با آپلود یک فایل CSV، دعوت‌های انبوه را مجاز کنید"
     disabled: "غیرفعال شده"
@@ -1819,6 +1816,10 @@ fa_IR:
       topic: "نتایج"
       user: "کاربران"
     results_page: "نتایج جستجو برای '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "آخرین فرسته‌ها"
+      order_latest_topic: "آخرین موضوعات"
   filter:
     description:
       in_new: "نمایش موضوعاتی که جدید هستند یا پاسخ جدید دارند"

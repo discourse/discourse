@@ -513,3 +513,4 @@ fr:
       invite_user_or_group:
         title: "Avertir les utilisateurs ou les groupes"
         invite: "Envoyer"
+        success: "Invitation envoyée"

@@ -3249,6 +3249,8 @@ cs:
           label: Odpovědět na téma
           trigger: Témata
           desc: Odpovědět na téma, ale ne na konkrétní příspěvek
+        reply_to_message:
+          trigger: Odeslat
         toggle_whisper:
           label: Přepnout šeptání
         create_topic:
@@ -6555,6 +6557,7 @@ cs:
         too_many_requests: Tuto akci jste provedli příliš mnohokrát. Počkejte prosím před dalším pokusem.
         not_found_error: Omlouváme se, tato sestava neexistuje
         custom_date_range: Vlastní období
+        stable: "stabilní"
         sections:
           reports:
             title: "Sestav"
@@ -6576,8 +6579,6 @@ cs:
                 "2": "Člen"
                 "3": "Stálý člen"
                 "4": "Leader"
-              trend:
-                stable: "stabilní"
         reports_section:
           no_data: "Žádná data k zobrazení"
           modal:
@@ -7118,9 +7119,10 @@ cs:
           your_organization: "Vaše organizace"
           your_organization_description: "Tyto informace použijeme ve Smluvních podmínkách a Oznámení o ochraně osobních údajů, abychom ukázali, kdo provozuje web a pod kterou jurisdikcí."
           company_name: "Jméno"
-          company_name_placeholder: "Acme, s. r. o."
           company_name_warning: |
             Pokud ponecháte prázdné, nebudou poskytnuty žádné standardní Smluvní podmínky ani Oznámení o ochraně osobních údajů.
+          company_url: "Webová stránka"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Rozhodné právo"
           governing_law_placeholder: "Provincie, stát nebo země"
           governing_law_help: |

@@ -284,6 +284,71 @@ module("Unit | lib | discourse-workflows | data-schema", function () {
     );
   });
 
+  test("schemaFieldsForNodeInput previews connected upstream output before the current node succeeds", function (assert) {
+    const currentNode = {
+      id: "create-post",
+      name: "Create post",
+      type: "action:create_post",
+    };
+    const sourceNode = {
+      id: "template",
+      name: "Template",
+      type: "action:template",
+    };
+    const runData = {
+      Template: [
+        {
+          node_id: "template",
+          node_type: "action:template",
+          status: "success",
+          outputs: [
+            {
+              index: 0,
+              items: [{ json: { template: "Rendered body" } }],
+              item_count: 1,
+            },
+          ],
+        },
+      ],
+      "Create post": [
+        {
+          node_id: "create-post",
+          node_type: "action:create_post",
+          status: "skipped",
+          inputs: [
+            {
+              index: 0,
+              items: [{ json: { template: "Rendered body" } }],
+              item_count: 1,
+              source: null,
+            },
+          ],
+        },
+      ],
+    };
+
+    assert.deepEqual(
+      schemaFieldsForNodeInput(runData, "Create post", {
+        node: currentNode,
+        sourceNode,
+        outputIndex: 0,
+      }).map((field) => field.key),
+      ["template"]
+    );
+    assert.deepEqual(
+      inputSummaryForNode(runData, "Create post", 0, {
+        node: currentNode,
+        sourceNode,
+        outputIndex: 0,
+      }),
+      {
+        inputIndex: 0,
+        itemCount: 1,
+        truncated: false,
+      }
+    );
+  });
+
   test("nodeItemJsonPath escapes node names for expressions", function (assert) {
     assert.strictEqual(
       nodeItemJsonPath('Fetch "quoted" \\ data'),

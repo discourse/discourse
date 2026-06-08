@@ -2473,6 +2473,8 @@ da:
           label: Besvar emne
           trigger: Emne
           desc: Besvar emnet, ikke noget specifikt indlæg
+        reply_to_message:
+          trigger: Meddelelse
         toggle_whisper:
           label: Slå hvisken til/fra
         create_topic:
@@ -5002,7 +5004,7 @@ da:
           site_contact_name: "Navn på websteds kontaktperson"
           your_organization: "Din organisation"
           company_name: "Navn"
-          company_name_placeholder: "Eksempel-firma"
+          company_url: "Hjemmeside"
           governing_law: "Gældende lov"
           governing_law_placeholder: "Provins, stat eller land"
           city_for_disputes: "By for tvister"

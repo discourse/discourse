@@ -8,7 +8,15 @@ describe "Admin Dashboard Redesign | Reports section" do
 
   before do
     SiteSetting.dashboard_improvements = true
-    SiteSetting.admin_dashboard_sections = "reports"
+    AdminDashboardSectionConfiguration.update(
+      [
+        { id: "reports", visible: true },
+        { id: "highlights", visible: false },
+        { id: "traffic", visible: false },
+        { id: "engagement", visible: false },
+      ],
+      actor: current_user,
+    )
     AdminDashboardReport.delete_all
     sign_in(current_user)
   end
@@ -23,6 +31,20 @@ describe "Admin Dashboard Redesign | Reports section" do
 
     modal.toggle("core_report:admin_logins")
     expect(modal).to have_drag_controls
+  end
+
+  it "disables the reorder arrows at the ends of the enabled list on mobile", mobile: true do
+    AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
+    AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
+
+    page.visit("/admin")
+    dashboard.open_manage_reports_via_cog
+    expect(modal).to have_open
+
+    expect(modal).to have_disabled_move_up("core_report:signups")
+    expect(modal).to have_enabled_move_down("core_report:signups")
+    expect(modal).to have_enabled_move_up("core_report:topics")
+    expect(modal).to have_disabled_move_down("core_report:topics")
   end
 
   it "lets admins customize the reports section via the manage-reports modal" do

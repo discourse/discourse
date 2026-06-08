@@ -332,7 +332,7 @@ fi:
       page_publishing_requirements: "Sivun julkaisua ei voi ottaa käyttöön, jos suojatut lataukset verkkoon ovat käytössä."
       s3_backup_requires_s3_settings: "Et voi käyttää S3:a varmuuskopiosijaintina, ellei %{setting_name} ei ole määritetty."
       s3_bucket_reused: "Sama säiliö ei voi olla sekä 's3_upload_bucket' että 's3_backup_bucket'. Valitse eri säiliö tai määritä eri polku jokaiselle säiliölle."
-      secure_uploads_requirements: "S3-lataukset ja S3 ACL:t täytyy ottaa käyttöön ennen suojattujen latausten käyttöönottoa."
+      secure_uploads_requirements: "S3-lataukset täytyy ottaa käyttöön ennen suojattujen latausten käyttöönottoa."
       share_quote_facebook_requirements: "Facebook-sovellustunnus on määritettävä, jotta lainausten jakaminen Facebookiin on mahdollista."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Et voi pakottaa kaksivaiheista tunnistusta, jos paikallinen kirjautuminen on pois käytöstä."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Et voi pakottaa 2FA-asetusta käyttöön kun DiscourseConnect on aktiivisena."
@@ -1634,9 +1634,6 @@ fi:
       maxmind_db_configuration: 'Palvelin on määritetty käyttämään MaxMind-tietokantoja käänteisissä IP-hauissa, mutta kelvollista MaxMind-tilin tunnusta ei ole määritetty, mikä saattaa johtaa siihen, että MaxMind-tietokantoja ei voi ladata jatkossa. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Katso tästä oppaasta lisätietoja</a>.'
       admin_sidebar_deprecation: "Vanha ylläpitäjien asettelu on vanhentunut ja korvataan uudella <a href='https://meta.discourse.org/t/-/289281'>sivupalkkiasettelulla</a>. Se poistetaan seuraavassa julkaisuversiossa. Voit <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>määrittää</a> uuden sivupalkkiasettelun nyt ottaaksesi sen käyttöön ennen sitä."
     back_from_logster_text: "Takaisin sivustolle"
-    reports_section:
-      providers:
-        core_report: "Standardi"
   site_settings:
     allow_bulk_invite: "Salli joukkokutsut lataamalla CSV-tiedosto"
     disabled: "poistettu käytöstä"
@@ -2459,6 +2456,10 @@ fi:
     results_page: "Tulokset hakusanalle '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Uusimmat viestit"
+      order_latest_topic: "Tuoreimmat ketjut"
   filter:
     description:
       status: "Suodata ketjuja niiden tilan mukaan"

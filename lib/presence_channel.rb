@@ -107,7 +107,12 @@ class PresenceChannel
     return true if user_id && config.allowed_user_ids&.include?(user_id)
 
     if user_id && config.allowed_group_ids.present?
-      return true if config.allowed_group_ids.include?(Group::AUTO_GROUPS[:everyone])
+      # `everyone` (0) and `logged_in_users` (5) are pseudogroups with no
+      # group_users rows; either one means any logged-in user may view.
+      if config.allowed_group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+           config.allowed_group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
+        return true
+      end
       group_ids ||= GroupUser.where(user_id: user_id).pluck("group_id")
       return true if (group_ids & config.allowed_group_ids).present?
     end

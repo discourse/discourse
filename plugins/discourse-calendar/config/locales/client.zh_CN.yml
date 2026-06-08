@@ -532,3 +532,4 @@ zh_CN:
       invite_user_or_group:
         title: "通知用户或群组"
         invite: "发送"
+        success: "邀请已发送"

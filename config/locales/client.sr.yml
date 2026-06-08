@@ -1846,6 +1846,8 @@ sr:
           confirm: Imate novi nacrt teme sačuvan, koji će biti obrisan ako stvorite povezanu temu.
         reply_to_topic:
           trigger: Tema
+        reply_to_message:
+          trigger: Privatna poruka
         edit_post: "Uređivanje objave"
         unknown_user: "Korisnik"
       image: "slika"
@@ -2919,6 +2921,7 @@ sr:
         general_tab: "Opšti"
         security_tab: "Sigurnost"
         loading: "Učitavanje kontrolne table..."
+        stable: "stabilan"
         sections:
           highlights:
             title: "Istaknuto"
@@ -2964,7 +2967,6 @@ sr:
                   one: "-%{count} pad"
                   few: "-%{count} pada"
                   other: "-%{count} padova"
-                stable: "stabilan"
               moves_in_aria:
                 one: "%{count} član se pomerio gore"
                 few: "%{count} člana su se pomerila gore"
@@ -2993,6 +2995,10 @@ sr:
               no_signal:
                 title: "Još uvek nema dovoljno aktivnosti za sumiranje angažovanja."
                 summary: "Izaberite duži opseg datuma ili se vratite kada vaša zajednica bude imala više aktivnosti."
+              metrics:
+                new_signups: "Nove registracije"
+                dau_mau: "DAU / MAU lepljivost"
+                daily_engaged_users: "Dnevno angažovano"
         reports_section:
           modal:
             enabled_heading: "Omogućeno"
@@ -3012,16 +3018,12 @@ sr:
           kpi:
             new_signups:
               label: "Nove registracije"
-              tooltip: "Nalozi kreirani u ovom periodu, uključujući neaktivirane i pripremne naloge."
             dau_mau:
               label: "DAU / MAU lepljivost"
-              tooltip: 'Udeo mesečno aktivnih korisnika koji su se vratili u zajednicu u poslednjem danu. Ovo pokazuje koliko je vaša zajednica "aktivna" na osnovu toga koliko se često ljudi vraćaju.'
             new_contributors:
               label: "Novi saradnici"
-              tooltip: "Broj članova koji su objavili svoju prvu objavu u ovom periodu."
             daily_engaged_users:
               label: "Dnevno angažovano"
-              tooltip: "Broj članova koji su lajkovali ili objavili u zajednici u poslednjem danu."
           comparison:
             last_7_days: "u odnosu na poslednjih 7 dana"
             last_30_days: "u odnosu na poslednjih 30 dana"
@@ -3185,6 +3187,7 @@ sr:
       config_areas:
         about:
           company_name: "Ime foruma"
+          company_url: "Website"
           extra_groups:
             groups: "Grupe"
           optional: "(opciono)"

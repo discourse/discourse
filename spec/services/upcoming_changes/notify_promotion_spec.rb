@@ -255,6 +255,34 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
         end
       end
 
+      context "when the notification creation fails" do
+        before do
+          Notification::Action::BulkCreate.stubs(:call).raises(ActiveRecord::StatementInvalid.new)
+        end
+
+        it "rolls back the staff action log" do
+          expect { result }.not_to change {
+            UserHistory.where(
+              action: UserHistory.actions[:upcoming_change_toggled],
+              subject: "enable_upload_debug_mode",
+            ).count
+          }
+        end
+
+        it "rolls back the upcoming change event" do
+          expect { result }.not_to change {
+            UpcomingChangeEvent.where(
+              event_type: :admins_notified_automatic_promotion,
+              upcoming_change_name: :enable_upload_debug_mode,
+            ).count
+          }
+        end
+
+        it "fails the service" do
+          expect(result).to fail_with_exception
+        end
+      end
+
       context "when there is an existing notification with the old data format" do
         before do
           Fabricate(

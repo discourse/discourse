@@ -295,6 +295,39 @@ ALTER SEQUENCE public.admin_dashboard_reports_id_seq OWNED BY public.admin_dashb
 
 
 --
+-- Name: admin_dashboard_sections; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.admin_dashboard_sections (
+    id bigint NOT NULL,
+    section_id character varying NOT NULL,
+    "position" integer NOT NULL,
+    visible boolean DEFAULT true NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: admin_dashboard_sections_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.admin_dashboard_sections_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: admin_dashboard_sections_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.admin_dashboard_sections_id_seq OWNED BY public.admin_dashboard_sections.id;
+
+
+--
 -- Name: admin_notices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -11801,6 +11834,13 @@ ALTER TABLE ONLY public.admin_dashboard_reports ALTER COLUMN id SET DEFAULT next
 
 
 --
+-- Name: admin_dashboard_sections id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_dashboard_sections ALTER COLUMN id SET DEFAULT nextval('public.admin_dashboard_sections_id_seq'::regclass);
+
+
+--
 -- Name: admin_notices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -13915,6 +13955,14 @@ ALTER TABLE ONLY public.ad_plugin_impressions
 
 ALTER TABLE ONLY public.admin_dashboard_reports
     ADD CONSTRAINT admin_dashboard_reports_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: admin_dashboard_sections admin_dashboard_sections_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_dashboard_sections
+    ADD CONSTRAINT admin_dashboard_sections_pkey PRIMARY KEY (id);
 
 
 --
@@ -17255,6 +17303,13 @@ CREATE INDEX index_admin_dashboard_reports_on_position ON public.admin_dashboard
 --
 
 CREATE UNIQUE INDEX index_admin_dashboard_reports_on_source_and_identifier ON public.admin_dashboard_reports USING btree (source, identifier);
+
+
+--
+-- Name: index_admin_dashboard_sections_on_section_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_admin_dashboard_sections_on_section_id ON public.admin_dashboard_sections USING btree (section_id);
 
 
 --
@@ -21795,6 +21850,10 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260604052235'),
+('20260603115312'),
+('20260603115200'),
+('20260602104726'),
 ('20260601043020'),
 ('20260525105009'),
 ('20260525105006'),
@@ -21824,6 +21883,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260428072232'),
 ('20260424004343'),
 ('20260422144944'),
+('20260422135650'),
 ('20260422130653'),
 ('20260422102523'),
 ('20260422062938'),

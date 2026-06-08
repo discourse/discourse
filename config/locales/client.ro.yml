@@ -2315,6 +2315,8 @@ ro:
           label: Răspunde la subiect
           trigger: Subiect
           desc: Răspundeți subiectului, nu unei anumite postări
+        reply_to_message:
+          trigger: Mesaj
         create_personal_message:
           desc: "Creează un mesaj personal nou"
         toggle_unlisted:
@@ -4546,7 +4548,8 @@ ro:
           your_organization: "Organizația ta"
           your_organization_description: "Vom utiliza aceste informații în Termenele serviciului și în Notificarea privind confidențialitatea pentru a arăta cine operează site-ul și sub ce jurisdicție."
           company_name: "Nume"
-          company_name_placeholder: "Organizația Acme"
+          company_url: "Site web"
+          company_url_placeholder: "https://example-co.com"
           governing_law_placeholder: "Provincie, stat sau țară"
           governing_law_help: |
             Specifică jurisdicția pentru termenii legali ai site-ului, de obicei locul în care compania este înregistrată sau își desfășoară activitatea.

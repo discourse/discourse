@@ -10,6 +10,11 @@ es:
       site_settings:
         categories:
           discourse_solved: "Discourse resuelto"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Soluciones aceptadas"
   js:
     notifications:
       alt:
@@ -57,6 +62,8 @@ es:
       confirm_solved_removal: "Este cambio desactivará las soluciones para este tema y eliminará la solución aceptada."
       confirm_solved_removal_confirm: "Confirmar"
       confirm_solved_removal_cancel: "Cancelar"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: '¿Se ha respondido a tu pregunta?'
         description: "Destaca la respuesta y ayuda a los demás utilizando el botón de solución que hay debajo de la respuesta correcta."

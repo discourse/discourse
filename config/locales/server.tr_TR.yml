@@ -338,7 +338,7 @@ tr_TR:
       page_publishing_requirements: "Güvenli yüklemeler etkinleştirilirse sayfa yayınlama etkinleştirilemez."
       s3_backup_requires_s3_settings: "\"%{setting_name}\" değerini sağlamadığınız sürece S3'ü yedekleme konumu olarak kullanamazsınız."
       s3_bucket_reused: "\"s3_upload_bucket\" ve \"s3_backup_bucket\" için aynı kovayı kullanamazsınız. Farklı bir kova seçin veya her kova için farklı bir yol kullanın."
-      secure_uploads_requirements: "Güvenli yüklemeler etkinleştirilmeden önce S3 yüklemeleri ve S3 ACL'leri etkinleştirilmelidir."
+      secure_uploads_requirements: "Güvenli yüklemeler etkinleştirilmeden önce S3 yüklemeleri etkinleştirilmeli."
       share_quote_facebook_requirements: "Facebook için alıntı paylaşımını etkinleştirmek üzere bir Facebook uygulama kimliği belirlemeniz gerekiyor."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Yerel girişler devre dışı bırakılmışsa 2 adımlı kimlik doğrulamayı zorlayamazsınız."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "DiscourseConnect etkinleştirilmişse 2 adımlı kimlik doğrulamayı zorlayamazsınız."
@@ -1681,9 +1681,6 @@ tr_TR:
       admin_sidebar_deprecation: "Eski yönetici düzeni, yeni <a href='https://meta.discourse.org/t/-/289281'>kenar çubuğu düzeni</a> lehine kullanımdan kaldırıldı ve bir sonraki sürümde kaldırılacak. Bundan önce katılmak için şimdi yeni kenar çubuğu düzenini <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>yapılandırabilirsiniz</a>."
       starttls_disabled: "Giden e-posta yapılandırmasında STARTTLS devre dışı bırakılmıştır. Bu neredeyse hiçbir zaman gerekli değildir. Ortamınızdan <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> öğesini kaldırmayı düşünün. Daha fazla ayrıntı için lütfen <a href='https://meta.discourse.org/t/387286'>bu konuya</a> bakın."
     back_from_logster_text: "Siteye geri dön"
-    reports_section:
-      providers:
-        core_report: "Standart"
   site_settings:
     allow_bulk_invite: "Bir CSV dosyası yükleyerek toplu davetlere izin verin"
     disabled: "devre dışı"
@@ -2580,6 +2577,10 @@ tr_TR:
     results_page: "\"%{term}\" için arama sonuçları"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "En son gönderiler"
+      order_latest_topic: "En son konular"
   filter:
     description:
       status: "Konuları durumlarına göre filtreleyin"

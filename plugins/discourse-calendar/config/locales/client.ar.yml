@@ -574,3 +574,4 @@ ar:
       invite_user_or_group:
         title: "إرسال إشعار إلى المستخدمين أو المجموعات"
         invite: "إرسال"
+        success: "تم إرسال الدعوة"

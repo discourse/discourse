@@ -43,6 +43,11 @@ function renderComponent(context) {
         @focusPost={{context.focusPost}}
         @registerPost={{registerPost}}
         @collapseFromDepth={{context.collapseFromDepth}}
+        @multiSelect={{context.multiSelect}}
+        @togglePostSelection={{context.togglePostSelection}}
+        @selectReplies={{context.selectReplies}}
+        @selectBelow={{context.selectBelow}}
+        @postSelected={{context.postSelected}}
       />
     </template>
   );
@@ -65,6 +70,11 @@ module("Integration | Component | Nested | Post", function (hooks) {
     this.collapseFromDepth = null;
     this.expansionState = new Map();
     this.fetchedChildrenCache = new Map();
+    this.multiSelect = false;
+    this.togglePostSelection = noop;
+    this.selectReplies = noop;
+    this.selectBelow = noop;
+    this.postSelected = () => false;
     this.post = this.store.createRecord("post", {
       id: 2,
       post_number: 2,
@@ -258,5 +268,41 @@ module("Integration | Component | Nested | Post", function (hooks) {
       .dom(".nested-post-children")
       .doesNotExist("does not mount the child loader");
     assert.verifySteps([], "does not request children while rendering");
+  });
+
+  test("renders multi-select controls", async function (assert) {
+    let selectedPost;
+    this.multiSelect = true;
+    this.postSelected = () => false;
+    this.togglePostSelection = (post) => {
+      selectedPost = post;
+    };
+
+    await renderComponent(this);
+
+    assert
+      .dom(".select-post")
+      .hasText(i18n("topic.multi_select.select_post.label"));
+    assert
+      .dom(".select-below")
+      .hasText(i18n("topic.multi_select.select_below.label"));
+
+    await click(".select-post");
+
+    assert.strictEqual(selectedPost, this.post, "passes the post to selection");
+  });
+
+  test("marks selected posts", async function (assert) {
+    this.multiSelect = true;
+    this.postSelected = (post) => post === this.post;
+
+    await renderComponent(this);
+
+    assert
+      .dom(".nested-post")
+      .hasClass("selected", "adds the selected state class");
+    assert
+      .dom(".select-post")
+      .hasText(i18n("topic.multi_select.selected_post.label"));
   });
 });

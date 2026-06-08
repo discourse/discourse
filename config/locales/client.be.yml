@@ -1360,6 +1360,8 @@ be:
         edit: Рэдагаваць
         reply_to_topic:
           trigger: Тэма
+        reply_to_message:
+          trigger: Паведамленне
         create_personal_message:
           desc: "Напісаць новае асабістае паведамленне"
         unknown_user: "Карыстальнік"

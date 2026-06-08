@@ -1,7 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
-import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ConfigureMenu from "discourse/admin/components/dashboard/configure-menu";
 import DashboardDateRange from "discourse/admin/components/dashboard/date-range";
@@ -11,78 +9,14 @@ import DashboardReports from "discourse/admin/components/dashboard/reports";
 import DashboardSkeleton from "discourse/admin/components/dashboard/skeleton";
 import DashboardTraffic from "discourse/admin/components/dashboard/traffic";
 import DMenu from "discourse/float-kit/components/d-menu";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { deepEqual } from "discourse/lib/object";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class RedesignedAdminDashboard extends Component {
   @service currentUser;
 
-  @tracked pendingSections;
-
-  _saving = false;
-  _opened = false;
-
-  constructor() {
-    super(...arguments);
-    this.pendingSections = this.#buildPendingSections(
-      this.args.loadedSections?.configuration?.sections
-    );
-  }
-
-  @action
-  onMenuOpen() {
-    this._opened = true;
-    this.pendingSections = this.#buildPendingSections(
-      this.args.loadedSections?.configuration?.sections
-    );
-  }
-
-  @action
-  toggleVisibility(id) {
-    this.pendingSections = this.pendingSections.map((s) =>
-      s.id === id ? { ...s, visible: !s.visible } : s
-    );
-  }
-
-  @action
-  reorder(fromIndex, toIndex) {
-    const next = [...this.pendingSections];
-    const [moved] = next.splice(fromIndex, 1);
-    next.splice(toIndex, 0, moved);
-    this.pendingSections = next;
-  }
-
-  @action
-  onMenuClose() {
-    if (this._saving || !this._opened) {
-      return;
-    }
-
-    const committedSections =
-      this.args.loadedSections?.configuration?.sections ?? [];
-
-    if (deepEqual(this.pendingSections, committedSections)) {
-      return;
-    }
-
-    this._saving = true;
-    this.args
-      .updateConfiguration(this.pendingSections)
-      .catch((e) => {
-        popupAjaxError(e);
-        this.pendingSections = this.#buildPendingSections(
-          this.args.loadedSections?.configuration?.sections
-        );
-      })
-      .finally(() => {
-        this._saving = false;
-      });
-  }
-
-  #buildPendingSections(sections) {
-    return sections?.map((section) => ({ ...section })) ?? [];
+  get configurationSections() {
+    return this.args.loadedSections?.configuration?.sections ?? [];
   }
 
   <template>
@@ -105,14 +39,12 @@ export default class RedesignedAdminDashboard extends Component {
             @title={{i18n "admin.dashboard.configure.tooltip"}}
             @triggerClass="btn-default"
             @modalForMobile={{true}}
-            @onClose={{this.onMenuClose}}
-            @onShow={{this.onMenuOpen}}
           >
             <:content>
               <ConfigureMenu
-                @sections={{this.pendingSections}}
-                @onReorder={{this.reorder}}
-                @onToggleVisibility={{this.toggleVisibility}}
+                @sections={{this.configurationSections}}
+                @onReorder={{@reorderSections}}
+                @onToggleVisibility={{@toggleSection}}
               />
             </:content>
           </DMenu>

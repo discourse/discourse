@@ -11,8 +11,11 @@ import { bind } from "discourse/lib/decorators";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import QuoteState from "discourse/lib/quote-state";
 import Composer from "discourse/models/composer";
+import Post from "discourse/models/post";
 import { i18n } from "discourse-i18n";
-import processNode from "../lib/process-node";
+import processNode, {
+  registerPostInTopicPostStream,
+} from "../lib/process-node";
 
 export default class NestedController extends Controller {
   @service appEvents;
@@ -100,6 +103,136 @@ export default class NestedController extends Controller {
 
   get minimumRequiredTags() {
     return this.#topicController.minimumRequiredTags;
+  }
+
+  get multiSelect() {
+    return this.#topicController.multiSelect;
+  }
+
+  get selectedPostsCount() {
+    return this.#topicController.selectedPostsCount;
+  }
+
+  get canSelectAll() {
+    return this.#nestedSelectablePostIds().some(
+      (id) => !this.#topicController.selectedPostIds.includes(id)
+    );
+  }
+
+  get canDeselectAll() {
+    return this.selectedPostsCount > 0;
+  }
+
+  get canDeleteSelected() {
+    const selectedPosts = this.#topicController.selectedPosts;
+
+    return (
+      this.selectedPostsCount > 0 &&
+      this.selectedPostsCount === selectedPosts.length &&
+      selectedPosts.every((post) => post.can_delete)
+    );
+  }
+
+  get canMergeTopic() {
+    return this.#topicController.canMergeTopic;
+  }
+
+  get canChangeOwner() {
+    return this.#topicController.canChangeOwner;
+  }
+
+  get canMergePosts() {
+    return this.#topicController.canMergePosts;
+  }
+
+  @bind
+  postSelected(post) {
+    return this.#topicController.postSelected(post);
+  }
+
+  @action
+  toggleMultiSelect(event) {
+    return this.#topicController.toggleMultiSelect(event);
+  }
+
+  @action
+  togglePostSelection(post) {
+    return this.#topicController.togglePostSelection(post);
+  }
+
+  @action
+  selectReplies(post) {
+    return this.#topicController.selectReplies(post);
+  }
+
+  @action
+  selectBelow(post) {
+    const postIds = this.#visiblePostIdsBelow(post);
+
+    if (postIds.length > 0) {
+      this.#topicController._updateSelectedPostIds(postIds);
+    }
+  }
+
+  @action
+  selectAll(event) {
+    event?.preventDefault();
+    this.#topicController._updateSelectedPostIds(
+      this.#nestedSelectablePostIds()
+    );
+  }
+
+  @action
+  deselectAll(event) {
+    return this.#topicController.deselectAll(event);
+  }
+
+  @action
+  deleteSelected() {
+    const user = this.currentUser;
+    this.dialog.yesNoConfirm({
+      message: i18n("post.delete.confirm", {
+        count: this.selectedPostsCount,
+      }),
+      didConfirm: () => {
+        Post.deleteMany(this.#topicController.selectedPostIds);
+        (this.topic?.postStream?.posts || []).forEach(
+          (post) =>
+            this.postSelected(post) &&
+            post.setDeletedState &&
+            post.setDeletedState(user)
+        );
+        this.toggleMultiSelect();
+      },
+    });
+  }
+
+  @action
+  mergePosts() {
+    return this.#topicController.mergePosts();
+  }
+
+  #visiblePostIdsBelow(post) {
+    const viewSelector = this.contextMode
+      ? ".nested-context-view"
+      : ".nested-view:not(.nested-context-view)";
+    const view = document.querySelector(viewSelector);
+    if (!view) {
+      return [post.id];
+    }
+
+    const postIds = Array.from(
+      view.querySelectorAll("article[data-post-id]")
+    ).map((element) => Number(element.dataset.postId));
+    const index = postIds.indexOf(post.id);
+
+    return index === -1 ? [post.id] : postIds.slice(index);
+  }
+
+  #nestedSelectablePostIds() {
+    return (this.topic?.postStream?.posts || [])
+      .map((post) => post.id)
+      .filter((id) => id != null);
   }
 
   @action
@@ -352,7 +485,7 @@ export default class NestedController extends Controller {
     if (!postStream.findLoadedPost(id)) {
       for (const post of this.postRegistry.values()) {
         if (post.id === id) {
-          postStream.storePost(post);
+          registerPostInTopicPostStream(this.topic, post);
           break;
         }
       }

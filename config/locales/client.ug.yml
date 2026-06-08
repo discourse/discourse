@@ -2966,6 +2966,8 @@ ug:
           label: تېمىغا جاۋاب
           trigger: تېما
           desc: تېمىغا جاۋاب، بەلگىلەنگەن يازمىغا ئەمەس
+        reply_to_message:
+          trigger: ئۇچۇر
         toggle_whisper:
           label: پىچىر ئالماشتۇر
         create_topic:
@@ -5906,6 +5908,7 @@ ug:
         too_many_requests: بۇ مەشغۇلاتنى بەك كۆپ قىلدىڭىز. سەل كۈتۈپ ئاندىن قايتا سىناڭ.
         not_found_error: كەچۈرۈڭ، بۇ دوكلات مەۋجۇت ئەمەس
         custom_date_range: ئىختىيارى چېسلا دائىرىسى
+        stable: "مۇقىم"
         sections:
           reports:
             title: "دوكلات"
@@ -5927,8 +5930,6 @@ ug:
                 "2": "ئەزا"
                 "3": "ئادەتتىكى"
                 "4": "باشلىق"
-              trend:
-                stable: "مۇقىم"
         reports_section:
           no_data: "كۆرسىتىدىغان سانلىق مەلۇمات يوق"
           modal:
@@ -6446,9 +6447,10 @@ ug:
           your_organization: "تەشكىلاتىڭىز"
           your_organization_description: "بىز بۇ ئۇچۇرنى مۇلازىمەت ماددىلىرى ۋە شەخسىيەت باياناتىدا كۆرسىتىپ مەزكۇر تور بېكەتنى يۈرۈشتۈرگۈچىسى ۋە ئەدلىيە تەۋەلىكىنى كۆرسىتىمىز"
           company_name: "ئىسمى"
-          company_name_placeholder: "Acme تەشكىلاتى"
           company_name_warning: |
             ئەگەر بوش قالدۇرۇلسا، قېلىپسىمان مۇلازىمەت ماددىلىرى ياكى شەخسىيەت باياناتىنى تەمىنلىمەيدۇ
+          company_url: "تور بېكەت"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "باشقۇرۇش قانۇنى"
           governing_law_placeholder: "ئۆلكە، ئىشتات ياكى دۆلەت"
           governing_law_help: |

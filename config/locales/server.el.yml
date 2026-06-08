@@ -1203,9 +1203,6 @@ el:
       google_analytics_version: "Το Discourse σας χρησιμοποιεί αυτήν τη στιγμή το Google Analytics 3, το οποίο δεν θα υποστηρίζεται πλέον μετά τον Ιούλιο του 2023. <a href='https://meta.discourse.org/t/260498'>Αναβαθμίστε σε Google Analytics 4</a> τώρα για να συνεχίσετε να λαμβάνετε πολύτιμες πληροφορίες και αναλυτικά στοιχεία για την απόδοση του ιστότοπού σας."
       admin_sidebar_deprecation: "Η παλιά διάταξη διαχειριστή έχει καταργηθεί υπέρ της νέας <a href='https://meta.discourse.org/t/-/289281'>διάταξης πλαϊνής γραμμής</a> και θα καταργηθεί στην επόμενη έκδοση. Μπορείτε να <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>διαμορφώσετε</a> τη νέα διάταξη πλαϊνής γραμμής τώρα για να επιλέξετε να συμμετάσχετε πριν από αυτό."
     back_from_logster_text: "Πίσω στον ιστότοπο"
-    reports_section:
-      providers:
-        core_report: "Τυπικό"
   site_settings:
     disabled: "απενεργοποιημένα"
     censored_words: "Αυτόματη αντικατάσταση λέξεων θα γίνεται με &#9632;&#9632;&#9632;&#9632;"
@@ -1567,6 +1564,10 @@ el:
       topic: "Αποτελέσματα"
       user: "Χρήστες"
     results_page: "Αποτελέσματα αναζήτησης για '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "Τελευταίες αναρτήσεις"
+      order_latest_topic: "Τελευταία θέματα"
   filter:
     description:
       status_deleted: "Εμφάνιση διαγραμμένων θεμάτων (αν έχετε δικαίωμα)"
