@@ -755,6 +755,23 @@ module(
         sectionTitles.some((t) => t.includes("First Step")),
         "shows ancestor node as section"
       );
+
+      const resultField = [
+        ...this.element.querySelectorAll(".workflows-schema-field__key"),
+      ].find((el) => el.textContent.trim() === "result");
+      const dragged = {};
+      const dataTransfer = {
+        setData(type, value) {
+          dragged[type] = value;
+        },
+      };
+
+      await triggerEvent(resultField, "dragstart", { dataTransfer });
+
+      assert.strictEqual(
+        JSON.parse(dragged[WORKFLOW_VARIABLE_MIME]).id,
+        '$("First Step").first().json.result'
+      );
     });
 
     test("environment fields match schema symbols", async function (assert) {

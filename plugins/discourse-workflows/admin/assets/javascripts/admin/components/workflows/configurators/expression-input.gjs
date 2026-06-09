@@ -11,7 +11,7 @@ import {
   inputConnectionsForNode,
   inputIndexForConnection,
   inputSummaryForNode,
-  nodeItemJsonPath,
+  nodeOutputJsonPath,
   outputIndexForConnection,
   previousNodeForConnection,
   schemaFieldsForNodeInput,
@@ -95,7 +95,10 @@ export default class ExpressionInput extends Component {
           fields: schemaFieldsForNodeOutput(runData, ancestor.node.name, {
             outputIndex: ancestor.outputIndex,
             node: ancestor.node,
-            prefix: nodeItemJsonPath(ancestor.node.name),
+            prefix: nodeOutputJsonPath(runData, ancestor.node.name, {
+              outputIndex: ancestor.outputIndex,
+              node: ancestor.node,
+            }),
           }),
         }))
       : [];
