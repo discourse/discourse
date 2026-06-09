@@ -191,6 +191,70 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(enqueued_trigger_node_ids).not_to include("type-mismatch")
   end
 
+  it "only enqueues user seen workflows matching the trigger setting" do
+    seen_at = Time.zone.now
+    user.update_columns(first_seen_at: seen_at, last_seen_at: seen_at)
+
+    create_published_workflow("matching-trigger", "trigger:user_seen")
+    create_published_workflow(
+      "every-seen-trigger",
+      "trigger:user_seen",
+      configuration: {
+        "trigger_on" => "every_time_seen",
+      },
+    )
+    create_published_workflow(
+      "returning-user-trigger",
+      "trigger:user_seen",
+      configuration: {
+        "trigger_on" => "not_seen_for_more_than",
+        "not_seen_for_amount" => 1,
+        "not_seen_for_unit" => "days",
+      },
+    )
+
+    described_class.handle(DiscourseWorkflows::Nodes::UserSeen::V1, user, nil)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly(
+      "matching-trigger",
+      "every-seen-trigger",
+      "returning-user-trigger",
+    )
+    expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first["user_id"]).to eq(
+      user.id,
+    )
+  end
+
+  it "enqueues user seen workflows for returning users" do
+    previous_seen_at = 2.days.ago
+    user.update_columns(first_seen_at: 1.month.ago, last_seen_at: Time.zone.now)
+
+    create_published_workflow("new-user-trigger", "trigger:user_seen")
+    create_published_workflow(
+      "every-seen-trigger",
+      "trigger:user_seen",
+      configuration: {
+        "trigger_on" => "every_time_seen",
+      },
+    )
+    create_published_workflow(
+      "returning-user-trigger",
+      "trigger:user_seen",
+      configuration: {
+        "trigger_on" => "not_seen_for_more_than",
+        "not_seen_for_amount" => 1,
+        "not_seen_for_unit" => "days",
+      },
+    )
+
+    described_class.handle(DiscourseWorkflows::Nodes::UserSeen::V1, user, previous_seen_at)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly(
+      "every-seen-trigger",
+      "returning-user-trigger",
+    )
+  end
+
   it "does not enqueue post edited workflows for replies by default" do
     create_post(topic: topic)
     create_published_workflow("first-post-only", "trigger:post_edited")
