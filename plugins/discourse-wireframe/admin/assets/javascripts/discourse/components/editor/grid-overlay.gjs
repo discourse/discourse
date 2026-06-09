@@ -7,6 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { gridDimensions, parsePlacement } from "discourse/blocks";
+import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 import { GRID_LAYOUT_SELECTOR } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-dom-contract";
@@ -28,7 +29,6 @@ import {
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import { entryKey } from "../../lib/mutate-layout";
 import { buildBlockPalette } from "../../lib/palette";
-import gridTrackResize from "../../modifiers/grid-track-resize";
 import EditorEmptyDropPlaceholder from "./editor-empty-drop-placeholder";
 
 /**
@@ -109,8 +109,9 @@ function descriptorsEqual(a, b) {
  *  - For every slot, an invisible tile `<div>` at the slot's grid
  *    coordinates. The tile body is the drag-to-move surface; a corner
  *    handle drags to resize; hover reveals a delete `×`.
- *  - A resize ghost `<div>` repositioned by `gridTileDrag` to preview
- *    the proposed cell rectangle during a resize gesture.
+ *  - A resize ghost `<div>` repositioned during a span-resize gesture
+ *    (by the block chrome's resize handlers) to preview the proposed cell
+ *    rectangle.
  *  - A single drop-preview overlay `<div>` that the component
  *    repositions during a drag-and-drop to mark where the block will
  *    land (rectangle over a cell for "land here / swap" actions; thin
@@ -118,7 +119,7 @@ function descriptorsEqual(a, b) {
  *
  * Drop-preview overlay vs. drag ghost: deliberately separate elements
  * even though both live inside the same grid. The resize ghost is
- * driven by `gridTileDrag` (pointer-events) via CSS grid placement;
+ * driven by the span-resize handlers (pointer-events) via CSS grid placement;
  * the drop overlay is driven by HTML5 DnD events via absolute pixel
  * positions so it can render a thin line midway in a grid gap.
  * Sharing one element would force one path to teach the other its
@@ -231,6 +232,14 @@ export default class GridOverlay extends Component {
   // eslint-disable-next-line no-unused-private-class-members
   #overlayElement = null;
 
+  /**
+   * The active column-track resize session ({gridEl, pxWidths, nextFractions}),
+   * or `null`. Captured on `onTrackResizeStart` and cleared on end/cancel.
+   *
+   * @type {?Object}
+   */
+  #trackResize = null;
+
   willDestroy() {
     super.willDestroy(...arguments);
     this.#gridDropTargetCleanup?.();
@@ -281,7 +290,7 @@ export default class GridOverlay extends Component {
    * global). Empty when the grid has one column or is `@container`-
    * collapsed (resolved track widths aren't a usable basis then).
    *
-   * @returns {Array<{line: number, rowStart: number, rowEnd: number, leftTrack: number}>}
+   * @returns {Array<{payload: number, class: string, style: any}>} `DResizeHandles` descriptors.
    */
   get columnHandles() {
     if (this.isCollapsed || this.columns < 2) {
@@ -313,11 +322,16 @@ export default class GridOverlay extends Component {
         // Close the run at a span (this row breaks it) or at the last row.
         if (runStart !== null && (!isBoundary || row === this.rows)) {
           const rowEnd = isBoundary ? row : row - 1;
+          // `DResizeHandles` descriptor: `payload` is the 0-indexed left track
+          // (the column pair this gutter resizes); `style` places the handle
+          // strip on the gridline; `class` styles it as a vertical hairline.
           handles.push({
-            line,
-            rowStart: runStart,
-            rowEnd,
-            leftTrack: line - 2,
+            payload: line - 2,
+            class:
+              "wireframe-grid-track-handle wireframe-grid-track-handle--column",
+            style: trustHTML(
+              `grid-column: ${line}; grid-row: ${runStart} / ${rowEnd + 1};`
+            ),
           });
           runStart = null;
         }
@@ -327,22 +341,82 @@ export default class GridOverlay extends Component {
   }
 
   /**
-   * Inline style placing a column handle run at grid line `line` across
-   * rows `rowStart`–`rowEnd` (a continuous strip down that gutter). The
-   * strip is centred on the line via CSS (see the stylesheet), so no
-   * pixel measurement is needed here.
+   * Starts a column-track resize. Snapshots the grid's resolved column pixel
+   * widths (the basis for the fraction math) and selects the layout. Aborts
+   * (returns `false`) if the gutter is out of range. `payload` is the left track.
    *
-   * @param {{line: number, rowStart: number, rowEnd: number}} handle
-   * @returns {ReturnType<typeof trustHTML>}
+   * @param {number} leftTrack
+   * @returns {void|false}
    */
-  columnHandleStyle(handle) {
-    return trustHTML(
-      `grid-column: ${handle.line}; grid-row: ${handle.rowStart} / ${handle.rowEnd + 1};`
+  @action
+  onTrackResizeStart(leftTrack) {
+    const gridEl = this.getGridElement();
+    if (!gridEl) {
+      return false;
+    }
+    const pxWidths = this.#readColumnWidths(gridEl);
+    if (leftTrack < 0 || leftTrack + 1 >= pxWidths.length) {
+      return false;
+    }
+    // Selecting on grab means the inspector tracks the layout being resized.
+    this.selectGrid();
+    this.#trackResize = { gridEl, pxWidths, nextFractions: null };
+  }
+
+  /**
+   * Previews the resize: recomputes the column fractions from the pointer delta
+   * (Alt = shrink the columns to the right proportionally instead of split-pane)
+   * and writes them to the grid's `--d-block-layout-cols` custom property.
+   * Nothing mutates tracked state during the drag, so Glimmer doesn't clobber
+   * the inline preview; the commit's structural re-render replaces it.
+   *
+   * @param {number} leftTrack
+   * @param {Object} dragInfo
+   * @returns {void}
+   */
+  @action
+  onTrackResize(leftTrack, dragInfo) {
+    const session = this.#trackResize;
+    if (!session) {
+      return;
+    }
+    session.nextFractions = resizeColumnFractions(
+      session.pxWidths,
+      leftTrack,
+      dragInfo.delta.x,
+      { proportional: dragInfo.event.altKey }
+    );
+    session.gridEl.style.setProperty(
+      "--d-block-layout-cols",
+      session.nextFractions.map((fraction) => `${fraction}fr`).join(" ")
     );
   }
 
   /**
-   * Persists resized column widths once a gridline drag ends.
+   * Commits the resized column widths once the drag ends. The structural
+   * re-render replaces the inline preview with the persisted value, so no manual
+   * clear is needed.
+   *
+   * @returns {void}
+   */
+  @action
+  onTrackResizeEnd() {
+    const next = this.#trackResize?.nextFractions;
+    this.#trackResize = null;
+    if (next) {
+      this.commitColumnFractions(next);
+    }
+  }
+
+  /** @returns {void} */
+  @action
+  onTrackResizeCancel() {
+    this.#trackResize?.gridEl?.style.removeProperty("--d-block-layout-cols");
+    this.#trackResize = null;
+  }
+
+  /**
+   * Persists resized column widths.
    *
    * @param {number[]} fractions
    */
@@ -352,6 +426,13 @@ export default class GridOverlay extends Component {
       gridKey: this.args.gridKey,
       fractions,
     });
+  }
+
+  #readColumnWidths(el) {
+    return (getComputedStyle(el).gridTemplateColumns || "")
+      .split(" ")
+      .map((part) => parseFloat(part))
+      .filter((value) => !Number.isNaN(value));
   }
 
   get slots() {
@@ -1545,20 +1626,14 @@ export default class GridOverlay extends Component {
         {{! Interior column gridline handles — drag to resize the two
           adjacent columns (persisted as `columnFractions`); hold Alt to
           shrink the columns to the right proportionally instead. }}
-        {{#each this.columnHandles as |handle|}}
-          <div
-            class="wireframe-grid-track-handle wireframe-grid-track-handle--column"
-            title={{i18n "wireframe.canvas.resize_column_hint"}}
-            style={{this.columnHandleStyle handle}}
-            {{gridTrackResize
-              this.getGridElement
-              handle.leftTrack
-              resizeColumnFractions
-              this.commitColumnFractions
-              this.selectGrid
-            }}
-          ></div>
-        {{/each}}
+        <DResizeHandles
+          @handles={{this.columnHandles}}
+          @onResizeStart={{this.onTrackResizeStart}}
+          @onResize={{this.onTrackResize}}
+          @onResizeEnd={{this.onTrackResizeEnd}}
+          @onResizeCancel={{this.onTrackResizeCancel}}
+          @draggingClass="--dragging"
+        />
         {{! No local drop overlay — the shell-mounted `<DropPreview>`
           is the single indicator. The dragover handler publishes
           the unified descriptor directly to

@@ -745,6 +745,45 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.strictEqual(undoneCell.containerArgs.grid.column, "2");
       assert.strictEqual(undoneCell.containerArgs.grid.row, "1");
     });
+
+    test("resizeSlot never grows the grid's declared columns / rows", function (assert) {
+      // Regression: a resize must not bake a wider span into the grid's
+      // declared track count — growth is reserved for drops. (The handle
+      // clamps to the effective size; even if a placement past declared
+      // reaches the manipulator, declared stays put.)
+      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const grid = draft[0];
+      const seed = grid.children[0];
+      const seedKey = `wf:svc-test-tile:${seed.__stableKey}`;
+      assert.strictEqual(
+        grid.args.columns,
+        4,
+        "grid starts at 4 declared columns"
+      );
+
+      const ok = this.editor.gridManipulator.resizeSlot({
+        slotKey: seedKey,
+        column: "1 / 6", // trailing edge (line 6) reaches past the 4 columns
+        row: "1",
+      });
+      assert.true(ok);
+
+      const after = this.editor.readResolvedLayout("homepage-blocks");
+      const resized = after[0].children.find(
+        (c) => c.__stableKey === seed.__stableKey
+      );
+      assert.strictEqual(
+        resized.containerArgs.grid.column,
+        "1 / 6",
+        "the placement is written"
+      );
+      assert.strictEqual(
+        after[0].args.columns,
+        4,
+        "declared columns are unchanged (resize does not grow the grid)"
+      );
+      assert.strictEqual(after[0].args.rows, 2, "declared rows are unchanged");
+    });
   });
 
   module(

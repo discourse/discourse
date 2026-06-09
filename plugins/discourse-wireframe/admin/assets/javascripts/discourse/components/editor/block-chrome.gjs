@@ -6,9 +6,14 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { parsePlacement } from "discourse/blocks";
+import {
+  gridDimensions,
+  parsePlacement,
+  parseSlotPlacement,
+} from "discourse/blocks";
 import { isPartKey } from "discourse/lib/blocks/-internals/composite";
 import { and, eq } from "discourse/truth-helpers";
+import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
@@ -21,7 +26,10 @@ import {
   GRID_LAYOUT_SELECTOR,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-dom-contract";
 import {
+  cellAt,
   computeOccupation,
+  computeSpanResize,
+  formatTrack,
   placementsOverlap,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import { imageArgEntries } from "../../lib/empty-image-upload";
@@ -29,7 +37,6 @@ import { kindForArg } from "../../lib/kind-for-arg";
 import { entryKey } from "../../lib/mutate-layout";
 import { buildBlockPalette } from "../../lib/palette";
 import containerDropTarget from "../../modifiers/container-drop-target";
-import gridTileDrag from "../../modifiers/grid-tile-drag";
 import LinkEditPopover from "../link-edit-popover";
 import BlockToolbar from "./block-toolbar";
 import EditorEmptyDropPlaceholder from "./editor-empty-drop-placeholder";
@@ -156,28 +163,19 @@ export default class BlockChrome extends Component {
     if (!grid) {
       return new Set();
     }
-    const columns = Number(grid.args?.columns ?? 6);
-    const rows = Number(grid.args?.rows ?? 2);
+    // Use the EFFECTIVE grid size (what's actually rendered), not the declared
+    // `args` size, so a sibling spanning past the declared count is still
+    // counted as occupied. Same source the renderer uses, so they can't drift.
+    const { columns, rows } = gridDimensions(
+      { columns: grid.args?.columns ?? 3, rows: grid.args?.rows ?? 2 },
+      grid.children
+    );
     const selfKey = this.args.blockKey;
     const siblings = (grid.children ?? []).filter(
       (child) => entryKey(child) !== selfKey
     );
     return computeOccupation(siblings, columns, rows);
   };
-
-  /**
-   * The edge + corner handles painted on a selected grid cell for span-resize.
-   * Edges (`n` / `s` / `e` / `w`) render as bars and resize one axis; corners
-   * (`ne` / `nw` / `se` / `sw`) render as nubs and resize both. Each carries
-   * the compass `dir` handed to the drag modifier and a precomputed BEM class
-   * (so the template needs no `concat` helper).
-   */
-  gridResizeHandles = ["n", "s", "e", "w", "ne", "nw", "se", "sw"].map(
-    (dir) => ({
-      dir,
-      className: `wireframe-block-chrome__resize-handle wireframe-block-chrome__resize-handle--${dir}`,
-    })
-  );
 
   /**
    * Finds the rendered image marker (`[data-block-arg="<argName>"]`)
@@ -213,6 +211,17 @@ export default class BlockChrome extends Component {
    * @type {any[]}
    */
   #urlTooltips = [];
+
+  /**
+   * The active span-resize session, or `null` when no resize is in progress.
+   * Captured on `onGridResizeStart` and cleared on end/cancel. Holds the
+   * resolved origin placement, the snapshotted occupancy + grid rect + effective
+   * dimensions (so the math is stable across the drag), the ghost element, and
+   * the latest computed placement to commit.
+   *
+   * @type {?Object}
+   */
+  #gridResize = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -425,8 +434,11 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Columns count of the parent grid layout. Drives the resize
-   * modifier's snap math.
+   * Columns count of the parent grid layout. Drives the resize modifier's snap
+   * math. Reports the EFFECTIVE size (what's actually rendered —
+   * `gridDimensions` of the declared args plus the children's extent), not the
+   * declared `args.columns`, so the pointer-to-cell mapping matches the grid the
+   * author sees and a span can't be dragged past the rightmost rendered column.
    *
    * @returns {number}
    */
@@ -434,7 +446,10 @@ export default class BlockChrome extends Component {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
     const grid = this.wireframe.findEntryParent(this.args.blockKey);
-    return Number(grid?.args?.columns ?? 6);
+    return gridDimensions(
+      { columns: grid?.args?.columns ?? 3, rows: grid?.args?.rows ?? 2 },
+      grid?.children
+    ).columns;
   }
 
   /** @returns {number} */
@@ -442,7 +457,10 @@ export default class BlockChrome extends Component {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
     const grid = this.wireframe.findEntryParent(this.args.blockKey);
-    return Number(grid?.args?.rows ?? 2);
+    return gridDimensions(
+      { columns: grid?.args?.columns ?? 3, rows: grid?.args?.rows ?? 2 },
+      grid?.children
+    ).rows;
   }
 
   /**
@@ -1036,18 +1054,121 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Routes the resize modifier's commit back to THIS slot's own args.
-   * The resize handle lives on the slot wrapper (transparent path), so
-   * commits update the slot's column / row in place — the cell border
-   * grows / shrinks but the inner content stays put.
+   * Starts a span-resize from one of the `DResizeHandles`. Snapshots a stable
+   * session for the drag: the effective grid dimensions (so a span clamps to the
+   * rendered grid, never growing it), the grid's pixel rect, the sibling
+   * occupancy (so a growing edge clamps at the first neighbour), the resolved
+   * origin placement, and the ghost element. An auto-placed cell has no concrete
+   * origin, so its starting cell is taken from the pointer.
+   *
+   * @param {string} direction - The handle's compass direction.
+   * @param {Object} dragInfo - The `DResizeHandles` drag payload.
+   * @returns {void|false}
    */
   @action
-  commitSelfResize(placement) {
-    this.wireframe.gridManipulator.resizeSlot({
-      slotKey: this.args.blockKey,
-      column: placement.column,
-      row: placement.row,
+  onGridResizeStart(direction, dragInfo) {
+    const gridEl = this.getResizeGridElement();
+    if (!gridEl) {
+      return false;
+    }
+    const columns = this.slotGridColumns;
+    const rows = this.slotGridRows;
+    const gridRect = gridEl.getBoundingClientRect();
+    const startCell = cellAt(dragInfo.event, gridRect, columns, rows);
+    const origin = parseSlotPlacement(this.slotPlacement);
+    if (origin.column.start == null) {
+      origin.column = { start: startCell.column, end: startCell.column + 1 };
+    }
+    if (origin.row.start == null) {
+      origin.row = { start: startCell.row, end: startCell.row + 1 };
+    }
+    const ghost = this.getResizeGhost();
+    this.#gridResize = {
+      origin,
+      columns,
+      rows,
+      gridRect,
+      occupied: this.getResizeOccupied(),
+      ghost,
+      next: null,
+    };
+    if (ghost) {
+      this.#applyGhostStyle(ghost, origin);
+      ghost.classList.add("--visible");
+    }
+  }
+
+  /**
+   * Previews the span on each pointer move: maps the pointer to a grid cell and
+   * computes the clamped placement (`computeSpanResize` stops a growing edge at
+   * the first occupied neighbour and at the rendered grid bounds), then paints
+   * the ghost.
+   *
+   * @param {string} direction - The handle's compass direction.
+   * @param {Object} dragInfo - The `DResizeHandles` drag payload.
+   * @returns {void}
+   */
+  @action
+  onGridResize(direction, dragInfo) {
+    const session = this.#gridResize;
+    if (!session) {
+      return;
+    }
+    const cell = cellAt(
+      dragInfo.event,
+      session.gridRect,
+      session.columns,
+      session.rows
+    );
+    const next = computeSpanResize({
+      origin: session.origin,
+      cell,
+      direction,
+      columns: session.columns,
+      rows: session.rows,
+      occupied: session.occupied,
     });
+    session.next = next;
+    if (session.ghost) {
+      this.#applyGhostStyle(session.ghost, next);
+    }
+  }
+
+  /**
+   * Commits the span-resize on release, writing the clamped placement to this
+   * slot's own `containerArgs.grid` in place (the cell border grows / shrinks,
+   * the inner content stays put). Resize never grows the declared grid — see
+   * `GridManipulator#resizeSlot`.
+   *
+   * @returns {void}
+   */
+  @action
+  onGridResizeEnd() {
+    const next = this.#gridResize?.next;
+    this.#endGridResize();
+    if (next) {
+      this.wireframe.gridManipulator.resizeSlot({
+        slotKey: this.args.blockKey,
+        column: formatTrack(next.column),
+        row: formatTrack(next.row),
+      });
+    }
+  }
+
+  /** @returns {void} */
+  @action
+  onGridResizeCancel() {
+    this.#endGridResize();
+  }
+
+  #applyGhostStyle(ghost, placement) {
+    ghost.style.gridColumn = `${placement.column.start} / ${placement.column.end}`;
+    ghost.style.gridRow = `${placement.row.start} / ${placement.row.end}`;
+  }
+
+  #endGridResize() {
+    this.#gridResize?.ghost?.classList.remove("--visible");
+    this.#gridResize = null;
   }
 
   /**
@@ -1556,27 +1677,18 @@ export default class BlockChrome extends Component {
 
           {{#if (and this.isGridCell this.isSelected)}}
             {{! Edge bars + corner nubs for span-resize. Each handle hands its
-              compass direction to the drag modifier; edges move one axis,
-              corners both. The bar/nub language is deliberately distinct from
-              the image block's round resize dots so the two gestures are never
-              confused. }}
-            {{#each this.gridResizeHandles as |handle|}}
-              <span
-                class={{handle.className}}
-                title={{i18n "wireframe.canvas.resize_handle_title"}}
-                aria-hidden="true"
-                {{gridTileDrag
-                  this.getResizeGridElement
-                  this.slotPlacement
-                  this.slotGridColumns
-                  this.slotGridRows
-                  this.getResizeGhost
-                  this.commitSelfResize
-                  handle.dir
-                  this.getResizeOccupied
-                }}
-              ></span>
-            {{/each}}
+              compass direction back through the resize callbacks; edges move one
+              axis, corners both. The bar/nub language is deliberately distinct
+              from the image block's round resize dots so the two gestures are
+              never confused. }}
+            <DResizeHandles
+              @handleClass="wireframe-block-chrome__resize-handle"
+              @onResizeStart={{this.onGridResizeStart}}
+              @onResize={{this.onGridResize}}
+              @onResizeEnd={{this.onGridResizeEnd}}
+              @onResizeCancel={{this.onGridResizeCancel}}
+              @draggingClass="--dragging"
+            />
           {{/if}}
 
           {{#if this.showsImageResizeHandle}}

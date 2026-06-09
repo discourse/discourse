@@ -316,9 +316,16 @@ export default class GridManipulator {
 
   /**
    * Updates a grid cell's `column` / `row` placement. Written by the cell's
-   * resize handle on pointerup, so a span dragged past the declared size
-   * grows the grid's declared dimensions to match. A deterministic resize of
-   * one cell against an explicit rect, not a drop — no decider.
+   * resize handle on pointerup. A deterministic resize of one cell against an
+   * explicit rect, not a drop — no decider.
+   *
+   * Resize does NOT grow the grid: the handle already clamps the span to the
+   * EFFECTIVE (rendered) dimensions, so the committed placement never reaches
+   * past what's already visible. Declared `args.columns` / `args.rows` are left
+   * untouched — growing the declared track count is reserved for drops. (The
+   * effective size is recomputed from the children on every render via
+   * `gridDimensions`, so a wider span still renders; it just doesn't bake a new
+   * column / row into the author's declared grid.)
    *
    * @param {{slotKey: string, column: string, row: string}} args
    * @returns {boolean}
@@ -343,16 +350,7 @@ export default class GridManipulator {
       if (!result.changed) {
         return false;
       }
-      // A placement reaching past the declared size (e.g. a span dragged to
-      // the edge) grows the grid's declared columns / rows to match.
-      const parent = svc.findEntryParent(slotKey);
-      const gridKey = parent ? entryKey(parent) : null;
-      svc.publishStructuralChange(
-        located.outletName,
-        gridKey
-          ? this.syncDeclaredToUsage(result.layout, gridKey)
-          : result.layout
-      );
+      svc.publishStructuralChange(located.outletName, result.layout);
       return true;
     });
   }
