@@ -64,6 +64,23 @@ RSpec.describe UserGuardian do
 
       expect(admin.guardian.can_see_flair?).to eq(false)
     end
+
+    context "when granular_anonymous_and_logged_in_groups_permissions is enabled" do
+      before { SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true }
+
+      it "treats the everyone group as logged-in users, excluding anonymous viewers" do
+        SiteSetting.flair_visible_groups = Group::AUTO_GROUPS[:everyone].to_s
+
+        expect(non_member.guardian.can_see_flair?).to eq(true)
+        expect(Guardian.new.can_see_flair?).to eq(false)
+      end
+
+      it "lets anonymous viewers see flairs when the anonymous_users group is configured" do
+        SiteSetting.flair_visible_groups = Group::AUTO_GROUPS[:anonymous_users].to_s
+
+        expect(Guardian.new.can_see_flair?).to eq(true)
+      end
+    end
   end
 
   describe "#can_claim_reviewable_topic?" do

@@ -6,15 +6,11 @@ module UserGuardian
     (SiteSetting.reviewable_claiming != "disabled" || automatic) && can_review_topic?(topic)
   end
 
-  # Gates visibility of other users' avatar flairs to the viewer; it does not
-  # change who may have a flair. No staff exemption.
   def can_see_flair?
     flair_visible_groups = SiteSetting.flair_visible_groups_map
 
-    return true if flair_visible_groups.include?(Group::AUTO_GROUPS[:everyone])
-    return false if anonymous?
-
-    @user.in_any_groups?(flair_visible_groups)
+    flair_visible_groups.include?(Group::AUTO_GROUPS[:everyone]) ||
+      @user.in_any_groups?(flair_visible_groups)
   end
 
   def can_pick_avatar?(user_avatar, upload)
