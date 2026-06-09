@@ -27,7 +27,7 @@ class RspecPerformanceFormatter
         group = request_group(env, data)
         groups << group if group
       rescue => error
-        groups << { error: MethodProfiler.utf8("#{error.class}: #{error.message}") }
+        groups << { error: "#{error.class}: #{error.message}" }
       end
       Middleware::RequestTracker.register_detailed_request_logger(logger)
       yield
