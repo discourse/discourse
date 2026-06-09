@@ -9,12 +9,13 @@ RSpec.shared_context "with prosemirror editor" do
     )
   end
 
-  fab!(:tag)
-  fab!(:category_with_emoji) do
-    Fabricate(:category, slug: "cat", emoji: "cat", style_type: "emoji")
-  end
-  fab!(:category_with_icon) { Fabricate(:category, icon: "bell", style_type: "icon") }
-  fab!(:category_without_icon, :category)
+  # NOTE: The hashtag/tag autocomplete fixtures (`tag`, `category_with_emoji`,
+  # `category_with_icon`, `category_without_icon`) used to live here and were
+  # eagerly fabricated for every example in all 15 prosemirror spec files, but
+  # only the autocomplete and keymap specs reference them. Fabricating each of
+  # those categories also creates a `user` association, so ~13 of the files paid
+  # for 3 categories + 3 users + 1 tag per example with nothing using them. They
+  # now live in the two specs that actually need them.
 
   let(:cdp) { PageObjects::CDP.new }
   let(:composer) { PageObjects::Components::Composer.new }
