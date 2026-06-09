@@ -3615,7 +3615,7 @@ tr_TR:
         education:
           topic_tracking_preferences: 'Yeni konu izleme ayarlarınızı <a href="%{basePath}/my/preferences/tracking">tercihlerinizden</a> görüntüleyebilir ve değiştirebilirsiniz.'
           unread: "Okunmamış bir şey kalmadı... Etkileyici!"
-          new_new: "Şu anda yeni bir şey yok... Kısa süre sonra tekrar kontrol edin!"
+          unified_new: "Şu anda yeni bir şey yok... Kısa süre sonra tekrar kontrol edin!"
           new: "Şu anda yeni bir şey yok... Kısa süre sonra tekrar kontrol edin!"
           generic: "Burada görecek bir şey yok... yakında tekrar kontrol edin!"
     topic_bulk_actions:
@@ -3715,10 +3715,6 @@ tr_TR:
       topic_admin_menu:
         enable_nested_replies: "İç içe geçmiş yanıtları etkinleştir"
         disable_nested_replies: "İç içe geçmiş yanıtları devre dışı bırak"
-      context:
-        banner: "Bu konudan tek bir başlığı görüntülüyorsunuz."
-        view_full_topic: "Konunun tamamını görüntüle"
-        view_parent_context: "Üst bağlamı görüntüle"
     topic:
       filter_to:
         one: "Konuda %{count} gönderi"
@@ -4961,7 +4957,7 @@ tr_TR:
         new_replies_tooltip: "Yeni yanıtlar"
         replies: "Yanıtlar"
         replies_with_count: "Yanıtlar (%{count})"
-      new_new:
+      unified_new:
         help: "son birkaç gün içinde oluşturulan veya yanıtlanan konular"
       posted:
         title: "Gönderilerim"

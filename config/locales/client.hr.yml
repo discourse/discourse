@@ -3462,7 +3462,7 @@ hr:
         education:
           topic_tracking_preferences: 'Nove postavke praćenja tema možete pregledati i promijeniti u <a href="%{basePath}/my/preferences/tracking">svojim postavkama</a>.'
           unread: "Ništa nije ostalo nepročitano... impresivno!"
-          new_new: "Trenutno ništa nova... provjerite uskoro!"
+          unified_new: "Trenutno ništa nova... provjerite uskoro!"
           new: "Trenutno ništa nova... provjerite uskoro!"
     topic_bulk_actions:
       dismiss:
@@ -4686,7 +4686,7 @@ hr:
         new_replies_tooltip: "Novi odgovori"
         replies: "Odgovori"
         replies_with_count: "Odgovori (%{count})"
-      new_new:
+      unified_new:
         help: "teme kreirane ili na koje je odgovoreno u posljednjih nekoliko dana"
       posted:
         title: "Moje objave"

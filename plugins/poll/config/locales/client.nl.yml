@@ -12,6 +12,7 @@ nl:
           poll: "Discourse-poll"
   js:
     poll:
+      title: "Poll"
       dynamic:
         enabled_hint: "Opties kunnen worden toegevoegd of verwijderd."
       voters:

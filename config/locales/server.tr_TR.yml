@@ -2446,7 +2446,6 @@ tr_TR:
     navigation_menu: "Siteniz için ana gezinme menüsü olarak kenar çubuğunu veya başlık açılır menüsünü belirleyin. Kenar çubuğu önerilir."
     default_navigation_menu_categories: "Seçilen kategoriler, varsayılan olarak Navigasyon Menüsü'nün Kategoriler bölümünde gösterilir."
     default_navigation_menu_tags: "Seçilen etiketler, varsayılan olarak Navigasyon Menüsü'nün Etiketler bölümünde gösterilir."
-    experimental_new_new_view_groups: 'Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
     enable_form_templates: "Form şablonları özelliğini etkinleştirin. Bu özellik sayesinde, konu oluşturma akışının bir parçası olarak veri doğrulamalı yapılandırılmış bir form uygulayabilirsiniz."
     show_preview_for_form_templates: "Form şablonları özelliği için ön izlemeyi etkinleştirin"
     lazy_load_categories_groups: "Kategori bilgilerini yalnızca bu gruplardaki kullanıcılar için tembel olarak yükleyin. Bu, çok sayıda kategoriye sahip sitelerde performansı artırır."
@@ -3789,6 +3788,8 @@ tr_TR:
     Bu e-posta aboneliğinden çıkmak için [buraya tıklayın](%{unsubscribe_url}).
   subject_re: "Ynt: "
   subject_pm: "[Kişisel Mesaj] "
+  email_from: "%{user_name}"
+  email_from_group: "%{group_name}"
   user_notifications:
     previous_discussion: "Önceki Yanıtlar"
     reached_limit:

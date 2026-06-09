@@ -18,11 +18,33 @@ zh_CN:
         providers: "提供商"
         providers_description: "配置聊天服务提供商集成"
       add_provider: "添加提供商"
+      view_provider_settings: "查看提供商设置"
       more_providers: "更多"
+      confirm_setup_provider: "确定要启用 %{provider} 提供商吗？稍后可以在“设置”选项卡中禁用。"
+      setup_provider_modal:
+        title: "设置 %{provider} 提供商"
+        setup_instructions: "请提供以下详细信息以设置 %{provider} 提供商。%{additionalInstructions}"
+        confirm_setup: "确认设置"
+        success: "提供商 %{provider} 设置成功"
+        slack:
+          instructions: "需要提供访问令牌或出站网络钩子 URL。"
+          at_least_one_required: "输入访问令牌或出站网络钩子 URL。"
+          access_token:
+            title: "访问令牌"
+            description: "Slack 机器人 OAuth 访问令牌"
+          outbound_webhook_url:
+            title: "出站网络钩子 URL"
+            description: "Slack 出站网络钩子 URL"
+        telegram:
+          instructions: "保存时将验证访问令牌。"
+          access_token:
+            title: "访问令牌"
+            description: "来自 BotFather 的 Telegram 机器人访问令牌"
       empty_state:
         title: "关联您的聊天平台"
         body: "将 Discourse 中的通知发送到团队的聊天。选择一个提供商以开始。"
       channels_title: "频道"
+      channels_description: "为 %{provider} 提供商配置频道。"
       no_channels: "尚未配置任何频道。"
       channel_actions: "频道操作"
       add_first_channel: "添加您的第一个 %{provider} 频道"
@@ -95,6 +117,8 @@ zh_CN:
               title: 频道
               help: "例如 #channel 或 @username"
           errors:
+            at_least_one_required: "输入访问令牌或出站网络钩子 URL。"
+            invalid_webhook_url: "出站网络钩子 URL 必须是有效的 https://hooks.slack.com/services/... 链接。"
             auth_error: "提供的身份验证令牌无效"
             action_prohibited: "机器人没有权限在该频道发帖"
             channel_not_found: "指定的频道在 Slack 上不存在"
@@ -108,6 +132,8 @@ zh_CN:
               title: 聊天 ID
               help: 一个由机器人提供的号码，或一个 @channelname 格式的广播频道标识符
           errors:
+            access_token_required: "需要机器人访问令牌。"
+            webhook_setup_failed: "无法在 Telegram 上注册网络钩子。请检查令牌并重试。"
             channel_not_found: "指定的频道在 Telegram 上不存在"
             forbidden: "机器人没有权限在此频道发帖"
         discord:

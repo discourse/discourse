@@ -879,8 +879,10 @@ zh_CN:
       quota_required: "必须为此模型指定最大词元数或使用次数"
       no_query_specified: 查询参数为必选项，请指定。
       no_user_for_agent: 指定的智能体没有关联的用户。
+      agent_not_found: "指定的智能体不存在。请检查 agent_name 或 agent_id 参数（旧版：agent_name 或 agent_id）。"
       no_user_specified: username 或 user_unique_id 参数为必选项，请指定。
       user_not_found: 指定的用户不存在。请检查 username 参数。
+      agent_disabled: "指定的智能体已被禁用。请检查 agent_name 或 agent_id 参数（旧版：agent_name 或 agent_id）。"
       no_default_llm: 智能体必须定义 default_llm。
       user_not_allowed: 该用户无权参与该话题。
       invalid_stream_resume_token: resume_token 无效或已过期。

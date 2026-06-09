@@ -1913,6 +1913,7 @@ te:
       title: "వరుసలో ఉన్న పోస్ట్‌ల రిమైండర్"
   subject_re: "ప్ర: "
   subject_pm: "[PM] "
+  email_from_group: "%{group_name}"
   user_notifications:
     previous_discussion: "గత జవాబులు"
     in_reply_to: "సమాధానముగా"

@@ -3427,7 +3427,7 @@ ug:
         education:
           topic_tracking_preferences: 'يېڭى تېما ئىزلاش تەڭىكىڭىزنى <a href="%{basePath}/my/preferences/tracking">مايىللىقىڭىز</a> دا كۆرسىتىپ ۋە ئۆزگەرتەلەيسىز.'
           unread: "ئوقۇلمىغان ھېچ نەرسە قالمىدى… تەسىرلىك!"
-          new_new: "ھازىرچە ھېچقانداق يېڭىلىق يوق… تېزلا تەكشۈرىدۇ!"
+          unified_new: "ھازىرچە ھېچقانداق يېڭىلىق يوق… تېزلا تەكشۈرىدۇ!"
           new: "ھازىرچە ھېچقانداق يېڭىلىق يوق… تېزلا تەكشۈرىدۇ!"
     topic_bulk_actions:
       dismiss:
@@ -4644,7 +4644,7 @@ ug:
         new_replies_tooltip: "يېڭى جاۋاب"
         replies: "جاۋاب"
         replies_with_count: "جاۋاب (%{count})"
-      new_new:
+      unified_new:
         help: "يېقىنقى بىر قانچە كۈندە قۇرۇلغان ياكى جاۋاب يېزىلغان تېمىلار"
       posted:
         title: "يازمىلىرىم"

@@ -3271,7 +3271,7 @@ it:
         education:
           topic_tracking_preferences: 'Puoi visualizzare e modificare le tue nuove impostazioni di monitoraggio degli argomenti nelle <a href="%{basePath}/my/preferences/tracking">preferenze</a>.'
           unread: "Non è rimasto nulla da leggere... impressionante!"
-          new_new: "Al momento non ci sono novità... torna presto a trovarci!"
+          unified_new: "Al momento non ci sono novità... torna presto a trovarci!"
           new: "Al momento non ci sono novità... torna presto a trovarci!"
     topic_bulk_actions:
       dismiss:
@@ -4436,7 +4436,7 @@ it:
         new_replies_tooltip: "Nuove risposte"
         replies: "Risposte"
         replies_with_count: "Risposte (%{count})"
-      new_new:
+      unified_new:
         help: "argomenti creati o a cui si è risposto negli ultimi giorni"
       posted:
         title: "I miei messaggi"

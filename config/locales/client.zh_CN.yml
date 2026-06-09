@@ -3459,7 +3459,7 @@ zh_CN:
         education:
           topic_tracking_preferences: '您可以在<a href="%{basePath}/my/preferences/tracking">您的偏好设置</a>中查看和更改新的话题跟踪设置。'
           unread: "没有未读内容… 太棒了！"
-          new_new: "目前没有新内容… 稍后再查看！"
+          unified_new: "目前没有新内容… 稍后再查看！"
           new: "目前没有新内容… 稍后再查看！"
           generic: "这里没什么可看的… 稍后回来看看！"
     topic_bulk_actions:
@@ -3555,10 +3555,6 @@ zh_CN:
       topic_admin_menu:
         enable_nested_replies: "启用嵌套回复"
         disable_nested_replies: "禁用嵌套回复"
-      context:
-        banner: "您正在查看的是此话题中的单个消息串。"
-        view_full_topic: "查看完整话题"
-        view_parent_context: "查看父上下文"
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"
@@ -4741,7 +4737,7 @@ zh_CN:
         new_replies_tooltip: "新回复"
         replies: "回复"
         replies_with_count: "回复 (%{count})"
-      new_new:
+      unified_new:
         help: "最近几天创建或回复的话题"
       posted:
         title: "我的帖子"
