@@ -22,6 +22,19 @@ describe DiscourseAutomation::Automation do
       end
     end
 
+    context "when triggers are suppressed" do
+      it "doesn’t run the script" do
+        automation = Fabricate(:automation, enabled: true)
+
+        list =
+          capture_contexts do
+            DiscourseAutomation.suppress_triggers { automation.trigger!("Howdy!") }
+          end
+
+        expect(list).to eq([])
+      end
+    end
+
     context "when recursively triggered" do
       before do
         DiscourseAutomation::Scriptable.add("recursive_test_scriptable") do

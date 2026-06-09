@@ -149,6 +149,7 @@ module DiscourseAutomation
 
     def trigger!(context = {})
       return if !enabled
+      return if DiscourseAutomation.triggers_suppressed?
 
       if DiscourseAutomation.recursion_depth >= DiscourseAutomation::MAX_RECURSION_DEPTH
         Stat.log(id) do

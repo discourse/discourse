@@ -16,6 +16,53 @@ describe DiscourseAutomation::Triggerable do
 
   fab!(:automation) { Fabricate(:automation, trigger: "foo") }
 
+  describe "deprecated active automation API" do
+    it "raises a deprecation error" do
+      expect { DiscourseAutomation.set_active_automation(10) }.to raise_error(
+        Discourse::Deprecation,
+        /suppress_triggers/,
+      )
+
+      expect { DiscourseAutomation.get_active_automation }.to raise_error(
+        Discourse::Deprecation,
+        /suppress_triggers/,
+      )
+    end
+  end
+
+  describe "trigger suppression thread safety" do
+    it "ensures suppressed triggers are thread-local" do
+      DiscourseAutomation.suppress_triggers do
+        thread = Thread.new { DiscourseAutomation.triggers_suppressed? }
+        thread.join
+        expect(thread.value).to eq(false)
+
+        expect(DiscourseAutomation.triggers_suppressed?).to eq(true)
+      end
+
+      expect(DiscourseAutomation.triggers_suppressed?).to eq(false)
+    end
+
+    it "clears suppressed triggers after errors" do
+      expect { DiscourseAutomation.suppress_triggers { raise "boom" } }.to raise_error("boom")
+
+      expect(DiscourseAutomation.triggers_suppressed?).to eq(false)
+    end
+
+    it "requires a block without changing existing suppression" do
+      DiscourseAutomation.suppress_triggers do
+        expect { DiscourseAutomation.suppress_triggers }.to raise_error(
+          StandardError,
+          "Expecting a block",
+        )
+
+        expect(DiscourseAutomation.triggers_suppressed?).to eq(true)
+      end
+
+      expect(DiscourseAutomation.triggers_suppressed?).to eq(false)
+    end
+  end
+
   describe "recursion depth thread safety" do
     after do
       while DiscourseAutomation.recursion_depth.positive?
