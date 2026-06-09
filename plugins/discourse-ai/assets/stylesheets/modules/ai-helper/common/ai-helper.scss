@@ -744,3 +744,17 @@
     }
   }
 }
+
+.select-kit.category-chooser .category-row[data-value="ai-category-suggest"],
+.select-kit.category-chooser .category-row[data-value="ai-category-exit"] {
+  position: sticky;
+  top: 0;
+  z-index: z("dropdown") + 1;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-down-1-rem);
+  justify-content: space-between;
+  background: var(--primary-very-low);
+  border-bottom: 1px solid var(--primary-low);
+}
