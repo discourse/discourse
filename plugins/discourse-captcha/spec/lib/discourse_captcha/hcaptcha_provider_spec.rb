@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseHcaptcha::HcaptchaProvider do
+RSpec.describe DiscourseCaptcha::HcaptchaProvider do
   subject(:provider) { described_class.new }
 
   describe "#captcha_verification_url" do
     it "returns the hCaptcha verification URL" do
-      expect(provider.captcha_verification_url).to eq(
-        "https://hcaptcha.com/siteverify"
-      )
+      expect(provider.captcha_verification_url).to eq("https://hcaptcha.com/siteverify")
     end
   end
 
@@ -46,7 +44,7 @@ RSpec.describe DiscourseHcaptcha::HcaptchaProvider do
       stub =
         stub_request(:post, "https://hcaptcha.com/siteverify").to_return(
           status: 200,
-          body: '{"success":true}'
+          body: '{"success":true}',
         )
 
       response = provider.send_captcha_verification(token)

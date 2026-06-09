@@ -11,11 +11,9 @@ RSpec.describe "Signup with captcha" do
 
   context "with hCaptcha", allow_network: %w[hcaptcha.com *.hcaptcha.com] do
     before do
-      SiteSetting.discourse_captcha_provider =
-        DiscourseHcaptcha::CaptchaProvider::HCAPTCHA
+      SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::HCAPTCHA
       SiteSetting.hcaptcha_site_key = "10000000-ffff-ffff-ffff-000000000001"
-      SiteSetting.hcaptcha_secret_key =
-        "0x0000000000000000000000000000000000000000"
+      SiteSetting.hcaptcha_secret_key = "0x0000000000000000000000000000000000000000"
     end
 
     it "displays the hCaptcha widget on signup page" do
@@ -53,9 +51,7 @@ RSpec.describe "Signup with captcha" do
 
         signup_page.click_create_account
 
-        expect(signup_page).to have_flash_message(
-          I18n.t("js.discourse_captcha.missing_token")
-        )
+        expect(signup_page).to have_flash_message(I18n.t("js.discourse_captcha.missing_token"))
       end
     end
 
@@ -72,12 +68,9 @@ RSpec.describe "Signup with captcha" do
 
   context "with reCaptcha", allow_network: %w[www.google.com www.gstatic.com] do
     before do
-      SiteSetting.discourse_captcha_provider =
-        DiscourseHcaptcha::CaptchaProvider::RECAPTCHA
-      SiteSetting.recaptcha_site_key =
-        "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-      SiteSetting.recaptcha_secret_key =
-        "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+      SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
+      SiteSetting.recaptcha_site_key = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+      SiteSetting.recaptcha_secret_key = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
     end
 
     it "displays the reCaptcha widget on signup page" do
@@ -97,10 +90,7 @@ RSpec.describe "Signup with captcha" do
   end
 
   context "when captcha provider is none" do
-    before do
-      SiteSetting.discourse_captcha_provider =
-        DiscourseHcaptcha::CaptchaProvider::NONE
-    end
+    before { SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::NONE }
 
     it "does not display any captcha widget" do
       signup_page.open

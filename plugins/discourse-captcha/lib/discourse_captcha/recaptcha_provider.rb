@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DiscourseHcaptcha
+module DiscourseCaptcha
   class RecaptchaProvider < CaptchaProvider
     CAPTCHA_VERIFICATION_URL = "https://www.google.com/recaptcha/api/siteverify"
 
@@ -15,11 +15,7 @@ module DiscourseHcaptcha
     end
 
     def send_captcha_verification(captcha_token)
-      send_verification(
-        captcha_token,
-        CAPTCHA_VERIFICATION_URL,
-        SiteSetting.recaptcha_secret_key
-      )
+      send_verification(captcha_token, CAPTCHA_VERIFICATION_URL, SiteSetting.recaptcha_secret_key)
     end
   end
 end
