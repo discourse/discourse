@@ -216,11 +216,31 @@ module("Unit | Route | nested", function (hooks) {
       },
     };
 
-    const restored = route._restoreCachedEntry(
-      cached,
-      { topic_id: 42, slug: "nested-topic" },
-      "top"
+    let restored;
+    const randomUUIDDescriptor = Object.getOwnPropertyDescriptor(
+      crypto,
+      "randomUUID"
     );
+
+    Object.defineProperty(crypto, "randomUUID", {
+      configurable: true,
+      value: undefined,
+    });
+
+    try {
+      restored = route._restoreCachedEntry(
+        cached,
+        { topic_id: 42, slug: "nested-topic" },
+        "top"
+      );
+    } finally {
+      if (randomUUIDDescriptor) {
+        Object.defineProperty(crypto, "randomUUID", randomUUIDDescriptor);
+      } else {
+        delete crypto.randomUUID;
+      }
+    }
+
     const restoredTopic = restored.modelData.topic;
     const restoredRootPost = restored.modelData.rootNodes[0].post;
     const restoredChildPost =

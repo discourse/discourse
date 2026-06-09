@@ -31,6 +31,8 @@ export default class NestedRoute extends DiscourseRoute {
     collapseReplies: { refreshModel: false },
   };
 
+  _renderKeySequence = 0;
+
   buildRouteInfoMetadata() {
     return { scrollOnTransition: false };
   }
@@ -437,9 +439,14 @@ export default class NestedRoute extends DiscourseRoute {
       post,
       children,
       _renderKey: freshRecords
-        ? crypto.randomUUID()
+        ? this._freshRenderKey(post)
         : nodeData._renderKey || post.id,
     };
+  }
+
+  _freshRenderKey(post) {
+    this._renderKeySequence += 1;
+    return `fresh-${post.id || post.post_number}-${this._renderKeySequence}`;
   }
 
   _createRecord(type, attrs, { freshRecords = false } = {}) {
@@ -565,7 +572,7 @@ export default class NestedRoute extends DiscourseRoute {
     // @preloadedChildren only in its constructor, so without a fresh key the
     // inner cascade keeps rendering the previous target when two context
     // views share a chain root.
-    chainTip._renderKey = crypto.randomUUID();
+    chainTip._renderKey = this._freshRenderKey(targetNode.post);
 
     return {
       topic,
