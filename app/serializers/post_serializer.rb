@@ -251,6 +251,14 @@ class PostSerializer < BasicPostSerializer
     object.user&.flair_group_id
   end
 
+  def include_flair_name?
+    (scope || Guardian.new).can_see_flair?
+  end
+  alias_method :include_flair_url?, :include_flair_name?
+  alias_method :include_flair_bg_color?, :include_flair_name?
+  alias_method :include_flair_color?, :include_flair_name?
+  alias_method :include_flair_group_id?, :include_flair_name?
+
   def badges_granted
     return [] unless SiteSetting.enable_badges && SiteSetting.show_badges_in_post_header
 
