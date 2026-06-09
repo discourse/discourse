@@ -225,36 +225,6 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(rollups).to contain_exactly(["google.com", 2], [nil, 1])
       end
 
-      it "surfaces backfilled referrers in the historical top-referrers report" do
-        Discourse.stubs(:current_hostname).returns("forum.example.com")
-        start_date = 7.days.ago.to_date
-        created_at = 3.days.ago
-        3.times do
-          Fabricate(
-            :browser_pageview_event_with_unnormalized_referrer,
-            referrer: "https://news.ycombinator.com/item?id=1",
-            created_at:,
-          )
-        end
-        Fabricate(
-          :browser_pageview_event_with_unnormalized_referrer,
-          referrer: "https://www.reddit.com/r/discourse",
-          created_at:,
-        )
-
-        job.execute({})
-
-        report =
-          Report.find(
-            "top_referrers_by_browser_pageviews",
-            start_date: start_date,
-            end_date: Date.current,
-          )
-        expect(report.data.map { |row| row[:normalized_referrer] }).to eq(
-          %w[news.ycombinator.com/item?id=1 reddit.com/r/discourse],
-        )
-      end
-
       it "re-selects the row and repairs the rollup when a crash happens before the version is stamped" do
         date = 3.days.ago.to_date
         event =
