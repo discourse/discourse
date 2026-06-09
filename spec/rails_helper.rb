@@ -30,23 +30,6 @@ ENV["ENABLE_LOGSTASH_LOGGER"] ||= "1"
 require File.expand_path("../../config/environment", __FILE__)
 Discourse.singleton_class.prepend(RspecWarnExceptionCapture)
 
-# Discourse sets `config.active_record.use_schema_cache_dump = false` outside
-# development, so in test each parallel worker cold-populates the AR schema
-# cache. For system tests that happens on the first system example (the
-# ModelSchema-deadlock workaround in the `before(:each)` hook below), firing
-# ~1000 pg_catalog introspection queries per worker in a synchronized burst
-# across all 12 CI workers. Re-enable the dump in CI so workers instead load
-# the committed db/schema_cache.yml (regenerated to match the migrated schema
-# by the `Create and migrate databases` workflow step). Set before any schema
-# access so the lazy load picks it up. Rails validates the dump's schema
-# version against the DB and silently ignores a stale/missing dump, and the
-# per-table `schema_cache.add` warm-up still runs as a safety net, so a miss
-# degrades to the previous query-based behaviour with an identical
-# post-condition. No-op outside CI.
-if ENV["CI"]
-  ActiveRecord::ConnectionAdapters::SchemaReflection.use_schema_cache_dump = true
-end
-
 # In CI, neutralize ActiveRecord query log tags + verbose query logs. Both
 # enabled in `config/environments/test.rb`, but their output is unreachable
 # under `RAILS_TEST_LOG_LEVEL=error`. The compute cost is not: every AR
