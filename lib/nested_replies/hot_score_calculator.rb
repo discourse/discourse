@@ -10,6 +10,20 @@ module NestedReplies
       [Float::INFINITY, 12.hours],
     ].freeze
 
+    ENGAGEMENT_WEIGHTS = {
+      reply_count: 5.0,
+      like_score: 15.0,
+      incoming_link_count: 5.0,
+      bookmark_count: 2.0,
+      reads: 0.2,
+    }.freeze
+
+    def self.engagement_score_sql(table_name)
+      ENGAGEMENT_WEIGHTS.map do |column, weight|
+        "COALESCE(#{table_name}.#{column}, 0) * #{weight}"
+      end.join(" + ")
+    end
+
     def self.time_scale_seconds(sibling_count)
       count = sibling_count.to_i
       BUCKETS.find { |max_count, _| count <= max_count }.second.to_i
@@ -30,7 +44,7 @@ module NestedReplies
         INSERT INTO nested_view_post_stats
           (post_id, hot_score, hot_score_updated_at, topic_id, reply_to_post_number, post_number, created_at, updated_at)
         SELECT target.id,
-               LN(1 + GREATEST(COALESCE(NULLIF(target.score, 0), target.like_score, 0), 0)) +
+               LN(1 + GREATEST(#{engagement_score_sql("target")}, 0)) +
                  EXTRACT(EPOCH FROM target.created_at) /
                    CASE
                      WHEN target.sibling_count <= 10 THEN #{14.days.to_i}
@@ -79,7 +93,7 @@ module NestedReplies
           INSERT INTO nested_view_post_stats
             (post_id, hot_score, hot_score_updated_at, topic_id, reply_to_post_number, post_number, created_at, updated_at)
           SELECT p.id,
-                 LN(1 + GREATEST(COALESCE(NULLIF(p.score, 0), p.like_score, 0), 0)) +
+                 LN(1 + GREATEST(#{engagement_score_sql("p")}, 0)) +
                    EXTRACT(EPOCH FROM p.created_at) / :time_scale_seconds,
                  NOW(),
                  p.topic_id,
