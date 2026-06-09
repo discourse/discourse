@@ -429,35 +429,18 @@ module SystemHelpers
     read =
       lambda do
         return [] unless File.exist?(log)
-        matching =
-          File.open(log) do |f|
-            f
-              .read
-              .lines
-              .reject { |l| l.strip.empty? }
-              .filter_map do |line|
-                JSON.parse(line)
-              rescue JSON::ParserError
-                nil
-              end
-              .select { |e| e["controller"] == controller && (action.nil? || e["action"] == action) }
-          end
-
-        # In parallel system-test runs every worker's in-process app server
-        # appends its access log to this one shared `log/#{Rails.env}.log`, and
-        # pageview tracking fires PageviewController requests on *every*
-        # navigation in *every* spec. So while this worker waits for its own two
-        # piggyback/beacon entries, the file is also filling with other workers'
-        # PageviewController entries. `DiscourseLogstashLogger` stamps each line
-        # with the writing process's `pid`, and Capybara's app server runs in
-        # this same process, so prefer only the entries our own server wrote —
-        # otherwise the matchers below can latch onto a different worker's entry
-        # (mismatched url/topic_id, or a second session_id), which is what makes
-        # these BPV specs flake and drags a ~50s serial flaky-retry onto the
-        # step. Fall back to the unfiltered set when we wrote none (e.g. if the
-        # app server is ever out-of-process) so this can only help or no-op.
-        own = matching.select { |e| e["pid"] == Process.pid }
-        own.any? ? own : matching
+        File.open(log) do |f|
+          f
+            .read
+            .lines
+            .reject { |l| l.strip.empty? }
+            .filter_map do |line|
+              JSON.parse(line)
+            rescue JSON::ParserError
+              nil
+            end
+            .select { |e| e["controller"] == controller && (action.nil? || e["action"] == action) }
+        end
       end
 
     try_until_success { raise Capybara::ExpectationNotMet if read.call.size < entries }
