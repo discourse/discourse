@@ -89,7 +89,7 @@ function getGroupMessageSummaryNotification(overrides = {}) {
   );
 }
 
-module("Integration | Component | user-menu | messages-list", function (hooks) {
+module("Integration | Component | UserMenu | MessagesList", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders unread PM notifications first followed by messages and read group_message_summary notifications", async function (assert) {

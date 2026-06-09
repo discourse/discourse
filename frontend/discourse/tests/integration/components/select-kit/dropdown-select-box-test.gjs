@@ -28,7 +28,7 @@ const setDefaultState = (ctx, options) => {
 };
 
 module(
-  "Integration | Component | select-kit/dropdown-select-box",
+  "Integration | Component | SelectKit | DropdownSelectBox",
   function (hooks) {
     setupRenderingTest(hooks);
 

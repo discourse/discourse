@@ -565,8 +565,10 @@ class User < ActiveRecord::Base
     # from some strange edge case, this handles it.
     if is_system_user? &&
          (
-           (Group.auto_groups_between(:admins, :trust_level_4) - [Group::AUTO_GROUPS[:anonymous]]) &
-             group_ids
+           (
+             Group.auto_groups_between(:admins, :trust_level_4) -
+               [Group::AUTO_GROUPS[:anonymous_users]]
+           ) & group_ids
          ).any?
       return true
     end
@@ -1608,7 +1610,8 @@ class User < ActiveRecord::Base
     end
 
     # mark all the user's quoted posts as "needing a rebake"
-    Post.rebake_all_quoted_posts(id) if saved_change_to_uploaded_avatar_id?
+    # use background job to avoid blocking on large datasets
+    Jobs.enqueue(:rebake_quoted_posts_for_user, user_id: id) if saved_change_to_uploaded_avatar_id?
   end
 
   def first_post_created_at
@@ -1980,8 +1983,8 @@ class User < ActiveRecord::Base
     user_status && !user_status.expired?
   end
 
-  def new_new_view_enabled?
-    in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
+  def unified_new_enabled?
+    upcoming_change_enabled?(:enable_unified_new)
   end
 
   def populated_required_custom_fields?

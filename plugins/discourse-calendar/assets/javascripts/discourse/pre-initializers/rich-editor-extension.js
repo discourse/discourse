@@ -2,7 +2,11 @@ import { camelize } from "@ember/string";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { buildBBCodeAttrs } from "discourse/lib/text";
 import EventNodeView from "../components/event-node-view";
-import { buildEventPreview } from "../initializers/discourse-post-event-decorator";
+import { buildEventPreview } from "../lib/event-preview";
+import {
+  buildEventSkeleton,
+  getCustomFieldNames,
+} from "../lib/raw-event-helper";
 
 export const EVENT_ATTRIBUTES = {
   name: { default: null },
@@ -24,8 +28,8 @@ export const EVENT_ATTRIBUTES = {
   image: { default: null },
 };
 
-/** @type {RichEditorExtension} */
-const extension = {
+/** @returns {RichEditorExtension} */
+const buildExtension = (siteSettings) => ({
   nodeViews: {
     event: {
       component: EventNodeView,
@@ -34,7 +38,13 @@ const extension = {
 
   nodeSpec: {
     event: {
-      attrs: EVENT_ATTRIBUTES,
+      get attrs() {
+        const attrs = { ...EVENT_ATTRIBUTES };
+        getCustomFieldNames(siteSettings).forEach((field) => {
+          attrs[camelize(field)] = { default: null };
+        });
+        return attrs;
+      },
       group: "block",
       content: "block*",
       defining: true,
@@ -105,19 +115,10 @@ const extension = {
   inputRules: ({ utils: { convertFromMarkdown }, getContext }) => ({
     match: /^\[event([^\]]*)]$/,
     handler: (state, match, start, end) => {
-      const currentUser = getContext().currentUser;
-      const timezone = currentUser?.user_option?.timezone || moment.tz.guess();
-
       const userInput = match[1].trim();
-      let eventMarkdown;
-
-      if (userInput) {
-        eventMarkdown = `[event ${userInput}]\n[/event]`;
-      } else {
-        const now = moment.tz(moment(), timezone);
-        const defaults = `start="${now.format("YYYY-MM-DD HH:mm")}" status="public" timezone="${timezone}"`;
-        eventMarkdown = `[event ${defaults}]\n[/event]`;
-      }
+      const eventMarkdown = userInput
+        ? `[event ${userInput}]\n[/event]`
+        : buildEventSkeleton(getContext().currentUser);
 
       const doc = convertFromMarkdown(eventMarkdown);
       return doc.content.firstChild
@@ -125,12 +126,13 @@ const extension = {
         : null;
     },
   }),
-};
+});
 
 export default {
   initialize() {
     withPluginApi((api) => {
-      api.registerRichEditorExtension(extension);
+      const siteSettings = api.container.lookup("service:site-settings");
+      api.registerRichEditorExtension(buildExtension(siteSettings));
     });
   },
 };

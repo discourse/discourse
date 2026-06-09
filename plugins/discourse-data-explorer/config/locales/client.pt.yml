@@ -14,6 +14,9 @@ pt:
       explorer:
         no_semicolons: "Remova os pontos e vírgulas da consulta."
         dirty: "Deve guardar a consulta antes de executar."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Sem resultados"
     explorer:
       default_query: "Predefinição"
       or: "ou"
@@ -50,3 +53,11 @@ pt:
       search_placeholder: "Pesquisar..."
     group:
       reports: "Relatórios"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Explorador de Dados"
+      sql:
+        param_value: "Valor"
+        output:
+          results: "Resultados"
+          no_results: "Sem resultados"

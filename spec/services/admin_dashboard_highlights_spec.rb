@@ -79,6 +79,30 @@ describe AdminDashboardHighlights do
         result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
         expect(result[:kpis].map { |k| k[:type] }).not_to include(:extra_kpi)
       end
+
+      it "averages a registered KPI backed by an average report instead of summing it" do
+        DiscoursePluginRegistry.stubs(:admin_dashboard_highlight_kpis).returns(
+          [{ type: :plugin_engaged, report: "daily_engaged_users" }],
+        )
+        engaged_user = Fabricate(:user, created_at: Time.zone.local(2026, 1, 1))
+        Fabricate(
+          :user_action,
+          user: engaged_user,
+          action_type: UserAction::LIKE,
+          created_at: Time.zone.local(2026, 4, 23, 12),
+        )
+        Fabricate(
+          :user_action,
+          user: engaged_user,
+          action_type: UserAction::LIKE,
+          created_at: Time.zone.local(2026, 4, 24, 12),
+        )
+
+        result = described_class.build(start_date: "2026-04-22", end_date: "2026-04-28")
+        kpi = result[:kpis].find { |k| k[:type] == :plugin_engaged }
+
+        expect(kpi[:value]).to eq(1.0) # daily average, not the two-day sum of 2
+      end
     end
 
     it "skips a KPI when its report errors out" do
@@ -173,7 +197,7 @@ describe AdminDashboardHighlights do
         Report
           .expects(:find)
           .at_least_once
-          .returns(stub(type: "signups", error: nil, data: [], prev_period: 0))
+          .returns(stub(type: "signups", error: nil, data: [], prev_period: 0, average: false))
         Report.stubs(:cache)
         described_class.build(start_date: "2026-03-01", end_date: "2026-03-31")
       end

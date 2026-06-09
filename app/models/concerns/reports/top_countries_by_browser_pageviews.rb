@@ -4,6 +4,7 @@ module Reports::TopCountriesByBrowserPageviews
   extend ActiveSupport::Concern
 
   EXCLUDED_COUNTRY_CODES = %w[ZZ T1 A1 A2 O1 XX EU AP].freeze
+  MAX_ROWS = 200
 
   class_methods do
     def report_top_countries_by_browser_pageviews(report)
@@ -22,20 +23,20 @@ module Reports::TopCountriesByBrowserPageviews
         },
       ]
 
-      user_filter_sql = SiteSetting.login_required ? "AND user_id IS NOT NULL" : ""
+      count_expr = SiteSetting.login_required ? "logged_in_count" : "count"
       end_date_exclusive = report.end_date.to_date + 1
 
       sql = <<~SQL
         WITH ranked AS (
           SELECT
             country_code,
-            COUNT(*) AS count,
-            SUM(COUNT(*)) OVER () AS total
-          FROM browser_pageview_events
-          WHERE created_at >= :start_date
-            AND created_at < :end_date_exclusive
-            #{user_filter_sql}
+            SUM(#{count_expr}) AS count,
+            SUM(SUM(#{count_expr})) OVER () AS total
+          FROM browser_pageview_country_daily_rollups
+          WHERE date >= :start_date
+            AND date < :end_date_exclusive
           GROUP BY country_code
+          HAVING SUM(#{count_expr}) > 0
         )
         SELECT country_code, count,
                CASE WHEN total = 0 THEN 0
@@ -54,7 +55,7 @@ module Reports::TopCountriesByBrowserPageviews
             start_date: report.start_date,
             end_date_exclusive: end_date_exclusive,
             excluded_codes: EXCLUDED_COUNTRY_CODES,
-            limit: report.limit || 50,
+            limit: MAX_ROWS,
           )
           .map { |row| { country_code: row.country_code, count: row.count, percent: row.percent } }
     end

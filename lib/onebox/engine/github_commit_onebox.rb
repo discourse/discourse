@@ -23,6 +23,20 @@ module Onebox
         "https://api.github.com/repos/#{match[:org]}/#{match[:repository]}/commits/#{match[:sha]}"
       end
 
+      def inline_data
+        return if github_auth_header(match[:org]).blank?
+
+        result = raw(github_auth_header(match[:org]))
+        message = result["commit"]["message"].split("\n").first
+        {
+          title:
+            "#{message} - #{match[:org]}/#{match[:repository]}@#{result["sha"][0...7]} - GitHub",
+        }
+      rescue StandardError => e
+        Rails.logger.warn("Inline GitHub commit onebox error for #{@url}: #{e.message}")
+        nil
+      end
+
       private
 
       def match

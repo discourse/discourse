@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "discourse_assign/assignment_permissions"
+
 class RandomAssignUtils
   attr_reader :context, :fields, :automation, :topic, :group
 
@@ -116,7 +118,7 @@ class RandomAssignUtils
     users =
       group
         .users
-        .where(id: User.assign_allowed.select(:id))
+        .where(id: DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(topic))
         .where.not(
           id:
             User

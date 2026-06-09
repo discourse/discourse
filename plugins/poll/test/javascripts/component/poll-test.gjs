@@ -9,7 +9,7 @@ import Poll from "discourse/plugins/poll/discourse/components/poll";
 
 let requests = 0;
 
-module("Component | poll", function (hooks) {
+module("Component | Poll", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -234,6 +234,51 @@ module("Component | poll", function (hooks) {
 
     assert.dom("ul.options").exists("options are shown");
     assert.dom("ul.results").doesNotExist("results are not shown");
+  });
+
+  test("does not render an empty ranked choice outcome to a non-staff voter on staff_only polls", async function (assert) {
+    this.setProperties({
+      post: EmberObject.create({
+        id: 42,
+        topic: {
+          archived: false,
+        },
+        user_id: 29,
+        polls_votes: {
+          poll: [
+            { digest: "1f972d1df351de3ce35a787c89faad29", rank: 1 },
+            { digest: "d7ebc3a9beea2e680815a1e4f57d6db6", rank: 2 },
+          ],
+        },
+      }),
+      poll: trackedObject({
+        name: "poll",
+        type: "ranked_choice",
+        status: "open",
+        results: "staff_only",
+        options: [
+          { id: "1f972d1df351de3ce35a787c89faad29", html: "this", rank: 1 },
+          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "that", rank: 2 },
+        ],
+        voters: 1,
+        chart_type: "bar",
+        // no ranked_choice_outcome — the server withholds it from non-staff
+      }),
+    });
+
+    await render(
+      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+    );
+
+    assert
+      .dom("table.poll-results-ranked-choice")
+      .doesNotExist("the empty outcome table is not rendered");
+    assert
+      .dom(".results-staff-only")
+      .exists("the staff-only results notice is shown instead");
+    assert
+      .dom(".ranked-choice-poll-option")
+      .exists("the ballot options are shown to the voter");
   });
 
   test("can vote", async function (assert) {

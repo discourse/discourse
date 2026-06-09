@@ -323,7 +323,7 @@ class SessionController < ApplicationController
     connect_verbose_warn do
       "Verbose SSO log: User was logged on #{user.username}\n\n#{sso.diagnostics}"
     end
-    log_on_user(user) if user.id != current_user&.id
+    log_on_user(user, replay_anonymous_action: true) if user.id != current_user&.id
   end
 
   def create
@@ -479,7 +479,7 @@ class SessionController < ApplicationController
         return render json: payload
       else
         user.update_timezone_if_missing(params[:timezone])
-        log_on_user(user)
+        log_on_user(user, replay_anonymous_action: true)
         return render json: success_json
       end
     end
@@ -495,7 +495,7 @@ class SessionController < ApplicationController
         Discourse.redis.del "otp_#{params[:token]}"
         return redirect_to path("/")
       elsif request.post?
-        log_on_user(user)
+        log_on_user(user, replay_anonymous_action: true)
         Discourse.redis.del "otp_#{params[:token]}"
         return redirect_to path("/")
       else
@@ -849,7 +849,7 @@ class SessionController < ApplicationController
   def login(user, passkey_login: false, second_factor_auth_result: nil)
     session.delete(ACTIVATE_USER_KEY)
     user.update_timezone_if_missing(params[:timezone])
-    log_on_user(user)
+    log_on_user(user, replay_anonymous_action: true)
 
     if payload = cookies.delete(:sso_payload)
       confirmed_2fa_during_login =

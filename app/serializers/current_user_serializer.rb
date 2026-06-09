@@ -27,7 +27,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :no_password,
              :can_delete_account,
              :can_post_anonymously,
-             :can_toggle_nested_mode,
              :can_ignore_users,
              :can_edit_tags,
              :can_delete_all_posts_and_topics,
@@ -74,7 +73,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_tags,
              :sidebar_category_ids,
              :sidebar_sections,
-             :new_new_view_enabled?,
+             :unified_new_enabled?,
              :can_view_raw_email,
              :login_method,
              :has_unseen_features,
@@ -173,7 +172,7 @@ class CurrentUserSerializer < BasicUserSerializer
   def include_show_site_owner_onboarding?
     SiteSetting.enable_site_owner_onboarding && object.admin? &&
       User.where(admin: true).human_users.minimum(:id) == object.id &&
-      Topic.minimum(:created_at)&.after?(SiteSetting.site_owner_onboarding_max_days.days.ago)
+      object.created_at.after?(SiteSetting.site_owner_onboarding_max_days.days.ago)
   end
 
   def show_site_owner_onboarding
@@ -202,14 +201,6 @@ class CurrentUserSerializer < BasicUserSerializer
   def can_post_anonymously
     SiteSetting.allow_anonymous_mode &&
       (is_anonymous || object.in_any_groups?(SiteSetting.anonymous_posting_allowed_groups_map))
-  end
-
-  def can_toggle_nested_mode
-    object.in_any_groups?(SiteSetting.nested_replies_toggle_mode_groups_map)
-  end
-
-  def include_can_toggle_nested_mode?
-    SiteSetting.nested_replies_enabled
   end
 
   def can_ignore_users

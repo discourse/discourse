@@ -6,6 +6,9 @@
 
 el:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Δεν υπάρχουν αποτελέσματα"
     explorer:
       default_query: "Προεπιλογή"
       mode:
@@ -55,3 +58,10 @@ el:
       search_placeholder: "Αναζήτηση..."
     group:
       reports: "Αναφορές"
+    discourse_workflows:
+      sql:
+        query_id: "Ερώτημα"
+        param_value: "Τιμή"
+        output:
+          results: "Αποτελέσματα"
+          no_results: "Δεν υπάρχουν αποτελέσματα"

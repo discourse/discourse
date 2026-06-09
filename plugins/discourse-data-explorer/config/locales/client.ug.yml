@@ -6,6 +6,9 @@
 
 ug:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "نەتىجە يوق"
     explorer:
       default_query: "كۆڭۈلدىكى"
       or: "ياكى"
@@ -33,3 +36,9 @@ ug:
       reset_params: "ئەسلىگە قايتۇر"
     group:
       reports: "دوكلات"
+    discourse_workflows:
+      sql:
+        param_value: "قىممەت"
+        output:
+          results: "نەتىجە"
+          no_results: "نەتىجە يوق"

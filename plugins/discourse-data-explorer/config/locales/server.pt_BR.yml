@@ -17,6 +17,7 @@ pt_BR:
         title: Agendar uma postagem em um tópico com resultados do Data Explorer
         description: Obter relatórios programados publicados em um tópico específico
   data_explorer:
+    admin_dashboard_label: "Explorador de Dados"
     report_generator:
       private_message:
         title: "Relatório programado para %{query_name}"

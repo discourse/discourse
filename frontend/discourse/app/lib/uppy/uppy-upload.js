@@ -287,7 +287,7 @@ export default class UppyUpload {
     this.uppyWrapper.uppyInstance.on(
       "upload-error",
       (file, error, response) => {
-        if (response.aborted) {
+        if (response?.aborted) {
           return; // User cancelled the upload
         }
         this.#removeInProgressUpload(file.id);

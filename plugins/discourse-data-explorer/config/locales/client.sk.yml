@@ -14,6 +14,9 @@ sk:
       explorer:
         no_semicolons: "Odstráňte z dotazu bodkočiarky."
         dirty: "Pred spustením musíte dotaz uložiť."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Žiadne výsledky"
     explorer:
       default_query: "Predvolené"
       or: "alebo"
@@ -83,6 +86,16 @@ sk:
           descriptions:
             data_explorer:
               run_queries: "Spustite dotazy Data Explorer. Obmedzte kľúč API na súbor dotazov zadaním ID dotazov."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Prieskumník údajov"
+      sql:
+        query_id: "Dopyt"
+        add_param: "Pridať parameter"
+        param_value: "Hodnota"
+        output:
+          results: "Výsledky"
+          no_results: "Žiadne výsledky"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

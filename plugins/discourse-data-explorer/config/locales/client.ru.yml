@@ -21,6 +21,9 @@ ru:
       explorer:
         no_semicolons: "Удалите точку с запятой из запроса."
         dirty: "Вы должны сохранить запрос перед его выполнением."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Нет результатов"
     explorer:
       default_query: "По умолчанию"
       default_query_notice: "Это запрос по умолчанию, SQL-код нельзя редактировать. Чтобы отредактировать SQL-код, создайте новый запрос."
@@ -40,7 +43,6 @@ ru:
         description_hint: "Опишите свои потребности простым языком. Мы сгенерируем для вас SQL-запрос, название и описание."
         description_placeholder: "Например, показать мне количество регистраций за определенный период времени."
         generate: "Сгенерировать"
-        regenerate: "Сгенерировать повторно"
         generating: "Генерация запросов с помощью ИИ..."
         generation_timeout: "Истекло время ожидания генерации запроса ИИ. Вы можете написать SQL-запрос вручную."
         generation_error: "При формировании запроса произошла ошибка."
@@ -114,6 +116,17 @@ ru:
           descriptions:
             data_explorer:
               run_queries: "Выполнение запросов проводника данных. Ограничьте ключ API набором запросов, указав идентификаторы запросов."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Проводник данных"
+      sql:
+        queries: "Запросы"
+        query_id: "Запрос"
+        add_param: "Добавить параметр"
+        param_value: "Значение"
+        output:
+          results: "Результаты"
+          no_results: "Нет результатов"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

@@ -3,6 +3,8 @@
 module Reports::TopReferrersByBrowserPageviews
   extend ActiveSupport::Concern
 
+  MAX_ROWS = 200
+
   class_methods do
     def report_top_referrers_by_browser_pageviews(report)
       report.modes = [Report::MODES[:table]]
@@ -20,7 +22,7 @@ module Reports::TopReferrersByBrowserPageviews
         },
       ]
 
-      user_filter_sql = SiteSetting.login_required ? "AND user_id IS NOT NULL" : ""
+      count_expr = SiteSetting.login_required ? "logged_in_count" : "count"
       end_date_exclusive = report.end_date.to_date + 1
 
       host = BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname)
@@ -30,22 +32,22 @@ module Reports::TopReferrersByBrowserPageviews
         WITH ranked AS (
           SELECT
             normalized_referrer,
-            COUNT(*) AS count,
-            SUM(COUNT(*)) OVER () AS total
-          FROM browser_pageview_events
-          WHERE created_at >= :start_date
-            AND created_at < :end_date_exclusive
-            #{user_filter_sql}
+            SUM(#{count_expr}) AS count,
+            SUM(SUM(#{count_expr})) OVER () AS total
+          FROM browser_pageview_referrer_daily_rollups
+          WHERE date >= :start_date
+            AND date < :end_date_exclusive
+            AND normalized_referrer IS NOT NULL
+            AND normalized_referrer <> :host_exact
+            AND normalized_referrer NOT LIKE :host_path_prefix ESCAPE '\\'
+            AND normalized_referrer NOT LIKE :host_query_prefix ESCAPE '\\'
           GROUP BY normalized_referrer
+          HAVING SUM(#{count_expr}) > 0
         )
         SELECT normalized_referrer, count,
                CASE WHEN total = 0 THEN 0
                     ELSE ROUND((count::numeric / total) * 100)::integer END AS percent
         FROM ranked
-        WHERE normalized_referrer IS NOT NULL
-          AND normalized_referrer <> :host_exact
-          AND normalized_referrer NOT LIKE :host_path_prefix ESCAPE '\\'
-          AND normalized_referrer NOT LIKE :host_query_prefix ESCAPE '\\'
         ORDER BY count DESC, normalized_referrer ASC
         LIMIT :limit
       SQL
@@ -59,7 +61,7 @@ module Reports::TopReferrersByBrowserPageviews
             host_exact: host,
             host_path_prefix: "#{escaped_host}/%",
             host_query_prefix: "#{escaped_host}?%",
-            limit: report.limit || 50,
+            limit: MAX_ROWS,
           )
           .map do |row|
             { normalized_referrer: row.normalized_referrer, count: row.count, percent: row.percent }

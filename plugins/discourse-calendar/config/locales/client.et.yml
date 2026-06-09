@@ -44,6 +44,18 @@ et:
               title: "Avalik"
             private:
               title: "Privaatne"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "minut"
+              other: "minutit"
+            hours:
+              one: "tund"
+              other: "tundi"
+            days:
+              one: "päev"
+              other: "päeva"
       builder_modal:
         custom_fields:
           placeholder: "Valikuline"
@@ -61,6 +73,10 @@ et:
             after: "pärast"
         recurrence:
           every_day: "Iga päev"
+          ordinals:
+            last: "viimane"
+        attendance:
+          none: "Pole"
         url:
           label: "URL"
           placeholder: "Valikuline"
@@ -68,7 +84,8 @@ et:
           label: "Asukoht"
         description:
           label: "Kirjeldus"
-        status:
-          label: "Staatus"
+        event_type:
+          public:
+            title: "Avalik"
       invite_user_or_group:
         invite: "Saada"

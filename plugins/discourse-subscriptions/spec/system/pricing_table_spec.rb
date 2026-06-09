@@ -92,6 +92,24 @@ RSpec.describe "Pricing Table" do
     )
   end
 
+  it "Passes a signed user reference to Stripe" do
+    sign_in(admin)
+    SiteSetting.discourse_subscriptions_pricing_table_id = "prctbl_123"
+
+    visit("/s/subscriptions")
+
+    pricing_table = find("stripe-pricing-table", visible: :all)
+    client_reference_id = pricing_table["client-reference-id"]
+
+    expect(client_reference_id).to be_present
+    expect(
+      User.find_signed(
+        client_reference_id,
+        purpose: DiscourseSubscriptions::CHECKOUT_SESSION_USER_REFERENCE_PURPOSE,
+      ),
+    ).to eq(admin)
+  end
+
   it "Shows a log in message if not signed in" do
     visit("/")
 

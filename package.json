@@ -12,8 +12,9 @@
     "@rdil/parallel-prettier": "^3.0.0",
     "concurrently": "^9.2.1",
     "eslint": "9.39.2",
+    "execa": "^9.6.0",
     "jsdoc": "^4.0.5",
-    "lefthook": "^2.1.6",
+    "lefthook": "^2.1.9",
     "licensee": "^11.1.1",
     "lint-to-the-future": "^2.6.4",
     "lint-to-the-future-eslint": "^3.3.0",
@@ -23,7 +24,7 @@
     "typescript": "^5.9.3"
   },
   "scripts": {
-    "dev": "concurrently \"bin/ember-cli server --environment=development\" \"RAILS_ENV=development bin/rails server\"",
+    "dev": "bin/dev",
     "lint": "concurrently \"pnpm:lint:*(!fix)\" --names \"lint:\"",
     "lint:fix": "concurrently \"pnpm:lint:*:fix\" --names \"fix:\"",
     "lint:css": "pnpm stylelint 'app/assets/stylesheets/**/*.scss' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') 'themes/**/*.scss'",
@@ -38,8 +39,9 @@
     "lttf:ignore": "lint-to-the-future ignore",
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",
     "lint-progress": "pnpm lttf:output && npx html-pages ./lint-progress --no-cache",
-    "ember": "pnpm --dir=frontend/discourse ember",
-    "playwright-install": "playwright install --no-shell chromium"
+    "playwright-install": "playwright install --no-shell chromium",
+    "build": "pnpm --dir=frontend/discourse build",
+    "start": "pnpm --dir=frontend/discourse start"
   },
   "engines": {
     "node": ">= 20",
@@ -55,7 +57,11 @@
       "licensee@11.1.1": "patches/licensee@11.1.1.patch",
       "@ember-compat/tracked-built-ins@0.9.1": "patches/@ember-compat__tracked-built-ins@0.9.1.patch",
       "ember-source@6.10.1": "patches/ember-source@6.10.1.patch",
-      "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch"
+      "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch",
+      "ember-exam@10.1.0": "patches/ember-exam@10.1.0.patch",
+      "message-bus-client": "patches/message-bus-client.patch",
+      "ember-buffered-proxy": "patches/ember-buffered-proxy.patch",
+      "pikaday": "patches/pikaday.patch"
     },
     "peerDependencyRules": {
       "allowedVersions": {
@@ -71,7 +77,8 @@
     },
     "overrides": {
       "@ember/test-waiters": "4.1.1",
-      "babel-plugin-ember-template-compilation@~2.3.0": "2.4.1"
+      "babel-plugin-ember-template-compilation@~2.3.0": "2.4.1",
+      "broccoli-babel-transpiler@8.0.0": "^8.0.2"
     }
   }
 }

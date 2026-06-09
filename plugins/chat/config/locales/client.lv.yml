@@ -162,3 +162,8 @@ lv:
           fields:
             message:
               label: Ziņa
+    discourse_workflows:
+      send_chat_message:
+        message: "Ziņa"
+      chat_approval:
+        message: "Ziņa"

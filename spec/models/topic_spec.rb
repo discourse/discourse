@@ -1918,6 +1918,15 @@ RSpec.describe Topic do
         }.not_to change(category, :topic_count)
       end
 
+      it "does not trigger topic_category_changed when category stays the same" do
+        events =
+          DiscourseEvent.track_events(:topic_category_changed) do
+            topic.change_category_to_id(category.id)
+          end
+
+        expect(events).to be_empty
+      end
+
       it "doesn't reset the category when an id that doesn't exist" do
         topic.change_category_to_id(55_556)
         expect(topic.category_id).to eq(category.id)
@@ -1934,6 +1943,17 @@ RSpec.describe Topic do
           expect(topic.reload.category).to eq(new_category)
           expect(new_category.reload.topic_count).to eq(1)
           expect(category.reload.topic_count).to eq(0)
+        end
+
+        it "triggers a topic_category_changed event" do
+          events =
+            DiscourseEvent.track_events(:topic_category_changed) do
+              topic.change_category_to_id(new_category.id)
+            end
+
+          expect(events.length).to eq(1)
+          expect(events.first[:params][0]).to eq(topic)
+          expect(events.first[:params][1]).to eq(category)
         end
 
         describe "user that is watching the new category" do
@@ -2972,6 +2992,37 @@ RSpec.describe Topic do
         )
       }.to raise_error(RateLimiter::LimitExceeded)
     end
+
+    context "with limit_admin_personal_messages_per_day" do
+      it "does not rate limit admins when set to 0" do
+        SiteSetting.limit_admin_personal_messages_per_day = 0
+
+        2.times do
+          create_post(
+            user: admin,
+            archetype: "private_message",
+            target_usernames: [user1.username, user2.username],
+          )
+        end
+      end
+
+      it "rate limits admins when set to a non-zero value" do
+        SiteSetting.limit_admin_personal_messages_per_day = 1
+
+        create_post(
+          user: admin,
+          archetype: "private_message",
+          target_usernames: [user1.username, user2.username],
+        )
+        expect {
+          create_post(
+            user: admin,
+            archetype: "private_message",
+            target_usernames: [user1.username, user2.username],
+          )
+        }.to raise_error(RateLimiter::LimitExceeded)
+      end
+    end
   end
 
   describe ".count_exceeds_minimum?" do
@@ -3514,6 +3565,13 @@ RSpec.describe Topic do
       third_post.update!(post_type: Post.types[:whisper])
 
       expect(Topic.reset_highest(topic.id)).to eq(2)
+    end
+
+    it "excludes small action posts from both the public and staff highest post number" do
+      third_post.update!(post_type: Post.types[:small_action])
+
+      expect(Topic.reset_highest(topic.id)).to eq(2)
+      expect(topic.reload.highest_staff_post_number).to eq(2)
     end
   end
 

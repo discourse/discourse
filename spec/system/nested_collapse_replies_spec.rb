@@ -68,7 +68,7 @@ RSpec.describe "Nested view collapse_replies URL param" do
     # replies behind a button). When the target is *below* the chain
     # root, applying collapseFromDepth=1 would hide the target itself,
     # defeating the whole point of the context view. The
-    # effectiveCollapseFromDepth getter in context-view.gjs ignores
+    # collapseFromDepth getter in nested.gjs ignores
     # collapse_replies in that case.
     it "ignores collapse_replies and shows the target when the chain has ancestors" do
       page.visit("/n/#{topic.slug}/#{topic.id}/#{reply_to_reply.post_number}?collapse_replies=true")

@@ -390,10 +390,10 @@ class Reviewable < ActiveRecord::Base
     result
   end
 
-  # Override this in specific reviewable type to include scores for
-  # non-pending reviewables
+  # Includes pending scores plus disagreed ones, so re-approving a previously
+  # rejected reviewable correctly flips those scores back to "agreed".
   def updatable_reviewable_scores
-    reviewable_scores.pending
+    reviewable_scores.pending.or(reviewable_scores.disagreed)
   end
 
   def transition_to(status_symbol, performed_by)
@@ -427,20 +427,21 @@ class Reviewable < ActiveRecord::Base
     result = self.order(order || "reviewables.score desc, reviewables.created_at desc")
 
     if preload
+      target_associations = [
+        :user_stat,
+        :primary_email,
+        { topic: :category },
+        :user_histories,
+        :user_custom_fields,
+      ]
+      target_associations << :localizations if SiteSetting.content_localization_enabled
+
       result =
         result
           .includes(
             { created_by: :user_stat },
             :topic,
-            {
-              target: [
-                :user_stat,
-                :primary_email,
-                { topic: :category },
-                :user_histories,
-                :user_custom_fields,
-              ],
-            },
+            { target: target_associations },
             { target_created_by: [:user_custom_fields] },
             :reviewable_histories,
           )

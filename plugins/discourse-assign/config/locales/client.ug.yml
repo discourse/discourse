@@ -45,3 +45,6 @@ ug:
     edit_assignments_modal:
       topic: "تېما"
       post: "يازما"
+    discourse_workflows:
+      assign_topic:
+        topic_id: "تېما كىملىكى"

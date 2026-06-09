@@ -106,6 +106,8 @@ sw:
       previous_month: "Mwezi Uliopita"
       next_month: "Mwezi Ujao"
       placeholder: tarehe
+    date_range_picker:
+      apply: "Tumia"
     share:
       close: "funga"
     action_codes:
@@ -192,8 +194,6 @@ sw:
     privacy_policy: "Sera ya Faragha"
     privacy: "Faragha"
     tos: "Masharti ya Huduma"
-    mobile_view: "Mtazamo wa Simu"
-    desktop_view: "Muonekano wa Eneo Kazi"
     now: "sasa hivi"
     read_more: "soma zaidi"
     more: "Zaidi"
@@ -211,8 +211,6 @@ sw:
     suggested_topics:
       pm_title: "Ujumbe Uliopendekezwa"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Imeruhusiwa"
       start_posting:
         back: "Iliyopita"
     about:
@@ -1275,7 +1273,7 @@ sw:
       edit_shared_draft: "Hariri mgawanyo wa mswadajaribio"
       title_placeholder: "Kwa kifupi majadiliano haya yanahusu nini?"
       title_or_link_placeholder: "Andika kichwa cha habari, au bandika kiungo hapa"
-      edit_reason_placeholder: "kwa nini unahariri?"
+      edit_reason_placeholder: "Kwa nini unahariri?"
       topic_featured_link_placeholder: "Ingiza linki inayoonyeshwa na kichwa"
       remove_featured_link: "Ondoa kiungo kwenye mada."
       reply_placeholder: "Andika hapa. tumia Markdown, BBCode au HTML kuweka kwenye muundo mzuri. Vuta na kuweka picha"
@@ -1305,6 +1303,7 @@ sw:
         attribute_value: "Thamani"
         apply: "Tumia"
       help: "Msaada kwenye kuhariri MarkDown"
+      edit_reason: "Kwa nini unahariri?"
       modal_ok: "Sawa"
       cant_send_pm: "Samahani, hauwezi kutuma ujumbe kwenda kwa %{username}."
       yourself_confirm:
@@ -1322,14 +1321,15 @@ sw:
           desc: Tengeneza mada mpya itakayoungwa na hii mada
         reply_to_topic:
           label: Jibu mada
+          trigger: Mada
           desc: Jibu mada, sio chapisho lolote tu
-        toggle_whisper:
-          desc: Minong'ono inapatikana kwa wasaidizi tu
+        reply_to_message:
+          trigger: Ujumbe
         create_personal_message:
-          label: "Ujumbe mpya"
           desc: "Tengeneza ujumbe binafsi mpya"
         shared_draft:
           label: "Mswadajaribio Gawiza"
+        unknown_user: "Mtumiaji"
       ignore: "Puuzia"
       image: "picha"
     notifications:
@@ -1913,7 +1913,6 @@ sw:
             button: "HTML"
       bookmarks:
         name: "Jina"
-        options: "Chaguo"
     category:
       none: "(hakuna kategoria)"
       all: "Kategoria Zote"
@@ -2373,7 +2372,7 @@ sw:
         modal:
           cancel: "ghairi"
           create: "Hifadhi"
-          reason: "kwa nini unahariri?"
+          reason: "Kwa nini unahariri?"
       spreadsheet:
         show: "Onyesha"
         about: "Kuhusu"
@@ -2582,6 +2581,11 @@ sw:
                 "2": "Mwanachama"
                 "3": "Kawaida"
                 "4": "Kiongozi"
+        reports_section:
+          modal:
+            enabled_heading: "Imeruhusiwa"
+            all_heading: "Ripoti zote"
+            apply: "Tumia"
         site_traffic:
           series:
             anonymous: "Asiyejulikana"
@@ -2749,6 +2753,7 @@ sw:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Jina"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Makundi"
           optional: "(sio muhimu)"

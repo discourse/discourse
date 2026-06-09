@@ -2470,6 +2470,53 @@ RSpec.describe TopicsController do
 
               expect(response.status).to eq(200)
             end
+
+            it "returns canonical tags in the response when synonyms are submitted" do
+              canonical = Fabricate(:tag, name: "apple-inc")
+              Fabricate(:tag, name: "aapl", target_tag: canonical)
+              Fabricate(:tag, name: "appl", target_tag: canonical)
+
+              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: %w[aapl appl apple-inc] }
+
+              expect(response.status).to eq(200)
+              expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
+                "apple-inc",
+              )
+              expect(topic.reload.tags.pluck(:name)).to contain_exactly("apple-inc")
+            end
+
+            it "does not include tags in the response when tags were not part of the update" do
+              put "/t/#{topic.slug}/#{topic.id}.json",
+                  params: {
+                    title: "This is a new title for the topic",
+                  }
+
+              expect(response.status).to eq(200)
+              expect(response.parsed_body).not_to have_key("tags")
+            end
+
+            it "does not create a revision when only synonyms of existing tags are submitted" do
+              canonical = Fabricate(:tag, name: "apple-inc")
+              aapl = Fabricate(:tag, name: "aapl", target_tag: canonical)
+              appl = Fabricate(:tag, name: "appl", target_tag: canonical)
+              topic.tags << canonical
+
+              expect do
+                put "/t/#{topic.slug}/#{topic.id}.json",
+                    params: {
+                      tags: [
+                        { id: aapl.id, name: "aapl" },
+                        { id: appl.id, name: "appl" },
+                        { id: canonical.id, name: "apple-inc" },
+                      ],
+                    }
+              end.not_to change { topic.reload.first_post.revisions.count }
+
+              expect(response.status).to eq(200)
+              expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
+                "apple-inc",
+              )
+            end
           end
 
           it "returns success when updating with empty tags on a topic with no tags" do
@@ -2516,6 +2563,29 @@ RSpec.describe TopicsController do
 
             expect(response.status).to eq(200)
             expect(topic.reload.tags.pluck(:name)).to contain_exactly("brand-new")
+          end
+
+          it "returns canonical tags and skips revision when only synonyms are submitted" do
+            canonical = Fabricate(:tag, name: "apple-inc")
+            aapl = Fabricate(:tag, name: "aapl", target_tag: canonical)
+            appl = Fabricate(:tag, name: "appl", target_tag: canonical)
+            topic.tags << canonical
+
+            expect do
+              put "/t/#{topic.id}/tags.json",
+                  params: {
+                    tags: [
+                      { id: aapl.id, name: "aapl" },
+                      { id: appl.id, name: "appl" },
+                      { id: canonical.id, name: "apple-inc" },
+                    ],
+                  }
+            end.not_to change { topic.reload.first_post.revisions.count }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
+              "apple-inc",
+            )
           end
 
           it "does not remove tag if no params is given" do
@@ -3068,29 +3138,34 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
     end
 
-    it "return 404 for an invalid page" do
+    it "redirects an over-range page to the last valid page" do
       get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
-      expect(response.status).to eq(404)
+      expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}.json")
     end
 
-    it "handles pagination correctly with deleted posts" do
+    it "redirects over-range pages to the last multi-page page" do
       topic_with_posts = Fabricate(:topic)
-
-      24.times do |i|
-        Fabricate(:post, topic: topic_with_posts, deleted_at: i.even? ? DateTime.now : nil)
-      end
-
+      Fabricate.times(25, :post, topic: topic_with_posts)
       Topic.reset_highest(topic_with_posts.id)
-      topic_with_posts.reload
 
-      expect(topic_with_posts.posts_count).to eq(12)
-      expect(topic_with_posts.highest_post_number).to eq(24)
+      get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}", params: { page: 5 }
+      expect(response).to redirect_to("/t/#{topic_with_posts.slug}/#{topic_with_posts.id}?page=2")
+    end
 
-      get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}.json", params: { page: 1 }
-      expect(response.status).to eq(200)
+    it "uses viewer-visible post count when deciding the last valid page (whispers)" do
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+
+      topic_with_posts = Fabricate(:topic)
+      Fabricate.times(20, :post, topic: topic_with_posts)
+      Fabricate(:post, topic: topic_with_posts, post_type: Post.types[:whisper])
+      Topic.reset_highest(topic_with_posts.id)
 
       get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}.json", params: { page: 2 }
-      expect(response.status).to eq(404)
+      expect(response).to redirect_to("/t/#{topic_with_posts.slug}/#{topic_with_posts.id}.json")
+
+      sign_in(admin)
+      get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}.json", params: { page: 2 }
+      expect(response.status).to eq(200)
     end
 
     it "can find a topic given a slug in the id param" do
@@ -3180,6 +3255,17 @@ RSpec.describe TopicsController do
       get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" }
 
       expect(response).to redirect_to("/n/#{topic.slug}/#{topic.id}?embed_mode=true")
+    end
+
+    it "preserves class_name alongside embed_mode when redirecting to nested view" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true", class_name: "lee-af" }
+
+      expect(response).to redirect_to(
+        "/n/#{topic.slug}/#{topic.id}?class_name=lee-af&embed_mode=true",
+      )
     end
 
     it "returns 404 when an invalid slug is given and no id" do
@@ -3289,6 +3375,58 @@ RSpec.describe TopicsController do
 
         queries = queries.filter { |q| q =~ /FROM "?post_localizations"?/ }
         expect(queries.size).to eq(1)
+      end
+
+      context "with an internal topic onebox" do
+        fab!(:reader) { Fabricate(:user, locale: "ja") }
+        fab!(:onebox_topic) { Fabricate(:topic, title: "Sun Tzu's strategies", locale: "en") }
+        fab!(:onebox_post) do
+          Fabricate(:post, topic: onebox_topic, post_number: 1, locale: "en", raw: "Subdue them.")
+        end
+        fab!(:host_topic) { Fabricate(:topic, locale: "ja") }
+        fab!(:host_post) do
+          Fabricate(:post, topic: host_topic, post_number: 1, locale: "ja", raw: "見てください")
+        end
+
+        before do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.content_localization_supported_locales = "en|ja"
+          Fabricate(:topic_localization, topic: onebox_topic, locale: "ja", title: "孫子の兵法")
+          Fabricate(:post_localization, post: onebox_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+          TopicLink.create!(
+            topic: host_topic,
+            post: host_post,
+            user: host_post.user,
+            url: onebox_post.url,
+            domain: Discourse.current_hostname,
+            internal: true,
+            quote: true,
+            reflection: false,
+            link_topic_id: onebox_topic.id,
+            link_post_id: onebox_post.id,
+          )
+        end
+
+        def host_post_json
+          get "/t/#{host_topic.id}.json"
+          expect(response.status).to eq(200)
+          response.parsed_body["post_stream"]["posts"].find { |p| p["id"] == host_post.id }
+        end
+
+        it "returns localized onebox data for a reader in their own language" do
+          sign_in(reader)
+
+          entry = host_post_json["localized_oneboxes"].first
+          expect(entry["title"]).to eq("孫子の兵法")
+          expect(entry["excerpt"]).to include("戦わずして勝つ")
+        end
+
+        it "omits localized onebox data when the reader chose to see original content" do
+          reader.user_option.update!(show_original_content: true)
+          sign_in(reader)
+
+          expect(host_post_json.key?("localized_oneboxes")).to eq(false)
+        end
       end
     end
 
@@ -3781,7 +3919,7 @@ RSpec.describe TopicsController do
         expect(extract_post_stream).to eq(@post_ids[3..3])
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 3 }
-        expect(response.status).to eq(404)
+        expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}.json?page=2")
 
         TopicView.stubs(:chunk_size).returns(4)
 
@@ -3790,7 +3928,7 @@ RSpec.describe TopicsController do
         expect(extract_post_stream).to eq(@post_ids[0..3])
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
-        expect(response.status).to eq(404)
+        expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}.json")
       end
     end
 
@@ -5639,8 +5777,7 @@ RSpec.describe TopicsController do
       before do
         create_post(topic: unread_topic)
         create_post(topic: unread_topic)
-        user.groups << group
-        SiteSetting.experimental_new_new_view_groups = group.id
+        SiteSetting.enable_unified_new = true
         sign_in(user)
       end
 
@@ -7345,73 +7482,80 @@ RSpec.describe TopicsController do
   end
 
   describe "#set_notifications" do
-    describe "initiated by admin" do
-      it "can update another user's notification level via API" do
-        api_key = Fabricate(:api_key, user: admin)
+    let(:watching) { NotificationLevels.topic_levels[:watching] }
+
+    it "rejects `username` param for session requests" do
+      sign_in(user)
+      post "/t/#{topic.id}/notifications.json",
+           params: {
+             username: user_2.username,
+             notification_level: watching,
+           }
+
+      expect(response.status).to eq(403)
+      expect(TopicUser.find_by(user: user, topic: topic)).to be_blank
+      expect(TopicUser.find_by(user: user_2, topic: topic)).to be_blank
+    end
+
+    describe "via API" do
+      it "admin can target another user with `username` param" do
+        api_key = Fabricate(:api_key, user: admin).key
         post "/t/#{topic.id}/notifications",
              params: {
                username: user.username,
-               notification_level: NotificationLevels.topic_levels[:watching],
+               notification_level: watching,
              },
              headers: {
-               HTTP_API_KEY: api_key.key,
+               HTTP_API_KEY: api_key,
                HTTP_API_USERNAME: admin.username,
              }
-        expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(
-          NotificationLevels.topic_levels[:watching],
-        )
+
+        expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(watching)
       end
 
-      it "can update own notification level via API" do
-        api_key = Fabricate(:api_key, user: admin)
+      it "admin acts on self when `username` param is absent" do
+        api_key = Fabricate(:api_key, user: admin).key
         post "/t/#{topic.id}/notifications",
              params: {
-               notification_level: NotificationLevels.topic_levels[:watching],
+               notification_level: watching,
              },
              headers: {
-               HTTP_API_KEY: api_key.key,
+               HTTP_API_KEY: api_key,
                HTTP_API_USERNAME: admin.username,
              }
-        expect(TopicUser.find_by(user: admin, topic: topic).notification_level).to eq(
-          NotificationLevels.topic_levels[:watching],
-        )
-      end
-    end
 
-    describe "initiated by non-admin" do
-      it "only acts on current_user and ignores `username` param" do
-        sign_in(user)
-        TopicUser.create!(
-          user: user,
-          topic: topic,
-          notification_level: NotificationLevels.topic_levels[:tracking],
-        )
-        post "/t/#{topic.id}/notifications.json",
+        expect(TopicUser.find_by(user: admin, topic: topic).notification_level).to eq(watching)
+      end
+
+      it "non-admin gets 403 when passing `username` to target another user" do
+        api_key = Fabricate(:api_key, user: user).key
+        post "/t/#{topic.id}/notifications",
              params: {
                username: user_2.username,
-               notification_level: NotificationLevels.topic_levels[:watching],
-             }
-
-        expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(
-          NotificationLevels.topic_levels[:watching],
-        )
-        expect(TopicUser.find_by(user: user_2, topic: topic)).to be_blank
-      end
-
-      it "can update own notification level via API" do
-        api_key = Fabricate(:api_key, user: user)
-        post "/t/#{topic.id}/notifications",
-             params: {
-               notification_level: NotificationLevels.topic_levels[:watching],
+               notification_level: watching,
              },
              headers: {
-               HTTP_API_KEY: api_key.key,
+               HTTP_API_KEY: api_key,
                HTTP_API_USERNAME: user.username,
              }
 
-        expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(
-          NotificationLevels.topic_levels[:watching],
-        )
+        expect(response.status).to eq(403)
+        expect(TopicUser.find_by(user: user, topic: topic)).to be_blank
+        expect(TopicUser.find_by(user: user_2, topic: topic)).to be_blank
+      end
+
+      it "non-admin acts on self when `username` param is absent" do
+        api_key = Fabricate(:api_key, user: user).key
+        post "/t/#{topic.id}/notifications",
+             params: {
+               notification_level: watching,
+             },
+             headers: {
+               HTTP_API_KEY: api_key,
+               HTTP_API_USERNAME: user.username,
+             }
+
+        expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(watching)
       end
     end
 
@@ -7542,6 +7686,29 @@ RSpec.describe TopicsController do
         },
       )
       expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
+    end
+
+    it "applies class_name to the html element when embed_mode is allowed" do
+      SiteSetting.embed_any_origin = true
+      get("/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true", class_name: "lee-af" })
+      expect(response.body).to match(/<html[^>]*\bclass="[^"]*\blee-af\b/)
+    end
+
+    it "ignores class_name when embed_mode is not allowed" do
+      get("/t/#{topic.slug}/#{topic.id}", params: { class_name: "lee-af" })
+      expect(response.body).not_to match(/<html[^>]*\blee-af\b/)
+    end
+
+    it "ignores class_name with invalid characters" do
+      SiteSetting.embed_any_origin = true
+      get(
+        "/t/#{topic.slug}/#{topic.id}",
+        params: {
+          embed_mode: "true",
+          class_name: "lee\" onload=alert(1)",
+        },
+      )
+      expect(response.body).not_to include("onload=alert(1)")
     end
   end
 

@@ -4,7 +4,7 @@ import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DNumberField from "discourse/ui-kit/d-number-field";
 
-module("Integration | Component | number-field", function (hooks) {
+module("Integration | Component | NumberField", function (hooks) {
   setupRenderingTest(hooks);
 
   test("number field", async function (assert) {

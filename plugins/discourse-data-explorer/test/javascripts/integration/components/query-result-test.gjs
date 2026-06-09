@@ -4,7 +4,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 import QueryResult from "../../discourse/components/query-result";
 
-module("Integration | Component | query-result", function (hooks) {
+module("Integration | Component | QueryResult", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders query results", async function (assert) {
@@ -135,7 +135,7 @@ module("Integration | Component | query-result", function (hooks) {
   });
 });
 
-module("Integration | Component | query-result | chart", function (hooks) {
+module("Integration | Component | QueryResult | Chart", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders the chart by default and the toggle for chartable results", async function (assert) {
@@ -228,6 +228,28 @@ module("Integration | Component | query-result | chart", function (hooks) {
     assert.dom("canvas").exists();
   });
 
+  test("defaults to the table when charting would drop columns", async function (assert) {
+    const content = {
+      colrender: [],
+      result_count: 2,
+      columns: ["user", "reason", "count"],
+      rows: [
+        ["user1", "spam", 10],
+        ["user2", "off-topic", 5],
+      ],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert
+      .dom("table")
+      .exists("table is the default when some columns can't be charted");
+    assert.dom("canvas").doesNotExist("chart is not shown by default");
+
+    await click(".query-results-modes input[value='chart']");
+    assert.dom("canvas").exists("chart is still available via the toggle");
+  });
+
   test("doesn't render a chart when all non-label columns are relation types", async function (assert) {
     const content = {
       colrender: { 1: "user", 2: "badge" },
@@ -312,6 +334,40 @@ module("Integration | Component | query-result | chart", function (hooks) {
     assert
       .dom(".query-results-chart__footnote")
       .exists("shows a footnote listing ignored columns");
+  });
+
+  test("caps a long table and reveals it with the expand button", async function (assert) {
+    const rows = Array.from({ length: 100 }, (_, i) => [`user${i}`, i]);
+    const content = {
+      colrender: [],
+      result_count: rows.length,
+      columns: ["user_name", "like_count"],
+      rows,
+    };
+
+    await render(
+      <template>
+        <div class="query-results">
+          <QueryResult @content={{content}} @view="table" />
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".query-results-table-wrapper")
+      .doesNotHaveClass("--expanded", "the long table is capped by default");
+    assert
+      .dom(".query-results-expand-btn")
+      .exists("an expand button is offered for the overflowing table");
+
+    await click(".query-results-expand-btn");
+
+    assert
+      .dom(".query-results-table-wrapper.--expanded")
+      .exists("clicking expand removes the height cap");
+    assert
+      .dom(".query-results-expand-btn")
+      .doesNotExist("the expand button is gone once expanded");
   });
 
   test("chart/table toggle switches the view (XOR)", async function (assert) {

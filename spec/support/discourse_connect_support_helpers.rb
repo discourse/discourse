@@ -71,3 +71,9 @@ module DiscourseConnectHelpers
     false
   end
 end
+
+RSpec.configure do |config|
+  config.before(:suite) do
+    DiscourseConnectHelpers.provider_port = 9100 + ENV["TEST_ENV_NUMBER"].to_i
+  end
+end

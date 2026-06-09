@@ -70,7 +70,7 @@ export default {
         );
       }
 
-      if (api.registerUserMenuTab) {
+      if (currentUser?.can_assign_globally && api.registerUserMenuTab) {
         api.registerUserMenuTab((UserMenuTab) => {
           return class extends UserMenuTab {
             id = "assign-list";

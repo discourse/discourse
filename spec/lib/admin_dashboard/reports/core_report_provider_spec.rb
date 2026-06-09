@@ -2,11 +2,17 @@
 
 RSpec.describe AdminDashboard::Reports::CoreReportProvider do
   fab!(:admin)
-  let(:guardian) { Guardian.new(admin) }
+  let(:guardian) { admin.guardian }
 
   describe ".source_name" do
     it "returns 'core_report'" do
       expect(described_class.source_name).to eq("core_report")
+    end
+  end
+
+  describe ".label" do
+    it "is nil because the standard provider's reports render without a pill" do
+      expect(described_class.label).to be_nil
     end
   end
 
@@ -20,6 +26,7 @@ RSpec.describe AdminDashboard::Reports::CoreReportProvider do
       expect(resolved.source).to eq("core_report")
       expect(resolved.identifier).to eq("signups")
       expect(resolved.title).to be_present
+      expect(resolved.label).to be_nil
     end
 
     it "omits identifiers that don't correspond to a built-in report" do
@@ -38,24 +45,51 @@ RSpec.describe AdminDashboard::Reports::CoreReportProvider do
     end
   end
 
-  describe ".available_for" do
+  describe ".list_all" do
     it "includes built-in reports" do
-      reports = described_class.available_for(guardian)
-      identifiers = reports.map(&:identifier)
+      reports = described_class.list_all
 
-      expect(identifiers).to include("signups")
-      reports.each { |r| expect(r).to be_a(AdminDashboard::Reports::ResolvedReport) }
+      expect(reports.map(&:identifier)).to include("signups")
+      expect(reports).to all(be_a(AdminDashboard::Reports::ResolvedReport))
     end
 
     it "filters by name/description when search is given" do
-      filtered = described_class.available_for(guardian, search: "signup")
+      filtered = described_class.list_all(search: "signup")
       identifiers = filtered.map(&:identifier)
 
       expect(identifiers).to include("signups")
     end
 
     it "returns no results when search matches nothing" do
-      expect(described_class.available_for(guardian, search: "zzzz_no_match_zzzz")).to be_empty
+      expect(described_class.list_all(search: "zzzz_no_match_zzzz")).to be_empty
+    end
+
+    it "returns a title-sorted page and resumes after the cursor" do
+      first_two = described_class.list_all(limit: 2)
+      expect(first_two.size).to eq(2)
+
+      titles = described_class.list_all.map { |report| report.title.to_s.downcase }
+      expect(titles).to eq(titles.sort)
+
+      after = { title: first_two.last.title, key: first_two.last.key }
+      next_two = described_class.list_all(after: after, limit: 2)
+
+      expect(next_two.size).to eq(2)
+      expect(first_two.map(&:identifier)).not_to include(*next_two.map(&:identifier))
+      expect(
+        described_class.sort_key(next_two.first) <=> described_class.sort_key(first_two.last),
+      ).to eq(1)
+    end
+  end
+
+  describe "reports excluded from the dashboard" do
+    after { Report.dashboard_excluded_report_types.delete("signups") }
+
+    it "omits them from both list_all and resolve_many" do
+      Report.dashboard_excluded_report_types << "signups"
+
+      expect(described_class.list_all.map(&:identifier)).not_to include("signups")
+      expect(described_class.resolve_many(%w[signups], guardian: guardian)).to be_empty
     end
   end
 

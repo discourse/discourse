@@ -40,7 +40,6 @@ class ApplicationController < ActionController::Base
   before_action :set_mp_snapshot_fields
   before_action :clear_notifications
   around_action :with_resolved_locale
-  before_action :set_mobile_view
   before_action :block_if_readonly_mode
   before_action :authorize_mini_profiler
   before_action :redirect_to_login_if_required
@@ -120,24 +119,15 @@ class ApplicationController < ActionController::Base
     response.headers.delete("X-Frame-Options") if SiteSetting.allow_embedding_site_in_an_iframe
   end
 
-  def ember_cli_required?
-    Rails.env.development? && ENV["ALLOW_EMBER_CLI_PROXY_BYPASS"] != "1" &&
-      request.headers["X-Discourse-Ember-CLI"] != "true"
-  end
-
-  def application_layout
-    ember_cli_required? ? "ember_cli" : "application"
-  end
-
   def set_layout
     case request.headers["Discourse-Render"]
     when "desktop"
-      return application_layout
+      return "application"
     when "crawler"
       return "crawler"
     end
 
-    use_crawler_layout? ? "crawler" : application_layout
+    use_crawler_layout? ? "crawler" : "application"
   end
 
   class RenderEmpty < StandardError
@@ -148,6 +138,12 @@ class ApplicationController < ActionController::Base
 
   rescue_from RenderEmpty do
     with_resolved_locale { render "default/empty" }
+  end
+
+  rescue_from EmberCli::BuildError do |e|
+    @build_error = e.details
+    response.headers["Cache-Control"] = "no-store"
+    render "default/build_error", layout: false, status: :service_unavailable
   end
 
   rescue_from ArgumentError do |e|
@@ -452,10 +448,6 @@ class ApplicationController < ActionController::Base
     I18n.with_locale(locale) { yield }
   end
 
-  def set_mobile_view
-    session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
-  end
-
   NO_THEMES = "no_themes"
   NO_PLUGINS = "no_plugins"
   NO_UNOFFICIAL_PLUGINS = "no_unofficial_plugins"
@@ -576,6 +568,15 @@ class ApplicationController < ActionController::Base
     user
   end
 
+  def fetch_target_user
+    if params[:username].present? || params[:external_id].present?
+      raise Discourse::InvalidAccess if !is_api? || !guardian.is_admin?
+      fetch_user_from_params
+    else
+      current_user
+    end
+  end
+
   def post_ids_including_replies
     post_ids = params[:post_ids].map(&:to_i)
     post_ids |= PostReply.where(post_id: params[:reply_post_ids]).pluck(:reply_post_id) if params[
@@ -628,7 +629,7 @@ class ApplicationController < ActionController::Base
       ApplicationLayoutPreloader.new(
         guardian:,
         theme_id: @theme_id,
-        theme_target: view_context.mobile_view? ? :mobile : :desktop,
+        theme_target: view_context.mobile_device? ? :mobile : :desktop,
         login_method:,
       )
   end
@@ -876,6 +877,8 @@ class ApplicationController < ActionController::Base
     second_factor_path = path("/u/#{current_user.encoded_username}/preferences/second-factor")
     allowed_paths = [redirect_path, second_factor_path, path("/admin"), path("/safe-mode")]
     if allowed_paths.none? { |p| request.fullpath.start_with?(p) }
+      cookies[:destination_url] = destination_url.presence
+
       rate_limiter = RateLimiter.new(current_user, "redirect_to_required_fields_log", 1, 24.hours)
 
       if rate_limiter.performed!(raise_error: false)

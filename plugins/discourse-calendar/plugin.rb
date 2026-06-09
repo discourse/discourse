@@ -33,12 +33,16 @@ register_asset "stylesheets/mobile/discourse-post-event.scss", :mobile
 register_asset "stylesheets/colors.scss", :color_definitions
 register_asset "stylesheets/common/user-preferences.scss"
 register_asset "stylesheets/common/upcoming-events-list.scss"
+register_asset "stylesheets/common/livestream.scss"
+register_asset "stylesheets/desktop/livestream.scss", :desktop
+register_asset "stylesheets/mobile/livestream.scss", :mobile
 register_svg_icon "calendar-day"
 register_svg_icon "clock"
 register_svg_icon "file-csv"
 register_svg_icon "star"
 register_svg_icon "file-arrow-up"
 register_svg_icon "location-pin"
+register_svg_icon "arrows-up-to-line"
 
 module ::DiscourseCalendar
   PLUGIN_NAME = "discourse-calendar"
@@ -57,6 +61,41 @@ module ::DiscourseCalendar
 
   # List of groups
   GROUP_TIMEZONES_CUSTOM_FIELD = "group-timezones"
+
+  module Livestream
+    LIVESTREAM_CHAT_STATUS_MESSAGE_BUS_CHANNEL = "/discourse-calendar/livestream/chat-status"
+
+    def self.handle_topic_chat_channel_creation(topic)
+      return if topic.category.blank?
+      return if DiscourseCalendar::Livestream::TopicChatChannel.exists?(topic_id: topic.id)
+      return if topic.tags.blank? || topic.tags.none? { |tag| tag.name == "livestream" }
+
+      channel =
+        Chat::Channel.create!(
+          chatable_id: topic.category.id,
+          chatable_type: "Category",
+          name: topic.title,
+          status: Chat::Channel.statuses[:open],
+          type: "CategoryChannel",
+          allow_channel_wide_mentions: true,
+        )
+
+      DiscourseCalendar::Livestream::TopicChatChannel.create!(topic: topic, chat_channel: channel)
+      channel.user_chat_channel_memberships.create!(user: topic.user, following: false)
+    end
+
+    def self.livestream_chat_status_channel(user_id)
+      "#{LIVESTREAM_CHAT_STATUS_MESSAGE_BUS_CHANNEL}/#{user_id}"
+    end
+
+    def self.publish_livestream_chat_status(membership, user:)
+      MessageBus.publish(
+        livestream_chat_status_channel(user.id),
+        Chat::UserChannelMembershipSerializer.new(membership, scope: user.guardian).to_json,
+        user_ids: [user.id],
+      )
+    end
+  end
 
   def self.users_on_holiday
     PluginStore.get(PLUGIN_NAME, USERS_ON_HOLIDAY_KEY) || []
@@ -77,6 +116,8 @@ module ::DiscoursePostEvent
 end
 
 require_relative "lib/discourse_calendar/engine"
+require_relative "lib/discourse_calendar/livestream/topic_extension"
+require_relative "lib/discourse_calendar/livestream/chat_channel_extension"
 
 Dir
   .glob(File.expand_path("../lib/discourse_calendar/site_settings/*.rb", __FILE__))
@@ -132,6 +173,7 @@ after_initialize do
   require_relative "jobs/regular/discourse_post_event/bulk_invite"
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
+  require_relative "jobs/regular/livestream/recalculate_user_channel_memberships"
   require_relative "lib/discourse_post_event/engine"
   require_relative "lib/discourse_post_event/event_finder"
   require_relative "lib/discourse_post_event/event_parser"
@@ -179,6 +221,8 @@ after_initialize do
     Jobs::ExportCsvFile.prepend(DiscoursePostEvent::ExportPostEventCsvReportExtension)
     Post.prepend(DiscoursePostEvent::PostExtension)
     ::WebHook.prepend(DiscoursePostEvent::WebHookExtension)
+    Topic.prepend(DiscourseCalendar::Livestream::TopicExtension)
+    Chat::Channel.prepend(DiscourseCalendar::Livestream::ChatChannelExtension)
   end
 
   add_to_class(:user, :can_create_discourse_post_event?) do
@@ -772,5 +816,91 @@ after_initialize do
     on_holiday_usernames = DiscourseCalendar.users_on_holiday
     report.data = (group_usernames & on_holiday_usernames).map { |username| { username: username } }
     report.total = report.data.count
+  end
+
+  register_anonymous_action("rsvp_event") do |user, params|
+    event_id = params["event_id"]
+    recurring = ActiveModel::Type::Boolean.new.cast(params["recurring"])
+    existing_invitee = DiscoursePostEvent::Invitee.find_by(post_id: event_id, user_id: user.id)
+
+    if existing_invitee
+      DiscoursePostEvent::UpdateInvitee.call(
+        params: {
+          event_id: event_id,
+          invitee_id: existing_invitee.id,
+          status: params["status"],
+          recurring: recurring,
+        },
+        guardian: user.guardian,
+      )
+    else
+      DiscoursePostEvent::CreateInvitee.call(
+        params: {
+          event_id: event_id,
+          status: params["status"],
+          recurring: recurring,
+          user_id: user.id,
+        },
+        guardian: user.guardian,
+      )
+    end
+  end
+
+  # DISCOURSE LIVESTREAM
+
+  add_to_serializer(
+    :topic_view,
+    :chat_channel_id,
+    include_condition: -> { SiteSetting.livestream_enabled },
+  ) do
+    return nil if object.topic.topic_chat_channel.blank?
+    object.topic.topic_chat_channel.chat_channel_id
+  end
+
+  on(:post_edited) do |post, _, _|
+    if SiteSetting.livestream_enabled
+      DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
+    end
+  end
+  on(:topic_created) do |topic, _, _|
+    if SiteSetting.livestream_enabled
+      DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(topic)
+    end
+  end
+  on(:chat_channel_trashed) do |channel, user|
+    if SiteSetting.livestream_enabled
+      # If the chat channel is deleted, delete the related TopicChatChannel record
+      DiscourseCalendar::Livestream::TopicChatChannel.where(chat_channel_id: channel.id).destroy_all
+    end
+  end
+
+  on(:discourse_calendar_post_event_invitee_status_changed) do |invitee|
+    next if !SiteSetting.livestream_enabled
+
+    topic = invitee.event.post.topic
+    topic_chat_channel = topic.topic_chat_channel
+
+    next if !topic_chat_channel
+
+    user = User.find(invitee.user_id)
+    channel = topic_chat_channel.chat_channel
+    manager = Chat::ChannelMembershipManager.new(channel)
+
+    user_allowed_in_chat = user.in_any_groups?(SiteSetting.livestream_chat_allowed_groups_map)
+
+    membership =
+      if invitee.status == DiscoursePostEvent::Invitee.statuses[:going]
+        user_allowed_in_chat ? manager.follow(user) : manager.unfollow(user)
+      else
+        manager.unfollow(user)
+      end
+
+    DiscourseCalendar::Livestream.publish_livestream_chat_status(membership, user: user)
+  end
+
+  on(:site_setting_changed) do |name, old_val, new_val|
+    if name == :livestream_chat_allowed_groups && SiteSetting.livestream_enabled
+      Jobs::LivestreamRecalculateUserChannelMemberships.new.execute
+    end
   end
 end

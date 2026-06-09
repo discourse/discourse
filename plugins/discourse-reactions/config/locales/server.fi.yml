@@ -12,7 +12,6 @@ fi:
     discourse_reactions_enabled_reactions: "Määrittää luettelon käytössä olevista reaktioista, kaikki emojit ovat sallittuja tässä."
     discourse_reactions_desaturated_reaction_panel: "Vähentää reaktioiden visuaalista häiriötä näyttämällä ne vähemmän värikyllästettyinä, kunnes niitä osoitetaan."
     discourse_reactions_excluded_from_like: "Reaktiot, joita ei lasketa tykkäyksiksi. Reaktiot, jotka eivät ole tässä luettelossa, lasketaan tykkäyksiksi kunniamerkeissä, raportoinnissa ja muissa tarkoituksissa."
-    discourse_reactions_like_sync_enabled: "Jos tämä on käytössä, historiallisiin reaktioihin luodaan vastaavat tykkäystietueet, paitsi niihin reaktioihin, jotka on määritelty \"discourse_reactions_excluded_from_like\"-asetuksessa. Tämä synkronointi tapahtuu säännöllisesti taustalla ja myös silloin, kun muutat \"discourse_reactions_excluded_from_like\"-asetusta."
   badges:
     first_reaction:
       name: Ensimmäinen reaktio

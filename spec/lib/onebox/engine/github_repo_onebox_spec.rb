@@ -70,6 +70,19 @@ RSpec.describe Onebox::Engine::GithubRepoOnebox do
     end
   end
 
+  describe "#inline_data" do
+    it "returns nil when no access token is configured" do
+      expect(described_class.new(gh_link).inline_data).to be_nil
+    end
+
+    it "returns the repo title from the API when an access token is configured" do
+      SiteSetting.github_onebox_access_tokens = "discourse|github_pat_1234"
+      expect(described_class.new(gh_link).inline_data).to eq(
+        title: "GitHub - discourse/discourse - A platform for community discussion. Free, open,...",
+      )
+    end
+  end
+
   describe ".===" do
     it "matches valid GitHub repository URL" do
       valid_url = URI("https://github.com/username/repository/")

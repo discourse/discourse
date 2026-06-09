@@ -3,15 +3,16 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { themePrefix } from "virtual:theme";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import BulkSelectCheckbox from "discourse/components/topic-list/bulk-select-checkbox";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import UnreadIndicator from "discourse/components/topic-list/unread-indicator";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
+import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { shortDateNoYear } from "discourse/lib/formatter";
-import { or } from "discourse/truth-helpers";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -20,6 +21,7 @@ import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
+import { topicWasUpdatedAfterLastPost } from "../../lib/topic-activity";
 import { getTopicStatusBadge } from "../../lib/topic-status-badge";
 
 export default class HighContextTopicCard extends Component {
@@ -99,6 +101,14 @@ export default class HighContextTopicCard extends Component {
 
   get topicCreator() {
     return this.args.topic.creator;
+  }
+
+  get hasLastReplyContext() {
+    return this.hasReplies && !topicWasUpdatedAfterLastPost(this.args.topic);
+  }
+
+  get hasContext() {
+    return this.hasLastReplyContext || this.hasAssigned;
   }
 
   get lastPoster() {
@@ -196,6 +206,10 @@ export default class HighContextTopicCard extends Component {
           {{~#if @topic.featured_link~}}
             &nbsp;{{topicFeaturedLink @topic}}
           {{~/if~}}
+          <PluginOutlet
+            @name="topic-list-after-title"
+            @outletArgs={{lazyHash topic=@topic}}
+          />
           <UnreadIndicator @topic={{@topic}} />
           <TopicPostBadges
             @unreadPosts={{@topic.unread_posts}}
@@ -209,9 +223,9 @@ export default class HighContextTopicCard extends Component {
         {{/if}}
       </div>
 
-      {{#if (or this.hasReplies this.hasAssigned)}}
+      {{#if this.hasContext}}
         <div class="hc-topic-card__context">
-          {{#if this.hasReplies}}
+          {{#if this.hasLastReplyContext}}
             <div class="hc-topic-card__last-reply">
               {{dAvatar this.lastPoster.user imageSize="tiny"}}
               <span
@@ -219,7 +233,7 @@ export default class HighContextTopicCard extends Component {
               >{{this.lastPoster.username}}</span>
               <span>{{i18n (themePrefix "replied")}}</span>
               <span class="hc-topic-card__time">
-                {{dFormatDate @topic.bumpedAt leaveAgo="true"}}
+                {{dFormatDate @topic.last_posted_at leaveAgo="true"}}
               </span>
             </div>
           {{/if}}

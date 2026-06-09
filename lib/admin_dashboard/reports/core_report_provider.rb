@@ -9,8 +9,18 @@ module AdminDashboard
         SOURCE_NAME
       end
 
+      # The standard/default provider intentionally has no label, so its
+      # reports render without a pill. Labels exist only to distinguish
+      # non-standard (plugin-contributed) sources.
+      def self.label
+        nil
+      end
+
       def self.resolve_many(identifiers, guardian:)
-        index = available_for(guardian).index_by(&:identifier)
+        return {} if guardian.nil?
+
+        index =
+          dashboard_entries(guardian).map { |entry| build_resolved(entry) }.index_by(&:identifier)
         identifiers.each_with_object({}) do |identifier, hash|
           key = identifier.to_s
           resolved = index[key]
@@ -28,7 +38,7 @@ module AdminDashboard
 
           cached = ::Report.find_cached(key, opts)
           if cached
-            hash[key] = cached
+            hash[key] = with_empty_flag(cached)
             next
           end
 
@@ -36,17 +46,27 @@ module AdminDashboard
           next if report.blank?
 
           ::Report.cache(report)
-          hash[key] = report.as_json
+          hash[key] = with_empty_flag(report.as_json)
         end
       end
 
-      # TODO: paginate once the Manage Reports modal's list-available endpoint
-      # exists; today this returns every registered built-in report unbounded.
-      def self.available_for(guardian, search: nil)
-        entries = ::Reports::ListQuery.call(guardian: guardian)
-        entries = filter_by_search(entries, search) if search.present?
-        entries.map { |entry| build_resolved(entry) }
+      def self.with_empty_flag(payload)
+        payload.merge(empty: payload[:data].blank?)
       end
+      private_class_method :with_empty_flag
+
+      def self.list_all(search: nil, after: nil, limit: nil)
+        entries = dashboard_entries(Guardian.new(Discourse.system_user))
+        entries = filter_by_search(entries, search) if search.present?
+        seek(entries.map { |entry| build_resolved(entry) }, after: after, limit: limit)
+      end
+
+      def self.dashboard_entries(guardian)
+        ::Reports::ListQuery
+          .call(guardian: guardian)
+          .reject { |entry| ::Report.dashboard_excluded_report_types.include?(entry[:type]) }
+      end
+      private_class_method :dashboard_entries
 
       def self.build_resolved(entry)
         AdminDashboard::Reports::ResolvedReport.new(
@@ -54,6 +74,8 @@ module AdminDashboard
           identifier: entry[:type],
           title: entry[:title],
           description: entry[:description],
+          label: label,
+          url: "/admin/reports/#{entry[:type]}",
         )
       end
       private_class_method :build_resolved

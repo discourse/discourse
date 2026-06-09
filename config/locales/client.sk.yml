@@ -200,6 +200,15 @@ sk:
       placeholder: Dátum
       from_placeholder: "od dátumu"
       to_placeholder: "k dnešnému dňu"
+    date_range_picker:
+      apply: "Použi"
+      start_date: "Dátum začiatku"
+      presets:
+        last_7_days: "Posledných 7 dní"
+        last_30_days: "Posledných 30 dní"
+        last_3_months: "Posledných 3 mesiacov"
+        last_6_months: "Posledných 6 mesiacov"
+        last_year: "Minulý rok"
     share:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "príspevok č.%{postNumber} od @%{username}"
@@ -332,8 +341,6 @@ sk:
     tos: "Podmienky používania"
     rules: "Pravidlá"
     conduct: "Kódex správania"
-    mobile_view: "Mobilná verzia"
-    desktop_view: "Zobrazenie pre počítač"
     now: "práve teraz"
     read_more: "čítaj ďalej"
     more: "Viac"
@@ -372,7 +379,7 @@ sk:
       pm_title: "Odporúčané správy"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Povolené"
+        enabled: "Vybrané"
       start_posting:
         back: "Späť"
     about:
@@ -2916,7 +2923,7 @@ sk:
       users_placeholder: "Pridanie používateľov alebo skupín"
       title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
       title_or_link_placeholder: "Napíšte názov témy alebo tu skopírujte odkaz"
-      edit_reason_placeholder: "prečo upravujete?"
+      edit_reason_placeholder: "Prečo upravujete?"
       topic_featured_link_placeholder: "Zadajte odkaz zobrazený s názvom."
       remove_featured_link: "Odstrániť odkaz z témy."
       reply_placeholder: "Píšte sem. Formátujte pomocou Markdown, BBCode alebo HTML. Pretiahnite alebo vložte obrázky."
@@ -2969,6 +2976,7 @@ sk:
         attribute_value: "Hodnota"
         apply: "Použi"
       help: "Nápoveda úprav pre Markdown"
+      edit_reason: "Prečo upravujete?"
       exit_fullscreen_prompt: "Stlačením <kbd>ESC</kbd> ukončíte celú obrazovku"
       modal_ok: "OK"
       cant_send_pm: "Ľutujeme, nemôžete poslať správu používateľovi %{username}."
@@ -2998,23 +3006,22 @@ sk:
           desc: Vytvorenie novej správy začínajúcej s rovnakými príjemcami
         reply_to_topic:
           label: Odpovedať na tému
+          trigger: Téma
           desc: Odpovedzte na tému, nie na konkrétny príspevok
+        reply_to_message:
+          trigger: Správa
         toggle_whisper:
           label: Prepnúť šepot
-          desc: Šepot je viditeľný iba pre zamestnancov
         create_topic:
-          label: "Nová téma"
           desc: Vytvorte novú tému
-        create_personal_message:
-          label: "Nová správa"
         shared_draft:
           label: "Zdieľaný koncept"
           desc: "Navrhnite tému, ktorá bude viditeľná iba pre povolených používateľov"
         toggle_topic_bump:
-          label: "Prepnúť tému bump"
           desc: "Odpoveď bez zmeny dátumu poslednej odpovede"
         toggle_unlisted:
           label: Prepínanie nezaradených
+        unknown_user: "Používateľ"
       reload: "Znovu načítať"
       ignore: "Ignorovať"
       image_alt_text:
@@ -3430,6 +3437,23 @@ sk:
           other: "Odmietnuť (%{count})…"
         dismiss_tooltip: "Zahoď iba nové príspevky, alebo prestaň pozorovať témy"
         also_dismiss_topics: "Prestať pozorovať tieto témy. Už sa nikdy nebudú ukazovať medzi neprečítanými"
+        dismiss_new_topics: "Zamietnuť nové témy"
+        dismiss_new_replies: "Skryť nové odpovede"
+        dismiss_new_topics_with_selected:
+          one: "Zamietnuť (%{count})"
+          few: "Zamietnuť (%{count})"
+          many: "Zamietnuť (%{count})"
+          other: "Zamietnuť (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Zamietnuť (%{count})"
+          few: "Zamietnuť (%{count})"
+          many: "Zamietnuť (%{count})"
+          other: "Zamietnuť (%{count})"
+        dismiss_all_with_selected:
+          one: "Zamietnuť (%{count})"
+          few: "Zamietnuť (%{count})"
+          many: "Zamietnuť (%{count})"
+          other: "Zamietnuť (%{count})"
         dismiss_new: "Zahodiť. Nová"
         dismiss_new_modal:
           title: "Zamietnuť nové"
@@ -4329,7 +4353,6 @@ sk:
         name_placeholder: "Na čo slúži táto záložka?"
         name_input_label: "Názov záložky"
         set_reminder: "Pripomeň mi"
-        options: "Možnosti"
         actions:
           delete_bookmark:
             name: "Odstrániť záložku"
@@ -4974,18 +4997,7 @@ sk:
       staff_info: "Ak chcete pridať obmedzenia, vložte túto značku do skupiny značiek <a href=%{basePath}/tag_groups></a>."
       category_restricted: "Táto značka je obmedzená na kategórie, ku ktorým nemáte oprávnenie na prístup."
       synonyms: "Synonymá"
-      synonyms_description: "Ak sa použijú nasledujúce značky, nahradia sa týmito značkami <b>%{base_tag_name}</b>."
       save: "Uloženie názvu a popisu značky"
-      tag_groups_info:
-        one: 'Táto značka patrí do skupiny "%{tag_groups}".'
-        few: "Táto značka patrí do skupín \"%{tag_groups}\"."
-        many: "Táto značka patrí do skupín \"%{tag_groups}\"."
-        other: "Táto značka patrí do týchto skupín: %{tag_groups}."
-      category_restrictions:
-        one: "Môže sa používať len v tejto kategórii:"
-        few: "Môže sa používať len v týchto kategóriách:"
-        many: "Môže sa používať len v týchto kategóriách:"
-        other: "Môže sa používať len v týchto kategóriách:"
       edit_synonyms: "Upraviť synonymá"
       add_synonyms_label: "Pridajte synonymá:"
       add_synonyms: "Pridať"
@@ -5425,7 +5437,7 @@ sk:
           title: "Upraviť tabuľku"
           cancel: "zrušiť"
           create: "Uložiť"
-          reason: "prečo upravujete?"
+          reason: "Prečo upravujete?"
           trigger_reason: "Pridať dôvod úpravy"
         default_edit_reason: "Aktualizujte tabuľku pomocou editora tabuliek"
       default_header:
@@ -6048,6 +6060,12 @@ sk:
                 "2": "Člen"
                 "3": "Bežné"
                 "4": "Vodca"
+        reports_section:
+          no_data: "Žiadne údaje na zobrazenie"
+          modal:
+            enabled_heading: "Povolené"
+            all_heading: "Všetky hlásenia"
+            apply: "Použi"
         configure:
           button: "Konfigurovať"
         site_traffic:
@@ -6578,9 +6596,10 @@ sk:
           your_organization: "Vaša organizácia"
           your_organization_description: "Tieto informácie použijeme v podmienkach používania služby a v oznámení o ochrane osobných údajov, aby sme uviedli, kto prevádzkuje stránku a pod akou jurisdikciou."
           company_name: "Meno"
-          company_name_placeholder: "Organizácia Acme"
           company_name_warning: |
             Ak zostane prázdne, nebudú poskytnuté žiadne všeobecné podmienky služby ani oznámenie o ochrane osobných údajov.
+          company_url: "Webová stránka"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Platné právo"
           governing_law_placeholder: "Provincia, štát alebo krajina"
           governing_law_help: |

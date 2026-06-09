@@ -149,7 +149,6 @@ export default class QueriesEdit extends Component {
                     dragMove=@controller.dragMove
                   }}
                 >
-                  {{dIcon "discourse-expand"}}
                 </div>
 
                 <div class="clear"></div>
@@ -201,6 +200,7 @@ export default class QueriesEdit extends Component {
                 @action={{@controller.showHelpModal}}
                 @label="explorer.help.label"
                 @icon="circle-question"
+                @disabled={{@controller.actionsBusy}}
                 class="btn-transparent query-action-bar__help"
               />
             {{/if}}
@@ -228,12 +228,14 @@ export default class QueriesEdit extends Component {
                 @action={{@controller.recover}}
                 @icon="arrow-rotate-left"
                 @label="explorer.recover"
+                @disabled={{@controller.actionsBusy}}
               />
             {{else if this.showDestroyQuery}}
               <DButton
                 @action={{@controller.destroyQuery}}
                 @icon="trash-can"
                 @label="explorer.delete"
+                @disabled={{@controller.actionsBusy}}
                 class="btn-danger"
               />
             {{/if}}

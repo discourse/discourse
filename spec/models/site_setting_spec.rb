@@ -187,7 +187,7 @@ RSpec.describe SiteSetting do
     end
 
     it "includes only settings for the specified category" do
-      expect(SiteSetting.all_settings(filter_categories: ["required"]).count).to eq(12)
+      expect(SiteSetting.all_settings(filter_categories: ["required"]).count).to eq(13)
     end
   end
 

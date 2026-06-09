@@ -214,6 +214,18 @@ pl_PL:
       placeholder: data
       from_placeholder: "od daty"
       to_placeholder: "do daty"
+    date_range_picker:
+      apply: "Zastosuj"
+      start_date: "Data rozpoczęcia"
+      end_date: "Data zakończenia"
+      date_placeholder: "rrrr/mm/dd"
+      presets:
+        label: "Predefiniowane zakresy dat"
+        last_7_days: "Ostatnie 7 dni"
+        last_30_days: "Ostatnie 30 dni"
+        last_3_months: "Ostatnie 3 miesiące"
+        last_6_months: "Ostatnie 6 miesięcy"
+        last_year: "W ubiegłym roku"
     languages:
       ar:
         name: arabski
@@ -430,7 +442,6 @@ pl_PL:
         since: "(od %{version})"
       toggle_safe_mode: "Przełącz tryb awaryjny"
       toggle_verbose_localization: "Przełącz szczegółową lokalizację"
-      toggle_mobile_view: "Przełącz widok mobilny"
       disable_dev_tools: "Wyłącz narzędzia programistyczne"
       toggle_upcoming_changes_debug: "Przełącz debugowanie nadchodzących zmian"
     s3:
@@ -491,8 +502,6 @@ pl_PL:
     tos: "Warunki użytkowania serwisu"
     rules: "Zasady"
     conduct: "Regulamin"
-    mobile_view: "Widok mobilny"
-    desktop_view: "Wersja komputerowa"
     now: "teraz"
     read_more: "więcej"
     more: "Więcej"
@@ -537,9 +546,9 @@ pl_PL:
         description: "Wybierz motyw początkowy dla swojej społeczności"
         action: "Wybierz motyw"
         modal_title: "Wybierz motyw"
-        use_theme: "Użyj tego motywu"
-        enabled: "Włączona"
-        theme_set: "%{theme} jest teraz Twoim domyślnym motywem"
+        use_theme: "Użyj wybranego motywu"
+        enabled: "Wybrany"
+        applying_theme: "Stosowanie motywu..."
         browse_all: "Zarządzaj motywami"
         show_light_screenshot: "Pokaż jasny zrzut ekranu"
         show_dark_screenshot: "Pokaż ciemny zrzut ekranu"
@@ -3317,7 +3326,7 @@ pl_PL:
       users_placeholder: "Dodaj użytkowników lub grupy"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
       title_or_link_placeholder: "Tutaj wpisz tytuł lub wklej link"
-      edit_reason_placeholder: "powód edycji?"
+      edit_reason_placeholder: "Powód edycji?"
       topic_featured_link_placeholder: "Wstaw link pod nazwą "
       remove_featured_link: "Usuń link z tematu."
       reply_placeholder: "Pisz w tym miejscu. Wspierane formatowanie to Markdown, BBCode lub HTML. Możesz też przeciągnąć tu obrazek."
@@ -3387,7 +3396,10 @@ pl_PL:
       collapse: "Zminimalizuj panel kompozytora"
       open: "Otwórz panel kompozytora"
       abandon: "Zamknij kompozytor i odrzuć szkic"
-      edit_reason: "Dodaj powód edycji"
+      edit_reason: "Powód edycji?"
+      whisper_indicator:
+        public: "Widoczny"
+        whispering: "Szeptanie"
       enter_fullscreen: "Przejdź do pełnoekranowego kompozytora"
       exit_fullscreen: "Wyjdź z trybu pełnoekranowego kompozytora"
       exit_fullscreen_prompt: "Naciśnij <kbd>ESC</kbd>, aby wyjść z pełnego ekranu"
@@ -3422,25 +3434,34 @@ pl_PL:
           desc: Utwórz nową wiadomość zaczynając od tych samych odbiorców
         reply_to_topic:
           label: Odpowiedz na temat
+          trigger: Temat
           desc: Odpowiedz na temat, a nie żaden konkretny wpis
+        reply_to_message:
+          label: Odpowiedz na wiadomość
+          trigger: Wiadomość
+          desc: Odpowiedz na wiadomość, a nie na konkretny wpis
         toggle_whisper:
           label: Przełącz szept
-          desc: Szepty są widoczne tylko dla zespołu zarządzającego
+          desc: Szepty są widoczne tylko dla uprawnionych grup
         create_topic:
-          label: "Nowy temat"
+          label: Utwórz temat
           desc: Utwórz nowy temat
         create_personal_message:
-          label: "Nowa wiadomość"
+          label: Utwórz wiadomość
           desc: "Utwórz nową prywatną wiadomość"
         shared_draft:
           label: "Udostępniony szkic"
           desc: "Szkicuj temat, który będzie widoczny tylko dla uprawnionych użytkowników"
         toggle_topic_bump:
-          label: "Przełącz podbicie tematu"
+          label: "Nie podbijaj tematu"
           desc: "Odpowiedz bez zmiany ostatniej daty odpowiedzi"
+        create_unlisted_topic: "Temat usunięty z listy"
         toggle_unlisted:
           label: Przełącz zastrzeżone
           desc: "Dostęp do tematów niewymienionych na liście jest możliwy wyłącznie za pośrednictwem bezpośredniego łącza"
+        edit_post: "Edycja wpisu"
+        no_actions_available: "Brak dostępnych działań"
+        unknown_user: "Użytkownik"
       reload: "Przeładuj"
       ignore: "Ignoruj"
       image_alt_text:
@@ -3917,6 +3938,26 @@ pl_PL:
           other: "Odrzuć (%{count})…"
         dismiss_tooltip: "Wyczyść nowe wpisy lub przestań śledzić tematy"
         also_dismiss_topics: "Przestać śledzić wskazane tematy. Nie chcę, aby pojawiały się w zakładce nieprzeczytane."
+        dismiss_all: "Odrzuć wszystko"
+        dismiss_new_topics: "Odrzuć nowe tematy"
+        dismiss_new_replies: "Odrzuć nowe odpowiedzi"
+        dismiss_new_topics_with_selected:
+          one: "Odrzuć (%{count})Dismiss "
+          few: "Odrzuć (%{count})"
+          many: "Odrzuć (%{count})"
+          other: "Odrzuć (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Odrzuć (%{count})"
+          few: "Odrzuć (%{count})"
+          many: "Odrzuć (%{count})"
+          other: "Odrzuć (%{count})"
+        dismiss_all_with_selected:
+          one: "Odrzuć (%{count})"
+          few: "Odrzuć (%{count})"
+          many: "Odrzuć (%{count})"
+          other: "Odrzuć (%{count})"
+        dismiss_new_menu: "Odrzuć opcje"
+        dismiss_and_stop_tracking: "Odrzuć i zatrzymaj śledzenie"
         dismiss_new: "Wyczyść nowe"
         dismiss_new_modal:
           title: "Odrzuć nowe"
@@ -3935,10 +3976,10 @@ pl_PL:
           replies: "Odrzuć nowe odpowiedzi"
           untrack: "Przestań śledzić te tematy, aby przestały pojawiać się na mojej nowej liście"
         dismiss_new_with_selected:
-          one: "Oddalenie nowe (%{count})"
-          few: "Oddalenie nowe (%{count})"
-          many: "Oddalenie nowe (%{count})"
-          other: "Oddalenie nowe (%{count})"
+          one: "Odrzuć nowe (%{count})"
+          few: "Odrzuć nowe (%{count})"
+          many: "Odrzuć nowe (%{count})"
+          other: "Odrzuć nowe (%{count})"
         toggle: "włącz grupowe zaznaczanie tematów"
         actions: "Operacje grupowe"
         change_category: "Aktualizuj kategorię"
@@ -4136,8 +4177,6 @@ pl_PL:
     nested_replies:
       nested_view: "Widok zagnieżdżony"
       flat_view: "Widok płaski"
-      view_as_nested: "Wyświetl jako zagnieżdżone"
-      view_as_flat: "Wyświetl jako płaskie"
       sort:
         label: "Sortuj po"
         top: "Popularne"
@@ -4160,8 +4199,12 @@ pl_PL:
         few: "%{count} odpowiedzi"
         many: "%{count} odpowiedzi"
         other: "%{count} odpowiedzi"
+      collapsed_post: "Zwinięty wpis"
       collapse: "Zwiń"
       collapse_parent: "Zwiń wątek nadrzędny"
+      focused_path: "Skoncentrowana ścieżka odpowiedzi"
+      return_to_branch: "Powrót do gałęzi %{username}"
+      all_replies: "Wszystkie odpowiedzi"
       category_settings:
         default_nested_view: "Użyj widoku zagnieżdżonego jako domyślnego dla tematów w tej kategorii"
       no_replies: "Nie ma jeszcze odpowiedzi."
@@ -5047,7 +5090,6 @@ pl_PL:
         name_placeholder: "Do czego ma służyć ta zakładka?"
         name_input_label: "Nazwa zakładki"
         set_reminder: "Przypomnij mi"
-        options: "Opcje"
         actions:
           delete_bookmark:
             name: "Usuń zakładkę"
@@ -5831,24 +5873,29 @@ pl_PL:
       staff_info: "Aby dodać ograniczenia, umieść ten znacznik w <a href=%{basePath}/tag_groups>grupie znaczników</a>."
       category_restricted: "Ten tag jest ograniczony do kategorii, do których nie masz uprawnień dostępu."
       synonyms: "Synonimy"
-      synonyms_description: "W przypadku użycia następujących tagów zostaną one zastąpione przez <b>%{base_tag_name}</b>."
+      synonyms_description:
+        one: "Synonim %{synonyms} zostanie zastąpiony przez %{base_tag_name}."
+        few: "Synonimy %{synonyms} zostaną zastąpiony przez %{base_tag_name}."
+        many: "Synonimy %{synonyms} zostaną zastąpiony przez %{base_tag_name}."
+        other: "Synonimy %{synonyms} zostaną zastąpiony przez %{base_tag_name}."
       synonyms_inline: "Synonimy te zostaną zastąpione przez %{base_tag_name}:"
+      synonym_hint: "→ %{tag_name}"
       save: "Zapisz nazwę i opis tagu"
       tag_groups_info:
-        one: 'Ten tag należy do grupy "%{tag_groups}”.'
-        few: "Ten tag należy do następujących grup: %{tag_groups}."
-        many: "Ten tag należy do następujących grup: %{tag_groups}."
-        other: "Ten tag należy do następujących grup: %{tag_groups}."
+        one: 'Ten tag należy do grupy tagów „%{tag_groups}”.'
+        few: "Ten tag należy do grup tagów „%{tag_groups}”."
+        many: "Ten tag należy do grup tagów „%{tag_groups}”."
+        other: "Ten tag należy do grup tagów „%{tag_groups}”."
       tag_groups_info_prefix:
-        one: "Ten tag należy do grupy "
-        few: "Te tagi należą do grupy: "
-        many: "Te tagi należą do grupy: "
-        other: "Te tagi należą do grupy: "
+        one: "Ten tag należy do grupy tagów: "
+        few: "Ten tag należy do grup tagów: "
+        many: "Ten tag należy do grup tagów: "
+        other: "Ten tag należy do grup tagów: "
       category_restrictions:
-        one: "Można go używać tylko w tej kategorii:"
-        few: "Można go używać tylko w tych kategoriach:"
-        many: "Można go używać tylko w tych kategoriach:"
-        other: "Można go używać tylko w tych kategoriach:"
+        one: "Można go używać tylko w kategorii %{categories}."
+        few: "Można go używać tylko w tych kategoriach: %{categories}"
+        many: "Można go używać tylko w tych kategoriach: %{categories}"
+        other: "Można go używać tylko w tych kategoriach: %{categories}"
       restricted_to: "Ograniczone do"
       no_synonyms: "Ten tag nie ma synonimów."
       edit_synonyms: "Edytuj synonimy"
@@ -6012,7 +6059,7 @@ pl_PL:
       back: "Poprzednia"
       forward: "Do przodu"
       share: "Udostępnij"
-      dismiss: "Wyczyść"
+      dismiss: "Odrzuć"
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
     theme_preview_notice: "Aktualnie wyświetlany jest podgląd motywu. Zamknij tę kartę lub okno przeglądarki, aby powrócić do normalnej konfiguracji witryny."
@@ -6329,7 +6376,7 @@ pl_PL:
           title: "Edytuj tabelę"
           cancel: "anuluj"
           create: "Zapisz"
-          reason: "dlaczego edytujesz?"
+          reason: "Powód edycji?"
           trigger_reason: "Dodaj powód edycji"
         default_edit_reason: "Zaktualizuj tabelę za pomocą edytora tabel"
       default_header:
@@ -7078,6 +7125,7 @@ pl_PL:
         not_found_error: Przepraszamy, ten raport nie istnieje.
         custom_date_range: Niestandardowy zakres dat
         loading: "Ładowanie pulpitu nawigacyjnego…"
+        stable: "stabilna"
         sections:
           highlights:
             title: "Najważniejsze wydarzenia"
@@ -7125,7 +7173,6 @@ pl_PL:
                   few: "-%{count} spada"
                   many: "-%{count} spada"
                   other: "-%{count} spada"
-                stable: "stabilna"
               moves_in_aria:
                 one: "%{count} członek przesunął się w górę"
                 few: "%{count} członków przesunęło się w górę"
@@ -7156,6 +7203,26 @@ pl_PL:
               no_signal:
                 title: "Za mało aktywności, aby podsumować zaangażowanie."
                 summary: "Wybierz dłuższy okres lub wróć, gdy w Twojej społeczności będzie więcej aktywności."
+              metrics:
+                new_signups: "Nowe rejestracje"
+                dau_mau: "Lepkość DAU / MAU"
+                daily_engaged_users: "Codziennie zaangażowani"
+        reports_section:
+          description: "Przypinaj standardowe raporty lub zapytania Eksploratora danych, aby śledzić kwestie istotne dla Twojej społeczności."
+          add: "Dodaj raport"
+          remove: "Usuń raport"
+          no_data: "Brak danych do wyświetlenia"
+          modal:
+            title: "Zarządzaj raportami"
+            search_placeholder: "Wyszukaj raporty"
+            counter: "Dodane raporty: %{count} / %{max}"
+            enabled_heading: "Włączono"
+            all_heading: "Wszystkie zgłoszenia"
+            apply: "Zastosuj"
+            enable: "Włącz %{title}"
+            disable: "Wyłącz %{title}"
+            move_up: "Przesuń %{title} w górę"
+            move_down: "Przesuń %{title} w dół"
         configure:
           button: "Konfiguruj"
           tooltip: "Skonfiguruj sposób wyświetlania tego pulpitu nawigacyjnego dla wszystkich użytkowników tej witryny."
@@ -7171,16 +7238,16 @@ pl_PL:
           kpi:
             new_signups:
               label: "Nowe rejestracje"
-              tooltip: "Konta utworzone w tym okresie, wliczając w to konta nieaktywowane i tymczasowe."
+              tooltip: "Utworzone konta, łącznie z kontami nieaktywowanymi i tymczasowymi."
             dau_mau:
               label: "Lepkość DAU / MAU"
-              tooltip: 'Odsetek aktywnych użytkowników miesięcznie, którzy powrócili do społeczności w ciągu ostatniego dnia. Pokazuje, jak „lepka” jest Twoja społeczność na podstawie częstotliwości powracania.'
+              tooltip: 'Odsetek aktywnych użytkowników miesięcznie, którzy powrócili do społeczności. Pokazuje, jak „przyczepna” jest Twoja społeczność na podstawie częstotliwości powracania.'
             new_contributors:
               label: "Nowi współtwórcy"
-              tooltip: "Liczba członków, którzy zamieścili swój pierwszy wpis w tym okresie."
+              tooltip: "Liczba członków, którzy zamieścili swój pierwszy wpis."
             daily_engaged_users:
               label: "Codziennie zaangażowani"
-              tooltip: "Liczba członków, którzy polubili lub zamieścili wpisy w społeczności w ciągu ostatniego dnia."
+              tooltip: "Średnia liczba członków, którzy polubili lub opublikowali wpisy w społeczności każdego dnia."
           comparison:
             last_7_days: "w porównaniu z ostatnimi 7 dniami"
             last_30_days: "w porównaniu z ostatnimi 30 dniami"
@@ -7238,6 +7305,7 @@ pl_PL:
             anonymous: "Anonimowi"
             embedded: "Osadzone wyświetlenia stron"
             crawlers: "Boty indeksujące"
+          see_details: "Zobacz szczegóły"
         period:
           last_7_days: "Ostatnie 7 dni"
           last_30_days: "Ostatnie 30 dni"
@@ -7771,9 +7839,11 @@ pl_PL:
           your_organization: "Twoja organizacja"
           your_organization_description: "Informacje te zostaną wykorzystane w Warunkach korzystania z usługi i Polityce prywatności, aby wskazać, kto zarządza witryną i w ramach jakiej jurysdykcji."
           company_name: "Nazwa"
-          company_name_placeholder: "Organizacja Acme"
+          company_name_placeholder: "PrzykładowaSA"
           company_name_warning: |
             Jeśli pozostawisz to pole puste, nie zostaną dostarczone standardowe warunki świadczenia usług ani polityka prywatności.
+          company_url: "Strona internetowa"
+          company_url_placeholder: "https://przykładowa-sa.pl"
           governing_law: "Obowiązujące prawo"
           governing_law_placeholder: "Prowincja, stan lub kraj"
           governing_law_help: |
@@ -8208,6 +8278,7 @@ pl_PL:
           finish_install: "Zakończ instalację motywu"
           last_attempt: "Proces instalacji nie został zakończony, ostatnia próba:"
           remote_branch: "Nazwa oddziału (opcjonalnie)"
+          remote_branch_placeholder: "Wybierz konkretną gałąź lub pozostaw puste"
           public_key: "Podaj następujący klucz publiczny pozwalający na dostęp do repozytorium:"
           install: "Zainstaluj"
           installed: "Zainstalowana"
@@ -8602,6 +8673,7 @@ pl_PL:
             delete_topic: "usuń temat"
             recover_topic: "przywróć wątek"
             delete_post: "usunięcie wpisu"
+            recover_post: "przywróć usunięty wpis"
             impersonate: "udawanie użytkownika"
             anonymize_user: "anonimizuj użytkownika"
             roll_up: "zwiń bloki IP"

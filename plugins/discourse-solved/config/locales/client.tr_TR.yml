@@ -62,6 +62,8 @@ tr_TR:
       confirm_solved_removal: "Bu değişiklik, bu konu için çözümleri devre dışı bırakacak ve kabul edilen çözümü kaldıracaktır."
       confirm_solved_removal_confirm: "Onayla"
       confirm_solved_removal_cancel: "İptal et"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Sorunuz yanıtlandı mı?
         description: "Yanıtı vurgulayın ve doğru cevabın altındaki çözüm düğmesini kullanarak başkalarına yardımcı olun."

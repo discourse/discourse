@@ -24,12 +24,6 @@ Discourse::Application.routes.draw do
     match "/404", to: "exceptions#not_found", via: %i[get post]
     get "/404-body" => "exceptions#not_found_body"
 
-    if Rails.env.local?
-      get "/bootstrap/core-css-for-tests.css" => "bootstrap#core_css_for_tests"
-      get "/bootstrap/site-settings-for-tests.js" => "bootstrap#site_settings_for_tests"
-      get "/bootstrap/plugin-test-info" => "bootstrap#plugin_test_info"
-    end
-
     # This is not a valid production route and is causing routing errors to be raised in
     # the test env adding noise to the logs. Just handle it here so we eliminate the noise.
     get "/favicon.ico", to: proc { [200, {}, [""]] } if Rails.env.test?
@@ -337,6 +331,10 @@ Discourse::Application.routes.draw do
       get "dashboard/security" => "dashboard#security"
       get "dashboard/reports" => "dashboard#reports"
       post "dashboard/reports/bulk" => "dashboard#bulk_reports"
+      get "dashboard/reports/available" => "dashboard#available_reports",
+          :constraints => AdminConstraint.new
+      put "dashboard/reports/layout" => "dashboard#update_reports_section",
+          :constraints => AdminConstraint.new
       get "dashboard/whats-new" => "dashboard#new_features"
       get "/whats-new" => "dashboard#new_features"
       post "/toggle-feature" => "dashboard#toggle_feature"
@@ -1423,6 +1421,8 @@ Discourse::Application.routes.draw do
     get "search" => "search#show"
     post "search/click" => "search#click"
 
+    post "anonymous-action" => "anonymous_actions#create"
+
     # Nested replies routes
     scope "n/:slug/:topic_id", constraints: { topic_id: /\d+/ } do
       get "/children/:post_number" => "nested_topics#children",
@@ -1898,17 +1898,21 @@ Discourse::Application.routes.draw do
     get "/dev-mode" => "dev_mode#index"
     post "/dev-mode" => "dev_mode#enter", :as => "dev_mode_enter"
 
+    get "/theme-qunit" => "qunit#index",
+        :constraints => ->(req) do
+          req.params["id"].nil? && req.params["name"].nil? && req.params["url"].nil?
+        end
     get "/theme-qunit" => "qunit#theme"
     get "/theme-tests", to: redirect("/theme-qunit")
 
-    # This is a special route that is used when theme QUnit tests are run through testem which appends a testem_id to the
-    # path. Unfortunately, testem's proxy support does not allow us to easily remove this from the path, so we have to
-    # handle it here.
-    if Rails.env.development?
-      get "/testem-theme-qunit/:testem_id/theme-qunit" => "qunit#theme",
-          :constraints => {
-            testem_id: /\d+/,
-          }
+    if Rails.env.local?
+      get "/tests" => "qunit#core"
+
+      # This is a special route that is used when theme QUnit tests are run through testem which appends a testem_id to the
+      # path. Unfortunately, testem's proxy support does not allow us to easily remove this from the path, so we have to
+      # handle it here.
+      get "/:testem_id/theme-qunit" => "qunit#theme", :constraints => { testem_id: /\d+/ }
+      get "/:testem_id/tests" => "qunit#core", :constraints => { testem_id: /\d+/ }
     end
 
     post "/push_notifications/subscribe" => "push_notification#subscribe"

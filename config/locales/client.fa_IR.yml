@@ -144,6 +144,13 @@ fa_IR:
       placeholder: تاریخ
       from_placeholder: "از تاریخ"
       to_placeholder: "تا تاریخ"
+    date_range_picker:
+      apply: "اعمال کردن"
+      presets:
+        last_7_days: "۷ روز گذشته"
+        last_30_days: "۳۰ روز گذشته"
+        last_6_months: "۶ ماه گذشته"
+        last_year: "سال گذشته"
     languages:
       ar:
         name: عربی
@@ -246,6 +253,7 @@ fa_IR:
     back_button: "بازگشت"
     welcome_banner:
       header:
+        new_members: "خوش آمدید، %{preferred_display_name}!"
         logged_in_members: "خوش آمدید، %{preferred_display_name}!"
         anonymous_members: "به %{site_name} خوش آمدید!"
       search_placeholder: "جستجو"
@@ -313,8 +321,6 @@ fa_IR:
     tos: "شرایط استفاده از خدمات"
     rules: "قوانین"
     conduct: "دستورالعمل"
-    mobile_view: "نمایش برای موبایل"
-    desktop_view: "نمایش برای کامپیوتر"
     now: "هم‌اکنون"
     read_more: "بیشتر بخوانید"
     more: "بیشتر"
@@ -347,7 +353,7 @@ fa_IR:
       pm_title: "پیام‌های پیشنهادی"
     admin_onboarding_banner:
       select_theme:
-        enabled: "فعال شده"
+        enabled: "انتخاب شده"
       start_posting:
         back: "بازگشت"
     about:
@@ -958,7 +964,7 @@ fa_IR:
           access: دسترسی
         categories:
           title: دسته‌بندی‌ها
-          long_title: "اعلان‌های پیش‌فرض دسته"
+          long_title: "آگاه‌سازی‌های پیش‌گزیدهٔ دسته"
           description: "هنگامی که کاربران به این گروه اضافه می‌شوند، تنظیمات اعلان دسته آنها روی این پیشفرض‌ها تنظیم می‌شود. پس از آن، آنها می‌توانند آنها را تغییر دهند."
           watched_categories_instructions: "دنبال کردن خودکار همه موضوعات در این دسته‌ها. اعضای گروه از تمام پست ها و موضوعات جدید مطلع خواهند شد و تعداد پست های جدید نیز در کنار موضوع ظاهر می شود."
           tracked_categories_instructions: "پیگیری خودکار تمامی موضوعات در این دسته٬ تعداد پست های جدید در جلوی موضوعات نمایش داده خواهد شد."
@@ -967,7 +973,7 @@ fa_IR:
           muted_categories_instructions: "کاربران هیچ اعلانی در مورد موضوعات جدید در این دسته ها دریافت نخواهند کرد و جدیدترین موضوعات، در دسته‌ها یا صفحه جدیدترین موضوعات ظاهر نمی شوند."
         tags:
           title: برچسب‌ها
-          long_title: "اعلان‌های پیش فرض برچسب‌ها"
+          long_title: "آگاه‌سازی‌های پیش‌گزیدهٔ برچسب‌ها"
           description: "هنگامی که کاربران به این گروه اضافه می شوند، تنظیمات اعلان برچسب آن‌ها روی این پیش فرض‌ها تنظیم می شود. پس از آن، آن‌ها می توانند آن‌ها را تغییر دهند."
           watched_tags_instructions: "تمام موضوعات حاوی این برچسب‌ها را به صورت خودکار دنبال کنید. اعضای گروه از تمام پست‌ها و موضوعات جدید مطلع می‌شوند و تعداد پست‌های جدید نیز در کنار موضوع ظاهر می‌شود."
           tracked_tags_instructions: "شما به صورت خودکار تمام موضوعات جدید در این برچسب را پیگیری خواهید کرد. تعداد پست‌های جدید در کنار موضوع نمایش داده می‌شود."
@@ -1111,7 +1117,7 @@ fa_IR:
         icon: "یک آیکون را انتخاب کنید"
         image: "تصویری را بارگذاری کنید"
       default_notifications:
-        modal_title: "آگاه‌سازی‌های پیش‌فرض کاربر"
+        modal_title: "آگاه‌سازی‌های پیش‌گزیدهٔ کاربر"
         modal_description:
           one: "آیا می‌خواهید این تغییر را به صورت گذشته‌نگر اعمال کنید؟ این کار، تنظیمات برگزیده %{count} کاربر موجود را تغییر می‌دهد."
           other: "آیا می‌خواهید این تغییر را به صورت گذشته‌نگراعمال کنید؟ این کار، تنظیمات برگزیده %{count} کاربر موجود را تغییر می‌دهد."
@@ -2605,6 +2611,7 @@ fa_IR:
         attribute_value: "مقدار"
         apply: "اعمال کردن"
       help: "راهنمای ویرایش با Markdown"
+      edit_reason: "چرا ویرایش می‌کنید؟"
       exit_fullscreen_prompt: "برای خروج از تمام صفحه، دکمه <kbd>ESC</kbd> را فشار دهید"
       modal_ok: "تایید"
       cant_send_pm: "متاسفانه , شما نمیتوانید به %{username} پیام بفرستید."
@@ -2633,21 +2640,24 @@ fa_IR:
           desc: پیام جدیدی ایجاد کنید که از همان گیرندگان شروع شود
         reply_to_topic:
           label: پاسخ به مبحث
+          trigger: موضوع
           desc: به مبحث اصلی پاسخ بده و نه هیچ کدام از نوشته ها
+        reply_to_message:
+          trigger: پیام
         toggle_whisper:
           label: فعالسازی زمزمه
-          desc: زمزمه ها فقط توسط کارکنان قابل مشاهده است
         create_topic:
+          label: ایجاد موضوع
           desc: یک موضوع جدید ایجاد کنید
         create_personal_message:
-          label: "پیام جدید"
           desc: "یک پیام شخصی جدید بساز"
         shared_draft:
           label: "درفت اشتراکی"
           desc: "موضوعی را پیش‌نویس کنید که فقط برای کاربران مجاز قابل مشاهده باشد"
         toggle_topic_bump:
-          label: "فعالسازی بالا آوردن مبحث در لیست"
           desc: "بدون تغییر زمان اخرین پاسخ، پاسخ دهید."
+        edit_post: "در حال ویرایش نوشته"
+        unknown_user: "کاربر"
       reload: "بارگذاری مجدد"
       ignore: "چشم پوشی"
       image_alt_text:
@@ -2997,6 +3007,17 @@ fa_IR:
           other: "رد کردن (%{count})…"
         dismiss_tooltip: "نوشته‌های جددی را ببند یا موضوعات را پیگیری نکن"
         also_dismiss_topics: "توقف پیگیری این موضوعات که دیگر به عنوان خوانده نشده برای من نمایش داده نشوند"
+        dismiss_new_topics: "رد کردن موضوعات جدید"
+        dismiss_new_replies: "رد کردن پاسخ های جدید"
+        dismiss_new_topics_with_selected:
+          one: "رد کردن (%{count})"
+          other: "رد کردن (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "رد کردن (%{count})"
+          other: "رد کردن (%{count})"
+        dismiss_all_with_selected:
+          one: "رد کردن (%{count})"
+          other: "رد کردن (%{count})"
         dismiss_new: "بستن جدید"
         dismiss_new_modal:
           title: "رد کردن جدید"
@@ -3772,7 +3793,6 @@ fa_IR:
         name_placeholder: "این نشانک برای چی است؟"
         name_input_label: "نام نشانک"
         set_reminder: "به من یادآوری کن"
-        options: "گزینه‌ها"
         actions:
           delete_bookmark:
             name: "حذف نشانک"
@@ -4353,14 +4373,7 @@ fa_IR:
       staff_info: "برای افزودن محدودیت، این برچسب را در یک <a href=%{basePath}/tag_groups>گروه برچسب</a> قرار دهید."
       category_restricted: "این برچسب محدود به دسته‌هایی است که اجازه دسترسی به آن‌ها را ندارید."
       synonyms: "مترادف‌ها"
-      synonyms_description: "هنگامی که از برچسب‌های زیر استفاده می‌شود، آنها با <b>%{base_tag_name}</b>جایگزین می‌شوند."
       save: "ذخیره نام و توضیحات برچسب"
-      tag_groups_info:
-        one: 'این برچسب متعلق به گروه "%{tag_groups}" است.'
-        other: "این برچسب متعلق به این گروه ها است:%{tag_groups}."
-      category_restrictions:
-        one: "فقط در این دسته قابل استفاده است:"
-        other: "فقط در این دسته‌ها قابل استفاده است:"
       edit_synonyms: "ویرایش مترادف ها"
       add_synonyms_label: "اضافه کردن مترادف‌ها:"
       add_synonyms: "افزودن"
@@ -5147,6 +5160,11 @@ fa_IR:
                 "2": "عضو"
                 "3": "عادی"
                 "4": "رهبر"
+        reports_section:
+          modal:
+            enabled_heading: "فعال شده"
+            all_heading: "تمامی گزارشات"
+            apply: "اعمال کردن"
         site_traffic:
           series:
             anonymous: "ناشناس"
@@ -5637,9 +5655,10 @@ fa_IR:
           your_organization: "سازمان شما"
           your_organization_description: "ما از این اطلاعات در شرایط خدمات و اعلامیه حفظ حریم خصوصی استفاده خواهیم کرد تا نشان دهیم چه کسی سایت را اداره می‌کند و تحت چه حوزه قضایی قرار دارد."
           company_name: "نام"
-          company_name_placeholder: "درباره سازمان"
           company_name_warning: |
             اگر خالی باقی بماند، هیچ ضوابط خدمات یا اعلامیه حریم خصوصی ارائه نخواهد شد.
+          company_url: "وب‌سایت"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "قانون حاکم"
           governing_law_placeholder: "استان، ایالت یا کشور"
           governing_law_help: |

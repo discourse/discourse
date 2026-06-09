@@ -158,6 +158,15 @@ de:
       placeholder: Datum
       from_placeholder: "ab Datum"
       to_placeholder: "bis Datum"
+    date_range_picker:
+      apply: "Anwenden"
+      start_date: "Startdatum"
+      presets:
+        last_7_days: "Letzte 7 Tage"
+        last_30_days: "Letzte 30 Tage"
+        last_3_months: "Letzte 3 Monate"
+        last_6_months: "Letzte 6 Monate"
+        last_year: "Letztes Jahr"
     languages:
       ar:
         name: Arabisch
@@ -358,7 +367,6 @@ de:
         condition_debugging: "Debugging der Bedingungen"
       toggle_safe_mode: "Abgesicherten Modus umschalten"
       toggle_verbose_localization: "Erweiterte Lokalisierungshinweise umschalten"
-      toggle_mobile_view: "Mobile Ansicht umschalten"
       disable_dev_tools: "Entwicklertools deaktivieren"
       toggle_upcoming_changes_debug: "Debuggen von bevorstehenden Änderungen ein-/ ausschalten"
     s3:
@@ -417,8 +425,6 @@ de:
     tos: "Nutzungsbedingungen"
     rules: "Regeln"
     conduct: "Verhaltenskodex"
-    mobile_view: "Mobile Ansicht"
-    desktop_view: "Desktop-Ansicht"
     now: "gerade eben"
     read_more: "weiterlesen"
     more: "Mehr"
@@ -453,7 +459,7 @@ de:
       launch_in_easy_steps: "Starte in %{step_count} einfachen Schritten"
       congrats_onboarding_complete: "Herzlichen Glückwunsch zum Abschluss des Onboarding-Prozesses!"
       select_theme:
-        enabled: "Aktiviert"
+        enabled: "Ausgewählt"
       invite_collaborators:
         title: "Mitwirkende einladen"
         description: "Die ersten Mitglieder tragen dazu bei, deine Community zum Leben zu erwecken"
@@ -3036,7 +3042,7 @@ de:
       collapse: "Editor minimieren"
       open: "Editor öffnen"
       abandon: "Editor schließen und Entwurf verwerfen"
-      edit_reason: "Füge den Bearbeitungsgrund hinzu"
+      edit_reason: "Welchen Grund gibt es für die Bearbeitung?"
       enter_fullscreen: "Vollbild-Editor öffnen"
       exit_fullscreen: "Vollbild-Editor verlassen"
       exit_fullscreen_prompt: "Drücke <kbd>ESC</kbd>, um den Vollbildmodus zu verlassen"
@@ -3071,25 +3077,26 @@ de:
           desc: Neue Nachricht erstellen, beginnend mit denselben Empfängern
         reply_to_topic:
           label: Auf Thema antworten
+          trigger: Thema
           desc: Antworte auf das Thema, nicht auf einen bestimmten Beitrag
+        reply_to_message:
+          trigger: Nachricht
         toggle_whisper:
           label: Flüstermodus umschalten
-          desc: Ein geflüsterter Beitrag ist nur für Team-Mitglieder sichtbar
         create_topic:
-          label: "Neues Thema"
           desc: Erstelle ein neues Thema
         create_personal_message:
-          label: "Neue Nachricht"
           desc: "Erstelle eine neue persönliche Nachricht"
         shared_draft:
           label: "Gemeinsamer Entwurf"
           desc: "Entwurf eines Themas, das nur für erlaubte Benutzer sichtbar ist"
         toggle_topic_bump:
-          label: "„Nach oben verschieben“ für Thema umschalten"
           desc: "Antworten, ohne das Datum der neuesten Antwort zu ändern"
         toggle_unlisted:
           label: Sichtbarkeit umschalten
           desc: "Nicht aufgelistete Themen sind nur über einen direkten Link zugänglich"
+        edit_post: "Beitrag wird bearbeitet "
+        unknown_user: "Nutzer"
       reload: "Neu laden"
       ignore: "Ignorieren"
       image_alt_text:
@@ -3500,6 +3507,17 @@ de:
           other: "Ignorieren (%{count}) …"
         dismiss_tooltip: "Nur die neuen Beiträge ignorieren oder Themen nicht mehr verfolgen"
         also_dismiss_topics: "Diese Themen nicht mehr verfolgen, sodass mir diese nicht mehr als ungelesen angezeigt werden"
+        dismiss_new_topics: "Neue Themen verwerfen"
+        dismiss_new_replies: "Neue Antworten verwerfen"
+        dismiss_new_topics_with_selected:
+          one: "Ignorieren (%{count}) "
+          other: "Ignorieren (%{count}) "
+        dismiss_new_replies_with_selected:
+          one: "Ignorieren (%{count}) "
+          other: "Ignorieren (%{count}) "
+        dismiss_all_with_selected:
+          one: "Ignorieren (%{count}) "
+          other: "Ignorieren (%{count}) "
         dismiss_new: "Neue Themen ignorieren"
         dismiss_new_modal:
           title: "Neue verwerfen"
@@ -3653,8 +3671,6 @@ de:
     nested_replies:
       nested_view: "Verschachtelte Ansicht"
       flat_view: "Flache Ansicht"
-      view_as_nested: "Verschachtelt anzeigen"
-      view_as_flat: "Flach anzeigen"
       sort:
         label: "Sortieren nach"
         top: "Angesagte"
@@ -4449,7 +4465,6 @@ de:
         name_placeholder: "Wofür dient dieses Lesezeichen?"
         name_input_label: "Name des Lesezeichens"
         set_reminder: "Erinnere mich"
-        options: "Optionen"
         actions:
           delete_bookmark:
             name: "Lesezeichen löschen"
@@ -5128,18 +5143,8 @@ de:
       staff_info: "Um Einschränkungen hinzuzufügen, füge dieses Schlagwort einer <a href=%{basePath}/tag_groups>Schlagwortgruppe</a> hinzu."
       category_restricted: "Dieses Schlagwort ist auf Kategorien beschränkt, für die du keine Zugriffsberechtigung hast."
       synonyms: "Synonyme"
-      synonyms_description: "Wenn die folgenden Schlagwörter verwendet werden, werden sie durch <b>%{base_tag_name}</b> ersetzt."
       synonyms_inline: "Diese Synonyme werden durch %{base_tag_name} ersetzt:"
       save: "Name und Beschreibung des Schlagwortes speichern"
-      tag_groups_info:
-        one: 'Dieses Schlagwort gehört zur Gruppe „%{tag_groups}“.'
-        other: "Dieses Schlagwort gehört zu diesen Gruppen: %{tag_groups}"
-      tag_groups_info_prefix:
-        one: "Dieses Schlagwort gehört zur Gruppe: "
-        other: "Dieses Schlagwort gehört zu diesen Gruppen: "
-      category_restrictions:
-        one: "Es kann nur in dieser Kategorie verwendet werden:"
-        other: "Es kann nur in folgenden Kategorien verwendet werden:"
       restricted_to: "Beschränkt auf"
       no_synonyms: "Dieses Schlagwort hat keine Synonyme."
       edit_synonyms: "Synonyme bearbeiten"
@@ -6320,6 +6325,7 @@ de:
         too_many_requests: Du hast diese Aktion zu oft ausgeführt. Bitte warte, bevor du es erneut probierst.
         not_found_error: Entschuldige bitte, dieser Bericht existiert nicht
         custom_date_range: Benutzerdefinierter Datumsbereich
+        stable: "stabil"
         sections:
           reports:
             title: "Berichte"
@@ -6342,8 +6348,12 @@ de:
                 "2": "Mitglied"
                 "3": "Regulär"
                 "4": "Anführer"
-              trend:
-                stable: "stabil"
+        reports_section:
+          no_data: "Keine Daten anzuzeigen"
+          modal:
+            enabled_heading: "Aktiviert"
+            all_heading: "Alle Berichte"
+            apply: "Anwenden"
         configure:
           button: "Konfigurieren"
         site_traffic:
@@ -6864,9 +6874,10 @@ de:
           your_organization: "Deine Organisation"
           your_organization_description: "Wir verwenden diese Informationen in den Nutzungsbedingungen und im Datenschutzhinweis, um zu zeigen, wer die Website betreibt und unter welcher Gerichtsbarkeit."
           company_name: "Name"
-          company_name_placeholder: "Acme-Organisation"
           company_name_warning: |
             Wenn du nichts angibst, werden keine vorgefertigten allgemeinen Geschäftsbedingungen oder eine entsprechende Datenschutzrichtlinie bereitgestellt.
+          company_url: "Website"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Anzuwendendes Recht"
           governing_law_placeholder: "Provinz, Bundesland oder Land"
           governing_law_help: |

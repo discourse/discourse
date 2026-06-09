@@ -4,23 +4,23 @@ module PageObjects
   module Components
     class AdminDashboardSiteTraffic < PageObjects::Components::Base
       def has_headline?(text)
-        has_css?(".db-traffic__headline", text: text)
+        has_css?(".db-section__subintro h3", text: text)
       end
 
       def has_trend?(text)
-        has_css?(".db-traffic__trend", text: text)
+        has_css?(".db-section__subintro h3", text: text)
       end
 
       def has_up_trend?(text)
-        has_css?(".db-traffic__trend.--up", text: text)
+        has_trend?(text)
       end
 
       def has_down_trend?(text)
-        has_css?(".db-traffic__trend.--down", text: text)
+        has_trend?(text)
       end
 
       def has_no_trend?
-        has_no_css?(".db-traffic__trend")
+        has_no_css?(".db-section__subintro h3", text: "—")
       end
 
       def has_metric?(label, value)
@@ -34,6 +34,14 @@ module PageObjects
 
       def has_chart?
         has_css?(".db-section__traffic-chart canvas")
+      end
+
+      def has_see_details_link?
+        has_css?("a.db-traffic__see-details")
+      end
+
+      def click_see_details
+        find("a.db-traffic__see-details").click
       end
 
       def hover_comparison_tooltip
@@ -84,7 +92,10 @@ module PageObjects
 
           rows.each_with_index.all? do |row, index|
             nth = ".db-traffic__list-row:nth-child(#{index + 1})"
-            has_css?("#{nth} a.db-traffic__link", text: row[:referrer])
+            next false unless has_css?("#{nth} a.db-traffic__link", text: row[:referrer])
+            next true unless row.key?(:percent)
+
+            has_css?("#{nth} .db-traffic__percent", text: "#{row[:percent]}%")
           end
         end
       end
@@ -95,6 +106,22 @@ module PageObjects
 
       def has_top_referrers_empty_state?
         has_empty_state_in?("Top referrers", "No referrer data for this period.")
+      end
+
+      def click_top_referrers_drilldown
+        within_top_card("Top referrers") { find("h3.db-section__row-block-title a").click }
+      end
+
+      def click_top_countries_drilldown
+        within_top_card("Top countries") { find("h3.db-section__row-block-title a").click }
+      end
+
+      def has_top_referrers_drilldown?
+        within_top_card("Top referrers") { has_css?("h3.db-section__row-block-title a") }
+      end
+
+      def has_top_countries_drilldown?
+        within_top_card("Top countries") { has_css?("h3.db-section__row-block-title a") }
       end
 
       private

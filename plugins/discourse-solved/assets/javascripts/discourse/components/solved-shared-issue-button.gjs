@@ -11,13 +11,17 @@ import { i18n } from "discourse-i18n";
 export default class SolvedSharedIssueButton extends Component {
   @service currentUser;
   @service router;
+  @service siteSettings;
 
   @tracked saving = false;
 
   get show() {
+    const topic = this.args.post.topic;
+    const hasAcceptedAnswers = topic.accepted_answers?.length > 0;
+
     return (
-      this.args.post.topic.shared_issue_visible &&
-      !this.args.post.topic.accepted_answer
+      topic.shared_issue_visible &&
+      (!hasAcceptedAnswers || this.siteSettings.solved_allow_multiple_solutions)
     );
   }
 
@@ -38,10 +42,14 @@ export default class SolvedSharedIssueButton extends Component {
   }
 
   get label() {
+    const label = i18n("solved.shared_issue.label");
     if (this.count === 0) {
-      return i18n("solved.shared_issue.label_zero");
+      return label;
     }
-    return i18n("solved.shared_issue.label", { count: this.count });
+    return i18n("solved.shared_issue.label_with_count", {
+      label,
+      count: this.count,
+    });
   }
 
   @action

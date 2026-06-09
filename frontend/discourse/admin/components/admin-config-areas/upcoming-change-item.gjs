@@ -11,6 +11,7 @@ import { capitalize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import UpcomingChangeBadges from "discourse/admin/components/admin-config-areas/upcoming-change-badges";
+import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
 import GroupSelector from "discourse/components/group-selector";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
@@ -303,8 +304,11 @@ export default class UpcomingChangeItem extends Component {
         </div>
 
         {{#if @change.description}}
-          <div class="d-table__overview-about upcoming-change__description">
-            {{@change.description}}
+          <div
+            class="d-table__overview-about upcoming-change__description"
+            {{linkifySettingLinks @change.description}}
+          >
+            {{trustHTML @change.description}}
 
             <div
               class="upcoming-change__description-details"

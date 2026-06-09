@@ -1,5 +1,61 @@
 @use "lib/viewport";
 
+.de-dashboard-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  height: 100%;
+  min-height: 0;
+
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  &__table {
+    overflow: auto;
+    font-size: var(--font-down-2);
+  }
+
+  &__empty {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+}
+
+.de-cta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) 1.5rem;
+  border-top: 1px solid var(--primary-low);
+  text-decoration: none;
+  color: inherit;
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-half);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__title {
+    color: var(--tertiary);
+    font-weight: bold;
+  }
+
+  &__description {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__chevron {
+    color: var(--tertiary);
+    font-size: var(--font-down-1);
+  }
+}
+
 table.group-reports {
   width: 100%;
   table-layout: fixed;
@@ -49,16 +105,31 @@ table.group-reports {
   .panels-flex {
     display: flex;
     height: 400px;
-    border: 1px solid var(--primary-very-low);
+    border: 1px solid var(--primary-400);
+    border-radius: var(--d-border-radius);
+    overflow: hidden;
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      height: auto;
+    }
   }
 
   .editor-panel {
-    flex-grow: 1;
+    flex: 1 0 50%;
 
     .ace-wrapper {
+      --min-height: unset;
+      min-height: var(--min-height);
       position: relative;
       height: 100%;
       width: 100%;
+      box-sizing: border-box;
+      border: none;
+
+      @include viewport.until(sm) {
+        --min-height: 300px;
+      }
     }
 
     .ace_editor {
@@ -71,18 +142,33 @@ table.group-reports {
   }
 
   .right-panel {
+    --width: 345px;
     flex-shrink: 0;
     flex-grow: 0;
-    width: 345px;
+    width: var(--width);
+
+    @include viewport.until(sm) {
+      --width: 100%;
+    }
 
     .schema {
-      border-left: 1px solid var(--primary-low);
       height: 100%;
       overflow-y: scroll;
       overflow-x: hidden;
       color: var(--primary-high);
       font-size: var(--font-down-1);
       position: relative;
+
+      @include viewport.until(sm) {
+        .schema-container {
+          height: 200px;
+          overflow: auto;
+        }
+      }
+
+      @include viewport.from(sm) {
+        border-left: 1px solid var(--primary-low);
+      }
 
       .schema-search {
         padding: 0.5em;
@@ -93,7 +179,11 @@ table.group-reports {
         display: flex;
         align-items: center;
         gap: 0.4em;
-        border-bottom: 1px solid var(--primary-very-low);
+        border-bottom: 1px solid var(--primary-low);
+
+        @include viewport.until(sm) {
+          border-top: 1px solid var(--primary-low);
+        }
 
         .schema-search__icon {
           color: var(--primary-medium);
@@ -204,17 +294,10 @@ table.group-reports {
 
   .grippie {
     cursor: nwse-resize;
-    clear: both;
-    font-size: $font-down-2;
+    padding-bottom: var(--space-2);
     user-select: none;
     color: var(--primary);
     text-align: right;
-    background: var(--primary-very-low);
-    border: 1px solid var(--primary-very-low);
-
-    .d-icon {
-      transform: rotate(90deg);
-    }
   }
 }
 
@@ -513,23 +596,43 @@ table.group-reports {
   }
 
   .query-new__sql-editor {
-    height: 200px;
-    border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
+    margin-bottom: 1.5em;
 
-    .ace-wrapper {
-      position: relative;
-      height: 100%;
+    .ace-wrapper,
+    .ace-wrapper > .loading-container {
       width: 100%;
     }
 
-    .ace_editor {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
+    // the grippie lets the editor grow; give it a sensible starting height
+    .ace {
+      min-height: 200px;
+      width: 100%;
     }
+  }
+
+  .query-new__result-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 0.75em;
+  }
+
+  .query-new__result-about {
+    margin-right: auto;
+    color: var(--primary-medium);
+  }
+
+  // the count is shown in the result bar instead, on the same line as the toggle
+  .query-new__preview .result-meta {
+    display: none;
+  }
+
+  .query-new__fields {
+    margin-top: 1.5em;
+  }
+
+  .query-new__preview {
+    margin-top: 0.5em;
   }
 
   .query-new__field-label {
@@ -714,7 +817,9 @@ table.group-reports {
 
   .query-results-table-wrapper {
     overflow: auto;
-    max-height: 350px;
+
+    // cap a long table at the chart height so the actions below stay reachable
+    max-height: clamp(200px, 50vh, 350px);
 
     &.--expanded {
       max-height: none;

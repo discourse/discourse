@@ -7,7 +7,6 @@ import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
 import logout from "discourse/lib/logout";
-import mobile from "discourse/lib/mobile";
 import { getCurrentPushSubscription } from "discourse/lib/push-notifications";
 import identifySource, { consolePrefix } from "discourse/lib/source-identifier";
 import DiscourseURL from "discourse/lib/url";
@@ -71,11 +70,6 @@ export default class ApplicationRoute extends DiscourseRoute {
   willResolveModel(transition) {
     this.historyStore.willResolveModel(transition);
     return true;
-  }
-
-  @action
-  toggleMobileView() {
-    mobile.toggleMobileView();
   }
 
   @action

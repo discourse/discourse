@@ -4,10 +4,10 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 import SolvedAcceptAnswerButton from "../components/solved-accept-answer-button";
-import SolvedAcceptedAnswer from "../components/solved-accepted-answer";
+import SolvedAcceptedAnswers from "../components/solved-accepted-answers";
 import SolvedSharedIssueButton from "../components/solved-shared-issue-button";
 import SolvedUnacceptAnswerButton from "../components/solved-unaccept-answer-button";
-import setAcceptedSolution from "../lib/set-accepted-solution";
+import setAcceptedSolutions from "../lib/set-accepted-solutions";
 
 function topicHasSolvedEnabled(topic) {
   if (!topic) {
@@ -20,7 +20,6 @@ function topicHasSolvedEnabled(topic) {
     return true;
   }
 
-  // TODO: change to category.isType("support") once enable_simplified_category_creation is permanent
   const category = Category.findById(topic.category_id);
   if (category?.custom_fields?.enable_accepted_answers === "true") {
     return true;
@@ -41,7 +40,7 @@ function initializeWithApi(api) {
   }
 
   api.addTrackedTopicProperties(
-    "accepted_answer",
+    "accepted_answers",
     "has_accepted_answer",
     "shared_issue_count",
     "user_created_shared_issue",
@@ -79,24 +78,13 @@ function customizePost(api) {
 
   api.renderAfterWrapperOutlet(
     "post-content-cooked-html",
-    class extends Component {
-      static shouldRender(args) {
-        return (
-          args.post?.post_number === 1 && args.post?.topic?.accepted_answer
-        );
-      }
-
-      <template>
-        <SolvedAcceptedAnswer
-          @post={{@post}}
-          @decoratorState={{@decoratorState}}
-        />
-      </template>
-    }
+    SolvedAcceptedAnswers
   );
 }
 
 function customizePostMenu(api) {
+  const siteSettings = helperContext().siteSettings;
+
   api.registerValueTransformer(
     "post-menu-buttons",
     ({
@@ -116,22 +104,30 @@ function customizePostMenu(api) {
         solvedButton = SolvedAcceptAnswerButton;
       }
 
-      solvedButton &&
-        dag.add(
-          "solved",
-          solvedButton,
-          post.topic_accepted_answer && !post.accepted_answer
-            ? {
-                before: lastHiddenButtonKey,
-                after: secondLastHiddenButtonKey,
-              }
-            : {
-                before: [
-                  "assign", // button added by the assign plugin
-                  firstButtonKey,
-                ],
-              }
-        );
+      if (!solvedButton) {
+        return;
+      }
+
+      const collapse =
+        !siteSettings.solved_allow_multiple_solutions &&
+        post.topic_accepted_answer &&
+        !post.accepted_answer;
+
+      dag.add(
+        "solved",
+        solvedButton,
+        collapse
+          ? {
+              before: lastHiddenButtonKey,
+              after: secondLastHiddenButtonKey,
+            }
+          : {
+              before: [
+                "assign", // button added by the assign plugin
+                firstButtonKey,
+              ],
+            }
+      );
     }
   );
 
@@ -152,7 +148,7 @@ function handleMessages(api) {
     const topic = controller.model;
 
     if (topic) {
-      setAcceptedSolution(topic, message.accepted_answer);
+      setAcceptedSolutions(topic, message.accepted_answers);
     }
   };
 

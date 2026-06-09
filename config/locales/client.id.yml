@@ -110,6 +110,11 @@ id:
       placeholder: tanggal
       from_placeholder: "dari tanggal"
       to_placeholder: "sampai saat ini"
+    date_range_picker:
+      apply: "menerapkan"
+      presets:
+        last_7_days: "7 hari terakhir"
+        last_30_days: "30 hari terakhir"
     share:
       topic_html: 'Topik: <span class="topic-title">%{topicTitle}</span>'
       post: "kiriman #%{postNumber} oleh @%{username}"
@@ -226,8 +231,6 @@ id:
     tos: "Ketentuan Layanan"
     rules: "Aturan"
     conduct: "Kode Etik"
-    mobile_view: "Tampilan Mobile"
-    desktop_view: "Tampilan Desktop"
     now: "baru saja"
     read_more: "baca selengkapnya"
     more: "Selengkapnya"
@@ -255,7 +258,7 @@ id:
       pm_title: "Pesan Yang Disarankan"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Diaktifkan"
+        enabled: "Dipilih"
       start_posting:
         back: "Kembali"
     about:
@@ -1637,7 +1640,7 @@ id:
       discard: "Batalkan"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
-      edit_reason_placeholder: "mengapa Anda menyunting?"
+      edit_reason_placeholder: "Mengapa Anda menyunting?"
       topic_featured_link_placeholder: "Masukkan tautan yang terlihat dengan judul."
       remove_featured_link: "Hapus tautan dari topik"
       reply_placeholder: "Ketik disini. Gunakan Markdown, BBCode, atau HTML untuk memformat. Tarik atau tempel gambar."
@@ -1659,6 +1662,7 @@ id:
       upload_title: "Unggah"
       wrap_modal:
         apply: "menerapkan"
+      edit_reason: "Mengapa Anda menyunting?"
       modal_ok: "OK"
       cant_send_pm: "Maaf, anda tidak dapat mengirim pesan kepada %{username}"
       create_message_error: "Maaf, ada kesalahan dalam membuat pesan tersebut. Silakan coba lagi."
@@ -1674,12 +1678,15 @@ id:
           desc: Buat topik baru yang ditautkan dengan topik ini
         reply_to_topic:
           label: Balas ke topik
+          trigger: Topik
           desc: Membalas topik, bukan tulisan tertentu
+        reply_to_message:
+          trigger: pesan
         create_personal_message:
-          label: "Pesan baru"
           desc: "Buat pesan pribadi baru"
         shared_draft:
           label: "Konsep Bersama"
+        unknown_user: "Pengguna"
       ignore: "Abaikan"
       image: "gambar"
       toggle_image_grid: Beralih kisi gambar
@@ -1759,6 +1766,8 @@ id:
         clear_all: "Hapus Semua"
         defer: "Tandai belum dibaca"
         dismiss: "Bubar"
+        dismiss_new_topics: "Abaikan topik baru"
+        dismiss_new_replies: "Abaikan balasan baru"
         dismiss_new_modal:
           title: "Abaikan yang baru"
           topics: "Abaikan topik baru"
@@ -1954,7 +1963,6 @@ id:
         create: "Buat penanda"
         edit: "Sunting penanda"
         name: "Nama"
-        options: "Pilihan"
         actions:
           delete_bookmark:
             name: "Hapus penanda"
@@ -2348,7 +2356,7 @@ id:
         modal:
           cancel: "batal"
           create: "Simpan"
-          reason: "mengapa Anda menyunting?"
+          reason: "Mengapa Anda menyunting?"
       spreadsheet:
         show: "Tunjukkan"
         about: "Tentang"
@@ -2473,6 +2481,10 @@ id:
                 "0": "Baru"
                 "2": "Anggota"
                 "3": "Umum"
+        reports_section:
+          modal:
+            enabled_heading: "Diaktifkan"
+            apply: "menerapkan"
         site_traffic:
           series:
             anonymous: "Anonim"
@@ -2586,6 +2598,7 @@ id:
           community_name: "Nama komunitas"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nama"
+          company_url: "Situs web"
           extra_groups:
             groups: "Grup"
           optional: "(opsional)"

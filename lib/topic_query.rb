@@ -259,12 +259,13 @@ class TopicQuery
           builder.add_results(unread_messages(pm_params.merge(count: builder.results_left)))
         end
       else
-        if @user.new_new_view_enabled?
+        if @user.unified_new_enabled?
           builder.add_results(
             new_and_unread_results(
               topic:,
               per_page: builder.results_left,
               max_age: SiteSetting.suggested_topics_unread_max_days_old,
+              age_column: :bumped_at,
             ),
           )
         else
@@ -273,6 +274,7 @@ class TopicQuery
               topic: topic,
               per_page: builder.results_left,
               max_age: SiteSetting.suggested_topics_unread_max_days_old,
+              age_column: :bumped_at,
             ),
             :high,
           )
@@ -332,7 +334,7 @@ class TopicQuery
   end
 
   def list_new
-    if @user&.new_new_view_enabled?
+    if @user&.unified_new_enabled?
       list =
         case @options[:subset]
         when "topics"
@@ -1338,7 +1340,11 @@ class TopicQuery
 
       # perf note, in the past we tried doing this in a subquery but performance was
       # terrible, also tried with a join and it was bad
-      results = results.where("topics.bumped_at >= ?", unread_at)
+      #
+      # Default to updated_at so the unread/new lists stay consistent with the unread
+      # count (TopicTrackingState); suggested topics opt into bumped_at via age_column.
+      age_column = options[:age_column] == :bumped_at ? "bumped_at" : "updated_at"
+      results = results.where("topics.#{age_column} >= ?", unread_at)
     end
     results
   end

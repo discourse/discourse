@@ -8,7 +8,10 @@ export default {
     withPluginApi((api) => {
       const currentUser = container.lookup("service:current-user");
 
-      if (currentUser?.can_assign && api.addUserMessagesNavigationDropdownRow) {
+      if (
+        currentUser?.can_assign_globally &&
+        api.addUserMessagesNavigationDropdownRow
+      ) {
         api.addUserMessagesNavigationDropdownRow(
           "userPrivateMessages.assigned",
           i18n("discourse_assign.assigned"),

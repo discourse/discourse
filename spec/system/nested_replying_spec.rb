@@ -122,6 +122,22 @@ RSpec.describe "Nested view replying" do
       expect(nested_view).to have_no_collapsed_bar_for(root_reply)
       expect(nested_view).to have_children_visible_for(root_reply)
     end
+
+    it "takes the user into the parent branch on mobile", mobile: true do
+      nested_view.visit_nested(topic)
+      expect(nested_view).to have_post(child_reply)
+
+      nested_view.click_reply_on_post(root_reply)
+      expect(composer).to be_opened
+
+      composer.fill_content("Reply from mobile")
+      composer.submit
+
+      expect(composer).to be_closed
+      expect(nested_view).to have_mobile_focus
+      expect(nested_view).to have_post(child_reply)
+      expect(nested_view).to have_post_text("Reply from mobile")
+    end
   end
 
   describe "replying to a post with no existing children" do
@@ -131,7 +147,7 @@ RSpec.describe "Nested view replying" do
 
     it "shows the depth line on the parent without refresh" do
       nested_view.visit_nested(topic)
-      expect(nested_view).to have_no_depth_line_for(root_reply)
+      expect(nested_view).to have_leaf_depth_line_for(root_reply)
 
       nested_view.click_reply_on_post(root_reply)
       composer.fill_content("First child reply")
@@ -139,6 +155,7 @@ RSpec.describe "Nested view replying" do
       expect(composer).to be_closed
 
       expect(nested_view).to have_depth_line_for(root_reply)
+      expect(nested_view).to have_no_leaf_depth_line_for(root_reply)
     end
   end
 

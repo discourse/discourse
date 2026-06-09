@@ -130,39 +130,30 @@ module ApplicationHelper
       end
 
       if is_brotli_req?
-        if path.include?("/assets/js/")
-          path = path.sub("/assets/js/", "/assets/br/")
-        else
-          path = path.sub(/\.([^.]+)\z/, '.br.\1')
-        end
+        path = path.sub("/assets/js/", "/assets/br/")
       elsif is_gzip_req?
-        if path.include?("/assets/js/")
-          path = path.sub("/assets/js/", "/assets/gz/")
-        else
-          path = path.sub(/\.([^.]+)\z/, '.gz.\1')
-        end
+        path = path.sub("/assets/js/", "/assets/gz/")
       end
     end
 
     path
   end
 
-  def preload_script(script, attrs: {})
-    scripts = []
+  def preload_script(script, type_module: false, attrs: {})
+    resolved_script = EmberCli.script_chunks[script]&.first || script
+    path = script_asset_path(resolved_script)
+    preload_script_url(path, entrypoint: script, type_module:, attrs:).html_safe
+  end
 
-    if chunks = EmberCli.script_chunks[script]
-      scripts.push(*chunks)
-    else
-      scripts.push(script)
-    end
+  def module_preloads_for(*scripts)
+    resolved_preload_scripts =
+      scripts.compact.flat_map { |script| EmberCli.script_chunks[script] }.compact.uniq
 
-    scripts
-      .map do |name|
-        path = script_asset_path(name)
-        preload_script_url(path, entrypoint: script, attrs: attrs)
-      end
-      .join("\n")
-      .html_safe
+    modulepreload_tags = resolved_preload_scripts.map { |script| <<~HTML }
+      <link rel="modulepreload" href="#{script_asset_path script}" nonce="#{csp_nonce_placeholder}">
+    HTML
+
+    modulepreload_tags.join("\n").html_safe
   end
 
   def preload_script_url(url, entrypoint: nil, type_module: false, attrs: nil)
@@ -196,13 +187,10 @@ module ApplicationHelper
 
   def html_classes
     list = []
-    unless SiteSetting.viewport_based_mobile_mode
-      list << (mobile_view? ? "mobile-view" : "desktop-view")
-      list << (mobile_device? ? "mobile-device" : "not-mobile-device")
-    end
     list << "rtl" if rtl?
     list << text_size_class
     list << "anon" unless current_user
+    list << @embed_class if @embed_class.present?
     list.join(" ")
   end
 
@@ -457,7 +445,7 @@ module ApplicationHelper
 
   def application_logo_url
     @application_logo_url ||=
-      if mobile_view?
+      if mobile_device?
         if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
           SiteSetting.site_mobile_logo_dark_url
         elsif SiteSetting.site_mobile_logo_url.present?
@@ -475,9 +463,9 @@ module ApplicationHelper
   def application_logo_dark_url
     @application_logo_dark_url ||=
       if dark_scheme_id != -1
-        if mobile_view? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
+        if mobile_device? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
           SiteSetting.site_mobile_logo_dark_url
-        elsif !mobile_view? && SiteSetting.site_logo_dark_url != application_logo_url
+        elsif !mobile_device? && SiteSetting.site_logo_dark_url != application_logo_url
           SiteSetting.site_logo_dark_url
         end
       end
@@ -491,8 +479,8 @@ module ApplicationHelper
     "#{Discourse.base_path}/login"
   end
 
-  def mobile_view?
-    MobileDetection.resolve_mobile_view!(request.user_agent, params, session)
+  def mobile_device?
+    MobileDetection.mobile_device?(request.user_agent)
   end
 
   def crawler_layout?
@@ -505,16 +493,12 @@ module ApplicationHelper
     else
       return false if !current_user && SiteSetting.login_required?
 
-      crawler_layout? || !mobile_view? || !modern_mobile_device?
+      crawler_layout? || !mobile_device? || !modern_mobile_device?
     end
   end
 
   def modern_mobile_device?
     MobileDetection.modern_mobile_device?(request.user_agent)
-  end
-
-  def mobile_device?
-    MobileDetection.mobile_device?(request.user_agent)
   end
 
   def customization_disabled?
@@ -793,7 +777,7 @@ module ApplicationHelper
   def theme_lookup(name)
     Theme.lookup_field(
       theme_id,
-      mobile_view? ? :mobile : :desktop,
+      mobile_device? ? :mobile : :desktop,
       name,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
       csp_nonce: csp_nonce_placeholder,
@@ -1002,12 +986,14 @@ module ApplicationHelper
       svg_sprite_path: SvgSprite.path(theme_id),
       media_optimization_bundle:
         script_asset_path(
-          EmberCli.script_chunks["media-optimization-bundle"]&.first || "media-optimization-bundle",
+          EmberCli.script_chunks["media-optimization-bundle"]&.first ||
+            "/media-optimization-bundle.js",
         ),
       enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
       color_scheme_is_dark: dark_color_scheme?,
       user_color_scheme_id: user_scheme_id || -1,
       user_dark_scheme_id: user_dark_scheme_id || -1,
+      is_staff: staff?,
     }
 
     if Rails.env.development?

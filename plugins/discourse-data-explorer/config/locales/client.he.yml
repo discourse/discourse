@@ -14,6 +14,9 @@ he:
       explorer:
         no_semicolons: "הסרת הנקודה פסיק מהשאילתה."
         dirty: "עליך לשמור את השאילתה בטרם ההרצה."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "אין תוצאות"
     explorer:
       default_query: "ברירת מחדל"
       or: "או"
@@ -83,6 +86,16 @@ he:
           descriptions:
             data_explorer:
               run_queries: "הרצת שאילתות של סייר נתונים. ניתן להגביל את מפתח ה־API לסדרה של שאילתות על ידי ציון מזהה שאילתה."
+    discourse_workflows:
+      nodes:
+        "action:sql": "דפדפן נתונים"
+      sql:
+        query_id: "שאילתה"
+        add_param: "הוספת משתנה"
+        param_value: "ערך"
+        output:
+          results: "תוצאות"
+          no_results: "אין תוצאות"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

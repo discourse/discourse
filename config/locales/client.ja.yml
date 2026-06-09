@@ -120,6 +120,15 @@ ja:
       placeholder: 日付
       from_placeholder: "開始日"
       to_placeholder: "終了日"
+    date_range_picker:
+      apply: "適用"
+      start_date: "開始日"
+      presets:
+        last_7_days: "過去 7 日間"
+        last_30_days: "過去 30 日間"
+        last_3_months: "過去 3 か月"
+        last_6_months: "過去 6 か月"
+        last_year: "昨年"
     languages:
       ar:
         name: アラビア語
@@ -359,8 +368,6 @@ ja:
     tos: "利用規約"
     rules: "ルール"
     conduct: "行動規範"
-    mobile_view: "モバイルビュー"
-    desktop_view: "デスクトップビュー"
     now: "たった今"
     read_more: "もっと読む"
     more: "もっと"
@@ -390,7 +397,7 @@ ja:
       pm_title: "推奨メッセージ"
     admin_onboarding_banner:
       select_theme:
-        enabled: "有効"
+        enabled: "選択済み"
       start_posting:
         back: "戻る"
     about:
@@ -2762,6 +2769,7 @@ ja:
       collapse: "作成ツールパネルを最小化する"
       open: "作成ツールパネルを開く"
       abandon: "作成ツールを閉じて下書きを破棄する"
+      edit_reason: "編集する理由は？"
       enter_fullscreen: "作成ツールの全画面表示を開始する"
       exit_fullscreen: "作成ツールの全画面表示を終了する"
       exit_fullscreen_prompt: "<kbd>ESC</kbd> を押して全画面表示を終了"
@@ -2796,25 +2804,26 @@ ja:
           desc: 同じ受信者で始まる新しいメッセージを作成します
         reply_to_topic:
           label: トピックへ返信
+          trigger: トピック
           desc: 特定の投稿ではなく、トピックに返信する
+        reply_to_message:
+          trigger: メッセージ
         toggle_whisper:
           label: ささやきを切り替える
-          desc: ささやきはスタッフメンバーにのみ表示されます
         create_topic:
-          label: "新規トピック"
           desc: 新しいトピックを作成します
         create_personal_message:
-          label: "新規メッセージ"
           desc: "新しい個人メッセージを作成する"
         shared_draft:
           label: "共有の下書き"
           desc: "許可されたユーザーにのみ表示されるトピックの下書きを作成します"
         toggle_topic_bump:
-          label: "トピックのバンプを切り替える"
           desc: "最新の返信日を変更せずに返信します"
         toggle_unlisted:
           label: 非表示の切り替え
           desc: "非表示のトピックはダイレクトリンクのみでアクセスできます"
+        edit_post: "投稿を編集中"
+        unknown_user: "ユーザー"
       reload: "再読み込み"
       ignore: "無視する"
       image_alt_text:
@@ -3174,6 +3183,14 @@ ja:
           other: "閉じる (%{count})…"
         dismiss_tooltip: "新規投稿のみを閉じるかトピックの追跡を停止します"
         also_dismiss_topics: "これらのトピックの追跡を停止して、未読として表示されないようにする"
+        dismiss_new_topics: "新しいトピックを閉じる"
+        dismiss_new_replies: "新しい返信を閉じる"
+        dismiss_new_topics_with_selected:
+          other: "閉じる (%{count})"
+        dismiss_new_replies_with_selected:
+          other: "閉じる (%{count})"
+        dismiss_all_with_selected:
+          other: "閉じる (%{count})"
         dismiss_new: "新規を閉じる"
         dismiss_new_modal:
           title: "新規を閉じる"
@@ -3955,7 +3972,6 @@ ja:
         name_placeholder: "これは何のブックマークですか？"
         name_input_label: "ブックマーク名"
         set_reminder: "リマインダー"
-        options: "オプション"
         actions:
           delete_bookmark:
             name: "ブックマークを削除"
@@ -4576,12 +4592,7 @@ ja:
       staff_info: "制限を追加するには、このタグを<a href=%{basePath}/tag_groups>タググループ</a>に追加します。"
       category_restricted: "このタグは、アクセス権限のないカテゴリに制限されています。"
       synonyms: "同義語"
-      synonyms_description: "次のタグが使用されている場合、<b>%{base_tag_name}</b> に置き換えられます。"
       save: "タグの名前と説明を保存する"
-      tag_groups_info:
-        other: "このタグは次のグループに属しています: %{tag_groups}。"
-      category_restrictions:
-        other: "次のカテゴリでのみ使用できます:"
       edit_synonyms: "同義語を編集"
       add_synonyms_label: "同義語の追加:"
       add_synonyms: "追加"
@@ -5685,6 +5696,7 @@ ja:
         too_many_requests: この操作の実行回数が多すぎます。しばらくしてからもう一度お試しください。
         not_found_error: このレポートは存在しません
         custom_date_range: カスタムの日付範囲
+        stable: "安定"
         sections:
           reports:
             title: "レポート"
@@ -5706,8 +5718,11 @@ ja:
                 "2": "メンバー"
                 "3": "レギュラー"
                 "4": "リーダー"
-              trend:
-                stable: "安定"
+        reports_section:
+          modal:
+            enabled_heading: "有効"
+            all_heading: "すべてのレポート"
+            apply: "適用"
         configure:
           button: "構成"
         site_traffic:
@@ -6217,9 +6232,10 @@ ja:
           your_organization: "あなたの組織"
           your_organization_description: "この情報は、サイトの運営者と管轄地域を示すために、利用規約とプライバシーに関する通知に使用されます。"
           company_name: "名前"
-          company_name_placeholder: "あいうえお組織"
           company_name_warning: |
             空白の場合、定型の利用規約またはプライバシーに関する通知は提供されません。
+          company_url: "ウェブサイト"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "準拠法"
           governing_law_placeholder: "都道府県または国"
           governing_law_help: |

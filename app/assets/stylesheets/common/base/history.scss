@@ -1,7 +1,7 @@
 @use "lib/viewport";
 
 // styles that apply to the popup that appears when you show the edit history of a post
-.modal.history-modal {
+.d-modal.history-modal {
   .d-modal__footer {
     justify-content: space-between;
   }

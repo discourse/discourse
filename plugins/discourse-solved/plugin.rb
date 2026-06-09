@@ -20,6 +20,7 @@ module ::DiscourseSolved
   ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD = "enable_accepted_answers"
   NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD = "notify_on_staff_accept_solved"
   EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD = "empty_box_on_unsolved"
+  SHARED_ISSUES_ENABLED_CUSTOM_FIELD = "enable_shared_issues"
   MAX_AUTO_CLOSE_HOURS = 20.years.to_i / 1.hour.to_i
 
   def self.accept_answer!(post, acting_user, topic: nil)
@@ -56,7 +57,7 @@ after_initialize do
     ::PostMover.prepend(DiscourseSolved::PostMoverExtension)
     ::UserSummary.prepend(DiscourseSolved::UserSummaryExtension)
 
-    ::Topic.attr_accessor(:accepted_answer_user_id)
+    ::Topic.attr_accessor(:accepted_answer_user_ids)
     ::TopicPostersSummary.alias_method(:old_user_ids, :user_ids)
     ::TopicPostersSummary.prepend(DiscourseSolved::TopicPostersSummaryExtension)
     [
@@ -68,12 +69,34 @@ after_initialize do
     ].each { |klass| klass.include(DiscourseSolved::TopicAnswerMixin) }
   end
 
-  register_category_list_topics_preloader_associations(:solved) if SiteSetting.solved_enabled
-  register_topic_preloader_associations(:solved) if SiteSetting.solved_enabled
-  Search.custom_topic_eager_load { [:solved] } if SiteSetting.solved_enabled
-  Site.preloaded_category_custom_fields << DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
-  Site.preloaded_category_custom_fields << DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD
-  Site.preloaded_category_custom_fields << DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD
+  solved_topic_answer_preload = { solved: :topic_answers }
+
+  if SiteSetting.solved_enabled
+    register_category_list_topics_preloader_associations(solved_topic_answer_preload)
+    register_topic_preloader_associations(solved_topic_answer_preload)
+    Search.custom_topic_eager_load { [solved_topic_answer_preload] }
+  end
+
+  TopicView.on_preload do |topic_view|
+    next unless SiteSetting.solved_enabled
+
+    solved = topic_view.topic.solved
+    next unless solved
+
+    ActiveRecord::Associations::Preloader.new(
+      records: [solved],
+      associations: {
+        topic_answers: [{ post: :user }, :accepter],
+      },
+    ).call
+  end
+
+  register_preloaded_category_custom_fields(DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD)
+  register_preloaded_category_custom_fields(
+    DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD,
+  )
+  register_preloaded_category_custom_fields(DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD)
+  register_preloaded_category_custom_fields(DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD)
 
   add_api_key_scope(
     :solved,
@@ -229,7 +252,9 @@ after_initialize do
   add_to_serializer(:post, :can_unaccept_answer) do
     scope.can_unaccept_answer?(topic, object) && accepted_answer
   end
-  add_to_serializer(:post, :accepted_answer) { topic&.solved&.answer_post_id == object.id }
+  add_to_serializer(:post, :accepted_answer) do
+    topic&.topic_answers&.any? { |topic_answer| topic_answer.answer_post_id == object.id }
+  end
   add_to_serializer(:post, :topic_accepted_answer) { topic&.solved&.present? }
 
   add_to_serializer(
@@ -291,16 +316,13 @@ after_initialize do
       options[:refresh_stream] = true
 
       if !new_allowed
-        if topic.solved.present?
-          post = topic.solved.answer_post
-          if post
-            DiscourseSolved::UnacceptAnswer.call(
-              params: {
-                post_id: post.id,
-              },
-              guardian: Discourse.system_user.guardian,
-            )
-          end
+        topic.topic_answers.each do |ta|
+          DiscourseSolved::UnacceptAnswer.call(
+            params: {
+              post_id: ta.answer_post_id,
+            },
+            guardian: Discourse.system_user.guardian,
+          )
         end
       end
     end
@@ -312,23 +334,25 @@ after_initialize do
      WHERE di.period_type = :period_type AND di.solutions IS NOT NULL;
 
     WITH x AS (
-      SELECT p.user_id, COUNT(DISTINCT st.id) AS solutions
+    SELECT p.user_id, COUNT(DISTINCT sta.id) AS solutions
       FROM discourse_solved_solved_topics AS st
+      JOIN discourse_solved_topic_answers AS sta
+        ON sta.solved_topic_id = st.id
+       AND COALESCE(sta.created_at, :since) > :since
       JOIN posts AS p
-         ON p.id = st.answer_post_id
-        AND COALESCE(st.created_at, :since) > :since
-        AND p.deleted_at IS NULL
+        ON p.id = sta.answer_post_id
+       AND p.deleted_at IS NULL
       JOIN topics AS t
-         ON t.id = st.topic_id
-        AND t.archetype <> 'private_message'
-        AND t.deleted_at IS NULL
+        ON t.id = st.topic_id
+       AND t.archetype <> 'private_message'
+       AND t.deleted_at IS NULL
       JOIN users AS u
-         ON u.id = p.user_id
-      WHERE u.id > 0
-        AND u.active
-        AND u.silenced_till IS NULL
-        AND u.suspended_till IS NULL
-      GROUP BY p.user_id
+        ON u.id = p.user_id
+     WHERE u.id > 0
+       AND u.active
+       AND u.silenced_till IS NULL
+       AND u.suspended_till IS NULL
+     GROUP BY p.user_id
     )
     UPDATE directory_items di
        SET solutions = x.solutions
@@ -356,15 +380,19 @@ after_initialize do
 
   register_topic_list_preload_user_ids do |topics, user_ids|
     # [{ topic_id => answer_user_id }, ... ]
-    topics_with_answer_poster =
+    topics_with_answer_users =
       DiscourseSolved::SolvedTopic
-        .joins(:answer_post)
+        .joins(topic_answers: :post)
         .where(topic_id: topics.map(&:id))
-        .pluck(:topic_id, "posts.user_id")
-        .to_h
+        .distinct
+        .pluck("discourse_solved_solved_topics.topic_id", "posts.user_id")
+        .each_with_object({}) { |(topic_id, user_id), h| (h[topic_id] ||= []) << user_id }
 
-    topics.each { |topic| topic.accepted_answer_user_id = topics_with_answer_poster[topic.id] }
-    user_ids.concat(topics_with_answer_poster.values)
+    topics.each do |topic|
+      topic.accepted_answer_user_ids = topics_with_answer_users[topic.id] || []
+    end
+
+    user_ids.concat(topics_with_answer_users.values.flatten.uniq)
   end
 
   DiscourseSolved::RegisterFilters.register(self)

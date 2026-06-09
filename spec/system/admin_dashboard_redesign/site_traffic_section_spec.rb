@@ -7,7 +7,15 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
   before do
     SiteSetting.dashboard_improvements = true
-    SiteSetting.admin_dashboard_sections = "traffic"
+    AdminDashboardSectionConfiguration.update(
+      [
+        { id: "traffic", visible: true },
+        { id: "highlights", visible: false },
+        { id: "reports", visible: false },
+        { id: "engagement", visible: false },
+      ],
+      actor: current_user,
+    )
     SiteSetting.use_legacy_pageviews = false
     SiteSetting.embed_topics_list = true
     sign_in(current_user)
@@ -128,6 +136,23 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     expect(traffic).to have_chart
   end
 
+  it "takes staff to the full site traffic report scoped to the same period when they click See details",
+     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+    Fabricate(:logged_in_browser_application_request, date: "2026-05-05", count: 10)
+
+    dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
+    traffic = dashboard.site_traffic
+
+    expect(traffic).to have_chart
+    expect(traffic).to have_see_details_link
+
+    traffic.click_see_details
+
+    expect(page).to have_current_path(
+      "/admin/reports/site_traffic?end_date=2026-05-12&start_date=2026-05-01",
+    )
+  end
+
   context "with top countries and top referrers cards" do
     before do
       SiteSetting.persist_browser_pageview_events = true
@@ -167,29 +192,89 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
         normalized_referrer: nil,
         created_at: "2026-05-12",
       )
+      # Internal-referrer and direct (no-referrer) pageviews must not dilute the
+      # top referrers percent denominator (it counts external referrer traffic only).
+      6.times do
+        Fabricate(
+          :browser_pageview_event,
+          country_code: "DE",
+          normalized_referrer: "test.localhost/t/topic/1",
+          created_at: "2026-05-12",
+        )
+      end
+
+      BrowserPageviewCountryDailyRollup.aggregate(
+        start_date: "2026-05-01".to_date,
+        end_date: "2026-05-14".to_date,
+      )
+      BrowserPageviewReferrerDailyRollup.aggregate(
+        start_date: "2026-05-01".to_date,
+        end_date: "2026-05-14".to_date,
+      )
 
       dashboard.visit
       traffic = dashboard.site_traffic
 
       expect(traffic).to have_top_country_rows(
         [
-          { country: "US", percent: 50 },
-          { country: "DE", percent: 25 },
-          { country: "GB", percent: 25 },
+          { country: "DE", percent: 70 },
+          { country: "US", percent: 20 },
+          { country: "GB", percent: 10 },
         ],
       )
       expect(traffic).to have_top_referrer_rows(
-        [{ referrer: "news.ycombinator.com/item?id=42" }, { referrer: "reddit.com/r/discourse" }],
+        [
+          { referrer: "news.ycombinator.com/item?id=42", percent: 67 },
+          { referrer: "reddit.com/r/discourse", percent: 33 },
+        ],
       )
     end
 
-    it "shows an empty state in both cards when no events qualify",
+    it "shows an empty state in both cards but keeps the headers as drill-down links when no events qualify",
        time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
       dashboard.visit
       traffic = dashboard.site_traffic
 
       expect(traffic).to have_top_countries_empty_state
       expect(traffic).to have_top_referrers_empty_state
+      expect(traffic).to have_top_referrers_drilldown
+      expect(traffic).to have_top_countries_drilldown
+    end
+
+    it "drills into the full top referrers report scoped to the dashboard period",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      Fabricate(
+        :browser_pageview_event,
+        normalized_referrer: "news.ycombinator.com/item?id=42",
+        created_at: "2026-05-12",
+      )
+      BrowserPageviewReferrerDailyRollup.aggregate(
+        start_date: "2026-05-01".to_date,
+        end_date: "2026-05-14".to_date,
+      )
+
+      dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
+      dashboard.site_traffic.click_top_referrers_drilldown
+
+      expect(page).to have_current_path(
+        "/admin/reports/top_referrers_by_browser_pageviews?end_date=2026-05-12&start_date=2026-05-01",
+      )
+    end
+
+    it "drills into the full top countries report scoped to the dashboard period",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      Fabricate(:browser_pageview_event, country_code: "US", created_at: "2026-05-12")
+      BrowserPageviewCountryDailyRollup.aggregate(
+        start_date: "2026-05-01".to_date,
+        end_date: "2026-05-14".to_date,
+      )
+
+      dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
+      dashboard.site_traffic.click_top_countries_drilldown
+
+      expect(page).to have_current_path(
+        "/admin/reports/top_countries_by_browser_pageviews?end_date=2026-05-12&start_date=2026-05-01",
+      )
     end
   end
 end

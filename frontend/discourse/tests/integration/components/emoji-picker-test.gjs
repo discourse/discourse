@@ -7,7 +7,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 
-module("Integration | Component | emoji-picker-content", function (hooks) {
+module("Integration | Component | EmojiPickerContent", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

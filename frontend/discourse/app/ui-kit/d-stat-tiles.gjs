@@ -1,6 +1,7 @@
-import { hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { number } from "discourse/lib/formatter";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const DStatTile = <template>
   <div class="d-stat-tile" role="group">
@@ -16,16 +17,21 @@ const DStatTile = <template>
     </div>
     {{#if @url}}
       <a href={{@url}} class="d-stat-tile__value" title={{@value}}>
-        {{number @value}}
+        {{if @formattedValue @formattedValue (number @value)}}
       </a>
     {{else}}
-      <span class="d-stat-tile__value" title={{@value}}>{{number @value}}</span>
+      <span class="d-stat-tile__value" title={{@value}}>
+        {{if @formattedValue @formattedValue (number @value)}}
+      </span>
     {{/if}}
   </div>
 </template>;
 
 const DStatTiles = <template>
-  <div class="d-stat-tiles" ...attributes>
+  <div
+    class={{dConcatClass "d-stat-tiles" (if @format (concat "--" @format))}}
+    ...attributes
+  >
     {{yield (hash Tile=DStatTile)}}
   </div>
 </template>;

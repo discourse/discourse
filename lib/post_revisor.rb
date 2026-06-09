@@ -243,6 +243,25 @@ class PostRevisor
     tag_list.sort.map { |tag_name| "##{tag_name}" }.join(", ")
   end
 
+  def self.tag_change_noop?(topic, incoming)
+    return topic.tags.empty? if incoming.blank?
+
+    ids =
+      if incoming.first.is_a?(String)
+        unique_names = incoming.map(&:downcase).uniq
+        found = Tag.where_name(unique_names).pluck(:id)
+        return false if found.size != unique_names.size
+        found
+      else
+        return false if incoming.any? { |t| t[:id].blank? }
+        incoming.filter_map { |t| t[:id]&.to_i }
+      end
+    return false if ids.blank?
+
+    canonical_ids = Tag.where(id: ids).pluck(Arel.sql("COALESCE(target_tag_id, id)")).uniq.sort
+    canonical_ids == topic.tags.pluck(:id).sort
+  end
+
   # Revises a post with the given fields and options.
   #
   # @param editor [User] The user performing the revision
@@ -268,7 +287,9 @@ class PostRevisor
     @fields[:raw] = cleanup_whitespaces(@fields[:raw]) if @fields.has_key?(:raw)
     @fields[:user_id] = @fields[:user_id].to_i if @fields.has_key?(:user_id)
     @fields[:category_id] = @fields[:category_id].to_i if @fields.has_key?(:category_id)
-    @fields.delete(:tags) if @fields.has_key?(:tags) && @fields[:tags].blank? && @topic.tags.empty?
+    if @fields.has_key?(:tags) && PostRevisor.tag_change_noop?(@topic, @fields[:tags])
+      @fields.delete(:tags)
+    end
 
     if @fields.has_key?(:reply_to_post_number)
       normalized = @fields[:reply_to_post_number].presence

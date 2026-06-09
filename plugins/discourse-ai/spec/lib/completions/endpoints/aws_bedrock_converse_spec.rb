@@ -181,6 +181,33 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
         expect(params[:system]).to be_present
       end
     end
+
+    it "logs a placeholder when image bytes are binary" do
+      model.update!(vision_enabled: true)
+      raw_bytes = "\x89PNG\r\n\x1a\nbinary".b
+      response = mock_converse_response
+      client = stub_sdk_client(response: response)
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          nil,
+          messages: [{ type: :user, content: ["Describe: ", { upload_id: 456 }] }],
+        )
+
+      allow(DiscourseAi::Completions::UploadEncoder).to receive(:encode).and_return(
+        [{ kind: :image, mime_type: "image/png", base64: Base64.strict_encode64(raw_bytes) }],
+      )
+
+      llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+      result = llm.generate(prompt, user: user)
+
+      expect(result).to eq("Hello world")
+      expect(AiApiAuditLog.last.raw_request_payload).to eq(
+        "[converse params contained binary payload, omitted from log]",
+      )
+      expect(client).to have_received(:converse) do |params|
+        expect(params.dig(:messages, 0, :content, 1, :image, :source, :bytes)).to eq(raw_bytes)
+      end
+    end
   end
 
   describe "streaming completion" do

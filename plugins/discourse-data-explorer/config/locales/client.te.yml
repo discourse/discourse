@@ -6,6 +6,9 @@
 
 te:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "ఫలితాలు లేవు"
     explorer:
       default_query: "అప్రమేయ"
       or: "లేదా"
@@ -26,3 +29,9 @@ te:
       reset_params: "రీసెట్ చేయండి"
     group:
       reports: "నివేదికలు"
+    discourse_workflows:
+      sql:
+        param_value: "విలువ"
+        output:
+          results: "ఫలితాలు"
+          no_results: "ఫలితాలు లేవు"

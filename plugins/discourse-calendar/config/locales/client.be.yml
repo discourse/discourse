@@ -35,6 +35,14 @@ be:
               title: "грамадскага"
             private:
               title: "прыватны"
+      composer:
+        reminder:
+          units:
+            days:
+              one: "дзень"
+              few: "дзён"
+              many: "дзён"
+              other: "дзён"
       builder_modal:
         create: "стварыць"
         update: "Захаваць"
@@ -44,13 +52,16 @@ be:
           periods:
             before: "перад"
             after: "пасля"
+        attendance:
+          none: "Няма"
         url:
           label: "URL спасылка"
         location:
           label: "размяшчэнне"
         description:
           label: "Апісанне"
-        status:
-          label: "Статус"
+        event_type:
+          public:
+            title: "Публічная"
       invite_user_or_group:
         invite: "адправіць"

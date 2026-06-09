@@ -690,3 +690,10 @@ sv:
       panels:
         chat:
           label: "Chatt"
+    discourse_workflows:
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Meddelande"
+      chat_approval:
+        message: "Meddelande"
+        channel_id: "Kanal"

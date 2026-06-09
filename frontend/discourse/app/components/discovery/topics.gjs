@@ -87,13 +87,13 @@ export default class DiscoveryTopics extends Component {
   }
 
   get showTopicsAndRepliesToggle() {
-    return this.new && this.currentUser?.new_new_view_enabled;
+    return this.new && this.currentUser?.unified_new_enabled;
   }
 
   get newRepliesCount() {
     this.topicTrackingState.get("messageCount"); // Autotrack this
 
-    if (this.currentUser?.new_new_view_enabled) {
+    if (this.currentUser?.unified_new_enabled) {
       return this.topicTrackingState.countUnread({
         categoryId: this.args.category?.id,
         noSubcategories: this.args.noSubcategories,
@@ -107,7 +107,7 @@ export default class DiscoveryTopics extends Component {
   get newTopicsCount() {
     this.topicTrackingState.get("messageCount"); // Autotrack this
 
-    if (this.currentUser?.new_new_view_enabled) {
+    if (this.currentUser?.unified_new_enabled) {
       return this.topicTrackingState.countNew({
         categoryId: this.args.category?.id,
         noSubcategories: this.args.noSubcategories,
@@ -119,7 +119,7 @@ export default class DiscoveryTopics extends Component {
   }
 
   get showTopicPostBadges() {
-    return !this.new || this.currentUser?.new_new_view_enabled;
+    return !this.new || this.currentUser?.unified_new_enabled;
   }
 
   get showEmptyFilterEducationInFooter() {
@@ -142,6 +142,10 @@ export default class DiscoveryTopics extends Component {
 
   get expandAllPinned() {
     return this.args.tag || this.args.category;
+  }
+
+  get showBottomDismissButtons() {
+    return this.allLoaded;
   }
 
   @action
@@ -304,15 +308,18 @@ export default class DiscoveryTopics extends Component {
             model=@model
           }}
         >
-          <TopicDismissButtons
-            @position="bottom"
-            @selectedTopics={{@bulkSelectHelper.selected}}
-            @model={{@model}}
-            @showResetNew={{@showResetNew}}
-            @showDismissRead={{@showDismissRead}}
-            @resetNew={{@resetNew}}
-            @dismissRead={{@dismissRead}}
-          />
+          {{#if this.showBottomDismissButtons}}
+            <TopicDismissButtons
+              @position="bottom"
+              @selectedTopics={{@bulkSelectHelper.selected}}
+              @model={{@model}}
+              @showResetNew={{@showResetNew}}
+              @showNewDismissCombo={{this.showTopicsAndRepliesToggle}}
+              @showDismissRead={{@showDismissRead}}
+              @resetNew={{@resetNew}}
+              @dismissRead={{@dismissRead}}
+            />
+          {{/if}}
 
           {{#if this.showEmptyFilterEducationInFooter}}
             <EmptyTopicFilter

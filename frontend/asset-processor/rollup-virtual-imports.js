@@ -12,12 +12,6 @@ export default {
   ) => {
     let output = `const compatModules = {};`;
 
-    if (themeId) {
-      output += cleanMultiline(`
-        import "virtual:init-settings";
-      `);
-    }
-
     const moduleFilenamesSet = new Set(moduleFilenames);
     const exportedModules = new Set();
 
@@ -101,12 +95,6 @@ export default {
     output += "export default compatModules;\n";
 
     return output;
-  },
-  "virtual:init-settings": ({ themeId, settings }) => {
-    return (
-      `import { registerSettings } from "discourse/lib/theme-settings-store";\n\n` +
-      `registerSettings(${themeId}, ${JSON.stringify(settings, null, 2)});\n`
-    );
   },
   "virtual:theme": ({ themeId }) => {
     return cleanMultiline(`

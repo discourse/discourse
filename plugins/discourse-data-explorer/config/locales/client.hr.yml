@@ -6,6 +6,9 @@
 
 hr:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Nema rezultata"
     explorer:
       default_query: "Zadano"
       or: "ili"
@@ -34,3 +37,9 @@ hr:
       search_placeholder: "Pretraži..."
     group:
       reports: "Izvještaji"
+    discourse_workflows:
+      sql:
+        param_value: "Vrijednost"
+        output:
+          results: "Rezultati"
+          no_results: "Nema rezultata"

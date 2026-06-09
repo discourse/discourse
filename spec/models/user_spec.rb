@@ -34,16 +34,21 @@ RSpec.describe User do
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
     end
 
-    it "never returns true for the 'anonymous' auto group — logged-in users are not anonymous" do
+    it "never returns true for the 'anonymous_users' auto group — logged-in users are not anonymous" do
       GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
       Discourse.system_user.reload
-      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
-      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(
+        false,
+      )
     end
 
-    it "returns true for the 'anonymous' auto group for anonymous users" do
+    it "returns true for the 'anonymous_users' auto group for anonymous users" do
       expect(
-        Guardian.new.instance_variable_get(:@user).in_any_groups?([Group::AUTO_GROUPS[:anonymous]]),
+        Guardian
+          .new
+          .instance_variable_get(:@user)
+          .in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]]),
       ).to eq(true)
     end
 
@@ -66,11 +71,13 @@ RSpec.describe User do
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
     end
 
-    it "never returns true for the 'anonymous' auto group — logged-in users are not anonymous" do
+    it "never returns true for the 'anonymous_users' auto group — logged-in users are not anonymous" do
       GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
       Discourse.system_user.reload
-      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
-      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(
+        false,
+      )
     end
 
     context "with granular_anonymous_and_logged_in_groups_permissions enabled" do
@@ -854,8 +861,9 @@ RSpec.describe User do
           user.update!(name: "Sam")
           expect(post.reload.baked_version).not_to be_nil
 
-          user.update!(uploaded_avatar_id: 100)
-          expect(post.reload.baked_version).to be_nil
+          expect_enqueued_with(job: :rebake_quoted_posts_for_user, args: { user_id: user.id }) do
+            user.update!(uploaded_avatar_id: 100)
+          end
         end
       end
     end
@@ -2036,6 +2044,27 @@ RSpec.describe User do
 
       expect_enqueued_with(job: :update_gravatar, args: { user_id: user.id }) do
         user.refresh_avatar
+      end
+    end
+
+    it "enqueues rebake job instead of blocking when avatar is updated" do
+      user = Fabricate(:user)
+      upload = Fabricate(:upload)
+
+      allow(Post).to receive(:rebake_all_quoted_posts)
+
+      expect_enqueued_with(job: :rebake_quoted_posts_for_user, args: { user_id: user.id }) do
+        user.update!(uploaded_avatar_id: upload.id)
+      end
+
+      expect(Post).not_to have_received(:rebake_all_quoted_posts)
+    end
+
+    it "does not enqueue rebake job when avatar is not changed" do
+      user = Fabricate(:user)
+
+      expect_not_enqueued_with(job: :rebake_quoted_posts_for_user) do
+        user.update!(name: "New Name")
       end
     end
   end

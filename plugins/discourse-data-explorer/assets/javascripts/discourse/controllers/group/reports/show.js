@@ -50,12 +50,6 @@ export default class GroupReportsShowController extends Controller {
     return NO_REMINDER_ICON;
   }
 
-  get bookmarkClassName() {
-    return this.queryGroupBookmark
-      ? ["query-group-bookmark", "bookmarked"].join(" ")
-      : "query-group-bookmark";
-  }
-
   @bind
   async run() {
     try {

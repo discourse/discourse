@@ -316,12 +316,9 @@ RSpec.describe Theme do
       )
       theme.save!
 
+      expect(theme.cached_settings).to include(name: "bob")
+
       javascript_cache = theme.reload.javascript_cache
-      expect(javascript_cache.content).to include <<~JS
-        registerSettings(#{theme.id}, {
-          "name": "bob"
-        });
-      JS
       expect(javascript_cache.content).to include("alert(settings.name)")
       expect(javascript_cache.content).to include("let a = () => {}")
 
@@ -329,11 +326,7 @@ RSpec.describe Theme do
       setting.value = "bill"
       theme.save!
 
-      expect(theme.reload.javascript_cache.content).to include <<~JS
-        registerSettings(#{theme.id}, {
-          "name": "bill"
-        });
-      JS
+      expect(theme.reload.cached_settings).to include(name: "bill")
     end
 
     it "is empty when the settings are invalid" do
@@ -1025,11 +1018,11 @@ RSpec.describe Theme do
       )
     end
 
-    it "updates the theme's javascript cache after running migration" do
+    it "updates the theme settings after running migration" do
       theme.set_field(target: :extra_js, name: "test.js.es6", value: "const hello = 'world';")
       theme.save!
 
-      expect(theme.javascript_cache.content).to include('"list_setting": "aa,bb"')
+      expect(theme.settings[:list_setting].value).to eq("aa,bb")
 
       settings_field.update!(value: <<~YAML)
         integer_setting: 1
@@ -1052,7 +1045,6 @@ RSpec.describe Theme do
 
       expect(setting_record.data_type).to eq(ThemeSetting.types[:list])
       expect(setting_record.value).to eq("zz|aa")
-      expect(theme.javascript_cache.content).to include('"list_setting": "zz|aa"')
     end
 
     it "allows changing a setting's type" do

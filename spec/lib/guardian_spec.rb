@@ -40,10 +40,10 @@ RSpec.describe Guardian do
   describe "AnonymousUser#in_any_groups?" do
     let(:anon) { Guardian::AnonymousUser.new }
 
-    it "returns true when the anonymous auto group is in the list" do
-      expect(anon.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(true)
+    it "returns true when the anonymous_users auto group is in the list" do
+      expect(anon.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(true)
       expect(
-        anon.in_any_groups?([Group::AUTO_GROUPS[:admins], Group::AUTO_GROUPS[:anonymous]]),
+        anon.in_any_groups?([Group::AUTO_GROUPS[:admins], Group::AUTO_GROUPS[:anonymous_users]]),
       ).to eq(true)
     end
 

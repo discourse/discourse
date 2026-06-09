@@ -61,6 +61,18 @@ pt:
               title: "Público"
             private:
               title: "Privado"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "minuto"
+              other: "minutos"
+            hours:
+              one: "hora"
+              other: "horas"
+            days:
+              one: "dia"
+              other: "dias"
       builder_modal:
         custom_fields:
           placeholder: "Opcional"
@@ -80,6 +92,10 @@ pt:
           label: "Recorrência"
           none: "Nenhuma recorrência"
           every_day: "Diariamente"
+          ordinals:
+            last: "último"
+        attendance:
+          none: "Nenhuma"
         url:
           label: "URL"
           placeholder: "Opcional"
@@ -87,7 +103,8 @@ pt:
           label: "Localização"
         description:
           label: "Descrição"
-        status:
-          label: "Estado"
+        event_type:
+          public:
+            title: "Público"
       invite_user_or_group:
         invite: "Enviar"

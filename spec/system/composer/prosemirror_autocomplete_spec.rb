@@ -24,6 +24,27 @@ describe "Composer - ProseMirror - Autocomplete" do
     expect(composer).to have_emoji_autocomplete
   end
 
+  it "keeps emoji autocomplete open when pressing arrow down near a horizontal rule" do
+    open_composer
+
+    composer.send_keys(:enter, "---", :enter)
+
+    expect(rich).to have_css("hr")
+
+    composer.send_keys(:up, :up)
+    composer.type_content(" :smi")
+
+    expect(composer).to have_emoji_autocomplete_selected(1)
+
+    composer.send_keys(:down)
+
+    expect(composer).to have_emoji_autocomplete_selected(2)
+
+    composer.send_keys(:up)
+
+    expect(composer).to have_emoji_autocomplete_selected(1)
+  end
+
   it "strips partially written emoji when using 'more' emoji modal" do
     open_composer
 

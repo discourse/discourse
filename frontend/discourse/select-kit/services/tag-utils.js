@@ -15,6 +15,16 @@ export default class TagUtils extends Service {
       .catch(popupAjaxError);
   }
 
+  sortSearchResults(results) {
+    if (!this.siteSettings.tags_sort_alphabetically) {
+      return results;
+    }
+    const byName = (a, b) => a.name.localeCompare(b.name);
+    const enabled = results.filter((r) => !r.disabled).sort(byName);
+    const disabled = results.filter((r) => r.disabled).sort(byName);
+    return [...enabled, ...disabled];
+  }
+
   validateCreate(
     filter,
     content,

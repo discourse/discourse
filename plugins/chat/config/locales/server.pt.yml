@@ -66,6 +66,10 @@ pt:
     actions:
       chat_reply:
         title: Responder
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Aprovar"
+      default_deny_label: "Rejeitar"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

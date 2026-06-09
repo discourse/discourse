@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../../../lib/discourse_assign/assignment_permissions"
+
 module Jobs
   class EnqueueReminders < ::Jobs::Scheduled
     REMINDER_BUFFER_MINUTES = 120
@@ -15,11 +17,11 @@ module Jobs
 
     def skip_enqueue?
       SiteSetting.remind_assigns_frequency.nil? || !SiteSetting.assign_enabled? ||
-        SiteSetting.assign_allowed_on_groups.blank?
+        DiscourseAssign::AssignmentPermissions.all_assign_allowed_group_ids.blank?
     end
 
     def allowed_group_ids
-      Group.assign_allowed_groups.pluck(:id).join(",")
+      DiscourseAssign::AssignmentPermissions.all_assign_allowed_group_ids.join(",")
     end
 
     def reminder_threshold

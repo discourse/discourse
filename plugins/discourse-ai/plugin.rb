@@ -19,9 +19,9 @@ register_asset "stylesheets/common/ai-blinking-animation.scss"
 register_asset "stylesheets/common/ai-user-settings.scss"
 register_asset "stylesheets/common/ai-features.scss"
 
-register_asset "stylesheets/admin/ai-features-editor.scss"
+register_asset "stylesheets/admin/ai-features-editor.scss", :admin
 
-register_asset "stylesheets/modules/translation/common/admin-translations.scss"
+register_asset "stylesheets/modules/translation/admin/translations.scss", :admin
 
 register_asset "stylesheets/modules/ai-helper/common/ai-helper.scss"
 register_asset "stylesheets/modules/ai-helper/desktop/ai-helper-fk-modals.scss", :desktop
@@ -100,6 +100,13 @@ after_initialize do
   require_relative "discourse_automation/ai_tool_action"
   require_relative "discourse_automation/llm_agent_triage"
   require_relative "discourse_automation/llm_tagger"
+
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      require_relative "discourse_workflows/nodes/ai_agent/v1"
+      DiscourseWorkflows::Nodes::AiAgent::V1
+    end
+  end
 
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })
 

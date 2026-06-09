@@ -243,9 +243,15 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_modifier(self, modifier_name, &blk)
   end
 
+  # Register a handler for an action initiated by an anonymous user, to be
+  # replayed against their account after they authenticate. See AnonymousAction.
+  def register_anonymous_action(type, &block)
+    reloadable_patch { AnonymousAction.register(type, &block) }
+  end
+
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def add_report(name, &block)
-    reloadable_patch { |plugin| Report.add_report(name, &block) }
+  def add_report(name, exclude_from_dashboard: false, &block)
+    reloadable_patch { |plugin| Report.add_report(name, exclude_from_dashboard:, &block) }
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
@@ -1228,8 +1234,8 @@ class Plugin::Instance
   end
 
   # Registers a KPI tile in the admin dashboard "Highlights" section
-  # (gated by SiteSetting.dashboard_improvements). The KPI is rendered as a
-  # tile linking to /admin/reports/:report.
+  # (gated by the dashboard_improvements upcoming change). The KPI is rendered
+  # as a tile linking to /admin/reports/:report.
   #
   # @param type [Symbol] unique identifier for the KPI. Used as the i18n key
   #   (admin.dashboard.highlights.kpi.<type>.label / .tooltip) and to

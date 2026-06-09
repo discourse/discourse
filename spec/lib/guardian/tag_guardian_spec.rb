@@ -128,6 +128,13 @@ RSpec.describe TagGuardian do
 
       expect(Guardian.new(trust_level_1).can_tag_pms?).to be_truthy
     end
+
+    it "returns true for any user when everyone is mapped to logged_in_users" do
+      SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:everyone]
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+
+      expect(Guardian.new(trust_level_0).can_tag_pms?).to be_truthy
+    end
   end
 
   describe "#can_admin_tags?" do

@@ -8,7 +8,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import pretender, { response } from "../../../helpers/create-pretender";
 
 module(
-  "Integration | Component | select-kit/email-group-user-chooser",
+  "Integration | Component | SelectKit | EmailGroupUserChooser",
   function (hooks) {
     setupRenderingTest(hooks);
 

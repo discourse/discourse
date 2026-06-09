@@ -19,13 +19,9 @@ module Jobs
         return
       end
 
-      target_category_ids = SiteSetting.ai_translation_target_categories
-      if target_category_ids.present?
-        categories =
-          Category.where(locale: nil).where(id: target_category_ids.split("|").map(&:to_i))
-      else
-        return
-      end
+      categories = Category.where(locale: nil)
+      excluded_category_ids = DiscourseAi::Translation.excluded_category_ids
+      categories = categories.where.not(id: excluded_category_ids) if excluded_category_ids.present?
 
       limit = SiteSetting.ai_translation_backfill_hourly_rate
       categories = categories.limit(limit)

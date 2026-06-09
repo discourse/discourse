@@ -144,6 +144,15 @@ it:
       placeholder: data
       from_placeholder: "dalla data"
       to_placeholder: "a oggi"
+    date_range_picker:
+      apply: "Applica"
+      start_date: "Data iniziale"
+      presets:
+        last_7_days: "Ultimi 7 giorni"
+        last_30_days: "Ultimi 30 giorni"
+        last_3_months: "Ultimi 3 mesi"
+        last_6_months: "Ultimi 6 mesi"
+        last_year: "Ultimo anno"
     languages:
       ar:
         name: Arabo
@@ -374,8 +383,6 @@ it:
     tos: "Termini di Servizio"
     rules: "Regole"
     conduct: "Codice di Condotta"
-    mobile_view: "Visualizzazione cellulari"
-    desktop_view: "Visualizzazione Desktop"
     now: "proprio ora"
     read_more: "altre informazioni"
     more: "Altro"
@@ -408,7 +415,7 @@ it:
       pm_title: "Messaggi Suggeriti"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Abilitato"
+        enabled: "Selezionato"
       start_posting:
         back: "Indietro"
     about:
@@ -2738,7 +2745,7 @@ it:
       users_placeholder: "Aggiungi utenti o gruppi"
       title_placeholder: "In breve, di cosa tratta questa discussione?"
       title_or_link_placeholder: "Digita il titolo o incolla qui il collegamento"
-      edit_reason_placeholder: "perché stai scrivendo?"
+      edit_reason_placeholder: "Perché stai modificando?"
       topic_featured_link_placeholder: "Inserisci il collegamento mostrato con il titolo."
       remove_featured_link: "Rimuovi il collegamento dall'argomento."
       reply_placeholder: "Scrivi qui. Per formattare il testo usa Markdown, BBCode o HTML. Trascina o incolla le immagini."
@@ -2794,6 +2801,7 @@ it:
         attribute_value: "Valore"
         apply: "Applica"
       help: "Aiuto Inserimento Markdown"
+      edit_reason: "Perché stai modificando?"
       exit_fullscreen_prompt: "Premi <kbd>ESC</kbd> per uscire dallo schermo intero."
       modal_ok: "OK"
       cant_send_pm: "Spiacenti, non puoi inviare un messaggio a %{username}."
@@ -2823,24 +2831,24 @@ it:
           desc: Crea un nuovo messaggio iniziando con gli stessi destinatari
         reply_to_topic:
           label: Rispondi all'argomento
+          trigger: Argomento
           desc: Rispondi all'argomento, non a uno specifico messaggio
+        reply_to_message:
+          trigger: Messaggio
         toggle_whisper:
           label: Attiva/disattiva sussurri
-          desc: I Sussurri sono visibili solo ai membri dello staff
         create_topic:
-          label: "Nuovo argomento"
           desc: Crea un nuovo argomento
         create_personal_message:
-          label: "Nuovo messaggio"
           desc: "Crea un nuovo messaggio personale"
         shared_draft:
           label: "Bozza Condivisa"
           desc: "Crea una bozza di argomento che sarà visibile solo agli utenti autorizzati"
         toggle_topic_bump:
-          label: "Interruttore riproposizione argomenti"
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
         toggle_unlisted:
           label: Attiva/disattiva non in elenco
+        unknown_user: "Utente"
       reload: "Ricarica"
       ignore: "Ignora"
       image_alt_text:
@@ -3204,6 +3212,17 @@ it:
           other: "Ignora (%{count})…"
         dismiss_tooltip: "Ignora solo i nuovi messaggi o smetti di seguire gli argomenti"
         also_dismiss_topics: "Smetti di seguire questi argomenti in modo che non vengano più visualizzati come non letti per me"
+        dismiss_new_topics: "Ignora nuovi argomenti"
+        dismiss_new_replies: "Ignora nuove risposte"
+        dismiss_new_topics_with_selected:
+          one: "Ignora (%{count})"
+          other: "Ignora (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Ignora (%{count})"
+          other: "Ignora (%{count})"
+        dismiss_all_with_selected:
+          one: "Ignora (%{count})"
+          other: "Ignora (%{count})"
         dismiss_new: "Ignora i nuovi messaggi"
         dismiss_new_modal:
           title: "Ignora nuovi"
@@ -4007,7 +4026,6 @@ it:
         name_placeholder: "A cosa serve questo segnalibro?"
         name_input_label: "Nome del segnalibro"
         set_reminder: "Ricordamelo"
-        options: "Opzioni"
         actions:
           delete_bookmark:
             name: "Cancella segnalibro"
@@ -4605,14 +4623,7 @@ it:
       staff_info: "Per aggiungere restrizioni, metti questa etichetta in un <a href=%{basePath}/tag_groups>gruppo di etichette</a>"
       category_restricted: "Questa etichetta è limitata a categorie a cui non sei autorizzato ad accedere."
       synonyms: "Sinonimi"
-      synonyms_description: "Quando vengono utilizzate le seguenti etichette, verranno sostituite con <b>%{base_tag_name}</b>."
       save: "Salva il nome e la descrizione dell’etichetta"
-      tag_groups_info:
-        one: 'Questa etichetta appartiene al gruppo "%{tag_groups}".'
-        other: "Questa etichetta appartiene a questi gruppi: %{tag_groups}."
-      category_restrictions:
-        one: "Può essere utilizzato solo in questa categoria:"
-        other: "Può essere utilizzato solo in queste categorie:"
       edit_synonyms: "Modifica Sinonimi"
       add_synonyms_label: "Aggiungi sinonimi:"
       add_synonyms: "Aggiungi"
@@ -5018,7 +5029,7 @@ it:
           title: "Modifica tabella"
           cancel: "annulla"
           create: "Salva"
-          reason: "perché stai modificando?"
+          reason: "Perché stai modificando?"
           trigger_reason: "Aggiungi il motivo della modifica"
         default_edit_reason: "Aggiorna tabella con l'editor di tabelle"
       default_header:
@@ -5639,6 +5650,12 @@ it:
                 "2": "Membro"
                 "3": "Abituale"
                 "4": "Veterano"
+        reports_section:
+          no_data: "Non ci sono dati da mostrare"
+          modal:
+            enabled_heading: "Abilitato"
+            all_heading: "Tutti i report"
+            apply: "Applica"
         configure:
           button: "Configura"
         site_traffic:
@@ -6151,9 +6168,10 @@ it:
           your_organization: "La tua organizzazione"
           your_organization_description: "Utilizzeremo queste informazioni nei Termini di servizio e nell'Informativa sulla privacy per indicare chi gestisce il sito e sotto quale giurisdizione."
           company_name: "Nome"
-          company_name_placeholder: "Organizzazione Acme"
           company_name_warning: |
             Se non compilato, non avrai a disposizione Termini di servizio o Informativa sulla privacy standard.
+          company_url: "Sito web"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Diritto applicabile"
           governing_law_placeholder: "Provincia, Stato o Paese"
           governing_law_help: |

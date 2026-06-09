@@ -45,10 +45,6 @@ module PageObjects
       def click_counter
         context_component.find(".discourse-reactions-counter").click
       end
-
-      def click_counter_number
-        context_component.find(".discourse-reactions-counter .reactions-counter").click
-      end
     end
   end
 end

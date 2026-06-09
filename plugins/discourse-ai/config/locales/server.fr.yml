@@ -43,7 +43,6 @@ fr:
     ai_sentiment_enabled: "Activez le module de sentiment."
     ai_sentiment_inference_service_api_endpoint: "Adresse URL où s'exécute l'API pour le module de sentiment"
     ai_sentiment_inference_service_api_key: "Clé d'API pour l'API de sentiment"
-    ai_sentiment_models: "Modèles à utiliser pour l'inférence. Le sentiment classe les publications dans la plage positif/neutre/négatif. Les émotions se classent dans la plage colère/dégoût/peur/joie/neutre/tristesse/surprise."
     ai_nsfw_detection_enabled: "Activez le module NSFW."
     ai_nsfw_inference_service_api_endpoint: "Adresse URL où l'API s'exécute pour le module NSFW"
     ai_nsfw_inference_service_api_key: "Clé d'API pour l'API NSFW"
