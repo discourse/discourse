@@ -104,6 +104,7 @@ function exitRow(component) {
 function enabledFor(component, siteSettings, currentUser) {
   const composer = getOwner(component).lookup("service:composer");
   return (
+    siteSettings.ai_embeddings_enabled &&
     composer?.model &&
     showComposerAiHelper(
       composer.model,
@@ -112,6 +113,11 @@ function enabledFor(component, siteSettings, currentUser) {
       "suggestions"
     )
   );
+}
+
+function hasEnoughContent(component) {
+  const composer = getOwner(component).lookup("service:composer");
+  return (composer?.model?.reply?.length ?? 0) > MIN_CHARACTER_COUNT;
 }
 
 function initInlineCategorySuggester(api) {
@@ -128,7 +134,7 @@ function initInlineCategorySuggester(api) {
       return;
     }
 
-    if (stateFor(component).mode === "idle") {
+    if (stateFor(component).mode === "idle" && hasEnoughContent(component)) {
       return triggerRow(component);
     }
   });
