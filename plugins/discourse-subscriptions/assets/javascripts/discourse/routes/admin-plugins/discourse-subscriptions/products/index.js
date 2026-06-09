@@ -1,17 +1,14 @@
 import { action } from "@ember/object";
-import { trackedArray } from "@ember/reactive/collections";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
-import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 import AdminProduct from "discourse/plugins/discourse-subscriptions/discourse/models/admin-product";
 
 export default class AdminPluginsDiscourseSubscriptionsProductsIndexRoute extends Route {
   @service dialog;
 
-  async model() {
-    const products = await AdminProduct.findAll();
-    return trackedArray(products);
+  model() {
+    return AdminProduct.findAll();
   }
 
   @action
@@ -24,11 +21,16 @@ export default class AdminPluginsDiscourseSubscriptionsProductsIndexRoute extend
         return product
           .destroy()
           .then(() => {
-            const model = this.controllerFor(
+            const controller = this.controllerFor(
               "adminPlugins.discourseSubscriptions.products.index"
-            ).model;
+            );
 
-            removeValueFromArray(model, product);
+            controller.set(
+              "model",
+              controller.model.filter(
+                (modelProduct) => modelProduct !== product
+              )
+            );
           })
           .catch((data) =>
             this.dialog.alert(data.jqXHR.responseJSON.errors.join("\n"))
