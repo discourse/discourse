@@ -31,6 +31,38 @@ RSpec.describe UserSummarySerializer do
     expect(serializer.as_json[:most_liked_users][0][:name]).to eq(nil)
   end
 
+  describe "flair fields in interaction lists" do
+    fab!(:flair_group) do
+      Fabricate(:group, flair_bg_color: "#111111", flair_color: "#999999", flair_icon: "icon")
+    end
+    fab!(:allowed_group, :group)
+
+    def most_liked_user_json(viewer)
+      UserActionManager.enable
+      liked_user = Fabricate(:user, flair_group: flair_group, refresh_auto_groups: true)
+      liked_post = create_post(user: liked_user)
+      PostActionCreator.like(user, liked_post)
+
+      guardian = Guardian.new(viewer)
+      summary = UserSummary.new(user, guardian)
+      UserSummarySerializer.new(summary, scope: guardian, root: false).as_json[:most_liked_users][0]
+    end
+
+    it "includes flair when the everyone group is configured" do
+      SiteSetting.flair_visible_groups = Group::AUTO_GROUPS[:everyone].to_s
+
+      expect(most_liked_user_json(another_user).key?(:flair_name)).to eq(true)
+    end
+
+    it "omits flair for viewers outside the configured groups" do
+      SiteSetting.flair_visible_groups = allowed_group.id.to_s
+      member = Fabricate(:user, groups: [allowed_group])
+
+      expect(most_liked_user_json(member).key?(:flair_name)).to eq(true)
+      expect(most_liked_user_json(another_user).key?(:flair_name)).to eq(false)
+    end
+  end
+
   it "respects hide_user_activity_tab setting" do
     SiteSetting.hide_user_activity_tab = true
     guardian = Guardian.new(another_user)
