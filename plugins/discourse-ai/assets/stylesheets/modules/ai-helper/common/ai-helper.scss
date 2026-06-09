@@ -758,3 +758,8 @@
   background: var(--primary-very-low);
   border-bottom: 1px solid var(--primary-low);
 }
+
+.select-kit.category-chooser .category-row[data-value="ai-category-suggest"] {
+  color: var(--primary-medium);
+  font-style: italic;
+}

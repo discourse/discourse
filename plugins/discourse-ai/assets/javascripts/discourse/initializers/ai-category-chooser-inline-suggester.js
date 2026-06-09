@@ -124,6 +124,7 @@ function initInlineCategorySuggester(api) {
     }
 
     if (component.selectKit.filter) {
+      reset(component);
       return;
     }
 
