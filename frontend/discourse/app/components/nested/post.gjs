@@ -580,6 +580,7 @@ export default class NestedPost extends Component {
         (if this.effectiveCollapsed "nested-post--collapsed")
         (if @isPinned "nested-post--pinned")
         (if @post.isWhisper "nested-post--whisper")
+        (if @post.hidden "nested-post--hidden post--hidden post-hidden")
         (if (or @post.deleted @post.user_deleted) "nested-post--deleted")
         (if this.cloakingData.active "nested-post--cloaked")
         (if this.selected "selected")
