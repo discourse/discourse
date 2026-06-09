@@ -5,7 +5,9 @@ module HasNestedReplyStats
 
   included do
     after_create :nested_replies_increment_stats
+    after_create :nested_replies_recalculate_hot_score_for_siblings
     after_destroy :nested_replies_decrement_stats
+    after_destroy :nested_replies_recalculate_hot_score_for_siblings
   end
 
   # Moves this post's subtree from `previous_reply_to_post_number` to its
@@ -72,6 +74,12 @@ module HasNestedReplyStats
           whisper_direct_reply_count = nested_view_post_stats.whisper_direct_reply_count + :is_whisper,
           updated_at = NOW()
       SQL
+
+    NestedReplies::HotScoreCalculator.recalculate_for_sibling_group(
+      topic_id: topic_id,
+      reply_to_post_number: previous_reply_to_post_number,
+    )
+    NestedReplies::HotScoreCalculator.recalculate_siblings_for_post(self)
   end
 
   private
@@ -168,5 +176,12 @@ module HasNestedReplyStats
       start_post_number: start_post_number,
       exclude_deleted: false,
     )
+  end
+
+  def nested_replies_recalculate_hot_score_for_siblings
+    return unless SiteSetting.nested_replies_enabled
+    return if post_number == 1
+
+    NestedReplies::HotScoreCalculator.recalculate_siblings_for_post(self)
   end
 end
