@@ -4101,7 +4101,7 @@ pl_PL:
         education:
           topic_tracking_preferences: 'Możesz przeglądać i zmieniać ustawienia śledzenia nowych tematów w <a href="%{basePath}/my/preferences/tracking">swoich preferencjach</a>.'
           unread: "Nic nie zostało do przeczytania. Imponujące!"
-          new_new: "Na razie nic nowego. Sprawdź wkrótce!"
+          unified_new: "Na razie nic nowego. Sprawdź wkrótce!"
           new: "Na razie nic nowego. Sprawdź wkrótce!"
           generic: "Nic tu nie ma...sprawdź wkrótce!"
     topic_bulk_actions:
@@ -4222,10 +4222,6 @@ pl_PL:
         link: "Dziennik aktywności"
         title: "Dziennik aktywności tematu"
         empty: "Brak aktywności tematu do wyświetlenia."
-      context:
-        banner: "Przeglądasz pojedynczy wątek z tego tematu."
-        view_full_topic: "Zobacz cały temat"
-        view_parent_context: "Wyświetl kontekst nadrzędny"
     topic:
       filter_to:
         one: "%{count} post w temacie"
@@ -5605,7 +5601,7 @@ pl_PL:
         new_replies_tooltip: "Nowe odpowiedzi"
         replies: "Odpowiedzi"
         replies_with_count: "Odpowiedzi (%{count})"
-      new_new:
+      unified_new:
         help: "tematy utworzone lub na które odpowiedziano w ciągu ostatnich kilku dni"
       posted:
         title: "Moje wpisy"

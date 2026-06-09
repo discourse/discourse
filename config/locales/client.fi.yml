@@ -3274,7 +3274,7 @@ fi:
         education:
           topic_tracking_preferences: 'Voit tarkastella ja muuttaa uusien ketjujen seuranta-asetuksiasi <a href="%{basePath}/my/preferences/tracking">asetuksissasi</a>.'
           unread: "Mitään ei ole lukematta... vaikuttavaa!"
-          new_new: "Ei mitään uutta tällä hetkellä... palaa takaisin pian!"
+          unified_new: "Ei mitään uutta tällä hetkellä... palaa takaisin pian!"
           new: "Ei mitään uutta tällä hetkellä... palaa takaisin pian!"
     topic_bulk_actions:
       dismiss:
@@ -4439,7 +4439,7 @@ fi:
         new_replies_tooltip: "Uudet vastaukset"
         replies: "Vastaukset"
         replies_with_count: "Vastaukset (%{count})"
-      new_new:
+      unified_new:
         help: "ketjut, jotka on luotu tai joihin on vastattu viime päivien aikana"
       posted:
         title: "Viestini"

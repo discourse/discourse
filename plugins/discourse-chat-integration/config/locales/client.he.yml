@@ -17,7 +17,17 @@ he:
       nav:
         providers: "ספקים"
       add_provider: "הוספת ספק"
+      view_provider_settings: "הצגת הגדרות ספק"
       more_providers: "עוד"
+      confirm_setup_provider: "להפעיל את הספק %{provider}? אפשר להשבית אותו אחר כך בלשונית ההגדרות."
+      setup_provider_modal:
+        title: "הגדרת הספק %{provider}"
+        slack:
+          access_token:
+            title: "אסימון גישה"
+        telegram:
+          access_token:
+            title: "אסימון גישה"
       channels_title: "ערוצים"
       channels_with_errors: "בפעם האחרונה שנשלחו מסרים כמה ערוצים נכשלו עבור הספר הזה. לחץ על סמליל(י) השגיאה כדי לקבל עוד מידע"
       group_mention_template: "אזכורים של: ‎@%{name}‎"

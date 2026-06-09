@@ -3233,7 +3233,7 @@ ja:
         education:
           topic_tracking_preferences: '新規トピックの追跡の設定は、<a href="%{basePath}/my/preferences/tracking">設定</a>で表示および変更できます。'
           unread: "未読はありません... お見事！"
-          new_new: "今のところ新着はありません... また後で確認してください！"
+          unified_new: "今のところ新着はありません... また後で確認してください！"
           new: "今のところ新着はありません... また後で確認してください！"
           generic: "ここには何もありません... また後で確認してください！"
     topic_bulk_actions:
@@ -4404,7 +4404,7 @@ ja:
         new_replies_tooltip: "新しい返信"
         replies: "返信"
         replies_with_count: "返信 (%{count})"
-      new_new:
+      unified_new:
         help: "数日以内に作成または返信されたトピック"
       posted:
         title: "自分の投稿"

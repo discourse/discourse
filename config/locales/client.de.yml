@@ -3609,7 +3609,7 @@ de:
         education:
           topic_tracking_preferences: 'Du kannst deine Konfiguration für die Verfolgung neuer Themen in <a href="%{basePath}/my/preferences/tracking">deinen Einstellungen</a> einsehen und ändern.'
           unread: "Nichts ungelesen … beeindruckend!"
-          new_new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
+          unified_new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
           new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
           generic: "Hier gibt es nichts zu sehen … Schau bald wieder vorbei!"
     topic_bulk_actions:
@@ -3701,10 +3701,6 @@ de:
       topic_admin_menu:
         enable_nested_replies: "Verschachtelte Antworten aktivieren"
         disable_nested_replies: "Verschachtelte Antworten deaktivieren"
-      context:
-        banner: "Du betrachtest einen einzelnen Thread aus diesem Thema."
-        view_full_topic: "Vollständiges Thema anzeigen"
-        view_parent_context: "Übergeordneten Kontext anzeigen"
     topic:
       filter_to:
         one: "%{count} Beitrag im Thema"
@@ -4947,7 +4943,7 @@ de:
         new_replies_tooltip: "Neue Antworten"
         replies: "Antworten"
         replies_with_count: "Antworten (%{count})"
-      new_new:
+      unified_new:
         help: "Themen, die in den letzten Tagen erstellt oder beantwortet wurden"
       posted:
         title: "Meine Beiträge"

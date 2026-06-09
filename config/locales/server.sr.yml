@@ -512,7 +512,6 @@ sr:
     default_other_external_links_in_new_tab: "Podrazumevano otvori spoljne veze u novoj kartici "
     enable_new_defaults_for_trust_level_3_requirements: "Ažurirali smo podrazumevane zahteve za TL3 kako bi bili razumniji za članove velikih, aktivnih zajednica. Ako ste prethodno poništili ova podešavanja, ova predstojeća promena neće imati efekta."
     enable_horizon_high_context_topic_cards: "Prikaži bogatije kartice tema u Horizon temi, uključujući izvode tema, oznake i informacije iz dodataka."
-    dashboard_improvements: "Poboljšanja navigacije, dizajna i upotrebljivosti administratorske kontrolne table Discourse-a."
   search:
     within_post: "#%{post_number} od %{username}"
     types:

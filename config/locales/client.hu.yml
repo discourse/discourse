@@ -3514,7 +3514,7 @@ hu:
         education:
           topic_tracking_preferences: 'Az új témakövetési beállításokat a <a href="%{basePath}/my/preferences/tracking">beállítások</a> között tekintheti meg és módosíthatja.'
           unread: "Semmi sem maradt olvasatlanul... lenyűgöző!"
-          new_new: "Jelenleg semmi újdonság... nézz vissza később!"
+          unified_new: "Jelenleg semmi újdonság... nézz vissza később!"
           new: "Jelenleg semmi újdonság... nézz vissza később!"
           generic: "Nincs itt semmi látnivaló... nézz vissza később!"
     topic_bulk_actions:
@@ -4777,7 +4777,7 @@ hu:
         new_replies_tooltip: "Új válaszok"
         replies: "Válaszok"
         replies_with_count: "Válaszok (%{count})"
-      new_new:
+      unified_new:
         help: "az elmúlt napokban létrehozott vagy megválaszolt témák"
       posted:
         title: "Saját bejegyzéseim"

@@ -3353,6 +3353,7 @@ cs:
     Chcete-li se odhlásit z těchto e-mailů, [klikněte zde](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[SZ] "
+  email_from_group: "%{group_name}"
   user_notifications:
     previous_discussion: "Předchozí diskuze"
     reached_limit:

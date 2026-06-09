@@ -12,6 +12,7 @@ de:
           poll: "Discourse Umfrage"
   js:
     poll:
+      title: "Umfrage"
       dynamic:
         enabled_hint: "Optionen können hinzugefügt oder entfernt werden."
       voters:

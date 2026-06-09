@@ -22,7 +22,6 @@ nl:
     remind_assigns_frequency: "Frequentie voor het herinneren van gebruikers aan toegewezen topics."
     pending_assign_reminder_threshold: "Aantal wachtende toewijzingen dat een herinneringsmelding activeert."
     max_assigned_topics: "Maximaal aantal topics dat aan een gebruiker kan worden toegewezen."
-    assign_allowed_on_groups: "Gebruikers in deze groepen mogen topics toewijzen."
     enable_assign_status: "Voeg een aanpasbaar statusveld toe aan elke toewijzing."
     assign_statuses: "Lijst van beschikbare statussen voor elke toewijzing. De eerste status is de standaardstatus die wordt toegepast op elke nieuwe toewijzing."
     ignore_solved_topics_in_assigned_reminder: "Voorkom dat toewijzingsherinneringen opgeloste topics bevatten. Alleen relevant bij gebruik van de plug-in discourse-solved."

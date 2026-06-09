@@ -3517,7 +3517,7 @@ pt_BR:
         education:
           topic_tracking_preferences: 'Você pode visualizar e alterar suas novas configurações de monitoramento de tópicos em <a href="%{basePath}/my/preferences/tracking">suas preferências</a>.'
           unread: "Nada ficou sem ser lido... impressionante!"
-          new_new: "Nada de novo no momento... volte em breve!"
+          unified_new: "Nada de novo no momento... volte em breve!"
           new: "Nada de novo no momento... volte em breve!"
           generic: "Não há nada para ver aqui... volte em breve!"
     topic_bulk_actions:
@@ -4783,7 +4783,7 @@ pt_BR:
         new_replies_tooltip: "Novas respostas"
         replies: "Respostas"
         replies_with_count: "Respostas (%{count})"
-      new_new:
+      unified_new:
         help: "tópicos criados ou respondidos nos últimos dias"
       posted:
         title: "Minhas postagens"

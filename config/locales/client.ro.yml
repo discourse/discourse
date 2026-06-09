@@ -2563,7 +2563,7 @@ ro:
         education:
           topic_tracking_preferences: 'Poți vizualiza și modifica noile tale setări pentru urmărirea subiectelor în <a href="%{basePath}/my/preferences/tracking">preferințele tale</a>.'
           unread: "Nimic rămas necitit... impresionant!"
-          new_new: "Nimic nou în acest moment... revino în curând!"
+          unified_new: "Nimic nou în acest moment... revino în curând!"
           new: "Nimic nou în acest moment... revino în curând!"
     topic_bulk_actions:
       dismiss:
