@@ -43,6 +43,10 @@ module Plugin
       end
     end
 
+    def self.external_plugin_imports(plugin_directory_name, entrypoint_name)
+      read_manifest(plugin_directory_name)[entrypoint_name]["externalPluginImports"]
+    end
+
     def compile!
       log "Compiling #{Discourse.plugins.count} plugins..."
       start = Time.now
@@ -148,7 +152,11 @@ module Plugin
           File.write("#{map_dir}/#{file_name}.map", info["map"]) if info["map"]
 
           if info["isEntry"]
-            manifest[info["name"]] = { fileName: file_name, imports: info["imports"] }
+            manifest[info["name"]] = {
+              fileName: file_name,
+              imports: info["imports"],
+              externalPluginImports: info["externalPluginImports"],
+            }
           end
         end
 
@@ -206,7 +214,7 @@ module Plugin
     end
 
     def cache?
-      true
+      false
     end
 
     def log(message)
