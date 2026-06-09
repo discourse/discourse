@@ -78,6 +78,11 @@ jobs:
             jq -r '.[] | select(.eligible) | "- `\(.name)`: `\(.current_status)` -> `\(.next_status)` in `\(.settings_path)`; last changed \(.days_since_status_change) days ago"' /tmp/upcoming_changes_status_report.json
           } >> "${GITHUB_STEP_SUMMARY}"
 
+      - name: Setup Git
+        run: |
+          git config --global user.email "ci@ci.invalid"
+          git config --global user.name "Discourse CI"
+
       - name: Create or print pull requests
         if: steps.report.outputs.eligible_count != '0'
         env:
