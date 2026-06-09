@@ -90,14 +90,17 @@ RSpec.describe UpcomingChanges::StatusReport do
         next_status: "stable",
         eligible: true,
       )
-      expect(records.fetch("recent_change")).to include(
+      recent_change = records.fetch("recent_change")
+      expect(recent_change).to include(
         current_status: "beta",
         next_status: "stable",
         eligible: false,
         eligibility_reason: "status_changed_recently",
         last_status_change_commit: commit_shas[:recent],
-        last_status_change_date: "2026-05-20T12:00:00Z",
         days_since_status_change: 5,
+      )
+      expect(Time.iso8601(recent_change.fetch(:last_status_change_date))).to eq(
+        Time.iso8601("2026-05-20T12:00:00Z"),
       )
       expect(records.fetch("stable_change")).to include(
         current_status: "stable",

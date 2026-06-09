@@ -33,6 +33,27 @@ RSpec.describe "script/create_upcoming_change_status_prs" do # rubocop:disable R
       #!/usr/bin/env bash
       echo "rails $*" >> "${COMMAND_LOG}"
     BASH
+    write_fake_executable("jq", <<~'RUBY')
+      #!/usr/bin/env ruby
+      require "json"
+
+      args = ARGV.dup
+      args.delete("-r")
+      args.delete("-c")
+      filter = args.shift
+      input = args.empty? ? STDIN.read : File.read(args.shift)
+      data = JSON.parse(input)
+
+      if filter == ".[] | select(.eligible)"
+        data.select { |record| record["eligible"] }.each { |record| puts JSON.generate(record) }
+      elsif filter.match?(/\A\.[a-z_]+( \/\/ empty)?\z/)
+        field = filter.delete_prefix(".").delete_suffix(" // empty")
+        print(data[field] || "")
+      else
+        warn "Unsupported jq filter: #{filter}"
+        exit 1
+      end
+    RUBY
     File.write(report_file, JSON.generate(report_records))
   end
 
