@@ -164,6 +164,17 @@ export default {
         }
       );
 
+      api.registerValueTransformer(
+        "topic-list-item-expand-pinned",
+        ({ value, context }) => {
+          if (isTopicCardContext(context) && isSimpleCardContext(context)) {
+            return false;
+          }
+
+          return value;
+        }
+      );
+
       // Disable mobile layout for topic card contexts
       api.registerValueTransformer(
         "topic-list-item-mobile-layout",
