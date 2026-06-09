@@ -615,7 +615,6 @@ tr_TR:
       admins: "yöneticiler"
       moderators: "moderatörler"
       staff: "personel"
-      anonymous: "anonim"
       trust_level_0: "güven_seviyesi_0"
       trust_level_1: "güven_seviyesi_1"
       trust_level_2: "güven_seviyesi_2"

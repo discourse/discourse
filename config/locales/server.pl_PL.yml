@@ -717,7 +717,7 @@ pl_PL:
       admins: "administratorzy"
       moderators: "moderatorzy"
       staff: "zespół"
-      anonymous: "anonimowy"
+      anonymous_users: "anonimowi_użytkownicy"
       logged_in_users: "zalogowani_użytkownicy"
       trust_level_0: "poziom_zaufania_0"
       trust_level_1: "poziom_zaufania_1"
@@ -727,7 +727,7 @@ pl_PL:
     default_descriptions:
       everyone: "Automatyczna grupa obejmująca wszystkich członków"
       staff: "Automatyczna grupa zawierająca administratorów i moderatorów"
-      anonymous: "Automatyczna pseudogrupa reprezentująca niezweryfikowanych gości"
+      anonymous_users: "Automatyczna pseudogrupa reprezentująca niezweryfikowanych gości"
       logged_in_users: "Automatyczna pseudogrupa obejmująca każdego zalogowanego użytkownika"
       admins: "Odpowiedzialny za konfigurację i utrzymanie tej strony, z dostępem do wszystkich danych członków i aktywności."
       moderators: "Odpowiada za reagowanie na flagi, moderowanie dyskusji i pomaganie członkom w obsłudze ich kont."
@@ -2770,7 +2770,7 @@ pl_PL:
     modernize_foundation_theme: "Zmiana ta wprowadza modyfikacje projektowe do motywu Foundation w Discourse."
     enable_horizon_high_context_topic_cards: "Wyświetla bogatsze karty tematyczne w motywie Horizon, obejmujące fragmenty tematów, tagi i rozszerzone informacje o wtyczce."
     reporting_improvements: "Ulepszenia nawigacji, projektu i użyteczności raportów administracyjnych Discourse."
-    granular_anonymous_and_logged_in_groups_permissions: "Wprowadza uprawnienia witryn oparte na grupach, które traktują „wszystkich” jako „wszystkich zalogowanych użytkowników” oraz włącza nowe pseudogrupy „anonymous” i „logged_in_users”, dzięki czemu administratorzy mogą wyraźnie określać mianem anonimowych gości i uwierzytelnionych użytkowników."
+    granular_anonymous_and_logged_in_groups_permissions: "Wprowadza uprawnienia witryn oparte na grupach, które traktują „wszystkich” jako „wszystkich zalogowanych użytkowników” oraz włącza nowe pseudogrupy „anonimowi_użytkownicy” i „zalogowani_użytkownicy”, dzięki czemu administratorzy mogą wyraźnie określać mianem anonimowych odwiedzających i uwierzytelnionych użytkowników."
     dashboard_improvements: "Udoskonalono nawigację, projekt i użyteczność panelu administracyjnego Discourse."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
