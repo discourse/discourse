@@ -6,22 +6,19 @@ module AdminDashboardKpis
 
   def build_kpi(type, report_name)
     prev_start = start_date - (end_date - start_date)
-    args = { start_date: prev_start, end_date:, facets: [] }
-
-    report = Report.find_cached(report_name, args)
-    if report.nil?
-      report = Report.find(report_name, args)
-      Report.cache(report) if report && report.error.blank?
-    end
+    report = find_kpi_report(report_name, start_date: prev_start, end_date:, facets: [])
 
     return nil if report.nil? || report_error?(report) || report_data(report).nil?
 
-    data = report_data(report)
-    average = report_average?(report)
-    current_start = start_date.to_date
+    current, previous = split_period_values(report)
+    if current.nil? && previous.nil?
+      report = find_kpi_report(report_name, start_date:, end_date:, facets: %i[prev_period])
+      return nil if report.nil? || report_error?(report) || report_data(report).nil?
 
-    current = period_value(data.select { |point| point_date(point) >= current_start }, average:)
-    previous = period_value(data.select { |point| point_date(point) < current_start }, average:)
+      average = report_average?(report)
+      current = period_value(report_data(report), average:)
+      previous = report_prev_period(report)
+    end
 
     {
       type: type,
@@ -34,6 +31,16 @@ module AdminDashboardKpis
         end_date: end_date.to_date.iso8601,
       },
     }
+  end
+
+  def find_kpi_report(report_name, args)
+    report = Report.find_cached(report_name, args)
+    if report.nil?
+      report = Report.find(report_name, args)
+      Report.cache(report) if report && report.error.blank?
+    end
+
+    report
   end
 
   # Report.find returns a Report object; Report.find_cached returns the as_json
@@ -54,13 +61,27 @@ module AdminDashboardKpis
     report_or_hash.is_a?(Hash) ? report_or_hash[:average] : report_or_hash.average
   end
 
+  def split_period_values(report)
+    data = report_data(report)
+    average = report_average?(report)
+    current_start = start_date.to_date
+    grouped_data = data.group_by { |point| point_date(point) >= current_start }
+
+    [
+      period_value(grouped_data[true] || [], average:),
+      period_value(grouped_data[false] || [], average:, empty_value: average ? nil : 0),
+    ]
+  rescue ArgumentError, NoMethodError
+    [nil, nil]
+  end
+
   def point_date(point)
     x = point[:x]
     x.is_a?(String) ? Date.parse(x) : x.to_date
   end
 
-  def period_value(data, average:)
-    return nil if data.empty?
+  def period_value(data, average:, empty_value: nil)
+    return empty_value if data.empty?
 
     ys = data.map { |point| point[:y] }
     return (ys.sum(&:to_f) / ys.size).round(1) if average

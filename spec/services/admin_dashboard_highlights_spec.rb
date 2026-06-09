@@ -54,6 +54,7 @@ describe AdminDashboardHighlights do
       result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
       signups = result[:kpis].find { |k| k[:type] == :new_signups }
 
+      expect(signups[:previous_value]).to eq(0)
       expect(signups[:percent_change]).to be_nil
     end
 
@@ -113,6 +114,24 @@ describe AdminDashboardHighlights do
         kpi = result[:kpis].find { |k| k[:type] == :plugin_engaged }
 
         expect(kpi[:value]).to eq(1.0) # daily average, not the two-day sum of 2
+      end
+
+      it "returns a registered table KPI with its previous period" do
+        Report.add_report("plugin_table_kpi") do |report|
+          report.data = [{ x: "all", y: 5 }]
+          report.prev_period = 2 if report.facets.include?(:prev_period)
+        end
+        DiscoursePluginRegistry.stubs(:admin_dashboard_highlight_kpis).returns(
+          [{ type: :plugin_table_kpi, report: "plugin_table_kpi" }],
+        )
+
+        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        kpi = result[:kpis].find { |item| item[:type] == :plugin_table_kpi }
+
+        expect(kpi[:value]).to eq(5)
+        expect(kpi[:previous_value]).to eq(2)
+      ensure
+        Report.remove_report("plugin_table_kpi")
       end
     end
 
