@@ -44,8 +44,29 @@ function propertySegment(key) {
     : `[${JSON.stringify(key)}]`;
 }
 
-export function nodeItemJsonPath(nodeName) {
+export function nodeOutputFirstJsonPath(nodeName, { outputIndex = 0 } = {}) {
+  const branchArg = outputIndex === 0 ? "" : outputIndex;
+  return `$(${JSON.stringify(nodeName)}).first(${branchArg}).json`;
+}
+
+export function nodeOutputLinkedItemJsonPath(nodeName) {
   return `$(${JSON.stringify(nodeName)}).item.json`;
+}
+
+export function nodeOutputJsonPath(
+  runData,
+  nodeName,
+  { outputIndex = 0, node } = {}
+) {
+  const run = latestRunWithOutput(runData, nodeName, { node });
+  const output = outputForRun(run, outputIndex);
+  const itemCount = output?.item_count ?? output?.items?.length ?? 0;
+
+  if (itemCount === 1) {
+    return nodeOutputFirstJsonPath(nodeName, { outputIndex });
+  }
+
+  return nodeOutputLinkedItemJsonPath(nodeName);
 }
 
 export function nodeOutputItemJsonPath(
