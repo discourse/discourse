@@ -146,10 +146,10 @@ export default class DResizeHandles extends Component {
         style={{handle.style}}
         data-resize-handle={{handle.payload}}
         {{dPointerDrag
-          onDown=(fn this.onHandleDown handle.payload)
-          onMove=(fn this.onHandleMove handle.payload)
-          onUp=(fn this.onHandleUp handle.payload)
-          onCancel=(fn this.onHandleCancel handle.payload)
+          onDragStart=(fn this.onHandleDown handle.payload)
+          onDrag=(fn this.onHandleMove handle.payload)
+          onDragEnd=(fn this.onHandleUp handle.payload)
+          onDragCancel=(fn this.onHandleCancel handle.payload)
           draggingClass=@draggingClass
         }}
       ></span>

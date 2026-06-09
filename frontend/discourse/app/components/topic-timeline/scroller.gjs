@@ -5,7 +5,7 @@ import {
   timelineDate,
 } from "discourse/components/topic-timeline/container";
 import { and, not } from "discourse/truth-helpers";
-import dDraggable from "discourse/ui-kit/modifiers/d-draggable";
+import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
 import { i18n } from "discourse-i18n";
 import BackButton from "./back-button";
 
@@ -25,10 +25,10 @@ export default class TopicTimelineScroller extends Component {
 
   <template>
     <div
-      {{dDraggable
-        didStartDrag=@didStartDrag
-        didEndDrag=@didEndDrag
-        dragMove=@dragMove
+      {{dPointerDrag
+        onDragStart=@didStartDrag
+        onDrag=@dragMove
+        onDragEnd=@didEndDrag
       }}
       style={{this.style}}
       class="timeline-scroller"

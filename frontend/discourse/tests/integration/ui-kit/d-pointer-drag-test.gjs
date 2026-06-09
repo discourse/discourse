@@ -6,20 +6,20 @@ import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
 module("Integration | ui-kit | d-pointer-drag", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("dispatches down → move → up and toggles the dragging class", async function (assert) {
+  test("dispatches start → drag → end and toggles the dragging class", async function (assert) {
     const calls = [];
-    const onDown = () => calls.push("down");
-    const onMove = (event) => calls.push(`move:${event.clientX}`);
-    const onUp = () => calls.push("up");
+    const onDragStart = () => calls.push("start");
+    const onDrag = (event) => calls.push(`drag:${event.clientX}`);
+    const onDragEnd = () => calls.push("end");
 
     await render(
       <template>
         <div
           class="dpd-target"
           {{dPointerDrag
-            onDown=onDown
-            onMove=onMove
-            onUp=onUp
+            onDragStart=onDragStart
+            onDrag=onDrag
+            onDragEnd=onDragEnd
             draggingClass="--dragging"
           }}
         ></div>
@@ -49,7 +49,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
 
     assert.deepEqual(
       calls,
-      ["down", "move:12", "up"],
+      ["start", "drag:12", "end"],
       "fires the lifecycle in order"
     );
     assert
@@ -59,11 +59,11 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
 
   test("ignores non-primary buttons", async function (assert) {
     const calls = [];
-    const onDown = () => calls.push("down");
+    const onDragStart = () => calls.push("start");
 
     await render(
       <template>
-        <div class="dpd-target" {{dPointerDrag onDown=onDown}}></div>
+        <div class="dpd-target" {{dPointerDrag onDragStart=onDragStart}}></div>
       </template>
     );
 
@@ -78,19 +78,19 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
     );
   });
 
-  test("onDown can veto the drag", async function (assert) {
+  test("onDragStart can veto the drag", async function (assert) {
     const calls = [];
-    const onDown = () => {
-      calls.push("down");
+    const onDragStart = () => {
+      calls.push("start");
       return false;
     };
-    const onMove = () => calls.push("move");
+    const onDrag = () => calls.push("drag");
 
     await render(
       <template>
         <div
           class="dpd-target"
-          {{dPointerDrag onDown=onDown onMove=onMove}}
+          {{dPointerDrag onDragStart=onDragStart onDrag=onDrag}}
         ></div>
       </template>
     );
@@ -107,8 +107,8 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
 
     assert.deepEqual(
       calls,
-      ["down"],
-      "a false return from onDown aborts the drag; no move fires"
+      ["start"],
+      "a false return from onDragStart aborts the drag; no drag fires"
     );
   });
 });

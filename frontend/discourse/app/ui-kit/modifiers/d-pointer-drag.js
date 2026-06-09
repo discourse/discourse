@@ -17,31 +17,36 @@ import Modifier from "ember-modifier";
  * here; everything domain-specific (what origin to capture, how to compute the
  * next value, how to preview it, what to commit) stays in the caller's handlers.
  *
+ * Despite the `onDrag*` callback names (chosen to match the lifecycle-verb
+ * rhythm of the sibling drag modifiers), this is NOT drag-and-drop: there is no
+ * drop target and no transfer payload. The names describe the gesture's
+ * lifecycle (start, move, end, cancel), not a transfer.
+ *
  * @example
  * <span {{dPointerDrag
- *   onDown=this.onDown
- *   onMove=this.onMove
- *   onUp=this.onUp
- *   onCancel=this.onCancel
+ *   onDragStart=this.onDragStart
+ *   onDrag=this.onDrag
+ *   onDragEnd=this.onDragEnd
+ *   onDragCancel=this.onDragCancel
  *   draggingClass="--dragging"
  * }} />
  *
  * Handlers (all optional):
- *  - `onDown(event)` — capture origin state; return `false` to ABORT the drag
- *    (e.g. an anchor isn't resolvable). Any other return starts it.
- *  - `onMove(event)` — compute + preview. Only fires during an active drag.
- *  - `onUp(event)` — compute + commit. Runs BEFORE capture is released.
- *  - `onCancel(event)` — release any preview without committing.
+ *  - `onDragStart(event)` — capture origin state; return `false` to ABORT the
+ *    drag (e.g. an anchor isn't resolvable). Any other return starts it.
+ *  - `onDrag(event)` — compute + preview. Only fires during an active drag.
+ *  - `onDragEnd(event)` — compute + commit. Runs BEFORE capture is released.
+ *  - `onDragCancel(event)` — release any preview without committing.
  *  - `draggingClass` — optional class toggled on the element while dragging.
  */
 export default class DPointerDragModifier extends Modifier {
   #element = null;
   #pointerId = null;
   #installed = false;
-  #onDown = null;
-  #onMove = null;
-  #onUp = null;
-  #onCancel = null;
+  #onDragStart = null;
+  #onDrag = null;
+  #onDragEnd = null;
+  #onDragCancel = null;
   #draggingClass = null;
 
   #handlePointerDown = (event) => {
@@ -51,7 +56,7 @@ export default class DPointerDragModifier extends Modifier {
       return;
     }
     // The caller captures its origin state here and may veto by returning false.
-    if (this.#onDown?.(event) === false) {
+    if (this.#onDragStart?.(event) === false) {
       return;
     }
     this.#pointerId = event.pointerId;
@@ -72,7 +77,7 @@ export default class DPointerDragModifier extends Modifier {
     if (this.#pointerId == null) {
       return;
     }
-    this.#onMove?.(event);
+    this.#onDrag?.(event);
   };
 
   #handlePointerUp = (event) => {
@@ -81,7 +86,7 @@ export default class DPointerDragModifier extends Modifier {
     }
     // Commit before releasing capture, so the caller sees a consistent drag
     // state while it reads the final value.
-    this.#onUp?.(event);
+    this.#onDragEnd?.(event);
     this.#finishDrag();
   };
 
@@ -89,7 +94,7 @@ export default class DPointerDragModifier extends Modifier {
     if (this.#pointerId == null) {
       return;
     }
-    this.#onCancel?.(event);
+    this.#onDragCancel?.(event);
     this.#finishDrag();
   };
 
@@ -101,15 +106,15 @@ export default class DPointerDragModifier extends Modifier {
   modify(
     element,
     _positional,
-    { onDown, onMove, onUp, onCancel, draggingClass }
+    { onDragStart, onDrag, onDragEnd, onDragCancel, draggingClass }
   ) {
     this.#element = element;
     // Refresh the handler refs every run so arg changes are picked up; the DOM
     // listeners themselves are installed once (they read these fields live).
-    this.#onDown = onDown;
-    this.#onMove = onMove;
-    this.#onUp = onUp;
-    this.#onCancel = onCancel;
+    this.#onDragStart = onDragStart;
+    this.#onDrag = onDrag;
+    this.#onDragEnd = onDragEnd;
+    this.#onDragCancel = onDragCancel;
     this.#draggingClass = draggingClass;
 
     if (!this.#installed) {

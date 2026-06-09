@@ -1,13 +1,37 @@
 import { registerDestructor } from "@ember/destroyable";
 import Modifier from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 
+/**
+ * A coarse "move/scrub" modifier that mixes raw mouse, touch, and HTML5 drag
+ * events into a single drag gesture and toggles a global `body.dragging` class.
+ *
+ * @deprecated Prefer the modifier built for the gesture you actually have:
+ *  - For "press-drag-transform" gestures (press, drag, a value changes
+ *    continuously with the pointer — scrollers, splitters, sliders, knobs,
+ *    repositioning a handle), use `d-pointer-drag` (`dPointerDrag`). It uses
+ *    unified Pointer Events with pointer capture, so it works for mouse, touch,
+ *    and pen without per-input branching and without a global class.
+ *  - For transferring something to a drop target (reorder a list, drop onto a
+ *    zone, accept dropped files), use the `d-drag-and-drop-*` modifiers.
+ *
+ * Kept only for external consumers still importing the legacy
+ * `discourse/modifiers/draggable` path; no in-repo code uses it.
+ */
 export default class DDraggableModifier extends Modifier {
   hasStarted = false;
   element;
 
   constructor(owner, args) {
     super(owner, args);
+    deprecated(
+      "The `draggable` modifier is deprecated. For press-drag-transform gestures (scrollers, splitters, repositioning a handle) use the `d-pointer-drag` modifier; for transferring something to a drop target use the `d-drag-and-drop-*` modifiers.",
+      {
+        id: "discourse.ui-kit.d-draggable",
+        since: "2026.6.0",
+      }
+    );
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
