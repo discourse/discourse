@@ -69,13 +69,8 @@ RSpec.describe "Anonymous public chat channels" do
       text: "Live anonymous public channel update",
     )
 
-    chat_drawer_page.maximize
-
-    expect(page).to have_current_path(public_channel.url)
-    expect(channel_page.messages).to have_message(
-      id: live_message.id,
-      text: "Live anonymous public channel update",
-    )
+    chat_drawer_page.join_channel
+    expect(login_page).to be_open
   end
 
   it "keeps visitors out of browse" do
