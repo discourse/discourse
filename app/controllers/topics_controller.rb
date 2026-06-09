@@ -1178,6 +1178,9 @@ class TopicsController < ApplicationController
       changed_topic_ids = operator.perform!
       result = { topic_ids: changed_topic_ids }
       result[:errors] = operator.errors if operator.errors.present?
+      if operator.tag_category_errors.present?
+        result[:tag_category_errors] = operator.tag_category_errors
+      end
       render_json_dump result
     rescue Discourse::InvalidParameters => ex
       render_json_error(ex, status: 400)
