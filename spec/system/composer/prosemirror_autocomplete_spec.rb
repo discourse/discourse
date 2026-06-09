@@ -3,13 +3,6 @@
 describe "Composer - ProseMirror - Autocomplete" do
   include_context "with prosemirror editor"
 
-  fab!(:tag)
-  fab!(:category_with_emoji) do
-    Fabricate(:category, slug: "cat", emoji: "cat", style_type: "emoji")
-  end
-  fab!(:category_with_icon) { Fabricate(:category, icon: "bell", style_type: "icon") }
-  fab!(:category_without_icon, :category)
-
   it "triggers an autocomplete on mention" do
     open_composer
     composer.type_content("@#{current_user.username}")
