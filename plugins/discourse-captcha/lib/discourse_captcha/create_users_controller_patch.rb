@@ -30,14 +30,12 @@ module DiscourseCaptcha
     def captcha_provider_selector
       case SiteSetting.discourse_captcha_provider
       when CaptchaProvider::HCAPTCHA
-        if SiteSetting.hcaptcha_site_key.present? &&
-             SiteSetting.hcaptcha_secret_key.present?
-          DiscourseHcaptcha::HcaptchaProvider.new
+        if SiteSetting.hcaptcha_site_key.present? && SiteSetting.hcaptcha_secret_key.present?
+          DiscourseCaptcha::HcaptchaProvider.new
         end
       when CaptchaProvider::RECAPTCHA
-        if SiteSetting.recaptcha_site_key.present? &&
-             SiteSetting.recaptcha_secret_key.present?
-          DiscourseHcaptcha::RecaptchaProvider.new
+        if SiteSetting.recaptcha_site_key.present? && SiteSetting.recaptcha_secret_key.present?
+          DiscourseCaptcha::RecaptchaProvider.new
         end
       end
     end

@@ -6,7 +6,7 @@ RSpec.describe ProblemCheck::RecaptchaConfiguration do
   shared_examples "fails_problem_check" do
     it do
       expect(check).to have_a_problem.with_priority("high").with_message(
-        "There is a problem with your ReCaptcha `site_key` or `secret_key` configuration"
+        "There is a problem with your ReCaptcha `site_key` or `secret_key` configuration",
       )
     end
   end
@@ -18,8 +18,7 @@ RSpec.describe ProblemCheck::RecaptchaConfiguration do
   context "when discourse_captcha_provider siteSetting is ReCaptcha" do
     before do
       SiteSetting.discourse_captcha_enabled = true
-      SiteSetting.discourse_captcha_provider =
-        DiscourseHcaptcha::CaptchaProvider::RECAPTCHA
+      SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
     end
 
     describe "`recaptcha_site_key` is not set" do
@@ -48,10 +47,7 @@ RSpec.describe ProblemCheck::RecaptchaConfiguration do
   end
 
   context "when discourse_captcha_provider siteSetting is none" do
-    before do
-      SiteSetting.discourse_captcha_provider =
-        DiscourseHcaptcha::CaptchaProvider::NONE
-    end
+    before { SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::NONE }
 
     describe "`recaptcha_site_key` is not set" do
       before { SiteSetting.recaptcha_secret_key = "just a string" }

@@ -62,7 +62,7 @@
 !/plugins/discourse-user-notes
 !/plugins/discourse-assign
 !/plugins/discourse-subscriptions
-!/plugins/discourse-hcaptcha
+!/plugins/discourse-captcha
 !/plugins/discourse-gamification
 !/plugins/discourse-calendar
 !/plugins/discourse-policy

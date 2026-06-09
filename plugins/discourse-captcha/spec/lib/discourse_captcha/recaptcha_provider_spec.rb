@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseHcaptcha::RecaptchaProvider do
+RSpec.describe DiscourseCaptcha::RecaptchaProvider do
   subject(:provider) { described_class.new }
 
   describe "#captcha_verification_url" do
     it "returns the reCAPTCHA verification URL" do
       expect(provider.captcha_verification_url).to eq(
-        "https://www.google.com/recaptcha/api/siteverify"
+        "https://www.google.com/recaptcha/api/siteverify",
       )
     end
   end
@@ -43,8 +43,7 @@ RSpec.describe DiscourseHcaptcha::RecaptchaProvider do
     before do
       SiteSetting.enable_local_logins = true
       SiteSetting.discourse_captcha_enabled = true
-      SiteSetting.discourse_captcha_provider =
-        DiscourseHcaptcha::CaptchaProvider::RECAPTCHA
+      SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
 
       SiteSetting.recaptcha_site_key = "site-key"
       SiteSetting.recaptcha_secret_key = "secret-key"
@@ -54,11 +53,10 @@ RSpec.describe DiscourseHcaptcha::RecaptchaProvider do
       stub =
         stub_request(
           :post,
-          DiscourseHcaptcha::RecaptchaProvider::CAPTCHA_VERIFICATION_URL
+          DiscourseCaptcha::RecaptchaProvider::CAPTCHA_VERIFICATION_URL,
         ).to_return(
           status: 200,
-          body:
-            '{"success":true,"challenge_ts":"2024-01-01T00:00:00Z","hostname":"example.com"}'
+          body: '{"success":true,"challenge_ts":"2024-01-01T00:00:00Z","hostname":"example.com"}',
         )
 
       response = provider.send_captcha_verification(token)

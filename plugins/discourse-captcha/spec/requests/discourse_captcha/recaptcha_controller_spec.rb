@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseHcaptcha::RecaptchaController do
+RSpec.describe DiscourseCaptcha::RecaptchaController do
   describe "POST /captcha/recaptcha/create" do
     before do
       SiteSetting.discourse_captcha_enabled = true
-      SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::RECAPTCHA
+      SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
       SiteSetting.recaptcha_site_key = "test-site-key"
       SiteSetting.recaptcha_secret_key = "test-secret-key"
     end
@@ -36,7 +36,7 @@ RSpec.describe DiscourseHcaptcha::RecaptchaController do
 
     context "when reCaptcha is not the selected provider" do
       before do
-        SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::HCAPTCHA
+        SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::HCAPTCHA
         SiteSetting.hcaptcha_site_key = "test-site-key"
         SiteSetting.hcaptcha_secret_key = "test-secret-key"
       end
@@ -49,7 +49,7 @@ RSpec.describe DiscourseHcaptcha::RecaptchaController do
     end
 
     context "when captcha provider is none" do
-      before { SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::NONE }
+      before { SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::NONE }
 
       it "returns 404 error" do
         post "/captcha/recaptcha/create.json", params: { token: "test-token" }
