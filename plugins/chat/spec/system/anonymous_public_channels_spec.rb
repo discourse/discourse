@@ -14,6 +14,7 @@ RSpec.describe "Anonymous public chat channels" do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
+  let(:chat_sidebar_page) { PageObjects::Pages::ChatSidebar.new }
   let(:login_page) { PageObjects::Pages::Login.new }
 
   before do
@@ -71,6 +72,20 @@ RSpec.describe "Anonymous public chat channels" do
 
     chat_drawer_page.join_channel
     expect(login_page).to be_open
+  end
+
+  it "lets visitors open public chat channels from the sidebar drawer" do
+    SiteSetting.navigation_menu = "sidebar"
+
+    visit("/")
+    chat_page.prefers_drawer
+
+    expect(chat_sidebar_page).to have_channel(public_channel)
+    expect(chat_sidebar_page).to have_no_channel(private_channel)
+
+    chat_sidebar_page.open_channel(public_channel)
+
+    expect(chat_drawer_page).to have_open_channel(public_channel)
   end
 
   it "keeps visitors out of browse" do
