@@ -1664,6 +1664,10 @@ te:
     results_page: "'%{term}' కోసం శోధన ఫలితాలు"
     audio: "[ఆడియో]"
     video: "[వీడియో]"
+  posts_filter:
+    description:
+      order_latest: "తాజా పోస్ట్‌లు"
+      order_latest_topic: "తాజా విషయాలు"
   discourse_connect:
     login_error: "లాగిన్ లోపం"
   original_poster: "మూల టపా రచయిత"

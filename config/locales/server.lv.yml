@@ -464,6 +464,9 @@ lv:
       category: "Sadaļas"
       user: "Lietotāji"
     results_page: "Meklēšanas rezultāti vaicājumam “%{term}”"
+  posts_filter:
+    description:
+      order_latest_topic: "Jaunākās tēmas"
   login:
     security_key_description: "Kad esat sagatavojis savu fiziskās drošības atslēgu, nospiediet tālāk esošo pogu Autentificēt ar drošības atslēgu."
     security_key_alternative: "Izmēģiniet citu veidu"

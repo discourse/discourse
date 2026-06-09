@@ -815,6 +815,20 @@ RSpec.describe TopicTrackingState do
     expect(TopicTrackingState.report(user)).to be_empty
   end
 
+  it "does not report a topic as unread when its only new post is a small action" do
+    TopicUser.change(
+      user.id,
+      topic.id,
+      notification_level: TopicUser.notification_levels[:tracking],
+      last_read_post_number: 1,
+    )
+
+    topic.add_small_action(Discourse.system_user, "closed.enabled")
+
+    expect(topic.reload.highest_post_number).to eq(1)
+    expect(TopicTrackingState.report(user).map(&:topic_id)).not_to include(topic.id)
+  end
+
   describe ".report" do
     it "correctly reports topics with staff posts" do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"

@@ -690,18 +690,12 @@ RSpec.describe Discourse do
       )
     end
 
-    it "invalidates all JS and CSS caches" do
+    it "invalidates all theme settings and CSS caches" do
       Stylesheet::Manager.clear_theme_cache!
 
       old_upload_url = Discourse.store.cdn_url(upload.url)
 
-      js_file_script =
-        Nokogiri::HTML5
-          .fragment(Theme.lookup_field(theme.id, :extra_js, nil))
-          .css("link[rel=modulepreload]")
-          .first
-      file_js = JavascriptCache.find_by(digest: js_file_script[:href][/\h{40}/]).content
-      expect(file_js).to include(old_upload_url)
+      expect(theme.cached_settings["theme_uploads"]["imajee"]).to eq(old_upload_url)
 
       css_link_tag =
         Nokogiri::HTML5
@@ -716,13 +710,7 @@ RSpec.describe Discourse do
       SiteSetting.s3_cdn_url = "https://new.s3.cdn.com/gg"
       new_upload_url = Discourse.store.cdn_url(upload.url)
 
-      js_file_script =
-        Nokogiri::HTML5
-          .fragment(Theme.lookup_field(theme.id, :extra_js, nil))
-          .css("link[rel=modulepreload]")
-          .first
-      file_js = JavascriptCache.find_by(digest: js_file_script[:href][/\h{40}/]).content
-      expect(file_js).to include(old_upload_url)
+      expect(theme.cached_settings["theme_uploads"]["imajee"]).to eq(old_upload_url)
 
       css_link_tag =
         Nokogiri::HTML5
@@ -736,13 +724,7 @@ RSpec.describe Discourse do
 
       Discourse.clear_all_theme_cache!
 
-      js_file_script =
-        Nokogiri::HTML5
-          .fragment(Theme.lookup_field(theme.id, :extra_js, nil))
-          .css("link[rel=modulepreload]")
-          .first
-      file_js = JavascriptCache.find_by(digest: js_file_script[:href][/\h{40}/]).content
-      expect(file_js).to include(new_upload_url)
+      expect(theme.cached_settings["theme_uploads"]["imajee"]).to eq(new_upload_url)
 
       css_link_tag =
         Nokogiri::HTML5

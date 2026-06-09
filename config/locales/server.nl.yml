@@ -2577,6 +2577,10 @@ nl:
     results_page: "Zoekresultaten voor '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Nieuwste berichten"
+      order_latest_topic: "Nieuwste topics"
   filter:
     description:
       status: "Filter topics op hun status"

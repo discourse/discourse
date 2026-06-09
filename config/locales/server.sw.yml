@@ -952,6 +952,10 @@ sw:
       topic: "Majibu"
       user: "Watumiaji"
     results_page: "Majibu ya utafiti ya '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "Machapisho Mapya"
+      order_latest_topic: "Mada za hivi karibuni"
   discourse_connect:
     login_error: "Hitilafu Wakati wa Kuingia."
     not_found: "Akaunti yako haijapatikana. Tafadhali wasiliana na msimamizi wa tovuti."

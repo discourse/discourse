@@ -1357,6 +1357,10 @@ ro:
       user: "Utilizatori"
     results_page: "Caută rezultate pentru '%{term}'"
     audio: "[audio]"
+  posts_filter:
+    description:
+      order_latest: "Ultimele postări"
+      order_latest_topic: "Ultimele subiecte"
   filter:
     description:
       status: "Filtrează subiectele după starea lor"

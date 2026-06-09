@@ -17,7 +17,7 @@ function dayButton(dateString) {
 
 function monthHeaders() {
   return [
-    ...document.querySelectorAll(".d-date-range-picker__month-header"),
+    ...document.querySelectorAll(".d-date-range-picker__month-title"),
   ].map((el) => el.textContent.trim());
 }
 

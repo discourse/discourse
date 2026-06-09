@@ -2081,6 +2081,10 @@ sv:
     results_page: "Sökresultat för '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Senaste inläggen"
+      order_latest_topic: "Aktuella ämnen"
   discourse_connect:
     login_error: "Inloggningsfel"
     not_found: "Ditt konto kunde inte hittas. Vi ber dig kontakta forumets administratör."

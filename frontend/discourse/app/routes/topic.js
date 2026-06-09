@@ -296,7 +296,7 @@ export default class TopicRoute extends DiscourseRoute {
 
     const currentPos = document.scrollingElement.scrollTop;
     if (currentPos === this.lastScrollPos) {
-      DiscourseURL.replaceState(url);
+      DiscourseURL.replaceState(`${url}${window.location.hash}`);
       return;
     }
 

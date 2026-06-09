@@ -23,4 +23,11 @@ RSpec.describe GroupShowSerializer do
     Assigner.new(topic2, user).assign(group)
     expect(serializer.as_json[:group_show][:assignment_count]).to eq(2)
   end
+
+  it "omits assignment count for scoped users" do
+    SiteSetting.assign_allowed_on_groups = ""
+    allow_group_to_assign_in_category(Fabricate(:category), group)
+
+    expect(serializer.as_json[:group_show]).not_to have_key(:assignment_count)
+  end
 end

@@ -151,11 +151,14 @@ class Theme < ActiveRecord::Base
 
     any_non_css_fields_changed =
       changed_fields.any? { |f| !(f.basic_scss_field? || f.extra_scss_field?) }
+    any_extra_js_fields_changed = changed_fields.any?(&:extra_js_field?)
 
-    changed_fields.each(&:save!)
+    changed_fields.each { |f| f.marked_for_destruction? ? f.destroy : f.save! }
     changed_fields.clear
 
     theme_modifier_set.save!
+
+    theme_fields.reload
 
     theme_fields.select(&:basic_html_field?).each(&:invalidate_baked!) if saved_change_to_name?
 
@@ -169,7 +172,7 @@ class Theme < ActiveRecord::Base
     settings_field&.ensure_baked! # Other fields require setting to be **baked**
     theme_fields.each(&:ensure_baked!)
 
-    update_javascript_cache!
+    update_javascript_cache! if any_extra_js_fields_changed
 
     remove_from_cache!
     ColorScheme.hex_cache.clear
@@ -214,7 +217,7 @@ class Theme < ActiveRecord::Base
   def update_javascript_cache!
     all_extra_js = load_all_extra_js
     if all_extra_js.present?
-      js_compiler = ThemeJavascriptCompiler.new(id, name, build_settings_hash)
+      js_compiler = ThemeJavascriptCompiler.new(id, name)
       js_compiler.append_tree(all_extra_js)
 
       javascript_cache || build_javascript_cache
@@ -682,7 +685,8 @@ class Theme < ActiveRecord::Base
 
     if field
       if value.blank? && !upload_id
-        field.destroy
+        field.mark_for_destruction
+        changed_fields << field
       else
         if field.value != value || field.upload_id != upload_id
           field.value = value
@@ -1020,7 +1024,6 @@ class Theme < ActiveRecord::Base
       end
 
       reload
-      update_javascript_cache!
     end
 
     if start_transaction
@@ -1066,7 +1069,7 @@ class Theme < ActiveRecord::Base
         theme_fields.where(target_id: Theme.targets[:migrations]).order(name: :asc),
       )
 
-    compiler = ThemeJavascriptCompiler.new(id, name, cached_default_settings, minify: false)
+    compiler = ThemeJavascriptCompiler.new(id, name, minify: false)
     compiler.append_tree(load_all_extra_js)
     compiler.append_tree(migrations_tree)
     compiler.append_tree(tests_tree)

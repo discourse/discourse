@@ -1276,7 +1276,7 @@ RSpec.describe TopicQuery do
     end
 
     context "with a small action at the tail of an unread topic" do
-      it "keeps the topic in the unread list" do
+      it "excludes the topic from the unread list" do
         topic = create_post(raw: "the original post", title: "super amazing title").topic
         topic.add_small_action(Discourse.system_user, "closed.enabled")
         topic.update_columns(updated_at: Time.zone.now, bumped_at: 1.year.ago)
@@ -1289,7 +1289,9 @@ RSpec.describe TopicQuery do
         TopicUser.update_last_read(user, topic.id, 1, 1, 1)
         user.user_stat.update!(first_unread_at: 1.minute.ago)
 
-        expect(TopicQuery.new(user).list_unread.topics).to include(topic)
+        # The small action does not advance highest_post_number, so the user has
+        # read everything that counts — the topic is no longer unread.
+        expect(TopicQuery.new(user).list_unread.topics).not_to include(topic)
       end
     end
 

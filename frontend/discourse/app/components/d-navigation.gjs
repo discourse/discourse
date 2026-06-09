@@ -156,9 +156,10 @@ export default class DNavigation extends Component {
     );
   }
 
-  @computed("tag", "tag.name", "additionalTags", "category")
+  @computed("toggleTagInfo", "tag", "tag.name", "additionalTags", "category")
   get showTagInfoButton() {
     return (
+      this.toggleTagInfo &&
       this.tag &&
       this.tag.name !== "none" &&
       !this.additionalTags &&

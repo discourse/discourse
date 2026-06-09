@@ -1816,6 +1816,10 @@ fa_IR:
       topic: "نتایج"
       user: "کاربران"
     results_page: "نتایج جستجو برای '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "آخرین فرسته‌ها"
+      order_latest_topic: "آخرین موضوعات"
   filter:
     description:
       in_new: "نمایش موضوعاتی که جدید هستند یا پاسخ جدید دارند"

@@ -24,10 +24,6 @@ Discourse::Application.routes.draw do
     match "/404", to: "exceptions#not_found", via: %i[get post]
     get "/404-body" => "exceptions#not_found_body"
 
-    if Rails.env.local?
-      get "/bootstrap/site-settings-for-tests.js" => "bootstrap#site_settings_for_tests"
-    end
-
     # This is not a valid production route and is causing routing errors to be raised in
     # the test env adding noise to the logs. Just handle it here so we eliminate the noise.
     get "/favicon.ico", to: proc { [200, {}, [""]] } if Rails.env.test?

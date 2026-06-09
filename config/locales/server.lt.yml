@@ -1445,6 +1445,10 @@ lt:
     results_page: "Paieškos rezultatai ir '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Naujausi įrašai"
+      order_latest_topic: "Naujausios temos"
   discourse_connect:
     login_error: "Prisijungimo klaida"
     not_found: "Nepavyko rasti jūsų paskyros. Prašome susisiekti su svetainės administratoriumi."

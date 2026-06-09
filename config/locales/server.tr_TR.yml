@@ -2577,6 +2577,10 @@ tr_TR:
     results_page: "\"%{term}\" için arama sonuçları"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "En son gönderiler"
+      order_latest_topic: "En son konular"
   filter:
     description:
       status: "Konuları durumlarına göre filtreleyin"

@@ -962,6 +962,10 @@ bg:
       topic: "Резултати"
       user: "Потребители"
     results_page: "Резултати от търсенето на '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "Последни публикации"
+      order_latest_topic: "Последни теми"
   original_poster: "Автор"
   most_recent_poster: "Последен Автор"
   frequent_poster: "Частен Автор"

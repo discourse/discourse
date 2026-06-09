@@ -1489,6 +1489,10 @@ zh_TW:
       topic: "結果"
       user: "使用者"
     results_page: "「%{term}」的搜尋結果"
+  posts_filter:
+    description:
+      order_latest: " 最近貼文"
+      order_latest_topic: "最新討論話題"
   discourse_connect:
     login_error: "登入錯誤"
     not_found: "無法找到你的帳號。請聯絡網站管理人員。"

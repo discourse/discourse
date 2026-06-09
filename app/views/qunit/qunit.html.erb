@@ -11,7 +11,6 @@
       <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
       <%= preload_script_url ExtraLocalesController.url("admin"), type_module: true %>
       <%= preload_script_url ExtraLocalesController.url("wizard"), type_module: true %>
-      <%= preload_script_url "/bootstrap/site-settings-for-tests.js", type_module: true %>
       <%= theme_translations_lookup %>
 
       <script nonce="<%= csp_nonce_placeholder %>">
@@ -37,6 +36,7 @@
 
       <%= theme_lookup("head_tag") %>
       <%= theme_tests %>
+      <%= fake_preload_data %>
 
       <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
       <meta property="og:title" content="">

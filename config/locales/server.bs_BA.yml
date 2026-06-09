@@ -801,6 +801,9 @@ bs_BA:
       topic: "Rezultati"
       user: "Korisnici"
     results_page: "Pretraži za termin '%{term}'"
+  posts_filter:
+    description:
+      order_latest_topic: "Latest topics"
   original_poster: "Originalni Autor"
   most_recent_poster: "Posljednji Autor"
   frequent_poster: "Čest Autor"

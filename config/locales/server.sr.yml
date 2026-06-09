@@ -519,6 +519,9 @@ sr:
       category: "Kategorije"
       topic: "Rezultati"
       user: "Korisnici"
+  posts_filter:
+    description:
+      order_latest_topic: "Poslednje teme"
   publish_page:
     slug_errors:
       invalid: "sadrži nevažeće karaktere."

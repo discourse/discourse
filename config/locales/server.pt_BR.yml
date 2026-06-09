@@ -2537,6 +2537,10 @@ pt_BR:
     results_page: "Pesquisar resultados para \"%{term}\""
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Últimas postagens"
+      order_latest_topic: "Últimos tópicos"
   filter:
     description:
       status: "Filtrar tópicos por status"

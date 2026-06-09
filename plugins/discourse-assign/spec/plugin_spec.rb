@@ -34,6 +34,19 @@ RSpec.describe DiscourseAssign do
       expect(assigned_option).to be_nil
     end
 
+    it "does not add assigned filter option for scoped users" do
+      SiteSetting.assign_allowed_on_groups = ""
+      category = Fabricate(:category)
+      scoped_group = Fabricate(:group)
+      scoped_user = Fabricate(:user, groups: [scoped_group])
+      allow_group_to_assign_in_category(category, scoped_group)
+
+      options = TopicsFilter.option_info(scoped_user.guardian)
+
+      assigned_option = options.find { |option| option[:name] == "assigned:" }
+      expect(assigned_option).to be_nil
+    end
+
     it "does not add assigned filter option for anonymous users" do
       options = TopicsFilter.option_info(Guardian.new)
 

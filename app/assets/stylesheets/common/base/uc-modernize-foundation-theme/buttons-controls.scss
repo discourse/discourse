@@ -40,7 +40,8 @@
       .composer-actions-btn,
       .language-switcher-trigger,
       .d-multi-select-trigger__expand-btn,
-      .emoji-picker-trigger
+      .emoji-picker-trigger,
+      .topic-list-header-tab
     ) {
       padding-block: 0;
       height: var(--d-control-height);
@@ -112,5 +113,13 @@
   input[type="color"] {
     height: var(--d-control-height);
     padding-block: 0;
+  }
+
+  .search-input {
+    .search-context {
+      height: calc(
+        var(--d-control-height) - var(--space-2)
+      ) !important; // overrides very specific btn selector at the top of this file
+    }
   }
 }
