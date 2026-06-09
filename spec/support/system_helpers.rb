@@ -421,7 +421,14 @@ module SystemHelpers
   end
 
   def capture_log_entries(controller:, entries:, action: nil)
-    log = Rails.root.join("log", "#{Rails.env}.log")
+    # In parallel runs each worker's lograge access log is redirected to a
+    # private `log/#{Rails.env}.#{TEST_ENV_NUMBER}.log` (see spec/rails_helper.rb)
+    # so workers never race on a shared file. Read that per-worker file when the
+    # redirect took effect, otherwise fall back to the shared path — so a no-op
+    # redirect can never make this helper read the wrong (empty) file.
+    worker = ENV["TEST_ENV_NUMBER"].presence
+    log = Rails.root.join("log", "#{Rails.env}.#{worker}.log") if worker
+    log = Rails.root.join("log", "#{Rails.env}.log") if log.nil? || !File.exist?(log)
     File.truncate(log, 0) if File.exist?(log)
 
     yield

@@ -145,6 +145,37 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
   UpcomingChanges.singleton_class.prepend(UpcomingChangesBatchedClearCaches)
 end
 
+# Give each parallel worker its own lograge/logstash access log.
+#
+# `ENABLE_LOGSTASH_LOGGER` defaults to "1" for specs (see top of this file), so
+# `config/initializers/101-lograge.rb` wires the in-process Puma test server to
+# append a logstash JSON entry for *every* request to `log/#{Rails.env}.log`.
+# That path is identical across all N system-test workers, so every worker's
+# server appends every request it handles to one shared inode — N processes
+# contending on a single growing file on the hot per-request path the browser's
+# `clientSettled` wait blocks on, and (worse) letting `capture_log_entries`'
+# `File.truncate` on one worker race the writes of the other 11. That shared
+# file is the root cause behind the request_tracker BPV specs being the most
+# frequently retried system spec, and each first-pass failure drags in a ~50s
+# cold serial flaky-retry phase (measured 51.73s in iter-0138) onto the step's
+# critical path.
+#
+# Point each worker's access log at a private `log/#{Rails.env}.#{n}.log` so the
+# writes never cross workers. `capture_log_entries` reads the same per-worker
+# path (and falls back to the shared path if this redirect ever no-ops, so a
+# failed redirect can never break the spec). Guarded by `TEST_ENV_NUMBER` so
+# single-process runs keep the shared path unchanged.
+if ENV["TEST_ENV_NUMBER"].present? && defined?(DiscourseLograge) &&
+     DiscourseLograge.enabled?
+  begin
+    per_worker_log =
+      Rails.root.join("log", "#{Rails.env}.#{ENV["TEST_ENV_NUMBER"]}.log").to_s
+    Rails.application.config.lograge.logger&.reopen(per_worker_log)
+  rescue => e
+    warn "Could not redirect per-worker lograge log: #{e.class}: #{e.message}"
+  end
+end
+
 require "rspec/rails"
 require "shoulda-matchers"
 require "sidekiq/testing"
