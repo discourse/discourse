@@ -887,7 +887,16 @@ RSpec.describe Middleware::RequestTracker do
       end
 
       context "when SiteSetting.persist_browser_pageview_events is true" do
-        before { SiteSetting.persist_browser_pageview_events = true }
+        before do
+          SiteSetting.persist_browser_pageview_events = true
+          BrowserPageviewEvent.clear_queued!
+          Discourse.clear_readonly!
+        end
+
+        after do
+          BrowserPageviewEvent.clear_queued!
+          Discourse.clear_readonly!
+        end
 
         def flush_browser_pageview_events
           Jobs::FlushBrowserPageviewEvents.new.execute({})
@@ -912,13 +921,11 @@ RSpec.describe Middleware::RequestTracker do
 
           events =
             DiscourseEvent.track_events(:browser_pageview) do
-              expect {
-                log_browser_pageview(data)
-                flush_browser_pageview_events
-              }.to change { BrowserPageviewEvent.count }.by(1)
+              expect { log_browser_pageview(data) }.to change { BrowserPageviewEvent.count }.by(1)
             end
 
           expect(events).to be_empty
+          expect(BrowserPageviewEvent.queued_count).to eq(0)
 
           event = BrowserPageviewEvent.last
           expect(event.session_id).to eq(session_id)
@@ -965,7 +972,6 @@ RSpec.describe Middleware::RequestTracker do
             )
 
           log_browser_pageview(data)
-          flush_browser_pageview_events
 
           event = BrowserPageviewEvent.last
           expect(event.referrer).to eq("https://www.example.com/path?utm_source=x")
@@ -989,7 +995,6 @@ RSpec.describe Middleware::RequestTracker do
             )
 
           log_browser_pageview(data)
-          flush_browser_pageview_events
 
           event = BrowserPageviewEvent.last
           expect(event.normalized_referrer).to be_nil
@@ -1013,10 +1018,7 @@ RSpec.describe Middleware::RequestTracker do
 
           events =
             DiscourseEvent.track_events(:browser_pageview) do
-              expect {
-                log_browser_pageview(data)
-                flush_browser_pageview_events
-              }.to change { BrowserPageviewEvent.count }.by(1)
+              expect { log_browser_pageview(data) }.to change { BrowserPageviewEvent.count }.by(1)
             end
 
           expect(events).to be_empty
@@ -1045,8 +1047,6 @@ RSpec.describe Middleware::RequestTracker do
 
           expect { flush_browser_pageview_events }.to change { BrowserPageviewEvent.count }.by(1)
           expect(BrowserPageviewEvent.queued_count).to eq(0)
-        ensure
-          Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
         end
       end
     end

@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::FlushBrowserPageviewEvents do
+  before do
+    BrowserPageviewEvent.clear_queued!
+    Discourse.clear_readonly!
+  end
+
+  after do
+    BrowserPageviewEvent.clear_queued!
+    Discourse.clear_readonly!
+  end
+
   let(:payload) do
     {
       url: "https://discourse.example/t/topic/1",

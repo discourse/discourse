@@ -10,10 +10,17 @@ class BrowserPageviewEvent < ActiveRecord::Base
   REDIS_QUEUE_KEY = "browser_pageview_events:pending"
   REDIS_FLUSH_LOCK_KEY = "browser_pageview_events:flush"
   REDIS_FLUSH_BATCH_SIZE = 1000
+  REDIS_QUEUE_MAX_SIZE = 1_000_000
+  REDIS_QUEUE_TTL = 1.day
 
   class << self
     def enqueue_for_later(payload)
-      Discourse.redis.rpush(REDIS_QUEUE_KEY, JSON.generate(serialize_payload(payload)))
+      return if Discourse.redis.llen(REDIS_QUEUE_KEY) >= REDIS_QUEUE_MAX_SIZE
+
+      Discourse.redis.multi do |transaction|
+        transaction.rpush(REDIS_QUEUE_KEY, JSON.generate(serialize_payload(payload)))
+        transaction.expire(REDIS_QUEUE_KEY, REDIS_QUEUE_TTL)
+      end
     rescue Redis::BaseConnectionError => e
       Rails.logger.warn("Failed to queue BrowserPageviewEvent in Redis: #{e.message}")
     end
@@ -40,7 +47,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
             queued_attributes << nil
           end
           processed += 1
-        rescue JSON::ParserError => e
+        rescue => e
           Rails.logger.error("Discarding queued BrowserPageviewEvent: #{e.message}")
           queued_attributes << nil
           processed += 1
@@ -165,7 +172,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
     def valid_ip_address?(ip_address)
       IPAddr.new(ip_address)
       true
-    rescue IPAddr::InvalidAddressError
+    rescue IPAddr::Error
       false
     end
 

@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe BrowserPageviewEvent do
+  before do
+    described_class.clear_queued!
+    Discourse.clear_readonly!
+  end
+
+  after do
+    described_class.clear_queued!
+    Discourse.clear_readonly!
+  end
+
   it "truncates string fields before saving" do
     event =
       described_class.create!(
@@ -88,6 +98,45 @@ RSpec.describe BrowserPageviewEvent do
       expect { described_class.flush_queued! }.not_to change { described_class.count }
 
       expect(described_class.queued_count).to eq(0)
+    end
+
+    it "discards payloads with an unparseable IP address without blocking the flush" do
+      queue_payload(payload.merge(ip_address: "1.2.3.4/64"))
+      queue_payload(payload.merge(url: "https://discourse.example/t/topic/3"))
+
+      expect { described_class.flush_queued! }.to change { described_class.count }.by(1)
+
+      expect(described_class.last.url).to eq("https://discourse.example/t/topic/3")
+      expect(described_class.queued_count).to eq(0)
+    end
+  end
+
+  describe ".enqueue_for_later" do
+    let(:payload) do
+      {
+        url: "https://discourse.example/t/topic/1",
+        ip_address: "1.2.3.4",
+        user_agent: "Mozilla/5.0",
+        session_id: "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx",
+        occurred_at: Time.zone.parse("2026-05-27 10:30:00").iso8601(6),
+      }
+    end
+
+    it "drops new events once the queue reaches its maximum size" do
+      stub_const(described_class, "REDIS_QUEUE_MAX_SIZE", 1) do
+        described_class.enqueue_for_later(payload)
+        expect { described_class.enqueue_for_later(payload) }.not_to change {
+          described_class.queued_count
+        }
+      end
+
+      expect(described_class.queued_count).to eq(1)
+    end
+
+    it "sets an expiry on the queue so a stranded backlog self-cleans" do
+      described_class.enqueue_for_later(payload)
+
+      expect(Discourse.redis.ttl(described_class::REDIS_QUEUE_KEY)).to be > 0
     end
   end
 end

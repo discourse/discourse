@@ -724,6 +724,7 @@ class Middleware::RequestTracker
       DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
     end
   end
+
   def self.persist_browser_pageview_event(payload)
     if REQUIRED_BROWSER_PAGEVIEW_EVENT_FIELDS.any? { |key| payload[key].blank? }
       Rails.logger.debug("Discarding BrowserPageviewEvent: incomplete payload")

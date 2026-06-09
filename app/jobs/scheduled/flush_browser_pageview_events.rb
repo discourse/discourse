@@ -2,12 +2,13 @@
 
 module Jobs
   class FlushBrowserPageviewEvents < ::Jobs::Scheduled
-    every 1.minute
+    every 5.minutes
 
     MAX_FLUSH_SECONDS = 50
 
     def execute(args)
       return if !SiteSetting.persist_browser_pageview_events
+      return if Discourse.pg_readonly_mode?
 
       deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + MAX_FLUSH_SECONDS
 
