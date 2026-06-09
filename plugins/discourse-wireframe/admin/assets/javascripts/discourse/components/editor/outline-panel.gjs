@@ -738,7 +738,9 @@ export default class OutlinePanel extends Component {
                       @action={{fn this.toggleCollapse row}}
                     />
                   {{else}}
-                    <span class="outline-block__leaf">{{dIcon "cube"}}</span>
+                    <span class="outline-block__leaf">
+                      {{dIcon (if row.isPart "circle-dashed" "cube")}}
+                    </span>
                   {{/if}}
                   <span class="outline-block__name">{{row.blockName}}</span>
                   {{#if row.layoutMode}}

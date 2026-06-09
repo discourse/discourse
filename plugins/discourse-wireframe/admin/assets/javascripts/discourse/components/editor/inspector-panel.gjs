@@ -5,6 +5,8 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import FKAlert from "discourse/form-kit/components/fk/alert";
+import { isPartKey } from "discourse/lib/blocks/-internals/composite";
+import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -32,15 +34,31 @@ export default class InspectorPanel extends Component {
   /**
    * The effective active tab. The outlet root has no Conditions tab (a page
    * region doesn't carry visibility conditions), so a lingering "conditions"
-   * selection from a previous block falls back to "args".
+   * selection from a previous block falls back to "args". A synthesized
+   * composite part shows only the Args tab (no conditions, no raw entry), so
+   * any other lingering selection falls back to "args" too.
    *
    * @returns {string}
    */
   get currentTab() {
+    if (this.isPart) {
+      return "args";
+    }
     if (this.isOutletRoot && this._activeTab === "conditions") {
       return "args";
     }
     return this._activeTab;
+  }
+
+  /**
+   * Whether the current selection is a synthesized composite part (no
+   * persisted entry). Parts have no visibility conditions and no real entry
+   * to inspect raw, so the inspector shows only the Args tab for them.
+   *
+   * @returns {boolean}
+   */
+  get isPart() {
+    return isPartKey(this.wireframe.selectedBlockKey);
   }
 
   /**
@@ -299,7 +317,7 @@ export default class InspectorPanel extends Component {
           @icon={{if this.argsTabHasErrors "triangle-exclamation"}}
           @action={{fn this.setTab "args"}}
         />
-        {{#unless this.isOutletRoot}}
+        {{#unless (or this.isOutletRoot this.isPart)}}
           <DButton
             class={{dConcatClass
               "btn-flat wireframe-inspector__tab"
@@ -309,14 +327,16 @@ export default class InspectorPanel extends Component {
             @action={{fn this.setTab "conditions"}}
           />
         {{/unless}}
-        <DButton
-          class={{dConcatClass
-            "btn-flat wireframe-inspector__tab"
-            (if (this.isTabActive "raw") "--active")
-          }}
-          @label="wireframe.inspector.tab_raw"
-          @action={{fn this.setTab "raw"}}
-        />
+        {{#unless this.isPart}}
+          <DButton
+            class={{dConcatClass
+              "btn-flat wireframe-inspector__tab"
+              (if (this.isTabActive "raw") "--active")
+            }}
+            @label="wireframe.inspector.tab_raw"
+            @action={{fn this.setTab "raw"}}
+          />
+        {{/unless}}
       </div>
 
       <div class="wireframe-inspector__body">

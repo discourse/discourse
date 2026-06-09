@@ -130,6 +130,16 @@ body.wireframe-active {
       background: rgb(217 119 6 / var(--wireframe-bg-opacity));
     }
 
+    /* Composite part — a code-defined inner block rendered by its composite,
+       not a free, reorderable entry. When selected it gets a dashed, lighter
+       outline (vs a free block's solid darker one) so it reads as "part of a
+       composite" while staying selectable and editable. */
+
+    &.--part.--selected {
+      outline-style: dashed;
+      outline-color: var(--wireframe-block-color);
+    }
+
     /* Brief attention flash when a block is selected from somewhere other
        than a direct click (outline, insert auto-select): a soft ring flares
        and fades, layering over the resting selection outline. */
@@ -1533,6 +1543,15 @@ body.wireframe-active {
       &.--muted:not(:hover, .--selected) {
         color: var(--primary-medium);
         opacity: 0.85;
+      }
+
+      /* Composite part — a code-defined inner block, not a free entry.
+         Italic + muted name signals "part of a composite" so it reads
+         differently from the reorderable blocks around it. */
+
+      &.--part .outline-block__name {
+        font-style: italic;
+        color: var(--primary-medium);
       }
     }
 

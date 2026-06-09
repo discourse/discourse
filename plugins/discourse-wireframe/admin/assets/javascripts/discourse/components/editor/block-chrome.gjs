@@ -7,6 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { parsePlacement } from "discourse/blocks";
+import { isPartKey } from "discourse/lib/blocks/-internals/composite";
 import { and, eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -489,17 +490,30 @@ export default class BlockChrome extends Component {
   }
 
   /**
+   * Whether this chrome wraps a synthesized composite part (no persisted
+   * entry). Parts can't be reordered, repositioned, or removed, so the
+   * chrome drops their drop zones and the canvas styles them distinctly
+   * (the `--part` modifier).
+   *
+   * @returns {boolean}
+   */
+  get isPart() {
+    return isPartKey(this.args.blockKey);
+  }
+
+  /**
    * Whether to render the before/after sibling drop zones around this
    * chrome. In a stack/row layout they let authors drop blocks
    * adjacent to existing siblings; inside a grid cell there's no
    * "before/after" — placement is by cell coordinate — so the zones
    * are meaningless and (because they take real flow space) actively
-   * misalign the chrome with the grid cell. Skip them.
+   * misalign the chrome with the grid cell. Skip them. A synthesized part
+   * can't be repositioned among siblings either, so skip them there too.
    *
    * @returns {boolean}
    */
   get showsSiblingDropZones() {
-    return !this.isGridCell && !this.args.isGhost;
+    return !this.isGridCell && !this.args.isGhost && !this.isPart;
   }
 
   /**
@@ -1377,6 +1391,7 @@ export default class BlockChrome extends Component {
             (if @isGhost "--ghost")
             (if @isError "--error")
             (if this.isEmptyCell "--cell")
+            (if this.isPart "--part")
           }}
           data-wf-block-name={{@blockName}}
           data-wf-block-key={{@blockKey}}

@@ -6,6 +6,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { isPartKey } from "discourse/lib/blocks/-internals/composite";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -158,6 +159,17 @@ export default class BlockToolbar extends Component {
   }
 
   /**
+   * `true` when this toolbar belongs to a synthesized composite part (which
+   * has no persisted entry). Structural actions — move, duplicate, delete,
+   * drag-to-reorder — are meaningless for a part, so the toolbar hides them.
+   *
+   * @returns {boolean}
+   */
+  get isPart() {
+    return isPartKey(this.args.blockKey);
+  }
+
+  /**
    * `true` when this block is a composed composite (renders a code-defined
    * `parts` composition) and can therefore be detached into explicit,
    * freely-editable children.
@@ -257,6 +269,13 @@ export default class BlockToolbar extends Component {
           {{dIcon "cubes"}}
           <span>{{@displayName}}</span>
         </span>
+      {{else if this.isPart}}
+        {{! A composite part isn't a movable block — its handle reads as a
+          part (dashed icon + name) and carries no drag source. }}
+        <span class="wireframe-block-toolbar__handle" title={{@displayName}}>
+          {{dIcon "circle-dashed"}}
+          <span>{{@displayName}}</span>
+        </span>
       {{else}}
         <span
           class="wireframe-block-toolbar__handle"
@@ -315,7 +334,7 @@ export default class BlockToolbar extends Component {
         {{else}}
           {{! Move / duplicate / delete don't apply to the outlet root —
             a page region can't be reordered, copied, or removed. }}
-          {{#unless @isOutletRoot}}
+          {{#unless (or @isOutletRoot this.isPart)}}
             <DButton
               class="btn-flat wireframe-block-toolbar__btn"
               @icon="arrow-up"
@@ -444,7 +463,7 @@ export default class BlockToolbar extends Component {
               @preventFocus={{true}}
             />
           {{/if}}
-          {{#unless @isOutletRoot}}
+          {{#unless (or @isOutletRoot this.isPart)}}
             <span
               class="wireframe-block-toolbar__separator"
               aria-hidden="true"
