@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
 module DiscourseHcaptcha
-  class HcaptchaController < DiscourseHcaptcha::CaptchaController
+  class RecaptchaController < DiscourseHcaptcha::CaptchaController
     requires_plugin PLUGIN_NAME
 
     private
 
     def ensure_config
-      unless SiteSetting.discourse_captcha_provider == CaptchaProvider::HCAPTCHA
+      unless SiteSetting.discourse_captcha_provider == CaptchaProvider::RECAPTCHA
         raise Discourse::NotFound
       end
       raise Discourse::InvalidParameters.new(:token) if params[:token].blank?
     end
 
     def token_key
-      "hcaptcha_token"
+      "recaptcha_token"
     end
   end
 end
