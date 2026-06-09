@@ -46,6 +46,7 @@ class ChatSetupInit {
       });
 
       if (!this.chatService.userCanChat) {
+        // include chat elements for anons (except header icon)
         if (
           this.chatService.anonymousUserCanViewPublicChat &&
           !EmbedMode.enabled
@@ -53,10 +54,6 @@ class ChatSetupInit {
           document.body.classList.add("chat-enabled");
           this.chatService.loadChannels();
           api.addCardClickListenerSelector(".chat-drawer-outlet");
-          api.headerIcons.add("chat", ChatHeaderIcon, {
-            after: "search",
-            before: "hamburger",
-          });
         }
 
         return;

@@ -47,33 +47,6 @@ RSpec.describe "Anonymous public chat channels" do
     expect(login_page).to be_open
   end
 
-  it "streams public channel activity to the drawer and full page for visitors" do
-    SiteSetting.navigation_menu = "sidebar"
-
-    visit("/")
-    chat_page.open_from_header
-    expect(chat_drawer_page).to have_open_channels
-
-    chat_drawer_page.open_channel(public_channel)
-    expect(chat_drawer_page).to have_open_channel(public_channel)
-
-    live_message =
-      Fabricate(
-        :chat_message,
-        chat_channel: public_channel,
-        message: "Live anonymous public channel update",
-        use_service: true,
-      )
-
-    expect(chat_drawer_page.messages).to have_message(
-      id: live_message.id,
-      text: "Live anonymous public channel update",
-    )
-
-    chat_drawer_page.join_channel
-    expect(login_page).to be_open
-  end
-
   it "lets visitors open public chat channels from the sidebar drawer" do
     SiteSetting.navigation_menu = "sidebar"
 
@@ -86,6 +59,9 @@ RSpec.describe "Anonymous public chat channels" do
     chat_sidebar_page.open_channel(public_channel)
 
     expect(chat_drawer_page).to have_open_channel(public_channel)
+
+    chat_drawer_page.join_channel
+    expect(login_page).to be_open
   end
 
   it "keeps visitors out of browse" do
