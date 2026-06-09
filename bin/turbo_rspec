@@ -105,9 +105,9 @@ formatters << { name: "progress", outputs: [] } if formatters.empty?
 
 formatters.each { |formatter| formatter[:outputs] << "-" if formatter[:outputs].empty? }
 
-if formatters.any? { |formatter| formatter[:name] == "Discourse::PerformanceFormatter" }
+if formatters.any? { |formatter| formatter[:name] == "RspecPerformanceFormatter" }
   ENV["DISCOURSE_RSPEC_PERF"] = "1"
-  require "./spec/support/performance_formatter"
+  require "./spec/support/rspec_performance_formatter"
 end
 
 puts "::group::Run turbo_rspec" if ENV["GITHUB_ACTIONS"]
