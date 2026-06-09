@@ -4352,6 +4352,9 @@ en:
   subject_re: "Re: "
   subject_pm: "[PM] "
 
+  email_from: "%{user_name}"
+  email_from_group: "%{group_name}"
+
   user_notifications:
     previous_discussion: "Previous Replies"
     reached_limit:
