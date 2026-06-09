@@ -5,7 +5,8 @@ module AdminDashboardKpis
   private
 
   def build_kpi(type, report_name)
-    args = { start_date: start_date, end_date: end_date, facets: %i[prev_period] }
+    prev_start = start_date - (end_date - start_date)
+    args = { start_date: prev_start, end_date:, facets: [] }
 
     report = Report.find_cached(report_name, args)
     if report.nil?
@@ -15,8 +16,12 @@ module AdminDashboardKpis
 
     return nil if report.nil? || report_error?(report) || report_data(report).nil?
 
-    current = period_value(report_data(report), average: report_average?(report))
-    previous = report_prev_period(report)
+    data = report_data(report)
+    average = report_average?(report)
+    current_start = start_date.to_date
+
+    current = period_value(data.select { |point| point_date(point) >= current_start }, average:)
+    previous = period_value(data.select { |point| point_date(point) < current_start }, average:)
 
     {
       type: type,
@@ -47,6 +52,11 @@ module AdminDashboardKpis
 
   def report_average?(report_or_hash)
     report_or_hash.is_a?(Hash) ? report_or_hash[:average] : report_or_hash.average
+  end
+
+  def point_date(point)
+    x = point[:x]
+    x.is_a?(String) ? Date.parse(x) : x.to_date
   end
 
   def period_value(data, average:)

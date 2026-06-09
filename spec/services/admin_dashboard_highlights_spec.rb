@@ -28,6 +28,17 @@ describe AdminDashboardHighlights do
       expect(signups[:percent_change]).to eq(100.0)
     end
 
+    it "counts start_date as current and the day before as previous" do
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 1))
+      Fabricate(:user, created_at: Time.zone.local(2026, 3, 31))
+
+      result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+      signups = result[:kpis].find { |k| k[:type] == :new_signups }
+
+      expect(signups[:value]).to eq(1)
+      expect(signups[:previous_value]).to eq(1)
+    end
+
     it "emits report_type and report_query instead of a synthesised URL" do
       result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
       signups = result[:kpis].find { |k| k[:type] == :new_signups }
