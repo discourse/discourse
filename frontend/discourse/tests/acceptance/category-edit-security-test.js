@@ -70,6 +70,36 @@ acceptance("Category Edit - Security", function (needs) {
       .exists({ count: 1 }, "adds only 'See' permission for a new row");
   });
 
+  test("remove all permissions", async function (assert) {
+    await visit("/c/bug/edit/security");
+
+    assert
+      .dom(".remove-all-permissions")
+      .doesNotExist("button is hidden below the group threshold");
+
+    await formKit().field("security_add_group_id").select("3");
+
+    assert
+      .dom(".remove-all-permissions")
+      .doesNotExist("button is still hidden with two groups");
+
+    await formKit().field("security_add_group_id").select("1");
+
+    assert
+      .dom(".remove-all-permissions")
+      .exists("button appears once three or more groups are configured");
+
+    await click(".remove-all-permissions");
+
+    assert.dom(".row-body").doesNotExist("removes every group permission");
+    assert
+      .dom(".row-empty")
+      .hasText(
+        i18n("category.permissions.no_groups_selected"),
+        "shows the empty message after removing all groups"
+      );
+  });
+
   test("editing permissions", async function (assert) {
     await visit("/c/bug/edit/security");
 

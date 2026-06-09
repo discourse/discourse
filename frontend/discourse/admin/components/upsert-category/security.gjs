@@ -8,7 +8,8 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
-import { eq } from "discourse/truth-helpers";
+import { eq, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -102,6 +103,10 @@ export default class UpsertCategorySecurity extends Component {
     return this.everyonePermission?.permission_type ?? PermissionType.READONLY;
   }
 
+  get canRemoveAllPermissions() {
+    return (this.permissions?.length ?? 0) >= 3;
+  }
+
   #setFormPermissions(permissions) {
     this.args.form.set("permissions", permissions);
   }
@@ -135,6 +140,11 @@ export default class UpsertCategorySecurity extends Component {
       (p) => p.group_id !== groupId
     );
     this.#setFormPermissions(newPermissions);
+  }
+
+  @action
+  onRemoveAllPermissions() {
+    this.#setFormPermissions([]);
   }
 
   @action
@@ -230,43 +240,53 @@ export default class UpsertCategorySecurity extends Component {
                 {{i18n "category.permissions.no_groups_selected"}}
               </div>
             {{/unless}}
-
-            {{#if this.hasAvailableGroups}}
-              <PluginOutlet
-                @name="category-security-permissions-add-group"
-                @outletArgs={{lazyHash
-                  category=@category
-                  availableGroups=this.availableGroups
-                  onSelectGroup=this.onSelectGroup
-                }}
-                @defaultGlimmer={{true}}
-              >
-                <div class="add-group">
-                  <span class="group-name">
-                    <@form.Field
-                      @name="security_add_group_id"
-                      @title={{i18n "category.security_add_group"}}
-                      @showTitle={{false}}
-                      @format="max"
-                      @type="select"
-                      @onSet={{this.onSecurityAddGroupSet}}
-                      as |field|
-                    >
-                      <field.Control
-                        class="available-groups"
-                        @nonePlaceholder={{i18n "category.security_add_group"}}
-                        as |select|
+            {{#if (or this.hasAvailableGroups this.canRemoveAllPermissions)}}
+              <div class="add-group">
+                {{#if this.hasAvailableGroups}}
+                  <PluginOutlet
+                    @name="category-security-permissions-add-group"
+                    @outletArgs={{lazyHash
+                      category=@category
+                      availableGroups=this.availableGroups
+                      onSelectGroup=this.onSelectGroup
+                    }}
+                    @defaultGlimmer={{true}}
+                  >
+                    <span class="group-name">
+                      <@form.Field
+                        @name="security_add_group_id"
+                        @title={{i18n "category.security_add_group"}}
+                        @showTitle={{false}}
+                        @format="max"
+                        @type="select"
+                        @onSet={{this.onSecurityAddGroupSet}}
+                        as |field|
                       >
-                        {{#each this.availableGroups as |group|}}
-                          <select.Option
-                            @value={{group.id}}
-                          >{{group.name}}</select.Option>
-                        {{/each}}
-                      </field.Control>
-                    </@form.Field>
-                  </span>
-                </div>
-              </PluginOutlet>
+                        <field.Control
+                          class="available-groups"
+                          @nonePlaceholder={{i18n
+                            "category.security_add_group"
+                          }}
+                          as |select|
+                        >
+                          {{#each this.availableGroups as |group|}}
+                            <select.Option
+                              @value={{group.id}}
+                            >{{group.name}}</select.Option>
+                          {{/each}}
+                        </field.Control>
+                      </@form.Field>
+                    </span>
+                  </PluginOutlet>
+                {{/if}}
+                {{#if this.canRemoveAllPermissions}}
+                  <DButton
+                    class="btn-default remove-all-permissions"
+                    @label="category.permissions.remove_all"
+                    @action={{this.onRemoveAllPermissions}}
+                  />
+                {{/if}}
+              </div>
             {{/if}}
           </div>
 
