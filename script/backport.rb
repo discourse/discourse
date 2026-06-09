@@ -2,7 +2,6 @@
 
 require "json"
 require "open3"
-require "shellwords"
 
 RunResult = Data.define(:success, :stdout, :stderr)
 
@@ -17,6 +16,13 @@ end
 
 def gh(*args, allow_failure: false)
   run("gh", *args, allow_failure: allow_failure)
+end
+
+# Quote a string as a single-line bash argument using ANSI-C ($'...') quoting,
+# so embedded newlines become a literal \n instead of wrapping the command.
+def bash_quote(str)
+  escaped = str.gsub(/[\\'\n]/, "\\" => "\\\\", "'" => "\\'", "\n" => "\\n")
+  "$'#{escaped}'"
 end
 
 pr_number = ENV.fetch("PR_NUMBER")
@@ -205,8 +211,7 @@ if failed.any?
     if r[:cherry_pick_range]
       gh_create =
         "gh pr create --base #{r[:release_branch]} --head #{r[:backport_branch]} " \
-          "--title #{Shellwords.escape(r[:backport_title])} " \
-          "--body #{Shellwords.escape(r[:backport_body])}"
+          "--title #{bash_quote(r[:backport_title])} --body #{bash_quote(r[:backport_body])}"
 
       comment_lines << <<~MSG
         #### #{r[:version]}
