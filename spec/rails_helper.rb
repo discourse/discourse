@@ -145,38 +145,6 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
   UpcomingChanges.singleton_class.prepend(UpcomingChangesBatchedClearCaches)
 end
 
-# `rails_helper` forces `ENABLE_LOGSTASH_LOGGER=1` (line 64) so `DiscourseLograge`
-# is enabled in CI. That wires lograge's `process_action.action_controller`
-# subscriber for *every* controller request the in-process Capybara test server
-# handles — and a system spec drives the browser through a bootstrap HTML load
-# plus dozens of JSON / MessageBus requests per navigation, thousands of times
-# over the suite. For each logged request lograge runs `custom_options`
-# (`params.to_query` + the `GC.stat[:heap_live_slots]` delta), allocates a
-# `LogStash::Event` and serializes it, then `DiscourseLogstashLogger#add`
-# re-parses that JSON, merges, and serializes again before appending a line to
-# `log/test.log` — a single file all 12 workers share, so the write also
-# contends across processes. None of it is on the response path; it is pure
-# per-request overhead on exactly the CPU-bound server phase the browser blocks
-# on between `clientSettled` waits, the same vein as the `sql.active_record`
-# unsubscribe and the `MethodProfiler` no-op above.
-#
-# The *only* consumer of this log in the system suite is `request_tracker_spec`,
-# which reads back the synthetic browser-page-view entries
-# `Middleware#instrument_browser_page_view` emits as a
-# `process_action.action_controller` notification tagged
-# `controller: "PageviewController"` (and only when `bpv_notifications_enabled`
-# is flipped on, which that spec alone does). `capture_log_entries` filters
-# strictly on `controller == "PageviewController"`, so ignoring every event
-# whose controller is anything else preserves those entries byte-for-byte while
-# skipping the format/serialize/write for all real requests. `Lograge.ignore?`
-# ORs the registered callbacks, so this stacks with the existing status-418
-# ignore. This is the targeted form of the always-true `Lograge.ignore` that
-# iter-138 / ENABLE_LOGSTASH_LOGGER=0 of iter-140 got rejected for: those killed
-# the BPV entries too and broke `request_tracker_spec`; this keeps them.
-if ENV["CI"] && defined?(Lograge)
-  Lograge.ignore(->(event) { event.payload[:controller] != "PageviewController" })
-end
-
 require "rspec/rails"
 require "shoulda-matchers"
 require "sidekiq/testing"
