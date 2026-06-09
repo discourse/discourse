@@ -19,9 +19,9 @@ module NestedReplies
     }.freeze
 
     def self.engagement_score_sql(table_name)
-      ENGAGEMENT_WEIGHTS.map do |column, weight|
-        "COALESCE(#{table_name}.#{column}, 0) * #{weight}"
-      end.join(" + ")
+      ENGAGEMENT_WEIGHTS
+        .map { |column, weight| "COALESCE(#{table_name}.#{column}, 0) * #{weight}" }
+        .join(" + ")
     end
 
     def self.time_scale_seconds(sibling_count)
