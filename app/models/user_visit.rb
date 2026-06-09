@@ -17,9 +17,10 @@ class UserVisit < ActiveRecord::Base
   def self.count_by_active_users(start_date, end_date)
     sql = <<~SQL
       WITH visits AS (
-        SELECT user_id, visited_at::DATE AS d
+        SELECT user_id, visited_at AS d
         FROM user_visits
-        WHERE visited_at::DATE >= :start_date::DATE - 29 AND visited_at::DATE <= :end_date::DATE
+        WHERE visited_at >= :start_date::DATE - 29
+          AND visited_at <= :end_date::DATE
       ),
       marked AS (
         SELECT user_id, d,
@@ -43,21 +44,35 @@ class UserVisit < ActiveRecord::Base
         UNION ALL
         SELECT end_d + 1 AS day, -1 AS delta FROM coverage
       ),
-      running AS (
-        SELECT day, sum(sum(delta)) OVER (ORDER BY day) AS mau
+      event_totals AS (
+        SELECT day, sum(delta) AS delta
         FROM events
         GROUP BY day
       ),
+      calendar AS (
+        SELECT generate_series(
+          (SELECT min(day) FROM event_totals),
+          :end_date::DATE,
+          INTERVAL '1 day'
+        )::DATE AS day
+      ),
+      running AS (
+        SELECT calendar.day,
+          sum(coalesce(event_totals.delta, 0)) OVER (ORDER BY calendar.day) AS mau
+        FROM calendar
+        LEFT JOIN event_totals ON event_totals.day = calendar.day
+      ),
       dau AS (
-        SELECT visited_at::DATE AS date, count(distinct user_id) AS dau
+        SELECT visited_at AS date, count(distinct user_id) AS dau
         FROM user_visits
-        WHERE visited_at::DATE >= :start_date::DATE AND visited_at <= :end_date::DATE
-        GROUP BY visited_at::DATE
+        WHERE visited_at >= :start_date::DATE
+          AND visited_at <= :end_date::DATE
+        GROUP BY visited_at
       )
-      SELECT dau.date, dau.dau,
-        (SELECT mau FROM running WHERE running.day <= dau.date ORDER BY day DESC LIMIT 1) AS mau
+      SELECT dau.date, dau.dau, running.mau
       FROM dau
-      ORDER BY date
+      JOIN running ON running.day = dau.date
+      ORDER BY dau.date
     SQL
 
     DB.query_hash(sql, start_date: start_date, end_date: end_date)
