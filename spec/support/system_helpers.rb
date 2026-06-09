@@ -443,7 +443,21 @@ module SystemHelpers
         end
       end
 
-    try_until_success { raise Capybara::ExpectationNotMet if read.call.size < entries }
+    # In CI these specs run inside a ~12-worker parallel suite that saturates
+    # the runner's CPU and shares one `log/test.log` with every other worker's
+    # request logging. The browser-fired piggyback/beacon requests and their
+    # lograge flush routinely take longer than Capybara's default 4s wait to
+    # land under that contention, so this size check times out, the example
+    # fails in the parallel phase, and turbo_rspec re-runs it serially in a
+    # fresh ~50s Rails boot at the end of the step (the flaky-retry path that
+    # `DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS=1` enables). The entries
+    # always arrive eventually — the serial retry passes — so a more generous
+    # wait lets the example pass in-phase and removes that ~50s serial retry
+    # from the step's critical path. `try_until_success` returns the instant the
+    # entries land, so the larger ceiling costs nothing when they're fast.
+    try_until_success(timeout: 30) do
+      raise Capybara::ExpectationNotMet if read.call.size < entries
+    end
     read.call
   end
 end
