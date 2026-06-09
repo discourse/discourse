@@ -7,6 +7,8 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import {
+  DEFAULT_GRID_COLUMNS,
+  DEFAULT_GRID_ROWS,
   gridDimensions,
   parsePlacement,
   parseSlotPlacement,
@@ -167,7 +169,10 @@ export default class BlockChrome extends Component {
     // `args` size, so a sibling spanning past the declared count is still
     // counted as occupied. Same source the renderer uses, so they can't drift.
     const { columns, rows } = gridDimensions(
-      { columns: grid.args?.columns ?? 3, rows: grid.args?.rows ?? 2 },
+      {
+        columns: grid.args?.columns ?? DEFAULT_GRID_COLUMNS,
+        rows: grid.args?.rows ?? DEFAULT_GRID_ROWS,
+      },
       grid.children
     );
     const selfKey = this.args.blockKey;
@@ -447,7 +452,10 @@ export default class BlockChrome extends Component {
     const _v = this.wireframe.structuralVersion;
     const grid = this.wireframe.findEntryParent(this.args.blockKey);
     return gridDimensions(
-      { columns: grid?.args?.columns ?? 3, rows: grid?.args?.rows ?? 2 },
+      {
+        columns: grid?.args?.columns ?? DEFAULT_GRID_COLUMNS,
+        rows: grid?.args?.rows ?? DEFAULT_GRID_ROWS,
+      },
       grid?.children
     ).columns;
   }
@@ -458,7 +466,10 @@ export default class BlockChrome extends Component {
     const _v = this.wireframe.structuralVersion;
     const grid = this.wireframe.findEntryParent(this.args.blockKey);
     return gridDimensions(
-      { columns: grid?.args?.columns ?? 3, rows: grid?.args?.rows ?? 2 },
+      {
+        columns: grid?.args?.columns ?? DEFAULT_GRID_COLUMNS,
+        rows: grid?.args?.rows ?? DEFAULT_GRID_ROWS,
+      },
       grid?.children
     ).rows;
   }
@@ -519,8 +530,8 @@ export default class BlockChrome extends Component {
     if (!grid) {
       return false;
     }
-    const maxColumns = Number(grid.args?.columns ?? 6);
-    const maxRows = Number(grid.args?.rows ?? 2);
+    const maxColumns = Number(grid.args?.columns ?? DEFAULT_GRID_COLUMNS);
+    const maxRows = Number(grid.args?.rows ?? DEFAULT_GRID_ROWS);
     const placement = parsePlacement(
       this.wireframe.findEntryAndOutletSync(this.args.blockKey)?.entry
         ?.containerArgs

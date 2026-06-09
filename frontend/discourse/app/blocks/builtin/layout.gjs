@@ -3,6 +3,8 @@ import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
 import {
+  DEFAULT_GRID_COLUMNS,
+  DEFAULT_GRID_ROWS,
   gridDimensions,
   normalizeFractions,
   parsePlacement,
@@ -67,7 +69,7 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
     // Grid args. Ignored by stack / row modes.
     columns: {
       type: "number",
-      default: 3,
+      default: DEFAULT_GRID_COLUMNS,
       integer: true,
       min: 1,
       max: 24,
@@ -75,7 +77,7 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
     },
     rows: {
       type: "number",
-      default: 2,
+      default: DEFAULT_GRID_ROWS,
       integer: true,
       min: 1,
       max: 24,
@@ -366,7 +368,10 @@ export default class Layout extends Component {
       // column widths. This is the same `gridDimensions` consumers read,
       // so the rendered grid and any mirrored size never drift.
       const { columns, rows } = gridDimensions(
-        { columns: this.args.columns ?? 3, rows: this.args.rows ?? 2 },
+        {
+          columns: this.args.columns ?? DEFAULT_GRID_COLUMNS,
+          rows: this.args.rows ?? DEFAULT_GRID_ROWS,
+        },
         this.args.children
       );
       const columnTemplate = (this.args.columnTemplate ?? "").trim();

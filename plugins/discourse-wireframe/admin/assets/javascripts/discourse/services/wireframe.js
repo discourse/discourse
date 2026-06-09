@@ -10,6 +10,8 @@ import {
 import { cancel, schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import {
+  DEFAULT_GRID_COLUMNS,
+  DEFAULT_GRID_ROWS,
   gridDimensions,
   parsePlacement,
   registerBlockArgRenderer,
@@ -2884,7 +2886,10 @@ export default class WireframeService extends Service {
     const located = this.findEntryAndOutletSync(gridKey);
     const args = located?.entry.args ?? {};
     return gridDimensions(
-      { columns: args.columns ?? 3, rows: args.rows ?? 2 },
+      {
+        columns: args.columns ?? DEFAULT_GRID_COLUMNS,
+        rows: args.rows ?? DEFAULT_GRID_ROWS,
+      },
       located?.entry.children
     );
   }

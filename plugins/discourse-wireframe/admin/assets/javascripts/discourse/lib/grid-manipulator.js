@@ -1,5 +1,10 @@
 // @ts-check
-import { gridDimensions, normalizeFractions } from "discourse/blocks";
+import {
+  DEFAULT_GRID_COLUMNS,
+  DEFAULT_GRID_ROWS,
+  gridDimensions,
+  normalizeFractions,
+} from "discourse/blocks";
 import {
   decideGridDrop,
   GRID_DROP_ACTIONS,
@@ -118,8 +123,8 @@ export default class GridManipulator {
       const decision = decideGridDrop({
         children: gridEntry.children ?? [],
         declared: {
-          columns: Number(gridEntry.args?.columns ?? 3),
-          rows: Number(gridEntry.args?.rows ?? 2),
+          columns: Number(gridEntry.args?.columns ?? DEFAULT_GRID_COLUMNS),
+          rows: Number(gridEntry.args?.rows ?? DEFAULT_GRID_ROWS),
         },
         source: { kind: source.kind, key: source.key ?? null },
         drop: { gesture, cell, anchorKey, direction, shift },
@@ -271,8 +276,8 @@ export default class GridManipulator {
     const decision = decideGridDrop({
       children: grid.children ?? [],
       declared: {
-        columns: grid.args?.columns ?? 3,
-        rows: grid.args?.rows ?? 2,
+        columns: grid.args?.columns ?? DEFAULT_GRID_COLUMNS,
+        rows: grid.args?.rows ?? DEFAULT_GRID_ROWS,
       },
       // The entry is already a child of the grid at this point, so it counts
       // as an in-grid source (its auto cell is credited as free).
@@ -374,8 +379,8 @@ export default class GridManipulator {
       return layout;
     }
     const declared = {
-      columns: grid.args?.columns ?? 3,
-      rows: grid.args?.rows ?? 2,
+      columns: grid.args?.columns ?? DEFAULT_GRID_COLUMNS,
+      rows: grid.args?.rows ?? DEFAULT_GRID_ROWS,
     };
     const effective = gridDimensions(declared, grid.children);
     if (

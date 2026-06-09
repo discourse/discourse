@@ -178,6 +178,8 @@ export {
  * auto-placement.
  */
 export {
+  DEFAULT_GRID_COLUMNS,
+  DEFAULT_GRID_ROWS,
   gridDimensions,
   normalizeFractions,
   parsePlacement,

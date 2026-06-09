@@ -6,7 +6,12 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { gridDimensions, parsePlacement } from "discourse/blocks";
+import {
+  DEFAULT_GRID_COLUMNS,
+  DEFAULT_GRID_ROWS,
+  gridDimensions,
+  parsePlacement,
+} from "discourse/blocks";
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
@@ -267,7 +272,10 @@ export default class GridOverlay extends Component {
   get columns() {
     const entry = this.gridEntry;
     return gridDimensions(
-      { columns: entry?.args?.columns ?? 3, rows: entry?.args?.rows ?? 2 },
+      {
+        columns: entry?.args?.columns ?? DEFAULT_GRID_COLUMNS,
+        rows: entry?.args?.rows ?? DEFAULT_GRID_ROWS,
+      },
       entry?.children
     ).columns;
   }
@@ -275,7 +283,10 @@ export default class GridOverlay extends Component {
   get rows() {
     const entry = this.gridEntry;
     return gridDimensions(
-      { columns: entry?.args?.columns ?? 3, rows: entry?.args?.rows ?? 2 },
+      {
+        columns: entry?.args?.columns ?? DEFAULT_GRID_COLUMNS,
+        rows: entry?.args?.rows ?? DEFAULT_GRID_ROWS,
+      },
       entry?.children
     ).rows;
   }

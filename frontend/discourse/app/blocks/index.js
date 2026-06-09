@@ -21,6 +21,8 @@ export {
 // `discourse/lib/blocks`) so consumers in other bundles can reach them
 // through this stable public facade rather than a concrete internal path.
 export {
+  DEFAULT_GRID_COLUMNS,
+  DEFAULT_GRID_ROWS,
   gridDimensions,
   normalizeFractions,
   parsePlacement,

@@ -25,6 +25,15 @@
  */
 
 /**
+ * Default grid dimensions for a `layout` block in grid mode. The single source
+ * of truth for "how big is an unsized grid" — used by the block's arg schema
+ * defaults and by every consumer that falls back when `args.columns` /
+ * `args.rows` are absent, so the fallbacks can't drift apart.
+ */
+export const DEFAULT_GRID_COLUMNS = 3;
+export const DEFAULT_GRID_ROWS = 2;
+
+/**
  * Parses a `column` / `row` arg pair into start / end line numbers.
  * Returns `{start: null, end: null}` tracks for auto / span / unknown
  * placements.
