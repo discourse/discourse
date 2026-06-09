@@ -150,9 +150,7 @@ describe "Standalone scripts" do
         visible: :all,
       )
       try_until_success do
-        expect(page.evaluate_script("window.__embedMessage?.type")).to eq(
-          "discourse-resize",
-        )
+        expect(page.evaluate_script("window.__embedMessage?.type")).to eq("discourse-resize")
       end
     end
   end
