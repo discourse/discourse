@@ -10,6 +10,7 @@ import { i18n } from "discourse-i18n";
 
 const SORT_OPTIONS = [
   { value: "top", labelKey: "nested_replies.sort.top" },
+  { value: "hot", labelKey: "nested_replies.sort.hot" },
   { value: "new", labelKey: "nested_replies.sort.new" },
   { value: "old", labelKey: "nested_replies.sort.old" },
 ];

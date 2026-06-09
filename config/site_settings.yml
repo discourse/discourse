@@ -1959,11 +1959,12 @@ nested_replies:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
   nested_replies_default_sort:
-    default: "top"
+    default: "hot"
     client: true
     type: enum
     choices:
       - top
+      - hot
       - new
       - old
     area: "posts_and_topics"

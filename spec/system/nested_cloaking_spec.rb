@@ -34,7 +34,7 @@ RSpec.describe "Nested view cloaking" do
     end
 
     it "cloaks root subtrees far from the viewport" do
-      nested_view.visit_nested(topic)
+      nested_view.visit_nested(topic, query: "sort=old")
       expect(nested_view).to have_nested_view
 
       expect(nested_view).to have_cloaked_root

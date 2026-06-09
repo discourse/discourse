@@ -4193,6 +4193,7 @@ en:
       sort:
         label: "Sort by"
         top: "Top"
+        hot: "Hot"
         new: "New"
         old: "Old"
       load_more_children:

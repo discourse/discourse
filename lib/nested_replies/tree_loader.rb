@@ -40,7 +40,7 @@ module NestedReplies
       scope =
         topic
           .posts
-          .where("reply_to_post_number IS NULL OR reply_to_post_number = 1")
+          .where("posts.reply_to_post_number IS NULL OR posts.reply_to_post_number = 1")
           .where(post_number: 2..) # exclude OP itself
       scope = apply_visibility(scope)
       NestedReplies::Sort.apply(scope, sort)
@@ -107,17 +107,19 @@ module NestedReplies
         last_level = (depth + 1 >= max_depth) || (depth + 1 >= configured_max_depth)
 
         order_expr = NestedReplies::Sort.sql_order_expression(sort)
+        hot_join = sort == "hot" ? NestedReplies::Sort.hot_score_join_sql : ""
         child_ids =
           DB.query_single(
             <<~SQL,
               SELECT id FROM (
-                SELECT id,
-                       ROW_NUMBER() OVER (PARTITION BY reply_to_post_number ORDER BY #{order_expr}) AS rn
+                SELECT posts.id,
+                       ROW_NUMBER() OVER (PARTITION BY posts.reply_to_post_number ORDER BY #{order_expr}) AS rn
                 FROM posts
-                WHERE topic_id = :topic_id
-                  AND reply_to_post_number IN (:parent_numbers)
-                  AND post_type IN (:post_types)
-                  AND post_number > 1
+                #{hot_join}
+                WHERE posts.topic_id = :topic_id
+                  AND posts.reply_to_post_number IN (:parent_numbers)
+                  AND posts.post_type IN (:post_types)
+                  AND posts.post_number > 1
               ) ranked
               WHERE rn <= :limit
             SQL
@@ -131,11 +133,13 @@ module NestedReplies
 
         all_children = load_posts_for_tree(topic.posts.with_deleted.where(id: child_ids)).to_a
 
+        hot_scores = hot_scores_for_posts(all_children)
+
         next_level = []
         all_children
           .group_by(&:reply_to_post_number)
           .each do |parent_number, child_posts|
-            sorted = NestedReplies::Sort.sort_in_memory(child_posts, sort)
+            sorted = NestedReplies::Sort.sort_in_memory(child_posts, sort, hot_scores: hot_scores)
             children_map[parent_number] = sorted
             all_posts.concat(sorted)
             next_level.concat(sorted) unless last_level
@@ -156,8 +160,9 @@ module NestedReplies
         parent_numbers = child_ancestors.map(&:reply_to_post_number).uniq
 
         order_expr = NestedReplies::Sort.sql_order_expression(sort)
+        hot_join = sort == "hot" ? NestedReplies::Sort.hot_score_join_sql : ""
 
-        visibility_conditions = +"post_type IN (:post_types) AND post_number > 1"
+        visibility_conditions = +"posts.post_type IN (:post_types) AND posts.post_number > 1"
         sql_params = {
           topic_id: topic.id,
           parent_numbers: parent_numbers,
@@ -167,11 +172,12 @@ module NestedReplies
 
         sibling_ids = DB.query_single(<<~SQL, **sql_params)
             SELECT id FROM (
-              SELECT id, reply_to_post_number,
-                     ROW_NUMBER() OVER (PARTITION BY reply_to_post_number ORDER BY #{order_expr}) AS rn
+              SELECT posts.id AS id, posts.reply_to_post_number,
+                     ROW_NUMBER() OVER (PARTITION BY posts.reply_to_post_number ORDER BY #{order_expr}) AS rn
               FROM posts
-              WHERE topic_id = :topic_id
-                AND reply_to_post_number IN (:parent_numbers)
+              #{hot_join}
+              WHERE posts.topic_id = :topic_id
+                AND posts.reply_to_post_number IN (:parent_numbers)
                 AND #{visibility_conditions}
             ) ranked
             WHERE rn <= :limit
@@ -180,9 +186,12 @@ module NestedReplies
         if sibling_ids.present?
           loaded_siblings =
             load_posts_for_tree(topic.posts.with_deleted.where(id: sibling_ids)).to_a
+          hot_scores = hot_scores_for_posts(loaded_siblings)
           grouped = loaded_siblings.group_by(&:reply_to_post_number)
 
-          grouped.transform_values! { |posts| NestedReplies::Sort.sort_in_memory(posts, sort) }
+          grouped.transform_values! do |posts|
+            NestedReplies::Sort.sort_in_memory(posts, sort, hot_scores: hot_scores)
+          end
 
           child_ancestors.each do |ancestor|
             siblings_map[ancestor.post_number] = grouped[ancestor.reply_to_post_number] || []
@@ -199,9 +208,31 @@ module NestedReplies
       siblings_map
     end
 
+    def hot_sorted_child_ids(parent_post_number, offset: 0, limit: CHILDREN_PER_PAGE)
+      DB.query_single(
+        <<~SQL,
+          SELECT posts.id
+          FROM nested_view_post_stats
+          JOIN posts ON posts.id = nested_view_post_stats.post_id
+          WHERE nested_view_post_stats.topic_id = :topic_id
+            AND nested_view_post_stats.reply_to_post_number IS NOT DISTINCT FROM :parent_post_number
+            AND posts.post_type IN (:post_types)
+            AND posts.post_number > 1
+          ORDER BY nested_view_post_stats.hot_score DESC, nested_view_post_stats.post_number ASC
+          OFFSET :offset
+          LIMIT :limit
+        SQL
+        topic_id: topic.id,
+        parent_post_number: parent_post_number,
+        post_types: visible_post_types,
+        offset: offset,
+        limit: limit,
+      )
+    end
+
     def flat_descendants_scope(parent_post_number, sort:, offset: 0, limit: CHILDREN_PER_PAGE)
       post_types = visible_post_types
-      order_expr = NestedReplies::Sort.sql_order_expression(sort)
+      order_expr = NestedReplies::Sort.sql_order_expression(sort, posts_table: "p")
 
       descendant_post_numbers =
         DB.query_single(
@@ -223,6 +254,7 @@ module NestedReplies
           SELECT d.post_number
           FROM descendants d
           JOIN posts p ON p.post_number = d.post_number AND p.topic_id = :topic_id
+          LEFT JOIN nested_view_post_stats ON nested_view_post_stats.post_id = p.id
           WHERE p.post_type IN (:post_types)
           ORDER BY #{order_expr}
           OFFSET :offset
@@ -350,6 +382,12 @@ module NestedReplies
           .pluck(:post_id, Arel.sql("total_descendant_count - whisper_total_descendant_count"))
           .to_h
       end
+    end
+
+    def hot_scores_for_posts(posts)
+      return {} if posts.empty?
+
+      NestedViewPostStat.where(post_id: posts.map(&:id).uniq).pluck(:post_id, :hot_score).to_h
     end
   end
 end

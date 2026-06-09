@@ -75,7 +75,7 @@ RSpec.describe "Nested view pagination" do
     end
 
     it "shows load more button and loads additional children on click" do
-      nested_view.visit_nested(topic)
+      nested_view.visit_nested(topic, query: "sort=old")
 
       expect(nested_view).to have_post(root_reply)
       expect(page).to have_css(".nested-post-children__load-more")
