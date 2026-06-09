@@ -15,6 +15,19 @@ RSpec.describe Categories::Configure do
     let(:params) { { category_id: category.id, category_type: "discussion" } }
     let(:dependencies) { { guardian: admin.guardian } }
 
+    def build_test_type(id, enables_plugin: false, plugin_enabled: true)
+      Class.new(Categories::Types::Base) do
+        type_id id
+
+        define_singleton_method(:enable_plugin) {} if enables_plugin
+        define_singleton_method(:plugin_enabled?) { plugin_enabled } if enables_plugin
+        define_singleton_method(:category_matches?) { |_| false }
+        define_singleton_method(:find_matches) { Category.none }
+        define_singleton_method(:configure_category) { |_, guardian:, configuration_values: {}| }
+        define_singleton_method(:unconfigure_category) { |_, guardian:| }
+      end
+    end
+
     context "when params are invalid" do
       let(:params) { { category_id: nil, category_type: nil } }
 
@@ -46,10 +59,71 @@ RSpec.describe Categories::Configure do
       it { is_expected.to fail_a_policy(:type_is_available) }
     end
 
+    context "when type does not enable a plugin (Discussion)" do
+      context "when user is a moderator" do
+        fab!(:moderator)
+
+        let(:dependencies) { { guardian: moderator.guardian } }
+
+        before { SiteSetting.moderators_manage_categories = true }
+
+        it { is_expected.to run_successfully }
+      end
+    end
+
+    context "when type enables a plugin that is not yet enabled" do
+      let(:test_type_class) do
+        build_test_type(:test_plugin_type, enables_plugin: true, plugin_enabled: false)
+      end
+      let(:params) { { category_id: category.id, category_type: "test_plugin_type" } }
+
+      before { Categories::TypeRegistry.register(test_type_class) }
+      after { Categories::TypeRegistry.reset! }
+
+      context "when user is a moderator" do
+        fab!(:moderator)
+
+        let(:dependencies) { { guardian: moderator.guardian } }
+
+        before { SiteSetting.moderators_manage_categories = true }
+
+        it { is_expected.to fail_a_policy(:type_is_available) }
+      end
+
+      context "when user is an admin" do
+        it { is_expected.to run_successfully }
+      end
+    end
+
+    context "when type enables a plugin that is already enabled" do
+      let(:test_type_class) do
+        build_test_type(:test_plugin_type_enabled, enables_plugin: true, plugin_enabled: true)
+      end
+      let(:params) { { category_id: category.id, category_type: "test_plugin_type_enabled" } }
+
+      before { Categories::TypeRegistry.register(test_type_class) }
+      after { Categories::TypeRegistry.reset! }
+
+      context "when user is a moderator" do
+        fab!(:moderator)
+
+        let(:dependencies) { { guardian: moderator.guardian } }
+
+        before { SiteSetting.moderators_manage_categories = true }
+
+        it { is_expected.to run_successfully }
+      end
+
+      context "when user is an admin" do
+        it { is_expected.to run_successfully }
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 
       it "calls enable_plugin on the type class" do
+        Categories::Types::Discussion.stubs(:plugin_enabled?).returns(true)
         Categories::Types::Discussion.expects(:enable_plugin).once
         result
       end
