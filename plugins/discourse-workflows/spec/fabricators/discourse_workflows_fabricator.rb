@@ -51,7 +51,6 @@ end
 
 Fabricator(:discourse_workflows_execution_data, class_name: "DiscourseWorkflows::ExecutionData") do
   execution { Fabricate(:discourse_workflows_execution) }
-  data { { "entries" => {}, "context" => {}, "node_contexts" => {}, "run_data" => {} } }
   workflow_data { {} }
 end
 

@@ -76,23 +76,14 @@ module DiscourseWorkflows
           timeout_action: nil,
         )
         trigger_error_workflow(error, steps)
-        publish_execution_run_data(force: @options.draft_execution)
+        publish_execution_run_data(
+          force: @options.draft_execution || @options.workflow_snapshot.present?,
+        )
         execution
       end
 
       def create_execution_with_status(status, trigger_data: self.trigger_data)
-        now = Time.current
-
-        DiscourseWorkflows::Execution.create!(
-          workflow: workflow,
-          workflow_version_id: execution_workflow_version_id,
-          trigger_node_id: @trigger_node_id,
-          status: status,
-          trigger_data: trigger_data,
-          execution_mode: @options.execution_mode,
-          started_at: now,
-          finished_at: now,
-        )
+        persist_execution!(status: status, trigger_data: trigger_data, finished_at: Time.current)
       end
 
       def create_rate_limited_execution
@@ -124,15 +115,23 @@ module DiscourseWorkflows
       private
 
       def create_execution!
-        DiscourseWorkflows::Execution.create!(
-          workflow: workflow,
+        persist_execution!(status: :running, trigger_data: trigger_data)
+      end
+
+      def persist_execution!(status:, trigger_data:, finished_at: nil)
+        @execution = @options.existing_execution || DiscourseWorkflows::Execution.new
+        @execution_context.execution = @execution if @options.existing_execution
+        @execution.update!(
+          workflow_id: workflow.id,
           workflow_version_id: execution_workflow_version_id,
           trigger_node_id: @trigger_node_id,
-          status: :running,
+          status: status,
           trigger_data: trigger_data,
           execution_mode: @execution_mode,
-          started_at: Time.current,
+          started_at: @execution.started_at || Time.current,
+          finished_at: finished_at,
         )
+        @execution
       end
 
       def execution_workflow_version_id
