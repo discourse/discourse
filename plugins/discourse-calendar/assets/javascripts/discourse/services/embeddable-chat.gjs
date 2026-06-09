@@ -1,17 +1,21 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
-import Chat from "discourse/plugins/chat/discourse/services/chat";
+import Service, { service } from "@ember/service";
 
 export const LIVESTREAM_TAG_NAME = "livestream";
 
-export default class EmbeddableChat extends Chat {
+export default class EmbeddableChat extends Service {
   @service siteSettings;
   @service router;
   @service currentUser;
   @service capabilities;
+  @service chat;
 
   @tracked isMobileChatVisible = false;
+
+  get userCanChat() {
+    return this.chat.userCanChat;
+  }
 
   canRenderChatChannel(topicController, mobileViewAllowed = false) {
     this.topicController = topicController;
