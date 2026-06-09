@@ -42,6 +42,9 @@ const BOX_DIRECTIONS = ["n", "ne", "e", "se", "s", "sw", "w", "nw"];
  * Args:
  *  - `@handleClass` — BEM block for the built-in 8-direction box. Ignored when
  *    `@handles` is supplied.
+ *  - `@directions` — optional subset of the eight compass directions to render
+ *    for the built-in box (e.g. only the edges/corners that can actually move).
+ *    Defaults to all eight; ignored when `@handles` is supplied.
  *  - `@handles` — explicit descriptors `{ payload, class?, style? }` (escape
  *    hatch; takes precedence over `@handleClass`). `payload` identifies the
  *    handle and is handed back to every callback; `class` positions/styles it;
@@ -130,7 +133,8 @@ export default class DResizeHandles extends Component {
     if (!handleClass) {
       return [];
     }
-    return BOX_DIRECTIONS.map((dir) => ({
+    const directions = this.args.directions ?? BOX_DIRECTIONS;
+    return directions.map((dir) => ({
       payload: dir,
       class: `${handleClass} ${handleClass}--${dir}`,
     }));

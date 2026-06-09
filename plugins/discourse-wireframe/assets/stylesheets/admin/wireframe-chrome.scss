@@ -2549,7 +2549,13 @@ body.wireframe-active
 /* Filled grid cells reveal their resize handles on the same trigger as empty
    cells — hover or selection — so the two read identically. The handles are
    always in the DOM for a grid cell; this gate keeps them invisible and inert
-   until the author hovers the cell or selects it. */
+   until the author hovers the cell or selects it.
+
+   The `:not(:has(...))` restricts the hover reveal to DIRECT hover of the
+   cell's own chrome: when the cell holds a container, hovering the blocks
+   nested inside it bubbles `:hover` up to this wrapper, which would otherwise
+   flash the cell's handles while the author works inside it. Selection still
+   reveals them unconditionally. */
 
 .wireframe-block-chrome-wrapper.--in-grid-cell {
   .wireframe-block-chrome__resize-handle {
@@ -2557,7 +2563,8 @@ body.wireframe-active
     pointer-events: none;
   }
 
-  &:hover .wireframe-block-chrome__resize-handle,
+  &:hover:not(:has(.wireframe-block-chrome-wrapper:hover))
+    .wireframe-block-chrome__resize-handle,
   .wireframe-block-chrome.--selected .wireframe-block-chrome__resize-handle {
     opacity: 0.85;
     pointer-events: auto;

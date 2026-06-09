@@ -10,6 +10,7 @@ import {
   formatTrack,
   nextFreeCellInReadingOrder,
   reflowChildrenIntoCells,
+  resizableDirections,
   resizeColumnFractions,
   syncContentToArrayOrder,
   unoccupiedCells,
@@ -921,6 +922,102 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
           proportional: true,
         }),
         [2.5, 0.25, 0.25]
+      );
+    });
+  });
+
+  module("resizableDirections", function () {
+    test("a corner 1×1 grows only inward", function (assert) {
+      // Top-left 1×1 in a 3×2 grid, nothing else placed: east + south + corner.
+      assert.deepEqual(
+        resizableDirections({
+          origin: rect(1, 2, 1, 2),
+          columns: 3,
+          rows: 2,
+          occupied: new Set(),
+        }).sort(),
+        ["e", "s", "se"].sort()
+      );
+    });
+
+    test("edge cells omit out-of-bounds directions", function (assert) {
+      // Bottom-right 1×1 of a 3×2 grid: only west + north (+ corner) are inward.
+      assert.deepEqual(
+        resizableDirections({
+          origin: rect(3, 4, 2, 3),
+          columns: 3,
+          rows: 2,
+          occupied: new Set(),
+        }).sort(),
+        ["n", "w", "nw"].sort()
+      );
+    });
+
+    test("a multi-cell block mid-grid can grow and shrink on both axes", function (assert) {
+      // 2×2 block at cols 1–2, rows 1–2 in a 4×4 grid: all eight handles.
+      assert.deepEqual(
+        resizableDirections({
+          origin: rect(1, 3, 1, 3),
+          columns: 4,
+          rows: 4,
+          occupied: new Set(),
+        }).sort(),
+        ["e", "n", "ne", "nw", "s", "se", "sw", "w"].sort()
+      );
+    });
+
+    test("a 1×1 hemmed in on all sides has no handles", function (assert) {
+      // Centre cell of a 3×3 grid with every orthogonal neighbour occupied.
+      const occupied = computeOccupation(
+        [
+          slot("n", "2", "1"),
+          slot("s", "2", "3"),
+          slot("w", "1", "2"),
+          slot("e", "3", "2"),
+        ],
+        3,
+        3
+      );
+      assert.deepEqual(
+        resizableDirections({
+          origin: rect(2, 3, 2, 3),
+          columns: 3,
+          rows: 3,
+          occupied,
+        }),
+        []
+      );
+    });
+
+    test("a blocked neighbour hides growth but a span keeps the shrink handle", function (assert) {
+      // 2-wide block at cols 1–2, row 1 of a 3×1 grid with col 3 occupied:
+      // east can't grow (col 3 taken) but can shrink (span 2), so "e" stays;
+      // west is at the boundary but the span keeps "w" (shrink). One row, span
+      // one vertically, so n/s and the corners are out.
+      const occupied = computeOccupation([slot("x", "3", "1")], 3, 1);
+      assert.deepEqual(
+        resizableDirections({
+          origin: rect(1, 3, 1, 2),
+          columns: 3,
+          rows: 1,
+          occupied,
+        }).sort(),
+        ["e", "w"].sort()
+      );
+    });
+
+    test("a blocked 1×1 neighbour with no span drops that direction", function (assert) {
+      // 1×1 at col 1, row 1 of a 3×1 grid with col 2 occupied: east is blocked
+      // and there's no span to shrink, so no handle survives.
+      const occupied = computeOccupation([slot("x", "2", "1")], 3, 1);
+      assert.deepEqual(
+        resizableDirections({
+          origin: rect(1, 2, 1, 2),
+          columns: 3,
+          rows: 1,
+          occupied,
+        }),
+        []
       );
     });
   });

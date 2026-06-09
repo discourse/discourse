@@ -952,6 +952,81 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
   });
 
+  module("move preserves a vacated span (grid)", function (innerHooks) {
+    innerHooks.beforeEach(async function () {
+      withTestBlockRegistration(() => registerBlock(TestTile));
+      // A 3×2 grid with one tile spanning columns 1–2 of row 1; the rest is
+      // blank, so the tile can be moved to an empty cell elsewhere.
+      await _renderBlocks(
+        "homepage-blocks",
+        [
+          {
+            block: Layout,
+            args: { mode: "grid", columns: 3, rows: 2 },
+            children: [
+              {
+                block: TestTile,
+                args: { title: "Hero" },
+                containerArgs: {
+                  grid: {
+                    column: "1 / 3",
+                    row: "1",
+                    align: "stretch",
+                    justify: "stretch",
+                  },
+                },
+              },
+            ],
+          },
+        ],
+        getOwner(this)
+      );
+      this.editor.siteSettings.wireframe_enabled = true;
+      logIn(getOwner(this));
+      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor.enter();
+    });
+
+    test("moving a spanning block to an empty cell leaves a merged cell at its old rect", function (assert) {
+      const grid = this.editor.readResolvedLayout("homepage-blocks")[0];
+      const gridKey = `layout:${grid.__stableKey}`;
+      const hero = grid.children.find((c) => c.args?.title === "Hero");
+      const heroKey = `wf:svc-test-tile:${hero.__stableKey}`;
+
+      // Move the spanning hero to an empty single cell at column 3, row 2.
+      const ok = this.editor.applyGridDrop({
+        targetGridKey: gridKey,
+        gesture: GRID_DROP_GESTURES.INTO,
+        cell: { column: 3, row: 2 },
+        source: { kind: "existing", key: heroKey },
+      });
+      assert.true(ok);
+
+      const after = this.editor.readResolvedLayout("homepage-blocks")[0];
+      const moved = after.children.find(
+        (c) => c.__stableKey === hero.__stableKey
+      );
+      assert.strictEqual(
+        moved.containerArgs.grid.column,
+        "3",
+        "the moved block lands at the target cell"
+      );
+      assert.strictEqual(moved.containerArgs.grid.row, "2");
+
+      // The vacated 2-cell region stays one merged cell, not two derived 1×1s.
+      const merged = after.children.filter(
+        (c) => c.block === "layout-merged-cell"
+      );
+      assert.strictEqual(merged.length, 1, "exactly one merged cell is minted");
+      assert.strictEqual(
+        merged[0].containerArgs.grid.column,
+        "1 / 3",
+        "the merged cell holds the block's old spanning rect"
+      );
+      assert.strictEqual(merged[0].containerArgs.grid.row, "1");
+    });
+  });
+
   module(
     "grid drop into a cell (cross-grid, same outlet)",
     function (innerHooks) {

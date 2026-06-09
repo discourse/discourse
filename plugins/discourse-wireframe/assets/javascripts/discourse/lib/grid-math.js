@@ -487,6 +487,77 @@ export function computeSpanResize({
 }
 
 /**
+ * The compass directions a cell can effectively resize from its current rect.
+ * A direction is included when its edge can GROW (the adjacent cell band is in
+ * bounds and unoccupied) OR SHRINK (that axis spans more than one cell); a
+ * corner is included only when both of its edges are. Used to render only the
+ * handles that would actually move the cell. A 1×1 origin can never shrink, so
+ * it yields only the directions that have a free neighbour to grow into.
+ *
+ * @param {Object} params
+ * @param {{column: {start: number, end: number}, row: {start: number, end: number}}} params.origin
+ * @param {number} params.columns - Effective column count.
+ * @param {number} params.rows - Effective row count.
+ * @param {Set<string>} params.occupied - Cells occupied by OTHER entries, keyed
+ *   `"row,col"` (the origin's own cells must not be in this set).
+ * @returns {Array<string>} A subset of `["n","e","s","w","ne","nw","se","sw"]`.
+ */
+export function resizableDirections({ origin, columns, rows, occupied }) {
+  const { column, row } = origin;
+  if (column.start == null || row.start == null) {
+    return [];
+  }
+  const colSpan = column.end - column.start;
+  const rowSpan = row.end - row.start;
+
+  // Growth reaches the adjacent cell band: east/south extend past the trailing
+  // line, west/north past the leading line. Shrinking only needs span > 1.
+  const east =
+    colSpan > 1 ||
+    (column.end <= columns &&
+      !columnBlocked(occupied, column.end, row.start, row.end));
+  const west =
+    colSpan > 1 ||
+    (column.start > 1 &&
+      !columnBlocked(occupied, column.start - 1, row.start, row.end));
+  const north =
+    rowSpan > 1 ||
+    (row.start > 1 &&
+      !rowBlocked(occupied, row.start - 1, column.start, column.end));
+  const south =
+    rowSpan > 1 ||
+    (row.end <= rows &&
+      !rowBlocked(occupied, row.end, column.start, column.end));
+
+  const dirs = [];
+  if (north) {
+    dirs.push("n");
+  }
+  if (east) {
+    dirs.push("e");
+  }
+  if (south) {
+    dirs.push("s");
+  }
+  if (west) {
+    dirs.push("w");
+  }
+  if (north && east) {
+    dirs.push("ne");
+  }
+  if (north && west) {
+    dirs.push("nw");
+  }
+  if (south && east) {
+    dirs.push("se");
+  }
+  if (south && west) {
+    dirs.push("sw");
+  }
+  return dirs;
+}
+
+/**
  * Whether any cell in column `column` across rows `[rowStart, rowEnd)` is
  * occupied. Rows / columns are 1-indexed cell indices (a track's leading line).
  *

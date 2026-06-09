@@ -641,6 +641,19 @@ export default class GridManipulator {
     const sameGrid =
       sourceLocated.outletName === outletName &&
       svc.isCellInGrid(sourceLocated.entry, gridKey);
+
+    // Snapshot the source's prior rect + grid before it moves, so a multi-cell
+    // region it leaves behind is preserved as a merged cell (the same shape a
+    // delete preserves) rather than shattering into derived single cells.
+    const priorPlacement = parsePlacement(sourceLocated.entry.containerArgs);
+    const priorParent = svc.findEntryParent(source.key);
+    const priorGridKey = sameGrid
+      ? gridKey
+      : priorParent
+        ? entryKey(priorParent)
+        : null;
+    const priorOutlet = sourceLocated.outletName;
+
     if (!sameGrid) {
       const moved = svc.moveAcrossOutlets({
         sourceOutletName: sourceLocated.outletName,
@@ -664,7 +677,65 @@ export default class GridManipulator {
     if (result.changed) {
       svc.publishStructuralChange(outletName, result.layout);
     }
+    if (priorGridKey) {
+      this.#restoreVacatedSpan(priorOutlet, priorGridKey, priorPlacement);
+    }
     return true;
+  }
+
+  /**
+   * Preserves a multi-cell region a moved block vacated by minting an empty
+   * merged cell at its old rect — so moving a spanning block out of a region
+   * leaves that region as one held-open merged cell, matching what a delete
+   * does, instead of letting it re-derive as separate single cells. A no-op
+   * for single cells (those stay derived) and guarded by the shared `rectIsFree`
+   * so a cascade that refilled the rect — or a move onto part of the rect — never
+   * mints an overlapping or duplicate cell.
+   *
+   * @param {string} outletName - The outlet the prior grid lives in.
+   * @param {string} gridKey - The grid the block was in before the move.
+   * @param {{column: {start: number, end: number}, row: {start: number, end: number}}} priorPlacement
+   * @returns {void}
+   */
+  #restoreVacatedSpan(outletName, gridKey, priorPlacement) {
+    const svc = this.service;
+    const { column, row } = priorPlacement;
+    if (column.start == null || row.start == null) {
+      return;
+    }
+    if (column.end - column.start <= 1 && row.end - row.start <= 1) {
+      return;
+    }
+    const layout = svc.readResolvedLayout(outletName);
+    if (!layout) {
+      return;
+    }
+    const grid = findEntry(layout, gridKey);
+    if (!grid) {
+      return;
+    }
+    if (!rectIsFree(grid.children ?? [], { column, row })) {
+      return;
+    }
+    const cellEntry = {
+      block: LAYOUT_MERGED_CELL_BLOCK,
+      args: {},
+      containerArgs: {
+        grid: {
+          column: formatTrack(column),
+          row: formatTrack(row),
+          align: "stretch",
+          justify: "stretch",
+        },
+      },
+    };
+    const insertion = insertEntryAt(layout, gridKey, cellEntry, "inside");
+    if (insertion.changed) {
+      svc.publishStructuralChange(
+        outletName,
+        this.syncDeclaredToUsage(insertion.layout, gridKey)
+      );
+    }
   }
 
   /**

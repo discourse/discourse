@@ -32,6 +32,7 @@ import {
   computeSpanResize,
   computeZone,
   computeZoneCollapsed,
+  resizableDirections,
   resizeColumnFractions,
   unoccupiedCells,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
@@ -492,8 +493,10 @@ export default class GridOverlay extends Component {
    * @returns {Array<{key: string, column: number, row: number, isSelected: boolean}>}
    */
   get emptyCells() {
-    const occupied = computeOccupation(this.slots, this.columns, this.rows);
-    const cells = unoccupiedCells(occupied, this.columns, this.rows);
+    const columns = this.columns;
+    const rows = this.rows;
+    const occupied = computeOccupation(this.slots, columns, rows);
+    const cells = unoccupiedCells(occupied, columns, rows);
     const selected = this.selectedEmptyCell;
     return cells.map((cell) => ({
       ...cell,
@@ -502,6 +505,17 @@ export default class GridOverlay extends Component {
         selected != null &&
         selected.column === cell.column &&
         selected.row === cell.row,
+      // Only the merge handles that have a free neighbour to grow into; a 1×1
+      // can't shrink, so a cell hemmed in on all sides shows none.
+      directions: resizableDirections({
+        origin: {
+          column: { start: cell.column, end: cell.column + 1 },
+          row: { start: cell.row, end: cell.row + 1 },
+        },
+        columns,
+        rows,
+        occupied,
+      }),
     }));
   }
 
@@ -1836,6 +1850,7 @@ export default class GridOverlay extends Component {
               cell is selected (see the SCSS gate). }}
             <DResizeHandles
               @handleClass="wireframe-block-chrome__resize-handle"
+              @directions={{cell.directions}}
               @onResizeStart={{fn this.onCellMergeStart cell}}
               @onResize={{fn this.onCellMerge cell}}
               @onResizeEnd={{this.onCellMergeEnd}}

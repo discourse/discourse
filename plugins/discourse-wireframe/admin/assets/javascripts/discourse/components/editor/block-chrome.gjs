@@ -34,6 +34,7 @@ import {
   computeSpanResize,
   formatTrack,
   placementsOverlap,
+  resizableDirections,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import { imageArgEntries } from "../../lib/empty-image-upload";
 import { kindForArg } from "../../lib/kind-for-arg";
@@ -473,6 +474,23 @@ export default class BlockChrome extends Component {
       },
       grid?.children
     ).rows;
+  }
+
+  /**
+   * The compass directions this grid cell can effectively resize toward, so
+   * only the handles that would actually move it are rendered. An edge at the
+   * grid boundary or blocked by a neighbouring cell — with no span to shrink on
+   * that axis — is omitted; a corner needs both of its edges.
+   *
+   * @returns {Array<string>}
+   */
+  get gridResizeDirections() {
+    return resizableDirections({
+      origin: parseSlotPlacement(this.slotPlacement),
+      columns: this.slotGridColumns,
+      rows: this.slotGridRows,
+      occupied: this.getResizeOccupied(),
+    });
   }
 
   /**
@@ -1697,6 +1715,7 @@ export default class BlockChrome extends Component {
               merge handles), so pointer-events stay off until then. }}
             <DResizeHandles
               @handleClass="wireframe-block-chrome__resize-handle"
+              @directions={{this.gridResizeDirections}}
               @onResizeStart={{this.onGridResizeStart}}
               @onResize={{this.onGridResize}}
               @onResizeEnd={{this.onGridResizeEnd}}
