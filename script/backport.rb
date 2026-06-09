@@ -2,6 +2,7 @@
 
 require "json"
 require "open3"
+require "shellwords"
 
 RunResult = Data.define(:success, :stdout, :stderr)
 
@@ -96,6 +97,14 @@ results = []
 backport_versions.each do |version|
   release_branch = "release/#{version}"
   backport_branch = "backport/#{version}/#{pr_number}"
+  backport_title = "#{pr_title} [backport #{version}]"
+  backport_body = <<~BODY
+    Backport of ##{pr_number} to #{release_branch}.
+
+    ---
+
+    #{pr_body}
+  BODY
 
   puts "\n--- Backporting to #{release_branch} ---"
 
@@ -132,6 +141,8 @@ backport_versions.each do |version|
       release_branch: release_branch,
       backport_branch: backport_branch,
       cherry_pick_range: cherry_pick_range,
+      backport_title: backport_title,
+      backport_body: backport_body,
     }
     run("git", "cherry-pick", "--abort", allow_failure: true)
     run("git", "checkout", "main", allow_failure: true)
@@ -142,15 +153,6 @@ backport_versions.each do |version|
   run("git", "push", "-f", "origin", backport_branch)
 
   # Create or update PR
-  backport_title = "#{pr_title} [backport #{version}]"
-  backport_body = <<~BODY
-    Backport of ##{pr_number} to #{release_branch}.
-
-    ---
-
-    #{pr_body}
-  BODY
-
   # Try to create the PR
   created =
     gh(
@@ -201,6 +203,11 @@ if failed.any?
   comment_lines << "### Failed backports"
   failed.each do |r|
     if r[:cherry_pick_range]
+      gh_create =
+        "gh pr create --base #{r[:release_branch]} --head #{r[:backport_branch]} " \
+          "--title #{Shellwords.escape(r[:backport_title])} " \
+          "--body #{Shellwords.escape(r[:backport_body])}"
+
       comment_lines << <<~MSG
         #### #{r[:version]}
         ```
@@ -209,8 +216,13 @@ if failed.any?
 
         To resolve manually:
         ```bash
+        git fetch origin #{r[:release_branch]}
         git checkout -B #{r[:backport_branch]} origin/#{r[:release_branch]}
         git cherry-pick #{r[:cherry_pick_range]}
+
+        # Resolve the conflicts, then push the branch and open the PR:
+        git push -f origin #{r[:backport_branch]}
+        #{gh_create}
         ```
       MSG
     else
