@@ -306,6 +306,7 @@ const extension = {
                       );
                     } else {
                       failedUrls.full.add(oneboxUrl);
+                      removeLoadingDecorations(view, oneboxUrl, "full");
                       if (forceRetry) {
                         showPreviewFailedToast();
                       }
@@ -314,6 +315,7 @@ const extension = {
                   .catch(() => {
                     pendingUrls.full.delete(oneboxUrl);
                     failedUrls.full.add(oneboxUrl);
+                    removeLoadingDecorations(view, oneboxUrl, "full");
                     if (forceRetry) {
                       showPreviewFailedToast();
                     }
@@ -324,8 +326,8 @@ const extension = {
             // Inline oneboxes, batched
             if (pendingUrls.inline.size) {
               const inlineUrls = pendingUrls.inline;
-              loadInlineOneboxes(inlineUrls, getContext()).then(
-                (inlineOneboxes) => {
+              loadInlineOneboxes(inlineUrls, getContext())
+                .then((inlineOneboxes) => {
                   for (const url of inlineUrls) {
                     pendingUrls.inline.delete(url);
                   }
@@ -335,8 +337,14 @@ const extension = {
                       view.state.tr.setMeta(plugin, { inlineOneboxes })
                     );
                   }
-                }
-              );
+                })
+                .catch(() => {
+                  for (const url of inlineUrls) {
+                    pendingUrls.inline.delete(url);
+                    failedUrls.inline.add(url);
+                  }
+                  removeLoadingDecorations(view, inlineUrls, "inline");
+                });
             }
           },
 
@@ -414,6 +422,21 @@ const extension = {
         };
       },
     });
+
+    function removeLoadingDecorations(view, urls, type) {
+      const urlSet = typeof urls === "string" ? new Set([urls]) : new Set(urls);
+      const decoState = plugin.getState(view.state);
+      const toRemove = decoState.find(
+        undefined,
+        undefined,
+        (spec) => spec.oneboxType === type && urlSet.has(spec.oneboxUrl)
+      );
+      if (toRemove.length) {
+        view.dispatch(
+          view.state.tr.setMeta(plugin, { removeDecorations: toRemove })
+        );
+      }
+    }
 
     function showPreviewFailedToast() {
       getContext().toasts.default({
