@@ -27,19 +27,24 @@ function reset(component) {
   state.suggestions = [];
 }
 
-async function loadSuggestions(component, selectKit) {
-  const owner = getOwner(component);
-  const composer = owner.lookup("service:composer");
-  const text = composer?.model?.reply;
-  const state = stateFor(component);
-
-  if (!text || text.length < MIN_CHARACTER_COUNT) {
-    owner.lookup("service:toasts").error({
+function noSuggestionsToast(component) {
+  getOwner(component)
+    .lookup("service:toasts")
+    .error({
       duration: "short",
       data: {
         message: i18n("discourse_ai.ai_helper.suggest_errors.no_suggestions"),
       },
     });
+}
+
+async function loadSuggestions(component, selectKit) {
+  const composer = getOwner(component).lookup("service:composer");
+  const text = composer?.model?.reply;
+  const state = stateFor(component);
+
+  if (!text || text.length < MIN_CHARACTER_COUNT) {
+    noSuggestionsToast(component);
     return;
   }
 
@@ -58,6 +63,10 @@ async function loadSuggestions(component, selectKit) {
 
     state.suggestions = assistant || [];
     state.mode = state.suggestions.length ? "results" : "idle";
+
+    if (!state.suggestions.length) {
+      noSuggestionsToast(component);
+    }
   } catch (error) {
     state.mode = "idle";
     popupAjaxError(error);
