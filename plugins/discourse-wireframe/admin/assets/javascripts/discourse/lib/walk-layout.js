@@ -29,6 +29,7 @@
  * meaningful DOM source.
  */
 import { _getOutletLayouts } from "discourse/blocks/block-outlet";
+import { synthesizePartEntries } from "discourse/lib/blocks/-internals/composite";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 
 /**
@@ -116,6 +117,13 @@ export async function walkAllOutlets({ blocksService, alwaysInclude }) {
   const layoutMap = _getOutletLayouts();
   const mounted = mountedOutletNames();
 
+  // Block-name → metadata index, built once. Lets `walkEntries` recognise a
+  // composite (a block declaring a `parts` composition) and emit its parts as
+  // nested rows without re-walking the registry per entry.
+  const metadataByName = new Map(
+    blocksService.listBlocksWithMetadata().map((b) => [b.name, b.metadata])
+  );
+
   // Sync prefix: touch every entry's soft-failure stamps before the
   // first `await`, so the reads attach to the caller's tracking frame
   // (typically a `@cached` getter wrapping the returned Promise in
@@ -168,7 +176,14 @@ export async function walkAllOutlets({ blocksService, alwaysInclude }) {
     const rootIsLayout =
       root && resolveBlockName(root.block, blocksService).name === "layout";
     if (rootIsLayout) {
-      walkEntries(root.children ?? [], 0, [0, "children"], rows, blocksService);
+      walkEntries(
+        root.children ?? [],
+        0,
+        [0, "children"],
+        rows,
+        blocksService,
+        metadataByName
+      );
       result.push({
         outletName,
         rows,
@@ -176,7 +191,7 @@ export async function walkAllOutlets({ blocksService, alwaysInclude }) {
         mode: normalizeLayoutMode(root.args?.mode),
       });
     } else {
-      walkEntries(layout, 0, [], rows, blocksService);
+      walkEntries(layout, 0, [], rows, blocksService, metadataByName);
       result.push({ outletName, rows, rootKey: null, mode: null });
     }
   }
@@ -217,7 +232,14 @@ function touchStamps(entries) {
   }
 }
 
-function walkEntries(entries, depth, path, rows, blocksService) {
+function walkEntries(
+  entries,
+  depth,
+  path,
+  rows,
+  blocksService,
+  metadataByName
+) {
   entries.forEach((entry, index) => {
     const entryPath = [...path, index];
 
@@ -227,8 +249,15 @@ function walkEntries(entries, depth, path, rows, blocksService) {
     );
     // Composite key matching the form minted in entry-processing.js (the
     // BLOCK_DEBUG callback receives the same value), so outline ↔ canvas
-    // selection compares apples to apples.
+    // selection compares apples to apples. For a synthesized part this is the
+    // part key (`${blockName}:${compositeKey}::part::${id}`), which also
+    // matches what the canvas chrome carries.
     const blockKey = `${blockName}:${entry.__stableKey}`;
+    // A composite (declares `parts`) that supplies no `children` of its own
+    // renders its composition; surface those parts as nested rows. An entry
+    // with its own children is a plain container and walks those instead.
+    const metadata = metadataByName.get(blockName) ?? null;
+    const hasParts = !!(metadata?.parts && entry.children == null);
     rows.push({
       depth,
       blockName,
@@ -243,6 +272,10 @@ function walkEntries(entries, depth, path, rows, blocksService) {
       // reference. The outline shows these with a warning icon so
       // authors can find and fix them.
       isUnknown: unknown,
+      // `isPart` marks a synthesized composite part (no persisted entry).
+      // The outline keeps these selectable but opts them out of drag/drop —
+      // a code-defined part isn't reorderable.
+      isPart: !!entry.__fromComposite,
       // `validationFailure` surfaces soft-failures stamped on the entry
       // by `validateLayout` in permissive mode (`__failureType =
       // "structural-invalid"`, `__failureReason` set to the original
@@ -255,7 +288,7 @@ function walkEntries(entries, depth, path, rows, blocksService) {
       validationFailure: entry.__failureType ?? null,
       validationReason: entry.__failureReason ?? null,
       validationDetails: entry.__failureDetails ?? null,
-      hasChildren: !!(entry.children && entry.children.length),
+      hasChildren: !!(entry.children && entry.children.length) || hasParts,
       path: entryPath,
     });
     if (entry.children?.length) {
@@ -264,7 +297,17 @@ function walkEntries(entries, depth, path, rows, blocksService) {
         depth + 1,
         [...entryPath, "children"],
         rows,
-        blocksService
+        blocksService,
+        metadataByName
+      );
+    } else if (hasParts) {
+      walkEntries(
+        synthesizePartEntries(entry, metadata),
+        depth + 1,
+        [...entryPath, "parts"],
+        rows,
+        blocksService,
+        metadataByName
       );
     }
   });

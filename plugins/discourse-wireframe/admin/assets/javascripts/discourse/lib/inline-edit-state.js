@@ -2,6 +2,7 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { next as nextRunloop } from "@ember/runloop";
+import { resolvePartArgs } from "discourse/lib/blocks/-internals/composite";
 import { toStorage } from "discourse/plugins/discourse-wireframe/discourse/lib/inline-rich-text";
 import {
   clearValidatorStamps,
@@ -9,7 +10,9 @@ import {
   findEntrySiblings,
   insertEntryAt,
   removeEntry,
+  resolvePartDef,
   revalidateEntryStamps,
+  setPartOverride,
 } from "./mutate-layout";
 
 /**
@@ -81,6 +84,17 @@ export default class InlineEditState {
    * @type {{entry: Object, outletName: string}|null}
    */
   #located = null;
+
+  /**
+   * Set instead of `#located` when the edited target is a synthesized
+   * composite part (which has no persisted entry). Holds the owning
+   * composite's key, outlet, and the override path, so the session commits
+   * the final value as a per-part override rather than into a tracked
+   * entry's args. `null` for an ordinary entry session.
+   *
+   * @type {{compositeKey: string, outletName: string, partPath: string}|null}
+   */
+  #partContext = null;
 
   /**
    * Snapshot of the arg's pre-edit value, captured at `start` time.
@@ -185,6 +199,11 @@ export default class InlineEditState {
    * @returns {*}
    */
   get argValue() {
+    // Part session: the pre-edit value captured at `start` is the part's
+    // effective arg; ProseMirror owns the value for the rest of the session.
+    if (this.#partContext) {
+      return this.#prevValue;
+    }
     if (!this.#located || !this.argName) {
       return undefined;
     }
@@ -247,12 +266,34 @@ export default class InlineEditState {
       this.stop({ commit: true });
     }
     const located = await this.service.findEntryAndOutlet(blockKey);
-    if (!located) {
-      return false;
+    if (located) {
+      this.#located = located;
+      this.#partContext = null;
+      this.#prevValue = located.entry.args?.[argName];
+      this.#blockName = located.entry.block ?? null;
+    } else {
+      // No persisted entry: this is a synthesized composite part. Resolve the
+      // owning composite + override path so the session commits as a per-part
+      // override. The pre-edit value is the part's effective arg (its
+      // code-default merged with any current override).
+      const partContext = this.service.resolvePartContext(blockKey);
+      const partDef = partContext
+        ? resolvePartDef(partContext.compositeEntry, partContext.idPath)
+        : null;
+      if (!partContext || !partDef) {
+        return false;
+      }
+      const override =
+        partContext.compositeEntry.overrides?.[partContext.partPath];
+      this.#located = null;
+      this.#partContext = {
+        compositeKey: partContext.compositeKey,
+        outletName: partContext.outletName,
+        partPath: partContext.partPath,
+      };
+      this.#prevValue = resolvePartArgs(partDef, override)[argName];
+      this.#blockName = this.service.blockNameOf({ block: partDef.block });
     }
-    this.#located = located;
-    this.#prevValue = located.entry.args?.[argName];
-    this.#blockName = located.entry.block ?? null;
     if (options.coords) {
       this.#initialSelection = { coords: options.coords };
     } else if (options.initialSelection !== undefined) {
@@ -278,6 +319,25 @@ export default class InlineEditState {
    * @param {{commit?: boolean}} [options]
    */
   stop({ commit = true } = {}) {
+    // Part session: on commit, the registered callback pulls ProseMirror's
+    // final doc and routes it through `applyChange`, which writes a per-part
+    // override (a structural commit that records its own undo). On cancel,
+    // nothing was written during the session, so PM teardown simply discards
+    // the edit — there's no entry value to restore.
+    if (this.#partContext) {
+      if (commit && this.#commitFn) {
+        this.#commitFn();
+      }
+      this.#located = null;
+      this.#partContext = null;
+      this.#prevValue = null;
+      this.#blockName = null;
+      this.#initialSelection = "selectAll";
+      this.blockKey = null;
+      this.argName = null;
+      return;
+    }
+
     const located = this.#located;
     const argName = this.argName;
     if (!located || !argName) {
@@ -339,6 +399,10 @@ export default class InlineEditState {
    *   for marked edits) produced by `toStorage(doc.toJSON())`.
    */
   applyChange(value) {
+    if (this.#partContext) {
+      this.#applyPartChange(value);
+      return;
+    }
     const located = this.#located;
     const argName = this.argName;
     if (!located || !argName) {
@@ -606,6 +670,47 @@ export default class InlineEditState {
     if (this._controller === controller) {
       this._controller = null;
     }
+  }
+
+  /**
+   * Commits the final value of a part edit session into the owning
+   * composite's per-part override map. A structural commit (the synthesis
+   * reads `entry.overrides` at render time), so it routes through
+   * `recordStructural` for undo/redo and re-publishes the draft layer. An
+   * empty value removes the override key, reverting that arg to the part's
+   * code default — matching `applyChange`'s delete-on-empty contract.
+   *
+   * @param {*} value
+   */
+  #applyPartChange(value) {
+    const { compositeKey, outletName, partPath } = this.#partContext;
+    const argName = this.argName;
+    this.service.recordStructural([outletName], () => {
+      const layout = this.service.readResolvedLayout(outletName);
+      if (!layout) {
+        return false;
+      }
+      const result = setPartOverride(
+        layout,
+        compositeKey,
+        partPath,
+        (current) => {
+          const merged = { ...current };
+          if (value == null || value === "") {
+            delete merged[argName];
+          } else {
+            merged[argName] = value;
+          }
+          return merged;
+        }
+      );
+      if (!result.changed) {
+        return false;
+      }
+      this.service.editedOutlets.add(outletName);
+      this.service.publishStructuralChange(outletName, result.layout);
+      return true;
+    });
   }
 
   #getSiblingInfo(direction) {

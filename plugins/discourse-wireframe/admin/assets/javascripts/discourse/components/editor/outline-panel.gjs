@@ -280,6 +280,12 @@ export default class OutlinePanel extends Component {
    */
   @action
   handleRowDragStart({ source }) {
+    // Synthesized composite parts aren't reorderable — never start a drag for
+    // one. (The underlying move would no-op anyway, but this avoids the
+    // misleading drag affordance.)
+    if (source?.data?.isPart) {
+      return;
+    }
     this.wireframe.startDrag(source.data);
   }
 
@@ -296,6 +302,12 @@ export default class OutlinePanel extends Component {
    */
   @action
   applyRowDrop(outletName, row, target) {
+    // A synthesized composite part isn't a real layout position — dropping
+    // onto/around it can't move or insert anything, so ignore the drop.
+    if (row.isPart) {
+      this.wireframe.endDrag();
+      return;
+    }
     const { source } = target;
     if (source?.type === "wf-palette-block") {
       this.wireframe.insertBlock({
@@ -682,6 +694,7 @@ export default class OutlinePanel extends Component {
                     (if (this.isRowDragSource row.blockKey) "--dragging")
                     (if row.hasError "--error")
                     (if row.isMuted "--muted")
+                    (if row.isPart "--part")
                   }}
                   role="button"
                   tabindex="0"
@@ -690,7 +703,9 @@ export default class OutlinePanel extends Component {
                   {{dDragAndDropSource
                     type="wf-block"
                     data=(hash
-                      blockKey=row.blockKey outletName=group.outletName
+                      blockKey=row.blockKey
+                      outletName=group.outletName
+                      isPart=row.isPart
                     )
                     onDragStart=this.handleRowDragStart
                     onDrop=this.wireframe.endDrag
