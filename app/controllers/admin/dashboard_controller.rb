@@ -166,10 +166,13 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   def dashboard_improvements?
+    dashboard_improvements_enabled =
+      UpcomingChanges.enabled_for_user?(:dashboard_improvements, current_user)
+
     if params[:version] == "alt"
-      !SiteSetting.dashboard_improvements
+      !dashboard_improvements_enabled
     else
-      SiteSetting.dashboard_improvements
+      dashboard_improvements_enabled
     end
   end
 

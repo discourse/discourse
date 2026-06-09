@@ -386,9 +386,20 @@ describe "Admin Customize Themes" do
       banner = PageObjects::Components::WelcomeBanner.new
       other_user = Fabricate(:user)
       other_user.user_option.update!(theme_ids: [theme.id])
+
+      # `Theme.user_theme_ids` is cached across examples; a stale entry makes
+      # the user resolve the wrong theme.
+      Theme.clear_cache!
+
       sign_in(other_user)
       visit("/")
       expect(banner).to be_visible
+
+      # A sanity check.
+      expect(page).to have_css(
+        "meta[name=discourse_theme_id][content='#{theme.id}']",
+        visible: false,
+      )
 
       # Wait for the `/client_settings` subscription's first poll to finish.
       try_until_success do

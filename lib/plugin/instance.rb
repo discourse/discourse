@@ -1234,8 +1234,8 @@ class Plugin::Instance
   end
 
   # Registers a KPI tile in the admin dashboard "Highlights" section
-  # (gated by SiteSetting.dashboard_improvements). The KPI is rendered as a
-  # tile linking to /admin/reports/:report.
+  # (gated by the dashboard_improvements upcoming change). The KPI is rendered
+  # as a tile linking to /admin/reports/:report.
   #
   # @param type [Symbol] unique identifier for the KPI. Used as the i18n key
   #   (admin.dashboard.highlights.kpi.<type>.label / .tooltip) and to
