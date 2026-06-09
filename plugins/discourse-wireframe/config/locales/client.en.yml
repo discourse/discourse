@@ -90,6 +90,7 @@ en:
         label_args_schema: "Args schema"
         label_no_args: "This block accepts no arguments."
         label_no_conditions: "No conditions."
+        locked_field_hint: "Locked by the composite. Detach the block to edit it."
         unknown_type: "Unknown"
         errors:
           required: "Required."

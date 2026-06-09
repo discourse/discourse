@@ -7,6 +7,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { eq } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 import { friendlyErrorMessage } from "discourse/plugins/discourse-wireframe/discourse/lib/friendly-error-message";
 import {
   buildValidationRule,
@@ -128,6 +129,25 @@ export default class InspectorForm extends Component {
   }
 
   /**
+   * The lock state when the current selection is a composite part: `"all"`
+   * (the whole part is locked), a Set of locked arg names, or `null` (not a
+   * part, or nothing locked). Locked args render disabled in the form, since
+   * a locked arg can't be overridden in place — only after detaching.
+   *
+   * @returns {"all"|Set<string>|null}
+   */
+  get lockedArgs() {
+    const lock = this.wireframe.partLockForSelection();
+    if (lock === true) {
+      return "all";
+    }
+    if (Array.isArray(lock)) {
+      return new Set(lock);
+    }
+    return null;
+  }
+
+  /**
    * The seed args we hand to `<Form @data>`. We use the
    * `argsSnapshot` captured once at selection time (a plain object) rather
    * than spreading the live `entry.args` trackedObject on every read —
@@ -152,7 +172,41 @@ export default class InspectorForm extends Component {
    */
   @action
   visibleFields(fields) {
-    return fields.filter((field) => isFieldVisible(field, this.values));
+    const visible = fields.filter((field) =>
+      isFieldVisible(field, this.values)
+    );
+    const locked = this.lockedArgs;
+    if (!locked) {
+      return visible;
+    }
+    // Annotate locked fields with a hint so the disabled control reads as
+    // "locked by the composite" rather than mysteriously inert.
+    const hint = i18n("wireframe.inspector.locked_field_hint");
+    return visible.map((field) =>
+      locked === "all" || locked.has(field.name)
+        ? {
+            ...field,
+            helpText: field.helpText ? `${field.helpText} ${hint}` : hint,
+          }
+        : field
+    );
+  }
+
+  /**
+   * Whether a given field renders disabled: either the whole form is
+   * read-only (unregistered block) or the field's arg is locked for the
+   * selected composite part.
+   *
+   * @param {import("../../lib/schema-to-fields").InspectorField} field
+   * @returns {boolean}
+   */
+  @action
+  isFieldDisabled(field) {
+    if (this.disabled) {
+      return true;
+    }
+    const locked = this.lockedArgs;
+    return locked === "all" || !!locked?.has(field.name);
   }
 
   /**
@@ -301,7 +355,7 @@ export default class InspectorForm extends Component {
                       @values={{this.values}}
                       @validationRuleFor={{this.validationRuleFor}}
                       @onFieldSet={{this.onFieldSet}}
-                      @disabled={{this.disabled}}
+                      @disabled={{this.isFieldDisabled field}}
                     />
                   {{/each}}
                 </div>
@@ -315,7 +369,7 @@ export default class InspectorForm extends Component {
                     @values={{this.values}}
                     @validationRuleFor={{this.validationRuleFor}}
                     @onFieldSet={{this.onFieldSet}}
-                    @disabled={{this.disabled}}
+                    @disabled={{this.isFieldDisabled field}}
                   />
                 {{/each}}
               </form.Section>

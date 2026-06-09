@@ -63,6 +63,7 @@ import {
   replaceEntryContainerArgs,
   replaceEntryId,
   replaceEntryInPlace,
+  resolvePartDef,
   revalidateEntryStamps,
   serializeEntryForSave,
   setPartOverride,
@@ -3115,6 +3116,22 @@ export default class WireframeService extends Service {
       }
     }
     return null;
+  }
+
+  /**
+   * The lock declaration for the currently-selected part, or null when the
+   * selection isn't a part. `true` means the whole part is locked (no in-place
+   * arg overrides); a string array lists the specific arg names that can't be
+   * overridden in place. Drives the inspector's disabling of locked fields.
+   *
+   * @returns {true|string[]|null}
+   */
+  partLockForSelection() {
+    const context = this.resolvePartContext(this.selectedBlockKey);
+    if (!context) {
+      return null;
+    }
+    return resolvePartDef(context.compositeEntry, context.idPath)?.lock ?? null;
   }
 
   /**
