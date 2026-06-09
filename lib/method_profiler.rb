@@ -3,12 +3,12 @@
 # see https://samsaffron.com/archive/2017/10/18/fastest-way-to-profile-a-method-in-ruby
 class MethodProfiler
   ITEMIZED_NAMES = %i[sql redis net].freeze
+  private_constant :ITEMIZED_NAMES
+
+  MAX_ITEM_LENGTH = 2000
+  private_constant :MAX_ITEM_LENGTH
 
   @@itemize_enabled = false
-
-  def self.itemize_enabled
-    @@itemize_enabled
-  end
 
   def self.itemize_enabled=(value)
     @@itemize_enabled = value
@@ -30,11 +30,11 @@ class MethodProfiler
           item_capture = <<~RUBY if itemize
           if prof[:__itemize]
             begin
-              if (__mp_item = MethodProfiler.__#{name}_item(self, args))
+              if (__mp_item = MethodProfiler.send(:__#{name}_item, self, args))
                 (data[:items] ||= []) << __mp_item.merge!(duration_ms: __mp_elapsed * 1000.0)
               end
             rescue => __mp_error
-              (data[:items] ||= []) << MethodProfiler.__item_error(__mp_error)
+              (data[:items] ||= []) << MethodProfiler.send(:__item_error, __mp_error)
             end
           end
         RUBY
@@ -67,38 +67,36 @@ class MethodProfiler
     klass.class_eval patches
   end
 
-  MAX_ITEM_LENGTH = 2000
-
-  def self.utf8(value)
+  private_class_method def self.utf8(value)
     value.to_s.dup.force_encoding(Encoding::UTF_8).scrub("?")
   end
 
-  def self.truncate(string)
+  private_class_method def self.truncate(string)
     return string if string.length <= MAX_ITEM_LENGTH
     "#{string[0, MAX_ITEM_LENGTH]}…(truncated, #{string.bytesize} bytes)"
   end
 
-  def self.__item_error(error)
+  private_class_method def self.__item_error(error)
     { error: truncate(utf8("#{error.class}: #{error.message}")) }
   end
 
-  def self.__sql_item(_receiver, args)
+  private_class_method def self.__sql_item(_receiver, args)
     { sql: truncate(utf8(args[0])) }
   end
 
-  def self.__redis_item(_receiver, args)
+  private_class_method def self.__redis_item(_receiver, args)
     command = args[0]
     return { command: truncate(utf8(command)) } unless command.is_a?(Array)
     commands = command.first.is_a?(Array) ? command : [command]
     { command: truncate(commands.map { |entry| __redis_command(entry) }.join("; ")) }
   end
 
-  def self.__redis_command(command)
+  private_class_method def self.__redis_command(command)
     return utf8(command) unless command.is_a?(Array)
     [utf8(command.first).upcase, *Array(command[1..]).map { |arg| utf8(arg) }].join(" ").strip
   end
 
-  def self.__net_item(receiver, args)
+  private_class_method def self.__net_item(receiver, args)
     if defined?(Net::HTTP) && receiver.is_a?(Net::HTTP)
       request = args[0]
       url = __http_url(receiver.use_ssl?, receiver.address, receiver.port, request.path)
@@ -119,7 +117,7 @@ class MethodProfiler
     end
   end
 
-  def self.__http_url(ssl, host, port, path)
+  private_class_method def self.__http_url(ssl, host, port, path)
     scheme = ssl ? "https" : "http"
     default_port = ssl ? 443 : 80
     authority = port.nil? || port == default_port ? host : "#{host}:#{port}"
