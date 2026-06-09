@@ -241,17 +241,19 @@ export default class UpsertCategorySecurity extends Component {
               </div>
             {{/unless}}
             {{#if (or this.hasAvailableGroups this.canRemoveAllPermissions)}}
-              <div class="add-group">
-                {{#if this.hasAvailableGroups}}
-                  <PluginOutlet
-                    @name="category-security-permissions-add-group"
-                    @outletArgs={{lazyHash
-                      category=@category
-                      availableGroups=this.availableGroups
-                      onSelectGroup=this.onSelectGroup
-                    }}
-                    @defaultGlimmer={{true}}
-                  >
+              <PluginOutlet
+                @name="category-security-permissions-add-group"
+                @outletArgs={{lazyHash
+                  category=@category
+                  availableGroups=this.availableGroups
+                  onSelectGroup=this.onSelectGroup
+                  canRemoveAllPermissions=this.canRemoveAllPermissions
+                  onRemoveAllPermissions=this.onRemoveAllPermissions
+                }}
+                @defaultGlimmer={{true}}
+              >
+                <div class="add-group">
+                  {{#if this.hasAvailableGroups}}
                     <span class="group-name">
                       <@form.Field
                         @name="security_add_group_id"
@@ -277,16 +279,16 @@ export default class UpsertCategorySecurity extends Component {
                         </field.Control>
                       </@form.Field>
                     </span>
-                  </PluginOutlet>
-                {{/if}}
-                {{#if this.canRemoveAllPermissions}}
-                  <DButton
-                    class="btn-default remove-all-permissions"
-                    @label="category.permissions.remove_all"
-                    @action={{this.onRemoveAllPermissions}}
-                  />
-                {{/if}}
-              </div>
+                  {{/if}}
+                  {{#if this.canRemoveAllPermissions}}
+                    <DButton
+                      class="btn-default remove-all-permissions"
+                      @label="category.permissions.remove_all"
+                      @action={{this.onRemoveAllPermissions}}
+                    />
+                  {{/if}}
+                </div>
+              </PluginOutlet>
             {{/if}}
           </div>
 
