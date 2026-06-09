@@ -3,28 +3,18 @@
 require "json"
 require "open3"
 require "optparse"
+require "pathname"
+require "psych"
 require "tempfile"
 
 module UpcomingChanges
   class StatusReport
     SETTINGS_PATH = "config/site_settings.yml"
     PLUGIN_SETTINGS_PATH_PATTERN = "plugins/*/config/settings.yml"
-    PROMOTIONS = { "experimental" => "alpha", "alpha" => "beta", "beta" => "stable" }.freeze
-    TERMINAL_STATUSES = %w[conceptual stable permanent never].freeze
-    STATUS_PATTERN = /\A(\s*)status:\s*(["']?)([^"'\s#]+)(["']?)([^\n]*)(\n?)\z/
+    STATUS_PATTERN = /\A(\s*)status:\s*(["']?)([^"'\s#]+)\2([^\n]*)(\n?)\z/
 
-    Commit =
-      Struct.new(:sha, :date, :author_name, :author_email, :subject, keyword_init: true) do
-        def to_h
-          {
-            "sha" => sha,
-            "date" => date,
-            "author_name" => author_name,
-            "author_email" => author_email,
-            "subject" => subject,
-          }
-        end
-      end
+    Commit = Struct.new(:sha, :date, :author_name, :author_email, :subject, keyword_init: true)
+    HistoryEntry = Struct.new(:commit, :status, keyword_init: true)
 
     class Git
       def initialize(repo_path:)
@@ -32,8 +22,7 @@ module UpcomingChanges
       end
 
       def commits_for(path)
-        output =
-          capture("log", "--format=%H%x00%aI%x00%an%x00%ae%x00%s", "--", path, allow_failure: true)
+        output = capture("log", "--format=%H%x00%aI%x00%an%x00%ae%x00%s", "--", path)
 
         output.lines.filter_map do |line|
           sha, date, author_name, author_email, subject = line.chomp.split("\0", 5)
@@ -44,27 +33,23 @@ module UpcomingChanges
       end
 
       def show_file(commit_sha, path)
-        capture("show", "#{commit_sha}:#{path}", allow_failure: true)
+        capture("show", "#{commit_sha}:#{path}")
       end
 
       private
 
-      def capture(*args, allow_failure: false)
+      def capture(*args)
         stdout, stderr, status = Open3.capture3("git", "-C", @repo_path, *args)
-        return stdout if status.success? || allow_failure
+        return stdout if status.success?
 
         raise "git #{args.join(" ")} failed: #{stderr}"
       end
     end
 
     class MetadataLoader
-      def self.from_current_site_setting(settings_path:)
-        source_metadata = from_file(settings_path, strict: true)
-        site_setting_metadata = SiteSetting.upcoming_change_metadata.slice(*source_metadata.keys)
-        site_setting_metadata.presence || source_metadata
-      end
-
       def self.from_content(content)
+        return {} if content.blank?
+
         Tempfile.create(%w[upcoming-change-settings .yml]) do |file|
           file.write(content)
           file.close
@@ -85,6 +70,202 @@ module UpcomingChanges
       end
     end
 
+    class SourceIndex
+      def initialize(repo_path:, settings_path:, settings_paths:)
+        @repo_path = repo_path
+        @settings_path = settings_path
+        @configured_settings_paths = settings_paths
+      end
+
+      def changes
+        @changes ||=
+          settings_paths
+            .each_with_object({}) do |settings_path, result|
+              MetadataLoader
+                .from_file(File.join(@repo_path, settings_path), strict: true)
+                .each { |name, metadata| result[name.to_sym] = metadata.merge(settings_path:) }
+            end
+            .sort
+            .to_h
+      end
+
+      def change_names
+        changes.keys
+      end
+
+      def explicit_paths?
+        @configured_settings_paths.present?
+      end
+
+      def metadata_for(change_name)
+        changes[change_name.to_sym]
+      end
+
+      def settings_path_for(change_name)
+        metadata_for(change_name)&.fetch(:settings_path) || plugin_settings_path_for(change_name) ||
+          @settings_path
+      end
+
+      private
+
+      def settings_paths
+        @settings_paths ||=
+          normalize_paths(@configured_settings_paths.presence || default_settings_paths)
+      end
+
+      def default_settings_paths
+        [@settings_path, *Dir.glob(File.join(@repo_path, PLUGIN_SETTINGS_PATH_PATTERN)).sort]
+      end
+
+      def normalize_paths(paths)
+        paths
+          .map { |path| File.expand_path(path, @repo_path) }
+          .map { |path| Pathname.new(path).relative_path_from(Pathname.new(@repo_path)).to_s }
+          .uniq
+      end
+
+      def plugin_settings_path_for(change_name)
+        plugin_name = SiteSetting.plugins[change_name.to_sym]
+        return if plugin_name.blank?
+
+        "plugins/#{plugin_name}/config/settings.yml"
+      end
+    end
+
+    class CurrentChanges
+      def initialize(repo_path:, source_index:)
+        @repo_path = repo_path
+        @source_index = source_index
+      end
+
+      def call
+        current_change_names
+          .each_with_object({}) do |change_name, result|
+            metadata = source_metadata_for(change_name).merge(core_metadata_for(change_name))
+            result[change_name] = metadata.merge(settings_path: settings_path_for(change_name))
+          end
+          .sort
+          .to_h
+      end
+
+      private
+
+      def current_change_names
+        return @source_index.change_names.sort if source_only?
+
+        (@source_index.change_names + SiteSetting.upcoming_change_site_settings)
+          .map(&:to_sym)
+          .uniq
+          .sort
+      end
+
+      def source_only?
+        @source_index.explicit_paths? ||
+          File.expand_path(@repo_path) != File.expand_path(Rails.root.to_s)
+      end
+
+      def source_metadata_for(change_name)
+        @source_index.metadata_for(change_name) || {}
+      end
+
+      def core_metadata_for(change_name)
+        return {} if source_only?
+
+        SiteSetting.upcoming_change_metadata[change_name.to_sym] || {}
+      end
+
+      def settings_path_for(change_name)
+        source_metadata_for(change_name)[:settings_path] ||
+          @source_index.settings_path_for(change_name)
+      end
+    end
+
+    class GitHistory
+      def initialize(git:)
+        @git = git
+      end
+
+      def by_change(changes)
+        changes
+          .group_by { |_, metadata| metadata[:settings_path] }
+          .each_with_object(
+            Hash.new { |hash, key| hash[key] = [] },
+          ) do |(settings_path, entries), result|
+            add_history_for_settings_file(result, settings_path, entries.map(&:first))
+          end
+      end
+
+      private
+
+      def add_history_for_settings_file(result, settings_path, change_names)
+        @git
+          .commits_for(settings_path)
+          .reverse_each do |commit|
+            statuses = statuses_at(commit, settings_path)
+
+            change_names.each do |change_name|
+              next if !statuses.key?(change_name)
+
+              result[change_name] << HistoryEntry.new(commit:, status: statuses[change_name])
+            end
+          end
+      end
+
+      def statuses_at(commit, settings_path)
+        MetadataLoader
+          .from_content(@git.show_file(commit.sha, settings_path))
+          .transform_values { |metadata| metadata[:status]&.to_s }
+      end
+    end
+
+    class PullRequestPlan
+      BRANCH_PREFIX = "dev/upcoming-change-status-bump"
+      LABEL = "upcoming-change"
+
+      def self.add_to(record, stale_after_days:)
+        return record if !record[:eligible]
+
+        record.merge(
+          branch: "#{BRANCH_PREFIX}/#{record[:name]}",
+          title: "DEV: Bump #{record[:name]} upcoming change to #{record[:next_status]}",
+          pr_label: LABEL,
+          pr_body: body_for(record, stale_after_days:),
+        )
+      end
+
+      def self.body_for(record, stale_after_days:)
+        <<~MD.chomp
+          <!-- upcoming-change-status-pr:#{record[:name]} -->
+
+          This automated PR moves `#{record[:name]}` from `#{record[:current_status]}` to `#{record[:next_status]}` after #{stale_after_days}+ days without a status change.
+
+          - Last status change commit: #{commit_link(record[:last_status_change_commit])}
+          - Last status change date: `#{record[:last_status_change_date]}`
+          - Settings file: `#{record[:settings_path]}`
+          - Original author: #{original_author(record)}
+          - Original PR: #{original_pr(record)}
+        MD
+      end
+
+      def self.commit_link(commit_sha)
+        return "N/A" if commit_sha.blank?
+
+        "[`#{commit_sha}`](https://github.com/discourse/discourse/commit/#{commit_sha})"
+      end
+
+      def self.original_author(record)
+        return "N/A" if record[:original_author_name].blank?
+
+        "#{record[:original_author_name]} (<#{record[:original_author_email]}>)"
+      end
+
+      def self.original_pr(record)
+        return "N/A" if record[:original_pr_number].blank?
+
+        "##{record[:original_pr_number]}"
+      end
+    end
+
     class SourceStatusUpdater
       def initialize(settings_file:)
         @settings_file = settings_file
@@ -95,20 +276,24 @@ module UpcomingChanges
         status_line = status_line_for(change_name)
         raise "Could not locate status line for upcoming change: #{change_name}" if status_line.nil?
 
-        lines[status_line] = lines[status_line].sub(STATUS_PATTERN) do
-          prefix = "#{Regexp.last_match(1)}status: "
-          quote = Regexp.last_match(2).to_s
-          suffix = Regexp.last_match(5).to_s
-          newline = Regexp.last_match(6).to_s
-          closing_quote = quote.empty? ? "" : quote
-
-          "#{prefix}#{quote}#{next_status}#{closing_quote}#{suffix}#{newline}"
+        original_line = lines.fetch(status_line)
+        lines[status_line] = updated_status_line(original_line, next_status)
+        if original_line == lines[status_line]
+          raise "Status line for upcoming change #{change_name} did not change"
         end
 
         File.write(@settings_file, lines.join)
       end
 
       private
+
+      def updated_status_line(line, next_status)
+        match = STATUS_PATTERN.match(line)
+        raise "Could not parse status line: #{line.strip}" if match.nil?
+
+        indentation, quote, _old_status, suffix, newline = match.captures
+        "#{indentation}status: #{quote}#{next_status}#{quote}#{suffix}#{newline}"
+      end
 
       def status_line_for(change_name)
         root = Psych.parse_file(@settings_file).root
@@ -155,37 +340,15 @@ module UpcomingChanges
     )
       @repo_path = repo_path
       @settings_path = settings_path
-      @settings_paths = settings_paths
       @stale_after_days = stale_after_days.to_i
       @now = now
+      @source_index = SourceIndex.new(repo_path:, settings_path:, settings_paths:)
       @git = Git.new(repo_path:)
     end
 
     def report
       current_changes.map do |name, metadata|
-        history = history_by_change.fetch(name, [])
-        original_commit = history.first
-        last_status_change = last_status_change_for(history)
-        current_status = metadata[:status]&.to_s
-        next_status = PROMOTIONS[current_status]
-        eligible, reason = eligibility_for(current_status, last_status_change)
-
-        {
-          name: name.to_s,
-          settings_path: metadata[:settings_path],
-          current_status: current_status,
-          next_status: next_status,
-          eligible: eligible,
-          eligibility_reason: reason,
-          days_since_status_change: days_since(last_status_change),
-          last_status_change_commit: last_status_change&.fetch(:commit)&.sha,
-          last_status_change_date: last_status_change&.fetch(:commit)&.date,
-          original_commit: original_commit&.fetch(:commit)&.sha,
-          original_commit_date: original_commit&.fetch(:commit)&.date,
-          original_author_name: original_commit&.fetch(:commit)&.author_name,
-          original_author_email: original_commit&.fetch(:commit)&.author_email,
-          original_pr_number: original_pr_number(original_commit),
-        }
+        build_record(name, metadata, history_by_change.fetch(name, []))
       end
     end
 
@@ -204,78 +367,61 @@ module UpcomingChanges
 
     private
 
-    def settings_file
-      File.join(@repo_path, @settings_path)
-    end
+    def build_record(name, metadata, history)
+      original_commit = history.first
+      last_status_change = last_status_change_for(history)
+      current_status = metadata[:status]&.to_s
+      next_status = UpcomingChanges.next_status(current_status)&.to_s
+      eligible, reason = eligibility_for(current_status:, next_status:, last_status_change:)
 
-    def settings_paths
-      @settings_paths ||=
-        begin
-          paths = [@settings_path]
-          paths.concat(Dir.glob(File.join(@repo_path, PLUGIN_SETTINGS_PATH_PATTERN)).sort)
-          paths
-            .map { |path| File.expand_path(path, @repo_path) }
-            .map { |path| Pathname.new(path).relative_path_from(Pathname.new(@repo_path)).to_s }
-            .uniq
-        end
+      PullRequestPlan.add_to(
+        {
+          name: name.to_s,
+          settings_path: metadata[:settings_path],
+          current_status:,
+          next_status:,
+          eligible:,
+          eligibility_reason: reason,
+          days_since_status_change: days_since(last_status_change),
+          last_status_change_commit: last_status_change&.commit&.sha,
+          last_status_change_date: last_status_change&.commit&.date,
+          original_commit: original_commit&.commit&.sha,
+          original_commit_date: original_commit&.commit&.date,
+          original_author_name: original_commit&.commit&.author_name,
+          original_author_email: original_commit&.commit&.author_email,
+          original_pr_number: original_pr_number(original_commit),
+        },
+        stale_after_days: @stale_after_days,
+      )
     end
 
     def current_changes
       @current_changes ||=
-        settings_paths
-          .each_with_object({}) do |settings_path, result|
-            metadata =
-              MetadataLoader.from_current_site_setting(
-                settings_path: File.join(@repo_path, settings_path),
-              )
+        CurrentChanges.new(repo_path: @repo_path, source_index: @source_index).call
+    end
 
-            metadata.each { |name, data| result[name] = data.merge(settings_path:) }
-          end
-          .sort
-          .to_h
+    def changes_needing_history
+      current_changes.select do |_, metadata|
+        UpcomingChanges.next_status(metadata[:status]).present?
+      end
     end
 
     def history_by_change
-      @history_by_change ||=
-        begin
-          result = Hash.new { |hash, key| hash[key] = [] }
-
-          settings_paths.each do |settings_path|
-            tracked_names =
-              current_changes
-                .select { |_, metadata| metadata[:settings_path] == settings_path }
-                .keys
-
-            @git
-              .commits_for(settings_path)
-              .reverse_each do |commit|
-                statuses =
-                  MetadataLoader
-                    .from_content(@git.show_file(commit.sha, settings_path))
-                    .transform_values { |metadata| metadata[:status]&.to_s }
-
-                tracked_names.each do |name|
-                  result[name] << { commit:, status: statuses[name] } if statuses.key?(name)
-                end
-              end
-          end
-
-          result
-        end
+      @history_by_change ||= GitHistory.new(git: @git).by_change(changes_needing_history)
     end
 
     def last_status_change_for(history)
       history
         .each_cons(2)
         .reduce(history.first) do |last_change, (previous, current)|
-          previous[:status] == current[:status] ? last_change : current
+          previous.status == current.status ? last_change : current
         end
     end
 
-    def eligibility_for(current_status, last_status_change)
+    def eligibility_for(current_status:, next_status:, last_status_change:)
       return false, "missing_status" if current_status.blank?
-      return false, "terminal_status" if TERMINAL_STATUSES.include?(current_status)
-      return false, "unknown_status" if !PROMOTIONS.key?(current_status)
+      return false, "unknown_status" if UpcomingChanges.statuses[current_status.to_sym].nil?
+      return false, "terminal_status" if next_status.blank?
       return false, "missing_git_history" if last_status_change.nil?
 
       return false, "status_changed_recently" if days_since(last_status_change) < @stale_after_days
@@ -286,11 +432,11 @@ module UpcomingChanges
     def days_since(history_entry)
       return nil if history_entry.nil?
 
-      (@now - Time.iso8601(history_entry.fetch(:commit).date)).to_i / 1.day
+      (@now - Time.iso8601(history_entry.commit.date)).to_i / 1.day
     end
 
     def original_pr_number(history_entry)
-      subject = history_entry&.fetch(:commit)&.subject
+      subject = history_entry&.commit&.subject
       subject&.match(/\(#(\d+)\)\z/)&.[](1) || subject&.match(/#(\d+)/)&.[](1)
     end
 

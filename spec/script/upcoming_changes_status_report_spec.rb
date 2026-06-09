@@ -58,66 +58,74 @@ RSpec.describe UpcomingChanges::StatusReport do
 
   describe "#report" do
     it "reports eligibility and git metadata", :aggregate_failures do
-      records = report.report.index_by { |record| record.fetch("name") }
+      records = report.report.index_by { |record| record.fetch(:name) }
 
       expect(records.fetch("experimental_change")).to include(
-        "settings_path" => "config/site_settings.yml",
-        "current_status" => "experimental",
-        "next_status" => "alpha",
-        "eligible" => true,
-        "eligibility_reason" => "status_unchanged_for_14_days",
-        "last_status_change_commit" => commit_shas[:original],
-        "original_commit" => commit_shas[:original],
-        "original_author_name" => "Alice Example",
-        "original_author_email" => "alice@example.com",
-        "original_pr_number" => "123",
+        settings_path: "config/site_settings.yml",
+        current_status: "experimental",
+        next_status: "alpha",
+        eligible: true,
+        eligibility_reason: "status_unchanged_for_14_days",
+        last_status_change_commit: commit_shas[:original],
+        original_commit: commit_shas[:original],
+        original_author_name: "Alice Example",
+        original_author_email: "alice@example.com",
+        original_pr_number: "123",
+        branch: "dev/upcoming-change-status-bump/experimental_change",
+        title: "DEV: Bump experimental_change upcoming change to alpha",
+        pr_label: "upcoming-change",
+      )
+      expect(records.fetch("experimental_change").fetch(:pr_body)).to include(
+        "<!-- upcoming-change-status-pr:experimental_change -->",
+        "This automated PR moves `experimental_change` from `experimental` to `alpha`",
+        "Original PR: #123",
       )
       expect(records.fetch("alpha_change")).to include(
-        "current_status" => "alpha",
-        "next_status" => "beta",
-        "eligible" => true,
+        current_status: "alpha",
+        next_status: "beta",
+        eligible: true,
       )
       expect(records.fetch("beta_change")).to include(
-        "current_status" => "beta",
-        "next_status" => "stable",
-        "eligible" => true,
+        current_status: "beta",
+        next_status: "stable",
+        eligible: true,
       )
       expect(records.fetch("recent_change")).to include(
-        "current_status" => "beta",
-        "next_status" => "stable",
-        "eligible" => false,
-        "eligibility_reason" => "status_changed_recently",
-        "last_status_change_commit" => commit_shas[:recent],
-        "last_status_change_date" => "2026-05-20T12:00:00Z",
-        "days_since_status_change" => 5,
+        current_status: "beta",
+        next_status: "stable",
+        eligible: false,
+        eligibility_reason: "status_changed_recently",
+        last_status_change_commit: commit_shas[:recent],
+        last_status_change_date: "2026-05-20T12:00:00Z",
+        days_since_status_change: 5,
       )
       expect(records.fetch("stable_change")).to include(
-        "current_status" => "stable",
-        "next_status" => nil,
-        "eligible" => false,
-        "eligibility_reason" => "terminal_status",
+        current_status: "stable",
+        next_status: nil,
+        eligible: false,
+        eligibility_reason: "terminal_status",
       )
       expect(records.fetch("conceptual_change")).to include(
-        "current_status" => "conceptual",
-        "eligible" => false,
-        "eligibility_reason" => "terminal_status",
+        current_status: "conceptual",
+        eligible: false,
+        eligibility_reason: "terminal_status",
       )
       expect(records.fetch("permanent_change")).to include(
-        "current_status" => "permanent",
-        "eligible" => false,
-        "eligibility_reason" => "terminal_status",
+        current_status: "permanent",
+        eligible: false,
+        eligibility_reason: "terminal_status",
       )
       expect(records.fetch("never_change")).to include(
-        "current_status" => "never",
-        "eligible" => false,
-        "eligibility_reason" => "terminal_status",
+        current_status: "never",
+        eligible: false,
+        eligibility_reason: "terminal_status",
       )
       expect(records.fetch("plugin_alpha_change")).to include(
-        "settings_path" => "plugins/chat/config/settings.yml",
-        "current_status" => "alpha",
-        "next_status" => "beta",
-        "eligible" => true,
-        "original_commit" => commit_shas[:original],
+        settings_path: "plugins/chat/config/settings.yml",
+        current_status: "alpha",
+        next_status: "beta",
+        eligible: true,
+        original_commit: commit_shas[:original],
       )
     end
   end
@@ -138,6 +146,24 @@ RSpec.describe UpcomingChanges::StatusReport do
       expect(File.read(File.join(repo_path, "config/site_settings.yml"))).to include(
         "  alpha_change:\n    default: false\n    client: true\n    hidden: true\n    upcoming_change:\n      status: alpha\n",
       )
+    end
+  end
+
+  describe described_class::SourceStatusUpdater do
+    it "raises when the status line cannot be edited" do
+      settings_file = File.join(repo_path, "config/site_settings.yml")
+      File.write(settings_file, <<~YAML)
+          experimental:
+            malformed_change:
+              upcoming_change:
+                status: "alpha beta"
+        YAML
+
+      updater = described_class.new(settings_file:)
+
+      expect {
+        updater.update!(change_name: "malformed_change", next_status: "beta")
+      }.to raise_error(RuntimeError, /Could not parse status line/)
     end
   end
 
