@@ -487,6 +487,11 @@ class Report
       .each { |date, count| report.data << { x: date, y: count } }
   end
 
+  def self.split_date_counts(counts, current_start)
+    current_start_date = current_start.to_date
+    counts.partition { |date, _count| date.to_date >= current_start_date }
+  end
+
   def self.add_prev_data(report, subject_class, report_method, *args)
     if report.modes.include?(Report::MODES[:chart]) && report.facets.include?(:prev_period)
       prev_data = subject_class.public_send(report_method, *args)
