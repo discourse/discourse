@@ -61,6 +61,37 @@ if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
   # the duration of a block, so query-counting tests still work unchanged.
   ActiveSupport::Notifications.notifier.unsubscribe("sql.active_record")
 
+  # Extend the same unsubscribe to the remaining `LogSubscriber` events that
+  # the in-process test server still dispatches on every request but that
+  # nothing consumes under `RAILS_TEST_LOG_LEVEL=error`:
+  #
+  # * `instantiation.active_record` is the untouched sibling of
+  #   `sql.active_record` on `ActiveRecord::LogSubscriber`. AR fires it from
+  #   `find_by_sql` once per model-loading SELECT (`record_count`/`class_name`
+  #   payload), so a Discourse topic/list request that fans out into dozens of
+  #   record-returning queries pays a notification `Event` allocation +
+  #   start/finish dispatch + the `LogSubscriber#instantiation` callback (which
+  #   then early-exits because `logger.level` is above `:debug`) that many times
+  #   per page the system specs drive.
+  # * `render_template`/`render_partial`/`render_collection`/`render_layout`
+  #   `.action_view` are `ActionView::LogSubscriber`'s events, dispatched for
+  #   every server-rendered bootstrap-HTML template + partial on each full page
+  #   load — again only to feed logs dropped at `error` level.
+  #
+  # Unsubscribing by name (same as `sql.active_record` above) removes the
+  # permanently-attached `LogSubscriber`, so `instrument` short-circuits via
+  # `@notifier.listening?` and skips the per-event `Event` + dispatch. No
+  # `spec/**` file subscribes to or asserts on these events, and
+  # `track_sql_queries` only attaches transient `sql.*` subscribers, so query-
+  # counting tests are unaffected. Restore with `DISCOURSE_KEEP_AR_QUERY_LOGS=1`.
+  %w[
+    instantiation.active_record
+    render_template.action_view
+    render_partial.action_view
+    render_collection.action_view
+    render_layout.action_view
+  ].each { |event| ActiveSupport::Notifications.notifier.unsubscribe(event) }
+
   # Same idea for the MiniSql path. Every `DB.query`/`DB.exec` flows through
   # `MiniSqlMultisiteConnection#run`, which unconditionally builds the
   # `sql.mini_sql` notification payload — and the `sql:` value is
