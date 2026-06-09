@@ -125,4 +125,132 @@ describe DiscourseAi::GuardianExtensions do
       end
     end
   end
+
+  describe "#can_create_ai_artifact?" do
+    fab!(:admin)
+    fab!(:moderator)
+    fab!(:allowed_group, :group)
+
+    before { SiteSetting.ai_artifact_security = "lax" }
+
+    it "returns false when anonymous" do
+      expect(Guardian.new.can_create_ai_artifact?).to eq(false)
+    end
+
+    it "returns false when ai_artifact_security is disabled" do
+      allowed_group.add(user)
+      SiteSetting.ai_artifact_allowed_groups = allowed_group.id.to_s
+      SiteSetting.ai_artifact_security = "disabled"
+
+      expect(Guardian.new(user).can_create_ai_artifact?).to eq(false)
+    end
+
+    it "returns true for admins regardless of group membership" do
+      SiteSetting.ai_artifact_allowed_groups = ""
+
+      expect(Guardian.new(admin).can_create_ai_artifact?).to eq(true)
+    end
+
+    it "returns true for users in ai_artifact_allowed_groups" do
+      allowed_group.add(user)
+      SiteSetting.ai_artifact_allowed_groups = allowed_group.id.to_s
+
+      expect(Guardian.new(user).can_create_ai_artifact?).to eq(true)
+    end
+
+    it "returns false for users not in ai_artifact_allowed_groups" do
+      SiteSetting.ai_artifact_allowed_groups = ""
+
+      expect(Guardian.new(user).can_create_ai_artifact?).to eq(false)
+    end
+
+    it "returns false for moderators who are not in ai_artifact_allowed_groups" do
+      SiteSetting.ai_artifact_allowed_groups = ""
+
+      expect(Guardian.new(moderator).can_create_ai_artifact?).to eq(false)
+    end
+  end
+
+  describe "#can_view_ai_artifact?" do
+    fab!(:owner, :user)
+    fab!(:other_user, :user)
+    fab!(:pm_topic) { Fabricate(:private_message_topic, user: owner) }
+    fab!(:pm_post) { Fabricate(:post, topic: pm_topic, user: owner) }
+    fab!(:artifact) { Fabricate(:ai_artifact, user: owner, post: pm_post) }
+
+    it "returns true for public artifacts even without authentication" do
+      artifact.update!(metadata: { public: true })
+
+      expect(Guardian.new.can_view_ai_artifact?(artifact)).to eq(true)
+    end
+
+    it "returns true to the artifact owner even when the artifact is not associated to a post" do
+      artifact.update!(post_id: nil)
+
+      expect(Guardian.new(owner).can_view_ai_artifact?(artifact)).to eq(true)
+    end
+
+    it "returns false to anonymous viewers when the artifact is not associated to a post and non-public" do
+      artifact.update!(post_id: nil)
+
+      expect(Guardian.new.can_view_ai_artifact?(artifact)).to eq(false)
+    end
+
+    it "returns true to users who can see the post" do
+      expect(Guardian.new(owner).can_view_ai_artifact?(artifact)).to eq(true)
+    end
+
+    it "returns false to users who cannot see the post" do
+      expect(Guardian.new(other_user).can_view_ai_artifact?(artifact)).to eq(false)
+    end
+  end
+
+  describe "#can_edit_ai_artifact?" do
+    fab!(:owner, :user)
+    fab!(:admin)
+    fab!(:other_user, :user)
+    fab!(:allowed_group, :group)
+    fab!(:artifact) { Fabricate(:ai_artifact, user: owner) }
+
+    before do
+      SiteSetting.ai_artifact_security = "lax"
+      allowed_group.add(owner)
+      SiteSetting.ai_artifact_allowed_groups = allowed_group.id.to_s
+    end
+
+    it "returns false when anonymous" do
+      expect(Guardian.new.can_edit_ai_artifact?(artifact)).to eq(false)
+    end
+
+    it "returns true for the artifact owner" do
+      expect(Guardian.new(owner).can_edit_ai_artifact?(artifact)).to eq(true)
+    end
+
+    it "returns true for admins" do
+      expect(Guardian.new(admin).can_edit_ai_artifact?(artifact)).to eq(true)
+    end
+
+    it "returns false for users who do not own the artifact" do
+      expect(Guardian.new(other_user).can_edit_ai_artifact?(artifact)).to eq(false)
+    end
+
+    it "returns false for moderators who do not own the artifact" do
+      moderator = Fabricate(:moderator)
+
+      expect(Guardian.new(moderator).can_edit_ai_artifact?(artifact)).to eq(false)
+    end
+
+    it "returns false when ai_artifact_security is disabled" do
+      SiteSetting.ai_artifact_security = "disabled"
+
+      expect(Guardian.new(owner).can_edit_ai_artifact?(artifact)).to eq(false)
+      expect(Guardian.new(admin).can_edit_ai_artifact?(artifact)).to eq(false)
+    end
+
+    it "returns false when the owner is no longer in ai_artifact_allowed_groups" do
+      SiteSetting.ai_artifact_allowed_groups = ""
+
+      expect(Guardian.new(owner).can_edit_ai_artifact?(artifact)).to eq(false)
+    end
+  end
 end

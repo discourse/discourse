@@ -11,6 +11,13 @@ discourse_ai:
       - "lax"
       - "hybrid"
       - "strict"
+  ai_artifact_allowed_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: "1"
+    allow_any: false
+    refresh: true
   ai_default_llm_model:
     default: ""
     type: enum

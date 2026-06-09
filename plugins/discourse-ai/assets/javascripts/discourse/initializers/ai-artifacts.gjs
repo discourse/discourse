@@ -8,8 +8,16 @@ function initializeAiArtifacts(api) {
         return;
       }
 
+      const post = helper.getModel?.();
+      const editableIds = new Set(post?.editable_ai_artifact_ids || []);
+      const previewMode = !post;
+
       [...element.querySelectorAll("div.ai-artifact")].forEach(
         (artifactElement) => {
+          if (artifactElement.closest("aside.quote")) {
+            return;
+          }
+
           const artifactId = artifactElement.getAttribute(
             "data-ai-artifact-id"
           );
@@ -29,6 +37,10 @@ function initializeAiArtifacts(api) {
           const seamless =
             artifactElement.getAttribute("data-ai-artifact-seamless") ||
             artifactElement.hasAttribute("data-ai-artifact-seamless");
+
+          const canEdit =
+            previewMode ||
+            (artifactId && editableIds.has(parseInt(artifactId, 10)));
 
           const dataAttributes = {};
           for (const attr of artifactElement.attributes) {
@@ -53,6 +65,8 @@ function initializeAiArtifacts(api) {
                 @artifactHeight={{artifactHeight}}
                 @autorun={{autorun}}
                 @seamless={{seamless}}
+                @canEdit={{canEdit}}
+                @previewMode={{previewMode}}
                 @dataAttributes={{dataAttributes}}
               />
             </template>
@@ -60,10 +74,7 @@ function initializeAiArtifacts(api) {
         }
       );
     },
-    {
-      id: "ai-artifact",
-      onlyStream: true,
-    }
+    { id: "ai-artifact" }
   );
 }
 

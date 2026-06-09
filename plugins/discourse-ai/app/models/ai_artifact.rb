@@ -100,6 +100,17 @@ class AiArtifact < ActiveRecord::Base
   def public?
     !!metadata&.dig("public")
   end
+
+  def self.link_artifacts_from_cooked(doc, post)
+    artifact_ids =
+      doc.css("div.ai-artifact").filter_map { |node| node["data-ai-artifact-id"].to_i.nonzero? }
+
+    return if artifact_ids.empty?
+
+    AiArtifact.where(id: artifact_ids, user_id: post.user_id, post_id: nil).update_all(
+      post_id: post.id,
+    )
+  end
 end
 
 # == Schema Information
@@ -114,6 +125,10 @@ end
 #  name       :string(255)      not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  post_id    :integer          not null
+#  post_id    :integer
 #  user_id    :integer          not null
+#
+# Indexes
+#
+#  index_ai_artifacts_on_post_id  (post_id)
 #
