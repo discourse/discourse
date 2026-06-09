@@ -16,21 +16,48 @@ class UserVisit < ActiveRecord::Base
 
   def self.count_by_active_users(start_date, end_date)
     sql = <<~SQL
-      WITH dau AS (
-        SELECT date_trunc('day', user_visits.visited_at)::DATE AS date,
-               count(distinct user_visits.user_id) AS dau
+      WITH visits AS (
+        SELECT DISTINCT user_id, visited_at::DATE AS d
         FROM user_visits
-        WHERE user_visits.visited_at::DATE >= :start_date::DATE AND user_visits.visited_at <= :end_date::DATE
-        GROUP BY date_trunc('day', user_visits.visited_at)::DATE
-        ORDER BY date_trunc('day', user_visits.visited_at)::DATE
+        WHERE visited_at::DATE >= :start_date::DATE - 29 AND visited_at::DATE <= :end_date::DATE
+      ),
+      marked AS (
+        SELECT user_id, d,
+          CASE
+            WHEN lag(d) OVER (PARTITION BY user_id ORDER BY d) >= d - 30 THEN 0
+            ELSE 1
+          END AS new_island
+        FROM visits
+      ),
+      islands AS (
+        SELECT user_id, d, sum(new_island) OVER (PARTITION BY user_id ORDER BY d) AS grp
+        FROM marked
+      ),
+      coverage AS (
+        SELECT min(d) AS start_d, max(d) + 29 AS end_d
+        FROM islands
+        GROUP BY user_id, grp
+      ),
+      events AS (
+        SELECT start_d AS day, 1 AS delta FROM coverage
+        UNION ALL
+        SELECT end_d + 1 AS day, -1 AS delta FROM coverage
+      ),
+      running AS (
+        SELECT day, sum(sum(delta)) OVER (ORDER BY day) AS mau
+        FROM events
+        GROUP BY day
+      ),
+      dau AS (
+        SELECT visited_at::DATE AS date, count(distinct user_id) AS dau
+        FROM user_visits
+        WHERE visited_at::DATE >= :start_date::DATE AND visited_at <= :end_date::DATE
+        GROUP BY visited_at::DATE
       )
-
-      SELECT date, dau,
-        (SELECT count(distinct user_visits.user_id)
-          FROM user_visits
-          WHERE user_visits.visited_at::DATE BETWEEN dau.date - 29 AND dau.date
-        ) AS mau
+      SELECT dau.date, dau.dau,
+        (SELECT mau FROM running WHERE running.day <= dau.date ORDER BY day DESC LIMIT 1) AS mau
       FROM dau
+      ORDER BY date
     SQL
 
     DB.query_hash(sql, start_date: start_date, end_date: end_date)
