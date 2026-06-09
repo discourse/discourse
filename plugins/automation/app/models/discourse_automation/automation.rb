@@ -148,22 +148,27 @@ module DiscourseAutomation
     end
 
     def trigger!(context = {})
-      if enabled
-        return if active_id = DiscourseAutomation.get_active_automation
+      return if !enabled
 
-        begin
-          DiscourseAutomation.set_active_automation(id)
-          if scriptable.background && !running_in_background
-            trigger_in_background!(context)
-          else
-            Stat.log(id) do
-              triggerable&.on_call&.call(self, serialized_fields)
-              scriptable.script.call(context, serialized_fields, self)
-            end
-          end
-        ensure
-          DiscourseAutomation.set_active_automation(nil)
+      if DiscourseAutomation.recursion_depth >= DiscourseAutomation::MAX_RECURSION_DEPTH
+        Stat.log(id) do
+          raise DiscourseAutomation::RecursionLimitExceeded,
+                "Automation recursion limit exceeded (max: #{DiscourseAutomation::MAX_RECURSION_DEPTH})"
         end
+      end
+
+      begin
+        DiscourseAutomation.increment_recursion_depth
+        if scriptable.background && !running_in_background
+          trigger_in_background!(context)
+        else
+          Stat.log(id) do
+            triggerable&.on_call&.call(self, serialized_fields)
+            scriptable.script.call(context, serialized_fields, self)
+          end
+        end
+      ensure
+        DiscourseAutomation.decrement_recursion_depth
       end
     end
 

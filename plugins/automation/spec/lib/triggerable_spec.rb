@@ -16,17 +16,21 @@ describe DiscourseAutomation::Triggerable do
 
   fab!(:automation) { Fabricate(:automation, trigger: "foo") }
 
-  describe "active automation thread safety" do
-    after { DiscourseAutomation.set_active_automation(nil) }
+  describe "recursion depth thread safety" do
+    after do
+      while DiscourseAutomation.recursion_depth.positive?
+        DiscourseAutomation.decrement_recursion_depth
+      end
+    end
 
-    it "ensurese thread safety when setting automation id" do
-      DiscourseAutomation.set_active_automation(10)
+    it "ensures thread safety when setting recursion depth" do
+      DiscourseAutomation.increment_recursion_depth
 
-      thread = Thread.new { DiscourseAutomation.get_active_automation }
+      thread = Thread.new { DiscourseAutomation.recursion_depth }
       thread.join
-      expect(thread.value).to eq(nil)
+      expect(thread.value).to eq(0)
 
-      expect(DiscourseAutomation.get_active_automation).to eq(10)
+      expect(DiscourseAutomation.recursion_depth).to eq(1)
     end
   end
 

@@ -21,6 +21,55 @@ describe DiscourseAutomation::Automation do
         expect(list).to eq(["Howdy!"])
       end
     end
+
+    context "when recursively triggered" do
+      before do
+        DiscourseAutomation::Scriptable.add("recursive_test_scriptable") do
+          script do |context, _, automation|
+            depth = context[:depth]
+
+            DiscourseAutomation::CapturedContext.add(depth)
+
+            if depth < context[:target_depth]
+              automation.trigger!(depth: depth + 1, target_depth: context[:target_depth])
+            end
+          end
+        end
+      end
+
+      after { DiscourseAutomation::Scriptable.remove("recursive_test_scriptable") }
+
+      it "runs nested triggers up to the maximum depth" do
+        automation = Fabricate(:automation, enabled: true, script: "recursive_test_scriptable")
+
+        list = capture_contexts { automation.trigger!(depth: 1, target_depth: 5) }
+
+        expect(list).to eq([1, 2, 3, 4, 5])
+      end
+
+      it "raises when the maximum depth is exceeded" do
+        automation = Fabricate(:automation, enabled: true, script: "recursive_test_scriptable")
+
+        expect {
+          capture_contexts { automation.trigger!(depth: 1, target_depth: 6) }
+        }.to raise_error(
+          DiscourseAutomation::RecursionLimitExceeded,
+          /Automation recursion limit exceeded/,
+        )
+      end
+
+      it "clears recursion depth after the limit error" do
+        automation = Fabricate(:automation, enabled: true, script: "recursive_test_scriptable")
+
+        expect { automation.trigger!(depth: 1, target_depth: 6) }.to raise_error(
+          DiscourseAutomation::RecursionLimitExceeded,
+        )
+
+        list = capture_contexts { automation.trigger!(depth: 1, target_depth: 1) }
+
+        expect(list).to eq([1])
+      end
+    end
   end
 
   describe "when a script is meant to be triggered in the background" do

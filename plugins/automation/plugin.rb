@@ -31,12 +31,23 @@ module ::DiscourseAutomation
   USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY_START_COUNT = 1000
   REMOVE_UPLOAD_MARKUP_FROM_DELETED_POSTS_BATCH_SIZE = 1000
 
-  def self.set_active_automation(id)
-    Thread.current[:active_automation_id] = id
+  MAX_RECURSION_DEPTH = 5
+  RECURSION_DEPTH_KEY = :discourse_automation_recursion_depth
+
+  class RecursionLimitExceeded < StandardError
   end
 
-  def self.get_active_automation
-    Thread.current[:active_automation_id]
+  def self.recursion_depth
+    Thread.current[RECURSION_DEPTH_KEY] || 0
+  end
+
+  def self.increment_recursion_depth
+    Thread.current[RECURSION_DEPTH_KEY] = recursion_depth + 1
+  end
+
+  def self.decrement_recursion_depth
+    new_depth = recursion_depth - 1
+    Thread.current[RECURSION_DEPTH_KEY] = new_depth.positive? ? new_depth : nil
   end
 end
 
