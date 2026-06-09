@@ -1,5 +1,6 @@
 // @ts-check
 import { modifier } from "ember-modifier";
+import { installPointerDrag } from "discourse/ui-kit/lib/pointer-drag";
 
 const MIN_DIM = 40;
 
@@ -76,7 +77,6 @@ export default modifier(
     let originRect = null;
     let originX = 0;
     let originY = 0;
-    let pointerId = null;
     let aspect = null;
     const { signX, signY } = deltaSigns(direction);
 
@@ -128,83 +128,40 @@ export default modifier(
       };
     }
 
-    function onPointerDown(event) {
-      if (event.button !== 0) {
-        return;
-      }
-      const blockEl = getBlockElement?.();
-      if (!blockEl) {
-        return;
-      }
-      event.preventDefault();
-      event.stopPropagation();
-      originRect = blockEl.getBoundingClientRect();
-      originX = event.clientX;
-      originY = event.clientY;
-      aspect =
-        typeof lockedAspectRatio === "number" &&
-        Number.isFinite(lockedAspectRatio) &&
-        lockedAspectRatio > 0
-          ? lockedAspectRatio
-          : originRect.width / Math.max(originRect.height, 1);
-      pointerId = event.pointerId;
-      element.setPointerCapture(pointerId);
-    }
-
-    function onPointerMove(event) {
-      if (pointerId == null) {
-        return;
-      }
-      const next = compute(event, event.shiftKey);
-      if (next) {
-        onPreview?.(next);
-      }
-    }
-
-    function onPointerUp(event) {
-      if (pointerId == null) {
-        return;
-      }
-      const final = compute(event, event.shiftKey);
-      try {
-        element.releasePointerCapture(pointerId);
-      } catch {
-        // The capture is automatically released if the element was
-        // removed mid-drag; safe to ignore.
-      }
-      pointerId = null;
-      originRect = null;
-      aspect = null;
-      if (final) {
-        onCommit?.(final);
-      }
-    }
-
-    function onPointerCancel() {
-      if (pointerId == null) {
-        return;
-      }
-      try {
-        element.releasePointerCapture(pointerId);
-      } catch {
-        // The capture is automatically released if the element was
-        // removed mid-drag; safe to ignore.
-      }
-      pointerId = null;
-      originRect = null;
-      aspect = null;
-    }
-
-    element.addEventListener("pointerdown", onPointerDown);
-    element.addEventListener("pointermove", onPointerMove);
-    element.addEventListener("pointerup", onPointerUp);
-    element.addEventListener("pointercancel", onPointerCancel);
-
-    return () => {
-      element.removeEventListener("pointerdown", onPointerDown);
-      element.removeEventListener("pointermove", onPointerMove);
-      element.removeEventListener("pointerup", onPointerUp);
-      element.removeEventListener("pointercancel", onPointerCancel);
-    };
+    return installPointerDrag(element, {
+      onDown(event) {
+        const blockEl = getBlockElement?.();
+        if (!blockEl) {
+          return false;
+        }
+        originRect = blockEl.getBoundingClientRect();
+        originX = event.clientX;
+        originY = event.clientY;
+        aspect =
+          typeof lockedAspectRatio === "number" &&
+          Number.isFinite(lockedAspectRatio) &&
+          lockedAspectRatio > 0
+            ? lockedAspectRatio
+            : originRect.width / Math.max(originRect.height, 1);
+      },
+      onMove(event) {
+        const next = compute(event, event.shiftKey);
+        if (next) {
+          onPreview?.(next);
+        }
+      },
+      onUp(event) {
+        const final = compute(event, event.shiftKey);
+        originRect = null;
+        aspect = null;
+        if (final) {
+          onCommit?.(final);
+        }
+      },
+      onCancel() {
+        originRect = null;
+        aspect = null;
+      },
+    });
   }
 );

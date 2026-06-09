@@ -359,6 +359,147 @@ export function cellAt(event, gridRect, columns, rows) {
 }
 
 /**
+ * Computes the new placement for a directional span-resize gesture: the
+ * author grabbed one of a cell's edge / corner handles and dragged toward
+ * `cell`. The direction code names which edges move — `e` / `w` move the
+ * trailing / leading column edge, `s` / `n` move the trailing / leading row
+ * edge, and corner codes (`se`, `nw`, …) move one edge per axis. The opposite
+ * edges stay pinned, so the cell grows or shrinks from the grabbed side.
+ *
+ * Pure function (no DOM), extracted so the geometry is unit-testable.
+ *
+ * Grid lines are 1-indexed and the trailing edge is exclusive: a cell at line
+ * `N` occupies the track between lines `N` and `N + 1`, so the pointer cell `c`
+ * yields a trailing edge of `c + 1` and a leading edge of `c`. Every edge is
+ * clamped to the grid bounds and to a minimum 1×1 span.
+ *
+ * A GROWING edge additionally clamps at the first occupied cell in its path,
+ * so a span can never overlap a neighbour — it stops one track short. Shrinking
+ * frees cells, so it never needs an occupancy clamp. The column extent is
+ * clamped first (against the candidate row band) and the row extent second
+ * (against the already-clamped column band), so a diagonal obstacle pulls
+ * whichever edge reaches it rather than allowing an overlap to slip through.
+ *
+ * @param {Object} params
+ * @param {{column: {start: number, end: number}, row: {start: number, end: number}}} params.origin
+ *   The cell's current placement (assumed to be a valid, non-overlapping rect).
+ * @param {{column: number, row: number}} params.cell - The pointer's cell.
+ * @param {string} params.direction - One of `n|s|e|w|ne|nw|se|sw`.
+ * @param {number} params.columns - The grid's column count.
+ * @param {number} params.rows - The grid's row count.
+ * @param {Set<string>} [params.occupied] - Cells occupied by OTHER entries
+ *   (exclude the resized cell), keyed by `cellKey`. Defaults to empty (no
+ *   occupancy clamp).
+ * @returns {{column: {start: number, end: number}, row: {start: number, end: number}}}
+ */
+export function computeSpanResize({
+  origin,
+  cell,
+  direction,
+  columns,
+  rows,
+  occupied,
+}) {
+  const occ = occupied ?? new Set();
+  const east = direction.includes("e");
+  const west = direction.includes("w");
+  const south = direction.includes("s");
+  const north = direction.includes("n");
+
+  let colStart = origin.column.start;
+  let colEnd = origin.column.end;
+  let rowStart = origin.row.start;
+  let rowEnd = origin.row.end;
+
+  // Candidate edges from the pointer cell, clamped to the grid and a 1×1 floor.
+  if (east) {
+    colEnd = clamp(cell.column + 1, origin.column.start + 1, columns + 1);
+  } else if (west) {
+    colStart = clamp(cell.column, 1, origin.column.end - 1);
+  }
+  if (south) {
+    rowEnd = clamp(cell.row + 1, origin.row.start + 1, rows + 1);
+  } else if (north) {
+    rowStart = clamp(cell.row, 1, origin.row.end - 1);
+  }
+
+  // Occupancy clamp on growing edges only (column first, then row).
+  if (east && colEnd > origin.column.end) {
+    for (let c = origin.column.end; c < colEnd; c++) {
+      if (columnBlocked(occ, c, rowStart, rowEnd)) {
+        colEnd = c;
+        break;
+      }
+    }
+  } else if (west && colStart < origin.column.start) {
+    for (let c = origin.column.start - 1; c >= colStart; c--) {
+      if (columnBlocked(occ, c, rowStart, rowEnd)) {
+        colStart = c + 1;
+        break;
+      }
+    }
+  }
+  if (south && rowEnd > origin.row.end) {
+    for (let r = origin.row.end; r < rowEnd; r++) {
+      if (rowBlocked(occ, r, colStart, colEnd)) {
+        rowEnd = r;
+        break;
+      }
+    }
+  } else if (north && rowStart < origin.row.start) {
+    for (let r = origin.row.start - 1; r >= rowStart; r--) {
+      if (rowBlocked(occ, r, colStart, colEnd)) {
+        rowStart = r + 1;
+        break;
+      }
+    }
+  }
+
+  return {
+    column: { start: colStart, end: colEnd },
+    row: { start: rowStart, end: rowEnd },
+  };
+}
+
+/**
+ * Whether any cell in column `column` across rows `[rowStart, rowEnd)` is
+ * occupied. Rows / columns are 1-indexed cell indices (a track's leading line).
+ *
+ * @param {Set<string>} occupied
+ * @param {number} column
+ * @param {number} rowStart
+ * @param {number} rowEnd
+ * @returns {boolean}
+ */
+function columnBlocked(occupied, column, rowStart, rowEnd) {
+  for (let r = rowStart; r < rowEnd; r++) {
+    if (occupied.has(cellKey(r, column))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Whether any cell in row `row` across columns `[colStart, colEnd)` is
+ * occupied.
+ *
+ * @param {Set<string>} occupied
+ * @param {number} row
+ * @param {number} colStart
+ * @param {number} colEnd
+ * @returns {boolean}
+ */
+function rowBlocked(occupied, row, colStart, colEnd) {
+  for (let c = colStart; c < colEnd; c++) {
+    if (occupied.has(cellKey(row, c))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
  * Five-zone hit test inside a cell. Returns `"center"` for the inner
  * 60% rect, otherwise one of `"left"` / `"right"` / `"up"` / `"down"`
  * (the outer 20% bands). Corners resolve to whichever edge the cursor

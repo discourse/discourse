@@ -4,6 +4,7 @@ import {
   cellsForFree,
   computeOccupation,
   computeShiftPlan,
+  computeSpanResize,
   computeZone,
   computeZoneCollapsed,
   formatTrack,
@@ -13,6 +14,15 @@ import {
   syncContentToArrayOrder,
   unoccupiedCells,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
+
+// Builds an origin placement from CSS-grid-line numbers, matching the
+// `{column: {start, end}, row: {start, end}}` shape `computeSpanResize` reads.
+function rect(colStart, colEnd, rowStart, rowEnd) {
+  return {
+    column: { start: colStart, end: colEnd },
+    row: { start: rowStart, end: rowEnd },
+  };
+}
 
 // A grid cell fixture. `entryKey` (used internally by computeShiftPlan) keys
 // an entry as `"${block}:${__stableKey}"`, so a cell named "k" resolves to
@@ -102,6 +112,131 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
         column: 1,
         row: 1,
       });
+    });
+  });
+
+  module("computeSpanResize — directional grid span", function () {
+    test("east grows the trailing column edge to the pointer cell", function (assert) {
+      const next = computeSpanResize({
+        origin: rect(1, 2, 1, 2),
+        cell: { column: 3, row: 1 },
+        direction: "e",
+        columns: 4,
+        rows: 2,
+      });
+      assert.deepEqual(next, rect(1, 4, 1, 2), "end extends to cell 3 + 1");
+    });
+
+    test("west moves the leading column edge (origin extends left)", function (assert) {
+      const next = computeSpanResize({
+        origin: rect(3, 4, 1, 2),
+        cell: { column: 1, row: 1 },
+        direction: "w",
+        columns: 4,
+        rows: 2,
+      });
+      assert.deepEqual(next, rect(1, 4, 1, 2), "start moves to cell 1");
+    });
+
+    test("south grows the trailing row edge", function (assert) {
+      const next = computeSpanResize({
+        origin: rect(1, 2, 1, 2),
+        cell: { column: 1, row: 3 },
+        direction: "s",
+        columns: 2,
+        rows: 3,
+      });
+      assert.deepEqual(next, rect(1, 2, 1, 4), "row end extends to 3 + 1");
+    });
+
+    test("north moves the leading row edge up", function (assert) {
+      const next = computeSpanResize({
+        origin: rect(1, 2, 3, 4),
+        cell: { column: 1, row: 1 },
+        direction: "n",
+        columns: 2,
+        rows: 4,
+      });
+      assert.deepEqual(next, rect(1, 2, 1, 4), "row start moves to 1");
+    });
+
+    test("a corner grows both axes", function (assert) {
+      const next = computeSpanResize({
+        origin: rect(1, 2, 1, 2),
+        cell: { column: 3, row: 2 },
+        direction: "se",
+        columns: 4,
+        rows: 3,
+      });
+      assert.deepEqual(next, rect(1, 4, 1, 3), "both edges extend");
+    });
+
+    test("a growing edge clamps one track short of an occupied neighbour", function (assert) {
+      // A neighbour fills column 3; an east span from column 1 must stop at the
+      // edge before it (cols 1–2) so the rect never overlaps.
+      const occupied = computeOccupation([slot("x", "3", "1")], 4, 1);
+      const next = computeSpanResize({
+        origin: rect(1, 2, 1, 2),
+        cell: { column: 4, row: 1 },
+        direction: "e",
+        columns: 4,
+        rows: 1,
+        occupied,
+      });
+      assert.deepEqual(next, rect(1, 3, 1, 2), "end clamps before column 3");
+    });
+
+    test("an origin-moving edge clamps against an occupied cell behind it", function (assert) {
+      // A neighbour fills row 1; a north span from row 3 stops at row 2.
+      const occupied = computeOccupation([slot("x", "1", "1")], 1, 4);
+      const next = computeSpanResize({
+        origin: rect(1, 2, 3, 4),
+        cell: { column: 1, row: 1 },
+        direction: "n",
+        columns: 1,
+        rows: 4,
+        occupied,
+      });
+      assert.deepEqual(next, rect(1, 2, 2, 4), "start clamps to row 2");
+    });
+
+    test("shrinking is never occupancy-clamped", function (assert) {
+      // Dragging the east edge inward shrinks the span; an occupied cell
+      // elsewhere must not interfere.
+      const occupied = computeOccupation([slot("x", "4", "1")], 4, 1);
+      const next = computeSpanResize({
+        origin: rect(1, 4, 1, 2),
+        cell: { column: 1, row: 1 },
+        direction: "e",
+        columns: 4,
+        rows: 1,
+        occupied,
+      });
+      assert.deepEqual(next, rect(1, 2, 1, 2), "shrinks to a 1×1 span");
+    });
+
+    test("respects grid bounds and a 1×1 minimum", function (assert) {
+      const past = computeSpanResize({
+        origin: rect(1, 2, 1, 2),
+        cell: { column: 99, row: 99 },
+        direction: "se",
+        columns: 3,
+        rows: 2,
+      });
+      assert.deepEqual(past, rect(1, 4, 1, 3), "clamps to the grid edges");
+
+      const collapsed = computeSpanResize({
+        origin: rect(2, 4, 1, 2),
+        cell: { column: 1, row: 1 },
+        direction: "w",
+        columns: 4,
+        rows: 2,
+      });
+      assert.deepEqual(
+        collapsed,
+        rect(1, 4, 1, 2),
+        "start can reach line 1 but not past end - 1"
+      );
     });
   });
 

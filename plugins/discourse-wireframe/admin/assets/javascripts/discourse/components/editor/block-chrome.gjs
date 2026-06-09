@@ -20,7 +20,10 @@ import {
   BLOCK_ARG_SELECTOR,
   GRID_LAYOUT_SELECTOR,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-dom-contract";
-import { placementsOverlap } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
+import {
+  computeOccupation,
+  placementsOverlap,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import { imageArgEntries } from "../../lib/empty-image-upload";
 import { kindForArg } from "../../lib/kind-for-arg";
 import { entryKey } from "../../lib/mutate-layout";
@@ -136,6 +139,45 @@ export default class BlockChrome extends Component {
     const grid = this.getResizeGridElement();
     return grid?.querySelector(".wireframe-grid-ghost") ?? null;
   };
+
+  /**
+   * The set of grid cells occupied by SIBLING entries (this block excluded),
+   * keyed `"row,col"`. Captured at the start of a span-resize so the gesture
+   * can clamp a growing edge at the first occupied neighbour and never commit
+   * an overlapping placement. Reads through the service (opens a tracked dep
+   * on `structuralVersion`) so it reflects the live layout.
+   *
+   * @returns {Set<string>}
+   */
+  getResizeOccupied = () => {
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.wireframe.structuralVersion;
+    const grid = this.wireframe.findEntryParent(this.args.blockKey);
+    if (!grid) {
+      return new Set();
+    }
+    const columns = Number(grid.args?.columns ?? 6);
+    const rows = Number(grid.args?.rows ?? 2);
+    const selfKey = this.args.blockKey;
+    const siblings = (grid.children ?? []).filter(
+      (child) => entryKey(child) !== selfKey
+    );
+    return computeOccupation(siblings, columns, rows);
+  };
+
+  /**
+   * The edge + corner handles painted on a selected grid cell for span-resize.
+   * Edges (`n` / `s` / `e` / `w`) render as bars and resize one axis; corners
+   * (`ne` / `nw` / `se` / `sw`) render as nubs and resize both. Each carries
+   * the compass `dir` handed to the drag modifier and a precomputed BEM class
+   * (so the template needs no `concat` helper).
+   */
+  gridResizeHandles = ["n", "s", "e", "w", "ne", "nw", "se", "sw"].map(
+    (dir) => ({
+      dir,
+      className: `wireframe-block-chrome__resize-handle wireframe-block-chrome__resize-handle--${dir}`,
+    })
+  );
 
   /**
    * Finds the rendered image marker (`[data-block-arg="<argName>"]`)
@@ -1513,19 +1555,28 @@ export default class BlockChrome extends Component {
           {{/if}}
 
           {{#if (and this.isGridCell this.isSelected)}}
-            <span
-              class="wireframe-block-chrome__resize-handle"
-              title={{i18n "wireframe.canvas.resize_handle_title"}}
-              aria-hidden="true"
-              {{gridTileDrag
-                this.getResizeGridElement
-                this.slotPlacement
-                this.slotGridColumns
-                this.slotGridRows
-                this.getResizeGhost
-                this.commitSelfResize
-              }}
-            ></span>
+            {{! Edge bars + corner nubs for span-resize. Each handle hands its
+              compass direction to the drag modifier; edges move one axis,
+              corners both. The bar/nub language is deliberately distinct from
+              the image block's round resize dots so the two gestures are never
+              confused. }}
+            {{#each this.gridResizeHandles as |handle|}}
+              <span
+                class={{handle.className}}
+                title={{i18n "wireframe.canvas.resize_handle_title"}}
+                aria-hidden="true"
+                {{gridTileDrag
+                  this.getResizeGridElement
+                  this.slotPlacement
+                  this.slotGridColumns
+                  this.slotGridRows
+                  this.getResizeGhost
+                  this.commitSelfResize
+                  handle.dir
+                  this.getResizeOccupied
+                }}
+              ></span>
+            {{/each}}
           {{/if}}
 
           {{#if this.showsImageResizeHandle}}
