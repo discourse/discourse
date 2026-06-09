@@ -30,7 +30,7 @@ export default class TopicDismissButtons extends Component {
   }
 
   get dismissNewLabel() {
-    if (this.currentUser?.new_new_view_enabled) {
+    if (this.currentUser?.unified_new_enabled) {
       switch (this.newListSubset) {
         case "topics":
           if (this.args.selectedTopics.length > 0) {

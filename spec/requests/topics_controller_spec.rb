@@ -5777,8 +5777,7 @@ RSpec.describe TopicsController do
       before do
         create_post(topic: unread_topic)
         create_post(topic: unread_topic)
-        user.groups << group
-        SiteSetting.experimental_new_new_view_groups = group.id
+        SiteSetting.enable_unified_new = true
         sign_in(user)
       end
 

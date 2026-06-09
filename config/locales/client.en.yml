@@ -3945,7 +3945,7 @@ en:
         education:
           topic_tracking_preferences: 'You can view and change your new topic tracking settings in <a href="%{basePath}/my/preferences/tracking">your preferences</a>.'
           unread: "Nothing left unread... impressive!"
-          new_new: "Nothing new at the moment... check back soon!"
+          unified_new: "Nothing new at the moment... check back soon!"
           new: "Nothing new at the moment... check back soon!"
           generic: "Nothing to see here...check back soon!"
 
@@ -5402,7 +5402,7 @@ en:
         new_replies_tooltip: "New replies"
         replies: "Replies"
         replies_with_count: "Replies (%{count})"
-      new_new:
+      unified_new:
         help: "topics created or replied to in the last few days"
       posted:
         title: "My posts"

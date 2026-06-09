@@ -1223,7 +1223,7 @@ class TopicsController < ApplicationController
 
   def reset_new
     topic_scope =
-      if current_user.new_new_view_enabled?
+      if current_user.unified_new_enabled?
         if params[:dismiss_topics] && params[:dismiss_posts]
           TopicQuery.new(current_user).new_and_unread_results(limit: false)
         elsif params[:dismiss_topics]
@@ -1282,7 +1282,7 @@ class TopicsController < ApplicationController
     dismissed_topic_ids = []
     dismissed_post_topic_ids = []
 
-    if !current_user.new_new_view_enabled? || params[:dismiss_topics]
+    if !current_user.unified_new_enabled? || params[:dismiss_topics]
       dismissed_topic_ids =
         TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_topics").perform!
     end

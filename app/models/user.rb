@@ -1983,8 +1983,8 @@ class User < ActiveRecord::Base
     user_status && !user_status.expired?
   end
 
-  def new_new_view_enabled?
-    in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
+  def unified_new_enabled?
+    upcoming_change_enabled?(:enable_unified_new)
   end
 
   def populated_required_custom_fields?

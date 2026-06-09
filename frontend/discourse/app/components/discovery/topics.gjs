@@ -87,13 +87,13 @@ export default class DiscoveryTopics extends Component {
   }
 
   get showTopicsAndRepliesToggle() {
-    return this.new && this.currentUser?.new_new_view_enabled;
+    return this.new && this.currentUser?.unified_new_enabled;
   }
 
   get newRepliesCount() {
     this.topicTrackingState.get("messageCount"); // Autotrack this
 
-    if (this.currentUser?.new_new_view_enabled) {
+    if (this.currentUser?.unified_new_enabled) {
       return this.topicTrackingState.countUnread({
         categoryId: this.args.category?.id,
         noSubcategories: this.args.noSubcategories,
@@ -107,7 +107,7 @@ export default class DiscoveryTopics extends Component {
   get newTopicsCount() {
     this.topicTrackingState.get("messageCount"); // Autotrack this
 
-    if (this.currentUser?.new_new_view_enabled) {
+    if (this.currentUser?.unified_new_enabled) {
       return this.topicTrackingState.countNew({
         categoryId: this.args.category?.id,
         noSubcategories: this.args.noSubcategories,
@@ -119,7 +119,7 @@ export default class DiscoveryTopics extends Component {
   }
 
   get showTopicPostBadges() {
-    return !this.new || this.currentUser?.new_new_view_enabled;
+    return !this.new || this.currentUser?.unified_new_enabled;
   }
 
   get showEmptyFilterEducationInFooter() {

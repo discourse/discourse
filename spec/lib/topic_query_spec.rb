@@ -1647,14 +1647,10 @@ RSpec.describe TopicQuery do
       end
     end
 
-    context "when logged in and user is part of the `experimental_new_new_view_groups` site setting groups" do
-      fab!(:group)
+    context "when unified new is enabled" do
       fab!(:topic)
 
-      before do
-        SiteSetting.experimental_new_new_view_groups = group.name
-        group.add(user)
-      end
+      before { SiteSetting.enable_unified_new = true }
 
       after { clear_cache! }
 
