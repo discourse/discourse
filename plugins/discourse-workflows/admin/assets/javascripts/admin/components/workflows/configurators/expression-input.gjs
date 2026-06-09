@@ -5,7 +5,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import discourseLater from "discourse/lib/later";
-import buildWorkflowExtension from "../../../lib/workflows/codemirror-extension";
 import {
   ancestorOutputNodes,
   inputConnectionsForNode,
@@ -17,6 +16,7 @@ import {
   schemaFieldsForNodeInput,
   schemaFieldsForNodeOutput,
 } from "../../../lib/workflows/data-schema";
+import buildExpressionExtensions from "../../../lib/workflows/expression-extensions";
 import ExpressionPreview from "../variable/expression-preview";
 import VariableInput from "../variable/input";
 
@@ -100,7 +100,7 @@ export default class ExpressionInput extends Component {
         }))
       : [];
 
-    return buildWorkflowExtension(cmParams, {
+    return buildExpressionExtensions(cmParams, {
       inputFields,
       ancestorNodes,
       siteSettings: this.siteSettings,
