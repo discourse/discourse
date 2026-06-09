@@ -125,6 +125,11 @@ RSpec.describe BrowserPageviewReferrerDailyRollup do
         normalized_referrer: "google.com",
         created_at: requested_date,
       )
+      Fabricate(
+        :browser_pageview_event,
+        normalized_referrer: "bing.com",
+        created_at: untouched_date,
+      )
 
       described_class.recompute([requested_date])
 
