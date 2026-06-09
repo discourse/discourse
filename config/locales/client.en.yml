@@ -9161,6 +9161,7 @@ en:
           disabled: "Not shown on signup form"
         searchable:
           title: "Searchable"
+          tooltip: "When enabled, anyone can find members by this field's value and see it in search results, even if it's not shown on their profile or user card."
           enabled: "Searchable"
           disabled: "Not searchable"
 

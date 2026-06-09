@@ -269,6 +269,7 @@ export default class AdminUserFieldsForm extends Component {
             @name="searchable"
             @showTitle={{false}}
             @title={{i18n "admin.user_fields.searchable.title"}}
+            @tooltip={{i18n "admin.user_fields.searchable.tooltip"}}
             @type="checkbox"
             as |field|
           >
