@@ -441,4 +441,10 @@ module UpcomingChanges
   def self.find_dependents_for_change(change_setting_name)
     settings_provider.type_supervisor.dependencies.dependents(change_setting_name.to_s)
   end
+
+  def self.including_css
+    settings_provider.upcoming_change_site_settings.filter_map do |upcoming_change|
+      upcoming_change if settings_provider.upcoming_change_metadata[upcoming_change][:include_css]
+    end
+  end
 end

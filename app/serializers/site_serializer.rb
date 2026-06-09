@@ -450,9 +450,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def upcoming_changes_with_css
-    SiteSetting.upcoming_change_site_settings.filter_map do |upcoming_change|
-      upcoming_change if SiteSetting.upcoming_change_metadata[upcoming_change][:include_css]
-    end
+    UpcomingChanges.including_css
   end
 
   private
