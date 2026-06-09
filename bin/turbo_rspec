@@ -106,7 +106,7 @@ formatters << { name: "progress", outputs: [] } if formatters.empty?
 formatters.each { |formatter| formatter[:outputs] << "-" if formatter[:outputs].empty? }
 
 if formatters.any? { |formatter| formatter[:name] == "RspecPerformanceFormatter" }
-  ENV["DISCOURSE_RSPEC_PERF"] = "1"
+  ENV["DISCOURSE_RSPEC_PERFORMANCE_FORMATTER"] = "1"
   require "./spec/support/rspec_performance_formatter"
 end
 

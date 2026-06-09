@@ -3,20 +3,10 @@
 class RspecPerformanceFormatter
   RSpec::Core::Formatters.register(self, :example_passed, :example_failed, :example_pending)
 
-  @active = false
-
   class << self
-    def enabled?
-      @active || ENV["DISCOURSE_RSPEC_PERF"] == "1"
-    end
-
-    def activate!
-      @active = true
-    end
-
     def measure
       MethodProfiler.ensure_discourse_instrumentation!
-      MethodProfiler.start
+      MethodProfiler.start(itemize: true)
       yield
       summarize(MethodProfiler.stop)
     end
@@ -27,7 +17,7 @@ class RspecPerformanceFormatter
         group = request_group(env, data)
         groups << group if group
       rescue => error
-        groups << { error: "#{error.class}: #{error.message}" }
+        groups << summarize(nil).merge(error: "#{error.class}: #{error.message}")
       end
       Middleware::RequestTracker.register_detailed_request_logger(logger)
       yield
@@ -115,8 +105,6 @@ class RspecPerformanceFormatter
 
   def initialize(output)
     @output = output
-    self.class.activate!
-    MethodProfiler.itemize_enabled = true
   end
 
   def example_passed(notification)
