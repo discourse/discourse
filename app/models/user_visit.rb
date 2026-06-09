@@ -17,7 +17,7 @@ class UserVisit < ActiveRecord::Base
   def self.count_by_active_users(start_date, end_date)
     sql = <<~SQL
       WITH visits AS (
-        SELECT DISTINCT user_id, visited_at::DATE AS d
+        SELECT user_id, visited_at::DATE AS d
         FROM user_visits
         WHERE visited_at::DATE >= :start_date::DATE - 29 AND visited_at::DATE <= :end_date::DATE
       ),
