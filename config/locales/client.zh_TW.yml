@@ -115,6 +115,13 @@ zh_TW:
       placeholder: 日期
       from_placeholder: "從日期"
       to_placeholder: "至今"
+    date_range_picker:
+      apply: "套用"
+      presets:
+        last_7_days: "過去 7 天"
+        last_30_days: "過去 30 天"
+        last_3_months: "過去 3 個月"
+        last_6_months: "過去 6 個月"
     languages:
       ar:
         name: 阿拉伯語
@@ -371,7 +378,7 @@ zh_TW:
       pm_title: "推薦訊息"
     admin_onboarding_banner:
       select_theme:
-        enabled: "啟用"
+        enabled: "已選"
       invite_collaborators:
         title: "邀請協作者"
       start_posting:
@@ -2527,6 +2534,7 @@ zh_TW:
         attribute_value: "價值"
         apply: "套用"
       help: "Markdown 編輯說明"
+      edit_reason: "你為什麼做編輯?"
       exit_fullscreen_prompt: "按<kbd>ESC</kbd>離開全螢幕"
       modal_ok: "確定"
       cant_send_pm: "抱歉，你不能發訊息給 %{username} 。"
@@ -2556,21 +2564,22 @@ zh_TW:
           desc: 創建以相同收件人開頭的新訊息
         reply_to_topic:
           label: 回應話題
+          trigger: 話題
           desc: 回應本話題而非特定貼文
+        reply_to_message:
+          trigger: 訊息
         toggle_whisper:
           label: 切換為悄悄話
-          desc: 悄悄話只有管理員能見
         create_topic:
           desc: 開啟新話題
         create_personal_message:
-          label: "新增訊息"
           desc: "寫一則私訊"
         shared_draft:
           label: "共享草稿"
           desc: "建立僅允許使用者可見的話題草稿"
         toggle_topic_bump:
-          label: "回應但不讓貼文浮上來"
           desc: "回覆而不改變最新回應日期"
+        unknown_user: "使用者"
       reload: "重新載入"
       ignore: "忽略"
       image_alt_text:
@@ -2899,6 +2908,14 @@ zh_TW:
           other: "忽略（%{count} 個）…"
         dismiss_tooltip: "僅忽略新貼文或停止追蹤話題"
         also_dismiss_topics: "停止追蹤這些話題，這樣這些話題就不再顯示為未讀了"
+        dismiss_new_topics: "關閉新主題"
+        dismiss_new_replies: "忽略新回覆"
+        dismiss_new_topics_with_selected:
+          other: "忽略（%{count} 個）"
+        dismiss_new_replies_with_selected:
+          other: "忽略（%{count} 個）"
+        dismiss_all_with_selected:
+          other: "忽略（%{count} 個）"
         dismiss_new: "忽略新內容"
         dismiss_new_modal:
           title: "忽略新內容"
@@ -4174,12 +4191,7 @@ zh_TW:
       staff_info: "要新增限制，請將此標記放入<a href=%{basePath}/tag_groups>標記組</a>。"
       category_restricted: "此標記僅限於您無權訪問的類別。"
       synonyms: "同義詞"
-      synonyms_description: "使用以下標記時，它們將被替換為 <b>%{base_tag_name}</b>。"
       save: "保存標記的名稱和描述"
-      tag_groups_info:
-        other: "此標記屬於以下組：%{tag_groups}。"
-      category_restrictions:
-        other: "它只能用於以下類別："
       edit_synonyms: "編輯同義詞"
       add_synonyms_label: "新增同義字："
       add_synonyms: "新增"
@@ -5024,8 +5036,6 @@ zh_TW:
             enabled_heading: "啟用"
             all_heading: "所有報告"
             apply: "套用"
-            move_up: "上移"
-            move_down: "下移"
         site_traffic:
           series:
             anonymous: "匿名"
@@ -5520,9 +5530,10 @@ zh_TW:
             受邀接收所有自動發送的私人訊息的群組。
           your_organization_description: "我們將在《服務條款》和《隱私聲明》中顯示此資訊來表明此網站的運營方和司法管轄區。"
           company_name: "名字"
-          company_name_placeholder: "Acme 組織"
           company_name_warning: |
             如果留空，則不會提供模板服務條款或隱私權通知。
+          company_url: "網站"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "適用於法律"
           governing_law_placeholder: "省、州或國家"
           governing_law_help: |

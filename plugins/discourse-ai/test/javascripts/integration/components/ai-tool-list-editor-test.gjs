@@ -18,7 +18,7 @@ class ModalStub extends Service {
   }
 }
 
-module("Integration | Component | ai-tool-list-editor", function (hooks) {
+module("Integration | Component | AiToolListEditor", function (hooks) {
   setupRenderingTest(hooks, { stubRouter: true });
 
   hooks.beforeEach(function () {

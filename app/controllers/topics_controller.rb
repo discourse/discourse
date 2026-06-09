@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TopicsController < ApplicationController
+  include EmbedModeHandler
+
   requires_login only: %i[
                    timings
                    destroy_timings
@@ -34,6 +36,7 @@ class TopicsController < ApplicationController
                  ]
 
   before_action :consider_user_for_promotion, only: :show
+  before_action :set_embed_class, only: :show
   after_action :allow_embed_mode, only: :show
 
   skip_before_action :check_xhr, only: %i[show feed]
@@ -198,7 +201,11 @@ class TopicsController < ApplicationController
       url = +"/n/#{@topic_view.topic.slug}/#{@topic_view.topic.id}"
       post_number = opts[:post_number].to_i
       url << "/#{post_number}" if post_number > 0
-      url << "?embed_mode=true" if params[:embed_mode] == "true"
+      if params[:embed_mode] == "true"
+        embed_query = { embed_mode: true }
+        embed_query[:class_name] = params[:class_name] if params[:class_name].present?
+        url << "?#{embed_query.to_query}"
+      end
       redirect_to url, status: :found
       return
     end
@@ -1216,7 +1223,7 @@ class TopicsController < ApplicationController
 
   def reset_new
     topic_scope =
-      if current_user.new_new_view_enabled?
+      if current_user.unified_new_enabled?
         if params[:dismiss_topics] && params[:dismiss_posts]
           TopicQuery.new(current_user).new_and_unread_results(limit: false)
         elsif params[:dismiss_topics]
@@ -1275,7 +1282,7 @@ class TopicsController < ApplicationController
     dismissed_topic_ids = []
     dismissed_post_topic_ids = []
 
-    if !current_user.new_new_view_enabled? || params[:dismiss_topics]
+    if !current_user.unified_new_enabled? || params[:dismiss_topics]
       dismissed_topic_ids =
         TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_topics").perform!
     end
@@ -1385,14 +1392,6 @@ class TopicsController < ApplicationController
       else
         topic.tags.pluck(:name)
       end
-  end
-
-  def allow_embed_mode
-    return if params[:embed_mode].blank?
-    return unless SiteSetting.embed_full_app
-    return unless SiteSetting.embed_any_origin? || EmbeddableHost.record_for_url(request.referer)
-
-    response.headers.delete("X-Frame-Options")
   end
 
   def topic_params

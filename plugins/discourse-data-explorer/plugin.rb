@@ -41,6 +41,14 @@ after_initialize do
   #   - block
   GlobalSetting.add_default(:max_data_explorer_api_req_mode, "warn")
 
+  if respond_to?(:register_discourse_workflows_node)
+    register_svg_icon "database"
+    register_discourse_workflows_node do
+      require_relative "lib/discourse_data_explorer/workflows/sql_action/v1"
+      DiscourseDataExplorer::Workflows::SqlAction::V1
+    end
+  end
+
   add_to_class(:guardian, :user_is_a_member_of_group?) do |group|
     return false if !current_user
     return true if current_user.admin?
@@ -197,7 +205,9 @@ after_initialize do
   end
 
   if defined?(DiscourseAi)
+    require_relative "lib/discourse_data_explorer/ai_query_params"
     require_relative "lib/discourse_data_explorer/tools/run_sql"
+    require_relative "lib/discourse_data_explorer/tools/submit_query"
     require_relative "lib/discourse_data_explorer/ai_query_generator"
 
     DiscourseAi.register_feature(

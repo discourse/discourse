@@ -137,53 +137,11 @@ RSpec.describe ThemeJavascriptsController do
       component.save!
     end
 
-    it "sets theme settings default values" do
-      component.update_setting(:num_setting, 643)
+    it "serves the bundled test file" do
       _, digest = component.baked_js_tests_with_digest
 
       get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
-      expect(response.body).to include <<~JS
-        registerSettings(#{component.id}, {
-          "num_setting": 5
-        });
-      JS
       expect(response.body).to include("assert.ok(true);")
-    end
-
-    it "includes theme uploads URLs in the settings object" do
-      SiteSetting.authorized_extensions = "*"
-      js_file = Tempfile.new(%w[vendorlib .js])
-      js_file.write("console.log(123);\n")
-      js_file.rewind
-      js_upload = UploadCreator.new(js_file, "vendorlib.js").create_for(Discourse::SYSTEM_USER_ID)
-      component.set_field(
-        type: :theme_upload_var,
-        target: :common,
-        name: "vendorlib",
-        upload_id: js_upload.id,
-      )
-      component.save!
-      _, digest = component.baked_js_tests_with_digest
-
-      theme_javascript_hash =
-        component.theme_fields.find_by(upload_id: js_upload.id).javascript_cache.digest
-
-      get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
-      expect(response.body).to include <<~JS
-        registerSettings(#{component.id}, {
-          "num_setting": 5,
-          "theme_uploads": {
-            "vendorlib": "/uploads/default/test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/original/1X/#{js_upload.sha1}.js"
-          },
-          "theme_uploads_local": {
-            "vendorlib": "/theme-javascripts/#{theme_javascript_hash}.js?__ws=test.localhost"
-          }
-        });
-      JS
-      expect(response.body).to include("assert.ok(true);")
-    ensure
-      js_file&.close
-      js_file&.unlink
     end
 
     it "responds with 404 if digest is not a 40 chars hex" do

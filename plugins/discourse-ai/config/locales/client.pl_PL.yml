@@ -50,6 +50,13 @@ pl_PL:
             delete_ai_secret: "Usuń sekret AI"
             update_ai_spam_settings: "Zaktualizuj ustawienia spamu AI"
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_ai: "Wymaga włączenia wtyczki AI"
+      nodes:
+        "action:ai_agent": "Agent AI"
+      node_descriptions:
+        "action:ai_agent": "Uruchom agenta AI, aby przetwarzać dane lub generować treści"
     discourse_automation:
       scriptables:
         llm_report:
@@ -226,6 +233,11 @@ pl_PL:
               description: "Zezwól na tagowanie wpisów tworzonych przez użytkownika systemowego."
     discourse_ai:
       title: "AI"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Agent"
+          prompt: "Monit"
+          select_agent: "Wybierz agenta..."
       bot_chats:
         tab_label: "Czaty botów"
       default_llm:
@@ -379,8 +391,8 @@ pl_PL:
         description: "Automatycznie tłumacz całą zawartość swojego forum na język preferowany przez użytkownika"
         supported_locales: "Obsługiwane języki"
         supported_locales_description: "To ustawienie witryny pozwala również odwiedzającym na dodawanie tłumaczeń wpisów."
-        translatable_categories: "Kategorie możliwe do przetłumaczenia"
-        translatable_categories_description: "Przetłumaczone zostaną tylko treści z wybranych kategorii. Podkategorie należy dodać osobno."
+        excluded_categories: "Wykluczone kategorie"
+        excluded_categories_description: "Treści w tych kategoriach nie będą tłumaczone. Pozostaw puste, aby przetłumaczyć treści we wszystkich kategoriach, w tym w kategoriach prywatnych."
         admin_actions:
           translation_settings: "Ustawienia tłumaczenia"
           localization_settings: "Ustawienia lokalizacji"
@@ -638,6 +650,7 @@ pl_PL:
         confirm_delete: "Czy na pewno chcesz usunąć tego agenta?"
         new: "Nowy agent"
         no_agents: "Nie utworzono jeszcze żadnych agentów"
+        manage_agents: "Zarządzaj agentami"
         title: "Agenty"
         short_title: "Agenty"
         delete: "Usuń"

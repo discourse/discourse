@@ -54,3 +54,11 @@ hy:
       no_search_results: "Ներողություն, մենք չկարողացանք գտնել Ձեր տեքստի հետ համընկնող որևէ արդյունք:"
     group:
       reports: "Հաշվետվություններ"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Տվյալների Ուսումնասիրում"
+      sql:
+        query_id: "Հարցում"
+        param_value: "Արժեք"
+        output:
+          results: "Արդյունքները"

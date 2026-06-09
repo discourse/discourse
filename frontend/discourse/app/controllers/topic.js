@@ -37,7 +37,10 @@ import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import { applyBehaviorTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
@@ -321,6 +324,12 @@ export default class TopicController extends Controller {
     "model.word_count",
     "model.postStream.loadingFilter"
   )
+  get showTopicFooterButtons() {
+    return applyValueTransformer("topic-show-footer-buttons", true, {
+      topic: this.model,
+    });
+  }
+
   get showBottomTopicMap() {
     // filter out small posts, because they're short
     const postsCount =
@@ -582,78 +591,79 @@ export default class TopicController extends Controller {
   }
 
   @action
-  selectText() {
-    const { postId, buffer, opts } = this.quoteState;
-    const loadedPost = this.get("model.postStream").findLoadedPost(postId);
-    const promise = loadedPost
-      ? Promise.resolve(loadedPost)
-      : this.get("model.postStream").loadPost(postId);
+  async selectText() {
+    const { postId } = this.quoteState;
+    const postStream = this.get("model.postStream");
+    const composer = this.composer;
+    const { markdown: buffer, opts } = await this.quoteState.markdown();
 
-    return promise.then(async (post) => {
-      if (EmbedMode.enabled) {
-        const quotedText = buildQuote(post, buffer, opts);
-        this.appEvents.trigger("embed-composer:reply-to-post", post);
-        if (quotedText?.trim()) {
-          this.appEvents.trigger("composer:insert-block", quotedText);
-        }
-        return;
-      }
-
-      const quoteEvent = { post, buffer, opts, handled: false };
-      this.appEvents.trigger("topic:quote-post", quoteEvent);
-      if (quoteEvent.handled) {
-        return;
-      }
-
-      const composer = this.composer;
-      const viewOpen = composer.get("model.viewOpen");
-
-      // If we can't create a post, delegate to reply as new topic
-      if (!viewOpen && !this.get("model.details.can_create_post")) {
-        this.send("replyAsNewTopic", post);
-        return;
-      }
-
-      const composerOpts = {
-        action: Composer.REPLY,
-        draftSequence: post.get("topic.draft_sequence"),
-        draftKey: post.get("topic.draft_key"),
-      };
-
-      if (post.get("post_number") === 1) {
-        composerOpts.topic = post.get("topic");
-      } else {
-        composerOpts.post = post;
-      }
-
-      // If the composer is associated with a different post, we don't change it.
-      const composerPost = composer.get("model.post");
-      if (composerPost && composerPost.get("id") !== this.get("post.id")) {
-        composerOpts.post = composerPost;
-      }
-
+    if (EmbedMode.enabled) {
+      const loadedPost = postStream.findLoadedPost(postId);
+      const post = loadedPost ? loadedPost : await postStream.loadPost(postId);
       const quotedText = buildQuote(post, buffer, opts);
-
-      if (composer.get("model.viewOpen")) {
+      this.appEvents.trigger("embed-composer:reply-to-post", post);
+      if (quotedText?.trim()) {
         this.appEvents.trigger("composer:insert-block", quotedText);
-      } else if (composer.get("model.viewDraft")) {
-        const model = composer.get("model");
-        model.set("reply", model.get("reply") + "\n" + quotedText);
-        composer.openIfDraft();
-      } else {
-        const draftData = await Draft.get(composerOpts.draftKey);
-
-        if (draftData.draft) {
-          const data = JSON.parse(draftData.draft);
-          composerOpts.draftSequence = draftData.draft_sequence;
-          composerOpts.reply = data.reply + "\n" + quotedText;
-        } else {
-          composerOpts.quote = quotedText;
-        }
-
-        composer.open(composerOpts);
       }
-    });
+      return;
+    }
+
+    const loadedPost = postStream.findLoadedPost(postId);
+    const post = loadedPost ? loadedPost : await postStream.loadPost(postId);
+
+    const quoteEvent = { post, buffer, opts, handled: false };
+    this.appEvents.trigger("topic:quote-post", quoteEvent);
+    if (quoteEvent.handled) {
+      return;
+    }
+
+    const viewOpen = composer.get("model.viewOpen");
+
+    // If we can't create a post, delegate to reply as new topic
+    if (!viewOpen && !this.get("model.details.can_create_post")) {
+      await this.replyAsNewTopic(post);
+      return;
+    }
+
+    const composerOpts = {
+      action: Composer.REPLY,
+      draftSequence: post.get("topic.draft_sequence"),
+      draftKey: post.get("topic.draft_key"),
+    };
+
+    if (post.get("post_number") === 1) {
+      composerOpts.topic = post.get("topic");
+    } else {
+      composerOpts.post = post;
+    }
+
+    // If the composer is associated with a different post, we don't change it.
+    const composerPost = composer.get("model.post");
+    if (composerPost && composerPost.get("id") !== this.get("post.id")) {
+      composerOpts.post = composerPost;
+    }
+
+    const quotedText = buildQuote(post, buffer, opts);
+
+    if (composer.get("model.viewOpen")) {
+      this.appEvents.trigger("composer:insert-block", quotedText);
+    } else if (composer.get("model.viewDraft")) {
+      const model = composer.get("model");
+      model.set("reply", model.get("reply") + "\n" + quotedText);
+      composer.openIfDraft();
+    } else {
+      const draftData = await Draft.get(composerOpts.draftKey);
+
+      if (draftData.draft) {
+        const data = JSON.parse(draftData.draft);
+        composerOpts.draftSequence = draftData.draft_sequence;
+        composerOpts.reply = data.reply + "\n" + quotedText;
+      } else {
+        composerOpts.quote = quotedText;
+      }
+
+      composer.open(composerOpts);
+    }
   }
 
   @action
@@ -858,15 +868,12 @@ export default class TopicController extends Controller {
       return;
     }
 
-    if (EmbedMode.enabled) {
-      const quotedPost = postStream.findLoadedPost(quoteState.postId);
-      const quotedText = buildQuote(
-        quotedPost,
-        quoteState.buffer,
-        quoteState.opts
-      );
-      quoteState.clear();
+    const quotedPost = postStream.findLoadedPost(quoteState.postId);
+    const { markdown: buffer, opts: quoteOpts } = await quoteState.markdown();
+    const quotedText = buildQuote(quotedPost, buffer, quoteOpts);
+    quoteState.clear();
 
+    if (EmbedMode.enabled) {
       this.appEvents.trigger("embed-composer:reply-to-post", post);
       if (quotedText?.trim()) {
         this.appEvents.trigger("composer:insert-block", quotedText.trim());
@@ -875,14 +882,6 @@ export default class TopicController extends Controller {
     }
 
     const composerController = this.composer;
-    const quotedPost = postStream.findLoadedPost(quoteState.postId);
-    const quotedText = buildQuote(
-      quotedPost,
-      quoteState.buffer,
-      quoteState.opts
-    );
-
-    quoteState.clear();
 
     if (
       composerController.get("model.topic.id") === topic.get("id") &&
@@ -1513,10 +1512,11 @@ export default class TopicController extends Controller {
   }
 
   @action
-  replyAsNewTopic(post) {
+  async replyAsNewTopic(post) {
     const composerController = this.composer;
     const { quoteState } = this;
-    const quotedText = buildQuote(post, quoteState.buffer, quoteState.opts);
+    const { markdown: buffer, opts } = await quoteState.markdown();
+    const quotedText = buildQuote(post, buffer, opts);
 
     quoteState.clear();
 
@@ -1910,16 +1910,14 @@ export default class TopicController extends Controller {
   }
 
   @action
-  buildQuoteMarkdown() {
-    const { postId, buffer, opts } = this.quoteState;
-    const loadedPost = this.get("model.postStream").findLoadedPost(postId);
-    const promise = loadedPost
-      ? Promise.resolve(loadedPost)
-      : this.get("model.postStream").loadPost(postId);
+  async buildQuoteMarkdown() {
+    const { postId } = this.quoteState;
+    const postStream = this.get("model.postStream");
+    const { markdown: buffer, opts } = await this.quoteState.markdown();
+    const loadedPost = postStream.findLoadedPost(postId);
+    const post = loadedPost ? loadedPost : await postStream.loadPost(postId);
 
-    return promise.then((post) => {
-      return buildQuote(post, buffer, opts);
-    });
+    return buildQuote(post, buffer, opts);
   }
 
   @action

@@ -39,7 +39,7 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
     ],
   };
 
-  test("renders the headline title, summary and one KpiTile per kpi", async function (assert) {
+  test("renders the headline title, summary and one metric per kpi", async function (assert) {
     await render(
       <template>
         <DashboardEngagement
@@ -55,17 +55,21 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
       .dom(".db-section__subintro h3")
       .hasText("Members are forming a habit of coming back.");
     assert.dom(".db-section__subintro p").exists();
-    assert.dom(".db-kpi").exists({ count: 3 });
+    assert.dom(".db-section__metric").exists({ count: 3 });
     assert
-      .dom('a.db-kpi[href*="/admin/reports/dau_by_mau"] .db-kpi__value')
+      .dom(
+        ".db-section__metrics .db-section__metric:nth-child(1) .db-section__metric-number"
+      )
       .hasText("21.6%");
     assert
       .dom(
-        'a.db-kpi[href*="/admin/reports/daily_engaged_users"] .db-kpi__value'
+        ".db-section__metrics .db-section__metric:nth-child(2) .db-section__metric-number"
       )
       .hasText("150");
     assert
-      .dom('a.db-kpi[href*="/admin/reports/signups"] .db-kpi__value')
+      .dom(
+        ".db-section__metrics .db-section__metric:nth-child(3) .db-section__metric-number"
+      )
       .hasText("248");
   });
 
@@ -82,7 +86,7 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
     );
 
     assert.dom(".db-section__error").exists();
-    assert.dom(".db-kpi").doesNotExist();
+    assert.dom(".db-section__metric").doesNotExist();
   });
 
   test("omits the headline block when the engagement payload is missing", async function (assert) {

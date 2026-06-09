@@ -158,6 +158,15 @@ nl:
       placeholder: datum
       from_placeholder: "vanaf datum"
       to_placeholder: "tot datum"
+    date_range_picker:
+      apply: "Toepassen"
+      start_date: "Begindatum"
+      presets:
+        last_7_days: "Afgelopen 7 dagen"
+        last_30_days: "Afgelopen 30 dagen"
+        last_3_months: "Afgelopen 3 maanden"
+        last_6_months: "Afgelopen 6 maanden"
+        last_year: "Vorig jaar"
     languages:
       ar:
         name: Arabisch
@@ -450,7 +459,7 @@ nl:
       launch_in_easy_steps: "Start in %{step_count} eenvoudige stappen"
       congrats_onboarding_complete: "Gefeliciteerd met het voltooien van het onboardingproces!"
       select_theme:
-        enabled: "Ingeschakeld"
+        enabled: "Geselecteerd"
       invite_collaborators:
         title: "Deelnemers uitnodigen"
         description: "Vroege leden helpen je community tot leven te brengen"
@@ -666,6 +675,7 @@ nl:
       continue_as_guest: "Doorgaan als gast"
       be_first_to_reply: "Antwoord als eerste!"
       replying_to: "Antwoorden op %{username}"
+      editing_post: "Bericht bewerken "
       reply_placeholder: "Schrijf een antwoord..."
       signin_flow:
         cancel: "Annuleren"
@@ -2962,7 +2972,7 @@ nl:
       users_placeholder: "Voeg gebruikers of groepen toe"
       title_placeholder: "Waar gaat deze discussie over in één korte zin?"
       title_or_link_placeholder: "Typ de titel of plak hier een link"
-      edit_reason_placeholder: "waarom bewerk je?"
+      edit_reason_placeholder: "Waarom bewerk je?"
       topic_featured_link_placeholder: "Voer de weergegeven link in met titel."
       remove_featured_link: "Link verwijderen uit topic."
       reply_placeholder: "Typ hier. Gebruik Markdown, BBCode of HTML voor opmaak. Sleep of plak afbeeldingen."
@@ -3032,7 +3042,7 @@ nl:
       collapse: "Editorpaneel minimaliseren"
       open: "Editorpaneel openen"
       abandon: "Editor sluiten en concept verwijderen"
-      edit_reason: "Voeg je reden voor de bewerking toe"
+      edit_reason: "Waarom bewerk je?"
       enter_fullscreen: "Editor openen in volledig scherm"
       exit_fullscreen: "Editor in volledig scherm afsluiten"
       exit_fullscreen_prompt: "Druk op <kbd>ESC</kbd> om het volledige scherm te sluiten"
@@ -3067,25 +3077,26 @@ nl:
           desc: Maak een nieuw bericht dat begint met dezelfde ontvangers
         reply_to_topic:
           label: Antwoorden op topic
+          trigger: Topic
           desc: Antwoord op het topic, niet een bepaald bericht
+        reply_to_message:
+          trigger: Bericht
         toggle_whisper:
           label: Fluisteren in-/uitschakelen
-          desc: Fluisterberichten zijn alleen zichtbaar voor medewerkers
         create_topic:
-          label: "Nieuw topic"
           desc: Maak een nieuw topic
         create_personal_message:
-          label: "Nieuw bericht"
           desc: "Een nieuw persoonlijk bericht maken"
         shared_draft:
           label: "Gedeeld concept"
           desc: "Maak een topicconcept dat alleen zichtbaar is voor toegestane gebruikers"
         toggle_topic_bump:
-          label: "Omhoog plaatsen van topic in-/uitschakelen"
           desc: "Antwoorden zonder datum van laatste antwoord te wijzigen"
         toggle_unlisted:
           label: Onzichtbaar schakelen
           desc: "Onzichtbare topics zijn alleen toegankelijk via een rechtstreekse link"
+        edit_post: "Bericht bewerken "
+        unknown_user: "Gebruiker"
       reload: "Opnieuw laden"
       ignore: "Negeren"
       image_alt_text:
@@ -3471,6 +3482,8 @@ nl:
         relist_topics: "Topics opnieuw zichtbaar maken"
         pin_topics: "Deze topics uitlichten"
         unpin_topics: "Topic losmaken"
+        enable_nested_replies: "Geneste antwoorden inschakelen"
+        disable_nested_replies: "Geneste antwoorden uitschakelen"
         reset_bump_dates: "Omhoogplaatsingsdatums resetten"
         defer: "Markeren als ongelezen"
         delete: "Topics verwijderen"
@@ -3494,6 +3507,17 @@ nl:
           other: "Negeren (%{count})…"
         dismiss_tooltip: "Negeer alleen nieuwe berichten of stop het volgen van topics"
         also_dismiss_topics: "Volgen van deze topics stoppen, zodat ze nooit meer als ongelezen verschijnen voor mij"
+        dismiss_new_topics: "Nieuwe topics negeren"
+        dismiss_new_replies: "Nieuwe antwoorden sluiten"
+        dismiss_new_topics_with_selected:
+          one: "Negeren (%{count})"
+          other: "Negeren (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Negeren (%{count})"
+          other: "Negeren (%{count})"
+        dismiss_all_with_selected:
+          one: "Negeren (%{count})"
+          other: "Negeren (%{count})"
         dismiss_new: "Nieuwe negeren"
         dismiss_new_modal:
           title: "Nieuwe negeren"
@@ -3611,6 +3635,10 @@ nl:
       manage_tags:
         add:
           title: "Tags toevoegen"
+        remove:
+          title: "Tags verwijderen"
+        replace:
+          title: "Tags vervangen"
       delete_topics:
         name: "Verwijderen"
         description: "Verwijder de geselecteerde topics permanent. Deze actie kan niet ongedaan worden gemaakt."
@@ -3636,11 +3664,13 @@ nl:
       unpin_topics:
         name: "Losmaken"
         description: "Maak alle geselecteerde topics los die zijn vastgemaakt aan een categorie of globaal zijn vastgemaakt"
+      enable_nested_replies:
+        name: "Geneste antwoorden inschakelen"
+      disable_nested_replies:
+        name: "Geneste antwoorden uitschakelen"
     nested_replies:
       nested_view: "Geneste weergave"
       flat_view: "Platte weergave"
-      view_as_nested: "Weergeven als genest"
-      view_as_flat: "Weergeven als plat"
       sort:
         label: "Sorteren op"
         top: "Top"
@@ -5020,6 +5050,7 @@ nl:
         blockquote: "Blokcitaat"
       bookmarks:
         title: "Bladwijzers maken"
+        enter: "Opslaan en sluiten"
         later_today: "Later vandaag"
         later_this_week: "Later deze week"
         tomorrow: "Morgen"
@@ -5034,6 +5065,7 @@ nl:
         reply_as_new_topic: "Antwoorden als gekoppeld topic"
         reply_topic: "Antwoorden op topic"
         flag: "Bericht markeren"
+        edit: "Bericht bewerken"
         delete: "Bericht verwijderen"
         mark_tracking: "Topic volgen"
         mark_watching: "Topic observeren"
@@ -5111,18 +5143,8 @@ nl:
       staff_info: "Om beperkingen toe te voegen, moet je deze tag in een <a href=%{basePath}/tag_groups>taggroep</a> plaatsen."
       category_restricted: "Deze tag is beperkt tot categorieën waartoe je geen toegang hebt."
       synonyms: "Synoniemen"
-      synonyms_description: "Wanneer de volgende tags worden gebruikt, worden deze vervangen door <b>%{base_tag_name}</b>."
       synonyms_inline: "Deze synoniemen worden vervangen door %{base_tag_name}:"
       save: "Sla de naam en beschrijving van de tag op"
-      tag_groups_info:
-        one: 'Deze tag behoort tot de groep ''%{tag_groups}''.'
-        other: "Deze tag behoort tot deze groepen: %{tag_groups}."
-      tag_groups_info_prefix:
-        one: "Deze tag behoort tot de groep"
-        other: "Deze tag behoort tot deze groepen: "
-      category_restrictions:
-        one: "Deze kan alleen worden gebruikt in deze categorie:"
-        other: "Deze kan alleen worden gebruikt in deze categorieën:"
       restricted_to: "Beperkt tot"
       no_synonyms: "Deze tag heeft geen synoniemen."
       edit_synonyms: "Synoniemen bewerken"
@@ -5565,7 +5587,7 @@ nl:
           title: "Tabel bewerken"
           cancel: "annuleren"
           create: "Opslaan"
-          reason: "waarom bewerk je?"
+          reason: "Waarom bewerk je?"
           trigger_reason: "Reden voor bewerking toevoegen"
         default_edit_reason: "Tabel bijwerken met tabeleditor"
       default_header:
@@ -6303,12 +6325,14 @@ nl:
         too_many_requests: Je hebt deze actie te vaak uitgevoerd. Wacht voordat je het opnieuw probeert.
         not_found_error: Dit rapport bestaat niet
         custom_date_range: Aangepast datumbereik
+        stable: "stabiel"
         sections:
           reports:
             title: "Rapporten"
           traffic:
             title: "Siteverkeer"
           engagement:
+            title: "Betrokkenheid"
             activity_by_category:
               category: "Categorie"
               topics: "Topics"
@@ -6330,8 +6354,6 @@ nl:
             enabled_heading: "Ingeschakeld"
             all_heading: "Alle rapporten"
             apply: "Toepassen"
-            move_up: "Omhoog verplaatsen"
-            move_down: "Omlaag verplaatsen"
         configure:
           button: "Configureren"
         site_traffic:
@@ -6852,9 +6874,10 @@ nl:
           your_organization: "Je organisatie"
           your_organization_description: "We gebruiken deze informatie in de Gebruiksvoorwaarden en Privacyverklaring om aan te geven wie de site beheert en in welk rechtsgebied."
           company_name: "Naam"
-          company_name_placeholder: "Acme-organisatie"
           company_name_warning: |
             Als dit leeg wordt gelaten worden er geen standaard Gebruiksvoorwaarden of Privacyverklaring verstrekt.
+          company_url: "Website"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Toepasselijk recht"
           governing_law_placeholder: "Provincie, staat of land"
           governing_law_help: |

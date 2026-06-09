@@ -81,9 +81,7 @@ class DiscoursePoll::Poll
         end
       end
 
-    if serialized_poll[:type] == RANKED_CHOICE
-      serialized_poll[:ranked_choice_outcome] = DiscoursePoll::RankedChoice.outcome(poll_id)
-    else
+    if serialized_poll[:type] != RANKED_CHOICE
       # Ensure consistency here as we do not have a unique index to limit the
       # number of votes per the poll's configuration.
       is_multiple = serialized_poll[:type] == MULTIPLE
@@ -145,19 +143,9 @@ class DiscoursePoll::Poll
   end
 
   def self.remove_vote(user, post_id, poll_name)
-    poll_id = nil
-
-    serialized_poll =
-      DiscoursePoll::Poll.change_vote(user, post_id, poll_name) do |poll|
-        poll_id = poll.id
-        PollVote.where(poll: poll, user: user).delete_all
-      end
-
-    if serialized_poll[:type] == RANKED_CHOICE
-      serialized_poll[:ranked_choice_outcome] = DiscoursePoll::RankedChoice.outcome(poll_id)
+    DiscoursePoll::Poll.change_vote(user, post_id, poll_name) do |poll|
+      PollVote.where(poll: poll, user: user).delete_all
     end
-
-    serialized_poll
   end
 
   def self.toggle_status(user, post_id, poll_name, status, raise_errors = true)
@@ -207,8 +195,13 @@ class DiscoursePoll::Poll
       poll.save!
 
       serialized_poll = PollSerializer.new(poll, root: false, scope: guardian).as_json
-      payload = { post_id:, polls: [serialized_poll] }
 
+      # This payload is broadcast to every subscriber on the topic channel, so
+      # we only broadcast public data by serializing it as an anonymous user.
+      payload = {
+        post_id:,
+        polls: [PollSerializer.new(poll, root: false, scope: Guardian.new).as_json],
+      }
       post.publish_message!("/polls/#{post.topic_id}", payload)
 
       serialized_poll
@@ -530,8 +523,13 @@ class DiscoursePoll::Poll
       poll.reload
 
       serialized_poll = PollSerializer.new(poll, root: false, scope: guardian).as_json
-      payload = { post_id:, polls: [serialized_poll] }
 
+      # This payload is broadcast to every subscriber on the topic channel, so
+      # we only broadcast public data by serializing it as an anonymous user.
+      payload = {
+        post_id:,
+        polls: [PollSerializer.new(poll, root: false, scope: Guardian.new).as_json],
+      }
       post.publish_message!("/polls/#{post.topic_id}", payload)
 
       serialized_poll

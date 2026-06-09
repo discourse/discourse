@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import ReviewableTopicLink from "discourse/components/reviewable/topic-link";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | reviewable | topic-link", function (hooks) {
+module("Integration | Component | Reviewable | TopicLink", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders topic information when topic exists", async function (assert) {

@@ -13,8 +13,8 @@ export default class EmptyTopicFilter extends Component {
     if (this.args.unreadFilter) {
       return i18n("topics.none.education.unread");
     } else if (this.args.newFilter) {
-      if (this.currentUser.new_new_view_enabled) {
-        return i18n("topics.none.education.new_new");
+      if (this.currentUser.unified_new_enabled) {
+        return i18n("topics.none.education.unified_new");
       } else {
         return i18n("topics.none.education.new");
       }
@@ -24,7 +24,7 @@ export default class EmptyTopicFilter extends Component {
   }
 
   get ctaLabelWithAction() {
-    if (this.currentUser.new_new_view_enabled) {
+    if (this.currentUser.unified_new_enabled) {
       if (this.args.newListSubset === "topics") {
         if (this.args.trackingCounts.newReplies > 0) {
           return {
@@ -53,7 +53,7 @@ export default class EmptyTopicFilter extends Component {
 
   get ctaRoute() {
     if (
-      this.currentUser.new_new_view_enabled &&
+      this.currentUser.unified_new_enabled &&
       this.ctaLabelWithAction.action
     ) {
       return;

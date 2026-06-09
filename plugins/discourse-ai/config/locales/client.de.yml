@@ -50,6 +50,9 @@ de:
             delete_ai_secret: "KI-Geheimschlüssel löschen"
             update_ai_spam_settings: "KI-Spam-Einstellungen aktualisieren"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_agent": "KI-Agent"
     discourse_automation:
       scriptables:
         llm_report:
@@ -226,6 +229,9 @@ de:
               description: "Erlaubte das Hinzufügen von Schlagwörter zu Beiträgen des Systembenutzers"
     discourse_ai:
       title: "KI"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Agent"
       default_llm:
         title: "Standard-LLM-Modell"
         description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder im Agent kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
@@ -368,8 +374,6 @@ de:
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
         supported_locales: "Unterstützte Sprachen"
         supported_locales_description: "Diese Website-Einstellung ermöglicht es auch Besuchern, Übersetzungen von Beiträgen beizutragen."
-        translatable_categories: "Übersetzbare Kategorien"
-        translatable_categories_description: "Es werden nur Inhalte aus den ausgewählten Kategorien übersetzt. Unterkategorien müssen separat hinzugefügt werden."
         admin_actions:
           translation_settings: "Übersetzungseinstellungen"
           localization_settings: "Lokalisierungseinstellungen"

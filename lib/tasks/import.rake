@@ -424,12 +424,14 @@ def update_topics
                   FROM posts
                  WHERE NOT hidden
                    AND deleted_at IS NULL
+                   AND #{Topic.public_post_types_sql}
                    AND topic_id = p.topic_id
               ORDER BY post_number DESC
                  LIMIT 1) last_poster
         FROM posts p
        WHERE NOT hidden
          AND deleted_at IS NULL
+         AND #{Topic.public_post_types_sql}
     GROUP BY topic_id
   )
   UPDATE topics

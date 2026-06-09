@@ -158,6 +158,15 @@ tr_TR:
       placeholder: tarih
       from_placeholder: "başlangıç tarihi"
       to_placeholder: "bugüne kadar"
+    date_range_picker:
+      apply: "Uygula"
+      start_date: "Başlangıç tarihi"
+      presets:
+        last_7_days: "Son 7 gün"
+        last_30_days: "Son 30 gün"
+        last_3_months: "Son 3 ay"
+        last_6_months: "Son 6 ay"
+        last_year: "Geçen yıl"
     languages:
       ar:
         name: Arapça
@@ -452,7 +461,7 @@ tr_TR:
       launch_in_easy_steps: "%{step_count} kolay adımda başlatın"
       congrats_onboarding_complete: "Onboarding sürecini tamamladığınız için tebrikler!"
       select_theme:
-        enabled: "Etkin mi"
+        enabled: "Seçili"
       invite_collaborators:
         title: "İş Ortaklarını Davet Et"
         description: "İlk üyeler, topluluğunuzu hayata geçirmeye yardımcı olur"
@@ -2974,7 +2983,7 @@ tr_TR:
       users_placeholder: "Kullanıcı veya grup ekleyin"
       title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
       title_or_link_placeholder: "Buraya başlık yazın veya bir bağlantı yapıştırın"
-      edit_reason_placeholder: "neden düzenleme yapıyorsunuz?"
+      edit_reason_placeholder: "Neden düzenleme yapıyorsunuz?"
       topic_featured_link_placeholder: "Başlıkla gösterilen bağlantıyı girin."
       remove_featured_link: "Konudan bağlantıyı kaldır."
       reply_placeholder: "Buraya yazın. Biçimlendirmek için Markdown, BBCode veya HTML kullanabilirsiniz. Resimleri sürükleyebilir veya yapıştırabilirsiniz."
@@ -3044,7 +3053,7 @@ tr_TR:
       collapse: "Besteci panelini küçült"
       open: "Besteci panelini aç"
       abandon: "Besteciyi kapat ve taslağı sil"
-      edit_reason: "Düzenleme nedeninizi girin"
+      edit_reason: "Neden düzenleme yapıyorsunuz?"
       enter_fullscreen: "Tam ekran besteci moduna gir"
       exit_fullscreen: "Tam ekran besteci modundan çık"
       exit_fullscreen_prompt: "Tam ekrandan çıkmak için <kbd>ESC</kbd> tuşuna basın"
@@ -3079,25 +3088,26 @@ tr_TR:
           desc: Aynı alıcılarla başlayan yeni mesaj oluştur
         reply_to_topic:
           label: Konuyu yanıtla
+          trigger: Konu
           desc: Belirli bir gönderiye değil, konuya yanıt verin
+        reply_to_message:
+          trigger: Mesaj
         toggle_whisper:
           label: Fısıltıyı Aç/Kapat
-          desc: Fısıltılar yalnızca personel tarafından görülebilir
         create_topic:
-          label: "Yeni konu"
           desc: Yeni bir konu oluşturun
         create_personal_message:
-          label: "Yeni İleti"
           desc: "Kişisel bir ileti oluştur"
         shared_draft:
           label: "Paylaşılan Taslak"
           desc: "Yalnızca izin verilen kullanıcılar tarafından görülebilecek bir konu taslağı oluşturun"
         toggle_topic_bump:
-          label: "Konu üste sıçratmayı aç/kapat"
           desc: "En son yanıt tarihini değiştirmeden yanıtla"
         toggle_unlisted:
           label: Listeden kaldırılanı aç/kapat
           desc: "Listelenmemiş konulara yalnızca doğrudan bağlantı ile erişilebilir."
+        edit_post: "Gönderi düzenleniyor"
+        unknown_user: "Kullanıcı"
       reload: "Yeniden Yükle"
       ignore: "Yok say"
       image_alt_text:
@@ -3508,6 +3518,8 @@ tr_TR:
           other: "Kapat (%{count})"
         dismiss_tooltip: "Yeni gönderileri kapat veya konuları takip etmeyi durdur"
         also_dismiss_topics: "Yeniden okunmamış olarak gösterilmemesi için bu konuları takip etmeyi durdur"
+        dismiss_new_topics: "Yeni konuları kapat"
+        dismiss_new_replies: "Yeni yanıtları kapat"
         dismiss_new: "Yenileri Kapat"
         dismiss_new_modal:
           title: "Yeniyi kapat"
@@ -3673,8 +3685,6 @@ tr_TR:
     nested_replies:
       nested_view: "İç içe geçmiş görünüm"
       flat_view: "Düz görünüm"
-      view_as_nested: "İç içe geçmiş olarak görüntüle"
-      view_as_flat: "Düz olarak görüntüle"
       sort:
         label: "Sıralama ölçütü"
         top: "En iyi"
@@ -5147,18 +5157,8 @@ tr_TR:
       staff_info: "Kısıtlama eklemek için bu etiketi bir <a href=%{basePath}/tag_groups>etiket grubuna</a> koyun."
       category_restricted: "Bu etiket, erişim izninizin olmadığı kategorilerle sınırlı."
       synonyms: "Eş Anlamlılar"
-      synonyms_description: "Aşağıdaki etiketler kullanıldığında <b>%{base_tag_name}</b>ile değiştirilir."
       synonyms_inline: "Bu eşanlamlılar %{base_tag_name} ile değiştirilecektir:"
       save: "Etiketin adını ve açıklamasını kaydedin"
-      tag_groups_info:
-        one: 'Bu etiket %{tag_groups} grubuna ait.'
-        other: "Bu etiket şu gruplara ait: %{tag_groups}."
-      tag_groups_info_prefix:
-        one: "Bu etiket gruba aittir "
-        other: "Bu etiket şu gruplara aittir: "
-      category_restrictions:
-        one: "Sadece şu kategoride kullanılabilir:"
-        other: "Yalnızca şu kategorilerde kullanılabilir:"
       restricted_to: "Sınırlı"
       no_synonyms: "Bu etiketin eşanlamlısı yoktur."
       edit_synonyms: "Eş Anlamlıları Düzenle"
@@ -5601,7 +5601,7 @@ tr_TR:
           title: "Tabloyu düzenle"
           cancel: "iptal et"
           create: "Kaydet"
-          reason: "neden düzenleme yapıyorsunuz?"
+          reason: "Neden düzenleme yapıyorsunuz?"
           trigger_reason: "Düzenleme nedeni ekleyin"
         default_edit_reason: "Tablo Düzenleyiciyle Tabloyu güncelle"
       default_header:
@@ -6339,6 +6339,7 @@ tr_TR:
         too_many_requests: Bu eylemi birçok kez gerçekleştirdiniz. Tekrar denemeden önce lütfen bekleyin.
         not_found_error: Üzgünüz, bu rapor mevcut değil
         custom_date_range: Özel tarih aralığı
+        stable: "stabil"
         sections:
           reports:
             title: "Rapor"
@@ -6361,16 +6362,12 @@ tr_TR:
                 "2": "Üye"
                 "3": "Normal"
                 "4": "Lider"
-              trend:
-                stable: "stabil"
         reports_section:
           no_data: "Gösterilecek veri yok"
           modal:
             enabled_heading: "Etkin mi"
             all_heading: "Tüm raporlar"
             apply: "Uygula"
-            move_up: "Yukarı taşı"
-            move_down: "Aşağı taşı"
         configure:
           button: "Yapılandır"
         site_traffic:
@@ -6891,9 +6888,10 @@ tr_TR:
           your_organization: "Organizasyonunuz"
           your_organization_description: "Bu bilgileri, siteyi kimin işlettiğini ve hangi yargı yetkisi kapsamında işlettiğini göstermek için Hizmet Koşulları ve Gizlilik Bildiriminde kullanırız."
           company_name: "Ad"
-          company_name_placeholder: "Acme Organizasyonu"
           company_name_warning: |
             Boş bırakılırsa Hizmet Şartları veya Gizlilik Bildirimine ilişkin ortak metin sağlanmaz
+          company_url: "Web sitesi"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Geçerli kanun"
           governing_law_placeholder: "İl, Eyalet veya Ülke"
           governing_law_help: |

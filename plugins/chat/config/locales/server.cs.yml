@@ -30,7 +30,6 @@ cs:
     chat_editing_grace_period_max_diff_low_trust: "Maximální počet povolených změn znaků v době odkladu úpravy chatu, pokud se změní více, zobrazí se značka (upraveno) u zprávy chatu (úroveň důvěry 0 a 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximální počet povolených změn znaků v době odkladu úpravy chatu, pokud se změní více, zobrazí se značka (upraveno) u zprávy chatu (úroveň důvěry 2 a vyšší)."
     chat_preferred_index: "Preferovaný panel při načítání /chat"
-    allow_chat_in_anonymous_mode: "Povolením tohoto nastavení umožníte uživatelům, kteří procházejí vaše stránky anonymně, používat chat. Toto nastavení vyžaduje, aby bylo povoleno nastavení `allow anonymous mode`."
     chat_search_enabled: "Povolením tohoto nastavení umožníte uživatelům prohledávat zprávy chatu."
     errors:
       chat_default_channel: "Výchozí kanál chatu musí být veřejný kanál."
@@ -260,6 +259,10 @@ cs:
     scriptables:
       send_chat_message:
         title: Odeslat zprávu chatu
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Schválení"
+      default_deny_label: "Odmítnout"
   reviewable_score_types:
     needs_review:
       title: "Potřebuje revizi"

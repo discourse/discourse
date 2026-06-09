@@ -29,7 +29,7 @@ pl_PL:
     oauth2_json_groups_path: "Ścieżka w pliku JSON użytkownika OAuth2 do tablicy nazw grup, do których należy użytkownik. Pozostaw puste, aby wyłączyć synchronizację grup."
     oauth2_user_field_mappings: "Mapuj ścieżki w pliku JSON użytkownika OAuth2 na pola użytkownika Discourse. Każdy wpis łączy ścieżkę JSON z numerycznym identyfikatorem pola użytkownika Discourse."
     oauth2_email_verified: "Sprawdź to, czy witryna OAuth2 zweryfikowała adres e-mail"
-    oauth2_overrides_email: "Zastąp adres e-mail Discourse zdalnym adresem e-mail przy każdym logowaniu. Działa tak samo jak ustawienie `auth_overrides_email`, ale jest specyficzne dla logowań OAuth2."
+    oauth2_overrides_email: "Zastąp adres e-mail Discourse zdalnym adresem e-mail przy każdym logowaniu. Działa tak samo jak ustawienie {{setting:auth_overrides_email}} , ale jest specyficzne dla logowań OAuth2."
     oauth2_send_auth_header: "Wyślij dane uwierzytelniające klienta w nagłówku autoryzacji HTTP"
     oauth2_send_auth_body: "Wyślij dane uwierzytelniające klienta w treści żądania"
     oauth2_debug_auth: "Umieść bogate informacje debugowania w swoich logach"

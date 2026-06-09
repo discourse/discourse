@@ -35,3 +35,6 @@ te:
     edit_assignments_modal:
       topic: "విషయం"
       post: "పోస్ట్"
+    discourse_workflows:
+      assign_topic:
+        topic_id: "విషయపు ఐడీ"

@@ -49,6 +49,7 @@ module PageObjects
 
         def close_popup
           locator(".discourse-post-event-close").click
+          has_no_css?("[data-identifier='post-event-menu']")
           self
         end
 
@@ -72,6 +73,15 @@ module PageObjects
 
         def open_bulk_invite_modal
           open_more_menu { locator(".dropdown-menu__item.bulk-invite").click }
+          self
+        end
+
+        def has_title_link_href?(href)
+          has_css?(".event-info .name a[href='#{href}']")
+        end
+
+        def open_invite_user_or_group_modal
+          open_more_menu { locator(".dropdown-menu__item.invite-user-or-group").click }
           self
         end
 

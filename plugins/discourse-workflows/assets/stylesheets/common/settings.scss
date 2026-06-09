@@ -1,0 +1,33 @@
+.workflows-settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-4) 0;
+
+  &__section {
+    padding: var(--space-4);
+
+    &.--danger {
+      border: 1px solid var(--workflow-status-error-low);
+      border-radius: var(--d-border-radius);
+    }
+  }
+
+  &__section-title {
+    font-size: var(--font-up-1);
+    margin: 0 0 var(--space-2) 0;
+
+    .--danger & {
+      color: var(--workflow-status-error);
+    }
+  }
+
+  &__section-description {
+    color: var(--primary-medium);
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .form-kit__field-custom {
+    width: 100% !important;
+  }
+}

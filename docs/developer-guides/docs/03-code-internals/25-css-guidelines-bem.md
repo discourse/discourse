@@ -62,3 +62,7 @@ Or in an alternate use case, imagine we want to style all of these elements insi
 Instead of placing a modifier on each element separately, we can just place it on the block level and use it indirectly via the syntax with `&` at the end. It makes little difference in the CSS file, but it keeps the DOM cleaner by not repeating modifiers.
 
 A great real world example of our CSS classes in use in Discourse is within the chat plugin, in the [loading skeleton component](https://github.com/discourse/discourse/blob/8b9da12bf2ef02cbf913352d861fd031b763f7fd/plugins/chat/assets/javascripts/discourse/components/chat-skeleton.gjs).
+
+## See also
+
+- [Designing for Different Devices](27-designing-for-devices.md) — adapting styles to viewport size, touch vs. hover, and other device characteristics.

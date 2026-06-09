@@ -189,7 +189,12 @@ export default class TopicFromParams extends DiscourseRoute {
     this.controllerFor("topic").set("previousURL", document.location.pathname);
 
     transition.followRedirects().finally(() => {
-      if (!this.router.currentRouteName.startsWith("topic.")) {
+      const routeName = this.router.currentRouteName;
+
+      if (
+        !routeName?.startsWith("topic.") &&
+        !routeName?.startsWith("nested")
+      ) {
         this.header.clearTopic();
       }
     });

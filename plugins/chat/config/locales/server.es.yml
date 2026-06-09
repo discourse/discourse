@@ -33,7 +33,6 @@ es:
     chat_editing_grace_period_max_diff_low_trust: "Número máximo de cambios de caracteres permitidos en el periodo de gracia de edición del chat, si se cambian más se muestra la etiqueta (editado) mediante el mensaje de chat (nivel de confianza 0 y 1)."
     chat_editing_grace_period_max_diff_high_trust: "Número máximo de cambios de caracteres permitidos en el periodo de gracia de edición del chat, si se cambian más se muestra la etiqueta (editado) mediante el mensaje de chat (nivel de confianza 2 y superior)."
     chat_preferred_index: "Pestaña preferida al cargar /chat."
-    allow_chat_in_anonymous_mode: "Activa esta opción para permitir que los usuarios que navegan en tu sitio de forma anónima puedan usar el chat. Esta opción requiere que se active el ajuste «allow anonymous mode»."
     chat_search_enabled: "Activa esta opción para permitir que los usuarios busquen mensajes de chat."
     errors:
       chat_default_channel: "El canal de chat por defecto debe ser un canal público."
@@ -240,6 +239,10 @@ es:
     scriptables:
       send_chat_message:
         title: Enviar mensaje de chat
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Aprobar"
+      default_deny_label: "Denegar"
   reviewable_score_types:
     needs_review:
       title: "Necesita revisión"

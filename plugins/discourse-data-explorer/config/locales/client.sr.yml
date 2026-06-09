@@ -21,3 +21,8 @@ sr:
       query_groups: "Grupe"
       query_description: "Opis"
       reset_params: "Reset"
+    discourse_workflows:
+      sql:
+        param_value: "Vriednost"
+        output:
+          results: "Rezultati"

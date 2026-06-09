@@ -196,6 +196,7 @@ class Stylesheet::Manager::Builder
     DiscoursePluginRegistry.stylesheets.each { |_, paths| assets += paths.to_a }
     DiscoursePluginRegistry.mobile_stylesheets.each { |_, paths| assets += paths.to_a }
     DiscoursePluginRegistry.desktop_stylesheets.each { |_, paths| assets += paths.to_a }
+    DiscoursePluginRegistry.admin_stylesheets.each { |_, paths| assets += paths.to_a }
     Digest::SHA1.hexdigest(assets.sort.join)
   end
 

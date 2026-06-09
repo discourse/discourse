@@ -16,6 +16,8 @@ lv:
         all: "Viss"
       move_post_cancel: "Atcelt"
       confirm_solved_removal_cancel: "Atcelt"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
     discourse_automation:
       triggerables:
         first_accepted_solution:

@@ -9,7 +9,7 @@ import { i18n } from "discourse-i18n";
 @tagName("")
 export default class AssignedAdvancedSearch extends Component {
   static shouldRender(args, { currentUser }) {
-    return currentUser?.can_assign;
+    return currentUser?.can_assign_globally;
   }
 
   @action

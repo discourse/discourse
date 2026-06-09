@@ -120,6 +120,14 @@ vi:
       placeholder: ngày
       from_placeholder: "từ ngày"
       to_placeholder: "đến nay"
+    date_range_picker:
+      apply: "Áp dụng"
+      presets:
+        last_7_days: "7 ngày qua"
+        last_30_days: "30 ngày qua"
+        last_3_months: "3 tháng qua"
+        last_6_months: "6 tháng qua"
+        last_year: "Năm ngoái"
     languages:
       ar:
         name: Tiếng Ả Rập
@@ -388,7 +396,7 @@ vi:
       pm_title: "Tin nhắn gợi ý"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Đã bật"
+        enabled: "Đã chọn"
       start_posting:
         back: "Quay lại"
     about:
@@ -2696,7 +2704,7 @@ vi:
       users_placeholder: "Thêm người dùng hoặc nhóm"
       title_placeholder: "Tóm tắt chủ đề này trong một câu ngắn gọn"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán link vào đây"
-      edit_reason_placeholder: "Lý do bạn sửa?"
+      edit_reason_placeholder: "Lý do bạn sửa"
       topic_featured_link_placeholder: "Nhập liên kết hiển thị với tiêu đề."
       remove_featured_link: "Xóa liên kết khỏi chủ đề."
       reply_placeholder: "Nhập ở đây. Định dạng bằng Markdown, BBCode, hoặc HTML. Kéo thả hoặc dán hình ảnh."
@@ -2764,6 +2772,7 @@ vi:
       collapse: "Thu nhỏ trình soạn thảo"
       open: "Mở rộng trình soạn thảo"
       abandon: "Đóng trình soạn thảo và xóa bản nháp"
+      edit_reason: "Lý do bạn sửa"
       enter_fullscreen: "Phóng to trình soạn thảo"
       exit_fullscreen: "Thoát khỏi trình soạn toàn màn hình"
       exit_fullscreen_prompt: "Nhấn <kbd>ESC</kbd> để thoát khỏi chế độ toàn màn hình"
@@ -2798,25 +2807,26 @@ vi:
           desc: Tạo tin nhắn mới bắt đầu với cùng người nhận
         reply_to_topic:
           label: Trả lời chủ đề
+          trigger: Chủ đề
           desc: Trả lời chủ đề, không ảnh hưởng bất kỳ tút nào
+        reply_to_message:
+          trigger: Nhắn tin
         toggle_whisper:
           label: Chuyển đổi nói thầm
-          desc: Những lời thì thầm chỉ hiển thị với MOD
         create_topic:
-          label: "Chủ đề mới"
           desc: Tạo một chủ đề mới
         create_personal_message:
-          label: "Tin nhắn mới"
           desc: "Tạo một tin nhắn cá nhân mới"
         shared_draft:
           label: "Bản nháp được Chia sẻ"
           desc: "Nháp một chủ đề sẽ chỉ hiển thị cho người dùng được phép"
         toggle_topic_bump:
-          label: "Bật/tắt đẩy chủ đề"
           desc: "Trả lời mà không thay đổi ngày trả lời gần nhất"
         toggle_unlisted:
           label: Bật/tắt chế độ không công khai
           desc: "Các chủ đề không công khai chỉ có thể truy cập thông qua link trực tiếp"
+        edit_post: "Đang chỉnh sửa tút"
+        unknown_user: "Người dùng"
       reload: "Nạp lại"
       ignore: "Bỏ qua"
       image_alt_text:
@@ -3176,6 +3186,14 @@ vi:
           other: "Loại bỏ (%{count})…"
         dismiss_tooltip: "Chỉ bỏ qua tút mới hoặc dừng theo dõi chủ đề"
         also_dismiss_topics: "Ngừng theo dõi các chủ đề này để không hiển thị lại là chủ đề chưa đọc"
+        dismiss_new_topics: "Bỏ qua các chủ đề mới"
+        dismiss_new_replies: "Bỏ qua các trả lời mới"
+        dismiss_new_topics_with_selected:
+          other: "Loại bỏ (%{count})"
+        dismiss_new_replies_with_selected:
+          other: "Loại bỏ (%{count})"
+        dismiss_all_with_selected:
+          other: "Loại bỏ (%{count})"
         dismiss_new: "Bỏ qua tất cả"
         dismiss_new_modal:
           title: "Bỏ qua mục mới"
@@ -4576,12 +4594,7 @@ vi:
       staff_info: "Để thêm các hạn chế, hãy đặt thẻ này vào <a href=%{basePath}/tag_groups>nhóm thẻ</a>."
       category_restricted: "Thẻ này bị giới hạn đối với các chuyên mục bạn không có quyền truy cập."
       synonyms: "Từ đồng nghĩa"
-      synonyms_description: "Khi các thẻ sau được sử dụng, chúng sẽ được thay thế bằng <b>%{base_tag_name}</b>."
       save: "Lưu tên và mô tả của thẻ"
-      tag_groups_info:
-        other: "Thẻ này thuộc các nhóm: %{tag_groups}."
-      category_restrictions:
-        other: "Nó chỉ có thể được sử dụng trong các chuyên mục sau:"
       edit_synonyms: "Chỉnh sửa từ đồng nghĩa"
       add_synonyms_label: "Thêm từ đồng nghĩa:"
       add_synonyms: "Thêm"
@@ -5687,6 +5700,7 @@ vi:
         too_many_requests: Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi trước khi thử lại.
         not_found_error: Xin lỗi, báo cáo này không tồn tại
         custom_date_range: Khoảng thời gian tùy chỉnh
+        stable: "ổn định"
         sections:
           reports:
             title: "Báo cáo"
@@ -5706,16 +5720,12 @@ vi:
                 "2": "Nâng Cao"
                 "3": "Tích Cực"
                 "4": "Nhà Lãnh Đạo"
-              trend:
-                stable: "ổn định"
         reports_section:
           no_data: "Không có dữ liệu để hiển thị"
           modal:
             enabled_heading: "Đã bật"
             all_heading: "Tất cả các báo cáo"
             apply: "Áp dụng"
-            move_up: "Chuyển lên"
-            move_down: "Chuyển xuống"
         site_traffic:
           series:
             anonymous: "Ẩn danh"
@@ -6223,9 +6233,10 @@ vi:
           your_organization: "Tổ chức của bạn"
           your_organization_description: "Chúng tôi sẽ sử dụng thông tin này trong Điều khoản dịch vụ và Thông báo bảo mật để nêu rõ ai là người vận hành trang web và thuộc thẩm quyền nào."
           company_name: "Tên"
-          company_name_placeholder: "Tổ chức Acme"
           company_name_warning: |
             Nếu để trống, sẽ không cung cấp các điều khoản dịch vụ hoặc thông báo về quyền riêng tư mẫu.
+          company_url: "Trang web"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Luật áp dụng"
           governing_law_placeholder: "Tỉnh, Thành phố hoặc Quốc gia"
           governing_law_help: |

@@ -195,6 +195,10 @@ sq:
     scriptables:
       send_chat_message:
         title: Dërgoi një kanal mesazhi.
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Aprovo"
+      default_deny_label: "Mohoni"
   reviewable_score_types:
     needs_review:
       title: "Nevojë për Rishikim"

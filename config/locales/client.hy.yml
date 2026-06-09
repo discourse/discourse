@@ -143,6 +143,8 @@ hy:
       placeholder: ամսաթիվ
       from_placeholder: "ամսաթվից"
       to_placeholder: "դեպի ամսաթիվ"
+    date_range_picker:
+      apply: "Կիրառել"
     share:
       topic_html: 'Թեմա՝ <span class="topic-title">%{topicTitle}</span>'
       post: "գրառում #%{postNumber} @%{username}-ի կողմից"
@@ -2288,6 +2290,7 @@ hy:
         attribute_value: "Արժեք"
         apply: "Կիրառել"
       help: "Markdown-ի խմբագրման օգնություն"
+      edit_reason: "Ո՞րն է խմբագրման պատճառը:"
       modal_ok: "Լավ"
       cant_send_pm: "Ներողություն, Դուք չեք կարող հաղորդագրություն ուղարկել %{username}-ին:"
       yourself_confirm:
@@ -2306,18 +2309,19 @@ hy:
           confirm: 'Ձեզ մոտ պահպանված է նոր թեմայի սևագիրը, որը կվերագրվի, եթե դրա հետ կապված թեմա ստեղծեք: '
         reply_to_topic:
           label: Պատասխանել թեմային
+          trigger: Թեմա
           desc: Պատասխանել թեմային, այլ ոչ թե որոշակի գրառման
+        reply_to_message:
+          trigger: Ուղարկել
         toggle_whisper:
           label: Փոխանջատել շշնջումը
-          desc: Շշուկները տեսանելի են միայն անձնակազմին
         create_personal_message:
-          label: "Նոր հաղորդագրություն"
           desc: "Գրել նոր անձնական նամակ"
         shared_draft:
           label: "Ստեղծել Կիսված Սևագիր"
         toggle_topic_bump:
-          label: "Փոխանջատել թեմայի բարձրացումը "
           desc: "Պատասխանել՝ առանց պատասխանի վերջին ամսաթիվը փոխելու"
+        unknown_user: "Օգտատեր"
       ignore: "Անտեսել"
       image: "նկար"
       link_toolbar:
@@ -3543,10 +3547,6 @@ hy:
       default_info: "Այս տեգը չի սահմանափակվում որևէ կատեգորիայով և չունի հոմանիշ:"
       category_restricted: "Այս տեգը սահմանափակված է այն կատեգորիաներով, որոնցում մուտքի թույլտվություն չունեք:"
       synonyms: "Հոմանիշներ"
-      synonyms_description: "Հետևյալ տեգերի օգտագործման դեպքում, դրանք կփոխարինվեն <b>%{base_tag_name}</b> -ով:"
-      tag_groups_info:
-        one: 'Այս պիտակը պատկանում է «%{tag_groups}» խմբին:'
-        other: "Այս թեգը պատկանում է այս խմբերին՝ %{tag_groups}"
       add_synonyms_label: "Ավելացնել հոմանիշներ."
       add_synonyms: "Ավելացնել"
       add_synonyms_failed: "Այս տեգերը չեն կարող ավելացվել որպես հոմանիշներ՝ <b>%{tag_names}</b> : Համոզվեք, որ դրանք հոմանիշներ չունեն և մեկ այլ տեգի հոմանիշներ չեն:"
@@ -4250,6 +4250,8 @@ hy:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Անուն"
+          company_url: "Վեբ կայք"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Խմբեր"
           optional: "(ընտրովի)"

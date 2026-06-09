@@ -87,13 +87,12 @@ RSpec.describe "Dismissing New" do
     end
   end
 
-  describe "when the `experimental_new_new_view_groups` site setting is enabled" do
-    fab!(:group) { Fabricate(:group).tap { |g| g.add(user) } }
+  describe "when unified new is enabled" do
     fab!(:new_topic) { Fabricate(:topic, user: user) }
     fab!(:post1) { create_post(user: user) }
     fab!(:post2) { create_post(topic: post1.topic) }
 
-    before { SiteSetting.experimental_new_new_view_groups = group.name }
+    before { SiteSetting.enable_unified_new = true }
 
     it "should remove the new topic and post across sessions after the user dismisses it" do
       tab_1 = open_new_window(:tab)

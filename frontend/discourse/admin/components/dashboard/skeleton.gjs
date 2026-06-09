@@ -8,7 +8,7 @@ const ENGAGEMENT_ACTIVITY_ROWS = Array.from({ length: 4 });
 
 <template>
   <div
-    class="db-skeleton -animation"
+    class="db-skeleton --animation"
     role="status"
     aria-label={{i18n "admin.dashboard.loading"}}
   >

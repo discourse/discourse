@@ -4,7 +4,7 @@ import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
-module("Integration | Component | topic-dismiss-buttons", function (hooks) {
+module("Integration | Component | TopicDismissButtons", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -20,7 +20,7 @@ module("Integration | Component | topic-dismiss-buttons", function (hooks) {
   });
 
   test("renders a direct dismiss all combo button in the experimental new view", async function (assert) {
-    this.currentUser.new_new_view_enabled = true;
+    this.currentUser.unified_new_enabled = true;
     this.showNewDismissCombo = true;
 
     await render(
@@ -42,7 +42,7 @@ module("Integration | Component | topic-dismiss-buttons", function (hooks) {
   });
 
   test("dismisses the active subset directly in the experimental new view", async function (assert) {
-    this.currentUser.new_new_view_enabled = true;
+    this.currentUser.unified_new_enabled = true;
     this.showNewDismissCombo = true;
     this.model.params.subset = "replies";
 
@@ -76,7 +76,7 @@ module("Integration | Component | topic-dismiss-buttons", function (hooks) {
   });
 
   test("dismiss and stop tracking runs the same subset with untrack enabled", async function (assert) {
-    this.currentUser.new_new_view_enabled = true;
+    this.currentUser.unified_new_enabled = true;
     this.showNewDismissCombo = true;
     this.model.params.subset = "replies";
 
@@ -112,7 +112,7 @@ module("Integration | Component | topic-dismiss-buttons", function (hooks) {
   });
 
   test("does not show stop tracking on the topics subset", async function (assert) {
-    this.currentUser.new_new_view_enabled = true;
+    this.currentUser.unified_new_enabled = true;
     this.showNewDismissCombo = true;
     this.model.params.subset = "topics";
 
@@ -147,7 +147,7 @@ module("Integration | Component | topic-dismiss-buttons", function (hooks) {
   });
 
   test("does not render the combo menu on mobile bottom dismiss", async function (assert) {
-    this.currentUser.new_new_view_enabled = true;
+    this.currentUser.unified_new_enabled = true;
     this.showNewDismissCombo = true;
     this.model.topics = new Array(6).fill({});
 
@@ -176,6 +176,85 @@ module("Integration | Component | topic-dismiss-buttons", function (hooks) {
 
     assert.dom("#dismiss-new-bottom").exists();
     assert.dom("#dismiss-new-menu-bottom").doesNotExist();
+  });
+
+  test("shows count of selected topics in the dismiss new topics button", async function (assert) {
+    this.currentUser.unified_new_enabled = true;
+    this.showNewDismissCombo = true;
+    this.model.params.subset = "topics";
+    this.selectedTopics = [{ id: 1 }, { id: 2 }];
+
+    await render(
+      <template>
+        <TopicDismissButtons
+          @position="top"
+          @model={{this.model}}
+          @selectedTopics={{this.selectedTopics}}
+          @showResetNew={{this.showResetNew}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showDismissRead={{false}}
+          @resetNew={{this.resetNew}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("#dismiss-new-top")
+      .hasText(
+        i18n("topics.bulk.dismiss_new_topics_with_selected", { count: 2 })
+      );
+  });
+
+  test("shows count of selected topics in the dismiss new replies button", async function (assert) {
+    this.currentUser.unified_new_enabled = true;
+    this.showNewDismissCombo = true;
+    this.model.params.subset = "replies";
+    this.selectedTopics = [{ id: 1 }, { id: 2 }];
+
+    await render(
+      <template>
+        <TopicDismissButtons
+          @position="top"
+          @model={{this.model}}
+          @selectedTopics={{this.selectedTopics}}
+          @showResetNew={{this.showResetNew}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showDismissRead={{false}}
+          @resetNew={{this.resetNew}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("#dismiss-new-top")
+      .hasText(
+        i18n("topics.bulk.dismiss_new_replies_with_selected", { count: 2 })
+      );
+  });
+
+  test("shows count of selected topics in the dismiss all button", async function (assert) {
+    this.currentUser.unified_new_enabled = true;
+    this.showNewDismissCombo = true;
+    this.model.params.subset = "all";
+    this.selectedTopics = [{ id: 1 }, { id: 2 }];
+
+    await render(
+      <template>
+        <TopicDismissButtons
+          @position="top"
+          @model={{this.model}}
+          @selectedTopics={{this.selectedTopics}}
+          @showResetNew={{this.showResetNew}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showDismissRead={{false}}
+          @resetNew={{this.resetNew}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("#dismiss-new-top")
+      .hasText(i18n("topics.bulk.dismiss_all_with_selected", { count: 2 }));
   });
 
   test("keeps the legacy dismiss new button outside the experimental new view", async function (assert) {

@@ -8,11 +8,7 @@ class Admin::DashboardController < Admin::StaffController
 
   def index
     if dashboard_improvements?
-      visible_ids = AdminDashboardSectionConfiguration.visible_section_ids
-      data = { sections: visible_ids.map { |id| { id: id, data: section_data(id) } } }
-      if current_user.admin?
-        data[:configuration] = { sections: AdminDashboardSectionConfiguration.sections }
-      end
+      data = dashboard_sections_payload
     else
       data = AdminDashboardIndexData.fetch_cached_stats
 
@@ -105,8 +101,9 @@ class Admin::DashboardController < Admin::StaffController
 
   def available_reports
     search = params[:search]
+    cursor = params.permit(cursor: %i[title key])[:cursor]&.to_h&.symbolize_keys
     enabled = AdminDashboard::Reports::Section.build(guardian: guardian, search: search)[:items]
-    listing = AdminDashboard::Reports::Listing.call(cursor: params[:cursor], search: search)
+    listing = AdminDashboard::Reports::Listing.call(cursor: cursor, search: search)
 
     render json: {
              providers: listing[:providers],
@@ -134,6 +131,15 @@ class Admin::DashboardController < Admin::StaffController
 
   private
 
+  def dashboard_sections_payload
+    visible_ids = AdminDashboardSectionConfiguration.visible_section_ids
+    data = { sections: visible_ids.map { |id| { id: id, data: section_data(id) } } }
+    if current_user.admin?
+      data[:configuration] = { sections: AdminDashboardSectionConfiguration.sections }
+    end
+    data
+  end
+
   def section_data(id)
     case id
     when "highlights"
@@ -160,10 +166,13 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   def dashboard_improvements?
+    dashboard_improvements_enabled =
+      UpcomingChanges.enabled_for_user?(:dashboard_improvements, current_user)
+
     if params[:version] == "alt"
-      !SiteSetting.dashboard_improvements
+      !dashboard_improvements_enabled
     else
-      SiteSetting.dashboard_improvements
+      dashboard_improvements_enabled
     end
   end
 

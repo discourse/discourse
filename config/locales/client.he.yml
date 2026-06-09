@@ -214,6 +214,13 @@ he:
       placeholder: תאריך
       from_placeholder: "מתאריך"
       to_placeholder: "עד תאריך"
+    date_range_picker:
+      apply: "החלה"
+      presets:
+        last_7_days: "7 הימים האחרונים"
+        last_30_days: "30 הימים האחרונים"
+        last_6_months: "חצי השנה האחרונה"
+        last_year: "שנה שעברה"
     languages:
       ar:
         name: ערבית
@@ -513,8 +520,7 @@ he:
       select_theme:
         action: "בחירת ערכת עיצוב"
         modal_title: "בחירת ערכת עיצוב"
-        use_theme: "להשתמש בערכת העיצוב הזאת"
-        enabled: "פעיל"
+        enabled: "נבחרים"
         browse_all: "ניהול ערכות עיצוב"
       invite_collaborators:
         action: "יצירת הזמנה"
@@ -754,6 +760,7 @@ he:
           many: "+%{count} טיוטות נוספות"
           other: "+%{count} טיוטות נוספות"
     embed_mode:
+      editing_post: "רשומה נערכת"
       reply_placeholder: "כתיבת תגובה…"
       signin_flow:
         share_session_title: "כניסה אל %{site_name}"
@@ -3250,6 +3257,7 @@ he:
       collapse: "מזעור לוח העריכה"
       open: "פתיחת לוח העריכה"
       abandon: "סגירת העורך והשלכת הטיוטה"
+      edit_reason: "מדוע ערכת?"
       enter_fullscreen: "כניסה לעריכה במסך מלא"
       exit_fullscreen: "יציאה מעריכה במסך מלא"
       exit_fullscreen_prompt: "לחיצה על <kbd>ESC</kbd> תוציא אותך ממסך מלא"
@@ -3284,24 +3292,25 @@ he:
           desc: יצירת הודעה חדשה שתיפתח עם אותם נמענים
         reply_to_topic:
           label: הגב לנושא
+          trigger: נושא
           desc: הגב לנושא, לא פוסט ספציפי
+        reply_to_message:
+          trigger: הודעה
         toggle_whisper:
           label: החלפת מצב לחישה
-          desc: לחישות גלויות לחברי סגל בלבד
         create_topic:
-          label: "נושא חדש"
           desc: יצירת נושא חדש
         create_personal_message:
-          label: "הודעה חדשה"
           desc: "צור הודעה פרטית חדשה"
         shared_draft:
           label: "טיוטה משותפת"
           desc: "יצירת טיוטה לנושא שרק משתמשים מורשים יוכלו לראות"
         toggle_topic_bump:
-          label: "החלפת מצב הקפצת נושא"
           desc: "הגב מבלי לשנות את תאריך התגובה האחרונה"
         toggle_unlisted:
           desc: "נושאים מוסתרים נגישים רק באמצעות קישור ישיר"
+        edit_post: "רשומה נערכת"
+        unknown_user: "משתמש"
       reload: "ריענון"
       ignore: "התעלמות"
       image_alt_text:
@@ -3722,6 +3731,8 @@ he:
         confirm: "אישור"
         select_all: "בחירה בהכול"
         clear_all: "לפנות הכול"
+        enable_nested_replies: "הפעלת תגובות מקוננות"
+        disable_nested_replies: "השבתת תגובות מקוננות"
         reset_bump_dates: "איפוס תאריכי ההקפצות"
         defer: "סימון כלא נקרא"
         delete_topics_count:
@@ -3754,6 +3765,23 @@ he:
           other: "להתעלם (%{count})…"
         dismiss_tooltip: "ביטול הצגת פוסטים חדשים או מעקב אחר נושאים"
         also_dismiss_topics: "הפסיקו לעקוב אחרי נושאים אלו כדי שהם לא יופיעו שוב בתור לא-נקראו"
+        dismiss_new_topics: "התעלמות מנושאים חדשים"
+        dismiss_new_replies: "התעלמות מתגובות חדשות"
+        dismiss_new_topics_with_selected:
+          one: "להתעלם (%{count})"
+          two: "להתעלם (%{count})"
+          many: "להתעלם (%{count})"
+          other: "להתעלם (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "להתעלם (%{count})"
+          two: "להתעלם (%{count})"
+          many: "להתעלם (%{count})"
+          other: "להתעלם (%{count})"
+        dismiss_all_with_selected:
+          one: "להתעלם (%{count})"
+          two: "להתעלם (%{count})"
+          many: "להתעלם (%{count})"
+          other: "להתעלם (%{count})"
         dismiss_new: "ביטול חדשים"
         dismiss_new_modal:
           title: "התעלמות מחדשים"
@@ -3879,8 +3907,6 @@ he:
     nested_replies:
       nested_view: "תצוגה מקוננת"
       flat_view: "תצוגה שטוחה"
-      view_as_nested: "הצגה כמקונן"
-      view_as_flat: "הצגה כשטוח"
       sort:
         label: "מיון לפי"
         top: "מובילים"
@@ -5456,24 +5482,8 @@ he:
       staff_info: "כדי להוסיף הגבלות, יש לשים את התגית הזאת ב<a href=%{basePath}/tag_groups>קבוצת תגיות</a>."
       category_restricted: "תגית זו מוגבלת לקטגוריות שאין לך גישה אליהן."
       synonyms: "מילים נרדפות"
-      synonyms_description: "תגיות אלו תוחלפנה בתגית <b>%{base_tag_name}</b>."
       synonyms_inline: "המילים הנרדפות האלו יוחלפו ב־%{base_tag_name}:"
       save: "שמירת השם ותיאור התגית"
-      tag_groups_info:
-        one: 'תגית זו שייכת לקבוצה הזאת: %{tag_groups}'
-        two: "תגית זו שייכת לקבוצות האלו: %{tag_groups}"
-        many: "תגית זו שייכת לקבוצות האלו: %{tag_groups}"
-        other: "תגית זו שייכת לקבוצות האלו: %{tag_groups}"
-      tag_groups_info_prefix:
-        one: "התגית הזאת שייכת לקבוצה "
-        two: "התגית הזאת שייכת לקבוצות האלו: "
-        many: "התגית הזאת שייכת לקבוצות האלו: "
-        other: "התגית הזאת שייכת לקבוצות האלו: "
-      category_restrictions:
-        one: "ניתן להשתמש בה בקטגוריה זו בלבד:"
-        two: "ניתן להשתמש בה בקטגוריות אלו בלבד:"
-        many: "ניתן להשתמש בה בקטגוריות אלו בלבד:"
-        other: "ניתן להשתמש בה בקטגוריות אלו בלבד:"
       restricted_to: "מוגבלת לכדי"
       no_synonyms: "לתגית הזאת אין מילים נרדפות."
       edit_synonyms: "עריכת מילים נרדפות"
@@ -5950,7 +5960,7 @@ he:
           title: "עריכת טבלה"
           cancel: "ביטול"
           create: "שמירה"
-          reason: "מה סיבת העריכה?"
+          reason: "מדוע ערכת?"
           trigger_reason: "הוספת סיבה לעריכה"
         default_edit_reason: "עדכון טבלה עם עורך טבלאות"
       default_header:
@@ -6658,12 +6668,14 @@ he:
         too_many_requests: ביצעת את הפעולה הזו פעמים רבות מדי. נא להמתין בטרם ביצוע ניסיון חוזר.
         not_found_error: הדוח אינו קיים, עמך הסליחה
         custom_date_range: טווח תאריכים מותאם אישית
+        stable: "יציב"
         sections:
           reports:
             title: "דוחות"
           traffic:
             title: "תעבורת האתר"
           engagement:
+            title: "מעורבות"
             activity_by_category:
               title: "פעילות לפי קטגוריה"
               category: "קטגוריה"
@@ -6672,6 +6684,7 @@ he:
               share: "שיתוף"
             whos_posting:
               all_categories: "כל הקטגוריות"
+              new_members: "חברים חדשים"
               staff: "סגל"
             trust_level_pipeline:
               trust_levels:
@@ -6680,16 +6693,14 @@ he:
                 "2": "חברים"
                 "3": "רגילה"
                 "4": "מובילים"
-              trend:
-                stable: "יציב"
         reports_section:
           no_data: "אין נתונים להצגה"
           modal:
             enabled_heading: "פעיל"
             all_heading: "כל הדיווחים"
             apply: "החלה"
-            move_up: "העלאה למעלה"
-            move_down: "הורדה למטה"
+            move_up: "העלאת %{title} למעלה"
+            move_down: "הורדת %{title} למטה"
         configure:
           button: "הגדרה"
           tooltip: "הגדרת איך לוח המחוונים הזה מופיע לכל מבקרי האתר הזה."
@@ -6700,6 +6711,10 @@ he:
           toggle_visibility: "הצגת %{label} בלוח המחוונים"
           empty_state_admin: "אין סעיפים להצגה. יש לפתוח את ההגדרות כדי להפעיל אחד כזה."
         site_traffic:
+          top_countries:
+            title: "מדינות מובילות"
+          top_referrers:
+            title: "מפנים מובילים"
           series:
             anonymous: "אלמוני"
             crawlers: "סורקי אינטרנט"
@@ -7231,9 +7246,10 @@ he:
           your_organization: "הארגון שלך"
           your_organization_description: "אנו נשתמש במידע זה בתנאי השירות ובהצהרת הפרטיות כדי להראות מי מפעיל את האתר ותחת איזו סמכות שיפוט."
           company_name: "שם"
-          company_name_placeholder: "עמותת לקט ישראל"
           company_name_warning: |
             אם השדה יישאר ריק, לא יסופקו תנאי שירות או הצהרת פרטיות ראשוניים.
+          company_url: "אתר"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "החוק המחייב"
           governing_law_placeholder: "מחוז, מדינה או ארץ"
           governing_law_help: |

@@ -23,6 +23,19 @@ module Onebox
         "https://api.github.com/repos/#{m["org"]}/#{m["repo"]}/issues/#{m["item_id"]}"
       end
 
+      def inline_data
+        return if github_auth_header(match["org"]).blank?
+
+        result = raw(github_auth_header(match["org"]))
+        {
+          title:
+            "#{result["title"]} - Issue ##{match["item_id"]} - #{match["org"]}/#{match["repo"]} - GitHub",
+        }
+      rescue StandardError => e
+        Rails.logger.warn("Inline GitHub issue onebox error for #{@url}: #{e.message}")
+        nil
+      end
+
       private
 
       def match

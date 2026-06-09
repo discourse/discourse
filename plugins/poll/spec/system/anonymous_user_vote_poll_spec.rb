@@ -29,7 +29,7 @@ describe "Anonymous user voting on a poll" do
 
       login_page.fill(username: user.username, password: "supersecurepassword").click_login
 
-      expect(page).to have_current_path(topic.url)
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(PollVote.where(user: user).count).to eq(1)
     end
   end

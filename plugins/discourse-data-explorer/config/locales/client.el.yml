@@ -58,3 +58,10 @@ el:
       search_placeholder: "Αναζήτηση..."
     group:
       reports: "Αναφορές"
+    discourse_workflows:
+      sql:
+        query_id: "Ερώτημα"
+        param_value: "Τιμή"
+        output:
+          results: "Αποτελέσματα"
+          no_results: "Δεν υπάρχουν αποτελέσματα"

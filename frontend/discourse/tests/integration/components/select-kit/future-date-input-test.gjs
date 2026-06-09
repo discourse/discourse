@@ -16,7 +16,7 @@ function getOptions() {
 }
 
 module(
-  "Integration | Component | select-kit/future-date-input",
+  "Integration | Component | SelectKit | FutureDateInput",
   function (hooks) {
     setupRenderingTest(hooks);
 

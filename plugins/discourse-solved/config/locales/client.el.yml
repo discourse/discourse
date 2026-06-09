@@ -12,7 +12,6 @@ el:
           kpi:
             accepted_solutions:
               label: "Αποδεκτές λύσεις"
-              tooltip: "Ο αριθμός των θεμάτων που είχαν μια ανάρτηση σημασμένη ως λύση σε αυτήν την περίοδο."
   js:
     notifications:
       alt:
@@ -45,10 +44,8 @@ el:
       confirm_solved_removal_confirm: "Επιβεβαίωση"
       confirm_solved_removal_cancel: "Άκυρο"
       shared_issue:
-        label_zero: "Κι εγώ"
-        label:
-          one: "Κι εγώ (%{count})"
-          other: "Κι εγώ (%{count})"
+        label: "Κι εγώ"
+        label_with_count: "%{label} (%{count})"
         title: "Αντιμετωπίζω κι εγώ αυτό το πρόβλημα"
         author_title: "Εσείς ξεκινήσατε αυτό το θέμα"
       no_answer:

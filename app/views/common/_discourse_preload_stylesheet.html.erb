@@ -24,7 +24,7 @@
   <%- end %>
 <%- end %>
 
-<%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: mobile_device?, desktop_view: !mobile_device?, request: request, rtl: rtl?).each do |file| %>
+<%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: mobile_device?, desktop_view: !mobile_device?, include_admin: staff?, request: request, rtl: rtl?).each do |file| %>
   <%= discourse_stylesheet_preload_tag(file) %>
 <%- end %>
 

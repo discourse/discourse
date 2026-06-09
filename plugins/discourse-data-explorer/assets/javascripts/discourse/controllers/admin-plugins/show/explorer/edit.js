@@ -12,7 +12,7 @@ import { i18n } from "discourse-i18n";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
 import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
-import { chartability } from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
+import { defaultView } from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
 const viewStore = new KeyValueStore("discourse_data_explorer_");
@@ -86,12 +86,19 @@ export default class PluginsExplorerController extends Controller {
       current.group_ids !== this._pristine.group_ids;
   }
 
+  // While a query is running (or AI is generating) the actions in the action
+  // bar shouldn't be usable — the interstitial "Save changes and run" state
+  // is confusing otherwise.
+  get actionsBusy() {
+    return this.loading || this.aiGenerating;
+  }
+
   get saveDisabled() {
-    return !this.dirty;
+    return !this.dirty || this.actionsBusy;
   }
 
   get runDisabled() {
-    return this.model.destroyed;
+    return this.model.destroyed || this.actionsBusy;
   }
 
   get parsedParams() {
@@ -165,7 +172,7 @@ export default class PluginsExplorerController extends Controller {
     } else if (this.mode === "ai" && !this.hasResults) {
       this.view = "sql";
     } else {
-      this.view = chartability(this.results).chartable ? "chart" : "table";
+      this.view = defaultView(this.results);
     }
   }
 
@@ -321,18 +328,16 @@ export default class PluginsExplorerController extends Controller {
 
   @bind
   dragMove(e) {
-    if (!e.movementY && !e.movementX) {
+    if (!e.movementX) {
       return;
     }
 
     const editPane = document.querySelector(".query-editor");
     const target = editPane.querySelector(".panels-flex");
-    const grippie = editPane.querySelector(".grippie");
 
     // we need to get the initial height / width of edit pane
     // before we manipulate the size
     if (!this.initialPaneWidth && !this.originalPaneHeight) {
-      this.originalPaneWidth = target.clientWidth;
       this.originalPaneHeight = target.clientHeight;
     }
 
@@ -340,14 +345,9 @@ export default class PluginsExplorerController extends Controller {
       this.originalPaneHeight,
       target.clientHeight + e.movementY
     );
-    const newWidth = Math.max(
-      this.originalPaneWidth,
-      target.clientWidth + e.movementX
-    );
 
     target.style.height = newHeight + "px";
-    target.style.width = newWidth + "px";
-    grippie.style.width = newWidth + "px";
+
     this.appEvents.trigger("ace:resize");
   }
 
@@ -503,9 +503,7 @@ export default class PluginsExplorerController extends Controller {
         // After a successful run, jump out of the SQL view so the user sees
         // the results they just asked for.
         if (this.view === "sql") {
-          this.setView(
-            chartability(this.results).chartable ? "chart" : "table"
-          );
+          this.setView(defaultView(this.results));
         } else {
           this.initView();
         }

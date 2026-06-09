@@ -3257,6 +3257,17 @@ RSpec.describe TopicsController do
       expect(response).to redirect_to("/n/#{topic.slug}/#{topic.id}?embed_mode=true")
     end
 
+    it "preserves class_name alongside embed_mode when redirecting to nested view" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true", class_name: "lee-af" }
+
+      expect(response).to redirect_to(
+        "/n/#{topic.slug}/#{topic.id}?class_name=lee-af&embed_mode=true",
+      )
+    end
+
     it "returns 404 when an invalid slug is given and no id" do
       get "/t/nope-nope.json"
 
@@ -3364,6 +3375,58 @@ RSpec.describe TopicsController do
 
         queries = queries.filter { |q| q =~ /FROM "?post_localizations"?/ }
         expect(queries.size).to eq(1)
+      end
+
+      context "with an internal topic onebox" do
+        fab!(:reader) { Fabricate(:user, locale: "ja") }
+        fab!(:onebox_topic) { Fabricate(:topic, title: "Sun Tzu's strategies", locale: "en") }
+        fab!(:onebox_post) do
+          Fabricate(:post, topic: onebox_topic, post_number: 1, locale: "en", raw: "Subdue them.")
+        end
+        fab!(:host_topic) { Fabricate(:topic, locale: "ja") }
+        fab!(:host_post) do
+          Fabricate(:post, topic: host_topic, post_number: 1, locale: "ja", raw: "見てください")
+        end
+
+        before do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.content_localization_supported_locales = "en|ja"
+          Fabricate(:topic_localization, topic: onebox_topic, locale: "ja", title: "孫子の兵法")
+          Fabricate(:post_localization, post: onebox_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+          TopicLink.create!(
+            topic: host_topic,
+            post: host_post,
+            user: host_post.user,
+            url: onebox_post.url,
+            domain: Discourse.current_hostname,
+            internal: true,
+            quote: true,
+            reflection: false,
+            link_topic_id: onebox_topic.id,
+            link_post_id: onebox_post.id,
+          )
+        end
+
+        def host_post_json
+          get "/t/#{host_topic.id}.json"
+          expect(response.status).to eq(200)
+          response.parsed_body["post_stream"]["posts"].find { |p| p["id"] == host_post.id }
+        end
+
+        it "returns localized onebox data for a reader in their own language" do
+          sign_in(reader)
+
+          entry = host_post_json["localized_oneboxes"].first
+          expect(entry["title"]).to eq("孫子の兵法")
+          expect(entry["excerpt"]).to include("戦わずして勝つ")
+        end
+
+        it "omits localized onebox data when the reader chose to see original content" do
+          reader.user_option.update!(show_original_content: true)
+          sign_in(reader)
+
+          expect(host_post_json.key?("localized_oneboxes")).to eq(false)
+        end
       end
     end
 
@@ -5714,8 +5777,7 @@ RSpec.describe TopicsController do
       before do
         create_post(topic: unread_topic)
         create_post(topic: unread_topic)
-        user.groups << group
-        SiteSetting.experimental_new_new_view_groups = group.id
+        SiteSetting.enable_unified_new = true
         sign_in(user)
       end
 
@@ -7624,6 +7686,29 @@ RSpec.describe TopicsController do
         },
       )
       expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
+    end
+
+    it "applies class_name to the html element when embed_mode is allowed" do
+      SiteSetting.embed_any_origin = true
+      get("/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true", class_name: "lee-af" })
+      expect(response.body).to match(/<html[^>]*\bclass="[^"]*\blee-af\b/)
+    end
+
+    it "ignores class_name when embed_mode is not allowed" do
+      get("/t/#{topic.slug}/#{topic.id}", params: { class_name: "lee-af" })
+      expect(response.body).not_to match(/<html[^>]*\blee-af\b/)
+    end
+
+    it "ignores class_name with invalid characters" do
+      SiteSetting.embed_any_origin = true
+      get(
+        "/t/#{topic.slug}/#{topic.id}",
+        params: {
+          embed_mode: "true",
+          class_name: "lee\" onload=alert(1)",
+        },
+      )
+      expect(response.body).not_to include("onload=alert(1)")
     end
   end
 

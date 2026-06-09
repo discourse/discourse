@@ -852,3 +852,12 @@ cs:
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Odeslat zprávu chatu"
+      send_chat_message:
+        channel_id: "Kanál"
+        message: "Odeslat"
+      chat_approval:
+        message: "Odeslat"
+        channel_id: "Kanál"

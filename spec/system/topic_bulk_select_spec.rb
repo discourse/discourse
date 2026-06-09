@@ -292,9 +292,10 @@ describe "Topic bulk select" do
         expect(topic_list).to have_closed_status(topics.third)
       end
 
-      # Check that the user did receive a new post notification badge
+      # The bulk close posts a small action, which no longer marks the topic
+      # unread, so the watching user does not get a new post notification badge.
       visit("/latest")
-      expect(topic_list).to have_unread_badge(topics.third)
+      expect(topic_list).to have_no_unread_badge(topics.third)
     end
 
     it "closes topics silently" do
@@ -346,6 +347,8 @@ describe "Topic bulk select" do
     it "works with keyboard shortcuts" do
       sign_in(admin)
       visit("/latest")
+
+      expect(page).to have_css("#site-logo")
 
       send_keys([:shift, "b"])
       expect(topic_list).to have_bulk_select_enabled

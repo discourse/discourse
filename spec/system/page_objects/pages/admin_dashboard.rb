@@ -32,20 +32,28 @@ module PageObjects
       end
 
       def has_active_period?(period)
-        has_css?(".db-date-range input[value='#{period}']:checked")
+        if period == "custom"
+          page.current_url.include?("range=custom")
+        else
+          has_css?(".db-date-range__trigger .d-button-label", text: preset_label(period))
+        end
       end
 
-      def select_preset(period)
-        find(".db-date-range label", text: preset_label(period)).click
-        self
+      def has_custom_label?(text)
+        has_css?(".db-date-range__trigger .d-button-label", exact_text: text)
       end
 
-      def has_custom_label_text?(text)
-        has_css?(".db-date-range__custom", text: text)
+      def date_range_picker
+        PageObjects::Components::AdminDashboardDateRangePicker.new
       end
 
       def open_custom_date_range
-        find(".db-date-range__custom").click
+        find(".db-date-range__trigger").click
+        date_range_picker.tap(&:open?)
+      end
+
+      def select_preset(period)
+        open_custom_date_range.select_preset(preset_label(period))
         self
       end
 
@@ -128,6 +136,10 @@ module PageObjects
           "Last 30 days"
         when "last_3_months"
           "Last 3 months"
+        when "last_6_months"
+          "Last 6 months"
+        when "last_year"
+          "Last year"
         end
       end
     end

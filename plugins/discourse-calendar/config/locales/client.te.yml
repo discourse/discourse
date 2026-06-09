@@ -49,6 +49,18 @@ te:
               title: "బహిరంగం"
             private:
               title: "అంతరంగికం"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "నిమిషం"
+              other: "నిమిషాలు"
+            hours:
+              one: "గంట"
+              other: "గంటలు"
+            days:
+              one: "రోజు"
+              other: "రోజులు"
       builder_modal:
         custom_fields:
           placeholder: "ఐచ్ఛికం"
@@ -64,6 +76,8 @@ te:
           periods:
             before: "ముందు"
             after: "తర్వాత"
+        attendance:
+          none: "ఏదీ లేదు"
         url:
           label: "URL"
           placeholder: "ఐచ్ఛికం"
@@ -71,7 +85,8 @@ te:
           label: "ప్రాంతం"
         description:
           label: "వివరణ"
-        status:
-          label: "స్థితి"
+        event_type:
+          public:
+            title: "బహిరంగం"
       invite_user_or_group:
         invite: "పంపండి"

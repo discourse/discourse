@@ -30,7 +30,7 @@ function aiFeaturesPayload(llmModel) {
   };
 }
 
-module("Integration | Component | ai-features", function (hooks) {
+module("Integration | Component | AiFeatures", function (hooks) {
   setupRenderingTest(hooks, { stubRouter: true });
 
   hooks.beforeEach(function () {

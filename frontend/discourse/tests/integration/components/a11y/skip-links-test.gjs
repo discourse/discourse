@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
-module("Integration | Component | a11y/skip-links", function (hooks) {
+module("Integration | Component | A11y | SkipLinks", function (hooks) {
   setupRenderingTest(hooks);
 
   test("skip link height does not exceed -75px offset on narrow 320px viewports", async function (assert) {
@@ -75,6 +75,7 @@ module("Integration | Component | a11y/skip-links", function (hooks) {
       "skip link is hidden with -75px offset before focus"
     );
 
+    skipLink.style.transition = "none";
     skipLink.focus();
 
     computedStyle = window.getComputedStyle(skipLink);

@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
-import { fn, get } from "@ember/helper";
+import { fn, get, hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { eq } from "discourse/truth-helpers";
 import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
@@ -140,14 +141,18 @@ export default class EditCategoryTypeSchemaFields extends Component {
 
   get hasCustomFields() {
     return this.schema.category_custom_fields?.some((entry) =>
-      this.shouldDisplayField(entry)
+      this.isFieldVisible(entry)
     );
   }
 
   get hasCategorySettings() {
     return this.schema.category_settings?.some((entry) =>
-      this.shouldDisplayField(entry)
+      this.isFieldVisible(entry)
     );
+  }
+
+  get hasSiteTexts() {
+    return this.schema.site_texts?.some((entry) => this.isFieldVisible(entry));
   }
 
   get className() {
@@ -192,13 +197,33 @@ export default class EditCategoryTypeSchemaFields extends Component {
     return entry.show_on_create;
   }
 
+  @bind
+  dependencyMet(entry) {
+    if (!entry.depends_on) {
+      return true;
+    }
+
+    const data = this.args.transientData ?? {};
+    const value =
+      data.custom_fields?.[entry.depends_on] ??
+      data.category_type_site_settings?.[entry.depends_on] ??
+      data.category_type_settings?.[entry.depends_on];
+
+    return value === true || value === "true";
+  }
+
+  @bind
+  isFieldVisible(entry) {
+    return this.shouldDisplayField(entry) && this.dependencyMet(entry);
+  }
+
   <template>
     <div class={{this.className}}>
       {{#if this.hasCustomFields}}
         <@form.Section>
           <@form.Object @name="custom_fields" as |customFields|>
             {{#each this.schema.category_custom_fields as |entry|}}
-              {{#if (this.shouldDisplayField entry)}}
+              {{#if (this.isFieldVisible entry)}}
                 <SchemaFormField
                   @category={{@category}}
                   @entry={{entry}}
@@ -214,7 +239,7 @@ export default class EditCategoryTypeSchemaFields extends Component {
         <@form.Section>
           <@form.Object @name="category_type_settings" as |categorySettings|>
             {{#each this.schema.category_settings as |entry|}}
-              {{#if (this.shouldDisplayField entry)}}
+              {{#if (this.isFieldVisible entry)}}
                 <SchemaFormField
                   @category={{@category}}
                   @entry={{entry}}
@@ -232,6 +257,39 @@ export default class EditCategoryTypeSchemaFields extends Component {
         @title={{i18n "category.type_settings_schema.site_settings"}}
         @subtitle={{i18n "category.settings_apply_to_all_of_type_warning"}}
       >
+        {{#if this.hasSiteTexts}}
+          <@form.Object @name="site_texts" as |siteTexts|>
+            {{#each this.schema.site_texts as |entry|}}
+              {{#if (this.isFieldVisible entry)}}
+                <siteTexts.Field
+                  @name={{entry.name}}
+                  @type="input"
+                  @title={{entry.label}}
+                  @description={{entry.description}}
+                  @disabled={{@isLoadingSiteTextsLocale}}
+                  @labelFormat="full"
+                  @format="large"
+                  as |field|
+                >
+                  <div class="schema-site-text">
+                    {{#if @availableLocales}}
+                      <ComboBox
+                        @valueProperty="value"
+                        @content={{@availableLocales}}
+                        @value={{@siteTextsLocale}}
+                        @onChange={{@switchSiteTextsLocale}}
+                        @options={{hash filterable=true}}
+                        class="schema-site-text__locale"
+                      />
+                    {{/if}}
+                    <field.Control />
+                  </div>
+                </siteTexts.Field>
+              {{/if}}
+            {{/each}}
+          </@form.Object>
+        {{/if}}
+
         <@form.Object
           @name="category_type_site_settings"
           as |siteSettings data|

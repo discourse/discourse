@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatSidebarIndicators from "discourse/plugins/chat/discourse/components/chat-sidebar-indicators";
 
-module("Component | chat-sidebar-indicators", function (hooks) {
+module("Component | ChatSidebarIndicators", function (hooks) {
   setupRenderingTest(hooks);
 
   test("shows indicator when unreadCount > 0", async function (assert) {

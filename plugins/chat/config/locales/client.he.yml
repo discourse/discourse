@@ -823,3 +823,10 @@ he:
       panels:
         chat:
           label: "צ׳אט"
+    discourse_workflows:
+      send_chat_message:
+        channel_id: "ערוץ"
+        message: "הודעה"
+      chat_approval:
+        message: "הודעה"
+        channel_id: "ערוץ"

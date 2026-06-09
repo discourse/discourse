@@ -326,7 +326,7 @@
     padding-right: var(--space-1);
   }
 
-  .num {
+  .topic-list-data.num {
     text-align: center;
     font-size: var(--d-topic-list-data-font-size);
 
@@ -338,7 +338,10 @@
       font-weight: 700;
       color: inherit;
       display: inline-block;
-      padding: 15px 5px;
+
+      @include viewport.from(sm) {
+        padding: var(--space-3) var(--space);
+      }
     }
   }
 
@@ -474,7 +477,8 @@
 }
 
 .table-heading {
-  border-bottom: 3px solid var(--primary-low);
+  border-bottom: var(--d-table-border-top-height) solid
+    var(--table-border-color);
 }
 
 // This is not what we want:

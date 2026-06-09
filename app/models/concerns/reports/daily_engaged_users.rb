@@ -23,9 +23,8 @@ module Reports::DailyEngagedUsers
         prev_data =
           UserAction.count_daily_engaged_users(report.prev_start_date, report.prev_end_date)
 
-        prev = prev_data.sum { |k, v| v }
-        prev = prev / ((report.end_date - report.start_date) / 1.day) if prev > 0
-        report.prev_period = prev
+        prev = prev_data.values.sum
+        report.prev_period = prev.zero? ? prev : (prev.to_f / prev_data.size).round(1)
       end
 
       data.each { |key, value| report.data << { x: key, y: value } }

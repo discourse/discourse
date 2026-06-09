@@ -44,6 +44,13 @@ bs_BA:
               title: "Javno"
             private:
               title: "Privatno"
+      composer:
+        reminder:
+          units:
+            days:
+              one: "day"
+              few: "days"
+              other: "days"
       builder_modal:
         custom_fields:
           placeholder: "Opcionalno"
@@ -61,6 +68,10 @@ bs_BA:
           label: "Vraćanje"
           none: "Bez ponavljanja"
           every_day: "Svaki dan"
+          ordinals:
+            last: "posljednji"
+        attendance:
+          none: "Ništa"
         url:
           label: "URL"
           placeholder: "Opcionalno"
@@ -68,7 +79,8 @@ bs_BA:
           label: "Lokacija"
         description:
           label: "Opis"
-        status:
-          label: "Status"
+        event_type:
+          public:
+            title: "Javno"
       invite_user_or_group:
         invite: "Pošalji"

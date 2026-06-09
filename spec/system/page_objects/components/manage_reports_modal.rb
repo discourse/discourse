@@ -3,7 +3,9 @@
 module PageObjects
   module Components
     class ManageReportsModal < PageObjects::Components::Base
-      MODAL = ".manage-reports-modal"
+      MODAL = ".manage-reports"
+      ROW = ".manage-reports__row"
+      ENABLED_ROW = ".manage-reports__row.--enabled"
 
       def has_open?
         has_css?(MODAL)
@@ -19,29 +21,15 @@ module PageObjects
       end
 
       def enabled_identifiers
-        within("#{MODAL} .manage-reports__list--enabled") do
-          all(".manage-reports__row").map { |el| el["data-identifier"] }
-        end
-      end
-
-      def all_identifiers
-        within("#{MODAL} .manage-reports__list--all") do
-          all(".manage-reports__row").map { |el| el["data-identifier"] }
-        end
+        all("#{MODAL} #{ENABLED_ROW}").map { |el| el["data-identifier"] }
       end
 
       def has_all_row?(identifier)
-        has_css?(
-          "#{MODAL} .manage-reports__list--all " \
-            ".manage-reports__row[data-identifier='#{identifier}']",
-        )
+        has_css?("#{MODAL} #{ROW}[data-identifier='#{identifier}']")
       end
 
       def has_no_all_row?(identifier)
-        has_no_css?(
-          "#{MODAL} .manage-reports__list--all " \
-            ".manage-reports__row[data-identifier='#{identifier}']",
-        )
+        has_no_css?("#{MODAL} #{ROW}[data-identifier='#{identifier}']")
       end
 
       def toggle(identifier)
@@ -50,36 +38,18 @@ module PageObjects
       end
 
       def has_toggle_on?(identifier)
-        has_css?(
-          "#{MODAL} .manage-reports__list--enabled " \
-            ".manage-reports__row[data-identifier='#{identifier}']",
-        )
+        has_css?("#{MODAL} #{ENABLED_ROW}[data-identifier='#{identifier}']")
       end
 
       def has_toggle_off?(identifier)
-        has_no_css?(
-          "#{MODAL} .manage-reports__list--enabled " \
-            ".manage-reports__row[data-identifier='#{identifier}']",
-        ) &&
-          has_css?(
-            "#{MODAL} .manage-reports__list--all " \
-              ".manage-reports__row[data-identifier='#{identifier}']",
-          )
+        has_css?("#{MODAL} #{ROW}[data-identifier='#{identifier}']") &&
+          has_no_css?("#{MODAL} #{ENABLED_ROW}[data-identifier='#{identifier}']")
       end
 
       def toggle_for(identifier)
-        enabled_row =
-          "#{MODAL} .manage-reports__list--enabled " \
-            ".manage-reports__row[data-identifier='#{identifier}']"
-        toggle_selector =
-          if has_css?(enabled_row, wait: 0)
-            "#{enabled_row} .d-toggle-switch__checkbox"
-          else
-            "#{MODAL} .manage-reports__list--all " \
-              ".manage-reports__row[data-identifier='#{identifier}'] " \
-              ".d-toggle-switch__checkbox"
-          end
-        PageObjects::Components::DToggleSwitch.new(toggle_selector)
+        PageObjects::Components::DToggleSwitch.new(
+          "#{MODAL} #{ROW}[data-identifier='#{identifier}'] .d-toggle-switch__checkbox",
+        )
       end
 
       def apply
@@ -90,6 +60,39 @@ module PageObjects
       def close
         find("#{MODAL} .d-modal__header .modal-close").click
         self
+      end
+
+      def has_disabled_move_up?(identifier)
+        has_css?(
+          "#{MODAL} #{ROW}[data-identifier='#{identifier}'] button.manage-reports__arrow[disabled] .d-icon-arrow-up",
+        )
+      end
+
+      def has_disabled_move_down?(identifier)
+        has_css?(
+          "#{MODAL} #{ROW}[data-identifier='#{identifier}'] button.manage-reports__arrow[disabled] .d-icon-arrow-down",
+        )
+      end
+
+      def has_enabled_move_up?(identifier)
+        has_css?(
+          "#{MODAL} #{ROW}[data-identifier='#{identifier}'] button.manage-reports__arrow:not([disabled]) .d-icon-arrow-up",
+        )
+      end
+
+      def has_enabled_move_down?(identifier)
+        has_css?(
+          "#{MODAL} #{ROW}[data-identifier='#{identifier}'] button.manage-reports__arrow:not([disabled]) .d-icon-arrow-down",
+        )
+      end
+
+      def has_drag_controls?
+        has_css?("#{MODAL} .manage-reports__list.--reorderable")
+      end
+
+      def has_no_drag_controls?
+        has_css?("#{MODAL} .manage-reports__list") &&
+          has_no_css?("#{MODAL} .manage-reports__list.--reorderable")
       end
 
       def has_counter?(count, max)

@@ -158,6 +158,14 @@ pt_BR:
       placeholder: data
       from_placeholder: "a partir da data"
       to_placeholder: "até agora"
+    date_range_picker:
+      apply: "Aplicar"
+      start_date: "Data de início"
+      presets:
+        last_7_days: "Últimos sete dias"
+        last_30_days: "Últimos 30 dias"
+        last_6_months: "Últimos seis meses"
+        last_year: "Ano passado"
     languages:
       ar:
         name: Árabe
@@ -449,7 +457,7 @@ pt_BR:
       launch_in_easy_steps: "Comece em %{step_count} passos fáceis"
       congrats_onboarding_complete: "Parabéns por concluir o processo de integração!"
       select_theme:
-        enabled: "Ativados"
+        enabled: "Selecionado(a)"
       invite_collaborators:
         title: "Convidar colaboradores"
         description: "Os primeiros membros ajudam a dar vida à sua comunidade."
@@ -2928,7 +2936,7 @@ pt_BR:
       users_placeholder: "Adicionar usuários(as) ou grupos"
       title_placeholder: "Em algumas palavras, sobre o que é esta discussão?"
       title_or_link_placeholder: "Digite um título, ou cole um link aqui"
-      edit_reason_placeholder: "por que você está editando?"
+      edit_reason_placeholder: "Por que você está editando?"
       topic_featured_link_placeholder: "Inserir link mostrado no título."
       remove_featured_link: "Remover link do tópico."
       reply_placeholder: "Digite aqui. Use Markdown, BBCode, ou HTML para formatar. Arraste ou cole imagens."
@@ -2997,6 +3005,7 @@ pt_BR:
       collapse: "Minimizar o painel do compositor"
       open: "Abrir o painel do compositor"
       abandon: "Fechar compositor e ignorar rascunho"
+      edit_reason: "Por que você está editando?"
       enter_fullscreen: "Abrir o compositor em tela cheia"
       exit_fullscreen: "Sair do compositor em tela cheia"
       exit_fullscreen_prompt: "Pressione <kbd>ESC</kbd> para sair da tela cheia"
@@ -3031,25 +3040,26 @@ pt_BR:
           desc: Crie uma nova mensagem começando com os mesmos destinatários
         reply_to_topic:
           label: Responder ao tópico
+          trigger: Tópico
           desc: Responder ao tópico, não a uma postagem específica
+        reply_to_message:
+          trigger: Mensagem
         toggle_whisper:
           label: Alternar sussurro
-          desc: Sussurros são visíveis apenas para membros da equipe
         create_topic:
-          label: "Novo tópico"
           desc: Criar um novo tópico
         create_personal_message:
-          label: "Nova mensagem"
           desc: "Criar uma nova mensagem pessoal"
         shared_draft:
           label: "Rascunho compartilhado"
           desc: "Fazer rascunho do tópico visívei apenas para usuários(as) com permissão"
         toggle_topic_bump:
-          label: "Alternar promoção de tópico"
           desc: "Responder sem alterar a data da última resposta"
         toggle_unlisted:
           label: Ativar como não listado
           desc: "Tópicos não listados só são acessíveis por link direto"
+        edit_post: "Editando postagem"
+        unknown_user: "Usuário(a)"
       reload: "Recarregar"
       ignore: "Ignorar"
       image_alt_text:
@@ -3438,6 +3448,17 @@ pt_BR:
           other: "Descartar (%{count})…"
         dismiss_tooltip: "Descartar apenas postagens novas ou parar de monitorar tópicos"
         also_dismiss_topics: "Parar de monitorar estes tópicos para que eles deixem de aparecer como não lidos para mim"
+        dismiss_new_topics: "Descartar novos tópicos"
+        dismiss_new_replies: "Descartar novas respostas"
+        dismiss_new_topics_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_all_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
         dismiss_new: "Descartar novos"
         dismiss_new_modal:
           title: "Descartar novos"
@@ -4958,18 +4979,8 @@ pt_BR:
       staff_info: "Para adicionar restrições, coloque esta etiqueta em um <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
       category_restricted: "Essa tag é restrita a categorias que você não tem permissão para acessar."
       synonyms: "Sinônimos"
-      synonyms_description: "Quando as seguintes etiquetas forem usadas, serão substituídas por <b>%{base_tag_name}</b>."
       synonyms_inline: "Estes sinônimos serão substituídos por %{base_tag_name}:"
       save: "Salvar nome e descrição da etiqueta"
-      tag_groups_info:
-        one: 'Esta etiqueta pertence ao grupo: %{tag_groups}.'
-        other: "Esta etiqueta pertence aos grupos: %{tag_groups}."
-      tag_groups_info_prefix:
-        one: "Esta tag pertence ao grupo "
-        other: "Esta tag pertence a estes grupos: "
-      category_restrictions:
-        one: "Pode ser usada apenas nesta categoria:"
-        other: "Pode ser usada apenas nestas categorias:"
       restricted_to: "Restrito a"
       no_synonyms: "Esta tag não possui sinônimos."
       edit_synonyms: "Editar sinônimos"
@@ -5412,7 +5423,7 @@ pt_BR:
           title: "Editar tabela"
           cancel: "cancelar"
           create: "Salvar"
-          reason: "por que você está editando?"
+          reason: "Por que você está editando?"
           trigger_reason: "Adicione o motivo para a edição"
         default_edit_reason: "Atualizar tabela com o editor de tabelas"
       default_header:
@@ -6132,6 +6143,7 @@ pt_BR:
         too_many_requests: Você realizou esta ação muitas vezes. Aguarde antes de tentar novamente.
         not_found_error: Desculpe, este relatório não existe
         custom_date_range: Intervalo de datas personalizado
+        stable: "estável"
         sections:
           reports:
             title: "Relatórios"
@@ -6154,16 +6166,12 @@ pt_BR:
                 "2": "Membro"
                 "3": "Regular"
                 "4": "Líder"
-              trend:
-                stable: "estável"
         reports_section:
           no_data: "Nenhum dado para exibir"
           modal:
             enabled_heading: "Ativados"
             all_heading: "Todos os relatórios"
             apply: "Aplicar"
-            move_up: "Mover para cima"
-            move_down: "Mover para baixo"
         configure:
           button: "Configurar"
         site_traffic:
@@ -6683,9 +6691,10 @@ pt_BR:
           your_organization: "Sua organização"
           your_organization_description: "Essas informações serão usadas nos Termos de Serviço e Contrato de Privacidade para mostrar que administra o site e a jurisdição em que isso acontece."
           company_name: "Nome"
-          company_name_placeholder: "Acme Organization"
           company_name_warning: |
             Se deixado em branco, os Termos de Serviço ou Aviso de Privacidade padrão não serão fornecidos.
+          company_url: "Site"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Lei aplicável"
           governing_law_placeholder: "Província, estado ou país"
           governing_law_help: |

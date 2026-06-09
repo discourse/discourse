@@ -17,7 +17,7 @@ describe "Topic page" do
 
     find("#toc-h2-testing .anchor", visible: :all).click
 
-    expect(current_url).to match("/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
+    expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}#toc-h2-testing}, url: true)
   end
 
   context "with a subfolder setup" do
@@ -28,7 +28,10 @@ describe "Topic page" do
 
       find("#toc-h2-testing .anchor", visible: :all).click
 
-      expect(current_url).to match("/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
+      expect(page).to have_current_path(
+        %r{/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing},
+        url: true,
+      )
     end
   end
 
@@ -43,7 +46,7 @@ describe "Topic page" do
     it "includes the copy button" do
       visit("/t/#{topic.slug}/#{topic.id}")
 
-      expect(".codeblock-button-wrapper").to be_present
+      expect(page).to have_css(".codeblock-button-wrapper")
     end
   end
 
@@ -73,7 +76,7 @@ describe "Topic page" do
 
     visit("/t/#{topic.slug}/#{topic.id}")
 
-    expect(".toggle-admin-menu").to be_present
+    expect(page).to have_css(".toggle-admin-menu")
 
     send_keys([:shift, "a"])
 

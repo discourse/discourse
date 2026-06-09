@@ -168,6 +168,10 @@ class TopicsFilter
       end
     when "public"
       @scope = @scope.joins(:category).where("NOT categories.read_restricted")
+    when "noreplies"
+      @scope = @scope.where("topics.posts_count = 1")
+    when "single_user"
+      @scope = @scope.where("topics.participant_count = 1")
     else
       if custom_filter = TopicsFilter.custom_status_filters[status]
         @scope = custom_filter[:block].call(@scope) if custom_filter[:enabled].call
@@ -277,6 +281,8 @@ class TopicsFilter
       { name: "status:unlisted", description: I18n.t("filter.description.status_unlisted") },
       { name: "status:deleted", description: I18n.t("filter.description.status_deleted") },
       { name: "status:public", description: I18n.t("filter.description.status_public") },
+      { name: "status:noreplies", description: I18n.t("filter.description.status_noreplies") },
+      { name: "status:single_user", description: I18n.t("filter.description.status_single_user") },
       { name: "order:", description: I18n.t("filter.description.order"), priority: 1 },
       { name: "order:activity", description: I18n.t("filter.description.order_activity") },
       { name: "order:activity-asc", description: I18n.t("filter.description.order_activity_asc") },

@@ -118,6 +118,8 @@ gl:
       next_month: "Mes seguinte"
       placeholder: data
       to_placeholder: "ata a data"
+    date_range_picker:
+      apply: "Aplicar"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "pechar"
@@ -247,8 +249,6 @@ gl:
     suggested_topics:
       pm_title: "Mensaxes suxeridas"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Activado"
       start_posting:
         back: "Volver"
     about:
@@ -1828,7 +1828,7 @@ gl:
       discard: "Desbotar"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
-      edit_reason_placeholder: "por que o está editando?"
+      edit_reason_placeholder: "Por que o está editando?"
       topic_featured_link_placeholder: "Escriba a ligazón amosada co título."
       remove_featured_link: "Retirar a ligazón do tema."
       reply_placeholder: "Escriba aquí. Utilice Markdown, BBCode ou HTML para formatar. Arrastre ou pegue as imaxes."
@@ -1863,6 +1863,7 @@ gl:
         attribute_value: "Valor"
         apply: "Aplicar"
       help: "Axuda para a edición con Markdown"
+      edit_reason: "Por que o está editando?"
       modal_ok: "De acordo"
       cant_send_pm: "Sentímolo pero non pode enviar unha mensaxe a %{username}."
       yourself_confirm:
@@ -1884,19 +1885,20 @@ gl:
           label: Responder como nova mensaxe de grupo
         reply_to_topic:
           label: Responder ao tema
+          trigger: Tema
           desc: Responder ao tema, non a ningunha publicación específica
+        reply_to_message:
+          trigger: Mensaxe
         toggle_whisper:
           label: Trocar rumor
-          desc: Os rumores son visíbeis unicamente para os membros do equipo
         create_personal_message:
-          label: "Nova mensaxe"
           desc: "Crear unha nova mensaxe privada"
         shared_draft:
           label: "Borrador compartido"
           desc: "Facer borrador dun tema que soamente será visíbel por usuarios admitidos"
         toggle_topic_bump:
-          label: "Trocar a promoción do tema"
           desc: "Responder sen cambiar a data da última resposta"
+        unknown_user: "Usuario"
       reload: "Recargar"
       ignore: "Ignorar"
       image: "imaxe"
@@ -3147,13 +3149,6 @@ gl:
       default_info: "Esta etiqueta non se restrinxe a ningunha categoría e non ten sinónimos."
       category_restricted: "Esta etiqueta restrínxese ás categorías ás que non ten permiso para acceder."
       synonyms: "Sinónimos"
-      synonyms_description: "Cando se usen as seguintes etiquetas, substituílas por <b>%{base_tag_name}</b>."
-      tag_groups_info:
-        one: 'Esta etiqueta pertence ao grupo «%{tag_groups}».'
-        other: "Esta etiqueta pertence a estes grupos: «%{tag_groups}»."
-      category_restrictions:
-        one: "Só pode usarse nesta categoría:"
-        other: "Só pode usarse nestas categorías:"
       add_synonyms_label: "Engadir sinónimos:"
       add_synonyms: "Engadir"
       add_synonyms_explanation:
@@ -3362,7 +3357,7 @@ gl:
         modal:
           cancel: "cancelar"
           create: "Gardar"
-          reason: "por que o está editando?"
+          reason: "Por que o está editando?"
       spreadsheet:
         show: "Amosar"
         about: "Verbo de"
@@ -3886,6 +3881,8 @@ gl:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nome"
+          company_url: "Sitio web"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupos"
           optional: "(opcional)"

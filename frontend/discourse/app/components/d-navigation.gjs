@@ -156,9 +156,10 @@ export default class DNavigation extends Component {
     );
   }
 
-  @computed("tag", "tag.name", "additionalTags", "category")
+  @computed("toggleTagInfo", "tag", "tag.name", "additionalTags", "category")
   get showTagInfoButton() {
     return (
+      this.toggleTagInfo &&
       this.tag &&
       this.tag.name !== "none" &&
       !this.additionalTags &&
@@ -202,12 +203,12 @@ export default class DNavigation extends Component {
     });
   }
 
-  @computed("showResetNew", "filterType", "currentUser.new_new_view_enabled")
+  @computed("showResetNew", "filterType", "currentUser.unified_new_enabled")
   get showNewDismissCombo() {
     return (
       this.showResetNew &&
       this.filterType === "new" &&
-      this.currentUser.new_new_view_enabled
+      this.currentUser.unified_new_enabled
     );
   }
 

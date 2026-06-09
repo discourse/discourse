@@ -144,6 +144,15 @@ fr:
       placeholder: date
       from_placeholder: "date de début"
       to_placeholder: "date de fin"
+    date_range_picker:
+      apply: "Appliquer"
+      start_date: "Date de début"
+      presets:
+        last_7_days: "Ces 7 derniers jours"
+        last_30_days: "30 derniers jours"
+        last_3_months: "3 derniers mois"
+        last_6_months: "6 derniers mois"
+        last_year: "L'année dernière"
     languages:
       ar:
         name: Arabe
@@ -411,7 +420,7 @@ fr:
       pm_title: "Messages suggérés"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Activé"
+        enabled: "Sélectionné"
       start_posting:
         back: "Retour"
     about:
@@ -2754,7 +2763,7 @@ fr:
       users_placeholder: "Ajouter des utilisateurs ou des groupes"
       title_placeholder: "Pouvez-vous résumer le sujet en une courte phrase ?"
       title_or_link_placeholder: "Saisissez un titre ou copiez un lien ici"
-      edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
+      edit_reason_placeholder: "Pourquoi modifiez-vous le tableau ?"
       topic_featured_link_placeholder: "Saisissez le lien à afficher avec le titre."
       remove_featured_link: "Retirer le lien du sujet."
       reply_placeholder: "Saisissez votre message ici. Pour le mettre en forme, utilisez du Markdown, du BBCode ou du HTML. Glissez-déposez ou collez des images."
@@ -2810,6 +2819,7 @@ fr:
         attribute_value: "Valeur"
         apply: "Appliquer"
       help: "Aide à l'édition Markdown"
+      edit_reason: "Pourquoi modifiez-vous le tableau ?"
       exit_fullscreen_prompt: "Appuyez sur <kbd>ÉCHAP</kbd> pour quitter le mode plein écran"
       modal_ok: "OK"
       cant_send_pm: "Nous sommes désolés, vous ne pouvez pas envoyer de message à l'utilisateur %{username}."
@@ -2839,24 +2849,24 @@ fr:
           desc: Créer un nouveau message avec les mêmes destinataires
         reply_to_topic:
           label: Répondre au sujet
+          trigger: Sujet
           desc: Répondre au sujet, pas à un message spécifique
+        reply_to_message:
+          trigger: Message
         toggle_whisper:
           label: Activer/désactiver le murmure
-          desc: Les murmures ne sont visibles que par les responsables
         create_topic:
-          label: "Nouveau sujet"
           desc: Créer un nouveau sujet
         create_personal_message:
-          label: "Nouveau message direct"
           desc: "Créer un nouveau message direct"
         shared_draft:
           label: "Brouillon partagé"
           desc: "Créer un brouillon de sujet qui ne sera visible que par les utilisateurs autorisés"
         toggle_topic_bump:
-          label: "Activer/désactiver l'actualisation du sujet"
           desc: "Répondre sans changer la date de dernière réponse"
         toggle_unlisted:
           label: Activer/désactiver l'état non répertorié
+        unknown_user: "Utilisateur"
       reload: "Recharger"
       ignore: "Ignorer"
       image_alt_text:
@@ -3220,6 +3230,17 @@ fr:
           other: "Marquer comme lus (%{count})…"
         dismiss_tooltip: "Marquer les nouveaux messages comme vus, ou arrêter de suivre des sujets"
         also_dismiss_topics: "Arrêter de suivre ces sujets pour qu'ils ne soient plus jamais marqués comme non lus"
+        dismiss_new_topics: "Ignorer les nouveaux sujets"
+        dismiss_new_replies: "Ignorer les nouvelles réponses"
+        dismiss_new_topics_with_selected:
+          one: "Marquer comme lus (%{count})"
+          other: "Marquer comme lus (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Marquer comme lus (%{count})"
+          other: "Marquer comme lus (%{count})"
+        dismiss_all_with_selected:
+          one: "Marquer comme lus (%{count})"
+          other: "Marquer comme lus (%{count})"
         dismiss_new: "Marquer comme vu(s)"
         dismiss_new_modal:
           title: "Ignorer les nouveaux"
@@ -4631,14 +4652,7 @@ fr:
       staff_info: "Pour y définir des restrictions d'utilisation, placez cette étiquette dans un <a href=%{basePath}/tag_groups>groupe d'étiquettes</a>."
       category_restricted: "Cette étiquette est limitée à des catégories auxquelles vous n'avez pas la permission d'accéder."
       synonyms: "Synonymes"
-      synonyms_description: "Quand les étiquettes suivantes sont utilisées, elles seront remplacées par <b>%{base_tag_name}</b>."
       save: "Enregistrer le nom et la description de l'étiquette"
-      tag_groups_info:
-        one: 'Cette étiquette appartient au groupe « %{tag_groups} ».'
-        other: "Cette étiquette appartient aux groupes : %{tag_groups}."
-      category_restrictions:
-        one: "Elle ne peut être utilisée que dans cette catégorie :"
-        other: "Elle ne peut être utilisée que dans ces catégories :"
       edit_synonyms: "Modifier les synonymes"
       add_synonyms_label: "Ajoutez des synonymes :"
       add_synonyms: "Ajouter"
@@ -5044,7 +5058,7 @@ fr:
           title: "Modifier le tableau"
           cancel: "annuler"
           create: "Enregistrer"
-          reason: "pourquoi modifiez-vous le tableau ?"
+          reason: "Pourquoi modifiez-vous le tableau ?"
           trigger_reason: "Ajouter la raison de la modification"
         default_edit_reason: "Modifier avec l'éditeur de tableaux"
       default_header:
@@ -5671,8 +5685,6 @@ fr:
             enabled_heading: "Activé"
             all_heading: "Tous les rapports"
             apply: "Appliquer"
-            move_up: "Déplacer vers le haut"
-            move_down: "Déplacer vers le bas"
         configure:
           button: "Configurer"
         site_traffic:
@@ -6185,9 +6197,10 @@ fr:
           your_organization: "Votre organisation"
           your_organization_description: "Nous utiliserons ces informations dans les Conditions d'utilisation et l'Avis de confidentialité pour indiquer qui exploite le site et sous quelle juridiction."
           company_name: "Nom"
-          company_name_placeholder: "Organisation Acme"
           company_name_warning: |
             Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis.
+          company_url: "Site Web"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Droit applicable"
           governing_law_placeholder: "Province, État ou pays"
           governing_law_help: |

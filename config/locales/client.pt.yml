@@ -144,6 +144,11 @@ pt:
       placeholder: data
       from_placeholder: "a partir da data"
       to_placeholder: "até à data"
+    date_range_picker:
+      apply: "Aplicar"
+      presets:
+        last_7_days: "Últimos 7 Dias"
+        last_30_days: "Últimos 30 Dias"
     languages:
       ar:
         name: Árabe
@@ -413,8 +418,6 @@ pt:
       pill: "Sugerido"
       pm_title: "Mensagens Sugeridas"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Ativado"
       start_posting:
         back: "Anterior"
     about:
@@ -2797,6 +2800,7 @@ pt:
       collapse: "Minimizar o painel de compositor"
       open: "Abrir o painel de compositor"
       abandon: "Fechar compositor e ignorar rascunho"
+      edit_reason: "Porque está a editar?"
       enter_fullscreen: "Entrar no modo de ecrã completo do compositor"
       exit_fullscreen: "Sair do modo de ecrã completo do compositor"
       exit_fullscreen_prompt: "Pressione <kbd>ESC</kbd> para sair do ecrã completo"
@@ -2827,22 +2831,22 @@ pt:
           desc: Criar nova mensagem começando com os mesmos destinatários
         reply_to_topic:
           label: Responder ao tópico
+          trigger: Tópico
           desc: Responder ao tópico, não a uma publicação especifica
+        reply_to_message:
+          trigger: Mensagem
         toggle_whisper:
           label: Alternar sussurro
-          desc: Os sussurros são apenas visíveis para os membros da equipa
         create_topic:
-          label: "Novo tópico"
           desc: Criar um novo tópico
         create_personal_message:
-          label: "Nova mensagem"
           desc: "Crie uma nova mensagem privada"
         shared_draft:
           label: "Rascunho Partilhado"
           desc: "Escrever um rascunho de tópico que só pode ser visível para usuários permitidos"
         toggle_topic_bump:
-          label: "Alterar possibilidade de bump de tópico"
           desc: "Responder sem alterar a data de última resposta"
+        unknown_user: "Utilizador"
       reload: "Recarregar"
       ignore: "Ignorar"
       image_alt_text:
@@ -3144,6 +3148,16 @@ pt:
           other: "Descartar (%{count})…"
         dismiss_tooltip: "rejeitar apenas as novas mensagens ou deixar de seguir os tópicos"
         also_dismiss_topics: "Parar de seguir estes tópicos para que estes nunca me apareçam como não lidos novamente"
+        dismiss_new_replies: "Descartar respostas novas"
+        dismiss_new_topics_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_all_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
         dismiss_new: "Marcar Visto Novos"
         dismiss_new_modal:
           posts: "Descartar respostas novas"
@@ -4277,13 +4291,6 @@ pt:
       choose_for_topic: "tags opcionais"
       category_restricted: "Esta tag é restrita a categorias que você não tem permissão para acessar."
       synonyms: "Sinônimos"
-      synonyms_description: "Quando as tags seguintes forem usadas, elas serão substituídas por <b>%{base_tag_name}</b>."
-      tag_groups_info:
-        one: 'Esta tag pertence ao grupo "%{tag_groups}".'
-        other: "Esta tag pertence a estes grupos: %{tag_groups}."
-      category_restrictions:
-        one: "Só pode ser usado nesta categoria:"
-        other: "Só pode ser usado nessas categorias:"
       add_synonyms_label: "Adicionar sinônimos:"
       add_synonyms: "Adicionar"
       remove_synonym: "Remover Sinônimo"
@@ -4809,8 +4816,6 @@ pt:
             enabled_heading: "Ativado"
             all_heading: "Todos os relatórios"
             apply: "Aplicar"
-            move_up: "Mover para cima"
-            move_down: "Mover para baixo"
         site_traffic:
           series:
             anonymous: "Anónimo"
@@ -5067,6 +5072,8 @@ pt:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nome"
+          company_url: "site"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupos"
           optional: "(opcional)"

@@ -176,7 +176,6 @@ export default class AdminReportChart extends Component {
               sampleSize: 5,
               maxRotation: 25,
               minRotation: 0,
-              stepSize: 1,
               precision: 0,
             },
           },

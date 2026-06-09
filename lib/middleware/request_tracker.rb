@@ -33,6 +33,7 @@ class Middleware::RequestTracker
   MAX_SESSION_ID_LENGTH = 32
   MAX_USER_AGENT_LENGTH = 1000
   MAX_IP_ADDRESS_LENGTH = 45
+  REQUIRED_BROWSER_PAGEVIEW_EVENT_FIELDS = %i[url ip_address user_agent session_id]
 
   # register callbacks for detailed request loggers called on every request
   # example:
@@ -721,6 +722,11 @@ class Middleware::RequestTracker
   private_class_method :trigger_browser_pageview_event
 
   def self.persist_browser_pageview_event(payload)
+    if REQUIRED_BROWSER_PAGEVIEW_EVENT_FIELDS.any? { |key| payload[key].blank? }
+      Rails.logger.debug("Discarding BrowserPageviewEvent: incomplete payload")
+      return
+    end
+
     Scheduler::Defer.later "Create BrowserPageviewEvent" do
       BrowserPageviewEvent.create!(
         url: payload[:url],
@@ -729,6 +735,7 @@ class Middleware::RequestTracker
         asn: payload[:asn],
         referrer: payload[:referrer],
         normalized_referrer: BrowserPageviewReferrerInspector.normalize(payload[:referrer]),
+        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
         user_agent: payload[:user_agent],
         session_id: payload[:session_id],
         user_id: payload[:user_id],

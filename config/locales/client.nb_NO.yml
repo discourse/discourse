@@ -143,6 +143,11 @@ nb_NO:
       placeholder: dato
       from_placeholder: "fra dato"
       to_placeholder: "til dato"
+    date_range_picker:
+      apply: "Bruk"
+      presets:
+        last_7_days: "Siste 7 dager"
+        last_30_days: "Siste 30 dager"
     languages:
       be:
         name: Hviterussisk
@@ -299,8 +304,6 @@ nb_NO:
       pill: "Foreslåtte"
       pm_title: "Anbefalte meldinger"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Aktivert"
       start_posting:
         back: "Forrige"
     about:
@@ -2410,7 +2413,7 @@ nb_NO:
       users_placeholder: "Legg til brukere eller grupper"
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       title_or_link_placeholder: "Skriv inn tittel eller lim inn en lenke her"
-      edit_reason_placeholder: "hvorfor endrer du?"
+      edit_reason_placeholder: "Hvorfor endrer du?"
       topic_featured_link_placeholder: "Skriv inn lenke vist med tittel."
       remove_featured_link: "Fjern lenke fra emnet."
       reply_placeholder: "Skriv her. Bruk Markdown, BBCode eller HTML for å formatere innholdet. Dra bilder hit eller lim dem inn."
@@ -2446,6 +2449,7 @@ nb_NO:
         attribute_value: "Verdi"
         apply: "Bruk"
       help: "Hjelp for redigering i Markdown"
+      edit_reason: "Hvorfor endrer du?"
       exit_fullscreen_prompt: "Trykk <kbd>ESC</kbd> for å gå ut av fullskjerm"
       modal_ok: "OK"
       cant_send_pm: "Beklager, du kan ikke sende privat melding til %{username}."
@@ -2475,21 +2479,22 @@ nb_NO:
           desc: Opprett ny melding som starter med samme mottakere
         reply_to_topic:
           label: Svar på emnet
+          trigger: Emne
           desc: Svar på emnet, ikke et spesifikt innlegg
+        reply_to_message:
+          trigger: Send
         toggle_whisper:
           label: Veksle hvisking
-          desc: Hvisking er kun synlig for stab
         create_topic:
           desc: Opprett et nytt emne
         create_personal_message:
-          label: "Ny melding"
           desc: "Opprett en ny personlig melding"
         shared_draft:
           label: "Delt utkast"
           desc: "Lag et emne som bare vil være synlig for tillatte brukere"
         toggle_topic_bump:
-          label: "Slå på/av at emnet flyttes øverst"
           desc: "Svar uten å endre siste svardato"
+        unknown_user: "Bruker"
       reload: "Oppdater"
       ignore: "Ignorer"
       image_alt_text:
@@ -2833,6 +2838,17 @@ nb_NO:
           other: "Avvis (%{count}) …"
         dismiss_tooltip: "Avvis kun nye innlegg eller slutt å overvåke emner"
         also_dismiss_topics: "Slutt å overvåke disse emnene slik at de aldri igjen vises til meg som ulest"
+        dismiss_new_topics: "Avvis nye emner"
+        dismiss_new_replies: "Avvis nye svar"
+        dismiss_new_topics_with_selected:
+          one: "Avvis (%{count}) "
+          other: "Avvis (%{count}) "
+        dismiss_new_replies_with_selected:
+          one: "Avvis (%{count}) "
+          other: "Avvis (%{count}) "
+        dismiss_all_with_selected:
+          one: "Avvis (%{count}) "
+          other: "Avvis (%{count}) "
         dismiss_new: "Avvis nye"
         dismiss_new_modal:
           title: "Avvis nye"
@@ -4060,13 +4076,6 @@ nb_NO:
       choose_for_topic: "valgfrie stikkord"
       category_restricted: "Denne taggen er begrenset til kategorier du ikke har tilgang til tilgang."
       synonyms: "Synonymer"
-      synonyms_description: "Når følgende merkelapper brukes, vil de bli erstattet med <b>%{base_tag_name}</b>."
-      tag_groups_info:
-        one: 'Denne taggen tilhører gruppen "%{tag_groups}.'
-        other: "Denne taggen tilhører disse gruppene: %{tag_groups}."
-      category_restrictions:
-        one: "Den kan bare brukes i denne kategorien:"
-        other: "Den kan kun brukes i disse kategoriene:"
       add_synonyms_label: "Legg til synonymer:"
       add_synonyms: "Legg til"
       add_synonyms_explanation:
@@ -4286,7 +4295,7 @@ nb_NO:
         modal:
           cancel: "avbryt"
           create: "Lagre"
-          reason: "hvorfor endrer du?"
+          reason: "Hvorfor endrer du?"
       spreadsheet:
         show: "Vis"
         about: "Om"
@@ -4759,6 +4768,7 @@ nb_NO:
       config_areas:
         about:
           company_name: "Navn"
+          company_url: "Nettside"
           extra_groups:
             groups: "Grupper"
           optional: "(valgfritt)"

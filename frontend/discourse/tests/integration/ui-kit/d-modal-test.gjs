@@ -288,4 +288,32 @@ module("Integration | ui-kit | DModal", function (hooks) {
       "pressing enter inside select-kit does not trigger the default button"
     );
   });
+
+  test("does not swallow keystrokes aimed at a modal stacked above it", async function (assert) {
+    await render(
+      <template>
+        <DModal @inline={{true}} @title="Underlying modal" />
+        <DModal @inline={{true}} @title="Stacked modal">
+          <:body>
+            <input type="text" class="stacked-modal-input" />
+          </:body>
+        </DModal>
+      </template>
+    );
+
+    const inputElement = document.querySelector(".stacked-modal-input");
+    inputElement.focus();
+
+    const event = new KeyboardEvent("keydown", {
+      key: "a",
+      bubbles: true,
+      cancelable: true,
+    });
+    inputElement.dispatchEvent(event);
+
+    assert.false(
+      event.defaultPrevented,
+      "the underlying modal does not preventDefault keystrokes aimed at the modal stacked above it"
+    );
+  });
 });

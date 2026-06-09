@@ -184,3 +184,10 @@ it:
       title: "Modifica assegnazioni"
       topic: "Argomento"
       post: "Messaggio"
+    discourse_workflows:
+      assign_topic:
+        operations:
+          assign: "Assegna"
+          unassign: "Annulla assegnazione"
+        topic_id: "ID dell'argomento"
+        assignee: "Assegnatario"

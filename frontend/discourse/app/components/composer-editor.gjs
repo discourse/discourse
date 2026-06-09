@@ -129,6 +129,11 @@ export default class ComposerEditor extends Component {
     });
   }
 
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    this.uppyComposerUpload.teardown();
+  }
+
   get topic() {
     return this.composer.get("model.topic");
   }
@@ -285,6 +290,13 @@ export default class ComposerEditor extends Component {
   _composerEditorDestroyEditor(elem) {
     if (this.composer.allowUpload && this._cleanupComposerUploadElement) {
       this.uppyComposerUpload.teardown(elem);
+    }
+  }
+
+  @action
+  _composerEditorInitFormTemplate(formEl) {
+    if (this.composer.allowUpload) {
+      this.uppyComposerUpload.setup(formEl);
     }
   }
 
@@ -960,59 +972,20 @@ export default class ComposerEditor extends Component {
   }
 
   @action
+  replyChanged() {
+    this.appEvents.trigger("composer:reply-changed", this.composer.model);
+  }
+
+  @action
   previewUpdated(preview, helper) {
     this._renderMentions(preview);
     this._renderHashtags(preview);
     this._refreshOneboxes(preview);
     this._expandShortUrls(preview);
 
-    // Only apply image size adjustments for form template previews
-    // Regular composer handles this through ProseMirror
-    if (this.composer.formTemplateIds?.length > 0) {
-      this._applyImageSizes(preview);
-    }
-
     this._decorateCookedElement(preview, helper);
 
     this.composer.afterRefresh(preview);
-  }
-
-  _applyImageSizes(preview) {
-    // Apply sizing to images to match regular composer behavior
-    // where percentage scales are relative to the max_image_width site setting
-    // not the original image dimensions
-    const maxImageWidth = this.siteSettings.max_image_width;
-
-    const images = preview.querySelectorAll("img.resizable[width][height]");
-
-    images.forEach((img) => {
-      const processImage = () => {
-        const width = parseInt(img.getAttribute("width"), 10);
-        const height = parseInt(img.getAttribute("height"), 10);
-        const naturalWidth = img.naturalWidth;
-
-        if (!naturalWidth || naturalWidth === 0) {
-          return;
-        }
-
-        if (width && height) {
-          const percentage = width / naturalWidth;
-
-          const constrainedBase = Math.min(naturalWidth, maxImageWidth);
-          const displayWidth = Math.round(constrainedBase * percentage);
-          const displayHeight = Math.round(height * (displayWidth / width));
-
-          img.setAttribute("width", displayWidth);
-          img.setAttribute("height", displayHeight);
-        }
-      };
-
-      if (img.complete && img.naturalWidth > 0) {
-        processImage();
-      } else {
-        img.addEventListener("load", processImage, { once: true });
-      }
-    });
   }
 
   @computed("composer.formTemplateIds")
@@ -1109,12 +1082,16 @@ export default class ComposerEditor extends Component {
               class="composer-select-form-template"
             />
           {{/if}}
-          <form id="form-template-form">
+          <form
+            id="form-template-form"
+            {{didInsert this._composerEditorInitFormTemplate}}
+          >
             <Wrapper
               @id={{this.selectedFormTemplateId}}
               @initialValues={{this.composer.formTemplateInitialValues}}
               @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
               @onChange={{this.updateFormPreview}}
+              @uppyComposerUpload={{this.uppyComposerUpload}}
             />
           </form>
         </div>
@@ -1141,6 +1118,7 @@ export default class ComposerEditor extends Component {
     {{else}}
       <DEditor
         @value={{this.composer.model.reply}}
+        @change={{this.replyChanged}}
         @placeholder={{this.replyPlaceholder}}
         @previewUpdated={{this.previewUpdated}}
         @markdownOptions={{this.markdownOptions}}

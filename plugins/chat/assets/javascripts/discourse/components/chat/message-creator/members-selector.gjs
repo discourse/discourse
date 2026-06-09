@@ -23,12 +23,12 @@ export default class MembersSelector extends Component {
 
   get items() {
     return this.chatables.filter(
-      (c) => !this.highlightedMemberIds.includes(c.model.id)
+      (c) => !this.selectedIdentifiers.includes(c.identifier)
     );
   }
 
-  get highlightedMemberIds() {
-    return this.args.members.map((u) => u.model.id);
+  get selectedIdentifiers() {
+    return this.args.members.map((member) => member.identifier);
   }
 
   @action
@@ -57,7 +57,7 @@ export default class MembersSelector extends Component {
       return;
     }
 
-    if (this.highlightedMemberIds.includes(chatable.model.id)) {
+    if (this.selectedIdentifiers.includes(chatable.identifier)) {
       this.unselectMember(chatable);
     } else {
       this.args.onChange?.([...this.args.members, chatable]);

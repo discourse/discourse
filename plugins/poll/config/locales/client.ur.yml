@@ -62,10 +62,10 @@ ur:
         none: "کوئی نہیں"
       options:
         label: "اختیارات"
-      error_while_toggling_status: "معذرت، اِس پول کا سٹیٹس تبدیل کرتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا۔"
-      error_while_casting_votes: "معذرت، آپ کا ووٹ ڈالتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا"
-      error_while_fetching_voters: "معذرت، ووٹرز کو دکھاتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا"
-      error_while_exporting_results: "معذرت، پول کے نتائج برآمد کرنے میں ایک خامی تھی۔"
+      error_while_toggling_status: "معذرت، اِس پول کی حیثیت تبدیل کرتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا۔"
+      error_while_casting_votes: "معذرت، آپ کے ووٹ ڈالتے وقت ایک خرابی کا سامنا کرنا پڑا۔"
+      error_while_fetching_voters: "معذرت، ووٹرز کو دکھاتے وقت ایک خرابی کا سامنا کرنا پڑا۔"
+      error_while_exporting_results: "معذرت، پول کے نتائج برآمد کرنے میں ایک خرابی پیش آئی۔"
       ui_builder:
         insert: پول شامل کریے
         help:

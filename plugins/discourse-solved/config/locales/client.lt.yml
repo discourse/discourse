@@ -20,6 +20,8 @@ lt:
       move_post_cancel: "Atšaukti"
       confirm_solved_removal_confirm: "Patvirtinti"
       confirm_solved_removal_cancel: "Atšaukti"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
     discourse_automation:
       triggerables:
         first_accepted_solution:
