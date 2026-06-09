@@ -6892,7 +6892,12 @@ CREATE TABLE public.nested_view_post_stats (
     whisper_direct_reply_count integer DEFAULT 0 NOT NULL,
     whisper_total_descendant_count integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    hot_score double precision DEFAULT 0.0 NOT NULL,
+    hot_score_updated_at timestamp(6) without time zone,
+    topic_id bigint,
+    reply_to_post_number integer,
+    post_number integer
 );
 
 
@@ -17484,6 +17489,13 @@ CREATE UNIQUE INDEX idx_leaderboard_scores_lb_user_date ON public.gamification_l
 
 
 --
+-- Name: idx_nested_stats_hot_siblings; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_nested_stats_hot_siblings ON public.nested_view_post_stats USING btree (topic_id, reply_to_post_number, hot_score DESC, post_number);
+
+
+--
 -- Name: idx_notifications_speedup_unread_count; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22498,6 +22510,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260610205840'),
 ('20260610075829'),
 ('20260610064425'),
+('20260609150000'),
 ('20260609050938'),
 ('20260608104742'),
 ('20260607161322'),
@@ -24842,4 +24855,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20120311164326'),
 ('20120311163914'),
 ('20000225050318');
-
