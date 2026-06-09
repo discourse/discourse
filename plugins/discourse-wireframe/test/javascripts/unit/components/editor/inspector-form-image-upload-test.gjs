@@ -50,6 +50,12 @@ class StubWireframeService extends Service {
   updateSelectedArg(name, value) {
     this.updateSelectedArgCalls.push({ name, value });
   }
+
+  partLockForSelection() {
+    return null;
+  }
+
+  toggleConditionsDetached() {}
 }
 
 function stubWireframe(owner, blockData, options) {

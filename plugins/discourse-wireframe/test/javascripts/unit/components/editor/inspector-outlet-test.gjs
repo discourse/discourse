@@ -68,6 +68,12 @@ class StubWireframeService extends Service {
   }
 
   updateSelectedArg() {}
+
+  partLockForSelection() {
+    return null;
+  }
+
+  toggleConditionsDetached() {}
 }
 
 function stubWireframe(owner, blockData) {

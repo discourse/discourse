@@ -58,6 +58,12 @@ class StubWireframeService extends Service {
     return false;
   }
 
+  partLockForSelection() {
+    return null;
+  }
+
+  toggleConditionsDetached() {}
+
   updateSelectedArg(name, value) {
     this.updateSelectedArgCalls.push({ name, value });
   }
