@@ -167,6 +167,16 @@ jobs:
           else
             bin/rake db:create db:migrate
           fi
+          # Regenerate the schema cache dump so its stored schema_version matches
+          # the freshly-migrated test DB. The committed db/schema_cache.yml lags
+          # behind newer migrations, so without this its version check fails and
+          # Rails ignores it. With a matching dump, each system-test worker loads
+          # it (spec/rails_helper re-enables use_schema_cache_dump in CI) instead
+          # of cold-populating the AR schema cache via ~1000 pg_catalog
+          # introspection queries in a synchronized 12-worker burst on its first
+          # system example. Best-effort: a failure leaves the stale committed
+          # dump, whose version check then fails, falling back to that warm-up.
+          bin/rake db:schema:cache:dump || true
 
       - name: Fetch turbo_rspec_runtime.log cache
         uses: actions/cache@v5
