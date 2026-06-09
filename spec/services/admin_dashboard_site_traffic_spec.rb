@@ -680,5 +680,110 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(second[:top_countries][:rows].first[:country_code]).to eq("US")
       end
     end
+
+    context "for bounce rate and average session duration" do
+      include BrowserPageviewSessionHelpers
+
+      before { SiteSetting.persist_browser_pageview_events = true }
+
+      it "omits both metrics when persist_browser_pageview_events is disabled" do
+        SiteSetting.persist_browser_pageview_events = false
+
+        kpis = described_class.build(start_date: nil, end_date: nil)[:kpis]
+        expect(kpis).not_to have_key(:bounce_rate)
+        expect(kpis).not_to have_key(:avg_session_duration)
+      end
+
+      it "returns the combined bounce rate and average session duration for the period" do
+        member = Fabricate(:user)
+
+        # bounced single-pageview visit (0s)
+        record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0))
+
+        # two-pageview visit lasting 30s (not a bounce)
+        visit_start = record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0))
+        Fabricate(
+          :browser_pageview_event,
+          session_id: visit_start.session_id,
+          created_at: Time.zone.local(2026, 5, 1, 10, 0, 30),
+        )
+
+        # engaged single-pageview member visit (60s, not a bounce)
+        record_visit(at: Time.zone.local(2026, 5, 2, 10, 0, 0), user_id: member.id, engaged_for: 60)
+
+        aggregate_session_rollup
+
+        kpis = described_class.build(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]
+        expect(kpis[:bounce_rate]).to eq(value: 33)
+        expect(kpis[:avg_session_duration]).to eq(value: 30)
+      end
+
+      it "returns a trend for the bounce rate compared with the previous period" do
+        # Previous period (Apr 28–30): 1 of 4 visits bounced = 25%
+        record_visit(at: Time.zone.local(2026, 4, 28, 10, 0, 0))
+        3.times { record_visit(at: Time.zone.local(2026, 4, 28, 10, 0, 0), engaged_for: 30) }
+
+        # Current period (May 1–3): 1 of 2 visits bounced = 50%
+        record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0))
+        record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0), engaged_for: 30)
+
+        aggregate_session_rollup
+
+        kpis = described_class.build(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]
+        expect(kpis[:bounce_rate]).to eq(
+          value: 50,
+          percent_change: 100,
+          comparison_period: {
+            start_date: "2026-04-28",
+            end_date: "2026-04-30",
+          },
+        )
+      end
+
+      it "omits the trend when the previous period has no visits" do
+        record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0))
+        record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0), engaged_for: 30)
+
+        aggregate_session_rollup
+
+        kpis = described_class.build(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]
+        expect(kpis[:bounce_rate]).to eq(value: 50)
+        expect(kpis[:avg_session_duration]).to eq(value: 15)
+      end
+
+      it "computes the metrics from the rollup after the source events are pruned" do
+        record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0))
+        record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0), engaged_for: 30)
+
+        aggregate_session_rollup
+        BrowserPageviewEvent.delete_all
+        BrowserPageviewEngagement.delete_all
+
+        kpis = described_class.build(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]
+        expect(kpis[:bounce_rate]).to eq(value: 50)
+        expect(kpis[:avg_session_duration]).to eq(value: 15)
+      end
+
+      it "returns nil values and no trend when no visits fall in the period" do
+        kpis = described_class.build(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]
+        expect(kpis[:bounce_rate]).to eq(value: nil)
+        expect(kpis[:avg_session_duration]).to eq(value: nil)
+      end
+
+      it "keeps the metrics on login-required sites where logged-in share is dropped" do
+        SiteSetting.login_required = true
+        member = Fabricate(:user)
+
+        record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0), user_id: member.id)
+        record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0), user_id: member.id, engaged_for: 30)
+
+        aggregate_session_rollup
+
+        kpis = described_class.build(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]
+        expect(kpis[:bounce_rate]).to eq(value: 50)
+        expect(kpis[:avg_session_duration]).to eq(value: 15)
+        expect(kpis).not_to have_key(:logged_in_share)
+      end
+    end
   end
 end

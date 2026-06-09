@@ -554,6 +554,48 @@ describe "Request tracking" do
         expect(beacon_events).to be_blank
         expect(non_beacon_events).to be_blank
       end
+
+      it "records an engagement ping when the user switches away from the page" do
+        SiteSetting.persist_browser_pageview_events = true
+
+        visit "/"
+        session_id = pageview_tracking.session_id
+
+        switch_to_window(open_new_window(:tab))
+
+        try_until_success do
+          expect(
+            BrowserPageviewEngagement.joins(:event).where(
+              browser_pageview_events: {
+                session_id: session_id,
+                url: "#{Discourse.base_url_no_prefix}/",
+              },
+            ).count,
+          ).to eq(1)
+        end
+      end
+
+      it "binds the engagement ping to the last page viewed when the user leaves after browsing multiple pages" do
+        SiteSetting.persist_browser_pageview_events = true
+
+        visit "/"
+        session_id = pageview_tracking.session_id
+
+        find(".nav-item_categories a").click
+        expect(page).to have_current_path("/categories")
+
+        switch_to_window(open_new_window(:tab))
+
+        try_until_success do
+          expect(
+            BrowserPageviewEngagement.joins(:event).where(
+              browser_pageview_events: {
+                session_id: session_id,
+              },
+            ).pluck("browser_pageview_events.url"),
+          ).to eq(["#{Discourse.base_url_no_prefix}/categories"])
+        end
+      end
     end
   end
 

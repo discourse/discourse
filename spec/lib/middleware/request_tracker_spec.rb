@@ -1159,6 +1159,90 @@ RSpec.describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_anon_browser_beacon.first.count).to eq(1)
     end
 
+    context "for engagement pings" do
+      before { SiteSetting.persist_browser_pageview_events = true }
+
+      let(:middleware) { Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] }) }
+
+      it "binds the ping to the latest pageview matching its session and url" do
+        earlier_pageview = Fabricate(:browser_pageview_event, created_at: 2.minutes.ago)
+
+        latest_pageview =
+          Fabricate(
+            :browser_pageview_event,
+            session_id: earlier_pageview.session_id,
+            url: earlier_pageview.url,
+            created_at: 1.minute.ago,
+          )
+
+        status, =
+          middleware.call(
+            beacon_env(
+              {
+                session_id: latest_pageview.session_id,
+                url: latest_pageview.url,
+                engagement: true,
+              },
+              same_origin,
+            ),
+          )
+
+        expect(status).to eq(204)
+        expect(BrowserPageviewEngagement.pluck(:event_id)).to eq([latest_pageview.id])
+      end
+
+      it "drops a ping that matches no pageview" do
+        unsaved_pageview = Fabricate.build(:browser_pageview_event)
+
+        status, =
+          middleware.call(
+            beacon_env(
+              {
+                session_id: unsaved_pageview.session_id,
+                url: unsaved_pageview.url,
+                engagement: true,
+              },
+              same_origin,
+            ),
+          )
+
+        expect(status).to eq(204)
+        expect(BrowserPageviewEngagement.count).to eq(0)
+      end
+
+      it "records pings even when beacon pageview tracking is disabled" do
+        SiteSetting.use_beacon_for_browser_page_views = false
+
+        pageview = Fabricate(:browser_pageview_event, created_at: 1.minute.ago)
+
+        status, =
+          middleware.call(
+            beacon_env(
+              { session_id: pageview.session_id, url: pageview.url, engagement: true },
+              same_origin,
+            ),
+          )
+
+        expect(status).to eq(204)
+        expect(BrowserPageviewEngagement.pluck(:event_id)).to eq([pageview.id])
+      end
+
+      it "does not record pings when persist_browser_pageview_events is off" do
+        SiteSetting.persist_browser_pageview_events = false
+
+        pageview = Fabricate(:browser_pageview_event, created_at: 1.minute.ago)
+
+        middleware.call(
+          beacon_env(
+            { session_id: pageview.session_id, url: pageview.url, engagement: true },
+            same_origin,
+          ),
+        )
+
+        expect(BrowserPageviewEngagement.count).to eq(0)
+      end
+    end
+
     it "returns 403 for cross-origin beacon requests" do
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
       status, = middleware.call(beacon_env({}, { "HTTP_ORIGIN" => "https://evil.example" }))

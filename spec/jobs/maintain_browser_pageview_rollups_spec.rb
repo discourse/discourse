@@ -19,6 +19,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
 
       expect(BrowserPageviewCountryDailyRollup.count).to eq(0)
       expect(BrowserPageviewReferrerDailyRollup.count).to eq(0)
+      expect(BrowserPageviewSessionDailyRollup.count).to eq(0)
       expect(event.reload.normalized_referrer_version).to be_nil
     end
 
@@ -32,6 +33,31 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(
           BrowserPageviewReferrerDailyRollup.where(normalized_referrer: "google.com").sum(:count),
         ).to eq(1)
+      end
+
+      it "aggregates session rollups (bounce and duration) from recent pageview events" do
+        today = Time.zone.now.beginning_of_day
+
+        Fabricate(:browser_pageview_event, created_at: today + 1.hour)
+
+        engaged_visit_start = Fabricate(:browser_pageview_event, created_at: today + 2.hours)
+        Fabricate(
+          :browser_pageview_event,
+          session_id: engaged_visit_start.session_id,
+          created_at: today + 2.hours + 40.seconds,
+        )
+
+        job.execute({})
+
+        expect(
+          BrowserPageviewSessionDailyRollup.pluck(
+            :date,
+            :logged_in,
+            :sessions_count,
+            :bounced_count,
+            :total_duration_seconds,
+          ),
+        ).to eq([[Date.current, false, 2, 1, 40]])
       end
 
       it "backfills from the earliest event date on the first run when rollups are empty" do

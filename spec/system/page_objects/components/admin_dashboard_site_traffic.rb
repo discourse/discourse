@@ -32,6 +32,46 @@ module PageObjects
         has_no_css?(".db-section__metric", text: label)
       end
 
+      def has_bounce_rate?(value)
+        has_metric?("Bounce rate", value)
+      end
+
+      def has_no_bounce_rate?
+        has_no_metric?("Bounce rate")
+      end
+
+      def has_empty_bounce_rate?
+        has_metric?("Bounce rate", "—")
+      end
+
+      def has_positive_bounce_rate_trend?
+        has_metric_trend?("Bounce rate", "good")
+      end
+
+      def has_negative_bounce_rate_trend?
+        has_metric_trend?("Bounce rate", "bad")
+      end
+
+      def has_avg_session_duration?(value)
+        has_metric?("Avg. session duration", value)
+      end
+
+      def has_no_avg_session_duration?
+        has_no_metric?("Avg. session duration")
+      end
+
+      def has_empty_avg_session_duration?
+        has_metric?("Avg. session duration", "—")
+      end
+
+      def has_positive_avg_session_duration_trend?
+        has_metric_trend?("Avg. session duration", "good")
+      end
+
+      def has_negative_avg_session_duration_trend?
+        has_metric_trend?("Avg. session duration", "bad")
+      end
+
       def has_chart?
         has_css?(".db-section__traffic-chart canvas")
       end
@@ -64,6 +104,24 @@ module PageObjects
 
       def has_logged_in_share_tooltip?(text)
         Tooltips.new("site-traffic-logged-in-share-tooltip").present?(text: text)
+      end
+
+      def hover_bounce_rate_tooltip
+        find("[data-trigger][data-identifier='site-traffic-bounce-rate-tooltip']").hover
+        self
+      end
+
+      def has_bounce_rate_tooltip?(text)
+        Tooltips.new("site-traffic-bounce-rate-tooltip").present?(text: text)
+      end
+
+      def hover_avg_session_duration_tooltip
+        find("[data-trigger][data-identifier='site-traffic-avg-session-duration-tooltip']").hover
+        self
+      end
+
+      def has_avg_session_duration_tooltip?(text)
+        Tooltips.new("site-traffic-avg-session-duration-tooltip").present?(text: text)
       end
 
       def has_no_top_countries_card?
@@ -125,6 +183,12 @@ module PageObjects
       end
 
       private
+
+      def has_metric_trend?(label, quality)
+        within(".db-section__metric", text: label) do
+          has_css?(".db-section__metric-trend.--#{quality}")
+        end
+      end
 
       def has_no_top_card?(title)
         has_no_css?(".db-section__row-block", text: title)

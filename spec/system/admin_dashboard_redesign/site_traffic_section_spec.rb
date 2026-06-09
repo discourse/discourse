@@ -277,4 +277,99 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       )
     end
   end
+
+  context "with bounce rate and average session duration metrics" do
+    include BrowserPageviewSessionHelpers
+
+    before { SiteSetting.persist_browser_pageview_events = true }
+
+    it "shows staff the bounce rate and average session duration for the period",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      # 3 visits across 3 days: one bounce (0s), one 120s, one 150s -> bounce 33%, avg 90s = "1m 30s"
+      record_visit(at: Time.zone.local(2026, 5, 10, 10, 0, 0))
+
+      visit_start = record_visit(at: Time.zone.local(2026, 5, 11, 10, 0, 0))
+      Fabricate(
+        :browser_pageview_event,
+        session_id: visit_start.session_id,
+        created_at: Time.zone.local(2026, 5, 11, 10, 2, 0),
+      )
+
+      record_visit(at: Time.zone.local(2026, 5, 12, 10, 0, 0), engaged_for: 150)
+
+      aggregate_session_rollup
+
+      dashboard.visit
+      traffic = dashboard.site_traffic
+
+      expect(traffic).to have_bounce_rate("33%")
+      expect(traffic).to have_avg_session_duration("1m 30s")
+    end
+
+    it "does not show the metrics when persist_browser_pageview_events is off",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      SiteSetting.persist_browser_pageview_events = false
+
+      dashboard.visit
+      traffic = dashboard.site_traffic
+
+      expect(traffic).to have_no_bounce_rate
+      expect(traffic).to have_no_avg_session_duration
+    end
+
+    it "shows a falling bounce rate and a rising session duration as positive trends",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      # Previous period (Apr 1): bounce 75%, low duration
+      3.times { record_visit(at: Time.zone.local(2026, 4, 1, 10, 0, 0)) }
+      record_visit(at: Time.zone.local(2026, 4, 1, 10, 0, 0), engaged_for: 30)
+
+      # Current period (May 12): bounce 25%, high duration
+      3.times { record_visit(at: Time.zone.local(2026, 5, 12, 10, 0, 0), engaged_for: 200) }
+      record_visit(at: Time.zone.local(2026, 5, 12, 10, 0, 0))
+
+      aggregate_session_rollup
+
+      dashboard.visit
+      traffic = dashboard.site_traffic
+
+      expect(traffic).to have_positive_bounce_rate_trend
+      expect(traffic).to have_positive_avg_session_duration_trend
+    end
+
+    it "shows a rising bounce rate and a falling session duration as negative trends",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      # Previous period (Apr 1): bounce 25%, high duration
+      record_visit(at: Time.zone.local(2026, 4, 1, 10, 0, 0))
+      3.times { record_visit(at: Time.zone.local(2026, 4, 1, 10, 0, 0), engaged_for: 200) }
+
+      # Current period (May 12): bounce 75%, low duration
+      3.times { record_visit(at: Time.zone.local(2026, 5, 12, 10, 0, 0)) }
+      record_visit(at: Time.zone.local(2026, 5, 12, 10, 0, 0), engaged_for: 30)
+
+      aggregate_session_rollup
+
+      dashboard.visit
+      traffic = dashboard.site_traffic
+
+      expect(traffic).to have_negative_bounce_rate_trend
+      expect(traffic).to have_negative_avg_session_duration_trend
+    end
+
+    it "shows a neutral placeholder for each metric when no visits fall in the period",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      dashboard.visit
+      traffic = dashboard.site_traffic
+
+      expect(traffic).to have_empty_bounce_rate
+      expect(traffic).to have_empty_avg_session_duration
+
+      traffic.hover_bounce_rate_tooltip
+      expect(traffic).to have_bounce_rate_tooltip("Shown once visits are recorded for this period.")
+
+      traffic.hover_avg_session_duration_tooltip
+      expect(traffic).to have_avg_session_duration_tooltip(
+        "Shown once visits are recorded for this period.",
+      )
+    end
+  end
 end
