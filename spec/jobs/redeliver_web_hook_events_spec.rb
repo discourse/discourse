@@ -43,7 +43,7 @@ RSpec.describe Jobs::RedeliverWebHookEvents do
     expect(messages.first.data).to include(type: "redelivered")
   end
 
-  it "restricts the redelivery MessageBus publish to the staff group" do
+  it "restricts the redelivery MessageBus publish to the admins group" do
     stub_request(:post, web_hook.payload_url).to_return(status: 200, body: "", headers: {})
 
     messages =
@@ -52,7 +52,7 @@ RSpec.describe Jobs::RedeliverWebHookEvents do
       end
 
     expect(messages.size).to eq(1)
-    expect(messages.first.group_ids).to eq([Group::AUTO_GROUPS[:staff]])
+    expect(messages.first.group_ids).to eq([Group::AUTO_GROUPS[:admins]])
   end
 
   context "when there is a redelivering_webhook_event in process" do
