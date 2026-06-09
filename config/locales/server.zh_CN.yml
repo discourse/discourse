@@ -567,7 +567,6 @@ zh_CN:
       admins: "管理员"
       moderators: "版主"
       staff: "管理人员"
-      anonymous: "匿名"
       logged_in_users: "已登录用户"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
@@ -577,7 +576,7 @@ zh_CN:
     default_descriptions:
       everyone: "包括所有成员的自动群组"
       staff: "包括管理员和版主的自动群组"
-      anonymous: "匿名访客自动用户组"
+      anonymous_users: "匿名访客自动用户组"
       logged_in_users: "包含所有已登录用户的自动用户组"
       admins: "负责配置和维护此站点，并有权访问所有成员和活动数据"
       moderators: "负责回应举报、主持讨论并帮助成员管理帐户"

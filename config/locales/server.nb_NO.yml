@@ -289,7 +289,6 @@ nb_NO:
       admins: "administratorer"
       moderators: "moderatorer"
       staff: "stab"
-      anonymous: "anonym"
       trust_level_0: "tillitsnivå_0"
       trust_level_1: "tillitsnivå_1"
       trust_level_2: "tillitsnivå_2"

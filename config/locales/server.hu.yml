@@ -612,7 +612,6 @@ hu:
       admins: "adminisztrátorok"
       moderators: "moderátorok"
       staff: "stáb"
-      anonymous: "névtelen"
       trust_level_0: "bizalmi_szint_0"
       trust_level_1: "bizalmi_szint_1"
       trust_level_2: "bizalmi_szint_2"
