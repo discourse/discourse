@@ -511,6 +511,7 @@ export default {
               constructor({
                 channel,
                 chatService,
+                currentUser,
                 siteSettings,
                 menuService,
                 capabilities,
@@ -518,6 +519,7 @@ export default {
                 super(...arguments);
                 this.channel = channel;
                 this.chatService = chatService;
+                this.currentUser = currentUser;
                 this.menuService = menuService;
                 this.chatStateManager = chatStateManager;
                 this.siteSettings = siteSettings;
