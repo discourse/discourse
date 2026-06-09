@@ -422,57 +422,28 @@ module SystemHelpers
 
   def capture_log_entries(controller:, entries:, action: nil)
     log = Rails.root.join("log", "#{Rails.env}.log")
-
-    # In parallel system-test runs every worker's in-process app server appends
-    # its lograge access log to this one shared `log/#{Rails.env}.log`. The old
-    # implementation `File.truncate`d that shared file and then waited for the
-    # right number of matching lines, which races the other 11 workers: their
-    # interleaved entries (and, for `truncate`, their concurrent writes) make the
-    # matchers latch onto the wrong lines. Instead of truncating, record the
-    # current end-of-file and read only what is appended while the block runs,
-    # and keep just the entries our own worker wrote. `DiscourseLogstashLogger`
-    # stamps every line with the writing process's `pid`, and Capybara's test
-    # server runs in this same process, so `pid` uniquely identifies our worker.
-    offset = File.exist?(log) ? File.size(log) : 0
-    own_pid = Process.pid
+    File.truncate(log, 0) if File.exist?(log)
 
     yield
 
     read =
       lambda do
         return [] unless File.exist?(log)
-        matching =
-          File.open(log) do |f|
-            f.seek(offset) if f.size >= offset
-            f
-              .read
-              .lines
-              .reject { |l| l.strip.empty? }
-              .filter_map do |line|
-                JSON.parse(line)
-              rescue JSON::ParserError
-                nil
-              end
-              .select { |e| e["controller"] == controller && (action.nil? || e["action"] == action) }
-          end
-
-        # Prefer the entries our own worker's server wrote; fall back to the
-        # unfiltered set if `pid` is ever unavailable (e.g. an out-of-process
-        # server) so this can only sharpen the result, never empty it.
-        own = matching.select { |e| e["pid"] == own_pid }
-        own.any? ? own : matching
+        File.open(log) do |f|
+          f
+            .read
+            .lines
+            .reject { |l| l.strip.empty? }
+            .filter_map do |line|
+              JSON.parse(line)
+            rescue JSON::ParserError
+              nil
+            end
+            .select { |e| e["controller"] == controller && (action.nil? || e["action"] == action) }
+        end
       end
 
-    # The `/srv/pv` beacon POST can take longer than the 4s default Capybara wait
-    # to be served and logged under 12-worker parallel load: MessageBus's
-    # long-poll parks one of the in-process server's ~4 threads, so the beacon
-    # queues behind each navigation's EMBER_ENV=development asset burst. When it
-    # times out here the two BPV examples fail in the parallel phase and
-    # turbo_rspec re-runs them in a ~52s serial flaky-retry appended to the step
-    # (measured 51.61s in the iter-0101 CI log). Waiting a few extra seconds
-    # inline for the beacon on the one worker that owns this spec is far cheaper
-    # than that serial retry, and only that worker pays it.
-    try_until_success(timeout: 20) { raise Capybara::ExpectationNotMet if read.call.size < entries }
+    try_until_success { raise Capybara::ExpectationNotMet if read.call.size < entries }
     read.call
   end
 end
