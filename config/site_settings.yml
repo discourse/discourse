@@ -614,6 +614,12 @@ basic:
   clean_up_browser_pageview_events:
     default: false
     hidden: true
+  browser_pageview_referrer_backfill_batch_size:
+    default: 5000
+    type: integer
+    min: 1
+    max: 20000
+    hidden: true
   experimental_detect_crawler_pageviews:
     default: false
     hidden: true

@@ -735,6 +735,7 @@ class Middleware::RequestTracker
         asn: payload[:asn],
         referrer: payload[:referrer],
         normalized_referrer: BrowserPageviewReferrerInspector.normalize(payload[:referrer]),
+        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
         user_agent: payload[:user_agent],
         session_id: payload[:session_id],
         user_id: payload[:user_id],

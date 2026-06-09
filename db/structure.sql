@@ -1950,7 +1950,8 @@ CREATE TABLE public.browser_pageview_events (
     created_at timestamp without time zone NOT NULL,
     asn integer,
     score integer,
-    normalized_referrer character varying(2000)
+    normalized_referrer character varying(2000),
+    normalized_referrer_version smallint
 );
 
 
@@ -16564,6 +16565,13 @@ CREATE INDEX idx_bpe_ip_ua_created_at ON public.browser_pageview_events USING bt
 
 
 --
+-- Name: idx_bpe_normalized_referrer_version; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_normalized_referrer_version ON public.browser_pageview_events USING btree (normalized_referrer_version) WHERE (referrer IS NOT NULL);
+
+
+--
 -- Name: idx_bpe_session_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21855,6 +21863,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260603115200'),
 ('20260602104726'),
 ('20260601043020'),
+('20260528074731'),
+('20260528074719'),
 ('20260525105009'),
 ('20260525105006'),
 ('20260522043337'),
