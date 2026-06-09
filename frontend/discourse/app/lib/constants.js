@@ -33,6 +33,8 @@ export const AUTO_GROUPS = {
   admins: { id: 1, automatic: true, name: "admins" },
   moderators: { id: 2, automatic: true, name: "moderators" },
   staff: { id: 3, automatic: true, name: "staff" },
+  anonymous_users: { id: 4, automatic: true, name: "anonymous_users" },
+  logged_in_users: { id: 5, automatic: true, name: "logged_in_users" },
   trust_level_0: { id: 10, automatic: true, name: "trust_level_0" },
   trust_level_1: { id: 11, automatic: true, name: "trust_level_1" },
   trust_level_2: { id: 12, automatic: true, name: "trust_level_2" },
@@ -74,6 +76,7 @@ export const ADMIN_SEARCH_RESULT_TYPES = [
   "theme",
   "component",
   "report",
+  "upcomingChange",
 ];
 
 export const API_KEY_SCOPE_MODES = ["global", "read_only", "granular"];
