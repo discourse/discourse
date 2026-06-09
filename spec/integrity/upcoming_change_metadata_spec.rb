@@ -45,7 +45,7 @@ RSpec.describe "upcoming change metadata integrity checks" do
 
     it "#{label} is valid" do
       metadata = setting[:upcoming_change]
-      allowed_keys = %i[status impact learn_more_url allow_enabled_for]
+      allowed_keys = %i[status impact learn_more_url allow_enabled_for include_css]
       required_keys = %i[status impact]
       unsupported_keys = metadata.keys - allowed_keys
       missing_keys = required_keys - metadata.keys
@@ -55,6 +55,7 @@ RSpec.describe "upcoming change metadata integrity checks" do
       impact_parts = impact.is_a?(String) ? impact.split(",") : []
       learn_more_url = metadata[:learn_more_url]
       allow_enabled_for = metadata[:allow_enabled_for]
+      include_css = metadata[:include_css]
 
       aggregate_failures do
         expect(setting[:options][:hidden]).to eq(true), "#{label} must set `hidden: true`"
@@ -108,6 +109,11 @@ RSpec.describe "upcoming change metadata integrity checks" do
             expect(allow_strings).to eq(["everyone"]),
             "#{label} `upcoming_change.allow_enabled_for` may not combine `everyone` with other values"
           end
+        end
+
+        unless include_css.nil?
+          expect([true, false]).to include(include_css),
+          "#{label} `upcoming_change.include_css` must be a boolean"
         end
       end
     end
