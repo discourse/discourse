@@ -6180,6 +6180,38 @@ ALTER SEQUENCE public.linked_topics_id_seq OWNED BY public.linked_topics.id;
 
 
 --
+-- Name: livestream_topic_chat_channels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.livestream_topic_chat_channels (
+    id bigint NOT NULL,
+    topic_id bigint NOT NULL,
+    chat_channel_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: livestream_topic_chat_channels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.livestream_topic_chat_channels_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: livestream_topic_chat_channels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.livestream_topic_chat_channels_id_seq OWNED BY public.livestream_topic_chat_channels.id;
+
+
+--
 -- Name: llm_credit_allocations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -12892,6 +12924,13 @@ ALTER TABLE ONLY public.linked_topics ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: livestream_topic_chat_channels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.livestream_topic_chat_channels ALTER COLUMN id SET DEFAULT nextval('public.livestream_topic_chat_channels_id_seq'::regclass);
+
+
+--
 -- Name: llm_credit_allocations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15196,6 +15235,14 @@ ALTER TABLE ONLY public.javascript_caches
 
 ALTER TABLE ONLY public.linked_topics
     ADD CONSTRAINT linked_topics_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: livestream_topic_chat_channels livestream_topic_chat_channels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.livestream_topic_chat_channels
+    ADD CONSTRAINT livestream_topic_chat_channels_pkey PRIMARY KEY (id);
 
 
 --
@@ -21577,6 +21624,13 @@ CREATE UNIQUE INDEX unique_index_categories_on_slug ON public.categories USING b
 
 
 --
+-- Name: unique_livestream_topic_chat_channels; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_livestream_topic_chat_channels ON public.livestream_topic_chat_channels USING btree (topic_id, chat_channel_id);
+
+
+--
 -- Name: unique_post_links; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21861,6 +21915,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260604052235'),
 ('20260603115312'),
 ('20260603115200'),
+('20260603013342'),
 ('20260602104726'),
 ('20260601043020'),
 ('20260528074731'),
