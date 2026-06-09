@@ -738,6 +738,8 @@ module SiteSettingExtension
         name,
         upcoming_change_enabled: UpcomingChanges.enabled?(name),
       )
+    elsif name.to_sym == :promote_upcoming_changes_on_status
+      refresh!
     end
 
     return if current[name] == old_val
@@ -802,6 +804,8 @@ module SiteSettingExtension
 
     if UpcomingChanges.exists?(name)
       apply_upcoming_change_default_overrides_for!(name, upcoming_change_enabled: current[name])
+    elsif name.to_sym == :promote_upcoming_changes_on_status
+      refresh!
     end
 
     return if current[name] == old_val

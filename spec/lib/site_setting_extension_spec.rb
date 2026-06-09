@@ -2110,6 +2110,15 @@ RSpec.describe SiteSettingExtension do
       it "returns the YAML default" do
         expect(settings.suggested_topics_max_days_old).to eq(365)
       end
+
+      it "immediately applies the override default when the promotion status changes" do
+        expect(settings.suggested_topics_max_days_old).to eq(365)
+
+        settings.promote_upcoming_changes_on_status = :experimental
+
+        expect(settings.increase_suggested_topics_max_days_old_default).to eq(true)
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
+      end
     end
 
     context "when the linked upcoming change is enabled via add_override!" do
