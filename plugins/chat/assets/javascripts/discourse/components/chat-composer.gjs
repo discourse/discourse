@@ -244,18 +244,18 @@ export default class ChatComposer extends Component {
 
     this.inProgressUploadsCount = inProgressUploadsCount || 0;
 
+    this.composer.textarea?.focus();
+    this.reportReplyingPresence();
+
+    // Only persist once uploads settle.
     if (
       typeof uploads !== "undefined" &&
-      inProgressUploadsCount !== "undefined" &&
       inProgressUploadsCount === 0 &&
       this.draft
     ) {
       this.draft.uploads = cloneJSON(uploads);
+      this.persistDraft();
     }
-
-    this.composer.textarea?.focus();
-    this.reportReplyingPresence();
-    this.persistDraft();
   }
 
   @action
