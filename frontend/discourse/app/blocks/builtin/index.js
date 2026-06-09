@@ -35,6 +35,7 @@ export { default as Paragraph } from "./paragraph";
 export { default as Image } from "./image";
 export { default as ButtonLink } from "./button-link";
 export { default as Layout } from "./layout";
+export { LayoutMergedCell } from "./layout";
 export { default as Spacer } from "./spacer";
 export { default as Divider } from "./divider";
 export { default as Callout } from "./callout";

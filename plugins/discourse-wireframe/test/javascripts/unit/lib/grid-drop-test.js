@@ -3,21 +3,38 @@ import {
   decideGridDrop,
   GRID_DROP_ACTIONS,
   GRID_DROP_GESTURES,
+  rectIsFree,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-drop";
 
-// A grid cell fixture. `entryKey` keys an entry as `"${block}:${__stableKey}"`,
-// so a cell named "a" resolves to the key "wf:cell:a". `column` / `row` accept
-// CSS Grid shorthand ("2", "1 / 3", "auto").
+// A grid cell holding a content block. `entryKey` keys an entry as
+// `"${block}:${__stableKey}"`, so a cell named "a" resolves to the key
+// "content:a". `column` / `row` accept CSS Grid shorthand ("2", "1 / 3",
+// "auto").
 function cell(key, column, row) {
   return {
     __stableKey: key,
-    block: "wf:cell",
+    block: "content",
     containerArgs: { grid: { column, row } },
   };
 }
 
 function keyOf(k) {
-  return `wf:cell:${k}`;
+  return `content:${k}`;
+}
+
+// An empty merged cell occupying a (possibly spanning) rect — the placeholder
+// a drop consumes (REPLACE), inheriting its span. Keyed under the core block
+// name so the decider's merged-cell carve-out recognises it.
+function mergedCell(key, column, row) {
+  return {
+    __stableKey: key,
+    block: "layout-merged-cell",
+    containerArgs: { grid: { column, row } },
+  };
+}
+
+function mergedKeyOf(k) {
+  return `layout-merged-cell:${k}`;
 }
 
 // Convenience: an "existing block already in this grid" source.
@@ -122,6 +139,56 @@ module("Unit | Discourse Wireframe | lib:grid-drop", function () {
       assert.strictEqual(decision.action, GRID_DROP_ACTIONS.FILL);
       assert.deepEqual(decision.placement, { column: "1", row: "2" });
       assert.deepEqual(decision.declared, { columns: 2, rows: 2 });
+    });
+
+    test("palette onto an empty merged cell → REPLACE, inheriting its span", function (assert) {
+      // [A][ M…M ] — M spans columns 2–3. A palette block dropped into M
+      // consumes M and inherits its full rect (not a 1×1 fill, not a NOOP).
+      const children = [cell("a", "1", "1"), mergedCell("m", "2 / 4", "1")];
+      const decision = decideGridDrop({
+        children,
+        declared: { columns: 3, rows: 1 },
+        source: PALETTE,
+        drop: { gesture: GRID_DROP_GESTURES.INTO, cell: { column: 2, row: 1 } },
+      });
+      assert.strictEqual(decision.action, GRID_DROP_ACTIONS.REPLACE);
+      assert.strictEqual(decision.swapWith, mergedKeyOf("m"));
+      assert.deepEqual(decision.placement, { column: "2 / 4", row: "1" });
+      // The merged cell already held the rect, so declared doesn't grow.
+      assert.deepEqual(decision.declared, { columns: 3, rows: 1 });
+    });
+
+    test("existing block onto an empty merged cell → REPLACE, not SWAP", function (assert) {
+      // A content occupant would SWAP; a merged cell is consumed instead, so
+      // the moved block doesn't trade places with an empty placeholder.
+      const children = [cell("a", "1", "1"), mergedCell("m", "2 / 4", "1")];
+      const decision = decideGridDrop({
+        children,
+        declared: { columns: 3, rows: 1 },
+        source: sameGrid("a"),
+        drop: { gesture: GRID_DROP_GESTURES.INTO, cell: { column: 2, row: 1 } },
+      });
+      assert.strictEqual(decision.action, GRID_DROP_ACTIONS.REPLACE);
+      assert.strictEqual(decision.swapWith, mergedKeyOf("m"));
+      assert.deepEqual(decision.placement, { column: "2 / 4", row: "1" });
+    });
+
+    test("merged-cell consume ignores the Shift flag", function (assert) {
+      // Shift distinguishes SWAP from REPLACE for a content occupant; for a
+      // merged cell the outcome is REPLACE-consume either way.
+      const children = [cell("a", "1", "1"), mergedCell("m", "2 / 4", "1")];
+      const decision = decideGridDrop({
+        children,
+        declared: { columns: 3, rows: 1 },
+        source: sameGrid("a"),
+        drop: {
+          gesture: GRID_DROP_GESTURES.INTO,
+          cell: { column: 2, row: 1 },
+          shift: false,
+        },
+      });
+      assert.strictEqual(decision.action, GRID_DROP_ACTIONS.REPLACE);
+      assert.strictEqual(decision.swapWith, mergedKeyOf("m"));
     });
   });
 
@@ -435,6 +502,57 @@ module("Unit | Discourse Wireframe | lib:grid-drop", function () {
       assert.strictEqual(decision.action, GRID_DROP_ACTIONS.APPEND);
       assert.deepEqual(decision.placement, { column: "2", row: "1" });
       assert.deepEqual(decision.declared, { columns: 3, rows: 1 });
+    });
+  });
+
+  /* The occupancy primitive shared by the decider and the spanning insert. */
+  module("rectIsFree (shared occupancy primitive)", function () {
+    test("a blank region is free", function (assert) {
+      // [A][_][_] — A at column 1; the columns 2–3 region is unoccupied.
+      const kids = [cell("a", "1", "1")];
+      assert.true(
+        rectIsFree(kids, {
+          column: { start: 2, end: 4 },
+          row: { start: 1, end: 2 },
+        })
+      );
+    });
+
+    test("a region overlapping a placed entry is not free", function (assert) {
+      // A spans columns 1–2; a rect touching column 2 overlaps it.
+      const kids = [cell("a", "1 / 3", "1")];
+      assert.false(
+        rectIsFree(kids, {
+          column: { start: 2, end: 4 },
+          row: { start: 1, end: 2 },
+        })
+      );
+    });
+
+    test("auto-placed children never occupy", function (assert) {
+      // An auto-placed child pins no column / row, so it covers nothing.
+      const kids = [cell("a", "auto", "auto")];
+      assert.true(
+        rectIsFree(kids, {
+          column: { start: 1, end: 2 },
+          row: { start: 1, end: 2 },
+        })
+      );
+    });
+
+    test("excludeKey skips an entry's own placement", function (assert) {
+      // The entry at the rect would block itself; excluding its key frees it,
+      // matching how the decider credits a same-grid source's own cell.
+      const kids = [cell("a", "1 / 3", "1")];
+      const rect = {
+        column: { start: 1, end: 3 },
+        row: { start: 1, end: 2 },
+      };
+      assert.false(rectIsFree(kids, rect), "occupied without the exclusion");
+      assert.true(
+        rectIsFree(kids, rect, keyOf("a")),
+        "free once the entry's own placement is excluded"
+      );
     });
   });
 });

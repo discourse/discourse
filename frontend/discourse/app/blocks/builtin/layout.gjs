@@ -1,11 +1,13 @@
 // @ts-check
 import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
 import {
   DEFAULT_GRID_COLUMNS,
   DEFAULT_GRID_ROWS,
   gridDimensions,
+  LAYOUT_MERGED_CELL_BLOCK,
   normalizeFractions,
   parsePlacement,
 } from "discourse/lib/blocks";
@@ -285,6 +287,8 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
   },
 })
 export default class Layout extends Component {
+  @service blocks;
+
   /**
    * Inline style for the `.d-block-layout__cell` wrapper this layout
    * renders around each grid-mode child. The cell wrapper IS the grid
@@ -372,7 +376,7 @@ export default class Layout extends Component {
           columns: this.args.columns ?? DEFAULT_GRID_COLUMNS,
           rows: this.args.rows ?? DEFAULT_GRID_ROWS,
         },
-        this.args.children
+        this.renderedChildren
       );
       const columnTemplate = (this.args.columnTemplate ?? "").trim();
       const rowTemplate = (this.args.rowTemplate ?? "").trim();
@@ -468,8 +472,34 @@ export default class Layout extends Component {
    *
    * @returns {Array<Object>} children in row-major reading order
    */
-  get sortedChildren() {
+  /**
+   * The children this layout actually renders.
+   *
+   * In grid mode on the LIVE (non-editor) path, a merged cell
+   * (`layout-merged-cell`) holds no content — but its `containerArgs.grid`
+   * still claims a track, so a row or column that exists ONLY to hold merged
+   * cells would show an empty band (the row's `minmax(80px, auto)` floor) to a
+   * visitor. Dropping merged cells from the rendered set there makes such a
+   * track collapse (it's neither counted by `gridDimensions` nor wrapped in a
+   * cell). In the editor (`blocks.showGhosts`) they ARE kept, so the author
+   * sees the held-open space they're shaping. A track shared with content is
+   * unaffected — the content keeps it. Stack / row modes never have merged
+   * cells, so the filter is grid-only.
+   *
+   * @returns {Array<Object>}
+   */
+  get renderedChildren() {
     const children = this.args.children ?? [];
+    if (this.resolvedMode === "grid" && !this.blocks.showGhosts) {
+      return children.filter(
+        (child) => child.blockName !== LAYOUT_MERGED_CELL_BLOCK
+      );
+    }
+    return children;
+  }
+
+  get sortedChildren() {
+    const children = this.renderedChildren;
     if (this.resolvedMode !== "grid") {
       return children;
     }
@@ -513,5 +543,31 @@ export default class Layout extends Component {
         {{/if}}
       {{/each}}
     </div>
+  </template>
+}
+
+/**
+ * An empty cell within a grid `layout` — a region spanning one or more base
+ * grid cells that is intentionally left empty (a hero rail, a sidebar gap). It
+ * carries `containerArgs.grid` like any positioned child, so the layout's
+ * renderer wraps it in a `.d-block-layout__cell` that claims its grid area
+ * while rendering no content. A *filled* region is an ordinary child with a
+ * span; this block exists only to hold an EMPTY region's footprint as a
+ * first-class entry, so the region survives save / load and stays editable.
+ *
+ * Only meaningful as a child of a grid-mode `layout`. On the live page it
+ * renders nothing; a layout collapses merged-cell-only rows for visitors (see
+ * `Layout.renderedChildren`). Themes that want to target it can match
+ * `[data-block-name="layout-merged-cell"]` (there is no `.block-<name>` class).
+ */
+@block(LAYOUT_MERGED_CELL_BLOCK, {
+  displayName: "Merged cell",
+  category: "Layout",
+  icon: "border-none",
+  paletteHidden: true,
+})
+export class LayoutMergedCell extends Component {
+  <template>
+    {{! Claims its grid area; renders nothing on the live page. }}
   </template>
 }

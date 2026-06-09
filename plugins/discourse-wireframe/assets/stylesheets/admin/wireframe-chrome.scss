@@ -2325,9 +2325,13 @@ body.wireframe-active
 
   /* Inside a grid cell the placeholder fills the cell rectangle (the
      cell's dashed border is the surrounding affordance). Drop the
-     outer margin so the placeholder hugs the border. */
+     outer margin so the placeholder hugs the border, and stretch to the
+     cell's full height (the cell flex-centers its children, which would
+     otherwise leave the placeholder content-tall and the cell's top /
+     bottom dead) so the whole cell is the pick + select click target. */
 
   .wireframe-grid-cell > & {
+    align-self: stretch;
     margin: 0;
     min-height: 0;
     padding: 0.35rem;
@@ -2515,6 +2519,52 @@ body.wireframe-active
     bottom: -3px;
     left: -3px;
     cursor: nesw-resize;
+  }
+}
+
+/* Empty-cell merge handles reuse the filled-cell resize visual, but a blank
+   cell isn't selected by default — keep them out of sight until the author
+   hovers the cell or selects it, then they read identically to a filled
+   cell's handles. */
+
+.wireframe-grid-cell {
+  .wireframe-block-chrome__resize-handle {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &:hover,
+  &.--selected {
+    .wireframe-block-chrome__resize-handle {
+      opacity: 0.85;
+      pointer-events: auto;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+/* Filled grid cells reveal their resize handles on the same trigger as empty
+   cells — hover or selection — so the two read identically. The handles are
+   always in the DOM for a grid cell; this gate keeps them invisible and inert
+   until the author hovers the cell or selects it. */
+
+.wireframe-block-chrome-wrapper.--in-grid-cell {
+  .wireframe-block-chrome__resize-handle {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &:hover .wireframe-block-chrome__resize-handle,
+  .wireframe-block-chrome.--selected .wireframe-block-chrome__resize-handle {
+    opacity: 0.85;
+    pointer-events: auto;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 }
 
@@ -4109,7 +4159,7 @@ body.wireframe-active {
     background: rgb(220 53 69 / 0.06);
   }
 
-  /* Empty-cell chrome — a `wf:cell` entry is an empty grid cell.
+  /* Empty-cell chrome — a merged-cell entry is an empty grid cell.
      Always visible (unlike normal blocks, an empty cell is meaningless
      without an affordance pointing it out). Dashed amber outline + tinted
      background mirror the grid overlay's auto-empty cells so the two read

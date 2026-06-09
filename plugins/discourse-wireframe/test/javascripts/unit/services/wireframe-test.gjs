@@ -786,6 +786,172 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
   });
 
+  module("merge / split empty cells (grid)", function (innerHooks) {
+    innerHooks.beforeEach(async function () {
+      withTestBlockRegistration(() => registerBlock(TestTile));
+      // A 3×1 grid with one resident tile pinned to the top-left cell, so
+      // columns 2–3 are blank space a merge can claim.
+      await _renderBlocks(
+        "homepage-blocks",
+        [
+          {
+            block: Layout,
+            args: { mode: "grid", columns: 3, rows: 1 },
+            children: [
+              {
+                block: TestTile,
+                args: { title: "Seed" },
+                containerArgs: {
+                  grid: {
+                    column: "1",
+                    row: "1",
+                    align: "stretch",
+                    justify: "stretch",
+                  },
+                },
+              },
+            ],
+          },
+        ],
+        getOwner(this)
+      );
+      this.editor.siteSettings.wireframe_enabled = true;
+      logIn(getOwner(this));
+      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor.enter();
+    });
+
+    function gridKeyOf(editor) {
+      return `layout:${editor.readResolvedLayout("homepage-blocks")[0].__stableKey}`;
+    }
+
+    function mergedCellOf(editor) {
+      return editor
+        .readResolvedLayout("homepage-blocks")[0]
+        .children.find((c) => c.block === "layout-merged-cell");
+    }
+
+    test("mergeCells inserts a spanning merged cell and grows declared to fit", function (assert) {
+      const ok = this.editor.gridManipulator.mergeCells({
+        gridKey: gridKeyOf(this.editor),
+        // Columns 2–3, rows 1–2 — free, and the second row is past the
+        // declared single row, so declared must grow.
+        rect: { column: { start: 2, end: 4 }, row: { start: 1, end: 3 } },
+      });
+      assert.true(ok);
+
+      const cell = mergedCellOf(this.editor);
+      assert.strictEqual(
+        cell?.block,
+        "layout-merged-cell",
+        "a merged-cell entry was inserted"
+      );
+      assert.strictEqual(cell.containerArgs.grid.column, "2 / 4");
+      assert.strictEqual(cell.containerArgs.grid.row, "1 / 3");
+      const cellArgs = cell.args ?? {};
+      assert.deepEqual(
+        cellArgs,
+        {},
+        "the merged cell stamps no args of its own"
+      );
+
+      const grid = this.editor.readResolvedLayout("homepage-blocks")[0];
+      assert.strictEqual(
+        grid.args.rows,
+        2,
+        "declared rows grew to fit the span"
+      );
+      assert.strictEqual(
+        grid.args.columns,
+        3,
+        "declared columns are unchanged"
+      );
+    });
+
+    test("mergeCells refuses a rect that overlaps existing content", function (assert) {
+      const before =
+        this.editor.readResolvedLayout("homepage-blocks")[0].children.length;
+      const ok = this.editor.gridManipulator.mergeCells({
+        gridKey: gridKeyOf(this.editor),
+        // Columns 1–2 overlaps the seed at column 1.
+        rect: { column: { start: 1, end: 3 }, row: { start: 1, end: 2 } },
+      });
+      assert.false(ok, "the overlapping merge is refused");
+      assert.strictEqual(
+        this.editor.readResolvedLayout("homepage-blocks")[0].children.length,
+        before,
+        "no entry was inserted"
+      );
+    });
+
+    test("splitCell dissolves a merged cell, leaving declared untouched", function (assert) {
+      this.editor.gridManipulator.mergeCells({
+        gridKey: gridKeyOf(this.editor),
+        rect: { column: { start: 2, end: 4 }, row: { start: 1, end: 2 } },
+      });
+      const cell = mergedCellOf(this.editor);
+      const cellKey = `layout-merged-cell:${cell.__stableKey}`;
+
+      const ok = this.editor.gridManipulator.splitCell({ cellKey });
+      assert.true(ok);
+      assert.strictEqual(
+        mergedCellOf(this.editor),
+        undefined,
+        "the merged-cell entry is gone (1×1s stay derived)"
+      );
+      assert.strictEqual(
+        this.editor.readResolvedLayout("homepage-blocks")[0].args.columns,
+        3,
+        "declared columns are preserved so the freed cells stay held open"
+      );
+    });
+
+    test("resizeSlot shrinking a merged cell to 1×1 dissolves it", function (assert) {
+      this.editor.gridManipulator.mergeCells({
+        gridKey: gridKeyOf(this.editor),
+        rect: { column: { start: 2, end: 4 }, row: { start: 1, end: 2 } },
+      });
+      const cell = mergedCellOf(this.editor);
+      const cellKey = `layout-merged-cell:${cell.__stableKey}`;
+
+      const ok = this.editor.gridManipulator.resizeSlot({
+        slotKey: cellKey,
+        column: "2",
+        row: "1",
+      });
+      assert.true(ok);
+      assert.strictEqual(
+        mergedCellOf(this.editor),
+        undefined,
+        "resizing down to a single cell dissolves the entry"
+      );
+    });
+
+    test("resizeSlot keeps a merged cell that stays multi-cell", function (assert) {
+      this.editor.gridManipulator.mergeCells({
+        gridKey: gridKeyOf(this.editor),
+        rect: { column: { start: 2, end: 4 }, row: { start: 1, end: 2 } },
+      });
+      const cell = mergedCellOf(this.editor);
+      const cellKey = `layout-merged-cell:${cell.__stableKey}`;
+
+      const ok = this.editor.gridManipulator.resizeSlot({
+        slotKey: cellKey,
+        column: "2 / 4",
+        row: "1 / 3",
+      });
+      assert.true(ok);
+
+      const resized = mergedCellOf(this.editor);
+      assert.strictEqual(
+        resized?.block,
+        "layout-merged-cell",
+        "a multi-cell resize keeps the merged cell"
+      );
+      assert.strictEqual(resized.containerArgs.grid.row, "1 / 3");
+    });
+  });
+
   module(
     "grid drop into a cell (cross-grid, same outlet)",
     function (innerHooks) {
@@ -1460,7 +1626,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
   module(
     "conservation battery — no move duplicates a block",
     function (innerHooks) {
-      // One outlet, two grids + a loose stack tile + an empty wf:cell, so a
+      // One outlet, two grids + a loose stack tile + an empty layout-merged-cell, so a
       // single seed can exercise every move/insert method across source
       // contexts. The universal invariant: after the op, no content block
       // appears more than once (no duplication) and the total count changes
@@ -1490,7 +1656,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
               children: [
                 cell("B1", "1", "1"),
                 {
-                  block: "wf:cell",
+                  block: "layout-merged-cell",
                   containerArgs: {
                     grid: {
                       column: "3",
@@ -1521,14 +1687,16 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           `wf:svc-test-tile:${
             grid.children.find((c) => c.args?.title === title).__stableKey
           }`;
-        const emptyCell = gridB.children.find((c) => c.block === "wf:cell");
+        const emptyCell = gridB.children.find(
+          (c) => c.block === "layout-merged-cell"
+        );
         return {
           gridA: `layout:${gridA.__stableKey}`,
           gridB: `layout:${gridB.__stableKey}`,
           a1: tile(gridA, "A1"),
           a2: tile(gridA, "A2"),
           b1: tile(gridB, "B1"),
-          emptyCell: `wf:cell:${emptyCell.__stableKey}`,
+          emptyCell: `layout-merged-cell:${emptyCell.__stableKey}`,
           s: `wf:svc-test-tile:${loose.__stableKey}`,
         };
       }
@@ -1745,6 +1913,44 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         expected,
         "grid-mutating methods match the known set — add new ones here AND " +
           "confirm they route through the placement rules"
+      );
+    });
+
+    // Sibling tripwire on the manipulator itself: every public method either
+    // routes a drop through `decideGridDrop` (the rule chokepoint) or, for the
+    // direct cell ops, validates occupancy through the shared `rectIsFree`
+    // primitive. A NEW public method turns this red, forcing a decision about
+    // which path it belongs to before it can silently bypass the rules.
+    test("manipulator's public surface is the known set", function (assert) {
+      const editor = getOwner(this).lookup("service:wireframe");
+      const expected = [
+        // Decided placement — routes through `decideGridDrop`.
+        "drop",
+        "positionEntering",
+        // Direct cell ops — validate occupancy via the shared `rectIsFree`
+        // (`mergeCells`) or operate on an explicit chosen cell.
+        "mergeCells",
+        "moveIntoCell",
+        "placeInCell",
+        "splitCell",
+        // Deterministic resizes / declared-size sync — explicit rects, no
+        // decider.
+        "resizeColumns",
+        "resizeSlot",
+        "syncDeclaredToUsage",
+      ];
+      const found = Object.getOwnPropertyNames(
+        Object.getPrototypeOf(editor.gridManipulator)
+      ).filter(
+        (name) =>
+          name !== "constructor" &&
+          typeof editor.gridManipulator[name] === "function"
+      );
+      assert.deepEqual(
+        found.sort(),
+        expected.sort(),
+        "manipulator methods match the known set — add new ones here AND " +
+          "confirm they route through the decider or the shared occupancy check"
       );
     });
   });

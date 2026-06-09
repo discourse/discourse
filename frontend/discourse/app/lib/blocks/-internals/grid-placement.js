@@ -34,6 +34,14 @@ export const DEFAULT_GRID_COLUMNS = 3;
 export const DEFAULT_GRID_ROWS = 2;
 
 /**
+ * Block name of the core "merged cell" — an empty positioned region in a grid
+ * `layout`. The single source for the name so the block definition, the
+ * live-path collapse in the layout renderer, and any consumer that detects an
+ * empty cell all reference one value and can't drift apart.
+ */
+export const LAYOUT_MERGED_CELL_BLOCK = "layout-merged-cell";
+
+/**
  * Parses a `column` / `row` arg pair into start / end line numbers.
  * Returns `{start: null, end: null}` tracks for auto / span / unknown
  * placements.

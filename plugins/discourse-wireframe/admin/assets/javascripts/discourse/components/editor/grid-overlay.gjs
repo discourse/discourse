@@ -13,6 +13,7 @@ import {
   parsePlacement,
 } from "discourse/blocks";
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 import { GRID_LAYOUT_SELECTOR } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-dom-contract";
@@ -26,7 +27,9 @@ import {
 // `grid-math` is the plugin's editor-only geometry; admin-only consumer,
 // so cross-bundle imports use absolute addon paths.
 import {
+  cellAt,
   computeOccupation,
+  computeSpanResize,
   computeZone,
   computeZoneCollapsed,
   resizeColumnFractions,
@@ -185,6 +188,7 @@ export default class GridOverlay extends Component {
    * @returns {Element|null}
    */
   getGridElement = () => this.gridElement;
+
   /**
    * Per-drag geometry cache. Populated lazily on the first dragover
    * of a session (keyed on the drag source's reference identity in
@@ -230,7 +234,6 @@ export default class GridOverlay extends Component {
   #gridDropTargetCleanup = null;
 
   /** Resize ghost element ref, captured on its own insert. */
-  // eslint-disable-next-line no-unused-private-class-members
   #ghostElement = null;
 
   /** Drop-preview overlay element ref, captured on its own insert. */
@@ -244,6 +247,28 @@ export default class GridOverlay extends Component {
    * @type {?Object}
    */
   #trackResize = null;
+
+  /**
+   * The active empty-cell merge session, or `null`. Snapshots the same stable
+   * geometry a filled-cell span-resize does — the origin 1×1 rect, the
+   * effective dimensions, the grid's pixel rect, the sibling occupancy, and
+   * the ghost element — so the gesture clamps a growing edge at the first
+   * neighbour and never previews an overlapping span.
+   *
+   * @type {?Object}
+   */
+  #cellMerge = null;
+
+  /**
+   * The `{column, row}` of the empty cell the author has clicked, or `null`.
+   * An empty cell isn't a real entry, so it has no block key to select; this
+   * holds the click locally and the selection is treated as live only while
+   * the owning grid stays selected (see `selectedEmptyCell`). Reveals the same
+   * span-resize handles a filled cell shows on selection.
+   *
+   * @type {?{column: number, row: number}}
+   */
+  @tracked _selectedEmptyCell = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -450,9 +475,48 @@ export default class GridOverlay extends Component {
     return this.gridEntry?.children ?? [];
   }
 
+  /**
+   * The grid's empty cells, each annotated with a stable `key` and whether
+   * it's the currently selected one. Exposing `isSelected` as data (rather
+   * than calling a predicate from the template) keeps the render free of
+   * method invocations and re-derives selection whenever the tracked
+   * selection changes.
+   *
+   * The `key` (the cell's `column,row` coordinate) is what the template's
+   * `{{#each ... key="key"}}` matches on: this getter returns brand-new
+   * objects every read, so without an explicit key Glimmer would tear down
+   * and rebuild every cell whenever selection changes — destroying the very
+   * resize handle a merge drag just captured the pointer on. The stable key
+   * makes recomputes reuse each cell's DOM instead.
+   *
+   * @returns {Array<{key: string, column: number, row: number, isSelected: boolean}>}
+   */
   get emptyCells() {
     const occupied = computeOccupation(this.slots, this.columns, this.rows);
-    return unoccupiedCells(occupied, this.columns, this.rows);
+    const cells = unoccupiedCells(occupied, this.columns, this.rows);
+    const selected = this.selectedEmptyCell;
+    return cells.map((cell) => ({
+      ...cell,
+      key: `${cell.column},${cell.row}`,
+      isSelected:
+        selected != null &&
+        selected.column === cell.column &&
+        selected.row === cell.row,
+    }));
+  }
+
+  /**
+   * The clicked empty cell, treated as live only while its owning grid is
+   * still the selected block. Returns `null` once the selection moves
+   * elsewhere, so a stale coordinate never keeps an old cell highlighted.
+   *
+   * @returns {?{column: number, row: number}}
+   */
+  get selectedEmptyCell() {
+    if (this.wireframe.selectedBlockKey !== this.args.gridKey) {
+      return null;
+    }
+    return this._selectedEmptyCell;
   }
 
   /**
@@ -593,6 +657,144 @@ export default class GridOverlay extends Component {
     this.wireframe.selectBlock({ key: this.args.gridKey });
   }
 
+  /**
+   * Selects an empty cell: records its coordinate and selects the owning grid
+   * (an empty cell has no entry of its own, so the inspector tracks the grid).
+   * Reveals the cell's span-resize handles, the same way selecting a filled
+   * cell does.
+   *
+   * @param {{column: number, row: number}} cell
+   * @returns {void}
+   */
+  @action
+  selectEmptyCell(cell) {
+    this._selectedEmptyCell = { column: cell.column, row: cell.row };
+    this.selectGrid();
+  }
+
+  /**
+   * Starts a merge drag from an empty cell. Selects the cell, then snapshots a
+   * stable session: the effective dimensions (so the span clamps to the
+   * rendered grid, never growing past a neighbour), the grid's pixel rect, the
+   * sibling occupancy, the origin 1×1 rect, and the ghost element. Mirrors the
+   * filled-cell span-resize, but the origin is always the tile's own cell.
+   *
+   * @param {{column: number, row: number}} cell
+   * @param {string} direction - The handle's compass direction.
+   * @param {Object} dragInfo - The `DResizeHandles` drag payload.
+   * @returns {void|false}
+   */
+  @action
+  onCellMergeStart(cell, direction, dragInfo) {
+    void direction;
+    void dragInfo;
+    const gridEl = this.getGridElement();
+    if (!gridEl) {
+      return false;
+    }
+    this.selectEmptyCell(cell);
+    const columns = this.columns;
+    const rows = this.rows;
+    this.#cellMerge = {
+      origin: {
+        column: { start: cell.column, end: cell.column + 1 },
+        row: { start: cell.row, end: cell.row + 1 },
+      },
+      columns,
+      rows,
+      gridRect: gridEl.getBoundingClientRect(),
+      // Every real slot is an obstacle — the empty cell is blank space, not an
+      // entry, so there's no self to exclude.
+      occupied: computeOccupation(this.slots, columns, rows),
+      ghost: this.#ghostElement,
+      next: null,
+    };
+    if (this.#cellMerge.ghost) {
+      this.#applyGhostStyle(this.#cellMerge.ghost, this.#cellMerge.origin);
+      this.#cellMerge.ghost.classList.add("--visible");
+    }
+  }
+
+  /**
+   * Previews the merge span on each move: maps the pointer to a grid cell and
+   * computes the clamped span (stopping a growing edge at the first occupied
+   * neighbour and the grid bounds), then paints the ghost.
+   *
+   * @param {{column: number, row: number}} cell - The origin cell (unused; the
+   *   origin is held in the session).
+   * @param {string} direction - The handle's compass direction.
+   * @param {Object} dragInfo - The `DResizeHandles` drag payload.
+   * @returns {void}
+   */
+  @action
+  onCellMerge(cell, direction, dragInfo) {
+    void cell;
+    const session = this.#cellMerge;
+    if (!session) {
+      return;
+    }
+    const pointerCell = cellAt(
+      dragInfo.event,
+      session.gridRect,
+      session.columns,
+      session.rows
+    );
+    const next = computeSpanResize({
+      origin: session.origin,
+      cell: pointerCell,
+      direction,
+      columns: session.columns,
+      rows: session.rows,
+      occupied: session.occupied,
+    });
+    session.next = next;
+    if (session.ghost) {
+      this.#applyGhostStyle(session.ghost, next);
+    }
+  }
+
+  /**
+   * Commits the merge on release: if the dragged span covers more than the
+   * single origin cell, persists it as a merged cell through the manipulator
+   * (validated by the shared occupancy primitive). A span that never left the
+   * origin 1×1 is a no-op — single cells stay derived.
+   *
+   * @returns {void}
+   */
+  @action
+  onCellMergeEnd() {
+    const next = this.#cellMerge?.next;
+    this.#endCellMerge();
+    if (!next) {
+      return;
+    }
+    const spansMultipleCells =
+      next.column.end - next.column.start > 1 ||
+      next.row.end - next.row.start > 1;
+    if (spansMultipleCells) {
+      this.wireframe.gridManipulator.mergeCells({
+        gridKey: this.args.gridKey,
+        rect: next,
+      });
+    }
+  }
+
+  /** @returns {void} */
+  @action
+  onCellMergeCancel() {
+    this.#endCellMerge();
+  }
+
+  #applyGhostStyle(ghost, placement) {
+    ghost.style.gridColumn = `${placement.column.start} / ${placement.column.end}`;
+    ghost.style.gridRow = `${placement.row.start} / ${placement.row.end}`;
+  }
+
+  #endCellMerge() {
+    this.#cellMerge?.ghost?.classList.remove("--visible");
+    this.#cellMerge = null;
+  }
+
   #computeIsCollapsed() {
     const gridEl = this.gridElement;
     if (!gridEl) {
@@ -714,7 +916,7 @@ export default class GridOverlay extends Component {
       });
     }
     if (kind === "replace") {
-      // Dropping onto an empty `wf:cell` entry reads the same as
+      // Dropping onto an empty merged-cell entry reads the same as
       // dropping into any other empty cell — one affordance.
       return source.type === "wf-palette-block"
         ? i18n("wireframe.canvas.drop_preview.add_here", {
@@ -1612,9 +1814,12 @@ export default class GridOverlay extends Component {
       {{! `insertBefore=null` appends without wiping the slots already
         rendered inside the grid div. }}
       {{#in-element this.gridElement insertBefore=null}}
-        {{#each this.emptyCells as |cell|}}
+        {{#each this.emptyCells key="key" as |cell|}}
           <div
-            class="wireframe-grid-cell"
+            class={{dConcatClass
+              "wireframe-grid-cell"
+              (if cell.isSelected "--selected")
+            }}
             style={{this.cellStyle cell}}
             data-col={{cell.column}}
             data-row={{cell.row}}
@@ -1622,8 +1827,20 @@ export default class GridOverlay extends Component {
             <EditorEmptyDropPlaceholder
               @hint={{i18n "wireframe.canvas.empty_hint"}}
               @palette={{this.palette}}
-              @onActivate={{this.selectGrid}}
+              @onActivate={{fn this.selectEmptyCell cell}}
               @onPick={{fn this.pickBlockForCell cell}}
+            />
+            {{! Span-resize handles — drag to merge this blank cell with
+              adjacent ones into a single empty region. Same edge bars +
+              corner nubs a filled cell shows; revealed on hover or when the
+              cell is selected (see the SCSS gate). }}
+            <DResizeHandles
+              @handleClass="wireframe-block-chrome__resize-handle"
+              @onResizeStart={{fn this.onCellMergeStart cell}}
+              @onResize={{fn this.onCellMerge cell}}
+              @onResizeEnd={{this.onCellMergeEnd}}
+              @onResizeCancel={{this.onCellMergeCancel}}
+              @draggingClass="--dragging"
             />
           </div>
         {{/each}}

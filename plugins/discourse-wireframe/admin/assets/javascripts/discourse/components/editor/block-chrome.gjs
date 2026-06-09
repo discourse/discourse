@@ -10,11 +10,12 @@ import {
   DEFAULT_GRID_COLUMNS,
   DEFAULT_GRID_ROWS,
   gridDimensions,
+  LAYOUT_MERGED_CELL_BLOCK,
   parsePlacement,
   parseSlotPlacement,
 } from "discourse/blocks";
 import { isPartKey } from "discourse/lib/blocks/-internals/composite";
-import { and, eq } from "discourse/truth-helpers";
+import { eq } from "discourse/truth-helpers";
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -852,7 +853,7 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * `wf:cell` entries are empty grid cells. The chrome wraps them
+   * Merged-cell entries are empty grid cells. The chrome wraps them
    * like any other block (selection, drag, resize via the existing
    * grid handle), but the inner render area becomes a "Pick a block"
    * placeholder instead of the cell's no-op template, and drops route
@@ -862,7 +863,7 @@ export default class BlockChrome extends Component {
    * @returns {boolean}
    */
   get isEmptyCell() {
-    return this.args.blockName === "wf:cell";
+    return this.args.blockName === LAYOUT_MERGED_CELL_BLOCK;
   }
 
   /**
@@ -1686,12 +1687,14 @@ export default class BlockChrome extends Component {
             <GridOverlay @gridKey={{@blockKey}} @outletName={{@outletName}} />
           {{/if}}
 
-          {{#if (and this.isGridCell this.isSelected)}}
+          {{#if this.isGridCell}}
             {{! Edge bars + corner nubs for span-resize. Each handle hands its
               compass direction back through the resize callbacks; edges move one
               axis, corners both. The bar/nub language is deliberately distinct
               from the image block's round resize dots so the two gestures are
-              never confused. }}
+              never confused. Always rendered for a grid cell; the SCSS reveals
+              them on hover or when the cell is selected (matching the empty-cell
+              merge handles), so pointer-events stay off until then. }}
             <DResizeHandles
               @handleClass="wireframe-block-chrome__resize-handle"
               @onResizeStart={{this.onGridResizeStart}}

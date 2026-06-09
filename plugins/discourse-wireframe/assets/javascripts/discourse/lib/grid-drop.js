@@ -1,7 +1,11 @@
 // @ts-check
 import { gridDimensions, parsePlacement } from "discourse/blocks";
 import { entryKey } from "./entry-key";
-import { computeShiftPlan, nextFreeCellInReadingOrder } from "./grid-math";
+import {
+  computeShiftPlan,
+  isMergedCell,
+  nextFreeCellInReadingOrder,
+} from "./grid-math";
 
 /**
  * The single rule chokepoint for dropping a block into a grid layout.
@@ -231,6 +235,21 @@ function decideInto(
   // A same-grid source sitting in the target cell isn't its own occupant.
   const occupant = slotCoveringCell(kids, cell, inGrid ? sourceKey : null);
 
+  // An empty merged cell is consumed by the drop: the source lands at the
+  // merged cell's full (possibly spanning) rect and the placeholder entry is
+  // removed (REPLACE). This is the same consume-and-inherit outcome the direct
+  // cell-fill path produces, so the overlay agrees with it — a drop onto a
+  // merged cell never swaps or shifts, whatever the source or `shift` flag.
+  if (occupant && isMergedCell(occupant)) {
+    return {
+      action: GRID_DROP_ACTIONS.REPLACE,
+      placement: placementOf(occupant),
+      moves: [],
+      swapWith: entryKey(occupant),
+      declared: { columns: declared.columns, rows: declared.rows },
+    };
+  }
+
   if (!occupant) {
     const placement = { column: `${cell.column}`, row: `${cell.row}` };
     return {
@@ -347,24 +366,67 @@ function decideGeneric({ kids, declared, dims, sourceKey, inGrid }) {
  * @returns {Object|null}
  */
 function slotCoveringCell(kids, cell, excludeKey) {
+  // A single cell is a 1×1 rect (end lines are exclusive).
+  const rect = {
+    column: { start: cell.column, end: cell.column + 1 },
+    row: { start: cell.row, end: cell.row + 1 },
+  };
   for (const child of kids) {
     if (excludeKey && entryKey(child) === excludeKey) {
       continue;
     }
-    const placement = parsePlacement(child.containerArgs);
-    if (placement.column.start == null || placement.row.start == null) {
-      continue;
-    }
-    if (
-      cell.column >= placement.column.start &&
-      cell.column < placement.column.end &&
-      cell.row >= placement.row.start &&
-      cell.row < placement.row.end
-    ) {
+    if (entryCoversRect(child, rect)) {
       return child;
     }
   }
   return null;
+}
+
+/**
+ * Whether an explicitly placed child's rect intersects `rect`. Auto-placed
+ * children (no pinned column / row) never count as covering anything.
+ * Both rects use CSS Grid line numbers with exclusive end lines, so two
+ * rects overlap when each axis's intervals overlap.
+ *
+ * @param {Object} child
+ * @param {{column: {start: number, end: number}, row: {start: number, end: number}}} rect
+ * @returns {boolean}
+ */
+function entryCoversRect(child, rect) {
+  const placement = parsePlacement(child.containerArgs);
+  if (placement.column.start == null || placement.row.start == null) {
+    return false;
+  }
+  return (
+    placement.column.start < rect.column.end &&
+    rect.column.start < placement.column.end &&
+    placement.row.start < rect.row.end &&
+    rect.row.start < placement.row.end
+  );
+}
+
+/**
+ * Whether the rectangular grid region `rect` is unoccupied by any explicitly
+ * placed child. The single occupancy primitive shared by the drop decider
+ * (via `slotCoveringCell`) and the direct spanning insert (`mergeCells`), so
+ * both agree on what "free" means. `excludeKey` skips one entry's own
+ * placement — pass the entry being resized so it doesn't block itself.
+ *
+ * @param {Array<Object>} children
+ * @param {{column: {start: number, end: number}, row: {start: number, end: number}}} rect
+ * @param {string|null} [excludeKey]
+ * @returns {boolean}
+ */
+export function rectIsFree(children, rect, excludeKey = null) {
+  for (const child of children) {
+    if (excludeKey && entryKey(child) === excludeKey) {
+      continue;
+    }
+    if (entryCoversRect(child, rect)) {
+      return false;
+    }
+  }
+  return true;
 }
 
 /**

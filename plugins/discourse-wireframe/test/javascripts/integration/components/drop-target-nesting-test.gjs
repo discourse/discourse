@@ -283,10 +283,10 @@ module(
     });
 
     /*
-     * row → cell : an empty wf:cell child. Its middle third is a REPLACE
+     * row → cell : an empty layout-merged-cell child. Its middle third is a REPLACE
      * landing, never a seam.
      */
-    test("a wf:cell child's middle third resolves to 'replace'", async function (assert) {
+    test("a layout-merged-cell child's middle third resolves to 'replace'", async function (assert) {
       await render(
         <template>
           <div
@@ -297,7 +297,7 @@ module(
               <div
                 class="wireframe-block-chrome"
                 data-wf-block-key="CELL"
-                data-wf-block-name="wf:cell"
+                data-wf-block-name="layout-merged-cell"
               ></div>
             </div>
           </div>

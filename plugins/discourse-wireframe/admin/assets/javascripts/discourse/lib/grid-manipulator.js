@@ -3,13 +3,20 @@ import {
   DEFAULT_GRID_COLUMNS,
   DEFAULT_GRID_ROWS,
   gridDimensions,
+  LAYOUT_MERGED_CELL_BLOCK,
   normalizeFractions,
+  parsePlacement,
 } from "discourse/blocks";
 import {
   decideGridDrop,
   GRID_DROP_ACTIONS,
   GRID_DROP_GESTURES,
+  rectIsFree,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-drop";
+import {
+  formatTrack,
+  isMergedCell,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import {
   entryKey,
   findEntry,
@@ -25,7 +32,7 @@ import {
  * single entry point (`drop`) that routes it through `decideGridDrop` (the
  * rule chokepoint) and into private executors. The placement-adjacent
  * deterministic ops live here too — resizing a cell (`resizeSlot`) or the
- * column tracks (`resizeColumns`), and filling an explicit `wf:cell`
+ * column tracks (`resizeColumns`), and filling an explicit merged cell
  * placeholder (`placeInCell` / `moveIntoCell`) — but those target an
  * explicit rect, so they don't consult the decider. (Whole-grid template /
  * dimension reshaping stays on the service as its own subsystem.)
@@ -157,7 +164,7 @@ export default class GridManipulator {
   }
 
   /**
-   * Moves an existing block onto an empty `wf:cell`, removing the source and
+   * Moves an existing block onto an empty merged cell, removing the source and
    * replacing the placeholder with the moved block's data — the block adopts
    * the cell's `containerArgs.grid` (and its span / identity) so it lands at
    * the cell's exact rect. Same-outlet only for now. A deterministic
@@ -179,7 +186,7 @@ export default class GridManipulator {
     if (sourceLocated.outletName !== cellLocated.outletName) {
       return false;
     }
-    if (cellLocated.entry.block !== "wf:cell") {
+    if (!isMergedCell(cellLocated.entry)) {
       return false;
     }
     return svc.recordStructural([cellLocated.outletName], () => {
@@ -214,7 +221,7 @@ export default class GridManipulator {
   }
 
   /**
-   * Replaces an empty `wf:cell` placeholder with a fresh block. The new
+   * Replaces an empty merged-cell placeholder with a fresh block. The new
    * entry inherits the cell's `containerArgs.grid`, so it lands at the same
    * (possibly spanning) rect. A deterministic replace-in-place against a
    * chosen placeholder, not a decided placement.
@@ -225,7 +232,7 @@ export default class GridManipulator {
   placeInCell({ cellKey, blockName, defaultArgs = {} }) {
     const svc = this.service;
     const located = svc.findEntryAndOutletSync(cellKey);
-    if (!located || located.entry.block !== "wf:cell") {
+    if (!located || !isMergedCell(located.entry)) {
       return false;
     }
     if (
@@ -249,6 +256,103 @@ export default class GridManipulator {
       }
       svc.publishStructuralChange(located.outletName, result.layout);
       svc.selectInsertedEntry(newEntry);
+      return true;
+    });
+  }
+
+  /**
+   * Creates an empty merged cell spanning `rect` (CSS Grid line numbers, end
+   * exclusive) inside a grid — the one way to turn blank grid space into a
+   * persisted spanning region. It validates the rect through the shared
+   * `rectIsFree` occupancy primitive (refusing on any overlap, the same verdict
+   * the drop decider would reach for that region), inserts a merged-cell entry
+   * at the rect, then grows the grid's declared size to fit. A direct spanning
+   * insert, not a decided placement — the decider only ever lands a 1×1, so it
+   * can't express a merge; routing through the shared primitive keeps the
+   * no-overlap invariant single-sourced all the same.
+   *
+   * @param {{
+   *   gridKey: string,
+   *   rect: {column: {start: number, end: number}, row: {start: number, end: number}},
+   * }} args
+   * @returns {boolean}
+   */
+  mergeCells({ gridKey, rect }) {
+    const svc = this.service;
+    const located = svc.findEntryAndOutletSync(gridKey);
+    if (!located) {
+      return false;
+    }
+    return svc.recordStructural([located.outletName], () => {
+      const layout = svc.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const grid = findEntry(layout, gridKey);
+      if (!grid) {
+        return false;
+      }
+      // Refuse a merge that would overlap existing content. Occupancy is
+      // single-sourced through `rectIsFree`, so this is the same verdict the
+      // decider reaches — no second, divergent overlap rule.
+      if (!rectIsFree(grid.children ?? [], rect)) {
+        return false;
+      }
+      const cellEntry = {
+        block: LAYOUT_MERGED_CELL_BLOCK,
+        args: {},
+        containerArgs: {
+          grid: {
+            column: formatTrack(rect.column),
+            row: formatTrack(rect.row),
+            align: "stretch",
+            justify: "stretch",
+          },
+        },
+      };
+      const insertion = insertEntryAt(layout, gridKey, cellEntry, "inside");
+      if (!insertion.changed) {
+        return false;
+      }
+      // A merge can extend past the declared tracks (it's a create, like a
+      // drop), so grow declared to fit — keeping effective ≤ declared.
+      const synced = this.syncDeclaredToUsage(insertion.layout, gridKey);
+      svc.publishStructuralChange(located.outletName, synced);
+      svc.selectInsertedEntry(cellEntry);
+      return true;
+    });
+  }
+
+  /**
+   * Dissolves an empty merged cell back into blank space: removes its entry so
+   * the now-uncovered base cells are re-derived as single 1×1 empties (single
+   * cells are never persisted — the grid overlay surfaces them geometrically).
+   * The grid's declared size is intentionally left untouched: a removal never
+   * grows usage, and shrinking would collapse rows / columns the author still
+   * wants held open. The inverse of `mergeCells`.
+   *
+   * @param {{cellKey: string}} args
+   * @returns {boolean}
+   */
+  splitCell({ cellKey }) {
+    const svc = this.service;
+    const located = svc.findEntryAndOutletSync(cellKey);
+    if (!located || !isMergedCell(located.entry)) {
+      return false;
+    }
+    return svc.recordStructural([located.outletName], () => {
+      const layout = svc.readResolvedLayout(located.outletName);
+      if (!layout) {
+        return false;
+      }
+      const removal = removeEntry(layout, cellKey);
+      if (!removal.changed) {
+        return false;
+      }
+      if (svc.selectedBlockKey === cellKey) {
+        svc.selectBlock(null);
+      }
+      svc.publishStructuralChange(located.outletName, removal.layout);
       return true;
     });
   }
@@ -340,6 +444,12 @@ export default class GridManipulator {
     const located = svc.findEntryAndOutletSync(slotKey);
     if (!located || !svc.isGridCellEntry(located.entry)) {
       return false;
+    }
+    // An empty merged cell shrunk to a single base cell dissolves rather than
+    // persisting a degenerate 1×1 entry — the overlay re-derives that position
+    // as a derived empty. (A filled span resized to 1×1 stays a real block.)
+    if (isMergedCell(located.entry) && this.#isSingleCell(column, row)) {
+      return this.splitCell({ cellKey: slotKey });
     }
     return svc.recordStructural([located.outletName], () => {
       const layout = svc.readResolvedLayout(located.outletName);
@@ -773,5 +883,30 @@ export default class GridManipulator {
         },
       },
     };
+  }
+
+  /**
+   * Whether a `column` / `row` shorthand pair resolves to a single 1×1 base
+   * cell (each axis spans exactly one track). Used to detect a merged cell
+   * resized down to a single cell, which should dissolve rather than persist.
+   *
+   * @param {string} column
+   * @param {string} row
+   * @returns {boolean}
+   */
+  #isSingleCell(column, row) {
+    const placement = parsePlacement({ grid: { column, row } });
+    if (
+      placement.column.start == null ||
+      placement.column.end == null ||
+      placement.row.start == null ||
+      placement.row.end == null
+    ) {
+      return false;
+    }
+    return (
+      placement.column.end - placement.column.start === 1 &&
+      placement.row.end - placement.row.start === 1
+    );
   }
 }

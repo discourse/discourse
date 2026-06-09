@@ -2,6 +2,7 @@
 import { registerDestructor } from "@ember/destroyable";
 import { service } from "@ember/service";
 import Modifier from "ember-modifier";
+import { LAYOUT_MERGED_CELL_BLOCK } from "discourse/blocks";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 import { resolveLinearDrop } from "discourse/plugins/discourse-wireframe/discourse/lib/linear-drop";
@@ -271,7 +272,7 @@ export function computeDescriptor({
   const targetKey = child.chrome.getAttribute("data-wf-block-key");
   const blockName = child.chrome.getAttribute("data-wf-block-name");
 
-  if (blockName === "wf:cell") {
+  if (blockName === LAYOUT_MERGED_CELL_BLOCK) {
     return buildReplaceCellDescriptor({
       wireframe,
       rect,
@@ -487,7 +488,7 @@ function buildInsideDescriptor({
 }
 
 /**
- * Builds the descriptor for a drop directly onto a `wf:cell`
+ * Builds the descriptor for a drop directly onto a merged-cell
  * chrome (the chrome IS the drop area; there's no inner
  * container to project onto). An empty cell is always a single
  * REPLACE landing, regardless of where the cursor sits within it.

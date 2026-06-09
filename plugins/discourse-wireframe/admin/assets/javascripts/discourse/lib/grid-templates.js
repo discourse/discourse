@@ -1,5 +1,5 @@
 // @ts-check
-import { parsePlacement } from "discourse/blocks";
+import { LAYOUT_MERGED_CELL_BLOCK, parsePlacement } from "discourse/blocks";
 import {
   computeOccupation,
   unoccupiedCells,
@@ -22,7 +22,7 @@ import {
  * `resolveTemplateLayout` merges the parsed frame with the template's
  * static `args` and returns those rects; the service reflows the
  * layout's existing content into them in reading order on apply, and
- * any still-empty spanning rects become `wf:cell` entries.
+ * any still-empty spanning rects become merged-cell entries.
  *
  * A template without an `areas` string would set the grid dimensions
  * only, and the service would reflow content into the grid's individual
@@ -189,7 +189,7 @@ export function resolveTemplateLayout(template) {
     rowTemplate: baseArgs.rowTemplate ?? "",
   };
   const slotEntries = parsed.slots.map((slot) => ({
-    block: "wf:cell",
+    block: LAYOUT_MERGED_CELL_BLOCK,
     containerArgs: {
       grid: {
         column: slot.column,
@@ -221,7 +221,7 @@ function rectKey(rect) {
 
 /**
  * The set of rect keys a grid currently occupies: every child's rect
- * (content and empty `wf:cell` alike) plus the single cells no child
+ * (content and empty merged cells alike) plus the single cells no child
  * covers (the overlay's derived empties). Together these describe the
  * grid's shape regardless of how its cells are filled.
  *

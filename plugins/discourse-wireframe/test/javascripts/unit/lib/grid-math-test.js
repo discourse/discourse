@@ -26,18 +26,18 @@ function rect(colStart, colEnd, rowStart, rowEnd) {
 
 // A grid cell fixture. `entryKey` (used internally by computeShiftPlan) keys
 // an entry as `"${block}:${__stableKey}"`, so a cell named "k" resolves to
-// the key "wf:cell:k". `column` / `row` accept CSS Grid shorthand ("2",
-// "1 / 3", "auto").
+// the key "layout-merged-cell:k". `column` / `row` accept CSS Grid shorthand
+// ("2", "1 / 3", "auto").
 function slot(key, column, row) {
   return {
     __stableKey: key,
-    block: "wf:cell",
+    block: "layout-merged-cell",
     containerArgs: { grid: { column, row } },
   };
 }
 
 function keyOf(k) {
-  return `wf:cell:${k}`;
+  return `layout-merged-cell:${k}`;
 }
 
 // The placement *parsers* (parseTrack / parseSlotPlacement / parsePlacement)
@@ -708,7 +708,7 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
       assert.strictEqual(result[0].containerArgs.grid.column, "1 / 4");
     });
 
-    test("pads spanning leftover cells with wf:cell, leaves single cells derived", function (assert) {
+    test("pads spanning leftover cells with layout-merged-cell, leaves single cells derived", function (assert) {
       // hero + 3: one spanning cell, three single cells. With zero
       // content, only the spanning cell materialises as an entry.
       const cells = [
@@ -719,7 +719,7 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
       ];
       const result = reflowChildrenIntoCells([], cells);
       assert.strictEqual(result.length, 1);
-      assert.strictEqual(result[0].block, "wf:cell");
+      assert.strictEqual(result[0].block, "layout-merged-cell");
       assert.strictEqual(result[0].containerArgs.grid.column, "1 / 4");
     });
 
@@ -784,7 +784,7 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
       assert.strictEqual(result[1].containerArgs.grid.column, "2");
     });
 
-    test("leaves wf:cell entries' rects untouched", function (assert) {
+    test("leaves layout-merged-cell entries' rects untouched", function (assert) {
       const children = [
         {
           block: "wf:paragraph",
@@ -792,7 +792,7 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
           containerArgs: { grid: { column: "3", row: "1" } },
         },
         {
-          block: "wf:cell",
+          block: "layout-merged-cell",
           containerArgs: { grid: { column: "2", row: "1" } },
         },
         {
@@ -802,11 +802,11 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
         },
       ];
       const result = syncContentToArrayOrder(children);
-      // Content positions in use are col1 and col3 (the wf:cell holds col2).
+      // Content positions in use are col1 and col3 (the layout-merged-cell holds col2).
       // Array order is [B, A], so B takes the reading-first content slot.
       assert.strictEqual(result[0].__stableKey, "B");
       assert.strictEqual(result[0].containerArgs.grid.column, "1");
-      assert.strictEqual(result[1].block, "wf:cell");
+      assert.strictEqual(result[1].block, "layout-merged-cell");
       assert.strictEqual(result[1].containerArgs.grid.column, "2");
       assert.strictEqual(result[2].__stableKey, "A");
       assert.strictEqual(result[2].containerArgs.grid.column, "3");
@@ -842,7 +842,7 @@ module("Unit | Discourse Wireframe | lib:grid-math", function () {
           containerArgs: { grid: { column: "2", row: "1" } },
         },
         {
-          block: "wf:cell",
+          block: "layout-merged-cell",
           containerArgs: { grid: { column: "1", row: "1" } },
         },
       ];

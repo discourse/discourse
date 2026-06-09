@@ -156,7 +156,7 @@ function readVeThemeParam(url) {
  * child entries are recursively turned into ghost components (each
  * routed back through the `BLOCK_DEBUG` hook, so each child gets its
  * own chrome + `WFGhostBlock`). This is what lets authors see and
- * edit nested failing entries (e.g. four broken `wf:cell` rows
+ * edit nested failing entries (e.g. four broken merged-cell rows
  * inside a failing layout container).
  *
  * Mirrors core's dev-tools `createGhostChildren` (in
@@ -405,7 +405,7 @@ function installBlockChrome(editor) {
             // below) they arrive as an array of `{Component, key}` ghost
             // descriptors. Forward them so `WFGhostBlock` can render
             // them inside its own silhouette — that's how nested
-            // failing entries (e.g. unknown `wf:cell` rows inside a
+            // failing entries (e.g. unknown merged-cell rows inside a
             // failing layout) surface as separately editable rows.
             ghostChildren: blockData.children ?? null,
           },

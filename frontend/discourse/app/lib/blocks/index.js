@@ -181,6 +181,7 @@ export {
   DEFAULT_GRID_COLUMNS,
   DEFAULT_GRID_ROWS,
   gridDimensions,
+  LAYOUT_MERGED_CELL_BLOCK,
   normalizeFractions,
   parsePlacement,
   parseSlotPlacement,

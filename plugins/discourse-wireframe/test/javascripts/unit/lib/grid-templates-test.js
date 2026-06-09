@@ -2,7 +2,10 @@ import { module, test } from "qunit";
 import { matchGridTemplate } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-templates";
 
 function cell(column, row) {
-  return { block: "wf:cell", containerArgs: { grid: { column, row } } };
+  return {
+    block: "layout-merged-cell",
+    containerArgs: { grid: { column, row } },
+  };
 }
 
 function content(column, row) {
@@ -13,7 +16,7 @@ module(
   "Unit | Discourse Wireframe | lib:grid-templates | matchGridTemplate",
   function () {
     test("matches a hero-plus-three shape (all empty)", function (assert) {
-      // The hero rect is a multi-cell `wf:cell` entry; a/b/c are derived
+      // The hero rect is a multi-cell `layout-merged-cell` entry; a/b/c are derived
       // single empties. Together they reconstruct the preset's shape.
       const children = [cell("1 / 4", "1")];
       const match = matchGridTemplate(children, 3, 2);

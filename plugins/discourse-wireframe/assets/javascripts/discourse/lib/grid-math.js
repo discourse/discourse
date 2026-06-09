@@ -4,8 +4,33 @@
 // from core's public blocks API. `entryKey` is imported from its own file
 // rather than `./mutate-layout` to avoid pulling the rest of mutate-layout's
 // helpers in alongside it.
-import { parsePlacement } from "discourse/blocks";
+import { LAYOUT_MERGED_CELL_BLOCK, parsePlacement } from "discourse/blocks";
 import { entryKey } from "./entry-key";
+
+/**
+ * Whether an entry is a "merged cell" — the core `layout-merged-cell` block, an
+ * empty positioned region in a grid. Merged cells live in the same `children`
+ * array as content but hold no block; this predicate is the one place that
+ * distinguishes them from content.
+ *
+ * @param {Object} entry
+ * @returns {boolean}
+ */
+export function isMergedCell(entry) {
+  return entry?.block === LAYOUT_MERGED_CELL_BLOCK;
+}
+
+/**
+ * The content children of a grid — everything that isn't a merged cell. Used by
+ * the few operations that reason about real content (reflow reading order,
+ * "is the grid empty", template matching).
+ *
+ * @param {Array<Object>} children
+ * @returns {Array<Object>}
+ */
+export function contentCells(children) {
+  return (children ?? []).filter((child) => !isMergedCell(child));
+}
 
 /**
  * Pure helpers for the grid editor. All functions operate on plain data
@@ -146,7 +171,7 @@ export function cellsForFree(columns, rows) {
 /**
  * Reassigns a grid layout's content children onto an ordered list of
  * target `cells`, in reading order, padding the leftover *spanning*
- * cells with empty `wf:cell` entries. This is the one primitive behind
+ * cells with empty merged-cell entries. This is the one primitive behind
  * switching templates, toggling free mode, and reordering via the
  * outline: the grid's *shape* changes and existing content is rearranged
  * to fit it top to bottom, left to right.
@@ -162,14 +187,14 @@ export function cellsForFree(columns, rows) {
  * justify) and only has its `column` / `row` overwritten with the cell's
  * rect, so a child reflowed into a spanning cell adopts the span.
  * Leftover single cells get no entry — the grid overlay surfaces those
- * geometrically — but leftover spanning cells become `wf:cell` entries
+ * geometrically — but leftover spanning cells become merged-cell entries
  * so the span survives save / load.
  *
  * Returns `null` — refusing the reflow — when there is more content than
  * cells, so callers can disable the action rather than drop blocks.
  *
  * @param {Array<Object>} contentChildren - The layout's content entries
- *   (exclude empty `wf:cell` entries before calling).
+ *   (exclude empty merged-cell entries before calling).
  * @param {Array<{column: string, row: string}>} cells - Target rects in
  *   reading order.
  * @returns {Array<Object>|null} The new `children` array, or `null` when
@@ -198,7 +223,7 @@ export function reflowChildrenIntoCells(contentChildren, cells) {
       });
     } else if (isMultiCell(cell)) {
       children.push({
-        block: "wf:cell",
+        block: LAYOUT_MERGED_CELL_BLOCK,
         containerArgs: {
           grid: {
             column: cell.column,
@@ -217,7 +242,7 @@ export function reflowChildrenIntoCells(contentChildren, cells) {
  * Re-derives a grid's content placements from document (array) order:
  * the content children, taken in array order, are reassigned to the
  * positions they currently occupy sorted in reading order (top to
- * bottom, left to right). Empty `wf:cell` entries keep their rects.
+ * bottom, left to right). Empty merged-cell entries keep their rects.
  *
  * This is what makes reordering the children array — e.g. dragging a
  * row in the outline — actually move blocks in the grid: array order
@@ -233,7 +258,7 @@ export function reflowChildrenIntoCells(contentChildren, cells) {
  */
 export function syncContentToArrayOrder(children) {
   const list = children ?? [];
-  const content = list.filter((child) => child.block !== "wf:cell");
+  const content = contentCells(list);
   if (content.length < 2) {
     return list;
   }
@@ -245,10 +270,10 @@ export function syncContentToArrayOrder(children) {
     }))
     .sort(rectReadingOrder);
   // Walk the array; each content child (in array order) claims the next
-  // reading-order position. `wf:cell` placeholders pass through untouched.
+  // reading-order position. Merged-cell placeholders pass through untouched.
   let cursor = 0;
   return list.map((child) => {
-    if (child.block === "wf:cell") {
+    if (isMergedCell(child)) {
       return child;
     }
     const rect = rects[cursor++];
