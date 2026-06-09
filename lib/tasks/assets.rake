@@ -112,15 +112,15 @@ def log_task_duration(task_description, &task)
 end
 
 task "assets:precompile:compress_js": "environment" do
-  puts "Compressing JavaScript files"
+  puts "Compressing JavaScript and WASM files"
 
   load_path = Rails.application.assets.load_path
 
-  log_task_duration("Done compressing all JS files") do
+  log_task_duration("Done compressing all JS and WASM files") do
     concurrent? do |proc|
       load_path
         .assets
-        .select { |asset| asset.logical_path.extname == ".js" }
+        .select { |asset| %w[.js .wasm].include?(asset.logical_path.extname) }
         .each do |asset|
           digested_path = asset.digested_path.to_s
 
