@@ -41,13 +41,9 @@ RSpec.describe MethodProfiler do
   describe ".stop" do
     before { MethodProfiler.ensure_discourse_instrumentation! }
 
-    after { MethodProfiler.itemize_enabled = false }
-
-    context "when itemize_enabled is true" do
-      before { MethodProfiler.itemize_enabled = true }
-
+    context "when itemizing" do
       it "records each sql statement and redis command in order" do
-        MethodProfiler.start
+        MethodProfiler.start(itemize: true)
 
         ActiveRecord::Base.connection.execute("SELECT 1")
         ActiveRecord::Base.connection.execute("SELECT 1")
@@ -77,7 +73,7 @@ RSpec.describe MethodProfiler do
       end
 
       it "scrubs invalid utf-8 bytes so itemized commands stay json-safe" do
-        MethodProfiler.start
+        MethodProfiler.start(itemize: true)
 
         Discourse.redis.set("method_profiler_binary_test", "\xC2".b)
 
@@ -93,7 +89,7 @@ RSpec.describe MethodProfiler do
 
       it "records a capture error instead of breaking the call or swallowing it" do
         MethodProfiler.stubs(:__sql_item).raises(StandardError.new("boom"))
-        MethodProfiler.start
+        MethodProfiler.start(itemize: true)
 
         expect { ActiveRecord::Base.connection.execute("SELECT 1") }.not_to raise_error
 
@@ -104,7 +100,7 @@ RSpec.describe MethodProfiler do
       end
 
       it "truncates very long itemized values so the output stays bounded" do
-        MethodProfiler.start
+        MethodProfiler.start(itemize: true)
 
         Discourse.redis.set("method_profiler_long_test", "x" * 5000)
 
@@ -119,9 +115,9 @@ RSpec.describe MethodProfiler do
       end
     end
 
-    context "when itemize_enabled is false" do
+    context "when not itemizing" do
       it "records only counts and duration, with no items" do
-        MethodProfiler.start
+        MethodProfiler.start(itemize: false)
 
         ActiveRecord::Base.connection.execute("SELECT 1")
 

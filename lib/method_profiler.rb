@@ -67,36 +67,42 @@ class MethodProfiler
     klass.class_eval patches
   end
 
-  private_class_method def self.utf8(value)
+  def self.utf8(value)
     value.to_s.dup.force_encoding(Encoding::UTF_8).scrub("?")
   end
+  private_class_method :utf8
 
-  private_class_method def self.truncate(string)
+  def self.truncate(string)
     return string if string.length <= MAX_ITEM_LENGTH
     "#{string[0, MAX_ITEM_LENGTH]}…(truncated, #{string.bytesize} bytes)"
   end
+  private_class_method :truncate
 
-  private_class_method def self.__item_error(error)
+  def self.__item_error(error)
     { error: truncate(utf8("#{error.class}: #{error.message}")) }
   end
+  private_class_method :__item_error
 
-  private_class_method def self.__sql_item(_receiver, args)
+  def self.__sql_item(_receiver, args)
     { sql: truncate(utf8(args[0])) }
   end
+  private_class_method :__sql_item
 
-  private_class_method def self.__redis_item(_receiver, args)
+  def self.__redis_item(_receiver, args)
     command = args[0]
     return { command: truncate(utf8(command)) } unless command.is_a?(Array)
     commands = command.first.is_a?(Array) ? command : [command]
     { command: truncate(commands.map { |entry| __redis_command(entry) }.join("; ")) }
   end
+  private_class_method :__redis_item
 
-  private_class_method def self.__redis_command(command)
+  def self.__redis_command(command)
     return utf8(command) unless command.is_a?(Array)
     [utf8(command.first).upcase, *Array(command[1..]).map { |arg| utf8(arg) }].join(" ").strip
   end
+  private_class_method :__redis_command
 
-  private_class_method def self.__net_item(receiver, args)
+  def self.__net_item(receiver, args)
     if defined?(Net::HTTP) && receiver.is_a?(Net::HTTP)
       request = args[0]
       url = __http_url(receiver.use_ssl?, receiver.address, receiver.port, request.path)
@@ -116,13 +122,15 @@ class MethodProfiler
       { method: "", url: "" }
     end
   end
+  private_class_method :__net_item
 
-  private_class_method def self.__http_url(ssl, host, port, path)
+  def self.__http_url(ssl, host, port, path)
     scheme = ssl ? "https" : "http"
     default_port = ssl ? 443 : 80
     authority = port.nil? || port == default_port ? host : "#{host}:#{port}"
     "#{scheme}://#{authority}#{path}"
   end
+  private_class_method :__http_url
 
   def self.patch_with_debug_sql(klass, methods, name, no_recurse: false)
     patches =
@@ -174,14 +182,14 @@ class MethodProfiler
     result
   end
 
-  def self.start(transfer = nil)
+  def self.start(transfer = nil, itemize: @@itemize_enabled)
     prof =
       transfer ||
         {
           __start: Process.clock_gettime(Process::CLOCK_MONOTONIC),
           __start_gc_heap_live_slots: GC.stat[:heap_live_slots],
         }
-    if @@itemize_enabled
+    if itemize
       prof[:__itemize] = true
     else
       prof.delete(:__itemize)

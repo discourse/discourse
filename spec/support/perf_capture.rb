@@ -1,25 +1,22 @@
 # frozen_string_literal: true
 
-RSpec.configure do |config|
-  config.before(:suite) do
-    if RspecPerformanceFormatter.enabled?
+if ENV["DISCOURSE_RSPEC_PERFORMANCE_FORMATTER"] == "1"
+  require_relative "rspec_performance_formatter"
+
+  RSpec.configure do |config|
+    config.before(:suite) do
       MethodProfiler.ensure_discourse_instrumentation!
       MethodProfiler.itemize_enabled = true
     end
-  end
 
-  config.around(:each) do |example|
-    unless RspecPerformanceFormatter.enabled?
-      example.run
-      next
+    config.around(:each) do |example|
+      test_summary = nil
+      request_groups =
+        RspecPerformanceFormatter.collect_requests do
+          test_summary = RspecPerformanceFormatter.measure { example.run }
+        end
+
+      example.metadata[:perf] = RspecPerformanceFormatter.assemble(test_summary, request_groups)
     end
-
-    test_summary = nil
-    request_groups =
-      RspecPerformanceFormatter.collect_requests do
-        test_summary = RspecPerformanceFormatter.measure { example.run }
-      end
-
-    example.metadata[:perf] = RspecPerformanceFormatter.assemble(test_summary, request_groups)
   end
 end
