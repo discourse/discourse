@@ -472,7 +472,7 @@ class GroupsController < ApplicationController
       RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
     end
 
-    group = Group.find(params[:id])
+    group = find_group_for_show
     raise Discourse::NotFound unless group
     raise Discourse::InvalidAccess unless group.public_admission
 

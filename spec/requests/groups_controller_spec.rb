@@ -2286,6 +2286,27 @@ RSpec.describe GroupsController do
         expect(response.status).to eq(204)
       end
 
+      it "should not allow a user to join a public group they cannot see" do
+        hidden_group =
+          Fabricate(
+            :public_group,
+            visibility_level: Group.visibility_levels[:owners],
+            grant_trust_level: TrustLevel[4],
+          )
+        hidden_group.add_owner(admin)
+        user.update!(trust_level: TrustLevel[0])
+        sign_in(user)
+
+        expect(user.guardian.can_see_group?(hidden_group)).to eq(false)
+
+        put "/groups/#{hidden_group.id}/join.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["error_type"]).to eq("not_found")
+        expect(GroupUser.exists?(group_id: hidden_group.id, user_id: user.id)).to eq(false)
+        expect(user.reload.trust_level).to eq(TrustLevel[0])
+      end
+
       it "should not allow a user to join a nonpublic group" do
         sign_in(user)
 
