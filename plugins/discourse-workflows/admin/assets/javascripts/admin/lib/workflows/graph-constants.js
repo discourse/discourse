@@ -10,9 +10,17 @@ export function normalizeTargetInput(targetInput) {
   return targetInput || "main";
 }
 
-export function portIndexFromKey(value) {
-  value = value?.toString();
-  if (!value || value === "main" || value === "true" || value === "done") {
+export function portIndexFromKey(value, orderedKeys = null) {
+  value = value?.toString() || DEFAULT_OUTPUT;
+
+  const orderedIndex = orderedKeys?.findIndex(
+    (key) => key?.toString() === value
+  );
+  if (orderedIndex >= 0) {
+    return orderedIndex;
+  }
+
+  if (value === "main" || value === "true" || value === "done") {
     return 0;
   }
 
@@ -28,9 +36,13 @@ export function portIndexFromKey(value) {
   return parseInt(value, 10) || 0;
 }
 
-export function normalizeSourceOutputIndex(connection) {
+export function normalizeSourceOutputIndex(
+  connection,
+  orderedOutputKeys = null
+) {
   return (
-    connection.sourceOutputIndex ?? portIndexFromKey(connection.sourceOutput)
+    connection.sourceOutputIndex ??
+    portIndexFromKey(connection.sourceOutput, orderedOutputKeys)
   );
 }
 
@@ -57,11 +69,18 @@ export function graphConnectionKey({
 
 export function connectionMatchesEndpoint(
   connection,
-  { sourceClientId, sourceOutput, targetClientId, targetInput = "main" }
+  {
+    sourceClientId,
+    sourceOutput,
+    sourceOutputIndex,
+    targetClientId,
+    targetInput = "main",
+  }
 ) {
   return (
     (connection.sourceClientId ?? connection.source) === sourceClientId &&
-    normalizeSourceOutputIndex(connection) === portIndexFromKey(sourceOutput) &&
+    normalizeSourceOutputIndex(connection) ===
+      (sourceOutputIndex ?? portIndexFromKey(sourceOutput)) &&
     (connection.targetClientId ?? connection.target) === targetClientId &&
     normalizeTargetInputIndex(connection) === portIndexFromKey(targetInput)
   );
