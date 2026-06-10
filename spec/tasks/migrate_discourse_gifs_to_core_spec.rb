@@ -6,20 +6,89 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
     silence_warnings { Discourse::Application.load_tasks }
   end
 
+  # Mirrors the real discourse-gifs settings.yml so theme.settings resolves the
+  # same defaults the migration reads in production (e.g. api_provider: giphy,
+  # giphy_content_rating: r).
+  SETTINGS_YAML = <<~YAML
+    api_provider:
+      default: "giphy"
+      type: "enum"
+      choices: [giphy, tenor, klipy]
+    giphy_api_key:
+      type: string
+      default: ""
+    giphy_file_format:
+      type: enum
+      default: webp
+      choices: [webp, gif]
+    giphy_content_rating:
+      type: enum
+      default: r
+      choices: [g, pg, pg-13, r]
+    giphy_locale:
+      type: enum
+      default: en
+      choices:
+        [
+          ar, bn, cs, da, de, en, es, fa, fi, fr, hi, hu, id, it, iw, ja, ko,
+          ms, nl, no, pl, pt, ro, ru, sv, th, tl, tr, uk, vi, zh-CN, zh-TW,
+        ]
+    limit_infinite_search_results:
+      type: bool
+      default: false
+    max_results_limit:
+      type: integer
+      min: 24
+      default: 240
+    tenor_api_key:
+      type: string
+      default: ""
+    tenor_file_detail:
+      type: enum
+      default: mediumgif
+      choices: [gif, mediumgif, tinygif, nanogif]
+    tenor_content_filter:
+      type: "enum"
+      default: high
+      choices: [high, medium, low, "off"]
+    tenor_country:
+      type: string
+      default: "US"
+    tenor_locale:
+      type: string
+      default: "en_US"
+    klipy_api_key:
+      type: string
+      default: ""
+    klipy_file_detail:
+      type: enum
+      default: webp
+      choices: [webp, gif]
+    klipy_content_filter:
+      type: "enum"
+      default: high
+      choices: [high, medium, low, "off"]
+    klipy_country:
+      type: string
+      default: "US"
+    klipy_locale:
+      type: string
+      default: "en_US"
+  YAML
+
   fab!(:remote_theme) do
     RemoteTheme.create!(remote_url: "https://github.com/discourse/discourse-gifs")
   end
-  fab!(:component) { Fabricate(:theme, component: true, remote_theme: remote_theme) }
+  fab!(:component) do
+    Fabricate(:theme, component: true, remote_theme: remote_theme).tap do |theme|
+      theme.set_field(target: :settings, name: "yaml", value: SETTINGS_YAML)
+      theme.save!
+    end
+  end
 
   def add_overrides(theme, overrides)
-    overrides.each do |name, value|
-      ThemeSetting.create!(
-        theme: theme,
-        name: name.to_s,
-        value: value.to_s,
-        data_type: ThemeSetting.types[:string],
-      )
-    end
+    overrides.each { |name, value| theme.update_setting(name, value) }
+    theme.save!
     theme.reload
   end
 
@@ -97,12 +166,21 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
         end
       end
 
-      it "passes the Giphy locale through unchanged" do
-        add_overrides(component, api_provider: "giphy", giphy_locale: "fr")
+      it "translates the Giphy language code to a Klipy xx_YY locale", :aggregate_failures do
+        {
+          "fr" => "fr_FR",
+          "ja" => "ja_JP",
+          "zh-CN" => "zh_CN",
+          "iw" => "he_IL",
+        }.each do |giphy_locale, expected|
+          component.theme_settings.destroy_all
+          add_overrides(component, api_provider: "giphy", giphy_locale: giphy_locale)
 
-        run_migration(component)
+          run_migration(component)
 
-        expect(SiteSetting.klipy_locale).to eq("fr")
+          expect(SiteSetting.klipy_locale).to eq(expected),
+          "expected giphy '#{giphy_locale}' to map to '#{expected}', got '#{SiteSetting.klipy_locale}'"
+        end
       end
 
       it "does not migrate the Giphy API key into klipy_api_key" do
@@ -135,7 +213,8 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
         end
       end
 
-      it "passes Tenor content filter, country and locale through unchanged", :aggregate_failures do
+      it "passes Tenor content filter, country and locale (already xx_YY) through",
+         :aggregate_failures do
         add_overrides(
           component,
           api_provider: "tenor",
@@ -185,7 +264,7 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
 
     context "with shared settings that apply regardless of provider" do
       it "migrates limit_infinite_search_results" do
-        add_overrides(component, api_provider: "tenor", limit_infinite_search_results: "true")
+        add_overrides(component, api_provider: "tenor", limit_infinite_search_results: true)
 
         run_migration(component)
 
@@ -193,11 +272,20 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
       end
 
       it "migrates max_results_limit" do
-        add_overrides(component, api_provider: "giphy", max_results_limit: "96")
+        add_overrides(component, api_provider: "giphy", max_results_limit: 96)
 
         run_migration(component)
 
         expect(SiteSetting.klipy_max_results_limit).to eq(96)
+      end
+    end
+
+    context "when the TC uses its default (untouched) settings" do
+      it "migrates effective defaults, e.g. giphy's default 'r' rating to klipy 'low'" do
+        # No ThemeSetting rows exist, so this only passes if defaults are read.
+        run_migration(component)
+
+        expect(SiteSetting.klipy_content_filter).to eq("low")
       end
     end
 
@@ -208,6 +296,72 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
         run_migration(component)
 
         expect(SiteSetting.klipy_content_filter).to eq("medium")
+      end
+    end
+
+    context "with disabled_image_download_domains" do
+      it "adds Klipy media hosts when a gif-provider host was blocked, keeping others" do
+        SiteSetting.disabled_image_download_domains = "example.com|media.giphy.com"
+
+        run_migration(component)
+
+        expect(SiteSetting.disabled_image_download_domains.split("|")).to include(
+          "example.com",
+          "media.giphy.com",
+          "static.klipy.com",
+          "static1.klipy.com",
+          "static2.klipy.com",
+        )
+      end
+
+      it "does not touch the setting when no gif-provider host is blocked" do
+        SiteSetting.disabled_image_download_domains = "example.com"
+
+        run_migration(component)
+
+        expect(SiteSetting.disabled_image_download_domains).to eq("example.com")
+      end
+
+      it "does not duplicate Klipy hosts on re-run" do
+        SiteSetting.disabled_image_download_domains = "media.giphy.com"
+
+        run_migration(component)
+        run_migration(component)
+
+        hosts = SiteSetting.disabled_image_download_domains.split("|")
+        expect(hosts.count("static.klipy.com")).to eq(1)
+      end
+    end
+
+    context "with theme translation overrides" do
+      def add_translation_override(theme, key, value, locale: "en")
+        ThemeTranslationOverride.create!(theme:, locale:, translation_key: key, value:)
+      end
+
+      it "migrates customised strings (per locale) to the matching core site text",
+         :aggregate_failures do
+        add_translation_override(component, "gif.composer_title", "Add a GIF")
+        add_translation_override(component, "gif.modal_title", "Chercher des GIFs", locale: "fr")
+
+        run_migration(component)
+
+        expect(
+          TranslationOverride.find_by(
+            locale: "en",
+            translation_key: "js.gifs.composer_title",
+          )&.value,
+        ).to eq("Add a GIF")
+        expect(
+          TranslationOverride.find_by(locale: "fr", translation_key: "js.gifs.modal_title")&.value,
+        ).to eq("Chercher des GIFs")
+      end
+
+      it "skips overrides of keys with no core equivalent" do
+        add_translation_override(component, "gif.query", "Keyword")
+
+        run_migration(component)
+
+        expect(TranslationOverride.where("translation_key LIKE 'js.gifs.%'")).to be_empty
       end
     end
 
