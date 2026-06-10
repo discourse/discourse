@@ -997,6 +997,15 @@ RSpec.describe UserApiKeysController do
       expect(response.status).to eq(400)
     end
 
+    it "rejects auth_redirect outside the allowlist" do
+      SiteSetting.allowed_user_api_auth_redirects = "https://good.example.com/callback"
+
+      get "/user-api-key/otp",
+          params: otp_args.merge(auth_redirect: "https://evil.example.com/callback")
+
+      expect(response.status).to eq(403)
+    end
+
     it "does not show the form when auth_redirect differs from a registered client's redirect" do
       SiteSetting.allowed_user_api_auth_redirects = "https://*.example.com/callback"
 
@@ -1026,9 +1035,13 @@ RSpec.describe UserApiKeysController do
       expect(response.status).to eq(403)
     end
 
-    it "refuses to redirect to disallowed place" do
+    it "rejects auth_redirect outside the allowlist" do
+      SiteSetting.allowed_user_api_auth_redirects = "https://good.example.com/callback"
       sign_in(Fabricate(:user))
-      post "/user-api-key/otp", params: otp_args
+
+      post "/user-api-key/otp",
+           params: otp_args.merge(auth_redirect: "https://evil.example.com/callback")
+
       expect(response.status).to eq(403)
     end
 
