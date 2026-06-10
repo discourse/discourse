@@ -1434,6 +1434,14 @@ RSpec.describe SiteSettingExtension do
       ).to eq("simple")
     end
 
+    it "returns 'simple_on_disable' for settings that require confirmation with 'simple_on_disable' type" do
+      expect(
+        SiteSetting.all_settings.find { |s| s[:setting] == :content_security_policy }[
+          :requires_confirmation
+        ],
+      ).to eq("simple_on_disable")
+    end
+
     it "returns nil for settings that do not require confirmation" do
       expect(
         SiteSetting.all_settings.find { |s| s[:setting] == :display_local_time_in_user_card }[

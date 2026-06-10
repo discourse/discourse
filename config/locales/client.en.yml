@@ -9340,6 +9340,9 @@ en:
           can_permanently_delete:
             prompt: "Enabling this allows admins to permanently destroy posts, topics, and post revisions. Permanently deleted data cannot be recovered. This may also affect data integrity and break existing links."
             confirm: "I understand"
+          content_security_policy:
+            prompt: "Disabling the content security policy removes an important layer of protection against cross-site scripting (XSS) and other content injection attacks. This will leave your site vulnerable, and should only be done for debugging/testing purposes. Are you sure you want to proceed?"
+            confirm: "Yes, disable the content security policy"
         job_status:
           completed: "Update completed"
           enqueued: "Update in progress"

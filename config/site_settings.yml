@@ -20,8 +20,9 @@
 #                         These groups cannot be selected and will be stripped if set via API.
 #                         Only applies to group_list type settings.
 # requires_confirmation - A string that indicates if the setting requires confirmation before it can be changed.
-#                         Only valid value here is "simple" which will display a confirmation dialog when the setting
-#                         is changed.
+#                         Valid values are "simple" (always display a confirmation dialog when the setting is changed),
+#                         "simple_on_enable" (only when the setting is enabled), and "simple_on_disable" (only when
+#                         the setting is disabled).
 # themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
 #                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
 # upcoming_change_default_override - Allow an upcoming change to control the new default value of this setting.
@@ -2979,6 +2980,7 @@ security:
     max_file_size_kb: 512
   content_security_policy:
     default: true
+    requires_confirmation: "simple_on_disable"
   content_security_policy_report_only:
     default: false
   content_security_policy_frame_ancestors:
