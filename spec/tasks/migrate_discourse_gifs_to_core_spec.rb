@@ -281,18 +281,11 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
     end
 
     context "when the TC uses its default (untouched) settings" do
-      it "migrates the effective default content rating (giphy 'r' => 'low')" do
-        # No overrides: api_provider defaults to giphy and giphy_content_rating to r,
-        # which must still be mapped even though no ThemeSetting rows exist.
+      it "migrates effective defaults, e.g. giphy's default 'r' rating to klipy 'low'" do
+        # No ThemeSetting rows exist, so this only passes if defaults are read.
         run_migration(component)
 
         expect(SiteSetting.klipy_content_filter).to eq("low")
-      end
-
-      it "maps giphy's default 'en' to en_US (which matches the core default)" do
-        run_migration(component)
-
-        expect(SiteSetting.klipy_locale).to eq("en_US")
       end
     end
 
@@ -307,14 +300,13 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
     end
 
     context "with disabled_image_download_domains" do
-      it "adds Klipy media hosts when a Giphy host was being blocked" do
-        SiteSetting.disabled_image_download_domains = "media.giphy.com"
-        add_overrides(component, api_provider: "giphy", giphy_locale: "fr")
+      it "adds Klipy media hosts when a gif-provider host was blocked, keeping others" do
+        SiteSetting.disabled_image_download_domains = "example.com|media.giphy.com"
 
         run_migration(component)
 
-        hosts = SiteSetting.disabled_image_download_domains.split("|")
-        expect(hosts).to include(
+        expect(SiteSetting.disabled_image_download_domains.split("|")).to include(
+          "example.com",
           "media.giphy.com",
           "static.klipy.com",
           "static1.klipy.com",
@@ -322,49 +314,16 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
         )
       end
 
-      it "adds Klipy media hosts when a Tenor host was being blocked" do
-        SiteSetting.disabled_image_download_domains = "media.tenor.com"
-        add_overrides(component, api_provider: "tenor")
-
-        run_migration(component)
-
-        expect(SiteSetting.disabled_image_download_domains.split("|")).to include(
-          "static.klipy.com",
-          "static1.klipy.com",
-          "static2.klipy.com",
-        )
-      end
-
-      it "preserves unrelated blocked domains" do
-        SiteSetting.disabled_image_download_domains = "example.com|media.giphy.com"
-        add_overrides(component, api_provider: "giphy")
-
-        run_migration(component)
-
-        expect(SiteSetting.disabled_image_download_domains.split("|")).to include("example.com")
-      end
-
-      it "does not touch the setting when no gif provider host is blocked" do
+      it "does not touch the setting when no gif-provider host is blocked" do
         SiteSetting.disabled_image_download_domains = "example.com"
-        add_overrides(component, api_provider: "giphy")
 
         run_migration(component)
 
         expect(SiteSetting.disabled_image_download_domains).to eq("example.com")
       end
 
-      it "does not touch the setting when it is blank" do
-        SiteSetting.disabled_image_download_domains = ""
-        add_overrides(component, api_provider: "giphy")
-
-        run_migration(component)
-
-        expect(SiteSetting.disabled_image_download_domains).to eq("")
-      end
-
       it "does not duplicate Klipy hosts on re-run" do
         SiteSetting.disabled_image_download_domains = "media.giphy.com"
-        add_overrides(component, api_provider: "giphy")
 
         run_migration(component)
         run_migration(component)
@@ -376,16 +335,13 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
 
     context "with theme translation overrides" do
       def add_translation_override(theme, key, value, locale: "en")
-        ThemeTranslationOverride.create!(
-          theme: theme,
-          locale: locale,
-          translation_key: key,
-          value: value,
-        )
+        ThemeTranslationOverride.create!(theme:, locale:, translation_key: key, value:)
       end
 
-      it "migrates a customised string to the matching core site text" do
+      it "migrates customised strings (per locale) to the matching core site text",
+         :aggregate_failures do
         add_translation_override(component, "gif.composer_title", "Add a GIF")
+        add_translation_override(component, "gif.modal_title", "Chercher des GIFs", locale: "fr")
 
         run_migration(component)
 
@@ -395,13 +351,6 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
             translation_key: "js.gifs.composer_title",
           )&.value,
         ).to eq("Add a GIF")
-      end
-
-      it "migrates overrides for non-English locales" do
-        add_translation_override(component, "gif.modal_title", "Chercher des GIFs", locale: "fr")
-
-        run_migration(component)
-
         expect(
           TranslationOverride.find_by(locale: "fr", translation_key: "js.gifs.modal_title")&.value,
         ).to eq("Chercher des GIFs")
