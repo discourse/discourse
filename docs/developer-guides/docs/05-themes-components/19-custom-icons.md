@@ -103,3 +103,35 @@ Here the icon name follows the `d-icon-` prefix. So in this example it's `d-unli
 Most of our icons follow the icon names from https://fontawesome.com/, but there are exceptions (which is why checking the ID in your inspector is the most reliable method). You can see all the exceptions in the `const REPLACEMENTS` block [here on github](https://github.com/discourse/discourse/blob/0b5d5b0d40ecf4b1588a442598410ea64d7869d5/app/assets/javascripts/discourse-common/addon/lib/icon-library.js#L14).
 
 That's it. You can now style Discourse with your own custom icons!
+
+# Step 4 (recommended for full icon sets) - Declare an `icon_set`
+
+If your theme replaces most of Discourse's icons (a full set like Lucide or Phosphor), per-icon `replaceIcon` calls have a cost: the bundle ships both the replaced default icons and your replacements, and a set with multiple weights ships every weight even though only one is used.
+
+Declaring an `icon_set` in about.json moves the replacement to the server. Each mapped glyph from your sprite is bundled under the canonical icon id, so no `replaceIcon` calls are needed and only the glyphs actually rendered are served. Icons you don't map keep their Discourse defaults.
+
+```json
+"assets": {
+  "icons-sprite": "/assets/icons-sprite.svg"
+},
+"icon_set": {
+  "map": "/assets/icon-map.json"
+}
+```
+
+`map` maps a canonical Discourse icon name to a `<symbol>` id in your sprite. It can be an inline object (`{ "bell": "ph-regular-bell" }`) or a path to a JSON file of the same shape.
+
+Map values may contain `{placeholder}` tokens, each resolving from the theme setting of the same name. With `"bell": "ph-{weight}-bell"` and a `weight` setting set to `bold`, the `ph-bold-bell` symbol is served as `bell` - and changing the setting re-resolves the bundle. A set can have any number of variant axes (weight, style, fill, ...), each its own setting. An icon that should always use one variant maps to a fixed id instead (`"heart": "ph-fill-heart"`).
+
+If the theme has a list setting named `ignored_icons`, icons listed there keep their Discourse default glyph, so admins can opt out of the replacement per icon (a well-known setting name, like the `icons-sprite` asset name). Mapped icons that don't resolve to a glyph in your sprite fall back to the default too, and are logged in the server logs to help catch typos.
+
+When an `icon_set` is declared, the declaring theme's sprite is used only as a source for mapped glyphs: symbols no map entry resolves to (such as the other weights) are not bundled. Other themes' sprites and `replaceIcon` keep working as before.
+
+Plugins can declare an icon set too, with the same shape, using the plugin's `svg-icons` sprite as the glyph source and site settings for `{placeholder}` tokens (e.g. `"bell": "ph-{my_plugin_icon_weight}-bell"`):
+
+```ruby
+# plugin.rb
+register_icon_set(map: "icon-map.json")
+```
+
+A theme-declared icon set takes precedence over plugin-registered ones.

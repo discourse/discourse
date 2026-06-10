@@ -290,6 +290,10 @@ class RemoteTheme < ActiveRecord::Base
       end
     end
 
+    if (icon_set = theme_info["icon_set"]).present?
+      updated_fields << import_icon_set_field(theme, icon_set, importer)
+    end
+
     begin
       updated_fields.concat(
         ThemeScreenshotsHandler.new(theme).parse_screenshots_as_theme_fields!(
@@ -435,6 +439,41 @@ class RemoteTheme < ActiveRecord::Base
     override = hex.downcase
     override = nil if override !~ /\A[0-9a-f]{6}\z/
     override
+  end
+
+  # Parses an about.json "icon_set" declaration into a stored field the SVG
+  # sprite bundler reads. The set's glyph map (canonical icon name -> sprite
+  # glyph id, optionally containing {placeholder} tokens that resolve from the
+  # same-named theme settings) may be given inline or as a path to a JSON file
+  # in the theme.
+  def import_icon_set_field(theme, icon_set, importer)
+    raise ImportError, I18n.t("themes.import_error.icon_set_not_object") if !icon_set.is_a?(Hash)
+
+    map = icon_set["map"]
+
+    if map.is_a?(String)
+      path = importer.real_path(map)
+      raise ImportError, I18n.t("themes.import_error.icon_set_map_missing", path: map) if path.nil?
+      begin
+        map = JSON.parse(File.read(path))
+      rescue JSON::ParserError => e
+        raise ImportError, I18n.t("themes.import_error.icon_set_invalid", error: e.message)
+      end
+    end
+
+    if !map.is_a?(Hash) || map.empty? ||
+         !map.all? { |name, glyph| SvgSprite.valid_icon_name?(name) && glyph.is_a?(String) }
+      raise ImportError, I18n.t("themes.import_error.icon_set_map_invalid")
+    end
+
+    declaration = { "map" => map }
+
+    theme.set_field(
+      target: :common,
+      name: SvgSprite::ICON_SET_FIELD_NAME,
+      type: :json,
+      value: declaration.to_json,
+    )
   end
 
   def update_theme_color_schemes(theme, schemes)

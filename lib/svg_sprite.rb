@@ -294,6 +294,10 @@ module SvgSprite
 
   THEME_SPRITE_VAR_NAME = "icons-sprite"
 
+  ICON_SET_FIELD_NAME = "icon-set"
+
+  ICON_SET_IGNORE_SETTING = "ignored_icons"
+
   MAX_THEME_SPRITE_SIZE = 1024.kilobytes
 
   def self.preload
@@ -332,72 +336,81 @@ module SvgSprite
 
   # Just used in tests
   def self.clear_plugin_svg_sprite_cache!
-    @plugin_svgs = nil
+    @plugin_svgs_by_plugin = nil
+    @icon_set_site_settings = nil
   end
 
-  def self.plugin_svgs
-    @plugin_svgs ||=
-      begin
-        plugin_paths = []
-        Discourse
-          .plugins
-          .map { |plugin| File.dirname(plugin.path) }
-          .each { |path| plugin_paths << "#{path}/svg-icons/*.svg" }
-
-        custom_sprite_paths = Dir.glob(plugin_paths)
-
-        custom_sprite_paths.reduce({}) do |symbols, path|
-          symbols.merge!(symbols_for(File.basename(path, ".svg"), File.read(path), strict: true))
+  def self.plugin_svgs_by_plugin
+    @plugin_svgs_by_plugin ||=
+      Discourse
+        .plugins
+        .reduce({}) do |by_plugin, plugin|
+          symbols =
+            Dir
+              .glob("#{File.dirname(plugin.path)}/svg-icons/*.svg")
+              .reduce({}) do |s, path|
+                s.merge!(symbols_for(File.basename(path, ".svg"), File.read(path), strict: true))
+              end
+          by_plugin[plugin.name] = symbols if symbols.present?
+          by_plugin
         end
+  end
+
+  def self.theme_svgs_by_theme(theme_id)
+    return {} if theme_id.blank?
+
+    cache.defer_get_set_bulk(
+      Theme.transform_ids(theme_id),
+      lambda { |_theme_id| "theme_svg_sprites_#{_theme_id}" },
+    ) do |theme_ids|
+      theme_field_uploads =
+        ThemeField.where(
+          type_id: ThemeField.types[:theme_upload_var],
+          name: THEME_SPRITE_VAR_NAME,
+          theme_id: theme_ids,
+        ).pluck(:upload_id)
+
+      theme_sprites =
+        ThemeSvgSprite.where(theme_id: theme_ids).pluck(:theme_id, :upload_id, :sprite)
+      missing_sprites = (theme_field_uploads - theme_sprites.map(&:second))
+
+      if missing_sprites.present?
+        Rails.logger.warn(
+          "Missing ThemeSvgSprites for theme #{theme_id}, uploads #{missing_sprites.join(", ")}",
+        )
       end
-  end
 
-  def self.theme_svgs(theme_id)
-    if theme_id.present?
-      cache
-        .defer_get_set_bulk(
-          Theme.transform_ids(theme_id),
-          lambda { |_theme_id| "theme_svg_sprites_#{_theme_id}" },
-        ) do |theme_ids|
-          theme_field_uploads =
-            ThemeField.where(
-              type_id: ThemeField.types[:theme_upload_var],
-              name: THEME_SPRITE_VAR_NAME,
-              theme_id: theme_ids,
-            ).pluck(:upload_id)
-
-          theme_sprites =
-            ThemeSvgSprite.where(theme_id: theme_ids).pluck(:theme_id, :upload_id, :sprite)
-          missing_sprites = (theme_field_uploads - theme_sprites.map(&:second))
-
-          if missing_sprites.present?
-            Rails.logger.warn(
-              "Missing ThemeSvgSprites for theme #{theme_id}, uploads #{missing_sprites.join(", ")}",
-            )
-          end
-
-          theme_sprites
-            .map do |(_theme_id, upload_id, sprite)|
-              [_theme_id, symbols_for("theme_#{_theme_id}_#{upload_id}.svg", sprite, strict: false)]
-            rescue => e
-              Rails.logger.warn(
-                "Bad XML in custom sprite in theme with ID=#{_theme_id}. Error info: #{e.inspect}",
-              )
-            end
-            .compact
-            .to_h
-            .values_at(*theme_ids)
+      theme_sprites
+        .map do |(_theme_id, upload_id, sprite)|
+          [_theme_id, symbols_for("theme_#{_theme_id}_#{upload_id}.svg", sprite, strict: false)]
+        rescue => e
+          Rails.logger.warn(
+            "Bad XML in custom sprite in theme with ID=#{_theme_id}. Error info: #{e.inspect}",
+          )
         end
-        .values
         .compact
-        .reduce({}) { |a, b| a.merge!(b) }
-    else
-      {}
+        .to_h
+        .values_at(*theme_ids)
     end
   end
 
-  def self.custom_svgs(theme_id)
-    plugin_svgs.merge(theme_svgs(theme_id))
+  # The icon-set-declaring theme's (or plugin's) sprite is an alias source
+  # only (see apply_icon_set): its raw symbol ids are not registered or
+  # served, so unused variants are dropped and the icon picker doesn't offer
+  # ids that wouldn't render client-side. Callers that already resolved the
+  # active icon set pass it (or nil) via icon_set: to skip a second lookup.
+  def self.custom_svgs(theme_id, icon_set: :unresolved)
+    set = icon_set == :unresolved ? active_icon_set(theme_id) : icon_set
+    svgs = {}
+    plugin_svgs_by_plugin.each do |plugin_name, symbols|
+      svgs.merge!(symbols) if set.nil? || plugin_name != set["plugin"]
+    end
+    theme_svgs_by_theme(theme_id).each do |sprite_theme_id, symbols|
+      next if symbols.nil?
+      next if set && sprite_theme_id == set["theme_id"]
+      svgs.merge!(symbols)
+    end
+    svgs
   end
 
   def self.all_icons(theme_id = nil)
@@ -432,8 +445,18 @@ module SvgSprite
   end
 
   def self.svgs_for(theme_id)
+    icon_set = active_icon_set(theme_id)
     svgs = core_svgs
-    svgs = svgs.merge(custom_svgs(theme_id)) if theme_id.present?
+    if icon_set
+      # Aliasing applies before the custom merge so server-rendered lookups
+      # (raw_svg, search, the icon picker) resolve the same glyph the client
+      # sprite renders: the set replaces default glyphs, while other themes'
+      # sprite overrides still win.
+      svgs = apply_icon_set(svgs.dup, icon_set, icon_set_source(theme_id, icon_set))
+      svgs.merge!(custom_svgs(theme_id, icon_set: icon_set))
+    elsif theme_id.present?
+      svgs = svgs.merge(custom_svgs(theme_id, icon_set: nil))
+    end
     svgs
   end
 
@@ -450,10 +473,244 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 " \
         "".dup
 
-    svg_subset << core_svgs.slice(*icons).values.join
-    svg_subset << custom_svgs(theme_id).values.join
+    icon_set = active_icon_set(theme_id)
+    if icon_set
+      # The set's glyphs replace default glyphs under their canonical ids;
+      # other plugins' icons and other themes' sprites then ship wholesale
+      # (custom_svgs excludes the declaring sprite) and win id collisions, so
+      # an explicit sprite override of a mapped icon keeps working.
+      svgs = core_svgs.slice(*icons)
+      apply_icon_set(svgs, icon_set, icon_set_source(theme_id, icon_set), icons)
+      svgs.merge!(custom_svgs(theme_id, icon_set: icon_set))
+      svg_subset << svgs.values.join
+    else
+      # Append rather than merge to preserve the long-standing emission for
+      # sites without an icon set: id collisions ship both symbols and the
+      # default (first in document order) wins client-side.
+      svg_subset << core_svgs.slice(*icons).values.join
+      svg_subset << custom_svgs(theme_id, icon_set: nil).values.join
+    end
 
     svg_subset << "</svg>"
+  end
+
+  # A theme or plugin can declare a first-class "icon set": a map of canonical
+  # icon names to its sprite's glyph ids, optionally variant-templated
+  # ("ph-{weight}-bell", where each {placeholder} resolves from the setting of
+  # the same name - a theme setting for themes, a site setting for plugins).
+  # For each mapped name whose resolved glyph exists in `source`, overrides
+  # `svgs[name]` with that glyph aliased to the canonical id -- so
+  # `<use href="#bell">` renders the set glyph with no client-side replaceIcon,
+  # and the replaced Font Awesome original and the unused variants are never
+  # emitted. Unmapped icons keep their existing glyph. Mutates and returns
+  # `svgs`.
+  def self.apply_icon_set(svgs, icon_set, source, names = icon_set["map"].keys)
+    names.each do |name|
+      target = icon_set_target(icon_set, name)
+      svgs[name] = alias_symbol_id(source[target], name) if target && source[target]
+    end
+    svgs
+  end
+
+  # The sprite glyph id a canonical icon name resolves to, or nil if the name
+  # is unmapped, ignored (see ICON_SET_IGNORE_SETTING), or the map value is
+  # malformed.
+  def self.icon_set_target(icon_set, name)
+    mapped = icon_set["map"][name]
+    return nil if !mapped.is_a?(String)
+    return nil if icon_set["ignored"]&.include?(name)
+    values = icon_set["values"] || {}
+    mapped.gsub(/\{([\w-]+)\}/) { values[$1].to_s }
+  end
+
+  # The sprite of the theme or plugin that declared the icon set, which mapped
+  # glyphs are resolved against.
+  def self.icon_set_source(theme_id, icon_set)
+    if icon_set["plugin"]
+      plugin_svgs_by_plugin[icon_set["plugin"]] || {}
+    else
+      theme_svgs_by_theme(theme_id)[icon_set["theme_id"]] || {}
+    end
+  end
+
+  # Rewrites the <symbol>'s own id to the canonical icon id. Anchored to the
+  # opening tag and matched as a standalone ` id="..."` attribute, so attributes
+  # like `data-id`/`clip-id` are not mistaken for it. Block form avoids treating
+  # the name as a regexp back-reference.
+  def self.alias_symbol_id(symbol, name)
+    symbol.sub(/(<symbol\b[^>]*?\s)id="[^"]*"/) { "#{$1}id=\"#{name}\"" }
+  end
+
+  # The icon set in effect for a theme: a declaring theme (or component, in
+  # transform_ids order) takes precedence over plugin-registered sets.
+  def self.active_icon_set(theme_id)
+    theme_ids = Theme.transform_ids(theme_id)
+    # Cached (busted by expire_cache on setting/field change) so `bundle`, which
+    # runs per request, doesn't repeat a query + settings parse. The "no icon
+    # set" sentinel is `{}` (not a Symbol): a Hash survives serialization across
+    # DistributedCache/MessageBus to other app servers (a Symbol arrives as a
+    # String), and `{}.presence` is nil.
+    result =
+      get_set_cache("icon_set_#{theme_ids.join(",")}") do
+        icon_set = build_icon_set(theme_ids) || build_plugin_icon_set
+        log_unresolved_icon_set_targets(theme_id, icon_set) if icon_set
+        icon_set || {}
+      end
+    result.presence
+  end
+
+  # Authoring mistakes (a typo'd glyph id, a variant missing from the sprite)
+  # degrade silently to the default glyph; log them once per cache rebuild so
+  # they are diagnosable.
+  def self.log_unresolved_icon_set_targets(theme_id, icon_set)
+    source = icon_set_source(theme_id, icon_set)
+    missing =
+      icon_set["map"].keys.filter_map do |name|
+        target = icon_set_target(icon_set, name)
+        name if target && !source.key?(target)
+      end
+    return if missing.empty?
+
+    Rails.logger.warn(
+      "Icon set (#{icon_set["plugin"] || "theme #{icon_set["theme_id"]}"}): " \
+        "#{missing.size} mapped icons have no matching sprite glyph and fall back " \
+        "to the default: #{missing.first(20).join(", ")}",
+    )
+  end
+
+  def self.icon_set_fields
+    # Scoped by target and type as well as name so an unrelated theme file
+    # that happens to be named "icon-set" (e.g. stylesheets/icon-set.scss)
+    # can't shadow or fake a declaration.
+    ThemeField.where(
+      name: ICON_SET_FIELD_NAME,
+      target_id: Theme.targets[:common],
+      type_id: ThemeField.types[:json],
+    )
+  end
+
+  def self.build_icon_set(theme_ids)
+    fields = icon_set_fields.find_by_theme_ids(theme_ids).where.not(value: nil).to_a
+    decl = nil
+    field = fields.find { |f| decl = parse_icon_set_field(f) }
+    return nil if !field
+
+    if fields.size > 1
+      Rails.logger.warn(
+        "Multiple themes declare an icon set (theme ids #{fields.map(&:theme_id).join(", ")}); " \
+          "using theme #{field.theme_id}",
+      )
+    end
+
+    decl["theme_id"] = field.theme_id
+    # A fresh settings parse, not cached_settings: the cache-expiry hook on
+    # ThemeSetting fires before the theme caches are cleared, so a cached read
+    # here could re-cache a stale value.
+    settings = field.theme&.settings || {}
+    decl["values"] = icon_set_placeholders(decl["map"]).index_with do |setting|
+      settings[setting.to_sym]&.value
+    end
+    # A well-known setting name (like the "icons-sprite" asset name): icons
+    # listed in a list setting named "ignored_icons" keep their default glyph.
+    if (ignored = settings[ICON_SET_IGNORE_SETTING.to_sym]&.value)
+      decl["ignored"] = ignored.to_s.split("|").map(&:strip)
+    end
+
+    decl
+  end
+
+  def self.parse_icon_set_field(field)
+    return nil if field.value.blank?
+    decl =
+      begin
+        JSON.parse(field.value)
+      rescue JSON::ParserError
+        nil
+      end
+    return nil unless decl.is_a?(Hash) && decl["map"].is_a?(Hash)
+    decl["map"] = sanitize_icon_set_map(decl["map"])
+    decl["map"].present? ? decl : nil
+  end
+
+  # Entries with malformed names or non-string glyph ids are dropped: names
+  # are spliced into <symbol id> attributes (see alias_symbol_id), so this is
+  # the injection guard for declarations written outside the validated import
+  # path. Import raises on these instead (see RemoteTheme#import_icon_set_field).
+  def self.sanitize_icon_set_map(map)
+    map.select { |name, glyph| valid_icon_name?(name) && glyph.is_a?(String) }
+  end
+
+  def self.valid_icon_name?(name)
+    name.is_a?(String) && name.match?(/\A[\w-]+\z/)
+  end
+
+  def self.build_plugin_icon_set(registrations = DiscoursePluginRegistry.icon_sets)
+    registrations.each do |registered|
+      map = registered[:map]
+      map = read_plugin_icon_map(registered) if map.is_a?(String)
+      next if !map.is_a?(Hash)
+      # Symbol keys are idiomatic in plugin code; normalize before sanitizing.
+      map = sanitize_icon_set_map(map.transform_keys(&:to_s))
+      next if map.empty?
+
+      values =
+        icon_set_placeholders(map).index_with do |setting|
+          SiteSetting.public_send(setting) if SiteSetting.respond_to?(setting)
+        end
+      decl = { "map" => map, "values" => values, "plugin" => registered[:plugin_name] }
+      if (setting = registered[:ignore_setting].to_s).present? && SiteSetting.respond_to?(setting)
+        decl["ignored"] = SiteSetting.public_send(setting).to_s.split("|").map(&:strip)
+      end
+      return decl
+    end
+    nil
+  end
+
+  def self.read_plugin_icon_map(registered)
+    dir = File.realpath(registered[:plugin_dir])
+    path = File.expand_path(registered[:map], dir)
+    return nil if !File.exist?(path)
+    path = File.realpath(path)
+    return nil if !path.start_with?(dir + File::SEPARATOR)
+    JSON.parse(File.read(path))
+  rescue JSON::ParserError, Errno::ENOENT
+    nil
+  end
+
+  # The {placeholder} tokens used across a map's values; each resolves from
+  # the setting of the same name.
+  def self.icon_set_placeholders(map)
+    map.values.filter_map { |v| v.scan(/\{([\w-]+)\}/) if v.is_a?(String) }.flatten.uniq
+  end
+
+  def self.theme_declares_icon_set?(theme_id)
+    icon_set_fields.exists?(theme_id: theme_id)
+  end
+
+  # Whether a site setting change affects a plugin-registered icon set (one of
+  # its map placeholders, its ignore setting, or the plugin's enabled setting)
+  # - used to expire the sprite cache from the site_setting_changed event.
+  def self.icon_set_site_setting?(setting_name)
+    icon_set_site_settings.include?(setting_name.to_s)
+  end
+
+  # Memoized: registrations and plugin files don't change within a process.
+  # Reads the unfiltered registrations on purpose - a disabled plugin's
+  # enabled setting must still expire the cache when it is toggled.
+  def self.icon_set_site_settings
+    @icon_set_site_settings ||=
+      DiscoursePluginRegistry
+        ._raw_icon_sets
+        .flat_map do |entry|
+          map = entry[:value][:map]
+          map = read_plugin_icon_map(entry[:value]) if map.is_a?(String)
+          placeholders = map.is_a?(Hash) ? icon_set_placeholders(map) : []
+          placeholders +
+            [entry[:plugin].enabled_site_setting, entry[:value][:ignore_setting]].compact.map(
+              &:to_s
+            )
+        end
+        .to_set
   end
 
   def self.search(searched_icon)

@@ -911,6 +911,18 @@ class Theme < ActiveRecord::Base
         end
       end
 
+      # The map is always stored inline (file references are resolved at
+      # import), so the declaration round-trips through export/re-import.
+      if (field = theme_fields.find(&:icon_set_field?))
+        icon_set =
+          begin
+            JSON.parse(field.value)
+          rescue JSON::ParserError
+            nil
+          end
+        meta[:icon_set] = icon_set if icon_set.present?
+      end
+
       meta[
         :learn_more
       ] = "https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966"
