@@ -96,6 +96,8 @@ class IncomingLink < ActiveRecord::Base
               WHERE id = ?",
       post_id,
     )
+
+    DiscourseEvent.trigger(:incoming_link_created, self)
   end
 
   protected

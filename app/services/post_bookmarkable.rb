@@ -81,10 +81,16 @@ class PostBookmarkable < BaseBookmarkable
 
   def self.after_create(guardian, bookmark, opts)
     sync_topic_user_bookmarked(guardian.user, bookmark.bookmarkable.topic, opts)
+    Post.where(id: bookmark.bookmarkable_id).update_all("bookmark_count = bookmark_count + 1")
+    DiscourseEvent.trigger(:post_bookmark_created, bookmark)
   end
 
   def self.after_destroy(guardian, bookmark, opts)
     sync_topic_user_bookmarked(guardian.user, bookmark.bookmarkable.topic, opts)
+    Post.where(id: bookmark.bookmarkable_id).update_all(
+      "bookmark_count = GREATEST(bookmark_count - 1, 0)",
+    )
+    DiscourseEvent.trigger(:post_bookmark_destroyed, bookmark)
   end
 
   def self.cleanup_deleted

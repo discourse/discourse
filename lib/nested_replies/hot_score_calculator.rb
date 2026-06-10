@@ -29,6 +29,13 @@ module NestedReplies
       BUCKETS.find { |max_count, _| count <= max_count }.second.to_i
     end
 
+    def self.recalculate_for_post_if_nested(post_id)
+      post = Post.where(id: post_id).where("post_number > 1").first
+      return if post.blank? || !post.topic&.nested_view?
+
+      recalculate_for_post(post.id)
+    end
+
     def self.recalculate_for_post(post_id)
       DB.exec(<<~SQL, post_id: post_id)
         WITH target AS (
@@ -77,6 +84,17 @@ module NestedReplies
         topic_id: post.topic_id,
         reply_to_post_number: post.reply_to_post_number,
       )
+    end
+
+    def self.recalculate_parents_for_post_numbers(topic_id:, post_numbers:)
+      post_numbers = Array(post_numbers).compact.uniq
+      return if post_numbers.empty?
+
+      Post
+        .with_deleted
+        .where(topic_id: topic_id, post_number: post_numbers)
+        .pluck(:id)
+        .each { |post_id| recalculate_for_post(post_id) }
     end
 
     def self.recalculate_for_sibling_group(topic_id:, reply_to_post_number:)

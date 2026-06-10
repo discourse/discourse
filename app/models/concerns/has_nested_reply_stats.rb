@@ -80,6 +80,10 @@ module HasNestedReplyStats
       reply_to_post_number: previous_reply_to_post_number,
     )
     NestedReplies::HotScoreCalculator.recalculate_siblings_for_post(self)
+    NestedReplies::HotScoreCalculator.recalculate_parents_for_post_numbers(
+      topic_id: topic_id,
+      post_numbers: [previous_reply_to_post_number, reply_to_post_number],
+    )
   end
 
   private
@@ -183,5 +187,9 @@ module HasNestedReplyStats
     return if post_number == 1
 
     NestedReplies::HotScoreCalculator.recalculate_siblings_for_post(self)
+    NestedReplies::HotScoreCalculator.recalculate_parents_for_post_numbers(
+      topic_id: topic_id,
+      post_numbers: [reply_to_post_number],
+    )
   end
 end
