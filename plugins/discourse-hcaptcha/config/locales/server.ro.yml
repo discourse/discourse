@@ -12,4 +12,3 @@ ro:
     site_settings:
       categories:
         discourse_hcaptcha: "Modul hCaptcha"
-  h_captcha_verification_failed: "Verificarea hCaptcha a eșuat"

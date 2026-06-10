@@ -8,12 +8,17 @@ zh_CN:
   dashboard:
     problem:
       hcaptcha_configuration: "您的 hCaptcha `site_key` 或 `secret_key` 配置存在问题"
+      recaptcha_configuration: "您的 ReCaptcha `site_key` 或 `secret_key` 配置存在问题。"
   admin:
     site_settings:
       categories:
         discourse_hcaptcha: "hCaptcha 插件"
   site_settings:
-    discourse_hcaptcha_enabled: "启用 hCaptcha 插件。需要 <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> 帐户。"
+    discourse_captcha_enabled: "启用新用户注册的验证码验证。需要配置以下 hCaptcha 或 reCaptcha。"
+    discourse_captcha_provider: "选择验证码提供商。这需要您拥有所选提供商的帐户。"
     hcaptcha_site_key: "来自您的 <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> 帐户的 hCaptcha 网站密钥"
     hcaptcha_secret_key: "来自您的 <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> 帐户的 hCaptcha 密钥"
-  h_captcha_verification_failed: "hCaptcha 验证失败"
+    recaptcha_site_key: "来自您的 ReCaptcha <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> 帐户的 ReCaptcha 网站密钥"
+    recaptcha_secret_key: "来自您的 ReCaptcha <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> 帐户的 ReCaptcha 密钥"
+  captcha_verification_failed: "验证码验证失败"
+  captcha_not_configured: "验证码已启用，但配置不正确。请联系网站管理员。"

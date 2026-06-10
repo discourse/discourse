@@ -6,10 +6,8 @@
 
 ja:
   js:
-    discourse_hCaptcha:
-      missing_token: "hCaptcha チャレンジを完了してください。"
+    discourse_captcha:
       placeholder: プレースホルダー
-      contact_system_administrator: "hCaptcha に問題が発生しました。この問題が解決しない場合は、システム管理者にお問い合わせください"
   admin_js:
     admin:
       site_settings:

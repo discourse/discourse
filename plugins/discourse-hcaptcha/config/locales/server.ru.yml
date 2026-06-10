@@ -13,7 +13,5 @@ ru:
       categories:
         discourse_hcaptcha: "Плагин hCaptcha"
   site_settings:
-    discourse_hcaptcha_enabled: "Включает плагин hCaptcha. Требуется аккаунт <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>."
     hcaptcha_site_key: "Ключ сайта hCaptcha из вашего аккаунта <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
     hcaptcha_secret_key: "Секретный ключ hCaptcha из вашего аккаунта <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
-  h_captcha_verification_failed: "Ошибка проверки hCaptcha"

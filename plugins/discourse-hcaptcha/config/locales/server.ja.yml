@@ -13,7 +13,5 @@ ja:
       categories:
         discourse_hcaptcha: "hCaptcha プラグイン"
   site_settings:
-    discourse_hcaptcha_enabled: "hCaptcha プラグ位にを有効にします。<a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> アカウントが必要です。"
     hcaptcha_site_key: "<a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> アカウントの hCaptcha サイトキー"
     hcaptcha_secret_key: "<a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> アカウントの hCaptcha シークレットキー"
-  h_captcha_verification_failed: "hCaptcha 認証に失敗しました"
