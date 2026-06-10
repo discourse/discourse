@@ -79,6 +79,29 @@ describe DiscourseAutomation::Triggerable do
 
       expect(DiscourseAutomation.recursion_depth).to eq(1)
     end
+
+    it "with_recursion_depth seeds the depth and restores the previous one" do
+      DiscourseAutomation.increment_recursion_depth
+
+      DiscourseAutomation.with_recursion_depth(3) do
+        expect(DiscourseAutomation.recursion_depth).to eq(3)
+      end
+
+      expect(DiscourseAutomation.recursion_depth).to eq(1)
+    end
+
+    it "with_recursion_depth restores the previous depth after errors" do
+      expect { DiscourseAutomation.with_recursion_depth(3) { raise "boom" } }.to raise_error("boom")
+
+      expect(DiscourseAutomation.recursion_depth).to eq(0)
+    end
+
+    it "with_recursion_depth requires a block" do
+      expect { DiscourseAutomation.with_recursion_depth(3) }.to raise_error(
+        StandardError,
+        "Expecting a block",
+      )
+    end
   end
 
   describe "#setting" do

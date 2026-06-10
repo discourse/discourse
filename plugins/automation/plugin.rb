@@ -74,6 +74,20 @@ module ::DiscourseAutomation
     Thread.current[RECURSION_DEPTH_KEY] = new_depth.positive? ? new_depth : nil
   end
 
+  # Restores the recursion depth inherited from the thread that enqueued a
+  # background trigger, so the limit holds across job boundaries.
+  def self.with_recursion_depth(depth)
+    raise StandardError, "Expecting a block" if !block_given?
+
+    previous_depth = Thread.current[RECURSION_DEPTH_KEY]
+    Thread.current[RECURSION_DEPTH_KEY] = depth.to_i.positive? ? depth.to_i : nil
+    begin
+      yield
+    ensure
+      Thread.current[RECURSION_DEPTH_KEY] = previous_depth
+    end
+  end
+
   def self.suppressed_triggers_count
     Thread.current[SUPPRESSED_TRIGGERS_KEY] || 0
   end

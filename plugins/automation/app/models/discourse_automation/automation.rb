@@ -144,6 +144,7 @@ module DiscourseAutomation
         Jobs::DiscourseAutomation::Trigger,
         automation_id: id,
         context: self.class.serialize_context(context),
+        recursion_depth: DiscourseAutomation.recursion_depth,
       )
     end
 
@@ -158,18 +159,20 @@ module DiscourseAutomation
         end
       end
 
-      begin
-        DiscourseAutomation.increment_recursion_depth
-        if scriptable.background && !running_in_background
-          trigger_in_background!(context)
-        else
+      if scriptable.background && !running_in_background
+        # The job carries the current depth and the script runs (and is
+        # counted) inside it, so don't increment around a mere enqueue.
+        trigger_in_background!(context)
+      else
+        begin
+          DiscourseAutomation.increment_recursion_depth
           Stat.log(id) do
             triggerable&.on_call&.call(self, serialized_fields)
             scriptable.script.call(context, serialized_fields, self)
           end
+        ensure
+          DiscourseAutomation.decrement_recursion_depth
         end
-      ensure
-        DiscourseAutomation.decrement_recursion_depth
       end
     end
 

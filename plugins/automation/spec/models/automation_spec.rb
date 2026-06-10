@@ -106,6 +106,19 @@ describe DiscourseAutomation::Automation do
         Jobs::DiscourseAutomation::Trigger.jobs.size
       }.by(1)
     end
+
+    it "carries the current recursion depth into the job" do
+      DiscourseAutomation.increment_recursion_depth
+
+      begin
+        automation.trigger!({ val: "Howdy!" })
+      ensure
+        DiscourseAutomation.decrement_recursion_depth
+      end
+
+      job_args = Jobs::DiscourseAutomation::Trigger.jobs.last["args"].first
+      expect(job_args["recursion_depth"]).to eq(1)
+    end
   end
 
   describe "#remove_id_from_custom_field" do

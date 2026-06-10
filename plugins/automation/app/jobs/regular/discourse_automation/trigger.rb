@@ -27,7 +27,14 @@ module Jobs
         context = ::DiscourseAutomation::Automation.deserialize_context(args[:context])
 
         automation.running_in_background!
-        automation.trigger!(context)
+        ::DiscourseAutomation.with_recursion_depth(args[:recursion_depth] || 0) do
+          automation.trigger!(context)
+        end
+      rescue ::DiscourseAutomation::RecursionLimitExceeded => e
+        # Stat.log already recorded the error; retrying can never succeed.
+        Rails.logger.warn(
+          "[discourse-automation] #{e.message} (automation_id: #{args[:automation_id]})",
+        )
       end
     end
   end
