@@ -444,7 +444,7 @@ module UpcomingChanges
 
   def self.including_css
     settings_provider.upcoming_change_site_settings.filter_map do |upcoming_change|
-      upcoming_change if settings_provider.upcoming_change_metadata[upcoming_change][:include_css]
+      upcoming_change if settings_provider.upcoming_change_metadata[upcoming_change][:body_class]
     end
   end
 end

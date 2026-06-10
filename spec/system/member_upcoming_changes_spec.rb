@@ -13,14 +13,14 @@ RSpec.describe "Member upcoming changes" do
           status: :experimental,
           impact_type: "other",
           impact_role: "developers",
-          include_css: true,
+          body_class: true,
         },
         about_page_extra_groups_show_description: {
           impact: "feature,all_members",
           status: :stable,
           impact_type: "feature",
           impact_role: "all_members",
-          include_css: true,
+          body_class: true,
         },
       },
     )

@@ -607,7 +607,7 @@ RSpec.describe SiteSerializer do
   end
 
   describe "#upcoming_changes_with_css" do
-    it "returns upcoming changes with include_css: true" do
+    it "returns upcoming changes with body_class: true" do
       mock_upcoming_change_metadata(
         {
           enable_upload_debug_mode: {
@@ -615,14 +615,14 @@ RSpec.describe SiteSerializer do
             status: :beta,
             impact_type: "other",
             impact_role: "developers",
-            include_css: true,
+            body_class: true,
           },
           enable_user_tips: {
             impact: "feature,all_members",
             status: :alpha,
             impact_type: "feature",
             impact_role: "all_members",
-            include_css: false,
+            body_class: false,
           },
         },
       )

@@ -165,7 +165,7 @@ module SiteSettingExtension
   #       options are shown. Valid values: everyone, staff, specific_groups. "No one"
   #       is always present. If `everyone` is included it must be the only value.
   #       Omit to allow all options (the default permissive behavior).
-  #     include_css: (optional) boolean to include CSS data-attrs for the upcoming change,
+  #     body_class: (optional) boolean to include CSS data-attrs for the upcoming change,
   #       useful for scoping style changes related to the change.
   def upcoming_change_metadata
     @upcoming_change_metadata ||= {}
@@ -1311,7 +1311,7 @@ module SiteSettingExtension
           impact_role: impact_role,
           status: opts[:upcoming_change][:status].to_sym,
           allow_enabled_for: allow_enabled_for,
-          include_css: opts[:upcoming_change][:include_css],
+          body_class: opts[:upcoming_change][:body_class],
         )
       end
 
