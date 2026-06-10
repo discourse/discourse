@@ -753,6 +753,27 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_svg_icon(icon)
   end
 
+  # Declare an icon set: a map of canonical Discourse icon names to glyph ids
+  # in the plugin's svg-icons sprite, served under the canonical ids with no
+  # client-side replaceIcon (see SvgSprite.apply_icon_set). `map` is a Hash or
+  # a path to a JSON file of the same shape, relative to the plugin directory.
+  # Map values may contain {placeholder} tokens, each resolving from the site
+  # setting of the same name (e.g. "ph-{my_plugin_icon_weight}-bell").
+  # `ignore_setting` optionally names a list site setting; icons listed there
+  # keep their default glyph. A theme-declared icon set takes precedence over
+  # plugin-registered ones.
+  def register_icon_set(map:, ignore_setting: nil)
+    DiscoursePluginRegistry.register_icon_set(
+      {
+        map: map,
+        ignore_setting: ignore_setting,
+        plugin_name: name,
+        plugin_dir: File.dirname(path),
+      },
+      self,
+    )
+  end
+
   def extend_content_security_policy(extension)
     csp_extensions << extension
   end
