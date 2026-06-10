@@ -6,23 +6,23 @@ module Migrations
   module Tooling
     module CLI
       module SchemaCommands
-        class DiffCommand < BaseCommand
-          include DiffOutput
-
-          self.description = "Show differences between configuration and database"
+        class UnignoreCommand < BaseCommand
+          self.description = "Remove a table from ignored.rb"
 
           options do
             option "-h/--help", "Print out help."
             option "--db <name>", "Database configuration to use.", default: "intermediate_db"
-            option "--verbose", "Show auto-ignored plugin columns."
           end
+
+          one :table_name, "The name of the table to remove from ignored.rb."
 
           def call
             return print_usage if @options[:help]
+            require_positional!(table_name, "table_name")
 
             database = selected_database
-            result = schema.diff(database:)
-            display_diff(result, database:, verbose: @options[:verbose])
+            schema.unignore_table(table_name, database:)
+            puts "✓ Removed #{table_name} from ignored.rb".green
           end
         end
       end

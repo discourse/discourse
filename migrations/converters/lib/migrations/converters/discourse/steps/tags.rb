@@ -24,6 +24,8 @@ module Migrations
             created_at: item[:created_at],
             description: item[:description],
             name: item[:name],
+            locale: item[:locale],
+            slug: item[:slug],
           )
 
           if item[:target_tag_id]

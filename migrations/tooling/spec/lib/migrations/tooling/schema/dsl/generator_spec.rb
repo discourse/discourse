@@ -174,6 +174,41 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
       end
     end
 
+    it "deletes generated files that are no longer produced" do
+      Dir.mktmpdir do |tmpdir|
+        paths = configure_output(tmpdir)
+        stub_validation_and_resolution(resolved_definition)
+
+        FileUtils.mkdir_p(paths[:models])
+        stale_path = File.join(paths[:models], "old_model.rb")
+        File.write(stale_path, "# This file is auto-generated from the Models schema.\n")
+
+        generator = described_class.new(Migrations::Tooling::Schema)
+        generator.generate
+
+        expect(File.exist?(stale_path)).to be false
+        expect(generator.deleted_files.size).to eq(1)
+        expect(generator.deleted_files.first).to end_with("old_model.rb")
+      end
+    end
+
+    it "keeps files without the auto-generated header" do
+      Dir.mktmpdir do |tmpdir|
+        paths = configure_output(tmpdir)
+        stub_validation_and_resolution(resolved_definition)
+
+        FileUtils.mkdir_p(paths[:models])
+        manual_path = File.join(paths[:models], "manual_model.rb")
+        File.write(manual_path, "# Hand-written model\n")
+
+        generator = described_class.new(Migrations::Tooling::Schema)
+        generator.generate
+
+        expect(File.exist?(manual_path)).to be true
+        expect(generator.deleted_files).to be_empty
+      end
+    end
+
     it "generates model file with custom code markers for :extended mode" do
       Dir.mktmpdir do |tmpdir|
         paths = configure_output(tmpdir)

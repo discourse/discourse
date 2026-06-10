@@ -71,6 +71,7 @@ module Migrations
             manual_locked_trust_level: item[:manual_locked_trust_level],
             moderator: item[:moderator],
             name: item[:name],
+            original_username: nil,
             primary_group_id: item[:primary_group_id],
             registration_ip_address: item[:registration_ip_address],
             silenced_till: item[:silenced_till],
