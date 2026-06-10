@@ -3,7 +3,6 @@ import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -165,7 +164,7 @@ export default class DashboardSearch extends Component {
               <div
                 class={{dConcatClass
                   "db-section__metric-number"
-                  (if this.rateExceedsThreshold "--alert")
+                  (if this.rateExceedsThreshold "--neg")
                 }}
               >
                 {{this.noResultRateValue}}
@@ -291,10 +290,7 @@ export default class DashboardSearch extends Component {
                           </td>
                           <td>
                             <DTooltip
-                              class={{dConcatClass
-                                "db-pill"
-                                (if (eq row.status "no_match") "--neg")
-                              }}
+                              class="db-pill --neg"
                               @identifier="search-gap-badge-tooltip"
                             >
                               <:trigger>{{badgeLabel row.status}}</:trigger>

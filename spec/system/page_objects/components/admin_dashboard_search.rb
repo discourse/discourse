@@ -5,10 +5,7 @@ module PageObjects
     class AdminDashboardSearch < PageObjects::Components::Base
       SECTION = "[data-section-id='search']"
 
-      BADGE_SELECTORS = {
-        "No match" => ".db-pill.--neg",
-        "Poor match" => ".db-pill:not(.--neg)",
-      }.freeze
+      BADGE_SELECTORS = { "No match" => ".db-pill.--neg", "Poor match" => ".db-pill.--neg" }.freeze
 
       def has_headline?(title, summary)
         has_css?("#{SECTION} .db-section__subintro h3", exact_text: title) &&
@@ -21,12 +18,12 @@ module PageObjects
 
       def has_no_result_rate?(value, delta: nil)
         has_kpi?("no_result_rate", value, delta: delta) &&
-          has_no_css?("#{kpi_selector("no_result_rate")} .db-section__metric-number.--alert")
+          has_no_css?("#{kpi_selector("no_result_rate")} .db-section__metric-number.--neg")
       end
 
       def has_alert_no_result_rate?(value)
         has_css?(
-          "#{kpi_selector("no_result_rate")} .db-section__metric-number.--alert",
+          "#{kpi_selector("no_result_rate")} .db-section__metric-number.--neg",
           exact_text: value,
         )
       end
