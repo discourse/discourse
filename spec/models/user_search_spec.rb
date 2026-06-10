@@ -308,4 +308,28 @@ RSpec.describe UserSearch do
       expect(results[2]).to eq("mrorange")
     end
   end
+
+  context "with the search_custom_fields option" do
+    fab!(:searchable_field) { Fabricate(:user_field, searchable: true, show_on_profile: true) }
+    fab!(:member) { Fabricate(:user, username: "memberx", name: "Member X") }
+
+    before do
+      member.set_user_field(searchable_field.id, "Acme-Corp")
+      member.save_custom_fields
+      SearchIndexer.index(member.reload, force: true)
+    end
+
+    it "matches a custom field value containing `_`, `.` or `-` when the option is set" do
+      expect(search_for("Acme-Corp", search_custom_fields: true)).to include("memberx")
+    end
+
+    it "matches a custom field value when the option is set and `enable_names` is disabled" do
+      SiteSetting.enable_names = false
+      expect(search_for("Acme-Corp", search_custom_fields: true)).to include("memberx")
+    end
+
+    it "does not match custom fields for `_`, `.` or `-` terms without the option" do
+      expect(search_for("Acme-Corp")).not_to include("memberx")
+    end
+  end
 end

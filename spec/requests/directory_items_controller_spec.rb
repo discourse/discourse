@@ -490,5 +490,45 @@ RSpec.describe DirectoryItemsController do
         expect(fields[field.id.to_s]["value"]).to include("Music")
       end
     end
+
+    it "finds users by a searchable custom field value containing `_`, `.` or `-`" do
+      field = Fabricate(:user_field, searchable: true, show_on_profile: true)
+      member = Fabricate(:user)
+      UserCustomField.create!(
+        user_id: member.id,
+        name: "user_field_#{field.id}",
+        value: "Acme-Corp",
+      )
+
+      DirectoryItem.refresh!
+      SearchIndexer.with_indexing { SearchIndexer.index(member, force: true) }
+
+      get "/directory_items.json", params: { period: "all", name: "Acme-Corp" }
+
+      expect(response.status).to eq(200)
+      usernames = response.parsed_body["directory_items"].map { |item| item["user"]["username"] }
+      expect(usernames).to include(member.username)
+    end
+
+    it "finds users by a searchable custom field value when `enable_names` is disabled" do
+      SiteSetting.enable_names = false
+
+      field = Fabricate(:user_field, searchable: true, show_on_profile: true)
+      member = Fabricate(:user)
+      UserCustomField.create!(
+        user_id: member.id,
+        name: "user_field_#{field.id}",
+        value: "Cutrocket",
+      )
+
+      DirectoryItem.refresh!
+      SearchIndexer.with_indexing { SearchIndexer.index(member, force: true) }
+
+      get "/directory_items.json", params: { period: "all", name: "Cutrocket" }
+
+      expect(response.status).to eq(200)
+      usernames = response.parsed_body["directory_items"].map { |item| item["user"]["username"] }
+      expect(usernames).to include(member.username)
+    end
   end
 end
