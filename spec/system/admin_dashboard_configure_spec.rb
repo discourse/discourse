@@ -6,7 +6,10 @@ describe "Admin Dashboard Configure menu" do
 
   let(:dashboard) { PageObjects::Pages::AdminDashboard.new }
 
-  before { SiteSetting.dashboard_improvements = true }
+  before do
+    SiteSetting.dashboard_improvements = true
+    SiteSetting.admin_dashboard_search_section_enabled = true
+  end
 
   context "as an admin" do
     before { sign_in(admin) }

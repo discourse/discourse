@@ -7,6 +7,7 @@ describe "Admin Dashboard Redesign | Search section" do
 
   before do
     SiteSetting.dashboard_improvements = true
+    SiteSetting.admin_dashboard_search_section_enabled = true
     sign_in(current_user)
   end
 
