@@ -157,7 +157,7 @@ describe "Admin Dashboard Redesign | Search section" do
       search = dashboard.search
 
       expect(search).to have_headline(
-        "Members ran 0 on-site searches in the last 30 days.",
+        "Not enough search activity to summarise yet.",
         "Pick a longer date range or come back once members have searched more.",
       )
       expect(search).to have_total_searches("0")
