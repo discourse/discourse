@@ -2,29 +2,6 @@
 
 module TurboTests
   class Runner
-    # Canonical runtime log consumed by parallel_tests when splitting specs
-    # into balanced groups. It is gitignored, so in CI its only source is the
-    # GitHub Actions cache saved at the end of the previous run.
-    RUNTIME_LOG = "tmp/turbo_rspec_runtime.log"
-
-    # Every worker used to write its timings to RUNTIME_LOG directly, but
-    # ParallelTests::RSpec::LoggerBase opens `--out` with mode "w" in every
-    # worker process, each with an independent file offset starting at 0.
-    # With 12 workers the last writer overwrites the head of the file and
-    # only a byte-overlay mosaic survives — usually too sparse for
-    # parallel_tests' runtime threshold (it needs data for > 2/3 of the
-    # files), which silently degrades the split to file byte-size, and
-    # occasionally just-enough-but-corrupt, which packs the missing heavy
-    # files at the average. Each worker now writes to a private log and the
-    # parent merges them after all workers exit.
-    WORKER_RUNTIME_LOG_DIR = "tmp/turbo_rspec_runtime_logs"
-
-    # Committed snapshot of real measured per-file runtimes, substituted for
-    # RUNTIME_LOG when the restored cache is too sparse to balance on (fresh
-    # cache scope, or a cache written before the merge fix above) — see
-    # #prepare_runtime_log.
-    RUNTIME_SEED_LOG = "lib/turbo_tests/core_system_runtime_seed.log"
-
     def self.run(opts = {})
       files = opts[:files]
       formatters = opts[:formatters]
@@ -85,11 +62,7 @@ module TurboTests
       @num_processes = ParallelTests.determine_number_of_processes(nil)
 
       group_opts = {}
-
-      if @use_runtime_info
-        prepare_runtime_log
-        group_opts[:runtime_log] = RUNTIME_LOG
-      end
+      group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log" if @use_runtime_info
 
       tests_in_groups =
         ParallelTests::RSpec::Runner.tests_in_groups(@files, @num_processes, **group_opts)
@@ -113,8 +86,6 @@ module TurboTests
       @reporter.finish
 
       @threads.each(&:join)
-
-      merge_runtime_logs if @use_runtime_info
 
       if @retry_and_log_flaky_tests && !@reporter.failed_examples.empty?
         retry_failed_examples_threshold = 10
@@ -158,64 +129,6 @@ module TurboTests
       end
 
       FileUtils.mkdir_p("tmp/test-pipes/")
-
-      # Drop per-worker runtime logs from a previous run so the merge can't
-      # pick up stale timings for a worker slot that doesn't run this time.
-      FileUtils.rm_rf(WORKER_RUNTIME_LOG_DIR)
-      FileUtils.mkdir_p(WORKER_RUNTIME_LOG_DIR)
-    end
-
-    # parallel_tests only balances by runtime when the log covers > 2/3 of
-    # the files (ParallelTests::Test::Runner#tests_with_size); below that it
-    # silently degrades the split to file byte-size. A cache that clears the
-    # bar is fresh, complete, same-environment data — leave it untouched. One
-    # that doesn't is a pre-merge-fix byte-overlay mosaic: substitute the
-    # committed seed wholesale rather than overlaying, because the two are
-    # measured at different scales (CI-contended seconds vs the seed's
-    # locally measured seconds) and the grouper packs by relative weight.
-    def prepare_runtime_log
-      seeded = parse_runtime_log(RUNTIME_SEED_LOG)
-      return if seeded.empty?
-
-      cached = parse_runtime_log(RUNTIME_LOG)
-      return if cached.count { |path, _| @files.include?(path) } * 1.5 > @files.size
-
-      write_runtime_log(seeded)
-    end
-
-    # Fold every worker's private runtime log into RUNTIME_LOG. Entries for
-    # files that didn't run this invocation are kept (multiple turbo_rspec
-    # invocations within one CI job share the file), fresh timings win.
-    def merge_runtime_logs
-      fresh =
-        Dir["#{WORKER_RUNTIME_LOG_DIR}/*.log"].reduce({}) do |times, path|
-          times.merge(parse_runtime_log(path))
-        end
-
-      write_runtime_log(parse_runtime_log(RUNTIME_LOG).merge(fresh)) if fresh.any?
-    end
-
-    def parse_runtime_log(path)
-      return {} unless File.exist?(path)
-
-      File
-        .read(path)
-        .each_line
-        .with_object({}) do |line, times|
-          test, _, time = line.strip.rpartition(":")
-          # A pre-merge-fix cache can contain one corrupt line at the seam
-          # where a worker's write overlapped another's; require a clean
-          # `path/to/foo_spec.rb:<float>` shape and drop anything else.
-          next if !test.end_with?("_spec.rb") || !time.match?(/\A\d+(\.\d+)?\z/)
-          times[test] = time.to_f if time.to_f > 0
-        end
-    rescue SystemCallError
-      {}
-    end
-
-    def write_runtime_log(times)
-      FileUtils.mkdir_p(File.dirname(RUNTIME_LOG))
-      File.write(RUNTIME_LOG, times.map { |test, time| "#{test}:#{time}" }.join("\n") << "\n")
     end
 
     def rerun_failed_examples(failed_examples)
@@ -283,12 +196,7 @@ module TurboTests
 
         record_runtime_options =
           if record_runtime
-            [
-              "--format",
-              "ParallelTests::RSpec::RuntimeLogger",
-              "--out",
-              "#{WORKER_RUNTIME_LOG_DIR}/worker-#{process_id}.log",
-            ]
+            %w[--format ParallelTests::RSpec::RuntimeLogger --out tmp/turbo_rspec_runtime.log]
           else
             []
           end
