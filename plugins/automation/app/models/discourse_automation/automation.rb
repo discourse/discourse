@@ -160,8 +160,6 @@ module DiscourseAutomation
       end
 
       if scriptable.background && !running_in_background
-        # The job carries the current depth and the script runs (and is
-        # counted) inside it, so don't increment around a mere enqueue.
         trigger_in_background!(context)
       else
         begin
