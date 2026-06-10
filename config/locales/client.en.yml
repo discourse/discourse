@@ -7001,17 +7001,17 @@ en:
             logging_disabled: "Search logging is disabled, so no search data is being collected. Enable the log_search_queries site setting to start collecting it."
             count_headline:
               last_7_days:
-                one: "Members ran %{formatted_count} on-site search in the last 7 days."
-                other: "Members ran %{formatted_count} on-site searches in the last 7 days."
+                one: "Members ran %{formatted_count} on-site search in the last 7 days"
+                other: "Members ran %{formatted_count} on-site searches in the last 7 days"
               last_30_days:
-                one: "Members ran %{formatted_count} on-site search in the last 30 days."
-                other: "Members ran %{formatted_count} on-site searches in the last 30 days."
+                one: "Members ran %{formatted_count} on-site search in the last 30 days"
+                other: "Members ran %{formatted_count} on-site searches in the last 30 days"
               last_3_months:
-                one: "Members ran %{formatted_count} on-site search in the last 3 months."
-                other: "Members ran %{formatted_count} on-site searches in the last 3 months."
+                one: "Members ran %{formatted_count} on-site search in the last 3 months"
+                other: "Members ran %{formatted_count} on-site searches in the last 3 months"
               selected_period:
-                one: "Members ran %{formatted_count} on-site search in the selected period."
-                other: "Members ran %{formatted_count} on-site searches in the selected period."
+                one: "Members ran %{formatted_count} on-site search in the selected period"
+                other: "Members ran %{formatted_count} on-site searches in the selected period"
             headline:
               no_signal_title: "Not enough search activity to summarise yet."
               no_signal: "Pick a longer date range or come back once members have searched more."

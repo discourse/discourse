@@ -61,7 +61,7 @@ describe "Admin Dashboard Redesign | Search section" do
       search = dashboard.search
 
       expect(search).to have_headline(
-        "Members ran 50 on-site searches in the last 30 days.",
+        "Members ran 50 on-site searches in the last 30 days",
         "The no-result rate is climbing compared with the previous period. " \
           "Keep an eye on the content gaps below.",
       )
@@ -111,7 +111,7 @@ describe "Admin Dashboard Redesign | Search section" do
       dashboard.select_preset("last_7_days")
 
       expect(search).to have_headline(
-        "Members ran 27 on-site searches in the last 7 days.",
+        "Members ran 27 on-site searches in the last 7 days",
         "Members keep finding what they search for, and search volume is steady or growing.",
       )
 
@@ -126,7 +126,7 @@ describe "Admin Dashboard Redesign | Search section" do
       dashboard.select_preset("last_3_months")
 
       expect(dashboard.search).to have_headline(
-        "Members ran 90 on-site searches in the last 3 months.",
+        "Members ran 90 on-site searches in the last 3 months",
         "Members keep finding what they search for, and search volume is steady or growing.",
       )
 
@@ -144,7 +144,7 @@ describe "Admin Dashboard Redesign | Search section" do
       search = dashboard.search
 
       expect(search).to have_headline(
-        "Members ran 10 on-site searches in the last 30 days.",
+        "Members ran 10 on-site searches in the last 30 days",
         "More than 10% of searches ended without a click this period. " \
           "Review the content gaps below to see what's missing.",
       )
@@ -195,7 +195,7 @@ describe "Admin Dashboard Redesign | Search section" do
       search = dashboard.search
 
       expect(search).to have_headline(
-        "Members ran 3 on-site searches in the selected period.",
+        "Members ran 3 on-site searches in the selected period",
         "Search volume is down compared with the previous period, " \
           "while most searches still lead to content.",
       )
@@ -206,7 +206,7 @@ describe "Admin Dashboard Redesign | Search section" do
       dashboard.visit_with_query(range: "custom", start_date: "2026-04-25", end_date: "2026-04-25")
 
       expect(search).to have_headline(
-        "Members ran 1 on-site search in the selected period.",
+        "Members ran 1 on-site search in the selected period",
         "More than 10% of searches ended without a click this period. " \
           "Review the content gaps below to see what's missing.",
       )
