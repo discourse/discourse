@@ -17,9 +17,7 @@ describe "User preferences | Security" do
     sign_in(user)
 
     # system specs run on their own host + port
-    DiscourseWebauthn.stubs(:origin).returns(
-      "http://#{Capybara.server_host}:#{Capybara.server_port}",
-    )
+    DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
   end
 
   shared_examples "security keys" do
