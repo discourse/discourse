@@ -1636,6 +1636,50 @@ posting:
     default: false
     client: true
     hidden: true
+    area: "gifs"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/404829"
+  klipy_api_key:
+    default: ""
+    client: true
+    area: "gifs"
+  klipy_file_detail:
+    default: "webp"
+    client: true
+    area: "gifs"
+    type: enum
+    choices:
+      - webp
+      - gif
+  klipy_content_filter:
+    default: "high"
+    client: true
+    area: "gifs"
+    type: enum
+    choices:
+      - high
+      - medium
+      - low
+      - "off"
+  klipy_country:
+    default: "US"
+    client: true
+    area: "gifs"
+  klipy_locale:
+    default: "en_US"
+    client: true
+    area: "gifs"
+  klipy_limit_infinite_search_results:
+    default: false
+    client: true
+    area: "gifs"
+  klipy_max_results_limit:
+    default: 240
+    client: true
+    area: "gifs"
+    min: 24
   approve_post_count:
     default: 0
     area: "posts_and_topics"

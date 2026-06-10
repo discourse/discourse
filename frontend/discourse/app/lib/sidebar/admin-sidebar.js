@@ -417,6 +417,19 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       ]);
     }
 
+    if (siteSettings.enable_gifs) {
+      this.adminNavManager.amendLinksToSection("appearance", [
+        {
+          name: "admin_gifs",
+          route: "adminConfig.gifs.settings",
+          label: "admin.config.gifs.title",
+          description: "admin.config.gifs.header_description",
+          icon: "gif",
+          settings_area: "gifs",
+        },
+      ]);
+    }
+
     this.adminNavManager.amendLinksToSection("root", [
       {
         name: "admin_upcoming_changes",
