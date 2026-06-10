@@ -10,6 +10,11 @@ module PageObjects
         "Poor match" => ".db-pill:not(.--neg)",
       }.freeze
 
+      def has_headline?(title, summary)
+        has_css?("#{SECTION} .db-section__subintro h3", exact_text: title) &&
+          has_css?("#{SECTION} .db-section__subintro p", exact_text: summary)
+      end
+
       def has_total_searches?(value, delta: nil)
         has_kpi?("total_searches", value, delta: delta)
       end

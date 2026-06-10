@@ -59,6 +59,12 @@ describe "Admin Dashboard Redesign | Search section" do
 
       search = dashboard.search
 
+      expect(search).to have_headline(
+        "Members ran 50 on-site searches in the last 30 days.",
+        "The no-result rate is climbing compared with the previous period. " \
+          "Keep an eye on the content gaps below.",
+      )
+
       expect(search).to have_total_searches("50", delta: { text: "+25%", direction: "pos" })
       expect(search).to have_no_result_rate("4%", delta: { text: "+4%", direction: "neg" })
 
@@ -103,6 +109,11 @@ describe "Admin Dashboard Redesign | Search section" do
 
       dashboard.select_preset("last_7_days")
 
+      expect(search).to have_headline(
+        "Members ran 27 on-site searches in the last 7 days.",
+        "Members keep finding what they search for, and search volume is steady or growing.",
+      )
+
       expect(search).to have_total_searches("27", delta: { text: "+800%", direction: "pos" })
       expect(search).to have_no_result_rate("7%", delta: { text: "-93%", direction: "pos" })
 
@@ -124,6 +135,11 @@ describe "Admin Dashboard Redesign | Search section" do
       dashboard.visit
       search = dashboard.search
 
+      expect(search).to have_headline(
+        "Members ran 10 on-site searches in the last 30 days.",
+        "More than 10% of searches ended without a click this period. " \
+          "Review the content gaps below to see what's missing.",
+      )
       expect(search).to have_total_searches("10")
       expect(search).to have_alert_no_result_rate("50%")
     end
@@ -133,6 +149,10 @@ describe "Admin Dashboard Redesign | Search section" do
       dashboard.visit
       search = dashboard.search
 
+      expect(search).to have_headline(
+        "Members ran 0 on-site searches in the last 30 days.",
+        "Pick a longer date range or come back once members have searched more.",
+      )
       expect(search).to have_total_searches("0")
       expect(search).to have_no_result_rate("—")
       expect(search).to have_no_kpi_deltas
@@ -164,6 +184,11 @@ describe "Admin Dashboard Redesign | Search section" do
       dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-03")
       search = dashboard.search
 
+      expect(search).to have_headline(
+        "Members ran 3 on-site searches in the selected period.",
+        "Search volume is down compared with the previous period, " \
+          "while most searches still lead to content.",
+      )
       expect(search).to have_total_searches("3", delta: { text: "-40%", direction: "neg" })
       expect(search).to have_no_result_rate("0%", delta: { text: "-100%", direction: "pos" })
       expect(search).to have_trending_rows([{ term: "ruby", searches: 3 }])

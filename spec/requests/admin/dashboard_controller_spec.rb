@@ -269,6 +269,9 @@ RSpec.describe Admin::DashboardController do
           expect(response.status).to eq(200)
           expect(search_data).to eq(
             "logging_enabled" => true,
+            "headline" => {
+              "key" => "admin.dashboard.sections.search.headline.healthy",
+            },
             "kpis" => {
               "total_searches" => {
                 "value" => 2,
@@ -303,6 +306,9 @@ RSpec.describe Admin::DashboardController do
           expect(response.status).to eq(200)
           expect(search_data).to eq(
             "logging_enabled" => true,
+            "headline" => {
+              "key" => "admin.dashboard.sections.search.headline.content_gaps",
+            },
             "kpis" => {
               "total_searches" => {
                 "value" => 1,

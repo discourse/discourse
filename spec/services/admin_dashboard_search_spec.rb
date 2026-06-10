@@ -28,6 +28,9 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
+        headline: {
+          key: "admin.dashboard.sections.search.headline.content_gaps",
+        },
         kpis: {
           total_searches: {
             value: 19,
@@ -68,6 +71,9 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
+        headline: {
+          key: "admin.dashboard.sections.search.headline.healthy",
+        },
         kpis: {
           total_searches: {
             value: 136,
@@ -101,6 +107,9 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
+        headline: {
+          key: "admin.dashboard.sections.search.headline.content_gaps",
+        },
         kpis: {
           total_searches: {
             value: 11,
@@ -117,6 +126,30 @@ RSpec.describe AdminDashboardSearch do
             { term: format("gap-%02d", index), searches: 1, status: "no_match" }
           end,
       )
+    end
+
+    it "picks the headline state from the rate and volume signals" do
+      Fabricate(:search_log, term: "ghost", created_at: "2026-05-02 10:00")
+      Fabricate.times(11, :clicked_search_log, term: "ruby", created_at: "2026-05-02 11:00")
+      Fabricate.times(12, :clicked_search_log, term: "ruby", created_at: "2026-04-26 10:00")
+
+      Fabricate.times(4, :clicked_search_log, term: "ruby", created_at: "2026-04-02 10:00")
+      Fabricate.times(10, :clicked_search_log, term: "ruby", created_at: "2026-03-27 10:00")
+
+      Fabricate.times(12, :clicked_search_log, term: "ruby", created_at: "2026-03-02 10:00")
+      Fabricate.times(10, :clicked_search_log, term: "ruby", created_at: "2026-02-24 10:00")
+
+      expect(
+        described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:headline],
+      ).to eq(key: "admin.dashboard.sections.search.headline.rate_climbing")
+
+      expect(
+        described_class.build(start_date: "2026-04-01", end_date: "2026-04-07")[:headline],
+      ).to eq(key: "admin.dashboard.sections.search.headline.shrinking")
+
+      expect(
+        described_class.build(start_date: "2026-03-01", end_date: "2026-03-07")[:headline],
+      ).to eq(key: "admin.dashboard.sections.search.headline.healthy")
     end
 
     it "omits deltas when the prior window has no searches" do
@@ -138,6 +171,9 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
+        headline: {
+          key: "admin.dashboard.sections.search.headline.no_signal",
+        },
         kpis: {
           total_searches: {
             value: 0,
