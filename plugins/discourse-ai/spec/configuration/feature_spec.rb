@@ -211,6 +211,48 @@ RSpec.describe DiscourseAi::Configuration::Feature do
     end
   end
 
+  describe ".admin_dashboard_features" do
+    it "returns the first-party admin dashboard highlights feature" do
+      feature = described_class.admin_dashboard_features.first
+
+      expect(feature.name).to eq("highlights")
+      expect(feature.agent_setting).to eq("ai_admin_dashboard_highlights_agent")
+      expect(feature.module_id).to eq(DiscourseAi::Configuration::Module::ADMIN_DASHBOARD_ID)
+      expect(feature.module_name).to eq(DiscourseAi::Configuration::Module::ADMIN_DASHBOARD)
+    end
+
+    it "is enabled only when its selected agent is enabled" do
+      SiteSetting.ai_admin_dashboard_enabled = true
+      agent = AiAgent.find_by(id: -38) || Fabricate(:ai_agent, id: -38)
+      agent.update!(enabled: true)
+      feature = described_class.admin_dashboard_features.first
+
+      expect(feature).to be_enabled
+
+      agent.update!(enabled: false)
+      expect(feature).not_to be_enabled
+    end
+
+    it "is disabled when the admin dashboard module is disabled" do
+      SiteSetting.ai_admin_dashboard_enabled = false
+      agent = AiAgent.find_by(id: -38) || Fabricate(:ai_agent, id: -38)
+      agent.update!(enabled: true)
+
+      expect(described_class.admin_dashboard_features.first).not_to be_enabled
+    end
+  end
+
+  describe "admin dashboard module" do
+    it "is hidden from the AI features page" do
+      admin_dashboard_module =
+        DiscourseAi::Configuration::Module.all.find do |mod|
+          mod.name == DiscourseAi::Configuration::Module::ADMIN_DASHBOARD
+        end
+
+      expect(admin_dashboard_module).not_to be_visible
+    end
+  end
+
   describe ".find_features_using" do
     it "returns all features using a specific agent" do
       SiteSetting.ai_summarization_agent = ai_agent.id

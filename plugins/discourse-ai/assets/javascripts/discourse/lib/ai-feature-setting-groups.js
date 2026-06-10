@@ -79,6 +79,17 @@ export const AI_FEATURE_SETTING_GROUPS = {
     },
   ],
 
+  admin_dashboard: [
+    {
+      key: "settings",
+      titleKey: "discourse_ai.features.admin_dashboard.setting_groups.settings",
+      settings: [
+        "ai_admin_dashboard_enabled",
+        "ai_admin_dashboard_highlights_agent",
+      ],
+    },
+  ],
+
   bot: [
     {
       key: "settings",

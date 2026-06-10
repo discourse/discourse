@@ -32,6 +32,7 @@ register_asset "stylesheets/modules/summarization/desktop/ai-summary.scss", :des
 
 register_asset "stylesheets/modules/summarization/common/ai-gists.scss"
 
+register_asset "stylesheets/modules/admin-dashboard/common/admin-dashboard-highlight.scss"
 register_asset "stylesheets/modules/ai-bot/common/bot-replies.scss"
 register_asset "stylesheets/modules/ai-bot/common/ai-agent.scss"
 register_asset "stylesheets/modules/ai-bot/common/ai-discobot-discoveries.scss"
