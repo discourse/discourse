@@ -318,3 +318,4 @@ gem "pdf-reader", require: false
 
 # for discourse-data-explorer (JSON:API modernization spike)
 gem "graphiti", "1.10.2"
+gem "graphiti-rails"
