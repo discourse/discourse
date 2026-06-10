@@ -223,7 +223,8 @@ RSpec.describe DiscourseAi::Configuration::Feature do
 
     it "is enabled only when its selected agent is enabled" do
       SiteSetting.ai_admin_dashboard_enabled = true
-      agent = Fabricate(:ai_agent, id: -38, enabled: true)
+      agent = AiAgent.find_by(id: -38) || Fabricate(:ai_agent, id: -38)
+      agent.update!(enabled: true)
       feature = described_class.admin_dashboard_features.first
 
       expect(feature).to be_enabled
@@ -234,7 +235,8 @@ RSpec.describe DiscourseAi::Configuration::Feature do
 
     it "is disabled when the admin dashboard module is disabled" do
       SiteSetting.ai_admin_dashboard_enabled = false
-      Fabricate(:ai_agent, id: -38, enabled: true)
+      agent = AiAgent.find_by(id: -38) || Fabricate(:ai_agent, id: -38)
+      agent.update!(enabled: true)
 
       expect(described_class.admin_dashboard_features.first).not_to be_enabled
     end

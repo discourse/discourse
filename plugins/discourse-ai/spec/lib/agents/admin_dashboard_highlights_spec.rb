@@ -16,12 +16,9 @@ RSpec.describe DiscourseAi::Agents::AdminDashboardHighlights do
 
   it "resolves records with its system id to the admin dashboard highlights class" do
     agent =
-      Fabricate(
-        :ai_agent,
-        id: -38,
-        name: "Admin Dashboard Highlights #{SecureRandom.hex(4)}",
-        allowed_group_ids: [Group::AUTO_GROUPS[:admins]],
-      )
+      AiAgent.find_by(id: -38) ||
+        Fabricate(:ai_agent, id: -38, name: "Admin Dashboard Highlights #{SecureRandom.hex(4)}")
+    agent.update!(allowed_group_ids: [Group::AUTO_GROUPS[:admins]])
 
     expect(agent.class_instance).to be < described_class
     expect(agent.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:admins])
