@@ -3289,7 +3289,7 @@ fr:
         education:
           topic_tracking_preferences: 'Vous pouvez consulter et modifier vos paramètres de suivi des nouveaux sujets dans <a href="%{basePath}/my/preferences/tracking">vos préférences</a>.'
           unread: "Rien n'a été oublié... impressionnant !"
-          new_new: "Rien de nouveau pour le moment... revenez bientôt !"
+          unified_new: "Rien de nouveau pour le moment... revenez bientôt !"
           new: "Rien de nouveau pour le moment... revenez bientôt !"
     topic_bulk_actions:
       dismiss:
@@ -4465,7 +4465,7 @@ fr:
         new_replies_tooltip: "Nouvelles réponses"
         replies: "Réponses"
         replies_with_count: "Réponses (%{count})"
-      new_new:
+      unified_new:
         help: "sujets créés ou auxquels on a répondu au cours des derniers jours"
       posted:
         title: "Mes publications"

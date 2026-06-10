@@ -20,8 +20,9 @@
 #                         These groups cannot be selected and will be stripped if set via API.
 #                         Only applies to group_list type settings.
 # requires_confirmation - A string that indicates if the setting requires confirmation before it can be changed.
-#                         Only valid value here is "simple" which will display a confirmation dialog when the setting
-#                         is changed.
+#                         Valid values are "simple" (always display a confirmation dialog when the setting is changed),
+#                         "simple_on_enable" (only when the setting is enabled), and "simple_on_disable" (only when
+#                         the setting is disabled).
 # themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
 #                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
 # upcoming_change_default_override - Allow an upcoming change to control the new default value of this setting.
@@ -31,6 +32,7 @@
 #                          - status: experimental | alpha | beta | stable
 #                          - impact: two parts separated by comma - feature|other|site_setting_default , staff|admins|moderators|all_members|developers
 #                          - learn_more_url: a url for more information
+#                          - body_class: (optional boolean) to include a uc-NAME CSS class on the <body> element when the change is enabled
 #                          - allow_enabled_for: (optional array) restricts which "Enabled for"
 #                            dropdown options the admin can pick for this upcoming change.
 #                            Valid values: everyone, staff, specific_groups.
@@ -1635,6 +1637,50 @@ posting:
     default: false
     client: true
     hidden: true
+    area: "gifs"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/404829"
+  klipy_api_key:
+    default: ""
+    client: true
+    area: "gifs"
+  klipy_file_detail:
+    default: "webp"
+    client: true
+    area: "gifs"
+    type: enum
+    choices:
+      - webp
+      - gif
+  klipy_content_filter:
+    default: "high"
+    client: true
+    area: "gifs"
+    type: enum
+    choices:
+      - high
+      - medium
+      - low
+      - "off"
+  klipy_country:
+    default: "US"
+    client: true
+    area: "gifs"
+  klipy_locale:
+    default: "en_US"
+    client: true
+    area: "gifs"
+  klipy_limit_infinite_search_results:
+    default: false
+    client: true
+    area: "gifs"
+  klipy_max_results_limit:
+    default: 240
+    client: true
+    area: "gifs"
+    min: 24
   approve_post_count:
     default: 0
     area: "posts_and_topics"
@@ -2935,6 +2981,7 @@ security:
     max_file_size_kb: 512
   content_security_policy:
     default: true
+    requires_confirmation: "simple_on_disable"
   content_security_policy_report_only:
     default: false
   content_security_policy_frame_ancestors:
@@ -4393,6 +4440,7 @@ experimental:
       allow_enabled_for:
         - staff
         - specific_groups
+      body_class: true
   enable_auto_grid_images:
     default: true
     client: true
@@ -4406,6 +4454,7 @@ experimental:
       status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403284"
+      body_class: true
   enable_new_post_reactions_menu:
     default: false
     client: true
@@ -4470,6 +4519,7 @@ experimental:
       status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/387322"
+      body_class: true
   enable_simplified_category_creation:
     default: false
     hidden: true
@@ -4500,6 +4550,7 @@ experimental:
       impact: "feature,all_members"
       status: "beta"
       learn_more_url: "https://meta.discourse.org/t/-/395331"
+      body_class: true
   enable_horizon_high_context_topic_cards:
     default: false
     client: true

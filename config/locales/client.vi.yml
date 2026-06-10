@@ -3237,7 +3237,7 @@ vi:
         education:
           topic_tracking_preferences: 'Bạn có thể xem và thay đổi cài đặt theo dõi chủ đề của mình trong <a href="%{basePath}/my/preferences/tracking">thiết lập</a>.'
           unread: "Đã đọc hết... thật ấn tượng!"
-          new_new: "Hiện tại chưa có gì mới... hãy quay lại sau!"
+          unified_new: "Hiện tại chưa có gì mới... hãy quay lại sau!"
           new: "Hiện tại chưa có gì mới... hãy quay lại sau!"
           generic: "Không có gì để xem ở đây... hãy quay lại sau!"
     topic_bulk_actions:
@@ -4409,7 +4409,7 @@ vi:
         new_replies_tooltip: "Các trả lời mới"
         replies: "Trả lời"
         replies_with_count: "Trả lời (%{count})"
-      new_new:
+      unified_new:
         help: "các chủ đề được tạo hoặc trả lời trong vài ngày qua"
       posted:
         title: "Tút của tôi"

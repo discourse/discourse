@@ -6,10 +6,8 @@
 
 ru:
   js:
-    discourse_hCaptcha:
-      missing_token: "Пройдите тест hCaptcha."
+    discourse_captcha:
       placeholder: заполнитель
-      contact_system_administrator: "Возникла проблема с hCaptcha. Если проблема не исчезнет, обратитесь к системному администратору."
   admin_js:
     admin:
       site_settings:

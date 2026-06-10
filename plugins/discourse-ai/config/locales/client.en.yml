@@ -313,6 +313,12 @@ en:
             model_settings: "Model Settings"
             related_topics: "Related Topics"
             semantic_search: "Semantic Search"
+        admin_dashboard:
+          name: "Admin Dashboard"
+          description: "Helps community managers spot meaningful shifts and decide where to look next"
+          highlights: "Highlights"
+          setting_groups:
+            settings: "Basic Settings"
         discord:
           name: "Discord integration"
           description: "Adds the ability to search Discord channels"

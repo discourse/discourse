@@ -3143,6 +3143,15 @@ en:
       confirm_publish: "Are you sure you want to publish this draft?"
       publishing: "Publishing Topic…"
 
+    gifs:
+      modal_title: "Search GIFs"
+      composer_title: "Insert GIF"
+      no_results: "Enter a keyword above to search for GIFs."
+      browse_categories: "Browse by category"
+      bad_api_key: "Klipy API key is missing or invalid. Please check the gifs API key setting."
+      error_rate_limit: "We have reached the GIF API rate limits. Please wait a moment and try again."
+      error_search_too_long: "Please shorten your search query to under 50 characters and try again."
+
     composer:
       autocomplete:
         username_missing: "Selected autocomplete result is missing username."
@@ -5057,6 +5066,7 @@ en:
         toggle_reply: "Toggle Reply permission"
         toggle_full: "Toggle Create permission"
         inherited: 'This permission is inherited from "%{everyone_group}"'
+        remove_all: "Remove all"
       special_warning: "This is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       uncategorized_security_warning: "This category is special. It is intended as holding area for topics that have no category; it cannot have security settings."
       uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text Content</a>.'
@@ -6615,6 +6625,9 @@ en:
         notifications:
           title: "Notifications"
           header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation"
+        gifs:
+          title: "GIFs"
+          header_description: "Configure the GIF picker that lets users search and insert GIFs into posts and chat messages. Site texts for the modal can be customized in customize/site_texts."
         onebox:
           title: "Onebox"
           header_description: "Configure how onebox previews are generated and displayed for your site"
@@ -9162,6 +9175,7 @@ en:
           disabled: "Not shown on signup form"
         searchable:
           title: "Searchable"
+          tooltip: "When enabled, anyone can find members by this field's value and see it in search results, even if it's not shown on their profile or user card."
           enabled: "Searchable"
           disabled: "Not searchable"
 
@@ -9328,6 +9342,9 @@ en:
           can_permanently_delete:
             prompt: "Enabling this allows admins to permanently destroy posts, topics, and post revisions. Permanently deleted data cannot be recovered. This may also affect data integrity and break existing links."
             confirm: "I understand"
+          content_security_policy:
+            prompt: "Disabling the content security policy removes an important layer of protection against cross-site scripting (XSS) and other content injection attacks. This will leave your site vulnerable, and should only be done for debugging/testing purposes. Disabling CSP will never help to resolve CORS issues. Are you sure you want to proceed?"
+            confirm: "Yes, disable the content security policy"
         job_status:
           completed: "Update completed"
           enqueued: "Update in progress"

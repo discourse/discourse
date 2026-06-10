@@ -33,6 +33,11 @@ pl_PL:
             topic_id:
               label: ID tematu
     discourse_calendar:
+      livestream:
+        chat:
+          going: "Kliknij „Idę”"
+          join_channel_header: "🌟 Dołącz do nas! 🌟"
+          join_channel_message: "Potwierdź swoją obecność i odblokuj nasz czat wydarzenia. Zanurz się w dyskusjach, podziel się swoim entuzjazmem i połącz się z innymi uczestnikami!"
       invite_user_notification: "%{username} zaprosił Cię do: %{description}"
       preferences:
         all_events: "Kalendarz Discourse – wszystkie wydarzenia"

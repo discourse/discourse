@@ -28,6 +28,7 @@ module SiteSettings
           fg
           ga
           gb
+          gif
           gpu
           gpt
           gtm

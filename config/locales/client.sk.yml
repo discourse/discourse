@@ -3514,7 +3514,7 @@ sk:
         education:
           topic_tracking_preferences: 'Nastavenia sledovania novej témy si môžete pozrieť a zmeniť v <a href="%{basePath}/my/preferences/tracking">nastaveniach</a>.'
           unread: "Nič nezostalo neprečítané... pôsobivé!"
-          new_new: "Momentálne nič nové... čoskoro sa vráťte!"
+          unified_new: "Momentálne nič nové... skúste to znova neskôr!"
           new: "Momentálne nič nové... skúste to znova neskôr!"
     topic_bulk_actions:
       dismiss:
@@ -4795,7 +4795,7 @@ sk:
         new_replies_tooltip: "Nové odpovede"
         replies: "Odpovede"
         replies_with_count: "Odpovede (%{count})"
-      new_new:
+      unified_new:
         help: "témy vytvorené alebo zodpovedané za posledných niekoľko dní"
       posted:
         title: "Moje príspevky"

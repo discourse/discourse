@@ -19,6 +19,7 @@ pl_PL:
         title: Zasady
         attach: Utwórz zasady
         save: Zapisz zmiany
+        edit: Edytuj ustawienia zasad
         insert: Wstaw
         errors:
           group: Grupa jest wymagana

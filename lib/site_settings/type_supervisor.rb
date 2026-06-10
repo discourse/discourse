@@ -36,6 +36,7 @@ class SiteSettings::TypeSupervisor
   REQUIRES_CONFIRMATION_TYPES = {
     simple: "simple",
     simple_on_enable: "simple_on_enable",
+    simple_on_disable: "simple_on_disable",
     user_option: "user_option",
   }.freeze
 

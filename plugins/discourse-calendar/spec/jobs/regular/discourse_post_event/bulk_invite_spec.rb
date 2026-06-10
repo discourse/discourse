@@ -165,6 +165,34 @@ describe Jobs::DiscoursePostEventBulkInvite do
           end
         end
 
+        context "when the current user can't see the group's members" do
+          # Moderator can edit any post but is not an admin, so member-visibility
+          # checks actually apply to them.
+          let(:moderator) { Fabricate(:moderator) }
+          let(:mod_topic) { Fabricate(:topic, user: moderator) }
+          let(:mod_post) { Fabricate(:post, topic: mod_topic) }
+          let(:mod_event) { Fabricate(:event, post: mod_post, status: "private") }
+          let(:hidden_member) { Fabricate(:user) }
+          let(:hidden_group) do
+            Fabricate(:group, members_visibility_level: Group.visibility_levels[:owners]).tap do |g|
+              g.add(hidden_member)
+              g.save!
+            end
+          end
+
+          # Serialized Sidekiq args come back with string keys, which is what the
+          # group-visibility filter must handle (see filter_out_unavailable_groups).
+          it "filters out the group even when invitee args use string keys" do
+            Jobs::DiscoursePostEventBulkInvite.new.execute(
+              event_id: mod_event.id,
+              invitees: [{ "identifier" => hidden_group.name, "attendance" => "going" }],
+              current_user_id: moderator.id,
+            )
+
+            expect(DiscoursePostEvent::Invitee.where(post_id: mod_post.id)).to be_empty
+          end
+        end
+
         context "when the event is public" do
           before { post_event_1.update_with_params!(status: 1) }
 

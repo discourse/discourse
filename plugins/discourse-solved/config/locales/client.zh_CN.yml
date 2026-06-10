@@ -15,6 +15,7 @@ zh_CN:
           kpi:
             accepted_solutions:
               label: "已被接受的解决方案"
+              tooltip: "被标记为解决方案的帖子所构成的主题数量。"
   js:
     notifications:
       alt:
@@ -60,7 +61,10 @@ zh_CN:
       confirm_solved_removal_confirm: "确认"
       confirm_solved_removal_cancel: "取消"
       shared_issue:
+        label: "我也是"
         label_with_count: "%{label} (%{count})"
+        title: "我也遇到了这个问题。"
+        author_title: "你发起了这个话题。"
       no_answer:
         title: 您的问题是否已被解答？
         description: "在正确回复下方使用解决方案按钮高亮显示回答并帮助他人。"

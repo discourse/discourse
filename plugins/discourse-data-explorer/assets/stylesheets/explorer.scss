@@ -338,6 +338,7 @@ table.group-reports {
 
   &:not(.editing) .desc {
     margin: 10px 0;
+    white-space: pre-wrap;
   }
 
   .groups {
@@ -914,6 +915,9 @@ table.group-reports {
     .query-desc {
       color: var(--primary-high);
       max-width: 20vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
 
       @include viewport.until(md) {
         max-width: 90vw;

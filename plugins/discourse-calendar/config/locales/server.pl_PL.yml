@@ -72,6 +72,10 @@ pl_PL:
     sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
     calendar_first_day_of_week: "Ustaw pierwszy dzień tygodnia, w którym będzie wyświetlany kalendarz. Dostępne opcje to sobota, niedziela lub poniedziałek."
     enable_events_category_type_setup: "Włącza opcję typu kategorii Wydarzenia podczas konfiguracji tworzenia kategorii."
+    livestream_enabled: "Włącz czat na żywo dla tematów oznaczonych tagiem „na żywo”."
+    livestream_chat_allowed_groups: "Tylko grupy znajdujące się na liście dozwolonych mogą czatować na kanale transmisji na żywo."
+    livestream_embeddable_chat_allowed_paths: "Dozwolone ścieżki dla osadzanego czatu na żywo."
+    livestream_enable_modal_chat_on_mobile: "Pokaż czat na żywo w oknie modalnym na urządzeniu mobilnym."
   discourse_calendar:
     category_type:
       default_calendar_view:

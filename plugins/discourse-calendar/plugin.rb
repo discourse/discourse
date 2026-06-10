@@ -254,14 +254,10 @@ after_initialize do
   end
 
   add_to_class(:user, :can_act_on_discourse_post_event?) do |event|
-    return @can_act_on_discourse_post_event if defined?(@can_act_on_discourse_post_event)
-    @can_act_on_discourse_post_event =
-      begin
-        return true if staff?
-        can_create_discourse_post_event? && Guardian.new(self).can_edit_post?(event.post)
-      rescue StandardError
-        false
-      end
+    return true if staff?
+    can_create_discourse_post_event? && Guardian.new(self).can_edit_post?(event.post)
+  rescue StandardError
+    false
   end
 
   add_to_class(:guardian, :can_act_on_discourse_post_event?) do |event|

@@ -127,6 +127,7 @@ ar:
     ai_bot_add_to_header: "عرض زر في الرأس لبدء رسالة خاصة مع روبوت ذكاء اصطناعي"
     ai_bot_add_to_community_section: "عرض رابط في قسم المجتمع في الشريط الجانبي لبدء رسالة خاصة مع روبوت ذكاء اصطناعي"
     ai_bot_github_access_token: "رمز وصول GitHub للاستخدام مع أدوات الذكاء الاصطناعي من GitHub (مطلوب لدعم البحث)"
+    ai_bot_enable_docked_composer: "تفعيل محرر الكتابة بنمط الدردشة المثبّت للمحادثات مع بوت الذكاء الاصطناعي بدلًا من محرر الكتابة العائم التقليدي."
     ai_discover_enabled: "تفعيل ميزة البحث الاكتشافي"
     ai_discover_agent: "الوكيل المستخدم في ميزة البحث الاكتشافي"
     ai_google_custom_search_api_key: "مفتاح API لواجهة API الخاصة ببحث Google المخصَّص، راجع: https://developers.google.com/custom-search"
@@ -954,8 +955,10 @@ ar:
       quota_required: "يجب عليك تحديد الحد الأقصى للرموز أو الاستخدامات لهذا النموذج"
       no_query_specified: معلمة الاستعلام مطلوبة، يُرجى تحديدها.
       no_user_for_agent: الوكيل المحدد غير مرتبط بأي مستخدم.
+      agent_not_found: "الوكيل المحدد غير موجود. يُرجى التحقق من معلمات agent_name أو agent_id (أو المعلمات القديمة: persona_name أو persona_id)."
       no_user_specified: اسم المستخدم أو معلمة user_unique_id مطلوبة، يُرجى تحديدها.
       user_not_found: المستخدم المحدَّد غير موجود. تحقَّق من معلمة username.
+      agent_disabled: "الوكيل المحدد غير مُفعّل. يُرجى التحقق من معلمات agent_name أو agent_id (أو المعلمات القديمة: persona_name أو persona_id)."
       no_default_llm: يجب تحديد نموذج لغوي افتراضي للوكيل (default_llm).
       user_not_allowed: غير مسموح للمستخدم بالمشاركة في الموضوع.
       invalid_stream_resume_token: رمز resume_token غير صالح أو انتهت صلاحيته.

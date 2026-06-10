@@ -9,6 +9,7 @@ module DiscourseWorkflows
         :draft_execution,
         :workflow_version,
         :workflow_snapshot,
+        :existing_execution,
         :webhook_context,
       ) do
         def initialize(
@@ -17,6 +18,7 @@ module DiscourseWorkflows
           draft_execution: false,
           workflow_version: nil,
           workflow_snapshot: nil,
+          existing_execution: nil,
           webhook_context: nil
         )
           super

@@ -10,7 +10,7 @@ import {
   inputFieldPrefixForConnection,
   inputIndexForConnection,
   inputSummaryForNode,
-  nodeItemJsonPath,
+  nodeOutputJsonPath,
   outputIndexForConnection,
   outputSummaryForNode,
   previousNodeForConnection,
@@ -218,7 +218,10 @@ export default class InputContext extends Component {
           {
             outputIndex: ancestor.outputIndex,
             node: ancestor.node,
-            prefix: nodeItemJsonPath(ancestor.node.name),
+            prefix: nodeOutputJsonPath(this.runData, ancestor.node.name, {
+              outputIndex: ancestor.outputIndex,
+              node: ancestor.node,
+            }),
           }
         );
         return {

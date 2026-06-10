@@ -8,12 +8,14 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import CreateTopicButton from "discourse/components/create-topic-button";
 import bodyClass from "discourse/helpers/body-class";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { gt } from "discourse/truth-helpers";
 
 export default class SidebarNewTopicButton extends Component {
   @service composer;
   @service currentUser;
   @service siteSettings;
+  @service site;
   @service router;
   @service header;
   @service appEvents;
@@ -36,6 +38,36 @@ export default class SidebarNewTopicButton extends Component {
 
   get draftCount() {
     return this.currentUser?.get("draft_count");
+  }
+
+  get createTopicLabel() {
+    const defaultKey = "topic.create";
+    let value = defaultKey;
+
+    if (
+      this.site.shared_drafts_category_id &&
+      this.category?.id === this.site.shared_drafts_category_id
+    ) {
+      value = "topic.create_shared_draft";
+    }
+
+    return applyValueTransformer("create-topic-label", value, {
+      site: this.site,
+      defaultKey,
+      category: this.category,
+      currentUser: this.currentUser,
+    });
+  }
+
+  get createTopicIcon() {
+    const defaultIcon = "far-pen-to-square";
+
+    return applyValueTransformer("create-topic-icon", defaultIcon, {
+      site: this.site,
+      defaultIcon,
+      category: this.category,
+      currentUser: this.currentUser,
+    });
   }
 
   get createTopicTargetCategory() {
@@ -91,7 +123,8 @@ export default class SidebarNewTopicButton extends Component {
         {{willDestroy this.stopWatchingForComposer}}
         @canCreateTopic={{this.canCreateTopic}}
         @action={{this.createNewTopic}}
-        @label="topic.create"
+        @label={{this.createTopicLabel}}
+        @icon={{this.createTopicIcon}}
         @btnClass="sidebar-new-topic-button"
         @btnTypeClass="btn-primary"
         @showDrafts={{gt this.draftCount 0}}

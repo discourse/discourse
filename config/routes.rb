@@ -435,6 +435,7 @@ Discourse::Application.routes.draw do
 
         # Needed for back-end routing to work.
         #
+        get "gifs" => "site_settings#index"
         get "navigation" => "site_settings#index"
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"

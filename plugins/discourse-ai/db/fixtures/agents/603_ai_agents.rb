@@ -33,6 +33,8 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
     if agent_class == DiscourseAi::Agents::WebArtifactCreator
       # this is somewhat sensitive, so we default it to staff
       agent.allowed_group_ids = [Group::AUTO_GROUPS[:staff]]
+    elsif agent_class == DiscourseAi::Agents::AdminDashboardHighlights
+      agent.allowed_group_ids = [Group::AUTO_GROUPS[:admins]]
     elsif external_agent_ids.include?(id)
       agent.allowed_group_ids = [Group::AUTO_GROUPS[:admins]]
     elsif summarization_agents.include?(agent_class)

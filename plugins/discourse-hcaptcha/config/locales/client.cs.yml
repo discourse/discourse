@@ -6,10 +6,8 @@
 
 cs:
   js:
-    discourse_hCaptcha:
-      missing_token: "Dokončete prosím výzvu hCaptcha."
+    discourse_captcha:
       placeholder: zástupný symbol
-      contact_system_administrator: "Vyskytl se problém s hCaptcha. Pokud problém přetrvává, kontaktujte prosím správce systému."
   admin_js:
     admin:
       site_settings:
