@@ -37,6 +37,7 @@ class UsernameValidator
     username_last_char_valid?
     username_no_double_special?
     username_does_not_end_with_confusing_suffix?
+    username_not_watched_word?
     username_plugin_validation
     errors.empty?
   end
@@ -148,6 +149,18 @@ class UsernameValidator
 
     if CONFUSING_EXTENSIONS.match?(username)
       errors << I18n.t(:"user.username.must_not_end_with_confusing_suffix")
+    end
+  end
+
+  def username_not_watched_word?
+    return unless errors.empty?
+
+    if matches = WordWatcher.new(username).word_matches_across_all_actions.presence
+      if matches.size == 1
+        errors << I18n.t(:"user.username.contains_blocked_word", word: matches[0])
+      else
+        errors << I18n.t(:"user.username.contains_blocked_words", words: matches.join(", "))
+      end
     end
   end
 
