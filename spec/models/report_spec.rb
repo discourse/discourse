@@ -833,6 +833,34 @@ RSpec.describe Report do
     end
   end
 
+  describe "signups" do
+    it "uses previous daily counts for the previous period" do
+      freeze_time(Time.zone.local(2026, 4, 28, 12, 0, 0))
+      Report.clear_cache
+
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 17, 12, 0, 0))
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 23, 12, 0, 0))
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 23, 13, 0, 0))
+
+      report =
+        Report.find(
+          "signups",
+          start_date: Time.zone.local(2026, 4, 22).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 28).end_of_day,
+          facets: %i[prev_period total prev30Days],
+        )
+
+      data = report.data.map { |data_point| [data_point[:x].to_date, data_point[:y]] }
+
+      aggregate_failures do
+        expect(data).to contain_exactly([Date.new(2026, 4, 23), 2])
+        expect(report.prev_period).to eq(1)
+        expect(report.total).to eq(3)
+        expect(report.prev30Days).to eq(1)
+      end
+    end
+  end
+
   describe "posts counts" do
     it "only counts regular posts" do
       post = Fabricate(:post)
