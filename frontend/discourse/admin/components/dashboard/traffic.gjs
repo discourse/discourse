@@ -86,13 +86,36 @@ export default class DashboardTraffic extends Component {
     });
   }
 
-  get showLoggedInShare() {
-    const loggedInShare = this.args.traffic?.kpis?.logged_in_share?.value;
-    return loggedInShare !== null && loggedInShare !== undefined;
-  }
+  get metricTiles() {
+    const kpis = this.args.traffic?.kpis;
+    const tiles = [];
 
-  get loggedInShare() {
-    return `${this.args.traffic?.kpis?.logged_in_share?.value ?? 0}%`;
+    const loggedInShare = kpis?.logged_in_share?.value;
+    if (loggedInShare !== null && loggedInShare !== undefined) {
+      tiles.push(this.#metricTile("logged_in_share", `${loggedInShare}%`));
+    }
+
+    if (kpis?.bounce_rate) {
+      const value = kpis.bounce_rate.value;
+      tiles.push(
+        this.#metricTile("bounce_rate", value == null ? "—" : `${value}%`, {
+          empty: value == null,
+        })
+      );
+    }
+
+    if (kpis?.avg_session_duration) {
+      const seconds = kpis.avg_session_duration.value;
+      tiles.push(
+        this.#metricTile(
+          "avg_session_duration",
+          seconds == null ? "—" : this.#formatDuration(seconds),
+          { empty: seconds == null }
+        )
+      );
+    }
+
+    return tiles;
   }
 
   get chartModel() {
@@ -133,6 +156,32 @@ export default class DashboardTraffic extends Component {
   formatTrendPercent(value) {
     const precision = value < 1 ? 1 : 0;
     return `${I18n.toNumber(value, { precision })}%`;
+  }
+
+  #metricTile(key, value, { empty = false } = {}) {
+    return {
+      value,
+      identifier: `site-traffic-${key.replaceAll("_", "-")}-tooltip`,
+      label: i18n(`admin.dashboard.site_traffic.kpi.${key}.label`),
+      tooltip: i18n(
+        `admin.dashboard.site_traffic.kpi.${key}.${empty ? "empty_tooltip" : "tooltip"}`
+      ),
+    };
+  }
+
+  #formatDuration(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainder = seconds % 60;
+    if (minutes === 0) {
+      return i18n("admin.dashboard.site_traffic.duration.seconds", {
+        seconds: remainder,
+      });
+    }
+
+    return i18n("admin.dashboard.site_traffic.duration.minutes_seconds", {
+      minutes,
+      seconds: remainder,
+    });
   }
 
   #dateFrom(value) {
@@ -224,29 +273,23 @@ export default class DashboardTraffic extends Component {
             </p> }}
           </div>
 
-          {{#if this.showLoggedInShare}}
+          {{#if this.metricTiles.length}}
             <div class="db-section__metrics">
-              <div class="db-section__metric">
-                <div
-                  class="db-section__metric-number"
-                >{{this.loggedInShare}}</div>
-                <div class="db-section__metric-label">
-                  {{i18n
-                    "admin.dashboard.site_traffic.kpi.logged_in_share.label"
-                  }}
-                  <DTooltip
-                    class="db-section__info"
-                    @identifier="site-traffic-logged-in-share-tooltip"
-                    @icon="far-circle-question"
-                  >
-                    <:content>
-                      {{i18n
-                        "admin.dashboard.site_traffic.kpi.logged_in_share.tooltip"
-                      }}
-                    </:content>
-                  </DTooltip>
+              {{#each this.metricTiles as |tile|}}
+                <div class="db-section__metric">
+                  <div class="db-section__metric-number">{{tile.value}}</div>
+                  <div class="db-section__metric-label">
+                    {{tile.label}}
+                    <DTooltip
+                      class="db-section__info"
+                      @identifier={{tile.identifier}}
+                      @icon="far-circle-question"
+                    >
+                      <:content>{{tile.tooltip}}</:content>
+                    </DTooltip>
+                  </div>
                 </div>
-              </div>
+              {{/each}}
             </div>
           {{/if}}
         </div>

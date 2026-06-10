@@ -44,5 +44,42 @@ document.addEventListener("DOMContentLoaded", function () {
         body: JSON.stringify(body),
       });
     }
+
+    const engagementPingsEnabled =
+      document.querySelector("meta[name=discourse-engagement-ping-enabled]")
+        ?.content === "true";
+
+    if (trackViewSessionId && engagementPingsEnabled) {
+      let lastPingAt = null;
+
+      const sendPing = () => {
+        const now = Date.now();
+        if (lastPingAt && now - lastPingAt < 3000) {
+          return;
+        }
+        lastPingAt = now;
+        fetch(`${root}/srv/pv`, {
+          method: "POST",
+          keepalive: true,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            session_id: trackViewSessionId,
+            url: window.location.href,
+            engagement: true,
+          }),
+        });
+      };
+
+      const sendPingIfLeaving = () => {
+        if (document.visibilityState !== "hidden" && document.hasFocus()) {
+          return;
+        }
+        sendPing();
+      };
+
+      document.addEventListener("visibilitychange", sendPingIfLeaving);
+      window.addEventListener("blur", sendPingIfLeaving);
+      window.addEventListener("pagehide", sendPing);
+    }
   }
 });

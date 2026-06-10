@@ -7,6 +7,10 @@ import {
 import { sendBeaconPageview } from "discourse/lib/beacon-pageview";
 import EmbedMode from "discourse/lib/embed-mode";
 import {
+  resetExitPingTracking,
+  trackPageForExitPing,
+} from "discourse/lib/engagement-exit-ping";
+import {
   googleTagManagerPageChanged,
   resetPageTracking,
   startPageTracking,
@@ -25,6 +29,12 @@ export default {
       "true";
     if (!isErrorPage) {
       sendDeferredPageview();
+      trackPageForExitPing({
+        sessionId: document.querySelector(
+          "meta[name=discourse-track-view-session-id]"
+        )?.content,
+        url: window.location.href,
+      });
     }
 
     // Tell our AJAX system to track a page transition
@@ -169,6 +179,7 @@ export default {
       }
       trackingUrl = new URL(path, window.location.origin).href;
       trackingReferrer = window.location.href;
+      trackPageForExitPing({ sessionId: trackingSessionId, url: trackingUrl });
     }
     trackNextAjaxAsPageview(trackingSessionId, trackingUrl, trackingReferrer);
 
@@ -183,5 +194,6 @@ export default {
   teardown() {
     resetPageTracking();
     resetAjax();
+    resetExitPingTracking();
   },
 };

@@ -350,6 +350,18 @@ class Middleware::RequestTracker
 
     env["discourse.request_tracker"] = self
 
+    if self.class.is_engagement_ping_request?(request)
+      env["discourse.request_tracker.skip"] = true
+
+      if self.class.same_origin_beacon_request?(request)
+        self.class.record_engagement_ping(request)
+        result = [204, {}, []]
+      else
+        result = [403, {}, []]
+      end
+      return result
+    end
+
     if self.class.is_beacon_tracking_request?(request)
       if self.class.same_origin_beacon_request?(request)
         result = [204, {}, []]
@@ -678,15 +690,48 @@ class Middleware::RequestTracker
     request.post? && request.path == "#{Discourse.base_path}/pageview"
   end
 
-  def self.extract_beacon_view_tracking_data(env)
-    body = env["rack.input"]&.read
-    env["rack.input"]&.rewind
-    data =
-      begin
-        JSON.parse(body)
-      rescue JSON::ParserError
+  # An exit ping shares the beacon endpoint but is accepted regardless of
+  # SiteSetting.use_beacon_for_browser_page_views: exits can never piggyback
+  # on a subsequent request, so the ping must work in both transport modes.
+  def self.is_engagement_ping_request?(request)
+    request.post? && request.path == Discourse.beacon_pv_tracking_path &&
+      parsed_beacon_body(request.env)["engagement"] == true
+  end
+
+  def self.record_engagement_ping(request)
+    return if !SiteSetting.persist_browser_pageview_events
+
+    body = parsed_beacon_body(request.env)
+    session_id = body["session_id"]&.slice(0, MAX_SESSION_ID_LENGTH)
+    url = body["url"]&.slice(0, MAX_URL_LENGTH)
+    return if session_id.blank? || url.blank?
+
+    received_at = Time.zone.now
+
+    Scheduler::Defer.later "Record BrowserPageviewEngagement" do
+      BrowserPageviewEngagement.record(session_id: session_id, url: url, occurred_at: received_at)
+    end
+  end
+
+  MAX_BEACON_BODY_BYTES = 4096
+
+  def self.parsed_beacon_body(env)
+    env["discourse.parsed_beacon_body"] ||= begin
+      if env["CONTENT_LENGTH"].to_i > MAX_BEACON_BODY_BYTES
         {}
+      else
+        body = env["rack.input"]&.read(MAX_BEACON_BODY_BYTES)
+        env["rack.input"]&.rewind
+        JSON.parse(body)
       end
+    rescue JSON::ParserError, TypeError
+      {}
+    end
+  end
+  private_class_method :parsed_beacon_body
+
+  def self.extract_beacon_view_tracking_data(env)
+    data = parsed_beacon_body(env)
 
     topic_id = data["topic_id"]&.to_i
     tracking_url = data["url"]&.slice(0, MAX_URL_LENGTH)
