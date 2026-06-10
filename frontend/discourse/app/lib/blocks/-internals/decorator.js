@@ -29,6 +29,7 @@ import {
   validateBlockDataOption,
   validateBlockOptions,
   validateBlockParts,
+  validateChildBlocks,
   validateDisplayMetadata,
   validateOutletRestrictions,
 } from "discourse/lib/blocks/-internals/validation/block-decorator";
@@ -69,6 +70,9 @@ const AUTH_TOKEN = Symbol("block-auth-token");
  * @property {string|string[]|Function|null} decoratorClassNames - CSS classNames from decorator.
  * @property {Object|null} args - Args schema for the block.
  * @property {Object|null} childArgs - Child args schema (containers only).
+ * @property {readonly string[]|null} childBlocks - Allow-list of block names a
+ *   container may hold as direct children (containers only); null means any. See
+ *   the `childBlocks` option.
  * @property {Object|null} constraints - Cross-arg validation constraints.
  * @property {Function|null} validate - Custom validation function.
  * @property {readonly string[]|null} allowedOutlets - Allowed outlet patterns.
@@ -278,6 +282,9 @@ function freezeParts(parts) {
  * @param {Object.<string, ArgSchema>} [options.childArgs] - Schema for args passed to children
  *   of this container block. Only valid when container: true.
  *
+ * @param {string[]} [options.childBlocks] - Allow-list of block names this
+ *   container may hold as direct children. Only valid when container: true.
+ *
  * @param {Object} [options.constraints] - Cross-arg validation constraints.
  *
  * @param {Function} [options.validate] - Custom validation function.
@@ -368,6 +375,7 @@ export function block(name, options = {}) {
     description = "",
     args: argsSchema = null,
     childArgs: childArgsSchema = null,
+    childBlocks = null,
     constraints = null,
     validate: validateFn = null,
     allowedOutlets = null,
@@ -444,6 +452,9 @@ export function block(name, options = {}) {
   // Validate outlet restriction patterns
   validateOutletRestrictions(name, allowedOutlets, deniedOutlets);
 
+  // Validate the optional child-block allow-list.
+  validateChildBlocks(name, childBlocks, isContainer);
+
   // Shallow type-check the optional display-metadata fields.
   validateDisplayMetadata(name, options);
 
@@ -464,6 +475,7 @@ export function block(name, options = {}) {
       blockName: name,
       category,
       childArgs: childArgsSchema ? Object.freeze(childArgsSchema) : null,
+      childBlocks: childBlocks ? Object.freeze([...childBlocks]) : null,
       constraints: constraints ? Object.freeze(constraints) : null,
       data: dataDeclaration ? Object.freeze({ ...dataDeclaration }) : null,
       decoratorClassNames,

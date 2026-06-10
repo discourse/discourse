@@ -27,6 +27,7 @@ export const VALID_BLOCK_OPTIONS = Object.freeze([
   "description",
   "args",
   "childArgs",
+  "childBlocks",
   "constraints",
   "validate",
   "allowedOutlets",
@@ -337,4 +338,39 @@ export function validateOutletRestrictions(
   // by plugins/themes.
   warnUnknownOutletPatterns(allowedOutlets, name, "allowedOutlets");
   warnUnknownOutletPatterns(deniedOutlets, name, "deniedOutlets");
+}
+
+/**
+ * Validates the `childBlocks` option — the allow-list of block names a
+ * container may hold as direct children. Only valid on containers, and every
+ * entry must be a non-empty, well-formed block name.
+ *
+ * @param {string} name - The block name (for error messages).
+ * @param {string[]|null} childBlocks - The declared allow-list, or null.
+ * @param {boolean} isContainer - Whether the decorated block is a container.
+ */
+export function validateChildBlocks(name, childBlocks, isContainer) {
+  if (childBlocks == null) {
+    return;
+  }
+  if (!isContainer) {
+    raiseBlockError(
+      `Block "${name}": "childBlocks" is only valid for container blocks (container: true).`
+    );
+  }
+  if (!Array.isArray(childBlocks) || childBlocks.length === 0) {
+    raiseBlockError(
+      `Block "${name}": "childBlocks" must be a non-empty array of block names.`
+    );
+  }
+  for (const childName of childBlocks) {
+    if (
+      typeof childName !== "string" ||
+      !VALID_NAMESPACED_BLOCK_PATTERN.test(childName)
+    ) {
+      raiseBlockError(
+        `Block "${name}": "childBlocks" entry "${childName}" is not a valid block name.`
+      );
+    }
+  }
 }

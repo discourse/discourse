@@ -159,6 +159,74 @@ function validateContainerChildren(
 }
 
 /**
+ * Resolves a child entry's block reference to its registered name, accepting
+ * either a string name (the common case, and the only thing available for an
+ * unresolved factory) or a resolved `@block`-decorated class. Returns null when
+ * the name can't be determined, so the caller stays permissive in that case.
+ *
+ * @param {string|Function} blockRef - A child entry's `block` value.
+ * @returns {string|null}
+ */
+function childBlockName(blockRef) {
+  if (typeof blockRef === "string") {
+    return blockRef;
+  }
+  if (blockRef) {
+    return getBlockMetadata(blockRef)?.blockName ?? null;
+  }
+  return null;
+}
+
+/**
+ * Validates a container's direct children against its `childBlocks` allow-list.
+ * When the parent declares `childBlocks`, every direct child's block name must
+ * appear in the list. The check is name-based — it reads each child's name
+ * directly (string, or the resolved class's `blockName`) and never needs the
+ * child's class resolved — so it holds even for unresolved child factories; it
+ * only relies on the parent (already resolved here) carrying the allow-list.
+ *
+ * No-ops (returns true) when the parent declares no `childBlocks`. A child whose
+ * name can't be determined is skipped rather than rejected.
+ *
+ * @param {Object} entry - The parent container entry.
+ * @param {Object} parentMeta - The parent's resolved block metadata.
+ * @param {string} parentName - Parent block name for error messages.
+ * @param {string} outletName - The outlet name for error messages.
+ * @param {Object} context - Error context for raiseBlockError.
+ * @returns {boolean} True if every child is allowed (or nothing to check).
+ */
+function validateAllowedChildBlocks(
+  entry,
+  parentMeta,
+  parentName,
+  outletName,
+  context
+) {
+  const allowed = parentMeta.childBlocks;
+  if (!allowed) {
+    return true;
+  }
+  for (const child of entry.children ?? []) {
+    const name = childBlockName(child.block);
+    if (name && !allowed.includes(name)) {
+      raiseBlockError(
+        `Block component ${parentName} in layout ${outletName} only accepts ` +
+          `${allowed.join(", ")} as direct children, but got "${name}".`,
+        {
+          ...context,
+          details: {
+            code: ERROR_CODES.INVALID_CHILDREN,
+            expected: { childBlocks: allowed },
+          },
+        }
+      );
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
  * Validates block constraints and custom validation functions.
  * Applies arg defaults before validation.
  *
@@ -1108,6 +1176,19 @@ export async function validateEntry(
     !validateContainerChildren(
       entry,
       isContainer,
+      blockName,
+      outletName,
+      baseContext
+    )
+  ) {
+    return null;
+  }
+
+  // Validate each direct child against the parent's `childBlocks` allow-list.
+  if (
+    !validateAllowedChildBlocks(
+      entry,
+      blockMeta,
       blockName,
       outletName,
       baseContext
