@@ -29,6 +29,106 @@ ENV["RAILS_ENV"] ||= "test"
 ENV["ENABLE_LOGSTASH_LOGGER"] ||= "1"
 require File.expand_path("../../config/environment", __FILE__)
 Discourse.singleton_class.prepend(RspecWarnExceptionCapture)
+
+# In CI, prune instrumentation whose output is unreachable under
+# `RAILS_TEST_LOG_LEVEL=error` but whose compute cost is paid on every
+# query or request. Set DISCOURSE_KEEP_TEST_INSTRUMENTATION=1 to restore
+# everything for debugging.
+if ENV["CI"] && !ENV["DISCOURSE_KEEP_TEST_INSTRUMENTATION"]
+  # `config/environments/test.rb` enables query log tags and verbose query
+  # logs. Their output never surfaces at the error log level, but every AR
+  # query still runs the `request_path` / `Thread.current.object_id` lambdas
+  # and builds an SQL comment, and `verbose_query_logs` walks the Ruby stack
+  # via caller_locations on every log emit. Override `QueryLogs.comment` to a
+  # constant nil so the prepended `call(sql, connection)` exits in one branch
+  # without iterating handlers or touching the execution context.
+  ActiveRecord.verbose_query_logs = false
+
+  if defined?(ActiveRecord::QueryLogs)
+    ActiveRecord::QueryLogs.tags = []
+    ActiveRecord::QueryLogs.singleton_class.define_method(:comment) { |_connection| nil }
+  end
+
+  # Mirror the production-only optimization from
+  # `config/initializers/300-perf.rb` into CI test runs. Every AR query
+  # passes through `ActiveSupport::Notifications.instrument("sql.active_record")`.
+  # With AR's LogSubscriber attached, that path allocates a notification
+  # Event and dispatches start/finish across all subscribers, only for
+  # `ActiveRecord::LogSubscriber#sql` to immediately exit because
+  # `RAILS_TEST_LOG_LEVEL=error` keeps the logger level above the
+  # subscriber's `:debug` threshold. With no subscribers, the `instrument`
+  # call short-circuits via `listening?` and just yields the block.
+  # `spec/support/helpers.rb#track_sql_queries` attaches a transient
+  # subscriber via `Notifications.subscribed { ... }` for the duration of a
+  # block, so query-counting tests still work unchanged.
+  ActiveSupport::Notifications.notifier.unsubscribe("sql.active_record")
+
+  # Same idea for the MiniSql path. Every `DB.query`/`DB.exec` flows through
+  # `MiniSqlMultisiteConnection#run`, which builds the `sql.mini_sql`
+  # notification payload eagerly. The `sql:` value runs
+  # `ActiveRecord::Base.sanitize_sql_array` (regex parameter interpolation)
+  # on every parameterized query before `instrument` even checks for
+  # listeners. Unlike AR's path there is no LogSubscriber to unsubscribe
+  # (MiniSql ships none), so gate the whole instrument behind `listening?`.
+  # `track_sql_queries` attaches a transient `sql.mini_sql` subscriber, so
+  # query-counting blocks still measure correctly.
+  MiniSqlMultisiteConnection.class_eval do
+    def run(sql, params)
+      if ActiveSupport::Notifications.notifier.listening?("sql.mini_sql")
+        ActiveSupport::Notifications.instrument(
+          "sql.mini_sql",
+          sql: sql_fragment(sql, *params),
+          name: "MiniSql",
+        )
+      end
+
+      super
+    end
+  end
+
+  # Neutralize MethodProfiler in CI. `Middleware::RequestTracker` wraps every
+  # controller request the in-process test server handles with
+  # `MethodProfiler.start` / `.stop`, and `Hijack` / `Jobs::Base` do the same
+  # for hijacked responses and jobs. While a profiler is active, the
+  # prepended patches on `PG::Connection`, `Redis::Client`,
+  # `RedisClient::RubyConnection`, `Net::HTTP` and `Excon::Connection` record
+  # every call with two `Process.clock_gettime`s plus a hash mutation. A
+  # topic or list request fans out into dozens of SQL queries and Redis
+  # calls, so that is paid hundreds of times per page the system specs
+  # drive. `MethodProfiler.start` also builds a full `GC.stat` Hash on every
+  # request. In CI that timing data only surfaces in the `X-Runtime` header
+  # and lograge's `db`/`redis`/`net` fields, which nothing asserts on.
+  # No-op `start` so `Thread.current[:_method_profiler]` stays nil and every
+  # patched call takes the thread-local nil-check fast path. Every consumer
+  # (`RequestTracker`, `Hijack`, `Jobs::Base`, lograge) is already
+  # nil-guarded on that path.
+  MethodProfiler.singleton_class.prepend(
+    Module.new do
+      def start(_transfer = nil)
+        nil
+      end
+    end,
+  )
+
+  # `UpcomingChanges.clear_caches!` is called per spec via
+  # `TestSetup.test_setup`. The upstream implementation pays three serial
+  # Redis round-trips, and the keys are almost always already gone because
+  # the global `after :each` calls `Discourse.redis.flushdb` at the end of
+  # every spec. Collapse the three DELs into a single multi-key DEL so
+  # workers pay one round-trip per spec, with byte-identical post-condition.
+  UpcomingChanges.singleton_class.prepend(
+    Module.new do
+      def clear_caches!
+        Discourse.redis.del(
+          Discourse.cache.normalize_key(current_statuses_cache_key),
+          Discourse.cache.normalize_key(permanent_upcoming_changes_cache_key),
+          DiscourseUpdates.send(:latest_new_feature_created_at_key),
+        )
+      end
+    end,
+  )
+end
+
 require "rspec/rails"
 require "shoulda-matchers"
 require "sidekiq/testing"
