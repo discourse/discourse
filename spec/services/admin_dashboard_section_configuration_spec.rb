@@ -11,6 +11,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "reports", visible: true },
           { id: "traffic", visible: true },
           { id: "engagement", visible: true },
+          { id: "search", visible: true },
         ],
       )
     end
@@ -32,6 +33,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "reports", visible: true },
           { id: "traffic", visible: true },
           { id: "engagement", visible: true },
+          { id: "search", visible: true },
         ],
       )
     end
@@ -45,6 +47,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "highlights", visible: false },
           { id: "engagement", visible: true },
           { id: "traffic", visible: false },
+          { id: "search", visible: false },
         ],
         actor: admin,
       )
@@ -71,6 +74,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "highlights", visible: false },
           { id: "reports", visible: true },
           { id: "traffic", visible: true },
+          { id: "search", visible: true },
         ],
       )
     end
@@ -88,6 +92,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "reports", visible: true },
           { id: "traffic", visible: true },
           { id: "engagement", visible: true },
+          { id: "search", visible: true },
         ],
       )
     end
@@ -99,6 +104,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "reports", visible: "false" },
           { id: "engagement", visible: 1 },
           { id: "traffic", visible: 0 },
+          { id: "search", visible: "f" },
         ],
         actor: admin,
       )

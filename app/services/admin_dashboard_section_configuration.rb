@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AdminDashboardSectionConfiguration
-  KNOWN_SECTIONS = %w[highlights reports traffic engagement].freeze
+  KNOWN_SECTIONS = %w[highlights reports traffic engagement search].freeze
 
   def self.sections
     AdminDashboardSection

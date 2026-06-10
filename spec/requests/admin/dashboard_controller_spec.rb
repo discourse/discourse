@@ -386,6 +386,7 @@ RSpec.describe Admin::DashboardController do
           "reports",
           "traffic",
           "engagement",
+          "search",
         )
         expect(section_payloads.dig("highlights", "data")).to be_present
         expect(section_payloads.dig("traffic", "data")).to be_present
@@ -502,7 +503,7 @@ RSpec.describe Admin::DashboardController do
         expect(configuration).to be_present
 
         ids = configuration["sections"].map { |s| s["id"] }
-        expect(ids).to match_array(%w[highlights reports traffic engagement])
+        expect(ids).to match_array(%w[highlights reports traffic engagement search])
 
         visible = configuration["sections"].select { |s| s["visible"] }.map { |s| s["id"] }
         expect(visible).to eq(%w[highlights reports])
@@ -542,6 +543,7 @@ RSpec.describe Admin::DashboardController do
               { id: "highlights", visible: true },
               { id: "traffic", visible: false },
               { id: "engagement", visible: false },
+              { id: "search", visible: false },
             ],
           }
 
@@ -578,7 +580,7 @@ RSpec.describe Admin::DashboardController do
 
       expect(response.status).to eq(204)
       expect(AdminDashboardSectionConfiguration.sections.map { |s| s[:id] }).to match_array(
-        %w[highlights reports traffic engagement],
+        %w[highlights reports traffic engagement search],
       )
     end
 
@@ -592,6 +594,7 @@ RSpec.describe Admin::DashboardController do
               { id: "reports", visible: "false" },
               { id: "engagement", visible: "1" },
               { id: "traffic", visible: "0" },
+              { id: "search", visible: "false" },
             ],
           }
 
@@ -630,6 +633,7 @@ RSpec.describe Admin::DashboardController do
               { id: "reports", visible: false },
               { id: "traffic", visible: false },
               { id: "engagement", visible: false },
+              { id: "search", visible: false },
             ],
           }
 

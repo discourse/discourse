@@ -227,6 +227,10 @@
     @include viewport.until(sm) {
       font-size: var(--font-up-2);
     }
+
+    &.--alert {
+      color: var(--danger);
+    }
   }
 
   &__metric-label {
