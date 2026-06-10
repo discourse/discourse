@@ -257,7 +257,8 @@ RSpec.describe "Chat composer" do
       chat_page.visit_channel(channel_1)
 
       file_path = file_from_fixtures("logo.png", "images").path
-      cdp.with_slow_upload do
+      # Hold the upload request in-flight, without throttling everything.
+      cdp.with_pending_requests(%r{/uploads\.json}) do
         attach_file("channel-file-uploader", file_path, make_visible: true)
         expect(page).to have_css(".chat-composer-upload--in-progress")
         expect(page).to have_css(".chat-composer.is-send-disabled")
