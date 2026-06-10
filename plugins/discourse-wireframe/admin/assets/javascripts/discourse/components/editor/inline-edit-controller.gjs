@@ -79,6 +79,16 @@ export default class InlineEditController extends Component {
    */
   @cached
   get activeRendererEl() {
+    // Read the tracked session identity FIRST so this `@cached` getter always
+    // depends on it and recomputes on every session transition. The
+    // container-arg branch below returns early; without these reads up here it
+    // would capture no tracked dependency for a container-arg session and the
+    // cache would stick on the first target's element — leaving ProseMirror
+    // mounted there while later commits write to the new session target (the
+    // tab-label value bled into other tabs / paragraphs). `blockKey` is set to
+    // the child key on each container-arg session, so it changes per target.
+    const { blockKey, argName } = this.wireframe.inlineEdit;
+
     // ContainerArg session (e.g. a tab-strip label): the editable span lives in
     // the PARENT's render, not the child's chrome, so it's resolved by a
     // dedicated `[data-wf-container-arg-key]` marker rather than the child's
@@ -94,7 +104,6 @@ export default class InlineEditController extends Component {
       return document.querySelector(`${host} [data-wf-inline-edit-arg]`);
     }
 
-    const { blockKey, argName } = this.wireframe.inlineEdit;
     if (!blockKey || !argName) {
       return null;
     }

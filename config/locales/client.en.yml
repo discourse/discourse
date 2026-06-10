@@ -196,6 +196,7 @@ en:
           tab: "Tab"
           tab_label: "Label"
           tab_number: "Tab %{number}"
+          add_tab: "Add tab"
         accordion_item:
           title: "Title"
           default_open: "Open by default"

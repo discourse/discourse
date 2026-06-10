@@ -4,6 +4,7 @@ import BlockOutlet, {
   _resetOutletLayoutsForTesting,
 } from "discourse/blocks/block-outlet";
 import Heading from "discourse/blocks/builtin/heading";
+import Layout from "discourse/blocks/builtin/layout";
 import Tabs from "discourse/blocks/builtin/tabs";
 import {
   DEBUG_CALLBACK,
@@ -11,6 +12,20 @@ import {
 } from "discourse/lib/blocks/-internals/debug-hooks";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+
+// Each tab panel is a `layout` block (the `tabs` `childBlocks` contract), so a
+// panel wraps its content in a layout and carries the tab label on that layout.
+function panel(text, label) {
+  const entry = {
+    block: Layout,
+    args: {},
+    children: [{ block: Heading, args: { text } }],
+  };
+  if (label !== undefined) {
+    entry.containerArgs = { tab: { label } };
+  }
+  return entry;
+}
 
 module("Integration | Blocks | tabs", function (hooks) {
   setupRenderingTest(hooks);
@@ -27,16 +42,8 @@ module("Integration | Blocks | tabs", function (hooks) {
           block: Tabs,
           args: {},
           children: [
-            {
-              block: Heading,
-              args: { text: "Inside first" },
-              containerArgs: { tab: { label: "First" } },
-            },
-            {
-              block: Heading,
-              args: { text: "Inside second" },
-              containerArgs: { tab: { label: "Second" } },
-            },
+            panel("Inside first", "First"),
+            panel("Inside second", "Second"),
           ],
         },
       ])
@@ -66,10 +73,7 @@ module("Integration | Blocks | tabs", function (hooks) {
         {
           block: Tabs,
           args: {},
-          children: [
-            { block: Heading, args: { text: "Inside first" } },
-            { block: Heading, args: { text: "Inside second" } },
-          ],
+          children: [panel("Inside first"), panel("Inside second")],
         },
       ])
     );
@@ -88,16 +92,8 @@ module("Integration | Blocks | tabs", function (hooks) {
           block: Tabs,
           args: {},
           children: [
-            {
-              block: Heading,
-              args: { text: "Inside first" },
-              containerArgs: { tab: { label: "First" } },
-            },
-            {
-              block: Heading,
-              args: { text: "Inside second" },
-              containerArgs: { tab: { label: "Second" } },
-            },
+            panel("Inside first", "First"),
+            panel("Inside second", "Second"),
           ],
         },
       ])
@@ -115,7 +111,25 @@ module("Integration | Blocks | tabs", function (hooks) {
       .hasAttribute("aria-selected", "true", "the clicked tab is selected");
   });
 
-  test("reveals every panel and keeps the strip when edit presentation is on", async function (assert) {
+  test("renders no add-tab affordance on the live page", async function (assert) {
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        {
+          block: Tabs,
+          args: {},
+          children: [panel("Inside first", "First")],
+        },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+    assert
+      .dom("[data-wf-append-child]")
+      .doesNotExist("the add affordance is editor-only");
+  });
+
+  test("stays functional under edit presentation — active panel only, with edit affordances", async function (assert) {
     debugHooks.setCallback(DEBUG_CALLBACK.EDIT_PRESENTATION, () => true);
 
     withPluginApi((api) =>
@@ -124,16 +138,62 @@ module("Integration | Blocks | tabs", function (hooks) {
           block: Tabs,
           args: {},
           children: [
-            {
-              block: Heading,
-              args: { text: "Inside first" },
-              containerArgs: { tab: { label: "First" } },
-            },
-            {
-              block: Heading,
-              args: { text: "Inside second" },
-              containerArgs: { tab: { label: "Second" } },
-            },
+            panel("Inside first", "First"),
+            panel("Inside second", "Second"),
+          ],
+        },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+    // Functional, not stacked: only the active (first) panel renders.
+    assert
+      .dom(".d-block-tabs__panel .d-block-heading")
+      .exists({ count: 1 }, "only the active panel renders, not all stacked");
+    assert
+      .dom(".d-block-tabs__panel .d-block-heading")
+      .hasText("Inside first", "the active panel is the first tab");
+
+    // Every tab carries its panel key so a click can select that panel.
+    assert
+      .dom(".d-block-tabs__strip [data-wf-tab-panel-key]")
+      .exists({ count: 2 }, "each tab carries its panel key");
+
+    // Only the ACTIVE tab is an inline-edit target, so the edit affordance
+    // doesn't show on tabs the author isn't on.
+    const labelHosts = [
+      ...document.querySelectorAll(
+        ".d-block-tabs__strip [data-wf-container-arg-key]"
+      ),
+    ];
+    assert.strictEqual(
+      labelHosts.length,
+      1,
+      "only the active tab is an edit target"
+    );
+    assert
+      .dom(labelHosts[0])
+      .hasAttribute("data-wf-container-arg-namespace", "tab")
+      .hasAttribute("data-wf-container-arg-field", "label");
+
+    // The trailing append-tab affordance is offered for adding another tab.
+    assert
+      .dom(".d-block-tabs__strip [data-wf-append-child]")
+      .exists("the add-tab affordance is rendered in the editing strip");
+  });
+
+  test("clicking a tab switches the rendered panel under edit presentation", async function (assert) {
+    debugHooks.setCallback(DEBUG_CALLBACK.EDIT_PRESENTATION, () => true);
+
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        {
+          block: Tabs,
+          args: {},
+          children: [
+            panel("Inside first", "First"),
+            panel("Inside second", "Second"),
           ],
         },
       ])
@@ -142,23 +202,16 @@ module("Integration | Blocks | tabs", function (hooks) {
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
     assert
-      .dom(".d-block-tabs--editing")
-      .exists("switches to the expanded editing presentation");
-    assert
-      .dom(".d-block-tabs--editing .d-block-tabs__panel .d-block-heading")
-      .exists({ count: 2 }, "every panel is revealed for editing");
+      .dom(".d-block-tabs__panel .d-block-heading")
+      .hasText("Inside first", "starts on the first tab");
 
-    // The strip stays visible so labels are editable in place, each label span
-    // carrying the markers external editing tooling targets.
-    const labelHosts = [
-      ...document.querySelectorAll(
-        ".d-block-tabs__strip [data-wf-container-arg-key]"
-      ),
-    ];
-    assert.strictEqual(labelHosts.length, 2, "every label is an edit target");
+    await click(document.querySelectorAll(".d-block-tabs__tab")[1]);
+
     assert
-      .dom(labelHosts[0])
-      .hasAttribute("data-wf-container-arg-namespace", "tab")
-      .hasAttribute("data-wf-container-arg-field", "label");
+      .dom(".d-block-tabs__panel .d-block-heading")
+      .hasText("Inside second", "switching tabs reveals the other panel");
+    assert
+      .dom(".d-block-tabs__panel .d-block-heading")
+      .exists({ count: 1 }, "still only one panel renders after switching");
   });
 });

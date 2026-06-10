@@ -667,6 +667,13 @@ export default class BlockChrome extends Component {
     if (this.isGridLayout) {
       return false;
     }
+    // A container that forces its children to one kind renders its own "add"
+    // affordance (the append marker), so the generic drop hint would be
+    // redundant — and offering the full palette would be wrong, since only the
+    // declared kind belongs here. Skip the empty-container path for them.
+    if (this.metadata?.childBlocks?.length) {
+      return false;
+    }
     // Open a tracked dep on structuralVersion so this re-evaluates
     // after every layout mutation (insert / remove / move).
     // eslint-disable-next-line no-unused-vars
@@ -1221,6 +1228,18 @@ export default class BlockChrome extends Component {
     event.preventDefault();
     event.stopPropagation();
 
+    // A container that forces its children to one kind (e.g. this block when it
+    // declares a single `childBlocks`) renders an "add" affordance carrying the
+    // `data-wf-append-child` marker. Clicking it appends a fresh child of that
+    // kind and selects it — no selection precondition, since it's an explicit
+    // button. Handled BEFORE the `detail === 0` bail below: activating the
+    // button by keyboard (Space / Enter) is a legitimate "add" gesture, and
+    // synthesized clicks (tests) carry `detail === 0` too.
+    if (event.target.closest?.("[data-wf-append-child]")) {
+      this.wireframe.appendImplicitChild(this.args.blockKey);
+      return;
+    }
+
     // A block arg rendered as a native <button> (e.g. a button-link with
     // no URL set yet) activates on Space / Enter and dispatches a click
     // even while the caret sits in the label's inline editor nested
@@ -1232,30 +1251,33 @@ export default class BlockChrome extends Component {
       return;
     }
 
-    // A container can render an inline-editable region for one of its
-    // children's containerArgs (e.g. this block's strip shows each child's
-    // label). Such a span is foreign to the generic `[data-block-arg]` path
-    // below — the arg belongs to a child, not this chrome — so it gets its
-    // own early branch keyed off the `data-wf-container-arg-*` markers. It
-    // follows the same "click to select, click again to edit" gesture.
-    const containerArgEl = event.target.closest?.(
-      "[data-wf-container-arg-key]"
-    );
-    if (
-      containerArgEl &&
-      this.wireframe.selectedBlockKey === this.args.blockKey
-    ) {
-      const {
-        wfContainerArgKey,
-        wfContainerArgNamespace,
-        wfContainerArgField,
-      } = containerArgEl.dataset;
-      this.wireframe.inlineEdit.startContainerArg(
-        wfContainerArgKey,
-        wfContainerArgNamespace,
-        wfContainerArgField,
-        { coords: { x: event.clientX, y: event.clientY } }
-      );
+    // A tab in a switchable strip (e.g. this block's tabs). The block's own
+    // tab button already switched the active panel; here we route SELECTION:
+    // a click selects that tab's panel layout, so the inspector targets it
+    // (including its `containerArgs.tab.label`) and the drop area is the active
+    // panel. Clicking the already-active tab whose panel is already selected
+    // starts an inline edit of its label instead (the "click again to edit"
+    // gesture) — the active tab carries the `data-wf-container-arg-*` markers,
+    // and the DOM hasn't re-rendered yet so `aria-selected` still reflects the
+    // pre-click active tab.
+    const tabEl = event.target.closest?.("[data-wf-tab-panel-key]");
+    if (tabEl) {
+      const panelKey = tabEl.dataset.wfTabPanelKey;
+      const isActive = tabEl.getAttribute("aria-selected") === "true";
+      if (
+        isActive &&
+        this.wireframe.selectedBlockKey === panelKey &&
+        tabEl.dataset.wfContainerArgKey
+      ) {
+        this.wireframe.inlineEdit.startContainerArg(
+          tabEl.dataset.wfContainerArgKey,
+          tabEl.dataset.wfContainerArgNamespace,
+          tabEl.dataset.wfContainerArgField,
+          { coords: { x: event.clientX, y: event.clientY } }
+        );
+        return;
+      }
+      this.wireframe.selectBlock({ key: panelKey });
       return;
     }
 

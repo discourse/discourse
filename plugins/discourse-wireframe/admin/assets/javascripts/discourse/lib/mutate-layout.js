@@ -500,6 +500,17 @@ export function insertEntryAt(layout, targetKey, entry, position) {
           subtreeChanged = true;
           continue;
         }
+        if (position === "inside-end") {
+          // Like "inside" but APPENDS, so an "add to the end" gesture (a tab
+          // strip's trailing affordance) lands the new child last rather than
+          // first.
+          const nextChildren = candidate.children
+            ? [...candidate.children, entry]
+            : [entry];
+          result.push(cloneEntryShell(candidate, { children: nextChildren }));
+          subtreeChanged = true;
+          continue;
+        }
       }
       if (!inserted && candidate.children?.length) {
         const newChildren = walk(candidate.children);
@@ -990,6 +1001,123 @@ export function wrapAsOutletRoot(layout) {
     return entries;
   }
   return [{ block: "layout", args: { mode: "stack" }, children: entries }];
+}
+
+/**
+ * Resolves an entry's block to its registered name, for either a string ref
+ * (`"layout"`) or a decorated class ref (whose `blockName` is the name).
+ *
+ * @param {Object} entry
+ * @returns {string|null}
+ */
+function blockEntryName(entry) {
+  if (typeof entry?.block === "string") {
+    return entry.block;
+  }
+  if (entry?.block) {
+    return getBlockMetadata(entry.block)?.blockName ?? null;
+  }
+  return null;
+}
+
+/**
+ * The single block kind a container forces every direct child to be, or null.
+ * A container opts in by declaring a one-entry `childBlocks` allow-list whose
+ * kind is itself a container (so a non-conforming child can be wrapped in it).
+ * This is what makes a container's children implicit layouts — the same idea as
+ * the outlet's implicit root layout, applied per child.
+ *
+ * @param {Object} entry - The container entry.
+ * @param {(blockRef: string|Function) => (Object|null)} lookupMetadata
+ * @returns {string|null}
+ */
+function singleImplicitChildKind(entry, lookupMetadata) {
+  const childBlocks = lookupMetadata?.(entry.block)?.childBlocks;
+  if (childBlocks?.length !== 1) {
+    return null;
+  }
+  const kind = childBlocks[0];
+  // Only auto-wrap into a container kind — a leaf kind couldn't hold the child.
+  return lookupMetadata?.(kind)?.isContainer ? kind : null;
+}
+
+/**
+ * Recursively enforces every implicit-child-kind container's invariant: each
+ * direct child must be of the declared kind, so a container whose `childBlocks`
+ * names one container kind (e.g. a tabbed container forcing `layout` panels)
+ * yields rich child containers out of the box. Any non-conforming child is
+ * wrapped in a fresh instance of the kind.
+ *
+ * Identity-preserving: returns the SAME array / entry references wherever
+ * nothing needs wrapping, so it is a cheap no-op on republish and never churns
+ * an unaffected subtree (and re-wrapping is impossible — an already-conforming
+ * child is left untouched, so the pass is idempotent). A wrapped child is held
+ * by REFERENCE inside the wrapper (never cloned), so a caller holding the
+ * original entry — e.g. to select it right after an insert — keeps a live
+ * reference into the published tree.
+ *
+ * @param {Array<Object>} layout
+ * @param {(blockRef: string|Function) => (Object|null)} lookupMetadata
+ * @returns {Array<Object>}
+ */
+export function normalizeImplicitChildren(layout, lookupMetadata) {
+  if (!Array.isArray(layout) || layout.length === 0) {
+    return layout;
+  }
+  let changed = false;
+  const next = layout.map((entry) => {
+    const normalized = normalizeEntryImplicitChildren(entry, lookupMetadata);
+    if (normalized !== entry) {
+      changed = true;
+    }
+    return normalized;
+  });
+  return changed ? next : layout;
+}
+
+/**
+ * Normalizes a single entry's subtree: descendants first, then this container's
+ * own implicit-child-kind invariant. Returns the same `entry` reference when
+ * nothing changed.
+ *
+ * @param {Object} entry
+ * @param {(blockRef: string|Function) => (Object|null)} lookupMetadata
+ * @returns {Object}
+ */
+function normalizeEntryImplicitChildren(entry, lookupMetadata) {
+  if (!entry?.children?.length) {
+    return entry;
+  }
+  let children = normalizeImplicitChildren(entry.children, lookupMetadata);
+  const kind = singleImplicitChildKind(entry, lookupMetadata);
+  if (kind) {
+    let wrapped = false;
+    const mapped = children.map((child) => {
+      if (blockEntryName(child) === kind) {
+        return child;
+      }
+      wrapped = true;
+      // `containerArgs` is the DIRECT parent's placement metadata (e.g. a tab
+      // label). After wrapping, the wrapper — not the child — is the parent's
+      // direct child, so move the bag onto the wrapper or the parent reads
+      // nothing and the label is orphaned one level too deep on the child. A
+      // freshly-inserted block carries no `containerArgs`, so its reference is
+      // preserved (selection-after-insert relies on it — see the function doc);
+      // only a child that already has placement is shallow-cloned to strip it.
+      if (child.containerArgs) {
+        const { containerArgs, ...rest } = child;
+        return { block: kind, args: {}, containerArgs, children: [rest] };
+      }
+      return { block: kind, args: {}, children: [child] };
+    });
+    if (wrapped) {
+      children = mapped;
+    }
+  }
+  if (children === entry.children) {
+    return entry;
+  }
+  return cloneEntryShell(entry, { children });
 }
 
 /**

@@ -255,6 +255,18 @@ body.wireframe-active {
         --d-button-danger-border--hover: var(--d-button-danger-border);
       }
     }
+
+    /* The tabs strip is editor navigation (switch panel, add a tab), not inert
+       block content — keep it pointer-interactive even on an UNSELECTED tabs
+       block, like the empty-drop placeholder above. The rule above forces every
+       descendant of the wrapped block to `pointer-events: none`; re-enable it on
+       the strip's buttons so a click reaches them (otherwise the click targets
+       the chrome wrapper, the "+" reads as dead, and tab switching can't fire). */
+
+    .d-block-tabs__tab,
+    .d-block-tabs__add-tab {
+      pointer-events: auto;
+    }
   }
 
   /* Overlap badge — anchored to the chrome's top-right corner, always
@@ -4446,6 +4458,45 @@ body.wireframe-active {
       outline: 1px dashed var(--tertiary);
       outline-offset: 2px;
       border-radius: 2px;
+    }
+  }
+
+  /* The active tab's label is editable in place even though the TABS chrome
+     isn't the selected block (clicking a tab selects its panel layout, so the
+     `--selected` gate above never fires for tabs). Mirror that affordance for
+     the active tab's label, keyed off the `data-wf-container-arg-*` markers the
+     tabs block puts only on the active tab. */
+
+  .d-block-tabs__tab[data-wf-container-arg-key] & {
+    pointer-events: auto;
+    cursor: text;
+
+    .wf-inline-rich-text__content,
+    .wf-inline-rich-text__content::before {
+      pointer-events: auto;
+    }
+
+    &:hover:not(:has(.wf-inline-editor-mount)) {
+      outline: 1px dashed var(--tertiary);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+  }
+
+  /* When the TABS block ITSELF is selected, its strip labels must NOT read as
+     inline-editable: a tab name is edited via its active tab (with that tab's
+     panel selected), never by selecting the whole tabs block. The generic
+     selected-block rule above would otherwise light up every label, so override
+     it here for strip labels. Higher specificity + later source order than both
+     the generic rule and the active-tab rule above, so it wins while the tabs
+     chrome is selected; when it isn't, the active-tab rule drives the affordance
+     as normal. */
+
+  .wireframe-block-chrome.--selected .d-block-tabs__tab & {
+    cursor: default;
+
+    &:hover {
+      outline: none;
     }
   }
 }

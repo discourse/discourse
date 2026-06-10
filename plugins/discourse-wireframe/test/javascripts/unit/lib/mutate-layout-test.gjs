@@ -9,6 +9,7 @@ import {
   findEntry,
   insertEntryAt,
   moveEntry,
+  normalizeImplicitChildren,
   removeEntry,
   replaceEntryArgs,
   replaceEntryContainerArgs,
@@ -142,6 +143,87 @@ module("Unit | Discourse Wireframe | mutate-layout", function () {
       assert.strictEqual(wrapped.length, 1);
       assert.strictEqual(wrapped[0].block, "layout");
       assert.deepEqual(wrapped[0].children, []);
+    });
+  });
+
+  module("normalizeImplicitChildren", function () {
+    // A container forcing `layout` children; a layout (the kind, a container);
+    // and a leaf. Keyed by plain string name to match the entries below.
+    const META = {
+      tabs: { childBlocks: ["layout"], isContainer: true },
+      layout: { isContainer: true },
+      leaf: { isContainer: false },
+    };
+    const lookup = (ref) =>
+      META[typeof ref === "string" ? ref : ref?.blockName] ?? null;
+
+    test("wraps a non-conforming child in the declared kind", function (assert) {
+      const child = { block: "leaf", __stableKey: 9 };
+      const layout = [{ block: "tabs", children: [child] }];
+      const result = normalizeImplicitChildren(layout, lookup);
+      const panel = result[0].children[0];
+      assert.strictEqual(panel.block, "layout", "the child is wrapped");
+      assert.strictEqual(
+        panel.children[0],
+        child,
+        "the original child is held by reference, not cloned"
+      );
+    });
+
+    test("moves a wrapped child's containerArgs (the parent's placement) onto the wrapper", function (assert) {
+      // `containerArgs` is the parent's placement metadata (e.g. a tab label).
+      // After wrapping, the wrapper is the parent's direct child, so the bag
+      // must travel with it — otherwise the parent reads nothing and the label
+      // is orphaned one level too deep on the wrapped child.
+      const child = {
+        block: "leaf",
+        __stableKey: 9,
+        containerArgs: { tab: { label: "Tab A" } },
+      };
+      const layout = [{ block: "tabs", children: [child] }];
+      const result = normalizeImplicitChildren(layout, lookup);
+      const panel = result[0].children[0];
+      assert.strictEqual(panel.block, "layout", "the child is wrapped");
+      assert.deepEqual(
+        panel.containerArgs,
+        { tab: { label: "Tab A" } },
+        "the placement moves to the wrapper so the parent reads it"
+      );
+      assert.strictEqual(
+        panel.children[0].containerArgs,
+        undefined,
+        "the wrapped child no longer carries the orphaned placement"
+      );
+      assert.strictEqual(
+        panel.children[0].__stableKey,
+        9,
+        "the wrapped child keeps its identity otherwise"
+      );
+    });
+
+    test("leaves an already-conforming child untouched (identity preserved)", function (assert) {
+      const child = { block: "layout", children: [{ block: "leaf" }] };
+      const layout = [{ block: "tabs", children: [child] }];
+      const result = normalizeImplicitChildren(layout, lookup);
+      assert.strictEqual(
+        result,
+        layout,
+        "no change returns the same reference"
+      );
+      assert.strictEqual(result[0].children[0], child);
+    });
+
+    test("is idempotent", function (assert) {
+      const layout = [{ block: "tabs", children: [{ block: "leaf" }] }];
+      const once = normalizeImplicitChildren(layout, lookup);
+      const twice = normalizeImplicitChildren(once, lookup);
+      assert.strictEqual(twice, once, "a second pass changes nothing");
+    });
+
+    test("ignores a container that declares no childBlocks", function (assert) {
+      const layout = [{ block: "layout", children: [{ block: "leaf" }] }];
+      const result = normalizeImplicitChildren(layout, lookup);
+      assert.strictEqual(result, layout, "a plain container is untouched");
     });
   });
 
@@ -838,6 +920,33 @@ module("Unit | Discourse Wireframe | mutate-layout", function () {
       const result = insertEntryAt(layout, null, newEntry, "after");
       assert.true(result.changed);
       assert.strictEqual(result.layout[result.layout.length - 1], newEntry);
+    });
+
+    test("inside-end appends as the last child", function (assert) {
+      const layout = makeLayout();
+      const newEntry = {
+        block: "wf:mutate-test-leaf",
+        args: { title: "Last" },
+        __stableKey: 54,
+      };
+      const result = insertEntryAt(
+        layout,
+        "wf:mutate-test-container:2",
+        newEntry,
+        "inside-end"
+      );
+      assert.true(result.changed);
+      assert.strictEqual(result.layout[1].children.length, 2);
+      assert.strictEqual(
+        result.layout[1].children[0],
+        layout[1].children[0],
+        "existing child keeps identity and stays first"
+      );
+      assert.strictEqual(
+        result.layout[1].children[1],
+        newEntry,
+        "new entry is appended last"
+      );
     });
 
     test("returns changed=false when targetKey isn't present", function (assert) {

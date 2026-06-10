@@ -98,21 +98,6 @@ export default class InlineEditState {
   #partContext = null;
 
   /**
-   * Set instead of `#located` when the edited target is a *child's
-   * containerArg* (e.g. a `tabs` strip label, stored at
-   * `child.containerArgs.tab.label`) rather than the child's own arg. Holds
-   * the child entry's key, its outlet, and the containerArgs namespace + field,
-   * so the session commits the final value into that child's containerArgs
-   * (a structural mutation via `replaceEntryContainerArgs`) rather than into a
-   * tracked entry's args. `null` for an ordinary entry or part session. This
-   * is the third inline-edit target type, alongside the entry-arg and
-   * composite-part (`#partContext`) types.
-   *
-   * @type {{childKey: string, outletName: string, namespace: string, field: string}|null}
-   */
-  #containerArgContext = null;
-
-  /**
    * Snapshot of the arg's pre-edit value, captured at `start` time.
    * Used to build the `prev` Map for the undo entry on commit, and to
    * restore the original value on revert. `null` when no edit is in
@@ -121,7 +106,6 @@ export default class InlineEditState {
    * @type {*}
    */
   #prevValue = null;
-
   /**
    * Block name (`wf:paragraph`, `wf:heading`, …) of the entry currently
    * being edited. Cached at session start so the PM keymap can branch
@@ -131,7 +115,6 @@ export default class InlineEditState {
    * @type {string|null}
    */
   #blockName = null;
-
   /**
    * Selection hint for the next `mountEditor` call. `"selectAll"` (the
    * default) preserves the "start typing to replace" affordance for
@@ -149,7 +132,6 @@ export default class InlineEditState {
    * @type {"start"|"end"|"selectAll"|{pos:number}|{coords:{x:number,y:number}}}
    */
   #initialSelection = "selectAll";
-
   /**
    * Callback the inline-edit controller registers via `registerCommit`.
    * Invoked from `stop({ commit: true })` BEFORE the editing state is
@@ -162,6 +144,25 @@ export default class InlineEditState {
    * @type {(() => void) | null}
    */
   #commitFn = null;
+  /**
+   * Set instead of `#located` when the edited target is a *child's
+   * containerArg* (e.g. a `tabs` strip label, stored at
+   * `child.containerArgs.tab.label`) rather than the child's own arg. Holds
+   * the child entry's key, its outlet, and the containerArgs namespace + field,
+   * so the session commits the final value into that child's containerArgs
+   * (a structural mutation via `replaceEntryContainerArgs`) rather than into a
+   * tracked entry's args. `null` for an ordinary entry or part session. This
+   * is the third inline-edit target type, alongside the entry-arg and
+   * composite-part (`#partContext`) types.
+   *
+   * Tracked so the controller's `activeRendererEl` getter (which reads it via
+   * `containerArgContext`) recomputes when the session opens / moves / closes —
+   * without this the cached element stuck on the first target and commits bled
+   * the value into the wrong tab / block.
+   *
+   * @type {{childKey: string, outletName: string, namespace: string, field: string}|null}
+   */
+  @tracked _containerArgContext = null;
 
   /**
    * Reference to the active `InlineEditController` instance — the
@@ -216,10 +217,10 @@ export default class InlineEditState {
    * @returns {{childKey: string, namespace: string, field: string}|null}
    */
   get containerArgContext() {
-    if (!this.#containerArgContext) {
+    if (!this._containerArgContext) {
       return null;
     }
-    const { childKey, namespace, field } = this.#containerArgContext;
+    const { childKey, namespace, field } = this._containerArgContext;
     return { childKey, namespace, field };
   }
 
@@ -239,7 +240,7 @@ export default class InlineEditState {
     }
     // ContainerArg session: same — the snapshot seeds ProseMirror, which then
     // owns the value until commit.
-    if (this.#containerArgContext) {
+    if (this._containerArgContext) {
       return this.#prevValue;
     }
     if (!this.#located || !this.argName) {
@@ -307,7 +308,7 @@ export default class InlineEditState {
     if (located) {
       this.#located = located;
       this.#partContext = null;
-      this.#containerArgContext = null;
+      this._containerArgContext = null;
       this.#prevValue = located.entry.args?.[argName];
       this.#blockName = located.entry.block ?? null;
     } else {
@@ -325,7 +326,7 @@ export default class InlineEditState {
       const override =
         partContext.compositeEntry.overrides?.[partContext.partPath];
       this.#located = null;
-      this.#containerArgContext = null;
+      this._containerArgContext = null;
       this.#partContext = {
         compositeKey: partContext.compositeKey,
         outletName: partContext.outletName,
@@ -366,7 +367,7 @@ export default class InlineEditState {
     if (!childKey || !namespace || !field) {
       return false;
     }
-    const ctx = this.#containerArgContext;
+    const ctx = this._containerArgContext;
     if (
       ctx &&
       ctx.childKey === childKey &&
@@ -384,7 +385,7 @@ export default class InlineEditState {
     }
     this.#located = null;
     this.#partContext = null;
-    this.#containerArgContext = {
+    this._containerArgContext = {
       childKey,
       outletName: located.outletName,
       namespace,
@@ -439,12 +440,12 @@ export default class InlineEditState {
     // which writes the child's containerArg (a structural commit that records
     // its own undo). On cancel, nothing was written, so PM teardown discards
     // the edit — there's no entry value to restore.
-    if (this.#containerArgContext) {
+    if (this._containerArgContext) {
       if (commit && this.#commitFn) {
         this.#commitFn();
       }
       this.#located = null;
-      this.#containerArgContext = null;
+      this._containerArgContext = null;
       this.#prevValue = null;
       this.#blockName = null;
       this.#initialSelection = "selectAll";
@@ -518,7 +519,7 @@ export default class InlineEditState {
       this.#applyPartChange(value);
       return;
     }
-    if (this.#containerArgContext) {
+    if (this._containerArgContext) {
       this.#applyContainerArgChange(value);
       return;
     }
@@ -843,7 +844,7 @@ export default class InlineEditState {
    */
   #applyContainerArgChange(value) {
     const { childKey, outletName, namespace, field } =
-      this.#containerArgContext;
+      this._containerArgContext;
     // Normalise an empty value to `undefined` (the field is deleted, not stored
     // as `""`) so the no-op gate below treats empty→empty as unchanged.
     const isEmpty = value == null || value === "";

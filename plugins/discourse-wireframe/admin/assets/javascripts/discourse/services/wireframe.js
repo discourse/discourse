@@ -63,6 +63,7 @@ import {
   findEntrySiblings,
   insertEntryAt,
   moveEntry,
+  normalizeImplicitChildren,
   removeEntry,
   replaceEntryConditions,
   replaceEntryContainerArgs,
@@ -2760,6 +2761,14 @@ export default class WireframeService extends Service {
       // filled in from the block's schema `default:` values via
       // `applyArgDefaults` at render time.
       const fresh = { block: blockName, args: { ...defaultArgs } };
+      // A container that forces its children to one kind (e.g. tabs → `layout`)
+      // must never be empty — it would be invalid AND have no first tab to fill.
+      // Seed it with one child of that kind so dropping the block lands a ready
+      // first panel (and the block's "add" affordance grows it from there).
+      const seedKind = this.#implicitChildKind(blockName);
+      if (seedKind) {
+        fresh.children = [{ block: seedKind, args: {} }];
+      }
       // Annotate with `containerArgs.grid` defaults when the destination
       // parent is a `wf:layout` in grid mode — that's the placement
       // namespace the grid layout reads to position each direct child.
@@ -2782,6 +2791,52 @@ export default class WireframeService extends Service {
       this.selectInsertedEntry(entry);
       return true;
     });
+  }
+
+  /**
+   * Appends a fresh child of a container's declared implicit-child kind to the
+   * end of its children, then selects it. Drives the "add" affordance an
+   * implicit-child-kind container renders (e.g. a tabbed container's trailing
+   * "+" on the strip): the new panel is the sole `childBlocks` kind (a `layout`),
+   * so it arrives ready to fill with a rich layout. No-ops for a key that isn't
+   * such a container.
+   *
+   * @param {string} containerKey - The implicit-child-kind container's key.
+   * @returns {boolean}
+   */
+  appendImplicitChild(containerKey) {
+    const located = this.findEntryAndOutletSync(containerKey);
+    if (!located) {
+      return false;
+    }
+    const kind = this.#implicitChildKind(located.entry.block);
+    if (!kind) {
+      return false;
+    }
+    return this.insertBlock({
+      blockName: kind,
+      targetKey: containerKey,
+      position: "inside-end",
+      targetOutletName: located.outletName,
+    });
+  }
+
+  /**
+   * The sole block kind a container forces every direct child to be (e.g. a
+   * tabbed container → `layout`), or null when the block isn't such a container.
+   * The kind must itself be a container, so a non-conforming child can be
+   * wrapped in it and an empty container can be seeded with it.
+   *
+   * @param {string|Function} blockRef - The container's block ref.
+   * @returns {string|null}
+   */
+  #implicitChildKind(blockRef) {
+    const childBlocks = this.lookupBlockMetadata(blockRef)?.childBlocks;
+    if (childBlocks?.length !== 1) {
+      return null;
+    }
+    const kind = childBlocks[0];
+    return this.lookupBlockMetadata(kind)?.isContainer ? kind : null;
   }
 
   /**
@@ -3215,6 +3270,15 @@ export default class WireframeService extends Service {
    * mutation.
    */
   publishStructuralChange(outletName, newLayout) {
+    // Enforce every implicit-child-kind container's invariant at the one point
+    // all structural mutations funnel through: a container declaring a single
+    // `childBlocks` kind (e.g. tabs forcing `layout` panels) gets any
+    // non-conforming child wrapped here, so insert / move / paste / drop /
+    // duplicate all keep the invariant without per-path handling. A no-op for
+    // layouts with no such container (returns the same reference).
+    newLayout = normalizeImplicitChildren(newLayout, (ref) =>
+      this.lookupBlockMetadata(ref)
+    );
     _setLayoutLayer(
       outletName,
       LAYOUT_LAYERS.SESSION_DRAFT,
@@ -3703,8 +3767,13 @@ export default class WireframeService extends Service {
       // a switchable mode). A flat list renders identically to the default
       // stack, so the wrap is visually transparent until the author changes
       // the mode.
-      const draftLayout = wrapAsOutletRoot(
-        layout ? cloneLayoutForDraft(layout) : []
+      // Wrap any non-conforming child of an implicit-child-kind container (e.g.
+      // a hand-authored non-layout tab panel) so the invariant holds from the
+      // moment the editor opens, matching what `publishStructuralChange` keeps
+      // up during editing.
+      const draftLayout = normalizeImplicitChildren(
+        wrapAsOutletRoot(layout ? cloneLayoutForDraft(layout) : []),
+        (ref) => this.lookupBlockMetadata(ref)
       );
       _setLayoutLayer(
         outletName,

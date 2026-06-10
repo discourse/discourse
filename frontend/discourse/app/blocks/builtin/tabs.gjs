@@ -4,29 +4,32 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
+import { modifier } from "ember-modifier";
 import { block } from "discourse/blocks";
 import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
-import { eq } from "discourse/truth-helpers";
+import { and, eq } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const VALID_ALIGNS = ["start", "center", "end"];
 
 /**
  * A tabbed container: a horizontal strip of labels over a stack of panels,
- * showing one panel at a time. Each panel is an arbitrary child block (a
- * section / card / group for a multi-block panel), matching the rest of the
- * collapsing-container family.
+ * showing one panel at a time. Each panel is a `layout` block (see
+ * `childBlocks`), so a tab is a rich, grid-capable container.
  *
  * Each panel's tab label lives in the child's `containerArgs.tab.label` — the
  * parent-readable per-child metadata channel — because a container never
  * receives its children's own args. The `tabs` block reads it to build the
  * strip, falling back to "Tab N" when a child has no label yet.
  *
- * In an editing context the ambient "edit presentation" capability is set, so
- * the block reveals ALL panels stacked (each child directly selectable and
- * editable in place) while keeping the strip visible so labels stay editable
- * on it — the same expand-all approach the sibling collapsing containers use.
+ * The tabs stay functional in an edit-driven context: only the active panel is
+ * shown, and switching tabs reveals each panel's content for editing in turn —
+ * the same one-at-a-time presentation as the live page. Under the ambient
+ * "edit presentation" capability the block additionally renders an append
+ * affordance at the end of the strip and marks each label as editable in place.
  */
 @block("tabs", {
   container: true,
@@ -34,6 +37,10 @@ const VALID_ALIGNS = ["start", "center", "end"];
   icon: "table-columns",
   category: "Layout",
   description: "A tabbed container — one panel of blocks shown at a time.",
+  // Each panel is itself a `layout` block, so a tab is a rich container out of
+  // the box. The allow-list is validator-enforced; edit-driven tooling wraps any
+  // other block dropped in as a panel to keep this invariant.
+  childBlocks: ["layout"],
   args: {
     align: {
       type: "string",
@@ -92,7 +99,31 @@ export default class Tabs extends Component {
   fallbackLabel = (index) =>
     i18n("blocks.builtin.tabs.tab_number", { number: index + 1 });
 
-  /** @returns {boolean} Whether the editor wants every panel revealed. */
+  /**
+   * Activates a freshly added tab. A panel is only ever added to this container
+   * as a new tab, so a growth in the child count means a tab was just appended —
+   * switch to it, so an author who adds a tab lands on the (empty) panel they
+   * just created rather than staying on the old one.
+   *
+   * `#previousPanelCount` starts null so the very first render (0 → N) is not
+   * mistaken for growth; the assignment is deferred via `next` because it sets
+   * `activeIndex`, which the same render reads.
+   */
+  syncActiveOnAdd = modifier((element, [count]) => {
+    const total = Number(count);
+    if (this.#previousPanelCount !== null && total > this.#previousPanelCount) {
+      next(() => (this.activeIndex = total - 1));
+    }
+    this.#previousPanelCount = total;
+  });
+
+  /** @type {number | null} */
+  #previousPanelCount = null;
+
+  /**
+   * @returns {boolean} Whether the ambient edit-presentation capability is set,
+   *   so the block shows its in-place editing affordances (append + labels).
+   */
   get isEditing() {
     return debugHooks.isEditPresentation;
   }
@@ -116,7 +147,7 @@ export default class Tabs extends Component {
     return Math.min(Math.max(this.activeIndex, 0), count - 1);
   }
 
-  /** @returns {Object | undefined} The child shown on the live page. */
+  /** @returns {Object | undefined} The single child currently shown. */
   get activePanel() {
     return this.panels[this.activePanelIndex];
   }
@@ -135,87 +166,93 @@ export default class Tabs extends Component {
   }
 
   <template>
-    {{#if this.isEditing}}
-      {{! Editing: reveal every panel stacked so each child is directly
-          selectable and editable, while the strip stays visible so labels can
-          be edited in place. Each label span carries the `data-wf-container-arg-*`
-          markers external editing tooling keys off to start an inline-edit
-          session on the child's `containerArgs.tab.label`. }}
-      <div class="{{this.rootClass}} d-block-tabs--editing">
-        <div class="d-block-tabs__strip" role="tablist">
+    <div class={{this.rootClass}} {{this.syncActiveOnAdd this.panels.length}}>
+      <div class="d-block-tabs__strip">
+        {{! The tabs live in their own tablist so the editor-only append
+            affordance can sit in the strip without being inside the tablist
+            (a tablist holds only tabs). In an edit-driven context each tab
+            carries its panel key so a click can select that panel's layout;
+            the inline-edit markers + editable region are added ONLY to the
+            active tab, so the label of the tab you're on can be edited in place
+            while the others stay plain. All these attributes are omitted on the
+            live page. }}
+        <div class="d-block-tabs__tablist" role="tablist">
           {{#each this.panels key="key" as |child index|}}
-            <span
-              class="d-block-tabs__tab"
-              role="tab"
-              data-wf-container-arg-key={{child.key}}
-              data-wf-container-arg-namespace="tab"
-              data-wf-container-arg-field="label"
-            >
-              <RichTextRenderer
-                @arg="label"
-                @schema="plain"
-                @value={{this.labelValue child}}
-                @placeholder={{this.fallbackLabel index}}
-                as |R|
+            {{#let (eq this.activePanelIndex index) as |isActive|}}
+              <button
+                type="button"
+                class="d-block-tabs__tab {{if isActive 'is-active'}}"
+                role="tab"
+                aria-selected={{if isActive "true" "false"}}
+                data-wf-tab-panel-key={{if this.isEditing child.key}}
+                data-wf-container-arg-key={{if
+                  (and this.isEditing isActive)
+                  child.key
+                }}
+                data-wf-container-arg-namespace={{if
+                  (and this.isEditing isActive)
+                  "tab"
+                }}
+                data-wf-container-arg-field={{if
+                  (and this.isEditing isActive)
+                  "label"
+                }}
+                {{on "click" (fn this.selectTab index)}}
               >
-                <R.Content />
-              </RichTextRenderer>
-            </span>
+                <RichTextRenderer
+                  @arg="label"
+                  @schema="plain"
+                  @value={{this.labelValue child}}
+                  @placeholder={{this.fallbackLabel index}}
+                  as |R|
+                >
+                  {{#if this.isEditing}}
+                    {{! Editing: render the editable region for EVERY tab (even
+                        when empty, so an unlabelled tab can still be clicked
+                        into — the placeholder shows the "Tab N" hint). Gating
+                        this on the active tab instead would move `<R.Content/>`
+                        between conditional branches when a tab activates, which
+                        makes Glimmer destroy + rebuild the just-clicked span —
+                        detaching it before edit-driven click handling resolves
+                        it, so selecting an inactive tab by its text silently
+                        failed.
+                        Which tab is the inline-edit TARGET is carried by the
+                        `data-wf-container-arg-*` attributes below (active-only),
+                        not by this branch. }}
+                    <R.Content />
+                  {{else if R.isEmpty}}
+                    {{this.fallbackLabel index}}
+                  {{else}}
+                    <R.Content />
+                  {{/if}}
+                </RichTextRenderer>
+              </button>
+            {{/let}}
           {{/each}}
         </div>
 
-        <div class="d-block-tabs__panels">
-          {{#each this.panels key="key" as |child index|}}
-            <div
-              class="d-block-tabs__panel"
-              role="tabpanel"
-              data-tab-index={{index}}
-            >
-              <child.Component />
-            </div>
-          {{/each}}
-        </div>
-      </div>
-    {{else}}
-      <div class={{this.rootClass}}>
-        <div class="d-block-tabs__strip" role="tablist">
-          {{#each this.panels key="key" as |child index|}}
-            <button
-              type="button"
-              class="d-block-tabs__tab
-                {{if (eq this.activePanelIndex index) 'is-active'}}"
-              role="tab"
-              aria-selected={{if
-                (eq this.activePanelIndex index)
-                "true"
-                "false"
-              }}
-              {{on "click" (fn this.selectTab index)}}
-            >
-              <RichTextRenderer
-                @arg="label"
-                @schema="plain"
-                @value={{this.labelValue child}}
-                as |R|
-              >
-                {{#if R.isEmpty}}
-                  {{this.fallbackLabel index}}
-                {{else}}
-                  <R.Content />
-                {{/if}}
-              </RichTextRenderer>
-            </button>
-          {{/each}}
-        </div>
-
-        {{#if this.activePanel}}
-          <div class="d-block-tabs__panels">
-            <div class="d-block-tabs__panel" role="tabpanel">
-              <this.activePanel.Component />
-            </div>
-          </div>
+        {{#if this.isEditing}}
+          {{! Append-tab affordance, shown only under edit presentation. It
+              carries no behaviour here; external edit-driven tooling detects
+              the data attribute and appends a new panel. }}
+          <button
+            type="button"
+            class="d-block-tabs__add-tab"
+            data-wf-append-child="true"
+            aria-label={{i18n "blocks.builtin.tabs.add_tab"}}
+          >
+            {{dIcon "plus"}}
+          </button>
         {{/if}}
       </div>
-    {{/if}}
+
+      {{#if this.activePanel}}
+        <div class="d-block-tabs__panels">
+          <div class="d-block-tabs__panel" role="tabpanel">
+            <this.activePanel.Component />
+          </div>
+        </div>
+      {{/if}}
+    </div>
   </template>
 }

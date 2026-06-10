@@ -16,6 +16,7 @@ import {
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { attachEditorShortcuts } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-shortcuts";
 import { GRID_DROP_GESTURES } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-drop";
+import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/mutate-layout";
 
 @block("wf:svc-test-tile", { args: { title: { type: "string" } } })
 class TestTile extends Component {
@@ -34,6 +35,19 @@ class TestTile extends Component {
 class TestConstrained extends Component {
   <template>
     <div class="constrained">{{@label}}</div>
+  </template>
+}
+
+// A container that forces every direct child to be a `layout` (the same
+// `childBlocks` contract the `tabs` block uses), so its panels are implicit
+// layouts and the editor wraps anything else dropped in.
+@block("wf:svc-test-tabs", {
+  container: true,
+  childBlocks: ["layout"],
+})
+class TestTabs extends Component {
+  <template>
+    <div class="test-tabs">{{yield}}</div>
   </template>
 }
 
@@ -628,6 +642,122 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
       inserted.args.title = "Mutated";
       assert.strictEqual(defaults.title, "Shared");
+    });
+  });
+
+  module("implicit-child containers (childBlocks)", function (innerHooks) {
+    innerHooks.beforeEach(async function () {
+      withTestBlockRegistration(() => {
+        registerBlock(TestTile);
+        registerBlock(TestTabs);
+      });
+      await _renderBlocks(
+        "homepage-blocks",
+        [
+          {
+            block: TestTabs,
+            children: [
+              {
+                block: Layout,
+                args: {},
+                children: [{ block: TestTile, args: { title: "P1" } }],
+              },
+            ],
+          },
+        ],
+        getOwner(this)
+      );
+      this.editor.siteSettings.wireframe_enabled = true;
+      logIn(getOwner(this));
+      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor.enter();
+    });
+
+    function tabsEntry(editor) {
+      return outletChildren(editor)[0];
+    }
+
+    function blockNameOf(editor, entry) {
+      return editor.lookupBlockMetadata(entry.block)?.blockName;
+    }
+
+    test("appendImplicitChild appends an empty layout panel and selects it", function (assert) {
+      const before = tabsEntry(this.editor).children.length;
+
+      const ok = this.editor.appendImplicitChild(
+        entryKey(tabsEntry(this.editor))
+      );
+      assert.true(ok);
+
+      const panels = tabsEntry(this.editor).children;
+      assert.strictEqual(panels.length, before + 1, "a panel was appended");
+      const added = panels[panels.length - 1];
+      assert.strictEqual(
+        blockNameOf(this.editor, added),
+        "layout",
+        "the new panel is a layout"
+      );
+      assert.strictEqual(
+        this.editor.selectedBlockKey,
+        entryKey(added),
+        "the new panel is selected"
+      );
+    });
+
+    test("inserting an implicit-child container seeds one panel of its kind", function (assert) {
+      this.editor.insertBlock({
+        blockName: "wf:svc-test-tabs",
+        targetKey: null,
+        position: "inside",
+        targetOutletName: "homepage-blocks",
+      });
+
+      const inserted = this.editor.findEntryByKey(this.editor.selectedBlockKey);
+      assert.strictEqual(
+        blockNameOf(this.editor, inserted),
+        "wf:svc-test-tabs",
+        "the freshly inserted tabs block is selected"
+      );
+      assert.strictEqual(
+        inserted.children?.length,
+        1,
+        "it is seeded with exactly one panel (never empty)"
+      );
+      assert.strictEqual(
+        blockNameOf(this.editor, inserted.children[0]),
+        "layout",
+        "the seeded panel is a layout (the declared child kind)"
+      );
+    });
+
+    test("a non-layout block inserted into the container is wrapped and stays selected", function (assert) {
+      const ok = this.editor.insertBlock({
+        blockName: "wf:svc-test-tile",
+        defaultArgs: { title: "Bare" },
+        targetKey: entryKey(tabsEntry(this.editor)),
+        position: "inside-end",
+        targetOutletName: "homepage-blocks",
+      });
+      assert.true(ok);
+
+      const panels = tabsEntry(this.editor).children;
+      const wrapper = panels[panels.length - 1];
+      assert.strictEqual(
+        blockNameOf(this.editor, wrapper),
+        "layout",
+        "the dropped block is wrapped in a layout panel"
+      );
+      const inner = wrapper.children[0];
+      assert.strictEqual(
+        inner.args.title,
+        "Bare",
+        "the dropped block is the wrapper's child"
+      );
+      assert.strictEqual(
+        this.editor.selectedBlockKey,
+        entryKey(inner),
+        "the dropped block stays selected through the wrap (same reference)"
+      );
     });
   });
 
