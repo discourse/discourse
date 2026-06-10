@@ -27,9 +27,7 @@ module DiscourseCaptcha
       http.use_ssl = true
 
       request = FinalDestination::HTTP::Post.new(uri.request_uri)
-      request.set_form_data(
-        { "secret" => secret_key, "response" => captcha_token }
-      )
+      request.set_form_data({ "secret" => secret_key, "response" => captcha_token })
 
       http.request(request)
     end
