@@ -37,6 +37,25 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(response.status).to eq(301)
     end
 
+    it "renders flat topic HTML for browsers without JavaScript" do
+      post = Fabricate(:post, topic: topic, user: user, raw: "Visible without JavaScript")
+
+      get "/n/#{topic.slug}/#{topic.id}"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(topic.title)
+      expect(response.body).to include(post.cooked)
+    end
+
+    it "renders flat topic HTML for nested post URLs without JavaScript" do
+      post = Fabricate(:post, topic: topic, user: user, raw: "Context post without JavaScript")
+
+      get "/n/#{topic.slug}/#{topic.id}/#{post.post_number}"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(post.cooked)
+    end
+
     it "returns 404 for anonymous users on private topics" do
       private_category = Fabricate(:private_category, group: Fabricate(:group))
       private_topic = Fabricate(:topic, category: private_category)

@@ -25,7 +25,7 @@ class NestedTopicsController < ApplicationController
       end
 
       store_preloaded("nested_topic_#{@topic.id}", MultiJson.dump(list_roots_response(page: 0)))
-      render "default/empty"
+      render_flat_topic_html
       return
     end
 
@@ -66,7 +66,7 @@ class NestedTopicsController < ApplicationController
       end
 
       store_preloaded("nested_topic_#{@topic.id}", MultiJson.dump(show_context_response))
-      render "default/empty"
+      render_flat_topic_html(post_number: params[:post_number].to_i)
       return
     end
 
@@ -161,6 +161,27 @@ class NestedTopicsController < ApplicationController
       on_failure { raise Discourse::NotFound }
     end
     result
+  end
+
+  def render_flat_topic_html(post_number: nil)
+    opts = {}
+    opts[:post_number] = post_number if post_number.to_i > 0
+
+    @topic_view = TopicView.new(@topic.id, current_user, opts)
+    @topic = @topic_view.topic
+
+    if should_track_visit?
+      @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
+    end
+
+    @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags.visible(guardian) : []
+    @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
+    @description_meta = @topic_view.topic.excerpt.presence || @topic_view.summary
+
+    topic_view_serializer = TopicViewSerializer.new(@topic_view, scope: guardian, root: false)
+    store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
+
+    render "topics/show"
   end
 
   def show_context_response
