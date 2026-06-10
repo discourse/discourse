@@ -266,11 +266,7 @@ html.composer-open:not(.has-full-page-chat) {
     .composer-actions-reply-target-link {
       --d-button-default-text-color: var(--primary-high);
       --d-button-flat-icon-color: var(--primary-high);
-      max-width: 30ch;
-
-      @include viewport.until(sm) {
-        max-width: 18ch;
-      }
+      overflow: hidden;
 
       &__label {
         @include ellipsis;
