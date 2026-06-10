@@ -56,7 +56,6 @@
     "@lezer/highlight": "^1.2.3",
     "@lezer/javascript": "^1.5.4",
     "@lezer/lr": "^1.4.8",
-    "@viz-js/viz": "^3.28.0",
     "ace-builds": "^1.44.0",
     "chart.js": "4.5.1",
     "chartjs-adapter-moment": "^1.0.1",

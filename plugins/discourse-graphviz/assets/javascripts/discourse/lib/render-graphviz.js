@@ -1,11 +1,13 @@
 import { trustHTML } from "@ember/template";
 import { hrefAllowed } from "pretty-text/sanitizer";
-import loadViz from "discourse/lib/load-viz";
+import loadScript from "discourse/lib/load-script";
 
 let vizPromise;
 
-function vizInstance() {
-  vizPromise ??= loadViz().then((module) => module.instance());
+function loadViz() {
+  vizPromise ??= loadScript(
+    "/plugins/discourse-graphviz/javascripts/viz-3.0.1.js"
+  );
   return vizPromise;
 }
 
@@ -36,7 +38,15 @@ export function sanitizeGraphvizSvg(svg) {
 }
 
 export async function generateGraph(source, engine) {
-  const viz = await vizInstance();
-  const svg = viz.renderSVGElement(source, { engine });
-  return trustHTML(sanitizeGraphvizSvg(svg).outerHTML);
+  await loadViz();
+
+  /* global vizRenderStringSync */
+  const rendered = vizRenderStringSync(source, { format: "svg", engine });
+
+  const doc = new DOMParser().parseFromString(rendered, "image/svg+xml");
+  if (doc.querySelector("parsererror")) {
+    throw new Error(doc.querySelector("parsererror").textContent);
+  }
+
+  return trustHTML(sanitizeGraphvizSvg(doc.documentElement).outerHTML);
 }
