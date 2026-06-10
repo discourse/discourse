@@ -104,6 +104,25 @@ jobs:
         run: |
           echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 2))" >> $GITHUB_ENV
 
+      # Tune Ruby GC for system test RSpec workers. Each worker eager loads a
+      # large heap at boot and sustains allocator pressure across its spec
+      # shard. Pre-allocating slots lets boot skip repeated heap-grow and GC
+      # cycles, raising the old-malloc limits makes major GCs fire roughly 4x
+      # less often, and the growth factor settings smooth out the steady-state
+      # heap growth curve. This is the same envelope Discourse ships in its
+      # production unicorn launchers.
+      - name: Set Ruby GC tuning for system tests
+        if: matrix.build_type == 'system'
+        run: |
+          echo "RUBY_GC_HEAP_INIT_SLOTS=2000000" >> $GITHUB_ENV
+          echo "RUBY_GC_HEAP_FREE_SLOTS=600000" >> $GITHUB_ENV
+          echo "RUBY_GC_HEAP_GROWTH_FACTOR=1.1" >> $GITHUB_ENV
+          echo "RUBY_GC_HEAP_GROWTH_MAX_SLOTS=300000" >> $GITHUB_ENV
+          echo "RUBY_GC_MALLOC_LIMIT=67108864" >> $GITHUB_ENV
+          echo "RUBY_GC_MALLOC_LIMIT_MAX=1073741824" >> $GITHUB_ENV
+          echo "RUBY_GC_OLDMALLOC_LIMIT=67108864" >> $GITHUB_ENV
+          echo "RUBY_GC_OLDMALLOC_LIMIT_MAX=2147483648" >> $GITHUB_ENV
+
       - name: Set QUNIT_PARALLEL for QUnit tests
         if: matrix.build_type == 'frontend'
         run: |
