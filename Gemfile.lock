@@ -297,6 +297,10 @@ GEM
       graphiti_errors (~> 1.1.0)
       jsonapi-renderer (~> 0.2, >= 0.2.2)
       jsonapi-serializable (~> 0.3.0)
+    graphiti-rails (0.4.1)
+      graphiti (~> 1.2)
+      railties (>= 5.0)
+      rescue_registry (~> 1.0)
     graphiti_errors (1.1.2)
       jsonapi-serializable (~> 0.1)
     guess_html_encoding (0.0.11)
@@ -606,6 +610,8 @@ GEM
       io-console (~> 0.5)
     request_store (1.7.0)
       rack (>= 1.4)
+    rescue_registry (1.0.0)
+      activesupport (>= 5.0)
     rexml (3.4.4)
     rinku (2.0.6)
     rotp (6.3.0)
@@ -896,6 +902,7 @@ DEPENDENCIES
   fastimage
   goldiloader
   graphiti (= 1.10.2)
+  graphiti-rails
   hashery
   highline
   htmlentities
@@ -1118,6 +1125,7 @@ CHECKSUMS
   google-protobuf (4.35.0-x86_64-linux-gnu) sha256=999226f3b00cd9fddb1b26851d16060212fa1d90c406aaad47e574682b716059
   google-protobuf (4.35.0-x86_64-linux-musl) sha256=be0218520d77b2aee898b363514b03819f6f63f9c041ae0d0d79b4ce5247bffd
   graphiti (1.10.2) sha256=836333464c9d02b91ae5404ca35d2168e378ddc2d17f8bf832996ded21b8dc7b
+  graphiti-rails (0.4.1) sha256=c6be084e4119bc061e51fdcb5536fcc29a02099b4404dd36adfc038264ddeab8
   graphiti_errors (1.1.2) sha256=98d3d7e87f3469647c5aa97adc5edf81eecebeb0402e69659137688d445b8dc3
   guess_html_encoding (0.0.11) sha256=cab6468b945f38673fc41ad147fbbc89693b3c6c34b03b071e2ed669a603e098
   hana (1.3.7) sha256=5425db42d651fea08859811c29d20446f16af196308162894db208cac5ce9b0d
@@ -1269,6 +1277,7 @@ CHECKSUMS
   regexp_parser (2.12.0) sha256=35a916a1d63190ab5c9009457136ae5f3c0c7512d60291d0d1378ba18ce08ebb
   reline (0.6.3) sha256=1198b04973565b36ec0f11542ab3f5cfeeec34823f4e54cebde90968092b1835
   request_store (1.7.0) sha256=e1b75d5346a315f452242a68c937ef8e48b215b9453a77a6c0acdca2934c88cb
+  rescue_registry (1.0.0) sha256=0187c18432558fead224a0c1f7b981361ef675bc6c5fe8be9577fe68ec45e6d8
   rexml (3.4.4) sha256=19e0a2c3425dfbf2d4fc1189747bdb2f849b6c5e74180401b15734bc97b5d142
   rinku (2.0.6) sha256=8b60670e3143f3db2b37efa262971ce3619ec23092045498ef9f077d82828d7d
   rotp (6.3.0) sha256=75d40087e65ed0d8022c33055a6306c1c400d1c12261932533b5d6cbcd868854

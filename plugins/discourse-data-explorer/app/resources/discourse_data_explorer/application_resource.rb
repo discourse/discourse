@@ -1,0 +1,27 @@
+# frozen_string_literal: true
+
+module DiscourseDataExplorer
+  # Base resource for the JSON:API modernization spike (Graphiti).
+  # See docs/api-modernization-exploration.md.
+  class ApplicationResource < Graphiti::Resource
+    self.abstract_class = true
+    self.adapter = Graphiti::Adapters::ActiveRecord
+    self.endpoint_namespace = "/data-explorer/api/v1"
+
+    # Spike: keep the surface minimal for now — no auto-generated relationship
+    # links and no endpoint inference/validation until we wire routing properly.
+    self.autolink = false
+    self.validate_endpoints = false
+
+    # Graphiti's AR adapter paginates via Kaminari (.page/.per), which Discourse
+    # doesn't ship. Supply a custom proc so we depend on neither Kaminari nor an
+    # adapter override. NOTE: this is plain offset/limit — Graphiti's built-in
+    # "cursor" pagination is also offset-based, so real keyset/cursor pagination
+    # (planned via the `pagy` gem) will replace this block in a later step.
+    paginate do |scope, current_page, per_page, _ctx, offset|
+      per_page = (per_page || 20).to_i
+      current_page = (current_page || 1).to_i
+      scope.limit(per_page).offset((current_page - 1) * per_page + offset.to_i)
+    end
+  end
+end
