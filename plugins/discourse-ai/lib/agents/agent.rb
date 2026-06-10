@@ -238,6 +238,7 @@ module DiscourseAi
             ChatThreadTitler => -35,
             SentimentClassifier => -36,
             EmotionClassifier => -37,
+            AdminDashboardHighlights => -38,
           }.freeze
         end
       end

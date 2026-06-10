@@ -14,6 +14,7 @@ module DiscourseAi
       EMBEDDINGS = "embeddings"
       AUTOMATION_REPORTS = "automation_reports"
       AUTOMATION_TRIAGE = "automation_triage"
+      ADMIN_DASHBOARD = "admin_dashboard"
 
       NAMES = [
         SUMMARIZATION,
@@ -27,6 +28,7 @@ module DiscourseAi
         EMBEDDINGS,
         AUTOMATION_REPORTS,
         AUTOMATION_TRIAGE,
+        ADMIN_DASHBOARD,
       ].freeze
 
       SUMMARIZATION_ID = 1
@@ -40,6 +42,7 @@ module DiscourseAi
       EMBEDDINGS_ID = 9
       AUTOMATION_REPORTS_ID = 10
       AUTOMATION_TRIAGE_ID = 11
+      ADMIN_DASHBOARD_ID = 12
 
       class << self
         def external_module_id(module_name)
@@ -102,6 +105,16 @@ module DiscourseAi
               enabled_by_setting: "ai_embeddings_enabled",
               features: DiscourseAi::Configuration::Feature.embeddings_features,
               extra_check: -> { SiteSetting.ai_embeddings_semantic_search_enabled },
+            ),
+            new(
+              ADMIN_DASHBOARD_ID,
+              ADMIN_DASHBOARD,
+              enabled_by_setting: "ai_admin_dashboard_enabled",
+              features: DiscourseAi::Configuration::Feature.admin_dashboard_features,
+              extra_check: -> do
+                DiscourseAi::Configuration::Feature.admin_dashboard_features.any?(&:enabled?)
+              end,
+              visible: false,
             ),
           ]
 

@@ -174,6 +174,19 @@ module DiscourseAi
           ]
         end
 
+        def admin_dashboard_features
+          feature_cache[:admin_dashboard] ||= [
+            new(
+              "highlights",
+              "ai_admin_dashboard_highlights_agent",
+              DiscourseAi::Configuration::Module::ADMIN_DASHBOARD_ID,
+              DiscourseAi::Configuration::Module::ADMIN_DASHBOARD,
+              enabled_by_setting: "ai_admin_dashboard_enabled",
+              require_enabled_agent: true,
+            ),
+          ]
+        end
+
         def lookup_bot_agent_ids
           AiAgent
             .where(enabled: true)
@@ -317,6 +330,7 @@ module DiscourseAi
             bot_features,
             spam_features,
             embeddings_features,
+            admin_dashboard_features,
             ai_automation_report_scripts,
             ai_automation_triage_scripts,
           ].flatten
@@ -349,7 +363,8 @@ module DiscourseAi
         module_name,
         enabled_by_setting: "",
         agent_ids_lookup: nil,
-        llm_models_lookup: nil
+        llm_models_lookup: nil,
+        require_enabled_agent: false
       )
         @name = name
         @agent_setting = agent_setting
@@ -358,6 +373,7 @@ module DiscourseAi
         @enabled_by_setting = enabled_by_setting
         @agent_ids_lookup = agent_ids_lookup
         @llm_models_lookup = llm_models_lookup
+        @require_enabled_agent = require_enabled_agent
       end
 
       def llm_models
@@ -397,9 +413,16 @@ module DiscourseAi
       attr_reader :name, :agent_setting, :module_id, :module_name
 
       def enabled?
-        return true if @enabled_by_setting.blank?
+        return agent_enabled? if @enabled_by_setting.blank?
         return false unless SiteSetting.respond_to?(@enabled_by_setting)
-        SiteSetting.get(@enabled_by_setting)
+        return false if !SiteSetting.get(@enabled_by_setting)
+
+        agent_enabled?
+      end
+
+      def agent_enabled?
+        return true if !@require_enabled_agent
+        agent_ids.any? { |agent_id| AiAgent.find_by_id_from_cache(agent_id)&.enabled? }
       end
 
       def agent_ids
