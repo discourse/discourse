@@ -317,44 +317,6 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       expect(traffic).to have_no_avg_session_duration
     end
 
-    it "shows a falling bounce rate and a rising session duration as positive trends",
-       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
-      # Previous period (Apr 1): bounce 75%, low duration
-      3.times { record_visit(at: Time.zone.local(2026, 4, 1, 10, 0, 0)) }
-      record_visit(at: Time.zone.local(2026, 4, 1, 10, 0, 0), engaged_for: 30)
-
-      # Current period (May 12): bounce 25%, high duration
-      3.times { record_visit(at: Time.zone.local(2026, 5, 12, 10, 0, 0), engaged_for: 200) }
-      record_visit(at: Time.zone.local(2026, 5, 12, 10, 0, 0))
-
-      aggregate_session_rollup
-
-      dashboard.visit
-      traffic = dashboard.site_traffic
-
-      expect(traffic).to have_positive_bounce_rate_trend
-      expect(traffic).to have_positive_avg_session_duration_trend
-    end
-
-    it "shows a rising bounce rate and a falling session duration as negative trends",
-       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
-      # Previous period (Apr 1): bounce 25%, high duration
-      record_visit(at: Time.zone.local(2026, 4, 1, 10, 0, 0))
-      3.times { record_visit(at: Time.zone.local(2026, 4, 1, 10, 0, 0), engaged_for: 200) }
-
-      # Current period (May 12): bounce 75%, low duration
-      3.times { record_visit(at: Time.zone.local(2026, 5, 12, 10, 0, 0)) }
-      record_visit(at: Time.zone.local(2026, 5, 12, 10, 0, 0), engaged_for: 30)
-
-      aggregate_session_rollup
-
-      dashboard.visit
-      traffic = dashboard.site_traffic
-
-      expect(traffic).to have_negative_bounce_rate_trend
-      expect(traffic).to have_negative_avg_session_duration_trend
-    end
-
     it "shows a neutral placeholder for each metric when no visits fall in the period",
        time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
       dashboard.visit

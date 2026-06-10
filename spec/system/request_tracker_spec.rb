@@ -561,17 +561,61 @@ describe "Request tracking" do
         visit "/"
         session_id = pageview_tracking.session_id
 
-        switch_to_window(open_new_window(:tab))
+        try_until_success do
+          expect(BrowserPageviewEvent.exists?(session_id: session_id)).to eq(true)
+        end
+
+        pageview_tracking.switch_to_another_application
 
         try_until_success do
           expect(
-            BrowserPageviewEngagement.joins(:event).where(
-              browser_pageview_events: {
-                session_id: session_id,
-                url: "#{Discourse.base_url_no_prefix}/",
-              },
-            ).count,
+            BrowserPageviewEngagement
+              .joins(:event)
+              .where(
+                browser_pageview_events: {
+                  session_id: session_id,
+                  url: "#{Discourse.base_url_no_prefix}/",
+                },
+              )
+              .count,
           ).to eq(1)
+        end
+      end
+
+      it "records another ping when the user returns and leaves again",
+         time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+        SiteSetting.persist_browser_pageview_events = true
+
+        visit "/"
+        session_id = pageview_tracking.session_id
+
+        try_until_success do
+          expect(BrowserPageviewEvent.exists?(session_id: session_id)).to eq(true)
+        end
+
+        pageview_tracking.switch_to_another_application
+
+        try_until_success do
+          expect(
+            BrowserPageviewEngagement
+              .joins(:event)
+              .where(browser_pageview_events: { session_id: session_id })
+              .count,
+          ).to eq(1)
+        end
+
+        pageview_tracking.skip_past_resend_throttle
+        pageview_tracking.return_to_page
+        pageview_tracking.skip_past_resend_throttle
+        pageview_tracking.switch_to_another_application
+
+        try_until_success do
+          expect(
+            BrowserPageviewEngagement
+              .joins(:event)
+              .where(browser_pageview_events: { session_id: session_id })
+              .count,
+          ).to eq(2)
         end
       end
 
@@ -584,15 +628,23 @@ describe "Request tracking" do
         find(".nav-item_categories a").click
         expect(page).to have_current_path("/categories")
 
-        switch_to_window(open_new_window(:tab))
+        try_until_success do
+          expect(
+            BrowserPageviewEvent.exists?(
+              session_id: session_id,
+              url: "#{Discourse.base_url_no_prefix}/categories",
+            ),
+          ).to eq(true)
+        end
+
+        pageview_tracking.switch_to_another_application
 
         try_until_success do
           expect(
-            BrowserPageviewEngagement.joins(:event).where(
-              browser_pageview_events: {
-                session_id: session_id,
-              },
-            ).pluck("browser_pageview_events.url"),
+            BrowserPageviewEngagement
+              .joins(:event)
+              .where(browser_pageview_events: { session_id: session_id })
+              .pluck("browser_pageview_events.url"),
           ).to eq(["#{Discourse.base_url_no_prefix}/categories"])
         end
       end

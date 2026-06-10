@@ -7061,6 +7061,17 @@ en:
             logged_in_share:
               label: "Logged-in share"
               tooltip: "The share of pageviews from logged-in members."
+            bounce_rate:
+              label: "Bounce rate"
+              tooltip: "The share of visits that viewed a single page for less than 10 seconds."
+              empty_tooltip: "Shown once visits are recorded for this period."
+            avg_session_duration:
+              label: "Avg. session duration"
+              tooltip: "The average length of a visit, including bounced visits."
+              empty_tooltip: "Shown once visits are recorded for this period."
+          duration:
+            minutes_seconds: "%{minutes}m %{seconds}s"
+            seconds: "%{seconds}s"
           top_countries:
             title: "Top countries"
             empty: "No country data for this period."

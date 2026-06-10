@@ -179,7 +179,7 @@ RSpec.describe BrowserPageviewSessionDailyRollup do
       ).to eq([[Date.new(2026, 5, 5), false, 1, 1, 0]])
     end
 
-    it "caps each idle gap between pageviews at 30 minutes" do
+    it "starts a new visit when more than 30 minutes pass between pageviews in a tab" do
       first_pageview =
         Fabricate(:browser_pageview_event, created_at: Time.zone.local(2026, 5, 5, 10, 0, 0))
       Fabricate(
@@ -203,7 +203,97 @@ RSpec.describe BrowserPageviewSessionDailyRollup do
           :bounced_count,
           :total_duration_seconds,
         ),
-      ).to eq([[Date.new(2026, 5, 5), false, 1, 0, 3600]])
+      ).to eq([[Date.new(2026, 5, 5), false, 3, 3, 0]])
+    end
+
+    it "counts each day's drive-by in a parked tab as its own bounce" do
+      first_visit_pageview =
+        Fabricate(:browser_pageview_event, created_at: Time.zone.local(2026, 5, 5, 10, 0, 0))
+      Fabricate(
+        :browser_pageview_engagement,
+        event: first_visit_pageview,
+        created_at: Time.zone.local(2026, 5, 5, 10, 0, 5),
+      )
+
+      second_visit_pageview =
+        Fabricate(
+          :browser_pageview_event,
+          session_id: first_visit_pageview.session_id,
+          created_at: Time.zone.local(2026, 5, 6, 10, 0, 0),
+        )
+      Fabricate(
+        :browser_pageview_engagement,
+        event: second_visit_pageview,
+        created_at: Time.zone.local(2026, 5, 6, 10, 0, 5),
+      )
+
+      described_class.aggregate(start_date: start_date, end_date: end_date)
+
+      expect(
+        described_class.order(:date, :logged_in).pluck(
+          :date,
+          :logged_in,
+          :sessions_count,
+          :bounced_count,
+          :total_duration_seconds,
+        ),
+      ).to eq([[Date.new(2026, 5, 5), false, 1, 1, 5], [Date.new(2026, 5, 6), false, 1, 1, 5]])
+    end
+
+    it "splits a tab's pageviews a day apart into two visits even without exit pings" do
+      first_pageview =
+        Fabricate(:browser_pageview_event, created_at: Time.zone.local(2026, 5, 5, 10, 0, 0))
+      Fabricate(
+        :browser_pageview_event,
+        session_id: first_pageview.session_id,
+        created_at: Time.zone.local(2026, 5, 6, 10, 0, 0),
+      )
+
+      described_class.aggregate(start_date: start_date, end_date: end_date)
+
+      expect(
+        described_class.order(:date, :logged_in).pluck(
+          :date,
+          :logged_in,
+          :sessions_count,
+          :bounced_count,
+          :total_duration_seconds,
+        ),
+      ).to eq([[Date.new(2026, 5, 5), false, 1, 1, 0], [Date.new(2026, 5, 6), false, 1, 1, 0]])
+    end
+
+    it "keeps a visit together when the user returns shortly after an exit ping" do
+      first_pageview =
+        Fabricate(:browser_pageview_event, created_at: Time.zone.local(2026, 5, 5, 10, 0, 0))
+      Fabricate(
+        :browser_pageview_engagement,
+        event: first_pageview,
+        created_at: Time.zone.local(2026, 5, 5, 10, 0, 5),
+      )
+
+      last_pageview =
+        Fabricate(
+          :browser_pageview_event,
+          session_id: first_pageview.session_id,
+          created_at: Time.zone.local(2026, 5, 5, 10, 2, 0),
+        )
+      Fabricate(
+        :browser_pageview_engagement,
+        event: last_pageview,
+        created_at: Time.zone.local(2026, 5, 5, 10, 2, 30),
+      )
+
+      described_class.aggregate(start_date: start_date, end_date: end_date)
+
+      expect(
+        described_class.order(:date, :logged_in).pluck(
+          :date,
+          :logged_in,
+          :sessions_count,
+          :bounced_count,
+          :total_duration_seconds,
+        ),
+      ).to eq([[Date.new(2026, 5, 5), false, 1, 0, 150]])
     end
 
     it "counts a final-page ping received after midnight toward the prior day's visit" do
@@ -226,6 +316,77 @@ RSpec.describe BrowserPageviewSessionDailyRollup do
           :total_duration_seconds,
         ),
       ).to eq([[Date.new(2026, 5, 5), false, 1, 0, 15]])
+    end
+
+    it "keeps a bounce bounced when a parked tab is touched hours later" do
+      pageview =
+        Fabricate(:browser_pageview_event, created_at: Time.zone.local(2026, 5, 5, 10, 0, 0))
+      Fabricate(
+        :browser_pageview_engagement,
+        event: pageview,
+        created_at: Time.zone.local(2026, 5, 5, 10, 0, 5),
+      )
+      Fabricate(
+        :browser_pageview_engagement,
+        event: pageview,
+        created_at: Time.zone.local(2026, 5, 5, 14, 0, 0),
+      )
+
+      described_class.aggregate(start_date: start_date, end_date: end_date)
+
+      expect(
+        described_class.order(:date, :logged_in).pluck(
+          :date,
+          :logged_in,
+          :sessions_count,
+          :bounced_count,
+          :total_duration_seconds,
+        ),
+      ).to eq([[Date.new(2026, 5, 5), false, 1, 1, 5]])
+    end
+
+    it "credits a long single-page read whose only ping lands after the inactivity window" do
+      pageview =
+        Fabricate(:browser_pageview_event, created_at: Time.zone.local(2026, 5, 5, 10, 0, 0))
+      Fabricate(
+        :browser_pageview_engagement,
+        event: pageview,
+        created_at: Time.zone.local(2026, 5, 5, 10, 45, 0),
+      )
+
+      described_class.aggregate(start_date: start_date, end_date: end_date)
+
+      expect(
+        described_class.order(:date, :logged_in).pluck(
+          :date,
+          :logged_in,
+          :sessions_count,
+          :bounced_count,
+          :total_duration_seconds,
+        ),
+      ).to eq([[Date.new(2026, 5, 5), false, 1, 0, 1800]])
+    end
+
+    it "attributes a visit straddling the range start to the day before the range" do
+      first_pageview =
+        Fabricate(:browser_pageview_event, created_at: Time.zone.local(2026, 5, 4, 23, 50, 0))
+      Fabricate(
+        :browser_pageview_event,
+        session_id: first_pageview.session_id,
+        created_at: Time.zone.local(2026, 5, 5, 0, 10, 0),
+      )
+
+      described_class.aggregate(start_date: Date.new(2026, 5, 5), end_date: end_date)
+
+      expect(
+        described_class.order(:date, :logged_in).pluck(
+          :date,
+          :logged_in,
+          :sessions_count,
+          :bounced_count,
+          :total_duration_seconds,
+        ),
+      ).to eq([])
     end
 
     it "caps the final page's dwell at 30 minutes" do
@@ -359,7 +520,7 @@ RSpec.describe BrowserPageviewSessionDailyRollup do
       expect(described_class.sum(:sessions_count)).to eq(1)
     end
 
-    it "is idempotent — running twice produces the same totals" do
+    it "is idempotent, so running twice produces the same totals" do
       first_pageview =
         Fabricate(:browser_pageview_event, created_at: Time.zone.local(2026, 5, 5, 10, 0, 0))
       Fabricate(

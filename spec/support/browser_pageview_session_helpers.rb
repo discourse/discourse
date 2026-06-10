@@ -17,4 +17,11 @@ module BrowserPageviewSessionHelpers
       end_date: Date.current,
     )
   end
+
+  def set_engagements_instrumented_at(time)
+    DB.exec(
+      "UPDATE schema_migration_details SET created_at = :time WHERE version = '20260610025606'",
+      time: time,
+    )
+  end
 end

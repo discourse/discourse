@@ -436,6 +436,9 @@ module ApplicationHelper
     if SiteSetting.use_beacon_for_browser_page_views
       tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
     end
+    if SiteSetting.persist_browser_pageview_events
+      tags << tag.meta(name: "discourse-engagement-ping-enabled", content: "true")
+    end
     tags.html_safe
   end
 

@@ -718,39 +718,6 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(kpis[:avg_session_duration]).to eq(value: 30)
       end
 
-      it "returns a trend for the bounce rate compared with the previous period" do
-        # Previous period (Apr 28–30): 1 of 4 visits bounced = 25%
-        record_visit(at: Time.zone.local(2026, 4, 28, 10, 0, 0))
-        3.times { record_visit(at: Time.zone.local(2026, 4, 28, 10, 0, 0), engaged_for: 30) }
-
-        # Current period (May 1–3): 1 of 2 visits bounced = 50%
-        record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0))
-        record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0), engaged_for: 30)
-
-        aggregate_session_rollup
-
-        kpis = described_class.build(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]
-        expect(kpis[:bounce_rate]).to eq(
-          value: 50,
-          percent_change: 100,
-          comparison_period: {
-            start_date: "2026-04-28",
-            end_date: "2026-04-30",
-          },
-        )
-      end
-
-      it "omits the trend when the previous period has no visits" do
-        record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0))
-        record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0), engaged_for: 30)
-
-        aggregate_session_rollup
-
-        kpis = described_class.build(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]
-        expect(kpis[:bounce_rate]).to eq(value: 50)
-        expect(kpis[:avg_session_duration]).to eq(value: 15)
-      end
-
       it "computes the metrics from the rollup after the source events are pruned" do
         record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0))
         record_visit(at: Time.zone.local(2026, 5, 1, 10, 0, 0), engaged_for: 30)

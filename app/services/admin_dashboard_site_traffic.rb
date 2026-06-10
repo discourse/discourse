@@ -39,6 +39,7 @@ class AdminDashboardSiteTraffic
     }
 
     if SiteSetting.persist_browser_pageview_events
+      response[:kpis].merge!(session_kpis)
       response[:top_countries] = fetch_card("top_countries_by_browser_pageviews")
       response[:top_referrers] = fetch_card("top_referrers_by_browser_pageviews")
     end
@@ -117,6 +118,41 @@ class AdminDashboardSiteTraffic
     return nil if login_required?
 
     totals[:human].positive? ? ((totals[:logged_in].to_f / totals[:human]) * 100).round : 0
+  end
+
+  def session_kpis
+    totals = session_totals(start_date.to_date, end_date.to_date)
+
+    {
+      bounce_rate: {
+        value: bounce_rate(totals),
+      },
+      avg_session_duration: {
+        value: avg_session_duration(totals),
+      },
+    }
+  end
+
+  def session_totals(range_start, range_end)
+    BrowserPageviewSessionDailyRollup.where(date: range_start..range_end).pick(
+      Arel.sql("SUM(sessions_count)"),
+      Arel.sql("SUM(bounced_count)"),
+      Arel.sql("SUM(total_duration_seconds)"),
+    ) || []
+  end
+
+  def bounce_rate(totals)
+    sessions, bounced, _duration = totals
+    return nil if sessions.to_i.zero?
+
+    ((bounced.to_f / sessions) * 100).round
+  end
+
+  def avg_session_duration(totals)
+    sessions, _bounced, duration = totals
+    return nil if sessions.to_i.zero?
+
+    (duration.to_f / sessions).round
   end
 
   def pageview_series(rows, include_embedded:)
