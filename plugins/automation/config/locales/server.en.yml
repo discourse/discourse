@@ -1,6 +1,7 @@
 en:
   site_settings:
     discourse_automation_enabled: "Enable discourse-automation plugin"
+    discourse_automation_max_recursion_depth: "Maximum automation recursion depth"
   discourse_automation:
     staff_action_logs:
       empty_value: "(empty)"
