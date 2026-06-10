@@ -85,9 +85,7 @@ export default class QueriesEdit extends Component {
               {{/unless}}
             </div>
 
-            <div class="desc">
-              {{@controller.model.description}}
-            </div>
+            <div class="desc">{{@controller.model.description}}</div>
           {{/if}}
 
           {{#unless @controller.model.destroyed}}
