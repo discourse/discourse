@@ -48,6 +48,19 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(response.body).to include("nested_topic_#{topic.id}")
     end
 
+    it "links no-JavaScript users to the forced-flat topic when the nested response is incomplete" do
+      (NestedReplies::TreeLoader::ROOTS_PER_PAGE + 1).times do
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      end
+
+      get "/n/#{topic.slug}/#{topic.id}"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("<noscript>")
+      expect(response.body).to include(%(/t/#{topic.slug}/#{topic.id}?flat=1))
+      expect(response.body).to include(I18n.t(:read_full_topic))
+    end
+
     it "renders flat topic HTML for nested post URLs without JavaScript" do
       post = Fabricate(:post, topic: topic, user: user, raw: "Context post without JavaScript")
 
@@ -55,6 +68,8 @@ RSpec.describe NestedTopicsController, type: :request do
 
       expect(response.status).to eq(200)
       expect(response.body).to include(post.cooked)
+      expect(response.body).to include(%(/t/#{topic.slug}/#{topic.id}/#{post.post_number}?flat=1))
+      expect(response.body).to include(I18n.t(:show_post_in_topic))
     end
 
     it "returns 404 for anonymous users on private topics" do

@@ -3,6 +3,17 @@
 module TopicsHelper
   include ApplicationHelper
 
+  def topic_path_with_flat_param(path, force: nil, anchor: nil)
+    force = params[:flat] == "1" if force.nil?
+    path = path.to_s
+
+    if force && !path.match?(/[?&]flat=1(?:&|$)/)
+      path += path.include?("?") ? "&flat=1" : "?flat=1"
+    end
+
+    anchor.present? ? "#{path}##{anchor}" : path
+  end
+
   def render_topic_title(topic)
     link_to(Emoji.gsub_emoji_to_unicode(topic.title), topic.relative_url)
   end

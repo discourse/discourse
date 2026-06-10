@@ -73,8 +73,23 @@
 
   <div class="nested-crawler" itemscope itemtype="http://schema.org/DiscussionForumPosting">
     <meta itemprop="headline" content="<%= @nested_topic[:title] %>">
-    <link itemprop="url" href="<%= @topic.url %>">
+    <link itemprop="url" href="<%= @topic_view.absolute_url %>">
     <meta itemprop="datePublished" content="<%= @topic.created_at.to_formatted_s(:iso8601) %>">
+
+    <% if @nested_response[:target_post].present? %>
+      <% target_post_number = @nested_response[:target_post][:post_number] %>
+      <noscript>
+        <div class="nested-topic-no-js-notice topic-body crawler-post">
+          <%= link_to t(:show_post_in_topic), topic_path_with_flat_param("#{@topic.url}/#{target_post_number}", force: true) %>
+        </div>
+      </noscript>
+    <% elsif @nested_response[:has_more_roots] %>
+      <noscript>
+        <div class="nested-topic-no-js-notice topic-body crawler-post">
+          <%= link_to t(:read_full_topic), topic_path_with_flat_param(@topic.url, force: true) %>
+        </div>
+      </noscript>
+    <% end %>
 
     <% render_nested_post.call(@nested_response[:op_post], 0) %>
 
