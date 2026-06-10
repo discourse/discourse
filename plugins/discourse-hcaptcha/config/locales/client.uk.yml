@@ -6,10 +6,8 @@
 
 uk:
   js:
-    discourse_hCaptcha:
-      missing_token: "Будь ласка, виконайте завдання hCaptcha."
+    discourse_captcha:
       placeholder: заповнювач
-      contact_system_administrator: "Виникла проблема з hCaptcha. Якщо проблема не зникає, зверніться до системного адміністратора."
   admin_js:
     admin:
       site_settings:

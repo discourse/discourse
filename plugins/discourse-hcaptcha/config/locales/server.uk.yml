@@ -13,7 +13,5 @@ uk:
       categories:
         discourse_hcaptcha: "Плагін hCaptcha"
   site_settings:
-    discourse_hcaptcha_enabled: "Увімкніть плагін hCaptcha. Потрібен обліковий запис <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> ."
     hcaptcha_site_key: "Ключ сайту hCaptcha з вашого облікового запису <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
     hcaptcha_secret_key: "Секретний ключ hCaptcha з вашого облікового запису <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
-  h_captcha_verification_failed: "Не вдалося перевірити hCaptcha"

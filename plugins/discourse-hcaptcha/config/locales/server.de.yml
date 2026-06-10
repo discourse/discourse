@@ -13,7 +13,5 @@ de:
       categories:
         discourse_hcaptcha: "hCaptcha-Plug-in"
   site_settings:
-    discourse_hcaptcha_enabled: "Aktiviere das hCaptcha-Plug-in. Erfordert ein <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>-Konto."
     hcaptcha_site_key: "hCaptcha-Website-Schlüssel aus deinem <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>-Konto"
     hcaptcha_secret_key: "Geheimer hCaptcha-Schlüssel aus deinem <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>-Konto"
-  h_captcha_verification_failed: "hCaptcha-Verifizierung fehlgeschlagen"

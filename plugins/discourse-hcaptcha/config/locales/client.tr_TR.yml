@@ -6,10 +6,8 @@
 
 tr_TR:
   js:
-    discourse_hCaptcha:
-      missing_token: "Lütfen hCaptcha testini tamamlayın."
+    discourse_captcha:
       placeholder: yer tutucu
-      contact_system_administrator: "hCaptcha ile ilgili bir sorun oluştu, bu sorun devam ederse lütfen bir sistem yöneticisiyle iletişime geçin"
   admin_js:
     admin:
       site_settings:
