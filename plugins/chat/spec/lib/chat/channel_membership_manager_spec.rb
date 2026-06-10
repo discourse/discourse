@@ -62,6 +62,29 @@ RSpec.describe Chat::ChannelMembershipManager do
       }
       expect(membership.reload.following).to eq(true)
     end
+
+    it "creates a direct message user when following a direct message channel" do
+      channel = Fabricate(:direct_message_channel)
+
+      expect { described_class.new(channel).follow(user) }.to change {
+        Chat::DirectMessageUser.exists?(user: user, direct_message: channel.chatable)
+      }.from(false).to(true)
+    end
+
+    it "does not create a direct message user when following a category channel" do
+      expect { described_class.new(channel1).follow(user) }.not_to change {
+        Chat::DirectMessageUser.count
+      }
+    end
+
+    it "repairs a missing direct message user for an existing followed direct message membership" do
+      channel = Fabricate(:direct_message_channel)
+      Fabricate(:user_chat_channel_membership_for_dm, chat_channel: channel, user: user)
+
+      expect { described_class.new(channel).follow(user) }.to change {
+        Chat::DirectMessageUser.exists?(user: user, direct_message: channel.chatable)
+      }.from(false).to(true)
+    end
   end
 
   describe ".unfollow" do

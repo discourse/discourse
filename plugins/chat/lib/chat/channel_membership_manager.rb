@@ -25,6 +25,8 @@ module Chat
           Chat::UserChatChannelMembership.new(user: user, chat_channel: channel, following: true)
 
       ActiveRecord::Base.transaction do
+        ensure_direct_message_user(user)
+
         if membership.new_record?
           membership.save!
           recalculate_user_count
@@ -56,6 +58,12 @@ module Chat
       return if Chat::Channel.exists?(id: channel.id, user_count_stale: true)
       channel.update!(user_count_stale: true)
       Jobs.enqueue_in(3.seconds, Jobs::Chat::UpdateChannelUserCount, chat_channel_id: channel.id)
+    end
+
+    def ensure_direct_message_user(user)
+      return if !channel.direct_message_channel?
+
+      Chat::DirectMessageUser.create_or_find_by!(user: user, direct_message: channel.chatable)
     end
 
     def unfollow_all_users

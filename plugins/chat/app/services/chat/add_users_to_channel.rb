@@ -55,6 +55,7 @@ module Chat
         step :create_memberships
         step :recompute_users_count
         step :notice_channel
+        step :publish_new_channel
       end
     end
 
@@ -98,6 +99,7 @@ module Chat
 
     def create_memberships(channel:, target_users:)
       always_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
+      now = Time.zone.now
 
       memberships =
         target_users.map do |user|
@@ -107,8 +109,8 @@ module Chat
             muted: false,
             following: true,
             notification_level: always_level,
-            created_at: Time.zone.now,
-            updated_at: Time.zone.now,
+            created_at: now,
+            updated_at: now,
           }
         end
 
@@ -117,26 +119,39 @@ module Chat
         return
       end
 
-      context[:added_user_ids] = ::Chat::UserChatChannelMembership
-        .insert_all(
-          memberships,
-          unique_by: %i[user_id chat_channel_id],
-          returning: Arel.sql("user_id, (xmax = '0') as inserted"),
-        )
-        .select { |row| row["inserted"] }
-        .map { |row| row["user_id"] }
+      inserted_membership_user_ids =
+        ::Chat::UserChatChannelMembership
+          .insert_all(
+            memberships,
+            unique_by: %i[user_id chat_channel_id],
+            returning: Arel.sql("user_id, (xmax = '0') as inserted"),
+          )
+          .select { |row| row["inserted"] }
+          .map { |row| row["user_id"] }
 
-      ::Chat::DirectMessageUser.insert_all(
-        context.added_user_ids.map do |id|
+      direct_message_users =
+        target_users.map do |user|
           {
-            user_id: id,
+            user_id: user.id,
             direct_message_channel_id: channel.chatable.id,
-            created_at: Time.zone.now,
-            updated_at: Time.zone.now,
+            created_at: now,
+            updated_at: now,
           }
-        end,
-        unique_by: %i[direct_message_channel_id user_id],
-      )
+        end
+
+      inserted_direct_message_user_ids =
+        ::Chat::DirectMessageUser
+          .insert_all(
+            direct_message_users,
+            unique_by: %i[direct_message_channel_id user_id],
+            returning: Arel.sql("user_id, (xmax = '0') as inserted"),
+          )
+          .select { |row| row["inserted"] }
+          .map { |row| row["user_id"] }
+
+      context[:added_user_ids] = (
+        inserted_membership_user_ids + inserted_direct_message_user_ids
+      ).uniq
     end
 
     def recompute_users_count(channel:)
@@ -166,6 +181,12 @@ module Chat
             ),
         },
       ) { on_failure { fail!(failure: "Failed to notice the channel") } }
+    end
+
+    def publish_new_channel(channel:)
+      return if context.added_user_ids.blank?
+
+      DB.after_commit { ::Chat::Publisher.publish_new_channel(channel, context.added_user_ids) }
     end
   end
 end

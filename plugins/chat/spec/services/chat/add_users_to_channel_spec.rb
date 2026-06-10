@@ -110,6 +110,31 @@ RSpec.describe Chat::AddUsersToChannel do
         expect { result }.to change { ::Chat::DirectMessageUser.count }.by(users.count + 1) # +1 for system user creating the notice message and added to the channel
       end
 
+      it "repairs a missing direct message user for an existing membership" do
+        broken_user = users.first
+        Chat::UserChatChannelMembership.create!(
+          user: broken_user,
+          chat_channel: channel,
+          following: true,
+          notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+        )
+
+        expect { result }.to change {
+          Chat::DirectMessageUser.exists?(user: broken_user, direct_message: direct_message)
+        }.from(false).to(true)
+
+        expect(result.added_user_ids).to include(broken_user.id)
+        expect(
+          Chat::ChannelFetcher.structured(broken_user.guardian)[:direct_message_channels],
+        ).to include(channel)
+      end
+
+      it "publishes the channel to users added to the channel" do
+        Chat::Publisher.expects(:publish_new_channel).with(channel, includes(*users.map(&:id))).once
+
+        result
+      end
+
       it "updates users count" do
         expect { result }.to change { channel.reload.user_count }.by(users.count + 1) # +1 for system user creating the notice message and added to the channel
       end
