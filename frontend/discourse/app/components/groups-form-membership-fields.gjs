@@ -6,7 +6,6 @@ import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import GroupFlairInputs from "discourse/components/group-flair-inputs";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import DTooltip from "discourse/float-kit/components/d-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import AssociatedGroup from "discourse/models/associated-group";
@@ -17,34 +16,18 @@ import DRadioButton from "discourse/ui-kit/d-radio-button";
 import { i18n } from "discourse-i18n";
 
 const JoinMethodOption = <template>
-  {{#if @disabled}}
-    <DTooltip @content={{@disabledHint}}>
-      <:trigger>
-        <label class="radio">
-          <DRadioButton
-            @name="join_method"
-            @value={{@value}}
-            @selection={{@selection}}
-            @disabled={{true}}
-            class={{@class}}
-          />
+  <label class="radio">
+    <DRadioButton
+      @name="join_method"
+      @value={{@value}}
+      @selection={{@selection}}
+      @onChange={{@onChange}}
+      @disabled={{@disabled}}
+      class={{@class}}
+    />
 
-          {{@label}}
-        </label>
-      </:trigger>
-    </DTooltip>
-  {{else}}
-    <label class="radio">
-      <DRadioButton
-        @name="join_method"
-        @value={{@value}}
-        @selection={{@selection}}
-        @onChange={{@onChange}}
-        class={{@class}}
-      />
-      {{@label}}
-    </label>
-  {{/if}}
+    {{@label}}
+  </label>
 </template>;
 
 @tagName("")
@@ -219,7 +202,75 @@ export default class GroupsFormMembershipFields extends Component {
               "admin.groups.manage.interaction.visibility_levels.description"
             }}
           </div>
+        {{/if}}
 
+        <fieldset class="groups-form-join-method">
+          <legend>{{i18n "groups.manage.membership.join_method_title"}}</legend>
+
+          <JoinMethodOption
+            @value="free"
+            @label={{i18n "groups.manage.membership.join_method.free"}}
+            @class="group-form-public-admission"
+            @selection={{this.joinMethod}}
+            @onChange={{fn this.setJoinMethod "free"}}
+            @disabled={{this.joinMethodDisabled}}
+          />
+
+          <JoinMethodOption
+            @value="request"
+            @label={{i18n "groups.manage.membership.join_method.request"}}
+            @class="group-form-allow-membership-requests"
+            @selection={{this.joinMethod}}
+            @onChange={{fn this.setJoinMethod "request"}}
+            @disabled={{this.joinMethodDisabled}}
+          />
+
+          <JoinMethodOption
+            @value="invite"
+            @label={{i18n "groups.manage.membership.join_method.invite"}}
+            @class="group-form-invite-only"
+            @selection={{this.joinMethod}}
+            @onChange={{fn this.setJoinMethod "invite"}}
+          />
+
+          {{#if this.model.allow_membership_requests}}
+            <div class="groups-form-membership-request-template">
+              <label for="membership-request-template">
+                {{i18n "groups.membership_request_template"}}
+              </label>
+
+              <DExpandingTextArea
+                {{on
+                  "input"
+                  (withEventValue
+                    (fn (mut this.model.membership_request_template))
+                  )
+                }}
+                value={{this.model.membership_request_template}}
+                name="membership-request-template"
+                class="group-form-membership-request-template input-xxlarge"
+              />
+            </div>
+          {{/if}}
+
+          {{#if this.joinMethodDisabled}}
+            <div class="control-instructions">
+              {{i18n "groups.manage.membership.join_method_visibility_hint"}}
+            </div>
+          {{/if}}
+        </fieldset>
+
+        <label class="group-form-public-exit-label">
+          <Input
+            @type="checkbox"
+            class="group-form-public-exit"
+            @checked={{this.model.public_exit}}
+          />
+
+          {{i18n "groups.public_exit"}}
+        </label>
+
+        {{#if this.canAdminGroup}}
           <label class="groups-form-members-visibility-label">
             {{i18n
               "admin.groups.manage.interaction.members_visibility_levels.title"
@@ -243,72 +294,6 @@ export default class GroupsFormMembershipFields extends Component {
             </div>
           {{/if}}
         {{/if}}
-
-        <fieldset class="groups-form-join-method">
-          <legend>{{i18n "groups.manage.membership.join_method_title"}}</legend>
-
-          <JoinMethodOption
-            @value="free"
-            @label={{i18n "groups.manage.membership.join_method.free"}}
-            @class="group-form-public-admission"
-            @selection={{this.joinMethod}}
-            @onChange={{fn this.setJoinMethod "free"}}
-            @disabled={{this.joinMethodDisabled}}
-            @disabledHint={{i18n
-              "groups.manage.membership.join_method_visibility_hint"
-            }}
-          />
-
-          <JoinMethodOption
-            @value="invite"
-            @label={{i18n "groups.manage.membership.join_method.invite"}}
-            @class="group-form-invite-only"
-            @selection={{this.joinMethod}}
-            @onChange={{fn this.setJoinMethod "invite"}}
-          />
-
-          <JoinMethodOption
-            @value="request"
-            @label={{i18n "groups.manage.membership.join_method.request"}}
-            @class="group-form-allow-membership-requests"
-            @selection={{this.joinMethod}}
-            @onChange={{fn this.setJoinMethod "request"}}
-            @disabled={{this.joinMethodDisabled}}
-            @disabledHint={{i18n
-              "groups.manage.membership.join_method_visibility_hint"
-            }}
-          />
-
-          {{#if this.model.allow_membership_requests}}
-            <div class="groups-form-membership-request-template">
-              <label for="membership-request-template">
-                {{i18n "groups.membership_request_template"}}
-              </label>
-
-              <DExpandingTextArea
-                {{on
-                  "input"
-                  (withEventValue
-                    (fn (mut this.model.membership_request_template))
-                  )
-                }}
-                value={{this.model.membership_request_template}}
-                name="membership-request-template"
-                class="group-form-membership-request-template input-xxlarge"
-              />
-            </div>
-          {{/if}}
-        </fieldset>
-
-        <label class="group-form-public-exit-label">
-          <Input
-            @type="checkbox"
-            class="group-form-public-exit"
-            @checked={{this.model.public_exit}}
-          />
-
-          {{i18n "groups.public_exit"}}
-        </label>
       </div>
 
       {{#if this.model.can_admin_group}}

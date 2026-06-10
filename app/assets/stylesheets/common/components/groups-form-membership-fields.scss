@@ -1,6 +1,6 @@
 .group-form-automatic-membership-automatic,
 .groups-form-grant-trust-level {
-  margin-bottom: 10px;
+  margin-bottom: var(--space-3);
 }
 
 .groups-form-visibility-access {
@@ -8,6 +8,10 @@
   .groups-form-join-method,
   .group-form-public-exit-label {
     margin-top: var(--space-4);
+  }
+
+  .group-form-public-exit-label {
+    margin-bottom: var(--space-5);
   }
 
   .groups-form-join-method {
@@ -26,7 +30,7 @@
   }
 
   .groups-form-membership-request-template {
-    margin-top: var(--space-2);
+    margin-top: var(--space-4);
   }
 
   .radio:has([disabled]) {

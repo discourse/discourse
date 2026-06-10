@@ -1347,9 +1347,9 @@ en:
           join_method_title: "How can users join?"
           join_method:
             free: "Anyone can join freely"
-            request: "Require approval to join"
+            request: "Anyone can request to join"
             invite: "Invite only"
-          join_method_visibility_hint: "Joining freely or by request requires a group that's visible to the public or to logged-in users."
+          join_method_visibility_hint: "Users need to be able to see the group to join freely or request access."
         categories:
           title: Categories
           long_title: "Category default notifications"

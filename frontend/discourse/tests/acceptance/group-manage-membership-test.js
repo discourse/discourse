@@ -8,8 +8,11 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { i18n } from "discourse-i18n";
 
 acceptance("Managing Group Membership", function (needs) {
+  let savedGroup;
+
   needs.user();
   needs.pretender((server, helper) => {
     server.get("/associated_groups", () =>
@@ -24,7 +27,14 @@ acceptance("Managing Group Membership", function (needs) {
         ],
       })
     );
+
+    server.put("/groups/57", (request) => {
+      savedGroup = helper.parsePostData(request.requestBody).group;
+      return helper.response({ success: "OK" });
+    });
   });
+
+  needs.hooks.beforeEach(() => (savedGroup = null));
 
   test("As an admin", async function (assert) {
     updateCurrentUser({ can_create_group: true });
@@ -115,6 +125,47 @@ acceptance("Managing Group Membership", function (needs) {
     assert
       .dom(".group-form-allow-membership-requests")
       .isDisabled("disables membership requests for a restricted group");
+
+    assert
+      .dom(".groups-form-join-method .control-instructions")
+      .hasText(
+        i18n("groups.manage.membership.join_method_visibility_hint"),
+        "shows a persistent hint explaining why the options are disabled"
+      );
+  });
+
+  test("each join method serializes to the matching booleans on save", async function (assert) {
+    updateCurrentUser({ admin: true });
+
+    await visit("/g/alternative-group/manage/membership");
+
+    await click(".group-form-allow-membership-requests");
+    await click(".group-manage-save");
+
+    assert.strictEqual(
+      savedGroup.public_admission,
+      "false",
+      "by request clears public_admission"
+    );
+    assert.strictEqual(
+      savedGroup.allow_membership_requests,
+      "true",
+      "by request sets allow_membership_requests"
+    );
+
+    await click(".group-form-invite-only");
+    await click(".group-manage-save");
+
+    assert.strictEqual(
+      savedGroup.public_admission,
+      "false",
+      "invite only clears public_admission"
+    );
+    assert.strictEqual(
+      savedGroup.allow_membership_requests,
+      "false",
+      "invite only clears allow_membership_requests"
+    );
   });
 
   test("As an admin on a site that can associate groups", async function (assert) {
