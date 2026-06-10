@@ -6,6 +6,7 @@ import { toFlatMarkdown } from "discourse/plugins/discourse-wireframe/discourse/
 import InspectorCategoryField from "./inspector-category-field";
 import InspectorGroupField from "./inspector-group-field";
 import InspectorImageField from "./inspector-image-field";
+import InspectorRepeatableField from "./inspector-repeatable-field";
 import InspectorTagField from "./inspector-tag-field";
 import InspectorUserField from "./inspector-user-field";
 
@@ -53,10 +54,13 @@ export const FORM_KIT_TYPE_BY_CONTROL = Object.freeze({
   "tag-select": "custom",
   "user-select": "custom",
   "group-select": "custom",
+  // An array of structured items (`itemType: "object"`). Rides the `custom`
+  // slot; the bespoke control renders one editable row per item.
+  repeatable: "custom",
 });
 
 /**
- * Maps a `ui.control` to the FormKit `<form.Field @type="...">` value,
+ * Maps a `ui.control` to the FormKit field "type" value,
  * defaulting to `"input-text"` for anything not in the map.
  *
  * @param {string} control
@@ -76,7 +80,8 @@ export function fieldTypeFor(control) {
  *
  * Args contract:
  *
- *   @form              the `<Form @data>` yield (used for `<@form.Field>`).
+ *   @form              the FormKit form object; its `Field` component is
+ *                      invoked for each field.
  *   @field             the InspectorField descriptor from `schemaToFields`.
  *   @values            current values map (only the `rich-inline` branch
  *                      reads it, for the read-only summary).
@@ -128,22 +133,32 @@ const InspectorField = <template>
         {{/each}}
       </formField.Control>
     {{else if (eq @field.control "image")}}
-      {{! Image args own a bespoke custom control with Upload | URL
+      {{! Image args own a bespoke custom control with Upload or URL
           tabs, an optional dark variant, and a ratio-mismatch warning.
-          Mounted inside `<formField.Control>` (FormKit's `custom`
-          slot, which is just a styling wrapper that yields its
-          content) — the inner component reads/writes the field value
-          directly via the yielded `formField`. }}
+          Mounted inside the FormKit custom control slot (a styling
+          wrapper that yields its content) — the inner component
+          reads/writes the field value directly via the yielded
+          form field. }}
       <formField.Control>
         <InspectorImageField @custom={{formField}} @schema={{@field.schema}} />
       </formField.Control>
+    {{else if (eq @field.control "repeatable")}}
+      {{! An array of structured items. The bespoke control reads/writes the
+          whole array live via the wireframe service and renders one editable
+          row per item, built from the arg's item schema. }}
+      <formField.Control>
+        <InspectorRepeatableField
+          @custom={{formField}}
+          @schema={{@field.schema}}
+        />
+      </formField.Control>
     {{else if (eq @field.control "category-select")}}
-      {{! `<formField.Control>` with `@type="custom"` renders a styling
-          wrapper that just yields its content (`FKControlCustom` doesn't
-          yield the field — it's empty). The chooser binds value/set off
-          the OUTER `formField` (the FieldData yielded by `<form.Field>`),
-          matching the established pattern in `app/components/tag-settings.gjs`
-          for the synonyms picker. }}
+      {{! The custom-type FormKit control renders a styling wrapper that
+          just yields its content (FKControlCustom doesn't yield the field —
+          it's empty). The chooser binds value/set off the OUTER form field
+          (the FieldData yielded by the form's Field component), matching the
+          established pattern in app/components/tag-settings.gjs for the
+          synonyms picker. }}
       <formField.Control>
         <InspectorCategoryField
           @custom={{formField}}

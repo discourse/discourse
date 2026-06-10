@@ -63,6 +63,11 @@ en:
         category_theme: "Theme"
       inspector:
         empty: "Select a block to inspect."
+        multi:
+          selected_count:
+            one: "%{count} block selected"
+            other: "%{count} blocks selected"
+          delete: "Delete selected"
         unregistered_notice_title: "Unregistered block"
         unregistered_notice: "It won't render on the live page, and its values are read-only."
         unregistered_notice_remove: "Remove block"
@@ -176,6 +181,15 @@ en:
           url_probe_failed: "Couldn't load this URL to detect its size. It will still be saved, but layout may shift on first paint."
           resized_info: "Displayed at %{width}×%{height} (natural %{natural_width}×%{natural_height})."
           reset_to_natural: "Reset to natural"
+        repeatable:
+          add_item: "Add item"
+          remove_item: "Remove item"
+          move_up: "Move up"
+          move_down: "Move down"
+          import_label: "Import from JSON"
+          import_placeholder: '[{ "label": "Docs", "url": "/docs" }]'
+          import_apply: "Replace items"
+          import_invalid: "Paste a JSON array of items."
         conditions:
           empty_hint: "Pick a condition to control when this block renders."
           clear_all: "Remove all conditions"
@@ -269,6 +283,9 @@ en:
         view_outlets: "Outlets"
         expand_row: "Expand children"
         collapse_row: "Collapse children"
+        child_count:
+          one: "× %{count}"
+          other: "× %{count}"
         filter:
           placeholder: "Filter blocks"
           clear: "Clear filter"
@@ -332,6 +349,10 @@ en:
           move_up: "Move up"
           move_down: "Move down"
           duplicate: "Duplicate"
+          duplicate_count: "Duplicate multiple"
+          duplicate_n: "× %{count}"
+          duplicate_custom: "Custom count"
+          duplicate_apply: "Duplicate"
           detach: "Detach into blocks"
           delete: "Delete"
           expand_for_editing: "Expand for editing"

@@ -47,6 +47,15 @@ export const DEBUG_CALLBACK = Object.freeze({
    * Example payload: `{ simulation: { user, viewport } }`.
    */
   EVAL_CONTEXT: "evalContext",
+  /**
+   * Returns a boolean. When truthy, a container that normally reveals only
+   * part of its content at a time (a paged or collapsed presentation) should
+   * instead make ALL of its content reachable, and keep its navigation
+   * interactive, so each part can be manipulated directly. Read on the live
+   * render path, so a tracked source inside the callback propagates
+   * re-renders. Left unset, containers render their normal presentation.
+   */
+  EDIT_PRESENTATION: "editPresentation",
 });
 
 /**
@@ -140,6 +149,17 @@ class DebugHooks {
    */
   get isGhostBlocksEnabled() {
     return this.#callbacks.get(DEBUG_CALLBACK.GHOST_BLOCKS)?.() ?? false;
+  }
+
+  /**
+   * Returns whether content should be presented in its fully-revealed,
+   * directly-editable form (see `EDIT_PRESENTATION`). A paged/collapsing
+   * container reads this to expose all of its parts instead of one at a time.
+   *
+   * @returns {boolean}
+   */
+  get isEditPresentation() {
+    return this.#callbacks.get(DEBUG_CALLBACK.EDIT_PRESENTATION)?.() ?? false;
   }
 
   /**

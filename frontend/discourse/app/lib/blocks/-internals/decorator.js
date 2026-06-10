@@ -91,6 +91,9 @@ const AUTH_TOKEN = Symbol("block-auth-token");
  * @property {boolean} transparent - When true, the block is treated as
  *   structural scaffolding rather than a user-facing block (children
  *   expanded inline). See the `transparent` option on `block()`.
+ * @property {boolean} gridEditable - When true, this container positions its
+ *   children on a 2D grid (each child carries `containerArgs.grid`), so editing
+ *   tooling can offer cell-placement affordances. See the `gridEditable` option.
  * @property {ReadonlyArray<{id: string, block: string|Function, args: Object|null, lock: true|string[]|null}>|null} parts -
  *   The code-defined inner composition, or null. See the `parts` option on
  *   `block()`.
@@ -179,10 +182,10 @@ const BlockComponentManager = new Proxy(
  * Schema for block argument validation.
  *
  * @typedef {Object} ArgSchema
- * @property {"string"|"number"|"boolean"|"array"|"any"} type - The argument type (required)
+ * @property {"string"|"number"|"boolean"|"array"|"object"|"any"} type - The argument type (required)
  * @property {boolean} [required=false] - Whether the argument is required
  * @property {*} [default] - Default value for the argument
- * @property {"string"|"number"|"boolean"} [itemType] - Item type for array arguments
+ * @property {"string"|"number"|"boolean"|"object"} [itemType] - Item type for array arguments
  * @property {RegExp} [pattern] - Regex pattern for string validation
  * @property {number} [minLength] - Minimum length for string or array
  * @property {number} [maxLength] - Maximum length for string or array
@@ -191,6 +194,10 @@ const BlockComponentManager = new Proxy(
  * @property {boolean} [integer] - Whether number must be an integer
  * @property {Array} [enum] - Allowed values for the argument
  * @property {Array} [itemEnum] - Allowed values for array items
+ * @property {Object.<string, ArgSchema>} [itemSchema] - For arrays with
+ *   itemType "object", the schema for each item's fields. Each element is
+ *   validated against it, with errors reported at indexed paths (e.g.
+ *   "items[2].url"). A consumer can render it as a repeated set of fields.
  * @property {UIHints} [ui] - Optional metadata describing how this arg should
  *   be presented for editing. Pure metadata — has no runtime effect on the
  *   block itself.
@@ -311,6 +318,12 @@ function freezeParts(parts) {
  *   first-class block. Implies — but does not auto-set — `paletteHidden`;
  *   transparent blocks are typically not user-pickable.
  *
+ * @param {boolean} [options.gridEditable=false] - When true, this container
+ *   positions its children on a 2D grid: each child carries placement under
+ *   `containerArgs.grid` (`column` / `row`, as a grid `layout` does), and
+ *   editing tooling may offer cell-placement affordances. Independent of the
+ *   block's own rendering — the block still decides how to lay the cells out.
+ *
  * @param {Object} [options.data] - Declared data dependency. When present, the
  *   resolved data is delivered to the block as `@data` and the framework owns
  *   the loading boundary. `request(args)` maps args to a serializable
@@ -366,6 +379,7 @@ export function block(name, options = {}) {
     thumbnail = null,
     paletteHidden = false,
     transparent = false,
+    gridEditable = false,
     data: dataDeclaration = null,
     parts = null,
   } = options;
@@ -458,6 +472,7 @@ export function block(name, options = {}) {
       displayName,
       icon,
       isContainer,
+      gridEditable: gridEditable === true,
       namespace: parsed.namespace,
       namespaceType: parsed.type,
       paletteHidden: paletteHidden === true,

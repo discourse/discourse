@@ -66,6 +66,25 @@ module("Unit | Discourse Wireframe | schemaToFields", function () {
     assert.strictEqual(fields[0].control, "text");
   });
 
+  test("maps an array-of-object arg to the repeatable control", function (assert) {
+    const fields = schemaToFields({
+      items: {
+        type: "array",
+        itemType: "object",
+        itemSchema: {
+          label: { type: "string" },
+          url: { type: "string" },
+        },
+      },
+    });
+    assert.strictEqual(fields[0].control, "repeatable");
+    assert.deepEqual(
+      Object.keys(fields[0].schema.itemSchema),
+      ["label", "url"],
+      "the item schema is preserved on the field descriptor for the control"
+    );
+  });
+
   test("maps `any` to a code editor", function (assert) {
     const fields = schemaToFields({ data: { type: "any" } });
     assert.strictEqual(fields[0].control, "code");

@@ -45,6 +45,7 @@ export default apiInitializer((api) => {
   installGhostChildrenCreator();
   installOutletBoundary(editor);
   installGhostBlocksWhileEditing(editor);
+  installEditPresentationWhileEditing(editor);
   installSimulationContext(editor);
   installVeThemeAutoEnter(api, editor);
   // The shortcut listener self-gates on `editor.isActive`, so we can
@@ -98,6 +99,25 @@ function installSimulationContext(editor) {
 function installGhostBlocksWhileEditing(editor) {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.GHOST_BLOCKS);
   debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => {
+    if (editor.isActive) {
+      return true;
+    }
+    return previous ? previous() : false;
+  });
+}
+
+/**
+ * While the editor is active, force the block pipeline's "edit presentation"
+ * flag on so paged / collapsing containers (carousel, tabs, accordion) reveal
+ * all of their content at once for direct editing instead of showing one part
+ * at a time. Preserves any pre-existing callback via the same save-and-OR
+ * pattern as the ghost-blocks installer.
+ *
+ * @param {import("../services/wireframe").default} editor
+ */
+function installEditPresentationWhileEditing(editor) {
+  const previous = debugHooks.getCallback(DEBUG_CALLBACK.EDIT_PRESENTATION);
+  debugHooks.setCallback(DEBUG_CALLBACK.EDIT_PRESENTATION, () => {
     if (editor.isActive) {
       return true;
     }

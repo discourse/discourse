@@ -10,6 +10,7 @@ import {
   findEntrySiblings,
   insertEntryAt,
   removeEntry,
+  replaceEntryContainerArgs,
   resolvePartDef,
   revalidateEntryStamps,
   setPartOverride,
@@ -95,6 +96,21 @@ export default class InlineEditState {
    * @type {{compositeKey: string, outletName: string, partPath: string}|null}
    */
   #partContext = null;
+
+  /**
+   * Set instead of `#located` when the edited target is a *child's
+   * containerArg* (e.g. a `tabs` strip label, stored at
+   * `child.containerArgs.tab.label`) rather than the child's own arg. Holds
+   * the child entry's key, its outlet, and the containerArgs namespace + field,
+   * so the session commits the final value into that child's containerArgs
+   * (a structural mutation via `replaceEntryContainerArgs`) rather than into a
+   * tracked entry's args. `null` for an ordinary entry or part session. This
+   * is the third inline-edit target type, alongside the entry-arg and
+   * composite-part (`#partContext`) types.
+   *
+   * @type {{childKey: string, outletName: string, namespace: string, field: string}|null}
+   */
+  #containerArgContext = null;
 
   /**
    * Snapshot of the arg's pre-edit value, captured at `start` time.
@@ -191,6 +207,23 @@ export default class InlineEditState {
   }
 
   /**
+   * The active containerArg target ({ childKey, namespace, field }) when this
+   * is a containerArg session, else `null`. The controller reads it to resolve
+   * the renderer span via a dedicated `[data-wf-container-arg-key]` selector
+   * instead of `[data-wf-block-key]` (the editable span lives in the parent's
+   * render, not the child's chrome).
+   *
+   * @returns {{childKey: string, namespace: string, field: string}|null}
+   */
+  get containerArgContext() {
+    if (!this.#containerArgContext) {
+      return null;
+    }
+    const { childKey, namespace, field } = this.#containerArgContext;
+    return { childKey, namespace, field };
+  }
+
+  /**
    * Live value of the arg being edited. Falls through to the schema
    * default when the entry has no value for this arg — matches the
    * lookup `createBlockArgsWithReactiveGetters` uses to compute the
@@ -202,6 +235,11 @@ export default class InlineEditState {
     // Part session: the pre-edit value captured at `start` is the part's
     // effective arg; ProseMirror owns the value for the rest of the session.
     if (this.#partContext) {
+      return this.#prevValue;
+    }
+    // ContainerArg session: same — the snapshot seeds ProseMirror, which then
+    // owns the value until commit.
+    if (this.#containerArgContext) {
       return this.#prevValue;
     }
     if (!this.#located || !this.argName) {
@@ -269,6 +307,7 @@ export default class InlineEditState {
     if (located) {
       this.#located = located;
       this.#partContext = null;
+      this.#containerArgContext = null;
       this.#prevValue = located.entry.args?.[argName];
       this.#blockName = located.entry.block ?? null;
     } else {
@@ -286,6 +325,7 @@ export default class InlineEditState {
       const override =
         partContext.compositeEntry.overrides?.[partContext.partPath];
       this.#located = null;
+      this.#containerArgContext = null;
       this.#partContext = {
         compositeKey: partContext.compositeKey,
         outletName: partContext.outletName,
@@ -301,6 +341,62 @@ export default class InlineEditState {
     }
     this.blockKey = blockKey;
     this.argName = argName;
+    return true;
+  }
+
+  /**
+   * Begins an inline-text edit session for a CHILD's containerArg
+   * (`child.containerArgs[namespace][field]`) — e.g. a `tabs` strip label.
+   * Captures the current containerArg value as the pre-edit snapshot so the
+   * session commits as a single structural mutation. Implicitly commits + ends
+   * any other session in flight.
+   *
+   * Called from the canvas chrome when the user clicks a
+   * `[data-wf-container-arg-key]` region — the parent renders the editable span
+   * for a child whose placement it owns. Per-keystroke mutations go through
+   * `applyChange` → `#applyContainerArgChange` (committed on `stop`).
+   *
+   * @param {string} childKey - The child entry whose containerArg is edited.
+   * @param {string} namespace - The containerArgs namespace (e.g. `"tab"`).
+   * @param {string} field - The field within that namespace (e.g. `"label"`).
+   * @param {{coords?: {x:number,y:number}}} [options]
+   * @returns {Promise<boolean>} `true` if the session opened.
+   */
+  async startContainerArg(childKey, namespace, field, options = {}) {
+    if (!childKey || !namespace || !field) {
+      return false;
+    }
+    const ctx = this.#containerArgContext;
+    if (
+      ctx &&
+      ctx.childKey === childKey &&
+      ctx.namespace === namespace &&
+      ctx.field === field
+    ) {
+      return true;
+    }
+    if (this.blockKey) {
+      this.stop({ commit: true });
+    }
+    const located = await this.service.findEntryAndOutlet(childKey);
+    if (!located) {
+      return false;
+    }
+    this.#located = null;
+    this.#partContext = null;
+    this.#containerArgContext = {
+      childKey,
+      outletName: located.outletName,
+      namespace,
+      field,
+    };
+    this.#prevValue = located.entry.containerArgs?.[namespace]?.[field];
+    this.#blockName = located.entry.block ?? null;
+    if (options.coords) {
+      this.#initialSelection = { coords: options.coords };
+    }
+    this.blockKey = childKey;
+    this.argName = field;
     return true;
   }
 
@@ -330,6 +426,25 @@ export default class InlineEditState {
       }
       this.#located = null;
       this.#partContext = null;
+      this.#prevValue = null;
+      this.#blockName = null;
+      this.#initialSelection = "selectAll";
+      this.blockKey = null;
+      this.argName = null;
+      return;
+    }
+
+    // ContainerArg session: on commit, the registered callback pulls the final
+    // doc and routes it through `applyChange` → `#applyContainerArgChange`,
+    // which writes the child's containerArg (a structural commit that records
+    // its own undo). On cancel, nothing was written, so PM teardown discards
+    // the edit — there's no entry value to restore.
+    if (this.#containerArgContext) {
+      if (commit && this.#commitFn) {
+        this.#commitFn();
+      }
+      this.#located = null;
+      this.#containerArgContext = null;
       this.#prevValue = null;
       this.#blockName = null;
       this.#initialSelection = "selectAll";
@@ -401,6 +516,10 @@ export default class InlineEditState {
   applyChange(value) {
     if (this.#partContext) {
       this.#applyPartChange(value);
+      return;
+    }
+    if (this.#containerArgContext) {
+      this.#applyContainerArgChange(value);
       return;
     }
     const located = this.#located;
@@ -700,6 +819,57 @@ export default class InlineEditState {
             delete merged[argName];
           } else {
             merged[argName] = value;
+          }
+          return merged;
+        }
+      );
+      if (!result.changed) {
+        return false;
+      }
+      this.service.editedOutlets.add(outletName);
+      this.service.publishStructuralChange(outletName, result.layout);
+      return true;
+    });
+  }
+
+  /**
+   * Commits the final value of a containerArg edit session into the child
+   * entry's `containerArgs[namespace][field]`. A structural commit (the parent
+   * reads `child.containerArgs` at render time), so it routes through
+   * `recordStructural` for undo/redo and re-publishes the draft layer. An empty
+   * value removes the field, matching `applyChange`'s delete-on-empty contract.
+   *
+   * @param {*} value
+   */
+  #applyContainerArgChange(value) {
+    const { childKey, outletName, namespace, field } =
+      this.#containerArgContext;
+    // Normalise an empty value to `undefined` (the field is deleted, not stored
+    // as `""`) so the no-op gate below treats empty→empty as unchanged.
+    const isEmpty = value == null || value === "";
+    const nextValue = isEmpty ? undefined : value;
+    // `replaceEntryContainerArgs` always reports a change on a key match, so
+    // gate the commit ourselves: an unchanged value must not push an undo entry
+    // or republish — mirroring the entry-arg undo gate in `stop`.
+    const prevValue = this.#prevValue == null ? undefined : this.#prevValue;
+    if (sameValue(prevValue, nextValue)) {
+      return;
+    }
+    this.service.recordStructural([outletName], () => {
+      const layout = this.service.readResolvedLayout(outletName);
+      if (!layout) {
+        return false;
+      }
+      const result = replaceEntryContainerArgs(
+        layout,
+        childKey,
+        namespace,
+        (current) => {
+          const merged = { ...current };
+          if (value == null || value === "") {
+            delete merged[field];
+          } else {
+            merged[field] = value;
           }
           return merged;
         }

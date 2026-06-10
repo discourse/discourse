@@ -38,6 +38,7 @@ export const VALID_BLOCK_OPTIONS = Object.freeze([
   "thumbnail",
   "paletteHidden",
   "transparent",
+  "gridEditable",
   "data",
   "parts",
 ]);

@@ -1,0 +1,24 @@
+/* Whole-block link affordance.
+
+   A block that should be clickable as a whole renders a single designated
+   anchor carrying this class, instead of wrapping its content in an <a>
+   (which would nest interactive elements and produce invalid markup). The
+   anchor's `::after` expands to cover the block's nearest positioned
+   ancestor, so the block must establish a positioning context
+   (`position: relative`) on its root. Content that needs to stay
+   independently clickable (inner links, buttons) raises itself above the
+   overlay with `.d-block-stretched-link-above`. */
+
+.d-block-stretched-link {
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+}
+
+.d-block-stretched-link-above {
+  position: relative;
+  z-index: 2;
+}

@@ -60,6 +60,24 @@
   min-height: 0;
 }
 
+/* Tiles mode: fit as many equal columns as the container width allows,
+   reflowing automatically. The `min(..., 100%)` guard keeps a single tile
+   from overflowing when the container is narrower than the min item width —
+   no `@container` collapse rule is needed because `auto-fit` already drops to
+   one column at narrow widths. Children carry no placement; each child's
+   wrapper is itself a grid item. */
+
+.d-block-layout--tiles {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(var(--d-block-layout-min-item-width, 16rem), 100%), 1fr)
+  );
+  gap: var(--d-block-layout-gap, 1rem);
+  align-items: var(--d-block-layout-align, stretch);
+  transition: gap 180ms ease;
+}
+
 /* Responsive collapse — at narrow widths, every grid cell takes the
    full row and stacks vertically. Driven per-cell (not per-container)
    because `@container` rules only style DESCENDANTS of the queried

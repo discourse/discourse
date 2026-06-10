@@ -93,9 +93,16 @@ export const VALID_ARG_TYPES = Object.freeze([
 ]);
 
 /**
- * Valid item types for array args.
+ * Valid item types for array args. The scalar item types constrain each
+ * element directly; `"object"` marks an array of structured items, where each
+ * element's fields are described by a companion `itemSchema`.
  */
-export const VALID_ITEM_TYPES = Object.freeze(["string", "number", "boolean"]);
+export const VALID_ITEM_TYPES = Object.freeze([
+  "string",
+  "number",
+  "boolean",
+  "object",
+]);
 
 /**
  * Valid properties for arg schema definitions.
@@ -106,6 +113,7 @@ export const VALID_ARG_SCHEMA_PROPERTIES = Object.freeze([
   "default",
   "itemType",
   "itemEnum",
+  "itemSchema",
   "pattern",
   "minLength",
   "maxLength",
@@ -186,6 +194,11 @@ export const SCHEMA_PROPERTY_RULES = Object.freeze({
   itemEnum: {
     allowedTypes: ["array"],
     // valueCheck handled separately (uses validateEnumArray)
+    typeErrorSuffix: "array",
+  },
+  itemSchema: {
+    allowedTypes: ["array"],
+    // valueCheck handled separately (recursive schema validation; requires itemType "object")
     typeErrorSuffix: "array",
   },
   properties: {
@@ -409,6 +422,58 @@ export function validateCommonSchemaProperties(argDef, argName, options = {}) {
         `${entityType} "${entityName}": arg "${argName}" has invalid itemType ${suggestion}. ` +
           `Valid item types are: ${VALID_ITEM_TYPES.join(", ")}.`
       );
+    }
+  }
+
+  // An array of structured items declares each item's fields via `itemSchema`.
+  // It is only meaningful with itemType "object", and the scalar `itemEnum`
+  // constraint does not apply to object items.
+  if (argDef.type === "array" && argDef.itemType === "object") {
+    if (argDef.itemSchema === undefined) {
+      raiseBlockError(
+        `${entityType} "${entityName}": arg "${argName}" has itemType "object" but no "itemSchema". ` +
+          `Declare an "itemSchema" describing each item's fields.`
+      );
+    }
+    if (argDef.itemEnum !== undefined) {
+      raiseBlockError(
+        `${entityType} "${entityName}": arg "${argName}" cannot combine "itemEnum" with itemType "object".`
+      );
+    }
+  }
+
+  // Validate the itemSchema shape and recurse into each item field. We reuse
+  // the same recursive validation as object `properties` so an item field
+  // keeps the full schema vocabulary (including `ui` hints).
+  if (argDef.itemSchema !== undefined) {
+    if (argDef.type !== "array" || argDef.itemType !== "object") {
+      raiseBlockError(
+        `${entityType} "${entityName}": arg "${argName}" has "itemSchema" but is not an array with itemType "object". ` +
+          `"itemSchema" is only valid when type is "array" and itemType is "object".`
+      );
+    } else if (
+      !argDef.itemSchema ||
+      typeof argDef.itemSchema !== "object" ||
+      Array.isArray(argDef.itemSchema)
+    ) {
+      raiseBlockError(
+        `${entityType} "${entityName}": arg "${argName}" has invalid "itemSchema" value. Must be an object.`
+      );
+    } else {
+      const itemValidProperties =
+        context.validProperties ?? VALID_ARG_SCHEMA_PROPERTIES;
+      for (const [fieldName, fieldDef] of Object.entries(argDef.itemSchema)) {
+        validateArgName(fieldName, {
+          ...context,
+          argLabel: `arg "${argName}" item field`,
+        });
+        validateArgSchemaEntry(fieldDef, `${argName}.itemSchema.${fieldName}`, {
+          ...context,
+          validProperties: itemValidProperties,
+          allowAnyType: false,
+          argLabel: "item field",
+        });
+      }
     }
   }
 
@@ -712,6 +777,7 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
     type,
     itemType,
     itemEnum,
+    itemSchema,
     pattern,
     minLength,
     maxLength,
@@ -949,7 +1015,7 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
           }
         );
       }
-      if (itemType) {
+      if (itemType && itemType !== "object") {
         for (let i = 0; i < value.length; i++) {
           const item = value[i];
           const itemError = validateArrayItemType(
@@ -957,6 +1023,22 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
             itemType,
             argName,
             i,
+            options
+          );
+          if (itemError) {
+            return itemError;
+          }
+        }
+      }
+      // Structured items: validate each element against its itemSchema, reusing
+      // the object validator so errors carry indexed paths like `items[2].url`.
+      if (itemType === "object") {
+        const itemArgSchema = { type: "object", properties: itemSchema };
+        for (let i = 0; i < value.length; i++) {
+          const itemError = validateArgValue(
+            value[i],
+            itemArgSchema,
+            `${argName}[${i}]`,
             options
           );
           if (itemError) {

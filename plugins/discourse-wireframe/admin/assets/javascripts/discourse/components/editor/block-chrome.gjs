@@ -1232,6 +1232,33 @@ export default class BlockChrome extends Component {
       return;
     }
 
+    // A container can render an inline-editable region for one of its
+    // children's containerArgs (e.g. this block's strip shows each child's
+    // label). Such a span is foreign to the generic `[data-block-arg]` path
+    // below — the arg belongs to a child, not this chrome — so it gets its
+    // own early branch keyed off the `data-wf-container-arg-*` markers. It
+    // follows the same "click to select, click again to edit" gesture.
+    const containerArgEl = event.target.closest?.(
+      "[data-wf-container-arg-key]"
+    );
+    if (
+      containerArgEl &&
+      this.wireframe.selectedBlockKey === this.args.blockKey
+    ) {
+      const {
+        wfContainerArgKey,
+        wfContainerArgNamespace,
+        wfContainerArgField,
+      } = containerArgEl.dataset;
+      this.wireframe.inlineEdit.startContainerArg(
+        wfContainerArgKey,
+        wfContainerArgNamespace,
+        wfContainerArgField,
+        { coords: { x: event.clientX, y: event.clientY } }
+      );
+      return;
+    }
+
     const argEl = event.target.closest?.("[data-block-arg]");
     const argName = argEl?.dataset?.blockArg;
     const kind = argName ? kindForArg(this.metadata, argName) : null;

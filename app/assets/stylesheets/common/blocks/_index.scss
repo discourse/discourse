@@ -2,7 +2,19 @@
    Pure reader-page rendering — anything that only matters while editing
    lives with the editing tooling, not here. */
 
+@import "stretched-link";
 @import "layout";
+@import "section";
+@import "card";
+@import "link-list";
+@import "stats";
+@import "list";
+@import "carousel";
+@import "tabs";
+@import "accordion";
+@import "table";
+@import "media-leaves";
+@import "featured-data";
 @import "text";
 @import "image";
 @import "callout";

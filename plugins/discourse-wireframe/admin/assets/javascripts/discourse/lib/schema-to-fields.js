@@ -81,10 +81,17 @@ function pickControl(argDef) {
       // the current content without having a parallel edit surface here.
       return "rich-inline";
     case "array":
-      // Only string arrays auto-map to a tag-chooser. Other shapes
-      // fall through to a plain text input until bespoke collection
-      // rendering is added.
-      return argDef.itemType === "string" ? "tag-chooser" : "text";
+      // String arrays map to a tag-chooser; arrays of structured objects
+      // (`itemType: "object"` + `itemSchema`) map to the repeatable control,
+      // which renders one editable row per item. Anything else falls through
+      // to a plain text input.
+      if (argDef.itemType === "string") {
+        return "tag-chooser";
+      }
+      if (argDef.itemType === "object") {
+        return "repeatable";
+      }
+      return "text";
     case "string":
     default:
       if (Array.isArray(argDef.enum) && argDef.enum.length > 0) {

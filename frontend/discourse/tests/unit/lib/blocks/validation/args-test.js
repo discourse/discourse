@@ -91,12 +91,72 @@ module("Unit | Lib | blocks/validation/args", function () {
 
     test("throws for invalid itemType", function (assert) {
       const schema = {
-        tags: { type: "array", itemType: "object" },
+        tags: { type: "array", itemType: "date" },
       };
 
       assert.throws(
         () => validateArgsSchema(schema, "test-block"),
-        /invalid itemType "object"/
+        /invalid itemType "date"/
+      );
+    });
+
+    test("throws for itemType object without itemSchema", function (assert) {
+      const schema = {
+        items: { type: "array", itemType: "object" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /itemType "object" but no "itemSchema"/
+      );
+    });
+
+    test("throws for itemSchema without itemType object", function (assert) {
+      const schema = {
+        items: {
+          type: "array",
+          itemType: "string",
+          itemSchema: { label: { type: "string" } },
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /"itemSchema" is only valid when type is "array" and itemType is "object"/
+      );
+    });
+
+    test("throws for an invalid sub-field inside itemSchema", function (assert) {
+      const schema = {
+        items: {
+          type: "array",
+          itemType: "object",
+          itemSchema: { label: { type: "nope" } },
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid type/
+      );
+    });
+
+    test("accepts a valid array-of-object schema with itemSchema", function (assert) {
+      const schema = {
+        items: {
+          type: "array",
+          itemType: "object",
+          itemSchema: {
+            label: { type: "string", required: true },
+            url: { type: "string" },
+          },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
       );
     });
 
@@ -1284,6 +1344,52 @@ module("Unit | Lib | blocks/validation/args", function () {
           "test-block"
         ),
         null
+      );
+    });
+
+    test("validates array-of-object items against itemSchema", function (assert) {
+      const schema = {
+        type: "array",
+        itemType: "object",
+        itemSchema: {
+          label: { type: "string", required: true },
+          url: { type: "string" },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgValue(
+          [{ label: "Docs", url: "/docs" }],
+          schema,
+          "items",
+          "test-block"
+        ),
+        null,
+        "valid items pass"
+      );
+
+      const missing = validateArgValue(
+        [{ url: "/docs" }],
+        schema,
+        "items",
+        "test-block"
+      );
+      assert.strictEqual(
+        missing?.path,
+        "items[0].label",
+        "a missing required sub-field reports an indexed path"
+      );
+
+      const wrongType = validateArgValue(
+        [{ label: "Docs", url: "/docs" }, { label: 7 }],
+        schema,
+        "items",
+        "test-block"
+      );
+      assert.strictEqual(
+        wrongType?.path,
+        "items[1].label",
+        "a wrong sub-field type reports the offending item's indexed path"
       );
     });
 

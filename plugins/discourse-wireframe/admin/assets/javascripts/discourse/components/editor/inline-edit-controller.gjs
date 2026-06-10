@@ -79,6 +79,21 @@ export default class InlineEditController extends Component {
    */
   @cached
   get activeRendererEl() {
+    // ContainerArg session (e.g. a tab-strip label): the editable span lives in
+    // the PARENT's render, not the child's chrome, so it's resolved by a
+    // dedicated `[data-wf-container-arg-key]` marker rather than the child's
+    // `data-wf-block-key` (which also tags the child's panel chrome — reusing it
+    // would be ambiguous).
+    const containerArg = this.wireframe.inlineEdit.containerArgContext;
+    if (containerArg) {
+      const { childKey, namespace, field } = containerArg;
+      const host =
+        `[data-wf-container-arg-key="${CSS.escape(childKey)}"]` +
+        `[data-wf-container-arg-namespace="${CSS.escape(namespace)}"]` +
+        `[data-wf-container-arg-field="${CSS.escape(field)}"]`;
+      return document.querySelector(`${host} [data-wf-inline-edit-arg]`);
+    }
+
     const { blockKey, argName } = this.wireframe.inlineEdit;
     if (!blockKey || !argName) {
       return null;

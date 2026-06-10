@@ -14,7 +14,7 @@ import {
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-const VALID_MODES = ["stack", "row", "grid"];
+const VALID_MODES = ["stack", "row", "grid", "tiles"];
 const VALID_ALIGNS = ["start", "center", "end", "stretch"];
 const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
 
@@ -31,6 +31,11 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
  *     core's `WrappedBlockLayout` puts those CSS Grid declarations on
  *     the child's outer wrapper — the direct DOM child of this layout's
  *     container `<div>`.
+ *  - `tiles` — CSS Grid that fits as many equal columns as the container
+ *     width allows (`repeat(auto-fit, minmax(minItemWidth, 1fr))`).
+ *     Children carry no placement and reflow automatically as the width
+ *     changes, so this mode is for uniform sets (e.g. a card grid) rather
+ *     than a deliberately-placed layout.
  */
 @block("layout", {
   container: true,
@@ -146,6 +151,19 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
       ui: {
         control: "radio-group",
         label: i18n("blocks.builtin.layout.auto_collapse_label"),
+      },
+    },
+    // Tiles mode only: the minimum width each child gets before the row
+    // wraps. The grid fits as many equal `minmax(minItemWidth, 1fr)` columns
+    // as the container width allows, so children reflow without any explicit
+    // placement.
+    minItemWidth: {
+      type: "string",
+      default: "16rem",
+      ui: {
+        label: i18n("blocks.builtin.layout.min_item_width"),
+        placeholder: i18n("blocks.builtin.layout.min_item_width_placeholder"),
+        conditional: { arg: "mode", equals: "tiles" },
       },
     },
   },
@@ -407,6 +425,19 @@ export default class Layout extends Component {
           `--d-block-layout-rows: ${gridTemplateRows}; ` +
           `--d-block-layout-gap: ${gap}rem; ` +
           `--d-block-layout-align: ${align};`
+      );
+    }
+
+    if (mode === "tiles") {
+      // Auto-fit reflow: the stylesheet's `.d-block-layout--tiles` rule reads
+      // this min-item-width into `repeat(auto-fit, minmax(<width>, 1fr))`, so
+      // the browser decides the column count from the available width. No
+      // per-child placement is involved.
+      const minItemWidth =
+        (this.args.minItemWidth ?? "16rem").trim() || "16rem";
+      return trustHTML(
+        `--d-block-layout-min-item-width: ${minItemWidth}; ` +
+          `--d-block-layout-gap: ${gap}rem; --d-block-layout-align: ${align};`
       );
     }
 

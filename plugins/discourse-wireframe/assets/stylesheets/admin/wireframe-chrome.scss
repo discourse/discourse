@@ -753,6 +753,28 @@ body.wireframe-active {
       }
     }
 
+    /* Duplicate ×N split-button. Both halves — the ×1 Duplicate button and
+       the dropdown's chevron trigger — render as compact flat buttons matching
+       the rest of the bar; the combo's default chrome is sized for primary
+       actions and looks oversized in this icon row. */
+
+    &__duplicate {
+      display: inline-flex;
+      align-items: stretch;
+
+      .btn {
+        min-width: 0;
+        min-height: 0;
+        padding: var(--wireframe-badge-padding);
+        line-height: 1;
+      }
+
+      .d-icon {
+        font-size: var(--wireframe-badge-font-size) !important;
+        width: var(--wireframe-badge-font-size) !important;
+      }
+    }
+
     &__separator {
       align-self: stretch;
       width: 1px;
@@ -1611,6 +1633,19 @@ body.wireframe-active {
       text-transform: lowercase;
     }
 
+    /* Hidden-child count shown on a collapsed container row (e.g. "× 12"),
+       so a compacted large container still tells you how much it holds. */
+
+    .outline-block__child-count {
+      padding: 0 0.35rem;
+      border-radius: 3px;
+      background: var(--primary-low);
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+      font-weight: 400;
+      font-variant-numeric: tabular-nums;
+    }
+
     /* Status badge — gates / failure indicator at the end of each row.
        Color mirrors the row's `.--error` state so failing blocks read
        as a single coherent warning rather than a row + lone icon. */
@@ -1656,6 +1691,24 @@ body.wireframe-active {
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--primary-low);
   margin-bottom: 0.5rem;
+}
+
+/* Bulk-action panel shown in place of the per-block form when more than one
+   block is selected. */
+
+.wireframe-inspector__multi {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.wireframe-inspector__multi-count {
+  font-weight: 600;
+}
+
+.wireframe-inspector__multi-delete {
+  align-self: stretch;
 }
 
 .wireframe-inspector__block-name {
@@ -2188,6 +2241,44 @@ body.wireframe-active
 
     &--danger {
       color: var(--danger);
+    }
+  }
+}
+
+/* Duplicate ×N dropdown opened from the block toolbar's Duplicate split-button.
+   A compact list of preset counts plus a custom-count row. Rendered in a
+   FloatKit portal, so it's addressed by its identifier-derived content class
+   (the bare `data-identifier` also lands on the trigger). */
+
+.wireframe-duplicate-count-content {
+  .dropdown-menu {
+    min-width: 9rem;
+  }
+
+  /* Presets fill the row and read like a normal menu list. */
+  .dropdown-menu__item > .btn {
+    width: 100%;
+    justify-content: flex-start;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Custom-count row: a narrow number field beside its own apply button. */
+  .wireframe-block-toolbar__duplicate-custom {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+
+    input[type="number"] {
+      width: 3.5rem;
+      min-height: 0;
+      margin: 0;
+      padding: 0.25rem 0.4rem;
+    }
+
+    .btn {
+      flex: 1 1 auto;
+      justify-content: center;
     }
   }
 }
@@ -4827,5 +4918,72 @@ body.wireframe-active--dim-non-editable
       color: var(--primary-medium);
       margin: 0.4rem 0;
     }
+  }
+}
+
+/* Repeatable array-of-object control: one editable row per item, with
+   add / remove / reorder affordances and a JSON import box. */
+
+.wireframe-repeatable {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    padding: 0.5rem;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius, 0.25rem);
+  }
+
+  &__fields {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  &__field-label {
+    font-size: var(--font-down-2);
+    font-weight: 600;
+    color: var(--primary-medium);
+  }
+
+  &__row-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  &__import {
+    margin-top: 0.25rem;
+
+    summary {
+      cursor: pointer;
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+    }
+  }
+
+  &__import-input {
+    width: 100%;
+    margin-top: 0.4rem;
+    font-family: var(--d-font-family--monospace, monospace);
+    font-size: var(--font-down-2);
+  }
+
+  &__import-error {
+    color: var(--danger);
+    font-size: var(--font-down-1);
+    margin: 0.25rem 0;
   }
 }
