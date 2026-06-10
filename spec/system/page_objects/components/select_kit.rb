@@ -99,17 +99,7 @@ module PageObjects
       end
 
       def collapse_with_escape
-        # Press Escape on the filter input when there is one — pressing it on
-        # the non-focusable wrapper sends the key to whichever element happens
-        # to have focus, which is timing-dependent.
-        filter_input = "#{@context}.is-expanded .select-kit-filter .filter-input"
-
-        if has_css?(filter_input, wait: 0)
-          find(filter_input).send_keys(:escape)
-        else
-          expanded_component.press("Escape")
-        end
-
+        expanded_component.press("Escape")
         collapsed_component
       end
 

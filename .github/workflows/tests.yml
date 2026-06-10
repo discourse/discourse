@@ -52,16 +52,7 @@ jobs:
       CHEAP_SOURCE_MAPS: "1"
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
-      # `production` here makes every system-spec page load parse a minified,
-      # tree-shaken bundle instead of the much larger development build,
-      # cutting the in-browser parse/boot time the suite pays on each of its
-      # thousands of navigations. The dev-only `rails-testing.js` test bridge
-      # (`window.clientSettled`) is dead-code-eliminated from production
-      # builds; spec/rails_helper.rb injects a build-independent
-      # reimplementation via a Playwright init script, so settle semantics are
-      # unchanged. Specs that depend on dev-build-only behaviour (deprecation
-      # assertions, /theme-qunit) are skipped when EMBER_ENV=production.
-      EMBER_ENV: production
+      EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright

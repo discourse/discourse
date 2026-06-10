@@ -94,9 +94,7 @@ describe "Changing email" do
     find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
     find("button[type=submit]:not([disabled])").click
 
-    try_until_success(
-      reason: "the second-factor confirm request is not tracked by clientSettled",
-    ) { expect(user.reload.primary_email.email).to eq(new_email) }
+    expect(user.reload.primary_email.email).to eq(new_email)
   end
 
   it "makes admins verify old email" do
