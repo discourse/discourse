@@ -596,7 +596,7 @@ plugins:
   - "discourse-gamification"
   - "discourse-github"
   - "discourse-graphviz"
-  - "discourse-hcaptcha"
+  - "discourse-captcha"
   - "discourse-lazy-videos"
   - "discourse-local-dates"
   - "discourse-login-with-amazon"

@@ -21,16 +21,7 @@ require_relative "lib/discourse_captcha/engine"
 require_relative "lib/discourse_captcha/captcha_provider"
 
 after_initialize do
-  deprecate_setting(
-    "discourse_hcaptcha_enabled",
-    "discourse_captcha_enabled",
-    false,
-    "3.5"
-  )
-
-  reloadable_patch do
-    UsersController.include(DiscourseCaptcha::CreateUsersControllerPatch)
-  end
+  reloadable_patch { UsersController.include(DiscourseCaptcha::CreateUsersControllerPatch) }
 
   require_relative "app/services/problem_check/hcaptcha_configuration"
   require_relative "app/services/problem_check/recaptcha_configuration"
