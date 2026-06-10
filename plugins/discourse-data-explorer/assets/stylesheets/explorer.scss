@@ -915,6 +915,9 @@ table.group-reports {
     .query-desc {
       color: var(--primary-high);
       max-width: 20vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
 
       @include viewport.until(md) {
         max-width: 90vw;
