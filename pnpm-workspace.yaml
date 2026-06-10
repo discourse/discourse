@@ -30,7 +30,7 @@ packages:
 - "plugins/discourse-gamification"
 - "plugins/discourse-github"
 - "plugins/discourse-graphviz"
-- "plugins/discourse-hcaptcha"
+- "plugins/discourse-captcha"
 - "plugins/discourse-lazy-videos"
 - "plugins/discourse-local-dates"
 - "plugins/discourse-login-with-amazon"

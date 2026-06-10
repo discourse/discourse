@@ -738,6 +738,12 @@ importers:
         specifier: npm:@discourse/types@*
         version: '@discourse/types@2026.6.0-06d03da3'
 
+  plugins/discourse-captcha:
+    dependencies:
+      discourse:
+        specifier: npm:@discourse/types@*
+        version: '@discourse/types@2026.6.0-06d03da3'
+
   plugins/discourse-chat-integration:
     dependencies:
       discourse:
@@ -769,12 +775,6 @@ importers:
         version: '@discourse/types@2026.6.0-06d03da3'
 
   plugins/discourse-graphviz:
-    dependencies:
-      discourse:
-        specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
-
-  plugins/discourse-hcaptcha:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
