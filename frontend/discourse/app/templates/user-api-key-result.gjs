@@ -1,7 +1,9 @@
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import DButton from "discourse/ui-kit/d-button";
 
 export default <template>
+  {{hideApplicationSidebar}}
   {{hideApplicationFooter}}
 
   <div class="authorize-api-key">

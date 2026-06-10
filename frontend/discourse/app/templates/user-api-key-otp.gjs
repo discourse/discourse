@@ -1,9 +1,11 @@
 import { on } from "@ember/modifier";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default <template>
+  {{hideApplicationSidebar}}
   {{hideApplicationFooter}}
 
   <div class="authorize-api-key">
