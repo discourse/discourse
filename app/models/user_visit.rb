@@ -16,62 +16,62 @@ class UserVisit < ActiveRecord::Base
 
   def self.count_by_active_users(start_date, end_date)
     sql = <<~SQL
-      WITH visits AS (
+      WITH visits_in_mau_range AS (
         SELECT user_id, visited_at AS d
         FROM user_visits
         WHERE visited_at >= :start_date::DATE - 29
           AND visited_at <= :end_date::DATE
       ),
-      marked AS (
+      visit_island_starts AS (
         SELECT user_id, d,
           CASE
             WHEN lag(d) OVER (PARTITION BY user_id ORDER BY d) >= d - 30 THEN 0
             ELSE 1
           END AS new_island
-        FROM visits
+        FROM visits_in_mau_range
       ),
-      islands AS (
+      visit_islands AS (
         SELECT user_id, d, sum(new_island) OVER (PARTITION BY user_id ORDER BY d) AS grp
-        FROM marked
+        FROM visit_island_starts
       ),
-      coverage AS (
+      active_ranges AS (
         SELECT min(d) AS start_d, max(d) + 29 AS end_d
-        FROM islands
+        FROM visit_islands
         GROUP BY user_id, grp
       ),
-      events AS (
-        SELECT start_d AS day, 1 AS delta FROM coverage
+      active_range_events AS (
+        SELECT start_d AS day, 1 AS delta FROM active_ranges
         UNION ALL
-        SELECT end_d + 1 AS day, -1 AS delta FROM coverage
+        SELECT end_d + 1 AS day, -1 AS delta FROM active_ranges
       ),
-      event_totals AS (
+      daily_active_deltas AS (
         SELECT day, sum(delta) AS delta
-        FROM events
+        FROM active_range_events
         GROUP BY day
       ),
-      calendar AS (
+      days AS (
         SELECT generate_series(
-          (SELECT min(day) FROM event_totals),
+          (SELECT min(day) FROM daily_active_deltas),
           :end_date::DATE,
           INTERVAL '1 day'
         )::DATE AS day
       ),
-      running AS (
-        SELECT calendar.day,
-          sum(coalesce(event_totals.delta, 0)) OVER (ORDER BY calendar.day) AS mau
-        FROM calendar
-        LEFT JOIN event_totals ON event_totals.day = calendar.day
+      rolling_mau AS (
+        SELECT days.day,
+          sum(coalesce(daily_active_deltas.delta, 0)) OVER (ORDER BY days.day) AS mau
+        FROM days
+        LEFT JOIN daily_active_deltas ON daily_active_deltas.day = days.day
       ),
       dau AS (
-        SELECT visited_at AS date, count(distinct user_id) AS dau
+        SELECT visited_at AS date, count(*) AS dau
         FROM user_visits
         WHERE visited_at >= :start_date::DATE
           AND visited_at <= :end_date::DATE
         GROUP BY visited_at
       )
-      SELECT dau.date, dau.dau, running.mau
+      SELECT dau.date, dau.dau, rolling_mau.mau
       FROM dau
-      JOIN running ON running.day = dau.date
+      JOIN rolling_mau ON rolling_mau.day = dau.date
       ORDER BY dau.date
     SQL
 
