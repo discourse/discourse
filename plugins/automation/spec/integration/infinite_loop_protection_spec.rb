@@ -37,8 +37,8 @@ describe "Infinite loop protection" do
     )
   end
 
-  it "stops the loop after allowing limited recursive replies" do
-    expected_post_count = 1 + (2 * DiscourseAutomation::MAX_RECURSION_DEPTH)
+  it "silently stops recursive replies at the configured limit" do
+    expected_post_count = 1 + (2 * SiteSetting.discourse_automation_max_recursion_depth)
 
     expect do
       PostCreator.create!(Fabricate(:user), raw: "post", title: "topic", skip_validations: true)
@@ -46,6 +46,6 @@ describe "Infinite loop protection" do
             DiscourseAutomation::Stat.where(automation_id: [automation_1.id, automation_2.id]).sum(
               :total_errors,
             )
-          }.by(2)
+          }.by(0)
   end
 end

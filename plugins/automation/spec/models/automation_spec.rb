@@ -52,7 +52,8 @@ describe DiscourseAutomation::Automation do
 
       after { DiscourseAutomation::Scriptable.remove("recursive_test_scriptable") }
 
-      it "runs nested triggers up to the maximum depth" do
+      it "runs nested triggers up to the configured maximum depth" do
+        SiteSetting.discourse_automation_max_recursion_depth = 5
         automation = Fabricate(:automation, enabled: true, script: "recursive_test_scriptable")
 
         list = capture_contexts { automation.trigger!(depth: 1, target_depth: 5) }
@@ -60,23 +61,28 @@ describe DiscourseAutomation::Automation do
         expect(list).to eq([1, 2, 3, 4, 5])
       end
 
-      it "raises when the maximum depth is exceeded" do
+      it "does not allow recursive triggers by default" do
         automation = Fabricate(:automation, enabled: true, script: "recursive_test_scriptable")
 
-        expect {
-          capture_contexts { automation.trigger!(depth: 1, target_depth: 6) }
-        }.to raise_error(
-          DiscourseAutomation::RecursionLimitExceeded,
-          /Automation recursion limit exceeded/,
-        )
+        list = capture_contexts { automation.trigger!(depth: 1, target_depth: 2) }
+
+        expect(list).to eq([1])
       end
 
-      it "clears recursion depth after the limit error" do
+      it "silently stops when the configured maximum depth is exceeded" do
+        SiteSetting.discourse_automation_max_recursion_depth = 5
         automation = Fabricate(:automation, enabled: true, script: "recursive_test_scriptable")
 
-        expect { automation.trigger!(depth: 1, target_depth: 6) }.to raise_error(
-          DiscourseAutomation::RecursionLimitExceeded,
-        )
+        list = capture_contexts { automation.trigger!(depth: 1, target_depth: 6) }
+
+        expect(list).to eq([1, 2, 3, 4, 5])
+      end
+
+      it "clears recursion depth after the limit is reached" do
+        SiteSetting.discourse_automation_max_recursion_depth = 5
+        automation = Fabricate(:automation, enabled: true, script: "recursive_test_scriptable")
+
+        capture_contexts { automation.trigger!(depth: 1, target_depth: 6) }
 
         list = capture_contexts { automation.trigger!(depth: 1, target_depth: 1) }
 
