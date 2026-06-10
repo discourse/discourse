@@ -222,6 +222,7 @@ class Site
           full_name_visible_in_signup:,
           tos_url: Discourse.tos_url,
           privacy_policy_url: Discourse.privacy_policy_url,
+          upcoming_changes_with_css: UpcomingChanges.including_css,
         }.to_json
       )
     end

@@ -83,6 +83,15 @@ upcoming_change:
 | `[specific_groups]` | No one, Specific group(s) |
 | `[staff, specific_groups]` | No one, Staff, Specific group(s) |
 
+**Optional:** Add `include_css: true` if you need to scope CSS to this change. When enabled for a user, a `uc-<dasherized-setting-name>` class is added to `<body>` so stylesheets can gate visuals on the change (e.g. `enable_your_feature_name` → `body.uc-enable-your-feature-name`). Omit it (the default) when the change has no CSS keyed on the body class — body classes are opt-in, not emitted for every change.
+
+```yaml
+upcoming_change:
+  status: "experimental"
+  impact: "feature,all_members"
+  include_css: true
+```
+
 ### 2. Add Translation
 
 Add to `config/locales/server.en.yml` under `site_settings:`:

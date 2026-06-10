@@ -31,6 +31,7 @@
 #                          - status: experimental | alpha | beta | stable
 #                          - impact: two parts separated by comma - feature|other|site_setting_default , staff|admins|moderators|all_members|developers
 #                          - learn_more_url: a url for more information
+#                          - body_class: (optional boolean) to include a uc-NAME CSS class on the <body> element when the change is enabled
 #                          - allow_enabled_for: (optional array) restricts which "Enabled for"
 #                            dropdown options the admin can pick for this upcoming change.
 #                            Valid values: everyone, staff, specific_groups.
@@ -4392,6 +4393,7 @@ experimental:
       allow_enabled_for:
         - staff
         - specific_groups
+      body_class: true
   enable_auto_grid_images:
     default: true
     client: true
@@ -4405,6 +4407,7 @@ experimental:
       status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403284"
+      body_class: true
   enable_new_post_reactions_menu:
     default: false
     client: true
@@ -4469,6 +4472,7 @@ experimental:
       status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/387322"
+      body_class: true
   enable_simplified_category_creation:
     default: false
     hidden: true
@@ -4499,6 +4503,7 @@ experimental:
       impact: "feature,all_members"
       status: "beta"
       learn_more_url: "https://meta.discourse.org/t/-/395331"
+      body_class: true
   enable_horizon_high_context_topic_cards:
     default: false
     client: true

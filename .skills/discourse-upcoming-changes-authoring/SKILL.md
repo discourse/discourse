@@ -68,7 +68,7 @@ All services use `Service::Base`. They're organized under `app/services/upcoming
 
 **Site settings service** (`app/services/site-settings.js`) — Loads upcoming changes from `PreloadStore`, applies them as overrides to site settings, and stores them in `settings.currentUserUpcomingChanges`.
 
-**Body CSS classes** — `app/controllers/application.js` generates `uc-{dasherized-key}` classes on `<body>` for each enabled upcoming change, allowing CSS-based feature gating.
+**Body CSS classes** — `app/controllers/application.js` generates `uc-{dasherized-key}` classes on `<body>` for each enabled upcoming change that opts in via `body_class: true`, allowing CSS-based feature gating. The controller intersects `siteSettings.currentUserUpcomingChanges` (enabled-for-this-user changes) with `site.upcoming_changes_with_css` (changes that opted into CSS) — a change must be in both to get a body class. The opt-in list comes from `SiteSerializer#upcoming_changes_with_css`, which returns the change names whose metadata has `body_class: true`. See [CSS Opt-In](#css-opt-in) below.
 
 **Notifications** — Two notification types (`upcoming-change-available`, `upcoming-change-automatically-promoted`) handle singular/dual/many change descriptions and link to the admin page with filter params.
 
@@ -146,6 +146,33 @@ Some upcoming changes only make sense to show admins under certain conditions �
 - **Display-only**: This affects whether the change appears in the admin UI list, not whether it's enabled. `enabled?` / `enabled_for_user?` still resolve normally — code paths gated on the change continue to work.
 - **N+1 by design**: `should_display?` is called once per change in the loop. If a gating method does expensive work (DB queries, plugin lookups), memoize inside the method to avoid repeated cost.
 - **Notifications still fire**: Conditional display only filters the `List` service result. `TrackAddedChanges`, `NotifyAdminsOfAvailableUpcomingChanges`, `NotifyPromotions`, etc. do not consult `ConditionalDisplay`, so admins may still receive notifications about a hidden change. Consider this when designing the gate — usually the gate should reflect a long-lived condition (plugin missing, theme not installed) rather than transient state.
+
+### CSS Opt-In
+
+A change can opt into having a `uc-{dasherized-key}` class added to `<body>` when it is enabled for the current user, so stylesheets can gate visuals on the change. This is **opt-in** via the `body_class: true` metadata key — body classes are *not* emitted for every enabled change, only those that ask for them. This keeps the body class list small and intentional, and avoids leaking the names of unrelated (non-visual) changes into the DOM.
+
+```yaml
+enable_your_feature_name:
+  default: false
+  client: true
+  hidden: true
+  upcoming_change:
+    status: experimental
+    impact: feature,all_members
+    body_class: true
+```
+
+#### How It Works
+
+1. **Parsing** — `lib/site_setting_extension.rb` reads `body_class` from the `upcoming_change:` metadata and stores it (defaulting to `nil`/falsey) in `upcoming_change_metadata`.
+2. **Serialization** — `SiteSerializer#upcoming_changes_with_css` filters `SiteSetting.upcoming_change_site_settings` down to the change names whose metadata has `body_class` truthy, and exposes them to the frontend as `site.upcoming_changes_with_css`.
+3. **Body class generation** — `app/controllers/application.js` iterates `siteSettings.currentUserUpcomingChanges` and pushes a `uc-{dasherize(key)}` class only when both the setting is truthy for the user **and** `site.upcoming_changes_with_css.includes(key)`. A change must be enabled *and* opted-in to get a class.
+
+#### Key Behaviors
+
+- **Opt-in only**: Omitting `body_class` (or setting it `false`) means no body class — the default. Add it only when you actually have CSS keyed on `uc-{name}`.
+- **Enabled-for-user gated**: The class only appears for users the change is enabled for (via `currentUserUpcomingChanges`), not globally. Anonymous/ineligible users won't get it.
+- **Integrity-checked**: `body_class` is in the integrity spec's `allowed_keys` and must be a boolean — see [Mocking Metadata](#mocking-metadata) for how to set it in tests.
 
 ## Key Design Decisions
 
@@ -286,10 +313,13 @@ mock_upcoming_change_metadata(
       status: :experimental,
       impact_type: "feature",
       impact_role: "all_members",
+      body_class: true, # optional — opts into the uc-{name} body class
     },
   },
 )
 ```
+
+To test the CSS opt-in serializer (`SiteSerializer#upcoming_changes_with_css`), mock two changes — one with `body_class: true` and one with `body_class: false` — and assert the serialized array includes the former and excludes the latter. See `spec/serializers/site_serializer_spec.rb`. System coverage for the resulting `uc-{name}` body class lives in `spec/system/member_upcoming_changes_spec.rb`.
 
 ### Mocking Default Overrides
 
@@ -405,6 +435,7 @@ Notification type tests create notifications with `Notification.create()` and ve
 | Event model | `app/models/upcoming_change_event.rb` |
 | Group model | `app/models/site_setting_group.rb` |
 | Settings integration | `lib/site_setting_extension.rb` (search for `upcoming_change`) |
+| CSS opt-in serializer | `app/serializers/site_serializer.rb` (`upcoming_changes_with_css`) |
 | Defaults provider | `lib/site_settings/defaults_provider.rb` (default override activation/resolution) |
 | Services | `app/services/upcoming_changes/*.rb` |
 | Group upsert | `app/services/site_setting/upsert_groups.rb` |
@@ -423,6 +454,8 @@ Notification type tests create notifications with `Notification.create()` and ve
 | Constants | `frontend/discourse/app/lib/constants.js` |
 | Styles | `app/assets/stylesheets/admin/upcoming-changes.scss` |
 | Core spec | `spec/lib/upcoming_changes_spec.rb` |
+| Integrity spec | `spec/integrity/upcoming_change_metadata_spec.rb` (validates allowed metadata keys) |
+| Serializer spec | `spec/serializers/site_serializer_spec.rb` (`#upcoming_changes_with_css`) |
 | Request spec | `spec/requests/admin/config/upcoming_changes_controller_spec.rb` |
 | Admin system spec | `spec/system/admin_upcoming_changes_spec.rb` |
 | Member system spec | `spec/system/member_upcoming_changes_spec.rb` |
