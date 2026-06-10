@@ -254,6 +254,7 @@ module DiscourseGifsMigration
     end
 
     errors.concat(migrate_disabled_image_download_domains)
+    errors.concat(migrate_translation_overrides(theme))
 
     if enable_gifs
       begin
@@ -278,8 +279,7 @@ module DiscourseGifsMigration
   # Sites that blocked the old provider's gifs from being downloaded via
   # `disabled_image_download_domains` should keep blocking gifs after the switch
   # to Klipy. We only act when a known gif-provider host is already listed, so
-  # we never touch the setting on sites that weren't blocking gifs. Returns any
-  # error raised so the caller can fold it into its tally.
+  # we never touch the setting on sites that weren't blocking gifs
   def migrate_disabled_image_download_domains
     hosts =
       SiteSetting.disabled_image_download_domains.to_s.split("|").map(&:strip).reject(&:empty?)
@@ -307,6 +307,23 @@ module DiscourseGifsMigration
 
   def gif_provider_host?(host)
     GIF_PROVIDER_DOMAINS.any? { |domain| host == domain || host.end_with?(".#{domain}") }
+  end
+
+  def migrate_translation_overrides(theme)
+    theme
+      .theme_translation_overrides
+      .each_with_object([]) do |override, errors|
+        core_key = "js.#{override.translation_key.sub(/\Agif\./, "gifs.")}"
+        next unless I18n.exists?(core_key, :en)
+
+        begin
+          TranslationOverride.upsert!(override.locale, core_key, override.value)
+          success("#{override.translation_key} (#{override.locale}) => #{core_key}")
+        rescue StandardError => e
+          errors << e
+          failure("failed to migrate translation '#{override.translation_key}': #{e.message}")
+        end
+      end
   end
 end
 

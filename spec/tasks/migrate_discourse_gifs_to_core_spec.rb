@@ -374,6 +374,48 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
       end
     end
 
+    context "with theme translation overrides" do
+      def add_translation_override(theme, key, value, locale: "en")
+        ThemeTranslationOverride.create!(
+          theme: theme,
+          locale: locale,
+          translation_key: key,
+          value: value,
+        )
+      end
+
+      it "migrates a customised string to the matching core site text" do
+        add_translation_override(component, "gif.composer_title", "Add a GIF")
+
+        run_migration(component)
+
+        expect(
+          TranslationOverride.find_by(
+            locale: "en",
+            translation_key: "js.gifs.composer_title",
+          )&.value,
+        ).to eq("Add a GIF")
+      end
+
+      it "migrates overrides for non-English locales" do
+        add_translation_override(component, "gif.modal_title", "Chercher des GIFs", locale: "fr")
+
+        run_migration(component)
+
+        expect(
+          TranslationOverride.find_by(locale: "fr", translation_key: "js.gifs.modal_title")&.value,
+        ).to eq("Chercher des GIFs")
+      end
+
+      it "skips overrides of keys with no core equivalent" do
+        add_translation_override(component, "gif.query", "Keyword")
+
+        run_migration(component)
+
+        expect(TranslationOverride.where("translation_key LIKE 'js.gifs.%'")).to be_empty
+      end
+    end
+
     context "with the enable_gifs keyword" do
       it "leaves enable_gifs untouched by default" do
         SiteSetting.enable_gifs = false
