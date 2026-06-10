@@ -150,6 +150,7 @@ Migrations::Tooling::Schema.ignored do
   tables :external_upload_stubs, :optimized_images, :optimized_videos, :upload_references, :uploads
 
   tables :admin_dashboard_reports,
+         :admin_dashboard_sections,
          :browser_pageview_country_daily_rollups,
          :browser_pageview_referrer_daily_rollups
 

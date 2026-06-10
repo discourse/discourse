@@ -34,6 +34,7 @@ module Migrations
             requirement: item[:requirement],
             searchable: item[:searchable],
             show_on_profile: item[:show_on_profile],
+            show_on_signup: item[:show_on_signup],
             show_on_user_card: item[:show_on_user_card],
           )
         end

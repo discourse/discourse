@@ -13,9 +13,20 @@ module Migrations
             :missing_columns,
             :stale_ignored_columns,
             :auto_ignored_columns,
-          )
+          ) do
+            # Auto-ignored plugin columns are informational; everything else
+            # requires a config change.
+            def actionable?
+              unconfigured_columns.any? || missing_columns.any? || stale_ignored_columns.any?
+            end
+          end
         DiffResult =
-          Data.define(:unconfigured_tables, :missing_tables, :stale_ignored_tables, :table_diffs)
+          Data.define(:unconfigured_tables, :missing_tables, :stale_ignored_tables, :table_diffs) do
+            def actionable?
+              unconfigured_tables.any? || missing_tables.any? || stale_ignored_tables.any? ||
+                table_diffs.any?(&:actionable?)
+            end
+          end
 
         class Differ
           def initialize(schema_module)
