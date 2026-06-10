@@ -45,6 +45,7 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(response.status).to eq(200)
       expect(response.body).to include(topic.title)
       expect(response.body).to include(post.cooked)
+      expect(response.body).not_to include("nested_topic_#{topic.id}")
     end
 
     it "renders flat topic HTML for nested post URLs without JavaScript" do

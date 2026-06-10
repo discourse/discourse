@@ -24,7 +24,6 @@ class NestedTopicsController < ApplicationController
         return
       end
 
-      store_preloaded("nested_topic_#{@topic.id}", MultiJson.dump(list_roots_response(page: 0)))
       render_flat_topic_html
       return
     end
@@ -65,7 +64,6 @@ class NestedTopicsController < ApplicationController
         return
       end
 
-      store_preloaded("nested_topic_#{@topic.id}", MultiJson.dump(show_context_response))
       render_flat_topic_html(post_number: params[:post_number].to_i)
       return
     end
@@ -177,9 +175,6 @@ class NestedTopicsController < ApplicationController
     @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags.visible(guardian) : []
     @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
     @description_meta = @topic_view.topic.excerpt.presence || @topic_view.summary
-
-    topic_view_serializer = TopicViewSerializer.new(@topic_view, scope: guardian, root: false)
-    store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
 
     render "topics/show"
   end
