@@ -1,11 +1,26 @@
-import AdSlot from "./ad-slot";
+import Component from "@glimmer/component";
+import AdSlot, { slotContenders } from "./ad-slot";
 
-const NestedRootAd = <template>
-  <AdSlot
-    @placement="nested-roots-between"
-    @category={{@topic.category.slug}}
-    @indexNumber={{@index}}
-  />
-</template>;
+export default class NestedRootAd extends Component {
+  static shouldRender(args, context) {
+    return (
+      args.index &&
+      slotContenders(
+        context.site,
+        context.siteSettings,
+        "nested-roots-between",
+        args.index
+      ).length > 0
+    );
+  }
 
-export default NestedRootAd;
+  <template>
+    <div class="ad-connector ad-connector--nested-root">
+      <AdSlot
+        @placement="nested-roots-between"
+        @category={{@topic.category.slug}}
+        @indexNumber={{@index}}
+      />
+    </div>
+  </template>
+}
