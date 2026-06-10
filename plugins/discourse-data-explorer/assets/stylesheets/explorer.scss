@@ -338,6 +338,7 @@ table.group-reports {
 
   &:not(.editing) .desc {
     margin: 10px 0;
+    white-space: pre-wrap;
   }
 
   .groups {
