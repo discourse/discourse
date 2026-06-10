@@ -32,6 +32,10 @@ acceptance("Managing Group Membership", function (needs) {
     await visit("/g/alternative-group/manage/membership");
 
     assert
+      .dom(".groups-form-visibility-level")
+      .exists("displays visibility level selector");
+
+    assert
       .dom('label[for="automatic_membership"]')
       .exists("displays automatic membership label");
 
@@ -45,36 +49,37 @@ acceptance("Managing Group Membership", function (needs) {
 
     assert
       .dom(".group-form-public-admission")
-      .exists("displays group public admission input");
+      .exists("displays the join freely option");
+
+    assert
+      .dom(".group-form-public-admission")
+      .isChecked("selects join freely for this group");
+
+    assert
+      .dom(".group-form-allow-membership-requests")
+      .exists("displays the membership request option");
+
+    assert
+      .dom(".group-form-invite-only")
+      .exists("displays the invite only option");
 
     assert
       .dom(".group-form-public-exit")
       .exists("displays group public exit input");
 
-    assert
-      .dom(".group-form-allow-membership-requests")
-      .exists("displays group allow_membership_request input");
-
-    assert
-      .dom(".group-form-allow-membership-requests")
-      .isDisabled("disables group allow_membership_request input");
-
     assert.dom(".group-flair-inputs").exists("displays avatar flair inputs");
 
-    await click(".group-form-public-admission");
     await click(".group-form-allow-membership-requests");
 
     assert
-      .dom(".group-form-public-admission")
-      .isDisabled("disables group public admission input");
-
-    assert
-      .dom(".group-form-public-exit")
-      .isNotDisabled("it should not disable group public exit input");
+      .dom(".group-form-allow-membership-requests")
+      .isChecked("selects the membership request option");
 
     assert
       .dom(".group-form-membership-request-template")
-      .exists("displays the membership request template field");
+      .exists(
+        "displays the membership request template field when requests are enabled"
+      );
 
     const emailDomains = selectKit(
       ".group-form-automatic-membership-automatic"
@@ -84,6 +89,32 @@ acceptance("Managing Group Membership", function (needs) {
     await emailDomains.selectRowByValue("foo.com");
 
     assert.strictEqual(emailDomains.header().value(), "foo.com");
+  });
+
+  test("restricting visibility resets an incompatible join method", async function (assert) {
+    updateCurrentUser({ can_create_group: true });
+
+    await visit("/g/alternative-group/manage/membership");
+
+    assert
+      .dom(".group-form-public-admission")
+      .isChecked("join freely is selected for this group");
+
+    const visibility = selectKit(".select-kit.groups-form-visibility-level");
+    await visibility.expand();
+    await visibility.selectRowByValue("2");
+
+    assert
+      .dom(".group-form-invite-only")
+      .isChecked("falls back to invite only once the group is restricted");
+
+    assert
+      .dom(".group-form-public-admission")
+      .isDisabled("disables join freely for a restricted group");
+
+    assert
+      .dom(".group-form-allow-membership-requests")
+      .isDisabled("disables membership requests for a restricted group");
   });
 
   test("As an admin on a site that can associate groups", async function (assert) {
@@ -126,6 +157,10 @@ acceptance("Managing Group Membership", function (needs) {
     await visit("/g/discourse/manage/membership");
 
     assert
+      .dom(".groups-form-visibility-level")
+      .doesNotExist("does not display visibility level selector");
+
+    assert
       .dom('label[for="automatic_membership"]')
       .doesNotExist("it should not display automatic membership label");
 
@@ -151,19 +186,19 @@ acceptance("Managing Group Membership", function (needs) {
 
     assert
       .dom(".group-form-public-admission")
-      .exists("displays group public admission input");
+      .exists("displays the join freely option");
+
+    assert
+      .dom(".group-form-allow-membership-requests")
+      .exists("displays the membership request option");
+
+    assert
+      .dom(".group-form-invite-only")
+      .exists("displays the invite only option");
 
     assert
       .dom(".group-form-public-exit")
       .exists("displays group public exit input");
-
-    assert
-      .dom(".group-form-allow-membership-requests")
-      .exists("displays group allow_membership_request input");
-
-    assert
-      .dom(".group-form-allow-membership-requests")
-      .isDisabled("disables group allow_membership_request input");
   });
 });
 

@@ -2,3 +2,38 @@
 .groups-form-grant-trust-level {
   margin-bottom: 10px;
 }
+
+.groups-form-visibility-access {
+  .groups-form-members-visibility-label,
+  .groups-form-join-method,
+  .group-form-public-exit-label {
+    margin-top: var(--space-4);
+  }
+
+  .groups-form-join-method {
+    margin-bottom: 0;
+    padding: 0;
+    border: 0;
+    min-inline-size: 0;
+
+    legend {
+      font-weight: normal;
+      font-size: var(--font-0);
+      color: var(--primary-high);
+      padding: 0;
+      margin-bottom: var(--space-2);
+    }
+  }
+
+  .groups-form-membership-request-template {
+    margin-top: var(--space-2);
+  }
+
+  .radio:has([disabled]) {
+    color: var(--primary-medium);
+
+    &:hover {
+      cursor: not-allowed;
+    }
+  }
+}

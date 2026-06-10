@@ -14,31 +14,6 @@ import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class GroupsFormInteractionFields extends Component {
-  visibilityLevelOptions = [
-    {
-      name: i18n("admin.groups.manage.interaction.visibility_levels.public"),
-      value: 0,
-    },
-    {
-      name: i18n(
-        "admin.groups.manage.interaction.visibility_levels.logged_on_users"
-      ),
-      value: 1,
-    },
-    {
-      name: i18n("admin.groups.manage.interaction.visibility_levels.members"),
-      value: 2,
-    },
-    {
-      name: i18n("admin.groups.manage.interaction.visibility_levels.staff"),
-      value: 3,
-    },
-    {
-      name: i18n("admin.groups.manage.interaction.visibility_levels.owners"),
-      value: 4,
-    },
-  ];
-
   aliasLevelOptions = [
     { name: i18n("groups.alias_levels.nobody"), value: 0 },
     { name: i18n("groups.alias_levels.only_admins"), value: 1 },
@@ -49,17 +24,6 @@ export default class GroupsFormInteractionFields extends Component {
   ];
 
   watchingNotificationLevel = NotificationLevels.WATCHING;
-
-  @computed(
-    "model.members_visibility_level",
-    "visibilityLevelOptions.firstObject.value"
-  )
-  get membersVisibilityLevel() {
-    return (
-      this.model?.members_visibility_level ||
-      this.visibilityLevelOptions?.firstObject?.value
-    );
-  }
 
   @computed("model.messageable_level", "aliasLevelOptions.firstObject.value")
   get messageableLevel() {
@@ -110,68 +74,8 @@ export default class GroupsFormInteractionFields extends Component {
     );
   }
 
-  @computed("membersVisibilityLevel")
-  get membersVisibilityPrivate() {
-    return (
-      this.membersVisibilityLevel !==
-      this.visibilityLevelOptions.firstObject.value
-    );
-  }
-
   <template>
     <div ...attributes>
-      {{#if this.canAdminGroup}}
-        <div class="control-group">
-          <label class="control-label">
-            {{i18n "admin.groups.manage.interaction.visibility"}}
-          </label>
-          <label>
-            {{i18n "admin.groups.manage.interaction.visibility_levels.title"}}
-          </label>
-
-          <ComboBox
-            @name="alias"
-            @valueProperty="value"
-            @value={{this.model.visibility_level}}
-            @content={{this.visibilityLevelOptions}}
-            @onChange={{fn (mut this.model.visibility_level)}}
-            @options={{hash castInteger=true}}
-            class="groups-form-visibility-level"
-          />
-
-          <div class="control-instructions">
-            {{i18n
-              "admin.groups.manage.interaction.visibility_levels.description"
-            }}
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label>
-            {{i18n
-              "admin.groups.manage.interaction.members_visibility_levels.title"
-            }}
-          </label>
-
-          <ComboBox
-            @name="alias"
-            @valueProperty="value"
-            @value={{this.membersVisibilityLevel}}
-            @content={{this.visibilityLevelOptions}}
-            @onChange={{fn (mut this.model.members_visibility_level)}}
-            class="groups-form-members-visibility-level"
-          />
-
-          {{#if this.membersVisibilityPrivate}}
-            <div class="control-instructions">
-              {{i18n
-                "admin.groups.manage.interaction.members_visibility_levels.description"
-              }}
-            </div>
-          {{/if}}
-        </div>
-      {{/if}}
-
       <div class="control-group">
         <label class="control-label">
           {{i18n "groups.manage.interaction.posting"}}
