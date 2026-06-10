@@ -55,58 +55,12 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    path =
-      File.join(
-        GlobalSetting.relative_url_root || "",
-        "/session/#{user.encoded_username}/become.json?redirect=false",
-      )
+    visit File.join(
+            GlobalSetting.relative_url_root || "",
+            "/session/#{user.encoded_username}/become.json?redirect=false",
+          )
 
-    # Run the same request the browser used to be navigated to through the app
-    # in-process instead. This keeps every server-side side effect of
-    # `SessionController#become` (`log_on_user`, auth token generation, the
-    # full middleware stack) while skipping an entire Chrome page navigation
-    # per sign-in; the session cookies from the response are copied into the
-    # browser context so the next real navigation is authenticated.
-    rack_session = Rack::Test::Session.new(Rails.application)
-    rack_session.get(
-      "http://#{Capybara.server_host}#{path}",
-      {},
-      { "HTTP_USER_AGENT" => "Mozilla/5.0 (SystemHelpers#sign_in)" },
-    )
-    response = rack_session.last_response
-
-    if !response.ok? || !response.body.include?("Signed in to #{user.encoded_username} successfully")
-      raise "sign_in for #{user.encoded_username} failed (HTTP #{response.status}): #{response.body[0, 300]}"
-    end
-
-    cookies =
-      Array(response.headers["Set-Cookie"])
-        .flat_map { |header| header.split("\n") }
-        .filter_map do |line|
-          cookie, *attributes = line.split(/;\s*/)
-          name, _, value = cookie.partition("=")
-          next if name.blank?
-          attributes = attributes.map(&:downcase)
-          same_site = attributes.filter_map { |a| a[/\Asamesite=(\w+)\z/, 1]&.capitalize }.first
-          {
-            name: name,
-            value: value,
-            path: "/",
-            httpOnly: attributes.include?("httponly"),
-            secure: attributes.include?("secure"),
-            sameSite: same_site || "Lax",
-          }
-        end
-
-    page.driver.with_playwright_page do |pw_page|
-      pw_page.context.add_cookies(
-        # `visit "/foo"` resolves to `Capybara.server_host`, but some specs
-        # navigate to `test.localhost` absolute URLs — cover both hosts.
-        cookies.flat_map do |cookie|
-          [Capybara.server_host, "test.localhost"].map { |domain| cookie.merge(domain: domain) }
-        end,
-      )
-    end
+    expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
 
   def setup_system_test
