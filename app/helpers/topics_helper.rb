@@ -14,6 +14,16 @@ module TopicsHelper
     anchor.present? ? "#{path}##{anchor}" : path
   end
 
+  def nested_posts_have_unrendered_replies?(posts)
+    Array(posts).any? { |post| nested_post_has_unrendered_replies?(post) }
+  end
+
+  def nested_post_has_unrendered_replies?(post)
+    children = Array(post[:children])
+
+    post[:direct_reply_count].to_i > children.length || nested_posts_have_unrendered_replies?(children)
+  end
+
   def render_topic_title(topic)
     link_to(Emoji.gsub_emoji_to_unicode(topic.title), topic.relative_url)
   end

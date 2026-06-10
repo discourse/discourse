@@ -1451,6 +1451,7 @@ class TopicsController < ApplicationController
           additional_allowed_query_parameters,
         ),
       )
+    opts[:flat] = "1" if !request.format.json? && params[:flat] == "1"
     opts.delete(:page) if params[:page] == 0
 
     url = topic.relative_url

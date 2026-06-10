@@ -3247,6 +3247,21 @@ RSpec.describe TopicsController do
       expect(response).to redirect_to(topic.relative_url + "/42?page=123")
     end
 
+    it "preserves forced-flat mode when redirecting to the canonical topic URL" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      get "/t/wrong-slug/#{topic.id}", params: { flat: "1" }
+
+      expect(response).to redirect_to("#{topic.relative_url}?flat=1")
+    end
+
+    it "does not preserve forced-flat mode on JSON canonical topic redirects" do
+      get "/t/wrong-slug/#{topic.id}.json", params: { flat: "1" }
+
+      expect(response).to redirect_to("#{topic.relative_url}.json")
+    end
+
     it "does not accept page params as an array" do
       get "/t/#{topic.slug}", params: { post_number: 42, page: [2] }
 
