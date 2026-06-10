@@ -577,6 +577,11 @@ nav.post-controls {
       &.create {
         color: var(--d-post-control-create-text-color);
 
+        &:hover {
+          // overrides transition applied while hovering over post
+          transition: none;
+        }
+
         .d-icon {
           color: var(--d-post-control-create-icon-color);
         }
