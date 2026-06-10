@@ -76,10 +76,12 @@ class ReviewableAiToolAction < Reviewable
 
     # Suppress automation re-triggers caused by the tool's side effects
     # (e.g. edit_tags → topic_tags_changed → automation fires again → loop).
-    if defined?(DiscourseAutomation)
-      DiscourseAutomation.suppress_triggers { tool.invoke }
-    else
+    # Setting an active automation makes trigger!() return early.
+    begin
+      DiscourseAutomation.set_active_automation(id) if defined?(DiscourseAutomation)
       tool.invoke
+    ensure
+      DiscourseAutomation.set_active_automation(nil) if defined?(DiscourseAutomation)
     end
 
     create_result(:success, :approved)
