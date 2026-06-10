@@ -477,6 +477,24 @@ RSpec.describe UserSerializer do
       expect(json[:user_api_keys][1][:id]).to eq(user_api_key_4.id)
       expect(json[:user_api_keys][2][:id]).to eq(user_api_key_2.id)
     end
+
+    it "includes expires_at" do
+      freeze_time
+      key = Fabricate(:readonly_user_api_key, user: user, expires_at: 1.day.from_now)
+
+      json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
+
+      serialized_key = json[:user_api_keys].find { |api_key| api_key[:id] == key.id }
+      expect(serialized_key[:expires_at]).to eq_time(1.day.from_now)
+    end
+
+    it "includes expired keys that have not been revoked" do
+      expired_key = Fabricate(:readonly_user_api_key, user: user, expires_at: 1.day.ago)
+
+      json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:user_api_keys].map { |key| key[:id] }).to include(expired_key.id)
+    end
   end
 
   context "with user_passkeys" do
