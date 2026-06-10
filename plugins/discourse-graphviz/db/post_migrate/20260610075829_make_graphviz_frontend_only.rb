@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 class MakeGraphvizFrontendOnly < ActiveRecord::Migration[8.0]
   def up
     execute "DELETE FROM site_settings WHERE name = 'graphviz_default_svg'"
