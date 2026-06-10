@@ -387,4 +387,219 @@ describe "Reviewables" do
       expect(title_html).to include("&lt;b&gt;")
     end
   end
+
+  describe "when resolving flagged post reviewables from the queue" do
+    fab!(:performing_moderator, :moderator)
+    fab!(:agreed_reviewable, :reviewable_flagged_post)
+    fab!(:disagreed_reviewable, :reviewable_flagged_post)
+    fab!(:ignored_reviewable, :reviewable_flagged_post)
+    fab!(:deleted_reviewable, :reviewable_flagged_post)
+
+    before { Jobs.run_immediately! }
+
+    it "shows each resolved reviewable's status in both open queues" do
+      using_session(:other_tab) do
+        sign_in(performing_moderator)
+        visit("/review")
+
+        expect(review_page).to have_reviewables(
+          [agreed_reviewable, disagreed_reviewable, ignored_reviewable, deleted_reviewable],
+        )
+      end
+
+      visit("/review")
+
+      expect(review_page).to have_reviewables(
+        [agreed_reviewable, disagreed_reviewable, ignored_reviewable, deleted_reviewable],
+      )
+
+      review_page.select_bundled_action(agreed_reviewable, "post-agree_and_keep", bundle_index: 1)
+
+      expect(review_page).to have_reviewable_with_approved_status(agreed_reviewable)
+
+      review_page.select_bundled_action(disagreed_reviewable, "post-disagree", bundle_index: 2)
+
+      expect(review_page).to have_reviewable_with_rejected_status(disagreed_reviewable)
+
+      review_page.select_bundled_action(
+        ignored_reviewable,
+        "post-ignore_and_do_nothing",
+        bundle_index: 2,
+      )
+
+      expect(review_page).to have_reviewable_with_ignored_status(ignored_reviewable)
+
+      review_page.select_bundled_action(
+        deleted_reviewable,
+        "post-delete_and_agree",
+        bundle_index: 1,
+      )
+
+      expect(review_page).to have_reviewable_with_approved_status(deleted_reviewable)
+      expect(review_page).to have_reviewables(
+        [agreed_reviewable, disagreed_reviewable, ignored_reviewable, deleted_reviewable],
+      )
+
+      using_session(:other_tab) do
+        expect(review_page).to have_reviewable_with_approved_status(agreed_reviewable)
+        expect(review_page).to have_reviewable_with_rejected_status(disagreed_reviewable)
+        expect(review_page).to have_reviewable_with_ignored_status(ignored_reviewable)
+        expect(review_page).to have_reviewable_with_approved_status(deleted_reviewable)
+        expect(review_page).to have_reviewables(
+          [agreed_reviewable, disagreed_reviewable, ignored_reviewable, deleted_reviewable],
+        )
+      end
+    end
+  end
+
+  describe "when resolving queued post reviewables from the queue" do
+    fab!(:performing_moderator, :moderator)
+    fab!(:approved_reviewable, :reviewable_queued_post)
+    fab!(:rejected_reviewable, :reviewable_queued_post)
+
+    before { Jobs.run_immediately! }
+
+    it "shows each resolved reviewable's status in both open queues" do
+      using_session(:other_tab) do
+        sign_in(performing_moderator)
+        visit("/review")
+
+        expect(review_page).to have_reviewables([approved_reviewable, rejected_reviewable])
+      end
+
+      visit("/review")
+
+      expect(review_page).to have_reviewables([approved_reviewable, rejected_reviewable])
+
+      review_page.select_action(approved_reviewable, "approve_post")
+
+      expect(review_page).to have_reviewable_with_approved_status(approved_reviewable)
+
+      review_page.select_bundled_action(rejected_reviewable, "reject_post")
+
+      expect(review_page).to have_reviewable_with_rejected_status(rejected_reviewable)
+      expect(review_page).to have_reviewables([approved_reviewable, rejected_reviewable])
+
+      using_session(:other_tab) do
+        expect(review_page).to have_reviewable_with_approved_status(approved_reviewable)
+        expect(review_page).to have_reviewable_with_rejected_status(rejected_reviewable)
+        expect(review_page).to have_reviewables([approved_reviewable, rejected_reviewable])
+      end
+    end
+  end
+
+  describe "when resolving user reviewables from the queue" do
+    fab!(:performing_moderator, :moderator)
+
+    fab!(:approved_user) { Fabricate(:user, approved: false) }
+    fab!(:rejected_user) { Fabricate(:user, approved: false) }
+
+    fab!(:approved_user_reviewable) do
+      ReviewableUser.needs_review!(
+        target: approved_user,
+        created_by: Discourse.system_user,
+        reviewable_by_moderator: true,
+        payload: {
+          username: approved_user.username,
+          name: approved_user.name,
+          email: approved_user.email,
+        },
+      )
+    end
+
+    fab!(:rejected_user_reviewable) do
+      ReviewableUser.needs_review!(
+        target: rejected_user,
+        created_by: Discourse.system_user,
+        reviewable_by_moderator: true,
+        payload: {
+          username: rejected_user.username,
+          name: rejected_user.name,
+          email: rejected_user.email,
+        },
+      )
+    end
+
+    let(:rejection_reason_modal) { PageObjects::Modals::RejectReasonReviewable.new }
+
+    before do
+      SiteSetting.must_approve_users = true
+      Jobs.run_immediately!
+    end
+
+    it "shows each resolved reviewable's status in both open queues" do
+      using_session(:other_tab) do
+        sign_in(performing_moderator)
+        visit("/review")
+
+        expect(review_page).to have_reviewables(
+          [approved_user_reviewable, rejected_user_reviewable],
+        )
+      end
+
+      visit("/review")
+
+      expect(review_page).to have_reviewables([approved_user_reviewable, rejected_user_reviewable])
+
+      review_page.select_action(approved_user_reviewable, "user-approve_user")
+
+      expect(review_page).to have_reviewable_with_approved_status(approved_user_reviewable)
+
+      review_page.select_bundled_action(rejected_user_reviewable, "user-delete_user")
+      rejection_reason_modal.fill_in_rejection_reason("user is spamming")
+      rejection_reason_modal.delete_user
+
+      expect(review_page).to have_reviewable_with_rejected_status(rejected_user_reviewable)
+      expect(review_page).to have_reviewables([approved_user_reviewable, rejected_user_reviewable])
+
+      using_session(:other_tab) do
+        expect(review_page).to have_reviewable_with_approved_status(approved_user_reviewable)
+        expect(review_page).to have_reviewable_with_rejected_status(rejected_user_reviewable)
+        expect(review_page).to have_reviewables(
+          [approved_user_reviewable, rejected_user_reviewable],
+        )
+      end
+    end
+  end
+
+  describe "when resolving posts queued for review from the queue" do
+    fab!(:performing_moderator, :moderator)
+
+    fab!(:approved_post_reviewable) { ReviewablePost.queue_for_review(Fabricate(:post)) }
+    fab!(:rejected_post_reviewable) { ReviewablePost.queue_for_review(Fabricate(:post)) }
+
+    before { Jobs.run_immediately! }
+
+    it "shows each resolved reviewable's status in both open queues" do
+      using_session(:other_tab) do
+        sign_in(performing_moderator)
+        visit("/review")
+
+        expect(review_page).to have_reviewables(
+          [approved_post_reviewable, rejected_post_reviewable],
+        )
+      end
+
+      visit("/review")
+
+      expect(review_page).to have_reviewables([approved_post_reviewable, rejected_post_reviewable])
+
+      review_page.select_action(approved_post_reviewable, "post-approve")
+
+      expect(review_page).to have_reviewable_with_approved_status(approved_post_reviewable)
+
+      review_page.select_bundled_action(rejected_post_reviewable, "post-reject_and_delete")
+
+      expect(review_page).to have_reviewable_with_rejected_status(rejected_post_reviewable)
+      expect(review_page).to have_reviewables([approved_post_reviewable, rejected_post_reviewable])
+
+      using_session(:other_tab) do
+        expect(review_page).to have_reviewable_with_approved_status(approved_post_reviewable)
+        expect(review_page).to have_reviewable_with_rejected_status(rejected_post_reviewable)
+        expect(review_page).to have_reviewables(
+          [approved_post_reviewable, rejected_post_reviewable],
+        )
+      end
+    end
+  end
 end
