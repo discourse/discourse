@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="ph-regular-bell" viewBox="0 0 256 256"><path d="M128 24a8 8 0 0 1 8 8v8a8 8 0 0 1-16 0v-8a8 8 0 0 1 8-8Z"/></symbol>
+  <symbol id="ph-bold-bell" viewBox="0 0 256 256"><path d="M128 16a16 16 0 0 1 16 16v16a16 16 0 0 1-32 0V32a16 16 0 0 1 16-16Z"/></symbol>
+  <symbol id="ph-fill-bell" viewBox="0 0 256 256"><path d="M128 8a24 24 0 0 1 24 24v24a24 24 0 0 1-48 0V32a24 24 0 0 1 24-24Z"/></symbol>
+  <symbol id="ph-regular-gear" viewBox="0 0 256 256"><path d="M128 80a48 48 0 1 0 48 48 48 48 0 0 0-48-48Z"/></symbol>
+  <symbol id="ph-bold-gear" viewBox="0 0 256 256"><path d="M128 72a56 56 0 1 0 56 56 56 56 0 0 0-56-56Z"/></symbol>
+  <symbol data-foo-id="keep-me" id="ph-regular-flask" viewBox="0 0 256 256"><path d="M99FLASK"/></symbol>
+  <symbol id="ph-regular-dice" viewBox="0 0 256 256"><path d="M99DICE"/></symbol>
+  <symbol id="ph-regular-confetti" viewBox="0 0 256 256"><path d="M99CONFETTI"/></symbol>
+</svg>

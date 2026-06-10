@@ -40,7 +40,8 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   end
 
   if name.to_s.include?("_icon") ||
-       %i[icon objects].include?(SiteSetting.type_supervisor.get_type(name))
+       %i[icon objects].include?(SiteSetting.type_supervisor.get_type(name)) ||
+       SvgSprite.icon_set_site_setting?(name)
     SvgSprite.expire_cache
   end
 

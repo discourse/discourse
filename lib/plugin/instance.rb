@@ -775,6 +775,22 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_svg_icon_source(block, self)
   end
 
+  # Declare an icon set: canonical Discourse icon names mapped to glyph ids in
+  # the plugin's svg-icons sprite, served under the canonical ids. `map` is a
+  # Hash or a path to a JSON file of that shape. Values may contain {placeholder}
+  # tokens resolving from this plugin's own site setting of the same name.
+  def register_icon_set(map:, ignore_setting: nil)
+    DiscoursePluginRegistry.register_icon_set(
+      {
+        map: map,
+        ignore_setting: ignore_setting,
+        plugin_name: name,
+        plugin_dir: File.dirname(path),
+      },
+      self,
+    )
+  end
+
   def extend_content_security_policy(extension)
     csp_extensions << extension
   end
