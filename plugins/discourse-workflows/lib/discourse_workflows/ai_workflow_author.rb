@@ -17,10 +17,6 @@ module DiscourseWorkflows
       100_000
     end
 
-    def temperature
-      0.2
-    end
-
     def tools
       [
         DiscourseWorkflows::Ai::Tools::WorkflowAskQuestions,
