@@ -121,6 +121,21 @@ export default class InspectorPanel extends Component {
   }
 
   /**
+   * `true` when more than one block is selected — the inspector then shows a
+   * bulk-action summary instead of the per-block form.
+   *
+   * @returns {boolean}
+   */
+  get hasMultiSelection() {
+    return this.wireframe.hasMultiSelection;
+  }
+
+  /** @returns {number} How many blocks are currently selected. */
+  get selectionCount() {
+    return this.wireframe.selectedKeys.size;
+  }
+
+  /**
    * Live data for the selected block, or `null` when nothing is
    * selected. Pulled from the service so the inspector tracks the
    * latest live values without holding its own snapshot.
@@ -256,6 +271,11 @@ export default class InspectorPanel extends Component {
   }
 
   @action
+  removeSelectedBlocks() {
+    this.wireframe.removeBlocks([...this.wireframe.selectedKeys]);
+  }
+
+  @action
   setTab(tab) {
     this._activeTab = tab;
   }
@@ -266,7 +286,22 @@ export default class InspectorPanel extends Component {
   }
 
   <template>
-    {{#if this.hasSelection}}
+    {{#if this.hasMultiSelection}}
+      <div class="wireframe-inspector__multi">
+        <span class="wireframe-inspector__multi-count">
+          {{i18n
+            "wireframe.inspector.multi.selected_count"
+            count=this.selectionCount
+          }}
+        </span>
+        <DButton
+          class="btn-danger wireframe-inspector__multi-delete"
+          @icon="trash-can"
+          @label="wireframe.inspector.multi.delete"
+          @action={{this.removeSelectedBlocks}}
+        />
+      </div>
+    {{else if this.hasSelection}}
       <div class="wireframe-inspector__header">
         <span class="wireframe-inspector__block-name">
           {{this.displayTitle}}

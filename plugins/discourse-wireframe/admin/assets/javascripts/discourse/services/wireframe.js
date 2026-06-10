@@ -355,6 +355,16 @@ export default class WireframeService extends Service {
   redoStack = trackedArray();
 
   /**
+   * The full set of selected block keys. `selectedBlockKey` is the PRIMARY
+   * (anchor) of this set — the block whose form the inspector shows when
+   * exactly one is selected, and the anchor for shift-range selection.
+   * Single-select keeps this at `{ primaryKey }`; the outline's modifier
+   * gestures grow it. `isBlockSelected` reads it, so the canvas highlights
+   * every member. A `trackedSet`, so `.has` / `.size` reads auto-track.
+   */
+  selectedKeys = trackedSet();
+
+  /**
    * For each entry we've ever mutated, the `entry.args` snapshot taken
    * before the first mutation. Reset / exit walk this map and write those
    * snapshots back into `entry.args`.
@@ -386,6 +396,7 @@ export default class WireframeService extends Service {
    * @type {Set<string>}
    */
   editedOutlets = new Set();
+
   /**
    * Maps each drafted outlet to the composite key of its implicit root
    * `layout` block. Every drafted outlet is normalised to a single root
@@ -1114,33 +1125,45 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Inserts a fresh clone of the given block immediately after it in
-   * the layout. Used by the block toolbar's `Duplicate` button.
+   * Inserts `count` fresh clones of the given block immediately after it in
+   * the layout. Used by the block toolbar's `Duplicate` button (`count = 1`)
+   * and its "duplicate ×N" menu. All clones land in a single structural
+   * transaction, so the whole batch is one undo step. The clones are identical,
+   * so their relative order among themselves is irrelevant.
    *
    * @param {string} blockKey
+   * @param {number} [count=1] - How many clones to insert (clamped to >= 1).
    * @returns {boolean}
    */
   @action
-  duplicateBlock(blockKey) {
+  duplicateBlock(blockKey, count = 1) {
     const located = this.findEntryAndOutletSync(blockKey);
     if (!located) {
       return false;
     }
+    const copies = Math.max(1, Math.floor(count));
     return this.recordStructural([located.outletName], () => {
-      const layout = this.readResolvedLayout(located.outletName);
+      let layout = this.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
-      const insertion = insertEntryAt(
-        layout,
-        blockKey,
-        cloneEntryForPaste(located.entry),
-        "after"
-      );
-      if (!insertion.changed) {
+      let changed = false;
+      for (let i = 0; i < copies; i++) {
+        const insertion = insertEntryAt(
+          layout,
+          blockKey,
+          cloneEntryForPaste(located.entry),
+          "after"
+        );
+        if (insertion.changed) {
+          layout = insertion.layout;
+          changed = true;
+        }
+      }
+      if (!changed) {
         return false;
       }
-      this.publishStructuralChange(located.outletName, insertion.layout);
+      this.publishStructuralChange(located.outletName, layout);
       return true;
     });
   }
@@ -1164,19 +1187,11 @@ export default class WireframeService extends Service {
       if (!layout) {
         return false;
       }
-      // Multi-cell placements get preserved as empty merged-cell entries
-      // on delete — that keeps the author's layout shape (a hero
-      // spanning 3 columns, a sidebar rail, etc.) intact even when
-      // the content inside it is removed. Single-cell deletes fall
-      // through to a normal removal; the grid overlay's auto-empty
-      // cell rendering already surfaces those positions as drop
-      // targets.
-      const result = this.#shouldRestoreAsCell(layout, located.entry, blockKey)
-        ? replaceEntryInPlace(layout, blockKey, {
-            block: LAYOUT_MERGED_CELL_BLOCK,
-            containerArgs: located.entry.containerArgs,
-          })
-        : removeEntry(layout, blockKey);
+      const result = this.#removeEntryFromLayout(
+        layout,
+        blockKey,
+        located.entry
+      );
       if (!result.changed) {
         return false;
       }
@@ -1186,6 +1201,76 @@ export default class WireframeService extends Service {
       this.publishStructuralChange(located.outletName, result.layout);
       return true;
     });
+  }
+
+  /**
+   * Removes several blocks in a single structural transaction, so the whole
+   * batch is one undo step. Used by the multi-selection's bulk delete (the
+   * inspector panel + the Delete shortcut). Outlet roots are skipped; a
+   * container and one of its descendants both being selected is safe — once the
+   * container is gone the descendant key simply no longer matches.
+   *
+   * @param {Array<string>} keys
+   * @returns {boolean} Whether anything was removed.
+   */
+  @action
+  removeBlocks(keys) {
+    const located = (keys ?? [])
+      .filter((key) => !this.isOutletRoot(key))
+      .map((key) => ({ key, ...this.findEntryAndOutletSync(key) }))
+      .filter((entry) => entry.entry);
+    if (located.length === 0) {
+      return false;
+    }
+    const outletNames = [...new Set(located.map((l) => l.outletName))];
+    return this.recordStructural(outletNames, () => {
+      let anyChanged = false;
+      for (const outletName of outletNames) {
+        let layout = this.readResolvedLayout(outletName);
+        if (!layout) {
+          continue;
+        }
+        let outletChanged = false;
+        for (const { key, entry } of located.filter(
+          (l) => l.outletName === outletName
+        )) {
+          const result = this.#removeEntryFromLayout(layout, key, entry);
+          if (result.changed) {
+            layout = result.layout;
+            outletChanged = true;
+          }
+        }
+        if (outletChanged) {
+          this.publishStructuralChange(outletName, layout);
+          anyChanged = true;
+        }
+      }
+      if (anyChanged) {
+        this.selectBlock(null);
+      }
+      return anyChanged;
+    });
+  }
+
+  /**
+   * Removes a single entry from `layout` by key, preserving a multi-cell grid
+   * placement as an empty merged-cell entry (keeps the author's layout shape —
+   * a hero spanning 3 columns, a sidebar rail — intact even when its content is
+   * removed); single-cell entries are removed outright. Returns the
+   * `{ layout, changed }` result without publishing.
+   *
+   * @param {Array<Object>} layout
+   * @param {string} key
+   * @param {Object} entry - The located entry (for its `containerArgs`).
+   * @returns {{layout: Array<Object>, changed: boolean}}
+   */
+  #removeEntryFromLayout(layout, key, entry) {
+    return this.#shouldRestoreAsCell(layout, entry, key)
+      ? replaceEntryInPlace(layout, key, {
+          block: LAYOUT_MERGED_CELL_BLOCK,
+          containerArgs: entry.containerArgs,
+        })
+      : removeEntry(layout, key);
   }
 
   /**
@@ -1466,8 +1551,18 @@ export default class WireframeService extends Service {
     }
   }
 
+  /**
+   * Selects a block as the PRIMARY (the inspector form + the multi-select
+   * anchor). By default this also collapses the multi-selection to just this
+   * block, so every existing caller stays single-select; the outline's
+   * `toggleBlockSelection` / `setSelectionRange` pass `preserveMultiSelection`
+   * to keep the surrounding set intact while moving the anchor.
+   *
+   * @param {Object|null} data - `{ key, ... }` (rest hydrated from the layout).
+   * @param {{preserveMultiSelection?: boolean}} [options]
+   */
   @action
-  selectBlock(data) {
+  selectBlock(data, { preserveMultiSelection = false } = {}) {
     // Flush anything still pending from a previous selection so we don't
     // apply those keystrokes to the new block by accident.
     if (this.#pendingArgs.size > 0) {
@@ -1483,6 +1578,15 @@ export default class WireframeService extends Service {
       this.inlineEdit.stop({ commit: true });
     }
     this.selectedBlockKey = data?.key ?? null;
+
+    // Unless a multi-select gesture is moving the anchor within an existing
+    // set, the primary IS the whole selection.
+    if (!preserveMultiSelection) {
+      this.selectedKeys.clear();
+      if (data?.key != null) {
+        this.selectedKeys.add(data.key);
+      }
+    }
 
     if (!data) {
       this.selectedBlockData = null;
@@ -1666,20 +1770,73 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Tells whether a given block key matches the current selection.
+   * Tells whether a given block key is part of the current selection. Reads the
+   * `selectedKeys` set (not just the primary), so under a multi-selection every
+   * selected block's chrome / outline row highlights. Used only for highlight;
+   * identity checks (e.g. "is this the block being inline-edited") read
+   * `selectedBlockKey` directly.
    *
    * Decorated with `@action` so that Glimmer template subexpressions like
    * `(this.wireframe.isBlockSelected row.blockKey)` keep the correct
    * `this` binding. Without it Glimmer extracts the bare function reference
-   * and calls it without context, which throws when the body reads
-   * `this.selectedBlockKey`.
+   * and calls it without context, which throws when the body reads `this`.
    *
    * @param {string|null} key - The composite block key (`${name}:${__stableKey}`).
    * @returns {boolean}
    */
   @action
   isBlockSelected(key) {
-    return this.selectedBlockKey != null && this.selectedBlockKey === key;
+    return key != null && this.selectedKeys.has(key);
+  }
+
+  /** @returns {boolean} Whether more than one block is currently selected. */
+  get hasMultiSelection() {
+    return this.selectedKeys.size > 1;
+  }
+
+  /**
+   * Toggles a block in/out of the multi-selection (the outline's cmd/ctrl-click
+   * gesture). Adding a block makes it the new primary; removing the primary
+   * re-anchors to a remaining member (or clears the selection entirely).
+   *
+   * @param {Object} data - `{ key, ... }` for the toggled block.
+   */
+  @action
+  toggleBlockSelection(data) {
+    const key = data?.key;
+    if (key == null) {
+      return;
+    }
+    if (this.selectedKeys.has(key)) {
+      this.selectedKeys.delete(key);
+      if (this.selectedBlockKey === key) {
+        // Re-anchor the primary to any remaining member so the inspector still
+        // has a block to bind to (or clear when the set is now empty).
+        const next = [...this.selectedKeys][0] ?? null;
+        this.selectBlock(next ? { key: next } : null, {
+          preserveMultiSelection: true,
+        });
+      }
+    } else {
+      this.selectedKeys.add(key);
+      this.selectBlock(data, { preserveMultiSelection: true });
+    }
+  }
+
+  /**
+   * Replaces the multi-selection with `keys` and anchors the primary at
+   * `anchorData` (the outline's shift-click range gesture).
+   *
+   * @param {Array<string>} keys - The block keys to select.
+   * @param {Object} anchorData - `{ key, ... }` for the anchor (clicked) block.
+   */
+  @action
+  setSelectionRange(keys, anchorData) {
+    this.selectedKeys.clear();
+    for (const key of keys) {
+      this.selectedKeys.add(key);
+    }
+    this.selectBlock(anchorData, { preserveMultiSelection: true });
   }
 
   /**
@@ -1856,6 +2013,26 @@ export default class WireframeService extends Service {
    * @param {*} value
    */
   setImageArg(blockKey, argName, value) {
+    this.setArg(blockKey, argName, value);
+  }
+
+  /**
+   * Writes a single arg value into the entry identified by `blockKey`,
+   * immediately (not keystroke-debounced) and through the same write-path as
+   * inspector edits so undo / redo / persistence stay consistent. The entry is
+   * resolved synchronously so the canvas re-renders before the next paint.
+   *
+   * General-purpose: the image affordances (`setImageArg`, `uploadImageForArg`)
+   * and the repeatable-array control route through here. Because the write is
+   * immediate, a consumer that derives the next value from the current
+   * `entry.args` (e.g. add-then-remove on an array) always reads a fresh value
+   * rather than a stale pre-flush one.
+   *
+   * @param {string} blockKey
+   * @param {string} argName
+   * @param {*} value
+   */
+  setArg(blockKey, argName, value) {
     const located = this.findEntryAndOutletSync(blockKey);
     if (!located?.entry) {
       return;

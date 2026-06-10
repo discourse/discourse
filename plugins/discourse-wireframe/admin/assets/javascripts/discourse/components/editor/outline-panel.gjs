@@ -4,7 +4,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { trackedSet } from "@ember/reactive/collections";
+import { trackedMap, trackedSet } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { TrackedAsyncData } from "ember-async-data";
@@ -26,6 +26,12 @@ import { normalizeLayoutMode, walkAllOutlets } from "../../lib/walk-layout";
 function rowPadding(depth) {
   return trustHTML(`padding-left: ${1 + depth * 0.75}rem;`);
 }
+
+// A container with more than this many children starts collapsed in the
+// outline (showing a "× N" count badge) so a large layout — a 12-card grid, a
+// long carousel — stays scannable instead of flooding the tree. The user can
+// still expand it; their explicit choice overrides this default.
+const CHILD_COUNT_THRESHOLD = 6;
 
 /**
  * Read-only outline of registered block outlet layouts. Renders one section
@@ -60,7 +66,18 @@ export default class OutlinePanel extends Component {
   acceptedDragKinds = ["wf-block", "wf-palette-block"];
   isViewMode = (mode) => this.viewMode === mode;
   isStatusFilter = (filter) => this.statusFilter === filter;
-  isRowCollapsed = (blockKey) => this.#collapsedKeys.has(blockKey);
+  /**
+   * Whether a container row is collapsed. A row the user has explicitly toggled
+   * uses that choice; otherwise it falls back to the default — collapsed when
+   * the child count exceeds the threshold, expanded below it.
+   *
+   * @param {Object} row - The outline row (needs `blockKey` + `childCount`).
+   * @returns {boolean}
+   */
+  isRowCollapsed = (row) =>
+    this.#collapseOverrides.has(row.blockKey)
+      ? this.#collapseOverrides.get(row.blockKey)
+      : row.childCount > CHILD_COUNT_THRESHOLD;
   isOutletCollapsed = (outletName) => this.#collapsedOutlets.has(outletName);
 
   /**
@@ -74,12 +91,13 @@ export default class OutlinePanel extends Component {
     return rootKey != null && this.wireframe.isBlockSelected(rootKey);
   };
   /**
-   * `blockKey`s of container rows the user has collapsed in this
-   * session. Rows whose ancestor chain includes a collapsed key are
-   * filtered out of `decoratedGroups`. Session-only — collapse state
-   * resets on editor exit, mirroring how transient UI state lives.
+   * Explicit per-row collapse choices keyed by `blockKey` (`true` = collapsed,
+   * `false` = expanded). Only rows the user has toggled appear here; everything
+   * else uses the threshold default in `isRowCollapsed`. Rows whose ancestor
+   * chain resolves to collapsed are filtered out of `decoratedGroups`.
+   * Session-only — resets on editor exit, mirroring how transient UI state lives.
    */
-  #collapsedKeys = trackedSet();
+  #collapseOverrides = trackedMap();
 
   /**
    * Outlet names the user has collapsed in the tree view. When an
@@ -204,11 +222,9 @@ export default class OutlinePanel extends Component {
     if (!row.hasChildren) {
       return;
     }
-    if (this.#collapsedKeys.has(row.blockKey)) {
-      this.#collapsedKeys.delete(row.blockKey);
-    } else {
-      this.#collapsedKeys.add(row.blockKey);
-    }
+    // Record the flipped state as an explicit override so it sticks against the
+    // threshold default (a big container the user expanded stays expanded).
+    this.#collapseOverrides.set(row.blockKey, !this.isRowCollapsed(row));
   }
 
   /**
@@ -228,14 +244,49 @@ export default class OutlinePanel extends Component {
   }
 
   /**
+   * Selects the clicked row, honoring modifier keys to build a multi-selection:
+   * cmd/ctrl-click toggles the row in/out of the selection, shift-click selects
+   * the contiguous range from the current primary to the clicked row (within
+   * the same outlet's visible rows), and a plain click selects just this row.
+   *
    * @param {string} outletName - The owning outlet's name (the row itself
-   *   does not carry it; we read it from the outer group when the user
-   *   clicks).
+   *   does not carry it; we read it from the outer group when the user clicks).
    * @param {Object} row - A row produced by `walkAllOutlets`.
+   * @param {MouseEvent} [event] - Appended by `{{on "click"}}`; carries the
+   *   modifier-key state.
    */
   @action
-  selectRow(outletName, row) {
-    this.wireframe.selectBlock({
+  selectRow(outletName, row, event) {
+    const data = this.#rowData(outletName, row);
+
+    if (event?.metaKey || event?.ctrlKey) {
+      this.wireframe.toggleBlockSelection(data);
+    } else if (event?.shiftKey) {
+      const keys = this.#rangeKeys(outletName, row);
+      if (keys) {
+        this.wireframe.setSelectionRange(keys, data);
+      } else {
+        this.wireframe.selectBlock(data);
+      }
+    } else {
+      this.wireframe.selectBlock(data);
+    }
+
+    // Flash the block on the canvas so the eye lands on it after it scrolls
+    // into view — the outline row is far from the rendered block.
+    this.wireframe.flashBlock(row.blockKey);
+  }
+
+  /**
+   * Builds the selection payload for a row (the shape `selectBlock` and the
+   * multi-select gestures expect).
+   *
+   * @param {string} outletName
+   * @param {Object} row
+   * @returns {Object}
+   */
+  #rowData(outletName, row) {
+    return {
       key: row.blockKey,
       name: row.blockName,
       id: row.blockId,
@@ -243,10 +294,35 @@ export default class OutlinePanel extends Component {
       conditions: row.conditions,
       outletName,
       metadata: this.lookupMetadataFor(row.blockName),
-    });
-    // Flash the block on the canvas so the eye lands on it after it scrolls
-    // into view — the outline row is far from the rendered block.
-    this.wireframe.flashBlock(row.blockKey);
+    };
+  }
+
+  /**
+   * The block keys spanning the current primary selection and `toRow`, within
+   * the clicked outlet's visible rows — the shift-click range. Returns `null`
+   * when there's no anchor or either endpoint isn't a visible row (e.g. the
+   * anchor is in another outlet or hidden under a collapsed container), so the
+   * caller falls back to a plain single select.
+   *
+   * @param {string} outletName
+   * @param {Object} toRow
+   * @returns {Array<string>|null}
+   */
+  #rangeKeys(outletName, toRow) {
+    const anchorKey = this.wireframe.selectedBlockKey;
+    if (!anchorKey) {
+      return null;
+    }
+    const group = this.decoratedGroups.find((g) => g.outletName === outletName);
+    const rows = group?.rows ?? [];
+    const anchorIndex = rows.findIndex((r) => r.blockKey === anchorKey);
+    const toIndex = rows.findIndex((r) => r.blockKey === toRow.blockKey);
+    if (anchorIndex === -1 || toIndex === -1) {
+      return null;
+    }
+    const [lo, hi] =
+      anchorIndex <= toIndex ? [anchorIndex, toIndex] : [toIndex, anchorIndex];
+    return rows.slice(lo, hi + 1).map((r) => r.blockKey);
   }
 
   /**
@@ -373,9 +449,6 @@ export default class OutlinePanel extends Component {
    * @returns {Array<Object>}
    */
   #dropCollapsedDescendants(rows) {
-    if (this.#collapsedKeys.size === 0) {
-      return rows;
-    }
     /** @type {Array<{depth: number, key: string}>} */
     const collapsedAncestors = [];
     const result = [];
@@ -391,13 +464,13 @@ export default class OutlinePanel extends Component {
         // whether this row itself is also collapsed (so its own
         // descendants stay suppressed even if a deeper grandparent
         // expands later).
-        if (row.hasChildren && this.#collapsedKeys.has(row.blockKey)) {
+        if (row.hasChildren && this.isRowCollapsed(row)) {
           collapsedAncestors.push({ depth: row.depth, key: row.blockKey });
         }
         continue;
       }
       result.push(row);
-      if (row.hasChildren && this.#collapsedKeys.has(row.blockKey)) {
+      if (row.hasChildren && this.isRowCollapsed(row)) {
         collapsedAncestors.push({ depth: row.depth, key: row.blockKey });
       }
     }
@@ -726,12 +799,12 @@ export default class OutlinePanel extends Component {
                     <DButton
                       class="outline-block__toggle"
                       @icon={{if
-                        (this.isRowCollapsed row.blockKey)
+                        (this.isRowCollapsed row)
                         "chevron-right"
                         "chevron-down"
                       }}
                       @ariaLabel={{if
-                        (this.isRowCollapsed row.blockKey)
+                        (this.isRowCollapsed row)
                         "wireframe.outline.expand_row"
                         "wireframe.outline.collapse_row"
                       }}
@@ -743,6 +816,17 @@ export default class OutlinePanel extends Component {
                     </span>
                   {{/if}}
                   <span class="outline-block__name">{{row.blockName}}</span>
+                  {{#if (this.isRowCollapsed row)}}
+                    {{! Count badge surfacing how many child rows are hidden
+                      while the container is collapsed — the compaction cue for
+                      large containers. }}
+                    <span class="outline-block__child-count">
+                      {{i18n
+                        "wireframe.outline.child_count"
+                        count=row.childCount
+                      }}
+                    </span>
+                  {{/if}}
                   {{#if row.layoutMode}}
                     <span class="outline-block__mode">
                       {{i18n

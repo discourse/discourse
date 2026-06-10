@@ -258,6 +258,12 @@ function walkEntries(
     // with its own children is a plain container and walks those instead.
     const metadata = metadataByName.get(blockName) ?? null;
     const hasParts = !!(metadata?.parts && entry.children == null);
+    // Synthesize the composite's parts once (reused for both the child-count
+    // and the recursive walk below) so a part-backed container reports the
+    // same count it actually renders as rows.
+    const partEntries = hasParts
+      ? synthesizePartEntries(entry, metadata)
+      : null;
     rows.push({
       depth,
       blockName,
@@ -289,6 +295,10 @@ function walkEntries(
       validationReason: entry.__failureReason ?? null,
       validationDetails: entry.__failureDetails ?? null,
       hasChildren: !!(entry.children && entry.children.length) || hasParts,
+      // Number of nested rows this container contributes (own children, or
+      // synthesized composite parts). Drives the outline's "× N" count badge
+      // and the auto-collapse-past-threshold compaction.
+      childCount: entry.children?.length ?? partEntries?.length ?? 0,
       path: entryPath,
     });
     if (entry.children?.length) {
@@ -300,9 +310,9 @@ function walkEntries(
         blocksService,
         metadataByName
       );
-    } else if (hasParts) {
+    } else if (partEntries) {
       walkEntries(
-        synthesizePartEntries(entry, metadata),
+        partEntries,
         depth + 1,
         [...entryPath, "parts"],
         rows,

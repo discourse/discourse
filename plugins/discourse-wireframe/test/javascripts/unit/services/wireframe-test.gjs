@@ -2151,6 +2151,114 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     }
   );
 
+  module(
+    "inlineEdit.startContainerArg — a child's containerArg",
+    function (innerHooks) {
+      innerHooks.beforeEach(async function () {
+        withTestBlockRegistration(() => registerBlock(TestTile));
+        this.layout = await _renderBlocks(
+          "homepage-blocks",
+          [{ block: TestTile, args: { title: "First" } }],
+          getOwner(this)
+        );
+        this.editor.siteSettings.wireframe_enabled = true;
+        logIn(getOwner(this));
+        this.editor = getOwner(this).lookup("service:wireframe");
+        this.editor.enter();
+        const draft = outletChildren(this.editor);
+        this.key = `wf:svc-test-tile:${draft[0].__stableKey}`;
+      });
+
+      test("start snapshots the child's containerArg value", async function (assert) {
+        const opened = await this.editor.inlineEdit.startContainerArg(
+          this.key,
+          "tab",
+          "label"
+        );
+        assert.true(opened, "the session opens");
+        assert.strictEqual(
+          this.editor.inlineEdit.argValue,
+          undefined,
+          "snapshots the (absent) label as the pre-edit value"
+        );
+        assert.deepEqual(
+          this.editor.inlineEdit.containerArgContext,
+          { childKey: this.key, namespace: "tab", field: "label" },
+          "exposes the containerArg target to the controller"
+        );
+      });
+
+      test("commit writes the label into the child's containerArgs and is undoable", async function (assert) {
+        await this.editor.inlineEdit.startContainerArg(
+          this.key,
+          "tab",
+          "label"
+        );
+        assert.false(this.editor.canUndo, "nothing on the undo stack yet");
+
+        this.editor.inlineEdit.applyChange("First tab");
+        this.editor.inlineEdit.stop({ commit: true });
+
+        const after = outletChildren(this.editor);
+        assert.strictEqual(
+          after[0].containerArgs?.tab?.label,
+          "First tab",
+          "the label lands in the child's containerArgs"
+        );
+        assert.true(this.editor.canUndo, "the structural commit is undoable");
+      });
+
+      test("committing an empty value removes the label", async function (assert) {
+        await this.editor.inlineEdit.startContainerArg(
+          this.key,
+          "tab",
+          "label"
+        );
+        this.editor.inlineEdit.applyChange("Seed");
+        this.editor.inlineEdit.stop({ commit: true });
+
+        await this.editor.inlineEdit.startContainerArg(
+          this.key,
+          "tab",
+          "label"
+        );
+        this.editor.inlineEdit.applyChange("");
+        this.editor.inlineEdit.stop({ commit: true });
+
+        const after = outletChildren(this.editor);
+        assert.false(
+          "label" in (after[0].containerArgs?.tab ?? {}),
+          "an empty commit deletes the label rather than storing an empty value"
+        );
+      });
+
+      test("committing an unchanged value doesn't push an undo entry", async function (assert) {
+        await this.editor.inlineEdit.startContainerArg(
+          this.key,
+          "tab",
+          "label"
+        );
+        this.editor.inlineEdit.applyChange("Seed");
+        this.editor.inlineEdit.stop({ commit: true });
+        const undoCount = this.editor.undoStack.length;
+
+        await this.editor.inlineEdit.startContainerArg(
+          this.key,
+          "tab",
+          "label"
+        );
+        this.editor.inlineEdit.applyChange("Seed");
+        this.editor.inlineEdit.stop({ commit: true });
+
+        assert.strictEqual(
+          this.editor.undoStack.length,
+          undoCount,
+          "re-committing the same label is a no-op on the undo stack"
+        );
+      });
+    }
+  );
+
   module("clipboard (copy / cut / paste)", function (innerHooks) {
     innerHooks.beforeEach(async function () {
       withTestBlockRegistration(() => registerBlock(TestTile));
@@ -2489,6 +2597,110 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       await this.editor.undo();
       after = outletChildren(this.editor);
       assert.strictEqual(after.length, 2);
+    });
+
+    test("duplicateBlock(key, count) inserts that many clones in one undo step", async function (assert) {
+      this.editor.duplicateBlock(this.firstKey, 3);
+      let after = outletChildren(this.editor);
+      assert.strictEqual(
+        after.length,
+        5,
+        "three clones added to the two blocks"
+      );
+
+      await this.editor.undo();
+      after = outletChildren(this.editor);
+      assert.strictEqual(
+        after.length,
+        2,
+        "a single undo removes the whole ×N batch"
+      );
+    });
+
+    test("duplicateBlock clamps a non-positive count to one clone", function (assert) {
+      this.editor.duplicateBlock(this.firstKey, 0);
+      assert.strictEqual(
+        outletChildren(this.editor).length,
+        3,
+        "always inserts at least one clone"
+      );
+    });
+
+    test("selectBlock resets the selection to a single block", function (assert) {
+      this.editor.selectBlock({ key: this.firstKey });
+      this.editor.toggleBlockSelection({ key: this.secondKey });
+      assert.strictEqual(this.editor.selectedKeys.size, 2, "two selected");
+
+      this.editor.selectBlock({ key: this.firstKey });
+      assert.strictEqual(
+        this.editor.selectedKeys.size,
+        1,
+        "a plain select collapses back to one"
+      );
+      assert.true(this.editor.isBlockSelected(this.firstKey));
+      assert.false(this.editor.isBlockSelected(this.secondKey));
+    });
+
+    test("toggleBlockSelection adds, re-anchors, and removes", function (assert) {
+      this.editor.selectBlock({ key: this.firstKey });
+
+      this.editor.toggleBlockSelection({ key: this.secondKey });
+      assert.true(this.editor.hasMultiSelection, "now multi-selected");
+      assert.true(this.editor.isBlockSelected(this.firstKey));
+      assert.true(this.editor.isBlockSelected(this.secondKey));
+      assert.strictEqual(
+        this.editor.selectedBlockKey,
+        this.secondKey,
+        "the newly added block becomes the primary"
+      );
+
+      this.editor.toggleBlockSelection({ key: this.secondKey });
+      assert.false(this.editor.isBlockSelected(this.secondKey), "removed");
+      assert.strictEqual(
+        this.editor.selectedBlockKey,
+        this.firstKey,
+        "removing the primary re-anchors to a remaining member"
+      );
+    });
+
+    test("setSelectionRange selects every key and anchors the primary", function (assert) {
+      this.editor.setSelectionRange([this.firstKey, this.secondKey], {
+        key: this.secondKey,
+      });
+      assert.strictEqual(this.editor.selectedKeys.size, 2);
+      assert.true(this.editor.isBlockSelected(this.firstKey));
+      assert.true(this.editor.isBlockSelected(this.secondKey));
+      assert.strictEqual(this.editor.selectedBlockKey, this.secondKey);
+    });
+
+    test("removeBlocks deletes the whole selection in one undo step", async function (assert) {
+      this.editor.removeBlocks([this.firstKey, this.secondKey]);
+      assert.strictEqual(
+        outletChildren(this.editor).length,
+        0,
+        "both blocks removed"
+      );
+
+      await this.editor.undo();
+      assert.strictEqual(
+        outletChildren(this.editor).length,
+        2,
+        "a single undo restores both"
+      );
+    });
+
+    test("removeBlocks skips the outlet root", function (assert) {
+      const rootKey = this.editor.readResolvedLayout("homepage-blocks")[0];
+      const rootEntryKey = `layout:${rootKey.__stableKey}`;
+      this.editor.removeBlocks([rootEntryKey, this.firstKey]);
+
+      const after = outletChildren(this.editor);
+      assert.strictEqual(after.length, 1, "the non-root block is removed");
+      assert.strictEqual(
+        after[0].args.title,
+        "Second",
+        "the root (and its surviving child) stay"
+      );
     });
 
     test("updateSelectedConditions feeds the undo stack", async function (assert) {

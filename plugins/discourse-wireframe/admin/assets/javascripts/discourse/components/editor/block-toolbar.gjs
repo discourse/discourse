@@ -1,7 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -9,9 +9,16 @@ import { service } from "@ember/service";
 import { isPartKey } from "discourse/lib/blocks/-internals/composite";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DComboButton from "discourse/ui-kit/d-combo-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { i18n } from "discourse-i18n";
+
+// Quick-pick copy counts offered by the Duplicate button's dropdown, alongside
+// a custom field. Stamping out a row of identical cards is then one gesture
+// instead of N clicks.
+const DUPLICATE_PRESETS = [2, 3, 5, 10];
 
 /**
  * Floating contextual bar shown above each block chrome. Two regions
@@ -54,6 +61,15 @@ export default class BlockToolbar extends Component {
    * is typing.
    */
   @tracked editorValue = "";
+
+  /**
+   * Copy count for the Duplicate dropdown's custom field. Read from the
+   * template (the number input + its apply button), so it stays unprefixed.
+   */
+  @tracked customDuplicateCount = 2;
+
+  /** FloatKit menu API for the Duplicate dropdown, captured so a pick can close it. */
+  #duplicateMenu = null;
 
   get canMoveUp() {
     return this.wireframe.canMoveSelectedUp;
@@ -151,6 +167,26 @@ export default class BlockToolbar extends Component {
   @action
   duplicate() {
     this.wireframe.duplicateBlock(this.args.blockKey);
+  }
+
+  @action
+  registerDuplicateMenu(api) {
+    this.#duplicateMenu = api;
+  }
+
+  @action
+  updateCustomDuplicateCount(event) {
+    // Clamp to a sane positive integer; an empty/invalid field falls back to 1.
+    this.customDuplicateCount = Math.max(
+      1,
+      parseInt(event.target.value, 10) || 1
+    );
+  }
+
+  @action
+  async duplicateTimes(count) {
+    await this.#duplicateMenu?.close();
+    this.wireframe.duplicateBlock(this.args.blockKey, count);
   }
 
   @action
@@ -351,13 +387,62 @@ export default class BlockToolbar extends Component {
               @disabled={{if this.canMoveDown false true}}
               @action={{this.moveDown}}
             />
-            <DButton
-              class="btn-flat wireframe-block-toolbar__btn"
-              @icon="copy"
-              @title="wireframe.canvas.toolbar.duplicate"
-              @ariaLabel="wireframe.canvas.toolbar.duplicate"
-              @action={{this.duplicate}}
-            />
+            <DComboButton class="wireframe-block-toolbar__duplicate" as |combo|>
+              <combo.Button
+                class="btn-flat wireframe-block-toolbar__btn"
+                @icon="copy"
+                @title="wireframe.canvas.toolbar.duplicate"
+                @ariaLabel="wireframe.canvas.toolbar.duplicate"
+                @action={{this.duplicate}}
+              />
+              <combo.Menu
+                class="btn-flat wireframe-block-toolbar__btn"
+                @identifier="wireframe-duplicate-count"
+                @title={{i18n "wireframe.canvas.toolbar.duplicate_count"}}
+                @ariaLabel={{i18n "wireframe.canvas.toolbar.duplicate_count"}}
+                @onRegisterApi={{this.registerDuplicateMenu}}
+              >
+                <DDropdownMenu as |dropdown|>
+                  {{#each DUPLICATE_PRESETS as |n|}}
+                    <dropdown.item>
+                      <DButton
+                        class="btn-flat"
+                        @translatedLabel={{i18n
+                          "wireframe.canvas.toolbar.duplicate_n"
+                          count=n
+                        }}
+                        @action={{fn this.duplicateTimes n}}
+                      />
+                    </dropdown.item>
+                  {{/each}}
+                  <dropdown.item
+                    class="wireframe-block-toolbar__duplicate-custom"
+                  >
+                    {{! The dropdown content renders in a FloatKit portal, so
+                      this input isn't actually nested inside the toolbar in the
+                      DOM — the lexical nesting is a false positive. }}
+                    {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+                    <input
+                      type="number"
+                      min="1"
+                      aria-label={{i18n
+                        "wireframe.canvas.toolbar.duplicate_custom"
+                      }}
+                      value={{this.customDuplicateCount}}
+                      {{on "input" this.updateCustomDuplicateCount}}
+                    />
+                    <DButton
+                      class="btn-flat"
+                      @label="wireframe.canvas.toolbar.duplicate_apply"
+                      @action={{fn
+                        this.duplicateTimes
+                        this.customDuplicateCount
+                      }}
+                    />
+                  </dropdown.item>
+                </DDropdownMenu>
+              </combo.Menu>
+            </DComboButton>
             {{#if this.canDetach}}
               <DButton
                 class="btn-flat wireframe-block-toolbar__btn"
