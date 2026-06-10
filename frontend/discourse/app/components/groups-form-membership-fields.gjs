@@ -22,7 +22,6 @@ const JoinMethodOption = <template>
       @value={{@value}}
       @selection={{@selection}}
       @onChange={{@onChange}}
-      @disabled={{@disabled}}
       class={{@class}}
     />
 
@@ -137,9 +136,29 @@ export default class GroupsFormMembershipFields extends Component {
     return "invite";
   }
 
-  @computed("model.visibility_level")
-  get joinMethodDisabled() {
-    return parseInt(this.model?.visibility_level, 10) > 1;
+  @computed("joinMethod")
+  get joinRequiresVisibility() {
+    return this.joinMethod !== "invite";
+  }
+
+  // Non-admins can't edit visibility, so when the group isn't visible the only
+  // valid join method is invite-only — hide the options that need visibility.
+  @computed("canAdminGroup", "model.visibility_level")
+  get restrictToInviteOnly() {
+    return (
+      !this.canAdminGroup && parseInt(this.model?.visibility_level, 10) > 1
+    );
+  }
+
+  // "Who can see this group?" can't be more private than the join method allows,
+  // so the restricted levels are dropped when joining doesn't require an invite.
+  @computed("joinRequiresVisibility", "visibilityLevelOptions")
+  get groupVisibilityLevelOptions() {
+    if (this.joinRequiresVisibility) {
+      return this.visibilityLevelOptions.filter((option) => option.value <= 1);
+    }
+
+    return this.visibilityLevelOptions;
   }
 
   @computed("model.emailDomains")
@@ -152,19 +171,18 @@ export default class GroupsFormMembershipFields extends Component {
   }
 
   @action
-  setVisibilityLevel(value) {
-    this.model.set("visibility_level", value);
-
-    if (parseInt(value, 10) > 1) {
-      this.model.set("public_admission", false);
-      this.model.set("allow_membership_requests", false);
-    }
-  }
-
-  @action
   setJoinMethod(value) {
     this.model.set("public_admission", value === "free");
     this.model.set("allow_membership_requests", value === "request");
+
+    // Free/request require a visible group, so open up a restricted visibility.
+    if (
+      this.canAdminGroup &&
+      value !== "invite" &&
+      parseInt(this.model?.visibility_level, 10) > 1
+    ) {
+      this.model.set("visibility_level", 0);
+    }
   }
 
   @action
@@ -182,48 +200,26 @@ export default class GroupsFormMembershipFields extends Component {
           {{i18n "groups.manage.membership.visibility_and_access"}}
         </label>
 
-        {{#if this.canAdminGroup}}
-          <label>
-            {{i18n "admin.groups.manage.interaction.visibility_levels.title"}}
-          </label>
-
-          <ComboBox
-            @name="alias"
-            @valueProperty="value"
-            @value={{this.model.visibility_level}}
-            @content={{this.visibilityLevelOptions}}
-            @onChange={{this.setVisibilityLevel}}
-            @options={{hash castInteger=true}}
-            class="groups-form-visibility-level"
-          />
-
-          <div class="control-instructions">
-            {{i18n
-              "admin.groups.manage.interaction.visibility_levels.description"
-            }}
-          </div>
-        {{/if}}
-
         <fieldset class="groups-form-join-method">
           <legend>{{i18n "groups.manage.membership.join_method_title"}}</legend>
 
-          <JoinMethodOption
-            @value="free"
-            @label={{i18n "groups.manage.membership.join_method.free"}}
-            @class="group-form-public-admission"
-            @selection={{this.joinMethod}}
-            @onChange={{fn this.setJoinMethod "free"}}
-            @disabled={{this.joinMethodDisabled}}
-          />
+          {{#unless this.restrictToInviteOnly}}
+            <JoinMethodOption
+              @value="free"
+              @label={{i18n "groups.manage.membership.join_method.free"}}
+              @class="group-form-public-admission"
+              @selection={{this.joinMethod}}
+              @onChange={{fn this.setJoinMethod "free"}}
+            />
 
-          <JoinMethodOption
-            @value="request"
-            @label={{i18n "groups.manage.membership.join_method.request"}}
-            @class="group-form-allow-membership-requests"
-            @selection={{this.joinMethod}}
-            @onChange={{fn this.setJoinMethod "request"}}
-            @disabled={{this.joinMethodDisabled}}
-          />
+            <JoinMethodOption
+              @value="request"
+              @label={{i18n "groups.manage.membership.join_method.request"}}
+              @class="group-form-allow-membership-requests"
+              @selection={{this.joinMethod}}
+              @onChange={{fn this.setJoinMethod "request"}}
+            />
+          {{/unless}}
 
           <JoinMethodOption
             @value="invite"
@@ -252,12 +248,6 @@ export default class GroupsFormMembershipFields extends Component {
               />
             </div>
           {{/if}}
-
-          {{#if this.joinMethodDisabled}}
-            <div class="control-instructions">
-              {{i18n "groups.manage.membership.join_method_visibility_hint"}}
-            </div>
-          {{/if}}
         </fieldset>
 
         <label class="group-form-public-exit-label">
@@ -271,6 +261,26 @@ export default class GroupsFormMembershipFields extends Component {
         </label>
 
         {{#if this.canAdminGroup}}
+          <label class="groups-form-visibility-label">
+            {{i18n "admin.groups.manage.interaction.visibility_levels.title"}}
+          </label>
+
+          <ComboBox
+            @name="alias"
+            @valueProperty="value"
+            @value={{this.model.visibility_level}}
+            @content={{this.groupVisibilityLevelOptions}}
+            @onChange={{fn (mut this.model.visibility_level)}}
+            @options={{hash castInteger=true}}
+            class="groups-form-visibility-level"
+          />
+
+          <div class="control-instructions">
+            {{i18n
+              "admin.groups.manage.interaction.visibility_levels.description"
+            }}
+          </div>
+
           <label class="groups-form-members-visibility-label">
             {{i18n
               "admin.groups.manage.interaction.members_visibility_levels.title"

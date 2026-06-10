@@ -4,8 +4,8 @@
 }
 
 .groups-form-visibility-access {
+  .groups-form-visibility-label,
   .groups-form-members-visibility-label,
-  .groups-form-join-method,
   .group-form-public-exit-label {
     margin-top: var(--space-4);
   }
@@ -31,13 +31,5 @@
 
   .groups-form-membership-request-template {
     margin-top: var(--space-4);
-  }
-
-  .radio:has([disabled]) {
-    color: var(--primary-medium);
-
-    &:hover {
-      cursor: not-allowed;
-    }
   }
 }
