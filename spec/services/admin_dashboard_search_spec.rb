@@ -152,6 +152,24 @@ RSpec.describe AdminDashboardSearch do
       ).to eq(key: "admin.dashboard.sections.search.headline.healthy")
     end
 
+    it "resolves overlapping headline states by priority" do
+      Fabricate.times(3, :search_log, term: "ghost", created_at: "2026-02-02 10:00")
+      Fabricate.times(7, :clicked_search_log, term: "ruby", created_at: "2026-02-02 11:00")
+      Fabricate.times(10, :clicked_search_log, term: "ruby", created_at: "2026-01-27 10:00")
+
+      Fabricate(:search_log, term: "ghost", created_at: "2026-01-02 10:00")
+      Fabricate.times(9, :clicked_search_log, term: "ruby", created_at: "2026-01-02 11:00")
+      Fabricate.times(20, :clicked_search_log, term: "ruby", created_at: "2025-12-27 10:00")
+
+      expect(
+        described_class.build(start_date: "2026-02-01", end_date: "2026-02-07")[:headline],
+      ).to eq(key: "admin.dashboard.sections.search.headline.content_gaps")
+
+      expect(
+        described_class.build(start_date: "2026-01-01", end_date: "2026-01-07")[:headline],
+      ).to eq(key: "admin.dashboard.sections.search.headline.rate_climbing")
+    end
+
     it "omits deltas when the prior window has no searches" do
       Fabricate.times(2, :clicked_search_log, term: "ruby", created_at: "2026-05-02 10:00")
 

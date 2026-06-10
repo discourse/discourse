@@ -122,6 +122,13 @@ describe "Admin Dashboard Redesign | Search section" do
       expect(page).to have_current_path("/admin/logs/search_logs/term?period=weekly&term=ruby")
 
       dashboard.visit
+      dashboard.select_preset("last_3_months")
+
+      expect(dashboard.search).to have_headline(
+        "Members ran 90 on-site searches in the last 3 months.",
+        "Members keep finding what they search for, and search volume is steady or growing.",
+      )
+
       dashboard.search.click_content_gap_term("discobot")
 
       expect(page).to have_current_path("/search?q=discobot")
@@ -181,6 +188,8 @@ describe "Admin Dashboard Redesign | Search section" do
 
       Fabricate.times(5, :search_log, term: "ruby", created_at: "2026-04-30 10:00")
 
+      Fabricate(:search_log, term: "solo", created_at: "2026-04-25 10:00")
+
       dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-03")
       search = dashboard.search
 
@@ -192,6 +201,14 @@ describe "Admin Dashboard Redesign | Search section" do
       expect(search).to have_total_searches("3", delta: { text: "-40%", direction: "neg" })
       expect(search).to have_no_result_rate("0%", delta: { text: "-100%", direction: "pos" })
       expect(search).to have_trending_rows([{ term: "ruby", searches: 3 }])
+
+      dashboard.visit_with_query(range: "custom", start_date: "2026-04-25", end_date: "2026-04-25")
+
+      expect(search).to have_headline(
+        "Members ran 1 on-site search in the selected period.",
+        "More than 10% of searches ended without a click this period. " \
+          "Review the content gaps below to see what's missing.",
+      )
     end
   end
 end
