@@ -17,6 +17,30 @@ RSpec.describe SvgSpriteController do
       expect(response.status).to eq(200)
     end
 
+    it "serves aliased glyphs for a theme that declares an icon set" do
+      theme = Fabricate(:theme)
+      fname = "phosphor-multiweight-sprite.svg"
+      upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
+      theme.set_field(
+        target: :common,
+        name: SvgSprite.theme_sprite_variable_name,
+        upload_id: upload.id,
+        type: :theme_upload_var,
+      )
+      theme.set_field(
+        target: :common,
+        name: SvgSprite::ICON_SET_FIELD_NAME,
+        type: :json,
+        value: { "map" => { "bell" => "ph-regular-bell" } }.to_json,
+      )
+      theme.save!
+
+      get "/svg-sprite/#{Discourse.current_hostname}/svg-#{theme.id}-#{SvgSprite.version(theme.id)}.js"
+      expect(response.status).to eq(200)
+      expect(response.body).to include("M128 24a8") # the Phosphor glyph, aliased onto #bell
+      expect(response.body).not_to include("ph-regular-bell") # raw id not served
+    end
+
     it "should redirect to current version" do
       random_hash = Digest::SHA1.hexdigest("somerandomstring")
       get "/svg-sprite/#{Discourse.current_hostname}/svg--#{random_hash}.js"

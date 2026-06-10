@@ -36,6 +36,8 @@ class ThemeField < ActiveRecord::Base
     if upload && svg_sprite_field?
       upsert_svg_sprite!
       SvgSprite.expire_cache
+    elsif icon_set_field? && saved_change_to_value?
+      SvgSprite.expire_cache
     end
   end
 
@@ -43,6 +45,13 @@ class ThemeField < ActiveRecord::Base
     if svg_sprite_field?
       ThemeSvgSprite.where(theme_id: theme_id).delete_all
 
+      SvgSprite.expire_cache
+    elsif icon_set_field?
+      SvgSprite.expire_cache
+    elsif settings_field? && SvgSprite.theme_declares_icon_set?(theme_id)
+      # An icon set's variant values can resolve from settings defaults, so
+      # removing the settings YAML changes the bundled sprite. (Settings
+      # *changes* are covered by the bake-time expiry in ensure_baked!.)
       SvgSprite.expire_cache
     end
   end
@@ -357,6 +366,11 @@ class ThemeField < ActiveRecord::Base
 
   def svg_sprite_field?
     ThemeField.theme_var_type_ids.include?(type_id) && name == SvgSprite.theme_sprite_variable_name
+  end
+
+  def icon_set_field?
+    name == SvgSprite::ICON_SET_FIELD_NAME && target_id == Theme.targets[:common] &&
+      type_id == ThemeField.types[:json]
   end
 
   def migration_field?

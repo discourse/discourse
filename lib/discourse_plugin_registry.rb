@@ -97,6 +97,8 @@ class DiscoursePluginRegistry
   define_filtered_register :topic_preloader_associations
   define_filtered_register :category_list_topics_preloader_associations
 
+  define_filtered_register :icon_sets
+
   define_filtered_register :api_parameter_routes
   define_filtered_register :api_key_scope_mappings
   define_filtered_register :user_api_key_scope_mappings

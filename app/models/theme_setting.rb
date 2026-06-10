@@ -28,6 +28,16 @@ class ThemeSetting < ActiveRecord::Base
   after_destroy :clear_settings_cache
   after_save :clear_settings_cache
 
+  # An icon set can resolve its glyph variants from setting values (see
+  # SvgSprite.build_icon_set), so changing a referenced setting can change the
+  # bundled sprite.
+  after_save do
+    if saved_change_to_value? && SvgSprite.icon_set_theme_setting?(theme_id, name)
+      SvgSprite.expire_cache
+    end
+  end
+  after_destroy { SvgSprite.expire_cache if SvgSprite.icon_set_theme_setting?(theme_id, name) }
+
   after_save do
     if data_type == ThemeSetting.types[:upload] && saved_change_to_value?
       UploadReference.ensure_exist!(upload_ids: [value], target: self)

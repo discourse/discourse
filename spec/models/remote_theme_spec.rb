@@ -12,6 +12,175 @@ RSpec.describe RemoteTheme do
       .returns([1024, 768])
   end
 
+  describe "icon_set import" do
+    let(:icon_map) { { "bell" => "ph-{weight}-bell", "heart" => "ph-fill-heart" } }
+    let(:repos) { [] }
+
+    after { repos.each { |repo| `rm -fr #{repo}` } }
+
+    around(:each) { |group| MockGitImporter.with_mock { group.run } }
+
+    def import!(icon_set:, extra_files: {})
+      about = { name: "icon set theme", icon_set: icon_set }.to_json
+      repos << (repo = setup_git_repo({ "about.json" => about }.merge(extra_files)))
+      RemoteTheme.import_theme(MockGitImporter.register("https://example.com/icon_set.git", repo))
+    end
+
+    def stored(theme)
+      field = theme.theme_fields.find_by(name: SvgSprite::ICON_SET_FIELD_NAME)
+      field && JSON.parse(field.value)
+    end
+
+    it "imports an inline map" do
+      theme = import!(icon_set: { "map" => icon_map })
+      expect(stored(theme)).to eq("map" => icon_map)
+    end
+
+    it "round-trips through theme export metadata" do
+      theme = import!(icon_set: { "map" => icon_map })
+      expect(theme.generate_metadata_hash[:icon_set]).to eq("map" => icon_map)
+    end
+
+    it "raises when a map key is not a valid icon name" do
+      expect {
+        import!(icon_set: { "map" => { 'bell" onload="x' => "ph-regular-bell" } })
+      }.to raise_error(RemoteTheme::ImportError, /icon names/)
+    end
+
+    it "reads the map from a referenced file" do
+      theme =
+        import!(
+          icon_set: {
+            "map" => "assets/icon-map.json",
+          },
+          extra_files: {
+            "assets/icon-map.json" => icon_map.to_json,
+          },
+        )
+      expect(stored(theme)["map"]).to eq(icon_map)
+    end
+
+    it "raises when the referenced map file is missing" do
+      expect { import!(icon_set: { "map" => "assets/missing.json" }) }.to raise_error(
+        RemoteTheme::ImportError,
+        /was not found/,
+      )
+    end
+
+    it "raises when the referenced map path is not a file" do
+      expect {
+        import!(
+          icon_set: {
+            "map" => "assets",
+          },
+          extra_files: {
+            "assets/placeholder.txt" => "placeholder",
+          },
+        )
+      }.to raise_error(RemoteTheme::ImportError, /map path is not a file/)
+    end
+
+    it "applies the asset size limit to a referenced map before reading it" do
+      large_icon_map = (1..100).index_with { |index| "ph-icon-#{index}" }
+
+      stub_const(RemoteTheme, "MAX_ASSET_FILE_SIZE", 200.bytes) do
+        expect {
+          import!(
+            icon_set: {
+              "map" => "assets/icon-map.json",
+            },
+            extra_files: {
+              "assets/icon-map.json" => large_icon_map.to_json,
+            },
+          )
+        }.to raise_error(
+          RemoteTheme::ImportError,
+          I18n.t(
+            "themes.import_error.asset_too_big",
+            filename: "assets/icon-map.json",
+            limit: ActiveSupport::NumberHelper.number_to_human_size(200),
+          ),
+        )
+      end
+    end
+
+    it "includes a referenced map in the total theme size limit" do
+      about = { name: "icon set theme", icon_set: { "map" => "assets/icon-map.json" } }.to_json
+      total_size = about.bytesize + icon_map.to_json.bytesize
+
+      stub_const(RemoteTheme, "MAX_THEME_SIZE", (total_size - 1).bytes) do
+        expect {
+          import!(
+            icon_set: {
+              "map" => "assets/icon-map.json",
+            },
+            extra_files: {
+              "assets/icon-map.json" => icon_map.to_json,
+            },
+          )
+        }.to raise_error(
+          RemoteTheme::ImportError,
+          I18n.t(
+            "themes.import_error.theme_too_big",
+            limit: ActiveSupport::NumberHelper.number_to_human_size(total_size - 1),
+          ),
+        )
+      end
+    end
+
+    it "raises when the map is empty" do
+      expect { import!(icon_set: { "map" => {} }) }.to raise_error(
+        RemoteTheme::ImportError,
+        /map must be an object/,
+      )
+    end
+
+    it "raises when icon_set carries a key other than map" do
+      expect {
+        import!(icon_set: { "map" => icon_map, "ignore_setting" => "whatever" })
+      }.to raise_error(RemoteTheme::ImportError, /unknown keys: ignore_setting/)
+    end
+
+    it "raises when icon_set is not an object" do
+      expect { import!(icon_set: [1, 2]) }.to raise_error(
+        RemoteTheme::ImportError,
+        /icon_set must be an object/,
+      )
+    end
+
+    it "raises when icon_set is an empty object" do
+      expect { import!(icon_set: {}) }.to raise_error(
+        RemoteTheme::ImportError,
+        /map must be an object/,
+      )
+    end
+
+    it "raises when a map value is not a string" do
+      expect { import!(icon_set: { "map" => { "bell" => 5 } }) }.to raise_error(
+        RemoteTheme::ImportError,
+        /map must be an object/,
+      )
+    end
+
+    it "updates the field on re-import and destroys it when icon_set is removed" do
+      theme = import!(icon_set: { "map" => icon_map })
+
+      add_to_git_repo(
+        repos.last,
+        "about.json" => { name: "icon set theme", icon_set: { map: { gear: "ph-gear" } } }.to_json,
+      )
+      theme.remote_theme.update_from_remote
+      theme.reload
+      expect(theme.theme_fields.where(name: SvgSprite::ICON_SET_FIELD_NAME).count).to eq(1)
+      expect(stored(theme)["map"]).to eq("gear" => "ph-gear")
+
+      add_to_git_repo(repos.last, "about.json" => { name: "icon set theme" }.to_json)
+      theme.remote_theme.update_from_remote
+      theme.reload
+      expect(stored(theme)).to be_nil
+    end
+  end
+
   describe "#import_theme" do
     def about_json(
       love_color: "FAFAFA",
