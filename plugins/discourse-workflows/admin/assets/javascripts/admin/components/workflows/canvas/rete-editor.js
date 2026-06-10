@@ -331,6 +331,10 @@ export class ReteEditorBridge {
         context.type === "connectioncreated" ||
         context.type === "connectionremoved"
       ) {
+        if (context.type === "connectioncreated") {
+          this.annotateConnectionIndexes(context.data);
+        }
+
         this.updateRendererGraphIndex();
         this.renderer.scheduleConnectionUpdate();
 
@@ -340,7 +344,8 @@ export class ReteEditorBridge {
             conn.source,
             conn.sourceOutput,
             conn.target,
-            conn.targetInput
+            conn.targetInput,
+            conn.sourceOutputIndex
           );
         }
       }
@@ -430,19 +435,17 @@ export class ReteEditorBridge {
     }
   }
 
-  connectionKeyFromClientIds(connection) {
-    return graphConnectionKey({
-      source: connection.sourceClientId,
-      sourceOutputIndex: normalizeSourceOutputIndex(connection),
-      target: connection.targetClientId,
-      targetInputIndex: normalizeTargetInputIndex(connection),
-    });
+  outputIndexFor(sourceNode, connection) {
+    return normalizeSourceOutputIndex(
+      connection,
+      Object.keys(sourceNode?.outputs || {})
+    );
   }
 
   outputKeyFor(sourceNode, connection) {
     return (
-      Object.keys(sourceNode.outputs || {})[
-        normalizeSourceOutputIndex(connection)
+      Object.keys(sourceNode?.outputs || {})[
+        this.outputIndexFor(sourceNode, connection)
       ] || normalizeSourceOutput(connection.sourceOutput)
     );
   }
@@ -453,6 +456,15 @@ export class ReteEditorBridge {
         normalizeTargetInputIndex(connection)
       ] || normalizeTargetInput(connection.targetInput)
     );
+  }
+
+  annotateConnectionIndexes(connection) {
+    const sourceNode = this.editor.getNode(
+      connection.sourceClientId || connection.source
+    );
+
+    connection.sourceOutputIndex = this.outputIndexFor(sourceNode, connection);
+    return connection;
   }
 
   buildDesiredGraphConnections(connections) {
@@ -466,7 +478,15 @@ export class ReteEditorBridge {
         continue;
       }
 
-      const key = this.connectionKeyFromClientIds(connection);
+      const sourceOutputIndex = this.outputIndexFor(sourceNode, connection);
+      const targetInputIndex = normalizeTargetInputIndex(connection);
+      const key = graphConnectionKey({
+        source: connection.sourceClientId,
+        sourceOutputIndex,
+        target: connection.targetClientId,
+        targetInputIndex,
+      });
+
       if (seen.has(key)) {
         continue;
       }
@@ -475,10 +495,10 @@ export class ReteEditorBridge {
       graphConnections.push({
         source: connection.sourceClientId,
         sourceOutput: this.outputKeyFor(sourceNode, connection),
-        sourceOutputIndex: normalizeSourceOutputIndex(connection),
+        sourceOutputIndex,
         target: connection.targetClientId,
         targetInput: this.inputKeyFor(targetNode, connection),
-        targetInputIndex: normalizeTargetInputIndex(connection),
+        targetInputIndex,
       });
     }
 
@@ -491,7 +511,9 @@ export class ReteEditorBridge {
         id: node.id,
         type: node.workflowData.type,
       })),
-      connections
+      connections.map((connection) =>
+        this.annotateConnectionIndexes(connection)
+      )
     );
   }
 
@@ -532,14 +554,18 @@ export class ReteEditorBridge {
       return;
     }
 
-    await this.editor.addConnection(
-      new this.ClassicPreset.Connection(
-        sourceNode,
-        this.outputKeyFor(sourceNode, { sourceOutput, sourceOutputIndex }),
-        targetNode,
-        this.inputKeyFor(targetNode, { targetInput, targetInputIndex })
-      )
+    const connection = new this.ClassicPreset.Connection(
+      sourceNode,
+      this.outputKeyFor(sourceNode, { sourceOutput, sourceOutputIndex }),
+      targetNode,
+      this.inputKeyFor(targetNode, { targetInput, targetInputIndex })
     );
+    connection.sourceOutputIndex = this.outputIndexFor(sourceNode, {
+      sourceOutput,
+      sourceOutputIndex,
+    });
+
+    await this.editor.addConnection(connection);
   }
 
   async syncState(nodes, connections) {
@@ -612,13 +638,17 @@ export class ReteEditorBridge {
       this.updateRendererGraphIndex(desiredGraphConnections);
 
       const desiredConnectionKeys = new Set(
-        connections.map((c) => this.connectionKeyFromClientIds(c))
+        desiredGraphConnections.map((connection) =>
+          graphConnectionKey(connection)
+        )
       );
       const existingConnections = this.editor.getConnections();
       const existingConnectionKeys = new Map();
 
       for (const connection of existingConnections) {
-        const key = graphConnectionKey(connection);
+        const key = graphConnectionKey(
+          this.annotateConnectionIndexes(connection)
+        );
 
         if (!desiredConnectionKeys.has(key)) {
           await this.editor.removeConnection(connection.id);
@@ -628,20 +658,20 @@ export class ReteEditorBridge {
         existingConnectionKeys.set(key, connection.id);
       }
 
-      for (const connection of connections) {
-        const key = this.connectionKeyFromClientIds(connection);
+      for (const connection of desiredGraphConnections) {
+        const key = graphConnectionKey(connection);
 
         if (existingConnectionKeys.has(key)) {
           continue;
         }
 
         await this.addConnection(
-          connection.sourceClientId,
-          normalizeSourceOutput(connection.sourceOutput),
-          connection.targetClientId,
-          normalizeTargetInput(connection.targetInput),
-          normalizeSourceOutputIndex(connection),
-          normalizeTargetInputIndex(connection)
+          connection.source,
+          connection.sourceOutput,
+          connection.target,
+          connection.targetInput,
+          connection.sourceOutputIndex,
+          connection.targetInputIndex
         );
         existingConnectionKeys.set(key, true);
       }
