@@ -20,6 +20,9 @@ RSpec.describe AdminDashboardSearch do
 
       Fabricate.times(4, :search_log, term: "discobot", created_at: "2026-05-04 10:00")
 
+      Fabricate.times(2, :clicked_search_log, term: "zeta", created_at: "2026-05-04 11:00")
+      Fabricate.times(2, :search_log, term: "zeta", created_at: "2026-05-04 12:00")
+
       Fabricate.times(5, :clicked_search_log, term: "ruby", created_at: "2026-04-26 10:00")
       Fabricate.times(5, :search_log, term: "ghost", created_at: "2026-04-26 11:00")
 
@@ -27,18 +30,19 @@ RSpec.describe AdminDashboardSearch do
         logging_enabled: true,
         kpis: {
           total_searches: {
-            value: 15,
-            percent_change: 50,
+            value: 19,
+            percent_change: 90,
           },
           no_result_rate: {
-            value: 27,
-            point_change: -23,
+            value: 21,
+            point_change: -29,
             exceeds_threshold: true,
           },
         },
         trending: [
           { term: "ruby", searches: 6 },
           { term: "markdown tables", searches: 5 },
+          { term: "zeta", searches: 4 },
           { term: "discobot", searches: 4 },
         ],
         trending_period: "weekly",
@@ -60,15 +64,16 @@ RSpec.describe AdminDashboardSearch do
       Fabricate.times(4, :search_log, term: "exact-twenty", created_at: "2026-05-04 11:00")
 
       Fabricate.times(3, :search_log, term: "zero-clicks", created_at: "2026-05-05 10:00")
+      Fabricate.times(3, :search_log, term: "alpha-zero", created_at: "2026-05-05 11:00")
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
         kpis: {
           total_searches: {
-            value: 133,
+            value: 136,
           },
           no_result_rate: {
-            value: 2,
+            value: 4,
             exceeds_threshold: false,
           },
         },
@@ -76,12 +81,14 @@ RSpec.describe AdminDashboardSearch do
           { term: "tiny-ctr", searches: 101 },
           { term: "just-over", searches: 24 },
           { term: "exact-twenty", searches: 5 },
+          { term: "alpha-zero", searches: 3 },
           { term: "zero-clicks", searches: 3 },
         ],
         trending_period: "weekly",
         content_gaps: [
           { term: "tiny-ctr", searches: 101, status: "poor_match" },
           { term: "exact-twenty", searches: 5, status: "poor_match" },
+          { term: "alpha-zero", searches: 3, status: "no_match" },
           { term: "zero-clicks", searches: 3, status: "no_match" },
         ],
       )
