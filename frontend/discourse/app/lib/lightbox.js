@@ -327,7 +327,8 @@ async function initLightbox(elem, additionalData = {}) {
     // this ensures that cropped images (eg: grid) do not cause jittering when closing
     data.thumbCropped = true;
 
-    data.src = data.src || el.getAttribute("data-large-src");
+    data.src ||= el.getAttribute("data-large-src");
+    data.msrc ||= imgEl?.currentSrc || imgEl?.src;
     data.origSrc =
       imgEl?.getAttribute("data-orig-src") ||
       el.getAttribute("data-orig-src") ||
