@@ -1018,6 +1018,9 @@ en:
           disable_streaming: "Disable streaming completions (convert streaming to non streaming requests)"
           reasoning_effort: "Reasoning effort (only applicable to reasoning models)"
           service_tier: "Service tier (flex = lower cost/higher latency, priority = faster processing)"
+          reasoning_parser: "vLLM reasoning parser"
+          thinking_override: "Thinking override"
+          thinking_token_budget: "Thinking token budget"
           enable_reasoning: "Enable reasoning (only applicable to reasoning models)"
           adaptive_thinking: "Enable adaptive thinking (recommended for Claude 4.6 models)"
           enable_thinking: "Enable thinking (Gemini 2.5 models - uses token budget)"
@@ -1031,6 +1034,12 @@ en:
           prompt_caching_tool_results: "Tool Results - Cache when tool results are present (recommended)"
           prompt_caching_always: "Always - Always use prompt caching"
           effort: "Effort level"
+
+        provider_field_hints:
+          reasoning_parser: "Must match the vLLM server --reasoning-parser setting. Discourse cannot switch parsers per request; it uses this to shape request options."
+          thinking_override: "Optionally force supported vLLM chat templates to enable or disable thinking for each request. Unsupported parsers keep the server default."
+          reasoning_effort: "Sends vLLM's reasoning_effort request option for parsers that support it."
+          thinking_token_budget: "Optional cap for reasoning tokens. Requires a vLLM reasoning parser and is ignored when reasoning effort is None."
 
       related_topics:
         title: "Related topics"
