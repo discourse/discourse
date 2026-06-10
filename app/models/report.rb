@@ -475,8 +475,19 @@ class Report
   end
 
   def self.report_about(report, subject_class, report_method = :count_per_day)
-    basic_report_about report, subject_class, report_method, report.start_date, report.end_date
-    add_counts report, subject_class
+    data_start = report.facets.include?(:prev_period) ? report.prev_start_date : report.start_date
+    counts = subject_class.public_send(report_method, data_start, report.end_date)
+
+    prev_period_count = nil
+
+    if report.facets.include?(:prev_period)
+      counts, prev_counts = split_date_counts(counts, report.start_date)
+      prev_period_count = prev_counts.sum { |_date, count| count }
+    end
+
+    report.data = counts.map { |date, count| { x: date, y: count } }
+
+    add_counts report, subject_class, prev_period_count: prev_period_count
   end
 
   def self.basic_report_about(report, subject_class, report_method, *args)
@@ -499,16 +510,18 @@ class Report
     end
   end
 
-  def self.add_counts(report, subject_class, query_column = "created_at")
+  def self.add_counts(report, subject_class, query_column = "created_at", prev_period_count: nil)
     if report.facets.include?(:prev_period)
-      prev_data =
-        subject_class.where(
-          "#{query_column} >= ? and #{query_column} < ?",
-          report.prev_start_date,
-          report.prev_end_date,
-        )
-
-      report.prev_period = prev_data.count
+      report.prev_period =
+        if prev_period_count
+          prev_period_count
+        else
+          subject_class.where(
+            "#{query_column} >= ? and #{query_column} < ?",
+            report.prev_start_date,
+            report.prev_end_date,
+          ).count
+        end
     end
 
     report.total = subject_class.count if report.facets.include?(:total)
