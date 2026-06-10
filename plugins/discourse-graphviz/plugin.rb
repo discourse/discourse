@@ -14,9 +14,13 @@ register_asset "stylesheets/common/graphviz.scss"
 
 module ::DiscourseGraphviz
   ALLOWED_URL_SCHEMES = %w[http https].freeze
+  ALLOWED_ENGINES = %w[dot neato circo fdp osage twopi].freeze
+  DEFAULT_ENGINE = "dot"
+
+  RENDER_TIMEOUT_MS = 5_000
 
   def self.context
-    context = MiniRacer::Context.new
+    context = MiniRacer::Context.new(timeout: RENDER_TIMEOUT_MS)
     context.load("#{Rails.root.join("plugins/discourse-graphviz/public/javascripts/viz-3.0.1.js")}")
     context
   end
@@ -55,11 +59,15 @@ after_initialize do
       doc
         .css("div.graphviz")
         .each do |graph|
-          engine = graph.attribute("data-engine").value
+          engine = graph.attribute("data-engine")&.value
+          valid_engine = DiscourseGraphviz::ALLOWED_ENGINES.include?(engine)
+          engine = DiscourseGraphviz::DEFAULT_ENGINE if !valid_engine
           svg_graph =
             begin
-              DiscourseGraphviz.context.eval(
-                "vizRenderStringSync(#{graph.children[0].content.inspect}, {engine: '#{engine}'})",
+              DiscourseGraphviz.context.call(
+                "vizRenderStringSync",
+                graph.children[0].content,
+                { engine: engine },
               )
             rescue StandardError
               nil
