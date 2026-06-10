@@ -24,7 +24,9 @@ class NestedTopicsController < ApplicationController
         return
       end
 
-      render_flat_topic_html
+      response = list_roots_response(page: 0)
+      store_preloaded("nested_topic_#{@topic.id}", MultiJson.dump(response))
+      render_nested_topic_html(response)
       return
     end
 
@@ -64,7 +66,9 @@ class NestedTopicsController < ApplicationController
         return
       end
 
-      render_flat_topic_html(post_number: params[:post_number].to_i)
+      response = show_context_response
+      store_preloaded("nested_topic_#{@topic.id}", MultiJson.dump(response))
+      render_nested_topic_html(response)
       return
     end
 
@@ -161,22 +165,14 @@ class NestedTopicsController < ApplicationController
     result
   end
 
-  def render_flat_topic_html(post_number: nil)
-    opts = {}
-    opts[:post_number] = post_number if post_number.to_i > 0
+  def render_nested_topic_html(response)
+    @nested_response = response
+    @nested_topic = response[:topic]
+    @tags = SiteSetting.tagging_enabled ? @topic.tags.visible(guardian) : []
+    @breadcrumbs = helpers.categories_breadcrumb(@topic) || []
+    @description_meta = @topic.excerpt.presence || @topic_view.summary
 
-    @topic_view = TopicView.new(@topic.id, current_user, opts)
-    @topic = @topic_view.topic
-
-    if should_track_visit?
-      @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
-    end
-
-    @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags.visible(guardian) : []
-    @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
-    @description_meta = @topic_view.topic.excerpt.presence || @topic_view.summary
-
-    render "topics/show"
+    render "nested_topics/show"
   end
 
   def show_context_response
