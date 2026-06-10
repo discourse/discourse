@@ -18,7 +18,10 @@ describe "Theme qunit testing" do
     t
   end
 
-  it "lists themes and can run tests by id, name and url" do
+  # `/theme-qunit` boots the app's qunit harness, which is only part of
+  # development builds.
+  it "lists themes and can run tests by id, name and url",
+     if: !SystemHelpers.production_ember_build? do
     visit "/theme-qunit"
 
     expect(page).to have_css("a[href^='/theme-qunit?id=']", count: 1)
