@@ -227,6 +227,27 @@ RSpec.describe FileHelper do
       it "excludes SVG" do
         expect(FileHelper.inline_safe_files).not_to include("svg")
       end
+
+      it "only contains extensions that map to a non-scriptable content type" do
+        scriptable_content_types = %w[
+          text/html
+          application/xhtml+xml
+          image/svg+xml
+          application/xml
+          text/xml
+        ]
+
+        offenders =
+          FileHelper.inline_safe_files.select do |extension|
+            content_type = MiniMime.lookup_by_filename("file.#{extension}")&.content_type
+            next false if content_type.blank?
+
+            scriptable_content_types.include?(content_type) ||
+              content_type.match?(/(java|ecma)script/)
+          end
+
+        expect(offenders).to be_empty
+      end
     end
   end
 end
