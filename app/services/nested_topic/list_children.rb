@@ -54,27 +54,42 @@ class NestedTopic::ListChildren
     context[:flatten] = flattened?(params, loader)
     per_page = NestedReplies::TreeLoader::CHILDREN_PER_PAGE
 
-    children_scope =
-      if context[:flatten]
+    children_scope = nil
+    children_posts = nil
+
+    if context[:flatten]
+      children_scope =
         loader.flat_descendants_scope(
           params.parent_post_number,
           sort: params.sort,
           offset: params.page * per_page,
           limit: per_page,
         )
-      else
-        scope =
-          topic_view
-            .topic
-            .posts
-            .where(reply_to_post_number: params.parent_post_number)
-            .where(post_number: 2..)
-        scope = loader.apply_visibility(scope)
-        scope = NestedReplies::Sort.apply(scope, params.sort)
-        scope.offset(params.page * per_page).limit(per_page)
-      end
+    elsif params.sort == "hot"
+      child_ids =
+        loader.hot_sorted_child_ids(
+          params.parent_post_number,
+          offset: params.page * per_page,
+          limit: per_page,
+        )
+      children_posts =
+        loader.load_posts_for_tree(topic_view.topic.posts.with_deleted.where(id: child_ids)).to_a
+      hot_scores = loader.hot_scores_for_posts(children_posts)
+      children_posts =
+        NestedReplies::Sort.sort_in_memory(children_posts, params.sort, hot_scores: hot_scores)
+    else
+      children_scope =
+        topic_view
+          .topic
+          .posts
+          .where(reply_to_post_number: params.parent_post_number)
+          .where(post_number: 2..)
+      children_scope = loader.apply_visibility(children_scope)
+      children_scope = NestedReplies::Sort.apply(children_scope, params.sort)
+      children_scope = children_scope.offset(params.page * per_page).limit(per_page)
+    end
 
-    context[:children_posts] = loader.load_posts_for_tree(children_scope).to_a
+    context[:children_posts] = children_posts || loader.load_posts_for_tree(children_scope).to_a
     context[:children_map] = {}
     context[:all_posts] = context[:children_posts]
   end

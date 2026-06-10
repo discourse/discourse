@@ -234,7 +234,11 @@ RSpec.describe "Nested view" do
 
     it "changes sort order and updates the URL" do
       nested_view.visit_nested(topic)
+      expect(nested_view).to have_sort_active("hot")
+
+      nested_view.click_sort("top")
       expect(nested_view).to have_sort_active("top")
+      expect(page).to have_current_path(/sort=top/)
 
       nested_view.click_sort("new")
       expect(nested_view).to have_sort_active("new")
@@ -348,8 +352,8 @@ RSpec.describe "Nested view" do
     end
 
     it "lets the user drill into reply branches without leaving the topic", mobile: true do
-      nested_view.visit_nested(topic)
-      nested_path = %r{/n/#{topic.slug}/#{topic.id}}
+      nested_view.visit_nested(topic, query: "sort=old")
+      nested_path = %r{/n/#{topic.slug}/#{topic.id}(\?sort=old)?}
 
       expect(nested_view).to have_post(child_reply)
       expect(nested_view).to have_post(grandchild_reply)
@@ -451,7 +455,7 @@ RSpec.describe "Nested view" do
       )
       sixth_level_reply.rebake!
 
-      nested_view.visit_nested(topic)
+      nested_view.visit_nested(topic, query: "sort=old")
       nested_view.scroll_post_near_top(great_grandchild_reply)
 
       nested_view.click_replies_toggle(great_grandchild_reply)

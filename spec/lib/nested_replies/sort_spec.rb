@@ -2,8 +2,9 @@
 
 RSpec.describe NestedReplies::Sort do
   describe ".valid?" do
-    it "accepts top, new, old" do
+    it "accepts top, hot, new, old" do
       expect(described_class.valid?("top")).to eq(true)
+      expect(described_class.valid?("hot")).to eq(true)
       expect(described_class.valid?("new")).to eq(true)
       expect(described_class.valid?("old")).to eq(true)
     end
@@ -17,9 +18,9 @@ RSpec.describe NestedReplies::Sort do
   describe ".sort_in_memory" do
     let(:posts) do
       [
-        Struct.new(:like_count, :post_number, :created_at).new(5, 2, 3.days.ago),
-        Struct.new(:like_count, :post_number, :created_at).new(1, 3, 1.day.ago),
-        Struct.new(:like_count, :post_number, :created_at).new(10, 4, 2.days.ago),
+        Struct.new(:id, :like_count, :post_number, :created_at).new(10, 5, 2, 3.days.ago),
+        Struct.new(:id, :like_count, :post_number, :created_at).new(11, 1, 3, 1.day.ago),
+        Struct.new(:id, :like_count, :post_number, :created_at).new(12, 10, 4, 2.days.ago),
       ]
     end
 
@@ -36,6 +37,12 @@ RSpec.describe NestedReplies::Sort do
     it "sorts by old (post_number asc)" do
       sorted = described_class.sort_in_memory(posts, "old")
       expect(sorted.map(&:post_number)).to eq([2, 3, 4])
+    end
+
+    it "sorts by hot (hot_score desc, post_number asc tiebreaker)" do
+      hot_scores = { 10 => 1.0, 11 => 2.0, 12 => 2.0 }
+      sorted = described_class.sort_in_memory(posts, "hot", hot_scores: hot_scores)
+      expect(sorted.map(&:post_number)).to eq([3, 4, 2])
     end
 
     it "raises on invalid algorithm" do

@@ -309,6 +309,16 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(json["sort"]).to eq("old")
     end
 
+    it "allows hot as the site setting default sort" do
+      SiteSetting.nested_replies_default_sort = "hot"
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      sign_in(user)
+
+      get "/n/#{topic.slug}/#{topic.id}.json"
+      json = response.parsed_body
+      expect(json["sort"]).to eq("hot")
+    end
+
     it "sorts by top (like_count desc)" do
       low = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 1)
       high = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 10)
@@ -343,6 +353,19 @@ RSpec.describe NestedTopicsController, type: :request do
       json = response.parsed_body
       root_ids = json["roots"].map { |r| r["id"] }
       expect(root_ids).to eq([new_post.id, old_post.id])
+    end
+
+    it "sorts by hot (hot_score desc)" do
+      low = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      high = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      NestedViewPostStat.find_by!(post_id: low.id).update!(hot_score: 1.0)
+      NestedViewPostStat.find_by!(post_id: high.id).update!(hot_score: 10.0)
+      sign_in(user)
+
+      get show_url(topic, sort: "hot")
+      json = response.parsed_body
+      root_ids = json["roots"].map { |r| r["id"] }
+      expect(root_ids).to eq([high.id, low.id])
     end
 
     it "sorts by old (post_number asc)" do
@@ -766,6 +789,25 @@ RSpec.describe NestedTopicsController, type: :request do
       child_ids = json["children"].map { |c| c["id"] }
       expect(child_ids).to include(whisper_child.id)
     end
+
+    it "excludes whisper action-code children for staff when sorting by hot" do
+      root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      whisper_child =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: admin,
+          reply_to_post_number: root.post_number,
+          post_type: Post.types[:whisper],
+          action_code: "assigned",
+        )
+      sign_in(admin)
+
+      get children_url(topic, root.post_number, sort: "hot")
+      json = response.parsed_body
+      child_ids = json["children"].map { |c| c["id"] }
+      expect(child_ids).not_to include(whisper_child.id)
+    end
   end
 
   describe "whisper reply count visibility" do
@@ -807,6 +849,25 @@ RSpec.describe NestedTopicsController, type: :request do
       root_json = json["roots"].find { |r| r["id"] == root.id }
       expect(root_json["direct_reply_count"]).to eq(2)
       expect(root_json["total_descendant_count"]).to eq(2)
+    end
+
+    it "excludes whisper action-code posts from staff reply counts" do
+      root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      Fabricate(
+        :post,
+        topic: topic,
+        user: admin,
+        reply_to_post_number: root.post_number,
+        post_type: Post.types[:whisper],
+        action_code: "assigned",
+      )
+      sign_in(admin)
+
+      get show_url(topic)
+      json = response.parsed_body
+      root_json = json["roots"].find { |r| r["id"] == root.id }
+      expect(root_json["direct_reply_count"]).to eq(0)
+      expect(root_json["total_descendant_count"]).to eq(0)
     end
   end
 
@@ -896,6 +957,30 @@ RSpec.describe NestedTopicsController, type: :request do
         json = response.parsed_body
         child_ids = json["children"].map { |c| c["id"] }
         expect(child_ids).to eq([new_child.id, old_child.id])
+      end
+
+      it "sorts children by hot (hot_score desc)" do
+        low = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+        high = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+        NestedViewPostStat.find_by!(post_id: low.id).update!(hot_score: 1.0)
+        NestedViewPostStat.find_by!(post_id: high.id).update!(hot_score: 10.0)
+        sign_in(user)
+
+        get children_url(topic, root.post_number, sort: "hot")
+        json = response.parsed_body
+        child_ids = json["children"].map { |c| c["id"] }
+        expect(child_ids).to eq([high.id, low.id])
+      end
+
+      it "includes children without hot stat rows when sorting by hot" do
+        child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+        NestedViewPostStat.where(post_id: child.id).delete_all
+        sign_in(user)
+
+        get children_url(topic, root.post_number, sort: "hot")
+        json = response.parsed_body
+        child_ids = json["children"].map { |c| c["id"] }
+        expect(child_ids).to include(child.id)
       end
 
       it "sorts children by old (post_number asc)" do
