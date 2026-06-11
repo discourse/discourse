@@ -104,6 +104,7 @@
 
     .names {
       padding-left: 1.25em;
+      flex: 1 1 auto;
 
       @include viewport.until(sm) {
         box-sizing: border-box;
@@ -114,6 +115,12 @@
         display: flex;
         align-items: center;
         outline: none;
+
+        &:focus-visible {
+          border: 1px solid;
+
+          @include default-focus;
+        }
       }
 
       .d-icon {
@@ -161,8 +168,16 @@
         }
       }
 
+      @include viewport.from(sm) {
+        max-width: 225px;
+      }
+
       button {
         width: 100%;
+
+        @include viewport.from(sm) {
+          min-width: 150px;
+        }
       }
     }
   }
@@ -183,6 +198,7 @@
 
     .d-icon {
       color: var(--primary);
+      font-size: var(--font-down-1);
 
       @include viewport.until(sm) {
         font-size: var(--font-down-2);
@@ -443,6 +459,11 @@
           text-overflow: ellipsis;
         }
       }
+
+      @include viewport.from(sm) {
+        display: block;
+        max-width: 185px;
+      }
     }
 
     .user-card-badge-link {
@@ -465,8 +486,14 @@
       }
     }
 
-    .more-user-badges a {
-      @extend .user-badge;
+    .more-user-badges {
+      @include viewport.from(sm) {
+        max-width: 125px;
+      }
+
+      a {
+        @extend .user-badge;
+      }
     }
   }
 
