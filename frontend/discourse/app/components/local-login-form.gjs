@@ -16,6 +16,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import DPasswordField from "discourse/ui-kit/d-password-field";
 import DSecondFactorInput from "discourse/ui-kit/d-second-factor-input";
 import DTogglePasswordMask from "discourse/ui-kit/d-toggle-password-mask";
@@ -155,6 +156,7 @@ export default class LocalLoginForm extends Component {
 
   @action
   authenticateSecurityKey() {
+    this.args.secondFactorMethodChanged(SECOND_FACTOR_METHODS.SECURITY_KEY);
     getWebauthnCredential(
       this.args.securityKeyChallenge,
       this.args.securityKeyAllowedCredentialIds,
@@ -166,6 +168,24 @@ export default class LocalLoginForm extends Component {
         this.args.flashChanged(error);
         this.args.flashTypeChanged("error");
       }
+    );
+  }
+
+  @action
+  authenticatePasskeySecondFactor() {
+    this.args.secondFactorMethodChanged(SECOND_FACTOR_METHODS.PASSKEY);
+    getWebauthnCredential(
+      this.args.securityKeyChallenge,
+      this.args.passkeyAllowedCredentialIds,
+      (credentialData) => {
+        this.args.securityKeyCredentialChanged(credentialData);
+        this.args.login();
+      },
+      (error) => {
+        this.args.flashChanged(error);
+        this.args.flashTypeChanged("error");
+      },
+      { userVerification: "required" }
     );
   }
 
@@ -259,7 +279,10 @@ export default class LocalLoginForm extends Component {
               @backupEnabled={{@backupEnabled}}
               @totpEnabled={{@totpEnabled}}
               @otherMethodAllowed={{@otherMethodAllowed}}
-              @action={{this.authenticateSecurityKey}}
+              @passkeysEnabled={{@passkeysEnabled}}
+              @securityKeysEnabled={{@securityKeysEnabled}}
+              @passkeyAction={{this.authenticatePasskeySecondFactor}}
+              @securityKeyAction={{this.authenticateSecurityKey}}
             />
           {{else}}
             <DSecondFactorInput

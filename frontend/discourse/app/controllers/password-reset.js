@@ -69,10 +69,25 @@ export default class PasswordResetController extends Controller {
     set(this, "model.backup_enabled", value);
   }
 
-  @computed("model.second_factor_required", "model.security_key_required")
+  @computed("model.passkeys_enabled")
+  get passkeysEnabled() {
+    return this.model?.passkeys_enabled;
+  }
+
+  set passkeysEnabled(value) {
+    set(this, "model.passkeys_enabled", value);
+  }
+
+  @computed(
+    "model.second_factor_required",
+    "model.security_key_required",
+    "model.passkeys_enabled"
+  )
   get securityKeyOrSecondFactorRequired() {
     return (
-      this.model?.second_factor_required || this.model?.security_key_required
+      this.model?.second_factor_required ||
+      this.model?.security_key_required ||
+      this.model?.passkeys_enabled
     );
   }
 
@@ -81,16 +96,28 @@ export default class PasswordResetController extends Controller {
     return this.model?.multiple_second_factor_methods;
   }
 
-  @computed("securityKeyRequired", "selectedSecondFactorMethod")
-  get displaySecurityKeyForm() {
+  @computed("model.second_factor_required", "model.backup_enabled")
+  get tokenMethodsAllowed() {
+    return this.model?.second_factor_required || this.model?.backup_enabled;
+  }
+
+  @computed(
+    "securityKeyRequired",
+    "passkeysEnabled",
+    "selectedSecondFactorMethod"
+  )
+  get displayWebauthnForm() {
     return (
-      this.securityKeyRequired &&
-      this.selectedSecondFactorMethod === SECOND_FACTOR_METHODS.SECURITY_KEY
+      (this.securityKeyRequired || this.passkeysEnabled) &&
+      (this.selectedSecondFactorMethod === SECOND_FACTOR_METHODS.SECURITY_KEY ||
+        this.selectedSecondFactorMethod === SECOND_FACTOR_METHODS.PASSKEY)
     );
   }
 
   initSelectedSecondFactorMethod() {
-    if (this.model.security_key_required) {
+    if (this.model.passkeys_enabled) {
+      this.set("selectedSecondFactorMethod", SECOND_FACTOR_METHODS.PASSKEY);
+    } else if (this.model.security_key_required) {
       this.set(
         "selectedSecondFactorMethod",
         SECOND_FACTOR_METHODS.SECURITY_KEY
@@ -173,10 +200,15 @@ export default class PasswordResetController extends Controller {
             password: null,
             errorMessage: result.message,
           });
-        } else if (this.secondFactorRequired || this.securityKeyRequired) {
+        } else if (
+          this.secondFactorRequired ||
+          this.securityKeyRequired ||
+          this.passkeysEnabled
+        ) {
           this.setProperties({
             secondFactorRequired: false,
             securityKeyRequired: false,
+            passkeysEnabled: false,
             errorMessage: null,
           });
         } else if (result.errors?.["user_password.password"]?.length > 0) {
@@ -222,6 +254,24 @@ export default class PasswordResetController extends Controller {
           errorMessage,
         });
       }
+    );
+  }
+
+  @action
+  authenticatePasskey() {
+    this.set("selectedSecondFactorMethod", SECOND_FACTOR_METHODS.PASSKEY);
+
+    getWebauthnCredential(
+      this.model.challenge,
+      this.model.passkey_allowed_credential_ids,
+      (credentialData) => {
+        this.set("securityKeyCredential", credentialData);
+        this.send("submit");
+      },
+      (errorMessage) => {
+        this.setProperties({ password: null, errorMessage });
+      },
+      { userVerification: "required" }
     );
   }
 }

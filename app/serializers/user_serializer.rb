@@ -115,7 +115,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def second_factor_enabled
-    object.totp_enabled? || object.security_keys_enabled?
+    object.has_any_second_factor_methods_enabled?
   end
 
   def include_second_factor_backup_enabled?

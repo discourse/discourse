@@ -378,7 +378,7 @@ RSpec.describe UsersController do
         expect(response.body).to have_tag("div#data-preloaded") do |element|
           json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
           expect(json["password_reset"]).to include(
-            '{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
+            '{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"passkeys_enabled":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
           )
         end
 
@@ -535,7 +535,7 @@ RSpec.describe UsersController do
           expect(response.body).to have_tag("div#data-preloaded") do |element|
             json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
             expect(json["password_reset"]).to include(
-              '{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
+              '{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"passkeys_enabled":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
             )
           end
 
@@ -648,6 +648,92 @@ RSpec.describe UsersController do
             expect(response.body).to include(I18n.t("webauthn.validation.not_found_error"))
             expect(user1.reload.confirm_password?("hg9ow8yHG32O")).to eq(false)
           end
+        end
+      end
+
+      context "when the user only has a passkey and allow_passkeys_for_2fa is enabled" do
+        let!(:passkey) do
+          Fabricate(
+            :user_security_key,
+            user: user1,
+            credential_id: valid_passkey_data[:credential_id],
+            public_key: valid_passkey_data[:public_key],
+            factor_type: UserSecurityKey.factor_types[:first_factor],
+          )
+        end
+
+        before do
+          SiteSetting.allow_passkeys_for_2fa = true
+          SiteSetting.enforce_second_factor = "all"
+          simulate_localhost_passkey_challenge
+          DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
+
+          get "/u/password-reset/#{email_token.token}"
+        end
+
+        it "preloads with the passkey allow-list when 2FA is enforced" do
+          expect(response.body).to have_tag("div#data-preloaded") do |element|
+            json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+            password_reset = JSON.parse(json["password_reset"])
+            expect(password_reset["challenge"]).not_to eq(nil)
+            expect(password_reset["passkeys_enabled"]).to eq(true)
+            expect(password_reset["security_key_required"]).to eq(false)
+            expect(password_reset["allowed_credential_ids"]).to eq(nil)
+            expect(password_reset["passkey_allowed_credential_ids"]).to eq([passkey.credential_id])
+          end
+        end
+
+        it "does not advertise the passkey when 2FA is not enforced" do
+          SiteSetting.enforce_second_factor = "no"
+
+          get "/u/password-reset/#{email_token.token}"
+
+          expect(response.body).to have_tag("div#data-preloaded") do |element|
+            json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+            password_reset = JSON.parse(json["password_reset"])
+            expect(password_reset["passkeys_enabled"]).to eq(false)
+            expect(password_reset["passkey_allowed_credential_ids"]).to eq(nil)
+          end
+        end
+
+        it "does not change the password without a second factor when 2FA is enforced" do
+          put "/u/password-reset/#{email_token.token}", params: { password: "hg9ow8yHG32O" }
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include(I18n.t("login.invalid_second_factor_method"))
+          expect(user1.reload.confirm_password?("hg9ow8yHG32O")).to eq(false)
+        end
+
+        it "changes the password without a second factor when 2FA is not enforced" do
+          SiteSetting.enforce_second_factor = "no"
+
+          put "/u/password-reset/#{email_token.token}", params: { password: "hg9ow8yHG32O" }
+
+          expect(response.status).to eq(200)
+          expect(user1.reload.confirm_password?("hg9ow8yHG32O")).to eq(true)
+        end
+
+        it "changes the password with a valid passkey assertion" do
+          put "/u/password-reset/#{email_token.token}.json",
+              params: {
+                password: "hg9ow8yHG32O",
+                second_factor_token: valid_passkey_auth_data,
+                second_factor_method: UserSecondFactor.methods[:passkey],
+              }
+
+          expect(response.status).to eq(200)
+          user1.reload
+          expect(user1.confirm_password?("hg9ow8yHG32O")).to eq(true)
+          expect(user1.user_auth_tokens.count).to eq(1)
+        end
+
+        it "ignores the passkey when allow_passkeys_for_2fa is disabled" do
+          SiteSetting.allow_passkeys_for_2fa = false
+
+          put "/u/password-reset/#{email_token.token}", params: { password: "hg9ow8yHG32O" }
+
+          expect(response.status).to eq(200)
+          expect(user1.reload.confirm_password?("hg9ow8yHG32O")).to eq(true)
         end
       end
     end
