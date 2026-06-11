@@ -107,8 +107,8 @@ GEM
       activerecord (>= 6.0.0)
       activesupport (>= 6.0.0)
     ast (2.4.3)
-    auth-sanitizer (0.1.4)
-      version_gem (~> 1.1, >= 1.1.9)
+    auth-sanitizer (0.2.1)
+      version_gem (~> 1.1, >= 1.1.10)
     aws-eventstream (1.4.0)
     aws-partitions (1.1134.0)
     aws-sdk-bedrockruntime (1.74.0)
@@ -777,7 +777,7 @@ GEM
     uniform_notifier (1.18.0)
     uri (1.1.1)
     useragent (0.16.11)
-    version_gem (1.1.10)
+    version_gem (1.1.11)
     web-push (3.0.1)
       jwt (~> 2.0)
       openssl (~> 3.0)
@@ -993,7 +993,7 @@ CHECKSUMS
   afm (1.0.0) sha256=5bd4d6f6241e7014ef090985ec6f4c3e9745f6de0828ddd58bc1efdd138f4545
   annotaterb (4.20.0) sha256=871b2e898d1d60c23bdc59b72a5b840678a56355bf5f6fdeb8c79d317ff98bf7
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
-  auth-sanitizer (0.1.4) sha256=ded72221d4d3a7c91e34e8a87b21e6a42cbf7829697f140dcf49d542422faedc
+  auth-sanitizer (0.2.1) sha256=917dcf01f7589b06c26726afe90568cf2fb29d37a1f94facfc664f11967cc577
   aws-eventstream (1.4.0) sha256=116bf85c436200d1060811e6f5d2d40c88f65448f2125bc77ffce5121e6e183b
   aws-partitions (1.1134.0) sha256=28f5f6156777ac346904a79ce6cb3b14a521e3866fee12a0da86d7b500266d3e
   aws-sdk-bedrockruntime (1.74.0) sha256=fc5eb0ab9485fc847bfcef058b8c50f2f7996d4a8266ce3562da2daa5bf1dea5
@@ -1321,7 +1321,7 @@ CHECKSUMS
   uniform_notifier (1.18.0) sha256=4787785556f66f6418486da0f1d78b3239aaff98e2e7938fb05e2062b0ffce9d
   uri (1.1.1) sha256=379fa58d27ffb1387eaada68c749d1426738bd0f654d812fcc07e7568f5c57c6
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
-  version_gem (1.1.10) sha256=d0575dc9f2949b2db9497051f96e5c36d7c6c2f2e81afd1a73cacccd4690e506
+  version_gem (1.1.11) sha256=695df6464862b3dc976b4f6e0e089062517c8137ecd31078d8c378347f959c97
   web-push (3.0.1) sha256=5b4dd2f2bba3bd8951da6416492fe920a6f203d14d3080f943c5d01c0cc4b18d
   webmock (3.26.2) sha256=774556f2ea6371846cca68c01769b2eac0d134492d21f6d0ab5dd643965a4c90
   webrick (1.9.2) sha256=beb4a15fc474defed24a3bda4ffd88a490d517c9e4e6118c3edce59e45864131
