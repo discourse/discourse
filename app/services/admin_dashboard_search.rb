@@ -5,7 +5,6 @@ class AdminDashboardSearch
   TOP_TERMS_LIMIT = 10
   ALARM_THRESHOLD_PERCENT = 10
   POOR_MATCH_MAX_CTR_PERCENT = 20
-  HEADLINE_KEY_PREFIX = "admin.dashboard.sections.search.headline"
   TRENDING_PERIODS_BY_MAX_DAYS = {
     7 => "weekly",
     31 => "monthly",
@@ -16,7 +15,6 @@ class AdminDashboardSearch
                    :TOP_TERMS_LIMIT,
                    :ALARM_THRESHOLD_PERCENT,
                    :POOR_MATCH_MAX_CTR_PERCENT,
-                   :HEADLINE_KEY_PREFIX,
                    :TRENDING_PERIODS_BY_MAX_DAYS
 
   def self.build(start_date:, end_date:)
@@ -100,7 +98,7 @@ class AdminDashboardSearch
   end
 
   def headline_key(current:, kpis:)
-    "#{HEADLINE_KEY_PREFIX}.#{headline_state(current: current, kpis: kpis)}"
+    "admin.dashboard.sections.search.headline.#{headline_state(current: current, kpis: kpis)}"
   end
 
   def headline_state(current:, kpis:)
