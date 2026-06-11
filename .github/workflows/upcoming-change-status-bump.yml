@@ -36,6 +36,10 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_PUSH_TOKEN || github.token }}
       SKIP_DB_AND_REDIS: "1"
       RAILS_DB: nonexistent
+      # Plugins default to :none under RAILS_ENV=test, which leaves plugin settings
+      # validator/enum constants (e.g. Chat::*) unautoloadable when the report parses
+      # plugins/*/config/settings.yml. Load them so constantize succeeds.
+      LOAD_PLUGINS: "1"
 
     steps:
       - uses: actions/checkout@v6
