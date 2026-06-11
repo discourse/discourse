@@ -288,6 +288,9 @@ importers:
       '@lezer/lr':
         specifier: ^1.4.8
         version: 1.4.10
+      '@viz-js/viz':
+        specifier: ^3.28.0
+        version: 3.28.0
       ace-builds:
         specifier: ^1.44.0
         version: 1.44.0
@@ -2783,6 +2786,9 @@ packages:
 
   '@vitest/utils@4.1.8':
     resolution: {integrity: sha512-uOJamYALNhfJ6iolExyQM40yIQwDqYnkKtQ5VCiSe17E33H0aQ/u+1GlRuz4LZBk6Mm3sg90G9hEbmEt37C1Zg==}
+
+  '@viz-js/viz@3.28.0':
+    resolution: {integrity: sha512-nPt+jbGHGgd7lUQLBT79/4lChIzeW44I+hFrscx18AnpNyX9vdRFVNwVbKz9eq+ACeKSm4bFQns17WhCW11eWQ==}
 
   '@volar/kit@2.4.28':
     resolution: {integrity: sha512-cKX4vK9dtZvDRaAzeoUdaAJEew6IdxHNCRrdp5Kvcl6zZOqb6jTOfk3kXkIkG3T7oTFXguEMt5+9ptyqYR84Pg==}
@@ -10492,6 +10498,8 @@ snapshots:
       '@vitest/pretty-format': 4.1.8
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.0
+
+  '@viz-js/viz@3.28.0': {}
 
   '@volar/kit@2.4.28(typescript@5.9.3)':
     dependencies:
