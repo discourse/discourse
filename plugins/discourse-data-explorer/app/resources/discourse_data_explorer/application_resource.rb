@@ -13,6 +13,13 @@ module DiscourseDataExplorer
     self.autolink = false
     self.validate_endpoints = false
 
+    # Public-API hardening: Graphiti makes every attribute filterable/sortable
+    # by default — flip to opt-in so the exposed query surface is deliberate.
+    # NOTE: sideloads and #find work by filtering on :id, so resources that are
+    # sideloaded or fetched by id must explicitly re-enable `filter :id`.
+    self.attributes_filterable_by_default = false
+    self.attributes_sortable_by_default = false
+
     # Graphiti's AR adapter paginates via Kaminari (.page/.per), which Discourse
     # doesn't ship. Supply a custom proc so we depend on neither Kaminari nor an
     # adapter override. NOTE: this is plain offset/limit — Graphiti's built-in
