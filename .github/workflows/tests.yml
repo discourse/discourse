@@ -104,6 +104,11 @@ jobs:
         run: |
           echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 2))" >> $GITHUB_ENV
 
+      - name: Prune test instrumentation for system tests
+        if: matrix.build_type == 'system'
+        run: |
+          echo "DISCOURSE_PRUNE_TEST_INSTRUMENTATION=1" >> $GITHUB_ENV
+
       - name: Set QUNIT_PARALLEL for QUnit tests
         if: matrix.build_type == 'frontend'
         run: |

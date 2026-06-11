@@ -30,11 +30,14 @@ ENV["ENABLE_LOGSTASH_LOGGER"] ||= "1"
 require File.expand_path("../../config/environment", __FILE__)
 Discourse.singleton_class.prepend(RspecWarnExceptionCapture)
 
-# In CI, prune instrumentation whose output is unreachable under
-# `RAILS_TEST_LOG_LEVEL=error` but whose compute cost is paid on every
-# query or request. Set DISCOURSE_KEEP_TEST_INSTRUMENTATION=1 to restore
-# everything for debugging.
-if ENV["CI"] && !ENV["DISCOURSE_KEEP_TEST_INSTRUMENTATION"]
+# In CI system test builds, prune instrumentation whose output is unreachable
+# under `RAILS_TEST_LOG_LEVEL=error` but whose compute cost is paid on every
+# query or request. The backend suite must keep full instrumentation because
+# it contains specs that exercise it directly (method_profiler_spec,
+# hijack_spec, request_tracker_spec), so the workflow only sets this variable
+# when `matrix.build_type == 'system'`. Unset it to restore everything for
+# debugging.
+if ENV["DISCOURSE_PRUNE_TEST_INSTRUMENTATION"] == "1"
   # `config/environments/test.rb` enables query log tags and verbose query
   # logs. Their output never surfaces at the error log level, but every AR
   # query still runs the `request_path` / `Thread.current.object_id` lambdas
