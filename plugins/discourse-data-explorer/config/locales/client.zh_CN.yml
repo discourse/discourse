@@ -24,12 +24,17 @@ zh_CN:
     data_explorer:
       admin_dashboard_card:
         no_results: "没有结果"
+      manage_reports_hint:
+        title: "创建数据资源管理器查询"
+        description: "编写自定义 SQL 查询，以查找与您的社区相关的特定内容。"
     explorer:
       default_query: "默认"
       default_query_notice: "这是一个默认查询，SQL 无法编辑。要编辑 SQL，请创建一个新查询。"
       queries: "查询"
       query_created: "查询已创建！"
       mode:
+        label: "查询创作模式"
+        manual: "编写 SQL"
         ai: "使用 AI 生成"
       or: "或者"
       admins_only: "数据资源管理器仅供管理员使用。"
@@ -42,6 +47,8 @@ zh_CN:
         description_title: "使用 AI 生成"
         description_hint: "请用简洁明了的语言描述您的需求。我们将为您生成 SQL 代码、名称和描述。"
         description_placeholder: "例如，显示不同时间段的注册情况"
+        regenerate_placeholder: "例如，更新查询以限制结果数为 50 条。"
+        prompt_label: "Prompt"
         generate: "生成"
         regenerate: "重新生成"
         generating: "正在使用 AI 生成查询…"
@@ -65,6 +72,7 @@ zh_CN:
       schema:
         title: "数据库架构"
         filter: "搜索…"
+        search_tables: "搜索表"
         sensitive: "此列的内容可能包含特别敏感或私人的信息。使用此列的内容时请谨慎。"
       types:
         bool:
@@ -79,6 +87,22 @@ zh_CN:
       delete: "删除"
       recover: "取消删除查询"
       sql_label: "SQL"
+      run_with_explain: "使用查询计划运行"
+      run_options: "更多运行选项"
+      view:
+        label: "结果视图"
+      chart_empty:
+        no_rows: "没有要绘制的行。"
+        no_numeric: "此查询没有要绘制图表的数值列。"
+        no_numeric_with_columns: "此查询没有要绘制图表的数值列（已忽略： %{columns}）。"
+        view_as_table: "以表格形式查看"
+      chart_footnote:
+        ignored: "未绘制图表的列： %{columns}"
+      export_as:
+        label: "导出为…"
+        results_json: "结果（JSON）"
+        results_csv: "结果（CSV）"
+        query_json: "查询定义（JSON）"
       others_dirty: "查询具有未保存的更改，如果您离开，这些更改将丢失。"
       run_time: "查询在 %{value} 毫秒内完成。"
       cached_result_notice: "正在显示自 %{relative_time} 起的缓存结果。"

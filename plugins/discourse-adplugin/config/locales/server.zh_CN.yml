@@ -35,6 +35,7 @@ zh_CN:
     no_ads_for_tags: "不在含有这些标签的话题列表和话题页面上显示广告。"
     house_ads_after_nth_topic: '如果定义了“话题之间”自家广告，则在每 N 个话题后显示一个广告，其中 N 是此值。'
     house_ads_after_nth_post: '如果定义了“帖子之间”自家广告，则在每 N 条帖子后显示一个广告，其中 N 是此值。'
+    house_ads_after_nth_root: '如果定义了“嵌套根之间”房屋广告，则在嵌套回复视图中每 N 个根回复后显示一个广告，其中 N 是此值。'
     house_ads_frequency: "如果将其他广告联盟配置为在广告位中展示，则应展示广告的频率（以百分比形式表示）。"
     ads_txt: "ads.txt 文件的内容。<a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>此 Google AdSense 帮助页面</a>介绍了更多详细信息。"
     ad_plugin_routes_enabled: "启用针对自家广告的路由"
