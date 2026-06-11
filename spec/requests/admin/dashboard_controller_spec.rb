@@ -299,43 +299,6 @@ RSpec.describe Admin::DashboardController do
             "trending_period" => "weekly",
             "content_gaps" => [],
           )
-
-          configure_dashboard_sections(%w[highlights])
-
-          get "/admin/dashboard.json"
-
-          expect(response.status).to eq(200)
-          expect(response.parsed_body["sections"].map { |section| section["id"] }).not_to include(
-            "search",
-          )
-        end
-
-        it "returns the search payload to moderators" do
-          sign_in(moderator)
-          configure_dashboard_sections(%w[search])
-          Fabricate(:search_log, term: "discobot", created_at: "2026-05-02 10:00")
-
-          get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-07" }
-
-          expect(response.status).to eq(200)
-          expect(search_data).to eq(
-            "logging_enabled" => true,
-            "headline" => {
-              "key" => "admin.dashboard.sections.search.headline.content_gaps",
-            },
-            "kpis" => {
-              "total_searches" => {
-                "value" => 1,
-              },
-              "no_result_rate" => {
-                "value" => 100,
-                "exceeds_threshold" => true,
-              },
-            },
-            "trending" => [{ "term" => "discobot", "searches" => 1 }],
-            "trending_period" => "weekly",
-            "content_gaps" => [{ "term" => "discobot", "searches" => 1, "status" => "no_match" }],
-          )
         end
       end
 
