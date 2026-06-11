@@ -89,13 +89,8 @@ module SecondFactorManager
   end
   alias_method :passkeys_for_2fa_enabled?, :passkeys_available_as_second_factor?
 
-  # Passkey-as-2FA (`passkeys_available_as_second_factor?`) is still excluded
-  # here even though every 2FA flow can now challenge passkeys. Counting them
-  # makes passkey-only users compliant with enforced 2FA (no more redirect to
-  # enrollment), which is the final step of the `allow_passkeys_for_2fa`
-  # rollout and ships separately.
   def has_any_second_factor_methods_enabled?
-    totp_enabled? || security_keys_enabled?
+    totp_enabled? || security_keys_enabled? || passkeys_available_as_second_factor?
   end
 
   def has_multiple_second_factor_methods?

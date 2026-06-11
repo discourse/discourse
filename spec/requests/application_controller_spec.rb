@@ -230,6 +230,26 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
     end
 
+    it "should not redirect passkey-only users when allow_passkeys_for_2fa is enabled" do
+      SiteSetting.enforce_second_factor = "all"
+      SiteSetting.allow_passkeys_for_2fa = true
+      Fabricate(:passkey_with_random_credential, user: user)
+      sign_in(user)
+
+      get "/"
+      expect(response.status).to eq(200)
+    end
+
+    it "should redirect passkey-only users when allow_passkeys_for_2fa is disabled" do
+      SiteSetting.enforce_second_factor = "all"
+      SiteSetting.allow_passkeys_for_2fa = false
+      Fabricate(:passkey_with_random_credential, user: user)
+      sign_in(user)
+
+      get "/"
+      expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
+    end
+
     it "should redirect users when enforce_second_factor is 'all' and authenticated via oauth" do
       SiteSetting.enforce_second_factor = "all"
       sign_in(user)
