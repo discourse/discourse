@@ -12,16 +12,16 @@ module PageObjects
           has_css?("#{SECTION} .db-section__subintro p", exact_text: summary)
       end
 
-      def has_total_searches?(value, delta: nil)
+      def has_total_searches_kpi?(value, delta: nil)
         has_kpi?("total_searches", value, delta: delta)
       end
 
-      def has_no_result_rate?(value, delta: nil)
+      def has_no_result_rate_kpi?(value, delta: nil)
         has_kpi?("no_result_rate", value, delta: delta) &&
           has_no_css?("#{kpi_selector("no_result_rate")} .db-section__metric-number.--neg")
       end
 
-      def has_alert_no_result_rate?(value)
+      def has_alert_no_result_rate_kpi?(value)
         has_css?(
           "#{kpi_selector("no_result_rate")} .db-section__metric-number.--neg",
           exact_text: value,

@@ -48,8 +48,8 @@ describe "Admin Dashboard Redesign | Search section" do
         "Keep an eye on the content gaps below.",
     )
 
-    expect(search).to have_total_searches("50", delta: { text: "+25%", direction: "pos" })
-    expect(search).to have_no_result_rate("4%", delta: { text: "+4%", direction: "neg" })
+    expect(search).to have_total_searches_kpi("50", delta: { text: "+25%", direction: "pos" })
+    expect(search).to have_no_result_rate_kpi("4%", delta: { text: "+4%", direction: "neg" })
 
     search.hover_total_searches_tooltip
     expect(search).to have_total_searches_tooltip(
@@ -97,8 +97,8 @@ describe "Admin Dashboard Redesign | Search section" do
       "Members keep finding what they search for, and search volume is steady or growing.",
     )
 
-    expect(search).to have_total_searches("27", delta: { text: "+800%", direction: "pos" })
-    expect(search).to have_no_result_rate("7%", delta: { text: "-93%", direction: "pos" })
+    expect(search).to have_total_searches_kpi("27", delta: { text: "+800%", direction: "pos" })
+    expect(search).to have_no_result_rate_kpi("7%", delta: { text: "-93%", direction: "pos" })
 
     search.click_trending_term("ruby")
 
@@ -130,8 +130,8 @@ describe "Admin Dashboard Redesign | Search section" do
       "More than 10% of searches ended without a click this period. " \
         "Review the content gaps below to see what's missing.",
     )
-    expect(search).to have_total_searches("10")
-    expect(search).to have_alert_no_result_rate("50%")
+    expect(search).to have_total_searches_kpi("10")
+    expect(search).to have_alert_no_result_rate_kpi("50%")
   end
 
   it "shows staff a graceful empty state when no searches were logged",
@@ -143,8 +143,8 @@ describe "Admin Dashboard Redesign | Search section" do
       "Not enough search activity to summarise yet.",
       "Pick a longer date range or come back once members have searched more.",
     )
-    expect(search).to have_total_searches("0")
-    expect(search).to have_no_result_rate("—")
+    expect(search).to have_total_searches_kpi("0")
+    expect(search).to have_no_result_rate_kpi("—")
     expect(search).to have_no_kpi_deltas
     expect(search).to have_trending_empty_state("No searches in this period.")
     expect(search).to have_content_gaps_empty_state("No content gaps in this period.")
@@ -181,8 +181,8 @@ describe "Admin Dashboard Redesign | Search section" do
       "Search volume is down compared with the previous period, " \
         "while most searches still lead to content.",
     )
-    expect(search).to have_total_searches("3", delta: { text: "-40%", direction: "neg" })
-    expect(search).to have_no_result_rate("0%", delta: { text: "-100%", direction: "pos" })
+    expect(search).to have_total_searches_kpi("3", delta: { text: "-40%", direction: "neg" })
+    expect(search).to have_no_result_rate_kpi("0%", delta: { text: "-100%", direction: "pos" })
     expect(search).to have_trending_rows([{ term: "ruby", searches: 3 }])
 
     dashboard.visit_with_query(range: "custom", start_date: "2026-04-25", end_date: "2026-04-25")
