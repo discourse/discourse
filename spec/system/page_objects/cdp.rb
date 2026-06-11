@@ -8,8 +8,12 @@ module PageObjects
 
     def allow_clipboard
       page.driver.with_playwright_page do |pw_page|
-        pw_page.context.grant_permissions(["clipboard-read"], origin: pw_page.url)
-        pw_page.context.grant_permissions(["clipboard-write"], origin: pw_page.url)
+        # Granting without an origin applies to all origins. Pinning to
+        # `pw_page.url` breaks when no navigation has happened yet (the page is
+        # still `about:blank`, an opaque origin which permissions cannot be
+        # granted to), which is now the case when this is called right after
+        # `sign_in`.
+        pw_page.context.grant_permissions(%w[clipboard-read clipboard-write])
       end
     end
 
