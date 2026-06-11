@@ -532,3 +532,29 @@ $show-interested: inherit;
     text-align: center;
   }
 }
+
+.discourse-post-event {
+  .event__placeholder {
+    display: inline-block;
+    border-radius: var(--d-border-radius, 0.25em);
+    background-color: var(--primary-low);
+  }
+
+  .event__placeholder--text {
+    width: 8em;
+    height: 0.9em;
+    vertical-align: middle;
+  }
+
+  .event__placeholder--avatar {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+  }
+
+  .event__placeholder--button {
+    width: 5em;
+    height: 2em;
+    margin-right: 0.5em;
+  }
+}
