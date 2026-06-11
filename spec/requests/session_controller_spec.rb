@@ -2997,6 +2997,17 @@ RSpec.describe SessionController do
         expect(json["current_user"]).to be_present
         expect(json["current_user"]["id"]).to eq(user.id)
       end
+
+      it "does not include a featured topic the user cannot see" do
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        featured_topic = Fabricate(:topic, category: private_category)
+        user.user_profile.update!(featured_topic_id: featured_topic.id)
+
+        get "/session/current.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["current_user"]).not_to have_key("featured_topic")
+      end
     end
 
     context "when logged in as an anonymous shadow user" do
