@@ -51,7 +51,7 @@ class Stat
   end
 
   def self.calculate(stats)
-    stats.map { |stat| stat.calculate }.reduce(Hash.new, :merge)
+    stats.map { |stat| stat.calculate }.reduce({}) { |memo, result| memo.deep_merge(result) }
   end
 
   def self.core_stats
