@@ -43,6 +43,14 @@ module DiscourseWorkflows
         ).deep_symbolize_keys
       end
 
+      def self.serialize_user(user, guardian: Discourse.system_user.guardian)
+        return if user.blank?
+
+        MultiJson.load(
+          DiscourseWorkflows::UserSerializer.new(user, scope: guardian, root: false).to_json,
+        ).deep_symbolize_keys
+      end
+
       class RuntimeState
         attr_reader :condition_step_details, :execution_hints, :log, :metadata, :wait_request
 

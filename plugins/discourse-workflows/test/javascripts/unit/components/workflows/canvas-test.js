@@ -29,6 +29,234 @@ module("Unit | Component | workflows canvas", function (hooks) {
     );
   });
 
+  test("AI proposal review replaces prompt composer", function (assert) {
+    const canvas = Object.create(WorkflowCanvas.prototype);
+
+    canvas.aiGenerating = false;
+    canvas.aiResponse = {
+      status: "proposed_patch",
+      response: {
+        message: "Draft proposal ready",
+        proposal: {
+          operations: [{ op: "rename_node", node_id: "node-1", name: "Wait" }],
+        },
+      },
+    };
+
+    assert.true(
+      canvas.aiShowingProposalReview,
+      "proposal review is shown when a draft exists"
+    );
+    assert.false(
+      canvas.aiShowingPromptComposer,
+      "prompt composer is hidden while reviewing a draft"
+    );
+    assert.strictEqual(
+      canvas.aiResponseMessage,
+      null,
+      "proposal response message is hidden to avoid duplicate review copy"
+    );
+  });
+
+  test("AI proposal exposes created agent resources", function (assert) {
+    const canvas = Object.create(WorkflowCanvas.prototype);
+
+    canvas.aiResponse = {
+      status: "proposed_patch",
+      response: {
+        proposal: {
+          operations: [
+            {
+              op: "create_ai_agent",
+              client_id: "triage-agent",
+              agent: {
+                name: "Workflow triage agent",
+                description: "Classifies support posts.",
+                system_prompt: "Classify Discourse posts.",
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    assert.deepEqual(
+      canvas.aiCreatedAgentResources,
+      [
+        {
+          key: "triage-agent-Workflow triage agent",
+          name: "Workflow triage agent",
+          description: "Classifies support posts.",
+          systemPrompt: "Classify Discourse posts.",
+        },
+      ],
+      "created AI agents are available for proposal review"
+    );
+  });
+
+  test("AI clarification questions advance one at a time", async function (assert) {
+    const canvas = Object.create(WorkflowCanvas.prototype);
+
+    canvas.aiGenerating = false;
+    canvas.aiClarificationQuestionIndex = 0;
+    canvas.aiResponse = {
+      status: "needs_clarification",
+      response: {
+        questions: [
+          { id: "scope", question: "Scope?", options: ["General"] },
+          { id: "users", question: "Users?", options: ["TL2"] },
+        ],
+      },
+    };
+    Object.defineProperty(canvas, "aiClarificationCurrentQuestionDisabled", {
+      value: false,
+    });
+
+    assert.strictEqual(
+      canvas.aiCurrentQuestionNumber,
+      1,
+      "starts on the first question"
+    );
+    assert.strictEqual(
+      canvas.aiQuestionText(canvas.aiCurrentQuestion),
+      "Scope?",
+      "only the first question is current"
+    );
+    assert.strictEqual(
+      canvas.aiClarificationContinueLabel,
+      i18n("discourse_workflows.ai.next_question"),
+      "non-final questions use a next label"
+    );
+
+    await canvas.continueAiClarificationQuestion();
+
+    assert.strictEqual(
+      canvas.aiCurrentQuestionNumber,
+      2,
+      "moves to the second question"
+    );
+    assert.strictEqual(
+      canvas.aiQuestionText(canvas.aiCurrentQuestion),
+      "Users?",
+      "the second question becomes current"
+    );
+
+    canvas.previousAiClarificationQuestion();
+
+    assert.strictEqual(
+      canvas.aiCurrentQuestionNumber,
+      1,
+      "can move back to the previous question"
+    );
+
+    await canvas.continueAiClarificationQuestion();
+    Object.defineProperty(canvas, "submitAiClarification", {
+      value: async () => assert.step("submitted"),
+    });
+
+    assert.strictEqual(
+      canvas.aiClarificationContinueLabel,
+      i18n("discourse_workflows.ai.continue"),
+      "the final question uses the continue label"
+    );
+
+    await canvas.continueAiClarificationQuestion();
+
+    assert.verifySteps(["submitted"]);
+  });
+
+  test("AI progress is shown only while generating", function (assert) {
+    const canvas = Object.create(WorkflowCanvas.prototype);
+
+    canvas.aiProgressEvents = [{ stage: "queued" }];
+    canvas.aiGenerating = false;
+
+    assert.false(
+      canvas.aiShowingProgress,
+      "completed authoring does not show old progress"
+    );
+
+    canvas.aiGenerating = true;
+
+    assert.true(
+      canvas.aiShowingProgress,
+      "active authoring shows progress events"
+    );
+
+    canvas.aiProgressEvents = [];
+
+    assert.false(
+      canvas.aiShowingProgress,
+      "active authoring without events does not show progress"
+    );
+  });
+
+  test("returning to the AI prompt clears in-progress authoring state", function (assert) {
+    const canvas = Object.create(WorkflowCanvas.prototype);
+    const handler = () => {};
+
+    Object.defineProperty(canvas, "messageBus", {
+      value: {
+        unsubscribe(channel, callback) {
+          assert.strictEqual(
+            channel,
+            "/discourse-workflows/ai-authoring/generation-1",
+            "unsubscribes from the active authoring channel"
+          );
+          assert.strictEqual(
+            callback,
+            handler,
+            "unsubscribes the active authoring handler"
+          );
+          assert.step("unsubscribed");
+        },
+      },
+    });
+
+    canvas.aiGenerating = true;
+    canvas.aiProgressEvents = [{ stage: "queued" }];
+    canvas.aiResponse = { status: "needs_clarification" };
+    canvas.aiSessionId = "session-1";
+    canvas.aiGenerationId = "generation-1";
+    canvas.aiClarificationAnswers = { scope: { selected: ["General"] } };
+    canvas.aiClarificationQuestionIndex = 1;
+    canvas.aiError = "The request failed";
+    canvas.aiAuthoringChannel =
+      "/discourse-workflows/ai-authoring/generation-1";
+    canvas.aiAuthoringHandler = handler;
+
+    assert.true(
+      canvas.aiCanReturnToPrompt,
+      "stateful AI authoring can return to the prompt"
+    );
+
+    canvas.returnToAiPrompt();
+
+    assert.verifySteps(["unsubscribed"]);
+    assert.false(canvas.aiGenerating, "generation stops locally");
+    assert.deepEqual(canvas.aiProgressEvents, [], "progress is cleared");
+    assert.strictEqual(canvas.aiResponse, null, "response is cleared");
+    assert.strictEqual(canvas.aiSessionId, null, "session is cleared");
+    assert.strictEqual(canvas.aiGenerationId, null, "generation is cleared");
+    assert.deepEqual(
+      canvas.aiClarificationAnswers,
+      {},
+      "clarification answers are cleared"
+    );
+    assert.strictEqual(
+      canvas.aiClarificationQuestionIndex,
+      0,
+      "clarification index is reset"
+    );
+    assert.strictEqual(canvas.aiError, null, "error state is cleared");
+    assert.strictEqual(canvas.aiAuthoringChannel, null, "channel is cleared");
+    assert.strictEqual(canvas.aiAuthoringHandler, null, "handler is cleared");
+    assert.false(
+      canvas.aiCanReturnToPrompt,
+      "cleared state no longer shows a start-over action"
+    );
+  });
+
   test("browseTemplates delegates to the editor", function (assert) {
     const canvas = Object.create(WorkflowCanvas.prototype);
 

@@ -376,6 +376,20 @@ RSpec.describe DiscourseAi::Agents::Agent do
       )
     end
 
+    it "rebuilds external tool lookup when the cache is partially reset" do
+      register_fake_feature
+
+      expect(described_class.external_tool_by_name("FakeExternalTool")).to eq(
+        FakeExternalPlugin::FakeExternalTool,
+      )
+
+      described_class.instance_variable_set(:@external_tools_by_name, nil)
+
+      expect(described_class.external_tool_by_name("FakeExternalTool")).to eq(
+        FakeExternalPlugin::FakeExternalTool,
+      )
+    end
+
     it "includes external tools in the agent's available_tools" do
       register_fake_feature
 
