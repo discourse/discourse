@@ -95,11 +95,15 @@ export default <template>
                 @loginPassword={{@controller.loginPassword}}
                 @loginPasswordChanged={{@controller.loginPasswordChanged}}
                 @secondFactorMethod={{@controller.secondFactorMethod}}
+                @secondFactorMethodChanged={{@controller.secondFactorMethodChanged}}
                 @secondFactorToken={{@controller.secondFactorToken}}
                 @secondFactorTokenChanged={{@controller.secondFactorTokenChanged}}
                 @backupEnabled={{@controller.backupEnabled}}
                 @totpEnabled={{@controller.totpEnabled}}
+                @passkeysEnabled={{@controller.passkeysEnabled}}
+                @securityKeysEnabled={{@controller.securityKeysEnabled}}
                 @securityKeyAllowedCredentialIds={{@controller.securityKeyAllowedCredentialIds}}
+                @passkeyAllowedCredentialIds={{@controller.passkeyAllowedCredentialIds}}
                 @securityKeyChallenge={{@controller.securityKeyChallenge}}
                 @showSecurityKey={{@controller.showSecurityKey}}
                 @otherMethodAllowed={{@controller.otherMethodAllowed}}

@@ -431,6 +431,56 @@ shared_examples "login scenarios" do
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
   end
+
+  context "when the user's only second factor is a passkey" do
+    before do
+      SiteSetting.allow_passkeys_for_2fa = true
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
+    end
+
+    it "can login with a password and the passkey as 2FA" do
+      with_passkey(user) do
+        login_form.open.fill(username: "john", password: "supersecurepassword").click_login
+
+        expect(page).to have_css("#passkey-authenticate-button")
+        find("#passkey-authenticate-button").click
+
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+    end
+
+    it "can login with a login link and the passkey as 2FA" do
+      with_passkey(user) do
+        login_form.open.fill_username("john").email_login_link
+
+        login_link = wait_for_email_link(user, :email_login)
+        visit login_link
+
+        expect(page).to have_css("#passkey-authenticate-button")
+        find("#passkey-authenticate-button").click
+
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+    end
+
+    it "can reset password with the passkey as 2FA" do
+      with_passkey(user) do
+        login_form.open.fill_username("john").forgot_password
+        find("button.forgot-password-reset").click
+
+        reset_password_link = wait_for_email_link(user, :reset_password)
+        visit reset_password_link
+
+        expect(page).to have_css("#passkey-authenticate-button")
+        find("#passkey-authenticate-button").click
+
+        find("#new-account-password").fill_in(with: "newsuperpassword")
+        find(".change-password-form .btn-primary").click
+
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+    end
+  end
 end
 
 describe "Login" do

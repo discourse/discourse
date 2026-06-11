@@ -125,6 +125,37 @@ RSpec.describe SessionController do
           expect(DiscourseWebauthn.rp_id).to eq("localhost")
         end
       end
+
+      context "when the user only has a passkey and allow_passkeys_for_2fa is enabled" do
+        let!(:passkey) { Fabricate(:passkey_with_random_credential, user: user) }
+
+        before { SiteSetting.allow_passkeys_for_2fa = true }
+
+        it "advertises the passkey as a second factor" do
+          get "/session/email-login/#{email_token.token}.json"
+
+          response_body_parsed = response.parsed_body
+          expect(response_body_parsed["can_login"]).to eq(true)
+          expect(response_body_parsed["passkeys_enabled"]).to eq(true)
+          expect(response_body_parsed["security_key_required"]).to eq(false)
+          expect(response_body_parsed["allowed_credential_ids"]).to eq(nil)
+          expect(response_body_parsed["passkey_allowed_credential_ids"]).to eq(
+            [passkey.credential_id],
+          )
+          expect(response_body_parsed["challenge"]).to be_present
+        end
+
+        it "does not advertise the passkey when allow_passkeys_for_2fa is disabled" do
+          SiteSetting.allow_passkeys_for_2fa = false
+
+          get "/session/email-login/#{email_token.token}.json"
+
+          response_body_parsed = response.parsed_body
+          expect(response_body_parsed["can_login"]).to eq(true)
+          expect(response_body_parsed["passkeys_enabled"]).to eq(nil)
+          expect(response_body_parsed["passkey_allowed_credential_ids"]).to eq(nil)
+        end
+      end
     end
   end
 
@@ -490,6 +521,71 @@ RSpec.describe SessionController do
             expect(session[:current_user_id]).to eq(user.id)
             expect(user.user_auth_tokens.count).to eq(1)
           end
+        end
+      end
+
+      context "when the user only has a passkey and allow_passkeys_for_2fa is enabled" do
+        let!(:passkey) do
+          Fabricate(
+            :user_security_key,
+            user: user,
+            credential_id: valid_passkey_data[:credential_id],
+            public_key: valid_passkey_data[:public_key],
+            factor_type: UserSecurityKey.factor_types[:first_factor],
+          )
+        end
+
+        before do
+          SiteSetting.allow_passkeys_for_2fa = true
+          simulate_localhost_passkey_challenge
+          DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
+
+          # store challenge in server session by visiting the email login page
+          get "/session/email-login/#{email_token.token}.json"
+        end
+
+        it "denies login without a second factor" do
+          post "/session/email-login/#{email_token.token}.json"
+
+          expect(response.status).to eq(200)
+          expect(session[:current_user_id]).to eq(nil)
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.invalid_second_factor_method"))
+        end
+
+        it "logs the user in with a valid passkey assertion" do
+          post "/session/email-login/#{email_token.token}.json",
+               params: {
+                 second_factor_token: valid_passkey_auth_data,
+                 second_factor_method: UserSecondFactor.methods[:passkey],
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).not_to be_present
+          expect(session[:current_user_id]).to eq(user.id)
+        end
+
+        it "denies a passkey assertion posted as the security key method" do
+          post "/session/email-login/#{email_token.token}.json",
+               params: {
+                 second_factor_token: valid_passkey_auth_data,
+                 second_factor_method: UserSecondFactor.methods[:security_key],
+               }
+
+          expect(response.status).to eq(200)
+          expect(session[:current_user_id]).to eq(nil)
+          expect(response.parsed_body["error"]).to eq(
+            I18n.t("login.not_enabled_second_factor_method"),
+          )
+        end
+
+        it "logs the user in without 2FA when allow_passkeys_for_2fa is disabled" do
+          SiteSetting.allow_passkeys_for_2fa = false
+
+          post "/session/email-login/#{email_token.token}.json"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).not_to be_present
+          expect(session[:current_user_id]).to eq(user.id)
         end
       end
 
@@ -2181,6 +2277,66 @@ RSpec.describe SessionController do
               I18n.t("login.not_enabled_second_factor_method"),
             )
           end
+        end
+      end
+
+      context "when a user has passkey-only 2FA login" do
+        let!(:passkey) do
+          Fabricate(
+            :user_security_key,
+            user: user,
+            credential_id: valid_passkey_data[:credential_id],
+            public_key: valid_passkey_data[:public_key],
+            factor_type: UserSecurityKey.factor_types[:first_factor],
+          )
+        end
+
+        before do
+          SiteSetting.allow_passkeys_for_2fa = true
+          DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
+        end
+
+        it "challenges the user and advertises the passkey on the first attempt" do
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+
+          expect(response.status).to eq(200)
+          expect(session[:current_user_id]).to eq(nil)
+          response_body = response.parsed_body
+          expect(response_body["failed"]).to eq("FAILED")
+          expect(response_body["passkeys_enabled"]).to eq(true)
+          expect(response_body["security_key_enabled"]).to eq(false)
+          expect(response_body["passkey_allowed_credential_ids"]).to eq([passkey.credential_id])
+          expect(response_body["allowed_credential_ids"]).to eq(nil)
+          expect(response_body["challenge"]).to be_present
+        end
+
+        it "logs the user in with a valid passkey assertion" do
+          simulate_localhost_passkey_challenge
+
+          # store challenge in server session by failing login once
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+
+          post "/session.json",
+               params: {
+                 login: user.username,
+                 password: "myawesomepassword",
+                 second_factor_token: valid_passkey_auth_data,
+                 second_factor_method: UserSecondFactor.methods[:passkey],
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).not_to be_present
+          expect(session[:current_user_id]).to eq(user.id)
+        end
+
+        it "logs the user in without 2FA when allow_passkeys_for_2fa is disabled" do
+          SiteSetting.allow_passkeys_for_2fa = false
+
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).not_to be_present
+          expect(session[:current_user_id]).to eq(user.id)
         end
       end
 
