@@ -949,6 +949,9 @@ ur:
       write: "سب لکھیں"
       one_time_password: "ایک بار والا لاگ اِن ٹَوکن تشکیل دیں"
       bookmarks_calendar: "بک مارک یاددہانی پڑھیں"
+    device:
+      code: "کَوڈ"
+      continue: "جاری رکھیں"
     invalid_public_key: "معذرت، عوامی کلید غلط ہے۔"
     invalid_auth_redirect: "معذرت، اِس auth_redirect ہَوسٹ کی اجازت نہیں ہے۔"
     invalid_token: "غائب، غلط یا میعاد ختم شدہ ٹَوکن۔"

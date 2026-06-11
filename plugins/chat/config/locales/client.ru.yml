@@ -872,6 +872,8 @@ ru:
         chat:
           label: "Чат"
     discourse_workflows:
+      node_unavailable:
+        requires_chat: "Для работы требуется включить плагин чата."
       nodes:
         "action:send_chat_message": "Отправить сообщение в чат"
       send_chat_message:
@@ -880,3 +882,4 @@ ru:
       chat_approval:
         message: "Сообщение"
         channel_id: "Канал"
+        timeout_minutes: "Тайм-аут (минуты)"

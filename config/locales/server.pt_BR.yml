@@ -1173,6 +1173,10 @@ pt_BR:
       one_time_password: "Criar um token de acesso único com a conta"
       bookmarks_calendar: "Ler lembretes de favorito"
       user_status: "Ler e atualizar status do usuário"
+    device:
+      code: "Código"
+      continue: "Continuar"
+      authorize_title: 'Autorizar "%{application_name}"'
     invalid_public_key: "Desculpe, a chave pública é inválida."
     invalid_auth_redirect: "Desculpe, este host auth_redirect não é permitido."
     invalid_token: "Token ausente, inválido ou expirado."
@@ -1816,7 +1820,6 @@ pt_BR:
     allowed_crawler_user_agents: "Agentes de usuário(a) de rastreadores da web que devem ter permissão para acessar o site. AVISO! ESTA CONFIGURAÇÃO NEGARÁ ACESSO A TODOS OS RASTREADORES NÃO LISTADOS AQUI!"
     blocked_crawler_user_agents: "Palavra sem diferenciação de maiúsculas e minúsculas na linha do agente do(a) usuário(a) que identifica os rastreadores da web que não devem ter permissão para acessar o site. Não se aplica se a lista de permissões estiver definida."
     llms_txt: "Faça o upload de um arquivo de texto para ser disponibilizado em /llms.txt para os crawlers de LLM. Veja <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> para mais informações."
-    content_security_policy: "Ative Política de Segurança de Conteúdo (CSP). A CSP é uma camada adicional de segurança que ajuda a impedir certos tipos de ataque, incluindo Cross Site Scripting (XSS) e injeção de dados."
     content_security_policy_report_only: "Ativar Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_frame_ancestors: "Restrinja quem incorpora este site em iframes via CSP. Controle os hosts permitidos em <a href='%{base_path}/admin/customize/embedding'>Incorporação</a>"
     content_security_policy_script_src: "Fontes de scripts adicionais na lista de permissões. O host e CDN atual estão inclusos por padrão. Consulte <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigue ataques XSS com a política de segurança de conteúdo.</a> (CSP). Outras fontes de hosts são ignoradas, pois a dinâmica estrita está ativada."

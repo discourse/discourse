@@ -299,6 +299,9 @@ de:
             model_settings: "Modelleinstellungen"
             related_topics: "Verwandte Themen"
             semantic_search: "Semantische Suche"
+        admin_dashboard:
+          setting_groups:
+            settings: "Grundlegende Einstellungen"
         discord:
           name: "Discord-Integration"
           description: "Fügt die Möglichkeit hinzu, Discord-Kanäle zu durchsuchen"

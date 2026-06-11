@@ -1155,6 +1155,9 @@ fr:
       one_time_password: "Créer un jeton à accès unique"
       bookmarks_calendar: "Lire les rappels de signet"
       user_status: "Lire et mettre à jour le statut de l'utilisateur"
+    device:
+      code: "Code"
+      continue: "Continuer"
     invalid_public_key: "Nous sommes désolés, la clé publique est invalide."
     invalid_auth_redirect: "Nous sommes désolés, cet hôte auth_redirect n'est pas autorisé."
     invalid_token: "Jeton manquant, invalide ou expiré."
@@ -1783,7 +1786,6 @@ fr:
     allowed_iframes: "Liste des préfixes d'URL src d'iframe que Discourse peut autoriser en toute sécurité dans les publications. Le caractère * peut être utilisé pour correspondre à n'importe quel nombre de caractères autres que « / »."
     allowed_crawler_user_agents: "Les agents utilisateurs des robots d'indexation qui sont autorisés à accéder au site. ATTENTION : CE PARAMÈTRE BLOQUERA TOUS LES ROBOTS D'INDEXATION NON LISTÉS ICI !"
     blocked_crawler_user_agents: "Mot unique insensible à la casse dans la chaîne de caractères de l'agent utilisateur identifiant les robots d'indexation Web qui ne devraient pas être autorisés à accéder au site. Ne s'applique pas si la liste d'autorisations est définie."
-    content_security_policy: "Activez la politique de sécurité du contenu (CSP). La CSP est une couche de sécurité supplémentaire qui permet de prévenir certains types d'attaques, notamment le Cross Site Scripting (XSS) et l'injection de données."
     content_security_policy_report_only: "Activer Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_frame_ancestors: "Limiter les parties autorisées à intégrer ce site dans une iframe par le biais de l'attribut « csp ». Appliquer les restrictions d'hôtes définies dans la page <a href='%{base_path}/admin/customize/embedding'>Intégration externe</a>."
     content_security_policy_script_src: "Sources de script supplémentaires autorisées. L'hôte actuel et le CDN sont inclus par défaut. Voir <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Empêcher les attaques XSS grâce à la politique de sécurité du contenu (CSP).</a> Les autres sources hôtes sont ignorées car la dynamique stricte est activée."

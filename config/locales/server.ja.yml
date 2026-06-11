@@ -1090,6 +1090,10 @@ ja:
       one_time_password: "ワンタイムログイントークンの作成"
       bookmarks_calendar: "ブックマークリマインダーの読み取り"
       user_status: "ユーザーステータスの読み取りと更新"
+    device:
+      code: "コード"
+      continue: "続行"
+      authorize_title: '「%{application_name}」の承認'
     invalid_public_key: "公開鍵は無効です。"
     invalid_auth_redirect: "この auth_redirect ホストは許可されていません。"
     invalid_token: "欠落しているか、無効または期限切れのトークンです。"
@@ -1731,7 +1735,6 @@ ja:
     allowed_crawler_user_agents: "サイトへのアクセスを許可する必要のあるウェブクローラーのユーザーエージェント。警告！これを設定すると、ここにリストされていないすべてのクローラーが拒否されます！"
     blocked_crawler_user_agents: "サイトへのアクセスを許可してはいけないウェブクローラーを識別する、ユーザーエージェント文字列の大文字と小文字を区別しない一意の語。ホワイトリストが定義されている場合は適用されません。"
     llms_txt: "LLM クローラー向けに /llms.txt に配信するテキストファイルをアップロードする。詳細は <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> をご覧ください。"
-    content_security_policy: "Content-Security-Policy (CSP) を有効にします。CSP は、クロスサイトスクリプティング (XSS) やデータインジェクションなどの特定の種類の攻撃を防ぐのに役立つ追加のセキュリティレイヤーです。"
     content_security_policy_report_only: "Content-Security-Policy-Report-Only (CSP) を有効にする"
     content_security_policy_frame_ancestors: "CSP を介してこのサイトを iframe に埋め込むことのできるユーザーを制限する。許可されるホストを <a href='%{base_path}/admin/customize/embedding'>埋め込み</a>で制御します。"
     content_security_policy_script_src: "追加のホワイトリストにあるスクリプトソース。現在のホストと CDN はデフォルトで含まれています。<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>コンテンツセキュリティポリシー (CSP) で XSS 攻撃を緩和する</a> をご覧ください。その他のホストソースは strict-dynamic が有効であるため無視されます。"

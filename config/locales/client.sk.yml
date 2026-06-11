@@ -6,6 +6,16 @@
 
 sk:
   js:
+    user_api_key:
+      authorize: "Autorizovať"
+      deny: "Zrušiť"
+      copied: "Skopírované!"
+      otp_description: 'Chcete povoliť prístup na túto stránku "%{application_name}"?'
+      no_trust_level: "Ľutujeme, nemáte dostatočný stupeň dôvery na prístup k používateľskému API"
+      generic_error: "Ľutujeme, nie je možné vystaviť používateľský API kľúč, táto možnosť môže byť vypnutá administrátorom."
+      device:
+        code: "Kód"
+        continue: "Pokračovať"
     blocks:
       ghost:
         status: "Stav"
@@ -1600,6 +1610,9 @@ sk:
       undo_revoke_access: "Zrušiť odvolanie prístupu"
       api_approved: "Schválený:"
       api_last_used_at: "Naposledy použité:"
+      api_expires_at: "Platnosť vyprší:"
+      api_expired_at: "Vypršala platnosť:"
+      api_expires_never: "nikdy"
       theme: "Téma"
       save_to_change_theme: 'Téma bude aktualizovaná po kliknutí na "%{save_text}"'
       home: "Predvolená domovská stránka"
@@ -6060,6 +6073,11 @@ sk:
                 "2": "Člen"
                 "3": "Bežné"
                 "4": "Vodca"
+          search:
+            title: "Hľadať"
+            table:
+              searches: "Vyhľadávania"
+              status: "Stav"
         reports_section:
           no_data: "Žiadne údaje na zobrazenie"
           modal:

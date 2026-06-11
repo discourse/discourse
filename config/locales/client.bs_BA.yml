@@ -6,6 +6,12 @@
 
 bs_BA:
   js:
+    user_api_key:
+      deny: "Odustani"
+      copied: "Kopirano!"
+      device:
+        code: "Šifra"
+        continue: "Nastavi"
     blocks:
       ghost:
         status: "Status"
@@ -1038,6 +1044,8 @@ bs_BA:
       undo_revoke_access: "Poništi oduzeti pristup"
       api_approved: "Odobreno:"
       api_last_used_at: "Zadnje korišteno kod"
+      api_expires_at: "Ističe:"
+      api_expires_never: "nikad"
       theme: "Izgled"
       save_to_change_theme: 'Tema će biti ažurirana nakon što kliknete "%{save_text}"'
       home: "Uobičajena početna stranica"
@@ -3352,6 +3360,11 @@ bs_BA:
                 "2": "Član"
                 "3": "Normalno"
                 "4": "Vođa"
+          search:
+            title: "Pretraži"
+            table:
+              searches: "Pretraživanja"
+              status: "Status"
         reports_section:
           no_data: "Nema podataka za prikaz"
           modal:

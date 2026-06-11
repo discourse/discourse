@@ -1186,6 +1186,10 @@ es:
       one_time_password: "Crear un código de inicio de sesión de un único uso"
       bookmarks_calendar: "Leer recordatorios de marcadores"
       user_status: "Leer y actualizar el estado del usuario"
+    device:
+      code: "Código"
+      continue: "Continuar"
+      authorize_title: 'Autorizar a «%{application_name}»'
     invalid_public_key: "Lo sentimos, la clave pública no es válida."
     invalid_auth_redirect: "Lo sentimos, este host auth_redirect no está permitido."
     invalid_token: "El token no es válido, ha caducado o no se encuentra"
@@ -1833,7 +1837,6 @@ es:
     allowed_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe permitir el acceso al sitio. ¡ADVERTENCIA! ¡CONFIGURAR ESTO INHABILITARÁ A TODOS LOS CRAWLERS QUE NO SE ENCUENTRAN AQUÍ!"
     blocked_crawler_user_agents: "Palabra única insensible a mayúsculas y minúsculas en la cadena del agente de usuario que identifica a los que no se debe permitir el acceso al sitio. No se aplica si se define una lista de permitidos."
     llms_txt: "Sube un archivo de texto para que se publique en /llms.txt para los rastreadores de LLM. Consulta <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> para obtener más información."
-    content_security_policy: "Activa la Política de Seguridad de Contenidos (CSP). La CSP es una capa adicional de seguridad que ayuda a evitar ciertos tipos de ataques, como el Cross Site Scripting (XSS) y la inyección de datos."
     content_security_policy_report_only: "Activar la política de seguridad de contenido de solo denuncias (CSP)"
     content_security_policy_frame_ancestors: "Restringir quién puede incrustar este sitio en iframes a través de CSP. Controla los hosts permitidos en <a href='%{base_path}/admin/customize/embedding'>Insertado</a>"
     content_security_policy_script_src: "Fuentes de scripts adicionales permitidas. El host actual y la CDN se incluyen por defecto. Ver <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigar los ataques XSS con la Política de Seguridad de Contenidos.</a> (CSP). Otras fuentes de host se ignoran, ya que está activada la dinámica estricta."

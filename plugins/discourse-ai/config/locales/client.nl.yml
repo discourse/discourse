@@ -299,6 +299,9 @@ nl:
             model_settings: "Modelinstellingen"
             related_topics: "Gerelateerde topics"
             semantic_search: "Semantisch zoeken"
+        admin_dashboard:
+          setting_groups:
+            settings: "Basisinstellingen"
         discord:
           name: "Discord-integratie"
           description: "Voegt de mogelijkheid toe om in Discord-kanalen te zoeken"

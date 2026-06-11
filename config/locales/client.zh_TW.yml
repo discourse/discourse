@@ -6,6 +6,16 @@
 
 zh_TW:
   js:
+    user_api_key:
+      authorize: "授權"
+      deny: "取消"
+      copied: "已複製!"
+      otp_description: '你要允許進入%{application_name}這個網站嗎？'
+      no_trust_level: "抱歉，你沒有使用使用者 API 所需要的信任等級"
+      generic_error: "抱歉，我們不能分發使用者 API 密鑰，該特性已經被站點管理員禁用"
+      device:
+        code: "代碼"
+        continue: "繼續"
     blocks:
       ghost:
         status: "狀態"
@@ -1405,6 +1415,9 @@ zh_TW:
       undo_revoke_access: "解除撤銷許可"
       api_approved: "已通過審核："
       api_last_used_at: "最近使用於："
+      api_expires_at: "過期時間:"
+      api_expired_at: "已過期:"
+      api_expires_never: "永不"
       theme: "佈景主題"
       save_to_change_theme: '主題會在您點擊「%{save_text}」後更新。'
       home: "預設首頁"
@@ -5031,6 +5044,11 @@ zh_TW:
                 "2": "成員"
                 "3": "活躍使用者"
                 "4": "資深"
+          search:
+            title: "搜索"
+            table:
+              searches: "搜尋結果"
+              status: "狀態"
         reports_section:
           modal:
             enabled_heading: "啟用"

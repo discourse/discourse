@@ -987,6 +987,9 @@ sv:
       one_time_password: "Skapa ett engångsinloggningsbevis"
       bookmarks_calendar: "Läs påminnelser om bokmärken"
       user_status: "Läs och uppdatera användarstatus"
+    device:
+      code: "Kod"
+      continue: "Fortsätt"
     invalid_public_key: "Tyvärr är den offentliga nyckeln ogiltig."
     invalid_auth_redirect: "Tyvärr är denna auth_redirect-värd inte tillåten."
     invalid_token: "Saknat, ogiltigt eller utgånget bevis."

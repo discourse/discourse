@@ -1118,6 +1118,10 @@ zh_CN:
       one_time_password: "创建一次性登录令牌"
       bookmarks_calendar: "读取书签提醒"
       user_status: "读取和更新用户状态"
+    device:
+      code: "代码"
+      continue: "继续"
+      authorize_title: '授权“%{application_name}”'
     invalid_public_key: "抱歉，该公钥无效。"
     invalid_auth_redirect: "抱歉，此 auth_redirect 主机不被允许。"
     invalid_token: "令牌缺失、无效或已过期。"
@@ -1795,7 +1799,6 @@ zh_CN:
     slow_down_crawler_user_agents: "网络爬虫的用户代理应该按照“减慢爬虫速率”设置中的配置进行速率限制。每个值的长度必须至少为 3 个字符。"
     slow_down_crawler_rate: "如果指定了 slow_down_crawler_user_agents，则此速率将应用于所有抓取工具（请求之间的延迟秒数）"
     llms_txt: "上传一个文本文件，该文件将通过 /llms.txt 提供给 LLM 爬虫。有关详情，请参阅 <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a>。"
-    content_security_policy: "启用内容安全策略 (CSP)。CSP 是一个附加安全层，有助于防止某些类型的攻击，包括跨站脚本 (XSS) 和数据注入。"
     content_security_policy_report_only: "启用仅限内容安全策略报告 (CSP)"
     content_security_policy_frame_ancestors: "限制谁可以通过 CSP 将此网站嵌入 iframe 中。在<a href='%{base_path}/admin/customize/embedding'>嵌入</a>上控制允许的主机。"
     content_security_policy_script_src: "额外的允许脚本源。默认包括当前主机和 CDN。请参阅<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>使用内容安全策略 (CSP) 缓解 XSS 攻击</a>。启用 strict-dynamic 后，其他主机源将被忽略。"

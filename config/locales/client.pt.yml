@@ -6,6 +6,15 @@
 
 pt:
   js:
+    user_api_key:
+      authorize: "Autorizar"
+      deny: "Cancelar"
+      copied: "Copiado!"
+      no_trust_level: "Desculpe, não tem o nível de confiança requerido para aceder à API de utilizador"
+      generic_error: "Desculpe, nós não conseguimos gerar as chaves de API do utilizador, esta funcionalidade poderá estar desativada pela administração do site"
+      device:
+        code: "Código"
+        continue: "Continuar"
     blocks:
       ghost:
         status: "Estado"
@@ -1547,6 +1556,9 @@ pt:
       undo_revoke_access: "Cancelar Rescissão de Acesso"
       api_approved: "Aprovado:"
       api_last_used_at: "Usado pela última vez em:"
+      api_expires_at: "Expira:"
+      api_expired_at: "Expirado:"
+      api_expires_never: "nunca"
       theme: "Tema"
       save_to_change_theme: 'O tema será atualizado após clicar em "%{save_text}"'
       home: "Página de Início Predefinida"
@@ -4810,6 +4822,11 @@ pt:
                 "2": "Membro"
                 "3": "Habitual"
                 "4": "Líder"
+          search:
+            title: "Procurar"
+            table:
+              searches: "Pesquisas"
+              status: "Estado"
         reports_section:
           no_data: "Sem dados para exibir"
           modal:

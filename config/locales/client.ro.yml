@@ -6,6 +6,15 @@
 
 ro:
   js:
+    user_api_key:
+      authorize: "Autorizează"
+      deny: "Anulează"
+      copied: "Copiat!"
+      no_trust_level: "Ne pare rău, nu ai nivelul de încredere necesar pentru a accesa API utilizator"
+      generic_error: "Ne pare rău, nu putem să emitem chei API utilizator: această funcționalitate este probabil dezactivată din administrarea site-ului"
+      device:
+        code: "Cod"
+        continue: "Continuă"
     blocks:
       ghost:
         status: "Stare"
@@ -1459,6 +1468,8 @@ ro:
       undo_revoke_access: "Anulează revocarea accesului"
       api_approved: "Aprobate:"
       api_last_used_at: "Ultima utilizare la:"
+      api_expired_at: "Expirate:"
+      api_expires_never: "niciodată"
       theme: "Temă"
       save_to_change_theme: 'Tema va fi actualizată după ce faceți clic pe „%{save_text}”'
       home: "Pagina inițială implicită"
@@ -4259,6 +4270,11 @@ ro:
                 "2": "Membru"
                 "3": "Utilizator frecvent"
                 "4": "Lider"
+          search:
+            title: "Caută"
+            table:
+              searches: "Căutări"
+              status: "Stare"
         reports_section:
           add: "Adaugă raport"
           remove: "Elimină raportul"

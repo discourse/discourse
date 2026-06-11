@@ -671,6 +671,9 @@ zh_TW:
       read: "讀取所有"
       write: "寫入所有"
       one_time_password: "建立一鍵登入"
+    device:
+      code: "代碼"
+      continue: "繼續"
     invalid_public_key: "很抱歉，公鑰無效"
     invalid_auth_redirect: "很抱歉，這個轉向不被允許"
     invalid_token: "遺失或過期的Token"
