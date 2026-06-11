@@ -3,7 +3,7 @@
 RSpec.describe Migrations::Conversion::SerialJob do
   subject(:job) { described_class.new(step) }
 
-  let(:step) { instance_double(Migrations::Conversion::ProgressStep) }
+  let(:step) { double("ProgressStep") } # rubocop:disable RSpec/VerifiedDoubles
   let(:item) { "Item" }
   let(:tracker) { instance_double(Migrations::Conversion::StepTracker) }
   let(:stats) { Migrations::Conversion::StepStats.new }
