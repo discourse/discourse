@@ -75,6 +75,10 @@ module BrowserTime
       pw_page.clock.install(time:)
       pw_page.clock.resume
     end
+
+    # Playwright's clock is context-scoped and cannot be uninstalled, so the
+    # context must be disposed after the example instead of soft-reset.
+    page.driver.require_hard_reset! if page.driver.respond_to?(:require_hard_reset!)
   end
 
   # Apply timezone override via CDP if timezone metadata is present.

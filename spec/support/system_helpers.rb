@@ -4,6 +4,25 @@ require "highline/import"
 module SystemHelpers
   PLATFORM_KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
 
+  # A production Ember build strips `@ember/debug` macros (`deprecate`,
+  # `assert`) and the dev-only test affordances, so specs asserting that
+  # behaviour are conditionally skipped via `if:` metadata.
+  def self.production_ember_build?
+    return @production_ember_build if defined?(@production_ember_build)
+
+    @production_ember_build =
+      if ENV["EMBER_ENV"].present?
+        ENV["EMBER_ENV"] == "production"
+      else
+        begin
+          info = Rails.root.join("frontend/discourse/dist/BUILD_INFO.json")
+          info.exist? && JSON.parse(info.read)["ember_env"] == "production"
+        rescue StandardError
+          false
+        end
+      end
+  end
+
   # Pass to `send_keys` to move the caret to the start of the current line in a
   # contenteditable. The Home key doesn't move the caret on macOS; Cmd+Left does.
   LINE_START_KEY = RUBY_PLATFORM =~ /darwin/i ? %i[meta left] : :home
@@ -55,12 +74,66 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    visit File.join(
-            GlobalSetting.relative_url_root || "",
-            "/session/#{user.encoded_username}/become.json?redirect=false",
-          )
+    path =
+      File.join(
+        GlobalSetting.relative_url_root || "",
+        "/session/#{user.encoded_username}/become.json?redirect=false",
+      )
 
-    expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
+    # Run the same request the browser used to be navigated to through the app
+    # in-process instead. This keeps every server-side side effect of
+    # `SessionController#become` (`log_on_user`, auth token generation, the
+    # full middleware stack) while skipping an entire Chrome page navigation
+    # per sign-in; the session cookies from the response are copied into the
+    # browser context so the next real navigation is authenticated.
+    rack_session = Rack::Test::Session.new(Rails.application)
+    rack_session.get(
+      "http://#{Capybara.server_host}#{path}",
+      {},
+      { "HTTP_USER_AGENT" => "Mozilla/5.0 (SystemHelpers#sign_in)" },
+    )
+    response = rack_session.last_response
+
+    if !response.ok? ||
+         !response.body.include?("Signed in to #{user.encoded_username} successfully")
+      raise "sign_in for #{user.encoded_username} failed (HTTP #{response.status}): #{response.body[0, 300]}"
+    end
+
+    cookies =
+      Array(response.headers["Set-Cookie"])
+        .flat_map { |header| header.split("\n") }
+        .filter_map do |line|
+          cookie, *attributes = line.split(/;\s*/)
+          name, _, value = cookie.partition("=")
+          next if name.blank?
+          attributes = attributes.map(&:downcase)
+          same_site = attributes.filter_map { |a| a[/\Asamesite=(\w+)\z/, 1]&.capitalize }.first
+          {
+            name: name,
+            value: value,
+            path: "/",
+            httpOnly: attributes.include?("httponly"),
+            secure: attributes.include?("secure"),
+            sameSite: same_site || "Lax",
+          }
+        end
+
+    page.driver.with_playwright_page do |pw_page|
+      pw_page.context.add_cookies(
+        # `visit "/foo"` resolves to `Capybara.server_host`, but some specs
+        # navigate to `test.localhost` absolute URLs — cover both hosts.
+        cookies.flat_map do |cookie|
+          [Capybara.server_host, "test.localhost"].map { |domain| cookie.merge(domain: domain) }
+        end,
+      )
+    end
+
+    # `Capybara::Session#reset!` only resets the driver (closing the browser
+    # context and dropping the cookies injected above) when the session has
+    # been used. The old `visit`-based sign_in marked it used implicitly;
+    # without this, `Capybara.reset_sessions!` (e.g. in specs that sign in and
+    # then test anonymous access) silently keeps the authenticated context.
+    page.instance_variable_set(:@touched, true)
   end
 
   def setup_system_test
@@ -422,28 +495,59 @@ module SystemHelpers
 
   def capture_log_entries(controller:, entries:, action: nil)
     log = Rails.root.join("log", "#{Rails.env}.log")
-    File.truncate(log, 0) if File.exist?(log)
+
+    # In parallel system-test runs every worker's in-process app server appends
+    # its lograge access log to this one shared `log/#{Rails.env}.log`. The old
+    # implementation `File.truncate`d that shared file and then waited for the
+    # right number of matching lines, which races the other 11 workers: their
+    # interleaved entries (and, for `truncate`, their concurrent writes) make the
+    # matchers latch onto the wrong lines. Instead of truncating, record the
+    # current end-of-file and read only what is appended while the block runs,
+    # and keep just the entries our own worker wrote. `DiscourseLogstashLogger`
+    # stamps every line with the writing process's `pid`, and Capybara's test
+    # server runs in this same process, so `pid` uniquely identifies our worker.
+    offset = File.exist?(log) ? File.size(log) : 0
+    own_pid = Process.pid
 
     yield
 
     read =
       lambda do
         return [] unless File.exist?(log)
-        File.open(log) do |f|
-          f
-            .read
-            .lines
-            .reject { |l| l.strip.empty? }
-            .filter_map do |line|
-              JSON.parse(line)
-            rescue JSON::ParserError
-              nil
-            end
-            .select { |e| e["controller"] == controller && (action.nil? || e["action"] == action) }
-        end
+        matching =
+          File.open(log) do |f|
+            f.seek(offset) if f.size >= offset
+            f
+              .read
+              .lines
+              .reject { |l| l.strip.empty? }
+              .filter_map do |line|
+                JSON.parse(line)
+              rescue JSON::ParserError
+                nil
+              end
+              .select do |e|
+                e["controller"] == controller && (action.nil? || e["action"] == action)
+              end
+          end
+
+        # Prefer the entries our own worker's server wrote; fall back to the
+        # unfiltered set if `pid` is ever unavailable (e.g. an out-of-process
+        # server) so this can only sharpen the result, never empty it.
+        own = matching.select { |e| e["pid"] == own_pid }
+        own.any? ? own : matching
       end
 
-    try_until_success { raise Capybara::ExpectationNotMet if read.call.size < entries }
+    # The `/srv/pv` beacon POST can take longer than the 4s default Capybara wait
+    # to be served and logged under 12-worker parallel load: MessageBus's
+    # long-poll parks one of the in-process server's ~4 threads, so the beacon
+    # queues behind each navigation's EMBER_ENV=development asset burst. When it
+    # times out here the two BPV examples fail in the parallel phase and
+    # turbo_rspec re-runs them in a ~52s serial flaky-retry appended to the step
+    # (measured 51.61s in the iter-0101 CI log). Waiting a few extra seconds
+    # inline for the beacon on the one worker that owns this spec is far cheaper
+    # than that serial retry, and only that worker pays it.
+    try_until_success(timeout: 20) { raise Capybara::ExpectationNotMet if read.call.size < entries }
     read.call
   end
 end
