@@ -32,7 +32,18 @@ module DiscourseRssPolling
     end
 
     def categories
-      @accessor.element_content(:categories).map { |c| c.content }
+      # RSS <category> elements expose their value via `content`, while Atom
+      # <category term="..."> elements use `term` instead.
+      @accessor
+        .element_content(:categories)
+        .map do |category|
+          if category.respond_to?(:content) && category.content
+            category.content
+          elsif category.respond_to?(:term)
+            category.term
+          end
+        end
+        .compact
     end
 
     def image_link
@@ -43,8 +54,19 @@ module DiscourseRssPolling
       url&.starts_with?("https://www.youtube.com/watch")
     end
 
+    # Normalized to a Time (or nil). RSS uses <pubDate> (which the parser
+    # already returns as a Time); Atom uses <published>, falling back to
+    # <updated> for feeds that only provide the latter (returned as a String).
     def pubdate
-      @accessor.element_content(:pubDate) || @accessor.element_content(:published)
+      raw =
+        @accessor.element_content(:pubDate) || @accessor.element_content(:published) ||
+          @accessor.element_content(:updated)
+      return if raw.blank?
+      return raw if raw.respond_to?(:iso8601)
+
+      Time.zone.parse(raw.to_s)
+    rescue ArgumentError, TypeError
+      nil
     end
 
     private
