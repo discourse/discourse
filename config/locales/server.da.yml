@@ -879,6 +879,9 @@ da:
       write: "Skriv alt"
       one_time_password: "Opret et engangs login token"
       bookmarks_calendar: "Læse bogmærkepåmindelser"
+    device:
+      code: "Kode"
+      continue: "Fortsæt"
     invalid_public_key: "Beklager, den offentlige nøgle er ugyldig."
     invalid_auth_redirect: "Beklager, denne auth_redirect vært er ikke tilladt."
     invalid_token: "Manglede, ugyldigt eller udløbet token."

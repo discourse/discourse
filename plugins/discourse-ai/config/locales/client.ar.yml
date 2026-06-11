@@ -311,6 +311,10 @@ ar:
             model_settings: "إعدادات النموذج"
             related_topics: "الموضوعات ذات الصلة"
             semantic_search: "البحث الدلالي"
+        admin_dashboard:
+          highlights: "التمييزات"
+          setting_groups:
+            settings: "الإعدادات الأساسية"
         discord:
           name: "التكامل مع Discord"
           description: "يُمكّن من إجراء عمليات البحث داخل قنوات Discord"

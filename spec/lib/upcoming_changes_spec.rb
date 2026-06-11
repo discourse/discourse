@@ -295,6 +295,24 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  describe ".next_status" do
+    it "returns the next automatically promoted status", :aggregate_failures do
+      expect(described_class.next_status(:experimental)).to eq(:alpha)
+      expect(described_class.next_status(:alpha)).to eq(:beta)
+      expect(described_class.next_status(:beta)).to eq(:stable)
+      expect(described_class.next_status("beta")).to eq(:stable)
+    end
+
+    it "returns nil for statuses outside automatic promotion", :aggregate_failures do
+      expect(described_class.next_status(:conceptual)).to be_nil
+      expect(described_class.next_status(:stable)).to be_nil
+      expect(described_class.next_status(:permanent)).to be_nil
+      expect(described_class.next_status(:never)).to be_nil
+      expect(described_class.next_status(:unknown)).to be_nil
+      expect(described_class.next_status(nil)).to be_nil
+    end
+  end
+
   describe ".history_for" do
     fab!(:admin)
 

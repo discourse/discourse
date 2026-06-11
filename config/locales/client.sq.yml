@@ -6,6 +6,13 @@
 
 sq:
   js:
+    user_api_key:
+      authorize: "Autorizo"
+      deny: "Anulo"
+      copied: "Kopjuar!"
+      device:
+        code: "Kodi"
+        continue: "Vazhdoni"
     blocks:
       ghost:
         status: "Status"
@@ -1348,6 +1355,9 @@ sq:
       undo_revoke_access: "Anullo heqjen e aksesit"
       api_approved: "Aprovuar më:"
       api_last_used_at: "Përdorur për herë të fundit në:"
+      api_expires_at: "Skadon:"
+      api_expired_at: "Skaduar:"
+      api_expires_never: "asnjëherë"
       theme: "Tema"
       save_to_change_theme: 'Tema do të përditësohet pasi të klikoni "%{save_text}"'
       home: "Faqja kryesore e parazgjedhur"
@@ -4145,6 +4155,10 @@ sq:
                 "2": "Anëtar"
                 "3": "I zakonshëm"
                 "4": "Udhëheqës"
+          search:
+            title: "Kërko"
+            table:
+              status: "Status"
         reports_section:
           modal:
             enabled_heading: "Aktivizuar"

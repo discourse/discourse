@@ -6,6 +6,21 @@
 
 pt_BR:
   js:
+    user_api_key:
+      title: 'Autorizar "%{application_name}"'
+      authorize: "Autorizar"
+      deny: "Cancelar"
+      logged_in_as: "Logado(a) como"
+      permissions_header: 'Isso permitirá que "%{application_name}":'
+      redirect_warning: "A autorização redirecionará você para"
+      copied: "Copiou!"
+      otp_description: 'Você gostaria de permitir que "%{application_name}" acesse este site?'
+      no_trust_level: "Desculpe, você não tem o nível de confiança necessário para acessar a API de usuário(a)."
+      generic_error: "Desculpe, não foi possível emitir as chaves de API de usuário(a). Esse recurso pode ter sido desativado pelo(a) administrador(a) do site."
+      device:
+        code: "Código"
+        continue: "Continuar"
+        authorize_title: 'Autorizar "%{application_name}"'
     blocks:
       ghost:
         status: "Status"
@@ -1689,6 +1704,9 @@ pt_BR:
       undo_revoke_access: "Desfazer revogação de acesso"
       api_approved: "Aprovada:"
       api_last_used_at: "Usada pela última vez em:"
+      api_expires_at: "Expira:"
+      api_expired_at: "Expirou:"
+      api_expires_never: "nunca"
       api_show_permissions:
         one: "Permissões concedidas (%{count})"
         other: "Permissões concedidas (%{count})"
@@ -6166,6 +6184,11 @@ pt_BR:
                 "2": "Membro"
                 "3": "Regular"
                 "4": "Líder"
+          search:
+            title: "Pesquisar"
+            table:
+              searches: "Pesquisas"
+              status: "Status"
         reports_section:
           no_data: "Nenhum dado para exibir"
           modal:

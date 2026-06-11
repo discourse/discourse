@@ -62,6 +62,9 @@ ko:
           name: "검색"
           setting_groups:
             settings: "기본 설정"
+        admin_dashboard:
+          setting_groups:
+            settings: "기본 설정"
         discord:
           setting_groups:
             settings: "기본 설정"

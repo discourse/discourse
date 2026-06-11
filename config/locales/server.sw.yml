@@ -508,6 +508,9 @@ sw:
       session_info: "Soma taarifa za kipindi cha mtumiaji"
       read: "Soma zote"
       write: "Andika zote"
+    device:
+      code: "Kodi"
+      continue: "Endelea"
   reports:
     default:
       labels:

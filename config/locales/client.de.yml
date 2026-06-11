@@ -6,6 +6,21 @@
 
 de:
   js:
+    user_api_key:
+      title: 'Autorisiere „%{application_name}“'
+      authorize: "Genehmigen"
+      deny: "Abbrechen"
+      logged_in_as: "Angemeldet als"
+      permissions_header: 'Dies erlaubt „%{application_name}“:'
+      redirect_warning: "Bei der Autorisierung wirst du weitergeleitet zu"
+      copied: "Kopiert!"
+      otp_description: 'Möchtest du „%{application_name}“ erlauben, auf diese Website zuzugreifen?'
+      no_trust_level: "Entschuldige, du hast nicht die erforderliche Vertrauensstufe, um die Benutzer-API zu nutzen."
+      generic_error: "Entschuldige, leider können wir keine Benutzer-API-Schlüssel ausgeben. Diese Funktion wurde unter Umständen vom Website-Administrator deaktiviert."
+      device:
+        code: "Code"
+        continue: "Weiter"
+        authorize_title: 'Autorisiere „%{application_name}“'
     blocks:
       ghost:
         status: "Status"
@@ -1701,6 +1716,9 @@ de:
       undo_revoke_access: "Zugriffsrecht wiederherstellen"
       api_approved: "Genehmigt:"
       api_last_used_at: "Zuletzt benutzt am:"
+      api_expires_at: "Gültig bis:"
+      api_expired_at: "Abgelaufen:"
+      api_expires_never: "nie"
       api_show_permissions:
         one: "Berechtigung erteilt (%{count})"
         other: "Berechtigungen erteilt (%{count})"
@@ -6344,6 +6362,11 @@ de:
                 "2": "Mitglied"
                 "3": "Regulär"
                 "4": "Anführer"
+          search:
+            title: "Suche"
+            table:
+              searches: "Suchen"
+              status: "Status"
         reports_section:
           no_data: "Keine Daten anzuzeigen"
           modal:

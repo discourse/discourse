@@ -824,6 +824,9 @@ gl:
       write: "Escribilo todo"
       one_time_password: "Crear un token de inicio de sesión dun só uso"
       bookmarks_calendar: "Ler recordatorios de marcadores"
+    device:
+      code: "Código"
+      continue: "Continuar"
     invalid_public_key: "Sentímolo, a chave pública non é válida."
     invalid_auth_redirect: "Sentímolo, este servidor auth_redirect non está permitido."
     invalid_token: "Token non válido, caducado ou ausente."

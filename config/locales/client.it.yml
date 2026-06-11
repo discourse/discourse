@@ -6,6 +6,16 @@
 
 it:
   js:
+    user_api_key:
+      authorize: "Autorizza"
+      deny: "Annulla"
+      copied: "Copiato!"
+      otp_description: 'Vuoi consentire a "%{application_name}" l''accesso al sito?'
+      no_trust_level: "Spiacenti, non hai il livello di attendibilità richiesto per accedere alle API utente"
+      generic_error: "Spiacenti, non siamo in grado di produrre user API keys, questa caratteristica potrebbe essere stata disabilitata dall'amministratore di sistema"
+      device:
+        code: "Codice"
+        continue: "Continua"
     blocks:
       ghost:
         status: "Stato"
@@ -1539,6 +1549,9 @@ it:
       undo_revoke_access: "Annullare Revoca Accesso"
       api_approved: "Approvato:"
       api_last_used_at: "Ultimo utilizzo:"
+      api_expires_at: "Scadenza:"
+      api_expired_at: "Scaduto:"
+      api_expires_never: "mai"
       theme: "Tema"
       save_to_change_theme: 'Il tema verrà aggiornato dopo aver cliccato su "%{save_text}"'
       home: "Home Page Predefinita"
@@ -5650,6 +5663,11 @@ it:
                 "2": "Membro"
                 "3": "Abituale"
                 "4": "Veterano"
+          search:
+            title: "Cerca"
+            table:
+              searches: "Ricerche"
+              status: "Stato"
         reports_section:
           no_data: "Non ci sono dati da mostrare"
           modal:

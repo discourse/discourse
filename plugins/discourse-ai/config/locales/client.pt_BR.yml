@@ -264,6 +264,9 @@ pt_BR:
             model_settings: "Configurações de modelo"
             related_topics: "Tópicos relacionados"
             semantic_search: "Pesquisa semântica"
+        admin_dashboard:
+          setting_groups:
+            settings: "Configurações básicas"
         discord:
           name: "Integração com o Discourse"
           description: "Adiciona a possibilidade de pesquisar nos canais do Discord"

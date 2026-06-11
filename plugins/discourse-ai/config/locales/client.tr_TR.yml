@@ -299,6 +299,9 @@ tr_TR:
             model_settings: "Model Ayarları"
             related_topics: "İlgili Konular"
             semantic_search: "Anlamsal Arama"
+        admin_dashboard:
+          setting_groups:
+            settings: "Temel Ayarlar"
         discord:
           name: "Discord entegrasyonu"
           description: "Discord kanallarında arama yapma özelliğini ekler"

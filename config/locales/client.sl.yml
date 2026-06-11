@@ -6,6 +6,13 @@
 
 sl:
   js:
+    user_api_key:
+      deny: "Prekliči"
+      copied: "Kopirano!"
+      otp_description: 'Hočete dovoliti "%{application_name}" da dostopa do te strani?'
+      device:
+        code: "Koda"
+        continue: "Nadaljuj"
     blocks:
       ghost:
         status: "Status"
@@ -1210,6 +1217,9 @@ sl:
       undo_revoke_access: "Razveljavi preklic dostopa"
       api_approved: "Odobreno"
       api_last_used_at: "Zadnjič uporabljeno:"
+      api_expires_at: "Poteče:"
+      api_expired_at: "Poteklo:"
+      api_expires_never: "nikoli"
       theme: "Videz"
       save_to_change_theme: 'Tema bo posodobljena, ko kliknete "%{save_text}"'
       home: "Privzeta začetna stran"
@@ -3928,6 +3938,11 @@ sl:
                 "2": "Polnopraven član"
                 "3": "Običajne"
                 "4": "Vodja"
+          search:
+            title: "Išči"
+            table:
+              searches: "Iskanj"
+              status: "Status"
         reports_section:
           no_data: "Ni podatkov za prikaz"
           modal:

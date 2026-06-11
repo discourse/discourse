@@ -6,6 +6,21 @@
 
 es:
   js:
+    user_api_key:
+      title: 'Autorizar a «%{application_name}»'
+      authorize: "Autorizar"
+      deny: "Cancelar"
+      logged_in_as: "Sesión iniciada como"
+      permissions_header: 'Esto permitirá a «%{application_name}» hacer lo siguiente:'
+      redirect_warning: "Si lo autorizas, se te redireccionará a"
+      copied: "¡Copiado!"
+      otp_description: '¿Te gustaría permitir a «%{application_name}» acceder a este sitio?'
+      no_trust_level: "Lo sentimos, no tienes el nivel de confianza requerido para acceder a la API de usuario"
+      generic_error: "Lo sentimos, no pudimos emitir claves API de usuario, esta funcionalidad podría haber sido desactivada por el administrador del sitio"
+      device:
+        code: "Código"
+        continue: "Continuar"
+        authorize_title: 'Autorizar a «%{application_name}»'
     blocks:
       ghost:
         status: "Estado"
@@ -1699,6 +1714,9 @@ es:
       undo_revoke_access: "Deshacer revocación de acceso"
       api_approved: "Fecha de aprobación:"
       api_last_used_at: "Fecha de último uso:"
+      api_expires_at: "Caduca:"
+      api_expired_at: "Caducado:"
+      api_expires_never: "nunca"
       api_show_permissions:
         one: "Permisos concedidos (%{count})"
         other: "Permisos concedidos (%{count})"
@@ -6279,6 +6297,11 @@ es:
                 "2": "Miembro"
                 "3": "Habitual"
                 "4": "Líder"
+          search:
+            title: "Buscar"
+            table:
+              searches: "Búsquedas"
+              status: "Estado"
         reports_section:
           no_data: "No hay datos que mostrar"
           modal:

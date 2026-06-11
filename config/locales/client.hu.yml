@@ -6,6 +6,21 @@
 
 hu:
   js:
+    user_api_key:
+      title: '"%{application_name}" engedélyezése'
+      authorize: "Engedélyezés"
+      deny: "Mégse"
+      logged_in_as: "Bejelentkezve mint"
+      permissions_header: 'Ez lehetővé teszi a(z) "%{application_name}" számára a következőket:'
+      redirect_warning: "Az engedélyezés átirányít a következőre:"
+      copied: "Másolva!"
+      otp_description: 'Szeretné, hogy a(z) „%{application_name}” hozzáférjen ehhez az oldalhoz?'
+      no_trust_level: "Sajnáljuk, nem rendelkezik a felhasználói API eléréséhez szükséges megbízhatósági szinttel"
+      generic_error: "Sajnos nem tudunk felhasználói API-kulcsokat kiadni, előfordulhat, hogy ezt a funkciót a webhely adminisztrátora letiltotta"
+      device:
+        code: "Kód"
+        continue: "Folytatás"
+        authorize_title: '"%{application_name}" engedélyezése'
     blocks:
       ghost:
         status: "Állapot"
@@ -1684,6 +1699,9 @@ hu:
       undo_revoke_access: "Hozzáférés visszaállítása"
       api_approved: "Jóváhagyva:"
       api_last_used_at: "Utoljára használva:"
+      api_expires_at: "Lejár:"
+      api_expired_at: "Lejárt:"
+      api_expires_never: "soha"
       api_show_permissions:
         one: "%{count} engedély megadva"
         other: "%{count} engedély megadva"
@@ -6156,6 +6174,11 @@ hu:
                 "2": "Tag"
                 "3": "Átlagos"
                 "4": "Vezető"
+          search:
+            title: "Keresés"
+            table:
+              searches: "Keresések"
+              status: "Állapot"
         reports_section:
           no_data: "Nincs megjeleníthető adat"
           modal:

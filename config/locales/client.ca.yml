@@ -6,6 +6,16 @@
 
 ca:
   js:
+    user_api_key:
+      authorize: "Autoritza"
+      deny: "Cancel·la"
+      copied: "Copiat!"
+      otp_description: 'Voleu permetre que "%{application_name}" accedeixi a aquest lloc web?'
+      no_trust_level: "No teniu el nivell de confiança necessari per a accedir a l'API d'usuari."
+      generic_error: "No hem pogut emetre les claus API d'usuari. Aquesta característica pot haver estat desactivada per l'administració del lloc web."
+      device:
+        code: "Codi"
+        continue: "Continua"
     blocks:
       ghost:
         status: "Estat"
@@ -1067,6 +1077,7 @@ ca:
       undo_revoke_access: "Desfés revocar l'accés"
       api_approved: "Aprovat:"
       api_last_used_at: "Utilitzat per darrera vegada:"
+      api_expires_never: "mai"
       theme: "Aparença"
       home: "Pàgina d'inici per defecte"
       staged: "Fictici"
@@ -3295,6 +3306,11 @@ ca:
                 "2": "Membre"
                 "3": "Habitual"
                 "4": "Líder"
+          search:
+            title: "Cerca"
+            table:
+              searches: "Cerques"
+              status: "Estat"
         reports_section:
           modal:
             enabled_heading: "Activat"

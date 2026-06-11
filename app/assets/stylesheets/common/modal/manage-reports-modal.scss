@@ -66,7 +66,7 @@
     }
 
     @include viewport.until(sm) {
-      padding-inline: var(--space-3) var(--space-6);
+      padding: var(--space-2) var(--space-3) var(--space-2) var(--space-6);
     }
   }
 
@@ -118,6 +118,7 @@
     margin: 0;
     color: var(--primary-medium);
     font-size: var(--font-down-1);
+    text-transform: capitalize;
   }
 
   &__arrow {
@@ -126,5 +127,11 @@
 
   .d-modal__footer {
     justify-content: flex-end;
+  }
+
+  .de-cta__description {
+    @include viewport.until(sm) {
+      display: none;
+    }
   }
 }

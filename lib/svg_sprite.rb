@@ -145,6 +145,7 @@ module SvgSprite
         far-chart-bar
         far-circle
         far-circle-dot
+        far-circle-question
         far-clipboard
         far-clock
         far-comment

@@ -257,6 +257,9 @@ ja:
             model_settings: "モデル設定"
             related_topics: "関連トピック"
             semantic_search: "セマンティック検索"
+        admin_dashboard:
+          setting_groups:
+            settings: "基本設定"
         discord:
           name: "Discord 統合"
           description: "Discord チャンネルを検索する機能を追加します"

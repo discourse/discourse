@@ -6,6 +6,16 @@
 
 id:
   js:
+    user_api_key:
+      authorize: "Izinkan"
+      deny: "Batal"
+      copied: "Disalin!"
+      otp_description: 'Apakah Anda ingin mengizinkan "%{application_name}" untuk mengakses situs ini?'
+      no_trust_level: "Maaf, Anda tidak memiliki trust level yang diperlukan untuk mengakses API pengguna"
+      generic_error: "Maaf, kami tidak dapat mengeluarkan kunci API pengguna, fitur ini mungkin dinonaktifkan oleh admin situs"
+      device:
+        code: "Kode"
+        continue: "Lanjutkan"
     blocks:
       ghost:
         status: "Status"
@@ -1111,6 +1121,7 @@ id:
       undo_revoke_access: "Batalkan Cabut Akses"
       api_approved: "Disetujui:"
       api_last_used_at: "Terakhir digunakan pada:"
+      api_expires_never: "tidak pernah"
       theme: "Tema"
       home: "Halaman Utama"
       staff_counters:
@@ -2481,6 +2492,10 @@ id:
                 "0": "Baru"
                 "2": "Anggota"
                 "3": "Umum"
+          search:
+            title: "Cari"
+            table:
+              status: "Status"
         reports_section:
           modal:
             enabled_heading: "Diaktifkan"

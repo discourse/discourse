@@ -6,6 +6,16 @@
 
 ur:
   js:
+    user_api_key:
+      authorize: "اجازت دیں"
+      deny: "منسوخ کریں"
+      copied: "کاپی کر لیا!"
+      otp_description: 'کیا آپ "%{application_name}" کو اِس سائٹ تک رسائی دینا پسند کریں گے؟'
+      no_trust_level: "معذرت، آپ کے پاس رکن API تک رسائی کے لیے مطلوبہ فعالیت کا درجہ نہیں ہے۔"
+      generic_error: "معذرت، ہم رکن API کیز جاری کرنے سے قاصر ہیں، یہ ترتیب فورم کے منتظم کی طرف سے غیر فعال ہوسکتی ہے"
+      device:
+        code: "کَوڈ"
+        continue: "جاری رکھیں"
     blocks:
       ghost:
         status: "حیثیت"
@@ -1722,6 +1732,9 @@ ur:
       undo_revoke_access: "رسائی کالعدم کو منسوخ کریں"
       api_approved: "منظورشدہ"
       api_last_used_at: "آخری بار استعمال کیا:"
+      api_expires_at: "میعاد ختم:"
+      api_expired_at: "میعاد ختم ہوگئی:"
+      api_expires_never: "کبھی نہیں "
       theme: "تھیم"
       save_to_change_theme: 'آپ کے "%{save_text}" پر کلک کرنے کے بعد تھیم کو اپ ڈیٹ کر دیا جائے گا۔'
       home: "ڈیفالٹ ہوم پیج"
@@ -6181,6 +6194,11 @@ ur:
                 "2": "ممبر"
                 "3": "رَیگولر"
                 "4": "لِیڈر"
+          search:
+            title: "تلاش کریں"
+            table:
+              searches: "سرچز"
+              status: "حیثیت"
         reports_section:
           modal:
             enabled_heading: "فعال شدہ"

@@ -151,12 +151,7 @@ module DiscourseAutomation
       return if !enabled
       return if DiscourseAutomation.triggers_suppressed?
 
-      if DiscourseAutomation.recursion_depth >= DiscourseAutomation::MAX_RECURSION_DEPTH
-        Stat.log(id) do
-          raise DiscourseAutomation::RecursionLimitExceeded,
-                "Automation recursion limit exceeded (max: #{DiscourseAutomation::MAX_RECURSION_DEPTH})"
-        end
-      end
+      return if DiscourseAutomation.recursion_depth >= DiscourseAutomation.max_recursion_depth
 
       begin
         DiscourseAutomation.increment_recursion_depth

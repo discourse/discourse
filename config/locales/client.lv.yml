@@ -6,6 +6,12 @@
 
 lv:
   js:
+    user_api_key:
+      deny: "Atcelt"
+      copied: "Nokopēts!"
+      device:
+        code: "Kods"
+        continue: "Turpināt"
     blocks:
       ghost:
         status: "Statuss"
@@ -1034,6 +1040,8 @@ lv:
       undo_revoke_access: "Atcelt piekļuves liegšanu"
       api_approved: "Apstiprināts:"
       api_last_used_at: "Pēdējoreiz izmantots:"
+      api_expires_at: "Derīguma termiņš beidzas:"
+      api_expires_never: "nekad"
       theme: "Tēma"
       save_to_change_theme: 'Tēma tiks atjaunināta pēc noklikšķināšanas uz "%{save_text}"'
       home: "Noklusējuma sākumlapa"
@@ -3047,6 +3055,10 @@ lv:
                 "0": "Jauns"
                 "2": "Biedrs"
                 "3": "Regulārs"
+          search:
+            title: "Meklēt"
+            table:
+              status: "Statuss"
         reports_section:
           modal:
             enabled_heading: "Ieslēgts"

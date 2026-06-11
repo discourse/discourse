@@ -3,7 +3,22 @@
 describe AdminDashboardSectionConfiguration do
   fab!(:admin)
 
+  before { SiteSetting.admin_dashboard_search_section_enabled = true }
+
   describe ".sections" do
+    it "omits the search section while admin_dashboard_search_section_enabled is disabled" do
+      SiteSetting.admin_dashboard_search_section_enabled = false
+
+      expect(described_class.sections).to eq(
+        [
+          { id: "highlights", visible: true },
+          { id: "reports", visible: true },
+          { id: "traffic", visible: true },
+          { id: "engagement", visible: true },
+        ],
+      )
+    end
+
     it "returns every seeded section, all visible, in canonical order by default" do
       expect(described_class.sections).to eq(
         [
@@ -11,6 +26,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "reports", visible: true },
           { id: "traffic", visible: true },
           { id: "engagement", visible: true },
+          { id: "search", visible: true },
         ],
       )
     end
@@ -32,6 +48,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "reports", visible: true },
           { id: "traffic", visible: true },
           { id: "engagement", visible: true },
+          { id: "search", visible: true },
         ],
       )
     end
@@ -45,6 +62,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "highlights", visible: false },
           { id: "engagement", visible: true },
           { id: "traffic", visible: false },
+          { id: "search", visible: false },
         ],
         actor: admin,
       )
@@ -71,6 +89,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "highlights", visible: false },
           { id: "reports", visible: true },
           { id: "traffic", visible: true },
+          { id: "search", visible: true },
         ],
       )
     end
@@ -88,6 +107,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "reports", visible: true },
           { id: "traffic", visible: true },
           { id: "engagement", visible: true },
+          { id: "search", visible: true },
         ],
       )
     end
@@ -99,6 +119,7 @@ describe AdminDashboardSectionConfiguration do
           { id: "reports", visible: "false" },
           { id: "engagement", visible: 1 },
           { id: "traffic", visible: 0 },
+          { id: "search", visible: "f" },
         ],
         actor: admin,
       )

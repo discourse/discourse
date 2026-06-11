@@ -6,6 +6,12 @@
 
 bg:
   js:
+    user_api_key:
+      deny: "Отмени"
+      copied: "Копирано!"
+      device:
+        code: "Код"
+        continue: "Напред"
     blocks:
       ghost:
         status: "Статус"
@@ -1216,6 +1222,9 @@ bg:
       undo_revoke_access: "Отмяна прекратяване на достъпа"
       api_approved: "Одобрени:"
       api_last_used_at: "Последно използван на:"
+      api_expires_at: "Изтича:"
+      api_expired_at: "Изтекъл срок:"
+      api_expires_never: "никога"
       theme: "Тема"
       save_to_change_theme: 'Темата ще бъде актуализирана, след като кликнете върху "%{save_text}“'
       home: "Начална страница по подразбиране"
@@ -3617,6 +3626,11 @@ bg:
                 "2": "Член"
                 "3": "Редовен"
                 "4": "лидер "
+          search:
+            title: "Търсене"
+            table:
+              searches: "Търсения"
+              status: "Статус"
         reports_section:
           modal:
             enabled_heading: "Да е включен"

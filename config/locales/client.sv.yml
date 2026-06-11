@@ -6,6 +6,16 @@
 
 sv:
   js:
+    user_api_key:
+      authorize: "Godkänn"
+      deny: "Avbryt"
+      copied: "Kopierad!"
+      otp_description: 'Vill du tillåta att "%{application_name}" får tillträde till din sida?'
+      no_trust_level: "Tyvärr har du inte den nödvändiga förtroendenivån för att få tillgång till användar-API:n"
+      generic_error: "Tyvärr kan vi inte utfärda API-nycklar, denna funktion har kanske inaktiverats av administratören"
+      device:
+        code: "Kod"
+        continue: "Fortsätt"
     blocks:
       ghost:
         status: "Status"
@@ -1273,6 +1283,9 @@ sv:
       undo_revoke_access: "Ångra återkallelse av åtkomst"
       api_approved: "Godkänd:"
       api_last_used_at: "Senast använd kl.:"
+      api_expires_at: "Utgår:"
+      api_expired_at: "Utgången:"
+      api_expires_never: "aldrig"
       theme: "Tema"
       save_to_change_theme: 'Tema kommer att uppdateras efter att du klickat på "%{save_text}"'
       home: "Standardhemsida"
@@ -4604,6 +4617,11 @@ sv:
                 "2": "Medlem"
                 "3": "Vanlig"
                 "4": "Ledare"
+          search:
+            title: "Sök"
+            table:
+              searches: "Sökningar"
+              status: "Status"
         reports_section:
           no_data: "Ingen data att visa"
           modal:

@@ -6,6 +6,21 @@
 
 nl:
   js:
+    user_api_key:
+      title: '''%{application_name}'' autoriseren'
+      authorize: "Autoriseren"
+      deny: "Annuleren"
+      logged_in_as: "Aanmelden als"
+      permissions_header: 'Dit staat ''%{application_name}'' toe om:'
+      redirect_warning: "Autoriseren leidt je door om naar"
+      copied: "Gekopieerd!"
+      otp_description: 'Wil je ''%{application_name}'' toegang tot deze website geven?'
+      no_trust_level: "Sorry, je hebt niet het vereiste vertrouwensniveau voor toegang tot de gebruikers-API."
+      generic_error: "Sorry, we kunnen geen API-sleutels voor gebruikers uitgeven; deze functie is mogelijk uitgeschakeld door de websitebeheerder."
+      device:
+        code: "Code"
+        continue: "Doorgaan"
+        authorize_title: '''%{application_name}'' autoriseren'
     blocks:
       ghost:
         status: "Status"
@@ -1701,6 +1716,9 @@ nl:
       undo_revoke_access: "Toegang intrekken ongedaan maken"
       api_approved: "Goedgekeurd:"
       api_last_used_at: "Laatst gebruikt op:"
+      api_expires_at: "Verloopt:"
+      api_expired_at: "Verlopen:"
+      api_expires_never: "nooit"
       api_show_permissions:
         one: "Toestemming verleend (%{count})"
         other: "Toestemming verleend (%{count})"
@@ -6344,6 +6362,11 @@ nl:
                 "2": "Lid"
                 "3": "Normaal"
                 "4": "Leider"
+          search:
+            title: "Zoeken"
+            table:
+              searches: "Zoekopdrachten"
+              status: "Status"
         reports_section:
           no_data: "Geen gegevens om weer te geven"
           modal:

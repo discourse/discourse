@@ -6,6 +6,12 @@
 
 sr:
   js:
+    user_api_key:
+      deny: "Odustani"
+      write_scope_warning: "Zahtevan je pun pristup za pisanje — ova aplikacija će moći da objavljuje, uređuje i briše sadržaj. Nastavite samo ako joj potpuno verujete."
+      copied: "Kopirano!"
+      device:
+        continue: "Nastavi"
     blocks:
       ghost:
         status: "Status"
@@ -1291,6 +1297,7 @@ sr:
       muted_users: "Utišano"
       tracked_topics_link: "Prikaži"
       api_approved: "Potvrđenji:"
+      api_expires_never: "nikada"
       staff_counters:
         suspensions:
           one: '<span class="%{className}">%{count}</span> suspenzija'
@@ -2999,6 +3006,10 @@ sr:
                 new_signups: "Nove registracije"
                 dau_mau: "DAU / MAU lepljivost"
                 daily_engaged_users: "Dnevno angažovano"
+          search:
+            title: "Pretraži"
+            table:
+              status: "Status"
         reports_section:
           modal:
             enabled_heading: "Omogućeno"
