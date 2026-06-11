@@ -147,6 +147,25 @@ RSpec.describe SecondFactorManager do
         expect(user.has_multiple_second_factor_methods?).to eq(false)
       end
     end
+
+    context "when passkeys count as a second factor" do
+      before { SiteSetting.allow_passkeys_for_2fa = true }
+
+      it "counts a passkey alongside totp" do
+        disable_security_key
+        expect(user.has_multiple_second_factor_methods?).to eq(false)
+
+        Fabricate(:passkey_with_random_credential, user: user)
+        expect(user.has_multiple_second_factor_methods?).to eq(true)
+      end
+
+      it "returns false for a passkey-only user" do
+        disable_security_key
+        disable_totp
+        Fabricate(:passkey_with_random_credential, user: user)
+        expect(user.has_multiple_second_factor_methods?).to eq(false)
+      end
+    end
   end
 
   describe "#only_security_keys_enabled?" do
@@ -212,16 +231,20 @@ RSpec.describe SecondFactorManager do
       end
 
       context "when the user has a passkey and allow_passkeys_for_2fa is enabled" do
-        # Login / email-login / password-reset flows call authenticate_second_factor
-        # without a second_factor_method. They don't advertise passkeys, so a
-        # passkey-only user must still pass through these flows; only the explicit
-        # 2FA endpoint (which submits a method) should require passkey validation.
         before do
           SiteSetting.allow_passkeys_for_2fa = true
           Fabricate(:passkey_with_random_credential, user: user)
         end
 
-        it "returns OK when no second_factor_method is submitted" do
+        it "is rejected when no second_factor_method is submitted" do
+          result = user.authenticate_second_factor(params, server_session)
+          expect(result.ok).to eq(false)
+          expect(result.error).to eq(I18n.t("login.invalid_second_factor_method"))
+          expect(result.passkeys_enabled).to eq(true)
+        end
+
+        it "returns OK when allow_passkeys_for_2fa is disabled" do
+          SiteSetting.allow_passkeys_for_2fa = false
           expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
         end
 
