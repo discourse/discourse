@@ -30,6 +30,7 @@ ru:
       queries: "Запросы"
       query_created: "Запрос создан!"
       mode:
+        manual: "Напишите SQL-запрос"
         ai: "Генерация с помощью ИИ"
       or: "или"
       admins_only: "Исследование данных доступно только для администраторов."
@@ -78,8 +79,13 @@ ru:
       undo: "Отменить изменения"
       delete: "Удалить"
       sql_label: "SQL"
+      export_as:
+        label: "Экспортировать как…"
+        results_json: "Результаты (JSON)"
+        results_csv: "Результаты (CSV)"
       others_dirty: "Запрос имеет несохранённые изменения, которые будут потеряны, если вы уйдёте со страницы."
       run_time: "Запрос завершен за %{value} мс."
+      cached_result_notice: "Отображение кэшированных результатов из %{relative_time}."
       result_count:
         one: "%{count} результат."
         few: "%{count} результата."

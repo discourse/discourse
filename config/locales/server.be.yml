@@ -2310,7 +2310,7 @@ be:
       linked: '% {Імя карыстальніка} звязана з вашай пасады ад "% {} тэме" -% {SITE_TITLE}'
       watching_first_post: '% {Імя карыстальніка} стварыў новую тэму "% {тэма}" - {%} SITE_TITLE'
       confirm_title: "Апавяшчэння ўключаная -% {SITE_TITLE}"
-      confirm_body: "Поспех! Паведамлення былі ўключаны."
+      confirm_body: "Гатова! Апавяшчэнні ўключаны."
       custom: "Апавяшчэнне ад% {імя карыстальніка} на {%} SITE_TITLE"
   staff_action_logs:
     not_found: "не знойдзены"
