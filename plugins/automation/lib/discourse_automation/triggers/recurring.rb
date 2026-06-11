@@ -49,20 +49,6 @@ module DiscourseAutomation
         now = Time.zone.now
         interval = interval.to_i
 
-        if !interval.positive?
-          log_debugging_info(
-            id: automation.id,
-            start_date:,
-            interval:,
-            frequency:,
-            previous_start_date:,
-            previous_interval:,
-            previous_frequency:,
-            now:,
-          )
-          return
-        end
-
         if start_date > now
           automation.pending_automations.create!(execute_at: start_date)
           return
