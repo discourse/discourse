@@ -143,42 +143,26 @@ describe "Recurring" do
         )
       end
 
-      it "does not schedule if the interval is zero" do
-        automation.upsert_field!(
-          "start_date",
-          "date_time",
-          { value: Time.parse("2023-01-31 07:30:00 UTC") },
-          target: "trigger",
-        )
-        automation.upsert_field!(
-          "recurrence",
-          "period",
-          { value: { interval: 0, frequency: "month" } },
-          target: "trigger",
-        )
-
-        freeze_time(Time.parse("2023-01-31 07:30:00 UTC")) { automation.trigger! }
-
-        expect(automation.reload.pending_automations.count).to eq(0)
+      it "rejects a zero interval" do
+        expect {
+          automation.upsert_field!(
+            "recurrence",
+            "period",
+            { value: { interval: "0", frequency: "month" } },
+            target: "trigger",
+          )
+        }.to raise_error(ActiveRecord::RecordInvalid)
       end
 
-      it "does not schedule if the interval is negative" do
-        automation.upsert_field!(
-          "start_date",
-          "date_time",
-          { value: Time.parse("2023-01-31 07:30:00 UTC") },
-          target: "trigger",
-        )
-        automation.upsert_field!(
-          "recurrence",
-          "period",
-          { value: { interval: -1, frequency: "month" } },
-          target: "trigger",
-        )
-
-        freeze_time(Time.parse("2023-01-31 07:30:00 UTC")) { automation.trigger! }
-
-        expect(automation.reload.pending_automations.count).to eq(0)
+      it "rejects a negative interval" do
+        expect {
+          automation.upsert_field!(
+            "recurrence",
+            "period",
+            { value: { interval: "-1", frequency: "month" } },
+            target: "trigger",
+          )
+        }.to raise_error(ActiveRecord::RecordInvalid)
       end
 
       it "preserves the selected day when it is the last day of February" do

@@ -95,12 +95,10 @@ module DiscourseAutomation
               .between(now.end_of_week, now + interval_end.weeks)
               .find { |date| date > now }
           when "month"
-            next_date = start_date
-            steps = 0
-            while next_date <= now
-              steps += interval
-              next_date = start_date + steps.months
-            end
+            months_elapsed = (now.year - start_date.year) * 12 + (now.month - start_date.month)
+            steps = (months_elapsed.to_f / interval).ceil * interval
+            next_date = start_date + steps.months
+            next_date = start_date + (steps += interval).months while next_date <= now
             next_date
           when "year"
             RRule::Rule
@@ -145,7 +143,12 @@ DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::RECURRING) d
         extra: {
           content: DiscourseAutomation::Triggers::Recurring::RECURRENCE_CHOICES,
         },
-        required: true
+        required: true,
+        validator: ->(value) do
+          if value && !value["interval"].to_i.positive?
+            I18n.t("discourse_automation.triggerables.recurring.invalid_interval")
+          end
+        end
   field :start_date, component: :date_time, required: true
 
   on_update do |automation, fields, previous_fields|
