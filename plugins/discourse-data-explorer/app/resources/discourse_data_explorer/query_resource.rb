@@ -5,6 +5,9 @@ module DiscourseDataExplorer
     self.model = DiscourseDataExplorer::Query
     self.type = :queries
 
+    belongs_to :user, resource: UserResource
+    many_to_many :groups, resource: GroupResource, foreign_key: { query_groups: :query_id }
+
     attribute :name, :string
     attribute :description, :string
     attribute :sql, :string

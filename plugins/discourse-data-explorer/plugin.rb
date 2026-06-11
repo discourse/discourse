@@ -49,6 +49,10 @@ after_initialize do
     end
   end
 
+  # JSON:API modernization spike (Graphiti): the many_to_many sideload on
+  # QueryResource matches groups back to queries via group.query_groups.
+  reloadable_patch { Group.has_many :query_groups, class_name: "DiscourseDataExplorer::QueryGroup" }
+
   add_to_class(:guardian, :user_is_a_member_of_group?) do |group|
     return false if !current_user
     return true if current_user.admin?
