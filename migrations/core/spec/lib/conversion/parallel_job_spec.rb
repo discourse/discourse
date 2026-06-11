@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Conversion::ParallelJob do
-  subject(:job) { described_class.new(step) }
+  subject(:job) { described_class.new(processor) }
 
-  let(:step) { double("ProgressStep") } # rubocop:disable RSpec/VerifiedDoubles
+  let(:processor) { instance_double(Migrations::Conversion::ProgressStep::Processor) }
   let(:item) { { key: "value" } }
   let(:tracker) { instance_double(Migrations::Conversion::StepTracker) }
   let(:stats) { Migrations::Conversion::StepStats.new }
   let(:intermediate_db) { class_double(Migrations::Database::IntermediateDB).as_stubbed_const }
 
   before do
-    allow(step).to receive(:tracker).and_return(tracker)
+    allow(processor).to receive(:tracker).and_return(tracker)
+    allow(processor).to receive(:setup)
 
     allow(tracker).to receive(:reset_stats!)
     allow(tracker).to receive(:log_error)
@@ -20,20 +21,26 @@ RSpec.describe Migrations::Conversion::ParallelJob do
     allow(intermediate_db).to receive(:close)
   end
 
-  after do
-    Migrations::Database::IntermediateDB.setup(nil)
-    Migrations::ForkManager.clear!
+  describe "#initialize" do
+    it "does not register an `after_fork_child` hook" do
+      expect { described_class.new(processor) }.not_to change { Migrations::ForkManager.size }
+    end
   end
 
-  describe "#initialize" do
+  describe "#setup" do
     it "sets up `OfflineConnection` as `IntermediateDB` connection" do
-      described_class.new(step)
+      job.setup
 
-      Migrations::ForkManager.fork do
-        expect(intermediate_db).to have_received(:setup).with(
-          an_instance_of(Migrations::Database::OfflineConnection),
-        )
-      end
+      expect(intermediate_db).to have_received(:setup).with(
+        an_instance_of(Migrations::Database::OfflineConnection),
+      )
+    end
+
+    it "runs the framework setup before the processor's `setup`" do
+      job.setup
+
+      expect(intermediate_db).to have_received(:setup).ordered
+      expect(processor).to have_received(:setup).ordered
     end
   end
 
@@ -44,7 +51,7 @@ RSpec.describe Migrations::Conversion::ParallelJob do
       allow(Migrations::Database::OfflineConnection).to receive(:new).and_return(offline_connection)
       allow(offline_connection).to receive(:clear!)
 
-      allow(step).to receive(:process_item)
+      allow(processor).to receive(:process)
       allow(offline_connection).to receive(:parametrized_insert_statements).and_return(
         [["SQL", [1, 2]], ["SQL", [2, 3]]],
       )
@@ -58,7 +65,7 @@ RSpec.describe Migrations::Conversion::ParallelJob do
     end
 
     it "processes an item and logs errors if exceptions occur" do
-      allow(step).to receive(:process_item).and_raise(StandardError.new("error"))
+      allow(processor).to receive(:process).and_raise(StandardError.new("error"))
 
       job.run(item)
 

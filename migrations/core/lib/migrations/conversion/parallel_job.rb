@@ -3,13 +3,17 @@
 module Migrations
   module Conversion
     class ParallelJob
-      def initialize(step)
-        @step = step
-        @tracker = step.tracker
+      def initialize(processor)
+        @processor = processor
+        @tracker = processor.tracker
 
         @offline_connection = Database::OfflineConnection.new
+      end
 
-        ForkManager.after_fork_child { Database::IntermediateDB.setup(@offline_connection) }
+      # Runs in the worker process, before the first item is processed.
+      def setup
+        Database::IntermediateDB.setup(@offline_connection)
+        @processor.setup
       end
 
       def run(item)
@@ -17,7 +21,7 @@ module Migrations
         @offline_connection.clear!
 
         begin
-          @step.process_item(item)
+          @processor.process(item)
         rescue StandardError => e
           @tracker.log_error("Failed to process item", exception: e, details: item)
         end

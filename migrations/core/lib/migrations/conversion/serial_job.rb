@@ -3,16 +3,20 @@
 module Migrations
   module Conversion
     class SerialJob
-      def initialize(step)
-        @step = step
-        @tracker = step.tracker
+      def initialize(processor)
+        @processor = processor
+        @tracker = processor.tracker
+      end
+
+      def setup
+        @processor.setup
       end
 
       def run(item)
         @tracker.reset_stats!
 
         begin
-          @step.process_item(item)
+          @processor.process(item)
         rescue StandardError => e
           @tracker.log_error("Failed to process item", exception: e, details: item)
         end
