@@ -1,5 +1,5 @@
 import { next } from "@ember/runloop";
-import { focus, render, settled, waitUntil } from "@ember/test-helpers";
+import { fillIn, focus, render, settled, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DOtp from "discourse/ui-kit/d-otp";
@@ -198,16 +198,8 @@ module("Integration | ui-kit | DOtp", function (hooks) {
       <template><DOtp @onChange={{this.onChangeCallback}} /></template>
     );
 
-    const input = this.element.querySelector(".d-otp-input");
-    input.value = "123456";
-    input.dispatchEvent(new Event("input"));
-
-    await settled();
-
-    input.value = "12345";
-    input.dispatchEvent(new Event("input"));
-
-    await settled();
+    await fillIn(".d-otp-input", "123456");
+    await fillIn(".d-otp-input", "12345");
 
     assert.strictEqual(this.value, "12345");
     assert.dom(".d-otp-slot:nth-child(6)").hasText("​ ");
