@@ -13,21 +13,33 @@ RSpec.describe "Rss Polling - admin" do
   end
 
   it "can save an rss polling configuration" do
-    visit("/admin/plugins/rss_polling")
+    visit("/admin/plugins/discourse-rss-polling/feeds")
 
-    find(".add-rss-polling-feed").click
-    find(".rss-polling-feed-url").fill_in(with: url)
-    find(".rss-polling-feed-updates").fill_in(with: "updates")
-    user = PageObjects::Components::SelectKit.new(".rss-polling-feed-user")
-    user.search(current_user.username)
-    user.select_row_by_value(current_user.username)
-    category = PageObjects::Components::SelectKit.new(".rss-polling-feed-category")
+    find(".rss-polling-feeds__add").click
+
+    form = PageObjects::Components::FormKit.new(".rss-polling-feed-form")
+    form.field("feed_url").fill_in(url)
+    form.field("feed_category_filter").fill_in("updates")
+
+    author = PageObjects::Components::SelectKit.new(".rss-polling-feed-form__author")
+    author.expand
+    author.search(current_user.username)
+    author.select_row_by_value(current_user.username)
+
+    category = PageObjects::Components::SelectKit.new(".rss-polling-feed-form__category")
+    category.expand
     category.search(category_1.name)
     category.select_row_by_value(category_1.id)
-    tag = PageObjects::Components::SelectKit.new(".rss-polling-feed-tag")
+
+    tag = PageObjects::Components::SelectKit.new(".rss-polling-feed-form__tags")
+    tag.expand
     tag.search(tag_1.name)
     tag.select_row_by_name(tag_1.name)
-    find(".save-rss-polling-feed").click
+    tag.collapse
+
+    form.submit
+
+    expect(page).to have_css(".rss-polling-feed")
 
     expect(DiscourseRssPolling::RssFeed.last).to have_attributes(
       url:,

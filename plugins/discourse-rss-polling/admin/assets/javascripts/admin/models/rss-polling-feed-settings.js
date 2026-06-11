@@ -22,4 +22,14 @@ export default {
       data: JSON.stringify({ feed_setting: feedSetting }),
     });
   },
+
+  testFeed(feedSetting) {
+    return ajax("/admin/plugins/rss_polling/feed_settings/test", {
+      type: "POST",
+      data: {
+        feed_url: feedSetting.feed_url,
+        feed_category_filter: feedSetting.feed_category_filter,
+      },
+    });
+  },
 };

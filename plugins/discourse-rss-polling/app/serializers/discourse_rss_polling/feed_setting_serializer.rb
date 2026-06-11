@@ -10,6 +10,8 @@ module DiscourseRssPolling
                :discourse_tags,
                :feed_category_filter
 
+    has_one :user, serializer: BasicUserSerializer, embed: :objects
+
     def feed_url
       object.url
     end

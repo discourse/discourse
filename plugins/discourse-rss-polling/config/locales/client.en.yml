@@ -10,13 +10,42 @@ en:
 
     admin:
       rss_polling:
-        feed: Feed Settings
-        discourse: Discourse Settings
+        feed_settings: Feed settings
+        discourse_settings: Discourse settings
         author: Author
+        author_description: The user that imported topics will be attributed to.
         feed_url: URL
         discourse_category: Category
         discourse_tags: Tags
-        feed_category_filter: Category Filter
-        documentation: RSS Polling configuration documentation
-        destroy_feed:
-          confirm: "Are you sure you want to delete this feed?"
+        feed_category_filter: Category filter
+        feed_category_filter_description: Only import items matching this feed category. Leave blank to import everything.
+        feeds:
+          title: Feeds
+          nav_description: Manage the RSS/Atom feeds that are imported into Discourse.
+          description: Configure the RSS/Atom feeds that are polled and imported as topics.
+          add: Add feed
+          add_header: Add feed
+          edit_header: Edit feed
+          empty: You haven't configured any feeds yet.
+          edit: Edit
+          delete: Delete
+          back: Back to feeds
+          save: Save
+          confirm_delete: "Are you sure you want to delete this feed?"
+          delete_success: Feed deleted
+          save_success: Feed saved
+        test:
+          button: Test feed
+          title: Preview
+          empty: This feed returned no items.
+          showing: "Showing the first %{count} of %{total} items."
+          skip_reasons:
+            missing_content: Skipped — the item has no content.
+            missing_title: Skipped — the item has no title.
+            category_filter_mismatch: "Skipped — item categories: %{categories}"
+            category_filter_mismatch_none: Skipped — the item has no categories.
+          errors:
+            fetch_failed: Couldn't fetch the feed. Check that the URL is correct and reachable.
+            parse_failed: The response doesn't look like a valid RSS or Atom feed.
+            invalid_feed: The feed couldn't be read because it's malformed.
+            unknown: Something went wrong while reading the feed.

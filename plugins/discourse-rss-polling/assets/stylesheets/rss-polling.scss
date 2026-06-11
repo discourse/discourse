@@ -1,35 +1,107 @@
-.rss-polling-feed-settings {
-  table {
-    tr {
-      td {
-        position: relative;
+@use "lib/viewport";
 
-        &:first-child input {
-          max-width: 200px;
-        }
+.rss-polling-feed-form {
+  // `<fieldset>` shrink-wraps to its content, so a fieldset containing only
+  // select-kit choosers (which have an intrinsic width) would not span the
+  // full width. Force it so the fields line up with the full-width inputs.
+  .form-kit__fieldset {
+    width: 100%;
+  }
 
-        &:nth-child(2) input {
-          max-width: 100px;
-        }
+  &__buttons {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+  }
+}
 
-        .user-chooser,
-        .category-chooser {
-          max-width: 150px;
-        }
+.rss-polling-feed-test {
+  margin-top: var(--space-4);
 
-        input {
-          margin-bottom: 0;
-        }
+  &__error {
+    margin-top: var(--space-4);
+  }
 
-        .select-kit.multi-select {
-          width: 120px;
-        }
-      }
+  &__title {
+    margin-bottom: var(--space-2);
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5em;
+    padding: var(--space-2);
+    border-top: 1px solid var(--primary-low);
+    border-left: 3px solid transparent;
+
+    // Imported items get a green accent so they stand out...
+    &.--import {
+      border-left-color: var(--success);
     }
 
-    .wide-button {
-      width: 100%;
-      text-align: center;
+    // ...while skipped items recede (muted title, no accent).
+    &.--skip .rss-polling-feed-test__item-title {
+      color: var(--primary-high);
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15em;
+    min-width: 0;
+  }
+
+  &__item-title {
+    word-break: break-word;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__item-date,
+  &__item-reason {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__more,
+  &__empty {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+}
+
+.rss-polling-feed {
+  // Compound selector to beat `.d-table .d-table__overview-name { font-weight: 700 }`.
+  .d-table__overview-name.rss-polling-feed__url {
+    font-family: var(--d-font-family--monospace);
+    font-weight: normal;
+
+    // Long URLs should wrap rather than overflow, especially on mobile where
+    // the controls are absolutely positioned over the top-right of the card.
+    word-break: break-all;
+  }
+
+  &__author {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  // On mobile the d-table renders as cards and the action buttons are
+  // absolutely positioned at the card's top-right. Reserve room so the URL
+  // doesn't run underneath them.
+  @include viewport.until(md) {
+    .d-table__cell.--overview {
+      padding-right: 5.5em;
     }
   }
 }
