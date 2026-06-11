@@ -66,6 +66,10 @@
     }
   }
 
+  .sidebar-section-header-dropdown-btn {
+    --d-button-default-border: none;
+  }
+
   .c-footer button {
     padding-block: 0.75rem !important;
     height: unset !important;
@@ -122,6 +126,18 @@
       height: calc(
         var(--d-control-height) - var(--space-2)
       ) !important; // overrides very specific btn selector at the top of this file
+    }
+  }
+
+  // button on /my/badges
+  .favorite-btn {
+    border-color: var(--primary-low);
+    border-bottom: none;
+    border-right: none;
+
+    &:hover {
+      border-bottom: none;
+      border-right: none;
     }
   }
 }

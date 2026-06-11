@@ -251,7 +251,6 @@ export default class TopicFooterButtons extends Component {
                           @disabled={{button.disabled}}
                           id={{concat "topic-footer-button-" button.id}}
                           class={{dConcatClass
-                            "btn-default"
                             "topic-footer-button"
                             button.classNames
                           }}
