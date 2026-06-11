@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require "net/http"
-require "json"
-require "uri"
-
 module Jobs
   class ReplaceGithubNonPermalinks < ::Jobs::Base
     sidekiq_options queue: "low"
@@ -18,6 +14,9 @@ module Jobs
       post = Post.find_by(id: post_id)
       return if post.blank?
 
+      client = Discourse::GithubApi.for(token: SiteSetting.github_linkback_access_token)
+      return if client.backing_off?
+
       raw = post.raw.dup
       start_raw = raw.dup
 
@@ -29,14 +28,15 @@ module Jobs
         next if excluded?(user, repo, file)
 
         begin
-          api_url = "https://api.github.com/repos/#{user}/#{repo}/commits/#{sha1}"
-          json = api_request(api_url)
-          if json && (json["sha"] != sha1)
-            new_sha = json["sha"]
+          commit = client.get("/repos/#{user}/#{repo}/commits/#{sha1}")
+          if commit && commit["sha"] != sha1
+            new_sha = commit["sha"]
             old_url = "github.com/#{user}/#{repo}/blob/#{sha1}/#{file}#{from_to}"
             new_url = "github.com/#{user}/#{repo}/blob/#{new_sha}/#{file}#{from_to}"
             raw.sub!(old_url, new_url)
           end
+        rescue Discourse::GithubApi::NotFound
+          next
         rescue => e
           log(
             :error,
@@ -75,13 +75,6 @@ module Jobs
     end
 
     private
-
-    def api_request(url)
-      uri = URI(url)
-      response = Net::HTTP.get_response(uri)
-
-      JSON.parse(response.body) if response.kind_of? Net::HTTPSuccess
-    end
 
     def log(log_level, message)
       Rails.logger.public_send(
