@@ -3,6 +3,11 @@
 module Migrations
   module Conversion
     class Step
+      # These constants also make bare `IntermediateDB::...` / `Enums::...`
+      # references work inside `ProgressStep`'s `source` / `processor` blocks:
+      # the blocks are written in step class bodies, and constants in methods
+      # defined via `class_eval(&block)` resolve through the block's lexical
+      # scope — the step class and its ancestors — not the role class.
       IntermediateDB = Database::IntermediateDB
       Enums = Database::IntermediateDB::Enums
 
