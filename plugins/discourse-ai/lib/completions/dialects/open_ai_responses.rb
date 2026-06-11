@@ -30,6 +30,12 @@ module DiscourseAi
           hoist_reasoning(super)
         end
 
+        def native_tools
+          return [] unless prompt.native_tool?(DiscourseAi::Completions::NativeTools::WEB_SEARCH)
+
+          [{ type: "web_search" }]
+        end
+
         private
 
         def disable_native_tools?

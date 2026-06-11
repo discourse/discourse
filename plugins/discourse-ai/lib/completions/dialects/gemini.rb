@@ -55,16 +55,26 @@ module DiscourseAi
         end
 
         def tools
-          return if prompt.tools.blank?
+          return if prompt.tools.blank? && prompt.native_tools.blank?
 
-          translated_tools =
-            prompt.tools.map do |t|
-              tool = { name: t.name, description: t.description }
-              tool[:parameters] = t.parameters_json_schema if t.parameters
-              tool
-            end
+          result = []
 
-          [{ function_declarations: translated_tools }]
+          if prompt.tools.present?
+            translated_tools =
+              prompt.tools.map do |t|
+                tool = { name: t.name, description: t.description }
+                tool[:parameters] = t.parameters_json_schema if t.parameters
+                tool
+              end
+
+            result << { function_declarations: translated_tools }
+          end
+
+          if prompt.native_tool?(DiscourseAi::Completions::NativeTools::WEB_SEARCH)
+            result << { google_search: {} }
+          end
+
+          result.presence
         end
 
         def max_prompt_tokens

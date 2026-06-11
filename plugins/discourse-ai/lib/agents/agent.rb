@@ -284,6 +284,10 @@ module DiscourseAi
         []
       end
 
+      def native_tools
+        []
+      end
+
       def available_tools
         self
           .class
@@ -338,6 +342,7 @@ module DiscourseAi
 
         prompt.max_pixels = self.class.vision_max_pixels if self.class.vision_enabled
         prompt.tools = available_tools.map(&:signature) if available_tools
+        prompt.native_tools = native_tools if native_tools.present?
         available_tools.each do |tool|
           tool.inject_prompt(prompt: prompt, context: context, agent: self)
         end

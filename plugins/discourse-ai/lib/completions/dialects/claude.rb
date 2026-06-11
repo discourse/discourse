@@ -54,7 +54,15 @@ module DiscourseAi
           tools = nil
           tools = tools_dialect.translated_tools if native_tool_support?
 
+          tools = (tools || []).concat(native_tools) if native_tools.present?
+
           ClaudePrompt.new(system_prompt.presence, interleving_messages, tools, tool_choice)
+        end
+
+        def native_tools
+          return [] unless prompt.native_tool?(DiscourseAi::Completions::NativeTools::WEB_SEARCH)
+
+          [{ type: "web_search_20250305", name: "web_search" }]
         end
 
         def max_prompt_tokens

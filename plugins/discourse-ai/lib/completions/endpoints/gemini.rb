@@ -82,19 +82,27 @@ module DiscourseAi
           if tools.present?
             payload[:tools] = tools
 
-            function_calling_config = { mode: "AUTO" }
-            if dialect.tool_choice.present?
-              if dialect.tool_choice == :none
-                function_calling_config = { mode: "NONE" }
-              else
-                function_calling_config = {
-                  mode: "ANY",
-                  allowed_function_names: [dialect.tool_choice],
-                }
-              end
-            end
+            # function_calling_config only applies to function declarations; Gemini
+            # rejects it when the request only carries provider-native tools (e.g.
+            # google_search grounding) with no function_declarations.
+            has_function_declarations =
+              tools.any? { |tool| tool.is_a?(Hash) && tool[:function_declarations].present? }
 
-            payload[:tool_config] = { function_calling_config: function_calling_config }
+            if has_function_declarations
+              function_calling_config = { mode: "AUTO" }
+              if dialect.tool_choice.present?
+                if dialect.tool_choice == :none
+                  function_calling_config = { mode: "NONE" }
+                else
+                  function_calling_config = {
+                    mode: "ANY",
+                    allowed_function_names: [dialect.tool_choice],
+                  }
+                end
+              end
+
+              payload[:tool_config] = { function_calling_config: function_calling_config }
+            end
           end
           if model_params.present?
             payload[:generationConfig].merge!(model_params.except(:response_format))

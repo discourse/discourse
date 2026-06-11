@@ -537,6 +537,7 @@ en:
 
       ai_agent:
         ai_tools: "Tools"
+        native_tools_help: "Provider-native tools (like web search) only appear once \"Force default LLM\" is enabled and the selected LLM supports them."
         mcp_servers: "MCP servers"
         mcp_server_tools_help: "Selected MCP servers expose all of their tools by default. Narrow them per agent to reduce token usage and keep tool choice focused."
         mcp_server_tool_count:

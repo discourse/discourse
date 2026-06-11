@@ -281,6 +281,67 @@ export default class AgentEditor extends Component {
     return this.allTools.filter((tool) => tools.includes(tool.id));
   }
 
+  @cached
+  get llmsById() {
+    const map = {};
+    for (const llm of this.args.agents.resultSetMeta.llms || []) {
+      map[llm.id] = llm;
+    }
+    return map;
+  }
+
+  // Provider-native tools are only offered when the agent forces a default LLM
+  // whose provider supports the tool.
+  supportedNativeToolIds(forceDefaultLlm, defaultLlmId) {
+    if (!forceDefaultLlm || !defaultLlmId) {
+      return [];
+    }
+    return this.llmsById[defaultLlmId]?.supported_native_tools || [];
+  }
+
+  @action
+  availableTools(data) {
+    const supported = this.supportedNativeToolIds(
+      data?.force_default_llm,
+      data?.default_llm_id
+    );
+    return this.allTools.filter((tool) => {
+      if (!tool.native) {
+        return true;
+      }
+      return supported.includes(tool.id.replace("native-", ""));
+    });
+  }
+
+  pruneNativeTools(form, data, forceDefaultLlm, defaultLlmId) {
+    const supported = this.supportedNativeToolIds(
+      forceDefaultLlm,
+      defaultLlmId
+    );
+    const tools = data.tools || [];
+    const kept = tools.filter((toolId) => {
+      if (!toolId.startsWith("native-")) {
+        return true;
+      }
+      return supported.includes(toolId.replace("native-", ""));
+    });
+    if (kept.length !== tools.length) {
+      this.updateToolNames(form, data, kept);
+    }
+  }
+
+  @action
+  onDefaultLlmChange(form, data, value) {
+    form.set("default_llm_id", value);
+    this.pruneNativeTools(form, data, data.force_default_llm, value);
+  }
+
+  @action
+  onForceDefaultLlmChange(form, data, value, { set }) {
+    set("force_default_llm", value);
+    this.pruneNativeTools(form, data, value, data.default_llm_id);
+  }
+
   mcpServerById(serverId) {
     return this.allMcpServers.find((item) => item.id === serverId);
   }
@@ -615,7 +676,7 @@ export default class AgentEditor extends Component {
             <AiLlmSelector
               @value={{field.value}}
               @llms={{@agents.resultSetMeta.llms}}
-              @onChange={{field.set}}
+              @onChange={{fn this.onDefaultLlmChange form data}}
               class="ai-agent-editor__llms"
             />
           </field.Control>
@@ -733,6 +794,7 @@ export default class AgentEditor extends Component {
           <form.Field
             @name="tools"
             @title={{i18n "discourse_ai.ai_agent.tools"}}
+            @description={{i18n "discourse_ai.ai_agent.native_tools_help"}}
             @format="large"
             @type="custom"
             as |field|
@@ -742,7 +804,7 @@ export default class AgentEditor extends Component {
                 @value={{field.value}}
                 @disabled={{data.system}}
                 @onChange={{fn this.updateToolNames form data}}
-                @content={{@agents.resultSetMeta.tools}}
+                @content={{this.availableTools data}}
               />
             </field.Control>
           </form.Field>
@@ -1170,6 +1232,7 @@ export default class AgentEditor extends Component {
                 @showTitle={{false}}
                 @format="large"
                 @type="checkbox"
+                @onSet={{fn this.onForceDefaultLlmChange form data}}
                 as |field|
               >
                 <field.Control />
