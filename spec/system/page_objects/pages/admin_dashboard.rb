@@ -97,6 +97,10 @@ module PageObjects
         PageObjects::Components::AdminDashboardSiteTraffic.new
       end
 
+      def search
+        PageObjects::Components::AdminDashboardSearch.new
+      end
+
       def section_ids_in_order
         all(".db-main [data-section-id]").map { |el| el["data-section-id"] }
       end
