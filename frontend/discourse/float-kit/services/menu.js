@@ -2,11 +2,31 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { trackedSet } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
-import Service from "@ember/service";
+import Service, { service } from "@ember/service";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
+import { bind } from "discourse/lib/decorators";
 
 export default class Menu extends Service {
+  @service router;
+
   registeredMenus = trackedSet();
+
+  constructor() {
+    super(...arguments);
+    this.router.on("routeWillChange", this.onRouteWillChange);
+  }
+
+  willDestroy() {
+    this.router.off("routeWillChange", this.onRouteWillChange);
+    super.willDestroy(...arguments);
+  }
+
+  @bind
+  onRouteWillChange() {
+    for (const menu of [...this.registeredMenus]) {
+      menu.close({ focusTrigger: false });
+    }
+  }
 
   /**
    * Render a menu
