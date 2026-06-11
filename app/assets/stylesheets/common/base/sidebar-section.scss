@@ -14,15 +14,6 @@
     }
   }
 
-  &:hover {
-    .sidebar-section-header-wrapper {
-      .btn.dropdown-select-box-header,
-      .sidebar-section-header-button {
-        opacity: 1;
-      }
-    }
-  }
-
   .sidebar-section-header-wrapper {
     display: flex;
     border-radius: var(--d-border-radius);
@@ -75,6 +66,15 @@
 
       &:focus {
         outline: 2px solid var(--token-color-background-accent-bolder);
+      }
+    }
+  }
+
+  &:hover {
+    .sidebar-section-header-wrapper {
+      .btn.dropdown-select-box-header,
+      .sidebar-section-header-button {
+        opacity: 1;
       }
     }
   }
