@@ -8,5 +8,7 @@ module DiscourseDataExplorer
     self.type = :users
 
     attribute :username, :string
+
+    filter :id # required by the belongs_to sideload from QueryResource
   end
 end
