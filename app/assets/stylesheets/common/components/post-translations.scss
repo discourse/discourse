@@ -13,15 +13,22 @@
   }
 }
 
-.fk-d-tooltip__content[data-identifier="post-language"]
-  .fk-d-tooltip__inner-content {
-  flex-direction: column;
-  align-items: flex-start;
-
-  .post-language__disclaimer {
+.post-info.post-language {
+  .post-language__toggle {
+    font-size: var(--font-down-1);
     color: var(--primary-medium);
-    font-size: var(--font-down-2);
-    margin-top: var(--space-1);
+
+    .d-icon {
+      color: currentcolor;
+    }
+
+    .d-button__suffix-icon {
+      margin-left: var(--space-1);
+    }
+
+    &:hover {
+      color: var(--primary-high);
+    }
   }
 }
 

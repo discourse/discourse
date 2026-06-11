@@ -71,8 +71,11 @@ module PageObjects
       end
 
       def post_language
-        post.find(".post-info.post-language").hover
-        find(".post-language-content")
+        post.find(".post-info.post-language")
+      end
+
+      def toggle_original_content
+        post.find("button.post-language__toggle").click
       end
 
       def open_post_history

@@ -40,6 +40,7 @@ describe "Content Localization" do
   let(:composer) { PageObjects::Components::Composer.new }
   let(:translation_composer) { PageObjects::Components::TranslationComposer.new }
   let(:post_1_obj) { PageObjects::Components::Post.new(1) }
+  let(:post_2_obj) { PageObjects::Components::Post.new(2) }
   let(:post_3_obj) { PageObjects::Components::Post.new(3) }
   let(:post_4_obj) { PageObjects::Components::Post.new(4) }
 
@@ -99,6 +100,23 @@ describe "Content Localization" do
       end
       visit("/")
       topic_list.visit_topic_with_title("Life strategies from The Art of War")
+    end
+
+    it "toggles a single post between translated and original content" do
+      sign_in(japanese_user)
+
+      visit("/t/#{topic.id}")
+      expect(post_1_obj).to have_cooked_content("傑作は単なる軍事戦略についてではありません")
+      expect(post_2_obj).to have_cooked_content("最大の勝利は戦いを必要としないものです")
+
+      post_1_obj.toggle_original_content
+      expect(post_1_obj).to have_cooked_content(
+        "The masterpiece isn’t just about military strategy",
+      )
+      expect(post_2_obj).to have_cooked_content("最大の勝利は戦いを必要としないものです")
+
+      post_1_obj.toggle_original_content
+      expect(post_1_obj).to have_cooked_content("傑作は単なる軍事戦略についてではありません")
     end
 
     it "persists 'Show Original' preference for logged-in users across page loads" do

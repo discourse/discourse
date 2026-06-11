@@ -5,6 +5,7 @@ import Post from "discourse/components/post";
 import DMenus from "discourse/float-kit/components/d-menus";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -290,43 +291,91 @@ module("Integration | Component | Post", function (hooks) {
 
   test("language", async function (assert) {
     this.post.is_localized = true;
-    this.post.language = "en";
+    this.post.language = "ja";
     this.siteSettings.available_locales = [
       { value: "en", name: "English (US)" },
+      { value: "ja", name: "Japanese" },
     ];
 
     await renderComponent(this.post);
 
-    await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
-    assert.dom(".post-language").includesText(
-      i18n("post.original_language", {
-        language: "English (US)",
+    assert.dom(".post-language__toggle").includesText(
+      i18n("post.localized_content_toggle.original_language", {
+        language: "Japanese",
       })
     );
     assert
-      .dom(".post-language")
-      .includesText(i18n("post.ai_translation_disclaimer"));
+      .dom(".post-language__toggle")
+      .hasAttribute(
+        "title",
+        `${i18n("post.original_language", { language: "Japanese" })} ${i18n(
+          "post.ai_translation_disclaimer"
+        )} ${i18n("post.localized_content_toggle.view_original")}`
+      );
   });
 
   test("outdated localization", async function (assert) {
     this.post.is_localized = true;
-    this.post.language = "en";
+    this.post.language = "ja";
     this.post.localization_outdated = true;
     this.siteSettings.available_locales = [
       { value: "en", name: "English (US)" },
+      { value: "ja", name: "Japanese" },
     ];
 
     await renderComponent(this.post);
 
-    await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
-    assert.dom(".post-language").includesText(
-      i18n("post.original_language_and_outdated", {
-        language: "English (US)",
+    assert.dom(".post-language__toggle").hasClass("heatmap-low");
+    assert.dom(".post-language__toggle").hasAttribute(
+      "title",
+      `${i18n("post.original_language_and_outdated", {
+        language: "Japanese",
+      })} ${i18n("post.ai_translation_disclaimer")} ${i18n(
+        "post.localized_content_toggle.view_original"
+      )}`
+    );
+  });
+
+  test("toggling localized content between translation and original", async function (assert) {
+    this.post.is_localized = true;
+    this.post.language = "ja";
+    this.post.cooked = "<p>translated content</p>";
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+      { value: "ja", name: "Japanese" },
+    ];
+
+    pretender.get("/posts/123/cooked.json", () =>
+      response({ cooked: "<p>original content</p>" })
+    );
+
+    await renderComponent(this.post);
+
+    assert.dom(".cooked").hasText("translated content");
+
+    await click(".post-language__toggle");
+
+    assert.dom(".cooked").hasText("original content", "shows the original");
+    assert
+      .dom(".post-language__toggle")
+      .includesText(i18n("post.localized_content_toggle.viewing_original"));
+    assert
+      .dom(".post-language__toggle")
+      .hasAttribute(
+        "title",
+        i18n("post.localized_content_toggle.view_translation")
+      );
+
+    await click(".post-language__toggle");
+
+    assert
+      .dom(".cooked")
+      .hasText("translated content", "shows the translation again");
+    assert.dom(".post-language__toggle").includesText(
+      i18n("post.localized_content_toggle.original_language", {
+        language: "Japanese",
       })
     );
-    assert
-      .dom(".post-language")
-      .includesText(i18n("post.ai_translation_disclaimer"));
   });
 
   test("read indicator", async function (assert) {
