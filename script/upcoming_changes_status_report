@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+# frozen_string_literal: true
+
+if !defined?(Rails)
+  abort "Run this script with bin/rails runner: SKIP_DB_AND_REDIS=1 RAILS_DB=nonexistent bin/rails runner script/upcoming_changes_status_report -- [options]"
+end
+
+UpcomingChanges::StatusReport::CLI.run(ARGV)
