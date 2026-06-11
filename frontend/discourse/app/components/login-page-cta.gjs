@@ -6,6 +6,14 @@ const LoginPageCta = <template>
   <div class="login-page-cta">
     <div class="login-page-cta__buttons">
       {{#if @canLoginLocal}}
+        {{#if @showCodeLoginToggle}}
+          <DButton
+            @action={{@toggleCodeLogin}}
+            @label="code_login.use_code_instead"
+            class="btn-large btn-default login-page-cta__code-login"
+          />
+        {{/if}}
+
         {{#unless @showSecurityKey}}
           <DButton
             @action={{@login}}

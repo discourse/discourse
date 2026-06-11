@@ -1054,6 +1054,9 @@ en:
     invalid_token: 'Oops! The link you used no longer works. You can <a href="%{base_url}/login">Log In</a> now. If you forgot your password, you can <a href="%{base_url}/password-reset">request a link</a> to reset it.'
     title: "Email login"
 
+  email_login_code:
+    invalid_code: "That code is incorrect or has expired. Request a new code and try again."
+
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
@@ -2133,6 +2136,7 @@ en:
 
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
+    enable_local_logins_via_code: "Allow users to log in and sign up with only their email address and a one-time code sent to them via email. New accounts are created with an automatically generated username, no password, and skip user fields normally required at signup. Not compatible with 'invite only' or 'require invite code'."
     allow_passkeys_for_2fa: "Allow users to use a passkey to satisfy two-factor authentication when confirming a sensitive action."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
@@ -2957,6 +2961,7 @@ en:
       discourse_connect_url_is_empty: "You must set a 'discourse connect url' before enabling this setting."
       discourse_connect_secret_is_too_short: "You must set a 'discourse connect secret' of at least 10 characters before enabling this setting."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
+      discourse_connect_enabled: "You must disable 'enable discourse connect' before enabling this setting."
       min_username_length_exists: "You cannot set 'min username length' above the shortest username (%{username})."
       min_group_name_length_exists: "You cannot set 'min username length' above the shortest group name (%{group_name})."
       min_username_length_range: "You cannot set 'min username length' above 'max username length'."
@@ -3405,6 +3410,16 @@ en:
 
 
       If you want to continue receiving email updates, you may ignore this email.
+
+  email_login_code_mailer:
+    title: "Email Login Code Mailer"
+    subject_template: "%{email_prefix}: %{code} is your login code"
+    text_body_template: |
+      Use this code to finish logging in to %{site_name}:
+
+      ## %{code}
+
+      This code expires in %{minutes} minutes. If you didn't request it, you can safely ignore this email.
 
   invite_mailer:
     title: "Invite Mailer"

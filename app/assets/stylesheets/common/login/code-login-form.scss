@@ -1,0 +1,58 @@
+.code-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  &__email-step {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  &__code-step,
+  &__second-factor-step {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1em;
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+  &__instructions {
+    margin: 0;
+    color: var(--primary-high);
+  }
+
+  &__error {
+    color: var(--danger);
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &__notice {
+    margin: 0;
+    color: var(--success);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+
+  &__email-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5em;
+  }
+}
+
+.login-page-cta__code-login {
+  margin-bottom: 0.5rem;
+}

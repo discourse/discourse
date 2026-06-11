@@ -1,6 +1,7 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
+import CodeLoginForm from "discourse/components/code-login-form";
 import FullnameInput from "discourse/components/fullname-input";
 import HoneypotInput from "discourse/components/honeypot-input";
 import LoginButtons from "discourse/components/login-buttons";
@@ -60,6 +61,17 @@ export default <template>
             />
           </WelcomeHeader>
         {{/unless}}
+        {{#if @controller.showCodeSignupForm}}
+          <CodeLoginForm
+            @context="signup"
+            @initialEmail={{@controller.accountEmail}}
+          />
+          {{#if @controller.disclaimerHtml}}
+            <div class="signup-page-cta__disclaimer">
+              {{trustHTML @controller.disclaimerHtml}}
+            </div>
+          {{/if}}
+        {{/if}}
         {{#if @controller.showCreateForm}}
           <form id="login-form">
             {{#if @controller.associateHtml}}
