@@ -7,8 +7,10 @@ module DiscourseDataExplorer
       class QueriesController < ::ApplicationController
         requires_plugin DiscourseDataExplorer::PLUGIN_NAME
 
-        # Spike: deliberately open + non-XHR so we can curl and focus purely on
-        # the JSON:API document. Real Guardian/auth wiring is a later step.
+        # Authorization is row-level, via Guardian in QueryResource#base_scope
+        # (admin → all, member → group-bound queries, anonymous → nothing).
+        # The skips give public-API semantics: anonymous gets an empty 200,
+        # not a login redirect, and no XHR requirement.
         skip_before_action :check_xhr, :redirect_to_login_if_required, raise: false
 
         # Graphiti's strict client-input errors need explicit status mapping

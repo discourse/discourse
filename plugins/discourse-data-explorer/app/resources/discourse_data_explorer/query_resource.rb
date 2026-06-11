@@ -14,7 +14,8 @@ module DiscourseDataExplorer
     attribute :name, :string, sortable: true
     attribute :description, :string
     attribute :sql, :string
-    attribute :hidden, :boolean
+    # Request-level readable guard: the attribute is omitted for non-admins.
+    attribute :hidden, :boolean, readable: :admin?
     attribute :last_run_at, :datetime, sortable: true
     attribute :created_at, :datetime
     attribute :updated_at, :datetime
@@ -44,10 +45,31 @@ module DiscourseDataExplorer
 
     self.default_sort = [{ last_run_at: :desc }]
 
-    # Persisted queries only — this brackets off the negative-ID virtual
-    # "default" queries, which live in code (Queries.default), not the table.
+    # Row-level authorization, mirroring the legacy Guardian rules
+    # (user_can_access_query?): admins see all non-hidden queries; logged-in
+    # users see queries bound to one of their groups; anonymous sees nothing.
+    # Group access is a subquery (not joins+distinct) so the scope stays
+    # composable with sorts that add their own joins (e.g. username).
+    # `id > 0` brackets off the negative-ID virtual "default" queries, which
+    # live in code (Queries.default), not the table.
     def base_scope
-      DiscourseDataExplorer::Query.where("data_explorer_queries.id > 0")
+      scope =
+        DiscourseDataExplorer::Query.where("data_explorer_queries.id > 0").where(hidden: false)
+      return scope if guardian.is_admin?
+      return scope.none if current_user.blank? || guardian.anonymous?
+
+      scope.where(
+        id:
+          DiscourseDataExplorer::QueryGroup.where(group_id: current_user.group_ids).select(
+            :query_id,
+          ),
+      )
+    end
+
+    # NB: guard methods are invoked by the serializer via a public send —
+    # marking this private breaks attribute guards at render time.
+    def admin?
+      guardian.is_admin?
     end
   end
 end
