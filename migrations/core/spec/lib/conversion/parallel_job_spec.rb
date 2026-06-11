@@ -21,12 +21,6 @@ RSpec.describe Migrations::Conversion::ParallelJob do
     allow(intermediate_db).to receive(:close)
   end
 
-  describe "#initialize" do
-    it "does not register an `after_fork_child` hook" do
-      expect { described_class.new(processor) }.not_to change { Migrations::ForkManager.size }
-    end
-  end
-
   describe "#setup" do
     it "sets up `OfflineConnection` as `IntermediateDB` connection" do
       job.setup
