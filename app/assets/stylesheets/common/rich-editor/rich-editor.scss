@@ -497,6 +497,10 @@
       cursor: zoom-in;
     }
   }
+
+  &:has(.image-alt-text-input:focus-within) img.ProseMirror-selectednode {
+    cursor: default;
+  }
 }
 
 .image-alt-text-input {

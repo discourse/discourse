@@ -395,6 +395,9 @@ bs_BA:
       confirm_title: Nastavi ka %{site_name}
       logging_in_as: Prijavite se kao %{username}
       confirm_button: Završi prijavu
+    device:
+      code: "Šifra"
+      continue: "Nastavi"
   reports:
     default:
       labels:

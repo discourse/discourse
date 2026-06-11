@@ -739,6 +739,9 @@ ca:
       read: "Llegeix-ho tot"
       write: "Escriu-ho tot"
       one_time_password: "Creeu un testimoni d'inici de sessió d'un sol ús"
+    device:
+      code: "Codi"
+      continue: "Continua"
     invalid_public_key: "Ho sentim, la clau pública no és vàlida."
     invalid_auth_redirect: "Ho sentim, aquest amfitrió auth_redirect no està permès."
     invalid_token: "Falta el testimoni, no és vàlid o ha caducat."

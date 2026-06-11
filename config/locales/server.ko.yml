@@ -838,6 +838,9 @@ ko:
       write: "모두 쓰기"
       one_time_password: "일회성 로그인 토큰 생성"
       bookmarks_calendar: "북마크 미리 알림 읽기"
+    device:
+      code: "코드"
+      continue: "계속하기"
     invalid_public_key: "공개 키가 유효하지 않습니다."
     invalid_auth_redirect: "이 auth_redirect 호스트는 허용되지 않습니다."
     invalid_token: "토큰이 없거나 유효하지 않거나 만료되었습니다."

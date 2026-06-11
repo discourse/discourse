@@ -6,6 +6,16 @@
 
 hr:
   js:
+    user_api_key:
+      authorize: "Odobriti"
+      deny: "Odustani"
+      copied: "Kopirano!"
+      otp_description: 'Želite li dopustiti "%{application_name}" pristup ovoj stranici?'
+      no_trust_level: "Nažalost, nemate potrebnu razinu povjerenja za pristup korisničkom API-ju"
+      generic_error: "Žao nam je, ne možemo izdati korisničke API ključeve, ovu je značajku možda onemogućio administrator stranice"
+      device:
+        code: "Šifra"
+        continue: "Nastavi"
     blocks:
       ghost:
         status: "Statust"
@@ -1627,6 +1637,9 @@ hr:
       undo_revoke_access: "Poništi opozivanje pristupa"
       api_approved: "Odobrio:"
       api_last_used_at: "Zadnji put uporabljeno u:"
+      api_expires_at: "Istječe:"
+      api_expired_at: "Isteklo:"
+      api_expires_never: "Nikad"
       theme: "Tema"
       save_to_change_theme: 'Tema će biti ažurirana nakon što kliknete "%{save_text}"'
       home: "Zadana početna stranica"
@@ -5856,6 +5869,11 @@ hr:
                 "2": "Član"
                 "3": "Stalni član"
                 "4": "Vođa"
+          search:
+            title: "Pretraživanje"
+            table:
+              searches: "Pretraživanja"
+              status: "Statust"
         reports_section:
           no_data: "Nema podataka za prikaz"
           modal:

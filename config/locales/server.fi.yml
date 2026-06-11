@@ -1155,6 +1155,9 @@ fi:
       one_time_password: "Kertakäyttöisen kirjautumiskoodin luominen"
       bookmarks_calendar: "Kirjanmerkkimuistutusten lukeminen"
       user_status: "Käyttäjän tilan lukeminen ja päivittäminen"
+    device:
+      code: "Koodi"
+      continue: "Jatka"
     invalid_public_key: "Julkinen avain ei kelpaa."
     invalid_auth_redirect: "Tämä auth_redirect host ei ole sallittu."
     invalid_token: "Tunniste puuttuu, ei kelpaa tai on vanhentunut."
@@ -1783,7 +1786,6 @@ fi:
     allowed_iframes: "Luettelo iframe src -URL-etuliitteistä, jotka Discourse voi turvallisesti sallia viesteissä. * vastaa mitä tahansa määrää muita merkkejä kuin vinoviivaa."
     allowed_crawler_user_agents: "Hakurobottien käyttäjäagentit, jotka saavat tulla sivustolle. VAROITUS! TÄMÄ ASETUS ESTÄÄ KAIKKI HAKUROBOTIT, JOITA EI LISTATA TÄSSÄ!"
     blocked_crawler_user_agents: "Käyttäjäagentin nimessä oleva kirjainkoosta riippumaton yksilöllinen merkkijono, jolla tunnistetaan estettävät hakurobotit. Ei sovelleta, jos sallittujen hakurobottien luettelo on määriteltynä."
-    content_security_policy: "Ota Content-Security-Policy (CSP) käyttöön. CSP on ylimääräinen suojaustaso, joka auttaa estämään tietyntyyppiset hyökkäykset, kuten Cross Site Scriptingin (XSS) ja tietojen lisäyksen."
     content_security_policy_report_only: "Käytä epäilyttävän sisällön raportointia (Content-Security-Policy-Report-Only)"
     content_security_policy_frame_ancestors: "Rajoita sitä, ketkä voivat upottaa tämän sivuston iframe-kehyksiin CSP:n kautta. Hallitse sallittuja isäntiä <a href='%{base_path}/admin/customize/embedding'>Upottaminen</a>-sivulla"
     content_security_policy_script_src: "Muut sallitut skriptilähteet. Nykyinen palvelin ja CDN sallitaan oletuksena. Katso <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP) Muut isäntälähteet ohitetaan, koska strict-dynamic on käytössä."

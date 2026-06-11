@@ -7028,6 +7028,54 @@ en:
                 new_signups: "New sign-ups"
                 dau_mau: "DAU / MAU stickiness"
                 daily_engaged_users: "Daily engaged"
+          search:
+            title: "Search"
+            fetch_error: "Couldn't load search data. Try refreshing the page."
+            logging_disabled: 'Search logging is disabled, so no search data is being collected. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to start collecting it.'
+            logging_disabled_moderator: "Search logging is disabled, so no search data is being collected. Ask an admin to enable log search queries to start collecting it."
+            count_headline:
+              last_7_days:
+                one: "Members ran %{formatted_count} on-site search in the last 7 days"
+                other: "Members ran %{formatted_count} on-site searches in the last 7 days"
+              last_30_days:
+                one: "Members ran %{formatted_count} on-site search in the last 30 days"
+                other: "Members ran %{formatted_count} on-site searches in the last 30 days"
+              last_3_months:
+                one: "Members ran %{formatted_count} on-site search in the last 3 months"
+                other: "Members ran %{formatted_count} on-site searches in the last 3 months"
+              selected_period:
+                one: "Members ran %{formatted_count} on-site search in the selected period"
+                other: "Members ran %{formatted_count} on-site searches in the selected period"
+            headline:
+              no_signal_title: "Not enough search activity to summarise yet."
+              no_signal: "Pick a longer date range or come back once members have searched more."
+              content_gaps: "More than 10% of searches ended without a click this period. Review the content gaps below to see what's missing."
+              rate_climbing: "The no-result rate is climbing compared with the previous period. Keep an eye on the content gaps below."
+              shrinking: "Search volume is down compared with the previous period, while most searches still lead to content."
+              healthy: "Members keep finding what they search for, and search volume is steady or growing."
+            kpi:
+              total_searches:
+                label: "Total searches"
+                tooltip: "The number of searches performed in your community."
+              no_result_rate:
+                label: "No-result rate"
+                tooltip: "The percentage of searches where members didn't click any result (0% CTR). This indicates that members may be searching for content your community doesn't have."
+            table:
+              term: "Search term"
+              searches: "Searches"
+              status: "Status"
+            trending:
+              title: "Trending searches"
+              tooltip: "The most popular search terms."
+              empty: "No searches in this period."
+            content_gaps:
+              title: "Content gaps"
+              empty: "No content gaps in this period."
+              badge:
+                no_match: "No match"
+                no_match_tooltip: "Search terms with a 0% click-through rate (CTR)."
+                poor_match: "Poor match"
+                poor_match_tooltip: "Search terms with a click-through rate (CTR) between 1-20%."
         reports_section:
           description: "Pin standard reports or Data Explorer queries to track what matters to your community."
           add: "Add report"

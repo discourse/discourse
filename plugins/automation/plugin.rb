@@ -31,12 +31,8 @@ module ::DiscourseAutomation
   USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY_START_COUNT = 1000
   REMOVE_UPLOAD_MARKUP_FROM_DELETED_POSTS_BATCH_SIZE = 1000
 
-  MAX_RECURSION_DEPTH = 5
   RECURSION_DEPTH_KEY = :discourse_automation_recursion_depth
   SUPPRESSED_TRIGGERS_KEY = :discourse_automation_suppressed_triggers
-
-  class RecursionLimitExceeded < StandardError
-  end
 
   def self.set_active_automation(_id)
     deprecated_active_automation_api
@@ -63,6 +59,10 @@ module ::DiscourseAutomation
 
   def self.recursion_depth
     Thread.current[RECURSION_DEPTH_KEY] || 0
+  end
+
+  def self.max_recursion_depth
+    SiteSetting.discourse_automation_max_recursion_depth
   end
 
   def self.increment_recursion_depth

@@ -1308,6 +1308,9 @@ sk:
       one_time_password: "Vytvorte jednorazový prihlasovací token"
       bookmarks_calendar: "Čítanie pripomienok záložiek"
       user_status: "Čítanie a aktualizácia stavu používateľa"
+    device:
+      code: "Kód"
+      continue: "Pokračovať"
     invalid_public_key: "Je nám ľúto, verejný kľúč je neplatný."
     invalid_auth_redirect: "Je nám ľúto, tento hostiteľ auth_redirect nie je povolený."
     invalid_token: "Chýbajúci, neplatný alebo vypršaný token."
@@ -1931,7 +1934,6 @@ sk:
     allowed_iframes: "Zoznam prefixov URL src iframe, ktoré môže diskurz Discourse bezpečne povoliť v príspevkoch. * možno použiť na porovnanie ľubovoľného počtu znakov, ktoré nie sú/."
     allowed_crawler_user_agents: "Používateľskí agenti webových prehľadávačov, ktorí by mali mať povolený prístup na stránku. POZOR! NASTAVENÍM TOHTO ZABLOKUJE VŠETKY PRÁZOVÉ STRÁNKY, KTORÉ TU NEJSÚ UVEDENÉ!"
     blocked_crawler_user_agents: "Jedinečné slovo v reťazci používateľského agenta, ktoré nerozlišuje veľkosť písmen a identifikuje webové prehliadače, ktorým by nemal byť povolený prístup na lokalitu. Neuplatňuje sa, ak je definovaný allowlist."
-    content_security_policy: "Povoľte Content-Security-Policy (CSP). CSP je ďalšia vrstva zabezpečenia, ktorá pomáha predchádzať určitým typom útokov vrátane Cross Site Scripting (XSS) a injekcie dát."
     content_security_policy_report_only: "Povoliť Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_frame_ancestors: "Obmedziť, kto môže túto stránku vložiť do iframe prostredníctvom CSP. Kontrola povolených hostiteľov pri <a href='%{base_path}/admin/customize/embedding'>vkladaní</a>"
     content_security_policy_script_src: "Ďalšie zdroje skriptov uvedené v zozname povolených zdrojov. Aktuálny hostiteľ a CDN sú predvolene zahrnuté. Pozrite si časť <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Zmiernenie útokov XSS pomocou zásad zabezpečenia obsahu.</a> (CSP). Ostatné zdroje hostiteľa sú ignorované, pretože je povolená funkcia strict-dynamic."

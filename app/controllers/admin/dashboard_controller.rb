@@ -154,6 +154,8 @@ class Admin::DashboardController < Admin::StaffController
       )
     when "reports"
       AdminDashboard::Reports::Section.build(guardian: guardian)
+    when "search"
+      AdminDashboardSearch.build(start_date: params[:start_date], end_date: params[:end_date])
     end
   end
 

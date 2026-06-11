@@ -1176,6 +1176,10 @@ hu:
       one_time_password: "Hozzon létre egyszeri bejelentkezési tokent"
       bookmarks_calendar: "Könyvjelző emlékeztetők olvasása"
       user_status: "Felhasználói állapot olvasása és frissítése"
+    device:
+      code: "Kód"
+      continue: "Folytatás"
+      authorize_title: '"%{application_name}" engedélyezése'
     invalid_public_key: "Sajnáljuk, a nyilvános kulcs érvénytelen."
     invalid_auth_redirect: "Sajnáljuk, ez az auth_redirect hoszt nem engedélyezett."
     invalid_token: "Hiányzó, érvénytelen vagy lejárt token."
@@ -1820,7 +1824,6 @@ hu:
     allowed_crawler_user_agents: "Azon webes keresőrobotok felhasználói ügynökei, amelyek számára engedélyezett a webhely elérése. FIGYELMEZTETÉS! ENNEK BEÁLLÍTÁSA MEGTILTJA AZ ÖSSZES ITT NEM FELSOROLT KERESŐROBOT HOZZÁFÉRÉSÉT!"
     blocked_crawler_user_agents: "A felhasználói ügynök karakterláncban szereplő egyedi, kis- és nagybetűkre nem érzékeny szó, amely azonosítja azokat a webes keresőrobotokat, amelyek számára nem engedélyezett a webhely elérése. Nem alkalmazandó, ha az engedélyezési lista definiálva van."
     llms_txt: "Töltsön fel egy szöveges fájlt, amely az /llms.txt útvonalon lesz elérhető az LLM-robotok (crawlerek) számára. További információért látogasson el az <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> oldalra."
-    content_security_policy: "Engedélyezze a Tartalombiztonsági Szabályzatot (Content-Security-Policy, CSP). A CSP egy további biztonsági réteg, amely segít megelőzni bizonyos típusú támadásokat, beleértve a keresztoldali szkriptelést (Cross Site Scripting, XSS) és az adatbefecskendezést."
     content_security_policy_report_only: "Engedélyezze a Tartalombiztonsági Szabályzat Csak Jelentés Módját (CSP)"
     content_security_policy_frame_ancestors: "Korlátozza, ki ágyazhatja be ezt a webhelyet iframe-ekbe a CSP segítségével. Az engedélyezett kiszolgálók szabályozása a <a href='%{base_path}/admin/customize/embedding'>Beágyazás</a> oldalon történik"
     content_security_policy_script_src: "További engedélyezett szkriptforrások. Az aktuális kiszolgáló és CDN alapértelmezetten szerepel. Lásd <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>XSS támadások mérséklése Tartalombiztonsági Szabályzattal.</a> (CSP). Egyéb kiszolgálóforrások figyelmen kívül maradnak, mivel a strict-dynamic engedélyezve van."

@@ -73,6 +73,16 @@ module UpcomingChanges
     statuses.keys.select { |key| statuses[key] < statuses[status.to_sym] }.last || :conceptual
   end
 
+  def self.next_status(status)
+    status = status&.to_sym
+    status_value = statuses[status]
+
+    return if status_value.nil?
+    return if status_value < statuses[:experimental] || status_value >= statuses[:stable]
+
+    statuses.keys.find { |key| statuses[key] > status_value }
+  end
+
   def self.image_exists?(change_setting_name)
     File.exist?(File.join(Rails.public_path, image_path(change_setting_name)))
   end

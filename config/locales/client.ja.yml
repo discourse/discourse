@@ -6,6 +6,21 @@
 
 ja:
   js:
+    user_api_key:
+      title: '「%{application_name}」の承認'
+      authorize: "承認"
+      deny: "キャンセル"
+      logged_in_as: "ログイン中:"
+      permissions_header: 'これにより、「%{application_name}」で次を行えます:'
+      redirect_warning: "承認すると次の場所にリダイレクトされます:"
+      copied: "コピーしました！"
+      otp_description: '"%{application_name}" にこのサイトへのアクセスを許可しますか？'
+      no_trust_level: "ユーザー API にアクセスするために必要な信頼レベルがありません。"
+      generic_error: "ユーザー API キーを発行できませんでした。この機能はサイト管理者によって無効化されている可能性があります。"
+      device:
+        code: "コード"
+        continue: "続行"
+        authorize_title: '「%{application_name}」の承認'
     blocks:
       ghost:
         status: "ステータス"
@@ -1534,6 +1549,9 @@ ja:
       undo_revoke_access: "アクセスの取り消しを元に戻す"
       api_approved: "承認:"
       api_last_used_at: "最終使用時間:"
+      api_expires_at: "有効期限:"
+      api_expired_at: "期限切れ:"
+      api_expires_never: "送信しない"
       theme: "テーマ"
       save_to_change_theme: '「%{save_text}」をクリックするとテーマが更新されます'
       home: "デフォルトのホームページ"
@@ -5718,6 +5736,11 @@ ja:
                 "2": "メンバー"
                 "3": "レギュラー"
                 "4": "リーダー"
+          search:
+            title: "検索"
+            table:
+              searches: "検索数"
+              status: "ステータス"
         reports_section:
           modal:
             enabled_heading: "有効"

@@ -6,6 +6,16 @@
 
 lt:
   js:
+    user_api_key:
+      authorize: "Leisti"
+      deny: "Atšaukti"
+      copied: "Nukopijuota!"
+      otp_description: 'Ar norite leisti „%{application_name}“ pasiekti šią svetainę?'
+      no_trust_level: "Atsiprašome, jūs neturite reikiamo patikimumo lygio, kad galėtumėte pasiekti vartotojo API"
+      generic_error: "Atsiprašome, negalime išduoti vartotojo API raktų, šią funkciją gali išjungti svetainės administratorius"
+      device:
+        code: "Kodas"
+        continue: "Tęsti"
     blocks:
       ghost:
         status: "Statusas"
@@ -1473,6 +1483,9 @@ lt:
       undo_revoke_access: "Atstatyti atgal panaikintas teises"
       api_approved: "Patvirtinta:"
       api_last_used_at: "Paskutinį kartą naudota:"
+      api_expires_at: "Galiojimo laikas baigiasi:"
+      api_expired_at: "Baigėsi galiojimo laikas:"
+      api_expires_never: "niekada"
       theme: "Tema"
       save_to_change_theme: 'Tema bus atnaujinta spustelėjus „%{save_text}“'
       home: "Numatytasis pagrindinis puslapis"
@@ -4370,6 +4383,11 @@ lt:
                 "2": "Narys"
                 "3": "Nuolatinės"
                 "4": "Lyderis"
+          search:
+            title: "Paieška"
+            table:
+              searches: "Paieškos"
+              status: "Statusas"
         reports_section:
           no_data: "Nėra rodomų duomenų"
           modal:

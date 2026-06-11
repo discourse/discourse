@@ -494,6 +494,9 @@ bg:
       confirm_title: Продължете към %{site_name}
       logging_in_as: Влизане като %{username}
       confirm_button: Завършете влизането
+    device:
+      code: "Код"
+      continue: "Напред"
   reports:
     default:
       labels:

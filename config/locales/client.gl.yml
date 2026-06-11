@@ -6,6 +6,16 @@
 
 gl:
   js:
+    user_api_key:
+      authorize: "Autorizar"
+      deny: "Cancelar"
+      copied: "Copiado!"
+      otp_description: 'Gustaríalle darlle permiso a "%{application_name}" para acceder a este sitio?'
+      no_trust_level: "Sentímolo, non ten o nivel de confianza que se necesita para acceder á API de usuario"
+      generic_error: "Sentimolo, non nos é posible emitir chaves API de usuario, pois esta funcionalidade debeu ser desactivada polo administrador do sitio"
+      device:
+        code: "Código"
+        continue: "Continuar"
     blocks:
       ghost:
         status: "Estado"
@@ -1073,6 +1083,9 @@ gl:
       undo_revoke_access: "Desfacer a revogación de acceso"
       api_approved: "Aprobado:"
       api_last_used_at: "Último utilizado o:"
+      api_expires_at: "Caduca:"
+      api_expired_at: "Caducou:"
+      api_expires_never: "nunca"
       theme: "Tema"
       save_to_change_theme: 'Para actualizar o tema, prema "%{save_text}"'
       home: "Páxina de inicio predeterminada"
@@ -3616,6 +3629,11 @@ gl:
                 "2": "Membro"
                 "3": "Normal"
                 "4": "Líder"
+          search:
+            title: "Buscar"
+            table:
+              searches: "Buscas"
+              status: "Estado"
         reports_section:
           no_data: "Non hai datos que amosar"
           modal:

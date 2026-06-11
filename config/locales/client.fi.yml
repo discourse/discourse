@@ -6,6 +6,16 @@
 
 fi:
   js:
+    user_api_key:
+      authorize: "Anna käyttöoikeus"
+      deny: "Peruuta"
+      copied: "Kopioitiin!"
+      otp_description: 'Haluatko sallia sovellukselle "%{application_name}" pääsyn sivustolle?'
+      no_trust_level: "Luottamustasosi ei ole riittävä käyttäjä-APIn käyttämiseen"
+      generic_error: "Käyttäjä-API-avaimien luominen ei onnistunut, sivuston ylläpitäjä on saattanut poistaa ominaisuuden käytöstä"
+      device:
+        code: "Koodi"
+        continue: "Jatka"
     blocks:
       ghost:
         status: "Tila"
@@ -1539,6 +1549,9 @@ fi:
       undo_revoke_access: "Peru käyttöoikeuden peruminen"
       api_approved: "Sallittu:"
       api_last_used_at: "Viimeksi käytetty:"
+      api_expires_at: "Vanhenee:"
+      api_expired_at: "Vanhentunut:"
+      api_expires_never: "ei koskaan"
       theme: "Teema"
       save_to_change_theme: 'Teema päivittyy, kun valitset "%{save_text}"'
       home: "Oletusaloitussivu"
@@ -5653,6 +5666,11 @@ fi:
                 "2": "Konkari"
                 "3": "Normaali"
                 "4": "Johtaja"
+          search:
+            title: "Haku"
+            table:
+              searches: "Hakuja"
+              status: "Tila"
         reports_section:
           modal:
             enabled_heading: "Käytössä"

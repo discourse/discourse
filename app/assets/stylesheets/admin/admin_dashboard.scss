@@ -812,6 +812,7 @@
     font-size: var(--font-down-3);
     padding: var(--space-half) var(--space-2);
     font-weight: 400;
+    white-space: nowrap;
 
     @include viewport.until(sm) {
       position: absolute;

@@ -6,6 +6,7 @@ import DashboardDateRange from "discourse/admin/components/dashboard/date-range"
 import DashboardEngagement from "discourse/admin/components/dashboard/engagement";
 import DashboardHighlights from "discourse/admin/components/dashboard/highlights";
 import DashboardReports from "discourse/admin/components/dashboard/reports";
+import DashboardSearch from "discourse/admin/components/dashboard/search";
 import DashboardSkeleton from "discourse/admin/components/dashboard/skeleton";
 import DashboardTraffic from "discourse/admin/components/dashboard/traffic";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -91,6 +92,17 @@ export default class RedesignedAdminDashboard extends Component {
               class={{concat "--" section.id}}
               data-section-id={{section.id}}
               @engagement={{section.data}}
+              @period={{@loadedSections.period}}
+              @loading={{@loadingSections}}
+              @fetchError={{@sectionsFetchError}}
+              @startDate={{@loadedSections.startDate}}
+              @endDate={{@loadedSections.endDate}}
+            />
+          {{else if (eq section.id "search")}}
+            <DashboardSearch
+              class={{concat "--" section.id}}
+              data-section-id={{section.id}}
+              @search={{section.data}}
               @period={{@loadedSections.period}}
               @loading={{@loadingSections}}
               @fetchError={{@sectionsFetchError}}

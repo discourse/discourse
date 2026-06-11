@@ -888,9 +888,23 @@ uk:
       nodes:
         "action:send_chat_message": "Надіслати повідомлення в чат"
         "action:chat_approval": "Схвалення чату"
+      node_descriptions:
+        "action:send_chat_message": "Надішліть повідомлення в чат"
+        "action:chat_approval": "Надіслати запит на схвалення до каналу чату та чекати на відповідь"
       send_chat_message:
         channel_id: "Канал"
         message: "Повідомлення"
       chat_approval:
         message: "Повідомлення"
+        approve_label: "Напис на кнопці «Підтвердити»"
+        approve_label_description: "Якщо залишити поле порожнім, за замовчуванням використовується значення «Схвалено»."
+        deny_label: "Напис на кнопці «Відхилити»"
+        deny_label_description: "Якщо поле залишити порожнім, за замовчуванням встановлюється значення «Відмовити»."
         channel_id: "Канал"
+        channel_id_description: "Канал чату, на який потрібно надіслати повідомлення про затвердження."
+        timeout_minutes: "Час очікування (хвилини)"
+        timeout_minutes_description: "Залиште поле порожнім, якщо не потрібно встановлювати обмеження за часом."
+        timeout_action: "При перевищенні ліміту часу"
+        timeout_action_description: "Що відбувається, коли час дії схвалення закінчується."
+        timeout_action_deny: "Відновити як відхилене"
+        timeout_action_fail: "Збій робочого процесу"

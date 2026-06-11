@@ -6,6 +6,13 @@
 
 be:
   js:
+    user_api_key:
+      authorize: "санкцыянаваць"
+      deny: "Скасаваць"
+      no_trust_level: "На жаль, у вас няма неабходнага ўзроўню даверу для доступу да API карыстацкага"
+      generic_error: "На жаль, мы не можам выдаць ключы карыстальніка API, гэтая функцыя можа быць адключаная адміністратарам сайта"
+      device:
+        continue: "Працягнуць"
     blocks:
       ghost:
         status: "Статус"
@@ -968,6 +975,7 @@ be:
       muted_users: "Адключаныя"
       apps: "Праграмы"
       api_approved: "Ухвалена:"
+      api_expires_never: "ніколі"
       theme: "Тэма"
       messages:
         inbox: "Уваходныя"
@@ -2200,6 +2208,11 @@ be:
                 "2": "Член"
                 "3": "рэгулярнае"
                 "4": "лідэр"
+          search:
+            title: "Пошук"
+            table:
+              searches: "Пошукавых запытаў"
+              status: "Статус"
         reports_section:
           modal:
             apply: "Прымяніць"
@@ -2584,77 +2597,77 @@ be:
             delete_category: "выдаленне катэгорыі"
             create_category: "стварэнне катэгорыі"
             grant_admin: "прызначэнне адміністратара"
-            revoke_admin: "адклікаць администраторство"
-            grant_moderation: "зрабіць мадэратарам"
-            revoke_moderation: "адклікаць правы мадэратара"
-            deleted_tag: "выдаліць тэг"
-            lock_trust_level: "заблакаваць ўзровень даверу"
-            post_rejected: "публікацыя адхілена"
+            revoke_admin: "адкліканне адміністратара"
+            grant_moderation: "прызначэнне мадэратара"
+            revoke_moderation: "адкліканне мадэратара"
+            deleted_tag: "выдаленне тэга"
+            lock_trust_level: "блакіраванне ўзроўню даверу"
+            post_rejected: "адхіленне допісу"
         screened_emails:
-          description: "Калі хто-то спрабуе стварыць новы ўліковы запіс, наступныя электронныя скрыні будуць правераны і рэгістрацыю заблакаваны, ці прынятыя нейкія іншых дзеянняў."
+          description: "Калі хтосьці паспрабуе стварыць новы ўліковы запіс, будуць правераны наступныя адрасы электроннай пошты, і рэгістрацыя будзе заблакіравана, або будуць выкананы іншыя дзеянні."
           actions:
-            allow: "дазволіць"
+            allow: "Дазволіць"
         screened_urls:
-          title: "Screened URLs"
-          description: "Пералічаныя тут вэб-адрасы выкарыстоўваліся ў паведамленнях карыстальнікаў, якія былі ідэнтыфікаваныя як спамераў."
-          url: "URL спасылка"
-          domain: "дамен"
+          title: "Правераныя URL-адрасы"
+          description: "Пералічаныя тут URL-адрасы выкарыстоўваліся ў допісах карыстальнікаў, якія былі ідэнтыфікаваныя як спамеры."
+          url: "URL-адрас"
+          domain: "Дамен"
         screened_ips:
-          title: "Screened IPs"
-          delete_confirm: "Вы ўпэўненыя, што жадаеце выдаліць правіла для %{ip_address}?"
+          title: "Правераныя IP-адрасы"
+          delete_confirm: "Вы ўпэўнены, што хочаце выдаліць правіла для %{ip_address}?"
           actions:
-            block: "заблакаваць"
-            do_nothing: "дазволіць"
+            block: "Заблакіраваць"
+            do_nothing: "Дазволіць"
           form:
-            label: "новая:"
+            label: "Новы:"
             ip_address: "IP-адрас"
-            add: "дадаць"
-            filter: "пошук"
+            add: "Дадаць"
+            filter: "Пошук"
         search_logs:
-          term: "тэрмін"
-          searches: "пошукавыя"
+          term: "Выраз"
+          searches: "Пошукавых запытаў"
           click_through_rate: "CTR"
           types:
-            header: "Header"
+            header: "Загаловак"
       watched_words:
         search: "пошук"
-        clear_filter: "ачысціць"
-        download: спампаваць
+        clear_filter: "Ачысціць"
+        download: Спампаваць
         actions:
-          block: "заблакаваць"
-          flag: "Пазначыць"
+          block: "Заблакіраваць"
+          flag: "Паскардзіцца"
           link: "Спасылка"
         form:
           link_label: "Спасылка"
-          add: "дадаць"
-          success: "поспех"
+          add: "Дадаць"
+          success: "Гатова"
       form_templates:
-        nav_title: "шаблоны"
+        nav_title: "Шаблоны"
         new_template: "Новы шаблон"
         list_table:
           headings:
-            name: "Імя"
+            name: "Назва"
             active_categories: "Актыўныя катэгорыі"
             actions: "Дзеянні"
         view_template:
-          close: "зачыніць"
+          close: "Закрыць"
           edit: "Рэдагаваць"
           delete: "Выдаліць"
         new_template_form:
           submit: "Захаваць"
-          cancel: "Адмяніць"
+          cancel: "Скасаваць"
           name:
             label: "Назва шаблона"
           template:
             label: "Шаблон"
-          preview: "Папярэдні прагляд"
+          preview: "Перадпрагляд"
         quick_insert_fields:
           add_new_field: "Дадаць"
           checkbox: "Птушка"
           input: "Кароткі адказ"
           textarea: "Доўгі адказ"
-          dropdown: "Выпадаючы спіс"
-          upload: "Загрузіць файл"
+          dropdown: "Выпадны спіс"
+          upload: "Запампаваць файл"
         validations_modal:
           table_headers:
             type: "Тып"
@@ -2670,8 +2683,8 @@ be:
             second: "Варыянт 2"
             third: "Варыянт 3"
       impersonate:
-        title: "ўвасобіцца"
-        not_found: "Карыстача не ўдалося знайсці."
+        title: "Уваход ад імені карыстальніка"
+        not_found: "Гэты карыстальнік не знойдзены."
         invalid: "Выбачайце, Вы не можаце ўвасобіцца ў карыстальніка."
       users:
         title: "Карыстальнікі"
@@ -2728,7 +2741,7 @@ be:
         approve: "ўхваліць"
         approved_by: "ўхвалена"
         approve_success: "Карыстальнік адобраны і яму адпраўлен ліст з інструкцыямі для актывацыі."
-        approve_bulk_success: "Поспех! Ўсіх выбраных карыстальнікаў было прынята і паведамлена пра гэта."
+        approve_bulk_success: "Гатова! Усе выбраныя карыстальнікі былі ўхвалены і атрымалі апавяшчэнне."
         time_read: "час чытання"
         post_edits_count: "паведамленне рэдагуе"
         anonymize: "ананімны карыстальнік"

@@ -8,6 +8,7 @@ RSpec.describe Admin::DashboardController do
   before do
     AdminDashboardData.stubs(:fetch_cached_stats).returns(reports: [])
     Jobs::CallDiscourseHub.any_instance.stubs(:execute).returns(true)
+    SiteSetting.admin_dashboard_search_section_enabled = true
   end
 
   def configure_dashboard_sections(visible_ids)
@@ -256,6 +257,49 @@ RSpec.describe Admin::DashboardController do
         end
       end
 
+      context "with search_data" do
+        let(:search_data) { section_payloads["search"]&.dig("data") }
+
+        it "omits the search section while admin_dashboard_search_section_enabled is disabled" do
+          SiteSetting.admin_dashboard_search_section_enabled = false
+          configure_dashboard_sections(%w[search highlights])
+
+          get "/admin/dashboard.json"
+
+          expect(response.status).to eq(200)
+          expect(section_payloads.keys).not_to include("search")
+          configuration_ids =
+            response.parsed_body["configuration"]["sections"].map { |section| section["id"] }
+          expect(configuration_ids).not_to include("search")
+        end
+
+        it "returns the search payload for the selected dates" do
+          configure_dashboard_sections(%w[search])
+          Fabricate(:clicked_search_log, term: "ruby", created_at: "2026-05-02 10:00")
+          Fabricate(:search_log, term: "ruby", created_at: "2026-05-02 11:00")
+
+          get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-07" }
+
+          expect(response.status).to eq(200)
+          expect(search_data).to eq(
+            "logging_enabled" => true,
+            "headline_state" => "healthy",
+            "kpis" => {
+              "total_searches" => {
+                "value" => 2,
+              },
+              "no_result_rate" => {
+                "value" => 0,
+                "exceeds_threshold" => false,
+              },
+            },
+            "trending" => [{ "term" => "ruby", "searches" => 2 }],
+            "trending_period" => "weekly",
+            "content_gaps" => [],
+          )
+        end
+      end
+
       it "is omitted when enabled for no one" do
         SiteSetting.dashboard_improvements = false
 
@@ -317,6 +361,7 @@ RSpec.describe Admin::DashboardController do
           "reports",
           "traffic",
           "engagement",
+          "search",
         )
         expect(section_payloads.dig("highlights", "data")).to be_present
         expect(section_payloads.dig("traffic", "data")).to be_present
@@ -433,7 +478,7 @@ RSpec.describe Admin::DashboardController do
         expect(configuration).to be_present
 
         ids = configuration["sections"].map { |s| s["id"] }
-        expect(ids).to match_array(%w[highlights reports traffic engagement])
+        expect(ids).to match_array(%w[highlights reports traffic engagement search])
 
         visible = configuration["sections"].select { |s| s["visible"] }.map { |s| s["id"] }
         expect(visible).to eq(%w[highlights reports])
@@ -473,6 +518,7 @@ RSpec.describe Admin::DashboardController do
               { id: "highlights", visible: true },
               { id: "traffic", visible: false },
               { id: "engagement", visible: false },
+              { id: "search", visible: false },
             ],
           }
 
@@ -509,7 +555,7 @@ RSpec.describe Admin::DashboardController do
 
       expect(response.status).to eq(204)
       expect(AdminDashboardSectionConfiguration.sections.map { |s| s[:id] }).to match_array(
-        %w[highlights reports traffic engagement],
+        %w[highlights reports traffic engagement search],
       )
     end
 
@@ -523,6 +569,7 @@ RSpec.describe Admin::DashboardController do
               { id: "reports", visible: "false" },
               { id: "engagement", visible: "1" },
               { id: "traffic", visible: "0" },
+              { id: "search", visible: "false" },
             ],
           }
 
@@ -561,6 +608,7 @@ RSpec.describe Admin::DashboardController do
               { id: "reports", visible: false },
               { id: "traffic", visible: false },
               { id: "engagement", visible: false },
+              { id: "search", visible: false },
             ],
           }
 
