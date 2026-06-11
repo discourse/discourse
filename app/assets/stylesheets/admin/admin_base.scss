@@ -1098,10 +1098,11 @@ table#user-badges {
 
     .value-input {
       box-sizing: border-box;
-      flex: 1 0 0px;
+      flex: 1 0 0;
       border-color: var(--primary-low);
       cursor: pointer;
       margin: 0;
+      min-width: 0;
 
       &:focus {
         border-color: var(--tertiary);
@@ -1111,6 +1112,7 @@ table#user-badges {
 
     .remove-value-btn {
       margin-right: 0.25em;
+      flex: 0 0 auto;
 
       @include value-btn;
     }
@@ -1151,6 +1153,8 @@ table#user-badges {
 
     .emoji-name {
       margin-left: 0.5em;
+
+      @include ellipsis;
     }
 
     &:not(.can-edit) {
