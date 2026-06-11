@@ -67,6 +67,11 @@ const TXT_FIXTURE = {
   human_filesize: "168 KB",
 };
 
+class MockCapabilitiesService extends Service {
+  @tracked isIOS = false;
+  @tracked isSafari = false;
+}
+
 module("Component | ChatUpload", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -142,6 +147,8 @@ module("Component | ChatUpload", function (hooks) {
 
   module("S3 CDN URLs", function (nestedHooks) {
     nestedHooks.beforeEach(function () {
+      this.owner.register("service:capabilities", MockCapabilitiesService);
+
       setupS3CDN(
         "//test.s3-us-west-1.amazonaws.com/site",
         "https://awesome.cdn/site"
@@ -229,10 +236,6 @@ module("Component | ChatUpload", function (hooks) {
 
   module("video source URL", function (nestedHooks) {
     let mockCapabilities;
-
-    class MockCapabilitiesService extends Service {
-      @tracked isSafari = false;
-    }
 
     nestedHooks.beforeEach(function () {
       // Register and inject the mock service
