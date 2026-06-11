@@ -134,7 +134,10 @@ class InlineOneboxer
     onebox = { url: url, title: title }
     onebox[:css_class] = css_class if css_class.present?
 
-    Discourse.cache.write(cache_key(url), onebox, expires_in: 1.day) if !opts[:skip_cache]
+    if !opts[:skip_cache]
+      ttl = onebox[:title].blank? ? 1.minute : 1.day
+      Discourse.cache.write(cache_key(url), onebox, expires_in: ttl)
+    end
     onebox
   end
 
