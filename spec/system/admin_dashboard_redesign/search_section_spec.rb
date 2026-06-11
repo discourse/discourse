@@ -177,7 +177,7 @@ describe "Admin Dashboard Redesign | Search section" do
 
       expect(search).to have_logging_disabled_notice(
         "Search logging is disabled, so no search data is being collected. " \
-          "Enable the log_search_queries site setting to start collecting it.",
+          "Enable log search queries to start collecting it.",
       )
       expect(search).to have_no_kpis
     end

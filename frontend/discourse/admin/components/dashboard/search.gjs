@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { trustHTML } from "@ember/template";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -117,7 +119,12 @@ export default class DashboardSearch extends Component {
         </div>
       {{else if this.loggingDisabled}}
         <p class="db-section__callout">
-          {{i18n "admin.dashboard.sections.search.logging_disabled"}}
+          {{trustHTML
+            (i18n
+              "admin.dashboard.sections.search.logging_disabled"
+              basePath=(dBasePath)
+            )
+          }}
         </p>
       {{else if @search}}
         <div class="db-section__subheader">

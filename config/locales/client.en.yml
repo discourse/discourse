@@ -6998,7 +6998,7 @@ en:
           search:
             title: "Search"
             fetch_error: "Couldn't load search data. Try refreshing the page."
-            logging_disabled: "Search logging is disabled, so no search data is being collected. Enable the log_search_queries site setting to start collecting it."
+            logging_disabled: 'Search logging is disabled, so no search data is being collected. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to start collecting it.'
             count_headline:
               last_7_days:
                 one: "Members ran %{formatted_count} on-site search in the last 7 days"

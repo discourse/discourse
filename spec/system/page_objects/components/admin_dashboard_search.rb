@@ -116,7 +116,11 @@ module PageObjects
       end
 
       def has_logging_disabled_notice?(message)
-        has_css?(SECTION, text: message)
+        has_css?(SECTION, text: message) &&
+          has_css?(
+            "#{SECTION} a[href='/admin/site_settings/category/all_results?filter=log%20search%20queries']",
+            text: "log search queries",
+          )
       end
 
       private
