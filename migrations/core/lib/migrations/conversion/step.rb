@@ -11,19 +11,17 @@ module Migrations
       IntermediateDB = Database::IntermediateDB
       Enums = Database::IntermediateDB::Enums
 
+      include AttributeAssignment
+
       attr_accessor :settings
       attr_reader :tracker
 
       # inside of Step it might make more sense to access it as `step` instead of `tracker`
       alias step tracker
 
-      def initialize(tracker, args = {})
-        @tracker = tracker
-
-        args.each do |arg, value|
-          setter = :"#{arg}="
-          public_send(setter, value) if respond_to?(setter, true)
-        end
+      def initialize(args = {})
+        @tracker = StepTracker.new
+        assign_attributes(args)
       end
 
       def execute
