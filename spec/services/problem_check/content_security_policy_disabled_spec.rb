@@ -17,7 +17,7 @@ RSpec.describe ProblemCheck::ContentSecurityPolicyDisabled do
 
       it do
         expect(check).to have_a_problem.with_priority("low").with_message(
-          "Your site has the content security policy disabled. This protection will soon become mandatory and the <a href='/admin/site_settings/category/all_results?filter=content_security_policy'>content_security_policy</a> setting will be removed. Re-enable it now and resolve any breakage it causes before the opt-out goes away.",
+          I18n.t("dashboard.problem.content_security_policy_disabled", base_path: "")
         )
       end
     end
