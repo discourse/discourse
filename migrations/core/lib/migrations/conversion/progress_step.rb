@@ -45,9 +45,6 @@ module Migrations
     # and would smuggle step-level state across the role boundary.
     class ProgressStep < Step
       class Source
-        IntermediateDB = Database::IntermediateDB
-        Enums = Database::IntermediateDB::Enums
-
         attr_accessor :settings
 
         def initialize(args = {})
@@ -67,9 +64,6 @@ module Migrations
       end
 
       class Processor
-        IntermediateDB = Database::IntermediateDB
-        Enums = Database::IntermediateDB::Enums
-
         attr_accessor :settings
         attr_reader :tracker
 

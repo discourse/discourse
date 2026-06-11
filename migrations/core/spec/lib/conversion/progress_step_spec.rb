@@ -250,12 +250,42 @@ RSpec.describe Migrations::Conversion::ProgressStep do
     it "uses a no-op as default `setup`" do
       expect { step_class.processor_class.new(tracker).setup }.not_to raise_error
     end
+  end
 
-    it "defines the `IntermediateDB` and `Enums` constants on both roles" do
-      expect(step_class.source_class).to have_constant(:IntermediateDB)
-      expect(step_class.source_class).to have_constant(:Enums)
-      expect(step_class.processor_class).to have_constant(:IntermediateDB)
-      expect(step_class.processor_class).to have_constant(:Enums)
+  describe "constant resolution" do
+    # The role blocks of real steps are written inside a step class body, so
+    # constants in their methods resolve through the step's lexical scope and
+    # ancestry (`Step` defines `IntermediateDB` and `Enums`). A `Class.new`
+    # block in this spec file would have the wrong lexical scope, hence the
+    # string eval.
+    before { Object.class_eval <<~RUBY }
+        class ProgressStepConstantsFixture < Migrations::Conversion::ProgressStep
+          source do
+            def items
+              [IntermediateDB, Enums]
+            end
+          end
+
+          processor do
+            def process(item)
+              [IntermediateDB, Enums]
+            end
+          end
+        end
+      RUBY
+
+    after { Object.send(:remove_const, :ProgressStepConstantsFixture) }
+
+    it "resolves `IntermediateDB` and `Enums` inside role blocks via the step's ancestry" do
+      expected = [Migrations::Database::IntermediateDB, Migrations::Database::IntermediateDB::Enums]
+
+      expect(ProgressStepConstantsFixture.source_class.new.items).to eq(expected)
+      expect(ProgressStepConstantsFixture.processor_class.new(tracker).process(nil)).to eq(expected)
+    end
+
+    it "does not define the constants on the role classes themselves" do
+      expect(ProgressStepConstantsFixture.source_class).not_to have_constant(:IntermediateDB)
+      expect(ProgressStepConstantsFixture.processor_class).not_to have_constant(:IntermediateDB)
     end
   end
 
