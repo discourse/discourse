@@ -128,6 +128,14 @@ module SystemHelpers
       )
     end
 
+    # The visit-based sign_in left the browser on a real app origin, and specs
+    # (plugin page objects especially) rely on that by calling execute_script
+    # before their first visit. A freshly reset page sits on about:blank,
+    # whose opaque origin denies localStorage and clipboard access, so park on
+    # the cheapest app document to preserve that contract.
+    on_blank_page = page.driver.with_playwright_page { |pw_page| !pw_page.url.start_with?("http") }
+    visit "/srv/status" if on_blank_page
+
     # `Capybara::Session#reset!` only resets the driver (closing the browser
     # context and dropping the cookies injected above) when the session has
     # been used. The old `visit`-based sign_in marked it used implicitly;
