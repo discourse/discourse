@@ -218,7 +218,7 @@ GEM
     email_reply_trimmer (0.2.0)
     erb (6.0.4)
     erubi (1.13.1)
-    excon (1.4.2)
+    excon (1.5.0)
       logger
     exifr (1.5.1)
     extralite-bundle (2.14)
@@ -1048,7 +1048,7 @@ CHECKSUMS
   email_reply_trimmer (0.2.0) sha256=05843fa5ee1a2037235f1f3c876e922f613e2b4406fea5bb14212d1708d6c525
   erb (6.0.4) sha256=38e3803694be357fe2bfe312487c74beaf9fb4e5beb3e22498952fe1645b95d9
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
-  excon (1.4.2) sha256=32d8d8eda619717d9b8043b4675e096fb5c2139b080e2ad3b267f88c545aaa35
+  excon (1.5.0) sha256=c503ad1d0123bc8ab2a062ff3789dc891ec368cb9e13765ab88a9c58c8bb6d50
   exifr (1.5.1) sha256=ad87a5dbc92946fbf1d8ccd178d557d95d9168e8b3c5c5f381ea2bffcc312521
   extralite-bundle (2.14) sha256=906c6e61dba586d6a0857e96ba985eef458ecd1b5ee009c8495c2c92ce6f18f4
   fabrication (3.0.0) sha256=a6a0bfad9071348ad3cb1701df788524b888c0cdd044b988893e7509f7463be3
