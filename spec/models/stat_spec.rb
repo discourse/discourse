@@ -45,5 +45,14 @@ RSpec.describe Stat do
         Stat.new("test", stat_type: :test) { { "7_days" => 1, "30_days" => 10, "count" => 100 } }
       expect(stat.calculate).to eq({ test: { test_7_days: 1, test_30_days: 10, test_count: 100 } })
     end
+
+    it "merges multiple stats with the same stat type" do
+      stats = [
+        Stat.new("boards", stat_type: :kanban) { { count: 1 } },
+        Stat.new("cards", stat_type: :kanban) { { count: 2 } },
+      ]
+
+      expect(Stat.send(:calculate, stats)).to eq({ kanban: { boards_count: 1, cards_count: 2 } })
+    end
   end
 end
