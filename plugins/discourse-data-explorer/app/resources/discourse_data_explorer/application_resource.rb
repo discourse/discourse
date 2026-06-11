@@ -20,6 +20,16 @@ module DiscourseDataExplorer
     self.attributes_filterable_by_default = false
     self.attributes_sortable_by_default = false
 
+    # `context` is the controller (or any stand-in passed to
+    # Graphiti.with_context) — the Guardian seam for all resources.
+    def guardian
+      context.guardian
+    end
+
+    def current_user
+      guardian.user
+    end
+
     # Graphiti's AR adapter paginates via Kaminari (.page/.per), which Discourse
     # doesn't ship. Supply a custom proc so we depend on neither Kaminari nor an
     # adapter override. NOTE: this is plain offset/limit — Graphiti's built-in
