@@ -6,20 +6,41 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 
 export default class EmailLoginController extends Controller {
   @service router;
 
   secondFactorMethod;
   secondFactorToken;
+  showTokenInput = false;
 
   lockImageUrl = getURL("/images/lock.svg");
 
   @computed("model")
   get secondFactorRequired() {
     return (
-      this.model.security_key_required || this.model.second_factor_required
+      this.model.security_key_required ||
+      this.model.passkeys_enabled ||
+      this.model.second_factor_required
     );
+  }
+
+  @computed(
+    "model.security_key_required",
+    "model.passkeys_enabled",
+    "showTokenInput"
+  )
+  get showWebauthnForm() {
+    return (
+      (this.model.security_key_required || this.model.passkeys_enabled) &&
+      !this.showTokenInput
+    );
+  }
+
+  @computed("model.totp_enabled", "model.backup_codes_enabled")
+  get otherTokenMethodsAllowed() {
+    return this.model.totp_enabled || this.model.backup_codes_enabled;
   }
 
   @action
@@ -68,6 +89,7 @@ export default class EmailLoginController extends Controller {
 
   @action
   authenticateSecurityKey() {
+    this.set("secondFactorMethod", SECOND_FACTOR_METHODS.SECURITY_KEY);
     getWebauthnCredential(
       this.model.challenge,
       this.model.allowed_credential_ids,
@@ -78,6 +100,23 @@ export default class EmailLoginController extends Controller {
       (errorMessage) => {
         this.set("model.error", errorMessage);
       }
+    );
+  }
+
+  @action
+  authenticatePasskey() {
+    this.set("secondFactorMethod", SECOND_FACTOR_METHODS.PASSKEY);
+    getWebauthnCredential(
+      this.model.challenge,
+      this.model.passkey_allowed_credential_ids,
+      (credentialData) => {
+        this.set("securityKeyCredential", credentialData);
+        this.send("finishLogin");
+      },
+      (errorMessage) => {
+        this.set("model.error", errorMessage);
+      },
+      { userVerification: "required" }
     );
   }
 }

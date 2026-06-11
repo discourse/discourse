@@ -105,6 +105,68 @@ acceptance("Password Reset", function (needs) {
     assert.true(DiscourseURL.redirectTo.calledWith("/"), "form is gone");
   });
 
+  test("Password Reset Page With Passkey", async function (assert) {
+    const calls = [];
+    sinon.stub(navigator.credentials, "get").callsFake((options) => {
+      calls.push(options);
+      const error = new Error("credential get cancelled in tests");
+      error.name = "NotAllowedError";
+      return Promise.reject(error);
+    });
+
+    PreloadStore.store("password_reset", {
+      is_developer: false,
+      passkeys_enabled: true,
+      passkey_allowed_credential_ids: ["cGFzc2tleS1jcmVkZW50aWFs"],
+      challenge: "somechallenge",
+    });
+
+    await visit("/u/password-reset/requiretwofactor");
+
+    assert
+      .dom("#passkey-authenticate-button")
+      .exists("shows the passkey button");
+    assert
+      .dom("#security-key-authenticate-button")
+      .doesNotExist("security key button is not shown without a security key");
+    assert
+      .dom("#new-account-password")
+      .doesNotExist("does not show the password input");
+
+    await click("#passkey-authenticate-button");
+    assert.strictEqual(
+      calls[0].publicKey.userVerification,
+      "required",
+      "the passkey ceremony requires user verification"
+    );
+  });
+
+  test("Password Reset Page With Passkey and Security Key", async function (assert) {
+    sinon.stub(navigator.credentials, "get").rejects(
+      Object.assign(new Error("credential get cancelled in tests"), {
+        name: "NotAllowedError",
+      })
+    );
+
+    PreloadStore.store("password_reset", {
+      is_developer: false,
+      security_key_required: true,
+      passkeys_enabled: true,
+      allowed_credential_ids: ["c2VjdXJpdHkta2V5LWNyZWRlbnRpYWw="],
+      passkey_allowed_credential_ids: ["cGFzc2tleS1jcmVkZW50aWFs"],
+      challenge: "somechallenge",
+    });
+
+    await visit("/u/password-reset/requiretwofactor");
+
+    assert
+      .dom("#passkey-authenticate-button")
+      .exists("shows the passkey button");
+    assert
+      .dom("#security-key-authenticate-button")
+      .exists("shows the security key button");
+  });
+
   test("Password Reset Page With Second Factor", async function (assert) {
     PreloadStore.store("password_reset", {
       is_developer: false,

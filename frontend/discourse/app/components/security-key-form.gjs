@@ -7,9 +7,9 @@ import { i18n } from "discourse-i18n";
 
 export default class SecurityKeyForm extends Component {
   get showSecurityKeyButton() {
-    // when the granular args aren't passed, keep the legacy single-button
-    // rendering driven by `@action`
-    return this.args.securityKeysEnabled ?? true;
+    // when the granular args aren't passed at all, keep the legacy
+    // single-button rendering driven by `@action`
+    return this.args.securityKeysEnabled ?? !this.args.passkeysEnabled;
   }
 
   get securityKeyAction() {

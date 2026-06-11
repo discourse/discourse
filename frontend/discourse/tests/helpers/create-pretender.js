@@ -803,6 +803,23 @@ export function applyDefaultHandlers() {
       });
     }
 
+    if (data.password === "need-passkey-2fa") {
+      return response({
+        failed: "FAILED",
+        ok: false,
+        error:
+          "The selected second factor method is not enabled for your account.",
+        reason: "not_enabled_second_factor_method",
+        backup_enabled: false,
+        security_key_enabled: false,
+        passkeys_enabled: true,
+        totp_enabled: false,
+        multiple_second_factor_methods: false,
+        passkey_allowed_credential_ids: ["cGFzc2tleS1jcmVkZW50aWFs"],
+        challenge: "challenge",
+      });
+    }
+
     return response(400, { error: "invalid login" });
   });
 

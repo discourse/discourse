@@ -305,6 +305,51 @@ module SystemHelpers
     end
   end
 
+  # Registers a passkey (first-factor credential) for the user on a virtual
+  # authenticator with user verification enabled. The credential is
+  # non-resident so the login page's conditional passkey prompt does not
+  # auto-complete; it can only be exercised through allow-list ceremonies
+  # such as the passkey-as-2FA flows.
+  def with_passkey(user)
+    public_key_base64 =
+      "pQECAyYgASFYIJhY+jDNJM8g0lyKP3ivDxs+mrKXqfKUY3f7Uo4pWTPDIlggj03xktSm0JTSqbDefhu5WAKH7VRQmWXotjtI/8ka/P0="
+    private_key_base64 =
+      "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg2AWg10o6aoM0s55halZvcQLnpM2tVO2D8Ugw7wFCjzyhRANCAASYWPowzSTPINJcij94rw8bPpqyl6nylGN3-1KOKVkzw49N8ZLUptCU0qmw3n4buVgCh-1UUJll6LY7SP_JGvz9"
+    credential_id_base64 = Base64.strict_encode64(SecureRandom.random_bytes(32))
+    credential_id_bytes = Base64.urlsafe_decode64(credential_id_base64)
+    private_key_bytes = Base64.urlsafe_decode64(private_key_base64)
+
+    with_virtual_authenticator(
+      hasUserVerification: true,
+      isUserVerified: true,
+    ) do |cdp_client, authenticator_id|
+      cdp_client.send_message(
+        "WebAuthn.addCredential",
+        params: {
+          authenticatorId: authenticator_id,
+          credential: {
+            credentialId: Base64.strict_encode64(credential_id_bytes),
+            isResidentCredential: false,
+            rpId: DiscourseWebauthn.rp_id,
+            privateKey: Base64.strict_encode64(private_key_bytes),
+            signCount: 1,
+          },
+        },
+      )
+
+      Fabricate(
+        :user_security_key,
+        user:,
+        public_key: public_key_base64,
+        credential_id: credential_id_base64,
+        factor_type: UserSecurityKey.factor_types[:first_factor],
+        name: "My Passkey",
+      )
+
+      yield
+    end
+  end
+
   def with_virtual_authenticator(options = {})
     page.driver.with_playwright_page do |pw_page|
       cdp_client = pw_page.context.new_cdp_session(pw_page)

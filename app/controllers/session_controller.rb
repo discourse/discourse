@@ -441,13 +441,17 @@ class SessionController < ApplicationController
         )
       end
 
-      if matched_user&.security_keys_enabled?
+      if matched_user&.security_keys_enabled? || matched_user&.passkeys_available_as_second_factor?
         DiscourseWebauthn.stage_challenge(matched_user, server_session)
         response.merge!(
-          DiscourseWebauthn.allowed_credentials(matched_user, server_session).merge(
-            security_key_required: true,
+          DiscourseWebauthn.allowed_credentials(
+            matched_user,
+            server_session,
+            include_passkeys: true,
           ),
         )
+        response[:security_key_required] = matched_user.security_keys_enabled?
+        response[:passkeys_enabled] = matched_user.passkeys_available_as_second_factor?
       end
 
       render json: response
@@ -795,9 +799,11 @@ class SessionController < ApplicationController
     second_factor_authentication_result = user.authenticate_second_factor(params, server_session)
     if !second_factor_authentication_result.ok
       failure_payload = second_factor_authentication_result.to_h
-      if user.security_keys_enabled?
+      if user.security_keys_enabled? || user.passkeys_available_as_second_factor?
         DiscourseWebauthn.stage_challenge(user, server_session)
-        failure_payload.merge!(DiscourseWebauthn.allowed_credentials(user, server_session))
+        failure_payload.merge!(
+          DiscourseWebauthn.allowed_credentials(user, server_session, include_passkeys: true),
+        )
       end
       @second_factor_failure_payload = failed_json.merge(failure_payload)
       return second_factor_authentication_result
