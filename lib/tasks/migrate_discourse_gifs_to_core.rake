@@ -158,7 +158,28 @@ module DiscourseGifsMigration
     puts "  #{paint(text, color, bold: bold)}"
   end
 
-  def find_components
+  def migrate_all(enable_gifs:)
+    migrated_any = false
+
+    each_target_db do |db|
+      theme = find_component_in_db(db)
+      next unless theme
+
+      unless migrated_any
+        puts "\nMigrating settings..."
+        puts "---------------------"
+        migrated_any = true
+      end
+
+      migrate_component(theme, enable_gifs: enable_gifs)
+    end
+
+    unless migrated_any
+      puts "\nNo #{DiscourseGifs::COMPONENT_NAME} theme component found. Nothing to migrate."
+    end
+  end
+
+  def each_target_db
     if ENV["RAILS_DB"].present?
       db = ENV["RAILS_DB"]
 
@@ -169,19 +190,14 @@ module DiscourseGifsMigration
         db = default_db
       end
 
-      RailsMultisite::ConnectionManagement.establish_connection(db: db)
-      Array(find_component_in_db(db))
+      RailsMultisite::ConnectionManagement.with_connection(db) { yield db }
     else
-      [].tap do |components|
-        RailsMultisite::ConnectionManagement.each_connection do |db|
-          components.concat(Array(find_component_in_db(db)))
-        end
-      end
+      RailsMultisite::ConnectionManagement.each_connection { |db| yield db }
     end
   end
 
   def find_component_in_db(db)
-    puts "Accessing database: #{db_label(db)}"
+    puts "Accessing database: #{db_label(db)} (#{RailsMultisite::ConnectionManagement.current_hostname})"
     puts "Searching for #{DiscourseGifs::COMPONENT_NAME} theme component..."
 
     themes =
@@ -211,14 +227,9 @@ module DiscourseGifsMigration
   def migrate_component(theme, enable_gifs:)
     puts "\n  Migrating settings for #{paint("#{theme.name} (ID: #{theme.id})", bold: true)}..."
 
-    # Read the TC's *effective* settings — overrides AND schema defaults. A
-    # ThemeSetting row only exists once a value is changed from its default, so
-    # reading theme_settings alone would miss every untouched setting (e.g. the
-    # default provider and content rating) and silently fall back to core's
-    # defaults instead of preserving the site's actual behaviour.
     values =
       theme.settings.each_with_object({}) { |(name, setting), h| h[name.to_s] = setting.value }
-    provider = values["api_provider"].presence || "giphy"
+    provider = values["api_provider"].presence || "giphy" # giphy is the default provider in theme component
     puts "  Detected provider: #{paint(provider, bold: true)}"
 
     mapping = (PROVIDER_MAPPINGS[provider] || {}).merge(SHARED_MAPPINGS)
@@ -332,13 +343,5 @@ desc "Migrate #{DiscourseGifs::COMPONENT_NAME} theme component settings to core 
 task "themes:discourse_gifs:migrate" => :environment do
   enable_gifs = %w[true yes 1].include?(ENV["ENABLE_GIFS"].to_s.strip.downcase)
 
-  components = DiscourseGifsMigration.find_components
-
-  if components.any?
-    puts "\nMigrating settings..."
-    puts "---------------------"
-    components.each { |c| DiscourseGifsMigration.migrate_component(c, enable_gifs: enable_gifs) }
-  else
-    puts "\nNo #{DiscourseGifs::COMPONENT_NAME} theme component found. Nothing to migrate."
-  end
+  DiscourseGifsMigration.migrate_all(enable_gifs: enable_gifs)
 end
