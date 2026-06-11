@@ -12,6 +12,9 @@ module DiscourseWorkflows
             color: "brown",
           },
           palette_visible: false,
+          inputs: [
+            { key: "main", type: "main", required: true, multiple: true },
+          ],
           outputs: [
             { key: "done", label_key: "discourse_workflows.branch.done" },
             { key: "loop", label_key: "discourse_workflows.branch.loop" },

@@ -10,10 +10,12 @@ import { i18n } from "discourse-i18n";
 import WorkflowEditorSession from "../../../lib/workflows/editor-session";
 import {
   connectionMatchesEndpoint,
+  nextAvailableTargetInputIndex,
   normalizeSourceOutputIndex,
   portIndexFromKey,
 } from "../../../lib/workflows/graph-constants";
 import {
+  nodeTypeInputUsesConnectionIndexes,
   nodeTypeLabel,
   nodeTypeOutputKeys,
   nodeTypePrimaryOutputKey,
@@ -275,7 +277,8 @@ export default class WorkflowsEditor extends Component {
     const nodes = this.#initNodes();
     return normalizeConnectionsForNodes(
       deserializeConnections(this.args.workflow.connections || {}, nodes),
-      nodes
+      nodes,
+      (node) => this.#nodeTypeFor(node)
     );
   }
 
@@ -460,14 +463,36 @@ export default class WorkflowsEditor extends Component {
     nodes = this.formApi.get("nodes")
   ) {
     const sourceNode = nodes?.find((node) => node.clientId === sourceClientId);
-    const sourceNodeType =
-      this.workflowsNodeTypes.findNodeType(sourceNode?.type) ||
-      sourceNode?.type;
 
     return portIndexFromKey(
       sourceOutput,
-      nodeTypeOutputKeys(sourceNodeType, sourceNode)
+      nodeTypeOutputKeys(this.#nodeTypeFor(sourceNode), sourceNode)
     );
+  }
+
+  #nodeTypeFor(node) {
+    return this.workflowsNodeTypes.findNodeType(node?.type) || node?.type;
+  }
+
+  #targetInputIndexFor(
+    targetClientId,
+    targetInput,
+    nodes = this.formApi.get("nodes"),
+    connections = this.formApi.get("connections")
+  ) {
+    const targetNode = nodes?.find((node) => node.clientId === targetClientId);
+
+    if (
+      !nodeTypeInputUsesConnectionIndexes(
+        this.#nodeTypeFor(targetNode),
+        targetInput,
+        targetNode
+      )
+    ) {
+      return portIndexFromKey(targetInput);
+    }
+
+    return nextAvailableTargetInputIndex(connections, targetClientId);
   }
 
   #addNewNode(nodeType, position, configOverrides, wireConnections) {
@@ -596,7 +621,9 @@ export default class WorkflowsEditor extends Component {
     targetClientId,
     nodeType,
     configOverrides = null,
-    targetInput = "main"
+    targetInput = "main",
+    sourceOutputIndex = null,
+    targetInputIndex = null
   ) {
     const existingNodes = this.formApi.get("nodes");
     const sourceNode = existingNodes.find((n) => n.clientId === sourceClientId);
@@ -618,8 +645,10 @@ export default class WorkflowsEditor extends Component {
           connectionMatchesEndpoint(connection, {
             sourceClientId,
             sourceOutput,
+            sourceOutputIndex,
             targetClientId,
             targetInput,
+            targetInputIndex,
           })
         );
         if (existingIdx >= 0) {
@@ -630,11 +659,13 @@ export default class WorkflowsEditor extends Component {
           sourceClientId,
           targetClientId: newNode.clientId,
           sourceOutput,
-          sourceOutputIndex: this.#sourceOutputIndexFor(
-            sourceClientId,
-            sourceOutput,
-            existingNodes
-          ),
+          sourceOutputIndex:
+            sourceOutputIndex ??
+            this.#sourceOutputIndexFor(
+              sourceClientId,
+              sourceOutput,
+              existingNodes
+            ),
           targetInput: "main",
         });
         connections.push({
@@ -642,6 +673,7 @@ export default class WorkflowsEditor extends Component {
           targetClientId,
           sourceOutput: nodeTypePrimaryOutputKey(nodeType),
           targetInput,
+          targetInputIndex,
         });
         return true;
       }
@@ -725,7 +757,8 @@ export default class WorkflowsEditor extends Component {
     sourceOutput,
     targetClientId,
     targetInput = "main",
-    sourceOutputIndex = null
+    sourceOutputIndex = null,
+    targetInputIndex = null
   ) {
     this.#captureUndo();
     const nodes = this.formApi.get("nodes");
@@ -734,6 +767,12 @@ export default class WorkflowsEditor extends Component {
       sourceClientId,
       sourceOutput,
       nodes
+    );
+    targetInputIndex ??= this.#targetInputIndexFor(
+      targetClientId,
+      targetInput,
+      nodes,
+      connections
     );
 
     // Don't create duplicate connections
@@ -744,6 +783,7 @@ export default class WorkflowsEditor extends Component {
         sourceOutputIndex,
         targetClientId,
         targetInput,
+        targetInputIndex,
       })
     );
     if (exists) {
@@ -756,6 +796,7 @@ export default class WorkflowsEditor extends Component {
       sourceOutput,
       sourceOutputIndex,
       targetInput,
+      targetInputIndex,
     });
     this.#ensureLoopSelfConnection(
       connections,
@@ -777,7 +818,8 @@ export default class WorkflowsEditor extends Component {
     sourceOutput,
     targetClientId,
     targetInput = "main",
-    sourceOutputIndex = null
+    sourceOutputIndex = null,
+    targetInputIndex = null
   ) {
     this.#captureUndo();
     const nodes = this.formApi.get("nodes");
@@ -794,6 +836,7 @@ export default class WorkflowsEditor extends Component {
         sourceOutputIndex,
         targetClientId,
         targetInput,
+        targetInputIndex,
       })
     );
 
@@ -968,7 +1011,7 @@ export default class WorkflowsEditor extends Component {
             ...n,
             configuration,
             name: name || n.name,
-          })
+          }, this.#nodeTypeFor(n))
         : n
     );
     this.formApi.set("nodes", updatedNodes);
@@ -976,7 +1019,8 @@ export default class WorkflowsEditor extends Component {
       "connections",
       normalizeConnectionsForNodes(
         this.formApi.get("connections"),
-        updatedNodes
+        updatedNodes,
+        (node) => this.#nodeTypeFor(node)
       )
     );
     return this.handleSubmit(options);
@@ -1260,7 +1304,9 @@ export default class WorkflowsEditor extends Component {
         ctx.connectionTarget,
         nodeType,
         configOverrides,
-        ctx.connectionTargetInput
+        ctx.connectionTargetInput,
+        ctx.connectionSourceOutputIndex,
+        ctx.connectionTargetInputIndex
       );
     } else if (ctx.canvasX != null) {
       this.addNodeAtPosition(
@@ -1358,7 +1404,8 @@ export default class WorkflowsEditor extends Component {
       const nodes = this.formApi.get("nodes");
       const connections = normalizeConnectionsForNodes(
         this.formApi.get("connections"),
-        nodes
+        nodes,
+        (node) => this.#nodeTypeFor(node)
       );
       const stickyNotes = this.formApi.get("stickyNotes");
       this.formApi.set("connections", connections);
