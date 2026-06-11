@@ -118,5 +118,36 @@ RSpec.describe DiscourseAi::Agents::Tools::ListReviewables do
       expect(item[:scores]).to be_present
       expect(item[:scores].first[:user]).to eq("system")
     end
+
+    it "includes existing notes" do
+      flagged_reviewable.reviewable_notes.create!(user: admin, content: "Earlier judgment")
+
+      result = tool({}).invoke
+
+      item = result[:reviewables].first
+      expect(item[:notes].size).to eq(1)
+      expect(item[:notes].first[:content]).to eq("Earlier judgment")
+      expect(item[:notes].first[:user]).to eq(admin.username)
+    end
+
+    it "filters out items with notes when has_notes is false" do
+      result = tool(has_notes: false).invoke
+      expect(result[:reviewables].size).to eq(1)
+
+      flagged_reviewable.reviewable_notes.create!(user: admin, content: "Reviewed")
+
+      result = tool(has_notes: false).invoke
+      expect(result[:reviewables]).to be_empty
+    end
+
+    it "returns only items with notes when has_notes is true" do
+      result = tool(has_notes: true).invoke
+      expect(result[:reviewables]).to be_empty
+
+      flagged_reviewable.reviewable_notes.create!(user: admin, content: "Reviewed")
+
+      result = tool(has_notes: true).invoke
+      expect(result[:reviewables].size).to eq(1)
+    end
   end
 end
