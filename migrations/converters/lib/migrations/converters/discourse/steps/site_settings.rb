@@ -18,6 +18,9 @@ module Migrations
           def items
             # The uploads referenced by upload-typed settings are embedded into
             # the items because the processor has no access to the source DB.
+            # The CASE guards the casts: the planner is free to evaluate them
+            # while probing the uploads PK index for rows of other setting
+            # types, where the value is not numeric.
             rows = @source_db.query <<~SQL
               SELECT s.name, s.value, s.data_type, s.updated_at, u.uploads
               FROM site_settings s
@@ -28,9 +31,11 @@ module Migrations
                                                            'origin', u.origin,
                                                            'user_id', u.user_id)) AS uploads
                        FROM uploads u
-                       WHERE s.value <> ''
-                         AND ((s.data_type = 17 AND u.id = ANY (STRING_TO_ARRAY(s.value, '|')::int[]))
-                           OR (s.data_type = 18 AND u.id = s.value::int))
+                       WHERE u.id = ANY (CASE
+                                             WHEN s.value = '' THEN NULL
+                                             WHEN s.data_type = 17 THEN STRING_TO_ARRAY(s.value, '|')::int[]
+                                             WHEN s.data_type = 18 THEN ARRAY[s.value::int]
+                                         END)
                        ) u ON TRUE
               WHERE s.name <> 'permalink_normalizations'
               ORDER BY s.name
