@@ -111,9 +111,18 @@ class AdminDashboardSearch
   end
 
   def trending
-    SearchLog
-      .trending_from(start_date, end_date: end_date, limit: TOP_TERMS_LIMIT)
-      .map { |row| { term: row.term, searches: row.searches } }
+    rows = DB.query(<<~SQL, window_start: start_date, window_end: end_date, limit: TOP_TERMS_LIMIT)
+          SELECT lower(term) AS term,
+                 COUNT(*) AS searches,
+                 SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
+          FROM search_logs
+          WHERE created_at >= :window_start AND created_at <= :window_end
+          GROUP BY lower(term)
+          ORDER BY searches DESC, clicks DESC, term ASC
+          LIMIT :limit
+        SQL
+
+    rows.map { |row| { term: row.term, searches: row.searches } }
   end
 
   def trending_period

@@ -295,6 +295,16 @@ RSpec.describe AdminDashboardSearch do
       end
     end
 
+    it "includes searches at the window start boundary in every list" do
+      Fabricate(:search_log, term: "boundary", created_at: "2026-05-01 00:00:00")
+
+      response = described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")
+
+      expect(response[:kpis][:total_searches][:value]).to eq(1)
+      expect(response[:trending]).to eq([{ term: "boundary", searches: 1 }])
+      expect(response[:content_gaps]).to eq([{ term: "boundary", searches: 1, status: "no_match" }])
+    end
+
     it "returns only the logging flag when search logging is disabled" do
       SiteSetting.log_search_queries = false
 
