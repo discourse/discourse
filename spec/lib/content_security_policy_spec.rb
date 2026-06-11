@@ -34,9 +34,14 @@ RSpec.describe ContentSecurityPolicy do
       expect(script_srcs).to include("'strict-dynamic'")
     end
 
-    it "does not set worker-src" do
+    it "allows wasm compilation" do
+      script_srcs = parse(policy)["script-src"]
+      expect(script_srcs).to include("'wasm-unsafe-eval'")
+    end
+
+    it "sets worker-src to self and blob:" do
       worker_src = parse(policy)["worker-src"]
-      expect(worker_src).to eq(nil)
+      expect(worker_src).to contain_exactly("'self'", "blob:")
     end
   end
 
