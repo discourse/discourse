@@ -57,6 +57,8 @@ module Migrations
           parent_output_stream.close
           fork_input_stream.close
 
+          @job.setup
+
           Oj.load(parent_input_stream, OJ_SETTINGS) do |data|
             result = @job.run(data)
             Oj.to_stream(fork_output_stream, result, OJ_SETTINGS)

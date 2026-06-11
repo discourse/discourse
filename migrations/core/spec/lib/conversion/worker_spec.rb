@@ -6,7 +6,9 @@ RSpec.describe Migrations::Conversion::Worker do
   let(:index) { 1 }
   let(:input_queue) { Queue.new }
   let(:output_queue) { Queue.new }
-  let(:job) { instance_double(Migrations::Conversion::ParallelJob, run: "result", cleanup: nil) }
+  let(:job) do
+    instance_double(Migrations::Conversion::ParallelJob, setup: nil, run: "result", cleanup: nil)
+  end
 
   after do
     input_queue.close if !input_queue.closed?
@@ -75,6 +77,35 @@ RSpec.describe Migrations::Conversion::Worker do
         [2, all_stats[2]],
         [3, all_stats[3]],
       )
+    end
+
+    it "runs `job.setup` once in the worker process before processing items" do
+      temp_file = Tempfile.new("setup_check")
+      temp_file_path = temp_file.path
+      parent_pid = Process.pid
+
+      allow(job).to receive(:setup) do
+        process = Process.pid == parent_pid ? "parent" : "worker"
+        File.write(temp_file_path, "setup in #{process}\n", mode: "a+")
+      end
+      allow(job).to receive(:run) do |data|
+        File.write(temp_file_path, "run: #{data[:text]}\n", mode: "a+")
+        data[:text]
+      end
+
+      worker.start
+      input_queue << { text: "Item 1" } << { text: "Item 2" }
+      input_queue.close
+      worker.wait
+      output_queue.close
+
+      expect(File.read(temp_file_path)).to eq <<~LOG
+        setup in worker
+        run: Item 1
+        run: Item 2
+      LOG
+    ensure
+      temp_file.unlink
     end
 
     it "runs `job.cleanup` at the end" do
