@@ -361,6 +361,42 @@ module DiscoursePostEvent
           expect(response.body).to include("SUMMARY:Interested Event")
         end
       end
+
+      context "when the attending user RSVPed to a recurring event" do
+        fab!(:target_user, :user)
+        fab!(:recurring_event) do
+          Fabricate(
+            :event,
+            original_starts_at: 1.day.from_now,
+            original_ends_at: 1.day.from_now + 1.hour,
+            recurrence: "every_week",
+            name: "Weekly Standup",
+          )
+        end
+
+        before { sign_in(target_user) }
+
+        it "returns only the current occurrence when they RSVPed to a single occurrence" do
+          Invitee.create_attendance!(target_user.id, recurring_event.id, :going, recurring: false)
+
+          get "/discourse-post-event/events.json", params: { attending_user: target_user.username }
+
+          expect(response.status).to eq(200)
+          event_json = response.parsed_body["events"].find { |e| e["id"] == recurring_event.id }
+          expect(event_json["occurrences"].size).to eq(1)
+          expect(event_json["occurrences"].first["starts_at"]).to eq(event_json["starts_at"])
+        end
+
+        it "returns the whole series when they RSVPed to every occurrence" do
+          Invitee.create_attendance!(target_user.id, recurring_event.id, :going, recurring: true)
+
+          get "/discourse-post-event/events.json", params: { attending_user: target_user.username }
+
+          expect(response.status).to eq(200)
+          event_json = response.parsed_body["events"].find { |e| e["id"] == recurring_event.id }
+          expect(event_json["occurrences"].size).to be > 1
+        end
+      end
     end
 
     context "with an all-day event" do
