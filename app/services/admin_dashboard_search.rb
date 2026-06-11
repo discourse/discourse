@@ -40,9 +40,7 @@ class AdminDashboardSearch
 
     {
       logging_enabled: true,
-      headline: {
-        key: headline_key(current: current, kpis: kpis),
-      },
+      headline_state: headline_state(current: current, kpis: kpis),
       kpis: kpis,
       trending: trending,
       trending_period: trending_period,
@@ -95,10 +93,6 @@ class AdminDashboardSearch
   def formatted_change(value)
     rounded = value.abs < 1 ? value.round(1) : value.round
     rounded.zero? ? nil : rounded
-  end
-
-  def headline_key(current:, kpis:)
-    "admin.dashboard.sections.search.headline.#{headline_state(current: current, kpis: kpis)}"
   end
 
   def headline_state(current:, kpis:)

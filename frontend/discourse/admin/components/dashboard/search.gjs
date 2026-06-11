@@ -50,7 +50,7 @@ export default class DashboardSearch extends Component {
   }
 
   get isNoSignal() {
-    return this.args.search.headline.key.endsWith(".no_signal");
+    return this.args.search.headline_state === "no_signal";
   }
 
   get headlineTitle() {
@@ -67,7 +67,9 @@ export default class DashboardSearch extends Component {
   }
 
   get headlineSummary() {
-    return i18n(this.args.search.headline.key);
+    return i18n(
+      `admin.dashboard.sections.search.headline.${this.args.search.headline_state}`
+    );
   }
 
   get totalSearchesValue() {

@@ -28,9 +28,7 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
-        headline: {
-          key: "admin.dashboard.sections.search.headline.content_gaps",
-        },
+        headline_state: "content_gaps",
         kpis: {
           total_searches: {
             value: 19,
@@ -71,9 +69,7 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
-        headline: {
-          key: "admin.dashboard.sections.search.headline.healthy",
-        },
+        headline_state: "healthy",
         kpis: {
           total_searches: {
             value: 136,
@@ -107,9 +103,7 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
-        headline: {
-          key: "admin.dashboard.sections.search.headline.content_gaps",
-        },
+        headline_state: "content_gaps",
         kpis: {
           total_searches: {
             value: 11,
@@ -140,16 +134,16 @@ RSpec.describe AdminDashboardSearch do
       Fabricate.times(10, :clicked_search_log, term: "ruby", created_at: "2026-02-24 10:00")
 
       expect(
-        described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:headline],
-      ).to eq(key: "admin.dashboard.sections.search.headline.rate_climbing")
+        described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:headline_state],
+      ).to eq("rate_climbing")
 
       expect(
-        described_class.build(start_date: "2026-04-01", end_date: "2026-04-07")[:headline],
-      ).to eq(key: "admin.dashboard.sections.search.headline.shrinking")
+        described_class.build(start_date: "2026-04-01", end_date: "2026-04-07")[:headline_state],
+      ).to eq("shrinking")
 
       expect(
-        described_class.build(start_date: "2026-03-01", end_date: "2026-03-07")[:headline],
-      ).to eq(key: "admin.dashboard.sections.search.headline.healthy")
+        described_class.build(start_date: "2026-03-01", end_date: "2026-03-07")[:headline_state],
+      ).to eq("healthy")
     end
 
     it "resolves overlapping headline states by priority" do
@@ -162,12 +156,12 @@ RSpec.describe AdminDashboardSearch do
       Fabricate.times(20, :clicked_search_log, term: "ruby", created_at: "2025-12-27 10:00")
 
       expect(
-        described_class.build(start_date: "2026-02-01", end_date: "2026-02-07")[:headline],
-      ).to eq(key: "admin.dashboard.sections.search.headline.content_gaps")
+        described_class.build(start_date: "2026-02-01", end_date: "2026-02-07")[:headline_state],
+      ).to eq("content_gaps")
 
       expect(
-        described_class.build(start_date: "2026-01-01", end_date: "2026-01-07")[:headline],
-      ).to eq(key: "admin.dashboard.sections.search.headline.rate_climbing")
+        described_class.build(start_date: "2026-01-01", end_date: "2026-01-07")[:headline_state],
+      ).to eq("rate_climbing")
     end
 
     it "omits deltas when the prior window has no searches" do
@@ -189,9 +183,7 @@ RSpec.describe AdminDashboardSearch do
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
-        headline: {
-          key: "admin.dashboard.sections.search.headline.no_signal",
-        },
+        headline_state: "no_signal",
         kpis: {
           total_searches: {
             value: 0,
