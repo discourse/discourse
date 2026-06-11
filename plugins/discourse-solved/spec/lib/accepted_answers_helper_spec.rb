@@ -137,7 +137,9 @@ RSpec.describe DiscourseSolved::AcceptedAnswersHelper do
           }.not_to raise_error
 
           expect(accepted_answers.length).to eq(2)
-          PostDestroyer.new(Discourse.system_user, answer_post, context: "test").destroy
+
+          # Destroying answer_post would delete the whole topic, since it's the OP
+          PostDestroyer.new(Discourse.system_user, answer_post2, context: "test").destroy
 
           expect {
             accepted_answers =
