@@ -5,20 +5,33 @@ module DiscourseDataExplorer
     self.model = DiscourseDataExplorer::Query
     self.type = :queries
 
-    belongs_to :user, resource: UserResource
-    many_to_many :groups, resource: GroupResource, foreign_key: { query_groups: :query_id }
+    # Relationships are read-only: writes flow exclusively through the
+    # `group_ids` attribute + Query::Create service. Without this, Graphiti
+    # side-posting would let a write payload create/destroy/disassociate the
+    # related User/Group records directly, bypassing the service (verified:
+    # a `groups` sidepost with method:"destroy" deletes the Group row).
+    belongs_to :user, resource: UserResource, writable: false
+    many_to_many :groups,
+                 resource: GroupResource,
+                 foreign_key: {
+                   query_groups: :query_id,
+                 },
+                 writable: false
 
     # Opting in to sorting happens on the attribute (`sortable: true`);
     # opting in to filtering happens via the `filter` DSL below, which flips
     # `filterable` on. (Asymmetric, but that's Graphiti's DSL.)
-    attribute :name, :string, sortable: true
-    attribute :description, :string
-    attribute :sql, :string
+    attribute :name, :string, sortable: true, writable: true
+    attribute :description, :string, writable: true
+    attribute :sql, :string, writable: true
     # Request-level readable guard: the attribute is omitted for non-admins.
     attribute :hidden, :boolean, readable: :admin?
     attribute :last_run_at, :datetime, sortable: true
     attribute :created_at, :datetime
     attribute :updated_at, :datetime
+    # Write-only: consumed by the create service, never assigned to the model
+    # (reads expose the `groups` relationship instead).
+    attribute :group_ids, :array_of_integers, only: [:writable]
 
     # --- Query surface (deliberate, opt-in) ---
 
@@ -70,6 +83,37 @@ module DiscourseDataExplorer
     # marking this private breaks attribute guards at render time.
     def admin?
       guardian.is_admin?
+    end
+
+    # --- Write seam: persistence delegates wholesale to Service::Base ---
+    # Graphiti's write flow is build → assign_attributes → save. We keep the
+    # built model as an unsaved shell (it carries validation errors back to
+    # Graphiti's 422 rendering), stash the deserialized payload instead of
+    # assigning it, and let the service own validation/permissions/writes.
+
+    def build(model_class)
+      model_class.new
+    end
+
+    def assign_attributes(model, attributes)
+      @create_params = attributes
+    end
+
+    def save(model)
+      created = nil
+
+      Query::Create.call(params: @create_params || {}, guardian: context.guardian) do
+        on_success { |query:| created = query }
+        on_model_errors(:query) { |query| created = query }
+        on_failed_contract { |contract| model.errors.merge!(contract.errors) }
+        on_failed_policy(:all_requested_groups_exist) do
+          model.errors.add(:group_ids, "must reference existing groups")
+        end
+        on_failed_policy(:can_create_query) { raise Discourse::InvalidAccess }
+        on_failure { model.errors.add(:base, "query could not be created") if model.errors.empty? }
+      end
+
+      created || model
     end
   end
 end
