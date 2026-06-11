@@ -2,6 +2,7 @@
 
 describe "Admin Dashboard Redesign | Search section" do
   fab!(:current_user, :admin)
+  fab!(:moderator)
 
   let(:dashboard) { PageObjects::Pages::AdminDashboard.new }
 
@@ -48,8 +49,8 @@ describe "Admin Dashboard Redesign | Search section" do
         "Keep an eye on the content gaps below.",
     )
 
-    expect(search).to have_total_searches_kpi("50", delta: { text: "+25%", direction: "pos" })
-    expect(search).to have_no_result_rate_kpi("4%", delta: { text: "+4%", direction: "neg" })
+    expect(search).to have_total_searches_kpi("50", improving_delta: "+25%")
+    expect(search).to have_no_result_rate_kpi("4%", worsening_delta: "+4%")
 
     search.hover_total_searches_tooltip
     expect(search).to have_total_searches_tooltip(
@@ -97,8 +98,8 @@ describe "Admin Dashboard Redesign | Search section" do
       "Members keep finding what they search for, and search volume is steady or growing.",
     )
 
-    expect(search).to have_total_searches_kpi("27", delta: { text: "+800%", direction: "pos" })
-    expect(search).to have_no_result_rate_kpi("7%", delta: { text: "-93%", direction: "pos" })
+    expect(search).to have_total_searches_kpi("27", improving_delta: "+800%")
+    expect(search).to have_no_result_rate_kpi("7%", improving_delta: "-93%")
 
     search.click_trending_term("ruby")
 
@@ -164,6 +165,19 @@ describe "Admin Dashboard Redesign | Search section" do
     expect(search).to have_no_kpis
   end
 
+  it "asks moderators to contact an admin when search logging is disabled",
+     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+    SiteSetting.log_search_queries = false
+    sign_in(moderator)
+
+    dashboard.visit
+
+    expect(dashboard.search).to have_moderator_logging_disabled_notice(
+      "Search logging is disabled, so no search data is being collected. " \
+        "Ask an admin to enable log search queries to start collecting it.",
+    )
+  end
+
   it "shows staff search activity for a selected custom date range",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     Fabricate(:clicked_search_log, term: "ruby", created_at: "2026-05-02 10:00")
@@ -181,9 +195,13 @@ describe "Admin Dashboard Redesign | Search section" do
       "Search volume is down compared with the previous period, " \
         "while most searches still lead to content.",
     )
-    expect(search).to have_total_searches_kpi("3", delta: { text: "-40%", direction: "neg" })
-    expect(search).to have_no_result_rate_kpi("0%", delta: { text: "-100%", direction: "pos" })
+    expect(search).to have_total_searches_kpi("3", worsening_delta: "-40%")
+    expect(search).to have_no_result_rate_kpi("0%", improving_delta: "-100%")
     expect(search).to have_trending_rows([{ term: "ruby", searches: 3 }])
+
+    search.click_trending_term("ruby")
+
+    expect(page).to have_current_path("/admin/logs/search_logs/term?period=all&term=ruby")
 
     dashboard.visit_with_query(range: "custom", start_date: "2026-04-25", end_date: "2026-04-25")
 

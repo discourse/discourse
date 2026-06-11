@@ -12,13 +12,22 @@ module PageObjects
           has_css?("#{SECTION} .db-section__subintro p", exact_text: summary)
       end
 
-      def has_total_searches_kpi?(value, delta: nil)
-        has_kpi?("total_searches", value, delta: delta)
+      def has_total_searches_kpi?(value, improving_delta: nil, worsening_delta: nil)
+        has_kpi?(
+          "total_searches",
+          value,
+          improving_delta: improving_delta,
+          worsening_delta: worsening_delta,
+        )
       end
 
-      def has_no_result_rate_kpi?(value, delta: nil)
-        has_kpi?("no_result_rate", value, delta: delta) &&
-          has_no_css?("#{kpi_selector("no_result_rate")} .db-section__metric-number.--neg")
+      def has_no_result_rate_kpi?(value, improving_delta: nil, worsening_delta: nil)
+        has_kpi?(
+          "no_result_rate",
+          value,
+          improving_delta: improving_delta,
+          worsening_delta: worsening_delta,
+        ) && has_no_css?("#{kpi_selector("no_result_rate")} .db-section__metric-number.--neg")
       end
 
       def has_alert_no_result_rate_kpi?(value)
@@ -123,15 +132,22 @@ module PageObjects
           )
       end
 
+      def has_moderator_logging_disabled_notice?(message)
+        has_css?(SECTION, text: message) && has_no_css?("#{SECTION} .db-section__callout a")
+      end
+
       private
 
-      def has_kpi?(type, value, delta: nil)
+      def has_kpi?(type, value, improving_delta:, worsening_delta:)
         unless has_css?("#{kpi_selector(type)} .db-section__metric-number", exact_text: value)
           return false
         end
-        return has_no_css?("#{kpi_selector(type)} .db-delta") if delta.nil?
+        if improving_delta.nil? && worsening_delta.nil?
+          return has_no_css?("#{kpi_selector(type)} .db-delta")
+        end
 
-        has_css?("#{kpi_selector(type)} .db-delta.--#{delta[:direction]}", exact_text: delta[:text])
+        modifier, text = improving_delta ? ["--pos", improving_delta] : ["--neg", worsening_delta]
+        has_css?("#{kpi_selector(type)} .db-delta.#{modifier}", exact_text: text)
       end
 
       def kpi_selector(type)

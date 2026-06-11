@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
@@ -42,6 +43,8 @@ function badgeTooltip(status) {
 }
 
 export default class DashboardSearch extends Component {
+  @service currentUser;
+
   get loggingDisabled() {
     return this.args.search?.logging_enabled === false;
   }
@@ -106,6 +109,14 @@ export default class DashboardSearch extends Component {
     return this.args.search.kpis.no_result_rate.exceeds_threshold;
   }
 
+  get trendingTermPeriod() {
+    if (this.args.period === "custom") {
+      return "all";
+    }
+
+    return this.args.search.trending_period;
+  }
+
   <template>
     <DashboardSection
       @title={{i18n "admin.dashboard.sections.search.title"}}
@@ -119,12 +130,18 @@ export default class DashboardSearch extends Component {
         </div>
       {{else if this.loggingDisabled}}
         <p class="db-section__callout">
-          {{trustHTML
-            (i18n
-              "admin.dashboard.sections.search.logging_disabled"
-              basePath=(dBasePath)
-            )
-          }}
+          {{#if this.currentUser.admin}}
+            {{trustHTML
+              (i18n
+                "admin.dashboard.sections.search.logging_disabled"
+                basePath=(dBasePath)
+              )
+            }}
+          {{else}}
+            {{i18n
+              "admin.dashboard.sections.search.logging_disabled_moderator"
+            }}
+          {{/if}}
         </p>
       {{else if @search}}
         <div class="db-section__subheader">
@@ -239,7 +256,7 @@ export default class DashboardSearch extends Component {
                               @route="adminSearchLogs.term"
                               @query={{hash
                                 term=row.term
-                                period=@search.trending_period
+                                period=this.trendingTermPeriod
                               }}
                             >
                               {{row.term}}
