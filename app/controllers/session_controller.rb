@@ -534,7 +534,7 @@ class SessionController < ApplicationController
         backup_enabled: user.backup_codes_enabled?,
         allowed_methods: challenge[:allowed_methods],
       )
-      passkeys_for_2fa = user.passkeys_for_2fa_enabled?
+      passkeys_for_2fa = user.passkeys_available_as_second_factor?
       if user.security_keys_enabled? || passkeys_for_2fa
         DiscourseWebauthn.stage_challenge(user, server_session)
         json.merge!(

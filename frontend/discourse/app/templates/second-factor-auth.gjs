@@ -18,12 +18,22 @@ export default <template>
       <p class="action-description">{{@controller.customDescription}}</p>
     {{/if}}
     <p>{{@controller.secondFactorDescription}}</p>
-    {{#if @controller.showSecurityKeyForm}}
+    {{#if @controller.showPasskeyForm}}
+      <div id="security-key">
+        <DButton
+          @action={{@controller.authenticatePasskey}}
+          @icon="user"
+          @label="login.use_passkey"
+          id="passkey-authenticate-button"
+          class="btn-large btn-primary"
+        />
+      </div>
+    {{else if @controller.showSecurityKeyForm}}
       <div id="security-key">
         <DButton
           @action={{@controller.authenticateSecurityKey}}
           @icon="key"
-          @label={{@controller.securityKeyAuthenticateLabel}}
+          @label="login.security_key_authenticate"
           id="security-key-authenticate-button"
           class="btn-large btn-primary"
         />
