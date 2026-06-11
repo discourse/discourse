@@ -23,6 +23,7 @@ import processNode, {
 
 export default class NestedRoute extends DiscourseRoute {
   @service composer;
+  @service currentTopic;
   @service header;
   @service historyStore;
   @service modal;
@@ -115,7 +116,6 @@ export default class NestedRoute extends DiscourseRoute {
     }
 
     controller.setProperties(model);
-    controller.subscribe();
 
     // Hydrate the topic controller so core components that do
     // lookup("controller:topic") (e.g. share modal) find valid state.
@@ -133,6 +133,8 @@ export default class NestedRoute extends DiscourseRoute {
     // topic.details.updateNotifications() can construct the correct URL.
     model.topic.details.set("topic", model.topic);
 
+    controller.subscribe();
+
     this.header.enterTopic(model.topic, !model.contextMode);
 
     // Store the OP in the postStream so core components that read loaded posts
@@ -140,6 +142,14 @@ export default class NestedRoute extends DiscourseRoute {
     if (model.opPost && model.topic.postStream) {
       registerPostInTopicPostStream(model.topic, model.opPost);
     }
+
+    this.currentTopic.enter({
+      topic: model.topic,
+      controller,
+      topicController,
+      route: this,
+      routeName: "nested",
+    });
 
     this.screenTrack.start(model.topic.id, controller);
 
@@ -167,6 +177,7 @@ export default class NestedRoute extends DiscourseRoute {
     this._saveToCache(controller);
 
     this._resetTopicControllerBulkSelection();
+    this.currentTopic.leave(controller.topic);
     controller.unsubscribe();
     this.screenTrack.stop();
     controller.topic = null;
@@ -232,6 +243,7 @@ export default class NestedRoute extends DiscourseRoute {
     }
 
     this._saveToCache(controller);
+    this.currentTopic.leave(controller.topic);
     controller.unsubscribe();
     this.screenTrack.stop();
   }

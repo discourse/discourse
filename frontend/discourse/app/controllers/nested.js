@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import NestedActivityLog from "discourse/components/modal/nested-activity-log";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { dispatchCustomPostMessageCallback } from "discourse/lib/custom-post-message-callbacks";
 import { bind } from "discourse/lib/decorators";
 import {
   NESTED_VIEW_CACHE_FORMAT_VERSION,
@@ -723,6 +724,18 @@ export default class NestedController extends Controller {
       case "recovered":
       case "acted":
         this.#handlePostChanged(data);
+        break;
+      default:
+        if (
+          !dispatchCustomPostMessageCallback(
+            data.type,
+            this.#topicController,
+            data
+          )
+        ) {
+          // eslint-disable-next-line no-console
+          console.warn("unknown nested topic bus message type", data);
+        }
         break;
     }
   }

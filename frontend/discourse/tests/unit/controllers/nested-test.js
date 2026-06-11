@@ -1,6 +1,7 @@
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { registerCustomPostMessageCallback } from "discourse/lib/custom-post-message-callbacks";
 import { NESTED_VIEW_CACHE_FORMAT_VERSION } from "discourse/lib/nested-view-cache-snapshot";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
@@ -40,6 +41,35 @@ module("Unit | Controller | nested", function (hooks) {
     post.topic = topic;
     return post;
   }
+
+  test("dispatches custom topic post message callbacks", function (assert) {
+    const topic = buildTopic(this.store, 724);
+    const topicController = this.owner.lookup("controller:topic");
+    topicController.set("model", topic);
+    this.controller.topic = topic;
+
+    registerCustomPostMessageCallback(
+      "nested_custom_message",
+      (controller, message) => {
+        assert.step("custom callback");
+        assert.strictEqual(
+          controller,
+          topicController,
+          "passes the topic controller compatibility shim"
+        );
+        assert.strictEqual(message.value, 123);
+      }
+    );
+
+    this.controller._onMessage({ type: "nested_custom_message", value: 123 });
+
+    assert.verifySteps(["custom callback"]);
+    assert.strictEqual(
+      this.controller.messageBusLastId,
+      undefined,
+      "does not require a message bus id"
+    );
+  });
 
   test("post registry events are scoped to the current topic", function (assert) {
     const previousTopic = buildTopic(this.store, 509);

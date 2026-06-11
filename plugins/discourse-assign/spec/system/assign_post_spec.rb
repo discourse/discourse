@@ -24,6 +24,30 @@ describe "Assign | Assigning posts" do
     assign_modal.confirm
   end
 
+  describe "with nested topic" do
+    let(:nested_view) { PageObjects::Pages::NestedView.new }
+    fab!(:nested_topic_record) { Fabricate(:nested_topic, topic: topic) }
+
+    before { SiteSetting.nested_replies_enabled = true }
+
+    it "updates the OP assignment display immediately when assigning a nested reply" do
+      nested_view.visit_nested(topic)
+
+      within("[data-post-number='#{post2.post_number}']") do
+        find(".show-more-actions").click if has_css?(".show-more-actions", wait: 2)
+        find(".post-action-menu__assign-post").click
+      end
+      assign_modal.assignee = staff_user
+      assign_modal.confirm
+
+      expect(assign_modal).to be_closed
+      expect(page).to have_css(
+        ".nested-view__op .assigned-to .assigned-indirectly",
+        text: "##{post2.post_number} to #{staff_user.username}",
+      )
+    end
+  end
+
   describe "with open topic" do
     it "can assign and unassign" do
       visit "/t/#{topic.id}"

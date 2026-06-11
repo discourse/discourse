@@ -26,6 +26,11 @@ import {
 } from "discourse/lib/array-tools";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
+import {
+  dispatchCustomPostMessageCallback,
+  registerCustomPostMessageCallback,
+  resetCustomPostMessageCallbacks,
+} from "discourse/lib/custom-post-message-callbacks";
 import { bind } from "discourse/lib/decorators";
 import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
@@ -54,22 +59,10 @@ import TopicTimer from "discourse/models/topic-timer";
 import { spinnerHTML } from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
-let customPostMessageCallbacks = {};
-
 const RETRIES_ON_RATE_LIMIT = 4;
 const MIN_BOTTOM_MAP_WORD_COUNT = 200;
 
-export function resetCustomPostMessageCallbacks() {
-  customPostMessageCallbacks = {};
-}
-
-export function registerCustomPostMessageCallback(type, callback) {
-  if (customPostMessageCallbacks[type]) {
-    throw new Error(`Error ${type} is an already registered post message!`);
-  }
-
-  customPostMessageCallbacks[type] = callback;
-}
+export { registerCustomPostMessageCallback, resetCustomPostMessageCallbacks };
 
 export default class TopicController extends Controller {
   @service appEvents;
@@ -2127,10 +2120,7 @@ export default class TopicController extends Controller {
         break;
       }
       default: {
-        let callback = customPostMessageCallbacks[data.type];
-        if (callback) {
-          callback(this, data);
-        } else {
+        if (!dispatchCustomPostMessageCallback(data.type, this, data)) {
           // eslint-disable-next-line no-console
           console.warn("unknown topic bus message type", data);
         }

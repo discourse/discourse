@@ -33,7 +33,6 @@ import { resetItemSelectCallbacks } from "discourse/components/search-menu/resul
 import { resetQuickSearchRandomTips } from "discourse/components/search-menu/results/random-quick-tip";
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
-import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/user-private-messages";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
@@ -43,6 +42,7 @@ import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-he
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
+import { resetCustomPostMessageCallbacks } from "discourse/lib/custom-post-message-callbacks";
 import deprecated from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { clearRegisteredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
@@ -68,6 +68,7 @@ import { resetLogSearchLinkClickedCallbacks } from "discourse/lib/search";
 import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/admin-sidebar";
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
+import { resetTopicLifecycleCallbacks } from "discourse/lib/topic-lifecycle-callbacks";
 import {
   resetHighestReadCache,
   setTopicList,
@@ -218,6 +219,7 @@ export function testCleanup(container, app) {
   resetUsernameDecorators();
   resetOneboxCache();
   resetCustomPostMessageCallbacks();
+  resetTopicLifecycleCallbacks();
   resetUserSearchCache();
   resetHighestReadCache();
   resetCardClickListenerSelector();
