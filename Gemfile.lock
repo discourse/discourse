@@ -734,7 +734,9 @@ GEM
     ssrf_filter (1.5.0)
     stackprof (0.2.28)
     stringio (3.2.0)
-    stripe (11.1.0)
+    stripe (19.2.0)
+      bigdecimal
+      logger
     strscan (3.1.8)
     syntax_tree (6.3.0)
       prettier_print (>= 1.2.0)
@@ -1288,7 +1290,7 @@ CHECKSUMS
   ssrf_filter (1.5.0) sha256=e03dcdb9d1730d7f6710532a606b3543df2a448a0293ce04a2d995523c5a97f6
   stackprof (0.2.28) sha256=4ec2ace02f386012b40ca20ef80c030ad711831f59511da12e83b34efb0f9a04
   stringio (3.2.0) sha256=c37cb2e58b4ffbd33fe5cd948c05934af997b36e0b6ca6fdf43afa234cf222e1
-  stripe (11.1.0) sha256=a76e82cc7e4d2433803ca5fbe9453d019df376236f0b9fbcb7f36e6dd327f98d
+  stripe (19.2.0) sha256=ff25c364546ad866be0ce05574ee2deef498602b0d013e9669a42e68bf6e9ee8
   strscan (3.1.8) sha256=aae2db611a225559f21ffbb71765c9a4e60fd262534a9ea84f4f11c7f32f679e
   syntax_tree (6.3.0) sha256=56e25a9692c798ec94c5442fe94c5e94af76bef91edc8bb02052cbdecf35f13d
   test-prof (1.6.1) sha256=0332d9c39a7c118ed942b2db582f055d9f24964d150004ec6b964d2fa262499e
