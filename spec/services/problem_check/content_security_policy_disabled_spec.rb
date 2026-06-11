@@ -17,7 +17,7 @@ RSpec.describe ProblemCheck::ContentSecurityPolicyDisabled do
 
       it do
         expect(check).to have_a_problem.with_priority("low").with_message(
-          I18n.t("dashboard.problem.content_security_policy_disabled", base_path: "")
+          I18n.t("dashboard.problem.content_security_policy_disabled", base_path: ""),
         )
       end
     end
