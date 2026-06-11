@@ -2,7 +2,9 @@
 
 describe "Group moderator self-lockout warning" do
   fab!(:moderator)
-  fab!(:group)
+  # Invite-only so the restrictive visibility levels remain available — a freely
+  # joinable group can't be hidden to members/staff/owners only.
+  fab!(:group) { Fabricate(:group, public_admission: false) }
 
   let(:group_page) { PageObjects::Pages::Group.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
@@ -16,17 +18,17 @@ describe "Group moderator self-lockout warning" do
 
   before { SiteSetting.moderators_manage_groups = true }
 
-  def visit_interaction_settings
+  def visit_membership_settings
     group_page.visit(group)
     group_page.click_manage
-    page.find(".user-secondary-navigation li", text: "Interaction").click
+    page.find(".user-secondary-navigation li", text: "Membership").click
   end
 
   context "when non-owner moderator changes visibility to 'Owners only'" do
     before { sign_in(moderator) }
 
     it "shows confirmation dialog for visibility_level change" do
-      visit_interaction_settings
+      visit_membership_settings
       visibility_chooser.expand
       visibility_chooser.select_row_by_value(Group.visibility_levels[:owners])
       group_page.click_save
@@ -36,7 +38,7 @@ describe "Group moderator self-lockout warning" do
     end
 
     it "shows confirmation dialog for members_visibility_level change" do
-      visit_interaction_settings
+      visit_membership_settings
       members_visibility_chooser.expand
       members_visibility_chooser.select_row_by_value(Group.visibility_levels[:owners])
       group_page.click_save
@@ -46,7 +48,7 @@ describe "Group moderator self-lockout warning" do
     end
 
     it "saves when confirmed" do
-      visit_interaction_settings
+      visit_membership_settings
       visibility_chooser.expand
       visibility_chooser.select_row_by_value(Group.visibility_levels[:owners])
       group_page.click_save
@@ -57,18 +59,18 @@ describe "Group moderator self-lockout warning" do
     end
 
     it "does not save when cancelled" do
-      visit_interaction_settings
+      visit_membership_settings
       visibility_chooser.expand
       visibility_chooser.select_row_by_value(Group.visibility_levels[:owners])
       group_page.click_save
       dialog.click_no
 
-      visit_interaction_settings
+      visit_membership_settings
       expect(visibility_chooser).to have_selected_value(Group.visibility_levels[:public])
     end
 
     it "saves without dialog for non-restrictive visibility levels" do
-      visit_interaction_settings
+      visit_membership_settings
       visibility_chooser.expand
       visibility_chooser.select_row_by_value(Group.visibility_levels[:staff])
       group_page.click_save
@@ -85,7 +87,7 @@ describe "Group moderator self-lockout warning" do
     end
 
     it "saves without showing dialog" do
-      visit_interaction_settings
+      visit_membership_settings
       visibility_chooser.expand
       visibility_chooser.select_row_by_value(Group.visibility_levels[:owners])
       group_page.click_save

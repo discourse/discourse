@@ -1,4 +1,35 @@
 .group-form-automatic-membership-automatic,
 .groups-form-grant-trust-level {
-  margin-bottom: 10px;
+  margin-bottom: var(--space-3);
+}
+
+.groups-form-visibility-access {
+  .groups-form-visibility-label,
+  .groups-form-members-visibility-label,
+  .group-form-public-exit-label {
+    margin-top: var(--space-4);
+  }
+
+  .group-form-public-exit-label {
+    margin-bottom: var(--space-5);
+  }
+
+  .groups-form-join-method {
+    margin-bottom: 0;
+    padding: 0;
+    border: 0;
+    min-inline-size: 0;
+
+    legend {
+      font-weight: normal;
+      font-size: var(--font-0);
+      color: var(--primary-high);
+      padding: 0;
+      margin-bottom: var(--space-2);
+    }
+  }
+
+  .groups-form-membership-request-template {
+    margin-top: var(--space-4);
+  }
 }
