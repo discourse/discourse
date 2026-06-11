@@ -104,6 +104,22 @@ RSpec.describe CurrentUserSerializer do
         expect(json[:second_factor_enabled]).to eq(true)
       end
     end
+
+    context "when the user only has a passkey" do
+      before do
+        SiteSetting.allow_passkeys_for_2fa = true
+        Fabricate(:passkey_with_random_credential, user: user)
+      end
+
+      it "is true" do
+        expect(json[:second_factor_enabled]).to eq(true)
+      end
+
+      it "is false when allow_passkeys_for_2fa is disabled" do
+        SiteSetting.allow_passkeys_for_2fa = false
+        expect(json[:second_factor_enabled]).to eq(false)
+      end
+    end
   end
 
   describe "#groups" do

@@ -168,6 +168,36 @@ RSpec.describe SecondFactorManager do
     end
   end
 
+  describe "#has_any_second_factor_methods_enabled?" do
+    it "is true when totp or security keys are enabled" do
+      expect(user.has_any_second_factor_methods_enabled?).to eq(true)
+
+      disable_totp
+      expect(user.has_any_second_factor_methods_enabled?).to eq(true)
+
+      disable_security_key
+      expect(user.has_any_second_factor_methods_enabled?).to eq(false)
+    end
+
+    context "when the user only has a passkey" do
+      before do
+        disable_totp
+        disable_security_key
+        Fabricate(:passkey_with_random_credential, user: user)
+      end
+
+      it "is true when allow_passkeys_for_2fa is enabled" do
+        SiteSetting.allow_passkeys_for_2fa = true
+        expect(user.has_any_second_factor_methods_enabled?).to eq(true)
+      end
+
+      it "is false when allow_passkeys_for_2fa is disabled" do
+        SiteSetting.allow_passkeys_for_2fa = false
+        expect(user.has_any_second_factor_methods_enabled?).to eq(false)
+      end
+    end
+  end
+
   describe "#only_security_keys_enabled?" do
     it "returns true if totp disabled and security key enabled" do
       disable_totp
