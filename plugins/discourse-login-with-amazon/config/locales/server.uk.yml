@@ -6,6 +6,7 @@
 
 uk:
   site_settings:
+    enable_login_with_amazon: "Увімкнути вхід за допомогою автентифікації Amazon, вимагає {{setting:login_with_amazon_client_id}} і {{setting:login_with_amazon_client_secret}}."
     login_with_amazon_client_id: "Увійти за допомогою ідентифікатора клієнта Amazon"
     login_with_amazon_client_secret: "Вхід за допомогою секретного ключа клієнта Amazon"
     login_with_amazon_scope: "Увійдіть зі сферами дії Amazon OAuth2 (через пробіл)"

@@ -6,6 +6,22 @@
 
 zh_CN:
   js:
+    user_api_key:
+      title: '授权“%{application_name}”'
+      authorize: "授权"
+      deny: "取消"
+      logged_in_as: "登录身份"
+      permissions_header: '这将允许“%{application_name}”：'
+      redirect_warning: "授权会将您重定向到"
+      write_scope_warning: "请求完全写入权限 — 此应用程序将能够发布、编辑和删除内容。只有在你完全信任的情况下才能继续。"
+      copied: "已复制！"
+      otp_description: '要允许“%{application_name}”访问此网站吗？'
+      no_trust_level: "抱歉，您没有访问用户 API 所需的信任级别"
+      generic_error: "抱歉，我们无法发布用户 API 密钥，此功能可能被网站管理员禁用"
+      device:
+        code: "代码"
+        continue: "继续"
+        authorize_title: '授权“%{application_name}”'
     blocks:
       ghost:
         status: "状态"
@@ -1654,6 +1670,9 @@ zh_CN:
       undo_revoke_access: "撤消访问权限撤消操作"
       api_approved: "已批准："
       api_last_used_at: "最后使用时间："
+      api_expires_at: "过期时间:"
+      api_expired_at: "已过期:"
+      api_expires_never: "从不"
       api_show_permissions:
         other: "已授予权限 (%{count})"
       theme: "主题"
@@ -4898,9 +4917,18 @@ zh_CN:
         create_or_reply: "创建主题或回复"
         fullscreen: "全屏编辑器"
         insert_current_time: "输入当前时间"
+        bold: "粗体"
+        italic: "斜体"
         link: "插入链接"
         preformatted: "预先格式化的文本"
         paragraph: "段落"
+        heading_1: "标题 1"
+        heading_2: "标题 2"
+        heading_3: "标题 3"
+        heading_4: "标题 4"
+        toggle_direction: "切换文本方向"
+        ordered_list: "有序列表"
+        unordered_list: "无序列表"
         blockquote: "块引用"
       bookmarks:
         title: "书签"
@@ -4910,13 +4938,21 @@ zh_CN:
         tomorrow: "明天"
         next_week: "下周"
         next_month: "下个月"
+        next_business_week: "下周开始"
         next_business_day: "下一个工作日"
         custom: "自定义日期和时间"
+        none: "无提醒"
         delete: "删除书签"
       actions:
         title: "操作"
+        bookmark_topic: "切换书签话题"
+        pin_unpin_topic: "置顶/取消置顶话题"
+        share_topic: "分享话题"
+        share_post: "分享帖子"
         reply_as_new_topic: "作为链接话题回复"
         reply_topic: "回复话题"
+        reply_post: "回复帖子"
+        quote_post: "引用帖子"
         flag: "标记帖子"
         edit: "编辑帖子"
         delete: "删除帖子"
@@ -6176,6 +6212,11 @@ zh_CN:
                 new_signups: "新注册用户"
                 dau_mau: "日活跃用户（DAU）/月活跃用户（MAU）粘性"
                 daily_engaged_users: "每日参与"
+          search:
+            title: "搜索"
+            table:
+              searches: "搜索"
+              status: "状态"
         reports_section:
           modal:
             enabled_heading: "已启用"
@@ -8191,6 +8232,7 @@ zh_CN:
           disabled: "在注册表单上隐藏"
         searchable:
           title: "可搜索"
+          tooltip: "启用此功能后，任何人都可以通过该字段的值查找成员，并在搜索结果中看到该字段，即使该字段未显示在成员的个人资料或用户卡片上。"
           enabled: "可搜索"
           disabled: "不可搜索"
         field_types:

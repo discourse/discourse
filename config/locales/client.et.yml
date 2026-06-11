@@ -6,6 +6,13 @@
 
 et:
   js:
+    user_api_key:
+      authorize: "Autoriseeri"
+      deny: "Loobu"
+      copied: "Kopeeritud!"
+      device:
+        code: "Kood"
+        continue: "Jätka"
     blocks:
       ghost:
         status: "Staatus"
@@ -935,6 +942,7 @@ et:
       undo_revoke_access: "Tühista ligipääsu tühistamine"
       api_approved: "Heakskiidetud:"
       api_last_used_at: "Viimati kasutatud:"
+      api_expires_never: "mitte kunagi"
       theme: "Teema"
       save_to_change_theme: 'Teema uuendatakse pärast seda, kui klõpsad nuppu "%{save_text}”'
       home: "Vaikimisi avaleht"
@@ -2925,6 +2933,11 @@ et:
                 "2": "Liige"
                 "3": "Püsiliige"
                 "4": "Vedaja"
+          search:
+            title: "Otsi"
+            table:
+              searches: "Otsingud"
+              status: "Staatus"
         reports_section:
           no_data: "Pole andmeid, mida näidata"
           modal:

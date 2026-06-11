@@ -6,6 +6,16 @@
 
 fa_IR:
   js:
+    user_api_key:
+      authorize: "اجازه دادن"
+      deny: "لغو"
+      copied: "کپی شد!"
+      otp_description: 'آیا می خواهید به "%{application_name}" اجازه دسترسی به این سایت را بدهید؟'
+      no_trust_level: "با عرض پوزش٬ شما سطح اعتماد مورد نیاز با برای دسترسی به api کاربر ندارید."
+      generic_error: "با عرض پوزش، نمی‌توانیم کلید API کاربر را حل کنیم، شاید این ویژگی در قسمت مدیریت غیر‌فعال شده."
+      device:
+        code: "کد"
+        continue: "ادامه"
     blocks:
       ghost:
         status: "وضعیت"
@@ -1416,6 +1426,9 @@ fa_IR:
       undo_revoke_access: "بازنشانی لغو دسترسی"
       api_approved: "تایید شده:"
       api_last_used_at: "آخرین بار استفاده شده در"
+      api_expires_at: "انقضاء:"
+      api_expired_at: "منقضی شده:"
+      api_expires_never: "هیچوقت"
       theme: "قالب"
       save_to_change_theme: 'پس از کلیک روی "%{save_text}" پوسته به روز خواهد شد'
       home: "صفحه خانگی پیشفرض"
@@ -5160,6 +5173,11 @@ fa_IR:
                 "2": "عضو"
                 "3": "عادی"
                 "4": "رهبر"
+          search:
+            title: "جستجو"
+            table:
+              searches: "جستجوها"
+              status: "وضعیت"
         reports_section:
           modal:
             enabled_heading: "فعال شده"

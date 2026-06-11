@@ -305,6 +305,9 @@ zh_CN:
             model_settings: "模型设置"
             related_topics: "相关话题"
             semantic_search: "语义搜索"
+        admin_dashboard:
+          setting_groups:
+            settings: "基本设置"
         discord:
           name: "Discord 集成"
           description: "增加了搜索 Discord 频道的功能"

@@ -669,6 +669,9 @@ ro:
       session_info: "Citește informațiile despre sesiunea utilizatorului"
       read: "Citește tot"
       write: "Scrie tot"
+    device:
+      code: "Cod"
+      continue: "Continuă"
   reports:
     default:
       labels:

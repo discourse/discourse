@@ -6,6 +6,21 @@
 
 cs:
   js:
+    user_api_key:
+      title: 'Autorizovat „%{application_name}“'
+      authorize: "Autorizovat"
+      deny: "Zrušit"
+      logged_in_as: "Přihlášen jako"
+      permissions_header: 'Toto povolí přístup „%{application_name}“:'
+      redirect_warning: "Ověření vás přesměruje na"
+      copied: "Zkopírováno!"
+      otp_description: 'Chcete povolit přístup k tomuto webu uživateli „%{application_name}“?'
+      no_trust_level: "Je nám líto, ale pro přístup k uživatelskému API nemáte požadovanou úroveň důvěry."
+      generic_error: "Omlouváme se, ale nemůžeme vydávat uživatelské API klíče, tato funkce mohla být zakázána administrátorem webu."
+      device:
+        code: "Kód"
+        continue: "Pokračovat"
+        authorize_title: 'Autorizovat „%{application_name}“'
     blocks:
       ghost:
         status: "Stav"
@@ -1791,6 +1806,9 @@ cs:
       undo_revoke_access: "Zrušit odebrání přístupu"
       api_approved: "Schváleno:"
       api_last_used_at: "Poslední použití:"
+      api_expires_at: "Vyprší:"
+      api_expired_at: "Platnost vypršela:"
+      api_expires_never: "nikdy"
       theme: "Motiv"
       save_to_change_theme: 'Motiv bude aktualizován po kliknutí na "%{save_text}"'
       home: "Výchozí domovská stránka"
@@ -6579,6 +6597,11 @@ cs:
                 "2": "Člen"
                 "3": "Stálý člen"
                 "4": "Leader"
+          search:
+            title: "Vyhledat"
+            table:
+              searches: "Hledání"
+              status: "Stav"
         reports_section:
           no_data: "Žádná data k zobrazení"
           modal:

@@ -1318,6 +1318,10 @@ cs:
       one_time_password: "Vytvoření jednorázového přihlašovacího tokenu"
       bookmarks_calendar: "Čtení připomenutí záložek"
       user_status: "Čtení a aktualizace stavu uživatele"
+    device:
+      code: "Kód"
+      continue: "Pokračovat"
+      authorize_title: 'Autorizovat „%{application_name}“'
     invalid_public_key: "Omlouváme se, veřejný klíč je neplatný."
     invalid_auth_redirect: "Omlouváme se, ale tento hostitel auth_redirect není povolen."
     invalid_token: "Chybějící, neplatný nebo vypršený token."
@@ -1955,7 +1959,6 @@ cs:
     allowed_iframes: "Seznam předpon URL iframe src, které Discourse bezpečně povoluje v příspěvcích. Znak * lze použít pro libovolný počet znaků jiných než /."
     allowed_crawler_user_agents: "Uživatelské agenty webových prohledávačů (crawlerů), kterým by měl být umožněn přístup na web. VAROVÁNÍ! TOTO NASTAVENÍ ZAKÁŽE VŠECHNY PROHLEDÁVAČE, KTERÉ ZDE NEJSOU UVEDENY!"
     blocked_crawler_user_agents: "Unikátní slovo v řetězci uživatelského agenta, které nerozlišuje velká a malá písmena a identifikuje webové roboty, kterým by neměl být povolen přístup k webu. Nepoužije se, pokud je definován seznam povolených."
-    content_security_policy: "Povolte zásady zabezpečení obsahu (CSP). CSP je další vrstva zabezpečení, která pomáhá předcházet určitým typům útoků, včetně Cross Site Scripting (XSS) a data injection."
     content_security_policy_report_only: "Povolit Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_frame_ancestors: "Omezit, kdo může zabudovat tento web do iframů přes CSP. Nastavte povolené hostitele v <a href='%{base_path}/admin/customize/embedding'>Zabudování</a>"
     content_security_policy_script_src: "Další zdroje skriptů na seznamu povolených. Aktuální hostitel a CDN jsou zahrnuty ve výchozím nastavení. Viz <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Zmírnění útoků XSS pomocí zásad zabezpečení obsahu.</a> (CSP). Ostatní zdroje hostitelů jsou ignorovány, protože je povoleno nastavení strict-dynamic."

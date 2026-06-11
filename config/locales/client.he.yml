@@ -6,6 +6,21 @@
 
 he:
   js:
+    user_api_key:
+      title: 'אישור של „%{application_name}”'
+      authorize: "אישור"
+      deny: "ביטול"
+      logged_in_as: "נכנסת בתור"
+      permissions_header: 'ההרשאה הזאת תאפשר ל־„%{application_name}” לבצע:'
+      redirect_warning: "האימות יפנה אותך אל"
+      copied: "הועתק!"
+      otp_description: 'לאפשר ל־„%{application_name}” לגשת לאתר הזה?'
+      no_trust_level: "אין לך את דרגת האמון הנדרשת כדי לגשת ל־API של המשתמשים, סליחה"
+      generic_error: "לא הצלחנו לייצר את מפתחות ה־API של המשתמש, ייתכן שיכולת זו הושבתה על ידי הנהלת האתר, עמך הסליחה"
+      device:
+        code: "קוד"
+        continue: "המשך"
+        authorize_title: 'אישור של „%{application_name}”'
     blocks:
       ghost:
         status: "מצב"
@@ -1830,6 +1845,9 @@ he:
       undo_revoke_access: "ביטול שלילת גישה"
       api_approved: "אושרו:"
       api_last_used_at: "שימוש אחרון:"
+      api_expires_at: "תפוג:"
+      api_expired_at: "לא בתוקף:"
+      api_expires_never: "אף פעם"
       theme: "ערכת עיצוב"
       save_to_change_theme: 'ערכת העיצוב תעודכן לאחר הלחיצה על „%{save_text}”'
       home: "דף בית ברירת מחדל"
@@ -6690,6 +6708,11 @@ he:
                 "2": "חברים"
                 "3": "רגילה"
                 "4": "מובילים"
+          search:
+            title: "חיפוש"
+            table:
+              searches: "חיפושים"
+              status: "מצב"
         reports_section:
           no_data: "אין נתונים להצגה"
           modal:

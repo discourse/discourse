@@ -6,6 +6,16 @@
 
 fr:
   js:
+    user_api_key:
+      authorize: "Autoriser"
+      deny: "Annuler"
+      copied: "Copié !"
+      otp_description: 'Voulez-vous autoriser « %{application_name} » à accéder à ce site ?'
+      no_trust_level: "Nous sommes désolés, vous n'avez pas le niveau de confiance requis pour accéder à l'API utilisateur"
+      generic_error: "Nous sommes désolés, nous n'avons pu générer de clés pour l'API utilisateur. Cette fonctionnalité a peut-être été désactivée par l'administrateur"
+      device:
+        code: "Code"
+        continue: "Continuer"
     blocks:
       ghost:
         status: "Statut"
@@ -1550,6 +1560,9 @@ fr:
       undo_revoke_access: "Annuler la révocation d'accès"
       api_approved: "Approuvé :"
       api_last_used_at: "Dernière utilisation :"
+      api_expires_at: "Expire le:"
+      api_expired_at: "Expiré:"
+      api_expires_never: "jamais"
       theme: "Thème"
       save_to_change_theme: 'Le thème sera mis à jour après un clic sur « %{save_text} »'
       home: "Page d'accueil par défaut"
@@ -5679,6 +5692,11 @@ fr:
                 "2": "Membre"
                 "3": "Normal"
                 "4": "Meneur"
+          search:
+            title: "Recherche"
+            table:
+              searches: "Recherches"
+              status: "Statut"
         reports_section:
           no_data: "Aucune donnée à afficher"
           modal:

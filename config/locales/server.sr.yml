@@ -295,6 +295,8 @@ sr:
     read: "pročitano"
     write_scope_warning: "Zahtevan je pun pristup za pisanje — ova aplikacija će moći da objavljuje, uređuje i briše sadržaj. Nastavite samo ako joj potpuno verujete."
     copied: "Kopirano!"
+    device:
+      continue: "Nastavi"
   reports:
     default:
       labels:

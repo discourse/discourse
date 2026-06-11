@@ -314,6 +314,12 @@ pl_PL:
             model_settings: "Ustawienia modelu"
             related_topics: "Powiązane tematy"
             semantic_search: "Wyszukiwanie semantyczne"
+        admin_dashboard:
+          name: "Panel administracyjny"
+          description: "Pomaga menedżerom społeczności dostrzegać znaczące zmiany i decydować, gdzie szukać dalej"
+          highlights: "Najważniejsze wydarzenia"
+          setting_groups:
+            settings: "Ustawienia podstawowe"
         discord:
           name: "Integracja z Discordem"
           description: "Dodaje możliwość wyszukiwania kanałów Discord"
@@ -1024,6 +1030,9 @@ pl_PL:
           disable_streaming: "Wyłącz uzupełnianie strumieniowania (zmień żądania strumieniowe na żądania niestrumieniowe)"
           reasoning_effort: "Wysiłek rozumowania (dotyczy tylko modeli rozumowania)"
           service_tier: "Poziom usług (elastyczny = niższy koszt/większe opóźnienie, priorytet = szybsze przetwarzanie)"
+          reasoning_parser: "Analizator wnioskowania vLLM"
+          thinking_override: "Zastąpienie myślenia"
+          thinking_token_budget: "Budżet tokena myślenia"
           enable_reasoning: "Włącz wnioskowanie (dotyczy tylko modeli wnioskowania)"
           adaptive_thinking: "Włącz myślenie adaptacyjne (zalecane dla modeli Claude 4.6)"
           enable_thinking: "Włącz myślenie (modele Gemini 2.5 – wykorzystuje budżet tokenów)"
@@ -1037,6 +1046,11 @@ pl_PL:
           prompt_caching_tool_results: "Wyniki narzędzi – pamięć podręczna, gdy dostępne są wyniki narzędzi (zalecane)"
           prompt_caching_always: "Zawsze – zawsze używaj szybkiego buforowania"
           effort: "Poziom wysiłku"
+        provider_field_hints:
+          reasoning_parser: "Musi być zgodny z ustawieniem serwera vLLM --reasoning-parser. Discourse nie może zmieniać parserów podczas żądania; wykorzystuje to do kształtowania opcji żądania."
+          thinking_override: "Opcjonalnie wymuś obsługiwane szablony czatu vLLM, aby włączyć lub wyłączyć myślenie dla każdego żądania. Nieobsługiwane parsery zachowują domyślne ustawienia serwera."
+          reasoning_effort: "Wysyła opcję żądania reasoning_effort vLLM dla parserów, które ją obsługują."
+          thinking_token_budget: "Opcjonalny limit dla tokenów wnioskowania. Wymaga parsera wnioskowania vLLM i jest ignorowany, gdy wysiłek wnioskowania wynosi Brak."
       related_topics:
         title: "Powiązane tematy"
         pill: "Powiązane"

@@ -724,6 +724,9 @@ vi:
       message_bus: "Cập nhật trực tiếp"
       one_time_password: "Tạo mã token đăng nhập một lần"
       bookmarks_calendar: "Đọc lời nhắc đánh dấu"
+    device:
+      code: "Mã"
+      continue: "Tiếp tục"
   reports:
     default:
       labels:

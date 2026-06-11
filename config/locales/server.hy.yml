@@ -691,6 +691,9 @@ hy:
       session_info: "Կարդալ օգտատիրոջ սեանսի ինֆոն"
       read: "Կարդալ ամբողջը"
       write: "Գրել ամբողջը"
+    device:
+      code: "Կոդ"
+      continue: "Շարունակել"
   flags:
     errors:
       already_handled: "Դրոշակը արդեն մշակված է"

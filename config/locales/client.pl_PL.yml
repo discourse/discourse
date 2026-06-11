@@ -6,6 +6,35 @@
 
 pl_PL:
   js:
+    user_api_key:
+      title: 'Autoryzuj "%{application_name}"'
+      authorize: "Autoryzuj"
+      deny: "Anuluj"
+      logged_in_as: "Zalogowano jako"
+      permissions_header: 'Umożliwi to „%{application_name}”:'
+      redirect_warning: "Autoryzacja przekieruje Cię do"
+      expiry_notice: 'Ten klucz dla „%{application_name}” wygaśnie dnia %{expires_at}.'
+      write_scope_warning: "Żądano pełnego dostępu do zapisu — ta aplikacja będzie mogła publikować, edytować i usuwać treści. Kontynuuj tylko wtedy, gdy w pełni jej ufasz."
+      copy_key: "Skopiuj klucz"
+      copied: "Skopiowano!"
+      otp_description: 'Czy zezwalasz „%{application_name}” na dostęp do tej strony?'
+      no_trust_level: "Przepraszamy, nie masz wystarczających uprawnień do przeglądania API użytkownika"
+      generic_error: "Przykro nam , ale ie jesteśmy w stanie pozwolić użytkownikowi na klucze API, ta funkcja może być zablokowana przed administratora."
+      device:
+        title: "Autoryzuj aplikację"
+        enter_code: "Wprowadź kod wyświetlony w aplikacji."
+        code: "Kod"
+        enter_full_code: "Wprowadź cały kod, aby autoryzować tę aplikację."
+        continue: "Kontynuuj"
+        invalid_code: "Przepraszamy, ten kod jest nieprawidłowy. Sprawdź kod i spróbuj ponownie."
+        expired_code: "Przepraszamy, ten kod wygasł lub został już wykorzystany. Poproś o nowy kod w aplikacji i spróbuj ponownie."
+        authorize_title: 'Autoryzuj „%{application_name}”'
+        expiry_notice: "Wygasa: %{expires_at}"
+        no_expiry_warning: "Ten klucz nie wygaśnie automatycznie. Autoryzuj go tylko wtedy, gdy w pełni ufasz aplikacji."
+        unregistered_app_warning: "Ta aplikacja nie jest zarejestrowana ani zweryfikowana przez tę witrynę. Kontynuuj tylko wtedy, gdy w pełni ufasz źródłu kodu."
+        complete: "Autoryzacja ukończona"
+        denied: "Odmowa autoryzacji"
+        return_to_cli: "Możesz teraz powrócić do terminala lub aplikacji."
     blocks:
       ghost:
         status: "Status"
@@ -1913,6 +1942,9 @@ pl_PL:
       undo_revoke_access: "Cofnij zablokowanie dostępu"
       api_approved: "Zatwierdzony:"
       api_last_used_at: "Ostatnio użyto:"
+      api_expires_at: "Wygasa:"
+      api_expired_at: "Wygasło:"
+      api_expires_never: "nigdy"
       api_show_permissions:
         one: "Przyznano uprawnienia (%{count})"
         few: "Przyznano uprawnienia (%{count})"
@@ -3207,6 +3239,14 @@ pl_PL:
       publish: "Opublikuj udostępniony szkic"
       confirm_publish: "Czy na pewno chcesz opublikować ten szkic?"
       publishing: "Publikowanie tematu..."
+    gifs:
+      modal_title: "Wyszukaj GIF-y"
+      composer_title: "Wstaw GIF"
+      no_results: "Wprowadź słowo kluczowe powyżej, aby wyszukać pliki GIF."
+      browse_categories: "Przeglądaj według kategorii"
+      bad_api_key: "Brak klucza API Klipy lub jest on nieprawidłowy. Sprawdź ustawienia klucza API dla plików GIF."
+      error_rate_limit: "Osiągnęliśmy limity szybkości interfejsu GIF API. Poczekaj chwilę i spróbuj ponownie."
+      error_search_too_long: "Skróć zapytanie wyszukiwania do mniej niż 50 znaków i spróbuj ponownie."
     composer:
       autocomplete:
         username_missing: "W wybranym wyniku autouzupełniania brakuje nazwy użytkownika."
@@ -5247,6 +5287,7 @@ pl_PL:
         toggle_reply: "Przełącz uprawnienie do odpowiedzi"
         toggle_full: "Przełącz uprawnienie do tworzenia"
         inherited: 'To uprawnienie jest dziedziczone po "%{everyone_group}"'
+        remove_all: "Usuń wszystko"
       special_warning: "Ta kategoria jest wstępnie zdefiniowana i ustawień zabezpieczeń nie można edytować. Jeśli nie chcesz używać tej kategorii, usuń ją zamiast używać jej ponownie."
       uncategorized_security_warning: "Ta kategoria ma specjalny charakter. Jest przeznaczona jako miejsce do przechowywania tematów nie przypisanych do żadnej kategorii i jako taka nie może mieć ustawień bezpieczeństwa."
       uncategorized_general_warning: 'Ta kategoria jest wyjątkowa. Jest używana jako domyślna kategoria dla nowych tematów, które nie mają wybranej kategorii. Jeśli chcesz zapobiec temu zachowaniu i wymusić wybór kategorii, <a href="%{settingLink}">wyłącz to ustawienie tutaj</a>. Jeśli chcesz zmienić nazwę lub opis, przejdź do <a href="%{customizeLink}">Dostosuj / Treść tekstowa</a>.'
@@ -6827,6 +6868,9 @@ pl_PL:
         notifications:
           title: "Powiadomienia"
           header_description: "Skonfiguruj sposób zarządzania powiadomieniami i ich dostarczania użytkownikom, w tym preferencje dotyczące wiadomości e-mail, powiadomień push, limitów wzmianek i konsolidacji powiadomień."
+        gifs:
+          title: "GIF-y"
+          header_description: "Skonfiguruj selektor GIF-ów, który umożliwia użytkownikom wyszukiwanie i wstawianie GIF-ów do wpisów i wiadomości na czacie. Teksty witryny w oknie modalnym można dostosować w pliku „custom/site_texts”."
         onebox:
           title: "Onebox"
           header_description: "Skonfiguruj sposób generowania i wyświetlania podglądów onebox dla swojej witryny."
@@ -7203,6 +7247,62 @@ pl_PL:
                 new_signups: "Nowe rejestracje"
                 dau_mau: "Lepkość DAU / MAU"
                 daily_engaged_users: "Codziennie zaangażowani"
+          search:
+            title: "Szukaj"
+            fetch_error: "Nie udało się wczytać danych wyszukiwania. Spróbuj odświeżyć stronę."
+            logging_disabled: 'Rejestrowanie wyszukiwania jest wyłączone, więc żadne dane nie są gromadzone. Włącz <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">zapytań wyszukiwania w dzienniku</a> , aby rozpocząć ich gromadzenie.'
+            logging_disabled_moderator: "Rejestrowanie wyszukiwania jest wyłączone, więc żadne dane nie są gromadzone. Poproś administratora o włączenie rejestrowania zapytań wyszukiwania, aby rozpocząć ich gromadzenie."
+            count_headline:
+              last_7_days:
+                one: "W ciągu ostatnich 7 dni członkowie przeprowadzili %{formatted_count} wyszukiwanie na stronie"
+                few: "W ciągu ostatnich 7 dni członkowie przeprowadzili %{formatted_count} wyszukiwania na stronie"
+                many: "W ciągu ostatnich 7 dni członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
+                other: "W ciągu ostatnich 7 dni członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
+              last_30_days:
+                one: "W ciągu ostatnich 30 dni członkowie przeprowadzili %{formatted_count} wyszukiwanie na stronie"
+                few: "W ciągu ostatnich 30 dni członkowie przeprowadzili %{formatted_count} wyszukiwania na stronie"
+                many: "W ciągu ostatnich 30 dni członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
+                other: "W ciągu ostatnich 30 dni członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
+              last_3_months:
+                one: "W ciągu ostatnich 3 miesięcy członkowie przeprowadzili %{formatted_count} wyszukiwanie na stronie"
+                few: "W ciągu ostatnich 3 miesięcy członkowie przeprowadzili %{formatted_count} wyszukiwania na stronie"
+                many: "W ciągu ostatnich 3 miesięcy członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
+                other: "W ciągu ostatnich 3 miesięcy członkowie przeprowadzili %{formatted_count} wyszukiwań na stronie"
+              selected_period:
+                one: "Członkowie przeprowadzili %{formatted_count} wyszukiwanie na miejscu w wybranym okresie"
+                few: "Członkowie przeprowadzili %{formatted_count} wyszukiwania na miejscu w wybranym okresie"
+                many: "Członkowie przeprowadzili %{formatted_count} wyszukiwań na miejscu w wybranym okresie"
+                other: "Członkowie przeprowadzili %{formatted_count} wyszukiwań na miejscu w wybranym okresie"
+            headline:
+              no_signal_title: "Za mało aktywności wyszukiwania, aby dokonać podsumowania."
+              no_signal: "Wybierz dłuższy przedział dat lub wróć, gdy członkowie przeszukają więcej tematów."
+              content_gaps: "Ponad 10% wyszukiwań zakończyło się w tym okresie bez kliknięcia. Sprawdź poniższe luki w treści, aby dowiedzieć się, czego brakuje."
+              rate_climbing: "Wskaźnik braku rezultatów rośnie w porównaniu z poprzednim okresem. Zwróć uwagę na luki w treściach poniżej."
+              shrinking: "W porównaniu z poprzednim okresem liczba wyszukiwań zmalała, jednak większość wyszukiwań nadal prowadzi do treści."
+              healthy: "Użytkownicy wciąż znajdują to, czego szukają, a liczba wyszukiwań jest stała lub rośnie."
+            kpi:
+              total_searches:
+                label: "Łączna liczba wyszukiwań"
+                tooltip: "Liczba wyszukiwań wykonanych w Twojej społeczności."
+              no_result_rate:
+                label: "Wskaźnik braku wyników"
+                tooltip: "Procent wyszukiwań, w których członkowie nie kliknęli żadnego wyniku (0% CTR). Oznacza to, że członkowie mogą szukać treści, których Twoja społeczność nie ma."
+            table:
+              term: "Termin wyszukiwania"
+              searches: "Wyszukiwania"
+              status: "Status"
+            trending:
+              title: "Popularne wyszukiwania"
+              tooltip: "Najpopularniejsze wyszukiwane hasła."
+              empty: "Brak wyszukiwań w tym okresie."
+            content_gaps:
+              title: "Luki w treściach"
+              empty: "W tym okresie nie odnotowano luk w treściach."
+              badge:
+                no_match: "Brak dopasowania"
+                no_match_tooltip: "Terminy wyszukiwania mające współczynnik klikalności (CTR) wynoszący 0%."
+                poor_match: "Słabe dopasowanie"
+                poor_match_tooltip: "Hasła wyszukiwania ze współczynnikiem klikalności (CTR) wynoszącym od 1 do 20%."
         reports_section:
           description: "Przypinaj standardowe raporty lub zapytania Eksploratora danych, aby śledzić kwestie istotne dla Twojej społeczności."
           add: "Dodaj raport"
@@ -9397,6 +9497,7 @@ pl_PL:
           disabled: "Nie pokazano w formularzu rejestracyjnym"
         searchable:
           title: "Możliwe do wyszukania"
+          tooltip: "Po włączeniu tej opcji każdy może wyszukiwać członków według wartości tego pola i widzieć ją w wynikach wyszukiwania, nawet jeśli nie jest ona wyświetlana na jego profilu lub karcie użytkownika."
           enabled: "Możliwe do wyszukania"
           disabled: "Niewyszukiwalny"
         field_types:
@@ -9572,6 +9673,9 @@ pl_PL:
           can_permanently_delete:
             prompt: "Włączenie tej opcji umożliwia administratorom trwałe usuwanie wpisów, tematów i wersji wpisów. Trwale usuniętych danych nie można odzyskać. Może to również wpłynąć na integralność danych i zerwanie istniejących linków."
             confirm: "Rozumiem"
+          content_security_policy:
+            prompt: "Wyłączenie polityki bezpieczeństwa treści usuwa ważną warstwę ochrony przed atakami typu cross-site scripting (XSS) i innymi atakami typu content injection. Spowoduje to, że Twoja witryna będzie podatna na ataki i należy to robić wyłącznie w celach debugowania/testowania. Wyłączenie CSP nigdy nie pomoże rozwiązać problemów z CORS. Czy na pewno chcesz kontynuować?"
+            confirm: "Tak, wyłącz zasady bezpieczeństwa treści"
         job_status:
           completed: "Aktualizacja ukończona"
           enqueued: "Aktualizacja w toku"

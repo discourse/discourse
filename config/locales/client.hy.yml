@@ -6,6 +6,15 @@
 
 hy:
   js:
+    user_api_key:
+      authorize: "Նույնականացնել"
+      deny: "Չեղարկել"
+      copied: "Պատճենված է!"
+      no_trust_level: "Ներողություն, Դուք չունեք օգտատիրոջ API -ի համար պահանջվող վստահության մակարդակը "
+      generic_error: "Ներողություն, մենք չկարողացանք թողարկել օգտատիրոջ API key-եր, հնարավոր է՝ այս հատկանիշը անջատված է կայքի ադմինի կողմից:"
+      device:
+        code: "Կոդ"
+        continue: "Շարունակել"
     blocks:
       ghost:
         status: "Ստատուս"
@@ -1323,6 +1332,9 @@ hy:
       undo_revoke_access: "Ետարկել Թույլտվության Հետկանչումը (Undo Revoke Access)"
       api_approved: "Հաստատված է՝"
       api_last_used_at: "Վերջին անգամ օգտագործվել է՝"
+      api_expires_at: "Ժամկետը լրանում է:"
+      api_expired_at: "Ժամկետանց:"
+      api_expires_never: "երբեք"
       theme: "Թեմա"
       save_to_change_theme: '«%{save_text}» սեղմելուց հետո թեման կթարմացվի'
       home: "Լռելյայն Գլխավոր Էջ"
@@ -4001,6 +4013,11 @@ hy:
                 "2": "Անդամ"
                 "3": "Սովորական"
                 "4": "Առաջնորդ"
+          search:
+            title: "Որոնում"
+            table:
+              searches: "Որոնումներ"
+              status: "Ստատուս"
         reports_section:
           modal:
             all_heading: "Բոլոր հաշվետվությունները"

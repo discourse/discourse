@@ -6,6 +6,21 @@
 
 el:
   js:
+    user_api_key:
+      title: 'Εξουσιοδότηση "%{application_name}"'
+      authorize: "Εξουσιοδότηση"
+      deny: "Άκυρο"
+      logged_in_as: "Σύνδεση ως"
+      permissions_header: 'Αυτό θα επιτρέπει στο "%{application_name}" να:'
+      redirect_warning: "Η εξουσιοδότηση θα σας ανακατευθύνει σε"
+      copied: "Αντιγράφηκε!"
+      otp_description: 'Θα θέλατε να επιτρέψετε στο "%{application_name}" να έχει πρόσβαση σε αυτόν τον ιστότοπο;'
+      no_trust_level: "Συγγνώμη, δεν έχεις το απαιτούμενο επίπεδο εμπιστοσύνης για να έχεις πρόσβαση στο API χρήστη"
+      generic_error: "Συγνώμη, δεν μπορούμε να εκδώσουμε κλειδιά API χρήστη, αυτή η δυνατότητα μπορεί να είναι απενεργοποιημένη από τον διαχειριστή του ιστότοπου"
+      device:
+        code: "Κωδικός"
+        continue: "Συνεχίστε"
+        authorize_title: 'Εξουσιοδότηση "%{application_name}"'
     blocks:
       ghost:
         status: "Κατάσταση"
@@ -1700,6 +1715,9 @@ el:
       undo_revoke_access: "Απενεργοποίηση Ανάκλησης Πρόσβασης"
       api_approved: "Εγκεκριμένο:"
       api_last_used_at: "Τελευταία χρήση στις:"
+      api_expires_at: "Λήγει:"
+      api_expired_at: "Έληξε:"
+      api_expires_never: "ποτέ"
       api_show_permissions:
         one: "Χορηγημένα δικαιώματα (%{count})"
         other: "Χορηγημένα δικαιώματα (%{count})"
@@ -6183,6 +6201,11 @@ el:
             headline:
               metrics:
                 new_signups: "Νέες εγγραφές"
+          search:
+            title: "Αναζήτηση"
+            table:
+              searches: "Αναζητήσεις"
+              status: "Κατάσταση"
         reports_section:
           no_data: "Δεν υπάρχουν δεδομένα για προβολή"
           modal:

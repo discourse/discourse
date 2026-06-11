@@ -824,6 +824,10 @@ el:
       one_time_password: "Δημιουργία διακριτικού σύνδεσης μίας χρήσης"
       bookmarks_calendar: "Ανάγνωση υπενθυμίσεων σελιδοδεικτών"
       user_status: "Ανάγνωση και ενημέρωση κατάστασης χρήστη"
+    device:
+      code: "Κωδικός"
+      continue: "Συνεχίστε"
+      authorize_title: 'Εξουσιοδότηση "%{application_name}"'
     invalid_public_key: "Λυπούμαστε, το δημόσιο κλειδί δεν είναι έγκυρο."
     invalid_auth_redirect: "Λυπούμαστε, αυτός ο διακομιστής auth_redirect δεν επιτρέπεται."
     invalid_token: "Απόν, άκυρο ή ληγμένο διακριτικό."
