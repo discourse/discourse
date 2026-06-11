@@ -2446,7 +2446,6 @@ nl:
     navigation_menu: "Geef een vervolgkeuzelijst voor de zijbalk of koptekst op als het hoofdnavigatiemenu voor je site. Zijbalk wordt aanbevolen."
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
-    experimental_new_new_view_groups: 'Schakel een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en laat de link "Alles" in de zijbalk ernaartoe verwijzen.'
     enable_form_templates: "Schakel de formuliersjablonenfunctie in. Hiermee kun je een gestructureerd formulier met gegevensvalidatie afdwingen als onderdeel van de maakflow van topics."
     show_preview_for_form_templates: "Schakel het voorbeeld voor formuliersjablonenfunctie in"
     lazy_load_categories_groups: "Laad categorie-informatie op luie wijze, alleen voor gebruikers van deze groepen. Dit verbetert de prestaties op sites met veel categorieën."
@@ -3800,6 +3799,7 @@ nl:
     [Klik hier](%{unsubscribe_url}) om je af te melden voor deze e-mails.
   subject_re: "Re:"
   subject_pm: "[PB]"
+  email_from_group: "%{group_name}"
   user_notifications:
     previous_discussion: "Eerdere antwoorden"
     reached_limit:

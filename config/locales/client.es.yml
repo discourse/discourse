@@ -3592,7 +3592,7 @@ es:
         education:
           topic_tracking_preferences: 'Puedes ver y cambiar tus nuevos ajustes para seguir temas en <a href="%{basePath}/my/preferences/tracking">tus preferencias</a>.'
           unread: "No tienes nada por leer... ¡Impresionante!"
-          new_new: "No hay nada nuevo en este momento... ¡Vuelve pronto!"
+          unified_new: "No hay nada nuevo en este momento... ¡Vuelve pronto!"
           new: "No hay nada nuevo en este momento... ¡Vuelve pronto!"
           generic: "No hay nada que ver aquí... ¡vuelve pronto!"
     topic_bulk_actions:
@@ -4888,7 +4888,7 @@ es:
         new_replies_tooltip: "Respuestas nuevas"
         replies: "Respuestas"
         replies_with_count: "Respuestas (%{count})"
-      new_new:
+      unified_new:
         help: "temas creados o respondidos en los últimos días"
       posted:
         title: "Mis publicaciones"

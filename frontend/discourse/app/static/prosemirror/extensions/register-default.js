@@ -28,7 +28,6 @@ import strikethrough from "./strikethrough";
 import table from "./table";
 import trailingInlineSpace from "./trailing-inline-space";
 import trailingParagraph from "./trailing-paragraph";
-import typographerReplacements from "./typographer-replacements";
 import underline from "./underline";
 import uploadPlaceholder from "./upload-placeholder";
 import wordPaste from "./word-paste";
@@ -58,7 +57,6 @@ const defaultExtensions = [
   htmlInline,
   htmlBlock,
   trailingParagraph,
-  typographerReplacements,
   table,
   markdownPaste,
   wordPaste,

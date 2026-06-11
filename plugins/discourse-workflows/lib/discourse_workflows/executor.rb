@@ -90,6 +90,7 @@ module DiscourseWorkflows
         ExecutionOptions.new(
           user: user,
           execution_mode: execution.execution_mode.to_sym,
+          workflow_snapshot: snapshot,
           webhook_context: webhook_context,
         )
       new(workflow, trigger_node_id, execution.trigger_data, options).resume_from(
@@ -99,7 +100,8 @@ module DiscourseWorkflows
     end
 
     def run
-      unless @workflow.published? || @options.draft_execution || @options.workflow_version
+      unless @workflow.published? || @options.draft_execution || @options.workflow_version ||
+               @options.workflow_snapshot
         return @store.create_execution_with_status(:skipped)
       end
       return @store.create_rate_limited_execution unless rate_limiter.within_limits?
@@ -423,7 +425,12 @@ module DiscourseWorkflows
     def resolved_pin_data
       return {} unless @options.execution_mode == :manual
 
-      data = @workflow.respond_to?(:pin_data) ? @workflow.pin_data : nil
+      data =
+        if @options.workflow_snapshot
+          @options.workflow_snapshot.pin_data
+        elsif @workflow.respond_to?(:pin_data)
+          @workflow.pin_data
+        end
       return {} if data.blank?
 
       data.transform_keys(&:to_s)

@@ -42,6 +42,45 @@ RSpec.describe DiscourseWorkflows::Executor do
         }.by(1)
       end
 
+      it "uses an existing execution record when provided" do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:manual"
+            g.node "log-1", "action:log"
+            g.chain "trigger-1", "log-1"
+          end
+        workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
+        snapshot = DiscourseWorkflows::WorkflowSnapshot.from_workflow(workflow, published: false)
+        existing_execution =
+          Fabricate(
+            :discourse_workflows_execution,
+            workflow: workflow,
+            status: :running,
+            execution_mode: :manual,
+            trigger_node_id: "trigger-1",
+          )
+        Fabricate(
+          :discourse_workflows_execution_data,
+          execution: existing_execution,
+          workflow_data: snapshot.to_h,
+        )
+        options =
+          described_class::ExecutionOptions.new(
+            execution_mode: :manual,
+            workflow_snapshot: snapshot,
+            existing_execution: existing_execution,
+          )
+
+        expect { described_class.new(workflow, "trigger-1", {}, options).run }.not_to change {
+          DiscourseWorkflows::Execution.count
+        }
+
+        expect(existing_execution.reload.status).to eq("success")
+        expect(
+          existing_execution.execution_data.steps_array.map { |step| step["node_id"] },
+        ).to include("log-1")
+      end
+
       it "stores context with item arrays in the execution" do
         execution = described_class.new(workflow, "trigger-1", trigger_data).run
 
@@ -65,6 +104,24 @@ RSpec.describe DiscourseWorkflows::Executor do
         execution = described_class.new(workflow, "trigger-1", trigger_data).run
 
         expect(execution.status).to eq("skipped")
+      end
+
+      it "updates an existing execution when skipped before start" do
+        unpublish_workflow!(workflow)
+        existing_execution =
+          Fabricate(
+            :discourse_workflows_execution,
+            workflow: workflow,
+            status: :running,
+            trigger_node_id: "trigger-1",
+          )
+        options = described_class::ExecutionOptions.new(existing_execution: existing_execution)
+
+        expect {
+          described_class.new(workflow, "trigger-1", trigger_data, options).run
+        }.not_to change { DiscourseWorkflows::Execution.count }
+
+        expect(existing_execution.reload.status).to eq("skipped")
       end
 
       it "preloads dependencies from the active workflow snapshot" do
@@ -556,6 +613,33 @@ RSpec.describe DiscourseWorkflows::Executor do
         second_execution = described_class.new(workflow, "trigger-1", trigger_data).run
         expect(second_execution.status).to eq("rate_limited")
         expect(second_execution.trigger_data).to eq("rate_limited" => true)
+      end
+
+      it "updates an existing execution when limits are exceeded" do
+        SiteSetting.discourse_workflows_max_executions_per_minute_per_workflow = 1
+
+        graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
+        workflow =
+          Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+        trigger_data = { topic_id: topic.id, tags: [] }
+        expect(described_class.new(workflow, "trigger-1", trigger_data).run.status).to eq("success")
+
+        existing_execution =
+          Fabricate(
+            :discourse_workflows_execution,
+            workflow: workflow,
+            status: :running,
+            trigger_node_id: "trigger-1",
+          )
+        options = described_class::ExecutionOptions.new(existing_execution: existing_execution)
+
+        expect {
+          described_class.new(workflow, "trigger-1", trigger_data, options).run
+        }.not_to change { DiscourseWorkflows::Execution.count }
+
+        existing_execution.reload
+        expect(existing_execution.status).to eq("rate_limited")
+        expect(existing_execution.trigger_data).to eq("rate_limited" => true)
       end
     end
 

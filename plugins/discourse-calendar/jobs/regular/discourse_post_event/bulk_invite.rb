@@ -33,6 +33,7 @@ module Jobs
     private
 
     def process_invitees(invitees)
+      invitees = invitees.map(&:with_indifferent_access)
       invitees = filter_out_unavailable_groups(invitees)
 
       max_bulk_invitees = SiteSetting.discourse_post_event_max_bulk_invitees

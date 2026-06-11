@@ -152,6 +152,67 @@ module("Integration | ui-kit | DOtp", function (hooks) {
     assert.dom(".d-otp-slot:nth-child(6)").hasText("​ 6");
   });
 
+  test("supports custom normalization and grouped slots", async function (assert) {
+    this.normalizeInput = (value) =>
+      value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+
+    await render(
+      <template>
+        <DOtp
+          @slots={{8}}
+          @groupSize={{4}}
+          @inputMode="text"
+          @autocomplete="off"
+          @normalizeInput={{this.normalizeInput}}
+        />
+      </template>
+    );
+
+    const input = this.element.querySelector(".d-otp-input");
+    const pasteEvent = new Event("paste", { bubbles: true });
+    pasteEvent.clipboardData = {
+      getData: () => "ab12-cd34",
+    };
+    input.dispatchEvent(pasteEvent);
+
+    await settled();
+
+    assert.dom(".d-otp-slot").exists({ count: 8 });
+    assert.dom(".d-otp-separator").exists({ count: 1 });
+    assert.dom(".d-otp-input").hasAttribute("inputmode", "text");
+    assert.dom(".d-otp-input").hasAttribute("autocomplete", "off");
+    assert.dom(".d-otp-input").hasAttribute("spellcheck", "false");
+    assert.dom(".d-otp-input").hasAttribute("autocorrect", "off");
+    assert.dom(".d-otp-input").hasAttribute("autocapitalize", "off");
+    assert.dom(".d-otp-slot[data-index='0']").hasText("​ A");
+    assert.dom(".d-otp-slot[data-index='7']").hasText("​ 4");
+  });
+
+  test("allows editing after all slots are filled", async function (assert) {
+    this.set("value", null);
+    this.onChangeCallback = (value) => {
+      this.set("value", value);
+    };
+
+    await render(
+      <template><DOtp @onChange={{this.onChangeCallback}} /></template>
+    );
+
+    const input = this.element.querySelector(".d-otp-input");
+    input.value = "123456";
+    input.dispatchEvent(new Event("input"));
+
+    await settled();
+
+    input.value = "12345";
+    input.dispatchEvent(new Event("input"));
+
+    await settled();
+
+    assert.strictEqual(this.value, "12345");
+    assert.dom(".d-otp-slot:nth-child(6)").hasText("​ ");
+  });
+
   test("removes all content when all is selected and backspace is pressed", async function (assert) {
     await render(<template><DOtp /></template>);
 

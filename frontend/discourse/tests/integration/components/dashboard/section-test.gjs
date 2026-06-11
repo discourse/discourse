@@ -50,6 +50,21 @@ module("Integration | Component | Dashboard | Section", function (hooks) {
     assert.dom(".db-section__wrapper .my-child").hasText("hello");
   });
 
+  test("renders the intro block above the wrapper", async function (assert) {
+    await render(
+      <template>
+        <DashboardSection @title="Highlights">
+          <:intro><span class="my-intro">summary</span></:intro>
+          <:default><span class="my-child">tiles</span></:default>
+        </DashboardSection>
+      </template>
+    );
+
+    assert.dom(".my-intro").hasText("summary");
+    assert.dom(".db-section__wrapper .my-intro").doesNotExist();
+    assert.dom(".db-section__wrapper .my-child").hasText("tiles");
+  });
+
   test("yields startDate and endDate to the default block", async function (assert) {
     const startDate = "2026-01-01";
     const endDate = "2026-01-31";

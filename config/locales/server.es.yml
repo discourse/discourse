@@ -2436,7 +2436,6 @@ es:
     navigation_menu: "Especifica la barra lateral o el encabezado desplegable como menú de navegación principal de tu sitio. Se recomienda la barra lateral."
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
-    experimental_new_new_view_groups: 'Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
     enable_form_templates: "Activa la característica de plantillas de formularios. Con ella, puedes forzar un formulario estructurado con validación de datos como parte del flujo de creación de temas."
     show_preview_for_form_templates: "Activa la vista previa de las plantillas de formulario"
     lazy_load_categories_groups: "Carga lenta de la información de categoría solo para los usuarios de estos grupos. Esto mejora el rendimiento en sitios con muchas categorías."
@@ -3748,6 +3747,8 @@ es:
     Para cancelar estos correos, [haz clic aquí](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
+  email_from: "%{user_name}"
+  email_from_group: "%{group_name}"
   user_notifications:
     previous_discussion: "Respuestas anteriores"
     reached_limit:

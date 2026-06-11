@@ -56,7 +56,7 @@ module Jobs
           type: type,
           web_hook_event: AdminWebHookEventSerializer.new(web_hook_event, root: false).as_json,
         },
-        group_ids: [Group::AUTO_GROUPS[:staff]],
+        group_ids: [Group::AUTO_GROUPS[:admins]],
       )
     end
   end

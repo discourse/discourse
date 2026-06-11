@@ -2414,7 +2414,6 @@ pt_BR:
     navigation_menu: "Especifique a barra lateral ou menu suspenso do cabeçalho como o menu principal de navegação do seu site. É recomendável a barra lateral."
     default_navigation_menu_categories: "As categorias selecionadas serão exibidas abaixo da seção de Categorias do Menu de Navegação por padrão."
     default_navigation_menu_tags: "As etiquetas selecionadas serão exibidas na seção Etiquetas do Menu de Navegação por padrão."
-    experimental_new_new_view_groups: 'Ative uma nova lista de tópicos que combina tópicos novos e não lidos e faz o link "Tudo", localizado na barra lateral, apontar para ela.'
     enable_form_templates: "Ativar o recurso de modelos de formulário. Com ele, você pode impor um formulário estruturado com validação de dados como parte do fluxo de criação de tópicos."
     show_preview_for_form_templates: "Ativar a pré-visualização para o recurso de modelos de formulário"
     lazy_load_categories_groups: "Carregue informações de forma ociosa apenas para os(as) usuários(as) destes grupos. Melhora o desempenho em sites com várias categorias."
@@ -3652,6 +3651,8 @@ pt_BR:
     Para cancelar a inscrição destes e-mails, [clique aqui](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
+  email_from: "%{user_name}"
+  email_from_group: "%{group_name}"
   user_notifications:
     previous_discussion: "Respostas anteriores"
     reached_limit:

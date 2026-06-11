@@ -1283,6 +1283,7 @@ en:
     logged_in_as: "Logged in as"
     permissions_header: 'This will allow "%{application_name}" to:'
     redirect_warning: "Authorizing will redirect you to"
+    expiry_notice: 'This key for "%{application_name}" will expire on %{expires_at}.'
     write_scope_warning: "Full write access requested — this application will be able to post, edit, and delete content. Proceed only if you fully trust it."
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
     copy_key: "Copy Key"
@@ -1304,6 +1305,22 @@ en:
       one_time_password: "Create a one-time login token"
       bookmarks_calendar: "Read bookmark reminders"
       user_status: "Read and update user status"
+    device:
+      title: "Authorize an application"
+      enter_code: "Enter the code displayed in your application."
+      enter_full_code: "Enter the complete code to authorize this application."
+      code: "Code"
+      code_character: "Code character %{position}"
+      continue: "Continue"
+      invalid_code: "Sorry, that code is invalid. Check the code and try again."
+      expired_code: "Sorry, that code has expired or has already been used. Request a new code from the application and try again."
+      authorize_title: 'Authorize "%{application_name}"'
+      expiry_notice: 'This key for "%{application_name}" will expire on %{expires_at}.'
+      no_expiry_warning: "This key will not expire automatically. Only authorize this if you fully trust the application."
+      unregistered_app_warning: "This application is not registered or verified by this site. Only continue if you fully trust the source of the code."
+      complete: "Authorization complete"
+      denied: "Authorization denied"
+      return_to_cli: "You can now return to your terminal or application."
     invalid_public_key: "Sorry, the public key is invalid."
     invalid_auth_redirect: "Sorry, this auth_redirect host is not allowed."
     invalid_token: "Missing, invalid or expired token."
@@ -2017,7 +2034,7 @@ en:
     slow_down_crawler_user_agents: "User agents of web crawlers that should be rate limited as configured in the {{setting:slow_down_crawler_rate}} setting. Each value must be at least 3 characters long."
     slow_down_crawler_rate: "If {{setting:slow_down_crawler_user_agents}} is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
     llms_txt: "Upload a text file to be served at /llms.txt for LLM crawlers. See <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> for more information."
-    content_security_policy: "Enable Content-Security-Policy (CSP). CSP is an additional layer of security that helps to prevent certain types of attacks, including Cross Site Scripting (XSS) and data injection."
+    content_security_policy: "Enable Content-Security-Policy (CSP). CSP is an additional layer of security that helps to prevent certain types of attacks, including Cross Site Scripting (XSS) and data injection. It should only be disabled temporarily for debugging/testing purposes."
     content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
     content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP). Other host sources are ignored as strict-dynamic is enabled."
@@ -2664,6 +2681,13 @@ en:
     enable_inline_emoji_translation: "Enables translation for inline emojis (without any space or punctuation before)"
     emoji_deny_list: "These emoji will not be available to use in menus or shortcodes."
     enable_gifs: "Adds a button to easily search and insert GIFs in posts."
+    klipy_api_key: "Klipy API key. Required to power GIF search. Note: this key is exposed to anyone viewing your site."
+    klipy_file_detail: "Image format to use. WebP has smaller files that load quicker, while GIF provides compatibility with older browsers."
+    klipy_content_filter: "Content safety level for GIF search results."
+    klipy_country: "Two-letter country code for GIF search results."
+    klipy_locale: "Language code for GIF search results, in xx_YY format (language plus optional country)."
+    klipy_limit_infinite_search_results: "Limit the number of GIF results returned as users scroll, to avoid hitting API rate limits."
+    klipy_max_results_limit: "When 'limit infinite search results' is enabled, stop loading after this many results. Each API call retrieves 24 GIFs."
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_allowed_groups: "Posts created by users not in these groups must be approved. Posts created by admins and moderators are always approved."
@@ -2758,6 +2782,8 @@ en:
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
     revoke_user_api_keys_unused_days: "Number of days since a user API key was last used before it is automatically revoked (0 for never)"
     revoke_user_api_keys_maxlife_days: "Number of days before a user API key is automatically revoked (0 for never)"
+    max_user_api_key_expiry_days: "Maximum expiry, in days, that clients can request for user API keys"
+    verbose_user_api_key_device_auth_logging: "Log detailed diagnostics for the user API key device authorization flow"
 
     tagging_enabled: "Enable tags on topics? See the <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Admin guide to tags on Meta</a> for more information."
     create_tag_allowed_groups: "Groups that are allowed to create tags. Admins and moderators can always create tags."
@@ -4351,6 +4377,9 @@ en:
 
   subject_re: "Re: "
   subject_pm: "[PM] "
+
+  email_from: "%{user_name}"
+  email_from_group: "%{group_name}"
 
   user_notifications:
     previous_discussion: "Previous Replies"

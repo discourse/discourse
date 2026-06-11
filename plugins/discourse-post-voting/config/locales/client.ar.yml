@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ar:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_post_voting: "تصويت على منشورات Discourse"
   post_voting:
     reviewables:
       comment_already_handled: "شكرًا، لكننا راجعنا هذا التعليق بالفعل وقررنا أنه لا يلزم الإبلاغ عنه مرة أخرى."
@@ -35,6 +40,14 @@ ar:
       already_voted: "يمكنك التصويت مرة واحدة فقط لكل سؤال."
       user_over_limit: "لا يمكنك تجاوز عدد الأصوات لمستوى ثقتك."
       one_vote_per_post: "يمكنك التصويت مرة واحدة فقط لكل منشور."
+      button:
+        upvote: "تصويت إيجابي"
+        remove_upvote: "إلغاء التصويت الإيجابي"
+        downvote: "تصويت سلبي"
+        remove_downvote: "إلغاء التصويت السلبي"
+      toggle_voters: "عرض أسماء المصوِّتين"
+      upvotes: "التصويتات الإيجابية"
+      downvotes: "التصويتات السلبية"
     last_answer_lowercase: الإجابة الأخيرة
     answer_lowercase:
       zero: إجابات
@@ -72,6 +85,10 @@ ar:
           edit: "تعديل"
           cancel: "إلغاء"
           add: "إضافة تعليق"
+          actions:
+            edit: "تعديل التعليق"
+            delete: "حذف التعليق"
+            flag: "الإبلاغ عن التعليق"
           show:
             zero: عرض %{count} تعليقًا إضافيًا
             one: عرض تعليق واحد (%{count}) إضافي

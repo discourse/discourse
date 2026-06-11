@@ -3788,7 +3788,7 @@ cs:
         education:
           topic_tracking_preferences: 'Nastavení sledování nových témat si můžete zobrazit a změnit ve <a href="%{basePath}/my/preferences/tracking">vašich předvolbách</a>.'
           unread: "Všechno přečteno... působivé!"
-          new_new: "V tuto chvíli nic nového... vraťte se brzy!"
+          unified_new: "V tuto chvíli nic nového... vraťte se brzy!"
           new: "V tuto chvíli nic nového... vraťte se brzy!"
           generic: "Zaítm tu není nic k vidění… zkuste to brzy znovu!"
     topic_bulk_actions:
@@ -5173,7 +5173,7 @@ cs:
         new_replies_tooltip: "Nové odpovědi"
         replies: "Odpovědi"
         replies_with_count: "Odpovědi (%{count})"
-      new_new:
+      unified_new:
         help: "témata vytvořená nebo zodpovězená v posledních několika dnech"
       posted:
         title: "Mé příspěvky"

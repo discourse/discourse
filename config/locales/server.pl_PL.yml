@@ -2726,7 +2726,7 @@ pl_PL:
     navigation_menu: "Określ pasek boczny lub menu rozwijane nagłówka jako główne menu nawigacyjne witryny. Zalecany jest pasek boczny."
     default_navigation_menu_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji kategorie menu nawigacji."
     default_navigation_menu_tags: "Wybrane tagi będą domyślnie wyświetlane w sekcji Tagi menu nawigacji."
-    experimental_new_new_view_groups: 'Włącz nową listę tematów, która łączy nieprzeczytane i nowe tematy i spraw, by łącze "Wszystko" na pasku bocznym prowadziło do niej.'
+    enable_unified_new: "Zastąp oddzielne listy „Nowe” i „Nieprzeczytane” jedną, ujednoliconą listą „Nowe”, która ułatwi członkom rozróżnianie nowych tematów od tematów z nowymi odpowiedziami. Po włączeniu, ścieżka „/new” wyświetla połączony widok z podkartami „Tematy” (nowe tematy) i „Odpowiedzi” (śledzone tematy z nowymi odpowiedziami), a opcja „Nieprzeczytane” zostaje usunięta z górnego menu."
     enable_form_templates: "Włącz funkcję szablonów formularzy. Dzięki niej możesz wymusić ustrukturyzowany formularz z walidacją danych w ramach procesu tworzenia tematu."
     show_preview_for_form_templates: "Włącz podgląd funkcji szablonów formularzy"
     lazy_load_categories_groups: "Leniwie ładuj informacje o kategoriach tylko dla użytkowników z tych grup. Poprawia to wydajność w witrynach z wieloma kategoriami."
@@ -2769,7 +2769,7 @@ pl_PL:
     enable_horizon_high_context_topic_cards: "Wyświetla bogatsze karty tematyczne w motywie Horizon, obejmujące fragmenty tematów, tagi i rozszerzone informacje o wtyczce."
     reporting_improvements: "Ulepszenia nawigacji, projektu i użyteczności raportów administracyjnych Discourse."
     granular_anonymous_and_logged_in_groups_permissions: "Wprowadza uprawnienia witryn oparte na grupach, które traktują „wszystkich” jako „wszystkich zalogowanych użytkowników” oraz włącza nowe pseudogrupy „anonimowi_użytkownicy” i „zalogowani_użytkownicy”, dzięki czemu administratorzy mogą wyraźnie określać mianem anonimowych odwiedzających i uwierzytelnionych użytkowników."
-    dashboard_improvements: "Udoskonalono nawigację, projekt i użyteczność panelu administracyjnego Discourse."
+    dashboard_improvements: "Umożliwia dostęp do przeprojektowanego pulpitu administracyjnego, który umożliwia przypinanie niestandardowych raportów i obejmuje ulepszone dane dotyczące ruchu w witrynie, zaangażowania i inne analizy powiązane z sukcesem i wartością społeczności."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_datetime: "Nieprawidłowy format daty i godziny. Upewnij się, że wprowadzono prawidłową datę i godzinę."
@@ -2786,6 +2786,7 @@ pl_PL:
       invalid_integer: "Wartość musi być liczbą całkowitą."
       regex_mismatch: "Wartość nie jest zgodna z wymaganym formatem."
       must_include_latest: "Górne menu musi zawierać zakładkę 'aktualne'."
+      top_menu_unread_not_allowed_with_unified_new: "Pozycji menu „nieprzeczytane” nie można użyć, gdy włączona jest opcja ujednoliconych nowych."
       invalid_string: "Nieprawidłowa wartość."
       invalid_string_min_max: "Musi być między %{min} i %{max} znaków."
       invalid_string_min:
@@ -4203,6 +4204,8 @@ pl_PL:
     Aby zrezygnować z tych e-maili, [kliknij tutaj](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PW] "
+  email_from: "%{user_name}"
+  email_from_group: "%{group_name}"
   user_notifications:
     previous_discussion: "Poprzednie odpowiedzi"
     reached_limit:

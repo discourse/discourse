@@ -99,12 +99,10 @@ export function buildConfig({ devMode } = {}) {
       sourcemap: true,
       cleanDir: !devMode,
       hashCharacters: "base36",
-      assetFileNames: (asset) => {
-        if (asset.names?.some((n) => n.endsWith(".wasm"))) {
-          return "assets/wasm/[name]-[hash].digested[extname]";
-        }
-        return "assets/js/[name]-[hash].digested[extname]";
-      },
+      // All assets (including .wasm) go in assets/js/ so that the
+      // assets:precompile br/gz compression and the assets/js/ -> assets/br//gz/
+      // S3 path renames in s3.rake apply to them too.
+      assetFileNames: "assets/js/[name]-[hash].digested[extname]",
       chunkFileNames: "assets/js/[name]-[hash].digested.js",
       entryFileNames: "assets/js/[name]-[hash].digested.js",
     },

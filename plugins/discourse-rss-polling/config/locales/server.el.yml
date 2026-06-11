@@ -7,3 +7,6 @@
 el:
   site_settings:
     rss_polling_frequency: "[RSS Polling] Συχνότητα του feed polling (σε λεπτά)"
+  rss_polling:
+    errors:
+      unknown_author_username: "Δεν βρέθηκε χρήστης με όνομα χρήστη '%{username}'."

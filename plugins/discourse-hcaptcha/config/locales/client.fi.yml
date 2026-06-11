@@ -6,10 +6,8 @@
 
 fi:
   js:
-    discourse_hCaptcha:
-      missing_token: "Suorita hCaptcha-haaste."
+    discourse_captcha:
       placeholder: paikkamerkki
-      contact_system_administrator: "hCaptchassa on ollut ongelma. Jos ongelma jatkuu, ota yhteyttä järjestelmänvalvojaan."
   admin_js:
     admin:
       site_settings:

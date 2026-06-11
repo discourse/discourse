@@ -6,8 +6,10 @@ import {
   inputFieldPrefixForConnection,
   inputForRun,
   inputSummaryForNode,
-  nodeItemJsonPath,
+  nodeOutputFirstJsonPath,
   nodeOutputItemJsonPath,
+  nodeOutputJsonPath,
+  nodeOutputLinkedItemJsonPath,
   outputForRun,
   outputSchemaForNode,
   outputSummaryForNode,
@@ -349,10 +351,59 @@ module("Unit | lib | discourse-workflows | data-schema", function () {
     );
   });
 
-  test("nodeItemJsonPath escapes node names for expressions", function (assert) {
+  test("nodeOutputFirstJsonPath escapes node names and output indexes for expressions", function (assert) {
     assert.strictEqual(
-      nodeItemJsonPath('Fetch "quoted" \\ data'),
+      nodeOutputFirstJsonPath('Fetch "quoted" \\ data', { outputIndex: 1 }),
+      '$("Fetch \\"quoted\\" \\\\ data").first(1).json'
+    );
+    assert.strictEqual(
+      nodeOutputFirstJsonPath("Fetch data"),
+      '$("Fetch data").first().json'
+    );
+  });
+
+  test("nodeOutputLinkedItemJsonPath escapes node names for expressions", function (assert) {
+    assert.strictEqual(
+      nodeOutputLinkedItemJsonPath('Fetch "quoted" \\ data'),
       '$("Fetch \\"quoted\\" \\\\ data").item.json'
+    );
+  });
+
+  test("nodeOutputJsonPath uses the simplest safe output expression", function (assert) {
+    const runData = {
+      Aggregate: [
+        {
+          status: "success",
+          outputs: [
+            {
+              index: 0,
+              items: [{ json: { markdown: "summary" } }],
+              item_count: 1,
+            },
+          ],
+        },
+      ],
+      "Per item": [
+        {
+          status: "success",
+          outputs: [
+            {
+              index: 0,
+              items: [{ json: { name: "Ada" } }, { json: { name: "Grace" } }],
+              item_count: 2,
+            },
+          ],
+        },
+      ],
+    };
+
+    assert.strictEqual(
+      nodeOutputJsonPath(runData, "Aggregate"),
+      '$("Aggregate").first().json'
+    );
+    assert.strictEqual(
+      nodeOutputJsonPath(runData, "Per item"),
+      '$("Per item").item.json'
     );
   });
 

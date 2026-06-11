@@ -6,10 +6,8 @@
 
 fr:
   js:
-    discourse_hCaptcha:
-      missing_token: "Veuillez compléter le défi hCaptcha."
+    discourse_captcha:
       placeholder: espace réservé
-      contact_system_administrator: "Une erreur s'est produite avec hCaptcha. Si ce problème persiste, veuillez contacter un administrateur système"
   admin_js:
     admin:
       site_settings:

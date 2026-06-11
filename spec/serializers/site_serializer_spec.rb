@@ -605,4 +605,31 @@ RSpec.describe SiteSerializer do
       expect(serialized).not_to have_key(:admin_config_login_routes)
     end
   end
+
+  describe "#upcoming_changes_with_css" do
+    it "returns upcoming changes with body_class: true" do
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :beta,
+            impact_type: "other",
+            impact_role: "developers",
+            body_class: true,
+          },
+          enable_user_tips: {
+            impact: "feature,all_members",
+            status: :alpha,
+            impact_type: "feature",
+            impact_role: "all_members",
+            body_class: false,
+          },
+        },
+      )
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:upcoming_changes_with_css]).to include(:enable_upload_debug_mode)
+      expect(serialized[:upcoming_changes_with_css]).not_to include(:enable_user_tips)
+    end
+  end
 end

@@ -10381,7 +10381,8 @@ CREATE TABLE public.user_api_keys (
     revoked_at timestamp without time zone,
     last_used_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     key_hash character varying NOT NULL,
-    user_api_key_client_id bigint
+    user_api_key_client_id bigint,
+    expires_at timestamp(6) without time zone
 );
 
 
@@ -21912,6 +21913,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260609050938'),
 ('20260607161322'),
 ('20260604052235'),
 ('20260603115312'),
@@ -21926,6 +21928,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260522043337'),
 ('20260520090937'),
 ('20260518104900'),
+('20260518072818'),
 ('20260518054805'),
 ('20260514055648'),
 ('20260514043815'),
@@ -21953,6 +21956,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260422130653'),
 ('20260422102523'),
 ('20260422062938'),
+('20260422000000'),
 ('20260421061908'),
 ('20260420014648'),
 ('20260415082426'),

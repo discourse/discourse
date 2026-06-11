@@ -447,7 +447,9 @@ zh_CN:
         description: "为您的社区选择一个起始主题"
         action: "选择主题"
         modal_title: "选择一个主题"
+        use_theme: "使用所选主题"
         enabled: "已选择"
+        applying_theme: "正在应用主题..."
         browse_all: "管理主题"
         show_light_screenshot: "显示浅色截图"
         show_dark_screenshot: "显示深色截图"
@@ -2930,6 +2932,9 @@ zh_CN:
       open: "打开编辑器面板"
       abandon: "关闭编辑器并舍弃草稿"
       edit_reason: "为何进行编辑？"
+      whisper_indicator:
+        public: "可见的"
+        whispering: "密语"
       enter_fullscreen: "进入全屏编辑器"
       exit_fullscreen: "退出全屏编辑器"
       exit_fullscreen_prompt: "按 <kbd>ESC</kbd> 退出全屏"
@@ -2967,22 +2972,30 @@ zh_CN:
           trigger: 话题
           desc: 回复话题，不是任何特定的帖子
         reply_to_message:
+          label: 回复消息
           trigger: 发送私信
+          desc: 回复话题，不是任何特定的帖子
         toggle_whisper:
           label: 切换密语
+          desc: 只有允许的群组才能看到密语
         create_topic:
+          label: 创建话题
           desc: 创建新话题
         create_personal_message:
+          label: 创建消息
           desc: "创建新的个人消息"
         shared_draft:
           label: "共享草稿"
           desc: "起草一个仅对允许的用户可见的话题"
         toggle_topic_bump:
+          label: "请勿顶帖"
           desc: "回复但不更改最新回复日期"
+        create_unlisted_topic: "取消公开话题"
         toggle_unlisted:
           label: 切换取消公开
           desc: "不公开的话题只能通过直接链接访问"
         edit_post: "正在编辑帖子"
+        no_actions_available: "没有可用建议"
         unknown_user: "用户"
       reload: "重新加载"
       ignore: "忽略"
@@ -3417,6 +3430,8 @@ zh_CN:
           other: "在 %{count} 主题上禁用嵌套回复"
         confirm_update_topics:
           other: "更新 %{count} 个话题"
+        confirm_apply_to_topics:
+          other: "重新公开 %{count} 个话题"
         confirm_close_topics:
           other: "关闭 %{count} 个话题"
         confirm_archive_topics:
@@ -3459,7 +3474,7 @@ zh_CN:
         education:
           topic_tracking_preferences: '您可以在<a href="%{basePath}/my/preferences/tracking">您的偏好设置</a>中查看和更改新的话题跟踪设置。'
           unread: "没有未读内容… 太棒了！"
-          new_new: "目前没有新内容… 稍后再查看！"
+          unified_new: "目前没有新内容… 稍后再查看！"
           new: "目前没有新内容… 稍后再查看！"
           generic: "这里没什么可看的… 稍后回来看看！"
     topic_bulk_actions:
@@ -3489,9 +3504,18 @@ zh_CN:
           description: "已添加到所有选定话题"
         remove:
           title: "移除标签"
+          description: "每当存在时删除"
           all_toggle: "移除所有标签"
+          all_warning: "<strong>所有现有标签</strong> 将从所选主题中移除。此操作无法撤销。"
         replace:
           title: "替换标签"
+          description: "将一个标签替换成另一个标签。"
+          add_replacement: "添加替换"
+          remove_replacement: "移除替换"
+          from_placeholder: "替换标签"
+          to_placeholder: "替换标签"
+          missing_from: "需要添加源标签。"
+          missing_to: "需要更换标签"
       delete_topics:
         name: "删除"
         description: "永久删除所选话题。此操作无法撤消。"
@@ -3542,6 +3566,9 @@ zh_CN:
       collapsed_post: "已折叠的帖子"
       collapse: "收起"
       collapse_parent: "收起父消息串"
+      focused_path: "重点回复路径"
+      return_to_branch: "返回到 %{username}的分支"
+      all_replies: "所有回复"
       category_settings:
         default_nested_view: "为此类别中的话题默认使用嵌套视图。"
       no_replies: "暂无回复。"
@@ -3555,14 +3582,15 @@ zh_CN:
       topic_admin_menu:
         enable_nested_replies: "启用嵌套回复"
         disable_nested_replies: "禁用嵌套回复"
-      context:
-        banner: "您正在查看的是此话题中的单个消息串。"
-        view_full_topic: "查看完整话题"
-        view_parent_context: "查看父上下文"
+      activity_log:
+        link: "活动日志"
+        title: "主题活动日志"
+        empty: "暂无主题活动显示。"
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"
       create: "新建话题"
+      create_shared_draft: "新共享草稿"
       create_long: "创建新话题"
       create_group: "新建话题和草稿"
       open_draft: "打开草稿"
@@ -3840,6 +3868,7 @@ zh_CN:
         unpin: "将此话题从%{categoryLink}类别顶部移除。"
         unpin_until: "将此话题从%{categoryLink}类别顶部移除，或等到<strong>%{until}</strong>。"
         pin_note: "用户可以为自己单独取消置顶话题。"
+        pin_until: "置顶至"
         pin_validation: "置顶此话题需要一个日期。"
         not_pinned: "%{categoryLink}没有置顶话题。"
         already_pinned:
@@ -4129,6 +4158,7 @@ zh_CN:
         about: "此帖子是一个 Wiki"
       few_likes_left: "谢谢您分享爱！您今天只剩下几个赞了。"
       controls:
+        menu_label: "帖子操作"
         reply: "开始撰写对此帖子的回复"
         like_action: "点赞"
         like: "点赞此帖子"
@@ -4403,6 +4433,10 @@ zh_CN:
       color_used: "使用的颜色"
       predefined_colors: "预定义颜色选项"
       name_placeholder: "建议使用一到两个词"
+      category_types: "类别类型"
+      unknown_category_type: "未知类别类型"
+      unknown_category_type_description: "此分类不支持或未启用分类类型“%{categoryType}”。"
+      category_types_no_results: "未找到其他类别类型"
       color_placeholder: "任意网页颜色"
       delete_confirm: "确定要删除此类别吗？"
       delete_error: "删除类别时出错。"
@@ -4741,7 +4775,7 @@ zh_CN:
         new_replies_tooltip: "新回复"
         replies: "回复"
         replies_with_count: "回复 (%{count})"
-      new_new:
+      unified_new:
         help: "最近几天创建或回复的话题"
       posted:
         title: "我的帖子"
@@ -4814,6 +4848,11 @@ zh_CN:
       key_header: "键"
       search_aliases:
         shift: "shift"
+        alt: "添加选项"
+        meta: "meta cmd 命令 win windows 超级"
+        ctrl: "Ctrl 控制"
+        enter: "输入回车"
+        esc: "Esc 退出"
       jump_to:
         title: "跳到"
         home: "首页"
@@ -4827,16 +4866,38 @@ zh_CN:
         profile: "资料"
         messages: "消息"
         drafts: "草稿"
+        next: "下一个话题"
+        previous: "上一个话题"
       navigation:
         title: "导航"
+        jump: "前往帖子#"
         back: "返回"
         up_down: "移动选择 &uarr; &darr;"
+        open: "打开所选话题"
+        open_new_window: "在新标签页/窗口中打开所选话题"
+        next_prev: "下一节/上一节"
+        go_to_unread_post: "前往第一篇未读帖子"
       application:
         title: "应用程序"
+        create: "创建新主题或发送私信"
+        notifications: "打开通知"
+        hamburger_menu: "打开导航菜单"
+        user_profile_menu: "打开用户菜单"
+        show_incoming_updated_topics: "显示更新主题"
         search: "搜索"
+        filter_sidebar: "筛选侧边栏"
+        help: "打开键盘帮助"
+        toggle_bulk_select: "切换批量选择"
+        dismiss: "忽略所选话题"
+        x: "切换选择（在批量选择模式下）"
         log_out: "退出"
       composing:
         title: "撰写"
+        return: "返回编辑器"
+        minimize: "最小化编辑器"
+        create_or_reply: "创建主题或回复"
+        fullscreen: "全屏编辑器"
+        insert_current_time: "输入当前时间"
         link: "插入链接"
         preformatted: "预先格式化的文本"
         paragraph: "段落"
@@ -6110,6 +6171,11 @@ zh_CN:
                 "2": "成员"
                 "3": "常规"
                 "4": "领导者"
+            headline:
+              metrics:
+                new_signups: "新注册用户"
+                dau_mau: "日活跃用户（DAU）/月活跃用户（MAU）粘性"
+                daily_engaged_users: "每日参与"
         reports_section:
           modal:
             enabled_heading: "已启用"
@@ -6117,6 +6183,16 @@ zh_CN:
             apply: "应用"
         configure:
           button: "配置"
+        highlights:
+          kpi:
+            new_signups:
+              tooltip: "已创建的帐户，包括未激活帐户和暂存帐户。"
+            dau_mau:
+              tooltip: '月活跃用户中回访用户的比例。这可以反映社区的“粘性”，即用户回访的频率。'
+            new_contributors:
+              tooltip: "首次发帖的成员人数。"
+            daily_engaged_users:
+              tooltip: "社区每天平均点赞或发帖的成员人数。"
         site_traffic:
           series:
             anonymous: "匿名"
@@ -6628,6 +6704,7 @@ zh_CN:
           your_organization: "您的组织"
           your_organization_description: "我们将在《服务条款》和《隐私声明》中显示此信息来表明此网站的运营方和司法管辖区。"
           company_name: "名称"
+          company_name_placeholder: "ExampleCo"
           company_name_warning: |
             如果留空，将不提供样板《服务条款》或《隐私声明》。
           company_url: "网站"
@@ -7057,6 +7134,7 @@ zh_CN:
           finish_install: "完成主题安装"
           last_attempt: "安装过程未完成，最后一次尝试："
           remote_branch: "分支名称（可选）"
+          remote_branch_placeholder: "选择一个具体的分支，或保持为空"
           public_key: "授予以下公钥访问仓库的权限："
           install: "安装"
           installed: "已安装"

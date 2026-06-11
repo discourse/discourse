@@ -414,6 +414,8 @@ export default class AiLlmEditorForm extends Component {
                   @title={{i18n
                     (concat "discourse_ai.llms.provider_fields." name)
                   }}
+                  @tooltip={{if params.tooltip (i18n params.tooltip)}}
+                  @helpText={{if params.helpText (i18n params.helpText)}}
                   @showTitle={{not (eq params.type "checkbox")}}
                   @format="large"
                   @type={{this.fieldTypeForProviderParam params.type}}

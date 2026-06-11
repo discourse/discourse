@@ -6,10 +6,11 @@
 
 pl_PL:
   js:
-    discourse_hCaptcha:
-      missing_token: "Proszę ukończyć wyzwanie hCaptcha."
+    discourse_captcha:
+      missing_token: "Wypełnij zadanie CAPTCHA."
+      verification_failed: "Weryfikacja CAPTCHA nie powiodła się. Spróbuj jeszcze raz."
       placeholder: symbol zastępczy
-      contact_system_administrator: "Wystąpił problem z hCaptcha. Jeśli problem będzie się powtarzał, skontaktuj się z administratorem systemu."
+      contact_system_administrator: "Wystąpił problem z dostawcą CAPTCHA. Jeśli problem będzie się powtarzał, skontaktuj się z administratorem systemu."
   admin_js:
     admin:
       site_settings:

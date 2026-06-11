@@ -2654,6 +2654,7 @@ ko:
     이러한 이메일을 구독 해제하려면 [여기를 클릭하세요](%{unsubscribe_url}).
   subject_re: "덧: "
   subject_pm: "[PM] "
+  email_from: "%{user_name}"
   user_notifications:
     previous_discussion: "이전 답장"
     reached_limit:

@@ -446,6 +446,15 @@ export default class ChatChannel extends Component {
       return;
     }
 
+    // Clear unread counts optimistically when the latest message is in view.
+    if (
+      !this.messagesLoader.canLoadMoreFuture &&
+      firstMessage.id === this.messagesManager.findLastMessage()?.id
+    ) {
+      this.args.channel.tracking.unreadCount = 0;
+      this.args.channel.tracking.mentionCount = 0;
+    }
+
     const lastReadId =
       this.args.channel.currentUserMembership?.lastReadMessageId;
     if (lastReadId >= firstMessage.id) {

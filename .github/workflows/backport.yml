@@ -9,7 +9,10 @@ jobs:
     if: |
       github.event.issue.pull_request &&
       contains(github.event.comment.body, '@discoursebot backport') &&
-      contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)
+      (
+        contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association) ||
+        github.event.comment.user.login == 'patch-triage[bot]'
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:

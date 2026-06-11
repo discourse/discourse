@@ -215,6 +215,9 @@ de:
               description: "Optional, beschränke die Auslösung auf Beiträge mit diesen Merkmalen"
           created: Erstellt
           edited: Bearbeitet
+          topics: Themen (alle Kategorien)
+          personal_messages: Nur persönliche Nachrichten
+          public_topics: Themen (nur öffentliche Kategorien)
           with_images: Bilder
           with_links: Links
           with_code: Code
@@ -317,6 +320,12 @@ de:
             tags:
               label: Schlagwörter
               description: Liste der Schlagwörter, die dem Thema hinzugefügt werden sollen.
+            closed_automatically:
+              label: Automatisch geschlossene Themen
+              description: Füge automatisch geschlossenen Themen Schlagwörter hinzu.
+            closed_manually:
+              label: Manuell geschlossene Themen
+              description: Füge manuell geschlossenen Themen Schlagwörter hinzu.
         post:
           fields:
             creator:

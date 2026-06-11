@@ -12,6 +12,8 @@ sr:
         link_to_settings: "Podešavanje"
         refresh: "Osveži"
         name: "Ime foruma"
+        section:
+          groups: "Grupe"
         period:
           all_time: "Oduvek"
           yearly: "Top godišnje"

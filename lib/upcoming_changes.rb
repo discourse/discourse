@@ -26,6 +26,12 @@ module UpcomingChanges
     def self.should_display_enable_horizon_high_context_topic_cards?
       Themes::Action::HorizonHighContextTopicCardsToggled.should_display_upcoming_change?
     end
+
+    # Sites already running the discourse-gifs theme component will have their
+    # configuration migrated separately so they don't need to opt in via the upcoming change.
+    def self.should_display_enable_gifs?
+      !DiscourseGifs.component_installed?
+    end
   end
 
   def self.user_enabled_reasons
@@ -450,5 +456,11 @@ module UpcomingChanges
   # This is done via depends_on and depends_behavior: hidden in site_settings.yml.
   def self.find_dependents_for_change(change_setting_name)
     settings_provider.type_supervisor.dependencies.dependents(change_setting_name.to_s)
+  end
+
+  def self.including_css
+    settings_provider.upcoming_change_site_settings.filter_map do |upcoming_change|
+      upcoming_change if settings_provider.upcoming_change_metadata[upcoming_change][:body_class]
+    end
   end
 end

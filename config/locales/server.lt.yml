@@ -1824,6 +1824,7 @@ lt:
     Norėdami atsisakyti šių el. laiškų prenumeratos, [spustelėkite čia](%{unsubscribe_url}).
   subject_re: "Dar kartą:"
   subject_pm: "[AŽ]"
+  email_from: "%{user_name}"
   user_notifications:
     previous_discussion: "Ankstesni atsakymai"
     in_reply_to: "Atsakant į"

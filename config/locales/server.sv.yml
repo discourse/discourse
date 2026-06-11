@@ -2936,6 +2936,8 @@ sv:
   unsubscribe_mailing_list: "Du mottar de här e-postmeddelandena för att du har aktiverat utskicksläge för e-postlistor. \n\n[Klicka här](%{unsubscribe_url}) för att avprenumerera från de här e-postmeddelandena.\n"
   subject_re: "Sv: "
   subject_pm: "[PM] "
+  email_from: "%{user_name}"
+  email_from_group: "%{group_name}"
   user_notifications:
     previous_discussion: "Föregående svar"
     reached_limit:

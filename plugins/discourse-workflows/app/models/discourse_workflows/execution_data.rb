@@ -5,6 +5,11 @@ module DiscourseWorkflows
     self.table_name = "discourse_workflows_execution_data"
     self.primary_key = "execution_id"
 
+    attribute :data,
+              default: -> do
+                { "entries" => {}, "context" => {}, "node_contexts" => {}, "run_data" => {} }
+              end
+
     belongs_to :execution, class_name: "DiscourseWorkflows::Execution", foreign_key: "execution_id"
 
     def entries

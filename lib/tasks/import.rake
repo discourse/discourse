@@ -296,7 +296,7 @@ def insert_automatic_group_users
   Group::AUTO_GROUPS.each do |group_name, group_id|
     user_condition =
       case group_name
-      when :anonymous, :logged_in_users
+      when :anonymous_users, :logged_in_users
         next
       when :everyone
         "TRUE"

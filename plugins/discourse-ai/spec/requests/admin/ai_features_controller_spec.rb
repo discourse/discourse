@@ -21,7 +21,7 @@ RSpec.describe DiscourseAi::Admin::AiFeaturesController do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["ai_features"].count).to eq(
-        DiscourseAi::Configuration::Module.all.size,
+        DiscourseAi::Configuration::Module.all.count(&:visible?),
       )
     end
 
@@ -32,7 +32,7 @@ RSpec.describe DiscourseAi::Admin::AiFeaturesController do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["ai_features"].count).to eq(
-        DiscourseAi::Configuration::Module.all.size,
+        DiscourseAi::Configuration::Module.all.count(&:visible?),
       )
     end
   end

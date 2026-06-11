@@ -48,6 +48,42 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       )
     end
 
+    it "includes vLLM reasoning controls metadata" do
+      get "/admin/plugins/discourse-ai/ai-llms.json"
+      expect(response).to be_successful
+
+      vllm_params = response.parsed_body.dig("meta", "provider_params", "vllm")
+      expect(vllm_params["reasoning_parser"]["values"]).to contain_exactly(
+        { "id" => "default", "name" => "Server default" },
+        { "id" => "deepseek_r1", "name" => "deepseek_r1" },
+        { "id" => "qwen3", "name" => "qwen3" },
+        { "id" => "deepseek_v3", "name" => "deepseek_v3" },
+        { "id" => "deepseek_v4", "name" => "deepseek_v4" },
+        { "id" => "gemma4", "name" => "gemma4" },
+        { "id" => "granite", "name" => "granite" },
+        { "id" => "glm45", "name" => "glm45" },
+        { "id" => "hunyuan_a13b", "name" => "hunyuan_a13b" },
+        { "id" => "cohere_command3", "name" => "cohere_command3" },
+        { "id" => "ernie45", "name" => "ernie45" },
+        { "id" => "holo2", "name" => "holo2" },
+        { "id" => "minimax_m2_append_think", "name" => "minimax_m2_append_think" },
+      )
+      expect(vllm_params["thinking_override"]["values"]).to contain_exactly(
+        { "id" => "default", "name" => "Server default" },
+        { "id" => "on", "name" => "Force on" },
+        { "id" => "off", "name" => "Force off" },
+      )
+      expect(vllm_params["reasoning_effort"]["values"]).to contain_exactly(
+        { "id" => "default", "name" => "Server default" },
+        { "id" => "none", "name" => "None" },
+        { "id" => "low", "name" => "Low" },
+        { "id" => "medium", "name" => "Medium" },
+        { "id" => "high", "name" => "High" },
+      )
+      expect(vllm_params["thinking_token_budget"]["type"]).to eq("number")
+      expect(vllm_params).not_to have_key("enable_thinking")
+    end
+
     it "lists enabled features on appropriate LLMs" do
       SiteSetting.ai_bot_enabled = true
       SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
@@ -301,6 +337,58 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
 
         expect(response.status).to eq(201)
         expect(created_model.lookup_custom_param("disable_system_prompt")).to eq(true)
+      end
+
+      it "stores vLLM reasoning provider params" do
+        post "/admin/plugins/discourse-ai/ai-llms.json",
+             params: {
+               ai_llm:
+                 valid_attrs.merge(
+                   provider: "vllm",
+                   provider_params: {
+                     reasoning_parser: "qwen3",
+                     thinking_override: "off",
+                     reasoning_effort: "medium",
+                     thinking_token_budget: "1024",
+                     enable_thinking: true,
+                     unknown_param: "ignored",
+                   },
+                 ),
+             }
+
+        created_model = LlmModel.last
+
+        expect(response.status).to eq(201)
+        expect(created_model.provider_params).to include(
+          "reasoning_parser" => "qwen3",
+          "thinking_override" => "off",
+          "reasoning_effort" => "medium",
+          "thinking_token_budget" => "1024",
+        )
+        expect(created_model.provider_params).not_to include("enable_thinking", "unknown_param")
+      end
+
+      it "sanitizes vLLM params when reasoning parser is inactive" do
+        post "/admin/plugins/discourse-ai/ai-llms.json",
+             params: {
+               ai_llm:
+                 valid_attrs.merge(
+                   provider: "vllm",
+                   provider_params: {
+                     reasoning_parser: "default",
+                     thinking_override: "on",
+                     reasoning_effort: "high",
+                     thinking_token_budget: "1024",
+                   },
+                 ),
+             }
+
+        created_model = LlmModel.last
+
+        expect(response.status).to eq(201)
+        expect(created_model.provider_params["thinking_override"]).to eq("default")
+        expect(created_model.provider_params["reasoning_effort"]).to eq("default")
+        expect(created_model.provider_params["thinking_token_budget"]).to be_nil
       end
 
       it "casts hash-form checkbox fields to booleans" do

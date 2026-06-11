@@ -166,7 +166,10 @@ build_plugin_env = { "SKIP_DB_AND_REDIS" => "1" }
 system(build_plugin_env, "bin/rake", "assets:precompile:build_plugins", exception: true)
 
 if ARGV.include?("--compress")
-  files = [*Dir.glob("#{EMBER_APP_DIR}/dist/**/*.js"), *Dir.glob("app/assets/generated/**/*.js")]
+  files = [
+    *Dir.glob("#{EMBER_APP_DIR}/dist/**/*.{js,wasm}"),
+    *Dir.glob("app/assets/generated/**/*.{js,wasm}"),
+  ]
   Parallel.map(files, in_threads: 4) do |file|
     next if File.exist?("#{file}.gz") && File.exist?("#{file}.br")
 

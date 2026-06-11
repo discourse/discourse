@@ -18,11 +18,23 @@ ru:
         providers: "Провайдер"
         providers_description: "Настройте интеграцию с провайдерами чата"
       add_provider: "Добавить провайдера"
+      view_provider_settings: "Просмотреть настройки поставщика"
       more_providers: "Ещё"
+      confirm_setup_provider: "Вы уверены, что хотите включить поставщика %{provider} ? Его можно отключить позже на вкладке «Настройки»."
+      setup_provider_modal:
+        title: "Настройка %{provider} поставщика"
+        setup_instructions: "Пожалуйста, предоставьте следующие данные для настройки провайдера %{provider} %{additionalInstructions}"
+        confirm_setup: "Подтвердите настройку"
+        success: "Поставщик %{provider} успешно настроен"
+        telegram:
+          access_token:
+            title: "токен доступа"
+            description: "Токен доступа к Telegram-боту от BotFather"
       empty_state:
         title: "Подключите свою платформу для чата"
         body: "Отправляйте уведомления из Discourse в чат вашей команды. Выберите поставщика, чтобы начать работу."
       channels_title: "Каналы"
+      channels_description: "Настройте каналы для провайдера %{provider}."
       no_channels: "Каналы пока не настроены."
       channel_actions: "Действия канала"
       add_first_channel: "Добавьте свой первый %{provider} канал"
@@ -95,6 +107,8 @@ ru:
               title: Канал
               help: "Например, #канал или @имя пользователя"
           errors:
+            at_least_one_required: "Введите токен доступа или URL-адрес исходящего веб-перехватчика."
+            invalid_webhook_url: "URL исходящего веб-перехватчика должен представлять собой действительную ссылку https://hooks.slack.com/services/..."
             auth_error: "Предоставленный токен аутентификации недействителен."
             action_prohibited: "Бот не имеет разрешения на публикацию в этот канал"
             channel_not_found: "Указанный канал не существует в Slack."
@@ -108,6 +122,8 @@ ru:
               title: ID чата
               help: Номер, данный вам ботом, или идентификатор канала вещания в виде @channelname
           errors:
+            access_token_required: "Для доступа к боту требуется токен."
+            webhook_setup_failed: "Не удалось зарегистрировать веб-хук в Telegram. Проверьте токен и повторите попытку."
             channel_not_found: "Указанный канал не существует в Telegram"
             forbidden: "Бот не имеет разрешения на публикацию на этот канал"
         discord:

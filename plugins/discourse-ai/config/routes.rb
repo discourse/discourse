@@ -90,6 +90,9 @@ Discourse::Application.routes.draw do
       :constraints => StaffConstraint.new
 
   scope "/admin/plugins/discourse-ai", constraints: AdminConstraint.new do
+    get "/admin-dashboard-highlights" => "discourse_ai/admin/admin_dashboard_highlights#show",
+        :format => :json
+
     get "/ai-personas", to: redirect("/admin/plugins/discourse-ai/ai-agents")
     get "/ai-personas/new", to: redirect("/admin/plugins/discourse-ai/ai-agents/new")
     get "/ai-personas/:id/edit", to: redirect("/admin/plugins/discourse-ai/ai-agents/%{id}/edit")
