@@ -45,13 +45,12 @@ module Migrations
     # and would smuggle step-level state across the role boundary.
     class ProgressStep < Step
       class Source
+        include AttributeAssignment
+
         attr_accessor :settings
 
         def initialize(args = {})
-          args.each do |arg, value|
-            setter = :"#{arg}="
-            public_send(setter, value) if respond_to?(setter, true)
-          end
+          assign_attributes(args)
         end
 
         def max_progress
@@ -64,16 +63,14 @@ module Migrations
       end
 
       class Processor
+        include AttributeAssignment
+
         attr_accessor :settings
         attr_reader :tracker
 
-        def initialize(tracker, args = {})
-          @tracker = tracker
-
-          args.each do |arg, value|
-            setter = :"#{arg}="
-            public_send(setter, value) if respond_to?(setter, true)
-          end
+        def initialize(args = {})
+          @tracker = StepTracker.new
+          assign_attributes(args)
         end
 
         def setup
@@ -85,16 +82,21 @@ module Migrations
         end
       end
 
+      # The step object is only a coordinator: it builds the source (in the
+      # main process) and one processor per worker. All per-item state —
+      # including the tracker — lives on the processors, and `settings` are
+      # routed to the roles, so none of the inherited per-step state applies.
+      undef_method :tracker, :step, :settings, :settings=
+
       attr_reader :source
 
-      def initialize(tracker, args = {})
-        super
+      def initialize(args = {})
         @args = args
         @source = self.class.source_class.new(args)
       end
 
       def create_processor
-        self.class.processor_class.new(StepTracker.new, @args)
+        self.class.processor_class.new(@args)
       end
 
       class << self

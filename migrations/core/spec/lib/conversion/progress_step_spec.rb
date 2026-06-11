@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Conversion::ProgressStep do
-  let(:tracker) { Migrations::Conversion::StepTracker.new }
-
   def define_step(&block)
     Class.new(described_class, &block)
   end
@@ -21,8 +19,8 @@ RSpec.describe Migrations::Conversion::ProgressStep do
       source = step_class.source_class.new
       expect(source.items).to eq([1, 2, 3])
 
-      expect(step_class.new(tracker)).not_to respond_to(:items)
-      expect(step_class.processor_class.new(tracker)).not_to respond_to(:items)
+      expect(step_class.new).not_to respond_to(:items)
+      expect(step_class.processor_class.new).not_to respond_to(:items)
     end
 
     it "defines private methods on the source role" do
@@ -68,10 +66,10 @@ RSpec.describe Migrations::Conversion::ProgressStep do
           end
         end
 
-      processor = step_class.processor_class.new(tracker)
+      processor = step_class.processor_class.new
       expect(processor.process(21)).to eq(42)
 
-      expect(step_class.new(tracker)).not_to respond_to(:process)
+      expect(step_class.new).not_to respond_to(:process)
       expect(step_class.source_class.new).not_to respond_to(:process)
     end
 
@@ -91,7 +89,7 @@ RSpec.describe Migrations::Conversion::ProgressStep do
           end
         end
 
-      processor = step_class.processor_class.new(tracker)
+      processor = step_class.processor_class.new
       expect(processor.process(1)).to eq("1")
       expect(processor.respond_to?(:transform)).to be(false)
       expect(processor.respond_to?(:transform, true)).to be(true)
@@ -131,7 +129,7 @@ RSpec.describe Migrations::Conversion::ProgressStep do
         end
 
       expect(step_class.source_class.new.items).to eq([2])
-      expect(step_class.processor_class.new(tracker).process(2)).to eq(4)
+      expect(step_class.processor_class.new.process(2)).to eq(4)
     end
 
     it "works independently of the order of the DSL calls" do
@@ -186,7 +184,7 @@ RSpec.describe Migrations::Conversion::ProgressStep do
           end
         end
 
-      processor = step_class.processor_class.new(tracker)
+      processor = step_class.processor_class.new
       expect { processor.process(1) }.to raise_error(NameError, /source_helper/)
     end
 
@@ -207,7 +205,7 @@ RSpec.describe Migrations::Conversion::ProgressStep do
           end
         end
 
-      step = step_class.new(tracker)
+      step = step_class.new
       step.source.items
 
       expect(step.create_processor.process(1)).to be(false)
@@ -242,13 +240,11 @@ RSpec.describe Migrations::Conversion::ProgressStep do
     end
 
     it "raises `NotImplementedError` when `process` is not defined" do
-      expect { step_class.processor_class.new(tracker).process(1) }.to raise_error(
-        NotImplementedError,
-      )
+      expect { step_class.processor_class.new.process(1) }.to raise_error(NotImplementedError)
     end
 
     it "uses a no-op as default `setup`" do
-      expect { step_class.processor_class.new(tracker).setup }.not_to raise_error
+      expect { step_class.processor_class.new.setup }.not_to raise_error
     end
   end
 
@@ -280,7 +276,7 @@ RSpec.describe Migrations::Conversion::ProgressStep do
       expected = [Migrations::Database::IntermediateDB, Migrations::Database::IntermediateDB::Enums]
 
       expect(ProgressStepConstantsFixture.source_class.new.items).to eq(expected)
-      expect(ProgressStepConstantsFixture.processor_class.new(tracker).process(nil)).to eq(expected)
+      expect(ProgressStepConstantsFixture.processor_class.new.process(nil)).to eq(expected)
     end
 
     it "does not define the constants on the role classes themselves" do
@@ -294,7 +290,7 @@ RSpec.describe Migrations::Conversion::ProgressStep do
       step_class = define_step { source { attr_accessor :source_db } }
 
       settings = { a: 1 }
-      step = step_class.new(tracker, settings:, source_db: "source db", unknown_arg: "dropped")
+      step = step_class.new(settings:, source_db: "source db", unknown_arg: "dropped")
 
       expect(step.source.settings).to eq(settings)
       expect(step.source.source_db).to eq("source db")
@@ -304,18 +300,26 @@ RSpec.describe Migrations::Conversion::ProgressStep do
       expect(processor).not_to respond_to(:source_db)
       expect(processor).not_to respond_to(:unknown_arg)
     end
+
+    it "keeps no per-step state on the coordinator" do
+      step = define_step.new(settings: { a: 1 })
+
+      expect(step).not_to respond_to(:tracker)
+      expect(step).not_to respond_to(:step)
+      expect(step).not_to respond_to(:settings)
+    end
   end
 
   describe "#source" do
     it "returns the same source instance every time" do
-      step = define_step.new(tracker)
+      step = define_step.new
       expect(step.source).to be(step.source)
     end
   end
 
   describe "#create_processor" do
     it "creates a new processor with its own tracker on every call" do
-      step = define_step.new(tracker)
+      step = define_step.new
 
       processor1 = step.create_processor
       processor2 = step.create_processor
@@ -355,7 +359,7 @@ RSpec.describe Migrations::Conversion::ProgressStep do
       source = step_class.source_class.new
       expect(source.items).to eq([1])
       expect(source.max_progress).to eq(1)
-      expect(step_class.processor_class.new(tracker).process(1)).to eq(2)
+      expect(step_class.processor_class.new.process(1)).to eq(2)
     end
   end
 

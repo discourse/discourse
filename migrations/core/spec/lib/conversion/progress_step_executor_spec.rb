@@ -5,7 +5,7 @@ RSpec.describe Migrations::Conversion::ProgressStepExecutor do
 
   let(:item_count) { 30 }
   let(:offline_connection) { Migrations::Database::OfflineConnection.new }
-  let(:step) { step_class.new(Migrations::Conversion::StepTracker.new, settings: { item_count: }) }
+  let(:step) { step_class.new(settings: { item_count: }) }
 
   before { Migrations::Database::IntermediateDB.setup(offline_connection) }
   after { Migrations::Database::IntermediateDB.setup(nil) }
