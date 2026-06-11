@@ -87,9 +87,14 @@ function applyTopicAssignmentMessage(topic, data) {
     const indirectlyAssignedTo = { ...(topic.indirectly_assigned_to || {}) };
 
     if (isAssigned) {
+      const existingAssignment = indirectlyAssignedTo[data.post_id] || {};
       indirectlyAssignedTo[data.post_id] = {
+        ...existingAssignment,
         assigned_to: data.assigned_to,
-        post_number: data.post_number,
+        post_number:
+          data.post_number ??
+          existingAssignment.post_number ??
+          post?.post_number,
         assignment_note: data.assignment_note,
         assignment_status: data.assignment_status,
       };
