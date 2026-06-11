@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .post-translations-modal {
   table {
     width: 100%;
@@ -24,6 +26,16 @@
 
     .d-button__suffix-icon {
       margin-left: var(--space-1);
+    }
+
+    @include viewport.until(sm) {
+      .d-button-label {
+        display: none;
+      }
+
+      .d-button__suffix-icon {
+        margin-left: 0;
+      }
     }
 
     &:hover {
