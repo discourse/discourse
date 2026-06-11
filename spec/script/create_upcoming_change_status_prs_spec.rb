@@ -83,9 +83,9 @@ RSpec.describe "script/create_upcoming_change_status_prs" do # rubocop:disable R
       "git checkout -B dev/upcoming-change-status-bump/alpha_change origin/main",
       "rails runner script/upcoming_changes_status_report -- --stale-after-days 14 --apply alpha_change",
       "git add plugins/chat/config/settings.yml",
-      "git commit -m DEV: Bump alpha_change upcoming change to beta",
+      "git commit -m FEATURE: Bump alpha_change upcoming change to beta",
       "git push -f origin dev/upcoming-change-status-bump/alpha_change",
-      "gh pr create --base main --head dev/upcoming-change-status-bump/alpha_change --title DEV: Bump alpha_change upcoming change to beta --body-file /tmp/upcoming-change-alpha_change-body.md --label upcoming-change --assignee original-author",
+      "gh pr create --base main --head dev/upcoming-change-status-bump/alpha_change --title FEATURE: Bump alpha_change upcoming change to beta --body-file /tmp/upcoming-change-alpha_change-body.md --label upcoming-change --assignee original-author",
     )
     expect(File.read("/tmp/upcoming-change-alpha_change-body.md")).to include(
       "<!-- upcoming-change-status-pr:alpha_change -->",
@@ -115,7 +115,7 @@ RSpec.describe "script/create_upcoming_change_status_prs" do # rubocop:disable R
         eligible: true,
         original_pr_number: "123",
         branch: "dev/upcoming-change-status-bump/alpha_change",
-        title: "DEV: Bump alpha_change upcoming change to beta",
+        title: "FEATURE: Bump alpha_change upcoming change to beta",
         pr_label: "upcoming-change",
         pr_body:
           "<!-- upcoming-change-status-pr:alpha_change -->\n\nThis automated PR moves `alpha_change` from `alpha` to `beta`.",

@@ -72,7 +72,7 @@ RSpec.describe UpcomingChanges::StatusReport do
         original_author_email: "alice@example.com",
         original_pr_number: "123",
         branch: "dev/upcoming-change-status-bump/experimental_change",
-        title: "DEV: Bump experimental_change upcoming change to alpha",
+        title: "FEATURE: Bump experimental_change upcoming change to alpha",
         pr_label: "upcoming-change",
       )
       expect(records.fetch("experimental_change").fetch(:pr_body)).to include(

@@ -227,7 +227,7 @@ module UpcomingChanges
 
         record.merge(
           branch: "#{BRANCH_PREFIX}/#{record[:name]}",
-          title: "DEV: Bump #{record[:name]} upcoming change to #{record[:next_status]}",
+          title: "FEATURE: Bump #{record[:name]} upcoming change to #{record[:next_status]}",
           pr_label: LABEL,
           pr_body: body_for(record, stale_after_days:),
         )
