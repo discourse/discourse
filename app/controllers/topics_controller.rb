@@ -181,7 +181,12 @@ class TopicsController < ApplicationController
         last_page = visible_posts_count > 0 ? ((visible_posts_count - 1) / chunk_size) + 1 : 1
         url = @topic_view.topic.relative_url
         url += ".json" if request.format.json?
-        url += "?page=#{last_page}" if last_page > 1
+
+        query = []
+        query << "page=#{last_page}" if last_page > 1
+        query << "flat=1" if !request.format.json? && params[:flat] == "1"
+        url += "?#{query.join("&")}" if query.present?
+
         return redirect_to url, status: :moved_permanently
       end
     end
@@ -1446,6 +1451,7 @@ class TopicsController < ApplicationController
           additional_allowed_query_parameters,
         ),
       )
+    opts[:flat] = "1" if !request.format.json? && params[:flat] == "1"
     opts.delete(:page) if params[:page] == 0
 
     url = topic.relative_url

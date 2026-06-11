@@ -148,14 +148,14 @@
       <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement' class="topic-body crawler-post">
         <% if @topic_view.single_post_request? %>
           <span itemprop='name'>
-            <%= link_to t(:show_post_in_topic), "#{@topic_view.current_page_path}#post_#{@topic_view.crawler_posts.first&.post_number}", itemprop: 'url' %>
+            <%= link_to t(:show_post_in_topic), topic_path_with_flat_param(@topic_view.current_page_path, anchor: "post_#{@topic_view.crawler_posts.first&.post_number}"), itemprop: 'url' %>
           </span>
         <% else %>
           <% if @topic_view.prev_page %>
-            <span itemprop='name'><%= link_to t(:prev_page), @topic_view.prev_page_path, rel: 'prev', itemprop: 'url' %></span>
+            <span itemprop='name'><%= link_to t(:prev_page), topic_path_with_flat_param(@topic_view.prev_page_path), rel: 'prev', itemprop: 'url' %></span>
           <% end %>
           <% if @topic_view.next_page %>
-            <span itemprop='name'><b><%= link_to t(:next_page), @topic_view.next_page_path, rel: 'next', itemprop: 'url' %></b></span>
+            <span itemprop='name'><b><%= link_to t(:next_page), topic_path_with_flat_param(@topic_view.next_page_path), rel: 'next', itemprop: 'url' %></b></span>
           <% end %>
         <% end %>
       </div>
@@ -167,7 +167,13 @@
   <% end %>
 
   <% content_for :head do %>
-    <%= auto_discovery_link_tag(@topic_view, {action: :feed, slug: @topic_view.topic.slug, topic_id: @topic_view.topic.id}, rel: 'alternate nofollow', title: t('rss_posts_in_topic', topic: @topic_view.title), type: 'application/rss+xml') %>
+    <%= auto_discovery_link_tag(
+      @topic_view,
+      { controller: "topics", action: :feed, slug: @topic_view.topic.slug, topic_id: @topic_view.topic.id },
+      rel: 'alternate nofollow',
+      title: t('rss_posts_in_topic', topic: @topic_view.title),
+      type: 'application/rss+xml'
+    ) %>
     <%= raw crawlable_meta_data(
       title: @topic_view.title,
       description: @topic_view.summary(strip_images: true),
@@ -185,10 +191,10 @@
 
     <% if !@topic_view.single_post_request? && (@topic_view.prev_page || @topic_view.next_page)  %>
       <% if @topic_view.prev_page %>
-        <link rel="prev" href="<%= @topic_view.prev_page_path -%>">
+        <link rel="prev" href="<%= topic_path_with_flat_param(@topic_view.prev_page_path) -%>">
       <% end %>
       <% if @topic_view.next_page %>
-        <link rel="next" href="<%= @topic_view.next_page_path -%>">
+        <link rel="next" href="<%= topic_path_with_flat_param(@topic_view.next_page_path) -%>">
       <% end %>
     <% end %>
   <% end %>

@@ -1,0 +1,136 @@
+<% if @nested_response && @nested_topic %>
+  <div id="topic-title">
+    <h1><%= @nested_topic[:title] %></h1>
+
+    <% if @breadcrumbs.present? %>
+      <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
+        <% @breadcrumbs.each_with_index do |c, i| %>
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="<%= c[:url] %>" class="badge-wrapper bullet" itemprop="item">
+              <span class="badge-category-bg" style="background-color: #<%= c[:color] %>"></span>
+              <span class="badge-category clear-badge">
+                <span class="category-name" itemprop="name"><%= c[:name] %></span>
+              </span>
+            </a>
+            <meta itemprop="position" content="<%= i + 1 %>" />
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @tags.present? %>
+      <div class="topic-category">
+        <div class="discourse-tags list-tags">
+          <% @tags.each_with_index do |tag, i| %>
+            <a href="<%= "#{Discourse.base_url}/tag/#{tag.name}" %>" class="discourse-tag" rel="tag"><%= tag.name %></a><% if i < @tags.size - 1 %>, <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%= server_plugin_outlet "topic_header" %>
+
+  <% render_nested_post = lambda do |post, depth = 0| %>
+    <% next if post.blank? %>
+    <% username = post[:username] || post[:display_username] %>
+    <div id="post_<%= post[:post_number] %>" class="topic-body crawler-post nested-crawler-post nested-crawler-post-depth-<%= depth %>" data-post-number="<%= post[:post_number] %>">
+      <div class="crawler-post-meta">
+        <% if username.present? %>
+          <span class="creator">
+            <a rel="nofollow" href="<%= Discourse.base_url %>/u/<%= username %>"><span><%= username %></span></a>
+            <%= "(#{post[:name]})" if SiteSetting.display_name_on_posts && SiteSetting.enable_names? && post[:name].present? %>
+          </span>
+        <% end %>
+
+        <span class="crawler-post-infos">
+          <% if post[:created_at].present? %>
+            <time datetime="<%= post[:created_at] %>" class="post-time"><%= l Time.zone.parse(post[:created_at].to_s), format: :long %></time>
+          <% end %>
+          <span><%= post[:post_number] %></span>
+        </span>
+      </div>
+
+      <div class="post">
+        <% if post[:deleted_post_placeholder] %>
+          <%= t("post.deleted_by_author_simple").html_safe %>
+        <% elsif post[:ignored_post_placeholder] %>
+          <%= t("post.ignored").html_safe %>
+        <% else %>
+          <%= post[:cooked].to_s.html_safe %>
+        <% end %>
+      </div>
+
+      <% if post[:like_count].to_i > 0 %>
+        <div><span class="post-likes"><%= t("post.has_likes", count: post[:like_count]) %></span></div>
+      <% end %>
+    </div>
+
+    <% Array(post[:children]).each do |child| %>
+      <% render_nested_post.call(child, depth + 1) %>
+    <% end %>
+  <% end %>
+
+  <div class="nested-crawler" itemscope itemtype="http://schema.org/DiscussionForumPosting">
+    <meta itemprop="headline" content="<%= @nested_topic[:title] %>">
+    <link itemprop="url" href="<%= @topic_view.absolute_url %>">
+    <meta itemprop="datePublished" content="<%= @topic.created_at.to_formatted_s(:iso8601) %>">
+
+    <% if @nested_response[:target_post].present? %>
+      <% target_post_number = @nested_response[:target_post][:post_number] %>
+      <noscript>
+        <div class="nested-topic-no-js-notice topic-body crawler-post">
+          <%= link_to t(:show_post_in_topic), topic_path_with_flat_param("#{@topic.url}/#{target_post_number}", force: true) %>
+        </div>
+      </noscript>
+    <% elsif @nested_response[:has_more_roots] || nested_posts_have_unrendered_replies?(@nested_response[:roots]) %>
+      <noscript>
+        <div class="nested-topic-no-js-notice topic-body crawler-post">
+          <%= link_to t(:read_full_topic), topic_path_with_flat_param(@topic.url, force: true) %>
+        </div>
+      </noscript>
+    <% end %>
+
+    <% render_nested_post.call(@nested_response[:op_post], 0) %>
+
+    <% if @nested_response[:ancestor_chain].present? %>
+      <% @nested_response[:ancestor_chain].each do |post| %>
+        <% render_nested_post.call(post, 0) %>
+      <% end %>
+    <% end %>
+
+    <% if @nested_response[:target_post].present? %>
+      <% render_nested_post.call(@nested_response[:target_post], 0) %>
+    <% else %>
+      <% Array(@nested_response[:roots]).each do |post| %>
+        <% render_nested_post.call(post, 0) %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% content_for :head do %>
+    <%= auto_discovery_link_tag(
+      @topic_view,
+      { controller: "topics", action: :feed, slug: @topic.slug, topic_id: @topic.id },
+      rel: "alternate nofollow",
+      title: t("rss_posts_in_topic", topic: @nested_topic[:title]),
+      type: "application/rss+xml"
+    ) %>
+    <%= raw crawlable_meta_data(
+      title: @nested_topic[:title],
+      description: @topic.excerpt.presence || @topic_view.summary(strip_images: true),
+      image: @topic_view.image_url,
+      image_width: @topic_view.image_width,
+      image_height: @topic_view.image_height,
+      image_type: @topic_view.image_type,
+      read_time: @topic_view.read_time,
+      like_count: @topic_view.like_count,
+      ignore_canonical: true,
+      published_time: @topic_view.published_time,
+      breadcrumbs: @breadcrumbs,
+      tags: @tags.map(&:name),
+    ) %>
+  <% end %>
+
+  <% content_for(:title) { @title || "#{gsub_emoji_to_unicode(@nested_topic[:title])} - #{SiteSetting.title}" } %>
+<% end %>

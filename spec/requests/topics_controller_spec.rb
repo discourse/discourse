@@ -3152,6 +3152,48 @@ RSpec.describe TopicsController do
       expect(response).to redirect_to("/t/#{topic_with_posts.slug}/#{topic_with_posts.id}?page=2")
     end
 
+    it "preserves forced-flat mode when redirecting over-range pages" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      topic_with_posts = Fabricate(:topic)
+      Fabricate.times(25, :post, topic: topic_with_posts)
+      Topic.reset_highest(topic_with_posts.id)
+
+      get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}", params: { page: 5, flat: "1" }
+
+      expect(response).to redirect_to("/t/#{topic_with_posts.slug}/#{topic_with_posts.id}?page=2&flat=1")
+    end
+
+    it "preserves forced-flat mode in topic pagination links" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      topic_with_posts = Fabricate(:topic)
+      Fabricate.times(25, :post, topic: topic_with_posts)
+      Topic.reset_highest(topic_with_posts.id)
+
+      get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}", params: { flat: "1" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(%(/t/#{topic_with_posts.slug}/#{topic_with_posts.id}?page=2&amp;flat=1))
+    end
+
+    it "does not redirect forced-flat paginated topic requests back to nested view" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      topic_with_posts = Fabricate(:topic)
+      Fabricate.times(25, :post, topic: topic_with_posts)
+      Topic.reset_highest(topic_with_posts.id)
+
+      get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}", params: { page: 2, flat: "1" }
+
+      expect(response.status).to eq(200)
+      expect(response.location.to_s).not_to match(%r{/n/})
+      expect(response.body).to include(%(/t/#{topic_with_posts.slug}/#{topic_with_posts.id}?flat=1))
+    end
+
     it "uses viewer-visible post count when deciding the last valid page (whispers)" do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
 
@@ -3203,6 +3245,21 @@ RSpec.describe TopicsController do
       get "/t/#{topic.slug}", params: { post_number: 42, page: 123 }
 
       expect(response).to redirect_to(topic.relative_url + "/42?page=123")
+    end
+
+    it "preserves forced-flat mode when redirecting to the canonical topic URL" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      get "/t/wrong-slug/#{topic.id}", params: { flat: "1" }
+
+      expect(response).to redirect_to("#{topic.relative_url}?flat=1")
+    end
+
+    it "does not preserve forced-flat mode on JSON canonical topic redirects" do
+      get "/t/wrong-slug/#{topic.id}.json", params: { flat: "1" }
+
+      expect(response).to redirect_to("#{topic.relative_url}.json")
     end
 
     it "does not accept page params as an array" do

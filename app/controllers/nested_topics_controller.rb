@@ -24,8 +24,9 @@ class NestedTopicsController < ApplicationController
         return
       end
 
-      store_preloaded("nested_topic_#{@topic.id}", MultiJson.dump(list_roots_response(page: 0)))
-      render "default/empty"
+      response = list_roots_response(page: 0)
+      store_preloaded("nested_topic_#{@topic.id}", MultiJson.dump(response))
+      render_nested_topic_html(response)
       return
     end
 
@@ -65,8 +66,9 @@ class NestedTopicsController < ApplicationController
         return
       end
 
-      store_preloaded("nested_topic_#{@topic.id}", MultiJson.dump(show_context_response))
-      render "default/empty"
+      response = show_context_response
+      store_preloaded("nested_topic_#{@topic.id}", MultiJson.dump(response))
+      render_nested_topic_html(response)
       return
     end
 
@@ -161,6 +163,16 @@ class NestedTopicsController < ApplicationController
       on_failure { raise Discourse::NotFound }
     end
     result
+  end
+
+  def render_nested_topic_html(response)
+    @nested_response = response
+    @nested_topic = response[:topic]
+    @tags = SiteSetting.tagging_enabled ? @topic.tags.visible(guardian) : []
+    @breadcrumbs = helpers.categories_breadcrumb(@topic) || []
+    @description_meta = @topic.excerpt.presence || @topic_view.summary
+
+    render "nested_topics/show"
   end
 
   def show_context_response
