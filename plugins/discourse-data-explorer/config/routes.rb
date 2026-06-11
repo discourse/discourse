@@ -37,6 +37,7 @@ Discourse::Application.routes.draw do
         :constraints => {
           id: /\d+/,
         }
+    post "queries" => "discourse_data_explorer/api/v1/queries#create"
   end
 
   mount DiscourseDataExplorer::Engine, at: "/admin/plugins/discourse-data-explorer"

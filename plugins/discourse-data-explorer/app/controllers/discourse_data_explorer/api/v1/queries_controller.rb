@@ -52,6 +52,16 @@ module DiscourseDataExplorer
         def show
           render jsonapi: QueryResource.find(params)
         end
+
+        def create
+          query = QueryResource.build(params)
+
+          if query.save
+            render jsonapi: query, status: :created
+          else
+            render jsonapi_errors: query
+          end
+        end
       end
     end
   end
