@@ -14,13 +14,19 @@ module Jobs
         @feed_url = args[:feed_url]
         @discourse_tags = args[:discourse_tags]
         @feed_category_filter = args[:feed_category_filter]
+        @rss_feed_id = args[:rss_feed_id]
 
         poll_feed if not_polled_recently?
       end
 
       private
 
-      attr_reader :feed_url, :author, :discourse_category_id, :discourse_tags, :feed_category_filter
+      attr_reader :feed_url,
+                  :author,
+                  :discourse_category_id,
+                  :discourse_tags,
+                  :feed_category_filter,
+                  :rss_feed_id
 
       def resolve_author(args)
         if args[:user_id]
@@ -56,12 +62,16 @@ module Jobs
       end
 
       def poll_feed
+        outcomes = []
+
+        fetch = ::DiscourseRssPolling::FeedFetcher.new(feed_url).fetch
         analyzer = ::DiscourseRssPolling::FeedAnalyzer.new(feed_category_filter:)
 
-        topics_polled_from_feed.each do |feed_item|
+        fetch.items.each do |feed_item|
           status, reason = analyzer.evaluate(feed_item)
 
           if status == ::DiscourseRssPolling::FeedAnalyzer::SKIPPED
+            outcomes << feed_item.outcome(status: :skipped, reason:)
             log_verbose("Skipped '#{feed_item.title || feed_item.url}' (#{reason})")
             next
           end
@@ -85,9 +95,13 @@ module Jobs
               cook_method: cook_method,
             )
 
+          new_post = post && (post.created_at == post.updated_at)
+          item_status = post.nil? ? :failed : (new_post ? :imported : :updated)
+          outcomes << feed_item.outcome(status: item_status)
+
           log_verbose("Imported '#{feed_item.title}' (#{feed_item.url})")
 
-          if post && (post.created_at == post.updated_at) # new post
+          if new_post
             if SiteSetting.rss_polling_use_pubdate && (post_time = feed_item.pubdate)
               begin
                 post.created_at = post_time
@@ -104,6 +118,22 @@ module Jobs
             set_image_as_thumbnail(post, feed_item.image_link) if feed_item.image_link
           end
         end
+
+        record_attempt(outcomes, error: fetch.error&.to_s)
+      rescue => e
+        Discourse.warn_exception(e, message: "RSS Polling: error while polling feed #{feed_url}")
+        record_attempt(outcomes, error: "unknown")
+        raise
+      end
+
+      def record_attempt(outcomes, error: nil)
+        return if rss_feed_id.blank?
+
+        ::DiscourseRssPolling::PollAttempt.record!(rss_feed_id:, items: outcomes, error:)
+      rescue => e
+        Rails.logger.warn(
+          "RSS Polling: failed to record poll attempt for feed #{rss_feed_id}: #{e.message}",
+        )
       end
 
       def log_verbose(message)
@@ -145,10 +175,6 @@ module Jobs
       ensure
         tmp&.close
         tmp&.unlink
-      end
-
-      def topics_polled_from_feed
-        ::DiscourseRssPolling::FeedFetcher.new(feed_url).fetch.items
       end
     end
   end

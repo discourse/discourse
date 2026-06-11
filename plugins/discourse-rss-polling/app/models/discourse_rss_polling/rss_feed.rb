@@ -5,6 +5,7 @@ module DiscourseRssPolling
     self.ignored_columns += %i[author]
 
     belongs_to :user, optional: true
+    has_many :poll_attempts, class_name: "DiscourseRssPolling::PollAttempt", dependent: :delete_all
 
     validates :url, presence: true
 
@@ -12,6 +13,7 @@ module DiscourseRssPolling
 
     def poll(inline: false)
       args = {
+        rss_feed_id: id,
         feed_url: url,
         user_id: user_id,
         discourse_category_id: category_id,

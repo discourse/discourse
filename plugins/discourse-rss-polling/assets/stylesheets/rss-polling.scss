@@ -1,9 +1,6 @@
 @use "lib/viewport";
 
 .rss-polling-feed-form {
-  // `<fieldset>` shrink-wraps to its content, so a fieldset containing only
-  // select-kit choosers (which have an intrinsic width) would not span the
-  // full width. Force it so the fields line up with the full-width inputs.
   .form-kit__fieldset {
     width: 100%;
   }
@@ -12,6 +9,16 @@
     display: flex;
     gap: 0.5em;
     align-items: center;
+  }
+
+  &__tag-requirement {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5em;
+    margin-top: var(--space-1);
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
   }
 }
 
@@ -40,12 +47,14 @@
     border-top: 1px solid var(--primary-low);
     border-left: 3px solid transparent;
 
-    // Imported items get a green accent so they stand out...
     &.--import {
       border-left-color: var(--success);
     }
 
-    // ...while skipped items recede (muted title, no accent).
+    &.--update {
+      border-left-color: var(--tertiary);
+    }
+
     &.--skip .rss-polling-feed-test__item-title {
       color: var(--primary-high);
     }
@@ -80,13 +89,9 @@
 }
 
 .rss-polling-feed {
-  // Compound selector to beat `.d-table .d-table__overview-name { font-weight: 700 }`.
   .d-table__overview-name.rss-polling-feed__url {
     font-family: var(--d-font-family--monospace);
     font-weight: normal;
-
-    // Long URLs should wrap rather than overflow, especially on mobile where
-    // the controls are absolutely positioned over the top-right of the card.
     word-break: break-all;
   }
 
@@ -96,12 +101,32 @@
     gap: 0.5em;
   }
 
-  // On mobile the d-table renders as cards and the action buttons are
-  // absolutely positioned at the card's top-right. Reserve room so the URL
-  // doesn't run underneath them.
   @include viewport.until(md) {
     .d-table__cell.--overview {
       padding-right: 5.5em;
     }
+  }
+}
+
+.rss-polling-feed-history {
+  &__attempt {
+    border-top: 1px solid var(--primary-low);
+    padding: var(--space-2) 0;
+  }
+
+  &__summary {
+    display: flex;
+    gap: 1em;
+    align-items: baseline;
+    cursor: pointer;
+  }
+
+  &__date {
+    font-weight: 600;
+  }
+
+  &__counts {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
   }
 }

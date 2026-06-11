@@ -9,41 +9,44 @@ module DiscourseRssPolling
     end
 
     def url
-      url?(@accessor.link) ? @accessor.link : @accessor.element_content(:id)
+      @url ||= (url?(@accessor.link) ? @accessor.link : @accessor.element_content(:id))
     end
 
     def content
-      content = nil
-
-      CONTENT_ELEMENT_TAG_NAMES.each do |tag_name|
-        break if content = @accessor.element_content(tag_name)
-      end
-
-      return url if is_youtube?
-
-      content&.force_encoding("UTF-8")&.scrub
+      @content ||=
+        if is_youtube?
+          url
+        else
+          value = nil
+          CONTENT_ELEMENT_TAG_NAMES.each do |tag_name|
+            break if value = @accessor.element_content(tag_name)
+          end
+          value&.force_encoding("UTF-8")&.scrub
+        end
     end
 
     def title
-      unclean_title = @accessor.element_content(:title)&.force_encoding("UTF-8")&.scrub
-      unclean_title =
-        TextCleaner.clean_title(TextSentinel.title_sentinel(unclean_title).text).presence
-      CGI.unescapeHTML(unclean_title) if unclean_title
+      @title ||=
+        begin
+          unclean_title = @accessor.element_content(:title)&.force_encoding("UTF-8")&.scrub
+          unclean_title =
+            TextCleaner.clean_title(TextSentinel.title_sentinel(unclean_title).text).presence
+          CGI.unescapeHTML(unclean_title) if unclean_title
+        end
     end
 
     def categories
-      # RSS <category> elements expose their value via `content`, while Atom
-      # <category term="..."> elements use `term` instead.
-      @accessor
-        .element_content(:categories)
-        .map do |category|
-          if category.respond_to?(:content) && category.content
-            category.content
-          elsif category.respond_to?(:term)
-            category.term
+      @categories ||=
+        @accessor
+          .element_content(:categories)
+          .map do |category|
+            if category.respond_to?(:content)
+              category.content.presence
+            elsif category.respond_to?(:term)
+              category.term
+            end
           end
-        end
-        .compact
+          .compact
     end
 
     def image_link
@@ -54,24 +57,39 @@ module DiscourseRssPolling
       url&.starts_with?("https://www.youtube.com/watch")
     end
 
-    # Normalized to a Time (or nil). RSS uses <pubDate> (which the parser
-    # already returns as a Time); Atom uses <published>, falling back to
-    # <updated> for feeds that only provide the latter (returned as a String).
     def pubdate
-      raw =
-        @accessor.element_content(:pubDate) || @accessor.element_content(:published) ||
-          @accessor.element_content(:updated)
-      return if raw.blank?
-      return raw if raw.respond_to?(:iso8601)
+      return @pubdate if defined?(@pubdate)
 
-      Time.zone.parse(raw.to_s)
-    rescue ArgumentError, TypeError
-      nil
+      @pubdate =
+        begin
+          raw =
+            @accessor.element_content(:pubDate) || @accessor.element_content(:published) ||
+              @accessor.element_content(:updated)
+          if raw.blank?
+            nil
+          elsif raw.respond_to?(:iso8601)
+            raw
+          else
+            Time.zone.parse(raw.to_s)
+          end
+        rescue ArgumentError, TypeError
+          nil
+        end
+    end
+
+    def outcome(status:, reason: nil)
+      {
+        "title" => title,
+        "url" => url,
+        "status" => status.to_s,
+        "reason" => reason&.to_s,
+        "categories" => categories,
+        "published_at" => pubdate&.iso8601,
+      }
     end
 
     private
 
-    # The tag name's relative order implies its priority.
     CONTENT_ELEMENT_TAG_NAMES = %i[content_encoded content description summary]
 
     def url?(link)

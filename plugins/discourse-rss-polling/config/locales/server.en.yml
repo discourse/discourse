@@ -9,3 +9,4 @@ en:
   rss_polling:
     errors:
       unknown_author_username: "No user found with username '%{username}'."
+      required_tag_group: "Topics in \"%{category}\" require at least %{count} tag(s) from the \"%{tag_group}\" group (%{tags}). Add one of those tags so imported items aren't rejected."

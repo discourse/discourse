@@ -17,8 +17,11 @@ en:
         feed_url: URL
         discourse_category: Category
         discourse_tags: Tags
+        required_tags_hint: "This category requires one of these tags — add one or imported topics will be rejected:"
+        required_tag_error: 'Add at least %{count} tag(s) from the "%{tag_group}" group, otherwise imported topics will be rejected.'
         feed_category_filter: Category filter
-        feed_category_filter_description: Only import items matching this feed category. Leave blank to import everything.
+        feed_category_filter_description: Only import items whose feed category contains this text (case-insensitive). Leave blank to import everything.
+        showing: "Showing the first %{count} of %{total} items."
         feeds:
           title: Feeds
           nav_description: Manage the RSS/Atom feeds that are imported into Discourse.
@@ -29,6 +32,7 @@ en:
           empty: You haven't configured any feeds yet.
           edit: Edit
           delete: Delete
+          history: History
           back: Back to feeds
           save: Save
           confirm_delete: "Are you sure you want to delete this feed?"
@@ -38,7 +42,7 @@ en:
           button: Test feed
           title: Preview
           empty: This feed returned no items.
-          showing: "Showing the first %{count} of %{total} items."
+          already_imported: Already imported — polling would update the existing topic.
           skip_reasons:
             missing_content: Skipped — the item has no content.
             missing_title: Skipped — the item has no title.
@@ -49,3 +53,14 @@ en:
             parse_failed: The response doesn't look like a valid RSS or Atom feed.
             invalid_feed: The feed couldn't be read because it's malformed.
             unknown: Something went wrong while reading the feed.
+        history:
+          title: History
+          empty: This feed hasn't been polled yet.
+          no_items: No items were processed in this poll.
+          no_changes: No changes
+          imported_count: "%{count} imported"
+          updated_count: "%{count} updated"
+          skipped_count: "%{count} skipped"
+          failed_count: "%{count} failed"
+          updated: Updated the existing topic.
+          failed: Failed to import.

@@ -197,5 +197,72 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
         }.by(1)
       end
     end
+
+    context "with an rss_feed_id" do
+      let(:rss_feed) { Fabricate(:rss_feed, url: feed_url, user: author) }
+
+      it "records a poll attempt with per-item outcomes" do
+        expect {
+          job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+        }.to change { DiscourseRssPolling::PollAttempt.count }.by(1)
+
+        attempt = DiscourseRssPolling::PollAttempt.last
+        expect(attempt.rss_feed_id).to eq(rss_feed.id)
+        expect(attempt.status).to eq("success")
+        expect(attempt.imported_count).to eq(1)
+        expect(attempt.items.first).to include(
+          "status" => "imported",
+          "title" => "Poll Feed Spec Fixture",
+        )
+      end
+
+      it "records a skipped outcome when the category filter doesn't match" do
+        job.execute(
+          feed_url: feed_url,
+          user_id: author.id,
+          rss_feed_id: rss_feed.id,
+          feed_category_filter: "does-not-match",
+        )
+
+        attempt = DiscourseRssPolling::PollAttempt.last
+        expect(attempt.skipped_count).to eq(1)
+        expect(attempt.items.first).to include(
+          "status" => "skipped",
+          "reason" => "category_filter_mismatch",
+        )
+      end
+
+      it "records an error attempt when an item fails to import" do
+        TopicEmbed.stubs(:import).returns(nil)
+
+        job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+
+        attempt = DiscourseRssPolling::PollAttempt.last
+        expect(attempt.status).to eq("error")
+        expect(attempt.failed_count).to eq(1)
+        expect(attempt.imported_count).to eq(0)
+      end
+
+      it "records an error attempt and re-raises when polling raises" do
+        TopicEmbed.stubs(:import).raises(StandardError.new("boom"))
+
+        expect {
+          job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+        }.to raise_error(StandardError)
+
+        attempt = DiscourseRssPolling::PollAttempt.last
+        expect(attempt).to be_present
+        expect(attempt.status).to eq("error")
+        expect(attempt.error).to eq("unknown")
+      end
+
+      it "keeps only the most recent attempts per feed" do
+        stub_const(DiscourseRssPolling::PollAttempt, "KEEP_PER_FEED", 2) do
+          4.times { DiscourseRssPolling::PollAttempt.record!(rss_feed_id: rss_feed.id, items: []) }
+        end
+
+        expect(DiscourseRssPolling::PollAttempt.where(rss_feed_id: rss_feed.id).count).to eq(2)
+      end
+    end
   end
 end

@@ -117,6 +117,95 @@ RSpec.describe DiscourseRssPolling::FeedSettingsController do
       expect(item["published_at"]).to be_present
       expect(item["status"]).to eq("would_import")
     end
+
+    it "matches the category filter case-insensitively" do
+      stub_request(:get, feed_url).to_return(status: 200, body: raw_feed)
+
+      post "/admin/plugins/rss_polling/feed_settings/test.json",
+           params: {
+             feed_url:,
+             feed_category_filter: "SPEC",
+           }
+
+      expect(response.parsed_body["items"].first["status"]).to eq("would_import")
+    end
+
+    it "flags items that are already imported" do
+      stub_request(:get, feed_url).to_return(status: 200, body: raw_feed)
+      TopicEmbed.import(
+        Discourse.system_user,
+        "https://blog.discourse.org/2017/09/poll-feed-spec-fixture/",
+        "Poll Feed Spec Fixture",
+        "content",
+      )
+
+      post "/admin/plugins/rss_polling/feed_settings/test.json", params: { feed_url: }
+
+      expect(response.parsed_body["items"].first["status"]).to eq("already_imported")
+    end
+  end
+
+  describe "#category_requirements" do
+    it "returns the category's required tag groups with their tags" do
+      category = Fabricate(:category)
+      tag_group = Fabricate(:tag_group, tags: [Fabricate(:tag, name: "required-tag")])
+      CategoryRequiredTagGroup.create!(category:, tag_group:, min_count: 1)
+
+      get "/admin/plugins/rss_polling/feed_settings/category_requirements.json",
+          params: {
+            category_id: category.id,
+          }
+
+      expect(response.status).to eq(200)
+      group = response.parsed_body["required_tag_groups"].first
+      expect(group["tag_group"]).to eq(tag_group.name)
+      expect(group["min_count"]).to eq(1)
+      expect(group["tags"]).to eq(["required-tag"])
+    end
+
+    it "returns no requirements for a category without required tag groups" do
+      category = Fabricate(:category)
+
+      get "/admin/plugins/rss_polling/feed_settings/category_requirements.json",
+          params: {
+            category_id: category.id,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["required_tag_groups"]).to eq([])
+    end
+  end
+
+  describe "#history" do
+    fab!(:rss_feed) { Fabricate(:rss_feed, url: "https://blog.discourse.org/feed", user: admin) }
+
+    it "returns the feed's recent poll attempts" do
+      DiscourseRssPolling::PollAttempt.record!(
+        rss_feed_id: rss_feed.id,
+        items: [
+          { "title" => "An item", "url" => "https://x.test/a", "status" => "imported" },
+          { "title" => "Another", "url" => "https://x.test/b", "status" => "imported" },
+          { "title" => "Skipped", "url" => "https://x.test/c", "status" => "skipped" },
+        ],
+      )
+
+      get "/admin/plugins/rss_polling/feed_settings/#{rss_feed.id}/history.json"
+
+      expect(response.status).to eq(200)
+      body = response.parsed_body
+      expect(body["feed_url"]).to eq(rss_feed.url)
+      expect(body["poll_attempts"].length).to eq(1)
+      attempt = body["poll_attempts"].first
+      expect(attempt["imported_count"]).to eq(2)
+      expect(attempt["skipped_count"]).to eq(1)
+      expect(attempt["items"].first["title"]).to eq("An item")
+    end
+
+    it "404s for an unknown feed" do
+      get "/admin/plugins/rss_polling/feed_settings/0/history.json"
+
+      expect(response.status).to eq(404)
+    end
   end
 
   describe "#update" do
@@ -127,6 +216,47 @@ RSpec.describe DiscourseRssPolling::FeedSettingsController do
               feed_url: "https://www.newsite.com/feed",
               author_username: "system",
               feed_category_filter: "updates",
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(DiscourseRssPolling::RssFeed.count).to eq(1)
+    end
+
+    it "rejects a feed whose category has an unsatisfied required tag group" do
+      SiteSetting.tagging_enabled = true
+      category = Fabricate(:category)
+      tag_group = Fabricate(:tag_group, tags: [Fabricate(:tag, name: "needed")])
+      CategoryRequiredTagGroup.create!(category:, tag_group:, min_count: 1)
+
+      put "/admin/plugins/rss_polling/feed_settings.json",
+          params: {
+            feed_setting: {
+              feed_url: "https://www.newsite.com/feed",
+              author_username: "system",
+              discourse_category_id: category.id,
+              discourse_tags: [],
+            },
+          }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].join).to match(/require/i)
+      expect(DiscourseRssPolling::RssFeed.count).to eq(0)
+    end
+
+    it "allows a feed that satisfies the category's required tag group" do
+      SiteSetting.tagging_enabled = true
+      category = Fabricate(:category)
+      tag_group = Fabricate(:tag_group, tags: [Fabricate(:tag, name: "needed")])
+      CategoryRequiredTagGroup.create!(category:, tag_group:, min_count: 1)
+
+      put "/admin/plugins/rss_polling/feed_settings.json",
+          params: {
+            feed_setting: {
+              feed_url: "https://www.newsite.com/feed",
+              author_username: "system",
+              discourse_category_id: category.id,
+              discourse_tags: ["needed"],
             },
           }
 

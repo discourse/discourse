@@ -4,15 +4,7 @@ module DiscourseRssPolling
   class FeedSettingsController < Admin::AdminController
     requires_plugin "discourse-rss-polling"
 
-    # Number of items shown in the "test feed" preview.
     TEST_PREVIEW_LIMIT = 20
-
-    # Serves the admin SPA for the plugin show page's deep-link routes
-    # (/feeds, /feeds/new, /feeds/:id/edit). `check_xhr` renders the Ember app
-    # for full-page (HTML) requests; the feed data is fetched separately.
-    def index
-      show
-    end
 
     def show
       feeds = RssFeed.includes(:user).order(:url)
@@ -23,6 +15,8 @@ module DiscourseRssPolling
                  root: :feed_settings,
                ).to_json
     end
+
+    alias_method :index, :show
 
     def update
       FeedSetting::Update.call(params: params[:feed_setting]) do
@@ -57,8 +51,6 @@ module DiscourseRssPolling
       end
     end
 
-    # Dry-run: fetch the feed and report which items would be imported or
-    # skipped (and why), without creating any topics.
     def test
       feed_url = params[:feed_url]
       raise Discourse::InvalidParameters.new(:feed_url) if feed_url.blank?
@@ -71,32 +63,66 @@ module DiscourseRssPolling
       end
 
       analyzer = FeedAnalyzer.new(feed_category_filter: params[:feed_category_filter])
+      preview_items = result.items.first(TEST_PREVIEW_LIMIT)
+      item_keys = preview_items.index_with { |feed_item| embed_key(feed_item.url) }
+      imported_keys = already_imported_keys(item_keys.values)
 
       items =
-        result
-          .items
-          .first(TEST_PREVIEW_LIMIT)
-          .map do |feed_item|
-            status, reason = analyzer.evaluate(feed_item)
-            {
-              title: feed_item.title,
-              url: feed_item.url,
-              status:,
-              reason:,
-              categories: feed_item.categories,
-              published_at: feed_item.pubdate&.iso8601,
-            }
+        preview_items.map do |feed_item|
+          status, reason = analyzer.evaluate(feed_item)
+          key = item_keys[feed_item]
+
+          if status == FeedAnalyzer::WOULD_IMPORT && key && imported_keys.include?(key)
+            status = :already_imported
           end
+
+          feed_item.outcome(status:, reason:)
+        end
 
       render json: { items:, total: result.items.size }
     rescue Discourse::InvalidParameters
       raise
     rescue => e
-      # The feed is fetched live and parsed leniently, so guard against
-      # unexpected failures (malformed items, parser quirks) with a clean error.
       Discourse.warn_exception(e, message: "RSS Polling: failed to test feed #{feed_url}")
       render json: { error: :unknown }, status: :unprocessable_entity
     end
+
+    def history
+      rss_feed = RssFeed.find_by(id: params[:id])
+      raise Discourse::NotFound if rss_feed.nil?
+
+      attempts = rss_feed.poll_attempts.recent.limit(PollAttempt::KEEP_PER_FEED)
+
+      render json: {
+               feed_url: rss_feed.url,
+               poll_attempts: serialize_data(attempts, PollAttemptSerializer),
+             }
+    end
+
+    def category_requirements
+      category = Category.find_by(id: params[:category_id])
+      render json: { required_tag_groups: RequiredTagGroups.for_category(category) }
+    end
+
+    def already_imported_keys(keys)
+      keys = keys.compact.uniq
+      return Set.new if keys.empty?
+
+      patterns = keys.map { |key| "^https?://#{Regexp.escape(key)}$" }
+      TopicEmbed
+        .where("embed_url ~* ANY(ARRAY[?])", patterns)
+        .pluck(:embed_url)
+        .map { |embed_url| embed_key(embed_url) }
+        .to_set
+    end
+    private :already_imported_keys
+
+    def embed_key(url)
+      return if url.blank?
+
+      TopicEmbed.normalize_url(url).sub(%r{\Ahttps?\://}, "")
+    end
+    private :embed_key
 
     def destroy
       feed = params[:feed_setting]

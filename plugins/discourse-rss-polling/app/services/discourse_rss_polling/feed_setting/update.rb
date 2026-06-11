@@ -15,8 +15,35 @@ module DiscourseRssPolling
 
         validates :feed_url, presence: true
         validates :author_username, presence: true
+        validate :satisfies_required_tag_groups
 
         before_validation :normalize_tags
+
+        def satisfies_required_tag_groups
+          return if discourse_category_id.blank?
+
+          category = ::Category.find_by(id: discourse_category_id)
+          return if category.nil?
+
+          feed_tags = Array(discourse_tags)
+
+          DiscourseRssPolling::RequiredTagGroups
+            .for_category(category)
+            .each do |group|
+              next if (feed_tags & group[:tags]).size >= group[:min_count]
+
+              errors.add(
+                :base,
+                I18n.t(
+                  "rss_polling.errors.required_tag_group",
+                  category: category.name,
+                  tag_group: group[:tag_group],
+                  count: group[:min_count],
+                  tags: group[:tags].join(", "),
+                ),
+              )
+            end
+        end
 
         def normalize_tags
           return if discourse_tags.blank?

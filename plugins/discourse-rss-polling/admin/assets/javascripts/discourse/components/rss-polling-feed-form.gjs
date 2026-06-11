@@ -12,8 +12,10 @@ import TagChooser from "discourse/select-kit/components/tag-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
 import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import { i18n } from "discourse-i18n";
+import RssPollingFeedItemList from "discourse/plugins/discourse-rss-polling/discourse/components/rss-polling-feed-item-list";
+import { errorMessage } from "discourse/plugins/discourse-rss-polling/discourse/lib/rss-polling-item";
 import RssPollingFeedSettings from "../../admin/models/rss-polling-feed-settings";
 
 export default class RssPollingFeedForm extends Component {
@@ -24,9 +26,22 @@ export default class RssPollingFeedForm extends Component {
   @tracked testResults = null;
   @tracked testTotal = 0;
   @tracked testError = null;
+  @tracked categoryRequirements = [];
+  #requirementsLoaded = Promise.resolve();
+
+  constructor() {
+    super(...arguments);
+    this.loadCategoryRequirements(this.args.feed?.discourse_category_id);
+  }
 
   get isEditing() {
     return !!this.args.feed;
+  }
+
+  get requiredTagNames() {
+    return [
+      ...new Set(this.categoryRequirements.flatMap((group) => group.tags)),
+    ];
   }
 
   get header() {
@@ -52,13 +67,52 @@ export default class RssPollingFeedForm extends Component {
   }
 
   get testErrorMessage() {
-    return this.testError
-      ? i18n(`admin.rss_polling.test.errors.${this.testError}`)
-      : null;
+    return errorMessage(this.testError);
   }
 
-  get testTruncated() {
-    return this.testResults && this.testTotal > this.testResults.length;
+  loadCategoryRequirements(categoryId) {
+    this.#requirementsLoaded = (async () => {
+      if (!categoryId) {
+        this.categoryRequirements = [];
+        return;
+      }
+
+      try {
+        const result =
+          await RssPollingFeedSettings.categoryRequirements(categoryId);
+        this.categoryRequirements = result.required_tag_groups ?? [];
+      } catch {
+        this.categoryRequirements = [];
+      }
+    })();
+
+    return this.#requirementsLoaded;
+  }
+
+  @action
+  categoryChanged(field, categoryId) {
+    field.set(categoryId);
+    this.loadCategoryRequirements(categoryId);
+  }
+
+  @action
+  async validateForm(data, { addError }) {
+    await this.#requirementsLoaded;
+
+    const feedTags = data.discourse_tags ?? [];
+
+    this.categoryRequirements.forEach((group) => {
+      const matched = group.tags.filter((tag) => feedTags.includes(tag)).length;
+      if (matched < group.min_count) {
+        addError("discourse_tags", {
+          title: i18n("admin.rss_polling.discourse_tags"),
+          message: i18n("admin.rss_polling.required_tag_error", {
+            count: group.min_count,
+            tag_group: group.tag_group,
+          }),
+        });
+      }
+    });
   }
 
   @action
@@ -84,29 +138,6 @@ export default class RssPollingFeedForm extends Component {
     }
   }
 
-  skipReasonText(item) {
-    if (!item.reason) {
-      return null;
-    }
-
-    if (item.reason === "category_filter_mismatch") {
-      if (item.categories?.length) {
-        return i18n(
-          "admin.rss_polling.test.skip_reasons.category_filter_mismatch",
-          {
-            categories: item.categories.join(", "),
-          }
-        );
-      }
-
-      return i18n(
-        "admin.rss_polling.test.skip_reasons.category_filter_mismatch_none"
-      );
-    }
-
-    return i18n(`admin.rss_polling.test.skip_reasons.${item.reason}`);
-  }
-
   @action
   async testFeed(data) {
     if (!data?.feed_url) {
@@ -121,15 +152,7 @@ export default class RssPollingFeedForm extends Component {
       const result = await RssPollingFeedSettings.testFeed(data);
 
       this.testTotal = result.total;
-      this.testResults = result.items.map((item) => {
-        return {
-          imported: item.status === "would_import",
-          label: item.title || item.url,
-          url: item.url,
-          publishedAt: item.published_at,
-          reasonText: this.skipReasonText(item),
-        };
-      });
+      this.testResults = result.items;
     } catch (error) {
       const key = error?.jqXHR?.responseJSON?.error;
       if (key) {
@@ -153,6 +176,7 @@ export default class RssPollingFeedForm extends Component {
           <:content>
             <Form
               @onSubmit={{this.save}}
+              @validate={{this.validateForm}}
               @data={{this.formData}}
               as |form transientData|
             >
@@ -214,7 +238,7 @@ export default class RssPollingFeedForm extends Component {
                   <field.Control>
                     <CategoryChooser
                       @value={{field.value}}
-                      @onChange={{field.set}}
+                      @onChange={{fn this.categoryChanged field}}
                       class="rss-polling-feed-form__category"
                     />
                   </field.Control>
@@ -237,6 +261,16 @@ export default class RssPollingFeedForm extends Component {
                       class="rss-polling-feed-form__tags"
                     />
                   </field.Control>
+                  {{#if this.requiredTagNames.length}}
+                    <div class="rss-polling-feed-form__tag-requirement">
+                      <span>{{i18n
+                          "admin.rss_polling.required_tags_hint"
+                        }}</span>
+                      {{#each this.requiredTagNames as |tag|}}
+                        {{dDiscourseTag tag}}
+                      {{/each}}
+                    </div>
+                  {{/if}}
                 </form.Field>
               </form.Fieldset>
 
@@ -263,44 +297,10 @@ export default class RssPollingFeedForm extends Component {
                   {{i18n "admin.rss_polling.test.title"}}
                 </h3>
                 {{#if this.testResults.length}}
-                  <ul class="rss-polling-feed-test__list">
-                    {{#each this.testResults as |item|}}
-                      <li
-                        class="rss-polling-feed-test__item
-                          {{if item.imported '--import' '--skip'}}"
-                      >
-                        <div class="rss-polling-feed-test__body">
-                          <a
-                            class="rss-polling-feed-test__item-title"
-                            href={{item.url}}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {{item.label}}
-                          </a>
-                          {{#if item.publishedAt}}
-                            <span class="rss-polling-feed-test__item-date">
-                              {{dFormatDate item.publishedAt}}
-                            </span>
-                          {{/if}}
-                          {{#if item.reasonText}}
-                            <span class="rss-polling-feed-test__item-reason">
-                              {{item.reasonText}}
-                            </span>
-                          {{/if}}
-                        </div>
-                      </li>
-                    {{/each}}
-                  </ul>
-                  {{#if this.testTruncated}}
-                    <p class="rss-polling-feed-test__more">
-                      {{i18n
-                        "admin.rss_polling.test.showing"
-                        count=this.testResults.length
-                        total=this.testTotal
-                      }}
-                    </p>
-                  {{/if}}
+                  <RssPollingFeedItemList
+                    @items={{this.testResults}}
+                    @total={{this.testTotal}}
+                  />
                 {{else}}
                   <p class="rss-polling-feed-test__empty">
                     {{i18n "admin.rss_polling.test.empty"}}

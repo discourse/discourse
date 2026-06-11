@@ -23,6 +23,10 @@ export default {
     });
   },
 
+  history(id) {
+    return ajax(`/admin/plugins/rss_polling/feed_settings/${id}/history.json`);
+  },
+
   testFeed(feedSetting) {
     return ajax("/admin/plugins/rss_polling/feed_settings/test", {
       type: "POST",
@@ -31,5 +35,14 @@ export default {
         feed_category_filter: feedSetting.feed_category_filter,
       },
     });
+  },
+
+  categoryRequirements(categoryId) {
+    return ajax(
+      "/admin/plugins/rss_polling/feed_settings/category_requirements",
+      {
+        data: { category_id: categoryId },
+      }
+    );
   },
 };

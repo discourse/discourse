@@ -10,6 +10,7 @@ enabled_site_setting :rss_polling_enabled
 add_admin_route "rss_polling.title", "discourse-rss-polling", { use_new_show_route: true }
 register_asset "stylesheets/rss-polling.scss"
 register_svg_icon "rss"
+register_svg_icon "clock-rotate-left"
 
 module ::DiscourseRssPolling
   PLUGIN_NAME = "discourse_rss_polling"

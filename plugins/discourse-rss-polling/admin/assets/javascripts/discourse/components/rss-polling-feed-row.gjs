@@ -94,6 +94,13 @@ export default class RssPollingFeedRow extends Component {
       <td class="d-table__cell --controls">
         <div class="d-table__cell-actions">
           <DButton
+            @route="adminPlugins.show.discourse-rss-polling-feeds.history"
+            @routeModels={{@feed.id}}
+            @icon="clock-rotate-left"
+            @title="admin.rss_polling.feeds.history"
+            class="btn-default btn-small rss-polling-feed__history"
+          />
+          <DButton
             @route="adminPlugins.show.discourse-rss-polling-feeds.edit"
             @routeModels={{@feed.id}}
             @icon="pencil"

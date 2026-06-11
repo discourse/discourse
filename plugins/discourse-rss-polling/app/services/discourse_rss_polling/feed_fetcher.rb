@@ -3,9 +3,6 @@
 require "rss"
 
 module DiscourseRssPolling
-  # Fetches and parses a feed URL into FeedItems. Shared by the poll job and the
-  # "test feed" dry-run so both fetch feeds the same way (timeout, API
-  # credentials, error handling).
   class FeedFetcher
     Result = Struct.new(:items, :error, keyword_init: true)
 
