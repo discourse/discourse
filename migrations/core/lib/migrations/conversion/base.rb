@@ -31,7 +31,7 @@ module Migrations
       end
 
       def steps
-        step_class = Step
+        step_class = StepBase
         current_module = self.class.name.deconstantize.constantize
 
         current_module
@@ -78,7 +78,7 @@ module Migrations
         default_args = { settings: }
 
         args = default_args.merge(step_args(step_class))
-        step_class.new(StepTracker.new, args)
+        step_class.new(args)
       end
 
       def filter_steps(step_classes, only_steps, skip_steps)

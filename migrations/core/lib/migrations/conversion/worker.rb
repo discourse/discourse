@@ -5,6 +5,9 @@ require "oj"
 module Migrations
   module Conversion
     class Worker
+      class CrashedError < StandardError
+      end
+
       OJ_SETTINGS = { mode: :object, class_cache: true, symbol_keys: true }
 
       def initialize(index, input_queue, output_queue, job)
@@ -60,6 +63,8 @@ module Migrations
           parent_output_stream.close
           fork_input_stream.close
 
+          @job.setup
+
           Oj.load(parent_input_stream, OJ_SETTINGS) do |data|
             result = @job.run(data)
             Oj.to_stream(fork_output_stream, result, OJ_SETTINGS)
@@ -74,6 +79,10 @@ module Migrations
       def start_input_thread(output_stream, worker_pid)
         @threads << Thread.new do
           Thread.current.name = "worker_#{@index}_input"
+          # A `CrashedError` surfaces through `Worker#wait` (`Thread#join`);
+          # without this, an interrupted run would additionally report the
+          # error for every worker.
+          Thread.current.report_on_exception = false
 
           begin
             while (data = @input_queue.pop)
@@ -87,9 +96,17 @@ module Migrations
                 @data_processed.wait(@mutex) while @processed_count < @sent_count && !@output_closed
               end
             end
+          rescue Errno::EPIPE
+            # The worker process died; the status check below raises the error.
           ensure
             output_stream.close
-            Process.waitpid(worker_pid)
+            _, status = Process.waitpid2(worker_pid)
+
+            if !status.success?
+              raise CrashedError,
+                    "Worker process #{@index} exited unexpectedly (#{status}). " \
+                      "Check the error output above for the cause."
+            end
           end
         end
       end
