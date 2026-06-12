@@ -129,6 +129,16 @@ RSpec.describe Migrations::Database do
     it "returns nil for nil input" do
       expect(described_class.format_ip_address(nil)).to be_nil
     end
+
+    it "formats an IPv4 `IPAddr`" do
+      expect(described_class.format_ip_address(IPAddr.new("192.168.1.1"))).to eq("192.168.1.1")
+    end
+
+    it "formats an IPv6 `IPAddr`" do
+      expect(
+        described_class.format_ip_address(IPAddr.new("2001:0db8:85a3:0000:0000:8a2e:0370:7334")),
+      ).to eq("2001:db8:85a3::8a2e:370:7334")
+    end
   end
 
   describe ".to_blob" do

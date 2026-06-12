@@ -59,6 +59,9 @@ module Migrations
 
     def self.format_ip_address(value)
       return nil if value.blank?
+      # `PG::BasicTypeMapForResults` decodes `inet` columns into `IPAddr`
+      # objects, which `IPAddr.new` rejects
+      return value.to_s if value.is_a?(IPAddr)
       IPAddr.new(value).to_s
     rescue ArgumentError
       nil
