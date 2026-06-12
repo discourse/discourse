@@ -1,6 +1,6 @@
-/* Self-contained dark-themed bundle analyzer viz, ported from the standalone
-   HTML report. All rules are scoped under `.bundle-analyzer` so the dark
-   palette doesn't leak into the rest of the dev-tools / app. */
+/* Bundle analyzer viz, ported from the standalone HTML report. All rules are
+   scoped under `.bundle-analyzer` and use Discourse's semantic color variables
+   so it follows the active (light/dark) color scheme. */
 
 .bundle-analyzer-modal .d-modal__container {
   width: min(1200px, 92vw);
@@ -11,24 +11,20 @@
 }
 
 .bundle-analyzer {
-  --ba-bg: #0f1115;
-  --ba-panel: #181b22;
-  --ba-panel2: #1f232c;
-  --ba-border: #2b303b;
-  --ba-text: #e6e8ec;
-  --ba-muted: #9aa3b2;
-  --ba-accent: #4c8dff;
-  --ba-good: #43b581;
-  --ba-bar: #3a4254;
+  --ba-bg: var(--secondary);
+  --ba-panel: var(--primary-very-low);
+  --ba-panel2: var(--primary-low);
+  --ba-border: var(--primary-low);
+  --ba-text: var(--primary);
+  --ba-muted: var(--primary-medium);
+  --ba-accent: var(--tertiary);
+  --ba-good: var(--success);
+  --ba-bar: var(--primary-low);
 
   background: var(--ba-bg);
   color: var(--ba-text);
-  font:
-    13px/1.5 -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    sans-serif;
+  font-size: 0.8125em;
+  line-height: 1.5;
   padding: 16px 20px 40px;
 }
 
@@ -138,7 +134,7 @@
 }
 .bundle-analyzer .ba-seg button.on {
   background: var(--ba-accent);
-  color: #fff;
+  color: var(--secondary);
 }
 
 .bundle-analyzer .ba-row {
@@ -216,20 +212,20 @@
   flex: none;
 }
 .bundle-analyzer .ba-badge.dyn {
-  background: #3a2f4d;
-  color: #c9a8ff;
+  background: var(--love-low);
+  color: var(--love);
 }
 .bundle-analyzer .ba-badge.entry {
-  background: #2f3d4d;
-  color: #9ec9ff;
+  background: var(--tertiary-low);
+  color: var(--tertiary);
 }
 .bundle-analyzer .ba-badge.add {
-  background: #4d3a2f;
-  color: #ffc59e;
+  background: var(--highlight-low);
+  color: var(--primary);
 }
 .bundle-analyzer .ba-badge.route {
-  background: #2f4d3a;
-  color: #9effc0;
+  background: var(--success-low);
+  color: var(--success);
 }
 
 .bundle-analyzer .ba-bar {
@@ -249,7 +245,7 @@
   grid-template-columns: 1fr 90px;
   gap: 8px;
   padding: 3px 0;
-  border-bottom: 1px solid #232833;
+  border-bottom: 1px solid var(--ba-border);
   color: var(--ba-muted);
 }
 .bundle-analyzer .ba-mname {
