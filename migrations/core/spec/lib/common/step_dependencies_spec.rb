@@ -69,6 +69,21 @@ RSpec.describe Migrations::StepDependencies do
           "not found in DependenciesTestModule",
       )
     end
+
+    context "with a top-level constant matching the step name" do
+      before { Object.const_set("GlobalStep", Class.new(DependenciesTestModule::BaseStep)) }
+      after { Object.send(:remove_const, "GlobalStep") }
+
+      it "doesn't resolve it" do
+        # Constant lookup on a module falls back to top-level constants by
+        # default; resolution has to stay within the steps namespace.
+        expect { DependenciesTestModule::Posts.depends_on(:global_step) }.to raise_error(
+          NameError,
+          "Step 'GlobalStep' (declared via depends_on in DependenciesTestModule::Posts) " \
+            "not found in DependenciesTestModule",
+        )
+      end
+    end
   end
 
   describe ".dependencies" do

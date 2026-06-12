@@ -16,7 +16,10 @@ module Migrations
       classes =
         step_names.map do |step_name|
           const_name = step_name.to_s.camelize
-          klass = scope.const_get(const_name) if scope.const_defined?(const_name)
+          # `inherit: false` keeps resolution strictly lexical; with the
+          # default, lookup on a module falls back to top-level constants
+          # (e.g. `::Users`).
+          klass = scope.const_get(const_name, false) if scope.const_defined?(const_name, false)
 
           unless klass.is_a?(Class) && klass < dependency_base_class
             raise NameError,
