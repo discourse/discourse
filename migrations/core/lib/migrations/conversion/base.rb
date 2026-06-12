@@ -70,8 +70,7 @@ module Migrations
         db_path = File.expand_path(settings[:intermediate_db][:path], Migrations.root_path)
         Database.migrate(db_path, migrations_path: Database::INTERMEDIATE_DB_SCHEMA_PATH)
 
-        db = Database.connect(db_path)
-        Database::IntermediateDB.setup(db)
+        Database::IntermediateDB.setup(Database::DbWriter.new(path: db_path))
       end
 
       def create_step(step_class)
