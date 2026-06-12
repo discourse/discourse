@@ -875,6 +875,17 @@ and the plugin's own rake-task specs still pass. **This is an upstream graphiti-
 worth reporting** — and another data point for the "graphiti-rails touches the whole app"
 caveat (Part 8, step 0): the blast radius now includes `Object` itself.
 
+Two smaller pieces of CI fallout from the same root (graphiti-rails being a global
+citizen):
+
+- **License classification:** `licensee` can't auto-classify the `dry-*` transitive deps
+  (all MIT, verified against gemspecs + LICENSE files) or the `yaml` default gem →
+  `.licensed.yml` gained `reviewed` entries for `dry-core`/`dry-inflector`/`dry-logic`/
+  `dry-types` and an `ignored` entry for `yaml`.
+- **Middleware stack:** rescue_registry's railtie inserts `RescueRegistry::ResetContext`
+  before `ActionDispatch::ShowExceptions` (per-request handler-context hygiene, benign) →
+  acknowledged in core's `spec/integrity/middleware_order_spec.rb` expected list.
+
 ### Spike status: complete
 
 All planned steps done (0–7). Every Graphiti question answered hands-on; working code +
