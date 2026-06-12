@@ -55,6 +55,7 @@ module DiscourseWorkflows
         )
       @steps = []
       @queue = []
+      @queue_index = 0
       @waiting_inputs = {}
       @waiting_input_sources = {}
       @waiting_input_targets = {}
@@ -195,15 +196,15 @@ module DiscourseWorkflows
 
     def process_queue
       iterations = 0
-      queue_index = 0
+      @queue_index = 0
 
       loop do
-        while queue_index < @queue.length
+        while @queue_index < @queue.length
           iterations += 1
           raise "Max iterations (#{MAX_ITERATIONS}) exceeded" if iterations > MAX_ITERATIONS
 
-          node, input_groups, input_sources = @queue[queue_index]
-          queue_index += 1
+          node, input_groups, input_sources = @queue[@queue_index]
+          @queue_index += 1
           execute_node(node, input_groups, input_sources || {})
         end
 
@@ -819,6 +820,12 @@ module DiscourseWorkflows
       now = Time.current
       ceiling = now + MAX_WAIT_DURATION_SECONDS
       resolved = waiting_until.blank? ? ceiling : [waiting_until, ceiling].min
+      @context.store_pending_input_groups(
+        inputs: @waiting_inputs,
+        sources: @waiting_input_sources,
+        target_ids: @waiting_input_targets.keys,
+      )
+      @context.store_pending_queue(@queue.drop(@queue_index || 0))
 
       execution =
         @store.pause_waiting_execution!(node: @waiting_node, waiting_until: resolved, steps: @steps)
@@ -840,6 +847,7 @@ module DiscourseWorkflows
       @snapshot = @store.workflow_snapshot
       @steps = []
       @queue = []
+      @queue_index = 0
       @waiting_inputs = {}
       @waiting_input_sources = {}
       @waiting_input_targets = {}
@@ -851,10 +859,13 @@ module DiscourseWorkflows
       @snapshot = @store.workflow_snapshot
       @steps = restore_steps_from(execution)
       @queue = []
+      @queue_index = 0
       @waiting_inputs = {}
       @waiting_input_sources = {}
       @waiting_input_targets = {}
       @input_wait_requirements = {}
+      restore_pending_queue!
+      restore_pending_input_groups!
     end
 
     def clear_waiting!
@@ -866,6 +877,40 @@ module DiscourseWorkflows
     def restore_steps_from(execution)
       entries = execution.execution_data&.entries || {}
       entries.values.flatten.map { |h| Step.from_h(h) }
+    end
+
+    def restore_pending_input_groups!
+      @context.consume_pending_input_groups.each do |target_id, payload|
+        target = @snapshot.find_node(target_id)
+        next if target.nil?
+
+        @waiting_input_targets[target.id] = target
+        @waiting_inputs[target.id] = indexed_values_from_payload(payload["inputs"], "items")
+        @waiting_input_sources[target.id] = indexed_values_from_payload(
+          payload["sources"],
+          "source",
+        )
+      end
+    end
+
+    def restore_pending_queue!
+      @queue =
+        @context.consume_pending_queue.filter_map do |payload|
+          node = @snapshot.find_node(payload["node_id"])
+          next if node.nil?
+
+          [
+            node,
+            indexed_values_from_payload(payload["inputs"], "items"),
+            indexed_values_from_payload(payload["sources"], "source"),
+          ]
+        end
+    end
+
+    def indexed_values_from_payload(payload, value_key)
+      Array(payload).each_with_object({}) do |entry, values|
+        values[entry["index"].to_i] = entry[value_key]
+      end
     end
 
     def build_resolver_context(node, input_groups, node_context, input_sources)
