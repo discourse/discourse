@@ -48,11 +48,7 @@ export default class EmojiPicker extends Component {
 
   <template>
     <DMenu
-      @triggerClass={{dConcatClass
-        "btn-default"
-        @btnClass
-        (if this.hasLabel "--has-label")
-      }}
+      @triggerClass={{dConcatClass @btnClass (if this.hasLabel "--has-label")}}
       @onRegisterApi={{this.onRegisterMenu}}
       @identifier="emoji-picker"
       @groupIdentifier="emoji-picker"
