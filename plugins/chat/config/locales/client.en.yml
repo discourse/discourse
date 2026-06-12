@@ -842,9 +842,14 @@ en:
       nodes:
         "action:send_chat_message": "Send chat message"
         "action:chat_approval": "Chat approval"
+        "trigger:chat_message_created": "Chat message created"
       node_descriptions:
         "action:send_chat_message": "Send a message to a chat channel"
         "action:chat_approval": "Send an approval request to a chat channel and wait for a response"
+        "trigger:chat_message_created": "Fires when a new chat message is created"
+      chat_message_created:
+        channel_id: "Channel"
+        channel_id_description: "Leave blank to trigger for all chat channels."
       send_chat_message:
         channel_id: "Channel"
         message: "Message"
