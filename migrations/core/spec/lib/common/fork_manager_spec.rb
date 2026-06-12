@@ -38,4 +38,21 @@ RSpec.describe Migrations::ForkManager do
       expect(status).to be_success
     end
   end
+
+  describe ".remove_after_fork_child_hook" do
+    it "stops the removed hook from running while other hooks keep running" do
+      read_io, write_io = IO.pipe
+      hook = described_class.after_fork_child { write_io.write("removed") }
+      described_class.after_fork_child { write_io.write("kept") }
+
+      described_class.remove_after_fork_child_hook(hook)
+      expect(described_class.size).to eq(1)
+
+      Process.waitpid(described_class.fork {})
+      write_io.close
+
+      expect(read_io.read).to eq("kept")
+      read_io.close
+    end
+  end
 end

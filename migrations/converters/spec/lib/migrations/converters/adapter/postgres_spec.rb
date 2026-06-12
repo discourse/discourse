@@ -70,6 +70,7 @@ RSpec.describe Migrations::Converters::Adapter::Postgres do
 
           expect { adapter.close }.to_not raise_error
           expect(connection).to_not have_received(:finish)
+          expect(Migrations::ForkManager.size).to eq(0)
         end
       end
     end
@@ -89,6 +90,24 @@ RSpec.describe Migrations::Converters::Adapter::Postgres do
           expect(status.exitstatus).to eq(0)
 
           expect { adapter.exec("SELECT 1") }.to_not raise_error
+        end
+      end
+
+      it "no longer discards the adapter in child processes after `close`" do
+        create_adapter do |adapter|
+          allow(adapter).to receive(:discard!).and_call_original
+          adapter.close
+
+          pid =
+            Migrations::ForkManager.fork do
+              expect(adapter).to_not have_received(:discard!)
+              exit!(0)
+            rescue RSpec::Expectations::ExpectationNotMetError
+              exit!(1)
+            end
+
+          _, status = Process.waitpid2(pid)
+          expect(status.exitstatus).to eq(0)
         end
       end
     end
