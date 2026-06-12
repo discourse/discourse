@@ -3,9 +3,6 @@
 module Migrations
   module Conversion
     class ParallelJob
-      class SetupError < StandardError
-      end
-
       def initialize(processor)
         @processor = processor
         @tracker = processor.tracker
@@ -16,14 +13,7 @@ module Migrations
       # Runs in the worker process, before the first item is processed.
       def setup
         Database::IntermediateDB.setup(@offline_connection)
-        @processor.setup
-
-        if @offline_connection.parametrized_insert_statements.any?
-          raise SetupError,
-                "The processor created IntermediateDB records during `setup`. Such writes are " \
-                  "discarded in parallel mode; build per-worker state in `setup` and create " \
-                  "records in `process` instead."
-        end
+        SetupGuard.run(@processor)
       end
 
       def run(item)

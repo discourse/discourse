@@ -22,6 +22,14 @@ RSpec.describe Migrations::Conversion::SerialJob do
       job.setup
       expect(processor).to have_received(:setup)
     end
+
+    it "raises an error when the processor writes to the IntermediateDB during `setup`" do
+      allow(processor).to receive(:setup) do
+        Migrations::Database::IntermediateDB.insert("INSERT INTO foo (id) VALUES (?)", 1)
+      end
+
+      expect { job.setup }.to raise_error(Migrations::Conversion::SetupGuard::SetupError)
+    end
   end
 
   describe "#run" do

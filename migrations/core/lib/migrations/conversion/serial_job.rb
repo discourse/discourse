@@ -9,7 +9,7 @@ module Migrations
       end
 
       def setup
-        @processor.setup
+        SetupGuard.run(@processor)
       end
 
       def run(item)
