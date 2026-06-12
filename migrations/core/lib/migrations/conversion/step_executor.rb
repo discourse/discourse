@@ -3,12 +3,13 @@
 module Migrations
   module Conversion
     class StepExecutor
-      def initialize(step)
+      def initialize(step, reporter:)
         @step = step
+        @reporter = reporter
       end
 
       def execute
-        puts @step.class.title
+        @reporter.start_step(@step.class.title)
         @step.execute
       end
     end
