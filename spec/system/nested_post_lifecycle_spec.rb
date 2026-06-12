@@ -10,7 +10,10 @@ RSpec.describe "Nested view post lifecycle" do
   let(:composer) { PageObjects::Components::Composer.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
 
-  before { SiteSetting.nested_replies_enabled = true }
+  before do
+    SiteSetting.nested_replies_enabled = true
+    Fabricate(:nested_topic, topic: topic)
+  end
 
   describe "editing a post and saving" do
     fab!(:root_reply) do

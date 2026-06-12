@@ -44,6 +44,7 @@ export default class NestedController extends Controller {
   @tracked sort;
   @tracked messageBusLastId;
   @tracked postNumber;
+  @tracked context = null;
   @tracked contextMode = false;
   @tracked contextChain = null;
   @tracked initialFocusedPath = [];
@@ -80,6 +81,7 @@ export default class NestedController extends Controller {
   // Populated by NestedPost components via appEvents so that readPosts
   // can find posts at any depth, not just those in the preloaded tree.
   postRegistry = new Map();
+  #latestScrollAnchor = null;
   #postEventsSubscribed = false;
   #messageBusChannel = null;
   #pendingPostIds = new Set();
@@ -310,10 +312,16 @@ export default class NestedController extends Controller {
 
   @action
   viewFullThread() {
+    this.saveToCache();
     this.nestedViewCache.useNextTransition();
-    this.router.transitionTo("nested", this.topic.slug, this.topic.id, {
-      queryParams: { sort: this.sort, context: null },
-    });
+    this.router.transitionTo(
+      "topic.fromParams",
+      this.topic.slug,
+      this.topic.id,
+      {
+        queryParams: { sort: this.sort, context: null },
+      }
+    );
   }
 
   @action
@@ -325,7 +333,7 @@ export default class NestedController extends Controller {
 
   @action
   saveScrollPosition(scrollAnchor) {
-    this.saveToCache(scrollAnchor);
+    this.saveScrollAnchor(scrollAnchor);
   }
 
   @action
@@ -333,16 +341,19 @@ export default class NestedController extends Controller {
     this.scrollAnchor = null;
   }
 
-  saveToCache(scrollAnchor) {
-    if (!this.topic) {
+  saveScrollAnchor(scrollAnchor) {
+    if (!this.topic || !scrollAnchor) {
       return;
     }
 
-    const cacheKey = this.nestedViewCache.buildKey(this.topic.id, {
-      sort: this.sort,
-      post_number: this.postNumber,
-      context: this.contextNoAncestors ? 0 : undefined,
-    });
+    this.#latestScrollAnchor = scrollAnchor;
+    this.#saveScrollAnchorToSession(this.#cacheKey(), scrollAnchor);
+  }
+
+  saveToCache(scrollAnchor = this.#latestScrollAnchor) {
+    if (!this.topic) {
+      return;
+    }
 
     const modelData = {
       topic: this.topic,
@@ -354,6 +365,7 @@ export default class NestedController extends Controller {
       messageBusLastId: this.messageBusLastId,
       pinnedPostIds: this.pinnedPostIds,
       postNumber: this.postNumber,
+      context: this.context,
       contextMode: this.contextMode,
       contextChain: this.contextChain,
       initialFocusedPath: this.initialFocusedPath,
@@ -364,6 +376,8 @@ export default class NestedController extends Controller {
       newRootPostIds: this.newRootPostIds,
     };
 
+    const cacheKey = this.#cacheKey();
+
     this.nestedViewCache.save(cacheKey, {
       formatVersion: NESTED_VIEW_CACHE_FORMAT_VERSION,
       modelData: snapshotNestedModelData(modelData),
@@ -373,13 +387,38 @@ export default class NestedController extends Controller {
       ),
       scrollAnchor,
     });
+
+    if (scrollAnchor) {
+      this.#saveScrollAnchorToSession(cacheKey, scrollAnchor);
+    }
+  }
+
+  #cacheKey() {
+    return this.nestedViewCache.buildKey(this.topic.id, {
+      sort: this.sort,
+      post_number: this.postNumber,
+      context: this.context ?? undefined,
+    });
+  }
+
+  #saveScrollAnchorToSession(cacheKey, scrollAnchor) {
+    try {
+      sessionStorage.setItem(
+        `nested-view-scroll:${cacheKey}`,
+        JSON.stringify(scrollAnchor)
+      );
+    } catch {
+      // Ignore storage failures; in-memory scroll restoration still works.
+    }
   }
 
   @action
   viewParentContext() {
+    this.saveToCache();
+
     if (this.ancestorsTruncated && this.topAncestorPostNumber) {
       this.router.transitionTo(
-        "nestedPost",
+        "topic.fromParamsNear",
         this.topic.slug,
         this.topic.id,
         this.topAncestorPostNumber,
@@ -387,7 +426,7 @@ export default class NestedController extends Controller {
       );
     } else {
       this.router.transitionTo(
-        "nestedPost",
+        "topic.fromParamsNear",
         this.topic.slug,
         this.topic.id,
         this.targetPostNumber,

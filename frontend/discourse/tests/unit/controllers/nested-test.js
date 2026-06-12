@@ -19,6 +19,7 @@ module("Unit | Controller | nested", function (hooks) {
   hooks.afterEach(function () {
     this.controller.unsubscribe();
     this.controller.topic = null;
+    this.controller.context = null;
     this.controller.contextMode = false;
     this.controller.rootNodes = [];
     this.controller.newRootPostIds = [];
@@ -300,6 +301,29 @@ module("Unit | Controller | nested", function (hooks) {
     }
   });
 
+  test("scroll position persistence avoids full cache snapshots", function (assert) {
+    const topic = buildTopic(this.store, 725);
+    const anchor = { postNumber: 2, offsetFromTop: 80, scrollY: 1600 };
+    const cacheKey = this.nestedViewCache.buildKey(topic.id, { sort: "top" });
+
+    this.controller.topic = topic;
+    this.controller.sort = "top";
+    sessionStorage.removeItem(`nested-view-scroll:${cacheKey}`);
+
+    this.controller.saveScrollPosition(anchor);
+
+    assert.strictEqual(
+      this.nestedViewCache.get(cacheKey),
+      null,
+      "does not snapshot the full nested model for scroll-only updates"
+    );
+    assert.deepEqual(
+      JSON.parse(sessionStorage.getItem(`nested-view-scroll:${cacheKey}`)),
+      anchor,
+      "keeps the scroll anchor available for restoration"
+    );
+  });
+
   test("focused post cache entries include the mobile focused path", function (assert) {
     const topic = buildTopic(this.store, 724);
     const focusedPost = buildPost(this.store, topic, 2001, 2);
@@ -307,13 +331,18 @@ module("Unit | Controller | nested", function (hooks) {
 
     this.controller.topic = topic;
     this.controller.sort = "top";
+    this.controller.context = 0;
     this.controller.rootNodes = focusedPath;
 
     this.controller.setFocusedPostNumber(2, focusedPath);
     this.controller.saveToCache({ postNumber: 2, offsetFromTop: 80 });
 
     const cached = this.nestedViewCache.get(
-      this.nestedViewCache.buildKey(topic.id, { sort: "top", post_number: 2 })
+      this.nestedViewCache.buildKey(topic.id, {
+        sort: "top",
+        post_number: 2,
+        context: 0,
+      })
     );
 
     assert.strictEqual(
@@ -341,5 +370,6 @@ module("Unit | Controller | nested", function (hooks) {
       2,
       "stores the post URL cache entry under the focused post number"
     );
+    assert.strictEqual(cached.modelData.context, 0, "preserves context depth");
   });
 });

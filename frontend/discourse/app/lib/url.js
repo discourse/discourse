@@ -393,11 +393,17 @@ class DiscourseURL extends EmberObject {
       const oldMatches = TOPIC_URL_REGEXP.exec(oldPath);
       const oldTopicId = oldMatches ? oldMatches[2] : null;
 
+      // Nested topics use the topic route too, but post-number changes need to
+      // run the route model hook so it can load the nested context payload.
+      const topicController = this.container.lookup("controller:topic");
+      if (topicController.shouldRenderNestedView) {
+        return false;
+      }
+
       // If the topic_id is the same
       if (oldTopicId === newTopicId) {
         this.replaceState(path);
 
-        const topicController = this.container.lookup("controller:topic");
         const opts = {};
         const postStream = topicController.get("model.postStream");
 

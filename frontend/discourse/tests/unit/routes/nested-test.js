@@ -40,6 +40,51 @@ module("Unit | Route | nested", function (hooks) {
     );
   });
 
+  test("redirects legacy root URLs to the topic route", function (assert) {
+    const route = this.owner.lookup("route:nested");
+    const replaceWith = sinon
+      .stub(route.router, "replaceWith")
+      .returns("redirected");
+
+    const result = route.beforeModel({
+      to: {
+        params: { slug: "nested-topic", topic_id: "42" },
+        queryParams: { sort: "new", collapseReplies: true },
+      },
+    });
+
+    assert.strictEqual(result, "redirected");
+    assert.deepEqual(replaceWith.firstCall.args, [
+      "topic.fromParams",
+      "nested-topic",
+      "42",
+      { queryParams: { sort: "new", collapse_replies: true } },
+    ]);
+  });
+
+  test("redirects legacy post URLs to the topic post route", function (assert) {
+    const route = this.owner.lookup("route:nestedPost");
+    const replaceWith = sinon
+      .stub(route.router, "replaceWith")
+      .returns("redirected");
+
+    const result = route.beforeModel({
+      to: {
+        params: { slug: "nested-topic", topic_id: "42", post_number: "7" },
+        queryParams: { sort: "top", context: "0" },
+      },
+    });
+
+    assert.strictEqual(result, "redirected");
+    assert.deepEqual(replaceWith.firstCall.args, [
+      "topic.fromParamsNear",
+      "nested-topic",
+      "42",
+      "7",
+      { queryParams: { sort: "top", context: "0" } },
+    ]);
+  });
+
   test("tears down the active nested topic before loading a different topic", function (assert) {
     const route = this.owner.lookup("route:nested");
     const controller = this.owner.lookup("controller:nested");

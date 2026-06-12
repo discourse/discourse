@@ -318,7 +318,7 @@ export default class NestedPost extends Component {
 
   get contextUrl() {
     return getURL(
-      `/n/${this.args.topic.slug}/${this.args.topic.id}/${this.args.post.post_number}?context=0`
+      `/t/${this.args.topic.slug}/${this.args.topic.id}/${this.args.post.post_number}?context=0`
     );
   }
 

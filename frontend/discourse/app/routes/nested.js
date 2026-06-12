@@ -47,6 +47,25 @@ export default class NestedRoute extends DiscourseRoute {
     return topicTitleToken(this.currentModel?.topic, this.siteSettings);
   }
 
+  beforeModel(transition) {
+    const { slug, topic_id, post_number } = transition.to.params;
+    const queryParams = this.#topicRouteQueryParams(transition.to.queryParams);
+
+    if (post_number) {
+      return this.router.replaceWith(
+        "topic.fromParamsNear",
+        slug,
+        topic_id,
+        post_number,
+        { queryParams }
+      );
+    }
+
+    return this.router.replaceWith("topic.fromParams", slug, topic_id, {
+      queryParams,
+    });
+  }
+
   async model(params, transition) {
     const { topic_id, slug, post_number } = params;
     this._teardownCurrentTopic(topic_id);
@@ -213,6 +232,18 @@ export default class NestedRoute extends DiscourseRoute {
   ) {
     topicController.set("multiSelect", false);
     topicController.selectedPostIds = [];
+  }
+
+  #topicRouteQueryParams(queryParams = {}) {
+    const result = { ...queryParams };
+    if (
+      result.collapseReplies !== undefined &&
+      result.collapse_replies === undefined
+    ) {
+      result.collapse_replies = result.collapseReplies;
+    }
+    delete result.collapseReplies;
+    return result;
   }
 
   _saveToCache(controller) {

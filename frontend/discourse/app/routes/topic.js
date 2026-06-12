@@ -42,6 +42,9 @@ export default class TopicRoute extends DiscourseRoute {
     filter: { replace: true },
     username_filters: { replace: true },
     flat: { replace: true },
+    sort: { replace: true, refreshModel: true },
+    context: { refreshModel: true },
+    collapseReplies: { replace: true },
   };
 
   buildRouteInfoMetadata() {

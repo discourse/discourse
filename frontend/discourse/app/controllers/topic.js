@@ -3,6 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action, computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
+import { getOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
@@ -102,6 +103,9 @@ export default class TopicController extends Controller {
     "username_filters",
     "replies_to_post_number",
     "flat",
+    "sort",
+    "context",
+    { collapseReplies: "collapse_replies" },
   ];
 
   editingTopic = false;
@@ -113,6 +117,9 @@ export default class TopicController extends Controller {
   replies_to_post_number = null;
   filter = null;
   flat = null;
+  sort = null;
+  context = null;
+  collapseReplies = false;
   quoteState = new QuoteState();
   currentPostId = null;
   userLastReadPostNumber = null;
@@ -136,6 +143,23 @@ export default class TopicController extends Controller {
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off("post:show-revision", this, "_showRevision");
+  }
+
+  get nestedController() {
+    return getOwner(this).lookup("controller:nested");
+  }
+
+  get forceFlatView() {
+    return (
+      this.flat === true ||
+      this.flat === "true" ||
+      this.flat === "1" ||
+      this.model?._forcedFlat
+    );
+  }
+
+  get shouldRenderNestedView() {
+    return this.model?.is_nested_view && !this.forceFlatView;
   }
 
   @computed("model.isPrivateMessage")
@@ -2020,6 +2044,11 @@ export default class TopicController extends Controller {
       return;
     }
 
+    if (this.shouldRenderNestedView) {
+      this.#onNestedTopicMessage(data);
+      return;
+    }
+
     const postStream = this.get("model.postStream");
     const currentPostNumber = topic.get("currentPost");
     const opts =
@@ -2138,11 +2167,72 @@ export default class TopicController extends Controller {
     }
   }
 
+  #onNestedTopicMessage(data) {
+    const topic = this.model;
+
+    if (data.reload_topic) {
+      topic
+        .reload()
+        .then(() => this.appEvents.trigger("header:update-topic", topic));
+      return;
+    }
+
+    switch (data.type) {
+      case "created":
+      case "revised":
+      case "rebaked":
+      case "deleted":
+      case "destroyed":
+      case "recovered":
+      case "acted":
+      case "read":
+      case "liked":
+      case "unliked":
+        // The nested controller owns rendered-post updates for these messages.
+        break;
+      case "move_to_inbox":
+        topic.set("message_archived", false);
+        break;
+      case "archived":
+        topic.set("message_archived", true);
+        break;
+      case "stats":
+        ["last_posted_at", "like_count", "posts_count"].forEach((property) => {
+          const value = data[property];
+          if (typeof value !== "undefined") {
+            topic.set(property, value);
+          }
+        });
+
+        if (data["last_poster"]) {
+          topic.details.set("last_poster", data["last_poster"]);
+        }
+        break;
+      case "remove_allowed_user":
+        this.router.transitionTo("userPrivateMessages", this.currentUser);
+        break;
+      default: {
+        let callback = customPostMessageCallbacks[data.type];
+        if (callback) {
+          callback(this, data);
+        } else {
+          // eslint-disable-next-line no-console
+          console.warn("unknown topic bus message type", data);
+        }
+      }
+    }
+  }
+
   reply() {
     this.replyToPost();
   }
 
   readPosts(topicId, postNumbers) {
+    if (this.shouldRenderNestedView) {
+      this.nestedController.readPosts(topicId, postNumbers);
+      return;
+    }
+
     const topic = this.model;
     const postStream = topic.get("postStream");
 

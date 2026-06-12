@@ -146,7 +146,7 @@ export default class TopicAdminMenu extends Component {
       topic.set("is_nested_view", newValue);
 
       if (newValue) {
-        DiscourseURL.routeTo(`/n/${slug}/${topicId}`);
+        DiscourseURL.routeTo(`/t/${slug}/${topicId}`);
       } else {
         DiscourseURL.routeTo(`/t/${slug}/${topicId}`);
       }

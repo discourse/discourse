@@ -8,6 +8,7 @@ RSpec.describe "Nested view" do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:op) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
+  fab!(:nested_topic_record) { Fabricate(:nested_topic, topic: topic) }
 
   let(:nested_view) { PageObjects::Pages::NestedView.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }
@@ -45,7 +46,6 @@ RSpec.describe "Nested view" do
   end
 
   describe "topic list navigation" do
-    fab!(:nested_topic_record) { Fabricate(:nested_topic, topic: topic) }
     fab!(:root_reply) do
       Fabricate(
         :post,
@@ -60,7 +60,7 @@ RSpec.describe "Nested view" do
       expect(topic_list).to have_topic(topic)
 
       topic_list.visit_topic(topic)
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
       expect(nested_view).to have_root_post(root_reply)
 
@@ -68,7 +68,7 @@ RSpec.describe "Nested view" do
       expect(topic_list).to have_topic(topic)
 
       topic_list.visit_topic(topic)
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
       expect(nested_view).to have_root_post(root_reply)
     end
@@ -349,7 +349,7 @@ RSpec.describe "Nested view" do
 
     it "lets the user drill into reply branches without leaving the topic", mobile: true do
       nested_view.visit_nested(topic)
-      nested_path = %r{/n/#{topic.slug}/#{topic.id}}
+      nested_path = %r{/t/#{topic.slug}/#{topic.id}}
 
       expect(nested_view).to have_post(child_reply)
       expect(nested_view).to have_post(grandchild_reply)
@@ -360,7 +360,7 @@ RSpec.describe "Nested view" do
       nested_view.click_replies_toggle(great_grandchild_reply)
 
       expect(page).to have_current_path(
-        %r{/n/#{topic.slug}/#{topic.id}/#{great_grandchild_reply.post_number}},
+        %r{/t/#{topic.slug}/#{topic.id}/#{great_grandchild_reply.post_number}},
       )
       expect(nested_view).to have_mobile_focus
       expect(nested_view).to have_mobile_ancestor(root_reply)
@@ -388,13 +388,13 @@ RSpec.describe "Nested view" do
 
       previous_scroll_y = nested_view.trigger_replies_toggle(great_grandchild_reply)
       expect(page).to have_current_path(
-        %r{/n/#{topic.slug}/#{topic.id}/#{great_grandchild_reply.post_number}},
+        %r{/t/#{topic.slug}/#{topic.id}/#{great_grandchild_reply.post_number}},
       )
       expect(nested_view).to have_mobile_focus
 
       page.go_back
 
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}$})
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}$})
       expect(nested_view).to have_no_mobile_focus
       try_until_success(reason: "scroll anchor restores after focused view closes") do
         expect(page.evaluate_script("window.scrollY")).to be_within(250).of(previous_scroll_y)
@@ -405,7 +405,7 @@ RSpec.describe "Nested view" do
       nested_view.visit_nested_context(topic, post_number: grandchild_reply.post_number)
 
       expect(page).to have_current_path(
-        %r{/n/#{topic.slug}/#{topic.id}/#{grandchild_reply.post_number}},
+        %r{/t/#{topic.slug}/#{topic.id}/#{grandchild_reply.post_number}},
       )
       expect(nested_view).to have_mobile_focus
       expect(nested_view).to have_mobile_ancestor(root_reply)
@@ -414,7 +414,7 @@ RSpec.describe "Nested view" do
 
       nested_view.click_mobile_ancestor(child_reply)
 
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}/#{child_reply.post_number}})
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}/#{child_reply.post_number}})
       expect(nested_view).to have_mobile_ancestor(root_reply)
       expect(nested_view).to have_no_mobile_ancestor(child_reply)
     end
@@ -426,7 +426,7 @@ RSpec.describe "Nested view" do
 
       nested_view.click_mobile_focus_back
 
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}(?:\?.*)?$})
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}(?:\?.*)?$})
       expect(nested_view).to have_no_mobile_focus
       expect(nested_view).to have_root_post(root_reply)
       expect(nested_view).to have_root_post(sibling_root_reply)
@@ -440,7 +440,7 @@ RSpec.describe "Nested view" do
 
       nested_view.click_mobile_ancestor_avatar(child_reply)
 
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}/#{child_reply.post_number}})
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}/#{child_reply.post_number}})
       expect(nested_view).to have_no_mobile_ancestor(child_reply)
       expect(page).to have_no_css(".user-card.show")
     end
@@ -510,7 +510,7 @@ RSpec.describe "Nested view" do
 
       expect(nested_view).to have_nested_view
       expect(nested_view).to have_root_post(root_reply)
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
     end
 
     it "direct URL with post_number loads context view" do
@@ -567,12 +567,13 @@ RSpec.describe "Nested view" do
   end
 
   describe "plugin disabled" do
-    it "returns 404 when plugin is disabled" do
+    it "renders the flat topic route when nested replies are disabled" do
       SiteSetting.nested_replies_enabled = false
 
       nested_view.visit_nested(topic)
 
-      expect(page).to have_css(".page-not-found")
+      expect(nested_view).to have_no_nested_view
+      expect(page).to have_css("#post_1")
     end
   end
 end
