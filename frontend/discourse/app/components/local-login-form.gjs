@@ -16,6 +16,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
+import { and, not } from "discourse/truth-helpers";
 import DPasswordField from "discourse/ui-kit/d-password-field";
 import DSecondFactorInput from "discourse/ui-kit/d-second-factor-input";
 import DTogglePasswordMask from "discourse/ui-kit/d-toggle-password-mask";
@@ -132,6 +133,12 @@ export default class LocalLoginForm extends Component {
   }
 
   @action
+  showCodeLogin(event) {
+    event?.preventDefault();
+    this.args.onShowCodeLogin();
+  }
+
+  @action
   handleForgotPassword(event) {
     event?.preventDefault();
 
@@ -191,7 +198,7 @@ export default class LocalLoginForm extends Component {
           <label class="alt-placeholder" for="login-account-name">
             {{i18n "login.email_placeholder"}}
           </label>
-          {{#if @canLoginLocalWithEmail}}
+          {{#if (and @canLoginLocalWithEmail (not @onShowCodeLogin))}}
             <a
               href
               class={{if @loginName "" "no-login-filled"}}
@@ -229,14 +236,25 @@ export default class LocalLoginForm extends Component {
             />
           {{/if}}
           <div class="login__password-links">
-            <a
-              href
-              id="forgot-password-link"
-              tabindex="2"
-              {{on "click" this.handleForgotPassword}}
-            >
-              {{i18n "forgot_password.action"}}
-            </a>
+            {{#if @onShowCodeLogin}}
+              <a
+                href
+                id="one-time-code-link"
+                tabindex="2"
+                {{on "click" this.showCodeLogin}}
+              >
+                {{i18n "code_login.email_me_code"}}
+              </a>
+            {{else}}
+              <a
+                href
+                id="forgot-password-link"
+                tabindex="2"
+                {{on "click" this.handleForgotPassword}}
+              >
+                {{i18n "forgot_password.action"}}
+              </a>
+            {{/if}}
           </div>
           <div class="caps-lock-warning {{unless this.capsLockOn 'hidden'}}">
             {{dIcon "triangle-exclamation"}}
