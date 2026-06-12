@@ -4966,6 +4966,11 @@ en:
       original_language: "This post was originally written in %{language}"
       original_language_and_outdated: "This post was originally written in %{language}. Translation may be outdated"
       ai_translation_disclaimer: "AI-generated translations may be inaccurate."
+      localized_content_toggle:
+        original_language: "Originally in %{language}"
+        view_original: "Click to view the original"
+        viewing_original: "Viewing original"
+        view_translation: "Click to view the translation"
 
     category:
       none: "(no category)"

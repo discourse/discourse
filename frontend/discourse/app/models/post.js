@@ -199,6 +199,7 @@ export default class Post extends RestModel {
   @tracked username;
   @tracked version;
   @tracked via_email;
+  @tracked viewingOriginalContent;
   @tracked wiki;
   @tracked yours;
   // for compatibility with existing code
@@ -721,6 +722,23 @@ export default class Post extends RestModel {
     return ajax(`/posts/${this.id}/cooked.json`).then((result) => {
       this.setProperties({ cooked: result.cooked, cooked_hidden: false });
     });
+  }
+
+  async toggleOriginalContent() {
+    if (this.viewingOriginalContent) {
+      this.setProperties({
+        cooked: this.localizedCooked,
+        localizedCooked: null,
+        viewingOriginalContent: false,
+      });
+    } else {
+      const result = await ajax(`/posts/${this.id}/cooked.json`);
+      this.setProperties({
+        localizedCooked: this.cooked,
+        cooked: result.cooked,
+        viewingOriginalContent: true,
+      });
+    }
   }
 
   rebake() {
