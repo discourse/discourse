@@ -44,6 +44,18 @@ RSpec.describe Migrations::Database::DbWriter do
     it_behaves_like "a database connection"
   end
 
+  describe "#initialize" do
+    it "leaks no fork hooks when the connection cannot be opened" do
+      allow(Migrations::Database::Connection).to receive(:new).and_raise(
+        Extralite::Error,
+        "unable to open database file",
+      )
+
+      expect { described_class.new(path: "unused.db") }.to raise_error(Extralite::Error)
+      expect(Migrations::ForkManager.size).to eq(0)
+    end
+  end
+
   describe "#insert" do
     it "executes statements in enqueue order" do
       create_db_writer do |db_writer, db_path|
@@ -177,6 +189,37 @@ RSpec.describe Migrations::Database::DbWriter do
 
         db_writer.close
         expect(all_ids(db_path)).to eq((1..6).to_a)
+      end
+    end
+
+    it "loses nothing across repeated fork windows with concurrent producers" do
+      create_db_writer do |db_writer, db_path|
+        producers =
+          Array.new(3) do |index|
+            Thread.new do
+              offset = index * 10_000
+              1.upto(2_000) { |id| insert(db_writer, offset + id) }
+            end
+          end
+
+        fork_windows = 0
+        while producers.any?(&:alive?) || fork_windows < 50
+          Migrations::ForkManager.batch_forks {}
+          fork_windows += 1
+        end
+        producers.each(&:join)
+
+        db_writer.close
+
+        ids = all_ids(db_path)
+        expect(ids.size).to eq(6_000)
+
+        # per-producer FIFO order survives every pause/resume cycle
+        3.times do |index|
+          offset = index * 10_000
+          producer_ids = ids.select { |id| id > offset && id <= offset + 2_000 }
+          expect(producer_ids).to eq(((offset + 1)..(offset + 2_000)).to_a)
+        end
       end
     end
 
