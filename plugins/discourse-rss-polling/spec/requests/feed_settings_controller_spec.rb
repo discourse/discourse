@@ -32,7 +32,23 @@ RSpec.describe DiscourseRssPolling::FeedSettingsController do
         "author_username" => Discourse.system_user.username,
         "discourse_category_id" => 4,
         "feed_category_filter" => "updates",
+        "enabled" => true,
       )
+    end
+
+    it "serializes the enabled flag for each feed" do
+      Fabricate(
+        :rss_feed,
+        url: "https://disabled.example.com/feed",
+        user: Discourse.system_user,
+        enabled: false,
+      )
+
+      get "/admin/plugins/rss_polling/feed_settings.json"
+
+      feeds = response.parsed_body["feed_settings"].index_by { |feed| feed["feed_url"] }
+      expect(feeds["https://blog.discourse.org/feed"]["enabled"]).to eq(true)
+      expect(feeds["https://disabled.example.com/feed"]["enabled"]).to eq(false)
     end
 
     it "sorts the feeds by URL" do
@@ -91,6 +107,18 @@ RSpec.describe DiscourseRssPolling::FeedSettingsController do
       expect(response.status).to eq(400)
     end
 
+    it "trims surrounding whitespace from the feed url before fetching" do
+      stub_request(:get, feed_url).to_return(status: 200, body: raw_feed)
+
+      post "/admin/plugins/rss_polling/feed_settings/test.json",
+           params: {
+             feed_url: "  #{feed_url}  ",
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["items"]).to be_present
+    end
+
     it "handles Atom feeds (term-style categories, <updated>-only dates)" do
       atom = <<~XML
         <?xml version="1.0" encoding="utf-8"?>
@@ -130,18 +158,21 @@ RSpec.describe DiscourseRssPolling::FeedSettingsController do
       expect(response.parsed_body["items"].first["status"]).to eq("would_import")
     end
 
-    it "flags items that are already imported" do
+    it "flags items that are already imported and links to the existing topic" do
       stub_request(:get, feed_url).to_return(status: 200, body: raw_feed)
-      TopicEmbed.import(
-        Discourse.system_user,
-        "https://blog.discourse.org/2017/09/poll-feed-spec-fixture/",
-        "Poll Feed Spec Fixture",
-        "content",
-      )
+      imported_post =
+        TopicEmbed.import(
+          Discourse.system_user,
+          "https://blog.discourse.org/2017/09/poll-feed-spec-fixture/",
+          "Poll Feed Spec Fixture",
+          "content",
+        )
 
       post "/admin/plugins/rss_polling/feed_settings/test.json", params: { feed_url: }
 
-      expect(response.parsed_body["items"].first["status"]).to eq("already_imported")
+      item = response.parsed_body["items"].first
+      expect(item["status"]).to eq("already_imported")
+      expect(item["topic_url"]).to eq(imported_post.topic.relative_url)
     end
   end
 
@@ -221,6 +252,7 @@ RSpec.describe DiscourseRssPolling::FeedSettingsController do
 
       expect(response.status).to eq(200)
       expect(DiscourseRssPolling::RssFeed.count).to eq(1)
+      expect(response.parsed_body["id"]).to eq(DiscourseRssPolling::RssFeed.last.id)
     end
 
     it "rejects a feed whose category has an unsatisfied required tag group" do
@@ -307,6 +339,19 @@ RSpec.describe DiscourseRssPolling::FeedSettingsController do
       expect(response.parsed_body["errors"]).to be_present
     end
 
+    it "trims surrounding whitespace from the feed url" do
+      put "/admin/plugins/rss_polling/feed_settings.json",
+          params: {
+            feed_setting: {
+              feed_url: "  https://www.newsite.com/feed  ",
+              author_username: "system",
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(DiscourseRssPolling::RssFeed.last.url).to eq("https://www.newsite.com/feed")
+    end
+
     it "allows duplicate rss feed urls" do
       put "/admin/plugins/rss_polling/feed_settings.json",
           params: {
@@ -331,6 +376,69 @@ RSpec.describe DiscourseRssPolling::FeedSettingsController do
       expect(response.status).to eq(200)
 
       expect(DiscourseRssPolling::RssFeed.count).to eq(2)
+    end
+  end
+
+  describe "#update_enabled" do
+    fab!(:rss_feed) { Fabricate(:rss_feed, user: admin) }
+
+    it "disables an enabled feed" do
+      put "/admin/plugins/rss_polling/feed_settings/#{rss_feed.id}/enabled.json",
+          params: {
+            enabled: false,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["enabled"]).to eq(false)
+      expect(rss_feed.reload.enabled).to eq(false)
+    end
+
+    it "re-enables a disabled feed" do
+      rss_feed.update!(enabled: false)
+
+      put "/admin/plugins/rss_polling/feed_settings/#{rss_feed.id}/enabled.json",
+          params: {
+            enabled: true,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["enabled"]).to eq(true)
+      expect(rss_feed.reload.enabled).to eq(true)
+    end
+
+    it "404s for an unknown feed" do
+      put "/admin/plugins/rss_polling/feed_settings/0/enabled.json", params: { enabled: false }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "400s when the enabled parameter is missing" do
+      put "/admin/plugins/rss_polling/feed_settings/#{rss_feed.id}/enabled.json", params: {}
+
+      expect(response.status).to eq(400)
+      expect(rss_feed.reload.enabled).to eq(true)
+    end
+  end
+
+  describe "#poll" do
+    fab!(:rss_feed) { Fabricate(:rss_feed, user: admin) }
+
+    it "enqueues a forced poll for the feed" do
+      Sidekiq::Testing.fake! do
+        expect {
+          post "/admin/plugins/rss_polling/feed_settings/#{rss_feed.id}/poll.json"
+        }.to change { Jobs::DiscourseRssPolling::PollFeed.jobs.size }.by(1)
+
+        expect(response.status).to eq(200)
+        args = Jobs::DiscourseRssPolling::PollFeed.jobs.last["args"][0]
+        expect(args).to include("rss_feed_id" => rss_feed.id, "force" => true)
+      end
+    end
+
+    it "404s for an unknown feed" do
+      post "/admin/plugins/rss_polling/feed_settings/0/poll.json"
+
+      expect(response.status).to eq(404)
     end
   end
 end

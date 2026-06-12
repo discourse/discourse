@@ -28,6 +28,22 @@ RSpec.describe DiscourseRssPolling::RssFeed do
     end
   end
 
+  describe "#enabled" do
+    it "defaults to true" do
+      feed = Fabricate(:rss_feed, user: user)
+      expect(feed.enabled).to eq(true)
+    end
+  end
+
+  describe ".enabled" do
+    it "only returns enabled feeds" do
+      enabled_feed = Fabricate(:rss_feed, user: user)
+      Fabricate(:rss_feed, user: user, enabled: false)
+
+      expect(described_class.enabled).to contain_exactly(enabled_feed)
+    end
+  end
+
   describe "legacy author column" do
     it "is hidden by ignored_columns so the model cannot drift again" do
       expect { described_class.new(author: "anything") }.to raise_error(

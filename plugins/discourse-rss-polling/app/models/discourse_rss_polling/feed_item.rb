@@ -77,7 +77,7 @@ module DiscourseRssPolling
         end
     end
 
-    def outcome(status:, reason: nil)
+    def outcome(status:, reason: nil, topic_url: nil)
       {
         "title" => title,
         "url" => url,
@@ -85,6 +85,7 @@ module DiscourseRssPolling
         "reason" => reason&.to_s,
         "categories" => categories,
         "published_at" => pubdate&.iso8601,
+        "topic_url" => topic_url,
       }
     end
 

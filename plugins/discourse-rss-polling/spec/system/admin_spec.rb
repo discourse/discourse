@@ -39,7 +39,7 @@ RSpec.describe "Rss Polling - admin" do
 
     form.submit
 
-    expect(page).to have_css(".rss-polling-feed")
+    expect(page).to have_css(".rss-polling-feed-form")
 
     expect(DiscourseRssPolling::RssFeed.last).to have_attributes(
       url:,
@@ -48,5 +48,69 @@ RSpec.describe "Rss Polling - admin" do
       category_id: category_1.id,
       tags: tag_1.name,
     )
+  end
+
+  it "can disable and re-enable a feed without deleting it" do
+    feed = Fabricate(:rss_feed, user: current_user)
+
+    visit("/admin/plugins/discourse-rss-polling/feeds")
+
+    expect(page).to have_css(".rss-polling-feed")
+
+    toggle = PageObjects::Components::DToggleSwitch.new(".rss-polling-feed__toggle")
+    expect(toggle).to be_checked
+
+    toggle.toggle
+
+    expect(page).to have_css(".rss-polling-feed.is-disabled")
+    expect(toggle).to be_unchecked
+    try_until_success { expect(feed.reload.enabled).to eq(false) }
+
+    toggle.toggle
+
+    expect(page).to have_no_css(".rss-polling-feed.is-disabled")
+    expect(toggle).to be_checked
+    try_until_success { expect(feed.reload.enabled).to eq(true) }
+  end
+
+  it "shows the feed settings and its poll history on one page" do
+    feed = Fabricate(:rss_feed, user: current_user)
+    DiscourseRssPolling::PollAttempt.record!(
+      rss_feed_id: feed.id,
+      items: [
+        {
+          "title" => "An imported item",
+          "url" => "https://example.com/rss/item",
+          "status" => "imported",
+          "topic_url" => "/t/-/1",
+        },
+      ],
+    )
+
+    visit("/admin/plugins/discourse-rss-polling/feeds/#{feed.id}/edit")
+
+    expect(page).to have_css(".rss-polling-feed-form")
+    expect(page).to have_css(".rss-polling-feed-form__poll")
+    expect(page).to have_css(".rss-polling-feed-history")
+    expect(page).to have_content("1 imported")
+  end
+
+  it "disables Poll now while the feed has unsaved edits" do
+    feed = Fabricate(:rss_feed, user: current_user, category_filter: "old")
+
+    visit("/admin/plugins/discourse-rss-polling/feeds/#{feed.id}/edit")
+
+    expect(page).to have_css(".rss-polling-feed-form__poll")
+    expect(page).to have_no_css(".rss-polling-feed-form__poll[disabled]")
+
+    form = PageObjects::Components::FormKit.new(".rss-polling-feed-form")
+    form.field("feed_category_filter").fill_in("changed")
+
+    expect(page).to have_css(".rss-polling-feed-form__poll[disabled]")
+
+    form.submit
+
+    expect(page).to have_no_css(".rss-polling-feed-form__poll[disabled]")
+    expect(feed.reload.category_filter).to eq("changed")
   end
 end

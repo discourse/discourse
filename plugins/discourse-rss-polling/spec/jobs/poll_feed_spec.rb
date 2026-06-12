@@ -214,6 +214,18 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
           "status" => "imported",
           "title" => "Poll Feed Spec Fixture",
         )
+        expect(attempt.items.first["topic_url"]).to be_present
+      end
+
+      it "polls again when force is true even if it was polled recently" do
+        job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+        expect(DiscourseRssPolling::PollAttempt.count).to eq(1)
+
+        job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+        expect(DiscourseRssPolling::PollAttempt.count).to eq(1)
+
+        job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id, force: true)
+        expect(DiscourseRssPolling::PollAttempt.count).to eq(2)
       end
 
       it "records a skipped outcome when the category filter doesn't match" do

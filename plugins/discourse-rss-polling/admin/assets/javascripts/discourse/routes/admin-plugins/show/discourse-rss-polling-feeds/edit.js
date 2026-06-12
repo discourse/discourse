@@ -7,17 +7,19 @@ export default class AdminPluginsShowDiscourseRssPollingFeedsEditRoute extends D
   @service router;
 
   async model(params) {
-    const result = await RssPollingFeedSettings.show();
-    const feed = result.feed_settings.find(
-      (item) => item.id === parseInt(params.id, 10)
-    );
+    const id = parseInt(params.id, 10);
+    const [result, history] = await Promise.all([
+      RssPollingFeedSettings.show(),
+      RssPollingFeedSettings.history(id),
+    ]);
+    const feed = result.feed_settings.find((item) => item.id === id);
 
     if (!feed) {
       this.router.replaceWith("adminPlugins.show.discourse-rss-polling-feeds");
       return;
     }
 
-    return feed;
+    return { feed, history };
   }
 
   titleToken() {

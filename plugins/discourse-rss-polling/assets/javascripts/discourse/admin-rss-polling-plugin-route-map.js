@@ -7,7 +7,6 @@ export default {
     this.route("discourse-rss-polling-feeds", { path: "feeds" }, function () {
       this.route("new");
       this.route("edit", { path: "/:id/edit" });
-      this.route("history", { path: "/:id/history" });
     });
   },
 };

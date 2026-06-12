@@ -8,7 +8,8 @@ module DiscourseRssPolling
                :author_username,
                :discourse_category_id,
                :discourse_tags,
-               :feed_category_filter
+               :feed_category_filter,
+               :enabled
 
     has_one :user, serializer: BasicUserSerializer, embed: :objects
 

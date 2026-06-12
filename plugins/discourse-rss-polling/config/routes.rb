@@ -7,6 +7,9 @@ DiscourseRssPolling::Engine.routes.draw do
   get "feed_settings/category_requirements" => "feed_settings#category_requirements",
       :constraints => StaffConstraint.new
   get "feed_settings/:id/history" => "feed_settings#history", :constraints => StaffConstraint.new
+  put "feed_settings/:id/enabled" => "feed_settings#update_enabled",
+      :constraints => StaffConstraint.new
+  post "feed_settings/:id/poll" => "feed_settings#poll", :constraints => StaffConstraint.new
   resource :feed_settings, constraints: StaffConstraint.new, only: %i[show update destroy]
 end
 

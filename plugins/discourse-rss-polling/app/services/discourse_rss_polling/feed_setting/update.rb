@@ -17,6 +17,7 @@ module DiscourseRssPolling
         validates :author_username, presence: true
         validate :satisfies_required_tag_groups
 
+        before_validation :normalize_feed_url
         before_validation :normalize_tags
 
         def satisfies_required_tag_groups
@@ -43,6 +44,10 @@ module DiscourseRssPolling
                 ),
               )
             end
+        end
+
+        def normalize_feed_url
+          self.feed_url = feed_url&.strip
         end
 
         def normalize_tags

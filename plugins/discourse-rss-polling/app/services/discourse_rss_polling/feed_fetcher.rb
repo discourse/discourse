@@ -7,7 +7,7 @@ module DiscourseRssPolling
     Result = Struct.new(:items, :error, keyword_init: true)
 
     def initialize(feed_url)
-      @feed_url = feed_url
+      @feed_url = feed_url.to_s.strip
     end
 
     def fetch

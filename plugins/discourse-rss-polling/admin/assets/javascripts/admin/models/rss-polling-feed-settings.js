@@ -23,8 +23,24 @@ export default {
     });
   },
 
+  setEnabled(feedSetting, enabled) {
+    return ajax(
+      `/admin/plugins/rss_polling/feed_settings/${feedSetting.id}/enabled`,
+      {
+        type: "PUT",
+        data: { enabled },
+      }
+    );
+  },
+
   history(id) {
     return ajax(`/admin/plugins/rss_polling/feed_settings/${id}/history.json`);
+  },
+
+  pollNow(id) {
+    return ajax(`/admin/plugins/rss_polling/feed_settings/${id}/poll`, {
+      type: "POST",
+    });
   },
 
   testFeed(feedSetting) {

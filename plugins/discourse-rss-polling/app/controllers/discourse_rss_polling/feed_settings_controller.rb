@@ -20,7 +20,7 @@ module DiscourseRssPolling
 
     def update
       FeedSetting::Update.call(params: params[:feed_setting]) do
-        on_success { render json: { success: true } }
+        on_success { |rss_feed:| render json: { success: true, id: rss_feed.id } }
         on_failed_contract do |contract|
           render json: {
                    success: false,
@@ -65,18 +65,20 @@ module DiscourseRssPolling
       analyzer = FeedAnalyzer.new(feed_category_filter: params[:feed_category_filter])
       preview_items = result.items.first(TEST_PREVIEW_LIMIT)
       item_keys = preview_items.index_with { |feed_item| embed_key(feed_item.url) }
-      imported_keys = already_imported_keys(item_keys.values)
+      imported_topic_urls = already_imported_topic_urls(item_keys.values)
 
       items =
         preview_items.map do |feed_item|
           status, reason = analyzer.evaluate(feed_item)
           key = item_keys[feed_item]
+          topic_url = nil
 
-          if status == FeedAnalyzer::WOULD_IMPORT && key && imported_keys.include?(key)
+          if status == FeedAnalyzer::WOULD_IMPORT && key && imported_topic_urls.key?(key)
             status = :already_imported
+            topic_url = imported_topic_urls[key]
           end
 
-          feed_item.outcome(status:, reason:)
+          feed_item.outcome(status:, reason:, topic_url:)
         end
 
       render json: { items:, total: result.items.size }
@@ -88,15 +90,32 @@ module DiscourseRssPolling
     end
 
     def history
-      rss_feed = RssFeed.find_by(id: params[:id])
-      raise Discourse::NotFound if rss_feed.nil?
+      rss_feed = find_rss_feed
 
       attempts = rss_feed.poll_attempts.recent.limit(PollAttempt::KEEP_PER_FEED)
 
       render json: {
+               id: rss_feed.id,
                feed_url: rss_feed.url,
                poll_attempts: serialize_data(attempts, PollAttemptSerializer),
              }
+    end
+
+    def poll
+      find_rss_feed.poll(force: true)
+
+      render json: { success: true }
+    end
+
+    def update_enabled
+      rss_feed = find_rss_feed
+
+      enabled = ActiveModel::Type::Boolean.new.cast(params[:enabled])
+      raise Discourse::InvalidParameters.new(:enabled) if enabled.nil?
+
+      rss_feed.update!(enabled:)
+
+      render json: { success: true, enabled: rss_feed.enabled }
     end
 
     def category_requirements
@@ -104,18 +123,26 @@ module DiscourseRssPolling
       render json: { required_tag_groups: RequiredTagGroups.for_category(category) }
     end
 
-    def already_imported_keys(keys)
+    def find_rss_feed
+      RssFeed.find_by(id: params[:id]) || raise(Discourse::NotFound)
+    end
+    private :find_rss_feed
+
+    def already_imported_topic_urls(keys)
       keys = keys.compact.uniq
-      return Set.new if keys.empty?
+      return {} if keys.empty?
 
       patterns = keys.map { |key| "^https?://#{Regexp.escape(key)}$" }
       TopicEmbed
         .where("embed_url ~* ANY(ARRAY[?])", patterns)
-        .pluck(:embed_url)
-        .map { |embed_url| embed_key(embed_url) }
-        .to_set
+        .includes(:topic)
+        .each_with_object({}) do |embed, urls|
+          next if embed.topic.nil?
+
+          urls[embed_key(embed.embed_url)] ||= embed.topic.relative_url
+        end
     end
-    private :already_imported_keys
+    private :already_imported_topic_urls
 
     def embed_key(url)
       return if url.blank?

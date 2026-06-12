@@ -13,7 +13,6 @@ en:
         feed_settings: Feed settings
         discourse_settings: Discourse settings
         author: Author
-        author_description: The user that imported topics will be attributed to.
         feed_url: URL
         discourse_category: Category
         discourse_tags: Tags
@@ -32,17 +31,27 @@ en:
           empty: You haven't configured any feeds yet.
           edit: Edit
           delete: Delete
-          history: History
+          enable: Enable feed
+          disable: Disable feed
           back: Back to feeds
           save: Save
           confirm_delete: "Are you sure you want to delete this feed?"
           delete_success: Feed deleted
           save_success: Feed saved
+          enable_success: Feed enabled
+          disable_success: Feed disabled
         test:
           button: Test feed
           title: Preview
           empty: This feed returned no items.
-          already_imported: Already imported — polling would update the existing topic.
+          dismiss: Dismiss
+          would_import: Would import
+          summary:
+            would_import: "%{count} would import"
+            already_imported: "%{count} already imported"
+            skipped: "%{count} would skip"
+          already_imported: "Already imported — polling would update the <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>existing topic</a>."
+          already_imported_plain: "Already imported — polling would update the existing topic."
           skip_reasons:
             missing_content: Skipped — the item has no content.
             missing_title: Skipped — the item has no title.
@@ -52,9 +61,19 @@ en:
             fetch_failed: Couldn't fetch the feed. Check that the URL is correct and reachable.
             parse_failed: The response doesn't look like a valid RSS or Atom feed.
             invalid_feed: The feed couldn't be read because it's malformed.
-            unknown: Something went wrong while reading the feed.
+            unknown: Couldn't read this feed. It may be temporarily unavailable or returning unexpected content. Test the feed to diagnose, or check the logs for details.
+        status:
+          enabled: Enabled
+          disabled: Disabled
+          disabled_note: Won't poll on schedule
         history:
-          title: History
+          recent: Recent polls
+          show_older: "Show %{count} older"
+          poll_now: Poll now
+          poll_now_dirty: Save your changes before polling.
+          poll_confirm: Polling now will fetch this feed and import or update topics. Continue?
+          poll_confirm_disabled: This feed is disabled. Polling now will still fetch it and import or update topics. Continue?
+          poll_started: Polling started — the latest attempt will appear here shortly.
           empty: This feed hasn't been polled yet.
           no_items: No items were processed in this poll.
           no_changes: No changes
@@ -62,5 +81,8 @@ en:
           updated_count: "%{count} updated"
           skipped_count: "%{count} skipped"
           failed_count: "%{count} failed"
-          updated: Updated the existing topic.
+          imported: "Imported as a new <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>topic</a>."
+          imported_plain: "Imported as a new topic."
+          updated: "Updated the <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>existing topic</a>."
+          updated_plain: "Updated the existing topic."
           failed: Failed to import.

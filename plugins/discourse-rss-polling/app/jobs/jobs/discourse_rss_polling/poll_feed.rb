@@ -16,7 +16,7 @@ module Jobs
         @feed_category_filter = args[:feed_category_filter]
         @rss_feed_id = args[:rss_feed_id]
 
-        poll_feed if not_polled_recently?
+        poll_feed if args[:force] || not_polled_recently?
       end
 
       private
@@ -97,7 +97,7 @@ module Jobs
 
           new_post = post && (post.created_at == post.updated_at)
           item_status = post.nil? ? :failed : (new_post ? :imported : :updated)
-          outcomes << feed_item.outcome(status: item_status)
+          outcomes << feed_item.outcome(status: item_status, topic_url: post&.topic&.relative_url)
 
           log_verbose("Imported '#{feed_item.title}' (#{feed_item.url})")
 
