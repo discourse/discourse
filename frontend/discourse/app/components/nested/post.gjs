@@ -801,6 +801,7 @@ export default class NestedPost extends Component {
                     <section class="nested-post__menu post-menu-area clearfix">
                       <PostMenu
                         @post={{@post}}
+                        @nestedReplyView={{true}}
                         @canCreatePost={{this.canCreatePost}}
                         @copyLink={{this.copyLink}}
                         @deletePost={{fn @deletePost @post}}

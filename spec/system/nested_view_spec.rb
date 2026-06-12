@@ -20,6 +20,15 @@ RSpec.describe "Nested view" do
 
   describe "basic rendering" do
     fab!(:root_reply) { Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "Root reply") }
+    fab!(:child_reply) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: Fabricate(:user),
+        raw: "Child reply",
+        reply_to_post_number: root_reply.post_number,
+      )
+    end
 
     it "displays the nested view with root posts" do
       nested_view.visit_nested(topic)
@@ -28,10 +37,12 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_root_post(root_reply)
     end
 
-    it "does not show the standard replies button on the OP" do
+    it "does not show the standard replies button in nested post menus" do
+      root_reply.update!(reply_count: 1)
       nested_view.visit_nested(topic)
 
       expect(nested_view).to have_no_show_replies_button_for(op)
+      expect(nested_view).to have_no_show_replies_button_for(root_reply)
     end
 
     it "shows the original post content" do
