@@ -102,19 +102,29 @@ export default class Analysis {
   totals(files) {
     let raw = 0;
     let brotli = 0;
+    // The brotli total is only meaningful once every chunk in the set has been
+    // measured; until then the caller should show "…" rather than a low sum.
+    let brotliReady = true;
     for (const f of files) {
       raw += this.chunks[f].rawSize;
-      brotli += this.brotli.get(f) ?? 0;
+      const b = this.brotli.get(f);
+      if (b == null) {
+        brotliReady = false;
+      } else {
+        brotli += b;
+      }
     }
-    return { files: files.size ?? files.length, raw, brotli };
+    return { files: files.size ?? files.length, raw, brotli, brotliReady };
   }
 
-  size(file, sizeKey) {
+  // Sort key: brotli when we have it, otherwise raw (so ordering is stable
+  // before brotli finishes and tightens up as sizes arrive).
+  sortSize(file) {
     const c = this.chunks[file];
     if (!c) {
       return 0;
     }
-    return sizeKey === "brotli" ? (this.brotli.get(file) ?? 0) : c.rawSize;
+    return this.brotli.get(file) ?? c.rawSize;
   }
 
   #computeUsedBy() {

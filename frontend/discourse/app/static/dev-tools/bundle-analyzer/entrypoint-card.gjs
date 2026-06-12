@@ -63,20 +63,22 @@ export default class EntrypointCard extends Component {
     return this.analysis.totals(this.loadSet);
   }
 
-  get addedDisplay() {
+  // Brotli total is "…" until every chunk in the set is measured, so a parent
+  // never momentarily looks smaller than it really is.
+  get addedBrotliLabel() {
     const t = this.addedTotals;
-    return this.args.sizeKey === "brotli" ? t.brotli : t.raw;
+    return t.brotliReady ? fmt(t.brotli) : "…";
   }
 
-  get fullDisplay() {
+  get fullBrotliLabel() {
     const t = this.fullTotals;
-    return this.args.sizeKey === "brotli" ? t.brotli : t.raw;
+    return t.brotliReady ? fmt(t.brotli) : "…";
   }
 
   get addedSorted() {
     return this.added
       .filter((f) => f !== this.args.file)
-      .sort((a, b) => this.#sz(b) - this.#sz(a));
+      .sort((a, b) => this.analysis.sortSize(b) - this.analysis.sortSize(a));
   }
 
   get sharedSorted() {
@@ -85,11 +87,7 @@ export default class EntrypointCard extends Component {
     }
     return [...this.loadSet]
       .filter((f) => this.args.baselineClosure.has(f) && f !== this.args.file)
-      .sort((a, b) => this.#sz(b) - this.#sz(a));
-  }
-
-  #sz(file) {
-    return this.analysis.size(file, this.args.sizeKey);
+      .sort((a, b) => this.analysis.sortSize(b) - this.analysis.sortSize(a));
   }
 
   @action
@@ -132,15 +130,16 @@ export default class EntrypointCard extends Component {
           >{{this.stemmed}}</span>
         </span>
         {{#if @baseline}}
-          <span class="ba-num"><b>{{fmt this.fullDisplay}}</b>
+          <span class="ba-num"><b>{{this.fullBrotliLabel}}</b>
             <span class="ba-pill">initial</span></span>
-          <span class="ba-num muted"></span>
+          <span class="ba-num muted">{{fmt this.fullTotals.raw}}
+            <span class="ba-pill">raw</span></span>
           <span class="ba-num pill">{{this.loadSet.size}}f</span>
         {{else}}
-          <span class="ba-num"><b>+{{fmt this.addedDisplay}}</b>
+          <span class="ba-num"><b>+{{this.addedBrotliLabel}}</b>
             <span class="ba-pill">added</span></span>
-          <span class="ba-num muted">{{fmt this.fullDisplay}}
-            <span class="ba-pill">total</span></span>
+          <span class="ba-num muted">+{{fmt this.addedTotals.raw}}
+            <span class="ba-pill">raw</span></span>
           <span
             class="ba-num pill"
           >+{{this.added.length}}/{{this.loadSet.size}}f</span>
@@ -171,7 +170,7 @@ export default class EntrypointCard extends Component {
             <div class="ba-pill" style="margin-bottom:6px">
               Initial load:
               <b>{{this.loadSet.size}}</b>
-              files ({{fmt this.fullTotals.brotli}}
+              files ({{this.fullBrotliLabel}}
               br /
               {{fmt this.fullTotals.raw}}
               raw).
@@ -180,7 +179,7 @@ export default class EntrypointCard extends Component {
             <div class="ba-pill" style="margin-bottom:6px">
               Adds
               <b>{{this.added.length}}</b>
-              new files ({{fmt this.addedTotals.brotli}}
+              new files ({{this.addedBrotliLabel}}
               br /
               {{fmt this.addedTotals.raw}}
               raw); full subtree is

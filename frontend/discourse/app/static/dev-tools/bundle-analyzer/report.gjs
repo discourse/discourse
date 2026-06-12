@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { eq } from "discourse/truth-helpers";
@@ -10,7 +9,6 @@ import EntrypointCard from "./entrypoint-card";
 import LoadedChunks from "./loaded-chunks";
 
 export default class Report extends Component {
-  @tracked sizeKey = "brotli";
   @tracked filter = "";
 
   loaded = new LoadedChunks(this.args.analysis.chunks);
@@ -24,10 +22,6 @@ export default class Report extends Component {
 
   get analysis() {
     return this.args.analysis;
-  }
-
-  get sizeIsBrotli() {
-    return this.sizeKey === "brotli";
   }
 
   // discourse.js is the baseline every other entrypoint measures against.
@@ -62,15 +56,11 @@ export default class Report extends Component {
     return { count: files.length, ...this.analysis.totals(new Set(files)) };
   }
 
-  #sz(file) {
-    return this.analysis.size(file, this.sizeKey);
-  }
-
   #addedSize(file) {
     const base = this.baselineClosure;
     return [...this.analysis.staticClosure(file)]
       .filter((x) => !base.has(x))
-      .reduce((n, x) => n + this.#sz(x), 0);
+      .reduce((n, x) => n + this.analysis.sortSize(x), 0);
   }
 
   #cardMatches(file) {
@@ -78,11 +68,6 @@ export default class Report extends Component {
       matches(file, this.filter) ||
       matches(this.analysis.chunks[file].name, this.filter)
     );
-  }
-
-  @action
-  setSize(key) {
-    this.sizeKey = key;
   }
 
   @action
@@ -105,7 +90,11 @@ export default class Report extends Component {
           loaded in this browser:
           {{this.loadedTotals.count}}
           chunks ·
-          {{fmt this.loadedTotals.brotli}}
+          {{if
+            this.loadedTotals.brotliReady
+            (fmt this.loadedTotals.brotli)
+            "…"
+          }}
           br
         </span>
         {{#unless this.analysis.brotliDone}}
@@ -117,18 +106,6 @@ export default class Report extends Component {
       </div>
 
       <div class="ba-toolbar">
-        <div class="ba-seg">
-          <button
-            type="button"
-            class={{if this.sizeIsBrotli "on"}}
-            {{on "click" (fn this.setSize "brotli")}}
-          >brotli</button>
-          <button
-            type="button"
-            class={{unless this.sizeIsBrotli "on"}}
-            {{on "click" (fn this.setSize "raw")}}
-          >raw</button>
-        </div>
         <input
           type="search"
           placeholder="Filter files / modules…"
@@ -152,7 +129,6 @@ export default class Report extends Component {
               @file={{f}}
               @analysis={{this.analysis}}
               @filter={{this.filter}}
-              @sizeKey={{this.sizeKey}}
               @baselineClosure={{this.baselineClosure}}
               @baseline={{eq f this.baselineFile}}
               @loaded={{this.loaded}}
@@ -178,7 +154,6 @@ export default class Report extends Component {
               @file={{f}}
               @analysis={{this.analysis}}
               @filter={{this.filter}}
-              @sizeKey={{this.sizeKey}}
               @baselineClosure={{this.baselineClosure}}
               @loaded={{this.loaded}}
             />
