@@ -61,7 +61,6 @@ export default class NestedController extends Controller {
   // state. If we ever want to scope it to entry-only, clear after the
   // initial render in the route.
   @tracked collapseReplies = false;
-  queryParams = ["sort", "context", { collapseReplies: "collapse_replies" }];
 
   // Externalized expansion state: postNumber → { expanded, collapsed }
   // Components read on construction, write on toggle.
@@ -256,8 +255,12 @@ export default class NestedController extends Controller {
     this.loadingMore = true;
     try {
       const nextPage = this.page + 1;
+      const query = new URLSearchParams({
+        page: nextPage,
+        sort: this.sort || "top",
+      });
       const data = await ajax(
-        `/n/${this.topic.slug}/${this.topic.id}.json?page=${nextPage}&sort=${this.sort}`
+        `/n/${this.topic.slug}/${this.topic.id}.json?${query}`
       );
 
       const newNodes = (data.roots || []).map((root) =>

@@ -14,12 +14,12 @@ class NestedTopicsController < ApplicationController
   after_action :allow_embed_mode, only: %i[show context]
 
   # GET /n/:slug/:topic_id (HTML + JSON)
-  # HTML: redirects legacy nested URLs to the canonical topic route.
+  # HTML: redirects browser requests to the canonical topic route.
   # JSON page 0: includes topic metadata, OP post, sort, and message_bus_last_id
   # JSON page 1+: returns only roots for pagination
   def show
     if spa_boot_request?
-      return redirect_to topic_route_url, status: legacy_topic_route_redirect_status
+      return redirect_to topic_route_url, status: topic_route_redirect_status
     end
 
     page = params[:page].to_i.clamp(0, 1000)
@@ -46,7 +46,7 @@ class NestedTopicsController < ApplicationController
   end
 
   # GET /n/:slug/:topic_id/:post_number (HTML + JSON)
-  # HTML: redirects legacy nested context URLs to the canonical topic route.
+  # HTML: redirects browser requests to the canonical topic route.
   # JSON param: context (integer) -- controls ancestor depth.
   #   nil/absent = windowed ancestor chain capped at max_depth (deep-links, notifications)
   #   0 = no ancestors, target at depth 0 ("Continue this thread")
@@ -54,7 +54,7 @@ class NestedTopicsController < ApplicationController
     if spa_boot_request?
       return(
         redirect_to topic_route_url(params[:post_number]),
-                    status: legacy_topic_route_redirect_status
+                    status: topic_route_redirect_status
       )
     end
 
@@ -133,7 +133,7 @@ class NestedTopicsController < ApplicationController
 
   private
 
-  LEGACY_TOPIC_ROUTE_QUERY_PARAMS = %w[sort collapse_replies context embed_mode class_name].freeze
+  TOPIC_ROUTE_QUERY_PARAMS = %w[sort collapse_replies context embed_mode class_name].freeze
 
   def list_roots_response(page:)
     result = nil
@@ -173,7 +173,7 @@ class NestedTopicsController < ApplicationController
     result
   end
 
-  def legacy_topic_route_redirect_status
+  def topic_route_redirect_status
     use_crawler_layout? ? :moved_permanently : :found
   end
 
@@ -182,7 +182,7 @@ class NestedTopicsController < ApplicationController
     post_number = post_number.to_i
     url << "/#{post_number}" if post_number > 0
 
-    query = request.query_parameters.slice(*LEGACY_TOPIC_ROUTE_QUERY_PARAMS)
+    query = request.query_parameters.slice(*TOPIC_ROUTE_QUERY_PARAMS)
     query.delete("class_name") unless query["embed_mode"] == "true"
     url << "?#{query.to_query}" if query.present?
     url

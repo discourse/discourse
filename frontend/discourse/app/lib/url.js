@@ -377,7 +377,7 @@ class DiscourseURL extends EmberObject {
 
     const internalPath = url.replace(this.origin, "");
 
-    return internalPath.startsWith("/t/") || internalPath.startsWith("/n/");
+    return internalPath.startsWith("/t/");
   }
 
   /**

@@ -23,6 +23,18 @@ import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import DiscourseRoute from "discourse/routes/discourse";
 
+export function nestedQueryString(params) {
+  const query = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null) {
+      query.set(key, value);
+    }
+  }
+
+  return query.toString();
+}
+
 // This route is used for retrieving a topic based on params
 export default class TopicFromParams extends DiscourseRoute {
   @service appEvents;
@@ -37,12 +49,8 @@ export default class TopicFromParams extends DiscourseRoute {
   @service store;
 
   buildRouteInfoMetadata() {
-    const topic = this.modelFor("topic");
-    const topicController = this.controllerFor("topic");
-
     return {
-      scrollOnTransition:
-        topic?.is_nested_view && !topicController?.forceFlatView,
+      scrollOnTransition: false,
     };
   }
 
@@ -244,19 +252,15 @@ export default class TopicFromParams extends DiscourseRoute {
     }
 
     if (targetsPost) {
-      const queryParts = [`sort=${sort}`, "track_visit=true"];
-      if (queryParams.context !== undefined && queryParams.context !== null) {
-        queryParts.push(`context=${queryParams.context}`);
-      }
+      const query = nestedQueryString({
+        sort,
+        track_visit: true,
+        context: queryParams.context,
+      });
 
       const data = await PreloadStore.getAndRemove(
         `nested_topic_${topic.id}`,
-        () =>
-          ajax(
-            `/n/${slug}/${topic.id}/context/${postNumber}.json?${queryParts.join(
-              "&"
-            )}`
-          )
+        () => ajax(`/n/${slug}/${topic.id}/context/${postNumber}.json?${query}`)
       );
 
       params._nested = processNestedContextResponse({
@@ -267,9 +271,10 @@ export default class TopicFromParams extends DiscourseRoute {
         store: this.store,
       });
     } else {
+      const query = nestedQueryString({ sort, track_visit: true });
       const data = await PreloadStore.getAndRemove(
         `nested_topic_${topic.id}`,
-        () => ajax(`/n/${slug}/${topic.id}.json?sort=${sort}&track_visit=true`)
+        () => ajax(`/n/${slug}/${topic.id}.json?${query}`)
       );
 
       params._nested = processNestedRootResponse({
@@ -497,10 +502,7 @@ export default class TopicFromParams extends DiscourseRoute {
     transition.followRedirects().finally(() => {
       const routeName = this.router.currentRouteName;
 
-      if (
-        !routeName?.startsWith("topic.") &&
-        !routeName?.startsWith("nested")
-      ) {
+      if (!routeName?.startsWith("topic.")) {
         this.header.clearTopic();
       }
     });

@@ -399,8 +399,12 @@ export default class NestedPost extends Component {
 
     this.loadingReplies = true;
     try {
+      const query = new URLSearchParams({
+        sort: this.args.sort || "top",
+        depth: this.childDepth,
+      });
       const data = await ajax(
-        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.post.post_number}.json?sort=${this.args.sort || "top"}&depth=${this.childDepth}`
+        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.post.post_number}.json?${query}`
       );
       if (this.isDestroying || this.isDestroyed) {
         return null;

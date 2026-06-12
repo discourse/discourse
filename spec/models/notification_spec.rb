@@ -350,7 +350,7 @@ RSpec.describe Notification do
       )
     end
 
-    it "uses the legacy specific-post URL for a singular nested-bucket notification" do
+    it "uses the canonical specific-post URL for a singular nested-bucket notification" do
       notification =
         Fabricate(
           :notification,

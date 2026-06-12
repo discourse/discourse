@@ -144,7 +144,7 @@ RSpec.describe "Nested context view" do
     # by Glimmer (same post.id key) and its <NestedPostChildren> only
     # reads @preloadedChildren in its constructor — so without a forced
     # rebuild, the inner cascade keeps rendering the *previous* target's
-    # chain. routes/nested.js stamps a per-fetch _renderKey on the chain
+    # chain. The topic route stamps a per-fetch _renderKey on the chain
     # to force a full recreation; these specs guard that.
     it "rebuilds the chain so the new target is visible" do
       nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
