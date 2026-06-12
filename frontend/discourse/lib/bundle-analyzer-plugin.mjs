@@ -1,0 +1,218 @@
+import * as fs from "fs";
+import * as zlib from "zlib";
+import { relative } from "path";
+import { promisify } from "util";
+
+// Async so calls run concurrently on the libuv threadpool rather than blocking
+// the main thread one chunk at a time (brotli at max quality is slow).
+const brotliCompress = promisify(zlib.brotliCompress);
+function computeBrotliSize(code, rawSize) {
+  return brotliCompress(code, {
+    params: {
+      [zlib.constants.BROTLI_PARAM_QUALITY]: zlib.constants.BROTLI_MAX_QUALITY,
+      [zlib.constants.BROTLI_PARAM_SIZE_HINT]: rawSize,
+    },
+  }).then((buf) => buf.length);
+}
+
+const DYNAMIC_IMPORT_RE =
+  /\bimport\s*\(\s*(?:\/\*[\s\S]*?\*\/\s*)*(['"`])([^'"`\n]+?)\1/g;
+
+// rolldown's `chunk.name` keeps the original seed-module name even when
+// chunkFileNames renames the file; derive the real label from the filename.
+const FILE_NAME_RE = /(?:.*\/)?(.+)-[a-z0-9]+\.digested\.js$/;
+function nameFromFile(fileName) {
+  const m = fileName.match(FILE_NAME_RE);
+  return m ? m[1] : fileName;
+}
+
+function offsetToLineCol(text, offset) {
+  let line = 1;
+  let last = 0;
+  for (let i = 0; i < offset; i++) {
+    if (text.charCodeAt(i) === 10) {
+      line++;
+      last = i + 1;
+    }
+  }
+  return { line, column: offset - last + 1 };
+}
+
+function rel(id) {
+  if (!id) {
+    return null;
+  }
+  const r = relative(process.cwd(), id);
+  if (!r.startsWith("..")) {
+    return r;
+  }
+  const nm = id.lastIndexOf("node_modules/");
+  return nm >= 0 ? id.slice(nm) : id;
+}
+
+// Records, per resolved module id, the source locations where it is
+// dynamically `import()`-ed, so dynamic chunks can be traced back to the exact
+// file + line that triggers their download.
+export default function bundleAnalyzerPlugin({ devMode } = {}) {
+  const sitesByResolvedId = new Map();
+
+  function addSite(resolvedId, site) {
+    let list = sitesByResolvedId.get(resolvedId);
+    if (!list) {
+      list = [];
+      sitesByResolvedId.set(resolvedId, list);
+    }
+    if (
+      !list.some((s) => s.importer === site.importer && s.line === site.line)
+    ) {
+      list.push(site);
+    }
+  }
+
+  return {
+    name: "bundle-analyzer",
+
+    async transform(code, id) {
+      let source = code;
+      try {
+        source = fs.readFileSync(id, "utf8");
+      } catch {
+        // virtual module: fall back to the transformed code
+      }
+
+      if (!source.includes("import(")) {
+        return null;
+      }
+
+      DYNAMIC_IMPORT_RE.lastIndex = 0;
+      let match;
+      const pending = [];
+      while ((match = DYNAMIC_IMPORT_RE.exec(source))) {
+        const specifier = match[2];
+        const lineStart = source.lastIndexOf("\n", match.index) + 1;
+        const lineText = source.slice(lineStart, match.index);
+        if (lineText.includes("@type") || /^\s*[*]/.test(lineText)) {
+          continue;
+        }
+        const { line, column } = offsetToLineCol(source, match.index);
+        pending.push({ specifier, line, column });
+      }
+
+      await Promise.all(
+        pending.map(async ({ specifier, line, column }) => {
+          let resolved;
+          try {
+            resolved = await this.resolve(specifier, id);
+          } catch {
+            resolved = null;
+          }
+          if (resolved?.id) {
+            addSite(resolved.id, {
+              importer: rel(id),
+              specifier,
+              line,
+              column,
+            });
+          }
+        })
+      );
+
+      return null;
+    },
+
+    async generateBundle(_options, bundle) {
+      const chunks = {};
+      const entrypoints = [];
+      const dynamicEntrypoints = [];
+
+      const chunkList = Object.entries(bundle).filter(
+        ([, chunk]) => chunk.type === "chunk"
+      );
+
+      const sizes = new Map(
+        await Promise.all(
+          chunkList.map(async ([fileName, chunk]) => {
+            const rawSize = Buffer.byteLength(chunk.code, "utf8");
+            return [
+              fileName,
+              {
+                rawSize,
+                brotliSize: await computeBrotliSize(chunk.code, rawSize),
+              },
+            ];
+          })
+        )
+      );
+
+      for (const [fileName, chunk] of chunkList) {
+        const { rawSize, brotliSize } = sizes.get(fileName);
+
+        const modules = Object.entries(chunk.modules)
+          .map(([moduleId, m]) => ({
+            id: rel(moduleId),
+            renderedLength: m.renderedLength,
+          }))
+          .sort((a, b) => b.renderedLength - a.renderedLength);
+
+        let importSites = sitesByResolvedId.get(chunk.facadeModuleId) || [];
+        if (importSites.length === 0 && chunk.isDynamicEntry) {
+          const info = this.getModuleInfo(chunk.facadeModuleId);
+          importSites = (info?.dynamicImporters || []).map((imp) => ({
+            importer: rel(imp),
+            specifier: null,
+            line: null,
+            column: null,
+          }));
+        }
+
+        chunks[fileName] = {
+          file: fileName,
+          name: nameFromFile(fileName),
+          facadeModuleId: rel(chunk.facadeModuleId),
+          isEntry: chunk.isEntry,
+          isDynamicEntry: chunk.isDynamicEntry,
+          rawSize,
+          brotliSize,
+          imports: chunk.imports,
+          dynamicImports: chunk.dynamicImports,
+          moduleCount: modules.length,
+          modules,
+          importSites,
+        };
+
+        if (chunk.isEntry) {
+          entrypoints.push(fileName);
+        } else if (chunk.isDynamicEntry) {
+          dynamicEntrypoints.push(fileName);
+        }
+      }
+
+      const data = {
+        generatedAt: new Date().toISOString(),
+        emberEnv: process.env.EMBER_ENV || "development",
+        entrypoints,
+        dynamicEntrypoints,
+        chunks,
+      };
+
+      const template = fs.readFileSync(
+        new URL("./bundle-analyzer-template.html", import.meta.url),
+        "utf8"
+      );
+      const html = template.replace(/\/\*__BUNDLE_DATA__\*\/\s*null/, () =>
+        JSON.stringify(data)
+      );
+
+      if (devMode) {
+        fs.mkdirSync("./dist", { recursive: true });
+        fs.writeFileSync("./dist/bundle-analysis.html", html);
+      } else {
+        this.emitFile({
+          type: "asset",
+          fileName: "bundle-analysis.html",
+          source: html,
+        });
+      }
+    },
+  };
+}
