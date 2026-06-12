@@ -88,16 +88,6 @@ export default class EntrypointCard extends Component {
       .sort((a, b) => this.analysis.sortSize(b) - this.analysis.sortSize(a));
   }
 
-  get sharedSorted() {
-    if (this.args.baseline) {
-      return [];
-    }
-    return [...this.loadSet]
-      .filter((f) => this.args.baselineClosure.has(f) && f !== this.args.file)
-      .filter((f) => this.analysis.chunkMatches(f, this.args.filter))
-      .sort((a, b) => this.analysis.sortSize(b) - this.analysis.sortSize(a));
-  }
-
   @action
   toggle() {
     this.open = !this.open;
@@ -214,21 +204,6 @@ export default class EntrypointCard extends Component {
                 @added={{this.markAdded}}
               />
             {{/each}}
-            {{#if this.sharedSorted.length}}
-              <div class="ba-pill" style="margin:10px 0 4px">
-                Already in initial load (free):
-                {{this.sharedSorted.length}}
-                files
-              </div>
-              {{#each this.sharedSorted as |f|}}
-                <ChunkRow
-                  @file={{f}}
-                  @analysis={{@analysis}}
-                  @filter={{@filter}}
-                  @loaded={{@loaded}}
-                />
-              {{/each}}
-            {{/if}}
           </div>
         </div>
       {{/if}}
