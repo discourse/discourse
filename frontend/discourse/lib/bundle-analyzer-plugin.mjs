@@ -198,14 +198,16 @@ export default function bundleAnalyzerPlugin({ devMode } = {}) {
       const json = JSON.stringify(data);
 
       // Co-located with the JS chunks so the dev-tools UI can fetch it relative
-      // to its own import.meta.url (assets/js/dev-tools-*.js -> ./bundle-analysis.json).
+      // to its own import.meta.url (assets/js/dev-tools-*.js -> ./bundle-analysis.digested.json).
+      // The `.digested.` marker tells Rails/propshaft this is pre-fingerprinted
+      // and should be served verbatim rather than hashed (and blocked).
       if (devMode) {
         fs.mkdirSync("./dist/assets/js", { recursive: true });
-        fs.writeFileSync("./dist/assets/js/bundle-analysis.json", json);
+        fs.writeFileSync("./dist/assets/js/bundle-analysis.digested.json", json);
       } else {
         this.emitFile({
           type: "asset",
-          fileName: "assets/js/bundle-analysis.json",
+          fileName: "assets/js/bundle-analysis.digested.json",
           source: json,
         });
       }

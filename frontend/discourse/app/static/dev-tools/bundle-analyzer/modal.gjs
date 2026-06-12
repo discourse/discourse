@@ -16,7 +16,10 @@ export default class BundleAnalyzerModal extends Component {
       // Computed at runtime rather than `new URL("./...", import.meta.url)` so
       // rolldown's resolveNewUrlToAsset doesn't try to resolve it as a build
       // asset. The JSON is emitted next to this chunk by bundle-analyzer-plugin.
-      const url = import.meta.url.replace(/[^/]+$/, "bundle-analysis.json");
+      const url = import.meta.url.replace(
+        /[^/]+$/,
+        "bundle-analysis.digested.json"
+      );
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
