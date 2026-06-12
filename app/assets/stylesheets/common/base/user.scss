@@ -22,6 +22,13 @@
 
     .group-dropdown {
       margin-right: 0.5em;
+      max-width: 20ch;
+
+      .name {
+        display: inline-block;
+
+        @include ellipsis;
+      }
 
       .mobile-view & {
         .select-kit-header-wrapper {
