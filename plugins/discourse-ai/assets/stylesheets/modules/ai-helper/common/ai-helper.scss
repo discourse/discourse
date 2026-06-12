@@ -691,3 +691,43 @@
     }
   }
 }
+
+// new inline AI helper
+.select-kit.mini-tag-chooser .select-kit-row,
+.select-kit.category-chooser .select-kit-row {
+  &.ai-category-suggest-row,
+  &.ai-category-exit-row,
+  &.ai-tag-suggest-row,
+  &.ai-tag-exit-row {
+    position: sticky;
+    top: 0;
+    z-index: z("dropdown") + 1;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-1);
+    font-size: var(--font-down-1-rem);
+    border-bottom: 1px solid var(--primary-low);
+    background: var(--secondary);
+
+    .name {
+      margin: 0;
+      font-size: var(--font-0); // unset
+    }
+  }
+
+  &.ai-category-exit-row,
+  .ai-tag-exit-row {
+    font-weight: bold;
+  }
+
+  &.ai-category-suggest-row,
+  &.ai-tag-suggest-row {
+    color: var(--primary-medium);
+    font-style: italic;
+
+    .d-icon-spinner {
+      animation: spin 1s linear infinite;
+    }
+  }
+}

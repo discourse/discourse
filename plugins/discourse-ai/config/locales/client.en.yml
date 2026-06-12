@@ -1055,6 +1055,7 @@ en:
         description: "Choose one of the options below, and the AI will suggest you a new version of the text."
         selection_hint: "Hint: You can also select a portion of the text before opening the helper to rewrite only that."
         suggest: "Suggest with AI"
+        suggestions: "Suggestions"
         suggest_errors:
           too_many_tags:
             one: "You can only have up to %{count} tag"
