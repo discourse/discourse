@@ -87,81 +87,73 @@ function initializeAIBotReplies(api) {
     return value;
   });
 
-  api.modifyClass("controller:topic", {
-    pluginId: "discourse-ai",
+  const onAIBotStreamedReply = (topic, data) => {
+    if (!topic?.postStream) {
+      return;
+    }
 
-    onAIBotStreamedReply: function (data) {
-      if (!this.model?.postStream) {
-        return;
+    const streamingState = lookupStreamingState(api);
+    const topicId = topic.id;
+
+    if (data?.noop) {
+      return;
+    }
+
+    if (data?.done) {
+      streamingState?.markFinishedAfterRender(topicId, data?.post_id);
+      if (siteSettings.ai_bot_enable_docked_composer) {
+        appEvents.trigger("discourse-ai:bot-reply-finished", {
+          topicId,
+          postId: data?.post_id,
+        });
       }
-
-      const streamingState = lookupStreamingState(api);
-      const topicId = this.model.id;
-
-      if (data?.noop) {
-        return;
+    } else {
+      const isNewStream = !streamingState?.isStreamingForTopic(topicId);
+      streamingState?.markStarted(topicId, data?.post_id);
+      if (isNewStream && siteSettings.ai_bot_enable_docked_composer) {
+        appEvents.trigger("discourse-ai:bot-reply-started", {
+          topicId,
+          postId: data?.post_id,
+        });
       }
+    }
 
-      if (data?.done) {
-        streamingState?.markFinishedAfterRender(topicId, data?.post_id);
-        if (siteSettings.ai_bot_enable_docked_composer) {
-          appEvents.trigger("discourse-ai:bot-reply-finished", {
-            topicId,
-            postId: data?.post_id,
-          });
-        }
-      } else {
-        const isNewStream = !streamingState?.isStreamingForTopic(topicId);
-        streamingState?.markStarted(topicId, data?.post_id);
-        if (isNewStream && siteSettings.ai_bot_enable_docked_composer) {
-          appEvents.trigger("discourse-ai:bot-reply-started", {
-            topicId,
-            postId: data?.post_id,
-          });
-        }
-      }
+    streamPostText(topic.postStream, data);
+  };
 
-      streamPostText(this.model.postStream, data);
-    },
-    subscribe: function () {
-      this._super();
+  api.onTopicEntered(({ topic, messageBus }) => {
+    if (
+      !topic.isPrivateMessage ||
+      !topic.details.allowed_users ||
+      topic.details.allowed_users.filter(isGPTBot).length < 1
+    ) {
+      return;
+    }
 
-      if (
-        this.model.isPrivateMessage &&
-        this.model.details.allowed_users &&
-        this.model.details.allowed_users.filter(isGPTBot).length >= 1
-      ) {
-        // -2 replays only the last message before listening for new ones.
-        // A completed stream always ends with done:true as its final message,
-        // so replaying just the last event is enough to resume an in-progress
-        // stream AND avoids the stale-state bug where replaying an earlier
-        // chunk calls markStarted right before the done message, leaving the
-        // MutationObserver waiting for a .streaming class that never gets
-        // removed (because streamPostText has nothing left to stream).
-        this.messageBus.subscribe(
-          `discourse-ai/ai-bot/topic/${this.model.id}`,
-          this.onAIBotStreamedReply.bind(this),
-          -2
-        );
-      }
-    },
-    unsubscribe: function () {
+    const callback = (data) => onAIBotStreamedReply(topic, data);
+
+    // -2 replays only the last message before listening for new ones.
+    // A completed stream always ends with done:true as its final message,
+    // so replaying just the last event is enough to resume an in-progress
+    // stream AND avoids the stale-state bug where replaying an earlier
+    // chunk calls markStarted right before the done message, leaving the
+    // MutationObserver waiting for a .streaming class that never gets
+    // removed (because streamPostText has nothing left to stream).
+    messageBus.subscribe(`discourse-ai/ai-bot/topic/${topic.id}`, callback, -2);
+
+    return () => {
       // we may have infected post stream so lets clean it up
-      if (this.model?.postStream) {
-        cleanupStreamingData(this.model.postStream);
+      if (topic.postStream) {
+        cleanupStreamingData(topic.postStream);
       }
 
-      if (this.model?.id) {
-        // Guarded lookup: the container can be destroyed before
-        // `unsubscribe` runs (teardown during test owner destruction),
-        // in which case there's nothing to mark finished anyway.
-        const streamingState = lookupStreamingState(api);
-        streamingState?.markFinished(this.model.id);
-      }
-
-      this.messageBus.unsubscribe("discourse-ai/ai-bot/topic/*");
-      this._super();
-    },
+      // Guarded lookup: the container can be destroyed before `unsubscribe`
+      // runs (teardown during test owner destruction), in which case there's
+      // nothing to mark finished anyway.
+      const streamingState = lookupStreamingState(api);
+      streamingState?.markFinished(topic.id);
+      messageBus.unsubscribe("discourse-ai/ai-bot/topic/*", callback);
+    };
   });
 
   api.onAppEvent("discourse-ai:post-submitted", ({ userPostNumber }) => {

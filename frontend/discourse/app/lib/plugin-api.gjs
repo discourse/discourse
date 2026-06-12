@@ -39,7 +39,6 @@ import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discours
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
-import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import { addBeforeLoadMoreCallback as addBeforeLoadMoreNotificationsCallback } from "discourse/controllers/user-notifications";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
@@ -60,6 +59,7 @@ import classPrepend, {
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/lib/custom-post-message-callbacks";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -104,6 +104,7 @@ import {
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { consolePrefix } from "discourse/lib/source-identifier";
+import { registerTopicLifecycleCallback } from "discourse/lib/topic-lifecycle-callbacks";
 import {
   _addTransformerName,
   _registerTransformer,
@@ -1021,6 +1022,47 @@ class _PluginApi {
    */
   registerCustomPostMessageCallback(type, callback) {
     registerCustomPostMessageCallback1(type, callback);
+  }
+
+  /**
+   * Returns the topic currently being viewed, whether it is being shown through
+   * the classic topic route or the nested topic route.
+   *
+   * Prefer this over `api.container.lookup("controller:topic").model` when all
+   * you need is the current topic model.
+   */
+  getCurrentTopic() {
+    return this._lookupContainer("service:current-topic")?.topic;
+  }
+
+  /**
+   * Runs `callback` whenever a topic is entered or refreshed through either the
+   * classic topic route or the nested topic route. The callback receives
+   * `{ topic, controller, topicController, route, routeName, appEvents,
+   * messageBus, currentTopic }`.
+   *
+   * This lifecycle is tied to route setup, not only topic identity. A same-topic
+   * route refresh can call the cleanup from the previous setup and then run the
+   * callback again.
+   *
+   * Return a function from the callback to clean up subscriptions/listeners. The
+   * cleanup runs before the topic/nested controller's own `unsubscribe()` hook.
+   *
+   * Example:
+   *
+   * ```javascript
+   * api.onTopicEntered(({ topic, messageBus }) => {
+   *   const channel = `/my-plugin/topic/${topic.id}`;
+   *   const callback = (message) => { ... };
+   *   messageBus.subscribe(channel, callback);
+   *   return () => messageBus.unsubscribe(channel, callback);
+   * });
+   * ```
+   */
+  onTopicEntered(callback) {
+    registerTopicLifecycleCallback(
+      wrapWithErrorHandler(callback, "broken_topic_entered_callback")
+    );
   }
 
   /**

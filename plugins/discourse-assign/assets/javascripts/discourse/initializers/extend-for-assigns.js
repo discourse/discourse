@@ -45,6 +45,81 @@ function canAssignTopic(context) {
   return context.topic?.can_assign ?? context.currentUser?.can_assign;
 }
 
+const TOPIC_ASSIGNMENT_CHANNEL = "/staff/topic-assignment";
+
+function applyTopicAssignmentMessage(topic, data) {
+  if (!topic || String(data.topic_id) !== String(topic.id)) {
+    return false;
+  }
+
+  const isAssigned = data.type === "assigned";
+  const post = data.post_id
+    ? topic.postStream?.posts?.find((p) => p.id === data.post_id)
+    : null;
+  const target = post || (!data.post_id ? topic : null);
+
+  if (target) {
+    target.assignment_note = data.assignment_note;
+    target.assignment_status = data.assignment_status;
+
+    if (data.assigned_type === "User") {
+      target.assigned_to_user_id = isAssigned ? data.assigned_to.id : null;
+      target.assigned_to_user = isAssigned ? data.assigned_to : null;
+
+      if (isAssigned) {
+        target.assigned_to_group_id = null;
+        target.assigned_to_group = null;
+      }
+    }
+
+    if (data.assigned_type === "Group") {
+      target.assigned_to_group_id = isAssigned ? data.assigned_to.id : null;
+      target.assigned_to_group = isAssigned ? data.assigned_to : null;
+
+      if (isAssigned) {
+        target.assigned_to_user_id = null;
+        target.assigned_to_user = null;
+      }
+    }
+  }
+
+  if (data.post_id) {
+    const indirectlyAssignedTo = { ...(topic.indirectly_assigned_to || {}) };
+
+    if (isAssigned) {
+      const existingAssignment = indirectlyAssignedTo[data.post_id] || {};
+      indirectlyAssignedTo[data.post_id] = {
+        ...existingAssignment,
+        assigned_to: data.assigned_to,
+        post_number:
+          data.post_number ??
+          existingAssignment.post_number ??
+          post?.post_number,
+        assignment_note: data.assignment_note,
+        assignment_status: data.assignment_status,
+      };
+    } else {
+      delete indirectlyAssignedTo[data.post_id];
+    }
+
+    topic.indirectly_assigned_to = indirectlyAssignedTo;
+  }
+
+  return true;
+}
+
+function subscribeToTopicAssignments({ topic, appEvents, messageBus }) {
+  const callback = (data) => {
+    if (applyTopicAssignmentMessage(topic, data)) {
+      appEvents.trigger("header:update-topic", topic);
+    }
+  };
+
+  messageBus.subscribe(TOPIC_ASSIGNMENT_CHANNEL, callback);
+
+  return () => messageBus.unsubscribe(TOPIC_ASSIGNMENT_CHANNEL, callback);
+}
+
 function registerTopicFooterButtons(api) {
   registerTopicFooterDropdown(TopicLevelAssignMenu);
 
@@ -460,69 +535,7 @@ function initialize(api) {
       }
   );
 
-  api.modifyClass(
-    "controller:topic",
-    (Superclass) =>
-      class extends Superclass {
-        subscribe() {
-          super.subscribe(...arguments);
-
-          this.messageBus.subscribe("/staff/topic-assignment", (data) => {
-            const topic = this.model;
-            const topicId = topic.id;
-
-            if (data.topic_id === topicId) {
-              let post;
-              if (data.post_id) {
-                post = topic.postStream.posts.find(
-                  (p) => p.id === data.post_id
-                );
-              }
-              const target = post || topic;
-
-              target.assignment_note = data.assignment_note;
-              target.assignment_status = data.assignment_status;
-              if (data.assigned_type === "User") {
-                target.assigned_to_user_id =
-                  data.type === "assigned" ? data.assigned_to.id : null;
-                target.assigned_to_user = data.assigned_to;
-              }
-              if (data.assigned_type === "Group") {
-                target.assigned_to_group_id =
-                  data.type === "assigned" ? data.assigned_to.id : null;
-                target.assigned_to_group = data.assigned_to;
-              }
-
-              if (data.post_id) {
-                topic.indirectly_assigned_to ||= {};
-                if (data.type === "assigned") {
-                  topic.indirectly_assigned_to[data.post_id] ||= {};
-                  topic.indirectly_assigned_to[data.post_id].assigned_to =
-                    data.assigned_to;
-                } else if (data.type === "unassigned") {
-                  delete topic.indirectly_assigned_to[data.post_id];
-                }
-              }
-            }
-            // force the components tracking `topic.indirectly_assigned_to` to update
-            // eslint-disable-next-line no-self-assign
-            topic.indirectly_assigned_to = topic.indirectly_assigned_to;
-
-            this.appEvents.trigger("header:update-topic", topic);
-          });
-        }
-
-        unsubscribe() {
-          super.unsubscribe(...arguments);
-
-          if (!this.model?.id) {
-            return;
-          }
-
-          this.messageBus.unsubscribe("/staff/topic-assignment");
-        }
-      }
-  );
+  api.onTopicEntered(subscribeToTopicAssignments);
 
   customizePost(api, siteSettings);
 

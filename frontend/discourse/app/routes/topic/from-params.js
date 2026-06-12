@@ -12,6 +12,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default class TopicFromParams extends DiscourseRoute {
   @service appEvents;
   @service composer;
+  @service currentTopic;
   @service header;
   @service router;
 
@@ -100,7 +101,9 @@ export default class TopicFromParams extends DiscourseRoute {
 
   deactivate() {
     super.deactivate(...arguments);
-    this.controllerFor("topic").unsubscribe();
+    const topicController = this.controllerFor("topic");
+    this.currentTopic.leave(topicController.model);
+    topicController.unsubscribe();
   }
 
   setupController(controller, params, { _discourse_anchor }) {
@@ -138,6 +141,13 @@ export default class TopicFromParams extends DiscourseRoute {
 
     this.appEvents.trigger("page:topic-loaded", topic);
     topicController.subscribe();
+    this.currentTopic.enter({
+      topic,
+      controller: topicController,
+      topicController,
+      route: this,
+      routeName: "topic",
+    });
 
     // Highlight our post after the next render
     schedule("afterRender", () =>

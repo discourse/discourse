@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
-import { bind } from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 import Poll from "../components/poll";
@@ -61,32 +60,18 @@ function attachPolls(elem, helper) {
 }
 
 function initializePolls(api) {
-  api.modifyClass(
-    "controller:topic",
-    (Superclass) =>
-      class extends Superclass {
-        subscribe() {
-          super.subscribe(...arguments);
-          this.messageBus.subscribe(
-            `/polls/${this.model.id}`,
-            this._onPollMessage
-          );
-        }
-
-        unsubscribe() {
-          this.messageBus.unsubscribe("/polls/*", this._onPollMessage);
-          super.unsubscribe(...arguments);
-        }
-
-        @bind
-        _onPollMessage(msg) {
-          const post = this.get("model.postStream").findLoadedPost(msg.post_id);
-          if (post) {
-            post.polls = msg.polls;
-          }
-        }
+  api.onTopicEntered(({ topic, messageBus }) => {
+    const callback = (msg) => {
+      const post = topic.postStream.findLoadedPost(msg.post_id);
+      if (post) {
+        post.polls = msg.polls;
       }
-  );
+    };
+
+    messageBus.subscribe(`/polls/${topic.id}`, callback);
+
+    return () => messageBus.unsubscribe("/polls/*", callback);
+  });
 
   api.modifyClass(
     "model:post",
