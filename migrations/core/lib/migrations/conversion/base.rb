@@ -31,6 +31,7 @@ module Migrations
         exit(1)
       ensure
         Database::IntermediateDB.close
+        @reporter&.close
       end
 
       def steps
