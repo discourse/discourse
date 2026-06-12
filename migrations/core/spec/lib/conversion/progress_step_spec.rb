@@ -304,9 +304,11 @@ RSpec.describe Migrations::Conversion::ProgressStep do
     it "keeps no per-step state on the coordinator" do
       step = define_step.new(settings: { a: 1 })
 
+      expect(step).not_to be_a(Migrations::Conversion::Step)
       expect(step).not_to respond_to(:tracker)
       expect(step).not_to respond_to(:step)
       expect(step).not_to respond_to(:settings)
+      expect(step).not_to respond_to(:execute)
     end
   end
 

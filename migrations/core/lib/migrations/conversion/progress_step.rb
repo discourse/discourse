@@ -44,7 +44,7 @@ module Migrations
     # The blocks are evaluated with `class_eval`, so use plain `def` inside
     # them. Avoid `define_method`: its block closes over the surrounding scope
     # and would smuggle step-level state across the role boundary.
-    class ProgressStep < Step
+    class ProgressStep < StepBase
       class Source
         include AttributeAssignment
 
@@ -85,10 +85,9 @@ module Migrations
 
       # The step object is only a coordinator: it builds the source (in the
       # main process) and one processor per worker. All per-item state —
-      # including the tracker — lives on the processors, and `settings` are
-      # routed to the roles, so none of the inherited per-step state applies.
-      undef_method :tracker, :step, :settings, :settings=
-
+      # including the trackers — lives on the roles, and `settings` are routed
+      # to them; that's why this class is a sibling of `Step` rather than a
+      # subclass — it has no `settings`, `tracker` or `execute` of its own.
       attr_reader :source
 
       def initialize(args = {})

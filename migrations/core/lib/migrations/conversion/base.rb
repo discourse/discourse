@@ -31,7 +31,7 @@ module Migrations
       end
 
       def steps
-        step_class = Step
+        step_class = StepBase
         current_module = self.class.name.deconstantize.constantize
 
         current_module
