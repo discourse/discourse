@@ -70,13 +70,21 @@ RSpec.describe Migrations::Conversion::Base do
     end
 
     it "creates one pool and one reporter per run and wires them through both executor kinds" do
+      reporter = nil
       allow(Migrations::Conversion::WorkerPool).to receive(:new).and_call_original
-      allow(Migrations::Conversion::ConsoleReporter).to receive(:new).and_call_original
+      allow(Migrations::Conversion::ConsoleReporter).to receive(
+        :new,
+      ).and_wrap_original do |original|
+        reporter = original.call
+        allow(reporter).to receive(:close).and_call_original
+        reporter
+      end
 
       expect { converter.run }.to output(/Converting topics.*Converting users/m).to_stdout
 
       expect(Migrations::Conversion::WorkerPool).to have_received(:new).once
       expect(Migrations::Conversion::ConsoleReporter).to have_received(:new).once
+      expect(reporter).to have_received(:close).once
       expect(offline_connection.parametrized_insert_statements).to eq(
         [
           *Array.new(5) { |index| ["INSERT INTO topics (original_id) VALUES (?)", [index]] },

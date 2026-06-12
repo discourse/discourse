@@ -18,6 +18,14 @@ module Migrations
       def with_progress(max_progress:, &block)
         ExtendedProgressBar.new(max_progress:).run(&block)
       end
+
+      def finish_step(title)
+        # do nothing
+      end
+
+      def close
+        # do nothing
+      end
     end
   end
 end

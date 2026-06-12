@@ -51,4 +51,13 @@ RSpec.describe Migrations::Conversion::ConsoleReporter do
       ).ordered
     end
   end
+
+  describe "#finish_step and #close" do
+    it "produce no output" do
+      expect {
+        reporter.finish_step("Fixture step")
+        reporter.close
+      }.not_to output.to_stdout
+    end
+  end
 end
