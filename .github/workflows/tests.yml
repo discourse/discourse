@@ -57,7 +57,16 @@ jobs:
       CHEAP_SOURCE_MAPS: "1"
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
-      EMBER_ENV: development
+      # `production` for system builds makes every system-spec page load parse
+      # a minified, tree-shaken bundle instead of the much larger development
+      # build, cutting the in-browser parse/boot time the suite pays on each
+      # of its thousands of navigations. The dev-only `rails-testing.js` test
+      # bridge (`window.clientSettled`) is dead-code-eliminated from
+      # production builds, so spec/support injects a build-independent
+      # reimplementation via a Playwright init script and settle semantics are
+      # unchanged. Specs that depend on dev-build-only behaviour (deprecation
+      # assertions, /theme-qunit) are skipped when EMBER_ENV=production.
+      EMBER_ENV: ${{ matrix.build_type == 'system' && 'production' || 'development' }}
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
@@ -103,6 +112,11 @@ jobs:
         if: matrix.build_type == 'system'
         run: |
           echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 2))" >> $GITHUB_ENV
+
+      - name: Prune test instrumentation for system tests
+        if: matrix.build_type == 'system'
+        run: |
+          echo "DISCOURSE_PRUNE_TEST_INSTRUMENTATION=1" >> $GITHUB_ENV
 
       - name: Set QUNIT_PARALLEL for QUnit tests
         if: matrix.build_type == 'frontend'

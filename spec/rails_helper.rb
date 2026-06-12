@@ -29,6 +29,31 @@ ENV["RAILS_ENV"] ||= "test"
 ENV["ENABLE_LOGSTASH_LOGGER"] ||= "1"
 require File.expand_path("../../config/environment", __FILE__)
 Discourse.singleton_class.prepend(RspecWarnExceptionCapture)
+
+# In CI system test builds, remove the permanently attached LogSubscribers
+# whose output is unreachable under `RAILS_TEST_LOG_LEVEL=error` but whose
+# dispatch cost is paid on every request the browser drives. Every AR query
+# fires `sql.active_record` and every model-loading SELECT fires
+# `instantiation.active_record`, and each server-rendered bootstrap template
+# or partial fires a `render_*.action_view` event. With a LogSubscriber
+# attached, each event allocates a notification Event and dispatches
+# start/finish, only for the subscriber to exit immediately because the log
+# level is above its `:debug` threshold. With no subscriber, `instrument`
+# short-circuits via `notifier.listening?`. Helpers like `track_sql_queries`
+# attach transient subscribers for the duration of a block, so query-counting
+# specs are unaffected. The workflow only sets this variable when
+# `matrix.build_type == 'system'`.
+if ENV["DISCOURSE_PRUNE_TEST_INSTRUMENTATION"] == "1"
+  %w[
+    sql.active_record
+    instantiation.active_record
+    render_template.action_view
+    render_partial.action_view
+    render_collection.action_view
+    render_layout.action_view
+  ].each { |event| ActiveSupport::Notifications.notifier.unsubscribe(event) }
+end
+
 require "rspec/rails"
 require "shoulda-matchers"
 require "sidekiq/testing"
