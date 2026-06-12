@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import {
-  normalizeNodeConfiguration,
   normalizeConnectionsForNodes,
+  normalizeNodeConfiguration,
   removeNodesFromGraph,
 } from "discourse/plugins/discourse-workflows/admin/components/workflows/editor/graph-utils";
 

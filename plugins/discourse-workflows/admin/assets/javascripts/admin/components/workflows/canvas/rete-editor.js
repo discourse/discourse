@@ -14,8 +14,8 @@ import {
 } from "../../../lib/workflows/graph-constants";
 import {
   nodeTypeInputAcceptsMultipleConnections,
-  nodeTypeInputUsesConnectionIndexes,
   nodeTypeInputs,
+  nodeTypeInputUsesConnectionIndexes,
   nodeTypeOutputKeys,
 } from "../../../lib/workflows/node-types";
 import {
