@@ -32,6 +32,22 @@ RSpec.describe DiscourseRssPolling::FeedSetting::Update do
       it { is_expected.to fail_a_contract }
     end
 
+    context "when the feed_url is only whitespace" do
+      before { params[:feed_url] = "   " }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when the feed_url has surrounding whitespace" do
+      before { params[:feed_url] = "  https://blog.example.com/feed  " }
+
+      it { is_expected.to run_successfully }
+
+      it "stores the trimmed url" do
+        expect(result[:rss_feed].url).to eq("https://blog.example.com/feed")
+      end
+    end
+
     context "when the author does not exist" do
       before { params[:author_username] = "ghost" }
 
@@ -72,6 +88,21 @@ RSpec.describe DiscourseRssPolling::FeedSetting::Update do
             tags: "#{tag_1.name},#{tag_2.name}",
             category_filter: "news",
           )
+        end
+      end
+
+      context "when updating a disabled feed" do
+        fab!(:rss_feed) do
+          Fabricate(:rss_feed, url: "https://old.example.com/feed", user: user, enabled: false)
+        end
+
+        before { params[:id] = rss_feed.id }
+
+        it { is_expected.to run_successfully }
+
+        it "leaves the feed disabled" do
+          result
+          expect(rss_feed.reload.enabled).to eq(false)
         end
       end
 

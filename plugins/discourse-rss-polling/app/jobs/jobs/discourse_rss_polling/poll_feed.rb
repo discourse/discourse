@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rss"
-
 module Jobs
   module DiscourseRssPolling
     class PollFeed < ::Jobs::Base
@@ -16,13 +14,26 @@ module Jobs
         @feed_url = args[:feed_url]
         @discourse_tags = args[:discourse_tags]
         @feed_category_filter = args[:feed_category_filter]
+        @rss_feed_id = args[:rss_feed_id]
 
-        poll_feed if not_polled_recently?
+        if args[:force]
+          mark_polled
+        else
+          return if feed_disabled?
+          return unless not_polled_recently?
+        end
+
+        poll_feed
       end
 
       private
 
-      attr_reader :feed_url, :author, :discourse_category_id, :discourse_tags, :feed_category_filter
+      attr_reader :feed_url,
+                  :author,
+                  :discourse_category_id,
+                  :discourse_tags,
+                  :feed_category_filter,
+                  :rss_feed_id
 
       def resolve_author(args)
         if args[:user_id]
@@ -48,21 +59,35 @@ module Jobs
         "rss-polling-feed-polled:#{Digest::SHA1.hexdigest(feed_url)}"
       end
 
+      def poll_window
+        SiteSetting.rss_polling_frequency.minutes - 10.seconds
+      end
+
       def not_polled_recently?
-        Discourse.redis.set(
-          feed_key,
-          1,
-          ex: SiteSetting.rss_polling_frequency.minutes - 10.seconds,
-          nx: true,
-        )
+        Discourse.redis.set(feed_key, 1, ex: poll_window, nx: true)
+      end
+
+      def mark_polled
+        Discourse.redis.set(feed_key, 1, ex: poll_window)
+      end
+
+      def feed_disabled?
+        rss_feed_id.present? &&
+          !::DiscourseRssPolling::RssFeed.where(id: rss_feed_id, enabled: true).exists?
       end
 
       def poll_feed
-        topics_polled_from_feed.each do |feed_item|
-          next if feed_item.content.blank?
-          next if feed_item.title.blank?
-          if feed_category_filter.present? &&
-               feed_item.categories.none? { |c| c.include?(feed_category_filter) }
+        outcomes = []
+
+        fetch = ::DiscourseRssPolling::FeedFetcher.new(feed_url).fetch
+        analyzer = ::DiscourseRssPolling::FeedAnalyzer.new(feed_category_filter:)
+
+        fetch.items.each do |feed_item|
+          status, reason = analyzer.evaluate(feed_item)
+
+          if status == ::DiscourseRssPolling::FeedAnalyzer::SKIPPED
+            outcomes << feed_item.outcome(status: :skipped, reason:)
+            log_verbose("Skipped '#{feed_item.title || feed_item.url}' (#{reason})")
             next
           end
 
@@ -84,10 +109,16 @@ module Jobs
               tags: updated_tags,
               cook_method: cook_method,
             )
-          if post && (post.created_at == post.updated_at) # new post
-            if SiteSetting.rss_polling_use_pubdate
+
+          new_post = post && (post.created_at == post.updated_at)
+          item_status = post.nil? ? :failed : (new_post ? :imported : :updated)
+          outcomes << feed_item.outcome(status: item_status, topic_url: post&.topic&.relative_url)
+
+          log_verbose("Imported '#{feed_item.title}' (#{feed_item.url})")
+
+          if new_post
+            if SiteSetting.rss_polling_use_pubdate && (post_time = feed_item.pubdate)
               begin
-                post_time = feed_item.pubdate
                 post.created_at = post_time
                 post.save!
                 post.topic.created_at = post_time
@@ -102,6 +133,28 @@ module Jobs
             set_image_as_thumbnail(post, feed_item.image_link) if feed_item.image_link
           end
         end
+
+        record_attempt(outcomes, error: fetch.error&.to_s)
+      rescue => e
+        Discourse.warn_exception(e, message: "RSS Polling: error while polling feed #{feed_url}")
+        record_attempt(outcomes, error: "unknown")
+        raise
+      end
+
+      def record_attempt(outcomes, error: nil)
+        return if rss_feed_id.blank?
+
+        ::DiscourseRssPolling::PollAttempt.record!(rss_feed_id:, items: outcomes, error:)
+      rescue => e
+        Rails.logger.warn(
+          "RSS Polling: failed to record poll attempt for feed #{rss_feed_id}: #{e.message}",
+        )
+      end
+
+      def log_verbose(message)
+        return unless SiteSetting.rss_polling_verbose_logging
+
+        Rails.logger.info("RSS Polling: #{feed_url}: #{message}")
       end
 
       def set_image_as_thumbnail(post, image_link)
@@ -137,68 +190,6 @@ module Jobs
       ensure
         tmp&.close
         tmp&.unlink
-      end
-
-      def topics_polled_from_feed
-        raw_feed = fetch_raw_feed
-
-        if raw_feed.blank?
-          Rails.logger.warn("RSS Polling: Failed to fetch feed from #{feed_url}")
-          return []
-        end
-
-        parsed_feed = RSS::Parser.parse(raw_feed, false)
-
-        if parsed_feed.blank?
-          Rails.logger.warn("RSS Polling: Unable to parse feed from #{feed_url}")
-          return []
-        end
-
-        parsed_feed.items.map { |item| ::DiscourseRssPolling::FeedItem.new(item) }
-      rescue RSS::NotWellFormedError, RSS::InvalidRSSError => e
-        Discourse.warn_exception(e, message: "RSS Polling: Invalid RSS from #{feed_url}")
-        []
-      end
-
-      def fetch_raw_feed
-        url, headers = extract_api_credentials(@feed_url)
-        body = +""
-
-        fd = FinalDestination.new(url, headers:)
-        response_status = nil
-
-        fd.get do |response, chunk, uri|
-          if uri.blank? || !response.is_a?(Net::HTTPSuccess)
-            response_status = response&.code
-            throw :done
-          end
-          body << chunk
-        end
-
-        if body.blank? && response_status.present?
-          Rails.logger.warn(
-            "RSS Polling: HTTP #{response_status} when fetching #{feed_url} (status: #{fd.status})",
-          )
-        end
-
-        body.presence
-      end
-
-      def extract_api_credentials(url)
-        uri = URI.parse(url)
-        return url, {} if uri.query.blank?
-
-        params = CGI.parse(uri.query)
-        api_key = params.delete("api_key")&.first
-        api_username = params.delete("api_username")&.first
-
-        return url, {} if api_key.blank?
-
-        headers = { "Api-Key" => api_key }
-        headers["Api-Username"] = api_username if api_username.present?
-
-        uri.query = params.empty? ? nil : URI.encode_www_form(params)
-        [uri.to_s, headers]
       end
     end
   end

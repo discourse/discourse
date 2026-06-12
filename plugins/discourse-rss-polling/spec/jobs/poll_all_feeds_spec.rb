@@ -9,10 +9,10 @@ RSpec.describe Jobs::DiscourseRssPolling::PollAllFeeds do
   before { SiteSetting.rss_polling_enabled = true }
 
   describe "#execute" do
-    before do
-      Fabricate(:rss_feed, url: "https://www.example.com/feed", user: user_a)
-      Fabricate(:rss_feed, url: "https://blog.discourse.org/feed/", user: user_b)
+    fab!(:feed_a) { Fabricate(:rss_feed, url: "https://www.example.com/feed", user: user_a) }
+    fab!(:feed_b) { Fabricate(:rss_feed, url: "https://blog.discourse.org/feed/", user: user_b) }
 
+    before do
       Jobs.run_later!
       Discourse.redis.del("rss-polling-feeds-polled")
     end
@@ -43,6 +43,21 @@ RSpec.describe Jobs::DiscourseRssPolling::PollAllFeeds do
       it "does not queue PollFeed jobs" do
         Sidekiq::Testing.fake! do
           expect { job.execute({}) }.not_to change { Jobs::DiscourseRssPolling::PollFeed.jobs.size }
+        end
+      end
+    end
+
+    context "when a feed is disabled" do
+      before { feed_a.update!(enabled: false) }
+
+      it "only queues a PollFeed job for the enabled feeds" do
+        Sidekiq::Testing.fake! do
+          expect { job.execute({}) }.to change { Jobs::DiscourseRssPolling::PollFeed.jobs.size }.by(
+            1,
+          )
+
+          enqueued = Jobs::DiscourseRssPolling::PollFeed.jobs.last["args"][0]
+          expect(enqueued["feed_url"]).to eq("https://blog.discourse.org/feed/")
         end
       end
     end

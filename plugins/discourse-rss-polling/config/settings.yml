@@ -16,6 +16,16 @@ plugins:
     default: 30
     client: false
 
+  rss_polling_feed_request_timeout:
+    min: 5
+    max: 300
+    default: 30
+    client: false
+
+  rss_polling_verbose_logging:
+    default: false
+    client: false
+
   rss_polling_use_pubdate:
     default: false
     client: false
