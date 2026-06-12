@@ -80,7 +80,7 @@ async function loadSuggestions(component, selectKit) {
 function triggerRow(component) {
   return {
     id: SUGGEST_ID,
-    name: `<span class="ai-category-suggest__label">${i18n(
+    label: `<span class="ai-category-suggest__label">${i18n(
       "discourse_ai.ai_helper.suggest"
     )}</span>${iconHTML("discourse-sparkles")}`,
     onSelect: (selectKit) => loadSuggestions(component, selectKit),
@@ -90,7 +90,7 @@ function triggerRow(component) {
 function loadingRow() {
   return {
     id: SUGGEST_ID,
-    name: `<span class="ai-category-loading__label">${i18n(
+    label: `<span class="ai-category-loading__label">${i18n(
       "discourse_ai.ai_helper.context_menu.loading"
     )}</span>${iconHTML("spinner", { class: "fa-spin" })}`,
     onSelect: () => {},
@@ -100,7 +100,7 @@ function loadingRow() {
 function exitRow(component) {
   return {
     id: EXIT_ID,
-    name: `<span class="ai-category-exit__label">${i18n(
+    label: `<span class="ai-category-exit__label">${i18n(
       "discourse_ai.ai_helper.suggestions"
     )}</span>${iconHTML("xmark")}`,
     onSelect: (selectKit) => {
