@@ -33,7 +33,10 @@ module Migrations
       classes_with_dependencies = Set.new(classes_to_include)
       classes_to_include.each { |klass| add_dependencies(klass, classes_with_dependencies) }
 
-      classes_with_dependencies.to_a
+      # Preserve the input order. `Conversion::Base` passes an already sorted
+      # list and executes the result as-is, so dependencies pulled in by `only`
+      # must not be appended after the classes that depend on them.
+      @classes.select { |klass| classes_with_dependencies.include?(klass) }
     end
 
     private

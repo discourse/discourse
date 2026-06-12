@@ -62,6 +62,18 @@ RSpec.describe Migrations::Conversion::Base do
       )
     end
 
+    it "keeps pulled-in dependencies ordered before the steps that depend on them" do
+      TemporaryConverterModule::Categories.depends_on(:users)
+
+      # `--only categories` pulls in the `users` dependency; it has to run
+      # before `categories` because the filtered list is executed as-is.
+      filtered = converter.send(:filter_steps, converter.steps, ["categories"], [])
+
+      expect(filtered).to eq(
+        [TemporaryConverterModule::Users, TemporaryConverterModule::Categories],
+      )
+    end
+
     it "supports running a single step via `--only` even when its dependency is excluded" do
       TemporaryConverterModule::Categories.depends_on(:users)
 
