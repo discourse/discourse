@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
 import { bind } from "discourse/lib/decorators";
+import { not } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -181,7 +182,7 @@ export default class ManageTagsForm extends Component {
             @onSet={{this.afterFieldSet}}
             as |field|
           >
-            <field.Control />
+            <field.Control @showAllTags={{true}} />
           </form.Field>
         {{/if}}
 
@@ -207,7 +208,10 @@ export default class ManageTagsForm extends Component {
         @onSet={{this.afterFieldSet}}
         as |field|
       >
-        <field.Control @categoryId={{@categoryId}} />
+        <field.Control
+          @categoryId={{@categoryId}}
+          @showAllTags={{not @categoryId}}
+        />
       </form.Field>
 
       <form.Container
@@ -231,6 +235,7 @@ export default class ManageTagsForm extends Component {
                 as |field|
               >
                 <field.Control
+                  @showAllTags={{true}}
                   @maximum={{1}}
                   @placeholder="topic_bulk_actions.manage_tags.replace.from_placeholder"
                   @blockedTags={{this.blockedTagsFor
@@ -264,6 +269,7 @@ export default class ManageTagsForm extends Component {
               >
                 <field.Control
                   @categoryId={{@categoryId}}
+                  @showAllTags={{not @categoryId}}
                   @maximum={{1}}
                   @placeholder="topic_bulk_actions.manage_tags.replace.to_placeholder"
                   @blockedTags={{this.blockedTagsFor
