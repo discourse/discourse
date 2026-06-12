@@ -3,15 +3,19 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
 import SecondFactorForm from "discourse/components/second-factor-form";
 import SecurityKeyForm from "discourse/components/security-key-form";
+import UserField from "discourse/components/user-field";
+import valueEntered from "discourse/helpers/value-entered";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import escape from "discourse/lib/escape";
 import discourseLater from "discourse/lib/later";
+import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
@@ -23,6 +27,8 @@ import { i18n } from "discourse-i18n";
 const RESEND_COOLDOWN_SECONDS = 30;
 
 export default class CodeLoginForm extends Component {
+  @service site;
+
   @tracked step = "email";
   @tracked email = this.args.initialEmail ?? "";
   @tracked verifying = false;
@@ -41,11 +47,21 @@ export default class CodeLoginForm extends Component {
   @tracked securityKeyAllowedCredentialIds;
 
   code = "";
+  userFieldsValidationHelper = new UserFieldsValidationHelper({
+    getUserFields: () =>
+      this.site.get("user_fields")?.filter((f) => f.show_on_signup),
+    getAccountPassword: () => null,
+    showValidationOnInit: false,
+  });
   #cooldownTimer;
 
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.#cooldownTimer);
+  }
+
+  get isSignup() {
+    return this.args.context === "signup";
   }
 
   get isEmailStep() {
@@ -58,6 +74,14 @@ export default class CodeLoginForm extends Component {
 
   get isSecondFactorStep() {
     return this.step === "second-factor";
+  }
+
+  get isUserFieldsStep() {
+    return this.step === "user-fields";
+  }
+
+  get userFields() {
+    return this.userFieldsValidationHelper.userFields;
   }
 
   // Re-rendering DOtp with a fresh identity is the only way to clear it
@@ -156,11 +180,21 @@ export default class CodeLoginForm extends Component {
       data.second_factor_method = this.secondFactorMethod;
     }
 
+    if (this.isUserFieldsStep) {
+      data.user_fields = {};
+      this.userFields.forEach((f) => (data.user_fields[f.field.id] = f.value));
+    }
+
     try {
       const result = await ajax("/session/login-code/verify", {
         type: "POST",
         data,
       });
+
+      if (result?.user_fields_required && !this.isUserFieldsStep) {
+        this.step = "user-fields";
+        return;
+      }
 
       if (result?.second_factor_required && !this.isSecondFactorStep) {
         this.totpEnabled = result.totp_enabled;
@@ -178,6 +212,8 @@ export default class CodeLoginForm extends Component {
       if (result?.error) {
         if (this.isSecondFactorStep) {
           this.securityKeyCredential = null;
+          this.codeError = result.error;
+        } else if (this.isUserFieldsStep) {
           this.codeError = result.error;
         } else {
           this.codeError = result.error;
@@ -201,6 +237,15 @@ export default class CodeLoginForm extends Component {
     } finally {
       this.verifying = false;
     }
+  }
+
+  @action
+  async submitUserFields() {
+    this.userFieldsValidationHelper.validationVisible = true;
+    if (this.userFieldsValidationHelper.userFieldsValidation.failed) {
+      return;
+    }
+    return this.verifyCode();
   }
 
   @action
@@ -284,6 +329,12 @@ export default class CodeLoginForm extends Component {
   <template>
     <div class="code-login-form">
       {{#if this.isEmailStep}}
+        {{#if this.isSignup}}
+          <p class="code-login-form__instructions">
+            {{i18n "code_login.signup_instructions"}}
+          </p>
+        {{/if}}
+
         <Form
           @data={{hash email=this.email}}
           @onSubmit={{this.submitEmail}}
@@ -368,6 +419,40 @@ export default class CodeLoginForm extends Component {
               class="btn-flat code-login-form__change-email"
             />
           </div>
+        </div>
+      {{else if this.isUserFieldsStep}}
+        <div class="code-login-form__user-fields-step">
+          <h2 class="code-login-form__title">
+            {{i18n "code_login.user_fields_title"}}
+          </h2>
+          <p class="code-login-form__instructions">
+            {{i18n "code_login.user_fields_instructions"}}
+          </p>
+
+          <div class="user-fields">
+            {{#each this.userFields as |f|}}
+              <div class="input-group">
+                <UserField
+                  @field={{f.field}}
+                  @value={{f.value}}
+                  @validation={{f.validation}}
+                  class={{valueEntered f.value}}
+                />
+              </div>
+            {{/each}}
+          </div>
+
+          <div class="code-login-form__error" aria-live="polite" role="alert">
+            {{this.codeError}}
+          </div>
+
+          <DButton
+            @action={{this.submitUserFields}}
+            @label="code_login.continue_button"
+            @isLoading={{this.verifying}}
+            type="submit"
+            class="btn-primary code-login-form__verify"
+          />
         </div>
       {{else}}
         <div class="code-login-form__second-factor-step">

@@ -30,6 +30,7 @@ describe "Login and signup via email code" do
     it "creates an account and logs in" do
       visit("/signup")
       expect(page).to have_css(".code-login-form__email-step")
+      expect(page).to have_content(I18n.t("js.code_login.signup_title"))
       screenshot_marker(label: "code-signup-email-step")
 
       find(".code-login-form__email-step input[type='email']").fill_in(
@@ -46,6 +47,26 @@ describe "Login and signup via email code" do
       user = User.find_by_email("new.person@example.com")
       expect(user).to be_active
       expect(user.user_password).to be_nil
+    end
+  end
+
+  context "when signing up with required user fields" do
+    fab!(:user_field) { Fabricate(:user_field, name: "Occupation") }
+
+    it "collects the fields after the code is verified" do
+      request_code("fields.person@example.com", path: "/signup")
+      fill_code(latest_emailed_code("fields.person@example.com"))
+
+      expect(page).to have_css(".code-login-form__user-fields-step")
+      screenshot_marker(label: "code-signup-user-fields-step")
+
+      find(".user-field-occupation input").fill_in(with: "Dev")
+      find(".code-login-form__user-fields-step .code-login-form__verify").click
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      user = User.find_by_email("fields.person@example.com")
+      expect(user.custom_fields["user_field_#{user_field.id}"]).to eq("Dev")
     end
   end
 
@@ -93,7 +114,7 @@ describe "Login and signup via email code" do
       expect(page).to have_css("#login-account-name")
       screenshot_marker(label: "code-login-password-form")
 
-      find(".login-page-cta__code-login").click
+      find("#one-time-code-link").click
       expect(page).to have_css(".code-login-form__email-step")
 
       find(".code-login-form__password-toggle").click

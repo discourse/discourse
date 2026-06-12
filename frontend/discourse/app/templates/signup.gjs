@@ -53,7 +53,11 @@ export default <template>
           <SignupProgressBar @step={{@controller.progressBarStep}} />
           <WelcomeHeader
             id="create-account-title"
-            @header={{i18n "create_account.header_title"}}
+            @header={{if
+              @controller.showCodeSignupForm
+              (i18n "code_login.signup_title")
+              (i18n "create_account.header_title")
+            }}
           >
             <PluginOutlet
               @name="create-account-header-bottom"

@@ -2928,7 +2928,11 @@ en:
       code_resent: "We sent a new code."
       use_different_email: "Use a different email address"
       use_password_instead: "Log in with your password instead"
-      use_code_instead: "Email me a one-time code instead"
+      email_me_code: "Email me a one-time login code"
+      signup_title: "Join this community"
+      signup_instructions: "Enter your email address to join this community. We'll send you a code to confirm it and you'll be on your way!"
+      user_fields_title: "Almost done"
+      user_fields_instructions: "Just a few more details to finish creating your account."
 
     login:
       header_title: "Welcome back"

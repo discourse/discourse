@@ -95,6 +95,10 @@ export default <template>
                 />
               {{else}}
                 <LocalLoginForm
+                  @onShowCodeLogin={{if
+                    @controller.canUseCodeLogin
+                    @controller.togglePasswordForm
+                  }}
                   @loginName={{@controller.loginName}}
                   @loginNameChanged={{@controller.loginNameChanged}}
                   @canLoginLocalWithEmail={{@controller.canLoginLocalWithEmail}}
@@ -136,8 +140,6 @@ export default <template>
                 @createAccount={{@controller.createAccount}}
                 @loggingIn={{@controller.loggingIn}}
                 @showSecondFactor={{@controller.showSecondFactor}}
-                @showCodeLoginToggle={{@controller.showCodeLoginToggle}}
-                @toggleCodeLogin={{@controller.togglePasswordForm}}
               />
             {{/if}}
           </div>
@@ -177,8 +179,6 @@ export default <template>
             @createAccount={{@controller.createAccount}}
             @loggingIn={{@controller.loggingIn}}
             @showSecondFactor={{@controller.showSecondFactor}}
-            @showCodeLoginToggle={{@controller.showCodeLoginToggle}}
-            @toggleCodeLogin={{@controller.togglePasswordForm}}
           />
         {{/unless}}
       {{/if}}

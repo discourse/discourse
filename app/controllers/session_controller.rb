@@ -898,6 +898,8 @@ class SessionController < ApplicationController
       end
     end
 
+    return render json: { user_fields_required: true } if needs_signup_user_fields?(matched_user)
+
     EmailLoginCode::Redeem.call(
       service_params.deep_merge(ip_address: request.remote_ip),
     ) do |result|
@@ -905,8 +907,20 @@ class SessionController < ApplicationController
       on_failed_policy(:can_register_new_account) do
         render json: { error: I18n.t("login.new_registrations_disabled") }
       end
+      on_failed_policy(:required_fields_provided) do
+        render json: { error: I18n.t("login.missing_user_field") }
+      end
       on_failure { render json: invalid_login_code }
     end
+  end
+
+  # Required signup fields are only collected once the code has proven
+  # ownership of the inbox, so this response can't be used to probe whether
+  # an account exists.
+  def needs_signup_user_fields?(matched_user)
+    matched_user.nil? && params[:user_fields].blank? && UserField.required.exists? &&
+      SiteSetting.allow_new_registrations && !SiteSetting.invite_only &&
+      !SiteSetting.require_invite_code
   end
 
   def login_code_second_factor_info(user)

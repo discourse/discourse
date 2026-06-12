@@ -67,12 +67,6 @@ export default class LoginPageController extends Controller {
     return this.canUseCodeLogin && !this.showPasswordForm;
   }
 
-  get showCodeLoginToggle() {
-    return (
-      this.canUseCodeLogin && !this.showSecondFactor && !this.showSecurityKey
-    );
-  }
-
   @computed("siteSettings.enable_local_logins_via_email")
   get canLoginLocalWithEmail() {
     return this.siteSettings.enable_local_logins_via_email;

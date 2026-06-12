@@ -80,6 +80,36 @@ RSpec.describe EmailLoginCode::Redeem do
       end
     end
 
+    context "when required signup fields exist" do
+      fab!(:user_field)
+
+      it { is_expected.to fail_a_policy(:required_fields_provided) }
+
+      it "does not consume the code" do
+        result
+
+        expect(login_code.reload.consumed_at).to be_nil
+      end
+
+      context "when the field values are provided" do
+        let(:params) { { email:, code:, user_fields: { user_field.id.to_s => "Dev" } } }
+
+        it { is_expected.to run_successfully }
+
+        it "saves the field value on the new user" do
+          expect(result[:user].custom_fields["user_field_#{user_field.id}"]).to eq("Dev")
+        end
+      end
+
+      context "when the email belongs to an existing user" do
+        fab!(:user)
+
+        let(:email) { user.email }
+
+        it { is_expected.to run_successfully }
+      end
+    end
+
     context "when the email belongs to a staged user" do
       fab!(:staged_user) { Fabricate(:staged, active: false) }
 
