@@ -27,7 +27,13 @@ after_initialize do
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node do
       require_relative "lib/discourse_workflows/nodes/assign_topic/v1"
-      DiscourseWorkflows::Nodes::AssignTopic::V1
+      require_relative "lib/discourse_workflows/nodes/assigned/v1"
+      [DiscourseWorkflows::Nodes::AssignTopic::V1, DiscourseWorkflows::Nodes::Assigned::V1]
+    end
+
+    on(:assigned) do |assignment|
+      require_relative "lib/discourse_workflows/nodes/assigned/v1"
+      DiscourseWorkflows::EventListener.handle(DiscourseWorkflows::Nodes::Assigned::V1, assignment)
     end
   end
   UserUpdater::OPTION_ATTR.push(:notification_level_when_assigned)
