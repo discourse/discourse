@@ -246,6 +246,31 @@ RSpec.describe Migrations::Conversion::Worker do
       temp_file.unlink
     end
 
+    it "raises an error in the parent process when `job.setup` fails in the worker process" do
+      allow(job).to receive(:setup) do
+        $stderr.reopen(File::NULL) # silence the worker's backtrace in the test output
+        raise Migrations::Conversion::SetupGuard::SetupError, "setup failed"
+      end
+
+      worker.start
+      input_queue << { text: "Item 1" }
+      input_queue.close
+
+      expect { worker.wait }.to raise_error(
+        described_class::CrashedError,
+        /Worker process #{index} exited unexpectedly/,
+      )
+    end
+
+    it "raises an error when the worker process dies even though no pipe write failed" do
+      allow(job).to receive(:setup) { exit!(1) }
+
+      worker.start
+      input_queue.close
+
+      expect { worker.wait }.to raise_error(described_class::CrashedError)
+    end
+
     it "runs `job.cleanup` at the end" do
       temp_file = Tempfile.new("method_call_check")
       temp_file_path = temp_file.path
