@@ -10,9 +10,7 @@ import EntrypointCard from "./entrypoint-card";
 import LoadedChunks from "./loaded-chunks";
 
 export default class Report extends Component {
-  // Defaults to raw: brotli sizes arrive asynchronously from the worker, so
-  // raw gives immediate, stable numbers until the user flips the toggle.
-  @tracked sizeKey = "raw";
+  @tracked sizeKey = "brotli";
   @tracked filter = "";
 
   loaded = new LoadedChunks(this.args.analysis.chunks);

@@ -61,6 +61,17 @@ export default class Analysis {
     this.brotli = next;
   }
 
+  setBrotliMany(entries) {
+    if (!entries.length) {
+      return;
+    }
+    const next = new Map(this.brotli);
+    for (const [file, size] of entries) {
+      next.set(file, size);
+    }
+    this.brotli = next;
+  }
+
   brotliComplete() {
     this.brotliDone = true;
   }
