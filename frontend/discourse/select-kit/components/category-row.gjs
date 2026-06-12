@@ -18,18 +18,6 @@ export default class CategoryRow extends Component {
 
   readOnlyDesc = i18n("category_row.read_only_description");
 
-  get isActionRow() {
-    return typeof this.args.item?.onSelect === "function";
-  }
-
-  get role() {
-    return this.isActionRow ? "menuitem" : "menuitemradio";
-  }
-
-  get ariaChecked() {
-    return this.isActionRow ? undefined : this.isSelected;
-  }
-
   get isNone() {
     return this.rowValue === this.args.selectKit?.noneItem;
   }
@@ -296,7 +284,7 @@ export default class CategoryRow extends Component {
         (if this.isHighlighted "is-highlighted")
         (if this.isNone "is-none")
       }}
-      role={{this.role}}
+      role="menuitemradio"
       data-index={{@index}}
       data-name={{this.rowName}}
       data-value={{this.rowValue}}
@@ -308,6 +296,7 @@ export default class CategoryRow extends Component {
       {{on "mouseenter" this.handleMouseEnter passive=true}}
       {{on "click" this.handleClick}}
       {{on "keydown" this.handleKeyDown}}
+      aria-checked={{this.isSelected}}
       tabindex="-1"
     >
 
