@@ -8,8 +8,17 @@ module PageObjects
         self
       end
 
+      def visit_members(group)
+        page.visit("/g/#{group.name}/members")
+        self
+      end
+
       def find(selector)
         page.find(".group #{selector}")
+      end
+
+      def has_member?(user)
+        page.has_css?(".group-members .user-info[data-username='#{user.username}']")
       end
 
       def add_users
