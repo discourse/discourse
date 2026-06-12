@@ -719,6 +719,9 @@ pt:
       session_info: "Ler info da sessão de utilizador"
       read: "Ler todos"
       write: "Escrever todos"
+    device:
+      code: "Código"
+      continue: "Continuar"
   reports:
     default:
       labels:

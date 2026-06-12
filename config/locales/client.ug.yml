@@ -6,6 +6,16 @@
 
 ug:
   js:
+    user_api_key:
+      authorize: "دەلىللە"
+      deny: "ۋاز كەچ"
+      copied: "كۆچۈرۈلدى!"
+      otp_description: '«%{application_name}» نىڭ بۇ تور بېكەتنى زىيارەت قىلىشىغا يول قويامسىز؟'
+      no_trust_level: "كەچۈرۈڭ، ئىشلەتكۈچى API نى زىيارەت قىلىشقا يېتەرلىك تەلەپتىكى ئىشەنچ دەرىجىڭىز يوق"
+      generic_error: "كەچۈرۈڭ، ئىشلەتكۈچى API شىفىرلىق ئاچقۇچنى تارقىتالمايمىز، بۇ ئىقتىدارنى تور بېكەت باشقۇرغۇچى چەكلىگەن بولۇشى مۇمكىن."
+      device:
+        code: "كود"
+        continue: "داۋاملاشتۇر"
     blocks:
       ghost:
         status: "ھالەت"
@@ -1623,6 +1633,9 @@ ug:
       undo_revoke_access: "زىيارەت بىكار قىلىشتىن يېنىۋال"
       api_approved: "تەستىقلاندى:"
       api_last_used_at: "ئاخىرقى قېتىم ئىشلەتكەن ۋاقىت:"
+      api_expires_at: "ۋاقتى توشىدۇ:"
+      api_expired_at: "ۋاقتى توشتى:"
+      api_expires_never: "ھەرگىز"
       theme: "ئۆرنەك"
       save_to_change_theme: 'سىز «%{save_text}» نى چەككەندىن كېيىن ئۆرنەك يېڭىلىنىدۇ'
       home: "كۆڭۈلدىكى باش بەت"
@@ -5930,6 +5943,11 @@ ug:
                 "2": "ئەزا"
                 "3": "ئادەتتىكى"
                 "4": "باشلىق"
+          search:
+            title: "ئىزدە"
+            table:
+              searches: "ئىزدەش نەتىجىسى"
+              status: "ھالەت"
         reports_section:
           no_data: "كۆرسىتىدىغان سانلىق مەلۇمات يوق"
           modal:

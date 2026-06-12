@@ -429,6 +429,9 @@ sq:
       notifications: "Leximin dhe pastrimin e njoftimeve"
       push: "Njoftime \"push\" drejt shërbimeve të jashtme"
       session_info: "Leximin e informacionit të sesionit të llogarisë"
+    device:
+      code: "Kodi"
+      continue: "Vazhdoni"
   reports:
     default:
       labels:

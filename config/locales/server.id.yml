@@ -872,6 +872,9 @@ id:
       one_time_password: "Membuat token masuk satu kali"
       bookmarks_calendar: "Baca pengingat bookmark"
       user_status: "Baca dan perbarui status pengguna"
+    device:
+      code: "Kode"
+      continue: "Lanjutkan"
     invalid_public_key: "Maaf, kunci publik tidak valid."
     invalid_auth_redirect: "Maaf, host auth_redirect ini tidak diizinkan."
     invalid_token: "Token tidak ada, tidak valid, atau kedaluwarsa."

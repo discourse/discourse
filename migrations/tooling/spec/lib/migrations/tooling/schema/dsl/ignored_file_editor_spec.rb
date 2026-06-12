@@ -75,4 +75,88 @@ RSpec.describe Migrations::Tooling::Schema::DSL::IgnoredFileEditor do
       end
     end
   end
+
+  describe "#remove_table" do
+    it "removes a table from a tables group and preserves the reason" do
+      with_ignored_file(<<~RUBY) do |tmpdir, ignored_path|
+          Migrations::Tooling::Schema.ignored do
+            tables :a, :b, :c, reason: "legacy"
+          end
+        RUBY
+        allow(Migrations::Tooling::Schema::Helpers).to receive(:format_ruby_file)
+
+        described_class.new(tmpdir).remove_table(:b)
+
+        content = File.read(ignored_path)
+        expect(content).to include('tables :a, :c, reason: "legacy"')
+        expect(content).not_to include(":b")
+      end
+    end
+
+    it "removes a standalone table entry entirely" do
+      with_ignored_file(<<~RUBY) do |tmpdir, ignored_path|
+          Migrations::Tooling::Schema.ignored do
+            table :a, "Legacy table"
+            tables :b, :c
+          end
+        RUBY
+        allow(Migrations::Tooling::Schema::Helpers).to receive(:format_ruby_file)
+
+        described_class.new(tmpdir).remove_table(:a)
+
+        content = File.read(ignored_path)
+        expect(content).not_to include(":a,")
+        expect(content).not_to include("Legacy table")
+        expect(content).to include("tables :b, :c")
+      end
+    end
+
+    it "removes the whole group when the last table is removed" do
+      with_ignored_file(<<~RUBY) do |tmpdir, ignored_path|
+          Migrations::Tooling::Schema.ignored do
+            tables :a
+            tables :b, :c
+          end
+        RUBY
+        allow(Migrations::Tooling::Schema::Helpers).to receive(:format_ruby_file)
+
+        described_class.new(tmpdir).remove_table(:a)
+
+        content = File.read(ignored_path)
+        expect(content).not_to include("tables :a")
+        expect(content).to include("tables :b, :c")
+      end
+    end
+
+    it "removes a table from a multi-line tables group" do
+      with_ignored_file(<<~RUBY) do |tmpdir, ignored_path|
+          Migrations::Tooling::Schema.ignored do
+            tables :aaa,
+                   :bbb,
+                   :ccc
+          end
+        RUBY
+        allow(Migrations::Tooling::Schema::Helpers).to receive(:format_ruby_file)
+
+        described_class.new(tmpdir).remove_table(:aaa)
+
+        content = File.read(ignored_path)
+        expect(content).to include("tables :bbb, :ccc")
+        expect(content).not_to include(":aaa")
+      end
+    end
+
+    it "raises when the table is not ignored" do
+      with_ignored_file(<<~RUBY) do |tmpdir, _ignored_path|
+          Migrations::Tooling::Schema.ignored do
+            tables :a, :b
+          end
+        RUBY
+        expect { described_class.new(tmpdir).remove_table(:c) }.to raise_error(
+          Migrations::Tooling::Schema::ConfigError,
+          /is not ignored/,
+        )
+      end
+    end
+  end
 end

@@ -7,7 +7,10 @@
 ru:
   js:
     discourse_captcha:
+      missing_token: "Пожалуйста, пройдите проверку капчи."
+      verification_failed: "Проверка капчи не удалась. Пожалуйста, попробуйте еще раз."
       placeholder: заполнитель
+      contact_system_administrator: "Возникла проблема с вашим поставщиком капчи. Если проблема сохраняется, пожалуйста, свяжитесь с системным администратором."
   admin_js:
     admin:
       site_settings:

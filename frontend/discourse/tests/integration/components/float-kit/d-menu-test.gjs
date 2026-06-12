@@ -29,6 +29,21 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await triggerEvent(".fk-d-menu__trigger.-expanded", "click");
   }
 
+  async function swipeDown(selector) {
+    await triggerEvent(selector, "touchstart", {
+      touches: [{ clientX: 0, clientY: 0 }],
+      changedTouches: [{ clientX: 0, clientY: 0 }],
+    });
+    await triggerEvent(selector, "touchmove", {
+      touches: [{ clientX: 0, clientY: 200 }],
+      changedTouches: [{ clientX: 0, clientY: 200 }],
+    });
+    await triggerEvent(selector, "touchend", {
+      touches: [],
+      changedTouches: [{ clientX: 0, clientY: 200 }],
+    });
+  }
+
   test("@label", async function (assert) {
     await render(
       <template><DMenu @inline={{true}} @label="label" /></template>
@@ -70,6 +85,49 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await open();
 
     assert.dom(".fk-d-menu-modal[data-identifier='foo']").hasText("content");
+  });
+
+  test("@modalForMobile - swipe down to close", async function (assert) {
+    forceMobile();
+
+    await render(
+      <template>
+        <DMenu
+          @identifier="foo"
+          @inline={{true}}
+          @modalForMobile={{true}}
+          @content="content"
+        />
+      </template>
+    );
+    await open();
+
+    assert.dom(".fk-d-menu-modal").exists();
+
+    await swipeDown(".fk-d-menu-modal .d-modal__container");
+
+    assert.dom(".fk-d-menu-modal").doesNotExist();
+  });
+
+  test("@modalForMobile - swipe down defers to scrolled content", async function (assert) {
+    forceMobile();
+
+    await render(
+      <template>
+        <DMenu @identifier="foo" @inline={{true}} @modalForMobile={{true}}>
+          <div class="test-scroll-area" style="height: 50px; overflow-y: auto">
+            <div style="height: 500px">tall content</div>
+          </div>
+        </DMenu>
+      </template>
+    );
+    await open();
+
+    document.querySelector(".test-scroll-area").scrollTop = 100;
+
+    await swipeDown(".test-scroll-area");
+
+    assert.dom(".fk-d-menu-modal").exists();
   });
 
   test("@onRegisterApi", async function (assert) {

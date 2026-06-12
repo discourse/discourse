@@ -842,6 +842,9 @@ lt:
       write: "Rašyti visus"
       one_time_password: "Sukurkite vienkartinį prisijungimo raktą"
       bookmarks_calendar: "Skaityti žymių priminimus"
+    device:
+      code: "Kodas"
+      continue: "Tęsti"
     invalid_public_key: "Atsiprašome, viešasis raktas yra neteisingas."
     invalid_token: "Trūksta, netinkamas arba pasibaigęs prieigos raktas."
   flags:

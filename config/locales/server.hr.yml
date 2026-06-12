@@ -861,6 +861,9 @@ hr:
       one_time_password: "Stvorite jednokratni token za prijavu"
       bookmarks_calendar: "Čitajte podsjetnike za oznake"
       user_status: "Pročitajte i ažurirajte status korisnika"
+    device:
+      code: "Šifra"
+      continue: "Nastavi"
     invalid_public_key: "Nažalost, javni ključ je nevažeći."
     invalid_auth_redirect: "Nažalost, ovaj auth_redirect host nije dopušten."
     invalid_token: "Token nedostaje, nije valjan ili je istekao."

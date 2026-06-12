@@ -6,6 +6,13 @@
 
 te:
   js:
+    user_api_key:
+      authorize: "అధికారం ఇవ్వండి"
+      deny: "రద్దుచేయండి"
+      copied: "కాపీ చేయబడింది!"
+      device:
+        code: "కోడ్"
+        continue: "కొనసాగించండి"
     blocks:
       ghost:
         status: "స్థితి"
@@ -1249,6 +1256,7 @@ te:
       undo_revoke_access: "యాక్సెస్‌ ఉపసంహరణ ని రద్దు చేయండి"
       api_approved: "ఆమోదించబడింది:"
       api_last_used_at: "చివరిగా ఉపయోగించబడినది:"
+      api_expires_never: "ఎప్పటికీ వద్దు"
       theme: "థీమ్"
       save_to_change_theme: 'మీరు "%{save_text}" క్లిక్ చేసిన తర్వాత థీమ్ నవీకరించబడుతుంది'
       home: "డిఫాల్ట్ హోమ్ పేజీ"
@@ -4561,6 +4569,11 @@ te:
                 "2": "సభ్యుడు"
                 "3": "రెగ్యులరు"
                 "4": "లీడరు"
+          search:
+            title: "వెతుకు"
+            table:
+              searches: "శోధనలు"
+              status: "స్థితి"
         reports_section:
           modal:
             enabled_heading: "ప్రారంభించబడింది"

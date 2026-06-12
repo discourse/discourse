@@ -1319,6 +1319,10 @@ he:
       one_time_password: "יצירת אסימון כניסה חד־פעמי"
       bookmarks_calendar: "לקרוא תזכורות לסימניות"
       user_status: "קריאה ועדכון של מצב המשתמש"
+    device:
+      code: "קוד"
+      continue: "המשך"
+      authorize_title: 'אישור של „%{application_name}”'
     invalid_public_key: "המפתח הציבורי שגוי, עמך הסליחה."
     invalid_auth_redirect: "מארח auth_redirect זה אינו מורשה, עמך הסליחה."
     invalid_token: "אסימון חסר, שגוי או פג תוקף."
@@ -1968,7 +1972,6 @@ he:
     allowed_iframes: "רשימה של כתובות ל־src של iframe ש־Discourse יכולה להרשאות בבטחה בפוסטים. אפשר להשתמש ב־* כדי לתפוס מספר כלשהו של אותיות או תווים כלשהם."
     allowed_crawler_user_agents: "סוכני משתמשים של סורקי רשת שמורשים לגשת לאתר. אזהרה! שינוי הגדרה זו תחסום את כל הסורקים שאינם מופיעים כאן!"
     blocked_crawler_user_agents: "מילה ייחודית שאינה תלוית רישיות במחרוזת סוכן המשתמש (user agent) שמגדירה לאילו סורקי רשת אין הרשאת גישה לאתר. לא חל במקרה שהגדרת רשימת היתר."
-    content_security_policy: "אפשר מדיניות תוכן-אבטחה (CSP). CSP הוא שכבת אבטחה נוספת שעוזרת למנוע סוגים מסוימים של התקפות, כולל Cross Site Scripting (XSS) והזרקת נתונים."
     content_security_policy_report_only: "הפעלת Content-Security-Policy-Report-Only (מדיניות אבטחת תוכן בדיווח בלבד - CSP)"
     content_security_policy_frame_ancestors: "להגביל מי יכול להטמיע את האתר הזה עם מסגרות iframes דרך CSP. ניתן לשלוח במארחים המורשים דרך <a href='%{base_path}/admin/customize/embedding'>הטמעה</a>"
     content_security_policy_script_src: "מקורות סקריפט נוספים ברשימת ההיתרים. השרת המקומי וה-CDN כלולים כברירת מחדל. ראה <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>הגבלת התקפות XSS עם מדיניות אבטחת תוכן.</a> (CSP). מקורות שרת מקומי יתעלמו שכן strict-dynamic מופעל."

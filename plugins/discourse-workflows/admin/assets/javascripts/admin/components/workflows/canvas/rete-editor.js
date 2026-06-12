@@ -5,13 +5,17 @@ import {
   buildWorkflowGraphIndex,
   graphConnectionKey,
   LOOP_OUTPUT,
+  nextAvailableTargetInputIndex,
   normalizeSourceOutput,
   normalizeSourceOutputIndex,
   normalizeTargetInput,
   normalizeTargetInputIndex,
+  portIndexFromKey,
 } from "../../../lib/workflows/graph-constants";
 import {
+  nodeTypeInputAcceptsMultipleConnections,
   nodeTypeInputs,
+  nodeTypeInputUsesConnectionIndexes,
   nodeTypeOutputKeys,
 } from "../../../lib/workflows/node-types";
 import {
@@ -80,9 +84,11 @@ export class ReteEditorBridge {
               new ClassicPreset.Input(
                 socket,
                 key === "main" ? "" : key,
-                data.type === "flow:loop_over_items" ||
-                  (data.type === "flow:merge" &&
-                    (data.configuration?.mode || "append") === "append")
+                nodeTypeInputAcceptsMultipleConnections(
+                  nodeTypesByIdentifier.get(data.type) || data.type,
+                  key,
+                  data
+                )
               )
             );
           }
@@ -192,6 +198,7 @@ export class ReteEditorBridge {
       getNodeHeight,
       getNodeLabel,
       inputKeysFor,
+      nodeTypesByIdentifier,
     });
 
     renderer.onNodeDelete = (clientId) => {
@@ -223,6 +230,7 @@ export class ReteEditorBridge {
     getNodeHeight,
     getNodeLabel,
     inputKeysFor,
+    nodeTypesByIdentifier,
   }) {
     this.editor = editor;
     this.area = area;
@@ -242,6 +250,7 @@ export class ReteEditorBridge {
     this.getNodeHeight = getNodeHeight;
     this.getNodeLabel = getNodeLabel;
     this.inputKeysFor = inputKeysFor;
+    this.nodeTypesByIdentifier = nodeTypesByIdentifier;
     this.isSyncing = false;
     this.isAutoArranging = false;
     this.wasDragging = false;
@@ -345,7 +354,8 @@ export class ReteEditorBridge {
             conn.sourceOutput,
             conn.target,
             conn.targetInput,
-            conn.sourceOutputIndex
+            conn.sourceOutputIndex,
+            conn.targetInputIndex
           );
         }
       }
@@ -452,9 +462,39 @@ export class ReteEditorBridge {
 
   inputKeyFor(targetNode, connection) {
     return (
-      Object.keys(targetNode.inputs || {})[
+      Object.keys(targetNode?.inputs || {})[
         normalizeTargetInputIndex(connection)
       ] || normalizeTargetInput(connection.targetInput)
+    );
+  }
+
+  targetInputIndexFor(targetNode, connection) {
+    if (connection.targetInputIndex != null) {
+      return connection.targetInputIndex;
+    }
+
+    const inputKey = this.inputKeyFor(targetNode, connection);
+    const targetNodeType =
+      this.nodeTypesByIdentifier.get(targetNode?.workflowData?.type) ||
+      targetNode?.workflowData?.type;
+
+    if (
+      nodeTypeInputUsesConnectionIndexes(
+        targetNodeType,
+        inputKey,
+        targetNode?.workflowData
+      )
+    ) {
+      return nextAvailableTargetInputIndex(
+        this.editor.getConnections(),
+        targetNode.id,
+        connection
+      );
+    }
+
+    return portIndexFromKey(
+      connection.targetInput,
+      Object.keys(targetNode?.inputs || {})
     );
   }
 
@@ -462,8 +502,15 @@ export class ReteEditorBridge {
     const sourceNode = this.editor.getNode(
       connection.sourceClientId || connection.source
     );
+    const targetNode = this.editor.getNode(
+      connection.targetClientId || connection.target
+    );
 
     connection.sourceOutputIndex = this.outputIndexFor(sourceNode, connection);
+    connection.targetInputIndex = this.targetInputIndexFor(
+      targetNode,
+      connection
+    );
     return connection;
   }
 
@@ -563,6 +610,10 @@ export class ReteEditorBridge {
     connection.sourceOutputIndex = this.outputIndexFor(sourceNode, {
       sourceOutput,
       sourceOutputIndex,
+    });
+    connection.targetInputIndex = this.targetInputIndexFor(targetNode, {
+      targetInput,
+      targetInputIndex,
     });
 
     await this.editor.addConnection(connection);

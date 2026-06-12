@@ -6,6 +6,12 @@ module Migrations
       class UserFieldValues < Conversion::ProgressStep
         USER_FIELD_PREFIX = "user_field_"
 
+        # `USER_FIELD_PREFIX` as a `LIKE` pattern: the `_` characters are literal
+        # here, not single-character wildcards, so they're escaped for use with
+        # an `ESCAPE '\'` clause. This keeps the `user_field_*` split between
+        # this step and `UserCustomFields` exact and complementary.
+        USER_FIELD_LIKE_PATTERN = "#{USER_FIELD_PREFIX.gsub("_") { '\_' }}%"
+
         attr_accessor :source_db
 
         def max_progress
@@ -13,7 +19,7 @@ module Migrations
             SELECT COUNT(*)
             FROM user_custom_fields
             WHERE user_id > 0
-              AND name LIKE '#{USER_FIELD_PREFIX}%'
+              AND name LIKE '#{USER_FIELD_LIKE_PATTERN}' ESCAPE '\\'
           SQL
         end
 
@@ -24,7 +30,7 @@ module Migrations
                    (COUNT(*) OVER (PARTITION BY user_id, name) > 1)           AS is_multiselect_field
             FROM user_custom_fields
             WHERE user_id > 0
-              AND name LIKE '#{USER_FIELD_PREFIX}%'
+              AND name LIKE '#{USER_FIELD_LIKE_PATTERN}' ESCAPE '\\'
             ORDER BY user_id, name
           SQL
         end

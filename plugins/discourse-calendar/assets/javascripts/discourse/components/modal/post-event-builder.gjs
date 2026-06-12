@@ -115,7 +115,7 @@ export default class PostEventBuilder extends Component {
           : this.event.status || "public",
       rawInvitees: this.event.rawInvitees ?? [],
       recurrence: this.event.recurrence ?? null,
-      imageUpload: this.event.imageUpload ?? null,
+      imageUpload: this.event.imageUpload?.url ?? null,
       timezone: this.event.timezone ?? null,
       // clone so the form draft owns its own reminders
       reminders: (this.event.reminders ?? []).map((r) => ({ ...r })),
@@ -204,8 +204,8 @@ export default class PostEventBuilder extends Component {
 
   @action
   handleImageChange(value, { set }) {
-    set("imageUpload", value);
-    this.event.imageUpload = value;
+    set("imageUpload", value?.url ?? null);
+    this.event.imageUpload = value ?? null;
   }
 
   @action
@@ -740,6 +740,7 @@ export default class PostEventBuilder extends Component {
       }}
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @inline={{@inline}}
       class="post-event-builder-modal
         {{if this.isAdvancedScreen 'is-advanced' 'is-compact'}}"
     >

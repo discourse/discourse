@@ -12,17 +12,28 @@ module UpcomingChanges
     SETTINGS_PATH = "config/site_settings.yml"
     PLUGIN_SETTINGS_PATH_PATTERN = "plugins/*/config/settings.yml"
     STATUS_PATTERN = /\A(\s*)status:\s*(["']?)([^"'\s#]+)\2([^\n]*)(\n?)\z/
+    # Bounds how far back git history is scanned. Upcoming changes are short-lived, so a
+    # year is plenty and avoids re-parsing thousands of historical settings revisions.
+    DEFAULT_HISTORY_SINCE = "1 year ago"
 
     Commit = Struct.new(:sha, :date, :author_name, :author_email, :subject, keyword_init: true)
     HistoryEntry = Struct.new(:commit, :status, keyword_init: true)
 
     class Git
-      def initialize(repo_path:)
+      def initialize(repo_path:, since: nil)
         @repo_path = repo_path
+        @since = since
       end
 
+      # Only commits within @since are returned. For a change whose status last moved
+      # before the window, the oldest in-window commit becomes the apparent first/last
+      # status change. Eligibility is unaffected (its age is still well past the staleness
+      # threshold); only the reported original author/PR may point at the window boundary.
       def commits_for(path)
-        output = capture("log", "--format=%H%x00%aI%x00%an%x00%ae%x00%s", "--", path)
+        args = %w[log --format=%H%x00%aI%x00%an%x00%ae%x00%s]
+        args << "--since=#{@since}" if @since.present?
+        args += ["--", path]
+        output = capture(*args)
 
         output.lines.filter_map do |line|
           sha, date, author_name, author_email, subject = line.chomp.split("\0", 5)
@@ -336,6 +347,7 @@ module UpcomingChanges
       settings_path: SETTINGS_PATH,
       settings_paths: nil,
       stale_after_days: 14,
+      history_since: DEFAULT_HISTORY_SINCE,
       now: Time.current
     )
       @repo_path = repo_path
@@ -343,7 +355,7 @@ module UpcomingChanges
       @stale_after_days = stale_after_days.to_i
       @now = now
       @source_index = SourceIndex.new(repo_path:, settings_path:, settings_paths:)
-      @git = Git.new(repo_path:)
+      @git = Git.new(repo_path:, since: history_since)
     end
 
     def report
@@ -446,6 +458,7 @@ module UpcomingChanges
           repo_path: Rails.root.to_s,
           settings_paths: nil,
           stale_after_days: 14,
+          history_since: DEFAULT_HISTORY_SINCE,
           pretty: false,
         }
 
@@ -467,6 +480,10 @@ module UpcomingChanges
             opts.on("--stale-after-days DAYS", Integer, "Minimum unchanged age") do |days|
               options[:stale_after_days] = days
             end
+            opts.on(
+              "--history-since VALUE",
+              "How far back to scan git history (any git --since value); defaults to '#{DEFAULT_HISTORY_SINCE}'",
+            ) { |value| options[:history_since] = value }
             opts.on("--pretty", "Pretty-print JSON output") { options[:pretty] = true }
           end
 
@@ -477,6 +494,7 @@ module UpcomingChanges
             repo_path: options[:repo_path],
             settings_paths: options[:settings_paths],
             stale_after_days: options[:stale_after_days],
+            history_since: options[:history_since],
           )
         output = options[:apply] ? status_report.apply(options[:apply]) : status_report.report
         puts(options[:pretty] ? JSON.pretty_generate(output) : JSON.generate(output))

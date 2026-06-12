@@ -48,6 +48,7 @@ module Migrations
             flair_upload_id: @flair_upload_creator.create_for(item),
             full_name: item[:full_name],
             grant_trust_level: item[:grant_trust_level],
+            incoming_email: item[:incoming_email],
             members_visibility_level: item[:members_visibility_level],
             membership_request_template: item[:membership_request_template],
             mentionable_level: item[:mentionable_level],

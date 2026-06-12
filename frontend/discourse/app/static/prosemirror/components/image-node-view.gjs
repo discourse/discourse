@@ -611,8 +611,27 @@ export default class ImageNodeView extends Component {
     this.imageLoaded = true;
   }
 
+  get altInputHasFocus() {
+    return !!this.altMenuInstance?.content?.contains(document.activeElement);
+  }
+
+  @action
+  handleImageMouseDown(event) {
+    // keep the alt input focused so handleImageClick treats this click as
+    // a dismissal — ProseMirror also ignores default-prevented events
+    if (event.button === 0 && this.altInputHasFocus) {
+      event.preventDefault();
+    }
+  }
+
   @action
   async handleImageClick(event) {
+    if (this.altInputHasFocus) {
+      event.preventDefault();
+      this.args.view.focus();
+      return;
+    }
+
     if (this.image.classList.contains("ProseMirror-selectednode")) {
       event?.preventDefault();
       event?.stopPropagation();
@@ -644,6 +663,8 @@ export default class ImageNodeView extends Component {
       role="button"
       {{didInsert this.setupImage}}
       {{on "load" this.updateImageLoaded}}
+      {{! eslint-disable ember/template-no-pointer-down-event-binding }}
+      {{on "mousedown" this.handleImageMouseDown}}
       {{on "click" this.handleImageClick}}
     />
     {{#if this.isPlaceholder}}

@@ -1372,7 +1372,12 @@ en:
             from_alias_hint: "Alias to use as the from address when sending group SMTP emails. Note this may not be supported by all mail providers, please consult your mail provider's documentation."
         membership:
           title: Membership
-          access: Access
+          visibility_and_access: "Access & visibility"
+          join_method_title: "How can users join?"
+          join_method:
+            free: "Anyone can join freely"
+            request: "Anyone can request to join"
+            invite: "Invite only"
         categories:
           title: Categories
           long_title: "Category default notifications"
@@ -1405,7 +1410,6 @@ en:
         title: "Permissions"
         none: "There are no categories associated with this group."
         description: "Members of this group can access these categories"
-      public_admission: "Allow users to join the group freely (Requires publicly visible group)"
       public_exit: "Allow users to leave the group freely"
       empty:
         posts: "There are no posts by members of this group"
@@ -1421,7 +1425,6 @@ en:
       request: "Request"
       message: "Message"
       confirm_leave: "Are you sure you want to leave this group?"
-      allow_membership_requests: "Allow users to send membership requests to group owners (Requires publicly visible group)"
       membership_request_template: "Custom template to display to users when sending a membership request"
       membership_request:
         submit: "Submit Request"
@@ -7255,7 +7258,6 @@ en:
             incoming_email: "Custom incoming email address"
             incoming_email_placeholder: "enter email address"
             incoming_email_tooltip: "You can separate multiple email addresses with the | character."
-            visibility: Visibility
             visibility_levels:
               title: "Who can see this group?"
               public: "Everyone"

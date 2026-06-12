@@ -109,6 +109,7 @@ module DiscourseAi
             Tools::GrantBadge,
             Tools::ListReviewables,
             Tools::PerformReviewableAction,
+            Tools::AddReviewableNote,
             Tools::DbSchema,
             Tools::SearchSettings,
             Tools::SettingContext,

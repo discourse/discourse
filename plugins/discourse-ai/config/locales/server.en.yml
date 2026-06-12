@@ -594,6 +594,7 @@ en:
         grant_badge: "Grant badge"
         list_reviewables: "List review queue"
         perform_reviewable_action: "Review queue action"
+        add_reviewable_note: "Add review queue note"
         assign: "Assign topic"
         mark_as_solved: "Mark as solved"
         search: "Search"
@@ -639,6 +640,7 @@ en:
         grant_badge: "Grant a badge to a user"
         list_reviewables: "List pending review queue items with optional filtering"
         perform_reviewable_action: "Perform an action on a review queue item"
+        add_reviewable_note: "Add a note to a review queue item"
         assign: "Assign or unassign a topic to a user or group"
         mark_as_solved: "Mark or unmark a post as the accepted solution"
         search: "Search all public topics on the forum"
@@ -684,6 +686,7 @@ en:
         grant_badge: "Granting badge '%{badge_name}' to %{username}"
         list_reviewables: "Listing review queue items (type: %{type})"
         perform_reviewable_action: "Performing %{action} on reviewable %{reviewable_id}"
+        add_reviewable_note: "Adding note to reviewable %{reviewable_id}"
         assign: "Assigning topic %{topic_id} (assigned: %{assigned})"
         mark_as_solved: "Marking post %{post_id} as solved (solved: %{solved})"
         read: "Reading: <a href='%{url}'>%{title}</a>"
@@ -859,6 +862,14 @@ en:
           conflict: "This review queue item was updated by someone else. Please try again"
           action_failed: "Failed to perform the action"
         success: "Successfully performed '%{action}' on review queue item %{reviewable_id}"
+
+      add_reviewable_note:
+        errors:
+          not_allowed: "You are not allowed to access the review queue"
+          not_found: "Review queue item not found"
+          no_note: "A note is required to add a note to a review queue item"
+          failed: "Failed to add the note"
+        success: "Successfully added a note to review queue item %{reviewable_id}"
 
     reviewables:
       ai_tool_action:

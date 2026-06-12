@@ -1191,6 +1191,10 @@ nl:
       one_time_password: "Token voor eenmalige aanmelding maken"
       bookmarks_calendar: "Bladwijzerherinneringen lezen"
       user_status: "Gebruikersstatus lezen en bijwerken"
+    device:
+      code: "Code"
+      continue: "Doorgaan"
+      authorize_title: '''%{application_name}'' autoriseren'
     invalid_public_key: "Sorry, de openbare sleutel is ongeldig."
     invalid_auth_redirect: "Sorry, deze auth_redirect-host is niet toegestaan."
     invalid_token: "Ontbrekend, ongeldig of verlopen token."
@@ -1839,7 +1843,6 @@ nl:
     allowed_crawler_user_agents: "Useragents van webcrawlers die toegang tot de website dienen te hebben. WAARSCHUWING! INSTELLEN HIERVAN BLOKKEERT ALLE CRAWLERS DIE HIER NIET WORDEN VERMELD!"
     blocked_crawler_user_agents: "Uniek hoofdletterongevoelig woord in de useragent-string waarmee webcrawlers worden herkend die geen toegang tot de website mogen hebben. Niet van toepassing als toelatingslijst is opgegeven."
     llms_txt: "Upload een tekstbestand dat moet worden aangeboden op /llms.txt voor LLM-crawlers. Zie <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> voor meer informatie."
-    content_security_policy: "Schakel Content-Security-Policy (CSP) in. CSP is een extra beveiligingslaag die bepaalde soorten aanvallen helpt voorkomen, waaronder cross-site scripting (XSS) en data-injectie."
     content_security_policy_report_only: "Content-Security-Policy-Report-Only (CSP) inschakelen"
     content_security_policy_frame_ancestors: "Beperken wie deze website kan insluiten in iframes via CSP. Beheer toegestane hosts op <a href='%{base_path}/admin/customize/embedding'>Insluiten</a>"
     content_security_policy_script_src: "Aanvullende scriptbronnen op de toelatingslijst. De huidige host en CDN zijn standaard inbegrepen. Zie <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>XSS-aanvallen beperken met Content Security Policy.</a> (CSP). Andere hostbronnen worden genegeerd omdat strict-dynamic is ingeschakeld."

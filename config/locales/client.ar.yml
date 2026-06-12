@@ -6,6 +6,22 @@
 
 ar:
   js:
+    user_api_key:
+      title: 'تفويض "%{application_name}"'
+      authorize: "السماح"
+      deny: "ألغِ"
+      logged_in_as: "تم تسجيل الدخول باسم"
+      permissions_header: 'سيسمح هذا لـ "%{application_name}" بما يلي:'
+      redirect_warning: "سيؤدي التفويض إلى إعادة توجيهك إلى"
+      write_scope_warning: "مطلوب صلاحيات كتابة كاملة — سيتيح هذا التطبيق النشر والتعديل والحذف. يُرجى المتابعة فقط إذا كنت تثق به تمامًا."
+      copied: "تم النسخ!"
+      otp_description: 'هل ترغب في السماح للتطبيق "%{application_name}" بالوصول إلى هذا الموقع؟'
+      no_trust_level: "عذرًا، ليس لديك مستوى الثقة المطلوب للوصول إلى API للمستخدم"
+      generic_error: "عذرًا، لا يمكننا إصدار مفاتيح API للمستخدمين؛ ربما يكون مسؤول الموقع قد أوقف هذه الميزة"
+      device:
+        code: "الرمز"
+        continue: "متابعة"
+        authorize_title: 'تفويض "%{application_name}"'
     blocks:
       ghost:
         status: "الحالة"
@@ -2063,6 +2079,9 @@ ar:
       undo_revoke_access: "التراجع عن إلغاء الوصول"
       api_approved: "تمت الموافقة عليها:"
       api_last_used_at: "آخر استخدام في:"
+      api_expires_at: "وقت الانتهاء:"
+      api_expired_at: "انتهى:"
+      api_expires_never: "أبدًا"
       api_show_permissions:
         zero: "الأذونات الممنوحة (%{count})"
         one: "الأذونات الممنوحة (%{count})"
@@ -7590,6 +7609,11 @@ ar:
               metrics:
                 new_signups: "عمليات التسجيل الجديدة"
                 dau_mau: "معدل التفاعل DAU / MAU"
+          search:
+            title: "البحث"
+            table:
+              searches: "عمليات البحث"
+              status: "الحالة"
         reports_section:
           no_data: "لا توجد بيانات لعرضها"
           modal:

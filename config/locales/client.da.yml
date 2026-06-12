@@ -6,6 +6,16 @@
 
 da:
   js:
+    user_api_key:
+      authorize: "Autoriser"
+      deny: "Annuller"
+      copied: "Kopieret!"
+      otp_description: 'Vil du tillade at "%{application_name}" får adgang til dette websted?'
+      no_trust_level: "Beklager, du har ikke det krævede tillidsniveau for at få adgang til bruger-API'en"
+      generic_error: "Beklager, vi er ikke i stand til at udstede bruger-API-nøgler. Denne funktion kan muligvis være deaktiveret af webstedsadministratoren"
+      device:
+        code: "Kode"
+        continue: "Fortsæt"
     blocks:
       ghost:
         status: "Status"
@@ -1451,6 +1461,9 @@ da:
       undo_revoke_access: "Fortryd Tilbagekald adgang"
       api_approved: "Godkendt:"
       api_last_used_at: "Sidst brugt:"
+      api_expires_at: "Udløber:"
+      api_expired_at: "Udløbet:"
+      api_expires_never: "aldrig"
       theme: "Tema"
       save_to_change_theme: 'Tema vil blive opdateret efter du har trykket på“%{save_text}„'
       home: "Standard startside"
@@ -4624,6 +4637,11 @@ da:
                 "2": "Bruger"
                 "3": "Almindelig"
                 "4": "Leder"
+          search:
+            title: "Søg"
+            table:
+              searches: "søgninger"
+              status: "Status"
         reports_section:
           no_data: "Ingen data at vise"
           modal:

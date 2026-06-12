@@ -418,8 +418,10 @@ export default class WorkflowCanvas extends Component {
     this.args.onOpenNodePanel?.({
       connectionSource: connectionInfo.sourceClientId,
       connectionSourceOutput: connectionInfo.sourceOutput,
+      connectionSourceOutputIndex: connectionInfo.sourceOutputIndex,
       connectionTarget: connectionInfo.targetClientId,
       connectionTargetInput: connectionInfo.targetInput,
+      connectionTargetInputIndex: connectionInfo.targetInputIndex,
     });
   }
 
@@ -429,7 +431,9 @@ export default class WorkflowCanvas extends Component {
       connectionInfo.sourceClientId,
       connectionInfo.sourceOutput,
       connectionInfo.targetClientId,
-      connectionInfo.targetInput
+      connectionInfo.targetInput,
+      connectionInfo.sourceOutputIndex,
+      connectionInfo.targetInputIndex
     );
   }
 

@@ -51,8 +51,12 @@ ru:
             update_ai_spam_settings: "Обновить настройки AI-антиспама"
   js:
     discourse_workflows:
+      node_unavailable:
+        requires_ai: "Для этого нужно включить плагин ИИ"
       nodes:
         "action:ai_agent": "ИИ Агент"
+      node_descriptions:
+        "action:ai_agent": "Запустите агента искусственного интеллекта для обработки данных или генерации контента."
     discourse_automation:
       scriptables:
         llm_report:
@@ -223,6 +227,7 @@ ru:
       discourse_workflows:
         ai_agent:
           agent_id: "Агент"
+          select_agent: "Выберите агента..."
       default_llm:
         title: "Модель LLM по умолчанию"
         description: "Модель LLM по умолчанию для всех ИИ функций. Используется, если в настройке функции или персоны не указана конкретная модель LLM. При отсутствии модели по умолчанию используется последняя добавленная LLM."
@@ -292,6 +297,11 @@ ru:
             model_settings: "Настройки модели"
             related_topics: "Связанные темы"
             semantic_search: "Семантический поиск"
+        admin_dashboard:
+          name: "Панель администратора"
+          description: "Помогает менеджерам сообществ выявлять значимые изменения и решать, куда двигаться дальше."
+          setting_groups:
+            settings: "Основные настройки"
         discord:
           name: "Интеграция с Discord"
           description: "Добавляет возможность поиска по каналам Discord"

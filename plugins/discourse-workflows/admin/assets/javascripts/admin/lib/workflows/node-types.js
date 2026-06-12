@@ -1,5 +1,6 @@
 import { trustHTML } from "@ember/template";
 import { i18n } from "discourse-i18n";
+import { LOOP_NODE_TYPE } from "./graph-constants";
 
 const DEFAULT_COLOR = "var(--primary-medium)";
 const DEFAULT_I18N_PREFIX = "discourse_workflows";
@@ -194,40 +195,11 @@ function indexedPort(port, index) {
   };
 }
 
-function mergeInputs(node) {
-  const mode = node?.configuration?.mode || "append";
-
-  if (mode === "append") {
-    const count = Math.max(
-      parseInt(node?.configuration?.number_inputs, 10) || 2,
-      2
-    );
-    return Array.from({ length: count }, (_, index) =>
-      indexedPort(
-        {
-          key: `input_${index + 1}`,
-          display_name: `Input ${index + 1}`,
-          label: `Input ${index + 1}`,
-        },
-        index
-      )
-    );
-  }
-
-  return ["input_1", "input_2"].map((key, index) =>
-    indexedPort({ key, label: `Input ${index + 1}` }, index)
-  );
-}
-
 export function nodeTypeInputs(nodeTypeOrIdentifier, node = null) {
   const nodeType = resolveNodeTypeVersion(
     nodeTypeOrIdentifier,
     node?.typeVersion
   );
-
-  if (nodeTypeIdentifier(nodeType) === "flow:merge") {
-    return mergeInputs(node);
-  }
 
   const inputs = nodeType?.inputs;
 
@@ -238,14 +210,73 @@ export function nodeTypeInputs(nodeTypeOrIdentifier, node = null) {
   return [{ key: "main", index: 0, required: true }];
 }
 
+export function nodeTypeInput(nodeTypeOrIdentifier, keyOrIndex, node = null) {
+  return nodeTypeInputs(nodeTypeOrIdentifier, node).find(
+    (input) => input.key === keyOrIndex || input.index === keyOrIndex
+  );
+}
+
+export function nodeTypeInputAcceptsMultipleConnections(
+  nodeTypeOrIdentifier,
+  keyOrIndex,
+  node = null
+) {
+  return Boolean(
+    nodeTypeInput(nodeTypeOrIdentifier, keyOrIndex, node)?.multiple
+  );
+}
+
+export function nodeTypeInputUsesConnectionIndexes(
+  nodeTypeOrIdentifier,
+  keyOrIndex,
+  node = null
+) {
+  if (nodeTypeIdentifier(nodeTypeOrIdentifier) === LOOP_NODE_TYPE) {
+    return false;
+  }
+
+  const input = nodeTypeInput(nodeTypeOrIdentifier, keyOrIndex, node);
+  return Boolean(input?.multiple);
+}
+
+export function nodeTypeConnectionIndexedInputKey(
+  nodeTypeOrIdentifier,
+  node = null
+) {
+  if (nodeTypeIdentifier(nodeTypeOrIdentifier) === LOOP_NODE_TYPE) {
+    return null;
+  }
+
+  return nodeTypeInputs(nodeTypeOrIdentifier, node).find(
+    (input) => input.multiple
+  )?.key;
+}
+
+export function nodeTypeHasConfigurationFields(
+  nodeTypeOrIdentifier,
+  node = null
+) {
+  if (!nodeTypeOrIdentifier || typeof nodeTypeOrIdentifier === "string") {
+    return true;
+  }
+
+  const nodeType = resolveNodeTypeVersion(
+    nodeTypeOrIdentifier,
+    node?.typeVersion
+  );
+
+  return (
+    Object.keys(nodeType?.properties || {}).length > 0 ||
+    (nodeType?.credentials || []).length > 0
+  );
+}
+
 export function nodeTypeInputLabel(
   nodeTypeOrIdentifier,
   keyOrIndex,
   node = null
 ) {
-  const input = nodeTypeInputs(nodeTypeOrIdentifier, node).find(
-    (item) => item.key === keyOrIndex || item.index === keyOrIndex
-  );
+  const input = nodeTypeInput(nodeTypeOrIdentifier, keyOrIndex, node);
 
   if (input?.label_key) {
     return (

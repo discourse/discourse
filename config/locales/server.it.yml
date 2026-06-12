@@ -1155,6 +1155,9 @@ it:
       one_time_password: "Crea un token di accesso usa e getta"
       bookmarks_calendar: "Leggi promemoria segnalibri"
       user_status: "Leggi e aggiorna lo stato dell'utente"
+    device:
+      code: "Codice"
+      continue: "Continua"
     invalid_public_key: "Spiacente, la chiave pubblica non è valida."
     invalid_auth_redirect: "Spiacenti, questo host auth_redirect non è consentito."
     invalid_token: "Token mancante, non valido o scaduto."
@@ -1777,7 +1780,6 @@ it:
     allowed_iframes: "Un elenco di prefissi URL iframe src che Discourse può consentire in sicurezza nei post. * può essere utilizzato per trovare la corrispondenza con qualsiasi numero di caratteri diversi da /."
     allowed_crawler_user_agents: "User Agent dei crawler Web che dovrebbero poter accedere al sito. ATTENZIONE! IMPOSTANDO TALE OPZIONE SARANNO BLOCCATI TUTTI I CRAWLER NON ELENCATI QUI!"
     blocked_crawler_user_agents: "Parola univoca, senza distinzione tra maiuscole e minuscole, nella stringa user agent che identifica i web crawler cui non si vuole consentire l'accesso al sito. L'impostazione non si applica se è stata definita una lista di elementi consentiti."
-    content_security_policy: "Abilita Content-Security-Policy (CSP). CSP aggiunge un livello di sicurezza extra che contribuisce a prevenire determinati tipi di attacco informatico, tra cui Cross Site Scripting (XSS) e data injection."
     content_security_policy_report_only: "Abilita Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_frame_ancestors: "Limita chi può incorporare questo sito in iframes tramite CSP. Controlla gli host ammessi su <a href='%{base_path}/admin/customize/embedding'>Incorporamenti</a>"
     content_security_policy_script_src: "Sorgenti di script aggiuntivi consentite. Il server e la rete CDN in uso sono inclusi per impostazione predefinita. Consulta la sezione <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigare gli attacchi XSS con i criteri di sicurezza dei contenuti</a> (CSP). Quando è abilitata strict-dynamic, le altre sorgenti host vengono ignorate."

@@ -6,6 +6,15 @@
 
 nb_NO:
   js:
+    user_api_key:
+      authorize: "Autoriser"
+      deny: "Avbryt"
+      copied: "Kopiert!"
+      no_trust_level: "Beklager, du har ikke det nødvendige tillitsnivået for tilgang til API for brukere"
+      generic_error: "Beklager, vi kan ikke utstede API nøkler for brukere, denne funksjonen kan være deaktivert av administratoren"
+      device:
+        code: "Kode"
+        continue: "Fortsett"
     blocks:
       ghost:
         status: "Status"
@@ -1318,6 +1327,9 @@ nb_NO:
       undo_revoke_access: "Angre tilbaketrekking av tilgang"
       api_approved: "Godkjent:"
       api_last_used_at: "Sist brukt på:"
+      api_expires_at: "Utløper:"
+      api_expired_at: "Utløpt:"
+      api_expires_never: "aldri"
       theme: "Drakt"
       save_to_change_theme: 'Temaet vil bli oppdatert etter at du klikker på «%{save_text}»'
       home: "Forvalgt hjemmeside"
@@ -4544,6 +4556,11 @@ nb_NO:
                 "2": "Medlem"
                 "3": "Aktivt medlem"
                 "4": "Leder"
+          search:
+            title: "Søk"
+            table:
+              searches: "Søk"
+              status: "Status"
         reports_section:
           no_data: "Ingen data å vise"
           modal:

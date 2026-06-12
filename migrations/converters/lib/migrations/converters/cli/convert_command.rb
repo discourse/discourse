@@ -29,7 +29,12 @@ module Migrations
         def call
           return print_usage if @options[:help]
 
-          type = converter_type.downcase
+          type =
+            require_positional!(
+              converter_type,
+              "converter_type",
+              hint: valid_names_message,
+            ).downcase
           validate_converter_type!(type)
 
           settings = load_settings(type)
@@ -43,13 +48,16 @@ module Migrations
         private
 
         def validate_converter_type!(type)
-          names = Converters.names
-          return if names.include?(type)
+          return if Converters.names.include?(type)
 
           raise Error, <<~MSG
             Unknown converter name: #{type}
-            Valid names are: #{names.join(", ")}
+            #{valid_names_message}
           MSG
+        end
+
+        def valid_names_message
+          "Valid names are: #{Converters.names.join(", ")}"
         end
 
         def load_settings(type)

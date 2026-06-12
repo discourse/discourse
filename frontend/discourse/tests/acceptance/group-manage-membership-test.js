@@ -10,6 +10,8 @@ import {
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Managing Group Membership", function (needs) {
+  let savedGroup;
+
   needs.user();
   needs.pretender((server, helper) => {
     server.get("/associated_groups", () =>
@@ -24,12 +26,23 @@ acceptance("Managing Group Membership", function (needs) {
         ],
       })
     );
+
+    server.put("/groups/57", (request) => {
+      savedGroup = helper.parsePostData(request.requestBody).group;
+      return helper.response({ success: "OK" });
+    });
   });
+
+  needs.hooks.beforeEach(() => (savedGroup = null));
 
   test("As an admin", async function (assert) {
     updateCurrentUser({ can_create_group: true });
 
     await visit("/g/alternative-group/manage/membership");
+
+    assert
+      .dom(".groups-form-visibility-level")
+      .exists("displays visibility level selector");
 
     assert
       .dom('label[for="automatic_membership"]')
@@ -45,36 +58,37 @@ acceptance("Managing Group Membership", function (needs) {
 
     assert
       .dom(".group-form-public-admission")
-      .exists("displays group public admission input");
+      .exists("displays the join freely option");
+
+    assert
+      .dom(".group-form-public-admission")
+      .isChecked("selects join freely for this group");
+
+    assert
+      .dom(".group-form-allow-membership-requests")
+      .exists("displays the membership request option");
+
+    assert
+      .dom(".group-form-invite-only")
+      .exists("displays the invite only option");
 
     assert
       .dom(".group-form-public-exit")
       .exists("displays group public exit input");
 
-    assert
-      .dom(".group-form-allow-membership-requests")
-      .exists("displays group allow_membership_request input");
-
-    assert
-      .dom(".group-form-allow-membership-requests")
-      .isDisabled("disables group allow_membership_request input");
-
     assert.dom(".group-flair-inputs").exists("displays avatar flair inputs");
 
-    await click(".group-form-public-admission");
     await click(".group-form-allow-membership-requests");
 
     assert
-      .dom(".group-form-public-admission")
-      .isDisabled("disables group public admission input");
-
-    assert
-      .dom(".group-form-public-exit")
-      .isNotDisabled("it should not disable group public exit input");
+      .dom(".group-form-allow-membership-requests")
+      .isChecked("selects the membership request option");
 
     assert
       .dom(".group-form-membership-request-template")
-      .exists("displays the membership request template field");
+      .exists(
+        "displays the membership request template field when requests are enabled"
+      );
 
     const emailDomains = selectKit(
       ".group-form-automatic-membership-automatic"
@@ -84,6 +98,96 @@ acceptance("Managing Group Membership", function (needs) {
     await emailDomains.selectRowByValue("foo.com");
 
     assert.strictEqual(emailDomains.header().value(), "foo.com");
+  });
+
+  test("the join method constrains the group's visibility options", async function (assert) {
+    updateCurrentUser({ can_create_group: true });
+
+    await visit("/g/alternative-group/manage/membership");
+
+    assert
+      .dom(".group-form-public-admission")
+      .isChecked("join freely is selected for this group");
+
+    const visibility = selectKit(".select-kit.groups-form-visibility-level");
+    await visibility.expand();
+
+    assert
+      .dom(".groups-form-visibility-level .select-kit-row[data-value='2']")
+      .doesNotExist("members-only visibility is removed while anyone can join");
+    assert
+      .dom(".groups-form-visibility-level .select-kit-row[data-value='0']")
+      .exists("public visibility stays available");
+
+    await visibility.collapse();
+
+    await click(".group-form-invite-only");
+    await visibility.expand();
+
+    assert
+      .dom(".groups-form-visibility-level .select-kit-row[data-value='2']")
+      .exists("members-only visibility returns for invite-only groups");
+  });
+
+  test("choosing a join method that needs visibility reopens a restricted group", async function (assert) {
+    updateCurrentUser({ can_create_group: true });
+
+    await visit("/g/alternative-group/manage/membership");
+
+    // make it invite-only first so a restricted visibility can be picked
+    await click(".group-form-invite-only");
+
+    const visibility = selectKit(".select-kit.groups-form-visibility-level");
+    await visibility.expand();
+    await visibility.selectRowByValue("2");
+
+    assert.strictEqual(
+      visibility.header().value(),
+      "2",
+      "members-only visibility is set while invite-only"
+    );
+
+    await click(".group-form-public-admission");
+
+    assert.strictEqual(
+      visibility.header().value(),
+      "0",
+      "switching to join freely resets visibility to public"
+    );
+  });
+
+  test("each join method serializes to the matching booleans on save", async function (assert) {
+    updateCurrentUser({ admin: true });
+
+    await visit("/g/alternative-group/manage/membership");
+
+    await click(".group-form-allow-membership-requests");
+    await click(".group-manage-save");
+
+    assert.strictEqual(
+      savedGroup.public_admission,
+      "false",
+      "by request clears public_admission"
+    );
+    assert.strictEqual(
+      savedGroup.allow_membership_requests,
+      "true",
+      "by request sets allow_membership_requests"
+    );
+
+    await click(".group-form-invite-only");
+    await click(".group-manage-save");
+
+    assert.strictEqual(
+      savedGroup.public_admission,
+      "false",
+      "invite only clears public_admission"
+    );
+    assert.strictEqual(
+      savedGroup.allow_membership_requests,
+      "false",
+      "invite only clears allow_membership_requests"
+    );
   });
 
   test("As an admin on a site that can associate groups", async function (assert) {
@@ -126,6 +230,10 @@ acceptance("Managing Group Membership", function (needs) {
     await visit("/g/discourse/manage/membership");
 
     assert
+      .dom(".groups-form-visibility-level")
+      .doesNotExist("does not display visibility level selector");
+
+    assert
       .dom('label[for="automatic_membership"]')
       .doesNotExist("it should not display automatic membership label");
 
@@ -151,21 +259,60 @@ acceptance("Managing Group Membership", function (needs) {
 
     assert
       .dom(".group-form-public-admission")
-      .exists("displays group public admission input");
+      .exists("displays the join freely option");
+
+    assert
+      .dom(".group-form-allow-membership-requests")
+      .exists("displays the membership request option");
+
+    assert
+      .dom(".group-form-invite-only")
+      .exists("displays the invite only option");
 
     assert
       .dom(".group-form-public-exit")
       .exists("displays group public exit input");
-
-    assert
-      .dom(".group-form-allow-membership-requests")
-      .exists("displays group allow_membership_request input");
-
-    assert
-      .dom(".group-form-allow-membership-requests")
-      .isDisabled("disables group allow_membership_request input");
   });
 });
+
+acceptance(
+  "Managing Group Membership - non-admin owner of a private group",
+  function (needs) {
+    needs.user();
+    needs.pretender((server, helper) => {
+      server.get("/groups/discourse.json", () => {
+        const cloned = cloneJSON(groupFixtures["/groups/discourse.json"]);
+        cloned.group.visibility_level = 2;
+        cloned.group.public_admission = false;
+        cloned.group.allow_membership_requests = false;
+        cloned.group.can_admin_group = false;
+        return helper.response(cloned);
+      });
+    });
+
+    test("hides the open join methods that need a visible group", async function (assert) {
+      updateCurrentUser({ admin: false, moderator: false });
+
+      await visit("/g/discourse/manage/membership");
+
+      assert
+        .dom(".group-form-invite-only")
+        .exists("invite only remains available");
+
+      assert
+        .dom(".group-form-public-admission")
+        .doesNotExist("join freely is hidden when the group isn't visible");
+
+      assert
+        .dom(".group-form-allow-membership-requests")
+        .doesNotExist("request to join is hidden when the group isn't visible");
+
+      assert
+        .dom(".groups-form-visibility-level")
+        .doesNotExist("a non-admin owner can't change visibility to fix it");
+    });
+  }
+);
 
 acceptance(
   "Automatic Group Tooltip - can_admin_group is true",

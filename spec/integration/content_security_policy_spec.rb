@@ -13,7 +13,7 @@ RSpec.describe "content security policy integration" do
     expect(response.headers["Content-Security-Policy"]).to be_present
 
     expect(response.headers["Content-Security-Policy"]).to match(
-      /script-src 'nonce-[^']+' 'strict-dynamic';/,
+      /script-src 'nonce-[^']+' 'strict-dynamic' 'wasm-unsafe-eval'; worker-src 'self' blob:;/,
     )
   end
 end

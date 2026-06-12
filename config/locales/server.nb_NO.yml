@@ -627,6 +627,9 @@ nb_NO:
       session_info: "Les informasjon om brukersesjon"
       read: "Les alt"
       write: "Skriv alt"
+    device:
+      code: "Kode"
+      continue: "Fortsett"
   reports:
     default:
       labels:

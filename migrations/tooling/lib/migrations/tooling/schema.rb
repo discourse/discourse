@@ -4,6 +4,7 @@ module Migrations
   module Tooling
     module Schema
       Definition = Data.define(:tables, :enums)
+      GenerationResult = Data.define(:resolved, :deleted_files)
       PreflightResult = Data.define(:resolved, :errors)
       TableDefinition =
         Data.define(
@@ -123,9 +124,11 @@ module Migrations
         preflight(database:).errors
       end
 
-      def self.generate(database: :intermediate_db)
+      def self.generate(database: :intermediate_db, output_root: nil)
         ensure_ready!(database:)
-        DSL::Generator.new(self, database:).generate
+        generator = DSL::Generator.new(self, database:, output_root:)
+        resolved = generator.generate
+        GenerationResult.new(resolved:, deleted_files: generator.deleted_files)
       end
 
       def self.diff(database: :intermediate_db)
@@ -150,6 +153,13 @@ module Migrations
         end
 
         DSL::IgnoredFileEditor.new(config_path(database)).add_table(table_name, reason:)
+      end
+
+      # No database existence check here: removing entries of tables that no
+      # longer exist is the main use case.
+      def self.unignore_table(table_name, database: :intermediate_db)
+        ensure_ready!(database:)
+        DSL::IgnoredFileEditor.new(config_path(database)).remove_table(table_name)
       end
 
       # --- Lifecycle Methods ---

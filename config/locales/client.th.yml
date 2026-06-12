@@ -6,6 +6,11 @@
 
 th:
   js:
+    user_api_key:
+      deny: "ยกเลิก"
+      copied: "คัดลอกแล้ว!"
+      device:
+        continue: "ดำเนินการต่อ"
     blocks:
       ghost:
         status: "สถานะ"
@@ -913,6 +918,7 @@ th:
       apps: "แอป"
       api_approved: "อนุมัติแล้ว:"
       api_last_used_at: "ใช้ครั้งสุดท้ายเมื่อ:"
+      api_expires_never: "ไม่เลย"
       theme: "ธีม"
       save_to_change_theme: 'ธีมจะถูกอัปเดตเมื่อคุณคลิก "%{save_text}"'
       home: "หน้าเริ่มต้น"
@@ -2773,6 +2779,11 @@ th:
                 "0": "ใหม่"
                 "2": "สมาชิก"
                 "3": "ทั่วไป"
+          search:
+            title: "ค้นหา"
+            table:
+              searches: "ค้นหา"
+              status: "สถานะ"
         reports_section:
           modal:
             apply: "นำไปใช้"

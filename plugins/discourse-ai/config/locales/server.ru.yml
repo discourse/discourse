@@ -96,6 +96,8 @@ ru:
     ai_embeddings_semantic_quick_search_enabled: "Включить опцию семантического поиска во всплывающем меню поиска."
     ai_embeddings_semantic_related_include_closed_topics: "Включать в результаты семантического поиска закрытые темы"
     ai_embeddings_per_post_enabled: Генерировать эмбеддинги для каждой публикации
+    ai_admin_dashboard_enabled: "Включите функции искусственного интеллекта на панели администратора."
+    ai_admin_dashboard_highlights_agent: "Агент, который объясняет важные изменения в сообществе на панели администратора."
     ai_summarization_enabled: "Включить функцию резюмирования"
     ai_summarization_agent: "Агент для использования функции суммирования"
     ai_pm_summarization_allowed_groups: "Группам разрешено создавать и просматривать сводки в личных сообщениях."
@@ -299,6 +301,8 @@ ru:
       agents:
         default_llm_required: "Для включения чата требуется модель LLM по умолчанию"
         cannot_have_duplicate_tools: "Не может быть дублирующихся инструментов"
+        admin_dashboard_highlights:
+          description: "Составляет краткий отчет, отображаемый в верхней части административной панели, с объяснением изменений и моментов, заслуживающих внимания в этот период."
         github_helper:
           name: "Помощник по GitHub"
           description: "AI-бот, специализирующийся на оказании помощи в решении задач и вопросов, связанных с GitHub"
