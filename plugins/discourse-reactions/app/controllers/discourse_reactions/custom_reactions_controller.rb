@@ -88,7 +88,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     raise Discourse::InvalidAccess unless guardian.can_see_notifications?(user)
 
     posts = Post.joins(:topic).where(user_id: user.id)
-    posts = guardian.filter_allowed_categories(posts)
+    posts = visible_posts_for_reactions_received(posts)
     post_ids = posts.select(:id)
 
     reaction_users =
@@ -286,6 +286,15 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   end
 
   private
+
+  def visible_posts_for_reactions_received(posts)
+    visible_topic_ids = guardian.can_see_topic_ids(topic_ids: posts.distinct.pluck(:topic_id))
+
+    posts =
+      posts.where(topic_id: visible_topic_ids, post_type: Topic.visible_post_types(current_user))
+
+    guardian.filter_hidden_posts(posts)
+  end
 
   def get_users(reaction)
     DiscourseReactions::PostReactionsQuery
