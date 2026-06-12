@@ -856,6 +856,25 @@ our cursor rides the document `meta`, not URL helpers).
   Currently a client-supplied `sort` is silently overridden in cursor mode — a real
   implementation should reject the combination instead.
 
+### CI fallout — graphiti-rails rake tasks pollute Object (fixed, upstream bug)
+
+Merely having graphiti-rails in the bundle broke **core** request specs on CI
+(`undefined method '[]' for an instance of ActionDispatch::Integration::Session` on every
+`session[:key]` assertion). Root cause: `graphiti-rails-0.4.1/lib/tasks/graphiti.rake`
+defines its helpers (`session`, `setup_rails!`, `make_request`) with bare `def` inside
+`namespace :graphiti` — **rake namespaces are not lexical scopes**, so once tasks are
+loaded these become private methods on `Object` (it also does
+`include RescueRegistry::RailsTestHelpers` into `main`). `Object#session` then shadows the
+request-spec `session` helper. This bites even with plugins disabled, because the gem
+loads from the root Gemfile.
+
+Workaround: `config/initializers/100-graphiti-rake-pollution.rb` wraps
+`Rails.application.load_tasks` and scrubs the three methods, guarded by source location so
+only graphiti's definitions are ever removed. Verified: the broken core specs pass again
+and the plugin's own rake-task specs still pass. **This is an upstream graphiti-rails bug
+worth reporting** — and another data point for the "graphiti-rails touches the whole app"
+caveat (Part 8, step 0): the blast radius now includes `Object` itself.
+
 ### Spike status: complete
 
 All planned steps done (0–7). Every Graphiti question answered hands-on; working code +
