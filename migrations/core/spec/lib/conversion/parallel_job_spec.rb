@@ -18,6 +18,7 @@ RSpec.describe Migrations::Conversion::ParallelJob do
     allow(tracker).to receive(:stats).and_return(stats)
 
     allow(intermediate_db).to receive(:setup)
+    allow(intermediate_db).to receive(:with_connection).and_yield
     allow(intermediate_db).to receive(:close)
   end
 
@@ -37,17 +38,13 @@ RSpec.describe Migrations::Conversion::ParallelJob do
       expect(processor).to have_received(:setup).ordered
     end
 
-    it "raises an error when the processor writes to the IntermediateDB during `setup`" do
-      offline_connection = Migrations::Database::OfflineConnection.new
-      allow(Migrations::Database::OfflineConnection).to receive(:new).and_return(offline_connection)
-      allow(processor).to receive(:setup) do
-        offline_connection.insert("INSERT INTO foo VALUES (?)", [1])
-      end
+    it "runs the processor's `setup` through the setup guard" do
+      job.setup
 
-      expect { job.setup }.to raise_error(
-        described_class::SetupError,
-        /created IntermediateDB records during `setup`/,
+      expect(intermediate_db).to have_received(:with_connection).with(
+        an_instance_of(Migrations::Conversion::SetupGuard::NoWriteConnection),
       )
+      expect(processor).to have_received(:setup)
     end
   end
 

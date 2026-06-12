@@ -11,8 +11,9 @@ module Migrations
     #   (a forked process when the step runs in parallel), one instance per
     #   worker. Per-worker state is built in its `setup` hook which runs after
     #   the worker has started, never in the constructor. `setup` must not
-    #   create IntermediateDB records — only `process` writes; in parallel mode
-    #   `ParallelJob` raises if `setup` performed writes.
+    #   create IntermediateDB records — only `process` writes; `setup` runs
+    #   under `SetupGuard`, so a write raises `SetupGuard::SetupError` in
+    #   serial and parallel mode alike.
     #
     # The roles are separate objects, so state can't leak across the
     # process boundary: a processor method that tries to read source-side
