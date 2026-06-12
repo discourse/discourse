@@ -227,6 +227,10 @@
   background: var(--success-low);
   color: var(--success);
 }
+.bundle-analyzer .ba-badge.base {
+  background: var(--tertiary);
+  color: var(--secondary);
+}
 
 .bundle-analyzer .ba-bar {
   height: 4px;

@@ -6,9 +6,11 @@ import { action } from "@ember/object";
 import { fmt, routeName, stem } from "./analysis";
 import ChunkRow from "./chunk-row";
 
-// One dynamic entrypoint, showing the additional files it downloads on top of
-// the initial load. Expands to its full subtree (root + added + already-loaded).
-export default class DynamicCard extends Component {
+// One entrypoint (static or dynamic), rolled up into an expandable card that
+// shows the chunks it pulls in. `@baseline` marks discourse.js, the basis every
+// other card measures its "additional" bytes against; that card shows its full
+// initial load instead of a delta.
+export default class EntrypointCard extends Component {
   @tracked open = false;
 
   get analysis() {
@@ -23,8 +25,16 @@ export default class DynamicCard extends Component {
     return routeName(this.chunk);
   }
 
+  get isDynamic() {
+    return this.chunk.isDynamicEntry;
+  }
+
   get isLoaded() {
     return this.args.loaded?.has(this.args.file);
+  }
+
+  get markAdded() {
+    return !this.args.baseline;
   }
 
   get stemmed() {
@@ -36,7 +46,12 @@ export default class DynamicCard extends Component {
     return this.analysis.staticClosure(this.args.file);
   }
 
+  // For the baseline everything counts as the initial load; for everyone else,
+  // only the chunks not already in the baseline.
   get added() {
+    if (this.args.baseline) {
+      return [...this.loadSet];
+    }
     return [...this.loadSet].filter((f) => !this.args.baselineClosure.has(f));
   }
 
@@ -65,6 +80,9 @@ export default class DynamicCard extends Component {
   }
 
   get sharedSorted() {
+    if (this.args.baseline) {
+      return [];
+    }
     return [...this.loadSet]
       .filter((f) => this.args.baselineClosure.has(f) && f !== this.args.file)
       .sort((a, b) => this.#sz(b) - this.#sz(a));
@@ -95,10 +113,14 @@ export default class DynamicCard extends Component {
               title="Loaded in this browser session"
             >●</span>
           {{/if}}
-          {{#if this.route}}
+          {{#if @baseline}}
+            <span class="ba-badge base">baseline</span>
+          {{else if this.route}}
             <span class="ba-badge route">route: {{this.route}}</span>
-          {{else}}
+          {{else if this.isDynamic}}
             <span class="ba-badge dyn">dynamic</span>
+          {{else}}
+            <span class="ba-badge entry">entry</span>
           {{/if}}
           <span
             class="ba-label"
@@ -109,13 +131,20 @@ export default class DynamicCard extends Component {
             }}
           >{{this.stemmed}}</span>
         </span>
-        <span class="ba-num"><b>+{{fmt this.addedDisplay}}</b>
-          <span class="ba-pill">added</span></span>
-        <span class="ba-num muted">{{fmt this.fullDisplay}}
-          <span class="ba-pill">total</span></span>
-        <span
-          class="ba-num pill"
-        >+{{this.added.length}}/{{this.loadSet.size}}f</span>
+        {{#if @baseline}}
+          <span class="ba-num"><b>{{fmt this.fullDisplay}}</b>
+            <span class="ba-pill">initial</span></span>
+          <span class="ba-num muted"></span>
+          <span class="ba-num pill">{{this.loadSet.size}}f</span>
+        {{else}}
+          <span class="ba-num"><b>+{{fmt this.addedDisplay}}</b>
+            <span class="ba-pill">added</span></span>
+          <span class="ba-num muted">{{fmt this.fullDisplay}}
+            <span class="ba-pill">total</span></span>
+          <span
+            class="ba-num pill"
+          >+{{this.added.length}}/{{this.loadSet.size}}f</span>
+        {{/if}}
       </button>
       {{#if this.open}}
         <div class="ba-body">
@@ -129,24 +158,42 @@ export default class DynamicCard extends Component {
                 {{/if}}
               </div>
             {{else}}
-              <div class="ba-site pill">no static import site found</div>
+              <div class="ba-site pill">
+                {{#if this.isDynamic}}
+                  no static import site found
+                {{else}}
+                  loaded as a top-level entrypoint
+                {{/if}}
+              </div>
             {{/each}}
           </div>
-          <div class="ba-pill" style="margin-bottom:6px">
-            Adds
-            <b>{{this.added.length}}</b>
-            new files ({{fmt this.addedTotals.brotli}}
-            br /
-            {{fmt this.addedTotals.raw}}
-            raw); full subtree is
-            {{this.loadSet.size}}
-            files.
-          </div>
+          {{#if @baseline}}
+            <div class="ba-pill" style="margin-bottom:6px">
+              Initial load:
+              <b>{{this.loadSet.size}}</b>
+              files ({{fmt this.fullTotals.brotli}}
+              br /
+              {{fmt this.fullTotals.raw}}
+              raw).
+            </div>
+          {{else}}
+            <div class="ba-pill" style="margin-bottom:6px">
+              Adds
+              <b>{{this.added.length}}</b>
+              new files ({{fmt this.addedTotals.brotli}}
+              br /
+              {{fmt this.addedTotals.raw}}
+              raw); full subtree is
+              {{this.loadSet.size}}
+              files.
+            </div>
+          {{/if}}
           <div class="ba-sub-list">
             <ChunkRow
               @file={{@file}}
               @analysis={{@analysis}}
               @filter={{@filter}}
+              @loaded={{@loaded}}
               @root={{true}}
             />
             {{#each this.addedSorted as |f|}}
@@ -154,7 +201,8 @@ export default class DynamicCard extends Component {
                 @file={{f}}
                 @analysis={{@analysis}}
                 @filter={{@filter}}
-                @added={{true}}
+                @loaded={{@loaded}}
+                @added={{this.markAdded}}
               />
             {{/each}}
             {{#if this.sharedSorted.length}}
@@ -168,6 +216,7 @@ export default class DynamicCard extends Component {
                   @file={{f}}
                   @analysis={{@analysis}}
                   @filter={{@filter}}
+                  @loaded={{@loaded}}
                 />
               {{/each}}
             {{/if}}

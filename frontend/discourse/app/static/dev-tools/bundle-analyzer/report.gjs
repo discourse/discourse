@@ -3,31 +3,16 @@ import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { eq } from "discourse/truth-helpers";
 import { fmt, matches } from "./analysis";
-import ChunkRow from "./chunk-row";
-import DynamicCard from "./dynamic-card";
+import EntrypointCard from "./entrypoint-card";
 import LoadedChunks from "./loaded-chunks";
 
 export default class Report extends Component {
   @tracked sizeKey = "brotli";
   @tracked filter = "";
-  @tracked baseline;
 
   loaded = new LoadedChunks(this.args.analysis.chunks);
-
-  isBaseline = (file) => this.baseline.has(file);
-
-  constructor() {
-    super(...arguments);
-    const { entrypoints, chunks } = this.args.analysis;
-    let base = entrypoints.filter((f) =>
-      ["discourse", "vendor"].includes(chunks[f].name)
-    );
-    if (base.length === 0) {
-      base = [...entrypoints];
-    }
-    this.baseline = new Set(base);
-  }
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -38,81 +23,58 @@ export default class Report extends Component {
     return this.args.analysis;
   }
 
-  get loadedTotals() {
-    const files = [...this.loaded.files].filter((f) => this.analysis.chunks[f]);
-    return { count: files.length, ...this.analysis.totals(new Set(files)) };
-  }
-
-  get entrypointRows() {
-    return this.analysis.entrypoints.map((file) => ({
-      file,
-      name: this.analysis.chunks[file].name,
-      brotliSize: this.analysis.chunks[file].brotliSize,
-    }));
-  }
-
   get sizeIsBrotli() {
     return this.sizeKey === "brotli";
   }
 
+  // discourse.js is the baseline every other entrypoint measures against.
+  get baselineFile() {
+    const { entrypoints, chunks } = this.analysis;
+    return (
+      entrypoints.find((f) => chunks[f].name === "discourse") ?? entrypoints[0]
+    );
+  }
+
   @cached
   get baselineClosure() {
-    return this.analysis.closureOf([...this.baseline]);
+    return this.analysis.staticClosure(this.baselineFile);
   }
 
-  @cached
-  get initialFiles() {
-    return [...this.baselineClosure].sort((a, b) => this.#sz(b) - this.#sz(a));
-  }
-
-  get initialVisible() {
-    return this.initialFiles.filter(
-      (f) =>
-        matches(f, this.filter) ||
-        matches(this.analysis.chunks[f].name, this.filter) ||
-        this.analysis.chunks[f].modules.some((m) => matches(m.id, this.filter))
-    );
-  }
-
-  get initialTotals() {
-    const t = this.analysis.totals(new Set(this.initialFiles));
-    const modules = this.initialFiles.reduce(
-      (n, f) => n + this.analysis.chunks[f].moduleCount,
-      0
-    );
-    return { ...t, modules };
+  get staticVisible() {
+    const base = this.baselineFile;
+    const others = this.analysis.entrypoints
+      .filter((f) => f !== base)
+      .sort((a, b) => this.#addedSize(b) - this.#addedSize(a));
+    return [base, ...others].filter((f) => this.#cardMatches(f));
   }
 
   get dynamicVisible() {
-    const base = this.baselineClosure;
     return this.analysis.dynamicEntrypoints
-      .filter(
-        (f) =>
-          matches(f, this.filter) ||
-          matches(this.analysis.chunks[f].name, this.filter)
-      )
-      .sort((a, b) => this.#addedSize(b, base) - this.#addedSize(a, base));
+      .filter((f) => this.#cardMatches(f))
+      .sort((a, b) => this.#addedSize(b) - this.#addedSize(a));
+  }
+
+  get loadedTotals() {
+    const files = [...this.loaded.files].filter((f) => this.analysis.chunks[f]);
+    return { count: files.length, ...this.analysis.totals(new Set(files)) };
   }
 
   #sz(file) {
     return this.analysis.size(file, this.sizeKey);
   }
 
-  #addedSize(file, base) {
+  #addedSize(file) {
+    const base = this.baselineClosure;
     return [...this.analysis.staticClosure(file)]
       .filter((x) => !base.has(x))
       .reduce((n, x) => n + this.#sz(x), 0);
   }
 
-  @action
-  toggleBaseline(file) {
-    const next = new Set(this.baseline);
-    if (next.has(file)) {
-      next.delete(file);
-    } else {
-      next.add(file);
-    }
-    this.baseline = next;
+  #cardMatches(file) {
+    return (
+      matches(file, this.filter) ||
+      matches(this.analysis.chunks[file].name, this.filter)
+    );
   }
 
   @action
@@ -145,68 +107,45 @@ export default class Report extends Component {
         </span>
       </div>
 
+      <div class="ba-toolbar">
+        <div class="ba-seg">
+          <button
+            type="button"
+            class={{if this.sizeIsBrotli "on"}}
+            {{on "click" (fn this.setSize "brotli")}}
+          >brotli</button>
+          <button
+            type="button"
+            class={{unless this.sizeIsBrotli "on"}}
+            {{on "click" (fn this.setSize "raw")}}
+          >raw</button>
+        </div>
+        <input
+          type="search"
+          placeholder="Filter files / modules…"
+          {{on "input" this.updateFilter}}
+        />
+      </div>
+
       <section>
-        <h2>Initial page load</h2>
+        <h2>Static entrypoints</h2>
         <div class="ba-hint">
-          Files and bytes downloaded before any dynamic import. Toggle which
-          entrypoints count as the baseline.
+          Loaded up front via
+          <code>&lt;script&gt;</code>
+          tags.
+          <code>discourse</code>
+          is the baseline; every other card counts only the bytes it adds on top
+          of it.
         </div>
-
-        <div class="ba-baseline">
-          {{#each this.entrypointRows as |ep|}}
-            <label class={{if (this.isBaseline ep.file) "on"}}>
-              <input
-                type="checkbox"
-                checked={{this.isBaseline ep.file}}
-                {{on "change" (fn this.toggleBaseline ep.file)}}
-              />
-              {{ep.name}}
-              <span class="ba-pill">{{fmt ep.brotliSize}}</span>
-            </label>
-          {{/each}}
-        </div>
-
-        <div class="ba-cards">
-          <div class="ba-card"><div class="k">Files</div><div
-              class="v"
-            >{{this.initialTotals.files}}</div></div>
-          <div class="ba-card"><div class="k">Download (brotli)</div><div
-              class="v"
-            >{{fmt this.initialTotals.brotli}}</div></div>
-          <div class="ba-card"><div class="k">Uncompressed</div><div
-              class="v"
-            >{{fmt this.initialTotals.raw}}</div></div>
-          <div class="ba-card"><div class="k">Modules</div><div
-              class="v"
-            >{{this.initialTotals.modules}}</div></div>
-        </div>
-
-        <div class="ba-toolbar">
-          <div class="ba-seg">
-            <button
-              type="button"
-              class={{if this.sizeIsBrotli "on"}}
-              {{on "click" (fn this.setSize "brotli")}}
-            >brotli</button>
-            <button
-              type="button"
-              class={{unless this.sizeIsBrotli "on"}}
-              {{on "click" (fn this.setSize "raw")}}
-            >raw</button>
-          </div>
-          <input
-            type="search"
-            placeholder="Filter files / modules…"
-            {{on "input" this.updateFilter}}
-          />
-        </div>
-
         <div>
-          {{#each this.initialVisible as |f|}}
-            <ChunkRow
+          {{#each this.staticVisible as |f|}}
+            <EntrypointCard
               @file={{f}}
               @analysis={{this.analysis}}
               @filter={{this.filter}}
+              @sizeKey={{this.sizeKey}}
+              @baselineClosure={{this.baselineClosure}}
+              @baseline={{eq f this.baselineFile}}
               @loaded={{this.loaded}}
             />
           {{else}}
@@ -220,11 +159,13 @@ export default class Report extends Component {
         <div class="ba-hint">
           Each is loaded on demand via
           <code>import()</code>. “Additional” counts only chunks not already in
-          the initial load above.
+          the
+          <code>discourse</code>
+          baseline above.
         </div>
         <div>
           {{#each this.dynamicVisible as |f|}}
-            <DynamicCard
+            <EntrypointCard
               @file={{f}}
               @analysis={{this.analysis}}
               @filter={{this.filter}}
