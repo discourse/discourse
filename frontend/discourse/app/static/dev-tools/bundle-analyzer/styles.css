@@ -149,6 +149,14 @@
   overflow: hidden;
 }
 .bundle-analyzer .ba-row > .ba-head {
+  appearance: none;
+  border: 0;
+  margin: 0;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: var(--ba-panel);
   display: grid;
   grid-template-columns: 1fr 110px 100px 70px;
   gap: 8px;
