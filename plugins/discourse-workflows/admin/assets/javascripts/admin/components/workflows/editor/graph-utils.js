@@ -10,8 +10,8 @@ import {
 } from "../../../lib/workflows/graph-constants";
 import { NODE_DIRECT_SETTING_KEYS } from "../../../lib/workflows/node-data-shape";
 import {
-  nodeTypeHasConfigurationFields,
   nodeTypeConnectionIndexedInputKey,
+  nodeTypeHasConfigurationFields,
   nodeTypeInputUsesConnectionIndexes,
 } from "../../../lib/workflows/node-types";
 
@@ -112,8 +112,10 @@ export function normalizeConnectionsForNodes(
 
 function indexedConnectionInputKey(targetNode, nodeTypeForNode) {
   return (
-    nodeTypeConnectionIndexedInputKey(nodeTypeForNode(targetNode), targetNode) ||
-    "main"
+    nodeTypeConnectionIndexedInputKey(
+      nodeTypeForNode(targetNode),
+      targetNode
+    ) || "main"
   );
 }
 

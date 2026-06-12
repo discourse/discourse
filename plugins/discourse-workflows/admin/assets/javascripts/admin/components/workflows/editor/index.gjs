@@ -1007,11 +1007,14 @@ export default class WorkflowsEditor extends Component {
     const nodes = this.formApi.get("nodes");
     const updatedNodes = nodes.map((n) =>
       n.clientId === clientId
-        ? normalizeNodeConfiguration({
-            ...n,
-            configuration,
-            name: name || n.name,
-          }, this.#nodeTypeFor(n))
+        ? normalizeNodeConfiguration(
+            {
+              ...n,
+              configuration,
+              name: name || n.name,
+            },
+            this.#nodeTypeFor(n)
+          )
         : n
     );
     this.formApi.set("nodes", updatedNodes);

@@ -167,7 +167,10 @@ module("Unit | Utility | workflows node types", function () {
     };
 
     const inputs = nodeTypeInputs(mergeNodeType, { configuration: {} });
-    assert.deepEqual(inputs.map((input) => input.key), ["main"]);
+    assert.deepEqual(
+      inputs.map((input) => input.key),
+      ["main"]
+    );
     assert.true(inputs[0].multiple);
     assert.true(nodeTypeInputUsesConnectionIndexes(mergeNodeType, "main"));
     assert.strictEqual(

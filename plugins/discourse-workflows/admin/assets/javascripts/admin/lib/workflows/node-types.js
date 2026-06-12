@@ -221,7 +221,9 @@ export function nodeTypeInputAcceptsMultipleConnections(
   keyOrIndex,
   node = null
 ) {
-  return Boolean(nodeTypeInput(nodeTypeOrIdentifier, keyOrIndex, node)?.multiple);
+  return Boolean(
+    nodeTypeInput(nodeTypeOrIdentifier, keyOrIndex, node)?.multiple
+  );
 }
 
 export function nodeTypeInputUsesConnectionIndexes(
