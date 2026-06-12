@@ -2065,6 +2065,7 @@ RSpec.describe GroupsController do
 
       it "adds known users by email when DiscourseConnect is enabled" do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
 
         expect do

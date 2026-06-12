@@ -88,6 +88,7 @@ RSpec.describe ApplicationController do
 
     it "should redirect to SSO if enabled" do
       SiteSetting.discourse_connect_url = "http://someurl.com"
+      SiteSetting.discourse_connect_secret = "x" * 10
       SiteSetting.enable_discourse_connect = true
       get "/"
       expect(response).to redirect_to("/session/sso")
@@ -115,6 +116,7 @@ RSpec.describe ApplicationController do
     it "should not redirect to SSO when auth_immediately is disabled" do
       SiteSetting.auth_immediately = false
       SiteSetting.discourse_connect_url = "http://someurl.com"
+      SiteSetting.discourse_connect_secret = "x" * 10
       SiteSetting.enable_discourse_connect = true
 
       get "/"
