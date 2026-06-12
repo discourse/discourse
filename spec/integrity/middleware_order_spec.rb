@@ -19,6 +19,7 @@ RSpec.describe "Middleware order" do
       ActionDispatch::RequestId,
       SilenceLogger,
       Middleware::DefaultHeaders,
+      RescueRegistry::ResetContext, # inserted by graphiti-rails (JSON:API spike)
       ActionDispatch::ShowExceptions,
       ActionDispatch::DebugExceptions,
       ActionDispatch::Callbacks,
