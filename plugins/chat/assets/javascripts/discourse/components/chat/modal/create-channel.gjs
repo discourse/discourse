@@ -305,7 +305,7 @@ export default class ChatModalCreateChannel extends Component {
           <form.Field
             @name="description"
             @title={{i18n "chat.create_channel.description"}}
-            @type="textarea"
+            @type="input"
             @format="full"
             as |field|
           >

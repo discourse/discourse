@@ -3,6 +3,8 @@
 module PageObjects
   module Modals
     class ChatChannelCreate < PageObjects::Modals::Base
+      EMOJI_PICKER = PageObjects::Components::EmojiPicker.new
+
       def form
         @form ||= PageObjects::Components::FormKit.new(".chat-modal-create-channel__form")
       end
@@ -10,6 +12,16 @@ module PageObjects
       def select_category(category)
         find(".category-chooser").click
         find(".category-row[data-value=\"#{category.id}\"]").click
+      end
+
+      def select_emoji(emoji)
+        find(".form-kit__field-emoji .btn-emoji").click
+        EMOJI_PICKER.search_emoji(emoji)
+        EMOJI_PICKER.select_emoji(":#{emoji}:")
+      end
+
+      def reset_emoji
+        find(".form-kit__field-emoji .edit-channel-clear-emoji").click
       end
 
       def create_channel_hint
