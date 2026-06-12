@@ -136,4 +136,13 @@
     display: none;
     margin-left: auto;
   }
+
+  .full-page-chat & {
+    padding: var(--space-2) var(--space-4);
+    border-bottom: 1px solid var(--content-border-color);
+
+    &:first-child {
+      border-top: 1px solid var(--content-border-color);
+    }
+  }
 }

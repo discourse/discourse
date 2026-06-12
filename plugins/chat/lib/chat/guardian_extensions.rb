@@ -28,6 +28,8 @@ module Chat
     end
 
     def can_create_chat_message?
+      return false if anonymous?
+
       !SpamRule::AutoSilence.prevent_posting?(@user)
     end
 

@@ -12,6 +12,7 @@ import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
+import { anonymousUserCanViewPublicChat } from "discourse/plugins/chat/discourse/lib/anonymous-public-chat-access";
 
 const CHAT_ONLINE_OPTIONS = {
   userUnseenTime: 300000, // 5 minutes seconds with no interaction
@@ -26,6 +27,7 @@ export default class Chat extends Service {
   @service chatStateManager;
   @service presence;
   @service router;
+  @service siteSettings;
   @service chatChannelsManager;
   @service chatTrackingStateManager;
   @service chatPanePendingManager;
@@ -54,8 +56,11 @@ export default class Chat extends Service {
   willDestroy() {
     super.willDestroy(...arguments);
 
-    if (this.userCanChat && !EmbedMode.enabled) {
+    if (this.canSubscribeToChat && !EmbedMode.enabled) {
       this.chatSubscriptionsManager.stopChannelsSubscriptions();
+    }
+
+    if (this.userCanChat && !EmbedMode.enabled) {
       removeOnPresenceChange(this.onPresenceChangeCallback);
     }
   }
@@ -65,6 +70,14 @@ export default class Chat extends Service {
     return (
       this.currentUser?.has_chat_enabled && this.siteSettings?.chat_enabled
     );
+  }
+
+  get anonymousUserCanViewPublicChat() {
+    return anonymousUserCanViewPublicChat(this.currentUser, this.siteSettings);
+  }
+
+  get canSubscribeToChat() {
+    return this.userCanChat || this.anonymousUserCanViewPublicChat;
   }
 
   get activeChannel() {
@@ -197,10 +210,17 @@ export default class Chat extends Service {
   }
 
   setupWithPreloadedChannels(channelsView) {
-    this.chatSubscriptionsManager.startChannelsSubscriptions(
-      channelsView.meta.message_bus_last_ids
-    );
-    this.presenceChannel.subscribe(channelsView.global_presence_channel_state);
+    if (this.canSubscribeToChat) {
+      this.chatSubscriptionsManager.startChannelsSubscriptions(
+        channelsView.meta.message_bus_last_ids
+      );
+    }
+
+    if (this.currentUser) {
+      this.presenceChannel?.subscribe(
+        channelsView.global_presence_channel_state
+      );
+    }
 
     this.chatChannelsManager.userHasThreads = channelsView.has_threads ?? false;
 
@@ -215,12 +235,22 @@ export default class Chat extends Service {
           channelsView.unread_thread_overview[storedChannel.id];
       }
 
-      return this.chatChannelsManager.follow(storedChannel);
+      if (this.currentUser) {
+        return this.chatChannelsManager.follow(storedChannel);
+      }
+
+      if (storedChannel.isCategoryChannel) {
+        this.chatSubscriptionsManager.startChannelSubscription(storedChannel, {
+          readOnly: true,
+        });
+      }
     });
 
-    this.chatTrackingStateManager.setupWithPreloadedState(
-      channelsView.tracking
-    );
+    if (channelsView.tracking) {
+      this.chatTrackingStateManager.setupWithPreloadedState(
+        channelsView.tracking
+      );
+    }
   }
 
   updatePresence() {
@@ -229,7 +259,7 @@ export default class Chat extends Service {
         return;
       }
 
-      if (this.currentUser.user_option?.hide_presence) {
+      if (!this.currentUser || this.currentUser.user_option?.hide_presence) {
         return;
       }
 

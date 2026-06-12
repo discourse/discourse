@@ -111,7 +111,7 @@ export default class ChatChannel {
   }
 
   get unreadThreadsCountSinceLastViewed() {
-    if (!this.threadingEnabled) {
+    if (!this.threadingEnabled || !this.currentUserMembership) {
       return 0;
     }
 
@@ -226,7 +226,7 @@ export default class ChatChannel {
   }
 
   get isFollowing() {
-    return this.currentUserMembership.following;
+    return this.currentUserMembership?.following;
   }
 
   get canJoin() {
@@ -289,6 +289,11 @@ export default class ChatChannel {
   }
 
   set currentUserMembership(membership) {
+    if (membership === null) {
+      this._currentUserMembership = null;
+      return;
+    }
+
     if (membership instanceof UserChatChannelMembership) {
       this._currentUserMembership = membership;
     } else {

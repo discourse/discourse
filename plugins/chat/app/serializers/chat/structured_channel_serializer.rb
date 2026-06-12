@@ -36,9 +36,10 @@ module Chat
             chat_message_bus_last_ids[Chat::Publisher.kick_users_message_bus_channel(channel.id)],
           channel_message_bus_last_id:
             chat_message_bus_last_ids[Chat::Publisher.root_message_bus_channel(channel.id)],
-          # NOTE: This is always true because the public channels passed into this serializer
-          # have been fetched with [Chat::ChannelFetcher], which only returns channels that
-          # the user has access to based on category permissions.
+          # NOTE: The public channels passed into this serializer have been fetched with
+          # [Chat::ChannelFetcher], which only returns channels that the user has access to based
+          # on category permissions. Anonymous users get a join CTA, but the client sends them to
+          # the login/signup flow before attempting to join.
           can_join_chat_channel: true,
           post_allowed_category_ids: @options[:post_allowed_category_ids],
         )

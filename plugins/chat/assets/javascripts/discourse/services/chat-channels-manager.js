@@ -4,6 +4,7 @@ import Service, { service } from "@ember/service";
 import Promise from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { debounce } from "discourse/lib/decorators";
+import { anonymousUserCanViewPublicChat } from "discourse/plugins/chat/discourse/lib/anonymous-public-chat-access";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
@@ -108,6 +109,10 @@ export default class ChatChannelsManager extends Service {
   }
 
   async follow(model) {
+    if (!this.currentUser || !model.currentUserMembership) {
+      return model;
+    }
+
     this.chatSubscriptionsManager.startChannelSubscription(model);
 
     if (!model.currentUserMembership.following) {
@@ -165,12 +170,18 @@ export default class ChatChannelsManager extends Service {
     );
   }
 
+  get anonymousUserCanViewPublicChat() {
+    return anonymousUserCanViewPublicChat(this.currentUser, this.siteSettings);
+  }
+
   @cached
   get publicMessageChannels() {
     return this.#sortChannelsByProperty(
       this.channels.filter(
         (channel) =>
-          channel.isCategoryChannel && channel.currentUserMembership.following
+          channel.isCategoryChannel &&
+          (channel.currentUserMembership?.following ||
+            this.anonymousUserCanViewPublicChat)
       ),
       "slug"
     );
@@ -208,7 +219,8 @@ export default class ChatChannelsManager extends Service {
       this.channels.filter(
         (channel) =>
           channel.isCategoryChannel &&
-          channel.currentUserMembership?.following &&
+          (channel.currentUserMembership?.following ||
+            this.anonymousUserCanViewPublicChat) &&
           !channel.currentUserMembership?.starred
       )
     );
@@ -390,7 +402,8 @@ export default class ChatChannelsManager extends Service {
       this.channels.filter(
         (channel) =>
           channel.isCategoryChannel &&
-          channel.currentUserMembership?.following &&
+          (channel.currentUserMembership?.following ||
+            this.anonymousUserCanViewPublicChat) &&
           !channel.currentUserMembership?.starred
       ),
       "slug"

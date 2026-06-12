@@ -28,7 +28,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
       )
     end
 
-    memberships = Chat::ChannelMembershipManager.all_for_user(current_user)
+    memberships = current_user ? Chat::ChannelMembershipManager.all_for_user(current_user) : []
     channels = Chat::ChannelFetcher.secured_public_channels(guardian, options)
     serialized_channels =
       channels.map do |channel|
@@ -36,6 +36,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
           channel,
           scope: Guardian.new(current_user),
           membership: memberships.find { |membership| membership.chat_channel_id == channel.id },
+          can_join_chat_channel: can_join_chat_channel?(channel),
         )
       end
 
@@ -130,6 +131,14 @@ class Chat::Api::ChannelsController < Chat::ApiController
   end
 
   private
+
+  def can_join_chat_channel?(channel)
+    if current_user
+      guardian.can_join_chat_channel?(channel)
+    else
+      false
+    end
+  end
 
   def channel_from_params
     @channel ||=

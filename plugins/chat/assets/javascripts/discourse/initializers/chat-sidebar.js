@@ -14,6 +14,7 @@ import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import ChatChannelSidebarContextMenu from "discourse/plugins/chat/discourse/components/chat-channel-sidebar-context-menu";
 import ChatSidebarIndicators from "discourse/plugins/chat/discourse/components/chat-sidebar-indicators";
+import { anonymousUserCanViewPublicChat } from "discourse/plugins/chat/discourse/lib/anonymous-public-chat-access";
 import {
   CHAT_PANEL,
   initSidebarState,
@@ -75,7 +76,7 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
     get classNames() {
       const classes = [];
 
-      if (this.channel.currentUserMembership.muted) {
+      if (this.channel.currentUserMembership?.muted) {
         classes.push("sidebar-section-link--muted");
       }
 
@@ -244,13 +245,18 @@ export default {
   name: "chat-sidebar",
   initialize(container) {
     this.chatService = container.lookup("service:chat");
+    this.siteSettings = container.lookup("service:site-settings");
+    this.currentUser = container.lookup("service:current-user");
 
-    if (!this.chatService.userCanChat) {
+    const canViewPublicChatAnonymously = anonymousUserCanViewPublicChat(
+      this.currentUser,
+      this.siteSettings
+    );
+
+    if (!this.chatService.userCanChat && !canViewPublicChatAnonymously) {
       return;
     }
 
-    this.siteSettings = container.lookup("service:site-settings");
-    this.currentUser = container.lookup("service:current-user");
     this.capabilities = container.lookup("service:capabilities");
 
     withPluginApi((api) => {
@@ -269,7 +275,13 @@ export default {
           }
       );
 
-      initSidebarState(api, api.getCurrentUser());
+      if (canViewPublicChatAnonymously) {
+        api.setCombinedSidebarMode();
+        api.showSidebarSwitchPanelButtons();
+        this.chatService.loadChannels();
+      } else {
+        initSidebarState(api, api.getCurrentUser());
+      }
     });
 
     withPluginApi((api) => {
@@ -278,7 +290,7 @@ export default {
       );
       const chatStateManager = container.lookup("service:chat-state-manager");
 
-      if (this.siteSettings.chat_search_enabled) {
+      if (this.siteSettings.chat_search_enabled && this.currentUser) {
         api.addSidebarSection(
           (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
             const SidebarChatSearchSectionLink = class extends BaseCustomSidebarSectionLink {
@@ -499,6 +511,7 @@ export default {
               constructor({
                 channel,
                 chatService,
+                currentUser,
                 siteSettings,
                 menuService,
                 capabilities,
@@ -506,6 +519,7 @@ export default {
                 super(...arguments);
                 this.channel = channel;
                 this.chatService = chatService;
+                this.currentUser = currentUser;
                 this.menuService = menuService;
                 this.chatStateManager = chatStateManager;
                 this.siteSettings = siteSettings;
@@ -513,6 +527,10 @@ export default {
               }
 
               get hoverValue() {
+                if (!this.currentUser) {
+                  return;
+                }
+
                 return this.capabilities.isIpadOS ? null : "ellipsis-vertical";
               }
 
@@ -523,7 +541,7 @@ export default {
               get classNames() {
                 const classes = [];
 
-                if (this.channel.currentUserMembership.muted) {
+                if (this.channel.currentUserMembership?.muted) {
                   classes.push("sidebar-section-link--muted");
                 }
 
@@ -595,7 +613,7 @@ export default {
               }
 
               get hoverAction() {
-                if (this.capabilities.isIpadOS) {
+                if (!this.currentUser || this.capabilities.isIpadOS) {
                   return noop;
                 }
 
@@ -647,6 +665,7 @@ export default {
                       channel,
                       chatService: this.chatService,
                       menuService: this.menuService,
+                      currentUser: this.currentUser,
                       siteSettings: this.siteSettings,
                       capabilities: this.capabilities,
                     })
@@ -666,6 +685,10 @@ export default {
               }
 
               get actions() {
+                if (!this.currentUser) {
+                  return [];
+                }
+
                 return [
                   {
                     id: "browseChannels",
@@ -782,7 +805,7 @@ export default {
               get classNames() {
                 const classes = [];
 
-                if (this.channel.currentUserMembership.muted) {
+                if (this.channel.currentUserMembership?.muted) {
                   classes.push("sidebar-section-link--muted");
                 }
 
