@@ -28,7 +28,6 @@ RSpec.describe "AI Composer helper" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   fab!(:category)
-  fab!(:category_2, :category)
   fab!(:video, :tag)
   fab!(:music, :tag)
   fab!(:cloud, :tag)
@@ -303,79 +302,10 @@ RSpec.describe "AI Composer helper" do
     end
   end
 
-  context "when suggesting the category with AI category suggester" do
-    before do
-      SiteSetting.ai_embeddings_selected_model = embedding_definition.id
-      SiteSetting.ai_embeddings_enabled = true
-    end
-
-    it "updates the category with the suggested category" do
-      response =
-        Category
-          .take(3)
-          .map do |category|
-            {
-              id: category.id,
-              name: category.name,
-              slug: category.slug,
-              color: category.color,
-              score: rand(0.0...45.0),
-              topicCount: rand(1..3),
-            }
-          end
-          .sort_by { |h| h[:score] }
-      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:categories).returns(response)
-      visit("/latest")
-      page.find("#create-topic").click
-      composer.fill_content(input)
-      ai_suggestion_dropdown.click_suggest_category_button
-      wait_for { ai_suggestion_dropdown.has_dropdown? }
-      suggestion = category_2.name
-      ai_suggestion_dropdown.select_suggestion_by_name(suggestion)
-
-      expect(page).to have_css(".category-chooser summary[data-name='#{suggestion}']")
-    end
-
-    it "shows an error toast and closes the dropdown when no suggestions are returned" do
-      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:categories).returns([])
-      visit("/latest")
-      page.find("#create-topic").click
-      composer.fill_content(input)
-      ai_suggestion_dropdown.click_suggest_category_button
-
-      expect(ai_suggestion_dropdown).to have_no_dropdown
-      expect(toasts).to have_error(
-        I18n.t("js.discourse_ai.ai_helper.suggest_errors.no_suggestions"),
-      )
-    end
-  end
-
   context "when suggesting the tags with AI tag suggester" do
     before do
       SiteSetting.ai_embeddings_selected_model = embedding_definition.id
       SiteSetting.ai_embeddings_enabled = true
-    end
-
-    it "updates the tag with the suggested tag" do
-      response =
-        Tag
-          .take(7)
-          .map { |t| { id: t.id, name: t.name, score: rand(0.0...45.0) } }
-          .sort_by { |h| h[:score] }
-      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
-
-      visit("/latest")
-      page.find("#create-topic").click
-      composer.fill_content(input)
-
-      ai_suggestion_dropdown.click_suggest_tags_button
-
-      wait_for { ai_suggestion_dropdown.has_dropdown? }
-
-      suggestion = ai_suggestion_dropdown.suggestion_name(0)
-      ai_suggestion_dropdown.select_suggestion_by_value(0)
-
-      expect(page).to have_css(".mini-tag-chooser summary[data-name='#{suggestion}']")
     end
 
     it "does not suggest tags that already exist" do
@@ -410,32 +340,98 @@ RSpec.describe "AI Composer helper" do
       expect(page).to have_no_css(".ai-suggestions-menu button[data-name='#{video.name}']")
       expect(page).to have_no_css(".ai-suggestions-menu button[data-name='#{music.name}']")
     end
+  end
 
-    it "removes applied tag suggestions from the dropdown" do
-      response = [cloud, feedback, review].map { |t| { id: t.id, name: t.name, score: 1.0 } }
+  context "when suggesting a category inline in the composer" do
+    before do
+      SiteSetting.ai_embeddings_selected_model = embedding_definition.id
+      SiteSetting.ai_embeddings_enabled = true
+    end
+
+    it "suggests categories and applies the selected one" do
+      response = [
+        {
+          id: category.id,
+          name: category.name,
+          slug: category.slug,
+          color: category.color,
+          topicCount: 1,
+          score: 1.0,
+        },
+      ]
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:categories).returns(response)
+
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+
+      composer.category_chooser.expand
+      composer.category_chooser.select_row_by_value("ai-category-suggest")
+      composer.category_chooser.select_row_by_name(category.name)
+
+      expect(composer.category_chooser).to have_selected_name(category.name)
+    end
+
+    it "shows a toast when no category suggestions are returned" do
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:categories).returns([])
+
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+
+      composer.category_chooser.expand
+      composer.category_chooser.select_row_by_value("ai-category-suggest")
+
+      expect(toasts).to have_error(
+        I18n.t("js.discourse_ai.ai_helper.suggest_errors.no_suggestions"),
+      )
+    end
+
+    it "does not offer a suggestion without enough content" do
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content("Too short")
+
+      composer.category_chooser.expand
+
+      expect(page).to have_no_css(
+        ".category-chooser .select-kit-row[data-value='ai-category-suggest']",
+      )
+    end
+  end
+
+  context "when suggesting tags inline in the composer" do
+    let(:tag_chooser) { PageObjects::Components::SelectKit.new(".mini-tag-chooser") }
+
+    before do
+      SiteSetting.ai_embeddings_selected_model = embedding_definition.id
+      SiteSetting.ai_embeddings_enabled = true
+    end
+
+    it "suggests tags and applies the selected one" do
+      response = [{ id: cloud.id, name: cloud.name, count: 1 }]
       DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
 
       visit("/latest")
       page.find("#create-topic").click
       composer.fill_content(input)
 
-      ai_suggestion_dropdown.click_suggest_tags_button
-      wait_for { ai_suggestion_dropdown.has_dropdown? }
+      tag_chooser.expand
+      tag_chooser.select_row_by_value("ai-tag-suggest")
+      tag_chooser.select_row_by_name(cloud.name)
 
-      ai_suggestion_dropdown.select_suggestion_by_name(cloud.name)
-
-      expect(page).to have_css(".mini-tag-chooser summary[data-name='#{cloud.name}']")
-      expect(page).to have_no_css(".ai-suggestions-menu button[data-name='#{cloud.name}']")
+      expect(page).to have_css(".mini-tag-chooser .formatted-selection", text: cloud.name)
     end
 
-    it "shows an error toast when no suggestions are returned" do
+    it "shows a toast when no tag suggestions are returned" do
       DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns([])
 
       visit("/latest")
       page.find("#create-topic").click
       composer.fill_content(input)
 
-      ai_suggestion_dropdown.click_suggest_tags_button
+      tag_chooser.expand
+      tag_chooser.select_row_by_value("ai-tag-suggest")
 
       expect(toasts).to have_error(
         I18n.t("js.discourse_ai.ai_helper.suggest_errors.no_suggestions"),
