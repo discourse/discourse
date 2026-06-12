@@ -13,15 +13,16 @@ module Migrations
       end
 
       def execute
-        @max_progress = calculate_max_progress
-
         @reporter.start_step(@step.class.title)
+        @max_progress = calculate_max_progress
 
         if execute_in_parallel?
           execute_parallel
         else
           execute_serially
         end
+      ensure
+        @reporter.finish_step(@step.class.title)
       end
 
       private

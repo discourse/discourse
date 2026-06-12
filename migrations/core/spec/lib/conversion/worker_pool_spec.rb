@@ -103,7 +103,7 @@ RSpec.describe Migrations::Conversion::WorkerPool do
   end
 
   describe "Batch#wait" do
-    it "returns only after every worker process has exited" do
+    it "has run every worker's `cleanup` by the time `wait` returns" do
       Dir.mktmpdir do |dir|
         batch =
           pool.start(work_queue:, output_queue:) do

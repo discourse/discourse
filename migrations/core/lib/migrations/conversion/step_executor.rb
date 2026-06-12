@@ -11,6 +11,8 @@ module Migrations
       def execute
         @reporter.start_step(@step.class.title)
         @step.execute
+      ensure
+        @reporter.finish_step(@step.class.title)
       end
     end
   end
