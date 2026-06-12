@@ -22,23 +22,31 @@ export default class BrotliSizes {
     // filename to get the assets root the chunk files are resolved against.
     const root = import.meta.url.replace(/assets\/js\/[^/]+$/, "");
 
-    // Apply cache hits up front (one render), queue the rest for the workers.
-    const cached = [];
+    // Split into cache hits (applied up front) and work for the pool. This is
+    // pure — no tracked mutation here, since we're inside the render that
+    // constructed us; the actual updates happen in #begin a microtask later.
+    this.cachedEntries = [];
     this.queue = [];
     for (const file of Object.keys(analysis.chunks)) {
       if (this.cache[file] != null) {
-        cached.push([file, this.cache[file]]);
+        this.cachedEntries.push([file, this.cache[file]]);
       } else {
         this.queue.push({ file, url: new URL(file, root).href });
       }
     }
-    analysis.setBrotliMany(cached);
 
-    if (this.queue.length === 0) {
-      analysis.brotliComplete();
+    Promise.resolve().then(() => this.#begin());
+  }
+
+  #begin() {
+    if (this.destroyed) {
       return;
     }
-
+    this.analysis.setBrotliMany(this.cachedEntries);
+    if (this.queue.length === 0) {
+      this.analysis.brotliComplete();
+      return;
+    }
     this.#startPool();
   }
 
@@ -117,6 +125,7 @@ export default class BrotliSizes {
   }
 
   teardown() {
+    this.destroyed = true;
     for (const worker of this.workers) {
       worker.terminate();
     }
