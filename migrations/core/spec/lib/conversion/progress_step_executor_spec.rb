@@ -81,6 +81,27 @@ RSpec.describe Migrations::Conversion::ProgressStepExecutor do
       end
     end
 
+    context "when calculating the max progress is slow" do
+      let(:step_class) { define_fixture_step(false) }
+      let(:events) { [] }
+      let(:reporter) do
+        instance_double(Migrations::Conversion::ConsoleReporter).tap do |reporter|
+          allow(reporter).to receive(:start_step) { events << :start_step }
+          allow(reporter).to receive(:notice) { events << :notice }
+          allow(reporter).to receive(:with_progress) { events << :with_progress }
+          allow(reporter).to receive(:finish_step) { events << :finish_step }
+        end
+      end
+
+      it "announces the step before the runtime notice and reports the step end last" do
+        allow(Time).to receive(:now).and_return(Time.at(0), Time.at(10))
+
+        executor.execute
+
+        expect(events).to eq(%i[start_step notice with_progress finish_step])
+      end
+    end
+
     context "when the parallel threshold scales with the pool size" do
       let(:step_class) { define_fixture_step(true) }
 
