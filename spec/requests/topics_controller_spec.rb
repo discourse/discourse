@@ -3217,13 +3217,13 @@ RSpec.describe TopicsController do
       expect(response).to redirect_to(topic.relative_url)
     end
 
-    it "redirects to nested view when nested_replies_default is enabled" do
+    it "serves the topic route when nested_replies_default is enabled" do
       SiteSetting.nested_replies_enabled = true
       SiteSetting.nested_replies_default = true
 
       get "/t/#{topic.slug}/#{topic.id}"
 
-      expect(response).to redirect_to("/n/#{topic.slug}/#{topic.id}")
+      expect(response.status).to eq(200)
     end
 
     it "does not redirect crawlers to nested view" do
@@ -3248,24 +3248,22 @@ RSpec.describe TopicsController do
       expect(response).not_to redirect_to("/n/#{pm.slug}/#{pm.id}")
     end
 
-    it "preserves embed_mode when redirecting to nested view" do
+    it "serves embed_mode on the topic route for nested topics" do
       SiteSetting.nested_replies_enabled = true
       SiteSetting.nested_replies_default = true
 
       get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" }
 
-      expect(response).to redirect_to("/n/#{topic.slug}/#{topic.id}?embed_mode=true")
+      expect(response.status).to eq(200)
     end
 
-    it "preserves class_name alongside embed_mode when redirecting to nested view" do
+    it "serves embed class_name on the topic route for nested topics" do
       SiteSetting.nested_replies_enabled = true
       SiteSetting.nested_replies_default = true
 
       get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true", class_name: "lee-af" }
 
-      expect(response).to redirect_to(
-        "/n/#{topic.slug}/#{topic.id}?class_name=lee-af&embed_mode=true",
-      )
+      expect(response.status).to eq(200)
     end
 
     it "returns 404 when an invalid slug is given and no id" do

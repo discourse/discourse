@@ -28,6 +28,7 @@ RSpec.describe "Nested context view" do
 
   before do
     SiteSetting.nested_replies_enabled = true
+    Fabricate(:nested_topic, topic: topic)
     sign_in(user)
   end
 
@@ -143,7 +144,7 @@ RSpec.describe "Nested context view" do
     # by Glimmer (same post.id key) and its <NestedPostChildren> only
     # reads @preloadedChildren in its constructor — so without a forced
     # rebuild, the inner cascade keeps rendering the *previous* target's
-    # chain. routes/nested.js stamps a per-fetch _renderKey on the chain
+    # chain. The topic route stamps a per-fetch _renderKey on the chain
     # to force a full recreation; these specs guard that.
     it "rebuilds the chain so the new target is visible" do
       nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
@@ -152,7 +153,7 @@ RSpec.describe "Nested context view" do
       nested_view.route_to_nested_context(topic, post_number: chain_posts[4].post_number)
 
       expect(page).to have_current_path(
-        %r{/n/#{Regexp.escape(topic.slug)}/#{topic.id}/#{chain_posts[4].post_number}\b},
+        %r{/t/#{Regexp.escape(topic.slug)}/#{topic.id}/#{chain_posts[4].post_number}\b},
       )
       expect(nested_view).to have_post(chain_posts[4])
       expect(nested_view).to have_post(chain_posts[3])
@@ -169,18 +170,17 @@ RSpec.describe "Nested context view" do
     end
 
     # Notifications produce /t/slug/id/N URLs; topic/from-params.js
-    # detects is_nested_view and redirects to /n/.../N. When N is the
-    # post we're already viewing, the redirect is a no-op transition —
-    # we still need the URL to stay on /n/ (not leak to /t/) and the
-    # target to re-highlight via the nested:scroll-to-target appEvent.
-    it "keeps the URL on /n/ and re-highlights when /t/ is routed to the post we're already on" do
+    # detects is_nested_view and keeps the topic route mounted while loading
+    # the nested context payload. When N is the post we're already viewing,
+    # the target should re-highlight without leaving /t/.
+    it "keeps the URL on /t/ and re-highlights when /t/ is routed to the post we're already on" do
       nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
       expect(nested_view).to have_highlighted_post(chain_posts[2])
 
       nested_view.route_to_topic_post(topic, post_number: chain_posts[2].post_number)
 
       expect(page).to have_current_path(
-        %r{/n/#{Regexp.escape(topic.slug)}/#{topic.id}/#{chain_posts[2].post_number}\b},
+        %r{/t/#{Regexp.escape(topic.slug)}/#{topic.id}/#{chain_posts[2].post_number}\b},
       )
       expect(nested_view).to have_highlighted_post(chain_posts[2])
     end
@@ -209,7 +209,7 @@ RSpec.describe "Nested context view" do
       composer.submit
       expect(composer).to be_closed
 
-      expect(page).to have_current_path(%r{/n/})
+      expect(page).to have_current_path(%r{/t/})
     end
   end
 end

@@ -318,7 +318,7 @@ export default class NestedPost extends Component {
 
   get contextUrl() {
     return getURL(
-      `/n/${this.args.topic.slug}/${this.args.topic.id}/${this.args.post.post_number}?context=0`
+      `/t/${this.args.topic.slug}/${this.args.topic.id}/${this.args.post.post_number}?context=0`
     );
   }
 
@@ -399,8 +399,12 @@ export default class NestedPost extends Component {
 
     this.loadingReplies = true;
     try {
+      const query = new URLSearchParams({
+        sort: this.args.sort || "top",
+        depth: this.childDepth,
+      });
       const data = await ajax(
-        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.post.post_number}.json?sort=${this.args.sort || "top"}&depth=${this.childDepth}`
+        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.post.post_number}.json?${query}`
       );
       if (this.isDestroying || this.isDestroyed) {
         return null;
@@ -801,6 +805,7 @@ export default class NestedPost extends Component {
                     <section class="nested-post__menu post-menu-area clearfix">
                       <PostMenu
                         @post={{@post}}
+                        @nestedReplyView={{true}}
                         @canCreatePost={{this.canCreatePost}}
                         @copyLink={{this.copyLink}}
                         @deletePost={{fn @deletePost @post}}

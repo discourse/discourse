@@ -17,7 +17,10 @@ RSpec.describe "Nested view post admin menu" do
 
   let(:nested_view) { PageObjects::Pages::NestedView.new }
 
-  before { SiteSetting.nested_replies_enabled = true }
+  before do
+    SiteSetting.nested_replies_enabled = true
+    Fabricate(:nested_topic, topic: topic)
+  end
 
   def open_admin_menu_for(post)
     selector = "[data-post-number='#{post.post_number}']"

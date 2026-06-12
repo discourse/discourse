@@ -4,14 +4,14 @@ module PageObjects
   module Pages
     class NestedView < PageObjects::Pages::Base
       def visit_nested(topic, query: nil)
-        url = "/n/#{topic.slug}/#{topic.id}"
+        url = "/t/#{topic.slug}/#{topic.id}"
         url += "?#{query}" if query
         page.visit(url)
         self
       end
 
       def visit_nested_context(topic, post_number:, context: nil)
-        url = "/n/#{topic.slug}/#{topic.id}/#{post_number}"
+        url = "/t/#{topic.slug}/#{topic.id}/#{post_number}"
         url += "?context=#{context}" if context
         page.visit(url)
         self
@@ -29,7 +29,7 @@ module PageObjects
       end
 
       def route_to_nested_context(topic, post_number:, query: nil)
-        path = "/n/#{topic.slug}/#{topic.id}/#{post_number}"
+        path = "/t/#{topic.slug}/#{topic.id}/#{post_number}"
         path += "?#{query}" if query
         route_to(path)
       end
