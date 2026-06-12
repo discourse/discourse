@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import AdminReportChart from "discourse/admin/components/admin-report-chart";
 import AdminReportCounters from "discourse/admin/components/admin-report-counters";
+import AdminReportDonutChart from "discourse/admin/components/admin-report-donut-chart";
 import AdminReportInlineTable from "discourse/admin/components/admin-report-inline-table";
 import AdminReportLegacy from "discourse/admin/components/admin-report-legacy";
 import AdminReportNew from "discourse/admin/components/admin-report-new";
@@ -52,7 +53,8 @@ export default class AdminReport extends Component {
   @tracked options = null;
   @tracked dateRangeFrom = null;
   @tracked dateRangeTo = null;
-  @tracked userHasCustomDates = false;
+@tracked userHasCustomDates = false;
+  @tracked currentFilterType = null;
 
   showHeader = this.args.showHeader ?? true;
   showFilteringUI = this.args.showFilteringUI ?? false;
@@ -183,39 +185,56 @@ export default class AdminReport extends Component {
     return (
       this.currentMode === REPORT_MODES.chart ||
       this.currentMode === REPORT_MODES.stacked_chart ||
-      this.currentMode === REPORT_MODES.stacked_line_chart
+      this.currentMode === REPORT_MODES.stacked_line_chart ||
+      this.currentMode === REPORT_MODES.donut_chart
+    );
+  }
+
+  get additionalFilters() {
+    return makeArray(this.model?.available_filters).filter(
+      (f) => f.display !== "buttons"
     );
   }
 
   @action
   changeGrouping(grouping) {
-    const options = { chartGrouping: grouping };
+    if (
+      this.currentMode === REPORT_MODES.donut_chart &&
+      this.options?.filterId
+    ) {
+      // For donut charts, update filter locally without refreshing => exerimental, could apply everywhere?
+      this.currentFilterType = grouping;
+    } else if (this.options?.filterId) {
+      this.applyFilter(this.options.filterId, grouping);
+    } else {
+      const options = { chartGrouping: grouping };
 
-    if (this.siteSettings.reporting_improvements && !this.userHasCustomDates) {
-      const endDate = moment().endOf("day");
-      let startDate;
+      if (this.siteSettings.reporting_improvements && !this.userHasCustomDates) {
+        const endDate = moment().endOf("day");
+        let startDate;
 
-      switch (grouping) {
-        case "daily":
-          startDate = moment().subtract(1, "month").startOf("day");
-          break;
-        case "weekly":
-          startDate = moment().subtract(3, "months").startOf("day");
-          break;
-        case "monthly":
-          startDate = moment().subtract(12, "months").startOf("day");
-          break;
+        switch (grouping) {
+          case "daily":
+            startDate = moment().subtract(1, "month").startOf("day");
+            break;
+          case "weekly":
+            startDate = moment().subtract(3, "months").startOf("day");
+            break;
+          case "monthly":
+            startDate = moment().subtract(12, "months").startOf("day");
+            break;
+        }
+
+        if (startDate) {
+          this.dateRangeFrom = startDate;
+          this.dateRangeTo = endDate;
+          options.startDate = startDate;
+          options.endDate = endDate;
+        }
       }
 
-      if (startDate) {
-        this.dateRangeFrom = startDate;
-        this.dateRangeTo = endDate;
-        options.startDate = startDate;
-        options.endDate = endDate;
-      }
+      this.refreshReport(options);
     }
-
-    this.refreshReport(options);
   }
 
   get displayedModes() {
@@ -267,6 +286,8 @@ export default class AdminReport extends Component {
         return AdminReportRadar;
       case REPORT_MODES.storage_stats:
         return AdminReportStorageStats;
+      case REPORT_MODES.donut_chart:
+        return AdminReportDonutChart;
       default:
         if (reportModeComponent(reportMode)) {
           return reportModeComponent(reportMode);
@@ -291,7 +312,7 @@ export default class AdminReport extends Component {
       isTesting() ? "end" : formattedEndDate.replace(/-/g, ""),
       "[:prev_period]",
       this.args.reportOptions?.table?.limit,
-      // Convert all filter values to strings to ensure unique serialization
+
       this.args.filters?.customFilters
         ? JSON.stringify(this.args.filters?.customFilters, (k, v) =>
             k ? `${v}` : v
@@ -307,7 +328,19 @@ export default class AdminReport extends Component {
   }
 
   get chartGroupings() {
-    const chartGrouping = this.options?.chartGrouping;
+    // For donut charts, use currentFilterType instead of options.chartGrouping => experimental, could apply everywhere?
+    const chartGrouping =
+      this.currentMode === REPORT_MODES.donut_chart
+        ? this.currentFilterType
+        : this.options?.chartGrouping;
+
+    if (this.options?.chartGroupings) {
+      return this.options.chartGroupings.map((g) => ({
+        ...g,
+        class: `chart-grouping ${chartGrouping === g.id ? "active" : "inactive"}`,
+      }));
+    }
+
     const options = ["daily", "weekly", "monthly"];
 
     const dataLength = Array.isArray(this.model.chartData?.[0]?.data)
@@ -470,6 +503,10 @@ export default class AdminReport extends Component {
     this.model = report;
     this.currentMode = currentMode;
     this.options = this._buildOptions(currentMode, report);
+
+    if (currentMode === REPORT_MODES.donut_chart) {
+      this.currentFilterType = this.options?.chartGrouping || "role";
+    }
   }
 
   @bind
@@ -551,6 +588,20 @@ export default class AdminReport extends Component {
           this.args.reportOptions?.chartGrouping ||
           report.default_group_by ||
           Report.groupingForDatapoints(firstSeriesData.length),
+      });
+    }
+
+    const filter = report.available_filters?.find(
+      (f) => f.display === "buttons"
+    );
+    if (filter) {
+      return EmberObject.create({
+        chartGrouping: filter.default,
+        chartGroupings: filter.choices.map((c) => ({
+          id: c.id,
+          translatedLabel: c.name,
+        })),
+        filterId: filter.id,
       });
     }
   }

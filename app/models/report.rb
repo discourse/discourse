@@ -26,6 +26,7 @@ class Report
     counters: :counters,
     inline_table: :inline_table,
     storage_stats: :storage_stats,
+    donut_chart: :donut_chart,
   }
 
   HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs]
@@ -142,14 +143,17 @@ class Report
   include Reports::UserFlaggingRatio
   include Reports::UserToUserPrivateMessages
   include Reports::UserToUserPrivateMessagesWithReplies
-  include Reports::UsersByTrustLevel
-  include Reports::UsersByType
+  include Reports::UserStats
+  # include Reports::UsersByTrustLevel
+  # include Reports::UsersByType
   include Reports::Visits
   include Reports::WebCrawlers
   include Reports::WebHookEventsDailyAggregate
 
   attr_accessor :type,
                 :data,
+                :data_role,
+                :data_status,
                 :total,
                 :prev30Days,
                 :start_date,
@@ -309,6 +313,9 @@ class Report
       json[:limit] = limit if limit
       json[:default_group_by] = default_group_by if default_group_by
       json[:y_axis_title] = y_axis_title if y_axis_title
+
+      json[:data_role] = self.data_role if self.respond_to?(:data_role) && self.data_role
+      json[:data_status] = self.data_status if self.respond_to?(:data_status) && self.data_status
 
       if type == "page_view_crawler_reqs"
         json[:related_report] = Report.find(
