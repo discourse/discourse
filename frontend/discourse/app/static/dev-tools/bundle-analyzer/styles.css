@@ -1,0 +1,271 @@
+/* Self-contained dark-themed bundle analyzer viz, ported from the standalone
+   HTML report. All rules are scoped under `.bundle-analyzer` so the dark
+   palette doesn't leak into the rest of the dev-tools / app. */
+
+.bundle-analyzer-modal .d-modal__container {
+  width: min(1200px, 92vw);
+  max-width: 92vw;
+}
+.bundle-analyzer-modal .d-modal__body {
+  padding: 0;
+}
+
+.bundle-analyzer {
+  --ba-bg: #0f1115;
+  --ba-panel: #181b22;
+  --ba-panel2: #1f232c;
+  --ba-border: #2b303b;
+  --ba-text: #e6e8ec;
+  --ba-muted: #9aa3b2;
+  --ba-accent: #4c8dff;
+  --ba-good: #43b581;
+  --ba-bar: #3a4254;
+
+  background: var(--ba-bg);
+  color: var(--ba-text);
+  font:
+    13px/1.5 -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  padding: 16px 20px 40px;
+}
+
+.bundle-analyzer * {
+  box-sizing: border-box;
+}
+.bundle-analyzer code {
+  color: var(--ba-good);
+}
+.bundle-analyzer section {
+  margin-bottom: 28px;
+}
+.bundle-analyzer h2 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ba-muted);
+  margin: 0 0 12px;
+}
+
+.bundle-analyzer .ba-header {
+  margin-bottom: 16px;
+}
+.bundle-analyzer .ba-sub {
+  color: var(--ba-muted);
+  font-size: 12px;
+}
+.bundle-analyzer .ba-hint {
+  color: var(--ba-muted);
+  font-size: 12px;
+  margin: -4px 0 12px;
+}
+
+.bundle-analyzer .ba-cards {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.bundle-analyzer .ba-card {
+  background: var(--ba-panel);
+  border: 1px solid var(--ba-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  min-width: 150px;
+}
+.bundle-analyzer .ba-card .k {
+  color: var(--ba-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.bundle-analyzer .ba-card .v {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.bundle-analyzer .ba-baseline {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.bundle-analyzer .ba-baseline label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ba-muted);
+  cursor: pointer;
+}
+.bundle-analyzer .ba-baseline label.on {
+  color: var(--ba-text);
+}
+
+.bundle-analyzer input[type="search"] {
+  background: var(--ba-panel2);
+  border: 1px solid var(--ba-border);
+  border-radius: 6px;
+  color: var(--ba-text);
+  padding: 7px 10px;
+  width: 280px;
+  font-size: 13px;
+}
+
+.bundle-analyzer .ba-toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.bundle-analyzer .ba-seg {
+  display: inline-flex;
+  border: 1px solid var(--ba-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.bundle-analyzer .ba-seg button {
+  background: var(--ba-panel);
+  color: var(--ba-muted);
+  border: 0;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.bundle-analyzer .ba-seg button.on {
+  background: var(--ba-accent);
+  color: #fff;
+}
+
+.bundle-analyzer .ba-row {
+  border: 1px solid var(--ba-border);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  background: var(--ba-panel);
+  overflow: hidden;
+}
+.bundle-analyzer .ba-row > .ba-head {
+  display: grid;
+  grid-template-columns: 1fr 110px 100px 70px;
+  gap: 8px;
+  align-items: center;
+  padding: 9px 12px;
+  cursor: pointer;
+}
+.bundle-analyzer .ba-row > .ba-head:hover {
+  background: var(--ba-panel2);
+}
+.bundle-analyzer .ba-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.bundle-analyzer .ba-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bundle-analyzer .ba-label.root {
+  color: var(--ba-muted);
+  font-style: italic;
+}
+.bundle-analyzer .ba-tw {
+  color: var(--ba-muted);
+  width: 12px;
+  display: inline-block;
+  transition: transform 0.1s;
+  flex: none;
+}
+.bundle-analyzer .ba-row.open > .ba-head .ba-tw {
+  transform: rotate(90deg);
+}
+.bundle-analyzer .ba-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.bundle-analyzer .ba-num.muted {
+  color: var(--ba-muted);
+}
+.bundle-analyzer .ba-body {
+  display: none;
+  padding: 0 12px 12px 32px;
+}
+.bundle-analyzer .ba-row.open > .ba-body {
+  display: block;
+}
+
+.bundle-analyzer .ba-badge {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--ba-bar);
+  color: var(--ba-text);
+  flex: none;
+}
+.bundle-analyzer .ba-badge.dyn {
+  background: #3a2f4d;
+  color: #c9a8ff;
+}
+.bundle-analyzer .ba-badge.entry {
+  background: #2f3d4d;
+  color: #9ec9ff;
+}
+.bundle-analyzer .ba-badge.add {
+  background: #4d3a2f;
+  color: #ffc59e;
+}
+.bundle-analyzer .ba-badge.route {
+  background: #2f4d3a;
+  color: #9effc0;
+}
+
+.bundle-analyzer .ba-bar {
+  height: 4px;
+  background: var(--ba-bar);
+  border-radius: 2px;
+  margin-top: 4px;
+}
+.bundle-analyzer .ba-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--ba-accent);
+  border-radius: 2px;
+}
+.bundle-analyzer .ba-mod {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+  gap: 8px;
+  padding: 3px 0;
+  border-bottom: 1px solid #232833;
+  color: var(--ba-muted);
+}
+.bundle-analyzer .ba-mname {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ba-text);
+}
+.bundle-analyzer .ba-sites {
+  margin: 4px 0 10px;
+}
+.bundle-analyzer .ba-site {
+  color: var(--ba-muted);
+  padding: 2px 0;
+}
+.bundle-analyzer .ba-sub-list {
+  margin-top: 8px;
+}
+.bundle-analyzer .ba-pill,
+.bundle-analyzer .pill {
+  font-size: 11px;
+  color: var(--ba-muted);
+}
+.bundle-analyzer .ba-empty {
+  color: var(--ba-muted);
+  padding: 12px;
+}

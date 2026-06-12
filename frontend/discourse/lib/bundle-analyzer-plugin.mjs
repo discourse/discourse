@@ -195,22 +195,18 @@ export default function bundleAnalyzerPlugin({ devMode } = {}) {
         chunks,
       };
 
-      const template = fs.readFileSync(
-        new URL("./bundle-analyzer-template.html", import.meta.url),
-        "utf8"
-      );
-      const html = template.replace(/\/\*__BUNDLE_DATA__\*\/\s*null/, () =>
-        JSON.stringify(data)
-      );
+      const json = JSON.stringify(data);
 
+      // Co-located with the JS chunks so the dev-tools UI can fetch it relative
+      // to its own import.meta.url (assets/js/dev-tools-*.js -> ./bundle-analysis.json).
       if (devMode) {
-        fs.mkdirSync("./dist", { recursive: true });
-        fs.writeFileSync("./dist/bundle-analysis.html", html);
+        fs.mkdirSync("./dist/assets/js", { recursive: true });
+        fs.writeFileSync("./dist/assets/js/bundle-analysis.json", json);
       } else {
         this.emitFile({
           type: "asset",
-          fileName: "bundle-analysis.html",
-          source: html,
+          fileName: "assets/js/bundle-analysis.json",
+          source: json,
         });
       }
     },
