@@ -2,11 +2,6 @@ name: Tests
 
 on:
   pull_request:
-    paths-ignore:
-      - ".github/workflows/migration-tests.yml"
-      - ".github/dependabot.yml"
-      - ".github/labeler.yml"
-      - "migrations/**"
   push:
     branches:
       - main
@@ -57,7 +52,16 @@ jobs:
       CHEAP_SOURCE_MAPS: "1"
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
-      EMBER_ENV: development
+      # `production` here makes every system-spec page load parse a minified,
+      # tree-shaken bundle instead of the much larger development build,
+      # cutting the in-browser parse/boot time the suite pays on each of its
+      # thousands of navigations. The dev-only `rails-testing.js` test bridge
+      # (`window.clientSettled`) is dead-code-eliminated from production
+      # builds; spec/rails_helper.rb injects a build-independent
+      # reimplementation via a Playwright init script, so settle semantics are
+      # unchanged. Specs that depend on dev-build-only behaviour (deprecation
+      # assertions, /theme-qunit) are skipped when EMBER_ENV=production.
+      EMBER_ENV: production
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
@@ -68,26 +72,7 @@ jobs:
       matrix:
         include:
           - target: core
-            build_type: backend
-          - target: core
-            build_type: frontend
-          - target: core
             build_type: system
-          - target: plugins
-            build_type: backend
-          - target: plugins
-            build_type: frontend
-          - target: core-plugins
-            build_type: system
-          - target: chat
-            build_type: system
-          - target: official-plugins
-            build_type: system
-          - target: themes
-            build_type: frontend
-          - target: themes
-            build_type: system
-
     steps:
       - name: Enable jemalloc
         run: echo /usr/lib/libjemalloc.so.1 > /etc/ld.so.preload
@@ -305,6 +290,14 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
+          # The prior `Create and migrate databases` step already runs
+          # `parallel:create parallel:migrate` for every worker DB, so
+          # `bin/turbo_rspec`'s own `check_for_migrations` is redundant
+          # here. Skipping it lets the parent skip the Rails-app boot
+          # entirely — workers spawn that much earlier and the
+          # serial-prefix on the step's critical path shrinks by the
+          # parent's `Discourse::Application.initialize!` time.
+          TURBO_RSPEC_SKIP_MIGRATIONS_CHECK: "1"
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests

@@ -18,37 +18,50 @@ RSpec.configure do |config|
     class SpecTimeoutError < StandardError
     end
 
-    mutex = Mutex.new
-    condition_variable = ConditionVariable.new
-    test_running = false
-    is_waiting = false
+    # A single watchdog thread polls a shared monotonic deadline on a fixed 1s
+    # cadence and dumps every thread's backtrace when the running example is
+    # within ~1s of the PER_SPEC_TIMEOUT_SECONDS hard limit (which the
+    # `Timeout.timeout` below still enforces independently). This replaces a
+    # mutex / condition-variable handshake whose `config.around` `ensure` ran,
+    # after EVERY example, `sleep 0.01 while !is_waiting` to re-arm the logger
+    # thread — a guaranteed >=10ms spin-wait (plus several mutex round-trips and
+    # a `Thread#wakeup`) on the example thread, on the critical path *between*
+    # every one of the ~170 examples each of the 12 parallel system-test workers
+    # runs. That is ~1.7s of dead main-thread time per worker, and its
+    # scheduling latency under the saturated 16-core runner inflated the tail.
+    # The poll-based watchdog needs no per-example coordination, so the around
+    # hook drops to two plain local-variable writes and that between-examples
+    # stall disappears. `running`/`deadline_monotonic` are shared via the
+    # closure binding; MRI's GVL makes the plain reads/writes safe across the
+    # two threads.
+    running = false
+    deadline_monotonic = nil
 
-    backtrace_logger =
-      Thread.new do
-        loop do
-          mutex.synchronize do
-            is_waiting = true
-            condition_variable.wait(mutex)
-            is_waiting = false
+    Thread.new do
+      loop do
+        sleep 1
+
+        deadline = deadline_monotonic
+        if running && deadline &&
+             Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline - 1
+          puts "::group::[#{Process.pid}] Threads backtraces ~1 second before timeout"
+
+          Thread.list.each do |thread|
+            puts "\n"
+            (thread.backtrace || []).each { |line| puts line }
+            puts "\n"
           end
 
-          sleep PER_SPEC_TIMEOUT_SECONDS - 1
+          puts "::endgroup::"
 
-          if mutex.synchronize { test_running }
-            puts "::group::[#{Process.pid}] Threads backtraces 1 second before timeout"
-
-            Thread.list.each do |thread|
-              puts "\n"
-              thread.backtrace.each { |line| puts line }
-              puts "\n"
-            end
-
-            puts "::endgroup::"
-          end
-        rescue StandardError => e
-          puts "Error in backtrace logger: #{e}"
+          # Don't re-dump on every subsequent 1s tick for the same stuck
+          # example; the next example resets the deadline.
+          deadline_monotonic = nil
         end
+      rescue StandardError => e
+        puts "Error in backtrace logger: #{e}"
       end
+    end
 
     config.around do |example_procsy|
       Timeout.timeout(
@@ -56,10 +69,9 @@ RSpec.configure do |config|
         SpecTimeoutError,
         "Spec timed out after #{PER_SPEC_TIMEOUT_SECONDS} seconds",
       ) do
-        mutex.synchronize do
-          test_running = true
-          condition_variable.signal
-        end
+        deadline_monotonic =
+          Process.clock_gettime(Process::CLOCK_MONOTONIC) + PER_SPEC_TIMEOUT_SECONDS
+        running = true
 
         example_procsy.run
       rescue SpecTimeoutError
@@ -67,9 +79,7 @@ RSpec.configure do |config|
         puts example_procsy.example.metadata
         puts "---"
       ensure
-        mutex.synchronize { test_running = false }
-        backtrace_logger.wakeup
-        sleep 0.01 while !mutex.synchronize { is_waiting }
+        running = false
       end
     end
 
@@ -123,4 +133,22 @@ RSpec.configure do |config|
       ActiveRecord::Base.logger = original_logger
     end
   end
+end
+
+if ENV["CI"]
+  # With `mini_racer_single_threaded = true` (the default), every
+  # `PrettyText.protect` block and `AssetProcessor.v8_call` ends with
+  # `Context#low_memory_notification` — a forced full V8 GC intended to keep
+  # long-lived production processes compact. In short-lived CI spec workers
+  # that compaction buys nothing while costing a full collection on every
+  # markdown cook (measured: 8.83ms -> 3.27ms per cook without it) and ~50
+  # forced GCs during each worker's `PrettyText.create_es6_context` transpile
+  # (~1.5s per worker). V8's own allocation-triggered GC still runs; only the
+  # redundant forced collection is dropped.
+  MiniRacer::Context.prepend(
+    Module.new do
+      def low_memory_notification
+      end
+    end,
+  )
 end

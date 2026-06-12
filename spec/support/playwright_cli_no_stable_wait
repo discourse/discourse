@@ -1,0 +1,8 @@
+#!/bin/sh
+# Drop-in replacement for ./node_modules/.bin/playwright that loads the
+# playwright server with spec/support/playwright_skip_stable_wait.cjs
+# preloaded, removing the ~31ms-per-pointer-action "stable" animation wait
+# that is dead weight under `Capybara.disable_animation = true`.
+dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+root=$(CDPATH= cd -- "$dir/../.." && pwd)
+exec node --require "$dir/playwright_skip_stable_wait.cjs" "$root/node_modules/playwright/cli.js" "$@"

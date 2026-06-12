@@ -29,6 +29,153 @@ ENV["RAILS_ENV"] ||= "test"
 ENV["ENABLE_LOGSTASH_LOGGER"] ||= "1"
 require File.expand_path("../../config/environment", __FILE__)
 Discourse.singleton_class.prepend(RspecWarnExceptionCapture)
+
+# In CI, neutralize ActiveRecord query log tags + verbose query logs. Both
+# enabled in `config/environments/test.rb`, but their output is unreachable
+# under `RAILS_TEST_LOG_LEVEL=error`. The compute cost is not: every AR
+# query runs the `request_path` / `Thread.current.object_id` lambdas and
+# builds an SQL comment, and `verbose_query_logs` walks the Ruby stack via
+# caller_locations on every log emit. Override `QueryLogs.comment` to a
+# constant nil so the prepended `call(sql, connection)` exits in one branch
+# without iterating handlers or touching the execution context.
+if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
+  ActiveRecord.verbose_query_logs = false
+
+  if defined?(ActiveRecord::QueryLogs)
+    ActiveRecord::QueryLogs.tags = []
+    ActiveRecord::QueryLogs.singleton_class.define_method(:comment) { |_connection| nil }
+  end
+
+  # Mirror the production-only optimization from config/initializers/300-perf.rb
+  # into CI test runs. Every AR query passes through
+  # `ActiveSupport::Notifications.instrument("sql.active_record", payload)`.
+  # With AR's LogSubscriber attached, that path allocates a notification
+  # `Event`, dispatches start/finish across all subscribers, and ends in
+  # `ActiveRecord::LogSubscriber#sql` — which immediately exits because
+  # `RAILS_TEST_LOG_LEVEL=error` keeps `logger.level` above the subscriber's
+  # `:debug` threshold. With no subscribers, the `instrument` call short-
+  # circuits via `@notifier.listening?(name)` and just yields the block,
+  # skipping the Event allocation and the per-query subscriber lifecycle.
+  # `spec/support/helpers.rb#track_sql_queries` uses
+  # `Notifications.subscribed { ... }` to attach a transient subscriber for
+  # the duration of a block, so query-counting tests still work unchanged.
+  ActiveSupport::Notifications.notifier.unsubscribe("sql.active_record")
+
+  # Extend the same unsubscribe to the remaining `LogSubscriber` events that
+  # the in-process test server still dispatches on every request but that
+  # nothing consumes under `RAILS_TEST_LOG_LEVEL=error`:
+  #
+  # * `instantiation.active_record` is the untouched sibling of
+  #   `sql.active_record` on `ActiveRecord::LogSubscriber`. AR fires it from
+  #   `find_by_sql` once per model-loading SELECT (`record_count`/`class_name`
+  #   payload), so a Discourse topic/list request that fans out into dozens of
+  #   record-returning queries pays a notification `Event` allocation +
+  #   start/finish dispatch + the `LogSubscriber#instantiation` callback (which
+  #   then early-exits because `logger.level` is above `:debug`) that many times
+  #   per page the system specs drive.
+  # * `render_template`/`render_partial`/`render_collection`/`render_layout`
+  #   `.action_view` are `ActionView::LogSubscriber`'s events, dispatched for
+  #   every server-rendered bootstrap-HTML template + partial on each full page
+  #   load — again only to feed logs dropped at `error` level.
+  #
+  # Unsubscribing by name (same as `sql.active_record` above) removes the
+  # permanently-attached `LogSubscriber`, so `instrument` short-circuits via
+  # `@notifier.listening?` and skips the per-event `Event` + dispatch. No
+  # `spec/**` file subscribes to or asserts on these events, and
+  # `track_sql_queries` only attaches transient `sql.*` subscribers, so query-
+  # counting tests are unaffected. Restore with `DISCOURSE_KEEP_AR_QUERY_LOGS=1`.
+  %w[
+    instantiation.active_record
+    render_template.action_view
+    render_partial.action_view
+    render_collection.action_view
+    render_layout.action_view
+  ].each { |event| ActiveSupport::Notifications.notifier.unsubscribe(event) }
+
+  # Same idea for the MiniSql path. Every `DB.query`/`DB.exec` flows through
+  # `MiniSqlMultisiteConnection#run`, which unconditionally builds the
+  # `sql.mini_sql` notification payload — and the `sql:` value is
+  # `sql_fragment(sql, *params)`, which for any parameterized query runs
+  # `ActiveRecord::Base.sanitize_sql_array` (regex parameter interpolation).
+  # Because that payload is a positional argument, it is computed eagerly on
+  # *every* query before `instrument` even gets to check for listeners, so the
+  # encode + hash allocation are paid in full even though nothing consumes the
+  # event. Unlike AR's path there is no LogSubscriber to unsubscribe (MiniSql
+  # ships none), so we gate the whole instrument behind `listening?` instead.
+  # `track_sql_queries` attaches a transient `sql.mini_sql` subscriber, so when
+  # a query-counting block is active the check is true and behaviour is
+  # byte-identical; in the common case nobody listens and the per-query
+  # `sanitize_sql_array` + notification dispatch are skipped entirely.
+  MiniSqlMultisiteConnection.class_eval do
+    def run(sql, params)
+      if ActiveSupport::Notifications.notifier.listening?("sql.mini_sql")
+        ActiveSupport::Notifications.instrument(
+          "sql.mini_sql",
+          sql: sql_fragment(sql, *params),
+          name: "MiniSql",
+        )
+      end
+
+      super
+    end
+  end
+
+  # Neutralize MethodProfiler in CI. `Middleware::RequestTracker` wraps every
+  # controller request the in-process test server handles with
+  # `MethodProfiler.start` / `.stop`, and `Hijack` / `Jobs::Base` do the same
+  # for hijacked responses and jobs. While a profiler is active, the prepended
+  # patches on `PG::Connection`, `Redis::Client`, `RedisClient::RubyConnection`,
+  # `Net::HTTP` and `Excon::Connection` record every call with two
+  # `Process.clock_gettime`s plus a hash mutation — and a Discourse topic/list
+  # request fans out into dozens of SQL queries and Redis calls, so that is
+  # paid hundreds of times per page the system specs drive. On top of that,
+  # `MethodProfiler.start` builds a full `GC.stat` Hash (~30 entries) on every
+  # request, and lograge's `custom_options` reads `GC.stat[:heap_live_slots]`
+  # again to compute the per-request slot delta — two whole-Hash `GC.stat`
+  # allocations per request feeding allocation/GC pressure during the
+  # CPU-bound request-handling phase that system specs block on.
+  #
+  # In CI that timing data only ever surfaces in the `X-Runtime` header and
+  # lograge's `db`/`redis`/`net` fields (emitted at `error` level under
+  # `RAILS_TEST_LOG_LEVEL=error`) — nothing any system spec asserts on. No-op
+  # `start` so `Thread.current[:_method_profiler]` stays nil: every patched
+  # DB/Redis/Net call takes MethodProfiler's single thread-local nil-check fast
+  # path, the per-request `GC.stat`s are skipped, and `stop`/`transfer` return
+  # nil. Every consumer (`RequestTracker`, `Hijack`, `Jobs::Base`, lograge) is
+  # already nil-guarded on that path, so behaviour is unchanged. Set
+  # DISCOURSE_KEEP_METHOD_PROFILER=1 to restore instrumentation for debugging.
+  if !ENV["DISCOURSE_KEEP_METHOD_PROFILER"] && defined?(MethodProfiler)
+    MethodProfiler.singleton_class.prepend(
+      Module.new do
+        def start(_transfer = nil)
+          nil
+        end
+      end,
+    )
+  end
+
+  # `UpcomingChanges.clear_caches!` is called per spec via `TestSetup.test_setup`
+  # (the `config.before :each` hook). The upstream implementation pays three
+  # serial Redis round-trips — two `Discourse.cache.delete` calls plus a
+  # `Discourse.redis.del` inside `DiscourseUpdates.clear_latest_new_feature_created_at_cache`.
+  # Even on a localhost socket each round-trip costs ~50-100us of syscall +
+  # protocol overhead, and the keys are almost always already gone (the global
+  # `after :each` calls `Discourse.redis.flushdb` at the end of every spec,
+  # so the next spec's `test_setup` is DEL'ing nonexistent keys). Collapse
+  # the three DELs into a single multi-key DEL so workers pay one round-trip
+  # per spec instead of three, with byte-identical post-condition.
+  module UpcomingChangesBatchedClearCaches
+    def clear_caches!
+      Discourse.redis.del(
+        Discourse.cache.normalize_key(current_statuses_cache_key),
+        Discourse.cache.normalize_key(permanent_upcoming_changes_cache_key),
+        DiscourseUpdates.send(:latest_new_feature_created_at_key),
+      )
+    end
+  end
+  UpcomingChanges.singleton_class.prepend(UpcomingChangesBatchedClearCaches)
+end
+
 require "rspec/rails"
 require "shoulda-matchers"
 require "sidekiq/testing"
