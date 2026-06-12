@@ -42,7 +42,7 @@ module Migrations
                                END
                        ELSE u.suspended_till
                        END          AS suspended_till,
-                   a.acting_user_id AS suspended_by,
+                   a.acting_user_id AS suspended_by_id,
                    a.details        AS reason
             FROM actions a
                  JOIN users u ON a.target_user_id = u.id
