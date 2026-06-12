@@ -4,6 +4,7 @@ module Migrations
   module ForkManager
     @before_fork_hooks = []
     @after_fork_parent_hooks = []
+    @after_fork_child_hooks = []
     @execute_parent_forks = true
 
     class << self
@@ -39,10 +40,25 @@ module Migrations
         @after_fork_parent_hooks.delete(block)
       end
 
+      def after_fork_child(&block)
+        if block
+          @after_fork_child_hooks << block
+          block
+        end
+      end
+
+      def remove_after_fork_child_hook(block)
+        @after_fork_child_hooks.delete(block)
+      end
+
       def fork
         run_before_fork_hooks if @execute_parent_forks
 
-        pid = Process.fork { yield }
+        pid =
+          Process.fork do
+            run_after_fork_child_hooks
+            yield
+          end
 
         run_after_fork_parent_hooks if @execute_parent_forks
 
@@ -50,12 +66,13 @@ module Migrations
       end
 
       def size
-        @before_fork_hooks.size + @after_fork_parent_hooks.size
+        @before_fork_hooks.size + @after_fork_parent_hooks.size + @after_fork_child_hooks.size
       end
 
       def clear!
         @before_fork_hooks.clear
         @after_fork_parent_hooks.clear
+        @after_fork_child_hooks.clear
       end
 
       private
@@ -66,6 +83,10 @@ module Migrations
 
       def run_after_fork_parent_hooks
         @after_fork_parent_hooks.each(&:call)
+      end
+
+      def run_after_fork_child_hooks
+        @after_fork_child_hooks.each(&:call)
       end
     end
   end
