@@ -29,7 +29,20 @@ module DiscourseRssPolling
           items: items.first(MAX_ITEMS),
         )
       purge_old(rss_feed_id)
+      publish(attempt)
       attempt
+    end
+
+    def self.message_bus_channel(rss_feed_id)
+      "/rss-polling/feeds/#{rss_feed_id}"
+    end
+
+    def self.publish(attempt)
+      MessageBus.publish(
+        message_bus_channel(attempt.rss_feed_id),
+        PollAttemptSerializer.new(attempt, root: false).as_json,
+        group_ids: [Group::AUTO_GROUPS[:admins]],
+      )
     end
 
     def self.purge_old(rss_feed_id)

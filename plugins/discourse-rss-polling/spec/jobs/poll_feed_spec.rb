@@ -217,6 +217,18 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
         expect(attempt.items.first["topic_url"]).to be_present
       end
 
+      it "publishes the recorded attempt to the admin-only message bus channel" do
+        messages =
+          MessageBus.track_publish("/rss-polling/feeds/#{rss_feed.id}") do
+            job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+          end
+
+        expect(messages.size).to eq(1)
+        expect(messages.first.group_ids).to eq([Group::AUTO_GROUPS[:admins]])
+        expect(messages.first.data[:status]).to eq("success")
+        expect(messages.first.data[:imported_count]).to eq(1)
+      end
+
       it "polls again when force is true even if it was polled recently" do
         job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
         expect(DiscourseRssPolling::PollAttempt.count).to eq(1)

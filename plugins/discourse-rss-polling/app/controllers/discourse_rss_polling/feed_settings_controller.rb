@@ -98,6 +98,7 @@ module DiscourseRssPolling
                id: rss_feed.id,
                feed_url: rss_feed.url,
                poll_attempts: serialize_data(attempts, PollAttemptSerializer),
+               last_message_id: MessageBus.last_id(PollAttempt.message_bus_channel(rss_feed.id)),
              }
     end
 

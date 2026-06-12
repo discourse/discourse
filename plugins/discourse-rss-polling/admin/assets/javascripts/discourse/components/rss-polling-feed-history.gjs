@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -14,14 +15,42 @@ import {
 } from "discourse/plugins/discourse-rss-polling/discourse/lib/rss-polling-item";
 
 const VISIBLE_LIMIT = 10;
+const KEEP_LIMIT = 20;
 
 export default class RssPollingFeedHistory extends Component {
+  @service messageBus;
+
   @tracked openIndex = null;
   @tracked showAll = false;
+  @tracked rawAttempts;
+
+  constructor() {
+    super(...arguments);
+    this.rawAttempts = this.args.model.poll_attempts ?? [];
+    this.messageBus.subscribe(
+      this.channel,
+      this.onAttempt,
+      this.args.model.last_message_id
+    );
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.messageBus.unsubscribe(this.channel, this.onAttempt);
+  }
+
+  get channel() {
+    return `/rss-polling/feeds/${this.args.model.id}`;
+  }
+
+  @action
+  onAttempt(attempt) {
+    this.rawAttempts = [attempt, ...this.rawAttempts].slice(0, KEEP_LIMIT);
+  }
 
   @cached
   get attempts() {
-    return (this.args.model.poll_attempts ?? []).map((attempt) => ({
+    return this.rawAttempts.map((attempt) => ({
       createdAt: attempt.created_at,
       summary: pollSummary(attempt),
       danger: attempt.status === "error",

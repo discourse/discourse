@@ -7,7 +7,6 @@ import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseLater from "discourse/lib/later";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
@@ -141,8 +140,6 @@ export default class RssPollingFeedForm extends Component {
             duration: "short",
             data: { message: i18n("admin.rss_polling.history.poll_started") },
           });
-          await new Promise((resolve) => discourseLater(resolve, 3000));
-          await this.router.refresh();
         } catch (error) {
           popupAjaxError(error);
         } finally {
