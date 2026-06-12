@@ -1153,6 +1153,7 @@ RSpec.describe InvitesController do
 
       it "fails when discourse connect is enabled" do
         SiteSetting.discourse_connect_url = "https://example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
 
         put "/invites/show/#{invite.invite_key}.json"
@@ -1934,6 +1935,7 @@ RSpec.describe InvitesController do
 
       it "allows admin to bulk invite when DiscourseConnect enabled" do
         SiteSetting.discourse_connect_url = "https://example.com"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
 
         sign_in(admin)

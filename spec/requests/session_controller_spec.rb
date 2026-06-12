@@ -42,6 +42,7 @@ RSpec.describe SessionController do
     context "when SSO enabled" do
       before do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
       end
 
@@ -601,8 +602,8 @@ RSpec.describe SessionController do
   describe "#sso" do
     before do
       SiteSetting.discourse_connect_url = "http://example.com/discourse_sso"
-      SiteSetting.enable_discourse_connect = true
       SiteSetting.discourse_connect_secret = "shjkfdhsfkjh"
+      SiteSetting.enable_discourse_connect = true
     end
 
     it "redirects correctly" do
@@ -618,8 +619,8 @@ RSpec.describe SessionController do
       @sso_secret = "shjkfdhsfkjh"
 
       SiteSetting.discourse_connect_url = @sso_url
-      SiteSetting.enable_discourse_connect = true
       SiteSetting.discourse_connect_secret = @sso_secret
+      SiteSetting.enable_discourse_connect = true
 
       Fabricate(:admin)
     end
@@ -636,6 +637,29 @@ RSpec.describe SessionController do
       sso.nonce = nonce
       sso.sso_secret = @sso_secret
       sso
+    end
+
+    context "when the configured secret is blank" do
+      before { SiteSetting.discourse_connect_secret = "" }
+
+      it "rejects a payload signed with an empty secret without logging in or creating a user" do
+        sso = get_sso("/")
+        sso.sso_secret = ""
+        sso.external_id = "1337"
+        sso.email = "someone@example.com"
+        sso.name = "Some One"
+        sso.username = "someone"
+        sso.admin = true
+
+        expect {
+          get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+        }.not_to change { User.count }
+
+        expect(response.status).to eq(422)
+
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        expect(logged_on_user).to eq(nil)
+      end
     end
 
     context "when in staff writes only mode" do
@@ -1908,6 +1932,7 @@ RSpec.describe SessionController do
     context "when SSO is enabled" do
       before do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
 
         post "/session.json", params: { login: user.username, password: "myawesomepassword" }
@@ -2577,6 +2602,7 @@ RSpec.describe SessionController do
 
     it "redirects to /login-required when SSO and login_required" do
       SiteSetting.discourse_connect_url = "https://example.com/sso"
+      SiteSetting.discourse_connect_secret = "x" * 10
       SiteSetting.enable_discourse_connect = true
 
       user = sign_in(Fabricate(:user))
@@ -2893,6 +2919,7 @@ RSpec.describe SessionController do
       context "when SSO is enabled" do
         before do
           SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+          SiteSetting.discourse_connect_secret = "x" * 10
           SiteSetting.enable_discourse_connect = true
 
           post "/session.json", params: { login: user.username, password: "myawesomepassword" }
@@ -3522,6 +3549,7 @@ RSpec.describe SessionController do
 
         it "fails when discourse connect is enabled" do
           SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+          SiteSetting.discourse_connect_secret = "x" * 10
           SiteSetting.enable_discourse_connect = true
           simulate_localhost_passkey_challenge
           user.activate

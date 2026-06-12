@@ -10,6 +10,9 @@ class DiscourseConnectBase
   class SignatureError < ParseError
   end
 
+  class BlankSecretError < ParseError
+  end
+
   ACCESSORS = %i[
     add_groups
     admin
@@ -84,6 +87,8 @@ class DiscourseConnectBase
   def self.parse(payload, sso_secret = nil, **init_kwargs)
     sso = new(**init_kwargs)
     sso.sso_secret = sso_secret if sso_secret
+
+    raise BlankSecretError if sso.sso_secret.blank?
 
     parsed = Rack::Utils.parse_query(payload)
 

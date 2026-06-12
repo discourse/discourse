@@ -2440,11 +2440,11 @@ RSpec.describe Admin::UsersController do
     before do
       SiteSetting.email_editable = false
       SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.discourse_connect_secret = sso_secret
       SiteSetting.enable_discourse_connect = true
       SiteSetting.auth_overrides_email = true
       SiteSetting.auth_overrides_name = true
       SiteSetting.auth_overrides_username = true
-      SiteSetting.discourse_connect_secret = sso_secret
       sso.sso_secret = sso_secret
     end
 
@@ -2983,6 +2983,7 @@ RSpec.describe Admin::UsersController do
 
     before do
       SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.discourse_connect_secret = "x" * 10
       SiteSetting.enable_discourse_connect = true
     end
 
