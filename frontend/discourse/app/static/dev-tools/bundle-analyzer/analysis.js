@@ -117,6 +117,21 @@ export default class Analysis {
     return { files: files.size ?? files.length, raw, brotli, brotliReady };
   }
 
+  // True when a chunk matches the filter by its file path, its name, or any of
+  // the source module paths bundled inside it.
+  chunkMatches(file, filter) {
+    if (!filter) {
+      return true;
+    }
+    const c = this.chunks[file];
+    return (
+      !!c &&
+      (matches(file, filter) ||
+        matches(c.name, filter) ||
+        c.modules.some((m) => matches(m.id, filter)))
+    );
+  }
+
   // Sort key: brotli when we have it, otherwise raw (so ordering is stable
   // before brotli finishes and tightens up as sizes arrive).
   sortSize(file) {

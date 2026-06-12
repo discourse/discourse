@@ -75,9 +75,16 @@ export default class EntrypointCard extends Component {
     return t.brotliReady ? fmt(t.brotli) : "…";
   }
 
+  // While a filter is active the card opens itself (everything shown is a
+  // match) so the matching chunks/modules below are visible without a click.
+  get expanded() {
+    return this.open || !!this.args.filter;
+  }
+
   get addedSorted() {
     return this.added
       .filter((f) => f !== this.args.file)
+      .filter((f) => this.analysis.chunkMatches(f, this.args.filter))
       .sort((a, b) => this.analysis.sortSize(b) - this.analysis.sortSize(a));
   }
 
@@ -87,6 +94,7 @@ export default class EntrypointCard extends Component {
     }
     return [...this.loadSet]
       .filter((f) => this.args.baselineClosure.has(f) && f !== this.args.file)
+      .filter((f) => this.analysis.chunkMatches(f, this.args.filter))
       .sort((a, b) => this.analysis.sortSize(b) - this.analysis.sortSize(a));
   }
 
@@ -96,7 +104,9 @@ export default class EntrypointCard extends Component {
   }
 
   <template>
-    <div class="ba-row {{if this.open 'open'}} {{if this.isLoaded 'loaded'}}">
+    <div
+      class="ba-row {{if this.expanded 'open'}} {{if this.isLoaded 'loaded'}}"
+    >
       <button
         type="button"
         class="ba-head"
@@ -145,7 +155,7 @@ export default class EntrypointCard extends Component {
           >+{{this.added.length}}/{{this.loadSet.size}}f</span>
         {{/if}}
       </button>
-      {{#if this.open}}
+      {{#if this.expanded}}
         <div class="ba-body">
           <div class="ba-sites">
             {{#each this.chunk.importSites as |s|}}

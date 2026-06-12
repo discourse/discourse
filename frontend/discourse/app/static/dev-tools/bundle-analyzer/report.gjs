@@ -3,7 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { eq } from "discourse/truth-helpers";
-import { fmt, matches } from "./analysis";
+import { fmt } from "./analysis";
 import BrotliSizes from "./brotli-sizes";
 import EntrypointCard from "./entrypoint-card";
 import LoadedChunks from "./loaded-chunks";
@@ -64,10 +64,23 @@ export default class Report extends Component {
   }
 
   #cardMatches(file) {
-    return (
-      matches(file, this.filter) ||
-      matches(this.analysis.chunks[file].name, this.filter)
-    );
+    if (!this.filter) {
+      return true;
+    }
+    // Match if any chunk this entrypoint introduces (its subtree, minus the
+    // shared baseline) matches by path / name / bundled module path. The
+    // baseline card owns everything in its own subtree.
+    const base = this.baselineClosure;
+    const isBaseline = file === this.baselineFile;
+    for (const f of this.analysis.staticClosure(file)) {
+      if (!isBaseline && f !== file && base.has(f)) {
+        continue;
+      }
+      if (this.analysis.chunkMatches(f, this.filter)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @action

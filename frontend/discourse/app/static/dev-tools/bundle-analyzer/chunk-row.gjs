@@ -41,6 +41,19 @@ export default class ChunkRow extends Component {
     return this.chunk.modules.filter((m) => matches(m.id, this.args.filter));
   }
 
+  // Auto-open when the filter matches a module path inside this chunk, so the
+  // matching source path is revealed without a click.
+  get moduleMatch() {
+    return (
+      !!this.args.filter &&
+      this.chunk.modules.some((m) => matches(m.id, this.args.filter))
+    );
+  }
+
+  get expanded() {
+    return this.open || this.moduleMatch;
+  }
+
   get brotliLabel() {
     const size = this.args.analysis.brotliOf(this.args.file);
     return size == null ? "…" : fmt(size);
@@ -52,7 +65,9 @@ export default class ChunkRow extends Component {
   }
 
   <template>
-    <div class="ba-row {{if this.open 'open'}} {{if this.isLoaded 'loaded'}}">
+    <div
+      class="ba-row {{if this.expanded 'open'}} {{if this.isLoaded 'loaded'}}"
+    >
       <button type="button" class="ba-head" {{on "click" this.toggle}}>
         <span class="ba-name">
           <span class="ba-tw">▶</span>
@@ -92,7 +107,7 @@ export default class ChunkRow extends Component {
           {{#unless @root}}{{this.usedBy.length}} ep{{/unless}}
         </span>
       </button>
-      {{#if this.open}}
+      {{#if this.expanded}}
         <div class="ba-body">
           <div class="ba-pill" style="margin:2px 0 6px">
             Used by entrypoints:
