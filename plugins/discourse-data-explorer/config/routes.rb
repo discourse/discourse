@@ -29,6 +29,17 @@ Discourse::Application.routes.draw do
         format: /(json|csv)/,
       }
 
+  # JSON:API modernization spike (Graphiti) — read-only, public-shaped.
+  # See docs/api-modernization-exploration.md.
+  scope "/data-explorer/api/v1", defaults: { format: :jsonapi } do
+    get "queries" => "discourse_data_explorer/api/v1/queries#index"
+    get "queries/:id" => "discourse_data_explorer/api/v1/queries#show",
+        :constraints => {
+          id: /\d+/,
+        }
+    post "queries" => "discourse_data_explorer/api/v1/queries#create"
+  end
+
   mount DiscourseDataExplorer::Engine, at: "/admin/plugins/discourse-data-explorer"
   get "/admin/plugins/explorer" => redirect("/admin/plugins/discourse-data-explorer")
   get "/admin/plugins/explorer/queries" =>
