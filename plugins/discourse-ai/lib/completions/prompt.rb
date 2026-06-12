@@ -6,7 +6,7 @@ module DiscourseAi
       INVALID_TURN = Class.new(StandardError)
 
       attr_reader :messages, :tools, :system_message_text
-      attr_accessor :topic_id, :post_id, :max_pixels, :tool_choice, :skip_trim
+      attr_accessor :topic_id, :post_id, :max_pixels, :tool_choice, :skip_trim, :native_tools
 
       def self.text_only(message)
         if message[:content].is_a?(Array)
@@ -23,12 +23,14 @@ module DiscourseAi
         topic_id: nil,
         post_id: nil,
         max_pixels: nil,
-        tool_choice: nil
+        tool_choice: nil,
+        native_tools: []
       )
         raise ArgumentError, "messages must be an array" if !messages.is_a?(Array)
         raise ArgumentError, "tools must be an array" if !tools.is_a?(Array)
 
         @max_pixels = max_pixels || 1_048_576
+        @native_tools = native_tools || []
 
         @topic_id = topic_id
         @post_id = post_id
@@ -151,6 +153,14 @@ module DiscourseAi
         tools.present?
       end
 
+      def has_native_tools?
+        native_tools.present?
+      end
+
+      def native_tool?(id)
+        native_tools.include?(id)
+      end
+
       def encoded_uploads(
         message,
         allow_images: true,
@@ -227,7 +237,7 @@ module DiscourseAi
         return false unless other.is_a?(Prompt)
         messages == other.messages && tools == other.tools && topic_id == other.topic_id &&
           post_id == other.post_id && max_pixels == other.max_pixels &&
-          tool_choice == other.tool_choice
+          tool_choice == other.tool_choice && native_tools == other.native_tools
       end
 
       def eql?(other)
@@ -235,7 +245,7 @@ module DiscourseAi
       end
 
       def hash
-        [messages, tools, topic_id, post_id, max_pixels, tool_choice].hash
+        [messages, tools, topic_id, post_id, max_pixels, tool_choice, native_tools].hash
       end
 
       private

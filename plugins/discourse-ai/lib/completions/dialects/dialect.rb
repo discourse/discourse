@@ -56,6 +56,12 @@ module DiscourseAi
           @tools ||= tools_dialect.translated_tools
         end
 
+        # provider-native built-in tools (e.g. web search) rendered into the
+        # request payload; the provider executes them server-side
+        def native_tools
+          []
+        end
+
         def tool_choice
           prompt.tool_choice
         end

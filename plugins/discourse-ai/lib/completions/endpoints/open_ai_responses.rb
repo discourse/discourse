@@ -43,6 +43,10 @@ module DiscourseAi
             end
           end
 
+          if dialect.native_tools.present?
+            payload[:tools] = (payload[:tools] || []).concat(dialect.native_tools)
+          end
+
           convert_payload_to_responses_api!(payload)
           payload[:include] ||= []
           payload[:include] << "reasoning.encrypted_content"

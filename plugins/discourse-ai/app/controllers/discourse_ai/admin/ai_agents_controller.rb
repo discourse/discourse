@@ -36,6 +36,15 @@ module DiscourseAi
             }
           end
 
+        DiscourseAi::Completions::NativeTools.all.each do |native_tool|
+          tools << {
+            id: "#{DiscourseAi::Completions::NativeTools::PREFIX}#{native_tool.id}",
+            name: native_tool.name,
+            help: native_tool.help,
+            native: true,
+          }
+        end
+
         llms = DiscourseAi::Configuration::LlmEnumerator.values_for_serialization
         mcp_servers =
           AiMcpServer

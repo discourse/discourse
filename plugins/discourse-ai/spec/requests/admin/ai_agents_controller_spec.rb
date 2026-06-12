@@ -23,8 +23,17 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
       expected_tool_count =
         DiscourseAi::Agents::Agent.all_available_tools.length +
-          DiscourseAi::Agents::Agent.external_tools.length
+          DiscourseAi::Agents::Agent.external_tools.length +
+          DiscourseAi::Completions::NativeTools.all.length
       expect(response.parsed_body["meta"]["tools"].length).to eq(expected_tool_count)
+    end
+
+    it "includes provider-native tools in the tools list" do
+      get "/admin/plugins/discourse-ai/ai-agents.json"
+      tools = response.parsed_body["meta"]["tools"]
+      native_tool = tools.find { |t| t["id"] == "native-web_search" }
+      expect(native_tool).to be_present
+      expect(native_tool["native"]).to eq(true)
     end
 
     it "includes external plugin tools in the tools list" do
@@ -66,6 +75,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
             id: llm_model.id,
             name: llm_model.display_name,
             vision_enabled: llm_model.vision_enabled,
+            supported_native_tools: [],
           }.stringify_keys,
         ],
       )

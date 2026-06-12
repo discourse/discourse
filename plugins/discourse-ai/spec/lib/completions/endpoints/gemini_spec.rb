@@ -452,6 +452,36 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     expect(parsed[:tool_config]).to eq({ function_calling_config: { mode: "AUTO" } })
   end
 
+  it "sends google_search grounding without a function_calling_config when only native tools are present" do
+    prompt = DiscourseAi::Completions::Prompt.new("Hello")
+    prompt.native_tools = ["web_search"]
+
+    response = gemini_mock.response("World").to_json
+
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    response = llm.generate(prompt, user: user)
+
+    expect(response).to eq("World")
+
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    # Gemini rejects function_calling_config when there are no function_declarations
+    expect(parsed[:tools]).to eq([{ google_search: {} }])
+    expect(parsed).not_to have_key(:tool_config)
+  end
+
   it "properly encodes tool calls" do
     prompt = DiscourseAi::Completions::Prompt.new("Hello", tools: [echo_tool])
 
