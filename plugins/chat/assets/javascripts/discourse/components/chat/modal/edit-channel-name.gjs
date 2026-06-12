@@ -169,10 +169,11 @@ export default class ChatModalEditChannelName extends Component {
           <EmojiPicker
             @emoji={{this.editedEmoji}}
             @didSelectEmoji={{this.emojiSelected}}
-            @btnClass="btn-emoji"
+            @btnClass="btn-default btn-emoji"
             @modalForMobile={{false}}
             @context="channel-emoji"
             @inline={{true}}
+            @showCaret={{true}}
           />
 
           <DButton

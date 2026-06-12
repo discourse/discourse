@@ -146,7 +146,7 @@ RSpec.describe "Create channel" do
         context "for a public category" do
           before do
             channel_modal.select_category(category_1)
-            find(".-auto-join .chat-modal-create-channel__label").click
+            channel_modal.toggle_auto_join
             channel_modal.click_primary_button
           end
 
@@ -183,7 +183,7 @@ RSpec.describe "Create channel" do
           before do
             group_1.add(user_1)
             channel_modal.select_category(private_category)
-            find(".-auto-join .chat-modal-create-channel__label").click
+            channel_modal.toggle_auto_join
             channel_modal.click_primary_button
           end
 
