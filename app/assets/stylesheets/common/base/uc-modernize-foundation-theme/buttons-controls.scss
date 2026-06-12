@@ -43,7 +43,8 @@
       .emoji-picker-trigger,
       .topic-list-header-tab,
       .reviewable-action-dropdown,
-      .sidebar-section-header
+      .sidebar-section-header,
+      .tag-choice
     ) {
       padding-block: 0;
       height: var(--d-control-height);
@@ -64,6 +65,32 @@
     ) {
       width: var(--d-control-height);
     }
+  }
+
+  .login-fullpage .input-group label.alt-placeholder,
+  .login-fullpage .input-group .user-field.text label.control-label,
+  .login-fullpage .input-group .user-field.dropdown label.control-label,
+  .login-fullpage .input-group .user-field.multiselect label.control-label,
+  .signup-fullpage .input-group label.alt-placeholder,
+  .signup-fullpage .input-group .user-field.text label.control-label,
+  .signup-fullpage .input-group .user-field.dropdown label.control-label,
+  .signup-fullpage .input-group .user-field.multiselect label.control-label,
+  .invites-show .input-group label.alt-placeholder,
+  .invites-show .input-group .user-field.text label.control-label,
+  .invites-show .input-group .user-field.dropdown label.control-label,
+  .invites-show .input-group .user-field.multiselect label.control-label,
+  .password-reset-page .input-group label.alt-placeholder,
+  .password-reset-page .input-group .user-field.text label.control-label,
+  .password-reset-page .input-group .user-field.dropdown label.control-label,
+  .password-reset-page
+    .input-group
+    .user-field.multiselect
+    label.control-label {
+    top: 8px;
+  }
+
+  .form-kit__control-password-wrapper {
+    height: unset;
   }
 
   .sidebar-section-header-dropdown-btn {

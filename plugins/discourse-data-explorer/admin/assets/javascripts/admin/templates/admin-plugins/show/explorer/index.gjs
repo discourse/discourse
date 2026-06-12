@@ -203,7 +203,7 @@ export default <template>
                               {{on "click" @controller.scrollTop}}
                               @route="adminPlugins.show.explorer.edit"
                               @model={{query.id}}
-                              class="btn btn-default btn-small"
+                              class="btn btn-text btn-default btn-small"
                             >
                               {{i18n "edit"}}
                             </LinkTo>
