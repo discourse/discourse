@@ -15,13 +15,7 @@ module DiscourseWorkflows
             run_scope: "all_items",
           },
           inputs: [
-            {
-              key: "main",
-              type: "main",
-              display_name: "Input",
-              required: false,
-              multiple: true,
-            },
+            { key: "main", type: "main", display_name: "Input", required: false, multiple: true },
           ],
           required_inputs: 1,
         )
