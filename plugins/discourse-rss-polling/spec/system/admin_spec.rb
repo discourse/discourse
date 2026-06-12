@@ -113,4 +113,11 @@ RSpec.describe "Rss Polling - admin" do
     expect(page).to have_no_css(".rss-polling-feed-form__poll[disabled]")
     expect(feed.reload.category_filter).to eq("changed")
   end
+
+  it "redirects to the feeds list when editing a feed that no longer exists" do
+    visit("/admin/plugins/discourse-rss-polling/feeds/0/edit")
+
+    expect(page).to have_current_path("/admin/plugins/discourse-rss-polling/feeds")
+    expect(page).to have_css(".rss-polling-feeds__add")
+  end
 end

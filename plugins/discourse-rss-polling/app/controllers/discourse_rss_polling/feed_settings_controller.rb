@@ -110,10 +110,12 @@ module DiscourseRssPolling
     def update_enabled
       rss_feed = find_rss_feed
 
-      enabled = ActiveModel::Type::Boolean.new.cast(params[:enabled])
-      raise Discourse::InvalidParameters.new(:enabled) if enabled.nil?
+      enabled = params[:enabled]
+      unless enabled.in?([true, false, "true", "false"])
+        raise Discourse::InvalidParameters.new(:enabled)
+      end
 
-      rss_feed.update!(enabled:)
+      rss_feed.update!(enabled: ActiveModel::Type::Boolean.new.cast(enabled))
 
       render json: { success: true, enabled: rss_feed.enabled }
     end

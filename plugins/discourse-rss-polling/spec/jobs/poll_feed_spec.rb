@@ -228,6 +228,30 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
         expect(DiscourseRssPolling::PollAttempt.count).to eq(2)
       end
 
+      it "marks the feed as recently polled when forced so the next scheduled poll is throttled" do
+        job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id, force: true)
+        expect(DiscourseRssPolling::PollAttempt.count).to eq(1)
+
+        job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+        expect(DiscourseRssPolling::PollAttempt.count).to eq(1)
+      end
+
+      it "does not poll a disabled feed on a scheduled (non-forced) run" do
+        rss_feed.update!(enabled: false)
+
+        expect {
+          job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+        }.not_to change { DiscourseRssPolling::PollAttempt.count }
+      end
+
+      it "still polls a disabled feed when forced" do
+        rss_feed.update!(enabled: false)
+
+        expect {
+          job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id, force: true)
+        }.to change { DiscourseRssPolling::PollAttempt.count }.by(1)
+      end
+
       it "records a skipped outcome when the category filter doesn't match" do
         job.execute(
           feed_url: feed_url,

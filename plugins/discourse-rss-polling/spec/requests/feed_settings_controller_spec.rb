@@ -418,6 +418,16 @@ RSpec.describe DiscourseRssPolling::FeedSettingsController do
       expect(response.status).to eq(400)
       expect(rss_feed.reload.enabled).to eq(true)
     end
+
+    it "400s when the enabled parameter is not a boolean instead of coercing it" do
+      put "/admin/plugins/rss_polling/feed_settings/#{rss_feed.id}/enabled.json",
+          params: {
+            enabled: "maybe",
+          }
+
+      expect(response.status).to eq(400)
+      expect(rss_feed.reload.enabled).to eq(true)
+    end
   end
 
   describe "#poll" do

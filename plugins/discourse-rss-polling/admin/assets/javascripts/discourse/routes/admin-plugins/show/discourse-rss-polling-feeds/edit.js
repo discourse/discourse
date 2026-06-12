@@ -8,10 +8,7 @@ export default class AdminPluginsShowDiscourseRssPollingFeedsEditRoute extends D
 
   async model(params) {
     const id = parseInt(params.id, 10);
-    const [result, history] = await Promise.all([
-      RssPollingFeedSettings.show(),
-      RssPollingFeedSettings.history(id),
-    ]);
+    const result = await RssPollingFeedSettings.show();
     const feed = result.feed_settings.find((item) => item.id === id);
 
     if (!feed) {
@@ -19,6 +16,7 @@ export default class AdminPluginsShowDiscourseRssPollingFeedsEditRoute extends D
       return;
     }
 
+    const history = await RssPollingFeedSettings.history(id);
     return { feed, history };
   }
 

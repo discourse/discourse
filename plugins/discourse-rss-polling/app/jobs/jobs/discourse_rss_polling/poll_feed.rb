@@ -16,7 +16,14 @@ module Jobs
         @feed_category_filter = args[:feed_category_filter]
         @rss_feed_id = args[:rss_feed_id]
 
-        poll_feed if args[:force] || not_polled_recently?
+        if args[:force]
+          mark_polled
+        else
+          return if feed_disabled?
+          return unless not_polled_recently?
+        end
+
+        poll_feed
       end
 
       private
@@ -52,13 +59,21 @@ module Jobs
         "rss-polling-feed-polled:#{Digest::SHA1.hexdigest(feed_url)}"
       end
 
+      def poll_window
+        SiteSetting.rss_polling_frequency.minutes - 10.seconds
+      end
+
       def not_polled_recently?
-        Discourse.redis.set(
-          feed_key,
-          1,
-          ex: SiteSetting.rss_polling_frequency.minutes - 10.seconds,
-          nx: true,
-        )
+        Discourse.redis.set(feed_key, 1, ex: poll_window, nx: true)
+      end
+
+      def mark_polled
+        Discourse.redis.set(feed_key, 1, ex: poll_window)
+      end
+
+      def feed_disabled?
+        rss_feed_id.present? &&
+          !::DiscourseRssPolling::RssFeed.where(id: rss_feed_id, enabled: true).exists?
       end
 
       def poll_feed
