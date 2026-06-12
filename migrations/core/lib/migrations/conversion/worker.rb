@@ -16,6 +16,9 @@ module Migrations
         @threads = []
         @mutex = Mutex.new
         @data_processed = ConditionVariable.new
+        @sent_count = 0
+        @processed_count = 0
+        @output_closed = false
       end
 
       def start
@@ -75,7 +78,14 @@ module Migrations
           begin
             while (data = @input_queue.pop)
               Oj.to_stream(output_stream, data, OJ_SETTINGS)
-              @mutex.synchronize { @data_processed.wait(@mutex) }
+              @sent_count += 1
+
+              # waiting on the condition variable alone would lose the wakeup
+              # when the result arrives before this thread reaches `wait`, so
+              # the counters act as the wait predicate
+              @mutex.synchronize do
+                @data_processed.wait(@mutex) while @processed_count < @sent_count && !@output_closed
+              end
             end
           ensure
             output_stream.close
@@ -91,11 +101,19 @@ module Migrations
           begin
             Oj.load(input_stream, OJ_SETTINGS) do |data|
               @output_queue.push(data)
-              @mutex.synchronize { @data_processed.signal }
+
+              @mutex.synchronize do
+                @processed_count += 1
+                @data_processed.signal
+              end
             end
           ensure
             input_stream.close
-            @mutex.synchronize { @data_processed.signal }
+
+            @mutex.synchronize do
+              @output_closed = true
+              @data_processed.signal
+            end
           end
         end
       end
