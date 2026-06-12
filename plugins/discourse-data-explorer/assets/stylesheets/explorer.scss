@@ -465,22 +465,10 @@ table.group-reports {
     background-color: var(--danger-low);
   }
 
-  .invalid .ac-wrap {
-    background-color: var(--danger-low);
-  }
-
   .param {
     display: flex;
     align-items: center;
     flex: 0;
-
-    .ac-wrap {
-      display: inline-block;
-
-      input {
-        width: 100px !important; // override an inline style
-      }
-    }
 
     input,
     .select-kit {
