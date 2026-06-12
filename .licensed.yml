@@ -42,6 +42,7 @@ ignored:
     - timeout # Ruby (default gem)
     - tsort # Ruby (default gem)
     - uri # Ruby (default gem)
+    - yaml # Ruby (default gem)
 
 reviewed:
   bundler:
@@ -51,7 +52,11 @@ reviewed:
     - concurrent-ruby # MIT
     - css_parser # MIT
     - drb # BSD-2-Clause
+    - dry-core # MIT
+    - dry-inflector # MIT
     - dry-initializer # MIT
+    - dry-logic # MIT
+    - dry-types # MIT
     - excon # MIT
     - faraday-em_http # MIT
     - faraday-em_synchrony # MIT
