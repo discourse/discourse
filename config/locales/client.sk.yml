@@ -1131,7 +1131,8 @@ sk:
             from_alias_hint: "Alias, ktorý sa má použiť ako adresa odosielateľa pri odosielaní skupinových e-mailov SMTP. Upozorňujeme, že to nemusia podporovať všetci poskytovatelia pošty, pozrite si dokumentáciu poskytovateľa pošty."
         membership:
           title: Členstvo
-          access: Prístup
+          join_method:
+            invite: "Len na pozvánky"
         categories:
           title: Kategórie
           long_title: "Predvolené upozornenia kategórie"
@@ -1164,7 +1165,6 @@ sk:
         title: "Práva"
         none: "K tejto skupine nie sú priradené žiadne kategórie."
         description: "Členovia tejto skupiny majú prístup k týmto kategóriám"
-      public_admission: "Povoliť používateľom slobodne sa stať člen skupiny (kupina musí byť verejne viditeľná)"
       public_exit: "Povoliť používateľom slobodne opustiť skupinu."
       empty:
         posts: "Žiadne príspevky od členov tejto skupiny"
@@ -1180,7 +1180,6 @@ sk:
       request: "Požiadavka"
       message: "Správa"
       confirm_leave: "Naozaj chcete opustiť túto skupinu?"
-      allow_membership_requests: "Povoliť používateľom odosielať žiadosti o členstvo vlastníkom skupiny (vyžaduje verejne viditeľnú skupinu)"
       membership_request_template: "Vlastná šablóna, ktorá sa zobrazí používateľom pri posielaní žiadosti o členstvo"
       membership_request:
         submit: "Odošli požiadavku"
@@ -6177,7 +6176,6 @@ sk:
             incoming_email: "Vlastná e-mailová adresa pre príchodziu poštu"
             incoming_email_placeholder: "zadajte emailovú adresu"
             incoming_email_tooltip: "Viacero e-mailových adries môžete oddeliť pomocou znaku |."
-            visibility: Viditeľnosť
             visibility_levels:
               title: "Kto môže vidieť túto skupinu?"
               public: "Každý"

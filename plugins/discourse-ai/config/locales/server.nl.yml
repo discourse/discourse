@@ -808,6 +808,10 @@ nl:
           conflict: "Dit item in de beoordelingswachtrij is bijgewerkt door iemand anders. Probeer het opnieuw."
           action_failed: "De actie uitvoeren is mislukt."
         success: "'%{action}' uitgevoerd op item %{reviewable_id} in de beoordelingswachtrij"
+      add_reviewable_note:
+        errors:
+          not_allowed: "Je hebt geen toegang tot de beoordelingswachtrij."
+          not_found: "Item in de beoordelingswachtrij niet gevonden"
     reviewables:
       ai_tool_action:
         title: "AI-toolactie"

@@ -1241,7 +1241,8 @@ tr_TR:
             from_alias_hint: "Grup SMTP e-postaları gönderirken gönderici adresi olarak kullanılacak takma ad. Bunun tüm posta sağlayıcıları tarafından desteklenmeyebileceğini unutmayın, lütfen posta sağlayıcınızın belgelerini inceleyin."
         membership:
           title: Üyelik
-          access: Erişim
+          join_method:
+            invite: "Sadece davetliler"
         categories:
           title: Kategoriler
           long_title: "Kategori varsayılan bildirimleri"
@@ -1274,7 +1275,6 @@ tr_TR:
         title: "İzinler"
         none: "Bu grupla ilişkilendirilmiş kategori yok."
         description: "Bu grubun üyeleri bu kategorilere erişebilir"
-      public_admission: "Kullanıcıların gruba özgürce olarak katılmalarına izin ver (Grubun herkese açık olması gerekiyor)"
       public_exit: "Kullanıcıların gruptan özgürce ayrılmalarına izin ver"
       empty:
         posts: "Bu grubun üyeleri henüz gönderi paylaşmamış"
@@ -1290,7 +1290,6 @@ tr_TR:
       request: "Talep"
       message: "Mesaj"
       confirm_leave: "Bu gruptan ayrılmak istediğinizden emin misiniz?"
-      allow_membership_requests: "Kullanıcıların grup sahiplerine üyelik talepleri göndermesine izin ver (Genel olarak görünür grup gerektirir)"
       membership_request_template: "Üyelik talebi gönderirken kullanıcılara gösterilen özel şablon"
       membership_request:
         submit: "Talep gönder"
@@ -6478,7 +6477,6 @@ tr_TR:
             incoming_email: "Özel gelen e-posta adresi"
             incoming_email_placeholder: "e-posta adresi gir"
             incoming_email_tooltip: "Birden fazla e-posta adresini | karakteri ile ayırabilirsiniz."
-            visibility: Görünürlük
             visibility_levels:
               title: "Bu grubu kimler görebilir?"
               public: "Herkes"

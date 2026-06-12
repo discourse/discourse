@@ -605,7 +605,6 @@ et:
             title: "Seaded"
         membership:
           title: Liikmesus
-          access: Juurdepääs
         categories:
           title: Kategooriad
           watching_first_post_categories_instructions: "Kaustajaid teavitatakse esimesest postitusest igas uues teemas nendes kategooriates."
@@ -626,7 +625,6 @@ et:
         title: "Õigused"
         none: "Selle rühmaga pole seotud ühtegi kategooriat."
         description: "Selle rühma liikmed pääsevad ligi neile kategooriatele"
-      public_admission: "Luba kasutajatel rühmaga vabalt liituda (nõuab avalikult nähtavat rühma)"
       public_exit: "Luba kasutajatel vabalt rühmast lahkuda"
       empty:
         posts: "Selle rühma liikmed ei ole postitanud"
@@ -2992,7 +2990,6 @@ et:
             email: E-post
             incoming_email: "Individuaalne sissetuleva meili aadress"
             incoming_email_placeholder: "sisesta meiliaadress"
-            visibility: Nähtavus
             visibility_levels:
               title: "Kes näevad seda rühma?"
               public: "Kõik"

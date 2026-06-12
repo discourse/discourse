@@ -1860,6 +1860,7 @@ uk:
       twitter_login: 'Схоже, наразі вхід у Twitter не працює. Перевірте облікові дані в <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">налаштуваннях сайту</a>.'
       group_email_credentials: 'Виникла проблема з обліковими даними електронної пошти для групи <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Поки цю проблему не буде вирішено, жодні листи не надсилатимуться зі скриньки "Вхідні" групи. %{error}'
       upcoming_change_stable_opted_out: 'Ваш сайт відмовився від майбутньої зміни «%{upcoming_change}». Ця зміна досягла статусу «Стабільна» і незабаром може бути видалена або зроблена постійною. Відвідайте <a href="%{base_path}/admin/config/upcoming-changes">сторінку майбутніх змін</a> , щоб переглянути деталі цієї зміни.'
+      content_security_policy_disabled: "Функцію політики безпеки контенту вимкнено. Це важлива функція безпеки, яку ніколи не слід вимикати у робочому середовищі. <a href='%{base_path}/admin/site_settings/category/all_results?filter=content_security_policy'>Знову ввімкніть її тут</a>."
       rails_env: "Ваш сервер працює в режимі %{env}."
       host_names: "Ваш файл config/database.yml використовує localhost. Поміняйте його на хост вашого вебсайт."
       sidekiq_check: 'Sidekiq не запущено. Багато завдань, таких як надсилання електронних листів, виконуються Sidekiq асинхронно. Переконайтеся, що принаймні один процес Sidekiq запущено. <a href="https://github.com/mperham/sidekiq" target="_blank">Дізнайтеся про Sidekiq тут</a>.'

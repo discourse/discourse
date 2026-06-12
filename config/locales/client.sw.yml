@@ -471,7 +471,6 @@ sw:
             title: "Mpangilio"
         membership:
           title: Uanachama
-          access: Ufikivu
         categories:
           title: Vikundi
         tags:
@@ -488,7 +487,6 @@ sw:
           to: "Kwenda"
       permissions:
         title: "Vibali"
-      public_admission: "ruhusu watumiaji wajiunge kwenye kikundi bure (kikundi kinabidi kionwe na umma)"
       public_exit: "ruhusu watumiaji waache kikundi bure"
       empty:
         posts: "Hakuna machapisho ya wanachama wa kikundi hiki"
@@ -2647,7 +2645,6 @@ sw:
             email: Barua Pepe
             incoming_email: "Barua Pepe inayoingia"
             incoming_email_placeholder: "andika anwani ya barua pepe"
-            visibility: Uonekanaji
             visibility_levels:
               title: "Nani anaweza kuona kikundi hiki?"
               public: "Kila Mtu"

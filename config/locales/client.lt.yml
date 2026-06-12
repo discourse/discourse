@@ -1039,7 +1039,6 @@ lt:
             from_alias_hint: "Slapyvardis, naudojamas kaip siuntėjo adresas siunčiant grupinius SMTP el. laiškus. Atminkite, kad tai gali palaikyti ne visi pašto paslaugų teikėjai, todėl žr. savo pašto paslaugų teikėjo dokumentaciją."
         membership:
           title: Narystė
-          access: Prieiga
         categories:
           title: Kategorijos
           long_title: "Kategorijos numatytieji pranešimai"
@@ -1072,7 +1071,6 @@ lt:
         title: "Leidimai"
         none: "Su šia grupe susijusių kategorijų nėra."
         description: "Šios grupės nariai gali pasiekti šias kategorijas"
-      public_admission: "Leisti vartotojams laisvai prisijungti prie grupės (reikalauja viešai matomos grupės)"
       public_exit: "Leisti vartotojams laisvai išeiti iš grupės"
       empty:
         posts: "Šios grupės narių įrašų nėra"
@@ -1088,7 +1086,6 @@ lt:
       request: "Užklausa"
       message: "Žinutė"
       confirm_leave: "Ar tikrai norite palikti šią grupę?"
-      allow_membership_requests: "Leisti vartotojams siųsti narystės užklausas grupės savininkams (reikalinga viešai matoma grupė)"
       membership_request_template: "Pasirinktinis šablonas, kurį naudotojams galima rodyti siunčiant narystės užklausą"
       membership_request:
         submit: "Pateikti užklausą"
@@ -4457,7 +4454,6 @@ lt:
             email: Epaštas
             incoming_email: "Išskirtiniai ateinantys el. pašto adresai"
             incoming_email_placeholder: "įveskite elektoninio pašto adresą"
-            visibility: Matomumas
             visibility_levels:
               title: "Kas gali matyti šia grupę?"
               public: "Visi"

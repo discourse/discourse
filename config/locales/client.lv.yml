@@ -660,7 +660,6 @@ lv:
             allow_unknown_sender_topic_replies_hint: "Ļauj nezināmiem sūtītājiem atbildēt uz grupas tēmām. Ja tas nav iespējots, atbildes no e -pasta adresēm, kas vēl nav uzaicinātas uz šo tēmu, izveidos jaunu tēmu."
         membership:
           title: Piederība
-          access: Piekļuve
         categories:
           title: Sadaļas
           long_title: "Kategorijas noklusējuma paziņojumi"
@@ -686,7 +685,6 @@ lv:
           to: "Kam"
       permissions:
         title: "Atļaujas / Pieejas"
-      public_admission: "Atļaut lietotājiem brīvi pievienoties grupai (šai grupai jābūt publiski redzamai)"
       public_exit: "Ļaut lietotājiem brīvi pamest grupu"
       empty:
         posts: "Grupas dalībnieki nav veikuši nevienu ierakstu"
@@ -701,7 +699,6 @@ lv:
       request: "Pieprasījums"
       message: "Ziņa"
       confirm_leave: "Vai tiešām vēlaties pamest šo grupu?"
-      allow_membership_requests: "Ļaut lietotājiem sūtīt dalības pieprasījumus grupas īpašniekiem (nepieciešama publiski redzama grupa)"
       membership_request_template: "Pielāgota veidne, kas jāparāda lietotājiem, nosūtot dalības pieprasījumu"
       membership_request:
         submit: "Iesniegt pieprasījumu"

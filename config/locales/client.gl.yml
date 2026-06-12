@@ -690,7 +690,6 @@ gl:
             allow_unknown_sender_topic_replies: "Permitir respostas ao tema de remitente descoñecido."
         membership:
           title: Incorporación
-          access: Acceso
         categories:
           title: Categorías
           long_title: "Notificacións predeterminadas de categoría"
@@ -723,7 +722,6 @@ gl:
         title: "Permisos"
         none: "Non hai categorías asociadas a este grupo."
         description: "Os membros deste grupo poden acceder a estas categorías"
-      public_admission: "Permitir que os usuarios se unan ao grupo libremente (require un grupo visíbel ao público)"
       public_exit: "Permitir que os usuarios abandonen o grupo libremente"
       empty:
         posts: "Non hai publicacións de membros deste grupo"
@@ -739,7 +737,6 @@ gl:
       request: "Petición"
       message: "Mensaxe"
       confirm_leave: "Confirma o abandono deste grupo?"
-      allow_membership_requests: "Permitirlles aos usuarios que envíen peticións de incorporación aos propietarios do grupo (require un grupo visíbel ao público)"
       membership_request_template: "Personalizar o modelo que se lles amosa aos usuarios cando se envía unha petición de incorporación"
       membership_request:
         submit: "Enviar petición"
@@ -3702,7 +3699,6 @@ gl:
             email: Correo electrónico
             incoming_email: "Personalizar enderezos de correo-e entrantes"
             incoming_email_placeholder: "introducir enderezos de correo"
-            visibility: Visibilidade
             visibility_levels:
               title: "Quen pode ver este grupo?"
               public: "Todos"

@@ -1098,7 +1098,8 @@ fr:
             from_alias_hint: "Alias à utiliser comme adresse d'expédition lors de l'envoi d'e-mails SMTP de groupe. Veuillez noter que cela peut ne pas être pris en charge par tous les prestataires de messagerie, nous vous invitons à consulter la documentation de votre prestataire."
         membership:
           title: Adhésion
-          access: Accès
+          join_method:
+            invite: "Sur invitation uniquement"
         categories:
           title: Catégories
           long_title: "Notifications par défaut de la catégorie"
@@ -1131,7 +1132,6 @@ fr:
         title: "Permissions"
         none: "Aucune catégorie n'est associée à ce groupe."
         description: "Les membres de ce groupe peuvent accéder à ces catégories"
-      public_admission: "Autoriser les utilisateurs à rejoindre le groupe librement (nécessite que le groupe soit visible)"
       public_exit: "Autoriser les utilisateurs à quitter librement le groupe"
       empty:
         posts: "Aucune publication n'a été envoyée par les membres de ce groupe"
@@ -1147,7 +1147,6 @@ fr:
       request: "Demander à rejoindre"
       message: "Message"
       confirm_leave: "Voulez-vous vraiment quitter ce groupe ?"
-      allow_membership_requests: "Autoriser les utilisateurs à envoyer des demandes d'adhésion aux propriétaires du groupe (nécessite que le groupe soit visible publiquement)"
       membership_request_template: "Modèle personnalisé à afficher lors de l'envoi d'une demande d'adhésion par un utilisateur"
       membership_request:
         submit: "Soumettre la demande"
@@ -5790,7 +5789,6 @@ fr:
             incoming_email: "Adresse e-mail entrante personnalisée"
             incoming_email_placeholder: "saisissez une adresse e-mail"
             incoming_email_tooltip: "Vous pouvez séparer plusieurs adresses e-mail avec le caractère « | »."
-            visibility: Visibilité
             visibility_levels:
               title: "Qui peut voir ce groupe ?"
               public: "Tout le monde"

@@ -848,7 +848,8 @@ sv:
             from_alias_hint: "Alias att använda som från adress när du skickar grupp SMTP e-post. Observera att detta kanske inte stöds av alla e-postleverantörer, vänligen konsultera dokumentationen från din e-postleverantör."
         membership:
           title: Medlemskap
-          access: Tillgång
+          join_method:
+            invite: "Endast med inbjudan"
         categories:
           title: Kategorier
           long_title: "Standardaviseringar för kategori"
@@ -881,7 +882,6 @@ sv:
         title: "Behörigheter"
         none: "Det finns inga kategorier kopplade till denna grupp."
         description: "Medlemmar i denna grupp kan komma åt dessa kategorier"
-      public_admission: "Tillåt användare att fritt gå med i grupp (Kräver offentligt synlig grupp)"
       public_exit: "Tillåt användare att fritt lämna grupp"
       empty:
         requests: "Det finns inga medlemsansökningar för denna grupp"
@@ -892,7 +892,6 @@ sv:
       request: "Förfrågning"
       message: "Nytt meddelande"
       confirm_leave: "Är du säker på att du vill lämna den här gruppen?"
-      allow_membership_requests: "Tillåt användare att sända medlemskapsförfrågan till gruppägare (Kräver offentligt synlig grupp)"
       membership_request_template: "Anpassa mallen som visas när användare skickar en medlemsansökan"
       membership_request:
         submit: "Skicka ansökan"
@@ -4696,7 +4695,6 @@ sv:
             incoming_email: "Egenvald inkommande e-postadress"
             incoming_email_placeholder: "Ange e-postadress"
             incoming_email_tooltip: "Du kan skilja på flera e-postadresser med tecknet |."
-            visibility: Synlighet
             visibility_levels:
               title: "Vem kan se denna grupp?"
               public: "Alla"

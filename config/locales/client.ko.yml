@@ -822,7 +822,6 @@ ko:
             from_alias: "보내는 사람 별칭"
         membership:
           title: 멤버십
-          access: 액세스
         categories:
           title: 카테고리
           long_title: "카테고리 기본 알림"
@@ -855,7 +854,6 @@ ko:
         title: "권한"
         none: "이 그룹과 관련된 카테고리가 없습니다."
         description: "이 그룹의 회원은 이 카테고리에 액세스할 수 있습니다."
-      public_admission: "사용자가 그룹에 자유롭게 가입하도록 허용(공개 그룹이어야 함)"
       public_exit: "사용자가 자유롭게 그룹에서 탈퇴하도록 허용"
       empty:
         posts: "이 그룹에는 아직 회원들이 글을 작성하지 않았습니다"
@@ -871,7 +869,6 @@ ko:
       request: "요청"
       message: "메시지"
       confirm_leave: "이 그룹을 탈퇴할까요?"
-      allow_membership_requests: "사용자가 그룹 소유자에게 멤버십 요청을 보내도록 허용(공개 그룹이어야 함)"
       membership_request_template: "멤버십 요청을 보낼 때 사용자에게 표시할 사용자 지정 템플릿"
       membership_request:
         submit: "요청 제출"
@@ -4103,7 +4100,6 @@ ko:
             incoming_email: "사용자 지정 수신 이메일 주소"
             incoming_email_placeholder: "이메일 주소 입력"
             incoming_email_tooltip: "| 문자로 여러 이메일 주소를 구분할 수 있습니다."
-            visibility: 공개 옵션
             visibility_levels:
               title: "누가 이 그룹을 볼 수 있나요?"
               public: "모두"

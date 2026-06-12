@@ -1239,7 +1239,8 @@ nl:
             from_alias_hint: "Alias om te gebruiken als het van-adres bij het verzenden van groeps-SMTP-e-mails. Let op: dit wordt mogelijk niet door alle e-mailproviders ondersteund, raadpleeg de documentatie van je e-mailprovider."
         membership:
           title: Lidmaatschap
-          access: Toegang
+          join_method:
+            invite: "Alleen op uitnodiging"
         categories:
           title: Categorieën
           long_title: "Standaardmeldingen voor categorieën"
@@ -1272,7 +1273,6 @@ nl:
         title: "Toestemmingen"
         none: "Er zijn geen categorieën aan deze groep gekoppeld."
         description: "Leden van deze groep hebben toegang tot deze categorieën"
-      public_admission: "Gebruikers toestaan de groep te verlaten (vereist openbaar zichtbare groep)"
       public_exit: "Gebruikers toestaan de groep te verlaten"
       empty:
         posts: "Er zijn geen berichten van leden van deze groep"
@@ -1288,7 +1288,6 @@ nl:
       request: "Verzoek"
       message: "Bericht"
       confirm_leave: "Weet je zeker dat je deze groep wilt verlaten?"
-      allow_membership_requests: "Sta gebruikers toe om lidmaatschapsverzoeken naar groepseigenaren sturen (vereist een openbaar zichtbare groep)"
       membership_request_template: "Aangepaste sjabloon om aan gebruikers weer te geven bij het sturen van een lidmaatschapsverzoek"
       membership_request:
         submit: "Verzoek verzenden"
@@ -6464,7 +6463,6 @@ nl:
             incoming_email: "Aangepast adres voor inkomende e-mail"
             incoming_email_placeholder: "voer e-mailadres in"
             incoming_email_tooltip: "Je kunt meerdere e-mailadressen scheiden met het teken |."
-            visibility: Zichtbaarheid
             visibility_levels:
               title: "Wie kan deze groep zien?"
               public: "Iedereen"
