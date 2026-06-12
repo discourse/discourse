@@ -87,7 +87,7 @@ module TurboTests
 
       @threads.each(&:join)
 
-      if @retry_and_log_flaky_tests && @reporter.failed_examples.present?
+      if @retry_and_log_flaky_tests && !@reporter.failed_examples.empty?
         retry_failed_examples_threshold = 10
 
         if @reporter.failed_examples.length <= retry_failed_examples_threshold
@@ -105,6 +105,16 @@ module TurboTests
     protected
 
     def check_for_migrations
+      # In CI the workflow's `Create and migrate databases` step already
+      # runs `parallel:create parallel:migrate`, which migrates the parent
+      # and every worker DB. Re-checking from here only forces the parent
+      # to boot Rails, pure overhead on the step's serial-prefix critical
+      # path. The caller opts out by setting
+      # TURBO_RSPEC_SKIP_MIGRATIONS_CHECK=1. Local dev runs leave it unset
+      # and pay the full Rails boot from inside `load_rails_app!`.
+      return if ENV["TURBO_RSPEC_SKIP_MIGRATIONS_CHECK"] == "1"
+
+      TurboTests.load_rails_app!
       ActiveRecord::Tasks::DatabaseTasks.migrations_paths = %w[db/migrate db/post_migrate]
       ActiveRecord::Migration.check_all_pending!
     rescue ActiveRecord::PendingMigrationError
@@ -208,7 +218,7 @@ module TurboTests
           File.open(tmp_filename) do |fd|
             fd.each_line do |line|
               message = JSON.parse(line)
-              message = message.symbolize_keys
+              message = message.transform_keys(&:to_sym)
               message[:process_id] = process_id
               message[:command_string] = command_string
               @messages << message

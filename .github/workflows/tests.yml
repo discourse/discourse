@@ -61,6 +61,11 @@ jobs:
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
+      # The `Create and migrate databases` step migrates the parent and every
+      # worker DB before any rspec process starts, so bin/turbo_rspec's own
+      # migration check is redundant in CI. Skipping it lets the parent skip
+      # booting the Rails app entirely, so workers spawn earlier.
+      TURBO_RSPEC_SKIP_MIGRATIONS_CHECK: "1"
 
     strategy:
       fail-fast: false
