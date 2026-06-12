@@ -4,7 +4,7 @@ module DiscourseWorkflows
   module Nodes
     module Post
       class V1 < NodeType
-        OPERATIONS = %w[create get list].freeze
+        OPERATIONS = %w[create edit get list].freeze
         STATUS_OPTIONS = %w[any open closed archived noreplies single_user].freeze
         POST_TYPE_OPTIONS = %w[all first reply].freeze
         ORDER_OPTIONS = %w[latest oldest latest_topic oldest_topic likes].freeze
@@ -46,7 +46,7 @@ module DiscourseWorkflows
               type: :options,
               required: true,
               options: OPERATIONS,
-              default: "list",
+              default: "create",
             },
             topic_id: {
               type: :string,
@@ -65,7 +65,7 @@ module DiscourseWorkflows
               },
               display_options: {
                 show: {
-                  operation: ["create"],
+                  operation: %w[create edit],
                 },
               },
             },
@@ -96,7 +96,20 @@ module DiscourseWorkflows
               required: true,
               display_options: {
                 show: {
-                  operation: ["get"],
+                  operation: %w[edit get],
+                },
+              },
+            },
+            editor_username: {
+              type: :string,
+              required: false,
+              default: "system",
+              ui: {
+                control: :user,
+              },
+              display_options: {
+                show: {
+                  operation: ["edit"],
                 },
               },
             },
@@ -271,12 +284,13 @@ module DiscourseWorkflows
 
         def config_for(exec_ctx, item_index)
           {
-            "operation" => exec_ctx.get_node_parameter("operation", item_index, default: "list"),
+            "operation" => exec_ctx.get_node_parameter("operation", item_index, default: "create"),
             "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
             "raw" => exec_ctx.get_node_parameter("raw", item_index),
             "reply_to_post_number" =>
               exec_ctx.get_node_parameter("reply_to_post_number", item_index),
             "post_id" => exec_ctx.get_node_parameter("post_id", item_index),
+            "editor_username" => exec_ctx.get_node_parameter("editor_username", item_index),
             "include_raw" => exec_ctx.get_node_parameter("include_raw", item_index, default: true),
             "include_cooked" =>
               exec_ctx.get_node_parameter("include_cooked", item_index, default: false),
@@ -310,6 +324,8 @@ module DiscourseWorkflows
           case config["operation"]
           when "create"
             wrap(create_post(exec_ctx, config, item_index))
+          when "edit"
+            wrap(edit_post(exec_ctx, config, item_index))
           when "get"
             wrap(get_post(exec_ctx, config, item_index))
           when "list"
@@ -339,6 +355,21 @@ module DiscourseWorkflows
               exec_ctx.serialize_post(
                 post,
                 guardian: actor.guardian,
+                include_raw: true,
+                include_cooked: true,
+              ),
+          }
+        end
+
+        def edit_post(exec_ctx, config, item_index)
+          editor = exec_ctx.actor_from_parameter("editor_username", item_index)
+          post = exec_ctx.edit_post(user: editor, post_id: config["post_id"], raw: config["raw"])
+
+          {
+            post:
+              exec_ctx.serialize_post(
+                post,
+                guardian: editor.guardian,
                 include_raw: true,
                 include_cooked: true,
               ),

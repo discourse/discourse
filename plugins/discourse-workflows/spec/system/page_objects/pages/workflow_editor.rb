@@ -73,7 +73,7 @@ module PageObjects
           "action:topic_tags" => "Topic tags",
           "action:code" => "Code",
           "action:topic" => "Topic",
-          "action:create_post" => "Create post",
+          "action:post" => "Post",
           "action:set_fields" => "Set fields",
           "action:split_out" => "Split Out",
           "action:http_request" => "HTTP Request",
@@ -106,6 +106,12 @@ module PageObjects
             "create" => "Create topic",
             "get" => "Get topic",
             "list" => "List topics",
+          },
+          "action:post" => {
+            "create" => "Create post",
+            "edit" => "Edit post",
+            "get" => "Get post",
+            "list" => "List posts",
           },
         }.freeze
 

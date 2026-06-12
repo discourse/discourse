@@ -607,7 +607,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
             "actor_username" => "={{ $json.actor }}",
           },
           resolver: resolver,
-          node_identifier: "action:create_post",
+          node_identifier: "action:post",
         )
 
       expect(ctx.actor_from_parameter("actor_username")).to eq(user)
@@ -616,7 +616,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
         field: "actor_username",
         item_index: 0,
         source: :expression,
-        purpose: "action:create_post",
+        purpose: "action:post",
       )
     ensure
       resolver&.dispose
@@ -711,6 +711,34 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
         DiscourseWorkflows::NodeError,
         /Cannot create a post in a closed or archived topic/,
       )
+    end
+  end
+
+  describe "#edit_post" do
+    fab!(:admin)
+    fab!(:user)
+    fab!(:post) { Fabricate(:post, user: user, raw: "Original post") }
+
+    it "edits a post as the provided user" do
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      edited_post = ctx.edit_post(user: admin, post_id: post.id, raw: "Edited body")
+
+      expect(edited_post).to eq(post)
+      expect(post.reload.raw).to eq("Edited body")
+    end
+
+    it "requires the user to edit the post" do
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      hidden_post = create_post(user: admin, category: private_category)
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect do
+        ctx.edit_post(user: user, post_id: hidden_post.id, raw: "Hidden edit")
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect(hidden_post.reload.raw).not_to eq("Hidden edit")
     end
   end
 

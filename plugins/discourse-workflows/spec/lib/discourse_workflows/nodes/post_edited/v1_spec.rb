@@ -33,6 +33,13 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
 
       expect(trigger).not_to be_valid
     end
+
+    it "returns false when workflow execution requested the edit to be skipped" do
+      revisor = instance_double(PostRevisor, opts: { skip_workflows: true })
+      trigger = described_class.new(first_post, false, revisor)
+
+      expect(trigger).not_to be_valid
+    end
   end
 
   describe "#output" do

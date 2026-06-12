@@ -44,6 +44,159 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       )
     end
 
+    it "defaults to creating a post" do
+      first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
+      topic = first_post.topic
+
+      expect do
+        execute_node(
+          configuration: {
+            "topic_id" => topic.id.to_s,
+            "raw" => "Default create reply",
+            "author_username" => admin.username,
+          },
+          item: item,
+        )
+      end.to change { topic.posts.count }.by(1)
+
+      expect(topic.posts.order(:id).last.raw).to eq("Default create reply")
+    end
+
+    it "falls back to the system user when no author is configured" do
+      first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
+      topic = first_post.topic
+
+      execute_node(
+        configuration: {
+          "operation" => "create",
+          "topic_id" => topic.id.to_s,
+          "raw" => "Created by workflows",
+        },
+        item: item,
+      )
+
+      expect(topic.posts.order(:id).last.user_id).to eq(Discourse.system_user.id)
+    end
+
+    it "creates a reply to a specific post number" do
+      first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
+      topic = first_post.topic
+
+      execute_node(
+        configuration: {
+          "operation" => "create",
+          "topic_id" => topic.id.to_s,
+          "raw" => "Threaded reply",
+          "reply_to_post_number" => first_post.post_number.to_s,
+        },
+        item: item,
+      )
+
+      expect(topic.posts.order(:id).last.reply_to_post_number).to eq(first_post.post_number)
+    end
+
+    it "raises when the create author cannot be found" do
+      first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
+
+      expect do
+        execute_node(
+          configuration: {
+            "operation" => "create",
+            "topic_id" => first_post.topic_id.to_s,
+            "raw" => "Workflow reply",
+            "author_username" => "nonexistent_user",
+          },
+          item: item,
+        )
+      end.to raise_error(DiscourseWorkflows::NodeError, "User 'nonexistent_user' not found")
+    end
+
+    it "raises when the create author cannot see the topic" do
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      hidden_topic = create_post(user: admin, category: private_category).topic
+
+      expect do
+        execute_node(
+          configuration: {
+            "operation" => "create",
+            "topic_id" => hidden_topic.id.to_s,
+            "raw" => "Workflow reply",
+            "author_username" => user.username,
+          },
+          item: item,
+        )
+      end.to raise_error(Discourse::InvalidAccess).and not_change { hidden_topic.posts.count }
+    end
+
+    it "raises when creating in a closed or archived topic" do
+      first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
+      topic = first_post.topic
+      topic.update!(closed: true)
+
+      expect do
+        execute_node(
+          configuration: {
+            "operation" => "create",
+            "topic_id" => topic.id.to_s,
+            "raw" => "Workflow reply",
+          },
+          item: item,
+        )
+      end.to raise_error(
+        DiscourseWorkflows::NodeError,
+        /Cannot create a post in a closed or archived topic/,
+      )
+    end
+
+    it "edits a post for the configured editor" do
+      post = Fabricate(:post, user: user, raw: "Original post", post_number: 1)
+      result = nil
+
+      expect do
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "edit",
+              "post_id" => post.id.to_s,
+              "raw" => "Edited by workflow",
+              "editor_username" => admin.username,
+            },
+            item: item,
+          )
+      end.not_to change { Post.count }
+
+      post.reload
+      expect(post.raw).to eq("Edited by workflow")
+      expect(result["post"]).to include(
+        "id" => post.id,
+        "topic_id" => post.topic_id,
+        "username" => user.username,
+        "raw" => "Edited by workflow",
+        "cooked" => post.cooked,
+      )
+    end
+
+    it "raises when the editor cannot edit the post" do
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      hidden_post = create_post(user: admin, category: private_category)
+
+      expect do
+        execute_node(
+          configuration: {
+            "operation" => "edit",
+            "post_id" => hidden_post.id.to_s,
+            "raw" => "Hidden edit",
+            "editor_username" => user.username,
+          },
+          item: item,
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect(hidden_post.reload.raw).not_to eq("Hidden edit")
+    end
+
     it "gets a visible post with selected body fields" do
       post = Fabricate(:post, user: user, raw: "Visible post body", post_number: 1)
 
