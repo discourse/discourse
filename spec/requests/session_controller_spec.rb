@@ -566,6 +566,7 @@ RSpec.describe SessionController do
     context "when SSO is enabled" do
       before do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
       end
 
@@ -679,6 +680,7 @@ RSpec.describe SessionController do
     context "when SSO is enabled" do
       before do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
       end
 
