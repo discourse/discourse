@@ -18,7 +18,7 @@
     { "path": "plugins/discourse-gamification" },
     { "path": "plugins/discourse-github" },
     { "path": "plugins/discourse-graphviz" },
-    { "path": "plugins/discourse-hcaptcha" },
+    { "path": "plugins/discourse-captcha" },
     { "path": "plugins/discourse-lazy-videos" },
     { "path": "plugins/discourse-local-dates" },
     { "path": "plugins/discourse-login-with-amazon" },
