@@ -7,6 +7,8 @@ module Migrations
     # the imperative single-run contract, `ProgressStep` the per-item
     # source/processor roles.
     class StepBase
+      extend StepDependencies
+
       # These constants also make bare `IntermediateDB::...` / `Enums::...`
       # references work inside `ProgressStep`'s `source` / `processor` blocks:
       # the blocks are written in step class bodies, and constants in methods
@@ -28,6 +30,12 @@ module Migrations
               "converter.default_step_title",
               type: name&.demodulize&.underscore&.humanize(capitalize: false),
             )
+        end
+
+        private
+
+        def dependency_base_class
+          StepBase
         end
       end
     end
