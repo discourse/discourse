@@ -217,5 +217,5 @@ en:
         assignee: "Assignee"
         replace_existing: "Replace existing assignment"
       assigned:
-        topic_assignments_only: "Topic assignments only"
-        topic_assignments_only_description: "Only trigger when the assignment target is the topic, not an individual post"
+        topic_assignments_only: "Only trigger when the assignment target is the topic, not an individual post"
+        topic_assignments_only_description: "Topic assignments only"
