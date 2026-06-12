@@ -970,7 +970,8 @@ zh_TW:
             from_alias_hint: "傳送群組 SMTP 電子郵件時，用作寄件者位址的別名。請注意，並非所有郵件供應商都支援此功能，請參閱郵件供應商的說明文件。"
         membership:
           title: 會員身份
-          access: 存取
+          join_method:
+            invite: "僅限邀請"
         categories:
           title: 分類
           long_title: "類別預設通知"
@@ -1003,7 +1004,6 @@ zh_TW:
         title: "權限"
         none: "此組沒有相關類別。"
         description: "此群組的成員可以存取這些類別"
-      public_admission: "允許使用者自由加入群組（需要將群組設為公開瀏覽）"
       public_exit: "允許使用者自由離開群組"
       empty:
         posts: "沒有此群組成員的貼文"
@@ -1019,7 +1019,6 @@ zh_TW:
       request: "請求"
       message: "訊息"
       confirm_leave: "您確定要離開此群組？"
-      allow_membership_requests: "允許使用者向群組擁有者發送加入請求 (需要公開可見的群組)"
       membership_request_template: "自定當使用者傳送加入要求時顯示的樣板"
       membership_request:
         submit: "送出請求"
@@ -5136,7 +5135,6 @@ zh_TW:
             incoming_email: "自訂電子郵件"
             incoming_email_placeholder: "輸入 email"
             incoming_email_tooltip: "您可以使用 | 字元分隔多個電子郵件地址。"
-            visibility: 能見度
             visibility_levels:
               title: "誰能看到這個群組？"
               public: "所有使用者"

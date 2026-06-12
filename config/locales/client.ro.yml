@@ -1086,7 +1086,6 @@ ro:
             from_alias: "De la alias"
         membership:
           title: Calitate de membru
-          access: Acces
         categories:
           title: Categorii
           long_title: "Notificări implicite pentru categorii"
@@ -1118,7 +1117,6 @@ ro:
         title: "Permisiuni"
         none: "Nu există categorii asociate acestui grup."
         description: "Membrii acestui grup pot accesa aceste categorii"
-      public_admission: "Permite utilizatorilor să se alăture grupului în mod liber (necesită ca grupul să fie vizibil)"
       public_exit: "Permite utilizatorilor să părăsească grupul în mod liber."
       empty:
         posts: "Nu există postări ale membrilor acestui grup"
@@ -1134,7 +1132,6 @@ ro:
       request: "Cere"
       message: "Mesaj"
       confirm_leave: "Sigur vrei să părăsești acest grup?"
-      allow_membership_requests: "Permite utilizatorilor să trimită cereri de înscriere către proprietarii grupului (necesită ca grupul să fie vizibil public)"
       membership_request_template: "Șablonul personalizat pentru a fi afișat utilizatorilor atunci când trimiți o solicitare de membru"
       membership_request:
         submit: "Trimite cerere"

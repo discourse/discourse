@@ -1093,7 +1093,6 @@ pt:
             from_alias_hint: "Alias para usar como endereço de origem ao enviar e-mails SMTP de grupo. Nota que isto pode não ser suportado por todos os fornecedores de e-mails, por isso consulta a documentação do seu fornecedor de correio."
         membership:
           title: Filiação
-          access: Acesso
         categories:
           title: Categorias
           long_title: "Notificações padrão da categoria"
@@ -1126,7 +1125,6 @@ pt:
         title: "Permissões"
         none: "Não existem categorias associadas a este grupo."
         description: "Os membros deste grupo podem ter acesso a estas categorias"
-      public_admission: "Permitir entrada livre no grupo (Requer grupo publicamente visível)"
       public_exit: "Permitir que os utilizadores deixem o grupo livremente"
       empty:
         posts: "Não existem publicações por membros deste grupo"
@@ -1142,7 +1140,6 @@ pt:
       request: "Pedir"
       message: "Mensagem"
       confirm_leave: "Tem a certeza que pretende sair deste grupo?"
-      allow_membership_requests: "Permitir que os usuários enviem solicitações de adesão aos proprietários do grupo (requer grupo publicamente visível)"
       membership_request_template: "Template personalizado para mostrar aos utilizadores quando for enviado um pedido de adesão"
       membership_request:
         submit: "Submeter Pedido"
@@ -4894,7 +4891,6 @@ pt:
             email: E-mail
             incoming_email: "Endereço de email de entrada personalizado"
             incoming_email_placeholder: "introduza o endereço de email"
-            visibility: Visibilidade
             visibility_levels:
               title: "Quem pode ver este grupo?"
               public: "Todos"

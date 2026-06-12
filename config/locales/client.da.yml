@@ -1013,7 +1013,6 @@ da:
             from_alias: "Fra Alias"
         membership:
           title: Medlemskab
-          access: Adgang
         categories:
           title: Kategorier
           long_title: "Kategori standard notifikationer"
@@ -1046,7 +1045,6 @@ da:
         title: "Tilladelser"
         none: "Der er ingen kategorier tilknyttet denne gruppe."
         description: "Medlemmer af denne gruppe har adgang til disse kategorier"
-      public_admission: "Tillad brugere frit at tilmelde sig gruppen (Kræver at det er en offentlig synlig gruppe)"
       public_exit: "Tillad brugere frit at forlade gruppen"
       empty:
         posts: "Der er ingen indlæg skrevet af medlemmer i denne gruppe"
@@ -1062,7 +1060,6 @@ da:
       request: "Anmod om medlemskab"
       message: "Besked"
       confirm_leave: "Er du sikker på, at du vil forlade gruppen?"
-      allow_membership_requests: "Tillad brugere at sende medlemskabsanmodninger til gruppeejere (kræver offentligt synlig gruppe)"
       membership_request_template: "Brugerdefineret skabelon, der skal vises til brugere, når der sendes en medlemskabsanmodning"
       membership_request:
         submit: "Send Anmodning"
@@ -4721,7 +4718,6 @@ da:
             email: Email
             incoming_email: "Brugerdefineret indkommende email"
             incoming_email_placeholder: "indtast email adresse"
-            visibility: Synlighed
             visibility_levels:
               title: "Hvem kan se denne gruppe?"
               public: "Alle"

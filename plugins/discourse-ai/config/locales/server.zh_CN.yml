@@ -811,6 +811,10 @@ zh_CN:
           conflict: "此审核队列条目已被其他人更新。请重试。"
           action_failed: "无法执行操作"
         success: "已成功对审核队列条目 %{reviewable_id} 执行 '%{action}'。"
+      add_reviewable_note:
+        errors:
+          not_allowed: "您无权访问审核队列"
+          not_found: "找不到审核队列条目"
     reviewables:
       ai_tool_action:
         title: "AI 工具操作"

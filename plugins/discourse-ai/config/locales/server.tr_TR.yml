@@ -808,6 +808,10 @@ tr_TR:
           conflict: "Bu inceleme kuyruğundaki öğe başka biri tarafından güncellendi. Lütfen tekrar deneyin"
           action_failed: "İşlem gerçekleştirilemedi"
         success: "İnceleme kuyruğundaki %{reviewable_id} öğesi üzerinde '%{action}' işlemi başarıyla gerçekleştirildi"
+      add_reviewable_note:
+        errors:
+          not_allowed: "İnceleme kuyruğuna erişiminiz yok"
+          not_found: "İnceleme kuyruğundaki öğe bulunamadı"
     reviewables:
       ai_tool_action:
         title: "Yapay Zeka aracı eylemi"

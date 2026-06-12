@@ -808,6 +808,10 @@ es:
           conflict: "Otra persona ha actualizado este elemento de la cola de revisión. Inténtalo de nuevo."
           action_failed: "Error al realizar la acción"
         success: "Se ha realizado correctamente «%{action}» en el elemento de la cola de revisión %{reviewable_id}."
+      add_reviewable_note:
+        errors:
+          not_allowed: "No tienes permiso para acceder a la cola de revisión"
+          not_found: "No se ha encontrado el elemento en la cola de revisión"
     reviewables:
       ai_tool_action:
         title: "Acción de herramienta de IA"

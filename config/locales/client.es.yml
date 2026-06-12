@@ -1237,7 +1237,8 @@ es:
             from_alias_hint: "Alias que usar como la dirección de envío al enviar mensajes de grupo con SMTP. Ten en cuenta que no todos los proveedores de correo son compatibles con esta opción, consulta con el tuyo para saber si puedes usar los alias."
         membership:
           title: Membresía
-          access: Acceso
+          join_method:
+            invite: "Solo por invitación"
         categories:
           title: Categorías
           long_title: "Notificaciones predeterminadas de categoría"
@@ -1270,7 +1271,6 @@ es:
         title: "Permisos"
         none: "No hay categorías asociadas a este grupo."
         description: "Los miembros de este grupo pueden acceder a estas categorías"
-      public_admission: "Permitir que los usuarios se unan al grupo libremente (Se requiere que el grupo sea públicamente visible)"
       public_exit: "Permitir a los usuarios abandonar el grupo libremente"
       empty:
         posts: "No hay publicaciones por miembros de este grupo"
@@ -1286,7 +1286,6 @@ es:
       request: "Solicitar"
       message: "Mensaje"
       confirm_leave: "¿Seguro que quieres salir de este grupo?"
-      allow_membership_requests: "Permitir a los usuarios enviar solicitudes de membresía a propietarios de grupo (el grupo tiene que ser públicamente visible)"
       membership_request_template: "Plantilla personalizada que se muestra a los usuarios cuando envían una solicitud de membresía"
       membership_request:
         submit: "Enviar solicitud"
@@ -6399,7 +6398,6 @@ es:
             incoming_email: "Dirección de correo electrónico entrante personalizada"
             incoming_email_placeholder: "introduce la dirección de correo electrónico"
             incoming_email_tooltip: "Puedes separar varias direcciones de correo electrónico con el carácter |."
-            visibility: Visibilidad
             visibility_levels:
               title: "¿Quién puede ver este grupo?"
               public: "Todos"

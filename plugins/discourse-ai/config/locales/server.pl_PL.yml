@@ -583,6 +583,7 @@ pl_PL:
         grant_badge: "Przyznaj odznakę"
         list_reviewables: "Kolejka do przeglądu listy"
         perform_reviewable_action: "Działanie kolejki przeglądu"
+        add_reviewable_note: "Dodaj notatkę do kolejki przeglądu"
         assign: "Przypisz temat"
         mark_as_solved: "Oznacz jako rozwiązany"
         search: "Szukaj"
@@ -628,6 +629,7 @@ pl_PL:
         grant_badge: "Przyznaj użytkownikowi odznakę"
         list_reviewables: "Wyświetl listę oczekujących na przegląd elementów w kolejce z opcjonalnym filtrowaniem"
         perform_reviewable_action: "Wykonaj działanie w kolejce przeglądu"
+        add_reviewable_note: "Dodaj notatkę do elementu w kolejce przeglądu"
         assign: "Przypisz lub usuń przypisanie tematu użytkownikowi lub grupie"
         mark_as_solved: "Oznacz lub odznacz wpis jako zaakceptowane rozwiązanie"
         search: "Przeszukaj wszystkie publiczne tematy na forum"
@@ -675,6 +677,7 @@ pl_PL:
         grant_badge: "Przyznanie odznaki „%{badge_name}” użytkownikowi %{username}"
         list_reviewables: "Wyświetlanie listy elementów kolejki przeglądu (typ: %{type})"
         perform_reviewable_action: "Wykonywanie %{action} na %{reviewable_id} do przejrzenia"
+        add_reviewable_note: "Dodawanie notatki do %{reviewable_id} do przeglądu"
         assign: "Przypisanie tematu %{topic_id} (przypisano: %{assigned})"
         mark_as_solved: "Oznaczanie wpisu %{post_id} jako rozwiązany (rozwiązany: %{solved})"
         read: "Czytanie: <a href='%{url}'>%{title}</a>"
@@ -852,6 +855,13 @@ pl_PL:
           conflict: "Ten element kolejki przeglądu został zaktualizowany przez kogoś innego. Spróbuj ponownie."
           action_failed: "Nie udało się wykonać działania"
         success: "Pomyślnie wykonano działanie „%{action}” na elemencie kolejki przeglądu %{reviewable_id}"
+      add_reviewable_note:
+        errors:
+          not_allowed: "Nie masz dostępu do kolejki przeglądu"
+          not_found: "Nie znaleziono elementu kolejki przeglądu"
+          no_note: "Aby dodać notatkę do elementu kolejki przeglądu, wymagana jest notatka"
+          failed: "Nie udało się dodać notatki"
+        success: "Pomyślnie dodano notatkę do elementu kolejki przeglądu %{reviewable_id}"
     reviewables:
       ai_tool_action:
         title: "Działanie narzędzia AI"

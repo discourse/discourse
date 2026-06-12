@@ -1084,7 +1084,8 @@ ja:
             from_alias_hint: "グループ SMTP メールを送信する際に送信元アドレスとして使用するエイリアス。すべてのメールプロバイダーでサポートされているわけではなことにご注意ください。メールプロバイダーのドキュメントを参照してください。"
         membership:
           title: メンバーシップ
-          access: アクセス
+          join_method:
+            invite: "招待のみ"
         categories:
           title: カテゴリ
           long_title: "カテゴリのデフォルト通知"
@@ -1117,7 +1118,6 @@ ja:
         title: "権限"
         none: "このグループに関連付けられているカテゴリはありません。"
         description: "このグループのメンバーはこれらのカテゴリにアクセスできます"
-      public_admission: "ユーザーがグループに自由に参加することを許可する (一般公開グループである必要があります)"
       public_exit: "ユーザーがグループから自由に退出することを許可する"
       empty:
         posts: "このグループのメンバーによる投稿はありません"
@@ -1133,7 +1133,6 @@ ja:
       request: "リクエスト"
       message: "メッセージ"
       confirm_leave: "このグループから退出してもよろしいですか？"
-      allow_membership_requests: "ユーザーがグループのオーナーにメンバーシップリクエストを送信することを許可する (一般公開グループである必要があります)"
       membership_request_template: "メンバーシップリクエスト送信時にユーザーに表示するカスタムテンプレート"
       membership_request:
         submit: "リクエストを送信"
@@ -5833,7 +5832,6 @@ ja:
             incoming_email: "カスタム受信メールアドレス"
             incoming_email_placeholder: "メールアドレスを入力"
             incoming_email_tooltip: "複数のメールアドレスは「|」文字で区切ることができます。"
-            visibility: 表示状態
             visibility_levels:
               title: "誰がこのグループを閲覧できますか？"
               public: "全員"

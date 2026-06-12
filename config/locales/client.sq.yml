@@ -904,7 +904,6 @@ sq:
             from_alias_hint: "Alias për t'u përdorur si adresë nga kur dërgoni email SMTP në grup. Vini re se kjo mund të mos mbështetet nga të gjithë ofruesit e postës, ju lutemi konsultohuni me dokumentacionin e ofruesit tuaj të postës."
         membership:
           title: Anëtarësimi
-          access: Lejimi
         categories:
           title: Kategoritë
           long_title: "Njoftimet e paracaktuara të kategorisë"
@@ -937,7 +936,6 @@ sq:
         title: "Të drejtat"
         none: "Nuk ka kategori të lidhura me këtë grup."
         description: "Anëtarët e këtij grupi mund t'i qasen këtyre kategorive"
-      public_admission: "Lejo që përdoruesit të bashkohen lirisht ne grupin (Kërkon grupin e dukshëm publik)"
       public_exit: "Lejo përdoruesit të largohen nga grupi lirshëm"
       empty:
         posts: "Nuk ka postime nga anëtarët e këtij grupi"
@@ -953,7 +951,6 @@ sq:
       request: "Kërkesë"
       message: "Mesazh"
       confirm_leave: "A jeni të sigurt që dëshironi të largoheni nga ky grup?"
-      allow_membership_requests: "Lejoni përdoruesit të dërgojnë kërkesa për anëtarësim tek pronarët e grupit (Kërkon grup të dukshëm"
       membership_request_template: "Modeli i personalizuar për t'u shfaqur përdoruesve kur dërgoni një kërkesë për anëtarësim"
       membership_request:
         submit: "Paraqisni Kërkesën"

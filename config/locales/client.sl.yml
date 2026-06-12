@@ -804,7 +804,6 @@ sl:
             allow_unknown_sender_topic_replies: "Dovoli odgovore neznanih pošiljateljev."
         membership:
           title: Članstvo
-          access: Dostopnost
         categories:
           title: Kategorije
           long_title: "Privzeta obvestila kategorije"
@@ -837,7 +836,6 @@ sl:
         title: "Dovoljenja"
         none: "S to skupino ni povezana nobena kategorija."
         description: "Člani te skupine lahko dostopajo do teh kategorij"
-      public_admission: "Dovoli uporabnikom, da se sami pridružijo skupini (skupina mora biti javna)"
       public_exit: "Dovoli uporabnikom da sami zapustijo skupino"
       empty:
         posts: "Ni prispevkov članov skupine"
@@ -853,7 +851,6 @@ sl:
       request: "Zahteva"
       message: "Sporočilo"
       confirm_leave: "Ali ste prepričani, da želite zapustiti to skupino?"
-      allow_membership_requests: "Dovoli uporabnikom, da lastnikom skupin pošiljajo zahteve za članstvo (zahteva javno vidno skupino)"
       membership_request_template: "Predloga za prikaz uporabnikom, ko zaprosijo za članstvo"
       membership_request:
         submit: "Zaprosi za članstvo"
@@ -4010,7 +4007,6 @@ sl:
             email: E-naslov
             incoming_email: "Dohodni e-naslov po meri"
             incoming_email_placeholder: "vnesite e-naslov"
-            visibility: Vidljivost
             visibility_levels:
               title: "Kdo lahko vidi to skupino?"
               public: "Vsi"

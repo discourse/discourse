@@ -876,7 +876,6 @@ nb_NO:
             from_alias_hint: "Alias som skal brukes som fra-adresse når du sender SMTP-e-post til grupper. Merk at dette kanskje ikke støttes av alle e-postleverandører, se dokumentasjonen til e-postleverandøren din."
         membership:
           title: Medlemskap
-          access: Tilgang
         categories:
           title: Kategorier
           long_title: "Kategori standard varsler"
@@ -909,7 +908,6 @@ nb_NO:
         title: "Tillatelser"
         none: "Det er ingen kategorier tilknyttet denne gruppen."
         description: "Medlemmer av denne gruppen har tilgang til disse kategoriene"
-      public_admission: "Tillat brukere å ta del i gruppen fritt (krever offentlig synlig gruppe)"
       public_exit: "Tillat brukere å fritt forlate gruppen"
       empty:
         posts: "Det finnes ingen innlegg av medlemmer i denne gruppen"
@@ -925,7 +923,6 @@ nb_NO:
       request: "Forespørsel"
       message: "Melding"
       confirm_leave: "Er du sikker på at du vil forlate denne gruppen?"
-      allow_membership_requests: "Tillat brukere å sende medlemskap til gruppeeiere (krever offentlig synlig gruppe)"
       membership_request_template: "Egendefinert mal å vise brukere når du sender en medlemskapsforespørsel"
       membership_request:
         submit: "Send inn forespørsel"
@@ -4634,7 +4631,6 @@ nb_NO:
             incoming_email: "Brukerdefinert innkommende e-postadresse"
             incoming_email_placeholder: "velg e-postadresse"
             incoming_email_tooltip: "Du kan skille flere e-postadresser fra hverandre med tegnet |."
-            visibility: Synlighet
             visibility_levels:
               title: "Hvem kan se denne gruppen?"
               public: "Alle"
