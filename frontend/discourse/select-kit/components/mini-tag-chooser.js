@@ -69,7 +69,7 @@ export default class MiniTagChooser extends MultiSelectComponent {
   }
 
   modifyComponentForRow(collection, item) {
-    if (typeof item?.onSelect === "function") {
+    if (typeof item?.action === "function") {
       return SelectKitRow;
     }
 

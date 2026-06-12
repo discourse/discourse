@@ -91,8 +91,8 @@ export default class MultiSelect extends SelectKitComponent {
   }
 
   select(value, item) {
-    if (typeof item?.onSelect === "function") {
-      item.onSelect(this.selectKit, item);
+    if (typeof item?.action === "function") {
+      item.action(this.selectKit, item);
       return;
     }
 

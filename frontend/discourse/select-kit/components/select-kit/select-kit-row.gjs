@@ -46,10 +46,10 @@ export default class SelectKitRow extends Component {
   @tracked _langOverride;
 
   get isActionRow() {
-    return typeof this.item?.onSelect === "function";
+    return typeof this.item?.action === "function";
   }
 
-  @computed("item.onSelect")
+  @computed("item.action")
   get role() {
     return this.isActionRow ? "menuitem" : "menuitemradio";
   }
@@ -94,7 +94,7 @@ export default class SelectKitRow extends Component {
     return guidFor(this.item);
   }
 
-  @computed("isSelected", "item.onSelect")
+  @computed("isSelected", "item.action")
   get ariaChecked() {
     if (this.isActionRow) {
       return undefined;

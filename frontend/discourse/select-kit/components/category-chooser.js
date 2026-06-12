@@ -53,7 +53,7 @@ export default class CategoryChooser extends ComboBoxComponent {
   }
 
   modifyComponentForRow(collection, item) {
-    if (typeof item?.onSelect === "function") {
+    if (typeof item?.action === "function") {
       return SelectKitRow;
     }
 

@@ -129,7 +129,7 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
     assert.dom("#test").hasText("foo");
   });
 
-  test("an item with onSelect acts as an action row instead of being selected", async function (assert) {
+  test("an item with an action acts as an action row instead of being selected", async function (assert) {
     setDefaultState(this, "foo", { content: DEFAULT_CONTENT });
 
     let actioned = false;
@@ -138,7 +138,7 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
         return {
           id: "action",
           name: "Do something",
-          onSelect: () => {
+          action: () => {
             actioned = true;
           },
         };
@@ -157,7 +157,7 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
     await this.comboBox.expand();
     await this.comboBox.selectRowByValue("action");
 
-    assert.true(actioned, "the row's onSelect callback runs");
+    assert.true(actioned, "the row's action callback runs");
     assert.strictEqual(this.value, "foo", "the selected value is unchanged");
     assert.true(this.comboBox.isExpanded(), "the dropdown stays open");
     assert
