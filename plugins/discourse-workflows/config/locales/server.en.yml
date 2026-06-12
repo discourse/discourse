@@ -37,12 +37,12 @@ en:
       item:
         inconsistent_format_title: "Inconsistent item format"
         inconsistent_format: "Every returned item must use the same format."
-      create_post:
-        topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
       topic:
         create_failed: "Failed to create topic."
         unknown_operation: "Unknown operation: %{operation}."
       post:
+        topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
+        edit_failed: "Failed to edit post."
         unknown_operation: "Unknown operation: %{operation}."
         invalid_filter: "Invalid post filter fragment: %{fragments}."
       credential:

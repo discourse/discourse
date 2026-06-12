@@ -21,6 +21,7 @@ module DiscourseWorkflows
             color: "violet",
           },
           group: "discourse_triggers",
+          events: [:post_edited],
           properties: {
             post_scope: {
               type: :options,
@@ -50,14 +51,16 @@ module DiscourseWorkflows
           },
         )
 
-        def initialize(post, cooked, *)
+        def initialize(post, topic_changed_or_cooked = nil, revisor = nil, *)
           super(parameters: {})
           @post = post
-          @cooked = cooked
+          @cooked = topic_changed_or_cooked.is_a?(String) ? topic_changed_or_cooked : post&.cooked
+          @revisor = revisor
         end
 
         def valid?
-          @post.present? && @post.topic.present? && @post.post_type == ::Post.types[:regular]
+          @post.present? && @post.topic.present? && @post.post_type == ::Post.types[:regular] &&
+            !@revisor&.opts&.dig(:skip_workflows)
         end
 
         def output

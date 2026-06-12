@@ -26,14 +26,15 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(identifiers).to include(
           "trigger:topic_closed",
           "action:topic_tags",
-          "action:create_post",
+          "action:post",
           "action:topic",
           "condition:if",
         )
+        expect(identifiers).not_to include("action:create_post")
       end
 
       it "includes expected schema fields for each node type" do
-        node_type = result[:node_types].find { |nt| nt[:identifier] == "action:create_post" }
+        node_type = result[:node_types].find { |nt| nt[:identifier] == "action:post" }
         expect(node_type).to include(
           :displayName,
           :name,
@@ -45,18 +46,28 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
           :credentials,
           :webhooks,
         )
-        expect(node_type[:name]).to eq("action:create_post")
+        expect(node_type[:name]).to eq("action:post")
         expect(node_type[:kind]).to eq("action")
-        expect(node_type[:properties].keys).to contain_exactly(
-          :topic_id,
+        expect(node_type[:properties].keys).to include(
+          :operation,
           :raw,
+          :topic_id,
+          :post_id,
           :reply_to_post_number,
           :author_username,
+          :editor_username,
+          :include_raw,
+          :include_cooked,
+          :query,
+        )
+        expect(node_type.dig(:properties, :operation, :default)).to eq("create")
+        expect(node_type[:operations].map { |operation| operation[:value] }).to eq(
+          %w[create edit get list],
         )
       end
 
       it "returns UI hints for schema-driven configurators" do
-        node_type = result[:node_types].find { |nt| nt[:identifier] == "action:create_post" }
+        node_type = result[:node_types].find { |nt| nt[:identifier] == "action:post" }
 
         expect(node_type.dig(:properties, :raw, :ui)).to eq(control: :textarea)
       end
@@ -93,10 +104,10 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       end
 
       it "serializes ui palette group for action nodes" do
-        create_post = result[:node_types].find { |nt| nt[:identifier] == "action:create_post" }
+        post = result[:node_types].find { |nt| nt[:identifier] == "action:post" }
         form = result[:node_types].find { |nt| nt[:identifier] == "action:form" }
 
-        expect(create_post.dig(:ui, :palette_group, :id)).to eq("discourse_actions")
+        expect(post.dig(:ui, :palette_group, :id)).to eq("discourse_actions")
         expect(form.dig(:ui, :palette_group, :id)).to eq("human_review")
       end
 

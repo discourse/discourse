@@ -295,7 +295,7 @@ module DiscourseWorkflows
 
         if topic.closed? || topic.archived?
           raise DiscourseWorkflows::NodeError,
-                I18n.t("discourse_workflows.errors.create_post.topic_closed_or_archived")
+                I18n.t("discourse_workflows.errors.post.topic_closed_or_archived")
         end
 
         post_args = {
@@ -306,6 +306,19 @@ module DiscourseWorkflows
         }.compact
 
         PostCreator.new(user, post_args).create!
+      end
+
+      def edit_post(user:, post_id:, raw:)
+        post = ::Post.find(post_id)
+        raise Discourse::InvalidAccess if !user.guardian.can_edit_post?(post)
+
+        if !PostRevisor.new(post).revise!(user, { raw: raw }, skip_workflows: true)
+          errors = post.errors.full_messages.presence
+          raise DiscourseWorkflows::NodeError,
+                errors&.join(", ") || I18n.t("discourse_workflows.errors.post.edit_failed")
+        end
+
+        post.reload
       end
 
       def serialize_post(
