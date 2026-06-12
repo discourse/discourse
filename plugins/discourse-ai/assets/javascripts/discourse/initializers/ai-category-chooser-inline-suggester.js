@@ -1,7 +1,6 @@
 import { getOwner } from "@ember/owner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import { MIN_CHARACTER_COUNT } from "../lib/ai-helper-suggestions";
@@ -80,9 +79,9 @@ async function loadSuggestions(component, selectKit) {
 function triggerRow(component) {
   return {
     id: SUGGEST_ID,
-    label: `<span class="ai-category-suggest__label">${i18n(
-      "discourse_ai.ai_helper.suggest"
-    )}</span>${iconHTML("discourse-sparkles")}`,
+    name: i18n("discourse_ai.ai_helper.suggest"),
+    icon: "discourse-sparkles",
+    classNames: "ai-category-suggest-row",
     onSelect: (selectKit) => loadSuggestions(component, selectKit),
   };
 }
@@ -90,9 +89,9 @@ function triggerRow(component) {
 function loadingRow() {
   return {
     id: SUGGEST_ID,
-    label: `<span class="ai-category-loading__label">${i18n(
-      "discourse_ai.ai_helper.context_menu.loading"
-    )}</span>${iconHTML("spinner", { class: "fa-spin" })}`,
+    name: i18n("discourse_ai.ai_helper.context_menu.loading"),
+    icon: "spinner",
+    classNames: "ai-category-suggest-row",
     onSelect: () => {},
   };
 }
@@ -100,9 +99,9 @@ function loadingRow() {
 function exitRow(component) {
   return {
     id: EXIT_ID,
-    label: `<span class="ai-category-exit__label">${i18n(
-      "discourse_ai.ai_helper.suggestions"
-    )}</span>${iconHTML("xmark")}`,
+    name: i18n("discourse_ai.ai_helper.suggestions"),
+    icon: "xmark",
+    classNames: "ai-category-exit-row",
     onSelect: (selectKit) => {
       reset(component);
       selectKit.triggerSearch();
