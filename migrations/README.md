@@ -29,6 +29,22 @@ Public converters live in `converters/lib/migrations/converters/`. To run a priv
 (closed-source) converter, put its code in a subdirectory of `private/converters/`
 (or point `MIGRATIONS_PRIVATE_CONVERTERS_PATH` at it).
 
+### Source DB adapters and fork safety
+
+Worker processes inherit the source DB connection's socket from the main process. Whether
+that's dangerous depends on the client library: a destructor that only closes the file
+descriptor is harmless (the parent still holds it, so the kernel sends nothing over the
+wire), but a destructor that writes a protocol goodbye kills the parent's session as soon
+as a worker exits — libpq sends a Terminate message, MySQL clients send `COM_QUIT`.
+
+`Adapter::Postgres` handles this by registering a `ForkManager.after_fork_child` hook that
+calls `discard!` in each worker: the inherited socket is redirected to `/dev/null`, and any
+later use of the adapter in the worker raises `DiscardedError`. New adapters should follow
+the same pattern. The discard mechanism itself is library-specific — mysql2 has
+`automatic_close = false`, trilogy has a native `discard!`. To check whether a library
+needs one at all: connect, fork an empty child that exits normally, wait for it, and query
+again from the parent (see the fork-safety specs in `postgres_spec.rb`).
+
 ## Schema DSL
 
 The schema DSL lives in `migrations/tooling/lib/migrations/tooling/schema/dsl/`. Config sources
