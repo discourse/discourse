@@ -12,7 +12,7 @@ class ContentSecurityPolicy
           directives[:base_uri] = [:self]
           directives[:object_src] = [:none]
           directives[:script_src] = script_src
-          directives[:worker_src] = []
+          directives[:worker_src] = [:self, "blob:"]
           directives[:frame_ancestors] = frame_ancestors if restrict_embed?
           directives[:manifest_src] = ["'self'"]
         end
@@ -21,7 +21,7 @@ class ContentSecurityPolicy
     private
 
     def script_src
-      ["'strict-dynamic'"]
+      %w['strict-dynamic' 'wasm-unsafe-eval']
     end
 
     def frame_ancestors

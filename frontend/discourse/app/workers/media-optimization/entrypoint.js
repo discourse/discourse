@@ -1,12 +1,15 @@
-// The media optimization bundle uses webpack's import-scripts chunk loader,
-// so worker-only dynamic chunks can be loaded without a DOM shim.
-onmessage = async function (e) {
+// Built by rolldown as a standalone chunk and started as a module worker via a
+// blob bootstrap (see the media-optimization-worker service), so it inherits the
+// host document CSP. The codecs are bundled straight into this chunk.
+import { convert, convertAnimated, optimize } from "./codecs.js";
+
+self.onmessage = async function (e) {
   switch (e.data.type) {
     case "compress":
       try {
         globalThis.debugMode = e.data.settings.debug_mode;
 
-        let optimized = await globalThis.optimize(
+        let optimized = await optimize(
           e.data.file,
           e.data.fileName,
           e.data.width,
@@ -24,6 +27,7 @@ onmessage = async function (e) {
           [optimized]
         );
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error);
         postMessage({
           type: "error",
@@ -37,7 +41,7 @@ onmessage = async function (e) {
       try {
         globalThis.debugMode = e.data.settings.debug_mode;
 
-        let converted = await globalThis.convert(
+        let converted = await convert(
           e.data.file,
           e.data.fileName,
           e.data.fileType,
@@ -55,6 +59,7 @@ onmessage = async function (e) {
           [converted.data]
         );
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error);
         postMessage({
           type: "error",
@@ -68,7 +73,7 @@ onmessage = async function (e) {
       try {
         globalThis.debugMode = e.data.settings.debug_mode;
 
-        let animatedResult = await globalThis.convertAnimated(
+        let animatedResult = await convertAnimated(
           e.data.file,
           e.data.fileName,
           e.data.originalFileSize,
@@ -93,6 +98,7 @@ onmessage = async function (e) {
           });
         }
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error);
         postMessage({
           type: "error",
@@ -102,20 +108,8 @@ onmessage = async function (e) {
         });
       }
       break;
-    case "install":
-      try {
-        await loadLibs(e.data.settings);
-        postMessage({ type: "installed" });
-      } catch (error) {
-        console.error(error);
-        postMessage({ type: "installFailed", errorMessage: error.message });
-      }
-      break;
     default:
-      logIfDebug(`Sorry, we are out of ${e}.`);
+      // eslint-disable-next-line no-console
+      console.error(`Unexpected message type: ${e.data.type}`);
   }
 };
-
-async function loadLibs(settings) {
-  return import(settings.mediaOptimizationBundle);
-}

@@ -106,7 +106,7 @@ async function maybeResize(imageData, width, height, settings) {
   }
 }
 
-globalThis.optimize = async function (
+export async function optimize(
   imageData,
   fileName,
   width,
@@ -156,9 +156,9 @@ globalThis.optimize = async function (
   }
 
   return result;
-};
+}
 
-globalThis.convert = async function (
+export async function convert(
   fileBuffer,
   fileName,
   fileType,
@@ -219,9 +219,9 @@ globalThis.convert = async function (
   }
 
   return { data: result, outputType: "image/jpeg" };
-};
+}
 
-globalThis.convertAnimated = async function (
+export async function convertAnimated(
   fileBuffer,
   fileName,
   originalFileSize,
@@ -251,4 +251,4 @@ globalThis.convertAnimated = async function (
   }
 
   return { data: result, outputType: "image/webp" };
-};
+}
