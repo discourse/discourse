@@ -84,3 +84,11 @@ bin/lint --fix path/to/file
 ```
 
 Uses both rubocop and syntax_tree. Always lint changed files.
+
+## Known issues
+
+- **Parallel step items must be hashes (or other non-scalar JSON values).** Worker processes
+  receive their items as an Oj stream over a pipe, and Oj's stream parser can only detect the
+  end of a bare scalar (a number or string) once the next byte arrives — so a step whose
+  `items` yields scalars stalls the worker pipeline. Wrap scalar items in a hash
+  (e.g. `{ id: ... }`). This should go away if we switch the worker pipes from Oj to JSON.
