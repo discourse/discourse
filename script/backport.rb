@@ -21,11 +21,16 @@ end
 # Quote a string as a single-line bash argument using ANSI-C ($'...') quoting,
 # so embedded newlines become a literal \n instead of wrapping the command.
 def bash_quote(str)
-  escaped = str.gsub(/[\\'\n]/, "\\" => "\\\\", "'" => "\\'", "\n" => "\\n")
+  escaped = str.gsub(/\r\n?/, "\n").gsub(/[\\'\n]/, "\\" => "\\\\", "'" => "\\'", "\n" => "\\n")
   "$'#{escaped}'"
 end
 
 pr_number = ENV.fetch("PR_NUMBER")
+
+# Resolve the repo so manual instructions target the same one this script runs against
+# (it runs in both discourse/discourse and discourse/discourse-private-mirror).
+repo = gh("repo", "view", "--json", "nameWithOwner", "-q", ".nameWithOwner").stdout.strip
+repo_url = "git@github.com:#{repo}"
 
 # Get PR details (title, body, base branch)
 pr = JSON.parse(gh("pr", "view", pr_number, "--json", "title,body,baseRefName,mergeCommit").stdout)
@@ -210,7 +215,7 @@ if failed.any?
   failed.each do |r|
     if r[:cherry_pick_range]
       gh_create =
-        "gh pr create --base #{r[:release_branch]} --head #{r[:backport_branch]} " \
+        "gh pr create --repo #{repo} --base #{r[:release_branch]} --head #{r[:backport_branch]} " \
           "--title #{bash_quote(r[:backport_title])} --body #{bash_quote(r[:backport_body])}"
 
       comment_lines << <<~MSG
@@ -221,12 +226,12 @@ if failed.any?
 
         To resolve manually:
         ```bash
-        git fetch origin #{r[:release_branch]}
-        git checkout -B #{r[:backport_branch]} origin/#{r[:release_branch]}
+        git fetch #{repo_url} #{r[:release_branch]}
+        git checkout -B #{r[:backport_branch]} FETCH_HEAD
         git cherry-pick #{r[:cherry_pick_range]}
 
         # Resolve the conflicts, then push the branch and open the PR:
-        git push -f origin #{r[:backport_branch]}
+        git push -f #{repo_url} #{r[:backport_branch]}:#{r[:backport_branch]}
         #{gh_create}
         ```
       MSG
