@@ -21,12 +21,12 @@ RSpec.describe Migrations::Tooling::Coverage::ReferenceCheck do
   # `discourse`, so include it unless a test is about its absence.
   #
   # `Migrations::Converters` lives in the converters gem, which isn't loaded in
-  # the tooling gem's isolated specs, so it is stubbed in rather than required.
+  # the tooling gem's isolated specs, so a doubled constant stands in for it
+  # (verified against the real module only where it happens to be loaded).
   def stub_coverage(results, schema:)
-    converters = Module.new
+    converters = class_double("Migrations::Converters").as_stubbed_const
     allow(converters).to receive(:names).and_return(results.keys)
     allow(converters).to receive(:path_of) { |name| name }
-    stub_const("Migrations::Converters", converters)
 
     allow(analyzer_class).to receive(:new) do |path|
       instance_double(analyzer_class, analyze: results.fetch(path))
