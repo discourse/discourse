@@ -23,6 +23,10 @@ export default class DynamicCard extends Component {
     return routeName(this.chunk);
   }
 
+  get isLoaded() {
+    return this.args.loaded?.has(this.args.file);
+  }
+
   get stemmed() {
     return stem(this.args.file);
   }
@@ -76,7 +80,7 @@ export default class DynamicCard extends Component {
   }
 
   <template>
-    <div class="ba-row {{if this.open 'open'}}">
+    <div class="ba-row {{if this.open 'open'}} {{if this.isLoaded 'loaded'}}">
       <button
         type="button"
         class="ba-head"
@@ -85,6 +89,12 @@ export default class DynamicCard extends Component {
       >
         <span class="ba-name">
           <span class="ba-tw">▶</span>
+          {{#if this.isLoaded}}
+            <span
+              class="ba-loaded-dot"
+              title="Loaded in this browser session"
+            >●</span>
+          {{/if}}
           {{#if this.route}}
             <span class="ba-badge route">route: {{this.route}}</span>
           {{else}}

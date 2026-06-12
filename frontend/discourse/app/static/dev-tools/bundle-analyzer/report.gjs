@@ -6,11 +6,14 @@ import { action } from "@ember/object";
 import { fmt, matches } from "./analysis";
 import ChunkRow from "./chunk-row";
 import DynamicCard from "./dynamic-card";
+import LoadedChunks from "./loaded-chunks";
 
 export default class Report extends Component {
   @tracked sizeKey = "brotli";
   @tracked filter = "";
   @tracked baseline;
+
+  loaded = new LoadedChunks(this.args.analysis.chunks);
 
   isBaseline = (file) => this.baseline.has(file);
 
@@ -26,8 +29,18 @@ export default class Report extends Component {
     this.baseline = new Set(base);
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.loaded.teardown();
+  }
+
   get analysis() {
     return this.args.analysis;
+  }
+
+  get loadedTotals() {
+    const files = [...this.loaded.files].filter((f) => this.analysis.chunks[f]);
+    return { count: files.length, ...this.analysis.totals(new Set(files)) };
   }
 
   get entrypointRows() {
@@ -122,6 +135,14 @@ export default class Report extends Component {
           chunks · generated
           {{this.analysis.data.generatedAt}}
         </span>
+        <span class="ba-sub">
+          <span class="ba-loaded-dot">●</span>
+          loaded in this browser:
+          {{this.loadedTotals.count}}
+          chunks ·
+          {{fmt this.loadedTotals.brotli}}
+          br
+        </span>
       </div>
 
       <section>
@@ -186,6 +207,7 @@ export default class Report extends Component {
               @file={{f}}
               @analysis={{this.analysis}}
               @filter={{this.filter}}
+              @loaded={{this.loaded}}
             />
           {{else}}
             <div class="ba-empty">No matches.</div>
@@ -208,6 +230,7 @@ export default class Report extends Component {
               @filter={{this.filter}}
               @sizeKey={{this.sizeKey}}
               @baselineClosure={{this.baselineClosure}}
+              @loaded={{this.loaded}}
             />
           {{else}}
             <div class="ba-empty">No dynamic entrypoints.</div>

@@ -277,3 +277,16 @@
   color: var(--ba-muted);
   padding: 12px;
 }
+
+.bundle-analyzer .ba-loaded-dot {
+  color: var(--ba-good);
+  font-size: 9px;
+  line-height: 1;
+  flex: none;
+}
+.bundle-analyzer .ba-row.loaded {
+  border-color: color-mix(in srgb, var(--ba-good) 45%, var(--ba-border));
+}
+.bundle-analyzer .ba-row.loaded > .ba-head {
+  box-shadow: inset 3px 0 0 var(--ba-good);
+}

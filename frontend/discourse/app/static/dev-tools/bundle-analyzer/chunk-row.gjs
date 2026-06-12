@@ -17,6 +17,10 @@ export default class ChunkRow extends Component {
     return routeName(this.chunk);
   }
 
+  get isLoaded() {
+    return this.args.loaded?.has(this.args.file);
+  }
+
   get stemmed() {
     return stem(this.args.file);
   }
@@ -43,10 +47,16 @@ export default class ChunkRow extends Component {
   }
 
   <template>
-    <div class="ba-row {{if this.open 'open'}}">
+    <div class="ba-row {{if this.open 'open'}} {{if this.isLoaded 'loaded'}}">
       <button type="button" class="ba-head" {{on "click" this.toggle}}>
         <span class="ba-name">
           <span class="ba-tw">▶</span>
+          {{#if this.isLoaded}}
+            <span
+              class="ba-loaded-dot"
+              title="Loaded in this browser session"
+            >●</span>
+          {{/if}}
           {{#unless @root}}
             {{#if this.chunk.isEntry}}
               <span class="ba-badge entry">entry</span>
