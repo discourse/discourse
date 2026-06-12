@@ -373,13 +373,12 @@ class UploadsController < ApplicationController
       content_type: MiniMime.lookup_by_filename(upload.original_filename)&.content_type,
     }
 
-    if !FileHelper.is_inline_safe?(upload.original_filename)
+    if force_download? || !FileHelper.is_inline_safe?(upload.original_filename)
       opts[:disposition] = "attachment"
-    elsif params[:inline]
+      response.headers["Content-Security-Policy"] = "sandbox;"
+    else
       opts[:disposition] = "inline"
     end
-
-    response.headers["Content-Security-Policy"] = "sandbox;"
 
     file_path = Discourse.store.path_for(upload)
     return render_404 unless file_path && File.exist?(file_path)
