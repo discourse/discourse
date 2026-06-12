@@ -45,8 +45,19 @@ module DiscourseDataExplorer
                  content_type: "application/vnd.api+json"
         end
 
+        # Set by the keyset branch of ApplicationResource's paginate block
+        # (the resource reaches us through Graphiti's context).
+        attr_accessor :next_page_cursor
+
         def index
-          render jsonapi: QueryResource.all(params)
+          records = QueryResource.all(params)
+          records.data # force resolution so pagination runs before we build meta
+
+          if next_page_cursor
+            render jsonapi: records, meta: { page: { next_cursor: next_page_cursor } }
+          else
+            render jsonapi: records
+          end
         end
 
         def show
