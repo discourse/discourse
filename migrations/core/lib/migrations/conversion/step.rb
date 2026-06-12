@@ -2,15 +2,7 @@
 
 module Migrations
   module Conversion
-    class Step
-      # These constants also make bare `IntermediateDB::...` / `Enums::...`
-      # references work inside `ProgressStep`'s `source` / `processor` blocks:
-      # the blocks are written in step class bodies, and constants in methods
-      # defined via `class_eval(&block)` resolve through the block's lexical
-      # scope — the step class and its ancestors — not the role class.
-      IntermediateDB = Database::IntermediateDB
-      Enums = Database::IntermediateDB::Enums
-
+    class Step < StepBase
       include AttributeAssignment
 
       attr_accessor :settings
@@ -26,22 +18,6 @@ module Migrations
 
       def execute
         # do nothing
-      end
-
-      class << self
-        def title(
-          value = (
-            getter = true
-            nil
-          )
-        )
-          @title = value unless getter
-          @title.presence ||
-            I18n.t(
-              "converter.default_step_title",
-              type: name&.demodulize&.underscore&.humanize(capitalize: false),
-            )
-        end
       end
     end
   end
