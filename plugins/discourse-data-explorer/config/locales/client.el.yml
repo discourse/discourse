@@ -9,6 +9,9 @@ el:
     data_explorer:
       admin_dashboard_card:
         no_results: "Δεν υπάρχουν αποτελέσματα"
+      manage_reports_hint:
+        title: "Δημιουργία ερωτήματος στο Data Explorer"
+        description: "Γράψτε ένα προσαρμοσμένο ερώτημα SQL για να εμφανίσετε οτιδήποτε συγκεκριμένο για την κοινότητά σας."
     explorer:
       default_query: "Προεπιλογή"
       mode:
@@ -19,6 +22,7 @@ el:
       create: "Δημιουργία"
       description_placeholder: "Εισάγετε εδώ μια περιγραφή"
       ai:
+        regenerate_placeholder: "π.χ. Ενημέρωσε το ερώτημα ώστε να περιορίζεται στα 50 αποτελέσματα"
         generate: "Δημιουργία"
         optional: "προαιρετικό"
       import:

@@ -38,6 +38,7 @@ ur:
         single_user: "%{username}"
     mention_warning:
       dismiss: "بر خاست کریں"
+      global_mentions_disallowed: "اس چینل میں @here اور @all تذکرے غیر فعال ہیں۔"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "غیر ascii حروف پر مشتمل ہے"
@@ -48,6 +49,7 @@ ur:
     popup:
       chat_mention:
         direct: '%{username} نے آپ کا تذکرہ "%{channel}" میں کیا'
+        other_type: '%{username} نے "%{channel}" میں %{identifier} کا ذکر کیا'
       direct_message_chat_mention:
         direct: "%{username} نے نجی چیٹ میں آپ کا تذکرہ کیا"
         other_type: "%{username} نے نجی گفتگو میں %{identifier} کا ذکر کیا"
