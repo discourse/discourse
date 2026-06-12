@@ -32,12 +32,14 @@ function rel(id) {
   if (!id) {
     return null;
   }
-  const r = relative(process.cwd(), id);
-  if (!r.startsWith("..")) {
-    return r;
-  }
+  // Show third-party deps as their package-relative path (dropping the pnpm
+  // store prefix); everything else relative to the build cwd, including sibling
+  // workspace packages above it (e.g. ../pretty-text/...).
   const nm = id.lastIndexOf("node_modules/");
-  return nm >= 0 ? id.slice(nm) : id;
+  if (nm >= 0) {
+    return id.slice(nm);
+  }
+  return relative(process.cwd(), id);
 }
 
 // Records, per resolved module id, the source locations where it is
