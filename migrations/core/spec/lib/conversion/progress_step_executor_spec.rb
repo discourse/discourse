@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Conversion::ProgressStepExecutor do
-  subject(:executor) { described_class.new(step) }
+  subject(:executor) { described_class.new(step, pool:, reporter:) }
 
+  let(:pool_size) { 2 }
+  let(:pool) { Migrations::Conversion::WorkerPool.new(size: pool_size) }
+  let(:reporter) { Migrations::Conversion::ConsoleReporter.new }
   let(:item_count) { 30 }
   let(:offline_connection) { Migrations::Database::OfflineConnection.new }
   let(:step) { step_class.new(settings: { item_count: }) }
@@ -16,6 +19,10 @@ RSpec.describe Migrations::Conversion::ProgressStepExecutor do
       run_in_parallel run_parallel
 
       source do
+        def max_progress
+          settings[:item_count]
+        end
+
         def items
           Array.new(settings[:item_count]) { |index| { id: index } }
         end
@@ -71,6 +78,40 @@ RSpec.describe Migrations::Conversion::ProgressStepExecutor do
         expect(offline_connection.parametrized_insert_statements).to match_array(
           expected_insert_statements,
         )
+      end
+    end
+
+    context "when the parallel threshold scales with the pool size" do
+      let(:step_class) { define_fixture_step(true) }
+
+      context "with no more items than `pool.size * 10`" do
+        let(:item_count) { pool_size * 10 }
+
+        it "runs serially despite `run_in_parallel`" do
+          allow(Migrations::ForkManager).to receive(:fork).and_call_original
+
+          execute_quietly
+
+          expect(Migrations::ForkManager).not_to have_received(:fork)
+          expect(offline_connection.parametrized_insert_statements).to eq(
+            expected_insert_statements,
+          )
+        end
+      end
+
+      context "with one item more than `pool.size * 10`" do
+        let(:item_count) { pool_size * 10 + 1 }
+
+        it "runs in parallel" do
+          allow(Migrations::ForkManager).to receive(:fork).and_call_original
+
+          execute_quietly
+
+          expect(Migrations::ForkManager).to have_received(:fork).exactly(pool_size).times
+          expect(offline_connection.parametrized_insert_statements).to match_array(
+            expected_insert_statements,
+          )
+        end
       end
     end
   end

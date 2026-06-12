@@ -1,25 +1,21 @@
 # frozen_string_literal: true
 
-require "etc"
-require "colored2"
-
 module Migrations
   module Conversion
     class ProgressStepExecutor
-      WORKER_COUNT = Etc.nprocessors - 1 # leave 1 CPU free to do other work
-      MIN_PARALLEL_ITEMS = WORKER_COUNT * 10
-      MAX_QUEUE_SIZE = WORKER_COUNT * 100
       PRINT_RUNTIME_AFTER_SECONDS = 5
 
-      def initialize(step)
+      def initialize(step, pool:, reporter:)
         @step = step
         @source = step.source
+        @pool = pool
+        @reporter = reporter
       end
 
       def execute
         @max_progress = calculate_max_progress
 
-        puts @step.class.title
+        @reporter.start_step(@step.class.title)
 
         if execute_in_parallel?
           execute_parallel
@@ -30,18 +26,29 @@ module Migrations
 
       private
 
+      # Parallelism only pays off above a minimum number of items, and the
+      # queues need bounds for backpressure. Both are executor policy, scaled
+      # by the size of the injected pool.
+      def min_parallel_items
+        @pool.size * 10
+      end
+
+      def max_queue_size
+        @pool.size * 100
+      end
+
       def execute_in_parallel?
-        @step.class.run_in_parallel? && (@max_progress.nil? || @max_progress > MIN_PARALLEL_ITEMS)
+        @step.class.run_in_parallel? && (@max_progress.nil? || @max_progress > min_parallel_items)
       end
 
       def execute_serially
         job = SerialJob.new(@step.create_processor)
         job.setup
 
-        with_progressbar do |progressbar|
+        @reporter.with_progress(max_progress: @max_progress) do |progress|
           @source.items.each do |item|
             stats = job.run(item)
-            progressbar.update(
+            progress.update(
               increment_by: stats.progress,
               warning_count: stats.warning_count,
               error_count: stats.error_count,
@@ -51,14 +58,17 @@ module Migrations
       end
 
       def execute_parallel
-        worker_output_queue = SizedQueue.new(MAX_QUEUE_SIZE)
-        work_queue = SizedQueue.new(MAX_QUEUE_SIZE)
+        worker_output_queue = SizedQueue.new(max_queue_size)
+        work_queue = SizedQueue.new(max_queue_size)
 
-        workers = start_workers(work_queue, worker_output_queue)
+        batch =
+          @pool.start(work_queue:, output_queue: worker_output_queue) do
+            ParallelJob.new(@step.create_processor)
+          end
         writer_thread = start_db_writer(worker_output_queue)
         push_work(work_queue)
 
-        workers.each(&:wait)
+        batch.wait
         worker_output_queue.close
         writer_thread.join
       end
@@ -69,32 +79,28 @@ module Migrations
         duration = Time.now - start_time
 
         if duration > PRINT_RUNTIME_AFTER_SECONDS
-          message =
+          @reporter.notice(
             I18n.t(
               "converter.max_progress_calculation",
               duration: DateHelper.human_readable_time(duration),
-            )
-          puts "    #{message}"
+            ),
+          )
         end
 
         max_progress
-      end
-
-      def with_progressbar
-        ExtendedProgressBar.new(max_progress: @max_progress).run { |progressbar| yield progressbar }
       end
 
       def start_db_writer(worker_output_queue)
         Thread.new do
           Thread.current.name = "writer_thread"
 
-          with_progressbar do |progressbar|
+          @reporter.with_progress(max_progress: @max_progress) do |progress|
             while (parametrized_insert_statements, stats = worker_output_queue.pop)
               parametrized_insert_statements.each do |sql, parameters|
                 Database::IntermediateDB.insert(sql, *parameters)
               end
 
-              progressbar.update(
+              progress.update(
                 increment_by: stats.progress,
                 warning_count: stats.warning_count,
                 error_count: stats.error_count,
@@ -102,21 +108,6 @@ module Migrations
             end
           end
         end
-      end
-
-      def start_workers(work_queue, worker_output_queue)
-        workers = []
-
-        Process.warmup
-
-        ForkManager.with_batched_forks do
-          WORKER_COUNT.times do |index|
-            job = ParallelJob.new(@step.create_processor)
-            workers << Worker.new(index, work_queue, worker_output_queue, job).start
-          end
-        end
-
-        workers
       end
 
       def push_work(work_queue)
