@@ -8,10 +8,6 @@ if defined?(DiscourseWorkflows)
           description(
             name: "trigger:assigned",
             version: "1.0",
-            display_name_key: "discourse_assign.discourse_workflows.nodes.trigger:assigned",
-            description_key:
-              "discourse_assign.discourse_workflows.node_descriptions.trigger:assigned",
-            i18n_prefix: "discourse_assign.discourse_workflows",
             defaults: {
               icon: "user-plus",
               color: "cyan",
@@ -19,8 +15,7 @@ if defined?(DiscourseWorkflows)
             group: "discourse_triggers",
             events: [:assigned],
             available: -> { SiteSetting.assign_enabled },
-            unavailable_reason_key:
-              "discourse_assign.discourse_workflows.node_unavailable.requires_assign",
+            unavailable_reason_key: "discourse_workflows.node_unavailable.requires_assign",
             properties: {
               topic_assignments_only: {
                 type: :boolean,

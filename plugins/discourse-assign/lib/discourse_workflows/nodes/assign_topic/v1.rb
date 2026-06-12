@@ -10,17 +10,12 @@ if defined?(DiscourseWorkflows)
           description(
             name: "action:assign_topic",
             version: "1.0",
-            display_name_key: "discourse_assign.discourse_workflows.nodes.action:assign_topic",
-            description_key:
-              "discourse_assign.discourse_workflows.node_descriptions.action:assign_topic",
-            i18n_prefix: "discourse_assign.discourse_workflows",
             defaults: {
               icon: "user-plus",
               color: "cyan",
             },
             available: -> { SiteSetting.assign_enabled },
-            unavailable_reason_key:
-              "discourse_assign.discourse_workflows.node_unavailable.requires_assign",
+            unavailable_reason_key: "discourse_workflows.node_unavailable.requires_assign",
             capabilities: {
               run_scope: "per_item",
             },
