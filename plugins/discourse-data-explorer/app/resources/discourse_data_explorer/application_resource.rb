@@ -33,14 +33,28 @@ module DiscourseDataExplorer
     end
 
     # Graphiti's AR adapter paginates via Kaminari (.page/.per), which Discourse
-    # doesn't ship. Supply a custom proc so we depend on neither Kaminari nor an
-    # adapter override. NOTE: this is plain offset/limit — Graphiti's built-in
-    # "cursor" pagination is also offset-based, so real keyset/cursor pagination
-    # (planned via the `pagy` gem) will replace this block in a later step.
-    paginate do |scope, current_page, per_page, _ctx, offset|
+    # doesn't ship, so we supply our own proc with two modes:
+    #
+    # - default: plain offset/limit (page[number]/page[size]).
+    # - keyset (pagy): engaged by page[cursor]. NOT page[after] — Graphiti
+    #   eagerly decodes page[after]/[before] as a Base64 JSON *hash* of its own
+    #   offset-cursors and 500s on a foreign (pagy) cutoff. Cursor mode pins
+    #   its own ordering (id desc): the default sort's last_run_at is nullable,
+    #   and keyset pagination over nullable columns is a correctness trap. The
+    #   next cutoff is handed back through the context (controller) and
+    #   rendered in the document's meta.
+    paginate do |scope, current_page, per_page, ctx, offset|
       per_page = (per_page || 20).to_i
-      current_page = (current_page || 1).to_i
-      scope.limit(per_page).offset((current_page - 1) * per_page + offset.to_i)
+      cursor = ctx.respond_to?(:params) ? ctx.params.dig(:page, :cursor) : nil
+
+      if cursor.present?
+        pagy = Pagy::Keyset.new(scope.reorder(id: :desc), page: cursor, limit: per_page)
+        ctx.next_page_cursor = pagy.next if ctx.respond_to?(:next_page_cursor=)
+        pagy.records
+      else
+        current_page = (current_page || 1).to_i
+        scope.limit(per_page).offset((current_page - 1) * per_page + offset.to_i)
+      end
     end
   end
 end
