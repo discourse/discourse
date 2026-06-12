@@ -8,3 +8,5 @@ el:
   discourse_data_explorer:
     errors:
       tool_not_allowed: "Δεν επιτρέπεται να χρησιμοποιήσετε αυτό το εργαλείο"
+  data_explorer:
+    admin_dashboard_label: "Data Explorer"
