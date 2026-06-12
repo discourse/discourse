@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { trustHTML } from "@ember/template";
 
 // Strips the assets/js/ prefix and .digested.js suffix for a readable label.
@@ -33,6 +34,11 @@ export function matches(text, filter) {
 // Wraps the raw report JSON and answers the graph questions the UI needs:
 // static-import closures, per-chunk sizing, and which entrypoints reach a chunk.
 export default class Analysis {
+  // Brotli sizes are computed in the browser (see brotli-sizes.js) and land here
+  // incrementally; tracked so the UI re-renders as each chunk is measured.
+  @tracked brotli = new Map();
+  @tracked brotliDone = false;
+
   constructor(data) {
     this.data = data;
     this.chunks = data.chunks;
@@ -43,6 +49,24 @@ export default class Analysis {
 
   get chunkCount() {
     return Object.keys(this.chunks).length;
+  }
+
+  get brotliCount() {
+    return this.brotli.size;
+  }
+
+  setBrotli(file, size) {
+    const next = new Map(this.brotli);
+    next.set(file, size);
+    this.brotli = next;
+  }
+
+  brotliComplete() {
+    this.brotliDone = true;
+  }
+
+  brotliOf(file) {
+    return this.brotli.get(file);
   }
 
   staticClosure(file, set = new Set()) {
@@ -69,14 +93,17 @@ export default class Analysis {
     let brotli = 0;
     for (const f of files) {
       raw += this.chunks[f].rawSize;
-      brotli += this.chunks[f].brotliSize;
+      brotli += this.brotli.get(f) ?? 0;
     }
     return { files: files.size ?? files.length, raw, brotli };
   }
 
   size(file, sizeKey) {
     const c = this.chunks[file];
-    return c ? (sizeKey === "brotli" ? c.brotliSize : c.rawSize) : 0;
+    if (!c) {
+      return 0;
+    }
+    return sizeKey === "brotli" ? (this.brotli.get(file) ?? 0) : c.rawSize;
   }
 
   #computeUsedBy() {

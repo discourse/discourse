@@ -41,6 +41,11 @@ export default class ChunkRow extends Component {
     return this.chunk.modules.filter((m) => matches(m.id, this.args.filter));
   }
 
+  get brotliLabel() {
+    const size = this.args.analysis.brotliOf(this.args.file);
+    return size == null ? "…" : fmt(size);
+  }
+
   @action
   toggle() {
     this.open = !this.open;
@@ -79,7 +84,7 @@ export default class ChunkRow extends Component {
             </span>
           {{/if}}
         </span>
-        <span class="ba-num">{{fmt this.chunk.brotliSize}}
+        <span class="ba-num">{{this.brotliLabel}}
           <span class="ba-pill">br</span></span>
         <span class="ba-num muted">{{fmt this.chunk.rawSize}}
           <span class="ba-pill">raw</span></span>

@@ -1,19 +1,9 @@
 import * as fs from "fs";
-import * as zlib from "zlib";
 import { relative } from "path";
-import { promisify } from "util";
 
-// Async so calls run concurrently on the libuv threadpool rather than blocking
-// the main thread one chunk at a time (brotli at max quality is slow).
-const brotliCompress = promisify(zlib.brotliCompress);
-function computeBrotliSize(code, rawSize) {
-  return brotliCompress(code, {
-    params: {
-      [zlib.constants.BROTLI_PARAM_QUALITY]: zlib.constants.BROTLI_MAX_QUALITY,
-      [zlib.constants.BROTLI_PARAM_SIZE_HINT]: rawSize,
-    },
-  }).then((buf) => buf.length);
-}
+// Brotli sizes are intentionally NOT computed here — brotli at max quality is
+// the slowest part of the build. The dev-tools UI computes them on demand in a
+// web worker instead (see bundle-analyzer/brotli-sizes.js).
 
 const DYNAMIC_IMPORT_RE =
   /\bimport\s*\(\s*(?:\/\*[\s\S]*?\*\/\s*)*(['"`])([^'"`\n]+?)\1/g;
@@ -129,23 +119,8 @@ export default function bundleAnalyzerPlugin({ devMode } = {}) {
         ([, chunk]) => chunk.type === "chunk"
       );
 
-      const sizes = new Map(
-        await Promise.all(
-          chunkList.map(async ([fileName, chunk]) => {
-            const rawSize = Buffer.byteLength(chunk.code, "utf8");
-            return [
-              fileName,
-              {
-                rawSize,
-                brotliSize: await computeBrotliSize(chunk.code, rawSize),
-              },
-            ];
-          })
-        )
-      );
-
       for (const [fileName, chunk] of chunkList) {
-        const { rawSize, brotliSize } = sizes.get(fileName);
+        const rawSize = Buffer.byteLength(chunk.code, "utf8");
 
         const modules = Object.entries(chunk.modules)
           .map(([moduleId, m]) => ({
@@ -172,7 +147,6 @@ export default function bundleAnalyzerPlugin({ devMode } = {}) {
           isEntry: chunk.isEntry,
           isDynamicEntry: chunk.isDynamicEntry,
           rawSize,
-          brotliSize,
           imports: chunk.imports,
           dynamicImports: chunk.dynamicImports,
           moduleCount: modules.length,
