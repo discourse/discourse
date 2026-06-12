@@ -14,6 +14,7 @@ function nestedTopicWithUnacceptedAnswer() {
   return {
     topic: {
       ...topic,
+      is_nested_view: true,
       accepted_answers: [],
       has_accepted_answer: false,
     },
@@ -58,6 +59,12 @@ acceptance("Post Menu | Accept and Unaccept", function (needs) {
 
     server.get("/t/12.json", () =>
       helper.response(postStreamWithAcceptedAnswerExcerpt(null))
+    );
+    server.get("/t/23.json", () =>
+      helper.response({
+        ...postStreamWithAcceptedAnswerExcerpt(null),
+        is_nested_view: true,
+      })
     );
     server.get("/n/test-solved/23.json", () =>
       helper.response(nestedTopicWithUnacceptedAnswer())

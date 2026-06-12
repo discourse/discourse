@@ -1,7 +1,12 @@
 /* eslint-disable ember/no-observers */
 import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import EmberObject, { action, computed, set } from "@ember/object";
+import EmberObject, {
+  action,
+  computed,
+  getProperties,
+  set,
+} from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { getOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
@@ -59,6 +64,18 @@ let customPostMessageCallbacks = {};
 
 const RETRIES_ON_RATE_LIMIT = 4;
 const MIN_BOTTOM_MAP_WORD_COUNT = 200;
+const TOPIC_QUERY_PARAMS = [
+  "filter",
+  "username_filters",
+  "replies_to_post_number",
+  "flat",
+  "sort",
+  "context",
+  { collapseReplies: "collapse_replies" },
+];
+const TOPIC_PAGE_QUERY_PARAM_PROPERTIES = TOPIC_QUERY_PARAMS.map((param) =>
+  typeof param === "string" ? param : Object.keys(param)[0]
+);
 
 export function resetCustomPostMessageCallbacks() {
   customPostMessageCallbacks = {};
@@ -98,15 +115,7 @@ export default class TopicController extends Controller {
   @autoTrackedArray bookmarks = [];
   @autoTrackedArray selectedPostIds = [];
 
-  queryParams = [
-    "filter",
-    "username_filters",
-    "replies_to_post_number",
-    "flat",
-    "sort",
-    "context",
-    { collapseReplies: "collapse_replies" },
-  ];
+  queryParams = TOPIC_QUERY_PARAMS;
 
   editingTopic = false;
   enteredAt = null;
@@ -149,6 +158,20 @@ export default class TopicController extends Controller {
     return getOwner(this).lookup("controller:nested");
   }
 
+  @computed(
+    "filter",
+    "username_filters",
+    "replies_to_post_number",
+    "flat",
+    "sort",
+    "context",
+    "collapseReplies"
+  )
+  get topicPageQueryParams() {
+    return getProperties(this, TOPIC_PAGE_QUERY_PARAM_PROPERTIES);
+  }
+
+  @computed("flat", "model._forcedFlat")
   get forceFlatView() {
     return (
       this.flat === true ||
@@ -158,6 +181,7 @@ export default class TopicController extends Controller {
     );
   }
 
+  @computed("model.is_nested_view", "forceFlatView")
   get shouldRenderNestedView() {
     return this.model?.is_nested_view && !this.forceFlatView;
   }

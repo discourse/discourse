@@ -1,6 +1,5 @@
 import { array, concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { getProperties } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
@@ -532,10 +531,7 @@ export default <template>
                       @filteringRepliesToPostNumber={{@controller.replies_to_post_number}}
                       @updateTopicPageQueryParams={{@controller.updateTopicPageQueryParams}}
                       @postSelected={{@controller.postSelected}}
-                      @topicPageQueryParams={{getProperties
-                        @controller
-                        @controller.queryParams
-                      }}
+                      @topicPageQueryParams={{@controller.topicPageQueryParams}}
                       @topic={{@controller.model}}
                     />
                   {{/unless}}

@@ -1526,7 +1526,9 @@ RSpec.describe NestedTopicsController, type: :request do
     it "preserves class_name when redirecting embed_mode to the canonical topic route" do
       SiteSetting.embed_any_origin = true
       get("/n/#{topic.slug}/#{topic.id}", params: { embed_mode: "true", class_name: "lee-af" })
-      expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}?class_name=lee-af&embed_mode=true")
+      expect(response).to redirect_to(
+        "/t/#{topic.slug}/#{topic.id}?class_name=lee-af&embed_mode=true",
+      )
     end
 
     it "strips X-Frame-Options when embed_mode is allowed" do
