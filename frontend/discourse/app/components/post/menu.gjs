@@ -117,7 +117,6 @@ export default class PostMenu extends Component {
       showMoreActions: this.showMoreActions,
       showLogin: this.args.showLogin,
       toggleReplies: this.args.toggleReplies,
-      toggleWhoLiked: this.toggleWhoLiked,
       toggleWhoRead: this.toggleWhoRead,
     };
   }
@@ -428,10 +427,6 @@ export default class PostMenu extends Component {
     return this.registeredButtons.get(buttonKeys.SHOW_MORE);
   }
 
-  get remainingLikedUsers() {
-    return this.totalLikedUsers - this.likedUsers.length;
-  }
-
   get remainingReaders() {
     return this.totalReaders - this.readers.length;
   }
@@ -569,7 +564,6 @@ export default class PostMenu extends Component {
       collapsed: collapsed ?? this.collapsed,
       currentUser: this.currentUser,
       filteredRepliesView: this.args.filteredRepliesView,
-      isWhoLikedVisible: this.isWhoLikedVisible,
       isWhoReadVisible: this.isWhoReadVisible,
       isWikiMode: this.isWikiMode,
       repliesShown: this.args.repliesShown,
