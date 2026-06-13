@@ -30,7 +30,7 @@ class Middleware::RequestTracker
     ENV["DISCOURSE_MAX_REQS_PER_IP_EXCEPTIONS"]&.split&.map { |ip| IPAddr.new(ip) }
 
   MAX_URL_LENGTH = 2000
-  MAX_SESSION_ID_LENGTH = 32
+  MAX_SESSION_ID_LENGTH = 44 # Base64 encoding of 32 bytes produces 44 characters
   MAX_USER_AGENT_LENGTH = 1000
   MAX_IP_ADDRESS_LENGTH = 45
   REQUIRED_BROWSER_PAGEVIEW_EVENT_FIELDS = %i[url ip_address user_agent session_id]
