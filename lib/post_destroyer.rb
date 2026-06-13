@@ -252,8 +252,10 @@ class PostDestroyer
 
     feature_users_in_the_topic if @post.topic
     @post.publish_change_to_clients!(permanent? ? :destroyed : :deleted) if @post.topic
-    if @post.topic && @post.post_number == 1
-      TopicTrackingState.send(permanent? ? :publish_destroy : :publish_delete, @post.topic)
+    if @topic && @post.post_number == 1
+      TopicTrackingState.send(permanent? ? :publish_destroy : :publish_delete, @topic)
+    elsif @topic && @post.post_number > 1
+      TopicTrackingState.publish_unread_correction(@topic)
     end
   end
 

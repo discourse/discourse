@@ -178,6 +178,37 @@ class TopicTrackingState
     MessageBus.publish(RECOVER_MESSAGE_BUS_CHANNEL, message.as_json, group_ids: group_ids)
   end
 
+  def self.publish_unread_correction(topic)
+    return unless topic.regular?
+
+    scope = TopicUser.tracking(topic.id)
+
+    group_ids = topic.category && topic.category.secure_group_ids
+    if group_ids.present?
+      scope =
+        scope.joins("INNER JOIN group_users gu ON gu.user_id = topic_users.user_id").where(
+          "gu.group_id IN (?)",
+          group_ids,
+        )
+    end
+
+    user_ids = scope.pluck(:user_id)
+    return if user_ids.empty?
+
+    payload = {
+      highest_post_number: topic.highest_post_number,
+      updated_at: topic.updated_at,
+      category_id: topic.category_id,
+      archetype: topic.archetype,
+    }
+
+    payload[:tags] = topic.tags.pluck(:id).map { |id| { id: id } } if include_tags_in_report?
+
+    message = { topic_id: topic.id, message_type: UNREAD_MESSAGE_TYPE, payload: payload }
+
+    MessageBus.publish(UNREAD_MESSAGE_BUS_CHANNEL, message.as_json, user_ids: user_ids)
+  end
+
   # Called when a topic's category changes.
   # If moving to a more restricted category, users who lost access need to
   # have the topic removed from their tracking state.

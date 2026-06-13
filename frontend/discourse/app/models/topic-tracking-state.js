@@ -147,6 +147,9 @@ export default class TopicTrackingState extends EmberObject {
   @bind
   onDeleteMessage(msg) {
     this.modifyStateProp(msg, "deleted", true);
+    if (this.newIncoming) {
+      this.clearIncoming([msg.topic_id]);
+    }
     this.messageCount++;
   }
 
@@ -595,6 +598,10 @@ export default class TopicTrackingState extends EmberObject {
     }
 
     return Array.from(this.states.values()).filter((topic) => {
+      if (topic.deleted) {
+        return false;
+      }
+
       if (!filterFn(topic)) {
         return false;
       }
@@ -1053,6 +1060,10 @@ export default class TopicTrackingState extends EmberObject {
   _trackedTopics(opts = {}) {
     return Array.from(this.states.values())
       .map((topic) => {
+        if (topic.deleted) {
+          return;
+        }
+
         let newTopic = isNew(topic);
         let unreadTopic = isUnread(topic);
         if (newTopic || unreadTopic || opts.includeAll) {
