@@ -112,7 +112,27 @@ end
 
 task "s3:upload_assets" => [:environment, "s3:ensure_cors_rules"] do
   logger = Logger.new(STDOUT)
-  assets.each { |asset| upload(*asset, logger:) }
+
+  # Pre-warm the S3 helper and credentials before spawning threads
+  helper
+
+  thread_count = ENV["DISCOURSE_S3_UPLOAD_ASSETS_THREADS"]&.to_i || Concurrent.processor_count
+  pool = Concurrent::FixedThreadPool.new(thread_count)
+
+  # Use promises so we can detect failures
+  promises =
+    assets.map { |asset| Concurrent::Promise.execute(executor: pool) { upload(*asset, logger:) } }
+
+  pool.shutdown
+  pool.wait_for_termination
+
+  # Check for failures
+  failed = promises.select(&:rejected?)
+  if failed.any?
+    logger.error "\n#{failed.size} asset upload(s) failed:"
+    failed.each { |promise| logger.error "  #{promise.reason}" }
+    raise "Asset upload failed. See errors above."
+  end
 end
 
 task "s3:expire_missing_assets" => :environment do
