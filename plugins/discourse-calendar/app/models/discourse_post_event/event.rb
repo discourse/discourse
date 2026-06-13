@@ -22,6 +22,8 @@ module DiscoursePostEvent
     scope :open, -> { where(closed: false) }
 
     before_save :chat_channel_sync
+    # prepend so it runs before `dependent: :delete_all` wipes the invitees
+    before_destroy :reset_invitees_topic_tracking, prepend: true
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
     after_save do
@@ -301,7 +303,10 @@ module DiscoursePostEvent
     end
 
     def enforce_private_invitees!
-      invitees.where.not(user_id: fetch_users.select(:id)).delete_all
+      pruned = invitees.where.not(user_id: fetch_users.select(:id))
+      pruned_user_ids = pruned.pluck(:user_id)
+      pruned.delete_all
+      Invitee.reset_topic_tracking!(user_ids: pruned_user_ids, topic_id: post.topic_id)
     end
 
     def can_user_update_attendance?(user)
@@ -517,6 +522,13 @@ module DiscoursePostEvent
     end
 
     private
+
+    def reset_invitees_topic_tracking
+      topic_id = post&.topic_id
+      return if topic_id.nil?
+
+      Invitee.reset_topic_tracking!(user_ids: invitees.pluck(:user_id), topic_id:)
+    end
 
     def dates_changed?
       saved_change_to_original_starts_at || saved_change_to_original_ends_at
