@@ -58,6 +58,13 @@ class UserSummarySerializer < ApplicationSerializer
       object.flair_group&.flair_color
     end
 
+    def include_flair_name?
+      (scope || Guardian.new).can_see_flair?
+    end
+    alias_method :include_flair_url?, :include_flair_name?
+    alias_method :include_flair_bg_color?, :include_flair_name?
+    alias_method :include_flair_color?, :include_flair_name?
+
     def primary_group_name
       object.primary_group&.name
     end

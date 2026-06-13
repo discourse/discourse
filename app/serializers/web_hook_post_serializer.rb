@@ -33,6 +33,17 @@ class WebHookPostSerializer < PostSerializer
     badges_granted
   ].each { |attr| define_method("include_#{attr}?") { false } }
 
+  # Webhooks deliver payloads to trusted, admin-configured endpoints rather than
+  # to a flair-gated viewer, so flair fields are emitted regardless of the
+  # flair_visible_groups setting.
+  def include_flair_name?
+    true
+  end
+
+  def include_flair_group_id?
+    true
+  end
+
   def topic_posts
     @topic_posts ||= object.topic.posts.where(user_deleted: false)
   end

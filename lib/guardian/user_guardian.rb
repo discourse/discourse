@@ -6,6 +6,13 @@ module UserGuardian
     (SiteSetting.reviewable_claiming != "disabled" || automatic) && can_review_topic?(topic)
   end
 
+  def can_see_flair?
+    flair_visible_groups = SiteSetting.flair_visible_groups_map
+
+    flair_visible_groups.include?(Group::AUTO_GROUPS[:everyone]) ||
+      @user.in_any_groups?(flair_visible_groups)
+  end
+
   def can_pick_avatar?(user_avatar, upload)
     return false unless user
     return true if is_admin?
