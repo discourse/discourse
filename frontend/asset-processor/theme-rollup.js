@@ -9,7 +9,7 @@ import EmberThisFallback from "ember-this-fallback";
 import { browsers } from "../discourse/config/targets";
 import babelTransformModuleRenames from "../discourse/lib/babel-transform-module-renames";
 import AddThemeGlobals from "./add-theme-globals";
-import BabelReplaceImports from "./babel-replace-imports";
+import buildReplaceImportsPlugin from "./babel-replace-imports";
 import discourseColocation from "./rollup-plugins/discourse-colocation";
 import discourseExternalLoader from "./rollup-plugins/discourse-external-loader";
 import discourseFileSearch from "./rollup-plugins/discourse-file-search";
@@ -41,6 +41,8 @@ async function performRollup(modules, opts) {
 
   const cache = opts.pluginName ? caches.get(opts.pluginName) : false;
 
+  const externalPluginImports = {};
+
   const result = await rollup({
     input: inputConfig,
     logLevel: "info",
@@ -64,7 +66,7 @@ async function performRollup(modules, opts) {
       discourseExternalLoader({ basePath }),
       discourseColocation({ basePath }),
       getBabelOutputPlugin({
-        plugins: [BabelReplaceImports],
+        plugins: [buildReplaceImportsPlugin(externalPluginImports)],
         compact: false,
       }),
       babel({
@@ -137,6 +139,7 @@ async function performRollup(modules, opts) {
             imports: chunk.imports.filter((i) =>
               bundle.output.find((c) => c.fileName === i)
             ),
+            externalPluginImports,
           },
         ];
       })

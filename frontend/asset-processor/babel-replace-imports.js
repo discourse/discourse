@@ -1,113 +1,127 @@
 import { federatedExportNameFor } from "./federated-modules-helper";
 import rollupVirtualImports from "./rollup-virtual-imports";
 
-export default function (babel) {
-  const { types: t } = babel;
+export default function buildReplaceImportsPlugin(externalPluginImports) {
+  return function (babel) {
+    const { types: t } = babel;
 
-  return {
-    visitor: {
-      ImportDeclaration(path) {
-        const moduleName = path.node.source.value;
-        if (
-          moduleName.startsWith(".") ||
-          rollupVirtualImports[moduleName] ||
-          moduleName.startsWith("discourse/theme-")
-        ) {
-          return;
-        }
+    return {
+      visitor: {
+        ImportDeclaration(path) {
+          const moduleName = path.node.source.value;
+          if (
+            moduleName.startsWith(".") ||
+            rollupVirtualImports[moduleName] ||
+            moduleName.startsWith("discourse/theme-")
+          ) {
+            return;
+          }
 
-        if (moduleName.startsWith("discourse/plugins/")) {
-          const parts = moduleName.split("/");
-          path.node.source = t.stringLiteral(`discourse/plugins/${parts[2]}`);
+          if (moduleName.startsWith("discourse/plugins/")) {
+            const parts = moduleName.split("/");
+            const pluginName = parts[2];
+            path.node.source = t.stringLiteral(
+              `discourse/plugins/${pluginName}`
+            );
 
-          const getFederatedExportName = (exportedName) => {
-            const localModuleName = parts.slice(3).join("/");
-            return federatedExportNameFor(localModuleName, exportedName);
-          };
+            externalPluginImports[pluginName] ??= [];
 
-          const newImportSpecifiers = path.node.specifiers.map((specifier) => {
-            if (specifier.type === "ImportDefaultSpecifier") {
-              const federatedExportName = getFederatedExportName("default");
+            const getFederatedExportName = (exportedName) => {
+              const localModuleName = parts.slice(3).join("/");
+              return federatedExportNameFor(localModuleName, exportedName);
+            };
 
-              return t.importSpecifier(
-                t.identifier(specifier.local.name),
-                t.identifier(federatedExportName)
-              );
-            } else if (specifier.type === "ImportNamespaceSpecifier") {
-              const federatedExportName = getFederatedExportName("*");
-              return t.importSpecifier(
-                t.identifier(specifier.local.name),
-                t.identifier(federatedExportName)
-              );
-            } else {
-              const federatedExportName = getFederatedExportName(
-                specifier.imported.name
-              );
-              return t.importSpecifier(
-                t.identifier(specifier.local.name),
-                t.identifier(federatedExportName)
-              );
-            }
-          });
-          path.node.specifiers = newImportSpecifiers;
-          return;
-        }
+            const newImportSpecifiers = path.node.specifiers.map(
+              (specifier) => {
+                if (specifier.type === "ImportDefaultSpecifier") {
+                  const federatedExportName = getFederatedExportName("default");
+                  externalPluginImports[pluginName].push(federatedExportName);
 
-        const namespaceImports = [];
-        const properties = path.node.specifiers
-          .map((specifier) => {
-            if (specifier.type === "ImportDefaultSpecifier") {
-              return t.objectProperty(
-                t.identifier("default"),
-                t.identifier(specifier.local.name)
-              );
-            } else if (specifier.type === "ImportNamespaceSpecifier") {
-              namespaceImports.push(t.identifier(specifier.local.name));
-            } else {
-              return t.objectProperty(
-                t.identifier(specifier.imported.name),
-                t.identifier(specifier.local.name)
-              );
-            }
-          })
-          .filter(Boolean);
+                  return t.importSpecifier(
+                    t.identifier(specifier.local.name),
+                    t.identifier(federatedExportName)
+                  );
+                } else if (specifier.type === "ImportNamespaceSpecifier") {
+                  const federatedExportName = getFederatedExportName("*");
+                  externalPluginImports[pluginName].push(federatedExportName);
 
-        const replacements = [];
+                  return t.importSpecifier(
+                    t.identifier(specifier.local.name),
+                    t.identifier(federatedExportName)
+                  );
+                } else {
+                  const federatedExportName = getFederatedExportName(
+                    specifier.imported.name
+                  );
+                  externalPluginImports[pluginName].push(federatedExportName);
 
-        const moduleBrokerLookup = t.callExpression(
-          t.memberExpression(
+                  return t.importSpecifier(
+                    t.identifier(specifier.local.name),
+                    t.identifier(federatedExportName)
+                  );
+                }
+              }
+            );
+            path.node.specifiers = newImportSpecifiers;
+            return;
+          }
+
+          const namespaceImports = [];
+          const properties = path.node.specifiers
+            .map((specifier) => {
+              if (specifier.type === "ImportDefaultSpecifier") {
+                return t.objectProperty(
+                  t.identifier("default"),
+                  t.identifier(specifier.local.name)
+                );
+              } else if (specifier.type === "ImportNamespaceSpecifier") {
+                namespaceImports.push(t.identifier(specifier.local.name));
+              } else {
+                return t.objectProperty(
+                  t.identifier(specifier.imported.name),
+                  t.identifier(specifier.local.name)
+                );
+              }
+            })
+            .filter(Boolean);
+
+          const replacements = [];
+
+          const moduleBrokerLookup = t.callExpression(
             t.memberExpression(
-              t.identifier("window"),
-              t.identifier("moduleBroker")
-            ),
-            t.identifier("lookup")
-          ),
-          [t.stringLiteral(moduleName)]
-        );
-
-        if (properties.length) {
-          replacements.push(
-            t.variableDeclaration("const", [
-              t.variableDeclarator(
-                t.objectPattern(properties),
-                moduleBrokerLookup
+              t.memberExpression(
+                t.identifier("window"),
+                t.identifier("moduleBroker")
               ),
-            ])
+              t.identifier("lookup")
+            ),
+            [t.stringLiteral(moduleName)]
           );
-        }
 
-        if (namespaceImports.length) {
-          for (const namespaceImport of namespaceImports) {
+          if (properties.length) {
             replacements.push(
               t.variableDeclaration("const", [
-                t.variableDeclarator(namespaceImport, moduleBrokerLookup),
+                t.variableDeclarator(
+                  t.objectPattern(properties),
+                  moduleBrokerLookup
+                ),
               ])
             );
           }
-        }
 
-        path.replaceWithMultiple(replacements);
+          if (namespaceImports.length) {
+            for (const namespaceImport of namespaceImports) {
+              replacements.push(
+                t.variableDeclaration("const", [
+                  t.variableDeclarator(namespaceImport, moduleBrokerLookup),
+                ])
+              );
+            }
+          }
+
+          path.replaceWithMultiple(replacements);
+        },
       },
-    },
+    };
   };
 }

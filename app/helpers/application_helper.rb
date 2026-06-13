@@ -103,6 +103,24 @@ module ApplicationHelper
         .map { [it[:importmap_name], script_asset_path(it[:name])] }
         .to_h
 
+    inter_plugin_imports = {}
+
+    # TODO: PERF
+    plugin_assets.each do
+      it[:external_plugin_imports]&.each do |plugin_name, import_names|
+        next if plugin_assets.any? { it[:plugin].directory_name == plugin_name }
+        inter_plugin_imports[plugin_name] ||= Set.new
+        inter_plugin_imports[plugin_name].merge(import_names)
+      end
+    end
+
+    inter_plugin_imports.each do |missing_plugin_name, import_names|
+      exports = import_names.map { "fakeExport as #{it} " }.join(",")
+      imports[
+        "discourse/plugins/#{missing_plugin_name}"
+      ] = "data:text/javascript,const fakeExport = null; export { #{exports} };"
+    end
+
     JSON.pretty_generate({ imports: }).html_safe
   end
 
