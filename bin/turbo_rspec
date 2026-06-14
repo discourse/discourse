@@ -4,7 +4,11 @@
 ENV["RAILS_ENV"] ||= "test"
 
 require "./lib/turbo_tests"
+require "./lib/turbo_rspec_exclusion"
 require "optparse"
+
+# spec/nginx has its own Rails-free runner; turbo_rspec loads rails_helper.
+DEFAULT_EXCLUDE_PATTERNS = ["spec/nginx/**/*_spec.rb"].freeze
 
 requires = []
 formatters = []
@@ -16,7 +20,7 @@ profile_print_slowest_examples_count = 10
 use_runtime_info = nil
 enable_system_tests = nil
 retry_and_log_flaky_tests = ENV["DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS"].to_s == "1"
-exclude_patterns = []
+exclude_patterns = DEFAULT_EXCLUDE_PATTERNS.dup
 
 OptionParser
   .new do |opts|
@@ -74,6 +78,9 @@ OptionParser
   end
   .parse!(ARGV)
 
+explicit_file_args = ARGV.any?
+requested_files = nil
+
 # OptionParser modifies ARGV, leaving the leftover arguments in ARGV
 if ARGV.empty?
   files = Dir.glob("spec/**/*_spec.rb")
@@ -92,11 +99,14 @@ else
       end
     end
 
+  requested_files = files.dup
   use_runtime_info = false if use_runtime_info.nil?
 end
 
-if exclude_patterns.any?
-  files.reject! { |file| exclude_patterns.any? { |pattern| File.fnmatch(pattern, file) } }
+files.reject! { |file| TurboRspecExclusion.excluded_by_patterns?(file, exclude_patterns) } if exclude_patterns.any?
+
+if explicit_file_args && requested_files&.any? && files.empty?
+  abort "All requested spec files were excluded. spec/nginx has its own runner; use spec/nginx/run.sh for nginx specs."
 end
 
 requires.each { |f| require(f) }
