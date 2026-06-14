@@ -8,6 +8,7 @@ class GroupUser < ActiveRecord::Base
 
   after_commit :sync_add_via_manager, on: :create
   after_commit :sync_remove_via_manager, on: :destroy
+  after_commit :cleanup_inaccessible_notifications, on: :destroy
 
   def self.notification_levels
     NotificationLevels.all
@@ -138,6 +139,12 @@ class GroupUser < ActiveRecord::Base
 
   def sync_remove_via_manager
     GroupManager.new(group).sync_removal_side_effects([user.id])
+  end
+
+  def cleanup_inaccessible_notifications
+    return if destroyed_by_association&.active_record == User
+
+    Jobs.enqueue(:delete_inaccessible_notifications, user_id: user_id, group_id: group_id)
   end
 
   def self.semantically_higher_notification_level_sql(new_col, existing_col)
