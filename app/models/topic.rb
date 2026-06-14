@@ -310,7 +310,10 @@ class Topic < ActiveRecord::Base
   has_one :nested_topic, dependent: :destroy
 
   belongs_to :image_upload, class_name: "Upload"
+  belongs_to :og_image_upload, class_name: "Upload"
   has_many :topic_thumbnails, through: :image_upload
+
+  after_save :regenerate_og_image
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
@@ -442,6 +445,13 @@ class Topic < ActiveRecord::Base
       CategoryTagStat.topic_moved(self, *saved_changes[:category_id])
     elsif saved_changes[:category_id] && category&.read_restricted?
       UserProfile.remove_featured_topic_from_all_profiles(self)
+    end
+  end
+
+  def regenerate_og_image
+    if (saved_changes[:title] || saved_changes[:category_id]) && og_image_upload_id.present? &&
+         SiteSetting.generate_topic_og_image
+      Jobs.enqueue(:generate_topic_og_image, topic_id: id) if TopicOgImageGenerator.eligible?(self)
     end
   end
 
@@ -2276,6 +2286,7 @@ end
 #  featured_user4_id         :integer
 #  image_upload_id           :bigint
 #  last_post_user_id         :integer          not null
+#  og_image_upload_id        :bigint
 #  user_id                   :integer
 #  visibility_reason_id      :integer
 #
