@@ -69,28 +69,36 @@ module("Integration | Component | SearchMenu", function (hooks) {
       .dom(".search-result-topic")
       .exists("search result is a list of topics");
 
+    // Debug
+    const input = document.querySelector("#icon-search-input");
+    let focusCount = 0;
+    let blurCount = 0;
+    let stack;
+    const onFocus = () => {
+      focusCount++;
+      stack ??= new Error("focus after Esc").stack;
+    };
+    const onBlur = () => blurCount++;
+    input?.addEventListener("focus", onFocus);
+    input?.addEventListener("blur", onBlur);
+
     await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
 
-    // Something re-focuses the input and that re-runs the open handler.
-    // Capture the stack to pinpoints the source.
-    let stack = null;
-    const input = document.getElementById("icon-search-input");
-    const onRefocus = () => (stack ??= new Error("re-focus after Esc").stack);
-    input?.addEventListener("focus", onRefocus);
+    const panelAfterEscape = !!document.querySelector(".menu-panel");
 
     const menuClosed = await waitUntil(
       () => !document.querySelector(".menu-panel")
     ).catch(() => false);
 
-    input?.removeEventListener("focus", onRefocus);
+    input?.removeEventListener("focus", onFocus);
+    input?.removeEventListener("blur", onBlur);
 
     // If it didn't close, print out focus state in the failure message.
     let closeDebug = "";
     if (!menuClosed) {
-      const panelCount = document.querySelectorAll(".menu-panel").length;
       const { activeElement } = document;
-      const refocus = stack?.split("\n").slice(0, 5).join(" | ");
-      closeDebug = ` (activeElement=${activeElement?.id || activeElement?.nodeName}, hasFocus=${document.hasFocus()}, panelCount=${panelCount}, refocus=${refocus})`;
+      const refocus = stack?.split("\n").slice(0, 6).join(" | ");
+      closeDebug = ` (activeElement=${activeElement?.id || activeElement?.nodeName}, hasFocus=${document.hasFocus()}, panelCount=${document.querySelectorAll(".menu-panel").length}, panelAfterEscape=${panelAfterEscape}, focusCount=${focusCount}, blurCount=${blurCount}, refocus=${refocus})`;
     }
 
     assert.dom(".menu-panel").doesNotExist(`Menu panel is closed${closeDebug}`);
