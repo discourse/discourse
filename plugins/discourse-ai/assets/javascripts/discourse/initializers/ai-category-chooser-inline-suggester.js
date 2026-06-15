@@ -44,6 +44,7 @@ async function applyBestSuggestion(component, selectKit) {
     return;
   }
 
+  const startCategoryId = composer.model.categoryId;
   state.loading = true;
   selectKit.close();
   selectKit.set("isLoading", true);
@@ -55,6 +56,10 @@ async function applyBestSuggestion(component, selectKit) {
     );
 
     if (component.isDestroying || component.isDestroyed) {
+      return;
+    }
+
+    if (composer.model.categoryId !== startCategoryId) {
       return;
     }
 
