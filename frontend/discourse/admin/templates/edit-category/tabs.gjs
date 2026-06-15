@@ -91,6 +91,7 @@ export default class Tabs extends Component {
               @selectedTab={{@controller.selectedTab}}
               @categoryType={{@controller.selectedTab}}
               @category={{@controller.model}}
+              @showAdvancedTabs={{@controller.showAdvancedTabs}}
               @registerValidator={{@controller.registerValidator}}
               @registerAfterReset={{@controller.registerAfterReset}}
               @transientData={{transientData}}
