@@ -226,6 +226,54 @@ export default async function setupTests(config) {
   // Stop the message bus so we don't get ajax calls
   window.MessageBus.stop();
 
+  // DEBUG(flake): track keydown listeners on persistent targets to find what
+  // swallows the search-menu Escape across tests (a leaked capture-phase
+  // listener never cleaned up). Records fn name + add-stack; removed on cleanup.
+  if (!window.__kdTrackerInstalled) {
+    window.__kdTrackerInstalled = true;
+    window.__kdListeners = [];
+    for (const kdTarget of [
+      window,
+      document,
+      document.documentElement,
+      document.body,
+    ]) {
+      const tag =
+        kdTarget === window
+          ? "window"
+          : kdTarget === document
+            ? "document"
+            : kdTarget === document.documentElement
+              ? "html"
+              : "body";
+      const add = kdTarget.addEventListener.bind(kdTarget);
+      const remove = kdTarget.removeEventListener.bind(kdTarget);
+      kdTarget.addEventListener = function (type, fn, opts) {
+        if (type === "keydown") {
+          window.__kdListeners.push({
+            tag,
+            fn,
+            capture: opts === true || !!opts?.capture,
+            name: fn?.name || "(anon)",
+            stack: new Error().stack,
+          });
+        }
+        return add(type, fn, opts);
+      };
+      kdTarget.removeEventListener = function (type, fn, opts) {
+        if (type === "keydown") {
+          const i = window.__kdListeners.findIndex(
+            (l) => l.fn === fn && l.tag === tag
+          );
+          if (i > -1) {
+            window.__kdListeners.splice(i, 1);
+          }
+        }
+        return remove(type, fn, opts);
+      };
+    }
+  }
+
   // disable logster error reporting
   if (window.Logster) {
     window.Logster.enabled = false;

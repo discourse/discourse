@@ -69,17 +69,39 @@ module("Integration | Component | SearchMenu", function (hooks) {
       .dom(".search-result-topic")
       .exists("search result is a list of topics");
 
+    // DEBUG(flake)
+    const input = document.querySelector("#icon-search-input");
+    let blurCount = 0;
+    const onBlur = () => blurCount++;
+    input?.addEventListener("blur", onBlur);
+    let escCaptured = false;
+    let escBubbledToDoc = false;
+    const onDocCapture = (e) => (escCaptured ||= e.key === "Escape");
+    const onDocBubble = (e) => (escBubbledToDoc ||= e.key === "Escape");
+    document.addEventListener("keydown", onDocCapture, true);
+    document.addEventListener("keydown", onDocBubble, false);
+
     await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
 
     const menuClosed = await waitUntil(
       () => !document.querySelector(".menu-panel")
     ).catch(() => false);
 
-    // DEBUG(flake): the Escape is swallowed by a leaked d-modal capture-phase
-    // keydown listener on <html>. Name the test(s) that leaked it.
-    const closeDebug = menuClosed
-      ? ""
-      : ` (leakedModalKeydownListeners=${window.__dModalKeydownListeners ?? 0}, leakers=${(window.__modalLeakers ?? []).join(" / ")})`;
+    input?.removeEventListener("blur", onBlur);
+    document.removeEventListener("keydown", onDocCapture, true);
+    document.removeEventListener("keydown", onDocBubble, false);
+
+    // DEBUG(flake): something stops the Escape before SearchTerm.onKeydown runs
+    // (close() never called -> blurCount=0). Dump the capture-phase keydown
+    // listeners alive on persistent targets to name the swallower.
+    let closeDebug = "";
+    if (!menuClosed) {
+      const captureListeners = (window.__kdListeners ?? [])
+        .filter((l) => l.capture)
+        .map((l) => `${l.tag}:${l.name}@${l.stack?.split("\n")[2]?.trim()}`)
+        .join(" || ");
+      closeDebug = ` (blurCount=${blurCount}, escCaptured=${escCaptured}, escBubbledToDoc=${escBubbledToDoc}, modalListeners=${window.__dModalKeydownListeners ?? 0}, captureKeydownListeners=[${captureListeners}])`;
+    }
 
     assert.dom(".menu-panel").doesNotExist(`Menu panel is closed${closeDebug}`);
 
