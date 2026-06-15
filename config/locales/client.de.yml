@@ -161,6 +161,7 @@ de:
     date_range_picker:
       apply: "Anwenden"
       start_date: "Startdatum"
+      end_date: "Enddatum"
       presets:
         last_7_days: "Letzte 7 Tage"
         last_30_days: "Letzte 30 Tage"
