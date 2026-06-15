@@ -14,6 +14,77 @@ describe DiscoursePostEvent::Invitee do
   let(:post1) { Fabricate(:post, topic: topic) }
   let(:post_event) { Fabricate(:event, post: post1) }
 
+  describe "topic tracking" do
+    before { post_event.create_invitees([{ user_id: user_1.id, status: nil }]) }
+
+    let(:invitee) { post_event.invitees.find_by(user_id: user_1.id) }
+
+    def notification_level
+      TopicUser.find_by(user: user_1, topic: topic)&.notification_level
+    end
+
+    it "resets the topic tracking to regular when the invitee is destroyed" do
+      invitee.update_attendance!(:going)
+      expect(notification_level).to eq(TopicUser.notification_levels[:watching])
+
+      invitee.destroy!
+
+      expect(notification_level).to eq(TopicUser.notification_levels[:regular])
+    end
+
+    it "does not create a topic tracking record when none exists" do
+      expect(TopicUser.exists?(user: user_1, topic: topic)).to eq(false)
+
+      invitee.destroy!
+
+      expect(TopicUser.exists?(user: user_1, topic: topic)).to eq(false)
+    end
+
+    it "leaves a muted topic untouched when the invitee is destroyed" do
+      TopicUser.change(
+        user_1.id,
+        topic.id,
+        notification_level: TopicUser.notification_levels[:muted],
+      )
+
+      invitee.destroy!
+
+      expect(notification_level).to eq(TopicUser.notification_levels[:muted])
+    end
+
+    describe ".reset_topic_tracking!" do
+      it "downgrades watching/tracking rows to regular" do
+        TopicUser.change(
+          user_1.id,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:watching],
+        )
+
+        described_class.reset_topic_tracking!(user_ids: user_1.id, topic_id: topic.id)
+
+        expect(notification_level).to eq(TopicUser.notification_levels[:regular])
+      end
+
+      it "leaves muted rows untouched" do
+        TopicUser.change(
+          user_1.id,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:muted],
+        )
+
+        described_class.reset_topic_tracking!(user_ids: user_1.id, topic_id: topic.id)
+
+        expect(notification_level).to eq(TopicUser.notification_levels[:muted])
+      end
+
+      it "does not create a record when none exists" do
+        described_class.reset_topic_tracking!(user_ids: user_1.id, topic_id: topic.id)
+
+        expect(TopicUser.exists?(user: user_1, topic: topic)).to eq(false)
+      end
+    end
+  end
+
   context "when a user is destroyed" do
     context "when the user is an invitee to an event" do
       before { post_event.create_invitees([{ user_id: user_1.id, status: nil }]) }

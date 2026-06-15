@@ -1437,7 +1437,12 @@ pl_PL:
             from_alias_hint: "Alias używany jako adres nadawcy podczas wysyłania grupowych wiadomości e-mail SMTP. Pamiętaj, że może to nie być obsługiwane przez wszystkich dostawców poczty, zapoznaj się z dokumentacją dostawcy poczty."
         membership:
           title: Członkostwo
-          access: Dostęp
+          visibility_and_access: "Dostęp i widoczność"
+          join_method_title: "Jak użytkownicy mogą dołączyć?"
+          join_method:
+            free: "Każdy może dołączyć swobodnie"
+            request: "Każdy może poprosić o dołączenie"
+            invite: "Tylko zaproszenie"
         categories:
           title: Kategorie
           long_title: "Domyślne powiadomienia kategorii"
@@ -1470,7 +1475,6 @@ pl_PL:
         title: "Uprawnienia"
         none: "Nie ma kategorii powiązanych z tą grupą."
         description: "Członkowie tej grupy mają dostęp do tych kategorii"
-      public_admission: "Zezwól wszystkim użytkownikom na dołączanie do tej grupy (widoczność grupy musi być ustawiona na publiczną)"
       public_exit: "Zezwól wszystkim użytkownikom na opuszczanie tej grupy"
       empty:
         posts: "Członkowie tej grupy nie napisali żadnych postów"
@@ -1486,7 +1490,6 @@ pl_PL:
       request: "Wniosek"
       message: "Wiadomość"
       confirm_leave: "Czy na pewno chcesz opuścić tę grupę?"
-      allow_membership_requests: "Zezwalaj użytkownikom na wysyłanie wniosków o członkostwo do właścicieli grup (wymaga publicznie widocznej grupy)"
       membership_request_template: "Wyświetl niestandardowy szablon użytkownikom, w momencie wysyłania wniosku o członkostwo."
       membership_request:
         submit: "Złóż wniosek"
@@ -7494,7 +7497,6 @@ pl_PL:
             incoming_email: "Niestandardowy adres poczty przychodzącej"
             incoming_email_placeholder: "podaj adres e-mail"
             incoming_email_tooltip: "Możesz oddzielić kilka adresów e-mail znakiem |."
-            visibility: Widoczność
             visibility_levels:
               title: "Kto może widzieć tę grupę?"
               public: "Wszyscy"

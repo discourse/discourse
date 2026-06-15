@@ -637,7 +637,6 @@ th:
             title: "การตั้งค่า"
         membership:
           title: การเป็นสมาชิก
-          access: การเข้าถึง
         categories:
           title: หมวดหมู่
         tags:

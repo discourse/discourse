@@ -1087,7 +1087,8 @@ fi:
             from_alias_hint: "Lähettäjän osoitteena käytettävä alias lähetettäessä ryhmä-SMTP-sähköposteja. Huomioithan, että kaikki sähköpostipalveluntarjoajat eivät välttämättä tue tätä; katso tiedot sähköpostipalveluntarjoajasi ohjeista."
         membership:
           title: Jäsenyys
-          access: Pääsy
+          join_method:
+            invite: "Vain kutsusta"
         categories:
           title: Alueet
           long_title: "Alueen oletusilmoitustaso"
@@ -1120,7 +1121,6 @@ fi:
         title: "Oikeudet"
         none: "Tähän ryhmään ei ole liitetty alueita."
         description: "Tämän ryhmän jäsenet voivat käyttää näitä alueita"
-      public_admission: "Salli käyttäjien liittyä ryhmään vapaasti (ryhmän täytyy olla julkinen)"
       public_exit: "Salli käyttäjien poistua ryhmästä vapaasti"
       empty:
         posts: "Ryhmän jäsenet eivät ole lähettäneet viestejä"
@@ -1136,7 +1136,6 @@ fi:
       request: "Pyyntö"
       message: "Viesti"
       confirm_leave: "Haluatko varmasti poistua ryhmästä?"
-      allow_membership_requests: "Salli käyttäjän lähettää jäsenhakemuksia ryhmien isännille (Vaatii sen, että ryhmä on julkinen)"
       membership_request_template: "Mukautettu viestipohja, joka näytetään käyttäjälle, kun hän lähettää jäsenhakemusta ryhmään."
       membership_request:
         submit: "Lähetä hakemus"
@@ -5763,7 +5762,6 @@ fi:
             incoming_email: "Mukautettu saapuvan postin sähköpostiosoite"
             incoming_email_placeholder: "syötä sähköpostiosoite"
             incoming_email_tooltip: "Voit erottaa useita sähköpostiosoitteita |-merkillä."
-            visibility: Näkyvyys
             visibility_levels:
               title: "Ketkä voivat nähdä tämän ryhmän?"
               public: "Kaikki"

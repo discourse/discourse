@@ -359,6 +359,9 @@ class Reviewable < ActiveRecord::Base
 
     validate_action!(guardian, action_id, perform_method, args)
 
+    affected_candidate_ids =
+      delete_user_action?(action_id) ? pending_reviewable_ids_for_target_user : []
+
     result = nil
     update_count = false
     Reviewable.transaction do
@@ -373,6 +376,10 @@ class Reviewable < ActiveRecord::Base
     end
 
     result.after_commit.call if result && result.after_commit
+
+    if result&.success? && affected_candidate_ids.present?
+      result.affected_reviewable_ids |= resolved_reviewable_ids(affected_candidate_ids)
+    end
 
     unless status == :pending
       if update_count || result.remove_reviewable_ids.present?
@@ -845,6 +852,27 @@ class Reviewable < ActiveRecord::Base
   end
 
   private
+
+  def delete_user_action?(action_id)
+    resolved_action = (aliases[action_id] || action_id).to_sym
+    %i[delete_user delete_and_block_user delete_user_block].include?(resolved_action)
+  end
+
+  def pending_reviewable_ids_for_target_user
+    user = target_created_by || (target if target_type == "User")
+    return [] if user.blank?
+
+    Reviewable
+      .pending
+      .where(target_created_by: user)
+      .or(Reviewable.pending.where(target: user))
+      .where.not(id: id)
+      .pluck(:id)
+  end
+
+  def resolved_reviewable_ids(candidate_ids)
+    candidate_ids - Reviewable.pending.where(id: candidate_ids).pluck(:id)
+  end
 
   def aliases
     self.class.action_aliases

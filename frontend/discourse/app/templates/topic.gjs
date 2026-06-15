@@ -24,7 +24,6 @@ import SlowModeInfo from "discourse/components/slow-mode-info";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import TopicCategory from "discourse/components/topic-category";
 import TopicFooterButtons from "discourse/components/topic-footer-buttons";
-import TopicLocalizedContentToggle from "discourse/components/topic-localized-content-toggle";
 import TopicMap from "discourse/components/topic-map/index";
 import TopicMetadata from "discourse/components/topic-metadata";
 import TopicNavigation from "discourse/components/topic-navigation";
@@ -448,9 +447,6 @@ export default <template>
                     @convertToPublicTopic={{@controller.convertToPublicTopic}}
                     @convertToPrivateMessage={{@controller.convertToPrivateMessage}}
                   />
-                  {{#if @controller.model.has_localized_content}}
-                    <TopicLocalizedContentToggle @topic={{@controller.model}} />
-                  {{/if}}
                 </TopicProgress>
               {{/if}}
 

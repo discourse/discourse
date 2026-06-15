@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
+import dynamicChunkUrlPlugin from "./lib/dynamic-chunk-url-plugin.mjs";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
 import maybeBabel from "./lib/maybe-babel.mjs";
 import optimizedEmber from "./lib/optimized-ember.mjs";
@@ -8,7 +9,7 @@ import wrapTestModulesPlugin from "./lib/wrap-test-modules-plugin.mjs";
 
 writeResolverConfig(
   {
-    staticAppPaths: ["static", "admin"],
+    staticAppPaths: ["static", "admin", "workers"],
     splitAtRoutes: [{ type: "string", value: "wizard" }],
   },
   {
@@ -85,7 +86,6 @@ export function buildConfig({ devMode } = {}) {
     input: {
       discourse: "discourse.js",
       vendor: "vendor.js",
-      "media-optimization-bundle": "media-optimization-bundle.js",
       ...(!isProduction || process.env.FORCE_BUILD_TESTS
         ? {
             "test-entrypoint": "tests/test-entrypoint.js",
@@ -112,6 +112,7 @@ export function buildConfig({ devMode } = {}) {
     preserveEntrySignatures: "strict",
     plugins: [
       viteAliasPlugin({ entries: aliases }),
+      dynamicChunkUrlPlugin(),
       optimizedEmber(),
       viteImportGlobPlugin(),
       maybeBabel({

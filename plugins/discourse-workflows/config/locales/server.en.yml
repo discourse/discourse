@@ -37,12 +37,12 @@ en:
       item:
         inconsistent_format_title: "Inconsistent item format"
         inconsistent_format: "Every returned item must use the same format."
-      create_post:
-        topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
       topic:
         create_failed: "Failed to create topic."
         unknown_operation: "Unknown operation: %{operation}."
       post:
+        topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
+        edit_failed: "Failed to edit post."
         unknown_operation: "Unknown operation: %{operation}."
         invalid_filter: "Invalid post filter fragment: %{fragments}."
       credential:
@@ -57,11 +57,6 @@ en:
         operation_failed: "Tag operation failed: %{errors}"
       sort:
         code_missing_return: "Code must contain a return statement."
-      merge:
-        invalid_fields_to_match: "Invalid fields to match"
-        fields_to_match_pair_missing_fields: "Fields to match pair %{index} must define both input fields"
-        missing_fields_to_match: "Missing fields to match"
-        fields_to_match_required: 'You need to define at least one pair of fields in "Fields to match"'
       split_out:
         destination_count_mismatch: "Destination field name count must match field count."
         fields_to_include_required: "No fields specified."

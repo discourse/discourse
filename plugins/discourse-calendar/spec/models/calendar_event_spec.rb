@@ -164,7 +164,7 @@ describe CalendarEvent do
     end
 
     it "includes group timezones detail" do
-      Fabricate(:admin, refresh_auto_groups: true)
+      admin = Fabricate(:admin, refresh_auto_groups: true)
 
       timezones_post =
         create_post(
@@ -173,7 +173,7 @@ describe CalendarEvent do
         )
       timezones_post.reload
 
-      json = PostSerializer.new(timezones_post, scope: Guardian.new).as_json
+      json = PostSerializer.new(timezones_post, scope: admin.guardian).as_json
       group_timezones = json[:post][:group_timezones]
 
       expect(group_timezones["admins"].count).to eq(1)

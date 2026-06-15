@@ -1197,7 +1197,8 @@ zh_CN:
             from_alias_hint: "发送群组 SMTP 电子邮件时用作发件人地址的别名。请注意，并非所有邮件提供商都支持此功能，请查阅您的邮件提供商的文档。"
         membership:
           title: 成员资格
-          access: 访问
+          join_method:
+            invite: "仅限邀请"
         categories:
           title: 类别
           long_title: "类别默认通知"
@@ -1230,7 +1231,6 @@ zh_CN:
         title: "权限"
         none: "没有类别与此群组关联。"
         description: "此群组的成员可以访问这些类别"
-      public_admission: "允许用户自由加入群组（要求群组公开可见）"
       public_exit: "允许用户自由离开群组"
       empty:
         posts: "此群组的成员没有发布帖子"
@@ -1246,7 +1246,6 @@ zh_CN:
       request: "请求"
       message: "消息"
       confirm_leave: "确定要离开此群组吗？"
-      allow_membership_requests: "允许用户向群组所有者发送成员资格请求（要求群组公开可见）"
       membership_request_template: "在用户发送成员资格请求时向其显示的自定义模板"
       membership_request:
         submit: "提交请求"
@@ -6322,7 +6321,6 @@ zh_CN:
             incoming_email: "自定义传入电子邮件地址"
             incoming_email_placeholder: "输入电子邮件地址"
             incoming_email_tooltip: "您可以使用 | 字符分隔多个电子邮件地址。"
-            visibility: 公开范围
             visibility_levels:
               title: "谁能看到此群组？"
               public: "所有人"

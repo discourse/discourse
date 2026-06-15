@@ -18,37 +18,37 @@ module Migrations
         @execute_parent_forks = true
       end
 
-      def before_fork(run_once: false, &block)
+      def before_fork(&block)
         if block
-          @before_fork_hooks << { run_once:, block: }
+          @before_fork_hooks << block
           block
         end
       end
 
       def remove_before_fork_hook(block)
-        @before_fork_hooks.delete_if { |hook| hook[:block] == block }
+        @before_fork_hooks.delete(block)
       end
 
-      def after_fork_parent(run_once: false, &block)
+      def after_fork_parent(&block)
         if block
-          @after_fork_parent_hooks << { run_once:, block: }
+          @after_fork_parent_hooks << block
           block
         end
       end
 
       def remove_after_fork_parent_hook(block)
-        @after_fork_parent_hooks.delete_if { |hook| hook[:block] == block }
+        @after_fork_parent_hooks.delete(block)
       end
 
       def after_fork_child(&block)
         if block
-          @after_fork_child_hooks << { run_once: true, block: }
+          @after_fork_child_hooks << block
           block
         end
       end
 
       def remove_after_fork_child_hook(block)
-        @after_fork_child_hooks.delete_if { |hook| hook[:block] == block }
+        @after_fork_child_hooks.delete(block)
       end
 
       def fork
@@ -59,8 +59,6 @@ module Migrations
             run_after_fork_child_hooks
             yield
           end
-
-        @after_fork_child_hooks.clear
 
         run_after_fork_parent_hooks if @execute_parent_forks
 
@@ -80,25 +78,15 @@ module Migrations
       private
 
       def run_before_fork_hooks
-        run_hooks(@before_fork_hooks)
+        @before_fork_hooks.each(&:call)
       end
 
       def run_after_fork_parent_hooks
-        run_hooks(@after_fork_parent_hooks)
-        cleanup_run_once_hooks(@after_fork_child_hooks)
+        @after_fork_parent_hooks.each(&:call)
       end
 
       def run_after_fork_child_hooks
-        run_hooks(@after_fork_child_hooks)
-      end
-
-      def run_hooks(hooks)
-        hooks.each { |hook| hook[:block].call }
-        cleanup_run_once_hooks(hooks)
-      end
-
-      def cleanup_run_once_hooks(hooks)
-        hooks.delete_if { |hook| hook[:run_once] }
+        @after_fork_child_hooks.each(&:call)
       end
     end
   end

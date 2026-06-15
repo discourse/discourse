@@ -9,12 +9,17 @@ module DiscourseAi
 
       attr_reader :start_date, :end_date, :base_query, :timezone
 
-      def initialize(start_date: 30.days.ago, end_date: Time.current, timezone: Time.zone.name)
+      def initialize(
+        start_date: 30.days.ago,
+        end_date: Time.current,
+        timezone: Time.zone.name,
+        exact_range: false
+      )
         @timezone = timezone
 
         Time.zone = timezone # Set the timezone for parsing dates in the user's timezone
-        @start_date = start_date.beginning_of_day
-        @end_date = end_date.end_of_day
+        @start_date = exact_range ? start_date : start_date.beginning_of_day
+        @end_date = exact_range ? end_date : end_date.end_of_day
         Time.zone = nil # Reset to default timezone
 
         @base_query = AiApiRequestStat.between(@start_date, @end_date)

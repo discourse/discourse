@@ -769,7 +769,6 @@ id:
             title: "Pengaturan"
         membership:
           title: Keanggotaan
-          access: Mengakses
         categories:
           title: Kategori
           long_title: "Notifikasi default kategori"
@@ -788,7 +787,6 @@ id:
           to: "Kepada"
       permissions:
         title: "Izin"
-      public_admission: "Izinkan pengguna untuk bergabung dengan grup secara bebas (Membutuhkan grup yang dapat dilihat oleh umum)"
       public_exit: "Izinkan pengguna untuk meninggalkan grup dengan bebas"
       empty:
         posts: "Tidak ada pos oleh anggota grup ini"
@@ -804,7 +802,6 @@ id:
       request: "Pinta"
       message: "Pesan"
       confirm_leave: "Anda yakin ingin keluar dari grup ini?"
-      allow_membership_requests: "Izinkan pengguna mengirim permintaan keanggotaan ke pemilik grup (Membutuhkan grup yang dapat dilihat oleh umum)"
       membership_request:
         submit: "Ajukan Permintaan"
         title: "Permintaan untuk bergabung dengan @ %{group_name}"

@@ -1074,7 +1074,6 @@ vi:
             from_alias_hint: "Bí danh để sử dụng làm địa chỉ từ khi gửi email SMTP nhóm. Lưu ý rằng điều này có thể không được hỗ trợ bởi tất cả các nhà cung cấp email, vui lòng tham khảo tài liệu của nhà cung cấp email của bạn."
         membership:
           title: Thành viên
-          access: Truy cập
         categories:
           title: Chuyên mục
           long_title: "Thông báo mặc định của chuyên mục"
@@ -1107,7 +1106,6 @@ vi:
         title: "Quyền"
         none: "Không có chuyên mục nào được liên kết với nhóm này."
         description: "Thành viên của nhóm này có quyền truy cập các chuyên mục sau"
-      public_admission: "Cho phép Thành viên tham gia nhóm một cách tự do (nhóm hiển thị công khai)"
       public_exit: "Cho phép Thành viên thoát khỏi nhóm một cách tự do"
       empty:
         posts: "Không có tút nào từ các thành viên của nhóm này."
@@ -1123,7 +1121,6 @@ vi:
       request: "Yêu cầu"
       message: "Nhắn tin"
       confirm_leave: "Bạn có chắc muốn rời khỏi nhóm này?"
-      allow_membership_requests: "Cho phép thành viên gửi yêu cầu tham gia đến chủ nhóm (Yêu cầu nhóm hiển thị công khai)"
       membership_request_template: "đã tùy chỉnh để hiển thị cho người dùng khi gửi yêu cầu thành viên"
       membership_request:
         submit: "Gửi yêu cầu"
@@ -5825,7 +5822,6 @@ vi:
             incoming_email: "Tùy chỉnh địa chỉ email đến"
             incoming_email_placeholder: "điền địa chỉ email"
             incoming_email_tooltip: "Bạn có thể phân tách nhiều địa chỉ email bằng ký tự |."
-            visibility: Khả năng hiển thị
             visibility_levels:
               title: "Ai có thể xem nhóm"
               public: "Mọi người"

@@ -1354,7 +1354,8 @@ he:
             from_alias_hint: "כינוי בו יש להשתמש בתור כתוב מאת בעת שליחת הודעות SMTP קבוצתיות בדוא״ל. נא לשים לב שאולי חלק מספקי הדוא״ל לא תומכים בזה, נא להיעזר בתיעוד של ספק הדוא״ל שלך."
         membership:
           title: חברות
-          access: גישה
+          join_method:
+            invite: "בהזמנה בלבד"
         categories:
           title: קטגוריות
           long_title: "הודעות ברירת המחדל של הקטגוריה"
@@ -1387,7 +1388,6 @@ he:
         title: "הרשאות"
         none: "אין קטגוריות המשויכות לקבוצה זו."
         description: "החברים בקבוצה זו יכולים לגשת לקטגוריות האלו"
-      public_admission: "אפשרו למשתמשים להצטרף לקבוצה בחופשיות (דורש קבוצה פומבית)"
       public_exit: "אפשרו למשתמשים לעזוב את הקבוצה בחופשיות"
       empty:
         posts: "אין פוסטים של חברי קבוצה זו"
@@ -1403,7 +1403,6 @@ he:
       request: "בקשה"
       message: "הודעה"
       confirm_leave: "לעזוב את הקבוצה הזאת?"
-      allow_membership_requests: " לאפשר למשתמשים לשלוח בקשות חברות לבעלי הקבוצה (נדרשת קבוצה גלויה לכלל)"
       membership_request_template: "תבנית מותאמת אישית שתוצג למשתמשים בעת שליחת בקשת חברות"
       membership_request:
         submit: "הגשת בקשה"
@@ -6827,7 +6826,6 @@ he:
             incoming_email: "כתובת דוא״ל נכנס בהתאמה אישית"
             incoming_email_placeholder: "נא למלא כתובת דוא״ל"
             incoming_email_tooltip: "אפשר להפריד בין כתובות דוא״ל עם התו |."
-            visibility: חשיפה
             visibility_levels:
               title: "מי יכול לראות קבוצה זו?"
               public: "כולם"

@@ -26,12 +26,13 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
 
       expect(identifiers).to include("trigger:topic_closed")
       expect(identifiers).to include("action:topic_tags")
-      expect(identifiers).to include("action:create_post")
+      expect(identifiers).to include("action:post")
       expect(identifiers).to include("action:topic")
       expect(identifiers).to include("condition:if")
+      expect(identifiers).not_to include("action:create_post")
     end
 
-    it "returns List posts query control metadata" do
+    it "returns Post operation and List posts query control metadata" do
       get "/admin/plugins/discourse-workflows/node-types.json"
 
       post_node =
@@ -40,9 +41,19 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
         end
       properties = post_node["properties"]
 
+      expect(properties["operation"]).to include(
+        "type" => "options",
+        "default" => "create",
+        "options" => %w[create edit get list],
+      )
       expect(properties["query"]).to include(
         "type" => "string",
         "ui" => include("control" => "filter_query", "filter" => "posts"),
+      )
+      expect(properties["editor_username"]).to include(
+        "type" => "string",
+        "default" => "system",
+        "ui" => include("control" => "user"),
       )
       expect(properties["categories"]["ui"]).to include("hidden" => true)
       expect(properties["advanced_filter"]["ui"]).to include("hidden" => true)

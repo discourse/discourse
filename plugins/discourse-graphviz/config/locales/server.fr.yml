@@ -7,4 +7,3 @@
 fr:
   site_settings:
     discourse_graphviz_enabled: "Activer l'extension Graphviz"
-    graphviz_default_svg: "Rendu SVG par défaut au lieu du rendu d'image, peut être personnalisé par graphique avec l'élément « svg=true|false »."

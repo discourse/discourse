@@ -85,16 +85,6 @@ after_initialize do
     self,
   )
 
-  Plugin::Filter.register(:after_post_cook) do |post, cooked|
-    DiscourseWorkflows::EventListener.handle(
-      DiscourseWorkflows::Nodes::PostEdited::V1,
-      post,
-      cooked,
-    )
-
-    cooked
-  end
-
   add_to_serializer :site,
                     :topic_admin_button_workflows,
                     include_condition: -> { scope.is_admin? } do

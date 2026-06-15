@@ -49,8 +49,9 @@ class ThemeJavascriptCompiler
           },
         )
 
-      @content = output["main.js"]["code"]
-      @source_map = output["main.js"]["map"]
+      main = output.values.find { |chunk| chunk["name"] == "main" }
+      @content = main["code"]
+      @source_map = main["map"]
     end
     [@content, @source_map]
   rescue AssetProcessor::TranspileError => e

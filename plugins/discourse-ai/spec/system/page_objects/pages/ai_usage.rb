@@ -3,8 +3,11 @@
 module PageObjects
   module Pages
     class AiUsage < PageObjects::Pages::Base
-      def visit
-        page.visit "/admin/plugins/discourse-ai/ai-usage"
+      def visit(query: nil)
+        path = "/admin/plugins/discourse-ai/ai-usage"
+        path = "#{path}?#{query}" if query
+
+        page.visit path
       end
 
       def has_usage_content?
@@ -76,20 +79,43 @@ module PageObjects
         PageObjects::Components::SelectKit.new(".ai-usage__feature-selector")
       end
 
-      def select_period(period)
-        label =
-          case period
-          when :day
-            I18n.t("js.discourse_ai.usage.periods.last_day")
-          when :week
-            I18n.t("js.discourse_ai.usage.periods.last_week")
-          when :month
-            I18n.t("js.discourse_ai.usage.periods.last_month")
-          end
+      def has_selected_period?(period)
+        page.has_css?(".ai-usage__period-buttons .btn-primary", text: period_label(period))
+      end
 
-        find(".ai-usage__period-buttons .btn", text: label).click
+      def has_query_param?(name, value)
+        page.has_current_path?(query_param_pattern(name, value), url: true)
+      end
+
+      def has_no_query_param?(name, value)
+        page.has_no_current_path?(query_param_pattern(name, value), url: true)
+      end
+
+      def reload
+        page.refresh
+      end
+
+      def select_period(period)
+        find(".ai-usage__period-buttons .btn", text: period_label(period)).click
 
         self
+      end
+
+      private
+
+      def query_param_pattern(name, value)
+        /[?&]#{Regexp.escape(name)}=#{Regexp.escape(ERB::Util.url_encode(value.to_s))}(?:&|$)/
+      end
+
+      def period_label(period)
+        case period
+        when :day
+          I18n.t("js.discourse_ai.usage.periods.last_day")
+        when :week
+          I18n.t("js.discourse_ai.usage.periods.last_week")
+        when :month
+          I18n.t("js.discourse_ai.usage.periods.last_month")
+        end
       end
     end
   end

@@ -1165,7 +1165,6 @@ hr:
             from_alias_hint: "Alias koji se koristi kao adresa pošiljatelja pri slanju grupnih SMTP e-poruka. Imajte na umu da to možda ne podržavaju svi davatelji e-pošte, molimo pogledajte dokumentaciju svog e-mail pružatelja usluga."
         membership:
           title: Članstvo
-          access: Pristup
         categories:
           title: Kategorije
           long_title: "Zadane obavijesti kategorije"
@@ -1198,7 +1197,6 @@ hr:
         title: "Dopuštenja"
         none: "Nema kategorija povezanih s ovom grupom."
         description: "Članovi ove grupe mogu pristupiti ovim kategorijama"
-      public_admission: "Dozvoli korisnicima da se slobodno pridruže grupi (Zahtijeva javno vidljivu grupu)"
       public_exit: "Dozvoli korisnicima da slobodno napuste grupu"
       empty:
         posts: "Nema objava članova ove grupe"
@@ -1214,7 +1212,6 @@ hr:
       request: "Zahtjev"
       message: "Poruka"
       confirm_leave: "Jeste li sigurni da želite napustiti ovu grupu?"
-      allow_membership_requests: "Dopusti korisnicima slanje zahtjeva za članstvo vlasnicima grupa (zahtijeva javno vidljivu grupu)"
       membership_request_template: "Prilagođeni predložak za prikaz korisnicima prilikom slanja zahtjeva za članstvo"
       membership_request:
         submit: "Pošalji zahtjev"
@@ -5946,7 +5943,6 @@ hr:
             incoming_email: "Prilagođena dolazna adresa e-pošte"
             incoming_email_placeholder: "unesite adresu e-pošte"
             incoming_email_tooltip: "Možete odvojiti na više adresa e-pošte s | znakom."
-            visibility: Vidljivost
             visibility_levels:
               title: "Tko može vidjeti ovu grupu?"
               public: "Svi"

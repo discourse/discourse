@@ -168,6 +168,24 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(enqueued_trigger_node_ids).not_to include("trust-level-mismatch", "tag-mismatch")
   end
 
+  it "enqueues post edited workflows from the post edited event" do
+    post = create_post(user: Fabricate(:user, trust_level: TrustLevel[1]), category: category)
+    create_published_workflow("post-edited-trigger", "trigger:post_edited")
+
+    PostRevisor.new(post).revise!(admin, raw: "Edited by admin")
+
+    expect(enqueued_trigger_node_ids).to include("post-edited-trigger")
+  end
+
+  it "does not enqueue post edited workflows when the revision skips workflows" do
+    post = create_post(user: Fabricate(:user, trust_level: TrustLevel[1]), category: category)
+    create_published_workflow("post-edited-trigger", "trigger:post_edited")
+
+    PostRevisor.new(post).revise!(admin, { raw: "Edited by workflow" }, skip_workflows: true)
+
+    expect(enqueued_trigger_node_ids).not_to include("post-edited-trigger")
+  end
+
   it "only enqueues reviewable approved workflows matching the reviewable type" do
     create_published_workflow(
       "matching-trigger",

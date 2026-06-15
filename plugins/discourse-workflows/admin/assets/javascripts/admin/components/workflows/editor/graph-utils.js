@@ -3,11 +3,17 @@ import {
   collectLoopBodyNodeIds,
   graphConnectionKey,
   LOOP_NODE_TYPE,
+  nextAvailableTargetInputIndex,
   normalizeSourceOutput,
   normalizeSourceOutputIndex,
   normalizeTargetInputIndex,
-  portIndexFromKey,
 } from "../../../lib/workflows/graph-constants";
+import { NODE_DIRECT_SETTING_KEYS } from "../../../lib/workflows/node-data-shape";
+import {
+  nodeTypeConnectionIndexedInputKey,
+  nodeTypeHasConfigurationFields,
+  nodeTypeInputUsesConnectionIndexes,
+} from "../../../lib/workflows/node-types";
 
 export {
   buildOutgoingIndex,
@@ -23,15 +29,15 @@ function clientConnectionKey(connection) {
   });
 }
 
-function mergeModeFor(node) {
-  return node?.configuration?.mode || "append";
-}
-
-function cloneConnectionWithTargetInputIndex(connection, targetInputIndex) {
+function cloneConnectionWithTargetInputIndex(
+  connection,
+  targetInput,
+  targetInputIndex
+) {
   return {
     ...connection,
+    targetInput,
     targetInputIndex,
-    targetInput: `input_${targetInputIndex + 1}`,
   };
 }
 
@@ -42,137 +48,101 @@ function hasExplicitTargetInput(connection) {
   );
 }
 
-function nextUnusedInputIndex(used) {
-  let index = 0;
-  while (used.has(index)) {
-    index++;
-  }
-  return index;
-}
-
-export function normalizeConnectionsForNodes(connections, nodes) {
+export function normalizeConnectionsForNodes(
+  connections,
+  nodes,
+  nodeTypeForNode = (node) => node?.type
+) {
   const nodeByClientId = new Map(nodes.map((node) => [node.clientId, node]));
-  const usedMergeInputs = new Map();
-
-  for (const connection of connections) {
+  const explicitIndexedConnections = connections.flatMap((connection) => {
     const targetNode = nodeByClientId.get(connection.targetClientId);
     if (
-      targetNode?.type === "flow:merge" &&
-      hasExplicitTargetInput(connection)
+      !inputUsesIndexedConnections(targetNode, nodeTypeForNode) ||
+      !hasExplicitTargetInput(connection)
     ) {
-      const used = usedMergeInputs.get(connection.targetClientId) || new Set();
-      used.add(normalizeTargetInputIndex(connection));
-      usedMergeInputs.set(connection.targetClientId, used);
-    }
-  }
-
-  return connections.flatMap((connection) => {
-    const targetNode = nodeByClientId.get(connection.targetClientId);
-    if (targetNode?.type !== "flow:merge") {
-      return [connection];
-    }
-
-    const mode = mergeModeFor(targetNode);
-    const targetInputIndex = normalizeTargetInputIndex(connection);
-
-    if (mode === "append") {
-      if (!hasExplicitTargetInput(connection)) {
-        const used =
-          usedMergeInputs.get(connection.targetClientId) || new Set();
-        const nextInputIndex = nextUnusedInputIndex(used);
-        used.add(nextInputIndex);
-        usedMergeInputs.set(connection.targetClientId, used);
-        return [
-          cloneConnectionWithTargetInputIndex(connection, nextInputIndex),
-        ];
-      }
-
-      return [
-        cloneConnectionWithTargetInputIndex(connection, targetInputIndex),
-      ];
-    }
-
-    if (hasExplicitTargetInput(connection)) {
-      return targetInputIndex < 2
-        ? [cloneConnectionWithTargetInputIndex(connection, targetInputIndex)]
-        : [];
-    }
-
-    const used = usedMergeInputs.get(connection.targetClientId) || new Set();
-    const nextInputIndex = [0, 1].find((input) => !used.has(input));
-    if (nextInputIndex == null) {
       return [];
     }
 
-    used.add(nextInputIndex);
-    usedMergeInputs.set(connection.targetClientId, used);
-
-    return [cloneConnectionWithTargetInputIndex(connection, nextInputIndex)];
-  });
-}
-
-export function normalizeMergeConfiguration(configuration = {}) {
-  const mode = configuration.mode || "append";
-
-  if (mode === "append") {
-    return {
-      mode,
-      number_inputs: Math.max(
-        parseInt(configuration.number_inputs, 10) || 2,
-        2
+    return [
+      cloneConnectionWithTargetInputIndex(
+        connection,
+        indexedConnectionInputKey(targetNode, nodeTypeForNode),
+        normalizeTargetInputIndex(connection)
       ),
-    };
+    ];
+  });
+  const normalizedConnections = [];
+  const allocatedIndexedConnections = [...explicitIndexedConnections];
+
+  for (const connection of connections) {
+    const targetNode = nodeByClientId.get(connection.targetClientId);
+    if (!inputUsesIndexedConnections(targetNode, nodeTypeForNode)) {
+      normalizedConnections.push(connection);
+      continue;
+    }
+
+    const targetInputIndex = normalizeTargetInputIndex(connection);
+    const targetInput = indexedConnectionInputKey(targetNode, nodeTypeForNode);
+
+    if (hasExplicitTargetInput(connection)) {
+      normalizedConnections.push(
+        cloneConnectionWithTargetInputIndex(
+          connection,
+          targetInput,
+          targetInputIndex
+        )
+      );
+      continue;
+    }
+
+    const normalizedConnection = cloneConnectionWithTargetInputIndex(
+      connection,
+      targetInput,
+      nextAvailableTargetInputIndex(
+        allocatedIndexedConnections,
+        connection.targetClientId
+      )
+    );
+    normalizedConnections.push(normalizedConnection);
+    allocatedIndexedConnections.push(normalizedConnection);
   }
 
-  if (mode === "choose_branch") {
-    return {
-      mode,
-      use_data_of_input: configuration.use_data_of_input || "input_1",
-      use_data_of_input_index:
-        configuration.use_data_of_input_index ??
-        portIndexFromKey(configuration.use_data_of_input),
-      choose_output: configuration.choose_output || "specified_input",
-    };
-  }
-
-  const combineBy = configuration.combine_by || "matching_fields";
-  const normalized = {
-    mode,
-    combine_by: combineBy,
-    resolve_clash: configuration.resolve_clash || "prefer_last",
-    merge_mode: configuration.merge_mode || "deep_merge",
-    override_empty: Boolean(configuration.override_empty),
-    fuzzy_compare: Boolean(configuration.fuzzy_compare),
-  };
-
-  if (combineBy === "matching_fields") {
-    return {
-      ...normalized,
-      fields_to_match: configuration.fields_to_match || [],
-      join_mode: configuration.join_mode || "keep_matches",
-      output_data_from: configuration.output_data_from || "both",
-      multiple_matches: configuration.multiple_matches || "all",
-    };
-  }
-
-  if (combineBy === "position") {
-    return {
-      ...normalized,
-      include_unpaired: Boolean(configuration.include_unpaired),
-    };
-  }
-
-  return normalized;
+  return normalizedConnections;
 }
 
-export function normalizeNodeConfiguration(node) {
-  if (node?.type !== "flow:merge") {
+function indexedConnectionInputKey(targetNode, nodeTypeForNode) {
+  return (
+    nodeTypeConnectionIndexedInputKey(
+      nodeTypeForNode(targetNode),
+      targetNode
+    ) || "main"
+  );
+}
+
+function inputUsesIndexedConnections(targetNode, nodeTypeForNode) {
+  if (!targetNode) {
+    return false;
+  }
+
+  return nodeTypeInputUsesConnectionIndexes(
+    nodeTypeForNode(targetNode),
+    indexedConnectionInputKey(targetNode, nodeTypeForNode),
+    targetNode
+  );
+}
+
+export function normalizeNodeConfiguration(node, nodeType = node?.type) {
+  if (nodeTypeHasConfigurationFields(nodeType, node)) {
     return node;
   }
 
   return {
     ...node,
-    configuration: normalizeMergeConfiguration(node.configuration),
+    configuration: Object.fromEntries(
+      NODE_DIRECT_SETTING_KEYS.filter((key) =>
+        Object.hasOwn(node.configuration || {}, key)
+      ).map((key) => [key, node.configuration[key]])
+    ),
   };
 }
 

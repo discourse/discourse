@@ -808,6 +808,10 @@ de:
           conflict: "Dieser Eintrag in der Warteschlange zur Überprüfung wurde von einer anderen Person aktualisiert. Bitte versuche es erneut."
           action_failed: "Die Aktion konnte nicht ausgeführt werden"
         success: "Die Ausführung von '%{action}' für den Eintrag %{reviewable_id} in der Warteschlange zur Überprüfung war erfolgreich."
+      add_reviewable_note:
+        errors:
+          not_allowed: "Du darfst auf die Warteschlange zur Überprüfung nicht zugreifen"
+          not_found: "Eintrag der Warteschlange nicht gefunden"
     reviewables:
       ai_tool_action:
         title: "KI-Tool Aktion"

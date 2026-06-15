@@ -9,10 +9,15 @@ RSpec.describe SiteSettingsTask do
       SiteSetting.provider.all.each { |setting| SiteSetting.remove_override!(setting.name) }
 
       SiteSetting.discourse_connect_url = sso_url
+      SiteSetting.discourse_connect_secret = "x" * 10
       SiteSetting.enable_discourse_connect = true
       hash = SiteSettingsTask.export_to_hash
 
-      expect(hash).to eq("enable_discourse_connect" => "true", "discourse_connect_url" => sso_url)
+      expect(hash).to eq(
+        "discourse_connect_secret" => "x" * 10,
+        "enable_discourse_connect" => "true",
+        "discourse_connect_url" => sso_url,
+      )
     end
   end
 

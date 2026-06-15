@@ -33,6 +33,11 @@ uk:
             topic_id:
               label: ID теми
     discourse_calendar:
+      livestream:
+        chat:
+          going: "Натисніть «Продовжити»"
+          join_channel_header: "🌟 Приєднуйтесь до обговорення! 🌟"
+          join_channel_message: "Підтвердіть свою присутність та розблокуйте наш чат події. Зануртесь в обговорення, діліться своїми враженнями та спілкуйтеся з іншими учасниками!"
       invite_user_notification: "%{username} запросили Вас на: %{description}"
       preferences:
         all_events: "Discourse Календар - Усі події"
@@ -470,6 +475,7 @@ uk:
         description_placeholder: "Додати опис події"
         event_title_placeholder: "Назва події"
         create_event_button: "Створити подію"
+        action_title: "Створити нову подію"
         all_day: "Цілий день"
         reminder:
           units:
@@ -501,6 +507,10 @@ uk:
       composer_actions:
         create_event:
           label: "Створити подію"
+          desc: "Створити нову подію в цій категорії"
+        create_topic:
+          label: "Створити тему"
+          desc: "Створити звичайну тему замість події"
       builder_modal:
         custom_fields:
           label: "Користувацькі поля"

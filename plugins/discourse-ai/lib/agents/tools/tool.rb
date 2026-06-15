@@ -131,35 +131,14 @@ module DiscourseAi
         protected
 
         def fetch_default_branch(repo)
-          api_url = "https://api.github.com/repos/#{repo}"
-
-          response_code = "unknown error"
-          repo_data = nil
-
-          send_http_request(
-            api_url,
-            headers: {
-              "Accept" => "application/vnd.github.v3+json",
-            },
-            authenticate_github: true,
-          ) do |response|
-            response_code = response.code
-            if response_code == "200"
-              begin
-                repo_data = JSON.parse(read_response_body(response))
-              rescue JSON::ParserError
-                response_code = "500 - JSON parse error"
-              end
-            end
-          end
-
-          response_code == "200" ? repo_data["default_branch"] : "main"
+          github_client.get("https://api.github.com/repos/#{repo}")["default_branch"]
+        rescue Discourse::GithubApi::Error
+          "main"
         end
 
         def send_http_request(
           url,
           headers: {},
-          authenticate_github: false,
           follow_redirects: false,
           method: :get,
           body: nil,
@@ -168,7 +147,6 @@ module DiscourseAi
           self.class.send_http_request(
             url,
             headers: headers,
-            authenticate_github: authenticate_github,
             follow_redirects: follow_redirects,
             method: method,
             body: body,
@@ -176,10 +154,13 @@ module DiscourseAi
           )
         end
 
+        def github_client
+          ::Discourse::GithubApi.for(token: SiteSetting.ai_bot_github_access_token)
+        end
+
         def self.send_http_request(
           url,
           headers: {},
-          authenticate_github: false,
           follow_redirects: false,
           method: :get,
           body: nil
@@ -230,9 +211,6 @@ module DiscourseAi
 
           request["User-Agent"] = DiscourseAi::AiBot::USER_AGENT
           headers.each { |k, v| request[k] = v }
-          if authenticate_github && SiteSetting.ai_bot_github_access_token.present?
-            request["Authorization"] = "Bearer #{SiteSetting.ai_bot_github_access_token}"
-          end
 
           FinalDestination::HTTP.start(uri.hostname, uri.port, use_ssl: uri.port != 80) do |http|
             http.request(request) { |response| yield response, uri }

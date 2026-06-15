@@ -180,6 +180,10 @@ class SessionController < ApplicationController
       end
 
       return render_sso_error(text: I18n.t("discourse_connect.payload_parse_error"), status: 422)
+    rescue DiscourseConnect::BlankSecretError
+      connect_verbose_warn { "Verbose SSO log: blank secret detected" }
+
+      return render_sso_error(text: I18n.t("discourse_connect.signature_error"), status: 422)
     rescue DiscourseConnect::SignatureError => e
       connect_verbose_warn do
         "Verbose SSO log: Signature verification failed\n\n#{e.message}\n\n#{sso&.diagnostics}"

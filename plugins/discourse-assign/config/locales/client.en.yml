@@ -204,8 +204,10 @@ en:
         requires_assign: "Requires the Assign plugin to be enabled"
       nodes:
         "action:assign_topic": "Assign topic"
+        "trigger:assigned": "Assigned"
       node_descriptions:
         "action:assign_topic": "Assign or unassign a topic"
+        "trigger:assigned": "Fires when a topic or post is assigned"
       assign_topic:
         operation: "Operation"
         operations:
@@ -214,3 +216,6 @@ en:
         topic_id: "Topic ID"
         assignee: "Assignee"
         replace_existing: "Replace existing assignment"
+      assigned:
+        topic_assignments_only: "Only trigger when the assignment target is the topic, not an individual post"
+        topic_assignments_only_description: "Topic assignments only"

@@ -288,9 +288,9 @@ module("Unit | lib | discourse-workflows | data-schema", function () {
 
   test("schemaFieldsForNodeInput previews connected upstream output before the current node succeeds", function (assert) {
     const currentNode = {
-      id: "create-post",
-      name: "Create post",
-      type: "action:create_post",
+      id: "post",
+      name: "Post",
+      type: "action:post",
     };
     const sourceNode = {
       id: "template",
@@ -312,10 +312,10 @@ module("Unit | lib | discourse-workflows | data-schema", function () {
           ],
         },
       ],
-      "Create post": [
+      Post: [
         {
-          node_id: "create-post",
-          node_type: "action:create_post",
+          node_id: "post",
+          node_type: "action:post",
           status: "skipped",
           inputs: [
             {
@@ -330,7 +330,7 @@ module("Unit | lib | discourse-workflows | data-schema", function () {
     };
 
     assert.deepEqual(
-      schemaFieldsForNodeInput(runData, "Create post", {
+      schemaFieldsForNodeInput(runData, "Post", {
         node: currentNode,
         sourceNode,
         outputIndex: 0,

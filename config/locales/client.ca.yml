@@ -754,7 +754,6 @@ ca:
             title: "Configuració"
         membership:
           title: Membres
-          access: Accés
         categories:
           title: Categories
         tags:
@@ -771,7 +770,6 @@ ca:
           to: "A"
       permissions:
         title: "Permisos"
-      public_admission: "Permet als usuaris d'unir-se al grup lliurement (cal que el grup sigui visible públicament)"
       public_exit: "Permet que els usuaris abandonin el grup lliurement"
       empty:
         posts: "No hi ha publicacions de membres d'aquest grup"
@@ -786,7 +784,6 @@ ca:
       leave: "Abandona"
       request: "Sol·licita"
       message: "Missatge"
-      allow_membership_requests: "Permet als usuaris d'enviar sol·licituds d'afiliació als propietaris del grup (requereix un grup visible públicament)"
       membership_request_template: "Plantilla personalitzada que es mostra als usuaris quan envien una sol·licitud d'afiliació"
       membership_request:
         submit: "Envia sol·licitud"
@@ -3377,7 +3374,6 @@ ca:
             email: Correu electrònic
             incoming_email: "Adreça de correu entrant personalitzada:"
             incoming_email_placeholder: "introduïu una adreça de correu electrònic"
-            visibility: Visibilitat
             visibility_levels:
               title: "Qui pot veure aquest grup?"
               public: "Tothom"

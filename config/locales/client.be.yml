@@ -809,8 +809,6 @@ be:
             password: "Пароль"
           settings:
             title: "Налады"
-        membership:
-          access: Доступ
         categories:
           title: Катэгорыі
         tags:

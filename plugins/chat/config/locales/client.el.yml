@@ -656,6 +656,7 @@ el:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Αποστολή μηνύματος συνομιλίας"
+        "action:chat_approval": "Έγκριση συνομιλίας"
       send_chat_message:
         channel_id: "Κανάλι"
         message: "Μήνυμα"

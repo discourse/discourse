@@ -909,6 +909,7 @@ RSpec.describe UsersController do
       context "with discourse connect enabled" do
         before do
           SiteSetting.discourse_connect_url = "http://example.com/sso"
+          SiteSetting.discourse_connect_secret = "x" * 10
           SiteSetting.enable_discourse_connect = true
         end
 
@@ -2119,6 +2120,7 @@ RSpec.describe UsersController do
 
       it "should respond with proper error message if auth_overrides_username is enabled" do
         SiteSetting.discourse_connect_url = "http://someurl.com"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         SiteSetting.auth_overrides_username = true
         acting_user = admin
@@ -3106,6 +3108,7 @@ RSpec.describe UsersController do
       before do
         DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider)
         SiteSetting.discourse_connect_url = "http://localhost"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
       end
 
@@ -6067,6 +6070,7 @@ RSpec.describe UsersController do
         describe "when SSO is enabled" do
           it "should return the right response" do
             SiteSetting.discourse_connect_url = "http://someurl.com"
+            SiteSetting.discourse_connect_secret = "x" * 10
             SiteSetting.enable_discourse_connect = true
 
             post "/users/create_second_factor_totp.json"
@@ -6370,6 +6374,7 @@ RSpec.describe UsersController do
         describe "when SSO is enabled" do
           it "should return the right response" do
             SiteSetting.discourse_connect_url = "http://someurl.com"
+            SiteSetting.discourse_connect_secret = "x" * 10
             SiteSetting.enable_discourse_connect = true
 
             put "/users/second_factors_backup.json"
@@ -7023,6 +7028,7 @@ RSpec.describe UsersController do
     context "when SSO is enabled" do
       before do
         SiteSetting.discourse_connect_url = "https://discourse.test/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
       end
 
@@ -7109,6 +7115,7 @@ RSpec.describe UsersController do
     context "when SSO is enabled" do
       before do
         SiteSetting.discourse_connect_url = "https://discourse.test/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
       end
 
