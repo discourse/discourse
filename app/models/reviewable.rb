@@ -359,7 +359,8 @@ class Reviewable < ActiveRecord::Base
 
     validate_action!(guardian, action_id, perform_method, args)
 
-    affected_candidate_ids = reviewable_ids_affected_by(action_id)
+    affected_candidate_ids =
+      delete_user_action?(action_id) ? pending_reviewable_ids_for_target_user : []
 
     result = nil
     update_count = false
@@ -851,14 +852,6 @@ class Reviewable < ActiveRecord::Base
   end
 
   private
-
-  # Pending reviewables this action may resolve as a side effect, snapshotted
-  # before it runs so #perform can report the ones it cleared. Override to
-  # change which reviewables a type sweeps.
-  def reviewable_ids_affected_by(action_id)
-    return [] unless delete_user_action?(action_id)
-    pending_reviewable_ids_for_target_user
-  end
 
   def delete_user_action?(action_id)
     resolved_action = (aliases[action_id] || action_id).to_sym
