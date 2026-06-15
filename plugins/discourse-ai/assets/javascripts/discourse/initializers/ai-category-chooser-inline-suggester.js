@@ -23,6 +23,12 @@ function composerFor(component) {
   return getOwner(component).lookup("service:composer");
 }
 
+// only attach to the composer's own chooser, not every category-chooser
+// elsewhere in the app while a draft happens to be open
+function inComposer(component) {
+  return !!component.element?.closest("#reply-control");
+}
+
 function noSuggestionsToast(component) {
   getOwner(component)
     .lookup("service:toasts")
@@ -94,6 +100,8 @@ function enabledFor(component, siteSettings, currentUser) {
   return (
     siteSettings.ai_embeddings_enabled &&
     composer?.model &&
+    !composer.disableCategoryChooser &&
+    inComposer(component) &&
     showComposerAiHelper(
       composer.model,
       siteSettings,

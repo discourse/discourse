@@ -33,6 +33,12 @@ function composerFor(component) {
   return getOwner(component).lookup("service:composer");
 }
 
+// only attach to the composer's own chooser, not every mini-tag-chooser
+// elsewhere in the app while a draft happens to be open
+function inComposer(component) {
+  return !!component.element?.closest("#reply-control");
+}
+
 function noSuggestionsToast(component) {
   getOwner(component)
     .lookup("service:toasts")
@@ -128,6 +134,7 @@ function enabledFor(component, siteSettings, currentUser) {
     siteSettings.ai_embeddings_enabled &&
     composer?.model &&
     !composer.disableTagsChooser &&
+    inComposer(component) &&
     showComposerAiHelper(
       composer.model,
       siteSettings,
