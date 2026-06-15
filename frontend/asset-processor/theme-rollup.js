@@ -115,7 +115,7 @@ async function performRollup(modules, opts) {
   const bundle = await result.generate({
     format: "es",
     sourcemap: "hidden",
-    entryFileNames: `${opts.filenamePrefix ?? ""}[name]${opts.filenameSuffix ?? ""}.js`,
+    entryFileNames: `${opts.filenamePrefix ?? ""}[name].[hash:6]${opts.filenameSuffix ?? ""}.js`,
     chunkFileNames: `${opts.filenamePrefix ?? ""}chunk.[hash:6]${opts.filenameSuffix ?? ""}.js`,
   });
 
