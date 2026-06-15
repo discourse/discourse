@@ -438,11 +438,44 @@ RSpec.describe UserSerializer do
     end
 
     it "includes the correct fields for each audience" do
-      expect(admin_json[:user_fields].keys).to contain_exactly(*fields.map { |f| f.id.to_s })
-      expect(other_user_json[:user_fields].keys).to contain_exactly(
-        *fields[2..5].map { |f| f.id.to_s },
+      expect(admin_json[:user_fields].keys).to contain_exactly(
+        *fields.map { |field| field.id.to_s },
       )
-      expect(self_json[:user_fields].keys).to contain_exactly(*fields.map { |f| f.id.to_s })
+      expect(other_user_json[:user_fields].keys).to contain_exactly(
+        *fields[2..5].map { |field| field.id.to_s },
+      )
+      expect(self_json[:user_fields].keys).to contain_exactly(*fields.map { |field| field.id.to_s })
+    end
+  end
+
+  context "when public profiles are hidden from anonymous viewers" do
+    fab!(:user)
+    fab!(:user_field) { Fabricate(:user_field, show_on_profile: true) }
+
+    before do
+      SiteSetting.hide_user_profiles_from_public = true
+      user.user_stat.update!(post_count: 1)
+      user.user_profile.update!(
+        bio_raw: "private bio",
+        bio_cooked: "private cooked bio",
+        location: "private location",
+        website: "https://example.com/private",
+      )
+      user.set_user_field(user_field.id, "private field")
+    end
+
+    it "does not serialize profile details" do
+      json = UserSerializer.new(user, scope: Guardian.new, root: false).as_json
+
+      expect(json.keys).not_to include(
+        :bio_raw,
+        :bio_cooked,
+        :bio_excerpt,
+        :location,
+        :website,
+        :website_name,
+        :user_fields,
+      )
     end
   end
 
