@@ -15,6 +15,31 @@ RSpec.describe Chat::Api::ChannelsMembershipsController do
     sign_in(current_user)
   end
 
+  describe "#index" do
+    it "does not expose other users' membership state" do
+      chat_message = Fabricate(:chat_message, chat_channel: channel_1, user: other_user)
+      other_membership = channel_1.membership_for(other_user)
+      other_membership.update!(
+        following: false,
+        muted: true,
+        notification_level: :never,
+        last_read_message_id: chat_message.id,
+        last_viewed_at: 1.hour.ago,
+        last_viewed_pins_at: 30.minutes.ago,
+        starred: true,
+      )
+
+      get "/chat/api/channels/#{channel_1.id}/memberships"
+
+      expect(response.status).to eq(200)
+      membership =
+        response.parsed_body["memberships"].find { |item| item.dig("user", "id") == other_user.id }
+
+      expect(membership.dig("user", "username")).to eq(other_user.username)
+      expect(membership.keys).to contain_exactly("user")
+    end
+  end
+
   describe "#create" do
     describe "success" do
       it "works" do
