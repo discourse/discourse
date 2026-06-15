@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -269,6 +270,16 @@ export default class CodeLoginForm extends Component {
   }
 
   @action
+  editProfile(event) {
+    // The account was logged in server-side without a page reload, so the
+    // app is still in its anonymous boot state. Navigate with a full page
+    // load so it reboots authenticated rather than client-side routing into
+    // a user-only route as an anonymous user.
+    event?.preventDefault();
+    window.location.assign(this.editProfileUrl);
+  }
+
+  @action
   submitSecondFactor() {
     this.securityKeyCredential = null;
     return this.verifyCode();
@@ -466,6 +477,7 @@ export default class CodeLoginForm extends Component {
             <a
               href={{this.editProfileUrl}}
               class="code-login-form__edit-profile"
+              {{on "click" this.editProfile}}
             >
               {{i18n "code_login.account_ready_edit"}}
             </a>

@@ -49,6 +49,21 @@ describe "Sign up via email code" do
     expect(user.user_password).to be_nil
   end
 
+  it "opens preferences from the account-ready step" do
+    visit("/signup")
+    submit_email("new.person@example.com")
+    fill_code(latest_emailed_code("new.person@example.com"))
+
+    expect(page).to have_css(".code-login-form__complete-step")
+    find(".code-login-form__edit-profile").click
+
+    # A full page load reboots the app authenticated, landing on the new
+    # user's preferences rather than breaking on a user-only route.
+    user = User.find_by_email("new.person@example.com")
+    expect(page).to have_current_path("/u/#{user.username}/preferences/account")
+    expect(page).to have_css(".header-dropdown-toggle.current-user")
+  end
+
   context "with required user fields" do
     fab!(:user_field) { Fabricate(:user_field, name: "Occupation") }
 
