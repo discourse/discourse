@@ -420,6 +420,7 @@ discourse_ai:
   ai_discord_search_enabled:
     default: false
     client: true
+    validator: "DiscourseAi::Configuration::DiscordSearchAgentValidator"
     area: "ai-features/discord"
   ai_discord_app_id:
     default: ""
@@ -435,11 +436,13 @@ discourse_ai:
     choices:
       - search
       - agent
+    validator: "DiscourseAi::Configuration::DiscordSearchAgentValidator"
     area: "ai-features/discord"
   ai_discord_search_agent:
     default: ""
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    validator: "DiscourseAi::Configuration::DiscordSearchAgentValidator"
     area: "ai-features/discord"
   ai_discord_allowed_guilds:
     type: list

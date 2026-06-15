@@ -906,6 +906,10 @@ en:
           negative: "Negative"
           neutral: "Neutral"
 
+    discord:
+      configuration:
+        agent_user_required: "The Discord search agent must have an associated user before Discord agent mode can be enabled."
+
     llm:
       configuration:
         create_llm: "You need to setup an LLM before enabling this feature"
