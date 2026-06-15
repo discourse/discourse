@@ -93,7 +93,7 @@ acceptance("Post Menu | Accept and Unaccept", function (needs) {
   });
 
   test("accepting a post in nested view updates the post menu button", async function (assert) {
-    await visit("/n/test-solved/23");
+    await visit("/t/test-solved/23");
 
     assert
       .dom(
