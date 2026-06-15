@@ -147,6 +147,7 @@ module("Component | ChatUpload", function (hooks) {
 
   module("S3 CDN URLs", function (nestedHooks) {
     nestedHooks.beforeEach(function () {
+      this.owner.unregister("service:capabilities");
       this.owner.register("service:capabilities", MockCapabilitiesService);
 
       setupS3CDN(
@@ -238,7 +239,7 @@ module("Component | ChatUpload", function (hooks) {
     let mockCapabilities;
 
     nestedHooks.beforeEach(function () {
-      // Register and inject the mock service
+      this.owner.unregister("service:capabilities");
       this.owner.register("service:capabilities", MockCapabilitiesService);
       mockCapabilities = this.owner.lookup("service:capabilities");
     });
