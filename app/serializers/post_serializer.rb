@@ -313,12 +313,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def reply_to_user
-    {
-      id: object.reply_to_user.id,
-      username: object.reply_to_user.username,
-      name: object.reply_to_user.name,
-      avatar_template: object.reply_to_user.avatar_template,
-    }
+    BasicUserSerializer.new(object.reply_to_user, root: false).as_json
   end
 
   def deleted_by
