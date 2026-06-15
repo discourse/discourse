@@ -17,6 +17,20 @@ describe PostSerializer do
   end
 
   it "includes group timezones" do
+    admin = Fabricate(:admin, refresh_auto_groups: true)
+
+    calendar_post =
+      create_post(
+        raw:
+          "[timezones group=\"admins\"]\n[/timezones]\n\n[timezones group=\"trust_level_0\"]\n[/timezones]",
+      )
+
+    json = PostSerializer.new(calendar_post.reload, scope: admin.guardian).as_json
+    expect(json[:post][:group_timezones]["admins"].count).to eq(1)
+    expect(json[:post][:group_timezones]["trust_level_0"].count).to eq(2)
+  end
+
+  it "excludes group timezones the viewer is not allowed to see" do
     Fabricate(:admin, refresh_auto_groups: true)
 
     calendar_post =
@@ -26,8 +40,7 @@ describe PostSerializer do
       )
 
     json = PostSerializer.new(calendar_post.reload, scope: Guardian.new).as_json
-    expect(json[:post][:group_timezones]["admins"].count).to eq(1)
-    expect(json[:post][:group_timezones]["trust_level_0"].count).to eq(2)
+    expect(json[:post][:group_timezones]).to eq({})
   end
 
   it "groups calendar events correctly" do
