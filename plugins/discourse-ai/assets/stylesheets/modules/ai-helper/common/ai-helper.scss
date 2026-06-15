@@ -696,7 +696,6 @@
 .select-kit.mini-tag-chooser .select-kit-row,
 .select-kit.category-chooser .select-kit-row {
   &.ai-category-suggest-row,
-  &.ai-category-exit-row,
   &.ai-tag-suggest-row,
   &.ai-tag-exit-row {
     position: sticky;
@@ -720,8 +719,7 @@
     }
   }
 
-  &.ai-category-exit-row,
-  .ai-tag-exit-row {
+  &.ai-tag-exit-row {
     font-weight: bold;
   }
 
