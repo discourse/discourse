@@ -2714,6 +2714,65 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
     end
 
+    it "does not expose hidden post link counts", :aggregate_failures do
+      first_post = Fabricate(:post, user: post_author1)
+      test_topic = first_post.topic
+      visible_post = Fabricate(:post, topic: test_topic, user: post_author1)
+      hidden_post =
+        Fabricate(
+          :post,
+          topic: test_topic,
+          user: post_author1,
+          hidden: true,
+          hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+        )
+
+      visible_link =
+        Fabricate(
+          :topic_link,
+          post: visible_post,
+          url: "https://visible-link-count.example.com",
+          domain: "visible-link-count.example.com",
+          title: "Visible link count title",
+        )
+      hidden_link =
+        Fabricate(
+          :topic_link,
+          post: hidden_post,
+          url: "https://hidden-link-count.example.com",
+          domain: "hidden-link-count.example.com",
+          title: "Hidden link count title",
+        )
+
+      sign_in(user_2)
+
+      get "/t/#{test_topic.slug}/#{test_topic.id}.json"
+
+      expect(response.status).to eq(200)
+      show_posts = response.parsed_body.dig("post_stream", "posts")
+      show_hidden_post = show_posts.find { |post| post["id"] == hidden_post.id }
+      show_visible_post = show_posts.find { |post| post["id"] == visible_post.id }
+      expect(show_hidden_post).to include("hidden" => true, "can_see_hidden_post" => false)
+      expect(show_hidden_post).not_to have_key("link_counts")
+      expect(show_visible_post["link_counts"]).to contain_exactly(
+        a_hash_including("url" => visible_link.url, "title" => visible_link.title),
+      )
+      expect(response.body).not_to include(hidden_link.url)
+
+      get "/t/#{test_topic.id}/posts.json", params: { post_ids: [hidden_post.id, visible_post.id] }
+
+      expect(response.status).to eq(200)
+      posts = response.parsed_body.dig("post_stream", "posts")
+      posts_hidden_post = posts.find { |post| post["id"] == hidden_post.id }
+      posts_visible_post = posts.find { |post| post["id"] == visible_post.id }
+      expect(posts_hidden_post).to include("hidden" => true, "can_see_hidden_post" => false)
+      expect(posts_hidden_post).not_to have_key("link_counts")
+      expect(posts_visible_post["link_counts"]).to contain_exactly(
+        a_hash_including("url" => visible_link.url, "title" => visible_link.title),
+      )
+      expect(response.body).not_to include(hidden_link.url)
+    end
+
     it "return 404 for an invalid page" do
       get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
       expect(response.status).to eq(404)

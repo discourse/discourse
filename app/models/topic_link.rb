@@ -77,6 +77,9 @@ class TopicLink < ActiveRecord::Base
   def self.counts_for(guardian, topic, posts)
     return {} if posts.blank?
 
+    post_ids = visible_source_post_ids(guardian, topic, posts)
+    return {} if post_ids.blank?
+
     # Sam: this is not tidy in AR and also happens to be a critical path
     # for topic view
     builder =
@@ -120,7 +123,7 @@ class TopicLink < ActiveRecord::Base
     end
 
     # not certain if pluck is right, cause it may interfere with caching
-    builder.where("l.post_id in (:post_ids)", post_ids: posts.map(&:id))
+    builder.where("l.post_id in (:post_ids)", post_ids: post_ids)
     builder.secure_category(guardian.secure_category_ids)
 
     result = {}
@@ -198,6 +201,13 @@ class TopicLink < ActiveRecord::Base
 
     lookup
   end
+
+  def self.visible_source_post_ids(guardian, topic, posts)
+    return posts.map(&:id) if guardian.can_see_all_hidden_posts?(topic&.category)
+
+    posts.filter_map { |post| post.id if !post.hidden? || guardian.can_see_hidden_post?(post) }
+  end
+  private_class_method :visible_source_post_ids
 
   private
 
