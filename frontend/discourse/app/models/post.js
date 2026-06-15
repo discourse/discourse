@@ -169,6 +169,7 @@ export default class Post extends RestModel {
   @tracked likeAction;
   @tracked link_counts;
   @tracked localization_outdated;
+  @tracked localizedCooked;
   @tracked localized_oneboxes;
   @tracked locked;
   @tracked moderator;
@@ -721,6 +722,22 @@ export default class Post extends RestModel {
     return ajax(`/posts/${this.id}/cooked.json`).then((result) => {
       this.setProperties({ cooked: result.cooked, cooked_hidden: false });
     });
+  }
+
+  async toggleLocalizedContent() {
+    if (this.localizedCooked) {
+      this.setProperties({
+        cooked: this.localizedCooked,
+        localizedCooked: null,
+      });
+    } else {
+      const result = await ajax(`/posts/${this.id}/cooked.json`);
+
+      this.setProperties({
+        localizedCooked: this.cooked,
+        cooked: result.cooked,
+      });
+    }
   }
 
   rebake() {

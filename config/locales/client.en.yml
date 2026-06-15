@@ -4930,6 +4930,8 @@ en:
 
       original_language: "This post was originally written in %{language}"
       original_language_and_outdated: "This post was originally written in %{language}. Translation may be outdated"
+      click_to_translate: "Click to translate"
+      tap_to_translate: "Tap here to translate"
       ai_translation_disclaimer: "AI-generated translations may be inaccurate."
 
     category:
