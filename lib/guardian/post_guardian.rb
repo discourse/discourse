@@ -334,15 +334,22 @@ module PostGuardian
     post.deleted_by_id == @user.id && @user.has_trust_level?(TrustLevel[4])
   end
 
-  def can_see_hidden_post?(post)
-    if SiteSetting.hidden_post_visible_groups_map.include?(Group::AUTO_GROUPS[:everyone])
-      return true
-    end
+  def can_see_all_hidden_posts?(category = nil)
+    hidden_post_visible_groups = SiteSetting.hidden_post_visible_groups_map
+
+    return true if hidden_post_visible_groups.include?(Group::AUTO_GROUPS[:everyone])
     return false if anonymous?
     return true if is_staff?
+    return true if is_category_group_moderator?(category)
+
+    @user.in_any_groups?(hidden_post_visible_groups)
+  end
+
+  def can_see_hidden_post?(post)
+    return true if can_see_all_hidden_posts?
     return true if is_my_own?(post)
 
-    @user.in_any_groups?(SiteSetting.hidden_post_visible_groups_map)
+    false
   end
 
   def can_view_edit_history?(post)
