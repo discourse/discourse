@@ -28,6 +28,7 @@ RSpec.describe "AI Composer helper" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   fab!(:category)
+  fab!(:category_2, :category)
   fab!(:video, :tag)
   fab!(:music, :tag)
   fab!(:cloud, :tag)
@@ -348,7 +349,7 @@ RSpec.describe "AI Composer helper" do
       SiteSetting.ai_embeddings_enabled = true
     end
 
-    it "suggests categories and applies the selected one" do
+    it "applies the best suggestion and closes the dropdown" do
       response = [
         {
           id: category.id,
@@ -357,6 +358,14 @@ RSpec.describe "AI Composer helper" do
           color: category.color,
           topicCount: 1,
           score: 1.0,
+        },
+        {
+          id: category_2.id,
+          name: category_2.name,
+          slug: category_2.slug,
+          color: category_2.color,
+          topicCount: 1,
+          score: 0.5,
         },
       ]
       DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:categories).returns(response)
@@ -367,9 +376,9 @@ RSpec.describe "AI Composer helper" do
 
       composer.category_chooser.expand
       composer.category_chooser.select_row_by_value("ai-category-suggest")
-      composer.category_chooser.select_row_by_name(category.name)
 
       expect(composer.category_chooser).to have_selected_name(category.name)
+      expect(page).to have_no_css(".category-chooser.is-expanded")
     end
 
     it "shows a toast when no category suggestions are returned" do

@@ -7,23 +7,20 @@ import { MIN_CHARACTER_COUNT } from "../lib/ai-helper-suggestions";
 import { showComposerAiHelper } from "../lib/show-ai-helper";
 
 const SUGGEST_ID = "ai-category-suggest";
-const EXIT_ID = "ai-category-exit";
 
 const STATE = new WeakMap();
 
 function stateFor(component) {
   let state = STATE.get(component);
   if (!state) {
-    state = { mode: "idle", suggestions: [] };
+    state = { loading: false };
     STATE.set(component, state);
   }
   return state;
 }
 
-function reset(component) {
-  const state = stateFor(component);
-  state.mode = "idle";
-  state.suggestions = [];
+function composerFor(component) {
+  return getOwner(component).lookup("service:composer");
 }
 
 function noSuggestionsToast(component) {
@@ -37,8 +34,8 @@ function noSuggestionsToast(component) {
     });
 }
 
-async function loadSuggestions(component, selectKit) {
-  const composer = getOwner(component).lookup("service:composer");
+async function applyBestSuggestion(component, selectKit) {
+  const composer = composerFor(component);
   const text = composer?.model?.reply;
   const state = stateFor(component);
 
@@ -47,8 +44,9 @@ async function loadSuggestions(component, selectKit) {
     return;
   }
 
-  state.mode = "loading";
-  selectKit.triggerSearch();
+  state.loading = true;
+  selectKit.close();
+  selectKit.set("isLoading", true);
 
   try {
     const { assistant } = await ajax(
@@ -60,18 +58,18 @@ async function loadSuggestions(component, selectKit) {
       return;
     }
 
-    state.suggestions = assistant || [];
-    state.mode = state.suggestions.length ? "results" : "idle";
-
-    if (!state.suggestions.length) {
+    const best = (assistant || [])[0];
+    if (best) {
+      selectKit.select(best.id, { id: best.id, name: best.name });
+    } else {
       noSuggestionsToast(component);
     }
   } catch (error) {
-    state.mode = "idle";
     popupAjaxError(error);
   } finally {
+    state.loading = false;
     if (!component.isDestroying && !component.isDestroyed) {
-      selectKit.triggerSearch();
+      selectKit.set("isLoading", false);
     }
   }
 }
@@ -79,38 +77,15 @@ async function loadSuggestions(component, selectKit) {
 function triggerRow(component) {
   return {
     id: SUGGEST_ID,
-    name: i18n("discourse_ai.ai_helper.suggest"),
+    name: i18n("discourse_ai.ai_helper.choose"),
     icon: "discourse-sparkles",
     classNames: "ai-category-suggest-row",
-    onSelect: (selectKit) => loadSuggestions(component, selectKit),
-  };
-}
-
-function loadingRow() {
-  return {
-    id: SUGGEST_ID,
-    name: i18n("discourse_ai.ai_helper.context_menu.loading"),
-    icon: "spinner",
-    classNames: "ai-category-suggest-row",
-    onSelect: () => {},
-  };
-}
-
-function exitRow(component) {
-  return {
-    id: EXIT_ID,
-    name: i18n("discourse_ai.ai_helper.suggestions"),
-    icon: "xmark",
-    classNames: "ai-category-exit-row",
-    onSelect: (selectKit) => {
-      reset(component);
-      selectKit.triggerSearch();
-    },
+    onSelect: (selectKit) => applyBestSuggestion(component, selectKit),
   };
 }
 
 function enabledFor(component, siteSettings, currentUser) {
-  const composer = getOwner(component).lookup("service:composer");
+  const composer = composerFor(component);
   return (
     siteSettings.ai_embeddings_enabled &&
     composer?.model &&
@@ -124,8 +99,9 @@ function enabledFor(component, siteSettings, currentUser) {
 }
 
 function hasEnoughContent(component) {
-  const composer = getOwner(component).lookup("service:composer");
-  return (composer?.model?.reply?.length ?? 0) > MIN_CHARACTER_COUNT;
+  return (
+    (composerFor(component)?.model?.reply?.length ?? 0) > MIN_CHARACTER_COUNT
+  );
 }
 
 function initInlineCategorySuggester(api) {
@@ -138,41 +114,11 @@ function initInlineCategorySuggester(api) {
     }
 
     if (component.selectKit.filter) {
-      reset(component);
       return;
     }
 
-    if (stateFor(component).mode === "idle" && hasEnoughContent(component)) {
+    if (!stateFor(component).loading && hasEnoughContent(component)) {
       return triggerRow(component);
-    }
-  });
-
-  api.modifySelectKit("category-chooser").replaceContent((component) => {
-    if (!enabledFor(component, siteSettings, currentUser)) {
-      return;
-    }
-
-    if (component.selectKit.filter) {
-      return;
-    }
-
-    const state = stateFor(component);
-
-    if (state.mode === "loading") {
-      return [loadingRow()];
-    }
-
-    if (state.mode === "results") {
-      return [
-        exitRow(component),
-        ...state.suggestions.map((s) => ({ id: s.id, name: s.name })),
-      ];
-    }
-  });
-
-  api.modifySelectKit("category-chooser").onChange((component, value) => {
-    if (value !== SUGGEST_ID && value !== EXIT_ID) {
-      reset(component);
     }
   });
 }
