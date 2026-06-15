@@ -446,4 +446,56 @@ describe "Reviewables" do
       end
     end
   end
+
+  describe "when deleting a spammer from a queued post" do
+    fab!(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:spammer) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:watching_admin, :admin)
+
+    before { Jobs.run_immediately! }
+
+    it "resolves every reviewable tied to the spammer in the acting and watching queues" do
+      acted_queued_post =
+        Fabricate(
+          :reviewable_queued_post,
+          created_by: Discourse.system_user,
+          target_created_by: spammer,
+        )
+      flag = PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
+      flag.target.update!(
+        hidden: true,
+        hidden_at: Time.zone.now,
+        hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+      )
+      user_review = ReviewableUser.create_for(spammer)
+      review_every_post = ReviewablePost.queue_for_review(Fabricate(:post, user: spammer))
+
+      all = [acted_queued_post, flag, user_review, review_every_post]
+
+      using_session(:other_tab) do
+        sign_in(watching_admin)
+        visit("/review")
+
+        expect(review_page).to have_reviewables(all)
+      end
+
+      visit("/review")
+
+      expect(review_page).to have_reviewables(all)
+
+      review_page.select_bundled_action(acted_queued_post, "delete_user")
+
+      expect(review_page).to have_reviewable_with_rejected_status(acted_queued_post)
+      expect(review_page).to have_reviewable_with_approved_status(flag)
+      expect(review_page).to have_reviewable_with_rejected_status(user_review)
+      expect(review_page).to have_reviewable_with_rejected_status(review_every_post)
+
+      using_session(:other_tab) do
+        expect(review_page).to have_reviewable_with_rejected_status(acted_queued_post)
+        expect(review_page).to have_reviewable_with_approved_status(flag)
+        expect(review_page).to have_reviewable_with_rejected_status(user_review)
+        expect(review_page).to have_reviewable_with_rejected_status(review_every_post)
+      end
+    end
+  end
 end
