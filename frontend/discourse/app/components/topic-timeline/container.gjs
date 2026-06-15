@@ -9,7 +9,6 @@ import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { actionDescriptionHtml } from "discourse/components/post-action-description";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
-import TopicLocalizedContentToggle from "discourse/components/topic-localized-content-toggle";
 import UserTip from "discourse/components/user-tip";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
@@ -168,10 +167,7 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get showTimelineControls() {
-    return (
-      !this.args.fullscreen &&
-      (this.currentUser || this.args.model.has_localized_content)
-    );
+    return !this.args.fullscreen && this.currentUser;
   }
 
   get topicTitle() {
@@ -570,10 +566,6 @@ export default class TopicTimelineScrollArea extends Component {
           @convertToPublicTopic={{@convertToPublicTopic}}
           @convertToPrivateMessage={{@convertToPrivateMessage}}
         />
-
-        {{#if @model.has_localized_content}}
-          <TopicLocalizedContentToggle @topic={{@model}} />
-        {{/if}}
       </div>
     {{/if}}
 
