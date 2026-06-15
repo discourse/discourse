@@ -762,7 +762,7 @@
   }
 }
 
-@keyframes workflow-ai-highlight-pulse {
+@keyframes workflow-highlight-pulse {
   0%,
   100% {
     box-shadow: 0 0 0 2px var(--tertiary-low);
@@ -845,10 +845,12 @@
     box-shadow: 0 0 0 1px var(--tertiary);
   }
 
-  &.is-ai-highlighted &__icon-block {
-    border-color: var(--tertiary);
-    box-shadow: 0 0 0 3px var(--tertiary-low);
-    animation: workflow-ai-highlight-pulse 1.5s ease-in-out 3;
+  @media (prefers-reduced-motion: no-preference) {
+    &.is-highlighted &__icon-block {
+      border-color: var(--tertiary);
+      box-shadow: 0 0 0 3px var(--tertiary-low);
+      animation: workflow-highlight-pulse 1.25s ease-in-out 4;
+    }
   }
 
   &.is-trigger &__icon-block {

@@ -1358,7 +1358,7 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  handleWorkflowDiscarded(workflow) {
+  replaceWorkflow(workflow) {
     this.pendingSave = false;
     this.pendingGraphSnapshot = null;
     this.pendingSaveOptions = null;
@@ -1384,11 +1384,6 @@ export default class WorkflowsEditor extends Component {
     this.#refreshUndoState();
   }
 
-  @action
-  handleAiWorkflowApplied(workflow) {
-    this.handleWorkflowDiscarded(workflow);
-  }
-
   async discardWorkflowDraft() {
     try {
       const response = await ajax(
@@ -1398,7 +1393,7 @@ export default class WorkflowsEditor extends Component {
         }
       );
 
-      this.handleWorkflowDiscarded(response.workflow);
+      this.replaceWorkflow(response.workflow);
     } catch (e) {
       popupAjaxError(e);
       throw e;
@@ -1530,8 +1525,8 @@ export default class WorkflowsEditor extends Component {
           @onOpenNodePanel={{this.openNodePanel}}
           @onCloseNodePanel={{this.closeNodePanel}}
           @onBrowseTemplates={{this.browseTemplates}}
-          @onDiscardWorkflow={{this.handleWorkflowDiscarded}}
-          @onAiWorkflowApplied={{this.handleAiWorkflowApplied}}
+          @onDiscardWorkflow={{this.replaceWorkflow}}
+          @onWorkflowUpdated={{this.replaceWorkflow}}
           @onImportNodes={{this.importNodes}}
           @onAddStickyNote={{this.addStickyNote}}
           @onStickyNoteBeforeMutation={{this.stickyNoteBeforeMutation}}

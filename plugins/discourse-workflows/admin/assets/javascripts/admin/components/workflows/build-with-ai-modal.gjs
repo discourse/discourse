@@ -339,31 +339,6 @@ export default class BuildWithAiModal extends Component {
     });
   }
 
-  #changedNodeRefs() {
-    const refs = { ids: new Set(), names: new Set() };
-
-    for (const operation of this.aiProposal?.operations || []) {
-      if (operation.op === "add_node" && operation.node?.name) {
-        refs.names.add(operation.node.name);
-      }
-
-      for (const key of [
-        "node_id",
-        "client_id",
-        "from",
-        "from_node_id",
-        "to",
-        "to_node_id",
-      ]) {
-        if (operation[key]) {
-          refs.ids.add(operation[key].toString());
-        }
-      }
-    }
-
-    return refs;
-  }
-
   #ajaxErrorMessage(error) {
     const status = error?.jqXHR?.status ?? error?.status;
     if (status >= 500) {
@@ -566,8 +541,6 @@ export default class BuildWithAiModal extends Component {
       return;
     }
 
-    const changedNodeRefs = this.#changedNodeRefs();
-
     try {
       const response = await ajax(
         `/admin/plugins/discourse-workflows/workflows/${this.args.workflowId}/ai/apply.json`,
@@ -578,7 +551,7 @@ export default class BuildWithAiModal extends Component {
           },
         }
       );
-      this.args.onApply?.(response.workflow, changedNodeRefs);
+      this.args.onApply?.(response.workflow);
       this.returnToAiPrompt();
       this.aiPrompt = "";
       this.args.onClose?.();

@@ -46,7 +46,6 @@ export default class WorkflowCanvas extends Component {
   @tracked hasUnpublishedChangesOverride = null;
   @tracked selectionVersion = 0;
   @tracked aiPanelOpen = false;
-  @tracked aiHighlightedNodeIds = new Set();
   copiedEntities = { nodes: [], stickyNotes: [] };
   pasteOffset = 0;
   isFirstSync = true;
@@ -63,7 +62,6 @@ export default class WorkflowCanvas extends Component {
     super.willDestroy();
     this.rete?.destroy();
     this.keyboard?.teardown();
-    clearTimeout(this.aiHighlightTimer);
   }
 
   get workflowPublished() {
@@ -118,33 +116,6 @@ export default class WorkflowCanvas extends Component {
   @action
   closeAiPanel() {
     this.aiPanelOpen = false;
-  }
-
-  @action
-  isAiHighlightedNode(clientId) {
-    this.aiHighlightedNodeIds;
-    return this.aiHighlightedNodeIds.has(clientId?.toString());
-  }
-
-  #highlightAiChangedNodes(workflow, refs) {
-    const nodeIds = new Set();
-    for (const node of workflow?.nodes || []) {
-      if (refs.ids.has(node.id?.toString()) || refs.names.has(node.name)) {
-        nodeIds.add(node.id?.toString());
-      }
-    }
-
-    this.aiHighlightedNodeIds = nodeIds;
-    clearTimeout(this.aiHighlightTimer);
-    this.aiHighlightTimer = setTimeout(() => {
-      this.aiHighlightedNodeIds = new Set();
-    }, 6000);
-  }
-
-  @action
-  handleAiWorkflowApplied(workflow, changedNodeRefs) {
-    this.args.onAiWorkflowApplied?.(workflow);
-    this.#highlightAiChangedNodes(workflow, changedNodeRefs);
   }
 
   @action
@@ -761,7 +732,6 @@ export default class WorkflowCanvas extends Component {
               @onEditNode={{@onEditNode}}
               @workflowPublished={{this.workflowPublished}}
               @session={{@session}}
-              @aiHighlighted={{this.isAiHighlightedNode entry.node.id}}
             />
           {{/in-element}}
         {{/each}}
@@ -987,7 +957,7 @@ export default class WorkflowCanvas extends Component {
           <BuildWithAiModal
             @open={{this.aiPanelOpen}}
             @workflowId={{@workflowId}}
-            @onApply={{this.handleAiWorkflowApplied}}
+            @onApply={{@onWorkflowUpdated}}
             @onClose={{this.closeAiPanel}}
           />
         {{/if}}
