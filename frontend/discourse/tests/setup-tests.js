@@ -243,7 +243,9 @@ export default async function setupTests(config) {
   await loadSprites(setupData.svgSpritePath, "fontawesome");
 
   let app;
+  let modalLeakBaseline = 0;
   QUnit.testStart(async function (ctx) {
+    modalLeakBaseline = window.__dModalKeydownListeners ?? 0;
     let settings = resetSettings();
 
     resetThemeSettings();
@@ -310,7 +312,7 @@ export default async function setupTests(config) {
     disableLoadMoreObserver();
   });
 
-  QUnit.testDone(function () {
+  QUnit.testDone(function (details) {
     testCleanup(getOwner(app), app);
 
     sinon.restore();
@@ -321,6 +323,15 @@ export default async function setupTests(config) {
     run(() => {
       app.destroy();
     });
+
+    const modalListeners = window.__dModalKeydownListeners ?? 0;
+    if (modalListeners > modalLeakBaseline) {
+      (window.__modalLeakers ??= []).push(`${details.module}: ${details.name}`);
+      // eslint-disable-next-line no-console
+      console.error(
+        `MODAL-LEAK: "${details.module}: ${details.name}" left ${modalListeners - modalLeakBaseline} d-modal keydown listener(s) on <html> (total=${modalListeners})`
+      );
+    }
 
     resetPretender();
     clearPresenceState();

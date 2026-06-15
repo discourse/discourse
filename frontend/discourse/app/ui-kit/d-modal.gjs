@@ -96,6 +96,8 @@ export default class DModal extends Component {
       this.handleDocumentKeydown,
       { capture: true }
     );
+    window.__dModalKeydownListeners =
+      (window.__dModalKeydownListeners ?? 0) + 1;
 
     this.wrapperElement = el;
     this.animating = true;
@@ -114,6 +116,8 @@ export default class DModal extends Component {
       this.handleDocumentKeydown,
       { capture: true }
     );
+    window.__dModalKeydownListeners =
+      (window.__dModalKeydownListeners ?? 0) - 1;
   }
 
   get dismissable() {

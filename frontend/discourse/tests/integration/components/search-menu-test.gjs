@@ -69,54 +69,17 @@ module("Integration | Component | SearchMenu", function (hooks) {
       .dom(".search-result-topic")
       .exists("search result is a list of topics");
 
-    // Debug
-    const input = document.querySelector("#icon-search-input");
-    let focusCount = 0;
-    let blurCount = 0;
-    let stack;
-    const onFocus = () => {
-      focusCount++;
-      stack ??= new Error("focus after Esc").stack;
-    };
-    const onBlur = () => blurCount++;
-    input?.addEventListener("focus", onFocus);
-    input?.addEventListener("blur", onBlur);
-
-    let escCaptured = false;
-    let escBubbledToDoc = false;
-    const onDocCapture = (e) => (escCaptured ||= e.key === "Escape");
-    const onDocBubble = (e) => (escBubbledToDoc ||= e.key === "Escape");
-    document.addEventListener("keydown", onDocCapture, true);
-    document.addEventListener("keydown", onDocBubble, false);
-
     await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
-
-    const panelAfterEscape = !!document.querySelector(".menu-panel");
 
     const menuClosed = await waitUntil(
       () => !document.querySelector(".menu-panel")
     ).catch(() => false);
 
-    input?.removeEventListener("focus", onFocus);
-    input?.removeEventListener("blur", onBlur);
-    document.removeEventListener("keydown", onDocCapture, true);
-    document.removeEventListener("keydown", onDocBubble, false);
-
-    // If it didn't close, print out focus state in the failure message.
-    let closeDebug = "";
-    if (!menuClosed) {
-      const { activeElement } = document;
-      const refocus = stack?.split("\n").slice(0, 6).join(" | ");
-      const inputCount = document.querySelectorAll("#icon-search-input").length;
-      const containerCount = document.querySelectorAll(
-        ".search-menu-container"
-      ).length;
-      const panelCount = document.querySelectorAll(".menu-panel").length;
-      const activeOutsideTesting = activeElement
-        ? !activeElement.closest("#ember-testing")
-        : null;
-      closeDebug = ` (activeElement=${activeElement?.id || activeElement?.nodeName}, hasFocus=${document.hasFocus()}, panelCount=${panelCount}, inputCount=${inputCount}, containerCount=${containerCount}, activeOutsideTesting=${activeOutsideTesting}, panelAfterEscape=${panelAfterEscape}, focusCount=${focusCount}, blurCount=${blurCount}, escCaptured=${escCaptured}, escBubbledToDoc=${escBubbledToDoc}, refocus=${refocus})`;
-    }
+    // DEBUG(flake): the Escape is swallowed by a leaked d-modal capture-phase
+    // keydown listener on <html>. Name the test(s) that leaked it.
+    const closeDebug = menuClosed
+      ? ""
+      : ` (leakedModalKeydownListeners=${window.__dModalKeydownListeners ?? 0}, leakers=${(window.__modalLeakers ?? []).join(" / ")})`;
 
     assert.dom(".menu-panel").doesNotExist(`Menu panel is closed${closeDebug}`);
 
