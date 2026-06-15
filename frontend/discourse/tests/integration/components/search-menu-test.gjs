@@ -98,7 +98,15 @@ module("Integration | Component | SearchMenu", function (hooks) {
     if (!menuClosed) {
       const { activeElement } = document;
       const refocus = stack?.split("\n").slice(0, 6).join(" | ");
-      closeDebug = ` (activeElement=${activeElement?.id || activeElement?.nodeName}, hasFocus=${document.hasFocus()}, panelCount=${document.querySelectorAll(".menu-panel").length}, panelAfterEscape=${panelAfterEscape}, focusCount=${focusCount}, blurCount=${blurCount}, refocus=${refocus})`;
+      const inputCount = document.querySelectorAll("#icon-search-input").length;
+      const containerCount = document.querySelectorAll(
+        ".search-menu-container"
+      ).length;
+      const panelCount = document.querySelectorAll(".menu-panel").length;
+      const activeOutsideTesting = activeElement
+        ? !activeElement.closest("#ember-testing")
+        : null;
+      closeDebug = ` (activeElement=${activeElement?.id || activeElement?.nodeName}, hasFocus=${document.hasFocus()}, panelCount=${panelCount}, inputCount=${inputCount}, containerCount=${containerCount}, activeOutsideTesting=${activeOutsideTesting}, panelAfterEscape=${panelAfterEscape}, focusCount=${focusCount}, blurCount=${blurCount}, refocus=${refocus})`;
     }
 
     assert.dom(".menu-panel").doesNotExist(`Menu panel is closed${closeDebug}`);
