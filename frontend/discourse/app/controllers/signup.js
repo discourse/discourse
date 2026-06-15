@@ -137,7 +137,19 @@ export default class SignupPageController extends Controller {
   @computed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
   get showCreateForm() {
     return (
-      (this.hasAuthOptions || this.canCreateLocal) && !this.skipConfirmation
+      (this.hasAuthOptions || this.canCreateLocal) &&
+      !this.skipConfirmation &&
+      !this.showCodeSignupForm
+    );
+  }
+
+  @computed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
+  get showCodeSignupForm() {
+    return (
+      this.siteSettings.enable_local_logins_via_code &&
+      this.canCreateLocal &&
+      !this.hasAuthOptions &&
+      !this.skipConfirmation
     );
   }
 

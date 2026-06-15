@@ -2138,7 +2138,7 @@ en:
 
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
-    enable_local_logins_via_code: "Send a one-time code instead of a login link when a user logs in via email. Requires 'enable local logins via email'."
+    enable_local_logins_via_code: "Send a one-time code instead of a login link when a user logs in via email, and let new users sign up with just an email address and that code. Requires 'enable local logins via email'."
     allow_passkeys_for_2fa: "Allow users to use a passkey to satisfy two-factor authentication when confirming a sensitive action."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."

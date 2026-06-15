@@ -775,13 +775,65 @@ RSpec.describe SessionController do
     context "when the email does not belong to a user" do
       let(:login_code) { EmailLoginCode.generate!(email: "newuser@example.com") }
 
-      it "renders a generic error and does not create an account" do
+      it "creates and logs in a new user" do
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["error"]).to eq(I18n.t("email_login_code.invalid_code"))
+
+        new_user = User.find_by_email("newuser@example.com")
+        expect(new_user).to be_active
+        expect(session[:current_user_id]).to eq(new_user.id)
+      end
+
+      it "renders an error when registrations are disabled" do
+        SiteSetting.allow_new_registrations = false
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).to eq(I18n.t("login.new_registrations_disabled"))
         expect(session[:current_user_id]).to be_nil
-        expect(User.find_by_email("newuser@example.com")).to be_nil
+      end
+
+      context "when required signup fields exist" do
+        fab!(:user_field)
+
+        it "asks for the fields without consuming the code, then creates the user with them" do
+          post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["user_fields_required"]).to eq(true)
+          expect(session[:current_user_id]).to be_nil
+          expect(EmailLoginCode.active.for_email("newuser@example.com")).to be_present
+
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 user_fields: {
+                   user_field.id.to_s => "Dev",
+                 },
+               }
+
+          new_user = User.find_by_email("newuser@example.com")
+          expect(new_user.custom_fields["user_field_#{user_field.id}"]).to eq("Dev")
+          expect(session[:current_user_id]).to eq(new_user.id)
+        end
+
+        it "renders an error when the required fields are missing" do
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 user_fields: {
+                   "0" => "",
+                 },
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.missing_user_field"))
+          expect(session[:current_user_id]).to be_nil
+        end
       end
     end
 

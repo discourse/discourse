@@ -10,11 +10,31 @@
   }
 
   &__code-step,
-  &__second-factor-step {
+  &__second-factor-step,
+  &__user-fields-step,
+  &__complete-step {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 1em;
+  }
+
+  &__new-account {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
+    gap: 0.5em;
+    padding: 1em 0;
+  }
+
+  &__new-account-username {
+    font-size: var(--font-up-2);
+    font-weight: bold;
+  }
+
+  &__continue-to-site {
+    align-self: stretch;
   }
 
   &__title {
