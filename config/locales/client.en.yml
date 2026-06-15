@@ -2917,6 +2917,19 @@ en:
       logging_in_as: Logging in as %{email}
       confirm_button: Finish Login
 
+    code_login:
+      email_label: "Email"
+      continue_button: "Continue"
+      check_your_email: "Check your email"
+      code_instructions: "We sent a 6-digit code to <b>%{email}</b>. Enter it below to continue."
+      verify_button: "Continue"
+      resend: "Resend code"
+      resend_countdown: "Resend code (%{count}s)"
+      code_resent: "We sent a new code."
+      use_different_email: "Use a different email address"
+      use_password_instead: "Log in with your password instead"
+      email_me_code: "Email me a one-time login code"
+
     login:
       header_title: "Welcome back"
       title: "Log In"

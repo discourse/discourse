@@ -4809,6 +4809,42 @@ ALTER SEQUENCE public.email_change_requests_id_seq OWNED BY public.email_change_
 
 
 --
+-- Name: email_login_codes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.email_login_codes (
+    id bigint NOT NULL,
+    email character varying NOT NULL,
+    code_hash character varying NOT NULL,
+    attempts integer DEFAULT 0 NOT NULL,
+    requested_ip inet,
+    expires_at timestamp(6) without time zone NOT NULL,
+    consumed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: email_login_codes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.email_login_codes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: email_login_codes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.email_login_codes_id_seq OWNED BY public.email_login_codes.id;
+
+
+--
 -- Name: email_logs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -12673,6 +12709,13 @@ ALTER TABLE ONLY public.email_change_requests ALTER COLUMN id SET DEFAULT nextva
 
 
 --
+-- Name: email_login_codes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_login_codes ALTER COLUMN id SET DEFAULT nextval('public.email_login_codes_id_seq'::regclass);
+
+
+--
 -- Name: email_logs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14948,6 +14991,14 @@ ALTER TABLE ONLY public.drafts
 
 ALTER TABLE ONLY public.email_change_requests
     ADD CONSTRAINT email_change_requests_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: email_login_codes email_login_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_login_codes
+    ADD CONSTRAINT email_login_codes_pkey PRIMARY KEY (id);
 
 
 --
@@ -18524,6 +18575,20 @@ CREATE INDEX index_email_change_requests_on_user_id ON public.email_change_reque
 
 
 --
+-- Name: index_email_login_codes_on_expires_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_email_login_codes_on_expires_at ON public.email_login_codes USING btree (expires_at);
+
+
+--
+-- Name: index_email_login_codes_on_lower_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_email_login_codes_on_lower_email ON public.email_login_codes USING btree (lower((email)::text));
+
+
+--
 -- Name: index_email_logs_on_bounce_key; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21914,6 +21979,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260612092612'),
+('20260610205840'),
 ('20260610075829'),
 ('20260609050938'),
 ('20260607161322'),

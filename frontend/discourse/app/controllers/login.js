@@ -49,10 +49,19 @@ export default class LoginPageController extends Controller {
   @tracked secondFactorToken;
   @tracked flash;
   @tracked flashType;
+  @tracked showCodeLoginForm = false;
 
   @computed("siteSettings.enable_local_logins")
   get canLoginLocal() {
     return this.siteSettings.enable_local_logins;
+  }
+
+  get canUseCodeLogin() {
+    return (
+      this.siteSettings.enable_local_logins_via_code &&
+      this.siteSettings.enable_local_logins_via_email &&
+      this.siteSettings.enable_local_logins
+    );
   }
 
   @computed("siteSettings.enable_local_logins_via_email")
@@ -89,6 +98,9 @@ export default class LoginPageController extends Controller {
     }
     if (this.showSecondFactor || this.showSecurityKey) {
       classes.push("second-factor");
+    }
+    if (this.showCodeLoginForm) {
+      classes.push("code-login");
     }
     return classes.join(" ");
   }
@@ -157,6 +169,16 @@ export default class LoginPageController extends Controller {
     } catch (e) {
       popupAjaxError(e);
     }
+  }
+
+  @action
+  showCodeLogin() {
+    this.showCodeLoginForm = true;
+  }
+
+  @action
+  usePassword() {
+    this.showCodeLoginForm = false;
   }
 
   @action
