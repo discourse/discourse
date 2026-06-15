@@ -549,12 +549,12 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_op_post
     end
 
-    it "does not show reply buttons for anonymous users" do
+    it "shows login reply only in floating actions for anonymous users" do
       nested_view.visit_nested(topic)
 
       expect(nested_view).to have_no_reply_button_for(root_reply)
       expect(nested_view).to have_no_reply_button_on_op
-      expect(nested_view).to have_no_floating_reply_button
+      expect(nested_view).to have_floating_reply_button
     end
 
     it "shows login page when anonymous user clicks like" do
