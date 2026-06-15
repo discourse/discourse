@@ -402,6 +402,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_link_counts?
+    return false if object.hidden? && !scope.can_see_hidden_post?(object)
     return true if @single_post_link_counts.present?
 
     @topic_view.present? && @topic_view.link_counts.present? &&
