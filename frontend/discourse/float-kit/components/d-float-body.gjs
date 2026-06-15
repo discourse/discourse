@@ -6,7 +6,6 @@ import DFloatPortal from "discourse/float-kit/components/d-float-portal";
 import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
 import FloatKitApplyFloatingUi from "discourse/float-kit/modifiers/apply-floating-ui";
 import FloatKitCloseOnEscape from "discourse/float-kit/modifiers/close-on-escape";
-import { and } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import dTrapTab from "discourse/ui-kit/modifiers/d-trap-tab";
@@ -39,16 +38,22 @@ export default class DFloatBody extends Component {
     };
   });
 
+  // These intentionally do NOT also gate on `instance.expanded`. DFloatBody is
+  // only rendered while expanded (see the `{{#if @instance.expanded}}` in
+  // DTooltip/DMenu/DInlineFloat), so gating the `{{(if ...)}}` modifiers on
+  // `expanded` too would toggle them off in the very same render that tears the
+  // body down. That double teardown drops the modifiers' destructors, leaking
+  // their global listeners (e.g. close-on-escape's document keydown listener).
   get supportsCloseOnClickOutside() {
-    return this.args.instance.expanded && this.options.closeOnClickOutside;
+    return this.options.closeOnClickOutside;
   }
 
   get supportsCloseOnEscape() {
-    return this.args.instance.expanded && this.options.closeOnEscape;
+    return this.options.closeOnEscape;
   }
 
   get supportsCloseOnScroll() {
-    return this.args.instance.expanded && this.options.closeOnScroll;
+    return this.options.closeOnScroll;
   }
 
   get trigger() {
@@ -93,7 +98,7 @@ export default class DFloatBody extends Component {
         {{this.trapInteractionPropagation}}
         {{(if @trapTab (modifier dTrapTab autofocus=this.options.autofocus))}}
         {{(if
-          (and @instance.expanded this.supportsCloseOnClickOutside)
+          this.supportsCloseOnClickOutside
           (modifier
             dCloseOnClickOutside
             (fn @instance.close (hash focusTrigger=false))
