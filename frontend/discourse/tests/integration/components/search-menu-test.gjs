@@ -71,17 +71,26 @@ module("Integration | Component | SearchMenu", function (hooks) {
 
     await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
 
-    // Wait for the panel to actually be removed.
+    // Something re-focuses the input and that re-runs the open handler.
+    // Capture the stack to pinpoints the source.
+    let stack = null;
+    const input = document.getElementById("icon-search-input");
+    const onRefocus = () => (stack ??= new Error("re-focus after Esc").stack);
+    input?.addEventListener("focus", onRefocus);
+
     const menuClosed = await waitUntil(
       () => !document.querySelector(".menu-panel")
     ).catch(() => false);
+
+    input?.removeEventListener("focus", onRefocus);
 
     // If it didn't close, print out focus state in the failure message.
     let closeDebug = "";
     if (!menuClosed) {
       const panelCount = document.querySelectorAll(".menu-panel").length;
       const { activeElement } = document;
-      closeDebug = ` (activeElement=${activeElement?.id || activeElement?.nodeName}, hasFocus=${document.hasFocus()}, panelCount=${panelCount})`;
+      const refocus = stack?.split("\n").slice(0, 5).join(" | ");
+      closeDebug = ` (activeElement=${activeElement?.id || activeElement?.nodeName}, hasFocus=${document.hasFocus()}, panelCount=${panelCount}, refocus=${refocus})`;
     }
 
     assert.dom(".menu-panel").doesNotExist(`Menu panel is closed${closeDebug}`);
