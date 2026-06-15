@@ -203,6 +203,7 @@ zh_CN:
         requires_assign: "需要启用 Assign 插件"
       nodes:
         "action:assign_topic": "指定话题"
+        "trigger:assigned": "已指定"
       node_descriptions:
         "action:assign_topic": "分配或取消分配主题"
       assign_topic:

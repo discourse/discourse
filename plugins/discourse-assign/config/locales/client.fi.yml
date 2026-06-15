@@ -185,6 +185,8 @@ fi:
       topic: "Ketju"
       post: "Viesti"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Osoitettu"
       assign_topic:
         operations:
           assign: "Osoita"

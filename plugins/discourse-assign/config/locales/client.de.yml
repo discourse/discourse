@@ -203,6 +203,7 @@ de:
     discourse_workflows:
       nodes:
         "action:assign_topic": "Thema zuordnen"
+        "trigger:assigned": "Zugeordnet"
       assign_topic:
         operations:
           assign: "Zuordnen"

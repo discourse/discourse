@@ -189,6 +189,8 @@ sk:
       topic: "Téma"
       post: "Príspevok"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Priradené"
       assign_topic:
         operations:
           assign: "Priradiť"

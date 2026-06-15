@@ -215,6 +215,7 @@ uk:
         requires_assign: "Потрібно ввімкнути плагін Assign"
       nodes:
         "action:assign_topic": "Призначити тему"
+        "trigger:assigned": "Призначено"
       node_descriptions:
         "action:assign_topic": "Призначити або скасувати призначення теми"
       assign_topic:

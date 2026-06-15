@@ -691,6 +691,8 @@ sv:
         chat:
           label: "Chatt"
     discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
       send_chat_message:
         channel_id: "Kanal"
         message: "Meddelande"

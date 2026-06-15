@@ -185,6 +185,8 @@ it:
       topic: "Argomento"
       post: "Messaggio"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Assegnato"
       assign_topic:
         operations:
           assign: "Assegna"

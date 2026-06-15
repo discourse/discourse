@@ -797,6 +797,9 @@ tr_TR:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Sohbet mesajı gönder"
+        "trigger:chat_message_created": "Sohbet mesajı oluşturuldu"
+      chat_message_created:
+        channel_id: "Kanal"
       send_chat_message:
         channel_id: "Kanal"
         message: "Mesaj"

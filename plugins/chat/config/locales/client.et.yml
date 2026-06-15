@@ -207,6 +207,8 @@ et:
         chat:
           label: "Vestlus"
     discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
       send_chat_message:
         channel_id: "Kanal"
         message: "Sõnum"

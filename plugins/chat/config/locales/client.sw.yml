@@ -160,6 +160,8 @@ sw:
             message:
               label: Ujumbe
     discourse_workflows:
+      chat_message_created:
+        channel_id: "Chaneli"
       send_chat_message:
         channel_id: "Chaneli"
         message: "Ujumbe"
