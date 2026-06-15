@@ -98,7 +98,10 @@ module("Integration | Component | SearchMenu", function (hooks) {
     if (!menuClosed) {
       const captureListeners = (window.__kdListeners ?? [])
         .filter((l) => l.capture)
-        .map((l) => `${l.tag}:${l.name}@${l.stack?.split("\n")[2]?.trim()}`)
+        .map(
+          (l) =>
+            `${l.tag}:${l.name} addedBy="${l.test}" @${l.stack?.split("\n")[2]?.trim()}`
+        )
         .join(" || ");
       closeDebug = ` (blurCount=${blurCount}, escCaptured=${escCaptured}, escBubbledToDoc=${escBubbledToDoc}, modalListeners=${window.__dModalKeydownListeners ?? 0}, captureKeydownListeners=[${captureListeners}])`;
     }

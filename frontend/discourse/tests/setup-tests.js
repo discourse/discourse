@@ -255,6 +255,7 @@ export default async function setupTests(config) {
             fn,
             capture: opts === true || !!opts?.capture,
             name: fn?.name || "(anon)",
+            test: window.__currentTest,
             stack: new Error().stack,
           });
         }
@@ -294,6 +295,8 @@ export default async function setupTests(config) {
   let modalLeakBaseline = 0;
   QUnit.testStart(async function (ctx) {
     modalLeakBaseline = window.__dModalKeydownListeners ?? 0;
+    // DEBUG(flake): so the keydown tracker can attribute a leaked listener
+    window.__currentTest = `${ctx.module}: ${ctx.name}`;
     let settings = resetSettings();
 
     resetThemeSettings();
