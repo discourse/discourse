@@ -82,6 +82,13 @@ module("Integration | Component | SearchMenu", function (hooks) {
     input?.addEventListener("focus", onFocus);
     input?.addEventListener("blur", onBlur);
 
+    let escCaptured = false;
+    let escBubbledToDoc = false;
+    const onDocCapture = (e) => (escCaptured ||= e.key === "Escape");
+    const onDocBubble = (e) => (escBubbledToDoc ||= e.key === "Escape");
+    document.addEventListener("keydown", onDocCapture, true);
+    document.addEventListener("keydown", onDocBubble, false);
+
     await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
 
     const panelAfterEscape = !!document.querySelector(".menu-panel");
@@ -92,6 +99,8 @@ module("Integration | Component | SearchMenu", function (hooks) {
 
     input?.removeEventListener("focus", onFocus);
     input?.removeEventListener("blur", onBlur);
+    document.removeEventListener("keydown", onDocCapture, true);
+    document.removeEventListener("keydown", onDocBubble, false);
 
     // If it didn't close, print out focus state in the failure message.
     let closeDebug = "";
@@ -106,7 +115,7 @@ module("Integration | Component | SearchMenu", function (hooks) {
       const activeOutsideTesting = activeElement
         ? !activeElement.closest("#ember-testing")
         : null;
-      closeDebug = ` (activeElement=${activeElement?.id || activeElement?.nodeName}, hasFocus=${document.hasFocus()}, panelCount=${panelCount}, inputCount=${inputCount}, containerCount=${containerCount}, activeOutsideTesting=${activeOutsideTesting}, panelAfterEscape=${panelAfterEscape}, focusCount=${focusCount}, blurCount=${blurCount}, refocus=${refocus})`;
+      closeDebug = ` (activeElement=${activeElement?.id || activeElement?.nodeName}, hasFocus=${document.hasFocus()}, panelCount=${panelCount}, inputCount=${inputCount}, containerCount=${containerCount}, activeOutsideTesting=${activeOutsideTesting}, panelAfterEscape=${panelAfterEscape}, focusCount=${focusCount}, blurCount=${blurCount}, escCaptured=${escCaptured}, escBubbledToDoc=${escBubbledToDoc}, refocus=${refocus})`;
     }
 
     assert.dom(".menu-panel").doesNotExist(`Menu panel is closed${closeDebug}`);
