@@ -58,10 +58,15 @@ RSpec.describe "Nested view replying" do
       expect(nested_view).to have_floating_reply_button
     end
 
-    it "is not visible for anonymous users" do
+    it "is visible for anonymous users and opens the login flow" do
       Capybara.reset_sessions!
       nested_view.visit_nested(topic)
-      expect(nested_view).to have_no_floating_reply_button
+
+      expect(nested_view).to have_floating_reply_button
+
+      nested_view.click_floating_reply_button
+
+      expect(page).to have_css("#login-account-name")
     end
 
     it "opens the composer for a top-level reply" do
