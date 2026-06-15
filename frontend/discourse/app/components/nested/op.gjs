@@ -159,6 +159,7 @@ export default class NestedOp extends Component {
                       >
                         <PostMenu
                           @post={{@post}}
+                          @nestedReplyView={{true}}
                           @canCreatePost={{this.canCreatePost}}
                           @copyLink={{this.copyLink}}
                           @replyToPost={{@replyToPost}}

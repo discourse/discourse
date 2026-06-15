@@ -13,13 +13,13 @@ module Migrations
 
       def initialize(step)
         @step = step
+        @source = step.source
       end
 
       def execute
         @max_progress = calculate_max_progress
 
         puts @step.class.title
-        @step.execute
 
         if execute_in_parallel?
           execute_parallel
@@ -35,10 +35,11 @@ module Migrations
       end
 
       def execute_serially
-        job = SerialJob.new(@step)
+        job = SerialJob.new(@step.create_processor)
+        job.setup
 
         with_progressbar do |progressbar|
-          @step.items.each do |item|
+          @source.items.each do |item|
             stats = job.run(item)
             progressbar.update(
               increment_by: stats.progress,
@@ -64,7 +65,7 @@ module Migrations
 
       def calculate_max_progress
         start_time = Time.now
-        max_progress = @step.max_progress
+        max_progress = @source.max_progress
         duration = Time.now - start_time
 
         if duration > PRINT_RUNTIME_AFTER_SECONDS
@@ -110,7 +111,7 @@ module Migrations
 
         ForkManager.batch_forks do
           WORKER_COUNT.times do |index|
-            job = ParallelJob.new(@step)
+            job = ParallelJob.new(@step.create_processor)
             workers << Worker.new(index, work_queue, worker_output_queue, job).start
           end
         end
@@ -119,7 +120,7 @@ module Migrations
       end
 
       def push_work(work_queue)
-        @step.items.each { |item| work_queue.push(item) }
+        @source.items.each { |item| work_queue.push(item) }
         work_queue.close
       end
     end

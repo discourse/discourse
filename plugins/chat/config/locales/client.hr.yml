@@ -357,6 +357,8 @@ hr:
         chat:
           label: "Čavrljanje"
     discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
       send_chat_message:
         channel_id: "Kanal"
         message: "Poruka"

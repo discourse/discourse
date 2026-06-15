@@ -7,9 +7,6 @@
 # authors: Robin Ward, Sam Saffron
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-github
 
-require "sawyer"
-require "octokit"
-
 # Site setting validators must be loaded before initialize
 require_relative "app/lib/github_badges_repo_setting_validator"
 require_relative "app/lib/github_linkback_access_token_setting_validator"

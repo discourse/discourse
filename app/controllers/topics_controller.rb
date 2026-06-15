@@ -60,8 +60,6 @@ class TopicsController < ApplicationController
       raise Discourse::InvalidParameters.new("Show only accepts a single ID")
     end
 
-    flash["referer"] ||= request.referer[0..255] if request.referer
-
     # TODO: We'd like to migrate the wordpress feed to another url. This keeps up backwards
     # compatibility with existing installs.
     return wordpress if params[:best].present?
@@ -194,21 +192,9 @@ class TopicsController < ApplicationController
       return
     end
 
-    if !request.format.json? && !use_crawler_layout? && SiteSetting.nested_replies_enabled &&
-         !@topic_view.topic.private_message? &&
-         (@topic_view.topic.nested_topic.present? || SiteSetting.nested_replies_default) &&
-         params[:flat] != "1"
-      url = +"/n/#{@topic_view.topic.slug}/#{@topic_view.topic.id}"
-      post_number = opts[:post_number].to_i
-      url << "/#{post_number}" if post_number > 0
-      if params[:embed_mode] == "true"
-        embed_query = { embed_mode: true }
-        embed_query[:class_name] = params[:class_name] if params[:class_name].present?
-        url << "?#{embed_query.to_query}"
-      end
-      redirect_to url, status: :found
-      return
-    end
+    # Nested topics render through the normal topic route. The Ember topic
+    # route decides whether to mount the flat post stream or the nested tree;
+    # crawlers still receive the flat topic HTML from this controller.
 
     track_visit_to_topic
 
@@ -1466,7 +1452,7 @@ class TopicsController < ApplicationController
 
     if !request.format.json?
       hash = {
-        referer: request.referer || flash[:referer],
+        referer: request.referer,
         host: request.host,
         current_user: current_user,
         topic_id: @topic_view.topic.id,

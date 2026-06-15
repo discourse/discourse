@@ -28,11 +28,6 @@
 
   .topic-navigation {
     overflow-anchor: none;
-
-    .btn-toggle-localized-content.--active {
-      --d-button-default-icon-color: var(--tertiary);
-      --d-button-default-icon-color--hover: var(--primary-low);
-    }
   }
 
   // timeline

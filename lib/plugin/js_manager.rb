@@ -117,12 +117,15 @@ module Plugin
       filename_prefix = "#{plugin.directory_name}_"
       filename_suffix = "-#{base36_digest}.digested"
 
-      expected_entrypoints =
-        entrypoints_config.keys.map do |name|
-          "#{js_dir}/#{filename_prefix}#{name}#{filename_suffix}.js"
-        end
+      existing_files = Dir.glob("#{js_dir}/*").map { |path| File.basename(path) }
 
-      files_exist = expected_entrypoints.all? { |path| File.exist?(path) }
+      files_exist =
+        entrypoints_config.keys.all? do |name|
+          existing_files.any? do |file|
+            file.start_with?("#{filename_prefix}#{name}.") &&
+              file.end_with?("#{filename_suffix}.js")
+          end
+        end
 
       if !cache? || !files_exist
         compiler =

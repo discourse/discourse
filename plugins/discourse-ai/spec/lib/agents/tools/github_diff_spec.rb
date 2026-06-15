@@ -57,7 +57,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubDiff do
 
       stub_request(:get, "https://api.github.com/repos/#{repo}/commits/abc123").with(
         headers: {
-          "Accept" => "application/json",
+          "Accept" => "application/vnd.github+json",
         },
       ).to_return(status: 404)
 
@@ -115,15 +115,13 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubDiff do
     it "retrieves both PR info and diff" do
       stub_request(:get, "https://api.github.com/repos/#{repo}/pulls/#{pull_id}").with(
         headers: {
-          "Accept" => "application/json",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
+          "Accept" => "application/vnd.github+json",
         },
       ).to_return(status: 200, body: pr_info.to_json)
 
       stub_request(:get, "https://api.github.com/repos/#{repo}/pulls/#{pull_id}").with(
         headers: {
           "Accept" => "application/vnd.github.v3.diff",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
         },
       ).to_return(status: 200, body: diff)
 
@@ -139,8 +137,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubDiff do
 
       stub_request(:get, "https://api.github.com/repos/#{repo}/pulls/#{pull_id}").with(
         headers: {
-          "Accept" => "application/json",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
+          "Accept" => "application/vnd.github+json",
           "Authorization" => "Bearer ABC",
         },
       ).to_return(status: 200, body: pr_info.to_json)
@@ -148,7 +145,6 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubDiff do
       stub_request(:get, "https://api.github.com/repos/#{repo}/pulls/#{pull_id}").with(
         headers: {
           "Accept" => "application/vnd.github.v3.diff",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
           "Authorization" => "Bearer ABC",
         },
       ).to_return(status: 200, body: diff)
@@ -161,8 +157,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubDiff do
     it "returns an error for invalid pull request" do
       stub_request(:get, "https://api.github.com/repos/#{repo}/pulls/#{pull_id}").with(
         headers: {
-          "Accept" => "application/json",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
+          "Accept" => "application/vnd.github+json",
         },
       ).to_return(status: 404)
 
@@ -191,15 +186,13 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubDiff do
 
       stub_request(:get, "https://api.github.com/repos/#{repo}/pulls/#{pull_id}").with(
         headers: {
-          "Accept" => "application/json",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
+          "Accept" => "application/vnd.github+json",
         },
       ).to_return(status: 200, body: pr_info_deleted_fork.to_json)
 
       stub_request(:get, "https://api.github.com/repos/#{repo}/pulls/#{pull_id}").with(
         headers: {
           "Accept" => "application/vnd.github.v3.diff",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
         },
       ).to_return(status: 200, body: diff)
 
@@ -252,15 +245,13 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubDiff do
     it "retrieves commit info and diff" do
       stub_request(:get, "https://api.github.com/repos/#{repo}/commits/#{sha}").with(
         headers: {
-          "Accept" => "application/json",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
+          "Accept" => "application/vnd.github+json",
         },
       ).to_return(status: 200, body: commit_info.to_json)
 
       stub_request(:get, "https://api.github.com/repos/#{repo}/commits/#{sha}").with(
         headers: {
           "Accept" => "application/vnd.github.v3.diff",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
         },
       ).to_return(status: 200, body: diff)
 
@@ -283,8 +274,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubDiff do
 
       stub_request(:get, "https://api.github.com/repos/#{repo}/commits/#{sha}").with(
         headers: {
-          "Accept" => "application/json",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
+          "Accept" => "application/vnd.github+json",
           "Authorization" => "Bearer ABC",
         },
       ).to_return(status: 200, body: commit_info.to_json)
@@ -292,7 +282,6 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubDiff do
       stub_request(:get, "https://api.github.com/repos/#{repo}/commits/#{sha}").with(
         headers: {
           "Accept" => "application/vnd.github.v3.diff",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
           "Authorization" => "Bearer ABC",
         },
       ).to_return(status: 200, body: diff)
@@ -305,8 +294,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubDiff do
     it "returns an error for invalid commit" do
       stub_request(:get, "https://api.github.com/repos/#{repo}/commits/#{sha}").with(
         headers: {
-          "Accept" => "application/json",
-          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
+          "Accept" => "application/vnd.github+json",
         },
       ).to_return(status: 404)
 

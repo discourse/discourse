@@ -278,6 +278,55 @@ RSpec.describe UserDestroyer do
               reviewable.reload
               expect(reviewable).to be_rejected
             end
+
+            it "approves reviewable flags on hidden posts" do
+              spammer_post = Fabricate(:post, user: user)
+              reviewable = PostActionCreator.inappropriate(admin, spammer_post).reviewable
+              spammer_post.update!(
+                hidden: true,
+                hidden_at: Time.zone.now,
+                hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+              )
+              expect(reviewable).to be_pending
+
+              destroy
+
+              expect(reviewable.reload).to be_approved
+            end
+
+            it "rejects queued posts" do
+              reviewable =
+                Fabricate(
+                  :reviewable_queued_post,
+                  created_by: Discourse.system_user,
+                  target_created_by: user,
+                )
+              expect(reviewable).to be_pending
+
+              destroy
+
+              expect(reviewable.reload).to be_rejected
+            end
+
+            it "rejects the user's account reviewable when reviewable_id is a different reviewable" do
+              flag_reviewable =
+                PostActionCreator.inappropriate(admin, Fabricate(:post, user: user)).reviewable
+              account_reviewable = ReviewableUser.create_for(user)
+              destroy_opts[:reviewable_id] = flag_reviewable.id
+
+              destroy
+
+              expect(account_reviewable.reload).to be_rejected
+            end
+
+            it "leaves the user's account reviewable pending when reviewable_id is its id" do
+              account_reviewable = ReviewableUser.create_for(user)
+              destroy_opts[:reviewable_id] = account_reviewable.id
+
+              destroy
+
+              expect(account_reviewable.reload).to be_pending
+            end
           end
         end
 

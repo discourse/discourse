@@ -10,7 +10,7 @@ export default class ChatEmojiPicker extends Component {
     {{#if this.site.desktopView}}
       <EmojiPicker
         @didSelectEmoji={{@outletArgs.composer.onSelectEmoji}}
-        @btnClass="chat-composer-button btn-transparent -emoji"
+        @btnClass="chat-composer-button btn-transparent --emoji"
         @context="chat"
       />
 

@@ -420,7 +420,7 @@ html.composer-open:not(.has-full-page-chat) {
       width: auto;
 
       &.has-selection {
-        .name {
+        .selected-name .name {
           font-size: var(--font-up-1);
         }
       }

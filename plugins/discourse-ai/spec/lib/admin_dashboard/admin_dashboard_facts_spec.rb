@@ -75,4 +75,52 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
 
     expect(spike[:headline]).to include("news.ycombinator.com")
   end
+
+  it "does not report the site's own hostname as the traffic spike source" do
+    allow(Discourse).to receive(:current_hostname).and_return("meta.discourse.org")
+    base = 29.days.ago.to_date
+    spike_day = 20.days.ago.to_date
+    base.upto(Date.current) do |date|
+      ApplicationRequest.create!(
+        date: date,
+        req_type: ApplicationRequest.req_types[:page_view_logged_in_browser],
+        count: date == spike_day ? 5000 : 100,
+      )
+    end
+    BrowserPageviewReferrerDailyRollup.create!(
+      date: spike_day,
+      normalized_referrer: "meta.discourse.org",
+      count: 4000,
+      logged_in_count: 0,
+    )
+
+    spike = compute.fetch(:signals).find { |s| s[:key] == :traffic_spike }
+
+    expect(spike[:headline]).not_to include("meta.discourse.org")
+    expect(spike[:headline]).not_to include("external referrer")
+  end
+
+  it "does not report a same-site subfolder referrer as the traffic spike source" do
+    allow(Discourse).to receive(:current_hostname).and_return("meta.discourse.org")
+    base = 29.days.ago.to_date
+    spike_day = 20.days.ago.to_date
+    base.upto(Date.current) do |date|
+      ApplicationRequest.create!(
+        date: date,
+        req_type: ApplicationRequest.req_types[:page_view_logged_in_browser],
+        count: date == spike_day ? 5000 : 100,
+      )
+    end
+    BrowserPageviewReferrerDailyRollup.create!(
+      date: spike_day,
+      normalized_referrer: "meta.discourse.org/forum/latest",
+      count: 4000,
+      logged_in_count: 0,
+    )
+
+    spike = compute.fetch(:signals).find { |s| s[:key] == :traffic_spike }
+
+    expect(spike[:headline]).not_to include("meta.discourse.org")
+    expect(spike[:headline]).not_to include("external referrer")
+  end
 end

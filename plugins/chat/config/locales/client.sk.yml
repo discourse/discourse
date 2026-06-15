@@ -821,6 +821,8 @@ sk:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Odoslať chatovú správu"
+      chat_message_created:
+        channel_id: "Kanál"
       send_chat_message:
         channel_id: "Kanál"
         message: "Správa"

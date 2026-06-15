@@ -436,6 +436,8 @@ fa_IR:
         chat:
           label: "گفتگو"
     discourse_workflows:
+      chat_message_created:
+        channel_id: "کانال"
       send_chat_message:
         channel_id: "کانال"
         message: "پیام"

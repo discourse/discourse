@@ -797,6 +797,9 @@ de:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Chat-Nachricht senden"
+        "trigger:chat_message_created": "Chat-Nachricht erstellt"
+      chat_message_created:
+        channel_id: "Kanal"
       send_chat_message:
         channel_id: "Kanal"
         message: "Nachricht"

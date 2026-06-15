@@ -114,6 +114,7 @@ class TimestampsUpdater
     sql = <<~SQL
       UPDATE #{table_name}
       SET #{column_name} = #{new_value}
+      WHERE #{column_name} IS NOT NULL
     SQL
     @raw_connection.exec(sql)
   end

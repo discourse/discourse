@@ -311,7 +311,7 @@
 
     &__members {
       min-height: unset;
-      padding: 0.25rem 0.5rem;
+      padding: 0 0.5rem;
     }
 
     &__add-members__close-btn {
@@ -933,11 +933,6 @@
 
         .participant-selector {
           width: 100%;
-        }
-
-        div.ac-wrap {
-          width: 100%;
-          margin-bottom: 9px;
         }
       }
     }

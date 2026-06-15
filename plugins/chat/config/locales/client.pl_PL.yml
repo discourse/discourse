@@ -860,9 +860,14 @@ pl_PL:
       nodes:
         "action:send_chat_message": "Wyślij wiadomość czatu"
         "action:chat_approval": "Zatwierdzenie czatu"
+        "trigger:chat_message_created": "Utworzona wiadomość czatu"
       node_descriptions:
         "action:send_chat_message": "Wyślij wiadomość do kanału czatu"
         "action:chat_approval": "Wyślij prośbę o zatwierdzenie na kanał czatu i czekaj na odpowiedź"
+        "trigger:chat_message_created": "Wyzwala się, gdy zostanie utworzona nowa wiadomość czatu"
+      chat_message_created:
+        channel_id: "Kanał"
+        channel_id_description: "Pozostaw puste, aby włączyć czat dla wszystkich kanałów."
       send_chat_message:
         channel_id: "Kanał"
         message: "Wiadomość"

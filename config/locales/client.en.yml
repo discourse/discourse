@@ -1795,7 +1795,7 @@ en:
       enable_smart_lists: "Enable smart lists when writing in the composer"
       enable_defer: "Enable mark topics as unread"
       enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
-      show_original_content: "Show original content instead of translated content. Can also be toggled within topics."
+      show_original_content: "Show original content instead of translated content."
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -3200,6 +3200,77 @@ en:
       error_rate_limit: "We have reached the GIF API rate limits. Please wait a moment and try again."
       error_search_too_long: "Please shorten your search query to under 50 characters and try again."
 
+    codemirror:
+      expression:
+        sections:
+          recommended: "Recommended"
+          properties: "Properties"
+          methods: "Methods"
+          metadata: "Metadata"
+          globals: "Globals"
+        methods:
+          string:
+            length: "The number of characters in the string."
+            includes: "Returns true if the string contains the substring."
+            startsWith: "Returns true if the string starts with the given characters."
+            endsWith: "Returns true if the string ends with the given characters."
+            split: "Splits the string into an array of substrings."
+            replaceAll: "Replaces all occurrences of a search string."
+            replace: "Replaces the first occurrence of a search string."
+            trim: "Removes whitespace from both ends of the string."
+            trimStart: "Removes whitespace from the beginning of the string."
+            trimEnd: "Removes whitespace from the end of the string."
+            toLowerCase: "Converts the string to lowercase."
+            toUpperCase: "Converts the string to uppercase."
+            slice: "Extracts a section of the string."
+            substring: "Returns the part of the string between two indices."
+            indexOf: "Returns the index of the first occurrence, or -1 if not found."
+            match: "Matches the string against a regular expression."
+            concat: "Concatenates one or more strings."
+          number:
+            toFixed: "Formats the number with a fixed number of decimal places."
+            toString: "Returns a string representation of the number."
+            toPrecision: "Formats the number to a specified precision."
+            toLocaleString: "Returns a locale-sensitive string representation."
+          boolean:
+            toString: "Converts true to 'true' and false to 'false'."
+          array:
+            length: "The number of elements in the array."
+            map: "Creates a new array with the results of calling a function on every element."
+            filter: "Creates a new array with elements that pass the test."
+            find: "Returns the first element that satisfies the testing function."
+            includes: "Returns true if the array contains the specified value."
+            join: "Joins all elements into a string."
+            slice: "Returns a shallow copy of a portion of the array."
+            sort: "Sorts the elements of the array in place."
+            reverse: "Reverses the order of elements."
+            reduce: "Reduces the array to a single value."
+            indexOf: "Returns the first index of the value, or -1 if not found."
+            concat: "Merges arrays and/or values into a new array."
+          date:
+            toISOString: "Returns the date as an ISO 8601 string."
+            toLocaleDateString: "Returns a locale-sensitive date string."
+            getTime: "Returns milliseconds since Unix epoch."
+            getFullYear: "Returns the four-digit year."
+            getMonth: "Returns the month (0-11)."
+            getDate: "Returns the day of the month (1-31)."
+            getHours: "Returns the hour (0-23)."
+            getMinutes: "Returns the minutes (0-59)."
+            toLocaleString: "Returns a locale-sensitive date and time string."
+        globals:
+          Math: "Mathematical constants and functions (Math.round, Math.random, etc.)"
+          JSON: "JSON parsing and serialization (JSON.parse, JSON.stringify)."
+          Object: "Object utilities (Object.keys, Object.values, Object.entries)."
+          Array: "Array utilities (Array.isArray, Array.from)."
+          String: "String constructor and utilities."
+          Number: "Number utilities (Number.isInteger, Number.parseFloat)."
+          Date: "Date constructor. Use new Date() to create dates."
+          parseInt: "Parses a string and returns an integer."
+          parseFloat: "Parses a string and returns a floating-point number."
+          encodeURIComponent: "Encodes a URI component by replacing special characters."
+          decodeURIComponent: "Decodes an encoded URI component."
+          isNaN: "Returns true if the value is NaN."
+          isFinite: "Returns true if the value is a finite number."
     composer:
       autocomplete:
         username_missing: "Selected autocomplete result is missing username."
@@ -4119,6 +4190,10 @@ en:
         link: "Activity log"
         title: "Topic activity log"
         empty: "No topic activity to show."
+      context:
+        banner: "You are viewing a single thread from this topic."
+        view_full_topic: "View full topic"
+        view_parent_context: "View parent context"
     topic:
       filter_to:
         one: "%{count} post in topic"
@@ -4978,6 +5053,10 @@ en:
 
       original_language: "This post was originally written in %{language}"
       original_language_and_outdated: "This post was originally written in %{language}. Translation may be outdated"
+      # This is a loose key to be used beside the post-info post-language icon
+      originally_written_in: "Originally in %{language}"
+      click_to_show_original: "Click to show original"
+      tap_to_show_original: "Tap here to show original"
       ai_translation_disclaimer: "AI-generated translations may be inaccurate."
 
     category:
@@ -6323,12 +6402,6 @@ en:
             default: "%{filter} topics in %{category} without tags"
 
         categories: "All categories"
-    content_localization:
-      toggle_localized:
-        translated: "Page is machine-translated. Click to view original."
-        not_translated: "Page is not translated. Click to translate."
-        translations_enabled: "Translations enabled"
-        translations_disabled: "Translations disabled"
     language_switcher:
       title: "Change site language"
 

@@ -1,3 +1,4 @@
+import { i18n } from "discourse-i18n";
 import { buildScope } from "../expression-context";
 import { buildArgumentInfo } from "./argument-info";
 import { buildAutoCloseBraces } from "./auto-close-braces";
@@ -10,7 +11,10 @@ import { buildValidation } from "./validation";
 
 export default function buildExpressionExtensions(cmParams, domainOpts = {}) {
   const itemPrefix = domainOpts.itemPrefix || "$json";
-  const SECTION_NODES = cmParams.utils.section("Previous nodes", 1);
+  const SECTION_NODES = cmParams.utils.section(
+    i18n("discourse_workflows.expression_docs.sections.previous_nodes"),
+    1
+  );
   const sections = { ...cmParams.utils.sections, nodes: SECTION_NODES };
 
   const scope = buildScope(domainOpts);

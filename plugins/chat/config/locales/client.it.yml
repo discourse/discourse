@@ -752,6 +752,8 @@ it:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Invia messaggio di chat"
+      chat_message_created:
+        channel_id: "Canale"
       send_chat_message:
         channel_id: "Canale"
         message: "Messaggio"

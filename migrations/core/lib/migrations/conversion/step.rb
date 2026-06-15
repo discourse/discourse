@@ -2,9 +2,8 @@
 
 module Migrations
   module Conversion
-    class Step
-      IntermediateDB = Database::IntermediateDB
-      Enums = Database::IntermediateDB::Enums
+    class Step < StepBase
+      include AttributeAssignment
 
       attr_accessor :settings
       attr_reader :tracker
@@ -12,33 +11,13 @@ module Migrations
       # inside of Step it might make more sense to access it as `step` instead of `tracker`
       alias step tracker
 
-      def initialize(tracker, args = {})
-        @tracker = tracker
-
-        args.each do |arg, value|
-          setter = :"#{arg}="
-          public_send(setter, value) if respond_to?(setter, true)
-        end
+      def initialize(args = {})
+        @tracker = StepTracker.new
+        assign_attributes(args)
       end
 
       def execute
         # do nothing
-      end
-
-      class << self
-        def title(
-          value = (
-            getter = true
-            nil
-          )
-        )
-          @title = value unless getter
-          @title.presence ||
-            I18n.t(
-              "converter.default_step_title",
-              type: name&.demodulize&.underscore&.humanize(capitalize: false),
-            )
-        end
       end
     end
   end

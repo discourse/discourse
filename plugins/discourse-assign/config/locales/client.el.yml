@@ -73,6 +73,7 @@ el:
     discourse_workflows:
       nodes:
         "action:assign_topic": "Ανάθεση θέματος"
+        "trigger:assigned": "Ανατέθηκες"
       node_descriptions:
         "action:assign_topic": "Ανάθεση ή ακύρωση ανάθεσης θέματος"
       assign_topic:

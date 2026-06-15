@@ -34,5 +34,7 @@ be:
       topic: "Тэма"
       post: "пост"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "прызначаны"
       assign_topic:
         topic_id: "Номер тэмы"

@@ -313,12 +313,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def reply_to_user
-    {
-      id: object.reply_to_user.id,
-      username: object.reply_to_user.username,
-      name: object.reply_to_user.name,
-      avatar_template: object.reply_to_user.avatar_template,
-    }
+    BasicUserSerializer.new(object.reply_to_user, root: false).as_json
   end
 
   def deleted_by
@@ -430,6 +425,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_link_counts?
+    return false if object.hidden? && !scope.can_see_hidden_post?(object)
     return true if @single_post_link_counts.present?
 
     @topic_view.present? && @topic_view.link_counts.present? &&

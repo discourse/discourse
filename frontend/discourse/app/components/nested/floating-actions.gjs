@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -17,7 +18,20 @@ export default class NestedFloatingActions extends Component {
   topicRoute = getOwner(this).lookup("route:topic");
 
   get canCreatePost() {
-    return this.currentUser && this.args.topic?.details?.can_create_post;
+    return this.args.topic?.details?.can_create_post;
+  }
+
+  get showReplyButton() {
+    return !this.currentUser || this.canCreatePost;
+  }
+
+  @action
+  reply() {
+    if (!this.currentUser) {
+      return getOwner(this).lookup("route:application").send("showLogin");
+    }
+
+    return this.args.replyAction?.();
   }
 
   <template>
@@ -53,10 +67,10 @@ export default class NestedFloatingActions extends Component {
         @showChangeTimestamp={{this.topicRoute.showChangeTimestamp}}
       />
 
-      {{#if this.canCreatePost}}
+      {{#if this.showReplyButton}}
         <DButton
           class="btn-primary nested-view__floating-reply"
-          @action={{@replyAction}}
+          @action={{this.reply}}
           @icon="reply"
           @label="topic.reply.title"
           title={{i18n "topic.reply.help"}}

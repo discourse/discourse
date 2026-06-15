@@ -298,7 +298,7 @@ gem "zendesk_api", require: false
 # for discourse-subscriptions
 gem "stripe", require: false
 
-# for discourse-github
+# for discourse-code-review
 gem "sawyer", require: false
 gem "octokit", require: false
 

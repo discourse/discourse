@@ -876,6 +876,9 @@ ru:
         requires_chat: "Для работы требуется включить плагин чата."
       nodes:
         "action:send_chat_message": "Отправить сообщение в чат"
+        "trigger:chat_message_created": "Сообщение в чате создано"
+      chat_message_created:
+        channel_id: "Канал"
       send_chat_message:
         channel_id: "Канал"
         message: "Сообщение"

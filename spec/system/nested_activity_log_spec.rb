@@ -7,13 +7,14 @@ RSpec.describe "Nested activity log" do
 
   before do
     SiteSetting.nested_replies_enabled = true
+    Fabricate(:nested_topic, topic: topic)
     sign_in(admin)
   end
 
   it "opens the activity log modal and lists small actions" do
     topic.add_small_action(admin, "closed.enabled")
 
-    page.visit("/n/#{topic.slug}/#{topic.id}")
+    page.visit("/t/#{topic.slug}/#{topic.id}")
     find(".nested-view__activity-link").click
 
     expect(page).to have_css(".nested-activity-log-modal")
@@ -21,7 +22,7 @@ RSpec.describe "Nested activity log" do
   end
 
   it "hides the activity log link on a topic with no small actions" do
-    page.visit("/n/#{topic.slug}/#{topic.id}")
+    page.visit("/t/#{topic.slug}/#{topic.id}")
 
     expect(page).to have_css(".nested-view__controls")
     expect(page).to have_no_css(".nested-view__activity-link")

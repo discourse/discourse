@@ -601,6 +601,47 @@ describe DiscoursePostEvent::Event do
           }
         end
       end
+
+      context "when an invitee is no longer allowed" do
+        let(:group_2) { Fabricate(:group) }
+
+        it "resets the pruned invitee's topic tracking" do
+          event_1.invitees.find_by(user_id: user_1.id).update_attendance!(:going)
+          expect(TopicUser.find_by(user: user_1, topic: post_1.topic).notification_level).to eq(
+            TopicUser.notification_levels[:watching],
+          )
+
+          event_1.update_with_params!(raw_invitees: [group_2.name])
+
+          expect(event_1.invitees.find_by(user_id: user_1.id)).to be_nil
+          expect(TopicUser.find_by(user: user_1, topic: post_1.topic).notification_level).to eq(
+            TopicUser.notification_levels[:regular],
+          )
+        end
+      end
+    end
+  end
+
+  describe "resetting topic tracking when the event is destroyed" do
+    fab!(:user_1, :user)
+    fab!(:topic_1, :topic)
+    fab!(:post_1) { Fabricate(:post, topic: topic_1) }
+    fab!(:event_1) { Fabricate(:event, post: post_1) }
+
+    before { event_1.create_invitees([{ user_id: user_1.id, status: 0 }]) }
+
+    it "resets a watching invitee back to regular, leaving the topic intact" do
+      event_1.invitees.find_by(user_id: user_1.id).update_attendance!(:going)
+      expect(TopicUser.find_by(user: user_1, topic: topic_1).notification_level).to eq(
+        TopicUser.notification_levels[:watching],
+      )
+
+      event_1.destroy!
+
+      expect(Topic.exists?(topic_1.id)).to eq(true)
+      expect(TopicUser.find_by(user: user_1, topic: topic_1).notification_level).to eq(
+        TopicUser.notification_levels[:regular],
+      )
     end
   end
 
@@ -936,6 +977,62 @@ describe DiscoursePostEvent::Event do
 
       expect(post.image_upload_id).to eq(other_upload.id)
     end
+  end
+end
+
+describe DiscoursePostEvent::Event, "#most_likely_going" do
+  before do
+    Jobs.run_immediately!
+    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_post_event_enabled = true
+  end
+
+  fab!(:event)
+
+  it "orders going invitees by RSVP time (created_at), not by user id" do
+    early_rsvp = Fabricate(:user)
+    late_rsvp = Fabricate(:user)
+    # later-created user (higher id) RSVP'd first, so should come first
+    expect(late_rsvp.id).to be > early_rsvp.id
+
+    Fabricate(
+      :post_event_invitee,
+      event:,
+      user: late_rsvp,
+      status: DiscoursePostEvent::Invitee.statuses[:going],
+      created_at: 2.hours.ago,
+    )
+    Fabricate(
+      :post_event_invitee,
+      event:,
+      user: early_rsvp,
+      status: DiscoursePostEvent::Invitee.statuses[:going],
+      created_at: 1.hour.ago,
+    )
+
+    expect(event.most_likely_going.map(&:user)).to eq([late_rsvp, early_rsvp])
+  end
+
+  it "groups going invitees ahead of interested ones regardless of RSVP time" do
+    interested = Fabricate(:user)
+    going = Fabricate(:user)
+
+    Fabricate(
+      :post_event_invitee,
+      event:,
+      user: interested,
+      status: DiscoursePostEvent::Invitee.statuses[:interested],
+      created_at: 2.hours.ago,
+    )
+    Fabricate(
+      :post_event_invitee,
+      event:,
+      user: going,
+      status: DiscoursePostEvent::Invitee.statuses[:going],
+      created_at: 1.hour.ago,
+    )
+
+    expect(event.most_likely_going.map(&:user)).to eq([going, interested])
   end
 end
 

@@ -45,6 +45,7 @@ module Chat
       before_validation do
         self.auto_join_users = auto_join_users.presence || false
         self.threading_enabled = threading_enabled.presence || false
+        self.emoji = emoji.presence
       end
 
       validates :category_id, presence: true

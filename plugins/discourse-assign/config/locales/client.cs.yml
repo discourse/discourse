@@ -191,6 +191,8 @@ cs:
       topic: "Téma"
       post: "Příspěvek"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Přiděleno"
       assign_topic:
         operations:
           assign: "Přidělit"

@@ -3129,6 +3129,65 @@ RSpec.describe TopicsController do
       )
     end
 
+    it "does not expose hidden post link counts", :aggregate_failures do
+      first_post = Fabricate(:post, user: post_author1)
+      test_topic = first_post.topic
+      visible_post = Fabricate(:post, topic: test_topic, user: post_author1)
+      hidden_post =
+        Fabricate(
+          :post,
+          topic: test_topic,
+          user: post_author1,
+          hidden: true,
+          hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+        )
+
+      visible_link =
+        Fabricate(
+          :topic_link,
+          post: visible_post,
+          url: "https://visible-link-count.example.com",
+          domain: "visible-link-count.example.com",
+          title: "Visible link count title",
+        )
+      hidden_link =
+        Fabricate(
+          :topic_link,
+          post: hidden_post,
+          url: "https://hidden-link-count.example.com",
+          domain: "hidden-link-count.example.com",
+          title: "Hidden link count title",
+        )
+
+      sign_in(user_2)
+
+      get "/t/#{test_topic.slug}/#{test_topic.id}.json"
+
+      expect(response.status).to eq(200)
+      show_posts = response.parsed_body.dig("post_stream", "posts")
+      show_hidden_post = show_posts.find { |post| post["id"] == hidden_post.id }
+      show_visible_post = show_posts.find { |post| post["id"] == visible_post.id }
+      expect(show_hidden_post).to include("hidden" => true, "can_see_hidden_post" => false)
+      expect(show_hidden_post).not_to have_key("link_counts")
+      expect(show_visible_post["link_counts"]).to contain_exactly(
+        a_hash_including("url" => visible_link.url, "title" => visible_link.title),
+      )
+      expect(response.body).not_to include(hidden_link.url)
+
+      get "/t/#{test_topic.id}/posts.json", params: { post_ids: [hidden_post.id, visible_post.id] }
+
+      expect(response.status).to eq(200)
+      posts = response.parsed_body.dig("post_stream", "posts")
+      posts_hidden_post = posts.find { |post| post["id"] == hidden_post.id }
+      posts_visible_post = posts.find { |post| post["id"] == visible_post.id }
+      expect(posts_hidden_post).to include("hidden" => true, "can_see_hidden_post" => false)
+      expect(posts_hidden_post).not_to have_key("link_counts")
+      expect(posts_visible_post["link_counts"]).to contain_exactly(
+        a_hash_including("url" => visible_link.url, "title" => visible_link.title),
+      )
+      expect(response.body).not_to include(hidden_link.url)
+    end
+
     it "shows a blank-slug topic without redirecting" do
       topic.update_columns(title: "", slug: nil)
       topic.reload
@@ -3217,13 +3276,13 @@ RSpec.describe TopicsController do
       expect(response).to redirect_to(topic.relative_url)
     end
 
-    it "redirects to nested view when nested_replies_default is enabled" do
+    it "serves the topic route when nested_replies_default is enabled" do
       SiteSetting.nested_replies_enabled = true
       SiteSetting.nested_replies_default = true
 
       get "/t/#{topic.slug}/#{topic.id}"
 
-      expect(response).to redirect_to("/n/#{topic.slug}/#{topic.id}")
+      expect(response.status).to eq(200)
     end
 
     it "does not redirect crawlers to nested view" do
@@ -3248,24 +3307,22 @@ RSpec.describe TopicsController do
       expect(response).not_to redirect_to("/n/#{pm.slug}/#{pm.id}")
     end
 
-    it "preserves embed_mode when redirecting to nested view" do
+    it "serves embed_mode on the topic route for nested topics" do
       SiteSetting.nested_replies_enabled = true
       SiteSetting.nested_replies_default = true
 
       get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" }
 
-      expect(response).to redirect_to("/n/#{topic.slug}/#{topic.id}?embed_mode=true")
+      expect(response.status).to eq(200)
     end
 
-    it "preserves class_name alongside embed_mode when redirecting to nested view" do
+    it "serves embed class_name on the topic route for nested topics" do
       SiteSetting.nested_replies_enabled = true
       SiteSetting.nested_replies_default = true
 
       get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true", class_name: "lee-af" }
 
-      expect(response).to redirect_to(
-        "/n/#{topic.slug}/#{topic.id}?class_name=lee-af&embed_mode=true",
-      )
+      expect(response.status).to eq(200)
     end
 
     it "returns 404 when an invalid slug is given and no id" do
@@ -3846,9 +3903,10 @@ RSpec.describe TopicsController do
       end
     end
 
-    it "records redirects" do
+    it "records the referer for a visit arriving via redirect" do
       get "/t/#{topic.id}", headers: { HTTP_REFERER: "http://twitter.com" }
-      get "/t/#{topic.slug}/#{topic.id}", headers: { HTTP_REFERER: nil }
+      # Simulate browsers, which preserve Referer across same-origin redirects
+      follow_redirect!(headers: { "HTTP_REFERER" => "http://twitter.com" })
 
       link = IncomingLink.first
       expect(link.referer).to eq("http://twitter.com")
@@ -4562,6 +4620,30 @@ RSpec.describe TopicsController do
       body = response.parsed_body
 
       expect(body["suggested_topics"]).not_to eq(nil)
+    end
+
+    it "omits reply-to user names when names are disabled" do
+      SiteSetting.enable_names = false
+      post.user.update!(name: "Hidden Reply Target")
+      reply =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: post_author2,
+          reply_to_post_number: post.post_number,
+          reply_to_user_id: post.user_id,
+        )
+
+      get "/t/#{topic.id}/posts.json", params: { post_ids: [reply.id] }
+
+      expect(response.status).to eq(200)
+      posts = response.parsed_body["post_stream"]["posts"]
+      reply_post = posts.find { |post_json| post_json["id"] == reply.id }
+      reply_to_user = reply_post["reply_to_user"]
+
+      expect(reply_to_user).to include("id" => post.user_id, "username" => post.user.username)
+      expect(reply_to_user).not_to have_key("name")
+      expect(response.body).not_to include(post.user.name)
     end
 
     it "optionally can return raw" do
