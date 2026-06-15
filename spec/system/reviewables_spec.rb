@@ -377,4 +377,30 @@ describe "Reviewables" do
       expect(title_html).to include("&lt;b&gt;")
     end
   end
+
+  describe "when deleting and blocking a spammer from a hidden flagged post" do
+    let(:acted_reviewable) do
+      flag = PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
+      flag.target.update!(
+        hidden: true,
+        hidden_at: Time.zone.now,
+        hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+      )
+      flag
+    end
+
+    include_examples "resolving a spammer's reviewables on user deletion"
+  end
+
+  describe "when deleting a spammer from a queued post" do
+    let(:acted_reviewable) do
+      Fabricate(
+        :reviewable_queued_post,
+        created_by: Discourse.system_user,
+        target_created_by: spammer,
+      )
+    end
+
+    include_examples "resolving a spammer's reviewables on user deletion"
+  end
 end
