@@ -371,7 +371,9 @@ export default class TopicFromParams extends DiscourseRoute {
 
     const restoringFromCache = this._restoringFromCache;
 
-    nestedController.unsubscribe();
+    if (!this.#teardownCurrentNestedTopic(nestedController, model.topic.id)) {
+      nestedController.unsubscribe();
+    }
 
     topicController.set("model", model.topic);
     this.#resetTopicControllerBulkSelection(topicController);
@@ -452,6 +454,19 @@ export default class TopicFromParams extends DiscourseRoute {
       const rect = element.getBoundingClientRect();
       window.scrollTo(0, window.scrollY + rect.top - anchor.offsetFromTop);
     }
+  }
+
+  #teardownCurrentNestedTopic(controller, nextTopicId) {
+    const currentTopicId = controller.topic?.id;
+
+    if (!currentTopicId || String(currentTopicId) === String(nextTopicId)) {
+      return false;
+    }
+
+    this.#saveNestedToCache(controller);
+    controller.unsubscribe();
+    this.screenTrack.stop();
+    return true;
   }
 
   #saveNestedToCache(controller) {
