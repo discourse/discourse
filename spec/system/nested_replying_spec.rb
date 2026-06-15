@@ -10,6 +10,7 @@ RSpec.describe "Nested view replying" do
 
   before do
     SiteSetting.nested_replies_enabled = true
+    Fabricate(:nested_topic, topic: topic)
     sign_in(user)
   end
 
@@ -30,7 +31,7 @@ RSpec.describe "Nested view replying" do
 
       expect(composer).to be_closed
       expect(nested_view).to have_nested_view
-      expect(page).to have_current_path(%r{/n/})
+      expect(page).to have_current_path(%r{/t/})
     end
   end
 
@@ -47,7 +48,7 @@ RSpec.describe "Nested view replying" do
 
       expect(composer).to be_closed
       expect(nested_view).to have_nested_view
-      expect(page).to have_current_path(%r{/n/})
+      expect(page).to have_current_path(%r{/t/})
     end
   end
 
@@ -73,7 +74,7 @@ RSpec.describe "Nested view replying" do
       expect(composer).to be_closed
 
       expect(nested_view).to have_nested_view
-      expect(page).to have_current_path(%r{/n/})
+      expect(page).to have_current_path(%r{/t/})
     end
 
     it "hides when the composer is open and reappears when closed" do

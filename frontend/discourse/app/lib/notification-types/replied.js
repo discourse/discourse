@@ -24,7 +24,7 @@ export default class extends NotificationTypeBase {
   // rather than a single post so the user sees all the new content at once.
   get linkHref() {
     if (this.isBucketed && this.consolidatedCount > 1 && this.topicId) {
-      let url = getURL(`/n/${this.notification.slug}/${this.topicId}`);
+      let url = getURL(`/t/${this.notification.slug}/${this.topicId}`);
       if (!this.isTopicBucket) {
         url += `/${this.notification.data.reply_to_post_number}`;
       }

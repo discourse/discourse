@@ -29,6 +29,7 @@ function renderComponent(context) {
         @togglePostType={{noop}}
         @toggleWiki={{noop}}
         @unhidePost={{noop}}
+        @showPostMenu={{context.showPostMenu}}
         @registerPost={{registerPost}}
         @multiSelect={{context.multiSelect}}
         @togglePostSelection={{context.togglePostSelection}}
@@ -56,6 +57,7 @@ module("Integration | Component | Nested | Op", function (hooks) {
       is_nested_view: true,
     });
     this.multiSelect = false;
+    this.showPostMenu = false;
     this.togglePostSelection = noop;
     this.selectReplies = noop;
     this.selectBelow = noop;
@@ -71,6 +73,17 @@ module("Integration | Component | Nested | Op", function (hooks) {
       created_at: "2026-01-01T00:00:00.000Z",
       actions_summary: [],
     });
+  });
+
+  test("does not render the flat replies button in the nested OP menu", async function (assert) {
+    this.showPostMenu = true;
+    this.post.set("reply_count", 3);
+
+    await renderComponent(this);
+
+    assert
+      .dom(".nested-view__op-menu .post-action-menu__show-replies")
+      .doesNotExist("nested OP menu suppresses the flat replies button");
   });
 
   test("renders multi-select controls for the OP", async function (assert) {

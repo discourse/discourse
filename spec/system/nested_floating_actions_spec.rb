@@ -9,7 +9,10 @@ RSpec.describe "Nested view floating actions" do
   let(:nested_view) { PageObjects::Pages::NestedView.new }
   let(:composer) { PageObjects::Components::Composer.new }
 
-  before { SiteSetting.nested_replies_enabled = true }
+  before do
+    SiteSetting.nested_replies_enabled = true
+    Fabricate(:nested_topic, topic: topic)
+  end
 
   describe "as admin" do
     before { sign_in(admin) }
