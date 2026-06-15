@@ -57,8 +57,6 @@ class TopicsController < ApplicationController
       raise Discourse::InvalidParameters.new("Show only accepts a single ID")
     end
 
-    flash["referer"] ||= request.referer[0..255] if request.referer
-
     # TODO: We'd like to migrate the wordpress feed to another url. This keeps up backwards
     # compatibility with existing installs.
     return wordpress if params[:best].present?
@@ -1445,7 +1443,7 @@ class TopicsController < ApplicationController
 
     if !request.format.json?
       hash = {
-        referer: request.referer || flash[:referer],
+        referer: request.referer,
         host: request.host,
         current_user: current_user,
         topic_id: @topic_view.topic.id,
