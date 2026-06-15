@@ -113,6 +113,16 @@ RSpec.describe(DiscoursePostEvent::DestroyInvitee) do
         expect { result }.to change { DiscoursePostEvent::Invitee.count }.by(-1)
         expect(DiscoursePostEvent::Invitee.exists?(invitee.id)).to eq(false)
       end
+
+      it "resets the invitee's topic tracking to regular" do
+        invitee.update_topic_tracking!
+        topic_user = TopicUser.find_by(user: invitee_user, topic: topic)
+        expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:watching])
+
+        result
+
+        expect(topic_user.reload.notification_level).to eq(TopicUser.notification_levels[:regular])
+      end
     end
 
     context "when staff destroys another user's invitee" do
