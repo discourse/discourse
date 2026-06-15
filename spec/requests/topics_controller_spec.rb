@@ -3844,9 +3844,10 @@ RSpec.describe TopicsController do
       end
     end
 
-    it "records redirects" do
+    it "records the referer for a visit arriving via redirect" do
       get "/t/#{topic.id}", headers: { HTTP_REFERER: "http://twitter.com" }
-      get "/t/#{topic.slug}/#{topic.id}", headers: { HTTP_REFERER: nil }
+      # Simulate browsers, which preserve Referer across same-origin redirects
+      follow_redirect!(headers: { "HTTP_REFERER" => "http://twitter.com" })
 
       link = IncomingLink.first
       expect(link.referer).to eq("http://twitter.com")
