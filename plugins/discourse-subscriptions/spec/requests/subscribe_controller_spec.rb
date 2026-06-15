@@ -126,6 +126,8 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
     describe "#get_contributors" do
       before do
         Fabricate(:product, external_id: "prod_campaign")
+        user.user_stat.update!(post_count: 1)
+        campaign_user.user_stat.update!(post_count: 1)
         Fabricate(:customer, product_id: "prodct_23456", user_id: user.id, customer_id: "x")
         Fabricate(
           :customer,
@@ -235,6 +237,43 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
 
         expect(response.status).to eq(404)
       end
+    end
+  end
+
+  describe "#contributors" do
+    fab!(:contributor, :user)
+    fab!(:hidden_contributor, :user)
+
+    before do
+      SiteSetting.discourse_subscriptions_campaign_show_contributors = true
+      SiteSetting.discourse_subscriptions_campaign_product = ""
+      SiteSetting.hide_user_profiles_from_public = false
+      SiteSetting.allow_users_to_hide_profile = true
+      contributor.user_stat.update!(post_count: 1)
+      hidden_contributor.user_stat.update!(post_count: 1)
+      hidden_contributor.user_option.update!(hide_profile: true)
+      Fabricate(:customer, product_id: "prodct_23456", user_id: contributor.id, customer_id: "x")
+      Fabricate(
+        :customer,
+        product_id: "prod_campaign",
+        user_id: hidden_contributor.id,
+        customer_id: "y",
+      )
+    end
+
+    it "enforces profile visibility for anonymous contributors" do
+      get "/s/contributors.json"
+
+      expect(response).to have_http_status(:ok)
+      visible_contributor_ids = response.parsed_body.map { |serialized_user| serialized_user["id"] }
+
+      SiteSetting.hide_user_profiles_from_public = true
+
+      get "/s/contributors.json"
+
+      expect(visible_contributor_ids).to contain_exactly(contributor.id)
+      expect(response).to have_http_status(:forbidden)
+      expect(response.parsed_body).to include("error_type" => "invalid_access")
     end
   end
 

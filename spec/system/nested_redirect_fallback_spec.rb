@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Nested redirect fallback for untracked topics" do
+RSpec.describe "Topic route fallback for untracked nested-capable topics" do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:category)
   fab!(:topic_author, :user)
@@ -15,12 +15,10 @@ RSpec.describe "Nested redirect fallback for untracked topics" do
     sign_in(user)
   end
 
-  # When nested replies is enabled, the afterModel hook in
-  # topic/from-params.js checks topic.is_nested_view and redirects via
-  # router.replaceWith() to the nested route. That check relies on the
-  # topic's category being present in client-side state so is_nested_view
-  # can be resolved. When the topic is NOT in client-side tracking state
-  # the category lookup may be async, exercising a fallback path.
+  # When nested replies is enabled, topic/from-params.js needs the topic's
+  # category metadata before it can resolve topic.is_nested_view and choose
+  # between flat and nested rendering. When the topic is NOT in client-side
+  # tracking state, the category lookup may be async, exercising a fallback path.
   #
   # These tests verify the fallback preserves the post number in the URL
   # (so the user's scroll position isn't lost) and that non-nested topics

@@ -737,6 +737,8 @@ ja:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "チャットメッセージを送信する"
+      chat_message_created:
+        channel_id: "チャンネル"
       send_chat_message:
         channel_id: "チャンネル"
         message: "メッセージ"

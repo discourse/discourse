@@ -393,6 +393,8 @@ ko:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "채팅 메시지 보내기"
+      chat_message_created:
+        channel_id: "채널"
       send_chat_message:
         channel_id: "채널"
         message: "메시지 보내기"

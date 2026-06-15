@@ -5,6 +5,8 @@ import PostMenu from "discourse/components/post/menu";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
+const noop = () => {};
+
 module("Unit | Component | PostMenu", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -22,6 +24,40 @@ module("Unit | Component | PostMenu", function (hooks) {
       like_count: 3,
       actions_summary: [{ id: 2, count: 1, hidden: false, can_act: true }],
     });
+  });
+
+  test("replies button renders in flat post menus but not nested reply menus", async function (assert) {
+    this.post.set("reply_count", 2);
+    const post = this.post;
+
+    await render(
+      <template>
+        <PostMenu
+          @post={{post}}
+          @toggleReplies={{noop}}
+          @repliesShown={{false}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".post-action-menu__show-replies")
+      .exists("flat post menus still render the replies button");
+
+    await render(
+      <template>
+        <PostMenu
+          @post={{post}}
+          @nestedReplyView={{true}}
+          @toggleReplies={{noop}}
+          @repliesShown={{false}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".post-action-menu__show-replies")
+      .doesNotExist("nested post menus suppress the flat replies button");
   });
 
   test("post-menu-collapsed value transformer", async function (assert) {

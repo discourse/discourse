@@ -3217,13 +3217,13 @@ RSpec.describe TopicsController do
       expect(response).to redirect_to(topic.relative_url)
     end
 
-    it "redirects to nested view when nested_replies_default is enabled" do
+    it "serves the topic route when nested_replies_default is enabled" do
       SiteSetting.nested_replies_enabled = true
       SiteSetting.nested_replies_default = true
 
       get "/t/#{topic.slug}/#{topic.id}"
 
-      expect(response).to redirect_to("/n/#{topic.slug}/#{topic.id}")
+      expect(response.status).to eq(200)
     end
 
     it "does not redirect crawlers to nested view" do
@@ -3248,24 +3248,22 @@ RSpec.describe TopicsController do
       expect(response).not_to redirect_to("/n/#{pm.slug}/#{pm.id}")
     end
 
-    it "preserves embed_mode when redirecting to nested view" do
+    it "serves embed_mode on the topic route for nested topics" do
       SiteSetting.nested_replies_enabled = true
       SiteSetting.nested_replies_default = true
 
       get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" }
 
-      expect(response).to redirect_to("/n/#{topic.slug}/#{topic.id}?embed_mode=true")
+      expect(response.status).to eq(200)
     end
 
-    it "preserves class_name alongside embed_mode when redirecting to nested view" do
+    it "serves embed class_name on the topic route for nested topics" do
       SiteSetting.nested_replies_enabled = true
       SiteSetting.nested_replies_default = true
 
       get "/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true", class_name: "lee-af" }
 
-      expect(response).to redirect_to(
-        "/n/#{topic.slug}/#{topic.id}?class_name=lee-af&embed_mode=true",
-      )
+      expect(response.status).to eq(200)
     end
 
     it "returns 404 when an invalid slug is given and no id" do
@@ -4562,6 +4560,30 @@ RSpec.describe TopicsController do
       body = response.parsed_body
 
       expect(body["suggested_topics"]).not_to eq(nil)
+    end
+
+    it "omits reply-to user names when names are disabled" do
+      SiteSetting.enable_names = false
+      post.user.update!(name: "Hidden Reply Target")
+      reply =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: post_author2,
+          reply_to_post_number: post.post_number,
+          reply_to_user_id: post.user_id,
+        )
+
+      get "/t/#{topic.id}/posts.json", params: { post_ids: [reply.id] }
+
+      expect(response.status).to eq(200)
+      posts = response.parsed_body["post_stream"]["posts"]
+      reply_post = posts.find { |post_json| post_json["id"] == reply.id }
+      reply_to_user = reply_post["reply_to_user"]
+
+      expect(reply_to_user).to include("id" => post.user_id, "username" => post.user.username)
+      expect(reply_to_user).not_to have_key("name")
+      expect(response.body).not_to include(post.user.name)
     end
 
     it "optionally can return raw" do

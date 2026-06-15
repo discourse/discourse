@@ -756,6 +756,8 @@ ug:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "سۆھبەت ئۇچۇرى يوللا"
+      chat_message_created:
+        channel_id: "قانال"
       send_chat_message:
         channel_id: "قانال"
         message: "ئۇچۇر"

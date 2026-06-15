@@ -2848,6 +2848,7 @@ pl_PL:
       staged_users_disabled: "Przed włączeniem tego ustawienia musisz najpierw włączyć 'staged users'."
       reply_by_email_disabled: "Przed włączeniem tego ustawienia musisz najpierw włączyć opcję 'reply by email'."
       discourse_connect_url_is_empty: "Musisz ustawić 'discourse connect url' przed włączeniem tego ustawienia."
+      discourse_connect_secret_is_too_short: "Przed włączeniem tego ustawienia należy podać klucz „Discourse Connect Secret” składający się z co najmniej 10 znaków."
       enable_local_logins_disabled: "Przed włączeniem tego ustawienia musisz najpierw włączyć opcję 'enable local logins'."
       min_username_length_exists: "Nie można ustawić wartości „minimalnej długości nazwy użytkownika” wyższej niż najkrótsza nazwa użytkownika (%{username})."
       min_group_name_length_exists: "Nie można ustawić wartości „minimalnej długości nazwy użytkownika” wyższej niż najkrótsza nazwa grupy (%{group_name})."

@@ -824,6 +824,8 @@ he:
         chat:
           label: "צ׳אט"
     discourse_workflows:
+      chat_message_created:
+        channel_id: "ערוץ"
       send_chat_message:
         channel_id: "ערוץ"
         message: "הודעה"

@@ -169,6 +169,8 @@ ca:
             message:
               label: Missatge
     discourse_workflows:
+      chat_message_created:
+        channel_id: "Canal"
       send_chat_message:
         channel_id: "Canal"
         message: "Missatge"

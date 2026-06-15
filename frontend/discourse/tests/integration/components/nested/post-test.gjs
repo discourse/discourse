@@ -94,6 +94,25 @@ module("Integration | Component | Nested | Post", function (hooks) {
     sinon.restore();
   });
 
+  test("uses nested replies affordance instead of flat post-menu replies button", async function (assert) {
+    this.post.setProperties({
+      reply_count: 2,
+      direct_reply_count: 2,
+      total_descendant_count: 2,
+    });
+
+    await renderComponent(this);
+
+    assert
+      .dom(".nested-post__menu .post-action-menu__show-replies")
+      .doesNotExist(
+        "does not render the flat replies button in nested post menus"
+      );
+    assert
+      .dom(".nested-post__expand-replies")
+      .exists("keeps the nested replies expansion button");
+  });
+
   test("leaf posts can be collapsed from the depth line", async function (assert) {
     await renderComponent(this);
 

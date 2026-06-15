@@ -128,6 +128,7 @@ module UserGuardian
 
   def can_see_user_status?(user)
     return false if user.blank?
+    return false if user.user_option&.hide_profile?
 
     if user.silenced?
       is_me?(user) || is_staff?
