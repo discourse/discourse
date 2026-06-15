@@ -279,7 +279,7 @@ module DiscoursePostEvent
     end
 
     def most_likely_going(limit = SiteSetting.displayed_invitees_limit)
-      going = invitees.order(%i[status user_id]).limit(limit)
+      going = invitees.order(%i[status created_at user_id]).limit(limit)
 
       if private? && going.count < limit
         # invitees are only created when an attendance is set

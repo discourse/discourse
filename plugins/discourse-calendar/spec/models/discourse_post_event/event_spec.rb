@@ -980,6 +980,62 @@ describe DiscoursePostEvent::Event do
   end
 end
 
+describe DiscoursePostEvent::Event, "#most_likely_going" do
+  before do
+    Jobs.run_immediately!
+    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_post_event_enabled = true
+  end
+
+  fab!(:event)
+
+  it "orders going invitees by RSVP time (created_at), not by user id" do
+    early_rsvp = Fabricate(:user)
+    late_rsvp = Fabricate(:user)
+    # later-created user (higher id) RSVP'd first, so should come first
+    expect(late_rsvp.id).to be > early_rsvp.id
+
+    Fabricate(
+      :post_event_invitee,
+      event:,
+      user: late_rsvp,
+      status: DiscoursePostEvent::Invitee.statuses[:going],
+      created_at: 2.hours.ago,
+    )
+    Fabricate(
+      :post_event_invitee,
+      event:,
+      user: early_rsvp,
+      status: DiscoursePostEvent::Invitee.statuses[:going],
+      created_at: 1.hour.ago,
+    )
+
+    expect(event.most_likely_going.map(&:user)).to eq([late_rsvp, early_rsvp])
+  end
+
+  it "groups going invitees ahead of interested ones regardless of RSVP time" do
+    interested = Fabricate(:user)
+    going = Fabricate(:user)
+
+    Fabricate(
+      :post_event_invitee,
+      event:,
+      user: interested,
+      status: DiscoursePostEvent::Invitee.statuses[:interested],
+      created_at: 2.hours.ago,
+    )
+    Fabricate(
+      :post_event_invitee,
+      event:,
+      user: going,
+      status: DiscoursePostEvent::Invitee.statuses[:going],
+      created_at: 1.hour.ago,
+    )
+
+    expect(event.most_likely_going.map(&:user)).to eq([going, interested])
+  end
+end
+
 describe DiscoursePostEvent::Event, "#capacity" do
   before do
     Jobs.run_immediately!
