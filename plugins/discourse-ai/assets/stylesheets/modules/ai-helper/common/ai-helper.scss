@@ -270,6 +270,24 @@
   }
 }
 
+.suggest-titles-button {
+  #reply-control & {
+    background: var(--primary-low);
+    right: var(--space-1);
+    top: 50%;
+    transform: translateY(
+      calc(-50% - 0.25em)
+    ); // .25em = half of input margin-bottom padding
+    border-radius: var(--d-input-border-radius); // to match surrounding input
+    padding: 0.4em;
+    font-size: var(--font-down-1-rem);
+
+    .d-icon {
+      color: var(--tertiary);
+    }
+  }
+}
+
 #reply-control {
   .composer-actions.is-expanded,
   .composer-popup {
