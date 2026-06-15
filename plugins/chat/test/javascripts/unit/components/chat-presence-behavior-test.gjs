@@ -4,6 +4,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import {
   clearPresenceCallbacks,
+  processBrowserAttentionChange,
   setTestPresence,
 } from "discourse/lib/user-presence";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -22,6 +23,40 @@ function setScrollerHeight(scroller, { clientHeight, scrollHeight }) {
     configurable: true,
     value: scrollHeight,
   });
+}
+
+function stubDocumentAttention({
+  hasFocus = true,
+  visibilityState = "visible",
+}) {
+  sinon.stub(document, "hasFocus").returns(hasFocus);
+  sinon.stub(document, "visibilityState").value(visibilityState);
+}
+
+function publishChannelMessage(channelId, messageId, user) {
+  publishToMessageBus(`/chat/${channelId}`, {
+    type: "sent",
+    chat_message: {
+      id: messageId,
+      message: `hello ${messageId}`,
+      cooked: `<p>hello ${messageId}</p>`,
+      excerpt: `hello ${messageId}`,
+      created_at: "2025-01-01T00:00:00.000Z",
+      user,
+    },
+  });
+}
+
+function setChannelMembership(channel, lastReadMessageId = 1) {
+  channel.currentUserMembership.following = true;
+  channel.currentUserMembership.lastReadMessageId = lastReadMessageId;
+}
+
+function readRequests() {
+  return pretender.handledRequests.filter(
+    ({ method, url }) =>
+      method === "PUT" && url.startsWith("/chat/api/channels/1/read")
+  );
 }
 
 module("Unit | Components | presence gating", function (hooks) {
@@ -56,6 +91,12 @@ module("Unit | Components | presence gating", function (hooks) {
         },
       })
     );
+    pretender.put(`/chat/api/channels/1/read`, () =>
+      response({ success: true })
+    );
+    pretender.post(`/chat/api/channels/1/drafts`, () =>
+      response({ success: true })
+    );
   });
 
   hooks.afterEach(function () {
@@ -65,10 +106,7 @@ module("Unit | Components | presence gating", function (hooks) {
   });
 
   test("does not show arrow when user not present but pane cannot scroll", async function (assert) {
-    const channel = this.fabricators.channel({
-      id: 1,
-      currentUserMembership: { following: true, last_read_message_id: 1 },
-    });
+    const channel = this.fabricators.channel({ id: 1 });
 
     const readUpdateStub = sinon.stub(
       ChatChannel.prototype,
@@ -109,10 +147,7 @@ module("Unit | Components | presence gating", function (hooks) {
   });
 
   test("shows arrow when user not present and pane can scroll", async function (assert) {
-    const channel = this.fabricators.channel({
-      id: 1,
-      currentUserMembership: { following: true, last_read_message_id: 1 },
-    });
+    const channel = this.fabricators.channel({ id: 1 });
 
     this.channel = channel;
     await render(
@@ -143,10 +178,7 @@ module("Unit | Components | presence gating", function (hooks) {
   });
 
   test("pending manager tracks messages across contexts", async function (assert) {
-    const channel = this.fabricators.channel({
-      id: 1,
-      currentUserMembership: { following: true, last_read_message_id: 1 },
-    });
+    const channel = this.fabricators.channel({ id: 1 });
 
     this.channel = channel;
     await render(
@@ -183,10 +215,7 @@ module("Unit | Components | presence gating", function (hooks) {
   });
 
   test("clears pending state when scrolling to bottom", async function (assert) {
-    const channel = this.fabricators.channel({
-      id: 1,
-      currentUserMembership: { following: true, last_read_message_id: 1 },
-    });
+    const channel = this.fabricators.channel({ id: 1 });
 
     this.channel = channel;
     await render(
@@ -234,10 +263,7 @@ module("Unit | Components | presence gating", function (hooks) {
   });
 
   test("pending count contributes to document title", async function (assert) {
-    const channel = this.fabricators.channel({
-      id: 1,
-      currentUserMembership: { following: true, last_read_message_id: 1 },
-    });
+    const channel = this.fabricators.channel({ id: 1 });
 
     this.channel = channel;
     await render(
@@ -267,11 +293,125 @@ module("Unit | Components | presence gating", function (hooks) {
     );
   });
 
+  test("unfocused visible window at bottom follows without marking read until focus", async function (assert) {
+    setTestPresence(true);
+    stubDocumentAttention({ hasFocus: false, visibilityState: "visible" });
+
+    const channel = this.fabricators.channel({ id: 1 });
+    setChannelMembership(channel);
+    const otherUser = { id: 9999, username: "other" };
+
+    this.channel = channel;
+    await render(
+      <template><ChatChannel @channel={{this.channel}} /></template>
+    );
+
+    pretender.handledRequests.length = 0;
+
+    publishChannelMessage(1, 999, otherUser);
+    publishChannelMessage(1, 1000, otherUser);
+    publishChannelMessage(1, 1001, otherUser);
+    await settled();
+
+    assert.strictEqual(
+      channel.messagesManager.messages.length,
+      3,
+      "appends messages while passively following"
+    );
+    assert.strictEqual(
+      readRequests().length,
+      0,
+      "does not schedule read update"
+    );
+    assert.strictEqual(
+      channel.currentUserMembership.lastReadMessageId,
+      1,
+      "does not advance local durable read state while unfocused"
+    );
+    assert
+      .dom(".chat-scroll-to-bottom__button.visible")
+      .doesNotExist("does not show the scroll arrow while live-following");
+
+    document.hasFocus.returns(true);
+    processBrowserAttentionChange();
+    await settled();
+
+    assert.strictEqual(
+      readRequests().length,
+      1,
+      "marks read when focus returns"
+    );
+    assert.strictEqual(
+      channel.currentUserMembership.lastReadMessageId,
+      1001,
+      "advances local durable read state when focus returns"
+    );
+  });
+
+  test("hidden tab enqueues messages without marking read", async function (assert) {
+    setTestPresence(true);
+    stubDocumentAttention({ hasFocus: false, visibilityState: "hidden" });
+
+    const channel = this.fabricators.channel({ id: 1 });
+    setChannelMembership(channel);
+    const otherUser = { id: 9999, username: "other" };
+
+    const readUpdateStub = sinon.stub(
+      ChatChannel.prototype,
+      "debouncedUpdateLastReadMessage"
+    );
+
+    this.channel = channel;
+    await render(
+      <template><ChatChannel @channel={{this.channel}} /></template>
+    );
+
+    setScrollerHeight(this.element.querySelector(".chat-messages-scroller"), {
+      clientHeight: 100,
+      scrollHeight: 500,
+    });
+    readUpdateStub.resetHistory();
+
+    publishChannelMessage(1, 999, otherUser);
+    await settled();
+
+    assert.false(readUpdateStub.called, "does not schedule read update");
+    assert
+      .dom(".chat-scroll-to-bottom__button.visible")
+      .exists("shows jump affordance for hidden-tab messages");
+  });
+
+  test("own messages still follow while unfocused", async function (assert) {
+    setTestPresence(true);
+    stubDocumentAttention({ hasFocus: false, visibilityState: "visible" });
+
+    const channel = this.fabricators.channel({ id: 1 });
+
+    this.channel = channel;
+    await render(
+      <template><ChatChannel @channel={{this.channel}} /></template>
+    );
+
+    publishChannelMessage(1, 999, {
+      id: this.currentUser.id,
+      username: this.currentUser.username,
+    });
+    await settled();
+
+    assert.strictEqual(
+      channel.messagesManager.messages.length,
+      1,
+      "appends the current user's message"
+    );
+    assert
+      .dom(".chat-scroll-to-bottom__button.visible")
+      .doesNotExist("does not show the scroll arrow for own live messages");
+  });
+
   test("thread enqueues messages when user not present", async function (assert) {
     const thread = this.fabricators.thread({
       id: 1,
       channel: this.fabricators.channel({ id: 1 }),
-      currentUserMembership: { last_read_message_id: 1 },
     });
 
     const readUpdateStub = sinon.stub(
