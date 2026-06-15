@@ -1795,7 +1795,7 @@ en:
       enable_smart_lists: "Enable smart lists when writing in the composer"
       enable_defer: "Enable mark topics as unread"
       enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
-      show_original_content: "Show original content instead of translated content. Can also be toggled within topics."
+      show_original_content: "Show original content instead of translated content."
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -6314,12 +6314,6 @@ en:
             default: "%{filter} topics in %{category} without tags"
 
         categories: "All categories"
-    content_localization:
-      toggle_localized:
-        translated: "Page is machine-translated. Click to view original."
-        not_translated: "Page is not translated. Click to translate."
-        translations_enabled: "Translations enabled"
-        translations_disabled: "Translations disabled"
     language_switcher:
       title: "Change site language"
 
