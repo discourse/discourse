@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../mixins/github_body"
-require_relative "../mixins/github_auth_header"
+require_relative "../mixins/github_api"
 
 module Onebox
   module Engine
@@ -9,7 +9,7 @@ module Onebox
       include Engine
       include LayoutSupport
       include JSON
-      include Onebox::Mixins::GithubAuthHeader
+      include Onebox::Mixins::GithubApi
 
       matches_regexp(
         %r{^https?://(?:www\.)?(?:(?:\w)+\.)?github\.com/(?<org>.+)/(?<repo>.+)/(actions/runs/[[:digit:]]+|pull/[[:digit:]]*/checks\?check_run_id=[[:digit:]]+)},
@@ -65,7 +65,7 @@ module Onebox
       end
 
       def data
-        result = raw(github_auth_header(match[:org])).clone
+        result = raw.clone
 
         status = "unknown"
         if result["status"] == "completed"
@@ -84,7 +84,7 @@ module Onebox
           elsif type == :pr_run
             pr_url =
               "https://api.github.com/repos/#{match[:org]}/#{match[:repo]}/pulls/#{match[:pr_id]}"
-            ::MultiJson.load(URI.parse(pr_url).open(read_timeout: timeout))["title"]
+            load_json(pr_url)["title"]
           end
 
         {
