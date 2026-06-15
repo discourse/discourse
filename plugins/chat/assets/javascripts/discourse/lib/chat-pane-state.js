@@ -12,6 +12,10 @@ import { maintainScrollPosition } from "discourse/plugins/chat/discourse/lib/scr
 const CHAT_PRESENCE_OPTIONS = {
   userUnseenTime: 1 * 60 * 1000,
   browserHiddenTime: 0,
+  // Treat the user as away as soon as the window loses focus, even if the chat
+  // tab is still visible. Otherwise messages would be marked read (and the
+  // unread count cleared) while the window sits unfocused in the background.
+  requireWindowFocus: true,
 };
 
 /**

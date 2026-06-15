@@ -37,9 +37,14 @@ export default class ChatNotificationManager extends Service {
   @bind
   async onMessage(data) {
     // if the user is currently focused on this tab and channel,
-    // we don't want to show a desktop notification
+    // we don't want to show a desktop notification.
+    // `session.hasFocus` only tracks tab visibility, so also check
+    // `document.hasFocus()` to confirm the window actually has input focus -
+    // otherwise we'd suppress notifications while the window sits unfocused in
+    // the background (covered by another window, or another app has focus).
     if (
       this.session.hasFocus &&
+      document.hasFocus() &&
       data.channel_id === this.chat.activeChannel?.id
     ) {
       return;

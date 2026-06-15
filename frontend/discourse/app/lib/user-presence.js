@@ -6,6 +6,7 @@ const DEFAULT_USER_UNSEEN_MS = 60000;
 const DEFAULT_BROWSER_HIDDEN_MS = 0;
 
 let browserHiddenAt = null;
+let windowBlurredAt = null;
 let lastUserActivity = Date.now();
 let callbackWaitingForPresence = false;
 
@@ -15,10 +16,14 @@ let debounceUpdateDateTimeout = null;
 // Check whether the document is currently visible, and the user is actively using the site
 // Will return false if the browser went into the background more than `browserHiddenTime` milliseconds ago
 // Will also return false if there has been no user activity for more than `userUnseenTime` milliseconds
+// When `requireWindowFocus` is set, will also return false if the window lost input focus more
+// than `browserHiddenTime` milliseconds ago, even while the tab remains visible (e.g. the browser
+// window is in the background, covered by another window, or another application has focus)
 // Otherwise, will return true
 export default function userPresent({
   browserHiddenTime = DEFAULT_BROWSER_HIDDEN_MS,
   userUnseenTime = DEFAULT_USER_UNSEEN_MS,
+  requireWindowFocus = false,
 } = {}) {
   if (isTesting()) {
     return testPresence;
@@ -27,6 +32,13 @@ export default function userPresent({
   if (browserHiddenAt) {
     const timeSinceBrowserHidden = Date.now() - browserHiddenAt;
     if (timeSinceBrowserHidden >= browserHiddenTime) {
+      return false;
+    }
+  }
+
+  if (requireWindowFocus && windowBlurredAt) {
+    const timeSinceWindowBlurred = Date.now() - windowBlurredAt;
+    if (timeSinceWindowBlurred >= browserHiddenTime) {
       return false;
     }
   }
@@ -46,6 +58,7 @@ export default function userPresent({
 export function onPresenceChange({
   userUnseenTime = DEFAULT_USER_UNSEEN_MS,
   browserHiddenTime = DEFAULT_BROWSER_HIDDEN_MS,
+  requireWindowFocus = false,
   callback,
 } = {}) {
   if (userUnseenTime < DEFAULT_USER_UNSEEN_MS) {
@@ -57,7 +70,12 @@ export function onPresenceChange({
   callbacks.push({
     userUnseenTime,
     browserHiddenTime,
-    lastState: userPresent({ userUnseenTime, browserHiddenTime }),
+    requireWindowFocus,
+    lastState: userPresent({
+      userUnseenTime,
+      browserHiddenTime,
+      requireWindowFocus,
+    }),
     callback,
   });
 }
@@ -75,11 +93,21 @@ function processChanges() {
     browserHiddenAt = browserHidden ? Date.now() : null;
   }
 
+  // `document.hidden` only reflects tab visibility, not window focus. A tab can
+  // be the visible/foreground tab while the window itself is in the background
+  // (covered by another window, or another application has focus). Track that
+  // separately so callers opting into `requireWindowFocus` can react to it.
+  const windowBlurred = !document.hasFocus();
+  if (!!windowBlurredAt !== windowBlurred) {
+    windowBlurredAt = windowBlurred ? Date.now() : null;
+  }
+
   callbackWaitingForPresence = false;
   for (const callback of callbacks) {
     const currentState = userPresent({
       userUnseenTime: callback.userUnseenTime,
       browserHiddenTime: callback.browserHiddenTime,
+      requireWindowFocus: callback.requireWindowFocus,
     });
 
     if (callback.lastState !== currentState) {
@@ -148,6 +176,12 @@ if (!isTesting()) {
   document.addEventListener("keydown", seenUser, { passive: true });
   window.addEventListener("scroll", seenUser, { passive: true });
   window.addEventListener("focus", seenUser, { passive: true });
+
+  // Window focus/blur is distinct from tab visibility (`visibilitychange`): it
+  // fires when the window moves to/from the background even while the tab stays
+  // visible. `processChanges` re-reads `document.hasFocus()`, so a stray blur
+  // caused by focus moving into an embedded iframe is correctly ignored.
+  window.addEventListener("blur", processChanges, { passive: true });
 
   document.addEventListener("visibilitychange", visibilityChanged, {
     passive: true,
