@@ -18,9 +18,7 @@ class NestedTopicsController < ApplicationController
   # JSON page 0: includes topic metadata, OP post, sort, and message_bus_last_id
   # JSON page 1+: returns only roots for pagination
   def show
-    if spa_boot_request?
-      return redirect_to topic_route_url, status: topic_route_redirect_status
-    end
+    return redirect_to topic_route_url, status: topic_route_redirect_status if spa_boot_request?
 
     page = params[:page].to_i.clamp(0, 1000)
     render json: list_roots_response(page: page)
@@ -52,10 +50,7 @@ class NestedTopicsController < ApplicationController
   #   0 = no ancestors, target at depth 0 ("Continue this thread")
   def context
     if spa_boot_request?
-      return(
-        redirect_to topic_route_url(params[:post_number]),
-                    status: topic_route_redirect_status
-      )
+      return(redirect_to topic_route_url(params[:post_number]), status: topic_route_redirect_status)
     end
 
     render json: show_context_response
