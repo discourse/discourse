@@ -309,7 +309,7 @@ module("Integration | Component | Post", function (hooks) {
     assert.dom(".post-language").includesText(
       `${i18n("post.original_language", {
         language: "English (US)",
-      })}. ${i18n("post.click_to_translate")}`
+      })}. ${i18n("post.click_to_show_original")}`
     );
     assert
       .dom(".post-language")
@@ -403,7 +403,7 @@ module("Integration | Component | Post", function (hooks) {
     assert.dom(".post-language").includesText(
       `${i18n("post.original_language", {
         language: "English (US)",
-      })}. ${i18n("post.tap_to_translate")}`,
+      })}. ${i18n("post.tap_to_show_original")}`,
       "mobile tooltip uses tap copy"
     );
     assert.strictEqual(
@@ -435,7 +435,7 @@ module("Integration | Component | Post", function (hooks) {
     assert.dom(".post-language").includesText(
       `${i18n("post.original_language_and_outdated", {
         language: "English (US)",
-      })}. ${i18n("post.click_to_translate")}`
+      })}. ${i18n("post.click_to_show_original")}`
     );
     assert
       .dom(".post-language")

@@ -4967,8 +4967,8 @@ en:
       original_language_and_outdated: "This post was originally written in %{language}. Translation may be outdated"
       # This is a loose key to be used beside the post-info post-language icon
       originally_written_in: "Originally in %{language}"
-      click_to_translate: "Click to translate"
-      tap_to_translate: "Tap here to translate"
+      click_to_show_original: "Click to show original"
+      tap_to_show_original: "Tap here to show original"
       ai_translation_disclaimer: "AI-generated translations may be inaccurate."
 
     category:

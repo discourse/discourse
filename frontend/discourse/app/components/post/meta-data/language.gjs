@@ -34,8 +34,8 @@ export default class PostMetaDataLanguage extends Component {
 
   get translatePrompt() {
     return this.site.mobileView
-      ? i18n("post.tap_to_translate")
-      : i18n("post.click_to_translate");
+      ? i18n("post.tap_to_show_original")
+      : i18n("post.click_to_show_original");
   }
 
   @action
