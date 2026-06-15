@@ -102,7 +102,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "trigger:topic_closed",
       "action:topic",
       "condition:filter",
-      "condition:user_in_group",
+      "action:group",
       "action:send_chat_message",
       "action:send_private_message",
     )
@@ -112,7 +112,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
   it "includes declarative filter and topic lookup examples", :aggregate_failures do
     result = invoke_tool(include_examples: true)
     filter_node = result[:nodes].find { |node| node[:type] == "condition:filter" }
-    user_in_group_node = result[:nodes].find { |node| node[:type] == "condition:user_in_group" }
+    group_node = result[:nodes].find { |node| node[:type] == "action:group" }
     topic_node = result[:nodes].find { |node| node[:type] == "action:topic" }
     private_message_node =
       result[:nodes].find { |node| node[:type] == "action:send_private_message" }
@@ -137,8 +137,15 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     expect(topic_node[:examples]).to contain_exactly(
       include(parameters: include(operation: "get", topic_id: "={{ $json.topic.id }}")),
     )
-    expect(user_in_group_node[:examples]).to contain_exactly(
-      include(parameters: include(username: "={{ $json.user.username }}", group_id: 123)),
+    expect(group_node[:examples]).to contain_exactly(
+      include(
+        parameters:
+          include(
+            operation: "check_membership",
+            username: "={{ $json.user.username }}",
+            group_id: 123,
+          ),
+      ),
     )
     expect(private_message_node[:examples]).to contain_exactly(
       include(

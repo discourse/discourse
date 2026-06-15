@@ -80,13 +80,7 @@ module DiscourseWorkflows
 
         private
 
-        PASS_THROUGH_NODE_TYPES = %w[
-          condition:filter
-          condition:if
-          condition:user_in_group
-          action:limit
-          flow:wait
-        ].freeze
+        PASS_THROUGH_NODE_TYPES = %w[condition:filter condition:if action:limit flow:wait].freeze
         CONDITION_NODE_TYPES = %w[condition:filter condition:if].freeze
 
         JSON_REFERENCE_REGEX = /\$json(?:\.[A-Za-z_][A-Za-z0-9_]*)+/
@@ -148,7 +142,11 @@ module DiscourseWorkflows
 
         def output_schema_for(node, input_schema)
           catalog_schema =
-            DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog::OUTPUT_SCHEMAS[node["type"]]
+            DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog.output_schema_for(
+              node["type"],
+              parameters: node["parameters"] || {},
+              input_schema: input_schema,
+            )
           return catalog_schema if catalog_schema.present?
           return input_schema if PASS_THROUGH_NODE_TYPES.include?(node["type"].to_s)
 

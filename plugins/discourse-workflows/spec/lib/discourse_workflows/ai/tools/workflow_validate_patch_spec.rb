@@ -213,19 +213,50 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
       },
       {
         op: "add_node",
-        client_id: "friend-group",
+        client_id: "group-membership",
         node: {
-          type: "condition:user_in_group",
+          type: "action:group",
           typeVersion: "1.0",
-          name: "Keep friend group posts",
+          name: "Check friend group membership",
           position: {
             x: 280,
             y: 0,
           },
           parameters: {
+            operation: "check_membership",
             username: "={{ $json.post.username }}",
             group_id: 1,
             actor_username: "system",
+          },
+          credentials: {
+          },
+        },
+      },
+      {
+        op: "add_node",
+        client_id: "friend-group",
+        node: {
+          type: "condition:if",
+          typeVersion: "1.0",
+          name: "Keep friend group posts",
+          position: {
+            x: 560,
+            y: 0,
+          },
+          parameters: {
+            combinator: "and",
+            conditions: [
+              {
+                id: "member_of_friend_group",
+                leftValue: "={{ $json.group_membership.in_group }}",
+                operator: {
+                  operation: "equals",
+                  type: "boolean",
+                  singleValue: false,
+                },
+                rightValue: true,
+              },
+            ],
           },
           credentials: {
           },
@@ -239,7 +270,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
           typeVersion: "1.0",
           name: "DM admin",
           position: {
-            x: 560,
+            x: 840,
             y: 0,
           },
           parameters: {
@@ -255,6 +286,14 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
       {
         op: "add_connection",
         from: "post-created",
+        to: "group-membership",
+        output_index: 0,
+        input_index: 0,
+        connection_type: "main",
+      },
+      {
+        op: "add_connection",
+        from: "group-membership",
         to: "friend-group",
         output_index: 0,
         input_index: 0,
@@ -277,6 +316,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
     expect(schemas_by_name.dig("Keep friend group posts", :input_schema)).to include(
       "$json.post.username" => "string",
       "$json.post.post_url" => "string",
+      "$json.group_membership.in_group" => "boolean",
     )
     expect(schemas_by_name.dig("DM admin", :input_schema)).to include(
       "$json.post.username" => "string",

@@ -28,8 +28,10 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       expect(identifiers).to include("action:topic_tags")
       expect(identifiers).to include("action:post")
       expect(identifiers).to include("action:topic")
+      expect(identifiers).to include("action:group")
       expect(identifiers).to include("condition:if")
       expect(identifiers).to include("action:send_private_message")
+      expect(identifiers).not_to include("condition:user_in_group")
     end
 
     it "returns Post operation and List posts query control metadata" do
@@ -71,6 +73,15 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       badge_node =
         response.parsed_body["node_types"].find { |nt| nt["identifier"] == "action:badge" }
       expect(badge_node.dig("metadata", "badges")).to all(include("id", "name"))
+
+      group_node =
+        response.parsed_body["node_types"].find { |nt| nt["identifier"] == "action:group" }
+      expect(group_node.dig("metadata", "groups")).to include(
+        include("id" => Group::AUTO_GROUPS[:everyone], "name" => "everyone"),
+      )
+      expect(group_node.dig("properties", "group_id", "type_options")).not_to include(
+        "load_options_depends_on",
+      )
     end
 
     it "does not preload load options metadata that depends on node parameters" do

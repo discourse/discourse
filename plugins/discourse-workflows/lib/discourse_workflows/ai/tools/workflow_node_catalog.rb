@@ -64,6 +64,15 @@ module DiscourseWorkflows
           "user.staff" => "boolean",
         }.freeze
 
+        GROUP_MEMBERSHIP_SCHEMA = {
+          "group_membership" => "Group membership check result",
+          "group_membership.group_id" => "integer",
+          "group_membership.group_name" => "string",
+          "group_membership.user_id" => "integer",
+          "group_membership.username" => "string",
+          "group_membership.in_group" => "boolean",
+        }.freeze
+
         OUTPUT_SCHEMAS = {
           "trigger:manual" => {
           },
@@ -169,10 +178,11 @@ module DiscourseWorkflows
               },
             },
           ],
-          "condition:user_in_group" => [
+          "action:group" => [
             {
               name: "Keep posts from members of a group",
               parameters: {
+                operation: "check_membership",
                 username: "={{ $json.user.username }}",
                 group_id: 123,
                 actor_username: "system",
@@ -249,7 +259,7 @@ module DiscourseWorkflows
         SEARCH_ALIASES = {
           "action:send_private_message" => "dm direct message pm personal private message",
           "action:ai_agent" => "ai agent bot llm classify summarize generate sentiment triage",
-          "condition:user_in_group" => "group membership member belongs friend friends",
+          "action:group" => "group membership member belongs friend friends",
         }.freeze
 
         def self.signature
@@ -276,6 +286,16 @@ module DiscourseWorkflows
 
         def self.name
           "workflow_node_catalog"
+        end
+
+        def self.output_schema_for(identifier, parameters: {}, input_schema: {})
+          parameters = parameters.respond_to?(:to_h) ? parameters.to_h.with_indifferent_access : {}
+
+          if identifier.to_s == "action:group" && parameters[:operation].to_s == "check_membership"
+            return input_schema.merge(GROUP_MEMBERSHIP_SCHEMA)
+          end
+
+          OUTPUT_SCHEMAS.fetch(identifier.to_s, {})
         end
 
         def invoke
@@ -330,7 +350,7 @@ module DiscourseWorkflows
             properties: properties,
             credentials: json_safe(node_class.credentials),
             capabilities: json_safe(description[:capabilities] || {}),
-            output_schema: OUTPUT_SCHEMAS.fetch(identifier, {}),
+            output_schema: self.class.output_schema_for(identifier),
           }
           payload[:examples] = EXAMPLES[identifier] if include_examples && EXAMPLES.key?(identifier)
           payload
