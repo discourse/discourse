@@ -4,7 +4,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { bind } from "discourse/lib/decorators";
 import loadChartJS from "discourse/lib/load-chart-js";
-import { SERIES_COLORS } from "../lib/chart-helpers";
+import { looksLikeDate, SERIES_COLORS } from "../lib/chart-helpers";
 import themeColor from "../lib/themeColor";
 
 export default class DataExplorerChart extends Component {
@@ -28,17 +28,27 @@ export default class DataExplorerChart extends Component {
 
   _buildSingleSeriesConfig(gridColor, labelColor) {
     const isLine = this.args.chartType === "line";
-    const primaryColor = themeColor("--tertiary");
+    const tertiaryRgb = themeColor("--tertiary-rgb");
+    const primaryColor = `rgb(${tertiaryRgb})`;
+    const secondaryColor = `rgba(${tertiaryRgb}, 0.1)`;
 
+    // mirror core's admin report chart so data explorer charts render
+    // identically on the dashboard and the data explorer page
     const dataset = {
       label: this.args.datasets[0].label,
       data: this.args.datasets[0].values,
-      backgroundColor: isLine ? "transparent" : primaryColor,
+      backgroundColor: isLine ? secondaryColor : primaryColor,
       borderColor: primaryColor,
       borderWidth: isLine ? 2 : 0,
-      pointRadius: isLine ? 2 : 0,
+      pointRadius: isLine ? 3 : 0,
       pointHoverRadius: isLine ? 4 : 0,
-      tension: 0.3,
+      pointBackgroundColor: primaryColor,
+      pointBorderColor: primaryColor,
+      pointStyle: "rectRounded",
+      borderCapStyle: "round",
+      borderJoinStyle: "round",
+      tension: 0.4,
+      fill: isLine ? "origin" : false,
     };
 
     const xTicks = { color: labelColor };
@@ -54,6 +64,25 @@ export default class DataExplorerChart extends Component {
         maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
+          tooltip: {
+            backgroundColor: themeColor("--primary"),
+            titleColor: themeColor("--secondary"),
+            bodyColor: themeColor("--secondary"),
+            titleMarginBottom: 16,
+            padding: { left: 20, right: 20, top: 12, bottom: 12 },
+            bodySpacing: 8,
+            cornerRadius: 8,
+            boxPadding: 4,
+            callbacks: {
+              title: (items) => {
+                const label = items[0].label;
+                return looksLikeDate(label)
+                  ? moment(label).format("LL")
+                  : label;
+              },
+              label: (item) => item.formattedValue,
+            },
+          },
         },
         scales: {
           x: {
