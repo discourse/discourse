@@ -166,7 +166,12 @@ ug:
     date_range_picker:
       apply: "قوللان"
       start_date: "باشلىنىش ۋاقتى"
+      end_date: "ئاخىرلىشىش ۋاقتى"
+      date_placeholder: "yyyy/mm/dd"
       presets:
+        label: "ۋاقىت دائىرىسى ئالدىن تەڭشىكى"
+        last_7_days: "ئۆتكەن 7 كۈن"
+        last_30_days: "ئۆتكەن 30 كۈن"
         last_3_months: "ئۆتكەن 3 ئاي"
         last_6_months: "ئۆتكەن 6 ئاي"
         last_year: "ئۆتكەن يىل"
@@ -281,6 +286,7 @@ ug:
       comma: "، "
       last_item: "ۋە"
     action_codes:
+      topic_created: "بۇ تېما %{when} دا قۇرۇلغان"
       public_topic: "بۇ تېمىنى %{when} دە ئېلان قىل"
       open_topic: "%{when} دە بۇنى تېمىغا ئايلاندۇر"
       private_topic: "%{when} دە بۇ تېمىنى شەخسىي ئۇچۇرغا ئۆزگەرتىدۇ"
@@ -329,6 +335,8 @@ ug:
     software_update_prompt:
       message: "بۇ تور بېكەتنى يېڭىلىدۇق، نورمال ئىشلىشى ئۈچۈن <span>يېڭىلا</span>ڭ."
       dismiss: "پەرۋا قىلما"
+    notifications_tracking:
+      tooltip: "ئۇقتۇرۇش دەرىجىسى: %{level}"
     back_button: "كەينى"
     welcome_banner:
       header:
@@ -338,6 +346,9 @@ ug:
       search_placeholder: "ئىزدە"
     impersonation:
       notice: "سىز %{username} دەك سىياقلىنىۋاتىسىز"
+      time_left:
+        one: "(%{count} مىنۇت قالدى)"
+        other: "(%{count} مىنۇت قالدى)"
       stop: "سىياقلىنىشنى توختات"
     themes:
       default_description: "كۆڭۈلدىكى"
@@ -356,6 +367,20 @@ ug:
       unknown_source: "ئۆرنەك ياكى قىستۇرمىڭىزدىن بىرى"
     dev_tools:
       drag_to_move: "سۆرەپ يۆتكە"
+      toggle_plugin_outlet_debug: "قىستۇرما چىقىش ئېغىزى سازلاشنى ئالماشتۇر"
+      toggle_block_debug: "بۆلەك سازلاشنى ئالماشتۇر"
+      block_debug:
+        outlet_boundaries: "چىقىش ئېغىزى چېگراسى"
+        visual_overlay: "كۆرۈنۈشلۈك قاپلاش"
+        ghost_blocks: "ئەرۋاھ بۆلىكى"
+        condition_debugging: "شەرتلىك سازلاش"
+      plugin_outlet_debug:
+        find_on_github: "GitHub دىن ئىزدە"
+        wrapper: "(ئورىغۇچ)"
+        outlet_args: "چىقىش ئېغىزى ئۆزگەرگۈچىسى"
+        no_outlet_args: "بۇ چىقىش ئېغىزىدىن ھېچقانداق ئۆزگەرگۈچى ئۆتمىدى"
+        aliases: "تەخەللۇس"
+        deprecated: "ئىشلىتىشتىن توختىتىلغان"
     s3:
       regions:
         ap_northeast_1: "ئاسىيا تىنچ ئوكيان (توكيو)"
@@ -445,7 +470,11 @@ ug:
     admin_onboarding_banner:
       select_theme:
         enabled: "تاللاندى"
+        browse_all: "ئۆرنەك باشقۇرۇش"
+        show_light_screenshot: "سۇس ئېكران كۆرۈنۈشىنى كۆرسەت"
+        show_dark_screenshot: "قېنىق ئېكران كۆرۈنۈشىنى كۆرسەت"
       invite_collaborators:
+        title: "ھەمكارلاشقۇچى تەكلىپ قىل"
         action: "تەكلىپ قۇر"
       start_posting:
         title: "يوللاشنى باشلا"

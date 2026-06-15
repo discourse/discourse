@@ -907,6 +907,10 @@ ar:
         chat:
           label: "الدردشة"
     discourse_workflows:
+      nodes:
+        "trigger:chat_message_created": "إنشاء رسالة دردشة"
+      chat_message_created:
+        channel_id: "القناة"
       send_chat_message:
         channel_id: "القناة"
         message: "رسالة"

@@ -251,6 +251,8 @@ pt:
         text: Iniciar novo DM
         title: Criar uma conversação pessoal
     discourse_workflows:
+      chat_message_created:
+        channel_id: "Canal"
       send_chat_message:
         channel_id: "Canal"
         message: "Mensagem"

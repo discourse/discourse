@@ -759,9 +759,12 @@ zh_CN:
       nodes:
         "action:send_chat_message": "发送聊天消息"
         "action:chat_approval": "聊天审批"
+        "trigger:chat_message_created": "已创建聊天消息"
       node_descriptions:
         "action:send_chat_message": "向聊天频道发送消息"
         "action:chat_approval": "向聊天频道发送审批请求并等待回复"
+      chat_message_created:
+        channel_id: "频道"
       send_chat_message:
         channel_id: "频道"
         message: "发送私信"

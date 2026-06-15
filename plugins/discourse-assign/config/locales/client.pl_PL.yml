@@ -215,8 +215,10 @@ pl_PL:
         requires_assign: "Wymaga włączenia wtyczki Przypisz"
       nodes:
         "action:assign_topic": "Przypisz temat"
+        "trigger:assigned": "Przypisany"
       node_descriptions:
         "action:assign_topic": "Przypisz lub anuluj przypisanie tematu"
+        "trigger:assigned": "Wyzwala się, gdy przypisany zostanie temat lub wpis"
       assign_topic:
         operation: "Działanie"
         operations:
@@ -225,3 +227,6 @@ pl_PL:
         topic_id: "ID tematu"
         assignee: "Przypisany"
         replace_existing: "Zastąp istniejące zadanie"
+      assigned:
+        topic_assignments_only: "Wyzwalaj tylko wtedy, gdy celem zadania jest temat, a nie pojedynczy wpis"
+        topic_assignments_only_description: "Tylko przypisania tematów"

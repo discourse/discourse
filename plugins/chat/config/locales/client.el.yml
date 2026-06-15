@@ -657,6 +657,9 @@ el:
       nodes:
         "action:send_chat_message": "Αποστολή μηνύματος συνομιλίας"
         "action:chat_approval": "Έγκριση συνομιλίας"
+        "trigger:chat_message_created": "Δημιουργήθηκε μήνυμα συνομιλίας"
+      chat_message_created:
+        channel_id: "Κανάλι"
       send_chat_message:
         channel_id: "Κανάλι"
         message: "Μήνυμα"

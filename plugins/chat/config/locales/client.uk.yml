@@ -888,9 +888,12 @@ uk:
       nodes:
         "action:send_chat_message": "Надіслати повідомлення в чат"
         "action:chat_approval": "Схвалення чату"
+        "trigger:chat_message_created": "Повідомлення чату створено"
       node_descriptions:
         "action:send_chat_message": "Надішліть повідомлення в чат"
         "action:chat_approval": "Надіслати запит на схвалення до каналу чату та чекати на відповідь"
+      chat_message_created:
+        channel_id: "Канал"
       send_chat_message:
         channel_id: "Канал"
         message: "Повідомлення"

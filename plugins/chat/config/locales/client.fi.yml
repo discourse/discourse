@@ -699,6 +699,8 @@ fi:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Lähetä chat-viesti"
+      chat_message_created:
+        channel_id: "Kanava"
       send_chat_message:
         channel_id: "Kanava"
         message: "Viesti"

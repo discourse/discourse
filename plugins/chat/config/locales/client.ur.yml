@@ -434,6 +434,8 @@ ur:
         text: نیا ذاتی پیغام بنائیں
         title: نجی گفتگو شروع کریں
     discourse_workflows:
+      chat_message_created:
+        channel_id: "چَینل"
       send_chat_message:
         channel_id: "چَینل"
         message: "پیغام"

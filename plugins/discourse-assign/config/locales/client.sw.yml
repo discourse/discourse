@@ -68,6 +68,8 @@ sw:
       topic: "Mada"
       post: "Ujumbe"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Kukabidhi"
       assign_topic:
         operations:
           assign: "Kabidhi"

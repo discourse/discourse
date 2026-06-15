@@ -270,6 +270,8 @@ ro:
         text: Începe un mesaj direct nou
         title: Creează o discuție personală
     discourse_workflows:
+      chat_message_created:
+        channel_id: "Canal"
       send_chat_message:
         channel_id: "Canal"
         message: "Mesaj"

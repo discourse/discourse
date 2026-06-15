@@ -2534,6 +2534,7 @@ zh_CN:
       staged_users_disabled: "在启用此设置之前，您必须先启用 'staged users'。"
       reply_by_email_disabled: "在启用此设置之前，您必须先启用 'reply by email'。"
       discourse_connect_url_is_empty: "在启用此设置之前，您必须先设置 'discourse connect url'。"
+      discourse_connect_secret_is_too_short: "在启用此设置之前，您必须设置一个至少包含 10 个字符的“Discourse Connect 密钥”。"
       enable_local_logins_disabled: "在启用此设置之前，您必须先启用 'enable local logins'。"
       min_username_length_exists: "'min username length' 不能大于最短用户名 (%{username})。"
       min_group_name_length_exists: "'min username length' 不能大于最短群组名称 (%{group_name})。"

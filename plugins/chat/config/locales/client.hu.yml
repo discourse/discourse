@@ -741,6 +741,8 @@ hu:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Csevegőüzenet küldése"
+      chat_message_created:
+        channel_id: "Csatorna"
       send_chat_message:
         channel_id: "Csatorna"
         message: "Üzenet"
