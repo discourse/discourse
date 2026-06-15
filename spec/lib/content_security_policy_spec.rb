@@ -43,6 +43,23 @@ RSpec.describe ContentSecurityPolicy do
       worker_src = parse(policy)["worker-src"]
       expect(worker_src).to contain_exactly("'self'", "blob:")
     end
+
+    it "includes the CDN asset host in worker-src so the worker chunk can be imported" do
+      set_cdn_url "https://cdn.example.com"
+      worker_src = parse(policy)["worker-src"]
+      expect(worker_src).to contain_exactly("'self'", "blob:", "https://cdn.example.com/assets/")
+    end
+
+    it "includes the s3 asset CDN host in worker-src" do
+      global_setting :s3_bucket, "test_bucket"
+      global_setting :s3_region, "ap-australia"
+      global_setting :s3_access_key_id, "123"
+      global_setting :s3_secret_access_key, "123"
+      global_setting :s3_cdn_url, "https://s3cdn.example.com"
+
+      worker_src = parse(policy)["worker-src"]
+      expect(worker_src).to contain_exactly("'self'", "blob:", "https://s3cdn.example.com/assets/")
+    end
   end
 
   describe "manifest-src" do
