@@ -149,6 +149,14 @@ export default class Nested extends Component {
       .join(" ");
   }
 
+  get showContextBanner() {
+    return this.args.contextMode && !this.site.mobileView;
+  }
+
+  get showParentContextLink() {
+    return this.args.contextNoAncestors || this.args.ancestorsTruncated;
+  }
+
   get mobileFocusClass() {
     return `nested-view__mobile-focus --${this.focusDirection}`;
   }
@@ -613,7 +621,10 @@ export default class Nested extends Component {
       }
 
       const controls = document.querySelector(
-        ".nested-view > .nested-view__controls"
+        ".nested-view:not(.nested-context-view) > .nested-view__controls"
+      );
+      const banner = document.querySelector(
+        ".nested-context-view > .nested-context-view__banner"
       );
       const rect = target.getBoundingClientRect();
       window.scrollTo({
@@ -621,7 +632,8 @@ export default class Nested extends Component {
           window.scrollY +
           rect.top -
           (this.header.headerOffset || 0) -
-          (controls?.offsetHeight || 0),
+          (controls?.offsetHeight || 0) -
+          (banner?.offsetHeight || 0),
         behavior: "smooth",
       });
     } else if (this.#scrollAttempts < this.#maxScrollAttempts) {
@@ -833,6 +845,37 @@ export default class Nested extends Component {
             {{/if}}
           </div>
         </div>
+
+        {{#if this.showContextBanner}}
+          <div class="nested-context-view__banner">
+            <span class="nested-context-view__banner-icon">{{dIcon
+                "nested-thread"
+              }}</span>
+            <span class="nested-context-view__banner-text">{{i18n
+                "nested_replies.context.banner"
+              }}</span>
+            <div class="nested-context-view__nav">
+              <DButton
+                class="btn-default btn-small nested-context-view__full-thread"
+                @action={{@viewFullThread}}
+                @icon="arrow-left"
+                @translatedLabel={{i18n
+                  "nested_replies.context.view_full_topic"
+                }}
+              />
+              {{#if this.showParentContextLink}}
+                <DButton
+                  class="btn-default btn-small nested-context-view__parent-context"
+                  @action={{@viewParentContext}}
+                  @icon="arrow-up"
+                  @translatedLabel={{i18n
+                    "nested_replies.context.view_parent_context"
+                  }}
+                />
+              {{/if}}
+            </div>
+          </div>
+        {{/if}}
 
         {{#if (gt @newRootPostCount 0)}}
           <div class="nested-view__new-replies">

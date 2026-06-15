@@ -43,6 +43,28 @@ RSpec.describe "Nested context view" do
       expect(nested_view).to have_post(chain_posts[2])
     end
 
+    it "shows the desktop context banner with full-topic navigation" do
+      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
+
+      expect(nested_view).to have_context_banner
+      expect(nested_view).to have_view_full_thread_link
+      expect(nested_view).to have_no_view_parent_context_link
+
+      nested_view.click_view_full_thread
+
+      expect(nested_view).to have_nested_view
+      expect(nested_view).to have_no_context_view
+      expect(nested_view).to have_root_post(chain_posts[0])
+    end
+
+    it "keeps the desktop context banner out of the mobile stacked-root view", mobile: true do
+      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
+
+      expect(nested_view).to have_context_view
+      expect(nested_view).to have_mobile_focus
+      expect(nested_view).to have_no_context_banner
+    end
+
     it "marks direct post URLs as context routes" do
       nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
 
@@ -72,6 +94,21 @@ RSpec.describe "Nested context view" do
 
       expect(nested_view).to have_no_post(chain_posts[0])
       expect(nested_view).to have_post_at_depth(chain_posts[3], depth: 0)
+    end
+
+    it "offers parent-context navigation" do
+      nested_view.visit_nested_context(topic, post_number: chain_posts[3].post_number, context: 0)
+
+      expect(nested_view).to have_context_banner
+      expect(nested_view).to have_view_parent_context_link
+
+      nested_view.click_view_parent_context
+
+      expect(nested_view).to have_context_view
+      expect(nested_view).to have_post(chain_posts[0])
+      expect(nested_view).to have_post(chain_posts[1])
+      expect(nested_view).to have_post(chain_posts[2])
+      expect(nested_view).to have_post(chain_posts[3])
     end
   end
 

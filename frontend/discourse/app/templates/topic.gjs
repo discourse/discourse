@@ -132,11 +132,14 @@ export default <template>
             @unhidePost={{nested.unhidePost}}
             @postNumber={{nested.postNumber}}
             @contextMode={{nested.contextMode}}
+            @contextNoAncestors={{nested.contextNoAncestors}}
+            @ancestorsTruncated={{nested.ancestorsTruncated}}
             @targetPostNumber={{nested.targetPostNumber}}
             @initialFocusedPath={{nested.initialFocusedPath}}
             @setFocusedPostNumber={{nested.setFocusedPostNumber}}
             @saveScrollPosition={{nested.saveScrollPosition}}
             @viewFullThread={{nested.viewFullThread}}
+            @viewParentContext={{nested.viewParentContext}}
             @pinnedPostIds={{nested.pinnedPostIds}}
             @newRootPostCount={{nested.newRootPostCount}}
             @loadNewRoots={{nested.loadNewRoots}}

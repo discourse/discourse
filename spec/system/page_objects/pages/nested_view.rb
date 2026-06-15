@@ -62,6 +62,30 @@ module PageObjects
         has_css?(".nested-context-view")
       end
 
+      def has_no_context_view?
+        has_no_css?(".nested-context-view")
+      end
+
+      def has_context_banner?
+        has_css?(".nested-context-view__banner", text: I18n.t("js.nested_replies.context.banner"))
+      end
+
+      def has_no_context_banner?
+        has_no_css?(".nested-context-view__banner")
+      end
+
+      def has_view_full_thread_link?
+        has_css?(".nested-context-view__full-thread")
+      end
+
+      def has_view_parent_context_link?
+        has_css?(".nested-context-view__parent-context")
+      end
+
+      def has_no_view_parent_context_link?
+        has_no_css?(".nested-context-view__parent-context")
+      end
+
       # ── Post assertions ───────────────────────────────────────────
 
       def has_post_at_depth?(post, depth:)
@@ -323,6 +347,16 @@ module PageObjects
           find(".show-more-actions").click if has_css?(".show-more-actions", wait: 2)
           find("button.edit").click
         end
+        self
+      end
+
+      def click_view_full_thread
+        find(".nested-context-view__full-thread").click
+        self
+      end
+
+      def click_view_parent_context
+        find(".nested-context-view__parent-context").click
         self
       end
 
