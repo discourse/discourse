@@ -4,6 +4,25 @@ require "highline/import"
 module SystemHelpers
   PLATFORM_KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
 
+  # A production Ember build strips `@ember/debug` macros (`deprecate`,
+  # `assert`) and the dev-only test affordances, so specs asserting that
+  # behaviour are conditionally skipped via `if:` metadata.
+  def self.production_ember_build?
+    return @production_ember_build if defined?(@production_ember_build)
+
+    @production_ember_build =
+      if ENV["EMBER_ENV"].present?
+        ENV["EMBER_ENV"] == "production"
+      else
+        begin
+          info = Rails.root.join("frontend/discourse/dist/BUILD_INFO.json")
+          info.exist? && JSON.parse(info.read)["ember_env"] == "production"
+        rescue StandardError
+          false
+        end
+      end
+  end
+
   # Pass to `send_keys` to move the caret to the start of the current line in a
   # contenteditable. The Home key doesn't move the caret on macOS; Cmd+Left does.
   LINE_START_KEY = RUBY_PLATFORM =~ /darwin/i ? %i[meta left] : :home
