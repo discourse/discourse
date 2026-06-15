@@ -4,6 +4,21 @@ const MSO_LIST_CLASSES = [
   "MsoListParagraphCxSpLast",
 ];
 
+// Word's built-in quote-like paragraph styles ("Quote", "Intense Quote",
+// "Block Text"). Word has no semantic blockquote, so it emits styled paragraphs
+// instead of <blockquote>. Bare indentation (margin-left) is intentionally not
+// treated as a quote - it's too ambiguous to convert reliably.
+//
+// Desktop Word marks the style with a non-localized class (e.g. MsoQuote).
+// Word for the web ("WAC") instead tags runs with data-ccp-parastyle set to the
+// internal (English) style name, regardless of the document language - so these
+// match reliably across locales.
+const MSO_QUOTE_CLASSES = ["MsoQuote", "MsoIntenseQuote", "MsoBlockText"];
+const WAC_QUOTE_STYLES = ["Quote", "Intense Quote", "Block Text"];
+const WAC_QUOTE_SELECTOR = WAC_QUOTE_STYLES.map(
+  (style) => `[data-ccp-parastyle="${style}"]`
+).join(", ");
+
 /**
  * Extracts the list level from a Word list paragraph's style attribute.
  * Word uses styles like "mso-list:l0 level2 lfo1" to indicate nesting.
@@ -208,20 +223,166 @@ export function transformWordLists(container) {
   });
 }
 
+function isQuoteParagraph(node) {
+  if (node?.nodeType !== Node.ELEMENT_NODE || node.tagName !== "P") {
+    return false;
+  }
+
+  return (
+    MSO_QUOTE_CLASSES.some((cls) => node.classList.contains(cls)) ||
+    node.querySelector(WAC_QUOTE_SELECTOR) !== null
+  );
+}
+
+function nextElementSibling(node) {
+  let sibling = node.nextSibling;
+  while (sibling && sibling.nodeType !== Node.ELEMENT_NODE) {
+    sibling = sibling.nextSibling;
+  }
+  return sibling;
+}
+
 /**
- * Transforms Word list HTML string into standard HTML list structure.
+ * Transforms Word quote-style paragraphs into <blockquote> elements, for both
+ * desktop Word (class-based) and Word for the web (data-ccp-parastyle).
+ * Consecutive quote paragraphs are merged into a single blockquote. This
+ * function processes the DOM in place.
+ *
+ * @param {Document|Element} container - The container to process
+ */
+export function transformWordQuotes(container) {
+  const candidates = new Set();
+
+  // Desktop Word: quote style is a class on the paragraph
+  container
+    .querySelectorAll(MSO_QUOTE_CLASSES.map((c) => `p.${c}`).join(", "))
+    .forEach((p) => candidates.add(p));
+
+  // Word for the web: quote style is on a run inside the paragraph
+  container.querySelectorAll(WAC_QUOTE_SELECTOR).forEach((run) => {
+    const p = run.closest("p");
+    if (p) {
+      candidates.add(p);
+    }
+  });
+
+  if (candidates.size === 0) {
+    return;
+  }
+
+  // Walk paragraphs in document order so consecutive-sibling merging is stable
+  const paragraphs = Array.from(container.querySelectorAll("p")).filter((p) =>
+    candidates.has(p)
+  );
+
+  const absorbed = new Set();
+
+  paragraphs.forEach((paragraph) => {
+    if (absorbed.has(paragraph)) {
+      return;
+    }
+
+    const blockquote = document.createElement("blockquote");
+    paragraph.parentNode.insertBefore(blockquote, paragraph);
+
+    // Merge this paragraph and any consecutive quote paragraphs into one
+    // blockquote, preserving each as a paragraph with its inline formatting.
+    let current = paragraph;
+    while (isQuoteParagraph(current)) {
+      const next = nextElementSibling(current);
+      absorbed.add(current);
+      current.classList.remove(...MSO_QUOTE_CLASSES);
+      if (current.classList.length === 0) {
+        current.removeAttribute("class");
+      }
+      blockquote.appendChild(current);
+      current = next;
+    }
+  });
+}
+
+// Word review markup that should never make it into a post: comment reference
+// anchors/markers, the comment body list Word appends at the end, and tracked
+// deletions. Manual strikethrough is exported as <s>, not <del>, so dropping
+// <del> only removes revision deletions.
+const WORD_REVIEW_SELECTORS = [
+  "a.msocomanchor",
+  "span.MsoCommentReference",
+  "[style*='mso-comment-reference']",
+  "[style*='mso-special-character:comment']",
+  "a[href^='#_msocom']",
+  "a[name^='_msocom']",
+  "hr.msocomoff",
+  "[style*='mso-element:comment-list']",
+  "[style*='mso-element:comment']",
+  "p.MsoCommentText",
+  "p.MsoCommentSubject",
+  "del",
+].join(", ");
+
+/**
+ * Detects whether an HTML string originated from Microsoft Word, so that
+ * Word-only cleanup (e.g. review markup) is not applied to other sources.
+ *
+ * @param {string} html - The HTML string to inspect
+ * @returns {boolean}
+ */
+function isWordHtml(html) {
+  return (
+    html.includes("mso-") ||
+    html.includes("urn:schemas-microsoft-com") ||
+    /class=["']?Mso/.test(html)
+  );
+}
+
+/**
+ * Removes Word review markup (comments and tracked deletions) from a document.
+ * This function processes the DOM in place.
+ *
+ * @param {Document|Element} container - The container to process
+ */
+export function stripWordReviewMarkup(container) {
+  container
+    .querySelectorAll(WORD_REVIEW_SELECTORS)
+    .forEach((el) => el.remove());
+}
+
+/**
+ * Transforms Word-specific markup in an HTML string into standard HTML:
+ * converts Word lists and quote styles, and strips Word review markup
+ * (comments and tracked deletions).
  *
  * @param {string} html - The HTML string to transform
  * @returns {string} The transformed HTML
  */
-export function transformWordListsHtml(html) {
-  // Quick check if there's any Word list content
-  if (!MSO_LIST_CLASSES.some((cls) => html.includes(cls))) {
+export function transformWordHtml(html) {
+  const hasLists = MSO_LIST_CLASSES.some((cls) => html.includes(cls));
+  const hasQuotes =
+    MSO_QUOTE_CLASSES.some((cls) => html.includes(cls)) ||
+    WAC_QUOTE_STYLES.some((style) =>
+      html.includes(`data-ccp-parastyle="${style}"`)
+    );
+  const isWord = isWordHtml(html);
+
+  // Quick check if there's any Word content we handle
+  if (!hasLists && !hasQuotes && !isWord) {
     return html;
   }
 
   const doc = new DOMParser().parseFromString(html, "text/html");
-  transformWordLists(doc.body);
+
+  if (hasLists) {
+    transformWordLists(doc.body);
+  }
+
+  if (hasQuotes) {
+    transformWordQuotes(doc.body);
+  }
+
+  if (isWord) {
+    stripWordReviewMarkup(doc.body);
+  }
+
   return doc.body.innerHTML;
 }
 
@@ -231,7 +392,7 @@ const extension = {
     return new Plugin({
       props: {
         transformPastedHTML(html) {
-          return transformWordListsHtml(html);
+          return transformWordHtml(html);
         },
       },
     });
