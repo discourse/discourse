@@ -569,11 +569,18 @@ after_initialize do
     group_names = group_timezones["groups"] || []
 
     if group_names.present?
+      visible_group_ids =
+        Group
+          .where(name: group_names)
+          .visible_groups(scope.user)
+          .members_visible_groups(scope.user)
+          .select(:id)
+
       users =
         User
           .human_users
           .joins(:groups, :user_option)
-          .where("groups.name": group_names)
+          .where(groups: { id: visible_group_ids })
           .select("users.*", "groups.name AS group_name", "user_options.timezone")
 
       usernames_on_holiday = DiscourseCalendar.users_on_holiday
