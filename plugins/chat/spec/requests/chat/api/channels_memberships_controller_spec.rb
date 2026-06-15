@@ -25,7 +25,6 @@ RSpec.describe Chat::Api::ChannelsMembershipsController do
         notification_level: :never,
         last_read_message_id: chat_message.id,
         last_viewed_at: 1.hour.ago,
-        last_viewed_pins_at: 30.minutes.ago,
         starred: true,
       )
 
