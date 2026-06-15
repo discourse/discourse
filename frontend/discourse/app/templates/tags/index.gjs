@@ -76,7 +76,7 @@ export default <template>
           </label>
           <DExpandingTextArea
             {{on "input" (withEventValue (fn (mut @controller.bulkTagInput)))}}
-            value={{@controller.bulkTagInput}}
+            @value={{@controller.bulkTagInput}}
             placeholder={{i18n "tagging.bulk_create_inline_placeholder"}}
             disabled={{@controller.isCreatingTags}}
             rows="1"
