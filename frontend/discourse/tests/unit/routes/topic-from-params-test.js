@@ -1,4 +1,3 @@
-import Service from "@ember/service";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import TopicFromParams, {
@@ -31,28 +30,6 @@ module("Unit | Route | topic.from-params", function (hooks) {
   });
 
   test("saves current nested topic before swapping topics", function (assert) {
-    let screenTrackStopped = 0;
-    let screenTrackStarted = 0;
-
-    this.owner.register(
-      "service:screen-track",
-      class extends Service {
-        start() {
-          screenTrackStarted += 1;
-        }
-
-        stop() {
-          screenTrackStopped += 1;
-        }
-      }
-    );
-    this.owner.register(
-      "service:app-events",
-      class extends Service {
-        trigger() {}
-      }
-    );
-
     const route = this.owner.lookup("route:topic.from-params");
     const article = document.createElement("article");
     article.dataset.postNumber = "3";
@@ -60,6 +37,23 @@ module("Unit | Route | topic.from-params", function (hooks) {
     wrapper.className = "nested-post";
     wrapper.appendChild(article);
     document.body.appendChild(wrapper);
+
+    let screenTrackStopped = 0;
+    let screenTrackStarted = 0;
+
+    Object.defineProperty(route, "appEvents", {
+      value: { trigger() {} },
+    });
+    Object.defineProperty(route, "screenTrack", {
+      value: {
+        start() {
+          screenTrackStarted += 1;
+        },
+        stop() {
+          screenTrackStopped += 1;
+        },
+      },
+    });
 
     const nestedController = {
       topic: { id: 1 },
@@ -136,7 +130,11 @@ module("Unit | Route | topic.from-params", function (hooks) {
         nextTopic,
         "sets up the new nested topic"
       );
-      assert.strictEqual(screenTrackStarted, 1, "starts tracking the new topic");
+      assert.strictEqual(
+        screenTrackStarted,
+        1,
+        "starts tracking the new topic"
+      );
     } finally {
       wrapper.remove();
     }
