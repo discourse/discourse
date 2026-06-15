@@ -221,7 +221,7 @@ module DiscourseAi
         source = dominant_referrer_for(peak.date)
         headline =
           if source
-            "Traffic spiked on #{peak.date} (#{multiple}x the typical day), driven by #{source}"
+            "Traffic spiked on #{peak.date} (#{multiple}x the typical day), with #{source} as the top external referrer"
           else
             "Traffic spiked on #{peak.date} (#{multiple}x the typical day)"
           end
@@ -231,7 +231,7 @@ module DiscourseAi
 
       def dominant_referrer_for(date)
         rows = DB.query(<<~SQL, date: date)
-            SELECT normalized_referrer AS referrer, count
+            SELECT normalized_referrer, count
             FROM browser_pageview_referrer_daily_rollups
             WHERE date = :date AND normalized_referrer IS NOT NULL
             ORDER BY count DESC
@@ -240,9 +240,19 @@ module DiscourseAi
         return if rows.blank?
 
         total = rows.sum(&:count)
-        top = rows.first
+        top = rows.find { |row| external_referrer?(row.normalized_referrer) }
+        return if top.nil?
         return if total.zero? || (top.count.to_f / total) < 0.4
-        top.referrer
+        top.normalized_referrer
+      end
+
+      def external_referrer?(referrer)
+        site_host = BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname)
+        referrer = referrer.to_s
+        return false if referrer.blank? || site_host.blank?
+
+        referrer != site_host && !referrer.start_with?("#{site_host}/") &&
+          !referrer.start_with?("#{site_host}?")
       end
 
       def geography
