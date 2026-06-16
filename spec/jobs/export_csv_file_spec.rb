@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+  # frozen_string_literal: true
 
 RSpec.describe Jobs::ExportCsvFile do
   describe "#execute" do
@@ -562,7 +562,10 @@ RSpec.describe Jobs::ExportCsvFile do
       # Tab as a leading character is a formula trigger in some spreadsheet
       # software and can also be used to obfuscate other triggers
       user = Fabricate(:user)
-      user.user_profile.update_column(:location, "\t=HYPERLINK(\"https://meta.discourse.org/\",\"Click me\")")
+      user.user_profile.update_column(
+        :location,
+        "\t=HYPERLINK(\"https://meta.discourse.org/\",\"Click me\")"
+      )
 
       export_user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
 
