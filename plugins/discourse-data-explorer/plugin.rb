@@ -32,6 +32,22 @@ end
 
 require_relative "lib/discourse_data_explorer/engine"
 
+# Render datetimes in TimeWithZone's native format rather than running Graphiti's
+# :datetime read-coercer, which does `time.to_datetime.iso8601` — and since AR
+# hands it a TimeWithZone, `to_datetime` triggers a Rational/tzinfo allocation
+# storm (the single biggest serialization cost). This is scoped to :datetime ONLY,
+# so every other type keeps its normal read coercion — unlike a global
+# `typecast_reads = false`, which also changes integer_id-attribute / decimal /
+# custom-coerced output (verified against Graphiti's own suite: only datetime
+# serialization specs differ). Must run BEFORE resources load: serializer attribute
+# procs capture the read coercer at class-definition time, so this lives at plugin
+# top-level (pre-eager-load), not in after_initialize.
+# Trade-off: datetimes emit TimeWithZone's format (ms precision + "Z") instead of
+# DateTime#iso8601 ("+00:00", no fractional). See docs/api-modernization-exploration.md.
+if defined?(Graphiti)
+  Graphiti::Types[:datetime] = Graphiti::Types[:datetime].merge(read: ->(value) { value })
+end
+
 after_initialize do
   GlobalSetting.add_default(:max_data_explorer_api_reqs_per_10_seconds, 2)
 
@@ -72,17 +88,6 @@ after_initialize do
         DiscourseDataExplorer::GraphitiPatches::CachedExposureIvars::RelationshipInit,
       )
     end
-  end
-
-  if defined?(Graphiti)
-    # Skip per-attribute read typecasting. ActiveRecord already returns correct
-    # Ruby types, so the coercion is redundant work — and the :datetime read
-    # coercer in particular forces TimeWithZone -> DateTime (a Rational/tzinfo
-    # allocation storm). Measured ~24% fewer allocations on flat reads.
-    # Trade-off: datetimes render in TimeWithZone's native format
-    # (millisecond + "Z") rather than DateTime#iso8601 ("+00:00", no fractional).
-    # See docs/api-modernization-exploration.md (Part 8).
-    Graphiti.config.typecast_reads = false
   end
 
   add_to_class(:guardian, :user_is_a_member_of_group?) do |group|

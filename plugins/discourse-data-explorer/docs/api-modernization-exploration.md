@@ -997,24 +997,31 @@ specs green). The patch preserves correctness (honors custom `assign_each` block
 framework's `!assign_each_proc` default; mirrors `HasMany#children_for`'s Integer/String pk
 coercion). Kept plugin-local — an upstream Graphiti PR candidate if we commit to it.
 
-**Serializer optimization #2 — `typecast_reads = false` (applied on this branch).** The flat
+**Serializer optimization #2 — cheap `:datetime` read coercer (applied on this branch).** The flat
 case's remaining tax (~144 allocs/record vs AMS's ~18) profiled mostly to **read-typecasting**:
 Graphiti coerces every attribute through its type's read proc on each render, and the `:datetime`
 coercer (`Types::ReadDateTime`) does `time_with_zone.to_datetime.iso8601` → a `Rational`/`tzinfo`/
 `DateTime` allocation storm (~35K of the 144K at N=1000). AR already returns correct Ruby types,
-so the coercion is redundant. `Graphiti.config.typecast_reads = false` (set in `plugin.rb`,
-read per-render) skips it:
+so for datetimes the coercion is redundant.
+
+We first tried the global `Graphiti.config.typecast_reads = false`, but the suite run (below)
+showed that reaches too far — it also changes `integer_id`-attribute, decimal, and custom-coerced
+output. So the shipped version is **scoped to `:datetime` only**: override that one type's read
+coercer with identity (`Graphiti::Types[:datetime] = Graphiti::Types[:datetime].merge(read: ->(v){v})`),
+leaving every other type's coercion intact. It lives at **plugin top-level** (not `after_initialize`)
+because serializer attribute procs capture the read coercer at class-definition time — it must run
+before resources load; confirmed correct under eager-load (profile-env boot renders the native
+format). `:datetime` stays the schema type (contract guard unaffected).
 
 | | flat N=1000 | +includes N=1000 |
 |---|---|---|
-| read-typecast on | 50 ms / 144K | 123 ms / 261K |
-| **off** | **43 ms / 109K** | **112 ms / 226K** |
+| stock (read-typecast on) | 50 ms / 144K | 123 ms / 261K |
+| **datetime read = identity** | **~42 ms / 92.7K** | **~106 ms / 226K** |
 
-≈ **−24% allocations on flat**. Verified safe: `id` stays a String (JSON:API-compliant), every
-non-datetime attribute is byte-identical; **only datetime *formatting* changes** —
-`2026-…T15:14:54+00:00` (DateTime#iso8601) → `2026-…T15:14:54.353Z` (TimeWithZone#as_json, ms + Z).
-Both valid ISO 8601, so it's a deliberate contract choice (we took TimeWithZone's native format).
-It's a global, process-wide switch and benefits datetime-heavy resources most.
+≈ **−36% allocations on flat**. Verified safe: `id` stays a String (JSON:API-compliant), every
+non-datetime attribute byte-identical; **only datetime *formatting* changes** —
+`2026-…T15:14:54+00:00` (DateTime#iso8601) → `2026-…T15:14:54.353Z` (TimeWithZone native, ms + Z).
+Both valid ISO 8601 — a deliberate contract choice.
 
 **Serializer optimization #3 — memoize jsonapi-serializable's ivar names (applied on this
 branch).** Profiling the flat case (typecast already off) showed the top two allocators were the
@@ -1061,6 +1068,25 @@ but is O(n×m) on stock Graphiti — prefer `belongs_to`/`has_many` if unpatched
 `concurrency = false` by default (it's a global, process-wide switch — can't vary per resource;
 cheap sideloads dominate Discourse traffic and it's measurably faster there), flipping to `true`
 only if expensive/slow sideloads dominate; size the DB pool for whatever concurrency you keep.
+
+### Verification — Graphiti's own test suite (do our patches break anything?)
+
+To answer "are we 100% sure we retain every feature," we ran Graphiti **v1.10.2's own RSpec suite**
+(cloned, 1372 examples) with our changes layered in, staged:
+
+| configuration | result |
+|---|---|
+| baseline (unpatched) | **1372 / 0 failures**, 24 pending |
+| + m2m hash-index patch + ivar-cache | **1372 / 0 failures** — the two reimplementations break *nothing*, incl. polymorphic many_to_many & all serialization paths |
+| + global `typecast_reads = false` | **36 failures**, all output-format assertions (serialization/rendering), zero crashes — but reaches `integer_id`-attribute / decimal / custom-coerced output |
+| + **`:datetime`-scoped read override** (shipped) | **5 failures**, all the *datetime* coercion specs, zero crashes |
+
+Conclusions: the **m2m + ivar-cache reimplementations are verified safe to the gem's own standard**.
+The datetime change is the only deliberate behavioral difference, and scoping it to `:datetime`
+shrank its footprint from 36 specs (global) to 5 (datetime-only) — proving every non-datetime type
+still coerces exactly as stock. (The 5 are the gem's own assertions that `:datetime` renders as
+`DateTime#iso8601`; we intentionally render the native format instead.) Blast radius is confined:
+Graphiti is used only by the spike's resources, so none of this can affect core Discourse.
 
 ### Spike status: complete
 
