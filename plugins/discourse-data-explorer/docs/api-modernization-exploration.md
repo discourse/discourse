@@ -1016,21 +1016,44 @@ non-datetime attribute is byte-identical; **only datetime *formatting* changes**
 Both valid ISO 8601, so it's a deliberate contract choice (we took TimeWithZone's native format).
 It's a global, process-wide switch and benefits datetime-heavy resources most.
 
-**Combined effect (both optimizations, vs stock Graphiti):**
+**Serializer optimization #3 — memoize jsonapi-serializable's ivar names (applied on this
+branch).** Profiling the flat case (typecast already off) showed the top two allocators were the
+*same line*: `instance_variable_set("@#{k}", v)` in both `Resource#initialize` and
+`Relationship#initialize` — jsonapi-serializable copies each exposure into an ivar, allocating a
+String for the `@`-prefixed name on every key, every object/relationship, every record (~18K at
+N=1000). The exposure keys are a tiny fixed set, so we memoize the names
+(`lib/discourse_data_explorer/graphiti_patches/cached_exposure_ivars.rb`, prepended in
+`plugin.rb`). **Behavior-identical** (verified: `id` stays a String, all attributes byte-identical,
+includes correct) — flat N=1000 **109K → 90.7K allocs (−17%)**, and it helps `+includes` too
+(226K → 190K). The patch is a verbatim copy of the gem's two `initialize` methods with one line
+changed — safe to own because the gem is dormant (a *stable* monkeypatch target).
 
-| | in-process N=1000 +incl | HTTP +includes (page 50, c8) | HTTP flat |
-|---|---|---|---|
-| stock | 561 ms / 1.28M | 149 req/s | 450 req/s |
-| **m2m patch + typecast off** | **112 ms / 226K** (~5× / ~5.7×) | **206 req/s (+38%)** | **487 req/s (+8%)** |
+> Note: the originally-hypothesized "skip non-included relationships" was investigated and
+> **deferred** — the cheap part (omitting `{included:false}` output) is small, and the valuable
+> part (skipping the eager `Relationship.new` in `initialize`) requires reimplementing
+> jsonapi-serializable's frozen, include-unaware init in an include-driven way, which risks
+> breaking conditional fields / temp-ids / `always_include_resource_ids`. Not worth it; the ivar
+> memoization is the safe, behavior-preserving win.
 
-After both, Graphiti's **+includes** lands within ~1.35× of hand-rolled AMS on time (was ~7×);
-the **flat** case is still ~3.4× time / ~6× allocations — that residual is the **structural
-floor**: jsonapi-serializable instantiates a `Serializable::Resource` object per record plus a
-`Relationship` object per declared relationship per record *even when not included* (~47K of the
-flat allocations). Beating that means replacing the serialization backend — a major effort that
-trades away Graphiti's conveniences, and not worth it. The honest framing stands: **Graphiti's
-value is the query surface / contract guard / compound documents, not raw serialization
-throughput** — and with these two contained changes it's "fast enough," not a liability.
+**Combined effect — all three optimizations, vs stock Graphiti (in-process N=1000):**
+
+| | flat | +includes |
+|---|---|---|
+| stock | 50 ms / 144K | 561 ms / 1.28M |
+| **m2m + typecast off + ivar cache** | **36 ms / 90.7K** | **101 ms / 190K** |
+| (AMS reference) | 12 ms / 18K | 78 ms / 92K |
+
+After all three, **+includes** is within **~1.3×** of hand-rolled AMS on time (was ~7×) and ~2×
+allocations (was ~14×); **flat** is ~3× time / ~5× allocations (was 4× / 8×). HTTP throughput moved
+in step (the m2m + typecast pair already gave +38% on the +includes endpoint, +8% flat).
+
+The remaining gap is the **structural floor**: jsonapi-serializable instantiates a
+`Serializable::Resource` object per record plus the document hash/array tree (jsonapi-renderer).
+Beating *that* means replacing the serialization backend — a major effort that trades away
+Graphiti's conveniences, and not worth it. The honest framing stands, now well-measured:
+**Graphiti's value is the query surface / contract guard / compound documents, not raw
+serialization throughput** — and with three contained, mostly behavior-preserving changes it's
+comfortably "fast enough," within ~1.3–3× of a hand-rolled serializer, not a liability.
 
 **Performance guidance distilled:** cap page sizes; be deliberate about default `include`s
 (each relationship is ~3× cost); `many_to_many` is fine on this branch (hash-indexed patch above)
