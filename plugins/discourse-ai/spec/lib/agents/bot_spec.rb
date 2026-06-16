@@ -255,6 +255,56 @@ RSpec.describe DiscourseAi::Agents::Bot do
         expect(call_count).to eq(described_class::MAX_COMPLETIONS + 1)
       end
 
+      it "defaults the turn budget to half the context window when agentic without max_turn_tokens" do
+        # The editor lets an agentic agent be saved without a max_turn_tokens
+        # budget ("Leave empty for default limits"). This previously crashed
+        # with "comparison of Integer with nil failed". Instead the agent stays
+        # agentic and the budget defaults to half the LLM context window.
+        agentic_no_budget_agent =
+          Fabricate(
+            :ai_agent,
+            execution_mode: "agentic",
+            max_turn_tokens: nil,
+            compression_threshold: 80,
+            tools: [["ListCategories", nil, false]],
+          )
+
+        klass = agentic_no_budget_agent.class_instance
+
+        # gpt_4 has max_prompt_tokens 131_072, so the default budget is 65_536.
+        expect(DiscourseAi::Agents::Bot.default_max_turn_tokens(bot.send(:llm))).to eq(65_536)
+
+        tool_call =
+          DiscourseAi::Completions::ToolCall.new(id: "call_1", name: "categories", parameters: {})
+
+        responses = [tool_call, "Final answer"]
+        call_count = 0
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
+          agent_bot = described_class.as(bot_user, agent: klass.new)
+          context =
+            DiscourseAi::Agents::BotContext.new(messages: [{ type: :user, content: "test" }])
+
+          allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+            :generate,
+          ).and_wrap_original do |original, *args, **kwargs, &blk|
+            call_count += 1
+            result = original.call(*args, **kwargs, &blk)
+            # 70_000 tokens per call exceeds the 65_536 default budget after the
+            # first call, so the loop stops on the token budget (not the legacy
+            # MAX_COMPLETIONS limit).
+            if (tracker = kwargs[:execution_context]&.token_usage_tracker)
+              tracker.add_effective(request: 40_000, response: 30_000)
+            end
+            result
+          end
+
+          agent_bot.reply(context) { |_partial| }
+        end
+
+        expect(call_count).to eq(2)
+      end
+
       it "forces a final text-only call with budget hint when budget exhausted after tool execution" do
         # budget=2000, first call adds 3000 tokens → tool runs → budget exceeded
         # but prompt ends with :tool, so model gets one more tool_choice=:none call
