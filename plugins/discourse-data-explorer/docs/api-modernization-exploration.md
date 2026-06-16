@@ -995,9 +995,42 @@ distributed jsonapi-serializable work — so the bottleneck has shifted to the b
 Verified identical output (linkage matches `query.groups`) and contract-neutral (schema + service
 specs green). The patch preserves correctness (honors custom `assign_each` blocks via the
 framework's `!assign_each_proc` default; mirrors `HasMany#children_for`'s Integer/String pk
-coercion). Kept plugin-local — an upstream Graphiti PR candidate if we commit to it. The base
-serializer allocation tax (jsonapi-serializable: the now-dominant ~flat profile; affects the
-plain flat case too, not includes-only) remains the larger, harder lever — out of scope here.
+coercion). Kept plugin-local — an upstream Graphiti PR candidate if we commit to it.
+
+**Serializer optimization #2 — `typecast_reads = false` (applied on this branch).** The flat
+case's remaining tax (~144 allocs/record vs AMS's ~18) profiled mostly to **read-typecasting**:
+Graphiti coerces every attribute through its type's read proc on each render, and the `:datetime`
+coercer (`Types::ReadDateTime`) does `time_with_zone.to_datetime.iso8601` → a `Rational`/`tzinfo`/
+`DateTime` allocation storm (~35K of the 144K at N=1000). AR already returns correct Ruby types,
+so the coercion is redundant. `Graphiti.config.typecast_reads = false` (set in `plugin.rb`,
+read per-render) skips it:
+
+| | flat N=1000 | +includes N=1000 |
+|---|---|---|
+| read-typecast on | 50 ms / 144K | 123 ms / 261K |
+| **off** | **43 ms / 109K** | **112 ms / 226K** |
+
+≈ **−24% allocations on flat**. Verified safe: `id` stays a String (JSON:API-compliant), every
+non-datetime attribute is byte-identical; **only datetime *formatting* changes** —
+`2026-…T15:14:54+00:00` (DateTime#iso8601) → `2026-…T15:14:54.353Z` (TimeWithZone#as_json, ms + Z).
+Both valid ISO 8601, so it's a deliberate contract choice (we took TimeWithZone's native format).
+It's a global, process-wide switch and benefits datetime-heavy resources most.
+
+**Combined effect (both optimizations, vs stock Graphiti):**
+
+| | in-process N=1000 +incl | HTTP +includes (page 50, c8) | HTTP flat |
+|---|---|---|---|
+| stock | 561 ms / 1.28M | 149 req/s | 450 req/s |
+| **m2m patch + typecast off** | **112 ms / 226K** (~5× / ~5.7×) | **206 req/s (+38%)** | **487 req/s (+8%)** |
+
+After both, Graphiti's **+includes** lands within ~1.35× of hand-rolled AMS on time (was ~7×);
+the **flat** case is still ~3.4× time / ~6× allocations — that residual is the **structural
+floor**: jsonapi-serializable instantiates a `Serializable::Resource` object per record plus a
+`Relationship` object per declared relationship per record *even when not included* (~47K of the
+flat allocations). Beating that means replacing the serialization backend — a major effort that
+trades away Graphiti's conveniences, and not worth it. The honest framing stands: **Graphiti's
+value is the query surface / contract guard / compound documents, not raw serialization
+throughput** — and with these two contained changes it's "fast enough," not a liability.
 
 **Performance guidance distilled:** cap page sizes; be deliberate about default `include`s
 (each relationship is ~3× cost); `many_to_many` is fine on this branch (hash-indexed patch above)
