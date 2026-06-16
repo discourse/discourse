@@ -938,41 +938,6 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.status).to eq(200)
       end
 
-      it "omits SQL from group report details" do
-        query = make_query("SELECT 1977 as leaked_value", {}, [group.id.to_s])
-
-        get "/g/#{group.name}/reports/#{query.id}.json"
-
-        expect(response.status).to eq(200)
-        expect(response_json["query"]).not_to have_key("sql")
-        expect(response.body).not_to include(query.sql)
-      end
-
-      it "omits SQL from group report details for moderators" do
-        moderator = Fabricate(:moderator)
-        group.add(moderator)
-        sign_in(moderator)
-        query = make_query("SELECT 1984 as leaked_value", {}, [group.id.to_s])
-
-        get "/g/#{group.name}/reports/#{query.id}.json"
-
-        expect(response.status).to eq(200)
-        expect(response_json["query"]).not_to have_key("sql")
-        expect(response.body).not_to include(query.sql)
-      end
-
-      it "includes SQL in group report details for admins" do
-        admin = Fabricate(:admin)
-        sign_in(admin)
-        query = make_query("SELECT 1978 as admin_visible_value", {}, [group.id.to_s])
-
-        get "/g/#{group.name}/reports/#{query.id}.json"
-
-        expect(response.status).to eq(200)
-        expect(response_json["query"]["sql"]).to eq(query.sql)
-        expect(response.body).to include(query.sql)
-      end
-
       it "return a 404 when the query is hidden" do
         query = make_query("SELECT 1 as value", { hidden: true }, [group.id.to_s])
 
@@ -1016,6 +981,47 @@ describe DiscourseDataExplorer::QueryController do
         get "/data-explorer/queries/#{query.id}/run.json"
         expect(response.status).to eq(404)
       end
+    end
+  end
+
+  describe "#group_reports_show SQL visibility" do
+    fab!(:user)
+    fab!(:moderator)
+    fab!(:admin)
+    fab!(:group) { Fabricate(:group, users: [user]) }
+
+    it "omits SQL from group report details for group members" do
+      sign_in(user)
+      query = make_query("SELECT 1977 as leaked_value", {}, [group.id.to_s])
+
+      get "/g/#{group.name}/reports/#{query.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response_json["query"]).not_to have_key("sql")
+      expect(response.body).not_to include(query.sql)
+    end
+
+    it "omits SQL from group report details for moderators" do
+      group.add(moderator)
+      sign_in(moderator)
+      query = make_query("SELECT 1984 as leaked_value", {}, [group.id.to_s])
+
+      get "/g/#{group.name}/reports/#{query.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response_json["query"]).not_to have_key("sql")
+      expect(response.body).not_to include(query.sql)
+    end
+
+    it "includes SQL in group report details for admins" do
+      sign_in(admin)
+      query = make_query("SELECT 1978 as admin_visible_value", {}, [group.id.to_s])
+
+      get "/g/#{group.name}/reports/#{query.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response_json["query"]["sql"]).to eq(query.sql)
+      expect(response.body).to include(query.sql)
     end
   end
 
