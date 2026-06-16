@@ -51,7 +51,18 @@ after_initialize do
 
   # JSON:API modernization spike (Graphiti): the many_to_many sideload on
   # QueryResource matches groups back to queries via group.query_groups.
-  reloadable_patch { Group.has_many :query_groups, class_name: "DiscourseDataExplorer::QueryGroup" }
+  reloadable_patch do
+    Group.has_many :query_groups, class_name: "DiscourseDataExplorer::QueryGroup"
+
+    # Hash-indexed many_to_many sideload assignment (O(children × through +
+    # parents) instead of stock O(parents × children × through)). See
+    # lib/discourse_data_explorer/graphiti_patches/many_to_many_performant_assign.rb.
+    if defined?(Graphiti)
+      Graphiti::Sideload::ManyToMany.prepend(
+        DiscourseDataExplorer::GraphitiPatches::ManyToManyPerformantAssign,
+      )
+    end
+  end
 
   add_to_class(:guardian, :user_is_a_member_of_group?) do |group|
     return false if !current_user
