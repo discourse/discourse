@@ -2586,7 +2586,7 @@ files:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/402705"
       allow_enabled_for:
