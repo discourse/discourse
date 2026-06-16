@@ -1,4 +1,4 @@
-  # frozen_string_literal: true
+# frozen_string_literal: true
 
 RSpec.describe Jobs::ExportCsvFile do
   describe "#execute" do
