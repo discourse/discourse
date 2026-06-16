@@ -7,6 +7,8 @@ class DirectoryItemsController < ApplicationController
   before_action :set_groups_exclusion, if: -> { params[:exclude_groups].present? }
 
   def index
+    discourse_expires_in 1.minute
+
     unless SiteSetting.enable_user_directory?
       raise Discourse::InvalidAccess.new(:enable_user_directory)
     end
