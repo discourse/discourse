@@ -127,6 +127,19 @@
 
   .d-modal__footer {
     justify-content: flex-end;
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--space-2);
+    }
+  }
+
+  &__footer-note {
+    margin: 0;
+    margin-right: auto;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
   }
 
   .de-cta__description {
