@@ -564,7 +564,7 @@ RSpec.describe Jobs::ExportCsvFile do
       user = Fabricate(:user)
       user.user_profile.update_column(
         :location,
-        "\t=HYPERLINK(\"https://meta.discourse.org/\",\"Click me\")"
+        "\t=HYPERLINK(\"https://meta.discourse.org/\",\"Click me\")",
       )
 
       export_user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
