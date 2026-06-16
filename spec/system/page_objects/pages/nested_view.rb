@@ -389,6 +389,11 @@ module PageObjects
       end
 
       def scroll_post_near_top(post, offset: 80)
+        # Wait for the post to render before reading its geometry. With a warm
+        # asset cache the page settles before the nested view paints its posts,
+        # so scrolling immediately would run against a `querySelector` that
+        # still returns null.
+        has_post?(post)
         page.execute_script(<<~JS)
           const post = document.querySelector("[data-post-number='#{post.post_number}']");
           post.scrollIntoView();
@@ -398,6 +403,11 @@ module PageObjects
       end
 
       def scroll_past_topic_title
+        # Wait for the roots to render before scrolling. With a warm asset cache
+        # the page settles before the nested view paints, leaving
+        # `document.body.scrollHeight` at the viewport height so the scroll would
+        # never move past the header title.
+        has_css?(".nested-view__roots [data-post-number]")
         page.execute_script(<<~JS)
           window.scrollTo(0, document.body.scrollHeight);
         JS
