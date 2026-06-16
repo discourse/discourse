@@ -967,12 +967,44 @@ rare expensive-sideload endpoint forfeits the overlap. This also recasts the Par
 caveat: the thread-local propagation isn't only a correctness risk — it's a measurable tax that
 only pays for itself under genuine sideload I/O.
 
+**Source-level optimization — many_to_many hash-indexed assign (applied on this branch).**
+Stock `Graphiti::Sideload::ManyToMany` hardcodes `performant_assign? → false`, so
+`include=<many_to_many>` runs an **O(parents × children × through-rows)** nested scan in
+`assign_each` (the 13% `assign_each` + the `true_foreign_key`/`foreign_key`/`any?` helpers the
+profile flagged). `has_many`/`belongs_to` instead build a `{parent_pk => [children]}` hash once
+and do O(1) lookups; many_to_many can't reuse their `child_map` (`group_by(&foreign_key)` breaks
+when `foreign_key` is a hash), so the author fell back to the scan. The patch
+(`lib/discourse_data_explorer/graphiti_patches/many_to_many_performant_assign.rb`, prepended in
+`plugin.rb`) restores the indexed path for many_to_many — one pass over each child's
+through-records bucketed by parent key → **O(children × through + parents)**:
+
+| N=1000 +includes | median | allocations |
+|---|---|---|
+| stock | 586 ms | 1.28M |
+| **patched** | **123 ms** | **261K** |
+
+**~4.8× faster, ~5× fewer allocations** (worst case — many parents sharing a child; realistic
+data shows a smaller but unconditional win, since the `parents ×` factor is gone). It also holds
+at **realistic page sizes on the live endpoint**: re-running the HTTP throughput suite
+(profile env, page 50, c=8) lifted compound-document throughput **+34% (149 → 200 req/s**, p50
+53→40ms); flat and legacy unchanged. And the gap to the AMS-equivalent on the N=1000 in-process
+case collapsed from **~7× → ~1.6×**. The stackprof confirms it mechanistically: `assign_each`
+(was 13% self-time) is gone from the hot path, GC dropped ~24% → ~11%, and what remains is flat,
+distributed jsonapi-serializable work — so the bottleneck has shifted to the base serializer.
+
+Verified identical output (linkage matches `query.groups`) and contract-neutral (schema + service
+specs green). The patch preserves correctness (honors custom `assign_each` blocks via the
+framework's `!assign_each_proc` default; mirrors `HasMany#children_for`'s Integer/String pk
+coercion). Kept plugin-local — an upstream Graphiti PR candidate if we commit to it. The base
+serializer allocation tax (jsonapi-serializable: the now-dominant ~flat profile; affects the
+plain flat case too, not includes-only) remains the larger, harder lever — out of scope here.
+
 **Performance guidance distilled:** cap page sizes; be deliberate about default `include`s
-(each relationship is ~3× cost); prefer `belongs_to`/`has_many` over `many_to_many` on hot
-paths (assign O(n×m)); run Graphiti with `concurrency = false` by default (it's a global,
-process-wide switch — can't vary per resource; cheap sideloads dominate Discourse traffic and
-it's measurably faster there), flipping to `true` only if expensive/slow sideloads dominate;
-size the DB pool for whatever concurrency you keep.
+(each relationship is ~3× cost); `many_to_many` is fine on this branch (hash-indexed patch above)
+but is O(n×m) on stock Graphiti — prefer `belongs_to`/`has_many` if unpatched; run Graphiti with
+`concurrency = false` by default (it's a global, process-wide switch — can't vary per resource;
+cheap sideloads dominate Discourse traffic and it's measurably faster there), flipping to `true`
+only if expensive/slow sideloads dominate; size the DB pool for whatever concurrency you keep.
 
 ### Spike status: complete
 
