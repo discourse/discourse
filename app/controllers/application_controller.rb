@@ -140,7 +140,7 @@ class ApplicationController < ActionController::Base
     with_resolved_locale { render "default/empty" }
   end
 
-  rescue_from EmberCli::BuildError do |e|
+  rescue_from EmberAssets::BuildError do |e|
     @build_error = e.details
     response.headers["Cache-Control"] = "no-store"
     render "default/build_error", layout: false, status: :service_unavailable

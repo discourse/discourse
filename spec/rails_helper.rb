@@ -203,8 +203,8 @@ RSpec.configure do |config|
 
   config.before(:each) do |example|
     if example.metadata[:type] != :system
-      EmberCli.stubs(:read_manifest!).returns(nil)
-      EmberCli.stubs(:script_chunks).returns({})
+      EmberAssets.stubs(:read_manifest!).returns(nil)
+      EmberAssets.stubs(:script_chunks).returns({})
     end
   end
 

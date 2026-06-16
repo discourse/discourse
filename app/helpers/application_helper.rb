@@ -140,14 +140,14 @@ module ApplicationHelper
   end
 
   def preload_script(script, type_module: false, attrs: {})
-    resolved_script = EmberCli.script_chunks[script]&.first || script
+    resolved_script = EmberAssets.script_chunks[script]&.first || script
     path = script_asset_path(resolved_script)
     preload_script_url(path, entrypoint: script, type_module:, attrs:).html_safe
   end
 
   def module_preloads_for(*scripts)
     resolved_preload_scripts =
-      scripts.compact.flat_map { |script| EmberCli.script_chunks[script] }.compact.uniq
+      scripts.compact.flat_map { |script| EmberAssets.script_chunks[script] }.compact.uniq
 
     modulepreload_tags = resolved_preload_scripts.map { |script| <<~HTML }
       <link rel="modulepreload" href="#{script_asset_path script}" nonce="#{csp_nonce_placeholder}">
