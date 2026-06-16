@@ -61,6 +61,16 @@ after_initialize do
       Graphiti::Sideload::ManyToMany.prepend(
         DiscourseDataExplorer::GraphitiPatches::ManyToManyPerformantAssign,
       )
+
+      # Memoize jsonapi-serializable's per-exposure ivar names (avoids a String
+      # allocation per key/object/record). Behavior-identical; ~16% fewer
+      # serialization allocations. See the patch file for details.
+      JSONAPI::Serializable::Resource.prepend(
+        DiscourseDataExplorer::GraphitiPatches::CachedExposureIvars::ResourceInit,
+      )
+      JSONAPI::Serializable::Relationship.prepend(
+        DiscourseDataExplorer::GraphitiPatches::CachedExposureIvars::RelationshipInit,
+      )
     end
   end
 
