@@ -198,7 +198,7 @@ export default class DashboardTraffic extends Component {
       @endDate={{@endDate}}
       ...attributes
     >
-      <div class="db-traffic {{if @loading 'is-loading'}}">
+      <div class="db-traffic">
         <div class="db-section__subheader">
           <div class="db-section__subintro">
             <h3>

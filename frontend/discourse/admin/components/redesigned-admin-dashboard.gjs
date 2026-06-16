@@ -62,7 +62,6 @@ export default class RedesignedAdminDashboard extends Component {
               data-section-id={{section.id}}
               @highlights={{section.data}}
               @period={{@loadedSections.period}}
-              @loading={{@loadingSections}}
               @fetchError={{@sectionsFetchError}}
               @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
@@ -82,7 +81,6 @@ export default class RedesignedAdminDashboard extends Component {
               data-section-id={{section.id}}
               @traffic={{section.data}}
               @period={{@loadedSections.period}}
-              @loading={{@loadingSections}}
               @fetchError={{@sectionsFetchError}}
               @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
@@ -93,7 +91,6 @@ export default class RedesignedAdminDashboard extends Component {
               data-section-id={{section.id}}
               @engagement={{section.data}}
               @period={{@loadedSections.period}}
-              @loading={{@loadingSections}}
               @fetchError={{@sectionsFetchError}}
               @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
@@ -104,7 +101,6 @@ export default class RedesignedAdminDashboard extends Component {
               data-section-id={{section.id}}
               @search={{section.data}}
               @period={{@loadedSections.period}}
-              @loading={{@loadingSections}}
               @fetchError={{@sectionsFetchError}}
               @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}

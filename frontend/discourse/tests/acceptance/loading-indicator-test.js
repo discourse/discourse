@@ -111,4 +111,32 @@ acceptance("Page Loading Indicator", function (needs) {
 
     assert.verifySteps(["loading: true", "loading: false"]);
   });
+
+  test("the 'spinner: false' option suppresses the fallback spinner", async function (assert) {
+    this.siteSettings.page_loading_indicator = "spinner";
+
+    await visit("/");
+
+    const service = getOwner(this).lookup("service:loading-slider");
+
+    service.transitionStarted({ spinner: false });
+    await mostlySettled();
+
+    assert
+      .dom(SPINNER_SELECTOR)
+      .doesNotExist("does not show the fallback spinner when spinner: false");
+
+    service.transitionEnded();
+    await settled();
+
+    service.transitionStarted();
+    await mostlySettled();
+
+    assert
+      .dom(SPINNER_SELECTOR)
+      .exists("still shows the fallback spinner by default");
+
+    service.transitionEnded();
+    await settled();
+  });
 });

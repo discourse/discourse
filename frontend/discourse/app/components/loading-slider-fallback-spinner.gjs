@@ -8,7 +8,10 @@ export default class LoadingSliderFallbackSpinner extends Component {
   @service loadingSlider;
 
   get shouldDisplay() {
-    const { mode, loading, stillLoading } = this.loadingSlider;
+    const { mode, loading, stillLoading, spinnerEnabled } = this.loadingSlider;
+    if (!spinnerEnabled) {
+      return false;
+    }
     return (
       (mode === "spinner" && loading) || (mode === "slider" && stillLoading)
     );

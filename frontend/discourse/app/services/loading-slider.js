@@ -65,6 +65,7 @@ export default class LoadingSlider extends Service.extend(Evented) {
 
   @tracked loading = false;
   @tracked stillLoading = false;
+  @tracked spinnerEnabled = true;
 
   rollingAverage = new RollingAverage(
     STORE_LOADING_TIMES,
@@ -83,12 +84,13 @@ export default class LoadingSlider extends Service.extend(Evented) {
     return this.rollingAverage.average;
   }
 
-  transitionStarted() {
+  transitionStarted({ spinner = true } = {}) {
     if (this.loading) {
       // Nested transition
       return;
     }
 
+    this.spinnerEnabled = spinner;
     this.timer.start();
     this.loading = true;
     this.trigger("stateChanged", true);
@@ -115,6 +117,7 @@ export default class LoadingSlider extends Service.extend(Evented) {
 
     this.loading = false;
     this.stillLoading = false;
+    this.spinnerEnabled = true;
     this.trigger("stateChanged", false);
 
     this.scheduleManager.cancelAll();
