@@ -255,6 +255,54 @@ RSpec.describe Admin::DashboardController do
             ],
           )
         end
+
+        it "does not expose admin-only browser pageview cards to moderators" do
+          SiteSetting.persist_browser_pageview_events = true
+          configure_dashboard_sections(%w[traffic])
+
+          country_code = "US"
+          normalized_referrer = "sensitive-referrer.example"
+          event_date = Time.zone.local(2026, 5, 2, 12)
+
+          2.times do
+            Fabricate(
+              :browser_pageview_event,
+              country_code: country_code,
+              normalized_referrer: normalized_referrer,
+              created_at: event_date,
+            )
+          end
+
+          rollup_range = {
+            start_date: Date.iso8601("2026-05-01"),
+            end_date: Date.iso8601("2026-05-03"),
+          }
+          BrowserPageviewCountryDailyRollup.aggregate(**rollup_range)
+          BrowserPageviewReferrerDailyRollup.aggregate(**rollup_range)
+
+          get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-03" }
+
+          expect(response.status).to eq(200)
+          admin_traffic_data =
+            response.parsed_body["sections"].find { |section| section["id"] == "traffic" }["data"]
+          expect(admin_traffic_data.dig("top_countries", "rows", 0, "country_code")).to eq(
+            country_code,
+          )
+          expect(admin_traffic_data.dig("top_referrers", "rows", 0, "normalized_referrer")).to eq(
+            normalized_referrer,
+          )
+
+          sign_in(moderator)
+
+          get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-03" }
+
+          expect(response.status).to eq(200)
+          moderator_traffic_data =
+            response.parsed_body["sections"].find { |section| section["id"] == "traffic" }["data"]
+          expect(moderator_traffic_data).not_to have_key("top_countries")
+          expect(moderator_traffic_data).not_to have_key("top_referrers")
+          expect(response.body).not_to include(normalized_referrer)
+        end
       end
 
       context "with search_data" do
