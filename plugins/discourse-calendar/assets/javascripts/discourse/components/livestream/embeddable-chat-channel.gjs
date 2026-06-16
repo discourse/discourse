@@ -17,8 +17,6 @@ export default class EmbedableChatChannel extends Component {
 
   @tracked activeChannel;
 
-  chatChannelComponent = ChatChannel;
-
   updateChannel = modifier(async () => {
     if (this.args.chatChannelId === this.activeChannel?.id) {
       return;
@@ -75,9 +73,9 @@ export default class EmbedableChatChannel extends Component {
         </div>
       {{/unless}}
       <div class="chat-drawer">
-        {{#if (and this.activeChannel this.chatChannelComponent)}}
+        {{#if (and this.activeChannel ChatChannel)}}
           {{#each (array this.activeChannel) as |channel|}}
-            <this.chatChannelComponent @channel={{channel}} />
+            <ChatChannel @channel={{channel}} />
           {{/each}}
         {{/if}}
       </div>

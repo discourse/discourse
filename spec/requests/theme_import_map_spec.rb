@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Theme cross-bundle plugin imports" do
-  let(:theme) { Fabricate(:theme) }
+  fab!(:theme)
 
   before { Fabricate(:admin) } # so "/" renders the app instead of the install wizard
 

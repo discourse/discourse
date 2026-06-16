@@ -27,10 +27,6 @@ export default class ReviewableRefreshAiChatMessage extends Component {
     );
   }
 
-  get ChannelTitle() {
-    return ChannelTitle;
-  }
-
   <template>
     <div class="review-item__meta-content">
       <div class="review-item__meta-label">{{i18n
@@ -47,7 +43,7 @@ export default class ReviewableRefreshAiChatMessage extends Component {
               @reviewable.target_id
             }}
           >
-            <this.ChannelTitle @channel={{this.channel}} />
+            <ChannelTitle @channel={{this.channel}} />
           </LinkTo>
         {{else}}
           <ReviewableTopicLink @reviewable={{@reviewable}} />

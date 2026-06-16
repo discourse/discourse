@@ -88,10 +88,6 @@ export default class ChatMessageCollapser extends Component {
     return [];
   }
 
-  get lazyVideoComponent() {
-    return LazyVideo;
-  }
-
   lazyVideoCooked(elements) {
     return elements.reduce((acc, e) => {
       if (this.siteSettings.lazy_videos_enabled && lazyVideoPredicate(e)) {
@@ -204,11 +200,9 @@ export default class ChatMessageCollapser extends Component {
               @header={{cooked.header}}
               @onToggle={{@onToggleCollapse}}
             >
-              {{#if (and cooked.videoAttributes this.lazyVideoComponent)}}
+              {{#if (and cooked.videoAttributes LazyVideo)}}
                 <div class="chat-message-collapser-lazy-video">
-                  <this.lazyVideoComponent
-                    @videoAttributes={{cooked.videoAttributes}}
-                  />
+                  <LazyVideo @videoAttributes={{cooked.videoAttributes}} />
                 </div>
               {{else}}
                 <DDecoratedHtml
