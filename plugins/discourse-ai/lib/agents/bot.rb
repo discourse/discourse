@@ -22,6 +22,16 @@ module DiscourseAi
         prompt.push(type: :user, content: BUDGET_EXHAUSTED_HINT)
       end
 
+      # When an agentic agent has no explicit max_turn_tokens, default the turn
+      # budget to half of the LLM's context window (see the max_turn_tokens_help
+      # string). Returns nil when the LLM exposes no usable context window, in
+      # which case callers fall back to the fixed completion/tool limits.
+      def self.default_max_turn_tokens(llm)
+        max_prompt_tokens = llm&.max_prompt_tokens.to_i
+        return if max_prompt_tokens <= 0
+        max_prompt_tokens / 2
+      end
+
       def self.as(bot_user, agent: DiscourseAi::Agents::General.new, model: nil)
         new(bot_user, agent, model)
       end
@@ -89,8 +99,17 @@ module DiscourseAi
         needs_newlines = false
         tools_ran = 0
 
-        use_token_budget = agent.class.execution_mode == "agentic"
         token_budget = agent.class.max_turn_tokens
+        use_token_budget = agent.class.execution_mode == "agentic"
+
+        if use_token_budget && token_budget.blank?
+          # max_turn_tokens is optional; default the turn budget to half of the
+          # LLM context window. If the LLM exposes no context window, fall back
+          # to the fixed completion/tool limits rather than crashing on a nil
+          # budget comparison.
+          token_budget = self.class.default_max_turn_tokens(current_llm)
+          use_token_budget = token_budget.present?
+        end
 
         # In token budget mode, compression manages context size instead of
         # the dialect's destructive trim_messages. Disabling trim prevents

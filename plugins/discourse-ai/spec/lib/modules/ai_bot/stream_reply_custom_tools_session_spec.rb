@@ -141,6 +141,47 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
     end
 
+    it "defaults the budget to half the context window when agentic without max_turn_tokens" do
+      # "Leave empty for default limits": an agentic agent with no
+      # max_turn_tokens must not crash, and the budget defaults to half the LLM
+      # context window (fake_llm has max_prompt_tokens 131_072 → 65_536).
+      ai_agent.update!(max_turn_tokens: nil)
+
+      tool_call =
+        DiscourseAi::Completions::ToolCall.new(
+          name: "client_tool",
+          parameters: {
+            input: "test",
+          },
+          id: "tool_4",
+        )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [tool_call, "Summary after budget hit."],
+      ) do
+        session = build_session
+
+        allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+          :generate,
+        ).and_wrap_original do |original, *args, **kwargs, &blk|
+          result = original.call(*args, **kwargs, &blk)
+          # 70_000 tokens exceeds the 65_536 default budget after the first call.
+          if (tracker = kwargs[:execution_context]&.token_usage_tracker)
+            tracker.add_effective(request: 40_000, response: 30_000)
+          end
+          result
+        end
+
+        events = collect_events(session)
+
+        partials = events.select { |type, _| type == :partial }.map { |_, data| data }
+        expect(partials.join).to eq("Summary after budget hit.")
+
+        tool_events = events.select { |type, _| type == :tool_calls }
+        expect(tool_events).to be_empty
+      end
+    end
+
     it "persists request and response token counters in resume state" do
       tool_call =
         DiscourseAi::Completions::ToolCall.new(
