@@ -9,7 +9,6 @@ import DashboardReports from "discourse/admin/components/dashboard/reports";
 import DashboardSearch from "discourse/admin/components/dashboard/search";
 import DashboardSkeleton from "discourse/admin/components/dashboard/skeleton";
 import DashboardTraffic from "discourse/admin/components/dashboard/traffic";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -53,11 +52,6 @@ export default class RedesignedAdminDashboard extends Component {
         {{/if}}
       </div>
     </div>
-
-    <PluginOutlet
-      @name="admin-dashboard-after-header"
-      @connectorTagName="div"
-    />
 
     <div class="db-main">
       {{#if @loadedSections}}
