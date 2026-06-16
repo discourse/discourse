@@ -267,7 +267,13 @@ module Jobs
     private
 
     def escape_comma(string)
-      string&.include?(",") ? %Q|"#{string}"| : string
+      return string if string.nil?
+
+      # See test "CSV injection prevention" in export_csv_file_spec.rb for an explanation of this code.
+      string = "'" + string if string.start_with?("=", "+", "-", "@", "\t", "\r") ||
+        string.lstrip.start_with?("=", "+", "-", "@")
+
+      string.include?(",") ? %Q|"#{string}"| : string
     end
 
     def get_base_user_array(user)
