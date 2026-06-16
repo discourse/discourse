@@ -106,58 +106,6 @@ async function maybeResize(imageData, width, height, settings) {
   }
 }
 
-export async function optimize(
-  imageData,
-  fileName,
-  width,
-  height,
-  originalFileSize,
-  settings
-) {
-  const mozJpegOptions = buildMozJpegOptions(settings);
-
-  const initialSize = imageData.byteLength;
-  logIfDebug(
-    `Received imageData ${initialSize} bytes (raw uncompressed pixels) from original file size of ${originalFileSize} bytes (compressed) for ${fileName}`
-  );
-
-  const wrappedImageData = new ImageData(
-    new Uint8ClampedArray(imageData),
-    width,
-    height
-  );
-  const resized = await maybeResize(wrappedImageData, width, height, settings);
-  const finalWidth = resized.width;
-  const finalHeight = resized.height;
-
-  const result = await encodeJpeg(
-    resized instanceof ImageData
-      ? resized
-      : new ImageData(
-          new Uint8ClampedArray(resized.data),
-          finalWidth,
-          finalHeight
-        ),
-    mozJpegOptions
-  );
-
-  const finalSize = result.byteLength;
-  logIfDebug(
-    `Post-reencode size for ${fileName} is ${finalSize} bytes (compressed JPEG), original was ${originalFileSize} bytes`
-  );
-  const compressionFromOriginal = (originalFileSize / finalSize).toFixed(1);
-  const compressionFromRaw = (initialSize / finalSize).toFixed(1);
-  logIfDebug(
-    `Compressed ${compressionFromOriginal}x vs original file, ${compressionFromRaw}x vs raw pixels for ${fileName}`
-  );
-
-  if (finalSize < 20000) {
-    throw "Final size suspiciously small, discarding optimizations";
-  }
-
-  return result;
-}
-
 export async function convert(
   fileBuffer,
   fileName,

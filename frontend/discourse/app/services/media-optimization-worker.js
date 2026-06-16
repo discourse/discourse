@@ -2,7 +2,6 @@ import Service, { service } from "@ember/service";
 import { Promise } from "rsvp";
 import workerUrl from "virtual:dynamic-chunk-url:discourse/workers/media-optimization/entrypoint";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { fileToImageData } from "discourse/lib/media-optimization-utils";
 
 const CONVERT_FORMAT_REGEX = /(\.|\/)(jxl|hei[cf])$/i;
 const ANIMATED_GIF_REGEX = /(\.|\/)(gif)$/i;
@@ -13,7 +12,7 @@ const OPTIMIZABLE_REGEX = /(\.|\/)(jpe?g|png)$/i;
  *
  * 1. optimizeImage called
  * 2. worker started if one isn't already running, message handlers registered
- * 3. "compress"/"convert" message posted to the worker
+ * 3. "convert"/"convertAnimated" message posted to the worker
  * 4. worker posts back the optimized file (or an error), resolving the upload
  *
  * The worker is a module worker bundled with its codecs, so it is ready as soon
@@ -25,7 +24,6 @@ const OPTIMIZABLE_REGEX = /(\.|\/)(jpe?g|png)$/i;
 export default class MediaOptimizationWorkerService extends Service {
   @service appEvents;
   @service siteSettings;
-  @service capabilities;
 
   worker = null;
   currentComposerUploadData = null;
@@ -45,9 +43,6 @@ export default class MediaOptimizationWorkerService extends Service {
     const isConvertFormat = CONVERT_FORMAT_REGEX.test(typeOrName);
     const isAnimatedGif = ANIMATED_GIF_REGEX.test(typeOrName);
     const isOptimizable = OPTIMIZABLE_REGEX.test(typeOrName);
-    const wasmDecodeOptimizable =
-      isOptimizable &&
-      this.siteSettings.composer_media_optimization_image_wasm_decode_enabled;
 
     if (!isConvertFormat && !isAnimatedGif && !isOptimizable) {
       return Promise.resolve();
@@ -118,15 +113,15 @@ export default class MediaOptimizationWorkerService extends Service {
         debug_mode: this.siteSettings.composer_media_optimization_debug_mode,
       };
 
-      if (isConvertFormat || wasmDecodeOptimizable) {
-        let arrayBuffer;
-        try {
-          arrayBuffer = await file.data.arrayBuffer();
-        } catch (error) {
-          this.logIfDebug(error);
-          return resolve();
-        }
+      let arrayBuffer;
+      try {
+        arrayBuffer = await file.data.arrayBuffer();
+      } catch (error) {
+        this.logIfDebug(error);
+        return resolve();
+      }
 
+      if (isConvertFormat || isOptimizable) {
         this.worker.postMessage(
           {
             type: "convert",
@@ -139,15 +134,7 @@ export default class MediaOptimizationWorkerService extends Service {
           },
           [arrayBuffer]
         );
-      } else if (isAnimatedGif) {
-        let arrayBuffer;
-        try {
-          arrayBuffer = await file.data.arrayBuffer();
-        } catch (error) {
-          this.logIfDebug(error);
-          return resolve();
-        }
-
+      } else {
         this.worker.postMessage(
           {
             type: "convertAnimated",
@@ -158,28 +145,6 @@ export default class MediaOptimizationWorkerService extends Service {
             settings,
           },
           [arrayBuffer]
-        );
-      } else {
-        let imageData;
-        try {
-          imageData = await fileToImageData(file.data, this.capabilities.isIOS);
-        } catch (error) {
-          this.logIfDebug(error);
-          return resolve();
-        }
-
-        this.worker.postMessage(
-          {
-            type: "compress",
-            fileId: file.id,
-            file: imageData.data.buffer,
-            fileName: file.name,
-            width: imageData.width,
-            height: imageData.height,
-            originalFileSize: file.size,
-            settings,
-          },
-          [imageData.data.buffer]
         );
       }
 
