@@ -4440,7 +4440,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/395768"
       allow_enabled_for:
