@@ -9,5 +9,5 @@ This wrapper provides them with a way to use morphlex, while keeping the `import
  * @returns {Promise<import("diff")>}
  */
 export default async function loadJSDiff() {
-  return await waitForPromise(import("diff"));
+  return await waitForPromise(import(/* dynamicChunkName: "diff" */ "diff"));
 }

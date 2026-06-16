@@ -74,7 +74,7 @@ export async function ensureHighlightJs(langFile) {
 
 async function loadHighlightJs(langFile) {
   const [hljsModule, languageInitializer] = await Promise.all([
-    import("highlight.js/lib/core"),
+    import(/* dynamicChunkName: "highlightjs" */ "highlight.js/lib/core"),
     loadLanguageInitializer(langFile),
   ]);
 
@@ -91,9 +91,15 @@ async function loadLanguageInitializer(langFile) {
   if (DEBUG && isTesting()) {
     // Rails server is not available. Load up three languages direct from node_modules
     const [javascript, sql, ruby] = await Promise.all([
-      import("highlight.js/lib/languages/javascript"),
-      import("highlight.js/lib/languages/sql"),
-      import("highlight.js/lib/languages/ruby"),
+      import(
+        /* dynamicChunkName: "highlightjs-javascript" */ "highlight.js/lib/languages/javascript"
+      ),
+      import(
+        /* dynamicChunkName: "highlightjs-sql" */ "highlight.js/lib/languages/sql"
+      ),
+      import(
+        /* dynamicChunkName: "highlightjs-ruby" */ "highlight.js/lib/languages/ruby"
+      ),
     ]);
 
     return (hljs) => {
