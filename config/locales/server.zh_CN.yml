@@ -1943,6 +1943,7 @@ zh_CN:
     max_edits_per_day: "每个用户每天的最大编辑次数。"
     max_topics_per_day: "用户每天可以创建的最大话题数。"
     max_personal_messages_per_day: "用户每天可以创建的新个人消息话题的最大数量。"
+    limit_admin_personal_messages_per_day: "管理员每天可创建的新个人消息话题数量上限。设置为 0 则无限制。"
     max_invites_per_day: "用户每天可以发送的最大邀请数。"
     max_topic_invitations_per_day: "用户每天可以发送的最大话题邀请数。"
     max_topic_invitations_per_minute: "用户每分钟可以发送的最大话题邀请数。"

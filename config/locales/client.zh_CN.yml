@@ -4864,7 +4864,7 @@ zh_CN:
         go_to_unread_post: "前往第一篇未读帖子"
       application:
         title: "应用程序"
-        create: "创建新主题或发送私信"
+        create: "创建新话题或个人消息"
         notifications: "打开通知"
         hamburger_menu: "打开导航菜单"
         user_profile_menu: "打开用户菜单"
@@ -4919,16 +4919,29 @@ zh_CN:
         reply_topic: "回复话题"
         reply_post: "回复帖子"
         quote_post: "引用帖子"
+        like: "点赞帖子"
         flag: "标记帖子"
+        bookmark: "添加书签"
         edit: "编辑帖子"
         delete: "删除帖子"
+        mark_muted: "话题免打扰"
+        mark_regular: "常规（默认）话题"
         mark_tracking: "跟踪话题"
         mark_watching: "关注话题"
+        print: "打印话题"
         defer: "将话题标记为未读"
+        topic_admin_actions: "打开话题管理员操作"
+        archive_private_message: "切换存档个人消息"
       search_menu:
         title: "搜索菜单"
+        prev_next: "上下移动所选内容"
+        insert_url: "将所选内容插入到打开的编辑器中"
+        full_page_search: "启动完整页面搜索"
       admin:
         title: "管理员"
+        search_prev_next: "上下移动所选内容"
+        search_open: "打开管理员界面的搜索"
+        search_full_page: "打开整页管理员搜索"
     badges:
       earned_n_times:
         other: "已获得此徽章 %{count} 次"
@@ -4991,8 +5004,17 @@ zh_CN:
       staff_info: "要添加限制，请将此标签放入<a href=%{basePath}/tag_groups>标签组</a>。"
       category_restricted: "此标签仅限于您无权访问的类别。"
       synonyms: "同义词"
+      synonyms_description:
+        other: "同义词 %{synonyms} 将被替换为 %{base_tag_name}。"
       synonyms_inline: "这些同义词将被替换为 %{base_tag_name}："
+      synonym_hint: "→ %{tag_name}"
       save: "保存标签的名称和描述"
+      tag_groups_info:
+        other: "此标签属于以下标签组： %{tag_groups}。"
+      tag_groups_info_prefix:
+        other: "此标签属于以下标签组："
+      category_restrictions:
+        other: "它只能用于以下类别： %{categories}。"
       restricted_to: "限于"
       no_synonyms: "此标签没有同义词。"
       edit_synonyms: "编辑同义词"
@@ -5563,6 +5585,8 @@ zh_CN:
         group_moderation_and_security: "审核与安全"
         group_other: "其他"
         legacy_warning: "这是一份旧版报告，即将停用。如果您需要帮助寻找替代报告，请联系支持团队。"
+        chart:
+          total: "总计： %{count}"
       config_sections:
         account:
           title: "帐户"
@@ -6150,20 +6174,33 @@ zh_CN:
         too_many_requests: 您执行此操作的次数过多。请稍后再试。
         not_found_error: 抱歉，此报告不存在
         custom_date_range: 自定义日期范围
+        loading: "正在加载仪表盘…"
         sections:
+          highlights:
+            title: "高亮显示"
           reports:
             title: "举报"
           traffic:
             title: "网站流量"
           engagement:
             title: "参与度"
+            fetch_error: "互动数据加载失败。请尝试刷新页面。"
             activity_by_category:
+              title: "按类别显示的活动"
+              description: "各类别下的话题、帖子及成员参与情况。"
               category: "类别"
               topics: "话题"
               posts: "帖子"
+              page_views: "页面浏览量"
               share: "分享"
+              vs_prior: "与之前相比"
+              empty: "所选时间段内无任何活动。"
             whos_posting:
+              title: "谁在发帖？"
               all_categories: "所有类别"
+              include_subcategories: "包括子类别"
+              new_members: "新成员"
+              returning: "返回"
               staff: "管理人员"
             trust_level_pipeline:
               trust_levels:

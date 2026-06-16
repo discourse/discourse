@@ -161,7 +161,10 @@ tr_TR:
     date_range_picker:
       apply: "Uygula"
       start_date: "Başlangıç tarihi"
+      end_date: "Bitiş tarihi"
+      date_placeholder: "yyyy/aa/gg"
       presets:
+        label: "Tarih aralığı ön ayarları"
         last_7_days: "Son 7 gün"
         last_30_days: "Son 30 gün"
         last_3_months: "Son 3 ay"
@@ -339,6 +342,9 @@ tr_TR:
       search_placeholder: "Ara"
     impersonation:
       notice: "%{username} kimliğine bürünüyorsunuz."
+      time_left:
+        one: "(%{count} dakika kaldı)"
+        other: "(%{count} dakika kaldı)"
       stop: "Kişiyi taklit etmeyi bırak"
     themes:
       default_description: "Varsayılan"
@@ -367,6 +373,11 @@ tr_TR:
         visual_overlay: "Görsel katman"
         ghost_blocks: "Hayalet bloklar"
         condition_debugging: "Durum hata ayıklama"
+      plugin_outlet_debug:
+        find_on_github: "GitHub'da bul"
+        wrapper: "(sarmalayıcı)"
+        outlet_args: "Çıkış argümanları"
+        no_outlet_args: "Bu çıkışa herhangi bir çıkış argümanı aktarılmadı"
       toggle_safe_mode: "Güvenli modu aç/kapat"
       toggle_verbose_localization: "Ayrıntılı yerelleştirmeyi aç/kapat"
       disable_dev_tools: "Geliştirici araçlarını devre dışı bırak"
