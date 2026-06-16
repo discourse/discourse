@@ -7,6 +7,7 @@ module DiscoursePostEvent
 
       build_base_query(guardian, user)
         .then { |query| filter_by_post_id(query, params) }
+        .then { |query| filter_by_topic_id(query, params) }
         .then { |query| filter_by_attending_user(query, params, guardian, user) }
         .then { |query| filter_by_dates(query, params) }
         .then { |query| filter_by_category(query, params) }
@@ -55,6 +56,11 @@ module DiscoursePostEvent
     def self.filter_by_post_id(events, params)
       return events if params[:post_id].blank?
       events.where(id: params[:post_id])
+    end
+
+    def self.filter_by_topic_id(events, params)
+      return events if params[:topic_id].blank?
+      events.where(topics: { id: params[:topic_id] })
     end
 
     def self.filter_by_attending_user(events, params, guardian, user)

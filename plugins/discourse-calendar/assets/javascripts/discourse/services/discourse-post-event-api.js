@@ -18,6 +18,16 @@ export default class DiscoursePostEventApi extends Service {
     return DiscoursePostEventEvent.create(result.event);
   }
 
+  async eventByTopicId(topicId) {
+    const result = await this.#getRequest("/events", {
+      topic_id: topicId,
+      include_details: true,
+      limit: 1,
+    });
+    const eventData = (result.events || [])[0];
+    return eventData ? DiscoursePostEventEvent.create(eventData) : null;
+  }
+
   async events(data = {}) {
     if (this.eventsPromise) {
       this.eventsPromise.abort();

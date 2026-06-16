@@ -176,6 +176,7 @@ after_initialize do
   require_relative "jobs/regular/livestream/recalculate_user_channel_memberships"
   require_relative "lib/discourse_post_event/engine"
   require_relative "lib/discourse_post_event/event_finder"
+  require_relative "lib/discourse_post_event/event_onebox_data"
   require_relative "lib/discourse_post_event/event_parser"
   require_relative "lib/discourse_post_event/event_validator"
   require_relative "lib/discourse_post_event/export_csv_controller_extension"
@@ -281,6 +282,38 @@ after_initialize do
       SiteSetting.discourse_post_event_enabled && !object.nil? && !object.deleted_at.present?
     end,
   ) { DiscoursePostEvent::EventSerializer.new(object.event, scope: scope, root: false) }
+
+  TopicView.on_preload do |topic_view|
+    if SiteSetting.discourse_post_event_enabled
+      # always set the store (even when empty) and avoid a per-post query for every post in the topic
+      topic_view.set_preloaded_post_data(
+        :event_oneboxes,
+        DiscoursePostEvent::EventOneboxData.build(
+          posts: topic_view.posts,
+          guardian: topic_view.guardian,
+        ),
+      )
+    end
+  end
+
+  add_to_serializer(
+    :post,
+    :event_oneboxes,
+    include_condition: -> { SiteSetting.discourse_post_event_enabled && event_oneboxes.present? },
+  ) do
+    # use the batched topic-view preload on the common read path
+    # otherwise compute just this post so the event card shows without a page refresh
+    @event_oneboxes ||=
+      begin
+        preloaded = topic_view&.preloaded_post_data(:event_oneboxes)
+        if preloaded
+          preloaded[object.id] || {}
+        else
+          DiscoursePostEvent::EventOneboxData.build(posts: [object], guardian: scope)[object.id] ||
+            {}
+        end
+      end
+  end
 
   on(:post_created) do |post|
     DiscoursePostEvent::Event.update_from_raw(post)
@@ -715,6 +748,51 @@ after_initialize do
               #{rows}
             </table>
           HTML
+        end
+    end
+  end
+
+  on(:reduce_excerpt) do |fragment, options|
+    if SiteSetting.discourse_post_event_enabled
+      post = options[:post]
+      topic_title = post&.topic&.title
+
+      fragment
+        .css(".discourse-post-event")
+        .each do |event_node|
+          tz = event_node["data-timezone"] || "UTC"
+          all_day = event_node["data-all-day"] == "true"
+          starts_at = event_node["data-start"]
+          ends_at = event_node["data-end"]
+
+          date_format = all_day ? "%B %-d, %Y" : "%B %-d, %Y %-I:%M %p"
+          format_date = ->(value) do
+            DateTime.parse(value).strftime(date_format)
+          rescue StandardError
+            value
+          end
+
+          dates = nil
+          if starts_at.present?
+            dates = format_date.call(starts_at)
+            dates = "#{dates} → #{format_date.call(ends_at)}" if ends_at.present?
+            dates = "#{dates} (#{tz})" unless all_day
+          end
+
+          event_name = event_node["data-name"].presence
+          location = event_node["data-location"].presence
+
+          parts = []
+          # only repeat the name when it differs from the topic title, which is
+          # already shown alongside the excerpt (e.g. in the topic onebox)
+          parts << event_name if event_name && event_name != topic_title
+          parts << dates if dates
+          parts << location if location
+
+          summary = parts.compact.join(" · ")
+          summary = "📅 #{summary}" if summary.present?
+
+          event_node.replace(CGI.escape_html(summary))
         end
     end
   end

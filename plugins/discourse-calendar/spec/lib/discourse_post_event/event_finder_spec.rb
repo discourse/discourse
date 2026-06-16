@@ -388,4 +388,19 @@ describe DiscoursePostEvent::EventFinder do
       end
     end
   end
+
+  describe "by topic id" do
+    fab!(:event_one) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public]) }
+    fab!(:event_two) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public]) }
+
+    it "returns only the event in the given topic" do
+      expect(finder.search(current_user, { topic_id: event_one.post.topic_id })).to match_array(
+        [event_one],
+      )
+    end
+
+    it "returns nothing for a topic without an event" do
+      expect(finder.search(current_user, { topic_id: Fabricate(:topic).id })).to be_empty
+    end
+  end
 end
