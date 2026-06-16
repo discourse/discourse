@@ -4,6 +4,25 @@ require "highline/import"
 module SystemHelpers
   PLATFORM_KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
 
+  # A production Ember build strips `@ember/debug` macros (`deprecate`,
+  # `assert`) and the dev-only test affordances, so specs asserting that
+  # behaviour are conditionally skipped via `if:` metadata.
+  def self.production_ember_build?
+    return @production_ember_build if defined?(@production_ember_build)
+
+    @production_ember_build =
+      if ENV["EMBER_ENV"].present?
+        ENV["EMBER_ENV"] == "production"
+      else
+        begin
+          info = Rails.root.join("frontend/discourse/dist/BUILD_INFO.json")
+          info.exist? && JSON.parse(info.read)["ember_env"] == "production"
+        rescue StandardError
+          false
+        end
+      end
+  end
+
   # Pass to `send_keys` to move the caret to the start of the current line in a
   # contenteditable. The Home key doesn't move the caret on macOS; Cmd+Left does.
   LINE_START_KEY = RUBY_PLATFORM =~ /darwin/i ? %i[meta left] : :home
@@ -55,12 +74,74 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    visit File.join(
-            GlobalSetting.relative_url_root || "",
-            "/session/#{user.encoded_username}/become.json?redirect=false",
-          )
+    path =
+      File.join(
+        GlobalSetting.relative_url_root || "",
+        "/session/#{user.encoded_username}/become.json?redirect=false",
+      )
 
-    expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
+    # Run the same request the browser used to be navigated to through the app
+    # in-process instead. This keeps every server-side side effect of
+    # `SessionController#become` (`log_on_user`, auth token generation, the
+    # full middleware stack) while skipping an entire Chrome page navigation
+    # per sign-in; the session cookies from the response are copied into the
+    # browser context so the next real navigation is authenticated.
+    rack_session = Rack::Test::Session.new(Rails.application)
+    rack_session.get(
+      "http://#{Capybara.server_host}#{path}",
+      {},
+      { "HTTP_USER_AGENT" => "Mozilla/5.0 (SystemHelpers#sign_in)" },
+    )
+    response = rack_session.last_response
+
+    if !response.ok? ||
+         !response.body.include?("Signed in to #{user.encoded_username} successfully")
+      raise "sign_in for #{user.encoded_username} failed (HTTP #{response.status}): #{response.body[0, 300]}"
+    end
+
+    cookies =
+      Array(response.headers["Set-Cookie"])
+        .flat_map { |header| header.split("\n") }
+        .filter_map do |line|
+          cookie, *attributes = line.split(/;\s*/)
+          name, _, value = cookie.partition("=")
+          next if name.blank?
+          attributes = attributes.map(&:downcase)
+          same_site = attributes.filter_map { |a| a[/\Asamesite=(\w+)\z/, 1]&.capitalize }.first
+          {
+            name: name,
+            value: value,
+            path: "/",
+            httpOnly: attributes.include?("httponly"),
+            secure: attributes.include?("secure"),
+            sameSite: same_site || "Lax",
+          }
+        end
+
+    page.driver.with_playwright_page do |pw_page|
+      pw_page.context.add_cookies(
+        # `visit "/foo"` resolves to `Capybara.server_host`, but some specs
+        # navigate to `test.localhost` absolute URLs — cover both hosts.
+        cookies.flat_map do |cookie|
+          [Capybara.server_host, "test.localhost"].map { |domain| cookie.merge(domain: domain) }
+        end,
+      )
+    end
+
+    # The visit-based sign_in left the browser on a real app origin, and specs
+    # (plugin page objects especially) rely on that by calling execute_script
+    # before their first visit. A freshly reset page sits on about:blank,
+    # whose opaque origin denies localStorage and clipboard access, so park on
+    # the cheapest app document to preserve that contract.
+    on_blank_page = page.driver.with_playwright_page { |pw_page| !pw_page.url.start_with?("http") }
+    visit "/srv/status" if on_blank_page
+
+    # `Capybara::Session#reset!` only resets the driver (closing the browser
+    # context and dropping the cookies injected above) when the session has
+    # been used. The old `visit`-based sign_in marked it used implicitly;
+    # without this, `Capybara.reset_sessions!` (e.g. in specs that sign in and
+    # then test anonymous access) silently keeps the authenticated context.
+    page.instance_variable_set(:@touched, true)
   end
 
   def setup_system_test
