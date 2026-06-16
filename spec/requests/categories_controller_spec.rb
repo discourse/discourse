@@ -1354,13 +1354,19 @@ RSpec.describe CategoriesController do
 
           before do
             SiteSetting.enable_simplified_category_creation = true
+            plugin = Plugin::Instance.new
+            plugin.stubs(:humanized_name).returns("Test")
+            Discourse.plugins_by_name["discourse-test-plugin"] = plugin
             Categories::TypeRegistry.register(
               test_type_class,
               plugin_identifier: "discourse-test-plugin",
             )
           end
 
-          after { Categories::TypeRegistry.reset! }
+          after do
+            Discourse.plugins_by_name.delete("discourse-test-plugin")
+            Categories::TypeRegistry.reset!
+          end
 
           it "returns 422 when a moderator tries to add a plugin-enabling type" do
             sign_in(Fabricate(:moderator))
