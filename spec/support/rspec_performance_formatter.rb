@@ -6,7 +6,7 @@ class RspecPerformanceFormatter
   class << self
     def measure
       MethodProfiler.ensure_discourse_instrumentation!
-      MethodProfiler.start(itemize: true)
+      MethodProfiler.start
       yield
       summarize(MethodProfiler.stop)
     end

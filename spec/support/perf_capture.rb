@@ -4,10 +4,7 @@ if ENV["DISCOURSE_RSPEC_PERFORMANCE_FORMATTER"] == "1"
   require_relative "rspec_performance_formatter"
 
   RSpec.configure do |config|
-    config.before(:suite) do
-      MethodProfiler.ensure_discourse_instrumentation!
-      MethodProfiler.itemize_enabled = true
-    end
+    config.before(:suite) { MethodProfiler.ensure_discourse_instrumentation! }
 
     config.around(:each) do |example|
       test_summary = nil
