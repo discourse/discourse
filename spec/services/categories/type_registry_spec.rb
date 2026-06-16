@@ -83,8 +83,17 @@ RSpec.describe Categories::TypeRegistry do
         end
       end
 
-      before { described_class.register(test_type, plugin_identifier: "discourse-test-plugin") }
-      after { described_class.reset! }
+      before do
+        plugin = Plugin::Instance.new
+        plugin.stubs(:humanized_name).returns("Test")
+        Discourse.plugins_by_name["discourse-test-plugin"] = plugin
+        described_class.register(test_type, plugin_identifier: "discourse-test-plugin")
+      end
+
+      after do
+        Discourse.plugins_by_name.delete("discourse-test-plugin")
+        described_class.reset!
+      end
 
       it "returns can_enable_plugin: false for moderators" do
         moderator = Fabricate(:moderator)
@@ -140,14 +149,15 @@ RSpec.describe Categories::TypeRegistry do
       expect(described_class.plugin_display_name(:test_display_name_type)).to be_nil
     end
 
-    it "strips discourse- prefix and -plugin suffix and titleizes" do
+    it "returns the plugin humanized name" do
+      plugin = Plugin::Instance.new
+      plugin.stubs(:humanized_name).returns("Solved")
+      Discourse.plugins_by_name["discourse-solved-plugin"] = plugin
+
       described_class.register(test_type, plugin_identifier: "discourse-solved-plugin")
       expect(described_class.plugin_display_name(:test_display_name_type)).to eq("Solved")
-    end
-
-    it "handles plugin names without prefix/suffix" do
-      described_class.register(test_type, plugin_identifier: "my-cool-feature")
-      expect(described_class.plugin_display_name(:test_display_name_type)).to eq("My Cool Feature")
+    ensure
+      Discourse.plugins_by_name.delete("discourse-solved-plugin")
     end
   end
 

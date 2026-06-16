@@ -77,7 +77,6 @@ RSpec.describe Categories::Types::Base do
 
       expect(test_type.available_for?(admin.guardian)).to eq(true)
       expect(test_type.available_for?(moderator.guardian)).to eq(true)
-      expect(test_type.available_for?).to eq(true)
     end
 
     it "returns true for plugin-enabling types when user is admin and plugin is not enabled" do

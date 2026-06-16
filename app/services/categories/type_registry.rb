@@ -47,7 +47,7 @@ module Categories
       end
 
       def plugin_display_name(id)
-        owner(id)&.sub(/^discourse-/, "")&.sub(/-plugin$/, "")&.titleize
+        Discourse.plugins_by_name[owner(id)]&.humanized_name
       end
 
       def reset!

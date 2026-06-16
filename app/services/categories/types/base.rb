@@ -312,8 +312,8 @@ module Categories
         # Checks availability considering both the base available? check and
         # guardian permissions. Types that enable plugins require admin access
         # only when the plugin is not already enabled.
-        def available_for?(guardian = nil)
-          return false if enables_plugin? && !plugin_enabled? && guardian && !guardian.is_admin?
+        def available_for?(guardian)
+          return false if enables_plugin? && !plugin_enabled? && !guardian.is_admin?
           available?
         end
 
@@ -413,7 +413,7 @@ module Categories
         end
 
         def most_recently_active_admin
-          User.real.admins.where(active: true).order(last_seen_at: :desc).first
+          User.active_admins.order(last_seen_at: :desc).first
         end
 
         private
