@@ -32,6 +32,7 @@ module("Unit | Route | topic header cleanup", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
+    this.owner.unregister("service:header");
     this.owner.register("service:header", HeaderStub);
   });
 
