@@ -75,7 +75,7 @@ discourse_solved:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/402498"
   discourse_solved_admin_dashboard_seeded:
