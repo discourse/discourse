@@ -1636,7 +1636,6 @@ es:
       enable_smart_lists: "Activar listas inteligentes al escribir en el compositor"
       enable_defer: "Activar marcar temas como no leídos"
       enable_markdown_monospace_font: "Usar fuente monoespaciada en el modo Markdown del compositor"
-      show_original_content: "Mostrar el contenido original en lugar del traducido. También se puede activar o desactivar dentro de los temas."
       experimental_sidebar:
         enable: "Activar barra lateral"
         options: "Opciones"
@@ -2895,6 +2894,10 @@ es:
       publish: "Publicar borrador compartido"
       confirm_publish: "¿Seguro que quieres publicar este borrador?"
       publishing: "Publicando tema…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metadatos"
     composer:
       autocomplete:
         username_missing: "Falta el nombre de usuario en el resultado de autocompletar seleccionado."
@@ -5658,12 +5661,6 @@ es:
             bookmarks: "Temas en %{category} sin etiquetas que has añadido a marcadores"
             default: "%{filter} temas en %{category} sin etiquetas"
         categories: "Todas las categorías"
-    content_localization:
-      toggle_localized:
-        translated: "Esta página se ha traducido automáticamente. Haz clic para ver el original."
-        not_translated: "La página no está traducida. Haz clic para traducir."
-        translations_enabled: "Traducciones activadas"
-        translations_disabled: "Traducciones desactivadas"
     language_switcher:
       title: "Cambiar idioma del sitio"
   admin_js:

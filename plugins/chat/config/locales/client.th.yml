@@ -76,6 +76,7 @@ th:
         title: สร้างข้อความใหม่
         prefix: "ถึง:"
       create_channel:
+        description: "รายละเอียด"
         type: "ชนิด"
         types:
           category: "หมวดหมู่"

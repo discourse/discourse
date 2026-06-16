@@ -140,6 +140,7 @@ vi:
         title: Tin nhắn mới
         prefix: "Tới:"
       create_channel:
+        description: "Mô tả"
         type: "Loại"
         types:
           category: "Chuyên mục"

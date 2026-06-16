@@ -406,8 +406,6 @@ he:
         input_placeholder: הוספת שם
         slug_description: במזהה הייצוגי נעשה שימוש בכתובת במקום בשם הערוץ
         name: שם הערוץ
-        slug: מזהה ייצוגי של הערוץ (רשות)
-        emoji: אמוג׳י של הערוץ (רשות)
         reset_emoji: איפוס אמוג׳י
       channel_edit_description_modal:
         title: עריכת תיאור
@@ -475,16 +473,14 @@ he:
             many: 'למשתמשים ב־%{group} וב־%{count} קבוצות נוספות תהיה גישה לערוץ הזה בהתאם ל<a href="%{settingLink}" target="_blank">הגדרות האבטחה</a>'
             other: 'למשתמשים ב־%{group} וב־%{count} קבוצות נוספות תהיה גישה לערוץ הזה בהתאם ל<a href="%{settingLink}" target="_blank">הגדרות האבטחה</a>'
         create: "יצירת ערוץ"
-        description: "תיאור (רשות)"
+        description: "תיאור"
         name: "שם הערוץ"
-        slug: "מזהה ייצוגי של הערוץ (רשות)"
         title: "ערוץ חדש"
         type: "סוג"
         types:
           category: "קטגוריה"
           topic: "נושא"
         emoji:
-          label: "אמוג׳י של הערוץ (רשות)"
           reset: "איפוס אמוג׳י"
       reviewable:
         type: "הודעת צ׳אט"

@@ -1639,7 +1639,6 @@ de:
       enable_smart_lists: "Aktiviere intelligente Listen beim Schreiben im Composer"
       enable_defer: "„Themen als ungelesen markieren“ aktivieren"
       enable_markdown_monospace_font: "Monospace-Schriftart im Markdown-Modus des Editors verwenden"
-      show_original_content: "Zeige den Originalinhalt anstelle der übersetzten Inhalte. Die Einstellung kann auch innerhalb von Themen verändert werden."
       experimental_sidebar:
         enable: "Seitenleiste aktivieren"
         options: "Optionen"
@@ -2898,6 +2897,10 @@ de:
       publish: "Gemeinsamen Entwurf veröffentlichen"
       confirm_publish: "Bist du sicher, dass du diese Vorlage veröffentlichten möchtest?"
       publishing: "Thema wird veröffentlicht …"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metadaten"
     composer:
       autocomplete:
         username_missing: "Das ausgewählte Autovervollständigungsergebnis enthält keinen Benutzernamen."
@@ -3719,6 +3722,10 @@ de:
       topic_admin_menu:
         enable_nested_replies: "Verschachtelte Antworten aktivieren"
         disable_nested_replies: "Verschachtelte Antworten deaktivieren"
+      context:
+        banner: "Du betrachtest einen einzelnen Thread aus diesem Thema."
+        view_full_topic: "Vollständiges Thema anzeigen"
+        view_parent_context: "Übergeordneten Kontext anzeigen"
     topic:
       filter_to:
         one: "%{count} Beitrag im Thema"
@@ -5714,12 +5721,6 @@ de:
             bookmarks: "Themen in %{category} ohne Schlagwörter, die du mit einem Lesezeichen versehen hast"
             default: "%{filter} Themen in %{category} ohne Schlagwörter"
         categories: "Alle Kategorien"
-    content_localization:
-      toggle_localized:
-        translated: "Die Seite wurde maschinell übersetzt. Klicke, um das Original zu sehen."
-        not_translated: "Die Seite ist nicht übersetzt. Klicke zum Übersetzen."
-        translations_enabled: "Übersetzungen aktiviert"
-        translations_disabled: "Übersetzungen deaktiviert"
     language_switcher:
       title: "Sprache der Website ändern"
   admin_js:
