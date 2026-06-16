@@ -79,8 +79,9 @@ describe "Composer image optimization for uploads using media-optimization-worke
       file = file_from_fixtures("large_and_unoptimized.png", "images")
       converted_file_path = file.path.gsub("unoptimized", "notransparent")
 
-      # We do a conversion here to simulate a PNG with no transparency,
-      # the fixture has transparency, and PNGs with transparency are not optimized.
+      # We do a conversion here to simulate a PNG with no transparency, the
+      # fixture has transparency and transparent PNGs are converted to WEBP
+      # rather than JPEG (see the transparent PNG test below).
       Discourse::Utils.execute_command(
         *["convert", file.path, "-background", "white", "-alpha", "remove", converted_file_path],
         timeout: 3,
@@ -95,12 +96,12 @@ describe "Composer image optimization for uploads using media-optimization-worke
         Upload.find_by(original_filename: File.basename(converted_file_path).gsub("png", "jpg"))
 
       # Original large_and_unoptimized PNG with no transparency is 312_889 bytes
-      expect(upload.filesize).to eq(285_809)
+      expect(upload.filesize).to eq(271_246)
     ensure
       FileUtils.rm(converted_file_path)
     end
 
-    it "does not optimize a png with transparent pixels in the composer" do
+    it "converts a png with transparent pixels to webp in the composer" do
       visit "/new-topic"
       expect(composer).to be_opened
 
@@ -110,10 +111,11 @@ describe "Composer image optimization for uploads using media-optimization-worke
       expect(composer).to have_no_in_progress_uploads
       expect(composer.preview).to have_css(".image-wrapper", count: 1)
 
-      upload = Upload.find_by(original_filename: File.basename(file.path))
+      upload = Upload.find_by(original_filename: File.basename(file.path).gsub("png", "webp"))
 
-      # Original large_and_unoptimized.png is 421_730 bytes
-      expect(upload.filesize).to eq(421_730)
+      # Original large_and_unoptimized.png is 421_730 bytes; transparent PNGs are
+      # re-encoded as WEBP instead of JPEG.
+      expect(upload.filesize).to eq(135_594)
     end
   end
 end
