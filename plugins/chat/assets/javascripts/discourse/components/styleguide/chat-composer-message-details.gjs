@@ -3,23 +3,13 @@ import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { optionalRequire } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import ChatComposerMessageDetails from "discourse/plugins/chat/discourse/components/chat-composer-message-details";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-
-const StyleguideComponent = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide/component"
-);
-const Controls = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide/controls"
-);
-const Row = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide/controls/row"
-);
-const StyleguideExample = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide-example"
-);
+import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
+import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
+import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
+import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class ChatStyleguideChatComposerMessageDetails extends Component {
   @service currentUser;

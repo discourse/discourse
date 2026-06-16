@@ -303,11 +303,9 @@ RSpec.describe AssetProcessor do
       )
 
     expect(entrypoint(result, "main")["code"]).to include(
-      'compatModules["discourse/templates/connectors/foo"]',
+      '"discourse/templates/connectors/foo":',
     ).once
-    expect(entrypoint(result, "main")["code"]).to include(
-      'compatModules["discourse/connectors/foo"]',
-    ).once
+    expect(entrypoint(result, "main")["code"]).to include('"discourse/connectors/foo":').once
   end
 
   it "handles relative imports from one module to another" do

@@ -103,6 +103,18 @@ module ApplicationHelper
         .map { [it[:importmap_name], script_asset_path(it[:name])] }
         .to_h
 
+    # When a bundle (plugin or theme) statically imports from a plugin that
+    # isn't on the page, stand in a fake module so the import resolves instead
+    # of failing.
+    available_plugins = plugin_assets.map { |a| a[:plugin].directory_name }
+    required_plugins =
+      plugin_assets.flat_map { |a| a[:external_plugin_imports] || [] } +
+        theme_js_assets.flat_map { |a| a[:external_plugin_imports] }
+
+    (required_plugins.uniq - available_plugins).each do |plugin_name|
+      imports["discourse/plugins/#{plugin_name}"] = Plugin::JsManager::FAKE_PLUGIN_MODULE
+    end
+
     JSON.pretty_generate({ imports: }).html_safe
   end
 
@@ -794,13 +806,10 @@ module ApplicationHelper
     )
   end
 
-  def theme_js_lookup
-    Theme.lookup_field(
+  def theme_js_assets
+    Theme.js_asset_info(
       theme_id,
-      :extra_js,
-      nil,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
-      csp_nonce: csp_nonce_placeholder,
     )
   end
 

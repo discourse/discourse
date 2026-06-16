@@ -2,8 +2,8 @@ import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import { bind } from "discourse/lib/decorators";
-import { optionalRequire } from "discourse/lib/utilities";
 import User from "discourse/models/user";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import DiscoursePostEventEventStats from "./discourse-post-event-event-stats";
 import DiscoursePostEventInvitee from "./discourse-post-event-invitee";
 
@@ -59,10 +59,6 @@ export default class DiscoursePostEventEvent {
   @tracked _reminders;
 
   constructor(args = {}) {
-    const ChatChannel = optionalRequire(
-      "discourse/plugins/chat/discourse/models/chat-channel"
-    );
-
     this.id = args.id;
     this.rrule = args.rrule;
     this.name = args.name;

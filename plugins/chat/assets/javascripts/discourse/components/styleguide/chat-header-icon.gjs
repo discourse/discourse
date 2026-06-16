@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { optionalRequire } from "discourse/lib/utilities";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import Icon from "discourse/plugins/chat/discourse/components/chat/header/icon";
@@ -12,19 +11,10 @@ import {
   HEADER_INDICATOR_PREFERENCE_NEVER,
   HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
-
-const StyleguideComponent = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide/component"
-);
-const Controls = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide/controls"
-);
-const Row = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide/controls/row"
-);
-const StyleguideExample = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide-example"
-);
+import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
+import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
+import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
+import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class ChatStyleguideChatHeaderIcon extends Component {
   @tracked isActive = false;

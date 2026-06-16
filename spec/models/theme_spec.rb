@@ -329,6 +329,29 @@ RSpec.describe Theme do
       expect(theme.reload.cached_settings).to include(name: "bill")
     end
 
+    it "records the plugins a theme statically imports from" do
+      theme.set_field(target: :extra_js, name: "discourse/initializers/my-init.js", value: <<~JS)
+          import Thing from "discourse/plugins/some-plugin/lib/thing";
+          export default { name: "test", initialize() { Thing(); } };
+        JS
+      theme.save!
+
+      expect(theme.reload.javascript_cache.external_plugin_imports).to eq(["some-plugin"])
+    end
+
+    it "exposes baked extra_js as javascript cache info" do
+      theme.set_field(target: :extra_js, name: "discourse/initializers/my-init.js", value: <<~JS)
+          import Thing from "discourse/plugins/some-plugin/lib/thing";
+          export default { name: "test", initialize() { Thing(); } };
+        JS
+      theme.save!
+
+      cache = theme.reload.javascript_cache
+      expect(Theme.js_asset_info(theme.id)).to eq(
+        [{ url: cache.url, theme_id: theme.id, external_plugin_imports: ["some-plugin"] }],
+      )
+    end
+
     it "is empty when the settings are invalid" do
       theme.set_field(target: :settings, name: :yaml, value: "nil_setting: ")
       theme.save!
@@ -716,13 +739,13 @@ RSpec.describe Theme do
       child.save!
 
       first_common_value = Theme.lookup_field(child.id, :desktop, "header")
-      first_extra_js_value = Theme.lookup_field(child.id, :extra_js, nil)
+      first_extra_js_value = Theme.js_asset_info(child.id)
 
       Theme
         .stubs(:compiler_version)
         .returns("SOME_NEW_HASH") do
           second_common_value = Theme.lookup_field(child.id, :desktop, "header")
-          second_extra_js_value = Theme.lookup_field(child.id, :extra_js, nil)
+          second_extra_js_value = Theme.js_asset_info(child.id)
 
           new_common_compiler_version =
             ThemeField.find_by(theme_id: child.id, name: "header").compiler_version

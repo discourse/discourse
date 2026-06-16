@@ -1,6 +1,6 @@
 import { applyLocalDates } from "discourse/lib/local-dates";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { optionalRequire } from "discourse/lib/utilities";
+import applySpoiler from "discourse/plugins/spoiler-alert/lib/apply-spoiler";
 
 export default {
   name: "chat-plugin-decorators",
@@ -19,10 +19,6 @@ export default {
     );
 
     if (siteSettings.spoiler_enabled) {
-      const applySpoiler = optionalRequire(
-        "discourse/plugins/spoiler-alert/lib/apply-spoiler"
-      );
-
       api.decorateChatMessage(
         (element) => {
           element.querySelectorAll(".spoiler").forEach((spoiler) => {

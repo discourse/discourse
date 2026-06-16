@@ -1,16 +1,16 @@
 /* eslint-disable qunit/require-expect */
 import { transformSync } from "@babel/core";
 import { expect, test } from "vitest";
-import BabelReplaceImports from "./babel-replace-imports.js";
+import BabelResolveCoreImports from "./babel-resolve-core-imports.js";
 
 function compile(input) {
   return transformSync(input, {
     configFile: false,
-    plugins: [BabelReplaceImports],
+    plugins: [BabelResolveCoreImports],
   }).code;
 }
 
-test("replaces imports with moduleBroker calls", () => {
+test("destructures core imports from moduleBroker", () => {
   expect(
     compile(`
 import concatClass from "discourse/helpers/concat-class";
@@ -28,7 +28,7 @@ import { default as renamedDefaultImport, namedImport, otherNamedImport as renam
   `);
 });
 
-test("handles namespace imports", () => {
+test("handles core namespace imports", () => {
   expect(
     compile(`
 import * as MyModule from "discourse/module-1";
@@ -40,5 +40,19 @@ import defaultExport, * as MyModule2 from "discourse/module-2";
       default: defaultExport
     } = window.moduleBroker.lookup("discourse/module-2");
     const MyModule2 = window.moduleBroker.lookup("discourse/module-2");"
+  `);
+});
+
+test("leaves relative, virtual, theme and plugin imports untouched", () => {
+  expect(
+    compile(`
+import sibling from "./sibling";
+import { settings } from "discourse/theme-12/settings";
+import Thing from "discourse/plugins/other/lib/thing";
+  `)
+  ).toMatchInlineSnapshot(`
+    "import sibling from "./sibling";
+    import { settings } from "discourse/theme-12/settings";
+    import Thing from "discourse/plugins/other/lib/thing";"
   `);
 });

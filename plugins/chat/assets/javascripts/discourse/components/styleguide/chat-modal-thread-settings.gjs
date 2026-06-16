@@ -2,17 +2,11 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { optionalRequire } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import ChatModalThreadSettings from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-
-const Row = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide/controls/row"
-);
-const StyleguideExample = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide-example"
-);
+import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
+import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class ChatStyleguideChatModalThreadSettings extends Component {
   @service modal;

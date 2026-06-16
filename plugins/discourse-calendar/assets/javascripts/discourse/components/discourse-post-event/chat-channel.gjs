@@ -1,13 +1,11 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import { optionalRequire } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
+import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 
 export default class DiscoursePostEventChatChannel extends Component {
   get channelTitle() {
-    return optionalRequire(
-      "discourse/plugins/chat/discourse/components/channel-title"
-    );
+    return ChannelTitle;
   }
 
   <template>

@@ -5,12 +5,14 @@ import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import domFromString from "discourse/lib/dom-from-string";
 import applyLightbox from "discourse/lib/lightbox";
-import { escapeExpression, optionalRequire } from "discourse/lib/utilities";
+import { escapeExpression } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import { i18n } from "discourse-i18n";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
 import Collapser from "discourse/plugins/chat/discourse/components/collapser";
+import LazyVideo from "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video";
+import getVideoAttributes from "discourse/plugins/discourse-lazy-videos/lib/lazy-video-attributes";
 
 export default class ChatMessageCollapser extends Component {
   @service siteSettings;
@@ -87,16 +89,10 @@ export default class ChatMessageCollapser extends Component {
   }
 
   get lazyVideoComponent() {
-    return optionalRequire(
-      "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video"
-    );
+    return LazyVideo;
   }
 
   lazyVideoCooked(elements) {
-    const getVideoAttributes = optionalRequire(
-      "discourse/plugins/discourse-lazy-videos/lib/lazy-video-attributes"
-    );
-
     return elements.reduce((acc, e) => {
       if (this.siteSettings.lazy_videos_enabled && lazyVideoPredicate(e)) {
         const videoAttributes = getVideoAttributes(e);

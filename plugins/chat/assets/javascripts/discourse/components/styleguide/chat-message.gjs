@@ -3,25 +3,15 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { optionalRequire } from "discourse/lib/utilities";
 import { not } from "discourse/truth-helpers";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import ChatMessage from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-
-const StyleguideComponent = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide/component"
-);
-const Controls = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide/controls"
-);
-const Row = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide/controls/row"
-);
-const StyleguideExample = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide-example"
-);
+import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
+import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
+import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
+import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class ChatStyleguideChatMessage extends Component {
   @service currentUser;
