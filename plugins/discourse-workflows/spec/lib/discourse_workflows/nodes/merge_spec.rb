@@ -5,6 +5,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Merge::V1 do
     { "json" => json }
   end
 
+  def json_items(items)
+    items.map { |entry| { "json" => entry["json"] } }
+  end
+
   def execute_merge(input_1:, input_2:, input_groups: {}, configuration: {})
     execute_node_output(
       configuration: configuration,
@@ -44,5 +48,92 @@ RSpec.describe DiscourseWorkflows::Nodes::Merge::V1 do
       )
 
     expect(output).to eq([item("a" => 1), item("b" => 2), item("c" => 3)])
+  end
+
+  it "combines items by position" do
+    output =
+      execute_merge(
+        configuration: {
+          "mode" => "combine",
+          "resolve_clash" => "prefer_last",
+        },
+        input_1: [item("id" => 1, "a" => "A")],
+        input_2: [item("b" => "B")],
+      )
+
+    expect(json_items(output)).to eq([item("id" => 1, "a" => "A", "b" => "B")])
+  end
+
+  it "pairs items by index and records pairedItem lineage" do
+    output =
+      execute_merge(
+        configuration: {
+          "mode" => "combine",
+          "resolve_clash" => "prefer_last",
+        },
+        input_1: [item("a" => 1), item("a" => 2)],
+        input_2: [item("b" => 3), item("b" => 4)],
+      )
+
+    expect(json_items(output)).to eq([item("a" => 1, "b" => 3), item("a" => 2, "b" => 4)])
+    expect(output.first["pairedItem"]).to eq(
+      [{ "input" => 0, "item" => 0 }, { "input" => 1, "item" => 0 }],
+    )
+  end
+
+  it "defaults clash handling to add_suffix (matches n8n position combine)" do
+    output =
+      execute_merge(
+        configuration: {
+          "mode" => "combine",
+        },
+        input_1: [item("markdown" => "table 1")],
+        input_2: [item("markdown" => "table 2")],
+      )
+
+    expect(json_items(output)).to eq([item("markdown_1" => "table 1", "markdown_2" => "table 2")])
+  end
+
+  it "prefers input 1 on a clash when configured" do
+    output =
+      execute_merge(
+        configuration: {
+          "mode" => "combine",
+          "resolve_clash" => "prefer_first",
+        },
+        input_1: [item("value" => "one")],
+        input_2: [item("value" => "two")],
+      )
+
+    expect(json_items(output)).to eq([item("value" => "one")])
+  end
+
+  it "drops unpaired items by default when inputs differ in length" do
+    output =
+      execute_merge(
+        configuration: {
+          "mode" => "combine",
+          "resolve_clash" => "prefer_last",
+        },
+        input_1: [item("a" => 1), item("a" => 2)],
+        input_2: [item("b" => 3)],
+      )
+
+    expect(json_items(output)).to eq([item("a" => 1, "b" => 3)])
+  end
+
+  it "keeps unpaired items when include_unpaired is enabled" do
+    output =
+      execute_merge(
+        configuration: {
+          "mode" => "combine",
+          "resolve_clash" => "prefer_last",
+          "include_unpaired" => true,
+        },
+        input_1: [item("a" => 1), item("a" => 2)],
+        input_2: [item("b" => 3)],
+      )
+
+    expect(json_items(output)).to eq([item("a" => 1, "b" => 3), item("a" => 2)])
   end
 end
