@@ -571,7 +571,7 @@ de:
         allow_topic_mentions: "Themenerwähnungen zulassen"
         allow_topic_mentions_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen diesen Agenten in Themen erwähnen."
         require_approval: "Genehmigung für Moderationstools erforderlich"
-        require_approval_help: "Wenn diese Option aktiviert ist, werden Moderationsaktionen (Schließen, Löschen, Bearbeiten usw.) vor der Ausführung zur Genehmigung durch den Moderator an die Überprüfungswarteschlange gesendet."
+        require_approval_help: "Wenn diese Option aktiviert ist, werden Moderationsaktionen (Schließen, Löschen, Bearbeiten usw.) vor der Ausführung zur Genehmigung durch einen Moderator an die Überprüfungswarteschlange gesendet."
         force_default_llm: "Immer das Standard-Sprachmodell verwenden"
         save: "Speichern"
         saved: "Agent gespeichert"
@@ -980,7 +980,6 @@ de:
         title: "Änderungen mit KI vorschlagen"
         description: "Wähle eine der folgenden Optionen und die KI schlägt dir eine neue Version des Textes vor."
         selection_hint: "Tipp: Du kannst auch einen Teil des Textes auswählen, bevor du den Assistenten öffnest, um nur diesen Teil neu zu schreiben."
-        suggest: "Mit KI vorschlagen"
         suggest_errors:
           too_many_tags:
             one: "Du kannst höchstens %{count} Schlagwort haben."
@@ -1043,7 +1042,7 @@ de:
         short_title: "Einbettungen"
         description: "Einbettungen sind numerische Darstellungen von Daten, die Bedeutungen und Beziehungen erfassen und es Discourse-KI-Funktionen wie „Verwandte Themen“ und „KI-Suche“ ermöglichen, Inhalte zu verstehen und zu verknüpfen."
         new: "Neue Einbettung"
-        back: "Zurück zu den Einbettungen"
+        back: "Zurück zu Einbettungen"
         save: "Speichern"
         saved: "Einbettungskonfiguration gespeichert"
         delete: "Löschen"

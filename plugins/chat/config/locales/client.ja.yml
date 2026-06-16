@@ -370,8 +370,6 @@ ja:
         input_placeholder: 名前を追加してください
         slug_description: チャンネルスラグはチャンネル名の代わりに URL で使用されます
         name: チャンネル名
-        slug: チャンネルスラグ (オプション)
-        emoji: チャンネル絵文字 (オプション)
         reset_emoji: 絵文字をリセット
       channel_edit_description_modal:
         title: 説明を編集する
@@ -417,16 +415,14 @@ ja:
           hint_multiple_groups:
             other: '%{group} と他 %{count} 個のグループのユーザーは、<a href="%{settingLink}" target="_blank">セキュリティ設定</a>に従って、このチャンネルにアクセスできます'
         create: "チャンネルを作成"
-        description: "説明 (オプション)"
+        description: "説明"
         name: "チャンネル名"
-        slug: "チャンネルスラグ (オプション)"
         title: "新しいチャンネル"
         type: "タイプ"
         types:
           category: "カテゴリ"
           topic: "トピック"
         emoji:
-          label: "チャンネル絵文字 (オプション)"
           reset: "絵文字をリセット"
       reviewable:
         type: "チャットメッセージ"

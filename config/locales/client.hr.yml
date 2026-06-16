@@ -5425,10 +5425,6 @@ hr:
             bookmarks: "Teme u %{category} bez oznaka koje ste označili"
             default: "%{filter} teme u %{category} bez oznaka"
         categories: "Sve kategorije"
-    content_localization:
-      toggle_localized:
-        translated: "Stranica je strojno prevedena. Kliknite kako biste vidjeli izvornik."
-        not_translated: "Stranica nije prevedena. Kliknite za prijevod."
   admin_js:
     type_to_filter: "Upišite za filtriranje…"
     settings: "Postavke"

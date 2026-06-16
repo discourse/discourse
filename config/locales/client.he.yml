@@ -3100,6 +3100,10 @@ he:
       publish: "פרסום טיוטה משותפת"
       confirm_publish: "לפרסם את הטיוטה הזו?"
       publishing: "נושא מתפרסם…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "נתוני על"
     composer:
       autocomplete:
         username_missing: "תוצאת ההשלמה האוטומטית שנבחרה היא שם משתמש חסר."
@@ -3957,6 +3961,9 @@ he:
         link: "יומן פעילות"
         title: "יומן פעילות נושא"
         empty: "אין פעילות נושא להצגה."
+      context:
+        view_full_topic: "הצגת הנושא במלואו"
+        view_parent_context: "הצגת הקשר הורה"
     topic:
       filter_to:
         one: "פוסט אחד בנושא"
@@ -6088,12 +6095,6 @@ he:
             bookmarks: "נושאים ב%{category} ללא תיוג שהוספת לסימניות"
             default: "%{filter} נושאים ב%{category} בלי תגיות"
         categories: "כל הקטגוריות"
-    content_localization:
-      toggle_localized:
-        translated: "העמוד מתורגם על ידי מכונה. יש ללחוץ כדי לצפות במקור."
-        not_translated: "העמוד לא מתורגם. נא ללחוץ כדי לתרגם."
-        translations_enabled: "תרגומים פעילים"
-        translations_disabled: "תרגומים כבויים"
     language_switcher:
       title: "החלפת שפת האתר"
   admin_js:

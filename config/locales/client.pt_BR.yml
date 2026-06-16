@@ -2862,6 +2862,10 @@ pt_BR:
       publish: "Publicar rascunho compartilhado"
       confirm_publish: "Você tem certeza de que deseja publicar este rascunho?"
       publishing: "Publicando tópico…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metadados"
     composer:
       autocomplete:
         username_missing: "Nome de usuário(a) ausente no resultado do preenchimento automático selecionado."
@@ -5553,12 +5557,6 @@ pt_BR:
             bookmarks: "Tópicos em %{category} sem etiquetas que você adicionou aos favoritos"
             default: "Tópicos %{filter} em %{category} sem tags"
         categories: "Todas as categorias"
-    content_localization:
-      toggle_localized:
-        translated: "Esta página foi traduzida por máquina. Clique para ver o texto original."
-        not_translated: "Página não traduzida. Clique para traduzir."
-        translations_enabled: "Traduções ativadas"
-        translations_disabled: "Traduções desativadas"
     language_switcher:
       title: "Alterar o idioma do site"
   admin_js:

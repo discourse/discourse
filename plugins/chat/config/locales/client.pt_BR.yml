@@ -399,8 +399,6 @@ pt_BR:
         input_placeholder: Adicionar um nome
         slug_description: Um slug de canal é usado na URL em vez do nome do canal
         name: Nome do canal
-        slug: Slug do canal (opcional)
-        emoji: Emoji do canal (opcional)
         reset_emoji: Redefinir emoji
       channel_edit_description_modal:
         title: Editar descrição
@@ -458,16 +456,14 @@ pt_BR:
             one: 'Os(as) usuários(as) em %{group} e %{count} outro grupo terão acesso a este canal de acordo com as <a href="%{settingLink}" target="_blank">configurações de segurança</a>'
             other: 'Os(as) usuários(as) em %{group} e %{count} outros grupos terão acesso a este canal de acordo com as <a href="%{settingLink}" target="_blank">configurações de segurança</a>'
         create: "Criar canal"
-        description: "Descrição (opcional)"
+        description: "Descrição"
         name: "Nome do canal"
-        slug: "Slug do canal (opcional)"
         title: "Novo canal"
         type: "Tipo"
         types:
           category: "Categoria"
           topic: "Tópico"
         emoji:
-          label: "Emoji do canal (opcional)"
           reset: "Redefinir emoji"
       reviewable:
         type: "Mensagem de chat"

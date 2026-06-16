@@ -2885,6 +2885,10 @@ el:
       composer_title: "Εισαγωγή GIF"
       no_results: "Εισαγάγετε μια λέξη-κλειδί παραπάνω για να αναζητήσετε GIF."
       browse_categories: "Περιήγηση ανά κατηγορία"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Μεταδεδομένα"
     composer:
       autocomplete:
         username_missing: "Λείπει το όνομα χρήστη από το επιλεγμένο αποτέλεσμα αυτόματης συμπλήρωσης."
@@ -3739,6 +3743,10 @@ el:
         link: "Καταγραφή δραστηριότητας"
         title: "Καταγραφή δραστηριότητας θέματος"
         empty: "Δεν υπάρχει δραστηριότητα θέματος προς εμφάνιση."
+      context:
+        banner: "Βλεπεις ένα μόνο νήμα από αυτό το θέμα."
+        view_full_topic: "Προβολή πλήρους θέματος"
+        view_parent_context: "Προβολή γονικού περιεχομένου"
     topic:
       filter_to:
         one: "%{count} ανάρτηση σε θέμα"
@@ -5730,12 +5738,6 @@ el:
             bookmarks: "Θέματα σε %{category} χωρίς ετικέτες που έχετε σελιδοδεικτήσει"
             default: "%{filter} θέματα σε %{category} χωρίς ετικέτες"
         categories: "Όλες οι κατηγορίες"
-    content_localization:
-      toggle_localized:
-        translated: "Η σελίδα είναι μεταφρασμένη από μηχανή. Κάντε κλικ για να δείτε το πρωτότυπο."
-        not_translated: "Η σελίδα δεν έχει μεταφραστεί. Κάντε κλικ για μετάφραση."
-        translations_enabled: "Μεταφράσεις ενεργοποιημένες"
-        translations_disabled: "Μεταφράσεις απενεργοποιημένες"
     language_switcher:
       title: "Αλλαγή γλώσσας ιστότοπου"
   admin_js:
