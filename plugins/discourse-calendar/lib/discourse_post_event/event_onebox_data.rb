@@ -35,14 +35,9 @@ module DiscoursePostEvent
 
       topic_ids = links.map(&:last).uniq
 
-      # an event always lives on the first post of its topic, and its id equals
-      # that post's id
       first_post_ids = Post.where(topic_id: topic_ids, post_number: 1, deleted_at: nil).pluck(:id)
       return {} if first_post_ids.empty?
 
-      # eager-load everything EventSerializer touches (post.topic.category,
-      # post.user, image_upload) so serializing N events stays a constant number
-      # of queries rather than N+1
       events_by_topic =
         DiscoursePostEvent::Event
           .where(id: first_post_ids)

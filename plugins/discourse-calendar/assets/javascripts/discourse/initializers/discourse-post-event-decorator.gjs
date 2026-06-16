@@ -27,8 +27,6 @@ function _decorateEventOneboxes(cooked, helper) {
     return;
   }
 
-  // only topic-level / first-post oneboxes (data-post="1") become the event
-  // card; a link to a specific reply keeps its normal onebox
   cooked
     .querySelectorAll(
       "aside.quote[data-topic][data-post='1']:not([data-username])"
@@ -40,11 +38,6 @@ function _decorateEventOneboxes(cooked, helper) {
         return;
       }
 
-      // Replace the whole quote with the interactive event card. We swap the
-      // <aside> for a fresh wrapper: core's quote-controls decorator already
-      // ran on the aside, and removing it from the document makes that render
-      // a no-op (d-decorated-html skips targets no longer in the document),
-      // so there's nothing to clean up or conflict with.
       const wrapper = document.createElement("div");
       wrapper.className = "discourse-post-event-onebox";
       aside.replaceWith(wrapper);
