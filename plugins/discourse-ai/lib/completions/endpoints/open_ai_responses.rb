@@ -43,9 +43,15 @@ module DiscourseAi
             end
           end
 
+          native_tools = dialect.native_tools
+          payload[:tools] = (payload[:tools] || []).concat(native_tools) if native_tools.present?
+
           convert_payload_to_responses_api!(payload)
           payload[:include] ||= []
           payload[:include] << "reasoning.encrypted_content"
+          if native_tools.any? { |tool| tool[:type] == "web_search" }
+            payload[:include] << "web_search_call.action.sources"
+          end
 
           payload
         end

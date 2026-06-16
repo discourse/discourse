@@ -537,6 +537,7 @@ en:
 
       ai_agent:
         ai_tools: "Tools"
+        native_tools_help: "Provider-native tools, such as web search or page fetch, appear when \"Always use default language model\" is enabled and the selected default language model supports them."
         mcp_servers: "MCP servers"
         mcp_server_tools_help: "Selected MCP servers expose all of their tools by default. Narrow them per agent to reduce token usage and keep tool choice focused."
         mcp_server_tool_count:

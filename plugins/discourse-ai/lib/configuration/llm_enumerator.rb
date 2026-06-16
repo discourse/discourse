@@ -95,14 +95,25 @@ module DiscourseAi
         true
       end
 
-      # returns an array of hashes (id: , name:, vision_enabled:)
+      # returns an array of hashes (id: , name:, vision_enabled:, supported_native_tools:)
       def self.values_for_serialization
         return [] unless table_exists?
 
-        DB.query_hash(<<~SQL).map(&:symbolize_keys)
-          SELECT id, display_name AS name, vision_enabled
-          FROM llm_models
-        SQL
+        llm_models = LlmModel.all.index_by(&:id)
+
+        DB
+          .query_hash(<<~SQL)
+            SELECT id, display_name AS name, vision_enabled
+            FROM llm_models
+          SQL
+          .map do |row|
+            row = row.symbolize_keys
+            llm_model = llm_models[row[:id]]
+            row[:supported_native_tools] = DiscourseAi::Completions::NativeTools.supported_ids_for(
+              llm_model,
+            )
+            row
+          end
       end
 
       def self.values

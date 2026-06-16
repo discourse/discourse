@@ -397,6 +397,8 @@ en:
         cannot_delete_system_agent: "System agents cannot be deleted, please disable it instead"
         cannot_edit_system_agent: "System agents can only be renamed, you may not edit tools or system prompt, instead disable and make a copy"
         cannot_have_duplicate_tools: "Can not have duplicate tools"
+        native_tool_requires_forced_llm: "Provider-native tools require a default LLM with \"Force default LLM\" enabled"
+        native_tool_unsupported_by_llm: "The selected default LLM does not support one of the enabled provider-native tools"
         admin_dashboard_highlights:
           name: "Admin Dashboard Highlights"
           description: "Writes the brief readout shown at the top of the admin dashboard, explaining what changed and what deserves attention this period"
@@ -568,6 +570,13 @@ en:
           flag_type:
             name: "Flag Type"
             description: "Controls whether the post is reviewed, hidden, deleted, or treated as spam."
+      native_tools:
+        web_search:
+          name: "Web Search (native)"
+          help: "Lets the model search the web using the provider's built-in search, when the agent is forced to a supported LLM."
+        web_fetch:
+          name: "Web Fetch (native)"
+          help: "Lets the model open and read web pages using the provider's built-in web access, when the agent is forced to a supported LLM."
       tool_summary:
         read_artifact: "Read a web artifact"
         search_uploaded_documents: "Search uploaded documents"
