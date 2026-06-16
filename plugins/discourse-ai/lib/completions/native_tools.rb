@@ -14,6 +14,7 @@ module DiscourseAi
       PREFIX = "native-"
 
       WEB_SEARCH = "web_search"
+      WEB_FETCH = "web_fetch"
 
       # open_ai/azure only expose web search through the Responses API
       RESPONSES_API_PROVIDERS = %w[open_ai azure].freeze
@@ -50,6 +51,7 @@ module DiscourseAi
 
       DEFINITIONS = [
         Definition.new(id: WEB_SEARCH, providers: %w[google anthropic open_ai azure]),
+        Definition.new(id: WEB_FETCH, providers: %w[google anthropic]),
       ].freeze
 
       def self.all

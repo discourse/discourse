@@ -56,6 +56,10 @@ module DiscourseAi
           processor.process_message(response_data)
         end
 
+        def decode_chunk_finish
+          processor.finish
+        end
+
         def claude_processor
           @processor ||=
             DiscourseAi::Completions::AnthropicMessageProcessor.new(

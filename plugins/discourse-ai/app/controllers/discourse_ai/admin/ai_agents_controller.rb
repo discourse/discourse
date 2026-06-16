@@ -81,6 +81,7 @@ module DiscourseAi
         ai_agent = AiAgent.new(params.except(:rag_uploads))
 
         if ai_agent.save
+          ensure_ai_agent_user(ai_agent)
           if mcp_server_ids
             sync_mcp_server_assignments(ai_agent, mcp_server_ids, mcp_server_tool_names)
           end
@@ -105,6 +106,7 @@ module DiscourseAi
         initial_attributes = @ai_agent.attributes.dup
 
         if @ai_agent.update(params.except(:rag_uploads))
+          ensure_ai_agent_user(@ai_agent)
           if mcp_server_ids
             sync_mcp_server_assignments(@ai_agent, mcp_server_ids, mcp_server_tool_names)
           end
@@ -434,6 +436,17 @@ module DiscourseAi
 
       def attached_upload_ids
         ai_agent_params[:rag_uploads].to_a.map { |h| h[:id] }
+      end
+
+      def ensure_ai_agent_user(agent)
+        return if agent.system? || agent.user_id.present? || !agent_needs_user?(agent)
+
+        agent.create_user!
+      end
+
+      def agent_needs_user?(agent)
+        agent.force_default_llm? || agent.allow_topic_mentions? ||
+          agent.allow_chat_direct_messages? || agent.allow_chat_channel_mentions?
       end
 
       def ai_agent_params

@@ -62,6 +62,10 @@ module DiscourseAi
         end
 
         def model_msg(msg)
+          if (output_items = open_ai_response_output_items(msg)).present?
+            return output_items.deep_dup
+          end
+
           message_for_role("assistant", msg)
         end
 
@@ -144,7 +148,12 @@ module DiscourseAi
         def open_ai_reasoning_data(message)
           info = message[:thinking_provider_info]
           return if info.blank?
-          info[:open_ai_responses] || info["open_ai_responses"]
+
+          info.deep_symbolize_keys[:open_ai_responses]
+        end
+
+        def open_ai_response_output_items(message)
+          open_ai_reasoning_data(message)&.dig(:output_items)
         end
 
         def text_node(text, role)

@@ -572,8 +572,11 @@ en:
             description: "Controls whether the post is reviewed, hidden, deleted, or treated as spam."
       native_tools:
         web_search:
-          name: "Web search"
-          help: "Lets the model search the web using the provider's built-in search, when the agent is forced to a supported LLM"
+          name: "Web Search (native)"
+          help: "Lets the model search the web using the provider's built-in search, when the agent is forced to a supported LLM."
+        web_fetch:
+          name: "Web Fetch (native)"
+          help: "Lets the model open and read web pages using the provider's built-in web access, when the agent is forced to a supported LLM."
       tool_summary:
         read_artifact: "Read a web artifact"
         search_uploaded_documents: "Search uploaded documents"

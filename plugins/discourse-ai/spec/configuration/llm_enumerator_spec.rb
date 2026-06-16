@@ -33,8 +33,13 @@ RSpec.describe DiscourseAi::Configuration::LlmEnumerator do
 
     it "advertises supported provider-native tools" do
       gemini = Fabricate(:gemini_model)
+      openai_responses = Fabricate(:llm_model, url: "https://api.openai.com/v1/responses")
 
       serialized = described_class.values_for_serialization.find { |row| row[:id] == gemini.id }
+      expect(serialized[:supported_native_tools]).to eq(%w[web_search web_fetch])
+
+      serialized =
+        described_class.values_for_serialization.find { |row| row[:id] == openai_responses.id }
       expect(serialized[:supported_native_tools]).to eq(["web_search"])
     end
   end

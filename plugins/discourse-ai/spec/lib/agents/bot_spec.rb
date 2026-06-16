@@ -60,6 +60,50 @@ RSpec.describe DiscourseAi::Agents::Bot do
       expect(last_call[:model_params][:temperature]).to eq(0.4)
     end
 
+    it "requests Gemini thought summaries when thinking is shown" do
+      gemini = Fabricate(:gemini_model)
+      captured_kwargs = []
+      bot = described_class.as(bot_user, agent: DiscourseAi::Agents::General.new, model: gemini)
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          messages: [{ type: :user, content: "test" }],
+          skip_show_thinking: false,
+        )
+
+      allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+        :generate,
+      ) do |_, *_args, **kwargs|
+        captured_kwargs << kwargs
+        "Answer"
+      end
+
+      bot.reply(context) { |_partial| }
+
+      expect(captured_kwargs.first[:extra_model_params]).to include(include_thought_summaries: true)
+    end
+
+    it "does not request Gemini thought summaries when thinking is hidden" do
+      gemini = Fabricate(:gemini_model)
+      captured_kwargs = []
+      bot = described_class.as(bot_user, agent: DiscourseAi::Agents::General.new, model: gemini)
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          messages: [{ type: :user, content: "test" }],
+          skip_show_thinking: true,
+        )
+
+      allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+        :generate,
+      ) do |_, *_args, **kwargs|
+        captured_kwargs << kwargs
+        "Answer"
+      end
+
+      bot.reply(context) { |_partial| }
+
+      expect(captured_kwargs.first[:extra_model_params]).to be_nil
+    end
+
     context "when using function chaining" do
       it "yields a loading placeholder while proceeds to invoke the command" do
         tool = DiscourseAi::Agents::Tools::ListCategories.new({}, bot_user: nil, llm: nil)

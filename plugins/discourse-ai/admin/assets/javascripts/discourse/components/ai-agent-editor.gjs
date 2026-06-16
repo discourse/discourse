@@ -682,6 +682,20 @@ export default class AgentEditor extends Component {
           </field.Control>
         </form.Field>
 
+        {{#if (and (not @model.isNew) data.default_llm_id)}}
+          <form.Field
+            @name="force_default_llm"
+            @title={{i18n "discourse_ai.ai_agent.force_default_llm"}}
+            @showTitle={{false}}
+            @format="large"
+            @type="checkbox"
+            @onSet={{fn this.onForceDefaultLlmChange form data}}
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+        {{/if}}
+
         <form.Field
           @name="allowed_group_ids"
           @title={{i18n "discourse_ai.ai_agent.allowed_groups"}}
@@ -794,7 +808,7 @@ export default class AgentEditor extends Component {
           <form.Field
             @name="tools"
             @title={{i18n "discourse_ai.ai_agent.tools"}}
-            @description={{i18n "discourse_ai.ai_agent.native_tools_help"}}
+            @tooltip={{i18n "discourse_ai.ai_agent.native_tools_help"}}
             @format="large"
             @type="custom"
             as |field|
@@ -1222,23 +1236,7 @@ export default class AgentEditor extends Component {
             <field.Control />
           </form.Field>
 
-          {{#if @model.isNew}}
-            <div>{{i18n "discourse_ai.ai_agent.ai_bot.save_first"}}</div>
-          {{else}}
-            {{#if data.default_llm_id}}
-              <form.Field
-                @name="force_default_llm"
-                @title={{i18n "discourse_ai.ai_agent.force_default_llm"}}
-                @showTitle={{false}}
-                @format="large"
-                @type="checkbox"
-                @onSet={{fn this.onForceDefaultLlmChange form data}}
-                as |field|
-              >
-                <field.Control />
-              </form.Field>
-            {{/if}}
-
+          {{#unless @model.isNew}}
             <form.Container
               @title={{i18n "discourse_ai.ai_agent.user"}}
               @tooltip={{unless
@@ -1266,70 +1264,64 @@ export default class AgentEditor extends Component {
                 />
               {{/if}}
             </form.Container>
+          {{/unless}}
 
-            {{#if data.user}}
-              <form.Field
-                @name="allow_personal_messages"
-                @title={{i18n "discourse_ai.ai_agent.allow_personal_messages"}}
-                @tooltip={{i18n
-                  "discourse_ai.ai_agent.allow_personal_messages_help"
-                }}
-                @showTitle={{false}}
-                @format="large"
-                @type="checkbox"
-                as |field|
-              >
-                <field.Control />
-              </form.Field>
+          <form.Field
+            @name="allow_personal_messages"
+            @title={{i18n "discourse_ai.ai_agent.allow_personal_messages"}}
+            @tooltip={{i18n
+              "discourse_ai.ai_agent.allow_personal_messages_help"
+            }}
+            @showTitle={{false}}
+            @format="large"
+            @type="checkbox"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
 
-              <form.Field
-                @name="allow_topic_mentions"
-                @title={{i18n "discourse_ai.ai_agent.allow_topic_mentions"}}
-                @tooltip={{i18n
-                  "discourse_ai.ai_agent.allow_topic_mentions_help"
-                }}
-                @showTitle={{false}}
-                @format="large"
-                @type="checkbox"
-                as |field|
-              >
-                <field.Control />
-              </form.Field>
+          <form.Field
+            @name="allow_topic_mentions"
+            @title={{i18n "discourse_ai.ai_agent.allow_topic_mentions"}}
+            @tooltip={{i18n "discourse_ai.ai_agent.allow_topic_mentions_help"}}
+            @showTitle={{false}}
+            @format="large"
+            @type="checkbox"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
 
-              {{#if this.chatPluginEnabled}}
-                <form.Field
-                  @name="allow_chat_direct_messages"
-                  @title={{i18n
-                    "discourse_ai.ai_agent.allow_chat_direct_messages"
-                  }}
-                  @tooltip={{i18n
-                    "discourse_ai.ai_agent.allow_chat_direct_messages_help"
-                  }}
-                  @showTitle={{false}}
-                  @format="large"
-                  @type="checkbox"
-                  as |field|
-                >
-                  <field.Control />
-                </form.Field>
+          {{#if this.chatPluginEnabled}}
+            <form.Field
+              @name="allow_chat_direct_messages"
+              @title={{i18n "discourse_ai.ai_agent.allow_chat_direct_messages"}}
+              @tooltip={{i18n
+                "discourse_ai.ai_agent.allow_chat_direct_messages_help"
+              }}
+              @showTitle={{false}}
+              @format="large"
+              @type="checkbox"
+              as |field|
+            >
+              <field.Control />
+            </form.Field>
 
-                <form.Field
-                  @name="allow_chat_channel_mentions"
-                  @title={{i18n
-                    "discourse_ai.ai_agent.allow_chat_channel_mentions"
-                  }}
-                  @tooltip={{i18n
-                    "discourse_ai.ai_agent.allow_chat_channel_mentions_help"
-                  }}
-                  @showTitle={{false}}
-                  @format="large"
-                  @type="checkbox"
-                  as |field|
-                >
-                  <field.Control />
-                </form.Field>
-              {{/if}}
-            {{/if}}
+            <form.Field
+              @name="allow_chat_channel_mentions"
+              @title={{i18n
+                "discourse_ai.ai_agent.allow_chat_channel_mentions"
+              }}
+              @tooltip={{i18n
+                "discourse_ai.ai_agent.allow_chat_channel_mentions_help"
+              }}
+              @showTitle={{false}}
+              @format="large"
+              @type="checkbox"
+              as |field|
+            >
+              <field.Control />
+            </form.Field>
           {{/if}}
         </form.Section>
 

@@ -102,6 +102,7 @@ module DiscourseAi
           execution_context.token_usage_tracker ||= DiscourseAi::Completions::TokenUsageTracker.new
         end
         llm_kwargs[:execution_context] = execution_context if execution_context
+        enable_gemini_thought_summaries!(llm_kwargs, current_llm, context)
         token_usage_tracker = execution_context&.token_usage_tracker
 
         final_answer_requested = false
@@ -263,6 +264,15 @@ module DiscourseAi
 
       private
 
+      def enable_gemini_thought_summaries!(llm_kwargs, current_llm, context)
+        return if current_llm.llm_model.provider != "google"
+        return if context.skip_show_thinking != false
+
+        extra_model_params = (llm_kwargs[:extra_model_params] || {}).dup
+        extra_model_params[:include_thought_summaries] = true
+        llm_kwargs[:extra_model_params] = extra_model_params
+      end
+
       def embed_thinking(raw_context)
         embedded_thinking = []
         thinking_bundle = nil
@@ -270,7 +280,10 @@ module DiscourseAi
         raw_context.each do |context|
           if context.is_a?(DiscourseAi::Completions::Thinking)
             thinking_bundle ||= { message: nil, provider_info: {} }
-            thinking_bundle[:message] = context.message if context.message.present?
+            thinking_bundle[:message] = merge_thinking_message(
+              thinking_bundle[:message],
+              context.message,
+            )
             thinking_bundle[
               :provider_info
             ] = DiscourseAi::Completions::Thinking.merge_provider_info(
@@ -296,6 +309,13 @@ module DiscourseAi
         end
 
         embedded_thinking
+      end
+
+      def merge_thinking_message(existing, incoming)
+        return existing if incoming.blank?
+        return incoming if existing.blank?
+
+        "#{existing}\n\n#{incoming}"
       end
 
       def tool_requires_approval?(tool)
@@ -362,7 +382,7 @@ module DiscourseAi
           provider_payload = {}
 
           current_thinking.each do |thinking|
-            thinking_message = thinking.message if thinking.message.present?
+            thinking_message = merge_thinking_message(thinking_message, thinking.message)
             provider_payload =
               DiscourseAi::Completions::Thinking.merge_provider_info(
                 provider_payload,

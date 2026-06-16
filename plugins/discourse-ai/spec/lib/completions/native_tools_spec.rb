@@ -14,12 +14,12 @@ RSpec.describe DiscourseAi::Completions::NativeTools do
   fab!(:bedrock_model)
 
   describe ".supported_ids_for" do
-    it "supports Gemini grounding" do
-      expect(described_class.supported_ids_for(gemini_model)).to eq(["web_search"])
+    it "supports Gemini grounding and URL context" do
+      expect(described_class.supported_ids_for(gemini_model)).to eq(%w[web_search web_fetch])
     end
 
-    it "supports Anthropic web search" do
-      expect(described_class.supported_ids_for(anthropic_model)).to eq(["web_search"])
+    it "supports Anthropic web search and fetch" do
+      expect(described_class.supported_ids_for(anthropic_model)).to eq(%w[web_search web_fetch])
     end
 
     it "supports OpenAI web search only on the Responses API" do
@@ -40,6 +40,8 @@ RSpec.describe DiscourseAi::Completions::NativeTools do
     it "validates ids regardless of prefix" do
       expect(described_class.valid?("web_search")).to eq(true)
       expect(described_class.valid?("native-web_search")).to eq(true)
+      expect(described_class.valid?("web_fetch")).to eq(true)
+      expect(described_class.valid?("native-web_fetch")).to eq(true)
       expect(described_class.valid?("nope")).to eq(false)
     end
 
@@ -58,9 +60,13 @@ RSpec.describe DiscourseAi::Completions::NativeTools do
       prompt
     end
 
-    it "renders google_search for Gemini (native tools only)" do
-      dialect = DiscourseAi::Completions::Dialects::Gemini.new(web_search_prompt, gemini_model)
-      expect(dialect.tools).to eq([{ google_search: {} }])
+    it "renders Gemini native web tools" do
+      prompt =
+        DiscourseAi::Completions::Prompt.new("system", messages: [{ type: :user, content: "hi" }])
+      prompt.native_tools = %w[web_search web_fetch]
+
+      dialect = DiscourseAi::Completions::Dialects::Gemini.new(prompt, gemini_model)
+      expect(dialect.tools).to eq([{ google_search: {} }, { url_context: {} }])
     end
 
     it "renders google_search alongside function declarations for Gemini" do
@@ -79,11 +85,15 @@ RSpec.describe DiscourseAi::Completions::NativeTools do
       expect(tools).to include({ google_search: {} })
     end
 
-    it "renders the web search tool for Claude" do
+    it "renders the web search and fetch tools for Claude" do
+      web_search_prompt.native_tools = %w[web_search web_fetch]
       dialect = DiscourseAi::Completions::Dialects::Claude.new(web_search_prompt, anthropic_model)
       translated = dialect.translate
 
       expect(translated.tools).to include({ type: "web_search_20250305", name: "web_search" })
+      expect(translated.tools).to include(
+        { type: "web_fetch_20260209", name: "web_fetch", allowed_callers: %w[direct] },
+      )
     end
 
     it "renders the web search tool for the OpenAI Responses API" do
@@ -92,6 +102,26 @@ RSpec.describe DiscourseAi::Completions::NativeTools do
           web_search_prompt,
           openai_responses_model,
         )
+
+      expect(dialect.native_tools).to eq([{ type: "web_search" }])
+    end
+
+    it "does not render OpenAI web fetch" do
+      prompt =
+        DiscourseAi::Completions::Prompt.new("system", messages: [{ type: :user, content: "hi" }])
+      prompt.native_tools = ["web_fetch"]
+      dialect =
+        DiscourseAi::Completions::Dialects::OpenAiResponses.new(prompt, openai_responses_model)
+
+      expect(dialect.native_tools).to eq([])
+    end
+
+    it "does not duplicate the OpenAI native web tool when unknown fetch is also present" do
+      prompt =
+        DiscourseAi::Completions::Prompt.new("system", messages: [{ type: :user, content: "hi" }])
+      prompt.native_tools = %w[web_search web_fetch]
+      dialect =
+        DiscourseAi::Completions::Dialects::OpenAiResponses.new(prompt, openai_responses_model)
 
       expect(dialect.native_tools).to eq([{ type: "web_search" }])
     end
