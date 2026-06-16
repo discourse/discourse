@@ -75,6 +75,8 @@ module Jobs
               case status[:error_key]
               when :does_not_meet_or_exceed_promotion_status
                 :info
+              when :should_not_be_displayed
+                :debug
               when :already_notified_about_promotion
                 :debug
               when :already_manually_toggled
