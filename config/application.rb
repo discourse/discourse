@@ -44,7 +44,7 @@ require "pry-rails" if Rails.env.development?
 
 require "discourse_fonts"
 
-require_relative "../lib/ember_cli"
+require_relative "../lib/ember_assets"
 
 if defined?(Bundler)
   bundler_groups = [:default]

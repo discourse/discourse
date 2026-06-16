@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class EmberCli < ActiveSupport::CurrentAttributes
+class EmberAssets < ActiveSupport::CurrentAttributes
   # Cache which persists for the duration of a request
   attribute :request_cache
 
@@ -142,7 +142,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
     { "message" => text, "messageHtml" => ERB::Util.html_escape(text) }
   end
 
-  def self.is_ember_cli_asset?(name)
+  def self.is_ember_asset?(name)
     assets.include?(name) || script_chunks.values.flatten.include?(name.delete_suffix(".js"))
   end
 

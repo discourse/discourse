@@ -23,7 +23,7 @@ class QunitController < ApplicationController
   end
 
   def core
-    @has_test_bundle = EmberCli.has_tests?
+    @has_test_bundle = EmberAssets.has_tests?
     request.env[:resolved_theme_id] = nil
 
     target = params[:target] || "core"
@@ -56,7 +56,7 @@ class QunitController < ApplicationController
   def theme
     raise Discourse::NotFound.new if !can_see_theme_qunit?
 
-    @has_test_bundle = EmberCli.has_tests?
+    @has_test_bundle = EmberAssets.has_tests?
 
     param_key = nil
     if (id = get_param(:id)).present?
