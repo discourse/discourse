@@ -64,6 +64,17 @@ after_initialize do
     end
   end
 
+  if defined?(Graphiti)
+    # Skip per-attribute read typecasting. ActiveRecord already returns correct
+    # Ruby types, so the coercion is redundant work — and the :datetime read
+    # coercer in particular forces TimeWithZone -> DateTime (a Rational/tzinfo
+    # allocation storm). Measured ~24% fewer allocations on flat reads.
+    # Trade-off: datetimes render in TimeWithZone's native format
+    # (millisecond + "Z") rather than DateTime#iso8601 ("+00:00", no fractional).
+    # See docs/api-modernization-exploration.md (Part 8).
+    Graphiti.config.typecast_reads = false
+  end
+
   add_to_class(:guardian, :user_is_a_member_of_group?) do |group|
     return false if !current_user
     return true if current_user.admin?
