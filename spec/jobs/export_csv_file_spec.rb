@@ -515,4 +515,75 @@ RSpec.describe Jobs::ExportCsvFile do
     expect(export_user["custom field 2 (custom user field)"]).to eq("true")
     expect(export_user["custom field 3 (custom user field)"]).to eq("false")
   end
+
+  # Spreadsheet software treats cells beginning with =, +, -, @, tab, or CR as formulas.
+  # Since CSV files are likely to be opened in Excel, LibreOffice, or Google Sheets, neutralize
+  # dangerous characters. If the string begins with dangerous punctuation, or if it begins
+  # with leading whitespace and _then_ dangerous punctuation, prepend a single quote to make
+  # it evaluate as a string.
+  # The escape_comma function in export_csv_file.rb is the main thing being tested here.
+  describe "CSV injection prevention" do
+    it "neutralizes a leading = in user location" do
+      # Most obvious case: =HYPERLINK(...) would create a clickable link in Excel
+      user = Fabricate(:user)
+      user.user_profile.update_column(
+        :location,
+        '=HYPERLINK("https://meta.discourse.org/","Click me")',
+      )
+
+      export_user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
+
+      # Value contains commas so it gets CSV-quoted; the ' prefix is inside the quotes
+      expect(export_user["location"]).to include("'=HYPERLINK")
+    end
+
+    it "neutralizes a leading + formula trigger in user name" do
+      # + is a valid formula trigger, less obvious than =
+      user = Fabricate(:user)
+      user.update_columns(name: '+cmd|\'/ C calc\'!A0')
+
+      export_user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
+
+      expect(export_user["name"]).to start_with("'+cmd")
+    end
+
+    it "neutralizes a formula trigger preceded by leading spaces in user location" do
+      # Spreadsheets strip leading whitespace before evaluating, so
+      # "   =cmd..." is still executed as a formula
+      user = Fabricate(:user)
+      user.user_profile.update_column(:location, "   =cmd|'/c calc.exe'!A")
+
+      export_user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
+
+      expect(export_user["location"]).to start_with("'   =cmd")
+    end
+
+    it "neutralizes a leading tab character formula trigger in user location" do
+      # Tab as a leading character is a formula trigger in some spreadsheet
+      # software and can also be used to obfuscate other triggers
+      user = Fabricate(:user)
+      user.user_profile.update_column(:location, "\t=HYPERLINK(\"https://meta.discourse.org/\",\"Click me\")")
+
+      export_user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
+
+      # because the test string has both a leading dangerous character and a comma
+      # in the middle, the single quote will get appended, but then the whole string
+      # gets wrapped in double quotes. So it begins with "'=HYPERLINK
+      expect(export_user["location"]).to start_with("\"'\t=HYPERLINK")
+    end
+
+    it "neutralizes an @ formula trigger in a custom user field" do
+      # @ triggers formula evaluation in Google Sheets and LibreOffice
+      user_field = Fabricate(:user_field, name: "company")
+      user = Fabricate(:user)
+      user.set_user_field(user_field.id, "@SUM(1+1)*cmd|' /C calc'!A0")
+      user.save!
+
+      user_list_header.push("company (custom user field)")
+
+      export_user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
+
+      expect(export_user["company (custom user field)"]).to start_with("'")
+    end
+  end
 end
