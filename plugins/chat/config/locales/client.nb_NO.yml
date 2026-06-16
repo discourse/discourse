@@ -85,6 +85,7 @@ nb_NO:
           one: "%{count} medlem"
           other: "%{count} medlemmer"
       create_channel:
+        description: "Beskrivelse"
         type: "Type"
         types:
           category: "Kategori"

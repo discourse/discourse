@@ -81,6 +81,7 @@ ca:
         title: Missatge nou
         prefix: "A:"
       create_channel:
+        description: "Descripció"
         type: "Tipus"
         types:
           category: "Categoria"

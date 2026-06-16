@@ -120,6 +120,7 @@ bg:
         title: Ново Съобщение
         prefix: "До:"
       create_channel:
+        description: "Описание"
         type: "Тип"
         types:
           category: "Категория"

@@ -2853,6 +2853,10 @@ hu:
       publish: "Megosztott vázlat közzététele"
       confirm_publish: "Biztos, hogy közzéteszi ezt a vázlatot?"
       publishing: "Téma közzététele…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metaadat"
     composer:
       autocomplete:
         username_missing: "A kiválasztott automatikus kiegészítési találatból hiányzik a felhasználónév."
@@ -5546,12 +5550,6 @@ hu:
             bookmarks: "%{category} kategória címke nélküli témái, amelyeket könyvjelzőhöz adtál"
             default: "%{filter} témák a(z) %{category} kategóriában címkék nélkül"
         categories: "Minden kategória"
-    content_localization:
-      toggle_localized:
-        translated: "Az oldal gépi fordítású. Kattintson az eredeti megtekintéséhez."
-        not_translated: "Az oldal nincs lefordítva. Kattintson a fordításhoz."
-        translations_enabled: "Fordítások engedélyezve"
-        translations_disabled: "Fordítások letiltva"
     language_switcher:
       title: "Oldal nyelvének módosítása"
   admin_js:

@@ -2913,6 +2913,10 @@ ur:
       publish: "مشترکہ مسودہ شائع کریں"
       confirm_publish: "کیا آپ واقعی اِس ڈرافٹ کو شائع کرنا چاہتے ہیں؟"
       publishing: "اشاعت کا موضوع۔۔۔"
+    codemirror:
+      expression:
+        sections:
+          metadata: "میٹا ڈیٹا"
     composer:
       autocomplete:
         username_missing: "منتخب کردہ خودکار تکمیل کا نتیجہ اسمِ صارف سے عاری ہے۔"
@@ -3742,6 +3746,10 @@ ur:
         link: "سرگرمی کا لاگ"
         title: "موضوع کی سرگرمی کا لاگ"
         empty: "موضوع کی دکھانے کے لیے سرگرمی نہیں ہے۔"
+      context:
+        banner: "آپ اس موضوع کے ایک واحد دھاگے کو دیکھ رہے ہیں۔"
+        view_full_topic: "مکمل موضوع دیکھیں"
+        view_parent_context: "بنیادی سیاق و سباق دیکھیں"
     topic:
       filter_to:
         one: "موضوع میں %{count} پوسٹ"
@@ -5670,10 +5678,6 @@ ur:
             bookmarks: "%{category} میں موضوعات ان دہجیوں کے بغیر جنہیں آپ نے بک مارک کیا"
             default: "%{filter} موضوعات %{category} میں بغیر دہجیوں کے"
         categories: "تمام زمرہ جات"
-    content_localization:
-      toggle_localized:
-        translated: "یہ صفحہ خودکار ترجمہ شدہ ہے۔ اصل دیکھنے کے لیے کلک کریں"
-        not_translated: "صفحہ ترجمہ شدہ نہیں ہے۔ ترجمہ کرنے کے لیے کلک کریں"
   admin_js:
     type_to_filter: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
     settings: "ترتیبات"

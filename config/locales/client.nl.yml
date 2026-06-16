@@ -1638,7 +1638,6 @@ nl:
       enable_smart_lists: "Schakel slimme lijsten in bij schrijven in de editor"
       enable_defer: "Als gelezen markeren van topics inschakelen"
       enable_markdown_monospace_font: "Gebruik een monospace lettertype in de Markdown-modus van de editor"
-      show_original_content: "Geef originele content weer in plaats van vertaalde content. Kan ook worden in-/uitgeschakeld binnen topics."
       experimental_sidebar:
         enable: "Zijbalk inschakelen"
         options: "Opties"
@@ -2897,6 +2896,10 @@ nl:
       publish: "Gedeeld concept publiceren"
       confirm_publish: "Weet je zeker dat je dit concept wilt publiceren?"
       publishing: "Topic publiceren…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metagegevens"
     composer:
       autocomplete:
         username_missing: "De gebruikersnaam ontbreekt in het geselecteerde automatisch ingevulde resultaat."
@@ -3718,6 +3721,10 @@ nl:
       topic_admin_menu:
         enable_nested_replies: "Geneste antwoorden inschakelen"
         disable_nested_replies: "Geneste antwoorden uitschakelen"
+      context:
+        banner: "Je bekijkt een enkele thread van dit topic."
+        view_full_topic: "Volledig topic weergeven"
+        view_parent_context: "Bovenliggende context weergeven"
     topic:
       filter_to:
         one: "%{count} bericht in topic"
@@ -5713,12 +5720,6 @@ nl:
             bookmarks: "Topics in %{category} zonder tags waarvoor je een bladwijzer hebt"
             default: "%{filter} topics in %{category} zonder tags"
         categories: "Alle categorieën"
-    content_localization:
-      toggle_localized:
-        translated: "Pagina is machinaal vertaald. Klik om het origineel te bekijken."
-        not_translated: "Pagina is niet vertaald. Klik om te vertalen."
-        translations_enabled: "Vertalingen ingeschakeld"
-        translations_disabled: "Vertalingen uitgeschakeld"
     language_switcher:
       title: "Sitetaal wijzigen"
   admin_js:

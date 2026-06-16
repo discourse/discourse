@@ -13,7 +13,7 @@ fr:
   js:
     filters:
       unassigned:
-        title: "Désattribué"
+        title: "Non attribué"
         help: "Sujets qui ne sont pas attribués"
     action_codes:
       assigned: "Attribué à %{who} le %{when}"

@@ -3157,6 +3157,10 @@ ru:
       modal_title: "Поиск GIF-изображений"
       composer_title: "Вставить GIF"
       no_results: "Введите ключевое слово выше для поиска GIF-файлов."
+    codemirror:
+      expression:
+        sections:
+          metadata: "Метаданные"
     composer:
       autocomplete:
         username_missing: "В выбранном результате автозаполнения отсутствует имя пользователя."
@@ -6126,12 +6130,6 @@ ru:
             bookmarks: "Темы в категории «%{category}» без тегов, которые вы добавили в закладки"
             default: "%{filter} темы в категории «%{category}» без тегов"
         categories: "Все категории"
-    content_localization:
-      toggle_localized:
-        translated: "Страница переведена автоматически. Нажмите, чтобы увидеть оригинал."
-        not_translated: "Страница не переведена. Нажмите, чтобы перевести."
-        translations_enabled: "Переводы включены"
-        translations_disabled: "Переводы отключены"
     language_switcher:
       title: "Изменить язык сайта"
   admin_js:

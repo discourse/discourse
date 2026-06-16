@@ -1873,7 +1873,6 @@ uk:
       enable_smart_lists: "Увімкніть розумні списки під час запису в композитор"
       enable_defer: "Увімкнути позначення тем як непрочитані"
       enable_markdown_monospace_font: "Використовувати моноширинний шрифт у режимі Markdown редактора тексту"
-      show_original_content: "Показувати оригінальний контент замість перекладеного. Також можна вмикати/вимикати в межах тем."
       experimental_sidebar:
         enable: "Увімкнути бічну панель"
         options: "Параметри"
@@ -3255,6 +3254,10 @@ uk:
       bad_api_key: "Ключ API Klipy відсутній або недійсний. Будь ласка, перевірте налаштування ключа API GIF."
       error_rate_limit: "Ми досягли лімітів швидкості GIF API. Зачекайте хвилинку та спробуйте ще раз."
       error_search_too_long: "Будь ласка, скоротіть пошуковий запит до менше ніж 50 символів і спробуйте ще раз."
+    codemirror:
+      expression:
+        sections:
+          metadata: "Метадані"
     composer:
       autocomplete:
         username_missing: "У вибраному результаті автозаповнення відсутнє ім’я користувача."
@@ -4270,6 +4273,10 @@ uk:
         link: "Журнал дій"
         title: "Журнал активності теми"
         empty: "Немає активності в темі для відображення."
+      context:
+        banner: "Ви переглядаєте одну тему в цій гілці."
+        view_full_topic: "Переглянути всю тему"
+        view_parent_context: "Переглянути батьківський контекст"
     topic:
       filter_to:
         one: "%{count} допис в темі"
@@ -6536,12 +6543,6 @@ uk:
             bookmarks: "Теми в %{category} без тегів, які ви додали до закладок"
             default: "%{filter} теми в %{category} без тегів"
         categories: "Всі розділи"
-    content_localization:
-      toggle_localized:
-        translated: "Сторінку перекладено машинним способом. Натисніть, щоб переглянути оригінал."
-        not_translated: "Сторінку не перекладено. Натисніть, щоб перекласти."
-        translations_enabled: "Переклади ввімкнено"
-        translations_disabled: "Переклади вимкнено"
     language_switcher:
       title: "Змінити мову сайту"
   admin_js:
