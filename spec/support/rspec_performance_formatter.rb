@@ -9,6 +9,8 @@ class RspecPerformanceFormatter
       MethodProfiler.start
       yield
       summarize(MethodProfiler.stop)
+    ensure
+      MethodProfiler.clear
     end
 
     def collect_requests
