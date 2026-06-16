@@ -104,6 +104,8 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "post-small-action-class",
   "post-small-action-custom-component",
   "post-small-action-icon",
+  "post-user-display-name",
+  "post-user-display-username",
   "poster-name-class",
   "poster-name-icons",
   "poster-name-user-title",
