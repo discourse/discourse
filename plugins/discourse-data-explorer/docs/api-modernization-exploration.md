@@ -1,7 +1,7 @@
 # API Modernization Exploration
 
 **Status:** Exploratory / RFC — Graphiti spike in progress (see Part 8)
-**Last updated:** 2026-06-11
+**Last updated:** 2026-06-16
 **Scope:** Contained in the `discourse-data-explorer` plugin. Core touches are limited to
 two lines: the `graphiti`/`graphiti-rails` entries in the root `Gemfile`, and a
 `Group.has_many :query_groups` association patch in `plugin.rb` (needed by the `groups`
@@ -886,8 +886,96 @@ citizen):
   before `ActionDispatch::ShowExceptions` (per-request handler-context hygiene, benign) →
   acknowledged in core's `spec/integrity/middleware_order_spec.rb` expected list.
 
+### Step 8 — performance (done)
+
+Two complementary methods. **In-process cost model** (env-independent for allocations &
+query-counts; wall-time is relative): Graphiti (A) vs an AMS-equivalent rendering the same
+output (B) vs the legacy `QuerySerializer` (C). **HTTP throughput** (profile env =
+production-like, 3 pitchfork workers, 12-core box, oha + wrk, rate-limiter off).
+
+**In-process cost model** (median ms; allocations @N=1000):
+
+| impl / scenario | N=10 | N=100 | N=1000 | allocs @1000 |
+|---|---|---|---|---|
+| A graphiti flat | 0.85 ms | 5.2 ms | 50 ms | 144K |
+| A graphiti +incl | 2.8 ms | 18 ms | 561 ms | 1.28M |
+| B ams flat | 0.36 ms | 1.4 ms | 13 ms | 18K |
+| B ams +incl | 1.9 ms | 8.4 ms | 100 ms | 92K |
+| C legacy (fixed) | 1.8 ms | 6.6 ms | 81 ms | 71K |
+
+- Read economics are fine for all three (A=3 / B=4 / C=4 queries, no N+1; **goldiloader
+  silently batches the legacy serializer's `user` access**, neutralizing the latent N+1 I
+  flagged earlier). The differentiator is **Ruby CPU + allocations**, not SQL.
+- Graphiti carries a real per-record tax vs an equivalent AMS — **modest at realistic page
+  sizes** (~1.5× time / ~2× allocs at N=10) but a **steeper slope** (~4–6× time / ~8–14×
+  allocs at N=1000). Allocations (~1,285/record for +incl) → GC pressure is the scaling risk.
+- The extreme N=1000 +incl figure is inflated by our `many_to_many` `assign_each` (O(parents
+  × children × join-rows); a seed quirk maximized it) + GC; the **flat** row is the cleaner
+  pure-serialization signal.
+
+**HTTP throughput** (req/s @ page size 50, 3 workers; oha, wrk-cross-checked):
+
+| endpoint | req/s | p50 | p99 |
+|---|---|---|---|
+| A flat | 450 | 18 ms | 23 ms |
+| A +includes (user,groups) | 149 | 53 ms | 77 ms |
+| C legacy index (AMS) | 270 | 30 ms | 37 ms |
+
+- **A flat (450) > legacy index (270) is an *endpoint* result, not a framework verdict** —
+  the legacy index does extra per-request work (merges `Queries.default`, computes
+  `total_rows`, builds `load_more`). The clean *framework* comparison is the in-process
+  A-vs-B above (Graphiti slower than AMS). Both true; different baselines.
+- **Compound documents are the cost center: +includes is 3× flat** (149 vs 450 rps),
+  consistent across both methods. For a JSON:API/WarpDrive API (whose point *is* compound
+  docs), this is the number to provision for: **~50 rps/worker at page size 50** for a
+  2-relationship document. Saturation is clean & worker-bound (c=1→49, c=8→149, c=16→153
+  rps; latency climbs, rps plateaus; scales ~linearly with workers).
+
+**Graphiti sideload concurrency: a measured two-regime trade-off** (both regimes tested).
+
+*Shallow/cheap sideloads* (the common case: `user`+`groups`, fast `IN` queries) — HTTP A/B,
+page size 50, +includes:
+
+| concurrency | c=1 | c=8 | c=16 |
+|---|---|---|---|
+| OFF | 68 rps | 190 rps | 191 rps |
+| ON (prod default) | 49 rps | 149 rps | 153 rps |
+| Δ | **+39%** | **+28%** | **+25%** |
+
+The **c=1** delta (+39%, zero external concurrency → no contention possible) proves it's
+**pure per-request overhead**: spinning threads + snapshotting `Thread.current`/Fiber storage
+per task (`Scope#future_with_context`) + connection checkout costs more than overlapping two
+cheap queries. Off also makes the tight `pool: 5` a non-issue (1 connection/request).
+
+*Expensive sideloads* (synthetic: 4 sibling sideloads each `pg_sleep(15ms)`) — in-process
+single-request latency:
+
+| concurrency | median | 
+|---|---|
+| ON | **30 ms** (4× 15ms sleeps overlap → ~20ms) |
+| OFF | **70 ms** (4× 15ms sequential → ~60ms) |
+
+Here threading **wins ~2.3× (−57% latency)** — it overlaps the I/O. So the regimes genuinely
+flip; the crossover is where per-sideload overlappable I/O exceeds the thread overhead.
+
+Two qualifiers: **(1)** `pg_sleep` is the best case (pure I/O, zero CPU); real expensive
+sideloads also do GIL-bound serialization that won't parallelize, so real gains land below
+−57%. **(2)** Concurrency is a **global, process-wide switch** (memoized executor) — *not*
+per-resource/per-request. So it's one decision for the whole app: pick the regime your traffic
+is dominated by. For Discourse (cheap indexed-FK sideloads dominate) → **OFF**, accepting that a
+rare expensive-sideload endpoint forfeits the overlap. This also recasts the Part 6 concurrency
+caveat: the thread-local propagation isn't only a correctness risk — it's a measurable tax that
+only pays for itself under genuine sideload I/O.
+
+**Performance guidance distilled:** cap page sizes; be deliberate about default `include`s
+(each relationship is ~3× cost); prefer `belongs_to`/`has_many` over `many_to_many` on hot
+paths (assign O(n×m)); run Graphiti with `concurrency = false` by default (it's a global,
+process-wide switch — can't vary per resource; cheap sideloads dominate Discourse traffic and
+it's measurably faster there), flipping to `true` only if expensive/slow sideloads dominate;
+size the DB pool for whatever concurrency you keep.
+
 ### Spike status: complete
 
-All planned steps done (0–7). Every Graphiti question answered hands-on; working code +
-specs behind each claim. See Part 6 for the distilled caveats and Part 7 for the
-recommendation.
+All planned steps done (0–8). Every Graphiti question answered hands-on; working code +
+specs + measurements behind each claim. See Part 6 for the distilled caveats and Part 7 for
+the recommendation.
