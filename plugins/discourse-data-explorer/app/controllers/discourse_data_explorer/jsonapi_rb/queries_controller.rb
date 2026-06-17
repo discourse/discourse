@@ -4,15 +4,18 @@ module DiscourseDataExplorer
   module JsonapiRb
     # Thin-layers alternative to the Graphiti QueryResource, built to PARITY with
     # it for an honest comparison (see docs/api-modernization-exploration.md,
-    # Part 9). jsonapi.rb's mixins handle the happy path (Ransack filtering,
-    # offset pagination, include + sparse fieldsets, deserialization); the rest —
-    # strict params, custom filter names, keyset cursor, stats shape, default
-    # sort, admin-only field — is hand-rolled, which is exactly what Graphiti
-    # provides out of the box. Renders explicitly (graphiti-rails owns the
-    # `:jsonapi` renderer in this app).
+    # Part 9). jsonapi.rb's mixins handle offset pagination, include + sparse
+    # fieldsets, and deserialization; the rest — filtering, strict params, keyset
+    # cursor, stats shape, default sort, admin-only field — is hand-rolled, which
+    # is exactly what Graphiti provides out of the box.
+    #
+    # NOTE: we deliberately do NOT use jsonapi.rb's `JSONAPI::Filtering` mixin. It
+    # is built on Ransack, and Ransack bundles Polyamorous, which globally
+    # monkeypatches ActiveRecord's join aliasing (association name instead of table
+    # name) and breaks core Discourse SQL — see Part 9. So filtering is hand-rolled.
+    # Renders explicitly (graphiti-rails owns the `:jsonapi` renderer in this app).
     class QueriesController < ::ApplicationController
       include ::JSONAPI::Fetching
-      include ::JSONAPI::Filtering
       include ::JSONAPI::Pagination
       include ::JSONAPI::Deserialization
 
@@ -25,18 +28,15 @@ module DiscourseDataExplorer
       before_action :reject_unknown_params!, only: :index
 
       PRELOAD = %i[user groups].freeze
-      # Ransack allowlist (also required on the model — Query.ransackable_attributes).
-      FILTERABLE = %w[name description last_run_at].freeze
-      # Public filter names → Ransack predicates. Graphiti named filters directly
-      # (`filter :search`); Ransack uses predicate-suffixed names, so we alias.
-      FILTER_ALIASES = { "search" => "name_or_description_cont" }.freeze
+      # The only public filter (matching Graphiti's `filter :search`). Hand-rolled
+      # rather than via Ransack — see the class comment.
+      ALLOWED_FILTERS = %w[search].freeze
       ALLOWED_SORTS = %w[name last_run_at username].freeze
       DEFAULT_SORT = { last_run_at: :desc }.freeze
       MAX_PAGE_SIZE = 100
 
       def index
-        scope = with_username_sort(base_scope)
-        scope = jsonapi_filter(translate_filter_aliases!(scope), FILTERABLE).result
+        scope = apply_filters(with_username_sort(base_scope))
         scope = scope.order(DEFAULT_SORT) if params[:sort].blank?
         scope = scope.includes(*PRELOAD)
 
@@ -82,10 +82,10 @@ module DiscourseDataExplorer
         )
       end
 
-      # Graphiti 400s on an unknown filter/sort; Ransack + jsonapi.rb silently
-      # ignore them, so we reject explicitly to match the strict contract.
+      # Graphiti 400s on an unknown filter/sort; jsonapi.rb would silently ignore
+      # them, so we reject explicitly to match the strict contract.
       def reject_unknown_params!
-        bad = (params[:filter]&.keys || []).map(&:to_s) - FILTER_ALIASES.keys
+        bad = (params[:filter]&.keys || []).map(&:to_s) - ALLOWED_FILTERS
         bad +=
           params[:sort]
             .to_s
@@ -100,12 +100,18 @@ module DiscourseDataExplorer
         )
       end
 
-      def translate_filter_aliases!(scope)
-        FILTER_ALIASES.each do |public_name, predicate|
-          next unless params[:filter].respond_to?(:key?) && params[:filter].key?(public_name)
-          params[:filter][predicate] = params[:filter].delete(public_name)
-        end
-        scope
+      # Graphiti exposed `filter :search` declaratively; here we own the SQL. Only
+      # `search` is allowed (enforced by reject_unknown_params!), matching the
+      # Graphiti QueryResource's name/description search.
+      def apply_filters(scope)
+        search = params.dig(:filter, :search)
+        return scope if search.blank?
+
+        pattern = "%#{ActiveRecord::Base.sanitize_sql_like(search.to_s.downcase)}%"
+        scope.where(
+          "LOWER(data_explorer_queries.name) LIKE :q OR LOWER(data_explorer_queries.description) LIKE :q",
+          q: pattern,
+        )
       end
 
       # `username` needs a join. Ransack's native route would require making the
