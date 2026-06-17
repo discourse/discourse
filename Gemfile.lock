@@ -345,6 +345,11 @@ GEM
     jsonapi-renderer (0.2.2)
     jsonapi-serializable (0.3.1)
       jsonapi-renderer (~> 0.2.0)
+    jsonapi-serializer (2.2.0)
+      activesupport (>= 4.2)
+    jsonapi.rb (2.1.1)
+      jsonapi-serializer
+      rack
     jwt (2.10.1)
       base64
     landlock (0.2)
@@ -586,6 +591,10 @@ GEM
     rainbow (3.1.1)
     raindrops (0.20.1)
     rake (13.4.2)
+    ransack (4.4.1)
+      activerecord (>= 7.2)
+      activesupport (>= 7.2)
+      i18n
     rb-fsevent (0.11.2)
     rb-inotify (0.11.1)
       ffi (~> 1.0)
@@ -918,6 +927,7 @@ DEPENDENCIES
   json
   json_completer
   json_schemer
+  jsonapi.rb
   landlock
   liquid (= 5.12.0)
   listen
@@ -976,6 +986,7 @@ DEPENDENCIES
   railties (~> 8.0.0)
   raindrops
   rake
+  ransack
   rb-fsevent
   rbtrace
   rchardet
@@ -1156,6 +1167,8 @@ CHECKSUMS
   json_schemer (2.5.0) sha256=2f01fb4cce721a4e08dd068fc2030cffd0702a7f333f1ea2be6e8991f00ae396
   jsonapi-renderer (0.2.2) sha256=b5c44b033d61b4abdb6500fa4ab84807ca0b36ea0e59e47a2c3ca7095a6e447b
   jsonapi-serializable (0.3.1) sha256=221e657677659d798e268a33ec97a83ec5ea0e4233f931358db84e88056552e9
+  jsonapi-serializer (2.2.0) sha256=f8141ac6f0c1e17e8513df68f8341afe2d7bffc285841d7090bc07f07efb0029
+  jsonapi.rb (2.1.1) sha256=e6d3c60b6d6236bc91dddd0a2b38c2c0ecd7530a8ef63778c6175420cc36537d
   jwt (2.10.1) sha256=e6424ae1d813f63e761a04d6284e10e7ec531d6f701917fadcd0d9b2deaf1cc5
   landlock (0.2) sha256=9bb86d7d12b16485b278ba575d49f55b730089c7a3d0f45a769fe4d7384d5e55
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
@@ -1271,6 +1284,7 @@ CHECKSUMS
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   raindrops (0.20.1) sha256=aa0eb9ff6834f2d9e232ba688bd49cb30be893bc5a3452e74722c94c1fab4730
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
+  ransack (4.4.1) sha256=6aeaac36fc19088570e10da1044e6cfd88c740e20f871b84566fd30e32b7a63d
   rb-fsevent (0.11.2) sha256=43900b972e7301d6570f64b850a5aa67833ee7d87b458ee92805d56b7318aefe
   rb-inotify (0.11.1) sha256=a0a700441239b0ff18eb65e3866236cd78613d6b9f78fea1f9ac47a85e47be6e
   rbs (4.0.2) sha256=af75671e66cd03434cc546622741ebf83f6197ec4328375805306330bf78ef25
