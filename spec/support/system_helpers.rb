@@ -55,12 +55,38 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    visit File.join(
-            GlobalSetting.relative_url_root || "",
-            "/session/#{user.encoded_username}/become.json?redirect=false",
-          )
+    path =
+      File.join(
+        GlobalSetting.relative_url_root || "",
+        "/session/#{user.encoded_username}/become.json?redirect=false",
+      )
+    url = "http://#{Capybara.server_host}:#{Capybara.server_port}#{path}"
 
-    expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
+    # Have the browser context itself issue the `become` request instead of
+    # navigating Chrome to it. Playwright's APIRequestContext sends the
+    # request with the context's cookies and writes the response cookies back
+    # into the same context, so the auth cookie lands in the browser's own
+    # cookie jar with the right host scope automatically. This keeps every
+    # server-side side effect of `SessionController#become` (`log_on_user`,
+    # auth token generation, the full middleware stack) while skipping an
+    # entire Chrome page navigation per sign-in, with no manual `Set-Cookie`
+    # parsing and no `add_cookies` call.
+    response = page.driver.with_playwright_page { |pw_page| pw_page.context.request.get(url) }
+
+    if !response.ok? ||
+         !response.text.include?("Signed in to #{user.encoded_username} successfully")
+      raise "sign_in for #{user.encoded_username} failed (HTTP #{response.status}): #{response.text[0, 300]}"
+    end
+
+    # The visit-based sign_in left the browser on a real app origin, and specs
+    # (plugin page objects especially) rely on that by calling execute_script
+    # before their first visit. A freshly reset page sits on about:blank, whose
+    # opaque origin denies localStorage and clipboard access, so park on the
+    # cheapest app document to preserve that contract. This real Capybara visit
+    # also marks the session as used, so `Capybara.reset_sessions!` tears down
+    # the authenticated context between examples (e.g. specs that sign in and
+    # then test anonymous access).
+    visit "/srv/status" if !page.current_url.start_with?("http")
   end
 
   def setup_system_test
