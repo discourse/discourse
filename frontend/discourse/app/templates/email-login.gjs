@@ -23,18 +23,19 @@ export default <template>
         {{#if @controller.model.can_login}}
           <div class="email-login-form">
             {{#if @controller.secondFactorRequired}}
-              {{#if @controller.model.security_key_required}}
+              {{#if @controller.showWebauthnForm}}
                 <SecurityKeyForm
-                  @setShowSecurityKey={{fn
-                    (mut @controller.model.security_key_required)
-                  }}
+                  @setShowSecondFactor={{fn (mut @controller.showTokenInput)}}
                   @setSecondFactorMethod={{fn
                     (mut @controller.secondFactorMethod)
                   }}
                   @backupEnabled={{@controller.model.backup_codes_enabled}}
                   @totpEnabled={{@controller.model.totp_enabled}}
-                  @otherMethodAllowed={{@controller.secondFactorRequired}}
-                  @action={{@controller.authenticateSecurityKey}}
+                  @otherMethodAllowed={{@controller.otherTokenMethodsAllowed}}
+                  @passkeysEnabled={{@controller.model.passkeys_enabled}}
+                  @securityKeysEnabled={{@controller.model.security_key_required}}
+                  @passkeyAction={{@controller.authenticatePasskey}}
+                  @securityKeyAction={{@controller.authenticateSecurityKey}}
                 />
               {{else}}
                 <SecondFactorForm
@@ -62,7 +63,7 @@ export default <template>
                 }}</p>
             {{/if}}
 
-            {{#unless @controller.model.security_key_required}}
+            {{#unless @controller.showWebauthnForm}}
               <DButton
                 @label="email_login.confirm_button"
                 @action={{@controller.finishLogin}}

@@ -44,8 +44,11 @@ export default class LoginPageController extends Controller {
   @tracked backupEnabled;
   @tracked totpEnabled;
   @tracked showSecurityKey;
+  @tracked securityKeysEnabled;
+  @tracked passkeysEnabled;
   @tracked securityKeyChallenge;
   @tracked securityKeyAllowedCredentialIds;
+  @tracked passkeyAllowedCredentialIds;
   @tracked secondFactorToken;
   @tracked flash;
   @tracked flashType;
@@ -165,6 +168,11 @@ export default class LoginPageController extends Controller {
   }
 
   @action
+  secondFactorMethodChanged(value) {
+    this.secondFactorMethod = value;
+  }
+
+  @action
   flashChanged(value) {
     this.flash = value;
   }
@@ -224,7 +232,9 @@ export default class LoginPageController extends Controller {
         this.flashType = "error";
 
         if (
-          (result.security_key_enabled || result.totp_enabled) &&
+          (result.security_key_enabled ||
+            result.passkeys_enabled ||
+            result.totp_enabled) &&
           !this.secondFactorRequired
         ) {
           this.otherMethodAllowed = result.multiple_second_factor_methods;
@@ -232,13 +242,22 @@ export default class LoginPageController extends Controller {
           this.showLoginButtons = false;
           this.backupEnabled = result.backup_enabled;
           this.totpEnabled = result.totp_enabled;
+          this.securityKeysEnabled = result.security_key_enabled;
+          this.passkeysEnabled = result.passkeys_enabled;
           this.showSecondFactor = result.totp_enabled;
-          this.showSecurityKey = result.security_key_enabled;
-          this.secondFactorMethod = result.security_key_enabled
-            ? SECOND_FACTOR_METHODS.SECURITY_KEY
-            : SECOND_FACTOR_METHODS.TOTP;
+          this.showSecurityKey =
+            result.security_key_enabled || result.passkeys_enabled;
+          if (result.passkeys_enabled) {
+            this.secondFactorMethod = SECOND_FACTOR_METHODS.PASSKEY;
+          } else if (result.security_key_enabled) {
+            this.secondFactorMethod = SECOND_FACTOR_METHODS.SECURITY_KEY;
+          } else {
+            this.secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
+          }
           this.securityKeyChallenge = result.challenge;
           this.securityKeyAllowedCredentialIds = result.allowed_credential_ids;
+          this.passkeyAllowedCredentialIds =
+            result.passkey_allowed_credential_ids;
 
           return;
         } else if (result.reason === "not_activated") {

@@ -1,5 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Signing In", function () {
@@ -122,6 +123,42 @@ acceptance("Signing In", function () {
       .isNotVisible("does not display the second factor prompt");
     assert.dom("#security-key").isVisible("shows the security key prompt");
     assert.dom("#login-button").isNotVisible("hides the login button");
+  });
+
+  test("passkey as second factor", async function (assert) {
+    const calls = [];
+    sinon.stub(navigator.credentials, "get").callsFake((options) => {
+      calls.push(options);
+      const error = new Error("credential get cancelled in tests");
+      error.name = "NotAllowedError";
+      return Promise.reject(error);
+    });
+
+    await visit("/");
+    await click("header .login-button");
+
+    assert.dom(".login-fullpage").exists("shows the login page");
+
+    await fillIn("#login-account-name", "eviltrout");
+    await fillIn("#login-account-password", "need-passkey-2fa");
+    await click(".login-fullpage .btn-primary");
+
+    assert
+      .dom("#credentials")
+      .isNotVisible("hides the username and password prompt");
+    assert
+      .dom("#passkey-authenticate-button")
+      .isVisible("shows the passkey button");
+    assert
+      .dom("#security-key-authenticate-button")
+      .doesNotExist("security key button is not shown without a security key");
+
+    await click("#passkey-authenticate-button");
+    assert.strictEqual(
+      calls.at(-1).publicKey.userVerification,
+      "required",
+      "the passkey ceremony requires user verification"
+    );
   });
 
   test("second factor backup - valid token", async function (assert) {

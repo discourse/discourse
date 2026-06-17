@@ -44,15 +44,18 @@ export default <template>
             <br />
           {{/if}}
 
-          {{#if @controller.displaySecurityKeyForm}}
+          {{#if @controller.displayWebauthnForm}}
             <SecurityKeyForm
               @setSecondFactorMethod={{fn
                 (mut @controller.selectedSecondFactorMethod)
               }}
               @backupEnabled={{@controller.backupEnabled}}
               @totpEnabled={{@controller.secondFactorRequired}}
-              @otherMethodAllowed={{@controller.otherMethodAllowed}}
-              @action={{@controller.authenticateSecurityKey}}
+              @otherMethodAllowed={{@controller.tokenMethodsAllowed}}
+              @passkeysEnabled={{@controller.passkeysEnabled}}
+              @securityKeysEnabled={{@controller.securityKeyRequired}}
+              @passkeyAction={{@controller.authenticatePasskey}}
+              @securityKeyAction={{@controller.authenticateSecurityKey}}
             />
           {{else}}
             <SecondFactorForm
@@ -71,7 +74,7 @@ export default <template>
             </SecondFactorForm>
           {{/if}}
 
-          {{#unless @controller.displaySecurityKeyForm}}
+          {{#unless @controller.displayWebauthnForm}}
             <DButton
               @isLoading={{@controller.isLoading}}
               @action={{@controller.submit}}
