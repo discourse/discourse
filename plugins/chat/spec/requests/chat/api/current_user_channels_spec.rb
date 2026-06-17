@@ -37,6 +37,15 @@ describe Chat::Api::CurrentUserChannelsController do
           expect(response.parsed_body["direct_message_channels"]).to be_blank
         end
 
+        it "omits global presence channel state" do
+          Fabricate(:category_channel)
+
+          get "/chat/api/me/channels"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).not_to have_key("global_presence_channel_state")
+        end
+
         it "returns an error when public channels are disabled" do
           SiteSetting.enable_public_channels = false
           Fabricate(:category_channel)

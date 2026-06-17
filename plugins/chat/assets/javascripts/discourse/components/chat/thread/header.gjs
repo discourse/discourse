@@ -32,7 +32,7 @@ export default class ChatThreadHeader extends Component {
       route = "chat.threads";
       title = i18n("chat.my_threads.title");
       models = [];
-    } else if (!this.currentUser.isInDoNotDisturb() && this.unreadCount > 0) {
+    } else if (!this.currentUser?.isInDoNotDisturb() && this.unreadCount > 0) {
       route = "chat.channel.threads";
       title = i18n("chat.return_to_threads_list");
       models = this.channel?.routeModels;
@@ -65,8 +65,8 @@ export default class ChatThreadHeader extends Component {
 
   get openThreadTitleModal() {
     if (
-      this.currentUser.admin ||
-      this.currentUser.id === this.args.thread?.originalMessage?.user?.id
+      this.currentUser?.admin ||
+      this.currentUser?.id === this.args.thread?.originalMessage?.user?.id
     ) {
       return () =>
         this.modal.show(ThreadSettingsModal, { model: this.args.thread });
@@ -95,8 +95,10 @@ export default class ChatThreadHeader extends Component {
         class={{if this.openThreadTitleModal "clickable"}}
       />
       <navbar.Actions as |action|>
-        <action.ThreadTrackingDropdown @thread={{@thread}} />
-        <action.ThreadSettingsButton @thread={{@thread}} />
+        {{#if this.currentUser}}
+          <action.ThreadTrackingDropdown @thread={{@thread}} />
+          <action.ThreadSettingsButton @thread={{@thread}} />
+        {{/if}}
         <action.CloseThreadButton @thread={{@thread}} />
       </navbar.Actions>
     </Navbar>

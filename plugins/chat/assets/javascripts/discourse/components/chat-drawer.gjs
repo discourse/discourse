@@ -15,7 +15,6 @@ import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import { anonymousUserCanViewPublicChat } from "discourse/plugins/chat/discourse/lib/anonymous-public-chat-access";
 import chatResizableNode from "discourse/plugins/chat/discourse/modifiers/chat/resizable-node";
 
 @tagName("")
@@ -25,8 +24,6 @@ export default class ChatDrawer extends Component {
   @service chatDrawerSize;
   @service chatStateManager;
   @service chatDrawerRouter;
-  @service currentUser;
-  @service siteSettings;
 
   loading = false;
   sizeTimer = null;
@@ -37,7 +34,7 @@ export default class ChatDrawer extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    if (!this.chat.userCanChat && !this.anonymousUserCanViewPublicChat) {
+    if (!this.chat.userCanChat && !this.chat.anonymousUserCanViewPublicChat) {
       return;
     }
 
@@ -62,7 +59,7 @@ export default class ChatDrawer extends Component {
   willDestroyElement() {
     super.willDestroyElement(...arguments);
 
-    if (!this.chat.userCanChat && !this.anonymousUserCanViewPublicChat) {
+    if (!this.chat.userCanChat && !this.chat.anonymousUserCanViewPublicChat) {
       return;
     }
 
@@ -105,10 +102,6 @@ export default class ChatDrawer extends Component {
     let style = `width: ${escapeExpression((width || "0").toString())}px;`;
     style += `height: ${escapeExpression((height || "0").toString())}px;`;
     this.set("drawerStyle", trustHTML(style));
-  }
-
-  get anonymousUserCanViewPublicChat() {
-    return anonymousUserCanViewPublicChat(this.currentUser, this.siteSettings);
   }
 
   get drawerActions() {

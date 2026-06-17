@@ -13,6 +13,7 @@ RSpec.describe "Anonymous public chat channels" do
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
   let(:chat_sidebar_page) { PageObjects::Pages::ChatSidebar.new }
   let(:login_page) { PageObjects::Pages::Login.new }
@@ -76,5 +77,15 @@ RSpec.describe "Anonymous public chat channels" do
     chat_page.visit_channels
 
     expect(chat_page).to have_public_channel(public_channel)
+  end
+
+  it "lets visitors jump from a public thread to its original message" do
+    public_channel.update!(threading_enabled: true)
+    thread = Fabricate(:chat_thread, channel: public_channel, original_message: existing_message)
+
+    chat_page.visit_thread(thread)
+    thread_page.open_original_message
+
+    expect(channel_page.messages).to have_message(id: thread.original_message.id, highlighted: true)
   end
 end

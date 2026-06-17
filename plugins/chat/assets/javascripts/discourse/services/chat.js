@@ -5,6 +5,7 @@ import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
@@ -12,7 +13,6 @@ import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
-import { anonymousUserCanViewPublicChat } from "discourse/plugins/chat/discourse/lib/anonymous-public-chat-access";
 
 const CHAT_ONLINE_OPTIONS = {
   userUnseenTime: 300000, // 5 minutes seconds with no interaction
@@ -73,7 +73,15 @@ export default class Chat extends Service {
   }
 
   get anonymousUserCanViewPublicChat() {
-    return anonymousUserCanViewPublicChat(this.currentUser, this.siteSettings);
+    return (
+      !this.currentUser &&
+      this.siteSettings.enable_public_channels &&
+      (this.siteSettings.chat_allowed_groups || "")
+        .toString()
+        .split("|")
+        .map((groupId) => parseInt(groupId, 10))
+        .includes(AUTO_GROUPS.anonymous_users.id)
+    );
   }
 
   get canSubscribeToChat() {

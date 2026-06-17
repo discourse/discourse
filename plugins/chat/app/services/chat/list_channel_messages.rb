@@ -72,6 +72,7 @@ module Chat
     def can_view_channel(guardian:, channel:)
       if guardian.anonymous?
         return false if !Chat.anonymous_public_channel_access_allowed?
+        return false if !channel&.category_channel?
       end
 
       guardian.can_preview_chat_channel?(channel)

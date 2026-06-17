@@ -43,6 +43,15 @@ RSpec.describe Chat::Api::ChannelMessagesController do
             [message_1.id, thread_reply.id],
           )
         end
+
+        it "returns an error for a direct message channel" do
+          direct_message_channel =
+            Fabricate(:direct_message_channel, group: true, users: Fabricate.times(3, :user))
+
+          get "/chat/api/channels/#{direct_message_channel.id}/messages"
+
+          expect(response.status).to eq(403)
+        end
       end
     end
 
