@@ -23,6 +23,8 @@ RSpec.describe DiscourseWorkflows::WorkflowDependency do
     it "excludes node types that only exist in an unpublished workflow" do
       graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
       Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
+
+      expect(described_class.active_node_types).not_to include("trigger:topic_closed")
     end
   end
 

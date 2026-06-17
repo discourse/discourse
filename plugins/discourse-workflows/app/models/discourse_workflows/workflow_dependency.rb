@@ -55,6 +55,7 @@ module DiscourseWorkflows
           .distinct
           .pluck(:dependency_key)
           .to_set
+      end
     end
 
     def self.cached_user_modals?
