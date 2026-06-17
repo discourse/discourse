@@ -665,6 +665,12 @@ login:
     default: true
     validator: "EnableLocalLoginsViaEmailValidator"
     area: "login"
+  enable_local_logins_via_code:
+    client: true
+    default: false
+    hidden: true
+    validator: "EnableLocalLoginsViaCodeValidator"
+    area: "login"
   enable_passkeys:
     client: true
     default: true
