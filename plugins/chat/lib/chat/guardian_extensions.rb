@@ -221,6 +221,8 @@ module Chat
       return false if !can_modify_channel_message?(message.chat_channel)
 
       if message.user_id == current_user.id
+        return false if !can_preview_chat_channel?(message.chat_channel)
+
         can_delete_own_chats?(chatable)
       else
         can_delete_other_chats?(chatable)
