@@ -10,6 +10,9 @@ class User < ActiveRecord::Base
 
   DEFAULT_FEATURED_BADGE_COUNT = 3
   MAX_SIMILAR_USERS = 10
+  STAFF_REASON_SANITIZER = Rails::Html::SafeListSanitizer.new
+  STAFF_REASON_ALLOWED_TAGS = %w[a br].freeze
+  STAFF_REASON_ALLOWED_ATTRIBUTES = %w[href rel target].freeze
 
   deprecate_column :flag_level, drop_from: "3.2"
 
@@ -1372,7 +1375,7 @@ class User < ActiveRecord::Base
   def full_silence_reason
     text = silenced_record.try(:details) if silenced?
     return text if text.blank?
-    PrettyText.cleanup(text.gsub("\n", "<br>"))
+    sanitize_staff_reason(text)
   end
 
   def silence_reason
@@ -1398,7 +1401,7 @@ class User < ActiveRecord::Base
   def full_suspend_reason
     text = suspend_record.try(:details) if suspended?
     return text if text.blank?
-    PrettyText.cleanup(text.gsub("\n", "<br>"))
+    sanitize_staff_reason(text)
   end
 
   def suspend_reason
@@ -1407,6 +1410,14 @@ class User < ActiveRecord::Base
     end
 
     nil
+  end
+
+  def sanitize_staff_reason(text)
+    STAFF_REASON_SANITIZER.sanitize(
+      PrettyText.cleanup(text.gsub("\n", "<br>")),
+      tags: STAFF_REASON_ALLOWED_TAGS,
+      attributes: STAFF_REASON_ALLOWED_ATTRIBUTES,
+    )
   end
 
   def suspended_message
