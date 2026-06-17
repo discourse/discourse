@@ -54,6 +54,9 @@ en:
         invalid_unit: "Invalid wait unit: %{unit}."
         invalid_timeout_unit: "Invalid timeout unit: %{unit}."
         timeout_amount_must_be_positive: "Timeout amount must be greater than 0."
+      modal:
+        no_target_user: "No target user is available for the modal."
+        user_not_found: "User '%{username}' not found."
       topic_tags:
         no_tag_names: "No tag names provided."
         operation_failed: "Tag operation failed: %{errors}"

@@ -5,6 +5,7 @@ module DiscourseWorkflows
     self.table_name = "discourse_workflows_workflow_dependencies"
 
     TOPIC_ADMIN_BUTTON_CACHE_KEY = "topic_admin_buttons"
+    USER_MODAL_CACHE_KEY = "has_user_modals"
 
     belongs_to :workflow, class_name: "DiscourseWorkflows::Workflow"
     belongs_to :workflow_version,
@@ -39,6 +40,12 @@ module DiscourseWorkflows
               icon: NodeData.parameters(published_trigger.trigger_node)["icon"],
             }
           end
+      end
+    end
+
+    def self.cached_user_modals?
+      cache.defer_get_set(USER_MODAL_CACHE_KEY) do
+        workflows_referencing("node_type", DiscourseWorkflows::Nodes::Modal::V1.identifier).exists?
       end
     end
 
