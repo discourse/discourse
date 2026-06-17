@@ -1,3 +1,4 @@
+import ActorControl from "../../components/workflows/configurators/actor-control";
 import BooleanControl from "../../components/workflows/configurators/boolean-control";
 import CategoryControl from "../../components/workflows/configurators/category-control";
 import CodeControl from "../../components/workflows/configurators/code-control";
@@ -23,6 +24,7 @@ import UserOrGroupControl from "../../components/workflows/configurators/user-or
 
 const FIELD_CONTROL_REGISTRY = {
   notice: { kind: "standalone", renderer: NoticeControl },
+  actor: { kind: "field", type: "custom", renderer: ActorControl },
   boolean: { kind: "standalone", renderer: BooleanControl },
   condition_builder: { kind: "standalone", renderer: ConditionBuilder },
   data_table_condition_builder: {

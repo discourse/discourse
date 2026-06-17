@@ -167,7 +167,7 @@ module DiscourseWorkflows
               required: false,
               default: "system",
               ui: {
-                control: :user,
+                control: :actor,
               },
             },
           },
@@ -301,7 +301,11 @@ module DiscourseWorkflows
           offset = [Integer(config["offset"] || 0), 0].max
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           topic_query =
-            TopicQuery.new(actor, q: config["query"], per_page: [limit + offset, MAX_LIMIT].min)
+            TopicQuery.new(
+              actor.guardian.user,
+              q: config["query"],
+              per_page: [limit + offset, MAX_LIMIT].min,
+            )
           topic_list = topic_query.list_filter
 
           topics = topic_list.topics.slice(offset, limit) || []

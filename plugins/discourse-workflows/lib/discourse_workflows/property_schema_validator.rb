@@ -85,6 +85,7 @@ module DiscourseWorkflows
     ].freeze
 
     KNOWN_UI_CONTROLS = %i[
+      actor
       boolean
       category
       checkbox
