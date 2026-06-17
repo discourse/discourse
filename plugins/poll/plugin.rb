@@ -194,7 +194,7 @@ after_initialize do
           end
 
         if post_with_polls.present?
-          all_polls = Poll.includes(:poll_options).where(post_id: post_with_polls)
+          all_polls = Poll.includes(:poll_options, :closed_by).where(post_id: post_with_polls)
           Poll.preload!(all_polls, user_id: @user&.id)
           DiscoursePoll::Poll.preload_serialized_voters!(all_polls)
           all_polls.each do |p|
@@ -216,7 +216,7 @@ after_initialize do
       if @topic_view.present?
         @topic_view.polls[object.id]
       else
-        Poll.includes(:poll_options).where(post: object)
+        Poll.includes(:poll_options, :closed_by).where(post: object)
       end
   end
 
