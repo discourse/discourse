@@ -67,14 +67,9 @@ export default class UpsertCategoryGeneral extends Component {
   constructor() {
     super(...arguments);
 
-    const primaryTypeId = this.isEditingExistingCategory
-      ? null
-      : this.categoryTypeChooser.currentSelection?.type;
-
     this.categoryTypes = [...this.categoryTypeChooser.allTypes].map((type) => ({
       ...type,
-      preventRemoval:
-        type.id === DISCUSSION_TYPE_ID || type.id === primaryTypeId,
+      preventRemoval: type.id === DISCUSSION_TYPE_ID,
     }));
   }
 
