@@ -16,12 +16,6 @@ RSpec.describe EmailLoginCode do
       expect(record.email).to eq("foo@example.com")
     end
 
-    it "stores the requesting IP" do
-      record = described_class.generate!(email: "foo@example.com", requested_ip: "1.2.3.4")
-
-      expect(record.requested_ip.to_s).to eq("1.2.3.4")
-    end
-
     it "deletes prior codes for the same email case-insensitively" do
       old_record = described_class.generate!(email: "FOO@example.com")
       other_record = described_class.generate!(email: "bar@example.com")

@@ -4817,7 +4817,6 @@ CREATE TABLE public.email_login_codes (
     email character varying NOT NULL,
     code_hash character varying NOT NULL,
     attempts integer DEFAULT 0 NOT NULL,
-    requested_ip inet,
     expires_at timestamp(6) without time zone NOT NULL,
     consumed_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,

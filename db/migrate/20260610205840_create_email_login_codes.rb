@@ -5,7 +5,6 @@ class CreateEmailLoginCodes < ActiveRecord::Migration[8.0]
       t.string :email, null: false
       t.string :code_hash, null: false
       t.integer :attempts, null: false, default: 0
-      t.inet :requested_ip
       t.datetime :expires_at, null: false
       t.datetime :consumed_at
       t.timestamps

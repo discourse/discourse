@@ -61,6 +61,12 @@ export default class CodeLoginForm extends Component {
     return this.step === "second-factor";
   }
 
+  // Whether a second factor other than the security key is available to fall
+  // back to (TOTP or backup codes).
+  get otherSecondFactorAllowed() {
+    return this.totpEnabled || this.backupCodesEnabled;
+  }
+
   // Re-rendering DOtp with a fresh identity is the only way to clear it
   get otpGenerationArray() {
     return [this.otpGeneration];
@@ -384,7 +390,7 @@ export default class CodeLoginForm extends Component {
               @setSecondFactorMethod={{this.setSecondFactorMethod}}
               @backupEnabled={{this.backupCodesEnabled}}
               @totpEnabled={{this.totpEnabled}}
-              @otherMethodAllowed={{this.totpEnabled}}
+              @otherMethodAllowed={{this.otherSecondFactorAllowed}}
               @action={{this.authenticateSecurityKey}}
             />
           {{else}}

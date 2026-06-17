@@ -28,7 +28,6 @@ RSpec.describe EmailLoginCode::Request do
 
       it "generates a login code for the email" do
         expect { result }.to change { EmailLoginCode.for_email(user.email).count }.by(1)
-        expect(EmailLoginCode.last.requested_ip.to_s).to eq("127.0.0.1")
       end
 
       it "enqueues the login code email" do

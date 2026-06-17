@@ -44,8 +44,8 @@ class EmailLoginCode::Request
     DiscourseEvent.trigger(:before_email_login, user)
   end
 
-  def generate_login_code(params:, ip_address:)
-    EmailLoginCode.generate!(email: params.email, requested_ip: ip_address)
+  def generate_login_code(params:)
+    EmailLoginCode.generate!(email: params.email)
   end
 
   def send_login_code_email(login_code:)

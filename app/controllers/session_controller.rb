@@ -502,9 +502,7 @@ class SessionController < ApplicationController
     # the behavior for emails we refuse to deliver to.
     return render json: success_json if login_code_honeypot_fails?
 
-    EmailLoginCode::Request.call(
-      service_params.deep_merge(ip_address: request.remote_ip),
-    ) do |result|
+    EmailLoginCode::Request.call(service_params) do |result|
       on_success { render json: success_json }
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
@@ -900,9 +898,7 @@ class SessionController < ApplicationController
       end
     end
 
-    EmailLoginCode::Redeem.call(
-      service_params.deep_merge(ip_address: request.remote_ip),
-    ) do |result|
+    EmailLoginCode::Redeem.call(service_params) do |result|
       on_success { |user:| login_with_login_code(user) }
       on_failure { render json: invalid_login_code }
     end

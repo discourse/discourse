@@ -19,7 +19,7 @@ class EmailLoginCode < ActiveRecord::Base
         end
   scope :for_email, ->(email) { where("lower(email) = ?", email.downcase) }
 
-  def self.generate!(email:, requested_ip: nil)
+  def self.generate!(email:)
     email = email.downcase
 
     code = SecureRandom.random_number(10**CODE_LENGTH).to_s.rjust(CODE_LENGTH, "0")
@@ -27,13 +27,7 @@ class EmailLoginCode < ActiveRecord::Base
     record = nil
     transaction do
       where("lower(email) = ?", email).delete_all
-      record =
-        create!(
-          email: email,
-          code_hash: hash_code(code),
-          requested_ip: requested_ip,
-          expires_at: VALID_FOR.from_now,
-        )
+      record = create!(email: email, code_hash: hash_code(code), expires_at: VALID_FOR.from_now)
     end
 
     record.instance_variable_set(:@code, code)
@@ -90,15 +84,14 @@ end
 #
 # Table name: email_login_codes
 #
-#  id           :bigint           not null, primary key
-#  attempts     :integer          default(0), not null
-#  code_hash    :string           not null
-#  consumed_at  :datetime
-#  email        :string           not null
-#  expires_at   :datetime         not null
-#  requested_ip :inet
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id          :bigint           not null, primary key
+#  attempts    :integer          default(0), not null
+#  code_hash   :string           not null
+#  consumed_at :datetime
+#  email       :string           not null
+#  expires_at  :datetime         not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
 # Indexes
 #

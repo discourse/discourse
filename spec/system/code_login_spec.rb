@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "rotp"
+
 describe "Login via email code" do
   include ThemeScreenshotMarker
 
@@ -62,6 +64,23 @@ describe "Login via email code" do
 
     fill_code(code)
     expect(page).to have_css(".header-dropdown-toggle.current-user")
+  end
+
+  context "when the user has a second factor" do
+    fab!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
+
+    it "prompts for the second factor before logging in" do
+      start_code_login(user.email)
+      fill_code(latest_emailed_code(user.email))
+
+      expect(page).to have_css(".code-login-form__second-factor-step")
+      screenshot_marker(label: "code-login-second-factor")
+
+      find(".second-factor-token-input").fill_in(with: ROTP::TOTP.new(user_second_factor.data).now)
+      find(".code-login-form__second-factor-step .code-login-form__verify").click
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+    end
   end
 
   it "can switch to the code form and back to password login" do

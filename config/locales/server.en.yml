@@ -3415,7 +3415,7 @@ en:
 
   email_login_code_mailer:
     title: "Email Login Code Mailer"
-    subject_template: "%{email_prefix}: %{code} is your login code"
+    subject_template: "%{code} is your login code"
     text_body_template: |
       Use this code to finish logging in to %{site_name}:
 
