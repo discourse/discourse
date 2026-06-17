@@ -53,7 +53,7 @@ module DiscourseWorkflows
           return [append_inputs(exec_ctx)] unless combine_mode?(exec_ctx)
 
           @input_item_indexes = item_indexes_by_input(exec_ctx.inputs)
-          [combine_by_position(two_inputs(exec_ctx), combine_config(exec_ctx))]
+          [combine_by_position(exec_ctx.inputs, combine_config(exec_ctx))]
         end
 
         private
@@ -73,10 +73,6 @@ module DiscourseWorkflows
 
         def append_inputs(exec_ctx)
           exec_ctx.inputs.flatten(1)
-        end
-
-        def two_inputs(exec_ctx)
-          [exec_ctx.input_items(0), exec_ctx.input_items(1)]
         end
 
         def combine_by_position(inputs, config)
