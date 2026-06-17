@@ -30,11 +30,41 @@ module AuthHelpers
     env
   end
 
-  def create_auth_cookie(token:, user_id: nil, trust_level: nil, issued_at: Time.current)
-    data = { token: token, user_id: user_id, trust_level: trust_level, issued_at: issued_at.to_i }
+  def create_auth_cookie(
+    token:,
+    user_id: nil,
+    username: nil,
+    trust_level: nil,
+    issued_at: Time.current
+  )
+    data = {
+      token: token,
+      user_id: user_id,
+      username: username,
+      trust_level: trust_level,
+      issued_at: issued_at.to_i,
+    }
     jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
     jar.encrypted[:_t] = { value: data }
     CGI.escape(jar[:_t])
+  end
+
+  # Mints a signed `_t` auth cookie for a user entirely in-process, with no HTTP
+  # or Rack request. `UserAuthToken.generate!` is the same model method the auth
+  # provider calls in `log_on_user`, and `create_auth_cookie` encrypts the
+  # payload exactly as the provider's `set_auth_cookie!` does. The payload mirrors
+  # production's, including `username`, because the request tracker reads the
+  # username straight from the cookie to attribute browser pageviews rather than
+  # looking the user up.
+  def auth_cookie_for(user)
+    token = UserAuthToken.generate!(user_id: user.id, staff: user.staff?)
+
+    create_auth_cookie(
+      token: token.unhashed_auth_token,
+      user_id: user.id,
+      username: user.username,
+      trust_level: user.trust_level,
+    )
   end
 
   def decrypt_auth_cookie(cookie)

@@ -55,12 +55,46 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    visit File.join(
-            GlobalSetting.relative_url_root || "",
-            "/session/#{user.encoded_username}/become.json?redirect=false",
-          )
+    # Mint the auth cookie in-process and inject it straight into the browser
+    # context, with no HTTP and no Rack request. `auth_cookie_for` builds the
+    # same encrypted `_t` cookie the auth provider's `set_auth_cookie!` writes,
+    # so the next real navigation is authenticated against the real provider.
+    # `add_cookies` sends the value verbatim and the server URL-decodes it on the
+    # way in, so we hand it the already-escaped value `create_auth_cookie`
+    # returns (the raw value's `/` characters would corrupt the cookie header).
+    cookie = auth_cookie_for(user)
 
-    expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
+    page.driver.with_playwright_page do |pw_page|
+      pw_page.context.add_cookies(
+        [
+          {
+            name: "_t",
+            value: cookie,
+            domain: Capybara.server_host,
+            path: "/",
+            httpOnly: true,
+            sameSite: "Lax",
+          },
+        ],
+      )
+    end
+
+    # The visit-based sign_in left the browser on a real app origin, and specs
+    # (plugin page objects especially) rely on that by calling execute_script
+    # before their first visit. A freshly reset page sits on about:blank, whose
+    # opaque origin denies localStorage and clipboard access, so park on the
+    # cheapest app document to preserve that contract. This real Capybara visit
+    # also marks the session as used, so `Capybara.reset_sessions!` tears down
+    # the authenticated context between examples (e.g. specs that sign in and
+    # then test anonymous access).
+    visit "/srv/status"
+
+    # Fail loudly if the cookie never made it into the context (e.g. a host-scope
+    # mismatch), rather than letting the spec proceed silently as anonymous.
+    cookies = page.driver.with_playwright_page { |pw_page| pw_page.context.cookies }
+    if cookies.none? { |browser_cookie| browser_cookie["name"] == "_t" }
+      raise "sign_in for #{user.encoded_username} failed: auth cookie was not set in the browser context"
+    end
   end
 
   def setup_system_test
