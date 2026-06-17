@@ -21,12 +21,30 @@ module DiscourseWorkflows
 
           uri = build_uri(@config["url"], @config["query_params"])
           headers = (@config["headers"] || {}).to_h.compact
-          Authenticator.apply(@config, headers, @exec_ctx, item_index: @item_index)
+          secret_headers = Authenticator.apply(@config, headers, @exec_ctx, item_index: @item_index)
           body = @config.key?("body") ? @config["body"] : build_body(method, @config, headers)
+          log_request(method, uri, headers, body, secret_headers)
           [method, uri, headers, body]
         end
 
         private
+
+        def log_request(method, uri, headers, body, secret_headers)
+          log = @exec_ctx&.log
+          return if log.nil?
+
+          log.info("#{method.to_s.upcase} #{filtered_url_for_logging(uri.to_s)}")
+          if headers.present?
+            redact_headers(headers, secret_headers).each { |k, v| log.info("#{k}: #{v}") }
+          end
+          log.info("[body omitted]") if body.present?
+        end
+
+        def redact_headers(headers, secret_headers)
+          ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters).filter(
+            headers.merge(secret_headers.index_with { FILTERED_QUERY_VALUE }),
+          )
+        end
 
         def build_uri(url, query_params)
           uri = URI.parse(url)
