@@ -1,30 +1,64 @@
 # frozen_string_literal: true
 
 RSpec.describe AdminDashboardSearch do
+  fab!(:user)
+
   before { freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0)) }
 
   describe ".build" do
-    it "returns KPIs, trending terms, and content gaps for the selected dates" do
-      Fabricate.times(3, :clicked_search_log, term: "ruby", created_at: "2026-05-02 10:00")
-      Fabricate.times(3, :search_log, term: "ruby", created_at: "2026-05-02 11:00")
+    it "returns KPIs, trending terms, and content gaps for the selected dates, counting only logged-in members" do
+      Fabricate.times(
+        3,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-05-02 10:00",
+      )
+      Fabricate.times(3, :search_log, term: "ruby", user: user, created_at: "2026-05-02 11:00")
 
-      Fabricate(:clicked_search_log, term: "markdown tables", created_at: "2026-05-03 10:00")
+      Fabricate(
+        :clicked_search_log,
+        term: "markdown tables",
+        user: user,
+        created_at: "2026-05-03 10:00",
+      )
 
       Fabricate.times(
         4,
         :search_log,
         term: "markdown tables",
+        user: user,
         search_type: SearchLog.search_types[:full_page],
         created_at: "2026-05-03 11:00",
       )
 
-      Fabricate.times(4, :search_log, term: "discobot", created_at: "2026-05-04 10:00")
+      Fabricate.times(4, :search_log, term: "discobot", user: user, created_at: "2026-05-04 10:00")
 
-      Fabricate.times(2, :clicked_search_log, term: "zeta", created_at: "2026-05-04 11:00")
-      Fabricate.times(2, :search_log, term: "zeta", created_at: "2026-05-04 12:00")
+      Fabricate.times(
+        2,
+        :clicked_search_log,
+        term: "zeta",
+        user: user,
+        created_at: "2026-05-04 11:00",
+      )
+      Fabricate.times(2, :search_log, term: "zeta", user: user, created_at: "2026-05-04 12:00")
 
-      Fabricate.times(5, :clicked_search_log, term: "ruby", created_at: "2026-04-26 10:00")
-      Fabricate.times(5, :search_log, term: "ghost", created_at: "2026-04-26 11:00")
+      Fabricate.times(
+        5,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-04-26 10:00",
+      )
+      Fabricate.times(5, :search_log, term: "ghost", user: user, created_at: "2026-04-26 11:00")
+
+      # Anonymous searches (likely crawlers) must be excluded from every metric and from the
+      # prior-window deltas. If counted, "crawler-bait" would top trending, inflate the
+      # no-result rate, and surface as a content gap; the anonymous "ruby" rows would change
+      # its count and the percent change.
+      Fabricate.times(30, :search_log, term: "crawler-bait", created_at: "2026-05-05 10:00")
+      Fabricate.times(10, :search_log, term: "ruby", created_at: "2026-05-02 09:00")
+      Fabricate.times(20, :search_log, term: "crawler-bait", created_at: "2026-04-26 09:00")
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
@@ -55,17 +89,58 @@ RSpec.describe AdminDashboardSearch do
     end
 
     it "buckets terms by exact CTR boundaries" do
-      Fabricate(:clicked_search_log, term: "tiny-ctr", created_at: "2026-05-02 10:00")
-      Fabricate.times(100, :search_log, term: "tiny-ctr", created_at: "2026-05-02 11:00")
+      Fabricate(:clicked_search_log, term: "tiny-ctr", user: user, created_at: "2026-05-02 10:00")
+      Fabricate.times(
+        100,
+        :search_log,
+        term: "tiny-ctr",
+        user: user,
+        created_at: "2026-05-02 11:00",
+      )
 
-      Fabricate.times(5, :clicked_search_log, term: "just-over", created_at: "2026-05-03 10:00")
-      Fabricate.times(19, :search_log, term: "just-over", created_at: "2026-05-03 11:00")
+      Fabricate.times(
+        5,
+        :clicked_search_log,
+        term: "just-over",
+        user: user,
+        created_at: "2026-05-03 10:00",
+      )
+      Fabricate.times(
+        19,
+        :search_log,
+        term: "just-over",
+        user: user,
+        created_at: "2026-05-03 11:00",
+      )
 
-      Fabricate(:clicked_search_log, term: "exact-twenty", created_at: "2026-05-04 10:00")
-      Fabricate.times(4, :search_log, term: "exact-twenty", created_at: "2026-05-04 11:00")
+      Fabricate(
+        :clicked_search_log,
+        term: "exact-twenty",
+        user: user,
+        created_at: "2026-05-04 10:00",
+      )
+      Fabricate.times(
+        4,
+        :search_log,
+        term: "exact-twenty",
+        user: user,
+        created_at: "2026-05-04 11:00",
+      )
 
-      Fabricate.times(3, :search_log, term: "zero-clicks", created_at: "2026-05-05 10:00")
-      Fabricate.times(3, :search_log, term: "alpha-zero", created_at: "2026-05-05 11:00")
+      Fabricate.times(
+        3,
+        :search_log,
+        term: "zero-clicks",
+        user: user,
+        created_at: "2026-05-05 10:00",
+      )
+      Fabricate.times(
+        3,
+        :search_log,
+        term: "alpha-zero",
+        user: user,
+        created_at: "2026-05-05 11:00",
+      )
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
@@ -98,7 +173,12 @@ RSpec.describe AdminDashboardSearch do
 
     it "caps trending and content gaps at the top 10 terms" do
       (1..11).each do |index|
-        Fabricate(:search_log, term: format("gap-%02d", index), created_at: "2026-05-02 10:00")
+        Fabricate(
+          :search_log,
+          term: format("gap-%02d", index),
+          user: user,
+          created_at: "2026-05-02 10:00",
+        )
       end
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
@@ -123,15 +203,51 @@ RSpec.describe AdminDashboardSearch do
     end
 
     it "picks the headline state from the rate and volume signals" do
-      Fabricate(:search_log, term: "ghost", created_at: "2026-05-02 10:00")
-      Fabricate.times(11, :clicked_search_log, term: "ruby", created_at: "2026-05-02 11:00")
-      Fabricate.times(12, :clicked_search_log, term: "ruby", created_at: "2026-04-26 10:00")
+      Fabricate(:search_log, term: "ghost", user: user, created_at: "2026-05-02 10:00")
+      Fabricate.times(
+        11,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-05-02 11:00",
+      )
+      Fabricate.times(
+        12,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-04-26 10:00",
+      )
 
-      Fabricate.times(4, :clicked_search_log, term: "ruby", created_at: "2026-04-02 10:00")
-      Fabricate.times(10, :clicked_search_log, term: "ruby", created_at: "2026-03-27 10:00")
+      Fabricate.times(
+        4,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-04-02 10:00",
+      )
+      Fabricate.times(
+        10,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-03-27 10:00",
+      )
 
-      Fabricate.times(12, :clicked_search_log, term: "ruby", created_at: "2026-03-02 10:00")
-      Fabricate.times(10, :clicked_search_log, term: "ruby", created_at: "2026-02-24 10:00")
+      Fabricate.times(
+        12,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-03-02 10:00",
+      )
+      Fabricate.times(
+        10,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-02-24 10:00",
+      )
 
       expect(
         described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:headline_state],
@@ -147,13 +263,37 @@ RSpec.describe AdminDashboardSearch do
     end
 
     it "resolves overlapping headline states by priority" do
-      Fabricate.times(3, :search_log, term: "ghost", created_at: "2026-02-02 10:00")
-      Fabricate.times(7, :clicked_search_log, term: "ruby", created_at: "2026-02-02 11:00")
-      Fabricate.times(10, :clicked_search_log, term: "ruby", created_at: "2026-01-27 10:00")
+      Fabricate.times(3, :search_log, term: "ghost", user: user, created_at: "2026-02-02 10:00")
+      Fabricate.times(
+        7,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-02-02 11:00",
+      )
+      Fabricate.times(
+        10,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-01-27 10:00",
+      )
 
-      Fabricate(:search_log, term: "ghost", created_at: "2026-01-02 10:00")
-      Fabricate.times(9, :clicked_search_log, term: "ruby", created_at: "2026-01-02 11:00")
-      Fabricate.times(20, :clicked_search_log, term: "ruby", created_at: "2025-12-27 10:00")
+      Fabricate(:search_log, term: "ghost", user: user, created_at: "2026-01-02 10:00")
+      Fabricate.times(
+        9,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-01-02 11:00",
+      )
+      Fabricate.times(
+        20,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2025-12-27 10:00",
+      )
 
       expect(
         described_class.build(start_date: "2026-02-01", end_date: "2026-02-07")[:headline_state],
@@ -165,7 +305,13 @@ RSpec.describe AdminDashboardSearch do
     end
 
     it "omits deltas when the prior window has no searches" do
-      Fabricate.times(2, :clicked_search_log, term: "ruby", created_at: "2026-05-02 10:00")
+      Fabricate.times(
+        2,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-05-02 10:00",
+      )
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:kpis]).to eq(
         total_searches: {
@@ -179,7 +325,7 @@ RSpec.describe AdminDashboardSearch do
     end
 
     it "omits deltas and rates when the current window has no searches" do
-      Fabricate.times(2, :search_log, term: "ruby", created_at: "2026-04-26 10:00")
+      Fabricate.times(2, :search_log, term: "ruby", user: user, created_at: "2026-04-26 10:00")
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
@@ -200,8 +346,20 @@ RSpec.describe AdminDashboardSearch do
     end
 
     it "omits deltas when nothing changed between the windows" do
-      Fabricate.times(5, :clicked_search_log, term: "ruby", created_at: "2026-05-02 10:00")
-      Fabricate.times(5, :clicked_search_log, term: "ruby", created_at: "2026-04-26 10:00")
+      Fabricate.times(
+        5,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-05-02 10:00",
+      )
+      Fabricate.times(
+        5,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-04-26 10:00",
+      )
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:kpis]).to eq(
         total_searches: {
@@ -215,11 +373,23 @@ RSpec.describe AdminDashboardSearch do
     end
 
     it "reports the rate delta in percentage points, not relative change" do
-      Fabricate(:search_log, term: "ghost", created_at: "2026-05-02 10:00")
-      Fabricate.times(3, :clicked_search_log, term: "ruby", created_at: "2026-05-02 11:00")
+      Fabricate(:search_log, term: "ghost", user: user, created_at: "2026-05-02 10:00")
+      Fabricate.times(
+        3,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-05-02 11:00",
+      )
 
-      Fabricate(:search_log, term: "ghost", created_at: "2026-04-26 10:00")
-      Fabricate.times(9, :clicked_search_log, term: "ruby", created_at: "2026-04-26 11:00")
+      Fabricate(:search_log, term: "ghost", user: user, created_at: "2026-04-26 10:00")
+      Fabricate.times(
+        9,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-04-26 11:00",
+      )
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:kpis]).to eq(
         total_searches: {
@@ -235,8 +405,14 @@ RSpec.describe AdminDashboardSearch do
     end
 
     it "treats a rate of exactly 10% as within the threshold" do
-      Fabricate(:search_log, term: "ghost", created_at: "2026-05-02 10:00")
-      Fabricate.times(9, :clicked_search_log, term: "ruby", created_at: "2026-05-02 11:00")
+      Fabricate(:search_log, term: "ghost", user: user, created_at: "2026-05-02 10:00")
+      Fabricate.times(
+        9,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-05-02 11:00",
+      )
 
       expect(
         described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:kpis][
@@ -246,8 +422,14 @@ RSpec.describe AdminDashboardSearch do
     end
 
     it "flags a rate just above 10% even when the display rounds to 10%" do
-      Fabricate.times(5, :search_log, term: "ghost", created_at: "2026-05-02 10:00")
-      Fabricate.times(44, :clicked_search_log, term: "ruby", created_at: "2026-05-02 11:00")
+      Fabricate.times(5, :search_log, term: "ghost", user: user, created_at: "2026-05-02 10:00")
+      Fabricate.times(
+        44,
+        :clicked_search_log,
+        term: "ruby",
+        user: user,
+        created_at: "2026-05-02 11:00",
+      )
 
       expect(
         described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")[:kpis][
@@ -274,8 +456,8 @@ RSpec.describe AdminDashboardSearch do
     end
 
     it "falls back to the default 30-day window for missing, malformed, or inverted dates" do
-      Fabricate(:search_log, term: "inside-window", created_at: "2026-04-16 10:00")
-      Fabricate(:search_log, term: "outside-window", created_at: "2026-04-13 10:00")
+      Fabricate(:search_log, term: "inside-window", user: user, created_at: "2026-04-16 10:00")
+      Fabricate(:search_log, term: "outside-window", user: user, created_at: "2026-04-13 10:00")
 
       [
         described_class.build(start_date: nil, end_date: nil),
@@ -288,7 +470,7 @@ RSpec.describe AdminDashboardSearch do
     end
 
     it "includes searches at the window start boundary in every list" do
-      Fabricate(:search_log, term: "boundary", created_at: "2026-05-01 00:00:00")
+      Fabricate(:search_log, term: "boundary", user: user, created_at: "2026-05-01 00:00:00")
 
       response = described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")
 
@@ -300,7 +482,7 @@ RSpec.describe AdminDashboardSearch do
     it "returns only the logging flag when search logging is disabled" do
       SiteSetting.log_search_queries = false
 
-      Fabricate(:search_log, term: "ruby", created_at: "2026-05-02 10:00")
+      Fabricate(:search_log, term: "ruby", user: user, created_at: "2026-05-02 10:00")
 
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: false,

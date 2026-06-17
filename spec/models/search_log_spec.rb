@@ -227,6 +227,17 @@ RSpec.describe SearchLog, type: :model do
       expect(term_click_through_details[:period]).to eq("all")
       expect(term_click_through_details[:data][0][:y]).to eq(1)
     end
+
+    it "counts only logged-in members' searches with the logged_in_only search type" do
+      member = Fabricate(:user)
+      Fabricate.times(2, :search_log, term: "ruby", user: member)
+      Fabricate.times(3, :search_log, term: "ruby")
+
+      expect(SearchLog.term_details("ruby")[:data].sum { |point| point[:y] }).to eq(5)
+      expect(
+        SearchLog.term_details("ruby", :weekly, :logged_in_only)[:data].sum { |point| point[:y] },
+      ).to eq(2)
+    end
   end
 
   describe "trending" do
@@ -258,6 +269,12 @@ RSpec.describe SearchLog, type: :model do
       SearchLog.where(term: "ruby", ip_address: "127.0.0.2").update_all(search_result_id: 24)
       top_trending = SearchLog.trending.first
       expect(top_trending.click_through).to eq(3)
+    end
+
+    it "counts only logged-in members' searches with the logged_in_only search type" do
+      results = SearchLog.trending(:all, :logged_in_only).to_a
+
+      expect(results.map { |trend| [trend.term, trend.searches] }).to eq([["ruby", 1]])
     end
   end
 

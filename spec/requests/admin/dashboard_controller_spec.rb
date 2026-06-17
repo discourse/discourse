@@ -323,8 +323,9 @@ RSpec.describe Admin::DashboardController do
 
         it "returns the search payload for the selected dates" do
           configure_dashboard_sections(%w[search])
-          Fabricate(:clicked_search_log, term: "ruby", created_at: "2026-05-02 10:00")
-          Fabricate(:search_log, term: "ruby", created_at: "2026-05-02 11:00")
+          member = Fabricate(:user)
+          Fabricate(:clicked_search_log, term: "ruby", user: member, created_at: "2026-05-02 10:00")
+          Fabricate(:search_log, term: "ruby", user: member, created_at: "2026-05-02 11:00")
 
           get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-07" }
 
