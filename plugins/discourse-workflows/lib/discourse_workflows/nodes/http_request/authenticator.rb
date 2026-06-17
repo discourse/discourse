@@ -11,7 +11,7 @@ module DiscourseWorkflows
 
         def self.apply(config, headers, exec_ctx, item_index: 0)
           auth_mode = config.fetch("authentication") { "none" }
-          return if auth_mode == "none"
+          return [] if auth_mode == "none"
 
           cred_data = fetch_credential_data(exec_ctx, auth_mode, item_index)
 
@@ -22,6 +22,8 @@ module DiscourseWorkflows
             apply_bearer_token(headers, cred_data)
           when "header_auth"
             apply_header_auth(headers, cred_data)
+          else
+            []
           end
         end
 
@@ -38,11 +40,13 @@ module DiscourseWorkflows
           user = cred_data["user"]
           password = cred_data["password"]
           headers["Authorization"] = "Basic #{Base64.strict_encode64("#{user}:#{password}")}"
+          ["Authorization"]
         end
 
         def self.apply_bearer_token(headers, cred_data)
           token = cred_data["token"]
           headers["Authorization"] = "Bearer #{token}"
+          ["Authorization"]
         end
 
         def self.apply_header_auth(headers, cred_data)
@@ -51,6 +55,7 @@ module DiscourseWorkflows
             raise_node_error!(I18n.t("discourse_workflows.errors.http_request.header_name_invalid"))
           end
           headers[name] = cred_data["value"]
+          [name]
         end
 
         private_class_method :fetch_credential_data,

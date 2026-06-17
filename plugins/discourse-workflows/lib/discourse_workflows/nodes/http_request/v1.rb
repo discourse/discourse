@@ -232,7 +232,6 @@ module DiscourseWorkflows
               form_params: exec_ctx.get_node_parameter("body_form.values", item_index, default: []),
             )
           query_params = exec_ctx.get_node_parameter("query_params.values", item_index, default: [])
-          log_request(exec_ctx.log, method, config["url"], headers, body, query_params:)
           response =
             exec_ctx.http_request(
               method: method,
@@ -268,26 +267,6 @@ module DiscourseWorkflows
 
         def wrap_response_body(body, paired_item:)
           wrap(body.is_a?(Hash) ? body : { data: body }, paired_item:)
-        end
-
-        def log_request(log, method, uri, headers, body, query_params: [])
-          log.info("#{method.to_s.upcase} #{filtered_url_for_logging(uri, query_params)}")
-          if headers.present?
-            filtered =
-              ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters).filter(
-                headers,
-              )
-            filtered.each { |k, v| log.info("#{k}: #{v}") }
-          end
-          if body.is_a?(Hash)
-            filtered_body =
-              ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters).filter(
-                body,
-              )
-            log.info(filtered_body.to_json)
-          elsif body.present?
-            log.info("[body omitted]")
-          end
         end
 
         def request_options(config, query_params)
