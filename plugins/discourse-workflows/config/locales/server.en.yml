@@ -74,6 +74,7 @@ en:
         host_required: "URL must include a host."
         credential_required: "Credential is required for authentication mode '%{mode}'."
         exec_ctx_required: "Execution context is required for authentication mode '%{mode}'."
+        header_name_invalid: "Header name contains invalid characters."
       data_table:
         unknown_column: "Unknown column name '%{column}'."
         unknown_operation: "Unknown operation: %{operation}."

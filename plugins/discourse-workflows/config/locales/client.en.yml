@@ -611,6 +611,7 @@ en:
         authentication_none: "None"
         authentication_basic_auth: "Basic auth"
         authentication_bearer_token: "Bearer token"
+        authentication_header_auth: "Header auth"
         credential: "Credential"
         method: "Method"
         url: "URL"
