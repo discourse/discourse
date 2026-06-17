@@ -701,6 +701,28 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
       resolver&.dispose
       sandbox&.dispose
     end
+
+    it "resolves the anonymous sentinel to an anonymous guardian actor" do
+      resolver_context = { "$json" => {} }
+      sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
+      ctx =
+        described_class.new(
+          input_items: [],
+          parameters: {
+            "actor_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
+          },
+          resolver: resolver,
+        )
+
+      actor = ctx.actor_from_parameter("actor_username")
+
+      expect(actor).to be_a(DiscourseWorkflows::AnonymousActor)
+      expect(actor.guardian.anonymous?).to eq(true)
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
   end
 
   describe "#create_post" do

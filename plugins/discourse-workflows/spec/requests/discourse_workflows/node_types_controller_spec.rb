@@ -53,7 +53,7 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       expect(properties["editor_username"]).to include(
         "type" => "string",
         "default" => "system",
-        "ui" => include("control" => "user"),
+        "ui" => include("control" => "actor"),
       )
       expect(properties["categories"]["ui"]).to include("hidden" => true)
       expect(properties["advanced_filter"]["ui"]).to include("hidden" => true)

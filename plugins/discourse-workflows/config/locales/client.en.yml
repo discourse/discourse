@@ -20,6 +20,10 @@ en:
             discourse_workflows_workflow_destroyed: "Delete workflow"
   js:
     discourse_workflows:
+      actor:
+        system: "System user"
+        anonymous: "Anonymous user"
+        user: "Specific user"
       node_unavailable:
         default: "This node is currently unavailable"
         short: "Unavailable"

@@ -270,7 +270,12 @@ module DiscourseWorkflows
       end
 
       def actor_from(username: nil, id: nil, field: nil, item_index: nil)
-        actor = find_user(username: username.presence, id: id)
+        actor =
+          if username == DiscourseWorkflows::AnonymousActor::USERNAME
+            DiscourseWorkflows::AnonymousActor.new
+          else
+            find_user(username: username.presence, id: id)
+          end
         ensure_actor_allowed!(actor, field: field, item_index: item_index)
         actor
       end
@@ -297,7 +302,9 @@ module DiscourseWorkflows
 
       def create_post(user:, raw:, topic_id:, reply_to_post_number: nil)
         topic = ::Topic.find(topic_id)
-        user.guardian.ensure_can_see!(topic)
+        guardian = user.guardian
+        guardian.ensure_can_see!(topic)
+        raise Discourse::InvalidAccess if !guardian.can_create_post?(topic)
 
         if topic.closed? || topic.archived?
           raise DiscourseWorkflows::NodeError,

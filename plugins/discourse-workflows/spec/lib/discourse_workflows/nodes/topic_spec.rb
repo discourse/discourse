@@ -116,6 +116,20 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         expect(Topic.last.user_id).to eq(Discourse.system_user.id)
       end
 
+      it "does not create a topic as the anonymous actor" do
+        expect do
+          execute_node(
+            configuration: {
+              "operation" => "create",
+              "title" => "Anonymous topic",
+              "raw" => "Created by workflows",
+              "actor_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
+            },
+            item: item,
+          )
+        end.to raise_error(DiscourseWorkflows::NodeError).and not_change(Topic, :count)
+      end
+
       it "accepts tags from an array" do
         execute_node(
           configuration: {
@@ -320,6 +334,26 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
           topic_1.id,
           topic_2.id,
         )
+      end
+
+      it "lists only publicly visible topics as the anonymous actor" do
+        group = Fabricate(:group)
+        private_category = Fabricate(:private_category, group: group)
+        private_topic = Fabricate(:topic, category: private_category, user: admin)
+        Fabricate(:post, topic: private_topic, user: admin)
+
+        result =
+          execute_list(
+            configuration: {
+              "operation" => "list",
+              "limit" => "50",
+              "actor_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
+            },
+          )
+
+        ids = result.map { |output_item| output_item["json"]["topic"]["id"] }
+        expect(ids).to include(topic_1.id, topic_2.id)
+        expect(ids).not_to include(private_topic.id)
       end
 
       it "respects the limit parameter" do
@@ -528,6 +562,21 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
               "operation" => "close",
               "topic_id" => topic.id.to_s,
               "actor_username" => user.username,
+            },
+            item: item,
+          )
+        end.to raise_error(Discourse::InvalidAccess)
+
+        expect(topic.reload).not_to be_closed
+      end
+
+      it "raises when closing as the anonymous actor" do
+        expect do
+          execute_node(
+            configuration: {
+              "operation" => "close",
+              "topic_id" => topic.id.to_s,
+              "actor_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
             },
             item: item,
           )
