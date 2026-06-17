@@ -8,6 +8,7 @@ RSpec.describe PostsFilter do
 
   fab!(:user)
   fab!(:user2, :user)
+  fab!(:admin)
   fab!(:feature_tag) { Fabricate(:tag, name: "feature") }
   fab!(:bug_tag) { Fabricate(:tag, name: "bug") }
   fab!(:announcement_category) { Fabricate(:category, name: "Announcements") }
@@ -66,7 +67,28 @@ RSpec.describe PostsFilter do
       { name: "order:", description: I18n.t("posts_filter.description.order"), priority: 1 },
       { name: "order:latest", description: I18n.t("posts_filter.description.order_latest") },
       { name: "status:open", description: I18n.t("posts_filter.description.status_open") },
+      { name: "status:listed", description: I18n.t("posts_filter.description.status_listed") },
+      { name: "status:unlisted", description: I18n.t("posts_filter.description.status_unlisted") },
+      { name: "status:deleted", description: I18n.t("posts_filter.description.status_deleted") },
+      { name: "status:public", description: I18n.t("posts_filter.description.status_public") },
+      {
+        name: "post_type:regular",
+        description: I18n.t("posts_filter.description.post_type_regular"),
+      },
+      { name: "post_type:all", description: I18n.t("posts_filter.description.post_type_all") },
       { name: "post_type:first", description: I18n.t("posts_filter.description.post_type_first") },
+      {
+        name: "post_type:moderator_action",
+        description: I18n.t("posts_filter.description.post_type_moderator_action"),
+      },
+      {
+        name: "post_type:small_action",
+        description: I18n.t("posts_filter.description.post_type_small_action"),
+      },
+      {
+        name: "post_type:whisper",
+        description: I18n.t("posts_filter.description.post_type_whisper"),
+      },
     )
     expect(options.find { |option| option[:name] == "order:" }).not_to include(
       :type,
@@ -159,7 +181,7 @@ RSpec.describe PostsFilter do
     expect(filtered_post_ids("username:aאb")).to contain_exactly(unicode_post.id)
   end
 
-  it "filters by topic, post type, status, dates, and limits" do
+  it "filters posts by topic, post type, status, dates, and limits" do
     feature_post.update_columns(created_at: 3.days.ago)
     bug_post.update_columns(created_at: 2.days.ago)
     feature_bug_post.update_columns(created_at: 1.day.ago)
@@ -186,6 +208,160 @@ RSpec.describe PostsFilter do
       reply_post.id,
     )
     expect(filtered_post_ids("category:Feedback max_results:1", limit: 5).length).to eq(1)
+  end
+
+  it "defaults to regular posts and allows explicit post types" do
+    SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+
+    topic = Fabricate(:topic, user: user, category: announcement_category)
+    regular_post = Fabricate(:post, topic: topic, user: user, post_number: 1)
+    reply_post = Fabricate(:post, topic: topic, user: user, post_number: 2)
+    moderator_action_post =
+      Fabricate(
+        :post,
+        topic: topic,
+        user: admin,
+        post_number: 3,
+        post_type: Post.types[:moderator_action],
+      )
+    small_action_post =
+      Fabricate(
+        :post,
+        topic: topic,
+        user: admin,
+        post_number: 4,
+        post_type: Post.types[:small_action],
+      )
+    whisper_post =
+      Fabricate(:post, topic: topic, user: admin, post_number: 5, post_type: Post.types[:whisper])
+    post_ids = [
+      regular_post.id,
+      reply_post.id,
+      moderator_action_post.id,
+      small_action_post.id,
+      whisper_post.id,
+    ]
+    scope = Post.where(id: post_ids)
+
+    expect(filtered_post_ids("", guardian: admin.guardian, scope: scope)).to contain_exactly(
+      regular_post.id,
+      reply_post.id,
+    )
+    expect(
+      filtered_post_ids("post_type:all", guardian: admin.guardian, scope: scope),
+    ).to contain_exactly(*post_ids)
+    expect(
+      filtered_post_ids("post_type:moderator_action", guardian: admin.guardian, scope: scope),
+    ).to contain_exactly(moderator_action_post.id)
+    expect(
+      filtered_post_ids("post_type:small_action", guardian: admin.guardian, scope: scope),
+    ).to contain_exactly(small_action_post.id)
+    expect(
+      filtered_post_ids("post_type:whisper", guardian: user.guardian, scope: scope),
+    ).to be_empty
+    expect(
+      filtered_post_ids("post_type:whisper", guardian: admin.guardian, scope: scope),
+    ).to contain_exactly(whisper_post.id)
+    expect(
+      filtered_post_ids("post_type:first", guardian: admin.guardian, scope: scope),
+    ).to contain_exactly(regular_post.id)
+    expect(
+      filtered_post_ids("post_type:reply", guardian: admin.guardian, scope: scope),
+    ).to contain_exactly(reply_post.id)
+    expect(
+      filtered_post_ids(
+        "post_type:small_action OR username:#{user.username}",
+        guardian: admin.guardian,
+        scope: scope,
+      ),
+    ).to contain_exactly(small_action_post.id, regular_post.id, reply_post.id)
+  end
+
+  it "keeps post_type all within guardian visibility" do
+    SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+
+    topic = Fabricate(:topic, user: user, category: announcement_category)
+    regular_post = Fabricate(:post, topic: topic, user: user)
+    small_action_post =
+      Fabricate(:post, topic: topic, user: admin, post_type: Post.types[:small_action])
+    hidden_post = Fabricate(:post, topic: topic, user: user2)
+    hidden_post.update_columns(hidden: true)
+    whisper_post = Fabricate(:post, topic: topic, user: admin, post_type: Post.types[:whisper])
+    secure_category = Fabricate(:private_category, group: Fabricate(:group))
+    secure_topic = Fabricate(:topic, user: user, category: secure_category)
+    secure_post = Fabricate(:post, topic: secure_topic, user: user)
+    pm_topic = Fabricate(:private_message_topic, user: user, recipient: user2)
+    pm_post = Fabricate(:post, topic: pm_topic, user: user)
+    scope =
+      Post.where(
+        id: [
+          regular_post.id,
+          small_action_post.id,
+          hidden_post.id,
+          whisper_post.id,
+          secure_post.id,
+          pm_post.id,
+        ],
+      )
+
+    expect(
+      filtered_post_ids("post_type:all", guardian: user.guardian, scope: scope),
+    ).to contain_exactly(regular_post.id, small_action_post.id)
+  end
+
+  it "filters posts by listed, unlisted, deleted, and public topic statuses" do
+    listed_topic = Fabricate(:topic, user: user, category: announcement_category)
+    listed_post = Fabricate(:post, topic: listed_topic, user: user)
+    unlisted_topic = Fabricate(:topic, user: user, category: announcement_category, visible: false)
+    unlisted_post = Fabricate(:post, topic: unlisted_topic, user: user)
+    deleted_topic = Fabricate(:topic, user: user, category: announcement_category)
+    deleted_post = Fabricate(:post, topic: deleted_topic, user: user)
+    PostDestroyer.new(admin, deleted_post, context: "spec").destroy
+
+    status_scope = Post.where(id: [listed_post.id, unlisted_post.id, deleted_post.id])
+
+    expect(
+      filtered_post_ids("status:listed", guardian: admin.guardian, scope: status_scope),
+    ).to contain_exactly(listed_post.id)
+    expect(
+      filtered_post_ids("status:unlisted", guardian: admin.guardian, scope: status_scope),
+    ).to contain_exactly(unlisted_post.id)
+    expect(
+      filtered_post_ids("status:deleted", guardian: admin.guardian, scope: status_scope),
+    ).to contain_exactly(deleted_post.id)
+    expect(
+      filtered_post_ids("status:deleted", guardian: user.guardian, scope: status_scope),
+    ).to be_empty
+
+    secure_group = Fabricate(:group)
+    secure_group.add(user)
+    secure_category = Fabricate(:private_category, group: secure_group)
+    secure_topic = Fabricate(:topic, user: user, category: secure_category)
+    secure_post = Fabricate(:post, topic: secure_topic, user: user)
+    uncategorized_topic = Fabricate(:topic, user: user, category: nil)
+    uncategorized_post = Fabricate(:post, topic: uncategorized_topic, user: user)
+    public_scope = Post.where(id: [listed_post.id, secure_post.id, uncategorized_post.id])
+
+    expect(filtered_post_ids("", guardian: user.guardian, scope: public_scope)).to contain_exactly(
+      listed_post.id,
+      secure_post.id,
+      uncategorized_post.id,
+    )
+    expect(
+      filtered_post_ids("status:public", guardian: user.guardian, scope: public_scope),
+    ).to contain_exactly(listed_post.id, uncategorized_post.id)
+
+    deleted_reply = Fabricate(:post, topic: listed_topic, user: user)
+    PostDestroyer.new(admin, deleted_reply, context: "spec").destroy
+
+    or_scope = Post.where(id: [listed_post.id, secure_post.id, deleted_post.id, deleted_reply.id])
+    expect(
+      filtered_post_ids(
+        "status:deleted OR status:public",
+        guardian: admin.guardian,
+        scope: or_scope,
+      ),
+    ).to contain_exactly(deleted_post.id, listed_post.id)
   end
 
   it "orders posts" do
