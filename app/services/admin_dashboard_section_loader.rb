@@ -19,10 +19,9 @@ class AdminDashboardSectionLoader
 
   def initialize(section_ids:, current_user:, start_date:, end_date:)
     @section_ids = section_ids
-    @user_id = current_user.id
+    @current_user = current_user
     @start_date = start_date
     @end_date = end_date
-    @locale = I18n.locale
   end
 
   def build
@@ -30,12 +29,9 @@ class AdminDashboardSectionLoader
 
     section_ids.each do |id|
       self.class.thread_pool.post do
-        I18n.with_locale(locale) do
-          user = User.find(user_id)
-          results << { id: id, data: section_data(id, user) }
-        rescue StandardError => e
-          results << { id: id, error: e }
-        end
+        results << { id: id, data: section_data(id, current_user) }
+      rescue StandardError => e
+        results << { id: id, error: e }
       end
     end
 
@@ -53,7 +49,7 @@ class AdminDashboardSectionLoader
 
   private
 
-  attr_reader :section_ids, :user_id, :start_date, :end_date, :locale
+  attr_reader :section_ids, :current_user, :start_date, :end_date
 
   def section_data(id, user)
     case id
