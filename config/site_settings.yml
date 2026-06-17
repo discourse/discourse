@@ -1353,6 +1353,18 @@ posting:
     default: false
     refresh: true
     area: "posts_and_topics"
+  remove_and_replace_uncategorized:
+    default: false
+    client: true
+    hidden: true
+    area: "posts_and_topics"
+    upcoming_change:
+      status: "experimental"
+      impact: "other,all_members"
+      allow_enabled_for:
+        - everyone
+      # TODO: replace with the real Meta announcement topic once published.
+      learn_more_url: "https://meta.discourse.org/t/-/000000"
   allow_duplicate_topic_titles:
     default: false
     area: "posts_and_topics"

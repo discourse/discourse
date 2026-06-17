@@ -845,6 +845,18 @@ RSpec.describe UpcomingChanges do
       )
     end
 
+    it "dispatches remove_and_replace_uncategorized to the action service display rule" do
+      SiteSetting.allow_uncategorized_topics = true
+      expect(
+        UpcomingChanges::ConditionalDisplay.should_display?(:remove_and_replace_uncategorized),
+      ).to eq(true)
+
+      SiteSetting.allow_uncategorized_topics = false
+      expect(
+        UpcomingChanges::ConditionalDisplay.should_display?(:remove_and_replace_uncategorized),
+      ).to eq(false)
+    end
+
     context "when the conditional display method is defined for an upcoming change" do
       context "when the conditional display method returns true" do
         before do

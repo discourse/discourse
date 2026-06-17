@@ -2,6 +2,14 @@
 
 Rails.application.config.after_initialize { UpcomingChanges.clear_caches! }
 
+# While the `remove_and_replace_uncategorized` change is in effect (manual opt-in
+# or auto-promotion), the legacy uncategorized settings no longer make sense, so
+# hide them. This modifier is re-evaluated on every `hidden_settings` read, so it
+# tracks both opt-in paths live and is multisite-safe.
+DiscoursePluginRegistry.register_modifier(Plugin::Instance.new, :hidden_site_settings) do |hidden|
+  SiteSetting::Action::RemoveAndReplaceUncategorizedToggled.apply_hidden_settings(hidden)
+end
+
 #
 # Similar to 014-track-setting-changes.rb, we can react to upcoming changes
 # being enabled/or disabled here for more complicated scenarios, where
@@ -22,6 +30,8 @@ DiscourseEvent.on(:upcoming_change_enabled) do |setting_name|
     SiteSetting::Action::SimpleEmailSubjectToggled.call(params: { setting_enabled: true })
   elsif setting_name == :enable_horizon_high_context_topic_cards
     Themes::Action::HorizonHighContextTopicCardsToggled.call(enabled: true)
+  elsif setting_name == :remove_and_replace_uncategorized
+    SiteSetting::Action::RemoveAndReplaceUncategorizedToggled.call(enabled: true)
   end
 end
 
@@ -31,5 +41,7 @@ DiscourseEvent.on(:upcoming_change_disabled) do |setting_name|
     SiteSetting::Action::SimpleEmailSubjectToggled.call(params: { setting_enabled: false })
   elsif setting_name == :enable_horizon_high_context_topic_cards
     Themes::Action::HorizonHighContextTopicCardsToggled.call(enabled: false)
+  elsif setting_name == :remove_and_replace_uncategorized
+    SiteSetting::Action::RemoveAndReplaceUncategorizedToggled.call(enabled: false)
   end
 end
