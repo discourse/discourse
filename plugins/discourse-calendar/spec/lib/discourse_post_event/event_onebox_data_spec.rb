@@ -16,6 +16,16 @@ describe DiscoursePostEvent::EventOneboxData do
     post
   end
 
+  # a self-onebox (a reply linking the topic it's in) produces no TopicLink row,
+  # so we craft the cooked aside the way the onebox would
+  def with_self_onebox(post, topic, extra = "")
+    post.update_columns(
+      cooked:
+        "<aside class=\"quote\" data-post=\"1\" data-topic=\"#{topic.id}\"#{extra}><blockquote>x</blockquote></aside>",
+    )
+    post
+  end
+
   it "returns the serialized event keyed by source post and linked topic id" do
     event_post = create_post_with_event(author, 'name="Pancakes"')
     linking_post = link_to(Fabricate(:post), event_post.topic)
@@ -50,6 +60,40 @@ describe DiscoursePostEvent::EventOneboxData do
 
   it "returns nothing without posts" do
     expect(described_class.build(posts: [], guardian: Guardian.new(reader))).to eq({})
+  end
+
+  context "with a same-topic onebox (a reply linking the event topic it's in)" do
+    it "includes the event keyed by the topic id" do
+      event_post = create_post_with_event(author, 'name="Pancakes"')
+      reply = with_self_onebox(Fabricate(:post, topic: event_post.topic), event_post.topic)
+
+      result = described_class.build(posts: [reply], guardian: Guardian.new(reader))
+
+      expect(result[reply.id][event_post.topic_id]).to be_present
+    end
+
+    it "ignores a same-topic quote (which carries a data-username)" do
+      event_post = create_post_with_event(author)
+      reply =
+        with_self_onebox(
+          Fabricate(:post, topic: event_post.topic),
+          event_post.topic,
+          ' data-username="bob"',
+        )
+
+      result = described_class.build(posts: [reply], guardian: Guardian.new(reader))
+
+      expect(result).to be_empty
+    end
+
+    it "does nothing for a self-link in a non-event topic" do
+      topic = Fabricate(:topic)
+      reply = with_self_onebox(Fabricate(:post, topic: topic), topic)
+
+      result = described_class.build(posts: [reply], guardian: Guardian.new(reader))
+
+      expect(result).to be_empty
+    end
   end
 
   describe "delivered through the post serializer" do

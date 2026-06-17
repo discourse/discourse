@@ -24,16 +24,25 @@ module DiscoursePostEvent
     def build
       return {} if @posts.blank?
 
-      # internal links the page's posts point at (indexed lookup, no cooked scan)
+      # cross-topic internal links (indexed lookup, no cooked scan). TopicLink
+      # does not record a topic that links itself, so same-topic oneboxes are
+      # detected from cooked further down.
       links =
         TopicLink
           .where(post_id: @posts.map(&:id), internal: true, reflection: false)
           .where.not(link_topic_id: nil)
           .pluck(:post_id, :link_topic_id)
           .uniq
-      return {} if links.empty?
 
-      topic_ids = links.map(&:last).uniq
+      # the topic being viewed, only when it's itself an event (cheap custom-field
+      # check, so non-event topic views do no extra work)
+      topic = @posts.first.topic
+      own_topic_id = topic&.event_starts_at ? topic.id : nil
+
+      topic_ids = links.map(&:last)
+      topic_ids << own_topic_id if own_topic_id
+      topic_ids.uniq!
+      return {} if topic_ids.empty?
 
       first_post_ids = Post.where(topic_id: topic_ids, post_number: 1, deleted_at: nil).pluck(:id)
       return {} if first_post_ids.empty?
@@ -45,24 +54,52 @@ module DiscoursePostEvent
           .index_by { |event| event.post.topic_id }
       return {} if events_by_topic.empty?
 
-      serialized = {}
+      @serialized = {}
       result = {}
 
       links.each do |source_post_id, link_topic_id|
         event = events_by_topic[link_topic_id]
-        next if event.nil?
-        next unless @guardian.can_see?(event.post)
+        next if event.nil? || !@guardian.can_see?(event.post)
+        (result[source_post_id] ||= {})[link_topic_id] = serialize(event)
+      end
 
-        serialized[event.id] ||= DiscoursePostEvent::EventSerializer.new(
-          event,
-          scope: @guardian,
-          root: false,
-        ).as_json
-
-        (result[source_post_id] ||= {})[link_topic_id] = serialized[event.id]
+      own_event = own_topic_id && events_by_topic[own_topic_id]
+      if own_event && @guardian.can_see?(own_event.post)
+        each_self_onebox_post(own_topic_id) do |post_id|
+          (result[post_id] ||= {})[own_topic_id] = serialize(own_event)
+        end
       end
 
       result
+    end
+
+    private
+
+    def serialize(event)
+      @serialized[event.id] ||= DiscoursePostEvent::EventSerializer.new(
+        event,
+        scope: @guardian,
+        root: false,
+      ).as_json
+    end
+
+    # yields the id of each post whose cooked oneboxes its own (event) topic. A
+    # same-topic onebox is `aside.quote[data-post="1"]` without a data-username
+    # (which would mark a manual quote); the cheap include? skips parsing posts
+    # that don't reference the topic at all.
+    def each_self_onebox_post(topic_id)
+      marker = %{data-topic="#{topic_id}"}
+      @posts.each do |post|
+        next if post.cooked.blank? || !post.cooked.include?(marker)
+
+        onebox =
+          Nokogiri::HTML5
+            .fragment(post.cooked)
+            .css(%{aside.quote[data-topic="#{topic_id}"][data-post="1"]})
+            .any? { |aside| aside["data-username"].blank? }
+
+        yield(post.id) if onebox
+      end
     end
   end
 end
