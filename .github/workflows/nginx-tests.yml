@@ -5,6 +5,7 @@ on:
     paths:
       - ".github/workflows/nginx-tests.yml"
       - "bin/turbo_rspec"
+      - "lib/turbo_rspec_exclusion.rb"
       - "config/nginx.sample.conf"
       - "spec/nginx/**"
       - "spec/rails_helper.rb"
@@ -15,6 +16,7 @@ on:
     paths:
       - ".github/workflows/nginx-tests.yml"
       - "bin/turbo_rspec"
+      - "lib/turbo_rspec_exclusion.rb"
       - "config/nginx.sample.conf"
       - "spec/nginx/**"
       - "spec/rails_helper.rb"

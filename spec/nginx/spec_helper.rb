@@ -31,10 +31,17 @@ RSpec.configure do |config|
 
   unless nginx_available
     raise "nginx not found on PATH but NGINX_TESTS_REQUIRED is set" if ENV["NGINX_TESTS_REQUIRED"]
+
     config.before(:suite) do
-      warn "[nginx specs] skipping: nginx not found on PATH " \
+      warn "[nginx specs] skipping nginx integration examples: nginx not found on PATH " \
              "(set NGINX_TESTS_REQUIRED=1 to fail instead)"
     end
-    config.filter_run_excluding(:nginx)
+
+    # Skip per-example rather than via filter_run_excluding(:nginx): an
+    # exclusion filter is bypassed when the developer supplies an
+    # inclusion filter (e.g. run.sh --example basic), which would let an
+    # integration example run and crash on Process.spawn("nginx"). A
+    # before-hook keyed on the :nginx tag skips regardless of selection.
+    config.before(:each, :nginx) { skip "nginx not found on PATH" }
   end
 end
