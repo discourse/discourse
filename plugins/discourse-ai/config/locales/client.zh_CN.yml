@@ -988,6 +988,9 @@ zh_CN:
         title: "使用 AI 提出更改建议"
         description: "选择以下选项之一，AI 将向您推荐新版本的文本。"
         selection_hint: "提示：您也可以在打开助手之前选择文本的一部分来仅重写该文本。"
+        suggest: "显示 AI 建议"
+        choose: "帮我选一个"
+        suggestions: "建议"
         suggest_errors:
           too_many_tags:
             other: "您最多只能有 %{count} 个标签"

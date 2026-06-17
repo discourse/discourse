@@ -4514,7 +4514,6 @@ es:
         site_settings: "Ajustes del sitio"
       choose_type:
         title: "Elegir el tipo de categoría"
-        requires_plugin: "Requiere plugin"
       create_category: "Crear categoría"
       save: "Guardar categoría"
       unsaved_changes: "Tienes cambios sin guardar"

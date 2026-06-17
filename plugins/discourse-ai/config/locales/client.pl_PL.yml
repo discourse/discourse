@@ -537,6 +537,7 @@ pl_PL:
         credit_allocations: "Alokacje kredytów"
       ai_agent:
         ai_tools: "Narzędzia"
+        native_tools_help: "Narzędzia natywne dostawcy, takie jak wyszukiwanie w sieci lub pobieranie stron, pojawiają się, gdy włączona jest opcja „Zawsze używaj domyślnego modelu języka” i wybrany domyślny model języka je obsługuje."
         mcp_servers: "Serwery MCP"
         mcp_server_tools_help: "Wybrane serwery MCP domyślnie udostępniają wszystkie swoje narzędzia. Zawęż je dla każdego agenta, aby zmniejszyć zużycie tokenów i zapewnić sobie wybór narzędzi."
         mcp_server_tool_count:
@@ -1058,6 +1059,9 @@ pl_PL:
         title: "Zaproponuj zmiany za pomocą AI"
         description: "Wybierz jedną z poniższych opcji, a sztuczna inteligencja zasugeruje Ci nową wersję tekstu."
         selection_hint: "Wskazówka: Możesz także zaznaczyć część tekstu przed otwarciem pomocnika, aby przepisać tylko ten fragment."
+        suggest: "Pokaż sugestie AI"
+        choose: "Wybierz za mnie"
+        suggestions: "Sugestie"
         suggest_errors:
           too_many_tags:
             one: "Możesz mieć maksymalnie %{count} znacznik"
