@@ -4909,7 +4909,6 @@ ru:
         site_settings: "Настройки сайта"
       choose_type:
         title: "Выберите тип категории"
-        requires_plugin: "Требуется плагин"
       create_category: "Создать категорию"
       save: "Сохранить категорию"
       unsaved_changes: "У вас есть несохраненные изменения"

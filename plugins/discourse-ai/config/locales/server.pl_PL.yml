@@ -387,6 +387,8 @@ pl_PL:
         cannot_delete_system_agent: "Nie można usunąć agentów systemowych, zamiast tego należy je wyłączyć"
         cannot_edit_system_agent: "Można zmienić tylko nazwy agentów systemowych, nie można edytować narzędzi ani komunikatów systemowych, zamiast tego należy je wyłączyć i utworzyć kopię"
         cannot_have_duplicate_tools: "Nie można mieć duplikatów narzędzi"
+        native_tool_requires_forced_llm: "Narzędzia natywne dostawcy wymagają domyślnego LLM z włączoną opcją „Wymuś domyślny LLM”"
+        native_tool_unsupported_by_llm: "Wybrany domyślny program LLM nie obsługuje żadnego z włączonych narzędzi natywnych dostawcy"
         admin_dashboard_highlights:
           name: "Najważniejsze informacje na temat panelu administracyjnego"
           description: "Wyświetla krótki odczyt wyświetlany na górze panelu administracyjnego, wyjaśniając, co się zmieniło i na co należy zwrócić uwagę w tym okresie"
@@ -557,6 +559,13 @@ pl_PL:
           flag_type:
             name: "Typ flagi"
             description: "Kontroluje, czy wpis jest sprawdzany, ukrywany, usuwany lub traktowany jako spam."
+      native_tools:
+        web_search:
+          name: "Wyszukiwanie w sieci (natywne)"
+          help: "Umożliwia modelowi przeszukiwanie sieci przy użyciu wbudowanej wyszukiwarki dostawcy, gdy agent jest zmuszony do korzystania z obsługiwanego LLM."
+        web_fetch:
+          name: "Pobieranie z sieci (natywne)"
+          help: "Umożliwia modelowi otwieranie i odczytywanie stron internetowych przy użyciu wbudowanego dostępu do sieci dostawcy, gdy agent jest wymuszony przez obsługiwany protokół LLM."
       tool_summary:
         read_artifact: "Przeczytaj artefakt sieciowy"
         search_uploaded_documents: "Wyszukaj przesłane dokumenty"

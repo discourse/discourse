@@ -4435,7 +4435,6 @@ zh_CN:
         site_settings: "站点设置"
       choose_type:
         title: "选择类别类型"
-        requires_plugin: "需要插件"
       create_category: "创建类别"
       save: "保存类别"
       unsaved_changes: "您有未保存的更改"
@@ -6260,14 +6259,28 @@ zh_CN:
               new_members: "新成员"
               returning: "返回"
               staff: "管理人员"
+              empty: "所选时间段内没有帖子。"
             trust_level_pipeline:
+              title: "信任级别变化"
               trust_levels:
                 "0": "新"
                 "1": "基本用户"
                 "2": "成员"
                 "3": "常规"
                 "4": "领导者"
+              trend:
+                climbing:
+                  other: "+%{count} 升级"
+                dropping:
+                  other: "-%{count} 降级"
+              moves_in_aria:
+                other: "%{count} 成员升级"
+              moves_out_aria:
+                other: "%{count} 成员降级"
+              stable_aria: "不变"
             headline:
+              healthy_growth:
+                title: "成员们正在养成回来的习惯。"
               metrics:
                 new_signups: "新注册用户"
                 dau_mau: "日活跃用户（DAU）/月活跃用户（MAU）粘性"

@@ -4570,7 +4570,6 @@ de:
         site_settings: "Website-Einstellungen"
       choose_type:
         title: "Kategorietyp wählen"
-        requires_plugin: "Erfordert ein Plug-in"
       create_category: "Kategorie erstellen"
       save: "Kategorie speichern"
       unsaved_changes: "Du hast ungespeicherte Änderungen"

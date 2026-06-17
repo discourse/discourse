@@ -4569,7 +4569,6 @@ nl:
         site_settings: "Site-instellingen"
       choose_type:
         title: "Kies categorietype"
-        requires_plugin: "Vereist plug-in"
       create_category: "Categorie maken"
       save: "Categorie opslaan"
       unsaved_changes: "Je hebt niet-opgeslagen wijzigingen"

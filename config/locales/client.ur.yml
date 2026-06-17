@@ -4594,7 +4594,6 @@ ur:
         site_settings: "سائٹ کی ترتیبات"
       choose_type:
         title: "زمرہ کی قسم منتخب کریں"
-        requires_plugin: "پلگ ان درکار ہے"
       create_category: "زمرہ بنائیں"
       save: "زمرہ محفوظ کریں"
       unsaved_changes: "آپ کی تبدلیاں محفوظ نہیں ہوئیں"

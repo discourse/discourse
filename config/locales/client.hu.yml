@@ -4405,7 +4405,6 @@ hu:
         site_settings: "Webhely beállítások"
       choose_type:
         title: "Válasszon kategóriatípust"
-        requires_plugin: "Szükséges bővítmény"
       create_category: "Kategória létrehozása"
       save: "Kategória mentése"
       unsaved_changes: "Nem mentett módosításai vannak"

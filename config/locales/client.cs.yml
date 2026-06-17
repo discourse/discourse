@@ -4772,7 +4772,6 @@ cs:
         site_settings: "Nastavení webu"
       choose_type:
         title: "Vyberte typ kategorie"
-        requires_plugin: "Vyžaduje plugin"
       create_category: "Vytvořit kategorii"
       save: "Uložit kategorii"
       unsaved_changes: "Máte neuložené změny"

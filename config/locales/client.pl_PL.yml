@@ -5291,7 +5291,6 @@ pl_PL:
         site_settings: "Ustawienia witryny"
       choose_type:
         title: "Wybierz typ kategorii"
-        requires_plugin: "Wymaga wtyczki"
       create_category: "Utwórz kategorię"
       save: "Zapisz kategorię"
       unsaved_changes: "Masz niezapisane zmiany"
@@ -7351,14 +7350,14 @@ pl_PL:
             headline:
               no_signal_title: "Za mało aktywności wyszukiwania, aby dokonać podsumowania."
               no_signal: "Wybierz dłuższy przedział dat lub wróć, gdy członkowie przeszukają więcej tematów."
-              content_gaps: "Ponad 10% wyszukiwań zakończyło się w tym okresie bez kliknięcia. Sprawdź poniższe luki w treści, aby dowiedzieć się, czego brakuje."
+              content_gaps: "Ponad 10% wyszukiwań członków zakończyło się w tym okresie bez kliknięcia. Sprawdź poniższe luki w treściach, aby dowiedzieć się, czego brakuje."
               rate_climbing: "Wskaźnik braku rezultatów rośnie w porównaniu z poprzednim okresem. Zwróć uwagę na luki w treściach poniżej."
               shrinking: "W porównaniu z poprzednim okresem liczba wyszukiwań zmalała, jednak większość wyszukiwań nadal prowadzi do treści."
               healthy: "Użytkownicy wciąż znajdują to, czego szukają, a liczba wyszukiwań jest stała lub rośnie."
             kpi:
               total_searches:
                 label: "Łączna liczba wyszukiwań"
-                tooltip: "Liczba wyszukiwań wykonanych w Twojej społeczności."
+                tooltip: "Liczba wyszukiwań wykonanych przez członków społeczności."
               no_result_rate:
                 label: "Wskaźnik braku wyników"
                 tooltip: "Procent wyszukiwań, w których członkowie nie kliknęli żadnego wyniku (0% CTR). Oznacza to, że członkowie mogą szukać treści, których Twoja społeczność nie ma."
@@ -7368,7 +7367,7 @@ pl_PL:
               status: "Status"
             trending:
               title: "Popularne wyszukiwania"
-              tooltip: "Najpopularniejsze wyszukiwane hasła."
+              tooltip: "Najpopularniejsze wyszukiwane hasła wśród członków."
               empty: "Brak wyszukiwań w tym okresie."
             content_gaps:
               title: "Luki w treściach"
@@ -7394,6 +7393,7 @@ pl_PL:
             disable: "Wyłącz %{title}"
             move_up: "Przesuń %{title} w górę"
             move_down: "Przesuń %{title} w dół"
+            footer_note: "Zmiany te będą dotyczyć wszystkich użytkowników."
         configure:
           button: "Konfiguruj"
           tooltip: "Skonfiguruj sposób wyświetlania tego pulpitu nawigacyjnego dla wszystkich użytkowników tej witryny."
@@ -8985,6 +8985,7 @@ pl_PL:
             header: "Nagłówek"
             full_page: "Pełna strona"
             click_through_only: "wszystkie (tylko przeklikiwanie)"
+            logged_in_only: "Tylko zalogowani"
           header_search_results: "Wyniki wyszukiwania w nagłówku"
         logster:
           title: "Dzienniki błędów"

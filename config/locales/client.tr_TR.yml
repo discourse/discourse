@@ -4594,7 +4594,6 @@ tr_TR:
         site_settings: "Site ayarları"
       choose_type:
         title: "Kategori türünü seçin"
-        requires_plugin: "Eklenti gerektirir"
       create_category: "Kategori oluştur"
       save: "Kategoriyi kaydet"
       unsaved_changes: "Kaydedilmemiş değişiklikleriniz var"

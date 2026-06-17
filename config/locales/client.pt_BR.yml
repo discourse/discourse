@@ -4415,8 +4415,6 @@ pt_BR:
       create_long: "Criar uma nova categoria"
       type_settings_schema:
         site_settings: "Configurações do site"
-      choose_type:
-        requires_plugin: "Requer plugin"
       create_category: "Criar categoria"
       save: "Salvar categoria"
       unsaved_changes: "Você tem alterações não salvas"
