@@ -6202,7 +6202,9 @@ zh_CN:
               new_members: "新成员"
               returning: "返回"
               staff: "管理人员"
+              empty: "所选时间段内没有帖子。"
             trust_level_pipeline:
+              title: "信任级别变化"
               trust_levels:
                 "0": "新"
                 "1": "基本用户"
@@ -6210,7 +6212,19 @@ zh_CN:
                 "3": "常规"
                 "4": "领导者"
               trend:
+                climbing:
+                  other: "+%{count} 升级"
+                dropping:
+                  other: "-%{count} 降级"
                 stable: "稳定"
+              moves_in_aria:
+                other: "%{count} 成员升级"
+              moves_out_aria:
+                other: "%{count} 成员降级"
+              stable_aria: "不变"
+            headline:
+              healthy_growth:
+                title: "成员们正在养成回来的习惯。"
         reports_section:
           modal:
             enabled_heading: "已启用"

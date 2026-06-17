@@ -248,7 +248,7 @@ pt_BR:
           gists: "Resumos breves da lista de tópicos"
           setting_groups:
             settings: "Configurações básicas"
-            gists: "Gists"
+            gists: "Resumos"
             backfill: "Backfill"
         search:
           name: "Pesquisar"
