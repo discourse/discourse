@@ -591,10 +591,6 @@ GEM
     rainbow (3.1.1)
     raindrops (0.20.1)
     rake (13.4.2)
-    ransack (4.4.1)
-      activerecord (>= 7.2)
-      activesupport (>= 7.2)
-      i18n
     rb-fsevent (0.11.2)
     rb-inotify (0.11.1)
       ffi (~> 1.0)
@@ -986,7 +982,6 @@ DEPENDENCIES
   railties (~> 8.0.0)
   raindrops
   rake
-  ransack
   rb-fsevent
   rbtrace
   rchardet
@@ -1284,7 +1279,6 @@ CHECKSUMS
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   raindrops (0.20.1) sha256=aa0eb9ff6834f2d9e232ba688bd49cb30be893bc5a3452e74722c94c1fab4730
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
-  ransack (4.4.1) sha256=6aeaac36fc19088570e10da1044e6cfd88c740e20f871b84566fd30e32b7a63d
   rb-fsevent (0.11.2) sha256=43900b972e7301d6570f64b850a5aa67833ee7d87b458ee92805d56b7318aefe
   rb-inotify (0.11.1) sha256=a0a700441239b0ff18eb65e3866236cd78613d6b9f78fea1f9ac47a85e47be6e
   rbs (4.0.2) sha256=af75671e66cd03434cc546622741ebf83f6197ec4328375805306330bf78ef25
