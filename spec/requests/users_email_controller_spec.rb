@@ -162,6 +162,46 @@ RSpec.describe UsersEmailController do
     context "when logged in" do
       before { sign_in(user) }
 
+      context "with CSRF protection enabled" do
+        before { ActionController::Base.allow_forgery_protection = true }
+        after { ActionController::Base.allow_forgery_protection = false }
+
+        it "rejects a CSRF token captured before a password reset" do
+          get "/session/csrf.json"
+          pre_reset_csrf_token = response.parsed_body["csrf"]
+          password_reset_token =
+            user
+              .email_tokens
+              .create!(email: user.email, scope: EmailToken.scopes[:password_reset])
+              .token
+
+          put "/u/password-reset/#{password_reset_token}.json",
+              params: {
+                password: SecureRandom.hex,
+              },
+              headers: {
+                "X-CSRF-Token" => pre_reset_csrf_token,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["success"]).to eq(true)
+
+          expect do
+            put "/u/#{user.username}/preferences/email.json",
+                params: {
+                  email: "bubblegum@adventuretime.ooo",
+                },
+                headers: {
+                  "X-CSRF-Token" => pre_reset_csrf_token,
+                  "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
+                }
+          end.not_to change(EmailChangeRequest, :count)
+
+          expect(response.status).to eq(403)
+          expect(response.body).to include("BAD CSRF")
+        end
+      end
+
       it "raises an error without an email parameter" do
         put "/u/#{user.username}/preferences/email.json"
         expect(response.status).to eq(400)

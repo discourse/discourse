@@ -940,6 +940,7 @@ class UsersController < ApplicationController
             action: UserHistory.actions[:change_password],
           )
 
+          reset_csrf_token(request)
           logon_after_password_reset
         end
       end
