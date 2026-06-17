@@ -657,6 +657,16 @@ en:
         descending: "Descending"
         code_field: "JavaScript code"
         code_description: "Write a comparator function body. Variables a and b are item objects. Return -1, 0, or 1."
+      merge:
+        mode: "Mode"
+        mode_append: "Append"
+        mode_combine: "Combine"
+        include_unpaired: "Include unpaired items"
+        include_unpaired_description: "When the two inputs have different numbers of items, keep the leftover items that have no counterpart to pair with instead of dropping them."
+        resolve_clash: "When fields clash"
+        resolve_clash_add_suffix: "Add a suffix"
+        resolve_clash_prefer_first: "Prefer first item"
+        resolve_clash_prefer_last: "Prefer last item"
       log:
         mode: "Mode"
         mode_description: "Choose whether entries are logged once per item or once for all items"
