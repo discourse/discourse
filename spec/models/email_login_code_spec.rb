@@ -130,5 +130,22 @@ RSpec.describe EmailLoginCode do
 
       expect(login_code.reload.consumed_at).to eq_time(Time.zone.now)
     end
+
+    it "only succeeds once, so concurrent redemptions can't both win" do
+      expect(login_code.consume!).to eq(true)
+      # a second caller holding the same (stale) record loses the race
+      expect(login_code.consume!).to eq(false)
+    end
+  end
+
+  describe ".hash_code" do
+    it "keys the hash with the server secret rather than a bare digest" do
+      hash = described_class.hash_code("123456")
+
+      expect(hash).not_to eq(Digest::SHA256.hexdigest("123456"))
+      expect(hash).to eq(
+        OpenSSL::HMAC.hexdigest("SHA256", GlobalSetting.safe_secret_key_base, "123456"),
+      )
+    end
   end
 end

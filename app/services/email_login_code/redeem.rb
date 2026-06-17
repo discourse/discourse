@@ -26,7 +26,9 @@ class EmailLoginCode::Redeem
   end
 
   def consume_code(login_code:)
-    login_code.consume!
+    # consume! is atomic; if it lost a race with a concurrent redemption the
+    # code is already spent, so this redemption must not log anyone in.
+    fail!("code already redeemed") unless login_code.consume!
   end
 
   def user_requires_activation?(user:)

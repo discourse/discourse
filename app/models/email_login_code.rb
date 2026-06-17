@@ -41,7 +41,9 @@ class EmailLoginCode < ActiveRecord::Base
   end
 
   def self.hash_code(code)
-    Digest::SHA256.hexdigest(code)
+    # Keyed with the server secret so a database snapshot alone can't be used
+    # to enumerate the small (6-digit) code space offline.
+    OpenSSL::HMAC.hexdigest("SHA256", GlobalSetting.safe_secret_key_base, code)
   end
 
   def code
@@ -73,8 +75,14 @@ class EmailLoginCode < ActiveRecord::Base
     end
   end
 
+  # Atomically marks the code consumed. Returns true only for the caller that
+  # wins the race, so two concurrent redemptions of the same code can't both
+  # succeed.
   def consume!
-    update!(consumed_at: Time.zone.now)
+    now = Time.zone.now
+    won = self.class.where(id: id, consumed_at: nil).update_all(consumed_at: now) == 1
+    self.consumed_at = now if won
+    won
   end
 end
 

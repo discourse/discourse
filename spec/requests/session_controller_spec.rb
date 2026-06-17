@@ -563,6 +563,16 @@ RSpec.describe SessionController do
       end
     end
 
+    context "when email login is disabled" do
+      before { SiteSetting.enable_local_logins_via_email = false }
+
+      it "returns a 403" do
+        post "/session/login-code.json", params: { email: user.email }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
     context "when SSO is enabled" do
       before do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
@@ -669,6 +679,16 @@ RSpec.describe SessionController do
 
     context "when local logins are disabled" do
       before { SiteSetting.enable_local_logins = false }
+
+      it "returns a 403" do
+        post "/session/login-code/verify.json", params: { email: user.email, code: "123456" }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when email login is disabled" do
+      before { SiteSetting.enable_local_logins_via_email = false }
 
       it "returns a 403" do
         post "/session/login-code/verify.json", params: { email: user.email, code: "123456" }
