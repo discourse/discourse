@@ -5,7 +5,7 @@ const PostMenuCopyLinkButton = <template>
     class="post-action-menu__copy-link"
     ...attributes
     @action={{@buttonActions.copyLink}}
-    @icon="d-post-share"
+    @icon="link"
     @label={{if @showLabel "post.controls.copy_action"}}
     @title="post.controls.copy_title"
     @ariaLabel="post.controls.copy_title"
