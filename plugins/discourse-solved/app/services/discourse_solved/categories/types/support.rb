@@ -11,6 +11,10 @@ module DiscourseSolved
             SiteSetting.solved_enabled = true
           end
 
+          def plugin_enabled?
+            SiteSetting.solved_enabled
+          end
+
           def category_matches?(category)
             category.enable_accepted_answers?
           end

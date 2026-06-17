@@ -15,6 +15,10 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import {
+  availableCategoryType,
+  unavailableBadgeText,
+} from "discourse/lib/category-type-utils";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
@@ -612,7 +616,7 @@ export default class UpsertCategoryGeneral extends Component {
               <div
                 class={{dConcatClass
                   "category-type-selector__result"
-                  (unless type.available "--unavailable")
+                  (unless (availableCategoryType type) "--unavailable")
                   (concat "--category-type-" type.id)
                 }}
               >
@@ -623,12 +627,14 @@ export default class UpsertCategoryGeneral extends Component {
 
                   {{type.name}}
 
-                  {{#unless type.available}}
+                  {{#unless (availableCategoryType type)}}
                     <span class="category-type-selector__result-badge">
                       <PluginOutlet
                         @name="category-type-selector-result-badge"
                         @outletArgs={{lazyHash type=type}}
-                      />
+                      >
+                        {{unavailableBadgeText type}}
+                      </PluginOutlet>
                     </span>
                   {{/unless}}
                 </div>
