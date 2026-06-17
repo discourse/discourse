@@ -59,7 +59,11 @@ export default <template>
               @outletArgs={{lazyHash createAccount=@controller.createAccount}}
             />
           </WelcomeHeader>
-          {{#if @controller.showLoginButtons}}
+          {{#if
+            (and
+              @controller.showLoginButtons (not @controller.showCodeLoginForm)
+            )
+          }}
 
             <LoginButtons
               @externalLogin={{@controller.externalLogin}}
@@ -144,7 +148,13 @@ export default <template>
           </div>
         {{/if}}
 
-        {{#if (and @controller.showLoginButtons @controller.site.desktopView)}}
+        {{#if
+          (and
+            @controller.showLoginButtons
+            @controller.site.desktopView
+            (not @controller.showCodeLoginForm)
+          )
+        }}
 
           {{#unless @controller.canLoginLocal}}
             <div class="login-left-side">

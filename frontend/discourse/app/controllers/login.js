@@ -89,7 +89,8 @@ export default class LoginPageController extends Controller {
     if (
       this.hasAtLeastOneLoginButton &&
       !this.showSecondFactor &&
-      !this.showSecurityKey
+      !this.showSecurityKey &&
+      !this.showCodeLoginForm
     ) {
       classes.push("has-alt-auth");
     }
