@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AdminDashboardSectionLoader
-  POOL_SIZE = 4
+  POOL_SIZE = AdminDashboardSectionConfiguration::KNOWN_SECTIONS.size
 
   def self.build(section_ids:, current_user:, start_date:, end_date:)
     new(
