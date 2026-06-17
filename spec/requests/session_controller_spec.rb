@@ -3151,6 +3151,7 @@ RSpec.describe SessionController do
         expect(challenge_data["allowed_methods"]).to contain_exactly(
           UserSecondFactor.methods[:totp],
           UserSecondFactor.methods[:security_key],
+          UserSecondFactor.methods[:passkey],
         )
         expect(challenge_data["description"]).to eq("this is description for test action")
 
@@ -3175,6 +3176,7 @@ RSpec.describe SessionController do
         expect(challenge_data["allowed_methods"]).to contain_exactly(
           UserSecondFactor.methods[:totp],
           UserSecondFactor.methods[:security_key],
+          UserSecondFactor.methods[:passkey],
           UserSecondFactor.methods[:backup_codes],
         )
       end
@@ -3192,7 +3194,7 @@ RSpec.describe SessionController do
           )
         end
 
-        it "exposes the passkey credentials and a webauthn challenge" do
+        it "exposes the passkey credentials separately from security keys" do
           post "/session/2fa/test-action", xhr: true
           nonce = response.parsed_body["second_factor_challenge_nonce"]
           get "/session/2fa.json", params: { nonce: nonce }
@@ -3201,10 +3203,31 @@ RSpec.describe SessionController do
           challenge_data = response.parsed_body
           expect(challenge_data["passkeys_enabled"]).to eq(true)
           expect(challenge_data["security_keys_enabled"]).to eq(false)
-          expect(challenge_data["allowed_credential_ids"]).to include(
+          expect(challenge_data["allowed_credential_ids"]).to be_blank
+          expect(challenge_data["passkey_allowed_credential_ids"]).to contain_exactly(
             valid_passkey_data[:credential_id],
           )
           expect(challenge_data["challenge"]).to be_present
+        end
+
+        it "keeps the allow-lists disjoint when the user also has a security key" do
+          Fabricate(:user_security_key_with_random_credential, user: user, name: "YubiKey")
+
+          post "/session/2fa/test-action", xhr: true
+          nonce = response.parsed_body["second_factor_challenge_nonce"]
+          get "/session/2fa.json", params: { nonce: nonce }
+
+          expect(response.status).to eq(200)
+          challenge_data = response.parsed_body
+          expect(challenge_data["passkeys_enabled"]).to eq(true)
+          expect(challenge_data["security_keys_enabled"]).to eq(true)
+          expect(challenge_data["passkey_allowed_credential_ids"]).to contain_exactly(
+            valid_passkey_data[:credential_id],
+          )
+          expect(challenge_data["allowed_credential_ids"]).to be_present
+          expect(challenge_data["allowed_credential_ids"]).not_to include(
+            valid_passkey_data[:credential_id],
+          )
         end
       end
 
@@ -3222,6 +3245,7 @@ RSpec.describe SessionController do
           challenge_data = response.parsed_body
           expect(challenge_data["passkeys_enabled"]).to eq(false)
           expect(challenge_data["allowed_credential_ids"]).to be_blank
+          expect(challenge_data["passkey_allowed_credential_ids"]).to be_blank
         end
       end
     end
@@ -3377,7 +3401,7 @@ RSpec.describe SessionController do
           post "/session/2fa.json",
                params: {
                  nonce: nonce,
-                 second_factor_method: UserSecondFactor.methods[:security_key],
+                 second_factor_method: UserSecondFactor.methods[:passkey],
                  second_factor_token: valid_passkey_auth_data,
                }
 
@@ -3395,11 +3419,54 @@ RSpec.describe SessionController do
           post "/session/2fa.json",
                params: {
                  nonce: nonce,
-                 second_factor_method: UserSecondFactor.methods[:security_key],
+                 second_factor_method: UserSecondFactor.methods[:passkey],
                  second_factor_token: valid_passkey_auth_data,
                }
 
           expect(response.status).to eq(403)
+        end
+
+        it "rejects a passkey assertion posted as the security key ceremony" do
+          SiteSetting.allow_passkeys_for_2fa = true
+          simulate_localhost_passkey_challenge
+          Fabricate(:user_security_key_with_random_credential, user: user, name: "YubiKey")
+
+          post "/session/2fa/test-action", xhr: true
+          nonce = response.parsed_body["second_factor_challenge_nonce"]
+
+          post "/session/2fa.json",
+               params: {
+                 nonce: nonce,
+                 second_factor_method: UserSecondFactor.methods[:security_key],
+                 second_factor_token: valid_passkey_auth_data,
+               }
+
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["error"]).to eq(I18n.t("webauthn.validation.ownership_error"))
+        end
+
+        it "rejects a security key assertion posted as the passkey ceremony" do
+          SiteSetting.allow_passkeys_for_2fa = true
+          simulate_localhost_passkey_challenge
+          Fabricate(
+            :user_security_key,
+            user: user,
+            public_key: valid_security_key_data[:public_key],
+            credential_id: valid_security_key_data[:credential_id],
+          )
+
+          post "/session/2fa/test-action", xhr: true
+          nonce = response.parsed_body["second_factor_challenge_nonce"]
+
+          post "/session/2fa.json",
+               params: {
+                 nonce: nonce,
+                 second_factor_method: UserSecondFactor.methods[:passkey],
+                 second_factor_token: valid_security_key_auth_post_data,
+               }
+
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["error"]).to eq(I18n.t("webauthn.validation.ownership_error"))
         end
 
         it "rejects an assertion from a disabled passkey even when the user has another enabled passkey" do
@@ -3414,7 +3481,7 @@ RSpec.describe SessionController do
           post "/session/2fa.json",
                params: {
                  nonce: nonce,
-                 second_factor_method: UserSecondFactor.methods[:security_key],
+                 second_factor_method: UserSecondFactor.methods[:passkey],
                  second_factor_token: valid_passkey_auth_data,
                }
 

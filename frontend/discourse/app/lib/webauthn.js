@@ -67,9 +67,9 @@ export function getWebauthnCredential(
         challenge: challengeBuffer,
         allowCredentials,
         timeout: 60000, // this is just a hint
-        // "discouraged" for plain 2FA (security keys), "preferred" when passkeys
-        // may be present so the browser prompts for UV on passkey credentials
-        // while still allowing non-UV security keys.
+        // "discouraged" for second-factor security keys, "required" for
+        // passkey ceremonies (matching the server-side validation for
+        // first-factor credentials).
         userVerification,
       },
       signal: WebauthnAbortHandler.signal(),
