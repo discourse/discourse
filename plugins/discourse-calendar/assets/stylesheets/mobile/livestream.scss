@@ -166,3 +166,12 @@ body.tag-livestream.chat-enabled {
 body:not(.tag-livestream) .d-header-icons .livestream-header-icon {
   display: none;
 }
+
+.discourse-calendar-livestream-zoom-entry {
+  margin-top: 0.5rem;
+}
+
+.discourse-calendar-livestream-zoom-page {
+  margin-left: calc(var(--topic-body-width-padding, 1rem) * -1);
+  margin-right: calc(var(--topic-body-width-padding, 1rem) * -1);
+}

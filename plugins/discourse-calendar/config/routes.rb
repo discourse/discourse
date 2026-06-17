@@ -23,9 +23,15 @@ DiscoursePostEvent::Engine.routes.draw do
   get "/upcoming-events/mine" => "upcoming_events#index"
 end
 
+DiscourseCalendar::Engine.routes.draw do
+  get "/discourse-calendar/livestream/zoom/signature" => "livestream#signature", :format => :json
+end
+
 Discourse::Application.routes.draw do
   mount DiscourseCalendar::Engine, at: "/"
   mount DiscoursePostEvent::Engine, at: "/"
+
+  get "t/:slug/:topic_id/zoom" => "topics#show", :constraints => { topic_id: /\d+/ }
 
   scope constraints: StaffConstraint.new do
     get "/admin/plugins/calendar" => "admin/plugins#index"

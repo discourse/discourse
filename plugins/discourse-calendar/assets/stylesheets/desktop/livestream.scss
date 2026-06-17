@@ -39,4 +39,12 @@
       height: 100%;
     }
   }
+
+  .discourse-calendar-livestream-zoom-entry__frame {
+    min-height: 720px;
+    border: 1px solid var(--primary-low);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--secondary);
+  }
 }

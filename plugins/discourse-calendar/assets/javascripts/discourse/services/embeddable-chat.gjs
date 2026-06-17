@@ -12,13 +12,14 @@ export default class EmbeddableChat extends Service {
   @service chat;
 
   @tracked isMobileChatVisible = false;
+  // TODO (martin) Make sure this is set everywhere that loads the embeddable chat e.g. topic routes
+  @tracked chatChannelId;
 
   get userCanChat() {
     return this.chat.userCanChat;
   }
 
-  canRenderChatChannel(topicController, mobileViewAllowed = false) {
-    this.topicController = topicController;
+  canRenderChatChannel(mobileViewAllowed = false) {
     if (
       this.siteSettings.livestream_enabled &&
       this.isMobileViewport === mobileViewAllowed &&
@@ -34,7 +35,7 @@ export default class EmbeddableChat extends Service {
           this.router.currentURL.startsWith(path)
       );
 
-      if (withinPathsAllowed && this.topicController?.model?.chat_channel_id) {
+      if (withinPathsAllowed && this.chatChannelId) {
         return true;
       }
     }
@@ -67,9 +68,5 @@ export default class EmbeddableChat extends Service {
 
   get isMobileViewport() {
     return !this.capabilities.viewport.lg;
-  }
-
-  get chatChannelId() {
-    return this.topicController?.model?.chat_channel_id;
   }
 }

@@ -38,3 +38,58 @@ body.chat-enabled.tag-livestream .chat-channel-preview-card {
     width: 100%;
   }
 }
+
+.discourse-calendar-livestream-zoom-entry-container {
+  margin-top: 1rem;
+}
+
+.discourse-calendar-livestream-zoom-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  &__error {
+    margin: 0;
+    color: var(--danger);
+  }
+}
+
+.discourse-calendar-livestream-zoom-page {
+  position: relative;
+  min-height: calc(100vh - var(--header-offset, 0px));
+  background: var(--secondary);
+
+  &__frame {
+    min-height: calc(100vh - var(--header-offset, 0px));
+  }
+
+  &__fallback {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    z-index: 2;
+    padding: 1rem;
+    border-radius: 8px;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+
+    p {
+      margin-top: 0;
+    }
+  }
+
+  &__chat-button {
+    position: fixed;
+    right: 1rem;
+    bottom: 4rem;
+    z-index: 3;
+  }
+}

@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { inject as controller } from "@ember/controller";
 import { service } from "@ember/service";
 import EmbeddableChatChannel from "../../components/livestream/embeddable-chat-channel";
 
@@ -7,7 +6,6 @@ export default class EmbedableChatChannelConnector extends Component {
   @service embeddableChat;
   @service siteSettings;
   @service capabilities;
-  @controller("topic") topicController;
 
   get shouldRender() {
     const mobileViewport =
@@ -18,10 +16,7 @@ export default class EmbedableChatChannelConnector extends Component {
       return false;
     }
 
-    return this.embeddableChat.canRenderChatChannel(
-      this.topicController,
-      mobileViewport
-    );
+    return this.embeddableChat.canRenderChatChannel(mobileViewport);
   }
 
   <template>

@@ -28,6 +28,11 @@ en:
               label: Topic ID
     discourse_calendar:
       livestream:
+        zoom:
+          join: "Join Zoom"
+          chat: "Chat"
+          open_in_zoom: "Open in Zoom"
+          load_error: "Unable to load Zoom in this page."
         chat:
           going: "Click Going"
           join_channel_header: "🌟 Join the Buzz! 🌟"

@@ -72,7 +72,8 @@
         "@fullcalendar/moment-timezone>moment-timezone": "*"
       },
       "ignoreMissing": [
-        "webpack"
+        "webpack",
+        "@types/react"
       ]
     },
     "overrides": {
