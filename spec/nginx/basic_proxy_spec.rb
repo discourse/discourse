@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "json"
+require "securerandom"
 require_relative "support/nginx_harness"
 
 RSpec.describe "nginx.sample.conf basic proxying" do # rubocop:disable RSpec/DescribeClass
@@ -63,6 +64,26 @@ RSpec.describe "nginx.sample.conf basic proxying" do # rubocop:disable RSpec/Des
     expect_acceleration_headers_stripped(payload["headers"])
     expect(payload["headers"]["X-Request-Start"]).to match(/\At=\d+(?:\.\d+)?\z/)
     expect(harness.nginx_access_log).to eq(access_log_before)
+  end
+
+  it "strips sensitive response headers from the cached asset route" do
+    # The cached asset location (svg-sprite/letter_avatar/user_avatar/...)
+    # proxy_hide_header's Set-Cookie, X-Discourse-Username and X-Runtime so
+    # a cached upstream response can never leak them to other clients. Ask
+    # the mock upstream to emit all three and assert nginx removes them.
+    # A unique path keeps this a fresh cache MISS so the assertion isn't
+    # masked by a previously cached response.
+    leaky_headers = {
+      "X-Mock-Header-Set-Cookie" => "_t=secret-session; path=/",
+      "X-Mock-Header-X-Discourse-Username" => "admin",
+      "X-Mock-Header-X-Runtime" => "0.123456",
+    }
+    response = harness.get("/svg-sprite/#{SecureRandom.hex(8)}.js", headers: leaky_headers)
+
+    expect(response.code).to eq("200")
+    expect(response["Set-Cookie"]).to be_nil
+    expect(response["X-Discourse-Username"]).to be_nil
+    expect(response["X-Runtime"]).to be_nil
   end
 
   def expect_acceleration_headers_stripped(headers)
