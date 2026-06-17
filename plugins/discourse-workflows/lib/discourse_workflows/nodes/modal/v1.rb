@@ -33,7 +33,6 @@ module DiscourseWorkflows
             },
             buttons: {
               type: :fixed_collection,
-              required: true,
               type_options: {
                 multiple_values: true,
               },
@@ -95,10 +94,6 @@ module DiscourseWorkflows
           target_user = resolve_target_user(exec_ctx)
           buttons = build_buttons(exec_ctx)
 
-          if buttons.empty?
-            raise_node_error!(I18n.t("discourse_workflows.errors.modal.buttons_required"))
-          end
-
           MessageBus.publish(
             self.class.user_channel(target_user.id),
             {
@@ -110,7 +105,10 @@ module DiscourseWorkflows
             user_ids: [target_user.id],
           )
 
-          exec_ctx.put_execution_to_wait(nil)
+          # With buttons we pause until the user picks one. With no buttons there
+          # is nothing to respond to, so the modal is informational: show it and
+          # let the flow continue (the user just closes it).
+          exec_ctx.put_execution_to_wait(nil) if buttons.any?
           [exec_ctx.input_items]
         end
 

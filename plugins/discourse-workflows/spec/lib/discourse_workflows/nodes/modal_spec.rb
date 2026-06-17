@@ -98,14 +98,20 @@ RSpec.describe DiscourseWorkflows::Nodes::Modal::V1 do
       )
     end
 
-    it "raises when no buttons are configured" do
+    it "shows an informational modal without waiting when there are no buttons" do
       configuration = config.merge("buttons" => { "values" => [] })
       exec_ctx = build_exec_ctx(configuration, ctx_user: user)
+      allow(exec_ctx).to receive(:put_execution_to_wait)
 
-      expect { described_class.new(parameters: configuration).execute(exec_ctx) }.to raise_error(
-        DiscourseWorkflows::NodeError,
-        I18n.t("discourse_workflows.errors.modal.buttons_required"),
-      )
+      messages =
+        MessageBus.track_publish(described_class.user_channel(user.id)) do
+          result = described_class.new(parameters: configuration).execute(exec_ctx)
+          expect(result).to eq([exec_ctx.input_items])
+        end
+
+      expect(exec_ctx).not_to have_received(:put_execution_to_wait)
+      expect(messages.size).to eq(1)
+      expect(messages.first.data[:buttons]).to eq([])
     end
   end
 
