@@ -454,6 +454,95 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
       end
     end
 
+    context "with header_auth authentication" do
+      fab!(:credential) do
+        Fabricate(
+          :discourse_workflows_credential,
+          credential_type: "header_auth",
+          data: {
+            "name" => "X-API-Key",
+            "value" => "my-secret-key",
+          },
+        )
+      end
+
+      it "injects the custom header" do
+        stub_request(:get, "https://api.example.com/data").with(
+          headers: {
+            "X-API-Key" => "my-secret-key",
+          },
+        ).to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.example.com/data",
+          "authentication" => "header_auth",
+          "credentials" => {
+            "auth" => {
+              "id" => credential.id,
+              "credential_type" => "header_auth",
+            },
+          },
+        }
+
+        result = execute_node(configuration: config, item: item)
+        expect(result).to eq("ok" => true)
+      end
+
+      it "resolves credential expressions against each input item" do
+        credential.update!(data: { "name" => "X-API-Key", "value" => "={{ $json.api_key }}" })
+
+        stub_request(:get, "https://api.example.com/data").with(
+          headers: {
+            "X-API-Key" => "key-alice",
+          },
+        ).to_return(
+          status: 200,
+          body: { user: "alice" }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+        stub_request(:get, "https://api.example.com/data").with(
+          headers: {
+            "X-API-Key" => "key-bob",
+          },
+        ).to_return(
+          status: 200,
+          body: { user: "bob" }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.example.com/data",
+          "authentication" => "header_auth",
+          "credentials" => {
+            "auth" => {
+              "id" => credential.id,
+              "credential_type" => "header_auth",
+            },
+          },
+        }
+        input_items = [
+          { "json" => { "api_key" => "key-alice" } },
+          { "json" => { "api_key" => "key-bob" } },
+        ]
+
+        result = execute_node_output(configuration: config, input_items: input_items).first
+
+        expect(result.map { |output_item| output_item["json"]["user"] }).to eq(%w[alice bob])
+      end
+    end
+
     context "with authentication set to none" do
       it "does not add Authorization header" do
         stub_request(:get, "https://api.example.com/data").to_return(
