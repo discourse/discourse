@@ -266,6 +266,20 @@ RSpec.describe UploadCreator do
             expect(File.extname(upload.url)).to eq(".png")
             expect(upload.original_filename).to eq("large_and_unoptimized.png")
           end
+
+          it "should not convert pasted images to jpeg when png_to_jpg_quality is 100" do
+            upload =
+              UploadCreator.new(
+                large_file,
+                large_filename,
+                pasted: true,
+                force_optimize: true,
+              ).create_for(user.id)
+
+            expect(upload.extension).to eq("png")
+            expect(File.extname(upload.url)).to eq(".png")
+            expect(upload.original_filename).to eq("large_and_unoptimized.png")
+          end
         end
 
         it "should not convert animated WEBP images" do

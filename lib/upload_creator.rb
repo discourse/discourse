@@ -321,8 +321,8 @@ class UploadCreator
 
   def convert_png_to_jpeg?
     return false unless @image_info.type == :png
-    return true if @opts[:pasted]
     return false if SiteSetting.ImageQuality.png_to_jpg_quality == 100
+    return true if @opts[:pasted]
     pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
   end
 
