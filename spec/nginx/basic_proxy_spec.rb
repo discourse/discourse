@@ -13,7 +13,10 @@ RSpec.describe "nginx.sample.conf basic proxying" do # rubocop:disable RSpec/Des
     }
   end
 
-  let(:existing_proxy_headers) do
+  # A client-supplied X-Forwarded-For that must NOT be trusted: the sample
+  # conf sets X-Forwarded-For to the end-user IP ($remote_addr), overwriting
+  # any inbound value, so a spoofed forwarded chain cannot get through.
+  let(:spoofed_proxy_headers) do
     { "X-Forwarded-For" => "198.51.100.7", "X-Forwarded-Proto" => "https" }
   end
 
@@ -21,7 +24,7 @@ RSpec.describe "nginx.sample.conf basic proxying" do # rubocop:disable RSpec/Des
   after { harness.stop }
 
   it "forwards a missing path through @discourse with the proxy headers intact" do
-    response = harness.get("/missing-path", headers: smuggled_headers.merge(existing_proxy_headers))
+    response = harness.get("/missing-path", headers: smuggled_headers.merge(spoofed_proxy_headers))
 
     expect(response.code).to eq("200")
 
@@ -31,7 +34,9 @@ RSpec.describe "nginx.sample.conf basic proxying" do # rubocop:disable RSpec/Des
     expect(payload["headers"]).to include(
       "Host" => "127.0.0.1:#{harness.listen_port}",
       "X-Real-IP" => "127.0.0.1",
-      "X-Forwarded-For" => "198.51.100.7, 127.0.0.1",
+      # Spoofed inbound XFF (198.51.100.7) is overwritten with the real
+      # end-user IP, not appended to.
+      "X-Forwarded-For" => "127.0.0.1",
       "X-Forwarded-Proto" => "https",
     )
     expect_acceleration_headers_stripped(payload["headers"])
@@ -41,7 +46,7 @@ RSpec.describe "nginx.sample.conf basic proxying" do # rubocop:disable RSpec/Des
 
   it "forwards /srv/status directly to the upstream with the proxy headers intact" do
     access_log_before = harness.nginx_access_log
-    response = harness.get("/srv/status", headers: smuggled_headers.merge(existing_proxy_headers))
+    response = harness.get("/srv/status", headers: smuggled_headers.merge(spoofed_proxy_headers))
 
     expect(response.code).to eq("200")
 
@@ -51,7 +56,8 @@ RSpec.describe "nginx.sample.conf basic proxying" do # rubocop:disable RSpec/Des
     expect(payload["headers"]).to include(
       "Host" => "127.0.0.1:#{harness.listen_port}",
       "X-Real-IP" => "127.0.0.1",
-      "X-Forwarded-For" => "198.51.100.7, 127.0.0.1",
+      # Spoofed inbound XFF is overwritten with the real end-user IP.
+      "X-Forwarded-For" => "127.0.0.1",
       "X-Forwarded-Proto" => "https",
     )
     expect_acceleration_headers_stripped(payload["headers"])
