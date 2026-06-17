@@ -9,11 +9,13 @@ RSpec.describe DiscourseWorkflows::Nodes::Merge::V1 do
     items.map { |entry| { "json" => entry["json"] } }
   end
 
-  def execute_merge(input_1:, input_2:, input_groups: {}, configuration: {})
+  def execute_merge(inputs:, input_groups: {}, configuration: {})
+    indexed_groups = inputs.each_with_index.to_h { |items, index| ["input_#{index + 1}", items] }
+
     execute_node_output(
       configuration: configuration,
-      input_items: input_1,
-      input_groups: { "input_1" => input_1, "input_2" => input_2 }.merge(input_groups),
+      input_items: inputs.first,
+      input_groups: indexed_groups.merge(input_groups),
     ).first
   end
 
@@ -27,8 +29,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Merge::V1 do
   it "appends items from internal input groups" do
     output =
       execute_merge(
-        input_1: [item("a" => 1)],
-        input_2: [item("b" => 2)],
+        inputs: [[item("a" => 1)], [item("b" => 2)]],
         input_groups: {
           "main" => [item("a" => 1), item("b" => 2)],
         },
@@ -38,14 +39,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Merge::V1 do
   end
 
   it "appends items from more than two internal input groups" do
-    output =
-      execute_merge(
-        input_1: [item("a" => 1)],
-        input_2: [item("b" => 2)],
-        input_groups: {
-          "input_3" => [item("c" => 3)],
-        },
-      )
+    output = execute_merge(inputs: [[item("a" => 1)], [item("b" => 2)], [item("c" => 3)]])
 
     expect(output).to eq([item("a" => 1), item("b" => 2), item("c" => 3)])
   end
@@ -57,8 +51,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Merge::V1 do
           "mode" => "combine",
           "resolve_clash" => "prefer_last",
         },
-        input_1: [item("id" => 1, "a" => "A")],
-        input_2: [item("b" => "B")],
+        inputs: [[item("id" => 1, "a" => "A")], [item("b" => "B")]],
       )
 
     expect(json_items(output)).to eq([item("id" => 1, "a" => "A", "b" => "B")])
@@ -71,8 +64,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Merge::V1 do
           "mode" => "combine",
           "resolve_clash" => "prefer_last",
         },
-        input_1: [item("a" => 1), item("a" => 2)],
-        input_2: [item("b" => 3), item("b" => 4)],
+        inputs: [[item("a" => 1), item("a" => 2)], [item("b" => 3), item("b" => 4)]],
       )
 
     expect(json_items(output)).to eq([item("a" => 1, "b" => 3), item("a" => 2, "b" => 4)])
@@ -87,11 +79,28 @@ RSpec.describe DiscourseWorkflows::Nodes::Merge::V1 do
         configuration: {
           "mode" => "combine",
         },
-        input_1: [item("markdown" => "table 1")],
-        input_2: [item("markdown" => "table 2")],
+        inputs: [[item("markdown" => "table 1")], [item("markdown" => "table 2")]],
       )
 
     expect(json_items(output)).to eq([item("markdown_1" => "table 1", "markdown_2" => "table 2")])
+  end
+
+  it "combines multiple inputs by position" do
+    output =
+      execute_merge(
+        configuration: {
+          "mode" => "combine",
+        },
+        inputs: [
+          [item("markdown" => "table 1")],
+          [item("markdown" => "table 2")],
+          [item("markdown" => "table 3")],
+        ],
+      )
+
+    expect(json_items(output)).to eq(
+      [item("markdown_1" => "table 1", "markdown_2" => "table 2", "markdown_3" => "table 3")],
+    )
   end
 
   it "prefers input 1 on a clash when configured" do
@@ -101,8 +110,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Merge::V1 do
           "mode" => "combine",
           "resolve_clash" => "prefer_first",
         },
-        input_1: [item("value" => "one")],
-        input_2: [item("value" => "two")],
+        inputs: [[item("value" => "one")], [item("value" => "two")]],
       )
 
     expect(json_items(output)).to eq([item("value" => "one")])
@@ -115,8 +123,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Merge::V1 do
           "mode" => "combine",
           "resolve_clash" => "prefer_last",
         },
-        input_1: [item("a" => 1), item("a" => 2)],
-        input_2: [item("b" => 3)],
+        inputs: [[item("a" => 1), item("a" => 2)], [item("b" => 3)]],
       )
 
     expect(json_items(output)).to eq([item("a" => 1, "b" => 3)])
@@ -130,8 +137,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Merge::V1 do
           "resolve_clash" => "prefer_last",
           "include_unpaired" => true,
         },
-        input_1: [item("a" => 1), item("a" => 2)],
-        input_2: [item("b" => 3)],
+        inputs: [[item("a" => 1), item("a" => 2)], [item("b" => 3)]],
       )
 
     expect(json_items(output)).to eq([item("a" => 1, "b" => 3), item("a" => 2)])
