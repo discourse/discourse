@@ -337,6 +337,14 @@ module("Integration | Component | Post", function (hooks) {
       "content is switched to original"
     );
 
+    await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
+    assert
+      .dom(".post-language")
+      .includesText(
+        i18n("post.click_to_show_translation"),
+        "prompt invites showing the translation while the original is shown"
+      );
+
     await click(".fk-d-tooltip__trigger");
 
     assert.strictEqual(
@@ -344,6 +352,14 @@ module("Integration | Component | Post", function (hooks) {
       "<p>Translated post</p>",
       "content is switched back to translated"
     );
+
+    await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
+    assert
+      .dom(".post-language")
+      .includesText(
+        i18n("post.click_to_show_original"),
+        "prompt invites showing the original while the translation is shown"
+      );
   });
 
   test("language indicator plugin outlet can render content before and after the icon", async function (assert) {
@@ -364,22 +380,82 @@ module("Integration | Component | Post", function (hooks) {
 
     await renderComponent(this.post);
 
-    const before = document.querySelector(".language-before");
-    const trigger = document.querySelector(".fk-d-tooltip__trigger");
-    const after = document.querySelector(".language-after");
-
-    assert.dom(before).hasText("Before English (US)");
-    assert.dom(trigger).exists("core language icon renders");
-    assert.dom(after).hasText("After English (US)");
+    assert
+      .dom(".fk-d-tooltip__trigger .language-before")
+      .hasText("Before English (US)");
+    assert
+      .dom(".fk-d-tooltip__trigger .fk-d-tooltip__icon")
+      .exists("core language icon renders");
+    assert
+      .dom(".fk-d-tooltip__trigger .language-after")
+      .hasText("After English (US)");
     assert.deepEqual(
       Array.from(
         document.querySelectorAll(
-          ".language-before, .fk-d-tooltip__trigger, .language-after"
+          ".fk-d-tooltip__trigger .language-before, .fk-d-tooltip__trigger .fk-d-tooltip__icon, .fk-d-tooltip__trigger .language-after"
         )
       ).map((element) => element.classList[0]),
-      ["language-before", "fk-d-tooltip__trigger", "language-after"],
-      "connectors render around the icon"
+      ["language-before", "fk-d-tooltip__icon", "language-after"],
+      "connectors render around the icon inside the clickable trigger"
     );
+  });
+
+  test("language indicator outlet content toggles the post when clicked", async function (assert) {
+    registerTemporaryModule(
+      "discourse/plugins/test-plugin/templates/connectors/post-language-indicator__before/label-before",
+      hbs`<span class="language-before">Before {{@outletArgs.language}}</span>`
+    );
+
+    this.post.is_localized = true;
+    this.post.language = "en";
+    this.post.cooked = "<p>Translated post</p>";
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+    ];
+
+    pretender.get(`/posts/${this.post.id}/cooked.json`, () =>
+      response({ cooked: "<p>Original post</p>" })
+    );
+
+    await renderComponent(this.post);
+
+    await click(".fk-d-tooltip__trigger .language-before");
+
+    assert.strictEqual(
+      this.post.cooked,
+      "<p>Original post</p>",
+      "clicking the injected outlet item toggles to the original"
+    );
+  });
+
+  test("language indicator outlet exposes whether the original is shown", async function (assert) {
+    registerTemporaryModule(
+      "discourse/plugins/test-plugin/templates/connectors/post-language-indicator__before/translation-only",
+      hbs`{{#unless @outletArgs.showingOriginal}}<span class="translation-only">Translation</span>{{/unless}}`
+    );
+
+    this.post.is_localized = true;
+    this.post.language = "en";
+    this.post.cooked = "<p>Translated post</p>";
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+    ];
+
+    pretender.get(`/posts/${this.post.id}/cooked.json`, () =>
+      response({ cooked: "<p>Original post</p>" })
+    );
+
+    await renderComponent(this.post);
+
+    assert
+      .dom(".translation-only")
+      .exists("outlet content shows while the translation is displayed");
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert
+      .dom(".translation-only")
+      .doesNotExist("outlet content hides while the original is displayed");
   });
 
   test("language tooltip on mobile translates when tapping the tooltip text", async function (assert) {
@@ -419,6 +495,15 @@ module("Integration | Component | Post", function (hooks) {
       "<p>Original post</p>",
       "content is switched after tapping tooltip text"
     );
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert
+      .dom(".post-language__original-language")
+      .hasText(
+        new RegExp(i18n("post.tap_to_show_translation")),
+        "tap prompt invites showing the translation while the original is shown"
+      );
   });
 
   test("outdated localization", async function (assert) {

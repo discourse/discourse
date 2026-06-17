@@ -5044,6 +5044,8 @@ en:
       originally_written_in: "Originally in %{language}"
       click_to_show_original: "Click to show original"
       tap_to_show_original: "Tap here to show original"
+      click_to_show_translation: "Click to show translation"
+      tap_to_show_translation: "Tap here to show translation"
       ai_translation_disclaimer: "AI-generated translations may be inaccurate."
 
     category:
