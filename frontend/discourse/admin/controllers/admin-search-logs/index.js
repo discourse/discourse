@@ -12,6 +12,10 @@ export default class AdminSearchLogsIndexController extends Controller {
       id: "all",
       name: i18n("admin.logs.search_logs.types.all_search_types"),
     },
+    {
+      id: "logged_in_only",
+      name: i18n("admin.logs.search_logs.types.logged_in_only"),
+    },
     { id: "header", name: i18n("admin.logs.search_logs.types.header") },
     {
       id: "full_page",

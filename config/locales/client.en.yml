@@ -7125,14 +7125,14 @@ en:
             headline:
               no_signal_title: "Not enough search activity to summarise yet."
               no_signal: "Pick a longer date range or come back once members have searched more."
-              content_gaps: "More than 10% of searches ended without a click this period. Review the content gaps below to see what's missing."
+              content_gaps: "More than 10% of member searches ended without a click this period. Review the content gaps below to see what's missing."
               rate_climbing: "The no-result rate is climbing compared with the previous period. Keep an eye on the content gaps below."
               shrinking: "Search volume is down compared with the previous period, while most searches still lead to content."
               healthy: "Members keep finding what they search for, and search volume is steady or growing."
             kpi:
               total_searches:
                 label: "Total searches"
-                tooltip: "The number of searches performed in your community."
+                tooltip: "The number of searches performed by members in your community."
               no_result_rate:
                 label: "No-result rate"
                 tooltip: "The percentage of searches where members didn't click any result (0% CTR). This indicates that members may be searching for content your community doesn't have."
@@ -7142,7 +7142,7 @@ en:
               status: "Status"
             trending:
               title: "Trending searches"
-              tooltip: "The most popular search terms."
+              tooltip: "The most popular search terms among members."
               empty: "No searches in this period."
             content_gaps:
               title: "Content gaps"
@@ -8740,6 +8740,7 @@ en:
             header: "Header"
             full_page: "Full page"
             click_through_only: "All (click through only)"
+            logged_in_only: "Logged in only"
           header_search_results: "Header search results"
         logster:
           title: "Error logs"
