@@ -40,6 +40,16 @@ Discourse::Application.routes.draw do
     post "queries" => "discourse_data_explorer/api/v1/queries#create"
   end
 
+  # Thin-layers alternative (jsonapi.rb) being compared against the Graphiti
+  # endpoint above. See docs/api-modernization-exploration.md (Part 9).
+  scope "/data-explorer/jsonapi-rb", defaults: { format: :json } do
+    get "queries" => "discourse_data_explorer/jsonapi_rb/queries#index"
+    get "queries/:id" => "discourse_data_explorer/jsonapi_rb/queries#show",
+        :constraints => {
+          id: /\d+/,
+        }
+  end
+
   mount DiscourseDataExplorer::Engine, at: "/admin/plugins/discourse-data-explorer"
   get "/admin/plugins/explorer" => redirect("/admin/plugins/discourse-data-explorer")
   get "/admin/plugins/explorer/queries" =>

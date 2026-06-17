@@ -320,3 +320,6 @@ gem "pdf-reader", require: false
 gem "graphiti", "1.10.2"
 gem "graphiti-rails"
 gem "pagy", "~> 43.0"
+# thin-layers alternative being compared against Graphiti (same spike)
+gem "jsonapi.rb"
+gem "ransack"

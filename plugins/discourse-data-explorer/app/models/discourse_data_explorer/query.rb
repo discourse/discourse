@@ -21,6 +21,18 @@ module DiscourseDataExplorer
     belongs_to :user
     validates :name, presence: true
 
+    # jsonapi.rb / Ransack comparison spike: Ransack 4 requires the model to
+    # allowlist filterable/sortable fields (a security default). NOTE: the
+    # Graphiti spike needed no model changes — it declared filters/sorts on the
+    # resource instead. See docs/api-modernization-exploration.md.
+    def self.ransackable_attributes(_auth_object = nil)
+      %w[name description last_run_at]
+    end
+
+    def self.ransackable_associations(_auth_object = nil)
+      []
+    end
+
     scope :for_group,
           ->(group) do
             where(hidden: false).joins(
