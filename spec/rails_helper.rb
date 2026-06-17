@@ -177,7 +177,7 @@ RSpec.configure do |config|
 
   config.before(:each, type: :system) do |example|
     SystemDrivers.preload_model_schemas!
-    SystemDrivers.register!(color_scheme: example.metadata[:color_scheme])
+    SystemDrivers.register!(example)
     driven_by SystemDrivers.driver_for(example)
 
     setup_system_test
