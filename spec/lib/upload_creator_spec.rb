@@ -215,6 +215,22 @@ RSpec.describe UploadCreator do
         expect(upload.original_filename).to eq("large_and_unoptimized.png")
       end
 
+      UploadCreator::ADMIN_ASSET_TYPES.each do |type|
+        it "should not convert to jpeg when the image is a #{type} asset" do
+          upload =
+            UploadCreator.new(
+              large_file,
+              large_filename,
+              type: type,
+              force_optimize: true,
+            ).create_for(admin.id)
+
+          expect(upload.extension).to eq("png")
+          expect(File.extname(upload.url)).to eq(".png")
+          expect(upload.original_filename).to eq("large_and_unoptimized.png")
+        end
+      end
+
       context "with jpeg image quality settings" do
         before do
           SiteSetting.png_to_jpg_quality = 75
