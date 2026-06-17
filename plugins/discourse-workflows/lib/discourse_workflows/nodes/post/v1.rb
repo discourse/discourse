@@ -5,8 +5,19 @@ module DiscourseWorkflows
     module Post
       class V1 < NodeType
         OPERATIONS = %w[create edit get list].freeze
-        STATUS_OPTIONS = %w[any open closed archived noreplies single_user].freeze
-        POST_TYPE_OPTIONS = %w[all first reply].freeze
+        STATUS_OPTIONS = %w[
+          any
+          open
+          closed
+          archived
+          listed
+          unlisted
+          deleted
+          public
+          noreplies
+          single_user
+        ].freeze
+        POST_TYPE_OPTIONS = %w[regular all first reply moderator_action small_action whisper].freeze
         ORDER_OPTIONS = %w[latest oldest latest_topic oldest_topic likes].freeze
         DEFAULT_LIMIT = 30
         MAX_LIMIT = 500
@@ -181,7 +192,7 @@ module DiscourseWorkflows
               type: :options,
               required: false,
               options: POST_TYPE_OPTIONS,
-              default: "all",
+              default: "regular",
               ui: {
                 hidden: true,
               },
@@ -309,7 +320,7 @@ module DiscourseWorkflows
             "topics" => exec_ctx.get_node_parameter("topics", item_index),
             "usernames" => exec_ctx.get_node_parameter("usernames", item_index),
             "groups" => exec_ctx.get_node_parameter("groups", item_index),
-            "post_type" => exec_ctx.get_node_parameter("post_type", item_index, default: "all"),
+            "post_type" => exec_ctx.get_node_parameter("post_type", item_index, default: "regular"),
             "status" => exec_ctx.get_node_parameter("status", item_index, default: "any"),
             "keywords" => exec_ctx.get_node_parameter("keywords", item_index),
             "topic_keywords" => exec_ctx.get_node_parameter("topic_keywords", item_index),
@@ -450,7 +461,7 @@ module DiscourseWorkflows
           add_query_part(parts, "groups", config["groups"])
           add_query_part(parts, "keywords", config["keywords"])
           add_query_part(parts, "topic_keywords", config["topic_keywords"])
-          if POST_TYPE_OPTIONS.include?(config["post_type"]) && config["post_type"] != "all"
+          if POST_TYPE_OPTIONS.include?(config["post_type"]) && config["post_type"] != "regular"
             add_query_part(parts, "post_type", config["post_type"])
           end
           if STATUS_OPTIONS.include?(config["status"]) && config["status"] != "any"

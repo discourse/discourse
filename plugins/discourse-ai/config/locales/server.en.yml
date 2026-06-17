@@ -273,6 +273,13 @@ en:
       copied: "Copied to clipboard"
     unknown_model: "Unknown AI model"
 
+    discourse_workflows:
+      ai_agent:
+        errors:
+          locked_default_llm_missing: "Agent '%{agent}' is locked to its default LLM, but no valid default LLM is configured"
+          llm_not_found: "LLM model with id %{llm_model_id} not found"
+          no_llm_configured: "No LLM is configured for agent '%{agent}'. Select an LLM model or configure an agent/site default LLM."
+
     tools:
       custom_name: "%{name} (custom)"
       presets:

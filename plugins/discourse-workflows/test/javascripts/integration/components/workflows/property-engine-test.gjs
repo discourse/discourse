@@ -824,7 +824,12 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
   test("renders combo boxes from metadata and applies option patches", async function (assert) {
     this.setProperties({
-      configuration: { agent_id: 2, agent_name: "" },
+      configuration: {
+        agent_force_default_llm: true,
+        agent_id: 2,
+        agent_name: "",
+        llm_model_id: 99,
+      },
       formApi: null,
       nodeType: "action:ai_agent",
       nodeTypes: [
@@ -832,8 +837,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
           identifier: "action:ai_agent",
           metadata: {
             agents: [
-              { id: 1, name: "Support Bot" },
-              { id: 2, name: "Helper Bot" },
+              { id: 1, name: "Support Bot", force_default_llm: false },
+              { id: 2, name: "Helper Bot", force_default_llm: true },
             ],
             i18n_prefix: "discourse_ai.discourse_workflows",
           },
@@ -854,7 +859,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
             filterable: true,
             name_property: "name",
             none: "discourse_ai.discourse_workflows.ai_agent.select_agent",
+            resets: ["llm_model_id"],
             set_from_option: {
+              agent_force_default_llm: "force_default_llm",
               agent_name: "name",
             },
             value_property: "id",
@@ -894,7 +901,190 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await selector.selectRowByValue("1");
 
     assert.strictEqual(String(this.formApi.get("agent_id")), "1");
+    assert.false(this.formApi.get("agent_force_default_llm"));
     assert.strictEqual(this.formApi.get("agent_name"), "Support Bot");
+    assert.strictEqual(this.formApi.get("llm_model_id"), null);
+  });
+
+  test("applies option patches from remote combo box options", async function (assert) {
+    const requests = [];
+    pretender.post(
+      "/admin/plugins/discourse-workflows/dynamic-node-parameters/options.json",
+      (request) => {
+        const body = JSON.parse(request.requestBody);
+        requests.push(body);
+
+        return response([
+          {
+            id: 1,
+            name: "Support Bot",
+            force_default_llm: false,
+            resolved_llm_name: "Default LLM",
+          },
+        ]);
+      }
+    );
+
+    this.setProperties({
+      configuration: {
+        agent_force_default_llm: true,
+        agent_id: null,
+        agent_name: "",
+        agent_resolved_llm_name: "",
+        llm_model_id: 99,
+      },
+      formApi: null,
+      node: {
+        clientId: "node-1",
+        type: "action:ai_agent",
+        typeVersion: "1.0",
+      },
+      nodeType: "action:ai_agent",
+      nodeTypes: [
+        {
+          identifier: "action:ai_agent",
+          name: "action:ai_agent",
+          version: "1.0",
+        },
+      ],
+      schema: {
+        agent_id: {
+          type: "integer",
+          required: true,
+          type_options: {
+            load_options_method: "agents",
+          },
+          no_data_expression: true,
+          ui: {
+            control: "combo_box",
+          },
+          control_options: {
+            filterable: true,
+            name_property: "name",
+            resets: ["llm_model_id"],
+            set_from_option: {
+              agent_force_default_llm: "force_default_llm",
+              agent_name: "name",
+              agent_resolved_llm_name: "resolved_llm_name",
+            },
+            value_property: "id",
+          },
+        },
+        agent_force_default_llm: {
+          type: "boolean",
+        },
+        agent_name: {
+          type: "string",
+        },
+        agent_resolved_llm_name: {
+          type: "string",
+        },
+        llm_model_id: {
+          type: "integer",
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @node={{this.node}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const selector = selectKit(".combo-box");
+    await selector.expand();
+    await waitFor(".combo-box .select-kit-row[data-value='1']");
+    await selector.selectRowByValue("1");
+
+    assert.strictEqual(String(this.formApi.get("agent_id")), "1");
+    assert.false(this.formApi.get("agent_force_default_llm"));
+    assert.strictEqual(this.formApi.get("agent_name"), "Support Bot");
+    assert.strictEqual(
+      this.formApi.get("agent_resolved_llm_name"),
+      "Default LLM"
+    );
+    assert.strictEqual(this.formApi.get("llm_model_id"), null);
+    assert.true(requests.length >= 1);
+    assert.strictEqual(requests[0].methodName, "agents");
+  });
+
+  test("renders combo box dynamic none labels from configuration", async function (assert) {
+    this.setProperties({
+      configuration: {
+        agent_resolved_llm_name: "Workflow LLM",
+        llm_model_id: null,
+      },
+      nodeType: "action:ai_agent",
+      nodeTypes: [
+        {
+          identifier: "action:ai_agent",
+          metadata: {
+            llm_models: [{ id: 1, name: "Override LLM" }],
+          },
+        },
+      ],
+      schema: {
+        llm_model_id: {
+          type: "integer",
+          required: false,
+          type_options: {
+            load_options_method: "llm_models",
+          },
+          no_data_expression: true,
+          ui: {
+            control: "combo_box",
+          },
+          control_options: {
+            name_property: "name",
+            none: "discourse_ai.discourse_workflows.ai_agent.llm_model_default",
+            none_label_field: "agent_resolved_llm_name",
+            none_label_i18n_key:
+              "discourse_ai.discourse_workflows.ai_agent.llm_model_default_with_name",
+            value_property: "id",
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const selector = selectKit(".combo-box");
+
+    assert.strictEqual(
+      selector.header().label(),
+      "Use agent default (Workflow LLM)"
+    );
   });
 
   test("renders remote multi-select options from load options", async function (assert) {

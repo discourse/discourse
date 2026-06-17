@@ -235,6 +235,10 @@ en:
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
+          forced_llm_notice_description: "This agent is locked to its configured default LLM. The workflow cannot override it."
+          llm_model_id: "LLM model"
+          llm_model_default: "Use agent default"
+          llm_model_default_with_name: "Use agent default (%{value})"
           prompt: "Prompt"
           select_agent: "Select an agent..."
 

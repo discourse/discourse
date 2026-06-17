@@ -348,6 +348,60 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       )
     end
 
+    it "lists regular posts by default and explicit action posts" do
+      topic = Fabricate(:topic, category: category, user: user)
+      regular_post = Fabricate(:post, topic: topic, user: user, post_number: 1, raw: "regular body")
+      small_action_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: admin,
+          post_number: 2,
+          post_type: Post.types[:small_action],
+        )
+
+      default_result =
+        execute_node_output(
+          configuration: {
+            "operation" => "list",
+            "limit" => "10",
+          },
+          item: item,
+        ).first
+      all_result =
+        execute_node_output(
+          configuration: {
+            "operation" => "list",
+            "post_type" => "all",
+            "limit" => "10",
+          },
+          item: item,
+        ).first
+      small_action_result =
+        execute_node_output(
+          configuration: {
+            "operation" => "list",
+            "post_type" => "small_action",
+            "limit" => "10",
+          },
+          item: item,
+        ).first
+
+      expect(default_result.map { |output_item| output_item.dig("json", "post", "id") }).to include(
+        regular_post.id,
+      )
+      expect(
+        default_result.map { |output_item| output_item.dig("json", "post", "id") },
+      ).not_to include(small_action_post.id)
+      expect(all_result.map { |output_item| output_item.dig("json", "post", "id") }).to include(
+        regular_post.id,
+        small_action_post.id,
+      )
+      expect(
+        small_action_result.map { |output_item| output_item.dig("json", "post", "id") },
+      ).to contain_exactly(small_action_post.id)
+    end
+
     it "respects actor permissions when listing posts" do
       restricted = Fabricate(:category, read_restricted: true)
       Fabricate(:category_group, category: restricted, group: Group[:staff], permission_type: 0)
