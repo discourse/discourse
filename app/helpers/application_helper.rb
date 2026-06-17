@@ -667,7 +667,11 @@ module ApplicationHelper
   def user_scheme_id
     return @user_scheme_id if defined?(@user_scheme_id)
     scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
-    @user_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
+    @user_scheme_id = scheme_id if scheme_id &&
+      (
+        ColorScheme.exists?(id: scheme_id, user_selectable: true) ||
+          theme.color_scheme_id == scheme_id.to_i
+      )
   end
 
   def scheme_id
@@ -683,10 +687,18 @@ module ApplicationHelper
     @scheme_id = Theme.where(id: theme_id).pick(:color_scheme_id)
   end
 
+  def theme
+    @theme = theme_id ? Theme.find_by_id(theme_id) : Theme.find_default
+  end
+
   def user_dark_scheme_id
     return @user_dark_scheme_id if defined?(@user_dark_scheme_id)
     scheme_id = cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id
-    @user_dark_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
+    @user_dark_scheme_id = scheme_id if scheme_id &&
+      (
+        ColorScheme.exists?(id: scheme_id, user_selectable: true) ||
+          theme.dark_color_scheme_id == scheme_id.to_i
+      )
   end
 
   def dark_scheme_id
