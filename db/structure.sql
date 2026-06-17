@@ -7876,7 +7876,9 @@ CREATE TABLE public.remote_themes (
     authors character varying,
     theme_version character varying,
     minimum_discourse_version character varying,
-    maximum_discourse_version character varying
+    maximum_discourse_version character varying,
+    local_compat_ref character varying,
+    remote_compat_ref character varying
 );
 
 
@@ -21982,6 +21984,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260610205840'),
 ('20260610075829'),
 ('20260609050938'),
+('20260608104742'),
 ('20260607161322'),
 ('20260604052235'),
 ('20260603115312'),
