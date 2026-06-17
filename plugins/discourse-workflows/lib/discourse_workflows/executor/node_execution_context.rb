@@ -260,7 +260,13 @@ module DiscourseWorkflows
 
       def actor_from_parameter(path, item_index = 0, default: "system")
         username = get_node_parameter(path, item_index, default: default)
-        actor_from(username: username.presence || default, field: path.to_s, item_index: item_index)
+
+        if username.blank?
+          raise DiscourseWorkflows::NodeError,
+                I18n.t("discourse_workflows.errors.actor.blank", field: path.to_s)
+        end
+
+        actor_from(username: username, field: path.to_s, item_index: item_index)
       end
 
       def actor_from(username: nil, id: nil, field: nil, item_index: nil)

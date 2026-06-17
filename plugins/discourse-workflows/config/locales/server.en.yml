@@ -34,6 +34,8 @@ en:
       node_does_not_accept_inputs: "%{node} does not accept inputs."
       duplicate_node_names: "Node names must be unique within a workflow. Duplicates: %{names}"
       no_rows_matched_filter: "No rows matched the provided filter."
+      actor:
+        blank: "The user for '%{field}' resolved to a blank value."
       item:
         inconsistent_format_title: "Inconsistent item format"
         inconsistent_format: "Every returned item must use the same format."
