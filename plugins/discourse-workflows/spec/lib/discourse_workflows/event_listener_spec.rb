@@ -8,7 +8,10 @@ RSpec.describe DiscourseWorkflows::EventListener do
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:tag) { Fabricate(:tag, name: "matched") }
 
-  before { SiteSetting.tagging_enabled = true }
+  before do
+    SiteSetting.tagging_enabled = true
+    DiscourseWorkflows::WorkflowDependency.clear_cache!
+  end
 
   it "enqueues a job when a matching event fires" do
     graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
@@ -217,6 +220,21 @@ RSpec.describe DiscourseWorkflows::EventListener do
     described_class.handle(DiscourseWorkflows::Nodes::PostEdited::V1, post, "<p>Cooked</p>")
 
     expect(enqueued_trigger_node_ids).not_to include("first-post-only")
+  end
+
+  it "does not query the dependencies table when no live workflow uses the fired trigger type" do
+    create_published_workflow("closed-trigger", "trigger:topic_closed")
+    DiscourseWorkflows::WorkflowDependency.active_node_types # warm the cache
+
+    queries =
+      track_sql_queries do
+        described_class.handle(DiscourseWorkflows::Nodes::TopicCreated::V1, topic)
+      end
+
+    dependency_queries =
+      queries.select { |sql| sql.include?("discourse_workflows_workflow_dependencies") }
+    expect(dependency_queries).to be_empty
+    expect(enqueued_trigger_node_ids).to be_empty
   end
 
   def create_published_workflow(trigger_node_id, trigger_type, configuration: {})
