@@ -27,7 +27,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
       context "as anonymous user" do
         before do
-          sign_out
+          delete "/session/#{current_user.username}.json"
           SiteSetting.chat_allowed_groups =
             "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
         end
@@ -51,6 +51,18 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           get "/chat/api/channels/#{direct_message_channel.id}/messages"
 
           expect(response.status).to eq(403)
+        end
+
+        it "skips bookmark queries" do
+          queries =
+            track_sql_queries do
+              get "/chat/api/channels/#{channel.id}/messages"
+              expect(response.status).to eq(200)
+            end
+
+          bookmark_queries = queries.select { |query| query.include?('FROM "bookmarks"') }
+
+          expect(bookmark_queries).to be_empty
         end
       end
     end

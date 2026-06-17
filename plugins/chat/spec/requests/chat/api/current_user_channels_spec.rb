@@ -34,6 +34,9 @@ describe Chat::Api::CurrentUserChannelsController do
 
           expect(public_channels.map { |channel| channel["id"] }).to eq([public_channel.id])
           expect(public_channels.first["meta"]["can_join_chat_channel"]).to eq(true)
+          expect(public_channels.first["meta"]["message_bus_last_ids"].keys).to eq(
+            %w[channel_message_bus_last_id],
+          )
           expect(response.parsed_body["direct_message_channels"]).to be_blank
         end
 

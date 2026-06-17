@@ -99,13 +99,23 @@ module Chat
       )
     end
 
-    def fetch_messages(metadata:)
-      [
+    def fetch_messages(metadata:, guardian:)
+      messages = [
         metadata[:messages],
         metadata[:past_messages]&.reverse,
         (metadata[:target_message] unless metadata[:target_message]&.thread_reply?),
         metadata[:future_messages],
       ].flatten.compact
+
+      if guardian.user.blank?
+        messages.each do |message|
+          association = message.association(:bookmarks)
+          association.target = []
+          association.loaded!
+        end
+      end
+
+      messages
     end
 
     def fetch_thread_ids(messages:)

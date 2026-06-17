@@ -191,7 +191,7 @@ export default class Chat extends Service {
     }
   }
 
-  async loadChannels() {
+  async loadChannels({ subscribe = Boolean(this.currentUser) } = {}) {
     // We want to be able to call this method multiple times, but only
     // actually load the channels once. This is because we might call
     // this method before the chat is fully initialized, and we don't
@@ -204,7 +204,7 @@ export default class Chat extends Service {
       if (!this.loadingChannels) {
         this.loadingChannels = new Promise((resolve) => {
           this.chatApi.listCurrentUserChannels().then((result) => {
-            this.setupWithPreloadedChannels(result);
+            this.setupWithPreloadedChannels(result, { subscribe });
             this.chatStateManager.hasPreloadedChannels = true;
             resolve();
           });
@@ -217,8 +217,11 @@ export default class Chat extends Service {
     }
   }
 
-  setupWithPreloadedChannels(channelsView) {
-    if (this.canSubscribeToChat) {
+  setupWithPreloadedChannels(
+    channelsView,
+    { subscribe = Boolean(this.currentUser) } = {}
+  ) {
+    if (subscribe && this.canSubscribeToChat) {
       this.chatSubscriptionsManager.startChannelsSubscriptions(
         channelsView.meta.message_bus_last_ids
       );
@@ -247,7 +250,7 @@ export default class Chat extends Service {
         return this.chatChannelsManager.follow(storedChannel);
       }
 
-      if (storedChannel.isCategoryChannel) {
+      if (subscribe && storedChannel.isCategoryChannel) {
         this.chatSubscriptionsManager.startChannelSubscription(storedChannel, {
           readOnly: true,
         });

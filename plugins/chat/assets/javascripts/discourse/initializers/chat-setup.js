@@ -52,7 +52,6 @@ class ChatSetupInit {
           !EmbedMode.enabled
         ) {
           document.body.classList.add("chat-enabled");
-          this.chatService.loadChannels();
           api.addCardClickListenerSelector(".chat-drawer-outlet");
         }
 

@@ -29,12 +29,11 @@ module("Unit | Service | chat | anonymous", function (hooks) {
     sinon.restore();
   });
 
-  test("setupWithPreloadedChannels subscribes to public channels as read-only", function (assert) {
+  test("setupWithPreloadedChannels skips realtime subscriptions by default", function (assert) {
     const channel = this.fabricators.channel({
       meta: {
         message_bus_last_ids: {
           channel_message_bus_last_id: 1,
-          new_messages: 2,
         },
       },
     });
@@ -56,14 +55,13 @@ module("Unit | Service | chat | anonymous", function (hooks) {
       },
     });
 
-    assert.true(
-      this.chatSubscriptionsManager.startChannelsSubscriptions.calledOnce
+    assert.false(
+      this.chatSubscriptionsManager.startChannelsSubscriptions.called,
+      "global channel subscriptions are skipped"
     );
-    assert.true(
-      this.chatSubscriptionsManager.startChannelSubscription.calledWith(
-        channel,
-        { readOnly: true }
-      )
+    assert.false(
+      this.chatSubscriptionsManager.startChannelSubscription.called,
+      "per-channel subscriptions are skipped"
     );
   });
 });
