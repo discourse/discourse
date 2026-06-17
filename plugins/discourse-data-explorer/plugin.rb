@@ -49,6 +49,12 @@ if defined?(Graphiti)
 end
 
 after_initialize do
+  # PERF-TEMP (benchmarking only): Graphiti concurrency is a process-wide, memoized
+  # switch. Toggle it per-boot (GRAPHITI_CONCURRENCY=off) to measure both regimes
+  # against the thin-layers endpoint. Runs before the first request → before the
+  # executor memoizes. Remove after the perf comparison (Part 9).
+  Graphiti.config.concurrency = false if defined?(Graphiti) && ENV["GRAPHITI_CONCURRENCY"] == "off"
+
   GlobalSetting.add_default(:max_data_explorer_api_reqs_per_10_seconds, 2)
 
   # Available options:
