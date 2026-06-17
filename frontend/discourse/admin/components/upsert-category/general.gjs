@@ -23,6 +23,7 @@ import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { runOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
+import { runOnBeforeVisibilityChange } from "discourse/lib/on-before-visibility-change";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import PermissionType from "discourse/models/permission-type";
@@ -337,7 +338,19 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   @action
-  onChangeVisibility(value) {
+  async onChangeVisibility(value) {
+    const allowed = await runOnBeforeVisibilityChange({
+      nextVisibility: value,
+      previousVisibility: this.categoryVisibility,
+      category: this.args.category,
+      form: this.args.form,
+      transientData: this.args.transientData,
+    });
+
+    if (!allowed) {
+      return;
+    }
+
     // Save current permissions before switching to public
     if (value === "public" && this.isPrivateCategory) {
       this.#previousPermissions = (this.permissions || []).map((p) => ({
