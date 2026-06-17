@@ -746,6 +746,36 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
       end
 
+      context "when user only has a passkey and allow_passkeys_for_2fa is enabled" do
+        before do
+          SiteSetting.allow_passkeys_for_2fa = true
+          Fabricate(:passkey_with_random_credential, user: user)
+        end
+
+        it "requires completing 2FA through local login" do
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+
+          data = JSON.parse(cookies[:authentication_data])
+
+          expect(data["email"]).to eq(user.email)
+          expect(data["omniauth_disallow_totp"]).to eq(true)
+        end
+
+        it "logs the user in when allow_passkeys_for_2fa is disabled" do
+          SiteSetting.allow_passkeys_for_2fa = false
+
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+
+          data = JSON.parse(cookies[:authentication_data])
+
+          expect(data["authenticated"]).to eq(true)
+        end
+      end
+
       context "when user has TOTP enabled but enforce_second_factor_on_external_auth is false" do
         before { user.create_totp(enabled: true) }
 

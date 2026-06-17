@@ -148,6 +148,35 @@ RSpec.describe SecondFactorManager do
         expect(user.has_multiple_second_factor_methods?).to eq(false)
       end
     end
+
+    context "when passkeys count as a second factor" do
+      before do
+        SiteSetting.allow_passkeys_for_2fa = true
+        SiteSetting.enforce_second_factor = "all"
+      end
+
+      it "counts a passkey alongside totp when 2FA is enforced" do
+        disable_security_key
+        expect(user.has_multiple_second_factor_methods?).to eq(false)
+
+        Fabricate(:passkey_with_random_credential, user: user)
+        expect(user.has_multiple_second_factor_methods?).to eq(true)
+      end
+
+      it "does not count a passkey when 2FA is not enforced" do
+        SiteSetting.enforce_second_factor = "no"
+        disable_security_key
+        Fabricate(:passkey_with_random_credential, user: user)
+        expect(user.has_multiple_second_factor_methods?).to eq(false)
+      end
+
+      it "returns false for a passkey-only user" do
+        disable_security_key
+        disable_totp
+        Fabricate(:passkey_with_random_credential, user: user)
+        expect(user.has_multiple_second_factor_methods?).to eq(false)
+      end
+    end
   end
 
   describe "#only_security_keys_enabled?" do
@@ -197,6 +226,67 @@ RSpec.describe SecondFactorManager do
     end
   end
 
+  describe "#passkey_required_as_second_factor?" do
+    before do
+      SiteSetting.allow_passkeys_for_2fa = true
+      Fabricate(:passkey_with_random_credential, user: user)
+    end
+
+    it "is false when 2FA is not enforced" do
+      SiteSetting.enforce_second_factor = "no"
+      expect(user.passkey_required_as_second_factor?).to eq(false)
+    end
+
+    it "is true when 2FA is enforced for everyone" do
+      SiteSetting.enforce_second_factor = "all"
+      expect(user.passkey_required_as_second_factor?).to eq(true)
+    end
+
+    it "follows staff enforcement for staff and non-staff users" do
+      SiteSetting.enforce_second_factor = "staff"
+      expect(user.passkey_required_as_second_factor?).to eq(false)
+
+      user.update!(admin: true)
+      expect(user.passkey_required_as_second_factor?).to eq(true)
+    end
+
+    it "is false when the user has no passkey even if 2FA is enforced" do
+      SiteSetting.enforce_second_factor = "all"
+      user.security_keys.destroy_all
+      expect(user.passkey_required_as_second_factor?).to eq(false)
+    end
+  end
+
+  describe "#has_any_second_factor_methods_enabled?" do
+    it "is true when totp or security keys are enabled" do
+      expect(user.has_any_second_factor_methods_enabled?).to eq(true)
+
+      disable_totp
+      expect(user.has_any_second_factor_methods_enabled?).to eq(true)
+
+      disable_security_key
+      expect(user.has_any_second_factor_methods_enabled?).to eq(false)
+    end
+
+    context "when the user only has a passkey" do
+      before do
+        disable_totp
+        disable_security_key
+        Fabricate(:passkey_with_random_credential, user: user)
+      end
+
+      it "is true when allow_passkeys_for_2fa is enabled, regardless of enforcement" do
+        SiteSetting.allow_passkeys_for_2fa = true
+        expect(user.has_any_second_factor_methods_enabled?).to eq(true)
+      end
+
+      it "is false when allow_passkeys_for_2fa is disabled" do
+        SiteSetting.allow_passkeys_for_2fa = false
+        expect(user.has_any_second_factor_methods_enabled?).to eq(false)
+      end
+    end
+  end
+
   describe "#authenticate_second_factor" do
     let(:params) { {} }
     let(:server_session) { ServerSession.new("some-prefix") }
@@ -213,16 +303,28 @@ RSpec.describe SecondFactorManager do
       end
 
       context "when the user has a passkey and allow_passkeys_for_2fa is enabled" do
-        # Login / email-login / password-reset flows call authenticate_second_factor
-        # without a second_factor_method. They don't advertise passkeys, so a
-        # passkey-only user must still pass through these flows; only the explicit
-        # 2FA endpoint (which submits a method) should require passkey validation.
         before do
           SiteSetting.allow_passkeys_for_2fa = true
           Fabricate(:passkey_with_random_credential, user: user)
         end
 
-        it "returns OK when no second_factor_method is submitted" do
+        it "returns OK without a second factor when 2FA is not enforced" do
+          # a passkey is a passwordless-login convenience here, not a forced
+          # second step on password login
+          result = user.authenticate_second_factor(params, server_session)
+          expect(result.ok).to eq(true)
+        end
+
+        it "is rejected without a second factor when 2FA is enforced" do
+          SiteSetting.enforce_second_factor = "all"
+          result = user.authenticate_second_factor(params, server_session)
+          expect(result.ok).to eq(false)
+          expect(result.error).to eq(I18n.t("login.invalid_second_factor_method"))
+          expect(result.passkeys_enabled).to eq(true)
+        end
+
+        it "returns OK when allow_passkeys_for_2fa is disabled" do
+          SiteSetting.allow_passkeys_for_2fa = false
           expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
         end
 

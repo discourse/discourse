@@ -833,6 +833,7 @@ class UsersController < ApplicationController
         admin: @user.admin?,
         second_factor_required: @user.totp_enabled?,
         security_key_required: @user.security_keys_enabled?,
+        passkeys_enabled: @user.passkey_required_as_second_factor?,
         backup_enabled: @user.backup_codes_enabled?,
         multiple_second_factor_methods: @user.has_multiple_second_factor_methods?,
       }
@@ -846,7 +847,13 @@ class UsersController < ApplicationController
         store_preloaded(
           "password_reset",
           MultiJson.dump(
-            security_params.merge(DiscourseWebauthn.allowed_credentials(@user, server_session)),
+            security_params.merge(
+              DiscourseWebauthn.allowed_credentials(
+                @user,
+                server_session,
+                include_passkeys: @user.passkey_required_as_second_factor?,
+              ),
+            ),
           ),
         )
 
@@ -858,7 +865,13 @@ class UsersController < ApplicationController
 
         DiscourseWebauthn.stage_challenge(@user, server_session)
         render json:
-                 security_params.merge(DiscourseWebauthn.allowed_credentials(@user, server_session))
+                 security_params.merge(
+                   DiscourseWebauthn.allowed_credentials(
+                     @user,
+                     server_session,
+                     include_passkeys: @user.passkey_required_as_second_factor?,
+                   ),
+                 )
       end
     end
   end
@@ -956,9 +969,16 @@ class UsersController < ApplicationController
           admin: @user.admin?,
           second_factor_required: @user.totp_enabled?,
           security_key_required: @user.security_keys_enabled?,
+          passkeys_enabled: @user.passkey_required_as_second_factor?,
           backup_enabled: @user.backup_codes_enabled?,
           multiple_second_factor_methods: @user.has_multiple_second_factor_methods?,
-        }.merge(DiscourseWebauthn.allowed_credentials(@user, server_session))
+        }.merge(
+          DiscourseWebauthn.allowed_credentials(
+            @user,
+            server_session,
+            include_passkeys: @user.passkey_required_as_second_factor?,
+          ),
+        )
 
         store_preloaded("password_reset", MultiJson.dump(security_params))
 

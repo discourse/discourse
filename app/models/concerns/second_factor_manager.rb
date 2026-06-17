@@ -15,6 +15,7 @@ module SecondFactorManager
       :totp_enabled,
       :multiple_second_factor_methods,
       :used_2fa_method,
+      :passkeys_enabled,
     )
 
   def create_totp(opts = {})
@@ -88,16 +89,37 @@ module SecondFactorManager
   end
   alias_method :passkeys_for_2fa_enabled?, :passkeys_available_as_second_factor?
 
-  # Passkey-as-2FA (`passkeys_available_as_second_factor?`) is intentionally
-  # excluded: it only satisfies `/session/2fa`. Password login, email login,
-  # and password reset have no passkey UI yet, so counting passkeys here would
-  # make those flows skip 2FA for passkey-only users.
+  # `enforce_second_factor` is the only setting that forces 2FA. A passkey is
+  # primarily a passwordless login credential, so merely owning one must not
+  # silently turn password/email/reset logins into a second step. We therefore
+  # only require (and advertise) a passkey as 2FA in those flows when the site
+  # enforces 2FA for this user; `allow_passkeys_for_2fa` just lets a passkey
+  # satisfy that enforcement.
+  def passkey_required_as_second_factor?
+    passkeys_available_as_second_factor? && subject_to_enforced_second_factor?
+  end
+
+  def subject_to_enforced_second_factor?
+    case SiteSetting.enforce_second_factor
+    when "all"
+      true
+    when "staff"
+      staff?
+    else
+      false
+    end
+  end
+
   def has_any_second_factor_methods_enabled?
-    totp_enabled? || security_keys_enabled?
+    totp_enabled? || security_keys_enabled? || passkeys_available_as_second_factor?
   end
 
   def has_multiple_second_factor_methods?
-    security_keys_enabled? && totp_or_backup_codes_enabled?
+    [
+      security_keys_enabled?,
+      totp_or_backup_codes_enabled?,
+      passkey_required_as_second_factor?,
+    ].count(true) > 1
   end
 
   def totp_or_backup_codes_enabled?
@@ -116,12 +138,23 @@ module SecondFactorManager
     user_second_factors&.backup_codes&.count
   end
 
+  # Whether an in-progress authentication (password login, email login, password
+  # reset, or an explicit `/session/2fa` confirmation) must validate a second
+  # factor before succeeding.
+  def second_factor_required_for_authentication?(params)
+    return true if security_keys_enabled? || totp_or_backup_codes_enabled?
+    return false if !passkeys_available_as_second_factor?
+
+    # Passkey-only user: require it when the client explicitly submits a second
+    # factor (the `/session/2fa` page or the passkey button) or when the site
+    # enforces 2FA for them. Otherwise the passkey stays a passwordless-login
+    # convenience and authentication proceeds with the password alone.
+    params[:second_factor_method].present? || subject_to_enforced_second_factor?
+  end
+
   def authenticate_second_factor(params, server_session)
     ok_result = SecondFactorAuthenticationResult.new(true)
-    if !security_keys_enabled? && !totp_or_backup_codes_enabled? &&
-         (!passkeys_available_as_second_factor? || params[:second_factor_method].blank?)
-      return ok_result
-    end
+    return ok_result if !second_factor_required_for_authentication?(params)
 
     second_factor_token = params[:second_factor_token]
     second_factor_method = params[:second_factor_method]&.to_i
@@ -241,6 +274,8 @@ module SecondFactorManager
       security_keys_enabled?,
       totp_enabled?,
       has_multiple_second_factor_methods?,
+      nil,
+      passkey_required_as_second_factor?,
     )
   end
 

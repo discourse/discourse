@@ -52,7 +52,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   end
 
   def second_factor_enabled
-    object.totp_enabled? || object.security_keys_enabled?
+    object.has_any_second_factor_methods_enabled?
   end
 
   def can_disable_second_factor
