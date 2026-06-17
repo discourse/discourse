@@ -178,14 +178,17 @@ starting point.
 | Serializer | Used by | Last real feature work | Read |
 |---|---|---|---|
 | **jsonapi-serializable** | Graphiti | 2021 (46 stars) | **Dead.** Graphiti is welded to it. |
-| **jsonapi-serializer** (ex-fast_jsonapi) | thin-layers | ~2020–22; v3 rewrite stalled; 2026 commits are CI-only | **Feature-dead** — but swappable |
-| **Alba** | (candidate) | v3.10 (2025-11), active maintainer | **Alive** — viable thin-stack replacement |
+| **jsonapi-serializer** (ex-fast_jsonapi) | thin-layers | ~2020–22; v3 rewrite stalled; 2026 commits are CI-only | **Feature-dead** — but works; MIT + ~500 LOC, forkable on demand |
+| **Alba** | (evaluated, rejected) | v3.10 (2025-11), active maintainer | Alive, but JSON:API is "manual" (no compound-doc adapter) → would mean rebuilding the hard part. Rejected — see Part 9 |
 | **pagy** | both (keyset) | continuous (2026-06) | **Very alive** |
 
-> **Key maintenance finding (post-audit):** *both* leading paths render through a **dead
-> serializer** today (Graphiti→jsonapi-serializable; thin→jsonapi-serializer). The asymmetry:
-> Graphiti is welded to its dead serializer; the thin-layers path can **swap onto a live one
-> (Alba)**. See Part 9.
+> **Key maintenance finding (post-audit, refined in Part 9):** *both* leading paths render
+> through a **feature-dead serializer** (Graphiti→jsonapi-serializable; thin→jsonapi-serializer).
+> For a **frozen spec** this is a *mild, well-mitigated* risk, not a differentiator: the
+> serializers work today, are small + MIT, and can be **forked on demand** (~500 LOC) the day a
+> future Ruby/Rails breaks them. (We evaluated swapping the thin path to the *live* Alba and
+> rejected it — Alba does JSON:API "manually," so it would mean rebuilding the hard
+> compound-document engine the dead gem already provides. See Part 9.)
 
 The single most important data point: **jsonapi-resources was *the* batteries-included
 JSON:API framework for Rails, and it is now ~4 years without a meaningful release and no
@@ -210,9 +213,9 @@ spec without re-implementing `include`/`fields`/`filter`/`sort`/`page` by hand.
 | **Full JSON:API query surface** | ⚠️ include/fields/pagination yes; **filtering & sorting hand-rolled** (Ransack unusable — breaks core, Part 9) | ✅✅ all natively + deep sideloading, least code | ❌ formatter only — you build the surface |
 | **Public contract + OpenAPI docs** | ⚠️ DIY (rswag from request specs) | ⚠️ own `schema.json` (not OpenAPI) — **but** auto backwards-compat CI guard | ✅✅ grape-swagger (mature) |
 | **Versioning** | DIY in Rails (easy) | DIY in Rails (easy) | ✅ first-class |
-| **Longevity / low lock-in** | ✅ thin/forkable; can swap to a live serializer (Alba) — but ships on a dead one, and you own the query surface | ⚠️ high lock-in; alive but welded to a dead serializer (bus-factor lower than first stated — multiple active contributors) | ✅ framework solid / ⚠️ adapter fragile |
+| **Longevity / low lock-in** | ✅ thin/forkable; rides a feature-dead serializer (fork-on-demand for a frozen spec — mild risk), and you own the query surface | ⚠️ high lock-in; alive framework but welded to a dead serializer (bus-factor lower than first stated — multiple active contributors) | ✅ framework solid / ⚠️ adapter fragile |
 | **Discourse-fit** (Guardian, `Service::Base`, ActionController) | ✅✅ all reused as-is | ⚠️ auth is 100% DIY (base_scope + guards); `save` can delegate to a service, but side-posting fights it | ❌ reconstruct auth/`current_user` outside AC |
-| **Verdict** | ~~Best for the decade~~ — **premature; open** (Part 9): low lock-in & swappable serializer, but you build & own the query surface | **Best to *experience* full JSON:API fast** — and the only genuinely-alive framework here | Weakest for *this* goal |
+| **Verdict** | ~~Best for the decade~~ — **premature; open** (Part 9): low lock-in (own the glue), but you build & own the query surface | **Best to *experience* full JSON:API fast** — and the only genuinely-alive framework here | Weakest for *this* goal |
 
 ### The strategic read
 
@@ -661,8 +664,8 @@ all writes through attributes + a service.
    swappability and our `Service::Base`/Guardian patterns intact — and is the better host
    for a Stripe-style versioning seam. **→ The thin-layers spike (Part 9) refined this:**
    it's "same wire contract, but you build & own the query surface (Ransack is unusable in
-   Discourse), on a serializer you'd swap to Alba." Decision remains genuinely open —
-   performance is a wash, and it comes down to *depend (Graphiti) vs own (thin)*.
+   Discourse), on a feature-dead-but-forkable serializer (jsonapi-serializer)." Decision remains
+   genuinely open — performance is a wash, and it comes down to *depend (Graphiti) vs own (thin)*.
 4. **Design v1 for versioning from day one** (always-latest internal representation +
    serialization seam + per-key version pin) without building the full transformation
    pipeline yet.
@@ -1166,10 +1169,43 @@ after removal.)
 
 ### Maintenance reality (verified 2026-06-17)
 
-See the Part 3 serializer table. The decisive point: *both* leading paths render through a
-**dead serializer**, but Graphiti is welded to `jsonapi-serializable` whereas the thin path can
-swap onto a live one (**Alba**, v3.10 2025-11). Graphiti-the-*framework* is itself alive
-(1.10.2 2026-03, multiple contributors) — the original "bus-factor" worry was overstated.
+*Both* leading paths render through a **feature-dead serializer** (Graphiti→jsonapi-serializable,
+dead 2021; thin→jsonapi-serializer, last real features ~2020–22). Graphiti-the-*framework* is
+itself alive (1.10.2 2026-03, multiple contributors) — the original "bus-factor" worry was
+overstated.
+
+**But the dead-serializer risk is mild and well-mitigated, not a real differentiator** —
+because JSON:API 1.1 is a **frozen spec**, so the serializer needs no new features ("dead"
+≈ "done"). It works today, is small + MIT, and is **forkable on demand** (jsonapi-serializer is
+~500 core LOC) the day a future Ruby/Rails actually breaks it. The realistic failure is a
+language/framework-compat break, and the mitigation (fork the ~500 LOC) is cheap and paid only
+*if/when* triggered. So "depend now, fork-if-broken" is a sound decade posture. (Forking
+Graphiti's `jsonapi-serializable` is messier — Graphiti's internals are entangled with it — but
+Graphiti is alive and would likely patch/replace it upstream.)
+
+### Serialization: explored Alba, kept jsonapi-serializer
+
+We seriously evaluated swapping the thin path onto the **live** Alba serializer (v3.10, 2025-11)
+to escape the dead dependency. Conclusion: **not worth it.**
+
+- **Alba does JSON:API "manually"** (its own README; no compound-document adapter). Its
+  associations nest *inline* — the opposite of JSON:API's flat top-level `included`. So you build
+  the JSON:API document layer yourself on top of it.
+- A spec-grounded scope of a *fully-compliant read/document* adapter (against the JSON:API 1.1
+  normative text) shows the easy 70% is ~40 lines, but the remaining hard core is the
+  **deep-include compound-document engine**: recursive dot-path resolution, pulling intermediate
+  resources in for *full linkage*, cross-tree dedup, and sparse fields applied per-type at each
+  level — ~80–130 bug-prone lines whose compliance **test suite is as much work as the code**.
+- **That hard engine is exactly what jsonapi-serializer already provides** (737 LOC total;
+  `get_included_records` + `@known_included_objects` does deep includes + dedup + sparse-on-
+  included). So "swap to Alba for full compliance" means *throwing away the one hard thing the
+  dead gem solves correctly and rebuilding+testing it* — for a frozen spec. Net negative.
+- Vendoring jsonapi-serializer pre-emptively was also rejected: **fork-on-demand dominates** —
+  the fork option is free and always available (MIT, lockfile-pinned, ~500 LOC), so paying for it
+  before it's needed is speculative (YAGNI).
+
+**Decision on serialization: stay on jsonapi-serializer; fork-on-demand if it ever breaks.** The
+serializer axis is therefore a *wash* between the two paths and drops out of the decision.
 
 ### Perf head-to-head (corrected)
 
@@ -1201,27 +1237,56 @@ wrk, page 50, c=8, profile env, m2m-patched Graphiti, both endpoints in the same
 Net: **performance is a wash** — each wins one regime; both serve hundreds of rps/3 workers.
 Perf is not the deciding factor.
 
+### Built: the query-surface DSL (punch-list #1) — closes the "ease" gap
+
+The biggest knock on the thin path was "you hand-roll the query surface per endpoint." So we
+built the reusable piece: `BaseController` + a declarative `jsonapi do … end` DSL
+(`app/controllers/discourse_data_explorer/jsonapi_rb/base_controller.rb`). A resource now
+declares its `serializer`, `base_scope`, `filter`s, `sort`s (incl. join sorts), `default_sort`,
+`includes`, `preload`, `stat`s and `page` caps; the base implements the mechanics once —
+strict-param → 400 (filter **and** sort **and** include), filtering, sorting, keyset/offset
+pagination, sparse fieldsets, stats meta, Guardian scoping, and JSON:API rendering.
+
+Payoff (measured):
+
+| | LOC |
+|---|---|
+| `QueriesController` hand-rolled (before) | 112 |
+| `QueriesController` on the DSL (after) | **45** (of which **~29** is the declarative read config) |
+| `BaseController` (reusable, paid once) | 125 |
+
+So a **second** resource's read surface costs ~30 LOC of config — matching Graphiti's
+ergonomics (its `QueryResource` was ~40 declarative LOC + a shared `ApplicationResource`), but
+with no Ransack, no lock-in, and no footguns. **Bonus:** the DSL enforces `include`-strictness
+(unknown include → 400), which the hand-rolled controller didn't — so it's *more* spec-compliant,
+not just terser. All parity features re-verified (11/11) on the DSL-based endpoint.
+
+This **flips the "ease of building endpoints" axis from a Graphiti win to roughly even** — which
+was Graphiti's main remaining edge.
+
 ### Honest state of the comparison (decision OPEN)
 
 | Axis | Graphiti | Thin-layers (jsonapi.rb) |
 |---|---|---|
-| Ease of building endpoints | ✅ declarative filters/sorts/stats (works) | ❌ hand-roll the query surface (Ransack unusable) |
-| Project liveness | ✅ framework alive | ⚠️ mixins sleepy; serializer dead (but swappable → Alba) |
+| Ease of building endpoints | ✅ declarative filters/sorts/stats | ✅ declarative DSL (**built**, Part 9 #1) — ~30 LOC/resource, no Ransack |
+| Project liveness | ✅ framework alive | ⚠️ mixins sleepy; serializer feature-dead (frozen spec → fork-on-demand; mild) |
 | Compound-doc perf | slower (−38% vs thin) | faster |
 | Bare-request perf | faster (+52%) | slower (optimizable) |
 | Lock-in | high | low (own the glue) |
 | Footguns | writable-default data-loss; `graphiti-rails` rake `Object` pollution | Ransack-breaks-core (avoided by dropping Ransack) |
 | Core-safety | needs the `Object`-pollution scrub initializer | clean once Ransack removed |
-| What we'd own/maintain | config + a 1-line `Group` association to function; 3 *optional* perf monkeypatches | a small query-surface framework + a serializer swap (Alba) |
+| What we'd own/maintain | config + a 1-line `Group` association to function; 3 *optional* perf monkeypatches | a small query-surface framework; serializer stays jsonapi-serializer (fork only if it ever breaks) |
 
-**What would make thin-layers viable** (equal-investment punch-list, not yet built): (1) a
-reusable base controller + tiny declarative DSL for filters/sorts/strictness; (2) conditional
-relationship linkage (closes the flat-perf gap); (3) swap to Alba (live serializer); (4) absorb
-the 4 jsonapi.rb mixin files; (5) shared JSON:API error layer + contract guard. Items 1+4+5
-amount to **owning a small JSON:API framework** (~1–2k lines), on live dependencies, without
-Graphiti's lock-in/footguns.
+**Thin-layers viability punch-list:** **(1) ✅ DONE** — reusable base controller + declarative
+DSL for filters/sorts/strictness (see above, 125 LOC); (2) conditional relationship linkage
+(closes the flat-perf gap); (3) keep the serializer on jsonapi-serializer — fork-on-demand if a
+future Ruby/Rails breaks it (frozen spec, ~500 LOC, MIT); (4) absorb the 4 jsonapi.rb mixin
+files; (5) shared JSON:API error layer + contract guard. Items 1+4+5 amount to **owning a small
+JSON:API framework** (~1–2k lines), without Graphiti's lock-in/footguns — and #1, the biggest
+chunk, is now built and proven.
 
 **The crux for the decade:** **depend on Graphiti** (alive, declarative, easy — but lock-in +
-welded to a dead serializer + the data-loss/rake footguns) **vs. own a small thin framework**
-(more to build & maintain — but no lock-in, a swappable live serializer, no core-breaking deps).
-The decision turns on *"depend vs. own,"* not on performance or features.
+the data-loss/rake footguns) **vs. own a small thin framework** (more to build & maintain — but
+no lock-in, no core-breaking deps). Both ride a feature-dead serializer with the same
+fork-on-demand hatch, so that's a wash; perf is a wash. The decision turns on *"depend vs.
+own,"* not on performance, serializer liveness, or features.
