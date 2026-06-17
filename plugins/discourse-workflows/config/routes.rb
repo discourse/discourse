@@ -21,6 +21,7 @@ DiscourseWorkflows::Engine.routes.draw do
             execution_id: /\d+/,
           }
       get "/workflows/:id/settings" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/versions" => "admin#index", :constraints => { id: /\d+/ }
     end
 
     scope format: :json do
@@ -43,6 +44,11 @@ DiscourseWorkflows::Engine.routes.draw do
       post "/executions" => "executions#create"
       get "/executions" => "executions#index"
       get "/workflows/:workflow_id/executions" => "executions#index"
+      get "/workflows/:workflow_id/versions" => "workflow_versions#index"
+      post "/workflows/:workflow_id/versions/:version_id/restore" => "workflow_versions#restore",
+           :constraints => {
+             version_id: /[0-9a-f-]{36}/,
+           }
       delete "/executions" => "executions#destroy"
       get "/executions/:id" => "executions#show"
       get "/stats" => "stats#index"

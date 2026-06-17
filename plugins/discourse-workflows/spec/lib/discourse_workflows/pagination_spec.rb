@@ -66,4 +66,44 @@ RSpec.describe DiscourseWorkflows::Pagination do
       expect(page.load_more_url).to be_nil
     end
   end
+
+  describe ".cursor_page with a custom column" do
+    fab!(:workflow, :discourse_workflows_workflow)
+
+    before do
+      workflow.snapshot!(user: workflow.created_by) # version 2
+      workflow.snapshot!(user: workflow.created_by) # version 3
+    end
+
+    let(:scope) { workflow.workflow_versions.order(version_number: :desc) }
+
+    it "paginates and builds the cursor URL using the given column" do
+      page =
+        described_class.cursor_page(
+          scope: scope,
+          cursor: nil,
+          limit: 2,
+          path: "/versions.json",
+          column: :version_number,
+        )
+
+      expect(page.records.map(&:version_number)).to eq([3, 2])
+      expect(page.total_rows).to eq(3)
+      expect(page.load_more_url).to eq("/versions.json?cursor=2&limit=2")
+    end
+
+    it "applies the cursor using the given column" do
+      page =
+        described_class.cursor_page(
+          scope: scope,
+          cursor: 2,
+          limit: 10,
+          path: "/versions.json",
+          column: :version_number,
+        )
+
+      expect(page.records.map(&:version_number)).to eq([1])
+      expect(page.load_more_url).to be_nil
+    end
+  end
 end
