@@ -20921,7 +20921,7 @@ CREATE INDEX index_user_actions_on_acting_user_id ON public.user_actions USING b
 -- Name: index_user_actions_on_action_type_and_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_user_actions_on_action_type_and_created_at ON public.user_actions USING btree (action_type, created_at);
+CREATE INDEX index_user_actions_on_action_type_and_created_at ON public.user_actions USING btree (action_type, created_at, user_id);
 
 
 --
@@ -21913,6 +21913,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260617053237'),
 ('20260612092612'),
 ('20260610075829'),
 ('20260609050938'),
