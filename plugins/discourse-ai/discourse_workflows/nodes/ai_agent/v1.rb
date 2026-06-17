@@ -121,24 +121,31 @@ if defined?(DiscourseWorkflows)
           end
 
           def self.agent_options
-            default_llm = default_llm_model
+            agents =
+              ::AiAgent
+                .where(enabled: true)
+                .order(:name)
+                .pluck(:id, :name, :default_llm_id, :force_default_llm)
 
-            ::AiAgent
-              .where(enabled: true)
-              .order(:name)
-              .pluck(:id, :name, :default_llm_id, :force_default_llm)
-              .map do |id, name, default_llm_id, force_default_llm|
-                configured_llm = find_llm_model(default_llm_id)
-                resolved_llm = force_default_llm ? configured_llm : configured_llm || default_llm
-                {
-                  id: id,
-                  name: name,
-                  default_llm_id: default_llm_id,
-                  force_default_llm: force_default_llm,
-                  resolved_llm_id: resolved_llm&.id,
-                  resolved_llm_name: resolved_llm&.display_name,
-                }
-              end
+            site_default_llm_id = SiteSetting.ai_default_llm_model.presence&.to_i
+            llm_model_ids = agents.map { |_id, _name, default_llm_id, _force| default_llm_id }
+            llm_model_ids << site_default_llm_id
+            llm_models_by_id = ::LlmModel.where(id: llm_model_ids.compact.uniq).index_by(&:id)
+
+            default_llm = llm_models_by_id[site_default_llm_id]
+
+            agents.map do |id, name, default_llm_id, force_default_llm|
+              configured_llm = llm_models_by_id[default_llm_id]
+              resolved_llm = force_default_llm ? configured_llm : configured_llm || default_llm
+              {
+                id: id,
+                name: name,
+                default_llm_id: default_llm_id,
+                force_default_llm: force_default_llm,
+                resolved_llm_id: resolved_llm&.id,
+                resolved_llm_name: resolved_llm&.display_name,
+              }
+            end
           end
 
           def self.llm_model_options(context)
@@ -151,16 +158,6 @@ if defined?(DiscourseWorkflows)
                 { id: id, name: display_name }
               end
               .select { |llm_model| context.matches_filter?(llm_model[:name]) }
-          end
-
-          def self.default_llm_model
-            find_llm_model(SiteSetting.ai_default_llm_model)
-          end
-
-          def self.find_llm_model(id)
-            return if id.blank?
-
-            ::LlmModel.find_by(id: id)
           end
 
           def execute(exec_ctx)
