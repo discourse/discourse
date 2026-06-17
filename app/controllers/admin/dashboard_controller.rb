@@ -133,34 +133,19 @@ class Admin::DashboardController < Admin::StaffController
 
   def dashboard_sections_payload
     visible_ids = AdminDashboardSectionConfiguration.visible_section_ids
-    data = { sections: visible_ids.map { |id| { id: id, data: section_data(id) } } }
+    data = {
+      sections:
+        AdminDashboardSectionLoader.build(
+          section_ids: visible_ids,
+          current_user: current_user,
+          start_date: params[:start_date],
+          end_date: params[:end_date],
+        ),
+    }
     if current_user.admin?
       data[:configuration] = { sections: AdminDashboardSectionConfiguration.sections }
     end
     data
-  end
-
-  def section_data(id)
-    case id
-    when "highlights"
-      AdminDashboardHighlights.build(start_date: params[:start_date], end_date: params[:end_date])
-    when "traffic"
-      AdminDashboardSiteTraffic.build(
-        start_date: params[:start_date],
-        end_date: params[:end_date],
-        guardian: guardian,
-      )
-    when "engagement"
-      AdminDashboardEngagement.build(
-        start_date: params[:start_date],
-        end_date: params[:end_date],
-        current_user: current_user,
-      )
-    when "reports"
-      AdminDashboard::Reports::Section.build(guardian: guardian)
-    when "search"
-      AdminDashboardSearch.build(start_date: params[:start_date], end_date: params[:end_date])
-    end
   end
 
   def mark_new_features_as_seen

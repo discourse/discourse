@@ -133,7 +133,11 @@ export async function loadThemesAndPlugins() {
 export async function loadAdmin() {
   defineModules(
     "discourse/admin",
-    (await import("discourse/admin/compat-modules")).default
+    (
+      await import(
+        /* dynamicChunkName: "admin" */ "discourse/admin/compat-modules"
+      )
+    ).default
   );
 }
 

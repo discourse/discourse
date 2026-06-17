@@ -914,6 +914,51 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
           ],
         )
       end
+      it "normalizes saved thinking provider info" do
+        custom_prompt = [
+          [
+            "Grounded answer",
+            bot_user.username,
+            nil,
+            nil,
+            {
+              "message" => "Web search: OpenAI news",
+              "provider_info" => {
+                "gemini" => {
+                  "grounding_metadata" => {
+                    "webSearchQueries" => ["OpenAI news"],
+                  },
+                },
+              },
+            },
+          ],
+        ]
+
+        PostCustomPrompt.create!(post: second_post, custom_prompt: custom_prompt)
+
+        context =
+          described_class.messages_from_post(
+            third_post,
+            max_posts: 10,
+            bot_usernames: [bot_user.username],
+            include_uploads: false,
+          )
+
+        expect(context).to include(
+          {
+            type: :model,
+            content: "Grounded answer",
+            thinking: "Web search: OpenAI news",
+            thinking_provider_info: {
+              gemini: {
+                grounding_metadata: {
+                  webSearchQueries: ["OpenAI news"],
+                },
+              },
+            },
+          },
+        )
+      end
     end
   end
 end

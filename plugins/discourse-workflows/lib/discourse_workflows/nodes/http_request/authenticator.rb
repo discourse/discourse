@@ -6,6 +6,9 @@ module DiscourseWorkflows
       class Authenticator
         extend NodeErrorHandling
 
+        # RFC 7230 header field-name
+        HEADER_NAME_PATTERN = /\A[A-Za-z0-9!#$%&'*+.^_`|~-]+\z/
+
         def self.apply(config, headers, exec_ctx, item_index: 0)
           auth_mode = config.fetch("authentication") { "none" }
           return if auth_mode == "none"
@@ -17,6 +20,8 @@ module DiscourseWorkflows
             apply_basic_auth(headers, cred_data)
           when "bearer_token"
             apply_bearer_token(headers, cred_data)
+          when "header_auth"
+            apply_header_auth(headers, cred_data)
           end
         end
 
@@ -40,7 +45,18 @@ module DiscourseWorkflows
           headers["Authorization"] = "Bearer #{token}"
         end
 
-        private_class_method :fetch_credential_data, :apply_basic_auth, :apply_bearer_token
+        def self.apply_header_auth(headers, cred_data)
+          name = cred_data["name"].to_s
+          unless name.match?(HEADER_NAME_PATTERN)
+            raise_node_error!(I18n.t("discourse_workflows.errors.http_request.header_name_invalid"))
+          end
+          headers[name] = cred_data["value"]
+        end
+
+        private_class_method :fetch_credential_data,
+                             :apply_basic_auth,
+                             :apply_bearer_token,
+                             :apply_header_auth
       end
     end
   end

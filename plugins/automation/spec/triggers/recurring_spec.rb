@@ -117,7 +117,124 @@ describe "Recurring" do
         pending_automations = automation.reload.pending_automations
         expect(pending_automations.count).to eq(1)
         expect(pending_automations.first.execute_at).to eq_time(
-          Time.parse("2023-11-05 07:30:00 UTC"),
+          Time.parse("2023-11-01 07:30:00 UTC"),
+        )
+      end
+
+      it "clamps to the end of the month if the target month is too short" do
+        automation.upsert_field!(
+          "start_date",
+          "date_time",
+          { value: Time.parse("2023-01-31 07:30:00 UTC") },
+          target: "trigger",
+        )
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 1, frequency: "month" } },
+          target: "trigger",
+        )
+
+        freeze_time(Time.parse("2023-01-31 07:30:00.141775363 UTC")) { automation.trigger! }
+
+        pending_automations = automation.reload.pending_automations
+        expect(pending_automations.first.execute_at).to eq_time(
+          Time.parse("2023-02-28 07:30:00 UTC"),
+        )
+      end
+
+      it "rejects a zero interval" do
+        expect {
+          automation.upsert_field!(
+            "recurrence",
+            "period",
+            { value: { interval: "0", frequency: "month" } },
+            target: "trigger",
+          )
+        }.to raise_error(ActiveRecord::RecordInvalid)
+      end
+
+      it "rejects a negative interval" do
+        expect {
+          automation.upsert_field!(
+            "recurrence",
+            "period",
+            { value: { interval: "-1", frequency: "month" } },
+            target: "trigger",
+          )
+        }.to raise_error(ActiveRecord::RecordInvalid)
+      end
+
+      it "preserves the selected day when it is the last day of February" do
+        automation.upsert_field!(
+          "start_date",
+          "date_time",
+          { value: Time.parse("2023-02-28 07:30:00 UTC") },
+          target: "trigger",
+        )
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 1, frequency: "month" } },
+          target: "trigger",
+        )
+
+        freeze_time(Time.parse("2023-02-28 07:30:00.141775363 UTC")) { automation.trigger! }
+
+        pending_automations = automation.reload.pending_automations
+        expect(pending_automations.first.execute_at).to eq_time(
+          Time.parse("2023-03-28 07:30:00 UTC"),
+        )
+      end
+
+      it "preserves the selected day when it is the last day of April" do
+        automation.upsert_field!(
+          "start_date",
+          "date_time",
+          { value: Time.parse("2024-04-30 07:30:00 UTC") },
+          target: "trigger",
+        )
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 1, frequency: "month" } },
+          target: "trigger",
+        )
+
+        freeze_time(Time.parse("2024-04-30 07:30:00.141775363 UTC")) { automation.trigger! }
+
+        pending_automations = automation.reload.pending_automations
+        expect(pending_automations.first.execute_at).to eq_time(
+          Time.parse("2024-05-30 07:30:00 UTC"),
+        )
+      end
+
+      it "preserves the original day across a real clamped execution" do
+        automation.upsert_field!(
+          "start_date",
+          "date_time",
+          { value: Time.parse("2023-01-31 07:30:00 UTC") },
+          target: "trigger",
+        )
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 1, frequency: "month" } },
+          target: "trigger",
+        )
+
+        freeze_time(Time.parse("2023-01-31 07:30:00.141775363 UTC")) { automation.trigger! }
+        pending_automations = automation.reload.pending_automations
+        expect(pending_automations.count).to eq(1)
+        expect(pending_automations.first.execute_at).to eq_time(
+          Time.parse("2023-02-28 07:30:00 UTC"),
+        )
+
+        freeze_time(Time.parse("2023-02-28 07:30:00.141775363 UTC")) { automation.trigger! }
+        pending_automations = automation.reload.pending_automations
+        expect(pending_automations.count).to eq(1)
+        expect(pending_automations.first.execute_at).to eq_time(
+          Time.parse("2023-03-31 07:30:00 UTC"),
         )
       end
     end
@@ -358,7 +475,7 @@ describe "Recurring" do
 
         pending_automation = automation.pending_automations.last
         expect(pending_automation.execute_at).to be_within_one_minute_of(
-          Time.parse("2021-07-02 08:00:00 UTC"),
+          Time.parse("2021-07-04 08:00:00 UTC"),
         )
       end
     end

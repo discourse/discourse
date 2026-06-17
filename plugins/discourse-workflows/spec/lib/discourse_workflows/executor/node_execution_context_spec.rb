@@ -646,7 +646,19 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
       end
     end
 
-    it "falls back to the default actor for blank actor fields" do
+    it "defaults to the system user when the actor field is not configured" do
+      resolver_context = { "$json" => {} }
+      sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
+      ctx = described_class.new(input_items: [], parameters: {}, resolver: resolver)
+
+      expect(ctx.actor_from_parameter("actor_username")).to eq(Discourse.system_user)
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+
+    it "raises when a configured actor field resolves to a blank value" do
       resolver_context = { "$json" => {} }
       sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
       resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
@@ -659,7 +671,54 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
           resolver: resolver,
         )
 
-      expect(ctx.actor_from_parameter("actor_username")).to eq(Discourse.system_user)
+      expect { ctx.actor_from_parameter("actor_username") }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        I18n.t("discourse_workflows.errors.actor.blank", field: "actor_username"),
+      )
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+
+    it "raises when an actor expression resolves to a blank value" do
+      resolver_context = { "$json" => { "actor" => "" } }
+      sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
+      ctx =
+        described_class.new(
+          input_items: [{ "json" => { "actor" => "" } }],
+          parameters: {
+            "actor_username" => "={{ $json.actor }}",
+          },
+          resolver: resolver,
+        )
+
+      expect { ctx.actor_from_parameter("actor_username") }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        I18n.t("discourse_workflows.errors.actor.blank", field: "actor_username"),
+      )
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+
+    it "resolves the anonymous sentinel to an anonymous guardian actor" do
+      resolver_context = { "$json" => {} }
+      sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
+      ctx =
+        described_class.new(
+          input_items: [],
+          parameters: {
+            "actor_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
+          },
+          resolver: resolver,
+        )
+
+      actor = ctx.actor_from_parameter("actor_username")
+
+      expect(actor).to be_a(DiscourseWorkflows::AnonymousActor)
+      expect(actor.guardian.anonymous?).to eq(true)
     ensure
       resolver&.dispose
       sandbox&.dispose

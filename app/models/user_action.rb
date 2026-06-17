@@ -140,15 +140,50 @@ class UserAction < ActiveRecord::Base
   end
 
   def self.count_daily_engaged_users(start_date = nil, end_date = nil)
-    result = select(:user_id).distinct.where(action_type: USER_ACTED_TYPES)
-
     if start_date && end_date
-      result = result.group("date(created_at)")
-      result = result.where("created_at > ? AND created_at < ?", start_date, end_date)
-      result = result.order("date(created_at)")
-    end
+      sql = <<~SQL
+        SELECT day, COUNT(*) AS count
+        FROM (
+          SELECT DISTINCT date(created_at) AS day, user_id
+          FROM user_actions
+          WHERE action_type IN (:action_types)
+            AND created_at > :start_date
+            AND created_at < :end_date
+        ) distinct_daily_users
+        GROUP BY day
+        ORDER BY day
+      SQL
 
-    result.count
+      DB
+        .query(sql, action_types: USER_ACTED_TYPES, start_date: start_date, end_date: end_date)
+        .each_with_object({}) { |row, counts| counts[row.day] = row.count }
+    else
+      sql = <<~SQL
+        WITH RECURSIVE engaged_users AS (
+          (
+            SELECT user_id
+            FROM user_actions
+            WHERE action_type IN (:action_types)
+            ORDER BY user_id
+            LIMIT 1
+          )
+          UNION ALL
+          SELECT (
+            SELECT user_id
+            FROM user_actions
+            WHERE user_id > engaged_users.user_id
+              AND action_type IN (:action_types)
+            ORDER BY user_id
+            LIMIT 1
+          )
+          FROM engaged_users
+          WHERE engaged_users.user_id IS NOT NULL
+        )
+        SELECT COUNT(*) FROM engaged_users WHERE user_id IS NOT NULL
+      SQL
+
+      DB.query_single(sql, action_types: USER_ACTED_TYPES).first
+    end
   end
 
   def self.stream_item(action_id, guardian)
@@ -506,7 +541,7 @@ end
 #  idx_unique_rows                                   (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
 #  idx_user_actions_speed_up_user_all                (user_id,created_at,action_type)
 #  index_user_actions_on_acting_user_id              (acting_user_id)
-#  index_user_actions_on_action_type_and_created_at  (action_type,created_at)
+#  index_user_actions_on_action_type_and_created_at  (action_type,created_at,user_id)
 #  index_user_actions_on_target_post_id              (target_post_id)
 #  index_user_actions_on_target_user_id              (target_user_id) WHERE (target_user_id IS NOT NULL)
 #  index_user_actions_on_user_id_and_action_type     (user_id,action_type)

@@ -125,6 +125,8 @@ function dynamicValueKey(schema = {}, fieldName) {
   }
 
   switch (fieldControl(schema)) {
+    case "actor":
+      return "username";
     case "category":
       return "category_id";
     case "data_table_column_select":

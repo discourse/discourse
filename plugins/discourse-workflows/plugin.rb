@@ -42,6 +42,7 @@ register_svg_icon "triangle-exclamation"
 register_svg_icon "clock"
 register_svg_icon "comments"
 register_svg_icon "pause"
+register_svg_icon "window-maximize"
 register_svg_icon "user-plus"
 register_svg_icon "grip-vertical"
 register_svg_icon "arrow-down-a-z"
@@ -89,6 +90,14 @@ after_initialize do
                     :topic_admin_button_workflows,
                     include_condition: -> { scope.is_admin? } do
     DiscourseWorkflows::WorkflowDependency.cached_topic_admin_buttons
+  end
+
+  add_to_serializer :current_user,
+                    :discourse_workflows_user_modal_last_id,
+                    include_condition: -> do
+                      DiscourseWorkflows::WorkflowDependency.cached_user_modals?
+                    end do
+    MessageBus.last_id(DiscourseWorkflows::Nodes::Modal::V1.user_channel(object.id))
   end
 
   on(:site_setting_changed) do |name, old_value, new_value|

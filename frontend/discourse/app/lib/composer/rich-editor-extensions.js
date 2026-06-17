@@ -161,7 +161,9 @@ export function registerRichEditorExtension(extension) {
 export async function clearRichEditorExtensions() {
   // Import it first - a lazy import later would re-register the defaults.
   const module = await waitForPromise(
-    import("discourse/static/prosemirror/extensions/register-default")
+    import(
+      /* dynamicChunkName: "prosemirror-extensions" */ "discourse/static/prosemirror/extensions/register-default"
+    )
   );
   registeredExtensions.length = 0;
   defaultExtensionsRegistered = false;

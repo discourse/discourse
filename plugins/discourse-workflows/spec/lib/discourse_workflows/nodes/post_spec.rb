@@ -44,6 +44,23 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       )
     end
 
+    it "raises when creating a post as the anonymous actor" do
+      first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
+      topic = first_post.topic
+
+      expect do
+        execute_node(
+          configuration: {
+            "operation" => "create",
+            "topic_id" => topic.id.to_s,
+            "raw" => "Anonymous reply",
+            "author_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
+          },
+          item: item,
+        )
+      end.to raise_error(Discourse::InvalidAccess).and not_change { topic.posts.count }
+    end
+
     it "defaults to creating a post" do
       first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
       topic = first_post.topic
@@ -232,6 +249,23 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
             "operation" => "get",
             "post_id" => hidden_post.id.to_s,
             "actor_username" => other_user.username,
+          },
+          item: item,
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "raises when the anonymous actor cannot see the post" do
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      hidden_post = create_post(user: admin, category: private_category)
+
+      expect do
+        execute_node(
+          configuration: {
+            "operation" => "get",
+            "post_id" => hidden_post.id.to_s,
+            "actor_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
           },
           item: item,
         )

@@ -56,6 +56,10 @@ class DiscourseAi::Completions::NovaMessageProcessor
     @tool_calls.map { |tool_call| tool_call.to_tool_call }
   end
 
+  def finish
+    []
+  end
+
   def process_streamed_message(parsed)
     return if !parsed
 

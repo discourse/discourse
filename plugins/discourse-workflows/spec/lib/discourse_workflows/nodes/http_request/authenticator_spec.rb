@@ -63,5 +63,70 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::Authenticator do
         expect(headers["Authorization"]).to eq("Bearer my-secret-token")
       end
     end
+
+    context "with header_auth" do
+      it "sets the custom header from the credential" do
+        headers = {}
+        exec_ctx =
+          instance_double(
+            DiscourseWorkflows::Executor::NodeExecutionContext,
+            get_credentials: {
+              "name" => "X-API-Key",
+              "value" => "my-secret-key",
+            },
+          )
+
+        described_class.apply({ "authentication" => "header_auth" }, headers, exec_ctx)
+
+        expect(headers["X-API-Key"]).to eq("my-secret-key")
+      end
+
+      it "raises when the resolved header name is blank" do
+        exec_ctx =
+          instance_double(
+            DiscourseWorkflows::Executor::NodeExecutionContext,
+            get_credentials: {
+              "name" => "",
+              "value" => "my-secret-key",
+            },
+          )
+
+        expect {
+          described_class.apply({ "authentication" => "header_auth" }, {}, exec_ctx)
+        }.to raise_error(DiscourseWorkflows::NodeError, /Header name contains invalid characters/)
+      end
+
+      it "raises when the resolved header name injects CRLF" do
+        headers = {}
+        exec_ctx =
+          instance_double(
+            DiscourseWorkflows::Executor::NodeExecutionContext,
+            get_credentials: {
+              "name" => "X-Foo\r\nX-Injected: evil",
+              "value" => "my-secret-key",
+            },
+          )
+
+        expect {
+          described_class.apply({ "authentication" => "header_auth" }, headers, exec_ctx)
+        }.to raise_error(DiscourseWorkflows::NodeError, /Header name contains invalid characters/)
+        expect(headers).to be_empty
+      end
+
+      it "raises when the resolved header name contains other illegal characters" do
+        exec_ctx =
+          instance_double(
+            DiscourseWorkflows::Executor::NodeExecutionContext,
+            get_credentials: {
+              "name" => "X Api Key",
+              "value" => "my-secret-key",
+            },
+          )
+
+        expect {
+          described_class.apply({ "authentication" => "header_auth" }, {}, exec_ctx)
+        }.to raise_error(DiscourseWorkflows::NodeError, /Header name contains invalid characters/)
+      end
+    end
   end
 end
