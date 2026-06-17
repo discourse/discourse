@@ -4,6 +4,7 @@ import { module, test } from "qunit";
 import PostMenu from "discourse/components/post/menu";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 const noop = () => {};
 
@@ -103,6 +104,22 @@ module("Unit | Component | PostMenu", function (hooks) {
       ["transformer called"],
       "behavior transformer was called"
     );
+  });
+
+  test("show more does not request who liked the post", async function (assert) {
+    this.siteSettings.post_menu_hidden_items = "bookmark|copyLink";
+
+    let requested = false;
+    pretender.get("/post_action_users", () => {
+      requested = true;
+      return response({ post_action_users: [] });
+    });
+
+    const post = this.post;
+    await render(<template><PostMenu @post={{post}} /></template>);
+    await click(".post-action-menu__show-more");
+
+    assert.false(requested, "no request is sent to /post_action_users");
   });
 
   module("post-menu value transformer", function () {
