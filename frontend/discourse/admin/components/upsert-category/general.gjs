@@ -23,8 +23,10 @@ import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { runOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
-import { runOnBeforeVisibilityChange } from "discourse/lib/on-before-visibility-change";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import PermissionType from "discourse/models/permission-type";
@@ -316,9 +318,9 @@ export default class UpsertCategoryGeneral extends Component {
       : "category.visibility.public";
   }
 
-  // Extension point (e.g. for hosting plans) to present the private/group
-  // restricted visibility option as locked. It stays clickable so a registered
-  // `onBeforeVisibilityChange` callback can react to the selection.
+  // Extension point to present the private/group-restricted visibility option
+  // as locked. It stays clickable, so a consumer can still react to the
+  // selection via the `category-visibility-change` behavior transformer.
   get privateVisibilityLocked() {
     return applyValueTransformer("category-visibility-private-locked", false, {
       category: this.args.category,
@@ -348,19 +350,24 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   @action
-  async onChangeVisibility(value) {
-    const allowed = await runOnBeforeVisibilityChange({
-      nextVisibility: value,
-      previousVisibility: this.categoryVisibility,
-      category: this.args.category,
-      form: this.args.form,
-      transientData: this.args.transientData,
-    });
+  onChangeVisibility(value) {
+    // Applying the change is wrapped in a behavior transformer so consumers can
+    // intercept or override it (e.g. require confirmation before a category is
+    // made private). Not calling `next` leaves the selection unchanged.
+    return applyBehaviorTransformer(
+      "category-visibility-change",
+      () => this.#applyVisibilityChange(value),
+      {
+        nextVisibility: value,
+        previousVisibility: this.categoryVisibility,
+        category: this.args.category,
+        form: this.args.form,
+        transientData: this.args.transientData,
+      }
+    );
+  }
 
-    if (!allowed) {
-      return;
-    }
-
+  #applyVisibilityChange(value) {
     // Save current permissions before switching to public
     if (value === "public" && this.isPrivateCategory) {
       this.#previousPermissions = (this.permissions || []).map((p) => ({

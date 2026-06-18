@@ -76,7 +76,6 @@ import { registerIconRenderer, replaceIcon } from "discourse/lib/icon-library";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
-import { registerOnBeforeVisibilityChange } from "discourse/lib/on-before-visibility-change";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
 import {
   extraConnectorClass,
@@ -3422,25 +3421,6 @@ class _PluginApi {
    */
   registerOnBeforeCategoryTypesChange(fn) {
     registerOnBeforeCategoryTypesChange(fn);
-  }
-
-  /**
-   * Register a callback that runs when the user changes the category visibility selection
-   * (e.g. public vs group-restricted) in the category editor's General tab.
-   *
-   * Callbacks run in order. Each may be `async`. The change applies only if every callback
-   * returns a **truthy** value; a **falsy** return blocks the new selection. If a callback
-   * throws, the error is reported and the change is blocked; in tests the error is rethrown.
-   *
-   * The callback receives:
-   * - `nextVisibility` - the visibility value being switched to
-   * - `previousVisibility` - the visibility value before this change
-   * - `category`, `form`, and optionally `transientData`
-   *
-   * @param {function(Object): (boolean|undefined|Promise<boolean|undefined>)} fn
-   */
-  registerOnBeforeVisibilityChange(fn) {
-    registerOnBeforeVisibilityChange(fn);
   }
 
   /**

@@ -9,6 +9,7 @@
  */
 // eslint-discourse keep-array-sorted
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
+  "category-visibility-change",
   "composer-actions-on-select",
   "composer-position:correct-scroll-position",
   "composer-position:editor-touch-move",
