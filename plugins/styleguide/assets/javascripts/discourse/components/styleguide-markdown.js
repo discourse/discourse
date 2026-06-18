@@ -1,13 +1,14 @@
-/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
-import $ from "jquery";
 import { cook } from "discourse/lib/text";
 
 export default class StyleguideMarkdown extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    const contents = $(this.element).html();
-    cook(contents).then((cooked) => $(this.element).html(cooked.toString()));
+    const contents = this.element.innerHTML;
+    cook(contents).then(
+      (cooked) => (this.element.innerHTML = cooked.toString())
+    );
   }
 }
