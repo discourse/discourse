@@ -5925,6 +5925,11 @@ en:
   onebox:
     discourse:
       user_joined_community: "Joined %{date}"
+    google_meet:
+      title: "Google Meet meeting"
+      description: "Open this Google Meet link to join the call."
+      meeting_code: "Code:"
+      join: "Join meeting"
     gitlab:
       truncated_file: "This file has been truncated."
       show_original: "show original"

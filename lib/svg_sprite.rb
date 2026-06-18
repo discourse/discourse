@@ -288,6 +288,7 @@ module SvgSprite
         user-shield
         user-xmark
         users
+        video
         wand-magic
         wrench
         xmark
