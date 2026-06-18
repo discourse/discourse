@@ -1358,7 +1358,7 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  handleWorkflowDiscarded(workflow) {
+  replaceWorkflow(workflow) {
     this.pendingSave = false;
     this.pendingGraphSnapshot = null;
     this.pendingSaveOptions = null;
@@ -1393,7 +1393,7 @@ export default class WorkflowsEditor extends Component {
         }
       );
 
-      this.handleWorkflowDiscarded(response.workflow);
+      this.replaceWorkflow(response.workflow);
     } catch (e) {
       popupAjaxError(e);
       throw e;
@@ -1530,7 +1530,8 @@ export default class WorkflowsEditor extends Component {
           @onOpenNodePanel={{this.openNodePanel}}
           @onCloseNodePanel={{this.closeNodePanel}}
           @onBrowseTemplates={{this.browseTemplates}}
-          @onDiscardWorkflow={{this.handleWorkflowDiscarded}}
+          @onDiscardWorkflow={{this.replaceWorkflow}}
+          @onWorkflowUpdated={{this.replaceWorkflow}}
           @onImportNodes={{this.importNodes}}
           @onAddStickyNote={{this.addStickyNote}}
           @onStickyNoteBeforeMutation={{this.stickyNoteBeforeMutation}}

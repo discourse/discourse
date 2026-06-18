@@ -116,6 +116,7 @@ export default class BooleanControl extends Component {
           <ExpressionWrapper
             @expressionMode={{true}}
             @field={{field}}
+            @schema={{@schema}}
             @placeholder={{this.placeholder}}
             @supportsExpression={{this.supportsExpression}}
             @dynamicValueHint={{@dynamicValueHint}}
