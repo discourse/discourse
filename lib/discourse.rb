@@ -989,12 +989,10 @@ module Discourse
   # before forking, otherwise the forked process might
   # be in a bad state
   def self.before_fork
-    if GlobalSetting.mini_racer_single_threaded
-      ObjectSpace.each_object(MiniRacer::Context) { |c| c.low_memory_notification }
-    else
-      # V8 does not support forking, make sure all contexts are disposed
-      ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
-    end
+    # V8 does not support forking, make sure all contexts are disposed
+    # This is required even in single_threaded mode to prevent mutex corruption
+    # when forking while V8 operations are in progress
+    ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
 
     # get rid of rubbish so we don't share it
     Process.warmup
@@ -1272,12 +1270,6 @@ module Discourse
       Thread.new { LetterAvatar.image_magick_version },
       Thread.new { SvgSprite.core_svgs },
       Thread.new { EmberCli.script_chunks(exception: false) },
-      Thread.new do
-        if GlobalSetting.mini_racer_single_threaded
-          PrettyText.cook("warm up **pretty text**")
-          AssetProcessor.v8
-        end
-      end,
     ].each(&:join)
   ensure
     @preloaded_rails = true
