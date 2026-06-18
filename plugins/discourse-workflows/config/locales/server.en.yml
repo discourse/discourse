@@ -79,7 +79,7 @@ en:
         edit_failed: "Failed to edit post."
         unknown_operation: "Unknown operation: %{operation}."
         invalid_filter: "Invalid post filter fragment: %{fragments}."
-      send_private_message:
+      send_personal_message:
         no_recipients: "At least one personal message recipient is required."
       credential:
         missing_required_field: "is missing required field '%{field}'"

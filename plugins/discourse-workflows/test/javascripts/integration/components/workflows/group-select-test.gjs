@@ -37,7 +37,7 @@ module("Integration | Component | Workflows | GroupSelect", function (hooks) {
       },
     };
     this.nodeDefinition = {
-      identifier: "action:send_private_message",
+      identifier: "action:send_personal_message",
       metadata: {
         groups: [
           { id: 1, name: "support" },

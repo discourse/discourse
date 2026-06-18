@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseWorkflows::Nodes::SendPrivateMessage::V1 do
+RSpec.describe DiscourseWorkflows::Nodes::SendPersonalMessage::V1 do
   fab!(:sender, :admin)
   fab!(:recipient, :user)
   fab!(:second_recipient, :user)
 
   describe "#execute" do
-    it "creates a private message for the configured recipient", :aggregate_failures do
+    it "creates a personal message for the configured recipient", :aggregate_failures do
       result = nil
 
       expect do
@@ -102,7 +102,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendPrivateMessage::V1 do
         )
       end.to raise_error(
         DiscourseWorkflows::NodeError,
-        I18n.t("discourse_workflows.errors.send_private_message.no_recipients"),
+        I18n.t("discourse_workflows.errors.send_personal_message.no_recipients"),
       )
     end
   end

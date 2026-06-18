@@ -2,10 +2,10 @@
 
 module DiscourseWorkflows
   module Nodes
-    module SendPrivateMessage
+    module SendPersonalMessage
       class V1 < NodeType
         description(
-          name: "action:send_private_message",
+          name: "action:send_personal_message",
           version: "1.0",
           defaults: {
             icon: "envelope",
@@ -118,7 +118,7 @@ module DiscourseWorkflows
 
           if recipient_usernames.blank? && recipient_group_names.blank?
             raise_node_error!(
-              I18n.t("discourse_workflows.errors.send_private_message.no_recipients"),
+              I18n.t("discourse_workflows.errors.send_personal_message.no_recipients"),
             )
           end
 

@@ -14,7 +14,7 @@ module Jobs
         "Do not ask whether trust level is available for trigger:post_created or trigger:post_edited; it is available as user.trust_level.",
         "Do not generate fallback chains for undocumented author aliases; use the exact post.* fields from the node catalog output_schema.",
         "For named group membership checks, use workflow_resolve_entity to resolve the group, then use action:group with operation check_membership, group_id set to the resolved group id, and username ={{ $json.user.username }} when the input schema includes user.username, otherwise use the exact username field from the current input schema. It adds group_membership.in_group while preserving the original item fields. Do not use a Code node for simple group membership.",
-        "For private messages, DMs, direct messages, or PM notifications, use action:send_private_message with recipient_usernames or recipient_group_names as arrays, title, raw, and sender_username. Resolve named users with workflow_resolve_entity(kind: user), and named groups with workflow_resolve_entity(kind: group).",
+        "For personal messages, private messages, DMs, direct messages, or PM notifications, use action:send_personal_message with recipient_usernames or recipient_group_names as arrays, title, raw, and sender_username. Resolve named users with workflow_resolve_entity(kind: user), and named groups with workflow_resolve_entity(kind: group).",
       ].freeze
 
       def execute(args)

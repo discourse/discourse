@@ -80,7 +80,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "post.topic_id" => "integer",
       "post.post_url" => "string",
     )
-    expect(nodes_by_type.dig("action:send_private_message", :output_schema)).to include(
+    expect(nodes_by_type.dig("action:send_personal_message", :output_schema)).to include(
       "topic.id" => "integer",
       "topic.slug" => "string",
       "post.id" => "integer",
@@ -104,7 +104,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "condition:filter",
       "action:group",
       "action:send_chat_message",
-      "action:send_private_message",
+      "action:send_personal_message",
     )
     expect(result[:nodes].find { |node| node[:type] == "action:topic" }[:examples]).to be_present
   end
@@ -115,8 +115,8 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     group_node = result[:nodes].find { |node| node[:type] == "action:group" }
     topic_node = result[:nodes].find { |node| node[:type] == "action:topic" }
     post_node = result[:nodes].find { |node| node[:type] == "action:post" }
-    private_message_node =
-      result[:nodes].find { |node| node[:type] == "action:send_private_message" }
+    personal_message_node =
+      result[:nodes].find { |node| node[:type] == "action:send_personal_message" }
     if_node = result[:nodes].find { |node| node[:type] == "condition:if" }
     cake_example =
       filter_node[:examples].find { |example| example[:name] == "Keep TL1 posts mentioning cake" }
@@ -151,7 +151,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
           ),
       ),
     )
-    expect(private_message_node[:examples]).to contain_exactly(
+    expect(personal_message_node[:examples]).to contain_exactly(
       include(
         parameters:
           include(

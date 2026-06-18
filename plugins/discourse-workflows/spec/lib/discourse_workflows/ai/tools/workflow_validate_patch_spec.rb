@@ -266,7 +266,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
         op: "add_node",
         client_id: "dm-admin",
         node: {
-          type: "action:send_private_message",
+          type: "action:send_personal_message",
           typeVersion: "1.0",
           name: "DM admin",
           position: {

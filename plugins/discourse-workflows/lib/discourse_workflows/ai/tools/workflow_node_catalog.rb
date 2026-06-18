@@ -87,7 +87,7 @@ module DiscourseWorkflows
             "tag_names" => "array<string>",
           },
           "action:post" => POST_SCHEMA,
-          "action:send_private_message" => TOPIC_LIST_ITEM_SCHEMA.merge(POST_SCHEMA),
+          "action:send_personal_message" => TOPIC_LIST_ITEM_SCHEMA.merge(POST_SCHEMA),
           "action:send_chat_message" => {
             "channel_id" => "integer",
             "message" => "string",
@@ -210,7 +210,7 @@ module DiscourseWorkflows
               },
             },
           ],
-          "action:send_private_message" => [
+          "action:send_personal_message" => [
             {
               name: "DM a post link to an admin",
               parameters: {
@@ -258,7 +258,7 @@ module DiscourseWorkflows
         ].freeze
 
         SEARCH_ALIASES = {
-          "action:send_private_message" => "dm direct message pm personal private message",
+          "action:send_personal_message" => "dm direct message pm personal private message",
           "action:ai_agent" => "ai agent bot llm classify summarize generate sentiment triage",
           "action:group" => "group membership member belongs friend friends",
         }.freeze

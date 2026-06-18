@@ -30,7 +30,7 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       expect(identifiers).to include("action:topic")
       expect(identifiers).to include("action:group")
       expect(identifiers).to include("condition:if")
-      expect(identifiers).to include("action:send_private_message")
+      expect(identifiers).to include("action:send_personal_message")
       expect(identifiers).not_to include("condition:user_in_group")
     end
 
@@ -67,14 +67,14 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       expect(properties["advanced_filter"]["ui"]).to include("hidden" => true)
     end
 
-    it "returns Send private message recipient control metadata" do
+    it "returns Send personal message recipient control metadata" do
       get "/admin/plugins/discourse-workflows/node-types.json"
 
-      pm_node =
+      personal_message_node =
         response.parsed_body["node_types"].find do |node_type|
-          node_type["identifier"] == "action:send_private_message"
+          node_type["identifier"] == "action:send_personal_message"
         end
-      properties = pm_node["properties"]
+      properties = personal_message_node["properties"]
 
       expect(properties["recipient_usernames"]).to include(
         "type" => "array",
@@ -92,7 +92,7 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
         "default" => "system",
         "ui" => include("control" => "actor"),
       )
-      expect(pm_node.dig("metadata", "groups")).to include(
+      expect(personal_message_node.dig("metadata", "groups")).to include(
         include("id" => Group::AUTO_GROUPS[:everyone], "name" => "everyone"),
       )
     end
