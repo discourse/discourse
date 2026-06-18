@@ -539,7 +539,7 @@ RSpec.describe "Nested view" do
       Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "Public reply")
     end
 
-    before { Capybara.reset_sessions! }
+    before { sign_out }
 
     it "allows anonymous users to view the nested view" do
       nested_view.visit_nested(topic)

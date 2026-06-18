@@ -119,6 +119,12 @@ RSpec.describe "Sidebar navigation menu" do
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
       it "displays other user avatar in prefix when two participants" do
+        # An uploaded avatar produces a `/user_avatar/.../#{username}/...` src so
+        # the assertion can tell the participants apart. The default system
+        # avatar points at a constant letter-avatar URL (shared across users for
+        # cache reuse), which carries no username.
+        other_user.update!(uploaded_avatar_id: Fabricate(:image_upload).id)
+
         visit("/")
 
         expect(

@@ -16,15 +16,11 @@ module PageObjects
       end
 
       def prefers_full_page
-        page.execute_script(
-          "window.localStorage.setItem('discourse_chat_preferred_mode', '\"FULL_PAGE_CHAT\"');",
-        )
+        set_chat_preferred_mode("FULL_PAGE_CHAT")
       end
 
       def prefers_drawer
-        page.execute_script(
-          "window.localStorage.setItem('discourse_chat_preferred_mode', '\"DRAWER_CHAT\"');",
-        )
+        set_chat_preferred_mode("DRAWER_CHAT")
       end
 
       def open_from_header
@@ -182,6 +178,36 @@ module PageObjects
 
       def public_channel_selector(channel)
         ".public-channels .chat-channel-row[data-chat-channel-id='#{channel.id}']"
+      end
+
+      # Seeds the chat preferred mode in localStorage so the app reads it on the
+      # next page load. `sign_in` no longer navigates, so the browser may still be
+      # on `about:blank` (whose opaque origin denies localStorage) when a spec
+      # calls this in a `before` block. A page-level init script runs on every
+      # page load and works before any `visit`. The `if (!getItem(...))` guard
+      # seeds the initial preference only, so a later in-app mode switch survives a
+      # reload instead of being clobbered. When the page is already on a real
+      # origin (e.g. the spec sets the mode after its first `visit`), also write
+      # localStorage immediately so the running app picks it up without a reload.
+      #
+      # The script is registered on the page rather than the context: the
+      # warm-cache soft reset keeps the context alive across examples but creates
+      # a fresh page, so a context-level script would accumulate and an earlier
+      # example's mode could win the "set if absent" race in a later example.
+      def set_chat_preferred_mode(mode)
+        page.driver.with_playwright_page do |pw_page|
+          pw_page.add_init_script(script: <<~JS)
+            if (!window.localStorage.getItem("discourse_chat_preferred_mode")) {
+              window.localStorage.setItem("discourse_chat_preferred_mode", '"#{mode}"');
+            }
+          JS
+
+          unless pw_page.url.start_with?("about:")
+            pw_page.evaluate(
+              %(window.localStorage.setItem("discourse_chat_preferred_mode", '"#{mode}"');),
+            )
+          end
+        end
       end
 
       def drawer?(expectation:, channel_id: nil, expanded: true)

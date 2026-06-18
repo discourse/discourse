@@ -371,6 +371,12 @@ module PageObjects
       end
 
       def trigger_replies_toggle(post)
+        # Wait for the toggle button to render before the script reads and
+        # clicks it. A production build with the warm cache can boot fast
+        # enough that the script fires while the nested view is still mounting,
+        # leaving `querySelector` null and the click a null dereference.
+        has_css?("[data-post-number='#{post.post_number}'] .nested-post__expand-replies")
+
         page.evaluate_script(<<~JS)
           (() => {
             const button = document.querySelector(
@@ -389,6 +395,11 @@ module PageObjects
       end
 
       def scroll_post_near_top(post, offset: 80)
+        # Wait for the target post to render before scrolling. A production
+        # build boots fast enough that the script can otherwise fire while the
+        # nested view is still mounting, leaving `querySelector` null.
+        has_css?("[data-post-number='#{post.post_number}']")
+
         page.execute_script(<<~JS)
           const post = document.querySelector("[data-post-number='#{post.post_number}']");
           post.scrollIntoView();
@@ -398,6 +409,11 @@ module PageObjects
       end
 
       def scroll_past_topic_title
+        # Wait for the nested view to render so the document is its full height
+        # before scrolling to the bottom, otherwise the scroll lands short of
+        # the topic title and the header title never appears.
+        has_css?(".nested-view")
+
         page.execute_script(<<~JS)
           window.scrollTo(0, document.body.scrollHeight);
         JS

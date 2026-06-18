@@ -8,8 +8,7 @@ module PageObjects
 
     def allow_clipboard
       page.driver.with_playwright_page do |pw_page|
-        pw_page.context.grant_permissions(["clipboard-read"], origin: pw_page.url)
-        pw_page.context.grant_permissions(["clipboard-write"], origin: pw_page.url)
+        pw_page.context.grant_permissions(%w[clipboard-read clipboard-write])
       end
     end
 

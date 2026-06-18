@@ -4,6 +4,25 @@ require "highline/import"
 module SystemHelpers
   PLATFORM_KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
 
+  # A production Ember build strips `@ember/debug` macros (`deprecate`,
+  # `assert`) and the dev-only test affordances, so specs asserting that
+  # behaviour are conditionally skipped via `if:` metadata.
+  def self.production_ember_build?
+    return @production_ember_build if defined?(@production_ember_build)
+
+    @production_ember_build =
+      if ENV["EMBER_ENV"].present?
+        ENV["EMBER_ENV"] == "production"
+      else
+        begin
+          info = Rails.root.join("frontend/discourse/dist/BUILD_INFO.json")
+          info.exist? && JSON.parse(info.read)["ember_env"] == "production"
+        rescue StandardError
+          false
+        end
+      end
+  end
+
   # Pass to `send_keys` to move the caret to the start of the current line in a
   # contenteditable. The Home key doesn't move the caret on macOS; Cmd+Left does.
   LINE_START_KEY = RUBY_PLATFORM =~ /darwin/i ? %i[meta left] : :home
@@ -55,12 +74,46 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    visit File.join(
-            GlobalSetting.relative_url_root || "",
-            "/session/#{user.encoded_username}/become.json?redirect=false",
-          )
+    # Mint the auth cookie in-process and inject it straight into the browser
+    # context, with no HTTP and no Rack request, and no navigation of our own.
+    # `auth_cookie_for` builds the same encrypted `_t` cookie the auth provider's
+    # `set_auth_cookie!` writes, so the spec's first real navigation is
+    # authenticated against the real provider.
+    # `add_cookies` sends the value verbatim and the server URL-decodes it on the
+    # way in, so we hand it the already-escaped value `create_auth_cookie`
+    # returns (the raw value's `/` characters would corrupt the cookie header).
+    cookie = auth_cookie_for(user)
 
-    expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
+    page.driver.with_playwright_page do |pw_page|
+      pw_page.context.add_cookies(
+        [
+          {
+            name: "_t",
+            value: cookie,
+            domain: Capybara.server_host,
+            path: "/",
+            httpOnly: true,
+            sameSite: "Lax",
+          },
+        ],
+      )
+    end
+
+    # Fail loudly if the cookie never made it into the context (e.g. a host-scope
+    # mismatch), rather than letting the spec proceed silently as anonymous.
+    cookies = page.driver.with_playwright_page { |pw_page| pw_page.context.cookies }
+    if cookies.none? { |browser_cookie| browser_cookie["name"] == "_t" }
+      raise "sign_in for #{user.encoded_username} failed: auth cookie was not set in the browser context"
+    end
+  end
+
+  # Drop the authenticated session by clearing the browser context's cookies.
+  # Use this when a spec signs in via a shared hook but a given example needs
+  # to act anonymously. It clears cookies directly rather than going through
+  # `Capybara.reset_sessions!`, which only resets a session Capybara considers
+  # touched and so does nothing right after a navigation-free `sign_in`.
+  def sign_out
+    page.driver.with_playwright_page { |pw_page| pw_page.context.clear_cookies }
   end
 
   def setup_system_test
@@ -69,7 +122,13 @@ module SystemHelpers
     SiteSetting.global_notice = ""
     SiteSetting.force_hostname = Capybara.server_host
     SiteSetting.port = Capybara.server_port
-    SiteSetting.external_system_avatars_url = ""
+    # A constant letter-avatar URL lets the browser reuse one cached image
+    # across every spec instead of paying a cache-cold fetch per username. The
+    # path serves the same letter avatar and resolves through the real
+    # controller; `{size}` is substituted client-side as usual. Uploaded
+    # avatars (`/user_avatar/`) are unaffected, and specs that configure avatars
+    # explicitly override this setting per-example as before.
+    SiteSetting.external_system_avatars_url = "/letter_avatar/a/{size}/#{LetterAvatar.version}.png"
     SiteSetting.enable_user_tips = false
     SiteSetting.allowed_internal_hosts =
       (
