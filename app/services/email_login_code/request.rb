@@ -33,7 +33,7 @@ class EmailLoginCode::Request
   private
 
   def fetch_user(params:)
-    User::Action::FindByEmail.call(email: params.email)
+    User.real.where(staged: false).with_email(params.email).first
   end
 
   def existing_account?(user:)
