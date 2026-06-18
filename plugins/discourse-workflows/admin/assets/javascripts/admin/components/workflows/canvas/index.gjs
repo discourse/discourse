@@ -119,7 +119,6 @@ export default class WorkflowCanvas extends Component {
           type: "PUT",
           data: {
             workflow: {
-              name: this.args.workflowName,
               published: true,
             },
           },
@@ -180,7 +179,6 @@ export default class WorkflowCanvas extends Component {
           type: "PUT",
           data: {
             workflow: {
-              name: this.args.workflowName,
               published: false,
             },
           },
