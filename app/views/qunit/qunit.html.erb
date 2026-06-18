@@ -81,9 +81,8 @@
       <discourse-assets-icons></discourse-assets-icons>
 
       <script nonce="<%= csp_nonce_placeholder %>">
-        window.EmberENV = {
-          _DEFAULT_ASYNC_OBSERVERS: true,
-        };
+        window.EmberENV ??= {};
+        window.EmberENV._DEFAULT_ASYNC_OBSERVERS = true;
       </script>
 
       <%= preload_script "test-entrypoint", type_module: true %>
