@@ -4,6 +4,10 @@ export function showComposerAiHelper(
   currentUser,
   featureType
 ) {
+  if (!currentUser) {
+    return false;
+  }
+
   const enableHelper = _helperEnabled(siteSettings);
   const enableAssistant = currentUser.can_use_assistant;
   const canShowInPM = siteSettings.ai_helper_allowed_in_pm;

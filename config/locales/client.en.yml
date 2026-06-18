@@ -48,6 +48,14 @@ en:
         no_visible_children_hint: "This container block is not rendered because none of its children are visible."
         condition_failed_hint: "This block is not rendered because its conditions failed."
         head_hidden_tail_hint: "This block is not rendered because another block was rendered first in the `head` container."
+    access_control:
+      manage:
+        access_level_editor: "Editor"
+        access_level_viewer: "Viewer"
+        access_level_remove: "Remove"
+        access_anonymous: "Anonymous (public)"
+        access_members: "All members"
+        add_group: "Add group"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
