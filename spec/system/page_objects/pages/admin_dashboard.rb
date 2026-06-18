@@ -27,6 +27,63 @@ module PageObjects
         find(".dashboard-problem", text: message).find(".btn").click
       end
 
+      def has_site_advice?
+        has_css?(".db-section.--site-advice")
+      end
+
+      def has_site_advice_at_top?
+        has_css?(".db-main > .db-section.--site-advice:first-child")
+      end
+
+      def has_no_site_advice?
+        has_no_css?(".db-section.--site-advice")
+      end
+
+      def has_site_advice_title?(text)
+        has_css?(".db-section.--site-advice .db-section__subintro h3", exact_text: text)
+      end
+
+      def has_site_advice_problem?(message)
+        has_css?(".db-section.--site-advice [data-test-site-advice-problem]", text: message)
+      end
+
+      def has_no_site_advice_problem?(message)
+        has_no_css?(".db-section.--site-advice [data-test-site-advice-problem]", text: message)
+      end
+
+      def has_first_site_advice_problem?(message)
+        has_css?(
+          ".db-section.--site-advice [data-test-site-advice-problem]:first-child",
+          text: message,
+        )
+      end
+
+      def has_ignore_button_for?(message)
+        within(".db-section.--site-advice [data-test-site-advice-problem]", text: message) do
+          has_css?("[data-test-site-advice-ignore]")
+        end
+      end
+
+      def has_no_ignore_buttons?
+        has_no_css?(".db-section.--site-advice [data-test-site-advice-ignore]")
+      end
+
+      def has_site_advice_refresh_button?
+        has_css?(".db-section.--site-advice [data-test-site-advice-refresh]")
+      end
+
+      def ignore_site_advice_problem(message)
+        within(".db-section.--site-advice [data-test-site-advice-problem]", text: message) do
+          find("[data-test-site-advice-ignore]").click
+        end
+        self
+      end
+
+      def refresh_site_advice
+        find(".db-section.--site-advice [data-test-site-advice-refresh]").click
+        self
+      end
+
       def has_redesigned_toolbar?
         has_css?(".db-toolbar")
       end

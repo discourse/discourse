@@ -991,3 +991,45 @@
 .db-reports {
   display: contents;
 }
+
+.db-site-advice {
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding-block: var(--space-2);
+  }
+
+  &__icon {
+    flex-shrink: 0;
+
+    &.--high {
+      color: var(--danger);
+    }
+
+    &.--low {
+      color: var(--tertiary);
+    }
+  }
+
+  &__message {
+    flex-grow: 1;
+    overflow-wrap: anywhere;
+
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1) var(--space-3);
+      margin-block: var(--space-1) 0;
+      margin-inline: 0;
+      padding: 0;
+      list-style: none;
+    }
+  }
+}

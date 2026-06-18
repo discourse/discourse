@@ -21,6 +21,9 @@ export default <template>
       @refreshSections={{@controller.fetchSections}}
       @loadingSections={{@controller.loadingSections}}
       @sectionsFetchError={{@controller.sectionsFetchError}}
+      @problems={{@controller.problems}}
+      @onRefreshProblems={{@controller.refreshSiteAdvice}}
+      @onIgnoreProblem={{@controller.ignoreProblem}}
     />
   {{else}}
     <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />
