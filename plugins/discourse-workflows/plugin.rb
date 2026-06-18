@@ -86,16 +86,6 @@ after_initialize do
     self,
   )
 
-  Plugin::Filter.register(:after_post_cook) do |post, cooked|
-    DiscourseWorkflows::EventListener.handle(
-      DiscourseWorkflows::Nodes::PostEdited::V1,
-      post,
-      cooked,
-    )
-
-    cooked
-  end
-
   if defined?(DiscourseAi)
     require_relative "lib/discourse_workflows/ai/tools/base"
     require_relative "lib/discourse_workflows/ai/graph_digest"
