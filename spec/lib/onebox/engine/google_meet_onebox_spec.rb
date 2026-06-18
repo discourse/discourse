@@ -67,6 +67,26 @@ RSpec.describe Onebox::Engine::GoogleMeetOnebox do
       end
     end
 
+    it "escapes malicious query strings" do
+      attack_payload = %("><script>alert(1)</script>)
+      malicious_url = "https://meet.google.com/tiw-gooe-vbs?authuser=#{attack_payload}"
+      normalized_url = UrlHelper.normalized_encode(malicious_url).to_s
+      escaped_url = Onebox::Helpers.uri_encode(normalized_url)
+
+      Oneboxer.invalidate(normalized_url)
+
+      html = Oneboxer.onebox(malicious_url)
+      document = Nokogiri::HTML5.fragment(html)
+
+      aggregate_failures do
+        expect(document.css("script")).to be_empty
+        expect(html).not_to include(attack_payload)
+        expect(document.at_css("aside.onebox.googlemeet")["data-onebox-src"]).to eq(escaped_url)
+        expect(document.css("a").map { |link| link["href"] }.uniq).to eq([escaped_url])
+        expect(document.at_css(".google-meet-onebox__code-value").text).to eq("tiw-gooe-vbs")
+      end
+    end
+
     it "keeps the original meeting URL when Google redirects" do
       redirected_url =
         "https://meet.google.com/unsupported?meetingCode=tiw-gooe-vbs&ref=https://meet.google.com/tiw-gooe-vbs"
