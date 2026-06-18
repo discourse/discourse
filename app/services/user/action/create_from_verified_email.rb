@@ -6,7 +6,10 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
   option :user_fields, optional: true
 
   def call
-    username = UserNameSuggester.suggest(email)
+    # Pass the local part as a fallback so we derive the username from the email
+    # even when use_email_for_username_and_name_suggestions is off; the email is
+    # already verified here, so the setting's enumeration concern doesn't apply.
+    username = UserNameSuggester.suggest(email, email.split("@").first)
 
     user = User.where(staged: true).with_email(email).first
     user&.unstage!

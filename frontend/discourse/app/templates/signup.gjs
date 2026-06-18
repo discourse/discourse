@@ -50,7 +50,9 @@ export default <template>
         }}
       >
         {{#unless @controller.skipConfirmation}}
-          <SignupProgressBar @step={{@controller.progressBarStep}} />
+          {{#unless @controller.showCodeSignupForm}}
+            <SignupProgressBar @step={{@controller.progressBarStep}} />
+          {{/unless}}
           <WelcomeHeader
             id="create-account-title"
             @header={{if
@@ -69,8 +71,11 @@ export default <template>
           <CodeLoginForm
             @context="signup"
             @initialEmail={{@controller.accountEmail}}
+            @onStepChange={{@controller.updateCodeSignupStep}}
           />
-          {{#if @controller.disclaimerHtml}}
+          {{#if
+            (and @controller.codeSignupOnEmailStep @controller.disclaimerHtml)
+          }}
             <div class="signup-page-cta__disclaimer">
               {{trustHTML @controller.disclaimerHtml}}
             </div>

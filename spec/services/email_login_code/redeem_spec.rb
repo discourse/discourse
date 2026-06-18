@@ -59,16 +59,19 @@ RSpec.describe EmailLoginCode::Redeem do
       end
 
       it "creates an active user with a confirmed email and no password" do
-        SiteSetting.use_email_for_username_and_name_suggestions = true
-
         user = result[:user]
 
         expect(user).to be_active
         expect(user.email).to eq(email)
         expect(user).to be_email_confirmed
         expect(user.password_hash).to be_nil
-        expect(user.username).to eq("jane")
         expect(user.registration_ip_address.to_s).to eq("127.0.0.1")
+      end
+
+      it "derives the username from the email even when email-based suggestions are off" do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
+
+        expect(result[:user].username).to eq("jane")
       end
 
       it "enqueues the welcome message" do

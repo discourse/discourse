@@ -32,7 +32,6 @@ const RESEND_COOLDOWN_SECONDS = 30;
 export default class CodeLoginForm extends Component {
   @service site;
 
-  @tracked step = "email";
   @tracked email = this.args.initialEmail ?? "";
   @tracked verifying = false;
   @tracked codeError;
@@ -40,7 +39,6 @@ export default class CodeLoginForm extends Component {
   @tracked resendCooldown = 0;
   @tracked otpGeneration = 0;
   @tracked newAccount;
-
   @tracked secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
   @tracked secondFactorToken;
   @tracked securityKeyCredential;
@@ -49,7 +47,6 @@ export default class CodeLoginForm extends Component {
   @tracked securityKeyRequired = false;
   @tracked securityKeyChallenge;
   @tracked securityKeyAllowedCredentialIds;
-
   code = "";
   userFieldsValidationHelper = new UserFieldsValidationHelper({
     getUserFields: () =>
@@ -58,10 +55,21 @@ export default class CodeLoginForm extends Component {
     showValidationOnInit: false,
   });
   #cooldownTimer;
+  @tracked _step = "email";
 
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.#cooldownTimer);
+  }
+
+  // Tracked-backed so the parent can react to step transitions via onStepChange.
+  get step() {
+    return this._step;
+  }
+
+  set step(value) {
+    this._step = value;
+    this.args.onStepChange?.(value);
   }
 
   get isSignup() {

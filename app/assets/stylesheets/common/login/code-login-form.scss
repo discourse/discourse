@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .code-login-form {
   display: flex;
   flex-direction: column;
@@ -17,6 +19,13 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 1em;
+  }
+
+  &__user-fields-step {
+    .user-fields {
+      align-self: stretch;
+      margin-top: 0.5em;
+    }
   }
 
   &__new-account {
@@ -70,5 +79,32 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 0.5em;
+  }
+}
+
+// Keep the disclaimer from hugging the continue button it follows.
+.code-login-form + .signup-page-cta__disclaimer {
+  margin-top: 1.5em;
+}
+
+// Scoped to the passwordless signup flow so login and regular signup are untouched.
+@include viewport.until(md) {
+  .signup-page .signup-body.passwordless-signup {
+    padding: 1.5rem;
+
+    // Drop the heading's own padding so it lines up with the form below it.
+    .login-welcome-header {
+      padding: 0;
+      margin-bottom: 1rem;
+    }
+
+    .code-login-form__email-actions {
+      align-self: stretch;
+    }
+
+    .code-login-form__continue,
+    .code-login-form__verify {
+      width: 100%;
+    }
   }
 }
