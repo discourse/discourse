@@ -4,8 +4,27 @@ import DiscoursePostEventOneboxPreview from "./onebox-preview";
 // Returns the topic id for a topic-level / first-post onebox link, or null for
 // anything else (including a link to a specific reply, post number > 1) — the
 // event lives on the first post, so only that link should render the card.
+//
+// Only relative or same-origin URLs are considered: an absolute link to another
+// Discourse site (e.g. https://meta.discourse.org/t/foo/123) must keep its
+// external onebox rather than resolve to an unrelated local topic with id 123.
 export function topicIdFromUrl(url) {
-  const match = url?.match(/\/t\/[^/]+\/(\d+)(?:\/(\d+))?/);
+  if (!url) {
+    return null;
+  }
+
+  let path;
+  try {
+    const parsed = new URL(url, window.location.origin);
+    if (parsed.origin !== window.location.origin) {
+      return null;
+    }
+    path = parsed.pathname;
+  } catch {
+    return null;
+  }
+
+  const match = path.match(/\/t\/[^/]+\/(\d+)(?:\/(\d+))?/);
   if (!match) {
     return null;
   }

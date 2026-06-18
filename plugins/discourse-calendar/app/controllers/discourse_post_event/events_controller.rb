@@ -196,6 +196,7 @@ module DiscoursePostEvent
         :include_subcategories,
         :include_interested,
         :include_ongoing,
+        :include_closed,
         :limit,
         :attending_user,
         :before,

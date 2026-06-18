@@ -402,5 +402,24 @@ describe DiscoursePostEvent::EventFinder do
     it "returns nothing for a topic without an event" do
       expect(finder.search(current_user, { topic_id: Fabricate(:topic).id })).to be_empty
     end
+
+    context "with a closed event" do
+      fab!(:closed_event) do
+        Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public], closed: true)
+      end
+
+      it "excludes the closed event by default" do
+        expect(finder.search(current_user, { topic_id: closed_event.post.topic_id })).to be_empty
+      end
+
+      it "includes the closed event when include_closed is set" do
+        expect(
+          finder.search(
+            current_user,
+            { topic_id: closed_event.post.topic_id, include_closed: true },
+          ),
+        ).to match_array([closed_event])
+      end
+    end
   end
 end

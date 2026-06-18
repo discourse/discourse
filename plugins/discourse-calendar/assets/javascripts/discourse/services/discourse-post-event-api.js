@@ -22,6 +22,7 @@ export default class DiscoursePostEventApi extends Service {
     const result = await this.#getRequest("/events", {
       topic_id: topicId,
       include_details: true,
+      include_closed: true,
       limit: 1,
     });
     const eventData = (result.events || [])[0];
