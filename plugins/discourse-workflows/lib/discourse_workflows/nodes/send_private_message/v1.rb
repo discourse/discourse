@@ -21,6 +21,7 @@ module DiscourseWorkflows
               required: false,
               ui: {
                 control: :user,
+                multiple: true,
               },
             },
             recipient_group_names: {
