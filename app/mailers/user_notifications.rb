@@ -12,7 +12,7 @@ class UserNotifications < ActionMailer::Base
   def signup(user, opts = {})
     template =
       if opts[:password_reset_token].present?
-        "user_notifications.admin_signup"
+        "user_notifications.signup_first_admin"
       else
         "user_notifications.signup"
       end
