@@ -24,6 +24,47 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           message_1.id,
         )
       end
+
+      context "as anonymous user" do
+        before do
+          delete "/session/#{current_user.username}.json"
+          SiteSetting.chat_allowed_groups =
+            "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        end
+
+        it "returns messages for a public category channel" do
+          thread = Fabricate(:chat_thread, channel:, original_message: message_1)
+          thread_reply = Fabricate(:chat_message, chat_channel: channel, thread:)
+
+          get "/chat/api/channels/#{channel.id}/messages"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["messages"].map { |message| message["id"] }).to eq(
+            [message_1.id, thread_reply.id],
+          )
+        end
+
+        it "returns an error for a direct message channel" do
+          direct_message_channel =
+            Fabricate(:direct_message_channel, group: true, users: Fabricate.times(3, :user))
+
+          get "/chat/api/channels/#{direct_message_channel.id}/messages"
+
+          expect(response.status).to eq(403)
+        end
+
+        it "skips bookmark queries" do
+          queries =
+            track_sql_queries do
+              get "/chat/api/channels/#{channel.id}/messages"
+              expect(response.status).to eq(200)
+            end
+
+          bookmark_queries = queries.select { |query| query.include?('FROM "bookmarks"') }
+
+          expect(bookmark_queries).to be_empty
+        end
+      end
     end
 
     context "when params are invalid" do

@@ -28,7 +28,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
       )
     end
 
-    memberships = Chat::ChannelMembershipManager.all_for_user(current_user)
+    memberships = current_user ? Chat::ChannelMembershipManager.all_for_user(current_user) : []
     channels = Chat::ChannelFetcher.secured_public_channels(guardian, options)
     serialized_channels =
       channels.map do |channel|

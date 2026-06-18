@@ -3,6 +3,7 @@ import { trackedObject } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
 import Promise from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import { debounce } from "discourse/lib/decorators";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
@@ -108,6 +109,10 @@ export default class ChatChannelsManager extends Service {
   }
 
   async follow(model) {
+    if (!this.currentUser || !model.currentUserMembership) {
+      return model;
+    }
+
     this.chatSubscriptionsManager.startChannelSubscription(model);
 
     if (!model.currentUserMembership.following) {
@@ -165,12 +170,26 @@ export default class ChatChannelsManager extends Service {
     );
   }
 
+  get anonymousUserCanViewPublicChat() {
+    return (
+      !this.currentUser &&
+      this.siteSettings.enable_public_channels &&
+      (this.siteSettings.chat_allowed_groups || "")
+        .toString()
+        .split("|")
+        .map((groupId) => parseInt(groupId, 10))
+        .includes(AUTO_GROUPS.anonymous_users.id)
+    );
+  }
+
   @cached
   get publicMessageChannels() {
     return this.#sortChannelsByProperty(
       this.channels.filter(
         (channel) =>
-          channel.isCategoryChannel && channel.currentUserMembership.following
+          channel.isCategoryChannel &&
+          (channel.currentUserMembership?.following ||
+            this.anonymousUserCanViewPublicChat)
       ),
       "slug"
     );
@@ -208,7 +227,8 @@ export default class ChatChannelsManager extends Service {
       this.channels.filter(
         (channel) =>
           channel.isCategoryChannel &&
-          channel.currentUserMembership?.following &&
+          (channel.currentUserMembership?.following ||
+            this.anonymousUserCanViewPublicChat) &&
           !channel.currentUserMembership?.starred
       )
     );
@@ -390,7 +410,8 @@ export default class ChatChannelsManager extends Service {
       this.channels.filter(
         (channel) =>
           channel.isCategoryChannel &&
-          channel.currentUserMembership?.following &&
+          (channel.currentUserMembership?.following ||
+            this.anonymousUserCanViewPublicChat) &&
           !channel.currentUserMembership?.starred
       ),
       "slug"

@@ -7,5 +7,9 @@ module Chat
     def global_presence_channel_state
       PresenceChannelStateSerializer.new(PresenceChannel.new("/chat/online").state, root: nil)
     end
+
+    def include_global_presence_channel_state?
+      !scope.anonymous?
+    end
   end
 end
