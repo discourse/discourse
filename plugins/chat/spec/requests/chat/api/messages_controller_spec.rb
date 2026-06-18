@@ -105,6 +105,37 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         expect(response.status).to eq(200)
       end
     end
+
+    describe "when the owner has lost access to the channel" do
+      it "doesn't allow deleting their own message in a private category channel" do
+        group = Fabricate(:group)
+        group.add(current_user)
+        channel = Fabricate(:private_category_channel, group: group)
+        message = Fabricate(:chat_message, chat_channel: channel, user: current_user)
+        group.remove(current_user)
+
+        sign_in(current_user)
+
+        expect {
+          delete "/chat/api/channels/#{message.chat_channel_id}/messages/#{message.id}.json"
+        }.not_to change { Chat::Message.count }
+        expect(response.status).to eq(403)
+      end
+
+      it "doesn't allow deleting their own message after leaving a direct message" do
+        other_user = Fabricate(:user)
+        channel = Fabricate(:direct_message_channel, users: [current_user, other_user])
+        message = Fabricate(:chat_message, chat_channel: channel, user: current_user)
+        channel.chatable.direct_message_users.find_by!(user: current_user).destroy!
+
+        sign_in(current_user)
+
+        expect {
+          delete "/chat/api/channels/#{message.chat_channel_id}/messages/#{message.id}.json"
+        }.not_to change { Chat::Message.count }
+        expect(response.status).to eq(403)
+      end
+    end
   end
 
   describe "#restore" do
