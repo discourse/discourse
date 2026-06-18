@@ -2,9 +2,12 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
+import { bind } from "discourse/lib/decorators";
+import discourseLater from "discourse/lib/later";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { and } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -50,6 +53,8 @@ export default class ChatMessageReaction extends Component {
       return;
     }
 
+    const desktop = !this.site.mobileView;
+
     const instance = this.menu.register(element, {
       identifier: "chat-message-reaction-users",
       groupIdentifier: "chat-message-reaction-users",
@@ -57,17 +62,67 @@ export default class ChatMessageReaction extends Component {
       modalForMobile: true,
       placement: "bottom",
       fallbackPlacements: ["top"],
-      triggers: this.site.mobileView ? ["hold"] : ["hover"],
+      triggers: desktop ? ["hover"] : ["hold"],
       data: {
         message: this.args.message,
         emoji: this.args.reaction.emoji,
+        // Lets the popup keep itself open while the pointer is over it, so the
+        // hover-to-open menu only closes once the pointer leaves both the
+        // reaction and the popup.
+        onContentPointerEnter: desktop
+          ? this.cancelCloseReactionsUsersMenu
+          : undefined,
+        onContentPointerLeave: desktop
+          ? this.scheduleCloseReactionsUsersMenu
+          : undefined,
       },
     });
+    this.#reactionsUsersMenuInstance = instance;
+
+    if (desktop) {
+      element.addEventListener(
+        "pointerenter",
+        this.cancelCloseReactionsUsersMenu,
+        { passive: true }
+      );
+      element.addEventListener(
+        "pointerleave",
+        this.scheduleCloseReactionsUsersMenu,
+        { passive: true }
+      );
+    }
 
     return () => {
+      cancel(this.#closeReactionsUsersMenuTimer);
+      element.removeEventListener(
+        "pointerenter",
+        this.cancelCloseReactionsUsersMenu
+      );
+      element.removeEventListener(
+        "pointerleave",
+        this.scheduleCloseReactionsUsersMenu
+      );
       instance.destroy();
+      this.#reactionsUsersMenuInstance = null;
     };
   });
+  #reactionsUsersMenuInstance = null;
+  #closeReactionsUsersMenuTimer = null;
+
+  // Close on a short delay so moving the pointer across the gap between the
+  // reaction and the popup (or briefly off either) doesn't dismiss it.
+  @bind
+  scheduleCloseReactionsUsersMenu() {
+    cancel(this.#closeReactionsUsersMenuTimer);
+    this.#closeReactionsUsersMenuTimer = discourseLater(() => {
+      this.#reactionsUsersMenuInstance?.close({ focusTrigger: false });
+    }, 250);
+  }
+
+  @bind
+  cancelCloseReactionsUsersMenu() {
+    cancel(this.#closeReactionsUsersMenuTimer);
+  }
 
   // When the new reactions menu is enabled the reaction opens a users popup, so
   // the names tooltip is suppressed here.

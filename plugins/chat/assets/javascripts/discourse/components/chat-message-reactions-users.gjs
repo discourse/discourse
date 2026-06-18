@@ -21,6 +21,25 @@ export default class ChatMessageReactionsUsers extends Component {
   // tabs let the user switch between the message's reactions within the popup.
   @tracked activeFilter = this.args.data.emoji ?? null;
 
+  // On desktop, report pointer enter/leave on the whole menu so the reaction can
+  // keep the hover-to-open popup alive while it (or the reaction) is hovered.
+  trackPointerForClose = modifier((element) => {
+    const onEnter = this.args.data.onContentPointerEnter;
+    const onLeave = this.args.data.onContentPointerLeave;
+    if (!onEnter || !onLeave) {
+      return;
+    }
+
+    const target = element.closest(".fk-d-menu") ?? element;
+    target.addEventListener("pointerenter", onEnter, { passive: true });
+    target.addEventListener("pointerleave", onLeave, { passive: true });
+
+    return () => {
+      target.removeEventListener("pointerenter", onEnter);
+      target.removeEventListener("pointerleave", onLeave);
+    };
+  });
+
   // Keeps the active filter visible in the horizontally-scrollable header when
   // the hovered reaction is past the visible tabs. Re-runs whenever the active
   // filter changes (passed as a positional arg).
@@ -151,6 +170,7 @@ export default class ChatMessageReactionsUsers extends Component {
       @fetchUsers={{this.fetchUsers}}
       @titleText={{this.titleText}}
       @totalUsers={{this.activeFilterTotalUsers}}
+      {{this.trackPointerForClose}}
     >
       <:header as |resetAndReload|>
         {{this.registerReset resetAndReload}}

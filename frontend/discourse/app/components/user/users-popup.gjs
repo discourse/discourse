@@ -119,7 +119,7 @@ export default class UsersPopup extends Component {
   }
 
   <template>
-    <div class="users-popup">
+    <div class="users-popup" ...attributes>
       <div class="users-popup__sticky-header">
         {{#if this.site.mobileView}}
           <div class="users-popup__title">{{@titleText}}</div>
