@@ -697,7 +697,7 @@ module ApplicationHelper
     @user_dark_scheme_id = scheme_id if scheme_id &&
       (
         ColorScheme.exists?(id: scheme_id, user_selectable: true) ||
-          theme.dark_color_scheme_id == scheme_id.to_i
+          theme&.dark_color_scheme_id == scheme_id.to_i
       )
   end
 
