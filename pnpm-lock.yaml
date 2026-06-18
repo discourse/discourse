@@ -180,6 +180,9 @@ importers:
       source-map-js:
         specifier: ^1.2.1
         version: 1.2.1
+      strip-test-selectors:
+        specifier: ^0.1.0
+        version: 0.1.0
       terser:
         specifier: ^5.47.1
         version: 5.48.0
@@ -420,6 +423,9 @@ importers:
       rrule:
         specifier: ^2.8.1
         version: 2.8.1
+      strip-test-selectors:
+        specifier: ^0.1.0
+        version: 0.1.0
     devDependencies:
       '@babel/core':
         specifier: ^7.29.7
@@ -7350,6 +7356,9 @@ packages:
   strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
+
+  strip-test-selectors@0.1.0:
+    resolution: {integrity: sha512-wkVYph30L7wYkMf5EypfTqhY4qZwmQ0hpFOTksaXne49YbUr2jenJl5w5yj9IWx3ojtoH9BGAQ7cShnYEzbs5g==}
 
   stubborn-fs@2.0.0:
     resolution: {integrity: sha512-Y0AvSwDw8y+nlSNFXMm2g6L51rBGdAQT20J3YSOqxC53Lo3bjWRtr2BKcfYoAf352WYpsZSTURrA0tqhfgudPA==}
@@ -15939,6 +15948,8 @@ snapshots:
   strip-final-newline@4.0.0: {}
 
   strip-json-comments@3.1.1: {}
+
+  strip-test-selectors@0.1.0: {}
 
   stubborn-fs@2.0.0:
     dependencies:

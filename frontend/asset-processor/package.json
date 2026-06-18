@@ -33,6 +33,7 @@
     "postcss-nesting": "^14.0.0",
     "rolldown": "1.0.3",
     "source-map-js": "^1.2.1",
+    "strip-test-selectors": "^0.1.0",
     "terser": "^5.47.1"
   },
   "engines": {

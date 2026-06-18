@@ -6,6 +6,7 @@ import DecoratorTransforms from "decorator-transforms";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
 import { precompile } from "ember-source/ember-template-compiler/index.js";
 import EmberThisFallback from "ember-this-fallback";
+import StripTestSelectorsPlugin from "strip-test-selectors/src/strip-test-selectors";
 import { browsers } from "../discourse/config/targets";
 import babelTransformModuleRenames from "../discourse/lib/babel-transform-module-renames";
 import AddThemeGlobals from "./add-theme-globals";
@@ -92,6 +93,7 @@ async function performRollup(modules, opts) {
                 }).plugin,
                 buildEmberTemplateManipulatorPlugin(opts.themeId),
                 transformActionSyntax,
+                ...(opts.minify ? [StripTestSelectorsPlugin] : []),
               ],
             },
           ],

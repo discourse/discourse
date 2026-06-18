@@ -99,7 +99,8 @@
     "rete-connection-plugin": "^2.0.5",
     "rete-history-plugin": "^2.1.1",
     "rete-render-utils": "^2.0.3",
-    "rrule": "^2.8.1"
+    "rrule": "^2.8.1",
+    "strip-test-selectors": "^0.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",

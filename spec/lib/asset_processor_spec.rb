@@ -192,6 +192,28 @@ RSpec.describe AssetProcessor do
       )
     end
 
+    it "strips data-test-* attributes in production mode" do
+      script = <<~JS.chomp
+        export default class Foo {
+          <template>
+            <div data-test-my-element class="keep">hello</div>
+          </template>
+        }
+      JS
+
+      modules = { "discourse/components/foo.gjs" => script }
+      entrypoints = { main: { modules: ["discourse/components/foo.gjs"] } }
+
+      unminified = AssetProcessor.new.rollup(modules, { themeId: 22, entrypoints: entrypoints })
+      expect(entrypoint(unminified, "main")["code"]).to include("data-test-my-element")
+
+      minified =
+        AssetProcessor.new.rollup(modules, { minify: true, themeId: 22, entrypoints: entrypoints })
+      code = entrypoint(minified, "main")["code"]
+      expect(code).not_to include("data-test-my-element")
+      expect(code).to include("keep")
+    end
+
     it "can use themePrefix not in a template" do
       script = <<~JS.chomp
         export default function foo() {
