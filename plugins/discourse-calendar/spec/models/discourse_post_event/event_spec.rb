@@ -820,6 +820,27 @@ describe DiscoursePostEvent::Event do
     fab!(:post) { Fabricate(:post, topic: topic, user: user) }
     fab!(:upload)
 
+    it "sets livestream from the bbcode attribute" do
+      post.update!(
+        raw:
+          "[event start=\"2020-04-24 14:15\" livestream=\"true\" location=\"https://example.com/live\"]\n[/event]",
+      )
+      post.rebake!
+      DiscoursePostEvent::Event.update_from_raw(post)
+      post.reload
+
+      expect(post.event.livestream).to eq(true)
+    end
+
+    it "defaults livestream to false when the attribute is absent" do
+      post.update!(raw: "[event start=\"2020-04-24 14:15\"]\n[/event]")
+      post.rebake!
+      DiscoursePostEvent::Event.update_from_raw(post)
+      post.reload
+
+      expect(post.event.livestream).to eq(false)
+    end
+
     context "with image" do
       before do
         post.update!(

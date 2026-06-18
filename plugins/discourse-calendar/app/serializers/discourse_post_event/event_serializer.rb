@@ -29,12 +29,27 @@ module DiscoursePostEvent
     attributes :location
     attributes :watching_invitee
     attributes :chat_enabled
+    attributes :livestream
+    attributes :livestream_onebox
     attributes :channel
     attributes :rrule
     attributes :max_attendees
     attributes :at_capacity
 
     has_one :image_upload, embed: :object, serializer: UploadSerializer
+
+    def include_livestream_onebox?
+      object.livestream? && object.location.present?
+    end
+
+    # The full cooked onebox for the livestream URL (the lazy-video container for
+    # supported providers), rendered at the bottom of the event card. Cached;
+    # warmed in the background so this never blocks on a network fetch.
+    def livestream_onebox
+      cached = Oneboxer.cached_onebox(object.location)
+      Jobs.enqueue(:warm_livestream_onebox, url: object.location) if cached.blank?
+      cached.presence
+    end
 
     def channel
       ::Chat::ChannelSerializer.new(

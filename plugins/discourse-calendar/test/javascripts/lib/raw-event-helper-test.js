@@ -4,12 +4,14 @@ import {
   buildEventBlock,
   buildParams,
   defaultReminderFor,
+  parseEventAttrs,
   parseEventBlock,
   parseReminders,
   reconcileDefaultReminder,
   reminderToBBCode,
   removeEvent,
   replaceRaw,
+  stateToEventInput,
 } from "discourse/plugins/discourse-calendar/discourse/lib/raw-event-helper";
 
 const SAME_DAY_CONFIG = {
@@ -443,6 +445,40 @@ module("Unit | Lib | raw-event-helper", function () {
       buildParams(startsAt, null, {}, siteSettings).image,
       undefined,
       "omits image when imageUpload is not set"
+    );
+  });
+
+  test("livestream round-trips through state, params and parsing", function (assert) {
+    const startsAt = "2024-06-15T10:00:00Z";
+    const siteSettings = { discourse_post_event_allowed_custom_fields: "" };
+
+    assert.strictEqual(
+      buildParams(startsAt, null, { livestream: true }, siteSettings)
+        .livestream,
+      "true",
+      "buildParams emits livestream when enabled"
+    );
+
+    assert.strictEqual(
+      buildParams(startsAt, null, { livestream: false }, siteSettings)
+        .livestream,
+      undefined,
+      "buildParams omits livestream when disabled"
+    );
+
+    assert.true(
+      stateToEventInput({ livestream: true }).livestream,
+      "stateToEventInput carries livestream through"
+    );
+
+    assert.true(
+      parseEventAttrs({ livestream: "true" }).livestream,
+      "parseEventAttrs reads livestream=true"
+    );
+
+    assert.false(
+      parseEventAttrs({}).livestream,
+      "parseEventAttrs defaults livestream to false"
     );
   });
 });

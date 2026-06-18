@@ -24,6 +24,9 @@ module DiscoursePostEvent
     before_save :chat_channel_sync
     # prepend so it runs before `dependent: :delete_all` wipes the invitees
     before_destroy :reset_invitees_topic_tracking, prepend: true
+    # A livestream pulls in the old embeddable-chat topic channel (gated on the
+    # `livestream_enabled` setting).
+    after_commit :create_livestream_chat_channel, on: %i[create update]
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
     after_save do
@@ -48,6 +51,11 @@ module DiscoursePostEvent
 
     def self.attributes_protected_by_default
       super - %w[id]
+    end
+
+    def create_livestream_chat_channel
+      return unless livestream? && SiteSetting.livestream_enabled
+      DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
     end
 
     def destroy_topic_custom_field
@@ -408,6 +416,7 @@ module DiscoursePostEvent
           minimal: event_params[:minimal],
           closed: event_params[:closed] || false,
           chat_enabled: event_params[:"chat-enabled"]&.downcase == "true",
+          livestream: event_params[:livestream]&.downcase == "true",
           max_attendees: event_params[:"max-attendees"]&.to_i,
           all_day: parsed_all_day,
           image_upload_id: resolve_image_upload(event_params[:image], post)&.id,
@@ -640,6 +649,7 @@ end
 #  custom_fields      :jsonb            not null
 #  deleted_at         :datetime
 #  description        :string(1000)
+#  livestream         :boolean          default(FALSE), not null
 #  location           :string(1000)
 #  max_attendees      :integer
 #  minimal            :boolean

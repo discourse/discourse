@@ -68,7 +68,8 @@ module ::DiscourseCalendar
     def self.handle_topic_chat_channel_creation(topic)
       return if topic.category.blank?
       return if DiscourseCalendar::Livestream::TopicChatChannel.exists?(topic_id: topic.id)
-      return if topic.tags.blank? || topic.tags.none? { |tag| tag.name == "livestream" }
+      # Driven by the livestream event attribute now, not a "livestream" tag.
+      return unless topic.first_post&.event&.livestream?
 
       channel =
         Chat::Channel.create!(
@@ -173,6 +174,7 @@ after_initialize do
   require_relative "jobs/regular/discourse_post_event/bulk_invite"
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
+  require_relative "jobs/regular/discourse_post_event/warm_livestream_onebox"
   require_relative "jobs/regular/livestream/recalculate_user_channel_memberships"
   require_relative "lib/discourse_post_event/engine"
   require_relative "lib/discourse_post_event/event_finder"

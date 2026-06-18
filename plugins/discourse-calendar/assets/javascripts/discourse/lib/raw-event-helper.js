@@ -161,6 +161,10 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
     params.chatEnabled = "true";
   }
 
+  if (event.livestream) {
+    params.livestream = "true";
+  }
+
   if (event.maxAttendees) {
     params.maxAttendees = `${event.maxAttendees}`;
   }
@@ -274,6 +278,7 @@ export function defaultEventState() {
     recurrenceUntil: null,
     showLocalTime: false,
     chatEnabled: false,
+    livestream: false,
     minimal: false,
     url: null,
     image: null,
@@ -311,6 +316,7 @@ export function parseEventAttrs(
     recurrenceUntil: attrs.recurrenceUntil || null,
     showLocalTime: attrs.showLocalTime === "true",
     chatEnabled: attrs.chatEnabled === "true",
+    livestream: attrs.livestream === "true",
     minimal: attrs.minimal === "true",
     url: attrs.url || null,
     image: attrs.image || null,
@@ -334,6 +340,7 @@ export function stateToEventInput(state) {
     showLocalTime: state.showLocalTime,
     minimal: state.minimal,
     chatEnabled: state.chatEnabled,
+    livestream: state.livestream,
     maxAttendees: state.maxAttendees,
     rawInvitees: state.allowedGroups ? state.allowedGroups.split(",") : [],
     reminders: state.reminders,

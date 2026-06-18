@@ -24,6 +24,7 @@ export const EVENT_ATTRIBUTES = {
   recurrence: { default: null },
   recurrenceUntil: { default: null },
   chatEnabled: { default: null },
+  livestream: { default: null },
   allDay: { default: null },
   image: { default: null },
 };

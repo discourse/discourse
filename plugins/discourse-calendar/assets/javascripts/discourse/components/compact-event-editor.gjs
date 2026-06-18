@@ -40,6 +40,7 @@ export default class CompactEventEditor extends Component {
   @tracked recurrenceUntil;
   @tracked showLocalTime;
   @tracked chatEnabled;
+  @tracked livestream;
   @tracked minimal;
   @tracked url;
   @tracked image;
@@ -78,6 +79,7 @@ export default class CompactEventEditor extends Component {
     this.recurrenceUntil = s.recurrenceUntil;
     this.showLocalTime = s.showLocalTime;
     this.chatEnabled = s.chatEnabled;
+    this.livestream = s.livestream;
     this.minimal = s.minimal;
     this.url = s.url;
     this.image = s.image;
@@ -107,6 +109,7 @@ export default class CompactEventEditor extends Component {
       recurrenceUntil: this.recurrenceUntil,
       showLocalTime: this.showLocalTime,
       chatEnabled: this.chatEnabled,
+      livestream: this.livestream,
       minimal: this.minimal,
       url: this.url,
       image: this.image,
@@ -297,6 +300,16 @@ export default class CompactEventEditor extends Component {
   onLocationInput(event) {
     const value = event.target.value;
     this.location = value === "" ? null : value;
+    // The livestream toggle is only meaningful when the location is a URL.
+    if (!this.isLocationUrl) {
+      this.livestream = false;
+    }
+    this.#emitChange();
+  }
+
+  @action
+  toggleLivestream() {
+    this.livestream = !this.livestream;
     this.#emitChange();
   }
 
@@ -568,6 +581,7 @@ export default class CompactEventEditor extends Component {
       max_attendees: this.maxAttendees,
       show_local_time: this.showLocalTime,
       chat_enabled: this.chatEnabled,
+      livestream: this.livestream,
       minimal: this.minimal,
       all_day: this.allDay,
       reminders: this.reminders,
@@ -600,6 +614,7 @@ export default class CompactEventEditor extends Component {
           this.maxAttendees = updatedEvent.maxAttendees ?? null;
           this.showLocalTime = !!updatedEvent.showLocalTime;
           this.chatEnabled = !!updatedEvent.chatEnabled;
+          this.livestream = !!updatedEvent.livestream;
           this.minimal = !!updatedEvent.minimal;
           this.allDay = !!updatedEvent.allDay;
           this.reminders = updatedEvent.reminders || [];
@@ -784,6 +799,19 @@ export default class CompactEventEditor extends Component {
         {{/if}}
       </div>
     </section>
+
+    {{#if this.isLocationUrl}}
+      <section class="composer-event__livestream">
+        <div class="composer-event__livestream-toggle">
+          <DToggleSwitch
+            class="composer-event__livestream-switch"
+            @state={{this.livestream}}
+            @label="discourse_post_event.composer.livestream"
+            {{on "click" this.toggleLivestream}}
+          />
+        </div>
+      </section>
+    {{/if}}
 
     <section class="composer-event__attendees">
       {{dIcon "users"}}

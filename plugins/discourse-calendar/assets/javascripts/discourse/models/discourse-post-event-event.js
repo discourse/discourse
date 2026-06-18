@@ -38,6 +38,8 @@ export default class DiscoursePostEventEvent {
   @tracked post;
   @tracked minimal;
   @tracked chatEnabled;
+  @tracked livestream;
+  @tracked livestreamOnebox;
   @tracked canUpdateAttendance;
   @tracked canActOnDiscoursePostEvent;
   @tracked shouldDisplayInvitees;
@@ -87,6 +89,8 @@ export default class DiscoursePostEventEvent {
     this.isStandalone = args.is_standalone;
     this.minimal = args.minimal;
     this.chatEnabled = args.chat_enabled;
+    this.livestream = args.livestream;
+    this.livestreamOnebox = args.livestream_onebox;
     this.maxAttendees = args.max_attendees;
     this.atCapacity = args.at_capacity;
     this.recurrence = args.recurrence;
@@ -179,6 +183,8 @@ export default class DiscoursePostEventEvent {
     this.isStandalone = event.isStandalone;
     this.minimal = event.minimal;
     this.chatEnabled = event.chatEnabled;
+    this.livestream = event.livestream;
+    this.livestreamOnebox = event.livestreamOnebox;
     this.rrule = event.rrule;
     this.maxAttendees = event.maxAttendees;
     this.atCapacity = event.atCapacity;
