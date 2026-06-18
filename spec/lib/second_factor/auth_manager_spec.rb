@@ -45,6 +45,17 @@ RSpec.describe SecondFactor::AuthManager do
     [challenge[:nonce], server_session]
   end
 
+  describe "#allowed_methods" do
+    it "allows totp, security keys and passkeys by default" do
+      manager = create_manager(create_action)
+      expect(manager.allowed_methods).to contain_exactly(
+        UserSecondFactor.methods[:totp],
+        UserSecondFactor.methods[:security_key],
+        UserSecondFactor.methods[:passkey],
+      )
+    end
+  end
+
   describe "#allow_backup_codes!" do
     it "adds the backup codes method to the allowed methods set" do
       manager = create_manager(create_action)

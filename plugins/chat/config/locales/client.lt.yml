@@ -181,6 +181,7 @@ lt:
         title: Nauja žinutė
         prefix: "Kam:"
       create_channel:
+        description: "Aprašymas"
         type: "Tipas"
         types:
           category: "Kategorija"

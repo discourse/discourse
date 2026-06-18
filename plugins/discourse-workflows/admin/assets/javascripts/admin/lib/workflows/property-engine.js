@@ -125,6 +125,8 @@ function dynamicValueKey(schema = {}, fieldName) {
   }
 
   switch (fieldControl(schema)) {
+    case "actor":
+      return "username";
     case "category":
       return "category_id";
     case "data_table_column_select":
@@ -132,11 +134,13 @@ function dynamicValueKey(schema = {}, fieldName) {
     case "data_table_select":
       return "data_table_id";
     case "group_select":
-      return "group_id";
+      return schema.control_options?.value_property === "name"
+        ? "group_names"
+        : "group_id";
     case "tags":
       return "tag_names";
     case "user":
-      return "username";
+      return ui.multiple ? "usernames" : "username";
     case "user_or_group":
       return "user_or_group_name";
     case "select":

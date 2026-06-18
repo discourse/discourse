@@ -2315,6 +2315,10 @@ fa_IR:
       confirm_title: ورود به %{site_name}
       logging_in_as: ورود با %{email}
       confirm_button: اتمام ورود
+    code_login:
+      email_label: "ایمیل"
+      continue_button: "ادامه"
+      verify_button: "ادامه"
     login:
       header_title: "خوش آمدید"
       title: "ورود"

@@ -29,6 +29,10 @@ module DiscourseWorkflows
              class_name: "DiscourseWorkflows::WorkflowPublishHistory",
              foreign_key: "workflow_id",
              dependent: :delete_all
+    has_many :ai_authoring_sessions,
+             class_name: "DiscourseWorkflows::AiAuthoringSession",
+             foreign_key: "workflow_id",
+             dependent: :delete_all
 
     belongs_to :created_by, class_name: "User", foreign_key: "created_by_id"
     belongs_to :updated_by, class_name: "User", foreign_key: "updated_by_id", optional: true

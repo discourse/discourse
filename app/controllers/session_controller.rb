@@ -3,7 +3,10 @@
 class SessionController < ApplicationController
   before_action :check_local_login_allowed,
                 only: %i[create forgot_password passkey_challenge passkey_login]
+  before_action :ensure_login_code_allowed, only: %i[create_login_code verify_login_code]
   before_action :rate_limit_login, only: %i[create email_login]
+  before_action :rate_limit_login_code_request, only: %i[create_login_code]
+  before_action :rate_limit_login_code_verify, only: %i[verify_login_code]
   skip_before_action :redirect_to_login_if_required
   skip_before_action :redirect_to_profile_if_required
   skip_before_action :preload_json,
@@ -13,7 +16,7 @@ class SessionController < ApplicationController
   skip_before_action :check_xhr, only: %i[second_factor_auth_show]
 
   allow_in_readonly_mode :email_login
-  allow_in_staff_writes_only_mode :create, :forgot_password
+  allow_in_staff_writes_only_mode :create, :forgot_password, :create_login_code, :verify_login_code
 
   ACTIVATE_USER_KEY = "activate_user"
   FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY = 6
@@ -491,6 +494,34 @@ class SessionController < ApplicationController
     render json: { error: I18n.t("email_login.invalid_token", base_url: Discourse.base_url) }
   end
 
+  def create_login_code
+    expires_now
+
+    # Render the same response as a successful request so bots can't probe
+    # the endpoint. Sending no email at all for honeypot failures matches
+    # the behavior for emails we refuse to deliver to.
+    return render json: success_json if login_code_honeypot_fails?
+
+    EmailLoginCode::Request.call(service_params) do |result|
+      on_success { render json: success_json }
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
+    end
+  end
+
+  def verify_login_code
+    expires_now
+
+    EmailLoginCode::Verify.call(service_params) do |result|
+      on_success { |user:| process_verified_login_code(user) }
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
+      on_failure { render json: invalid_login_code }
+    end
+  end
+
   def one_time_password
     @otp_username = otp_username = Discourse.redis.get "otp_#{params[:token]}"
 
@@ -538,7 +569,7 @@ class SessionController < ApplicationController
         backup_enabled: user.backup_codes_enabled?,
         allowed_methods: challenge[:allowed_methods],
       )
-      passkeys_for_2fa = user.passkeys_for_2fa_enabled?
+      passkeys_for_2fa = user.passkeys_available_as_second_factor?
       if user.security_keys_enabled? || passkeys_for_2fa
         DiscourseWebauthn.stage_challenge(user, server_session)
         json.merge!(
@@ -818,6 +849,99 @@ class SessionController < ApplicationController
 
   def login_not_approved_for?(user)
     SiteSetting.must_approve_users? && !user.approved? && !user.admin?
+  end
+
+  def ensure_login_code_allowed
+    raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_code
+    # Code login is a delivery variant of email login, so it also requires
+    # `enable_local_logins_via_email` (checked via `check_login_via_email`).
+    check_local_login_allowed(check_login_via_email: true)
+    redirect_to path("/") if current_user
+  end
+
+  def rate_limit_login_code_request
+    RateLimiter.new(nil, "login-code-hour-#{request.remote_ip}", 6, 1.hour).performed!
+    RateLimiter.new(nil, "login-code-min-#{request.remote_ip}", 3, 1.minute).performed!
+
+    email = params[:email].to_s.strip.downcase
+    if email.present?
+      RateLimiter.new(
+        nil,
+        "login-code-email-#{Digest::SHA256.hexdigest(email)}",
+        3,
+        1.hour,
+      ).performed!
+    end
+  end
+
+  def rate_limit_login_code_verify
+    RateLimiter.new(nil, "login-code-verify-hour-#{request.remote_ip}", 30, 1.hour).performed!
+    RateLimiter.new(nil, "login-code-verify-min-#{request.remote_ip}", 6, 1.minute).performed!
+  end
+
+  def login_code_honeypot_fails?
+    return false if is_api?
+    params[:password_confirmation] != honeypot_value ||
+      params[:challenge] != challenge_value.try(:reverse)
+  end
+
+  def process_verified_login_code(matched_user)
+    if matched_user &&
+         (matched_user.totp_or_backup_codes_enabled? || matched_user.security_keys_enabled?)
+      if missing_second_factor_params?
+        return render json: login_code_second_factor_info(matched_user)
+      end
+
+      rate_limit_second_factor!(matched_user)
+      if !authenticate_second_factor(matched_user).ok
+        return render json: @second_factor_failure_payload
+      end
+    end
+
+    EmailLoginCode::Redeem.call(service_params) do |result|
+      on_success { |user:| login_with_login_code(user) }
+      on_failure { render json: invalid_login_code }
+    end
+  end
+
+  def login_code_second_factor_info(user)
+    response = { second_factor_required: true }
+
+    if user.totp_or_backup_codes_enabled?
+      response[:totp_enabled] = user.totp_enabled?
+      response[:backup_codes_enabled] = user.backup_codes_enabled?
+    end
+
+    if user.security_keys_enabled?
+      DiscourseWebauthn.stage_challenge(user, server_session)
+      response.merge!(
+        DiscourseWebauthn.allowed_credentials(user, server_session).merge(
+          security_key_required: true,
+        ),
+      )
+    end
+
+    response
+  end
+
+  def missing_second_factor_params?
+    params[:second_factor_token].blank?
+  end
+
+  def login_with_login_code(user)
+    raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
+
+    if login_not_approved_for?(user)
+      render json: login_not_approved
+    elsif payload = login_error_check(user)
+      render json: payload
+    else
+      login(user)
+    end
+  end
+
+  def invalid_login_code
+    { error: I18n.t("email_login_code.invalid_code") }
   end
 
   def invalid_credentials

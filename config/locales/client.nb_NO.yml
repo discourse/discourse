@@ -2163,6 +2163,10 @@ nb_NO:
       confirm_title: Fortsett til %{site_name}
       logging_in_as: Logger inn som %{email}
       confirm_button: Fullfør innlogging
+    code_login:
+      email_label: "E-post"
+      continue_button: "Fortsett"
+      verify_button: "Fortsett"
     login:
       header_title: "Velkommen tilbake"
       title: "Logg inn"

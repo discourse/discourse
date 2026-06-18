@@ -4,7 +4,7 @@ module DiscourseWorkflows
   module Nodes
     module Topic
       class V1 < NodeType
-        OPERATIONS = %w[create get list close set_custom_fields].freeze
+        OPERATIONS = %w[create get list close archive set_custom_fields].freeze
         MAX_LIMIT = 100
         DEFAULT_LIMIT = 30
         CUSTOM_FIELD_OPTIONS_LIMIT = 100
@@ -32,7 +32,7 @@ module DiscourseWorkflows
               required: true,
               display_options: {
                 show: {
-                  operation: %w[get close set_custom_fields],
+                  operation: %w[get close archive set_custom_fields],
                 },
               },
             },
@@ -167,7 +167,7 @@ module DiscourseWorkflows
               required: false,
               default: "system",
               ui: {
-                control: :user,
+                control: :actor,
               },
             },
           },
@@ -232,6 +232,8 @@ module DiscourseWorkflows
             list_topics(exec_ctx, config, item_index).map { |data| wrap(data) }
           when "close"
             wrap(close_topic(exec_ctx, config, item_index))
+          when "archive"
+            wrap(archive_topic(exec_ctx, config, item_index))
           when "set_custom_fields"
             wrap(set_custom_fields(exec_ctx, config, item_index))
           else
@@ -274,6 +276,7 @@ module DiscourseWorkflows
 
           {
             topic: exec_ctx.serialize_topic(topic, guardian: guardian),
+            post: post_data(post),
             post_id: post.id,
             post_number: post.post_number,
           }
@@ -293,6 +296,7 @@ module DiscourseWorkflows
                 guardian: actor.guardian,
                 custom_field_names: custom_field_names,
               ),
+            post: post_data(topic.first_post),
           }
         end
 
@@ -301,7 +305,11 @@ module DiscourseWorkflows
           offset = [Integer(config["offset"] || 0), 0].max
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           topic_query =
-            TopicQuery.new(actor, q: config["query"], per_page: [limit + offset, MAX_LIMIT].min)
+            TopicQuery.new(
+              actor.guardian.user,
+              q: config["query"],
+              per_page: [limit + offset, MAX_LIMIT].min,
+            )
           topic_list = topic_query.list_filter
 
           topics = topic_list.topics.slice(offset, limit) || []
@@ -321,6 +329,7 @@ module DiscourseWorkflows
                   guardian: actor.guardian,
                   custom_field_names: custom_field_names,
                 ),
+              post: post_data(topic.first_post),
             }
           end
         end
@@ -332,7 +341,26 @@ module DiscourseWorkflows
 
           topic.update_status("closed", true, actor)
 
-          { topic: exec_ctx.serialize_topic(topic.reload, guardian: actor.guardian) }
+          topic.reload
+          {
+            topic: exec_ctx.serialize_topic(topic, guardian: actor.guardian),
+            post: post_data(topic.first_post),
+          }
+        end
+
+        def archive_topic(exec_ctx, config, item_index)
+          topic = ::Topic.find(config["topic_id"])
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          guardian = actor.guardian
+          guardian.ensure_can_archive_topic!(topic)
+
+          topic.update_status("archived", true, actor)
+
+          topic.reload
+          {
+            topic: exec_ctx.serialize_topic(topic, guardian: guardian),
+            post: post_data(topic.first_post),
+          }
         end
 
         def set_custom_fields(exec_ctx, config, item_index)
@@ -364,6 +392,12 @@ module DiscourseWorkflows
 
             fields[key] = entry["value"]
           end
+        end
+
+        def post_data(post)
+          return if post.blank?
+
+          serialize_record(post, WebHookPostSerializer)
         end
       end
     end

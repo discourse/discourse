@@ -171,6 +171,55 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(prompts[0].tool_choice).to eq(nil)
     end
 
+    it "separates consecutive thinking messages" do
+      ai_agent.update!(show_thinking: true)
+      agent_klass = AiAgent.all_agents.find { |agent_class| agent_class.name == ai_agent.name }
+      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent_klass.new)
+      playground = described_class.new(bot)
+      responses = [
+        [
+          DiscourseAi::Completions::Thinking.new(message: "Web search: Anthropic AI news 2026"),
+          DiscourseAi::Completions::Thinking.new(message: "Web search: OpenAI AI news 2026"),
+          "Done",
+        ],
+      ]
+
+      reply_post = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
+        new_post = Fabricate(:post, raw: "Search AI news")
+        reply_post = playground.reply_to(new_post)
+      end
+
+      expect(reply_post.raw).to include(
+        "Web search: Anthropic AI news 2026\n\nWeb search: OpenAI AI news 2026",
+      )
+      thinking = PostCustomPrompt.find_by(post_id: reply_post.id).custom_prompt.first[4]
+      expect(thinking["message"]).to eq(
+        "Web search: Anthropic AI news 2026\n\nWeb search: OpenAI AI news 2026",
+      )
+    end
+
+    it "keeps trailing thinking outside the response text" do
+      ai_agent.update!(show_thinking: true)
+      agent_klass = AiAgent.all_agents.find { |agent_class| agent_class.name == ai_agent.name }
+      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent_klass.new)
+      playground = described_class.new(bot)
+      responses = [
+        ["Done", DiscourseAi::Completions::Thinking.new(message: "Web search: OpenAI news")],
+      ]
+
+      reply_post = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
+        new_post = Fabricate(:post, raw: "Search AI news")
+        reply_post = playground.reply_to(new_post)
+      end
+
+      expect(reply_post.raw).to include("Done\n\n<details")
+      expect(reply_post.raw).to end_with("</details>")
+      thinking = PostCustomPrompt.find_by(post_id: reply_post.id).custom_prompt.first[4]
+      expect(thinking["message"]).to eq("Web search: OpenAI news")
+    end
+
     it "uses custom tool in conversation" do
       ai_agent.update!(show_thinking: true)
       agent_klass = AiAgent.all_agents.find { |p| p.name == ai_agent.name }

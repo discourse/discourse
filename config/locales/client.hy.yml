@@ -2075,6 +2075,10 @@ hy:
       confirm_title: Շարունակել դեպի %{site_name}
       logging_in_as: Մուտք գործել որպես %{email}
       confirm_button: Ավարտել Մուտքը
+    code_login:
+      email_label: "Էլ. հասցե"
+      continue_button: "Շարունակել"
+      verify_button: "Շարունակել"
     login:
       header_title: "Բարի վերադարձ"
       title: "Մուտք Գործել"

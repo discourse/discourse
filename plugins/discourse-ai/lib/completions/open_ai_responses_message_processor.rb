@@ -18,16 +18,22 @@ module DiscourseAi::Completions
       @reasoning_contexts = {}
       @pending_reasonings = []
       @has_first_summary_part = false
+      @response_output_items = []
+      @emitted_response_output_items = false
     end
 
     # @param json [Hash] full JSON response from responses.create / retrieve
     # @return [Array<String,ToolCall>] pieces in the order they were produced
     def process_message(json)
+      json = normalize_provider_payload(json)
       result = []
 
       pending_reasonings = []
 
-      (json[:output] || []).each do |item|
+      output = json[:output] || []
+      @response_output_items = output.deep_dup
+
+      output.each do |item|
         type = item[:type]
 
         case type
@@ -39,6 +45,10 @@ module DiscourseAi::Completions
           end
         when "function_call"
           result << build_tool_call_from_item(item)
+        when "web_search_call"
+          if @output_thinking
+            result << build_native_tool_thinking(item, include_provider_info: true)
+          end
         when "message"
           text = extract_text(item)
           attach_message_id_to_reasonings(pending_reasonings, item[:id])
@@ -53,12 +63,13 @@ module DiscourseAi::Completions
     # @param json [Hash] a single streamed event, already parsed from ND-JSON
     # @return [String, ToolCall, nil] only when a complete chunk is ready
     def process_streamed_message(json)
+      json = normalize_provider_payload(json)
       rval = nil
-      event_type = json[:type] || json["type"]
+      event_type = json[:type]
 
       case event_type
       when "response.output_text.delta"
-        delta = json[:delta] || json["delta"]
+        delta = json[:delta]
         rval = delta if !delta.empty?
       when "response.reasoning_summary_part.added"
         rval = build_partial_reasoning_delta(json, prefix: "\n\n") if @has_first_summary_part
@@ -81,14 +92,19 @@ module DiscourseAi::Completions
       when "response.output_item.done"
         item = json[:item]
         if item
+          track_response_output_item(item)
           if item[:type] == "function_call"
             handle_tool_stream(:done, item) { |finished| rval = finished }
           elsif item[:type] == "reasoning" && @output_thinking
             return finalize_reasoning_context(item)
+          elsif item[:type] == "web_search_call" && @output_thinking
+            return build_native_tool_thinking(item)
           elsif item[:type] == "message"
             attach_message_id_to_pending_stream_reasonings(item[:id])
           end
         end
+      when "response.completed"
+        track_completed_response(json[:response])
       end
 
       update_usage(json)
@@ -118,15 +134,18 @@ module DiscourseAi::Completions
         rval << @tool
         @tool = nil
       end
+      if @output_thinking && (thinking = build_response_output_items_thinking)
+        rval << thinking
+      end
       rval
     end
 
     private
 
     def extract_text(message_item)
-      (message_item[:content] || message_item["content"] || [])
-        .filter { |c| (c[:type] || c["type"]) == "output_text" }
-        .map { |c| c[:text] || c["text"] }
+      (message_item[:content] || [])
+        .filter { |content| content[:type] == "output_text" }
+        .map { |content| content[:text] }
         .join
     end
 
@@ -153,7 +172,7 @@ module DiscourseAi::Completions
       item_id = item[:id]
       name = item[:name]
       arguments = item[:arguments] || ""
-      params = arguments.empty? ? {} : JSON.parse(arguments, symbolize_names: true)
+      params = ToolArgumentsParser.parse(arguments)
 
       ToolCall.new(
         id: call_id,
@@ -163,6 +182,59 @@ module DiscourseAi::Completions
           PROVIDER_KEY => { id: item_id, call_id: call_id }.compact,
         },
       )
+    end
+
+    def build_native_tool_thinking(item, include_provider_info: false)
+      provider_info = include_provider_info ? response_output_items_provider_info : {}
+
+      Thinking.new(message: native_tool_summary(item), partial: false, provider_info: provider_info)
+    end
+
+    def normalize_provider_payload(payload)
+      payload.respond_to?(:deep_symbolize_keys) ? payload.deep_symbolize_keys : payload
+    end
+
+    def build_response_output_items_thinking
+      return if @response_output_items.blank? || @emitted_response_output_items
+      return if !@response_output_items.any? { |item| native_tool_item?(item) }
+
+      @emitted_response_output_items = true
+      Thinking.new(message: nil, partial: false, provider_info: response_output_items_provider_info)
+    end
+
+    def response_output_items_provider_info
+      { PROVIDER_KEY => { output_items: @response_output_items } }
+    end
+
+    def track_response_output_item(item)
+      @response_output_items << item.deep_dup
+    end
+
+    def track_completed_response(response)
+      output = response&.dig(:output)
+      @response_output_items = output.deep_dup if output.present?
+    end
+
+    def native_tool_item?(item)
+      item[:type] == "web_search_call"
+    end
+
+    def native_tool_summary(item)
+      action = item[:action] || {}
+
+      case action[:type]
+      when "search"
+        queries = Array(action[:queries]).presence || Array(action[:query])
+        queries.present? ? "Web search: #{queries.join(", ")}" : "Web search"
+      when "open_page"
+        target = action.values_at(:url, :page_url, :title).compact.first
+        target.present? ? "Web fetch: #{target}" : "Web fetch"
+      when "find_in_page"
+        target = action.values_at(:pattern, :query).compact.first
+        target.present? ? "Web page search: #{target}" : "Web page search"
+      else
+        "Used native web tool"
+      end
     end
 
     def handle_tool_stream(event_type, json)
@@ -200,7 +272,7 @@ module DiscourseAi::Completions
     # Parse accumulated @tool_arguments once we have a complete JSON blob
     def process_arguments
       return if @tool_arguments.to_s.empty?
-      parsed = JSON.parse(@tool_arguments, symbolize_names: true)
+      parsed = ToolArgumentsParser.parse(@tool_arguments)
       @tool.parameters = parsed
       @tool.partial = false
       @tool_arguments = nil

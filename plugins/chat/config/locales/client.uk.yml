@@ -436,8 +436,6 @@ uk:
         input_placeholder: Додайте назву
         slug_description: Замість назви каналу в URL-адресі використовується slug каналу
         name: Назва каналу
-        slug: Slug каналу (опціонально)
-        emoji: Емодзі каналу (необов'язково)
         reset_emoji: Скинути емодзі
       channel_edit_description_modal:
         title: Редагувати опис
@@ -525,16 +523,14 @@ uk:
             many: 'Користувачі в %{group} і %{count} інших групах матимуть доступ до цього каналу відповідно до <a href="%{settingLink}" target="_blank">налаштувань безпеки</a>'
             other: 'Користувачі в %{group} і %{count} інших групах матимуть доступ до цього каналу відповідно до <a href="%{settingLink}" target="_blank">налаштувань безпеки</a>'
         create: "Створити канал"
-        description: "Опис (необов'язково)"
+        description: "Опис"
         name: "Назва каналу"
-        slug: "Slug каналу (опціонально)"
         title: "Новий канал"
         type: "Тип"
         types:
           category: "Розділ"
           topic: "Тема"
         emoji:
-          label: "Емодзі каналу (необов'язково)"
           reset: "Скинути емодзі"
       reviewable:
         type: "Повідомлення чату"

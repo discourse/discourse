@@ -69,6 +69,7 @@ be:
         title: новае паведамленне
         prefix: "да:"
       create_channel:
+        description: "Апісанне"
         type: "тып"
         types:
           category: "катэгорыя"

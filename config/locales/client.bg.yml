@@ -1885,6 +1885,10 @@ bg:
       confirm_title: Продължете към %{site_name}
       logging_in_as: Влизане като %{email}
       confirm_button: Завършете влизането
+    code_login:
+      email_label: "Имейл"
+      continue_button: "Напред"
+      verify_button: "Напред"
     login:
       header_title: "Добре дошли отново"
       title: "Вход"

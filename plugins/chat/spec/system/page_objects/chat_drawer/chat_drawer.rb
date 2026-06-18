@@ -9,6 +9,10 @@ module PageObjects
         @channels_index ||= ::PageObjects::Components::Chat::ChannelsIndex.new(VISIBLE_DRAWER)
       end
 
+      def messages
+        @messages ||= PageObjects::Components::Chat::Messages.new(VISIBLE_DRAWER)
+      end
+
       def browse
         @browse ||= ::PageObjects::Pages::ChatBrowse.new(".c-drawer-routes.--browse")
       end
@@ -62,6 +66,10 @@ module PageObjects
         has_no_css?(".chat-skeleton")
       end
 
+      def join_channel
+        find("#{VISIBLE_DRAWER} .toggle-channel-membership-button.-join").click
+      end
+
       def open_channel_row(channel)
         find("#{VISIBLE_DRAWER} .chat-channel-row[data-chat-channel-id='#{channel.id}']").click
         has_no_css?(".chat-skeleton")
@@ -73,6 +81,10 @@ module PageObjects
 
       def has_no_channel?(channel)
         channels_index.has_no_channel?(channel)
+      end
+
+      def has_no_browse_page_button?
+        channels_index.has_no_browse_page_button?
       end
 
       def has_channel_at_position?(channel, position)

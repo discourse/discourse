@@ -46,6 +46,7 @@ const CUSTOM_TYPES = [
   "secret_list",
   "upload",
   "group_list",
+  "group",
   "tag_list",
   "tag_group_list",
   "color",

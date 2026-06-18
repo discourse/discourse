@@ -1879,6 +1879,10 @@ ko:
       confirm_title: '%{site_name}에서 계속하기'
       logging_in_as: '%{email} 이메일로 로그인'
       confirm_button: 로그인 완료
+    code_login:
+      email_label: "이메일"
+      continue_button: "계속하기"
+      verify_button: "계속하기"
     login:
       header_title: "환영합니다"
       title: "로그인"

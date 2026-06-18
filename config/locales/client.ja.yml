@@ -2414,6 +2414,10 @@ ja:
       confirm_title: '%{site_name} に進む'
       logging_in_as: '%{email} としてログイン'
       confirm_button: ログイン完了
+    code_login:
+      email_label: "メールアドレス"
+      continue_button: "続行"
+      verify_button: "続行"
     login:
       header_title: "おかえりなさい"
       title: "ログイン"
@@ -2636,6 +2640,10 @@ ja:
       publish: "共有の下書きを公開"
       confirm_publish: "この下書きを公開してもよろしいですか？"
       publishing: "トピックを公開中…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "メタデータ"
     composer:
       autocomplete:
         username_missing: "選択した自動補完候補にはユーザー名がありません。"
@@ -5129,10 +5137,6 @@ ja:
             bookmarks: "ブックマークしたタグのない %{category} のトピック"
             default: "タグのない %{category} の%{filter}トピック"
         categories: "すべてのカテゴリ"
-    content_localization:
-      toggle_localized:
-        translated: "ページは機械翻訳されています。クリックすると元のページが表示されます。"
-        not_translated: "ページが翻訳されていません。クリックして翻訳してください。"
     language_switcher:
       title: "サイト言語の変更"
   admin_js:

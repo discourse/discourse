@@ -1559,6 +1559,10 @@ lv:
       confirm_title: Turpināt %{site_name}
       logging_in_as: Piesakoties kā %{email}
       confirm_button: Pabeigt pieteikšanos
+    code_login:
+      email_label: "E-pasts"
+      continue_button: "Turpināt"
+      verify_button: "Turpināt"
     login:
       header_title: "Laipni lūdzam"
       title: "Ienākt"

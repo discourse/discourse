@@ -2669,6 +2669,10 @@ ur:
       confirm_title: '%{site_name} پر جاری رکھیں'
       logging_in_as: '%{email} کے طور پر لاگ اِن'
       confirm_button: لاگ اِن مکمل
+    code_login:
+      email_label: "ای میل"
+      continue_button: "جاری رکھیں"
+      verify_button: "جاری رکھیں"
     login:
       header_title: "خوش آمدید"
       title: "لاگ اِن"
@@ -2687,7 +2691,6 @@ ur:
       security_key_description: "جب آپ کے پاس اپنی فزیکل سیکیورٹی کلید یا ہم آہنگ موبائل ڈیوائس تیار ہو جائے تو نیچے سیکیورٹی کلید کے ساتھ تصدیق کریں بٹن کو دبائیں۔"
       security_key_alternative: "دوسرا راستہ آزمائیں"
       security_key_authenticate: "سیکیورٹی کی کے ساتھ تصدیق کریں"
-      security_key_or_passkey_authenticate: "سیکیورٹی کلید یا پاس کی کے ساتھ تصدیق کریں"
       security_key_not_allowed_error: "سیکیورٹی کی, کی تصدیق کا عمل یا تو ختم ہو گیا تھا یا منسوخ کردیا گیا تھا۔"
       security_key_no_matching_credential_error: "فراہم کردہ سیکیورٹی کی میں کوئی مماثلت نہیں مل سکی۔"
       security_key_support_missing_error: "آپ کا موجودہ آلہ یا براؤزر سیکیورٹی کیز کے استعمال کی حمایت نہیں کرتا ہے۔ براہ کرم کوئی مختلف طریقہ استعمال کریں۔"
@@ -2913,6 +2916,10 @@ ur:
       publish: "مشترکہ مسودہ شائع کریں"
       confirm_publish: "کیا آپ واقعی اِس ڈرافٹ کو شائع کرنا چاہتے ہیں؟"
       publishing: "اشاعت کا موضوع۔۔۔"
+    codemirror:
+      expression:
+        sections:
+          metadata: "میٹا ڈیٹا"
     composer:
       autocomplete:
         username_missing: "منتخب کردہ خودکار تکمیل کا نتیجہ اسمِ صارف سے عاری ہے۔"
@@ -3742,6 +3749,10 @@ ur:
         link: "سرگرمی کا لاگ"
         title: "موضوع کی سرگرمی کا لاگ"
         empty: "موضوع کی دکھانے کے لیے سرگرمی نہیں ہے۔"
+      context:
+        banner: "آپ اس موضوع کے ایک واحد دھاگے کو دیکھ رہے ہیں۔"
+        view_full_topic: "مکمل موضوع دیکھیں"
+        view_parent_context: "بنیادی سیاق و سباق دیکھیں"
     topic:
       filter_to:
         one: "موضوع میں %{count} پوسٹ"
@@ -4586,7 +4597,6 @@ ur:
         site_settings: "سائٹ کی ترتیبات"
       choose_type:
         title: "زمرہ کی قسم منتخب کریں"
-        requires_plugin: "پلگ ان درکار ہے"
       create_category: "زمرہ بنائیں"
       save: "زمرہ محفوظ کریں"
       unsaved_changes: "آپ کی تبدلیاں محفوظ نہیں ہوئیں"
@@ -5670,10 +5680,6 @@ ur:
             bookmarks: "%{category} میں موضوعات ان دہجیوں کے بغیر جنہیں آپ نے بک مارک کیا"
             default: "%{filter} موضوعات %{category} میں بغیر دہجیوں کے"
         categories: "تمام زمرہ جات"
-    content_localization:
-      toggle_localized:
-        translated: "یہ صفحہ خودکار ترجمہ شدہ ہے۔ اصل دیکھنے کے لیے کلک کریں"
-        not_translated: "صفحہ ترجمہ شدہ نہیں ہے۔ ترجمہ کرنے کے لیے کلک کریں"
   admin_js:
     type_to_filter: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
     settings: "ترتیبات"

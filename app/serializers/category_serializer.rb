@@ -180,6 +180,6 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def available_category_types
-    Categories::TypeRegistry.list(only_visible: true)
+    Categories::TypeRegistry.list(only_visible: true, guardian: scope)
   end
 end

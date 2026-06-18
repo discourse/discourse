@@ -1,0 +1,26 @@
+.workflows-versions {
+  &__author {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  &__badge {
+    display: inline-block;
+    margin-inline-start: var(--space-1);
+    padding: 0 var(--space-1);
+    border-radius: var(--d-border-radius);
+    font-size: var(--font-down-2);
+    line-height: var(--line-height-large);
+
+    &.--current {
+      background: var(--primary-low);
+      color: var(--primary-medium);
+    }
+
+    &.--live {
+      background: var(--success-low);
+      color: var(--success);
+    }
+  }
+}

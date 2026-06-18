@@ -79,6 +79,7 @@ bs_BA:
         title: Nova poruka
         prefix: "Za:"
       create_channel:
+        description: "Opis"
         type: "Tip"
         types:
           category: "Kategorija"

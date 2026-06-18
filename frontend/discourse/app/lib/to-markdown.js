@@ -10,7 +10,9 @@ async function ensureDefaultExtensions() {
   }
 
   // The module's side effect registers the defaults and marks them as registered
-  await import("discourse/static/prosemirror/extensions/register-default");
+  await import(
+    /* dynamicChunkName: "prosemirror-extensions" */ "discourse/static/prosemirror/extensions/register-default"
+  );
 }
 
 // Deprecated no-ops - kept for backward compatibility
@@ -55,8 +57,12 @@ export default async function toMarkdown(html) {
       { isBoundary },
     ] = await Promise.all([
       import("prosemirror-model"),
-      import("discourse/static/prosemirror/core/schema"),
-      import("discourse/static/prosemirror/core/serializer"),
+      import(
+        /* dynamicChunkName: "prosemirror-schema" */ "discourse/static/prosemirror/core/schema"
+      ),
+      import(
+        /* dynamicChunkName: "prosemirror-serializer" */ "discourse/static/prosemirror/core/serializer"
+      ),
       import("discourse/static/prosemirror/extensions/word-paste"),
       import("discourse/static/prosemirror/lib/plugin-utils"),
     ]);

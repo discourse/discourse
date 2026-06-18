@@ -4,6 +4,7 @@ module DiscourseWorkflows
   class EventListener
     def self.handle(trigger_class, *args)
       return unless SiteSetting.discourse_workflows_enabled
+      return if WorkflowDependency.active_node_types.exclude?(trigger_class.identifier)
 
       trigger = trigger_class.new(*args)
       return unless trigger.valid?

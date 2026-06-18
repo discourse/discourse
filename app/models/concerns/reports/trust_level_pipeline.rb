@@ -35,13 +35,17 @@ module Reports::TrustLevelPipeline
       total_down = 0
 
       moves_sql = <<~SQL
+        WITH trust_changes AS MATERIALIZED (
+          SELECT target_user_id, new_value, previous_value, created_at
+          FROM user_histories
+          WHERE action IN (:change_action, :auto_action)
+        )
         SELECT
           new_value::integer AS new_tl,
           previous_value::integer AS prev_tl,
           COUNT(*) AS move_count
-        FROM user_histories
-        WHERE action IN (:change_action, :auto_action)
-          AND created_at >= :start_date
+        FROM trust_changes
+        WHERE created_at >= :start_date
           AND created_at <= :end_date
           AND previous_value ~ '^\\d+$'
           AND new_value ~ '^\\d+$'

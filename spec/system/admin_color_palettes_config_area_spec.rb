@@ -248,7 +248,7 @@ describe "Admin Color Palettes Config Area Page" do
     end
 
     it "shows toast when admin cannot see live preview" do
-      custom_scheme = Fabricate(:color_scheme, name: "Custom Scheme")
+      custom_scheme = Fabricate(:color_scheme, name: "Custom Scheme", user_selectable: true)
       admin.user_option.update!(
         theme_ids: [Theme.find_default.id],
         color_scheme_id: custom_scheme.id,

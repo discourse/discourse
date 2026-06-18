@@ -78,6 +78,7 @@ sw:
         title: Ujumbe Mpya
         prefix: "Kwenda:"
       create_channel:
+        description: "Maelezo"
         type: "Aina"
         types:
           category: "Kikundi"

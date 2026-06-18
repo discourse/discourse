@@ -54,6 +54,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
           :topic_id,
           :post_id,
           :reply_to_post_number,
+          :whisper,
           :author_username,
           :editor_username,
           :include_raw,
@@ -209,11 +210,11 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(http_request[:credentials]).to contain_exactly(
           a_hash_including(
             name: "auth",
-            credential_types: %w[basic_auth bearer_token],
+            credential_types: %w[basic_auth bearer_token header_auth],
             required: false,
             display_options: {
               show: {
-                authentication: %w[basic_auth bearer_token],
+                authentication: %w[basic_auth bearer_token header_auth],
               },
             },
           ),

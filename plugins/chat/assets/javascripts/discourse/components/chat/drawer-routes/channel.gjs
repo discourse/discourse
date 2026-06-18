@@ -11,12 +11,17 @@ export default class ChatDrawerRoutesChannel extends Component {
   @service chatStateManager;
   @service chatHistory;
   @service siteSettings;
+  @service currentUser;
 
   @tracked isFiltering = false;
 
   @action
   toggleIsFiltering() {
     this.isFiltering = !this.isFiltering;
+  }
+
+  get canSearchChat() {
+    return this.currentUser && this.siteSettings.chat_search_enabled;
   }
 
   get backBtnRoute() {
@@ -40,7 +45,7 @@ export default class ChatDrawerRoutesChannel extends Component {
           <navbar.BackButton @route={{this.backBtnRoute}} />
           <navbar.ChannelTitle @channel={{@model.channel}} />
           <navbar.Actions as |a|>
-            {{#if this.siteSettings.chat_search_enabled}}
+            {{#if this.canSearchChat}}
               <a.Filter
                 @channel={{@model.channel}}
                 @onToggleFilter={{this.toggleIsFiltering}}

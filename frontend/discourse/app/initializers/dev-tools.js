@@ -48,7 +48,9 @@ export default {
 
       app.deferReadiness();
 
-      import("discourse/static/dev-tools/entrypoint").then((devTools) => {
+      import(
+        /* dynamicChunkName: "dev-tools" */ "discourse/static/dev-tools/entrypoint"
+      ).then((devTools) => {
         devTools.init();
 
         // eslint-disable-next-line no-console

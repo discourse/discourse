@@ -719,7 +719,7 @@
     position: sticky;
     top: 0;
     z-index: z("dropdown") + 1;
-    flex-direction: row;
+    flex-direction: row-reverse;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-1);

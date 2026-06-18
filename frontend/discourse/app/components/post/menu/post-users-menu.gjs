@@ -5,6 +5,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DUserAvatar from "discourse/ui-kit/d-user-avatar";
 import DUserLink from "discourse/ui-kit/d-user-link";
@@ -39,10 +40,20 @@ export default class PostUsersMenu extends Component {
   @tracked bodyMinHeight = null;
 
   displayName = (user) => {
+    let defaultName;
     if (user.name && !this.siteSettings.prioritize_username_in_ux) {
-      return user.name;
+      defaultName = user.name;
+    } else {
+      defaultName = user.username;
     }
-    return user.username;
+    return applyValueTransformer("post-user-display-name", defaultName, {
+      user,
+    });
+  };
+  displayUsername = (user) => {
+    return applyValueTransformer("post-user-display-username", user.username, {
+      user,
+    });
   };
   resetAndReload = () => {
     this.users = [];
@@ -150,7 +161,7 @@ export default class PostUsersMenu extends Component {
                     @username={{user.username}}
                     class="post-users-popup__username"
                   >
-                    @{{user.username}}
+                    @{{this.displayUsername user}}
                   </DUserLink>
                 {{/unless}}
               </div>

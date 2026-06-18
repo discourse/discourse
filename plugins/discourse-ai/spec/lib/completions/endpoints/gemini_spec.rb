@@ -325,6 +325,105 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     expect(parsed.dig(:generationConfig, :thinkingConfig)).to eq({ thinkingLevel: "high" })
   end
 
+  it "requests Gemini thought summaries when enabled" do
+    model.update!(provider_params: { enable_thinking: true, thinking_level: "medium" })
+
+    response = gemini_mock.response("Using thought summaries").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate(
+      "Hello",
+      user: user,
+      output_thinking: true,
+      extra_model_params: {
+        include_thought_summaries: true,
+      },
+    )
+
+    parsed = JSON.parse(req_body, symbolize_names: true)
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to eq(
+      { thinkingLevel: "medium", includeThoughts: true },
+    )
+  end
+
+  it "decodes non-streamed thought summaries as thinking" do
+    response = {
+      candidates: [
+        {
+          content: {
+            parts: [
+              { text: "I should inspect the provided URL.", thought: true },
+              { text: "The URL contains latest topic data." },
+            ],
+            role: "model",
+          },
+        },
+      ],
+    }.to_json
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).to_return(status: 200, body: response)
+
+    result = llm.generate("Hello", user: user, output_thinking: true)
+
+    expect(result.first).to be_a(DiscourseAi::Completions::Thinking)
+    expect(result.first.message).to eq("I should inspect the provided URL.")
+    expect(result.last).to eq("The URL contains latest topic data.")
+  end
+
+  it "streams thought summaries separately from answer text" do
+    payload =
+      [
+        {
+          candidates: [
+            { content: { parts: [{ text: "I should ", thought: true }], role: "model" } },
+          ],
+        },
+        {
+          candidates: [
+            { content: { parts: [{ text: "inspect the URL.", thought: true }], role: "model" } },
+          ],
+        },
+        { candidates: [{ content: { parts: [{ text: "Answer text" }], role: "model" } }] },
+      ].map { |row| "data: #{row.to_json}\n\n" }.join
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
+    output = []
+
+    stub_request(:post, url).to_return(status: 200, body: payload)
+
+    result =
+      llm.generate("Hello", user: user, output_thinking: true) { |partial| output << partial }
+
+    expect(
+      output.map do |partial|
+        partial.is_a?(String) ? partial : [partial.message, partial.partial?]
+      end,
+    ).to eq(
+      [
+        ["I should ", true],
+        ["inspect the URL.", true],
+        ["I should inspect the URL.", false],
+        "Answer text",
+      ],
+    )
+    expect(result).to eq("Answer text")
+  end
+
   it "thinking_level takes priority over enable_thinking" do
     model.update!(
       provider_params: {
@@ -450,6 +549,262 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     parsed = JSON.parse(req_body, symbolize_names: true)
 
     expect(parsed[:tool_config]).to eq({ function_calling_config: { mode: "AUTO" } })
+  end
+
+  it "sends google_search grounding without a function_calling_config when only native tools are present" do
+    prompt = DiscourseAi::Completions::Prompt.new("Hello")
+    prompt.native_tools = ["web_search"]
+
+    response = gemini_mock.response("World").to_json
+
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    response = llm.generate(prompt, user: user)
+
+    expect(response).to eq("World")
+
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    # Gemini rejects function_calling_config when there are no function_declarations
+    expect(parsed[:tools]).to eq([{ google_search: {} }])
+    expect(parsed).not_to have_key(:tool_config)
+  end
+
+  it "emits native web search thinking from grounding metadata" do
+    prompt = DiscourseAi::Completions::Prompt.new("Hello")
+    prompt.native_tools = ["web_search"]
+
+    grounding_metadata = {
+      webSearchQueries: ["OpenAI news"],
+      searchEntryPoint: {
+        renderedContent: "<div>Search suggestions</div>",
+      },
+      groundingChunks: [{ web: { uri: "https://openai.com/news", title: "OpenAI" } }],
+      groundingSupports: [
+        {
+          segment: {
+            startIndex: 0,
+            endIndex: 15,
+            text: "Grounded answer",
+          },
+          groundingChunkIndices: [0],
+        },
+      ],
+    }
+    response = {
+      candidates: [
+        {
+          content: {
+            parts: [{ text: "Grounded answer" }],
+            role: "model",
+          },
+          groundingMetadata: grounding_metadata,
+        },
+      ],
+    }.to_json
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).to_return(status: 200, body: response)
+
+    result = llm.generate(prompt, user: user, output_thinking: true)
+
+    expect(result.first).to eq("Grounded answer")
+    expect(result.last).to be_a(DiscourseAi::Completions::Thinking)
+    expect(result.last.message).to eq("Web search: OpenAI news")
+    expect(result.last.provider_info.dig(:gemini, :grounding_metadata)).to eq(
+      grounding_metadata.except(:searchEntryPoint),
+    )
+  end
+
+  it "streams native web search thinking from grounding metadata" do
+    prompt = DiscourseAi::Completions::Prompt.new("Hello")
+    prompt.native_tools = ["web_search"]
+
+    rows = [
+      { candidates: [{ content: { parts: [{ text: "Grounded " }], role: "model" } }] },
+      { candidates: [{ content: { parts: [{ text: "answer" }], role: "model" } }] },
+      {
+        candidates: [
+          {
+            content: {
+              parts: [{ text: "", thoughtSignature: "sig-123" }],
+              role: "model",
+            },
+            finishReason: "STOP",
+            groundingMetadata: {
+              webSearchQueries: ["OpenAI news", "Anthropic news"],
+              groundingChunks: [{ web: { uri: "https://openai.com/news", title: "OpenAI" } }],
+            },
+          },
+        ],
+      },
+    ]
+    payload = rows.map { |row| "data: #{row.to_json}\n\n" }.join
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
+    output = []
+
+    stub_request(:post, url).to_return(status: 200, body: payload)
+
+    result = llm.generate(prompt, user: user, output_thinking: true) { |partial| output << partial }
+    thinking = output.find { |partial| partial.is_a?(DiscourseAi::Completions::Thinking) }
+
+    expect(output.map { |partial| partial.is_a?(String) ? partial : partial.message }).to eq(
+      ["Grounded ", "answer", "Web search: OpenAI news, Anthropic news"],
+    )
+    expect(thinking.provider_info.dig(:gemini, :grounding_metadata, :webSearchQueries)).to eq(
+      ["OpenAI news", "Anthropic news"],
+    )
+    expect(thinking.provider_info.dig(:gemini, :thought_signature_parts)).to eq(
+      [{ text: "", thoughtSignature: "sig-123" }],
+    )
+    expect(Array(result).join).to eq("Grounded answer")
+  end
+
+  it "keeps grounding metadata hidden when Gemini does not include search queries" do
+    payload =
+      [
+        { candidates: [{ content: { parts: [{ text: "Fetched answer" }], role: "model" } }] },
+        {
+          candidates: [
+            {
+              content: {
+                parts: [{ text: "", thoughtSignature: "sig-789" }],
+                role: "model",
+              },
+              finishReason: "STOP",
+              groundingMetadata: {
+                groundingChunks: [
+                  { web: { uri: "https://meta.discourse.org/latest.json", title: "Meta" } },
+                ],
+                groundingSupports: [
+                  {
+                    segment: {
+                      startIndex: 0,
+                      endIndex: 14,
+                      text: "Fetched answer",
+                    },
+                    groundingChunkIndices: [0],
+                  },
+                ],
+              },
+              urlContextMetadata: {
+                urlMetadata: [
+                  {
+                    retrievedUrl: "https://meta.discourse.org/latest.json",
+                    urlRetrievalStatus: "URL_RETRIEVAL_STATUS_SUCCESS",
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      ].map { |row| "data: #{row.to_json}\n\n" }.join
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
+    output = []
+
+    stub_request(:post, url).to_return(status: 200, body: payload)
+
+    llm.generate("Hello", user: user, output_thinking: true) { |partial| output << partial }
+
+    expect(output.map { |partial| partial.is_a?(String) ? partial : partial.message }).to eq(
+      ["Fetched answer", nil, "Web fetch: https://meta.discourse.org/latest.json"],
+    )
+    expect(output.grep(DiscourseAi::Completions::Thinking).first.provider_info[:gemini]).to include(
+      :grounding_metadata,
+      :thought_signature_parts,
+    )
+  end
+
+  it "emits hidden thinking for streamed text thought signatures" do
+    payload =
+      [
+        { candidates: [{ content: { parts: [{ text: "Hello" }], role: "model" } }] },
+        {
+          candidates: [
+            {
+              content: {
+                parts: [{ text: "", thoughtSignature: "sig-456" }],
+                role: "model",
+              },
+              finishReason: "STOP",
+            },
+          ],
+        },
+      ].map { |row| "data: #{row.to_json}\n\n" }.join
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
+    output = []
+
+    stub_request(:post, url).to_return(status: 200, body: payload)
+
+    result =
+      llm.generate("Hello", user: user, output_thinking: true) { |partial| output << partial }
+    thinking = output.find { |partial| partial.is_a?(DiscourseAi::Completions::Thinking) }
+
+    expect(output.map { |partial| partial.is_a?(String) ? partial : partial.message }).to eq(
+      ["Hello", nil],
+    )
+    expect(thinking.provider_info.dig(:gemini, :thought_signature_parts)).to eq(
+      [{ text: "", thoughtSignature: "sig-456" }],
+    )
+    expect(Array(result).join).to eq("Hello")
+  end
+
+  it "emits native web fetch thinking from URL context metadata" do
+    prompt = DiscourseAi::Completions::Prompt.new("Hello")
+    prompt.native_tools = ["web_fetch"]
+
+    url_context_metadata = {
+      urlMetadata: [
+        {
+          retrievedUrl: "https://example.com/report",
+          urlRetrievalStatus: "URL_RETRIEVAL_STATUS_SUCCESS",
+        },
+      ],
+    }
+    response = {
+      candidates: [
+        {
+          content: {
+            parts: [{ text: "Fetched answer" }],
+            role: "model",
+          },
+          urlContextMetadata: url_context_metadata,
+        },
+      ],
+    }.to_json
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).to_return(status: 200, body: response)
+
+    result = llm.generate(prompt, user: user, output_thinking: true)
+
+    expect(result.first).to eq("Fetched answer")
+    expect(result.last).to be_a(DiscourseAi::Completions::Thinking)
+    expect(result.last.message).to eq("Web fetch: https://example.com/report")
+    expect(result.last.provider_info.dig(:gemini, :url_context_metadata)).to eq(
+      url_context_metadata,
+    )
   end
 
   it "properly encodes tool calls" do

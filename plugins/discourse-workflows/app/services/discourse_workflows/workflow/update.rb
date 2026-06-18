@@ -4,42 +4,45 @@ module DiscourseWorkflows
   class Workflow::Update
     include Service::Base
 
-    TIMEZONE_NOT_PROVIDED = Object.new.freeze
-    STATIC_DATA_NOT_PROVIDED = Object.new.freeze
-    ERROR_WORKFLOW_ID_NOT_PROVIDED = Object.new.freeze
+    NOT_PROVIDED = Object.new.freeze
 
     params do
       attribute :workflow_id, :integer
-      attribute :name, :string
-      attribute :error_workflow_id, default: -> { ERROR_WORKFLOW_ID_NOT_PROVIDED }
-      attribute :timezone, default: -> { TIMEZONE_NOT_PROVIDED }
-      attribute :static_data, default: -> { STATIC_DATA_NOT_PROVIDED }
+      attribute :name, default: -> { NOT_PROVIDED }
+      attribute :error_workflow_id, default: -> { NOT_PROVIDED }
+      attribute :timezone, default: -> { NOT_PROVIDED }
+      attribute :static_data, default: -> { NOT_PROVIDED }
       attribute :nodes
       attribute :connections
       attribute :autosaved, :boolean, default: false
 
       validates :workflow_id, presence: true
-      validates :name, presence: true, length: { maximum: 100 }
+      validates :name, presence: true, length: { maximum: 100 }, if: :name_provided?
       validate :timezone_is_valid
       validate :static_data_is_valid_map
 
       def updatable_attributes
-        attrs = { name: }
+        attrs = {}
+        attrs[:name] = name if name_provided?
         attrs[:error_workflow_id] = error_workflow_id if error_workflow_id_provided?
         attrs[:static_data] = static_data if static_data_provided?
         attrs
       end
 
+      def name_provided?
+        name != NOT_PROVIDED
+      end
+
       def error_workflow_id_provided?
-        error_workflow_id != ERROR_WORKFLOW_ID_NOT_PROVIDED
+        error_workflow_id != NOT_PROVIDED
       end
 
       def timezone_provided?
-        timezone != TIMEZONE_NOT_PROVIDED
+        timezone != NOT_PROVIDED
       end
 
       def static_data_provided?
-        static_data != STATIC_DATA_NOT_PROVIDED
+        static_data != NOT_PROVIDED
       end
 
       def graph_data_provided?

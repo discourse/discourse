@@ -1,6 +1,7 @@
 import { render, settled, waitFor, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import PostUsersMenu from "discourse/components/post/menu/post-users-menu";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
 import {
@@ -182,6 +183,62 @@ module(
       resolve();
       await renderPromise;
       await settled();
+    });
+
+    test("can transform the display name via post-user-display-name transformer", async function (assert) {
+      this.siteSettings.prioritize_username_in_ux = false;
+
+      withPluginApi((api) => {
+        api.registerValueTransformer(
+          "post-user-display-name",
+          ({ value, context }) => {
+            if (context.user.id === 1) {
+              return "Custom Name";
+            }
+            return value;
+          }
+        );
+      });
+
+      const fetchUsers = () =>
+        Promise.resolve({ users: makeUsers(2), canLoadMore: false });
+
+      await renderMenu({ fetchUsers });
+
+      assert
+        .dom(".post-users-popup__item:nth-child(1) .post-users-popup__name")
+        .hasText("Custom Name", "first user has custom name");
+      assert
+        .dom(".post-users-popup__item:nth-child(2) .post-users-popup__name")
+        .hasText("User 2", "second user has default name");
+    });
+
+    test("can transform the username via post-user-display-username transformer", async function (assert) {
+      this.siteSettings.prioritize_username_in_ux = false;
+
+      withPluginApi((api) => {
+        api.registerValueTransformer(
+          "post-user-display-username",
+          ({ value, context }) => {
+            if (context.user.id === 1) {
+              return "custom_username";
+            }
+            return value;
+          }
+        );
+      });
+
+      const fetchUsers = () =>
+        Promise.resolve({ users: makeUsers(2), canLoadMore: false });
+
+      await renderMenu({ fetchUsers });
+
+      assert
+        .dom(".post-users-popup__item:nth-child(1) .post-users-popup__username")
+        .hasText("@custom_username", "first user has custom username");
+      assert
+        .dom(".post-users-popup__item:nth-child(2) .post-users-popup__username")
+        .hasText("@u2", "second user has default username");
     });
   }
 );
