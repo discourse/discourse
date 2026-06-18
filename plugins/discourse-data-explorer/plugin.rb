@@ -48,15 +48,11 @@ if defined?(Graphiti)
   Graphiti::Types[:datetime] = Graphiti::Types[:datetime].merge(read: ->(value) { value })
 end
 
-# Thin-layers JSON:API spike (jsonapi.rb): load ONLY the Ransack-free submodules.
-# `gem "jsonapi.rb"` is `require: false` because its aggregator (`require "jsonapi"`)
-# eagerly pulls in jsonapi/filtering → ransack → Polyamorous, which globally
-# monkeypatches ActiveRecord join aliasing and breaks core Discourse SQL. We use
-# jsonapi-serializer for output and hand-roll filtering instead. See Part 9.
-require "jsonapi/rails" # defines JSONAPI::Rails (used by Pagination) + jsonapi-serializer
-require "jsonapi/fetching" # include + sparse fieldsets
-require "jsonapi/pagination" # offset pagination
-require "jsonapi/deserialization" # jsonapi_deserialize
+# Thin-layers JSON:API spike: jsonapi-serializer for rendering. The jsonapi.rb gem was
+# dropped entirely (its Ransack-based filtering breaks core, and its other mixins —
+# include/fields/pagination/deserialization — were small enough to absorb into
+# JsonapiRb::BaseController). The thin stack now depends only on jsonapi-serializer + pagy.
+require "jsonapi/serializer"
 
 after_initialize do
   # PERF-TEMP (benchmarking only): Graphiti concurrency is a process-wide, memoized

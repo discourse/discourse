@@ -1218,24 +1218,75 @@ serializer axis is therefore a *wash* between the two paths and drops out of the
 
 wrk, page 50, c=8, profile env, m2m-patched Graphiti, both endpoints in the same boot:
 
-| scenario | rps | avg latency | in-proc queries | in-proc allocs |
-|---|---|---|---|---|
-| **GRAPHITI flat** | **525** | 15.1 ms | 7 | 9.3K |
-| THIN flat | 345 | 23.1 ms | 10 | 13.8K |
-| **THIN +incl** | **310** | 25.7 ms | 10 | 16.1K |
-| GRAPHITI +incl | 225 | 35.3 ms | 9 | 17.7K |
+**Two measurements — before and after conditional linkage (parity item #2) was built.**
 
-**A genuine crossover:**
-- **Bare/flat: Graphiti wins (+52%).** It omits relationship linkage when nothing is
-  `include`d (7 queries); jsonapi-serializer *always* emits linkage, so thin always preloads
-  `user`+`groups` (10 queries). Optimizable (conditional linkage) but real today.
-- **Compound/+includes: thin wins (+38%).** jsonapi-serializer builds compound documents
-  faster than Graphiti's jsonapi-serializable. For a JSON:API/WarpDrive API — whose point *is*
-  compound documents — thin wins the regime that matters, and is flatter across query shapes
-  (345→310, −10%) vs Graphiti's spiky 525→225 (−57%).
+*Initial — thin always emitted linkage + always preloaded (a crossover):*
 
-Net: **performance is a wash** — each wins one regime; both serve hundreds of rps/3 workers.
-Perf is not the deciding factor.
+| scenario | rps | in-proc queries |
+|---|---|---|
+| GRAPHITI flat | 525 | 7 |
+| THIN flat | 345 | 10 |
+| THIN +incl | 310 | 10 |
+| GRAPHITI +incl | 225 | 9 |
+
+Graphiti won flat (+52%) *only* because thin always emitted linkage and preloaded `user`+`groups`
+(10 queries vs 7); thin won +incl (+38%). A genuine crossover.
+
+*After conditional linkage (lazy linkage + preload only included relationships → thin flat now 7
+queries, like Graphiti) — re-run, same methodology, same boot:*
+
+| scenario | rps | avg latency | in-proc queries |
+|---|---|---|---|
+| **THIN flat** | **624** | 12.7 ms | 7 |
+| GRAPHITI flat | 506 | 15.7 ms | 7 |
+| **THIN +incl** | **305** | 26.1 ms | 10 |
+| GRAPHITI +incl | 215 | 36.9 ms | 9 |
+
+**The crossover is gone: at feature parity, thin wins both regimes** — flat **+23%**, +incl
+**+42%**. Removing the always-linkage tax made thin flat *leaner* than Graphiti flat: thin omits
+non-included relationships entirely (12.5 KB doc), whereas Graphiti emits a `{meta:{included:
+false}}` marker (17 KB) — both compliant, but thin sends and serializes less. (Graphiti's 506/215
+match the earlier 525/225 within box variance, so the thin gains are real, not drift.)
+
+Net: **once the thin endpoint matches Graphiti's linkage economics, it is faster on both bare and
+compound requests.** Perf now mildly favors thin — but it remains a secondary factor next to
+*depend vs own*.
+
+#### Full three-way suite — thin vs Graphiti vs AMS (the Part 8 methodology, all three)
+
+Re-run with the *final* thin stack (DSL + conditional linkage + mixins absorbed → deps are just
+jsonapi-serializer + pagy). Same boot, profile env, page 50.
+
+**HTTP throughput** (wrk, c=8, explicit URLs):
+
+| endpoint | rps | avg latency |
+|---|---|---|
+| **THIN flat** | **593** | 13.4 ms |
+| GRAPHITI flat | 476 | 16.6 ms |
+| **THIN +incl** | **287** | 27.8 ms |
+| GRAPHITI +incl | 201 | 39.7 ms |
+| LEGACY AMS index | 266 | 29.7 ms |
+
+(The legacy AMS index is an *endpoint* baseline, not pure serialization — it merges default
+queries, computes `total_rows`, builds `load_more`, and paginates differently. Matches Part 8's
+C ≈ 270. Thin/Graphiti are the clean JSON:API comparison.)
+
+**In-process cost model** (N=50, pure serialization render — env-independent allocations/queries):
+
+| impl | queries | allocations | best |
+|---|---|---|---|
+| **THIN flat** | 2 | **3,074** | 1.2 ms |
+| GRAPHITI flat | 1 | 6,889 | 2.4 ms |
+| **THIN +incl** | 5 | **10,592** | 5.6 ms |
+| GRAPHITI +incl | 3 | 14,516 | 6.1 ms |
+| LEGACY AMS (inline format) | 4 | 8,351 | 5.1 ms |
+
+**Both methods agree: jsonapi-serializer (thin) is the leanest renderer** — fewer allocations and
+less time than *both* Graphiti and Discourse's current AMS, flat and compound. (Graphiti issues
+fewer queries flat — 1 vs 2 — but allocates ~2.2× more; thin's win is Ruby/allocation cost, the
+scaling factor, not SQL. Legacy AMS renders a different inline shape, so it's a reference point,
+not a like-for-like.) This is the strongest objective evidence in the whole exploration, and it
+points the same way as everything else: the thin path is *not* a performance compromise.
 
 ### Built: the query-surface DSL (punch-list #1) — closes the "ease" gap
 
@@ -1269,24 +1320,38 @@ was Graphiti's main remaining edge.
 | Axis | Graphiti | Thin-layers (jsonapi.rb) |
 |---|---|---|
 | Ease of building endpoints | ✅ declarative filters/sorts/stats | ✅ declarative DSL (**built**, Part 9 #1) — ~30 LOC/resource, no Ransack |
-| Project liveness | ✅ framework alive | ⚠️ mixins sleepy; serializer feature-dead (frozen spec → fork-on-demand; mild) |
-| Compound-doc perf | slower (−38% vs thin) | faster |
-| Bare-request perf | faster (+52%) | slower (optimizable) |
+| Project liveness | ✅ framework alive | ✅ deps now just **jsonapi-serializer + pagy** (jsonapi.rb dropped); pagy alive, jsonapi-serializer feature-dead but fork-on-demand (mild) |
+| Compound-doc perf (+includes) | slower (−42% vs thin) | **faster** |
+| Bare-request perf (flat) | slower (−23% vs thin) | **faster** (conditional linkage **built**, #2) |
+| Contract/drift guard | ✅ SchemaDiff | ✅ **built** — `jsonapi_rb_contract.json` + spec (backwards-incompat detection, live-fire verified) |
 | Lock-in | high | low (own the glue) |
 | Footguns | writable-default data-loss; `graphiti-rails` rake `Object` pollution | Ransack-breaks-core (avoided by dropping Ransack) |
 | Core-safety | needs the `Object`-pollution scrub initializer | clean once Ransack removed |
-| What we'd own/maintain | config + a 1-line `Group` association to function; 3 *optional* perf monkeypatches | a small query-surface framework; serializer stays jsonapi-serializer (fork only if it ever breaks) |
+| What we'd own/maintain | config + a 1-line `Group` association to function; 3 *optional* perf monkeypatches | a small framework (~250 LOC: base controller + contract spec + serializers); serializer stays jsonapi-serializer (fork only if it ever breaks) |
 
-**Thin-layers viability punch-list:** **(1) ✅ DONE** — reusable base controller + declarative
-DSL for filters/sorts/strictness (see above, 125 LOC); (2) conditional relationship linkage
-(closes the flat-perf gap); (3) keep the serializer on jsonapi-serializer — fork-on-demand if a
-future Ruby/Rails breaks it (frozen spec, ~500 LOC, MIT); (4) absorb the 4 jsonapi.rb mixin
-files; (5) shared JSON:API error layer + contract guard. Items 1+4+5 amount to **owning a small
-JSON:API framework** (~1–2k lines), without Graphiti's lock-in/footguns — and #1, the biggest
-chunk, is now built and proven.
+**Thin-layers viability punch-list — ALL DONE:** **(1) ✅** reusable base controller + declarative
+DSL (125 LOC); **(2) ✅** conditional relationship linkage (lazy + preload-only-included → flat 7
+queries; flipped flat perf to a thin win); **(3) ✅** serializer stays jsonapi-serializer,
+fork-on-demand (frozen spec, ~500 LOC, MIT); **(4) ✅** absorbed the jsonapi.rb mixins
+(include/fields/pagination/deserialization) into `BaseController` — **jsonapi.rb dropped entirely**;
+deps are now just **jsonapi-serializer + pagy**; **(5) ✅** richer error documents — validation
+errors carry `source.pointer` (`/data/attributes/<field>`); **contract guard ✅** —
+`jsonapi_rb_contract.json` + spec (the SchemaDiff analogue, live-fire verified). The thin endpoint
+now has **full feature parity with the Graphiti example**, on ~250 owned LOC depending on two
+live-or-forkable libraries.
 
-**The crux for the decade:** **depend on Graphiti** (alive, declarative, easy — but lock-in +
-the data-loss/rake footguns) **vs. own a small thin framework** (more to build & maintain — but
-no lock-in, no core-breaking deps). Both ride a feature-dead serializer with the same
-fork-on-demand hatch, so that's a wash; perf is a wash. The decision turns on *"depend vs.
-own,"* not on performance, serializer liveness, or features.
+**The crux for the decade (now that parity is built):** with **perf** (thin faster both regimes),
+**ease** (DSL ≈ declarative resource), **contract guard** (both have it), and **serializer**
+(both fork-on-demand) all settled, the comparison reduces to a single, clean trade:
+
+- **Depend on Graphiti** — a complete, *maintained* framework; you write less code and get
+  features beyond what we've built (deep sideloading, side-posting, remote resources) for free —
+  at the cost of **lock-in**, the **data-loss + rake-`Object` footguns**, and a dead serializer
+  you can't easily fork (entangled).
+- **Own the thin framework** — ~250 LOC you understand and control, **faster**, **no lock-in**,
+  **no core-breaking footguns**, swappable/forkable serializer — at the cost of **building and
+  maintaining those ~250 LOC** and implementing advanced features (deep includes, etc.) yourself
+  *if/when* needed.
+
+On the measurable axes the thin path now leads; Graphiti's remaining edge is "batteries you don't
+maintain, for features we don't yet need." It is genuinely *"depend vs. own."*
