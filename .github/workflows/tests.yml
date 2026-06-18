@@ -68,7 +68,7 @@ jobs:
       # development build because they test that build. Specs that depend on
       # dev-build-only behaviour (deprecation assertions, /theme-qunit) are
       # skipped when EMBER_ENV=production.
-      EMBER_ENV: ${{ matrix.build_type == 'system' && 'production' || 'development' }}
+      EMBER_ENV: development # BISECT: production build temporarily disabled to isolate core-system failures
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
