@@ -17,7 +17,7 @@ en:
       notify_on_staff_accept_solved:
         label: "Notify topic creator when staff marks a solution"
       empty_box_on_unsolved:
-        label: "Display an empty checkbox next to unsolved topics in the topic list"
+        label: "Display unsolved topic state in the topic list for supported themes"
       solved_topics_auto_close_duration:
         label: "Auto close solved topics"
         description: "Automatically close solved topics after this duration from the last reply. Set to 0 to disable."
