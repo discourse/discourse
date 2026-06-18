@@ -91,22 +91,13 @@ RSpec.describe BrowserPageviewEvent do
       expect(described_class.queued_count).to eq(0)
     end
 
-    it "removes malformed queued payloads" do
+    it "removes malformed queued payloads without blocking later entries" do
       Discourse.redis.rpush(described_class::REDIS_QUEUE_KEY, "{")
-      queue_payload(payload.except(:url))
-
-      expect { described_class.flush_queued! }.not_to change { described_class.count }
-
-      expect(described_class.queued_count).to eq(0)
-    end
-
-    it "discards payloads with an unparseable IP address without blocking the flush" do
-      queue_payload(payload.merge(ip_address: "1.2.3.4/64"))
-      queue_payload(payload.merge(url: "https://discourse.example/t/topic/3"))
+      queue_payload(payload.merge(url: "https://discourse.example/t/topic/4"))
 
       expect { described_class.flush_queued! }.to change { described_class.count }.by(1)
 
-      expect(described_class.last.url).to eq("https://discourse.example/t/topic/3")
+      expect(described_class.last.url).to eq("https://discourse.example/t/topic/4")
       expect(described_class.queued_count).to eq(0)
     end
   end
@@ -120,6 +111,18 @@ RSpec.describe BrowserPageviewEvent do
         session_id: "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx",
         occurred_at: Time.zone.parse("2026-05-27 10:30:00").iso8601(6),
       }
+    end
+
+    it "skips payloads missing a required field instead of queueing them" do
+      expect { described_class.enqueue_for_later(payload.except(:url)) }.not_to change {
+        described_class.queued_count
+      }
+    end
+
+    it "skips payloads with an unparseable IP address instead of queueing them" do
+      expect {
+        described_class.enqueue_for_later(payload.merge(ip_address: "1.2.3.4/64"))
+      }.not_to change { described_class.queued_count }
     end
 
     it "drops new events once the queue reaches its maximum size" do

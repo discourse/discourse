@@ -15,6 +15,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
 
   class << self
     def enqueue_for_later(payload)
+      return unless valid_payload?(payload)
       return if Discourse.redis.llen(REDIS_QUEUE_KEY) >= REDIS_QUEUE_MAX_SIZE
 
       Discourse.redis.multi do |transaction|
@@ -39,13 +40,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
         queued_attributes = []
 
         entries.each do |entry|
-          attributes = attributes_from_payload(deserialize_payload(entry))
-          if valid_attributes?(attributes)
-            queued_attributes << attributes
-          else
-            Rails.logger.debug("Discarding queued BrowserPageviewEvent: invalid data")
-            queued_attributes << nil
-          end
+          queued_attributes << attributes_from_payload(deserialize_payload(entry))
           processed += 1
         rescue => e
           Rails.logger.error("Discarding queued BrowserPageviewEvent: #{e.message}")
@@ -163,10 +158,10 @@ class BrowserPageviewEvent < ActiveRecord::Base
       }
     end
 
-    def valid_attributes?(attributes)
-      attributes[:url].present? && attributes[:ip_address].present? &&
-        attributes[:user_agent].present? && attributes[:session_id].present? &&
-        attributes[:created_at].present? && valid_ip_address?(attributes[:ip_address])
+    def valid_payload?(payload)
+      payload[:url].present? && payload[:ip_address].present? && payload[:user_agent].present? &&
+        payload[:session_id].present? && payload[:occurred_at].present? &&
+        valid_ip_address?(payload[:ip_address])
     end
 
     def valid_ip_address?(ip_address)
@@ -178,8 +173,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
 
     def postgres_connection_error?(error)
       cause = error.cause
-      cause.is_a?(PG::ConnectionBad) ||
-        (defined?(PG::UnableToSend) && cause.is_a?(PG::UnableToSend))
+      cause.is_a?(PG::ConnectionBad) || cause.is_a?(PG::UnableToSend)
     end
   end
 
