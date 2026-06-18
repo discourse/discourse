@@ -66,6 +66,12 @@ module PageObjects
       end
 
       def open_configure_menu
+        ensure_redesigned_dashboard
+
+        if has_css?(".d-page-header-mobile-actions-trigger", wait: 0)
+          find(".d-page-header-mobile-actions-trigger").click
+        end
+
         find(".btn[data-identifier='db-configure']").click
         has_css?(".db-configure")
         self
@@ -131,6 +137,12 @@ module PageObjects
       end
 
       private
+
+      def ensure_redesigned_dashboard
+        page.refresh unless has_css?(".db-main", wait: 0)
+        has_css?(".db-main [data-section-id], .db-main__empty")
+        self
+      end
 
       def preset_label(period)
         case period
