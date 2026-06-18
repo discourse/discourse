@@ -670,7 +670,7 @@ module ApplicationHelper
     @user_scheme_id = scheme_id if scheme_id &&
       (
         ColorScheme.exists?(id: scheme_id, user_selectable: true) ||
-          theme.color_scheme_id == scheme_id.to_i
+          theme&.color_scheme_id == scheme_id.to_i
       )
   end
 
