@@ -5,17 +5,11 @@ class AdminDashboardSectionConfiguration
 
   def self.sections
     AdminDashboardSection
-      .where(section_id: enabled_sections)
+      .where(section_id: KNOWN_SECTIONS)
       .order(:position)
       .pluck(:section_id, :visible)
       .map { |id, visible| { id:, visible: } }
   end
-
-  def self.enabled_sections
-    return KNOWN_SECTIONS if SiteSetting.admin_dashboard_search_section_enabled
-    KNOWN_SECTIONS - %w[search]
-  end
-  private_class_method :enabled_sections
 
   def self.visible_section_ids
     sections.select { |s| s[:visible] }.map { |s| s[:id] }
