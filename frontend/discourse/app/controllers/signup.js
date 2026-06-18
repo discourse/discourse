@@ -154,7 +154,6 @@ export default class SignupPageController extends Controller {
     );
   }
 
-  // Alternative login methods and the disclaimer only belong on the first step.
   get codeSignupOnEmailStep() {
     return this.codeSignupStep === "email";
   }

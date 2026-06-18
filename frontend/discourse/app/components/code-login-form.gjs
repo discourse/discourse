@@ -7,6 +7,7 @@ import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
+import AvatarSelectorModal from "discourse/components/modal/avatar-selector";
 import SecondFactorForm from "discourse/components/second-factor-form";
 import SecurityKeyForm from "discourse/components/security-key-form";
 import UserField from "discourse/components/user-field";
@@ -14,23 +15,26 @@ import valueEntered from "discourse/helpers/value-entered";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import discourseDebounce from "discourse/lib/debounce";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
 import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
-import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import User, { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import DButton from "discourse/ui-kit/d-button";
 import DOtp from "discourse/ui-kit/d-otp";
 import DSecondFactorInput from "discourse/ui-kit/d-second-factor-input";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const RESEND_COOLDOWN_SECONDS = 30;
 
 export default class CodeLoginForm extends Component {
   @service site;
+  @service modal;
 
   @tracked email = this.args.initialEmail ?? "";
   @tracked verifying = false;
@@ -39,6 +43,14 @@ export default class CodeLoginForm extends Component {
   @tracked resendCooldown = 0;
   @tracked otpGeneration = 0;
   @tracked newAccount;
+  @tracked accountUser;
+  @tracked username = "";
+  @tracked usernameAvailable = false;
+  @tracked usernameChecking = false;
+  @tracked usernameError;
+  @tracked usernameEditable = true;
+  @tracked avatarTemplate;
+  @tracked avatarDetailsLoaded = false;
   @tracked secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
   @tracked secondFactorToken;
   @tracked securityKeyCredential;
@@ -55,6 +67,7 @@ export default class CodeLoginForm extends Component {
     showValidationOnInit: false,
   });
   #cooldownTimer;
+  #usernameCheckSeq = 0;
   @tracked _step = "email";
 
   willDestroy() {
@@ -102,8 +115,15 @@ export default class CodeLoginForm extends Component {
     return this.step === "complete";
   }
 
-  get editProfileUrl() {
-    return getURL("/my/preferences/account");
+  get continueDisabled() {
+    if (this.verifying) {
+      return true;
+    }
+    // When the username can't be changed there's nothing to validate.
+    if (!this.usernameEditable) {
+      return false;
+    }
+    return !this.usernameAvailable || this.usernameChecking;
   }
 
   get userFields() {
@@ -250,7 +270,11 @@ export default class CodeLoginForm extends Component {
       }
 
       if (result?.account_created) {
-        this.newAccount = result.user;
+        this.setupNewAccount(
+          result.user,
+          result.prefill_username,
+          result.can_edit_username
+        );
         this.step = "complete";
         return;
       }
@@ -272,19 +296,128 @@ export default class CodeLoginForm extends Component {
     return this.verifyCode();
   }
 
-  @action
-  continueAfterSignup() {
-    this.redirectAfterLogin();
+  // The account is logged in server-side but the app is still in its anonymous
+  // boot state, so username/avatar are edited through authenticated requests on
+  // a User model built from the verify response rather than the current user.
+  setupNewAccount(user, prefillUsername, canEditUsername) {
+    this.newAccount = user;
+    this.accountUser = User.create(user);
+    this.usernameEditable = canEditUsername;
+    // Only prefill an email-derived suggestion; otherwise the user picks one.
+    this.username = prefillUsername ? user.username : "";
+    this.avatarTemplate = user.avatar_template;
+    if (canEditUsername && this.username) {
+      this.checkUsernameAvailability();
+    }
   }
 
   @action
-  editProfile(event) {
-    // The account was logged in server-side without a page reload, so the
-    // app is still in its anonymous boot state. Navigate with a full page
-    // load so it reboots authenticated rather than client-side routing into
-    // a user-only route as an anonymous user.
-    event?.preventDefault();
-    window.location.assign(this.editProfileUrl);
+  usernameChanged(event) {
+    this.username = event.target.value;
+    this.usernameAvailable = false;
+    this.usernameError = null;
+    discourseDebounce(this, this.checkUsernameAvailability, 350);
+  }
+
+  async checkUsernameAvailability() {
+    const username = this.username?.trim();
+    if (!username) {
+      this.usernameAvailable = false;
+      this.usernameError = null;
+      return;
+    }
+
+    // Ignore responses that arrive out of order behind a newer check.
+    const seq = ++this.#usernameCheckSeq;
+    this.usernameChecking = true;
+    try {
+      const result = await User.checkUsername(
+        username,
+        this.email,
+        this.newAccount.id
+      );
+
+      if (seq !== this.#usernameCheckSeq) {
+        return;
+      }
+
+      if (result.available) {
+        this.usernameAvailable = true;
+        this.usernameError = null;
+      } else {
+        this.usernameAvailable = false;
+        this.usernameError =
+          result.errors?.join(" ") ||
+          (result.suggestion
+            ? i18n("code_login.username_unavailable", {
+                suggestion: result.suggestion,
+              })
+            : i18n("code_login.username_taken"));
+      }
+    } catch {
+      if (seq === this.#usernameCheckSeq) {
+        this.usernameAvailable = false;
+      }
+    } finally {
+      if (seq === this.#usernameCheckSeq) {
+        this.usernameChecking = false;
+      }
+    }
+  }
+
+  @action
+  async changeAvatar() {
+    try {
+      // The picker needs the gravatar/system/upload state, loaded on demand.
+      if (!this.avatarDetailsLoaded) {
+        await this.accountUser.findDetails();
+        this.avatarDetailsLoaded = true;
+      }
+    } catch (e) {
+      return popupAjaxError(e);
+    }
+
+    this.modal.show(AvatarSelectorModal, {
+      model: {
+        user: this.accountUser,
+        onAvatarChange: () => this.avatarChanged(),
+      },
+    });
+  }
+
+  async avatarChanged() {
+    // pickAvatar doesn't update the model, so reload to show the new avatar.
+    try {
+      await this.accountUser.findDetails();
+      this.avatarTemplate = this.accountUser.avatar_template;
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  @action
+  async continueAfterSignup() {
+    if (this.continueDisabled) {
+      return;
+    }
+
+    const username = this.username.trim();
+    if (
+      this.usernameEditable &&
+      username.toLowerCase() !== this.newAccount.username.toLowerCase()
+    ) {
+      this.verifying = true;
+      try {
+        await this.accountUser.changeUsername(username);
+      } catch (e) {
+        popupAjaxError(e);
+        return;
+      } finally {
+        this.verifying = false;
+      }
+    }
+
+    this.redirectAfterLogin();
   }
 
   @action
@@ -476,24 +609,61 @@ export default class CodeLoginForm extends Component {
           <h2 class="code-login-form__title">
             {{i18n "code_login.account_ready_title"}}
           </h2>
+          {{#if this.usernameEditable}}
+            <p class="code-login-form__instructions">
+              {{i18n "code_login.account_ready_edit"}}
+            </p>
+          {{/if}}
 
           <div class="code-login-form__new-account">
-            {{dBoundAvatarTemplate this.newAccount.avatar_template "huge"}}
-            <div class="code-login-form__new-account-username">
-              {{this.newAccount.username}}
-            </div>
-            <a
-              href={{this.editProfileUrl}}
-              class="code-login-form__edit-profile"
-              {{on "click" this.editProfile}}
+            <button
+              type="button"
+              class="code-login-form__avatar"
+              title={{i18n "code_login.change_avatar"}}
+              {{on "click" this.changeAvatar}}
             >
-              {{i18n "code_login.account_ready_edit"}}
-            </a>
+              {{dBoundAvatarTemplate this.avatarTemplate "huge"}}
+              <span class="code-login-form__avatar-edit">
+                {{dIcon "pencil"}}
+              </span>
+            </button>
+
+            {{#if this.usernameEditable}}
+              <div class="code-login-form__username-field">
+                <label for="code-login-username">
+                  {{i18n "code_login.username_label"}}
+                </label>
+                <input
+                  {{on "input" this.usernameChanged}}
+                  type="text"
+                  value={{this.username}}
+                  id="code-login-username"
+                  name="username"
+                  autocomplete="off"
+                  placeholder={{i18n "code_login.username_placeholder"}}
+                  class="code-login-form__new-account-username"
+                  aria-invalid={{if this.usernameError "true"}}
+                />
+                <div
+                  class="code-login-form__error"
+                  aria-live="polite"
+                  role="alert"
+                >
+                  {{this.usernameError}}
+                </div>
+              </div>
+            {{else}}
+              <div class="code-login-form__new-account-username">
+                {{this.newAccount.username}}
+              </div>
+            {{/if}}
           </div>
 
           <DButton
             @action={{this.continueAfterSignup}}
             @label="code_login.account_ready_continue"
+            @disabled={{this.continueDisabled}}
+            @isLoading={{this.verifying}}
             class="btn-large btn-primary code-login-form__continue-to-site"
           />
         </div>

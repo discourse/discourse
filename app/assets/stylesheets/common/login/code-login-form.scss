@@ -33,13 +33,51 @@
     flex-direction: column;
     align-items: center;
     align-self: stretch;
-    gap: 0.5em;
+    gap: 1em;
     padding: 1em 0;
   }
 
+  &__avatar {
+    position: relative;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    line-height: 0;
+
+    .avatar {
+      display: block;
+    }
+  }
+
+  &__avatar-edit {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    background: var(--tertiary);
+    color: var(--secondary);
+
+    .d-icon {
+      margin: 0;
+    }
+  }
+
+  &__username-field {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    gap: 0.25em;
+  }
+
   &__new-account-username {
-    font-size: var(--font-up-2);
-    font-weight: bold;
+    width: 100%;
+    margin: 0;
   }
 
   &__continue-to-site {

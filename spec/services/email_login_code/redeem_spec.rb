@@ -68,8 +68,12 @@ RSpec.describe EmailLoginCode::Redeem do
         expect(user.registration_ip_address.to_s).to eq("127.0.0.1")
       end
 
-      it "derives the username from the email even when email-based suggestions are off" do
-        SiteSetting.use_email_for_username_and_name_suggestions = false
+      it "does not derive the username from the email by default" do
+        expect(result[:user].username).not_to include("jane")
+      end
+
+      it "derives the username from the email when email-based suggestions are enabled" do
+        SiteSetting.use_email_for_username_and_name_suggestions = true
 
         expect(result[:user].username).to eq("jane")
       end
@@ -101,6 +105,30 @@ RSpec.describe EmailLoginCode::Redeem do
 
         it "saves the field value on the new user" do
           expect(result[:user].custom_fields["user_field_#{user_field.id}"]).to eq("Dev")
+        end
+
+        context "when a field is not shown on signup" do
+          fab!(:hidden_field) do
+            Fabricate(:user_field, requirement: "optional", show_on_signup: false)
+          end
+
+          let(:params) do
+            {
+              email:,
+              code:,
+              user_fields: {
+                user_field.id.to_s => "Dev",
+                hidden_field.id.to_s => "Secret",
+              },
+            }
+          end
+
+          it "ignores values for fields that aren't shown on signup" do
+            user = result[:user]
+
+            expect(user.custom_fields["user_field_#{user_field.id}"]).to eq("Dev")
+            expect(user.custom_fields["user_field_#{hidden_field.id}"]).to be_nil
+          end
         end
       end
 

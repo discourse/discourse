@@ -6,10 +6,7 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
   option :user_fields, optional: true
 
   def call
-    # Pass the local part as a fallback so we derive the username from the email
-    # even when use_email_for_username_and_name_suggestions is off; the email is
-    # already verified here, so the setting's enumeration concern doesn't apply.
-    username = UserNameSuggester.suggest(email, email.split("@").first)
+    username = UserNameSuggester.suggest(email)
 
     user = User.where(staged: true).with_email(email).first
     user&.unstage!
@@ -42,6 +39,7 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
 
     fields = user.custom_fields
     UserField
+      .where(show_on_signup: true)
       .pluck(:id)
       .each do |field_id|
         value = user_fields[field_id.to_s]

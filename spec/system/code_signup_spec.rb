@@ -26,7 +26,12 @@ describe "Sign up via email code" do
     expect(page).to have_css(".code-login-form__code-step")
   end
 
-  it "creates a passwordless account and logs in" do
+  def pick_username(name)
+    fill_in("code-login-username", with: name)
+    expect(page).to have_no_css(".code-login-form__continue-to-site[disabled]")
+  end
+
+  it "creates a passwordless account, picks a username, and logs in" do
     visit("/signup")
     expect(page).to have_css(".code-login-form__email-step")
     expect(page).to have_content(I18n.t("js.code_login.signup_title"))
@@ -37,31 +42,116 @@ describe "Sign up via email code" do
 
     fill_code(latest_emailed_code("new.person@example.com"))
 
-    user = User.find_by_email("new.person@example.com")
     expect(page).to have_css(".code-login-form__complete-step")
-    expect(page).to have_css(".code-login-form__new-account-username", text: user.username)
     screenshot_marker(label: "code-signup-complete-step")
+
+    # A username must be picked before the account can be used.
+    expect(page).to have_css(".code-login-form__continue-to-site[disabled]")
+    pick_username("new-person")
 
     find(".code-login-form__continue-to-site").click
 
     expect(page).to have_css(".header-dropdown-toggle.current-user")
-    expect(user.reload).to be_active
+
+    user = User.find_by_email("new.person@example.com")
+    expect(user).to be_active
+    expect(user.username).to eq("new-person")
     expect(user.user_password).to be_nil
   end
 
-  it "opens preferences from the account-ready step" do
+  it "blocks continuing while the picked username is taken" do
+    Fabricate(:user, username: "takenname")
+
     visit("/signup")
     submit_email("new.person@example.com")
     fill_code(latest_emailed_code("new.person@example.com"))
 
     expect(page).to have_css(".code-login-form__complete-step")
-    find(".code-login-form__edit-profile").click
 
-    # A full page load reboots the app authenticated, landing on the new
-    # user's preferences rather than breaking on a user-only route.
-    user = User.find_by_email("new.person@example.com")
-    expect(page).to have_current_path("/u/#{user.username}/preferences/account")
+    fill_in("code-login-username", with: "takenname")
+    expect(page).to have_css(".code-login-form__error", text: "username")
+    expect(page).to have_css(".code-login-form__continue-to-site[disabled]")
+  end
+
+  it "prefills the username when email-based suggestions are enabled" do
+    SiteSetting.use_email_for_username_and_name_suggestions = true
+
+    visit("/signup")
+    submit_email("jane@example.com")
+    fill_code(latest_emailed_code("jane@example.com"))
+
+    expect(page).to have_css(".code-login-form__complete-step")
+    expect(find("#code-login-username").value).to eq("jane")
+  end
+
+  it "keeps the generated username when usernames can't be changed" do
+    SiteSetting.username_change_period = 0
+
+    visit("/signup")
+    submit_email("locked.name@example.com")
+    fill_code(latest_emailed_code("locked.name@example.com"))
+
+    expect(page).to have_css(".code-login-form__complete-step")
+    expect(page).to have_no_css("#code-login-username")
+
+    find(".code-login-form__continue-to-site").click
     expect(page).to have_css(".header-dropdown-toggle.current-user")
+    expect(User.find_by_email("locked.name@example.com")).to be_present
+  end
+
+  it "lets the user open the avatar picker before continuing" do
+    visit("/signup")
+    submit_email("avatar.person@example.com")
+    fill_code(latest_emailed_code("avatar.person@example.com"))
+
+    expect(page).to have_css(".code-login-form__complete-step")
+    find(".code-login-form__avatar").click
+
+    expect(page).to have_css(".avatar-selector-modal")
+  end
+
+  it "shows an error for an incorrect code" do
+    visit("/signup")
+    submit_email("new.person@example.com")
+
+    correct_code = latest_emailed_code("new.person@example.com")
+    fill_code(correct_code == "000000" ? "000001" : "000000")
+
+    expect(page).to have_css(
+      ".code-login-form__error",
+      text: I18n.t("email_login_code.invalid_code"),
+    )
+    expect(page).to have_no_css(".header-dropdown-toggle.current-user")
+    expect(User.find_by_email("new.person@example.com")).to be_nil
+  end
+
+  it "does not create an account when registrations are disabled" do
+    SiteSetting.allow_new_registrations = false
+
+    visit("/signup")
+    submit_email("new.person@example.com")
+
+    # No code is sent when registrations are closed, so any code is rejected.
+    fill_code("000000")
+
+    expect(page).to have_css(".code-login-form__error")
+    expect(page).to have_no_css(".header-dropdown-toggle.current-user")
+    expect(User.find_by_email("new.person@example.com")).to be_nil
+  end
+
+  it "shows a pending-approval message when users must be approved" do
+    SiteSetting.must_approve_users = true
+
+    visit("/signup")
+    submit_email("approve.me@example.com")
+    fill_code(latest_emailed_code("approve.me@example.com"))
+
+    expect(page).to have_css(".code-login-form__error", text: I18n.t("login.not_approved"))
+    expect(page).to have_no_css(".header-dropdown-toggle.current-user")
+
+    user = User.find_by_email("approve.me@example.com")
+    expect(user).not_to be_approved
+    expect(ReviewableUser.pending.find_by(target: user)).to be_present
   end
 
   context "with required user fields" do
@@ -79,11 +169,13 @@ describe "Sign up via email code" do
       find(".code-login-form__user-fields-step .code-login-form__verify").click
 
       expect(page).to have_css(".code-login-form__complete-step")
+      pick_username("fields-person")
       find(".code-login-form__continue-to-site").click
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
 
       user = User.find_by_email("fields.person@example.com")
+      expect(user.username).to eq("fields-person")
       expect(user.custom_fields["user_field_#{user_field.id}"]).to eq("Dev")
     end
   end
