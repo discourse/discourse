@@ -3,6 +3,7 @@
 require "etc"
 require "fileutils"
 require "tmpdir"
+require_relative "nginx_executable"
 
 # Reads `config/nginx.sample.conf` and rewrites the handful of references
 # that don't work outside a deployed Discourse environment: hardcoded
@@ -100,8 +101,12 @@ module Nginx
         @module_cache.fetch(name) { @module_cache[name] = module_directive_usable?(name) }
       end
 
+      def self.nginx_bin
+        NginxExecutable.path || "nginx"
+      end
+
       def self.nginx_build_flags
-        @nginx_build_flags ||= `nginx -V 2>&1`
+        @nginx_build_flags ||= `#{nginx_bin} -V 2>&1`
       end
 
       def self.module_directive_usable?(name)
@@ -109,7 +114,16 @@ module Nginx
           config_path = File.join(tmpdir, "nginx.conf")
           File.write(config_path, module_probe_config(tmpdir, name))
 
-          !!system("nginx", "-t", "-c", config_path, "-p", tmpdir, out: File::NULL, err: File::NULL)
+          !!system(
+            nginx_bin,
+            "-t",
+            "-c",
+            config_path,
+            "-p",
+            tmpdir,
+            out: File::NULL,
+            err: File::NULL,
+          )
         end
       rescue SystemCallError
         false

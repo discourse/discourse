@@ -17,6 +17,7 @@
 require "rspec"
 
 $LOAD_PATH.unshift(File.expand_path("support", __dir__))
+require "nginx_executable"
 require "nginx_harness"
 
 RSpec.configure do |config|
@@ -27,7 +28,9 @@ RSpec.configure do |config|
     meta[:nginx] = true
   end
 
-  nginx_available = ENV["DISABLE_NGINX_TESTS"].nil? && system("which nginx >/dev/null 2>&1")
+  # Probe the same executable the harness will spawn (Process.spawn /
+  # execvp resolution), not a separate `which` lookup that could disagree.
+  nginx_available = ENV["DISABLE_NGINX_TESTS"].nil? && Nginx::Support::NginxExecutable.available?
 
   unless nginx_available
     raise "nginx not found on PATH but NGINX_TESTS_REQUIRED is set" if ENV["NGINX_TESTS_REQUIRED"]

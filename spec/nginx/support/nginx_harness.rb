@@ -8,6 +8,7 @@ require "tmpdir"
 require "webrick"
 require_relative "config_renderer"
 require_relative "mock_upstream"
+require_relative "nginx_executable"
 
 module Nginx
   module Support
@@ -142,7 +143,7 @@ module Nginx
 
         @nginx_pid =
           Process.spawn(
-            "nginx",
+            NginxExecutable.path || "nginx",
             "-c",
             wrapper_path,
             "-p",
