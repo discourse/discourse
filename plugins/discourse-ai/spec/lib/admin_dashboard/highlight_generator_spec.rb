@@ -95,12 +95,42 @@ RSpec.describe DiscourseAi::AdminDashboard::HighlightGenerator do
       message = message_for("2026-05-01", "2026-06-01")
 
       expect(message).to include("new sign-ups: 1100")
+      expect(message).to include("Period length: 32 days")
+      expect(message).to include("Community-owner lenses:")
+      expect(message).to include("Acquisition and discovery: new sign-ups: 1100")
       expect(message).to match(/Use ONLY the numbers and facts listed above/)
+      expect(message).to match(/Do not mention a metric whose value is "not available"/)
       expect(message).to match(/Do not invent sources, dates, causes, or numbers/)
+      expect(message).to match(/Never say "a specific external referrer"/)
       expect(message).to match(/Do not overstate causality/)
       expect(message).to match(/Do not say traffic "translated"/)
+      expect(message).to match(/"did not stem"/)
+      expect(message).to match(/state only its date, size, and listed referrer/)
       expect(message).to match(/Avoid report phrases/)
-      expect(message).to match(/what to inspect next/)
+      expect(message).to match(/next inspection areas/)
+    end
+
+    it "keeps unavailable metrics out of owner lenses" do
+      allow(AdminDashboardHighlights).to receive(:build).and_return(
+        {
+          kpis: [
+            {
+              type: :new_signups,
+              value: nil,
+              previous_value: 10,
+              percent_change: nil,
+              report_type: "signups",
+              report_query: {
+              },
+            },
+          ],
+        },
+      )
+
+      message = message_for("2026-05-01", "2026-06-01")
+
+      expect(message).to include("new sign-ups: not available")
+      expect(message).not_to include("Acquisition and discovery: new sign-ups")
     end
 
     it "says nothing stood out when no signal clears its threshold" do

@@ -4208,6 +4208,13 @@ en:
         banner: "You are viewing a single thread from this topic."
         view_full_topic: "View full topic"
         view_parent_context: "View parent context"
+    share_target:
+      title: "Shared content"
+      description: "What would you like to do with the shared content?"
+      new_topic: "New topic"
+      new_message: "New message"
+      add_to_reply: "Add to a reply"
+      added_to_reply: "Saved. The content will be added the next time you open a reply."
     topic:
       filter_to:
         one: "%{count} post in topic"
@@ -8273,6 +8280,7 @@ en:
           updating: "Updating…"
           update_success: "%{theme} Update complete"
           up_to_date: "Theme is up-to-date, last checked:"
+          up_to_date_branch: "Theme is up-to-date with %{branch}, last checked:"
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           change_source:
             button: "Change source"
@@ -8296,6 +8304,9 @@ en:
           commits_behind:
             one: "Theme is %{count} commit behind!"
             other: "Theme is %{count} commits behind!"
+          commits_behind_branch:
+            one: "Theme is %{count} commit behind %{branch}"
+            other: "Theme is %{count} commits behind %{branch}"
           compare_commits: "(See new commits)"
           remote_theme_edits: "If you want to edit this theme, you must <a href='%{repoURL}' target='_blank'>submit a change on its repository</a>"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"

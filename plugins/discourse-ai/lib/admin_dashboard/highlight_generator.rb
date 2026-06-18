@@ -7,7 +7,13 @@ module DiscourseAi
     # then handed to the admin dashboard highlights agent which explains what changed.
     class HighlightGenerator
       CACHE_TTL = 6.hours
-      CACHE_VERSION = 3
+      CACHE_VERSION = 4
+
+      LENSES = {
+        acquisition: "Acquisition and discovery",
+        participation: "Participation and contribution",
+        support: "Support health",
+      }.freeze
 
       def self.generate(start_date:, end_date:, period: nil)
         new(start_date: start_date, end_date: end_date, period: period).generate
@@ -94,22 +100,29 @@ module DiscourseAi
       def user_message(facts)
         <<~MSG.strip
           Community facts for #{facts[:period][:start_date]} to #{facts[:period][:end_date]} — this was a #{facts[:trend]} period.
+          Period length: #{facts[:period][:days]} days. Compare only with the previous #{facts[:period][:days]} days.
 
           Headline metrics (also shown as tiles below the highlight):
           #{facts[:metrics].map { |metric| format_metric(metric) }.join("\n")}
+
+          Community-owner lenses:
+          #{format_lenses(facts)}
 
           Notable this period:
           #{format_signals(facts[:signals])}
 
           Rules — follow exactly:
           - Use ONLY the numbers and facts listed above. Never state a value that is not listed.
+          - Do not mention a metric whose value is "not available".
           - Only mention a traffic source, country, or landing topic if it appears in "Notable" above. Do not invent sources, dates, causes, or numbers.
+          - If you mention a traffic source or external referrer, name it exactly as listed or do not mention the source. Never say "a specific external referrer".
           - Do not overstate causality. If the facts only show contrast or correlation, phrase it that way.
-          - Do not say traffic "translated" or "did not translate" into another metric unless the facts include a conversion metric. Use plain contrast instead.
+          - Do not say traffic "translated", "did not translate", "stemmed", "did not stem", "lifted", or "did not lift" another metric. Do not imply that a traffic spike caused, failed to cause, prevented, or failed to prevent another metric.
+          - If you mention a traffic spike, state only its date, size, and listed referrer/source. Put participation or support concerns in a separate sentence.
           - Avoid report phrases like "as evidenced by", "highlighting", "indicating", and "underscoring".
           - If little is notable, say it was a steady period rather than inventing drama.
 
-          Write the admin dashboard highlight: 2 or 3 short, scannable sentences for a community owner. Lead with the trend, pick the 2-3 facts most useful for deciding what to inspect next, and prefer relationships between metrics. Warm and plain, no hype, no corporate report phrasing, no emoji.#{language_directive}
+          Write the admin dashboard highlight: 2 or 3 short, scannable sentences for a community owner. Lead with the trend, then choose the 2-3 most useful next inspection areas from the community-owner lenses. For 7-day ranges, focus on immediate follow-up; for 30-day or longer ranges, focus on sustained patterns. Warm and plain, no hype, no corporate report phrasing, no emoji.#{language_directive}
         MSG
       end
 
@@ -121,6 +134,7 @@ module DiscourseAi
       end
 
       def format_metric(metric)
+        value = metric[:value].presence || "not available"
         change =
           if metric[:delta_pct].present?
             sign = metric[:delta_pct] >= 0 ? "+" : ""
@@ -128,7 +142,32 @@ module DiscourseAi
           else
             ""
           end
-        "- #{metric[:label]}: #{metric[:value]}#{change}"
+        "- #{metric[:label]}: #{value}#{change}"
+      end
+
+      def format_lenses(facts)
+        LENSES
+          .map do |category, title|
+            entries = lens_entries(facts, category)
+            next if entries.blank?
+
+            "- #{title}: #{entries.join("; ")}"
+          end
+          .compact
+          .join("\n")
+      end
+
+      def lens_entries(facts, category)
+        metrics =
+          facts[:metrics]
+            .select { |metric| metric[:category] == category && metric[:value].present? }
+            .map { |metric| format_metric(metric).delete_prefix("- ") }
+        signals =
+          facts[:signals]
+            .select { |signal| signal[:category] == category }
+            .map { |signal| signal[:headline] }
+
+        metrics + signals
       end
 
       def format_signals(signals)

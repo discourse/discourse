@@ -24,6 +24,7 @@ class EmailLoginCode::Redeem
   model :login_code
   policy :code_matches
   model :existing_user, :fetch_existing_user, optional: true
+  policy :email_available_for_new_account
   policy :can_register_new_account
   policy :required_fields_provided
 
@@ -50,7 +51,17 @@ class EmailLoginCode::Redeem
   end
 
   def fetch_existing_user(params:)
-    User::Action::FindByEmail.call(email: params.email)
+    User.real.where(staged: false).with_email(params.email).first
+  end
+
+  # Login matches on the exact address only, but a code's address can still
+  # belong to an existing account once normalized (e.g. a Gmail alias). Such a
+  # code can neither log in nor create an account, so it's treated as invalid
+  # (via the controller's generic failure) rather than leaking a reason.
+  def email_available_for_new_account(existing_user:, params:)
+    return true if existing_user.present?
+
+    User::Action::FindByEmail.call(email: params.email).blank?
   end
 
   def can_register_new_account(existing_user:, params:)

@@ -74,4 +74,74 @@ RSpec.describe DiscourseAi::Completions::OpenAiMessageProcessor do
     expect(final_tool.parameters).to eq({ title: "Pack", time: "18:00" })
     expect(final_tool.partial?).to eq(false)
   end
+
+  it "parses streamed arguments with padding" do
+    processor = described_class.new
+
+    processor.process_streamed_message(
+      chunk(
+        delta: {
+          tool_calls: [
+            { index: 0, id: "call_group", function: { name: "resolve", arguments: " {\"kind" } },
+          ],
+        },
+      ),
+    )
+    processor.process_streamed_message(
+      chunk(
+        delta: {
+          tool_calls: [
+            { index: 0, function: { arguments: "\":\"group\",\"query\":\"friend\"} " } },
+          ],
+        },
+      ),
+    )
+
+    tool = processor.process_streamed_message(chunk(delta: {}, finish_reason: "tool_calls"))
+
+    expect(tool.parameters).to eq({ kind: "group", query: "friend" })
+  end
+
+  it "repairs a missing opening delimiter" do
+    processor = described_class.new
+
+    processor.process_streamed_message(
+      chunk(
+        delta: {
+          tool_calls: [
+            {
+              index: 0,
+              id: "call_group",
+              function: {
+                name: "resolve",
+                arguments: "kind\": \"group\", \"query\": \"friend\"} ",
+              },
+            },
+          ],
+        },
+      ),
+    )
+
+    tool = processor.process_streamed_message(chunk(delta: {}, finish_reason: "tool_calls"))
+
+    expect(tool.parameters).to eq({ kind: "group", query: "friend" })
+  end
+
+  it "raises on invalid tool arguments" do
+    processor = described_class.new
+
+    processor.process_streamed_message(
+      chunk(
+        delta: {
+          tool_calls: [
+            { index: 0, id: "call_group", function: { name: "resolve", arguments: "not-json" } },
+          ],
+        },
+      ),
+    )
+
+    expect {
+      processor.process_streamed_message(chunk(delta: {}, finish_reason: "tool_calls"))
+    }.to raise_error(JSON::ParserError)
+  end
 end

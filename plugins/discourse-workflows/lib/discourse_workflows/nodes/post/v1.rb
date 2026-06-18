@@ -89,6 +89,20 @@ module DiscourseWorkflows
                 },
               },
             },
+            whisper: {
+              type: :boolean,
+              required: false,
+              default: false,
+              ui: {
+                control: :boolean,
+                expression: true,
+              },
+              display_options: {
+                show: {
+                  operation: ["create"],
+                },
+              },
+            },
             author_username: {
               type: :string,
               required: false,
@@ -300,6 +314,7 @@ module DiscourseWorkflows
             "raw" => exec_ctx.get_node_parameter("raw", item_index),
             "reply_to_post_number" =>
               exec_ctx.get_node_parameter("reply_to_post_number", item_index),
+            "whisper" => exec_ctx.get_node_parameter("whisper", item_index, default: false),
             "post_id" => exec_ctx.get_node_parameter("post_id", item_index),
             "editor_username" => exec_ctx.get_node_parameter("editor_username", item_index),
             "include_raw" => exec_ctx.get_node_parameter("include_raw", item_index, default: true),
@@ -359,6 +374,7 @@ module DiscourseWorkflows
               raw: config["raw"],
               topic_id: config["topic_id"],
               reply_to_post_number: config["reply_to_post_number"],
+              whisper: config["whisper"],
             )
 
           {

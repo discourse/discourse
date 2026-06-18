@@ -2653,6 +2653,10 @@ nl:
       confirm_title: Doorgaan naar %{site_name}
       logging_in_as: Aanmelden als %{email}
       confirm_button: Aanmelding voltooien
+    code_login:
+      email_label: "E-mailadres"
+      continue_button: "Doorgaan"
+      verify_button: "Doorgaan"
     login:
       header_title: "Welkom terug"
       title: "Aanmelden"

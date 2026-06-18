@@ -2,8 +2,6 @@
 
 module DiscoursePostEvent
   class Invitee < ActiveRecord::Base
-    UNKNOWN_ATTENDANCE = "unknown"
-
     self.table_name = "discourse_post_event_invitees"
 
     belongs_to :event, foreign_key: :post_id

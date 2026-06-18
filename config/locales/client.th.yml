@@ -1345,6 +1345,10 @@ th:
       confirm_title: ดำเนินการต่อไปยัง %{site_name}
       logging_in_as: กำลังเข้าสู่ระบบด้วย %{email}
       confirm_button: เสร็จสิ้นการเข้าสู่ระบบ
+    code_login:
+      email_label: "อีเมล"
+      continue_button: "ดำเนินการต่อ"
+      verify_button: "ดำเนินการต่อ"
     login:
       title: "เข้าสู่ระบบ"
       username: "ชื่อผู้ใช้"

@@ -2055,6 +2055,10 @@ ro:
       confirm_title: Continuă la %{site_name}
       logging_in_as: Autentificare ca %{email}
       confirm_button: Finalizează autentificarea
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Continuă"
+      verify_button: "Continuă"
     login:
       header_title: "Bine ai revenit"
       title: "Autentificare"

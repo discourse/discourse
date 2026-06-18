@@ -1,8 +1,7 @@
-/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { attributeBindings, tagName } from "@ember-decorators/component";
-import $ from "jquery";
 
 @tagName("input")
 @attributeBindings(
@@ -16,7 +15,7 @@ export default class DRadioButton extends Component {
   type = "radio";
 
   click() {
-    const value = $(this.element).val();
+    const value = this.element.value;
 
     if (this.onChange) {
       this.onChange(value);

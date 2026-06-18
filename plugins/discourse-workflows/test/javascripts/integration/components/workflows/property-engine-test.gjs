@@ -247,6 +247,86 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.strictEqual(this.formApi.get("group_inbox_id"), null);
   });
 
+  test("renders preloaded automatic group option by name", async function (assert) {
+    this.setProperties({
+      configuration: {
+        operation: "check_membership",
+        group_id: 14,
+      },
+      formApi: null,
+      node: {
+        clientId: "node-1",
+        type: "action:group",
+        typeVersion: "1.0",
+      },
+      nodeType: "action:group",
+      nodeTypes: [
+        {
+          identifier: "action:group",
+          name: "action:group",
+          version: "1.0",
+          metadata: {
+            groups: [
+              { id: 0, name: "everyone" },
+              { id: 14, name: "trust_level_2" },
+            ],
+          },
+        },
+      ],
+      schema: {
+        group_id: {
+          type: "integer",
+          required: true,
+          type_options: {
+            load_options_method: "groups",
+          },
+          ui: {
+            control: "group_select",
+          },
+          control_options: {
+            filterable: true,
+            name_property: "name",
+            value_property: "id",
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @node={{this.node}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const groupSelector = selectKit(".combo-box");
+
+    assert.strictEqual(groupSelector.header().value(), "14");
+    assert.strictEqual(groupSelector.header().label(), "trust_level_2");
+
+    await groupSelector.expand();
+    assert
+      .dom(".combo-box .select-kit-row[data-value='0']")
+      .hasText("everyone");
+  });
+
   test("preserves focus for collection fields while typing", async function (assert) {
     this.setProperties({
       configuration: {

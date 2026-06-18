@@ -50,6 +50,12 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
       expect(output[:post][:id]).to eq(first_post.id)
       expect(output[:post][:raw]).to eq(first_post.raw)
       expect(output[:post][:cooked]).to eq("<p>Cooked</p>")
+      expect(output[:user]).to include(
+        id: user.id,
+        username: user.username,
+        trust_level: user.trust_level,
+        trust_level_name: TrustLevel.name(user.trust_level),
+      )
       expect(output[:topic][:id]).to eq(topic.id)
       expect(output[:topic][:tags].map { |topic_tag| topic_tag[:name] }).to eq(["test-tag"])
       expect(output).not_to have_key(:cooked)

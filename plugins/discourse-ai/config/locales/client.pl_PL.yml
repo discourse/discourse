@@ -236,6 +236,10 @@ pl_PL:
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
+          forced_llm_notice_description: "Ten agent jest zablokowany na skonfigurowanym domyślnym LLM. Przepływ pracy nie może go zastąpić."
+          llm_model_id: "Model LLM"
+          llm_model_default: "Użyj ustawień domyślnych agenta"
+          llm_model_default_with_name: "Użyj ustawień domyślnych agenta (%{value})"
           prompt: "Monit"
           select_agent: "Wybierz agenta..."
       bot_chats:

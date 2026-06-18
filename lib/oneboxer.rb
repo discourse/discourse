@@ -35,6 +35,7 @@ module Oneboxer
       "https://new.reddit.com",
       "https://www.youtube.com",
       "https://youtu.be",
+      "https://meet.google.com",
       "https://twitter.com",
       "https://x.com",
       Discourse.base_url,

@@ -1,4 +1,5 @@
 const { buildMacros } = require("@embroider/macros/babel");
+const StripTestSelectors = require("strip-test-selectors");
 
 const macros = buildMacros({
   configure(macrosConfig) {
@@ -7,6 +8,8 @@ const macros = buildMacros({
     });
   },
 });
+
+const PRODUCTION = process.env.EMBER_ENV === "production";
 
 module.exports = {
   plugins: [
@@ -19,7 +22,10 @@ module.exports = {
           "ember-cli-htmlbars-inline-precompile",
           "htmlbars-inline-precompile",
         ],
-        transforms: [...macros.templateMacros],
+        transforms: [
+          ...macros.templateMacros,
+          ...(PRODUCTION ? [StripTestSelectors] : []),
+        ],
       },
     ],
     [
@@ -45,13 +51,13 @@ module.exports = {
           {
             source: "@glimmer/env",
             flags: {
-              DEBUG: process.env.EMBER_ENV !== "production",
+              DEBUG: !PRODUCTION,
               CI: !!process.env.CI,
             },
           },
         ],
         debugTools: {
-          isDebug: process.env.EMBER_ENV !== "production",
+          isDebug: !PRODUCTION,
           source: "@ember/debug",
           assertPredicateIndex: 1,
         },

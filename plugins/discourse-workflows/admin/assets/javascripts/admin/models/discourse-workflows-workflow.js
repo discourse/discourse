@@ -73,11 +73,8 @@ export default class DiscourseWorkflowsWorkflow extends RestModel {
   @tracked connections = [];
   @tracked stickyNotes = [];
 
-  updateProperties() {
+  graphProperties() {
     return {
-      name: this.name,
-      error_workflow_id: this.errorWorkflowId,
-      static_data: this.staticData,
       nodes: [
         ...this.nodes.map(WorkflowNode.serialize),
         ...(this.stickyNotes || []).map(StickyNote.serialize),
@@ -90,6 +87,9 @@ export default class DiscourseWorkflowsWorkflow extends RestModel {
   }
 
   createProperties() {
-    return this.updateProperties();
+    return {
+      name: this.name,
+      ...this.graphProperties(),
+    };
   }
 }

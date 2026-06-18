@@ -29,7 +29,7 @@ class EmailLoginCode::Request
   private
 
   def fetch_user(params:)
-    User::Action::FindByEmail.call(email: params.email)
+    User.real.where(staged: false).with_email(params.email).first
   end
 
   def existing_account?(user:)
@@ -47,6 +47,10 @@ class EmailLoginCode::Request
     return if SiteSetting.require_invite_code
     return if !EmailValidator.allowed?(params.email)
     return if ScreenedEmail.should_block?(params.email)
+    # Login matches on the exact address, but a new account can't be created for
+    # an email that already belongs to someone once normalized, so don't send a
+    # code that could never be redeemed into an account.
+    return if User::Action::FindByEmail.call(email: params.email)
 
     true
   end

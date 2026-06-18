@@ -2815,6 +2815,10 @@ cs:
       confirm_title: Pokračovat na %{site_name}
       logging_in_as: Přihlášení jako %{email}
       confirm_button: Dokončit přihlášení
+    code_login:
+      email_label: "Email"
+      continue_button: "Pokračovat"
+      verify_button: "Pokračovat"
     login:
       header_title: "Vítejte zpět"
       title: "Přihlášení"

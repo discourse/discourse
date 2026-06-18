@@ -49,6 +49,46 @@ RSpec.describe EmailLoginCode::Redeem do
       end
     end
 
+    context "when the email domain is blocked" do
+      let(:email) { "jane@blocked.com" }
+
+      before { SiteSetting.blocked_email_domains = "blocked.com" }
+
+      it { is_expected.to fail_a_policy(:can_register_new_account) }
+
+      it "does not consume the code or create a user" do
+        result
+
+        expect(login_code.reload.consumed_at).to be_nil
+        expect(User.find_by_email(email)).to be_nil
+      end
+    end
+
+    context "when the email is screened" do
+      let(:email) { "jane@example.com" }
+
+      before { Fabricate(:screened_email, email:, action_type: ScreenedEmail.actions[:block]) }
+
+      it { is_expected.to fail_a_policy(:can_register_new_account) }
+    end
+
+    context "when the email matches an existing account only after normalization" do
+      fab!(:other_user) { Fabricate(:user, email: "foobar@example.com") }
+
+      let(:email) { "foo.bar@example.com" }
+
+      before { SiteSetting.normalize_emails = true }
+
+      it { is_expected.to fail_a_policy(:email_available_for_new_account) }
+
+      it "does not consume the code or create a user" do
+        result
+
+        expect(login_code.reload.consumed_at).to be_nil
+        expect(User.find_by_email(email)).to be_nil
+      end
+    end
+
     context "when the email is unknown" do
       let(:email) { "jane@example.com" }
 
@@ -129,6 +169,27 @@ RSpec.describe EmailLoginCode::Redeem do
             expect(user.custom_fields["user_field_#{user_field.id}"]).to eq("Dev")
             expect(user.custom_fields["user_field_#{hidden_field.id}"]).to be_nil
           end
+        end
+      end
+
+      context "when a required field is hidden from signup" do
+        fab!(:hidden_required_field) do
+          Fabricate(:user_field, requirement: "for_all_users", show_on_signup: false)
+        end
+
+        let(:params) { { email:, code:, user_fields: { user_field.id.to_s => "Dev" } } }
+
+        it "does not require fields the signup form can't collect" do
+          expect(result).to run_successfully
+        end
+      end
+
+      context "when user_fields is malformed" do
+        let(:params) { { email:, code:, user_fields: "not-a-hash" } }
+
+        it "fails as a missing field instead of raising" do
+          expect { result }.not_to raise_error
+          expect(result).to fail_a_policy(:required_fields_provided)
         end
       end
 
@@ -218,6 +279,18 @@ RSpec.describe EmailLoginCode::Redeem do
         it "creates an approved user" do
           expect(result[:user]).to be_approved
         end
+      end
+    end
+
+    context "when the new account is awaiting approval" do
+      before { SiteSetting.must_approve_users = true }
+
+      it "does not enqueue the welcome message until it can access the forum" do
+        expect { result }.not_to change {
+          Jobs::SendSystemMessage.jobs.count do |job|
+            job["args"][0]["message_type"] == "welcome_user"
+          end
+        }
       end
     end
   end

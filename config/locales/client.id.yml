@@ -1545,6 +1545,10 @@ id:
       confirm_title: Lanjut ke %{site_name}
       logging_in_as: Masuk sebagai %{email}
       confirm_button: Selesai Login
+    code_login:
+      email_label: "Email"
+      continue_button: "Lanjutkan"
+      verify_button: "Lanjutkan"
     login:
       title: "Log In"
       username: "Pengguna"
