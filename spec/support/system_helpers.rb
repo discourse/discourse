@@ -86,6 +86,14 @@ module SystemHelpers
     if cookies.none? { |browser_cookie| browser_cookie["name"] == "_t" }
       raise "sign_in for #{user.encoded_username} failed: auth cookie was not set in the browser context"
     end
+
+    # Injecting the cookie mutates the browser context, so mark the Capybara
+    # session used. The old visit-based sign_in did this implicitly by
+    # navigating. Without it, `Capybara.reset_sessions!` is a no-op on this
+    # session (it only resets a touched session), so specs that sign in via a
+    # shared hook and then `reset_sessions!` to become anonymous would keep the
+    # authenticated cookie.
+    page.instance_variable_set(:@touched, true)
   end
 
   def setup_system_test

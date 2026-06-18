@@ -41,7 +41,6 @@ RSpec.describe "Share conversation" do
     Group.refresh_automatic_groups!
 
     cdp.allow_clipboard
-    page.execute_script("window.navigator.clipboard.writeText('')")
   end
 
   it "can share a conversation with a agent user" do
@@ -54,6 +53,11 @@ RSpec.describe "Share conversation" do
     Fabricate(:post, topic: pm, user: agent.user, raw: "No idea")
 
     visit(pm.url)
+
+    # Start from an empty clipboard so the assertion proves the share action
+    # wrote it. Done after the visit because the clipboard API needs a real
+    # origin, not the about:blank a freshly signed-in page sits on.
+    page.execute_script("window.navigator.clipboard.writeText('')")
 
     find("#post_2 .post-action-menu__share-ai").click
 
@@ -87,6 +91,11 @@ RSpec.describe "Share conversation" do
     pm_posts
 
     visit(pm.url)
+
+    # Start from an empty clipboard so the assertion proves the share action
+    # wrote it. Done after the visit because the clipboard API needs a real
+    # origin, not the about:blank a freshly signed-in page sits on.
+    page.execute_script("window.navigator.clipboard.writeText('')")
 
     find("#post_2 .post-action-menu__share-ai").click
 
