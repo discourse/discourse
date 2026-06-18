@@ -57,11 +57,24 @@ export default class ExpressionWrapper extends Component {
   }
 
   get expressionMode() {
+    if (this.args.expressionMode !== undefined) {
+      return Boolean(this.args.expressionMode);
+    }
+
     return isExpression(this.args.field?.value);
+  }
+
+  get modeItems() {
+    return this.args.modeItems || MODE_ITEMS;
   }
 
   @action
   toggleMode(value) {
+    if (this.args.onModeChange) {
+      this.args.onModeChange(value);
+      return;
+    }
+
     const wantsDynamic = value === "dynamic";
     if (wantsDynamic === this.expressionMode) {
       return;
@@ -171,7 +184,7 @@ export default class ExpressionWrapper extends Component {
 
       {{#if @supportsExpression}}
         <DSegmentedControl
-          @items={{MODE_ITEMS}}
+          @items={{this.modeItems}}
           @value={{if this.expressionMode "dynamic" "plain"}}
           @onSelect={{this.toggleMode}}
           @size="small"

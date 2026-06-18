@@ -78,6 +78,81 @@ module("Integration | Component | workflows boolean control", function (hooks) {
 
     assert.dom(".form-kit__control-toggle").doesNotExist();
     assert.dom(".workflows-variable-input").exists();
+    assert.strictEqual(this.formApi.get("enabled"), "=false");
+  });
+
+  test("switches true values to expression mode", async function (assert) {
+    this.setProperties({
+      configuration: { enabled: true },
+      formApi: null,
+      schema: { type: "boolean", ui: { expression: true } },
+      registerApi: (api) => this.set("formApi", api),
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <BooleanControl
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @fieldName="enabled"
+            @label="Enabled"
+            @schema={{this.schema}}
+          />
+        </Form>
+      </template>
+    );
+
+    await click(
+      '.workflows-property-engine__mode-control input[value="dynamic"]'
+    );
+
+    assert.dom(".workflows-variable-input").exists();
+    assert.strictEqual(this.formApi.get("enabled"), "=true");
+  });
+
+  test("switches back to plain mode", async function (assert) {
+    this.setProperties({
+      configuration: { enabled: false },
+      formApi: null,
+      schema: { type: "boolean", ui: { expression: true } },
+      registerApi: (api) => this.set("formApi", api),
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <BooleanControl
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @fieldName="enabled"
+            @label="Enabled"
+            @schema={{this.schema}}
+          />
+        </Form>
+      </template>
+    );
+
+    await click(
+      '.workflows-property-engine__mode-control input[value="dynamic"]'
+    );
+    await click(
+      '.workflows-property-engine__mode-control input[value="plain"]'
+    );
+
+    assert.dom(".form-kit__control-toggle").exists();
+    assert.dom(".workflows-variable-input").doesNotExist();
+    assert.false(this.formApi.get("enabled"));
   });
 
   test("renders in expression mode when value starts with =", async function (assert) {

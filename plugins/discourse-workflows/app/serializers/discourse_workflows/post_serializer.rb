@@ -7,6 +7,7 @@ module DiscourseWorkflows
                :topic_title,
                :topic_slug,
                :post_number,
+               :post_type,
                :reply_to_post_number,
                :post_url,
                :username,
