@@ -30,7 +30,7 @@ RSpec.describe Nginx::Support::NginxHarness do
             @events << :render_and_spawn_nginx
           end
 
-          def wait_for_port(port, label, _timeout: 5)
+          def wait_for_port(port, label, timeout: 5)
             @events << [:wait_for_port, port, label]
             true
           end

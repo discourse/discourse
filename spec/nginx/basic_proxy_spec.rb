@@ -78,9 +78,14 @@ RSpec.describe "nginx.sample.conf basic proxying" do # rubocop:disable RSpec/Des
       "X-Mock-Header-X-Discourse-Username" => "admin",
       "X-Mock-Header-X-Runtime" => "0.123456",
     }
-    response = harness.get("/svg-sprite/#{SecureRandom.hex(8)}.js", headers: leaky_headers)
+    path = "/svg-sprite/#{SecureRandom.hex(8)}.js"
+    response = harness.get(path, headers: leaky_headers)
 
     expect(response.code).to eq("200")
+    # Confirm the request actually reached the upstream (the mock echoes the
+    # request as JSON), so the headers below are absent because nginx hid
+    # them -- not because some other handler served this path.
+    expect(JSON.parse(response.body)["path"]).to eq(path)
     expect(response["Set-Cookie"]).to be_nil
     expect(response["X-Discourse-Username"]).to be_nil
     expect(response["X-Runtime"]).to be_nil

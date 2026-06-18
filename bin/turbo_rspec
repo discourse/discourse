@@ -105,8 +105,26 @@ end
 
 files.reject! { |file| TurboRspecExclusion.excluded_by_patterns?(file, exclude_patterns) } if exclude_patterns.any?
 
-if explicit_file_args && requested_files&.any? && files.empty?
-  abort "All requested spec files were excluded. spec/nginx has its own runner; use spec/nginx/run.sh for nginx specs."
+# If a developer explicitly asked for a file that the DEFAULT nginx
+# exclusion drops, fail loudly rather than silently running a subset.
+# Only the built-in pattern triggers this -- user-supplied
+# --exclude-pattern filters are intentional and may legitimately drop
+# requested files. Checking per-dropped-file (not just files.empty?)
+# catches the mixed case, e.g.
+#   bin/turbo_rspec spec/nginx/foo_spec.rb spec/models/bar_spec.rb
+# which would otherwise run only the model spec and exit 0.
+if explicit_file_args && requested_files&.any?
+  dropped_nginx =
+    requested_files.select do |file|
+      TurboRspecExclusion.excluded_by_patterns?(file, DEFAULT_EXCLUDE_PATTERNS)
+    end
+
+  unless dropped_nginx.empty?
+    abort <<~MSG.chomp
+      Requested spec file(s) are excluded from turbo_rspec by default: #{dropped_nginx.join(", ")}
+      spec/nginx has its own Rails-free runner; run those with: spec/nginx/run.sh
+    MSG
+  end
 end
 
 requires.each { |f| require(f) }

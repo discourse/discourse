@@ -149,7 +149,6 @@ module Nginx
           source
             .gsub("server 127.0.0.1:3000;", "server 127.0.0.1:#{upstream_port};")
             .gsub("listen 80;", "listen 127.0.0.1:#{listen_port};")
-            .gsub("listen [::]:80;", "listen [::1]:#{listen_port};")
             .gsub("/var/nginx/cache", File.join(tmpdir, "cache"))
             .gsub("/var/log/nginx/access.log", File.join(tmpdir, "access.log"))
             .gsub("/var/log/nginx/error.log", File.join(tmpdir, "error.log"))
