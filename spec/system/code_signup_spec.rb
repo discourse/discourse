@@ -99,7 +99,7 @@ describe "Sign up via email code" do
     expect(User.find_by_email("locked.name@example.com")).to be_present
   end
 
-  it "lets the user open the avatar picker before continuing" do
+  it "opens the avatar picker before continuing" do
     visit("/signup")
     submit_email("avatar.person@example.com")
     fill_code(latest_emailed_code("avatar.person@example.com"))

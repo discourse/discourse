@@ -975,6 +975,11 @@ class SessionController < ApplicationController
                  # can't offer an inline pick, so the client keeps the generated
                  # name instead of dead-ending on a forbidden change.
                  can_edit_username: user.guardian.can_edit_username?(user),
+                 # `can_upload_avatar` lives on CurrentUserSerializer, but the
+                 # account-ready step builds the user from UserSerializer, so
+                 # the avatar picker needs the upload permission passed through.
+                 can_upload_avatar:
+                   user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map),
                )
     else
       login(user)

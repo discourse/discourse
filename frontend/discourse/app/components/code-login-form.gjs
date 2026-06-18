@@ -270,11 +270,7 @@ export default class CodeLoginForm extends Component {
       }
 
       if (result?.account_created) {
-        this.setupNewAccount(
-          result.user,
-          result.prefill_username,
-          result.can_edit_username
-        );
+        this.setupNewAccount(result);
         this.step = "complete";
         return;
       }
@@ -299,14 +295,19 @@ export default class CodeLoginForm extends Component {
   // The account is logged in server-side but the app is still in its anonymous
   // boot state, so username/avatar are edited through authenticated requests on
   // a User model built from the verify response rather than the current user.
-  setupNewAccount(user, prefillUsername, canEditUsername) {
+  setupNewAccount(result) {
+    const user = result.user;
     this.newAccount = user;
-    this.accountUser = User.create(user);
-    this.usernameEditable = canEditUsername;
+    // can_upload_avatar isn't in UserSerializer, so carry it from the response.
+    this.accountUser = User.create({
+      ...user,
+      can_upload_avatar: result.can_upload_avatar,
+    });
+    this.usernameEditable = result.can_edit_username;
     // Only prefill an email-derived suggestion; otherwise the user picks one.
-    this.username = prefillUsername ? user.username : "";
+    this.username = result.prefill_username ? user.username : "";
     this.avatarTemplate = user.avatar_template;
-    if (canEditUsername && this.username) {
+    if (this.usernameEditable && this.username) {
       this.checkUsernameAvailability();
     }
   }

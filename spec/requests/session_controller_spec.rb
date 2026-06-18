@@ -785,6 +785,29 @@ RSpec.describe SessionController do
         expect(session[:current_user_id]).to eq(new_user.id)
       end
 
+      it "returns the flags the account-ready step needs" do
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        body = response.parsed_body
+        expect(body["account_created"]).to eq(true)
+        expect(body["can_edit_username"]).to eq(true)
+        # The avatar picker needs the upload permission, which isn't on
+        # UserSerializer. (Its value depends on automatic group membership,
+        # added on commit, so only assert the flag is present here.)
+        expect(body).to have_key("can_upload_avatar")
+        # Off by default, so the client makes the user pick rather than
+        # prefilling a generic username.
+        expect(body["prefill_username"]).to eq(false)
+      end
+
+      it "flags the username for prefill when email-based suggestions are on" do
+        SiteSetting.use_email_for_username_and_name_suggestions = true
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(response.parsed_body["prefill_username"]).to eq(true)
+      end
+
       it "renders an error when registrations are disabled" do
         SiteSetting.allow_new_registrations = false
 
