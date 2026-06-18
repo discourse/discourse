@@ -8,7 +8,6 @@ RSpec.describe Admin::DashboardController do
   before do
     AdminDashboardData.stubs(:fetch_cached_stats).returns(reports: [])
     Jobs::CallDiscourseHub.any_instance.stubs(:execute).returns(true)
-    SiteSetting.admin_dashboard_search_section_enabled = true
   end
 
   def configure_dashboard_sections(visible_ids)
@@ -307,19 +306,6 @@ RSpec.describe Admin::DashboardController do
 
       context "with search_data" do
         let(:search_data) { section_payloads["search"]&.dig("data") }
-
-        it "omits the search section while admin_dashboard_search_section_enabled is disabled" do
-          SiteSetting.admin_dashboard_search_section_enabled = false
-          configure_dashboard_sections(%w[search highlights])
-
-          get "/admin/dashboard.json"
-
-          expect(response.status).to eq(200)
-          expect(section_payloads.keys).not_to include("search")
-          configuration_ids =
-            response.parsed_body["configuration"]["sections"].map { |section| section["id"] }
-          expect(configuration_ids).not_to include("search")
-        end
 
         it "returns the search payload for the selected dates" do
           configure_dashboard_sections(%w[search])
