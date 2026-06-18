@@ -10,7 +10,6 @@ import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import EmojiPicker from "discourse/components/emoji-picker";
-import { VISIBILITY_OPTIMIZERS } from "discourse/float-kit/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
@@ -30,7 +29,6 @@ import ChatMessageBlocks from "discourse/plugins/chat/discourse/components/chat-
 import ChatMessageActionsMobileModal from "discourse/plugins/chat/discourse/components/chat-message-actions-mobile";
 import ChatMessageInReplyToIndicator from "discourse/plugins/chat/discourse/components/chat-message-in-reply-to-indicator";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
-import ChatMessageReactionsUsers from "discourse/plugins/chat/discourse/components/chat-message-reactions-users";
 import ChatMessageSeparator from "discourse/plugins/chat/discourse/components/chat-message-separator";
 import ChatMessageText from "discourse/plugins/chat/discourse/components/chat-message-text";
 import ChatMessageThreadIndicator from "discourse/plugins/chat/discourse/components/chat-message-thread-indicator";
@@ -58,15 +56,9 @@ export default class ChatMessage extends Component {
   @service chatChannelPane;
   @service chatThreadPane;
   @service modal;
-  @service menu;
-  @service siteSettings;
   @service interactedChatMessage;
 
   @tracked isActive = false;
-
-  // The emoji filter for the reactions users popup, owned here so a single open
-  // menu can switch filters as the user moves between reactions. `null` = "all".
-  @tracked reactionsUsersActiveEmoji = null;
 
   toggleCheckIfPossible = modifier((element) => {
     let addedListener = false;
@@ -95,84 +87,6 @@ export default class ChatMessage extends Component {
       }
     };
   });
-
-  // Registers a single reactions users popup for the whole reaction list. On
-  // mobile it opens on long-press (as a modal); on desktop it is opened on hover
-  // by `onReactionsListHover` so it only triggers over an actual reaction.
-  setupReactionsUsersMenu = modifier((element) => {
-    if (!this.useReactionsUsersMenu) {
-      return;
-    }
-
-    this.#reactionsUsersMenuInstance = this.menu.register(element, {
-      identifier: "chat-message-reaction-users",
-      groupIdentifier: "chat-message-reaction-users",
-      component: ChatMessageReactionsUsers,
-      interactive: true,
-      modalForMobile: true,
-      // The menu stays open while the user moves between reactions and only its
-      // content (filter) changes. Disabling flip and clamping the height to the
-      // viewport keep it pinned: otherwise switching to a taller filter (e.g.
-      // "All") makes floating-ui flip/shift the menu away from the reactions,
-      // toward the centre of the screen.
-      visibilityOptimizer: VISIBILITY_OPTIMIZERS.NONE,
-      constrainHeightToViewport: true,
-      triggers: { mobile: ["hold"], desktop: [] },
-      data: {
-        message: this.args.message,
-        getActiveEmoji: () => this.reactionsUsersActiveEmoji,
-        selectEmoji: (emoji) => (this.reactionsUsersActiveEmoji = emoji),
-      },
-    });
-
-    return () => {
-      this.#reactionsUsersMenuInstance?.destroy();
-      this.#reactionsUsersMenuInstance = null;
-    };
-  });
-  #reactionsUsersMenuInstance = null;
-
-  get useReactionsUsersMenu() {
-    return this.siteSettings.enable_new_chat_reactions_menu;
-  }
-
-  #reactionFromEvent(event) {
-    return event.target.closest(".chat-message-reaction[data-emoji-name]")
-      ?.dataset.emojiName;
-  }
-
-  @action
-  onReactionsListHover(event) {
-    if (
-      !this.useReactionsUsersMenu ||
-      this.site.mobileView ||
-      !this.#reactionsUsersMenuInstance
-    ) {
-      return;
-    }
-
-    const emoji = this.#reactionFromEvent(event);
-    if (!emoji) {
-      return;
-    }
-
-    this.reactionsUsersActiveEmoji = emoji;
-    // No-op when already expanded, so moving between reactions just updates the
-    // filter above instead of reopening the menu.
-    this.menu.show(this.#reactionsUsersMenuInstance);
-  }
-
-  @action
-  onReactionsListTouchStart(event) {
-    if (!this.useReactionsUsersMenu || !this.site.mobileView) {
-      return;
-    }
-
-    const emoji = this.#reactionFromEvent(event);
-    if (emoji) {
-      this.reactionsUsersActiveEmoji = emoji;
-    }
-  }
 
   get pane() {
     return this.threadContext ? this.chatThreadPane : this.chatChannelPane;
@@ -748,16 +662,7 @@ export default class ChatMessage extends Component {
                   @decorate={{this.decorateCookedMessage}}
                 >
                   {{#if @message.reactions.length}}
-                    <div
-                      class="chat-message-reaction-list"
-                      {{this.setupReactionsUsersMenu}}
-                      {{on "pointerover" this.onReactionsListHover}}
-                      {{on
-                        "touchstart"
-                        this.onReactionsListTouchStart
-                        passive=true
-                      }}
-                    >
+                    <div class="chat-message-reaction-list">
                       {{#each @message.reactions as |reaction|}}
                         <ChatMessageReaction
                           @reaction={{reaction}}

@@ -1,17 +1,52 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import UsersPopup from "discourse/components/user/users-popup";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
+const FILTER_SCROLL_PADDING = 8;
+
 export default class ChatMessageReactionsUsers extends Component {
   @service chatApi;
+
+  // The reaction whose menu was opened starts as the active filter. The header
+  // tabs let the user switch between the message's reactions within the popup.
+  @tracked activeFilter = this.args.data.emoji ?? null;
+
+  // Keeps the active filter visible in the horizontally-scrollable header when
+  // the hovered reaction is past the visible tabs. Re-runs whenever the active
+  // filter changes (passed as a positional arg).
+  scrollActiveFilterIntoView = modifier((element, [activeFilter]) => {
+    if (!activeFilter) {
+      return;
+    }
+
+    const button = element.querySelector(
+      `[data-reaction-filter="${CSS.escape(activeFilter)}"]`
+    );
+    if (!button) {
+      return;
+    }
+
+    const buttonRect = button.getBoundingClientRect();
+    const containerRect = element.getBoundingClientRect();
+    const overflowEnd = buttonRect.right - containerRect.right;
+    const overflowStart = containerRect.left - buttonRect.left;
+
+    if (overflowEnd > 0) {
+      element.scrollLeft += overflowEnd + FILTER_SCROLL_PADDING;
+    } else if (overflowStart > 0) {
+      element.scrollLeft -= overflowStart + FILTER_SCROLL_PADDING;
+    }
+  });
 
   fetchUsers = async (page, pageSize) => {
     const filter = this.activeFilter;
@@ -58,12 +93,6 @@ export default class ChatMessageReactionsUsers extends Component {
   };
   #resetCallback = null;
   #tabCache = new Map();
-
-  // The active emoji filter is owned by the message so a single open menu can
-  // switch filters as the user moves between reactions. `null` means "all".
-  get activeFilter() {
-    return this.args.data.getActiveEmoji?.() ?? null;
-  }
 
   get message() {
     return this.args.data.message;
@@ -114,7 +143,7 @@ export default class ChatMessageReactionsUsers extends Component {
   selectFilter(filterValue, event) {
     event.stopPropagation();
     event.preventDefault();
-    this.args.data.selectEmoji?.(filterValue);
+    this.activeFilter = filterValue;
   }
 
   <template>
@@ -127,7 +156,10 @@ export default class ChatMessageReactionsUsers extends Component {
         {{this.registerReset resetAndReload}}
         <span hidden {{didUpdate this.reload this.activeFilter}}></span>
         {{#if this.showFilters}}
-          <div class="users-popup__header">
+          <div
+            class="users-popup__header"
+            {{this.scrollActiveFilterIntoView this.activeFilter}}
+          >
             {{#each this.reactions as |reaction|}}
               <button
                 type="button"

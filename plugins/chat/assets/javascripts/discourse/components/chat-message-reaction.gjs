@@ -8,10 +8,12 @@ import { modifier } from "ember-modifier";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { and } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import ChatMessageReactionsUsers from "discourse/plugins/chat/discourse/components/chat-message-reactions-users";
 import { getReactionText } from "discourse/plugins/chat/discourse/lib/get-reaction-text";
 
 export default class ChatMessageReaction extends Component {
   @service currentUser;
+  @service menu;
   @service site;
   @service siteSettings;
   @service tooltip;
@@ -39,8 +41,36 @@ export default class ChatMessageReaction extends Component {
     };
   });
 
-  // When the new reactions menu is enabled the reaction list opens a users popup
-  // (handled by the parent message), so the names tooltip is suppressed here.
+  // With the new reactions menu enabled, hovering (desktop) or long-pressing
+  // (mobile) a reaction opens a users popup centred on that reaction. Each
+  // reaction registers its own menu; the shared `groupIdentifier` ensures only
+  // one is open at a time, so moving to another reaction opens a fresh menu.
+  registerReactionsUsersMenu = modifier((element) => {
+    if (!this.useReactionsUsersMenu) {
+      return;
+    }
+
+    const instance = this.menu.register(element, {
+      identifier: "chat-message-reaction-users",
+      groupIdentifier: "chat-message-reaction-users",
+      component: ChatMessageReactionsUsers,
+      modalForMobile: true,
+      placement: "bottom",
+      fallbackPlacements: ["top"],
+      triggers: this.site.mobileView ? ["hold"] : ["hover"],
+      data: {
+        message: this.args.message,
+        emoji: this.args.reaction.emoji,
+      },
+    });
+
+    return () => {
+      instance.destroy();
+    };
+  });
+
+  // When the new reactions menu is enabled the reaction opens a users popup, so
+  // the names tooltip is suppressed here.
   get useReactionsUsersMenu() {
     return (
       this.siteSettings.enable_new_chat_reactions_menu &&
@@ -84,6 +114,7 @@ export default class ChatMessageReaction extends Component {
       <button
         {{on "click" this.handleClick passive=true}}
         {{this.registerTooltip}}
+        {{this.registerReactionsUsersMenu}}
         type="button"
         title={{this.emojiString}}
         data-emoji-name={{@reaction.emoji}}
