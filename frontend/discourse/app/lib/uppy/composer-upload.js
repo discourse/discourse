@@ -433,6 +433,11 @@ export default class UppyComposerUpload {
 
     this.#uploadTargetBound = true;
     this.#bindMobileUploadButton();
+
+    // Signals that the uploader is bound and ready to accept files via the
+    // `${composerEventPrefix}:add-files` event, e.g. for content shared into
+    // the composer through the Web Share Target.
+    this.appEvents.trigger(`${this.composerEventPrefix}:uploader-ready`);
   }
 
   @bind
