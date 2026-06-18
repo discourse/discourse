@@ -10,10 +10,7 @@ function usernamesFromValue(value) {
   }
 
   if (typeof value === "string" && value.length > 0) {
-    return value
-      .split(",")
-      .map((username) => username.trim())
-      .filter(Boolean);
+    return [value];
   }
 
   return [];
@@ -41,6 +38,7 @@ export default class UserControl extends Component {
   <template>
     <ExpressionWrapper
       @field={{@field}}
+      @schema={{@schema}}
       @supportsExpression={{@supportsExpression}}
       @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}

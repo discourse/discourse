@@ -274,7 +274,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
             y: 0,
           },
           parameters: {
-            recipient_usernames: "admin",
+            recipient_usernames: ["admin"],
             title: "=New post from @{{ $json.post.username }}",
             raw: "=A friend group member posted: {{ $json.post.post_url }}",
             sender_username: "system",

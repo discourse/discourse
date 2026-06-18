@@ -155,7 +155,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       include(
         parameters:
           include(
-            recipient_usernames: "admin",
+            recipient_usernames: ["admin"],
             raw: "=A group member posted: {{ $json.post.post_url }}",
           ),
       ),

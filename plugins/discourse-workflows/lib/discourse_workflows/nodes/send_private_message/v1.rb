@@ -17,16 +17,30 @@ module DiscourseWorkflows
           },
           properties: {
             recipient_usernames: {
-              type: :string,
+              type: :array,
               required: false,
               ui: {
                 control: :user,
+                expression: true,
                 multiple: true,
               },
             },
             recipient_group_names: {
-              type: :string,
+              type: :array,
               required: false,
+              type_options: {
+                load_options_method: "groups",
+              },
+              ui: {
+                control: :group_select,
+                expression: true,
+                multiple: true,
+              },
+              control_options: {
+                value_property: "name",
+                name_property: "name",
+                filterable: true,
+              },
             },
             title: {
               type: :string,
@@ -49,6 +63,17 @@ module DiscourseWorkflows
             },
           },
         )
+
+        def self.load_options_context(context)
+          case context.method_name
+          when "groups"
+            ::Group
+              .order(:name)
+              .pluck(:id, :name)
+              .select { |_, name| context.matches_filter?(name) }
+              .map { |id, name| { id:, name: } }
+          end
+        end
 
         def execute(exec_ctx)
           items =

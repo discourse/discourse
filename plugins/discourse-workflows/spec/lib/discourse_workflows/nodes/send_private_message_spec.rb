@@ -3,6 +3,7 @@
 RSpec.describe DiscourseWorkflows::Nodes::SendPrivateMessage::V1 do
   fab!(:sender, :admin)
   fab!(:recipient, :user)
+  fab!(:second_recipient, :user)
 
   describe "#execute" do
     it "creates a private message for the configured recipient", :aggregate_failures do
@@ -12,7 +13,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendPrivateMessage::V1 do
         result =
           execute_node(
             configuration: {
-              "recipient_usernames" => recipient.username,
+              "recipient_usernames" => [recipient.username],
               "title" => "Friend group post",
               "raw" => "A friend posted: /t/example/1/1",
               "sender_username" => sender.username,
@@ -48,14 +49,14 @@ RSpec.describe DiscourseWorkflows::Nodes::SendPrivateMessage::V1 do
       result =
         execute_node(
           configuration: {
-            "recipient_usernames" => "={{ $json.recipient }}",
+            "recipient_usernames" => "={{ $json.recipients }}",
             "title" => "=New post from @{{ $json.author }}",
             "raw" => "=Link: {{ $json.url }}",
             "sender_username" => "system",
           },
           item: {
             "json" => {
-              "recipient" => recipient.username,
+              "recipients" => [recipient.username],
               "author" => "friend",
               "url" => "/t/post/2/1",
             },
@@ -68,6 +69,27 @@ RSpec.describe DiscourseWorkflows::Nodes::SendPrivateMessage::V1 do
       expect(topic.first_post.raw).to eq("Link: /t/post/2/1")
       expect(topic.allowed_users).to contain_exactly(Discourse.system_user, recipient)
       expect(result.dig("post", "user_id")).to eq(Discourse.system_user.id)
+    end
+
+    it "accepts dynamic comma-separated recipients", :aggregate_failures do
+      execute_node(
+        configuration: {
+          "recipient_usernames" => "={{ $json.recipient_usernames }}",
+          "title" => "Comma separated recipients",
+          "raw" => "This should reach both users",
+          "sender_username" => sender.username,
+        },
+        item: {
+          "json" => {
+            "recipient_usernames" => "#{recipient.username},#{second_recipient.username}",
+          },
+        },
+      )
+
+      topic = Topic.where(archetype: Archetype.private_message).order(:id).last
+
+      expect(topic.title).to eq("Comma separated recipients")
+      expect(topic.allowed_users).to contain_exactly(sender, recipient, second_recipient)
     end
 
     it "raises when no recipients are configured" do

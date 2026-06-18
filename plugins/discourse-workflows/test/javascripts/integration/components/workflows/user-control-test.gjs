@@ -50,7 +50,7 @@ module("Integration | Component | Workflows | UserControl", function (hooks) {
   });
 
   test("stores all selected usernames when configured as multiple", async function (assert) {
-    this.field = new TestField("");
+    this.field = new TestField([]);
     this.schema = { ui: { multiple: true } };
 
     await render(
@@ -67,6 +67,9 @@ module("Integration | Component | Workflows | UserControl", function (hooks) {
     await chooser.expand();
     await chooser.fillInFilter("s");
     await chooser.selectRowByValue("sam");
+
+    assert.deepEqual(this.field.value, ["sam"]);
+
     await chooser.fillInFilter("a");
     await chooser.selectRowByValue("alice");
 

@@ -67,6 +67,36 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       expect(properties["advanced_filter"]["ui"]).to include("hidden" => true)
     end
 
+    it "returns Send private message recipient control metadata" do
+      get "/admin/plugins/discourse-workflows/node-types.json"
+
+      pm_node =
+        response.parsed_body["node_types"].find do |node_type|
+          node_type["identifier"] == "action:send_private_message"
+        end
+      properties = pm_node["properties"]
+
+      expect(properties["recipient_usernames"]).to include(
+        "type" => "array",
+        "ui" => include("control" => "user", "expression" => true, "multiple" => true),
+      )
+      expect(properties["recipient_group_names"]).to include(
+        "type" => "array",
+        "type_options" => include("load_options_method" => "groups"),
+        "ui" => include("control" => "group_select", "expression" => true, "multiple" => true),
+        "control_options" =>
+          include("value_property" => "name", "name_property" => "name", "filterable" => true),
+      )
+      expect(properties["sender_username"]).to include(
+        "type" => "string",
+        "default" => "system",
+        "ui" => include("control" => "actor"),
+      )
+      expect(pm_node.dig("metadata", "groups")).to include(
+        include("id" => Group::AUTO_GROUPS[:everyone], "name" => "everyone"),
+      )
+    end
+
     it "includes load options metadata in node type response" do
       get "/admin/plugins/discourse-workflows/node-types.json"
 

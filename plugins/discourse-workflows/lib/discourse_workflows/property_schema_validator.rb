@@ -63,6 +63,7 @@ module DiscourseWorkflows
       flat
       format
       hidden
+      multiple
       show_description
       show_label
       singular_name

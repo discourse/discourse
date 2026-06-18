@@ -214,7 +214,7 @@ module DiscourseWorkflows
             {
               name: "DM a post link to an admin",
               parameters: {
-                recipient_usernames: "admin",
+                recipient_usernames: ["admin"],
                 title: "=New post from @{{ $json.post.username }}",
                 raw: "=A group member posted: {{ $json.post.post_url }}",
                 sender_username: "system",
