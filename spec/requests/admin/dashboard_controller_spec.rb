@@ -269,6 +269,7 @@ RSpec.describe Admin::DashboardController do
               country_code: country_code,
               normalized_referrer: normalized_referrer,
               created_at: event_date,
+              source: "beacon",
             )
           end
 
