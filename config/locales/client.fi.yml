@@ -2451,6 +2451,10 @@ fi:
       confirm_title: Jatka sivustolle %{site_name}
       logging_in_as: Kirjaudutaan käyttäjänä %{email}
       confirm_button: Kirjaudu
+    code_login:
+      email_label: "Sähköpostiosoite"
+      continue_button: "Jatka"
+      verify_button: "Jatka"
     login:
       header_title: "Tervetuloa takaisin"
       title: "Kirjaudu"

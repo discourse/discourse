@@ -2236,6 +2236,10 @@ zh_TW:
       confirm_title: 繼續連接至 %{site_name}
       logging_in_as: 以 %{email}登入
       confirm_button: 完成登入
+    code_login:
+      email_label: "電子信箱"
+      continue_button: "繼續"
+      verify_button: "繼續"
     login:
       header_title: "歡迎回來"
       title: "登入"

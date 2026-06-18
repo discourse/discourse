@@ -2465,6 +2465,10 @@ pt:
       confirm_title: Continuar para %{site_name}
       logging_in_as: Fazendo login como %{email}
       confirm_button: Concluir o Login
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Continuar"
+      verify_button: "Continuar"
     login:
       header_title: "Bem-vindo de volta"
       title: "Iniciar Sessão"

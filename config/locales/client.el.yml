@@ -2643,6 +2643,10 @@ el:
       confirm_title: Συνεχίστε στην %{site_name}
       logging_in_as: Σύνδεση ως %{email}
       confirm_button: Ολοκληρώστε τη σύνδεση
+    code_login:
+      email_label: "Διεύθυνση Email"
+      continue_button: "Συνεχίστε"
+      verify_button: "Συνεχίστε"
     login:
       header_title: "Καλώς ήρθατε και πάλι"
       title: "Σύνδεση"

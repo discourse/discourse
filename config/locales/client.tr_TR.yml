@@ -2666,6 +2666,10 @@ tr_TR:
       confirm_title: '%{site_name} adresine devam edin'
       logging_in_as: '%{email} olarak giriş yapılıyor'
       confirm_button: Giriş yapmayı bitir
+    code_login:
+      email_label: "E-posta"
+      continue_button: "Devam et"
+      verify_button: "Devam et"
     login:
       header_title: "Tekrar hoş geldiniz"
       title: "Giriş Yap"

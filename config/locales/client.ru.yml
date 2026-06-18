@@ -2904,6 +2904,10 @@ ru:
       confirm_title: Перейти на %{site_name}
       logging_in_as: Войти как %{email}
       confirm_button: Завершить вход
+    code_login:
+      email_label: "Эл. почта"
+      continue_button: "Продолжить"
+      verify_button: "Продолжить"
     login:
       header_title: "С возвращением!"
       title: "Войти"
