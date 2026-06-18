@@ -2466,6 +2466,10 @@ fr:
       confirm_title: Continuer vers %{site_name}
       logging_in_as: Connexion en tant que %{email}
       confirm_button: Complétez la connexion
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Continuer"
+      verify_button: "Continuer"
     login:
       header_title: "Ravi de vous revoir"
       title: "Se connecter"

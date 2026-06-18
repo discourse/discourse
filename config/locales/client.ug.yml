@@ -2583,6 +2583,10 @@ ug:
       confirm_title: '%{site_name} زىيارىتىنى داۋاملاشتۇرىدۇ'
       logging_in_as: '%{email} دا تىزىمغا كىرىدۇ'
       confirm_button: تىزىمغا كىرىش تامام
+    code_login:
+      email_label: "ئېلخەت"
+      continue_button: "داۋاملاشتۇر"
+      verify_button: "داۋاملاشتۇر"
     login:
       header_title: "قايتىپ خۇش كەپسىز"
       title: "تىزىمغا كىرىش"

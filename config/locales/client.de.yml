@@ -2654,6 +2654,10 @@ de:
       confirm_title: Weiter zu %{site_name}
       logging_in_as: Anmeldung als %{email}
       confirm_button: Anmeldung fertigstellen
+    code_login:
+      email_label: "E-Mail"
+      continue_button: "Weiter"
+      verify_button: "Weiter"
     login:
       header_title: "Willkommen zurück"
       title: "Anmelden"

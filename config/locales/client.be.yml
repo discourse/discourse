@@ -1268,6 +1268,10 @@ be:
       button_ok: "ОК"
     email_login:
       confirm_title: Перайсці да %{site_name}
+    code_login:
+      email_label: "Электронная пошта"
+      continue_button: "Працягнуць"
+      verify_button: "Працягнуць"
     login:
       title: "Уваход"
       username: "Карыстальнік"

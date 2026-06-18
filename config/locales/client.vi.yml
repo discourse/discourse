@@ -2406,6 +2406,10 @@ vi:
       confirm_title: Tiếp tục tới %{site_name}
       logging_in_as: Đăng nhập bằng %{email}
       confirm_button: Kết thúc đăng nhập
+    code_login:
+      email_label: "Email"
+      continue_button: "Tiếp tục"
+      verify_button: "Tiếp tục"
     login:
       header_title: "Chào mừng trở lại"
       title: "Đăng nhập"

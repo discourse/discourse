@@ -2651,6 +2651,10 @@ es:
       confirm_title: Continuar a %{site_name}
       logging_in_as: Iniciando sesión como %{email}
       confirm_button: Finalizar inicio de sesión
+    code_login:
+      email_label: "Correo electrónico"
+      continue_button: "Continuar"
+      verify_button: "Continuar"
     login:
       header_title: "Bienvenido/a de vuelta"
       title: "Iniciar sesión"

@@ -2853,6 +2853,10 @@ he:
       confirm_title: להמשיך אל %{site_name}
       logging_in_as: מתבצעת כניסה בתור %{email}
       confirm_button: סיום הכניסה
+    code_login:
+      email_label: "דוא״ל"
+      continue_button: "המשך"
+      verify_button: "המשך"
     login:
       header_title: "ברוך שובך"
       title: "כניסה"

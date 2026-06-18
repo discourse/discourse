@@ -2633,6 +2633,10 @@ pt_BR:
       confirm_title: Continuar para %{site_name}
       logging_in_as: Entrando como %{email}
       confirm_button: Terminar de entrar
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Continuar"
+      verify_button: "Continuar"
     login:
       header_title: "Boas-vindas outra vez"
       title: "Entrar"
