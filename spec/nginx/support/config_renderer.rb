@@ -2,6 +2,7 @@
 
 require "etc"
 require "fileutils"
+require "open3"
 require "tmpdir"
 require_relative "nginx_executable"
 
@@ -106,7 +107,16 @@ module Nginx
       end
 
       def self.nginx_build_flags
-        @nginx_build_flags ||= `#{nginx_bin} -V 2>&1`
+        # argv-style (not a shell) so an NGINX_BIN path with spaces is the
+        # same executable the spawn/module-probe paths run. nginx writes
+        # its build flags to stderr, so merge both streams.
+        @nginx_build_flags ||=
+          begin
+            stdout, stderr, _status = Open3.capture3(nginx_bin, "-V")
+            stdout + stderr
+          rescue SystemCallError
+            ""
+          end
       end
 
       def self.module_directive_usable?(name)
