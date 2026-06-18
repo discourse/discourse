@@ -53,6 +53,12 @@ end
 # include/fields/pagination/deserialization — were small enough to absorb into
 # JsonapiRb::BaseController). The thin stack now depends only on jsonapi-serializer + pagy.
 require "jsonapi/serializer"
+# Patch jsonapi-serializer's nested-include linkage bug (lazy_load_data + nested leaf drops
+# the leaf's linkage). Small, owned, on a frozen gem. See the patch file + Part 9.
+require_relative "lib/discourse_data_explorer/jsonapi_rb/lazy_nested_linkage_patch"
+FastJsonapi::SerializationCore::ClassMethods.prepend(
+  DiscourseDataExplorer::JsonapiRb::LazyNestedLinkagePatch,
+)
 
 after_initialize do
   # PERF-TEMP (benchmarking only): Graphiti concurrency is a process-wide, memoized

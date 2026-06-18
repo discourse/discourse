@@ -30,7 +30,8 @@
     },
     "includes": [
       "groups",
-      "user"
+      "user",
+      "user.groups"
     ],
     "max_page_size": 100
   }
