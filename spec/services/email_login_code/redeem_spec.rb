@@ -72,6 +72,14 @@ RSpec.describe EmailLoginCode::Redeem do
       it { is_expected.to fail_a_policy(:can_register_new_account) }
     end
 
+    context "when the email domain is not in the allowlist" do
+      let(:email) { "jane@example.com" }
+
+      before { SiteSetting.allowed_email_domains = "allowed.com" }
+
+      it { is_expected.to fail_a_policy(:can_register_new_account) }
+    end
+
     context "when the email matches an existing account only after normalization" do
       fab!(:other_user) { Fabricate(:user, email: "foobar@example.com") }
 
