@@ -43,7 +43,7 @@ RSpec.describe EmailLoginCode::Request do
       end
     end
 
-    context "when the email matches an existing user after normalization" do
+    context "when the email only matches an existing user after normalization" do
       let(:email) { "f.oo+anything@gmail.com" }
 
       before do
@@ -53,11 +53,15 @@ RSpec.describe EmailLoginCode::Request do
 
       it { is_expected.to run_successfully }
 
-      it "treats it as an existing account" do
-        events = DiscourseEvent.track_events(:before_email_login) { result }
+      it "does not treat it as an existing account" do
+        events = nil
 
-        expect(events).to contain_exactly(event_name: :before_email_login, params: [user])
-        expect(EmailLoginCode.for_email(email).count).to eq(1)
+        expect_not_enqueued_with(job: :send_email_login_code) do
+          events = DiscourseEvent.track_events(:before_email_login) { result }
+        end
+
+        expect(events).to be_empty
+        expect(EmailLoginCode.count).to eq(0)
       end
     end
 
