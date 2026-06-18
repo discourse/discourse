@@ -75,7 +75,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "topic_id" => "integer",
       "tag_names" => "array<string>",
     )
-    expect(nodes_by_type.dig("action:create_post", :output_schema)).to include(
+    expect(nodes_by_type.dig("action:post", :output_schema)).to include(
       "post.id" => "integer",
       "post.topic_id" => "integer",
       "post.post_url" => "string",
@@ -114,6 +114,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     filter_node = result[:nodes].find { |node| node[:type] == "condition:filter" }
     group_node = result[:nodes].find { |node| node[:type] == "action:group" }
     topic_node = result[:nodes].find { |node| node[:type] == "action:topic" }
+    post_node = result[:nodes].find { |node| node[:type] == "action:post" }
     private_message_node =
       result[:nodes].find { |node| node[:type] == "action:send_private_message" }
     if_node = result[:nodes].find { |node| node[:type] == "condition:if" }
@@ -136,6 +137,9 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     )
     expect(topic_node[:examples]).to contain_exactly(
       include(parameters: include(operation: "get", topic_id: "={{ $json.topic.id }}")),
+    )
+    expect(post_node[:examples]).to contain_exactly(
+      include(parameters: include(operation: "create", topic_id: "={{ $json.topic.id }}")),
     )
     expect(group_node[:examples]).to contain_exactly(
       include(

@@ -373,7 +373,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
         op: "add_node",
         client_id: "reply",
         node: {
-          type: "action:create_post",
+          type: "action:post",
           typeVersion: "1.0",
           name: "Reply",
           position: {
@@ -381,6 +381,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
             y: 0,
           },
           parameters: {
+            operation: "create",
             topic_id: "={{ $json.topic.id }}",
             raw: "Thanks for contacting support.",
             author_username: "system",

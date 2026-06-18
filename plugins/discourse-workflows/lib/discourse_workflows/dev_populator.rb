@@ -82,13 +82,14 @@ module DiscourseWorkflows
           ),
           node(
             id: "create-reply",
-            type: "action:create_post",
+            type: "action:post",
             name: "Create reply",
             position: {
               "x" => 360,
               "y" => 320,
             },
             parameters: {
+              "operation" => "create",
               "topic_id" => "={{ $json.topic.id }}",
               "raw" => "This automated reply was created by an example Discourse workflow.",
               "author_username" => "system",

@@ -86,7 +86,7 @@ module DiscourseWorkflows
             "topic_id" => "integer",
             "tag_names" => "array<string>",
           },
-          "action:create_post" => POST_SCHEMA,
+          "action:post" => POST_SCHEMA,
           "action:send_private_message" => TOPIC_LIST_ITEM_SCHEMA.merge(POST_SCHEMA),
           "action:send_chat_message" => {
             "channel_id" => "integer",
@@ -199,10 +199,11 @@ module DiscourseWorkflows
               },
             },
           ],
-          "action:create_post" => [
+          "action:post" => [
             {
               name: "Reply to the trigger topic",
               parameters: {
+                operation: "create",
                 topic_id: "={{ $json.topic.id }}",
                 raw: "Thanks for the report. A staff member will review this soon.",
                 author_username: "system",
