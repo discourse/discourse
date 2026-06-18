@@ -57,8 +57,7 @@
       cursor: not-allowed;
     }
 
-    // Looks disabled (dimmed, with its icon shown) but stays clickable so a
-    // consumer can react to the selection.
+    // Like --disabled, but the option stays clickable.
     &.--locked {
       color: var(--primary-medium);
       background: var(--d-input-bg-color--disabled);

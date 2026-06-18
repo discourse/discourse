@@ -318,12 +318,11 @@ export default class UpsertCategoryGeneral extends Component {
       : "category.visibility.public";
   }
 
-  // Extension point to present the private/group-restricted visibility option
-  // as locked. It stays clickable, so a consumer can still react to the
-  // selection via the `category-visibility-change` behavior transformer.
   get privateVisibilityLocked() {
     return applyValueTransformer("category-visibility-private-locked", false, {
       category: this.args.category,
+      form: this.args.form,
+      transientData: this.args.transientData,
     });
   }
 
@@ -351,9 +350,7 @@ export default class UpsertCategoryGeneral extends Component {
 
   @action
   onChangeVisibility(value) {
-    // Applying the change is wrapped in a behavior transformer so consumers can
-    // intercept or override it (e.g. require confirmation before a category is
-    // made private). Not calling `next` leaves the selection unchanged.
+    // Wrapped so consumers can intercept the change; skipping `next` vetoes it.
     return applyBehaviorTransformer(
       "category-visibility-change",
       () => this.#applyVisibilityChange(value),

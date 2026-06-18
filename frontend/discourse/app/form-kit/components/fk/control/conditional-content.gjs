@@ -26,10 +26,8 @@ const Contents = <template>
 
 export default class FKControlConditionalContent extends Component {
   @tracked manuallySetName = null;
-  // Bumped after `onChange` settles so the radio inputs re-assert their checked
-  // state to match `activeName`, even when the value did not change (e.g. the
-  // parent rejected the change). Without this, a native radio click that gets
-  // vetoed stays visually selected.
+  // Bumped after `onChange` settles to re-sync the radios with `activeName`,
+  // so a rejected change doesn't leave the clicked radio selected.
   @tracked resyncToken = 0;
 
   get activeName() {
