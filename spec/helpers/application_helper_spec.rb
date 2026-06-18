@@ -860,13 +860,29 @@ RSpec.describe ApplicationHelper do
 
     context "with custom light scheme" do
       before do
-        @new_cs = Fabricate(:color_scheme, name: "Flamboyant")
+        @new_cs = Fabricate(:color_scheme, name: "Flamboyant", user_selectable: true)
         user.user_option.color_scheme_id = @new_cs.id
         user.user_option.save!
         helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
       end
 
       it "returns color scheme from user option value" do
+        color_stylesheets = helper.discourse_color_scheme_stylesheets
+        expect(color_stylesheets).to include("color_definitions_flamboyant")
+      end
+
+      it "falls back to base scheme when the scheme is no longer user selectable" do
+        @new_cs.update!(user_selectable: false)
+
+        color_stylesheets = helper.discourse_color_scheme_stylesheets
+        expect(color_stylesheets).not_to include("color_definitions_flamboyant")
+        expect(color_stylesheets).to include("color_definitions_light-default")
+      end
+
+      it "keeps a non-user-selectable scheme that is the theme's own color scheme" do
+        @new_cs.update!(user_selectable: false)
+        Theme.find_default.update!(color_scheme_id: @new_cs.id)
+
         color_stylesheets = helper.discourse_color_scheme_stylesheets
         expect(color_stylesheets).to include("color_definitions_flamboyant")
       end
@@ -895,7 +911,7 @@ RSpec.describe ApplicationHelper do
         user.user_option.interface_color_mode = UserOption::LIGHT_MODE
         user.user_option.save!
         helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
-        @new_cs = Fabricate(:color_scheme, name: "Custom Color Scheme")
+        @new_cs = Fabricate(:color_scheme, name: "Custom Color Scheme", user_selectable: true)
 
         Theme.find_default.update!(dark_color_scheme_id: ColorScheme.where(name: "Dark").pick(:id))
       end
@@ -976,12 +992,12 @@ RSpec.describe ApplicationHelper do
 
   describe "#discourse_theme_color_meta_tags" do
     before do
-      light = Fabricate(:color_scheme)
+      light = Fabricate(:color_scheme, user_selectable: true)
       light.color_scheme_colors << ColorSchemeColor.new(name: "header_background", hex: "abcdef")
       light.save!
       helper.request.cookies["color_scheme_id"] = light.id
 
-      dark = Fabricate(:color_scheme)
+      dark = Fabricate(:color_scheme, user_selectable: true)
       dark.color_scheme_colors << ColorSchemeColor.new(name: "header_background", hex: "defabc")
       dark.save!
       helper.request.cookies["dark_scheme_id"] = dark.id
@@ -1035,7 +1051,7 @@ RSpec.describe ApplicationHelper do
     end
 
     it "renders a 'light dark' color-scheme if a dark scheme is set" do
-      dark = Fabricate(:color_scheme)
+      dark = Fabricate(:color_scheme, user_selectable: true)
       dark.save!
       helper.request.cookies["dark_scheme_id"] = dark.id
 
@@ -1046,8 +1062,8 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "#dark_scheme_id" do
-    fab!(:dark_scheme, :color_scheme)
-    fab!(:light_scheme, :color_scheme)
+    fab!(:dark_scheme) { Fabricate(:color_scheme, user_selectable: true) }
+    fab!(:light_scheme) { Fabricate(:color_scheme, user_selectable: true) }
 
     before do
       helper.request.cookies["color_scheme_id"] = light_scheme.id
