@@ -5013,6 +5013,11 @@ en:
         tag_group: "Tag group"
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete category"
+      danger_zone:
+        title: "Danger zone"
+        delete_title: "Delete this category"
+        delete_description: "Once deleted, this category and its settings cannot be recovered. Topics in it will need to be reassigned beforehand."
+        delete_title_forbidden: "Can't delete this category"
       create: "New category"
       create_with_type: "New %{typeName} category"
       create_long: "Create a new category"

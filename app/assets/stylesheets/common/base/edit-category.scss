@@ -4,11 +4,12 @@
 $category-settings-width: string.unquote("min(600px, 90%)");
 $number-input-width: 75px;
 
-div.edit-category {
+.edit-category {
   display: block;
   max-width: 75ch;
   width: 100%;
   margin: 0 auto;
+  padding-bottom: var(--space-12);
 
   @include viewport.until(sm) {
     display: block;
@@ -469,6 +470,61 @@ div.edit-category {
       }
     }
   }
+
+  &__footer {
+    grid-area: footer;
+
+    .form-kit__section-header {
+      border-color: var(--danger);
+    }
+
+    .form-kit__section-title {
+      color: var(--danger);
+    }
+  }
+
+  &__delete {
+    padding: var(--space-4);
+    border: 1px solid var(--danger);
+    border-radius: var(--d-border-radius);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      align-items: start;
+    }
+
+    &.--forbidden {
+      background: var(--highlight-bg);
+      border-color: var(--highlight-high);
+    }
+  }
+
+  &__delete-title {
+    font-size: var(--font-0);
+  }
+
+  &__delete-description {
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-medium);
+    margin-bottom: 0;
+    max-width: 60ch;
+  }
+
+  &__delete-actions {
+    text-align: right;
+
+    @include viewport.until(sm) {
+      align-self: stretch;
+
+      .btn {
+        width: 100%;
+      }
+    }
+  }
 }
 
 .edit-category-title-text {
@@ -494,7 +550,7 @@ div.edit-category {
   }
 }
 
-div.edit-category {
+.edit-category {
   .form-kit__errors-summary {
     width: 100%;
     max-width: var(--form-kit-max-input);
@@ -510,11 +566,6 @@ div.edit-category {
       // select-kit has pointer-events disabled, so we need to style the parent
       cursor: not-allowed;
     }
-  }
-
-  .edit-category-footer {
-    padding: 0;
-    margin-bottom: var(--space-4);
   }
 
   .edit-category-tab-localizations {
