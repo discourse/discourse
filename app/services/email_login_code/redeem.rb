@@ -6,7 +6,19 @@ class EmailLoginCode::Redeem
   params base_class: EmailLoginCode::Verify::Contract do
     attribute :user_fields
 
-    before_validation { self.user_fields = user_fields.to_h.stringify_keys if user_fields.present? }
+    before_validation do
+      # Only hash-like input can carry field values; anything else (a stray
+      # string/array) becomes an empty set so it fails as a missing field
+      # rather than raising during normalization.
+      self.user_fields =
+        (
+          if user_fields.is_a?(Hash) || user_fields.is_a?(ActionController::Parameters)
+            user_fields.to_h.stringify_keys
+          else
+            {}
+          end
+        )
+    end
   end
 
   model :login_code
@@ -41,19 +53,27 @@ class EmailLoginCode::Redeem
     User::Action::FindByEmail.call(email: params.email)
   end
 
-  def can_register_new_account(existing_user:)
+  def can_register_new_account(existing_user:, params:)
     return true if existing_user.present?
 
+    # Mirrors EmailLoginCode::Request#deliverable? so account creation enforces
+    # the same gates as the code request, even for a code issued before an
+    # address was blocked or one created outside the request service.
     SiteSetting.allow_new_registrations && !SiteSetting.invite_only &&
-      !SiteSetting.require_invite_code
+      !SiteSetting.require_invite_code && EmailValidator.allowed?(params.email) &&
+      !ScreenedEmail.should_block?(params.email)
   end
 
   def required_fields_provided(existing_user:, params:)
     return true if existing_user.present?
 
     values = params.user_fields.presence || {}
+    # Only the fields shown at signup can be collected here (the UI and
+    # CreateFromVerifiedEmail both use show_on_signup); requiring a hidden field
+    # would make passwordless signup impossible to complete.
     UserField
       .required
+      .where(show_on_signup: true)
       .pluck(:id)
       .all? do |field_id|
         value = values[field_id.to_s]
@@ -85,6 +105,10 @@ class EmailLoginCode::Redeem
   end
 
   def send_welcome_message(user:)
+    # Don't welcome accounts that can't access the forum yet (e.g. awaiting
+    # approval under must_approve_users), matching the normal signup path.
+    return if !user.guardian.can_access_forum?
+
     user.enqueue_welcome_message("welcome_user")
   end
 end

@@ -920,7 +920,8 @@ class SessionController < ApplicationController
   # ownership of the inbox, so this response can't be used to probe whether
   # an account exists.
   def needs_signup_user_fields?(matched_user)
-    matched_user.nil? && params[:user_fields].blank? && UserField.required.exists? &&
+    matched_user.nil? && params[:user_fields].blank? &&
+      UserField.required.where(show_on_signup: true).exists? &&
       SiteSetting.allow_new_registrations && !SiteSetting.invite_only &&
       !SiteSetting.require_invite_code
   end
