@@ -1182,7 +1182,7 @@ RSpec.describe Middleware::RequestTracker do
       expect(event.topic_id).to eq(123)
       expect(event.country_code).to eq("US")
       expect(event.ip_address.to_s).to eq("1.2.3.4")
-      expect(BrowserPageviewEvent.sources[event.source]).to eq(BrowserPageviewEvent::SOURCE_BEACON)
+      expect(event.source).to eq("beacon")
     end
 
     it "increments legacy and BPV counters from non-beacon requests" do
