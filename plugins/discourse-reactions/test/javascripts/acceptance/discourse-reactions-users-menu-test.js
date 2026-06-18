@@ -69,7 +69,7 @@ acceptance(
         undefined,
         "first fetch has no reaction_value"
       );
-      assert.dom(".post-users-popup__item").exists({ count: 5 });
+      assert.dom(".users-popup__item").exists({ count: 5 });
 
       await click('[data-reaction-filter="heart"]');
       assert.strictEqual(
@@ -77,7 +77,7 @@ acceptance(
         1,
         "does not refetch when filtering by heart"
       );
-      assert.dom(".post-users-popup__item").exists({ count: 3 });
+      assert.dom(".users-popup__item").exists({ count: 3 });
 
       await click('[data-reaction-filter="laughing"]');
       assert.strictEqual(
@@ -85,7 +85,7 @@ acceptance(
         1,
         "does not refetch when filtering by laughing"
       );
-      assert.dom(".post-users-popup__item").exists({ count: 2 });
+      assert.dom(".users-popup__item").exists({ count: 2 });
 
       await click('[data-reaction-filter="all"]');
       assert.strictEqual(
@@ -93,7 +93,7 @@ acceptance(
         1,
         "does not refetch when returning to all"
       );
-      assert.dom(".post-users-popup__item").exists({ count: 5 });
+      assert.dom(".users-popup__item").exists({ count: 5 });
     });
   }
 );

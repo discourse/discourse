@@ -107,6 +107,7 @@ Chat::Engine.routes.draw do
   get "/browse/archived" => "chat#respond"
   post "/dismiss-retention-reminder" => "chat#dismiss_retention_reminder"
   put ":chat_channel_id/react/:message_id" => "chat#react"
+  get "/:chat_channel_id/:message_id/reactions-users" => "chat#message_reactions_users"
   put "/:chat_channel_id/:message_id/rebake" => "chat#rebake"
   post "/:chat_channel_id/quote" => "chat#quote_messages"
   put "/user_chat_enabled/:user_id" => "chat#set_user_chat_status"

@@ -10,6 +10,13 @@ chat:
       status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/397571"
+  enable_new_chat_reactions_menu:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
   enable_public_channels:
     default: true
     client: true

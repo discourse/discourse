@@ -1,18 +1,17 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
 import UsersPopup from "discourse/components/user/users-popup";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import CustomReaction from "../models/discourse-reactions-custom-reaction";
 
-export default class DiscourseReactionsUsersMenu extends Component {
-  @tracked activeFilter = null;
+export default class ChatMessageReactionsUsers extends Component {
+  @service chatApi;
 
   fetchUsers = async (page, pageSize) => {
     const filter = this.activeFilter;
@@ -32,11 +31,10 @@ export default class DiscourseReactionsUsersMenu extends Component {
       }
     }
 
-    const result = await CustomReaction.fetchReactionsUsersList(
-      this.post.id,
-      page,
-      pageSize,
-      filter
+    const result = await this.chatApi.messageReactionsUsers(
+      this.channel.id,
+      this.message.id,
+      { page, limit: pageSize, emoji: filter }
     );
     const users = result.users ?? [];
     const canLoadMore = result.total_rows
@@ -49,8 +47,8 @@ export default class DiscourseReactionsUsersMenu extends Component {
 
     if (filter === null && !canLoadMore) {
       for (const reaction of this.reactions) {
-        this.#tabCache.set(reaction.id, {
-          users: merged.filter((u) => u.reaction === reaction.id),
+        this.#tabCache.set(reaction.emoji, {
+          users: merged.filter((user) => user.reaction === reaction.emoji),
           canLoadMore: false,
         });
       }
@@ -61,29 +59,45 @@ export default class DiscourseReactionsUsersMenu extends Component {
   #resetCallback = null;
   #tabCache = new Map();
 
-  get post() {
-    return this.args.data.post;
+  // The active emoji filter is owned by the message so a single open menu can
+  // switch filters as the user moves between reactions. `null` means "all".
+  get activeFilter() {
+    return this.args.data.getActiveEmoji?.() ?? null;
+  }
+
+  get message() {
+    return this.args.data.message;
+  }
+
+  get channel() {
+    return this.message.channel;
   }
 
   get reactions() {
-    return this.post.reactions || [];
+    return this.message.reactions ?? [];
   }
 
   get showFilters() {
     return this.reactions.length > 1;
   }
 
+  get totalReactions() {
+    return this.reactions.reduce((sum, reaction) => sum + reaction.count, 0);
+  }
+
   get titleText() {
-    return i18n("discourse_reactions.users_popup.title", {
-      count: this.post.reaction_users_count,
+    return i18n("chat.reactions.users_popup.title", {
+      count: this.totalReactions,
     });
   }
 
   get activeFilterTotalUsers() {
     if (!this.activeFilter) {
-      return this.post.reaction_users_count;
+      return this.totalReactions;
     }
-    return this.reactions.find((r) => r.id === this.activeFilter)?.count;
+    return this.reactions.find(
+      (reaction) => reaction.emoji === this.activeFilter
+    )?.count;
   }
 
   @action
@@ -92,15 +106,15 @@ export default class DiscourseReactionsUsersMenu extends Component {
   }
 
   @action
-  selectFilter(filterId, event) {
+  reload() {
+    this.#resetCallback?.();
+  }
+
+  @action
+  selectFilter(filterValue, event) {
     event.stopPropagation();
     event.preventDefault();
-    if (this.activeFilter === filterId) {
-      return;
-    }
-
-    this.activeFilter = filterId;
-    this.#resetCallback?.();
+    this.args.data.selectEmoji?.(filterValue);
   }
 
   <template>
@@ -111,30 +125,20 @@ export default class DiscourseReactionsUsersMenu extends Component {
     >
       <:header as |resetAndReload|>
         {{this.registerReset resetAndReload}}
+        <span hidden {{didUpdate this.reload this.activeFilter}}></span>
         {{#if this.showFilters}}
           <div class="users-popup__header">
-            <button
-              type="button"
-              class={{dConcatClass
-                "users-popup__filter"
-                (unless this.activeFilter "is-active")
-              }}
-              data-reaction-filter="all"
-              {{on "click" (fn this.selectFilter null)}}
-            >
-              {{i18n "discourse_reactions.users_popup.all"}}
-            </button>
             {{#each this.reactions as |reaction|}}
               <button
                 type="button"
                 class={{dConcatClass
                   "users-popup__filter"
-                  (if (eq reaction.id this.activeFilter) "is-active")
+                  (if (eq reaction.emoji this.activeFilter) "is-active")
                 }}
-                data-reaction-filter={{reaction.id}}
-                {{on "click" (fn this.selectFilter reaction.id)}}
+                data-reaction-filter={{reaction.emoji}}
+                {{on "click" (fn this.selectFilter reaction.emoji)}}
               >
-                {{dEmoji reaction.id skipTitle=true}}
+                {{dEmoji reaction.emoji skipTitle=true}}
                 <span>{{reaction.count}}</span>
               </button>
             {{/each}}
@@ -145,8 +149,6 @@ export default class DiscourseReactionsUsersMenu extends Component {
       <:reaction as |user|>
         {{#if user.reaction}}
           {{dEmoji user.reaction skipTitle=true class="users-popup__reaction"}}
-        {{else}}
-          {{dIcon "d-liked" class="users-popup__reaction"}}
         {{/if}}
       </:reaction>
     </UsersPopup>

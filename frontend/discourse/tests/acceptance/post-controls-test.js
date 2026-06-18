@@ -13,9 +13,9 @@ acceptance(`Post controls`, function (needs) {
 
     await click("#post_2 .button-count");
 
-    assert.dom(".post-users-popup").exists("post likes popup appears");
+    assert.dom(".users-popup").exists("post likes popup appears");
     assert
-      .dom(".post-users-popup__item")
+      .dom(".users-popup__item")
       .exists("liked users are listed in the popup");
   });
 

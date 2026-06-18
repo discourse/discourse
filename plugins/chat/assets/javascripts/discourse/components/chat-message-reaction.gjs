@@ -13,10 +13,15 @@ import { getReactionText } from "discourse/plugins/chat/discourse/lib/get-reacti
 export default class ChatMessageReaction extends Component {
   @service currentUser;
   @service site;
+  @service siteSettings;
   @service tooltip;
 
   registerTooltip = modifier((element) => {
-    if (this.args.disableTooltip || !this.popoverContent?.length) {
+    if (
+      this.args.disableTooltip ||
+      this.useReactionsUsersMenu ||
+      !this.popoverContent?.length
+    ) {
       return;
     }
 
@@ -33,6 +38,15 @@ export default class ChatMessageReaction extends Component {
       instance.destroy();
     };
   });
+
+  // When the new reactions menu is enabled the reaction list opens a users popup
+  // (handled by the parent message), so the names tooltip is suppressed here.
+  get useReactionsUsersMenu() {
+    return (
+      this.siteSettings.enable_new_chat_reactions_menu &&
+      !this.args.disableTooltip
+    );
+  }
 
   get showCount() {
     return this.args.showCount ?? true;
