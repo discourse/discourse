@@ -57,6 +57,18 @@
       cursor: not-allowed;
     }
 
+    // Looks disabled (dimmed, with its icon shown) but stays clickable so a
+    // consumer can react to the selection.
+    &.--locked {
+      color: var(--primary-medium);
+      background: var(--d-input-bg-color--disabled);
+
+      .d-icon {
+        color: currentcolor;
+        display: inline-block;
+      }
+    }
+
     .d-icon {
       display: none;
     }

@@ -24,6 +24,7 @@ import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { runOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
 import { runOnBeforeVisibilityChange } from "discourse/lib/on-before-visibility-change";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import PermissionType from "discourse/models/permission-type";
@@ -313,6 +314,15 @@ export default class UpsertCategoryGeneral extends Component {
     return this.siteSettings.login_required
       ? "category.visibility.all_members"
       : "category.visibility.public";
+  }
+
+  // Extension point (e.g. for hosting plans) to present the private/group
+  // restricted visibility option as locked. It stays clickable so a registered
+  // `onBeforeVisibilityChange` callback can react to the selection.
+  get privateVisibilityLocked() {
+    return applyValueTransformer("category-visibility-private-locked", false, {
+      category: this.args.category,
+    });
   }
 
   get showWarning() {
@@ -925,8 +935,15 @@ export default class UpsertCategoryGeneral extends Component {
                 {{i18n this.publicVisibilityLabel}}
               </Condition>
             {{/if}}
-            <Condition @name="group_restricted">
-              {{dIcon "check"}}
+            <Condition
+              @name="group_restricted"
+              @locked={{this.privateVisibilityLocked}}
+            >
+              {{#if this.privateVisibilityLocked}}
+                {{dIcon "lock"}}
+              {{else}}
+                {{dIcon "check"}}
+              {{/if}}
               {{i18n "category.visibility.group_restricted"}}
             </Condition>
           </cc.Conditions>

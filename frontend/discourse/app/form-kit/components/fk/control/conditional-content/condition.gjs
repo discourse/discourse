@@ -21,6 +21,7 @@ const FKControlConditionalContentOption = <template>
       class={{dConcatClass
         "form-kit__control-radio-label"
         (if @disabled "--disabled")
+        (if @locked "--locked")
       }}
     >
       <input

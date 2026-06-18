@@ -46,6 +46,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "category-display-name",
   "category-sort-orders",
   "category-text-color",
+  "category-visibility-private-locked",
   "composer-actions-content",
   "composer-editor-quoted-post-avatar-template",
   "composer-editor-reply-placeholder",
