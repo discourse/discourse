@@ -7,10 +7,10 @@ module TurboTests
     RSpec::Core::Formatters.register(self, :dump_summary)
 
     def dump_summary(notification, timings)
-      output_slowest_examples(timings) unless timings.empty?
+      output_slowest_examples(timings) if timings.present?
 
       totals_by_id, totals_by_origin = aggregate_js_deprecations(notification.examples)
-      output_js_deprecations(totals_by_id, totals_by_origin) unless totals_by_id.empty?
+      output_js_deprecations(totals_by_id, totals_by_origin) if totals_by_id.present?
 
       super(notification)
     end
@@ -111,7 +111,7 @@ module TurboTests
       return nil unless example_file_path
 
       expanded_example_file_path = Pathname.new(example_file_path).expand_path
-      return nil unless expanded_example_file_path.to_s.start_with?(TURBO_TESTS_REPO_ROOT)
+      return nil unless expanded_example_file_path.to_s.start_with?(Rails.root.to_s)
 
       extension_match = example_file_path.match(%r{/(plugins|themes)/([^/]+)/})
       if extension_match

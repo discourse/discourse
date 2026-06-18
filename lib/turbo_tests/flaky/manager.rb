@@ -3,7 +3,7 @@
 module TurboTests
   module Flaky
     class Manager
-      PATH = File.join(TURBO_TESTS_REPO_ROOT, "tmp/turbo_rspec_flaky_tests.json")
+      PATH = Rails.root.join("tmp/turbo_rspec_flaky_tests.json")
 
       def self.potential_flaky_tests
         JSON
@@ -43,10 +43,10 @@ module TurboTests
               end
             end
 
-        if flaky_tests.empty?
-          File.delete(PATH)
-        else
+        if flaky_tests.present?
           File.write(PATH, flaky_tests.to_json)
+        else
+          File.delete(PATH)
         end
       end
     end
