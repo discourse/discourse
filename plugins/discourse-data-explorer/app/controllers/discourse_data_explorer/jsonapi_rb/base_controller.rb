@@ -14,9 +14,9 @@ module DiscourseDataExplorer
     # No Ransack (it breaks core — see Part 9); filtering/sorting are plain AR blocks we
     # own. Reads are generic (index/show); writes stay per-controller (Service::Base).
     class BaseController < ::ApplicationController
-      include ::JSONAPI::Fetching # jsonapi_include / jsonapi_fields
-      include ::JSONAPI::Pagination # jsonapi_paginate + @_jsonapi_original_size
-      include ::JSONAPI::Deserialization # jsonapi_deserialize (for writes in subclasses)
+      # Self-contained: the include/fields/pagination/deserialization helpers (formerly
+      # the jsonapi.rb gem's mixins) are absorbed below, so the thin stack depends only on
+      # jsonapi-serializer (rendering) + pagy (keyset). See the helpers in the private section.
 
       requires_plugin DiscourseDataExplorer::PLUGIN_NAME
       skip_before_action :check_xhr,
@@ -76,20 +76,45 @@ module DiscourseDataExplorer
         _jsonapi_config.instance_eval(&block)
       end
 
+      # Machine-readable contract descriptor — the thin-layers analogue of Graphiti's
+      # generated schema. The backwards-compat guard (spec/integration/
+      # jsonapi_rb_contract_spec.rb) diffs it against a committed baseline and fails on
+      # backwards-incompatible changes (removed attribute/filter/sort/relationship,
+      # changed type/default_sort/relationship-kind, lowered page cap). String keys/values
+      # so it round-trips cleanly through the committed JSON.
+      def self.jsonapi_contract
+        config = _jsonapi_config
+        serializer = config.serializer_class
+        {
+          "type" => serializer.record_type.to_s,
+          "attributes" => serializer.attributes_to_serialize.keys.map(&:to_s).sort,
+          "relationships" =>
+            serializer.relationships_to_serialize.to_h do |name, rel|
+              [name.to_s, rel.relationship_type.to_s]
+            end,
+          "filters" => config.filters.keys.sort,
+          "sorts" => config.sorts.keys.sort,
+          "default_sort" => config.default_sort_value&.to_h { |key, dir| [key.to_s, dir.to_s] },
+          "stats" => config.stats.transform_values(&:to_s),
+          "includes" => config.allowed_includes.sort,
+          "max_page_size" => config.max_page_size,
+        }
+      end
+
       def index
         scope = apply_sort(apply_filters(base_scope))
-        scope = scope.includes(*cfg.preloads) if cfg.preloads.any?
+        scope = scope.includes(*included_preloads) if included_preloads.any?
 
         if (cursor = params.dig(:page, :cursor)).present?
           pagy = Pagy::Keyset.new(scope.reorder(id: :desc), page: cursor, limit: page_size)
           render_resource(pagy.records, meta: { page: { next_cursor: pagy.next } })
         else
-          render_resource(jsonapi_paginate(scope), meta: stats_meta(@_jsonapi_original_size))
+          render_resource(paginate_offset(scope), meta: stats_meta(@_jsonapi_original_size))
         end
       end
 
       def show
-        record = base_scope.includes(*cfg.preloads).find_by(id: params[:id])
+        record = base_scope.includes(*included_preloads).find_by(id: params[:id])
         return head(:not_found) if record.blank?
         render_resource(record)
       end
@@ -138,10 +163,72 @@ module DiscourseDataExplorer
         params[:include].to_s.split(",").map { it.split(".").first }.reject(&:blank?).uniq
       end
 
+      # Only preload relationships the client actually asked for — paired with the
+      # serializer's lazy_load_data, a bare request loads no relationship data (no N+1,
+      # fewer queries). Matches Graphiti's sideload-only-when-included economics.
+      def included_preloads
+        @included_preloads ||= cfg.preloads.select { requested_includes.include?(it.to_s) }
+      end
+
       def page_size
         size = params.dig(:page, :size).to_i
         size = cfg.default_page_size if size <= 0
         [size, cfg.max_page_size].min
+      end
+
+      # ── Absorbed JSON:API request/response helpers ──
+      # Formerly the jsonapi.rb gem's Fetching/Pagination/Deserialization mixins. Owned
+      # here (small, stable) so jsonapi.rb is dropped entirely; deps are now just
+      # jsonapi-serializer + pagy.
+
+      # `?include=user,groups` → ["user","groups"] for the serializer's include option.
+      def jsonapi_include
+        params[:include].to_s.split(",").filter_map { it.strip.presence }
+      end
+
+      # `?fields[queries]=name,sql` → { queries: ["name","sql"] } for sparse fieldsets.
+      def jsonapi_fields
+        return {} unless params[:fields].respond_to?(:each_pair)
+
+        # NB: ActionController::Parameters does not include Enumerable (no each_with_object),
+        # so build the hash with #each.
+        extracted = ActiveSupport::HashWithIndifferentAccess.new
+        params[:fields].each do |type, fields|
+          extracted[type] = fields.to_s.split(",").filter_map { it.strip.presence }
+        end
+        extracted
+      end
+
+      # Offset/limit pagination honoring the DSL's page caps; sets the total for stats.
+      def paginate_offset(scope)
+        @_jsonapi_original_size = scope.size
+        number = [1, params.dig(:page, :number).to_i].max
+        scope.offset((number - 1) * page_size).limit(page_size)
+      end
+
+      # Parse a JSON:API write document's `data` into a flat attributes hash, limited to
+      # `only`. to-one/to-many relationships become `<name>_id`/`<name>_ids`.
+      def jsonapi_deserialize(document, only:)
+        data =
+          if document.respond_to?(:permit!)
+            document.dup.require(:data).permit!.as_json
+          else
+            document.as_json["data"] || {}
+          end
+        allowed = Array(only).map(&:to_s)
+        parsed = (data["attributes"] || {}).slice(*allowed)
+
+        (data["relationships"] || {}).each do |name, rel|
+          next if allowed.exclude?(name)
+          rel_data = (rel || {})["data"]
+          singular = name.singularize
+          if rel_data.is_a?(Array)
+            parsed["#{singular}_ids"] = rel_data.filter_map { it["id"] }
+          else
+            parsed["#{singular}_id"] = rel_data && rel_data["id"]
+          end
+        end
+        parsed
       end
 
       # Request-driven, matching Graphiti's `stats[total]=count` → meta.stats.total.count.
@@ -156,15 +243,53 @@ module DiscourseDataExplorer
         options[:fields] = jsonapi_fields if params[:fields].present?
         options[:meta] = meta if meta.present?
 
-        render json: cfg.serializer_class.new(resource, options).serializable_hash,
-               status: status,
-               content_type: "application/vnd.api+json"
+        document = cfg.serializer_class.new(resource, options).serializable_hash
+        prune_empty_relationships!(document)
+        render json: document, status: status, content_type: "application/vnd.api+json"
       end
 
+      # lazy_load_data leaves a non-included relationship as an empty `{}` object, which is
+      # not spec-compliant (a relationship MUST have ≥1 of links/data/meta). Relationships
+      # are optional, so we drop the empties → the relationship is simply absent unless
+      # `include`d.
+      def prune_empty_relationships!(document)
+        data = document[:data]
+        records = data.is_a?(Array) ? data : [data]
+        records.each do |record|
+          next unless record.is_a?(Hash) && record[:relationships]
+          record[:relationships].reject! { |_, value| value.blank? }
+          record.delete(:relationships) if record[:relationships].empty?
+        end
+        document
+      end
+
+      # Plain-message error document (400s / generic failures).
       def render_errors(messages, status: :unprocessable_entity)
         code = Rack::Utils::SYMBOL_TO_STATUS_CODE[status].to_s
         errors = Array(messages).map { |message| { status: code, detail: message } }
         render json: { errors: errors }, status: status, content_type: "application/vnd.api+json"
+      end
+
+      # Validation errors → 422 with a JSON Pointer `source` per field (e.g.
+      # `/data/attributes/name`), per the JSON:API error-object spec. Takes an
+      # ActiveModel::Errors (from a Service::Base contract or the model).
+      def render_validation_errors(model_errors)
+        errors =
+          model_errors.map do |error|
+            {
+              status: "422",
+              title: "Invalid attribute",
+              detail: error.full_message,
+              source: {
+                pointer: "/data/attributes/#{error.attribute}",
+              },
+            }
+          end
+        render json: {
+                 errors: errors,
+               },
+               status: :unprocessable_entity,
+               content_type: "application/vnd.api+json"
       end
     end
   end

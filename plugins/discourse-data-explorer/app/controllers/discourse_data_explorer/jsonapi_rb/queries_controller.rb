@@ -51,8 +51,8 @@ module DiscourseDataExplorer
         DiscourseDataExplorer::Query::Create.call(params: attributes, guardian:) do
           on_success { |query:| render_resource(query, status: :created) }
           on_failed_policy(:can_create_query) { raise Discourse::InvalidAccess }
-          on_failed_contract { |contract| render_errors(contract.errors.full_messages) }
-          on_model_errors(:query) { |query| render_errors(query.errors.full_messages) }
+          on_failed_contract { |contract| render_validation_errors(contract.errors) }
+          on_model_errors(:query) { |query| render_validation_errors(query.errors) }
           on_failure { render_errors(["Query could not be created"]) }
         end
       end

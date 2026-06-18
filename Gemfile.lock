@@ -347,9 +347,6 @@ GEM
       jsonapi-renderer (~> 0.2.0)
     jsonapi-serializer (2.2.0)
       activesupport (>= 4.2)
-    jsonapi.rb (2.1.1)
-      jsonapi-serializer
-      rack
     jwt (2.10.1)
       base64
     landlock (0.2)
@@ -923,7 +920,7 @@ DEPENDENCIES
   json
   json_completer
   json_schemer
-  jsonapi.rb
+  jsonapi-serializer
   landlock
   liquid (= 5.12.0)
   listen
@@ -1163,7 +1160,6 @@ CHECKSUMS
   jsonapi-renderer (0.2.2) sha256=b5c44b033d61b4abdb6500fa4ab84807ca0b36ea0e59e47a2c3ca7095a6e447b
   jsonapi-serializable (0.3.1) sha256=221e657677659d798e268a33ec97a83ec5ea0e4233f931358db84e88056552e9
   jsonapi-serializer (2.2.0) sha256=f8141ac6f0c1e17e8513df68f8341afe2d7bffc285841d7090bc07f07efb0029
-  jsonapi.rb (2.1.1) sha256=e6d3c60b6d6236bc91dddd0a2b38c2c0ecd7530a8ef63778c6175420cc36537d
   jwt (2.10.1) sha256=e6424ae1d813f63e761a04d6284e10e7ec531d6f701917fadcd0d9b2deaf1cc5
   landlock (0.2) sha256=9bb86d7d12b16485b278ba575d49f55b730089c7a3d0f45a769fe4d7384d5e55
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc

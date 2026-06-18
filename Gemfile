@@ -320,9 +320,8 @@ gem "pdf-reader", require: false
 gem "graphiti", "1.10.2"
 gem "graphiti-rails"
 gem "pagy", "~> 43.0"
-# thin-layers alternative being compared against Graphiti (same spike).
-# require: false — the gem's aggregator (`require "jsonapi"`) eagerly loads
-# jsonapi/filtering → ransack → Polyamorous, which globally monkeypatches
-# ActiveRecord join aliasing and breaks core Discourse SQL. We load only the
-# Ransack-free submodules in plugin.rb and hand-roll filtering. See Part 9.
-gem "jsonapi.rb", require: false
+# thin-layers alternative being compared against Graphiti (same spike). Only the
+# jsonapi-serializer renderer is used; the jsonapi.rb gem was dropped (its Ransack
+# filtering breaks core; its other mixins were absorbed into the plugin). require: false
+# — required explicitly in plugin.rb to control load order. See Part 9.
+gem "jsonapi-serializer", require: false
