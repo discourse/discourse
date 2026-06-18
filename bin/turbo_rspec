@@ -17,6 +17,7 @@ use_runtime_info = nil
 enable_system_tests = nil
 retry_and_log_flaky_tests = ENV["DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS"].to_s == "1"
 exclude_patterns = []
+shard = nil
 
 OptionParser
   .new do |opts|
@@ -71,6 +72,11 @@ OptionParser
       "--exclude-pattern=pattern",
       "Exclude files that matches against the pattern using unix-style pattern matching (comma-separated for multiple patterns)",
     ) { |pattern| exclude_patterns.concat(pattern.split(",").map(&:strip)) }
+
+    opts.on(
+      "--shard=N/M",
+      "Run only the Nth shard of M total shards (1-indexed). Files are partitioned by sorted index modulo M.",
+    ) { |s| shard = s }
   end
   .parse!(ARGV)
 
@@ -99,16 +105,31 @@ if exclude_patterns.any?
   files.reject! { |file| exclude_patterns.any? { |pattern| File.fnmatch(pattern, file) } }
 end
 
+if shard
+  unless shard =~ %r{\A(\d+)/(\d+)\z}
+    STDERR.puts "Invalid --shard value #{shard.inspect}; expected N/M with N <= M"
+    exit 1
+  end
+  shard_idx = $1.to_i
+  total_shards = $2.to_i
+  if shard_idx < 1 || total_shards < 1 || shard_idx > total_shards
+    STDERR.puts "Invalid --shard value #{shard.inspect}; expected 1 <= N <= M"
+    exit 1
+  end
+  files =
+    files
+      .sort
+      .each_with_index
+      .select { |_, i| i % total_shards == (shard_idx - 1) }
+      .map(&:first)
+  puts "Sharding: running #{files.size} files (shard #{shard_idx}/#{total_shards})"
+end
+
 requires.each { |f| require(f) }
 
 formatters << { name: "progress", outputs: [] } if formatters.empty?
 
 formatters.each { |formatter| formatter[:outputs] << "-" if formatter[:outputs].empty? }
-
-if formatters.any? { |formatter| formatter[:name] == "RspecPerformanceFormatter" }
-  ENV["DISCOURSE_RSPEC_PERFORMANCE_FORMATTER"] = "1"
-  require "./spec/support/rspec_performance_formatter"
-end
 
 puts "::group::Run turbo_rspec" if ENV["GITHUB_ACTIONS"]
 if files.size > 5

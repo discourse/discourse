@@ -90,18 +90,33 @@ Capybara::Node::Base.prepend(CapybaraTimeoutExtension)
 module CapybaraPlaywrightBasePatch
   private
 
+  # Runs after every patched action, so transport cost is paid suite-wide.
+  # A single `evaluate` awaits the settle promise in the same protocol message
+  # and returns its JSON-serialized result (always `null` or an error-message
+  # string) directly, where `session.evaluate_async_script` costs three round
+  # trips per call: `evaluateExpressionHandle` plus the driver's `wrap_node`
+  # typeof probe and `jsonValue` fetch on the resulting handle. Routing through
+  # `with_playwright_page` keeps the driver's `assert_page_alive` error
+  # mapping and its context-destroyed retry identical to the stock transport.
   def execute_async_client_settled_script(session)
-    result = session.evaluate_async_script(<<~JS)
-        const done = arguments[0];
+    # The stock transport (`Capybara::Session#evaluate_async_script`) marked
+    # the session used; preserve that so `Capybara.reset_sessions!` still
+    # resets sessions whose examples only performed patched actions.
+    session.instance_variable_set(:@touched, true)
 
-        if (window.clientSettled) {
-          window.clientSettled(#{Capybara.default_max_wait_time * 1000})
-            .then(done)
-            .catch((error) => { done(error.message) });
-        } else {
-          done();
-        }
-      JS
+    result =
+      session.driver.with_playwright_page do |pw_page|
+        pw_page.capybara_current_frame.evaluate(<<~JS)
+          () => {
+            if (window.clientSettled) {
+              return window.clientSettled(#{Capybara.default_max_wait_time * 1000})
+                .then(() => null)
+                .catch((error) => error.message);
+            }
+            return null;
+          }
+        JS
+      end
 
     raise result if result.is_a? String
   end

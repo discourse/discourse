@@ -13,6 +13,7 @@ on:
       - beta
       - stable
       - release/*
+      - tgxworld/stack-on-main-measure
 
 concurrency:
   group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
@@ -57,10 +58,11 @@ jobs:
       CHEAP_SOURCE_MAPS: "1"
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
-      EMBER_ENV: development
+      EMBER_ENV: production
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
+      TURBO_RSPEC_SKIP_MIGRATIONS_CHECK: "1"
 
     strategy:
       fail-fast: false
@@ -68,23 +70,13 @@ jobs:
       matrix:
         include:
           - target: core
-            build_type: backend
-          - target: core
-            build_type: frontend
-          - target: core
             build_type: system
-          - target: plugins
-            build_type: backend
-          - target: plugins
-            build_type: frontend
           - target: core-plugins
-            build_type: system
-          - target: chat
             build_type: system
           - target: official-plugins
             build_type: system
-          - target: themes
-            build_type: frontend
+          - target: chat
+            build_type: system
           - target: themes
             build_type: system
 

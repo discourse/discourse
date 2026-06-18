@@ -129,7 +129,7 @@ group :test do
   gem "test-prof"
   gem "rails-dom-testing", require: false
   gem "minio_runner", require: false
-  gem "capybara-playwright-driver"
+  gem "capybara-playwright-driver", path: "vendor/gems/capybara-playwright-driver"
   gem "puma", require: false
 end
 
