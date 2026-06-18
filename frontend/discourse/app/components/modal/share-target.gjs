@@ -9,7 +9,7 @@ import { i18n } from "discourse-i18n";
 export default class ShareTargetModal extends Component {
   @service appEvents;
   @service composer;
-  @service sharedContent;
+  @service("shared-content") sharedContent;
   @service toasts;
 
   previews;

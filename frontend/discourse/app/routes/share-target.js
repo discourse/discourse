@@ -8,7 +8,7 @@ export default class extends DiscourseRoute {
   @service currentUser;
   @service modal;
   @service router;
-  @service sharedContent;
+  @service("shared-content") sharedContent;
 
   async beforeModel(transition) {
     if (!this.currentUser) {
