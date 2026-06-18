@@ -122,13 +122,7 @@ module SystemHelpers
     SiteSetting.global_notice = ""
     SiteSetting.force_hostname = Capybara.server_host
     SiteSetting.port = Capybara.server_port
-    # A constant letter-avatar URL lets the browser reuse one cached image
-    # across every spec instead of paying a cache-cold fetch per username. The
-    # path serves the same letter avatar and resolves through the real
-    # controller; `{size}` is substituted client-side as usual. Uploaded
-    # avatars (`/user_avatar/`) are unaffected, and specs that configure avatars
-    # explicitly override this setting per-example as before.
-    SiteSetting.external_system_avatars_url = "/letter_avatar/a/{size}/#{LetterAvatar.version}.png"
+    SiteSetting.external_system_avatars_url = ""
     SiteSetting.enable_user_tips = false
     SiteSetting.allowed_internal_hosts =
       (

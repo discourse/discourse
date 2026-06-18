@@ -34,22 +34,6 @@ require "shoulda-matchers"
 require "sidekiq/testing"
 require "capybara/rails"
 
-# With `mini_racer_single_threaded = true` (the default), every `PrettyText`
-# cook and `AssetProcessor.v8_call` ends with `Context#low_memory_notification`,
-# a forced full V8 GC that keeps long-lived production processes compact. In
-# short-lived CI spec workers that compaction buys nothing while costing a full
-# collection on every markdown cook and during each worker's transpile warm-up.
-# V8's own allocation-triggered GC still runs; only the redundant forced
-# collection is dropped.
-if ENV["CI"] && defined?(MiniRacer)
-  MiniRacer::Context.prepend(
-    Module.new do
-      def low_memory_notification
-      end
-    end,
-  )
-end
-
 # The shoulda-matchers gem no longer detects the test framework
 # you're using or mixes itself into that framework automatically.
 Shoulda::Matchers.configure do |config|
