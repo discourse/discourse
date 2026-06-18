@@ -53,6 +53,16 @@ RSpec.describe Wizard::Builder do
       expect(title_field.value).to eq("foobar")
     end
 
+    it "does not add a password field for the first local-login admin" do
+      admin = Fabricate(:admin)
+      UserAuthToken.generate!(user_id: admin.id)
+
+      wizard = Wizard::Builder.new(admin).build
+      setup_step = wizard.steps.find { |s| s.id == "setup" }
+
+      expect(setup_step.fields.map(&:id)).not_to include("password")
+    end
+
     it "should set the right default value for privacy fields" do
       SiteSetting.login_required = true
       SiteSetting.invite_only = false

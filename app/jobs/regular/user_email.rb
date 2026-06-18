@@ -102,6 +102,7 @@ module Jobs
       notification_type = args[:notification_type]
       notification_data_hash = args[:notification_data_hash]
       email_token = args[:email_token]
+      password_reset_token = args[:password_reset_token]
       to_address = args[:to_address]
 
       set_skip_context(type, user.id, to_address || user.email, post.try(:id))
@@ -204,6 +205,7 @@ module Jobs
 
       if email_token.present?
         email_args[:email_token] = email_token
+        email_args[:password_reset_token] = password_reset_token if password_reset_token.present?
 
         if type == "confirm_new_email"
           change_req = EmailChangeRequest.find_by_new_token(email_token)
