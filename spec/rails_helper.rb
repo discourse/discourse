@@ -254,6 +254,13 @@ RSpec.configure do |config|
     # Block all incoming requests before resetting Capybara session which will wait for all requests to finish
     BlockRequestsMiddleware.block_requests!
 
+    # `Capybara.reset_session!` only clears state for a session it considers
+    # touched. `sign_in` authenticates by injecting a cookie without navigating,
+    # so an example that signs in but never navigates leaves an untouched
+    # session whose auth cookie would otherwise survive into the next example.
+    # Clear the context cookies unconditionally to guarantee isolation.
+    page.driver.with_playwright_page { |pw_page| pw_page.context.clear_cookies }
+
     Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
   end

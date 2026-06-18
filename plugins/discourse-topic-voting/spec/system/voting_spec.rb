@@ -151,7 +151,7 @@ RSpec.describe "Topic voting" do
 
     before do
       DiscourseTopicVoting::CategorySetting.create!(category: voting_category)
-      Capybara.reset_session!
+      sign_out
     end
 
     it "redirects to login when clicking vote" do
