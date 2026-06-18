@@ -66,7 +66,6 @@ module PageObjects
       end
 
       def open_configure_menu
-        ensure_redesigned_dashboard
         find(".btn[data-identifier='db-configure']").click
         has_css?(".db-configure")
         self
@@ -128,20 +127,6 @@ module PageObjects
         within(".db-configure__row[data-section-id='#{id}']") do
           find(".db-configure__arrow:first-child").click
         end
-        self
-      end
-
-      # The redesigned dashboard (and its configure trigger) only renders once
-      # `dashboard_improvements` is active on the client. That value is pushed to
-      # the browser over MessageBus and can lag briefly under load, leaving the
-      # legacy dashboard showing instead. When that happens, reload to pick up the
-      # correct preloaded value before interacting.
-      def ensure_redesigned_dashboard
-        # `visit` has already settled the page, so the redesigned header is
-        # present immediately when active; use a zero wait here so the common
-        # case is instant and we only pay for a reload on the rare lag.
-        page.refresh unless has_css?(".db-header", wait: 0)
-        has_css?(".db-header")
         self
       end
 
