@@ -20,6 +20,13 @@ module DiscourseWorkflows
     validates :dependency_type, inclusion: { in: TYPES }
 
     scope :of_type, ->(type) { where(dependency_type: type) }
+    scope :on_active_version,
+          -> do
+            joins(:workflow).where(
+              "discourse_workflows_workflow_dependencies.workflow_version_id = " \
+                "discourse_workflows_workflows.active_version_id",
+            )
+          end
 
     def self.cache
       @cache ||= DistributedCache.new("discourse_workflows_dependencies")
@@ -46,15 +53,7 @@ module DiscourseWorkflows
 
     def self.active_node_types
       cache.defer_get_set(ACTIVE_NODE_TYPES_KEY) do
-        of_type("node_type")
-          .joins(:workflow)
-          .where(
-            "discourse_workflows_workflow_dependencies.workflow_version_id = " \
-              "discourse_workflows_workflows.active_version_id",
-          )
-          .distinct
-          .pluck(:dependency_key)
-          .to_set
+        of_type("node_type").on_active_version.distinct.pluck(:dependency_key).to_set
       end
     end
 

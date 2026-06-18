@@ -4550,6 +4550,46 @@ ALTER SEQUENCE public.discourse_workflows_webhooks_id_seq OWNED BY public.discou
 
 
 --
+-- Name: discourse_workflows_workflow_call_runs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_workflow_call_runs (
+    id bigint NOT NULL,
+    parent_execution_id bigint NOT NULL,
+    parent_node_id character varying(100) NOT NULL,
+    parent_resume_token character varying(64) NOT NULL,
+    child_execution_id bigint,
+    target_workflow_id bigint NOT NULL,
+    target_workflow_version_id character varying(36) NOT NULL,
+    user_id bigint,
+    trigger_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    error text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_workflow_call_runs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_workflow_call_runs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_workflow_call_runs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_workflow_call_runs_id_seq OWNED BY public.discourse_workflows_workflow_call_runs.id;
+
+
+--
 -- Name: discourse_workflows_workflow_dependencies; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -12703,6 +12743,13 @@ ALTER TABLE ONLY public.discourse_workflows_webhooks ALTER COLUMN id SET DEFAULT
 
 
 --
+-- Name: discourse_workflows_workflow_call_runs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflow_call_runs ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_workflow_call_runs_id_seq'::regclass);
+
+
+--
 -- Name: discourse_workflows_workflow_dependencies id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14980,6 +15027,14 @@ ALTER TABLE ONLY public.discourse_workflows_webhooks
 
 
 --
+-- Name: discourse_workflows_workflow_call_runs discourse_workflows_workflow_call_runs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflow_call_runs
+    ADD CONSTRAINT discourse_workflows_workflow_call_runs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: discourse_workflows_workflow_dependencies discourse_workflows_workflow_dependencies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -16852,6 +16907,20 @@ CREATE INDEX idx_dwf_ai_sessions_on_user_id ON public.discourse_workflows_ai_aut
 --
 
 CREATE INDEX idx_dwf_ai_sessions_on_workflow_id ON public.discourse_workflows_ai_authoring_sessions USING btree (workflow_id);
+
+
+--
+-- Name: idx_dwf_call_runs_on_child_execution_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_call_runs_on_child_execution_id ON public.discourse_workflows_workflow_call_runs USING btree (child_execution_id) WHERE (child_execution_id IS NOT NULL);
+
+
+--
+-- Name: idx_dwf_call_runs_on_parent_execution_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_call_runs_on_parent_execution_id ON public.discourse_workflows_workflow_call_runs USING btree (parent_execution_id);
 
 
 --
@@ -22065,6 +22134,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260624140945'),
+('20260623090824'),
 ('20260617053237'),
 ('20260615084100'),
 ('20260615082047'),

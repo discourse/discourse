@@ -24,7 +24,13 @@ module DiscourseWorkflows
         $itemIndex
       ].freeze
 
-      attr_reader :workflow, :trigger_data, :context, :user, :workflow_name, :static_data_state
+      attr_reader :workflow,
+                  :trigger_data,
+                  :context,
+                  :user,
+                  :workflow_name,
+                  :workflow_call_caller,
+                  :static_data_state
       attr_accessor :execution
 
       def initialize(
@@ -33,11 +39,13 @@ module DiscourseWorkflows
         user:,
         execution: nil,
         workflow_nodes: nil,
-        workflow_name: nil
+        workflow_name: nil,
+        workflow_call_caller: nil
       )
         @workflow = workflow
         @workflow_nodes = workflow_nodes
         @workflow_name = workflow_name || workflow.name
+        @workflow_call_caller = workflow_call_caller&.deep_stringify_keys
         @trigger_data = trigger_data
         @user = user
         @execution = execution
@@ -179,6 +187,9 @@ module DiscourseWorkflows
         "workflow_id" => ->(execution_context, _extra_context) { execution_context.workflow&.id },
         "workflow_name" => ->(execution_context, _extra_context) do
           execution_context.workflow_name
+        end,
+        "called_by" => ->(execution_context, _extra_context) do
+          execution_context.workflow_call_caller
         end,
         "resume_url" =>
           lambda do |execution_context, extra_context|
