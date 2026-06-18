@@ -4196,6 +4196,13 @@ en:
         banner: "You are viewing a single thread from this topic."
         view_full_topic: "View full topic"
         view_parent_context: "View parent context"
+    share_target:
+      title: "Shared content"
+      description: "What would you like to do with the shared content?"
+      new_topic: "New topic"
+      new_message: "New message"
+      add_to_reply: "Add to a reply"
+      added_to_reply: "Saved. The content will be added the next time you open a reply."
     topic:
       filter_to:
         one: "%{count} post in topic"
