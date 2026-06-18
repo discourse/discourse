@@ -12,6 +12,8 @@ import DashboardTraffic from "discourse/admin/components/dashboard/traffic";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { eq } from "discourse/truth-helpers";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default class RedesignedAdminDashboard extends Component {
@@ -22,9 +24,18 @@ export default class RedesignedAdminDashboard extends Component {
   }
 
   <template>
-    <div class="db-header">
-      <h1 class="db-header__title">Dashboard</h1>
-      <div class="db-header__actions">
+    <DPageHeader
+      @titleLabel={{i18n "admin.dashboard.title"}}
+      @hideTabs={{true}}
+    >
+      <:breadcrumbs>
+        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem
+          @path="/admin"
+          @label={{i18n "admin.dashboard.title"}}
+        />
+      </:breadcrumbs>
+      <:actions>
         <DashboardDateRange
           @period={{@requestedPeriod}}
           @startDate={{@requestedStartDate}}
@@ -32,7 +43,6 @@ export default class RedesignedAdminDashboard extends Component {
           @setPeriod={{@setPeriod}}
           @setCustomDateRange={{@setCustomDateRange}}
         />
-
         {{#if this.currentUser.admin}}
           <DMenu
             @identifier="db-configure"
@@ -51,8 +61,8 @@ export default class RedesignedAdminDashboard extends Component {
             </:content>
           </DMenu>
         {{/if}}
-      </div>
-    </div>
+      </:actions>
+    </DPageHeader>
 
     <PluginOutlet
       @name="redesigned-admin-dashboard-after-header"

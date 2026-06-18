@@ -7,34 +7,6 @@
   margin-bottom: var(--space-12);
 }
 
-.db-header {
-  display: flex;
-  align-items: center;
-  padding: var(--space-3) 0;
-  margin-bottom: var(--space-8);
-  position: sticky;
-  top: var(--header-offset, 60px);
-  z-index: 1;
-  background: var(--d-content-background, var(--secondary));
-
-  &__title {
-    @include viewport.until(sm) {
-      font-size: var(--font-up-3-rem);
-    }
-  }
-
-  &__actions {
-    display: flex;
-    gap: var(--space-4);
-    margin-left: auto;
-  }
-
-  @include viewport.until(sm) {
-    flex-direction: column-reverse;
-    align-items: flex-start;
-  }
-}
-
 .db-delta {
   font-size: var(--font-down-2-rem);
   font-weight: bold;
