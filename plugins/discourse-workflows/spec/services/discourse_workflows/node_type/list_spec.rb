@@ -54,6 +54,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
           :topic_id,
           :post_id,
           :reply_to_post_number,
+          :whisper,
           :author_username,
           :editor_username,
           :include_raw,

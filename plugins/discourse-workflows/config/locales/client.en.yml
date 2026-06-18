@@ -315,6 +315,8 @@ en:
         raw_description: "Raw content for the post"
         reply_to_post_number: "Reply to post number"
         reply_to_post_number_description: "Reply to a specific post number in the topic"
+        whisper: "Create as whisper"
+        whisper_description: "Create the post as a whisper. The author must be allowed to create whispers."
         author_username: "Author"
         post_id: "Post ID"
         editor_username: "Editor"

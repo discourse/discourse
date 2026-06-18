@@ -55,6 +55,12 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
         "default" => "system",
         "ui" => include("control" => "actor"),
       )
+      expect(properties["whisper"]).to include(
+        "type" => "boolean",
+        "default" => false,
+        "ui" => include("control" => "boolean", "expression" => true),
+        "display_options" => include("show" => include("operation" => ["create"])),
+      )
       expect(properties["categories"]["ui"]).to include("hidden" => true)
       expect(properties["advanced_filter"]["ui"]).to include("hidden" => true)
     end
