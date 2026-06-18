@@ -1327,7 +1327,7 @@ was Graphiti's main remaining edge.
 | Lock-in | high | low (own the glue) |
 | Footguns | writable-default data-loss; `graphiti-rails` rake `Object` pollution | Ransack-breaks-core (avoided by dropping Ransack) |
 | Core-safety | needs the `Object`-pollution scrub initializer | clean once Ransack removed |
-| What we'd own/maintain | config + a 1-line `Group` association to function; 3 *optional* perf monkeypatches | a small framework (~250 LOC: base controller + contract spec + serializers); serializer stays jsonapi-serializer (fork only if it ever breaks) |
+| What we'd own/maintain | config + a 1-line `Group` association to function; 3 *optional* perf monkeypatches | a small framework (~250 LOC) **+ 1 small serializer monkeypatch** (nested-include + lazy linkage); serializer stays jsonapi-serializer (fork only if it breaks) |
 
 **Thin-layers viability punch-list — ALL DONE:** **(1) ✅** reusable base controller + declarative
 DSL (125 LOC); **(2) ✅** conditional relationship linkage (lazy + preload-only-included → flat 7
@@ -1340,18 +1340,49 @@ errors carry `source.pointer` (`/data/attributes/<field>`); **contract guard ✅
 now has **full feature parity with the Graphiti example**, on ~250 owned LOC depending on two
 live-or-forkable libraries.
 
+### De-risking: deep nested includes (built) — and the one real bite
+
+To check that the features Graphiti has but we hadn't built wouldn't bite later, we built the
+biggest one — **deep nested includes** (`include=user.groups`) — end-to-end (request spec
+`spec/requests/discourse_data_explorer/jsonapi_rb/queries_controller_spec.rb`).
+
+- **The hard part is free.** jsonapi-serializer does the recursive compound-document assembly +
+  cross-tree dedup itself (verified in source). The DSL adds only small glue: a nested **preload
+  tree** derived from the requested paths (`user.groups` → `includes(user: :groups)`), full-path
+  strictness, and **prefix expansion** (the serializer needs every prefix of a path present, or the
+  intermediate relationship's linkage drops).
+- **🔴 The one real bite — a serializer patch.** `lazy_load_data` (our conditional-linkage perf win)
+  + a nested-*leaf* relationship hits a genuine jsonapi-serializer bug: `get_included_records` passes
+  the *parent's* include context to the child's `record_hash`, so a lazy leaf's linkage is dropped →
+  resources land in `included` with nothing linking to them (full-linkage violation). Fixed with a
+  small monkeypatch (`lazy_nested_linkage_patch.rb` — verbatim method + one line). **This is the
+  thin-path analogue of Graphiti's monkeypatches: "thin is patch-free" is _not_ absolute — advanced
+  features can require a small serializer patch too (here, on a frozen target).**
+- **Perf is fine, and still beats Graphiti head-to-head.** We added the matching `user.groups`
+  sideload to the Graphiti `QueryResource`/`UserResource` for a true comparison. Same-boot wrk
+  (page 50): **thin nested 366 vs Graphiti nested 302 rps (+21%)** — consistent with the flat
+  (+21%) and one-level (+26%) leads. Both are **N+1-free** (constant queries across page 10/50/100:
+  thin 10, Graphiti 9). Nesting adds no pathological overhead on either side — cost scales with
+  included-resource count. (AMS has no nested-include equivalent — its legacy format inlines
+  associations.)
+
+**De-risk verdict:** the features we'd build later are reachable without fighting the stack — but
+they are *not all free*: this one cost a small serializer patch, moderating the patch-free advantage.
+A known, bounded cost, not a lurking trap.
+
 **The crux for the decade (now that parity is built):** with **perf** (thin faster both regimes),
 **ease** (DSL ≈ declarative resource), **contract guard** (both have it), and **serializer**
 (both fork-on-demand) all settled, the comparison reduces to a single, clean trade:
 
 - **Depend on Graphiti** — a complete, *maintained* framework; you write less code and get
-  features beyond what we've built (deep sideloading, side-posting, remote resources) for free —
-  at the cost of **lock-in**, the **data-loss + rake-`Object` footguns**, and a dead serializer
-  you can't easily fork (entangled).
-- **Own the thin framework** — ~250 LOC you understand and control, **faster**, **no lock-in**,
-  **no core-breaking footguns**, swappable/forkable serializer — at the cost of **building and
-  maintaining those ~250 LOC** and implementing advanced features (deep includes, etc.) yourself
-  *if/when* needed.
+  features we haven't built (side-posting, remote resources, rich filter operators) for free — at
+  the cost of **lock-in**, the **data-loss + rake-`Object` footguns**, and a dead serializer you
+  can't easily fork (entangled).
+- **Own the thin framework** — ~250 LOC you understand and control, **faster**, **no lock-in**, no
+  core-breaking footguns — at the cost of **building and maintaining it** (now including **one small
+  serializer patch** for nested-include + lazy linkage — the patch-free advantage is *narrowed, not
+  absolute*) and implementing further advanced features yourself *if/when* needed. (Deep nested
+  includes: ✅ now built.)
 
 On the measurable axes the thin path now leads; Graphiti's remaining edge is "batteries you don't
 maintain, for features we don't yet need." It is genuinely *"depend vs. own."*

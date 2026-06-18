@@ -36,7 +36,6 @@ module DiscourseDataExplorer
                     :filters,
                     :sorts,
                     :stats,
-                    :preloads,
                     :allowed_includes,
                     :max_page_size,
                     :default_page_size
@@ -45,7 +44,6 @@ module DiscourseDataExplorer
           @filters = {}
           @sorts = {}
           @stats = {}
-          @preloads = []
           @allowed_includes = []
           @max_page_size = 100
           @default_page_size = 20
@@ -54,7 +52,8 @@ module DiscourseDataExplorer
         def serializer(klass) = @serializer_class = klass
         def base_scope(&block) = @base_scope_block = block
         def default_sort(hash) = @default_sort_value = hash
-        def preload(*names) = @preloads = names
+        # Allowed include paths (dotted for nesting, e.g. "user.groups"). Preloads are
+        # derived from these per-request — the include path *is* the AR association path.
         def includes(*names) = @allowed_includes = names.map(&:to_s)
         def stat(name, kind) = @stats[name.to_s] = kind
         # filter/sort take a block run in the controller instance (so they can read
@@ -153,21 +152,37 @@ module DiscourseDataExplorer
         bad = (params[:filter]&.keys || []).map(&:to_s) - cfg.filters.keys
         bad +=
           params[:sort].to_s.split(",").map { it.delete_prefix("-") }.reject { cfg.sorts.key?(it) }
-        bad += requested_includes - cfg.allowed_includes
+        bad += requested_include_paths - cfg.allowed_includes
         return if bad.empty?
 
         render_errors(["Unknown query parameter(s): #{bad.uniq.join(", ")}"], status: :bad_request)
       end
 
-      def requested_includes
-        params[:include].to_s.split(",").map { it.split(".").first }.reject(&:blank?).uniq
+      # Full dotted include paths the client requested, e.g. ["user", "user.groups"].
+      def requested_include_paths
+        @requested_include_paths ||=
+          params[:include].to_s.split(",").filter_map { it.strip.presence }.uniq
       end
 
-      # Only preload relationships the client actually asked for — paired with the
-      # serializer's lazy_load_data, a bare request loads no relationship data (no N+1,
-      # fewer queries). Matches Graphiti's sideload-only-when-included economics.
+      # Preload exactly (and only) the relationships the client `include`d — nested paths
+      # included — as a single AR `includes(...)` argument. Paired with the serializer's
+      # lazy_load_data, a bare request loads no relationship data (no N+1). jsonapi-serializer
+      # does the recursive document assembly; we own only the matching preload + strictness.
+      # ["user", "user.groups", "groups"] → [{ user: [:groups] }, :groups].
       def included_preloads
-        @included_preloads ||= cfg.preloads.select { requested_includes.include?(it.to_s) }
+        @included_preloads ||= to_ar_includes(preload_tree(requested_include_paths))
+      end
+
+      # Merge dotted paths into a nested tree: ["a.b","a.c","d"] → { a: { b: {}, c: {} }, d: {} }.
+      def preload_tree(paths)
+        paths.each_with_object({}) do |path, tree|
+          path.split(".").reduce(tree) { |node, segment| node[segment.to_sym] ||= {} }
+        end
+      end
+
+      # Tree → AR includes arg: { a: { b: {} }, d: {} } → [{ a: [:b] }, :d].
+      def to_ar_includes(tree)
+        tree.map { |key, subtree| subtree.empty? ? key : { key => to_ar_includes(subtree) } }
       end
 
       def page_size
@@ -181,9 +196,17 @@ module DiscourseDataExplorer
       # here (small, stable) so jsonapi.rb is dropped entirely; deps are now just
       # jsonapi-serializer + pagy.
 
-      # `?include=user,groups` → ["user","groups"] for the serializer's include option.
+      # The serializer's include option. jsonapi-serializer checks include membership
+      # per level by *direct* match, so a nested path needs every prefix present, or the
+      # intermediate relationship's linkage is dropped (full-linkage violation):
+      # "user.groups" → ["user", "user.groups"].
       def jsonapi_include
-        params[:include].to_s.split(",").filter_map { it.strip.presence }
+        requested_include_paths.flat_map { |path| include_prefixes(path) }.uniq
+      end
+
+      def include_prefixes(path)
+        segments = path.split(".")
+        (1..segments.size).map { |n| segments.first(n).join(".") }
       end
 
       # `?fields[queries]=name,sql` → { queries: ["name","sql"] } for sparse fieldsets.
@@ -254,7 +277,8 @@ module DiscourseDataExplorer
       # `include`d.
       def prune_empty_relationships!(document)
         data = document[:data]
-        records = data.is_a?(Array) ? data : [data]
+        # Prune primary data AND included resources (nested includes leave empty rels there too).
+        records = (data.is_a?(Array) ? data : [data]) + (document[:included] || [])
         records.each do |record|
           next unless record.is_a?(Hash) && record[:relationships]
           record[:relationships].reject! { |_, value| value.blank? }

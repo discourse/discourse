@@ -9,8 +9,9 @@ module DiscourseDataExplorer
     class QueriesController < BaseController
       jsonapi do
         serializer QuerySerializer
-        includes :user, :groups
-        preload :user, :groups
+        # Allowed includes, incl. the nested path `user.groups` (the author's groups) —
+        # demonstrates deep nested includes; preloads are derived from these.
+        includes :user, :groups, "user.groups"
         default_sort last_run_at: :desc
         stat :total, :count
         page max: 100, default: 20

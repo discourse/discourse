@@ -40,6 +40,12 @@
           "operators": [
             "eq"
           ]
+        },
+        "user_id": {
+          "type": "integer",
+          "operators": [
+            "eq"
+          ]
         }
       },
       "relationships": {},
@@ -212,7 +218,13 @@
           ]
         }
       },
-      "relationships": {},
+      "relationships": {
+        "groups": {
+          "type": "many_to_many",
+          "description": null,
+          "resource": "DiscourseDataExplorer::GroupResource"
+        }
+      },
       "stats": {
         "total": [
           "count"

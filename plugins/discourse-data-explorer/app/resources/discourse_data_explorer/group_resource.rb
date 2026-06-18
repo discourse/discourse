@@ -19,5 +19,12 @@ module DiscourseDataExplorer
         scope.includes(:query_groups).where(data_explorer_query_groups: { query_id: value })
       end
     end
+
+    # Required by the many_to_many sideload from UserResource (`include=user.groups`):
+    # Graphiti queries this resource with filter[user_id]=<parent user ids> and the
+    # assign reads group.group_users → user_id. Eager-load the native group_users join.
+    filter :user_id, :integer, only: [:eq] do
+      eq { |scope, value| scope.includes(:group_users).where(group_users: { user_id: value }) }
+    end
   end
 end
