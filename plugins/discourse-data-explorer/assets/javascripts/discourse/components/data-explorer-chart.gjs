@@ -101,26 +101,39 @@ export default class DataExplorerChart extends Component {
 
   _buildMultiSeriesConfig(gridColor, labelColor) {
     const stacked = this.args.stacked;
+    const isLine = this.args.chartType === "line";
 
     const datasets = this.args.datasets.map((ds, i) => {
       const color = SERIES_COLORS[i % SERIES_COLORS.length];
       const result = {
         label: ds.label,
         data: ds.values,
-        backgroundColor: color,
+        backgroundColor: isLine ? "transparent" : color,
         borderColor: color,
-        borderWidth: 1,
+        borderWidth: isLine ? 2 : 1,
       };
 
       if (stacked) {
         result.stack = "data-explorer-stack";
       }
 
+      if (isLine) {
+        result.pointRadius = 2;
+        result.pointHoverRadius = 4;
+        result.pointBackgroundColor = color;
+        result.pointBorderColor = color;
+        result.pointStyle = "rectRounded";
+        result.borderCapStyle = "round";
+        result.borderJoinStyle = "round";
+        result.tension = 0.4;
+        result.fill = false;
+      }
+
       return result;
     });
 
     const xTicks = { color: labelColor };
-    if (stacked) {
+    if (stacked || isLine) {
       xTicks.maxTicksLimit = 8;
     }
 
@@ -142,7 +155,7 @@ export default class DataExplorerChart extends Component {
     }
 
     return {
-      type: "bar",
+      type: this.args.chartType,
       data: { labels: this.args.labels, datasets },
       options: {
         responsive: true,

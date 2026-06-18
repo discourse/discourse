@@ -315,6 +315,58 @@ module("Integration | Component | QueryResult | Chart", function (hooks) {
     assert.dom("canvas").exists("renders a chart canvas for multi-series");
   });
 
+  test("allows the chart form to be changed for date-based multi-series data", async function (assert) {
+    const content = {
+      colrender: [],
+      result_count: 2,
+      columns: ["date", "likes", "posts"],
+      rows: [
+        ["2024-01-01", 10, 5],
+        ["2024-01-02", 20, 15],
+      ],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert
+      .dom(".query-results-chart__form input[value='stacked']")
+      .isChecked("date-based multi-series data defaults to stacked bars");
+
+    await click(".query-results-chart__form input[value='line']");
+
+    assert
+      .dom(".query-results-chart__form input[value='line']")
+      .isChecked("the user can switch to a multi-line chart");
+    assert.dom("canvas").exists("the chart remains visible");
+  });
+
+  test("persists the selected chart form per query", async function (assert) {
+    const query = { id: 43 };
+    const content = {
+      colrender: [],
+      result_count: 2,
+      columns: ["date", "likes", "posts"],
+      rows: [
+        ["2024-01-01", 10, 5],
+        ["2024-01-02", 20, 15],
+      ],
+    };
+
+    await render(
+      <template><QueryResult @content={{content}} @query={{query}} /></template>
+    );
+
+    await click(".query-results-chart__form input[value='line']");
+
+    await render(
+      <template><QueryResult @content={{content}} @query={{query}} /></template>
+    );
+
+    assert
+      .dom(".query-results-chart__form input[value='line']")
+      .isChecked("chart form is restored from localStorage");
+  });
+
   test("charts numeric columns and ignores text columns alongside them", async function (assert) {
     const content = {
       colrender: [],
