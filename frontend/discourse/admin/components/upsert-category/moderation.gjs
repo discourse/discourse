@@ -210,6 +210,7 @@ export default class UpsertCategoryModeration extends Component {
           @name="topic_posting_review_mode"
           @title={{i18n "category.require_topic_approval_for"}}
           @type="custom"
+          @format="full"
           as |field|
         >
           <field.Control>
@@ -228,6 +229,7 @@ export default class UpsertCategoryModeration extends Component {
             @name="topic_posting_review_group_ids"
             @title={{this.topicGroupChooserTitle}}
             @type="custom"
+            @format="full"
             @validate={{this.validatePostingReviewGroups}}
             as |field|
           >
@@ -253,6 +255,7 @@ export default class UpsertCategoryModeration extends Component {
           @name="reply_posting_review_mode"
           @title={{i18n "category.require_reply_approval_for"}}
           @type="custom"
+          @format="full"
           as |field|
         >
           <field.Control>
@@ -271,6 +274,7 @@ export default class UpsertCategoryModeration extends Component {
             @name="reply_posting_review_group_ids"
             @title={{this.replyGroupChooserTitle}}
             @type="custom"
+            @format="full"
             @validate={{this.validatePostingReviewGroups}}
             as |field|
           >

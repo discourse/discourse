@@ -1,7 +1,6 @@
 @use "lib/viewport";
 @use "sass:string";
 
-$category-settings-width: string.unquote("min(600px, 90%)");
 $number-input-width: var(--form-kit-small-input);
 
 .edit-category {
@@ -17,7 +16,9 @@ $number-input-width: var(--form-kit-small-input);
 
   .edit-category-tab {
     .form-kit__container-content {
-      // flex-direction: column;
+      // catch-all for text that can't use FormKit builtiin helpertext
+      flex-direction: column;
+
       input[type="number"] {
         width: $number-input-width;
       }
