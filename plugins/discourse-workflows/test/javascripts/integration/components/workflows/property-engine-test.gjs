@@ -12,6 +12,7 @@ import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "discourse-i18n";
 import PropertyEngineConfigurator from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/property-engine";
 import WorkflowEditorSession from "discourse/plugins/discourse-workflows/admin/lib/workflows/editor-session";
 
@@ -35,6 +36,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   hooks.afterEach(function () {
+    delete I18n.translations[I18n.locale]?.js?.discourse_workflows?.post
+      ?.raw_tooltip;
     sinon.restore();
   });
 
@@ -68,6 +71,91 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     assert.dom("input").hasValue("Hello");
     assert.dom("input").isFocused();
+  });
+
+  test("renders an inline description and a tooltip independently", async function (assert) {
+    I18n.translations[I18n.locale].js.discourse_workflows.post.raw_tooltip =
+      "Only visible to the agent";
+
+    this.setProperties({
+      configuration: { raw: "" },
+      nodeType: "action:post",
+      nodeTypes: [{ identifier: "action:post", name: "action:post" }],
+      schema: {
+        raw: {
+          type: "string",
+          ui: {
+            control: "textarea",
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".form-kit__container-description")
+      .hasText("Raw content for the post");
+    assert.dom(".fk-d-tooltip__trigger").exists();
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert
+      .dom(".fk-d-tooltip__inner-content")
+      .hasText("Only visible to the agent");
+  });
+
+  test("hides the tooltip when the label is hidden", async function (assert) {
+    I18n.translations[I18n.locale].js.discourse_workflows.post.raw_tooltip =
+      "Only visible to the agent";
+
+    this.setProperties({
+      configuration: { raw: "" },
+      nodeType: "action:post",
+      nodeTypes: [{ identifier: "action:post", name: "action:post" }],
+      schema: {
+        raw: {
+          type: "string",
+          ui: {
+            control: "textarea",
+            show_label: false,
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".fk-d-tooltip__trigger").doesNotExist();
+    assert
+      .dom(".form-kit__container-description")
+      .hasText("Raw content for the post");
   });
 
   test("renders checkbox controls from metadata", async function (assert) {
@@ -1257,5 +1345,79 @@ module("Integration | Component | workflows property engine", function (hooks) {
       topic_id: "21",
       custom_field_names: [],
     });
+  });
+
+  test("multi_input fields accept arbitrary ids and convert between fixed and dynamic", async function (assert) {
+    this.setProperties({
+      configuration: { upload_ids: [] },
+      formApi: null,
+      nodeType: "action:ai_agent",
+      schema: {
+        upload_ids: {
+          type: "array",
+          required: false,
+          ui: {
+            control: "multi_input",
+            expression: true,
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const selector = selectKit(".multi-select");
+
+    await selector.expand();
+    await selector.fillInFilter("12");
+    await selector.selectRowByValue("12");
+    await selector.fillInFilter("34");
+    await selector.selectRowByValue("34");
+
+    assert.deepEqual(
+      this.formApi.get("upload_ids"),
+      ["12", "34"],
+      "stores entered ids"
+    );
+
+    await click(
+      '.workflows-property-engine__mode-control input[value="dynamic"]'
+    );
+
+    assert.strictEqual(
+      this.formApi.get("upload_ids"),
+      '={{ ["12","34"] }}',
+      "converts the fixed list into a dynamic expression"
+    );
+
+    await click(
+      '.workflows-property-engine__mode-control input[value="plain"]'
+    );
+
+    assert.deepEqual(
+      this.formApi.get("upload_ids"),
+      ["12", "34"],
+      "converts the dynamic expression back into a fixed list"
+    );
   });
 });

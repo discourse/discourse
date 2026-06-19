@@ -26,6 +26,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "post.post_number" => "integer",
       "post.topic_id" => "integer",
       "post.post_url" => "string",
+      "post.upload_ids" => "array<integer>",
     )
     expect(nodes_by_type.dig("trigger:topic_created", :output_schema)).not_to include(
       "post.trust_level",
@@ -70,7 +71,10 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "topic.archived" => "boolean",
       "post.post_url" => "string",
     )
-    expect(nodes_by_type.dig("action:topic", :output_schema)).not_to include("post.trust_level")
+    expect(nodes_by_type.dig("action:topic", :output_schema)).not_to include(
+      "post.trust_level",
+      "post.upload_ids",
+    )
     expect(nodes_by_type.dig("action:topic_tags", :output_schema)).to include(
       "topic_id" => "integer",
       "tag_names" => "array<string>",
@@ -107,6 +111,15 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "action:send_personal_message",
     )
     expect(result[:nodes].find { |node| node[:type] == "action:topic" }[:examples]).to be_present
+  end
+
+  it "matches AI agent runner and attachment queries" do
+    result = invoke_tool(query: "runner permissions attachments", include_examples: true)
+    ai_agent_node = result[:nodes].find { |node| node[:type] == "action:ai_agent" }
+
+    expect(ai_agent_node).to be_present
+    expect(ai_agent_node.dig(:properties, "runner_username", "ui", "control")).to eq("actor")
+    expect(ai_agent_node.dig(:examples, 0, :parameters)).to include(runner_username: "system")
   end
 
   it "includes declarative filter and topic lookup examples", :aggregate_failures do
