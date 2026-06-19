@@ -48,10 +48,10 @@ if defined?(Graphiti)
   Graphiti::Types[:datetime] = Graphiti::Types[:datetime].merge(read: ->(value) { value })
 end
 
-# Thin-layers JSON:API spike: jsonapi-serializer for rendering. The jsonapi.rb gem was
+# JSON:API Kit: jsonapi-serializer for rendering. The jsonapi.rb gem was
 # dropped entirely (its Ransack-based filtering breaks core, and its other mixins —
 # include/fields/pagination/deserialization — were small enough to absorb into
-# JsonapiRb::BaseController). The thin stack now depends only on jsonapi-serializer + pagy.
+# JsonapiRb::BaseController). The Kit now depends only on jsonapi-serializer + pagy.
 require "jsonapi/serializer"
 # Patch jsonapi-serializer's nested-include linkage bug (lazy_load_data + nested leaf drops
 # the leaf's linkage). Small, owned, on a frozen gem. See the patch file + Part 9.
@@ -63,7 +63,7 @@ FastJsonapi::SerializationCore::ClassMethods.prepend(
 after_initialize do
   # PERF-TEMP (benchmarking only): Graphiti concurrency is a process-wide, memoized
   # switch. Toggle it per-boot (GRAPHITI_CONCURRENCY=off) to measure both regimes
-  # against the thin-layers endpoint. Runs before the first request → before the
+  # against the JSON:API Kit endpoint. Runs before the first request → before the
   # executor memoizes. Remove after the perf comparison (Part 9).
   Graphiti.config.concurrency = false if defined?(Graphiti) && ENV["GRAPHITI_CONCURRENCY"] == "off"
 
