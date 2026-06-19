@@ -14,7 +14,7 @@ class IntroducePermissionAclTables < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :access_control_lists, %i[target_type target_id], unique: true
+    add_index :access_control_lists, %i[target_type target_id permission], unique: true
     execute "CREATE INDEX idx_access_control_lists_allowed_user_ids ON access_control_lists USING GIN(allowed_user_ids)"
     execute "CREATE INDEX idx_access_control_lists_allowed_group_ids ON access_control_lists USING GIN(allowed_group_ids)"
   end

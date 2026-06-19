@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AccessControlList < ActiveRecord::Base
+  attr_accessor :allowed_groups_preloaded, :allowed_users_preloaded
+
   # NOTE: permission column is freeform, but some common
   # types are:
   #
@@ -18,9 +20,15 @@ class AccessControlList < ActiveRecord::Base
   # Generally the creator of whatever the linked target
   # record will become an owner by default.
 
-  has_many :allowed_users, class_name: "User", foreign_key: :id, primary_key: :allowed_user_ids
-  has_many :allowed_groups, class_name: "Group", foreign_key: :id, primary_key: :allowed_group_ids
   belongs_to :target, polymorphic: true
+
+  def allowed_users
+    @allowed_users ||= User.where(id: allowed_user_ids).to_a
+  end
+
+  def allowed_groups
+    @allowed_groups ||= Group.where(id: allowed_group_ids).to_a
+  end
 
   scope :with_permission, ->(permission) { where(permission:) }
   scope :for_target_type, ->(target_type) { where(target_type:) }
@@ -48,35 +56,82 @@ class AccessControlList < ActiveRecord::Base
   scope :matching_group,
         ->(group) { allowing_any_group([group.id]).or(allowing_users_in_group(group.id)) }
 
-  def self.permissions_matrix(access_control_lists)
-    access_control_lists.each_with_object({}) do |access_control_list, hash|
-      hash[access_control_list.target_type] ||= {}
-      hash[access_control_list.target_type][access_control_list.target_id] ||= []
-      # Build a matrix so the output looks like:
-      # { "DiscourseKanban::Board" => { 1 => { user_id => ["read", "write"], group_id => ["read"] } } }
-      #
-      matrix = hash[access_control_list.target_type][access_control_list.target_id]
+  def self.expand_list(list, target, owner)
+    permissions_expanded =
+      list.each_with_object({}) do |entry, permissions|
+        permissions[entry[:permission]] ||= {}
+        permissions[entry[:permission]][:allowed_user_ids] ||= []
+        permissions[entry[:permission]][:allowed_group_ids] ||= []
 
-      # Ensure it's a hash, not an array
-      hash[access_control_list.target_type][access_control_list.target_id] = matrix = {
-      } unless matrix.is_a?(Hash)
-
-      access_control_list.allowed_user_ids.each do |user_id|
-        key = [:user, user_id]
-        matrix[key] ||= []
-        if matrix[key].exclude?(access_control_list.permission)
-          matrix[key] << access_control_list.permission
+        if entry[:type].to_sym == :group
+          permissions[entry[:permission]][:allowed_group_ids] << entry[:id]
+        else
+          permissions[entry[:permission]][:allowed_user_ids] << entry[:id]
         end
       end
 
-      access_control_list.allowed_group_ids.each do |group_id|
-        key = [:group, group_id]
-        matrix[key] ||= []
-        if matrix[key].exclude?(access_control_list.permission)
-          matrix[key] << access_control_list.permission
-        end
-      end
+    permissions_expanded.map do |permission_name, permission|
+      {
+        permission: permission_name,
+        allowed_group_ids: permission[:allowed_group_ids],
+        allowed_user_ids: permission[:allowed_user_ids],
+        target_type: target.class.polymorphic_name,
+        target_id: target.id,
+        owner: owner,
+      }
     end
+  end
+
+  module RelationMethods
+    # Batch-loads the allowed users and groups for every ACL in the relation
+    # using two queries total (one per table), then memoizes the records onto
+    # each ACL so #allowed_users / #allowed_groups don't trigger N+1s. Returns
+    # the (now loaded) relation so it stays chainable.
+    def preload_allowed
+      acls = to_a
+
+      groups_by_id = Group.where(id: acls.flat_map(&:allowed_group_ids).uniq).index_by(&:id)
+
+      # TODO (martin) Handle users here too in a followup PR
+      # users_by_id = User.where(id: acls.flat_map(&:allowed_user_ids).uniq).index_by(&:id)
+
+      acls.each do |acl|
+        acl.allowed_groups_preloaded ||= acl.allowed_group_ids.filter_map { |id| groups_by_id[id] }
+
+        # TODO (martin) Handle users here too in a followup PR
+      end
+
+      self
+    end
+
+    def flattened_list
+      preload_allowed
+
+      flattened_list = []
+      each do |access_control_list|
+        access_control_list.allowed_group_ids.each do |group_id|
+          allowed_group = access_control_list.allowed_groups.find { |ag| ag.id == group_id }
+          flattened_list << {
+            type: :group,
+            id: group_id,
+            permission: access_control_list.permission,
+            name: allowed_group.name,
+            full_name: allowed_group.full_name,
+            metadata: {
+              auto_group: allowed_group.automatic?,
+            },
+          }
+        end
+
+        # TODO (martin) Properly handle users in a followup PR when we allow adding
+        # them in the UI.
+      end
+      flattened_list
+    end
+  end
+
+  def self.relation
+    super.extending(RelationMethods)
   end
 
   validates :target_id, uniqueness: { scope: :target_type }

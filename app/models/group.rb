@@ -549,6 +549,9 @@ class Group < ActiveRecord::Base
       group.name = default_name
     end
 
+    group.full_name =
+      I18n.t("groups.default_full_names.#{name}", locale: SiteSetting.default_locale)
+
     # the everyone, anonymous_users, and logged_in_users groups are special — they
     # represent implicit populations (unauthenticated visitors, or all logged-in
     # users) that cannot be enumerated via group_users rows.
