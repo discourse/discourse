@@ -3751,6 +3751,9 @@ el:
         banner: "Βλεπεις ένα μόνο νήμα από αυτό το θέμα."
         view_full_topic: "Προβολή πλήρους θέματος"
         view_parent_context: "Προβολή γονικού περιεχομένου"
+    share_target:
+      new_topic: "Νέο θέμα"
+      new_message: "Νέο μήνυμα"
     topic:
       filter_to:
         one: "%{count} ανάρτηση σε θέμα"

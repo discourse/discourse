@@ -412,7 +412,6 @@ tr_TR:
           no_users: "Kullanıcı bulunamadı"
           leave_event: "Etkinlikten ayrıl"
           status:
-            unknown: "İlgilenmiyorum"
             going: "Gidiyorum"
             interested: "İlgileniyorum"
             going_count:

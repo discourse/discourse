@@ -20,8 +20,6 @@ tr_TR:
         description: "Çözüldü olarak işaretlendikten sonra bu kadar saat geçtikten sonra konuyu otomatik olarak kapat. Devre dışı bırakmak için 0 olarak ayarla."
       notify_on_staff_accept_solved:
         label: "Personel bir çözümü işaretlediğinde konu açan kişiye bildirim gönder"
-      empty_box_on_unsolved:
-        label: "Konu listesinde çözülmemiş konuların yanında boş bir onay kutusu göster"
       solved_topics_auto_close_duration:
         label: "Çözülmüş konuları otomatik olarak kapat"
         description: "Son yanıtın üzerinden bu süre geçtikten sonra çözülmüş konuları otomatik olarak kapat. Devre dışı bırakmak için 0 olarak ayarla."

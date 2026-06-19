@@ -5024,6 +5024,8 @@ pt_BR:
   onebox:
     discourse:
       user_joined_community: "Juntou-se em %{date}"
+    google_meet:
+      meeting_code: "Código:"
     gitlab:
       truncated_file: "Este arquivo está truncado."
       show_original: "exibir original"

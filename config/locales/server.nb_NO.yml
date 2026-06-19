@@ -1340,6 +1340,8 @@ nb_NO:
               private:
                 label: "Privat"
   onebox:
+    google_meet:
+      meeting_code: "Kode:"
     github:
       closed: "lukket"
       status_date:

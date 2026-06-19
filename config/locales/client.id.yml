@@ -1824,6 +1824,8 @@ id:
       no_replies: "Belum ada balasan"
       deleted_post_placeholder: "[dihapus]"
       ignored_post_placeholder: "[diabaikan]"
+    share_target:
+      new_message: "Pesan baru"
     topic:
       create: "Topik Baru"
       archive_message:

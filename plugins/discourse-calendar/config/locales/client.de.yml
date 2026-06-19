@@ -421,7 +421,6 @@ de:
           this_and_following: "Dieser Termin und alle folgenden Termine"
           leave_event: "Ereignis verlassen"
           status:
-            unknown: "Nicht interessiert"
             going: "Dabei"
             not_going: "Nicht teilnehmen"
             interested: "Interessiert"

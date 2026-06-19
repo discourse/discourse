@@ -2429,6 +2429,8 @@ bg:
       deleted_post_placeholder: "[изтрита]"
       ignored_post_placeholder: "[игнориран]"
       pinned_reply: "Закована"
+    share_target:
+      new_message: "Ново съобщение"
     topic:
       create: "Нова тема"
       open_draft: "Довърши ревизия"

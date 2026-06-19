@@ -345,7 +345,6 @@ da:
       models:
         invitee:
           status:
-            unknown: "Ikke interesseret"
             going: "Deltager"
             interested: "Interesseret"
         event:

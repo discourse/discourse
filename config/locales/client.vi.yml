@@ -3298,6 +3298,9 @@ vi:
       deleted_post_placeholder: "[đã xóa]"
       ignored_post_placeholder: "[đã bỏ qua]"
       pinned_reply: "Đã ghim"
+    share_target:
+      new_topic: "Chủ đề mới"
+      new_message: "Tin nhắn mới"
     topic:
       filter_to:
         other: "%{count} tút trong chủ đề"

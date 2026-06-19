@@ -412,7 +412,6 @@ nl:
           no_users: "Geen gebruikers gevonden"
           leave_event: "Evenement verlaten"
           status:
-            unknown: "Niet geïnteresseerd"
             going: "Gaan"
             interested: "Geïnteresseerd"
             going_count:

@@ -2022,6 +2022,8 @@ bs_BA:
       deleted_post_placeholder: "[isbrisano]"
       ignored_post_placeholder: "[ignorisano]"
       pinned_reply: "Zakačena"
+    share_target:
+      new_message: "Nova poruka"
     topic:
       filter_to:
         one: "%{count} objava u temi"

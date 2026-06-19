@@ -2020,6 +2020,8 @@ ca:
       deleted_post_placeholder: "[suprimit]"
       ignored_post_placeholder: "[ignorat]"
       pinned_reply: "Afixat"
+    share_target:
+      new_message: "Missatge nou"
     topic:
       filter_to:
         one: "%{count} publicació en el tema"

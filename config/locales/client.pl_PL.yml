@@ -4354,6 +4354,13 @@ pl_PL:
         banner: "Przeglądasz pojedynczy wątek z tego tematu."
         view_full_topic: "Zobacz cały temat"
         view_parent_context: "Wyświetl kontekst nadrzędny"
+    share_target:
+      title: "Udostępniana treść"
+      description: "Co chcesz zrobić z udostępnioną treścią?"
+      new_topic: "Nowy temat"
+      new_message: "Nowa wiadomość"
+      add_to_reply: "Dodaj do odpowiedzi"
+      added_to_reply: "Zapisano. Treść zostanie dodana przy następnym otwarciu odpowiedzi."
     topic:
       filter_to:
         one: "%{count} post w temacie"

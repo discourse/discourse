@@ -2805,6 +2805,8 @@ fa_IR:
   onebox:
     discourse:
       user_joined_community: "در %{date} عضو شدن"
+    google_meet:
+      meeting_code: "کد:"
     github:
       closed: "بسته"
       status_date:

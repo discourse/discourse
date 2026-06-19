@@ -2268,6 +2268,8 @@ ro:
               private:
                 label: "Privat"
   onebox:
+    google_meet:
+      meeting_code: "Cod:"
     github:
       closed: "închis"
       status_date:

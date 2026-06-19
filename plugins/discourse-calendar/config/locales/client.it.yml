@@ -396,7 +396,6 @@ it:
           no_users: "Nessun utente trovato"
           leave_event: "Abbandona l'evento"
           status:
-            unknown: "Nessun interesse"
             going: "Parteciperò"
             interested: "Interessato"
             going_count:

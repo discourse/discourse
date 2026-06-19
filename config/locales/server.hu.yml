@@ -4962,6 +4962,8 @@ hu:
   onebox:
     discourse:
       user_joined_community: "Csatlakozott %{date}"
+    google_meet:
+      meeting_code: "Kód:"
     gitlab:
       truncated_file: "Ez a fájl csonkolva lett."
       show_original: "eredeti megjelenítése"

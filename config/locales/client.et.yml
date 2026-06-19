@@ -1742,6 +1742,8 @@ et:
       no_replies: "Veel ei ole vastuseid."
       ignored_post_placeholder: "[ignoreeritud]"
       pinned_reply: "Esiletõstetud"
+    share_target:
+      new_message: "Uus sõnum"
     topic:
       filter_to:
         one: "%{count} postitus teemas"

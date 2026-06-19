@@ -1778,6 +1778,8 @@ id:
   onebox:
     discourse:
       user_joined_community: "Bergabung %{date}"
+    google_meet:
+      meeting_code: "Kode:"
     github:
       closed: "tertutup"
       status_date:

@@ -5228,6 +5228,8 @@ zh_CN:
   onebox:
     discourse:
       user_joined_community: "%{date}加入"
+    google_meet:
+      meeting_code: "代码:"
     gitlab:
       truncated_file: "此文件已被截断。"
       show_original: "显示原始文件"

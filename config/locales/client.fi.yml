@@ -3341,6 +3341,9 @@ fi:
       deleted_post_placeholder: "[poistettu]"
       ignored_post_placeholder: "[sivuutettu]"
       pinned_reply: "Kiinnitetty"
+    share_target:
+      new_topic: "Uusi ketju"
+      new_message: "Uusi viesti"
     topic:
       filter_to:
         one: "%{count} viesti ketjussa"

@@ -2844,6 +2844,8 @@ lt:
       deleted_post_placeholder: "[ištrinta]"
       ignored_post_placeholder: "[nepaisoma]"
       pinned_reply: "Prisegta"
+    share_target:
+      new_message: "Nauja žinutė"
     topic:
       filter_to:
         one: "temoje %{count} įrašas"

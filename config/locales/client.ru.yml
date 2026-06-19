@@ -3999,6 +3999,9 @@ ru:
       pinned_reply: "Закреплена"
       pin_reply: "Закрепить вверху"
       unpin_reply: "Открепить"
+    share_target:
+      new_topic: "Новая тема"
+      new_message: "Личное сообщение"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
