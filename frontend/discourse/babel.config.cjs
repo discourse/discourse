@@ -11,6 +11,13 @@ const macros = buildMacros({
 
 const PRODUCTION = process.env.EMBER_ENV === "production";
 
+// System tests can run against a production build for speed, but they rely on
+// `data-test-*` selectors that are normally stripped from production. Setting
+// KEEP_TEST_SELECTORS=1 retains them while preserving every other production
+// optimization (minification, tree-shaking, @ember/debug stripping).
+const STRIP_TEST_SELECTORS =
+  PRODUCTION && process.env.KEEP_TEST_SELECTORS !== "1";
+
 module.exports = {
   plugins: [
     [
@@ -24,7 +31,7 @@ module.exports = {
         ],
         transforms: [
           ...macros.templateMacros,
-          ...(PRODUCTION ? [StripTestSelectors] : []),
+          ...(STRIP_TEST_SELECTORS ? [StripTestSelectors] : []),
         ],
       },
     ],
