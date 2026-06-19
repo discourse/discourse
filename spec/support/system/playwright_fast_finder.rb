@@ -139,7 +139,12 @@ module Capybara
           return unless enabled?
 
           playwright_execution.playwright.selectors.register(ENGINE_NAME, script: ENGINE_SOURCE)
-        rescue StandardError, NotImplementedError
+          unless @registered_logged
+            @registered_logged = true
+            warn "[capyq] selector engine registered"
+          end
+        rescue StandardError, NotImplementedError => e
+          warn "[capyq] disabled: #{e.class}: #{e.message}"
           disable!
         end
 

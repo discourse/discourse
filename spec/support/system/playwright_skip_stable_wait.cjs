@@ -32,6 +32,7 @@ const originalCompile = Module.prototype._compile;
 Module.prototype._compile = function (content, filename) {
   if (filename.endsWith(TARGET_SUFFIX) && content.includes(BEFORE)) {
     content = content.replace(BEFORE, AFTER);
+    process.stderr.write("[skip-stable-wait] patched playwright-core dom.js\n");
   }
   return originalCompile.call(this, content, filename);
 };
