@@ -4,6 +4,10 @@
 const SHARE_TARGET_CACHE = "discourse-share-target";
 const SHARE_TARGET_KEY_PREFIX = "/__discourse_share_target__/";
 
+function shareTargetCacheRequest(key) {
+  return new Request(new URL(key, window.location.origin).href);
+}
+
 export async function readSharedContent() {
   if (typeof caches === "undefined") {
     return null;
@@ -17,7 +21,7 @@ export async function readSharedContent() {
   }
 
   const metaResponse = await cache.match(
-    new Request(SHARE_TARGET_KEY_PREFIX + "meta")
+    shareTargetCacheRequest(SHARE_TARGET_KEY_PREFIX + "meta")
   );
 
   if (!metaResponse) {
@@ -28,7 +32,9 @@ export async function readSharedContent() {
 
   const files = [];
   for (const fileMeta of meta.files || []) {
-    const fileResponse = await cache.match(new Request(fileMeta.key));
+    const fileResponse = await cache.match(
+      shareTargetCacheRequest(fileMeta.key)
+    );
     if (!fileResponse) {
       continue;
     }
