@@ -50,7 +50,11 @@ module SystemDrivers
       acceptDownloads: true,
       downloadsPath: Downloads::FOLDER,
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
-      playwright_cli_executable_path: "./node_modules/.bin/playwright",
+      # Wrapper around ./node_modules/.bin/playwright that preloads
+      # playwright_skip_stable_wait.cjs, dropping the per-pointer-action
+      # "stable" animation wait that is dead weight under
+      # `Capybara.disable_animation = true`.
+      playwright_cli_executable_path: "./spec/support/system/playwright_cli_no_stable_wait",
       logger: Logger.new(IO::NULL),
       # NOTE: timezoneId is NOT set here because the driver is cached and reused,
       # so only the first test's timezone would be applied. Instead, we use CDP
