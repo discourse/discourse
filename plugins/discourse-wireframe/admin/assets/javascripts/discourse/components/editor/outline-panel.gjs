@@ -38,11 +38,6 @@ const CHILD_COUNT_THRESHOLD = 6;
  * per outlet, each containing a flattened tree of its blocks. Clicking a row
  * mirrors the canvas: it sets the selected block in the editor service so the
  * inspector populates and the matching block on the canvas highlights.
- *
- * Phase 1 limitation: the underlying layout map is only exposed in DEBUG
- * builds (`_getOutletLayouts`). In production, the outline shows an empty
- * state. Phase 3 replaces the data source with a public API on
- * `services/blocks` once the layout resolution chain lands in core.
  */
 export default class OutlinePanel extends Component {
   @service blocks;

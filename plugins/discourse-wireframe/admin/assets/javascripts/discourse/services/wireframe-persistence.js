@@ -69,6 +69,16 @@ export default class WireframePersistenceService extends Service {
   async _saveOutlet(themeId, outlet) {
     const resolvedLayout = this.wireframe.readResolvedLayout(outlet);
     const layout = serializeLayoutForSave(resolvedLayout ?? []);
+
+    // A null resolved read means the read path failed, not a deliberate
+    // "delete all" (which resolves to a real empty array). Refusing the POST
+    // preserves the server's copy instead of overwriting it with nothing.
+    if (layout.length === 0 && resolvedLayout == null) {
+      throw new Error(
+        `Refusing to save outlet "${outlet}": resolved layout was empty/unreadable`
+      );
+    }
+
     return ajax("/admin/customize/block-layouts.json", {
       type: "POST",
       data: {

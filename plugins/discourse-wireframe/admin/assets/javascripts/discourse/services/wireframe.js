@@ -20,7 +20,8 @@ import {
 } from "discourse/blocks";
 import {
   _clearLayoutLayer,
-  _getOutletLayouts,
+  _getResolvedLayout,
+  _getResolvedLayouts,
   _setLayoutLayer,
   LAYOUT_LAYERS,
 } from "discourse/blocks/block-outlet";
@@ -655,7 +656,7 @@ export default class WireframeService extends Service {
     // read below opens a per-key dep that fires when `revalidateEntryStamps`
     // rewrites or deletes `entry.__failureReason` on an arg edit.
     void this.structuralVersion;
-    const layoutMap = _getOutletLayouts();
+    const layoutMap = _getResolvedLayouts();
     const warnings = [];
     for (const [outletName, record] of layoutMap) {
       if (!record?.layout) {
@@ -1604,7 +1605,7 @@ export default class WireframeService extends Service {
 
     // Bind `args` to the LIVE `entry.args` (a `trackedObject`) so consumers
     // that need a live read (canvas-side, undo restoration, etc.) see
-    // current values. Walks `_getOutletLayouts()`, which returns the
+    // current values. Walks `_getResolvedLayouts()`, which returns the
     // resolved entry per outlet — so when session-drafts are active, we
     // bind to the draft entry, not the underlying layer's.
     const liveData = { ...hydrated };
@@ -2362,7 +2363,7 @@ export default class WireframeService extends Service {
    * @returns {Array<Object>|null}
    */
   readResolvedLayout(outletName) {
-    return _getOutletLayouts().get(outletName)?.layout ?? null;
+    return _getResolvedLayout(outletName);
   }
 
   /**
@@ -3305,7 +3306,7 @@ export default class WireframeService extends Service {
    * @returns {{entry: Object, outletName: string}|null}
    */
   findEntryAndOutletSync(key) {
-    const layoutMap = _getOutletLayouts();
+    const layoutMap = _getResolvedLayouts();
     for (const [outletName, record] of layoutMap) {
       if (!record.layout) {
         continue;
@@ -3345,7 +3346,7 @@ export default class WireframeService extends Service {
     const compositeStableKey = head.slice(head.lastIndexOf(":") + 1);
     const idPath = segments.slice(1);
 
-    const layoutMap = _getOutletLayouts();
+    const layoutMap = _getResolvedLayouts();
     for (const [outletName, record] of layoutMap) {
       if (!record.layout) {
         continue;
@@ -3477,7 +3478,7 @@ export default class WireframeService extends Service {
    * @returns {Promise<{entry: Object, outletName: string}|null>}
    */
   async findEntryAndOutlet(key) {
-    const layoutMap = _getOutletLayouts();
+    const layoutMap = _getResolvedLayouts();
     for (const [outletName, record] of layoutMap) {
       let layout;
       try {
@@ -3742,7 +3743,7 @@ export default class WireframeService extends Service {
 
   /**
    * Eagerly publishes a `session-draft` layer for every outlet that has a
-   * resolved layout. After this runs, `_getOutletLayouts()` returns draft
+   * resolved layout. After this runs, `_getResolvedLayouts()` returns draft
    * entries for those outlets — the rest of the editor session mutates
    * those drafts in place via `trackedObject`, so no further layer swap
    * happens during typing.
@@ -4005,7 +4006,7 @@ export default class WireframeService extends Service {
     if (!data?.key) {
       return;
     }
-    const layoutMap = _getOutletLayouts();
+    const layoutMap = _getResolvedLayouts();
     for (const [, record] of layoutMap) {
       const layout = record.layout;
       if (!layout) {
@@ -4224,7 +4225,7 @@ export default class WireframeService extends Service {
    * @returns {string|null}
    */
   #outletForEntry(entry) {
-    const layoutMap = _getOutletLayouts();
+    const layoutMap = _getResolvedLayouts();
     for (const [outletName, record] of layoutMap) {
       if (record.layout && this.#layoutContainsEntry(record.layout, entry)) {
         return outletName;

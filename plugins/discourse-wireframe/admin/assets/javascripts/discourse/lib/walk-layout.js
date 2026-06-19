@@ -28,7 +28,6 @@
  * unfiltered list during tests / SSR where `document` isn't a
  * meaningful DOM source.
  */
-import { _getOutletLayouts } from "discourse/blocks/block-outlet";
 import { synthesizePartEntries } from "discourse/lib/blocks/-internals/composite";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 
@@ -114,7 +113,7 @@ export function mountedOutletNames() {
 export async function walkAllOutlets({ blocksService, alwaysInclude }) {
   const result = [];
   const outlets = blocksService.listOutlets();
-  const layoutMap = _getOutletLayouts();
+  const layoutMap = blocksService.resolvedLayouts();
   const mounted = mountedOutletNames();
 
   // Block-name → metadata index, built once. Lets `walkEntries` recognise a

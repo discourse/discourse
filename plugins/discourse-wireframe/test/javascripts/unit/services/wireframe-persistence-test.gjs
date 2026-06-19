@@ -73,6 +73,10 @@ module(
         assert.strictEqual(body.outlet_name, "homepage-blocks");
         const payload = JSON.parse(body.layout_json);
         assert.strictEqual(payload.schema_version, 1);
+        assert.true(
+          payload.layout.length > 0,
+          "POSTs a non-empty layout (the resolved read path works in this build)"
+        );
         assert.strictEqual(payload.layout[0].block, "wf:persist-test-tile");
         assert.strictEqual(payload.layout[0].args.title, "Edited");
         assert.step("posted");
@@ -167,6 +171,53 @@ module(
       const result = await this.persistence.saveAll(5);
       assert.strictEqual(result.saved.length, 0);
       assert.strictEqual(result.errors.length, 0);
+    });
+
+    test("saveAll refuses to POST and keeps the draft when the resolved read fails (data-loss backstop)", async function (assert) {
+      withTestBlockRegistration(() => registerBlock(PersistTile));
+      const layout = await registerLayout(getOwner(this));
+      const stableKey = layout[0].__stableKey;
+
+      this.editor.selectBlock({
+        key: `wf:persist-test-tile:${stableKey}`,
+        name: "wf:persist-test-tile",
+        args: { title: "Original" },
+        metadata: { args: { title: { type: "string" } } },
+      });
+      await editArg(this.editor, "title", "Edited");
+
+      assert.true(
+        this.editor.editedOutlets.has("homepage-blocks"),
+        "outlet recorded as edited"
+      );
+
+      // Simulate the production read-path failure this guard exists for: a
+      // null resolved read must NOT be serialized into an empty-layout POST.
+      this.editor.readResolvedLayout = () => null;
+
+      pretender.post("/admin/customize/block-layouts.json", () => {
+        assert.step("posted");
+        return response({ success: true, target_theme_id: 5 });
+      });
+
+      const result = await this.persistence.saveAll(5);
+
+      assert.strictEqual(result.saved.length, 0, "nothing saved");
+      assert.strictEqual(
+        result.errors.length,
+        1,
+        "the outlet is reported as an error"
+      );
+      assert.strictEqual(result.errors[0].outlet, "homepage-blocks");
+      assert.true(
+        result.errors[0].message.includes("empty/unreadable"),
+        "surfaces the refusal reason"
+      );
+      assert.true(
+        this.editor.editedOutlets.has("homepage-blocks"),
+        "the draft is preserved (edited-outlet bookkeeping not cleared)"
+      );
+      assert.verifySteps([], "no POST was issued");
     });
   }
 );

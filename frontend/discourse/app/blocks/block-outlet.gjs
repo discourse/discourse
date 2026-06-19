@@ -932,6 +932,53 @@ export function _getValidatedLayout(outletName) {
 }
 
 /**
+ * Returns the synchronously-resolved layout array for an outlet (the winning
+ * layer's `layout`), or `null` when no layer is set. Resolves through
+ * `resolveLayoutRecord`, so the `trackedMap` read is autotracked: a caller that
+ * reads this inside a tracked context re-runs whenever any layer for the outlet
+ * changes.
+ *
+ * Unlike `_getOutletLayouts`, this has no DEBUG gate, so it returns real data in
+ * every build — which is what consumers outside test infrastructure need.
+ *
+ * @internal This is an internal API. Use the `blocks` service's `resolvedLayout()` method instead.
+ *
+ * @param {string} outletName - The outlet identifier.
+ * @returns {Array<LayoutEntry>|null} The resolved layout array, or null when no layer is set.
+ */
+export function _getResolvedLayout(outletName) {
+  return resolveLayoutRecord(outletName)?.layout ?? null;
+}
+
+/**
+ * Returns a Map of outlet name to its resolved `LayerEntry` for every outlet
+ * that has a layer set. Allocates a fresh Map on each call — read it once per
+ * computation and do not memoize, because reactivity comes from
+ * `resolveLayoutRecord` reading the `trackedMap`: iterating inside a tracked
+ * context subscribes to the relevant layer tags, so the consumer re-runs when a
+ * layer changes.
+ *
+ * This is the production-safe counterpart to `_getOutletLayouts` (which is
+ * DEBUG-gated test infrastructure); it returns the same `LayerEntry` shape, so
+ * `record.layout` / `record.validatedLayout` reads keep working.
+ *
+ * @internal This is an internal API. Use the `blocks` service's `resolvedLayouts()` method instead.
+ *
+ * @returns {Map<string, LayerEntry>} The resolved outlet entries.
+ */
+export function _getResolvedLayouts() {
+  /** @type {Map<string, LayerEntry>} */
+  const resolved = new Map();
+  for (const outletName of outletLayouts.keys()) {
+    const entry = resolveLayoutRecord(outletName);
+    if (entry) {
+      resolved.set(outletName, entry);
+    }
+  }
+  return resolved;
+}
+
+/**
  * Component signature for BlockOutlet.
  *
  * @typedef {Object} BlockOutletSignature

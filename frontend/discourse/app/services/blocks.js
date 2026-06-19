@@ -2,7 +2,12 @@
 import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
 /** @type {import("discourse/blocks/block-outlet.gjs")} */
-import { _getValidatedLayout, _hasLayout } from "discourse/blocks/block-outlet";
+import {
+  _getResolvedLayout,
+  _getResolvedLayouts,
+  _getValidatedLayout,
+  _hasLayout,
+} from "discourse/blocks/block-outlet";
 import { synthesizePartEntries } from "discourse/lib/blocks/-internals/composite";
 import { loadBlockData } from "discourse/lib/blocks/-internals/data-coordinator";
 import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
@@ -222,6 +227,28 @@ export default class Blocks extends Service {
    */
   hasLayout(outletName) {
     return _hasLayout(outletName);
+  }
+
+  /**
+   * Returns the resolved layout array for a single outlet (the winning layer's
+   * layout), or `null` when no layer is set. Reactive: reading this inside a
+   * tracked context re-runs when the outlet's resolved layer changes.
+   *
+   * @param {string} outletName - The outlet identifier.
+   * @returns {Array<Object>|null} The resolved layout array, or null.
+   */
+  resolvedLayout(outletName) {
+    return _getResolvedLayout(outletName);
+  }
+
+  /**
+   * Returns a Map of outlet name to its resolved layer entry for every outlet
+   * with a layer set. Reactive when read inside a tracked context.
+   *
+   * @returns {Map<string, Object>} The resolved outlet entries.
+   */
+  resolvedLayouts() {
+    return _getResolvedLayouts();
   }
 
   /*
