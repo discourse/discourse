@@ -30,6 +30,11 @@ $number-input-width: var(--form-kit-small-input);
     }
   }
 
+  .form-kit__control-custom,
+  .form-kit__control-custom .select-kit {
+    width: 100%;
+  }
+
   .warning {
     background-color: var(--tertiary-low);
     padding: 0.5em 2.5em 0.5em 1em;
@@ -411,5 +416,18 @@ $number-input-width: var(--form-kit-small-input);
 
   .d-multi-select__result-label {
     display: flex;
+  }
+}
+
+h3:has(+ #control-doc_index_topic_id) {
+  border-bottom: 1px solid var(--content-border-color);
+  padding-bottom: 0.5em;
+  font-size: var(--font-up-1);
+  margin: 0;
+}
+
+#control-doc_index_topic_id {
+  .form-kit__container-content {
+    width: 100%;
   }
 }
