@@ -251,10 +251,6 @@ module PageObjects
         has_no_css?(".c-navbar__star-channel-button")
       end
 
-      def has_no_browse_all_link?
-        has_no_css?(".chat-channel-preview-card__browse-all")
-      end
-
       def thread_list_button_selector
         ".c-navbar__threads-list-button"
       end
