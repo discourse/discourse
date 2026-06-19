@@ -50,11 +50,12 @@ en:
         head_hidden_tail_hint: "This block is not rendered because another block was rendered first in the `head` container."
     access_control:
       manage:
-        access_level_editor: "Editor"
-        access_level_viewer: "Viewer"
-        access_level_remove: "Remove"
-        access_anonymous: "Anonymous (public)"
-        access_members: "All members"
+        access_permission_editor: "Editor"
+        access_permission_editor_description: "Can create and edit content for this entity"
+        access_permission_viewer: "Viewer"
+        access_permission_viewer_description: "Can view content for this entity"
+        access_permission_remove: "Remove"
+        access_permission_remove_description: "Remove permission for this group"
         add_group: "Add group"
     carousel:
       go_to_slide: "Go to slide %{index}"

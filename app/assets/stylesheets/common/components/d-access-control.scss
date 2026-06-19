@@ -31,9 +31,19 @@
     white-space: nowrap;
   }
 
-  &__level {
+  &__permission {
     flex: 0 0 auto;
     width: auto;
+  }
+
+  &__permission-divider {
+    border-top: 1px solid var(--content-border-color);
+  }
+
+  &__permission-remove {
+    .texts span {
+      color: var(--danger) !important;
+    }
   }
 
   &__add {

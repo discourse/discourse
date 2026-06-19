@@ -4,54 +4,60 @@ import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import DButton from "discourse/ui-kit/d-button";
-import DSelect from "discourse/ui-kit/d-select";
 import { i18n } from "discourse-i18n";
 
-// const SPECIAL_GROUP_IDS = new Set([
-//   AUTO_GROUPS.anonymous_users.id,
-//   AUTO_GROUPS.logged_in_users.id,
-// ]);
-
-const DEFAULT_LEVEL = "editor";
-const LEVELS = [
-  { id: "editor", name: i18n("access_control.manage.access_level_editor") },
-  { id: "viewer", name: i18n("access_control.manage.access_level_viewer") },
+const DEFAULT_PERMISSION = "editor";
+const PERMISSIONS = [
+  {
+    id: "editor",
+    name: i18n("access_control.manage.access_permission_editor"),
+    description: i18n(
+      "access_control.manage.access_permission_editor_description"
+    ),
+  },
+  {
+    id: "viewer",
+    name: i18n("access_control.manage.access_permission_viewer"),
+    description: i18n(
+      "access_control.manage.access_permission_viewer_description"
+    ),
+  },
 ];
 const REMOVE_ACTION = {
   id: "remove",
-  name: i18n("access_control.manage.access_level_remove"),
+  name: i18n("access_control.manage.access_permission_remove"),
+  description: i18n(
+    "access_control.manage.access_permission_remove_description"
+  ),
 };
 
 export default class DAccessControl extends Component {
   @tracked addingGroup = false;
 
-  get levelOptions() {
-    if (this.args.transformLevelOptions) {
-      return [...this.args.transformLevelOptions(LEVELS), REMOVE_ACTION];
-    }
-    return [...LEVELS, REMOVE_ACTION];
+  constructor() {
+    super(...arguments);
+    this.permissionOptions = this.buildPermissionOptions();
+  }
+
+  buildPermissionOptions() {
+    const permissions = this.args.transformPermissionOptions
+      ? this.args.transformPermissionOptions(PERMISSIONS)
+      : PERMISSIONS;
+
+    return [
+      ...permissions,
+      {
+        ...REMOVE_ACTION,
+        classNames:
+          "d-access-control__permission-divider d-access-control__permission-remove",
+      },
+    ];
   }
 
   get availableGroups() {
     const taken = new Set(this.selectedGroupIds);
-    // const special = [
-    //   {
-    //     id: AUTO_GROUPS.anonymous_users.id,
-    //     name: i18n("access_control.manage.access_anonymous"),
-    //   },
-    //   {
-    //     id: AUTO_GROUPS.logged_in_users.id,
-    //     name: i18n("access_control.manage.access_members"),
-    //   },
-    // ];
-
-    // return [
-    //   ...special,
-    //   ...(this.args.groups || []).filter(
-    //     (group) => !SPECIAL_GROUP_IDS.has(group.id)
-    //   ),
-    // ].filter((group) => !taken.has(group.id));
     return this.args.groups.filter((group) => !taken.has(group.id));
   }
 
@@ -70,7 +76,6 @@ export default class DAccessControl extends Component {
       permission: entry.permission,
       name: entry.full_name,
       type: entry.type,
-      // name: this.#nameFor(entry.group_id),
     }));
   }
 
@@ -97,7 +102,9 @@ export default class DAccessControl extends Component {
       type: "group",
       // TODO (martin) Need to do this for more groups, like Everyone?
       permission:
-        groupId === AUTO_GROUPS.anonymous_users.id ? "viewer" : DEFAULT_LEVEL,
+        groupId === AUTO_GROUPS.anonymous_users.id
+          ? "viewer"
+          : DEFAULT_PERMISSION,
       metadata: {
         auto_group: selectedGroup.automatic,
       },
@@ -110,8 +117,8 @@ export default class DAccessControl extends Component {
   }
 
   @action
-  onLevelChange(groupId, level) {
-    if (level === REMOVE_ACTION.id) {
+  onPermissionChange(groupId, permission) {
+    if (permission === REMOVE_ACTION.id) {
       this.args.onChange(
         this.args.acl.filter(
           (entry) => !(entry.type === "group" && entry.id === groupId)
@@ -122,7 +129,7 @@ export default class DAccessControl extends Component {
 
     const next = this.args.acl.map((entry) =>
       entry.type === "group" && entry.id === groupId
-        ? { ...entry, permission: level }
+        ? { ...entry, permission }
         : entry
     );
     this.args.onChange(next);
@@ -137,22 +144,13 @@ export default class DAccessControl extends Component {
           {{#each this.rows key="key" as |row|}}
             <div class="d-access-control__row" data-group-id={{row.groupId}}>
               <span class="d-access-control__group-name">{{row.name}}</span>
-              <DSelect
-                class="d-access-control__level"
+              <DropdownSelectBox
+                class="d-access-control__permission"
                 @value={{row.permission}}
-                @includeNone={{false}}
-                @onChange={{fn this.onLevelChange row.id}}
-                as |dropdown|
-              >
-                {{#each this.levelOptions as |option|}}
-                  <dropdown.Option
-                    @value={{option.id}}
-                    class="d-access-control__level-{{option.id}}"
-                  >
-                    {{option.name}}
-                  </dropdown.Option>
-                {{/each}}
-              </DSelect>
+                @content={{this.permissionOptions}}
+                @onChange={{fn this.onPermissionChange row.id}}
+                @options={{hash showCaret=true showFullTitle=true}}
+              />
             </div>
           {{/each}}
         </div>
