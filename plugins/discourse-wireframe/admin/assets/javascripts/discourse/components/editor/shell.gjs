@@ -192,7 +192,7 @@ export default class EditorShell extends Component {
     this.isSaving = true;
     this.saveErrorMessage = null;
     try {
-      const result = await this.wireframePersistence.saveAll(
+      const result = await this.wireframePersistence.publish(
         this.wireframe.activeThemeId
       );
       if (result.errors.length) {

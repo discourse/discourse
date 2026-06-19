@@ -23,6 +23,10 @@ RSpec.describe Themes::SaveBlockLayout do
       { theme_id: theme.id, outlet_name: "homepage-blocks", layout_json: layout_json }
     end
 
+    def live_field(theme)
+      theme.theme_fields.find_by(name: "homepage-blocks", type_id: ThemeField.types[:block_layout])
+    end
+
     context "when the user is not an admin" do
       let(:dependencies) { { guardian: user.guardian } }
 
@@ -50,21 +54,12 @@ RSpec.describe Themes::SaveBlockLayout do
       end
     end
 
-    context "with a non-Git theme (no remote_theme_id)" do
-      it "writes the field directly to the parent theme" do
-        expect(result).to be_a_success
-        expect(result.target_theme).to eq(theme)
-        expect(result.redirected).to eq(false)
-        expect(result.child_created).to eq(false)
+    it "writes the block_layout field to the theme" do
+      expect(result).to be_a_success
 
-        field =
-          theme.theme_fields.find_by(
-            name: "homepage-blocks",
-            type_id: ThemeField.types[:block_layout],
-          )
-        expect(field).to be_present
-        expect(JSON.parse(field.value)["layout"][0]["block"]).to eq("hero-banner")
-      end
+      field = live_field(theme)
+      expect(field).to be_present
+      expect(JSON.parse(field.value)["layout"][0]["block"]).to eq("hero-banner")
     end
 
     context "with a Git-imported theme" do
@@ -73,32 +68,43 @@ RSpec.describe Themes::SaveBlockLayout do
         { theme_id: git_theme.id, outlet_name: "homepage-blocks", layout_json: layout_json }
       end
 
-      it "auto-creates a -customizations child component on first save" do
-        expect(result).to be_a_success
-        expect(result.target_theme).not_to eq(git_theme)
-        expect(result.target_theme.name).to eq("#{git_theme.name}-customizations")
-        expect(result.target_theme.component?).to eq(true)
-        expect(result.target_theme.remote_theme_id).to be_nil
-        expect(result.redirected).to eq(true)
-        expect(result.child_created).to eq(true)
-        expect(git_theme.reload.child_theme_ids).to include(result.target_theme.id)
-      end
+      it { is_expected.to fail_a_policy(:theme_is_not_git) }
 
-      it "reuses an existing -customizations child on subsequent saves" do
+      it "never writes the git theme's live field" do
         described_class.call(params:, **dependencies)
-        before_count = Theme.where(name: "#{git_theme.name}-customizations").count
+        expect(live_field(git_theme)).to be_nil
+      end
+    end
 
-        result = described_class.call(params:, **dependencies)
+    context "with the stale-publish guard" do
+      it "succeeds when no expected_version_token is supplied (opt out)" do
         expect(result).to be_a_success
-        expect(result.child_created).to eq(false)
-        expect(Theme.where(name: "#{git_theme.name}-customizations").count).to eq(before_count)
       end
 
-      it "writes directly to the parent theme when force_parent is true" do
-        forced = described_class.call(params: params.merge(force_parent: true), **dependencies)
-        expect(forced).to be_a_success
-        expect(forced.target_theme).to eq(git_theme)
-        expect(forced.redirected).to eq(false)
+      it "succeeds on first publish with an empty token (no live field yet)" do
+        outcome =
+          described_class.call(params: params.merge(expected_version_token: ""), **dependencies)
+        expect(outcome).to be_a_success
+      end
+
+      it "succeeds when the expected token matches the live field" do
+        described_class.call(params:, **dependencies)
+        token = Themes::BlockLayoutVersion.token_for(live_field(theme).value_baked)
+
+        outcome =
+          described_class.call(params: params.merge(expected_version_token: token), **dependencies)
+        expect(outcome).to be_a_success
+      end
+
+      it "fails as stale when the expected token no longer matches the live field" do
+        described_class.call(params:, **dependencies)
+
+        outcome =
+          described_class.call(
+            params: params.merge(expected_version_token: "stale-token"),
+            **dependencies,
+          )
+        expect(outcome).to fail_a_step(:guard_stale_publish)
       end
     end
 
@@ -119,37 +125,15 @@ RSpec.describe Themes::SaveBlockLayout do
       end
     end
 
-    context "with the MessageBus broadcast" do
-      it "publishes the saved layout on /block-layouts/<theme_id>" do
-        messages = MessageBus.track_publish("/block-layouts/#{theme.id}") { result }
+    it "publishes the saved layout with a version token on /block-layouts/<theme_id>" do
+      messages = MessageBus.track_publish("/block-layouts/#{theme.id}") { result }
 
-        expect(messages.length).to eq(1)
-        payload = messages.first.data
-        expect(payload[:outlet]).to eq("homepage-blocks")
-        expect(payload[:theme_id]).to eq(theme.id)
-        expect(payload[:layout][0]["block"]).to eq("hero-banner")
-      end
-
-      it "publishes against the redirected target theme for Git-imported saves" do
-        git_theme = Fabricate(:theme_with_remote_url)
-        git_params = {
-          theme_id: git_theme.id,
-          outlet_name: "homepage-blocks",
-          layout_json: layout_json,
-        }
-
-        messages =
-          MessageBus.track_publish { described_class.call(params: git_params, **dependencies) }
-        block_layout_messages = messages.select { |m| m.channel.start_with?("/block-layouts/") }
-
-        expect(block_layout_messages.length).to eq(1)
-        # The save is redirected to the auto-created child component, so the
-        # channel should NOT be the parent (Git-imported) theme's id.
-        expect(block_layout_messages.first.channel).not_to eq("/block-layouts/#{git_theme.id}")
-        # And the data's theme_id should match the channel id.
-        channel_id = block_layout_messages.first.channel[%r{\A/block-layouts/(\d+)\z}, 1].to_i
-        expect(block_layout_messages.first.data[:theme_id]).to eq(channel_id)
-      end
+      expect(messages.length).to eq(1)
+      payload = messages.first.data
+      expect(payload[:outlet]).to eq("homepage-blocks")
+      expect(payload[:theme_id]).to eq(theme.id)
+      expect(payload[:layout][0]["block"]).to eq("hero-banner")
+      expect(payload[:version_token]).to be_present
     end
   end
 end

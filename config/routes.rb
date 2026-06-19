@@ -267,7 +267,8 @@ Discourse::Application.routes.draw do
           collection { get "preview" => "form_templates#preview" }
         end
 
-        post "block-layouts" => "block_layouts#create"
+        post "block-layouts" => "block_layouts#publish"
+        delete "block-layouts" => "block_layouts#destroy"
 
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"

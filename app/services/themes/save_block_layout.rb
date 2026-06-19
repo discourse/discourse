@@ -1,16 +1,15 @@
 # frozen_string_literal: true
 
-# Saves a `block_layout` ThemeField for a single outlet on a theme.
+# Publishes a `block_layout` ThemeField for a single outlet on a theme — the
+# live, broadcast write. Concurrent publishers to the same `(theme, outlet)` are
+# serialized by a `DistributedMutex` so the second one reads the first's
+# committed state; an `expected_version_token` that no longer matches the live
+# field fails the publish (the controller maps it to HTTP 409), preventing a
+# silent multi-admin clobber.
 #
-# When the target theme is Git-imported (`remote_theme_id` is set), the save
-# is *redirected* to a child theme component named
-# `<theme-name>-customizations`. This component is created on the first save
-# and reused thereafter, so admin-side edits land somewhere that won't be
-# clobbered by upstream theme syncs.
-#
-# Pass `force_parent: true` to write directly to the parent (Git-imported)
-# theme — used when a theme author is intentionally maintaining the upstream
-# layout directly rather than through a child component.
+# Git-imported themes (`remote_theme_id` set) cannot be published — a policy
+# fails the service. Their layouts reach the repo via export / duplicate-to-an-
+# editable-theme flows instead, so a Git theme's live field is never written.
 #
 # @example
 #   Themes::SaveBlockLayout.call(
@@ -19,13 +18,12 @@
 #       theme_id: theme.id,
 #       outlet_name: "homepage-blocks",
 #       layout_json: layout.to_json,
+#       expected_version_token: token,
 #     }
 #   )
 #
 class Themes::SaveBlockLayout
   include Service::Base
-
-  CUSTOMIZATIONS_SUFFIX = "-customizations"
 
   # @!method self.call(guardian:, params:)
   #   @param [Guardian] guardian
@@ -34,19 +32,18 @@ class Themes::SaveBlockLayout
   #   @option params [String] :outlet_name The block outlet identifier
   #     (e.g. `"homepage-blocks"`). Stored as the ThemeField's `name`.
   #   @option params [String] :layout_json The serialized layout payload
-  #     ({ schema_version, layout: [...] }). Validated structurally during
-  #     baking; client-side full validation runs separately.
-  #   @option params [Boolean] :force_parent Write to the parent theme even
-  #     when it's Git-imported. Defaults to false (auto-redirect to a child).
-  #   @return [Service::Base::Context] context whose `target_theme` is the
-  #     theme that ended up holding the field, plus `redirected` /
-  #     `child_created` flags so the client can surface the right notice.
+  #     ({ schema_version, layout: [...] }). Validated structurally during baking.
+  #   @option params [String] :expected_version_token The version token the
+  #     caller last observed for this outlet's live field. When present and it no
+  #     longer matches the current live token, the publish fails as stale (409).
+  #     Omit (nil) to opt out of the check.
+  #   @return [Service::Base::Context]
 
   params do
     attribute :theme_id, :integer
     attribute :outlet_name, :string
     attribute :layout_json, :string
-    attribute :force_parent, :boolean, default: false
+    attribute :expected_version_token, :string
 
     validates :theme_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
     validates :outlet_name, presence: true, format: { with: /\A[a-z0-9_:\-]+\z/ }
@@ -55,13 +52,16 @@ class Themes::SaveBlockLayout
 
   model :theme
   policy :current_user_is_admin
+  policy :theme_is_not_git
 
-  transaction do
-    step :resolve_target_theme
-    step :upsert_field
-    step :save_target_theme
-    step :reload_field
-    step :guard_against_bake_error
+  lock(:theme_id, :outlet_name) do
+    transaction do
+      step :guard_stale_publish
+      step :upsert_field
+      step :save_theme
+      step :reload_field
+      step :guard_against_bake_error
+    end
   end
 
   step :publish_message_bus_update
@@ -76,64 +76,37 @@ class Themes::SaveBlockLayout
     guardian.is_admin?
   end
 
-  # Decides which theme actually receives the field. If the requested theme
-  # is Git-imported (`remote_theme_id` set) and the caller didn't opt into
-  # `force_parent`, we redirect to a `<name>-customizations` child component
-  # — creating it on the fly the first time. The context records both the
-  # final target theme and the redirection flags so the controller can let
-  # the client know what happened.
-  def resolve_target_theme(theme:, params:)
-    if theme.remote_theme_id.nil? || params.force_parent
-      context[:target_theme] = theme
-      context[:redirected] = false
-      context[:child_created] = false
-      return
-    end
-
-    target, created = ensure_customizations_component_for(theme)
-    context[:target_theme] = target
-    context[:redirected] = true
-    context[:child_created] = created
+  # A Git-imported theme's live field is never written here; its layouts are made
+  # real through export / duplicate-to-an-editable-theme instead.
+  def theme_is_not_git(theme:)
+    theme.remote_theme_id.nil?
   end
 
-  # Idempotent lookup-or-create for the `<theme-name>-customizations` child
-  # component. If a component with that exact name already exists but isn't
-  # linked as a child of the parent theme, we link it before returning. If
-  # the name is taken by something we can't reuse (a Git-imported component,
-  # a non-component theme), we fall back to suffixing `-2`, `-3`, ... until
-  # an unused name is available.
-  def ensure_customizations_component_for(parent_theme)
-    base_name = "#{parent_theme.name}#{CUSTOMIZATIONS_SUFFIX}"
+  # Runs first, inside the lock + transaction: reads the live baked value (under
+  # the row lock the mutex provides) and fails if it no longer matches the token
+  # the caller last observed. A nil `expected_version_token` opts out; an empty
+  # string matches an absent field (the first publish).
+  def guard_stale_publish(theme:, params:)
+    return if params.expected_version_token.nil?
 
-    candidate = Theme.where(name: base_name).first
-    if candidate&.component? && candidate.remote_theme_id.nil?
-      ensure_child_link(parent_theme, candidate)
-      return candidate, false
+    current =
+      theme
+        .theme_fields
+        .where(
+          name: params.outlet_name,
+          target_id: Theme.targets[:common],
+          type_id: ThemeField.types[:block_layout],
+        )
+        .pick(:value_baked)
+
+    if params.expected_version_token != Themes::BlockLayoutVersion.token_for(current)
+      fail!("stale_block_layout")
     end
-
-    if candidate.nil?
-      created = Theme.create!(name: base_name, component: true, user_id: parent_theme.user_id)
-      ensure_child_link(parent_theme, created)
-      return created, true
-    end
-
-    # Name collision with an unusable theme — pick a free suffix.
-    suffix = 2
-    suffix += 1 while Theme.where(name: "#{base_name}-#{suffix}").exists?
-    created =
-      Theme.create!(name: "#{base_name}-#{suffix}", component: true, user_id: parent_theme.user_id)
-    ensure_child_link(parent_theme, created)
-    [created, true]
   end
 
-  def ensure_child_link(parent_theme, child_theme)
-    return if parent_theme.child_theme_ids.include?(child_theme.id)
-    parent_theme.add_relative_theme!(:child, child_theme)
-  end
-
-  def upsert_field(target_theme:, params:)
+  def upsert_field(theme:, params:)
     field =
-      target_theme.set_field(
+      theme.set_field(
         target: :common,
         name: params.outlet_name,
         type: :block_layout,
@@ -142,8 +115,8 @@ class Themes::SaveBlockLayout
     context[:field] = field
   end
 
-  def save_target_theme(target_theme:)
-    target_theme.save!
+  def save_theme(theme:)
+    theme.save!
   end
 
   # `set_field` builds (or updates) an in-memory ThemeField; baking happens
@@ -161,14 +134,11 @@ class Themes::SaveBlockLayout
   end
 
   # Notifies other tabs / sessions that this outlet's layout has changed.
-  # Consumers subscribe to `/block-layouts/<theme_id>` and re-publish
-  # the payload via `api.setLayoutLayer(outlet, "theme", layout, {themeId})`,
-  # so rendered outlets refresh without a page reload.
-  #
-  # Published per-target-theme so subscribers only handle messages from
-  # themes that are part of their active stack — there's no point telling
-  # a client about edits to a theme they're not rendering.
-  def publish_message_bus_update(target_theme:, params:, field:)
+  # Consumers subscribe to `/block-layouts/<theme_id>` and re-publish the
+  # payload via `api.setLayoutLayer(outlet, "theme", layout, { themeId })`, so
+  # rendered outlets refresh without a page reload. The `version_token` lets a
+  # tab that observes another admin's publish refresh its captured token.
+  def publish_message_bus_update(theme:, params:, field:)
     return if field.nil? || field.value_baked.blank?
     parsed =
       begin
@@ -179,12 +149,13 @@ class Themes::SaveBlockLayout
     return if parsed.nil?
 
     MessageBus.publish(
-      "/block-layouts/#{target_theme.id}",
+      "/block-layouts/#{theme.id}",
       {
         outlet: params.outlet_name,
         layout: parsed["layout"],
         schema_version: parsed["schema_version"],
-        theme_id: target_theme.id,
+        theme_id: theme.id,
+        version_token: Themes::BlockLayoutVersion.token_for(field.value_baked),
       },
     )
   end

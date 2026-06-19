@@ -11,6 +11,12 @@ register_asset "stylesheets/admin/wireframe-chrome.scss", :admin
 
 enabled_site_setting :wireframe_enabled
 
+module ::DiscourseWireframe
+  PLUGIN_NAME = "discourse-wireframe"
+end
+
+require_relative "lib/discourse_wireframe/engine"
+
 # Icons used by block-metadata `icon:` fields and inspector UI that
 # aren't in the default SVG subset. Without these the rendered icon
 # is replaced by a placeholder square and the console logs a warning
@@ -61,8 +67,4 @@ end
 
 DiscourseWireframe::LucideSprite.manifest_names.each do |name|
   register_svg_icon "#{DiscourseWireframe::LucideSprite::ICON_PREFIX}#{name}"
-end
-
-module ::DiscourseWireframe
-  PLUGIN_NAME = "discourse-wireframe"
 end

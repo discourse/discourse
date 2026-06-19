@@ -212,6 +212,7 @@ class ApplicationLayoutPreloader
           outlet: outlet,
           schema_version: parsed["schema_version"],
           layout: parsed["layout"],
+          version_token: Themes::BlockLayoutVersion.token_for(value_baked),
         }
       end
     end

@@ -1,8 +1,13 @@
 // @ts-check
 import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
-import { _setLayoutLayer, LAYOUT_LAYERS } from "discourse/blocks/block-outlet";
+import {
+  _clearLayoutLayer,
+  _setLayoutLayer,
+  LAYOUT_LAYERS,
+} from "discourse/blocks/block-outlet";
 import { ajax } from "discourse/lib/ajax";
+import PreloadStore from "discourse/lib/preload-store";
 import {
   cloneLayoutForDraft,
   serializeLayoutForSave,
@@ -11,54 +16,79 @@ import {
 const SCHEMA_VERSION = 1;
 
 /**
- * Bridges the editor's in-memory edits and the server-side `block_layout`
- * ThemeField persistence. A single endpoint
- * (`POST /admin/customize/block-layouts.json`) saves one outlet at a
- * time; this service drives it once per edited outlet on save.
+ * Bridges the editor's in-memory edits and server-side `block_layout`
+ * persistence. Exposes the persistence verbs:
+ *  - `publish`        — live write + broadcast, guarded by a stale-version 409
+ *  - `saveDraft`      — private, never-live per-user draft
+ *  - `resetToDefault` — delete the live field (fall back to the underlying layer)
+ *  - `discardDraft`   — drop the caller's draft
  *
- * After a successful save the service publishes the just-saved layout into
- * the `theme` layer too. That update is silent — the session-draft is still
- * resolved while the editor is active, so the canvas doesn't re-render at
- * save time. The fresh theme layer takes over on `exit()` (or in another
- * tab, via the MessageBus subscription).
+ * `publish` sends the version token this tab last observed for each outlet so
+ * the server can reject a stale publish (another admin changed the live field
+ * meanwhile). The baseline token is seeded from the boot preload and advanced
+ * only by this tab's own successful publishes — never from MessageBus — so a
+ * concurrent publish is detected as a conflict rather than silently adopted.
  */
 export default class WireframePersistenceService extends Service {
   @service wireframe;
 
+  /** `${themeId}:${outlet}` -> last-observed live version token. */
+  #versionTokens = new Map();
+
+  #tokensSeeded = false;
+
   /**
-   * Saves every edited outlet to the supplied theme. The save loop is
-   * sequential by design — partial failure should leave earlier successes
-   * persisted. Each successful save clears that outlet from
-   * `editedOutlets`; cleared snapshot history happens at the call-site
-   * (the toolbar's Save handler) so the toolbar can stay in sync with
-   * isDirty/canUndo/canRedo.
+   * Publishes every edited outlet to the supplied theme — the live, broadcast
+   * write. Sequential by design so a partial failure leaves earlier successes
+   * persisted. Each success collapses the session draft into the theme layer
+   * (keyed by the requested theme) and clears the outlet from `editedOutlets`;
+   * a 409 conflict keeps the outlet edited so the edit isn't lost.
    *
    * @param {number} themeId - the id of the theme the editor is bound to.
-   * @returns {Promise<{
-   *   saved: Array<{outlet: string, targetThemeId: number, targetThemeName: string, redirected: boolean, childCreated: boolean}>,
-   *   errors: Array<{outlet: string, message: string}>
-   * }>}
+   * @returns {Promise<{saved: Array<{outlet: string, themeId: number}>, errors: Array<{outlet: string, message: string, conflict: boolean}>}>}
    */
-  async saveAll(themeId) {
+  async publish(themeId) {
     const result = { saved: [], errors: [] };
-    const editedOutlets = [...this.wireframe.editedOutlets];
 
-    for (const outlet of editedOutlets) {
+    for (const outlet of [...this.wireframe.editedOutlets]) {
       try {
-        const response = await this._saveOutlet(themeId, outlet);
-        result.saved.push({
-          outlet,
-          targetThemeId: response.target_theme_id,
-          targetThemeName: response.target_theme_name,
-          redirected: response.redirected,
-          childCreated: response.child_created,
-        });
-        this._publishToThemeLayer(outlet, response.target_theme_id);
+        const response = await this.#publishOutlet(themeId, outlet);
+        this.#publishToThemeLayer(outlet, themeId);
+        this.#setToken(themeId, outlet, response.version_token);
         this.wireframe.editedOutlets.delete(outlet);
+        result.saved.push({ outlet, themeId });
       } catch (error) {
         result.errors.push({
           outlet,
-          message: this._extractErrorMessage(error),
+          message: this.#extractErrorMessage(error),
+          conflict: error?.jqXHR?.status === 409,
+        });
+        // Keep a conflicted (or failed) outlet in `editedOutlets` so the edit
+        // isn't lost; the conflict-resolution UX lands in a later phase.
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Saves every edited outlet as a private, never-live draft. No broadcast and
+   * no theme-layer collapse — the session draft stays the resolved layer.
+   *
+   * @param {number} themeId - the id of the theme the editor is bound to.
+   * @returns {Promise<{saved: Array<{outlet: string}>, errors: Array<{outlet: string, message: string}>}>}
+   */
+  async saveDraft(themeId) {
+    const result = { saved: [], errors: [] };
+
+    for (const outlet of [...this.wireframe.editedOutlets]) {
+      try {
+        await this.#saveDraftOutlet(themeId, outlet);
+        result.saved.push({ outlet });
+      } catch (error) {
+        result.errors.push({
+          outlet,
+          message: this.#extractErrorMessage(error),
         });
       }
     }
@@ -66,7 +96,38 @@ export default class WireframePersistenceService extends Service {
     return result;
   }
 
-  async _saveOutlet(themeId, outlet) {
+  /**
+   * Resets an outlet to its default by deleting the live field, then clears the
+   * theme layer locally so the underlying (code) layer resolves.
+   *
+   * @param {number} themeId - the id of the theme owning the outlet.
+   * @param {string} outlet - the outlet identifier.
+   * @returns {Promise<void>}
+   */
+  async resetToDefault(themeId, outlet) {
+    await ajax("/admin/customize/block-layouts.json", {
+      type: "DELETE",
+      data: { theme_id: themeId, outlet_name: outlet },
+    });
+    _clearLayoutLayer(outlet, LAYOUT_LAYERS.THEME, { themeId });
+    this.#versionTokens.delete(this.#tokenKey(themeId, outlet));
+  }
+
+  /**
+   * Discards the caller's private draft for an outlet.
+   *
+   * @param {number} themeId - the id of the theme owning the outlet.
+   * @param {string} outlet - the outlet identifier.
+   * @returns {Promise<void>}
+   */
+  async discardDraft(themeId, outlet) {
+    await ajax("/admin/plugins/wireframe/block-layout-drafts.json", {
+      type: "DELETE",
+      data: { theme_id: themeId, outlet_name: outlet },
+    });
+  }
+
+  #publishOutlet(themeId, outlet) {
     const resolvedLayout = this.wireframe.readResolvedLayout(outlet);
     const layout = serializeLayoutForSave(resolvedLayout ?? []);
 
@@ -84,51 +145,92 @@ export default class WireframePersistenceService extends Service {
       data: {
         theme_id: themeId,
         outlet_name: outlet,
-        layout_json: JSON.stringify({
-          schema_version: SCHEMA_VERSION,
-          layout,
-        }),
+        layout_json: JSON.stringify({ schema_version: SCHEMA_VERSION, layout }),
+        expected_version_token: this.#tokenFor(themeId, outlet),
       },
     });
   }
 
-  /**
-   * Publishes the just-saved layout into the `theme` layer at
-   * `targetThemeId`. The session-draft layer stays at the top of the
-   * resolution chain while the editor is active, so this update is
-   * invisible to the user — until they `exit()`, at which point the draft
-   * clears and the theme layer takes over (now showing the saved state).
-   *
-   * Updates with `targetThemeId` (which can differ from the original theme
-   * id when the server redirected to a `<theme-name>-customizations` child)
-   * so the layer record matches what the server actually persisted.
-   */
-  _publishToThemeLayer(outlet, targetThemeId) {
+  #saveDraftOutlet(themeId, outlet) {
+    const resolvedLayout = this.wireframe.readResolvedLayout(outlet);
+    const layout = serializeLayoutForSave(resolvedLayout ?? []);
+
+    if (layout.length === 0 && resolvedLayout == null) {
+      throw new Error(
+        `Refusing to draft outlet "${outlet}": resolved layout was empty/unreadable`
+      );
+    }
+
+    return ajax("/admin/plugins/wireframe/block-layout-drafts.json", {
+      type: "POST",
+      data: {
+        theme_id: themeId,
+        outlet_name: outlet,
+        layout_json: JSON.stringify({ schema_version: SCHEMA_VERSION, layout }),
+        base_version_token: this.#tokenFor(themeId, outlet),
+      },
+    });
+  }
+
+  // Collapses the just-published session draft into the `theme` layer, keyed by
+  // the theme that was published to. The session-draft layer still wins while
+  // the editor is active, so this is invisible until exit/reload (or another
+  // tab via MessageBus). Cloned + permissive so a partial "save anyway" state
+  // round-trips without re-throwing on exit.
+  #publishToThemeLayer(outlet, themeId) {
     const layout = this.wireframe.readResolvedLayout(outlet);
-    if (!layout || !targetThemeId) {
+    if (!layout || !themeId) {
       return;
     }
-    // Clone so the theme layer's entries don't share `args` with the still-
-    // mutable session-draft entries — a future edit shouldn't accidentally
-    // bleed through into the "saved" state.
-    // Permissive matches the session-draft layer the user just saved
-    // *from*. After save, the editor is still active and the session-
-    // draft (also permissive) wins resolution; when the user exits the
-    // editor or reloads, this theme entry takes over. If the saved
-    // layout had `Save anyway` warnings, strict validation here would
-    // re-throw and crash the page on exit/reload — defeating the whole
-    // point of letting the user save a partial state. Permissive on the
-    // theme layer keeps the round-trip viable.
     _setLayoutLayer(
       outlet,
       LAYOUT_LAYERS.THEME,
       cloneLayoutForDraft(layout),
       getOwner(this),
-      { themeId: targetThemeId, permissive: true }
+      { themeId, permissive: true }
     );
   }
 
-  _extractErrorMessage(error) {
+  #tokenKey(themeId, outlet) {
+    return `${themeId}:${outlet}`;
+  }
+
+  // The baseline token for an outlet: this tab's last-observed live version.
+  // Seeded once from the boot preload; an outlet with no live field resolves to
+  // "" (an empty token matches an absent field, so a first publish succeeds yet
+  // still 409s if another admin created the field meanwhile).
+  #tokenFor(themeId, outlet) {
+    this.#seedTokens();
+    return this.#versionTokens.get(this.#tokenKey(themeId, outlet)) ?? "";
+  }
+
+  #setToken(themeId, outlet, token) {
+    if (token == null) {
+      return;
+    }
+    this.#versionTokens.set(this.#tokenKey(themeId, outlet), token);
+  }
+
+  #seedTokens() {
+    if (this.#tokensSeeded) {
+      return;
+    }
+    this.#tokensSeeded = true;
+    const rows = PreloadStore.get("themeBlockLayouts");
+    if (!Array.isArray(rows)) {
+      return;
+    }
+    for (const row of rows) {
+      if (row?.version_token != null) {
+        this.#versionTokens.set(
+          this.#tokenKey(row.theme_id, row.outlet),
+          row.version_token
+        );
+      }
+    }
+  }
+
+  #extractErrorMessage(error) {
     const body = error?.jqXHR?.responseJSON;
     if (body?.errors?.length) {
       return body.errors.join(", ");

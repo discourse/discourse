@@ -9,7 +9,11 @@ RSpec.describe Admin::BlockLayoutsController do
     { schema_version: 1, layout: [{ block: "hero-banner", args: { title: "Hi" } }] }.to_json
   end
 
-  describe "POST #create" do
+  def live_field(theme)
+    theme.theme_fields.find_by(name: "homepage-blocks", type_id: ThemeField.types[:block_layout])
+  end
+
+  describe "POST #publish" do
     context "as a non-admin" do
       before { sign_in(user) }
 
@@ -27,7 +31,7 @@ RSpec.describe Admin::BlockLayoutsController do
     context "as an admin" do
       before { sign_in(admin) }
 
-      it "saves a block_layout field on the target theme" do
+      it "publishes a block_layout field and returns a version token" do
         post "/admin/customize/block-layouts.json",
              params: {
                theme_id: theme.id,
@@ -38,18 +42,41 @@ RSpec.describe Admin::BlockLayoutsController do
         expect(response.status).to eq(200)
         body = response.parsed_body
         expect(body["success"]).to eq(true)
-        expect(body["target_theme_id"]).to eq(theme.id)
-        expect(body["redirected"]).to eq(false)
-
-        field =
-          theme.theme_fields.find_by(
-            name: "homepage-blocks",
-            type_id: ThemeField.types[:block_layout],
-          )
-        expect(field).to be_present
+        expect(body["theme_id"]).to eq(theme.id)
+        expect(body["version_token"]).to be_present
+        expect(live_field(theme)).to be_present
       end
 
-      it "redirects to a child component for Git-imported themes" do
+      it "succeeds on a first publish with an empty expected token" do
+        post "/admin/customize/block-layouts.json",
+             params: {
+               theme_id: theme.id,
+               outlet_name: "homepage-blocks",
+               layout_json: layout_json,
+               expected_version_token: "",
+             }
+        expect(response.status).to eq(200)
+      end
+
+      it "returns 409 when the expected token is stale" do
+        post "/admin/customize/block-layouts.json",
+             params: {
+               theme_id: theme.id,
+               outlet_name: "homepage-blocks",
+               layout_json: layout_json,
+             }
+
+        post "/admin/customize/block-layouts.json",
+             params: {
+               theme_id: theme.id,
+               outlet_name: "homepage-blocks",
+               layout_json: layout_json,
+               expected_version_token: "stale-token",
+             }
+        expect(response.status).to eq(409)
+      end
+
+      it "returns 422 for a Git-imported theme (publish disabled)" do
         git_theme = Fabricate(:theme_with_remote_url)
 
         post "/admin/customize/block-layouts.json",
@@ -58,12 +85,8 @@ RSpec.describe Admin::BlockLayoutsController do
                outlet_name: "homepage-blocks",
                layout_json: layout_json,
              }
-
-        expect(response.status).to eq(200)
-        body = response.parsed_body
-        expect(body["redirected"]).to eq(true)
-        expect(body["child_created"]).to eq(true)
-        expect(body["target_theme_name"]).to eq("#{git_theme.name}-customizations")
+        expect(response.status).to eq(422)
+        expect(live_field(git_theme)).to be_nil
       end
 
       it "returns 404 when the theme doesn't exist" do
@@ -98,6 +121,30 @@ RSpec.describe Admin::BlockLayoutsController do
              }
         expect(response.status).to eq(400)
       end
+    end
+  end
+
+  describe "DELETE #destroy (reset to default)" do
+    before { sign_in(admin) }
+
+    it "deletes the live field and returns success" do
+      theme.set_field(
+        target: :common,
+        name: "homepage-blocks",
+        type: :block_layout,
+        value: layout_json,
+      )
+      theme.save!
+      expect(live_field(theme)).to be_present
+
+      delete "/admin/customize/block-layouts.json",
+             params: {
+               theme_id: theme.id,
+               outlet_name: "homepage-blocks",
+             }
+
+      expect(response.status).to eq(200)
+      expect(live_field(theme)).to be_nil
     end
   end
 end

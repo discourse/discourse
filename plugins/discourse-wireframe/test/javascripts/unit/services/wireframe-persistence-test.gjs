@@ -8,6 +8,7 @@ import {
   _getRawOutletLayouts,
   _renderBlocks,
   _resetOutletLayoutsForTesting,
+  _setLayoutLayer,
   LAYOUT_LAYERS,
 } from "discourse/blocks/block-outlet";
 import {
@@ -54,170 +55,189 @@ module(
       this.editor.exit();
     });
 
-    test("saveAll posts every drafted outlet to the server", async function (assert) {
+    async function enterEdited(context) {
       withTestBlockRegistration(() => registerBlock(PersistTile));
-      const layout = await registerLayout(getOwner(this));
+      const layout = await registerLayout(getOwner(context));
       const stableKey = layout[0].__stableKey;
 
-      this.editor.selectBlock({
+      context.editor.selectBlock({
         key: `wf:persist-test-tile:${stableKey}`,
         name: "wf:persist-test-tile",
         args: { title: "Original" },
         metadata: { args: { title: { type: "string" } } },
       });
-      await editArg(this.editor, "title", "Edited");
+      await editArg(context.editor, "title", "Edited");
+    }
+
+    test("publish posts every edited outlet with the version token", async function (assert) {
+      await enterEdited(this);
 
       pretender.post("/admin/customize/block-layouts.json", (request) => {
         const body = parsePostData(request.requestBody);
         assert.strictEqual(body.theme_id, "5");
         assert.strictEqual(body.outlet_name, "homepage-blocks");
+        // No live field has been seen, so the first publish sends an empty token.
+        assert.strictEqual(body.expected_version_token, "");
         const payload = JSON.parse(body.layout_json);
-        assert.strictEqual(payload.schema_version, 1);
-        assert.true(
-          payload.layout.length > 0,
-          "POSTs a non-empty layout (the resolved read path works in this build)"
-        );
-        assert.strictEqual(payload.layout[0].block, "wf:persist-test-tile");
+        assert.true(payload.layout.length > 0);
         assert.strictEqual(payload.layout[0].args.title, "Edited");
         assert.step("posted");
-        return response({
-          success: true,
-          target_theme_id: 5,
-          target_theme_name: "Light",
-          redirected: false,
-          child_created: false,
-        });
+        return response({ success: true, theme_id: 5, version_token: "v1" });
       });
 
-      const result = await this.persistence.saveAll(5);
+      const result = await this.persistence.publish(5);
       assert.strictEqual(result.saved.length, 1);
       assert.strictEqual(result.errors.length, 0);
       assert.verifySteps(["posted"]);
     });
 
-    test("saveAll publishes the saved layout to the theme layer and clears the edited-outlets bookkeeping", async function (assert) {
-      withTestBlockRegistration(() => registerBlock(PersistTile));
-      const layout = await registerLayout(getOwner(this));
-      const stableKey = layout[0].__stableKey;
+    test("publish collapses the draft into the theme layer keyed by the requested theme and clears the edited-outlets bookkeeping", async function (assert) {
+      await enterEdited(this);
 
-      this.editor.selectBlock({
-        key: `wf:persist-test-tile:${stableKey}`,
-        name: "wf:persist-test-tile",
-        args: { title: "Original" },
-        metadata: { args: { title: { type: "string" } } },
-      });
-      await editArg(this.editor, "title", "Edited");
+      assert.true(this.editor.editedOutlets.has("homepage-blocks"));
 
-      assert.true(
-        this.editor.editedOutlets.has("homepage-blocks"),
-        "outlet recorded as edited after first mutation"
+      pretender.post("/admin/customize/block-layouts.json", () =>
+        response({ success: true, theme_id: 5, version_token: "v1" })
       );
 
-      pretender.post("/admin/customize/block-layouts.json", () => {
-        return response({
-          success: true,
-          target_theme_id: 7,
-          target_theme_name: "Saved",
-          redirected: false,
-          child_created: false,
-        });
-      });
-
-      await this.persistence.saveAll(5);
+      await this.persistence.publish(5);
 
       assert.false(
         this.editor.editedOutlets.has("homepage-blocks"),
-        "edited-outlet bookkeeping cleared after save"
+        "edited-outlet bookkeeping cleared after publish"
       );
 
       const record = _getRawOutletLayouts().get("homepage-blocks");
-      assert.strictEqual(
-        record[LAYOUT_LAYERS.THEME].length,
-        1,
-        "theme layer published with the saved layout"
-      );
+      assert.strictEqual(record[LAYOUT_LAYERS.THEME].length, 1);
       assert.strictEqual(
         record[LAYOUT_LAYERS.THEME][0].themeId,
-        7,
-        "theme layer keyed by the server-returned target_theme_id"
+        5,
+        "theme layer keyed by the requested theme id, not a server redirect"
       );
     });
 
-    test("saveAll records errors per outlet and continues", async function (assert) {
-      withTestBlockRegistration(() => registerBlock(PersistTile));
-      const layout = await registerLayout(getOwner(this));
-      const stableKey = layout[0].__stableKey;
+    test("publish keeps the outlet edited and flags a conflict on 409", async function (assert) {
+      await enterEdited(this);
 
-      this.editor.selectBlock({
-        key: `wf:persist-test-tile:${stableKey}`,
-        name: "wf:persist-test-tile",
-        args: { title: "Original" },
-        metadata: { args: { title: { type: "string" } } },
-      });
-      await editArg(this.editor, "title", "Edited");
+      pretender.post("/admin/customize/block-layouts.json", () =>
+        response(409, { errors: ["This layout was changed by someone else."] })
+      );
 
-      pretender.post("/admin/customize/block-layouts.json", () => {
-        return response(422, { errors: ["Layout exceeds max depth"] });
-      });
-
-      const result = await this.persistence.saveAll(5);
+      const result = await this.persistence.publish(5);
       assert.strictEqual(result.saved.length, 0);
       assert.strictEqual(result.errors.length, 1);
-      assert.strictEqual(result.errors[0].outlet, "homepage-blocks");
+      assert.true(result.errors[0].conflict, "flags the 409 as a conflict");
+      assert.true(
+        this.editor.editedOutlets.has("homepage-blocks"),
+        "the edit is preserved on conflict"
+      );
+    });
+
+    test("publish records errors per outlet and continues", async function (assert) {
+      await enterEdited(this);
+
+      pretender.post("/admin/customize/block-layouts.json", () =>
+        response(422, { errors: ["Layout exceeds max depth"] })
+      );
+
+      const result = await this.persistence.publish(5);
+      assert.strictEqual(result.saved.length, 0);
+      assert.strictEqual(result.errors.length, 1);
+      assert.false(result.errors[0].conflict);
       assert.true(result.errors[0].message.includes("max depth"));
     });
 
-    test("saveAll is a no-op when no outlet has been edited", async function (assert) {
-      const result = await this.persistence.saveAll(5);
+    test("publish is a no-op when no outlet has been edited", async function (assert) {
+      const result = await this.persistence.publish(5);
       assert.strictEqual(result.saved.length, 0);
       assert.strictEqual(result.errors.length, 0);
     });
 
-    test("saveAll refuses to POST and keeps the draft when the resolved read fails (data-loss backstop)", async function (assert) {
-      withTestBlockRegistration(() => registerBlock(PersistTile));
-      const layout = await registerLayout(getOwner(this));
-      const stableKey = layout[0].__stableKey;
-
-      this.editor.selectBlock({
-        key: `wf:persist-test-tile:${stableKey}`,
-        name: "wf:persist-test-tile",
-        args: { title: "Original" },
-        metadata: { args: { title: { type: "string" } } },
-      });
-      await editArg(this.editor, "title", "Edited");
-
-      assert.true(
-        this.editor.editedOutlets.has("homepage-blocks"),
-        "outlet recorded as edited"
-      );
-
-      // Simulate the production read-path failure this guard exists for: a
-      // null resolved read must NOT be serialized into an empty-layout POST.
+    test("publish refuses to POST and keeps the draft when the resolved read fails", async function (assert) {
+      await enterEdited(this);
       this.editor.readResolvedLayout = () => null;
 
       pretender.post("/admin/customize/block-layouts.json", () => {
         assert.step("posted");
-        return response({ success: true, target_theme_id: 5 });
+        return response({ success: true, theme_id: 5, version_token: "v1" });
       });
 
-      const result = await this.persistence.saveAll(5);
+      const result = await this.persistence.publish(5);
+      assert.strictEqual(result.saved.length, 0);
+      assert.strictEqual(result.errors.length, 1);
+      assert.true(result.errors[0].message.includes("empty/unreadable"));
+      assert.true(this.editor.editedOutlets.has("homepage-blocks"));
+      assert.verifySteps([]);
+    });
 
-      assert.strictEqual(result.saved.length, 0, "nothing saved");
-      assert.strictEqual(
-        result.errors.length,
-        1,
-        "the outlet is reported as an error"
+    test("saveDraft posts the drafts endpoint and leaves the theme layer untouched", async function (assert) {
+      await enterEdited(this);
+
+      pretender.post(
+        "/admin/plugins/wireframe/block-layout-drafts.json",
+        (request) => {
+          const body = parsePostData(request.requestBody);
+          assert.strictEqual(body.theme_id, "5");
+          assert.strictEqual(body.outlet_name, "homepage-blocks");
+          const payload = JSON.parse(body.layout_json);
+          assert.strictEqual(payload.layout[0].args.title, "Edited");
+          assert.step("drafted");
+          return response({ success: true });
+        }
       );
-      assert.strictEqual(result.errors[0].outlet, "homepage-blocks");
-      assert.true(
-        result.errors[0].message.includes("empty/unreadable"),
-        "surfaces the refusal reason"
+
+      const result = await this.persistence.saveDraft(5);
+      assert.strictEqual(result.saved.length, 1);
+      assert.verifySteps(["drafted"]);
+
+      const record = _getRawOutletLayouts().get("homepage-blocks");
+      assert.strictEqual(
+        record[LAYOUT_LAYERS.THEME].length,
+        0,
+        "a draft does not collapse into the theme layer"
       );
       assert.true(
         this.editor.editedOutlets.has("homepage-blocks"),
-        "the draft is preserved (edited-outlet bookkeeping not cleared)"
+        "the outlet stays edited after a draft save"
       );
-      assert.verifySteps([], "no POST was issued");
+    });
+
+    test("resetToDefault deletes the field and clears the theme layer", async function (assert) {
+      withTestBlockRegistration(() => registerBlock(PersistTile));
+      _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: PersistTile, args: { title: "Published" } }],
+        getOwner(this),
+        { themeId: 5 }
+      );
+      await settled();
+
+      pretender.delete("/admin/customize/block-layouts.json", () => {
+        assert.step("deleted");
+        return response({ success: true, theme_id: 5 });
+      });
+
+      await this.persistence.resetToDefault(5, "homepage-blocks");
+      assert.verifySteps(["deleted"]);
+
+      const record = _getRawOutletLayouts().get("homepage-blocks");
+      const themeLayerCleared =
+        record == null || record[LAYOUT_LAYERS.THEME].length === 0;
+      assert.true(themeLayerCleared, "the theme layer is cleared locally");
+    });
+
+    test("discardDraft issues a DELETE to the drafts endpoint", async function (assert) {
+      pretender.delete(
+        "/admin/plugins/wireframe/block-layout-drafts.json",
+        () => {
+          assert.step("discarded");
+          return response({ success: true });
+        }
+      );
+
+      await this.persistence.discardDraft(5, "homepage-blocks");
+      assert.verifySteps(["discarded"]);
     });
   }
 );
