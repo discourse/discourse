@@ -2,8 +2,10 @@
 
 begin
   require_relative "base"
+  require_relative "upload_markdown_normalizer"
   require "sqlite3"
   require "json"
+  require "csv"
 rescue LoadError
   STDERR.puts "",
               "ERROR: Failed to load required gems.",
@@ -155,6 +157,40 @@ class BulkImport::Generic < BulkImport::Base
     import_reaction_shadow_likes
 
     import_upload_references
+
+    report_unreplaced_upload_placeholders
+  end
+
+  def report_unreplaced_upload_placeholders
+    entries = @unreplaced_upload_placeholders
+    return if entries.blank?
+
+    total_placeholders = entries.sum { |entry| entry[:upload_ids].size }
+    path = File.expand_path("unreplaced_upload_placeholders.csv")
+
+    CSV.open(path, "w") do |csv|
+      csv << %w[content_type original_id url upload_id]
+      entries.each do |entry|
+        url =
+          if entry[:content_type] == "post" &&
+               (post_id = post_id_from_imported_id(entry[:original_id]))
+            "#{Discourse.base_url}/p/#{post_id}"
+          end
+        entry[:upload_ids].each do |upload_id|
+          csv << [entry[:content_type], entry[:original_id], url, upload_id]
+        end
+      end
+    end
+
+    red = ->(text) { "\e[31m#{text}\e[0m" }
+    puts ""
+    puts red.call("#{"!" * 10} UNREPLACED UPLOAD PLACEHOLDERS #{"!" * 10}")
+    puts red.call(
+           "#{total_placeholders} upload placeholder(s) across #{entries.size} post(s)/message(s) " \
+             "were NOT replaced (upload missing from uploads.db).",
+         )
+    puts red.call("Details (url + upload id) written to: #{path}")
+    puts ""
   end
 
   def execute_after
@@ -1002,7 +1038,7 @@ class BulkImport::Generic < BulkImport::Base
     @group_id_name_map ||= Group.pluck(:id, :name).to_h
   end
 
-  def raw_with_placeholders_interpolated(raw, row)
+  def raw_with_placeholders_interpolated(raw, row, content_type: "post")
     raw = raw.dup
     placeholders = row["placeholders"]&.then { |json| JSON.parse(json) }
 
@@ -1128,15 +1164,36 @@ class BulkImport::Generic < BulkImport::Base
       upload_ids = JSON.parse(row["upload_ids"])
       upload_ids_placeholders = (["?"] * upload_ids.size).join(",")
 
+      replaced_ids = []
       query(
         "SELECT id, markdown FROM uploads WHERE id IN (#{upload_ids_placeholders})",
         upload_ids,
         db: @uploads_db,
       ).tap do |result_set|
-        result_set.each { |upload| raw.gsub!("[upload|#{upload["id"]}]", upload["markdown"] || "") }
+        result_set.each do |upload|
+          markdown = upload["markdown"]
+          raw.gsub!("[upload|#{upload["id"]}]", markdown || "")
+          replaced_ids << upload["id"].to_s if markdown.present?
+        end
         result_set.close
       end
+
+      # A placeholder is "unreplaced" when its upload is missing from uploads.db OR was found but
+      # has no markdown (then it was silently blanked, leaving nothing to scan for). Both are known
+      # directly from the data, so report them instead of shipping broken posts.
+      missing_upload_ids = upload_ids.map(&:to_s) - replaced_ids
+      if missing_upload_ids.any?
+        (@unreplaced_upload_placeholders ||= []) << {
+          content_type: content_type,
+          original_id: row["id"],
+          upload_ids: missing_upload_ids,
+        }
+      end
     end
+
+    # Make the upload markdown cook correctly regardless of the context it sits in (table cells,
+    # block HTML, indented lines). No-op unless upload markdown is present.
+    raw = UploadMarkdownNormalizer.normalize(raw) if raw.include?("upload://")
 
     raw
   end
@@ -3259,7 +3316,8 @@ class BulkImport::Generic < BulkImport::Base
         deleted_at: to_datetime(row["deleted_at"]),
         deleted_by_id: deleted_by_id,
         in_reply_to_id: in_reply_to_id,
-        message: raw_with_placeholders_interpolated(row["message"], row),
+        message:
+          raw_with_placeholders_interpolated(row["message"], row, content_type: "chat_message"),
       }
     end
 
