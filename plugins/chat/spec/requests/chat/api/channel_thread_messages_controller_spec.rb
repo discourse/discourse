@@ -48,6 +48,15 @@ RSpec.describe Chat::Api::ChannelThreadMessagesController do
             [thread.original_message.id, message_1.id],
           )
         end
+
+        it "returns 404 when the thread original message is deleted" do
+          thread.original_message.trash!
+
+          get "/chat/api/channels/#{thread.channel.id}/threads/#{thread.id}/messages"
+
+          expect(response.status).to eq(404)
+          expect(response.parsed_body["error_type"]).to eq("not_found")
+        end
       end
     end
 
