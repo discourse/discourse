@@ -79,7 +79,7 @@ export default class Tabs extends Component {
         as |form transientData|
       >
         <form.Section
-          class="edit-category-content edit-category-tab-{{@controller.selectedTab}}"
+          class="edit-category-tab edit-category-tab-{{@controller.selectedTab}}"
         >
           {{#let
             (this.componentFor

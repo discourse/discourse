@@ -15,10 +15,9 @@ $number-input-width: var(--form-kit-small-input);
     display: block;
   }
 
-  .edit-category-content {
+  .edit-category-tab {
     .form-kit__container-content {
-      flex-direction: column;
-
+      // flex-direction: column;
       input[type="number"] {
         width: $number-input-width;
       }
