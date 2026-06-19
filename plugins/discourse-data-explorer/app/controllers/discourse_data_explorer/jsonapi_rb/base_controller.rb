@@ -2,11 +2,11 @@
 
 module DiscourseDataExplorer
   module JsonapiRb
-    # Thin JSON:API base controller + declarative query-surface DSL.
+    # JSON:API Kit — base controller + declarative query-surface DSL.
     #
     # This is the "own a small framework" piece from the API-modernization exploration
     # (docs/api-modernization-exploration.md, Part 9, punch-list #1). It gives the
-    # thin-layers approach Graphiti-like ergonomics — a resource declares its filters,
+    # JSON:API Kit Graphiti-like ergonomics — a resource declares its filters,
     # sorts, includes, base scope, stats and pagination, and this base implements the
     # mechanics once (strict params → 400, filtering, sorting incl. joins, keyset/offset
     # pagination, sparse fieldsets, stats meta, Guardian scoping, JSON:API rendering).
@@ -15,7 +15,7 @@ module DiscourseDataExplorer
     # own. Reads are generic (index/show); writes stay per-controller (Service::Base).
     class BaseController < ::ApplicationController
       # Self-contained: the include/fields/pagination/deserialization helpers (formerly
-      # the jsonapi.rb gem's mixins) are absorbed below, so the thin stack depends only on
+      # the jsonapi.rb gem's mixins) are absorbed below, so the Kit depends only on
       # jsonapi-serializer (rendering) + pagy (keyset). See the helpers in the private section.
 
       requires_plugin DiscourseDataExplorer::PLUGIN_NAME
@@ -75,7 +75,7 @@ module DiscourseDataExplorer
         _jsonapi_config.instance_eval(&block)
       end
 
-      # Machine-readable contract descriptor — the thin-layers analogue of Graphiti's
+      # Machine-readable contract descriptor — the JSON:API Kit's analogue of Graphiti's
       # generated schema. The backwards-compat guard (spec/integration/
       # jsonapi_rb_contract_spec.rb) diffs it against a committed baseline and fails on
       # backwards-incompatible changes (removed attribute/filter/sort/relationship,

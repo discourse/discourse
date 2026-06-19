@@ -2,7 +2,7 @@
 
 module DiscourseDataExplorer
   module JsonapiRb
-    # Thin-layers JSON:API endpoint for Query, built on the declarative DSL in
+    # JSON:API Kit endpoint for Query, built on the declarative DSL in
     # BaseController (docs/api-modernization-exploration.md, Part 9). Compare the size
     # of this file to the Graphiti QueryResource — the read query surface is now just a
     # config block; only the write (create) carries bespoke logic, via Service::Base.

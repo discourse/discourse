@@ -12,7 +12,7 @@ module DiscourseDataExplorer
     # linking to them (a JSON:API full-linkage violation). Fix: pass the child's own parsed
     # include context (`parse_includes_list(include_item.last)`).
     #
-    # This is the thin-layers analogue of the Graphiti monkeypatches: deep nested includes
+    # This is the JSON:API Kit's analogue of the Graphiti monkeypatches: deep nested includes
     # *and* the conditional-linkage perf optimization, together, require this small owned
     # patch. Verbatim copy of the gem's method with one changed line (safe to own — the gem
     # is dormant/frozen). See docs/api-modernization-exploration.md, Part 9.

@@ -1,6 +1,6 @@
 # API Modernization Exploration
 
-**Status:** Exploratory / RFC — Graphiti spike complete (Part 8); thin-layers spike +
+**Status:** Exploratory / RFC — Graphiti spike complete (Part 8); JSON:API Kit spike +
 head-to-head comparison (Part 9). **Decision still open.** Parts 3 & 5 were partially
 revised post-spike (see the revision notes there); claims were re-audited against source/
 tooling on 2026-06-17.
@@ -9,7 +9,7 @@ tooling on 2026-06-17.
 `graphiti`/`graphiti-rails`/`pagy`/`jsonapi.rb` entries in the root `Gemfile`, and a
 `Group.has_many :query_groups` association patch in `plugin.rb` (Graphiti `groups`
 sideload). Two endpoints are built for an apples-to-apples comparison: a Graphiti one
-(`/data-explorer/api/v1`) and a thin-layers one (`/data-explorer/jsonapi-rb`).
+(`/data-explorer/api/v1`) and a JSON:API Kit one (the home-grown "thin-layers" approach; `/data-explorer/jsonapi-rb`).
 
 ## Why this document exists
 
@@ -178,15 +178,15 @@ starting point.
 | Serializer | Used by | Last real feature work | Read |
 |---|---|---|---|
 | **jsonapi-serializable** | Graphiti | 2021 (46 stars) | **Dead.** Graphiti is welded to it. |
-| **jsonapi-serializer** (ex-fast_jsonapi) | thin-layers | ~2020–22; v3 rewrite stalled; 2026 commits are CI-only | **Feature-dead** — but works; MIT + ~500 LOC, forkable on demand |
+| **jsonapi-serializer** (ex-fast_jsonapi) | JSON:API Kit | ~2020–22; v3 rewrite stalled; 2026 commits are CI-only | **Feature-dead** — but works; MIT + ~500 LOC, forkable on demand |
 | **Alba** | (evaluated, rejected) | v3.10 (2025-11), active maintainer | Alive, but JSON:API is "manual" (no compound-doc adapter) → would mean rebuilding the hard part. Rejected — see Part 9 |
 | **pagy** | both (keyset) | continuous (2026-06) | **Very alive** |
 
 > **Key maintenance finding (post-audit, refined in Part 9):** *both* leading paths render
-> through a **feature-dead serializer** (Graphiti→jsonapi-serializable; thin→jsonapi-serializer).
+> through a **feature-dead serializer** (Graphiti→jsonapi-serializable; Kit→jsonapi-serializer).
 > For a **frozen spec** this is a *mild, well-mitigated* risk, not a differentiator: the
 > serializers work today, are small + MIT, and can be **forked on demand** (~500 LOC) the day a
-> future Ruby/Rails breaks them. (We evaluated swapping the thin path to the *live* Alba and
+> future Ruby/Rails breaks them. (We evaluated swapping the Kit to the *live* Alba and
 > rejected it — Alba does JSON:API "manually," so it would mean rebuilding the hard
 > compound-document engine the dead gem already provides. See Part 9.)
 
@@ -205,15 +205,15 @@ spec without re-implementing `include`/`fields`/`filter`/`sort`/`page` by hand.
 > two cells proved wrong (corrected below, full story in Part 9): (a) jsonapi.rb does **not**
 > get the full query surface for free — its filtering is Ransack, which **breaks core
 > Discourse** (Polyamorous monkeypatches AR join aliasing), so filtering/sorting must be
-> hand-rolled per endpoint; (b) the "best for the decade" verdict for thin-layers was
+> hand-rolled per endpoint; (b) the "best for the decade" verdict for the Kit was
 > **premature**. Treat the matrix as the *pre-spike hypothesis*; Part 9 is the evidence.
 
-| Criterion | **jsonapi.rb (thin-layers)** | **Graphiti** | **Grape + grape-jsonapi** |
+| Criterion | **JSON:API Kit** | **Graphiti** | **Grape + grape-jsonapi** |
 |---|---|---|---|
 | **Full JSON:API query surface** | ⚠️ include/fields/pagination yes; **filtering & sorting hand-rolled** (Ransack unusable — breaks core, Part 9) | ✅✅ all natively + deep sideloading, least code | ❌ formatter only — you build the surface |
 | **Public contract + OpenAPI docs** | ⚠️ DIY (rswag from request specs) | ⚠️ own `schema.json` (not OpenAPI) — **but** auto backwards-compat CI guard | ✅✅ grape-swagger (mature) |
 | **Versioning** | DIY in Rails (easy) | DIY in Rails (easy) | ✅ first-class |
-| **Longevity / low lock-in** | ✅ thin/forkable; rides a feature-dead serializer (fork-on-demand for a frozen spec — mild risk), and you own the query surface | ⚠️ high lock-in; alive framework but welded to a dead serializer (bus-factor lower than first stated — multiple active contributors) | ✅ framework solid / ⚠️ adapter fragile |
+| **Longevity / low lock-in** | ✅ small/forkable; rides a feature-dead serializer (fork-on-demand for a frozen spec — mild risk), and you own the query surface | ⚠️ high lock-in; alive framework but welded to a dead serializer (bus-factor lower than first stated — multiple active contributors) | ✅ framework solid / ⚠️ adapter fragile |
 | **Discourse-fit** (Guardian, `Service::Base`, ActionController) | ✅✅ all reused as-is | ⚠️ auth is 100% DIY (base_scope + guards); `save` can delegate to a service, but side-posting fights it | ❌ reconstruct auth/`current_user` outside AC |
 | **Verdict** | ~~Best for the decade~~ — **premature; open** (Part 9): low lock-in (own the glue), but you build & own the query surface | **Best to *experience* full JSON:API fast** — and the only genuinely-alive framework here | Weakest for *this* goal |
 
@@ -288,8 +288,8 @@ Implications for us:
   the conformance snag media-type versioning hits. The two compose: stay additive
   (JSON:API's "additive is non-breaking") for the ~90% of changes that are additive, and
   spend a version transformation only on genuinely breaking ones.
-- **It pushes (mildly) toward thin-layers over Graphiti.** The transformation pipeline
-  lives in the serialization seam — the layer the thin-layers approach keeps yours and
+- **It pushes (mildly) toward the Kit over Graphiti.** The transformation pipeline
+  lives in the serialization seam — the layer the Kit keeps yours and
   swappable. Bolting Stripe-style gates onto Graphiti means post-processing the
   framework's own rendered output, which fights it.
 - **Don't build the machinery for v1 — design *for* it.** The pipeline is a standing
@@ -311,7 +311,7 @@ Implications for us:
   serialization seam**, so the heavier model can be adopted later without a rewrite.
 - **Graphiti note:** its auto-generated `schema.json` + CI backwards-compat check is a
   genuine contract-drift *alarm* (catches dropped filters, changed default sorts, type
-  changes) — a real asset for a public contract that the thin-layers path doesn't give for
+  changes) — a real asset for a public contract that the Kit doesn't give for
   free. But it only catches *schema-level* breaks, and Graphiti has no versioning
   machinery: it gives you the breaking-change alarm, not the Stripe-style downgrade
   pipeline (which would fight its serialization ownership anyway).
@@ -323,7 +323,7 @@ Implications for us:
 Illustrative shapes (not exact APIs), public + versioned, with `user`/`groups` as real
 JSON:API relationships.
 
-### A) Thin-layers — ActionController + jsonapi.rb + `Service::Base`
+### A) JSON:API Kit — ActionController + jsonapi.rb + `Service::Base`
 
 ```ruby
 # config/routes.rb
@@ -348,7 +348,7 @@ end
 ```
 
 ```ruby
-# controller — thin; query semantics are explicit opt-in; logic lives in the service
+# controller — lean; query semantics are explicit opt-in; logic lives in the service
 class Api::V1::QueriesController < Api::V1::BaseController
   include JSONAPI::Fetching      # include + sparse fieldsets
   include JSONAPI::Filtering     # ⚠️ filter via Ransack — UNUSABLE in Discourse (Part 9); hand-roll instead
@@ -413,7 +413,7 @@ the JSON:API query surface is explicit (you allowlist filters, opt into includes
 code per endpoint, near-zero lock-in. Best fit for the Stripe-style serialization seam.
 
 > **Correction (Part 9):** `JSONAPI::Filtering` (Ransack) **breaks core Discourse**, so the
-> real thin endpoint hand-rolls filtering *and* sorting. The "explicit query surface" is
+> real Kit endpoint hand-rolls filtering *and* sorting. The "explicit query surface" is
 > therefore meaningfully *more* code than this sketch implies — closer to "build your own
 > small DSL" than "opt-in wiring."
 
@@ -534,7 +534,7 @@ are the subtleties that don't show up in a feature matrix — the things a spike
   `required`/`single`, **and adding/changing a `default_sort` or `default_page_size`**. It runs
   *inside the test suite* (`GraphitiSpecHelpers::RSpec.schema!`); `FORCE_SCHEMA=true` is the
   deliberate "yes, I'm breaking it" override. This is a real, CI-enforceable public-contract
-  guardrail — stronger than the matrix implies, and something the thin-layers path doesn't get
+  guardrail — stronger than the matrix implies, and something the Kit doesn't get
   for free. (Caveat: it only runs over resources loaded during the test boot, and `FORCE_SCHEMA`
   must never be set in normal CI.)
 - **N+1 avoidance is structural.** Sideloads are *separate `IN`-filtered queries per
@@ -660,12 +660,12 @@ all writes through attributes + a service.
    (concurrency/thread-locals, write authz, the write-dialect divergence).
 3. **Make the commitment decision separately.** If the experience confirms we want the
    whole query surface and we can accept the lock-in, keep Graphiti. If not,
-   the **thin-layers** approach gives the same wire contract with a decade of
+   the **JSON:API Kit** gives the same wire contract with a decade of
    swappability and our `Service::Base`/Guardian patterns intact — and is the better host
-   for a Stripe-style versioning seam. **→ The thin-layers spike (Part 9) refined this:**
+   for a Stripe-style versioning seam. **→ The JSON:API Kit spike (Part 9) refined this:**
    it's "same wire contract, but you build & own the query surface (Ransack is unusable in
    Discourse), on a feature-dead-but-forkable serializer (jsonapi-serializer)." Decision remains
-   genuinely open — performance is a wash, and it comes down to *depend (Graphiti) vs own (thin)*.
+   genuinely open — performance is a wash, and it comes down to *depend (Graphiti) vs own (the Kit)*.
 4. **Design v1 for versioning from day one** (always-latest internal representation +
    serialization seam + per-key version pin) without building the full transformation
    pipeline yet.
@@ -1134,9 +1134,9 @@ the recommendation.
 
 ---
 
-## Part 9 — Thin-layers spike & corrected comparison
+## Part 9 — JSON:API Kit spike & corrected comparison
 
-Built the jsonapi.rb thin-layers endpoint (`/data-explorer/jsonapi-rb`) to **full feature
+Built the JSON:API Kit endpoint (`/data-explorer/jsonapi-rb`) to **full feature
 parity** with the Graphiti `QueryResource` example, for an honest apples-to-apples comparison:
 reads, `user`/`groups` relationships, `include` + sparse fieldsets, `filter[search]`, sorts
 (incl. a `username` join), `default_sort`, keyset cursor (pagy), stats meta, admin-only
@@ -1160,7 +1160,7 @@ after removal.)
   `jsonapi/filtering → ransack`. Filtering is hand-rolled in the controller (`LOWER(name/
   description) LIKE`, `sanitize_sql_like`).
 - **Implication:** jsonapi.rb's batteries-included filtering is **unusable in Discourse**. The
-  one convenience that made the thin stack "easy" is gone — you hand-roll filtering *and*
+  one convenience that made the Kit stack "easy" is gone — you hand-roll filtering *and*
   sorting per endpoint, i.e. build your own query-surface DSL. (This corrects the Part 3
   matrix and the Part 5 sketch.) Note the symmetry with Graphiti: both ecosystems carry a
   global-monkeypatch hazard — Graphiti's `graphiti-rails` rake pollutes `Object` (Part 8),
@@ -1170,7 +1170,7 @@ after removal.)
 ### Maintenance reality (verified 2026-06-17)
 
 *Both* leading paths render through a **feature-dead serializer** (Graphiti→jsonapi-serializable,
-dead 2021; thin→jsonapi-serializer, last real features ~2020–22). Graphiti-the-*framework* is
+dead 2021; Kit→jsonapi-serializer, last real features ~2020–22). Graphiti-the-*framework* is
 itself alive (1.10.2 2026-03, multiple contributors) — the original "bus-factor" worry was
 overstated.
 
@@ -1185,7 +1185,7 @@ Graphiti is alive and would likely patch/replace it upstream.)
 
 ### Serialization: explored Alba, kept jsonapi-serializer
 
-We seriously evaluated swapping the thin path onto the **live** Alba serializer (v3.10, 2025-11)
+We seriously evaluated swapping the Kit onto the **live** Alba serializer (v3.10, 2025-11)
 to escape the dead dependency. Conclusion: **not worth it.**
 
 - **Alba does JSON:API "manually"** (its own README; no compound-document adapter). Its
@@ -1220,77 +1220,77 @@ wrk, page 50, c=8, profile env, m2m-patched Graphiti, both endpoints in the same
 
 **Two measurements — before and after conditional linkage (parity item #2) was built.**
 
-*Initial — thin always emitted linkage + always preloaded (a crossover):*
+*Initial — the Kit always emitted linkage + always preloaded (a crossover):*
 
 | scenario | rps | in-proc queries |
 |---|---|---|
 | GRAPHITI flat | 525 | 7 |
-| THIN flat | 345 | 10 |
-| THIN +incl | 310 | 10 |
+| KIT flat | 345 | 10 |
+| KIT +incl | 310 | 10 |
 | GRAPHITI +incl | 225 | 9 |
 
-Graphiti won flat (+52%) *only* because thin always emitted linkage and preloaded `user`+`groups`
-(10 queries vs 7); thin won +incl (+38%). A genuine crossover.
+Graphiti won flat (+52%) *only* because the Kit always emitted linkage and preloaded `user`+`groups`
+(10 queries vs 7); the Kit won +incl (+38%). A genuine crossover.
 
-*After conditional linkage (lazy linkage + preload only included relationships → thin flat now 7
+*After conditional linkage (lazy linkage + preload only included relationships → Kit flat now 7
 queries, like Graphiti) — re-run, same methodology, same boot:*
 
 | scenario | rps | avg latency | in-proc queries |
 |---|---|---|---|
-| **THIN flat** | **624** | 12.7 ms | 7 |
+| **KIT flat** | **624** | 12.7 ms | 7 |
 | GRAPHITI flat | 506 | 15.7 ms | 7 |
-| **THIN +incl** | **305** | 26.1 ms | 10 |
+| **KIT +incl** | **305** | 26.1 ms | 10 |
 | GRAPHITI +incl | 215 | 36.9 ms | 9 |
 
-**The crossover is gone: at feature parity, thin wins both regimes** — flat **+23%**, +incl
-**+42%**. Removing the always-linkage tax made thin flat *leaner* than Graphiti flat: thin omits
+**The crossover is gone: at feature parity, the Kit wins both regimes** — flat **+23%**, +incl
+**+42%**. Removing the always-linkage tax made Kit flat *leaner* than Graphiti flat: the Kit omits
 non-included relationships entirely (12.5 KB doc), whereas Graphiti emits a `{meta:{included:
-false}}` marker (17 KB) — both compliant, but thin sends and serializes less. (Graphiti's 506/215
-match the earlier 525/225 within box variance, so the thin gains are real, not drift.)
+false}}` marker (17 KB) — both compliant, but the Kit sends and serializes less. (Graphiti's 506/215
+match the earlier 525/225 within box variance, so the Kit's gains are real, not drift.)
 
-Net: **once the thin endpoint matches Graphiti's linkage economics, it is faster on both bare and
-compound requests.** Perf now mildly favors thin — but it remains a secondary factor next to
+Net: **once the Kit matches Graphiti's linkage economics, it is faster on both bare and
+compound requests.** Perf now mildly favors the Kit — but it remains a secondary factor next to
 *depend vs own*.
 
-#### Full three-way suite — thin vs Graphiti vs AMS (the Part 8 methodology, all three)
+#### Full three-way suite — the Kit vs Graphiti vs AMS (the Part 8 methodology, all three)
 
-Re-run with the *final* thin stack (DSL + conditional linkage + mixins absorbed → deps are just
+Re-run with the *final* Kit stack (DSL + conditional linkage + mixins absorbed → deps are just
 jsonapi-serializer + pagy). Same boot, profile env, page 50.
 
 **HTTP throughput** (wrk, c=8, explicit URLs):
 
 | endpoint | rps | avg latency |
 |---|---|---|
-| **THIN flat** | **593** | 13.4 ms |
+| **KIT flat** | **593** | 13.4 ms |
 | GRAPHITI flat | 476 | 16.6 ms |
-| **THIN +incl** | **287** | 27.8 ms |
+| **KIT +incl** | **287** | 27.8 ms |
 | GRAPHITI +incl | 201 | 39.7 ms |
 | LEGACY AMS index | 266 | 29.7 ms |
 
 (The legacy AMS index is an *endpoint* baseline, not pure serialization — it merges default
 queries, computes `total_rows`, builds `load_more`, and paginates differently. Matches Part 8's
-C ≈ 270. Thin/Graphiti are the clean JSON:API comparison.)
+C ≈ 270. Kit/Graphiti are the clean JSON:API comparison.)
 
 **In-process cost model** (N=50, pure serialization render — env-independent allocations/queries):
 
 | impl | queries | allocations | best |
 |---|---|---|---|
-| **THIN flat** | 2 | **3,074** | 1.2 ms |
+| **KIT flat** | 2 | **3,074** | 1.2 ms |
 | GRAPHITI flat | 1 | 6,889 | 2.4 ms |
-| **THIN +incl** | 5 | **10,592** | 5.6 ms |
+| **KIT +incl** | 5 | **10,592** | 5.6 ms |
 | GRAPHITI +incl | 3 | 14,516 | 6.1 ms |
 | LEGACY AMS (inline format) | 4 | 8,351 | 5.1 ms |
 
-**Both methods agree: jsonapi-serializer (thin) is the leanest renderer** — fewer allocations and
+**Both methods agree: jsonapi-serializer (the Kit's serializer) is the leanest renderer** — fewer allocations and
 less time than *both* Graphiti and Discourse's current AMS, flat and compound. (Graphiti issues
-fewer queries flat — 1 vs 2 — but allocates ~2.2× more; thin's win is Ruby/allocation cost, the
+fewer queries flat — 1 vs 2 — but allocates ~2.2× more; the Kit's win is Ruby/allocation cost, the
 scaling factor, not SQL. Legacy AMS renders a different inline shape, so it's a reference point,
 not a like-for-like.) This is the strongest objective evidence in the whole exploration, and it
-points the same way as everything else: the thin path is *not* a performance compromise.
+points the same way as everything else: the Kit is *not* a performance compromise.
 
 ### Built: the query-surface DSL (punch-list #1) — closes the "ease" gap
 
-The biggest knock on the thin path was "you hand-roll the query surface per endpoint." So we
+The biggest knock on the Kit was "you hand-roll the query surface per endpoint." So we
 built the reusable piece: `BaseController` + a declarative `jsonapi do … end` DSL
 (`app/controllers/discourse_data_explorer/jsonapi_rb/base_controller.rb`). A resource now
 declares its `serializer`, `base_scope`, `filter`s, `sort`s (incl. join sorts), `default_sort`,
@@ -1317,26 +1317,26 @@ was Graphiti's main remaining edge.
 
 ### Honest state of the comparison (decision OPEN)
 
-| Axis | Graphiti | Thin-layers (jsonapi.rb) |
+| Axis | Graphiti | JSON:API Kit |
 |---|---|---|
 | Ease of building endpoints | ✅ declarative filters/sorts/stats | ✅ declarative DSL (**built**, Part 9 #1) — ~30 LOC/resource, no Ransack |
 | Project liveness | ✅ framework alive | ✅ deps now just **jsonapi-serializer + pagy** (jsonapi.rb dropped); pagy alive, jsonapi-serializer feature-dead but fork-on-demand (mild) |
-| Compound-doc perf (+includes) | slower (−42% vs thin) | **faster** |
-| Bare-request perf (flat) | slower (−23% vs thin) | **faster** (conditional linkage **built**, #2) |
+| Compound-doc perf (+includes) | slower (−42% vs the Kit) | **faster** |
+| Bare-request perf (flat) | slower (−23% vs the Kit) | **faster** (conditional linkage **built**, #2) |
 | Contract/drift guard | ✅ SchemaDiff | ✅ **built** — `jsonapi_rb_contract.json` + spec (backwards-incompat detection, live-fire verified) |
 | Lock-in | high | low (own the glue) |
 | Footguns | writable-default data-loss; `graphiti-rails` rake `Object` pollution | Ransack-breaks-core (avoided by dropping Ransack) |
 | Core-safety | needs the `Object`-pollution scrub initializer | clean once Ransack removed |
 | What we'd own/maintain | config + a 1-line `Group` association to function; 3 *optional* perf monkeypatches | a small framework (~250 LOC) **+ 1 small serializer monkeypatch** (nested-include + lazy linkage); serializer stays jsonapi-serializer (fork only if it breaks) |
 
-**Thin-layers viability punch-list — ALL DONE:** **(1) ✅** reusable base controller + declarative
+**JSON:API Kit viability punch-list — ALL DONE:** **(1) ✅** reusable base controller + declarative
 DSL (125 LOC); **(2) ✅** conditional relationship linkage (lazy + preload-only-included → flat 7
-queries; flipped flat perf to a thin win); **(3) ✅** serializer stays jsonapi-serializer,
+queries; flipped flat perf to a Kit win); **(3) ✅** serializer stays jsonapi-serializer,
 fork-on-demand (frozen spec, ~500 LOC, MIT); **(4) ✅** absorbed the jsonapi.rb mixins
 (include/fields/pagination/deserialization) into `BaseController` — **jsonapi.rb dropped entirely**;
 deps are now just **jsonapi-serializer + pagy**; **(5) ✅** richer error documents — validation
 errors carry `source.pointer` (`/data/attributes/<field>`); **contract guard ✅** —
-`jsonapi_rb_contract.json` + spec (the SchemaDiff analogue, live-fire verified). The thin endpoint
+`jsonapi_rb_contract.json` + spec (the SchemaDiff analogue, live-fire verified). The Kit
 now has **full feature parity with the Graphiti example**, on ~250 owned LOC depending on two
 live-or-forkable libraries.
 
@@ -1356,21 +1356,34 @@ biggest one — **deep nested includes** (`include=user.groups`) — end-to-end 
   the *parent's* include context to the child's `record_hash`, so a lazy leaf's linkage is dropped →
   resources land in `included` with nothing linking to them (full-linkage violation). Fixed with a
   small monkeypatch (`lazy_nested_linkage_patch.rb` — verbatim method + one line). **This is the
-  thin-path analogue of Graphiti's monkeypatches: "thin is patch-free" is _not_ absolute — advanced
+  the Kit's analogue of Graphiti's monkeypatches: "the Kit is patch-free" is _not_ absolute — advanced
   features can require a small serializer patch too (here, on a frozen target).**
 - **Perf is fine, and still beats Graphiti head-to-head.** We added the matching `user.groups`
-  sideload to the Graphiti `QueryResource`/`UserResource` for a true comparison. Same-boot wrk
-  (page 50): **thin nested 366 vs Graphiti nested 302 rps (+21%)** — consistent with the flat
-  (+21%) and one-level (+26%) leads. Both are **N+1-free** (constant queries across page 10/50/100:
-  thin 10, Graphiti 9). Nesting adds no pathological overhead on either side — cost scales with
-  included-resource count. (AMS has no nested-include equivalent — its legacy format inlines
+  sideload to the Graphiti `QueryResource`/`UserResource` for a true comparison. Both are **N+1-free**
+  (constant queries across page 10/50/100: Kit 10, Graphiti 9); nesting adds no pathological
+  overhead on either side. (AMS has no nested-include equivalent — its legacy format inlines
   associations.)
+
+**Definitive same-boot head-to-head** (wrk, page 50, c=8 — the most-controlled run, all six scenarios
+in one boot incl. the Graphiti `user.groups` sideload; supersedes the scattered earlier figures for
+the comparison, which drifted with box variance):
+
+| regime | Kit rps | graphiti rps | Kit lead |
+|---|---|---|---|
+| flat | 623 | 514 | +21% |
+| one-level (`user,groups`) | 280 | 223 | +26% |
+| nested (`user.groups`) | 366 | 302 | +21% |
+
+The Kit leads all three. **Caveat:** these are single-run numbers with ~±5% box variance — across the
+session's runs the flat lead ranged ~+21–25% and the one-level lead ~+26–43% (the Kit always ahead).
+Treat the *direction* (the Kit faster, every regime) as the robust result and the exact percentages as
+approximate.
 
 **De-risk verdict:** the features we'd build later are reachable without fighting the stack — but
 they are *not all free*: this one cost a small serializer patch, moderating the patch-free advantage.
 A known, bounded cost, not a lurking trap.
 
-**The crux for the decade (now that parity is built):** with **perf** (thin faster both regimes),
+**The crux for the decade (now that parity is built):** with **perf** (the Kit faster both regimes),
 **ease** (DSL ≈ declarative resource), **contract guard** (both have it), and **serializer**
 (both fork-on-demand) all settled, the comparison reduces to a single, clean trade:
 
@@ -1378,11 +1391,11 @@ A known, bounded cost, not a lurking trap.
   features we haven't built (side-posting, remote resources, rich filter operators) for free — at
   the cost of **lock-in**, the **data-loss + rake-`Object` footguns**, and a dead serializer you
   can't easily fork (entangled).
-- **Own the thin framework** — ~250 LOC you understand and control, **faster**, **no lock-in**, no
+- **Own the Kit** — ~250 LOC you understand and control, **faster**, **no lock-in**, no
   core-breaking footguns — at the cost of **building and maintaining it** (now including **one small
   serializer patch** for nested-include + lazy linkage — the patch-free advantage is *narrowed, not
   absolute*) and implementing further advanced features yourself *if/when* needed. (Deep nested
   includes: ✅ now built.)
 
-On the measurable axes the thin path now leads; Graphiti's remaining edge is "batteries you don't
+On the measurable axes the Kit now leads; Graphiti's remaining edge is "batteries you don't
 maintain, for features we don't yet need." It is genuinely *"depend vs. own."*

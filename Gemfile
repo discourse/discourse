@@ -320,7 +320,7 @@ gem "pdf-reader", require: false
 gem "graphiti", "1.10.2"
 gem "graphiti-rails"
 gem "pagy", "~> 43.0"
-# thin-layers alternative being compared against Graphiti (same spike). Only the
+# JSON:API Kit — the home-grown alternative being compared against Graphiti (same spike). Only the
 # jsonapi-serializer renderer is used; the jsonapi.rb gem was dropped (its Ransack
 # filtering breaks core; its other mixins were absorbed into the plugin). require: false
 # — required explicitly in plugin.rb to control load order. See Part 9.
