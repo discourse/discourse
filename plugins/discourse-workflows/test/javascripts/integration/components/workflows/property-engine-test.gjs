@@ -70,6 +70,85 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.dom("input").isFocused();
   });
 
+  test("renders configured descriptions as tooltips", async function (assert) {
+    this.setProperties({
+      configuration: { raw: "" },
+      nodeType: "action:post",
+      nodeTypes: [{ identifier: "action:post", name: "action:post" }],
+      schema: {
+        raw: {
+          type: "string",
+          ui: {
+            control: "textarea",
+            description_tooltip: true,
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__container-description").doesNotExist();
+    assert.dom(".fk-d-tooltip__trigger").exists();
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert
+      .dom(".fk-d-tooltip__inner-content")
+      .hasText("Raw content for the post");
+  });
+
+  test("falls back to inline descriptions when tooltip labels are hidden", async function (assert) {
+    this.setProperties({
+      configuration: { raw: "" },
+      nodeType: "action:post",
+      nodeTypes: [{ identifier: "action:post", name: "action:post" }],
+      schema: {
+        raw: {
+          type: "string",
+          ui: {
+            control: "textarea",
+            description_tooltip: true,
+            show_label: false,
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".fk-d-tooltip__trigger").doesNotExist();
+    assert
+      .dom(".form-kit__container-description")
+      .hasText("Raw content for the post");
+  });
+
   test("renders checkbox controls from metadata", async function (assert) {
     this.setProperties({
       configuration: {

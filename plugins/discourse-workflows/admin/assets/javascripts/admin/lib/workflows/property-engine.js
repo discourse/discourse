@@ -340,6 +340,10 @@ export function fieldShowDescription(schema = {}) {
   return fieldUi(schema).show_description !== false;
 }
 
+export function fieldDescriptionAsTooltip(schema = {}) {
+  return fieldUi(schema).description_tooltip === true;
+}
+
 export function fieldShowLabel(schema = {}) {
   return fieldUi(schema).show_label !== false;
 }

@@ -266,8 +266,33 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
         :discourse_workflows_ai_authoring_session,
         user: admin,
         workflow: workflow,
-        latest_request: "Create a manual workflow",
-        messages: [{ "type" => "user", "content" => "Create a manual workflow" }],
+        latest_request:
+          '{"type":"workflow_ask_questions_result","answers":[{"id":"trigger_scope","selected_options":["First post only"]}]}',
+        messages: [
+          {
+            "type" => "user",
+            "content" =>
+              JSON.pretty_generate(
+                {
+                  mode: "edit",
+                  message: "Create a manual workflow after asking questions",
+                  workflow_id: workflow.id,
+                },
+              ),
+          },
+          {
+            "type" => "user",
+            "content" =>
+              JSON.pretty_generate(
+                {
+                  mode: "edit",
+                  message:
+                    '{"type":"workflow_ask_questions_result","answers":[{"id":"trigger_scope","selected_options":["First post only"]}]}',
+                  workflow_id: workflow.id,
+                },
+              ),
+          },
+        ],
       )
     operations = [
       {
@@ -309,6 +334,72 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     expect(session.latest_response).to include(
       "message" => I18n.t("discourse_workflows.ai.tool_call_proposal_message"),
     )
+    expect(session.proposed_patch["title"]).to eq("Create a manual workflow after asking questions")
+    expect(session.proposed_patch.dig("patch_validation", "valid")).to eq(true)
+  end
+
+  it "falls back to validated patch tool calls when the final result omits operations",
+     :aggregate_failures do
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+    session =
+      Fabricate(
+        :discourse_workflows_ai_authoring_session,
+        user: admin,
+        workflow: workflow,
+        latest_request: "Create a manual workflow",
+        messages: [{ "type" => "user", "content" => "Create a manual workflow" }],
+      )
+    operations = [
+      {
+        op: "add_node",
+        client_id: "manual-trigger",
+        node: {
+          type: "trigger:manual",
+          name: "Manual trigger",
+          credentials: [],
+        },
+      },
+    ]
+    raw_context = [
+      [
+        { arguments: { workflow_id: workflow.id, operations: operations.map(&:to_json) } }.to_json,
+        "validate-patch-call-id",
+        "tool_call",
+        "workflow_validate_patch",
+      ],
+      [
+        { status: "success", valid: true }.to_json,
+        "validate-patch-call-id",
+        "tool",
+        "workflow_validate_patch",
+      ],
+      [
+        {
+          status: "error",
+          message: "Proposed patch results must include proposal.operations",
+          questions: [],
+          proposal: {
+          },
+        }.to_json,
+        "authoring-result-call-id",
+        "tool",
+        DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name,
+      ],
+    ]
+    fake_bot = double
+
+    allow(fake_bot).to receive(:reply).and_return(raw_context)
+    allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
+
+    described_class.new.execute(
+      session_id: session.id,
+      user_id: admin.id,
+      generation_id: SecureRandom.hex,
+    )
+
+    expect(session.reload).to have_attributes(status: "proposal_ready", risk_level: "medium")
+    expect(session.proposed_patch["title"]).to eq("Create a manual workflow")
+    expect(session.proposed_patch["operations"]).to eq(JSON.parse(operations.to_json))
     expect(session.proposed_patch.dig("patch_validation", "valid")).to eq(true)
   end
 

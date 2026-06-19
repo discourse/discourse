@@ -183,8 +183,13 @@ module Jobs
       end
 
       def parse_tool_call_response(raw_context)
-        parse_authoring_result_tool_response(raw_context) ||
-          parse_ask_questions_tool_response(raw_context) ||
+        authoring_response = parse_authoring_result_tool_response(raw_context)
+        if invalid_empty_proposed_patch_response?(authoring_response)
+          patch_response = parse_validate_patch_tool_response(raw_context)
+          return patch_response if patch_response.present?
+        end
+
+        authoring_response || parse_ask_questions_tool_response(raw_context) ||
           parse_validate_patch_tool_response(raw_context)
       end
 
@@ -280,8 +285,7 @@ module Jobs
       def tool_call_proposal_response(arguments, operations)
         operations = normalized_patch_operations(operations)
         title =
-          arguments[:workflow_name].presence ||
-            @session.latest_request.to_s.truncate(80).presence ||
+          arguments[:workflow_name].presence || human_request_title ||
             I18n.t("discourse_workflows.ai.tool_call_proposal_title")
 
         {
@@ -329,6 +333,41 @@ module Jobs
           "status" => "error",
           "message" => text.presence || I18n.t("discourse_workflows.ai.error_invalid_response"),
         }
+      end
+
+      def invalid_empty_proposed_patch_response?(parsed)
+        parsed = normalized_hash(parsed)
+        tool_class = ::DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult
+        missing_operations_message = tool_class::MISSING_PROPOSAL_OPERATIONS_MESSAGE
+
+        parsed[:status].to_s == "error" && parsed[:proposal].blank? &&
+          parsed[:message].to_s == missing_operations_message
+      end
+
+      def human_request_title
+        human_request = latest_human_request
+        human_request.presence&.truncate(80)
+      end
+
+      def latest_human_request
+        requests = [@session.latest_request]
+        @session.messages.reverse_each do |message|
+          next if message["type"].to_s != "user"
+
+          requests << user_message_text(message["content"])
+        end
+
+        requests.find { |request| request.present? && !clarification_result_message?(request) }
+      end
+
+      def user_message_text(content)
+        parsed = parse_json_hash(content.to_s)
+        normalized_hash(parsed)[:message].presence || content.to_s
+      end
+
+      def clarification_result_message?(message)
+        parsed = parse_json_hash(message.to_s)
+        normalized_hash(parsed)[:type].to_s == "workflow_ask_questions_result"
       end
 
       def proposed_patch_response?(parsed)

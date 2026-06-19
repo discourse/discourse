@@ -5,6 +5,7 @@ import { i18n } from "discourse-i18n";
 import FIELD_CONTROL_REGISTRY from "../../../lib/workflows/field-control-registry";
 import {
   fieldControl,
+  fieldDescriptionAsTooltip,
   fieldFormat,
   fieldInputType,
   fieldShowDescription,
@@ -126,15 +127,39 @@ export default class Field extends Component {
     return FIELD_VALIDATORS[this.args.schema?.validate];
   }
 
+  get rawDescription() {
+    return propertyDescription(this.nodeDefinition, this.args.fieldName);
+  }
+
+  get descriptionContent() {
+    const description = this.rawDescription;
+    return description ? trustHTML(description) : undefined;
+  }
+
+  get descriptionTooltipEnabled() {
+    return fieldDescriptionAsTooltip(this.args.schema) && this.showLabel;
+  }
+
   get fieldDescription() {
-    if (!fieldShowDescription(this.args.schema)) {
+    if (
+      !fieldShowDescription(this.args.schema) ||
+      this.descriptionTooltipEnabled
+    ) {
       return undefined;
     }
-    const description = propertyDescription(
-      this.nodeDefinition,
-      this.args.fieldName
-    );
-    return description ? trustHTML(description) : undefined;
+
+    return this.descriptionContent;
+  }
+
+  get fieldTooltip() {
+    if (
+      !fieldShowDescription(this.args.schema) ||
+      !this.descriptionTooltipEnabled
+    ) {
+      return undefined;
+    }
+
+    return this.rawDescription;
   }
 
   get dynamicValueHint() {
@@ -181,6 +206,7 @@ export default class Field extends Component {
         @title={{this.fieldTitle}}
         @showTitle={{this.showLabel}}
         @description={{this.fieldDescription}}
+        @tooltip={{this.fieldTooltip}}
         @type={{this.resolvedFieldType}}
         @format={{this.format}}
         @validation={{this.validation}}
