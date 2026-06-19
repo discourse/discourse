@@ -3599,6 +3599,9 @@ pt_BR:
       deleted_post_placeholder: "[excluído]"
       pinned_reply: "Fixada"
       unpin_reply: "Desafixar"
+    share_target:
+      new_topic: "Novo tópico"
+      new_message: "Nova mensagem"
     topic:
       filter_to:
         one: "%{count} postagem no tópico"

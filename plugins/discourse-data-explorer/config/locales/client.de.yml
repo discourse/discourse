@@ -78,6 +78,10 @@ de:
       delete: "Löschen"
       recover: "Anfrage wiederherstellen"
       sql_label: "SQL"
+      chart:
+        form:
+          label: "Diagrammtyp"
+          bar: "Balken"
       others_dirty: "Eine Anfrage hat nicht gespeicherte Änderungen, die verloren gehen, wenn du woanders hin navigierst."
       run_time: "Anfrage in %{value} ms abgeschlossen."
       cached_result_notice: "Zeigt zwischengespeicherte Ergebnisse von %{relative_time}."

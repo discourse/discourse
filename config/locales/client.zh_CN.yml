@@ -3635,6 +3635,9 @@ zh_CN:
         banner: "您正在查看的是此话题中的单个消息串。"
         view_full_topic: "查看完整话题"
         view_parent_context: "查看父上下文"
+    share_target:
+      new_topic: "新建话题"
+      new_message: "新建消息"
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"

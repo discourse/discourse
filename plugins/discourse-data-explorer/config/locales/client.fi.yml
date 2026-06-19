@@ -50,6 +50,10 @@ fi:
       run: "Suorita"
       undo: "Hylkää muutokset"
       delete: "Poista"
+      chart:
+        form:
+          label: "Kuvaajan tyyppi"
+          bar: "Pylväs"
       others_dirty: "Kyselyyn tehdyt tallentamattomat muutokset menetetään, jos navigoit pois."
       run_time: "Kysely suoritettu %{value} millisekunnissa."
       result_count:

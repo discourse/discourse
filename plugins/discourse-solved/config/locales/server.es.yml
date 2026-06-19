@@ -20,8 +20,6 @@ es:
         description: "Cierra automáticamente el tema después de este número de horas una vez marcado como resuelto. Establece en 0 para desactivarlo."
       notify_on_staff_accept_solved:
         label: "Notificar al creador del tema cuando el personal marque una solución"
-      empty_box_on_unsolved:
-        label: "Mostrar una casilla de verificación vacía junto a los temas sin resolver en la lista de temas"
       solved_topics_auto_close_duration:
         label: "Cierre automático de temas resueltos"
         description: "Cierra automáticamente los temas resueltos transcurrido este tiempo desde la última respuesta. Establece en 0 para desactivar."

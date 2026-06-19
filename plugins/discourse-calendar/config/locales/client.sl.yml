@@ -346,7 +346,6 @@ sl:
       models:
         invitee:
           status:
-            unknown: "Neodločen"
             going: "Pridem"
             interested: "Mogoče pridem"
         event:

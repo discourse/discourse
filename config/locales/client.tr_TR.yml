@@ -3754,6 +3754,9 @@ tr_TR:
         banner: "Bu konudan tek bir başlığı görüntülüyorsunuz."
         view_full_topic: "Konunun tamamını görüntüle"
         view_parent_context: "Üst bağlamı görüntüle"
+    share_target:
+      new_topic: "Yeni konu"
+      new_message: "Yeni İleti"
     topic:
       filter_to:
         one: "Konuda %{count} gönderi"

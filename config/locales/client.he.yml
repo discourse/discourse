@@ -3968,6 +3968,9 @@ he:
       context:
         view_full_topic: "הצגת הנושא במלואו"
         view_parent_context: "הצגת הקשר הורה"
+    share_target:
+      new_topic: "נושא חדש"
+      new_message: "הודעה חדשה"
     topic:
       filter_to:
         one: "פוסט אחד בנושא"

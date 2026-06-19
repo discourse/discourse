@@ -116,7 +116,6 @@ ko:
       models:
         invitee:
           status:
-            unknown: "관심 없음"
             interested: "관심"
         event:
           expired: "만료됨"

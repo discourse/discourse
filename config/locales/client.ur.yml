@@ -3753,6 +3753,9 @@ ur:
         banner: "آپ اس موضوع کے ایک واحد دھاگے کو دیکھ رہے ہیں۔"
         view_full_topic: "مکمل موضوع دیکھیں"
         view_parent_context: "بنیادی سیاق و سباق دیکھیں"
+    share_target:
+      new_topic: "نیا موضوع"
+      new_message: "نیا پیغام"
     topic:
       filter_to:
         one: "موضوع میں %{count} پوسٹ"

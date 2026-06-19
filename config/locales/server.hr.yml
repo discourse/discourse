@@ -2765,6 +2765,8 @@ hr:
               private:
                 label: "Privatno"
   onebox:
+    google_meet:
+      meeting_code: "Šifra:"
     github:
       closed: "zatvoreno"
       status_date:

@@ -3235,6 +3235,9 @@ pt:
       deleted_post_placeholder: "[eliminado]"
       ignored_post_placeholder: "[ignorados]"
       pinned_reply: "Fixado"
+    share_target:
+      new_topic: "Novo tópico"
+      new_message: "Nova mensagem"
     topic:
       filter_to:
         one: "%{count} publicação no tópico"

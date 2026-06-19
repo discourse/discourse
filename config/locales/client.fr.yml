@@ -3356,6 +3356,9 @@ fr:
       deleted_post_placeholder: "[supprimés]"
       ignored_post_placeholder: "[ignoré]"
       pinned_reply: "Épinglé"
+    share_target:
+      new_topic: "Nouveau sujet"
+      new_message: "Nouveau message direct"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"

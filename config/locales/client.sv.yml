@@ -2776,6 +2776,8 @@ sv:
       deleted_post_placeholder: "[raderade]"
       ignored_post_placeholder: "[ignorerade]"
       pinned_reply: "Fäst"
+    share_target:
+      new_message: "Nytt meddelande"
     topic:
       filter_to:
         one: "%{count} inlägg i ämnet"

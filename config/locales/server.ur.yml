@@ -3584,6 +3584,8 @@ ur:
   search_logs:
     graph_title: "سرچ شمار"
   onebox:
+    google_meet:
+      meeting_code: "کَوڈ:"
     github:
       closed: "بند"
       status_date:

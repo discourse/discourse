@@ -1753,6 +1753,8 @@ th:
       deleted_post_placeholder: "[ลบ]"
       ignored_post_placeholder: "[ละเว้นแล้ว]"
       pinned_reply: "ปักหมุดแล้ว"
+    share_target:
+      new_message: "ข้อความใหม่"
     topic:
       filter_to:
         other: " %{count} โพสต์ในกระทู้"

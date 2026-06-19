@@ -2802,7 +2802,6 @@ pl_PL:
     reporting_improvements: "Ulepszenia nawigacji, projektu i użyteczności raportów administracyjnych Discourse."
     granular_anonymous_and_logged_in_groups_permissions: "Wprowadza uprawnienia witryn oparte na grupach, które traktują „wszystkich” jako „wszystkich zalogowanych użytkowników” oraz włącza nowe pseudogrupy „anonimowi_użytkownicy” i „zalogowani_użytkownicy”, dzięki czemu administratorzy mogą wyraźnie określać mianem anonimowych odwiedzających i uwierzytelnionych użytkowników."
     dashboard_improvements: "Umożliwia dostęp do przeprojektowanego pulpitu administracyjnego, który umożliwia przypinanie niestandardowych raportów i obejmuje ulepszone dane dotyczące ruchu w witrynie, zaangażowania i inne analizy powiązane z sukcesem i wartością społeczności."
-    admin_dashboard_search_section_enabled: "Wyświetl sekcję wyszukiwania na nowym pulpicie administratora w trakcie testów."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_datetime: "Nieprawidłowy format daty i godziny. Upewnij się, że wprowadzono prawidłową datę i godzinę."
@@ -5692,6 +5691,11 @@ pl_PL:
   onebox:
     discourse:
       user_joined_community: "Dołączył %{date}"
+    google_meet:
+      title: "Spotkanie w Google Meet"
+      description: "Otwórz ten link Google Meet, aby dołączyć do rozmowy."
+      meeting_code: "Kod:"
+      join: "Dołącz do spotkania"
     gitlab:
       truncated_file: "Ten plik został obcięty."
       show_original: "pokaż oryginał"
