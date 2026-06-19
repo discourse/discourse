@@ -122,6 +122,7 @@ class ApplicationLayoutPreloader
     @preloaded["isStaffWritesOnly"] = @staff_writes_only_mode.to_json
     @preloaded["activatedThemes"] = activated_themes_json
     @preloaded["themeBlockLayouts"] = theme_block_layouts_json
+    @preloaded["themeBlockLayoutMeta"] = theme_block_layout_meta_json
   end
 
   def preload_upcoming_change_data(user)
@@ -140,14 +141,42 @@ class ApplicationLayoutPreloader
     Theme.where(id: ids).pluck(:id, :name).to_h.to_json
   end
 
-  # Returns a JSON-serialised flat list of block_layout entries for the
-  # active theme stack — one row per `(theme, outlet)` pair, ordered by
-  # `Theme.transform_ids` (theme stack order). A boot-time
-  # initializer iterates this list and calls `api.setLayoutLayer(outlet,
-  # "theme", layout, { themeId })` for each, in array order. Theme-stack
-  # ordering means the last theme in the stack ends up at the tail of each
-  # outlet's `theme` layer array, matching the existing precedence rule:
-  # last in the stack wins.
+  # Per-theme metadata for the active stack, keyed by theme id. The block-layout
+  # resolver picks each outlet's owner by the minimum `stack_index` (the theme's
+  # position in `Theme.transform_ids`, parent before components); consumers also
+  # read `is_git` / `name` / `component`. Emitted separately because the site
+  # serializer's `user_themes` lacks `remote_theme_id` and lists only
+  # user-selectable themes.
+  def theme_block_layout_meta_json
+    id = @theme_id
+    return "{}" if id.blank?
+    ids = Theme.transform_ids(id)
+    return "{}" if ids.blank?
+
+    info_by_id =
+      Theme
+        .where(id: ids)
+        .pluck(:id, :name, :component, :remote_theme_id)
+        .to_h do |theme_id, name, component, remote_theme_id|
+          [theme_id, { name: name, component: component, is_git: !remote_theme_id.nil? }]
+        end
+
+    meta = {}
+    ids.each_with_index do |theme_id, index|
+      info = info_by_id[theme_id]
+      next if info.nil?
+      meta[theme_id] = info.merge(stack_index: index)
+    end
+    meta.to_json
+  end
+
+  # Returns a JSON-serialised flat list of block_layout entries for the active
+  # theme stack — one row per `(theme, outlet)` pair, ordered by
+  # `Theme.transform_ids` (theme stack order). A boot-time initializer iterates
+  # this list and calls `api.setLayoutLayer(outlet, "theme", layout, { themeId,
+  # themeStackIndex })` for each. An outlet's owner is the theme with the minimum
+  # stack index (the most ancestral theme — parent before components), resolved
+  # client-side from the per-theme `stack_index` in `theme_block_layout_meta_json`.
   def theme_block_layouts_json
     id = @theme_id
     return "[]" if id.blank?

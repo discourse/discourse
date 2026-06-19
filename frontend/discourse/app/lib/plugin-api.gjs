@@ -3440,11 +3440,18 @@ class _PluginApi {
    * Blocks can have conditions that determine when they render. Conditions support
    * AND logic (array), OR logic (`any`), and NOT logic (`not`).
    *
+   * By default a layout is an editable seed; pass `overridable: false` to ship a
+   * locked, authoritative layout that outranks theme edits. The flag — not the
+   * caller — decides, so plugins and theme JS use this same method.
+   *
    * @experimental This API is under active development and may change or be removed
    * in future releases without prior notice. Use with caution in production environments.
    *
    * @param {string} outletName - The block outlet identifier
    * @param {Array<import("discourse/blocks/block-outlet").LayoutEntry>} blocks - Array of layout entries
+   * @param {Object} [options] - Registration options
+   * @param {boolean} [options.overridable=true] - `true` ships an editable seed; `false` ships a locked, authoritative layout
+   * @param {string|number|null} [options.sourceId] - An opaque id for the registering source, recorded as provenance
    *
    * @example
    * ```javascript
@@ -3486,11 +3493,14 @@ class _PluginApi {
    * ]);
    * ```
    */
-  renderBlocks(outletName, blocks) {
+  renderBlocks(outletName, blocks, options = {}) {
     // Capture call site here, excluding this method, so the stack trace
     // points directly to the user's code that called api.renderBlocks().
     const callSiteError = captureCallSite(this.renderBlocks);
-    _renderBlocks(outletName, blocks, this.container, callSiteError);
+    _renderBlocks(outletName, blocks, this.container, {
+      ...options,
+      callSiteError,
+    });
   }
 
   /**

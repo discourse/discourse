@@ -22,8 +22,11 @@ import PreloadStore from "discourse/lib/preload-store";
  *
  * @param {import("discourse/lib/plugin-api").default} api
  * @param {Array<{theme_id: number, outlet: string, layout: Array<Object>}>} layouts
+ * @param {Object<string, {stack_index: number}>} [metaByThemeId] - Per-theme
+ *   metadata from the `themeBlockLayoutMeta` preload, keyed by theme id. Supplies
+ *   each entry's `stack_index`; the minimum-ranked theme owns the outlet.
  */
-export function hydrateThemeBlockLayouts(api, layouts) {
+export function hydrateThemeBlockLayouts(api, layouts, metaByThemeId = {}) {
   if (!Array.isArray(layouts) || layouts.length === 0) {
     return;
   }
@@ -37,6 +40,11 @@ export function hydrateThemeBlockLayouts(api, layouts) {
     try {
       api.setLayoutLayer(outlet, api.LAYOUT_LAYERS.THEME, layout, {
         themeId,
+        // An outlet's owner is the theme with the minimum stack rank; that rank
+        // is server-authoritative (the themeBlockLayoutMeta preload), not array
+        // order. A theme missing from the map (e.g. one that published after
+        // boot) falls back to lowest priority in the resolver.
+        themeStackIndex: metaByThemeId[themeId]?.stack_index,
         lazy: true,
         // Theme-shipped layouts may have authoring errors (typos in
         // block names, container with no children, etc.) — those
@@ -72,8 +80,15 @@ export function hydrateThemeBlockLayouts(api, layouts) {
  * @param {number[]} themeIds - the ids of every theme currently in the
  *   active stack. We subscribe per id; foreign-theme messages are filtered
  *   out at the channel level.
+ * @param {Object<string, {stack_index: number}>} [metaByThemeId] - Per-theme
+ *   metadata (keyed by theme id) forwarded to `hydrateThemeBlockLayouts` so a
+ *   live update keeps the theme's server-assigned stack rank.
  */
-export function subscribeToBlockLayoutUpdates(api, themeIds) {
+export function subscribeToBlockLayoutUpdates(
+  api,
+  themeIds,
+  metaByThemeId = {}
+) {
   const messageBus = getOwnerWithFallback().lookup("service:message-bus");
   if (!messageBus || !Array.isArray(themeIds)) {
     return;
@@ -86,14 +101,18 @@ export function subscribeToBlockLayoutUpdates(api, themeIds) {
       if (!data || data.theme_id !== themeId || !data.outlet) {
         return;
       }
-      hydrateThemeBlockLayouts(api, [
-        {
-          theme_id: data.theme_id,
-          outlet: data.outlet,
-          layout: data.layout,
-          schema_version: data.schema_version,
-        },
-      ]);
+      hydrateThemeBlockLayouts(
+        api,
+        [
+          {
+            theme_id: data.theme_id,
+            outlet: data.outlet,
+            layout: data.layout,
+            schema_version: data.schema_version,
+          },
+        ],
+        metaByThemeId
+      );
     });
   }
 }
@@ -103,17 +122,16 @@ export function subscribeToBlockLayoutUpdates(api, themeIds) {
  *
  * The Rails preloader (`ApplicationLayoutPreloader#theme_block_layouts_json`)
  * exposes a flat list of `{ theme_id, outlet, schema_version, layout }` rows
- * — one per `block_layout` ThemeField on every theme in the active stack,
- * already ordered by stack position. We hand that list to
- * `hydrateThemeBlockLayouts`, which calls `api.setLayoutLayer(outlet, "theme",
- * layout, { themeId, lazy: true })` for each.
+ * — one per `block_layout` ThemeField on every theme in the active stack —
+ * plus a `themeBlockLayoutMeta` map carrying each theme's `stack_index`. We hand
+ * both to `hydrateThemeBlockLayouts`, which calls `api.setLayoutLayer(outlet,
+ * "theme", layout, { themeId, themeStackIndex, lazy: true })` for each.
  *
- * Publishing in stack order means each outlet's `theme` layer array ends
- * up with the last theme in the stack at the tail — which the resolution
- * chain treats as the winner. Validation is deferred to first render
- * (`lazy: true`), so it doesn't matter whether this initializer runs
- * before or after a theme api-initializer that registers blocks via
- * `api.renderBlocks(class-ref)`.
+ * Ownership of an outlet is the theme with the minimum stack rank (the most
+ * ancestral theme — parent before components), so array order no longer
+ * matters. Validation is deferred to first render (`lazy: true`), so it doesn't
+ * matter whether this initializer runs before or after a theme api-initializer
+ * that registers blocks via `api.renderBlocks(class-ref)`.
  *
  * Once the initial hydration is in place we also subscribe to the
  * `/block-layouts/<theme_id>` MessageBus channels for every theme that ships
@@ -122,12 +140,13 @@ export function subscribeToBlockLayoutUpdates(api, themeIds) {
  */
 export default apiInitializer((api) => {
   const layouts = PreloadStore.get("themeBlockLayouts");
-  hydrateThemeBlockLayouts(api, layouts);
+  const meta = PreloadStore.get("themeBlockLayoutMeta") ?? {};
+  hydrateThemeBlockLayouts(api, layouts, meta);
 
   if (Array.isArray(layouts) && layouts.length > 0) {
     const themeIds = [...new Set(layouts.map((row) => row.theme_id))].filter(
       Boolean
     );
-    subscribeToBlockLayoutUpdates(api, themeIds);
+    subscribeToBlockLayoutUpdates(api, themeIds, meta);
   }
 });

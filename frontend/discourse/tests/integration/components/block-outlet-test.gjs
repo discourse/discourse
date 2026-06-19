@@ -55,6 +55,44 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       assert.dom(".render-test-content").hasText("Test Content");
     });
 
+    test("re-renders when a locked layout is added after first paint", async function (assert) {
+      @block("autotrack-seed-block")
+      class SeedBlock extends Component {
+        <template>
+          <div class="seed-content">Seed</div>
+        </template>
+      }
+
+      @block("autotrack-locked-block")
+      class LockedBlock extends Component {
+        <template>
+          <div class="locked-content">Locked</div>
+        </template>
+      }
+
+      withPluginApi((api) =>
+        api.renderBlocks("homepage-blocks", [{ block: SeedBlock }])
+      );
+
+      await render(
+        <template><BlockOutlet @name="homepage-blocks" /></template>
+      );
+      assert.dom(".seed-content").exists("the overridable seed renders first");
+
+      // Register a locked layout AFTER the first paint. resolveLayoutRecord reads
+      // tracked record fields, so the outlet must re-resolve and re-render — this
+      // guards the autotracking of the new precedence chain.
+      withPluginApi((api) =>
+        api.renderBlocks("homepage-blocks", [{ block: LockedBlock }], {
+          overridable: false,
+        })
+      );
+      await settled();
+
+      assert.dom(".locked-content").exists("the locked layout takes over");
+      assert.dom(".seed-content").doesNotExist();
+    });
+
     test("renders correct BEM class structure", async function (assert) {
       @block("bem-test-block")
       class BemTestBlock extends Component {

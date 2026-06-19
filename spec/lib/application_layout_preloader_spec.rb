@@ -99,4 +99,42 @@ RSpec.describe ApplicationLayoutPreloader do
       expect(preloaded_block_layouts(theme_id: theme.id)).to eq([])
     end
   end
+
+  describe "themeBlockLayoutMeta preloaded entry" do
+    fab!(:theme)
+    fab!(:component_theme) { Fabricate(:theme, component: true, name: "side-effects") }
+
+    def preloaded_meta(theme_id:)
+      preloader = build_preloader(theme_id: theme_id)
+      JSON.parse(preloader.preloaded_data["themeBlockLayoutMeta"])
+    end
+
+    it "is an empty object when no theme is active" do
+      expect(preloaded_meta(theme_id: nil)).to eq({})
+    end
+
+    it "carries name, component, is_git and stack_index per theme in stack order" do
+      theme.add_relative_theme!(:child, component_theme)
+
+      meta = preloaded_meta(theme_id: theme.id)
+      stack_order = Theme.transform_ids(theme.id)
+
+      # stack_index matches the theme's position in transform_ids (parent first).
+      stack_order.each_with_index { |id, index| expect(meta[id.to_s]["stack_index"]).to eq(index) }
+
+      parent = meta[theme.id.to_s]
+      expect(parent["name"]).to eq(theme.name)
+      expect(parent["component"]).to eq(false)
+      expect(parent["is_git"]).to eq(false)
+
+      expect(meta[component_theme.id.to_s]["component"]).to eq(true)
+    end
+
+    it "marks a theme installed from a remote (git) source" do
+      git_theme = Fabricate(:theme_with_remote_url)
+
+      meta = preloaded_meta(theme_id: git_theme.id)
+      expect(meta[git_theme.id.to_s]["is_git"]).to eq(true)
+    end
+  end
 end

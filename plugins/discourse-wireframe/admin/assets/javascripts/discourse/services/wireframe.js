@@ -95,7 +95,7 @@ const FLASH_DURATION_MS = 1100;
  *
  * Mutation pipeline: at `enter()`, the editor deep-clones every outlet's
  * resolved layout and publishes those clones as the `session-draft` layer
- * (highest precedence in the block resolution chain). Edits during the
+ * (which wins over the persisted theme / code layer while editing). Edits during the
  * session mutate the draft entry's `args` (a `trackedObject`) directly —
  * the curried block reads through reactive getters defined by
  * `createBlockArgsWithReactiveGetters`, so a single `entry.args.title = "x"`

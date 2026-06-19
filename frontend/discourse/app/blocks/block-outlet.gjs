@@ -89,28 +89,35 @@ import DAsyncContent from "discourse/ui-kit/d-async-content";
  * @property {Array<LayoutEntry>} layout - The raw layout array (synchronously accessible).
  * @property {Array<Object>} validationWarnings - Tracked array of warnings collected during permissive validation. Populated asynchronously.
  * @property {number} [themeId] - The theme id (only set on entries in the "theme" layer).
+ * @property {string} [source] - Provenance: one of `LAYOUT_SOURCE` (which channel registered this entry).
+ * @property {string|number|null} [sourceId] - Opaque source id: the theme id for "theme" entries, or a caller-supplied id (or null) for code / session-draft entries.
+ * @property {boolean} [overridable] - Code entries only: true for an editable seed, false for a locked (authoritative) layout.
+ * @property {number} [themeStackIndex] - Theme entries only: the theme's position in the active stack (`Theme.transform_ids`); the minimum-ranked theme owns the outlet.
  */
 
 /**
  * @typedef {Object} PerOutletRecord
- * @property {LayerEntry|undefined} session-draft - In-memory layout edits scoped to the current session (highest precedence).
- * @property {LayerEntry[]} theme - One entry per theme in the active stack, ordered by stack position. Last in array wins.
- * @property {LayerEntry|undefined} code-default - The layout registered via api.renderBlocks (lowest precedence).
+ * @property {LayerEntry|undefined} session-draft - In-memory layout edits scoped to the current session.
+ * @property {LayerEntry[]} theme - One entry per theme in the active stack. The entry with the minimum `themeStackIndex` (the most ancestral theme) owns the outlet.
+ * @property {LayerEntry|undefined} code-locked - A locked (non-overridable) layout registered via api.renderBlocks. Authoritative; outranks every other layer.
+ * @property {LayerEntry|undefined} code-overridable - An overridable seed registered via api.renderBlocks (lowest precedence).
  */
 
 /**
- * Layer names for the layout resolution chain. Listed from highest precedence
- * to lowest. Within the "theme" layer, ordering follows the theme stack — the
- * last theme to register a layout for an outlet wins.
+ * Public layer names for `api.setLayoutLayer` / `api.clearLayoutLayer`. Within
+ * the "theme" layer, the theme with the minimum stack rank (the most ancestral
+ * theme that ships a layout — parent before components) owns the outlet.
  *
- * Layers exist for in-session editing support and theme integration:
  * - "session-draft": in-memory layout edits scoped to the current session.
- *   Highest precedence, so an in-progress edit overrides the saved theme /
- *   code-default layout. Cleared on exit, save, or discard.
+ *   Wins over the persisted theme / code layout while editing. Cleared on exit,
+ *   save, or discard.
  * - "theme": layouts shipped by themes via `block_layout` ThemeFields. Hydrated
  *   at boot from the active theme stack.
- * - "code-default": the existing `api.renderBlocks(...)` registration path.
- *   What plugins / core ship as the default layout for an outlet.
+ * - "code-default": the `api.renderBlocks(...)` registration path. Internally
+ *   this splits into a locked slot (authoritative; outranks every layer) and an
+ *   overridable seed slot (the in-code default; lowest precedence), selected by
+ *   the `overridable` flag — but callers still pass the single "code-default"
+ *   layer name.
  */
 export const LAYOUT_LAYERS = Object.freeze({
   SESSION_DRAFT: "session-draft",
@@ -120,6 +127,35 @@ export const LAYOUT_LAYERS = Object.freeze({
 
 /** @type {string[]} */
 const LAYER_VALUES = Object.values(LAYOUT_LAYERS);
+
+/**
+ * Provenance source for a resolved layer entry — deliberately distinct from the
+ * layer name. The "code" source additionally carries the `overridable` axis
+ * (seed vs locked).
+ */
+export const LAYOUT_SOURCE = Object.freeze({
+  SESSION_DRAFT: "session-draft",
+  THEME: "theme",
+  CODE: "code",
+});
+
+/**
+ * The default `overridable` stance for code layouts registered via
+ * `api.renderBlocks`: `true` ships an editable seed, `overridable: false` ships
+ * a locked, authoritative layout. Kept as one constant so the global stance is
+ * trivially flippable later.
+ */
+export const CODE_LAYOUT_OVERRIDABLE_BY_DEFAULT = true;
+
+/*
+ * Internal record slots for the two code-layer kinds. The public layer name
+ * `LAYOUT_LAYERS.CODE_DEFAULT` is unchanged for `api.setLayoutLayer` /
+ * `api.clearLayoutLayer`; `_setLayoutLayer` routes a CODE_DEFAULT write into one
+ * of these by the resolved `overridable` flag. They are never passed as a public
+ * `layer` argument, so they stay out of `LAYER_VALUES`.
+ */
+const CODE_LOCKED = "code-locked";
+const CODE_OVERRIDABLE = "code-overridable";
 
 /**
  * Maps outlet names to their per-layer record. Each outlet can hold one entry
@@ -276,7 +312,8 @@ function makeEmptyRecord() {
   return {
     [LAYOUT_LAYERS.SESSION_DRAFT]: undefined,
     [LAYOUT_LAYERS.THEME]: [],
-    [LAYOUT_LAYERS.CODE_DEFAULT]: undefined,
+    [CODE_LOCKED]: undefined,
+    [CODE_OVERRIDABLE]: undefined,
   };
 }
 
@@ -290,18 +327,25 @@ function isRecordEmpty(record) {
   return (
     !record[LAYOUT_LAYERS.SESSION_DRAFT] &&
     record[LAYOUT_LAYERS.THEME].length === 0 &&
-    !record[LAYOUT_LAYERS.CODE_DEFAULT]
+    !record[CODE_LOCKED] &&
+    !record[CODE_OVERRIDABLE]
   );
 }
 
 /**
  * Walks the layers of a per-outlet record in precedence order and returns the
- * first entry that has been set. Within the "theme" layer, the last entry in
- * the stack wins (matching the existing theme-stack precedence rule).
+ * first entry that wins:
+ *
+ *   1. a locked code layout (`overridable: false`) — authoritative;
+ *   2. the session draft — live editing;
+ *   3. the owner theme — the theme entry with the MINIMUM `themeStackIndex` (the
+ *      most ancestral theme that ships a layout, parent before components);
+ *   4. an overridable code seed — the in-code default.
  *
  * Reads from the trackedMap inside this function are tracked by Ember's
  * autotracking — callers that read through here re-run when any layer in the
- * record changes.
+ * record changes. The owner loop iterates a plain array stored on the record, so
+ * it adds no tracking beyond the single `outletLayouts.get` read.
  *
  * @param {string} outletName
  * @returns {LayerEntry|undefined}
@@ -311,15 +355,32 @@ function resolveLayoutRecord(outletName) {
   if (!layers) {
     return undefined;
   }
+  // 1. A locked programmatic layout is authoritative.
+  if (layers[CODE_LOCKED]) {
+    return layers[CODE_LOCKED];
+  }
+  // 2. A live session draft wins while editing.
   if (layers[LAYOUT_LAYERS.SESSION_DRAFT]) {
     return layers[LAYOUT_LAYERS.SESSION_DRAFT];
   }
-  const themeLayer = layers[LAYOUT_LAYERS.THEME];
-  if (themeLayer.length > 0) {
-    return themeLayer[themeLayer.length - 1];
+  // 3. The owner theme is the entry with the minimum stack rank. Strictly-less
+  //    comparison means the first entry at the minimum rank wins (one entry per
+  //    theme id, so ties don't occur in practice).
+  let owner;
+  let ownerRank = Infinity;
+  for (const entry of layers[LAYOUT_LAYERS.THEME]) {
+    const rank = entry.themeStackIndex ?? Number.MAX_SAFE_INTEGER;
+    if (rank < ownerRank) {
+      ownerRank = rank;
+      owner = entry;
+    }
   }
-  if (layers[LAYOUT_LAYERS.CODE_DEFAULT]) {
-    return layers[LAYOUT_LAYERS.CODE_DEFAULT];
+  if (owner) {
+    return owner;
+  }
+  // 4. An overridable programmatic seed is the in-code default.
+  if (layers[CODE_OVERRIDABLE]) {
+    return layers[CODE_OVERRIDABLE];
   }
   return undefined;
 }
@@ -605,6 +666,10 @@ function createLayerEntry({
   callSiteError,
   themeId,
   permissive = false,
+  source,
+  sourceId = null,
+  overridable,
+  themeStackIndex,
 }) {
   /** @type {Promise<Array<LayoutEntry>>|null} */
   let validationPromise = null;
@@ -617,6 +682,20 @@ function createLayerEntry({
   const entry = { layout, validationWarnings: trackedArray() };
   if (themeId !== undefined) {
     entry.themeId = themeId;
+  }
+  // Provenance, stamped once at creation as plain own-properties (read directly
+  // in resolveLayoutRecord, zero per-render cost). The flag and stack rank are
+  // stored on the entry — not a side Set — so the wholesale record replacement
+  // keeps them autotracked, the same way `themeId` above is.
+  if (source !== undefined) {
+    entry.source = source;
+    entry.sourceId = sourceId;
+  }
+  if (overridable !== undefined) {
+    entry.overridable = overridable;
+  }
+  if (themeStackIndex !== undefined) {
+    entry.themeStackIndex = themeStackIndex;
   }
   Object.defineProperty(entry, "validatedLayout", {
     get() {
@@ -703,6 +782,15 @@ function createLayerEntry({
  * @param {import("@ember/owner").default} [owner]
  * @param {Object} [options]
  * @param {number} [options.themeId] - Required when layer is "theme".
+ * @param {number} [options.themeStackIndex] - Theme layer: the theme's rank in
+ *   the active stack (`Theme.transform_ids`); the minimum-ranked theme owns the
+ *   outlet. Preserved from the existing entry on a same-themeId re-registration
+ *   when omitted.
+ * @param {boolean} [options.overridable] - Code-default layer: `true` (the
+ *   default, see `CODE_LAYOUT_OVERRIDABLE_BY_DEFAULT`) writes the overridable
+ *   seed slot; `false` writes the locked slot.
+ * @param {string|number|null} [options.sourceId] - Code-default layer: an opaque
+ *   id for the registering source, recorded as provenance.
  * @param {boolean} [options.lazy=false] - When true, defers validation
  *   until the entry's `validatedLayout` is first read (typically by
  *   `BlockOutlet` at render time).
@@ -756,6 +844,30 @@ export function _setLayoutLayer(
   // republishes don't tear down DOM identity for unchanged entries.
   assignStableKeys(layout, { skipExisting: true });
 
+  const existing = outletLayouts.get(outletName) ?? makeEmptyRecord();
+
+  // Resolve provenance per layer. On a theme re-registration we keep the
+  // originally-stamped stack rank when the caller omits one, so a later
+  // MessageBus update can't silently change ownership.
+  let source;
+  let sourceId = null;
+  let overridable;
+  let themeStackIndex;
+  if (layer === LAYOUT_LAYERS.SESSION_DRAFT) {
+    source = LAYOUT_SOURCE.SESSION_DRAFT;
+  } else if (layer === LAYOUT_LAYERS.THEME) {
+    source = LAYOUT_SOURCE.THEME;
+    sourceId = options.themeId;
+    const existingTheme = existing[LAYOUT_LAYERS.THEME].find(
+      (t) => t.themeId === options.themeId
+    );
+    themeStackIndex = options.themeStackIndex ?? existingTheme?.themeStackIndex;
+  } else {
+    source = LAYOUT_SOURCE.CODE;
+    sourceId = options.sourceId ?? null;
+    overridable = options.overridable ?? CODE_LAYOUT_OVERRIDABLE_BY_DEFAULT;
+  }
+
   const layerEntry = createLayerEntry({
     layout,
     outletName,
@@ -763,14 +875,16 @@ export function _setLayoutLayer(
     callSiteError,
     themeId: layer === LAYOUT_LAYERS.THEME ? options.themeId : undefined,
     permissive: options.permissive ?? false,
+    source,
+    sourceId,
+    overridable,
+    themeStackIndex,
   });
 
-  const existing = outletLayouts.get(outletName) ?? makeEmptyRecord();
   let nextRecord;
   if (layer === LAYOUT_LAYERS.THEME) {
-    // Replace the entry for this themeId (if present) or append. Order is
-    // governed by call order — callers (the theme-load initializer) should
-    // register layers in theme-stack order.
+    // Replace the entry for this themeId (if present) or append. Resolution no
+    // longer depends on array order — ownership is the minimum themeStackIndex.
     const themes = existing[LAYOUT_LAYERS.THEME];
     const idx = themes.findIndex((t) => t.themeId === options.themeId);
     const newThemes =
@@ -778,6 +892,11 @@ export function _setLayoutLayer(
         ? [...themes.slice(0, idx), layerEntry, ...themes.slice(idx + 1)]
         : [...themes, layerEntry];
     nextRecord = { ...existing, [LAYOUT_LAYERS.THEME]: newThemes };
+  } else if (layer === LAYOUT_LAYERS.CODE_DEFAULT) {
+    // The public "code-default" layer maps to one of the two internal slots,
+    // selected by the resolved `overridable` flag.
+    const slot = overridable ? CODE_OVERRIDABLE : CODE_LOCKED;
+    nextRecord = { ...existing, [slot]: layerEntry };
   } else {
     nextRecord = { ...existing, [layer]: layerEntry };
   }
@@ -826,6 +945,15 @@ export function _clearLayoutLayer(outletName, layer, options = {}) {
         ),
       };
     }
+  } else if (layer === LAYOUT_LAYERS.CODE_DEFAULT) {
+    // Clearing the public "code-default" layer removes BOTH internal slots —
+    // the locked layout and the overridable seed — matching the old single-slot
+    // semantics.
+    nextRecord = {
+      ...existing,
+      [CODE_LOCKED]: undefined,
+      [CODE_OVERRIDABLE]: undefined,
+    };
   } else {
     nextRecord = { ...existing, [layer]: undefined };
   }
@@ -838,11 +966,27 @@ export function _clearLayoutLayer(outletName, layer, options = {}) {
 }
 
 /**
+ * Formats the trailing ` (sources: …)` clause for a code-layer collision error,
+ * naming whichever of the two source ids are known.
+ *
+ * @param {string|number|null} existingId - The sourceId stamped on the existing entry.
+ * @param {string|number|null} incomingId - The sourceId of the colliding registration.
+ * @returns {string} A ` (sources: a, b)` suffix, or "" when neither id is known.
+ */
+function describeCodeSources(existingId, incomingId) {
+  const ids = [existingId, incomingId].filter((id) => id != null);
+  return ids.length ? ` (sources: ${ids.join(", ")})` : "";
+}
+
+/**
  * Registers an outlet layout (array of block entries) for a named outlet.
  *
- * This is the main entry point for plugins to render blocks in designated areas.
- * Each outlet can only have one `code-default` layout. Theme and session-draft
- * layouts go through `_setLayoutLayer` instead.
+ * This is the main entry point for plugins and themes to render blocks in
+ * designated areas. By default the layout is an editable seed
+ * (`overridable: true`); pass `overridable: false` to ship a locked,
+ * authoritative layout. The flag — not the caller — decides, so theme JS and
+ * plugins share the same path. Theme and session-draft layouts go through
+ * `_setLayoutLayer` instead.
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
@@ -850,10 +994,12 @@ export function _clearLayoutLayer(outletName, layer, options = {}) {
  * @param {string} outletName - The outlet identifier (must be in BLOCK_OUTLETS).
  * @param {Array<LayoutEntry>} layout - Array of block entries.
  * @param {Object} [owner] - The application owner for service lookup (passed from plugin API).
- * @param {Error|null} [callSiteError] - Pre-captured error for source-mapped stack traces.
- *   When called via api.renderBlocks(), this is captured there to exclude the PluginApi wrapper.
+ * @param {Object} [options] - Registration options.
+ * @param {boolean} [options.overridable=true] - `true` registers an editable seed; `false` registers a locked, authoritative layout.
+ * @param {string|number|null} [options.sourceId] - An opaque id for the registering source, recorded as provenance.
+ * @param {Error|null} [options.callSiteError] - Pre-captured error for source-mapped stack traces. When called via api.renderBlocks(), this is captured there to exclude the PluginApi wrapper.
  * @returns {Promise<Array<Object>>} Promise resolving to the validated layout array.
- * @throws {Error} If validation fails or the outlet already has a code-default layout.
+ * @throws {Error} If validation fails, or the outlet already has a code layout of the same kind (seed+seed or locked+locked).
  *
  * @example
  * ```js
@@ -877,20 +1023,31 @@ export function _clearLayoutLayer(outletName, layer, options = {}) {
  * ]);
  * ```
  */
-export function _renderBlocks(outletName, layout, owner, callSiteError = null) {
-  if (!callSiteError) {
-    callSiteError = captureCallSite(_renderBlocks);
-  }
+export function _renderBlocks(outletName, layout, owner, options = {}) {
+  const callSiteError = options.callSiteError ?? captureCallSite(_renderBlocks);
+  const sourceId = options.sourceId ?? null;
+  const overridable = options.overridable ?? CODE_LAYOUT_OVERRIDABLE_BY_DEFAULT;
 
-  // The "already has a layout" guard fires only when something has already
-  // registered on the code-default layer for this outlet. Theme and session-
-  // draft layers don't trip it — re-registering theme layouts (via MessageBus)
-  // and session drafts (via in-session editing) is expected and supported.
+  // Collision matrix against the two code slots. A second registration of the
+  // SAME kind (seed+seed or locked+locked) is a conflict and throws, naming both
+  // sources. A locked layout and an overridable seed may coexist: the lock wins
+  // resolution and the seed is the fallback while both are present. Theme and
+  // session-draft layers don't trip this — re-registering those (MessageBus, in-
+  // session editing) is expected.
   const existing = outletLayouts.get(outletName);
-  if (existing?.[LAYOUT_LAYERS.CODE_DEFAULT]) {
-    raiseBlockError(
-      `Block outlet "${outletName}" already has a layout registered.`
-    );
+  if (existing) {
+    if (overridable && existing[CODE_OVERRIDABLE]) {
+      raiseBlockError(
+        `Block outlet "${outletName}" already has an overridable layout registered` +
+          describeCodeSources(existing[CODE_OVERRIDABLE].sourceId, sourceId)
+      );
+    }
+    if (!overridable && existing[CODE_LOCKED]) {
+      raiseBlockError(
+        `Block outlet "${outletName}" already has a locked layout registered` +
+          describeCodeSources(existing[CODE_LOCKED].sourceId, sourceId)
+      );
+    }
   }
 
   return _setLayoutLayer(
@@ -900,6 +1057,8 @@ export function _renderBlocks(outletName, layout, owner, callSiteError = null) {
     owner,
     {
       callSiteError,
+      overridable,
+      sourceId,
     }
   );
 }
