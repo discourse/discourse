@@ -814,7 +814,7 @@ describe DiscoursePostEvent::Event do
     end
   end
 
-  describe ".update_from_raw" do
+  describe "syncing from raw" do
     fab!(:user) { Fabricate(:user, admin: true) }
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, topic: topic, user: user) }
@@ -826,7 +826,7 @@ describe DiscoursePostEvent::Event do
           raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
         )
         post.rebake!
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
       end
 
@@ -838,7 +838,7 @@ describe DiscoursePostEvent::Event do
       it "clears image_upload_id when image is removed" do
         post.update!(raw: "[event start=\"2020-04-24 14:15\"]\n[/event]")
         post.rebake!
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
 
         expect(post.event.image_upload_id).to be_nil
@@ -858,7 +858,7 @@ describe DiscoursePostEvent::Event do
             raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
           )
         post.rebake!
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
         CookedPostProcessor.new(post).post_process
 
@@ -872,7 +872,7 @@ describe DiscoursePostEvent::Event do
           raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
         )
         post.rebake!
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
         CookedPostProcessor.new(post).post_process
 
@@ -891,7 +891,7 @@ describe DiscoursePostEvent::Event do
             raw: "[event start=\"2020-04-24 14:15\"]\n[/event]\n![image](#{other_upload.url})",
           )
         post.rebake!
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
         CookedPostProcessor.new(post).post_process
 
@@ -930,7 +930,7 @@ describe DiscoursePostEvent::Event do
       end
 
       it "does not associate the upload" do
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
 
         expect(post.event.image_upload_id).to be_nil
