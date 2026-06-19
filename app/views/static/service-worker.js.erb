@@ -135,166 +135,52 @@ var SHARE_TARGET_PATH = '<%= Discourse.base_path %>/share-target';
 var SHARE_TARGET_CACHE = 'discourse-share-target';
 var SHARE_TARGET_KEY_PREFIX = '/__discourse_share_target__/';
 
-function shareTargetDebug(message, details) {
-  console.log('[share-target] ' + message, details || {});
-}
-
-function shareTargetErrorDetails(err) {
-  return {
-    name: err && err.name,
-    message: err && err.message,
-    stack: err && err.stack,
-  };
-}
-
 function shareTargetCacheRequest(key) {
   return new Request(new URL(key, self.location.origin).href);
 }
 
-function shareTargetRequestDetails(request) {
-  return {
-    url: request.url,
-    method: request.method,
-    mode: request.mode,
-    destination: request.destination,
-    contentType: request.headers.get('content-type'),
-    contentLength: request.headers.get('content-length'),
-    bodyUsed: request.bodyUsed,
-  };
-}
-
-function shareTargetFormDataDetails(formData) {
-  var files = formData.getAll('files').filter(function (file) {
-    return file && typeof file !== 'string';
-  });
-
-  return {
-    hasTitle: formData.has('title'),
-    hasText: formData.has('text'),
-    hasUrl: formData.has('url'),
-    titleLength: (formData.get('title') || '').length,
-    textLength: (formData.get('text') || '').length,
-    urlLength: (formData.get('url') || '').length,
-    fileCount: files.length,
-    files: files.map(function (file) {
-      return {
-        nameLength: (file.name || '').length,
-        type: file.type,
-        size: file.size,
-      };
-    }),
-  };
-}
-
 function stashSharedContent(request) {
-  shareTargetDebug('stash start', shareTargetRequestDetails(request));
-
-  return request.clone().formData().then(
+  return request.formData().then(
     function (formData) {
-      shareTargetDebug('formData parsed', shareTargetFormDataDetails(formData));
-
       var files = formData.getAll('files').filter(function (file) {
         return file && typeof file !== 'string';
       });
 
-      return caches.open(SHARE_TARGET_CACHE).then(
-        function (cache) {
-          shareTargetDebug('cache opened', { cacheName: SHARE_TARGET_CACHE });
+      return caches.open(SHARE_TARGET_CACHE).then(function (cache) {
+        var fileMeta = [];
+        var puts = files.map(function (file, index) {
+          var key = SHARE_TARGET_KEY_PREFIX + 'file-' + index;
+          fileMeta.push({ key: key, name: file.name, type: file.type });
 
-          var fileMeta = [];
-          var puts = files.map(function (file, index) {
-            var key = SHARE_TARGET_KEY_PREFIX + 'file-' + index;
-            fileMeta.push({ key: key, name: file.name, type: file.type });
-
-            shareTargetDebug('file cache put start', {
-              index: index,
-              key: key,
-              type: file.type,
-              size: file.size,
-              nameLength: (file.name || '').length,
-            });
-
-            return cache
-              .put(
-                shareTargetCacheRequest(key),
-                new Response(file, {
-                  headers: {
-                    'content-type': file.type || 'application/octet-stream',
-                    'x-share-filename': encodeURIComponent(file.name || ('shared-file-' + index)),
-                  },
-                })
-              )
-              .then(function () {
-                shareTargetDebug('file cache put complete', {
-                  index: index,
-                  key: key,
-                });
-              })
-              .catch(function (err) {
-                shareTargetDebug('file cache put failed', {
-                  index: index,
-                  key: key,
-                  error: shareTargetErrorDetails(err),
-                });
-                throw err;
-              });
-          });
-
-          var meta = {
-            title: formData.get('title') || '',
-            text: formData.get('text') || '',
-            url: formData.get('url') || '',
-            files: fileMeta,
-          };
-
-          shareTargetDebug('meta cache put start', {
-            key: SHARE_TARGET_KEY_PREFIX + 'meta',
-            fileCount: fileMeta.length,
-          });
-
-          puts.push(
-            cache
-              .put(
-                shareTargetCacheRequest(SHARE_TARGET_KEY_PREFIX + 'meta'),
-                new Response(JSON.stringify(meta), {
-                  headers: { 'content-type': 'application/json' },
-                })
-              )
-              .then(function () {
-                shareTargetDebug('meta cache put complete', {
-                  key: SHARE_TARGET_KEY_PREFIX + 'meta',
-                });
-              })
-              .catch(function (err) {
-                shareTargetDebug('meta cache put failed', {
-                  key: SHARE_TARGET_KEY_PREFIX + 'meta',
-                  error: shareTargetErrorDetails(err),
-                });
-                throw err;
-              })
+          return cache.put(
+            shareTargetCacheRequest(key),
+            new Response(file, {
+              headers: {
+                'content-type': file.type || 'application/octet-stream',
+                'x-share-filename': encodeURIComponent(file.name || ('shared-file-' + index)),
+              },
+            })
           );
+        });
 
-          return Promise.all(puts).then(function () {
-            shareTargetDebug('stash complete', {
-              fileCount: fileMeta.length,
-            });
-          });
-        },
-        function (err) {
-          shareTargetDebug('cache open failed', {
-            cacheName: SHARE_TARGET_CACHE,
-            error: shareTargetErrorDetails(err),
-          });
-          throw err;
-        }
-      );
-    },
-    function (err) {
-      shareTargetDebug('formData failed', {
-        request: shareTargetRequestDetails(request),
-        error: shareTargetErrorDetails(err),
+        var meta = {
+          title: formData.get('title') || '',
+          text: formData.get('text') || '',
+          url: formData.get('url') || '',
+          files: fileMeta,
+        };
+
+        puts.push(
+          cache.put(
+            shareTargetCacheRequest(SHARE_TARGET_KEY_PREFIX + 'meta'),
+            new Response(JSON.stringify(meta), {
+              headers: { 'content-type': 'application/json' },
+            })
+          )
+        );
+
+        return Promise.all(puts);
       });
-      throw err;
     }
   );
 }
@@ -306,7 +192,7 @@ self.addEventListener('fetch', function (event) {
     event.respondWith(
       stashSharedContent(event.request)
         .catch(function (err) {
-          console.error('Failed to stash shared content', shareTargetErrorDetails(err));
+          console.error('Failed to stash shared content', err);
         })
         .then(function () {
           // 303 forces the follow-up navigation to be a GET.
