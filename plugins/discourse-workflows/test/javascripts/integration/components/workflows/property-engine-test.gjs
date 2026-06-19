@@ -12,6 +12,7 @@ import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "discourse-i18n";
 import PropertyEngineConfigurator from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/property-engine";
 import WorkflowEditorSession from "discourse/plugins/discourse-workflows/admin/lib/workflows/editor-session";
 
@@ -35,6 +36,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   hooks.afterEach(function () {
+    delete I18n.translations[I18n.locale]?.js?.discourse_workflows?.post
+      ?.raw_tooltip;
     sinon.restore();
   });
 
@@ -70,7 +73,10 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.dom("input").isFocused();
   });
 
-  test("renders configured descriptions as tooltips", async function (assert) {
+  test("renders an inline description and a tooltip independently", async function (assert) {
+    I18n.translations[I18n.locale].js.discourse_workflows.post.raw_tooltip =
+      "Only visible to the agent";
+
     this.setProperties({
       configuration: { raw: "" },
       nodeType: "action:post",
@@ -80,7 +86,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
           type: "string",
           ui: {
             control: "textarea",
-            description_tooltip: true,
           },
         },
       },
@@ -101,17 +106,22 @@ module("Integration | Component | workflows property engine", function (hooks) {
       </template>
     );
 
-    assert.dom(".form-kit__container-description").doesNotExist();
+    assert
+      .dom(".form-kit__container-description")
+      .hasText("Raw content for the post");
     assert.dom(".fk-d-tooltip__trigger").exists();
 
     await click(".fk-d-tooltip__trigger");
 
     assert
       .dom(".fk-d-tooltip__inner-content")
-      .hasText("Raw content for the post");
+      .hasText("Only visible to the agent");
   });
 
-  test("falls back to inline descriptions when tooltip labels are hidden", async function (assert) {
+  test("hides the tooltip when the label is hidden", async function (assert) {
+    I18n.translations[I18n.locale].js.discourse_workflows.post.raw_tooltip =
+      "Only visible to the agent";
+
     this.setProperties({
       configuration: { raw: "" },
       nodeType: "action:post",
@@ -121,7 +131,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
           type: "string",
           ui: {
             control: "textarea",
-            description_tooltip: true,
             show_label: false,
           },
         },

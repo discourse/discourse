@@ -103,7 +103,7 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
     runner_schema = described_class.property_schema[:runner_username]
 
     expect(runner_schema).to include(type: :string, default: "system")
-    expect(runner_schema[:ui]).to include(control: :actor, description_tooltip: true)
+    expect(runner_schema[:ui]).to include(control: :actor)
   end
 
   it "runs the agent once per input item with item-specific parameters" do

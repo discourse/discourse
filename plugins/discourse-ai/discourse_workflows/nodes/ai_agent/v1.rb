@@ -104,7 +104,6 @@ if defined?(DiscourseWorkflows)
                 default: "system",
                 ui: {
                   control: :actor,
-                  description_tooltip: true,
                 },
               },
               prompt: {
@@ -119,7 +118,6 @@ if defined?(DiscourseWorkflows)
                 default: [],
                 ui: {
                   control: :textarea,
-                  description_tooltip: true,
                   expression: true,
                 },
               },

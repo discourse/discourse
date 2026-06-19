@@ -5,7 +5,6 @@ import { i18n } from "discourse-i18n";
 import FIELD_CONTROL_REGISTRY from "../../../lib/workflows/field-control-registry";
 import {
   fieldControl,
-  fieldDescriptionAsTooltip,
   fieldFormat,
   fieldInputType,
   fieldShowDescription,
@@ -17,6 +16,7 @@ import {
   propertyDynamicValueHint,
   propertyLabel,
   propertyPlaceholder,
+  propertyTooltip,
 } from "../../../lib/workflows/property-engine";
 
 const CRON_FIELD_PATTERN =
@@ -127,39 +127,26 @@ export default class Field extends Component {
     return FIELD_VALIDATORS[this.args.schema?.validate];
   }
 
-  get rawDescription() {
-    return propertyDescription(this.nodeDefinition, this.args.fieldName);
-  }
+  get fieldDescription() {
+    if (!fieldShowDescription(this.args.schema)) {
+      return undefined;
+    }
 
-  get descriptionContent() {
-    const description = this.rawDescription;
+    const description = propertyDescription(
+      this.nodeDefinition,
+      this.args.fieldName
+    );
     return description ? trustHTML(description) : undefined;
   }
 
-  get descriptionTooltipEnabled() {
-    return fieldDescriptionAsTooltip(this.args.schema) && this.showLabel;
-  }
-
-  get fieldDescription() {
-    if (
-      !fieldShowDescription(this.args.schema) ||
-      this.descriptionTooltipEnabled
-    ) {
-      return undefined;
-    }
-
-    return this.descriptionContent;
-  }
-
   get fieldTooltip() {
-    if (
-      !fieldShowDescription(this.args.schema) ||
-      !this.descriptionTooltipEnabled
-    ) {
+    // FKTooltip renders inside the label, so there is nowhere to show it when
+    // the label is hidden.
+    if (!this.showLabel) {
       return undefined;
     }
 
-    return this.rawDescription;
+    return propertyTooltip(this.nodeDefinition, this.args.fieldName);
   }
 
   get dynamicValueHint() {

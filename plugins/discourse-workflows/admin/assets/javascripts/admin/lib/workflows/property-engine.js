@@ -111,6 +111,12 @@ export function propertyDescription(nodeDefinitionOrType, fieldName) {
   );
 }
 
+export function propertyTooltip(nodeDefinitionOrType, fieldName) {
+  return translatedOrNull(
+    `${i18nBase(nodeDefinitionOrType)}.${localeKeyPart(fieldName)}_tooltip`
+  );
+}
+
 export function propertyPlaceholder(nodeDefinitionOrType, fieldName) {
   return translatedOrNull(
     `${i18nBase(nodeDefinitionOrType)}.${localeKeyPart(fieldName)}_placeholder`
@@ -338,10 +344,6 @@ export function fieldSupportsExpression(schema = {}) {
 
 export function fieldShowDescription(schema = {}) {
   return fieldUi(schema).show_description !== false;
-}
-
-export function fieldDescriptionAsTooltip(schema = {}) {
-  return fieldUi(schema).description_tooltip === true;
 }
 
 export function fieldShowLabel(schema = {}) {

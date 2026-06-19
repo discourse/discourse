@@ -57,7 +57,6 @@ module DiscourseWorkflows
 
     KNOWN_UI_KEYS = %i[
       control
-      description_tooltip
       dynamic_value
       expression
       filter

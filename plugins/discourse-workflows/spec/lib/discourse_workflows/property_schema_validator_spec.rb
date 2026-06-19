@@ -81,12 +81,6 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
       expect(validate(schema)).to eq([])
     end
 
-    it "accepts description tooltip ui metadata" do
-      schema = { upload_ids: { type: :array, ui: { description_tooltip: true } } }
-
-      expect(validate(schema)).to eq([])
-    end
-
     it "accepts checkbox controls" do
       schema = { enabled: { type: :boolean, ui: { control: :checkbox } } }
 
