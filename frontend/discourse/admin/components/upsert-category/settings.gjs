@@ -76,7 +76,6 @@ export default class UpsertCategorySettings extends Component {
           (i18n "category.subcategory_num_featured_topics")
           (i18n "category.num_featured_topics")
         }}
-        @format="max"
         @type="input-number"
         as |field|
       >

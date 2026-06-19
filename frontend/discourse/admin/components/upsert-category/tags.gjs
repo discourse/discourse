@@ -44,7 +44,6 @@ export default class UpsertCategoryTags extends Component {
       <@form.Field
         @name="minimum_required_tags"
         @title={{i18n "category.minimum_required_tags"}}
-        @format="max"
         @type="input-number"
         as |field|
       >
