@@ -17,6 +17,7 @@ chat:
     upcoming_change:
       status: "alpha"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/123456"
   enable_public_channels:
     default: true
     client: true
