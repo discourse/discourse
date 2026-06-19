@@ -749,6 +749,11 @@ table.group-reports {
     margin-bottom: 1rem;
     animation: fadein 2s;
 
+    .query-results-chart__form {
+      max-width: 100%;
+      margin-bottom: 0.75rem;
+    }
+
     canvas {
       height: clamp(200px, 50vh, 350px) !important;
     }
