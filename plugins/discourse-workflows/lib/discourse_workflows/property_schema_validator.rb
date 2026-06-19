@@ -104,6 +104,7 @@ module DiscourseWorkflows
       group_select
       icon
       multi_combo_box
+      multi_input
       notice
       password
       query_params

@@ -1346,4 +1346,78 @@ module("Integration | Component | workflows property engine", function (hooks) {
       custom_field_names: [],
     });
   });
+
+  test("multi_input fields accept arbitrary ids and convert between fixed and dynamic", async function (assert) {
+    this.setProperties({
+      configuration: { upload_ids: [] },
+      formApi: null,
+      nodeType: "action:ai_agent",
+      schema: {
+        upload_ids: {
+          type: "array",
+          required: false,
+          ui: {
+            control: "multi_input",
+            expression: true,
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const selector = selectKit(".multi-select");
+
+    await selector.expand();
+    await selector.fillInFilter("12");
+    await selector.selectRowByValue("12");
+    await selector.fillInFilter("34");
+    await selector.selectRowByValue("34");
+
+    assert.deepEqual(
+      this.formApi.get("upload_ids"),
+      ["12", "34"],
+      "stores entered ids"
+    );
+
+    await click(
+      '.workflows-property-engine__mode-control input[value="dynamic"]'
+    );
+
+    assert.strictEqual(
+      this.formApi.get("upload_ids"),
+      '={{ ["12","34"] }}',
+      "converts the fixed list into a dynamic expression"
+    );
+
+    await click(
+      '.workflows-property-engine__mode-control input[value="plain"]'
+    );
+
+    assert.deepEqual(
+      this.formApi.get("upload_ids"),
+      ["12", "34"],
+      "converts the dynamic expression back into a fixed list"
+    );
+  });
 });

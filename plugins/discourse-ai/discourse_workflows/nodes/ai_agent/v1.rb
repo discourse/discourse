@@ -117,7 +117,7 @@ if defined?(DiscourseWorkflows)
                 required: false,
                 default: [],
                 ui: {
-                  control: :textarea,
+                  control: :multi_input,
                   expression: true,
                 },
               },

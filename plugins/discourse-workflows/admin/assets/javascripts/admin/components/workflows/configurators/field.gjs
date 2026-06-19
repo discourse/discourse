@@ -140,8 +140,6 @@ export default class Field extends Component {
   }
 
   get fieldTooltip() {
-    // FKTooltip renders inside the label, so there is nowhere to show it when
-    // the label is hidden.
     if (!this.showLabel) {
       return undefined;
     }
