@@ -75,6 +75,7 @@
   justify-content: space-between;
   font-family: var(--heading-font-family);
   color: var(--primary);
+  border-bottom: 1px solid var(--content-border-color);
 
   .channel-title {
     line-height: var(--line-height-medium);
