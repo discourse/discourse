@@ -274,6 +274,39 @@ body.wireframe-active {
      with a triangle icon. Matches the handle's badge shape but in
      danger red so the warning is the loudest element on the block. */
 
+  /* Per-outlet state badge on the outlet root (read-only / default /
+     published, plus an editing pill). Anchored top-left so it never collides
+     with the top-right overlap / out-of-bounds warning badge. */
+
+  .wireframe-block-chrome__outlet-badge {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: var(--wireframe-badge-padding);
+    background: var(--primary-medium);
+    color: var(--secondary);
+    font-size: var(--wireframe-badge-font-size);
+    font-weight: bold;
+    border-radius: 0 0 4px 0;
+    text-shadow: var(--wireframe-shadow);
+    pointer-events: none;
+
+    &.--published {
+      background: var(--success);
+      color: var(--secondary);
+    }
+
+    .wireframe-block-chrome__outlet-badge-pill {
+      padding: 0 4px;
+      border-radius: 4px;
+      background: rgb(0, 0, 0, 0.25);
+    }
+  }
+
   .wireframe-block-chrome__overlap-badge {
     position: absolute;
     top: -1px;

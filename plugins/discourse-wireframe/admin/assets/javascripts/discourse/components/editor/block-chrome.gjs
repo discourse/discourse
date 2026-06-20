@@ -1,6 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -41,6 +42,7 @@ import { kindForArg } from "../../lib/kind-for-arg";
 import { entryKey } from "../../lib/mutate-layout";
 import { buildBlockPalette } from "../../lib/palette";
 import containerDropTarget from "../../modifiers/container-drop-target";
+import { OUTLET_STATE } from "../../services/wireframe";
 import LinkEditPopover from "../link-edit-popover";
 import BlockToolbar from "./block-toolbar";
 import EditorEmptyDropPlaceholder from "./editor-empty-drop-placeholder";
@@ -878,6 +880,33 @@ export default class BlockChrome extends Component {
   }
 
   /**
+   * The persistence state of the outlet this block belongs to (one of
+   * `OUTLET_STATE`). Drives the outlet-root badge and the read-only suppression.
+   *
+   * @returns {string}
+   */
+  get outletState() {
+    return this.wireframe.outletState(this.args.outletName);
+  }
+
+  /**
+   * Whether this block sits inside a read-only (LOCKED) outlet — owned by a
+   * non-overridable programmatic layout. Every block in such an outlet (root
+   * and descendants share the outlet name) suppresses selection and the
+   * toolbar, so the locked layout can't be edited.
+   *
+   * @returns {boolean}
+   */
+  get isReadOnlyOutlet() {
+    return this.outletState === OUTLET_STATE.LOCKED;
+  }
+
+  /** @returns {boolean} */
+  get isOutletEditing() {
+    return this.wireframe.isOutletEditing(this.args.outletName);
+  }
+
+  /**
    * Merged-cell entries are empty grid cells. The chrome wraps them
    * like any other block (selection, drag, resize via the existing
    * grid handle), but the inner render area becomes a "Pick a block"
@@ -1223,6 +1252,13 @@ export default class BlockChrome extends Component {
   @action
   onClick(event) {
     if (!this.wireframe.isActive) {
+      return;
+    }
+    // A LOCKED outlet is read-only — swallow the click so nothing inside it can
+    // be selected or edited.
+    if (this.isReadOnlyOutlet) {
+      event.preventDefault();
+      event.stopPropagation();
       return;
     }
     event.preventDefault();
@@ -1626,6 +1662,7 @@ export default class BlockChrome extends Component {
             (if this.isSelected "--selected")
             (if this.isContainer "--container")
             (if this.isOutletRoot "--outlet-root")
+            (if this.isReadOnlyOutlet "--read-only")
             (if this.isEmptyContainer "--empty-container")
             (if this.hasGridOverlap "--overlapping")
             (if this.isOutOfBounds "--out-of-bounds")
@@ -1661,18 +1698,40 @@ export default class BlockChrome extends Component {
           role="button"
           tabindex="0"
         >
-          <BlockToolbar
-            @blockKey={{@blockKey}}
-            @outletName={{@outletName}}
-            @displayName={{this.displayName}}
-            @isOutletRoot={{this.isOutletRoot}}
-            @chromeEl={{this.chromeEl}}
-            @isSelected={{this.isSelected}}
-            @canFillImage={{this.imageCanFillBlock}}
-            @canResetImage={{this.imageIsResized}}
-            @onFillImage={{this.fillImageToBlock}}
-            @onResetImage={{this.resetImageToNaturalSize}}
-          />
+          {{! A read-only (LOCKED) outlet shows no toolbar — no drag handle, no
+            actions — so its programmatic layout can't be edited. }}
+          {{#unless this.isReadOnlyOutlet}}
+            <BlockToolbar
+              @blockKey={{@blockKey}}
+              @outletName={{@outletName}}
+              @displayName={{this.displayName}}
+              @isOutletRoot={{this.isOutletRoot}}
+              @chromeEl={{this.chromeEl}}
+              @isSelected={{this.isSelected}}
+              @canFillImage={{this.imageCanFillBlock}}
+              @canResetImage={{this.imageIsResized}}
+              @onFillImage={{this.fillImageToBlock}}
+              @onResetImage={{this.resetImageToNaturalSize}}
+            />
+          {{/unless}}
+
+          {{! Per-outlet state badge on the outlet root: read-only / default /
+            published, plus an editing pill when the outlet has unsaved edits. }}
+          {{#if this.isOutletRoot}}
+            <span
+              class={{dConcatClass
+                "wireframe-block-chrome__outlet-badge"
+                (concat "--" this.outletState)
+              }}
+            >
+              {{i18n (concat "wireframe.outlet.state." this.outletState)}}
+              {{#if this.isOutletEditing}}
+                <span class="wireframe-block-chrome__outlet-badge-pill">{{i18n
+                    "wireframe.outlet.editing"
+                  }}</span>
+              {{/if}}
+            </span>
+          {{/if}}
 
           {{! Overlap / out-of-bounds warning badge — only visible when
             this cell's rectangle intersects a sibling or runs past the

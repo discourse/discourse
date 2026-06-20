@@ -7,6 +7,28 @@ module DiscourseWireframe
   class BlockLayoutDraftsController < ::Admin::AdminController
     requires_plugin DiscourseWireframe::PLUGIN_NAME
 
+    # The current user's own drafts, optionally scoped to a set of theme ids
+    # (the active stack). `data` is returned verbatim (the raw stored string the
+    # client wrote); the client parses it and falls back to the live layout if
+    # it can't. Never exposes another user's drafts.
+    def index
+      drafts = DiscourseWireframe::BlockLayoutDraft.where(user_id: current_user.id)
+      theme_ids = Array.wrap(params[:theme_ids]).map(&:to_i).reject(&:zero?)
+      drafts = drafts.where(theme_id: theme_ids) if theme_ids.present?
+
+      render json: {
+               drafts:
+                 drafts.map do |draft|
+                   {
+                     theme_id: draft.theme_id,
+                     outlet: draft.outlet,
+                     data: draft.data,
+                     base_version_token: draft.base_version_token,
+                   }
+                 end,
+             }
+    end
+
     def create
       DiscourseWireframe::SaveBlockLayoutDraft.call(service_params) do
         on_success { render json: { success: true } }

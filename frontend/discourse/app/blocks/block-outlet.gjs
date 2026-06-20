@@ -350,7 +350,7 @@ function isRecordEmpty(record) {
  * @param {string} outletName
  * @returns {LayerEntry|undefined}
  */
-function resolveLayoutRecord(outletName) {
+function resolveLayoutRecord(outletName, { ignoreSessionDraft = false } = {}) {
   const layers = outletLayouts.get(outletName);
   if (!layers) {
     return undefined;
@@ -359,8 +359,11 @@ function resolveLayoutRecord(outletName) {
   if (layers[CODE_LOCKED]) {
     return layers[CODE_LOCKED];
   }
-  // 2. A live session draft wins while editing.
-  if (layers[LAYOUT_LAYERS.SESSION_DRAFT]) {
+  // 2. A live session draft wins while editing. Callers that need the
+  //    underlying (pre-edit) source instead pass `ignoreSessionDraft` to skip
+  //    this layer and resolve the layer that owns the outlet apart from the
+  //    in-session edit.
+  if (!ignoreSessionDraft && layers[LAYOUT_LAYERS.SESSION_DRAFT]) {
     return layers[LAYOUT_LAYERS.SESSION_DRAFT];
   }
   // 3. The owner theme is the entry with the minimum stack rank. Strictly-less
@@ -1107,6 +1110,43 @@ export function _getValidatedLayout(outletName) {
  */
 export function _getResolvedLayout(outletName) {
   return resolveLayoutRecord(outletName)?.layout ?? null;
+}
+
+/**
+ * Returns the provenance of an outlet's resolved layer — `{ source, sourceId,
+ * overridable, themeStackIndex }` taken from the winning entry — or `null` when
+ * no layer is set. Like `_getResolvedLayout`, it resolves through
+ * `resolveLayoutRecord`, so the `trackedMap` read is autotracked (a caller that
+ * reads this inside a tracked context re-runs whenever any layer for the outlet
+ * changes) and there is no DEBUG gate.
+ *
+ * Pass `ignoreSessionDraft: true` to resolve the underlying layer's provenance
+ * even when an in-session draft is present — that is, the source that owns the
+ * outlet apart from any unsaved edit. The provenance fields are populated per
+ * source: `overridable` is set only for code layers and `themeStackIndex` only
+ * for theme layers (both `undefined` otherwise).
+ *
+ * @internal This is an internal API. Use the `blocks` service's `resolvedLayoutMeta()` method instead.
+ *
+ * @param {string} outletName - The outlet identifier.
+ * @param {Object} [options] - Resolution options.
+ * @param {boolean} [options.ignoreSessionDraft=false] - When true, skip the session-draft layer and resolve the underlying source.
+ * @returns {{source: string, sourceId: (string|number|null), overridable: (boolean|undefined), themeStackIndex: (number|undefined)}|null} The resolved layer's provenance, or null when no layer is set.
+ */
+export function _getResolvedLayoutMeta(
+  outletName,
+  { ignoreSessionDraft = false } = {}
+) {
+  const entry = resolveLayoutRecord(outletName, { ignoreSessionDraft });
+  if (!entry) {
+    return null;
+  }
+  return {
+    source: entry.source,
+    sourceId: entry.sourceId ?? null,
+    overridable: entry.overridable,
+    themeStackIndex: entry.themeStackIndex,
+  };
 }
 
 /**

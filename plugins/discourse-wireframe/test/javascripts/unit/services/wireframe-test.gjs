@@ -17,6 +17,7 @@ import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { attachEditorShortcuts } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-shortcuts";
 import { GRID_DROP_GESTURES } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-drop";
 import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/mutate-layout";
+import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
 
 @block("wf:svc-test-tile", { args: { title: { type: "string" } } })
 class TestTile extends Component {
@@ -81,6 +82,7 @@ function outletChildren(editor, outlet = "homepage-blocks") {
 
 module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
   setupTest(hooks);
+  setupBlockLayoutDraftsStub(hooks);
 
   hooks.beforeEach(function () {
     this.editor = getOwner(this).lookup("service:wireframe");

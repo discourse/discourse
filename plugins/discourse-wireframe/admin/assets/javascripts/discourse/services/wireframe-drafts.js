@@ -1,0 +1,113 @@
+// @ts-check
+import Service, { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import { serializeLayoutForSave } from "../lib/mutate-layout";
+
+const SCHEMA_VERSION = 1;
+const DRAFTS_URL = "/admin/plugins/wireframe/block-layout-drafts.json";
+
+/**
+ * Owns all per-user block-layout draft I/O — read, save, and delete — against
+ * the plugin's drafts endpoint. Drafts are private and never live; promoting one
+ * to the live `block_layout` ThemeField is the persistence service's `publish`.
+ *
+ * A draft records the live version token it was based on (`base_version_token`)
+ * so a later session can tell whether the live layout moved on underneath it.
+ */
+export default class WireframeDraftsService extends Service {
+  @service wireframe;
+  @service wireframePersistence;
+
+  /**
+   * Fetches the current user's drafts, optionally scoped to a set of theme ids
+   * (the active stack). Returns parsed rows; a row whose stored `data` can't be
+   * parsed is dropped (the caller falls back to the live layout). Never rejects
+   * on a transport error — returns an empty array so a failed fetch degrades to
+   * "no drafts" rather than breaking the editor's entry path.
+   *
+   * @param {Array<number>} [themeIds] - theme ids to scope the fetch to.
+   * @returns {Promise<Array<{themeId: number, outlet: string, layout: Array<Object>, baseVersionToken: (string|null)}>>}
+   */
+  async fetchDrafts(themeIds) {
+    let response;
+    try {
+      response = await ajax(DRAFTS_URL, {
+        type: "GET",
+        data: themeIds?.length ? { theme_ids: themeIds } : {},
+      });
+    } catch {
+      return [];
+    }
+
+    const drafts = [];
+    for (const row of response?.drafts ?? []) {
+      let parsed;
+      try {
+        parsed = JSON.parse(row.data);
+      } catch {
+        // A corrupt or older-schema draft row is skipped; the outlet keeps its
+        // live seed instead of throwing during hydration.
+        continue;
+      }
+      drafts.push({
+        themeId: row.theme_id,
+        outlet: row.outlet,
+        layout: parsed?.layout ?? [],
+        baseVersionToken: row.base_version_token ?? null,
+      });
+    }
+    return drafts;
+  }
+
+  /**
+   * Deletes the caller's draft for an outlet. The server endpoint is idempotent,
+   * and a transport error is swallowed on purpose: a leftover draft is detected
+   * and cleaned on the next hydrate, so a failed cleanup must never fail the
+   * publish or reset that triggered it.
+   *
+   * @param {number} themeId - the id of the theme owning the outlet.
+   * @param {string} outlet - the outlet identifier.
+   * @returns {Promise<void>}
+   */
+  async deleteDraft(themeId, outlet) {
+    try {
+      await ajax(DRAFTS_URL, {
+        type: "DELETE",
+        data: { theme_id: themeId, outlet_name: outlet },
+      });
+    } catch {
+      // Intentionally ignored — see the method doc.
+    }
+  }
+
+  /**
+   * Saves a single outlet as a private draft — the per-outlet Save draft
+   * affordance.
+   *
+   * @param {number} themeId - the id of the theme owning the outlet.
+   * @param {string} outlet - the outlet identifier.
+   * @returns {Promise<void>}
+   */
+  saveDraftOutlet(themeId, outlet) {
+    const resolvedLayout = this.wireframe.readResolvedLayout(outlet);
+    const layout = serializeLayoutForSave(resolvedLayout ?? []);
+
+    // A null resolved read means the read path failed, not a deliberate empty
+    // layout; refuse so we don't persist a draft of nothing.
+    if (layout.length === 0 && resolvedLayout == null) {
+      throw new Error(
+        `Refusing to draft outlet "${outlet}": resolved layout was empty/unreadable`
+      );
+    }
+
+    return ajax(DRAFTS_URL, {
+      type: "POST",
+      data: {
+        theme_id: themeId,
+        outlet_name: outlet,
+        layout_json: JSON.stringify({ schema_version: SCHEMA_VERSION, layout }),
+        base_version_token: this.wireframePersistence.tokenFor(themeId, outlet),
+      },
+    });
+  }
+}

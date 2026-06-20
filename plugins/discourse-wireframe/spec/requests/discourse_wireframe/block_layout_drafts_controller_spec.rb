@@ -53,4 +53,50 @@ RSpec.describe DiscourseWireframe::BlockLayoutDraftsController do
          }
     expect(response.status).to eq(404)
   end
+
+  describe "#index" do
+    fab!(:other_theme, :theme)
+
+    it "returns only the current admin's own drafts, scoped to the requested themes" do
+      DiscourseWireframe::BlockLayoutDraft.create!(
+        user: admin,
+        theme: theme,
+        outlet: "homepage-blocks",
+        data: layout_json,
+        base_version_token: "t1",
+      )
+      # Another user's draft and a draft on an unrequested theme must not leak.
+      DiscourseWireframe::BlockLayoutDraft.create!(
+        user: user,
+        theme: theme,
+        outlet: "homepage-blocks",
+        data: layout_json,
+      )
+      DiscourseWireframe::BlockLayoutDraft.create!(
+        user: admin,
+        theme: other_theme,
+        outlet: "sidebar-blocks",
+        data: layout_json,
+      )
+
+      sign_in(admin)
+      get "/admin/plugins/wireframe/block-layout-drafts.json", params: { theme_ids: [theme.id] }
+
+      expect(response.status).to eq(200)
+      returned = response.parsed_body["drafts"]
+      expect(returned.size).to eq(1)
+      expect(returned.first).to include(
+        "theme_id" => theme.id,
+        "outlet" => "homepage-blocks",
+        "data" => layout_json,
+        "base_version_token" => "t1",
+      )
+    end
+
+    it "returns 404 for a non-admin" do
+      sign_in(user)
+      get "/admin/plugins/wireframe/block-layout-drafts.json"
+      expect(response.status).to eq(404)
+    end
+  end
 end

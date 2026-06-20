@@ -11,6 +11,7 @@ import Tabs from "discourse/blocks/builtin/tabs";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/mutate-layout";
+import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
 
 const OUTLET = "homepage-blocks";
 
@@ -28,6 +29,7 @@ module(
   "Integration | discourse-wireframe | tabs add-tab affordance",
   function (hooks) {
     setupRenderingTest(hooks);
+    setupBlockLayoutDraftsStub(hooks);
 
     hooks.beforeEach(async function () {
       await _renderBlocks(

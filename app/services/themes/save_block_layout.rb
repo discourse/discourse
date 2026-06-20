@@ -89,7 +89,7 @@ class Themes::SaveBlockLayout
   def guard_stale_publish(theme:, params:)
     return if params.expected_version_token.nil?
 
-    current =
+    current_value_baked, current_updated_at =
       theme
         .theme_fields
         .where(
@@ -97,11 +97,16 @@ class Themes::SaveBlockLayout
           target_id: Theme.targets[:common],
           type_id: ThemeField.types[:block_layout],
         )
-        .pick(:value_baked)
+        .pick(:value_baked, :updated_at)
 
-    if params.expected_version_token != Themes::BlockLayoutVersion.token_for(current)
-      fail!("stale_block_layout")
-    end
+    current_token = Themes::BlockLayoutVersion.token_for(current_value_baked)
+    return if params.expected_version_token == current_token
+
+    # Hand the controller the live token and publish time so a stale caller can
+    # surface what changed and re-publish against the current version.
+    context[:current_version] = current_token
+    context[:published_at] = current_updated_at
+    fail!("stale_block_layout")
   end
 
   def upsert_field(theme:, params:)

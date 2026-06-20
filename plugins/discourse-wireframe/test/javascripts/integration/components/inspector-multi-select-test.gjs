@@ -6,6 +6,7 @@ import Heading from "discourse/blocks/builtin/heading";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import InspectorPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector-panel";
+import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
 
 const OUTLET = "homepage-blocks";
 
@@ -17,6 +18,7 @@ module(
   "Integration | discourse-wireframe | Component | inspector multi-select",
   function (hooks) {
     setupRenderingTest(hooks);
+    setupBlockLayoutDraftsStub(hooks);
 
     hooks.beforeEach(async function () {
       await _renderBlocks(

@@ -20,6 +20,8 @@ import pretender, {
   response,
 } from "discourse/tests/helpers/create-pretender";
 
+const DRAFTS_URL = "/admin/plugins/wireframe/block-layout-drafts.json";
+
 @block("wf:persist-test-tile", { args: { title: { type: "string" } } })
 class PersistTile extends Component {
   <template>
@@ -38,6 +40,12 @@ async function registerLayout(owner) {
 async function editArg(editor, argName, value) {
   editor.updateSelectedArg(argName, value);
   await settled();
+}
+
+// A successful publish drops the now-redundant draft, so the drafts DELETE must
+// be mocked for the success paths or the cleanup would hit an unmocked route.
+function stubDraftsDelete() {
+  pretender.delete(DRAFTS_URL, () => response({ success: true }));
 }
 
 module(
@@ -71,6 +79,7 @@ module(
 
     test("publish posts every edited outlet with the version token", async function (assert) {
       await enterEdited(this);
+      stubDraftsDelete();
 
       pretender.post("/admin/customize/block-layouts.json", (request) => {
         const body = parsePostData(request.requestBody);
@@ -91,8 +100,43 @@ module(
       assert.verifySteps(["posted"]);
     });
 
+    test("publish targets each outlet's resolved owner, not the fallback", async function (assert) {
+      await enterEdited(this);
+      stubDraftsDelete();
+      // The outlet resolves to theme 7 as its owner; the fallback (5) must not win.
+      this.editor.outletOwner = () => ({ themeId: 7, isGit: false });
+
+      pretender.post("/admin/customize/block-layouts.json", (request) => {
+        assert.strictEqual(parsePostData(request.requestBody).theme_id, "7");
+        assert.step("posted-7");
+        return response({ success: true, theme_id: 7, version_token: "v1" });
+      });
+
+      const result = await this.persistence.publish(5);
+      assert.strictEqual(result.saved[0].themeId, 7);
+      assert.verifySteps(["posted-7"]);
+    });
+
+    test("publish skips a Git-owned outlet and preserves its edit", async function (assert) {
+      await enterEdited(this);
+      this.editor.outletOwner = () => ({ themeId: 9, isGit: true });
+
+      pretender.post("/admin/customize/block-layouts.json", () => {
+        assert.step("posted");
+        return response({ success: true, theme_id: 9, version_token: "v1" });
+      });
+
+      const result = await this.persistence.publish(5);
+      assert.strictEqual(result.saved.length, 0);
+      assert.strictEqual(result.skipped.length, 1);
+      assert.strictEqual(result.skipped[0].reason, "git");
+      assert.true(this.editor.editedOutlets.has("homepage-blocks"));
+      assert.verifySteps([]);
+    });
+
     test("publish collapses the draft into the theme layer keyed by the requested theme and clears the edited-outlets bookkeeping", async function (assert) {
       await enterEdited(this);
+      stubDraftsDelete();
 
       assert.true(this.editor.editedOutlets.has("homepage-blocks"));
 
@@ -116,24 +160,30 @@ module(
       );
     });
 
-    test("publish keeps the outlet edited and flags a conflict on 409", async function (assert) {
+    test("publish flags a 409 conflict with the live version and keeps the outlet edited", async function (assert) {
       await enterEdited(this);
 
       pretender.post("/admin/customize/block-layouts.json", () =>
-        response(409, { errors: ["This layout was changed by someone else."] })
+        response(409, {
+          errors: ["This layout was changed by someone else."],
+          current_version: "server-token",
+          published_at: "2026-06-19T12:00:00Z",
+        })
       );
 
       const result = await this.persistence.publish(5);
       assert.strictEqual(result.saved.length, 0);
       assert.strictEqual(result.errors.length, 1);
       assert.true(result.errors[0].conflict, "flags the 409 as a conflict");
+      assert.strictEqual(result.errors[0].currentVersion, "server-token");
+      assert.strictEqual(result.errors[0].publishedAt, "2026-06-19T12:00:00Z");
       assert.true(
         this.editor.editedOutlets.has("homepage-blocks"),
         "the edit is preserved on conflict"
       );
     });
 
-    test("publish records errors per outlet and continues", async function (assert) {
+    test("publish records non-conflict errors per outlet and continues", async function (assert) {
       await enterEdited(this);
 
       pretender.post("/admin/customize/block-layouts.json", () =>
@@ -151,6 +201,7 @@ module(
       const result = await this.persistence.publish(5);
       assert.strictEqual(result.saved.length, 0);
       assert.strictEqual(result.errors.length, 0);
+      assert.strictEqual(result.skipped.length, 0);
     });
 
     test("publish refuses to POST and keeps the draft when the resolved read fails", async function (assert) {
@@ -170,36 +221,28 @@ module(
       assert.verifySteps([]);
     });
 
-    test("saveDraft posts the drafts endpoint and leaves the theme layer untouched", async function (assert) {
+    test("overwriteOutlet re-posts with the server's current version", async function (assert) {
       await enterEdited(this);
+      stubDraftsDelete();
 
-      pretender.post(
-        "/admin/plugins/wireframe/block-layout-drafts.json",
-        (request) => {
-          const body = parsePostData(request.requestBody);
-          assert.strictEqual(body.theme_id, "5");
-          assert.strictEqual(body.outlet_name, "homepage-blocks");
-          const payload = JSON.parse(body.layout_json);
-          assert.strictEqual(payload.layout[0].args.title, "Edited");
-          assert.step("drafted");
-          return response({ success: true });
-        }
-      );
+      pretender.post("/admin/customize/block-layouts.json", (request) => {
+        assert.strictEqual(
+          parsePostData(request.requestBody).expected_version_token,
+          "server-token",
+          "overwrite echoes the server's current version as the expected token"
+        );
+        assert.step("overwritten");
+        return response({ success: true, theme_id: 5, version_token: "v2" });
+      });
 
-      const result = await this.persistence.saveDraft(5);
-      assert.strictEqual(result.saved.length, 1);
-      assert.verifySteps(["drafted"]);
-
-      const record = _getRawOutletLayouts().get("homepage-blocks");
-      assert.strictEqual(
-        record[LAYOUT_LAYERS.THEME].length,
-        0,
-        "a draft does not collapse into the theme layer"
+      const ok = await this.persistence.overwriteOutlet(
+        "homepage-blocks",
+        5,
+        "server-token"
       );
-      assert.true(
-        this.editor.editedOutlets.has("homepage-blocks"),
-        "the outlet stays edited after a draft save"
-      );
+      assert.true(ok);
+      assert.false(this.editor.editedOutlets.has("homepage-blocks"));
+      assert.verifySteps(["overwritten"]);
     });
 
     test("resetToDefault deletes the field and clears the theme layer", async function (assert) {
@@ -225,19 +268,6 @@ module(
       const themeLayerCleared =
         record == null || record[LAYOUT_LAYERS.THEME].length === 0;
       assert.true(themeLayerCleared, "the theme layer is cleared locally");
-    });
-
-    test("discardDraft issues a DELETE to the drafts endpoint", async function (assert) {
-      pretender.delete(
-        "/admin/plugins/wireframe/block-layout-drafts.json",
-        () => {
-          assert.step("discarded");
-          return response({ success: true });
-        }
-      );
-
-      await this.persistence.discardDraft(5, "homepage-blocks");
-      assert.verifySteps(["discarded"]);
     });
   }
 );

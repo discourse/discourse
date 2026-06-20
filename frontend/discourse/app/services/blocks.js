@@ -4,6 +4,7 @@ import Service from "@ember/service";
 /** @type {import("discourse/blocks/block-outlet.gjs")} */
 import {
   _getResolvedLayout,
+  _getResolvedLayoutMeta,
   _getResolvedLayouts,
   _getValidatedLayout,
   _hasLayout,
@@ -239,6 +240,25 @@ export default class Blocks extends Service {
    */
   resolvedLayout(outletName) {
     return _getResolvedLayout(outletName);
+  }
+
+  /**
+   * Returns the provenance of an outlet's resolved layer — `{ source, sourceId,
+   * overridable, themeStackIndex }` — or `null` when no layer is set. Reactive:
+   * reading this inside a tracked context re-runs when the outlet's resolved
+   * layer changes.
+   *
+   * Pass `{ ignoreSessionDraft: true }` to resolve the underlying source that
+   * owns the outlet apart from any in-session edit (the draft layer otherwise
+   * masks it).
+   *
+   * @param {string} outletName - The outlet identifier.
+   * @param {Object} [options] - Resolution options.
+   * @param {boolean} [options.ignoreSessionDraft=false] - When true, skip the session-draft layer.
+   * @returns {{source: string, sourceId: (string|number|null), overridable: (boolean|undefined), themeStackIndex: (number|undefined)}|null} The resolved layer's provenance, or null.
+   */
+  resolvedLayoutMeta(outletName, options) {
+    return _getResolvedLayoutMeta(outletName, options);
   }
 
   /**

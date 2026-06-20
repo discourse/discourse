@@ -9,6 +9,7 @@ import Layout from "discourse/blocks/builtin/layout";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
+import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
 
 // Renders the REAL editor overlay over a grid in edit mode. Unit + service
 // tests never mount `GridOverlay`, so a render-time throw in it (a getter that
@@ -67,6 +68,7 @@ module(
   "Integration | discourse-wireframe | GridOverlay rendering",
   function (hooks) {
     setupRenderingTest(hooks);
+    setupBlockLayoutDraftsStub(hooks);
 
     hooks.afterEach(function () {
       _resetOutletLayoutsForTesting();

@@ -33,7 +33,6 @@ import SimulationControls from "./simulation-controls";
 export default class EditorShell extends Component {
   @service dialog;
   @service wireframe;
-  @service wireframePersistence;
 
   /**
    * In-flight Save state. Toggling this true grays out the Save button so a
@@ -147,8 +146,8 @@ export default class EditorShell extends Component {
   }
 
   @action
-  reset() {
-    this.wireframe.resetAll();
+  discardAll() {
+    this.wireframe.discardAll();
   }
 
   @action
@@ -192,21 +191,11 @@ export default class EditorShell extends Component {
     this.isSaving = true;
     this.saveErrorMessage = null;
     try {
-      const result = await this.wireframePersistence.publish(
-        this.wireframe.activeThemeId
-      );
-      if (result.errors.length) {
-        this.saveErrorMessage = result.errors
-          .map((e) => `${e.outlet}: ${e.message}`)
-          .join("; ");
-      }
-      // The save also collapses session-drafts into the theme layer, so
-      // `isDirty` (driven by `initialSnapshots`) needs to be reset for
-      // the toolbar to reflect "no unsaved changes". Snapshots are tied
-      // to draft-entry references that no longer exist after save.
-      this.wireframe.initialSnapshots.clear();
-      this.wireframe.undoStack.length = 0;
-      this.wireframe.redoStack.length = 0;
+      // The editor service owns the publish orchestration (per-outlet owner
+      // targeting, the conflict prompt, edit-state reconciliation) so the
+      // toolbar Save and the per-outlet Publish share one path. It returns a
+      // banner message for non-conflict errors, or null on success.
+      this.saveErrorMessage = await this.wireframe.publishEditedOutlets();
     } finally {
       this.isSaving = false;
     }
@@ -268,9 +257,9 @@ export default class EditorShell extends Component {
             />
             <DButton
               class="wireframe-btn-reset"
-              @label="wireframe.chrome.reset"
+              @label="wireframe.chrome.discard_all"
               @disabled={{if this.wireframe.isDirty false true}}
-              @action={{this.reset}}
+              @action={{this.discardAll}}
             />
             <DButton
               class="btn-primary wireframe-btn-save"

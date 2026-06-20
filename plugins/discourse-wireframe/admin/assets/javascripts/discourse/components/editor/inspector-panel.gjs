@@ -16,6 +16,7 @@ import InspectorContainerArgsForm from "./inspector-container-args-form";
 import InspectorForm from "./inspector-form";
 import InspectorLayoutForm from "./inspector-layout-form";
 import InspectorMetadataSection from "./inspector-metadata-section";
+import InspectorOutletSection from "./inspector-outlet-section";
 import InspectorRawJson from "./inspector-raw-json";
 
 /**
@@ -337,9 +338,11 @@ export default class InspectorPanel extends Component {
         </FKAlert>
       {{/if}}
 
-      {{#unless this.isOutletRoot}}
+      {{#if this.isOutletRoot}}
+        <InspectorOutletSection @outletName={{this.data.outletName}} />
+      {{else}}
         <InspectorMetadataSection />
-      {{/unless}}
+      {{/if}}
 
       <div class="wireframe-inspector__tabs" role="tablist">
         <DButton

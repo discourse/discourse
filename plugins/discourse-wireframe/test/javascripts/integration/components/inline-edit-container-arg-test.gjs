@@ -12,6 +12,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import InlineEditController from "discourse/plugins/discourse-wireframe/discourse/components/editor/inline-edit-controller";
 import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/mutate-layout";
+import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
 
 @block("wf:cae-test-leaf", { args: { title: { type: "string" } } })
 class Leaf extends Component {
@@ -26,6 +27,7 @@ module(
   "Integration | discourse-wireframe | inline-edit container-arg reactivity",
   function (hooks) {
     setupRenderingTest(hooks);
+    setupBlockLayoutDraftsStub(hooks);
 
     hooks.afterEach(function () {
       this.editor?.exit();

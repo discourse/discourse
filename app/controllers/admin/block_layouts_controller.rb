@@ -28,10 +28,12 @@ class Admin::BlockLayoutsController < Admin::AdminController
                status: :unprocessable_entity
       end
       on_model_not_found(:theme) { raise Discourse::NotFound }
-      on_failed_step(:guard_stale_publish) do
+      on_failed_step(:guard_stale_publish) do |current_version:, published_at:|
         render json:
                  failed_json.merge(
                    errors: ["This layout was changed by someone else; reload and try again."],
+                   current_version:,
+                   published_at:,
                  ),
                status: :conflict
       end

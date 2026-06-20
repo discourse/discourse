@@ -7,6 +7,7 @@ import Section from "discourse/blocks/builtin/section";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import OutlinePanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/outline-panel";
+import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
 
 function headings(count) {
   return Array.from({ length: count }, (_, i) => ({
@@ -54,6 +55,7 @@ module(
   "Integration | discourse-wireframe | Component | outline-panel",
   function (hooks) {
     setupRenderingTest(hooks);
+    setupBlockLayoutDraftsStub(hooks);
 
     hooks.afterEach(function () {
       getOwner(this).lookup("service:wireframe").exit();

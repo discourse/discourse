@@ -74,6 +74,17 @@ RSpec.describe Admin::BlockLayoutsController do
                expected_version_token: "stale-token",
              }
         expect(response.status).to eq(409)
+        # The conflict body carries the live version + publish time so the
+        # client can reconcile (overwrite against the current version).
+        live =
+          theme.theme_fields.find_by(
+            name: "homepage-blocks",
+            type_id: ThemeField.types[:block_layout],
+          )
+        expect(response.parsed_body["current_version"]).to eq(
+          Themes::BlockLayoutVersion.token_for(live.value_baked),
+        )
+        expect(response.parsed_body["published_at"]).to be_present
       end
 
       it "returns 422 for a Git-imported theme (publish disabled)" do

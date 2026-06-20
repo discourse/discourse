@@ -11,6 +11,7 @@ en:
         undo: "Undo"
         redo: "Redo"
         reset: "Reset"
+        discard_all: "Discard all changes"
         save: "Save"
         save_anyway: "Save anyway"
         save_with_warnings_confirm:
@@ -375,3 +376,26 @@ en:
           homepage: "Homepage"
           categories: "Categories"
           latest: "Latest"
+      outlet:
+        state:
+          locked: "Read-only"
+          default: "Default"
+          published: "Published"
+        editing: "Editing"
+        provided_by: "Provided by %{source} — read-only"
+        save_draft: "Save draft"
+        publish: "Publish"
+        reset_to_default: "Reset to default"
+        discard: "Discard changes"
+        publish_disabled_git: "This area belongs to a Git-managed theme and can't be published from here."
+      stale_draft:
+        title: "Restore your draft?"
+        description: "Your saved draft is based on an older version of this layout — it has been published again since you last edited it. Keep your draft, or start fresh from the published version?"
+        keep: "Keep my draft"
+        start_fresh: "Start fresh"
+      conflict:
+        title: "This area was changed by someone else"
+        description: "Someone published changes to this area while you were editing. Overwrite their version with yours, or cancel to keep editing and reconcile by hand."
+        overwrite: "Overwrite with my version"
+        cancel: "Keep editing"
+        overwrite_failed: "Couldn't overwrite — please try again."

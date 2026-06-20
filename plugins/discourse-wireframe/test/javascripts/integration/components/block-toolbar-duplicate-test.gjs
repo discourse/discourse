@@ -6,6 +6,7 @@ import Heading from "discourse/blocks/builtin/heading";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import BlockToolbar from "discourse/plugins/discourse-wireframe/discourse/components/editor/block-toolbar";
+import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
 
 const OUTLET = "homepage-blocks";
 
@@ -17,6 +18,7 @@ module(
   "Integration | discourse-wireframe | Component | block-toolbar duplicate ×N",
   function (hooks) {
     setupRenderingTest(hooks);
+    setupBlockLayoutDraftsStub(hooks);
 
     hooks.beforeEach(async function () {
       await _renderBlocks(

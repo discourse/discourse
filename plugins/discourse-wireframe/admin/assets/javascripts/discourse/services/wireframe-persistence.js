@@ -16,21 +16,24 @@ import {
 const SCHEMA_VERSION = 1;
 
 /**
- * Bridges the editor's in-memory edits and server-side `block_layout`
- * persistence. Exposes the persistence verbs:
+ * Bridges the editor's in-memory edits and the live `block_layout` ThemeField:
  *  - `publish`        — live write + broadcast, guarded by a stale-version 409
- *  - `saveDraft`      — private, never-live per-user draft
  *  - `resetToDefault` — delete the live field (fall back to the underlying layer)
- *  - `discardDraft`   — drop the caller's draft
  *
- * `publish` sends the version token this tab last observed for each outlet so
+ * It also owns the version-token map — the live version each outlet was last
+ * seen at — which the drafts service reads via `tokenFor` to stamp a draft's
+ * baseline. `publish` sends the token this tab last observed for each outlet so
  * the server can reject a stale publish (another admin changed the live field
- * meanwhile). The baseline token is seeded from the boot preload and advanced
- * only by this tab's own successful publishes — never from MessageBus — so a
- * concurrent publish is detected as a conflict rather than silently adopted.
+ * meanwhile). The baseline is seeded from the boot preload and advanced only by
+ * this tab's own successful publishes — never from MessageBus — so a concurrent
+ * publish is detected as a conflict rather than silently adopted.
+ *
+ * Per-user draft I/O (read / save / delete) lives in the drafts service; this
+ * service calls it for post-publish cleanup.
  */
 export default class WireframePersistenceService extends Service {
   @service wireframe;
+  @service wireframeDrafts;
 
   /** `${themeId}:${outlet}` -> last-observed live version token. */
   #versionTokens = new Map();
@@ -38,62 +41,62 @@ export default class WireframePersistenceService extends Service {
   #tokensSeeded = false;
 
   /**
-   * Publishes every edited outlet to the supplied theme — the live, broadcast
+   * Publishes every edited outlet to its owner theme — the live, broadcast
    * write. Sequential by design so a partial failure leaves earlier successes
-   * persisted. Each success collapses the session draft into the theme layer
-   * (keyed by the requested theme) and clears the outlet from `editedOutlets`;
-   * a 409 conflict keeps the outlet edited so the edit isn't lost.
+   * persisted. Each outlet resolves its own owner, so a page assembled from
+   * several themes publishes each region to the theme that owns it;
+   * `fallbackThemeId` is the target only for an outlet nothing owns yet. A
+   * Git-owned outlet is skipped (never written) with its draft preserved; a 409
+   * conflict keeps the outlet edited and carries the live version for the
+   * conflict prompt.
    *
-   * @param {number} themeId - the id of the theme the editor is bound to.
-   * @returns {Promise<{saved: Array<{outlet: string, themeId: number}>, errors: Array<{outlet: string, message: string, conflict: boolean}>}>}
+   * @param {number} [fallbackThemeId] - publish target for outlets nothing owns yet.
+   * @returns {Promise<{saved: Array<{outlet: string, themeId: number}>, errors: Array<{outlet: string, themeId: number, message: string, conflict: boolean, currentVersion: (string|undefined), publishedAt: (string|undefined)}>, skipped: Array<{outlet: string, themeId: number, reason: string}>}>}
    */
-  async publish(themeId) {
-    const result = { saved: [], errors: [] };
-
+  async publish(fallbackThemeId) {
+    const result = { saved: [], errors: [], skipped: [] };
     for (const outlet of [...this.wireframe.editedOutlets]) {
-      try {
-        const response = await this.#publishOutlet(themeId, outlet);
-        this.#publishToThemeLayer(outlet, themeId);
-        this.#setToken(themeId, outlet, response.version_token);
-        this.wireframe.editedOutlets.delete(outlet);
-        result.saved.push({ outlet, themeId });
-      } catch (error) {
-        result.errors.push({
-          outlet,
-          message: this.#extractErrorMessage(error),
-          conflict: error?.jqXHR?.status === 409,
-        });
-        // Keep a conflicted (or failed) outlet in `editedOutlets` so the edit
-        // isn't lost; the conflict-resolution UX lands in a later phase.
-      }
+      await this.#publishOne(outlet, fallbackThemeId, result);
     }
-
     return result;
   }
 
   /**
-   * Saves every edited outlet as a private, never-live draft. No broadcast and
-   * no theme-layer collapse — the session draft stays the resolved layer.
+   * Publishes a single outlet to its owner theme — the per-outlet Publish
+   * affordance. Same per-outlet logic as the `publish` loop.
    *
-   * @param {number} themeId - the id of the theme the editor is bound to.
-   * @returns {Promise<{saved: Array<{outlet: string}>, errors: Array<{outlet: string, message: string}>}>}
+   * @param {string} outlet - the outlet identifier.
+   * @param {number} [fallbackThemeId] - target when nothing owns the outlet yet.
+   * @returns {Promise<{saved: Array<Object>, errors: Array<Object>, skipped: Array<Object>}>}
    */
-  async saveDraft(themeId) {
-    const result = { saved: [], errors: [] };
-
-    for (const outlet of [...this.wireframe.editedOutlets]) {
-      try {
-        await this.#saveDraftOutlet(themeId, outlet);
-        result.saved.push({ outlet });
-      } catch (error) {
-        result.errors.push({
-          outlet,
-          message: this.#extractErrorMessage(error),
-        });
-      }
-    }
-
+  async publishOutlet(outlet, fallbackThemeId) {
+    const result = { saved: [], errors: [], skipped: [] };
+    await this.#publishOne(outlet, fallbackThemeId, result);
     return result;
+  }
+
+  /**
+   * Re-publishes an outlet against the server's current version, intentionally
+   * overwriting a concurrent change — the "Overwrite" path of the conflict
+   * prompt. The token comes from the 409 response, so the guard now matches.
+   *
+   * @param {string} outlet - the outlet identifier.
+   * @param {number} themeId - the owner theme id.
+   * @param {string} currentVersion - the live token from the 409 response.
+   * @returns {Promise<boolean>} true on success.
+   */
+  async overwriteOutlet(outlet, themeId, currentVersion) {
+    try {
+      const response = await this.#publishRequest(
+        outlet,
+        themeId,
+        currentVersion
+      );
+      await this.#afterPublishSuccess(outlet, themeId, response.version_token);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   /**
@@ -113,21 +116,54 @@ export default class WireframePersistenceService extends Service {
     this.#versionTokens.delete(this.#tokenKey(themeId, outlet));
   }
 
-  /**
-   * Discards the caller's private draft for an outlet.
-   *
-   * @param {number} themeId - the id of the theme owning the outlet.
-   * @param {string} outlet - the outlet identifier.
-   * @returns {Promise<void>}
-   */
-  async discardDraft(themeId, outlet) {
-    await ajax("/admin/plugins/wireframe/block-layout-drafts.json", {
-      type: "DELETE",
-      data: { theme_id: themeId, outlet_name: outlet },
-    });
+  async #publishOne(outlet, fallbackThemeId, result) {
+    const owner = this.wireframe.outletOwner(outlet);
+    const themeId =
+      owner.themeId ?? fallbackThemeId ?? this.wireframe.defaultThemeId;
+
+    if (owner.isGit) {
+      // Never write a Git-managed theme's live field (Export/Duplicate is a
+      // later phase); leave the outlet edited and its draft intact so the work
+      // isn't lost.
+      result.skipped.push({ outlet, themeId, reason: "git" });
+      return;
+    }
+
+    try {
+      const response = await this.#publishRequest(
+        outlet,
+        themeId,
+        this.tokenFor(themeId, outlet)
+      );
+      await this.#afterPublishSuccess(outlet, themeId, response.version_token);
+      result.saved.push({ outlet, themeId });
+    } catch (error) {
+      const conflict = error?.jqXHR?.status === 409;
+      const body = error?.jqXHR?.responseJSON;
+      result.errors.push({
+        outlet,
+        themeId,
+        message: this.#extractErrorMessage(error),
+        conflict,
+        currentVersion: conflict ? body?.current_version : undefined,
+        publishedAt: conflict ? body?.published_at : undefined,
+      });
+      // Keep a conflicted (or failed) outlet in `editedOutlets` so the edit
+      // isn't lost; the caller surfaces the conflict prompt.
+    }
   }
 
-  #publishOutlet(themeId, outlet) {
+  // Shared success path: collapse the just-published draft into the theme layer,
+  // capture the new live token, clear the outlet from `editedOutlets`, and drop
+  // the now-redundant persisted draft (a failed cleanup is harmless).
+  async #afterPublishSuccess(outlet, themeId, versionToken) {
+    this.#publishToThemeLayer(outlet, themeId);
+    this.#setToken(themeId, outlet, versionToken);
+    this.wireframe.editedOutlets.delete(outlet);
+    await this.wireframeDrafts.deleteDraft(themeId, outlet);
+  }
+
+  #publishRequest(outlet, themeId, expectedToken) {
     const resolvedLayout = this.wireframe.readResolvedLayout(outlet);
     const layout = serializeLayoutForSave(resolvedLayout ?? []);
 
@@ -146,28 +182,7 @@ export default class WireframePersistenceService extends Service {
         theme_id: themeId,
         outlet_name: outlet,
         layout_json: JSON.stringify({ schema_version: SCHEMA_VERSION, layout }),
-        expected_version_token: this.#tokenFor(themeId, outlet),
-      },
-    });
-  }
-
-  #saveDraftOutlet(themeId, outlet) {
-    const resolvedLayout = this.wireframe.readResolvedLayout(outlet);
-    const layout = serializeLayoutForSave(resolvedLayout ?? []);
-
-    if (layout.length === 0 && resolvedLayout == null) {
-      throw new Error(
-        `Refusing to draft outlet "${outlet}": resolved layout was empty/unreadable`
-      );
-    }
-
-    return ajax("/admin/plugins/wireframe/block-layout-drafts.json", {
-      type: "POST",
-      data: {
-        theme_id: themeId,
-        outlet_name: outlet,
-        layout_json: JSON.stringify({ schema_version: SCHEMA_VERSION, layout }),
-        base_version_token: this.#tokenFor(themeId, outlet),
+        expected_version_token: expectedToken,
       },
     });
   }
@@ -195,11 +210,18 @@ export default class WireframePersistenceService extends Service {
     return `${themeId}:${outlet}`;
   }
 
-  // The baseline token for an outlet: this tab's last-observed live version.
-  // Seeded once from the boot preload; an outlet with no live field resolves to
-  // "" (an empty token matches an absent field, so a first publish succeeds yet
-  // still 409s if another admin created the field meanwhile).
-  #tokenFor(themeId, outlet) {
+  /**
+   * The baseline token for an outlet: this tab's last-observed live version.
+   * Seeded once from the boot preload; an outlet with no live field resolves to
+   * `""` (an empty token matches an absent field, so a first publish succeeds
+   * yet still 409s if another admin created the field meanwhile). Public so the
+   * drafts service can stamp a draft's `base_version_token`.
+   *
+   * @param {number} themeId - the id of the theme owning the outlet.
+   * @param {string} outlet - the outlet identifier.
+   * @returns {string} the last-observed live version token, or `""`.
+   */
+  tokenFor(themeId, outlet) {
     this.#seedTokens();
     return this.#versionTokens.get(this.#tokenKey(themeId, outlet)) ?? "";
   }

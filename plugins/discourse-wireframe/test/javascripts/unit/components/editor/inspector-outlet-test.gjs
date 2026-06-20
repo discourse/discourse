@@ -74,6 +74,28 @@ class StubWireframeService extends Service {
   }
 
   toggleConditionsDetached() {}
+
+  // Surface the per-outlet section (rendered for an outlet root) reads. Safe
+  // defaults: a default, editable, non-Git outlet with no unsaved edits.
+  outletState() {
+    return "default";
+  }
+
+  outletOwner() {
+    return { themeId: null, themeName: null, isGit: false };
+  }
+
+  isOutletEditing() {
+    return false;
+  }
+
+  saveDraftOutlet() {}
+
+  publishOutlet() {}
+
+  discardOutlet() {}
+
+  resetToDefault() {}
 }
 
 function stubWireframe(owner, blockData) {

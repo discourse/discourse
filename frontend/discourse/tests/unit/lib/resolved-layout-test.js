@@ -5,9 +5,13 @@ import { module, test } from "qunit";
 import { block } from "discourse/blocks";
 import {
   _getResolvedLayout,
+  _getResolvedLayoutMeta,
   _getResolvedLayouts,
   _renderBlocks,
   _resetOutletLayoutsForTesting,
+  _setLayoutLayer,
+  LAYOUT_LAYERS,
+  LAYOUT_SOURCE,
 } from "discourse/blocks/block-outlet";
 import {
   registerBlock,
@@ -71,6 +75,60 @@ module("Unit | lib | resolved-layout accessors", function (hooks) {
       "the map entry's layout is the same resolved array as _getResolvedLayout"
     );
     assert.strictEqual(entry.layout[0].block, Tile);
+  });
+
+  test("_getResolvedLayoutMeta returns the winning layer's provenance", function (assert) {
+    @block("resolved-layout-tile-meta")
+    class Tile extends Component {}
+
+    withTestBlockRegistration(() => registerBlock(Tile));
+
+    // An overridable code seed is the in-code default.
+    _renderBlocks("homepage-blocks", [{ block: Tile }], getOwner(this));
+    let meta = _getResolvedLayoutMeta("homepage-blocks");
+    assert.strictEqual(meta.source, LAYOUT_SOURCE.CODE);
+    assert.true(meta.overridable, "a code seed is overridable");
+
+    assert.strictEqual(
+      _getResolvedLayoutMeta("never-registered-outlet"),
+      null,
+      "returns null when no layer is set"
+    );
+  });
+
+  test("_getResolvedLayoutMeta with ignoreSessionDraft resolves the underlying source", function (assert) {
+    @block("resolved-layout-tile-base")
+    class Tile extends Component {}
+
+    withTestBlockRegistration(() => registerBlock(Tile));
+
+    _setLayoutLayer(
+      "homepage-blocks",
+      LAYOUT_LAYERS.THEME,
+      [{ block: Tile }],
+      getOwner(this),
+      { themeId: 7, themeStackIndex: 0 }
+    );
+    _setLayoutLayer(
+      "homepage-blocks",
+      LAYOUT_LAYERS.SESSION_DRAFT,
+      [{ block: Tile }],
+      getOwner(this),
+      { permissive: true }
+    );
+
+    // The draft wins normal resolution...
+    assert.strictEqual(
+      _getResolvedLayoutMeta("homepage-blocks").source,
+      LAYOUT_SOURCE.SESSION_DRAFT
+    );
+    // ...but ignoreSessionDraft reveals the theme underneath, with its id + rank.
+    const base = _getResolvedLayoutMeta("homepage-blocks", {
+      ignoreSessionDraft: true,
+    });
+    assert.strictEqual(base.source, LAYOUT_SOURCE.THEME);
+    assert.strictEqual(base.sourceId, 7);
+    assert.strictEqual(base.themeStackIndex, 0);
   });
 
   test("the accessors have no DEBUG gate (regression guard against a re-added early return)", function (assert) {

@@ -24,6 +24,7 @@ import {
   _getResolvedLayouts,
   _setLayoutLayer,
   LAYOUT_LAYERS,
+  LAYOUT_SOURCE,
 } from "discourse/blocks/block-outlet";
 import { PART_KEY_SEGMENT } from "discourse/lib/blocks/-internals/composite";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
@@ -44,6 +45,8 @@ import {
   reflowChildrenIntoCells,
   syncContentToArrayOrder,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
+import ConflictModal from "../components/editor/conflict-modal";
+import StaleDraftModal from "../components/editor/stale-draft-modal";
 import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-renderer";
 import GridManipulator from "../lib/grid-manipulator";
 import {
@@ -86,6 +89,21 @@ const FLUSH_DELAY_MS = 200;
 const FLASH_DURATION_MS = 1100;
 
 /**
+ * The persistence state of an outlet, derived from the source that owns it
+ * apart from any in-session edit (see `outletState`). `EDITING` is orthogonal —
+ * an outlet in any of these states may also have unsaved edits.
+ *
+ * - `LOCKED` — a non-overridable programmatic layout owns it; read-only.
+ * - `DEFAULT` — an overridable in-code seed (or nothing published yet).
+ * - `PUBLISHED` — a theme field owns it.
+ */
+export const OUTLET_STATE = Object.freeze({
+  LOCKED: "locked",
+  DEFAULT: "default",
+  PUBLISHED: "published",
+});
+
+/**
  * Editor service. Holds the editor's session state and mediates the
  * in-memory mutation pipeline.
  *
@@ -117,8 +135,11 @@ const FLASH_DURATION_MS = 1100;
 export default class WireframeService extends Service {
   @service blocks;
   @service currentUser;
+  @service modal;
   @service site;
   @service siteSettings;
+  @service wireframeDrafts;
+  @service wireframePersistence;
 
   @tracked isActive = false;
   @tracked selectedBlockKey = null;
@@ -452,6 +473,25 @@ export default class WireframeService extends Service {
   #originalLayouts = new Map();
 
   /**
+   * Bumped on every `enter()` and `exit()`. The async draft hydration captures
+   * the value at `enter()` time and bails if it no longer matches — so a
+   * hydration whose fetch resolves after the user exited (or re-entered) never
+   * writes into a closed or freshly-reopened session.
+   *
+   * @type {number}
+   */
+  #enterGeneration = 0;
+
+  /**
+   * Outlets whose persisted draft was based on an older live version than what
+   * is published now, queued at hydration time for a one-at-a-time stale-draft
+   * prompt (keep the draft, or start fresh from the live layout).
+   *
+   * @type {Array<{outlet: string, themeId: number, layout: Array<Object>}>}
+   */
+  #staleDraftQueue = [];
+
+  /**
    * Outlets whose draft has at least one structural mutation (block moved,
    * inserted, deleted). A `trackedSet` so the toolbar's `isDirty` getter
    * reactively responds to the first move — equivalent role to
@@ -601,6 +641,18 @@ export default class WireframeService extends Service {
     return registered.filter(
       (name) => this.blocks.hasLayout(name) || mounted?.has(name)
     );
+  }
+
+  /**
+   * The theme an outlet publishes to when nothing yet owns it (a pure in-code
+   * default with no live field). Exposed publicly so the persistence and drafts
+   * services can resolve a fallback publish target without reaching into the
+   * private resolver.
+   *
+   * @returns {number|null}
+   */
+  get defaultThemeId() {
+    return this.#defaultThemeId();
   }
 
   /** @returns {boolean} */
@@ -949,6 +1001,9 @@ export default class WireframeService extends Service {
       return;
     }
     this.isActive = true;
+    // New session generation: invalidates any draft hydration still in flight
+    // from a previous enter/exit so it can't write into this session.
+    const generation = ++this.#enterGeneration;
     this.activeThemeId = themeId ?? this.#defaultThemeId();
     document.body.classList.add("wireframe-active");
     document.addEventListener("mousedown", this.#onCanvasMouseDown);
@@ -960,6 +1015,12 @@ export default class WireframeService extends Service {
     // a swap.
     registerBlockArgRenderer("rich-text", ScaffoldedRichTextRenderer);
     this.#materializeAllDrafts();
+
+    // Seed each outlet from the live layout first (above) so the canvas paints
+    // immediately and `enter()` stays synchronous; then, after render, overlay
+    // any persisted per-user draft. The fetch is fire-and-forget and
+    // generation-guarded — it never blocks entry and bails if the session ends.
+    schedule("afterRender", this, this.#hydrateDrafts, generation);
 
     // Warm the inline-rich-text editor bundle in the background so the
     // first click-to-edit doesn't pay a load-the-PM-chunk latency hit.
@@ -987,6 +1048,11 @@ export default class WireframeService extends Service {
     const existing = this.readResolvedLayout(outletName);
     if (existing) {
       return existing;
+    }
+    // A LOCKED outlet is read-only — never mint a draft for it. This is a
+    // defensive backstop; the chrome already gates writes on `isOutletEditable`.
+    if (this.outletState(outletName) === OUTLET_STATE.LOCKED) {
+      return existing ?? [];
     }
     // Seed the outlet with an empty root `layout` block so it's an implicit
     // layout from the first drop, matching `#materializeAllDrafts`.
@@ -1028,6 +1094,9 @@ export default class WireframeService extends Service {
     }
     this.draftedOutlets.clear();
     this.#outletRootKeys.clear();
+    // Invalidate any in-flight draft hydration and drop queued stale prompts.
+    this.#enterGeneration++;
+    this.#staleDraftQueue.length = 0;
 
     this.isActive = false;
     this.activeThemeId = null;
@@ -2229,17 +2298,10 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Restores every touched outlet back to the pristine layout captured at
-   * `enter()` (structural edits) and every touched entry back to its initial
-   * (pre-edit) args (arg edits).
-   *
-   * For outlets that had structural mutations, we re-publish the captured
-   * `#originalLayouts` clone — that's a fresh tree, so the draft layer's
-   * entries get fully replaced. We then skip the per-entry args restoration
-   * for those outlets because the new draft already carries pristine args
-   * (the structurally-reset entries are the ones from `#originalLayouts`,
-   * never mutated). Args-only outlets fall through to the existing
-   * `initialSnapshots` write-back path.
+   * In-memory rollback of every touched outlet to its pristine pre-edit state,
+   * then clears the undo/redo history. Each outlet is reverted by
+   * `#rollbackOutletInMemory` (which handles both structural and arg edits); no
+   * server field is touched. Returns false when there's nothing to reset.
    *
    * @returns {Promise<boolean>}
    */
@@ -2248,52 +2310,264 @@ export default class WireframeService extends Service {
     if (!this.isDirty) {
       return false;
     }
-
-    // Wholesale re-publish of pristine layouts replaces every draft entry,
-    // invalidating the per-entry references stored in `initialSnapshots`
-    // for those outlets — drop them so we don't try to mutate stale entries.
-    const structurallyResetOutlets = new Set(this.#structurallyEditedOutlets);
-    if (structurallyResetOutlets.size > 0) {
-      for (const outletName of structurallyResetOutlets) {
-        const original = this.#originalLayouts.get(outletName);
-        if (!original) {
-          continue;
-        }
-        // Clone again: the snapshot must remain pristine in case the user
-        // mutates and then resets a second time during the same session.
-        // Permissive matches the original publish in `#materializeAllDrafts`
-        // — same session-draft layer, same tolerance contract.
-        _setLayoutLayer(
-          outletName,
-          LAYOUT_LAYERS.SESSION_DRAFT,
-          cloneLayoutForDraft(original),
-          getOwner(this),
-          { permissive: true }
-        );
-        // The snapshot preserves the root layout's `__stableKey`, so the
-        // recorded root key normally stays valid — re-record defensively in
-        // case the publish minted a fresh key for any reason.
-        this.#recordOutletRoot(outletName);
-      }
-      // Drop arg-snapshots whose entries belong to structurally-reset outlets.
-      // Entries elsewhere keep their snapshots so the args path still works.
-      for (const [entry] of this.initialSnapshots) {
-        if (structurallyResetOutlets.has(this.#outletForEntry(entry))) {
-          this.initialSnapshots.delete(entry);
-        }
-      }
-    }
-
-    // Args-only restoration for whatever survived the structural pass.
-    for (const [entry, snapshot] of this.initialSnapshots) {
-      this.writeArgs(entry, snapshot);
+    for (const outletName of this.#editedOutletNames()) {
+      this.#rollbackOutletInMemory(outletName);
     }
     this.undoStack.length = 0;
     this.redoStack.length = 0;
-    this.initialSnapshots.clear();
-    this.#structurallyEditedOutlets.clear();
-    this.editedOutlets.clear();
     return true;
+  }
+
+  /**
+   * Discards one outlet's unsaved edits: rolls its session draft back to the
+   * pristine pre-edit layout (in memory) and deletes the caller's persisted
+   * draft for it. Does NOT touch the live field — the published layout is
+   * unaffected.
+   *
+   * @param {string} outletName
+   * @returns {Promise<void>}
+   */
+  @action
+  async discardOutlet(outletName) {
+    this.#rollbackOutletInMemory(outletName);
+    await this.wireframeDrafts.deleteDraft(
+      this.outletOwner(outletName).themeId ?? this.defaultThemeId,
+      outletName
+    );
+  }
+
+  /**
+   * Discards every outlet's unsaved edits (the global toolbar affordance).
+   * Iterates `discardOutlet` so persisted drafts are dropped too — never a
+   * live-field delete.
+   *
+   * @returns {Promise<boolean>}
+   */
+  @action
+  async discardAll() {
+    if (!this.isDirty) {
+      return false;
+    }
+    for (const outletName of this.#editedOutletNames()) {
+      await this.discardOutlet(outletName);
+    }
+    this.undoStack.length = 0;
+    this.redoStack.length = 0;
+    return true;
+  }
+
+  /**
+   * Resets a published outlet to its default: deletes the live `block_layout`
+   * field (via the persistence service), drops the caller's draft, clears the
+   * local theme + session-draft layers so the underlying code default resolves,
+   * then re-seeds a fresh editable draft from it. Only valid for a PUBLISHED
+   * outlet whose owner is not Git-managed.
+   *
+   * @param {string} outletName
+   * @returns {Promise<boolean>} false when the outlet isn't eligible.
+   */
+  @action
+  async resetToDefault(outletName) {
+    const owner = this.outletOwner(outletName);
+    if (
+      this.outletState(outletName) !== OUTLET_STATE.PUBLISHED ||
+      owner.isGit
+    ) {
+      return false;
+    }
+    await this.wireframePersistence.resetToDefault(owner.themeId, outletName);
+    await this.wireframeDrafts.deleteDraft(owner.themeId, outletName);
+
+    // The live field and theme layer are gone; clear our session draft and edit
+    // bookkeeping for this outlet so it resolves to the underlying default, then
+    // re-seed a clean editable draft from that default (matching a fresh enter).
+    _clearLayoutLayer(outletName, LAYOUT_LAYERS.SESSION_DRAFT);
+    this.draftedOutlets.delete(outletName);
+    this.#originalLayouts.delete(outletName);
+    for (const [entry] of this.initialSnapshots) {
+      if (this.#outletForEntry(entry) === outletName) {
+        this.initialSnapshots.delete(entry);
+      }
+    }
+    this.#structurallyEditedOutlets.delete(outletName);
+    this.editedOutlets.delete(outletName);
+    this.#materializeAllDrafts();
+    return true;
+  }
+
+  /**
+   * Publishes every edited outlet (the toolbar Save). Each region goes live on
+   * the theme that owns it. Returns a banner message for non-conflict errors,
+   * or null on success; stale-version conflicts are surfaced through the
+   * conflict prompt here.
+   *
+   * @returns {Promise<string|null>}
+   */
+  @action
+  async publishEditedOutlets() {
+    const result = await this.wireframePersistence.publish(this.activeThemeId);
+    return this.#processPublishResult(result);
+  }
+
+  /**
+   * Publishes a single outlet to its owner theme (the inspector's per-outlet
+   * Publish). Shares the conflict + reconciliation handling with the toolbar
+   * Save.
+   *
+   * @param {string} outletName
+   * @returns {Promise<string|null>} a banner message, or null on success.
+   */
+  @action
+  async publishOutlet(outletName) {
+    const result = await this.wireframePersistence.publishOutlet(
+      outletName,
+      this.activeThemeId
+    );
+    return this.#processPublishResult(result);
+  }
+
+  /**
+   * Saves a single outlet as a private, never-live draft (the inspector's Save
+   * draft). The outlet stays edited — a draft doesn't go live.
+   *
+   * @param {string} outletName
+   * @returns {Promise<void>}
+   */
+  @action
+  async saveDraftOutlet(outletName) {
+    await this.wireframeDrafts.saveDraftOutlet(this.activeThemeId, outletName);
+  }
+
+  /**
+   * Clears one outlet's dirty bookkeeping after it has been published — drops
+   * its arg snapshots and edited flags WITHOUT rolling the layout back (the
+   * published draft stays on the canvas). Unlike `discardOutlet`, nothing
+   * reverts; this just reconciles "no unsaved changes" for that outlet.
+   *
+   * @param {string} outletName
+   */
+  #clearOutletEditState(outletName) {
+    for (const [entry] of this.initialSnapshots) {
+      if (this.#outletForEntry(entry) === outletName) {
+        this.initialSnapshots.delete(entry);
+      }
+    }
+    this.#structurallyEditedOutlets.delete(outletName);
+    this.editedOutlets.delete(outletName);
+  }
+
+  /**
+   * Reconciles a publish result: clears the edit state of published outlets,
+   * runs the conflict prompt for any stale-version 409, drops undo/redo history
+   * once nothing is left edited, and returns a banner message for the remaining
+   * (non-conflict) errors.
+   *
+   * @param {{saved: Array<Object>, errors: Array<Object>}} result
+   * @returns {Promise<string|null>}
+   */
+  async #processPublishResult(result) {
+    for (const saved of result.saved) {
+      this.#clearOutletEditState(saved.outlet);
+    }
+    for (const conflict of result.errors.filter((error) => error.conflict)) {
+      await this.#resolvePublishConflict(conflict);
+    }
+    // Undo/redo references draft entries that no longer exist once everything is
+    // published; clear it only when nothing is left edited, so a partial publish
+    // keeps history for the outlets still open.
+    if (this.editedOutlets.size === 0) {
+      this.undoStack.length = 0;
+      this.redoStack.length = 0;
+    }
+    const otherErrors = result.errors.filter((error) => !error.conflict);
+    if (otherErrors.length === 0) {
+      return null;
+    }
+    return otherErrors
+      .map((error) => `${error.outlet}: ${error.message}`)
+      .join("; ");
+  }
+
+  /**
+   * Surfaces a stale-version conflict for one outlet. Overwrite republishes
+   * against the server's current version (intentionally winning); cancel or
+   * dismiss keeps the outlet edited for manual reconciliation.
+   *
+   * @param {Object} conflict - one conflict entry from a publish result.
+   */
+  async #resolvePublishConflict(conflict) {
+    const result = await this.modal.show(ConflictModal, {
+      model: { outlet: conflict.outlet, publishedAt: conflict.publishedAt },
+    });
+    if (result?.choice !== "overwrite") {
+      return;
+    }
+    const ok = await this.wireframePersistence.overwriteOutlet(
+      conflict.outlet,
+      conflict.themeId,
+      conflict.currentVersion
+    );
+    if (ok) {
+      this.#clearOutletEditState(conflict.outlet);
+    }
+  }
+
+  /**
+   * Rolls a single outlet's session draft back to the pristine layout captured
+   * at `enter()` (or at draft hydration) and clears its edit bookkeeping. The
+   * `#originalLayouts` clone is re-published wholesale, so both structural and
+   * arg edits revert; for the rare case with no captured clone, the per-entry
+   * arg snapshots are written back instead. In-memory only — no server call.
+   *
+   * @param {string} outletName
+   */
+  #rollbackOutletInMemory(outletName) {
+    const original = this.#originalLayouts.get(outletName);
+    if (original) {
+      // Clone again so the snapshot stays pristine across repeated resets.
+      // Permissive matches the original publish in `#materializeAllDrafts`.
+      _setLayoutLayer(
+        outletName,
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        cloneLayoutForDraft(original),
+        getOwner(this),
+        { permissive: true }
+      );
+      // The snapshot preserves the root layout's `__stableKey`, so the recorded
+      // root key normally stays valid — re-record defensively regardless.
+      this.#recordOutletRoot(outletName);
+    }
+    for (const [entry, snapshot] of this.initialSnapshots) {
+      if (this.#outletForEntry(entry) !== outletName) {
+        continue;
+      }
+      // With a re-published clone the fresh draft already carries pristine args,
+      // so just drop the (now-stale) snapshot; without one, write it back.
+      if (!original) {
+        this.writeArgs(entry, snapshot);
+      }
+      this.initialSnapshots.delete(entry);
+    }
+    this.#structurallyEditedOutlets.delete(outletName);
+    this.editedOutlets.delete(outletName);
+  }
+
+  /**
+   * The set of outlet names with any unsaved edit — structural or arg-level —
+   * computed from the edit bookkeeping. Snapshotted (a new Set) so callers can
+   * iterate while mutating the underlying bookkeeping.
+   *
+   * @returns {Set<string>}
+   */
+  #editedOutletNames() {
+    const names = new Set(this.#structurallyEditedOutlets);
+    for (const entry of this.initialSnapshots.keys()) {
+      const outletName = this.#outletForEntry(entry);
+      if (outletName) {
+        names.add(outletName);
+      }
+    }
+    return names;
   }
 
   /**
@@ -2364,6 +2638,100 @@ export default class WireframeService extends Service {
    */
   readResolvedLayout(outletName) {
     return _getResolvedLayout(outletName);
+  }
+
+  /**
+   * The persistence state of an outlet — one of `OUTLET_STATE`. Derived from
+   * the source that owns the outlet apart from any in-session edit (the draft
+   * layer is ignored on purpose, so this reflects what is actually published,
+   * not the unsaved edit on top). Whether the outlet has unsaved edits is
+   * reported separately by `isOutletEditing`.
+   *
+   * Reads the resolved provenance directly (one keyed, tracked map read), so a
+   * template binding re-runs when the outlet's layers change. Kept a plain
+   * method — never `@cached` — so it can't freeze on an untracked early read.
+   *
+   * @param {string} outletName
+   * @returns {string} One of `OUTLET_STATE`.
+   */
+  outletState(outletName) {
+    const meta = this.blocks.resolvedLayoutMeta(outletName, {
+      ignoreSessionDraft: true,
+    });
+    if (meta?.source === LAYOUT_SOURCE.THEME) {
+      return OUTLET_STATE.PUBLISHED;
+    }
+    if (meta?.source === LAYOUT_SOURCE.CODE && meta.overridable === false) {
+      return OUTLET_STATE.LOCKED;
+    }
+    // An overridable in-code seed, or no underlying layer at all, is the default.
+    return OUTLET_STATE.DEFAULT;
+  }
+
+  /**
+   * The theme that owns an outlet (where Publish writes its live field) plus
+   * the metadata needed to badge and gate it. For a published outlet the owner
+   * is the theme that holds the field (the minimum stack-rank theme, resolved
+   * by the core layer resolver); for a default/locked outlet nothing owns it
+   * yet, so the publish target falls back to `defaultThemeId`. `themeName` and
+   * `isGit` come from the per-theme metadata preload.
+   *
+   * @param {string} outletName
+   * @returns {{themeId: (number|null), themeName: (string|null), isGit: boolean, stackIndex: (number|undefined), layer: string}}
+   */
+  outletOwner(outletName) {
+    const meta = this.blocks.resolvedLayoutMeta(outletName, {
+      ignoreSessionDraft: true,
+    });
+    const themeId =
+      meta?.source === LAYOUT_SOURCE.THEME
+        ? Number(meta.sourceId)
+        : this.defaultThemeId;
+    const themeMeta = this.#themeMeta(themeId);
+    return {
+      themeId,
+      themeName: themeMeta?.name ?? null,
+      isGit: themeMeta?.is_git ?? false,
+      stackIndex:
+        meta?.source === LAYOUT_SOURCE.THEME
+          ? meta.themeStackIndex
+          : themeMeta?.stack_index,
+      layer: meta?.source ?? null,
+    };
+  }
+
+  /**
+   * Whether an outlet has unsaved in-session edits. Reads the tracked edit
+   * bookkeeping directly so a template binding (the EDITING pill) re-runs as
+   * edits come and go.
+   *
+   * @param {string} outletName
+   * @returns {boolean}
+   */
+  isOutletEditing(outletName) {
+    if (this.#structurallyEditedOutlets.has(outletName)) {
+      return true;
+    }
+    if (this.initialSnapshots.size === 0) {
+      return false;
+    }
+    for (const entry of this.initialSnapshots.keys()) {
+      if (this.#outletForEntry(entry) === outletName) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Whether an outlet may be edited. A LOCKED outlet is read-only; everything
+   * else is editable.
+   *
+   * @param {string} outletName
+   * @returns {boolean}
+   */
+  isOutletEditable(outletName) {
+    return this.outletState(outletName) !== OUTLET_STATE.LOCKED;
   }
 
   /**
@@ -3742,6 +4110,25 @@ export default class WireframeService extends Service {
   }
 
   /**
+   * Per-theme metadata from the boot preload (display name, git status, stack
+   * rank), keyed by theme id. The preload is JSON, so its keys are strings;
+   * coerce the lookup id to a string. Returns null when the theme is absent.
+   *
+   * @param {number|string|null} themeId
+   * @returns {?{name: string, component: boolean, is_git: boolean, stack_index: number}}
+   */
+  #themeMeta(themeId) {
+    if (themeId == null) {
+      return null;
+    }
+    const meta = PreloadStore.get("themeBlockLayoutMeta");
+    if (!meta || typeof meta !== "object") {
+      return null;
+    }
+    return meta[String(themeId)] ?? null;
+  }
+
+  /**
    * Eagerly publishes a `session-draft` layer for every outlet that has a
    * resolved layout. After this runs, `_getResolvedLayouts()` returns draft
    * entries for those outlets — the rest of the editor session mutates
@@ -3754,6 +4141,12 @@ export default class WireframeService extends Service {
   #materializeAllDrafts() {
     for (const outletName of this.editableOutlets) {
       if (this.draftedOutlets.has(outletName)) {
+        continue;
+      }
+      // A LOCKED outlet is owned by a non-overridable programmatic layout: it
+      // stays read-only, so never seed a draft for it (the outline still lists
+      // it via `editableOutlets`, but the chrome marks it non-editable).
+      if (this.outletState(outletName) === OUTLET_STATE.LOCKED) {
         continue;
       }
       const layout = this.readResolvedLayout(outletName);
@@ -3801,6 +4194,132 @@ export default class WireframeService extends Service {
         outletName,
         cloneLayoutForDraft(this.readResolvedLayout(outletName) ?? [])
       );
+    }
+  }
+
+  /**
+   * Overlays any persisted per-user draft on top of the freshly materialized
+   * live seeds. Runs after render (off the synchronous `enter()`), so it never
+   * blocks first paint, and is generation-guarded so a fetch that resolves after
+   * the user exited or re-entered never writes into the wrong session. A failed
+   * fetch degrades to "no drafts" (handled in the drafts service).
+   *
+   * @param {number} generation - the `#enterGeneration` captured at enter time.
+   * @returns {Promise<void>}
+   */
+  async #hydrateDrafts(generation) {
+    const themeIds = [
+      ...new Set(
+        this.editableOutlets
+          .map((name) => this.outletOwner(name).themeId)
+          .filter((id) => id != null)
+      ),
+    ];
+    const drafts = await this.wireframeDrafts.fetchDrafts(themeIds);
+    // Bail if the user exited or re-entered while the fetch was in flight.
+    if (generation !== this.#enterGeneration || !this.isActive) {
+      return;
+    }
+
+    for (const draft of drafts) {
+      const { outlet } = draft;
+      // Only hydrate outlets the editor is actually drafting and that the user
+      // hasn't started touching since enter — re-seeding would clobber a live
+      // edit (committed or still in flight).
+      if (
+        !this.draftedOutlets.has(outlet) ||
+        !this.#isOutletPristineSinceEnter(outlet)
+      ) {
+        continue;
+      }
+      const liveToken = this.wireframePersistence.tokenFor(
+        draft.themeId,
+        outlet
+      );
+      if ((draft.baseVersionToken ?? "") === liveToken) {
+        // The draft is based on the live version that's still current: apply it.
+        this.#applyDraftToOutlet(outlet, draft.layout);
+      } else {
+        // The live layout moved on since the draft was saved: prompt the user.
+        this.#staleDraftQueue.push(draft);
+      }
+    }
+
+    await this.#flushStaleDraftQueue(generation);
+  }
+
+  /**
+   * Re-seeds an outlet's session draft from a persisted draft layout and marks
+   * the outlet edited (so it is dirty, badged as editing, and a Save/Publish
+   * target). Leaves `#originalLayouts` untouched — it still holds the live
+   * clone, so a later discard reverts to the published layout, not the draft.
+   *
+   * @param {string} outlet
+   * @param {Array<Object>} layout - the persisted draft layout.
+   */
+  #applyDraftToOutlet(outlet, layout) {
+    const draftLayout = normalizeImplicitChildren(
+      wrapAsOutletRoot(cloneLayoutForDraft(layout ?? [])),
+      (ref) => this.lookupBlockMetadata(ref)
+    );
+    _setLayoutLayer(
+      outlet,
+      LAYOUT_LAYERS.SESSION_DRAFT,
+      draftLayout,
+      getOwner(this),
+      { permissive: true }
+    );
+    this.#recordOutletRoot(outlet);
+    this.editedOutlets.add(outlet);
+    this.#structurallyEditedOutlets.add(outlet);
+  }
+
+  /**
+   * Whether an outlet is untouched since `enter()` — safe to overlay a draft
+   * onto. Conservative: any committed edit, pending arg flush, or open inline
+   * edit anywhere blocks re-seeding so live work is never clobbered.
+   *
+   * @param {string} outlet
+   * @returns {boolean}
+   */
+  #isOutletPristineSinceEnter(outlet) {
+    return (
+      !this.editedOutlets.has(outlet) &&
+      !this.#structurallyEditedOutlets.has(outlet) &&
+      this.#pendingArgs.size === 0 &&
+      this.inlineEdit.blockKey == null
+    );
+  }
+
+  /**
+   * Prompts for each stale draft one at a time (chained on the modal's
+   * close promise so they never overlap). Keep re-seeds from the draft; start
+   * fresh drops the persisted draft and keeps the already-seeded live layout.
+   * Generation-guarded between prompts so exiting mid-queue stops it.
+   *
+   * @param {number} generation - the `#enterGeneration` captured at enter time.
+   * @returns {Promise<void>}
+   */
+  async #flushStaleDraftQueue(generation) {
+    while (this.#staleDraftQueue.length > 0) {
+      if (generation !== this.#enterGeneration) {
+        return;
+      }
+      const item = this.#staleDraftQueue.shift();
+      const result = await this.modal.show(StaleDraftModal, {
+        model: { outlet: item.outlet },
+      });
+      if (generation !== this.#enterGeneration) {
+        return;
+      }
+      if (result?.choice === "keep") {
+        this.#applyDraftToOutlet(item.outlet, item.layout);
+      } else if (result?.choice === "fresh") {
+        // Start fresh: the live seed is already in place; drop the stale draft.
+        this.wireframeDrafts.deleteDraft(item.themeId, item.outlet);
+      }
+      // Dismissed (no choice): keep the live seed and leave the draft in place
+      // so the prompt returns next session.
     }
   }
 
