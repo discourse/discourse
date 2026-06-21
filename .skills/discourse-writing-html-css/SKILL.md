@@ -1,6 +1,6 @@
 ---
 name: discourse-writing-html-css
-description: Write HTML and CSS/SCSS for Discourse core, plugins, themes, and theme components. Use when authoring or modifying templates (.gjs/.hbs), stylesheets (.scss), component markup, or class names. Covers Discourse's BEM-with-standalone-modifiers naming, the CSS custom-property color palette (theming + dark mode), template/HTML conventions, and where stylesheets live.
+description: Write and repair HTML/CSS/SCSS for Discourse core, plugins, themes, and theme components. Use when authoring or modifying templates (.gjs/.hbs), stylesheets (.scss), component markup, class names, responsive layout, FormKit/select-kit styling, or CSS regressions. Covers Discourse's BEM-with-standalone-modifiers naming, the CSS custom-property color palette (theming + dark mode), template/HTML conventions, CSS repair patterns, and where stylesheets live.
 ---
 
 # Writing HTML & CSS for Discourse
@@ -33,6 +33,9 @@ and its `.scss`.
   and the `lib/viewport` breakpoint API.
 - [references/css-authoring.md](references/css-authoring.md) — native-CSS-vs-SASS swaps, local
   custom properties (incl. theme interaction), shared mixins.
+- [references/css-repair.md](references/css-repair.md) — repairing existing CSS: stale selector
+  deletion, selector scoping, overflow fixes, FormKit/token migration, mobile/desktop cleanup,
+  and regression verification.
 - [references/accessibility.md](references/accessibility.md) — screen-reader-only text, live-region
   announcements, contrast & forced-colors detail (the short a11y rules stay inline below).
 
@@ -222,6 +225,92 @@ Full swap list + rule-of-thumb: [references/css-authoring.md](references/css-aut
 - **Reuse the shared mixins** (`common/foundation/mixins.scss`): `ellipsis` / `line-clamp($n)`
   for truncation, `d-animation` (bakes in reduced-motion), `unselectable`. Details and the
   legacy ones to skip: [references/css-authoring.md](references/css-authoring.md).
+
+## Repairing existing CSS
+
+When modifying existing Discourse CSS, prefer **removing or narrowing** over adding another
+override. Most CSS regressions come from stale selectors, broad shared rules, old mobile/desktop
+splits, or component architecture changing underneath a stylesheet.
+
+Before writing new CSS, check where the selector is used and whether it is still rendered:
+
+```sh
+rg "<class-or-selector>" app/assets/stylesheets plugins themes
+git log --oneline --since='2026-01-01' -- '*.scss' '*.css' --grep='fix|scope|selector|overflow|mobile|formkit|token|foundation|remove'
+git show --stat --patch <suspect-commit> -- '*.scss' '*.css'
+```
+
+### Preferred repair moves
+
+- **Scope broad selectors down.** Do not fix leakage by adding `!important` or deeper descendant
+  chains. If `.name`, `.num`, `.btn`, `.d-icon`, `.select-kit`, `td`, or `th` leaks, target the
+  real component/state: `.selected-name .name`, `.topic-list-data.num`,
+  `.sidebar-filter__clear`.
+
+- **Delete stale CSS and imports.** If a component/class was removed or replaced, remove its
+  stylesheet/imports rather than keeping compatibility ghosts. Check with `rg` before assuming a
+  selector still matters.
+
+- **Move device-specific rules into `common/` with viewport mixins.** New and repaired styles
+  should live in one responsive stylesheet using `@include viewport.from(...)` /
+  `@include viewport.until(...)`, not split `desktop/` and `mobile/` copies.
+
+- **Fix overflow with containment primitives.** Try `min-width: 0`, `minmax(0, 1fr)`,
+  `max-width: 100%`, `max-height: 100%`, `overflow: hidden`, `flex-wrap: wrap`,
+  `table-layout: fixed`, and `@include ellipsis` before adding magic widths.
+
+- **Put scroll on the owning container, not `html`/`body`.** Especially on iOS, body scrolling
+  fixes usually create flicker or broken fixed layouts. Identify the route/modal/panel that
+  should scroll and give that container the height/overflow.
+
+- **Use FormKit/select-kit APIs and tokens instead of global internal overrides.** Prefer
+  FormKit field/container modifiers and `--form-kit-*` variables. Avoid broad rules like
+  `.form-kit__container-content { width: 100%; }` outside FormKit itself.
+
+- **Avoid global DOM inference.** Be suspicious of `body:has(...)`, `html { overflow-y: scroll; }`,
+  `li:last-child` for dynamic lists, and component-only variables placed in `:root`. If the app
+  knows the state, render a class/state/modifier.
+
+- **Audit shared foundation changes.** Changes to `.btn`, `.select-kit`, `.d-icon`,
+  `.topic-list-data`, category/tag badges, inputs, or foundation variables affect plugins and
+  themes. Check chat, reactions, solved, topic voting, Data Explorer, admin, Horizon, mobile,
+  and RTL where relevant.
+
+### Red flags
+
+Stop and re-check if your patch adds:
+
+```scss
+!important
+body:has(...)
+html { overflow-y: scroll; }
+:root { --one-component-var: ... }
+width: 340px;
+min-width: 300px;
+left: ...; right: ...; // without RTL thought
+li:last-child
+.name { ... }
+.num { ... }
+.btn { ... }
+```
+
+These are not banned, but they are radioactive enough to need a clear reason.
+
+### Verification for CSS repair PRs
+
+Check the affected surface in:
+
+- desktop and mobile viewports
+- light and dark palettes
+- Horizon if header/sidebar/foundation/theme variables are touched
+- RTL if physical positioning, icons, scroll fades, or nav is touched
+- iOS Safari / iOS-like behavior for scroll/chat/composer fixes
+- FormKit/select-kit contexts when forms or choosers are touched
+- plugin surfaces sharing common foundation classes
+- stale imports after deleting CSS
+
+For visual UX changes, include before/after screenshots. Deep-dive repair patterns and examples:
+[references/css-repair.md](references/css-repair.md).
 
 ## HTML / template conventions
 
