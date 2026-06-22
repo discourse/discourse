@@ -82,22 +82,3 @@
     transform: rotate(45deg);
   }
 }
-
-.c-navbar__pinned-messages-btn {
-  position: relative;
-
-  .d-icon {
-    transform: rotate(45deg);
-  }
-
-  &__unread-indicator {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 8px;
-    height: 8px;
-    background: var(--tertiary);
-    border-radius: 50%;
-    border: 2px solid var(--secondary);
-  }
-}

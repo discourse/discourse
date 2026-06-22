@@ -13,6 +13,12 @@
     top: 2rem;
   }
 
+  // when the sticky pinned-message bar is shown, float notices below it
+  // instead of on top of it
+  .chat-channel.--pinned-bar & {
+    top: var(--chat-pinned-bar-height);
+  }
+
   &__notice,
   .chat-retention-reminder {
     display: flex;

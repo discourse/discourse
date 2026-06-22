@@ -1,0 +1,114 @@
+.chat-channel {
+  // shared by the bar (its height) and the floating notices (their top offset)
+  --chat-pinned-bar-height: 2.75rem;
+}
+
+.chat-pinned-bar {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-1);
+  min-width: 0; // allow the bar to shrink instead of forcing a min width on the channel/drawer
+  min-height: var(--chat-pinned-bar-height);
+  box-sizing: border-box;
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--content-border-color);
+  background: var(--secondary);
+  flex-shrink: 0;
+  z-index: 2;
+
+  &.--loading {
+    display: none;
+  }
+
+  &__main {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+    padding: var(--space-1) var(--space-2);
+    background: transparent;
+    border: 0;
+    border-radius: var(--d-button-border-radius);
+    text-align: start;
+    cursor: pointer;
+
+    .no-touch &:hover {
+      background: var(--d-hover);
+    }
+  }
+
+  &__indicator {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-half);
+    align-self: stretch;
+    flex-shrink: 0;
+    width: 3px;
+    min-height: 2rem;
+  }
+
+  &__indicator-segment {
+    flex: 1;
+    min-height: 3px;
+    background: var(--tertiary-low);
+    border-radius: 3px;
+
+    &.--active {
+      background: var(--tertiary);
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--tertiary);
+    font-size: var(--font-down-2);
+    font-weight: 700;
+
+    .d-icon {
+      font-size: var(--font-down-2);
+      transform: rotate(45deg);
+    }
+  }
+
+  &__excerpt {
+    @include ellipsis;
+    color: var(--primary);
+    font-size: var(--font-down-1);
+  }
+
+  &__see-all {
+    position: relative;
+    align-self: center;
+    flex-shrink: 0;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    // the panel is open — the button now closes it
+    &.--active .d-icon {
+      color: var(--tertiary);
+    }
+  }
+
+  &__unread-indicator {
+    position: absolute;
+    inset-block-start: 5px;
+    inset-inline-end: 5px;
+    width: 8px;
+    height: 8px;
+    background: var(--tertiary);
+    border-radius: 50%;
+    border: 2px solid var(--secondary);
+  }
+}

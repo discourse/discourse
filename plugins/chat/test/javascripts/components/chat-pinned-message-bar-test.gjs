@@ -1,0 +1,308 @@
+import { getOwner } from "@ember/owner";
+import { click, render, settled } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
+import ChatPinnedMessageBar from "discourse/plugins/chat/discourse/components/chat/pinned-message-bar";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+
+function pinResponse(channel, count) {
+  const pinned_messages = [];
+  for (let i = 0; i < count; i++) {
+    pinned_messages.push({
+      id: 100 + i,
+      chat_message_id: 200 + i,
+      pinned_at: moment().subtract(i, "minute").toISOString(),
+      pinned_by: { id: 1, username: "alice" },
+      message: { id: 200 + i, excerpt: `Pinned excerpt ${i}`, message: "x" },
+    });
+  }
+  return response({ pinned_messages, membership: null });
+}
+
+module("Component | ChatPinnedMessageBar", function (hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.siteSettings.chat_pinned_messages = true;
+    this.channel = new ChatFabricators(getOwner(this)).channel();
+    this.noop = () => {};
+  });
+
+  test("does not render when the channel has no pins", async function (assert) {
+    this.channel.pinnedMessagesCount = 0;
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert.dom(".chat-pinned-bar").doesNotExist();
+  });
+
+  test("does not render when the site setting is disabled", async function (assert) {
+    this.siteSettings.chat_pinned_messages = false;
+    this.channel.pinnedMessagesCount = 2;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      pinResponse(this.channel, 2)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert.dom(".chat-pinned-bar").doesNotExist();
+  });
+
+  test("renders the most recent pin with no indicator for a single pin", async function (assert) {
+    this.channel.pinnedMessagesCount = 1;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      pinResponse(this.channel, 1)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert.dom(".chat-pinned-bar").exists();
+    assert.dom(".chat-pinned-bar__excerpt").hasText("Pinned excerpt 0");
+    assert.dom(".chat-pinned-bar__indicator").doesNotExist();
+  });
+
+  test("shows a position indicator for multiple pins", async function (assert) {
+    this.channel.pinnedMessagesCount = 3;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      pinResponse(this.channel, 3)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert.dom(".chat-pinned-bar__indicator-segment").exists({ count: 3 });
+    assert
+      .dom(".chat-pinned-bar__indicator-segment.--active")
+      .exists({ count: 1 });
+  });
+
+  test("clicking jumps to the current pin and cycles to the next", async function (assert) {
+    this.channel.pinnedMessagesCount = 2;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      pinResponse(this.channel, 2)
+    );
+
+    let jumpedTo = null;
+    this.onJump = (messageId) => (jumpedTo = messageId);
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.onJump}}
+        />
+      </template>
+    );
+
+    assert.dom(".chat-pinned-bar__excerpt").hasText("Pinned excerpt 0");
+
+    await click(".chat-pinned-bar__main");
+
+    assert.strictEqual(jumpedTo, 200, "jumps to the most recent pin");
+    assert
+      .dom(".chat-pinned-bar__excerpt")
+      .hasText("Pinned excerpt 1", "advances to the next pin");
+
+    await click(".chat-pinned-bar__main");
+
+    assert.strictEqual(jumpedTo, 201, "jumps to the second pin");
+    assert
+      .dom(".chat-pinned-bar__excerpt")
+      .hasText("Pinned excerpt 0", "wraps back to the first pin");
+  });
+
+  test("links to the full pinned messages list via the see-all icon", async function (assert) {
+    this.channel.pinnedMessagesCount = 1;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      pinResponse(this.channel, 1)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert.dom(".chat-pinned-bar__see-all").exists();
+    assert
+      .dom(".chat-pinned-bar__see-all")
+      .hasAttribute("href", new RegExp(`/${this.channel.id}/pins$`));
+  });
+
+  test("shows an unread indicator when there are unseen pins", async function (assert) {
+    this.channel.pinnedMessagesCount = 1;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      pinResponse(this.channel, 1)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert.dom(".chat-pinned-bar__unread-indicator").doesNotExist();
+
+    this.channel.currentUserMembership = { has_unseen_pins: true };
+    await settled();
+
+    assert.dom(".chat-pinned-bar__unread-indicator").exists();
+  });
+
+  test("renders the server excerpt as decoded HTML, not double-escaped", async function (assert) {
+    this.channel.pinnedMessagesCount = 1;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      response({
+        pinned_messages: [
+          {
+            id: 100,
+            chat_message_id: 200,
+            pinned_at: moment().toISOString(),
+            pinned_by: { id: 1, username: "alice" },
+            // server excerpts arrive as entity-encoded HTML
+            message: { id: 200, excerpt: "Rules &amp; etiquette&hellip;" },
+          },
+        ],
+        membership: null,
+      })
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".chat-pinned-bar__excerpt")
+      .hasText(
+        "Rules & etiquette…",
+        "decodes entities rather than escaping them"
+      );
+  });
+
+  test("reloads pins on a pin/unpin message bus event", async function (assert) {
+    let count = 1;
+    this.channel.pinnedMessagesCount = 1;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      pinResponse(this.channel, count)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".chat-pinned-bar__indicator")
+      .doesNotExist("starts with a single pin and no indicator");
+
+    // another message gets pinned elsewhere
+    count = 2;
+    await publishToMessageBus(`/chat/${this.channel.id}`, {
+      type: "pin",
+      chat_message_id: 201,
+    });
+    await settled();
+
+    assert
+      .dom(".chat-pinned-bar__indicator-segment")
+      .exists({ count: 2 }, "refetches and reflects both pins");
+  });
+
+  test("updates the preview when a pinned message is edited", async function (assert) {
+    this.channel.pinnedMessagesCount = 1;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      pinResponse(this.channel, 1)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert.dom(".chat-pinned-bar__excerpt").hasText("Pinned excerpt 0");
+
+    // the pinned message (id 200) is edited
+    await publishToMessageBus(`/chat/${this.channel.id}`, {
+      type: "edit",
+      chat_message: { id: 200, message: "edited", excerpt: "Edited excerpt" },
+    });
+    await settled();
+
+    assert
+      .dom(".chat-pinned-bar__excerpt")
+      .hasText("Edited excerpt", "reflects the edited message");
+  });
+
+  test("ignores edits to messages that are not pinned", async function (assert) {
+    this.channel.pinnedMessagesCount = 1;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      pinResponse(this.channel, 1)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    // a different (unpinned) message is edited
+    await publishToMessageBus(`/chat/${this.channel.id}`, {
+      type: "edit",
+      chat_message: { id: 999, message: "x", excerpt: "Should not appear" },
+    });
+    await settled();
+
+    assert.dom(".chat-pinned-bar__excerpt").hasText("Pinned excerpt 0");
+  });
+});

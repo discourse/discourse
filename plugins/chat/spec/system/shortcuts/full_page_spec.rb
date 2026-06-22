@@ -32,7 +32,7 @@ RSpec.describe "Shortcuts | full page" do
 
     it "closes the pinned messages list" do
       chat.visit_channel(channel_1)
-      find(".c-navbar__pinned-messages-btn").click
+      find(".chat-pinned-bar__see-all").click
 
       expect(page).to have_css(".c-routes.--channel-pins")
 

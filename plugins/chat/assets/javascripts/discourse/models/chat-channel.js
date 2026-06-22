@@ -73,6 +73,7 @@ export default class ChatChannel {
   @tracked draft;
   @tracked newestMessage;
   @tracked pinnedMessagesCount;
+  @tracked pinnedBarIndex = 0;
 
   threadsManager = new ChatThreadsManager(getOwnerWithFallback(this));
   messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));

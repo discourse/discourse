@@ -33,6 +33,7 @@ import {
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatComposerChannel from "./chat/composer/channel";
+import ChatPinnedMessageBar from "./chat/pinned-message-bar";
 import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
 import ChatSelectionManager from "./chat/selection-manager";
 import ChatChannelFilter from "./chat-channel-filter";
@@ -69,6 +70,9 @@ export default class ChatChannel extends Component {
     onUserPresent: this.maybeDebouncedUpdateLastReadMessage,
   });
 
+  jumpToPinnedMessage = (messageId) => {
+    this.highlightOrFetchMessage(messageId, { position: "center" });
+  };
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
@@ -93,6 +97,13 @@ export default class ChatChannel extends Component {
 
   get hasSavedScrollPosition() {
     return !!this.chatChannelScrollPositions.get(this.args.channel.id);
+  }
+
+  get hasPinnedBar() {
+    return (
+      this.siteSettings.chat_pinned_messages &&
+      this.args.channel?.hasPinnedMessages
+    );
   }
 
   get pendingContextKey() {
@@ -743,6 +754,7 @@ export default class ChatChannel extends Component {
         (if this.pane.sending "chat-channel--sending")
         (if this.hasSavedScrollPosition "chat-channel--saved-scroll-position")
         (if this.messagesLoader.fetchedOnce "--loaded")
+        (if this.hasPinnedBar "--pinned-bar")
       }}
       {{willDestroy this.teardown}}
       {{didInsert this.setup}}
@@ -757,6 +769,11 @@ export default class ChatChannel extends Component {
         @onToggleFilter={{@onToggleFilter}}
         @channel={{@channel}}
         @onLoadTargetMessageId={{this.onLoadTargetMessageId}}
+      />
+
+      <ChatPinnedMessageBar
+        @channel={{@channel}}
+        @onJumpToMessage={{this.jumpToPinnedMessage}}
       />
 
       <ChatMessagesScroller
