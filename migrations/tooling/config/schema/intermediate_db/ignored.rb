@@ -173,6 +173,7 @@ Migrations::Tooling::Schema.ignored do
          :directory_items,
          :do_not_disturb_timings,
          :email_change_requests,
+         :email_login_codes,
          :email_logs,
          :email_tokens,
          :embeddable_host_tags,
