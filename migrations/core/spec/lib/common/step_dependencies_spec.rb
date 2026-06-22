@@ -4,22 +4,7 @@ RSpec.describe Migrations::StepDependencies do
   before do
     Object.const_set(
       "DependenciesTestModule",
-      Module.new do
-        const_set(
-          "BaseStep",
-          Class.new do
-            extend Migrations::StepDependencies
-
-            class << self
-              private
-
-              def dependency_base_class
-                DependenciesTestModule::BaseStep
-              end
-            end
-          end,
-        )
-      end,
+      Module.new { const_set("BaseStep", Class.new { extend Migrations::StepDependencies }) },
     )
 
     DependenciesTestModule.const_set("Posts", Class.new(DependenciesTestModule::BaseStep))
@@ -163,6 +148,19 @@ RSpec.describe Migrations::StepDependencies do
 
         expect(DependenciesTestModule::Posts.dependencies).to eq([DependenciesTestModule::Users])
       end
+    end
+  end
+
+  describe "the dependency base class captured by `extend`" do
+    it "captures each extending hierarchy independently" do
+      DependenciesTestModule.const_set(
+        "OtherBase",
+        Class.new { extend Migrations::StepDependencies },
+      )
+      DependenciesTestModule.const_set("OtherStep", Class.new(DependenciesTestModule::OtherBase))
+
+      expect { DependenciesTestModule::OtherBase.depends_on(:other_step) }.not_to raise_error
+      expect { DependenciesTestModule::OtherBase.depends_on(:posts) }.to raise_error(NameError)
     end
   end
 end

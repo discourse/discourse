@@ -31,12 +31,6 @@ module Migrations
               type: name&.demodulize&.underscore&.humanize(capitalize: false),
             )
         end
-
-        private
-
-        def dependency_base_class
-          StepBase
-        end
       end
     end
   end
