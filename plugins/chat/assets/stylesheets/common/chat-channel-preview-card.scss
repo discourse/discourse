@@ -1,8 +1,17 @@
 .chat-channel-preview-card {
-  padding: 1.5rem;
+  padding: 0.5rem;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   z-index: 3;
-  box-shadow: var(--shadow-card);
+  border: 1px solid var(--d-chat-input-border-color);
+  background-color: var(--d-chat-input-bg-color);
+  border-radius: var(--d-border-radius-large);
+  margin: 1rem;
+  margin-top: 0.25rem;
+
+  .chat-channel__placeholder {
+    color: var(--primary-medium);
+  }
 }
