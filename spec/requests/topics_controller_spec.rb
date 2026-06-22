@@ -2537,6 +2537,22 @@ RSpec.describe TopicsController do
             expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
           end
 
+          it "rejects tag arrays exceeding the configured per-topic limit" do
+            SiteSetting.max_tags_per_topic = 1
+
+            put "/t/#{topic.slug}/#{topic.id}.json",
+                params: {
+                  tags: [{ id: tag.id, name: tag.name }, {}],
+                },
+                as: :json
+
+            expect(response.status).to eq(422)
+            expect(response.parsed_body["errors"]).to contain_exactly(
+              I18n.t("tags.too_many_tags_for_topic", count: 1),
+            )
+            expect(topic.reload.tags).to be_empty
+          end
+
           it "can update tags when params are form-encoded as indexed hash" do
             expect do
               put "/t/#{topic.id}/tags.json",
