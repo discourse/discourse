@@ -375,6 +375,7 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
 
     guardian.ensure_can_edit!(topic)
+    return if reject_oversized_tag_params!(:tags, :original_tags)
 
     original_title = params[:original_title]
     if original_title.present? && original_title != topic.title
@@ -476,6 +477,7 @@ class TopicsController < ApplicationController
     params.require(:tags)
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit_tags!(topic)
+    return if reject_oversized_tag_params!(:tags)
 
     success =
       PostRevisor.new(topic.first_post, topic).revise!(
@@ -1254,6 +1256,51 @@ class TopicsController < ApplicationController
   end
 
   private
+
+  def reject_oversized_tag_params!(*param_names)
+    param_names.each do |param_name|
+      next if !params.has_key?(param_name)
+      next if tag_param_size(params[param_name]) <= SiteSetting.max_tags_per_topic
+
+      render_json_error(
+        I18n.t("tags.too_many_tags_for_topic", count: SiteSetting.max_tags_per_topic),
+      )
+      return true
+    end
+
+    false
+  end
+
+  def tag_param_size(tags)
+    return tags.length if tags.is_a?(Array)
+    return tags.keys.length if tags.is_a?(ActionController::Parameters)
+
+    0
+  end
+
+  def resolve_tag_names(topic)
+    @resolved_tag_names ||=
+      if params[:tags].present?
+        incoming = params[:tags]
+        if incoming.first.is_a?(String)
+          Discourse.deprecate(
+            "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
+            since: "2026.01",
+            drop_from: "2026.07",
+          )
+          incoming.reject(&:empty?)
+        else
+          ids = incoming.filter_map { |t| t[:id]&.to_i }
+          names = incoming.filter_map { |t| t[:id].blank? && t[:name].presence }
+          names += Tag.visible(guardian).where(id: ids).pluck(:name) if ids.present?
+          names
+        end
+      elsif params.has_key?(:tags)
+        []
+      else
+        topic.tags.pluck(:name)
+      end
+  end
 
   def topic_params
     params.permit(:topic_id, :topic_time, timings: {})
