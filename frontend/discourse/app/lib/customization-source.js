@@ -50,6 +50,28 @@ export function isCustomizationSource(value) {
 }
 
 /**
+ * Splits the arguments of an API-entry function (`withPluginApi`/`apiInitializer`)
+ * into the build-injected source and the user-facing callback/options. Strips a
+ * trailing branded source descriptor and a leading legacy version string.
+ *
+ * @param {any[]} args - The call arguments (e.g. `Array.from(arguments)`).
+ * @returns {{ source: CustomizationSource|undefined, apiCodeCallback: any, opts: any }}
+ */
+export function splitSourceArgs(args) {
+  let source;
+  if (args.length > 0 && isCustomizationSource(args[args.length - 1])) {
+    source = args.pop();
+  }
+
+  if (typeof args[0] === "string") {
+    // Old path. First argument is the version string. Silently ignore.
+    args = args.slice(1);
+  }
+
+  return { source, apiCodeCallback: args[0], opts: args[1] };
+}
+
+/**
  * Maps a customization-source descriptor to its stable identifier string.
  *
  * Plugins are keyed by name (`plugin:<name>`); themes are keyed by their

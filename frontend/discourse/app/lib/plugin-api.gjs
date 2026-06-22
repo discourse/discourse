@@ -62,8 +62,8 @@ import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-opt
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import {
   CORE_SOURCE,
-  isCustomizationSource,
   resolveSourceId,
+  splitSourceArgs,
 } from "discourse/lib/customization-source";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
@@ -3693,15 +3693,10 @@ function getSourceBoundApi(api, source) {
   let boundApi = bySource.get(sourceId);
   if (!boundApi) {
     boundApi = new _PluginApi(api.container);
-    // A clean descriptor without the internal brand symbol. Read-only and
-    // frozen so plugins/themes can neither reassign `api.source` nor mutate it.
-    const publicSource = Object.freeze(
-      source.type === "plugin"
-        ? { type: "plugin", name: source.name }
-        : { type: "theme", id: source.id }
-    );
+    // Read-only and frozen so plugins/themes can neither reassign `api.source`
+    // nor mutate it.
     Object.defineProperty(boundApi, "source", {
-      value: publicSource,
+      value: publicSourceFor(source),
       writable: false,
       configurable: false,
       enumerable: false,
@@ -3715,6 +3710,21 @@ function getSourceBoundApi(api, source) {
 }
 
 /**
+ * Builds the frozen, public-facing descriptor exposed as `api.source`. Kept as
+ * an explicit allowlist (no internal brand symbol, no incidental fields).
+ *
+ * @param {import("discourse/lib/customization-source").CustomizationSource} descriptor - The build-injected source.
+ * @returns {Readonly<import("discourse/lib/customization-source").CustomizationSource>}
+ */
+function publicSourceFor(descriptor) {
+  return Object.freeze(
+    descriptor.type === "plugin"
+      ? { type: "plugin", name: descriptor.name }
+      : { type: "theme", id: descriptor.id }
+  );
+}
+
+/**
  * Executes the provided callback function with the `PluginApi` object.
  *
  * @param {(api: _PluginApi, opts: object) => any} apiCodeCallback - The callback function to execute
@@ -3723,21 +3733,10 @@ function getSourceBoundApi(api, source) {
  */
 export function withPluginApi(apiCodeCallback, opts) {
   // The asset processor appends a branded customization-source descriptor to
-  // calls made from plugin/theme code. Strip it before the user-facing args so
-  // it never leaks into `opts`.
-  let args = Array.from(arguments);
+  // calls made from plugin/theme code; splitSourceArgs strips it (and any legacy
+  // version string) so it never leaks into `opts`.
   let source;
-  if (args.length > 0 && isCustomizationSource(args[args.length - 1])) {
-    source = args.pop();
-  }
+  ({ apiCodeCallback, opts, source } = splitSourceArgs(Array.from(arguments)));
 
-  if (typeof args[0] === "string") {
-    // Old path. First argument is the version string. Silently ignore.
-    args = args.slice(1);
-  }
-
-  apiCodeCallback = args[0];
-  opts = args[1] || {};
-
-  return apiCodeCallback(getSourceBoundApi(getPluginApi(), source), opts);
+  return apiCodeCallback(getSourceBoundApi(getPluginApi(), source), opts || {});
 }
