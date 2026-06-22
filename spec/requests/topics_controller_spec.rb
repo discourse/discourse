@@ -2345,6 +2345,17 @@ RSpec.describe TopicsController do
             expect(response.parsed_body["errors"]).to be_nil
           end
 
+          it "does not create a revision when updating without tags on a topic with tags" do
+            topic.tags << tag
+
+            expect { put "/t/#{topic.id}/tags.json" }.not_to change {
+              topic.reload.first_post.revisions.count
+            }
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags.pluck(:id)).to contain_exactly(tag.id)
+          end
+
           it "can update tags" do
             expect do
               put "/t/#{topic.id}/tags.json", params: { tags: [{ id: tag.id, name: tag.name }] }
@@ -2384,7 +2395,7 @@ RSpec.describe TopicsController do
             end.to change { topic.reload.first_post.revisions.count }.by(1)
 
             expect(response.status).to eq(200)
-            expect(topic.reload.tags.pluck(:name)).to contain_exactly("newtag")
+            expect(topic.reload.tags.pluck(:name)).to contain_exactly(tag.name)
           end
 
           it "can add a tag to wiki topic" do
