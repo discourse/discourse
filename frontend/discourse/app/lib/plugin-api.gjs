@@ -61,6 +61,7 @@ import classPrepend, {
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import {
+  CORE_SOURCE,
   isCustomizationSource,
   resolveSourceId,
 } from "discourse/lib/customization-source";
@@ -3534,10 +3535,10 @@ class _PluginApi {
           `registerBlock("${blockOrName}", ...) requires a factory function as second argument.`
         );
       }
-      _registerBlockFactory(blockOrName, factory, this._source);
+      _registerBlockFactory(blockOrName, factory, this.source);
     } else {
       // Direct class: registerBlock(BlockClass)
-      _registerBlock(blockOrName, this._source);
+      _registerBlock(blockOrName, this.source);
     }
   }
 
@@ -3571,7 +3572,7 @@ class _PluginApi {
    * ```
    */
   registerBlockOutlet(outletName, options) {
-    _registerOutlet(outletName, options, this._source);
+    _registerOutlet(outletName, options, this.source);
   }
 
   /**
@@ -3619,7 +3620,7 @@ class _PluginApi {
    * ```
    */
   registerBlockConditionType(ConditionClass) {
-    _registerConditionType(ConditionClass, this._source);
+    _registerConditionType(ConditionClass, this.source);
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -3642,6 +3643,14 @@ function getPluginApi() {
 
   if (!pluginApi) {
     pluginApi = new _PluginApi(owner);
+    // The shared instance is core's view; plugins/themes get their own via
+    // getSourceBoundApi. Read-only so it cannot be reassigned.
+    Object.defineProperty(pluginApi, "source", {
+      value: CORE_SOURCE,
+      writable: false,
+      configurable: false,
+      enumerable: false,
+    });
     owner.registry.register("plugin-api:main", pluginApi, {
       instantiate: false,
     });
@@ -3660,8 +3669,8 @@ const sourceBoundApiCache = new WeakMap();
 /**
  * Returns a source-bound view of the PluginApi for the given customization
  * source. The view is a real `_PluginApi` instance (so private members work and
- * brand checks pass) sharing the singleton's container and carrying its own
- * frozen `_source`. Views are cached per source (keyed by the singleton in a
+ * brand checks pass) sharing the singleton's container and exposing a read-only
+ * `source` descriptor. Views are cached per source (keyed by the singleton in a
  * module-level WeakMap) and their container is kept in sync with the singleton.
  * Returns the singleton unchanged for core code (no source).
  *
@@ -3684,7 +3693,19 @@ function getSourceBoundApi(api, source) {
   let boundApi = bySource.get(sourceId);
   if (!boundApi) {
     boundApi = new _PluginApi(api.container);
-    boundApi._source = Object.freeze(source);
+    // A clean descriptor without the internal brand symbol. Read-only and
+    // frozen so plugins/themes can neither reassign `api.source` nor mutate it.
+    const publicSource = Object.freeze(
+      source.type === "plugin"
+        ? { type: "plugin", name: source.name }
+        : { type: "theme", id: source.id }
+    );
+    Object.defineProperty(boundApi, "source", {
+      value: publicSource,
+      writable: false,
+      configurable: false,
+      enumerable: false,
+    });
     bySource.set(sourceId, boundApi);
   } else {
     // Keep the container current, mirroring getPluginApi's refresh.

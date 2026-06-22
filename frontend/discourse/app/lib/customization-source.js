@@ -21,13 +21,21 @@ import { isTesting } from "discourse/lib/environment";
 export const SOURCE_BRAND = Symbol.for("discourse:customization-source");
 
 /**
- * The origin of a piece of customization code, determined at build time.
+ * The origin of a piece of customization code.
  *
  * @typedef {Object} CustomizationSource
- * @property {"plugin"|"theme"} type - Whether the code came from a plugin or a theme.
+ * @property {"core"|"plugin"|"theme"} type - Whether the code came from core, a plugin, or a theme.
  * @property {string} [name] - The plugin name (for `type: "plugin"`).
  * @property {number} [id] - The theme id (for `type: "theme"`).
  */
+
+/**
+ * The customization source for core code. Exposed as `api.source` when core
+ * (rather than a plugin or theme) uses the plugin API.
+ *
+ * @type {Readonly<CustomizationSource>}
+ */
+export const CORE_SOURCE = Object.freeze({ type: "core" });
 
 /**
  * Returns true if the given value is a branded customization-source descriptor.
@@ -60,6 +68,7 @@ export function resolveSourceId(source) {
   if (source.type === "theme") {
     return `theme:${source.id}`;
   }
+  // Core (or any other type) has no namespace and resolves to null.
   return null;
 }
 

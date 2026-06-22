@@ -383,7 +383,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
 
       withPluginApi(
         (api, opts) => {
-          boundSource = api._source;
+          boundSource = api.source;
           receivedOpts = opts;
         },
         { foo: 1 },
@@ -399,11 +399,11 @@ module("Unit | Utility | plugin-api", function (hooks) {
       );
     });
 
-    test("core code (no descriptor) gets the singleton with no source", function (assert) {
+    test("core code (no descriptor) gets the singleton with a core source", function (assert) {
       let api;
       withPluginApi((a) => (api = a));
 
-      assert.strictEqual(api._source, undefined);
+      assert.deepEqual(api.source, { type: "core" });
       assert.strictEqual(
         typeof api.getCurrentUser,
         "function",
@@ -411,7 +411,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
       );
     });
 
-    test("caches one bound api per source and delegates to the singleton", function (assert) {
+    test("caches one bound api per source; each exposes the full api", function (assert) {
       let first, second, other, core;
 
       withPluginApi((api) => (first = api), {}, pluginSource("chat"));
@@ -429,7 +429,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
       assert.strictEqual(
         typeof first.getCurrentUser,
         "function",
-        "bound api delegates to the singleton via its prototype"
+        "bound api exposes the full PluginApi surface"
       );
     });
 
@@ -437,7 +437,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
       let boundSource;
 
       withPluginApi(
-        (api) => (boundSource = api._source),
+        (api) => (boundSource = api.source),
         {},
         pluginSource("chat")
       );
@@ -450,7 +450,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
       let boundSource;
 
       const initializer = apiInitializer(
-        (api) => (boundSource = api._source),
+        (api) => (boundSource = api.source),
         {},
         pluginSource("chat")
       );
@@ -521,6 +521,27 @@ module("Unit | Utility | plugin-api", function (hooks) {
       );
 
       assert.true(true, "modifyClass works on a source-bound api");
+    });
+
+    test("source is read-only and frozen", function (assert) {
+      let api;
+      withPluginApi((a) => (api = a), {}, pluginSource("chat"));
+
+      assert.throws(
+        () => (api.source = { type: "plugin", name: "evil" }),
+        TypeError,
+        "the source binding cannot be reassigned"
+      );
+      assert.throws(
+        () => (api.source.name = "evil"),
+        TypeError,
+        "the source object cannot be mutated"
+      );
+      assert.strictEqual(
+        api.source.name,
+        "chat",
+        "the source is unchanged after both attempts"
+      );
     });
   });
 });
