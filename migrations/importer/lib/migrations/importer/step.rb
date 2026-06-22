@@ -49,12 +49,6 @@ module Migrations
         def required_sets
           @required_sets || {}
         end
-
-        private
-
-        def dependency_base_class
-          Step
-        end
       end
 
       def initialize(intermediate_db, discourse_db, shared_data, config)

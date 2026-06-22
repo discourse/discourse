@@ -9,16 +9,18 @@ module Migrations
   #
   # `depends_on` expresses correctness dependencies only -- step B reads what
   # step A wrote -- not thematic grouping. Inventing dependencies needlessly
-  # constrains scheduling; the Discourse converter currently declares none.
+  # constrains scheduling.
   module StepDependencies
+    def self.extended(base)
+      base.define_singleton_method(:dependency_base_class) { base }
+      base.singleton_class.send(:private, :dependency_base_class)
+    end
+
     def depends_on(*step_names)
       scope = steps_module
       classes =
         step_names.map do |step_name|
           const_name = step_name.to_s.camelize
-          # `inherit: false` keeps resolution strictly lexical; with the
-          # default, lookup on a module falls back to top-level constants
-          # (e.g. `::Users`).
           klass = scope.const_get(const_name, false) if scope.const_defined?(const_name, false)
 
           unless klass.is_a?(Class) && klass < dependency_base_class
@@ -58,14 +60,6 @@ module Migrations
     #   Migrations::Converters::Discourse::Users -> Migrations::Converters::Discourse
     def steps_module
       name.deconstantize.constantize
-    end
-
-    # The base class a resolved dependency must descend from. Each base class
-    # extending this module defines it as a private class method returning
-    # itself, so that subclasses inherit the correct value.
-    def dependency_base_class
-      raise NotImplementedError,
-            "#{name} must define a private `dependency_base_class` class method"
     end
   end
 end
