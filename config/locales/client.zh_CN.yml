@@ -4430,6 +4430,11 @@ zh_CN:
         tag_group: "标签群组"
       topic_featured_link_allowed: "在此类别中允许精选链接"
       delete: "删除类别"
+      danger_zone:
+        title: "危险区域"
+        delete_title: "删除此类别"
+        delete_description: "删除后，此类别及其设置将无法恢复。其中的话题需要事先重新分配。"
+        delete_title_forbidden: "无法删除此类别"
       create: "新建类别"
       create_with_type: "新建%{typeName}类别"
       create_long: "创建新类别"
