@@ -94,7 +94,10 @@ pl_PL:
       chart:
         form:
           label: "Typ wykresu"
-          bar: "Pasek"
+          line: "Liniowy"
+          bar: "Słupkowy"
+          stacked: "Skumulowany"
+          dual_axis: "Dwuosiowy"
         tooltip:
           total: "Razem: %{count}"
       chart_empty:

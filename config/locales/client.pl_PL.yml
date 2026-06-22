@@ -5304,6 +5304,11 @@ pl_PL:
         tag_group: "Grupa tagów"
       topic_featured_link_allowed: "Zezwól na wybrane linki w tej kategorii"
       delete: "Usuń kategorię"
+      danger_zone:
+        title: "Strefa niebezpieczna"
+        delete_title: "Edytuj tę kategorię"
+        delete_description: "Po usunięciu tej kategorii i jej ustawień nie będzie można odzyskać. Tematy w niej zawarte będą musiały zostać wcześniej ponownie przypisane."
+        delete_title_forbidden: "Nie można usunąć tej kategorii"
       create: "Nowa kategoria"
       create_with_type: "Nowa kategoria %{typeName}"
       create_long: "Utwórz nową kategorię"
