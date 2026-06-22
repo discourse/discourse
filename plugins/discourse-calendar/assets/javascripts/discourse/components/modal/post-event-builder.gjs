@@ -401,6 +401,10 @@ export default class PostEventBuilder extends Component {
     return this.args.model.initialScreen !== "advanced";
   }
 
+  get namePlaceholder() {
+    return this.args.model.event?.post?.topic?.title;
+  }
+
   get userTimezone() {
     return this.currentUser?.user_option?.timezone || moment.tz.guess();
   }
@@ -1237,35 +1241,41 @@ export default class PostEventBuilder extends Component {
                 {{/if}}
 
                 {{#if this.allowedCustomFields.length}}
-                  <form.Container
-                    @title={{i18n
-                      "discourse_post_event.builder_modal.custom_fields.label"
-                    }}
-                    @subtitle={{i18n
-                      "discourse_post_event.builder_modal.custom_fields.description"
-                    }}
-                    @format="full"
-                    class="form-kit__container-custom-fields"
+                  <PluginOutlet
+                    @name="discourse-post-event-builder-custom-fields"
+                    @outletArgs={{lazyHash event=@model.event form=form}}
+                    @connectorTagName="div"
                   >
-                    <form.Object @name="customFields" as |customFields|>
-                      {{#each this.allowedCustomFields as |customField|}}
-                        <customFields.Field
-                          @name={{customField.name}}
-                          @title={{customField.field}}
-                          @type="input"
-                          @format="full"
-                          @onSet={{fn this.setCustomField customField.field}}
-                          as |field|
-                        >
-                          <field.Control
-                            placeholder={{i18n
-                              "discourse_post_event.builder_modal.custom_fields.placeholder"
-                            }}
-                          />
-                        </customFields.Field>
-                      {{/each}}
-                    </form.Object>
-                  </form.Container>
+                    <form.Container
+                      @title={{i18n
+                        "discourse_post_event.builder_modal.custom_fields.label"
+                      }}
+                      @subtitle={{i18n
+                        "discourse_post_event.builder_modal.custom_fields.description"
+                      }}
+                      @format="full"
+                      class="form-kit__container-custom-fields"
+                    >
+                      <form.Object @name="customFields" as |customFields|>
+                        {{#each this.allowedCustomFields as |customField|}}
+                          <customFields.Field
+                            @name={{customField.name}}
+                            @title={{customField.field}}
+                            @type="input"
+                            @format="full"
+                            @onSet={{fn this.setCustomField customField.field}}
+                            as |field|
+                          >
+                            <field.Control
+                              placeholder={{i18n
+                                "discourse_post_event.builder_modal.custom_fields.placeholder"
+                              }}
+                            />
+                          </customFields.Field>
+                        {{/each}}
+                      </form.Object>
+                    </form.Container>
+                  </PluginOutlet>
                 {{/if}}
 
                 <form.Field
@@ -1288,6 +1298,7 @@ export default class PostEventBuilder extends Component {
                 @initialState={{this.compactInitialState}}
                 @urlTester={{this.urlTester}}
                 @onChange={{this.onCompactChange}}
+                @namePlaceholder={{this.namePlaceholder}}
                 @hideAdvanced={{true}}
               />
             </div>

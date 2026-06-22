@@ -15,7 +15,8 @@ module DiscoursePostEvent
                :post,
                :duration,
                :occurrences,
-               :all_day
+               :all_day,
+               :custom_fields
 
     def category_id
       object.post.topic.category_id
