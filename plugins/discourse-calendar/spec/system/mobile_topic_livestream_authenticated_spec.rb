@@ -12,7 +12,6 @@ describe "Discourse Livestream - Topic Livestream - Mobile - Authenticated", mob
   before do
     SiteSetting.calendar_enabled = true
     SiteSetting.chat_enabled = true
-    SiteSetting.livestream_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     sign_in(admin)
   end

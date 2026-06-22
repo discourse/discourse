@@ -854,32 +854,21 @@ after_initialize do
   add_to_serializer(
     :topic_view,
     :chat_channel_id,
-    include_condition: -> { SiteSetting.livestream_enabled },
-  ) do
-    return nil if object.topic.topic_chat_channel.blank?
-    object.topic.topic_chat_channel.chat_channel_id
-  end
+    include_condition: -> { object.topic.topic_chat_channel.present? },
+  ) { object.topic.topic_chat_channel.chat_channel_id }
 
   on(:post_edited) do |post, _, _|
-    if SiteSetting.livestream_enabled
-      DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
-    end
+    DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
   end
   on(:topic_created) do |topic, _, _|
-    if SiteSetting.livestream_enabled
-      DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(topic)
-    end
+    DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(topic)
   end
   on(:chat_channel_trashed) do |channel, user|
-    if SiteSetting.livestream_enabled
-      # If the chat channel is deleted, delete the related TopicChatChannel record
-      DiscourseCalendar::Livestream::TopicChatChannel.where(chat_channel_id: channel.id).destroy_all
-    end
+    # If the chat channel is deleted, delete the related TopicChatChannel record
+    DiscourseCalendar::Livestream::TopicChatChannel.where(chat_channel_id: channel.id).destroy_all
   end
 
   on(:discourse_calendar_post_event_invitee_status_changed) do |invitee|
-    next if !SiteSetting.livestream_enabled
-
     topic = invitee.event.post.topic
     topic_chat_channel = topic.topic_chat_channel
 

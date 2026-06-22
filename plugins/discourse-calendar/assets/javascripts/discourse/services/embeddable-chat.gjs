@@ -24,7 +24,6 @@ export default class EmbeddableChat extends Service {
   canRenderChatChannel(topicController, mobileViewAllowed = false) {
     this.topicController = topicController;
     if (
-      this.siteSettings.livestream_enabled &&
       this.isMobileViewport === mobileViewAllowed &&
       this.siteSettings.chat_enabled &&
       this.currentUser &&

@@ -11,7 +11,6 @@ describe "Discourse Livestream - Topic Livestream - Desktop - Authenticated" do
   before do
     SiteSetting.calendar_enabled = true
     SiteSetting.chat_enabled = true
-    SiteSetting.livestream_enabled = true
     sign_in(current_user)
   end
 

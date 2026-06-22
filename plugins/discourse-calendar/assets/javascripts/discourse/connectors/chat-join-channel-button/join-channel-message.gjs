@@ -5,15 +5,12 @@ import { i18n } from "discourse-i18n";
 
 export default class JoinChannelMessage extends Component {
   @service embeddableChat;
-  @service siteSettings;
   @controller("topic") topicController;
 
   get shouldRenderJoinText() {
     const topic = this.topicController?.model;
     return (
-      this.siteSettings.livestream_enabled &&
-      topic?.chat_channel_id &&
-      this.embeddableChat.topicHasLivestreamTag(topic)
+      topic?.chat_channel_id && this.embeddableChat.topicHasLivestreamTag(topic)
     );
   }
 

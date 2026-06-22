@@ -20,7 +20,6 @@ RSpec.describe DiscourseCalendar::Livestream do
       context "when the first post is not a livestream event" do
         before do
           SiteSetting.calendar_enabled = true
-          SiteSetting.livestream_enabled = true
           post = Fabricate(:post, topic: topic)
           Fabricate(:event, post: post, livestream: false)
         end
@@ -35,12 +34,8 @@ RSpec.describe DiscourseCalendar::Livestream do
       context "when the first post is a livestream event" do
         before do
           SiteSetting.calendar_enabled = true
-          # Create the livestream event while the setting is off so the event's
-          # own after_commit does not pre-create the channel; the examples drive
-          # handle_topic_chat_channel_creation directly.
           post = Fabricate(:post, topic: topic)
           Fabricate(:event, post: post, livestream: true)
-          SiteSetting.livestream_enabled = true
         end
 
         it "creates a chat channel" do

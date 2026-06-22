@@ -1,6 +1,6 @@
 function setupMarkdownIt(helper) {
-  helper.registerOptions((opts, siteSettings) => {
-    opts.features["livestream-preview"] = !!siteSettings.livestream_enabled;
+  helper.registerOptions((opts) => {
+    opts.features["livestream-preview"] = true;
   });
 
   helper.registerPlugin((md) => {

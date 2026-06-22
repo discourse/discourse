@@ -139,9 +139,6 @@ discourse_calendar:
       status: "beta"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/401309"
-  livestream_enabled:
-    default: false
-    client: true
   livestream_embeddable_chat_allowed_paths:
     type: list
     default: "/t"

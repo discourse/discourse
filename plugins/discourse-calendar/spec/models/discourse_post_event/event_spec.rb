@@ -658,7 +658,6 @@ describe DiscoursePostEvent::Event do
         end
 
         it "unfollows the pruned invitee from the livestream chat channel" do
-          SiteSetting.livestream_enabled = true
           channel = Fabricate(:category_channel)
           Fabricate(:topic_chat_channel, topic: post_1.topic, chat_channel: channel)
           membership =

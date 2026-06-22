@@ -52,7 +52,7 @@ module DiscoursePostEvent
     end
 
     def create_livestream_chat_channel
-      return unless livestream? && SiteSetting.livestream_enabled
+      return unless livestream?
       DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
     end
 
@@ -327,7 +327,6 @@ module DiscoursePostEvent
     # channel in their chat list.
     def unfollow_livestream_chat(user_ids)
       return if user_ids.blank?
-      return if !SiteSetting.livestream_enabled
 
       channel = post.topic.topic_chat_channel&.chat_channel
       return if channel.nil?
