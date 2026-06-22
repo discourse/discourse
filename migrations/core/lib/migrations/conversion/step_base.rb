@@ -7,6 +7,8 @@ module Migrations
     # the imperative single-run contract, `ProgressStep` the per-item
     # source/processor roles.
     class StepBase
+      extend StepDependencies
+
       # These constants also make bare `IntermediateDB::...` / `Enums::...`
       # references work inside `ProgressStep`'s `source` / `processor` blocks:
       # the blocks are written in step class bodies, and constants in methods
