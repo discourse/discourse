@@ -6,8 +6,6 @@ module DiscourseAi
   module Evals
     module Runners
       class DataExplorer < Base
-        STRUCTURED_KEYS = %i[name description sql].freeze
-
         def self.can_handle?(full_feature_name)
           full_feature_name&.start_with?("data_explorer:")
         end
@@ -26,9 +24,12 @@ module DiscourseAi
             )
 
           bot = DiscourseAi::Agents::Bot.as(user, agent: agent, model: llm)
-          captured = capture_structured_fields(bot, context, execution_context:)
+          bot.reply(context, execution_context:)
 
-          sql = captured[:sql].to_s.strip
+          captured =
+            context.feature_context[DiscourseDataExplorer::Tools::SubmitQuery::CONTEXT_KEY] || {}
+
+          sql = captured[:sql].to_s.chomp(";").strip
           metadata = {
             feature: feature_name,
             name: captured[:name].to_s.strip,
@@ -36,25 +37,6 @@ module DiscourseAi
           }
 
           wrap_result(sql, metadata)
-        end
-
-        private
-
-        def capture_structured_fields(bot, context, execution_context:)
-          buffers = STRUCTURED_KEYS.index_with { +"" }
-
-          bot.reply(context, execution_context:) do |partial, _, type|
-            if type == :structured_output
-              STRUCTURED_KEYS.each do |key|
-                chunk = partial.read_buffered_property(key)
-                buffers[key] << chunk.to_s if chunk
-              end
-            elsif type.blank?
-              buffers[:sql] << partial.to_s
-            end
-          end
-
-          buffers
         end
       end
     end
