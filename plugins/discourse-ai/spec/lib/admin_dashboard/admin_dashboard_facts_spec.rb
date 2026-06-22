@@ -41,7 +41,34 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
 
     headlines = compute(start_date: 1.day.ago.to_date.to_s).fetch(:signals).map { |s| s[:headline] }
 
-    expect(headlines).to include(match(/new topics received no reply \(100% of new topics\)/))
+    expect(headlines).to include(
+      match(/new member-created topics received no reply \(100% of member-created topics\)/),
+    )
+  end
+
+  it "excludes staff-created topics from the unanswered signal" do
+    user = Fabricate(:user)
+    admin = Fabricate(:admin)
+    moderator = Fabricate(:moderator)
+
+    Fabricate.times(6, :post, user: user, created_at: 1.day.ago)
+    Fabricate.times(3, :post, user: admin, created_at: 1.day.ago)
+    Fabricate.times(3, :post, user: moderator, created_at: 1.day.ago)
+
+    4.times do
+      topic = Fabricate(:topic, user: user, created_at: 1.day.ago)
+      Fabricate(:post, topic: topic, user: user, created_at: 1.day.ago)
+      Fabricate(:post, topic: topic, user: user, created_at: 1.day.ago)
+    end
+
+    unanswered_gap =
+      compute(start_date: 2.days.ago.to_date.to_s)
+        .fetch(:signals)
+        .find { |signal| signal[:key] == :unanswered_gap }
+
+    expect(unanswered_gap).to include(
+      headline: "6 new member-created topics received no reply (60% of member-created topics)",
+    )
   end
 
   it "reports when new-topic volume changes sharply" do
