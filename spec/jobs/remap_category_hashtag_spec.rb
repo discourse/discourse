@@ -44,6 +44,18 @@ RSpec.describe Jobs::RemapCategoryHashtag do
     expect(post.reload.raw).to eq("See #bug")
   end
 
+  it "skips raw matches when the category no longer exists" do
+    category = Fabricate(:category, slug: "bug")
+    post = create_post(raw: "See #bug")
+    category_id = category.id
+
+    category.destroy!
+
+    described_class.new.execute(category_id:, old_ref: "bug", new_ref: "issue")
+
+    expect(post.reload.raw).to eq("See #bug")
+  end
+
   it "uses the current category ref as the replacement target" do
     category = Fabricate(:category, slug: "bug")
     post = create_post(raw: "See #bug")

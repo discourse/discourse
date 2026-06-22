@@ -6,29 +6,33 @@ module Jobs
     cluster_concurrency 1
 
     def execute(args)
+      return if args[:category_id].blank?
+      category = category_from(args)
+      return if category.blank?
+
       old_ref = args[:old_ref].presence
-      new_ref = current_ref(args).presence || args[:new_ref].presence
+      new_ref = category&.slug_ref.presence || args[:new_ref].presence
       return if old_ref.blank? || new_ref.blank? || old_ref == new_ref
 
-      posts_matching(old_ref, args[:category_id]).find_each do |post|
-        update_post(post, old_ref, new_ref)
-      end
+      posts_matching(old_ref, category.id).find_each { |post| update_post(post, old_ref, new_ref) }
     end
 
     private
 
-    def current_ref(args)
-      Category.find_by(id: args[:category_id])&.slug_ref if args[:category_id].present?
+    def category_from(args)
+      Category.find_by(id: args[:category_id])
     end
 
     def posts_matching(old_ref, category_id)
-      category_id = category_id.to_i if category_id.present?
       posts =
         Post
           .joins(:topic)
           .where("topics.deleted_at IS NULL")
           .where("posts.raw ~* ?", "(?n)#{raw_hashtag_pattern(old_ref)}")
 
+      # More accurate way to find matching hashtags than looking
+      # at raw since we can have tags/chat channels with the same
+      # hashtag ref
       if category_id.present?
         posts =
           posts.where(
@@ -46,8 +50,12 @@ module Jobs
       return if new_raw == post.raw
 
       post.revise(Discourse.system_user, { raw: new_raw }, bypass_bump: true, skip_revision: true)
-    rescue => e
-      Discourse.warn_exception(e, message: "Failed to remap category hashtag in post #{post.id}")
+    rescue => err
+      Discourse.warn_exception(
+        err,
+        message:
+          "Failed to remap category hashtag #{old_ref} to #{new_ref} for category ID #{category.id} in post ID #{post.id}",
+      )
     end
 
     def raw_hashtag_pattern(ref)
