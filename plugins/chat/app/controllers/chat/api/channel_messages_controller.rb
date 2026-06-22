@@ -102,4 +102,10 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
       end
     end
   end
+
+  private
+
+  def allow_anonymous_public_chat_access?
+    action_name == "index" && anonymous_public_chat_access_enabled?
+  end
 end

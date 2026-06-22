@@ -28,7 +28,6 @@ nl:
       allow_accepted_answers: "Topiceigenaar en medewerkers toestaan een antwoord als oplossing te markeren"
       solved_topics_auto_close_hours: "Topic (n) uur na het laatste antwoord automatisch sluiten zodra het topic als opgelost is gemarkeerd."
       notify_on_staff_accept_solved: "Topiceigenaar informeren als medewerker een oplossing markeert"
-      empty_box_on_unsolved: "Een leeg selectievakje weergeven naast onopgeloste topics in de topiclijst"
       accept_answer: "Selecteer als dit antwoord het probleem oplost"
       accepted_description: "Dit is de geaccepteerde oplossing voor dit topic"
       has_no_accepted_answer: "Dit topic heeft geen oplossing"

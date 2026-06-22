@@ -96,3 +96,22 @@ module("Component | ChatChannelPreviewCard", function (hooks) {
       .doesNotExist("it does not show the join channel button");
   });
 });
+
+module("Component | ChatChannelPreviewCard | anonymous", function (hooks) {
+  setupRenderingTest(hooks, { anonymous: true });
+
+  hooks.beforeEach(function () {
+    this.channel = new ChatFabricators(getOwner(this)).channel({
+      chatable_type: "Category",
+      meta: { can_join_chat_channel: true },
+    });
+  });
+
+  test("browse all link is hidden", async function (assert) {
+    await render(
+      <template><ChatChannelPreviewCard @channel={{this.channel}} /></template>
+    );
+
+    assert.dom(".chat-channel-preview-card__browse-all").doesNotExist();
+  });
+});

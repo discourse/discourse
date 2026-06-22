@@ -22,7 +22,7 @@ class EmailLoginCode::Redeem
   end
 
   def fetch_user(params:)
-    User::Action::FindByEmail.call(email: params.email)
+    User.real.where(staged: false).with_email(params.email).first
   end
 
   def consume_code(login_code:)

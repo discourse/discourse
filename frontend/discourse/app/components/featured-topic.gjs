@@ -1,12 +1,12 @@
-/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import { trustHTML } from "@ember/template";
 import {
   attributeBindings,
   classNameBindings,
 } from "@ember-decorators/component";
-import $ from "jquery";
 import TopicPostBadges from "discourse/components/topic-post-badges";
+import domUtils from "discourse/lib/dom-utils";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import TopicStatus from "./topic-status";
 
@@ -17,7 +17,7 @@ export default class FeaturedTopic extends Component {
     if (e.target.closest(".last-posted-at")) {
       this.appEvents.trigger("topic-entrance:show", {
         topic: this.topic,
-        position: $(e.target).offset(),
+        position: domUtils.offset(e.target),
       });
       return false;
     }

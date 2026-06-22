@@ -99,7 +99,8 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
       )
     end
 
-    it "enables shared issues by default" do
+    it "enables shared issues by default when the upcoming change is enabled" do
+      SiteSetting.enable_solved_shared_issues = true
       described_class.configure_category(category, guardian: admin.guardian)
 
       expect(category.custom_fields[DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD]).to eq(
@@ -109,6 +110,7 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
     end
 
     it "uses provided configuration_values for shared issues" do
+      SiteSetting.enable_solved_shared_issues = true
       described_class.configure_category(
         category,
         guardian: admin.guardian,
@@ -122,19 +124,38 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
   end
 
   describe "configuration_schema" do
-    it "passes schema validation with the shared issues fields" do
+    it "passes schema validation" do
       expect { described_class.validate_schema! }.not_to raise_error
     end
 
-    it "declares the shared issues toggle as a category custom field" do
-      keys = described_class.configuration_schema[:category_custom_fields].keys
-      expect(keys).to include(DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD)
+    context "when enable_solved_shared_issues is enabled" do
+      before { SiteSetting.enable_solved_shared_issues = true }
+
+      it "declares the shared issues toggle as a category custom field" do
+        keys = described_class.configuration_schema[:category_custom_fields].keys
+        expect(keys).to include(DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD)
+      end
+
+      it "declares the shared issue label as a dependent site text" do
+        label = described_class.configuration_schema[:site_texts]["js.solved.shared_issue.label"]
+        expect(label[:label]).to be_present
+        expect(label[:depends_on]).to eq(DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD)
+      end
     end
 
-    it "declares the shared issue label as a dependent site text" do
-      label = described_class.configuration_schema[:site_texts]["js.solved.shared_issue.label"]
-      expect(label[:label]).to be_present
-      expect(label[:depends_on]).to eq(DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD)
+    context "when enable_solved_shared_issues is disabled" do
+      before { SiteSetting.enable_solved_shared_issues = false }
+
+      it "omits the shared issues toggle from the category custom fields" do
+        keys = described_class.configuration_schema[:category_custom_fields].keys
+        expect(keys).not_to include(DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD)
+      end
+
+      it "omits the shared issue label site text" do
+        expect(described_class.configuration_schema[:site_texts]).not_to have_key(
+          "js.solved.shared_issue.label",
+        )
+      end
     end
   end
 

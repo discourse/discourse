@@ -1632,6 +1632,8 @@ bg:
   onebox:
     discourse:
       user_joined_community: "Присъединен на %{date}"
+    google_meet:
+      meeting_code: "Код:"
     github:
       closed: "затворена"
       status_date:

@@ -44,6 +44,12 @@ el:
       run_options: "Περισσότερες επιλογές εκτέλεσης"
       view:
         label: "Προβολή αποτελεσμάτων"
+      chart:
+        form:
+          label: "Τύπος γραφήματος"
+          bar: "Μπάρες"
+        tooltip:
+          total: "Σύνολο: %{count}"
       chart_empty:
         view_as_table: "Προβολή ως πίνακα"
       export_as:

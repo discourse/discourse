@@ -94,6 +94,7 @@ module PageObjects
             "add" => "Add to group",
             "remove" => "Remove from group",
             "get" => "Get group",
+            "check_membership" => "Check membership",
           },
           "action:data_table" => {
             "insert" => "Insert",

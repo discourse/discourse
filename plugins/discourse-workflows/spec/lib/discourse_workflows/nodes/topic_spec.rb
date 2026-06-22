@@ -100,6 +100,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         expect(result["topic"]["last_poster_username"]).to eq(admin.username)
         expect(result["topic"]["posters"].map { |poster| poster["user_id"] }).to include(admin.id)
         expect(result).to include("post_id" => topic.first_post.id, "post_number" => 1)
+        expect(result.dig("post", "id")).to eq(topic.first_post.id)
+        expect(result.dig("post", "trust_level")).to eq(admin.trust_level)
       end
 
       it "creates a topic as the system user when actor_username is 'system'" do
@@ -178,7 +180,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
       fab!(:topic) { Fabricate(:topic, category: category, user: user) }
       fab!(:post) { Fabricate(:post, topic: topic, user: user, raw: "This is the topic body") }
 
-      it "returns all expected topic fields" do
+      it "returns all expected topic and first post fields" do
         result =
           execute_node(
             configuration: {
@@ -196,6 +198,14 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         expect(result["topic"]["title"]).to eq(topic.title)
         expect(result["topic"]["category_id"]).to eq(category.id)
         expect(result["topic"]["tags"]).to eq([])
+        expect(result["post"]).to include(
+          "id" => topic.first_post.id,
+          "topic_id" => topic.id,
+          "user_id" => user.id,
+          "username" => user.username,
+          "trust_level" => user.trust_level,
+          "post_url" => topic.first_post.url,
+        )
       end
 
       it "returns tag names when topic has tags" do
@@ -293,6 +303,42 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
             },
           )
         end.to raise_error(Discourse::InvalidAccess)
+      end
+    end
+
+    context "with operation 'archive'" do
+      fab!(:topic) { Fabricate(:topic, category: category, user: user) }
+      fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+
+      it "archives the topic for the configured actor" do
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "archive",
+              "topic_id" => topic.id.to_s,
+              "actor_username" => admin.username,
+            },
+            item: item,
+          )
+
+        expect(topic.reload).to be_archived
+        expect(result["topic"]).to include("id" => topic.id, "archived" => true)
+        expect(result.dig("post", "id")).to eq(topic.first_post.id)
+      end
+
+      it "raises when the actor cannot archive the topic" do
+        expect do
+          execute_node(
+            configuration: {
+              "operation" => "archive",
+              "topic_id" => topic.id.to_s,
+              "actor_username" => user.username,
+            },
+            item: item,
+          )
+        end.to raise_error(Discourse::InvalidAccess)
+
+        expect(topic.reload).not_to be_archived
       end
     end
 
@@ -417,7 +463,9 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
             },
           )
 
-        topic_data = result.find { |r| r["json"]["topic"]["id"] == topic_1.id }.dig("json", "topic")
+        topic_entry = result.find { |r| r["json"]["topic"]["id"] == topic_1.id }.dig("json")
+        topic_data = topic_entry["topic"]
+        post_data = topic_entry["post"]
         expect(topic_data).to include(
           "title" => topic_1.title,
           "category_id" => category.id,
@@ -432,6 +480,11 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         expect(topic_data["like_count"]).to be_present
         expect(topic_data["created_at"]).to be_present
         expect(topic_data["bumped_at"]).to be_present
+        expect(post_data).to include(
+          "id" => topic_1.first_post.id,
+          "topic_id" => topic_1.id,
+          "trust_level" => user.trust_level,
+        )
       end
 
       it "preloads selected custom fields when requested" do

@@ -41,6 +41,10 @@ pt:
           no: "Não"
       run: "Executar"
       delete: "Eliminar"
+      chart:
+        form:
+          label: "Tipo de gráfico"
+          bar: "Barras"
       others_dirty: "Uma consulta tem alterações não guardadas que serão perdidas se navegar para outro lado."
       run_time: "Consulta concluída em %{value} ms."
       result_count:

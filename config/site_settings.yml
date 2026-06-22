@@ -1645,7 +1645,7 @@ posting:
     hidden: true
     area: "gifs"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/404829"
   klipy_api_key:
@@ -4594,8 +4594,5 @@ experimental:
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/404528"
   admin_dashboard_reports_seeded:
-    default: false
-    hidden: true
-  admin_dashboard_search_section_enabled:
     default: false
     hidden: true

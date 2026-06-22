@@ -31,7 +31,7 @@ acceptance("Category Banners", function (needs) {
         slug: "test-read-only-with-banner",
         permission: null,
         read_only_banner:
-          "You need to video yourself <div class='inner'>doing</div> the secret handshake to post here",
+          "You need to video yourself <strong>doing</strong> the secret handshake to post here <img src=x onerror=alert(1)>",
       },
     ],
   });
@@ -58,8 +58,12 @@ acceptance("Category Banners", function (needs) {
 
     assert.dom(".category-read-only-banner").exists("shows a banner");
     assert
-      .dom(".category-read-only-banner .inner")
-      .exists({ count: 1 }, "allows staff to embed html in the message");
+      .dom(".category-read-only-banner strong")
+      .hasText("doing", "allows staff to embed safe html in the message");
+
+    assert
+      .dom(".category-read-only-banner img[onerror]")
+      .doesNotExist("sanitizes unsafe html attributes in the message");
   });
 });
 

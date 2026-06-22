@@ -25,8 +25,8 @@ export default class CsvUploader extends Component {
         });
       });
     },
-    uploadDone: () => {
-      this.dialog.alert(i18n(`${this.args.i18nPrefix}.success`));
+    uploadDone: (upload) => {
+      this.args.uploadDone?.(upload);
     },
     validateUploadedFilesOptions: {
       csvOnly: true,

@@ -50,6 +50,10 @@ fr:
       run: "Exécuter"
       undo: "Annuler les modifications"
       delete: "Supprimer"
+      chart:
+        form:
+          label: "Type de graphique"
+          bar: "Barre"
       others_dirty: "Une requête comporte des modifications non enregistrées qui seront perdues si vous quittez la page"
       run_time: "Requête exécutée en %{value} millisecondes."
       result_count:

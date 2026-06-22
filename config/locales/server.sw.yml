@@ -1994,6 +1994,8 @@ sw:
   search_logs:
     graph_title: "Idadi ya Utafiti"
   onebox:
+    google_meet:
+      meeting_code: "Kodi:"
     github:
       closed: "imefungwa"
       status_date:

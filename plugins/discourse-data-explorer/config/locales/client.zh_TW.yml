@@ -27,6 +27,9 @@ zh_TW:
           yes: "是"
           no: "否"
       delete: "刪除"
+      chart:
+        form:
+          bar: "長條圖"
       result_count:
         other: "%{count} 個結果."
       query_groups: "群組"

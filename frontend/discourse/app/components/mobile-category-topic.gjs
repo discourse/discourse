@@ -1,27 +1,24 @@
-/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import { classNameBindings, tagName } from "@ember-decorators/component";
-import $ from "jquery";
 import PostCountOrBadges from "discourse/components/topic-list/post-count-or-badges";
 import TopicStatus from "discourse/components/topic-status";
 import coldAgeClass from "discourse/helpers/cold-age-class";
+import domUtils from "discourse/lib/dom-utils";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dTopicLink from "discourse/ui-kit/helpers/d-topic-link";
 
 export function showEntrance(e) {
-  let target = $(e.target);
+  let target = e.target;
 
-  if (target.hasClass("posts-map") || target.parents(".posts-map").length > 0) {
-    if (target.prop("tagName") !== "A") {
-      target = target.find("a");
-      if (target.length === 0) {
-        target = target.end();
-      }
+  if (target.closest(".posts-map")) {
+    if (target.tagName !== "A") {
+      target = target.querySelector("a") || target;
     }
 
     this.appEvents.trigger("topic-entrance:show", {
       topic: this.topic,
-      position: target.offset(),
+      position: domUtils.offset(target),
     });
     return false;
   }

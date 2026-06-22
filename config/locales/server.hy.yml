@@ -2772,6 +2772,8 @@ hy:
   search_logs:
     graph_title: "Որոնումների Քանակ"
   onebox:
+    google_meet:
+      meeting_code: "Կոդ:"
     github:
       closed: "փակված"
       status_date:

@@ -2547,6 +2547,10 @@ zh_CN:
       confirm_title: 继续访问 %{site_name}
       logging_in_as: 以 %{email} 登录
       confirm_button: 完成登录
+    code_login:
+      email_label: "电子邮件"
+      continue_button: "继续"
+      verify_button: "继续"
     login:
       header_title: "欢迎回来"
       title: "登录"
@@ -2563,10 +2567,8 @@ zh_CN:
       second_factor_backup_description: "请输入您的备份代码之一："
       second_factor: "使用身份验证器应用登录"
       security_key_description: "当您准备好实物安全密钥或兼容的移动设备后，请按下面的“使用安全密钥进行身份验证”按钮。"
-      security_key_or_passkey_description: "准备好安全密钥、通行密钥或兼容的移动设备后，请按下面的按钮。"
       security_key_alternative: "尝试另一种方式"
       security_key_authenticate: "使用安全密钥进行身份验证"
-      security_key_or_passkey_authenticate: "使用安全密钥或通行密钥进行身份验证"
       security_key_not_allowed_error: "安全密钥身份验证过程超时或被取消。"
       security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
       security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
@@ -3633,6 +3635,9 @@ zh_CN:
         banner: "您正在查看的是此话题中的单个消息串。"
         view_full_topic: "查看完整话题"
         view_parent_context: "查看父上下文"
+    share_target:
+      new_topic: "新建话题"
+      new_message: "新建消息"
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"

@@ -1,10 +1,9 @@
-/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers */
+/* eslint-disable ember/no-classic-components, ember/no-observers */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
-import $ from "jquery";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
@@ -58,15 +57,16 @@ export default class GroupFlairInputs extends Component {
       return;
     }
 
-    if (!$(`${c} symbol#${icon}`).length) {
-      ajax(`/svg-sprite/search/${icon}`).then(function (data) {
-        if ($(singleIconEl).length === 0) {
-          $(c).append(`<div class="${h}">`);
+    if (!document.querySelector(`${c} symbol#${icon}`)) {
+      ajax(`/svg-sprite/search/${icon}`).then((data) => {
+        if (!document.querySelector(singleIconEl)) {
+          document
+            .querySelector(c)
+            .insertAdjacentHTML("beforeend", `<div class="${h}"></div>`);
         }
 
-        $(singleIconEl).html(
-          `<svg xmlns='http://www.w3.org/2000/svg' style='display: none;'>${data}</svg>`
-        );
+        document.querySelector(singleIconEl).innerHTML =
+          `<svg xmlns='http://www.w3.org/2000/svg' style='display: none;'>${data}</svg>`;
       });
     }
   }

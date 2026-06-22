@@ -1962,6 +1962,8 @@ sl:
               private:
                 label: "Zasebni"
   onebox:
+    google_meet:
+      meeting_code: "Koda:"
     github:
       closed: "zaprto"
       status_date:
