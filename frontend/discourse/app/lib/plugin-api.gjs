@@ -60,6 +60,10 @@ import classPrepend, {
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import {
+  isCustomizationSource,
+  resolveSourceId,
+} from "discourse/lib/customization-source";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -3530,10 +3534,10 @@ class _PluginApi {
           `registerBlock("${blockOrName}", ...) requires a factory function as second argument.`
         );
       }
-      _registerBlockFactory(blockOrName, factory);
+      _registerBlockFactory(blockOrName, factory, this._source);
     } else {
       // Direct class: registerBlock(BlockClass)
-      _registerBlock(blockOrName);
+      _registerBlock(blockOrName, this._source);
     }
   }
 
@@ -3567,7 +3571,7 @@ class _PluginApi {
    * ```
    */
   registerBlockOutlet(outletName, options) {
-    _registerOutlet(outletName, options);
+    _registerOutlet(outletName, options, this._source);
   }
 
   /**
@@ -3615,7 +3619,7 @@ class _PluginApi {
    * ```
    */
   registerBlockConditionType(ConditionClass) {
-    _registerConditionType(ConditionClass);
+    _registerConditionType(ConditionClass, this._source);
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -3649,6 +3653,43 @@ function getPluginApi() {
   return pluginApi;
 }
 
+// Per-owner cache of source-bound API views, keyed by the shared PluginApi
+// instance so it is collected together with its owner (no instance pollution).
+const sourceBoundApiCache = new WeakMap();
+
+/**
+ * Returns a view of the shared PluginApi instance that carries the given
+ * customization source. The view delegates everything to the singleton through
+ * its prototype and only shadows `_source`, so container refreshes and shared
+ * state remain visible. Views are cached per source (keyed by the singleton in
+ * a module-level WeakMap). Returns the singleton unchanged for core code (no
+ * source).
+ *
+ * @param {_PluginApi} api - The shared PluginApi instance.
+ * @param {import("discourse/lib/customization-source").CustomizationSource|undefined} source - The build-injected source.
+ * @returns {_PluginApi} The source-bound view, or the singleton for core.
+ */
+function getSourceBoundApi(api, source) {
+  const sourceId = resolveSourceId(source);
+  if (!sourceId) {
+    return api;
+  }
+
+  let bySource = sourceBoundApiCache.get(api);
+  if (!bySource) {
+    bySource = new Map();
+    sourceBoundApiCache.set(api, bySource);
+  }
+
+  let boundApi = bySource.get(sourceId);
+  if (!boundApi) {
+    boundApi = Object.create(api);
+    boundApi._source = Object.freeze(source);
+    bySource.set(sourceId, boundApi);
+  }
+  return boundApi;
+}
+
 /**
  * Executes the provided callback function with the `PluginApi` object.
  *
@@ -3657,12 +3698,22 @@ function getPluginApi() {
  * @returns {any} The result of the `callback` function, if executed
  */
 export function withPluginApi(apiCodeCallback, opts) {
-  if (typeof arguments[0] === "string") {
-    // Old path. First argument is the version string. Silently ignore.
-    [, apiCodeCallback, opts] = arguments;
+  // The asset processor appends a branded customization-source descriptor to
+  // calls made from plugin/theme code. Strip it before the user-facing args so
+  // it never leaks into `opts`.
+  let args = Array.from(arguments);
+  let source;
+  if (args.length > 0 && isCustomizationSource(args[args.length - 1])) {
+    source = args.pop();
   }
 
-  opts = opts || {};
+  if (typeof args[0] === "string") {
+    // Old path. First argument is the version string. Silently ignore.
+    args = args.slice(1);
+  }
 
-  return apiCodeCallback(getPluginApi(), opts);
+  apiCodeCallback = args[0];
+  opts = args[1] || {};
+
+  return apiCodeCallback(getSourceBoundApi(getPluginApi(), source), opts);
 }

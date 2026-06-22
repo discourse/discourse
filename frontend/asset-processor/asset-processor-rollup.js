@@ -11,6 +11,7 @@ import { browsers } from "../discourse/config/targets";
 import babelTransformModuleRenames from "../discourse/lib/babel-transform-module-renames";
 import AddThemeGlobals from "./add-theme-globals";
 import BabelReplaceImports from "./babel-replace-imports";
+import InjectCustomizationSource from "./inject-customization-source";
 import discourseColocation from "./rollup-plugins/discourse-colocation";
 import discourseExternalLoader from "./rollup-plugins/discourse-external-loader";
 import discourseFileSearch from "./rollup-plugins/discourse-file-search";
@@ -31,6 +32,14 @@ async function performRollup(modules, opts) {
   let basePath = opts.pluginName
     ? `discourse/plugins/${opts.pluginName}/`
     : `theme-${opts.themeId}/`;
+
+  // Identifies which plugin or theme this code belongs to, so registrations can
+  // be attributed at build time instead of via the runtime call stack.
+  const customizationSource = opts.pluginName
+    ? { type: "plugin", name: opts.pluginName }
+    : opts.themeId != null
+      ? { type: "theme", id: opts.themeId }
+      : null;
 
   const inputConfig = {};
 
@@ -74,6 +83,9 @@ async function performRollup(modules, opts) {
         compact: false,
         plugins: [
           [DecoratorTransforms, { runEarly: true }],
+          customizationSource
+            ? [InjectCustomizationSource, { source: customizationSource }]
+            : null,
           opts.themeId ? AddThemeGlobals : null,
           babelTransformModuleRenames,
           colocatedBabelPlugin,

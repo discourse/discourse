@@ -93,10 +93,11 @@ export function _freezeOutletRegistry() {
  * @param {string} outletName - The outlet name (must follow naming conventions).
  * @param {Object} [options] - Outlet options.
  * @param {string} [options.description] - Human-readable description.
+ * @param {import("discourse/lib/customization-source").CustomizationSource} [source] - The build-injected source of the calling code.
  *
  * @internal
  */
-export function _registerOutlet(outletName, options = {}) {
+export function _registerOutlet(outletName, options = {}, source) {
   if (
     !assertRegistryNotFrozen({
       frozen: outletRegistryFrozen,
@@ -131,6 +132,7 @@ export function _registerOutlet(outletName, options = {}) {
     !validateSourceNamespace({
       name: outletName,
       entityType: "outlet",
+      source,
     })
   ) {
     return;
