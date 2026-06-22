@@ -11,7 +11,7 @@
     "@glint/tsserver-plugin": "^2.4.0",
     "@rdil/parallel-prettier": "^3.0.0",
     "concurrently": "^9.2.1",
-    "eslint": "9.39.2",
+    "eslint": "10.5.0",
     "execa": "^9.6.0",
     "jsdoc": "^4.0.5",
     "lefthook": "^2.1.9",
@@ -20,7 +20,7 @@
     "lint-to-the-future-eslint": "^3.3.0",
     "playwright": "1.59.1",
     "prettier": "3.8.1",
-    "stylelint": "17.4.0",
+    "stylelint": "17.13.0",
     "typescript": "^5.9.3"
   },
   "scripts": {
