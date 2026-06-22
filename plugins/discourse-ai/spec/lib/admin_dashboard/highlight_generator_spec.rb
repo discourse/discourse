@@ -20,16 +20,17 @@ RSpec.describe DiscourseAi::AdminDashboard::HighlightGenerator do
     allow(AdminDashboardHighlights).to receive(:build).and_return({ kpis: kpis })
 
     agent_id = SiteSetting.ai_admin_dashboard_highlights_agent.to_i
-    AiAgent.find_by(id: agent_id) ||
-      Fabricate(
-        :ai_agent,
-        id: agent_id,
-        name: "Admin Dashboard Highlights #{SecureRandom.hex(4)}",
-        description: "Writes admin dashboard highlights",
-        allowed_group_ids: [Group::AUTO_GROUPS[:admins]],
-        enabled: true,
-        system: true,
-      )
+    agent =
+      AiAgent.find_by(id: agent_id) ||
+        Fabricate(
+          :ai_agent,
+          id: agent_id,
+          name: "Admin Dashboard Highlights #{SecureRandom.hex(4)}",
+          description: "Writes admin dashboard highlights",
+          allowed_group_ids: [Group::AUTO_GROUPS[:admins]],
+          system: true,
+        )
+    agent.update!(enabled: true)
   end
 
   it "hands the grounded facts to the agent and returns its highlight" do
