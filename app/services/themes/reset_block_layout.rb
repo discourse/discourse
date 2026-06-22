@@ -33,9 +33,11 @@ class Themes::ResetBlockLayout
   end
 
   # A Git-imported theme's live field is never written or cleared here, matching
-  # the publish path.
+  # the publish path. "Git" means an actual remote URL (`RemoteTheme#is_git?`),
+  # not merely a `remote_theme` record — a locally-imported editable theme is
+  # writable.
   def theme_is_not_git(theme:)
-    theme.remote_theme_id.nil?
+    theme.remote_theme&.is_git? != true
   end
 
   # `set_field` with a blank value marks the field for destruction; `save!`

@@ -39,6 +39,15 @@ RSpec.describe Themes::ResetBlockLayout do
       it { is_expected.to fail_a_policy(:theme_is_not_git) }
     end
 
+    context "with a locally-imported theme (remote_theme with a blank URL)" do
+      fab!(:local_import, :theme)
+      before { local_import.update!(remote_theme: RemoteTheme.create!(remote_url: "")) }
+      let(:params) { { theme_id: local_import.id, outlet_name: "homepage-blocks" } }
+
+      # Writable, unlike a real Git theme — the policy must not block it.
+      it { is_expected.not_to fail_a_policy(:theme_is_not_git) }
+    end
+
     it "deletes the live field" do
       set_live_field
 

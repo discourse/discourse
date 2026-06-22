@@ -136,5 +136,15 @@ RSpec.describe ApplicationLayoutPreloader do
       meta = preloaded_meta(theme_id: git_theme.id)
       expect(meta[git_theme.id.to_s]["is_git"]).to eq(true)
     end
+
+    it "treats a locally-imported theme (remote_theme with a blank URL) as not git" do
+      # A zip/dir-imported theme (e.g. an editable duplicate) has a remote_theme
+      # record but a blank remote_url — it is editable, not Git-managed.
+      local_import = Fabricate(:theme)
+      local_import.update!(remote_theme: RemoteTheme.create!(remote_url: ""))
+
+      meta = preloaded_meta(theme_id: local_import.id)
+      expect(meta[local_import.id.to_s]["is_git"]).to eq(false)
+    end
   end
 end

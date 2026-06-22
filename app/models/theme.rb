@@ -358,6 +358,16 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  # Returns `base` if no theme already uses it, otherwise appends the lowest
+  # free ` 2`/` 3`/… suffix — e.g. "My theme (copy)" → "My theme (copy) 2".
+  def self.uniquify_name(base)
+    return base unless Theme.where(name: base).exists?
+
+    suffix = 2
+    suffix += 1 while Theme.where(name: "#{base} #{suffix}").exists?
+    "#{base} #{suffix}"
+  end
+
   def set_default!
     if component
       raise Discourse::InvalidParameters.new(I18n.t("themes.errors.component_no_default"))

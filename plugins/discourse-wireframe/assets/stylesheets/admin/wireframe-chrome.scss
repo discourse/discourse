@@ -1807,6 +1807,76 @@ body.wireframe-active {
   }
 }
 
+/* Per-outlet section in the inspector: state badges + verbs + the Git escape
+   hatches (create-component / export / duplicate). */
+
+.wireframe-inspector__outlet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.wireframe-inspector__outlet-state {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.wireframe-outlet-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: var(--font-down-2);
+  font-weight: bold;
+  background: var(--primary-low);
+  color: var(--primary-high);
+
+  &.--published {
+    background: var(--success-low);
+    color: var(--success);
+  }
+
+  &.--locked {
+    background: var(--primary-low);
+    color: var(--primary-medium);
+  }
+
+  &.--editing {
+    background: var(--tertiary-low);
+    color: var(--tertiary);
+  }
+}
+
+.wireframe-inspector__outlet-verbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.wireframe-inspector__outlet-git {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0.5rem;
+  border: 1px solid var(--primary-low);
+  border-radius: 4px;
+  background: var(--primary-very-low);
+}
+
+.wireframe-inspector__outlet-git-notice {
+  margin: 0;
+  font-size: var(--font-down-1);
+  color: var(--primary-high);
+}
+
+.wireframe-inspector__outlet-git-error {
+  margin: 0;
+  font-size: var(--font-down-1);
+  color: var(--danger);
+}
+
 .wireframe-inspector__tabs {
   display: flex;
   gap: 0;

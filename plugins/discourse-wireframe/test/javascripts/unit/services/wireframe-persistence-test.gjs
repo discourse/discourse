@@ -269,5 +269,82 @@ module(
         record == null || record[LAYOUT_LAYERS.THEME].length === 0;
       assert.true(themeLayerCleared, "the theme layer is cleared locally");
     });
+
+    test("exportOutlet posts the draft and downloads the server content verbatim", async function (assert) {
+      await enterEdited(this);
+      let downloaded;
+      this.persistence._triggerDownload = (filename, content) => {
+        downloaded = { filename, content };
+      };
+
+      pretender.post(
+        "/admin/customize/block-layouts/export.json",
+        (request) => {
+          const body = parsePostData(request.requestBody);
+          assert.strictEqual(body.outlet_name, "homepage-blocks");
+          // useDraft sends the serialized current layout.
+          assert.strictEqual(
+            JSON.parse(body.layout_json).layout[0].args.title,
+            "Edited"
+          );
+          assert.step("exported");
+          return response({
+            filename: "block_layouts/homepage-blocks.json",
+            content: '{\n  "pretty": true\n}',
+          });
+        }
+      );
+
+      await this.persistence.exportOutlet(5, "homepage-blocks", {
+        useDraft: true,
+      });
+      assert.verifySteps(["exported"]);
+      assert.strictEqual(
+        downloaded.filename,
+        "block_layouts/homepage-blocks.json"
+      );
+      // Content is passed through untouched — not re-stringified.
+      assert.strictEqual(downloaded.content, '{\n  "pretty": true\n}');
+    });
+
+    test("duplicateTheme posts every edited outlet's draft and returns the new theme id", async function (assert) {
+      await enterEdited(this);
+
+      pretender.post(
+        "/admin/customize/block-layouts/duplicate.json",
+        (request) => {
+          const body = parsePostData(request.requestBody);
+          assert.strictEqual(body.theme_id, "5");
+          // The edited outlet's draft rides along (the server-side round-trip is
+          // covered by the request spec; here just confirm it's in the payload).
+          assert.true(request.requestBody.includes("homepage-blocks"));
+          assert.step("duplicated");
+          return response({ theme_id: 42 });
+        }
+      );
+
+      const result = await this.persistence.duplicateTheme(5);
+      assert.strictEqual(result.theme_id, 42);
+      assert.verifySteps(["duplicated"]);
+    });
+
+    test("createCustomizationComponent posts the drafts and returns the component id", async function (assert) {
+      await enterEdited(this);
+
+      pretender.post(
+        "/admin/customize/block-layouts/customization-component.json",
+        (request) => {
+          const body = parsePostData(request.requestBody);
+          assert.strictEqual(body.theme_id, "5");
+          assert.true(request.requestBody.includes("homepage-blocks"));
+          assert.step("componentized");
+          return response({ theme_id: 99 });
+        }
+      );
+
+      const result = await this.persistence.createCustomizationComponent(5);
+      assert.strictEqual(result.theme_id, 99);
+      assert.verifySteps(["componentized"]);
+    });
   }
 );

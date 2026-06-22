@@ -76,6 +76,23 @@ RSpec.describe Themes::SaveBlockLayout do
       end
     end
 
+    context "with a locally-imported theme (remote_theme with a blank URL)" do
+      # An editable duplicate / customization component has a remote_theme record
+      # but a blank remote_url — it is writable, unlike a real Git theme.
+      fab!(:local_import, :theme)
+      before { local_import.update!(remote_theme: RemoteTheme.create!(remote_url: "")) }
+      let(:params) do
+        { theme_id: local_import.id, outlet_name: "homepage-blocks", layout_json: layout_json }
+      end
+
+      it { is_expected.to run_successfully }
+
+      it "writes the live field (not blocked by the git policy)" do
+        described_class.call(params:, **dependencies)
+        expect(live_field(local_import)).to be_present
+      end
+    end
+
     context "with the stale-publish guard" do
       it "succeeds when no expected_version_token is supplied (opt out)" do
         expect(result).to be_a_success

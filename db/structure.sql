@@ -9006,7 +9006,8 @@ CREATE TABLE public.theme_modifier_sets (
     theme_setting_modifiers jsonb,
     serialize_topic_op_likes_data boolean,
     serialize_topic_is_hot boolean,
-    only_theme_color_schemes boolean
+    only_theme_color_schemes boolean,
+    duplicable_theme boolean
 );
 
 
@@ -21859,6 +21860,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260622153521'),
 ('20260619214923'),
 ('20260525105009'),
 ('20260525105006'),

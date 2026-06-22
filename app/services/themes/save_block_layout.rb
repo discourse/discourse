@@ -77,9 +77,13 @@ class Themes::SaveBlockLayout
   end
 
   # A Git-imported theme's live field is never written here; its layouts are made
-  # real through export / duplicate-to-an-editable-theme instead.
+  # real through export / duplicate / a local override component instead. "Git"
+  # means an actual remote URL (matching `RemoteTheme#is_git?`), NOT merely a
+  # `remote_theme` record — a locally zip/dir-imported theme (e.g. an editable
+  # duplicate or customization component) carries a blank-`remote_url`
+  # `remote_theme` and IS writable.
   def theme_is_not_git(theme:)
-    theme.remote_theme_id.nil?
+    theme.remote_theme&.is_git? != true
   end
 
   # Runs first, inside the lock + transaction: reads the live baked value (under

@@ -158,4 +158,197 @@ RSpec.describe Admin::BlockLayoutsController do
       expect(live_field(theme)).to be_nil
     end
   end
+
+  describe "POST #export" do
+    before do
+      theme.set_field(
+        target: :common,
+        name: "homepage-blocks",
+        type: :block_layout,
+        value: layout_json,
+      )
+      theme.save!
+    end
+
+    context "as an admin" do
+      before { sign_in(admin) }
+
+      it "returns the canonical filename and parseable content" do
+        post "/admin/customize/block-layouts/export.json",
+             params: {
+               theme_id: theme.id,
+               outlet_name: "homepage-blocks",
+             }
+
+        expect(response.status).to eq(200)
+        body = response.parsed_body
+        expect(body["filename"]).to eq("block_layouts/homepage-blocks.json")
+        parsed = JSON.parse(body["content"])
+        expect(parsed["schema_version"]).to eq(1)
+        expect(parsed["layout"].first["block"]).to eq("hero-banner")
+      end
+
+      it "produces a filename the importer reverses to the same outlet" do
+        post "/admin/customize/block-layouts/export.json",
+             params: {
+               theme_id: theme.id,
+               outlet_name: "homepage-blocks",
+             }
+        exported = response.parsed_body
+
+        # The export filename must round-trip through the import path matcher
+        # back to the original outlet name + target + type.
+        opts = ThemeField.opts_from_file_path(exported["filename"])
+        expect(opts).to include(name: "homepage-blocks", target: :common, type: :block_layout)
+
+        # And a field set from the exported content holds the same layout.
+        importer = Fabricate(:theme)
+        importer.set_field(value: exported["content"], **opts)
+        importer.save!
+        field =
+          importer.theme_fields.find_by(
+            name: "homepage-blocks",
+            type_id: ThemeField.types[:block_layout],
+          )
+        expect(field).to be_present
+        expect(JSON.parse(field.value)["layout"].first["block"]).to eq("hero-banner")
+      end
+
+      it "exports a layout_json override without a live field" do
+        override = {
+          schema_version: 1,
+          layout: [{ block: "hero-banner", args: { title: "Draft" } }],
+        }.to_json
+        post "/admin/customize/block-layouts/export.json",
+             params: {
+               theme_id: theme.id,
+               outlet_name: "sidebar-blocks",
+               layout_json: override,
+             }
+
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.parsed_body["content"])["layout"].first["args"]["title"]).to eq(
+          "Draft",
+        )
+      end
+
+      it "returns 404 when there is no field and no override" do
+        post "/admin/customize/block-layouts/export.json",
+             params: {
+               theme_id: theme.id,
+               outlet_name: "sidebar-blocks",
+             }
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 422 for a malformed override" do
+        post "/admin/customize/block-layouts/export.json",
+             params: {
+               theme_id: theme.id,
+               outlet_name: "homepage-blocks",
+               layout_json: "{not json",
+             }
+        expect(response.status).to eq(422)
+      end
+    end
+
+    it "returns 404 for a non-admin" do
+      sign_in(user)
+      post "/admin/customize/block-layouts/export.json",
+           params: {
+             theme_id: theme.id,
+             outlet_name: "homepage-blocks",
+           }
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "POST #duplicate" do
+    fab!(:git_theme) { Fabricate(:theme_with_remote_url, name: "Acme") }
+    let(:drafts) { [{ outlet_name: "homepage-blocks", layout_json: layout_json }] }
+
+    context "as an admin" do
+      before { sign_in(admin) }
+
+      it "creates an editable copy and returns its id" do
+        expect {
+          post "/admin/customize/block-layouts/duplicate.json",
+               params: {
+                 theme_id: git_theme.id,
+                 drafts: drafts,
+               }
+        }.to change { Theme.count }.by(1)
+
+        expect(response.status).to eq(200)
+        copy = Theme.find(response.parsed_body["theme_id"])
+        expect(copy.remote_theme&.is_git?).to be_falsey
+        expect(
+          copy.theme_fields.exists?(
+            name: "homepage-blocks",
+            type_id: ThemeField.types[:block_layout],
+          ),
+        ).to eq(true)
+      end
+
+      it "returns 422 when the theme opts out of duplication" do
+        git_theme.theme_modifier_set.update!(duplicable_theme: false)
+        post "/admin/customize/block-layouts/duplicate.json",
+             params: {
+               theme_id: git_theme.id,
+               drafts: drafts,
+             }
+        expect(response.status).to eq(422)
+      end
+
+      it "returns 422 for a malformed draft" do
+        post "/admin/customize/block-layouts/duplicate.json",
+             params: {
+               theme_id: git_theme.id,
+               drafts: [{ outlet_name: "homepage-blocks", layout_json: "{not json" }],
+             }
+        expect(response.status).to eq(422)
+      end
+    end
+
+    it "returns 404 for a non-admin" do
+      sign_in(user)
+      post "/admin/customize/block-layouts/duplicate.json",
+           params: {
+             theme_id: git_theme.id,
+             drafts: drafts,
+           }
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "POST #create_component" do
+    fab!(:git_theme) { Fabricate(:theme_with_remote_url, name: "Acme") }
+    let(:drafts) { [{ outlet_name: "homepage-blocks", layout_json: layout_json }] }
+
+    it "creates a local customization component child holding the layout" do
+      sign_in(admin)
+      expect {
+        post "/admin/customize/block-layouts/customization-component.json",
+             params: {
+               theme_id: git_theme.id,
+               drafts: drafts,
+             }
+      }.to change { Theme.count }.by(1)
+
+      expect(response.status).to eq(200)
+      component = Theme.find(response.parsed_body["theme_id"])
+      expect(component.component).to eq(true)
+      expect(git_theme.reload.child_theme_ids).to include(component.id)
+    end
+
+    it "returns 404 for a non-admin" do
+      sign_in(user)
+      post "/admin/customize/block-layouts/customization-component.json",
+           params: {
+             theme_id: git_theme.id,
+             drafts: drafts,
+           }
+      expect(response.status).to eq(404)
+    end
+  end
 end

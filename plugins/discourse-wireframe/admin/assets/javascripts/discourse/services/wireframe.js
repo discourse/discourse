@@ -35,6 +35,7 @@ import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
 import PreloadStore from "discourse/lib/preload-store";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { prefersReducedMotion } from "discourse/lib/utilities";
+import { i18n } from "discourse-i18n";
 // `grid-math` holds the editor-only grid geometry. Absolute addon path
 // because this admin service crosses into the plugin's universal bundle.
 import {
@@ -2436,6 +2437,96 @@ export default class WireframeService extends Service {
   @action
   async saveDraftOutlet(outletName) {
     await this.wireframeDrafts.saveDraftOutlet(this.activeThemeId, outletName);
+  }
+
+  /**
+   * Exports one outlet's layout as a downloadable repo file (the Git escape
+   * hatch for committing upstream). Exports the current draft when the outlet
+   * has edits, otherwise the live field.
+   *
+   * @param {string} outletName
+   * @returns {Promise<string|null>} an error message for the banner, or null on success.
+   */
+  @action
+  async exportOutlet(outletName) {
+    const themeId = this.outletOwner(outletName).themeId ?? this.defaultThemeId;
+    try {
+      await this.wireframePersistence.exportOutlet(themeId, outletName, {
+        useDraft: this.editedOutlets.has(outletName),
+      });
+      return null;
+    } catch (error) {
+      return this.#gitActionError(error, "wireframe.outlet.export_failed");
+    }
+  }
+
+  /**
+   * Duplicates the active theme into a new editable copy carrying all edited
+   * outlets' drafts. Returns the new theme id (the caller navigates to it) or an
+   * error message — never navigates itself, so it stays testable.
+   *
+   * @returns {Promise<{themeId: (number|undefined), error: (string|undefined)}>}
+   */
+  @action
+  async duplicateForEditing() {
+    try {
+      const { theme_id } = await this.wireframePersistence.duplicateTheme(
+        this.activeThemeId
+      );
+      return { themeId: theme_id };
+    } catch (error) {
+      return {
+        error: this.#gitActionError(error, "wireframe.outlet.duplicate_failed"),
+      };
+    }
+  }
+
+  /**
+   * Creates (or reuses) a local customization component for the active Git theme
+   * carrying all edited outlets' drafts. Returns the component's theme id (the
+   * caller reloads so its override takes effect) or an error message.
+   *
+   * @returns {Promise<{themeId: (number|undefined), error: (string|undefined)}>}
+   */
+  @action
+  async createCustomizationComponent() {
+    try {
+      const { theme_id } =
+        await this.wireframePersistence.createCustomizationComponent(
+          this.activeThemeId
+        );
+      return { themeId: theme_id };
+    } catch (error) {
+      return {
+        error: this.#gitActionError(
+          error,
+          "wireframe.outlet.create_component_failed"
+        ),
+      };
+    }
+  }
+
+  /**
+   * Hard-navigates the editor onto a different theme by reloading the current
+   * page with `?wf_theme=<id>`. A full document load is required (not an SPA
+   * transition) so the boot preload re-seeds the new theme's block layouts and
+   * per-theme metadata; the entry pill then auto-enters bound to it. Used after
+   * duplicate / create-customization-component so the new owner takes effect and
+   * Publish enables. Isolated here as a thin, stubbable seam.
+   *
+   * @param {number} themeId
+   */
+  navigateToEditTheme(themeId) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("wf_theme", themeId);
+    window.location.assign(url.toString());
+  }
+
+  // Pulls the server's error message out of a failed git-action request, falling
+  // back to a generic localized string.
+  #gitActionError(error, fallbackKey) {
+    const messages = error?.jqXHR?.responseJSON?.errors;
+    return messages?.length ? messages.join(", ") : i18n(fallbackKey);
   }
 
   /**

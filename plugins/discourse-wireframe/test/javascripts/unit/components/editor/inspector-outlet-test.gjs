@@ -76,13 +76,20 @@ class StubWireframeService extends Service {
   toggleConditionsDetached() {}
 
   // Surface the per-outlet section (rendered for an outlet root) reads. Safe
-  // defaults: a default, editable, non-Git outlet with no unsaved edits.
+  // defaults: a default, editable, non-Git outlet with no unsaved edits; a test
+  // can drive the state/owner through `blockData`.
   outletState() {
-    return "default";
+    return this.#blockData?.outletState ?? "default";
   }
 
   outletOwner() {
-    return { themeId: null, themeName: null, isGit: false };
+    return (
+      this.#blockData?.outletOwner ?? {
+        themeId: null,
+        themeName: null,
+        isGit: false,
+      }
+    );
   }
 
   isOutletEditing() {
@@ -96,6 +103,18 @@ class StubWireframeService extends Service {
   discardOutlet() {}
 
   resetToDefault() {}
+
+  exportOutlet() {}
+
+  duplicateForEditing() {
+    return {};
+  }
+
+  createCustomizationComponent() {
+    return {};
+  }
+
+  navigateToEditTheme() {}
 }
 
 function stubWireframe(owner, blockData) {
@@ -185,6 +204,35 @@ module(
           "wf:gone",
           "with no metadata there's no friendly name, so the raw name shows"
         );
+    });
+
+    test("a Git-owned outlet shows the escape hatches with Publish disabled", async function (assert) {
+      stubWireframe(this.owner, {
+        name: "layout",
+        isOutletRoot: true,
+        outletName: "homepage-blocks",
+        outletState: "published",
+        outletOwner: { themeId: 5, themeName: "Acme", isGit: true },
+        args: { mode: "stack" },
+        argsSnapshot: { mode: "stack" },
+        parentChildArgsSchema: null,
+      });
+
+      await render(<template><InspectorPanel /></template>);
+
+      assert
+        .dom(".wireframe-inspector__outlet-git-notice")
+        .exists("shows the Git notice");
+      assert
+        .dom(".wireframe-outlet-verb__create-component")
+        .exists("offers create customization component");
+      assert.dom(".wireframe-outlet-verb__export").exists("offers export");
+      assert
+        .dom(".wireframe-outlet-verb__duplicate")
+        .exists("offers duplicate");
+      assert
+        .dom(".wireframe-outlet-verb__publish")
+        .isDisabled("Publish is disabled for a Git-owned outlet");
     });
   }
 );

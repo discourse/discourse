@@ -142,11 +142,17 @@ class ApplicationLayoutPreloader
   end
 
   # Per-theme metadata for the active stack, keyed by theme id. The block-layout
-  # resolver picks each outlet's owner by the minimum `stack_index` (the theme's
-  # position in `Theme.transform_ids`, parent before components); consumers also
-  # read `is_git` / `name` / `component`. Emitted separately because the site
-  # serializer's `user_themes` lacks `remote_theme_id` and lists only
-  # user-selectable themes.
+  # resolver picks each outlet's owner by the maximum `stack_index` (the theme's
+  # position in `Theme.transform_ids`, parent before components), so the
+  # most-derived theme owns; consumers also read `is_git` / `name` / `component`.
+  # Emitted separately because the site serializer's `user_themes` lacks
+  # `remote_theme_id` and lists only user-selectable themes.
+  #
+  # `is_git` is derived from the presence of a `remote_url`, matching
+  # `RemoteTheme#is_git?` — NOT merely from a non-nil `remote_theme_id`. A
+  # locally zip/dir-imported theme has a `remote_theme` record with a blank
+  # `remote_url`, which is editable (not Git-managed); keying on `remote_url`
+  # lets such a theme correctly report `is_git: false`.
   def theme_block_layout_meta_json
     id = @theme_id
     return "{}" if id.blank?
@@ -156,9 +162,10 @@ class ApplicationLayoutPreloader
     info_by_id =
       Theme
         .where(id: ids)
-        .pluck(:id, :name, :component, :remote_theme_id)
-        .to_h do |theme_id, name, component, remote_theme_id|
-          [theme_id, { name: name, component: component, is_git: !remote_theme_id.nil? }]
+        .joins("LEFT JOIN remote_themes ON remote_themes.id = themes.remote_theme_id")
+        .pluck(:id, :name, :component, "remote_themes.remote_url")
+        .to_h do |theme_id, name, component, remote_url|
+          [theme_id, { name: name, component: component, is_git: remote_url.present? }]
         end
 
     meta = {}

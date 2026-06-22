@@ -8,6 +8,7 @@ import {
 } from "discourse/blocks/block-outlet";
 import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "discourse/lib/preload-store";
+import { downloadJson as triggerJsonDownload } from "../lib/download-json";
 import {
   cloneLayoutForDraft,
   serializeLayoutForSave,
@@ -163,28 +164,92 @@ export default class WireframePersistenceService extends Service {
     await this.wireframeDrafts.deleteDraft(themeId, outlet);
   }
 
-  #publishRequest(outlet, themeId, expectedToken) {
-    const resolvedLayout = this.wireframe.readResolvedLayout(outlet);
-    const layout = serializeLayoutForSave(resolvedLayout ?? []);
-
-    // A null resolved read means the read path failed, not a deliberate
-    // "delete all" (which resolves to a real empty array). Refusing the POST
-    // preserves the server's copy instead of overwriting it with nothing.
-    if (layout.length === 0 && resolvedLayout == null) {
-      throw new Error(
-        `Refusing to save outlet "${outlet}": resolved layout was empty/unreadable`
-      );
+  /**
+   * Exports a single outlet's layout as the repo-file JSON and triggers a
+   * download. With `useDraft`, the current (possibly unpublished) draft is sent
+   * as the source; otherwise the server exports the live field.
+   *
+   * @param {number} themeId - the id of the theme owning the outlet.
+   * @param {string} outlet - the outlet identifier.
+   * @param {object} [options]
+   * @param {boolean} [options.useDraft] - export the current draft instead of the live field.
+   * @returns {Promise<void>}
+   */
+  async exportOutlet(themeId, outlet, { useDraft } = {}) {
+    const data = { theme_id: themeId, outlet_name: outlet };
+    if (useDraft) {
+      data.layout_json = this.#serializeLayoutJson(outlet);
     }
+    const response = await ajax("/admin/customize/block-layouts/export.json", {
+      type: "POST",
+      data,
+    });
+    // `content` is already a serialized JSON string — download it verbatim.
+    this._triggerDownload(response.filename, response.content);
+  }
 
+  /**
+   * Duplicates the theme into a new editable (non-Git) theme, carrying every
+   * edited outlet's draft, and returns the new theme id.
+   *
+   * @param {number} themeId - the id of the source theme.
+   * @returns {Promise<{theme_id: number}>}
+   */
+  duplicateTheme(themeId) {
+    return ajax("/admin/customize/block-layouts/duplicate.json", {
+      type: "POST",
+      data: { theme_id: themeId, drafts: this.#editedDrafts() },
+    });
+  }
+
+  /**
+   * Creates (or reuses) a local customization component for a Git theme,
+   * carrying every edited outlet's draft, and returns the component's theme id.
+   *
+   * @param {number} themeId - the id of the parent theme being customized.
+   * @returns {Promise<{theme_id: number}>}
+   */
+  createCustomizationComponent(themeId) {
+    return ajax("/admin/customize/block-layouts/customization-component.json", {
+      type: "POST",
+      data: { theme_id: themeId, drafts: this.#editedDrafts() },
+    });
+  }
+
+  #publishRequest(outlet, themeId, expectedToken) {
     return ajax("/admin/customize/block-layouts.json", {
       type: "POST",
       data: {
         theme_id: themeId,
         outlet_name: outlet,
-        layout_json: JSON.stringify({ schema_version: SCHEMA_VERSION, layout }),
+        layout_json: this.#serializeLayoutJson(outlet),
         expected_version_token: expectedToken,
       },
     });
+  }
+
+  // Serializes an outlet's resolved layout to the wire `layout_json` string. A
+  // null resolved read means the read path failed, not a deliberate "delete
+  // all" (which resolves to a real empty array) — throw so a caller never
+  // persists/exports nothing over the server's copy.
+  #serializeLayoutJson(outlet) {
+    const resolvedLayout = this.wireframe.readResolvedLayout(outlet);
+    const layout = serializeLayoutForSave(resolvedLayout ?? []);
+    if (layout.length === 0 && resolvedLayout == null) {
+      throw new Error(
+        `Refusing to serialize outlet "${outlet}": resolved layout was empty/unreadable`
+      );
+    }
+    return JSON.stringify({ schema_version: SCHEMA_VERSION, layout });
+  }
+
+  // The edited outlets as `{ outlet_name, layout_json }` rows for the duplicate
+  // / customization-component endpoints, so no in-session edit is lost.
+  #editedDrafts() {
+    return [...this.wireframe.editedOutlets].map((outlet) => ({
+      outlet_name: outlet,
+      layout_json: this.#serializeLayoutJson(outlet),
+    }));
   }
 
   // Collapses the just-published session draft into the `theme` layer, keyed by
@@ -258,5 +323,11 @@ export default class WireframePersistenceService extends Service {
       return body.errors.join(", ");
     }
     return error?.message ?? "Save failed";
+  }
+
+  // Thin seam over the download helper so tests can assert the download without
+  // poking the DOM. (Underscore-prefixed: internal + stubbed only from tests.)
+  _triggerDownload(filename, content) {
+    triggerJsonDownload(filename, content);
   }
 }
