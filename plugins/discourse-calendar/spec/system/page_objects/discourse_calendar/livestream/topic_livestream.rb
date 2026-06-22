@@ -13,7 +13,11 @@ module PageObjects
         tag_chooser.select_row_by_name(tag.name)
         tag_chooser.collapse
 
-        composer.fill_content("The content for my livestream topic")
+        tomorrow = 1.day.from_now.strftime("%Y-%m-%d")
+        composer.fill_content <<~MD
+          [event start="#{tomorrow} 13:37" status="public" livestream="true" location="https://example.com/live"]
+          [/event]
+        MD
         composer.create
       end
 
@@ -38,7 +42,7 @@ module PageObjects
 
         tomorrow = 1.day.from_now.strftime("%Y-%m-%d")
         composer.fill_content <<~MD
-          [event start="#{tomorrow} 13:37" status="public"]
+          [event start="#{tomorrow} 13:37" status="public" livestream="true" location="https://example.com/live"]
           [/event]
         MD
         composer.create
