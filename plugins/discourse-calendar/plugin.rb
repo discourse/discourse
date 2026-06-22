@@ -68,7 +68,6 @@ module ::DiscourseCalendar
     def self.handle_topic_chat_channel_creation(topic)
       return if topic.category.blank?
       return if DiscourseCalendar::Livestream::TopicChatChannel.exists?(topic_id: topic.id)
-      # Driven by the livestream event attribute now, not a "livestream" tag.
       return unless topic.first_post&.event&.livestream?
 
       channel =
