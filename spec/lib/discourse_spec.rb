@@ -213,6 +213,110 @@ RSpec.describe Discourse do
     end
   end
 
+  describe ".plugin_for_path and .plugin_for" do
+    let(:plugin_dir) { Dir.mktmpdir }
+    let(:plugin) do
+      Class
+        .new(Plugin::Instance)
+        .new
+        .tap do |p|
+          p.path = "#{plugin_dir}/plugin.rb"
+          p.metadata = Plugin::Metadata.parse("# name: my-reflection-plugin")
+        end
+    end
+
+    before { Discourse.plugins.append(plugin) }
+
+    after do
+      Discourse.plugins.delete(plugin)
+      FileUtils.remove_entry(plugin_dir)
+    end
+
+    describe ".plugin_for_path" do
+      it "returns the owning plugin for a file directly inside its directory" do
+        File.write("#{plugin_dir}/thing.rb", "")
+        expect(Discourse.plugin_for_path("#{plugin_dir}/thing.rb")).to eq(plugin)
+      end
+
+      it "returns the owning plugin for a deeply nested file" do
+        FileUtils.mkdir_p("#{plugin_dir}/lib/foo")
+        File.write("#{plugin_dir}/lib/foo/bar.rb", "")
+        expect(Discourse.plugin_for_path("#{plugin_dir}/lib/foo/bar.rb")).to eq(plugin)
+      end
+
+      it "returns nil for core (non-plugin) paths" do
+        expect(Discourse.plugin_for_path("#{Rails.root.join("lib/discourse.rb")}")).to be_nil
+      end
+
+      it "returns nil for blank or non-existent paths" do
+        expect(Discourse.plugin_for_path(nil)).to be_nil
+        expect(Discourse.plugin_for_path("")).to be_nil
+        expect(Discourse.plugin_for_path("/this/does/not/exist.rb")).to be_nil
+      end
+
+      it "does not match a sibling directory sharing a name prefix" do
+        sibling = "#{plugin_dir}-extra"
+        FileUtils.mkdir_p(sibling)
+        File.write("#{sibling}/thing.rb", "")
+        expect(Discourse.plugin_for_path("#{sibling}/thing.rb")).to be_nil
+      ensure
+        FileUtils.remove_entry(sibling) if sibling
+      end
+
+      it "resolves a symlinked plugin directory via the real path" do
+        real_target = Dir.mktmpdir
+        symlink = "#{Dir.mktmpdir}/linked-plugin"
+        File.symlink(real_target, symlink)
+        plugin.path = "#{symlink}/plugin.rb"
+        File.write("#{real_target}/thing.rb", "")
+
+        # Queried by the resolved (real) path, which is what callers commonly have.
+        expect(Discourse.plugin_for_path("#{real_target}/thing.rb")).to eq(plugin)
+        # Queried through the symlink, realpath resolves it to the same target.
+        expect(Discourse.plugin_for_path("#{symlink}/thing.rb")).to eq(plugin)
+      ensure
+        FileUtils.remove_entry(real_target) if real_target
+        FileUtils.remove_entry(File.dirname(symlink)) if symlink
+      end
+    end
+
+    describe ".plugin_for" do
+      it "accepts a path string" do
+        File.write("#{plugin_dir}/thing.rb", "")
+        expect(Discourse.plugin_for("#{plugin_dir}/thing.rb")).to eq(plugin)
+      end
+
+      it "resolves a class to its owning plugin via const_source_location" do
+        FileUtils.mkdir_p("#{plugin_dir}/lib")
+        File.write("#{plugin_dir}/lib/thing.rb", "")
+        klass = Class.new
+        Object.stubs(:const_source_location).returns(["#{plugin_dir}/lib/thing.rb", 1])
+        klass.stubs(:name).returns("MyReflectionPlugin::Thing")
+        expect(Discourse.plugin_for(klass)).to eq(plugin)
+      end
+
+      it "resolves an instance to its owning plugin via its class" do
+        FileUtils.mkdir_p("#{plugin_dir}/lib")
+        File.write("#{plugin_dir}/lib/thing.rb", "")
+        klass = Class.new
+        klass.stubs(:name).returns("MyReflectionPlugin::Thing")
+        Object
+          .stubs(:const_source_location)
+          .with("MyReflectionPlugin::Thing")
+          .returns(["#{plugin_dir}/lib/thing.rb", 1])
+        expect(Discourse.plugin_for(klass.new)).to eq(plugin)
+      end
+
+      it "returns nil for core code" do
+        expect(Discourse.plugin_for(Discourse)).to be_nil
+      end
+
+      it "returns nil for an anonymous class with no name" do
+        expect(Discourse.plugin_for(Class.new)).to be_nil
+      end
+    end
+  end
+
   describe "authenticators" do
     it "returns inbuilt authenticators" do
       expect(Discourse.authenticators).to match_array(Discourse::BUILTIN_AUTH.map(&:authenticator))

@@ -379,6 +379,62 @@ module Discourse
     @plugins_by_name ||= {}
   end
 
+  # Returns the `Plugin::Instance` that owns the given absolute file path, or
+  # `nil` if the path does not live inside any loaded plugin (e.g. core code).
+  #
+  # Matching is done by directory prefix and is symlink-aware: plugins are
+  # commonly symlinked into `plugins/`, so we compare against both the
+  # plugin's `directory` and its `resolved_dir` (the real target). Both the
+  # input path and the candidate directories are resolved with `File.realpath`
+  # before comparison so that symlinked components on either side line up.
+  def self.plugin_for_path(path)
+    return if path.blank?
+    real = resolve_real_path(path)
+    plugins.find do |plugin|
+      [plugin.directory, plugin.resolved_dir].compact.uniq.any? do |dir|
+        resolved = resolve_real_path(dir)
+        real == resolved || real.start_with?("#{resolved}/")
+      end
+    end
+  end
+
+  # Convenience wrapper around `plugin_for_path` that accepts what plugin code
+  # naturally has on hand:
+  #
+  #   Discourse.plugin_for(__FILE__)        # a path string
+  #   Discourse.plugin_for(self)            # an instance
+  #   Discourse.plugin_for(Chat::Message)   # a class/module
+  #
+  # For modules and objects the defining file is derived via
+  # `Object.const_source_location`. Caveats:
+  #   - `const_source_location` points at where the constant *name* was first
+  #     defined, so for classes reopened across files it resolves to the first
+  #     definition. Pass `__FILE__` when in doubt.
+  #   - Anonymous classes/modules (no `name`) can't be resolved this way; pass
+  #     `__FILE__` instead.
+  # Returns `nil` for core (non-plugin) code.
+  def self.plugin_for(arg)
+    path =
+      case arg
+      when String
+        arg
+      when Module
+        Object.const_source_location(arg.name)&.first if arg.name
+      else
+        Object.const_source_location(arg.class.name)&.first if arg.class.name
+      end
+    plugin_for_path(path)
+  end
+
+  # Resolves `path` to its real (symlink-free) location, falling back to the
+  # original path when it can't be resolved (e.g. it doesn't exist).
+  def self.resolve_real_path(path)
+    File.realpath(path)
+  rescue StandardError
+    path
+  end
+  private_class_method :resolve_real_path
+
   def self.visible_plugins
     plugins.filter(&:visible?)
   end
