@@ -135,6 +135,21 @@ class Tag < ActiveRecord::Base
     find_by("lower(name) = ?", name.downcase)
   end
 
+  def self.slug_for_name(name)
+    return "" if name.blank?
+
+    slug =
+      I18n.with_locale(SiteSetting.default_locale) do
+        ActiveSupport::Inflector.transliterate(name.tr("'", ""))
+      end
+
+    slug = slug.downcase.gsub(/[^a-z0-9._-]+/, "-").tr("_", "-")
+    slug = slug.squeeze(".").squeeze("-").gsub(/\A[.\-]+|[.\-]+\z/, "")
+    slug = slug[0, Slug::MAX_LENGTH] || ""
+
+    slug.match?(/\A\d*\z/) ? "" : slug
+  end
+
   def self.top_tags(limit_arg: nil, category: nil, guardian: Guardian.new)
     # we add 1 to max_tags_in_filter_list to efficiently know we have more tags
     # than the limit. Frontend is responsible to enforce limit.
@@ -301,7 +316,7 @@ class Tag < ActiveRecord::Base
     return if name.blank?
 
     if self.slug.blank? || (will_save_change_to_name? && !will_save_change_to_slug?)
-      self.slug = Slug.for(name, "")
+      self.slug = Tag.slug_for_name(name)
       self.slug = "" if self.slug.blank? || duplicate_slug?
     end
   end

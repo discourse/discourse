@@ -60,6 +60,31 @@ RSpec.describe Tag do
     end
   end
 
+  describe "slug" do
+    it "keeps dots in the slug so dotted names keep their dot in the URL" do
+      expect(Fabricate(:tag, name: "node.js").slug).to eq("node.js")
+      expect(Fabricate(:tag, name: "1.5").slug).to eq("1.5")
+      expect(Fabricate(:tag, name: "1.6-alpha").slug).to eq("1.6-alpha")
+    end
+
+    it "recomputes the slug when the name is renamed to a dotted name" do
+      tag = Fabricate(:tag, name: "1-5")
+      expect(tag.slug).to eq("1-5")
+
+      tag.update!(name: "1.5")
+      expect(tag.slug).to eq("1.5")
+      expect(tag.url).to eq("/tag/1.5/#{tag.id}")
+    end
+
+    it "still flattens characters that are not URL-safe" do
+      expect(Fabricate(:tag, name: "Hello World").slug).to eq("hello-world")
+    end
+
+    it "leaves a purely numeric name without a slug so it can't be read as an id" do
+      expect(Fabricate(:tag, name: "123").slug).to eq("")
+    end
+  end
+
   describe "destroy" do
     subject(:tag) { Fabricate(:tag) }
 

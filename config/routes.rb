@@ -1722,7 +1722,12 @@ Discourse::Application.routes.draw do
       end
     end
 
-    scope "/tag/:tag_slug/:tag_id", constraints: { tag_id: /\d+/, format: :json } do
+    scope "/tag/:tag_slug/:tag_id",
+          constraints: {
+            tag_slug: %r{[^/]+?},
+            tag_id: /\d+/,
+            format: :json,
+          } do
       get "/" => "tags#show", :as => "tag_show_with_slug"
       get "/edit" => "tags#show"
       get "/edit/:tab" => "tags#show"
@@ -1734,12 +1739,13 @@ Discourse::Application.routes.draw do
 
     get "/tag/:tag_slug/:tag_id" => "tags#tag_feed",
         :constraints => {
+          tag_slug: %r{[^/]+?},
           tag_id: /\d+/,
           format: :rss,
         },
         :as => "tag_feed_with_id"
 
-    scope "/tag/:tag_name" do
+    scope "/tag/:tag_name", constraints: { tag_name: %r{[^/]+?(?<!\.json)(?<!\.rss)} } do
       constraints format: :json do
         get "/" => "tags#show", :as => "tag_show_by_name"
         get "/info" => "tags#info"

@@ -442,6 +442,21 @@ RSpec.describe TagsController do
       )
     end
 
+    it "shows tags with periods by the unencoded legacy URL" do
+      node = Fabricate(:tag, name: "node.js")
+      node_topic = Fabricate(:topic, tags: [node])
+
+      get "/tag/node.js.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        node_topic.id,
+      )
+
+      get "/tag/node.js"
+      expect(response.status).to eq(301)
+      expect(response.redirect_url).to end_with(node.url)
+    end
+
     it "shows tag intersections with encoded period tag names" do
       node = Fabricate(:tag, name: "node.js")
       other = Fabricate(:tag, name: "other")
@@ -835,6 +850,16 @@ RSpec.describe TagsController do
 
       get "/tag/#{tag.slug}/#{tag.id}.rss"
       expect(response.status).to eq(404)
+    end
+
+    it "serves the feed for a tag with periods without swallowing the extension" do
+      node = Fabricate(:tag, name: "node.js")
+      Fabricate(:topic, tags: [node])
+
+      get "/tag/node.js.rss"
+
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
     end
   end
 
