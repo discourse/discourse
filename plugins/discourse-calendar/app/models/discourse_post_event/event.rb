@@ -24,8 +24,6 @@ module DiscoursePostEvent
     before_save :chat_channel_sync
     # prepend so it runs before `dependent: :delete_all` wipes the invitees
     before_destroy :reset_invitees_topic_tracking, prepend: true
-    # A livestream pulls in the old embeddable-chat topic channel (gated on the
-    # `livestream_enabled` setting).
     after_commit :create_livestream_chat_channel, on: %i[create update]
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]

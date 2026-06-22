@@ -42,9 +42,6 @@ module DiscoursePostEvent
       object.livestream? && object.location.present?
     end
 
-    # The full cooked onebox for the livestream URL (the lazy-video container for
-    # supported providers), rendered at the bottom of the event card. Cached;
-    # warmed in the background so this never blocks on a network fetch.
     def livestream_onebox
       cached = Oneboxer.cached_onebox(object.location)
       Jobs.enqueue(:warm_livestream_onebox, url: object.location) if cached.blank?
