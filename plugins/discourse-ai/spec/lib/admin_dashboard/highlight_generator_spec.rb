@@ -141,11 +141,38 @@ RSpec.describe DiscourseAi::AdminDashboard::HighlightGenerator do
     end
 
     it "surfaces a real signal as a fact the agent can cite" do
-      Fabricate.times(5, :post) # 5 topics with no replies
+      user = Fabricate(:user)
+      now = Time.zone.now
+      DB.exec(
+        <<~SQL,
+          INSERT INTO topics (
+            title, fancy_title, created_at, updated_at, bumped_at, last_posted_at, posts_count,
+            user_id, last_post_user_id, category_id, visible, archetype, highest_post_number
+          )
+          SELECT
+            'Unanswered topic ' || topic_number,
+            'Unanswered topic ' || topic_number,
+            :now,
+            :now,
+            :now,
+            :now,
+            1,
+            :user_id,
+            :user_id,
+            :category_id,
+            true,
+            'regular',
+            1
+          FROM generate_series(1, 5) AS topic_number
+        SQL
+        now: now,
+        user_id: user.id,
+        category_id: SiteSetting.uncategorized_category_id,
+      )
 
       message = message_for(1.day.ago.to_date.to_s, Date.current.to_s)
 
-      expect(message).to match(/new topics received no reply/)
+      expect(message).to match(/new member-created topics received no reply/)
     end
 
     it "asks the agent to write in the requesting user's language" do
