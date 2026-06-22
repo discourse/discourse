@@ -175,7 +175,6 @@ after_initialize do
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
   require_relative "jobs/regular/discourse_post_event/warm_livestream_onebox"
-  require_relative "jobs/regular/livestream/recalculate_user_channel_memberships"
   require_relative "lib/discourse_post_event/engine"
   require_relative "lib/discourse_post_event/event_finder"
   require_relative "lib/discourse_post_event/event_parser"
@@ -891,21 +890,17 @@ after_initialize do
     channel = topic_chat_channel.chat_channel
     manager = Chat::ChannelMembershipManager.new(channel)
 
-    user_allowed_in_chat = user.in_any_groups?(SiteSetting.livestream_chat_allowed_groups_map)
-
+    # Attendance is the chat gate: anyone going is auto-followed into the
+    # livestream channel, anyone else is unfollowed.
     membership =
       if invitee.status == DiscoursePostEvent::Invitee.statuses[:going]
-        user_allowed_in_chat ? manager.follow(user) : manager.unfollow(user)
+        manager.follow(user)
       else
         manager.unfollow(user)
       end
 
-    DiscourseCalendar::Livestream.publish_livestream_chat_status(membership, user: user)
-  end
-
-  on(:site_setting_changed) do |name, old_val, new_val|
-    if name == :livestream_chat_allowed_groups && SiteSetting.livestream_enabled
-      Jobs::LivestreamRecalculateUserChannelMemberships.new.execute
+    if membership
+      DiscourseCalendar::Livestream.publish_livestream_chat_status(membership, user: user)
     end
   end
 end

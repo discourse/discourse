@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 
 export const LIVESTREAM_TAG_NAME = "livestream";
@@ -9,12 +10,15 @@ export default class EmbeddableChat extends Service {
   @service router;
   @service currentUser;
   @service capabilities;
-  @service chat;
 
   @tracked isMobileChatVisible = false;
 
+  get chat() {
+    return getOwner(this).lookup("service:chat");
+  }
+
   get userCanChat() {
-    return this.chat.userCanChat;
+    return this.chat?.userCanChat ?? false;
   }
 
   canRenderChatChannel(topicController, mobileViewAllowed = false) {

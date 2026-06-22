@@ -460,6 +460,7 @@ en:
         action_title: "Create a new event"
         all_day: "All day"
         livestream: "Livestream"
+        livestream_chat_disabled: "Enable chat to create livestream channels."
         reminder:
           units:
             minutes:

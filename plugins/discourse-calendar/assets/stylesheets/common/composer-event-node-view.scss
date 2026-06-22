@@ -216,6 +216,13 @@
 
   .composer-event__livestream-toggle {
     grid-column-start: 2;
+    justify-self: start;
+  }
+
+  .d-toggle-switch:has(.composer-event__livestream-switch:disabled) {
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   .composer-event__date-row {

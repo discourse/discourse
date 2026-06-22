@@ -315,6 +315,28 @@ module DiscoursePostEvent
       pruned_user_ids = pruned.pluck(:user_id)
       pruned.delete_all
       Invitee.reset_topic_tracking!(user_ids: pruned_user_ids, topic_id: post.topic_id)
+      unfollow_livestream_chat(pruned_user_ids)
+    end
+
+    # Unfollow users from the livestream chat channel once they are no longer
+    # attending (e.g. pruned when a private event's invited groups change). Chat
+    # following tracks attendance, so removed attendees should not keep the
+    # channel in their chat list.
+    def unfollow_livestream_chat(user_ids)
+      return if user_ids.blank?
+      return if !SiteSetting.livestream_enabled
+
+      channel = post.topic.topic_chat_channel&.chat_channel
+      return if channel.nil?
+
+      manager = Chat::ChannelMembershipManager.new(channel)
+      User
+        .where(id: user_ids)
+        .find_each do |user|
+          membership = manager.unfollow(user)
+          next if membership.nil?
+          DiscourseCalendar::Livestream.publish_livestream_chat_status(membership, user:)
+        end
     end
 
     def can_user_update_attendance?(user)

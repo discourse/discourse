@@ -618,6 +618,24 @@ describe DiscoursePostEvent::Event do
             TopicUser.notification_levels[:regular],
           )
         end
+
+        it "unfollows the pruned invitee from the livestream chat channel" do
+          SiteSetting.livestream_enabled = true
+          channel = Fabricate(:category_channel)
+          Fabricate(:topic_chat_channel, topic: post_1.topic, chat_channel: channel)
+          membership =
+            Fabricate(
+              :user_chat_channel_membership,
+              user: user_1,
+              chat_channel: channel,
+              following: true,
+            )
+
+          event_1.update_with_params!(raw_invitees: [group_2.name])
+
+          expect(event_1.invitees.find_by(user_id: user_1.id)).to be_nil
+          expect(membership.reload.following).to eq(false)
+        end
       end
     end
   end

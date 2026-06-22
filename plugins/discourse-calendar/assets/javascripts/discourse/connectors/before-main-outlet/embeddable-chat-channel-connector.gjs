@@ -14,7 +14,10 @@ export default class EmbedableChatChannelConnector extends Component {
       !this.siteSettings.livestream_enable_modal_chat_on_mobile &&
       !this.capabilities.viewport.lg;
 
-    if (!this.siteSettings.livestream_enabled) {
+    if (
+      !this.siteSettings.livestream_enabled ||
+      !this.siteSettings.chat_enabled
+    ) {
       return false;
     }
 

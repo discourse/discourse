@@ -25,6 +25,7 @@ export default class CompactEventEditor extends Component {
   @service composer;
   @service currentUser;
   @service modal;
+  @service siteSettings;
 
   @tracked name;
   @tracked location;
@@ -307,8 +308,15 @@ export default class CompactEventEditor extends Component {
     this.#emitChange();
   }
 
+  get livestreamDisabled() {
+    return !this.siteSettings.chat_enabled;
+  }
+
   @action
   toggleLivestream() {
+    if (this.livestreamDisabled) {
+      return;
+    }
     this.livestream = !this.livestream;
     this.#emitChange();
   }
@@ -802,14 +810,33 @@ export default class CompactEventEditor extends Component {
 
     {{#if this.isLocationUrl}}
       <section class="composer-event__livestream">
-        <div class="composer-event__livestream-toggle">
-          <DToggleSwitch
-            class="composer-event__livestream-switch"
-            @state={{this.livestream}}
-            @label="discourse_post_event.composer.livestream"
-            {{on "click" this.toggleLivestream}}
-          />
-        </div>
+        {{#if this.livestreamDisabled}}
+          <DTooltip
+            @placement="top-start"
+            class="composer-event__livestream-toggle"
+          >
+            <:trigger>
+              <DToggleSwitch
+                class="composer-event__livestream-switch"
+                @state={{this.livestream}}
+                @label="discourse_post_event.composer.livestream"
+                disabled
+              />
+            </:trigger>
+            <:content>
+              {{i18n "discourse_post_event.composer.livestream_chat_disabled"}}
+            </:content>
+          </DTooltip>
+        {{else}}
+          <div class="composer-event__livestream-toggle">
+            <DToggleSwitch
+              class="composer-event__livestream-switch"
+              @state={{this.livestream}}
+              @label="discourse_post_event.composer.livestream"
+              {{on "click" this.toggleLivestream}}
+            />
+          </div>
+        {{/if}}
       </section>
     {{/if}}
 

@@ -307,6 +307,10 @@ export default class PostEventBuilder extends Component {
     return this.urlTester(this.event.location ?? "");
   }
 
+  get showLivestream() {
+    return this.locationIsUrl && this.siteSettings.chat_enabled;
+  }
+
   get availableRecurrences() {
     const { weekday, ordinal } = recurrenceContext(this.startsAt || moment());
 
@@ -856,7 +860,7 @@ export default class PostEventBuilder extends Component {
                   />
                 </form.Field>
 
-                {{#if this.locationIsUrl}}
+                {{#if this.showLivestream}}
                   <form.Field
                     @name="livestream"
                     @title={{i18n
