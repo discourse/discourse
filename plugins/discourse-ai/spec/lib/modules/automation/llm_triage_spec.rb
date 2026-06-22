@@ -180,6 +180,40 @@ describe DiscourseAi::Automation::LlmTriage do
     end
   end
 
+  it "keeps one reviewable when review follows spam" do
+    DiscourseAi::Completions::Llm.with_prepared_responses(%w[bad bad]) do
+      triage(
+        post: post,
+        triage_agent_id: ai_agent.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :spam,
+        automation: nil,
+      )
+
+      triage(
+        post: post,
+        triage_agent_id: ai_agent.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :review,
+        automation: nil,
+      )
+    end
+
+    reviewables = Reviewable.pending.where(target: post)
+    reviewable = reviewables.first
+
+    aggregate_failures do
+      expect(reviewables.size).to eq(1)
+      expect(reviewable).to be_a(ReviewableFlaggedPost)
+      expect(reviewable.reviewable_scores.map(&:reviewable_score_type)).to contain_exactly(
+        ReviewableScore.types[:needs_approval],
+        ReviewableScore.types[:spam],
+      )
+    end
+  end
+
   it "can handle spam+silence flags" do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(
