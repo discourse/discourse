@@ -3653,17 +3653,17 @@ function getPluginApi() {
   return pluginApi;
 }
 
-// Per-owner cache of source-bound API views, keyed by the shared PluginApi
-// instance so it is collected together with its owner (no instance pollution).
+// Per-owner cache of source-bound API instances, keyed by the shared PluginApi
+// instance so it is collected together with its owner.
 const sourceBoundApiCache = new WeakMap();
 
 /**
- * Returns a view of the shared PluginApi instance that carries the given
- * customization source. The view delegates everything to the singleton through
- * its prototype and only shadows `_source`, so container refreshes and shared
- * state remain visible. Views are cached per source (keyed by the singleton in
- * a module-level WeakMap). Returns the singleton unchanged for core code (no
- * source).
+ * Returns a source-bound view of the PluginApi for the given customization
+ * source. The view is a real `_PluginApi` instance (so private members work and
+ * brand checks pass) sharing the singleton's container and carrying its own
+ * frozen `_source`. Views are cached per source (keyed by the singleton in a
+ * module-level WeakMap) and their container is kept in sync with the singleton.
+ * Returns the singleton unchanged for core code (no source).
  *
  * @param {_PluginApi} api - The shared PluginApi instance.
  * @param {import("discourse/lib/customization-source").CustomizationSource|undefined} source - The build-injected source.
@@ -3683,9 +3683,12 @@ function getSourceBoundApi(api, source) {
 
   let boundApi = bySource.get(sourceId);
   if (!boundApi) {
-    boundApi = Object.create(api);
+    boundApi = new _PluginApi(api.container);
     boundApi._source = Object.freeze(source);
     bySource.set(sourceId, boundApi);
+  } else {
+    // Keep the container current, mirroring getPluginApi's refresh.
+    boundApi.container = api.container;
   }
   return boundApi;
 }

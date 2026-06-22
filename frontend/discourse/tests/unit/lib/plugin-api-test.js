@@ -500,5 +500,27 @@ module("Unit | Utility | plugin-api", function (hooks) {
       );
       assert.true(hasBlock("chat:source-block"));
     });
+
+    test("source-bound api can invoke methods that use private members", function (assert) {
+      // The source-bound api must be a real PluginApi instance, not a prototype
+      // proxy: methods like modifyClass touch a #private, which brand-checks
+      // against real instances and throws "Receiver must be an instance of
+      // class" on anything created via Object.create.
+      class SourceThing {}
+      getOwner(this).register("source-thing:main", SourceThing);
+
+      withPluginApi(
+        (api) => {
+          api.modifyClass(
+            "source-thing:main",
+            (Superclass) => class extends Superclass {}
+          );
+        },
+        {},
+        pluginSource("chat")
+      );
+
+      assert.true(true, "modifyClass works on a source-bound api");
+    });
   });
 });
