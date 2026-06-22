@@ -2092,6 +2092,8 @@ pt:
               private:
                 label: "Privado"
   onebox:
+    google_meet:
+      meeting_code: "Código:"
     github:
       closed: "fechado"
       status_date:

@@ -13,6 +13,29 @@ RSpec.describe Chat::Api::ChannelsController do
 
         expect(response.status).to eq(403)
       end
+
+      context "when anonymous users can view public chat channels" do
+        before do
+          SiteSetting.chat_allowed_groups =
+            "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        end
+
+        it "returns an error" do
+          Fabricate(:category_channel)
+
+          get "/chat/api/channels"
+
+          expect(response.status).to eq(403)
+        end
+
+        it "does not return private category channels" do
+          Fabricate(:private_category_channel)
+
+          get "/chat/api/channels"
+
+          expect(response.status).to eq(403)
+        end
+      end
     end
 
     context "as disallowed user" do

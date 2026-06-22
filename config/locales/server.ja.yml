@@ -4852,6 +4852,8 @@ ja:
   onebox:
     discourse:
       user_joined_community: "%{date} に参加"
+    google_meet:
+      meeting_code: "コード:"
     gitlab:
       truncated_file: "このファイルは切り詰められています。"
       show_original: "オリジナルを表示"

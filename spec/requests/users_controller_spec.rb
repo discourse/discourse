@@ -5274,6 +5274,33 @@ RSpec.describe UsersController do
         expect(parsed["trust_level"]).to be_present
       end
 
+      it "sanitizes suspension and silencing reasons" do
+        payload = "public <img src=x onerror=alert(1)> reason"
+        penalized_user = Fabricate(:user)
+        penalized_user.user_stat.update!(post_count: 1)
+
+        UserSuspender.new(
+          penalized_user,
+          suspended_till: 2.days.from_now,
+          reason: payload,
+          by_user: admin,
+        ).suspend
+        UserSilencer.new(
+          penalized_user,
+          admin,
+          keep_posts: true,
+          reason: payload,
+          silenced_till: 2.days.from_now,
+        ).silence
+
+        get "/u/#{penalized_user.username}/card.json"
+
+        expect(response.status).to eq(200)
+        user_json = response.parsed_body["user"]
+        expect(user_json["suspend_reason"]).to eq("public  reason")
+        expect(user_json["silence_reason"]).to eq("public  reason")
+      end
+
       it "should have http status 403 for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}/card.json"

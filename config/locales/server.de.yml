@@ -5206,6 +5206,8 @@ de:
   onebox:
     discourse:
       user_joined_community: "Beigetreten %{date}"
+    google_meet:
+      meeting_code: "Code:"
     gitlab:
       truncated_file: "Diese Datei wurde abgeschnitten."
       show_original: "Original zeigen"

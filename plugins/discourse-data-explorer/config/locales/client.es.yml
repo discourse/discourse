@@ -69,6 +69,10 @@ es:
       undo: "Descartar cambios"
       delete: "Eliminar"
       recover: "Recuperar consulta"
+      chart:
+        form:
+          label: "Tipo de gráfico"
+          bar: "Barras"
       others_dirty: "Una consulta tiene cambios no guardados que se perderán si sales."
       run_time: "Consulta completada en %{value} ms."
       cached_result_notice: "Mostrando resultados en caché de %{relative_time}."

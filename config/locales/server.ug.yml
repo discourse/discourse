@@ -4604,6 +4604,8 @@ ug:
   onebox:
     discourse:
       user_joined_community: "%{date} قوشۇلغان"
+    google_meet:
+      meeting_code: "كود:"
     gitlab:
       truncated_file: "بۇ ھۆججەت قىسقارتىلدى."
       show_original: "ئەسلىنى كۆرسەت"

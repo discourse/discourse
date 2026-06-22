@@ -91,6 +91,12 @@ zh_CN:
       run_options: "更多运行选项"
       view:
         label: "结果视图"
+      chart:
+        form:
+          label: "图表类型"
+          bar: "条形图"
+        tooltip:
+          total: "总计： %{count}"
       chart_empty:
         no_rows: "没有要绘制的行。"
         no_numeric: "此查询没有要绘制图表的数值列。"

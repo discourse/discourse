@@ -106,6 +106,22 @@ module("Unit | Component | PostMenu", function (hooks) {
     );
   });
 
+  test("share and copy link buttons use distinct icons", async function (assert) {
+    const post = this.post;
+
+    await render(<template><PostMenu @post={{post}} /></template>);
+
+    assert
+      .dom(
+        ".post-action-menu__share svg.d-icon-d-post-share use[href='#arrow-up-from-bracket']"
+      )
+      .exists("share uses the share icon");
+
+    assert
+      .dom(".post-action-menu__copy-link svg.d-icon-link use[href='#link']")
+      .exists("copy link uses the link icon");
+  });
+
   test("show more does not request who liked the post", async function (assert) {
     this.siteSettings.post_menu_hidden_items = "bookmark|copyLink";
 

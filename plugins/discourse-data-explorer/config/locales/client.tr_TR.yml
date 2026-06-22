@@ -78,6 +78,10 @@ tr_TR:
       delete: "Sil"
       recover: "Sorguyu silme işlemini geri al"
       sql_label: "SQL"
+      chart:
+        form:
+          label: "Grafik tipi"
+          bar: "Çubuk"
       others_dirty: "Sorgu üzerinde yaptığınız değişiklikleri kaydetmezseniz bağlantınızın kopması durumunda yapılan değişiklikler kaybolur."
       run_time: "Sorgu %{value} ms'de tamamlandı."
       cached_result_notice: "%{relative_time} tarihinden itibaren önbelleğe alınmış sonuçlar gösteriliyor."

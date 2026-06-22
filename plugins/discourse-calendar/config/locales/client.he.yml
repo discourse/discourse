@@ -402,7 +402,6 @@ he:
           no_users: "לא נמצאו משתמשים"
           leave_event: "עזיבת האירוע"
           status:
-            unknown: "לא מעניין"
             going: "אשתתף"
             interested: "מעניין"
             going_count:

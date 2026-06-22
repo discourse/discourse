@@ -400,7 +400,6 @@ fr:
           no_users: "Aucun utilisateur trouvé"
           leave_event: "Quitter l'événement"
           status:
-            unknown: "Pas intéressé(e)"
             going: "Participera"
             interested: "Intéressé(e)"
             going_count:

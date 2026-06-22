@@ -2566,6 +2566,8 @@ lt:
   search_logs:
     graph_title: "Ieškoti kontakto"
   onebox:
+    google_meet:
+      meeting_code: "Kodas:"
     github:
       closed: "uždaryta"
       status_date:

@@ -35,7 +35,7 @@ module DiscourseRewind
             .includes(:topic)
             .references(:topic)
             .joins(topic: :category)
-            .where(topic: { deleted_at: nil, created_at: date, user_id: user.id })
+            .where(topic: { deleted_at: nil, created_at: date, user_id: user.id, visible: true })
             .where.not(topic: { archetype: Archetype.private_message })
             .where("NOT categories.read_restricted")
             .order("yearly_score DESC NULLS LAST")

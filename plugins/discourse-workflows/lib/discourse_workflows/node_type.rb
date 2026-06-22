@@ -216,6 +216,10 @@ module DiscourseWorkflows
       )
     end
 
+    def serialize_user(user, guardian: Discourse.system_user.guardian)
+      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_user(user, guardian: guardian)
+    end
+
     def with_paired_item(item, paired_item)
       Item.with_paired_item(item, paired_item)
     end

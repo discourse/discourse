@@ -20,6 +20,44 @@ describe DiscoursePostEvent::Event do
     ).is_at_most(DiscoursePostEvent::Event::MAX_NAME_LENGTH)
   end
 
+  describe "#raw_invitees_are_groups" do
+    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    it "is invalid when an invitee matches a username that is not a group" do
+      Fabricate(:user, username: "not_a_group")
+      event =
+        Fabricate.build(
+          :event,
+          post: post,
+          original_starts_at: Time.now,
+          raw_invitees: ["not_a_group"],
+        )
+
+      expect(event).not_to be_valid
+      expect(event.errors[:base]).to include(
+        I18n.t("discourse_post_event.errors.models.event.raw_invitees.only_group"),
+      )
+    end
+
+    it "is valid when an invitee is a group whose name collides with a username" do
+      Fabricate(:user).update_columns(
+        username: DiscoursePostEvent::Event::PUBLIC_GROUP,
+        username_lower: DiscoursePostEvent::Event::PUBLIC_GROUP,
+      )
+      event =
+        Fabricate.build(
+          :event,
+          post: post,
+          original_starts_at: Time.now,
+          raw_invitees: [DiscoursePostEvent::Event::PUBLIC_GROUP],
+        )
+
+      expect(event).to be_valid
+    end
+  end
+
   describe "topic custom fields callback" do
     let(:user) { Fabricate(:user, admin: true) }
     let!(:notified_user) { Fabricate(:user) }

@@ -403,7 +403,6 @@ cs:
           no_users: "Nebyli nalezeni žádní uživatelé"
           leave_event: "Opustit událost"
           status:
-            unknown: "Nemám zájem"
             going: "Zúčastním se"
             interested: "Mám zájem"
             going_count:

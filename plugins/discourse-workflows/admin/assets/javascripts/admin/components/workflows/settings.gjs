@@ -57,7 +57,6 @@ export default class WorkflowSettings extends Component {
           type: "PUT",
           data: {
             workflow: {
-              name: this.args.workflow.name,
               error_workflow_id: data.errorWorkflowId,
               timezone: data.timezone,
             },

@@ -20,16 +20,17 @@ RSpec.describe DiscourseAi::AdminDashboard::HighlightGenerator do
     allow(AdminDashboardHighlights).to receive(:build).and_return({ kpis: kpis })
 
     agent_id = SiteSetting.ai_admin_dashboard_highlights_agent.to_i
-    AiAgent.find_by(id: agent_id) ||
-      Fabricate(
-        :ai_agent,
-        id: agent_id,
-        name: "Admin Dashboard Highlights #{SecureRandom.hex(4)}",
-        description: "Writes admin dashboard highlights",
-        allowed_group_ids: [Group::AUTO_GROUPS[:admins]],
-        enabled: true,
-        system: true,
-      )
+    agent =
+      AiAgent.find_by(id: agent_id) ||
+        Fabricate(
+          :ai_agent,
+          id: agent_id,
+          name: "Admin Dashboard Highlights #{SecureRandom.hex(4)}",
+          description: "Writes admin dashboard highlights",
+          allowed_group_ids: [Group::AUTO_GROUPS[:admins]],
+          system: true,
+        )
+    agent.update!(enabled: true)
   end
 
   it "hands the grounded facts to the agent and returns its highlight" do
@@ -95,12 +96,42 @@ RSpec.describe DiscourseAi::AdminDashboard::HighlightGenerator do
       message = message_for("2026-05-01", "2026-06-01")
 
       expect(message).to include("new sign-ups: 1100")
+      expect(message).to include("Period length: 32 days")
+      expect(message).to include("Community-owner lenses:")
+      expect(message).to include("Acquisition and discovery: new sign-ups: 1100")
       expect(message).to match(/Use ONLY the numbers and facts listed above/)
+      expect(message).to match(/Do not mention a metric whose value is "not available"/)
       expect(message).to match(/Do not invent sources, dates, causes, or numbers/)
+      expect(message).to match(/Never say "a specific external referrer"/)
       expect(message).to match(/Do not overstate causality/)
       expect(message).to match(/Do not say traffic "translated"/)
+      expect(message).to match(/"did not stem"/)
+      expect(message).to match(/state only its date, size, and listed referrer/)
       expect(message).to match(/Avoid report phrases/)
-      expect(message).to match(/what to inspect next/)
+      expect(message).to match(/next inspection areas/)
+    end
+
+    it "keeps unavailable metrics out of owner lenses" do
+      allow(AdminDashboardHighlights).to receive(:build).and_return(
+        {
+          kpis: [
+            {
+              type: :new_signups,
+              value: nil,
+              previous_value: 10,
+              percent_change: nil,
+              report_type: "signups",
+              report_query: {
+              },
+            },
+          ],
+        },
+      )
+
+      message = message_for("2026-05-01", "2026-06-01")
+
+      expect(message).to include("new sign-ups: not available")
+      expect(message).not_to include("Acquisition and discovery: new sign-ups")
     end
 
     it "says nothing stood out when no signal clears its threshold" do
@@ -110,11 +141,38 @@ RSpec.describe DiscourseAi::AdminDashboard::HighlightGenerator do
     end
 
     it "surfaces a real signal as a fact the agent can cite" do
-      Fabricate.times(5, :post) # 5 topics with no replies
+      user = Fabricate(:user)
+      now = Time.zone.now
+      DB.exec(
+        <<~SQL,
+          INSERT INTO topics (
+            title, fancy_title, created_at, updated_at, bumped_at, last_posted_at, posts_count,
+            user_id, last_post_user_id, category_id, visible, archetype, highest_post_number
+          )
+          SELECT
+            'Unanswered topic ' || topic_number,
+            'Unanswered topic ' || topic_number,
+            :now,
+            :now,
+            :now,
+            :now,
+            1,
+            :user_id,
+            :user_id,
+            :category_id,
+            true,
+            'regular',
+            1
+          FROM generate_series(1, 5) AS topic_number
+        SQL
+        now: now,
+        user_id: user.id,
+        category_id: SiteSetting.uncategorized_category_id,
+      )
 
       message = message_for(1.day.ago.to_date.to_s, Date.current.to_s)
 
-      expect(message).to match(/new topics received no reply/)
+      expect(message).to match(/new member-created topics received no reply/)
     end
 
     it "asks the agent to write in the requesting user's language" do

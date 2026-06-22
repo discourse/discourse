@@ -574,6 +574,8 @@ Discourse::Application.routes.draw do
     get "session/hp" => "session#get_honeypot_value"
     get "session/email-login/:token" => "session#email_login_info"
     post "session/email-login/:token" => "session#email_login"
+    post "session/login-code" => "session#create_login_code"
+    post "session/login-code/verify" => "session#verify_login_code"
     get "session/otp/:token" => "session#one_time_password", :constraints => { token: /[0-9a-f]+/ }
     post "session/otp/:token" => "session#one_time_password", :constraints => { token: /[0-9a-f]+/ }
     get "session/2fa" => "session#second_factor_auth_show"
@@ -1525,6 +1527,9 @@ Discourse::Application.routes.draw do
 
     get "new-topic" => "new_topic#index"
     get "new-message" => "new_topic#index"
+    # Landing page for the PWA Web Share Target. The service worker intercepts
+    # the incoming multipart POST, stashes the payload, and redirects here.
+    get "share-target" => "new_topic#index"
     get "new-invite" => "new_invite#index"
 
     # Topic routes

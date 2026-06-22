@@ -20,8 +20,6 @@ nl:
         description: "Sluit een topic automatisch na zoveel uur als het gemarkeerd is als opgelost. Stel in op 0 om uit te schakelen."
       notify_on_staff_accept_solved:
         label: "Topiceigenaar informeren als medewerker een oplossing markeert"
-      empty_box_on_unsolved:
-        label: "Een leeg selectievakje weergeven naast onopgeloste topics in de topiclijst"
       solved_topics_auto_close_duration:
         label: "Automatisch opgeloste topics sluiten"
         description: "Sluit opgeloste topics automatisch na deze tijdsduur vanaf het laatste antwoord. Stel in op 0 om uit te schakelen."

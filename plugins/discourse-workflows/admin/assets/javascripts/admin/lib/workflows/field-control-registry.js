@@ -14,6 +14,7 @@ import FilterQuery from "../../components/workflows/configurators/filter-query";
 import GroupSelect from "../../components/workflows/configurators/group-select";
 import IconControl from "../../components/workflows/configurators/icon-control";
 import MultiComboBox from "../../components/workflows/configurators/multi-combo-box";
+import MultiInput from "../../components/workflows/configurators/multi-input";
 import NoticeControl from "../../components/workflows/configurators/notice-control";
 import QueryParams from "../../components/workflows/configurators/query-params";
 import SelectControl from "../../components/workflows/configurators/select-control";
@@ -49,6 +50,7 @@ const FIELD_CONTROL_REGISTRY = {
     renderer: DataTableColumnSelect,
   },
   multi_combo_box: { kind: "field", type: "custom", renderer: MultiComboBox },
+  multi_input: { kind: "field", type: "custom", renderer: MultiInput },
   filter_query: { kind: "field", type: "custom", renderer: FilterQuery },
   url_preview: { kind: "field", type: "custom", renderer: UrlPreview },
   tags: { kind: "field", type: "custom", renderer: TagsControl },

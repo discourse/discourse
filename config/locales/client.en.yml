@@ -2917,6 +2917,19 @@ en:
       logging_in_as: Logging in as %{email}
       confirm_button: Finish Login
 
+    code_login:
+      email_label: "Email"
+      continue_button: "Continue"
+      check_your_email: "Check your email"
+      code_instructions: "We sent a 6-digit code to <b>%{email}</b>. Enter it below to continue."
+      verify_button: "Continue"
+      resend: "Resend code"
+      resend_countdown: "Resend code (%{count}s)"
+      code_resent: "We sent a new code."
+      use_different_email: "Use a different email address"
+      use_password_instead: "Log in with your password instead"
+      email_me_code: "Email me a one-time login code"
+
     login:
       header_title: "Welcome back"
       title: "Log In"
@@ -4183,6 +4196,13 @@ en:
         banner: "You are viewing a single thread from this topic."
         view_full_topic: "View full topic"
         view_parent_context: "View parent context"
+    share_target:
+      title: "Shared content"
+      description: "What would you like to do with the shared content?"
+      new_topic: "New topic"
+      new_message: "New message"
+      add_to_reply: "Add to a reply"
+      added_to_reply: "Saved. The content will be added the next time you open a reply."
     topic:
       filter_to:
         one: "%{count} post in topic"
@@ -5096,6 +5116,11 @@ en:
         tag_group: "Tag group"
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete category"
+      danger_zone:
+        title: "Danger zone"
+        delete_title: "Delete this category"
+        delete_description: "Once deleted, this category and its settings cannot be recovered. Topics in it will need to be reassigned beforehand."
+        delete_title_forbidden: "Can't delete this category"
       create: "New category"
       create_with_type: "New %{typeName} category"
       create_long: "Create a new category"
@@ -7517,6 +7542,7 @@ en:
             invites:
               create: Send email invites or generate invite links.
             badges:
+              list: Get a list of badges.
               create: Create a new badge.
               show: Obtain information about a badge.
               update: Update a badge.
@@ -8248,6 +8274,7 @@ en:
           updating: "Updating…"
           update_success: "%{theme} Update complete"
           up_to_date: "Theme is up-to-date, last checked:"
+          up_to_date_branch: "Theme is up-to-date with %{branch}, last checked:"
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           change_source:
             button: "Change source"
@@ -8271,6 +8298,9 @@ en:
           commits_behind:
             one: "Theme is %{count} commit behind!"
             other: "Theme is %{count} commits behind!"
+          commits_behind_branch:
+            one: "Theme is %{count} commit behind %{branch}"
+            other: "Theme is %{count} commits behind %{branch}"
           compare_commits: "(See new commits)"
           remote_theme_edits: "If you want to edit this theme, you must <a href='%{repoURL}' target='_blank'>submit a change on its repository</a>"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
