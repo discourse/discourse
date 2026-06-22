@@ -10,8 +10,14 @@ module Discourse
     DEFAULT_READ_PATHS = %w[/bin /etc /lib /lib64 /usr].freeze
     DEFAULT_EXECUTE_PATHS = %w[/bin /lib /lib64 /usr].freeze
     LANDLOCK_COMMAND_ERROR =
-      if defined?(::Landlock::SafeExec::CommandError)
-        ::Landlock::SafeExec::CommandError
+      if defined?(::Landlock::CommandError)
+        ::Landlock::CommandError
+      else
+        Class.new(StandardError)
+      end
+    LANDLOCK_UNSUPPORTED_ERROR =
+      if defined?(::Landlock::UnsupportedError)
+        ::Landlock::UnsupportedError
       else
         Class.new(StandardError)
       end
@@ -34,25 +40,28 @@ module Discourse
       max_output_bytes: nil,
       truncate_output: false
     )
-      if defined?(::Landlock::SafeExec)
+      command = normalize_command(command)
+
+      if landlock_supported?
         result =
-          ::Landlock::SafeExec.capture(
-            *command,
+          ::Landlock.capture(
+            command,
             read: read,
             write: write,
             execute: execute,
             timeout: timeout,
             failure_message: failure_message,
             success_status_codes: success_status_codes,
-            env: env || {},
-            inherit_env: !unsetenv_others,
+            env: env,
+            unsetenv_others: unsetenv_others,
             chdir: chdir,
-            connect_tcp: connect_tcp,
+            connect_tcp: connect_tcp || [],
             bind_tcp: bind_tcp,
             rlimits: rlimits,
             seccomp_deny_network: seccomp_deny_network,
             max_output_bytes: max_output_bytes,
             truncate_output: truncate_output,
+            allow_all_known: filesystem_restriction?(read, write, execute),
           )
 
         return result.stdout if result.output_truncated? && truncate_output
@@ -72,33 +81,33 @@ module Discourse
           chdir: chdir || ".",
         )
       end
-    rescue LANDLOCK_COMMAND_ERROR => e
+    rescue LANDLOCK_COMMAND_ERROR, LANDLOCK_UNSUPPORTED_ERROR => e
       raise Discourse::Utils::CommandError.new(
               e.message,
-              stdout: e.stdout,
-              stderr: e.stderr,
-              status: e.status,
+              stdout: e.respond_to?(:stdout) ? e.stdout : nil,
+              stderr: e.respond_to?(:stderr) ? e.stderr : nil,
+              status: e.respond_to?(:status) ? e.status : nil,
             )
     end
 
     def self.landlock_supported?
-      defined?(::Landlock::SafeExec) && ::Landlock::SafeExec.supported?
+      defined?(::Landlock) && ::Landlock.supported?
     end
 
     def self.default_read_paths
-      if defined?(::Landlock::SafeExec)
-        ::Landlock::SafeExec.default_read_paths
-      else
-        existing_paths(DEFAULT_READ_PATHS)
-      end
+      existing_paths(DEFAULT_READ_PATHS)
     end
 
     def self.default_execute_paths
-      if defined?(::Landlock::SafeExec)
-        ::Landlock::SafeExec.default_execute_paths
-      else
-        existing_paths(DEFAULT_EXECUTE_PATHS)
-      end
+      existing_paths(DEFAULT_EXECUTE_PATHS)
+    end
+
+    def self.normalize_command(command)
+      command.length == 1 && command.first.is_a?(Array) ? command.first : command
+    end
+
+    def self.filesystem_restriction?(read, write, execute)
+      Array(read).any? || Array(write).any? || Array(execute).any?
     end
 
     def self.existing_paths(paths)

@@ -16,6 +16,32 @@ RSpec.describe DiscourseImage do
     end
   end
 
+  describe ".fix_orientation" do
+    it "supports in-place transformations" do
+      Dir.mktmpdir do |directory|
+        image_path = File.join(directory, "image.jpg")
+        FileUtils.cp(Rails.root.join("spec/fixtures/images/logo.jpg"), image_path)
+
+        described_class.fix_orientation(image_path)
+
+        expect(described_class.size(image_path)).to eq([512, 512])
+      end
+    end
+  end
+
+  describe ".optimize_image!" do
+    it "supports in-place optimization" do
+      Dir.mktmpdir do |directory|
+        image_path = File.join(directory, "image.png")
+        FileUtils.cp(Rails.root.join("spec/fixtures/images/pngquant.png"), image_path)
+
+        described_class.optimize_image!(image_path, allow_lossy_png: true, strict: false)
+
+        expect(described_class.size(image_path)).to eq([261, 227])
+      end
+    end
+  end
+
   describe ".size" do
     it "works when an image path has a symlinked parent directory" do
       Dir.mktmpdir do |directory|

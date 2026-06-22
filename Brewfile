@@ -12,6 +12,7 @@ brew 'postgresql'
 brew 'redis'
 
 brew "imagemagick"
+brew "vips"
 brew "jpegoptim"
 brew "jpeg-turbo"
 brew "libffi"

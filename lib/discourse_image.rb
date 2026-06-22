@@ -21,15 +21,6 @@ module DiscourseImage
     "mif1" => "heif",
     "msf1" => "heif",
   }.freeze
-  SAFE_IMAGE_ERROR_CLASSES =
-    [
-      SafeImage::UnsupportedFormatError,
-      SafeImage::UnsafePathError,
-      SafeImage::InvalidImageError,
-      SafeImage::LimitError,
-    ].index_by { |klass| klass.name }.freeze
-  SAFE_IMAGE_SANDBOX_ERROR_PATTERN =
-    /\Asandboxed (?:operation|worker|command) failed: (?<class>SafeImage::\w+): (?<message>.*)\z/m
 
   module_function
 
@@ -81,7 +72,9 @@ module DiscourseImage
         to,
         extension: output_extension || output_extension_for(to, filename: filename, type: type),
         force_temp: same_path?(safe_from, to),
-      ) { |safe_to| SafeImage.resize(safe_from, safe_to, width, height, **kwargs) }
+      ) do |safe_to|
+        SafeImage.resize(input: safe_from, output: safe_to, width: width, height: height, **kwargs)
+      end
     end
   end
 
@@ -91,7 +84,9 @@ module DiscourseImage
         to,
         extension: output_extension || output_extension_for(to, filename: filename, type: type),
         force_temp: same_path?(safe_from, to),
-      ) { |safe_to| SafeImage.crop(safe_from, safe_to, width, height, **kwargs) }
+      ) do |safe_to|
+        SafeImage.crop(input: safe_from, output: safe_to, width: width, height: height, **kwargs)
+      end
     end
   end
 
@@ -101,14 +96,16 @@ module DiscourseImage
         to,
         extension: output_extension || output_extension_for(to, filename: filename, type: type),
         force_temp: same_path?(safe_from, to),
-      ) { |safe_to| SafeImage.downsize(safe_from, safe_to, dimensions, **kwargs) }
+      ) do |safe_to|
+        SafeImage.downsize(input: safe_from, output: safe_to, dimensions: dimensions, **kwargs)
+      end
     end
   end
 
   def convert(from, to, format:, filename: nil, type: nil, **kwargs)
     with_safe_input_path(from, filename: filename, type: type) do |safe_from|
       with_safe_output_path(to, extension: format) do |safe_to|
-        SafeImage.convert(safe_from, safe_to, format: format, **kwargs)
+        SafeImage.convert(input: safe_from, output: safe_to, format: format, **kwargs)
       end
     end
   end
@@ -116,7 +113,7 @@ module DiscourseImage
   def convert_to_jpeg(from, to, filename: nil, type: nil, **kwargs)
     with_safe_input_path(from, filename: filename, type: type) do |safe_from|
       with_safe_output_path(to, extension: "jpg") do |safe_to|
-        SafeImage.convert_to_jpeg(safe_from, safe_to, **kwargs)
+        SafeImage.convert(input: safe_from, output: safe_to, format: "jpg", **kwargs)
       end
     end
   end
@@ -124,7 +121,7 @@ module DiscourseImage
   def convert_favicon_to_png(from, to, filename: nil, type: nil, **kwargs)
     with_safe_input_path(from, filename: filename, type: type || :ico) do |safe_from|
       with_safe_output_path(to, extension: "png") do |safe_to|
-        SafeImage.convert_favicon_to_png(safe_from, safe_to, **kwargs)
+        SafeImage.convert_favicon_to_png(input: safe_from, output: safe_to, **kwargs)
       end
     end
   end
@@ -134,17 +131,19 @@ module DiscourseImage
       with_safe_output_path(
         to,
         extension: output_extension_for(to, filename: filename, type: type),
-      ) { |safe_to| SafeImage.fix_orientation(safe_from, safe_to, **kwargs) }
+        force_temp: same_path?(safe_from, to),
+      ) { |safe_to| SafeImage.fix_orientation(input: safe_from, output: safe_to, **kwargs) }
     end
   end
 
   def optimize_image!(path, filename: nil, type: nil, **kwargs)
     with_safe_input_path(path, filename: filename, type: type) do |safe_path|
-      if safe_path == local_path(path)
-        SafeImage.optimize_image!(safe_path, **kwargs)
-      else
-        SafeImage.optimize_image!(safe_path, **kwargs)
-        FileUtils.mv(safe_path, local_path(path))
+      with_safe_output_path(
+        path,
+        extension: safe_extension_for(path, filename: filename, type: type),
+        force_temp: true,
+      ) do |safe_output|
+        SafeImage.optimize(input: safe_path, output: safe_output, **optimize_options(**kwargs))
       end
     end
   end
@@ -165,8 +164,6 @@ module DiscourseImage
         yield tempfile.path
       end
     end
-  rescue SafeImage::CommandError => error
-    translate_safe_image_command_error!(error)
   end
 
   def with_safe_output_path(path, extension: nil, force_temp: false)
@@ -232,13 +229,9 @@ module DiscourseImage
     false
   end
 
-  def translate_safe_image_command_error!(error)
-    match = SAFE_IMAGE_SANDBOX_ERROR_PATTERN.match(error.message)
-    error_class = SAFE_IMAGE_ERROR_CLASSES[match[:class]] if match
-
-    raise error_class, match[:message] if error_class
-
-    raise error
+  def optimize_options(allow_lossy_png: false, **kwargs)
+    kwargs[:mode] ||= allow_lossy_png ? :lossy : :lossless
+    kwargs
   end
 
   def normalize_info(info)
