@@ -54,6 +54,21 @@ module DiscourseAi
       end
       private_class_method :promote_post_reviewable_to_flagged!
 
+      def self.review_reviewable_for(post)
+        # If a spam triage rule already flagged this post, reuse that reviewable
+        # instead of creating a separate ReviewablePost. This mirrors
+        # `promote_post_reviewable_to_flagged!` for the opposite ordering, so
+        # moderators always see a single review item regardless of which rule
+        # ran first.
+        ReviewableFlaggedPost.pending.find_by(target: post) ||
+          ReviewablePost.needs_review!(
+            target: post,
+            created_by: Discourse.system_user,
+            reviewable_by_moderator: true,
+          )
+      end
+      private_class_method :review_reviewable_for
+
       def self.handle(
         post:,
         triage_agent_id:,
@@ -258,12 +273,7 @@ module DiscourseAi
                   end
                 end
               else
-                reviewable =
-                  ReviewablePost.needs_review!(
-                    target: post,
-                    created_by: Discourse.system_user,
-                    reviewable_by_moderator: true,
-                  )
+                reviewable = review_reviewable_for(post)
 
                 reviewable.add_score(
                   Discourse.system_user,
