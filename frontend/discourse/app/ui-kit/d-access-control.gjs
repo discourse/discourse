@@ -8,22 +8,12 @@ import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-b
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
-const DEFAULT_PERMISSION = "editor";
-const PERMISSIONS = [
-  {
-    id: "editor",
-    name: i18n("access_control.manage.access_permission_editor"),
-    description: i18n(
-      "access_control.manage.access_permission_editor_description"
-    ),
-  },
-  {
-    id: "viewer",
-    name: i18n("access_control.manage.access_permission_viewer"),
-    description: i18n(
-      "access_control.manage.access_permission_viewer_description"
-    ),
-  },
+const EDIT_PERMISSION = "edit";
+const READ_ONLY_PERMISSION = "view";
+const READ_ONLY_DEFAULT_AUTO_GROUPS = [
+  AUTO_GROUPS.anonymous_users.id,
+  AUTO_GROUPS.everyone.id,
+  AUTO_GROUPS.trust_level_0.id,
 ];
 const REMOVE_ACTION = {
   id: "remove",
@@ -33,6 +23,27 @@ const REMOVE_ACTION = {
   ),
 };
 
+function defaultPermissions() {
+  return [
+    {
+      id: READ_ONLY_PERMISSION,
+      level: 1,
+      name: i18n("access_control.manage.access_permission_viewer"),
+      description: i18n(
+        "access_control.manage.access_permission_viewer_description"
+      ),
+    },
+    {
+      id: EDIT_PERMISSION,
+      level: 2,
+      name: i18n("access_control.manage.access_permission_editor"),
+      description: i18n(
+        "access_control.manage.access_permission_editor_description"
+      ),
+    },
+  ];
+}
+
 export default class DAccessControl extends Component {
   @tracked addingGroup = false;
 
@@ -41,13 +52,25 @@ export default class DAccessControl extends Component {
     this.permissionOptions = this.buildPermissionOptions();
   }
 
+  /**
+   * If a transformPermissionOptions function is provided, it is passed all
+   * default permissions and can change the name, description, or level of
+   * these options, OR add new options, returning the new array.
+   *
+   * The level property is used to sort the options, and is an indicator
+   * of the level of access the permission provides, since e.g. Edit is a
+   * higher level of access than View, and to Edit by definition you need
+   * to be able to View.
+   *
+   * Otherwise, the default permissions are used.
+   */
   buildPermissionOptions() {
-    const permissions = this.args.transformPermissionOptions
-      ? this.args.transformPermissionOptions(PERMISSIONS)
-      : PERMISSIONS;
+    const permissions =
+      this.args.transformPermissionOptions?.(defaultPermissions()) ||
+      defaultPermissions();
 
     return [
-      ...permissions,
+      ...permissions.sort((a, b) => a.level - b.level),
       {
         ...REMOVE_ACTION,
         classNames:
@@ -100,11 +123,9 @@ export default class DAccessControl extends Component {
       name: selectedGroup.name,
       full_name: selectedGroup.full_name,
       type: "group",
-      // TODO (martin) Need to do this for more groups, like Everyone?
-      permission:
-        groupId === AUTO_GROUPS.anonymous_users.id
-          ? "viewer"
-          : DEFAULT_PERMISSION,
+      permission: READ_ONLY_DEFAULT_AUTO_GROUPS.includes(groupId)
+        ? READ_ONLY_PERMISSION
+        : EDIT_PERMISSION,
       metadata: {
         auto_group: selectedGroup.automatic,
       },

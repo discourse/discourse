@@ -4,18 +4,20 @@ class AccessControlList < ActiveRecord::Base
   attr_accessor :allowed_groups_preloaded, :allowed_users_preloaded
 
   # NOTE: permission column is freeform, but some common
-  # types are:
+  # types are below. In the UI these would generally be
+  # displayed as a role (e.g. adding -er), like Viewer,
+  # Editor, Manager, Owner, etc:
   #
-  # - read
-  # - write
+  # - view
+  # - edit
   # - manage
-  # - owner
+  # - own
   #
   # For categories for example we may have:
   #
-  # - read
-  # - create_posts
-  # - create_topics
+  # - view
+  # - create_post
+  # - create_topic
   #
   # Generally the creator of whatever the linked target
   # record will become an owner by default.
@@ -30,8 +32,6 @@ class AccessControlList < ActiveRecord::Base
     @allowed_groups ||= Group.where(id: allowed_group_ids).to_a
   end
 
-  scope :with_permission, ->(permission) { where(permission:) }
-  scope :for_target_type, ->(target_type) { where(target_type:) }
   scope :allowing_user,
         ->(user_id) { where("allowed_user_ids @> ARRAY[:user_id]::bigint[]", user_id:) }
   scope :allowing_any_user,
@@ -134,7 +134,7 @@ class AccessControlList < ActiveRecord::Base
     super.extending(RelationMethods)
   end
 
-  validates :target_id, uniqueness: { scope: :target_type }
+  validates :target_id, uniqueness: { scope: %i[target_type permission] }
 end
 
 # == Schema Information
@@ -153,7 +153,7 @@ end
 #
 # Indexes
 #
-#  idx_access_control_lists_allowed_group_ids               (allowed_group_ids) USING gin
-#  idx_access_control_lists_allowed_user_ids                (allowed_user_ids) USING gin
-#  index_access_control_lists_on_target_type_and_target_id  (target_type,target_id) UNIQUE
+#  idx_access_control_lists_allowed_group_ids                       (allowed_group_ids) USING gin
+#  idx_access_control_lists_allowed_user_ids                        (allowed_user_ids) USING gin
+#  index_access_control_lists_on_target_type_and_target_id_and_per  (target_type,target_id,permission) UNIQUE
 #
