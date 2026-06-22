@@ -20,6 +20,18 @@
   }
 }
 
+.dashboard-next .d-page-header__actions {
+  @include viewport.until(md) {
+    flex-direction: row;
+    gap: var(--space-1);
+    margin-block: var(--space-4);
+  }
+
+  @include viewport.until(sm) {
+    width: 100%;
+  }
+}
+
 .db-pill {
   font-size: var(--font-down-3);
   border-radius: 6.25rem;

@@ -27,6 +27,7 @@ export default class RedesignedAdminDashboard extends Component {
     <DPageHeader
       @titleLabel={{i18n "admin.dashboard.title"}}
       @hideTabs={{true}}
+      @collapseActionsOnMobile={{false}}
     >
       <:breadcrumbs>
         <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
@@ -35,6 +36,7 @@ export default class RedesignedAdminDashboard extends Component {
           @label={{i18n "admin.dashboard.title"}}
         />
       </:breadcrumbs>
+
       <:actions>
         <DashboardDateRange
           @period={{@requestedPeriod}}
