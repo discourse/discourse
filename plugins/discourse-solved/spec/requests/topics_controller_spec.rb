@@ -119,6 +119,23 @@ RSpec.describe TopicsController do
       expect(response.parsed_body.to_s).not_to include(answer_post.raw)
     end
 
+    it "does not serialize accepted answers that are hidden from the current user" do
+      answer_post =
+        Fabricate(:post, topic:, raw: "secret accepted hidden solution", user: Fabricate(:user))
+      Fabricate(:solved_topic, topic:, answer_post:)
+      answer_post.update!(
+        hidden: true,
+        hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+      )
+      sign_in(Fabricate(:user))
+
+      get "/t/#{topic.slug}/#{topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["accepted_answers"]).to be_nil
+      expect(response.parsed_body.to_s).not_to include(answer_post.raw)
+    end
+
     describe "with multiple solutions enabled" do
       before { SiteSetting.solved_allow_multiple_solutions = true }
 
