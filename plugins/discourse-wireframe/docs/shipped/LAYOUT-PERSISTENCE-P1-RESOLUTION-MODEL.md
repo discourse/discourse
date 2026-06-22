@@ -15,6 +15,12 @@ provenance, so consumers couldn't badge/own outlets.
 
 ## What landed
 
+> **Superseded by A-P4 (§0):** the theme-owner tie-break below was **reversed** from MIN to MAX
+> `themeStackIndex` — the most-derived theme (a component) now OVERRIDES the parent, instead of the
+> parent winning. The determinism guarantee (winner keyed on the server-authoritative `stack_index`,
+> not array order) is unchanged; only the direction flipped. Read "MIN"/"most-ancestral"/"parent-wins"
+> below as the historical P1 behaviour. See the A-P4 shipped doc for the current rule.
+
 **Core (`frontend/discourse`):**
 - `app/blocks/block-outlet.gjs` — rewrote `resolveLayoutRecord` to the precedence **locked code →
   session draft → owner theme (MIN `themeStackIndex`) → overridable code seed**. Added

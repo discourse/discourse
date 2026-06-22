@@ -1083,11 +1083,11 @@ module("Unit | Lib | block-outlet", function (hooks) {
       assert.strictEqual(resolved[0].args.label, "draft");
     });
 
-    test("multiple themes — owner is the minimum stack rank", async function (assert) {
+    test("multiple themes — owner is the maximum stack rank", async function (assert) {
       const owner = getOwner(this);
       // themeId 3 is the parent (stack index 0); themeId 7 is a component
-      // further down the stack (index 1). The most ancestral theme owns the
-      // outlet.
+      // further down the stack (index 1). The most-derived theme (the
+      // component) overrides the parent and owns the outlet.
       await _setLayoutLayer(
         "homepage-blocks",
         LAYOUT_LAYERS.THEME,
@@ -1105,13 +1105,14 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       const resolved =
         await _getOutletLayouts().get("homepage-blocks").validatedLayout;
-      assert.strictEqual(resolved[0].args.label, "first");
+      assert.strictEqual(resolved[0].args.label, "second");
     });
 
     test("owner resolution is independent of registration order", async function (assert) {
       const owner = getOwner(this);
-      // Register the higher-ranked component FIRST, then the parent. The parent
-      // (minimum stack index) still owns the outlet.
+      // Register the higher-ranked component FIRST, then the parent. The
+      // component (maximum stack index) still owns the outlet — order doesn't
+      // matter, only the stack rank.
       await _setLayoutLayer(
         "homepage-blocks",
         LAYOUT_LAYERS.THEME,
@@ -1129,7 +1130,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       const resolved =
         await _getOutletLayouts().get("homepage-blocks").validatedLayout;
-      assert.strictEqual(resolved[0].args.label, "first");
+      assert.strictEqual(resolved[0].args.label, "second");
     });
 
     test("re-registering a theme with the same themeId keeps its stack rank", async function (assert) {
@@ -1149,20 +1150,21 @@ module("Unit | Lib | block-outlet", function (hooks) {
         { themeId: 7, themeStackIndex: 1 }
       );
 
-      // Re-register theme 3 with new content and WITHOUT a stack index. The
-      // originally-stamped rank (0) is preserved, so theme 3 stays the owner —
-      // a MessageBus update can't silently change ownership.
+      // The component (theme 7, rank 1) owns. Re-register it with new content
+      // and WITHOUT a stack index. The originally-stamped rank (1) is preserved,
+      // so theme 7 stays the owner — a MessageBus update can't silently change
+      // ownership.
       await _setLayoutLayer(
         "homepage-blocks",
         LAYOUT_LAYERS.THEME,
-        [{ block: ResolutionChainBlock, args: { label: "a-updated" } }],
+        [{ block: ResolutionChainBlock, args: { label: "b-updated" } }],
         owner,
-        { themeId: 3 }
+        { themeId: 7 }
       );
 
       const resolved =
         await _getOutletLayouts().get("homepage-blocks").validatedLayout;
-      assert.strictEqual(resolved[0].args.label, "a-updated");
+      assert.strictEqual(resolved[0].args.label, "b-updated");
     });
 
     test("clearing session-draft falls back to theme", async function (assert) {

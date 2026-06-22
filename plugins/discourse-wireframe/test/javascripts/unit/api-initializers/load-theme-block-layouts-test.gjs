@@ -48,7 +48,7 @@ module(
       assert.strictEqual(resolved[0].args.label, "from-theme-5");
     });
 
-    test("owner is the most-ancestral theme (minimum stack rank)", async function (assert) {
+    test("owner is the most-derived theme (maximum stack rank)", async function (assert) {
       withPluginApi((api) => {
         hydrateThemeBlockLayouts(
           api,
@@ -72,15 +72,15 @@ module(
         await _getOutletLayouts().get("homepage-blocks").validatedLayout;
       assert.strictEqual(
         resolved[0].args.label,
-        "first",
-        "the parent theme (minimum stack rank) owns the outlet"
+        "second",
+        "the component (maximum stack rank) overrides the parent theme"
       );
     });
 
-    test("a live update for a lower-ranked theme doesn't steal ownership", async function (assert) {
+    test("a component's live update overrides the parent (most-derived wins)", async function (assert) {
       const meta = { 3: { stack_index: 0 }, 7: { stack_index: 1 } };
       withPluginApi((api) => {
-        // Boot: parent theme 3 (rank 0) owns; component theme 7 (rank 1) loses.
+        // Boot: parent theme 3 (rank 0) is overridden by component theme 7 (rank 1).
         hydrateThemeBlockLayouts(
           api,
           [
@@ -100,7 +100,7 @@ module(
         subscribeToBlockLayoutUpdates(api, [3, 7], meta);
       });
 
-      // A live update for the lower-ranked component theme 7 arrives over the
+      // A live update for the higher-ranked component theme 7 arrives over the
       // real MessageBus channel it subscribed to.
       await publishToMessageBus("/block-layouts/7", {
         theme_id: 7,
@@ -113,19 +113,19 @@ module(
         await _getOutletLayouts().get("homepage-blocks").validatedLayout;
       assert.strictEqual(
         resolved[0].args.label,
-        "parent",
-        "the parent (minimum stack rank) still owns after a component's live update"
+        "child-updated",
+        "the component (maximum stack rank) owns, and its live update is applied"
       );
 
-      // Prove the update actually landed on theme 7 (not a silent no-op): drop
-      // the parent and the component's freshly-published layout resolves.
-      _clearLayoutLayer("homepage-blocks", LAYOUT_LAYERS.THEME, { themeId: 3 });
-      const afterParentCleared =
+      // Drop the component and the parent's layout resolves — proving the
+      // determinism is by stack rank, not array/registration order.
+      _clearLayoutLayer("homepage-blocks", LAYOUT_LAYERS.THEME, { themeId: 7 });
+      const afterComponentCleared =
         await _getOutletLayouts().get("homepage-blocks").validatedLayout;
       assert.strictEqual(
-        afterParentCleared[0].args.label,
-        "child-updated",
-        "the live update was delivered to the component theme"
+        afterComponentCleared[0].args.label,
+        "parent",
+        "with the component gone, the parent theme owns the outlet"
       );
     });
 

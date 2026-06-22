@@ -366,14 +366,18 @@ function resolveLayoutRecord(outletName, { ignoreSessionDraft = false } = {}) {
   if (!ignoreSessionDraft && layers[LAYOUT_LAYERS.SESSION_DRAFT]) {
     return layers[LAYOUT_LAYERS.SESSION_DRAFT];
   }
-  // 3. The owner theme is the entry with the minimum stack rank. Strictly-less
-  //    comparison means the first entry at the minimum rank wins (one entry per
-  //    theme id, so ties don't occur in practice).
+  // 3. The owner theme is the entry with the MAXIMUM stack rank — the
+  //    most-derived theme in the active stack (`Theme.transform_ids` orders the
+  //    parent first, then its components), so a component overrides the layout
+  //    of the theme it is installed on. Strictly-greater comparison keeps the
+  //    first entry at the maximum rank (one entry per theme id, so ties don't
+  //    occur in practice). An entry with no known rank defaults to the lowest
+  //    priority so it never spuriously beats a properly-ranked entry.
   let owner;
-  let ownerRank = Infinity;
+  let ownerRank = -Infinity;
   for (const entry of layers[LAYOUT_LAYERS.THEME]) {
-    const rank = entry.themeStackIndex ?? Number.MAX_SAFE_INTEGER;
-    if (rank < ownerRank) {
+    const rank = entry.themeStackIndex ?? -1;
+    if (rank > ownerRank) {
       ownerRank = rank;
       owner = entry;
     }

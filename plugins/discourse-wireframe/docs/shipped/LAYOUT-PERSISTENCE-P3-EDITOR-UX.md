@@ -15,8 +15,9 @@ raw string). P3 makes the **outlet** the unit of editing:
 - A derived per-outlet **state** — LOCKED / DEFAULT / PUBLISHED — plus an orthogonal EDITING
   signal, shown as a badge in the inspector and on the outlet-root chrome.
 - **LOCKED outlets are read-only**: excluded from drafting, no chrome toolbar, clicks swallowed.
-- **Per-outlet owner targeting**: each region publishes to the theme that owns it (P1 min
-  stack-rank), not one session theme.
+- **Per-outlet owner targeting**: each region publishes to the theme that owns it (P1 stack-rank;
+  A-P4 §0 later flipped this from min to MAX — the most-derived theme/component owns), not one
+  session theme.
 - **Drafts hydrate on enter** from the per-user store, with a **stale-draft prompt** when the
   live layout moved on since the draft was saved.
 - **Verb split**: per-outlet Save draft / Publish / Reset to default / Discard in the inspector;
