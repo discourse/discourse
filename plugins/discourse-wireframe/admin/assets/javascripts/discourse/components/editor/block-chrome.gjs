@@ -1,7 +1,6 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -907,6 +906,45 @@ export default class BlockChrome extends Component {
   }
 
   /**
+   * Whether this outlet root currently holds no content blocks — the
+   * "start a layout from scratch" case (a freshly mounted or just-reset
+   * outlet whose root `layout` block has no children).
+   *
+   * @returns {boolean}
+   */
+  get isEmptyOutletRoot() {
+    if (!this.isOutletRoot) {
+      return false;
+    }
+    // Open a tracked dep on structuralVersion so this re-evaluates after every
+    // layout mutation (the first dropped block flips it non-empty).
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.wireframe.structuralVersion;
+    const entry = this.wireframe.findEntryAndOutletSync(
+      this.args.blockKey
+    )?.entry;
+    return !entry?.children?.length;
+  }
+
+  /**
+   * Whether the outlet badge should render its status chip. An empty,
+   * default outlet (nothing built yet, nothing owns it) shows just its
+   * name — a "Default" chip on an empty region is noise. Every other case
+   * (an edit in progress, a published or locked outlet, or a default
+   * outlet that actually has content) shows the chip.
+   *
+   * @returns {boolean}
+   */
+  get showOutletStatus() {
+    if (this.isOutletEditing) {
+      return true;
+    }
+    return !(
+      this.outletState === OUTLET_STATE.DEFAULT && this.isEmptyOutletRoot
+    );
+  }
+
+  /**
    * Merged-cell entries are empty grid cells. The chrome wraps them
    * like any other block (selection, drag, resize via the existing
    * grid handle), but the inner render area becomes a "Pick a block"
@@ -1699,13 +1737,20 @@ export default class BlockChrome extends Component {
           tabindex="0"
         >
           {{! A read-only (LOCKED) outlet shows no toolbar — no drag handle, no
-            actions — so its programmatic layout can't be edited. }}
+            actions — so its programmatic layout can't be edited. For the outlet
+            root the bar is the always-on identity badge above the region (the
+            handle carries the cube icon, name, and status chip); for other
+            blocks it reveals on hover / selection. The outlet status args drive
+            the handle's chip. }}
           {{#unless this.isReadOnlyOutlet}}
             <BlockToolbar
               @blockKey={{@blockKey}}
               @outletName={{@outletName}}
               @displayName={{this.displayName}}
               @isOutletRoot={{this.isOutletRoot}}
+              @outletState={{this.outletState}}
+              @isOutletEditing={{this.isOutletEditing}}
+              @showOutletStatus={{this.showOutletStatus}}
               @chromeEl={{this.chromeEl}}
               @isSelected={{this.isSelected}}
               @canFillImage={{this.imageCanFillBlock}}
@@ -1714,28 +1759,6 @@ export default class BlockChrome extends Component {
               @onResetImage={{this.resetImageToNaturalSize}}
             />
           {{/unless}}
-
-          {{! Always-on outlet marker: the outlet name plus a muted status suffix
-            — "Editing" while it has unsaved edits, otherwise its state
-            (read-only / default / published). One badge; Editing supersedes the
-            base state, so the two are never shown together. Anchored top-left so
-            it never collides with the top-right overlap warning badge. }}
-          {{#if this.isOutletRoot}}
-            <span
-              class={{dConcatClass
-                "wireframe-block-chrome__outlet-badge"
-                (concat
-                  "--" (if this.isOutletEditing "editing" this.outletState)
-                )
-              }}
-            >{{this.displayName}}<span
-                class="wireframe-block-chrome__outlet-badge-status"
-              >{{if
-                  this.isOutletEditing
-                  (i18n "wireframe.outlet.editing")
-                  (i18n (concat "wireframe.outlet.state." this.outletState))
-                }}</span></span>
-          {{/if}}
 
           {{! Overlap / out-of-bounds warning badge — only visible when
             this cell's rectangle intersects a sibling or runs past the

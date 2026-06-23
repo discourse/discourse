@@ -1,7 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -11,6 +11,7 @@ import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { i18n } from "discourse-i18n";
@@ -24,10 +25,12 @@ const DUPLICATE_PRESETS = [2, 3, 5, 10];
  * Floating contextual bar shown above each block chrome. Two regions
  * sit inside one rounded "tab" anchored to the chrome's top-left edge:
  *
- *   1. Handle region (always rendered) — grip icon + display name +
- *      drag-source modifier. Replaces the standalone block-handle
- *      badge so the block's identity stays visible whenever the bar
- *      is.
+ *   1. Handle region — grip icon + display name + drag-source
+ *      modifier. Replaces the standalone block-handle badge so the
+ *      block's identity stays visible whenever the bar is. Rendered
+ *      for movable blocks and composite parts; the outlet root has no
+ *      handle (its identity lives in the always-on outlet badge), so
+ *      its toolbar carries only its selection actions.
  *   2. Action region (rendered when `@isSelected`) — move up / down,
  *      duplicate, optional force-expand toggle, inline-format
  *      buttons, delete.
@@ -297,14 +300,30 @@ export default class BlockToolbar extends Component {
         translucent copy of the actual block during the drag instead
         of the small handle tab.
 
-        The outlet root is a page region, not a movable block — its
-        handle drops the drag source and reads as the outlet (cube
-        icon, outlet name) rather than a grip. }}
+        The outlet root is a page region, not a movable block — its handle
+        carries no drag source and reads as the outlet identity: the cube
+        icon, the outlet name, and an inner status chip (Editing / Published /
+        Default). This handle is the always-on badge above the region (kept
+        visible by CSS), so the outlet stays labelled without hovering. }}
       {{#if @isOutletRoot}}
-        {{! The outlet name + status live in the always-on badge (BlockChrome),
-          so the hover toolbar's handle is just the icon — no duplicate label. }}
-        <span class="wireframe-block-toolbar__handle" title={{@displayName}}>
+        <span
+          class="wireframe-block-toolbar__handle wireframe-block-toolbar__handle--outlet"
+          title={{@displayName}}
+        >
           {{dIcon "cubes"}}
+          <span>{{@displayName}}</span>
+          {{#if @showOutletStatus}}
+            <span
+              class={{dConcatClass
+                "wireframe-block-toolbar__status"
+                (concat "--" (if @isOutletEditing "editing" @outletState))
+              }}
+            >{{if
+                @isOutletEditing
+                (i18n "wireframe.outlet.editing")
+                (i18n (concat "wireframe.outlet.state." @outletState))
+              }}</span>
+          {{/if}}
         </span>
       {{else if this.isPart}}
         {{! A composite part isn't a movable block — its handle reads as a

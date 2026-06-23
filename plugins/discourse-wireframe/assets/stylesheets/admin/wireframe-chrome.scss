@@ -269,45 +269,6 @@ body.wireframe-active {
     }
   }
 
-  /* Always-on outlet marker: the outlet name + a muted status suffix
-     ("— Editing" / "— Published" / …). Persistent (not opacity-gated like the
-     hover toolbar) so outlet regions stay visible at rest. Anchored top-left so
-     it never collides with the top-right overlap / out-of-bounds warning. */
-
-  .wireframe-block-chrome__outlet-badge {
-    position: absolute;
-    top: -1px;
-    left: -1px;
-    z-index: 1000;
-    max-width: 100%;
-    padding: var(--wireframe-badge-padding);
-    background: var(--primary-medium);
-    color: var(--secondary);
-    font-size: var(--wireframe-badge-font-size);
-    font-weight: bold;
-    border-radius: 0 0 4px 0;
-    text-shadow: var(--wireframe-shadow);
-    pointer-events: none;
-    white-space: nowrap;
-
-    &.--published {
-      background: var(--success);
-    }
-
-    &.--editing {
-      background: var(--tertiary);
-    }
-
-    .wireframe-block-chrome__outlet-badge-status {
-      font-weight: normal;
-      opacity: 0.85;
-
-      &::before {
-        content: "— ";
-      }
-    }
-  }
-
   /* Overlap badge — anchored to the chrome's top-right corner, always
      fully visible (no opacity gating like the handle). Reads "Overlap"
      with a triangle icon. Matches the handle's badge shape but in
@@ -865,9 +826,9 @@ body.wireframe-active {
   }
 
   /* Outlet boundary — an invisible structural marker. Its `data-outlet-name`
-     drives mounted-outlet detection (`mountedOutletNames()`), but it draws
-     nothing: the outlet's frame + badge live on the implicit root layout's
-     chrome (`.--outlet-root`, below), so there's a single frame instead of a
+     is the DOM anchor for scroll/jump-to-outlet, but it draws nothing: the
+     outlet's frame + badge live on the implicit root layout's chrome
+     (`.--outlet-root`, below), so there's a single frame instead of a
      box-in-box. `display: contents` keeps the marker in the DOM (still
      queryable) while removing its box from layout. */
 
@@ -912,6 +873,27 @@ body.wireframe-active {
 
       &:hover {
         background: var(--wireframe-block-outlet-hover-color);
+      }
+
+      /* Inner status chip on the amber handle: a small pill reading the
+         outlet's state. Neutral translucent by default; Editing and Published
+         get their own hue so the state reads at a glance. */
+
+      .wireframe-block-toolbar__status {
+        padding: 0 6px;
+        background: rgb(0 0 0 / 0.25);
+        color: white;
+        font-weight: normal;
+        border-radius: 999px;
+        text-shadow: none;
+
+        &.--editing {
+          background: var(--tertiary);
+        }
+
+        &.--published {
+          background: var(--success);
+        }
       }
     }
   }
