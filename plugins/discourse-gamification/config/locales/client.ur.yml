@@ -67,6 +67,7 @@ ur:
         last_10_days: "پچھلے 10 دن"
         last_30_days: "پچھلے 30 دن"
         last_90_days: "پچھلے 90 دن"
+        last_year: "گزشتہ سال"
         all_time: "تمام اوقات"
       custom_range_from: "سے"
       admin:
