@@ -348,6 +348,10 @@ function resolveDiscourseInitializer(moduleName, themeId) {
 }
 
 function expectedSourceIdForModule(moduleName, themeId) {
+  // Only consumed by the development-only check in runWithExpectedSourceId.
+  if (!DEBUG) {
+    return null;
+  }
   if (themeId != null) {
     return `theme:${themeId}`;
   }

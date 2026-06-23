@@ -17,7 +17,7 @@ import { getThemeInfo } from "discourse/lib/source-identifier";
  * Tracks which namespace each source (theme/plugin) has used.
  * Enforces that each source can only register blocks with a single namespace.
  *
- * Key: source identifier (e.g., "theme:Tactile Theme" or "plugin:chat")
+ * Key: source identifier (e.g., "theme:42" or "plugin:chat")
  * Value: the namespace prefix used (e.g., "theme:tactile" or "chat")
  *
  * @type {Map<string, string|null>}

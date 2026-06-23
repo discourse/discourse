@@ -132,8 +132,8 @@ export function runWithExpectedSourceId(sourceId, fn) {
  * Development-only check: warns once per source when a registration made inside a
  * known plugin/theme initializer carried NO build-injected source (resolved to
  * core). That flags code which reached an API-entry function through an indirect
- * reference (an aliased local, a dynamic import, a namespace import, or a
- * re-export) the build transform cannot attribute.
+ * reference (a namespace import, a dynamic import, or a re-export) the build
+ * transform cannot attribute.
  *
  * Best-effort and synchronous by design: only registrations made synchronously
  * within the initializer are checked. Registrations deferred past an await/tick,
@@ -163,9 +163,9 @@ export function warnIfSourceUnexpected(resolvedSourceId) {
 
   // eslint-disable-next-line no-console
   console.warn(
-    `[customization-source] Code from ${expected} performed a registration that resolved to ` +
+    `Code from ${expected} performed a registration that resolved to ` +
       `"core". This usually means an API-entry function was reached through an indirect ` +
-      `reference (an aliased local, a dynamic import, or a namespace import) that the build ` +
+      `reference (a namespace import, a dynamic import, or a re-export) that the build ` +
       `cannot attribute. Call withPluginApi / apiInitializer directly so the source is tracked.`
   );
 }

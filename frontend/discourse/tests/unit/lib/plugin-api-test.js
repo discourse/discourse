@@ -437,6 +437,8 @@ module("Unit | Utility | plugin-api", function (hooks) {
       let boundSource;
 
       withPluginApi(
+        // eslint-disable-next-line discourse/plugin-api-no-version -- intentionally exercising the legacy version-string signature
+        "1.0",
         (api) => (boundSource = api.source),
         {},
         pluginSource("chat")
