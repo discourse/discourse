@@ -1488,6 +1488,8 @@ be:
         top: "Топ тэм"
         new: "Новы"
       pinned_reply: "Замацаваныя"
+    share_target:
+      new_message: "Новае паведамленне"
     topic:
       create: "Новая тэма"
       archive_message:

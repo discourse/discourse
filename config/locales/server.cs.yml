@@ -4392,6 +4392,8 @@ cs:
   onebox:
     discourse:
       user_joined_community: "Připojil/a se %{date}"
+    google_meet:
+      meeting_code: "Kód:"
     gitlab:
       truncated_file: "Tento soubor byl zkrácen."
       show_original: "zobrazit originál"

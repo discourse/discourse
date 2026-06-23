@@ -209,6 +209,27 @@ class CategoriesController < ApplicationController
             end
           end
         end
+
+        additional_category_types =
+          Array(params[:category_types]).compact_blank.map(&:to_sym) -
+            [category_type&.to_sym, :discussion].compact
+
+        additional_category_types.each do |additional_category_type|
+          Categories::Configure.call(
+            guardian:,
+            params: {
+              category_id: @category.id,
+              category_type: additional_category_type,
+            },
+          ) do
+            on_failed_policy(:type_is_available) do
+              configure_error = category_type_unavailable_error(additional_category_type)
+              raise ActiveRecord::Rollback
+            end
+          end
+        end
+
+        @category.reload if category_type.present? || additional_category_types.any?
       end
     end
 

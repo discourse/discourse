@@ -240,6 +240,11 @@ en:
           llm_model_default: "Use agent default"
           llm_model_default_with_name: "Use agent default (%{value})"
           prompt: "Prompt"
+          runner_username: "Run as"
+          runner_username_tooltip: "User whose permissions are used for upload visibility and AI agent tools. Use system for workflow-owned automation."
+          upload_ids: "Upload IDs"
+          upload_ids_tooltip: "Optional upload IDs to attach to the prompt. Image uploads are included when the agent has vision enabled; document uploads are included when the selected LLM supports their file type."
+          upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Select an agent..."
 
       bot_chats:

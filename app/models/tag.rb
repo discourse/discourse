@@ -300,10 +300,16 @@ class Tag < ActiveRecord::Base
     self.slug ||= ""
     return if name.blank?
 
-    if self.slug.blank? || (will_save_change_to_name? && !will_save_change_to_slug?)
+    if self.slug.present? && will_save_change_to_slug? && slug != slugified_custom_slug
+      errors.add(:slug, :invalid)
+    elsif self.slug.blank? || (will_save_change_to_name? && !will_save_change_to_slug?)
       self.slug = Slug.for(name, "")
       self.slug = "" if self.slug.blank? || duplicate_slug?
     end
+  end
+
+  def slugified_custom_slug
+    slug.parameterize
   end
 
   def duplicate_slug?

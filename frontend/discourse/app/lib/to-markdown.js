@@ -53,7 +53,7 @@ export default async function toMarkdown(html) {
       { DOMParser: ProseMirrorDOMParser },
       { createSchema },
       { default: Serializer },
-      { transformWordListsHtml },
+      { transformWordHtml },
       { isBoundary },
     ] = await Promise.all([
       import("prosemirror-model"),
@@ -73,7 +73,7 @@ export default async function toMarkdown(html) {
     const pluginParams = { utils: { isBoundary } };
     const serializer = new Serializer(extensions, pluginParams);
 
-    const processedHtml = transformWordListsHtml(html);
+    const processedHtml = transformWordHtml(html);
     const parsedDoc = new DOMParser().parseFromString(
       processedHtml,
       "text/html"

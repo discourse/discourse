@@ -21,6 +21,9 @@ id:
           yes: "Ya"
           no: "Tidak"
       delete: "Hapus"
+      chart:
+        form:
+          bar: "Batang"
       query_groups: "Grup"
       query_description: "Deskripsi"
       reset_params: "Reset"

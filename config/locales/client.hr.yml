@@ -3529,6 +3529,9 @@ hr:
       deleted_post_placeholder: "[izbrisao]"
       ignored_post_placeholder: "[ignorirano]"
       pinned_reply: "Zakvačeno"
+    share_target:
+      new_topic: "Nova tema"
+      new_message: "Nova poruka"
     topic:
       filter_to:
         one: "%{count} objava u temi"

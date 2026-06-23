@@ -396,7 +396,6 @@ fi:
           no_users: "Käyttäjiä ei löydy"
           leave_event: "Poistu tapahtumasta"
           status:
-            unknown: "Ei kiinnostunut"
             going: "Menossa"
             interested: "Kiinnostunut"
             going_count:

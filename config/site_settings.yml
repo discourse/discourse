@@ -597,10 +597,6 @@ basic:
   trigger_browser_pageview_events:
     default: false
     hidden: true
-  use_beacon_for_browser_page_views:
-    default: false
-    hidden: true
-    client: true
   persist_browser_pageview_events:
     default: true
     hidden: true
@@ -1645,7 +1641,7 @@ posting:
     hidden: true
     area: "gifs"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/404829"
   klipy_api_key:

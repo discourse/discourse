@@ -5199,6 +5199,8 @@ he:
   onebox:
     discourse:
       user_joined_community: "מועד הצטרפות: %{date}"
+    google_meet:
+      meeting_code: "קוד:"
     gitlab:
       truncated_file: "הקובץ הזה נקטע."
       show_original: "הצגת המקורי"

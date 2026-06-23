@@ -5207,6 +5207,8 @@ nl:
   onebox:
     discourse:
       user_joined_community: "Lid sinds %{date}"
+    google_meet:
+      meeting_code: "Code:"
     gitlab:
       truncated_file: "Dit bestand is afgekapt."
       show_original: "origineel weergeven"

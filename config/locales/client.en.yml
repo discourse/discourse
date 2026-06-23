@@ -5128,6 +5128,11 @@ en:
         tag_group: "Tag group"
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete category"
+      danger_zone:
+        title: "Danger zone"
+        delete_title: "Delete this category"
+        delete_description: "Once deleted, this category and its settings cannot be recovered. Topics in it will need to be reassigned beforehand."
+        delete_title_forbidden: "Can't delete this category"
       create: "New category"
       create_with_type: "New %{typeName} category"
       create_long: "Create a new category"
@@ -5874,6 +5879,7 @@ en:
         slug: "Slug"
         name_placeholder: "Tag name"
         slug_placeholder: "Tag slug (optional, auto-generated from name)"
+        invalid_slug: "Use lowercase letters, numbers, and single hyphens between words."
         saved: "Tag settings saved"
         no_synonyms: "No synonyms defined for this tag."
         add_synonym_placeholder: "Search for tags to add as synonyms..."
@@ -7020,6 +7026,10 @@ en:
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
         dismiss_notice: "Ignore"
+        site_advice:
+          title:
+            one: "%{count} issue requires your attention based on your site configuration"
+            other: "%{count} issues require your attention based on your site configuration"
         new_features:
           title: "What's new?"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
@@ -7549,6 +7559,7 @@ en:
             invites:
               create: Send email invites or generate invite links.
             badges:
+              list: Get a list of badges.
               create: Create a new badge.
               show: Obtain information about a badge.
               update: Update a badge.
@@ -8745,6 +8756,7 @@ en:
             change_site_setting_groups: "change site setting groups"
             discourse_id_regenerate_credentials: "regenerate Discourse ID credentials"
             configure_category_type: "configure category type"
+            unconfigure_category_type: "unconfigure category type"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

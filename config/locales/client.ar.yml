@@ -4603,6 +4603,9 @@ ar:
         banner: "أنت تشاهد سلسلة دردشة واحدة من هذا الموضوع."
         view_full_topic: "عرض الموضوع بالكامل"
         view_parent_context: "عرض السياق الأصلي"
+    share_target:
+      new_topic: "موضوع جديد"
+      new_message: "رسالة جديدة"
     topic:
       filter_to:
         zero: "%{count} منشور في الموضوع"

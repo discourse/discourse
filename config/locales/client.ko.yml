@@ -2493,6 +2493,9 @@ ko:
       deleted_post_placeholder: "[삭제됨]"
       ignored_post_placeholder: "[무시됨]"
       pinned_reply: "핀 지정됨"
+    share_target:
+      new_topic: "새 글"
+      new_message: "새 메시지"
     topic:
       filter_to:
         other: "이 글의 댓글 %{count}개"

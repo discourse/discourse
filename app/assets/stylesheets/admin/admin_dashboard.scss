@@ -1,38 +1,82 @@
 @use "lib/viewport";
 
+.db-site-advice {
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius-large);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--primary-very-low);
+    padding: var(--space-2) var(--space-4);
+    border-top-left-radius: var(--d-border-radius-large);
+    border-top-right-radius: var(--d-border-radius-large);
+    border-bottom: 1px solid var(--content-border-color);
+
+    h3 {
+      margin: 0;
+      font-size: var(--font-0);
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+
+    &:has(ul) {
+      align-items: flex-start;
+    }
+
+    @include viewport.until(sm) {
+      align-items: flex-start;
+    }
+    gap: var(--space-3);
+    padding: var(--space-4);
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--content-border-color);
+    }
+
+    .btn {
+      margin-left: auto;
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+
+    &.--high {
+      color: var(--danger);
+    }
+
+    &.--low {
+      color: var(--tertiary);
+    }
+  }
+
+  &__message {
+    overflow-wrap: anywhere;
+  }
+}
+
 .db-main {
   display: flex;
   flex-direction: column;
   gap: var(--space-12);
   margin-bottom: var(--space-12);
-}
-
-.db-header {
-  display: flex;
-  align-items: center;
-  padding: var(--space-3) 0;
-  margin-bottom: var(--space-8);
-  position: sticky;
-  top: var(--header-offset, 60px);
-  z-index: 1;
-  background: var(--d-content-background, var(--secondary));
-
-  &__title {
-    @include viewport.until(sm) {
-      font-size: var(--font-up-3-rem);
-    }
-  }
-
-  &__actions {
-    display: flex;
-    gap: var(--space-4);
-    margin-left: auto;
-  }
-
-  @include viewport.until(sm) {
-    flex-direction: column-reverse;
-    align-items: flex-start;
-  }
 }
 
 .db-delta {
@@ -45,6 +89,18 @@
 
   &.--neg {
     color: var(--danger);
+  }
+}
+
+.dashboard-next .d-page-header__actions {
+  @include viewport.until(md) {
+    flex-direction: row;
+    gap: var(--space-1);
+    margin-block: var(--space-4);
+  }
+
+  @include viewport.until(sm) {
+    width: 100%;
   }
 }
 
@@ -201,6 +257,10 @@
   }
 
   &__subintro {
+    h3 {
+      margin: 0;
+    }
+
     p {
       font-size: var(--font-down-1-rem);
       color: var(--primary-high);
@@ -245,7 +305,7 @@
 
   &__callout {
     background: var(--primary-very-low);
-    border: 1px solid var(--primary-low-mid);
+    border: 1px solid var(--content-border-color);
     padding: var(--space-3) var(--space-4);
     border-radius: var(--d-border-radius-large);
     font-size: var(--font-down-1-rem);
@@ -312,16 +372,16 @@
     box-sizing: border-box;
 
     &:not(:last-child) {
-      border-right: 1px solid var(--primary-low);
+      border-right: 1px solid var(--content-border-color);
     }
 
     @include viewport.until(sm) {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
 
       .--highlights & {
         border-radius: var(--d-border-radius-large);
         flex-basis: calc(50% - var(--space-1));
-        border: 1px solid var(--primary-low);
+        border: 1px solid var(--content-border-color);
       }
     }
   }
@@ -367,7 +427,7 @@
 
   &__wrapper {
     border-radius: var(--d-border-radius-large);
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
 
     &.--no-border {
       border: none;
@@ -796,7 +856,7 @@
 
 .db-report {
   &__card {
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     border-radius: var(--d-border-radius-large);
     padding: var(--space-4);
     box-sizing: border-box;
@@ -892,7 +952,7 @@
   }
 
   &__add-report {
-    border: 1px dashed var(--primary-low-mid);
+    border: 1px dashed var(--content-border-color);
     border-radius: var(--d-border-radius-large);
     background: var(--secondary);
     color: var(--primary-medium);

@@ -36,10 +36,6 @@ tr_TR:
       llm_triage:
         title: YZ kullanarak gönderileri sınıflandırın
         description: "Büyük bir dil modeli kullanarak gönderileri sınıflandırın"
-        flagged_post: |
-          <div>Modelin yanıtı:</div>
-          <p>%{llm_response}</p>
-          <b><a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> kuralı tarafından tetiklendi.</b>
         notify_author_pm:
           subject: "Gönderiniz inceleme için geçici olarak kaldırılmıştır."
           body: |

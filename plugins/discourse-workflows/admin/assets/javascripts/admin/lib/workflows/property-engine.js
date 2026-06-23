@@ -111,6 +111,12 @@ export function propertyDescription(nodeDefinitionOrType, fieldName) {
   );
 }
 
+export function propertyTooltip(nodeDefinitionOrType, fieldName) {
+  return translatedOrNull(
+    `${i18nBase(nodeDefinitionOrType)}.${localeKeyPart(fieldName)}_tooltip`
+  );
+}
+
 export function propertyPlaceholder(nodeDefinitionOrType, fieldName) {
   return translatedOrNull(
     `${i18nBase(nodeDefinitionOrType)}.${localeKeyPart(fieldName)}_placeholder`

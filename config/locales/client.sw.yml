@@ -1542,6 +1542,8 @@ sw:
       collapse: "Kunja"
       no_replies: "Bado hakuna majibu."
       pinned_reply: "Imebandikwa"
+    share_target:
+      new_message: "Ujumbe mpya"
     topic:
       filter_to:
         one: "%{count} chapisho kwenye mada"

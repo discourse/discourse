@@ -4279,6 +4279,9 @@ uk:
         banner: "Ви переглядаєте одну тему в цій гілці."
         view_full_topic: "Переглянути всю тему"
         view_parent_context: "Переглянути батьківський контекст"
+    share_target:
+      new_topic: "Нова тема"
+      new_message: "Нове повідомлення"
     topic:
       filter_to:
         one: "%{count} допис в темі"

@@ -3523,6 +3523,9 @@ ug:
       no_replies: "تېخى جاۋاب يوق."
       ignored_post_placeholder: "[پەرۋا قىلمايدىغان]"
       pinned_reply: "چوققىلاندى"
+    share_target:
+      new_topic: "يېڭى تېما"
+      new_message: "يېڭى ئۇچۇر"
     topic:
       filter_to:
         one: "تېمىدىكى %{count} يازما"

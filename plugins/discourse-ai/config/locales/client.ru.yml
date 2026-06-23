@@ -254,7 +254,7 @@ ru:
         no_llm: "LLM не выбрана"
         no_agent: "Не установлено"
         no_groups: "Отсутствует"
-        edit: "настроек"
+        edit: "Настроек"
         expand_list:
           one: "(еще %{count})"
           few: "(еще %{count})"

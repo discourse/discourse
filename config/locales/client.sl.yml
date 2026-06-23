@@ -2400,6 +2400,8 @@ sl:
       deleted_post_placeholder: "[izbrisano]"
       ignored_post_placeholder: "[prezrti]"
       pinned_reply: "Pripeto"
+    share_target:
+      new_message: "Novo ZS"
     topic:
       filter_to:
         one: "%{count} prispevek v temi"

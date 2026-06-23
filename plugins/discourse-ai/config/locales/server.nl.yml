@@ -36,10 +36,6 @@ nl:
       llm_triage:
         title: Berichten triageren met AI
         description: "Triageer berichten met behulp van een groot taalmodel"
-        flagged_post: |
-          <div>Reactie van het model:</div>
-          <p>%{llm_response}</p>
-          <b>Geactiveerd door de regel <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a>.</b>
         notify_author_pm:
           subject: "Je bericht is tijdelijk verwijderd voor beoordeling."
           body: |

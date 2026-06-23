@@ -6,7 +6,6 @@ plugins:
   discourse_workflows_ai_authoring_enabled:
     default: false
     client: true
-    hidden: true
   discourse_workflows_ai_authoring_max_prompt_length:
     default: 4000
     min: 1

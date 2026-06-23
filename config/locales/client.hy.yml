@@ -2619,6 +2619,8 @@ hy:
       deleted_post_placeholder: "[ջնջված է]"
       ignored_post_placeholder: "[անտեսված]"
       pinned_reply: "Ամրակցված"
+    share_target:
+      new_message: "Նոր հաղորդագրություն"
     topic:
       filter_to:
         one: "%{count} հրապարակում թեմայում"

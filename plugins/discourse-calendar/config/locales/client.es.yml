@@ -412,7 +412,6 @@ es:
           no_users: "No se han encontrado usuarios"
           leave_event: "Abandonar evento"
           status:
-            unknown: "No estoy interesado"
             going: "Asistiré"
             interested: "Estoy interesado"
             going_count:

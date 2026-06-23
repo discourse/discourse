@@ -3685,6 +3685,9 @@ es:
       deleted_post_placeholder: "[eliminado]"
       ignored_post_placeholder: "[ignorados]"
       pinned_reply: "Anclado"
+    share_target:
+      new_topic: "Nuevo tema"
+      new_message: "Nuevo mensaje"
     topic:
       filter_to:
         one: "%{count} publicación en el tema"

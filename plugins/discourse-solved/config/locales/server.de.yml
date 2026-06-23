@@ -20,8 +20,6 @@ de:
         description: "Thema nach so vielen Stunden automatisch schließen, wenn es als gelöst markiert wurde. Auf 0 setzen, um automatisches Schließen zu deaktivieren."
       notify_on_staff_accept_solved:
         label: "Benachrichtige den Themenersteller, wenn ein Team-Mitglied eine Lösung auswählt"
-      empty_box_on_unsolved:
-        label: "Zeige eine leere Box neben ungelösten Themen in der Themenliste"
       solved_topics_auto_close_duration:
         label: "Gelöste Themen automatisch schließen"
         description: "Gelöste Themen werden nach dieser Zeitspanne seit der letzten Antwort automatisch geschlossen. Auf 0 setzen, um diese Funktion zu deaktivieren."

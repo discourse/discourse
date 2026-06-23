@@ -2181,6 +2181,8 @@ gl:
       deleted_post_placeholder: "[eliminado]"
       ignored_post_placeholder: "[ignorado]"
       pinned_reply: "Fixado"
+    share_target:
+      new_message: "Nova mensaxe"
     topic:
       filter_to:
         one: "%{count} publicación no tema"

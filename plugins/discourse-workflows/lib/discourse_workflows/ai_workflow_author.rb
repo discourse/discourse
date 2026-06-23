@@ -85,6 +85,8 @@ module DiscourseWorkflows
         - In add_node, prefer position as an object like { "x": 280, "y": 0 }. The server can normalize [x, y] arrays, but object positions are clearer.
         - In create_ai_agent, client_id must be unique among proposed agents and agent must include only name, description, and system_prompt. The server will create a non-system, prompt-only, enabled AI agent when the draft is applied.
         - In action:ai_agent nodes that use a proposed agent, set parameters.agent_id to { "$ref": "agent-client-id" } and parameters.agent_name to the same name from create_ai_agent. For existing agents, set parameters.agent_id to the numeric id returned by workflow_ai_agent_catalog.
+        - For action:ai_agent nodes, set parameters.runner_username when permissions matter. Use "system" for workflow-owned automation, "anonymous" for public anonymous permissions, or a username/expression such as ={{ $json.post.username }} when the agent should only see and use tools as that user.
+        - When an action:ai_agent node should analyze images or documents and the current input schema exposes upload IDs, set parameters.upload_ids to a whole-field expression such as ={{ $json.post.upload_ids }}. Do not paste upload URLs into the prompt.
         - In add_connection and remove_connection, from/to must be existing node IDs or client_id values introduced by add_node operations in the same proposal.
         - Include risk notes for automatic triggers, public content changes, external HTTP requests, credentials, loops, and Code nodes.
         - Prefer declarative node configuration over Code nodes when the requested behavior can be expressed without JavaScript.

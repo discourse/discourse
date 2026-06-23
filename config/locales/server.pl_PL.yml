@@ -2802,7 +2802,6 @@ pl_PL:
     reporting_improvements: "Ulepszenia nawigacji, projektu i użyteczności raportów administracyjnych Discourse."
     granular_anonymous_and_logged_in_groups_permissions: "Wprowadza uprawnienia witryn oparte na grupach, które traktują „wszystkich” jako „wszystkich zalogowanych użytkowników” oraz włącza nowe pseudogrupy „anonimowi_użytkownicy” i „zalogowani_użytkownicy”, dzięki czemu administratorzy mogą wyraźnie określać mianem anonimowych odwiedzających i uwierzytelnionych użytkowników."
     dashboard_improvements: "Umożliwia dostęp do przeprojektowanego pulpitu administracyjnego, który umożliwia przypinanie niestandardowych raportów i obejmuje ulepszone dane dotyczące ruchu w witrynie, zaangażowania i inne analizy powiązane z sukcesem i wartością społeczności."
-    admin_dashboard_search_section_enabled: "Wyświetl sekcję wyszukiwania na nowym pulpicie administratora w trakcie testów."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_datetime: "Nieprawidłowy format daty i godziny. Upewnij się, że wprowadzono prawidłową datę i godzinę."
@@ -5566,6 +5565,11 @@ pl_PL:
       few: "Musisz wybrać co najmniej %{count} tagi."
       many: "Musisz wybrać co najmniej %{count} tagów."
       other: "Musisz wybrać co najmniej %{count} tagów."
+    too_many_tags_for_topic:
+      one: "Do tematu można zastosować %{count} znacznik."
+      few: "Do tematu można zastosować %{count} znaczniki."
+      many: "Do tematu można zastosować %{count} znaczników."
+      other: "Do tematu można zastosować %{count} znaczników."
     upload_row_too_long: "Plik CSV powinien zawierać jeden tag w każdym wierszu. Opcjonalnie po tagu można umieścić przecinek, a następnie nazwę grupy tagów."
     bulk_create:
       invalid_params: "Nieprawidłowe parametry. Podaj tablicę nazw tagów."
@@ -5597,6 +5601,7 @@ pl_PL:
       synonym: 'Zamiast tego użyj „%{tag_name}”'
       has_synonyms: 'Nie można użyć "%{tag_name}", ponieważ zawiera synonimy.'
       one_tag_per_topic_group: 'Konflikty z „%{tag_names}” (dozwolony tylko jeden na temat)'
+      one_tag_per_topic_group_without_names: "Konflikty z wybranym tagiem (dozwolony tylko jeden na temat)"
       missing_parent_tag: 'Dostępne po dodaniu znacznika „%{parent_tag_name}”'
       restricted_tags_cannot_be_used_in_category:
         one: 'Tag "%{tags}" nie może być użyty w kategorii "%{category}". Usuń go.'
@@ -5692,6 +5697,11 @@ pl_PL:
   onebox:
     discourse:
       user_joined_community: "Dołączył %{date}"
+    google_meet:
+      title: "Spotkanie w Google Meet"
+      description: "Otwórz ten link Google Meet, aby dołączyć do rozmowy."
+      meeting_code: "Kod:"
+      join: "Dołącz do spotkania"
     gitlab:
       truncated_file: "Ten plik został obcięty."
       show_original: "pokaż oryginał"

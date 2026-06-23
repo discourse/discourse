@@ -42,6 +42,7 @@ module DiscourseWorkflows
           "post.reply_count" => "integer",
           "post.score" => "number|null",
           "post.tags" => "array<string>",
+          "post.upload_ids" => "array<integer>",
         }.freeze
 
         WEBHOOK_POST_SCHEMA =
@@ -50,6 +51,7 @@ module DiscourseWorkflows
             "post.excerpt",
             "post.like_count",
             "post.tags",
+            "post.upload_ids",
           ).merge("post" => "WebHookPostSerializer payload", "post.category_slug" => "string")
 
         USER_SCHEMA = {
@@ -227,6 +229,7 @@ module DiscourseWorkflows
               parameters: {
                 agent_id: 123,
                 agent_name: "Post classifier",
+                runner_username: "system",
                 prompt:
                   "=Classify this Discourse post and return a short label: {{ $json.post.raw }}",
               },
@@ -259,7 +262,8 @@ module DiscourseWorkflows
 
         SEARCH_ALIASES = {
           "action:send_personal_message" => "dm direct message pm personal private message",
-          "action:ai_agent" => "ai agent bot llm classify summarize generate sentiment triage",
+          "action:ai_agent" =>
+            "ai agent bot llm classify summarize generate sentiment triage runner run as permissions uploads attachments",
           "action:group" => "group membership member belongs friend friends",
         }.freeze
 

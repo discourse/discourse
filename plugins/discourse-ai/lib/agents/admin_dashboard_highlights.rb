@@ -3,6 +3,10 @@
 module DiscourseAi
   module Agents
     class AdminDashboardHighlights < Agent
+      def self.default_enabled
+        false
+      end
+
       def tools
         []
       end

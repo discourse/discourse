@@ -2953,6 +2953,8 @@ nb_NO:
       deleted_post_placeholder: "[slettet]"
       ignored_post_placeholder: "[ignorert]"
       pinned_reply: "Fastsatt"
+    share_target:
+      new_message: "Ny melding"
     topic:
       filter_to:
         one: "%{count} innlegg i emnet"

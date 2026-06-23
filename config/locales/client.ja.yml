@@ -3308,6 +3308,9 @@ ja:
       deleted_post_placeholder: "[削除済み]"
       ignored_post_placeholder: "[無視]"
       pinned_reply: "固定"
+    share_target:
+      new_topic: "新規トピック"
+      new_message: "新規メッセージ"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"

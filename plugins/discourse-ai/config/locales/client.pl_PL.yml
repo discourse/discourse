@@ -241,6 +241,11 @@ pl_PL:
           llm_model_default: "Użyj ustawień domyślnych agenta"
           llm_model_default_with_name: "Użyj ustawień domyślnych agenta (%{value})"
           prompt: "Monit"
+          runner_username: "Uruchom jako"
+          runner_username_tooltip: "Użytkownik, którego uprawnienia służą do widoczności przesyłania i narzędzi agenta AI. Użyj systemu do automatyzacji przepływu pracy."
+          upload_ids: "Identyfikatory przesłania"
+          upload_ids_tooltip: "Opcjonalne identyfikatory przesyłania do dołączenia do monitu. Przesyłanie obrazów jest uwzględniane, gdy agent ma włączoną widoczność; przesyłanie dokumentów jest uwzględniane, gdy wybrany program LLM obsługuje ich typ pliku."
+          upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Wybierz agenta..."
       bot_chats:
         tab_label: "Czaty botów"

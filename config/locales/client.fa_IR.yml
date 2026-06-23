@@ -3123,6 +3123,8 @@ fa_IR:
       deleted_post_placeholder: "[حذف شده]"
       ignored_post_placeholder: "[صرف نظر شده]"
       pinned_reply: "سنجاق شده"
+    share_target:
+      new_message: "پیام جدید"
     topic:
       filter_to:
         one: "%{count} نوشته در این موضوع وجود دارد"

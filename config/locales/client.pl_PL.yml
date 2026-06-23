@@ -4354,6 +4354,13 @@ pl_PL:
         banner: "Przeglądasz pojedynczy wątek z tego tematu."
         view_full_topic: "Zobacz cały temat"
         view_parent_context: "Wyświetl kontekst nadrzędny"
+    share_target:
+      title: "Udostępniana treść"
+      description: "Co chcesz zrobić z udostępnioną treścią?"
+      new_topic: "Nowy temat"
+      new_message: "Nowa wiadomość"
+      add_to_reply: "Dodaj do odpowiedzi"
+      added_to_reply: "Zapisano. Treść zostanie dodana przy następnym otwarciu odpowiedzi."
     topic:
       filter_to:
         one: "%{count} post w temacie"
@@ -5297,6 +5304,11 @@ pl_PL:
         tag_group: "Grupa tagów"
       topic_featured_link_allowed: "Zezwól na wybrane linki w tej kategorii"
       delete: "Usuń kategorię"
+      danger_zone:
+        title: "Strefa niebezpieczna"
+        delete_title: "Edytuj tę kategorię"
+        delete_description: "Po usunięciu tej kategorii i jej ustawień nie będzie można odzyskać. Tematy w niej zawarte będą musiały zostać wcześniej ponownie przypisane."
+        delete_title_forbidden: "Nie można usunąć tej kategorii"
       create: "Nowa kategoria"
       create_with_type: "Nowa kategoria %{typeName}"
       create_long: "Utwórz nową kategorię"
@@ -7210,6 +7222,12 @@ pl_PL:
         latest_version: "Najnowsza"
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
         dismiss_notice: "Ignoruj"
+        site_advice:
+          title:
+            one: "%{count} problem wymaga uwagi ze względu na konfigurację witryny"
+            few: "%{count} problemy wymagają uwagi ze względu na konfigurację witryny"
+            many: "%{count} problemów wymaga uwagi ze względu na konfigurację witryny"
+            other: "%{count} problemów wymaga uwagi ze względu na konfigurację witryny"
         new_features:
           title: "Co nowego?"
           subtitle: "Cały czas udostępniamy nowe funkcje i ulepszenia. Ta strona obejmuje najważniejsze z nich, ale możesz kliknąć 'Dowiedz się więcej', aby zobaczyć obszerne informacje o wersji."
@@ -7770,6 +7788,7 @@ pl_PL:
             invites:
               create: Wysyłaj zaproszenia e-mailem lub generuj linki do zaproszeń.
             badges:
+              list: Pobierz listę odznak.
               create: Utwórz nową odznakę.
               show: Uzyskaj informacje o odznace.
               update: Zaktualizuj odznakę.
@@ -8973,6 +8992,7 @@ pl_PL:
             change_site_setting_groups: "zmień grupy ustawień witryny"
             discourse_id_regenerate_credentials: "wygeneruj ponownie dane uwierzytelniające Discourse ID"
             configure_category_type: "skonfiguruj typ kategorii"
+            unconfigure_category_type: "usuń konfigurację typu kategorii"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."

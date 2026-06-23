@@ -3419,6 +3419,8 @@ gl:
   search_logs:
     graph_title: "Análise das buscas"
   onebox:
+    google_meet:
+      meeting_code: "Código:"
     github:
       closed: "pechado"
       status_date:

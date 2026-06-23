@@ -3581,6 +3581,9 @@ sk:
       no_replies: "Zatiaľ žiadne odpovede."
       ignored_post_placeholder: "[ignorovať]"
       pinned_reply: "Pripnutý"
+    share_target:
+      new_topic: "Nová téma"
+      new_message: "Nová správa"
     topic:
       filter_to:
         one: "%{count} príspevok k téme"

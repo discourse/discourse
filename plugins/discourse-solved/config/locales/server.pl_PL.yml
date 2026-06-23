@@ -21,7 +21,7 @@ pl_PL:
       notify_on_staff_accept_solved:
         label: "Powiadom twórcę tematu, gdy personel oznaczy rozwiązanie"
       empty_box_on_unsolved:
-        label: "Wyświetl puste pole wyboru obok nierozwiązanych tematów na liście tematów"
+        label: "Wyświetl nierozwiązany stan tematu na liście tematów dla obsługiwanych motywów"
       solved_topics_auto_close_duration:
         label: "Automatycznie zamknij rozwiązane tematy"
         description: "Automatycznie zamykaj rozwiązane tematy po upływie tego czasu od ostatniej odpowiedzi. Ustaw na 0, aby wyłączyć."

@@ -400,7 +400,6 @@ ja:
           no_users: "ユーザーが見つかりません"
           leave_event: "イベントから退出"
           status:
-            unknown: "興味なし"
             going: "出席"
             interested: "興味あり"
             going_count:

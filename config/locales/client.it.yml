@@ -3338,6 +3338,9 @@ it:
       deleted_post_placeholder: "[eliminato]"
       ignored_post_placeholder: "[ignorato]"
       pinned_reply: "Appuntato"
+    share_target:
+      new_topic: "Nuovo argomento"
+      new_message: "Nuovo messaggio"
     topic:
       filter_to:
         one: "%{count} messaggio in questo argomento"

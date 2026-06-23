@@ -3018,6 +3018,8 @@ zh_TW:
       deleted_post_placeholder: "[刪除]"
       ignored_post_placeholder: "[已忽略]"
       pinned_reply: "已釘選"
+    share_target:
+      new_message: "新增訊息"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"

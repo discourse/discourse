@@ -2848,6 +2848,9 @@ da:
       deleted_post_placeholder: "[slettet]"
       ignored_post_placeholder: "[ignorerede]"
       pinned_reply: "Fastgjort"
+    share_target:
+      new_topic: "Nyt emne"
+      new_message: "Ny meddelelse"
     topic:
       filter_to:
         one: "%{count} indlæg i emnet"

@@ -4736,6 +4736,8 @@ fi:
   onebox:
     discourse:
       user_joined_community: "Liittynyt %{date}"
+    google_meet:
+      meeting_code: "Koodi:"
     gitlab:
       truncated_file: "Tämä tiedosto on lyhennetty."
       show_original: "näytä alkuperäinen"

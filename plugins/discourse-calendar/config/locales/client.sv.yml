@@ -360,7 +360,6 @@ sv:
       models:
         invitee:
           status:
-            unknown: "Inte intresserad"
             going: "Kommer"
             interested: "Intresserad"
         event:

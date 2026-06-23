@@ -3139,6 +3139,8 @@ da:
   search_logs:
     graph_title: "Antal søgninger"
   onebox:
+    google_meet:
+      meeting_code: "Kode:"
     github:
       closed: "lukket"
       status_date:
