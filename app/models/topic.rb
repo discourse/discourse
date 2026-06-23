@@ -1697,12 +1697,12 @@ class Topic < ActiveRecord::Base
     end
 
     if topic_timer.execute_at
-      if by_user&.staff? || by_user&.trust_level == TrustLevel[4]
+      if Guardian.new(by_user).can_set_topic_timer?(self)
         topic_timer.user = by_user
       else
         topic_timer.user ||=
           (
-            if user.staff? || user.trust_level == TrustLevel[4]
+            if Guardian.new(user).can_set_topic_timer?(self)
               user
             else
               Discourse.system_user

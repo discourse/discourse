@@ -168,6 +168,19 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#can_set_topic_timer" do
+    let(:payload) { serializer.as_json }
+
+    it "reflects the topic_timers_allowed_groups setting" do
+      group = Fabricate(:group)
+      group.add(user)
+      user.reload
+      SiteSetting.topic_timers_allowed_groups = group.id.to_s
+
+      expect(payload[:can_set_topic_timer]).to eq(true)
+    end
+  end
+
   describe "#pending_posts_count" do
     subject(:pending_posts_count) { serializer.pending_posts_count }
 

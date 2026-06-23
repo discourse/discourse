@@ -653,7 +653,7 @@ class TopicsController < ApplicationController
     params.require(:duration_minutes) if based_on_last_post
 
     topic = Topic.find_by(id: params[:topic_id])
-    guardian.ensure_can_moderate!(topic)
+    guardian.ensure_can_set_topic_timer!(topic)
 
     guardian.ensure_can_delete!(topic) if TopicTimer.destructive_types.values.include?(status_type)
 
