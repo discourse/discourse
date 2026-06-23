@@ -25,6 +25,8 @@ module Jobs
           end
         end
       end
+
+      ProblemCheck.realtime.run_all
     end
   end
 end

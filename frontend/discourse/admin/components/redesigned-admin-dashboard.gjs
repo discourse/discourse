@@ -7,6 +7,7 @@ import DashboardEngagement from "discourse/admin/components/dashboard/engagement
 import DashboardHighlights from "discourse/admin/components/dashboard/highlights";
 import DashboardReports from "discourse/admin/components/dashboard/reports";
 import DashboardSearch from "discourse/admin/components/dashboard/search";
+import DashboardSiteAdvice from "discourse/admin/components/dashboard/site-advice";
 import DashboardSkeleton from "discourse/admin/components/dashboard/skeleton";
 import DashboardTraffic from "discourse/admin/components/dashboard/traffic";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -61,6 +62,12 @@ export default class RedesignedAdminDashboard extends Component {
 
     <div class="db-main">
       {{#if @loadedSections}}
+        <DashboardSiteAdvice
+          @problems={{@problems}}
+          @onRefresh={{@onRefreshProblems}}
+          @onIgnore={{@onIgnoreProblem}}
+        />
+
         {{#each @loadedSections.sections key="id" as |section|}}
           {{#if (eq section.id "highlights")}}
             <DashboardHighlights

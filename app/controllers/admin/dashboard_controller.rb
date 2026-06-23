@@ -42,7 +42,7 @@ class Admin::DashboardController < Admin::StaffController
   def problems
     ProblemCheck.realtime.run_all
 
-    render json: { problems: serialize_data(AdminNotice.problem.all, AdminNoticeSerializer) }
+    render json: { problems: serialized_problems }
   end
 
   def new_features
@@ -131,6 +131,10 @@ class Admin::DashboardController < Admin::StaffController
 
   private
 
+  def serialized_problems
+    serialize_data(AdminNotice.problem.order(:id), AdminNoticeSerializer)
+  end
+
   def dashboard_sections_payload
     visible_ids = AdminDashboardSectionConfiguration.visible_section_ids
     data = {
@@ -141,6 +145,7 @@ class Admin::DashboardController < Admin::StaffController
           start_date: params[:start_date],
           end_date: params[:end_date],
         ),
+      problems: serialized_problems,
     }
     if current_user.admin?
       data[:configuration] = { sections: AdminDashboardSectionConfiguration.sections }
