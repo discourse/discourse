@@ -14,7 +14,8 @@ import generateCurrentDateMarkup from "../lib/generate-current-date-markup";
 import LocalDateBuilder from "../lib/local-date-builder";
 import richEditorExtension from "../lib/rich-editor-extension";
 
-// Import applyLocalDates from discourse/lib/local-dates instead
+// Wired into core via the "apply-local-dates" behavior transformer.
+// Call applyLocalDates from discourse/lib/local-dates instead of importing this directly.
 export function applyLocalDates(dates, siteSettings, timezone) {
   if (!siteSettings.discourse_local_dates_enabled) {
     return;
@@ -126,6 +127,10 @@ function _partitionedRanges(element) {
 
 function initializeDiscourseLocalDates(api) {
   api.registerRichEditorExtension(richEditorExtension);
+
+  api.registerBehaviorTransformer("apply-local-dates", ({ context }) => {
+    applyLocalDates(context.dates, context.siteSettings, context.timezone);
+  });
 
   const modal = api.container.lookup("service:modal");
   const siteSettings = api.container.lookup("service:site-settings");
