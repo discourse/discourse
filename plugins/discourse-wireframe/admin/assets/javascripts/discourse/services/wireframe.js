@@ -1072,6 +1072,46 @@ export default class WireframeService extends Service {
   }
 
   /**
+   * Re-discovers the outlets on the current page. The editor stays open across
+   * SPA navigation, so an outlet that wasn't on the page at `enter()` (e.g.
+   * `homepage-blocks` after navigating from the category page) needs the same
+   * draft seeding `enter()` gives the entry page's outlets — otherwise it never
+   * appears in the outline and can't be built. The `api.onPageChange` hook calls
+   * this after every navigation.
+   *
+   * No-op when the editor isn't active. Idempotent: outlets already drafted this
+   * session are skipped, so it's cheap to call on every page change.
+   */
+  @action
+  rediscoverOutlets() {
+    if (!this.isActive) {
+      return;
+    }
+    // Defer to after render so the just-navigated page's `<BlockOutlet>`s have
+    // mounted and registered in the blocks service before we read the
+    // mounted-outlet set that `editableOutlets` derives from.
+    schedule("afterRender", this, this.#rediscoverMountedOutlets);
+  }
+
+  /**
+   * The deferred body of `rediscoverOutlets` — runs once the new page's outlets
+   * have mounted.
+   */
+  #rediscoverMountedOutlets() {
+    // The session may have ended (or the page changed again) between scheduling
+    // and running.
+    if (!this.isActive) {
+      return;
+    }
+    const materialized = this.#materializeAllDrafts();
+    // Only refetch persisted drafts when a fresh outlet was actually seeded —
+    // navigating between pages that share outlets shouldn't trigger a fetch.
+    if (materialized > 0) {
+      this.#hydrateDrafts(this.#enterGeneration);
+    }
+  }
+
+  /**
    * Ensures a session-draft layer exists for `outletName`. Used by
    * mutation actions that target outlets the user is populating from
    * scratch — those outlets have no published layout (so
@@ -4350,9 +4390,15 @@ export default class WireframeService extends Service {
    * happens during typing.
    *
    * Idempotent: running over already-drafted outlets is a no-op (skipped by
-   * the `draftedOutlets` check). Invoked from `enter()`.
+   * the `draftedOutlets` check). Invoked from `enter()` and, for outlets that
+   * mount later, from `rediscoverOutlets()` on navigation.
+   *
+   * @returns {number} How many outlets were newly drafted by this call. Lets
+   *   the navigation path skip a redundant draft refetch when nothing new
+   *   mounted.
    */
   #materializeAllDrafts() {
+    let materialized = 0;
     for (const outletName of this.editableOutlets) {
       if (this.draftedOutlets.has(outletName)) {
         continue;
@@ -4396,6 +4442,7 @@ export default class WireframeService extends Service {
         { permissive: true }
       );
       this.draftedOutlets.add(outletName);
+      materialized++;
       // Record the root layout's key (minted by the publish above) so
       // selection / chrome can recognise it as the outlet.
       this.#recordOutletRoot(outletName);
@@ -4409,6 +4456,7 @@ export default class WireframeService extends Service {
         cloneLayoutForDraft(this.readResolvedLayout(outletName) ?? [])
       );
     }
+    return materialized;
   }
 
   /**

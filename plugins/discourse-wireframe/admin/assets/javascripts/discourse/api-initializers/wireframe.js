@@ -48,6 +48,10 @@ export default apiInitializer((api) => {
   installEditPresentationWhileEditing(editor);
   installSimulationContext(editor);
   installVeThemeAutoEnter(api, editor);
+  // The editor stays open across SPA navigation, so re-discover the new page's
+  // outlets after each transition. `rediscoverOutlets` self-gates on
+  // `editor.isActive`, so this is a no-op while the editor is closed.
+  api.onPageChange(() => editor.rediscoverOutlets());
   // The shortcut listener self-gates on `editor.isActive`, so we can
   // install it once at boot — no need to attach/detach on editor enter.
   attachEditorShortcuts(editor);
