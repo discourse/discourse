@@ -5,7 +5,7 @@ module Jobs
     def execute_timer_action(topic_timer, topic)
       user = topic_timer.user
 
-      if !Guardian.new(user).can_open_topic?(topic) || topic.open?
+      if !Guardian.new(user).can_set_topic_timer?(topic) || topic.open?
         topic_timer.destroy!
         topic.reload
 

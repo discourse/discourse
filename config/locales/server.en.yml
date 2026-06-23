@@ -2324,6 +2324,7 @@ en:
     edit_all_post_groups: "Allow users in this group to edit other users' posts"
 
     create_topic_allowed_groups: "Groups that are allowed to create new topics. Admins and moderators can always create topics."
+    topic_timers_allowed_groups: "Groups that are allowed to set topic timers. Admins and moderators can always set topic timers."
     allow_flagging_staff: "If enabled, users can flag posts from staff accounts."
 
     edit_wiki_post_allowed_groups: "Groups that are allowed to edit posts marked as wiki. Admins and moderators can always edit posts marked as wiki."
