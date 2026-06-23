@@ -115,6 +115,19 @@ ChatChannel.create();
   `);
 });
 
+test("recognises the quoted attribute key form", () => {
+  expect(
+    compile(`
+import ChatChannel from "discourse/plugins/chat/models/chat-channel" with { "discoursePlugin": "required" };
+
+ChatChannel.create();
+  `)
+  ).toMatchInlineSnapshot(`
+    "import _plugin_chat from "discourse/plugins/chat";
+    (_plugin_chat["models/chat-channel"] || _plugin_chat["models/chat-channel/index"]).default.create();"
+  `);
+});
+
 test("throws on an unknown `discoursePlugin` value", () => {
   expect(() =>
     compile(`

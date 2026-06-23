@@ -25,15 +25,12 @@ export default function (babel) {
     }
   }
 
-  // Reads the `with { discoursePlugin: "optional" | "required" }` attribute off
-  // an import. Cross-plugin imports are optional by default; only "required"
-  // makes the dependency hard. Any other value is a mistake.
-  function isOptional(path) {
+  function isOptionalPluginImport(path) {
     const attribute = (path.node.attributes ?? []).find(
       (a) => (a.key.name ?? a.key.value) === "discoursePlugin"
     );
     const mode = attribute?.value.value;
-    if (mode !== undefined && mode !== "optional" && mode !== "required") {
+    if (![undefined, "optional", "required"].includes(mode)) {
       throw path.buildCodeFrameError(
         `Invalid \`discoursePlugin\` import attribute "${mode}". Allowed values are "optional" and "required".`
       );
@@ -42,8 +39,8 @@ export default function (babel) {
   }
 
   return {
-    // Allow the `with { discoursePlugin: ... }` attribute to parse.
     manipulateOptions(_opts, parserOpts) {
+      // Allow the `with { discoursePlugin: ... }` attribute to parse.
       parserOpts.plugins.push("importAttributes");
     },
     pre() {
@@ -71,16 +68,13 @@ export default function (babel) {
           return;
         }
 
-        // Optional imports consolidate to `discourse/plugins/foo?`, which the
-        // import map resolves to a null stub when the plugin is absent; required
-        // imports use `discourse/plugins/foo`, which is left unmapped (and so
-        // throws) for a missing plugin.
-        const optional = isOptional(path);
+        const optional = isOptionalPluginImport(path);
 
         const parts = moduleName.split("/");
         const pluginName = parts[2];
         const compatModuleName = parts.slice(3).join("/");
 
+        // Add a ? suffix for optional cross-plugin imports
         const importSource = `discourse/plugins/${pluginName}${optional ? "?" : ""}`;
 
         let localId = this.pluginImports.get(importSource);
