@@ -5472,6 +5472,11 @@ pl_PL:
       few: "Musisz wybrać co najmniej %{count} tagi."
       many: "Musisz wybrać co najmniej %{count} tagów."
       other: "Musisz wybrać co najmniej %{count} tagów."
+    too_many_tags_for_topic:
+      one: "Do tematu można zastosować %{count} znacznik."
+      few: "Do tematu można zastosować %{count} znaczniki."
+      many: "Do tematu można zastosować %{count} znaczników."
+      other: "Do tematu można zastosować %{count} znaczników."
     upload_row_too_long: "Plik CSV powinien zawierać jeden tag w każdym wierszu. Opcjonalnie po tagu można umieścić przecinek, a następnie nazwę grupy tagów."
     bulk_create:
       invalid_params: "Nieprawidłowe parametry. Podaj tablicę nazw tagów."
