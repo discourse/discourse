@@ -20,13 +20,19 @@ import { i18n } from "discourse-i18n";
 import { autoTrackedArray } from "../lib/tracked-tools";
 
 let _messagesCache = {};
+let _educationMessageShown = false;
 
 export function resetComposerMessagesCache() {
   _messagesCache = {};
+  _educationMessageShown = false;
 }
 
-function containsEducationMessage(messages) {
-  return messages?.content?.some((msg) => msg.id === "education");
+function visibleMessages(messages) {
+  if (!_educationMessageShown) {
+    return messages?.content || [];
+  }
+
+  return messages?.content?.filter((msg) => msg.id !== "education") || [];
 }
 
 @tagName("")
@@ -57,6 +63,7 @@ export default class ComposerMessages extends Component {
     this.appEvents.on("composer:find-similar", this, this._findSimilar);
     this.appEvents.on("composer-messages:close", this, this._closeTop);
     this.appEvents.on("composer-messages:create", this, this._create);
+    this.appEvents.on("composer:saved", this, this._resetEducationMessageState);
     this.reset();
   }
 
@@ -68,6 +75,11 @@ export default class ComposerMessages extends Component {
     this.appEvents.off("composer:find-similar", this, this._findSimilar);
     this.appEvents.off("composer-messages:close", this, this._closeTop);
     this.appEvents.off("composer-messages:create", this, this._create);
+    this.appEvents.off(
+      "composer:saved",
+      this,
+      this._resetEducationMessageState
+    );
   }
 
   _closeTop() {
@@ -93,6 +105,10 @@ export default class ComposerMessages extends Component {
       this.reset();
       this.popup(EmberObject.create(info));
     });
+  }
+
+  _resetEducationMessageState() {
+    _educationMessageShown = false;
   }
 
   // Resets all active messages.
@@ -124,6 +140,10 @@ export default class ComposerMessages extends Component {
       }
 
       this.popup(msg);
+
+      if (msg.id === "education") {
+        _educationMessageShown = true;
+      }
     }
 
     if (this.composer.privateMessage) {
@@ -287,10 +307,7 @@ export default class ComposerMessages extends Component {
     const cacheKey = `${args.composer_action}${args.topic_id}${args.post_id}`;
 
     let messages;
-    if (
-      _messagesCache.cacheKey === cacheKey &&
-      !containsEducationMessage(_messagesCache.messages)
-    ) {
+    if (_messagesCache.cacheKey === cacheKey) {
       messages = _messagesCache.messages;
     } else {
       messages = await this.composer.store.find("composer-message", args);
@@ -298,11 +315,7 @@ export default class ComposerMessages extends Component {
         return;
       }
 
-      if (containsEducationMessage(messages)) {
-        _messagesCache = {};
-      } else {
-        _messagesCache = { messages, cacheKey };
-      }
+      _messagesCache = { messages, cacheKey };
     }
 
     // Checking composer messages on replies can give us a list of links to check for
@@ -313,11 +326,14 @@ export default class ComposerMessages extends Component {
 
     this.set("checkedMessages", true);
 
-    messages.content.forEach((msg) => {
+    visibleMessages(messages).forEach((msg) => {
       if (msg.wait_for_typing) {
         addUniqueValueToArray(this.queuedForTyping, msg);
       } else {
         this.popup(msg);
+        if (msg.id === "education") {
+          _educationMessageShown = true;
+        }
       }
     });
   }
