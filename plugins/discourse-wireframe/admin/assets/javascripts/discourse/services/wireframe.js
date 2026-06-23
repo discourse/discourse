@@ -2279,6 +2279,15 @@ export default class WireframeService extends Service {
       nextSelection: this.selectedBlockKey,
     });
     this.redoStack.length = 0;
+    // A structural edit that lands the outlet back on its pristine layout (e.g.
+    // adding a block then removing it) must clear the edit bookkeeping, so the
+    // "editing" state and the save/publish verbs reflect reality. The mutators
+    // only ever flag an outlet as edited; this is the symmetric un-flag, mirroring
+    // what undo/redo already do. The undo entry above is kept intact, so the edit
+    // stays reversible even once the outlet reads as pristine.
+    for (const { outletName: name } of changes) {
+      this.#reconcileOutletEdited(name);
+    }
     return result;
   }
 

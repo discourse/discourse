@@ -652,6 +652,36 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.false(this.editor.isDirty, "the editor is no longer dirty");
     });
 
+    test("adding a block then removing it clears the outlet's editing state", function (assert) {
+      assert.false(this.editor.isOutletEditing("homepage-blocks"));
+
+      const ok = this.editor.insertBlock({
+        blockName: "wf:svc-test-tile",
+        defaultArgs: { title: "Throwaway" },
+        targetKey: null,
+        position: "after",
+        targetOutletName: "homepage-blocks",
+      });
+      assert.true(ok);
+      // insertBlock auto-selects the freshly inserted entry, so this is the
+      // block we just added regardless of where it landed in the children.
+      const insertedKey = this.editor.selectedBlockKey;
+      assert.true(
+        this.editor.isOutletEditing("homepage-blocks"),
+        "the outlet is editing right after the insert"
+      );
+
+      assert.true(
+        this.editor.removeBlock(insertedKey),
+        "the inserted block is removed"
+      );
+      assert.false(
+        this.editor.isOutletEditing("homepage-blocks"),
+        "removing the block back to the pristine layout clears the editing state"
+      );
+      assert.false(this.editor.isDirty, "the editor is no longer dirty");
+    });
+
     test("redo re-marks the outlet as editing", async function (assert) {
       this.editor.insertBlock({
         blockName: "wf:svc-test-tile",
