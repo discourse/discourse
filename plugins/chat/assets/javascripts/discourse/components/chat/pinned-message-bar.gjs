@@ -86,6 +86,23 @@ export default class ChatPinnedMessageBar extends Component {
     return this.pins.length > 1;
   }
 
+  // Index of the first segment visible in the indicator. With more pins than
+  // the visible window, this shifts to keep the active segment in view, which
+  // gives the strip a "scroll" feel as you move through the pins.
+  get indicatorTop() {
+    const window = 5;
+    const total = this.pins.length;
+    if (total <= window) {
+      return 0;
+    }
+    const top = this.currentIndex - Math.floor(window / 2);
+    return Math.max(0, Math.min(top, total - window));
+  }
+
+  get indicatorStyle() {
+    return trustHTML(`--chat-pinned-bar-indicator-top: ${this.indicatorTop}`);
+  }
+
   get pinsPanelOpen() {
     return this.router.currentRoute?.name === "chat.channel.pins";
   }
@@ -188,15 +205,20 @@ export default class ChatPinnedMessageBar extends Component {
           >
             {{#if this.hasMultiplePins}}
               <span class="chat-pinned-bar__indicator" aria-hidden="true">
-                {{#each this.pins as |pin index|}}
-                  <span
-                    class={{if
-                      (eq index this.currentIndex)
-                      "chat-pinned-bar__indicator-segment --active"
-                      "chat-pinned-bar__indicator-segment"
-                    }}
-                  ></span>
-                {{/each}}
+                <span
+                  class="chat-pinned-bar__indicator-track"
+                  style={{this.indicatorStyle}}
+                >
+                  {{#each this.pins as |pin index|}}
+                    <span
+                      class={{if
+                        (eq index this.currentIndex)
+                        "chat-pinned-bar__indicator-segment --active"
+                        "chat-pinned-bar__indicator-segment"
+                      }}
+                    ></span>
+                  {{/each}}
+                </span>
               </span>
             {{/if}}
 

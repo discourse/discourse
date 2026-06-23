@@ -40,18 +40,30 @@
   }
 
   &__indicator {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-half);
-    align-self: stretch;
+    // a vertical strip of segments, one per pin, capped to a 5-segment window;
+    // with more pins the track scrolls to keep the active segment in view
+    --pin-slot: 6px; // segment height (4px) + spacing (2px)
+    align-self: center;
     flex-shrink: 0;
     width: 3px;
-    min-height: 2rem;
+    max-height: calc(var(--pin-slot) * 5);
+    overflow: hidden;
+  }
+
+  &__indicator-track {
+    display: block;
+    transform: translateY(
+      calc(var(--chat-pinned-bar-indicator-top, 0) * var(--pin-slot) * -1)
+    );
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: transform 150ms ease;
+    }
   }
 
   &__indicator-segment {
-    flex: 1;
-    min-height: 3px;
+    height: 4px;
+    margin-block-end: 2px;
     background: var(--tertiary-low);
     border-radius: 3px;
 

@@ -122,6 +122,41 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       .exists({ count: 1 });
   });
 
+  test("scrolls the indicator window when there are more pins than fit", async function (assert) {
+    this.channel.pinnedMessagesCount = 8;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      pinResponse(this.channel, 8)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    // every pin has a segment; the window is capped/scrolled via the track
+    assert.dom(".chat-pinned-bar__indicator-segment").exists({ count: 8 });
+    assert
+      .dom(".chat-pinned-bar__indicator-track")
+      .hasAttribute("style", /indicator-top:\s*0/, "window starts at the top");
+
+    // advance past the visible window — it scrolls to keep the active in view
+    for (let i = 0; i < 6; i++) {
+      await click(".chat-pinned-bar__main");
+    }
+
+    assert
+      .dom(".chat-pinned-bar__indicator-track")
+      .hasAttribute(
+        "style",
+        /indicator-top:\s*3/,
+        "window scrolled to keep the active segment visible"
+      );
+  });
+
   test("clicking jumps to the current pin and cycles to the next", async function (assert) {
     this.channel.pinnedMessagesCount = 2;
     pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
