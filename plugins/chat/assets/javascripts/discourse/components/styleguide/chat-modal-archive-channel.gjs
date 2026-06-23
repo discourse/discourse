@@ -5,8 +5,12 @@ import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
 import ChatModalArchiveChannel from "discourse/plugins/chat/discourse/components/chat/modal/archive-channel";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
-import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row" with {
+  discoursePlugin: "optional",
+};
+import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example" with {
+  discoursePlugin: "optional",
+};
 
 export default class ChatStyleguideChatModalArchiveChannel extends Component {
   @service modal;

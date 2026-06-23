@@ -11,10 +11,18 @@ import {
   HEADER_INDICATOR_PREFERENCE_NEVER,
   HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
-import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
-import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
-import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
-import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component" with {
+  discoursePlugin: "optional",
+};
+import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls" with {
+  discoursePlugin: "optional",
+};
+import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row" with {
+  discoursePlugin: "optional",
+};
+import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example" with {
+  discoursePlugin: "optional",
+};
 
 export default class ChatStyleguideChatHeaderIcon extends Component {
   @tracked isActive = false;

@@ -1,6 +1,8 @@
 import { applyLocalDates } from "discourse/lib/local-dates";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import applySpoiler from "discourse/plugins/spoiler-alert/lib/apply-spoiler";
+import applySpoiler from "discourse/plugins/spoiler-alert/lib/apply-spoiler" with {
+  discoursePlugin: "optional",
+};
 
 export default {
   name: "chat-plugin-decorators",

@@ -4,8 +4,12 @@ import { getOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
 import Item from "discourse/plugins/chat/discourse/components/chat/thread-list/item";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
-import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component" with {
+  discoursePlugin: "optional",
+};
+import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example" with {
+  discoursePlugin: "optional",
+};
 
 export default class ChatStyleguideChatThreadListItem extends Component {
   @tracked thread;

@@ -8,10 +8,18 @@ import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import ChatMessage from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
-import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
-import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
-import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component" with {
+  discoursePlugin: "optional",
+};
+import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls" with {
+  discoursePlugin: "optional",
+};
+import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row" with {
+  discoursePlugin: "optional",
+};
+import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example" with {
+  discoursePlugin: "optional",
+};
 
 export default class ChatStyleguideChatMessage extends Component {
   @service currentUser;

@@ -1,6 +1,8 @@
 import { LinkTo } from "@ember/routing";
 import { and } from "discourse/truth-helpers";
-import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
+import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title" with {
+  discoursePlugin: "optional",
+};
 
 <template>
   {{#if (and @event.channel ChannelTitle)}}

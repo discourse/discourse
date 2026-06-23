@@ -3,7 +3,9 @@ import EmberObject from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import { bind } from "discourse/lib/decorators";
 import User from "discourse/models/user";
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel" with {
+  discoursePlugin: "optional",
+};
 import DiscoursePostEventEventStats from "./discourse-post-event-event-stats";
 import DiscoursePostEventInvitee from "./discourse-post-event-invitee";
 

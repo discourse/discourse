@@ -6,8 +6,12 @@ import ReviewableCreatedBy from "discourse/components/reviewable/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable/topic-link";
 import highlightWatchedWords from "discourse/lib/highlight-watched-words";
 import { i18n } from "discourse-i18n";
-import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
+import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title" with {
+  discoursePlugin: "optional",
+};
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel" with {
+  discoursePlugin: "optional",
+};
 import ModelAccuracies from "../model-accuracies";
 
 export default class ReviewableRefreshAiChatMessage extends Component {
