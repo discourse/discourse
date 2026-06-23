@@ -1,5 +1,77 @@
 @use "lib/viewport";
 
+.db-site-advice {
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius-large);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--primary-very-low);
+    padding: var(--space-2) var(--space-4);
+    border-top-left-radius: var(--d-border-radius-large);
+    border-top-right-radius: var(--d-border-radius-large);
+    border-bottom: 1px solid var(--primary-low);
+
+    h3 {
+      margin: 0;
+      font-size: var(--font-0);
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+
+    &:has(ul) {
+      align-items: flex-start;
+    }
+
+    @include viewport.until(sm) {
+      align-items: flex-start;
+    }
+    gap: var(--space-3);
+    padding: var(--space-4);
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--primary-low);
+    }
+
+    .btn {
+      margin-left: auto;
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+
+    &.--high {
+      color: var(--danger);
+    }
+
+    &.--low {
+      color: var(--tertiary);
+    }
+  }
+
+  &__message {
+    overflow-wrap: anywhere;
+  }
+}
+
 .db-main {
   display: flex;
   flex-direction: column;
@@ -201,6 +273,10 @@
   }
 
   &__subintro {
+    h3 {
+      margin: 0;
+    }
+
     p {
       font-size: var(--font-down-1-rem);
       color: var(--primary-high);
@@ -990,46 +1066,4 @@
 
 .db-reports {
   display: contents;
-}
-
-.db-site-advice {
-  &__list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  &__item {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    padding-block: var(--space-2);
-  }
-
-  &__icon {
-    flex-shrink: 0;
-
-    &.--high {
-      color: var(--danger);
-    }
-
-    &.--low {
-      color: var(--tertiary);
-    }
-  }
-
-  &__message {
-    flex-grow: 1;
-    overflow-wrap: anywhere;
-
-    ul {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-1) var(--space-3);
-      margin-block: var(--space-1) 0;
-      margin-inline: 0;
-      padding: 0;
-      list-style: none;
-    }
-  }
 }
