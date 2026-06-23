@@ -183,7 +183,11 @@
     display: flex;
     align-items: center;
     flex-shrink: 0;
-    padding-top: var(--space-1);
+    margin-top: calc(-1 * var(--space-2));
+  }
+
+  &__collection-row.--inline-control &__collection-delete {
+    margin-top: calc(-1 * var(--space-1));
   }
 
   &__collection-fields {

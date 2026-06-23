@@ -469,6 +469,141 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.strictEqual(document.activeElement, keyInput);
   });
 
+  test("renders collection options as addable fields", async function (assert) {
+    this.setProperties({
+      configuration: { updates: {} },
+      formApi: null,
+      nodeType: "action:user",
+      schema: {
+        updates: {
+          type: "collection",
+          type_options: {
+            add_optional_field_button_text:
+              "discourse_workflows.property_engine.add_field",
+          },
+          options: [
+            {
+              name: "title",
+              type: "string",
+              required: false,
+            },
+          ],
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".workflows-property-engine__collection-row").doesNotExist();
+    assert
+      .dom(".workflows-property-engine__add-attrs-btn")
+      .hasText("Add field");
+
+    await click(".workflows-property-engine__add-attrs-btn");
+    await waitFor(".dropdown-menu__item .btn-transparent");
+    await click(findAll(".dropdown-menu__item .btn-transparent")[0]);
+
+    assert.dom(".workflows-property-engine__collection-row input").exists();
+    assert.dom(".form-kit__container-optional").doesNotExist();
+
+    await fillIn(
+      ".workflows-property-engine__collection-row input",
+      "Updated title"
+    );
+
+    assert.deepEqual(this.formApi.get("updates"), { title: "Updated title" });
+
+    await click(".workflows-property-engine__collection-delete button");
+
+    assert.deepEqual(this.formApi.get("updates"), {});
+  });
+
+  test("renders collection boolean options inline", async function (assert) {
+    this.setProperties({
+      configuration: { updates: {} },
+      formApi: null,
+      nodeType: "action:user",
+      schema: {
+        updates: {
+          type: "collection",
+          options: [
+            {
+              name: "trust_level_locked",
+              type: "boolean",
+              required: false,
+            },
+          ],
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    await click(".workflows-property-engine__add-attrs-btn");
+    await waitFor(".dropdown-menu__item .btn-transparent");
+    await click(findAll(".dropdown-menu__item .btn-transparent")[0]);
+
+    assert
+      .dom(".workflows-property-engine__collection-row")
+      .hasClass("--inline-control", "boolean rows use the inline row modifier");
+    assert
+      .dom(
+        ".workflows-property-engine__collection-row .d-toggle-switch__checkbox"
+      )
+      .hasAttribute("aria-checked", "false");
+    assert.deepEqual(this.formApi.get("updates"), {
+      trust_level_locked: false,
+    });
+
+    await click(
+      ".workflows-property-engine__collection-row .d-toggle-switch__checkbox"
+    );
+
+    assert.deepEqual(this.formApi.get("updates"), {
+      trust_level_locked: true,
+    });
+  });
+
   test("renders fixed collections with missing group data", async function (assert) {
     this.setProperties({
       configuration: { entries: {} },

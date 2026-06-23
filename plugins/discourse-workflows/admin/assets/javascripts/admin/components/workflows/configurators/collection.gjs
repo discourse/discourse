@@ -7,8 +7,10 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
+  fieldControl,
   fieldValue,
   findNodeType,
+  isExpression,
   normalizePropertyOptions,
   propertyDescription,
   propertyLabel,
@@ -38,6 +40,15 @@ export default class Collection extends Component {
     return (
       this.args.addLabel || i18n("discourse_workflows.property_engine.add_item")
     );
+  }
+
+  get addOptionLabel() {
+    const labelKey =
+      this.args.schema?.type_options?.add_optional_field_button_text;
+
+    return labelKey
+      ? i18n(labelKey)
+      : i18n("discourse_workflows.property_engine.add_option");
   }
 
   get isArrayCollection() {
@@ -76,9 +87,21 @@ export default class Collection extends Component {
     return this.availableOptions.length > 0;
   }
 
+  usesInlineControl(option) {
+    return (
+      fieldControl(option) === "boolean" &&
+      !isExpression(this.currentValue[option.name])
+    );
+  }
+
   @action
-  optionPath(name) {
-    return `${this.args.fieldName}.${name}`;
+  collectionRowClass(option) {
+    return [
+      "workflows-property-engine__collection-row",
+      this.usesInlineControl(option) ? "--inline-control" : null,
+    ]
+      .filter(Boolean)
+      .join(" ");
   }
 
   @action
@@ -163,37 +186,40 @@ export default class Collection extends Component {
           />
         {{/if}}
       {{else}}
-        {{#each this.selectedOptions key="name" as |option|}}
-          <div class="workflows-property-engine__collection-row">
-            <div class="workflows-property-engine__collection-delete">
-              <DButton
-                @action={{fn this.removeOption option}}
-                @icon="trash-can"
-                class="btn-transparent btn-small btn-danger"
-              />
-            </div>
+        <@form.Object @name={{@fieldName}} as |object item|>
+          {{#each this.selectedOptions key="name" as |option|}}
+            <div class={{this.collectionRowClass option}}>
+              <div class="workflows-property-engine__collection-delete">
+                <DButton
+                  @action={{fn this.removeOption option}}
+                  @icon="trash-can"
+                  class="btn-transparent btn-small btn-danger"
+                />
+              </div>
 
-            <div class="workflows-property-engine__collection-fields">
-              <Field
-                @form={{@form}}
-                @formApi={{@formApi}}
-                @configuration={{this.currentValue}}
-                @connections={{@connections}}
-                @credentials={{@credentials}}
-                @fieldName={{this.optionPath option.name}}
-                @label={{this.optionLabel option}}
-                @node={{@node}}
-                @nodeDefinition={{this.nodeDefinition}}
-                @nodeParameters={{@nodeParameters}}
-                @nodeType={{@nodeType}}
-                @nodes={{@nodes}}
-                @nodeTypes={{@nodeTypes}}
-                @schema={{option}}
-                @session={{@session}}
-              />
+              <div class="workflows-property-engine__collection-fields">
+                <Field
+                  @form={{object}}
+                  @formApi={{@formApi}}
+                  @configuration={{item}}
+                  @connections={{@connections}}
+                  @credentials={{@credentials}}
+                  @fieldName={{option.name}}
+                  @label={{this.optionLabel option}}
+                  @node={{@node}}
+                  @nodeDefinition={{this.nodeDefinition}}
+                  @nodeParameters={{@nodeParameters}}
+                  @nodeType={{@nodeType}}
+                  @nodes={{@nodes}}
+                  @nodeTypes={{@nodeTypes}}
+                  @schema={{option}}
+                  @session={{@session}}
+                  @showOptional={{false}}
+                />
+              </div>
             </div>
-          </div>
-        {{/each}}
+          {{/each}}
+        </@form.Object>
 
         {{#if this.hasAvailableOptions}}
           <DMenu
@@ -202,7 +228,7 @@ export default class Collection extends Component {
             @modalForwardRecipient={{true}}
           >
             <:trigger>
-              {{i18n "discourse_workflows.property_engine.add_option"}}
+              {{this.addOptionLabel}}
               {{dIcon "chevron-down"}}
             </:trigger>
             <:content as |menu|>

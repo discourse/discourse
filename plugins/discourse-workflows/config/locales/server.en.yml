@@ -79,6 +79,11 @@ en:
         edit_failed: "Failed to edit post."
         unknown_operation: "Unknown operation: %{operation}."
         invalid_filter: "Invalid post filter fragment: %{fragments}."
+      user:
+        unknown_operation: "Unknown operation: %{operation}."
+        invalid_updates: "User updates must be an object."
+        invalid_trust_level: "Invalid trust level: %{level}."
+        update_failed: "Failed to update user: %{errors}"
       send_personal_message:
         no_recipients: "At least one personal message recipient is required."
       credential:
