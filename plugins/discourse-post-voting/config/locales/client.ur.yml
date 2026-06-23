@@ -10,6 +10,7 @@ ur:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
     vote:
       toggle_voters: "دکھایں جنہوں نے ووٹ دیا"
+    last_answer_lowercase: آخری جواب
     post_voting:
       post:
         post_voting_comment:

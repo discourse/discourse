@@ -49,6 +49,8 @@ ur:
         group_selector_placeholder: "ایک گروپ منتخب کریں..."
       upcoming_events:
         status: "سٹیٹس"
+      upcoming_events_list:
+        all_day: "سارا دن"
       models:
         event:
           expired: "میعاد ختم ہوگئی"
@@ -100,6 +102,8 @@ ur:
           none: "تَقْلِید نہیں"
           every_day: "ہر دن"
           every_weekday: "ہر ہفتے کے دن"
+          ordinals:
+            last: "گزشتہ"
         attendance:
           none: "کوئی نہیں"
         allow_chat:
