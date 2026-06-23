@@ -115,9 +115,9 @@ module ApplicationHelper
         imports["discourse/plugins/#{plugin_name}?"] = imports["discourse/plugins/#{plugin_name}"]
       else
         imports["discourse/plugins/#{plugin_name}?"] = Plugin::JsManager.optional_plugin_stub
-        imports[
-          "discourse/plugins/#{plugin_name}"
-        ] = Plugin::JsManager.required_plugin_stub(plugin_name)
+        imports["discourse/plugins/#{plugin_name}"] = Plugin::JsManager.required_plugin_stub(
+          plugin_name,
+        )
       end
     end
 
