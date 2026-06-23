@@ -67,7 +67,7 @@ module PageObjects
       end
 
       def back_to_category
-        find(".edit-category .back-button").click
+        find(".edit-category-page .back-button").click
         self
       end
 
