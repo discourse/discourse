@@ -13,6 +13,7 @@ on:
       - beta
       - stable
       - release/*
+      - mracer-instrumented
 
 concurrency:
   group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
