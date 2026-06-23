@@ -587,6 +587,34 @@ RSpec.describe TagsController do
       )
     end
 
+    it "preserves the edit path when redirecting a mismatched slug" do
+      get "/tag/not-the-slug/#{tag.id}/edit"
+
+      expect(response.status).to eq(301)
+      expect(response.redirect_url).to end_with("/tag/#{tag.slug_for_url}/#{tag.id}/edit")
+    end
+
+    it "preserves the edit tab when redirecting a mismatched slug" do
+      get "/tag/not-the-slug/#{tag.id}/edit/general"
+
+      expect(response.status).to eq(301)
+      expect(response.redirect_url).to end_with("/tag/#{tag.slug_for_url}/#{tag.id}/edit/general")
+    end
+
+    it "does not redirect the edit page when the slug already matches" do
+      sign_in(admin)
+
+      get "/tag/#{tag.slug_for_url}/#{tag.id}/edit/general"
+      expect(response.status).to eq(200)
+    end
+
+    it "redirects the id-only edit route to the canonical slug edit URL" do
+      get "/tag/#{tag.id}/edit/general"
+
+      expect(response.status).to eq(301)
+      expect(response.redirect_url).to end_with("/tag/#{tag.slug_for_url}/#{tag.id}/edit/general")
+    end
+
     context "with a category in the path" do
       fab!(:topic_in_category) { Fabricate(:topic, tags: [tag], category: category) }
 

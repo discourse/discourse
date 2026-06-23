@@ -1707,6 +1707,8 @@ Discourse::Application.routes.draw do
 
     scope "/tag/:tag_id", constraints: { tag_id: /\d+/, format: :json } do
       get "/" => "tags#show", :as => "tag_show"
+      get "/edit" => "tags#show"
+      get "/edit/:tab" => "tags#show"
       get "/info" => "tags#info", :as => "tag_info"
       get "/notifications" => "tags#notifications", :as => "tag_notifications"
       put "/notifications" => "tags#update_notifications"

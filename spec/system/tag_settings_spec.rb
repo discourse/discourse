@@ -52,6 +52,21 @@ describe "Tag Settings" do
       expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}")
     end
 
+    it "lets the user open tag settings from a direct placeholder slug URL in a new tab" do
+      sign_in(admin)
+
+      new_tab = open_new_window(:tab)
+      switch_to_window(new_tab)
+
+      page.visit "/tag/-/#{tag_1.id}/edit/general"
+
+      expect(tag_settings_page).to have_tag_settings_page
+      expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
+      expect(tag_settings_page).to have_name_value(tag_1.name)
+      expect(tag_settings_page).to have_slug_value(tag_1.slug)
+      expect(tag_settings_page).to have_description_value(tag_1.description)
+    end
+
     it "allows privileged users to edit tag, admin to delete tag" do
       sign_in(trust_level_4)
       tags_page.visit_tag(tag_1)
