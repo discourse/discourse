@@ -8,6 +8,7 @@ import {
   _getResolvedLayouts,
   _getValidatedLayout,
   _hasLayout,
+  _mountedOutletNames,
 } from "discourse/blocks/block-outlet";
 import { synthesizePartEntries } from "discourse/lib/blocks/-internals/composite";
 import { loadBlockData } from "discourse/lib/blocks/-internals/data-coordinator";
@@ -121,6 +122,20 @@ export default class Blocks extends Service {
    */
   listOutlets() {
     return getAllOutlets();
+  }
+
+  /**
+   * Returns the set of outlet names with at least one `<BlockOutlet>` currently
+   * mounted on the page — which, unlike `listOutlets()` (every registered
+   * outlet) or `hasLayout()` (outlets with a layout), reflects what is actually
+   * rendered here, even for outlets with no layout yet. Driven by the outlet's
+   * own lifecycle, so it's populated as the page renders (before consumers that
+   * enumerate outlets run). A point-in-time snapshot, not a tracked/reactive set.
+   *
+   * @returns {Set<string>} The mounted outlet names.
+   */
+  mountedOutletNames() {
+    return _mountedOutletNames();
   }
 
   /**

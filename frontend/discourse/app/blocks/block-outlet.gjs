@@ -176,6 +176,24 @@ const CODE_OVERRIDABLE = "code-overridable";
 const outletLayouts = trackedMap();
 
 /**
+ * Ref-count of `<BlockOutlet>` instances currently mounted on the page, keyed by
+ * outlet name. Populated by `BlockOutlet`'s own lifecycle (constructor /
+ * `willDestroy`) at page render — before any consumer that enumerates outlets
+ * runs — independent of whether the outlet has a layout. So consumers know which
+ * outlets are on the page with no DOM scan and no render-timing race.
+ *
+ * A plain (UNtracked) Map on purpose: it's mutated during render (component
+ * construction), so tracking it would trip a backtracking-rerender assertion the
+ * moment a reader touches it in the same render pass. It doesn't need to be
+ * tracked — page mounts are stable for the life of a page, and consumers already
+ * recompute off the tracked layout layers (`outletLayouts`). Ref-counted so
+ * duplicate mounts and teardown-then-remount don't drop a name prematurely.
+ *
+ * @type {Map<string, number>}
+ */
+const mountedOutletCounts = new Map();
+
+/**
  * Counter for generating stable entry keys.
  * Incremented for each block entry that doesn't already carry a `__stableKey`,
  * either at first registration or for newly-inserted entries during edit-
@@ -400,6 +418,7 @@ function resolveLayoutRecord(outletName, { ignoreSessionDraft = false } = {}) {
 export function _resetOutletLayoutsForTesting() {
   if (DEBUG) {
     outletLayouts.clear();
+    mountedOutletCounts.clear();
     nextEntryKey = 0;
   }
 }
@@ -1083,6 +1102,48 @@ export function _hasLayout(outletName) {
 }
 
 /**
+ * Records that a `<BlockOutlet>` for `outletName` mounted, incrementing its
+ * ref-count. Call from the outlet's constructor.
+ *
+ * @internal This is an internal API.
+ * @param {string} outletName - The outlet identifier.
+ */
+export function _registerMountedOutlet(outletName) {
+  mountedOutletCounts.set(
+    outletName,
+    (mountedOutletCounts.get(outletName) ?? 0) + 1
+  );
+}
+
+/**
+ * Records that a `<BlockOutlet>` for `outletName` was destroyed, decrementing its
+ * ref-count and dropping the entry at zero. Call from the outlet's `willDestroy`.
+ *
+ * @internal This is an internal API.
+ * @param {string} outletName - The outlet identifier.
+ */
+export function _unregisterMountedOutlet(outletName) {
+  const next = (mountedOutletCounts.get(outletName) ?? 0) - 1;
+  if (next > 0) {
+    mountedOutletCounts.set(outletName, next);
+  } else {
+    mountedOutletCounts.delete(outletName);
+  }
+}
+
+/**
+ * Returns the set of outlet names with at least one `<BlockOutlet>` mounted on
+ * the page. A point-in-time snapshot — see `mountedOutletCounts` for why it is
+ * not tracked.
+ *
+ * @internal This is an internal API. Use the `blocks` service's `mountedOutletNames()` instead.
+ * @returns {Set<string>} The mounted outlet names.
+ */
+export function _mountedOutletNames() {
+  return new Set(mountedOutletCounts.keys());
+}
+
+/**
  * Returns the promise resolving to an outlet's validated layout entries, or
  * `undefined` when no layout is registered. Lets callers walk an outlet's
  * blocks before render (e.g. to resolve declared block data inside a route
@@ -1244,6 +1305,10 @@ export default class BlockOutlet extends Component {
         `Block outlet ${this.#name} is not registered in the blocks registry`
       );
     }
+
+    // Record this outlet as mounted so consumers can enumerate the outlets on
+    // the page, regardless of whether this one has a layout yet.
+    _registerMountedOutlet(this.#name);
   }
 
   willDestroy() {
@@ -1253,6 +1318,7 @@ export default class BlockOutlet extends Component {
     // Drop this outlet's coordinated block data so a later mount re-resolves
     // rather than reusing payloads cached for a torn-down outlet.
     resetBlockData(this.#name);
+    _unregisterMountedOutlet(this.#name);
   }
 
   get validatedLayout() {

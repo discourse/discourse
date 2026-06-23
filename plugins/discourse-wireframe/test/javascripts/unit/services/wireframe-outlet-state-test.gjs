@@ -5,9 +5,11 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
 import {
+  _registerMountedOutlet,
   _renderBlocks,
   _resetOutletLayoutsForTesting,
   _setLayoutLayer,
+  _unregisterMountedOutlet,
   LAYOUT_LAYERS,
 } from "discourse/blocks/block-outlet";
 import PreloadStore from "discourse/lib/preload-store";
@@ -150,6 +152,26 @@ module(
       });
 
       assert.strictEqual(this.editor.defaultThemeId, -1);
+    });
+
+    test("an outlet mounted on the page is editable even with no layout", function (assert) {
+      // Nothing rendered + nothing reset means no layout for this outlet.
+      assert.false(
+        this.editor.editableOutlets.includes("homepage-blocks"),
+        "not editable when it has neither a layout nor a mounted boundary"
+      );
+
+      // Simulate a <BlockOutlet> mounting (the blocks service's registry) with
+      // no layout — the post-reset "start from scratch" case.
+      _registerMountedOutlet("homepage-blocks");
+      try {
+        assert.true(
+          this.editor.editableOutlets.includes("homepage-blocks"),
+          "a mounted, layout-less outlet is editable so it can be rebuilt"
+        );
+      } finally {
+        _unregisterMountedOutlet("homepage-blocks");
+      }
     });
 
     test("an unowned outlet targets the active theme, not a default component", async function (assert) {

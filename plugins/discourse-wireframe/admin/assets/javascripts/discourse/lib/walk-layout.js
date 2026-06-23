@@ -70,36 +70,6 @@ function resolveBlockName(blockRef, blocksService) {
 }
 
 /**
- * Returns the set of outlet names whose `<OutletBoundary>` is currently
- * mounted in the DOM. Filters the walker to those outlets so layouts
- * registered for off-page outlets don't show as dead rows.
- *
- * Returns `null` when `document` isn't usable (Node-side / SSR / some
- * test environments) so callers can fall back to the full list.
- *
- * @returns {Set<string>|null}
- */
-export function mountedOutletNames() {
-  if (typeof document === "undefined") {
-    return null;
-  }
-  const nodes = document.querySelectorAll(
-    ".wireframe-outlet-boundary[data-outlet-name]"
-  );
-  if (nodes.length === 0) {
-    return null;
-  }
-  const names = new Set();
-  for (const node of nodes) {
-    const name = node.getAttribute("data-outlet-name");
-    if (name) {
-      names.add(name);
-    }
-  }
-  return names;
-}
-
-/**
  * @param {object} options
  * @param {any} options.blocksService
  * @param {Set<string>} [options.alwaysInclude] - Outlet names the
@@ -114,7 +84,11 @@ export async function walkAllOutlets({ blocksService, alwaysInclude }) {
   const result = [];
   const outlets = blocksService.listOutlets();
   const layoutMap = blocksService.resolvedLayouts();
-  const mounted = mountedOutletNames();
+  // Outlets actually on this page, from the blocks service's mounted-outlet
+  // registry (populated by each `<BlockOutlet>`'s lifecycle at page render). A
+  // point-in-time snapshot; the walk re-runs off the tracked layout layers it
+  // reads below (e.g. when an outlet's draft is materialised).
+  const mounted = blocksService.mountedOutletNames();
 
   // Block-name → metadata index, built once. Lets `walkEntries` recognise a
   // composite (a block declaring a `parts` composition) and emit its parts as
@@ -138,18 +112,18 @@ export async function walkAllOutlets({ blocksService, alwaysInclude }) {
   }
 
   for (const outletName of outlets) {
-    if (!blocksService.hasLayout(outletName)) {
-      continue;
-    }
-    // Filter to outlets actually rendered on this page when we can tell
-    // (mounted is null only in environments where the DOM query can't
-    // resolve — tests, SSR — at which point we walk everything).
-    // `alwaysInclude` lets the editor pin outlets it knows it has
-    // touched this session — the DOM boundary briefly disappears
-    // during a publish cycle and we don't want the outline to flicker
-    // the outlet out and back.
+    // Keep an outlet that has a layout, OR is mounted on this page (so an
+    // empty, layout-less outlet still gets a row once the editor materialises
+    // its draft), OR is pinned via `alwaysInclude` (the editor keeps outlets it
+    // touched this session from flickering out during a publish re-render).
+    // Off-page outlets — registered but neither mounted nor laid out here — are
+    // dropped so they don't show as dead rows.
     const forceInclude = alwaysInclude?.has(outletName);
-    if (mounted && !mounted.has(outletName) && !forceInclude) {
+    if (
+      !blocksService.hasLayout(outletName) &&
+      !mounted.has(outletName) &&
+      !forceInclude
+    ) {
       continue;
     }
     const entry = layoutMap.get(outletName);

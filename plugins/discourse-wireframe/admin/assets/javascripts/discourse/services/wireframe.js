@@ -82,7 +82,6 @@ import {
   wrapAsOutletRoot,
 } from "../lib/mutate-layout";
 import { inferSchemaFromValues } from "../lib/schema-to-fields";
-import { mountedOutletNames } from "../lib/walk-layout";
 
 const FLUSH_DELAY_MS = 200;
 
@@ -648,9 +647,14 @@ export default class WireframeService extends Service {
    */
   get editableOutlets() {
     const registered = this.blocks.listOutlets();
-    const mounted = mountedOutletNames();
+    // Which outlets are actually on this page — the blocks service's
+    // mounted-outlet registry, populated by each `<BlockOutlet>`'s lifecycle at
+    // page render (no DOM scan, no enter-time race). An outlet is editable when
+    // it has a layout OR is mounted here (so an empty outlet can be built from
+    // scratch).
+    const mounted = this.blocks.mountedOutletNames();
     return registered.filter(
-      (name) => this.blocks.hasLayout(name) || mounted?.has(name)
+      (name) => this.blocks.hasLayout(name) || mounted.has(name)
     );
   }
 

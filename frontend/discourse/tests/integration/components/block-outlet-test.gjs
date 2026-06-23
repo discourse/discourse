@@ -1,6 +1,12 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
-import { find, render, settled, setupOnerror } from "@ember/test-helpers";
+import {
+  clearRender,
+  find,
+  render,
+  settled,
+  setupOnerror,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { block } from "discourse/blocks";
@@ -26,6 +32,28 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
   hooks.afterEach(function () {
     setupOnerror();
+  });
+
+  module("mounted outlet registry", function () {
+    test("the blocks service tracks a mounted outlet (even with no layout) and clears it on teardown", async function (assert) {
+      const blocks = getOwner(this).lookup("service:blocks");
+      assert.false(
+        blocks.mountedOutletNames().has("hero-blocks"),
+        "not tracked before the outlet renders"
+      );
+
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+      assert.true(
+        blocks.mountedOutletNames().has("hero-blocks"),
+        "tracked while mounted, despite having no layout"
+      );
+
+      await clearRender();
+      assert.false(
+        blocks.mountedOutletNames().has("hero-blocks"),
+        "untracked once the outlet is torn down"
+      );
+    });
   });
 
   module("basic rendering", function () {
