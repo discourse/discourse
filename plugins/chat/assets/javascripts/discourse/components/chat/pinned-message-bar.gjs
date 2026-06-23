@@ -25,7 +25,6 @@ export default class ChatPinnedMessageBar extends Component {
     // whenever the channel id changes) rather than the optimistic
     // `pinnedMessagesCount`, which changes before the server confirms and
     // would refetch stale data.
-    this.#hydrateDismissal(channelId);
     const key = `/chat/${channelId}`;
     this.messageBus.subscribe(
       key,
@@ -38,24 +37,21 @@ export default class ChatPinnedMessageBar extends Component {
   #loadSequence = 0;
   #dismissStore = new KeyValueStore("discourse_chat_pinned_bar_");
 
-  // a user can hide the bar from the pins panel; it stays hidden until a pin
-  // newer than the one they dismissed above is added
+  // A user can hide the bar from the pins panel; it stays hidden until a pin
+  // newer than the one they dismissed above is added. Pin ids auto-increment,
+  // so "a newer pin exists" === "the max pin id increased" — order-independent.
+  // The live dismissal lives on the channel (tracked, set by the pins list);
+  // the local-storage fallback restores it across reloads without writing
+  // during render.
   get dismissed() {
-    const dismissedAbove = this.args.channel.pinsDismissedAboveId;
-    if (dismissedAbove == null) {
+    const dismissedAbove =
+      this.args.channel.pinsDismissedAboveId ??
+      this.#dismissStore.getObject(String(this.args.channel.id));
+    if (dismissedAbove == null || this.pins.length === 0) {
       return false;
     }
-    const newestPinId = this.pins[0]?.id;
-    return newestPinId != null && newestPinId <= dismissedAbove;
-  }
-
-  #hydrateDismissal(channelId) {
-    if (this.args.channel.pinsDismissedAboveId == null) {
-      const stored = this.#dismissStore.getObject(String(channelId));
-      if (stored != null) {
-        this.args.channel.pinsDismissedAboveId = stored;
-      }
-    }
+    const maxPinId = Math.max(...this.pins.map((pin) => pin.id));
+    return maxPinId <= dismissedAbove;
   }
 
   get showBar() {

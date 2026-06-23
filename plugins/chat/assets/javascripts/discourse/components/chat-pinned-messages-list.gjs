@@ -80,12 +80,13 @@ export default class ChatPinnedMessagesList extends Component {
   @action
   dismissBar() {
     const channel = this.args.channel;
-    const newestPinId = this.pinnedMessages[0]?.id;
-    if (newestPinId != null) {
-      channel.pinsDismissedAboveId = newestPinId;
+    if (this.pinnedMessages.length) {
+      // max id (not the first pin) so dismissal doesn't depend on ordering
+      const maxPinId = Math.max(...this.pinnedMessages.map((pin) => pin.id));
+      channel.pinsDismissedAboveId = maxPinId;
       this.#dismissStore.setObject({
         key: String(channel.id),
-        value: newestPinId,
+        value: maxPinId,
       });
     }
     this.router.transitionTo("chat.channel", ...channel.routeModels);

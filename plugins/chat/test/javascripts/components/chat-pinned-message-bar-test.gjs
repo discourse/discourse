@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import KeyValueStore from "discourse/lib/key-value-store";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
@@ -19,6 +20,20 @@ function pinResponse(channel, count) {
     });
   }
   return response({ pinned_messages, membership: null });
+}
+
+// pins given newest-first by id (matching the server's created_at DESC, id DESC)
+function pinsResponse(ids) {
+  return response({
+    pinned_messages: ids.map((id, i) => ({
+      id,
+      chat_message_id: 200 + id,
+      pinned_at: moment().subtract(i, "minute").toISOString(),
+      pinned_by: { id: 1, username: "alice" },
+      message: { id: 200 + id, excerpt: `Pin ${id}` },
+    })),
+    membership: null,
+  });
 }
 
 // a single pin whose pin-record id is `pinId` (the value the bar compares
@@ -413,5 +428,85 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
     assert
       .dom(".chat-pinned-bar")
       .doesNotHaveClass("--dismissed", "reappears for the newer pin");
+  });
+
+  test("stays dismissed after reload via stored state", async function (assert) {
+    // simulate a previous dismissal persisted to local storage
+    const store = new KeyValueStore("discourse_chat_pinned_bar_");
+    store.setObject({ key: String(this.channel.id), value: 100 });
+
+    this.channel.pinnedMessagesCount = 1;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      dismissablePinResponse(100)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert.dom(".chat-pinned-bar").hasClass("--dismissed");
+  });
+
+  test("stays dismissed when the dismissed pin is unpinned", async function (assert) {
+    let ids = [101, 100]; // newest-first
+    this.channel.pinnedMessagesCount = 2;
+    this.channel.pinsDismissedAboveId = 101;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      pinsResponse(ids)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert.dom(".chat-pinned-bar").hasClass("--dismissed");
+
+    // the newest pin is unpinned, leaving only an older (lower-id) pin
+    ids = [100];
+    await publishToMessageBus(`/chat/${this.channel.id}`, {
+      type: "unpin",
+      chat_message_id: 301,
+    });
+    await settled();
+
+    assert
+      .dom(".chat-pinned-bar")
+      .hasClass("--dismissed", "stays hidden — a removal is not a new pin");
+  });
+
+  test("uses the highest pin id, not the first pin, for dismissal", async function (assert) {
+    // pins[0] is first by display order but has a LOWER id than another pin
+    // (e.g. created_at not monotonic with id) — the bar must compare the max id
+    this.channel.pinnedMessagesCount = 2;
+    this.channel.pinsDismissedAboveId = 5;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      pinsResponse([5, 100])
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".chat-pinned-bar")
+      .doesNotHaveClass(
+        "--dismissed",
+        "shown because a pin with a higher id than the dismissed value exists"
+      );
   });
 });
