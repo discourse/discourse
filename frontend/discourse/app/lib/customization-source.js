@@ -129,11 +129,18 @@ export function runWithExpectedSourceId(sourceId, fn) {
 }
 
 /**
- * Development-only check: warns once when a registration's build-injected source
- * does not match the authoritative source of the initializer that is running.
- * This catches code that reaches an API-entry function through an indirect
- * reference (an aliased local, a dynamic import, or a namespace import) the build
- * transform cannot attribute. Stripped from production and silent in tests.
+ * Development-only check: warns once per source when a registration made inside a
+ * known plugin/theme initializer carried NO build-injected source (resolved to
+ * core). That flags code which reached an API-entry function through an indirect
+ * reference (an aliased local, a dynamic import, a namespace import, or a
+ * re-export) the build transform cannot attribute.
+ *
+ * Best-effort and synchronous by design: only registrations made synchronously
+ * within the initializer are checked. Registrations deferred past an await/tick,
+ * and legacy `<script>`-tag plugins, resolve to core and are not flagged. A
+ * registration attributed to a *different* (but present) source is treated as
+ * legitimate cross-source registration, not a missing descriptor. Stripped from
+ * production and silent in tests.
  *
  * @param {string|null} resolvedSourceId - The id resolved from the build-injected source.
  */
@@ -143,22 +150,22 @@ export function warnIfSourceUnexpected(resolvedSourceId) {
   }
 
   const expected = _expectedSourceId;
-  if (!expected || resolvedSourceId === expected) {
+  // Only the real gap: a plugin/theme initializer registered something that the
+  // build attributed to no source at all.
+  if (!expected || resolvedSourceId !== null) {
     return;
   }
 
-  const key = `${expected}|${resolvedSourceId ?? "core"}`;
-  if (_warnedMismatches.has(key)) {
+  if (_warnedMismatches.has(expected)) {
     return;
   }
-  _warnedMismatches.add(key);
+  _warnedMismatches.add(expected);
 
   // eslint-disable-next-line no-console
   console.warn(
     `[customization-source] Code from ${expected} performed a registration that resolved to ` +
-      `"${resolvedSourceId ?? "core"}". This usually means an API-entry function was reached ` +
-      `through an indirect reference (an aliased local, a dynamic import, or a namespace import) ` +
-      `that the build cannot attribute. Call withPluginApi / apiInitializer directly so the ` +
-      `source is tracked.`
+      `"core". This usually means an API-entry function was reached through an indirect ` +
+      `reference (an aliased local, a dynamic import, or a namespace import) that the build ` +
+      `cannot attribute. Call withPluginApi / apiInitializer directly so the source is tracked.`
   );
 }

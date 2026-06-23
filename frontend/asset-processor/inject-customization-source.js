@@ -1,19 +1,46 @@
 // Build-time transform that records which plugin or theme a piece of code came
 // from, so the runtime no longer has to infer it from the JavaScript call stack.
 //
-// For every call to one of the core API-entry functions (see ENTRY_FUNCTIONS)
-// made from plugin/theme code, it appends a branded source descriptor as the
-// last argument. The matching runtime functions detect the brand, strip the
-// descriptor, and bind it to the API object they hand back.
+// For each import of a core API-entry function (see ENTRY_FUNCTIONS) in
+// plugin/theme code, it shadows the imported binding with a thin wrapper that
+// appends a branded source descriptor as the last argument:
+//
+//   import { withPluginApi } from "discourse/lib/plugin-api";
+//   withPluginApi(cb);
+//
+// becomes (descriptor abbreviated):
+//
+//   import { withPluginApi as _customizationSource$withPluginApi } from "...";
+//   function withPluginApi(...args) {
+//     return _customizationSource$withPluginApi(...args, { ...descriptor });
+//   }
+//   withPluginApi(cb);
+//
+// Because the wrapper shadows the import binding, EVERY reference to it is
+// attributed — direct calls, aliased imports, a stored alias
+// (`const w = withPluginApi`), and the function passed as a callback. The
+// matching runtime functions detect the brand, strip the descriptor, and bind
+// it to the API object they hand back.
 //
 // Core code is compiled by a different pipeline and never runs through this
 // transform, so it receives no descriptor and resolves to "core".
+//
+// KNOWN LIMITATIONS (attribution falls back to "core"; the dev-only
+// warnIfSourceUnexpected flags them). Attribution flows through the named import
+// binding, so it does NOT cover: namespace-member access
+// (`import * as api; api.withPluginApi(...)`), dynamic `import()`,
+// import-through-a-re-export, or legacy `<script>`-tag plugins (`_pluginCallbacks`
+// in app.js, which call withPluginApi from core).
 
 // Registry key for the marker symbol. Keep in sync with SOURCE_BRAND
 // (`Symbol.for(...)`) in discourse/lib/customization-source. A registered symbol
 // is used so an ordinary object (e.g. a bogus `opts`) can never be mistaken for
 // a source descriptor.
 const SOURCE_BRAND_KEY = "discourse:customization-source";
+
+// Prefix for the hidden raw-import binding the wrapper forwards to. Also used to
+// detect already-shadowed imports so the transform is idempotent.
+const RAW_PREFIX = "_customizationSource$";
 
 // The core functions, keyed by their canonical import, that hand a PluginApi to
 // plugin/theme code. Extend this list as new source-aware entry points appear.
@@ -30,28 +57,17 @@ export default function (babel, options = {}) {
     return { name: "inject-customization-source", visitor: {} };
   }
 
-  function brandKey() {
-    return t.callExpression(
-      t.memberExpression(t.identifier("Symbol"), t.identifier("for")),
-      [t.stringLiteral(SOURCE_BRAND_KEY)]
-    );
-  }
-
-  function isBrandKey(node) {
-    return (
-      t.isCallExpression(node) &&
-      t.isMemberExpression(node.callee) &&
-      t.isIdentifier(node.callee.object, { name: "Symbol" }) &&
-      t.isIdentifier(node.callee.property, { name: "for" }) &&
-      node.arguments.length === 1 &&
-      t.isStringLiteral(node.arguments[0], { value: SOURCE_BRAND_KEY })
-    );
-  }
-
   function buildDescriptor() {
     const properties = [
       // [Symbol.for("discourse:customization-source")]: true
-      t.objectProperty(brandKey(), t.booleanLiteral(true), true),
+      t.objectProperty(
+        t.callExpression(
+          t.memberExpression(t.identifier("Symbol"), t.identifier("for")),
+          [t.stringLiteral(SOURCE_BRAND_KEY)]
+        ),
+        t.booleanLiteral(true),
+        true
+      ),
       t.objectProperty(t.identifier("type"), t.stringLiteral(source.type)),
     ];
 
@@ -68,52 +84,72 @@ export default function (babel, options = {}) {
     return t.objectExpression(properties);
   }
 
-  function isEntryCall(path) {
-    const callee = path.node.callee;
-    if (!t.isIdentifier(callee)) {
-      return false;
-    }
-
-    const binding = path.scope.getBinding(callee.name);
-    if (!binding || binding.kind !== "module") {
-      return false;
-    }
-
-    const specifier = binding.path;
-    if (!t.isImportSpecifier(specifier.node)) {
-      return false;
-    }
-
-    const importedName = specifier.node.imported.name;
-    const moduleName = specifier.parent.source.value;
-
+  function isEntryExport(moduleName, importedName) {
     return ENTRY_FUNCTIONS.some(
-      (entry) => entry.export === importedName && entry.module === moduleName
+      (entry) => entry.module === moduleName && entry.export === importedName
     );
   }
 
-  function alreadyBranded(args) {
-    const last = args[args.length - 1];
-    return (
-      last &&
-      t.isObjectExpression(last) &&
-      last.properties.some(
-        (property) =>
-          t.isObjectProperty(property) &&
-          property.computed &&
-          isBrandKey(property.key)
-      )
-    );
-  }
+  // Built once per file; cloned into each wrapper.
+  const descriptor = buildDescriptor();
 
   return {
     name: "inject-customization-source",
     visitor: {
-      CallExpression(path) {
-        if (!isEntryCall(path) || alreadyBranded(path.node.arguments)) {
+      ImportDeclaration(path) {
+        const moduleName = path.node.source.value;
+        if (!ENTRY_FUNCTIONS.some((entry) => entry.module === moduleName)) {
           return;
         }
-        path.node.arguments.push(buildDescriptor());
+
+        const wrappers = [];
+
+        for (const specifier of path.node.specifiers) {
+          if (
+            !t.isImportSpecifier(specifier) ||
+            !t.isIdentifier(specifier.imported) ||
+            !isEntryExport(moduleName, specifier.imported.name)
+          ) {
+            continue;
+          }
+
+          // Already shadowed (e.g. a second transform pass) — leave it alone.
+          if (specifier.local.name.startsWith(RAW_PREFIX)) {
+            continue;
+          }
+
+          const localName = specifier.local.name;
+          const rawName = `${RAW_PREFIX}${specifier.imported.name}`;
+
+          // Repoint the import to the hidden raw name; user references keep
+          // `localName` and resolve to the wrapper injected below.
+          specifier.local = t.identifier(rawName);
+
+          // function <local>(...args) { return <raw>(...args, <descriptor>); }
+          wrappers.push(
+            t.functionDeclaration(
+              t.identifier(localName),
+              [t.restElement(t.identifier("args"))],
+              t.blockStatement([
+                t.returnStatement(
+                  t.callExpression(t.identifier(rawName), [
+                    t.spreadElement(t.identifier("args")),
+                    t.cloneNode(descriptor, true),
+                  ])
+                ),
+              ])
+            )
+          );
+        }
+
+        if (wrappers.length > 0) {
+          // Rebuild scope so the now-repointed import (raw name) replaces the
+          // stale original-name binding; otherwise inserting the wrapper under
+          // the original name is seen as a duplicate declaration. References keep
+          // their original names and resolve to the hoisted wrappers.
+          path.scope.crawl();
+          path.insertAfter(wrappers);
+        }
       },
     },
   };
