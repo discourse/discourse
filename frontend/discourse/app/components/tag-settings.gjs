@@ -221,7 +221,7 @@ export default class TagSettings extends Component {
 
   @action
   validateSlug(name, slug, { addError }) {
-    if (slug?.trim() && !slugify(slug)) {
+    if (slug?.trim() && slug !== slugify(slug)) {
       addError(name, {
         title: i18n("tagging.settings.slug"),
         message: i18n("tagging.settings.invalid_slug"),

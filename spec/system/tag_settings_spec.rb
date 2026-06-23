@@ -112,7 +112,7 @@ describe "Tag Settings" do
       sign_in(admin)
 
       tag_settings_page.visit(tag_1)
-      tag_settings_page.fill_slug(".")
+      tag_settings_page.fill_slug("a.a")
       tag_settings_page.click_save
 
       expect(form.field("slug")).to have_errors(I18n.t("js.tagging.settings.invalid_slug"))

@@ -1045,6 +1045,20 @@ RSpec.describe TagsController do
         expect(tag.reload.slug).to eq("custom-slug")
       end
 
+      it "rejects tag slugs with unsupported characters" do
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { slug: "." } }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include("Slug is invalid")
+        expect(tag.reload.slug).to eq("original-name")
+
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { slug: "a.a" } }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include("Slug is invalid")
+        expect(tag.reload.slug).to eq("original-name")
+      end
+
       it "updates the tag description" do
         put "/tag/#{tag.id}/settings.json",
             params: {
