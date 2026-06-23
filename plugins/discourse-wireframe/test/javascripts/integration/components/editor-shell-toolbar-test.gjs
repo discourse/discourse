@@ -102,6 +102,26 @@ module(
       assert.true(published, "the Publish menu item writes the live field");
     });
 
+    test("for a core system theme, Save draft works but direct Publish is disabled", async function (assert) {
+      // Re-enter bound to a system theme (negative id). Save draft stays
+      // available; direct Publish is disabled in favour of the per-outlet
+      // companion-component path in the inspector.
+      this.editor.exit();
+      this.editor.enter({ themeId: -1 });
+      await makeDirty(this.editor);
+
+      await render(<template><EditorShell /></template>);
+
+      assert
+        .dom(".wireframe-btn-save-draft")
+        .isNotDisabled("Save draft works for a system theme");
+
+      await click(".wireframe-toolbar-publish-trigger");
+      assert
+        .dom(".wireframe-toolbar-publish-content .wireframe-btn-publish")
+        .isDisabled("direct Publish is disabled for a system theme");
+    });
+
     test("Save draft disables after a successful save and re-enables on the next edit", async function (assert) {
       await makeDirty(this.editor);
       pretender.post(DRAFTS_URL, () => response({ success: true }));

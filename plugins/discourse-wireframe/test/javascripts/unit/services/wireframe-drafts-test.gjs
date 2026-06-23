@@ -78,6 +78,22 @@ module(
       assert.verifySteps(["drafted"]);
     });
 
+    test("saveDraftOutlet posts a system theme's negative id unchanged", async function (assert) {
+      await enterEdited(this);
+
+      pretender.post(DRAFTS_URL, (request) => {
+        const body = parsePostData(request.requestBody);
+        // Core system themes (Foundation, Horizon) have negative ids; the client
+        // must forward them as-is rather than treating them as invalid.
+        assert.strictEqual(body.theme_id, "-1");
+        assert.step("drafted");
+        return response({ success: true });
+      });
+
+      await this.drafts.saveDraftOutlet(-1, "homepage-blocks");
+      assert.verifySteps(["drafted"]);
+    });
+
     test("deleteDraft issues a DELETE and swallows transport errors", async function (assert) {
       pretender.delete(DRAFTS_URL, () => {
         assert.step("deleted");

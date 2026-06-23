@@ -3,6 +3,9 @@
 RSpec.describe Themes::CreateCustomizationComponent do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:theme_id) }
+    it { is_expected.not_to allow_value(0).for(:theme_id) }
+    # Core system themes (Foundation, Horizon) have negative ids and are valid.
+    it { is_expected.to allow_value(-1).for(:theme_id) }
   end
 
   describe ".call" do
@@ -34,7 +37,7 @@ RSpec.describe Themes::CreateCustomizationComponent do
       expect(result).to run_successfully
       expect(component.component).to eq(true)
       expect(component.remote_theme&.is_git?).to be_falsey
-      expect(component.name).to eq("Acme-customizations")
+      expect(component.name).to eq("Acme-block-layouts")
       expect(parent.reload.child_theme_ids).to include(component.id)
 
       field =
@@ -64,8 +67,22 @@ RSpec.describe Themes::CreateCustomizationComponent do
     end
 
     it "suffixes the component name when the canonical name is taken by a non-reusable theme" do
-      Fabricate(:theme, name: "Acme-customizations", component: false)
-      expect(component.name).to eq("Acme-customizations 2")
+      Fabricate(:theme, name: "Acme-block-layouts", component: false)
+      expect(component.name).to eq("Acme-block-layouts 2")
+    end
+
+    context "with a core system theme as the parent (negative id)" do
+      let(:params) { { theme_id: Theme.foundation_theme.id, drafts: drafts } }
+
+      it "creates the companion component installed on the system theme" do
+        foundation = Theme.foundation_theme
+        expect(foundation.id).to be < 0
+
+        expect(result).to run_successfully
+        expect(component.component).to eq(true)
+        expect(component.name).to eq("Foundation-block-layouts")
+        expect(foundation.reload.child_theme_ids).to include(component.id)
+      end
     end
 
     it "is not blocked by the parent's duplicable_theme: false" do

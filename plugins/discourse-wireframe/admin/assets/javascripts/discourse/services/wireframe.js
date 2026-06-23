@@ -670,6 +670,18 @@ export default class WireframeService extends Service {
     return this.#defaultThemeId();
   }
 
+  /**
+   * Whether the editor is bound to a core "system" theme (Foundation, Horizon),
+   * which have negative ids. Such themes can't be published to directly — the
+   * editor offers an installable companion component instead — so the toolbar
+   * uses this to disable the direct Publish action.
+   *
+   * @returns {boolean}
+   */
+  get activeThemeIsSystem() {
+    return this.activeThemeId != null && this.activeThemeId < 0;
+  }
+
   /** @returns {boolean} */
   get canUndo() {
     return this.undoStack.length > 0;
@@ -2487,7 +2499,7 @@ export default class WireframeService extends Service {
       try {
         await this.saveDraftOutlet(outletName);
       } catch (error) {
-        errors.push(`${outletName}: ${error?.message ?? "Save draft failed"}`);
+        errors.push(`${outletName}: ${this.#describeSaveError(error)}`);
       }
     }
     if (errors.length === 0) {
@@ -2731,6 +2743,28 @@ export default class WireframeService extends Service {
       }
     }
     return names;
+  }
+
+  /**
+   * Turns a thrown save-draft failure into a human-readable banner string. The
+   * ajax helper rejects with `{ jqXHR, textStatus, errorThrown }` — an object
+   * with no `message` — so a bare `error.message` read would always fall back to
+   * a generic string and hide the real cause. Prefers the server's `errors`
+   * array, then the HTTP status, then any thrown Error's message/name, and only
+   * as a last resort the stringified value.
+   *
+   * @param {*} error - the value thrown/rejected from the draft save.
+   * @returns {string} a non-empty description for the banner.
+   */
+  #describeSaveError(error) {
+    const serverErrors = error?.jqXHR?.responseJSON?.errors;
+    if (serverErrors?.length) {
+      return serverErrors.join(", ");
+    }
+    if (error?.jqXHR) {
+      return `HTTP ${error.jqXHR.status}`;
+    }
+    return error?.message || error?.name || String(error);
   }
 
   /**

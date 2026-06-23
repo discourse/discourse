@@ -68,5 +68,27 @@ RSpec.describe DiscourseWireframe::SaveBlockLayoutDraft do
         be_a_success,
       )
     end
+
+    it "drafts a system theme (negative id), e.g. Foundation" do
+      foundation = Theme.foundation_theme
+      expect(foundation.id).to be < 0
+
+      expect(
+        described_class.call(params: params.merge(theme_id: foundation.id), **dependencies),
+      ).to be_a_success
+      expect(
+        DiscourseWireframe::BlockLayoutDraft.find_by(
+          user: admin,
+          theme_id: foundation.id,
+          outlet: "homepage-blocks",
+        ),
+      ).to be_present
+    end
+
+    it "rejects a theme_id of 0 (never a valid theme)" do
+      expect(described_class.call(params: params.merge(theme_id: 0), **dependencies)).to(
+        fail_a_contract,
+      )
+    end
   end
 end

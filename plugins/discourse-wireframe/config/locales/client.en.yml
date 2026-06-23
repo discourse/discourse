@@ -15,6 +15,7 @@ en:
         save_draft: "Save draft"
         draft_saved: "Saved"
         publish: "Publish"
+        publish_disabled_system: "Core themes can't be published to directly. Open an area in the inspector to create a companion component instead."
         publish_anyway: "Publish anyway"
         publish_with_warnings_confirm:
           one: "%{count} block has structural issues and won't render until you fix it. Publish anyway?"
@@ -394,7 +395,9 @@ en:
         reset_confirm_button: "Reset to default"
         discard: "Discard changes"
         publish_disabled_git: "This area belongs to a Git-managed theme and can't be published from here."
+        publish_disabled_system: "This is a core theme and can't be published to directly. Create a companion component instead."
         git_notice: "This theme is managed by Git, so it can't be edited here directly. Create a customization component to override it (recommended), export this area to commit it upstream, or duplicate the whole theme."
+        system_notice: "This is a core theme, so its layout can't be published to directly. Create a companion component to hold your changes and publish them — the core theme stays untouched and keeps receiving updates."
         create_component: "Create customization component"
         create_component_title: "Create a local theme component that overrides this Git theme's layout — you can publish to it."
         create_component_confirm_title: "Create a customization component?"

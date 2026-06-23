@@ -54,17 +54,55 @@ export default class InspectorOutletSection extends Component {
   }
 
   /**
-   * Whether Publish is available: the outlet has unsaved edits and its owner is
-   * not Git-managed.
+   * Whether the owning theme is a core "system" theme (Foundation, Horizon),
+   * which have negative ids. Like a Git theme, a system theme can't be published
+   * to directly — the companion-component path is offered instead.
+   *
+   * @returns {boolean}
+   */
+  get isSystem() {
+    return this.owner.themeId != null && this.owner.themeId < 0;
+  }
+
+  /**
+   * Whether to show the theme escape hatch (the companion-component affordance):
+   * true when the owner can't be published to directly — a Git-managed or a core
+   * system theme.
+   *
+   * @returns {boolean}
+   */
+  get showThemeEscapeHatch() {
+    return this.isGit || this.isSystem;
+  }
+
+  /**
+   * Whether Publish is available: the outlet has unsaved edits and its owner can
+   * be published to directly (not Git-managed and not a core system theme).
    *
    * @returns {boolean}
    */
   get canPublish() {
-    return this.isEditing && !this.isGit;
+    return this.isEditing && !this.isGit && !this.isSystem;
+  }
+
+  /**
+   * The reason Publish is unavailable, shown as the disabled button's tooltip,
+   * or null when Publish is available.
+   *
+   * @returns {string|null}
+   */
+  get publishDisabledTitle() {
+    if (this.isGit) {
+      return i18n("wireframe.outlet.publish_disabled_git");
+    }
+    if (this.isSystem) {
+      return i18n("wireframe.outlet.publish_disabled_system");
+    }
+    return null;
   }
 
   get canResetToDefault() {
-    return this.isPublished && !this.isGit;
+    return this.isPublished && !this.isGit && !this.isSystem;
   }
 
   /**
@@ -167,10 +205,7 @@ export default class InspectorOutletSection extends Component {
             class="btn-primary wireframe-outlet-verb__publish"
             @label="wireframe.outlet.publish"
             @disabled={{unless this.canPublish true}}
-            @title={{if
-              this.isGit
-              (i18n "wireframe.outlet.publish_disabled_git")
-            }}
+            @title={{this.publishDisabledTitle}}
             @action={{fn this.wireframe.publishOutlet @outletName}}
           />
           {{#if this.isEditing}}
@@ -189,10 +224,14 @@ export default class InspectorOutletSection extends Component {
           {{/if}}
         </div>
 
-        {{#if this.isGit}}
+        {{#if this.showThemeEscapeHatch}}
           <div class="wireframe-inspector__outlet-git">
             <p class="wireframe-inspector__outlet-git-notice">
-              {{i18n "wireframe.outlet.git_notice"}}
+              {{#if this.isSystem}}
+                {{i18n "wireframe.outlet.system_notice"}}
+              {{else}}
+                {{i18n "wireframe.outlet.git_notice"}}
+              {{/if}}
             </p>
             <DButton
               class="btn-primary wireframe-outlet-verb__create-component"
@@ -201,20 +240,25 @@ export default class InspectorOutletSection extends Component {
               @disabled={{this.isWorking}}
               @action={{this.confirmCreateComponent}}
             />
-            <DButton
-              class="btn-default wireframe-outlet-verb__export"
-              @label="wireframe.outlet.export"
-              @title={{i18n "wireframe.outlet.export_title"}}
-              @disabled={{this.isWorking}}
-              @action={{this.exportOutlet}}
-            />
-            <DButton
-              class="btn-default wireframe-outlet-verb__duplicate"
-              @label="wireframe.outlet.duplicate"
-              @title={{i18n "wireframe.outlet.duplicate_title"}}
-              @disabled={{this.isWorking}}
-              @action={{this.confirmDuplicate}}
-            />
+            {{! Export and Duplicate target the source theme directly, which is
+              only supported for Git themes — a core system theme uses the
+              companion component above instead. }}
+            {{#unless this.isSystem}}
+              <DButton
+                class="btn-default wireframe-outlet-verb__export"
+                @label="wireframe.outlet.export"
+                @title={{i18n "wireframe.outlet.export_title"}}
+                @disabled={{this.isWorking}}
+                @action={{this.exportOutlet}}
+              />
+              <DButton
+                class="btn-default wireframe-outlet-verb__duplicate"
+                @label="wireframe.outlet.duplicate"
+                @title={{i18n "wireframe.outlet.duplicate_title"}}
+                @disabled={{this.isWorking}}
+                @action={{this.confirmDuplicate}}
+              />
+            {{/unless}}
             {{#if this.actionError}}
               <p class="wireframe-inspector__outlet-git-error" role="alert">
                 {{this.actionError}}

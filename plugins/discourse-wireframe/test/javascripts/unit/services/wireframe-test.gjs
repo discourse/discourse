@@ -455,10 +455,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const secondKey = `wf:svc-test-tile:${draft[1].__stableKey}`;
 
       assert.false(this.editor.isDirty);
+      // Move "First" AFTER "Second" — a genuine reorder. (A no-op move that
+      // leaves the layout identical to its pristine state intentionally does
+      // NOT dirty the outlet, since the reconcile pass clears it again.)
       this.editor.moveBlock({
         sourceKey: firstKey,
         targetKey: secondKey,
-        position: "before",
+        position: "after",
         targetOutletName: "homepage-blocks",
       });
       assert.true(this.editor.isDirty);

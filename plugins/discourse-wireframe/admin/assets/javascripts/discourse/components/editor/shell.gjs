@@ -102,6 +102,18 @@ export default class EditorShell extends Component {
   }
 
   /**
+   * Whether the toolbar's Publish is available. Direct publish isn't supported
+   * for a core system theme (Foundation, Horizon) — those route through a
+   * per-outlet companion component in the inspector instead — so Publish is
+   * disabled while Save draft stays available.
+   *
+   * @returns {boolean}
+   */
+  get canPublish() {
+    return this.canSubmit && !this.wireframe.activeThemeIsSystem;
+  }
+
+  /**
    * Whether the primary button shows its transient "Saved" confirmation: a save
    * just succeeded and no new edit has re-enabled Save draft yet. Drives the
    * label/icon swap and the fade animation.
@@ -359,6 +371,11 @@ export default class EditorShell extends Component {
                     <DButton
                       class="btn-flat wireframe-btn-publish"
                       @label="wireframe.chrome.publish"
+                      @disabled={{unless this.canPublish true}}
+                      @title={{if
+                        this.wireframe.activeThemeIsSystem
+                        (i18n "wireframe.chrome.publish_disabled_system")
+                      }}
                       @action={{this.publish}}
                     />
                   </dropdown.item>

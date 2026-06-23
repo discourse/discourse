@@ -234,6 +234,41 @@ module(
         .dom(".wireframe-outlet-verb__publish")
         .isDisabled("Publish is disabled for a Git-owned outlet");
     });
+
+    test("a core system theme outlet offers the companion component, not direct publish", async function (assert) {
+      // System themes (Foundation, Horizon) have negative ids; they can't be
+      // published to directly, so the inspector offers the companion-component
+      // path — but not the Git-only export/duplicate, which target the source.
+      stubWireframe(this.owner, {
+        name: "layout",
+        isOutletRoot: true,
+        outletName: "homepage-blocks",
+        outletState: "default",
+        outletOwner: { themeId: -1, themeName: "Foundation", isGit: false },
+        isOutletEditing: true,
+        args: { mode: "stack" },
+        argsSnapshot: { mode: "stack" },
+        parentChildArgsSchema: null,
+      });
+
+      await render(<template><InspectorPanel /></template>);
+
+      assert
+        .dom(".wireframe-inspector__outlet-git-notice")
+        .exists("shows the system-theme notice");
+      assert
+        .dom(".wireframe-outlet-verb__create-component")
+        .exists("offers create customization component");
+      assert
+        .dom(".wireframe-outlet-verb__export")
+        .doesNotExist("hides export for a system theme (targets the source)");
+      assert
+        .dom(".wireframe-outlet-verb__duplicate")
+        .doesNotExist("hides duplicate for a system theme");
+      assert
+        .dom(".wireframe-outlet-verb__publish")
+        .isDisabled("Publish is disabled for a system theme");
+    });
   }
 );
 

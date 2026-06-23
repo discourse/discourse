@@ -10,7 +10,9 @@ module DiscourseWireframe
       attribute :theme_id, :integer
       attribute :outlet_name, :string
 
-      validates :theme_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
+      # Allow negative ids: core "system" themes (Foundation, Horizon) have
+      # negative ids and are legitimate draft targets. `0` is never a real theme.
+      validates :theme_id, presence: true, numericality: { only_integer: true, other_than: 0 }
       validates :outlet_name, presence: true, format: { with: /\A[a-z0-9_:\-]+\z/ }
     end
 

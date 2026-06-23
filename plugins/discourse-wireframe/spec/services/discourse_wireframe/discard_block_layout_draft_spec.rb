@@ -37,6 +37,28 @@ RSpec.describe DiscourseWireframe::DiscardBlockLayoutDraft do
       expect(result).to be_a_success
     end
 
+    it "discards a system theme's draft (negative id), e.g. Foundation" do
+      foundation = Theme.foundation_theme
+      expect(foundation.id).to be < 0
+      DiscourseWireframe::BlockLayoutDraft.create!(
+        user: admin,
+        theme_id: foundation.id,
+        outlet: "homepage-blocks",
+        data: "{}",
+      )
+
+      expect(
+        described_class.call(params: params.merge(theme_id: foundation.id), **dependencies),
+      ).to be_a_success
+      expect(
+        DiscourseWireframe::BlockLayoutDraft.where(
+          user: admin,
+          theme_id: foundation.id,
+          outlet: "homepage-blocks",
+        ),
+      ).to be_empty
+    end
+
     it "leaves another user's draft untouched" do
       DiscourseWireframe::BlockLayoutDraft.create!(
         user: user,

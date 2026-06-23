@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 # Creates (or reuses) a local, editable theme component that owns block-layout
-# customizations for a Git-managed parent theme, then overlays the supplied
-# drafts onto it. This is the light alternative to duplicating the whole theme:
-# the Git parent stays untouched (and keeps receiving upstream updates), while
-# the customizations live in a `<name>-customizations` child component that the
-# editor CAN publish to.
+# customizations for a parent theme that can't be published to directly — a
+# Git-managed theme, or a core system theme (Foundation, Horizon) — then overlays
+# the supplied drafts onto it. This is the light alternative to duplicating the
+# whole theme: the parent stays untouched (and a Git parent keeps receiving
+# upstream updates), while the customizations live in a `<name>-block-layouts`
+# child component that CAN be published to.
 #
 # Because the component sits above its parent in the active stack
 # (`Theme.transform_ids` orders the parent first), the block-layout resolver
@@ -21,7 +22,7 @@
 class Themes::CreateCustomizationComponent
   include Service::Base
 
-  CUSTOMIZATIONS_SUFFIX = "-customizations"
+  BLOCK_LAYOUTS_SUFFIX = "-block-layouts"
 
   # @!method self.call(guardian:, params:)
   #   @param [Guardian] guardian
@@ -35,7 +36,11 @@ class Themes::CreateCustomizationComponent
     attribute :theme_id, :integer
     attribute :drafts, :array, default: []
 
-    validates :theme_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
+    # Allow negative ids: core system themes (Foundation, Horizon) have negative
+    # ids and are a primary use case for a customization component (they can't be
+    # published to directly). `0` is never a real theme. Existence is enforced by
+    # the `model :theme` step below.
+    validates :theme_id, presence: true, numericality: { only_integer: true, other_than: 0 }
   end
 
   model :theme
@@ -71,11 +76,11 @@ class Themes::CreateCustomizationComponent
     end
   end
 
-  # Look up (or create) the parent's local `<name>-customizations` component and
+  # Look up (or create) the parent's local `<name>-block-layouts` component and
   # link it as a child. If the canonical name is taken by something we can't
   # reuse (a Git-imported component, a non-component theme), suffix it.
   def ensure_component(theme:, guardian:)
-    base_name = "#{theme.name}#{CUSTOMIZATIONS_SUFFIX}"
+    base_name = "#{theme.name}#{BLOCK_LAYOUTS_SUFFIX}"
     existing = Theme.find_by(name: base_name)
 
     component =

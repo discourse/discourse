@@ -164,7 +164,9 @@ function readVeThemeParam(url) {
       return null;
     }
     const parsedInt = parseInt(raw, 10);
-    return Number.isFinite(parsedInt) && parsedInt > 0 ? parsedInt : null;
+    // Any non-zero integer is a valid theme id — core "system" themes
+    // (Foundation, Horizon) have negative ids, so don't reject those.
+    return Number.isInteger(parsedInt) && parsedInt !== 0 ? parsedInt : null;
   } catch {
     return null;
   }
