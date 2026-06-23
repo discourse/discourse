@@ -5867,6 +5867,7 @@ en:
         slug: "Slug"
         name_placeholder: "Tag name"
         slug_placeholder: "Tag slug (optional, auto-generated from name)"
+        invalid_slug: "Use letters, numbers, or hyphens."
         saved: "Tag settings saved"
         no_synonyms: "No synonyms defined for this tag."
         add_synonym_placeholder: "Search for tags to add as synonyms..."
