@@ -38,9 +38,7 @@ class AccessControlListManager
     bulk_insert_list =
       AccessControlList.expand_list(params.flattened_acls, params.target, params.owner)
 
-    @context[:new_permissions] = AccessControlList::TargetAcl.new(
-      params.flattened_acls,
-    ).permission_lookup
+    @context[:new_permissions] = Acl::Target.new(params.flattened_acls).permission_lookup
 
     AccessControlList.insert_all!(bulk_insert_list)
   end

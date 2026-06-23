@@ -1,0 +1,103 @@
+# frozen_string_literal: true
+
+RSpec.describe AccessControlListManager do
+  describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:target) }
+    it { is_expected.to validate_presence_of(:flattened_acls) }
+    it { is_expected.to validate_presence_of(:owner) }
+    it { is_expected.to validate_length_of(:owner).is_at_most(100) }
+  end
+
+  describe ".call" do
+    subject(:result) { described_class.call(params:, **dependencies) }
+
+    fab!(:admin)
+    fab!(:category)
+    fab!(:group)
+    fab!(:other_group, :group)
+
+    let(:params) { { target:, flattened_acls:, owner: } }
+    let(:dependencies) { { guardian: } }
+    let(:guardian) { admin.guardian }
+    let(:target) { category }
+    let(:owner) { "test_owner" }
+
+    let(:flattened_acls) do
+      [
+        { type: "group", id: group.id, permission: "view" },
+        { type: "group", id: other_group.id, permission: "edit" },
+      ]
+    end
+
+    context "when the contract is invalid" do
+      let(:owner) { "" }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when everything is ok" do
+      it { is_expected.to run_successfully }
+
+      it "creates one access control list per permission for the target" do
+        expect { result }.to change { AccessControlList.where(target: category).count }.from(0).to(
+          2,
+        )
+
+        view_acl = AccessControlList.find_by(target: category, permission: "view")
+        edit_acl = AccessControlList.find_by(target: category, permission: "edit")
+        expect(view_acl.allowed_group_ids).to contain_exactly(group.id)
+        expect(edit_acl.allowed_group_ids).to contain_exactly(other_group.id)
+      end
+
+      it "stamps the records with the given owner" do
+        result
+
+        expect(AccessControlList.where(target: category).pluck(:owner).uniq).to eq(["test_owner"])
+      end
+
+      it "logs the permission change as a staff action" do
+        expect { result }.to change {
+          UserHistory.where(
+            action: UserHistory.actions[:change_access_control_list_permissions],
+          ).count
+        }.by(1)
+
+        log = UserHistory.last
+        expect(log.subject).to eq("Category (#{category.id})")
+        expect(log.new_value).to include("view", "edit")
+        expect(log.previous_value).to eq("")
+      end
+    end
+
+    context "when permissions already exist for the target" do
+      fab!(:existing_acl) do
+        Fabricate(
+          :access_control_list_with_groups,
+          target: category,
+          permission: "manage",
+          groups: [group],
+        )
+      end
+
+      it "replaces the previous access control lists" do
+        existing_id = existing_acl.id
+        result
+
+        expect(AccessControlList.where(target: category).pluck(:permission)).to contain_exactly(
+          "view",
+          "edit",
+        )
+        expect(AccessControlList.find_by(id: existing_id)).to be_nil
+      end
+
+      it "records the previous permissions in the staff action log" do
+        result
+
+        log = UserHistory.last
+        expect(log.subject).to eq("Category (#{category.id})")
+        expect(log.new_value).to include("view", "edit")
+        expect(log.previous_value).to include("manage")
+      end
+    end
+  end
+end

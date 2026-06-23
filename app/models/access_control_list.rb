@@ -3,9 +3,6 @@
 class AccessControlList < ActiveRecord::Base
   attr_accessor :allowed_groups_preloaded, :allowed_users_preloaded
 
-  class AclMixedTargetError < StandardError
-  end
-
   # NOTE: permission column is freeform, but some common
   # types are below. In the UI these would generally be
   # displayed as a role (e.g. adding -er), like Viewer,
@@ -157,7 +154,7 @@ class AccessControlList < ActiveRecord::Base
       preload_allowed
 
       if for_target.present?
-        raise AclMixedTargetError if map(&:target).uniq.length > 1
+        raise Acl::MixedTargetError if map(&:target).uniq.length > 1
       end
 
       flattened_list = []
@@ -198,98 +195,13 @@ class AccessControlList < ActiveRecord::Base
     # Used to easily access permissions for a single target, e.g. a Category,
     # accessed via the permission_acl method on a Model that has ACLs.
     def target_acl(target)
-      TargetAcl.new(flattened_list(for_target: target))
+      ::Acl::Target.new(flattened_list(for_target: target))
     end
 
     # Used to easily access permissions for a single user,
     # accessed via the permission_acl method on User.
     def user_acl
-      UserAcl.new(flattened_list)
-    end
-  end
-
-  class TargetAcl
-    attr_reader :group_lookup, :permission_lookup
-
-    def initialize(flattened_acl_list)
-      @group_lookup = {}
-      @permission_lookup = {}
-
-      flattened_acl_list.each do |acl|
-        @permission_lookup[acl[:permission]] ||= { group_ids: [] }
-
-        if acl[:type].to_sym == :group
-          @group_lookup[acl[:id]] ||= []
-          @group_lookup[acl[:id]] << acl[:permission]
-
-          # TODO (martin) Handle users here too in a followup PR when we allow adding them in the UI.
-          @permission_lookup[acl[:permission]][:group_ids] << acl[:id]
-        end
-      end
-    end
-
-    def group_has_permission?(group_or_id, permission)
-      @group_lookup[group_or_id.is_a?(Numeric) ? group_or_id : group_or_id&.id]&.include?(
-        permission,
-      )
-    end
-
-    def group_has_any_permission?(group_or_id, permissions)
-      group_permissions = @group_lookup[group_or_id.is_a?(Numeric) ? group_or_id : group_or_id&.id]
-      (group_permissions || []).any? { |permission| permissions.include?(permission) }
-    end
-
-    def permission_group_ids(permission)
-      (@permission_lookup[permission] || {}).dig(:group_ids)
-    end
-
-    def multi_permission_group_ids(permissions)
-      permissions.flat_map { |permission| permission_group_ids(permission) }.uniq
-    end
-  end
-
-  class UserAcl
-    def initialize(flattened_acl_list)
-      @target_lookup = {}
-      @permission_lookup = {}
-
-      flattened_acl_list.each do |acl|
-        @target_lookup[target_key(acl)] ||= []
-        @target_lookup[target_key(acl)] << acl[:permission]
-
-        @permission_lookup[acl[:permission]] ||= {}
-        @permission_lookup[acl[:permission]][acl[:target_type]] ||= []
-        @permission_lookup[acl[:permission]][acl[:target_type]] << acl[:target_id]
-      end
-    end
-
-    def has_target_permission?(target, permission)
-      @target_lookup[target_key(target)]&.include?(permission)
-    end
-
-    def has_any_target_permission?(target, permissions)
-      target_permissions = @target_lookup[target_key(target)]
-      (target_permissions || []).any? { |permission| permissions.include?(permission) }
-    end
-
-    def target_ids_with_permission(target_class, permission)
-      (@permission_lookup[permission] || {}).dig(target_class.polymorphic_name) || []
-    end
-
-    def target_ids_with_any_permissions(target_class, permissions)
-      permissions
-        .flat_map { |permission| target_ids_with_permission(target_class, permission) }
-        .uniq
-    end
-
-    private
-
-    def target_key(target)
-      if target.is_a?(Hash)
-        "#{target[:target_type]}_#{target[:target_id]}"
-      else
-        "#{target.class.polymorphic_name}_#{target.id}"
-      end
+      ::Acl::User.new(flattened_list)
     end
   end
 end
