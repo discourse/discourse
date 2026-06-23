@@ -10,10 +10,11 @@ RSpec.describe "Theme cross-bundle plugin imports" do
     JSON.parse(map)["imports"]
   end
 
-  it "supplies a fake module for a plugin a theme imports but that isn't enabled" do
+  it "stubs imports of an absent plugin: null for optional, throwing for required" do
     theme.set_field(target: :extra_js, name: "discourse/initializers/cross-bundle.js", value: <<~JS)
-        import Thing from "discourse/plugins/some-absent-plugin/lib/thing";
-        export default { name: "cross-bundle", initialize() { Thing(); } };
+        import Optional from "discourse/plugins/absent-optional-plugin/lib/thing" with { discoursePlugin: "optional" };
+        import Required from "discourse/plugins/absent-required-plugin/lib/thing" with { discoursePlugin: "required" };
+        export default { name: "cross-bundle", initialize() { Optional(); Required(); } };
       JS
     theme.save!
     SiteSetting.default_theme_id = theme.id
@@ -21,13 +22,14 @@ RSpec.describe "Theme cross-bundle plugin imports" do
     get "/"
     expect(response.status).to eq(200)
 
-    cache = theme.reload.javascript_cache
-    expect(response.body).to include(
-      %(<link rel="modulepreload" href="#{cache.url}" data-theme-id="#{theme.id}"),
+    # Optional import of a missing plugin resolves to a null-returning stub.
+    expect(import_map["discourse/plugins/absent-optional-plugin?"]).to eq(
+      Plugin::JsManager.optional_plugin_stub,
     )
 
-    expect(import_map["discourse/plugins/some-absent-plugin"]).to start_with(
-      "data:text/javascript,",
+    # Required import of a missing plugin resolves to a stub that throws on import.
+    expect(import_map["discourse/plugins/absent-required-plugin"]).to eq(
+      Plugin::JsManager.required_plugin_stub("absent-required-plugin"),
     )
   end
 end
