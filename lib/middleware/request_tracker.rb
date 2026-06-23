@@ -349,7 +349,7 @@ class Middleware::RequestTracker
     env["discourse.request_tracker"] = self
 
     if self.class.is_beacon_tracking_request?(request)
-      if self.class.same_origin_beacon_request?(request)
+      if self.class.same_origin_request?(request)
         result = [204, {}, []]
       else
         env["discourse.request_tracker.skip"] = true
@@ -361,6 +361,16 @@ class Middleware::RequestTracker
     if self.class.is_pageview_tracking_request?(request)
       result = [204, {}, []]
       return result
+    end
+
+    if self.class.is_engagement_tracking_request?(request)
+      env["discourse.request_tracker.skip"] = true
+      if self.class.same_origin_request?(request)
+        self.class.track_session_engagement(env)
+        return 204, {}, []
+      else
+        return 403, {}, []
+      end
     end
 
     MethodProfiler.start
@@ -664,7 +674,7 @@ class Middleware::RequestTracker
       ) && request.post? && request.path == Discourse.beacon_pv_tracking_path
   end
 
-  def self.same_origin_beacon_request?(request)
+  def self.same_origin_request?(request)
     origin = request.get_header("HTTP_ORIGIN").presence || request.referer.presence
     return false if origin.blank?
 
@@ -681,15 +691,34 @@ class Middleware::RequestTracker
     request.post? && request.path == "#{Discourse.base_path}/pageview"
   end
 
-  def self.extract_beacon_view_tracking_data(env)
+  def self.is_engagement_tracking_request?(request)
+    UpcomingChanges.enabled?(:dashboard_improvements) &&
+      SiteSetting.persist_browser_pageview_events && request.post? &&
+      request.path == Discourse.engagement_tracking_path
+  end
+
+  def self.track_session_engagement(env)
+    payload = read_json_body(env)
+    return unless payload.is_a?(Hash)
+
+    Scheduler::Defer.later("Track session engagement") do
+      BrowserPageviewSessionEngagement.upsert_from_payload(payload)
+    end
+  end
+
+  def self.read_json_body(env)
     body = env["rack.input"]&.read
     env["rack.input"]&.rewind
-    data =
-      begin
-        JSON.parse(body)
-      rescue JSON::ParserError
-        {}
-      end
+    return if body.blank?
+
+    JSON.parse(body)
+  rescue JSON::ParserError
+    nil
+  end
+  private_class_method :read_json_body
+
+  def self.extract_beacon_view_tracking_data(env)
+    data = read_json_body(env) || {}
 
     topic_id = data["topic_id"]&.to_i
     tracking_url = data["url"]&.slice(0, MAX_URL_LENGTH)

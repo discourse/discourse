@@ -2046,6 +2046,45 @@ ALTER SEQUENCE public.browser_pageview_referrer_daily_rollups_id_seq OWNED BY pu
 
 
 --
+-- Name: browser_pageview_session_engagements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_session_engagements (
+    id bigint NOT NULL,
+    session_id character varying(32) NOT NULL,
+    mouse_move_events integer DEFAULT 0 NOT NULL,
+    click_events integer DEFAULT 0 NOT NULL,
+    key_events integer DEFAULT 0 NOT NULL,
+    scroll_events integer DEFAULT 0 NOT NULL,
+    touch_events integer DEFAULT 0 NOT NULL,
+    back_forward_events integer DEFAULT 0 NOT NULL,
+    engaged_duration_ms integer DEFAULT 0 NOT NULL,
+    time_to_first_interaction_ms integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_session_engagements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.browser_pageview_session_engagements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: browser_pageview_session_engagements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.browser_pageview_session_engagements_id_seq OWNED BY public.browser_pageview_session_engagements.id;
+
+
+--
 -- Name: calendar_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -12320,6 +12359,13 @@ ALTER TABLE ONLY public.browser_pageview_referrer_daily_rollups ALTER COLUMN id 
 
 
 --
+-- Name: browser_pageview_session_engagements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_engagements ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_session_engagements_id_seq'::regclass);
+
+
+--
 -- Name: calendar_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14528,6 +14574,14 @@ ALTER TABLE ONLY public.browser_pageview_events
 
 ALTER TABLE ONLY public.browser_pageview_referrer_daily_rollups
     ADD CONSTRAINT browser_pageview_referrer_daily_rollups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_session_engagements browser_pageview_session_engagements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_engagements
+    ADD CONSTRAINT browser_pageview_session_engagements_pkey PRIMARY KEY (id);
 
 
 --
@@ -18131,6 +18185,20 @@ CREATE INDEX index_browser_pageview_events_on_topic_id ON public.browser_pagevie
 --
 
 CREATE INDEX index_browser_pageview_events_on_user_id ON public.browser_pageview_events USING btree (user_id);
+
+
+--
+-- Name: index_browser_pageview_session_engagements_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_browser_pageview_session_engagements_on_created_at ON public.browser_pageview_session_engagements USING brin (created_at);
+
+
+--
+-- Name: index_browser_pageview_session_engagements_on_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_browser_pageview_session_engagements_on_session_id ON public.browser_pageview_session_engagements USING btree (session_id);
 
 
 --
@@ -22275,6 +22343,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260626055145'),
 ('20260624140945'),
 ('20260623090824'),
+('20260623052745'),
 ('20260622201006'),
 ('20260622201005'),
 ('20260622140747'),

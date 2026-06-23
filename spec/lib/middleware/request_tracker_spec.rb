@@ -1959,4 +1959,95 @@ RSpec.describe Middleware::RequestTracker do
       expect(fake_logger.warnings).to be_empty
     end
   end
+
+  describe "session engagement tracking via /srv/se" do
+    before do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.persist_browser_pageview_events = true
+    end
+
+    def engagement_env(body_hash, extra = {})
+      env(
+        {
+          :path => "/srv/se",
+          "HTTP_HOST" => "test.localhost",
+          "REQUEST_METHOD" => "POST",
+          "CONTENT_TYPE" => "application/json",
+          "rack.input" => StringIO.new(JSON.generate(body_hash)),
+        }.merge(extra),
+      )
+    end
+
+    let(:same_origin) { { "HTTP_ORIGIN" => "http://test.localhost" } }
+    let(:payload) do
+      {
+        session_id: "sess-1",
+        mouse_move_events: 12,
+        click_events: 3,
+        key_events: 5,
+        scroll_events: 7,
+        touch_events: 0,
+        back_forward_events: 1,
+        engaged_duration_ms: 4200,
+        time_to_first_interaction_ms: 800,
+      }
+    end
+
+    it "returns 204 and inserts the row for a same-origin request" do
+      middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
+
+      expect {
+        status, = middleware.call(engagement_env(payload, same_origin))
+        expect(status).to eq(204)
+      }.to change { BrowserPageviewSessionEngagement.count }.by(1)
+
+      row = BrowserPageviewSessionEngagement.find_by(session_id: "sess-1")
+      expect(row.mouse_move_events).to eq(12)
+      expect(row.back_forward_events).to eq(1)
+      expect(row.engaged_duration_ms).to eq(4200)
+      expect(row.time_to_first_interaction_ms).to eq(800)
+    end
+
+    it "updates the existing row on a later snapshot for the same session" do
+      middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
+      middleware.call(engagement_env(payload, same_origin))
+
+      later = payload.merge(mouse_move_events: 40, engaged_duration_ms: 9000)
+
+      expect { middleware.call(engagement_env(later, same_origin)) }.not_to change {
+        BrowserPageviewSessionEngagement.count
+      }
+
+      row = BrowserPageviewSessionEngagement.find_by(session_id: "sess-1")
+      expect(row.mouse_move_events).to eq(40)
+      expect(row.engaged_duration_ms).to eq(9000)
+    end
+
+    it "returns 403 and writes nothing for a cross-origin request" do
+      middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
+
+      expect {
+        status, = middleware.call(engagement_env(payload, "HTTP_ORIGIN" => "https://evil.example"))
+        expect(status).to eq(403)
+      }.not_to change { BrowserPageviewSessionEngagement.count }
+    end
+
+    it "handles a malformed JSON body without writing a row" do
+      middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
+
+      expect {
+        status, =
+          middleware.call(engagement_env({}, same_origin).merge("rack.input" => StringIO.new("x")))
+        expect(status).to eq(204)
+      }.not_to change { BrowserPageviewSessionEngagement.count }
+    end
+
+    it "does not intercept the request when dashboard_improvements is disabled" do
+      SiteSetting.dashboard_improvements = false
+      middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
+
+      status, = middleware.call(engagement_env(payload, same_origin))
+      expect(status).to eq(200)
+    end
+  end
 end
