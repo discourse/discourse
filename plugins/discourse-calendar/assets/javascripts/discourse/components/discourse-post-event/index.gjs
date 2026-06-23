@@ -199,6 +199,7 @@ export default class DiscoursePostEvent extends Component {
                 @alt={{this.eventName}}
                 @linkToPost={{@linkToPost}}
                 @postUrl={{event.post.url}}
+                @post={{@post}}
               />
               <header class="event-header" {{this.setupMessageBus}}>
                 <div class="event-date">
@@ -294,6 +295,7 @@ export default class DiscoursePostEvent extends Component {
                     alt=this.eventName
                     linkToPost=@linkToPost
                     postUrl=event.post.url
+                    post=@post
                   )
                 }}
               >

@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { render, waitFor } from "@ember/test-helpers";
+import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DiscoursePostEvent from "../../discourse/components/discourse-post-event";
@@ -68,7 +68,7 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
       );
   });
 
-  test("renders the event image as a lightbox inside a topic", async function (assert) {
+  test("wires up the event image lightbox inside a topic", async function (assert) {
     stubApi.call(
       this,
       buildEvent({
@@ -78,15 +78,13 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
 
     const event = { id: 1, startsAt: "2026-06-04T14:00:00Z" };
     await render(<template><DiscoursePostEvent @event={{event}} /></template>);
-    await waitFor(".event-image");
+    await waitFor(".event-image a.lightbox");
+    await click(".event-image a.lightbox");
+    await waitFor(".pswp--open");
 
-    assert
-      .dom(".event-image a.lightbox")
-      .hasAttribute(
-        "href",
-        "/uploads/default/original/1X/event.png",
-        "links the image to the upload so it can be lightboxed"
-      );
+    assert.dom(".pswp--open").exists("opens the PhotoSwipe lightbox");
+
+    await click(".pswp__button--close");
   });
 
   test("links the event image to the post when linkToPost is set", async function (assert) {
