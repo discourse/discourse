@@ -1,7 +1,7 @@
 @use "lib/viewport";
 
 .db-site-advice {
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   border-radius: var(--d-border-radius-large);
 
   &__header {
@@ -12,7 +12,7 @@
     padding: var(--space-2) var(--space-4);
     border-top-left-radius: var(--d-border-radius-large);
     border-top-right-radius: var(--d-border-radius-large);
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
 
     h3 {
       margin: 0;
@@ -46,7 +46,7 @@
     padding: var(--space-4);
 
     &:not(:last-child) {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
     }
 
     .btn {
@@ -305,7 +305,7 @@
 
   &__callout {
     background: var(--primary-very-low);
-    border: 1px solid var(--primary-low-mid);
+    border: 1px solid var(--content-border-color);
     padding: var(--space-3) var(--space-4);
     border-radius: var(--d-border-radius-large);
     font-size: var(--font-down-1-rem);
@@ -372,16 +372,16 @@
     box-sizing: border-box;
 
     &:not(:last-child) {
-      border-right: 1px solid var(--primary-low);
+      border-right: 1px solid var(--content-border-color);
     }
 
     @include viewport.until(sm) {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
 
       .--highlights & {
         border-radius: var(--d-border-radius-large);
         flex-basis: calc(50% - var(--space-1));
-        border: 1px solid var(--primary-low);
+        border: 1px solid var(--content-border-color);
       }
     }
   }
@@ -427,7 +427,7 @@
 
   &__wrapper {
     border-radius: var(--d-border-radius-large);
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
 
     &.--no-border {
       border: none;
@@ -856,7 +856,7 @@
 
 .db-report {
   &__card {
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     border-radius: var(--d-border-radius-large);
     padding: var(--space-4);
     box-sizing: border-box;
@@ -952,7 +952,7 @@
   }
 
   &__add-report {
-    border: 1px dashed var(--primary-low-mid);
+    border: 1px dashed var(--content-border-color);
     border-radius: var(--d-border-radius-large);
     background: var(--secondary);
     color: var(--primary-medium);
