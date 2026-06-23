@@ -5,8 +5,8 @@ RSpec.describe Jobs::UpdateAnimatedUploads do
   let!(:gif_upload) { Fabricate(:upload, extension: "gif") }
 
   before do
-    url = Discourse.store.path_for(gif_upload) || gif_upload.url
-    FastImage.expects(:animated?).with(url).returns(true).once
+    DiscourseImage.stubs(:animated?).returns(true)
+    SafeImage.stubs(:remote_animated?).returns(true)
   end
 
   it "affects only GIF uploads" do

@@ -1,5 +1,37 @@
 # frozen_string_literal: true
 
+require "chunky_png"
+
+module UploadFabricatorImages
+  module_function
+
+  NAMED_COLORS = {
+    "black" => ChunkyPNG::Color::BLACK,
+    "cyan" => ChunkyPNG::Color.rgb(0, 255, 255),
+    "red" => ChunkyPNG::Color.rgb(255, 0, 0),
+    "white" => ChunkyPNG::Color::WHITE,
+  }.freeze
+
+  def write_solid_png(path, width, height, color)
+    png = ChunkyPNG::Image.new(width, height, parse_color(color))
+    png.save(path)
+  end
+
+  def parse_color(color)
+    color = color.to_s
+    return NAMED_COLORS.fetch(color.downcase) if NAMED_COLORS.key?(color.downcase)
+
+    hex = color.delete_prefix("#")
+    raise ArgumentError, "Unsupported color: #{color}" if (hex.length % 3).nonzero?
+
+    channel_width = hex.length / 3
+    max = (16**channel_width) - 1
+    channels =
+      hex.scan(/.{#{channel_width}}/).map { |channel| (channel.to_i(16) * 255.0 / max).floor }
+    ChunkyPNG::Color.rgb(*channels)
+  end
+end
+
 Fabricator(:upload) do
   user
   sha1 { sequence(:sha1) { |n| Digest::SHA1.hexdigest("#{n}#{Process.pid}") } }
@@ -49,14 +81,20 @@ Fabricator(:image_upload, from: :upload) do
 
   after_create do |upload, transients|
     file = Tempfile.new(%w[fabricated .png])
-    `magick -size #{upload.width}x#{upload.height} -depth #{transients[:color_depth]} xc:#{transients[:color]} "#{file.path}"`
+    UploadFabricatorImages.write_solid_png(
+      file.path,
+      upload.width,
+      upload.height,
+      transients[:color],
+    )
 
     upload.url = Discourse.store.store_upload(file, upload)
     upload.sha1 = Upload.generate_digest(file.path)
+    upload.update_columns(url: upload.url)
 
     WebMock.stub_request(:get, "http://#{Discourse.current_hostname}#{upload.url}").to_return(
       status: 200,
-      body: File.new(file.path),
+      body: File.binread(file.path),
     )
   end
 end
@@ -101,12 +139,13 @@ end
 Fabricator(:s3_image_upload, from: :upload_s3) do
   after_create do |upload|
     file = Tempfile.new(%w[fabricated .png])
-    `magick -size #{upload.width}x#{upload.height} xc:white "#{file.path}"`
+    UploadFabricatorImages.write_solid_png(file.path, upload.width, upload.height, "white")
 
     upload.url = Discourse.store.store_upload(file, upload)
     upload.sha1 = Upload.generate_digest(file.path)
+    upload.update_columns(url: upload.url)
 
-    WebMock.stub_request(:get, upload.url).to_return(status: 200, body: File.new(file.path))
+    WebMock.stub_request(:get, upload.url).to_return(status: 200, body: File.binread(file.path))
   end
 end
 

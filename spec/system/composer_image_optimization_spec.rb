@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "chunky_png"
+
 describe "Composer image optimization for uploads using media-optimization-worker" do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
 
@@ -81,10 +83,18 @@ describe "Composer image optimization for uploads using media-optimization-worke
 
       # We do a conversion here to simulate a PNG with no transparency,
       # the fixture has transparency, and PNGs with transparency are not optimized.
-      Discourse::Utils.execute_command(
-        *["convert", file.path, "-background", "white", "-alpha", "remove", converted_file_path],
-        timeout: 3,
-      )
+      image = ChunkyPNG::Image.from_file(file.path)
+      image.height.times do |y_position|
+        image.width.times do |x_position|
+          color = image[x_position, y_position]
+          alpha = ChunkyPNG::Color.a(color)
+          red = ((ChunkyPNG::Color.r(color) * alpha) + (255 * (255 - alpha))) / 255
+          green = ((ChunkyPNG::Color.g(color) * alpha) + (255 * (255 - alpha))) / 255
+          blue = ((ChunkyPNG::Color.b(color) * alpha) + (255 * (255 - alpha))) / 255
+          image[x_position, y_position] = ChunkyPNG::Color.rgb(red, green, blue)
+        end
+      end
+      image.save(converted_file_path)
 
       attach_file("file-uploader", [converted_file_path], make_visible: true)
 
@@ -94,8 +104,8 @@ describe "Composer image optimization for uploads using media-optimization-worke
       upload =
         Upload.find_by(original_filename: File.basename(converted_file_path).gsub("png", "jpg"))
 
-      # Original large_and_unoptimized PNG with no transparency is 312_889 bytes
-      expect(upload.filesize).to eq(285_809)
+      # Original large_and_unoptimized PNG with no transparency is 309_374 bytes
+      expect(upload.filesize).to eq(271_246)
     ensure
       FileUtils.rm(converted_file_path)
     end

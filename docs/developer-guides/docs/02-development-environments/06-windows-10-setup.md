@@ -35,7 +35,7 @@ You will need the following packages on your system:
 - [Node.js][node_link]
 - [pnpm][pnpm_link]
 - [MailHog][mh_link]\*\*
-- [ImageMagick][imagemagick_link]\*\*
+- [ImageMagick][imagemagick_link]
 
 _\*\* optional_
 

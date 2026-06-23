@@ -2,11 +2,11 @@
 
 RSpec.describe RemoteTheme do
   before do
-    FastImage
+    DiscourseImage
       .stubs(:size)
       .with { |arg| arg.match(%r{/screenshots/light\.jpeg}) }
       .returns([800, 600])
-    FastImage
+    DiscourseImage
       .stubs(:size)
       .with { |arg| arg.match(%r{/screenshots/dark\.jpeg}) }
       .returns([1024, 768])
@@ -477,7 +477,7 @@ RSpec.describe RemoteTheme do
       end
 
       it "fails if any of the provided screenshots has dimensions that are too big" do
-        FastImage
+        DiscourseImage
           .expects(:size)
           .with { |arg| arg.match(%r{/screenshots/light\.jpeg}) }
           .returns([512, 512])

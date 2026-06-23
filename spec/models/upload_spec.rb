@@ -1007,16 +1007,12 @@ RSpec.describe Upload do
       expect(invalid_image.dominant_color).to eq("")
     end
 
-    it "correctly handles unparsable ImageMagick output" do
-      Discourse::Utils.stubs(:execute_command).returns("someinvalidoutput")
+    it "stores an empty string when dominant color probing fails" do
+      DiscourseImage.stubs(:dominant_color).raises(SafeImage::InvalidImageError.new)
 
       expect(invalid_image.dominant_color).to eq(nil)
-
-      expect { invalid_image.dominant_color(calculate_if_missing: true) }.to raise_error(
-        /Calculated dominant color but unable to parse output/,
-      )
-
-      expect(invalid_image.dominant_color).to eq(nil)
+      expect(invalid_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(invalid_image.dominant_color).to eq("")
     end
 
     it "correctly handles error when file is too large to download" do

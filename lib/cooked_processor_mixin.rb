@@ -200,10 +200,10 @@ module CookedProcessorMixin
 
     return unless absolute_url
 
-    # FastImage fails when there's no scheme
+    # Safe Image remote probing requires an explicit scheme.
     absolute_url = SiteSetting.scheme + ":" + absolute_url if absolute_url.start_with?("//")
 
-    # we can't direct FastImage to our secure-uploads url because it bounces
+    # We can't probe our secure-uploads URL directly because it bounces
     # anonymous requests with a 404 error
     if url && Upload.secure_uploads_url?(url)
       absolute_url =
@@ -216,10 +216,16 @@ module CookedProcessorMixin
     if upload && upload.width && upload.width > 0
       @size_cache[url] = [upload.width, upload.height]
     else
-      @size_cache[url] = FastImage.size(absolute_url)
+      @size_cache[url] = SafeImage.remote_size(
+        absolute_url,
+        max_bytes: SiteSetting.max_image_size_kb.kilobytes,
+        total_timeout: 30,
+        max_pixels: nil,
+        allow_private: Rails.env.test?,
+      )
     end
-  rescue Zlib::BufError, URI::Error, OpenSSL::SSL::SSLError
-    # FastImage.size raises BufError for some gifs, leave it.
+  rescue SafeImage::Error, ArgumentError, URI::Error, OpenSSL::SSL::SSLError
+    # Ignore remote images that cannot be probed.
   end
 
   def get_filename(upload, src)

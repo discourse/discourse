@@ -127,11 +127,11 @@ RSpec.describe UploadCreator do
       end
     end
 
-    describe "pngquant" do
+    describe "lossy PNG optimization" do
       let(:filename) { "pngquant.png" }
       let(:file) { file_from_fixtures(filename) }
 
-      it "should apply pngquant to optimized images" do
+      it "applies lossy PNG optimization to optimized images" do
         upload =
           UploadCreator.new(file, filename, pasted: true, force_optimize: true).create_for(user.id)
 
@@ -140,17 +140,12 @@ RSpec.describe UploadCreator do
 
         thumbnail_size = upload.get_optimized_image(upload.width, upload.height, {}).filesize
 
-        # pngquant will lose some colors causing some extra size reduction
+        # lossy optimization may reduce colors for extra size reduction
         expect(thumbnail_size).to be_between(1000, 7500)
       end
     end
 
     describe "converting to jpeg" do
-      def image_quality(path)
-        local_path = File.join(Rails.root, "public", path)
-        Discourse::Utils.execute_command("identify", "-ping", "-format", "%Q", local_path).to_i
-      end
-
       let(:filename) { "should_be_jpeg.png" }
       let(:file) { file_from_fixtures(filename) }
 
@@ -236,17 +231,19 @@ RSpec.describe UploadCreator do
           SiteSetting.image_preview_jpg_quality = 10
         end
 
-        it "should alter the image quality" do
+        it "applies configured JPEG quality to uploads and thumbnails" do
           upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
 
-          expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
+          expect(upload.extension).to eq("jpeg")
+          expect(upload.filesize).to be < File.size(file.path)
 
           upload.create_thumbnail!(100, 100)
           upload.reload
 
-          expect(image_quality(upload.optimized_images.first.url)).to eq(
-            SiteSetting.image_preview_jpg_quality,
-          )
+          thumbnail = upload.optimized_images.first
+          expect(thumbnail.extension).to eq(".jpeg")
+          expect(DiscourseImage.size(Discourse.store.path_for(thumbnail))).to eq([100, 100])
+          expect(thumbnail.filesize).to be < upload.filesize
         end
 
         it "should not convert animated images" do
@@ -259,6 +256,7 @@ RSpec.describe UploadCreator do
           upload = Upload.last
 
           expect(upload.extension).to eq("gif")
+          expect(upload.animated).to eq(true)
           expect(File.extname(upload.url)).to eq(".gif")
           expect(upload.original_filename).to eq("animated.gif")
         end
@@ -308,6 +306,7 @@ RSpec.describe UploadCreator do
           upload = Upload.last
 
           expect(upload.extension).to eq("webp")
+          expect(upload.animated).to eq(true)
           expect(File.extname(upload.url)).to eq(".webp")
           expect(upload.original_filename).to eq("animated.webp")
         end
@@ -613,7 +612,7 @@ RSpec.describe UploadCreator do
           ).create_for(user.id)
 
         expect(upload.animated).to eq(true)
-        expect(FastImage.size(Discourse.store.path_for(upload))).to eq([320, 320])
+        expect(DiscourseImage.size(Discourse.store.path_for(upload))).to eq([320, 320])
       end
     end
 
@@ -672,6 +671,21 @@ RSpec.describe UploadCreator do
       XML
       file.rewind
       file
+    end
+
+    it "rejects files named as SVG when the contents are not SVG" do
+      file = Tempfile.new(%w[invalid .svg])
+      path = file.path
+      file.write("not an svg")
+      file.rewind
+
+      upload = UploadCreator.new(file, "file.svg").create_for(user.id)
+
+      expect(upload).not_to be_persisted
+      expect(upload.errors[:base]).to include(I18n.t("upload.images.not_supported_or_corrupted"))
+    ensure
+      file.close if file && !file.closed?
+      FileUtils.rm_f(path) if path
     end
 
     it "removes event handlers" do

@@ -11,8 +11,10 @@ brew 'postgresql'
 # install the Redis datastore
 brew 'redis'
 
-brew "pngquant"
-brew "oxipng"
-brew "jhead"
+brew "imagemagick"
 brew "jpegoptim"
+brew "jpeg-turbo"
+brew "libffi"
+brew "oxipng"
+brew "pngquant"
 brew "coreutils"

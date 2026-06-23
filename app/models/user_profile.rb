@@ -117,8 +117,23 @@ class UserProfile < ActiveRecord::Base
 
     return unless tempfile
 
-    ext = FastImage.type(tempfile).to_s
-    tempfile.rewind
+    ext =
+      begin
+        DiscourseImage.type(tempfile).to_s
+      rescue SafeImage::Error, ArgumentError
+        nil
+      ensure
+        begin
+          tempfile.rewind
+        rescue IOError
+          nil
+        end
+      end
+
+    if ext.blank?
+      tempfile.respond_to?(:close!) ? tempfile.close! : tempfile.close
+      return
+    end
 
     is_card_background = !options || options[:is_card_background]
     type = is_card_background ? "card_background" : "profile_background"

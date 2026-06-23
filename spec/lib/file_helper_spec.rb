@@ -150,6 +150,21 @@ RSpec.describe FileHelper do
     end
   end
 
+  describe ".optimize_image!" do
+    it "keeps missing optimizer tools non-fatal" do
+      Tempfile.create(%w[image .png], binmode: true) do |file|
+        file.write(png)
+        file.flush
+
+        SafeImage::Runner.stubs(:available?).returns(false)
+
+        expect {
+          described_class.optimize_image!(file.path, allow_pngquant: true)
+        }.not_to raise_error
+      end
+    end
+  end
+
   describe "inline safety checks" do
     describe ".is_inline_safe?" do
       it "returns true for non-SVG images" do

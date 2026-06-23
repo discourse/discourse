@@ -16,7 +16,7 @@ class LetterAvatar
   end
 
   # BUMP UP if avatar algorithm changes
-  VERSION = 5
+  VERSION = 6
 
   # CHANGE these values to support more pixel ratios
   FULLSIZE = 120 * 3
@@ -24,7 +24,7 @@ class LetterAvatar
 
   class << self
     def version
-      "#{VERSION}_#{image_magick_version}"
+      "#{VERSION}_#{renderer_version}"
     end
 
     def cache_path
@@ -71,50 +71,27 @@ class LetterAvatar
 
       filename = fullsize_path(identity)
 
-      # Use NimbusSans-Regular, except for macOS where it is unavailable, use Helvetica there
-      font = RbConfig::CONFIG["host_os"].match?(/darwin/i) ? "Helvetica" : "NimbusSans-Regular"
-      # and adjust vertical offset accordingly
-      vertical_offset = font == "Helvetica" ? 26 : 34
-
-      instructions = %W[
-        -size
-        #{FULLSIZE}x#{FULLSIZE}
-        xc:#{to_rgb(color)}
-        -pointsize
-        #{POINTSIZE}
-        -fill
-        #FFFFFFCC
-        -font
-        #{font}
-        -gravity
-        Center
-        -annotate
-        -0+#{vertical_offset}
-        #{letter}
-        -depth
-        8
-        #{filename}
-      ]
-
-      Discourse::Utils.execute_command("magick", *instructions)
+      SafeImage.letter_avatar(
+        output: filename,
+        size: FULLSIZE,
+        background_rgb: color,
+        letter: letter,
+        pointsize: POINTSIZE,
+        font: "DejaVu-Sans",
+      )
 
       ## do not optimize image, it will end up larger than original
       filename
     end
 
-    def to_rgb(color)
-      r, g, b = color
-      "rgb(#{r},#{g},#{b})"
-    end
-
-    def image_magick_version
-      @image_magick_version ||=
+    def renderer_version
+      @renderer_version ||=
         begin
           Thread.new do
             sleep 2
             cleanup_old
           end
-          Digest::MD5.hexdigest(`magick --version` << `magick -list font`)
+          Digest::MD5.hexdigest("safe_image/#{SafeImage::VERSION}/letter-avatar/dejavu-sans")
         end
     end
 

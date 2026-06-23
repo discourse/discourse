@@ -41,7 +41,7 @@ class OptimizedImage < ActiveRecord::Base
 
     if !upload.extension.match?(IM_DECODERS)
       if opts[:raise_on_error]
-        raise InvalidAccess
+        raise Discourse::InvalidAccess
       else
         # nothing to do ... bad extension, not an image
         return
@@ -72,9 +72,16 @@ class OptimizedImage < ActiveRecord::Base
 
     if extension == ".svg" && upload.extension != "svg"
       if opts[:raise_on_error]
-        raise InvalidAccess
+        raise Discourse::InvalidAccess
       else
         # we can not convert any images to svg, unsupported
+        return
+      end
+    elsif upload.extension == "svg" && extension != ".svg"
+      if opts[:raise_on_error]
+        raise Discourse::InvalidAccess
+      else
+        # SVG rasterization is intentionally outside the Safe Image migration.
         return
       end
     end
@@ -195,156 +202,61 @@ class OptimizedImage < ActiveRecord::Base
     paths.each { |path| raise Discourse::InvalidAccess unless safe_path?(path) }
   end
 
-  IM_DECODERS = /\A(jpe?g|png|ico|gif|webp|avif|svg)\z/i
+  IM_DECODERS = /\A(jpe?g|png|ico|gif|webp|avif|heic|heif|jxl|svg)\z/i
 
-  def self.prepend_decoder!(path, ext_path = nil, opts = nil)
+  def self.supported_extension!(path, ext_path = nil, opts = nil)
     opts ||= {}
 
-    # This logic is a little messy but the result of using mocks for most
-    # of the image tests. The idea here is you shouldn't trust the "original"
-    # path of a file to figure out its extension. However, in certain cases
-    # such as generating the loading upload thumbnail, we force the format,
-    # and this allows us to use the forced format in that case.
-    extension = nil
-    if opts[:format] && path != ext_path
-      extension = File.extname(path)[1..-1]
-    else
-      extension = File.extname(opts[:filename] || ext_path || path)[1..-1]
-    end
+    extension =
+      if opts[:format]
+        opts[:format].to_s
+      elsif path != ext_path
+        File.extname(path)[1..-1]
+      else
+        File.extname(opts[:filename] || ext_path || path)[1..-1]
+      end
+
+    extension = extension.to_s.delete_prefix(".").downcase if extension
+    extension = "jpg" if extension == "jpeg"
 
     if !extension || !extension.match?(IM_DECODERS)
       raise Discourse::InvalidAccess.new("Unsupported extension: #{extension}")
     end
-    "#{extension}:#{path}"
+
+    extension
   end
 
-  def self.thumbnail_or_resize
-    SiteSetting.strip_image_metadata ? "thumbnail" : "resize"
-  end
-
-  def self.resize_instructions(from, to, dimensions, opts = {})
-    ensure_safe_paths!(from, to)
-
-    # note FROM my not be named correctly
-    from = prepend_decoder!(from, to, opts)
-    to = prepend_decoder!(to, to, opts)
-
-    instructions = ["convert", "#{from}[0]"]
-
-    instructions << "-colors" << opts[:colors].to_s if opts[:colors]
-
-    instructions << "-quality" << opts[:quality].to_s if opts[:quality]
-
-    # NOTE: ORDER is important!
-    instructions.concat(
-      %W[
-        -auto-orient
-        -gravity
-        center
-        -background
-        transparent
-        -#{thumbnail_or_resize}
-        #{dimensions}^
-        -extent
-        #{dimensions}
-        -interpolate
-        catrom
-        -unsharp
-        2x0.5+0.7+0
-        -interlace
-        none
-        -profile
-        #{Rails.root.join("vendor/data/RT_sRGB.icm")}
-        #{to}
-      ],
-    )
-  end
-
-  def self.crop_instructions(from, to, dimensions, opts = {})
-    ensure_safe_paths!(from, to)
-
-    from = prepend_decoder!(from, to, opts)
-    to = prepend_decoder!(to, to, opts)
-
-    instructions = %W{
-      convert
-      #{from}[0]
-      -auto-orient
-      -gravity
-      north
-      -background
-      transparent
-      -#{thumbnail_or_resize}
-      #{dimensions}^
-      -crop
-      #{dimensions}+0+0
-      -unsharp
-      2x0.5+0.7+0
-      -interlace
-      none
-      -profile
-      #{Rails.root.join("vendor/data/RT_sRGB.icm")}
-    }
-
-    instructions << "-quality" << opts[:quality].to_s if opts[:quality]
-
-    instructions << to
-  end
-
-  def self.downsize_instructions(from, to, dimensions, opts = {})
-    ensure_safe_paths!(from, to)
-
-    from = prepend_decoder!(from, to, opts)
-    to = prepend_decoder!(to, to, opts)
-
-    %W{
-      convert
-      #{from}[0]
-      -auto-orient
-      -gravity
-      center
-      -background
-      transparent
-      -interlace
-      none
-      -resize
-      #{dimensions}
-      -profile
-      #{Rails.root.join("vendor/data/RT_sRGB.icm")}
-      #{to}
-    }
-  end
-
-  def self.resize(from, to, width, height, opts = {})
-    optimize("resize", from, to, "#{width}x#{height}", opts)
-  end
-
-  def self.crop(from, to, width, height, opts = {})
-    optimize("crop", from, to, "#{width}x#{height}", opts)
-  end
-
-  def self.downsize(from, to, dimensions, opts = {})
-    optimize("downsize", from, to, dimensions, opts)
-  end
-
-  def self.optimize(operation, from, to, dimensions, opts = {})
-    method_name = "#{operation}_instructions"
-
-    instructions = public_send(method_name.to_sym, from, to, dimensions, opts)
-    convert_with(instructions, to, opts)
+  def self.prepend_decoder!(path, ext_path = nil, opts = nil)
+    supported_extension!(path, ext_path, opts)
+    path
   end
 
   MAX_PNGQUANT_SIZE = 500_000
-  MAX_CONVERT_SECONDS = 20
 
-  def self.convert_with(instructions, to, opts = {})
-    Discourse::Utils.execute_command(
-      "nice",
-      "-n",
-      "10",
-      *instructions,
-      timeout: MAX_CONVERT_SECONDS,
-    )
+  def self.resize(from, to, width, height, opts = {})
+    process(:resize, from, to, [width, height], opts)
+  end
+
+  def self.crop(from, to, width, height, opts = {})
+    process(:crop, from, to, [width, height], opts)
+  end
+
+  def self.downsize(from, to, dimensions, opts = {})
+    process(:downsize, from, to, [dimensions], opts)
+  end
+
+  def self.process(operation, from, to, args, opts = {})
+    ensure_safe_paths!(from, to)
+    supported_extension!(to, to, opts)
+
+    safe_image_options = {
+      filename: opts[:filename],
+      output_extension: opts[:format] || File.extname(opts[:filename].to_s).delete_prefix("."),
+      quality: opts[:quality],
+      optimize: false,
+    }.compact
+
+    DiscourseImage.public_send(operation, from, to, *args, **safe_image_options)
 
     allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
     FileHelper.optimize_image!(to, allow_pngquant: allow_pngquant)
@@ -353,20 +265,13 @@ class OptimizedImage < ActiveRecord::Base
     if opts[:raise_on_error]
       raise e
     else
-      error = +"Failed to optimize image:"
-
-      if e.message =~ /\Aconvert:([^`]+)/
-        error << $1
-      else
-        error << " unknown reason"
-      end
-
       Discourse.warn(
-        error,
+        "Failed to optimize image",
         upload_id: opts[:upload_id],
         location: to,
+        error_class: e.class.name,
         error_message: e.message,
-        instructions: instructions,
+        operation: operation,
       )
       false
     end

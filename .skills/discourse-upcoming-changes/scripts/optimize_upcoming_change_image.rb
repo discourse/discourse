@@ -3,7 +3,7 @@
 # Usage: bin/rails runner ~/path/to/discourse-upcoming-changes/scripts/optimize_upcoming_change_image.rb <path>
 #
 # Converts (if needed), resizes, and optimizes an image for use as an upcoming change preview.
-# Uses Discourse's ImageMagick integration for format conversion and OptimizedImage for optimization.
+# Uses Safe Image for format conversion and optimization.
 
 path = ARGV[0]
 
@@ -19,8 +19,13 @@ unless File.exist?(path)
   exit 1
 end
 
-# Detect actual image format using FastImage (not file extension)
-image_info = FastImage.new(path)
+# Detect actual image format using Safe Image (not file extension)
+image_info =
+  begin
+    DiscourseImage.info(path)
+  rescue SafeImage::Error, ArgumentError
+    nil
+  end
 
 if image_info.nil?
   puts "Error: Could not determine image format for: #{path}"
@@ -37,17 +42,7 @@ output_path = path.sub(/\.[^.]+$/, ".png")
 if actual_type != "png"
   puts "Converting from #{actual_type} to PNG..."
 
-  # Use ImageMagick to convert to PNG (same approach as Discourse's UploadCreator)
-  Discourse::Utils.execute_command(
-    "magick",
-    path,
-    "-auto-orient",
-    "-background",
-    "white",
-    output_path,
-    failure_message: "Failed to convert image to PNG",
-    timeout: 30,
-  )
+  DiscourseImage.convert(path, output_path, format: "png", optimize: false)
 
   # Remove original if different from output
   File.delete(path) if path != output_path && File.exist?(path)
@@ -57,7 +52,7 @@ end
 # Use OptimizedImage.downsize to resize (max 1200px width, maintain aspect ratio)
 OptimizedImage.downsize(path, path, "1200x>")
 
-# Force pngquant optimization for better compression (OptimizedImage skips it for files > 500KB)
+# Force lossy PNG optimization for better compression (OptimizedImage only enables it for small files)
 FileHelper.optimize_image!(path, allow_pngquant: true)
 
 size = File.size(path)
