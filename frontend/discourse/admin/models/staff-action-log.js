@@ -6,8 +6,10 @@ import RestModel from "discourse/models/rest";
 import { i18n } from "discourse-i18n";
 
 function format(label, value, escape = true) {
+  const labelBr = value && value.toString().includes("\n") ? "<br/>" : " ";
+  value = value ? value.toString() : "";
   return value
-    ? `<b>${i18n(label)}</b>: ${escape ? escapeExpression(value) : value}`
+    ? `<b>${i18n(label)}:</b>${labelBr} ${escape ? escapeExpression(value.replaceAll("\n", "<br/>")) : value.replaceAll("\n", "<br/>")}`
     : "";
 }
 
@@ -78,9 +80,15 @@ export default class StaffActionLog extends RestModel {
     ];
 
     if (!this.useCustomModalForDetails) {
-      lines.push(format("admin.logs.staff_actions.new_value", this.new_value));
       lines.push(
-        format("admin.logs.staff_actions.previous_value", this.previous_value)
+        format("admin.logs.staff_actions.new_value", this.new_value, false)
+      );
+      lines.push(
+        format(
+          "admin.logs.staff_actions.previous_value",
+          this.previous_value,
+          false
+        )
       );
     }
 
