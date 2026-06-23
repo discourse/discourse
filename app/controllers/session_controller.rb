@@ -898,10 +898,32 @@ class SessionController < ApplicationController
       end
     end
 
-    EmailLoginCode::Redeem.call(service_params) do |result|
-      on_success { |user:| login_with_login_code(user) }
+    return render json: { user_fields_required: true } if needs_signup_user_fields?(matched_user)
+
+    EmailLoginCode::Redeem.call(
+      service_params.deep_merge(ip_address: request.remote_ip),
+    ) do |result|
+      on_success do |user:, existing_user:|
+        login_with_login_code(user, created_account: existing_user.nil?)
+      end
+      on_failed_policy(:can_register_new_account) do
+        render json: { error: I18n.t("login.new_registrations_disabled") }
+      end
+      on_failed_policy(:required_fields_provided) do
+        render json: { error: I18n.t("login.missing_user_field") }
+      end
       on_failure { render json: invalid_login_code }
     end
+  end
+
+  # Required signup fields are only collected once the code has proven
+  # ownership of the inbox, so this response can't be used to probe whether
+  # an account exists.
+  def needs_signup_user_fields?(matched_user)
+    matched_user.nil? && params[:user_fields].blank? &&
+      UserField.required.where(show_on_signup: true).exists? &&
+      SiteSetting.allow_new_registrations && !SiteSetting.invite_only &&
+      !SiteSetting.require_invite_code
   end
 
   def login_code_second_factor_info(user)
@@ -928,13 +950,38 @@ class SessionController < ApplicationController
     params[:second_factor_token].blank?
   end
 
-  def login_with_login_code(user)
+  def login_with_login_code(user, created_account: false)
     raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
 
     if login_not_approved_for?(user)
       render json: login_not_approved
     elsif payload = login_error_check(user)
       render json: payload
+    elsif created_account && !cookies[:sso_payload]
+      # Same tail as `login`, except the response tells the client a new
+      # account was created so it can show the "account ready" step before
+      # following the usual post-login redirect.
+      session.delete(ACTIVATE_USER_KEY)
+      user.update_timezone_if_missing(params[:timezone])
+      log_on_user(user, replay_anonymous_action: true)
+      render json:
+               success_json.merge(
+                 account_created: true,
+                 user: serialize_data(user, UserSerializer, root: false),
+                 # The username is only worth prefilling when it was derived
+                 # from the email; otherwise it's a generic fallback and the
+                 # client should make the user pick one.
+                 prefill_username: SiteSetting.use_email_for_username_and_name_suggestions,
+                 # Sites that lock usernames (e.g. username_change_period: 0)
+                 # can't offer an inline pick, so the client keeps the generated
+                 # name instead of dead-ending on a forbidden change.
+                 can_edit_username: user.guardian.can_edit_username?(user),
+                 # `can_upload_avatar` lives on CurrentUserSerializer, but the
+                 # account-ready step builds the user from UserSerializer, so
+                 # the avatar picker needs the upload permission passed through.
+                 can_upload_avatar:
+                   user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map),
+               )
     else
       login(user)
     end

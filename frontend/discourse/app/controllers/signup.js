@@ -36,6 +36,7 @@ export default class SignupPageController extends Controller {
   @tracked skipConfirmation;
   @tracked serverAccountEmail;
   @tracked serverEmailValidation;
+  @tracked codeSignupStep = "email";
   @autoTrackedArray rejectedEmails = [];
 
   accountChallenge = 0;
@@ -137,8 +138,29 @@ export default class SignupPageController extends Controller {
   @computed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
   get showCreateForm() {
     return (
-      (this.hasAuthOptions || this.canCreateLocal) && !this.skipConfirmation
+      (this.hasAuthOptions || this.canCreateLocal) &&
+      !this.skipConfirmation &&
+      !this.showCodeSignupForm
     );
+  }
+
+  @computed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
+  get showCodeSignupForm() {
+    return (
+      this.siteSettings.enable_local_logins_via_code &&
+      this.canCreateLocal &&
+      !this.hasAuthOptions &&
+      !this.skipConfirmation
+    );
+  }
+
+  get codeSignupOnEmailStep() {
+    return this.codeSignupStep === "email";
+  }
+
+  @action
+  updateCodeSignupStep(step) {
+    this.codeSignupStep = step;
   }
 
   @computed("site.desktopView", "hasAuthOptions")
@@ -151,7 +173,12 @@ export default class SignupPageController extends Controller {
     return this.formSubmitted;
   }
 
-  @computed("userFields", "hasAtLeastOneLoginButton", "hasAuthOptions")
+  @computed(
+    "userFields",
+    "hasAtLeastOneLoginButton",
+    "hasAuthOptions",
+    "showCodeSignupForm"
+  )
   get bodyClasses() {
     const classes = [];
     if (this.userFields) {
@@ -162,6 +189,9 @@ export default class SignupPageController extends Controller {
     }
     if (!this.canCreateLocal) {
       classes.push("no-local-logins");
+    }
+    if (this.showCodeSignupForm) {
+      classes.push("passwordless-signup");
     }
     return classes.join(" ");
   }
@@ -389,8 +419,16 @@ export default class SignupPageController extends Controller {
     return findAll().length > 0;
   }
 
-  @computed("authOptions", "hasAtLeastOneLoginButton")
+  @computed(
+    "authOptions",
+    "hasAtLeastOneLoginButton",
+    "showCodeSignupForm",
+    "codeSignupStep"
+  )
   get showRightSide() {
+    if (this.showCodeSignupForm && !this.codeSignupOnEmailStep) {
+      return false;
+    }
     return !this.authOptions && this.hasAtLeastOneLoginButton;
   }
 

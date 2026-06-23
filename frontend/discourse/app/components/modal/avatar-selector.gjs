@@ -101,9 +101,11 @@ export default class AvatarSelectorModal extends Component {
   }
 
   get allowAvatarUpload() {
+    // Falls back to the edited user when there is no current user yet, e.g.
+    // right after a passwordless signup before the app has rebooted.
+    const user = this.currentUser ?? this.user;
     return (
-      this.currentUser.can_upload_avatar &&
-      allowsImages(this.currentUser.staff, this.siteSettings)
+      user.can_upload_avatar && allowsImages(user.staff, this.siteSettings)
     );
   }
 
@@ -116,12 +118,23 @@ export default class AvatarSelectorModal extends Component {
     this.selected = value;
   }
 
+  // Callers that pass `model.onAvatarChange` (e.g. inline signup) handle the
+  // result themselves; otherwise we reload so the new avatar shows everywhere.
+  afterAvatarSaved({ guardTesting = false } = {}) {
+    if (this.args.model.onAvatarChange) {
+      this.args.model.onAvatarChange();
+      this.args.closeModal?.();
+    } else if (!guardTesting || !isTesting()) {
+      window.location.reload();
+    }
+  }
+
   @action
   async selectAvatar(url, event) {
     event?.preventDefault();
     try {
       await this.user.selectAvatar(url);
-      window.location.reload();
+      this.afterAvatarSaved();
     } catch (error) {
       popupAjaxError(error);
     }
@@ -162,9 +175,7 @@ export default class AvatarSelectorModal extends Component {
   async saveAvatarSelection() {
     try {
       await this.user.pickAvatar(this.selectedUploadId, this.selected);
-      if (!isTesting()) {
-        window.location.reload();
-      }
+      this.afterAvatarSaved({ guardTesting: true });
     } catch (error) {
       popupAjaxError(error);
     }
