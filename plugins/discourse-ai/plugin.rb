@@ -139,6 +139,12 @@ after_initialize do
     end
   end
 
+  on(:post_destroyed) { |post| DiscourseAi::AiApiAuditLogCleaner.delete_for_post(post.id) }
+
+  on(:topic_destroyed) { |topic| DiscourseAi::AiApiAuditLogCleaner.delete_for_topic(topic.id) }
+
+  on(:user_destroyed) { |user| DiscourseAi::AiApiAuditLogCleaner.delete_for_user(user.id) }
+
   if Rails.env.test?
     require_relative "spec/support/embeddings_generation_stubs"
     require_relative "spec/support/fake_external_agent"
