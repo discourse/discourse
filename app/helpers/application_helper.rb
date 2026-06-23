@@ -103,16 +103,30 @@ module ApplicationHelper
         .map { [it[:importmap_name], script_asset_path(it[:name])] }
         .to_h
 
-    # When a bundle (plugin or theme) statically imports from a plugin that
-    # isn't on the page, stand in a fake module so the import resolves instead
-    # of failing.
+    # A bundle can import another plugin as `discourse/plugins/<name>` (required)
+    # or `discourse/plugins/<name>?` (imported `with { optional: "true" }`). Make
+    # sure both specifiers resolve for every imported plugin:
+    #
+    #   * loaded plugin  -> alias `<name>?` to the plugin's real module (the
+    #     required `<name>` already maps to it)
+    #   * missing plugin -> point `<name>?` at a null-returning stub, and `<name>`
+    #     at a module that throws on import with a helpful message
     available_plugins = plugin_assets.map { |a| a[:plugin].directory_name }
-    required_plugins =
-      plugin_assets.flat_map { |a| a[:external_plugin_imports] || [] } +
-        theme_js_assets.flat_map { |a| a[:external_plugin_imports] }
+    external_plugin_imports =
+      (
+        plugin_assets.flat_map { |a| a[:external_plugin_imports] || [] } +
+          theme_js_assets.flat_map { |a| a[:external_plugin_imports] }
+      ).uniq
 
-    (required_plugins.uniq - available_plugins).each do |plugin_name|
-      imports["discourse/plugins/#{plugin_name}"] = Plugin::JsManager::FAKE_PLUGIN_MODULE
+    external_plugin_imports.each do |plugin_name|
+      if available_plugins.include?(plugin_name)
+        imports["discourse/plugins/#{plugin_name}?"] = imports["discourse/plugins/#{plugin_name}"]
+      else
+        imports["discourse/plugins/#{plugin_name}?"] = Plugin::JsManager::FAKE_PLUGIN_MODULE
+        imports[
+          "discourse/plugins/#{plugin_name}"
+        ] = Plugin::JsManager.missing_required_plugin_module(plugin_name)
+      end
     end
 
     JSON.pretty_generate({ imports: }).html_safe

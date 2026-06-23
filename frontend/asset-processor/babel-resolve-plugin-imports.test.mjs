@@ -72,6 +72,38 @@ export { foo };
   ).toThrow(/Re-exporting a cross-plugin import is not supported/);
 });
 
+test("rewrites an optional import to a `discourse/plugins/<name>?` specifier", () => {
+  // After discourse-external-loader, an optional import arrives with an
+  // `?optional` marker on its id (and the original attribute still attached).
+  expect(
+    compile(`
+import ChatChannel from "discourse/plugins/chat/models/chat-channel?optional" with { discoursePlugin: "optional" };
+
+ChatChannel.create();
+  `)
+  ).toMatchInlineSnapshot(`
+    "import _plugin_chat_optional from "discourse/plugins/chat?";
+    (_plugin_chat_optional["models/chat-channel"] || _plugin_chat_optional["models/chat-channel/index"]).default.create();"
+  `);
+});
+
+test("optional and required imports of the same plugin get separate specifiers", () => {
+  expect(
+    compile(`
+import { a } from "discourse/plugins/chat/lib/one?optional" with { discoursePlugin: "optional" };
+import { b } from "discourse/plugins/chat/lib/two";
+
+a();
+b();
+  `)
+  ).toMatchInlineSnapshot(`
+    "import _plugin_chat_optional from "discourse/plugins/chat?";
+    import _plugin_chat from "discourse/plugins/chat";
+    (0, (_plugin_chat_optional["lib/one"] || _plugin_chat_optional["lib/one/index"]).a)();
+    (0, (_plugin_chat["lib/two"] || _plugin_chat["lib/two/index"]).b)();"
+  `);
+});
+
 test("leaves relative and core imports untouched", () => {
   expect(
     compile(`

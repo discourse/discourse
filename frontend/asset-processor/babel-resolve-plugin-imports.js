@@ -25,7 +25,18 @@ export default function (babel) {
     }
   }
 
+  // Marker that discourse-external-loader appends to the external id of an
+  // import flagged `with { optional: "true" }`. Optionality rides in the
+  // module specifier so it survives bundling in `chunk.imports`.
+  const OPTIONAL_MARKER = "?optional";
+
   return {
+    // The original `with { optional: "true" }` attribute is still present on
+    // the (now `?optional`-marked) external import, so the parser needs to
+    // accept it.
+    manipulateOptions(_opts, parserOpts) {
+      parserOpts.plugins.push("importAttributes");
+    },
     pre() {
       this.pluginImports = new Map();
     },
@@ -33,11 +44,11 @@ export default function (babel) {
       Program: {
         exit(path) {
           const declarations = [];
-          for (const [pluginName, localId] of this.pluginImports) {
+          for (const [importSource, localId] of this.pluginImports) {
             declarations.push(
               t.importDeclaration(
                 [t.importDefaultSpecifier(t.identifier(localId))],
-                t.stringLiteral(`discourse/plugins/${pluginName}`)
+                t.stringLiteral(importSource)
               )
             );
           }
@@ -46,19 +57,32 @@ export default function (babel) {
       },
 
       ImportDeclaration(path) {
-        const moduleName = path.node.source.value;
+        let moduleName = path.node.source.value;
         if (!moduleName.startsWith("discourse/plugins/")) {
           return;
+        }
+
+        // An optional import arrives as `discourse/plugins/foo/bar?optional`.
+        // The consolidated import keeps the marker (`discourse/plugins/foo?`)
+        // so the import map can resolve it to a null stub when the plugin is
+        // absent, instead of the throwing stub used for required imports.
+        const optional = moduleName.endsWith(OPTIONAL_MARKER);
+        if (optional) {
+          moduleName = moduleName.slice(0, -OPTIONAL_MARKER.length);
         }
 
         const parts = moduleName.split("/");
         const pluginName = parts[2];
         const compatModuleName = parts.slice(3).join("/");
 
-        let localId = this.pluginImports.get(pluginName);
+        const importSource = `discourse/plugins/${pluginName}${optional ? "?" : ""}`;
+
+        let localId = this.pluginImports.get(importSource);
         if (!localId) {
-          localId = path.scope.generateUid(`plugin_${pluginName}`);
-          this.pluginImports.set(pluginName, localId);
+          localId = path.scope.generateUid(
+            `plugin_${pluginName}${optional ? "_optional" : ""}`
+          );
+          this.pluginImports.set(importSource, localId);
         }
 
         const compatModule = () => {
