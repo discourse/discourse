@@ -69,13 +69,7 @@ class AccessControlList < ActiveRecord::Base
   # Takes a list in this format, which is the same
   # format from flattened_list that will come from the UI:
   #
-  # [
-  #   {
-  #     "type": "group",
-  #     "id": 3,
-  #     "permission": "edit",
-  #   }
-  # ]
+  # { type: "group", id: 3, permission: "edit" }]
   #
   # And converts into ACL records that can be inserted into the DB with
   # .insert_all
@@ -106,6 +100,8 @@ class AccessControlList < ActiveRecord::Base
   end
 
   class TargetAcl
+    attr_reader :group_lookup, :permission_lookup
+
     def initialize(flattened_acl_list)
       @group_lookup = {}
       @permission_lookup = {}
@@ -113,7 +109,7 @@ class AccessControlList < ActiveRecord::Base
       flattened_acl_list.each do |acl|
         @permission_lookup[acl[:permission]] ||= { group_ids: [] }
 
-        if acl[:type] == :group
+        if acl[:type].to_sym == :group
           @group_lookup[acl[:id]] ||= []
           @group_lookup[acl[:id]] << acl[:permission]
 
@@ -238,7 +234,7 @@ class AccessControlList < ActiveRecord::Base
       preload_allowed
 
       if for_target.present?
-        raise AclMixedTargetError unless map(&:target).uniq.length === 1
+        raise AclMixedTargetError if map(&:target).uniq.length > 1
       end
 
       flattened_list = []
@@ -259,8 +255,8 @@ class AccessControlList < ActiveRecord::Base
           }
 
           if for_target.present?
-            list_entry[:target_id] = target.id
-            list_entry[:target_type] = target.class.polymorphic_name
+            list_entry[:target_id] = for_target.id
+            list_entry[:target_type] = for_target.class.polymorphic_name
           else
             list_entry[:target_id] = access_control_list.target_id
             list_entry[:target_type] = access_control_list.target_type
@@ -279,7 +275,7 @@ class AccessControlList < ActiveRecord::Base
     # Used to easily access permissions for a single target, e.g. a Category,
     # accessed via the permission_acl method on a Model that has ACLs.
     def target_acl(target)
-      TargetAcl.new(flattened_list, for_target: target)
+      TargetAcl.new(flattened_list(for_target: target))
     end
 
     # Used to easily access permissions for a single user,
