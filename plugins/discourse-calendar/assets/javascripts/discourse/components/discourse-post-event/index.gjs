@@ -197,6 +197,8 @@ export default class DiscoursePostEvent extends Component {
               <Image
                 @imageUpload={{event.imageUpload}}
                 @alt={{this.eventName}}
+                @linkToPost={{@linkToPost}}
+                @postUrl={{event.post.url}}
               />
               <header class="event-header" {{this.setupMessageBus}}>
                 <div class="event-date">
@@ -287,7 +289,11 @@ export default class DiscoursePostEvent extends Component {
                   Status=(component Status event=event)
                   ChatChannel=(component ChatChannel event=event)
                   Image=(component
-                    Image imageUpload=event.imageUpload alt=this.eventName
+                    Image
+                    imageUpload=event.imageUpload
+                    alt=this.eventName
+                    linkToPost=@linkToPost
+                    postUrl=event.post.url
                   )
                 }}
               >

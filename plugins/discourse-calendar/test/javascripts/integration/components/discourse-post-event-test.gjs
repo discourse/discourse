@@ -68,6 +68,55 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
       );
   });
 
+  test("renders the event image as a lightbox inside a topic", async function (assert) {
+    stubApi.call(
+      this,
+      buildEvent({
+        image_upload: { url: "/uploads/default/original/1X/event.png" },
+      })
+    );
+
+    const event = { id: 1, startsAt: "2026-06-04T14:00:00Z" };
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-image");
+
+    assert
+      .dom(".event-image a.lightbox")
+      .hasAttribute(
+        "href",
+        "/uploads/default/original/1X/event.png",
+        "links the image to the upload so it can be lightboxed"
+      );
+  });
+
+  test("links the event image to the post when linkToPost is set", async function (assert) {
+    stubApi.call(
+      this,
+      buildEvent({
+        image_upload: { url: "/uploads/default/original/1X/event.png" },
+      })
+    );
+
+    const event = { id: 1, startsAt: "2026-06-04T14:00:00Z" };
+    await render(
+      <template>
+        <DiscoursePostEvent @event={{event}} @linkToPost={{true}} />
+      </template>
+    );
+    await waitFor(".event-image");
+
+    assert
+      .dom(".event-image a.lightbox")
+      .doesNotExist("does not wire up a lightbox in calendar contexts");
+    assert
+      .dom(".event-image a")
+      .hasAttribute(
+        "href",
+        "/t/foo/1",
+        "links the image to the event topic instead"
+      );
+  });
+
   test("derives the weekday from the date for all-day events, ignoring the timezone offset", async function (assert) {
     // Midnight UTC in a negative-offset timezone rolls back to the previous
     // day; an all-day event's weekday must come from the date, not the offset.
