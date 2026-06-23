@@ -1951,7 +1951,8 @@ CREATE TABLE public.browser_pageview_events (
     asn integer,
     score integer,
     normalized_referrer character varying(2000),
-    normalized_referrer_version smallint
+    normalized_referrer_version smallint,
+    source smallint DEFAULT 1 NOT NULL
 );
 
 
@@ -22057,6 +22058,8 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260617053237'),
+('20260615084100'),
+('20260615082047'),
 ('20260612092612'),
 ('20260610205840'),
 ('20260610075829'),

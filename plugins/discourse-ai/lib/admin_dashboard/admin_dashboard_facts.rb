@@ -352,7 +352,9 @@ module DiscourseAi
       def landing_topic
         return if @period_days > MAX_LANDING_TOPIC_DAYS
 
-        row = DB.query(<<~SQL, start_date: @start_date, end_date: @end_date).first
+        row =
+          DB.query(
+            <<~SQL,
             SELECT e.topic_id, t.title, COUNT(*) AS visits
             FROM browser_pageview_events e
             JOIN topics t ON t.id = e.topic_id
@@ -360,10 +362,15 @@ module DiscourseAi
               AND e.created_at < (:end_date::date + 1)
               AND e.topic_id IS NOT NULL
               AND e.normalized_referrer IS NOT NULL
+              AND e.source = :source
             GROUP BY e.topic_id, t.title
             ORDER BY visits DESC
             LIMIT 1
           SQL
+            start_date: @start_date,
+            end_date: @end_date,
+            source: BrowserPageviewEvent.rollup_source,
+          ).first
         return if row.nil? || row.visits.to_i < 50
 
         signal(
