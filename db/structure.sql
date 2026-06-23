@@ -8712,6 +8712,41 @@ ALTER SEQUENCE public.site_setting_groups_id_seq OWNED BY public.site_setting_gr
 
 
 --
+-- Name: site_setting_localizations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.site_setting_localizations (
+    id bigint NOT NULL,
+    setting_name character varying NOT NULL,
+    locale character varying(20) NOT NULL,
+    value text NOT NULL,
+    cooked text,
+    localizer_user_id integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: site_setting_localizations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.site_setting_localizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: site_setting_localizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.site_setting_localizations_id_seq OWNED BY public.site_setting_localizations.id;
+
+
+--
 -- Name: site_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -13527,6 +13562,13 @@ ALTER TABLE ONLY public.site_setting_groups ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: site_setting_localizations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.site_setting_localizations ALTER COLUMN id SET DEFAULT nextval('public.site_setting_localizations_id_seq'::regclass);
+
+
+--
 -- Name: site_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15944,6 +15986,14 @@ ALTER TABLE ONLY public.single_sign_on_records
 
 ALTER TABLE ONLY public.site_setting_groups
     ADD CONSTRAINT site_setting_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: site_setting_localizations site_setting_localizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.site_setting_localizations
+    ADD CONSTRAINT site_setting_localizations_pkey PRIMARY KEY (id);
 
 
 --
@@ -20389,6 +20439,20 @@ CREATE UNIQUE INDEX index_site_setting_groups_on_name ON public.site_setting_gro
 
 
 --
+-- Name: index_site_setting_localizations_on_locale; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_site_setting_localizations_on_locale ON public.site_setting_localizations USING btree (locale);
+
+
+--
+-- Name: index_site_setting_localizations_on_setting_name_and_locale; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_site_setting_localizations_on_setting_name_and_locale ON public.site_setting_localizations USING btree (setting_name, locale);
+
+
+--
 -- Name: index_site_settings_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22135,6 +22199,7 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260624140945'),
 ('20260623090824'),
+('20260622140747'),
 ('20260617053237'),
 ('20260615084100'),
 ('20260615082047'),
@@ -24484,4 +24549,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20120311164326'),
 ('20120311163914'),
 ('20000225050318');
-

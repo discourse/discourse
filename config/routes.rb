@@ -468,7 +468,11 @@ Discourse::Application.routes.draw do
         end
 
         resources :about, constraints: AdminConstraint.new, only: %i[index] do
-          collection { put "/" => "about#update" }
+          collection do
+            put "/" => "about#update"
+            get "localizations" => "about#localizations"
+            put "localizations" => "about#update_localizations"
+          end
         end
 
         resources :customize,

@@ -1,7 +1,54 @@
 # frozen_string_literal: true
 
 class Admin::Config::AboutController < Admin::AdminController
+  LOCALIZATION_PARAM_MAP = {
+    general_settings: {
+      name: "title",
+      summary: "site_description",
+      extended_description: "extended_site_description",
+      community_title: "short_site_description",
+    },
+    contact_information: {
+      community_owner: "community_owner",
+    },
+    your_organization: {
+      company_name: "company_name",
+      company_url: "company_url",
+      governing_law: "governing_law",
+      city_for_disputes: "city_for_disputes",
+    },
+  }.freeze
+
   def index
+  end
+
+  def localizations
+    locale = localization_locale
+
+    render json: localization_payload(locale)
+  end
+
+  def update_localizations
+    locale = localization_locale
+
+    SiteSettingLocalization.transaction do
+      localization_settings_from_params.each do |setting|
+        if setting[:value].blank?
+          SiteSettingLocalization.where(setting_name: setting[:setting_name], locale:).destroy_all
+        else
+          localization =
+            SiteSettingLocalization.find_or_initialize_by(
+              setting_name: setting[:setting_name],
+              locale:,
+            )
+          localization.value = setting[:value]
+          localization.localizer_user_id = current_user.id
+          localization.save!
+        end
+      end
+    end
+
+    render json: localization_payload(locale)
   end
 
   def update
@@ -102,5 +149,53 @@ class Admin::Config::AboutController < Admin::AdminController
         raise Discourse::InvalidParameters, policy.reason
       end
     end
+  end
+
+  private
+
+  def localization_settings_from_params
+    settings = []
+
+    LOCALIZATION_PARAM_MAP.each do |section_name, param_map|
+      section_params = params[section_name]
+      next if section_params.blank?
+
+      param_map.each do |param_name, setting_name|
+        next if !section_params.key?(param_name)
+
+        settings << { setting_name:, value: section_params[param_name].to_s }
+      end
+    end
+
+    settings
+  end
+
+  def localization_locale
+    locale = SiteSettingLocalization.normalize_locale(params.require(:locale))
+    supported_locales =
+      SiteSetting
+        .content_localization_supported_locales
+        .to_s
+        .split("|")
+        .map { |supported_locale| SiteSettingLocalization.normalize_locale(supported_locale) }
+
+    if locale == SiteSettingLocalization.normalize_locale(SiteSetting.default_locale) ||
+         supported_locales.exclude?(locale)
+      raise Discourse::InvalidParameters, :locale
+    end
+
+    locale
+  end
+
+  def localization_payload(locale)
+    localizations =
+      SiteSettingLocalization
+        .where(locale:, setting_name: LOCALIZATION_PARAM_MAP.values.flat_map(&:values))
+        .index_by(&:setting_name)
+        .transform_values do |localization|
+          { value: localization.value, cooked: localization.cooked }
+        end
+
+    { locale:, localizations: }
   end
 end

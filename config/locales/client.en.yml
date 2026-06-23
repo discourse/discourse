@@ -7854,6 +7854,9 @@ en:
             initial_members: "Expanded members"
             initial_members_description: "Number of group members to display before adding a View more button."
             show_description: "Include description"
+          locale_selector:
+            title: "Language"
+            description: "Only translatable About page fields are shown."
           optional: "(optional)"
           update: "Update"
           toasts:

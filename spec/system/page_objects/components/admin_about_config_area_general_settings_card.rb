@@ -23,6 +23,10 @@ module PageObjects
         PageObjects::Components::UppyImageUploader.new(card.find(".file-uploader"))
       end
 
+      def has_no_banner_image_field?
+        form.has_no_field_with_name?("aboutBannerImage")
+      end
+
       def submit
         form.submit
       end
