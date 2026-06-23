@@ -73,6 +73,7 @@ en:
       pinned_bar:
         title: "Pinned"
         see_all: "See all pinned messages"
+        jump_to_pinned: "Jump to pinned message"
       no_pinned_messages: "No pinned messages in this channel."
       pin_message: "Pin message"
       unpin_message: "Unpin message"

@@ -159,10 +159,11 @@ export default class ChatPinnedMessageBar extends Component {
           <button
             type="button"
             class="chat-pinned-bar__main"
+            aria-label={{i18n "chat.pinned_bar.jump_to_pinned"}}
             {{on "click" this.jumpToCurrentPin}}
           >
             {{#if this.hasMultiplePins}}
-              <div class="chat-pinned-bar__indicator">
+              <span class="chat-pinned-bar__indicator" aria-hidden="true">
                 {{#each this.pins as |pin index|}}
                   <span
                     class={{if
@@ -172,10 +173,10 @@ export default class ChatPinnedMessageBar extends Component {
                     }}
                   ></span>
                 {{/each}}
-              </div>
+              </span>
             {{/if}}
 
-            <div class="chat-pinned-bar__content">
+            <span class="chat-pinned-bar__content">
               <span class="chat-pinned-bar__label">
                 {{dIcon "thumbtack"}}
                 {{i18n "chat.pinned_bar.title"}}
@@ -183,7 +184,7 @@ export default class ChatPinnedMessageBar extends Component {
               <span class="chat-pinned-bar__excerpt">
                 {{dReplaceEmoji this.currentExcerpt}}
               </span>
-            </div>
+            </span>
           </button>
         {{/if}}
 
