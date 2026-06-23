@@ -5488,6 +5488,9 @@ en:
     minimum_required_tags:
       one: "You must select at least %{count} tag."
       other: "You must select at least %{count} tags."
+    too_many_tags_for_topic:
+      one: "You can apply up to %{count} tag to a topic."
+      other: "You can apply up to %{count} tags to a topic."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
     bulk_create:
       invalid_params: "Invalid parameters. Please provide an array of tag names."

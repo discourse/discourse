@@ -2313,6 +2313,91 @@ RSpec.describe TopicsController do
             expect(topic.reload.tags.pluck(:name)).to contain_exactly("newtag")
           end
 
+          it "does not create a revision when only synonyms of existing tags are submitted" do
+            canonical = Fabricate(:tag, name: "apple-inc")
+            aapl = Fabricate(:tag, name: "aapl", target_tag: canonical)
+            appl = Fabricate(:tag, name: "appl", target_tag: canonical)
+            topic.tags << canonical
+
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json",
+                  params: {
+                    tags: [
+                      { id: aapl.id, name: "aapl" },
+                      { id: appl.id, name: "appl" },
+                      { id: canonical.id, name: "apple-inc" },
+                    ],
+                  }
+            end.not_to change { topic.reload.first_post.revisions.count }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["tags"].map { |t| t["name"] }).to contain_exactly(
+              "apple-inc",
+            )
+          end
+
+          it "returns success when updating with empty tags on a topic with no tags" do
+            expect(topic.tags).to be_empty
+
+            put "/t/#{topic.id}/tags.json"
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["errors"]).to be_nil
+          end
+
+          it "does not create a revision when updating without tags on a topic with tags" do
+            topic.tags << tag
+
+            expect { put "/t/#{topic.id}/tags.json" }.not_to change {
+              topic.reload.first_post.revisions.count
+            }
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags.pluck(:id)).to contain_exactly(tag.id)
+          end
+
+          it "can update tags" do
+            expect do
+              put "/t/#{topic.id}/tags.json", params: { tags: [{ id: tag.id, name: tag.name }] }
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+          end
+
+          it "rejects tag arrays exceeding the configured per-topic limit" do
+            SiteSetting.max_tags_per_topic = 1
+
+            put "/t/#{topic.slug}/#{topic.id}.json",
+                params: {
+                  tags: [{ id: tag.id, name: tag.name }, {}],
+                },
+                as: :json
+
+            expect(response.status).to eq(422)
+            expect(response.parsed_body["errors"]).to contain_exactly(
+              I18n.t("tags.too_many_tags_for_topic", count: 1),
+            )
+            expect(topic.reload.tags).to be_empty
+          end
+
+          it "can update tags when params are form-encoded as indexed hash" do
+            expect do
+              put "/t/#{topic.id}/tags.json",
+                  params: {
+                    tags: {
+                      "0" => {
+                        id: tag.id,
+                        name: tag.name,
+                      },
+                    },
+                  }
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags.pluck(:name)).to contain_exactly(tag.name)
+          end
+
           it "can add a tag to wiki topic" do
             SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
             topic.first_post.update!(wiki: true)

@@ -375,6 +375,7 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
 
     guardian.ensure_can_edit!(topic)
+    return if reject_oversized_tag_params!(:tags, :original_tags)
 
     original_title = params[:original_title]
     if original_title.present? && original_title != topic.title
@@ -406,16 +407,17 @@ class TopicsController < ApplicationController
           return render_json_error(I18n.t("category.errors.not_found"))
         end
 
-        if category &&
-             topic_tags = (params[:tags] || topic.tags.pluck(:name)).reject { |c| c.empty? }
-          if topic_tags.present?
+        if category
+          topic_tag_names = resolve_tag_names(topic)
+
+          if topic_tag_names.present?
             allowed_tags =
               DiscourseTagging.filter_allowed_tags(guardian, category: category).map(&:name)
 
-            invalid_tags = topic_tags - allowed_tags
+            invalid_tags = topic_tag_names - allowed_tags
 
             # Do not raise an error on a topic's hidden tags when not modifying tags
-            if params[:tags].blank?
+            if !params.has_key?(:tags)
               invalid_tags.each do |tag_name|
                 if DiscourseTagging.hidden_tag_names.include?(tag_name)
                   invalid_tags.delete(tag_name)
@@ -448,9 +450,25 @@ class TopicsController < ApplicationController
     changes.delete(:title) if topic.title == changes[:title]
     changes.delete(:category_id) if topic.category_id.to_i == changes[:category_id].to_i
 
-    if Tag.include_tags?
-      topic_tags = topic.tags.map(&:name).sort
-      changes.delete(:tags) if changes[:tags]&.sort == topic_tags
+    tags_submitted = Tag.include_tags? && changes.has_key?(:tags)
+
+    if tags_submitted
+      if changes[:tags].present?
+        incoming = normalized_tag_params(changes[:tags])
+
+        if incoming.first.is_a?(String)
+          Discourse.deprecate(
+            "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
+            since: "2026.01",
+            drop_from: "2026.07",
+          )
+        end
+
+        changes.delete(:tags) if PostRevisor.tag_change_noop?(topic, incoming)
+        changes[:tags] = resolve_tag_names(topic) if changes.has_key?(:tags)
+      elsif topic.tags.empty?
+        changes.delete(:tags)
+      end
     end
 
     success = true
@@ -469,22 +487,41 @@ class TopicsController < ApplicationController
     end
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"
-    success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
+    if !success
+      render_json_error(topic)
+    elsif tags_submitted
+      render_topic_with_tags(topic)
+    else
+      render_serialized(topic, BasicTopicSerializer)
+    end
   end
 
   def update_tags
-    params.require(:tags)
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit_tags!(topic)
+    return if reject_oversized_tag_params!(:tags)
 
-    success =
+    return render_topic_with_tags(topic) if !params.has_key?(:tags)
+
+    tags = normalized_tag_params(params[:tags])
+
+    if tags.present? && tags.first.is_a?(String)
+      Discourse.deprecate(
+        "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
+    end
+
+    unless PostRevisor.tag_change_noop?(topic, tags)
       PostRevisor.new(topic.first_post, topic).revise!(
         current_user,
-        { tags: params[:tags] },
+        { tags: resolve_tag_names(topic) },
         validate_post: false,
       )
+    end
 
-    success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
+    topic.errors.blank? ? render_topic_with_tags(topic) : render_json_error(topic)
   end
 
   def feature_stats
@@ -1254,6 +1291,66 @@ class TopicsController < ApplicationController
   end
 
   private
+
+  def render_topic_with_tags(topic)
+    payload = serialize_data(topic, BasicTopicSerializer)
+    payload[:tags] = topic
+      .visible_tags(guardian)
+      .map { |tag| { id: tag.id, name: tag.name, slug: tag.slug_for_url } }
+    render_json_dump(payload)
+  end
+
+  def reject_oversized_tag_params!(*param_names)
+    param_names.each do |param_name|
+      next if !params.has_key?(param_name)
+      next if tag_param_size(params[param_name]) <= SiteSetting.max_tags_per_topic
+
+      render_json_error(
+        I18n.t("tags.too_many_tags_for_topic", count: SiteSetting.max_tags_per_topic),
+      )
+      return true
+    end
+
+    false
+  end
+
+  def tag_param_size(tags)
+    return tags.length if tags.is_a?(Array)
+    return tags.keys.length if tags.is_a?(ActionController::Parameters)
+
+    0
+  end
+
+  def normalized_tag_params(tags)
+    return [] if tags.blank?
+    return tags.values if tags.is_a?(ActionController::Parameters)
+
+    tags
+  end
+
+  def resolve_tag_names(topic)
+    @resolved_tag_names ||=
+      if params[:tags].present?
+        incoming = normalized_tag_params(params[:tags])
+        if incoming.first.is_a?(String)
+          Discourse.deprecate(
+            "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
+            since: "2026.01",
+            drop_from: "2026.07",
+          )
+          incoming.reject(&:empty?)
+        else
+          ids = incoming.filter_map { |t| t[:id]&.to_i }
+          names = incoming.filter_map { |t| t[:id].blank? && t[:name].presence }
+          names += Tag.visible(guardian).where(id: ids).pluck(:name) if ids.present?
+          names
+        end
+      elsif params.has_key?(:tags)
+        []
+      else
+        topic.tags.pluck(:name)
+      end
+  end
 
   def topic_params
     params.permit(:topic_id, :topic_time, timings: {})
