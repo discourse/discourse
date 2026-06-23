@@ -73,8 +73,7 @@ async function performRollup(modules, opts) {
         extensions: [".js", ".gjs", ".hbs"],
         babelHelpers: "bundled",
         compact: false,
-        // Keep `import ... with { optional: "true" }` parseable so the attribute
-        // survives bundling and reaches BabelResolvePluginImports.
+        // Support `import ... with { ... }` for cross-plugin imports
         parserOpts: { plugins: ["importAttributes"] },
         plugins: [
           [DecoratorTransforms, { runEarly: true }],
@@ -121,9 +120,6 @@ async function performRollup(modules, opts) {
   const bundle = await result.generate({
     format: "es",
     sourcemap: "hidden",
-    // Emit modern `with { ... }` import attributes (rollup defaults to the
-    // deprecated `assert` keyword) so BabelResolvePluginImports only has to
-    // parse one syntax.
     importAttributesKey: "with",
     entryFileNames: `${opts.filenamePrefix ?? ""}[name].[hash:6]${opts.filenameSuffix ?? ""}.js`,
     chunkFileNames: `${opts.filenamePrefix ?? ""}chunk.[hash:6]${opts.filenameSuffix ?? ""}.js`,
@@ -133,10 +129,6 @@ async function performRollup(modules, opts) {
     caches.set(opts.pluginName, result.cache);
   }
 
-  // The other plugins this bundle imports from (`discourse/plugins/<name>/...`).
-  // The optional `?optional` marker rides on the final path segment, so it
-  // doesn't affect the plugin name we extract here — this stays a plain list of
-  // names, and the optional vs required distinction is handled in the import map.
   const externalPluginImports = [
     ...new Set(
       bundle.output
