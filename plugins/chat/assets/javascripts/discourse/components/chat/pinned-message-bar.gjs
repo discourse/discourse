@@ -6,7 +6,9 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
+import KeyValueStore from "discourse/lib/key-value-store";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
@@ -23,6 +25,7 @@ export default class ChatPinnedMessageBar extends Component {
     // whenever the channel id changes) rather than the optimistic
     // `pinnedMessagesCount`, which changes before the server confirms and
     // would refetch stale data.
+    this.#hydrateDismissal(channelId);
     const key = `/chat/${channelId}`;
     this.messageBus.subscribe(
       key,
@@ -33,6 +36,27 @@ export default class ChatPinnedMessageBar extends Component {
     return () => this.messageBus.unsubscribe(key, this.onBusMessage);
   });
   #loadSequence = 0;
+  #dismissStore = new KeyValueStore("discourse_chat_pinned_bar_");
+
+  // a user can hide the bar from the pins panel; it stays hidden until a pin
+  // newer than the one they dismissed above is added
+  get dismissed() {
+    const dismissedAbove = this.args.channel.pinsDismissedAboveId;
+    if (dismissedAbove == null) {
+      return false;
+    }
+    const newestPinId = this.pins[0]?.id;
+    return newestPinId != null && newestPinId <= dismissedAbove;
+  }
+
+  #hydrateDismissal(channelId) {
+    if (this.args.channel.pinsDismissedAboveId == null) {
+      const stored = this.#dismissStore.getObject(String(channelId));
+      if (stored != null) {
+        this.args.channel.pinsDismissedAboveId = stored;
+      }
+    }
+  }
 
   get showBar() {
     return (
@@ -148,10 +172,10 @@ export default class ChatPinnedMessageBar extends Component {
   <template>
     {{#if this.showBar}}
       <div
-        class={{if
-          this.currentPin
+        class={{dConcatClass
           "chat-pinned-bar"
-          "chat-pinned-bar --loading"
+          (if this.currentPin "" "--loading")
+          (if this.dismissed "--dismissed")
         }}
         {{this.subscribe @channel.id}}
       >

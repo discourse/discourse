@@ -21,6 +21,23 @@ function pinResponse(channel, count) {
   return response({ pinned_messages, membership: null });
 }
 
+// a single pin whose pin-record id is `pinId` (the value the bar compares
+// against the dismissed-above id)
+function dismissablePinResponse(pinId) {
+  return response({
+    pinned_messages: [
+      {
+        id: pinId,
+        chat_message_id: 200,
+        pinned_at: moment().toISOString(),
+        pinned_by: { id: 1, username: "alice" },
+        message: { id: 200, excerpt: "Pinned excerpt", message: "x" },
+      },
+    ],
+    membership: null,
+  });
+}
+
 module("Component | ChatPinnedMessageBar", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -304,5 +321,62 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
     await settled();
 
     assert.dom(".chat-pinned-bar__excerpt").hasText("Pinned excerpt 0");
+  });
+
+  test("hides the bar when dismissed above the newest pin", async function (assert) {
+    this.channel.pinnedMessagesCount = 1;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      dismissablePinResponse(100)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert.dom(".chat-pinned-bar").doesNotHaveClass("--dismissed");
+
+    this.channel.pinsDismissedAboveId = 100; // the newest pin's id
+    await settled();
+
+    assert.dom(".chat-pinned-bar").hasClass("--dismissed");
+  });
+
+  test("reappears once a pin newer than the dismissed one is added", async function (assert) {
+    let pinId = 100;
+    this.channel.pinnedMessagesCount = 1;
+    this.channel.pinsDismissedAboveId = 100;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      dismissablePinResponse(pinId)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".chat-pinned-bar")
+      .hasClass("--dismissed", "stays hidden while no newer pin exists");
+
+    // a newer pin (higher id) is added
+    pinId = 101;
+    await publishToMessageBus(`/chat/${this.channel.id}`, {
+      type: "pin",
+      chat_message_id: 201,
+    });
+    await settled();
+
+    assert
+      .dom(".chat-pinned-bar")
+      .doesNotHaveClass("--dismissed", "reappears for the newer pin");
   });
 });

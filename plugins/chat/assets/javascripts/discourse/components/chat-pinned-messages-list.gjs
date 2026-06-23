@@ -1,8 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
+import KeyValueStore from "discourse/lib/key-value-store";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChatMessage from "discourse/plugins/chat/discourse/components/chat-message";
@@ -11,6 +14,7 @@ export default class ChatPinnedMessagesList extends Component {
   @service messageBus;
   @service chatApi;
   @service currentUser;
+  @service router;
 
   @tracked pinnedMessages = this.args.pinnedMessages || [];
 
@@ -30,7 +34,6 @@ export default class ChatPinnedMessagesList extends Component {
       this.#markPinsAsRead(channel);
     };
   });
-
   onMessage = (busData) => {
     switch (busData.type) {
       case "pin":
@@ -41,7 +44,6 @@ export default class ChatPinnedMessagesList extends Component {
         break;
     }
   };
-
   isUnseen = (pin) => {
     if (pin.pinned_by?.id === this.currentUser?.id) {
       return false;
@@ -55,12 +57,10 @@ export default class ChatPinnedMessagesList extends Component {
     const lastViewed = new Date(this.#lastViewedPinsAtSnapshot);
     return pinnedAt > lastViewed;
   };
-
   decorateMessage = (pin) => {
     pin.message.isUnseen = this.isUnseen(pin);
     return pin.message;
   };
-
   pinnedByText = (pin) => {
     if (pin.pinned_by?.id === this.currentUser?.id) {
       return i18n("chat.pinned_messages.pinned_by_you");
@@ -69,13 +69,27 @@ export default class ChatPinnedMessagesList extends Component {
       username: pin.pinned_by?.username,
     });
   };
-
   routeModels = (pin) => {
     return [...this.args.channel.routeModels, pin.message.id];
   };
+  #dismissStore = new KeyValueStore("discourse_chat_pinned_bar_");
 
   #lastViewedPinsAtSnapshot =
     this.args.channel.currentUserMembership?.lastViewedPinsAt;
+
+  @action
+  dismissBar() {
+    const channel = this.args.channel;
+    const newestPinId = this.pinnedMessages[0]?.id;
+    if (newestPinId != null) {
+      channel.pinsDismissedAboveId = newestPinId;
+      this.#dismissStore.setObject({
+        key: String(channel.id),
+        value: newestPinId,
+      });
+    }
+    this.router.transitionTo("chat.channel", ...channel.routeModels);
+  }
 
   handlePinMessage(data) {
     const existingPin = this.pinnedMessages.find(
@@ -150,6 +164,18 @@ export default class ChatPinnedMessagesList extends Component {
           </div>
         {{/each}}
       </div>
+
+      {{#if this.pinnedMessages.length}}
+        <div class="chat-pinned-messages-list__footer">
+          <button
+            type="button"
+            class="chat-pinned-messages-list__dismiss btn btn-flat"
+            {{on "click" this.dismissBar}}
+          >
+            {{i18n "chat.pinned_messages.dismiss"}}
+          </button>
+        </div>
+      {{/if}}
     </div>
   </template>
 }

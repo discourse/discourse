@@ -68,6 +68,7 @@ en:
       pinned_messages:
         title: "Pinned messages"
         close: "Close pinned messages"
+        dismiss: "Dismiss pinned messages"
         pinned_by_you: "Pinned by you"
         pinned_by_user: "Pinned by %{username}"
       pinned_bar:

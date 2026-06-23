@@ -16,7 +16,8 @@
   flex-shrink: 0;
   z-index: 2;
 
-  &.--loading {
+  &.--loading,
+  &.--dismissed {
     display: none;
   }
 

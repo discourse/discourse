@@ -156,6 +156,20 @@ RSpec.describe "Chat pinned messages" do
     expect(page).to have_no_css(".c-routes.--channel-pins")
   end
 
+  it "lets a user hide the bar from the pins panel" do
+    Chat::PinnedMessage.create!(chat_message: message, chat_channel: channel, user: admin)
+
+    chat_page.visit_channel(channel)
+    expect(page).to have_css(".chat-pinned-bar")
+
+    find(".chat-pinned-bar__see-all").click
+    find(".chat-pinned-messages-list__dismiss").click
+
+    # the panel closes and the bar is dismissed (hidden) until a newer pin
+    expect(page).to have_no_css(".c-routes.--channel-pins")
+    expect(page).to have_no_css(".chat-pinned-bar")
+  end
+
   context "when viewing pinned messages attribution" do
     it "shows 'Pinned by you' when current user pinned the message" do
       chat_page.visit_channel(channel)

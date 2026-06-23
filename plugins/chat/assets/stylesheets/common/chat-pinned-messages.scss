@@ -26,6 +26,20 @@
   color: var(--primary-medium);
 }
 
+.chat-pinned-messages-list__footer {
+  position: sticky;
+  inset-block-end: 0;
+  margin-block-start: auto;
+  padding: var(--space-2);
+  background: var(--secondary);
+  border-top: 1px solid var(--content-border-color);
+}
+
+.chat-pinned-messages-list__dismiss {
+  width: 100%;
+  color: var(--primary-medium);
+}
+
 .chat-pinned-message {
   display: block;
   margin-inline: 1rem 0.75rem;
