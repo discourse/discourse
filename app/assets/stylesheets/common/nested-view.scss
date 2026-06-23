@@ -6,6 +6,18 @@
   }
 }
 
+// PostCookedHtml appends a selection barrier after the final block, so
+// `:last-child` does not usually match the final cooked paragraph.
+.nested-view__op-content,
+.nested-post__content {
+  .cooked > p {
+    &:last-child,
+    &:has(+ .cooked-selection-barrier:last-child) {
+      margin-bottom: 0;
+    }
+  }
+}
+
 // ── Top-level nested view ──────────────────────────────────────────
 .nested-view {
   --nested-sticky-avatar-bottom-offset: calc(var(--space-2) + var(--space-1));
