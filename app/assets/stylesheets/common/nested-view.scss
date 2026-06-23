@@ -20,6 +20,13 @@
 
 // ── Top-level nested view ──────────────────────────────────────────
 .nested-view {
+  // Avatar size for the "small" PostAvatar used in nested posts.
+  // Also anchors the sticky controls/avatar spacing.
+  --nested-avatar-size: 24px;
+  --nested-controls-height: calc(
+    var(--nested-avatar-size) + var(--space-2) + var(--space-2)
+  );
+  --nested-sticky-avatar-top-gap: var(--space-1);
   --nested-sticky-avatar-bottom-offset: calc(var(--space-2) + var(--space-1));
   background: var(--secondary);
   margin: 0 auto;
@@ -152,6 +159,8 @@
     position: sticky;
     top: var(--header-offset, 0);
     z-index: z("timeline");
+    box-sizing: border-box;
+    min-height: var(--nested-controls-height);
     padding: 0.25em 0;
     background: var(--secondary);
     border-bottom: 1px solid var(--primary-low);
@@ -171,8 +180,11 @@
     margin-left: auto;
   }
 
-  &__activity-link {
+  &__activity-link.btn {
     font-size: var(--font-down-1);
+    padding: 0.35em 0.55em;
+    min-height: auto;
+    line-height: var(--line-height-small);
     white-space: nowrap;
   }
 
@@ -418,9 +430,6 @@
 
 // ── Nested post (single comment in tree) ───────────────────────────
 .nested-post {
-  // Avatar size for the "small" PostAvatar used in nested posts.
-  // Used to calculate horizontal connector positions.
-  --nested-avatar-size: 24px;
   --nested-column-gap: var(--space-2);
   --nested-connector-offset: var(--space-2);
   --nested-vertical-gap: 0.5em;
@@ -432,8 +441,8 @@
   --nested-line-center-adjust: 0.5px;
   --nested-load-more-left-adjust: var(--nested-line-width);
   --nested-sticky-avatar-top: calc(
-    var(--header-offset, 0px) + var(--nested-avatar-size) + var(--space-2) +
-      var(--space-2)
+    var(--header-offset, 0px) + var(--nested-controls-height) +
+      var(--nested-sticky-avatar-top-gap)
   );
 
   // Grid splits article (row 1) from children (row 2) so the sticky avatar is
