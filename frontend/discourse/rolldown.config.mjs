@@ -151,6 +151,7 @@ export function buildConfig({ devMode } = {}) {
                 document.head.append(style);
               `,
               moduleType: "js",
+              map: { mappings: "" },
             };
           },
         },
