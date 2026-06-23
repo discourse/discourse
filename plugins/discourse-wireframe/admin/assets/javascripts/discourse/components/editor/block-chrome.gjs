@@ -1715,22 +1715,26 @@ export default class BlockChrome extends Component {
             />
           {{/unless}}
 
-          {{! Per-outlet state badge on the outlet root: read-only / default /
-            published, plus an editing pill when the outlet has unsaved edits. }}
+          {{! Always-on outlet marker: the outlet name plus a muted status suffix
+            — "Editing" while it has unsaved edits, otherwise its state
+            (read-only / default / published). One badge; Editing supersedes the
+            base state, so the two are never shown together. Anchored top-left so
+            it never collides with the top-right overlap warning badge. }}
           {{#if this.isOutletRoot}}
             <span
               class={{dConcatClass
                 "wireframe-block-chrome__outlet-badge"
-                (concat "--" this.outletState)
+                (concat
+                  "--" (if this.isOutletEditing "editing" this.outletState)
+                )
               }}
-            >
-              {{i18n (concat "wireframe.outlet.state." this.outletState)}}
-              {{#if this.isOutletEditing}}
-                <span class="wireframe-block-chrome__outlet-badge-pill">{{i18n
-                    "wireframe.outlet.editing"
-                  }}</span>
-              {{/if}}
-            </span>
+            >{{this.displayName}}<span
+                class="wireframe-block-chrome__outlet-badge-status"
+              >{{if
+                  this.isOutletEditing
+                  (i18n "wireframe.outlet.editing")
+                  (i18n (concat "wireframe.outlet.state." this.outletState))
+                }}</span></span>
           {{/if}}
 
           {{! Overlap / out-of-bounds warning badge — only visible when

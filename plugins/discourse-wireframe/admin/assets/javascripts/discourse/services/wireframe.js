@@ -77,6 +77,7 @@ import {
   resolvePartDef,
   revalidateEntryStamps,
   serializeEntryForSave,
+  serializeLayoutForSave,
   setPartOverride,
   wrapAsOutletRoot,
 } from "../lib/mutate-layout";
@@ -577,6 +578,15 @@ export default class WireframeService extends Service {
    */
   @tracked _clipboard = null;
 
+  /**
+   * Whether the current in-memory edits are already captured in a saved draft.
+   * Flipped false by any edit (through the structural + arg write chokepoints)
+   * and true by a successful `saveAllEditedDrafts`. Backs `hasUnsavedDraftEdits`,
+   * which the toolbar reads to disable Save draft until the next change.
+   * `_`-prefixed: decorated state accessed only within this service.
+   */
+  @tracked _draftReflectsEdits = false;
+
   constructor() {
     super(...arguments);
     this.#loadConditionsPanelState();
@@ -671,6 +681,18 @@ export default class WireframeService extends Service {
     return (
       this.initialSnapshots.size > 0 || this.#structurallyEditedOutlets.size > 0
     );
+  }
+
+  /**
+   * Whether there are in-memory edits not yet written to a draft. True after an
+   * edit, false right after a successful Save draft (until the next edit) and
+   * whenever nothing is edited. The toolbar's Save draft is gated on this so it
+   * disables once the current edits are safely drafted.
+   *
+   * @returns {boolean}
+   */
+  get hasUnsavedDraftEdits() {
+    return this.isDirty && !this._draftReflectsEdits;
   }
 
   /** @returns {boolean} */
@@ -1002,6 +1024,8 @@ export default class WireframeService extends Service {
       return;
     }
     this.isActive = true;
+    // Fresh session: no edits, nothing drafted yet.
+    this._draftReflectsEdits = false;
     // New session generation: invalidates any draft hydration still in flight
     // from a previous enter/exit so it can't write into this session.
     const generation = ++this.#enterGeneration;
@@ -2179,8 +2203,10 @@ export default class WireframeService extends Service {
     if (batch.kind === "structural") {
       this.#applyStructuralChanges(batch.changes, "prev");
       this.restoreSelection(batch.prevSelection);
+      batch.changes.forEach((c) => this.#reconcileOutletEdited(c.outletName));
     } else {
       this.writeArgs(batch.entry, batch.prev);
+      this.#reconcileOutletEdited(this.#outletForEntry(batch.entry));
     }
     this.redoStack.push(batch);
     return true;
@@ -2200,8 +2226,10 @@ export default class WireframeService extends Service {
     if (batch.kind === "structural") {
       this.#applyStructuralChanges(batch.changes, "next");
       this.restoreSelection(batch.nextSelection);
+      batch.changes.forEach((c) => this.#reconcileOutletEdited(c.outletName));
     } else {
       this.writeArgs(batch.entry, batch.next);
+      this.#reconcileOutletEdited(this.#outletForEntry(batch.entry));
     }
     this.undoStack.push(batch);
     return true;
@@ -2331,6 +2359,9 @@ export default class WireframeService extends Service {
   @action
   async discardOutlet(outletName) {
     this.#rollbackOutletInMemory(outletName);
+    // Drop the outlet's own undo/redo history so a later undo can't resurrect a
+    // draft we just discarded.
+    this.#dropUndoEntriesForOutlet(outletName);
     await this.wireframeDrafts.deleteDraft(
       this.outletOwner(outletName).themeId ?? this.defaultThemeId,
       outletName
@@ -2425,6 +2456,34 @@ export default class WireframeService extends Service {
       this.activeThemeId
     );
     return this.#processPublishResult(result);
+  }
+
+  /**
+   * Saves every edited outlet as a private draft — the toolbar's global Save
+   * draft. Drafts never go live, so each outlet stays edited afterwards.
+   * Mirrors `discardAll`'s batch shape over the per-outlet `saveDraftOutlet`; a
+   * per-outlet failure (e.g. an unreadable layout) is collected rather than
+   * thrown, so one bad outlet doesn't abort drafting the rest.
+   *
+   * @returns {Promise<string|null>} a banner message listing any failures, or null on success.
+   */
+  @action
+  async saveAllEditedDrafts() {
+    const errors = [];
+    for (const outletName of this.#editedOutletNames()) {
+      try {
+        await this.saveDraftOutlet(outletName);
+      } catch (error) {
+        errors.push(`${outletName}: ${error?.message ?? "Save draft failed"}`);
+      }
+    }
+    if (errors.length === 0) {
+      // Every edited outlet is now persisted; the toolbar disables Save draft
+      // until the next change.
+      this._draftReflectsEdits = true;
+      return null;
+    }
+    return errors.join("; ");
   }
 
   /**
@@ -2690,6 +2749,8 @@ export default class WireframeService extends Service {
       }
     }
     revalidateEntryStamps(entry, { owner: getOwner(this) });
+    // An arg write (live edit, undo, or redo) makes the saved draft stale.
+    this._draftReflectsEdits = false;
   }
 
   /**
@@ -2762,10 +2823,12 @@ export default class WireframeService extends Service {
   /**
    * The theme that owns an outlet (where Publish writes its live field) plus
    * the metadata needed to badge and gate it. For a published outlet the owner
-   * is the theme that holds the field (the minimum stack-rank theme, resolved
-   * by the core layer resolver); for a default/locked outlet nothing owns it
-   * yet, so the publish target falls back to `defaultThemeId`. `themeName` and
-   * `isGit` come from the per-theme metadata preload.
+   * is the theme that holds the field (the most-derived theme, resolved by the
+   * core layer resolver); for a default/locked outlet nothing owns it yet, so
+   * the target is this session's `activeThemeId` — the theme the editor was
+   * entered against (an explicit `enter({ themeId })`) or, for the pill, the
+   * current theme. `themeName` and `isGit` come from the per-theme metadata
+   * preload.
    *
    * @param {string} outletName
    * @returns {{themeId: (number|null), themeName: (string|null), isGit: boolean, stackIndex: (number|undefined), layer: string}}
@@ -2777,7 +2840,7 @@ export default class WireframeService extends Service {
     const themeId =
       meta?.source === LAYOUT_SOURCE.THEME
         ? Number(meta.sourceId)
-        : this.defaultThemeId;
+        : (this.activeThemeId ?? this.defaultThemeId);
     const themeMeta = this.#themeMeta(themeId);
     return {
       themeId,
@@ -3753,6 +3816,8 @@ export default class WireframeService extends Service {
     this.editedOutlets.add(outletName);
     this.#structurallyEditedOutlets.add(outletName);
     this.structuralVersion++;
+    // A new structural edit means the saved draft (if any) is now stale.
+    this._draftReflectsEdits = false;
   }
 
   /**
@@ -4171,27 +4236,38 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Picks a default theme id for editor sessions that didn't supply one.
-   * Reads from the `activatedThemes` preload — the server-resolved active
-   * theme stack for this request, ordered parent-first by
-   * `Theme.transform_ids`. The first id is the parent theme (the one the
-   * page is actually rendering against), which is exactly what we want to
-   * save edits to.
+   * Picks a default theme id for editor sessions that didn't supply one (the
+   * pill entry, vs. an explicit `enter({ themeId })`). This is the theme the
+   * page actually renders against — the parent of the active stack, which is
+   * `stack_index 0` in `Theme.transform_ids` — so edits to an outlet nothing
+   * owns yet save back to the current theme.
    *
-   * Falls back to the user-selectable themes list when activatedThemes is
-   * unavailable (legacy preload format) or empty. Returns null when no
-   * themes are available, in which case the Save button stays disabled.
+   * Derived from the `themeBlockLayoutMeta` preload, which carries each stack
+   * theme's `stack_index` and includes seeded default themes (negative ids like
+   * Foundation `-1`). NOT from `activatedThemes`: that is an unordered
+   * `{ id: name }` map, and a numeric-key lookup would both lose the stack order
+   * and skip the negative-id parent.
+   *
+   * Falls back to the user-selectable themes list when the meta preload is
+   * unavailable or empty. Returns null when no themes are available, in which
+   * case the Save / Publish control stays disabled.
    *
    * @returns {number|null}
    */
   #defaultThemeId() {
-    const activated = PreloadStore.get("activatedThemes");
-    if (activated && typeof activated === "object") {
-      const ids = Object.keys(activated)
-        .map((id) => parseInt(id, 10))
-        .filter((id) => Number.isFinite(id) && id > 0);
-      if (ids.length > 0) {
-        return ids[0];
+    const meta = PreloadStore.get("themeBlockLayoutMeta");
+    if (meta && typeof meta === "object") {
+      let parentId = null;
+      let minRank = Infinity;
+      for (const [id, info] of Object.entries(meta)) {
+        const rank = info?.stack_index ?? Infinity;
+        if (rank < minRank) {
+          minRank = rank;
+          parentId = Number(id);
+        }
+      }
+      if (parentId != null) {
+        return parentId;
       }
     }
     const themes = this.site?.user_themes ?? [];
@@ -4312,6 +4388,7 @@ export default class WireframeService extends Service {
       return;
     }
 
+    const applied = [];
     for (const draft of drafts) {
       const { outlet } = draft;
       // Only hydrate outlets the editor is actually drafting and that the user
@@ -4330,10 +4407,18 @@ export default class WireframeService extends Service {
       if ((draft.baseVersionToken ?? "") === liveToken) {
         // The draft is based on the live version that's still current: apply it.
         this.#applyDraftToOutlet(outlet, draft.layout);
+        applied.push(outlet);
       } else {
         // The live layout moved on since the draft was saved: prompt the user.
         this.#staleDraftQueue.push(draft);
       }
+    }
+
+    // The re-seeded outlets already match their saved drafts, so unless a live
+    // edit landed during the fetch the editor opens with nothing new to save —
+    // keep Save draft disabled until the next change.
+    if (applied.length > 0 && this.#allEditsAreDraftBacked(applied)) {
+      this._draftReflectsEdits = true;
     }
 
     await this.#flushStaleDraftQueue(generation);
@@ -4380,6 +4465,25 @@ export default class WireframeService extends Service {
       this.#pendingArgs.size === 0 &&
       this.inlineEdit.blockKey == null
     );
+  }
+
+  /**
+   * Whether every currently-edited outlet's dirtiness comes from a draft just
+   * re-seeded on entry (vs. a live edit the user made during the draft fetch).
+   * Guards the "open with a saved draft starts clean" behaviour so it never
+   * masks a genuine unsaved edit.
+   *
+   * @param {Array<string>} appliedOutlets - outlets re-seeded from a saved draft this pass.
+   * @returns {boolean}
+   */
+  #allEditsAreDraftBacked(appliedOutlets) {
+    const applied = new Set(appliedOutlets);
+    for (const outlet of this.#editedOutletNames()) {
+      if (!applied.has(outlet)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
@@ -4785,6 +4889,59 @@ export default class WireframeService extends Service {
   #snapshotLayout(outletName) {
     const layout = this.readResolvedLayout(outletName);
     return layout ? cloneLayoutForDraft(layout) : null;
+  }
+
+  /**
+   * Recomputes whether an outlet still counts as edited by comparing its current
+   * session draft to the pristine layout captured at `enter()` (`#originalLayouts`).
+   * When they match — e.g. after undoing every edit back to the starting point —
+   * the outlet's edit bookkeeping is cleared so the "Editing" badge and the
+   * save/publish verbs reflect reality. A real (non-pristine) edit is left marked;
+   * the mutators already flag those, so this only ever clears.
+   *
+   * @param {string} [outletName]
+   */
+  #reconcileOutletEdited(outletName) {
+    if (!outletName) {
+      return;
+    }
+    const original = this.#originalLayouts.get(outletName);
+    const current = this.readResolvedLayout(outletName);
+    const isPristine =
+      JSON.stringify(serializeLayoutForSave(current ?? [])) ===
+      JSON.stringify(serializeLayoutForSave(original ?? []));
+    if (!isPristine) {
+      return;
+    }
+    this.#structurallyEditedOutlets.delete(outletName);
+    this.editedOutlets.delete(outletName);
+    for (const entry of [...this.initialSnapshots.keys()]) {
+      if (this.#outletForEntry(entry) === outletName) {
+        this.initialSnapshots.delete(entry);
+      }
+    }
+  }
+
+  /**
+   * Removes an outlet's own entries from the undo/redo stacks — the per-outlet
+   * counterpart to the global clear in `discardAll`. A structural batch is
+   * dropped only when EVERY change targets this outlet (a cross-outlet batch is
+   * left intact); an arg batch is dropped when its entry belongs to this outlet.
+   *
+   * @param {string} outletName
+   */
+  #dropUndoEntriesForOutlet(outletName) {
+    const referencesOnly = (batch) =>
+      batch.kind === "structural"
+        ? batch.changes.every((change) => change.outletName === outletName)
+        : this.#outletForEntry(batch.entry) === outletName;
+    for (const stack of [this.undoStack, this.redoStack]) {
+      for (let i = stack.length - 1; i >= 0; i--) {
+        if (referencesOnly(stack[i])) {
+          stack.splice(i, 1);
+        }
+      }
+    }
   }
 
   /**

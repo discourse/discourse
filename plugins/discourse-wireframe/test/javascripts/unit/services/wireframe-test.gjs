@@ -13,6 +13,10 @@ import {
   registerBlock,
   withTestBlockRegistration,
 } from "discourse/tests/helpers/block-testing";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { attachEditorShortcuts } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-shortcuts";
 import { GRID_DROP_GESTURES } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-drop";
@@ -624,6 +628,84 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.strictEqual(restored.length, 1);
       assert.strictEqual(restored[0].args.title, "Existing");
       assert.false(this.editor.isDirty);
+    });
+
+    test("adding a block then undoing clears the outlet's editing state", async function (assert) {
+      assert.false(this.editor.isOutletEditing("homepage-blocks"));
+
+      this.editor.insertBlock({
+        blockName: "wf:svc-test-tile",
+        targetKey: null,
+        position: "after",
+        targetOutletName: "homepage-blocks",
+      });
+      assert.true(
+        this.editor.isOutletEditing("homepage-blocks"),
+        "the outlet is editing right after the insert"
+      );
+
+      await this.editor.undo();
+      assert.false(
+        this.editor.isOutletEditing("homepage-blocks"),
+        "undo back to the pristine layout clears the editing state"
+      );
+      assert.false(this.editor.isDirty, "the editor is no longer dirty");
+    });
+
+    test("redo re-marks the outlet as editing", async function (assert) {
+      this.editor.insertBlock({
+        blockName: "wf:svc-test-tile",
+        targetKey: null,
+        position: "after",
+        targetOutletName: "homepage-blocks",
+      });
+      await this.editor.undo();
+      assert.false(this.editor.isOutletEditing("homepage-blocks"));
+
+      await this.editor.redo();
+      assert.true(
+        this.editor.isOutletEditing("homepage-blocks"),
+        "redo restores the edit, so the outlet is editing again"
+      );
+    });
+
+    test("editing a block's arg then undoing clears the outlet's editing state", async function (assert) {
+      const tile = outletChildren(this.editor)[0];
+      this.editor.selectBlock({
+        key: `wf:svc-test-tile:${tile.__stableKey}`,
+        name: "wf:svc-test-tile",
+        args: { title: "Existing" },
+        metadata: { args: { title: { type: "string" } } },
+      });
+      await editArg(this.editor, "title", "Changed");
+      assert.true(this.editor.isOutletEditing("homepage-blocks"));
+
+      await this.editor.undo();
+      assert.false(
+        this.editor.isOutletEditing("homepage-blocks"),
+        "undo of the arg edit clears editing"
+      );
+    });
+
+    test("discardOutlet drops the outlet's undo history", async function (assert) {
+      pretender.delete(
+        "/admin/plugins/wireframe/block-layout-drafts.json",
+        () => response({ success: true })
+      );
+      this.editor.insertBlock({
+        blockName: "wf:svc-test-tile",
+        targetKey: null,
+        position: "after",
+        targetOutletName: "homepage-blocks",
+      });
+      assert.true(this.editor.canUndo, "undo is available after the insert");
+
+      await this.editor.discardOutlet("homepage-blocks");
+      assert.false(
+        this.editor.canUndo,
+        "discarding the outlet removes its undo entry"
+      );
+      assert.false(this.editor.isOutletEditing("homepage-blocks"));
     });
 
     test("default args don't bleed back into the source object", function (assert) {
@@ -3084,6 +3166,70 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("a click target outside any editor scope is out-of-scope", function (assert) {
       const child = appendScope("");
       assert.false(this.editor.isInsideAllowedScope(child));
+    });
+  });
+
+  module("saveAllEditedDrafts", function (innerHooks) {
+    const DRAFTS_URL = "/admin/plugins/wireframe/block-layout-drafts.json";
+    const PUBLISH_URL = "/admin/customize/block-layouts.json";
+
+    innerHooks.beforeEach(async function () {
+      withTestBlockRegistration(() => registerBlock(TestTile));
+      await registerTestLayout(getOwner(this));
+      this.editor.siteSettings.wireframe_enabled = true;
+      logIn(getOwner(this));
+      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor.enter();
+
+      // Edit the outlet's tile so the outlet counts as edited.
+      const tile = outletChildren(this.editor)[0];
+      this.editor.selectBlock({
+        key: `wf:svc-test-tile:${tile.__stableKey}`,
+        name: "wf:svc-test-tile",
+        args: { title: "Original" },
+        metadata: { args: { title: { type: "string" } } },
+      });
+      await editArg(this.editor, "title", "Edited");
+    });
+
+    test("drafts every edited outlet without publishing it live", async function (assert) {
+      pretender.post(DRAFTS_URL, (request) => {
+        const body = parsePostData(request.requestBody);
+        assert.step(`draft:${body.outlet_name}`);
+        return response({ success: true });
+      });
+      // Saving a draft must never write the live field.
+      pretender.post(PUBLISH_URL, () => {
+        assert.true(
+          false,
+          "the publish endpoint must not be hit by Save draft"
+        );
+        return response({});
+      });
+
+      const banner = await this.editor.saveAllEditedDrafts();
+
+      assert.strictEqual(banner, null, "no error banner on success");
+      assert.verifySteps(["draft:homepage-blocks"]);
+      assert.true(
+        this.editor.editedOutlets.has("homepage-blocks"),
+        "the outlet stays edited — a draft never goes live"
+      );
+    });
+
+    test("returns a banner naming an outlet whose draft fails", async function (assert) {
+      pretender.post(DRAFTS_URL, () => response(500, {}));
+
+      const banner = await this.editor.saveAllEditedDrafts();
+
+      assert.true(
+        banner?.includes("homepage-blocks"),
+        "the failing outlet is named in the banner"
+      );
+      assert.true(
+        this.editor.editedOutlets.has("homepage-blocks"),
+        "a failed draft leaves the outlet edited"
+      );
     });
   });
 });

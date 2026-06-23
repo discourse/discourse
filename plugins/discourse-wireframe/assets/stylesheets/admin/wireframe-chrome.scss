@@ -269,23 +269,17 @@ body.wireframe-active {
     }
   }
 
-  /* Overlap badge — anchored to the chrome's top-right corner, always
-     fully visible (no opacity gating like the handle). Reads "Overlap"
-     with a triangle icon. Matches the handle's badge shape but in
-     danger red so the warning is the loudest element on the block. */
-
-  /* Per-outlet state badge on the outlet root (read-only / default /
-     published, plus an editing pill). Anchored top-left so it never collides
-     with the top-right overlap / out-of-bounds warning badge. */
+  /* Always-on outlet marker: the outlet name + a muted status suffix
+     ("— Editing" / "— Published" / …). Persistent (not opacity-gated like the
+     hover toolbar) so outlet regions stay visible at rest. Anchored top-left so
+     it never collides with the top-right overlap / out-of-bounds warning. */
 
   .wireframe-block-chrome__outlet-badge {
     position: absolute;
     top: -1px;
     left: -1px;
     z-index: 1000;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
+    max-width: 100%;
     padding: var(--wireframe-badge-padding);
     background: var(--primary-medium);
     color: var(--secondary);
@@ -294,18 +288,30 @@ body.wireframe-active {
     border-radius: 0 0 4px 0;
     text-shadow: var(--wireframe-shadow);
     pointer-events: none;
+    white-space: nowrap;
 
     &.--published {
       background: var(--success);
-      color: var(--secondary);
     }
 
-    .wireframe-block-chrome__outlet-badge-pill {
-      padding: 0 4px;
-      border-radius: 4px;
-      background: rgb(0, 0, 0, 0.25);
+    &.--editing {
+      background: var(--tertiary);
+    }
+
+    .wireframe-block-chrome__outlet-badge-status {
+      font-weight: normal;
+      opacity: 0.85;
+
+      &::before {
+        content: "— ";
+      }
     }
   }
+
+  /* Overlap badge — anchored to the chrome's top-right corner, always
+     fully visible (no opacity gating like the handle). Reads "Overlap"
+     with a triangle icon. Matches the handle's badge shape but in
+     danger red so the warning is the loudest element on the block. */
 
   .wireframe-block-chrome__overlap-badge {
     position: absolute;
@@ -975,6 +981,48 @@ body.wireframe-active {
 
   .toolbar-title {
     font-weight: 600;
+  }
+}
+
+/* The toolbar primary is a split button: Save draft + a Publish menu. The two
+   segments share a seam so they read as one primary control. */
+
+.wireframe-btn-save {
+  display: inline-flex;
+  align-items: stretch;
+
+  .wireframe-btn-save-draft {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .wireframe-btn-publish-menu {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 1px solid var(--primary-low);
+  }
+}
+
+/* Transient "Saved ✓" confirmation shown on the primary after a draft save.
+   The 2s animation doubles as the timer: on `animationend` the label reverts to
+   "Save draft" (the button itself stays disabled until the next edit). */
+
+.wireframe-btn-save-draft.--just-saved {
+  animation: wireframe-draft-saved 2s ease-out forwards;
+
+  .d-icon {
+    color: var(--success);
+  }
+}
+
+@keyframes wireframe-draft-saved {
+  0%,
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.7;
   }
 }
 
@@ -4669,31 +4717,34 @@ picture,
   }
 }
 
-/* Picker CSS variables + z-index override.
+/* Picker CSS variables.
    The picker's grid layout depends on `--icon-grid-*` CSS variables
    that core sets on `.fk-d-menu.d-icon-grid-picker-content`. That
    class is only applied through the `<DMenu>` template path; when the
    menu is opened programmatically via `menu.show(...)` the
    identifier ends up as `data-identifier` only, no matching class.
    Re-declare the variables here keyed on the data attribute so the
-   grid lays out correctly when opened from `iconEdit.start()`.
-   Also bumps z-index above wireframe chrome (1000 / 1100). */
+   grid lays out correctly when opened from `iconEdit.start()`. (The
+   z-index bump above the chrome is handled by the generic `.fk-d-menu`
+   rule below.) */
 
 body.wireframe-active .fk-d-menu[data-identifier="d-icon-grid-picker"] {
-  z-index: 1500;
-
   --icon-grid-columns: 12;
   --icon-grid-cell: 36px;
   --icon-grid-gap: 2px;
   --icon-grid-h-padding: 0.5rem;
 }
 
-/* The inspector's layout-template picker is a `<DMenu>`; like every
-   FloatKit menu in the editor it must clear the wireframe chrome's
-   stacking (1000 / 1100), or it renders behind the inspector panel. */
+/* Every FloatKit overlay (menu / tooltip) mounts in a body-level portal that
+   would otherwise sit beneath the wireframe chrome (toolbar + panels at 1000,
+   shell at 1100). Bump them all in one place so a newly added menu or tooltip
+   can never silently render behind the editor — no per-menu override needed. */
 
-body.wireframe-active .fk-d-menu[data-identifier="wireframe-grid-templates"] {
-  z-index: 1500;
+body.wireframe-active {
+  .fk-d-menu,
+  .fk-d-tooltip {
+    z-index: 1500;
+  }
 }
 
 /* Inline URL edit — the rendered link element (an `<a>` inside DButton

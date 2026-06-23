@@ -10,12 +10,12 @@ import { OUTLET_STATE } from "../../services/wireframe";
 
 /**
  * The per-outlet section shown in the inspector when an outlet root is
- * selected. Surfaces the outlet's state (read-only / default / published, with
- * the owning theme named so an override is trackable) plus an editing pill, and
- * the per-outlet verbs gated by that state:
+ * selected. Surfaces the outlet's status in one badge — "Editing" while it has
+ * unsaved edits, otherwise its state (read-only / default / published, with the
+ * owning theme named so an override is trackable) — and the per-outlet verbs:
  *
- * - Save draft / Publish — available whenever the outlet is editable; Publish
- *   is disabled for a Git-managed owner.
+ * - Save draft / Publish — enabled only while the outlet has unsaved edits;
+ *   Publish is also disabled for a Git-managed owner.
  * - Reset to default / Discard — published-and-not-Git / has-edits respectively.
  * - Git escape hatches (when the owner is Git-managed): Create customization
  *   component (primary — a local component overrides the Git theme and is
@@ -51,6 +51,16 @@ export default class InspectorOutletSection extends Component {
 
   get isGit() {
     return this.owner.isGit;
+  }
+
+  /**
+   * Whether Publish is available: the outlet has unsaved edits and its owner is
+   * not Git-managed.
+   *
+   * @returns {boolean}
+   */
+  get canPublish() {
+    return this.isEditing && !this.isGit;
   }
 
   get canResetToDefault() {
@@ -96,6 +106,17 @@ export default class InspectorOutletSection extends Component {
     });
   }
 
+  @action
+  confirmReset() {
+    // Reset deletes the live ThemeField and is NOT undoable, so confirm first.
+    this.dialog.confirm({
+      title: i18n("wireframe.outlet.reset_confirm_title"),
+      message: i18n("wireframe.outlet.reset_confirm_message"),
+      confirmButtonLabel: "wireframe.outlet.reset_confirm_button",
+      didConfirm: () => this.wireframe.resetToDefault(this.args.outletName),
+    });
+  }
+
   // Runs a theme-producing git action; on success reloads onto the new theme so
   // its layers load and Publish enables, otherwise surfaces the error inline.
   async #runThemeAction(produce) {
@@ -116,18 +137,22 @@ export default class InspectorOutletSection extends Component {
   <template>
     <section class="wireframe-inspector__outlet">
       <div class="wireframe-inspector__outlet-state">
-        <span class={{concat "wireframe-outlet-badge --" this.state}}>
-          {{#if (if this.isPublished this.ownerName)}}
+        {{! One badge: "Editing" supersedes the base state so the two are never
+          shown together. }}
+        <span
+          class={{concat
+            "wireframe-outlet-badge --"
+            (if this.isEditing "editing" this.state)
+          }}
+        >
+          {{#if this.isEditing}}
+            {{i18n "wireframe.outlet.editing"}}
+          {{else if (if this.isPublished this.ownerName)}}
             {{i18n "wireframe.outlet.published_by" theme=this.ownerName}}
           {{else}}
             {{i18n (concat "wireframe.outlet.state." this.state)}}
           {{/if}}
         </span>
-        {{#if this.isEditing}}
-          <span class="wireframe-outlet-badge --editing">{{i18n
-              "wireframe.outlet.editing"
-            }}</span>
-        {{/if}}
       </div>
 
       {{#if this.isEditable}}
@@ -135,12 +160,13 @@ export default class InspectorOutletSection extends Component {
           <DButton
             class="btn-default wireframe-outlet-verb__save-draft"
             @label="wireframe.outlet.save_draft"
+            @disabled={{unless this.isEditing true}}
             @action={{fn this.wireframe.saveDraftOutlet @outletName}}
           />
           <DButton
             class="btn-primary wireframe-outlet-verb__publish"
             @label="wireframe.outlet.publish"
-            @disabled={{this.isGit}}
+            @disabled={{unless this.canPublish true}}
             @title={{if
               this.isGit
               (i18n "wireframe.outlet.publish_disabled_git")
@@ -158,7 +184,7 @@ export default class InspectorOutletSection extends Component {
             <DButton
               class="btn-danger wireframe-outlet-verb__reset"
               @label="wireframe.outlet.reset_to_default"
-              @action={{fn this.wireframe.resetToDefault @outletName}}
+              @action={{this.confirmReset}}
             />
           {{/if}}
         </div>

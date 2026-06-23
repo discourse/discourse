@@ -301,9 +301,10 @@ export default class BlockToolbar extends Component {
         handle drops the drag source and reads as the outlet (cube
         icon, outlet name) rather than a grip. }}
       {{#if @isOutletRoot}}
+        {{! The outlet name + status live in the always-on badge (BlockChrome),
+          so the hover toolbar's handle is just the icon — no duplicate label. }}
         <span class="wireframe-block-toolbar__handle" title={{@displayName}}>
           {{dIcon "cubes"}}
-          <span>{{@displayName}}</span>
         </span>
       {{else if this.isPart}}
         {{! A composite part isn't a movable block — its handle reads as a

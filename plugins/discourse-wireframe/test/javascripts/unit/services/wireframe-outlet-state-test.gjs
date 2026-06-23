@@ -138,5 +138,37 @@ module(
 
       assert.true(this.editor.isOutletEditing("homepage-blocks"));
     });
+
+    test("defaultThemeId is the current theme (min stack_index), including a negative-id parent", function (assert) {
+      // The parent (stack_index 0) is the theme the page renders against — even
+      // when it's a seeded theme with a negative id (Foundation = -1). It must
+      // NOT be the lowest positive id (a middle component).
+      PreloadStore.store("themeBlockLayoutMeta", {
+        "-1": { name: "Foundation", is_git: false, stack_index: 0 },
+        2: { name: "Discourse Gifs", is_git: false, stack_index: 1 },
+        5: { name: "Block Layout", is_git: false, stack_index: 2 },
+      });
+
+      assert.strictEqual(this.editor.defaultThemeId, -1);
+    });
+
+    test("an unowned outlet targets the active theme, not a default component", async function (assert) {
+      // A default (overridable code seed) outlet — nothing owns it yet.
+      await _renderBlocks("homepage-blocks", tile("Seed"), getOwner(this));
+      await settled();
+      assert.strictEqual(
+        this.editor.outletState("homepage-blocks"),
+        OUTLET_STATE.DEFAULT
+      );
+
+      // The session was entered against theme 7, so that's the save target —
+      // not a computed default theme.
+      this.editor.activeThemeId = 7;
+      assert.strictEqual(
+        this.editor.outletOwner("homepage-blocks").themeId,
+        7,
+        "the owner of an unowned outlet is the active (entered) theme"
+      );
+    });
   }
 );

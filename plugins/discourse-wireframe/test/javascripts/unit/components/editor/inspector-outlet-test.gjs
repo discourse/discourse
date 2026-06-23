@@ -93,7 +93,7 @@ class StubWireframeService extends Service {
   }
 
   isOutletEditing() {
-    return false;
+    return this.#blockData?.isOutletEditing ?? false;
   }
 
   saveDraftOutlet() {}
@@ -233,6 +233,72 @@ module(
       assert
         .dom(".wireframe-outlet-verb__publish")
         .isDisabled("Publish is disabled for a Git-owned outlet");
+    });
+  }
+);
+
+module(
+  "Integration | Wireframe | Inspector | outlet verbs & status badge",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    function outletRoot(extra) {
+      return {
+        name: "layout",
+        isOutletRoot: true,
+        outletName: "homepage-blocks",
+        outletState: "default",
+        args: { mode: "stack" },
+        argsSnapshot: { mode: "stack" },
+        parentChildArgsSchema: null,
+        ...extra,
+      };
+    }
+
+    test("Save draft and Publish are disabled when the outlet has no edits", async function (assert) {
+      stubWireframe(this.owner, outletRoot({ isOutletEditing: false }));
+
+      await render(<template><InspectorPanel /></template>);
+
+      assert
+        .dom(".wireframe-outlet-verb__save-draft")
+        .isDisabled("Save draft is disabled with nothing to save");
+      assert
+        .dom(".wireframe-outlet-verb__publish")
+        .isDisabled("Publish is disabled with nothing to save");
+    });
+
+    test("Save draft and Publish enable once the outlet is editing", async function (assert) {
+      stubWireframe(this.owner, outletRoot({ isOutletEditing: true }));
+
+      await render(<template><InspectorPanel /></template>);
+
+      assert
+        .dom(".wireframe-outlet-verb__save-draft")
+        .isNotDisabled("Save draft enables while editing");
+      assert
+        .dom(".wireframe-outlet-verb__publish")
+        .isNotDisabled("Publish enables while editing (non-Git owner)");
+    });
+
+    test("the status shows a single badge with Editing superseding the state", async function (assert) {
+      stubWireframe(
+        this.owner,
+        outletRoot({
+          outletState: "published",
+          outletOwner: { themeId: 5, themeName: "Acme", isGit: false },
+          isOutletEditing: true,
+        })
+      );
+
+      await render(<template><InspectorPanel /></template>);
+
+      assert
+        .dom(".wireframe-inspector__outlet-state .wireframe-outlet-badge")
+        .exists({ count: 1 }, "exactly one status badge, not state + editing");
+      assert
+        .dom(".wireframe-inspector__outlet-state .wireframe-outlet-badge")
+        .hasText("Editing", "Editing supersedes the published state");
     });
   }
 );

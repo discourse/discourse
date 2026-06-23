@@ -2,10 +2,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
+import DComboButton from "discourse/ui-kit/d-combo-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
@@ -41,6 +44,7 @@ export default class EditorShell extends Component {
    */
   @tracked isSaving = false;
   @tracked saveErrorMessage = null;
+  @tracked justSavedDraft = false;
   @tracked warningsPanelOpen = false;
   @tracked leftPanelTab = "palette";
   @tracked leftCollapsed = readBoolStorage("ve.leftCollapsed");
@@ -48,6 +52,9 @@ export default class EditorShell extends Component {
   @tracked dimNonEditable = readBoolStorage("ve.dimNonEditable", true);
 
   isLeftPanelTabActive = (tab) => this.leftPanelTab === tab;
+
+  /** The Publish dropdown menu's API handle, captured so the menu closes before publishing. */
+  #publishMenu = null;
 
   /**
    * CSS classes for the shell that drive the canvas grid template
@@ -66,20 +73,43 @@ export default class EditorShell extends Component {
   }
 
   /**
-   * Whether the Save button should be enabled. Requires:
+   * Whether the toolbar's Save draft / Publish control should be enabled (both
+   * actions share one gate). Requires:
    *   1. The editor to know which theme to write to (`activeThemeId` set).
-   *   2. There to be in-memory edits to save (`isDirty` true) — saving an
-   *      empty draft would be a no-op.
-   *   3. No save currently in flight.
+   *   2. There to be in-memory edits (`isDirty` true) — saving or publishing
+   *      with nothing edited would be a no-op.
+   *   3. No save or publish currently in flight.
    *
    * @returns {boolean}
    */
-  get canSave() {
+  get canSubmit() {
     return (
       !this.isSaving &&
       this.wireframe.isDirty &&
       this.wireframe.activeThemeId != null
     );
+  }
+
+  /**
+   * Whether Save draft is available: submittable AND there are edits not yet
+   * drafted, so it disables once the current edits are saved and re-enables on
+   * the next change. Publish stays available via `canSubmit` regardless.
+   *
+   * @returns {boolean}
+   */
+  get canSaveDraft() {
+    return this.canSubmit && this.wireframe.hasUnsavedDraftEdits;
+  }
+
+  /**
+   * Whether the primary button shows its transient "Saved" confirmation: a save
+   * just succeeded and no new edit has re-enabled Save draft yet. Drives the
+   * label/icon swap and the fade animation.
+   *
+   * @returns {boolean}
+   */
+  get saveDraftJustConfirmed() {
+    return this.justSavedDraft && !this.canSaveDraft;
   }
 
   @action
@@ -151,25 +181,49 @@ export default class EditorShell extends Component {
   }
 
   @action
-  save() {
-    if (!this.canSave) {
+  saveDrafts() {
+    if (!this.canSaveDraft) {
+      return;
+    }
+    // No validation-warnings prompt here: a draft is private and never live, so
+    // saving a mid-edit, still-invalid layout is exactly what drafts are for.
+    this.#performSaveDrafts();
+  }
+
+  @action
+  clearJustSavedDraft(event) {
+    // The confirmation fade finished — revert the primary back to Save draft.
+    if (event.animationName === "wireframe-draft-saved") {
+      this.justSavedDraft = false;
+    }
+  }
+
+  @action
+  async publish() {
+    await this.#publishMenu?.close();
+    if (!this.canSubmit) {
       return;
     }
     if (this.wireframe.hasValidationWarnings) {
       // Warnings on the session-draft layer are by design (mid-edit
-      // invalid states are tolerated, not blocked). The user might still
-      // want to save and come back later — confirm before posting so they
-      // don't ship a half-finished layout by accident.
+      // invalid states are tolerated, not blocked). Publishing goes live, so
+      // confirm first — the user shouldn't ship a half-finished layout by
+      // accident. (Save draft skips this; an invalid draft is fine.)
       this.dialog.confirm({
-        message: i18n("wireframe.chrome.save_with_warnings_confirm", {
+        message: i18n("wireframe.chrome.publish_with_warnings_confirm", {
           count: this.wireframe.validationWarnings.length,
         }),
-        confirmButtonLabel: "wireframe.chrome.save_anyway",
-        didConfirm: () => this.#performSave(),
+        confirmButtonLabel: "wireframe.chrome.publish_anyway",
+        didConfirm: () => this.#performPublish(),
       });
       return;
     }
-    this.#performSave();
+    this.#performPublish();
+  }
+
+  @action
+  registerPublishMenu(api) {
+    this.#publishMenu = api;
   }
 
   #syncBodyClasses() {
@@ -187,13 +241,28 @@ export default class EditorShell extends Component {
     );
   }
 
-  async #performSave() {
+  async #performSaveDrafts() {
+    this.isSaving = true;
+    this.saveErrorMessage = null;
+    try {
+      // The editor service drafts every edited outlet privately (no live write,
+      // no broadcast); the outlets stay edited. Returns a banner message for any
+      // outlet that couldn't be drafted, or null on success.
+      this.saveErrorMessage = await this.wireframe.saveAllEditedDrafts();
+      // Show the transient confirmation only when nothing failed.
+      this.justSavedDraft = this.saveErrorMessage == null;
+    } finally {
+      this.isSaving = false;
+    }
+  }
+
+  async #performPublish() {
     this.isSaving = true;
     this.saveErrorMessage = null;
     try {
       // The editor service owns the publish orchestration (per-outlet owner
       // targeting, the conflict prompt, edit-state reconciliation) so the
-      // toolbar Save and the per-outlet Publish share one path. It returns a
+      // toolbar Publish and the per-outlet Publish share one path. It returns a
       // banner message for non-conflict errors, or null on success.
       this.saveErrorMessage = await this.wireframe.publishEditedOutlets();
     } finally {
@@ -261,12 +330,41 @@ export default class EditorShell extends Component {
               @disabled={{if this.wireframe.isDirty false true}}
               @action={{this.discardAll}}
             />
-            <DButton
-              class="btn-primary wireframe-btn-save"
-              @label="wireframe.chrome.save"
-              @disabled={{if this.canSave false true}}
-              @action={{this.save}}
-            />
+            <DComboButton class="wireframe-btn-save" as |combo|>
+              <combo.Button
+                class={{dConcatClass
+                  "btn-primary wireframe-btn-save-draft"
+                  (if this.saveDraftJustConfirmed "--just-saved")
+                }}
+                @icon={{if this.saveDraftJustConfirmed "check"}}
+                @translatedLabel={{if
+                  this.saveDraftJustConfirmed
+                  (i18n "wireframe.chrome.draft_saved")
+                  (i18n "wireframe.chrome.save_draft")
+                }}
+                @disabled={{unless this.canSaveDraft true}}
+                @action={{this.saveDrafts}}
+                {{on "animationend" this.clearJustSavedDraft}}
+              />
+              <combo.Menu
+                class="btn-primary wireframe-btn-publish-menu"
+                @identifier="wireframe-toolbar-publish"
+                @title={{i18n "wireframe.chrome.publish"}}
+                @ariaLabel={{i18n "wireframe.chrome.publish"}}
+                @disabled={{unless this.canSubmit true}}
+                @onRegisterApi={{this.registerPublishMenu}}
+              >
+                <DDropdownMenu as |dropdown|>
+                  <dropdown.item>
+                    <DButton
+                      class="btn-flat wireframe-btn-publish"
+                      @label="wireframe.chrome.publish"
+                      @action={{this.publish}}
+                    />
+                  </dropdown.item>
+                </DDropdownMenu>
+              </combo.Menu>
+            </DComboButton>
             <DButton
               @icon="xmark"
               @label="wireframe.chrome.exit"

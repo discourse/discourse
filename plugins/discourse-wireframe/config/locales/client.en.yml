@@ -12,11 +12,13 @@ en:
         redo: "Redo"
         reset: "Reset"
         discard_all: "Discard all changes"
-        save: "Save"
-        save_anyway: "Save anyway"
-        save_with_warnings_confirm:
-          one: "%{count} block has structural issues and won't render until you fix it. Save anyway?"
-          other: "%{count} blocks have structural issues and won't render until you fix them. Save anyway?"
+        save_draft: "Save draft"
+        draft_saved: "Saved"
+        publish: "Publish"
+        publish_anyway: "Publish anyway"
+        publish_with_warnings_confirm:
+          one: "%{count} block has structural issues and won't render until you fix it. Publish anyway?"
+          other: "%{count} blocks have structural issues and won't render until you fix them. Publish anyway?"
         warnings_button_title: "Show validation warnings"
         dim_non_editable_title: "Dim non-editable regions"
         warnings_panel_title:
@@ -387,6 +389,9 @@ en:
         save_draft: "Save draft"
         publish: "Publish"
         reset_to_default: "Reset to default"
+        reset_confirm_title: "Reset to default?"
+        reset_confirm_message: "This deletes the published layout for this area and restores the built-in default. It can't be undone."
+        reset_confirm_button: "Reset to default"
         discard: "Discard changes"
         publish_disabled_git: "This area belongs to a Git-managed theme and can't be published from here."
         git_notice: "This theme is managed by Git, so it can't be edited here directly. Create a customization component to override it (recommended), export this area to commit it upstream, or duplicate the whole theme."
