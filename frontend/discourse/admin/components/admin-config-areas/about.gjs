@@ -117,6 +117,7 @@ export default class AdminConfigAreasAbout extends Component {
 
     if (this.isDefaultLocale) {
       this.localizations = {};
+      this.loadingLocalizations = false;
       return;
     }
 
@@ -126,11 +127,16 @@ export default class AdminConfigAreasAbout extends Component {
       const response = await ajax("/admin/config/about/localizations.json", {
         data: { locale },
       });
-      this.localizations = response.localizations;
+
+      if (this.selectedLocale === locale) {
+        this.localizations = response.localizations;
+      }
     } catch (err) {
       popupAjaxError(err);
     } finally {
-      this.loadingLocalizations = false;
+      if (this.selectedLocale === locale) {
+        this.loadingLocalizations = false;
+      }
     }
   }
 

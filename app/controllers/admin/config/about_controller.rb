@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::Config::AboutController < Admin::AdminController
+  before_action :ensure_can_localize_site_settings, only: %i[localizations update_localizations]
+
   LOCALIZATION_PARAM_MAP = {
     general_settings: {
       name: "title",
@@ -152,6 +154,10 @@ class Admin::Config::AboutController < Admin::AdminController
   end
 
   private
+
+  def ensure_can_localize_site_settings
+    guardian.ensure_can_localize_site_settings!
+  end
 
   def localization_settings_from_params
     settings = []

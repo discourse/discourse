@@ -86,6 +86,15 @@ describe Jobs::LocalizeSiteSettings do
     job.execute({ limit: 2 })
   end
 
+  it "skips settings that require manual localization" do
+    SiteSettingLocalization.stubs(:localizable_setting_names).returns(%w[company_url])
+    SiteSetting.company_url = "https://example.com"
+
+    DiscourseAi::Translation::SiteSettingLocalizer.expects(:localize).never
+
+    job.execute({ limit: 10 })
+  end
+
   it "skips settings that already have localizations" do
     SiteSettingLocalization.stubs(:localizable_setting_names).returns(%w[title])
     SiteSettingLocalization.create!(setting_name: "title", locale: "pt_BR", value: "Comunidade")

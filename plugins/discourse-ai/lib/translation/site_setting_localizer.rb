@@ -11,7 +11,7 @@ module DiscourseAi
       )
         setting_name = setting_name.to_s
         return if setting_name.blank? || target_locale.blank?
-        return if !SiteSettingLocalization.localizable?(setting_name)
+        return if !SiteSettingLocalization.automatically_localizable?(setting_name)
         return if LocaleNormalizer.is_same?(SiteSetting.default_locale, target_locale)
 
         value = SiteSetting.public_send(setting_name)

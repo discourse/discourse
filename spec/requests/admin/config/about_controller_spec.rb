@@ -5,6 +5,7 @@ describe Admin::Config::AboutController do
 
   before do
     sign_in(admin)
+    SiteSetting.content_localization_enabled = true
     SiteSetting.content_localization_supported_locales = "ja|pt_BR"
   end
 
@@ -44,6 +45,14 @@ describe Admin::Config::AboutController do
       get "/admin/config/about/localizations.json", params: { locale: "en" }
 
       expect(response.status).to eq(400)
+    end
+
+    it "rejects requests when content localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+
+      get "/admin/config/about/localizations.json", params: { locale: "ja" }
+
+      expect(response.status).to eq(403)
     end
   end
 
@@ -110,6 +119,20 @@ describe Admin::Config::AboutController do
           }
 
       expect(response.status).to eq(400)
+    end
+
+    it "rejects updates when content localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+
+      put "/admin/config/about/localizations.json",
+          params: {
+            locale: "ja",
+            general_settings: {
+              name: "日本語タイトル",
+            },
+          }
+
+      expect(response.status).to eq(403)
     end
   end
 end

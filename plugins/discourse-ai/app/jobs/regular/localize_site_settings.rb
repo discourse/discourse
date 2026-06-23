@@ -82,10 +82,7 @@ module Jobs
     private
 
     def localizable_setting_names
-      @localizable_setting_names ||=
-        SiteSettingLocalization.localizable_setting_names.select do |setting_name|
-          SiteSettingLocalization.localizable?(setting_name)
-        end
+      @localizable_setting_names ||= SiteSettingLocalization.automatically_localizable_setting_names
     end
   end
 end

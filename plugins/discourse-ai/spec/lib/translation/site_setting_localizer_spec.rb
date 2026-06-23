@@ -70,6 +70,13 @@ describe DiscourseAi::Translation::SiteSettingLocalizer do
       expect(existing.reload.value).to eq("新しいタイトル")
     end
 
+    it "skips settings that require manual localization" do
+      SiteSetting.company_url = "https://example.com"
+      DiscourseAi::Translation::ShortTextTranslator.expects(:new).never
+
+      expect(localizer.localize("company_url", "ja")).to be_nil
+    end
+
     it "skips invalid inputs" do
       SiteSetting.title = "English community"
       DiscourseAi::Translation::ShortTextTranslator.expects(:new).never
