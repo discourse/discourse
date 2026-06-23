@@ -3,6 +3,9 @@
 class AccessControlList < ActiveRecord::Base
   attr_accessor :allowed_groups_preloaded, :allowed_users_preloaded
 
+  class AclMixedTargetError < StandardError
+  end
+
   # NOTE: permission column is freeform, but some common
   # types are below. In the UI these would generally be
   # displayed as a role (e.g. adding -er), like Viewer,
@@ -16,6 +19,7 @@ class AccessControlList < ActiveRecord::Base
   # For categories for example we may have:
   #
   # - view
+  # - manage
   # - create_post
   # - create_topic
   #
@@ -47,15 +51,34 @@ class AccessControlList < ActiveRecord::Base
             group_id:,
           )
         end
+  scope :allowing_anonymous_users, -> { allowing_group(Group::AUTO_GROUPS[:anonymous_users]) }
+  scope :with_permission, ->(target, permission) { where(target:, permission:) }
 
   scope :matching_user,
         ->(user) do
-          allowing_any_user([user.id]).or(allowing_any_group(user.belonging_to_group_ids))
+          if user.nil?
+            allowing_any_group([Group::AUTO_GROUPS[:anonymous_users]])
+          else
+            allowing_any_user([user.id]).or(allowing_any_group(user.belonging_to_group_ids))
+          end
         end
 
   scope :matching_group,
         ->(group) { allowing_any_group([group.id]).or(allowing_users_in_group(group.id)) }
 
+  # Takes a list in this format, which is the same
+  # format from flattened_list that will come from the UI:
+  #
+  # [
+  #   {
+  #     "type": "group",
+  #     "id": 3,
+  #     "permission": "edit",
+  #   }
+  # ]
+  #
+  # And converts into ACL records that can be inserted into the DB with
+  # .insert_all
   def self.expand_list(list, target, owner)
     permissions_expanded =
       list.each_with_object({}) do |entry, permissions|
@@ -82,6 +105,89 @@ class AccessControlList < ActiveRecord::Base
     end
   end
 
+  class TargetAcl
+    def initialize(flattened_acl_list)
+      @group_lookup = {}
+      @permission_lookup = {}
+
+      flattened_acl_list.each do |acl|
+        @permission_lookup[acl[:permission]] ||= { group_ids: [] }
+
+        if acl[:type] == :group
+          @group_lookup[acl[:id]] ||= []
+          @group_lookup[acl[:id]] << acl[:permission]
+
+          # TODO (martin) Handle users here too in a followup PR when we allow adding them in the UI.
+          @permission_lookup[acl[:permission]][:group_ids] << acl[:id]
+        end
+      end
+    end
+
+    def group_has_permission?(group_or_id, permission)
+      @group_lookup[group_or_id.is_a?(Numeric) ? group_or_id : group_or_id&.id]&.include?(
+        permission,
+      )
+    end
+
+    def group_has_any_permission?(group_or_id, permissions)
+      group_permissions = @group_lookup[group_or_id.is_a?(Numeric) ? group_or_id : group_or_id&.id]
+      (group_permissions || []).any? { |permission| permissions.include?(permission) }
+    end
+
+    def permission_group_ids(permission)
+      (@permission_lookup[permission] || {}).dig(:group_ids)
+    end
+
+    def multi_permission_group_ids(permissions)
+      permissions.flat_map { |permission| permission_group_ids(permission) }.uniq
+    end
+  end
+
+  class UserAcl
+    def initialize(flattened_acl_list)
+      @target_lookup = {}
+      @permission_lookup = {}
+
+      flattened_acl_list.each do |acl|
+        @target_lookup[target_key(acl)] ||= []
+        @target_lookup[target_key(acl)] << acl[:permission]
+
+        @permission_lookup[acl[:permission]] ||= {}
+        @permission_lookup[acl[:permission]][acl[:target_type]] ||= []
+        @permission_lookup[acl[:permission]][acl[:target_type]] << acl[:target_id]
+      end
+    end
+
+    def has_target_permission?(target, permission)
+      @target_lookup[target_key(target)]&.include?(permission)
+    end
+
+    def has_any_target_permission?(target, permissions)
+      target_permissions = @target_lookup[target_key(target)]
+      (target_permissions || []).any? { |permission| permissions.include?(permission) }
+    end
+
+    def target_ids_with_permission(target_class, permission)
+      (@permission_lookup[permission] || {}).dig(target_class.polymorphic_name) || []
+    end
+
+    def target_ids_with_any_permissions(target_class, permissions)
+      permissions
+        .flat_map { |permission| target_ids_with_permission(target_class, permission) }
+        .uniq
+    end
+
+    private
+
+    def target_key(target)
+      if target.is_a?(Hash)
+        "#{target[:target_type]}_#{target[:target_id]}"
+      else
+        "#{target.class.polymorphic_name}_#{target.id}"
+      end
+    end
+  end
+
   module RelationMethods
     # Batch-loads the allowed users and groups for every ACL in the relation
     # using two queries total (one per table), then memoizes the records onto
@@ -104,14 +210,44 @@ class AccessControlList < ActiveRecord::Base
       self
     end
 
-    def flattened_list
+    # Used to display a list of user/group -> permission mappings
+    # in the UI, and also to construct the TargetAcl and UserAcl
+    # objects used for permission checks in Ruby.
+    #
+    # Takes an ActiveRecord::Relation of AccessControlList records and returns
+    # an array of hashes in this format:
+    #
+    # {
+    #  type: :group,
+    #  id: 3,
+    #  permission: "edit",
+    #  name: "Group Name", # only for groups
+    #  full_name: "Full Group Name", # only for groups
+    #  metadata: {
+    #    auto_group: true/false, # only for groups
+    #  },
+    #  target_id: 123, # only if for_target is not provided
+    #  target_type: "Category" # only if for_target is not provided
+    # }
+    #
+    # If for_target is provided, then mixed Relations of
+    # AccessControlList records with different targets will NOT
+    # be allowed, as this is intended to be used for constructing
+    # the TargetAcl for a specific target record e.g. a Category.
+    def flattened_list(for_target: nil)
       preload_allowed
+
+      if for_target.present?
+        raise AclMixedTargetError unless map(&:target).uniq.length === 1
+      end
 
       flattened_list = []
       each do |access_control_list|
         access_control_list.allowed_group_ids.each do |group_id|
-          allowed_group = access_control_list.allowed_groups.find { |ag| ag.id == group_id }
-          flattened_list << {
+          allowed_group =
+            access_control_list.allowed_groups_preloaded.find { |ag| ag.id == group_id }
+
+          list_entry = {
             type: :group,
             id: group_id,
             permission: access_control_list.permission,
@@ -121,12 +257,35 @@ class AccessControlList < ActiveRecord::Base
               auto_group: allowed_group.automatic?,
             },
           }
+
+          if for_target.present?
+            list_entry[:target_id] = target.id
+            list_entry[:target_type] = target.class.polymorphic_name
+          else
+            list_entry[:target_id] = access_control_list.target_id
+            list_entry[:target_type] = access_control_list.target_type
+          end
+
+          flattened_list << list_entry
         end
 
         # TODO (martin) Properly handle users in a followup PR when we allow adding
         # them in the UI.
       end
+
       flattened_list
+    end
+
+    # Used to easily access permissions for a single target, e.g. a Category,
+    # accessed via the permission_acl method on a Model that has ACLs.
+    def target_acl(target)
+      TargetAcl.new(flattened_list, for_target: target)
+    end
+
+    # Used to easily access permissions for a single user,
+    # accessed via the permission_acl method on User.
+    def user_acl
+      UserAcl.new(flattened_list)
     end
   end
 
@@ -144,8 +303,8 @@ end
 #  id                :bigint           not null, primary key
 #  allowed_group_ids :bigint           default([]), not null, is an Array
 #  allowed_user_ids  :bigint           default([]), not null, is an Array
-#  owner             :string           not null
-#  permission        :string           not null
+#  owner             :string(100)      not null
+#  permission        :string(100)      not null
 #  target_type       :string           not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
@@ -153,7 +312,7 @@ end
 #
 # Indexes
 #
-#  idx_access_control_lists_allowed_group_ids                       (allowed_group_ids) USING gin
-#  idx_access_control_lists_allowed_user_ids                        (allowed_user_ids) USING gin
-#  index_access_control_lists_on_target_type_and_target_id_and_per  (target_type,target_id,permission) UNIQUE
+#  idx_access_control_lists_allowed_group_ids          (allowed_group_ids) USING gin
+#  idx_access_control_lists_allowed_user_ids           (allowed_user_ids) USING gin
+#  idx_on_target_type_target_id_permission_f472902150  (target_type,target_id,permission) UNIQUE
 #

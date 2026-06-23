@@ -81,7 +81,14 @@ export default class DAccessControl extends Component {
 
   get availableGroups() {
     const taken = new Set(this.selectedGroupIds);
-    return this.args.groups.filter((group) => !taken.has(group.id));
+    return this.args.groups
+      .filter((group) => !taken.has(group.id))
+      .sort((a, b) => {
+        if (a.automatic !== b.automatic) {
+          return a.automatic ? -1 : 1;
+        }
+        return (a.full_name || a.name).localeCompare(b.full_name || b.name);
+      });
   }
 
   get selectedGroupIds() {
