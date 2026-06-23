@@ -26,8 +26,8 @@ module PageObjects
         end
 
         def open_advanced
-          if modal.has_css?(".d-modal__footer .advanced-settings", wait: 0)
-            modal.find(".d-modal__footer .advanced-settings").click
+          if modal.has_css?(".d-modal__footer .advanced-mode-btn", wait: 0)
+            modal.find(".d-modal__footer .advanced-mode-btn").click
           end
           self
         end

@@ -2,7 +2,7 @@ import DButton from "discourse/ui-kit/d-button";
 
 const AdvancedModeToggle = <template>
   <DButton
-    class="btn-default advanced-mode-btn{{if @active ' --active'}}"
+    class="btn-default advanced-mode-btn"
     @icon="gear"
     @label={{if
       @active
