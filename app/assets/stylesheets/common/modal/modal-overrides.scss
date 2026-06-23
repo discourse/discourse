@@ -370,11 +370,11 @@
   }
 }
 
-.d-modal.discourse-local-dates-create-modal {
-  .advanced-mode-btn {
-    margin-left: auto;
-  }
+.d-modal__footer .advanced-mode-btn {
+  margin-left: auto;
+}
 
+.d-modal.discourse-local-dates-create-modal {
   .date-time-configuration {
     display: flex;
 

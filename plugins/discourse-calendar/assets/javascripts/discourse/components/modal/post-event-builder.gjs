@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
+import AdvancedModeToggle from "discourse/components/advanced-mode-toggle";
 import Form from "discourse/components/form";
 import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -1288,12 +1289,9 @@ export default class PostEventBuilder extends Component {
         {{/if}}
 
         {{#if this.showScreenToggle}}
-          <DButton
-            class="btn-default advanced-settings
-              {{if this.isAdvancedScreen 'is-active'}}"
-            @icon="gear"
-            @label="discourse_post_event.builder_modal.advanced_settings"
-            @action={{this.toggleAdvanced}}
+          <AdvancedModeToggle
+            @active={{this.isAdvancedScreen}}
+            @onToggle={{this.toggleAdvanced}}
           />
         {{/if}}
       </:footer>

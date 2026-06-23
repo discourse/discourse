@@ -494,7 +494,6 @@ en:
         create_event_title: "Create Event"
         update_event_title: "Edit Event"
         advanced_settings_title: "Advanced settings"
-        advanced_settings: "Advanced settings"
         confirm_delete: "Are you sure you want to delete this event?"
         confirm_close: "Are you sure you want to close this event?"
         confirm_open: "Are you sure you want to open this event?"
