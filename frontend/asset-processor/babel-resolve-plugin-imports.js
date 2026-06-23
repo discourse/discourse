@@ -25,15 +25,24 @@ export default function (babel) {
     }
   }
 
-  // Marker that discourse-external-loader appends to the external id of an
-  // import flagged `with { optional: "true" }`. Optionality rides in the
-  // module specifier so it survives bundling in `chunk.imports`.
-  const OPTIONAL_MARKER = "?optional";
+  // Reads the `with { discoursePlugin: "optional" | "required" }` attribute off
+  // an import. Cross-plugin imports are optional by default; only "required"
+  // makes the dependency hard. Any other value is a mistake.
+  function isOptional(path) {
+    const attribute = (path.node.attributes ?? []).find(
+      (a) => (a.key.name ?? a.key.value) === "discoursePlugin"
+    );
+    const mode = attribute?.value.value;
+    if (mode !== undefined && mode !== "optional" && mode !== "required") {
+      throw path.buildCodeFrameError(
+        `Invalid \`discoursePlugin\` import attribute "${mode}". Allowed values are "optional" and "required".`
+      );
+    }
+    return mode !== "required";
+  }
 
   return {
-    // The original `with { optional: "true" }` attribute is still present on
-    // the (now `?optional`-marked) external import, so the parser needs to
-    // accept it.
+    // Allow the `with { discoursePlugin: ... }` attribute to parse.
     manipulateOptions(_opts, parserOpts) {
       parserOpts.plugins.push("importAttributes");
     },
@@ -57,19 +66,16 @@ export default function (babel) {
       },
 
       ImportDeclaration(path) {
-        let moduleName = path.node.source.value;
+        const moduleName = path.node.source.value;
         if (!moduleName.startsWith("discourse/plugins/")) {
           return;
         }
 
-        // An optional import arrives as `discourse/plugins/foo/bar?optional`.
-        // The consolidated import keeps the marker (`discourse/plugins/foo?`)
-        // so the import map can resolve it to a null stub when the plugin is
-        // absent, instead of the throwing stub used for required imports.
-        const optional = moduleName.endsWith(OPTIONAL_MARKER);
-        if (optional) {
-          moduleName = moduleName.slice(0, -OPTIONAL_MARKER.length);
-        }
+        // Optional imports consolidate to `discourse/plugins/foo?`, which the
+        // import map resolves to a null stub when the plugin is absent; required
+        // imports use `discourse/plugins/foo`, which is left unmapped (and so
+        // throws) for a missing plugin.
+        const optional = isOptional(path);
 
         const parts = moduleName.split("/");
         const pluginName = parts[2];

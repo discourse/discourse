@@ -22,11 +22,11 @@ renamed.property;
 Helpers.doThing();
   `)
   ).toMatchInlineSnapshot(`
-    "import _plugin_other from "discourse/plugins/other";
-    (0, (_plugin_other["lib/shared"] || _plugin_other["lib/shared/index"]).default)();
-    (0, (_plugin_other["lib/shared"] || _plugin_other["lib/shared/index"]).somethingShared)(1);
-    (_plugin_other["lib/shared"] || _plugin_other["lib/shared/index"]).other.property;
-    (_plugin_other["lib/helpers"] || _plugin_other["lib/helpers/index"]).doThing();"
+    "import _plugin_other_optional from "discourse/plugins/other?";
+    (0, (_plugin_other_optional["lib/shared"] || _plugin_other_optional["lib/shared/index"]).default)();
+    (0, (_plugin_other_optional["lib/shared"] || _plugin_other_optional["lib/shared/index"]).somethingShared)(1);
+    (_plugin_other_optional["lib/shared"] || _plugin_other_optional["lib/shared/index"]).other.property;
+    (_plugin_other_optional["lib/helpers"] || _plugin_other_optional["lib/helpers/index"]).doThing();"
   `);
 });
 
@@ -40,9 +40,9 @@ a();
 b();
   `)
   ).toMatchInlineSnapshot(`
-    "import _plugin_other from "discourse/plugins/other";
-    (0, (_plugin_other["lib/one"] || _plugin_other["lib/one/index"]).a)();
-    (0, (_plugin_other["lib/two"] || _plugin_other["lib/two/index"]).b)();"
+    "import _plugin_other_optional from "discourse/plugins/other?";
+    (0, (_plugin_other_optional["lib/one"] || _plugin_other_optional["lib/one/index"]).a)();
+    (0, (_plugin_other_optional["lib/two"] || _plugin_other_optional["lib/two/index"]).b)();"
   `);
 });
 
@@ -55,10 +55,10 @@ foo();
 const obj = { bar };
   `)
   ).toMatchInlineSnapshot(`
-    "import _plugin_other from "discourse/plugins/other";
-    (0, (_plugin_other["lib/shared"] || _plugin_other["lib/shared/index"]).foo)();
+    "import _plugin_other_optional from "discourse/plugins/other?";
+    (0, (_plugin_other_optional["lib/shared"] || _plugin_other_optional["lib/shared/index"]).foo)();
     const obj = {
-      bar: (_plugin_other["lib/shared"] || _plugin_other["lib/shared/index"]).bar
+      bar: (_plugin_other_optional["lib/shared"] || _plugin_other_optional["lib/shared/index"]).bar
     };"
   `);
 });
@@ -72,12 +72,10 @@ export { foo };
   ).toThrow(/Re-exporting a cross-plugin import is not supported/);
 });
 
-test("rewrites an optional import to a `discourse/plugins/<name>?` specifier", () => {
-  // After discourse-external-loader, an optional import arrives with an
-  // `?optional` marker on its id (and the original attribute still attached).
+test("imports are optional by default, consolidating to a `?` specifier", () => {
   expect(
     compile(`
-import ChatChannel from "discourse/plugins/chat/models/chat-channel?optional" with { discoursePlugin: "optional" };
+import ChatChannel from "discourse/plugins/chat/models/chat-channel";
 
 ChatChannel.create();
   `)
@@ -90,8 +88,8 @@ ChatChannel.create();
 test("optional and required imports of the same plugin get separate specifiers", () => {
   expect(
     compile(`
-import { a } from "discourse/plugins/chat/lib/one?optional" with { discoursePlugin: "optional" };
-import { b } from "discourse/plugins/chat/lib/two";
+import { a } from "discourse/plugins/chat/lib/one";
+import { b } from "discourse/plugins/chat/lib/two" with { discoursePlugin: "required" };
 
 a();
 b();
@@ -102,6 +100,28 @@ b();
     (0, (_plugin_chat_optional["lib/one"] || _plugin_chat_optional["lib/one/index"]).a)();
     (0, (_plugin_chat["lib/two"] || _plugin_chat["lib/two/index"]).b)();"
   `);
+});
+
+test('`discoursePlugin: "required"` consolidates to the plain specifier', () => {
+  expect(
+    compile(`
+import ChatChannel from "discourse/plugins/chat/models/chat-channel" with { discoursePlugin: "required" };
+
+ChatChannel.create();
+  `)
+  ).toMatchInlineSnapshot(`
+    "import _plugin_chat from "discourse/plugins/chat";
+    (_plugin_chat["models/chat-channel"] || _plugin_chat["models/chat-channel/index"]).default.create();"
+  `);
+});
+
+test("throws on an unknown `discoursePlugin` value", () => {
+  expect(() =>
+    compile(`
+import ChatChannel from "discourse/plugins/chat/models/chat-channel" with { discoursePlugin: "maybe" };
+ChatChannel.create();
+  `)
+  ).toThrow(/Invalid `discoursePlugin` import attribute "maybe"/);
 });
 
 test("leaves relative and core imports untouched", () => {
