@@ -402,22 +402,24 @@ export default class CodeLoginForm extends Component {
       return;
     }
 
+    this.verifying = true;
+
     const username = this.username.trim();
     if (
       this.usernameEditable &&
       username.toLowerCase() !== this.newAccount.username.toLowerCase()
     ) {
-      this.verifying = true;
       try {
         await this.accountUser.changeUsername(username);
       } catch (e) {
+        this.verifying = false;
         popupAjaxError(e);
         return;
-      } finally {
-        this.verifying = false;
       }
     }
 
+    // Leave the button disabled and spinning through the redirect so it doesn't
+    // flash back to its idle state before the page navigates away.
     this.redirectAfterLogin();
   }
 

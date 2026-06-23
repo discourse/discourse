@@ -1,5 +1,17 @@
 @use "lib/viewport";
 
+@keyframes code-login-form-step-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .code-login-form {
   display: flex;
   flex-direction: column;
@@ -19,6 +31,11 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 1em;
+
+    // Ease each step in so advancing through the flow doesn't snap abruptly.
+    @media (prefers-reduced-motion: no-preference) {
+      animation: code-login-form-step-in 0.25s ease;
+    }
   }
 
   &__user-fields-step {
