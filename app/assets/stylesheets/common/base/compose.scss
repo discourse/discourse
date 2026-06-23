@@ -228,8 +228,6 @@ html.composer-open:not(.has-full-page-chat) {
     }
 
     .composer-actions-trigger .d-button-label {
-      max-width: 10ch;
-
       @include ellipsis;
     }
 
