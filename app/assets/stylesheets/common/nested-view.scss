@@ -8,7 +8,6 @@
 
 // ── Top-level nested view ──────────────────────────────────────────
 .nested-view {
-  --nested-sticky-avatar-top: calc(var(--header-offset, 0px) + 3.25em);
   --nested-sticky-avatar-bottom-offset: calc(var(--space-2) + var(--space-1));
   background: var(--secondary);
   margin: 0 auto;
@@ -420,6 +419,10 @@
   --nested-line-width: 1px;
   --nested-line-center-adjust: 0.5px;
   --nested-load-more-left-adjust: var(--nested-line-width);
+  --nested-sticky-avatar-top: calc(
+    var(--header-offset, 0px) + var(--nested-avatar-size) + var(--space-2) +
+      var(--space-2)
+  );
 
   // Grid splits article (row 1) from children (row 2) so the sticky avatar is
   // bounded by the post itself and does not continue past the post menu into
@@ -1289,22 +1292,20 @@
     --nested-line-gutter: var(--nested-avatar-size);
     --nested-column-gap: var(--space-1);
     --nested-mobile-line-offset: calc(var(--nested-line-gutter) / 2);
+    --nested-line-center-adjust: var(--nested-line-width);
+    --nested-mobile-line-nudge: calc(-1 * var(--space-1));
     --nested-mobile-line-start: calc(var(--nested-avatar-size) + 6px);
     grid-template-columns: var(--nested-line-gutter) 1fr;
-
-    // Explicit rows are required so grid-row: 1 / -1 on the gutter
-    // can resolve -1 to the end of the explicit grid (line 3).
-    // Without this, -1 falls back to line 1 and the gutter only spans row 1.
-    grid-template-rows: auto 1fr;
     column-gap: var(--nested-column-gap);
 
     // Tighter vertical spacing between siblings
     --nested-vertical-gap: 0.25em;
 
-    // Gutter spans all grid rows so the sticky avatar and depth-line run
-    // continuously through the article and children areas.
+    // Keep the gutter bounded to the post row on mobile too. The depth-line
+    // remains available as the collapse target for this post, but the sticky
+    // avatar stops with the post instead of following the entire child subtree.
     > .nested-post__gutter {
-      grid-row: 1 / -1;
+      grid-row: 1;
       position: relative;
       z-index: 1;
       pointer-events: none;
@@ -1320,7 +1321,7 @@
       position: absolute;
       top: var(--nested-mobile-line-start);
       bottom: 0;
-      left: 0;
+      left: var(--nested-mobile-line-nudge);
       min-height: 0;
       pointer-events: auto;
 
