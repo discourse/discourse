@@ -154,6 +154,8 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
   end
 
   context "with top countries and top referrers cards" do
+    let(:browser_pageview_source) { BrowserPageviewEvent::SOURCE_BEACON }
+
     before do
       SiteSetting.persist_browser_pageview_events = true
       Discourse.stubs(:current_hostname).returns("test.localhost")
@@ -178,6 +180,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
           country_code: "US",
           normalized_referrer: "news.ycombinator.com/item?id=42",
           created_at: "2026-05-12",
+          source: browser_pageview_source,
         )
       end
       Fabricate(
@@ -185,12 +188,14 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
         country_code: "GB",
         normalized_referrer: "reddit.com/r/discourse",
         created_at: "2026-05-12",
+        source: browser_pageview_source,
       )
       Fabricate(
         :browser_pageview_event,
         country_code: "DE",
         normalized_referrer: nil,
         created_at: "2026-05-12",
+        source: browser_pageview_source,
       )
       # Internal-referrer and direct (no-referrer) pageviews must not dilute the
       # top referrers percent denominator (it counts external referrer traffic only).
@@ -200,6 +205,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
           country_code: "DE",
           normalized_referrer: "test.localhost/t/topic/1",
           created_at: "2026-05-12",
+          source: browser_pageview_source,
         )
       end
 
@@ -247,6 +253,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
         :browser_pageview_event,
         normalized_referrer: "news.ycombinator.com/item?id=42",
         created_at: "2026-05-12",
+        source: browser_pageview_source,
       )
       BrowserPageviewReferrerDailyRollup.aggregate(
         start_date: "2026-05-01".to_date,
@@ -263,7 +270,12 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
     it "drills into the full top countries report scoped to the dashboard period",
        time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
-      Fabricate(:browser_pageview_event, country_code: "US", created_at: "2026-05-12")
+      Fabricate(
+        :browser_pageview_event,
+        country_code: "US",
+        created_at: "2026-05-12",
+        source: browser_pageview_source,
+      )
       BrowserPageviewCountryDailyRollup.aggregate(
         start_date: "2026-05-01".to_date,
         end_date: "2026-05-14".to_date,

@@ -131,11 +131,13 @@ module DiscourseAi
         DB.query_single(<<~SQL, start_date: start_date, end_date: end_date).first.to_i
             SELECT COUNT(*)
             FROM topics t
+            JOIN users u ON u.id = t.user_id
             WHERE t.created_at >= :start_date
               AND t.created_at < (:end_date::date + 1)
               AND t.deleted_at IS NULL
               AND t.visible = true
               AND t.archetype = 'regular'
+              AND NOT (u.admin OR u.moderator)
           SQL
       end
 
@@ -196,19 +198,21 @@ module DiscourseAi
         count = DB.query_single(<<~SQL, start_date: @start_date, end_date: @end_date).first.to_i
             SELECT COUNT(*)
             FROM topics t
+            JOIN users u ON u.id = t.user_id
             WHERE t.created_at >= :start_date
               AND t.created_at < (:end_date::date + 1)
               AND t.posts_count = 1
               AND t.deleted_at IS NULL
               AND t.visible = true
               AND t.archetype = 'regular'
+              AND NOT (u.admin OR u.moderator)
           SQL
         return if count < 5
 
         total = new_topics_count(@start_date, @end_date)
         share = total.positive? ? ((count.to_f / total) * 100).round : 0
-        headline = "#{count} new topics received no reply"
-        headline = "#{headline} (#{share}% of new topics)" if share >= 10
+        headline = "#{count} new member-created topics received no reply"
+        headline = "#{headline} (#{share}% of member-created topics)" if share >= 10
 
         signal(
           :unanswered_gap,
@@ -348,7 +352,9 @@ module DiscourseAi
       def landing_topic
         return if @period_days > MAX_LANDING_TOPIC_DAYS
 
-        row = DB.query(<<~SQL, start_date: @start_date, end_date: @end_date).first
+        row =
+          DB.query(
+            <<~SQL,
             SELECT e.topic_id, t.title, COUNT(*) AS visits
             FROM browser_pageview_events e
             JOIN topics t ON t.id = e.topic_id
@@ -356,10 +362,15 @@ module DiscourseAi
               AND e.created_at < (:end_date::date + 1)
               AND e.topic_id IS NOT NULL
               AND e.normalized_referrer IS NOT NULL
+              AND e.source = :source
             GROUP BY e.topic_id, t.title
             ORDER BY visits DESC
             LIMIT 1
           SQL
+            start_date: @start_date,
+            end_date: @end_date,
+            source: BrowserPageviewEvent.rollup_source,
+          ).first
         return if row.nil? || row.visits.to_i < 50
 
         signal(

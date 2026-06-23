@@ -146,4 +146,40 @@ RSpec.describe CrawlerScorer do
 
     expect(event.reload.score).to eq(120)
   end
+
+  it "scores each source but partitions velocity so transports do not inflate each other" do
+    stub_const(CrawlerScorer, :VELOCITY_LOW, 10) do
+      stub_const(CrawlerScorer, :VELOCITY_MEDIUM, 20) do
+        base = 30.minutes.ago
+
+        # Same ip+ua, split across two transports with 12 pageviews each. On
+        # its own each source sits in the LOW velocity tier (+10). Combined they
+        # would be 24 pageviews and reach the MEDIUM tier (+20), so equal
+        # per-source scores prove the heuristics stay partitioned by source.
+        {
+          BrowserPageviewEvent::SOURCE_PIGGYBACK => "piggyback-session",
+          BrowserPageviewEvent::SOURCE_BEACON => "beacon-session",
+        }.each do |source, session_id|
+          12.times do |i|
+            make_event(source: source, session_id: session_id, created_at: base + (i * 15).seconds)
+          end
+        end
+
+        score!
+
+        expect(
+          BrowserPageviewEvent
+            .where(source: BrowserPageviewEvent::SOURCE_PIGGYBACK)
+            .pluck(:score)
+            .uniq,
+        ).to contain_exactly(10)
+        expect(
+          BrowserPageviewEvent
+            .where(source: BrowserPageviewEvent::SOURCE_BEACON)
+            .pluck(:score)
+            .uniq,
+        ).to contain_exactly(10)
+      end
+    end
+  end
 end

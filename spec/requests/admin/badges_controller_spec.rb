@@ -36,6 +36,35 @@ RSpec.describe Admin::BadgesController do
 
       include_examples "badges inaccessible"
     end
+
+    context "with an API key scoped to badges -> list" do
+      it "allows an admin's key to list badges" do
+        api_key = Fabricate(:api_key, user: admin)
+        Fabricate(:api_key_scope, resource: "badges", action: "list", api_key_id: api_key.id)
+
+        get "/admin/badges.json",
+            headers: {
+              "HTTP_API_KEY" => api_key.key,
+              "HTTP_API_USERNAME" => admin.username,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["badges"]).to be_present
+      end
+
+      it "denies a non-admin's key, since the admin route stays admin-only" do
+        api_key = Fabricate(:api_key, user: user)
+        Fabricate(:api_key_scope, resource: "badges", action: "list", api_key_id: api_key.id)
+
+        get "/admin/badges.json",
+            headers: {
+              "HTTP_API_KEY" => api_key.key,
+              "HTTP_API_USERNAME" => user.username,
+            }
+
+        expect(response.status).to eq(404)
+      end
+    end
   end
 
   describe "#preview" do

@@ -5596,6 +5596,7 @@ pl_PL:
       synonym: 'Zamiast tego użyj „%{tag_name}”'
       has_synonyms: 'Nie można użyć "%{tag_name}", ponieważ zawiera synonimy.'
       one_tag_per_topic_group: 'Konflikty z „%{tag_names}” (dozwolony tylko jeden na temat)'
+      one_tag_per_topic_group_without_names: "Konflikty z wybranym tagiem (dozwolony tylko jeden na temat)"
       missing_parent_tag: 'Dostępne po dodaniu znacznika „%{parent_tag_name}”'
       restricted_tags_cannot_be_used_in_category:
         one: 'Tag "%{tags}" nie może być użyty w kategorii "%{category}". Usuń go.'

@@ -130,6 +130,7 @@ class Category < ActiveRecord::Base
   after_update :create_category_permalink, if: :saved_change_to_slug?
   after_update :revise_category_definition, if: :saved_change_to_description?
   after_update :run_plugin_category_update_param_callbacks
+  after_update :enqueue_category_hashtag_remap, if: :saved_change_to_hashtag_ref?
   after_destroy :trash_category_definition
   after_destroy :clear_related_site_settings
 
@@ -1185,6 +1186,11 @@ class Category < ActiveRecord::Base
       .find_each { |category| category.create_category_definition }
   end
 
+  def self.hashtag_ref_from(slug:, parent_category_id:)
+    parent_slug = Category.where(id: parent_category_id).pick(:slug) if parent_category_id.present?
+    [parent_slug, slug].compact.join(Category::SLUG_REF_SEPARATOR)
+  end
+
   def slug_path(parent_ids = Set.new)
     if parent_category_id.present?
       if parent_ids.add?(parent_category_id)
@@ -1209,6 +1215,43 @@ class Category < ActiveRecord::Base
     else
       slug
     end
+  end
+
+  def saved_change_to_hashtag_ref?
+    saved_change_to_slug? || saved_change_to_parent_category_id?
+  end
+
+  def enqueue_category_hashtag_remap
+    old_slug = saved_change_to_slug? ? slug_before_last_save : slug
+    old_parent_category_id =
+      if saved_change_to_parent_category_id?
+        parent_category_id_before_last_save
+      else
+        parent_category_id
+      end
+
+    enqueue_category_hashtag_remap_job(
+      category_id: id,
+      old_ref:
+        Category.hashtag_ref_from(slug: old_slug, parent_category_id: old_parent_category_id),
+      new_ref: slug_ref,
+    )
+
+    if saved_change_to_slug?
+      subcategories.find_each do |subcategory|
+        enqueue_category_hashtag_remap_job(
+          category_id: subcategory.id,
+          old_ref: [old_slug, subcategory.slug].join(Category::SLUG_REF_SEPARATOR),
+          new_ref: [slug, subcategory.slug].join(Category::SLUG_REF_SEPARATOR),
+        )
+      end
+    end
+  end
+
+  def enqueue_category_hashtag_remap_job(category_id:, old_ref:, new_ref:)
+    return if old_ref.blank? || new_ref.blank? || old_ref == new_ref
+
+    DB.after_commit { Jobs.enqueue(:remap_category_hashtag, category_id:, old_ref:, new_ref:) }
   end
 
   def cannot_delete_reason

@@ -862,7 +862,10 @@ export default class Category extends RestModel {
     };
 
     if (!id && this.categoryTypes) {
-      props.category_type = Object.keys(this.categoryTypes)[0];
+      const primaryType = Object.keys(this.categoryTypes)[0];
+      if (this.category_types?.includes(primaryType)) {
+        props.category_type = primaryType;
+      }
     }
 
     return props;

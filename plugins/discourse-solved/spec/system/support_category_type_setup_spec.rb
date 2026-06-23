@@ -46,6 +46,47 @@ RSpec.describe "Support Category Type Setup" do
     expect(category.custom_fields["empty_box_on_unsolved"]).to eq("true")
   end
 
+  it "can add the support type via the selector while creating a category of another type" do
+    visit("/new-category/setup")
+    category_type_card.find_type_card("discussion").click
+    expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
+
+    form.field("name").fill_in("Discussion + Support")
+
+    # The type selector is only available under advanced settings while creating.
+    expect(page).to have_no_css(".category-type-selector")
+    category_page.toggle_advanced_settings
+
+    category_type_selector = PageObjects::Components::DMenu.new(".category-type-selector")
+    category_type_selector.expand
+    category_type_selector.option(".category-type-selector__result.--category-type-support").click
+    banner.click_save
+
+    expect(page).to have_css(".d-nav-submenu__tabs .edit-category-support")
+    category = Category.find_by(name: "Discussion + Support")
+    expect(category.category_types.keys).to include(:discussion, :support)
+    expect(category.enable_accepted_answers?).to eq(true)
+  end
+
+  it "can remove the type picked on the setup screen while creating a category" do
+    visit("/new-category/setup")
+    category_type_card.find_type_card("support").click
+    expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "support"))
+
+    form.field("name").fill_in("No longer support")
+
+    category_page.toggle_advanced_settings
+
+    category_type_selector = PageObjects::Components::DMenu.new(".category-type-selector")
+    category_type_selector.remove_selected_option("Support")
+    banner.click_save
+
+    expect(page).to have_no_css(".d-nav-submenu__tabs .edit-category-support")
+    category = Category.find_by(name: "No longer support")
+    expect(category.category_types.keys).to eq(%i[discussion])
+    expect(category.enable_accepted_answers?).to eq(false)
+  end
+
   it "is able to click the support tab when creating a new category when solved is disabled" do
     SiteSetting.solved_enabled = false
     visit("/new-category/setup")

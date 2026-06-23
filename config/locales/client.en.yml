@@ -7551,6 +7551,7 @@ en:
             invites:
               create: Send email invites or generate invite links.
             badges:
+              list: Get a list of badges.
               create: Create a new badge.
               show: Obtain information about a badge.
               update: Update a badge.
@@ -8747,6 +8748,7 @@ en:
             change_site_setting_groups: "change site setting groups"
             discourse_id_regenerate_credentials: "regenerate Discourse ID credentials"
             configure_category_type: "configure category type"
+            unconfigure_category_type: "unconfigure category type"
             change_access_control_list_permissions: "change access control list permissions"
         screened_emails:
           title: "Screened emails"
