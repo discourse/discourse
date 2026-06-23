@@ -44,6 +44,23 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       )
     end
 
+    it "raises when creating a post as the anonymous actor" do
+      first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
+      topic = first_post.topic
+
+      expect do
+        execute_node(
+          configuration: {
+            "operation" => "create",
+            "topic_id" => topic.id.to_s,
+            "raw" => "Anonymous reply",
+            "author_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
+          },
+          item: item,
+        )
+      end.to raise_error(Discourse::InvalidAccess).and not_change { topic.posts.count }
+    end
+
     it "defaults to creating a post" do
       first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
       topic = first_post.topic
@@ -93,6 +110,54 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       )
 
       expect(topic.posts.order(:id).last.reply_to_post_number).to eq(first_post.post_number)
+    end
+
+    it "creates a whisper when configured" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
+      topic = first_post.topic
+      result = nil
+
+      expect do
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "create",
+              "topic_id" => topic.id.to_s,
+              "raw" => "Workflow whisper",
+              "whisper" => true,
+              "author_username" => admin.username,
+            },
+            item: item,
+          )
+      end.to change { topic.posts.count }.by(1)
+
+      reply = topic.posts.order(:id).last
+      expect(reply.post_type).to eq(Post.types[:whisper])
+      expect(result["post"]).to include(
+        "id" => reply.id,
+        "post_type" => Post.types[:whisper],
+        "raw" => "Workflow whisper",
+      )
+    end
+
+    it "raises when the create author cannot whisper" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
+      topic = first_post.topic
+
+      expect do
+        execute_node(
+          configuration: {
+            "operation" => "create",
+            "topic_id" => topic.id.to_s,
+            "raw" => "Unauthorized whisper",
+            "whisper" => true,
+            "author_username" => user.username,
+          },
+          item: item,
+        )
+      end.to raise_error(Discourse::InvalidAccess).and not_change { topic.posts.count }
     end
 
     it "raises when the create author cannot be found" do
@@ -238,6 +303,23 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       end.to raise_error(Discourse::InvalidAccess)
     end
 
+    it "raises when the anonymous actor cannot see the post" do
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      hidden_post = create_post(user: admin, category: private_category)
+
+      expect do
+        execute_node(
+          configuration: {
+            "operation" => "get",
+            "post_id" => hidden_post.id.to_s,
+            "actor_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
+          },
+          item: item,
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+    end
+
     it "lists posts matching UI filter fields" do
       topic_1 =
         Fabricate(:topic, category: category, tags: [tag], user: user, title: "First report topic")
@@ -312,6 +394,60 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       expect(result.map { |output_item| output_item.dig("json", "post", "id") }).to contain_exactly(
         matching_post.id,
       )
+    end
+
+    it "lists regular posts by default and explicit action posts" do
+      topic = Fabricate(:topic, category: category, user: user)
+      regular_post = Fabricate(:post, topic: topic, user: user, post_number: 1, raw: "regular body")
+      small_action_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: admin,
+          post_number: 2,
+          post_type: Post.types[:small_action],
+        )
+
+      default_result =
+        execute_node_output(
+          configuration: {
+            "operation" => "list",
+            "limit" => "10",
+          },
+          item: item,
+        ).first
+      all_result =
+        execute_node_output(
+          configuration: {
+            "operation" => "list",
+            "post_type" => "all",
+            "limit" => "10",
+          },
+          item: item,
+        ).first
+      small_action_result =
+        execute_node_output(
+          configuration: {
+            "operation" => "list",
+            "post_type" => "small_action",
+            "limit" => "10",
+          },
+          item: item,
+        ).first
+
+      expect(default_result.map { |output_item| output_item.dig("json", "post", "id") }).to include(
+        regular_post.id,
+      )
+      expect(
+        default_result.map { |output_item| output_item.dig("json", "post", "id") },
+      ).not_to include(small_action_post.id)
+      expect(all_result.map { |output_item| output_item.dig("json", "post", "id") }).to include(
+        regular_post.id,
+        small_action_post.id,
+      )
+      expect(
+        small_action_result.map { |output_item| output_item.dig("json", "post", "id") },
+      ).to contain_exactly(small_action_post.id)
     end
 
     it "respects actor permissions when listing posts" do

@@ -5167,6 +5167,8 @@ tr_TR:
   onebox:
     discourse:
       user_joined_community: "%{date} tarihinde katıldı"
+    google_meet:
+      meeting_code: "Kod:"
     gitlab:
       truncated_file: "Bu dosya kesildi."
       show_original: "orjinali göster"

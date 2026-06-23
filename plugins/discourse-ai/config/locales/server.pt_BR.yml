@@ -33,10 +33,6 @@ pt_BR:
       llm_triage:
         title: Postagens de triagem usando IA
         description: "Postagens de triagem usando um modelo de linguagem grande"
-        flagged_post: |
-          <div>Resposta do modelo:</div>
-          <p>%{llm_response}</p>
-          <b>Acionada pela regra <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a>.</b>
         notify_author_pm:
           subject: "Sua postagem foi temporariamente removida para análise"
           body: |

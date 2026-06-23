@@ -3,22 +3,7 @@
 describe AdminDashboardSectionConfiguration do
   fab!(:admin)
 
-  before { SiteSetting.admin_dashboard_search_section_enabled = true }
-
   describe ".sections" do
-    it "omits the search section while admin_dashboard_search_section_enabled is disabled" do
-      SiteSetting.admin_dashboard_search_section_enabled = false
-
-      expect(described_class.sections).to eq(
-        [
-          { id: "highlights", visible: true },
-          { id: "reports", visible: true },
-          { id: "traffic", visible: true },
-          { id: "engagement", visible: true },
-        ],
-      )
-    end
-
     it "returns every seeded section, all visible, in canonical order by default" do
       expect(described_class.sections).to eq(
         [

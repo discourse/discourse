@@ -3,7 +3,8 @@ const SUPPORTED_FILE_EXTENSIONS = [".js", ".js.es6", ".hbs", ".gjs"];
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
 export default {
-  "virtual:entrypoint": (moduleFilenames, { themeId }) => {
+  "virtual:entrypoint": (moduleFilenames, { themeId, pluginName }) => {
+    const label = pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
     const imports = [];
     const entries = [];
     const warnings = [];
@@ -17,7 +18,7 @@ export default {
       ) {
         // Unsupported file type. Log a warning and skip
         warnings.push(
-          `console.warn("[THEME ${themeId}] Unsupported file type: ${moduleFilename}");`
+          `console.warn("[${label}] Unsupported file type: ${moduleFilename}");`
         );
         continue;
       }

@@ -177,10 +177,11 @@ module Jobs
           since: 1.week.ago,
           upcoming_changes_meeting_notify_status:
             SiteSetting.upcoming_change_site_settings.filter do |upcoming_change_name|
-              UpcomingChanges.meets_or_exceeds_status?(
-                upcoming_change_name,
-                UpcomingChanges.previous_status(SiteSetting.promote_upcoming_changes_on_status),
-              )
+              UpcomingChanges::ConditionalDisplay.should_display?(upcoming_change_name) &&
+                UpcomingChanges.meets_or_exceeds_status?(
+                  upcoming_change_name,
+                  UpcomingChanges.previous_status(SiteSetting.promote_upcoming_changes_on_status),
+                )
             end,
         )
     end

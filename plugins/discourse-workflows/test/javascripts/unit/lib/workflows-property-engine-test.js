@@ -89,6 +89,13 @@ module("Unit | Utility | workflows property engine", function () {
       }),
       "Must resolve to a username."
     );
+    assert.strictEqual(
+      propertyDynamicValueHint("action:group", "actor_username", {
+        type: "string",
+        ui: { control: "actor" },
+      }),
+      "Must resolve to a username."
+    );
   });
 
   test("supports plugin translation roots", function (assert) {

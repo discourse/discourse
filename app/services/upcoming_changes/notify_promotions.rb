@@ -46,6 +46,13 @@ class UpcomingChanges::NotifyPromotions
           status_hash[:error_key] = :setting_not_available
         end
 
+        on_failed_policy(:change_should_be_displayed) do |policy|
+          status_hash[
+            :error
+          ] = "Setting #{setting_name} is not displayed on this site, skipping promotion notification"
+          status_hash[:error_key] = :should_not_be_displayed
+        end
+
         on_failed_policy(:meets_or_exceeds_status) do |policy|
           status_hash[
             :error

@@ -12,6 +12,7 @@ import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-ti
 export default class ChatNavbarChannelTitle extends Component {
   @service chatApi;
   @service chatStateManager;
+  @service currentUser;
 
   @tracked isTogglingStarred = false;
 
@@ -37,13 +38,13 @@ export default class ChatNavbarChannelTitle extends Component {
   }
 
   get showStarButton() {
-    return !!this.args.channel?.currentUserMembership;
+    return this.currentUser && this.args.channel?.isFollowing;
   }
 
   @action
   async toggleStarred() {
     const channel = this.args.channel;
-    if (!channel?.currentUserMembership || this.isTogglingStarred) {
+    if (!channel?.isFollowing || this.isTogglingStarred) {
       return;
     }
 

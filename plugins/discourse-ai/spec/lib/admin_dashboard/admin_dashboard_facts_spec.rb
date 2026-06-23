@@ -22,7 +22,14 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
     expect(labels).to include("new sign-ups", "new contributors")
     expect(facts[:metrics].find { |metric| metric[:label] == "new sign-ups" }).to include(
       value: 100,
+      category: :acquisition,
     )
+    expect(facts[:metrics].find { |metric| metric[:label] == "new contributors" }).to include(
+      category: :participation,
+    )
+    expect(
+      facts[:metrics].find { |metric| metric[:label] == "questions resolved (accepted solutions)" },
+    ).to include(category: :support)
   end
 
   it "classifies the trend from the metric deltas" do
@@ -34,7 +41,124 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
 
     headlines = compute(start_date: 1.day.ago.to_date.to_s).fetch(:signals).map { |s| s[:headline] }
 
-    expect(headlines).to include(match(/new topics received no reply/))
+    expect(headlines).to include(
+      match(/new member-created topics received no reply \(100% of member-created topics\)/),
+    )
+  end
+
+  it "excludes staff-created topics from the unanswered signal" do
+    user = Fabricate(:user)
+    admin = Fabricate(:admin)
+    moderator = Fabricate(:moderator)
+
+    Fabricate.times(6, :post, user: user, created_at: 1.day.ago)
+    Fabricate.times(3, :post, user: admin, created_at: 1.day.ago)
+    Fabricate.times(3, :post, user: moderator, created_at: 1.day.ago)
+
+    4.times do
+      topic = Fabricate(:topic, user: user, created_at: 1.day.ago)
+      Fabricate(:post, topic: topic, user: user, created_at: 1.day.ago)
+      Fabricate(:post, topic: topic, user: user, created_at: 1.day.ago)
+    end
+
+    unanswered_gap =
+      compute(start_date: 2.days.ago.to_date.to_s)
+        .fetch(:signals)
+        .find { |signal| signal[:key] == :unanswered_gap }
+
+    expect(unanswered_gap).to include(
+      headline: "6 new member-created topics received no reply (60% of member-created topics)",
+    )
+  end
+
+  it "reports when new-topic volume changes sharply" do
+    start_date = Date.parse("2030-01-08")
+    end_date = Date.parse("2030-01-14")
+    Fabricate(:topic, created_at: Date.parse("2030-01-01"))
+    Fabricate.times(6, :topic, created_at: start_date)
+
+    topic_volume =
+      compute(start_date: start_date.to_s, end_date: end_date.to_s)
+        .fetch(:signals)
+        .find { |s| s[:key] == :topic_volume }
+
+    expect(topic_volume).to include(
+      category: :participation,
+      headline: "New topics were up 500% versus the previous period",
+    )
+  end
+
+  it "reports when new-topic volume drops sharply from meaningful previous volume" do
+    start_date = Date.parse("2030-01-08")
+    end_date = Date.parse("2030-01-14")
+    Fabricate.times(20, :topic, created_at: Date.parse("2030-01-01"))
+    Fabricate.times(4, :topic, created_at: start_date)
+
+    topic_volume =
+      compute(start_date: start_date.to_s, end_date: end_date.to_s)
+        .fetch(:signals)
+        .find { |s| s[:key] == :topic_volume }
+
+    expect(topic_volume).to include(
+      category: :participation,
+      headline: "New topics were down 80% versus the previous period",
+    )
+  end
+
+  it "skips the raw landing-topic scan for long date ranges" do
+    queries =
+      track_sql_queries do
+        compute(start_date: 1.year.ago.to_date.to_s, end_date: Date.current.to_s)
+      end
+
+    expect(queries.grep(/FROM browser_pageview_events e/)).to be_empty
+  end
+
+  it "reports the top external landing topic for three-month date ranges" do
+    topic = Fabricate(:topic, title: "Welcome topic for visitors")
+    Fabricate.times(
+      50,
+      :browser_pageview_event,
+      topic_id: topic.id,
+      normalized_referrer: "example.com",
+      created_at: 1.day.ago,
+    )
+
+    landing_topic =
+      compute(start_date: 3.months.ago.to_date.to_s, end_date: Date.current.to_s)
+        .fetch(:signals)
+        .find { |s| s[:key] == :landing_topic }
+
+    expect(landing_topic).to include(
+      category: :acquisition,
+      headline: 'External visitors mostly landed on "Welcome topic for visitors" (50 visits)',
+    )
+  end
+
+  it "skips the raw staff-ratio post scan for long date ranges" do
+    queries =
+      track_sql_queries do
+        compute(start_date: 1.year.ago.to_date.to_s, end_date: Date.current.to_s)
+      end
+
+    expect(queries.grep(/FROM posts p\s+JOIN users u/m)).to be_empty
+  end
+
+  it "reports staff post ratio for three-month date ranges" do
+    admin = Fabricate(:admin)
+    user = Fabricate(:user)
+    Fabricate.times(12, :post, user: admin, created_at: 1.day.ago)
+    Fabricate.times(8, :post, user: user, created_at: 1.day.ago)
+
+    staff_ratio =
+      compute(start_date: 3.months.ago.to_date.to_s, end_date: Date.current.to_s)
+        .fetch(:signals)
+        .find { |signal| signal[:key] == :staff_ratio }
+
+    expect(staff_ratio).to include(
+      category: :participation,
+      headline: "Staff wrote 60% of posts this period",
+    )
   end
 
   it "reports a traffic spike WITHOUT a source when no referrer dominates" do
@@ -51,6 +175,7 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
 
     expect(spike).to be_present
     expect(spike[:headline]).to match(/Traffic spiked/)
+    expect(spike[:category]).to eq(:acquisition)
     expect(spike[:headline]).not_to match(/driven by/)
   end
 

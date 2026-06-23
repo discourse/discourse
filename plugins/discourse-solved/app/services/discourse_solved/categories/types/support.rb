@@ -11,6 +11,10 @@ module DiscourseSolved
             SiteSetting.solved_enabled = true
           end
 
+          def plugin_enabled?
+            SiteSetting.solved_enabled
+          end
+
           def category_matches?(category)
             category.enable_accepted_answers?
           end
@@ -54,7 +58,7 @@ module DiscourseSolved
           end
 
           def configuration_schema
-            {
+            schema = {
               general_category_settings: {
                 name: {
                   default: I18n.t("category_types.support.name"),
@@ -107,23 +111,31 @@ module DiscourseSolved
                   type: :bool,
                   label: I18n.t("discourse_solved.category_type.empty_box_on_unsolved.label"),
                 },
-                DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD => {
-                  default: true,
-                  type: :bool,
-                  label: I18n.t("discourse_solved.category_type.enable_shared_issues.label"),
-                  description:
-                    I18n.t("discourse_solved.category_type.enable_shared_issues.description"),
-                },
               },
               site_texts: {
-                "js.solved.shared_issue.label" => {
-                  label: I18n.t("discourse_solved.category_type.shared_issue_label.label"),
-                  description:
-                    I18n.t("discourse_solved.category_type.shared_issue_label.description"),
-                  depends_on: DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD,
-                },
               },
             }
+
+            if SiteSetting.enable_solved_shared_issues
+              schema[:category_custom_fields][
+                DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD
+              ] = {
+                default: true,
+                type: :bool,
+                label: I18n.t("discourse_solved.category_type.enable_shared_issues.label"),
+                description:
+                  I18n.t("discourse_solved.category_type.enable_shared_issues.description"),
+              }
+
+              schema[:site_texts]["js.solved.shared_issue.label"] = {
+                label: I18n.t("discourse_solved.category_type.shared_issue_label.label"),
+                description:
+                  I18n.t("discourse_solved.category_type.shared_issue_label.description"),
+                depends_on: DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD,
+              }
+            end
+
+            schema
           end
 
           def icon

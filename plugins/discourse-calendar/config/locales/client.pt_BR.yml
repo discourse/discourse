@@ -401,7 +401,6 @@ pt_BR:
           no_users: "Nenhum usuário(a) encontrado(a)"
           leave_event: "Sair do evento"
           status:
-            unknown: "Não tenho interesse"
             going: "Eu vou"
             interested: "Interessado"
             going_count:

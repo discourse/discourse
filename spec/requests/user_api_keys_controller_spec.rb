@@ -239,6 +239,26 @@ RSpec.describe UserApiKeysController do
       )
     end
 
+    it "does not generate an OTP when a User API key requests the one_time_password scope" do
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
+      user = Fabricate(:user, refresh_auto_groups: true)
+      key =
+        Fabricate(
+          :user_api_key,
+          user: user,
+          scopes: [Fabricate.build(:user_api_key_scope, name: "write")],
+        )
+
+      post "/user-api-key.json",
+           params: args.merge(scopes: "one_time_password"),
+           headers: {
+             HTTP_USER_API_KEY: key.key,
+           }
+
+      expect(response.status).to eq(403)
+      expect(Discourse.redis.keys("otp_*")).to be_empty
+    end
+
     it "returns payload without redirect when auth_redirect not provided" do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       user = Fabricate(:user, trust_level: TrustLevel[0])
@@ -1120,6 +1140,38 @@ RSpec.describe UserApiKeysController do
 
       post "/user-api-key/otp", params: otp_args.merge(padding: "invalid")
       expect(response.status).to eq(400)
+    end
+
+    it "does not allow a User API key to generate an OTP" do
+      SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
+      user = Fabricate(:user, refresh_auto_groups: true)
+      key =
+        Fabricate(
+          :user_api_key,
+          user: user,
+          scopes: [Fabricate.build(:user_api_key_scope, name: "write")],
+        )
+
+      post "/user-api-key/otp", params: otp_args, headers: { HTTP_USER_API_KEY: key.key }
+
+      expect(response.status).to eq(403)
+      expect(Discourse.redis.keys("otp_*")).to be_empty
+    end
+
+    it "does not allow an admin API key to generate an OTP" do
+      SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
+      user = Fabricate(:user, refresh_auto_groups: true)
+      api_key = Fabricate(:api_key, user: Fabricate(:admin))
+
+      post "/user-api-key/otp",
+           params: otp_args,
+           headers: {
+             HTTP_API_KEY: api_key.key,
+             HTTP_API_USERNAME: user.username,
+           }
+
+      expect(response.status).to eq(403)
+      expect(Discourse.redis.keys("otp_*")).to be_empty
     end
   end
 end

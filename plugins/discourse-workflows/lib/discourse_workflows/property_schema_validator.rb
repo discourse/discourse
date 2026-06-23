@@ -63,6 +63,7 @@ module DiscourseWorkflows
       flat
       format
       hidden
+      multiple
       show_description
       show_label
       singular_name
@@ -78,6 +79,8 @@ module DiscourseWorkflows
       lang
       name_property
       none
+      none_label_field
+      none_label_i18n_key
       option_format
       set_from_option
       resets
@@ -85,6 +88,7 @@ module DiscourseWorkflows
     ].freeze
 
     KNOWN_UI_CONTROLS = %i[
+      actor
       boolean
       category
       checkbox
@@ -100,6 +104,7 @@ module DiscourseWorkflows
       group_select
       icon
       multi_combo_box
+      multi_input
       notice
       password
       query_params

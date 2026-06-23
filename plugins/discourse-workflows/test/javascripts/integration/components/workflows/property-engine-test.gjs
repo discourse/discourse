@@ -12,6 +12,7 @@ import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "discourse-i18n";
 import PropertyEngineConfigurator from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/property-engine";
 import WorkflowEditorSession from "discourse/plugins/discourse-workflows/admin/lib/workflows/editor-session";
 
@@ -35,6 +36,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   hooks.afterEach(function () {
+    delete I18n.translations[I18n.locale]?.js?.discourse_workflows?.post
+      ?.raw_tooltip;
     sinon.restore();
   });
 
@@ -68,6 +71,91 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     assert.dom("input").hasValue("Hello");
     assert.dom("input").isFocused();
+  });
+
+  test("renders an inline description and a tooltip independently", async function (assert) {
+    I18n.translations[I18n.locale].js.discourse_workflows.post.raw_tooltip =
+      "Only visible to the agent";
+
+    this.setProperties({
+      configuration: { raw: "" },
+      nodeType: "action:post",
+      nodeTypes: [{ identifier: "action:post", name: "action:post" }],
+      schema: {
+        raw: {
+          type: "string",
+          ui: {
+            control: "textarea",
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".form-kit__container-description")
+      .hasText("Raw content for the post");
+    assert.dom(".fk-d-tooltip__trigger").exists();
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert
+      .dom(".fk-d-tooltip__inner-content")
+      .hasText("Only visible to the agent");
+  });
+
+  test("hides the tooltip when the label is hidden", async function (assert) {
+    I18n.translations[I18n.locale].js.discourse_workflows.post.raw_tooltip =
+      "Only visible to the agent";
+
+    this.setProperties({
+      configuration: { raw: "" },
+      nodeType: "action:post",
+      nodeTypes: [{ identifier: "action:post", name: "action:post" }],
+      schema: {
+        raw: {
+          type: "string",
+          ui: {
+            control: "textarea",
+            show_label: false,
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".fk-d-tooltip__trigger").doesNotExist();
+    assert
+      .dom(".form-kit__container-description")
+      .hasText("Raw content for the post");
   });
 
   test("renders checkbox controls from metadata", async function (assert) {
@@ -245,6 +333,86 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await click(header.el().querySelector(".btn-clear"));
 
     assert.strictEqual(this.formApi.get("group_inbox_id"), null);
+  });
+
+  test("renders preloaded automatic group option by name", async function (assert) {
+    this.setProperties({
+      configuration: {
+        operation: "check_membership",
+        group_id: 14,
+      },
+      formApi: null,
+      node: {
+        clientId: "node-1",
+        type: "action:group",
+        typeVersion: "1.0",
+      },
+      nodeType: "action:group",
+      nodeTypes: [
+        {
+          identifier: "action:group",
+          name: "action:group",
+          version: "1.0",
+          metadata: {
+            groups: [
+              { id: 0, name: "everyone" },
+              { id: 14, name: "trust_level_2" },
+            ],
+          },
+        },
+      ],
+      schema: {
+        group_id: {
+          type: "integer",
+          required: true,
+          type_options: {
+            load_options_method: "groups",
+          },
+          ui: {
+            control: "group_select",
+          },
+          control_options: {
+            filterable: true,
+            name_property: "name",
+            value_property: "id",
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @node={{this.node}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const groupSelector = selectKit(".combo-box");
+
+    assert.strictEqual(groupSelector.header().value(), "14");
+    assert.strictEqual(groupSelector.header().label(), "trust_level_2");
+
+    await groupSelector.expand();
+    assert
+      .dom(".combo-box .select-kit-row[data-value='0']")
+      .hasText("everyone");
   });
 
   test("preserves focus for collection fields while typing", async function (assert) {
@@ -824,7 +992,12 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
   test("renders combo boxes from metadata and applies option patches", async function (assert) {
     this.setProperties({
-      configuration: { agent_id: 2, agent_name: "" },
+      configuration: {
+        agent_force_default_llm: true,
+        agent_id: 2,
+        agent_name: "",
+        llm_model_id: 99,
+      },
       formApi: null,
       nodeType: "action:ai_agent",
       nodeTypes: [
@@ -832,8 +1005,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
           identifier: "action:ai_agent",
           metadata: {
             agents: [
-              { id: 1, name: "Support Bot" },
-              { id: 2, name: "Helper Bot" },
+              { id: 1, name: "Support Bot", force_default_llm: false },
+              { id: 2, name: "Helper Bot", force_default_llm: true },
             ],
             i18n_prefix: "discourse_ai.discourse_workflows",
           },
@@ -854,7 +1027,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
             filterable: true,
             name_property: "name",
             none: "discourse_ai.discourse_workflows.ai_agent.select_agent",
+            resets: ["llm_model_id"],
             set_from_option: {
+              agent_force_default_llm: "force_default_llm",
               agent_name: "name",
             },
             value_property: "id",
@@ -894,7 +1069,190 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await selector.selectRowByValue("1");
 
     assert.strictEqual(String(this.formApi.get("agent_id")), "1");
+    assert.false(this.formApi.get("agent_force_default_llm"));
     assert.strictEqual(this.formApi.get("agent_name"), "Support Bot");
+    assert.strictEqual(this.formApi.get("llm_model_id"), null);
+  });
+
+  test("applies option patches from remote combo box options", async function (assert) {
+    const requests = [];
+    pretender.post(
+      "/admin/plugins/discourse-workflows/dynamic-node-parameters/options.json",
+      (request) => {
+        const body = JSON.parse(request.requestBody);
+        requests.push(body);
+
+        return response([
+          {
+            id: 1,
+            name: "Support Bot",
+            force_default_llm: false,
+            resolved_llm_name: "Default LLM",
+          },
+        ]);
+      }
+    );
+
+    this.setProperties({
+      configuration: {
+        agent_force_default_llm: true,
+        agent_id: null,
+        agent_name: "",
+        agent_resolved_llm_name: "",
+        llm_model_id: 99,
+      },
+      formApi: null,
+      node: {
+        clientId: "node-1",
+        type: "action:ai_agent",
+        typeVersion: "1.0",
+      },
+      nodeType: "action:ai_agent",
+      nodeTypes: [
+        {
+          identifier: "action:ai_agent",
+          name: "action:ai_agent",
+          version: "1.0",
+        },
+      ],
+      schema: {
+        agent_id: {
+          type: "integer",
+          required: true,
+          type_options: {
+            load_options_method: "agents",
+          },
+          no_data_expression: true,
+          ui: {
+            control: "combo_box",
+          },
+          control_options: {
+            filterable: true,
+            name_property: "name",
+            resets: ["llm_model_id"],
+            set_from_option: {
+              agent_force_default_llm: "force_default_llm",
+              agent_name: "name",
+              agent_resolved_llm_name: "resolved_llm_name",
+            },
+            value_property: "id",
+          },
+        },
+        agent_force_default_llm: {
+          type: "boolean",
+        },
+        agent_name: {
+          type: "string",
+        },
+        agent_resolved_llm_name: {
+          type: "string",
+        },
+        llm_model_id: {
+          type: "integer",
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @node={{this.node}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const selector = selectKit(".combo-box");
+    await selector.expand();
+    await waitFor(".combo-box .select-kit-row[data-value='1']");
+    await selector.selectRowByValue("1");
+
+    assert.strictEqual(String(this.formApi.get("agent_id")), "1");
+    assert.false(this.formApi.get("agent_force_default_llm"));
+    assert.strictEqual(this.formApi.get("agent_name"), "Support Bot");
+    assert.strictEqual(
+      this.formApi.get("agent_resolved_llm_name"),
+      "Default LLM"
+    );
+    assert.strictEqual(this.formApi.get("llm_model_id"), null);
+    assert.true(requests.length >= 1);
+    assert.strictEqual(requests[0].methodName, "agents");
+  });
+
+  test("renders combo box dynamic none labels from configuration", async function (assert) {
+    this.setProperties({
+      configuration: {
+        agent_resolved_llm_name: "Workflow LLM",
+        llm_model_id: null,
+      },
+      nodeType: "action:ai_agent",
+      nodeTypes: [
+        {
+          identifier: "action:ai_agent",
+          metadata: {
+            llm_models: [{ id: 1, name: "Override LLM" }],
+          },
+        },
+      ],
+      schema: {
+        llm_model_id: {
+          type: "integer",
+          required: false,
+          type_options: {
+            load_options_method: "llm_models",
+          },
+          no_data_expression: true,
+          ui: {
+            control: "combo_box",
+          },
+          control_options: {
+            name_property: "name",
+            none: "discourse_ai.discourse_workflows.ai_agent.llm_model_default",
+            none_label_field: "agent_resolved_llm_name",
+            none_label_i18n_key:
+              "discourse_ai.discourse_workflows.ai_agent.llm_model_default_with_name",
+            value_property: "id",
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const selector = selectKit(".combo-box");
+
+    assert.strictEqual(
+      selector.header().label(),
+      "Use agent default (Workflow LLM)"
+    );
   });
 
   test("renders remote multi-select options from load options", async function (assert) {
@@ -987,5 +1345,79 @@ module("Integration | Component | workflows property engine", function (hooks) {
       topic_id: "21",
       custom_field_names: [],
     });
+  });
+
+  test("multi_input fields accept arbitrary ids and convert between fixed and dynamic", async function (assert) {
+    this.setProperties({
+      configuration: { upload_ids: [] },
+      formApi: null,
+      nodeType: "action:ai_agent",
+      schema: {
+        upload_ids: {
+          type: "array",
+          required: false,
+          ui: {
+            control: "multi_input",
+            expression: true,
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const selector = selectKit(".multi-select");
+
+    await selector.expand();
+    await selector.fillInFilter("12");
+    await selector.selectRowByValue("12");
+    await selector.fillInFilter("34");
+    await selector.selectRowByValue("34");
+
+    assert.deepEqual(
+      this.formApi.get("upload_ids"),
+      ["12", "34"],
+      "stores entered ids"
+    );
+
+    await click(
+      '.workflows-property-engine__mode-control input[value="dynamic"]'
+    );
+
+    assert.strictEqual(
+      this.formApi.get("upload_ids"),
+      '={{ ["12","34"] }}',
+      "converts the fixed list into a dynamic expression"
+    );
+
+    await click(
+      '.workflows-property-engine__mode-control input[value="plain"]'
+    );
+
+    assert.deepEqual(
+      this.formApi.get("upload_ids"),
+      ["12", "34"],
+      "converts the dynamic expression back into a fixed list"
+    );
   });
 });

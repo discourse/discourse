@@ -67,6 +67,7 @@ module DiscourseWorkflows
           {
             post: serialize_post(@post, include_cooked: true).merge(cooked: @cooked),
             topic: topic_data(@post.topic),
+            user: user_data(@post.user),
           }
         end
 
@@ -81,6 +82,10 @@ module DiscourseWorkflows
 
         def topic_data(topic)
           serialize_record(topic, TopicListItemSerializer)
+        end
+
+        def user_data(user)
+          serialize_user(user)
         end
 
         def matches_post_scope?(post_scope)

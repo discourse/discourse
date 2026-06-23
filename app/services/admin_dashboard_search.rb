@@ -111,6 +111,7 @@ class AdminDashboardSearch
                  SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
           FROM search_logs
           WHERE created_at >= :window_start AND created_at <= :window_end
+            AND user_id IS NOT NULL
           GROUP BY lower(term)
           ORDER BY searches DESC, clicks DESC, term ASC
           LIMIT :limit
@@ -136,6 +137,7 @@ class AdminDashboardSearch
                  SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
           FROM search_logs
           WHERE created_at >= :window_start AND created_at <= :window_end
+            AND user_id IS NOT NULL
           GROUP BY lower(term)
           HAVING SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) * 100 <=
             COUNT(*) * :max_ctr_percent
@@ -164,6 +166,7 @@ class AdminDashboardSearch
                SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
         FROM search_logs
         WHERE created_at >= :window_start AND created_at <= :window_end
+          AND user_id IS NOT NULL
         GROUP BY lower(term)
       )
       SELECT COALESCE(SUM(searches), 0)::bigint AS total,

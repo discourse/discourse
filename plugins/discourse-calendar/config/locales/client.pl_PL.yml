@@ -393,6 +393,7 @@ pl_PL:
         send_bulk_invites: "Wyślij zaproszenia"
         group_selector_placeholder: "Wybierz grupę..."
         user_selector_placeholder: "Wybierz użytkownika..."
+        attendance_label: "Obecność"
         inline_title: "Zaproszenie zbiorcze w trybie inline"
         csv_title: "Zaproszenie zbiorcze CSV"
       upcoming_events:
@@ -423,7 +424,6 @@ pl_PL:
           this_and_following: "To wydarzenie i wszystkie kolejne wydarzenia"
           leave_event: "Opuść wydarzenie"
           status:
-            unknown: "Nie zainteresowany"
             going: "Wezmę udział"
             not_going: "Nie idę"
             interested: "Zainteresowany"

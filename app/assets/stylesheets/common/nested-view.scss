@@ -20,7 +20,6 @@
   &__header {
     margin-bottom: 1em;
     padding-bottom: 0.75em;
-    border-bottom: 1px solid var(--primary-low);
   }
 
   &__title {
@@ -189,7 +188,6 @@
   &__op {
     margin-bottom: 1.5em;
     padding: 1em;
-    background: var(--primary-very-low);
     border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius);
 
@@ -242,6 +240,37 @@
       padding: 0;
       margin-left: 0;
       font-size: var(--font-down-1);
+    }
+
+    @include viewport.from(sm) {
+      > .topic-avatar {
+        position: sticky;
+        top: calc(var(--header-offset) + var(--space-3));
+        align-self: flex-start;
+        margin-bottom: 25px;
+      }
+    }
+
+    @include viewport.until(sm) {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: start;
+      column-gap: 0.75em;
+      row-gap: 0.5em;
+
+      .nested-view__op-body {
+        display: contents;
+      }
+
+      .topic-meta-data {
+        align-self: center;
+      }
+
+      .nested-view__op-content,
+      .nested-view__op-menu,
+      .post-links-container {
+        grid-column: 1 / -1;
+      }
     }
   }
 
@@ -386,7 +415,9 @@
   --nested-line-offset: calc(
     var(--nested-connector-offset) + var(--nested-avatar-size) / 2
   );
-  --nested-load-more-left-adjust: 2px;
+  --nested-line-width: 1px;
+  --nested-line-center-adjust: 0.5px;
+  --nested-load-more-left-adjust: var(--nested-line-width);
 
   // Grid splits article (row 1) from children (row 2) so the gutter's
   // depth-line naturally stops at the article bottom.
@@ -410,8 +441,8 @@
       height: calc(
         var(--nested-vertical-gap) + var(--nested-avatar-size) / 2 + 5px // +5px visually centers the hook on the avatar
       );
-      border-left: 2px solid var(--primary-low);
-      border-bottom: 2px solid var(--primary-low);
+      border-left: var(--nested-line-width) solid var(--primary-low);
+      border-bottom: var(--nested-line-width) solid var(--primary-low);
       border-radius: 0 0 0 12px;
       transition: border-color 0.15s ease;
     }
@@ -431,7 +462,7 @@
         var(--nested-vertical-gap) + var(--nested-avatar-size) / 2 + 1px - 10px
       );
       bottom: 0;
-      width: 2px;
+      width: var(--nested-line-width);
       background: var(--primary-low);
       transition: background-color 0.15s ease;
     }
@@ -522,8 +553,8 @@
       left: calc(var(--nested-avatar-size) / 2);
       top: 6px;
       bottom: 0;
-      width: 2px;
-      border-radius: 1px;
+      width: var(--nested-line-width);
+      border-radius: var(--nested-line-center-adjust);
       background: var(--primary-low);
       transition: background-color 0.15s ease;
     }
@@ -591,8 +622,8 @@
         width: calc(var(--nested-avatar-size) / 2);
         transform: none;
         background: none;
-        border-left: 2px solid var(--primary-low);
-        border-bottom: 2px solid var(--primary-low);
+        border-left: var(--nested-line-width) solid var(--primary-low);
+        border-bottom: var(--nested-line-width) solid var(--primary-low);
         border-radius: 0 0 0 12px;
         transition: border-color 0.15s ease;
       }
@@ -632,7 +663,7 @@
   &__depth-line-icon {
     position: absolute;
     bottom: 0;
-    left: calc(50% + 1px);
+    left: calc(50% + var(--nested-line-center-adjust));
     transform: translateX(-50%);
     z-index: 1;
     display: flex;
@@ -969,8 +1000,8 @@
       top: -1em;
       height: calc(50% + 1em);
       width: var(--nested-line-offset);
-      border-left: 2px solid var(--primary-low);
-      border-bottom: 2px solid var(--primary-low);
+      border-left: var(--nested-line-width) solid var(--primary-low);
+      border-bottom: var(--nested-line-width) solid var(--primary-low);
       border-radius: 0 0 0 12px;
       transition: border-color 0.15s ease;
     }
@@ -1304,7 +1335,9 @@
       pointer-events: auto;
 
       &::after {
-        left: calc(var(--nested-mobile-line-offset) - 1px);
+        left: calc(
+          var(--nested-mobile-line-offset) - var(--nested-line-center-adjust)
+        );
         top: 0;
         bottom: 0;
       }
@@ -1313,9 +1346,11 @@
       &--collapsed::after {
         border: none;
         background: var(--primary-low);
-        width: 2px;
+        width: var(--nested-line-width);
         border-radius: 0;
-        left: calc(var(--nested-mobile-line-offset) - 1px);
+        left: calc(
+          var(--nested-mobile-line-offset) - var(--nested-line-center-adjust)
+        );
         bottom: 0;
       }
     }

@@ -91,6 +91,15 @@ pl_PL:
       run_options: "Więcej opcji uruchamiania"
       view:
         label: "Widok wyników"
+      chart:
+        form:
+          label: "Typ wykresu"
+          line: "Liniowy"
+          bar: "Słupkowy"
+          stacked: "Skumulowany"
+          dual_axis: "Dwuosiowy"
+        tooltip:
+          total: "Razem: %{count}"
       chart_empty:
         no_rows: "Brak wierszy do wykresu."
         no_numeric: "To zapytanie nie zawiera żadnych kolumn liczbowych do wykresu."

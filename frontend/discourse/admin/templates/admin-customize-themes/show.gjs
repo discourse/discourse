@@ -1,5 +1,4 @@
 import { LinkTo } from "@ember/routing";
-import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import DButton from "discourse/ui-kit/d-button";
@@ -168,18 +167,18 @@ export default <template>
       <div class="metadata control-unit remote-theme-metadata">
         {{#if @controller.model.remote_theme}}
           {{#if @controller.model.remote_theme.remote_url}}
-            {{#if @controller.sourceIsHttp}}
-              <a class="remote-url" href={{@controller.remoteThemeLink}}>{{i18n
-                  "admin.customize.theme.source_url"
-                }}{{dIcon "link"}}</a>
-            {{else}}
-              <div class="remote-url">
-                <code>{{@controller.model.remote_theme.remote_url}}</code>
-                {{#if @controller.model.remote_theme.branch}}
-                  (<code>{{@controller.model.remote_theme.branch}}</code>)
-                {{/if}}
-              </div>
-            {{/if}}
+            <div class="remote-url">
+              {{#if @controller.sourceIsHttp}}
+                <a
+                  href={{@controller.remoteThemeLink}}
+                >{{@controller.prettyRemoteUrl}}</a>
+              {{else}}
+                {{@controller.prettyRemoteUrl}}
+              {{/if}}
+              {{#if @controller.displayBranch}}
+                (<code>{{@controller.displayBranch}}</code>)
+              {{/if}}
+            </div>
           {{/if}}
 
           {{#if @controller.model.remote_theme.about_url}}
@@ -216,25 +215,14 @@ export default <template>
                 }}</span>
               {{@controller.model.remote_theme.theme_version}}</span>{{/if}}
 
-          {{#if @controller.model.remote_theme.is_git}}
-            <div class="alert alert-info remote-theme-edits">
-              {{trustHTML
-                (i18n
-                  "admin.customize.theme.remote_theme_edits"
-                  repoURL=@controller.remoteThemeLink
-                )
-              }}
+          {{#if @controller.showRemoteError}}
+            <div class="error-message">
+              {{dIcon "triangle-exclamation"}}
+              {{i18n "admin.customize.theme.repo_unreachable"}}
             </div>
-
-            {{#if @controller.showRemoteError}}
-              <div class="error-message">
-                {{dIcon "triangle-exclamation"}}
-                {{i18n "admin.customize.theme.repo_unreachable"}}
-              </div>
-              <div class="raw-error">
-                <code>{{@controller.model.remoteError}}</code>
-              </div>
-            {{/if}}
+            <div class="raw-error">
+              <code>{{@controller.model.remoteError}}</code>
+            </div>
           {{/if}}
         {{/if}}
       </div>

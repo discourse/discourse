@@ -1,3 +1,4 @@
+import ActorControl from "../../components/workflows/configurators/actor-control";
 import BooleanControl from "../../components/workflows/configurators/boolean-control";
 import CategoryControl from "../../components/workflows/configurators/category-control";
 import CodeControl from "../../components/workflows/configurators/code-control";
@@ -13,6 +14,7 @@ import FilterQuery from "../../components/workflows/configurators/filter-query";
 import GroupSelect from "../../components/workflows/configurators/group-select";
 import IconControl from "../../components/workflows/configurators/icon-control";
 import MultiComboBox from "../../components/workflows/configurators/multi-combo-box";
+import MultiInput from "../../components/workflows/configurators/multi-input";
 import NoticeControl from "../../components/workflows/configurators/notice-control";
 import QueryParams from "../../components/workflows/configurators/query-params";
 import SelectControl from "../../components/workflows/configurators/select-control";
@@ -23,6 +25,7 @@ import UserOrGroupControl from "../../components/workflows/configurators/user-or
 
 const FIELD_CONTROL_REGISTRY = {
   notice: { kind: "standalone", renderer: NoticeControl },
+  actor: { kind: "field", type: "custom", renderer: ActorControl },
   boolean: { kind: "standalone", renderer: BooleanControl },
   condition_builder: { kind: "standalone", renderer: ConditionBuilder },
   data_table_condition_builder: {
@@ -47,6 +50,7 @@ const FIELD_CONTROL_REGISTRY = {
     renderer: DataTableColumnSelect,
   },
   multi_combo_box: { kind: "field", type: "custom", renderer: MultiComboBox },
+  multi_input: { kind: "field", type: "custom", renderer: MultiInput },
   filter_query: { kind: "field", type: "custom", renderer: FilterQuery },
   url_preview: { kind: "field", type: "custom", renderer: UrlPreview },
   tags: { kind: "field", type: "custom", renderer: TagsControl },

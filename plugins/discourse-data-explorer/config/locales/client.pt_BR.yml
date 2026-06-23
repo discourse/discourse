@@ -59,6 +59,10 @@ pt_BR:
       undo: "Descartar alterações"
       delete: "Excluir"
       recover: "Desfazer exclusão da consulta"
+      chart:
+        form:
+          label: "Tipo de gráfico"
+          bar: "Barras"
       others_dirty: "Uma consulta tem alterações não salvas que serão perdidas se você sair desta página."
       run_time: "Consulta concluída em %{value} ms."
       result_count:

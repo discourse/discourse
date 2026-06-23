@@ -1345,6 +1345,10 @@ th:
       confirm_title: ดำเนินการต่อไปยัง %{site_name}
       logging_in_as: กำลังเข้าสู่ระบบด้วย %{email}
       confirm_button: เสร็จสิ้นการเข้าสู่ระบบ
+    code_login:
+      email_label: "อีเมล"
+      continue_button: "ดำเนินการต่อ"
+      verify_button: "ดำเนินการต่อ"
     login:
       title: "เข้าสู่ระบบ"
       username: "ชื่อผู้ใช้"
@@ -1749,6 +1753,8 @@ th:
       deleted_post_placeholder: "[ลบ]"
       ignored_post_placeholder: "[ละเว้นแล้ว]"
       pinned_reply: "ปักหมุดแล้ว"
+    share_target:
+      new_message: "ข้อความใหม่"
     topic:
       filter_to:
         other: " %{count} โพสต์ในกระทู้"

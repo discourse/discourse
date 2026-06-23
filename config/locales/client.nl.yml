@@ -2653,6 +2653,10 @@ nl:
       confirm_title: Doorgaan naar %{site_name}
       logging_in_as: Aanmelden als %{email}
       confirm_button: Aanmelding voltooien
+    code_login:
+      email_label: "E-mailadres"
+      continue_button: "Doorgaan"
+      verify_button: "Doorgaan"
     login:
       header_title: "Welkom terug"
       title: "Aanmelden"
@@ -3725,6 +3729,9 @@ nl:
         banner: "Je bekijkt een enkele thread van dit topic."
         view_full_topic: "Volledig topic weergeven"
         view_parent_context: "Bovenliggende context weergeven"
+    share_target:
+      new_topic: "Nieuw topic"
+      new_message: "Nieuw bericht"
     topic:
       filter_to:
         one: "%{count} bericht in topic"
@@ -4569,7 +4576,6 @@ nl:
         site_settings: "Site-instellingen"
       choose_type:
         title: "Kies categorietype"
-        requires_plugin: "Vereist plug-in"
       create_category: "Categorie maken"
       save: "Categorie opslaan"
       unsaved_changes: "Je hebt niet-opgeslagen wijzigingen"

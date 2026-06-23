@@ -5406,6 +5406,8 @@ ru:
   onebox:
     discourse:
       user_joined_community: "Регистрация: %{date}"
+    google_meet:
+      meeting_code: "Код:"
     gitlab:
       truncated_file: "Файл был обрезан."
       show_original: "показать оригинал"

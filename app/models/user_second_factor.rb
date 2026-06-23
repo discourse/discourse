@@ -18,8 +18,12 @@ class UserSecondFactor < ActiveRecord::Base
 
   validate :count_per_user_does_not_exceed_limit, on: :create
 
+  # `passkey` is a virtual method: passkeys live in `user_security_keys`
+  # (factor_type first_factor), never in this table. The enum value exists so
+  # the `second_factor_method` wire param can distinguish the passkey WebAuthn
+  # ceremony (user verification required) from the security key one.
   def self.methods
-    @methods ||= Enum.new(totp: 1, backup_codes: 2, security_key: 3)
+    @methods ||= Enum.new(totp: 1, backup_codes: 2, security_key: 3, passkey: 4)
   end
 
   def totp_object

@@ -2643,6 +2643,10 @@ el:
       confirm_title: Συνεχίστε στην %{site_name}
       logging_in_as: Σύνδεση ως %{email}
       confirm_button: Ολοκληρώστε τη σύνδεση
+    code_login:
+      email_label: "Διεύθυνση Email"
+      continue_button: "Συνεχίστε"
+      verify_button: "Συνεχίστε"
     login:
       header_title: "Καλώς ήρθατε και πάλι"
       title: "Σύνδεση"
@@ -3747,6 +3751,9 @@ el:
         banner: "Βλεπεις ένα μόνο νήμα από αυτό το θέμα."
         view_full_topic: "Προβολή πλήρους θέματος"
         view_parent_context: "Προβολή γονικού περιεχομένου"
+    share_target:
+      new_topic: "Νέο θέμα"
+      new_message: "Νέο μήνυμα"
     topic:
       filter_to:
         one: "%{count} ανάρτηση σε θέμα"
@@ -4578,7 +4585,6 @@ el:
         site_settings: "Ρυθμίσεις ιστότοπου"
       choose_type:
         title: "Επιλέξτε τύπο κατηγορίας"
-        requires_plugin: "Απαιτεί πρόσθετο"
       create_category: "Δημιουργία κατηγορίας"
       save: "Αποθήκευση κατηγορίας"
       unsaved_changes: "Έχετε μη αποθηκευμένες αλλαγές"
@@ -6313,14 +6319,12 @@ el:
             kpi:
               total_searches:
                 label: "Συνολικές αναζητήσεις"
-                tooltip: "Ο αριθμός των αναζητήσεων που πραγματοποιήθηκαν στην κοινότητά σας."
             table:
               term: "Όρος αναζήτησης"
               searches: "Αναζητήσεις"
               status: "Κατάσταση"
             trending:
               title: "Δημοφιλείς αναζητήσεις"
-              tooltip: "Οι πιο δημοφιλείς όροι αναζήτησης."
               empty: "Δεν υπάρχουν αναζητήσεις σε αυτήν την περίοδο."
             content_gaps:
               title: "Κενά περιεχομένου"

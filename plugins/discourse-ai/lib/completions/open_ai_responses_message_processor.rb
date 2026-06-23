@@ -172,7 +172,7 @@ module DiscourseAi::Completions
       item_id = item[:id]
       name = item[:name]
       arguments = item[:arguments] || ""
-      params = arguments.empty? ? {} : JSON.parse(arguments, symbolize_names: true)
+      params = ToolArgumentsParser.parse(arguments)
 
       ToolCall.new(
         id: call_id,
@@ -272,7 +272,7 @@ module DiscourseAi::Completions
     # Parse accumulated @tool_arguments once we have a complete JSON blob
     def process_arguments
       return if @tool_arguments.to_s.empty?
-      parsed = JSON.parse(@tool_arguments, symbolize_names: true)
+      parsed = ToolArgumentsParser.parse(@tool_arguments)
       @tool.parameters = parsed
       @tool.partial = false
       @tool_arguments = nil

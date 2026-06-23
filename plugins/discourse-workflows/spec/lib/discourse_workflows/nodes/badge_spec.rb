@@ -72,6 +72,19 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
           UserBadge.where(user: user, badge: badge).count
         }
       end
+
+      it "raises when granting as the anonymous actor" do
+        config = {
+          "operation" => "grant",
+          "username" => user.username,
+          "badge_id" => badge.id.to_s,
+          "actor_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
+        }
+
+        expect { execute_node(configuration: config, item: item) }.to raise_error(
+          Discourse::InvalidAccess,
+        ).and not_change { UserBadge.count }
+      end
     end
 
     context "with revoke operation" do

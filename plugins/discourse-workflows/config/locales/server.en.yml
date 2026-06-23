@@ -7,6 +7,38 @@ en:
             error_workflow_id:
               cannot_be_self: "cannot be set to the workflow itself"
   discourse_workflows:
+    ai:
+      default_code_node_name: "Code"
+      error_agent_not_configured: "The workflow authoring agent is not configured."
+      error_invalid_mode: "Invalid AI workflow authoring mode."
+      error_invalid_patch: "The AI proposal did not pass workflow validation: %{errors}"
+      error_invalid_response: "AI returned an invalid response."
+      error_invalid_script: "The AI generated Code node JavaScript that did not pass validation. Regenerate the proposal or ask the assistant to fix the script."
+      error_invalid_script_with_errors: "The AI generated Code node JavaScript that did not pass validation: %{errors}. Regenerate the proposal or ask the assistant to fix the script."
+      error_message_required: "Enter a prompt for the workflow assistant."
+      error_message_too_long: "The workflow assistant prompt is too long."
+      error_no_operations: "The AI response did not include any workflow patch operations."
+      error_not_enabled: "AI-assisted workflow authoring is not enabled."
+      error_proposal_not_ready: "This AI proposal is not ready to apply."
+      error_stale_proposal: "The workflow changed after this AI proposal was generated. Regenerate the proposal."
+      clarification_message: "Choose answers so the assistant can continue drafting the workflow."
+      tool_call_proposal_message: "The assistant drafted a workflow patch and the server validated it."
+      tool_call_proposal_summary:
+        one: "The assistant drafted one workflow patch operation. Review it before applying."
+        other: "The assistant drafted %{count} workflow patch operations. Review them before applying."
+      tool_call_proposal_title: "Workflow patch"
+      progress:
+        queued: "Workflow authoring request queued"
+        loading_context: "Loading workflow authoring context"
+        planning: "Asking the workflow authoring agent to draft a response"
+        writing_scripts: "Reviewing generated Code node scripts"
+        validating_scripts: "Validating generated Code node scripts"
+        validating_patch: "Validating workflow patch"
+        drafting_response: "Drafting workflow authoring response"
+        writing_response: "Writing workflow authoring response"
+        using_tool: "Using %{tool}"
+        tool_finished: "Finished %{tool}"
+        summarizing: "Preparing workflow authoring response"
     errors:
       approval_timed_out: "Approval timed out"
       webhook_timed_out: "Webhook timed out"
@@ -34,6 +66,8 @@ en:
       node_does_not_accept_inputs: "%{node} does not accept inputs."
       duplicate_node_names: "Node names must be unique within a workflow. Duplicates: %{names}"
       no_rows_matched_filter: "No rows matched the provided filter."
+      actor:
+        blank: "The user for '%{field}' resolved to a blank value."
       item:
         inconsistent_format_title: "Inconsistent item format"
         inconsistent_format: "Every returned item must use the same format."
@@ -45,6 +79,8 @@ en:
         edit_failed: "Failed to edit post."
         unknown_operation: "Unknown operation: %{operation}."
         invalid_filter: "Invalid post filter fragment: %{fragments}."
+      send_personal_message:
+        no_recipients: "At least one personal message recipient is required."
       credential:
         missing_required_field: "is missing required field '%{field}'"
       wait:
@@ -52,6 +88,9 @@ en:
         invalid_unit: "Invalid wait unit: %{unit}."
         invalid_timeout_unit: "Invalid timeout unit: %{unit}."
         timeout_amount_must_be_positive: "Timeout amount must be greater than 0."
+      modal:
+        no_target_user: "No target user is available for the modal."
+        user_not_found: "User '%{username}' not found."
       topic_tags:
         no_tag_names: "No tag names provided."
         operation_failed: "Tag operation failed: %{errors}"
@@ -72,6 +111,7 @@ en:
         host_required: "URL must include a host."
         credential_required: "Credential is required for authentication mode '%{mode}'."
         exec_ctx_required: "Execution context is required for authentication mode '%{mode}'."
+        header_name_invalid: "Header name contains invalid characters."
       data_table:
         unknown_column: "Unknown column name '%{column}'."
         unknown_operation: "Unknown operation: %{operation}."
@@ -91,3 +131,45 @@ en:
         field_not_found: "The field '%{field}' wasn't found in any input item."
   site_settings:
     discourse_workflows_enabled: "Enable the discourse-workflows plugin."
+    discourse_workflows_ai_authoring_enabled: "Enable AI-assisted workflow authoring."
+    discourse_workflows_ai_authoring_max_prompt_length: "Maximum length for AI workflow authoring prompts."
+    discourse_workflows_ai_authoring_rate_limit_per_minute: "Maximum AI workflow authoring requests per minute per user."
+  discourse_ai:
+    ai_bot:
+      agents:
+        ai_workflow_author:
+          name: "Workflow author"
+          description: "Builds and edits Discourse workflows from natural language"
+      tool_help:
+        workflow_node_catalog: "Lists available workflow nodes and their configuration schema"
+        workflow_ai_agent_catalog: "Lists existing Discourse AI agents that workflow drafts can reuse"
+        workflow_graph_context: "Describes the current workflow graph"
+        workflow_validate_patch: "Dry-runs and validates workflow patch operations"
+        workflow_ask_questions: "Asks the workflow admin to choose clarification answers"
+        workflow_authoring_result: "Returns the final workflow authoring result"
+        workflow_resolve_entity: "Resolves Discourse names to workflow parameter values"
+        search_chat_channels: "Searches chat channel names and IDs for workflow parameters"
+        workflow_script_context: "Returns context for writing workflow Code node JavaScript"
+        workflow_validate_script: "Validates workflow Code node JavaScript"
+      tool_summary:
+        workflow_node_catalog: "Reading workflow node catalog"
+        workflow_ai_agent_catalog: "Reading AI agent catalog"
+        workflow_graph_context: "Reading workflow graph"
+        workflow_validate_patch: "Validating workflow patch"
+        workflow_ask_questions: "Asking clarification questions"
+        workflow_authoring_result: "Returning workflow authoring result"
+        workflow_resolve_entity: "Resolving Discourse entities"
+        search_chat_channels: "Searching chat channels"
+        workflow_script_context: "Loading script context"
+        workflow_validate_script: "Validating script"
+      tool_description:
+        workflow_node_catalog: "Read workflow node catalog"
+        workflow_ai_agent_catalog: "Read AI agent catalog"
+        workflow_graph_context: "Read workflow graph"
+        workflow_validate_patch: "Validated workflow patch"
+        workflow_ask_questions: "Asked clarification questions"
+        workflow_authoring_result: "Returned workflow authoring result"
+        workflow_resolve_entity: "Resolved Discourse entities"
+        search_chat_channels: "Searched chat channels"
+        workflow_script_context: "Loaded script context"
+        workflow_validate_script: "Validated script"

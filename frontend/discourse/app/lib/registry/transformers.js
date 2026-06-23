@@ -9,6 +9,8 @@
  */
 // eslint-discourse keep-array-sorted
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
+  "apply-local-dates",
+  "category-visibility-change",
   "composer-actions-on-select",
   "composer-position:correct-scroll-position",
   "composer-position:editor-touch-move",
@@ -46,6 +48,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "category-display-name",
   "category-sort-orders",
   "category-text-color",
+  "category-visibility-private-locked",
   "composer-actions-content",
   "composer-editor-quoted-post-avatar-template",
   "composer-editor-reply-placeholder",
@@ -104,6 +107,8 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "post-small-action-class",
   "post-small-action-custom-component",
   "post-small-action-icon",
+  "post-user-display-name",
+  "post-user-display-username",
   "poster-name-class",
   "poster-name-icons",
   "poster-name-user-title",

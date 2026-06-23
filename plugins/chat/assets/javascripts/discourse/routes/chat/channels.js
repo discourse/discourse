@@ -11,8 +11,8 @@ export default class ChatChannelsRoute extends DiscourseRoute {
   }
 
   beforeModel() {
-    const id = this.currentUser.custom_fields.last_chat_channel_id;
-    if (this.site.desktopView) {
+    const id = this.currentUser?.custom_fields?.last_chat_channel_id;
+    if (this.site.desktopView && this.currentUser) {
       if (id) {
         this.chatChannelsManager.find(id).then((c) => {
           return this.router.replaceWith("chat.channel", ...c.routeModels);

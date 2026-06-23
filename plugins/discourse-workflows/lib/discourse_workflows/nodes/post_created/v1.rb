@@ -96,7 +96,7 @@ module DiscourseWorkflows
         end
 
         def output
-          { post: post_data(@post), topic: topic_data(@post.topic) }
+          { post: post_data(@post), topic: topic_data(@post.topic), user: user_data(@post.user) }
         end
 
         def matches?(trigger_ctx)
@@ -120,6 +120,10 @@ module DiscourseWorkflows
 
         def topic_data(topic)
           serialize_record(topic, TopicListItemSerializer)
+        end
+
+        def user_data(user)
+          serialize_user(user)
         end
 
         def matches_topic_type?(topic, topic_type)

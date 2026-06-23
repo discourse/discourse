@@ -7,12 +7,13 @@ import { getWebauthnCredential } from "discourse/lib/webauthn";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
-const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
+const { TOTP, BACKUP_CODE, SECURITY_KEY, PASSKEY } = SECOND_FACTOR_METHODS;
 
 export default class SecondFactorAuthController extends Controller {
   TOTP = TOTP;
   BACKUP_CODE = BACKUP_CODE;
   SECURITY_KEY = SECURITY_KEY;
+  PASSKEY = PASSKEY;
   queryParams = ["nonce"];
   message = null;
   loadError = false;
@@ -31,21 +32,14 @@ export default class SecondFactorAuthController extends Controller {
     return this.model?.backup_enabled;
   }
 
-  @computed("model.security_keys_enabled", "model.passkeys_enabled")
+  @computed("model.security_keys_enabled")
   get securityKeysEnabled() {
-    return this.model?.security_keys_enabled || this.model?.passkeys_enabled;
+    return this.model?.security_keys_enabled;
   }
 
   @computed("model.passkeys_enabled")
   get passkeysEnabled() {
     return this.model?.passkeys_enabled;
-  }
-
-  @computed("passkeysEnabled")
-  get securityKeyAuthenticateLabel() {
-    return this.passkeysEnabled
-      ? "login.security_key_or_passkey_authenticate"
-      : "login.security_key_authenticate";
   }
 
   @computed("model.allowed_methods")
@@ -66,6 +60,11 @@ export default class SecondFactorAuthController extends Controller {
   @computed("shownSecondFactorMethod")
   get showSecurityKeyForm() {
     return this.shownSecondFactorMethod === SECURITY_KEY;
+  }
+
+  @computed("shownSecondFactorMethod")
+  get showPasskeyForm() {
+    return this.shownSecondFactorMethod === PASSKEY;
   }
 
   @computed("shownSecondFactorMethod")
@@ -90,8 +89,14 @@ export default class SecondFactorAuthController extends Controller {
     );
   }
 
+  @computed("allowedMethods.[]", "passkeysEnabled")
+  get passkeysAvailable() {
+    return this.passkeysEnabled && this.allowedMethods.includes(PASSKEY);
+  }
+
   @computed(
     "userSelectedMethod",
+    "passkeysAvailable",
     "securityKeysAvailable",
     "totpAvailable",
     "backupCodesAvailable"
@@ -100,7 +105,9 @@ export default class SecondFactorAuthController extends Controller {
     if (this.userSelectedMethod !== null) {
       return this.userSelectedMethod;
     } else {
-      if (this.securityKeysAvailable) {
+      if (this.passkeysAvailable) {
+        return PASSKEY;
+      } else if (this.securityKeysAvailable) {
         return SECURITY_KEY;
       } else if (this.totpAvailable) {
         return TOTP;
@@ -114,12 +121,21 @@ export default class SecondFactorAuthController extends Controller {
 
   @computed(
     "shownSecondFactorMethod",
+    "passkeysAvailable",
     "securityKeysAvailable",
     "totpAvailable",
     "backupCodesAvailable"
   )
   get alternativeMethods() {
     const alts = [];
+    if (this.passkeysAvailable && this.shownSecondFactorMethod !== PASSKEY) {
+      alts.push({
+        id: PASSKEY,
+        translationKey: "login.second_factor_toggle.passkey",
+        class: "passkey",
+      });
+    }
+
     if (
       this.securityKeysAvailable &&
       this.shownSecondFactorMethod !== SECURITY_KEY
@@ -160,20 +176,22 @@ export default class SecondFactorAuthController extends Controller {
         return i18n("login.second_factor_title");
       case SECURITY_KEY:
         return i18n("login.second_factor_title");
+      case PASSKEY:
+        return i18n("login.second_factor_title");
       case BACKUP_CODE:
         return i18n("login.second_factor_backup_title");
     }
   }
 
-  @computed("shownSecondFactorMethod", "passkeysEnabled")
+  @computed("shownSecondFactorMethod")
   get secondFactorDescription() {
     switch (this.shownSecondFactorMethod) {
       case TOTP:
         return i18n("login.second_factor_description");
       case SECURITY_KEY:
-        return this.passkeysEnabled
-          ? i18n("login.security_key_or_passkey_description")
-          : i18n("login.security_key_description");
+        return i18n("login.security_key_description");
+      case PASSKEY:
+        return i18n("login.passkey_2fa_description");
       case BACKUP_CODE:
         return i18n("login.second_factor_backup_description");
     }
@@ -207,9 +225,9 @@ export default class SecondFactorAuthController extends Controller {
   }
 
   maybeAutoTriggerPasskey() {
-    if (this.passkeysEnabled && !this.autoTriggeredPasskey) {
+    if (this.passkeysAvailable && !this.autoTriggeredPasskey) {
       this.set("autoTriggeredPasskey", true);
-      this.authenticateSecurityKey({ silent: true });
+      this.authenticatePasskey({ silent: true });
     }
   }
 
@@ -263,11 +281,26 @@ export default class SecondFactorAuthController extends Controller {
   }
 
   @action
-  authenticateSecurityKey(options = {}) {
-    const silent = options?.silent === true;
+  authenticateSecurityKey() {
     getWebauthnCredential(
       this.model.challenge,
       this.model.allowed_credential_ids,
+      (credentialData) => {
+        this.verifySecondFactor({ second_factor_token: credentialData });
+      },
+      (errorMessage) => {
+        this.displayError(errorMessage);
+      },
+      { userVerification: "discouraged" }
+    );
+  }
+
+  @action
+  authenticatePasskey(options = {}) {
+    const silent = options?.silent === true;
+    getWebauthnCredential(
+      this.model.challenge,
+      this.model.passkey_allowed_credential_ids,
       (credentialData) => {
         this.verifySecondFactor({ second_factor_token: credentialData });
       },
@@ -276,7 +309,7 @@ export default class SecondFactorAuthController extends Controller {
           this.displayError(errorMessage);
         }
       },
-      { userVerification: this.passkeysEnabled ? "preferred" : "discouraged" }
+      { userVerification: "required" }
     );
   }
 

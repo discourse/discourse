@@ -2547,6 +2547,10 @@ zh_CN:
       confirm_title: 继续访问 %{site_name}
       logging_in_as: 以 %{email} 登录
       confirm_button: 完成登录
+    code_login:
+      email_label: "电子邮件"
+      continue_button: "继续"
+      verify_button: "继续"
     login:
       header_title: "欢迎回来"
       title: "登录"
@@ -2563,10 +2567,8 @@ zh_CN:
       second_factor_backup_description: "请输入您的备份代码之一："
       second_factor: "使用身份验证器应用登录"
       security_key_description: "当您准备好实物安全密钥或兼容的移动设备后，请按下面的“使用安全密钥进行身份验证”按钮。"
-      security_key_or_passkey_description: "准备好安全密钥、通行密钥或兼容的移动设备后，请按下面的按钮。"
       security_key_alternative: "尝试另一种方式"
       security_key_authenticate: "使用安全密钥进行身份验证"
-      security_key_or_passkey_authenticate: "使用安全密钥或通行密钥进行身份验证"
       security_key_not_allowed_error: "安全密钥身份验证过程超时或被取消。"
       security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
       security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
@@ -3633,6 +3635,9 @@ zh_CN:
         banner: "您正在查看的是此话题中的单个消息串。"
         view_full_topic: "查看完整话题"
         view_parent_context: "查看父上下文"
+    share_target:
+      new_topic: "新建话题"
+      new_message: "新建消息"
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"
@@ -4425,6 +4430,11 @@ zh_CN:
         tag_group: "标签群组"
       topic_featured_link_allowed: "在此类别中允许精选链接"
       delete: "删除类别"
+      danger_zone:
+        title: "危险区域"
+        delete_title: "删除此类别"
+        delete_description: "删除后，此类别及其设置将无法恢复。其中的话题需要事先重新分配。"
+        delete_title_forbidden: "无法删除此类别"
       create: "新建类别"
       create_with_type: "新建%{typeName}类别"
       create_long: "创建新类别"
@@ -4435,7 +4445,6 @@ zh_CN:
         site_settings: "站点设置"
       choose_type:
         title: "选择类别类型"
-        requires_plugin: "需要插件"
       create_category: "创建类别"
       save: "保存类别"
       unsaved_changes: "您有未保存的更改"
@@ -6260,14 +6269,28 @@ zh_CN:
               new_members: "新成员"
               returning: "返回"
               staff: "管理人员"
+              empty: "所选时间段内没有帖子。"
             trust_level_pipeline:
+              title: "信任级别变化"
               trust_levels:
                 "0": "新"
                 "1": "基本用户"
                 "2": "成员"
                 "3": "常规"
                 "4": "领导者"
+              trend:
+                climbing:
+                  other: "+%{count} 升级"
+                dropping:
+                  other: "-%{count} 降级"
+              moves_in_aria:
+                other: "%{count} 成员升级"
+              moves_out_aria:
+                other: "%{count} 成员降级"
+              stable_aria: "不变"
             headline:
+              healthy_growth:
+                title: "成员们正在养成回来的习惯。"
               metrics:
                 new_signups: "新注册用户"
                 dau_mau: "日活跃用户（DAU）/月活跃用户（MAU）粘性"

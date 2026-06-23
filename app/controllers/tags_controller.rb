@@ -519,6 +519,7 @@ class TagsController < ::ApplicationController
     tag = tag.target_tag if tag.target_tag_id.present?
 
     url = tag.url
+    url += tag_edit_path_suffix
     url += "/l/#{filter}" if filter.present?
 
     if @filter_on_category
@@ -557,6 +558,13 @@ class TagsController < ::ApplicationController
 
   def ensure_tags_enabled
     raise Discourse::NotFound unless SiteSetting.tagging_enabled?
+  end
+
+  def tag_edit_path_suffix
+    return "/edit/#{params[:tab]}" if params[:tab].present?
+    return "/edit" if request.path.delete_prefix(Discourse.base_path).end_with?("/edit")
+
+    ""
   end
 
   def self.tag_counts_json(tags, guardian)

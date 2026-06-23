@@ -3,6 +3,19 @@ plugins:
     default: false
     client: true
     hidden: true
+  discourse_workflows_ai_authoring_enabled:
+    default: false
+    client: true
+  discourse_workflows_ai_authoring_max_prompt_length:
+    default: 4000
+    min: 1
+    max: 20000
+    hidden: true
+  discourse_workflows_ai_authoring_rate_limit_per_minute:
+    default: 10
+    min: 1
+    max: 100
+    hidden: true
   discourse_workflows_max_executions_per_minute:
     default: 20
     hidden: true

@@ -38,6 +38,25 @@ RSpec.describe "Ideas Category Type Setup" do
     expect(Category.can_vote?(category.id)).to eq(true)
   end
 
+  it "can remove the ideas type picked on the setup screen while creating a category" do
+    visit("/new-category/setup")
+    category_type_card.find_type_card("ideas").click
+    expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "ideas"))
+
+    form.field("name").fill_in("No longer ideas")
+
+    category_page.toggle_advanced_settings
+
+    category_type_selector = PageObjects::Components::DMenu.new(".category-type-selector")
+    category_type_selector.remove_selected_option("Ideas")
+    banner.click_save
+
+    expect(page).to have_no_css(".d-nav-submenu__tabs .edit-category-ideas")
+    category = Category.find_by(name: "No longer ideas")
+    expect(category.category_types.keys).to eq(%i[discussion])
+    expect(Category.can_vote?(category.id)).to eq(false)
+  end
+
   context "when the ideas category type setup is disabled" do
     before { SiteSetting.enable_ideas_category_type_setup = false }
 

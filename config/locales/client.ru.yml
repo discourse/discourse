@@ -2904,6 +2904,10 @@ ru:
       confirm_title: Перейти на %{site_name}
       logging_in_as: Войти как %{email}
       confirm_button: Завершить вход
+    code_login:
+      email_label: "Эл. почта"
+      continue_button: "Продолжить"
+      verify_button: "Продолжить"
     login:
       header_title: "С возвращением!"
       title: "Войти"
@@ -3995,6 +3999,9 @@ ru:
       pinned_reply: "Закреплена"
       pin_reply: "Закрепить вверху"
       unpin_reply: "Открепить"
+    share_target:
+      new_topic: "Новая тема"
+      new_message: "Личное сообщение"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -4909,7 +4916,6 @@ ru:
         site_settings: "Настройки сайта"
       choose_type:
         title: "Выберите тип категории"
-        requires_plugin: "Требуется плагин"
       create_category: "Создать категорию"
       save: "Сохранить категорию"
       unsaved_changes: "У вас есть несохраненные изменения"

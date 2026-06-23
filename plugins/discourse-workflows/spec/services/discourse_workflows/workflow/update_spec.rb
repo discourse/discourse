@@ -3,8 +3,19 @@
 RSpec.describe DiscourseWorkflows::Workflow::Update do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:workflow_id) }
-    it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_length_of(:name).is_at_most(100) }
+
+    it "allows name to be omitted" do
+      contract = described_class.new(workflow_id: 1, nodes: [], connections: {})
+
+      expect(contract).to be_valid
+    end
+
+    it "requires name to be present when provided" do
+      contract = described_class.new(workflow_id: 1, name: "")
+
+      expect(contract).not_to be_valid
+    end
   end
 
   describe ".call" do

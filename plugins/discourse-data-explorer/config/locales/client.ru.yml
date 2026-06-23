@@ -79,6 +79,10 @@ ru:
       undo: "Отменить изменения"
       delete: "Удалить"
       sql_label: "SQL"
+      chart:
+        form:
+          label: "Тип диаграммы"
+          bar: "Гистограмма"
       export_as:
         label: "Экспортировать как…"
         results_json: "Результаты (JSON)"

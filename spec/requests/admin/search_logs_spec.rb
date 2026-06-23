@@ -27,6 +27,26 @@ RSpec.describe Admin::SearchLogsController do
       before { sign_in(admin) }
 
       include_examples "search logs accessible"
+
+      it "counts both anonymous and logged-in members' searches by default" do
+        Fabricate(:search_log, term: "discobot", user: user)
+        Fabricate.times(2, :search_log, term: "discobot")
+
+        get "/admin/logs/search_logs.json"
+
+        row = response.parsed_body.find { |entry| entry["term"] == "discobot" }
+        expect(row["searches"]).to eq(3)
+      end
+
+      it "counts only logged-in members' searches with the logged_in_only search type" do
+        Fabricate(:search_log, term: "discobot", user: user)
+        Fabricate.times(2, :search_log, term: "discobot")
+
+        get "/admin/logs/search_logs.json", params: { search_type: "logged_in_only" }
+
+        row = response.parsed_body.find { |entry| entry["term"] == "discobot" }
+        expect(row["searches"]).to eq(1)
+      end
     end
 
     context "when logged in as a moderator" do
@@ -64,6 +84,21 @@ RSpec.describe Admin::SearchLogsController do
       before { sign_in(admin) }
 
       include_examples "search log term accessible"
+
+      it "excludes anonymous searches from the graph with the logged_in_only search type" do
+        Fabricate(:search_log, term: "discobot", user: user)
+        Fabricate.times(4, :search_log, term: "discobot")
+
+        get "/admin/logs/search_logs/term.json", params: { term: "discobot" }
+        expect(response.parsed_body["term"]["data"].sum { |point| point["y"] }).to eq(5)
+
+        get "/admin/logs/search_logs/term.json",
+            params: {
+              term: "discobot",
+              search_type: "logged_in_only",
+            }
+        expect(response.parsed_body["term"]["data"].sum { |point| point["y"] }).to eq(1)
+      end
     end
 
     context "when logged in as a moderator" do
