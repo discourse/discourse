@@ -81,6 +81,32 @@ RSpec.describe Compression::Engine do
         end
       end
 
+      it "skips symlink entries when decompressing zip files" do
+        FileUtils.rm_rf(temp_folder)
+        FileUtils.mkdir(temp_folder)
+
+        source_dir = "#{temp_folder}/source"
+        FileUtils.mkdir(source_dir)
+        File.write("#{source_dir}/real-file", "real file")
+        File.symlink("#{source_dir}/real-file", "#{source_dir}/symlink-entry")
+
+        zip_file = "#{temp_folder}/theme.zip"
+        Zip::File.open(zip_file, create: true) do |zipfile|
+          zipfile.get_output_stream("child-file") { |f| f.write("child file") }
+          zipfile.add("symlink-entry", "#{source_dir}/symlink-entry")
+        end
+        FileUtils.rm_rf(source_dir)
+
+        extract_location = "#{temp_folder}/extract_location"
+        FileUtils.mkdir(extract_location)
+        engine = described_class.engine_for(zip_file)
+        engine.decompress(extract_location, zip_file, available_size)
+
+        expect(read_file("extract_location/child-file")).to eq("child file")
+        expect(File.exist?("#{extract_location}/symlink-entry")).to eq(false)
+        expect(File.symlink?("#{extract_location}/symlink-entry")).to eq(false)
+      end
+
       it "decompresses into symlinked directory" do
         real_location = "#{temp_folder}/extract_location"
         extract_location = "#{temp_folder}/is/symlinked"
