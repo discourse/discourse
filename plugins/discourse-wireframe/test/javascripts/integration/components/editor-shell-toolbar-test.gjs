@@ -210,5 +210,73 @@ module(
         .dom(".wireframe-review__change-counts")
         .exists("with a change summary");
     });
+
+    test("a draft edited back to match the published layout is still saveable", async function (assert) {
+      // Code layer (the "published" baseline) is one Heading "Title". Seed a saved
+      // draft that adds a second block, so the hydrated draft differs from it.
+      this.editor.exit();
+      pretender.get(DRAFTS_URL, () =>
+        response({
+          drafts: [
+            {
+              theme_id: 5,
+              outlet: OUTLET,
+              data: JSON.stringify({
+                schema_version: 1,
+                layout: [
+                  { block: "heading", args: { text: "Title" } },
+                  { block: "heading", args: { text: "Extra" } },
+                ],
+              }),
+              base_version_token: "",
+            },
+          ],
+        })
+      );
+      this.editor.enter({ themeId: 5 });
+      await render(<template><EditorShell /></template>);
+
+      assert.strictEqual(
+        outletChildren(this.editor).length,
+        2,
+        "the saved draft hydrated with two blocks"
+      );
+
+      // Delete the extra block so the canvas now matches the published one-block
+      // layout — but the persisted draft still has two blocks.
+      const extra = outletChildren(this.editor)[1];
+      this.editor.removeBlock(`heading:${extra.__stableKey}`);
+      await settled();
+
+      assert.strictEqual(
+        outletChildren(this.editor).length,
+        1,
+        "back to the published one-block layout"
+      );
+      assert.true(
+        this.editor.hasUnsavedDraftEdits,
+        "the persisted draft still differs from the canvas, so there are unsaved draft edits"
+      );
+      assert
+        .dom(".wireframe-btn-save")
+        .isNotDisabled("Save stays enabled so the draft can be updated");
+
+      // Saving must actually write the draft (not silently no-op) and then read
+      // clean.
+      let drafted = false;
+      pretender.post(DRAFTS_URL, () => {
+        drafted = true;
+        return response({ success: true });
+      });
+
+      await click(".wireframe-btn-save");
+      await click(".wireframe-review__save-draft");
+
+      assert.true(drafted, "Save draft writes the updated draft to the server");
+      assert.false(
+        this.editor.hasUnsavedDraftEdits,
+        "after saving, the draft baseline matches the canvas"
+      );
+    });
   }
 );

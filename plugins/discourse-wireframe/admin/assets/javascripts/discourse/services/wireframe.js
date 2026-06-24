@@ -484,6 +484,20 @@ export default class WireframeService extends Service {
   #originalLayouts = new Map();
 
   /**
+   * The serialized layout of each outlet's last *persisted draft* — set when a
+   * saved draft is hydrated on entry and after each successful draft save, and
+   * cleared when the draft is discarded, reset, or published. This is the
+   * baseline for "are there unsaved draft edits?" — distinct from `#originalLayouts`
+   * (the published/at-entry layout used for discard and the publish-diff). It
+   * lets the editor tell "the canvas differs from my saved draft" even when the
+   * canvas happens to match the published layout. A `trackedMap` so the
+   * `hasUnsavedDraftEdits` getter re-evaluates when a baseline changes.
+   *
+   * @type {Map<string, string>}
+   */
+  #persistedDraftLayouts = trackedMap();
+
+  /**
    * Bumped on every `enter()` and `exit()`. The async draft hydration captures
    * the value at `enter()` time and bails if it no longer matches — so a
    * hydration whose fetch resolves after the user exited (or re-entered) never
@@ -586,15 +600,6 @@ export default class WireframeService extends Service {
    * @type {{entry: Object, mode: "copy"|"cut"}|null}
    */
   @tracked _clipboard = null;
-
-  /**
-   * Whether the current in-memory edits are already captured in a saved draft.
-   * Flipped false by any edit (through the structural + arg write chokepoints)
-   * and true by a successful `saveAllEditedDrafts`. Backs `hasUnsavedDraftEdits`,
-   * which the toolbar reads to disable Save draft until the next change.
-   * `_`-prefixed: decorated state accessed only within this service.
-   */
-  @tracked _draftReflectsEdits = false;
 
   constructor() {
     super(...arguments);
@@ -710,15 +715,71 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Whether there are in-memory edits not yet written to a draft. True after an
-   * edit, false right after a successful Save draft (until the next edit) and
-   * whenever nothing is edited. The toolbar's Save draft is gated on this so it
-   * disables once the current edits are safely drafted.
+   * Whether any outlet's current layout differs from its last persisted draft —
+   * i.e. there are edits that Save draft would write. Computed by comparing the
+   * resolved layout against the persisted-draft baseline (or, for an outlet with
+   * no saved draft yet, the published/underlying layout). Deliberately NOT derived
+   * from `isDirty`: an outlet edited back to match the *published* layout drops out
+   * of the published-diff bookkeeping, yet its *saved draft* still differs and must
+   * remain saveable.
    *
    * @returns {boolean}
    */
   get hasUnsavedDraftEdits() {
-    return this.isDirty && !this._draftReflectsEdits;
+    const outlets = new Set([
+      ...this.#editedOutletNames(),
+      ...this.#persistedDraftLayouts.keys(),
+    ]);
+    for (const outletName of outlets) {
+      if (this.#outletHasUnsavedDraftEdits(outletName)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Whether the toolbar's Save control should be enabled — there is something to
+   * publish (`isDirty`, i.e. the canvas differs from the published layout) OR an
+   * unsaved draft change to write. The two are distinct: a draft reverted to match
+   * the published layout is not publishable but still has a draft to save.
+   *
+   * @returns {boolean}
+   */
+  get canOpenReview() {
+    return this.isDirty || this.hasUnsavedDraftEdits;
+  }
+
+  /**
+   * Whether one outlet's current layout differs from the state Save draft would
+   * have persisted: its last saved draft when one exists, otherwise the published
+   * (underlying-layer) layout.
+   *
+   * @param {string} outletName
+   * @returns {boolean}
+   */
+  #outletHasUnsavedDraftEdits(outletName) {
+    const current = this.#serializeBaseline(
+      this.readResolvedLayout(outletName)
+    );
+    const baseline = this.#persistedDraftLayouts.has(outletName)
+      ? this.#persistedDraftLayouts.get(outletName)
+      : this.#serializeBaseline(
+          this.readResolvedLayout(outletName, { ignoreSessionDraft: true })
+        );
+    return current !== baseline;
+  }
+
+  /**
+   * Canonical serialization of a resolved layout for baseline comparison — the
+   * same shape a draft/publish would persist, so two layouts that would save
+   * identically compare equal regardless of in-memory identity (`__stableKey`).
+   *
+   * @param {Array<Object>|null} layout
+   * @returns {string}
+   */
+  #serializeBaseline(layout) {
+    return JSON.stringify(serializeLayoutForSave(layout ?? []));
   }
 
   /** @returns {boolean} */
@@ -1062,8 +1123,6 @@ export default class WireframeService extends Service {
       return;
     }
     this.isActive = true;
-    // Fresh session: no edits, nothing drafted yet.
-    this._draftReflectsEdits = false;
     // New session generation: invalidates any draft hydration still in flight
     // from a previous enter/exit so it can't write into this session.
     const generation = ++this.#enterGeneration;
@@ -1218,6 +1277,7 @@ export default class WireframeService extends Service {
     this.#pendingArgs.clear();
     this.editedOutlets.clear();
     this.#originalLayouts.clear();
+    this.#persistedDraftLayouts.clear();
     this.#structurallyEditedOutlets.clear();
     this.#forceExpandedKeys.clear();
     // Clear every editor body class, including the chrome's collapse / dim
@@ -2455,6 +2515,7 @@ export default class WireframeService extends Service {
   @action
   async discardOutlet(outletName) {
     this.#rollbackOutletInMemory(outletName);
+    this.#persistedDraftLayouts.delete(outletName);
     // Drop the outlet's own undo/redo history so a later undo can't resurrect a
     // draft we just discarded.
     this.#dropUndoEntriesForOutlet(outletName);
@@ -2512,6 +2573,7 @@ export default class WireframeService extends Service {
     _clearLayoutLayer(outletName, LAYOUT_LAYERS.SESSION_DRAFT);
     this.draftedOutlets.delete(outletName);
     this.#originalLayouts.delete(outletName);
+    this.#persistedDraftLayouts.delete(outletName);
     for (const [entry] of this.initialSnapshots) {
       if (this.#outletForEntry(entry) === outletName) {
         this.initialSnapshots.delete(entry);
@@ -2555,18 +2617,27 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Saves every edited outlet as a private draft — the toolbar's global Save
-   * draft. Drafts never go live, so each outlet stays edited afterwards.
-   * Mirrors `discardAll`'s batch shape over the per-outlet `saveDraftOutlet`; a
-   * per-outlet failure (e.g. an unreadable layout) is collected rather than
-   * thrown, so one bad outlet doesn't abort drafting the rest.
+   * Saves every outlet with unsaved draft edits as a private draft — the toolbar's
+   * global Save draft. Drafts never go live. Iterates the outlets whose current
+   * layout differs from their persisted draft (not just the published-diff set):
+   * an outlet edited back to match the published layout is dropped from the
+   * published-diff bookkeeping but its saved draft still differs, so it must be
+   * written. A per-outlet failure is collected rather than thrown, so one bad
+   * outlet doesn't abort drafting the rest.
    *
    * @returns {Promise<string|null>} a banner message listing any failures, or null on success.
    */
   @action
   async saveAllEditedDrafts() {
     const errors = [];
-    for (const outletName of this.#editedOutletNames()) {
+    const outlets = new Set([
+      ...this.#editedOutletNames(),
+      ...this.#persistedDraftLayouts.keys(),
+    ]);
+    for (const outletName of outlets) {
+      if (!this.#outletHasUnsavedDraftEdits(outletName)) {
+        continue;
+      }
       try {
         await this.saveDraftOutlet(outletName);
       } catch (error) {
@@ -2574,9 +2645,8 @@ export default class WireframeService extends Service {
       }
     }
     if (errors.length === 0) {
-      // Every edited outlet is now persisted; the toolbar disables Save draft
-      // until the next change.
-      this._draftReflectsEdits = true;
+      // Every saved outlet advanced its draft baseline, so Save draft reads as
+      // clean until the next change.
       return null;
     }
     return errors.join("; ");
@@ -2592,6 +2662,12 @@ export default class WireframeService extends Service {
   @action
   async saveDraftOutlet(outletName) {
     await this.wireframeDrafts.saveDraftOutlet(this.activeThemeId, outletName);
+    // The persisted draft now matches the canvas — advance the baseline so the
+    // outlet reads as having no unsaved draft edits until the next change.
+    this.#persistedDraftLayouts.set(
+      outletName,
+      this.#serializeBaseline(this.readResolvedLayout(outletName))
+    );
   }
 
   /**
@@ -2700,6 +2776,8 @@ export default class WireframeService extends Service {
     }
     this.#structurallyEditedOutlets.delete(outletName);
     this.editedOutlets.delete(outletName);
+    // Publishing deletes the server-side draft, so its baseline no longer applies.
+    this.#persistedDraftLayouts.delete(outletName);
   }
 
   /**
@@ -2867,8 +2945,6 @@ export default class WireframeService extends Service {
       }
     }
     revalidateEntryStamps(entry, { owner: getOwner(this) });
-    // An arg write (live edit, undo, or redo) makes the saved draft stale.
-    this._draftReflectsEdits = false;
   }
 
   /**
@@ -4034,8 +4110,6 @@ export default class WireframeService extends Service {
     this.editedOutlets.add(outletName);
     this.#structurallyEditedOutlets.add(outletName);
     this.structuralVersion++;
-    // A new structural edit means the saved draft (if any) is now stale.
-    this._draftReflectsEdits = false;
   }
 
   /**
@@ -4640,13 +4714,10 @@ export default class WireframeService extends Service {
       }
     }
 
-    // The re-seeded outlets already match their saved drafts, so unless a live
-    // edit landed during the fetch the editor opens with nothing new to save —
-    // keep Save draft disabled until the next change.
-    if (applied.length > 0 && this.#allEditsAreDraftBacked(applied)) {
-      this._draftReflectsEdits = true;
-    }
-
+    // Each re-seeded outlet recorded its draft baseline in `#applyDraftToOutlet`,
+    // so it reads as having no unsaved draft edits until the next change; an outlet
+    // touched by a live edit during the fetch has no baseline and is compared
+    // against the published layout instead, so a genuine edit stays saveable.
     await this.#flushStaleDraftQueue(generation);
   }
 
@@ -4674,6 +4745,12 @@ export default class WireframeService extends Service {
     this.#recordOutletRoot(outlet);
     this.editedOutlets.add(outlet);
     this.#structurallyEditedOutlets.add(outlet);
+    // Record what the saved draft holds, so an edit that returns the canvas to the
+    // published layout is still recognized as differing from the persisted draft.
+    this.#persistedDraftLayouts.set(
+      outlet,
+      this.#serializeBaseline(this.readResolvedLayout(outlet))
+    );
   }
 
   /**
@@ -4691,25 +4768,6 @@ export default class WireframeService extends Service {
       this.#pendingArgs.size === 0 &&
       this.inlineEdit.blockKey == null
     );
-  }
-
-  /**
-   * Whether every currently-edited outlet's dirtiness comes from a draft just
-   * re-seeded on entry (vs. a live edit the user made during the draft fetch).
-   * Guards the "open with a saved draft starts clean" behaviour so it never
-   * masks a genuine unsaved edit.
-   *
-   * @param {Array<string>} appliedOutlets - outlets re-seeded from a saved draft this pass.
-   * @returns {boolean}
-   */
-  #allEditsAreDraftBacked(appliedOutlets) {
-    const applied = new Set(appliedOutlets);
-    for (const outlet of this.#editedOutletNames()) {
-      if (!applied.has(outlet)) {
-        return false;
-      }
-    }
-    return true;
   }
 
   /**

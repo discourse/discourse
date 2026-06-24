@@ -192,7 +192,7 @@ export default class EditorShell extends Component {
               class="btn-primary wireframe-btn-save"
               @icon="cloud-arrow-up"
               @label="wireframe.review.open"
-              @disabled={{unless this.wireframe.isDirty true}}
+              @disabled={{unless this.wireframe.canOpenReview true}}
               @action={{this.wireframe.openReviewDrawer}}
             />
             <DButton
