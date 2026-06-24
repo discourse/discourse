@@ -966,48 +966,6 @@ body.wireframe-active {
   }
 }
 
-/* The toolbar primary is a split button: Save draft + a Publish menu. The two
-   segments share a seam so they read as one primary control. */
-
-.wireframe-btn-save {
-  display: inline-flex;
-  align-items: stretch;
-
-  .wireframe-btn-save-draft {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-
-  .wireframe-btn-publish-menu {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-left: 1px solid var(--primary-low);
-  }
-}
-
-/* Transient "Saved ✓" confirmation shown on the primary after a draft save.
-   The 2s animation doubles as the timer: on `animationend` the label reverts to
-   "Save draft" (the button itself stays disabled until the next edit). */
-
-.wireframe-btn-save-draft.--just-saved {
-  animation: wireframe-draft-saved 2s ease-out forwards;
-
-  .d-icon {
-    color: var(--success);
-  }
-}
-
-@keyframes wireframe-draft-saved {
-  0%,
-  70% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0.7;
-  }
-}
-
 .wireframe-btn-warnings {
   display: inline-flex;
   align-items: center;
@@ -1055,36 +1013,6 @@ body.wireframe-active {
         margin-right: 0.5rem;
         color: var(--primary-medium);
       }
-    }
-  }
-}
-
-.wireframe-save-error {
-  grid-column: 1 / -1;
-  grid-row: 2;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 1rem;
-  background: var(--danger-low);
-  color: var(--danger);
-  border-bottom: 1px solid var(--danger);
-  font-size: var(--font-down-1);
-
-  .wireframe-save-error__icon .d-icon {
-    color: var(--danger);
-  }
-
-  .wireframe-save-error__message {
-    flex: 1;
-    overflow-wrap: anywhere;
-  }
-
-  .wireframe-save-error__dismiss {
-    flex-shrink: 0;
-
-    .d-icon {
-      color: var(--danger);
     }
   }
 }
@@ -1877,34 +1805,6 @@ body.wireframe-active {
     background: var(--tertiary-low);
     color: var(--tertiary);
   }
-}
-
-.wireframe-inspector__outlet-verbs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-.wireframe-inspector__outlet-git {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 0.5rem;
-  border: 1px solid var(--primary-low);
-  border-radius: 4px;
-  background: var(--primary-very-low);
-}
-
-.wireframe-inspector__outlet-git-notice {
-  margin: 0;
-  font-size: var(--font-down-1);
-  color: var(--primary-high);
-}
-
-.wireframe-inspector__outlet-git-error {
-  margin: 0;
-  font-size: var(--font-down-1);
-  color: var(--danger);
 }
 
 .wireframe-inspector__tabs {
@@ -3701,6 +3601,286 @@ body.wireframe-active {
   }
 }
 
+/* Toolbar chip naming where edits will publish; opens the review drawer. */
+.wireframe-target-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 16rem;
+
+  .d-button-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &.--blocked {
+    color: var(--danger);
+
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+}
+
+/* One-time notice under the toolbar when the active theme can't be published to. */
+.wireframe-blocked-callout {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: var(--tertiary-low);
+  border-bottom: 1px solid var(--tertiary);
+  font-size: var(--font-down-1);
+
+  &__icon .d-icon {
+    color: var(--tertiary);
+  }
+
+  &__message {
+    flex: 1;
+    overflow-wrap: anywhere;
+  }
+
+  &__setup,
+  &__dismiss {
+    flex-shrink: 0;
+  }
+}
+
+/* The save-and-publish review surface: a right-docked drawer over the editor. */
+.wireframe-review {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: z("modal", "popover");
+  width: 420px;
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  background: var(--secondary);
+  border-left: 1px solid var(--primary-low-mid);
+  box-shadow: var(--shadow-card);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  &__tabs {
+    display: flex;
+    gap: 0;
+    padding: 0.5rem 1rem 0;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__tab {
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+
+    &.--active {
+      border-bottom-color: var(--tertiary);
+      color: var(--tertiary);
+    }
+  }
+
+  &__body {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__empty {
+    margin: 1rem 0;
+    color: var(--primary-medium);
+    text-align: center;
+  }
+
+  &__escape {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.6rem;
+    border: 1px solid var(--tertiary);
+    border-radius: 4px;
+    background: var(--tertiary-low);
+  }
+
+  &__escape-notice {
+    margin: 0;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+  }
+
+  &__escape-error {
+    margin: 0;
+    font-size: var(--font-down-1);
+    color: var(--danger);
+  }
+
+  &__group {
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  &__group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.6rem;
+    background: var(--primary-very-low);
+    font-weight: 600;
+  }
+
+  &__group-theme {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  &__group-status {
+    font-size: var(--font-down-1);
+    font-weight: normal;
+
+    &.--ok {
+      color: var(--success);
+    }
+
+    &.--blocked {
+      color: var(--danger);
+    }
+  }
+
+  &__outlets {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__outlet {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    border-top: 1px solid var(--primary-low);
+  }
+
+  &__outlet-name {
+    color: var(--primary-high);
+    overflow-wrap: anywhere;
+  }
+
+  &__outlet-actions {
+    display: inline-flex;
+    gap: 0.25rem;
+    flex-shrink: 0;
+  }
+
+  &__change {
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    padding: 0.5rem 0.6rem;
+  }
+
+  &__change-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  &__change-counts {
+    display: inline-flex;
+    gap: 0.4rem;
+    flex: 1;
+    flex-wrap: wrap;
+  }
+
+  &__count {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+
+    &.--added {
+      color: var(--success);
+    }
+
+    &.--removed {
+      color: var(--danger);
+    }
+
+    &.--edited,
+    &.--moved {
+      color: var(--tertiary);
+    }
+  }
+
+  &__raw {
+    margin: 0.5rem 0 0;
+    max-height: 16rem;
+    overflow: auto;
+    padding: 0.5rem;
+    background: var(--primary-very-low);
+    border-radius: 4px;
+    font-size: var(--font-down-2);
+  }
+
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--danger-low);
+    color: var(--danger);
+    border-top: 1px solid var(--danger);
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--primary-low);
+  }
+
+  &__discard {
+    margin-right: auto;
+  }
+}
+
 .wireframe-conditions-tree {
   display: flex;
   flex-direction: column;
@@ -4972,6 +5152,8 @@ body.wireframe-active--dim-non-editable
     :has(.wireframe-shell) > *,
     .wireframe-shell,
     .wireframe-shell *,
+    .wireframe-review,
+    .wireframe-review *,
     #d-menu-portals,
     #d-menu-portals *,
     #d-tooltip-portals,

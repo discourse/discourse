@@ -136,16 +136,23 @@ class Admin::BlockLayoutsController < Admin::AdminController
   private
 
   def service_params
-    {
-      params:
-        params.permit(
-          :theme_id,
-          :outlet_name,
-          :layout_json,
-          :expected_version_token,
-          drafts: %i[outlet_name layout_json],
-        ),
-      guardian: guardian,
-    }
+    permitted =
+      params.permit(
+        :theme_id,
+        :outlet_name,
+        :layout_json,
+        :expected_version_token,
+        drafts: %i[outlet_name layout_json],
+      )
+
+    # The browser encodes an array of objects as `drafts[0][outlet_name]=...`,
+    # which Rack parses into a positional `{ "0" => {...} }` hash rather than an
+    # array. The service's array attribute would wrap that whole hash as a single
+    # element and lose each draft's keys, so normalize it back to an array here.
+    if permitted[:drafts].is_a?(ActionController::Parameters)
+      permitted[:drafts] = permitted[:drafts].values
+    end
+
+    { params: permitted, guardian: guardian }
   end
 end

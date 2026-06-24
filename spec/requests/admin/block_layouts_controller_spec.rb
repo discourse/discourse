@@ -350,5 +350,33 @@ RSpec.describe Admin::BlockLayoutsController do
            }
       expect(response.status).to eq(404)
     end
+
+    it "accepts drafts posted as a positional hash (the browser's array encoding)" do
+      sign_in(admin)
+      # jQuery encodes an array of objects as `drafts[0][outlet_name]=...`, which
+      # Rack parses into a `{ "0" => { ... } }` hash rather than an array. The
+      # endpoint must still read each draft's layout_json.
+      expect {
+        post "/admin/customize/block-layouts/customization-component.json",
+             params: {
+               theme_id: git_theme.id,
+               drafts: {
+                 "0" => {
+                   outlet_name: "homepage-blocks",
+                   layout_json: layout_json,
+                 },
+               },
+             }
+      }.to change { Theme.count }.by(1)
+
+      expect(response.status).to eq(200)
+      component = Theme.find(response.parsed_body["theme_id"])
+      expect(
+        component.theme_fields.find_by(
+          name: "homepage-blocks",
+          type_id: ThemeField.types[:block_layout],
+        ),
+      ).to be_present
+    end
   end
 end

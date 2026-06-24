@@ -81,6 +81,7 @@ import {
   setPartOverride,
   wrapAsOutletRoot,
 } from "../lib/mutate-layout";
+import { diffLayouts } from "../lib/outlet-change-summary";
 import { inferSchemaFromValues } from "../lib/schema-to-fields";
 
 const FLUSH_DELAY_MS = 200;
@@ -274,6 +275,15 @@ export default class WireframeService extends Service {
    * @type {boolean}
    */
   @tracked conditionsDetached = false;
+
+  /**
+   * Whether the publish review surface (the save/publish drawer) is open. Held
+   * here, not on a single chrome component, because several entry points open it
+   * (the toolbar Save button, the publish-target indicator, the blocked callout).
+   *
+   * @type {boolean}
+   */
+  @tracked reviewDrawerOpen = false;
 
   /**
    * Floating-panel rect (`{x, y, width, height}`) for the detached
@@ -1012,6 +1022,18 @@ export default class WireframeService extends Service {
     return this.simulation != null;
   }
 
+  /** Opens the publish review surface. */
+  @action
+  openReviewDrawer() {
+    this.reviewDrawerOpen = true;
+  }
+
+  /** Closes the publish review surface. */
+  @action
+  closeReviewDrawer() {
+    this.reviewDrawerOpen = false;
+  }
+
   /**
    * Toggles the conditions detach state. Reads / writes localStorage
    * so the preference survives reloads.
@@ -1180,6 +1202,7 @@ export default class WireframeService extends Service {
     this.#staleDraftQueue.length = 0;
 
     this.isActive = false;
+    this.reviewDrawerOpen = false;
     this.activeThemeId = null;
     this.selectedBlockKey = null;
     this.selectedBlockData = null;
@@ -1197,7 +1220,15 @@ export default class WireframeService extends Service {
     this.#originalLayouts.clear();
     this.#structurallyEditedOutlets.clear();
     this.#forceExpandedKeys.clear();
-    document.body.classList.remove("wireframe-active");
+    // Clear every editor body class, including the chrome's collapse / dim
+    // modifiers. These are separate class tokens from `wireframe-active`, so
+    // leaving them would keep the live page dimmed after the editor closes.
+    document.body.classList.remove(
+      "wireframe-active",
+      "wireframe-active--left-collapsed",
+      "wireframe-active--right-collapsed",
+      "wireframe-active--dim-non-editable"
+    );
     document.removeEventListener("mousedown", this.#onCanvasMouseDown);
     document.removeEventListener("mouseup", this.#onCanvasMouseUp);
     this.#selectionMousedownTarget = null;
@@ -2872,11 +2903,17 @@ export default class WireframeService extends Service {
    * is registered. Used by the persistence service to grab the snapshot of
    * an edited outlet that needs to be POSTed.
    *
+   * Pass `ignoreSessionDraft: true` to resolve the underlying source's layout —
+   * what is live now, apart from any unsaved edit. Reading both (with and without
+   * the flag) yields the baseline and the edited layout for a change comparison.
+   *
    * @param {string} outletName
+   * @param {Object} [options]
+   * @param {boolean} [options.ignoreSessionDraft=false] - When true, skip the session-draft layer and resolve the underlying source.
    * @returns {Array<Object>|null}
    */
-  readResolvedLayout(outletName) {
-    return _getResolvedLayout(outletName);
+  readResolvedLayout(outletName, { ignoreSessionDraft = false } = {}) {
+    return _getResolvedLayout(outletName, { ignoreSessionDraft });
   }
 
   /**
@@ -2939,6 +2976,100 @@ export default class WireframeService extends Service {
           : themeMeta?.stack_index,
       layer: meta?.source ?? null,
     };
+  }
+
+  /**
+   * The edited outlets grouped by the theme that owns them — the publish plan.
+   * Each group names its target theme and whether that theme can be published to
+   * directly (a local, non-Git theme) or needs the companion/duplicate/export
+   * path instead (a Git-managed or core "system" theme). Drives the publish
+   * review surface and the toolbar target indicator.
+   *
+   * Reactive: derives from `#editedOutletNames()` (which reads the tracked edit
+   * bookkeeping) and `outletOwner` (which reads the tracked layer store), so a
+   * template re-renders as edits and their owners change. Reads the edit
+   * bookkeeping through `#editedOutletNames()` rather than the plain
+   * `editedOutlets` Set on purpose — the Set is untracked and would not trigger
+   * a re-render.
+   *
+   * @returns {Array<{themeId: (number|null), themeName: (string|null), isGit: boolean, isSystem: boolean, publishable: boolean, outlets: Array<string>}>}
+   */
+  get publishTargets() {
+    const groups = new Map();
+    for (const outletName of this.#editedOutletNames()) {
+      const owner = this.outletOwner(outletName);
+      let group = groups.get(owner.themeId);
+      if (!group) {
+        const isSystem = owner.themeId != null && owner.themeId < 0;
+        group = {
+          themeId: owner.themeId,
+          themeName: owner.themeName,
+          isGit: owner.isGit,
+          isSystem,
+          publishable: !owner.isGit && !isSystem,
+          outlets: [],
+        };
+        groups.set(owner.themeId, group);
+      }
+      group.outlets.push(outletName);
+    }
+    return [...groups.values()];
+  }
+
+  /**
+   * The theme this session would publish to before anything is edited — the
+   * theme the editor was entered against (or the default target). Used by the
+   * toolbar target indicator to name the destination up front, with the same
+   * `publishable` shape as a `publishTargets` group so the indicator can render
+   * either uniformly. Null when no target can be resolved.
+   *
+   * @returns {{themeId: number, themeName: (string|null), isGit: boolean, isSystem: boolean, publishable: boolean}|null}
+   */
+  get activeThemeTarget() {
+    const themeId = this.activeThemeId ?? this.defaultThemeId;
+    if (themeId == null) {
+      return null;
+    }
+    const themeMeta = this.#themeMeta(themeId);
+    const isSystem = themeId < 0;
+    const isGit = themeMeta?.is_git ?? false;
+    return {
+      themeId,
+      themeName: themeMeta?.name ?? null,
+      isGit,
+      isSystem,
+      publishable: !isGit && !isSystem,
+    };
+  }
+
+  /**
+   * The structural change summary for an outlet — how its edited layout differs
+   * from the live (published or default) baseline. Compares the underlying source
+   * (resolved with `ignoreSessionDraft`) against the in-session draft on top.
+   *
+   * @param {string} outletName
+   * @returns {{added: number, removed: number, moved: number, edited: number, reliable: boolean}}
+   */
+  outletChangeSummary(outletName) {
+    const before = this.blocks.resolvedLayout(outletName, {
+      ignoreSessionDraft: true,
+    });
+    const after = this.readResolvedLayout(outletName);
+    return diffLayouts(before, after);
+  }
+
+  /**
+   * The pretty-printed JSON of an outlet's edited layout, for the raw-layout view.
+   * Uses the canonical save serializer so it matches what a publish would persist.
+   *
+   * @param {string} outletName
+   * @returns {string}
+   */
+  outletLayoutJson(outletName) {
+    const layout = serializeLayoutForSave(
+      this.readResolvedLayout(outletName) ?? []
+    );
+    return JSON.stringify(layout, null, 2);
   }
 
   /**

@@ -1168,13 +1168,25 @@ export function _getValidatedLayout(outletName) {
  * Unlike `_getOutletLayouts`, this has no DEBUG gate, so it returns real data in
  * every build — which is what consumers outside test infrastructure need.
  *
+ * Pass `ignoreSessionDraft: true` to resolve the underlying source's layout even
+ * when an in-session draft is present — that is, the layout that owns the outlet
+ * apart from any unsaved edit. Reading both (with and without the flag) yields the
+ * baseline and the edited layout, which a consumer can compare.
+ *
  * @internal This is an internal API. Use the `blocks` service's `resolvedLayout()` method instead.
  *
  * @param {string} outletName - The outlet identifier.
+ * @param {Object} [options] - Resolution options.
+ * @param {boolean} [options.ignoreSessionDraft=false] - When true, skip the session-draft layer and resolve the underlying source.
  * @returns {Array<LayoutEntry>|null} The resolved layout array, or null when no layer is set.
  */
-export function _getResolvedLayout(outletName) {
-  return resolveLayoutRecord(outletName)?.layout ?? null;
+export function _getResolvedLayout(
+  outletName,
+  { ignoreSessionDraft = false } = {}
+) {
+  return (
+    resolveLayoutRecord(outletName, { ignoreSessionDraft })?.layout ?? null
+  );
 }
 
 /**

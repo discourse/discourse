@@ -250,11 +250,17 @@ export default class Blocks extends Service {
    * layout), or `null` when no layer is set. Reactive: reading this inside a
    * tracked context re-runs when the outlet's resolved layer changes.
    *
+   * Pass `ignoreSessionDraft: true` to resolve the underlying source's layout even
+   * when an in-session draft is present — the layout that owns the outlet apart
+   * from any unsaved edit. Reading both yields the baseline and the edited layout.
+   *
    * @param {string} outletName - The outlet identifier.
+   * @param {Object} [options] - Resolution options.
+   * @param {boolean} [options.ignoreSessionDraft=false] - When true, skip the session-draft layer and resolve the underlying source.
    * @returns {Array<Object>|null} The resolved layout array, or null.
    */
-  resolvedLayout(outletName) {
-    return _getResolvedLayout(outletName);
+  resolvedLayout(outletName, { ignoreSessionDraft = false } = {}) {
+    return _getResolvedLayout(outletName, { ignoreSessionDraft });
   }
 
   /**

@@ -21,7 +21,7 @@ function outletChildren(editor) {
 }
 
 module(
-  "Integration | discourse-wireframe | Component | editor shell toolbar",
+  "Integration | discourse-wireframe | Component | editor shell save flow",
   function (hooks) {
     setupRenderingTest(hooks);
     setupBlockLayoutDraftsStub(hooks);
@@ -39,8 +39,8 @@ module(
       // `enter()` actually enables editing (matches the service-test setup).
       this.editor = getOwner(this).lookup("service:wireframe");
       // Pass an explicit theme id: there's no boot preload in a rendering test,
-      // so the editor can't derive a default target and the toolbar's submit
-      // control (which requires `activeThemeId`) would stay disabled.
+      // so the editor can't derive a default target and the toolbar's Save
+      // button (which requires `activeThemeId` via `isDirty`) would stay disabled.
       this.editor.enter({ themeId: 5 });
     });
 
@@ -49,7 +49,7 @@ module(
       _resetOutletLayoutsForTesting();
     });
 
-    // Edits the outlet's heading so the toolbar's submit control enables.
+    // Edits the outlet's heading so the toolbar's Save button enables.
     async function makeDirty(editor) {
       const draft = outletChildren(editor);
       editor.selectBlock({
@@ -60,22 +60,28 @@ module(
       await settled();
     }
 
-    test("renders a Save draft primary with a Publish menu, disabled until dirty", async function (assert) {
+    test("the toolbar Save button is disabled until dirty and opens the review drawer", async function (assert) {
       await render(<template><EditorShell /></template>);
 
       assert
-        .dom(".wireframe-btn-save-draft")
-        .hasText("Save draft", "the primary action is Save draft, not Publish");
+        .dom(".wireframe-btn-save")
+        .isDisabled("Save is disabled with nothing edited");
       assert
-        .dom(".wireframe-toolbar-publish-trigger")
-        .exists("the Publish menu trigger renders alongside it");
-      // Nothing edited yet → the whole control is disabled.
+        .dom(".wireframe-review")
+        .doesNotExist("the review drawer is closed initially");
+
+      await makeDirty(this.editor);
       assert
-        .dom(".wireframe-btn-save-draft")
-        .isDisabled("Save draft is disabled with nothing edited");
+        .dom(".wireframe-btn-save")
+        .isNotDisabled("Save enables once there are edits");
+
+      await click(".wireframe-btn-save");
+      assert
+        .dom(".wireframe-review")
+        .exists("clicking Save opens the review drawer");
     });
 
-    test("Save draft drafts the edited outlets without publishing; the menu publishes", async function (assert) {
+    test("the drawer's Save draft drafts the edited outlets without publishing; Publish writes the live field", async function (assert) {
       await makeDirty(this.editor);
 
       let drafted = false;
@@ -92,49 +98,52 @@ module(
       pretender.delete(DRAFTS_URL, () => response({ success: true }));
 
       await render(<template><EditorShell /></template>);
+      await click(".wireframe-btn-save");
 
-      await click(".wireframe-btn-save-draft");
-      assert.true(drafted, "clicking Save draft hits the drafts endpoint");
+      await click(".wireframe-review__save-draft");
+      assert.true(drafted, "Save draft hits the drafts endpoint");
       assert.false(published, "Save draft never writes the live field");
 
-      await click(".wireframe-toolbar-publish-trigger");
-      await click(".wireframe-toolbar-publish-content .wireframe-btn-publish");
-      assert.true(published, "the Publish menu item writes the live field");
+      await click(".wireframe-review__publish");
+      assert.true(published, "Publish writes the live field");
     });
 
-    test("for a core system theme, Save draft works but direct Publish is disabled", async function (assert) {
+    test("for a core system theme, Save draft works but Publish is disabled and the companion path is offered", async function (assert) {
       // Re-enter bound to a system theme (negative id). Save draft stays
-      // available; direct Publish is disabled in favour of the per-outlet
-      // companion-component path in the inspector.
+      // available; direct Publish is disabled in favour of the companion-
+      // component escape hatch.
       this.editor.exit();
       this.editor.enter({ themeId: -1 });
       await makeDirty(this.editor);
 
       await render(<template><EditorShell /></template>);
+      await click(".wireframe-btn-save");
 
       assert
-        .dom(".wireframe-btn-save-draft")
+        .dom(".wireframe-review__save-draft")
         .isNotDisabled("Save draft works for a system theme");
-
-      await click(".wireframe-toolbar-publish-trigger");
       assert
-        .dom(".wireframe-toolbar-publish-content .wireframe-btn-publish")
+        .dom(".wireframe-review__publish")
         .isDisabled("direct Publish is disabled for a system theme");
+      assert
+        .dom(".wireframe-review__create-component")
+        .exists("the companion-component escape hatch is offered instead");
     });
 
-    test("Save draft disables after a successful save and re-enables on the next edit", async function (assert) {
+    test("the drawer's Save draft disables after a successful save and re-enables on the next edit", async function (assert) {
       await makeDirty(this.editor);
       pretender.post(DRAFTS_URL, () => response({ success: true }));
 
       await render(<template><EditorShell /></template>);
+      await click(".wireframe-btn-save");
 
       assert
-        .dom(".wireframe-btn-save-draft")
+        .dom(".wireframe-review__save-draft")
         .isNotDisabled("enabled while there are unsaved edits");
 
-      await click(".wireframe-btn-save-draft");
+      await click(".wireframe-review__save-draft");
       assert
-        .dom(".wireframe-btn-save-draft")
+        .dom(".wireframe-review__save-draft")
         .isDisabled("disabled once the current edits are drafted");
 
       // A further edit re-enables it.
@@ -147,17 +156,15 @@ module(
       await settled();
 
       assert
-        .dom(".wireframe-btn-save-draft")
+        .dom(".wireframe-review__save-draft")
         .isNotDisabled("re-enabled after a new edit");
     });
 
-    test("opening with a matching saved draft starts with Save draft disabled", async function (assert) {
+    test("opening with a matching saved draft starts the drawer's Save draft disabled", async function (assert) {
       // The shared beforeEach already entered (and ran draft hydration) with no
       // drafts. Re-enter with a matching saved draft mocked BEFORE enter, so this
-      // hydration re-seeds it. A real (pretender) request is tracked by
-      // `settled()`, so `render()` deterministically waits for the re-seed — no
-      // polling. The re-seeded draft reflects what's persisted, so there's
-      // nothing new to save yet even though the outlet ends up marked edited.
+      // hydration re-seeds it. The re-seeded draft reflects what's persisted, so
+      // there's nothing new to save yet even though the outlet ends up edited.
       this.editor.exit();
       pretender.get(DRAFTS_URL, () =>
         response({
@@ -182,9 +189,26 @@ module(
         this.editor.isDirty,
         "the hydrated draft marks the outlet edited"
       );
+
+      await click(".wireframe-btn-save");
       assert
-        .dom(".wireframe-btn-save-draft")
+        .dom(".wireframe-review__save-draft")
         .isDisabled("a freshly hydrated draft has nothing new to save");
+    });
+
+    test("the Changes tab renders a per-outlet change summary", async function (assert) {
+      await makeDirty(this.editor);
+
+      await render(<template><EditorShell /></template>);
+      await click(".wireframe-btn-save");
+      await click(".wireframe-review__tab.--active + .wireframe-review__tab");
+
+      assert
+        .dom(".wireframe-review__change")
+        .exists("the Changes tab lists the edited outlet");
+      assert
+        .dom(".wireframe-review__change-counts")
+        .exists("with a change summary");
     });
   }
 );

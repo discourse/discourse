@@ -95,26 +95,6 @@ class StubWireframeService extends Service {
   isOutletEditing() {
     return this.#blockData?.isOutletEditing ?? false;
   }
-
-  saveDraftOutlet() {}
-
-  publishOutlet() {}
-
-  discardOutlet() {}
-
-  resetToDefault() {}
-
-  exportOutlet() {}
-
-  duplicateForEditing() {
-    return {};
-  }
-
-  createCustomizationComponent() {
-    return {};
-  }
-
-  navigateToEditTheme() {}
 }
 
 function stubWireframe(owner, blockData) {
@@ -206,117 +186,20 @@ module(
         );
     });
 
-    test("a Git-owned outlet shows the escape hatches with Publish disabled", async function (assert) {
-      stubWireframe(this.owner, {
-        name: "layout",
-        isOutletRoot: true,
-        outletName: "homepage-blocks",
-        outletState: "published",
-        outletOwner: { themeId: 5, themeName: "Acme", isGit: true },
-        args: { mode: "stack" },
-        argsSnapshot: { mode: "stack" },
-        parentChildArgsSchema: null,
-      });
-
-      await render(<template><InspectorPanel /></template>);
-
-      assert
-        .dom(".wireframe-inspector__outlet-git-notice")
-        .exists("shows the Git notice");
-      assert
-        .dom(".wireframe-outlet-verb__create-component")
-        .exists("offers create customization component");
-      assert.dom(".wireframe-outlet-verb__export").exists("offers export");
-      assert
-        .dom(".wireframe-outlet-verb__duplicate")
-        .exists("offers duplicate");
-      assert
-        .dom(".wireframe-outlet-verb__publish")
-        .isDisabled("Publish is disabled for a Git-owned outlet");
-    });
-
-    test("a core system theme outlet offers the companion component, not direct publish", async function (assert) {
-      // System themes (Foundation, Horizon) have negative ids; they can't be
-      // published to directly, so the inspector offers the companion-component
-      // path — but not the Git-only export/duplicate, which target the source.
-      stubWireframe(this.owner, {
-        name: "layout",
-        isOutletRoot: true,
-        outletName: "homepage-blocks",
-        outletState: "default",
-        outletOwner: { themeId: -1, themeName: "Foundation", isGit: false },
-        isOutletEditing: true,
-        args: { mode: "stack" },
-        argsSnapshot: { mode: "stack" },
-        parentChildArgsSchema: null,
-      });
-
-      await render(<template><InspectorPanel /></template>);
-
-      assert
-        .dom(".wireframe-inspector__outlet-git-notice")
-        .exists("shows the system-theme notice");
-      assert
-        .dom(".wireframe-outlet-verb__create-component")
-        .exists("offers create customization component");
-      assert
-        .dom(".wireframe-outlet-verb__export")
-        .doesNotExist("hides export for a system theme (targets the source)");
-      assert
-        .dom(".wireframe-outlet-verb__duplicate")
-        .doesNotExist("hides duplicate for a system theme");
-      assert
-        .dom(".wireframe-outlet-verb__publish")
-        .isDisabled("Publish is disabled for a system theme");
-    });
-  }
-);
-
-module(
-  "Integration | Wireframe | Inspector | outlet verbs & status badge",
-  function (hooks) {
-    setupRenderingTest(hooks);
-
-    function outletRoot(extra) {
-      return {
-        name: "layout",
-        isOutletRoot: true,
-        outletName: "homepage-blocks",
-        outletState: "default",
-        args: { mode: "stack" },
-        argsSnapshot: { mode: "stack" },
-        parentChildArgsSchema: null,
-        ...extra,
-      };
-    }
-
-    test("Save draft and Publish are disabled when the outlet has no edits", async function (assert) {
-      stubWireframe(this.owner, outletRoot({ isOutletEditing: false }));
-
-      await render(<template><InspectorPanel /></template>);
-
-      assert
-        .dom(".wireframe-outlet-verb__save-draft")
-        .isDisabled("Save draft is disabled with nothing to save");
-      assert
-        .dom(".wireframe-outlet-verb__publish")
-        .isDisabled("Publish is disabled with nothing to save");
-    });
-
-    test("Save draft and Publish enable once the outlet is editing", async function (assert) {
-      stubWireframe(this.owner, outletRoot({ isOutletEditing: true }));
-
-      await render(<template><InspectorPanel /></template>);
-
-      assert
-        .dom(".wireframe-outlet-verb__save-draft")
-        .isNotDisabled("Save draft enables while editing");
-      assert
-        .dom(".wireframe-outlet-verb__publish")
-        .isNotDisabled("Publish enables while editing (non-Git owner)");
-    });
-
     test("the status shows a single badge with Editing superseding the state", async function (assert) {
+      function outletRoot(extra) {
+        return {
+          name: "layout",
+          isOutletRoot: true,
+          outletName: "homepage-blocks",
+          outletState: "default",
+          args: { mode: "stack" },
+          argsSnapshot: { mode: "stack" },
+          parentChildArgsSchema: null,
+          ...extra,
+        };
+      }
+
       stubWireframe(
         this.owner,
         outletRoot({
