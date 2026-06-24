@@ -64,8 +64,6 @@ module Migrations
         suffixes_by_base = extract_suffixes(names_lower_collections)
 
         suffixes_by_base.transform_values! do |suffixes|
-          next if suffixes.empty?
-
           suffixes.sort!
 
           range_end = suffixes.last

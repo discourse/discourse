@@ -51,6 +51,27 @@ RSpec.describe Migrations::Importer::SuffixFinder do
       expect(result).to eq({ "user" => 2500 })
     end
 
+    it "keeps a range whose size is exactly the threshold" do
+      # [1..2], then a >= 100 gap, then a contiguous [1000..1300] range.
+      # Walking down from 1300, range_size hits exactly 300 at suffix 1000, which
+      # must still qualify (>= threshold), so the high range wins over [1..2].
+      names = %w[user_1 user_2] + (1000..1300).map { |i| "user_#{i}" }
+      result = finder.find_max_suffixes(names)
+
+      expect(result).to eq({ "user" => 1300 })
+    end
+
+    it "keeps a range whose size jumps past the threshold across an internal gap" do
+      # The high range is missing suffix 1000, so walking down from 1300 the
+      # range_size goes 299 -> 301 without ever equaling 300 exactly. It must
+      # still qualify, so the high range wins over [1..2] rather than falling
+      # through the >= 100 gap below it.
+      names = %w[user_1 user_2 user_999] + (1001..1300).map { |i| "user_#{i}" }
+      result = finder.find_max_suffixes(names)
+
+      expect(result).to eq({ "user" => 1300 })
+    end
+
     it "handles single suffix as a valid first range" do
       names = ["admin_42"]
       result = finder.find_max_suffixes(names)
