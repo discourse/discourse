@@ -154,7 +154,7 @@ class Upload < ActiveRecord::Base
   def get_optimized_image(width, height, opts = nil)
     opts ||= {}
 
-    fix_image_extension if !extension || extension.length == 0
+    fix_image_extension if extension.blank? || extension_mismatch_with_file?
 
     opts = opts.merge(raise_on_error: true)
     begin
@@ -204,6 +204,21 @@ class Upload < ActiveRecord::Base
       update_columns(extension: "unknown")
       true
     end
+  end
+
+  def extension_mismatch_with_file?
+    return false if extension == "unknown"
+
+    original_path = Discourse.store.path_for(self)
+    return false if original_path.blank?
+
+    actual_extension = DiscourseImage.sniff_extension(original_path)
+    return false if actual_extension.blank?
+
+    DiscourseImage.normalized_extension(actual_extension) !=
+      DiscourseImage.normalized_extension(extension)
+  rescue StandardError
+    false
   end
 
   def destroy
