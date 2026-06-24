@@ -143,7 +143,7 @@ export default class DAccessControl extends Component {
       name: selectedGroup.name,
       full_name: selectedGroup.full_name,
       type: "group",
-      permission: READ_ONLY_DEFAULT_AUTO_GROUPS.includes(groupId)
+      permission: READ_ONLY_DEFAULT_AUTO_GROUPS.includes(selectedGroup.id)
         ? READ_ONLY_PERMISSION
         : EDIT_PERMISSION,
       metadata: {

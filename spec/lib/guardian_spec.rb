@@ -77,6 +77,8 @@ RSpec.describe Guardian do
       )
     end
 
+    before { Category.stubs(:has_mandatory_acl?).returns(false) }
+
     describe "#has_acl_permission?" do
       it "is true when a group the user belongs to grants the permission" do
         expect(acl_user.guardian.has_acl_permission?(member_category, "view")).to eq(true)

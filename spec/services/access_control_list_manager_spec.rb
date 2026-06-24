@@ -29,6 +29,11 @@ RSpec.describe AccessControlListManager do
       ]
     end
 
+    before do
+      Category.stubs(:has_mandatory_acl?).returns(false)
+      Category.stubs(:acl_is_mandatory?).returns(false)
+    end
+
     context "when the contract is invalid" do
       let(:owner) { "" }
 

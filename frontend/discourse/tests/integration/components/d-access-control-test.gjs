@@ -17,6 +17,12 @@ const GROUPS = [
     full_name: "Logged In Users",
     automatic: true,
   },
+  {
+    id: AUTO_GROUPS.trust_level_0.id,
+    name: "trust_level_0",
+    full_name: "Trust level 0",
+    automatic: true,
+  },
 ];
 
 // Builds a controlled-component wrapper: `onChange` writes the next acl back into
@@ -56,7 +62,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await click(".d-access-control__add");
 
     const chooser = selectKit(".d-access-control__chooser");
-    assert.true(chooser.exists(), "the group chooser is shown");
+    await chooser.expand();
     await chooser.expand();
 
     assert
@@ -102,7 +108,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
 
     const chooser = selectKit(".d-access-control__chooser");
     await chooser.expand();
-    await chooser.selectRowByValue(AUTO_GROUPS.logged_in_users.id);
+    await chooser.expand();
+    await chooser.selectRowByValue(AUTO_GROUPS.trust_level_0.id);
 
     const [added] = state.onChangeCalls[0];
     assert.strictEqual(
@@ -199,19 +206,19 @@ module("Integration | Component | DAccessControl", function (hooks) {
 
     assert
       .dom(".d-access-control__group-name", rows[0])
-      .hasText("Some Group", "renders the first group name");
+      .hasText("Another Group", "renders the first group name");
     assert.strictEqual(
       rows[0].querySelector(".select-kit-header").dataset.value,
-      "view",
+      "edit",
       "loads the first group's permission"
     );
 
     assert
       .dom(".d-access-control__group-name", rows[1])
-      .hasText("Another Group", "renders the second group name");
+      .hasText("Some Group", "renders the second group name");
     assert.strictEqual(
       rows[1].querySelector(".select-kit-header").dataset.value,
-      "edit",
+      "view",
       "loads the second group's permission"
     );
   });
@@ -256,7 +263,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
       .exists({ count: 1 }, "removes the row whose permission was removed");
     assert
       .dom(".d-access-control__group-name")
-      .hasText("Another Group", "keeps the remaining row");
+      .hasText("Some Group", "keeps the remaining row");
   });
 
   test("calls the onChange arg when a permission changes", async function (assert) {

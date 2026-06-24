@@ -4268,6 +4268,11 @@ RSpec.describe User do
       )
     end
 
+    before do
+      Category.stubs(:has_mandatory_acl?).returns(true)
+      Category.stubs(:acl_is_mandatory?).returns(true)
+    end
+
     describe "#permission_acl" do
       it "builds an Acl::User from the acls matching the user and memoizes it" do
         expect(acl_user.permission_acl).to be_a(Acl::User)
