@@ -55,12 +55,12 @@ module Migrations
         work_queue = SizedQueue.new(MAX_QUEUE_SIZE)
 
         workers = start_workers(work_queue, worker_output_queue)
-        writer_thread = start_db_writer(worker_output_queue)
+        collector_thread = start_collector(worker_output_queue)
         push_work(work_queue)
 
         workers.each(&:wait)
         worker_output_queue.close
-        writer_thread.join
+        collector_thread.join
       end
 
       def calculate_max_progress
@@ -84,9 +84,9 @@ module Migrations
         ExtendedProgressBar.new(max_progress: @max_progress).run { |progressbar| yield progressbar }
       end
 
-      def start_db_writer(worker_output_queue)
+      def start_collector(worker_output_queue)
         Thread.new do
-          Thread.current.name = "writer_thread"
+          Thread.current.name = "collector_thread"
 
           with_progressbar do |progressbar|
             while (parametrized_insert_statements, stats = worker_output_queue.pop)
@@ -109,7 +109,7 @@ module Migrations
 
         Process.warmup
 
-        ForkManager.batch_forks do
+        ForkManager.with_batched_forks do
           WORKER_COUNT.times do |index|
             job = ParallelJob.new(@step.create_processor)
             workers << Worker.new(index, work_queue, worker_output_queue, job).start

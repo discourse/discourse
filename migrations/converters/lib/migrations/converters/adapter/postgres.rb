@@ -55,7 +55,7 @@ module Migrations
           @connection = nil
 
           if @fork_hook
-            ForkManager.remove_after_fork_child_hook(@fork_hook)
+            ForkManager.remove_after_fork_child(@fork_hook)
             @fork_hook = nil
           end
         end

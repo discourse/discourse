@@ -40,8 +40,8 @@ module Migrations
         close_connection(keep_path: false)
 
         before_hook, after_hook = @fork_hooks
-        ForkManager.remove_before_fork_hook(before_hook)
-        ForkManager.remove_after_fork_parent_hook(after_hook)
+        ForkManager.remove_before_fork(before_hook)
+        ForkManager.remove_after_fork_parent(after_hook)
       end
 
       def closed?

@@ -2,6 +2,9 @@
 
 module Migrations
   module Database
+    # Facade for all IntermediateDB writes. `@db` is whatever `setup` received:
+    # a `DbWriter` during a conversion run, an `OfflineConnection` in forked
+    # workers, or a plain `Connection`.
     module IntermediateDB
       def self.setup(db_connection)
         close
