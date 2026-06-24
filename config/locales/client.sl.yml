@@ -1837,6 +1837,8 @@ sl:
       email_label: "E-naslov"
       continue_button: "Nadaljuj"
       verify_button: "Nadaljuj"
+      account_ready_continue: "Nadaljuj"
+      username_label: "Uporabniško ime"
     login:
       title: "Vpis"
       username: "Uporabnik"

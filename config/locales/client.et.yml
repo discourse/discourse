@@ -1378,6 +1378,8 @@ et:
       email_label: "E-post"
       continue_button: "Jätka"
       verify_button: "Jätka"
+      account_ready_continue: "Jätka"
+      username_label: "Kasutajanimi"
     login:
       title: "Logi sisse"
       username: "Kasutaja"

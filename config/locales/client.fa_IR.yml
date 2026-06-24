@@ -2319,6 +2319,8 @@ fa_IR:
       email_label: "ایمیل"
       continue_button: "ادامه"
       verify_button: "ادامه"
+      account_ready_continue: "ادامه"
+      username_label: "نام‌کاربری"
     login:
       header_title: "خوش آمدید"
       title: "ورود"

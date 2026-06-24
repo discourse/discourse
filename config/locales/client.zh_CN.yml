@@ -2551,6 +2551,8 @@ zh_CN:
       email_label: "电子邮件"
       continue_button: "继续"
       verify_button: "继续"
+      account_ready_continue: "继续"
+      username_label: "用户名"
     login:
       header_title: "欢迎回来"
       title: "登录"

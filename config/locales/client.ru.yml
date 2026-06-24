@@ -2908,6 +2908,8 @@ ru:
       email_label: "Эл. почта"
       continue_button: "Продолжить"
       verify_button: "Продолжить"
+      account_ready_continue: "Продолжить"
+      username_label: "Псевдоним"
     login:
       header_title: "С возвращением!"
       title: "Войти"

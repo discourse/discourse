@@ -2241,6 +2241,8 @@ sq:
       email_label: "Email"
       continue_button: "Vazhdoni"
       verify_button: "Vazhdoni"
+      account_ready_continue: "Vazhdoni"
+      username_label: "Emri i përdoruesit"
     login:
       header_title: "Mirë se vini përsëri"
       title: "Identifikohu"

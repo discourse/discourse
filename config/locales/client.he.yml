@@ -2857,6 +2857,8 @@ he:
       email_label: "דוא״ל"
       continue_button: "המשך"
       verify_button: "המשך"
+      account_ready_continue: "המשך"
+      username_label: "שם משתמש"
     login:
       header_title: "ברוך שובך"
       title: "כניסה"

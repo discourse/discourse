@@ -1990,6 +1990,8 @@ te:
       email_label: "ఈమెయిల్"
       continue_button: "కొనసాగించండి"
       verify_button: "కొనసాగించండి"
+      account_ready_continue: "కొనసాగించండి"
+      username_label: "సభ్యనామం"
     login:
       header_title: "తిరిగి స్వాగతం"
       title: "లాగిన్"

@@ -2585,6 +2585,8 @@ hr:
       email_label: "Email"
       continue_button: "Nastavi"
       verify_button: "Nastavi"
+      account_ready_continue: "Nastavi"
+      username_label: "Korisničko ime"
     login:
       header_title: "Dobro došli natrag"
       title: "Prijava"

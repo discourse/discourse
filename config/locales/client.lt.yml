@@ -2201,6 +2201,8 @@ lt:
       email_label: "Epaštas"
       continue_button: "Tęsti"
       verify_button: "Tęsti"
+      account_ready_continue: "Tęsti"
+      username_label: "Naudotojo vardas"
     login:
       header_title: "Sveiki sugrįžę"
       title: "Prisijungti"

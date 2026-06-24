@@ -2455,6 +2455,8 @@ it:
       email_label: "E-mail"
       continue_button: "Continua"
       verify_button: "Continua"
+      account_ready_continue: "Continua"
+      username_label: "Nome utente"
     login:
       header_title: "Bentornato"
       title: "Accedi"

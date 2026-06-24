@@ -1272,6 +1272,8 @@ be:
       email_label: "Электронная пошта"
       continue_button: "Працягнуць"
       verify_button: "Працягнуць"
+      account_ready_continue: "Працягнуць"
+      username_label: "Імя карыстальніка"
     login:
       title: "Уваход"
       username: "Карыстальнік"

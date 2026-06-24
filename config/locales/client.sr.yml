@@ -1723,6 +1723,8 @@ sr:
       email_label: "E-mail"
       continue_button: "Nastavi"
       verify_button: "Nastavi"
+      account_ready_continue: "Nastavi"
+      username_label: "Korisničko Ime"
     login:
       header_title: "Dobro došli nazad"
       title: "Prijava"

@@ -2079,6 +2079,8 @@ hy:
       email_label: "Էլ. հասցե"
       continue_button: "Շարունակել"
       verify_button: "Շարունակել"
+      account_ready_continue: "Շարունակել"
+      username_label: "Օգտանուն"
     login:
       header_title: "Բարի վերադարձ"
       title: "Մուտք Գործել"

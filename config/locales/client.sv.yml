@@ -2018,6 +2018,8 @@ sv:
       email_label: "E-postadress"
       continue_button: "Fortsätt"
       verify_button: "Fortsätt"
+      account_ready_continue: "Fortsätt"
+      username_label: "Användarnamn"
     login:
       header_title: "Välkommen tillbaka"
       title: "Logga in"
