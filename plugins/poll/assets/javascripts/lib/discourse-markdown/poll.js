@@ -23,9 +23,11 @@ const ALLOWED_ATTRIBUTES = [
 function addNumberListItems(state, pollTokens, min, max, step, maximumOptions) {
   pollTokens.push(new state.Token("bullet_list_open", "ul", 1));
 
+  const maximumGeneratedOptions = maximumOptions + 1;
+
   for (
     let i = min, count = 0;
-    i <= max && count < maximumOptions;
+    i <= max && count < maximumGeneratedOptions;
     i += step, count++
   ) {
     pollTokens.push(new state.Token("list_item_open", "li", 1));
