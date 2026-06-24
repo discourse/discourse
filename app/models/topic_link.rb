@@ -179,13 +179,20 @@ class TopicLink < ActiveRecord::Base
     TopicLink.crawl_link_title(id)
   end
 
-  def self.duplicate_lookup(topic)
+  def self.duplicate_lookup(topic, guardian = Guardian.new)
     results =
       TopicLink
         .includes(:post, :user)
         .joins(:post, :user)
         .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
         .where(topic_id: topic.id, reflection: false)
+        .where(
+          posts: {
+            deleted_at: nil,
+            hidden: false,
+            post_type: Topic.visible_post_types(guardian.user),
+          },
+        )
         .last(200)
 
     lookup = {}
