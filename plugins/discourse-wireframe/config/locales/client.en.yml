@@ -86,6 +86,9 @@ en:
         category_theme: "Theme"
       inspector:
         empty: "Select a block to inspect."
+        controls:
+          decrement: "Decrease"
+          increment: "Increase"
         multi:
           selected_count:
             one: "%{count} block selected"

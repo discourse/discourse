@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import DSegmentedControl from "discourse/components/d-segmented-control";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -12,6 +13,8 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { GRID_TEMPLATES, parseGridAreas } from "../../lib/grid-templates";
+import InspectorDimensionField from "./inspector-dimension-field";
+import InspectorStepperField from "./inspector-stepper-field";
 
 /**
  * Custom inspector form for the `wf:layout` block. The generic
@@ -215,6 +218,37 @@ export default class InspectorLayoutForm extends Component {
     return `wireframe.inspector.layout.auto_collapse_help_${this.autoCollapse}`;
   }
 
+  /**
+   * Segmented-control items for the mode picker — each MODE const mapped to the
+   * `{value, label, icon}` shape `DSegmentedControl` expects, with the label
+   * resolved from i18n.
+   *
+   * @returns {Array<{value: string, label: string, icon: string}>}
+   */
+  get modeItems() {
+    return MODES.map((mode) => ({
+      value: mode.id,
+      label: i18n(`wireframe.inspector.layout.${mode.labelKey}`),
+      icon: mode.icon,
+    }));
+  }
+
+  /** @returns {Array<{value: string, label: string}>} */
+  get autoCollapseItems() {
+    return AUTO_COLLAPSE_OPTIONS.map((option) => ({
+      value: option.id,
+      label: i18n(`wireframe.inspector.layout.${option.labelKey}`),
+    }));
+  }
+
+  /** @returns {Array<{value: string, label: string}>} */
+  get alignItems() {
+    return ALIGNMENTS.map((value) => ({
+      value,
+      label: i18n(`wireframe.inspector.layout.align_${value}`),
+    }));
+  }
+
   @action
   setMode(mode) {
     this.#set("mode", mode);
@@ -231,22 +265,20 @@ export default class InspectorLayoutForm extends Component {
   }
 
   @action
-  setColumns(event) {
-    const raw = parseInt(event.target.value, 10);
-    if (!Number.isFinite(raw)) {
+  setColumns(value) {
+    if (!Number.isFinite(value)) {
       return;
     }
-    const next = clamp(raw, COLUMNS_MIN, COLUMNS_MAX);
+    const next = clamp(value, COLUMNS_MIN, COLUMNS_MAX);
     this.#applyDimensionChange({ columns: next, rows: this.rows });
   }
 
   @action
-  setRows(event) {
-    const raw = parseInt(event.target.value, 10);
-    if (!Number.isFinite(raw)) {
+  setRows(value) {
+    if (!Number.isFinite(value)) {
       return;
     }
-    const next = clamp(raw, ROWS_MIN, ROWS_MAX);
+    const next = clamp(value, ROWS_MIN, ROWS_MAX);
     this.#applyDimensionChange({ columns: this.columns, rows: next });
   }
 
@@ -290,10 +322,9 @@ export default class InspectorLayoutForm extends Component {
   }
 
   @action
-  setGap(event) {
-    const raw = Number(event.target.value);
-    if (Number.isFinite(raw)) {
-      this.#set("gap", raw);
+  setGap(value) {
+    if (Number.isFinite(value)) {
+      this.#set("gap", value);
     }
   }
 
@@ -391,26 +422,13 @@ export default class InspectorLayoutForm extends Component {
         <span class="wireframe-layout-form__legend">
           {{i18n "wireframe.inspector.layout.mode_legend"}}
         </span>
-        <div class="wireframe-layout-form__segmented" role="radiogroup">
-          {{#each MODES as |modeOption|}}
-            <DButton
-              class={{dConcatClass
-                "wireframe-layout-form__segment"
-                (if (eq this.mode modeOption.id) "--active")
-              }}
-              @ariaPressed={{eq this.mode modeOption.id}}
-              @icon={{modeOption.icon}}
-              @label={{concat
-                "wireframe.inspector.layout."
-                modeOption.labelKey
-              }}
-              @translatedTitle={{i18n
-                (concat "wireframe.inspector.layout." modeOption.labelKey)
-              }}
-              @action={{fn this.setMode modeOption.id}}
-            />
-          {{/each}}
-        </div>
+        <DSegmentedControl
+          class="wireframe-layout-form__segmented"
+          @items={{this.modeItems}}
+          @value={{this.mode}}
+          @name="wireframe-layout-mode"
+          @onSelect={{this.setMode}}
+        />
       </div>
 
       {{! Auto-collapse selector — surfaces the @container behaviour
@@ -423,22 +441,13 @@ export default class InspectorLayoutForm extends Component {
           <span class="wireframe-layout-form__legend">
             {{i18n "wireframe.inspector.layout.auto_collapse_label"}}
           </span>
-          <div class="wireframe-layout-form__segmented" role="radiogroup">
-            {{#each AUTO_COLLAPSE_OPTIONS as |option|}}
-              <DButton
-                class={{dConcatClass
-                  "wireframe-layout-form__segment"
-                  (if (eq this.autoCollapse option.id) "--active")
-                }}
-                @ariaPressed={{eq this.autoCollapse option.id}}
-                @label={{concat "wireframe.inspector.layout." option.labelKey}}
-                @translatedTitle={{i18n
-                  (concat "wireframe.inspector.layout." option.labelKey)
-                }}
-                @action={{fn this.setAutoCollapse option.id}}
-              />
-            {{/each}}
-          </div>
+          <DSegmentedControl
+            class="wireframe-layout-form__segmented"
+            @items={{this.autoCollapseItems}}
+            @value={{this.autoCollapse}}
+            @name="wireframe-layout-auto-collapse"
+            @onSelect={{this.setAutoCollapse}}
+          />
           <p class="wireframe-layout-form__hint">
             {{dIcon "circle-info"}}
             <span>{{i18n this.autoCollapseHelpKey}}</span>
@@ -491,31 +500,36 @@ export default class InspectorLayoutForm extends Component {
         {{! Column / row counts stay editable in both Free and template
           mode — editing a dimension diverges the shape from any matched
           preset, so the control falls back to Free on its own. }}
+        {{! Plain divs, NOT label elements: a label associates with its first
+          labelable descendant (the stepper's minus button), so hovering the
+          label draws that button in its hover state and clicking the legend
+          would trigger it. The stepper's input carries the name via its
+          aria-label argument instead. }}
         <div class="wireframe-layout-form__pair">
-          <label class="wireframe-layout-form__number">
+          <div class="wireframe-layout-form__number">
             <span class="wireframe-layout-form__legend">
               {{i18n "wireframe.inspector.layout.columns"}}
             </span>
-            <input
-              type="number"
-              min={{COLUMNS_MIN}}
-              max={{COLUMNS_MAX}}
-              value={{this.columns}}
-              {{on "change" this.setColumns}}
+            <InspectorStepperField
+              @value={{this.columns}}
+              @onChange={{this.setColumns}}
+              @min={{COLUMNS_MIN}}
+              @max={{COLUMNS_MAX}}
+              @ariaLabel={{i18n "wireframe.inspector.layout.columns"}}
             />
-          </label>
-          <label class="wireframe-layout-form__number">
+          </div>
+          <div class="wireframe-layout-form__number">
             <span class="wireframe-layout-form__legend">
               {{i18n "wireframe.inspector.layout.rows"}}
             </span>
-            <input
-              type="number"
-              min={{ROWS_MIN}}
-              max={{ROWS_MAX}}
-              value={{this.rows}}
-              {{on "change" this.setRows}}
+            <InspectorStepperField
+              @value={{this.rows}}
+              @onChange={{this.setRows}}
+              @min={{ROWS_MIN}}
+              @max={{ROWS_MAX}}
+              @ariaLabel={{i18n "wireframe.inspector.layout.rows"}}
             />
-          </label>
+          </div>
         </div>
 
         {{! Loaded-with-bad-data warning: some cells reference positions
@@ -545,38 +559,29 @@ export default class InspectorLayoutForm extends Component {
         <span class="wireframe-layout-form__legend">
           {{i18n "wireframe.inspector.layout.gap_legend"}}
         </span>
-        <div class="wireframe-layout-form__slider-row">
-          <input
-            type="range"
-            min={{GAP_MIN}}
-            max={{GAP_MAX}}
-            step={{GAP_STEP}}
-            value={{this.gap}}
-            {{on "input" this.setGap}}
-          />
-          <span class="wireframe-layout-form__slider-value">
-            {{this.gap}}rem
-          </span>
-        </div>
+        <InspectorDimensionField
+          @value={{this.gap}}
+          @onChange={{this.setGap}}
+          @unitless={{true}}
+          @unit="rem"
+          @slider={{true}}
+          @min={{GAP_MIN}}
+          @max={{GAP_MAX}}
+          @step={{GAP_STEP}}
+        />
       </div>
 
       <div class="wireframe-layout-form__field">
         <span class="wireframe-layout-form__legend">
           {{i18n "wireframe.inspector.layout.align_legend"}}
         </span>
-        <div class="wireframe-layout-form__segmented" role="radiogroup">
-          {{#each ALIGNMENTS as |value|}}
-            <DButton
-              class={{dConcatClass
-                "wireframe-layout-form__segment"
-                (if (eq this.align value) "--active")
-              }}
-              @ariaPressed={{eq this.align value}}
-              @label={{concat "wireframe.inspector.layout.align_" value}}
-              @action={{fn this.setAlign value}}
-            />
-          {{/each}}
-        </div>
+        <DSegmentedControl
+          class="wireframe-layout-form__segmented"
+          @items={{this.alignItems}}
+          @value={{this.align}}
+          @name="wireframe-layout-align"
+          @onSelect={{this.setAlign}}
+        />
       </div>
 
       {{#if this.isGrid}}

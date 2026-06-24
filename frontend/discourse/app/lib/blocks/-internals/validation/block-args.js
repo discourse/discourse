@@ -55,6 +55,12 @@ export const VALID_UI_CONTROLS = Object.freeze([
   // a consumer renders one editable row per item, each row built from the
   // item field schema.
   "repeatable",
+  // A numeric value with an optional unit selector and inline slider.
+  "dimension",
+  // A numeric value with decrement / increment buttons.
+  "stepper",
+  // A single-select button group (an alternative presentation of an enum).
+  "segmented",
 ]);
 
 /**
@@ -70,6 +76,12 @@ const VALID_UI_PROPERTIES = Object.freeze([
   "hidden",
   "conditional",
   "optionIcons",
+  // Numeric-control configuration: the allowed units a value may carry, the
+  // default unit, the increment step, and whether to show an inline slider.
+  "units",
+  "unit",
+  "step",
+  "slider",
 ]);
 
 /**
@@ -149,7 +161,7 @@ function validateUIHints(uiDef, argName, blockName, argLabel) {
     }
   }
 
-  for (const prop of ["label", "placeholder", "helpText", "group"]) {
+  for (const prop of ["label", "placeholder", "helpText", "group", "unit"]) {
     if (uiDef[prop] !== undefined && typeof uiDef[prop] !== "string") {
       raiseBlockError(
         `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.${prop}" value. Must be a string.`
@@ -157,10 +169,29 @@ function validateUIHints(uiDef, argName, blockName, argLabel) {
     }
   }
 
-  if (uiDef.hidden !== undefined && typeof uiDef.hidden !== "boolean") {
+  for (const prop of ["hidden", "slider"]) {
+    if (uiDef[prop] !== undefined && typeof uiDef[prop] !== "boolean") {
+      raiseBlockError(
+        `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.${prop}" value. Must be a boolean.`
+      );
+    }
+  }
+
+  if (uiDef.step !== undefined && typeof uiDef.step !== "number") {
     raiseBlockError(
-      `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.hidden" value. Must be a boolean.`
+      `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.step" value. Must be a number.`
     );
+  }
+
+  if (uiDef.units !== undefined) {
+    if (
+      !Array.isArray(uiDef.units) ||
+      uiDef.units.some((unit) => typeof unit !== "string")
+    ) {
+      raiseBlockError(
+        `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.units" value. Must be an array of strings.`
+      );
+    }
   }
 
   if (uiDef.conditional !== undefined) {

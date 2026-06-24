@@ -4,9 +4,12 @@ import { eq } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { toFlatMarkdown } from "discourse/plugins/discourse-wireframe/discourse/lib/inline-rich-text";
 import InspectorCategoryField from "./inspector-category-field";
+import InspectorDimensionField from "./inspector-dimension-field";
 import InspectorGroupField from "./inspector-group-field";
 import InspectorImageField from "./inspector-image-field";
 import InspectorRepeatableField from "./inspector-repeatable-field";
+import InspectorSegmentedField from "./inspector-segmented-field";
+import InspectorStepperField from "./inspector-stepper-field";
 import InspectorTagField from "./inspector-tag-field";
 import InspectorUserField from "./inspector-user-field";
 
@@ -57,6 +60,11 @@ export const FORM_KIT_TYPE_BY_CONTROL = Object.freeze({
   // An array of structured items (`itemType: "object"`). Rides the `custom`
   // slot; the bespoke control renders one editable row per item.
   repeatable: "custom",
+  // Numeric controls and the segmented enum picker also ride the `custom`
+  // slot; their per-control branches below mount the matching field component.
+  dimension: "custom",
+  stepper: "custom",
+  segmented: "custom",
 });
 
 /**
@@ -176,6 +184,34 @@ const InspectorField = <template>
     {{else if (eq @field.control "group-select")}}
       <formField.Control>
         <InspectorGroupField @custom={{formField}} />
+      </formField.Control>
+    {{else if (eq @field.control "dimension")}}
+      {{! Numeric value with an optional unit selector and inline slider. Reads
+          its configuration (units / step / slider / bounds) off the arg schema
+          and writes through the yielded field. }}
+      <formField.Control>
+        <InspectorDimensionField
+          @custom={{formField}}
+          @schema={{@field.schema}}
+        />
+      </formField.Control>
+    {{else if (eq @field.control "stepper")}}
+      {{! Numeric value with decrement / increment buttons. }}
+      <formField.Control>
+        <InspectorStepperField
+          @custom={{formField}}
+          @schema={{@field.schema}}
+        />
+      </formField.Control>
+    {{else if (eq @field.control "segmented")}}
+      {{! An enum rendered as a single-select button group. Items come from the
+          arg's enum values and optional icon map. }}
+      <formField.Control>
+        <InspectorSegmentedField
+          @custom={{formField}}
+          @options={{@field.options}}
+          @optionIcons={{@field.optionIcons}}
+        />
       </formField.Control>
     {{else if (eq @field.control "rich-inline")}}
       {{! Read-only summary — authors edit this arg on the canvas.

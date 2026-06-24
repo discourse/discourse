@@ -1116,6 +1116,63 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
     });
 
+    test("ui hints: accepts dimension / stepper / segmented controls", function (assert) {
+      for (const control of ["dimension", "stepper", "segmented"]) {
+        const schema = { size: { type: "number", ui: { control } } };
+        assert.strictEqual(
+          validateArgsSchema(schema, "test-block"),
+          undefined,
+          `accepts the "${control}" control`
+        );
+      }
+    });
+
+    test("ui hints: accepts the numeric-control configuration props", function (assert) {
+      const schema = {
+        size: {
+          type: "string",
+          ui: {
+            control: "dimension",
+            units: ["px", "rem", "%", "em"],
+            unit: "rem",
+            step: 0.25,
+            slider: true,
+          },
+        },
+      };
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+    });
+
+    test("ui hints: throws for non-array units", function (assert) {
+      const schema = {
+        size: { type: "string", ui: { control: "dimension", units: "px" } },
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.units" value\. Must be an array of strings/
+      );
+    });
+
+    test("ui hints: throws for non-number step", function (assert) {
+      const schema = {
+        size: { type: "number", ui: { control: "stepper", step: "1" } },
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.step" value\. Must be a number/
+      );
+    });
+
+    test("ui hints: throws for non-boolean slider", function (assert) {
+      const schema = {
+        size: { type: "number", ui: { control: "dimension", slider: "yes" } },
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.slider" value\. Must be a boolean/
+      );
+    });
+
     test("ui hints: accepts a conditional with equals", function (assert) {
       const schema = {
         ctaUrl: {

@@ -3049,43 +3049,13 @@ body.wireframe-active
     font-weight: 600;
   }
 
+  /* The mode / align / auto-collapse pickers render core `DSegmentedControl`,
+     which owns its own track / slider / radio styling. We only stretch it to
+     the panel width; the dark-chrome palette adjustments live in the shared
+     `.wireframe-inspector` override block below. */
+
   &__segmented {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-    gap: 1px;
-    background: var(--primary-very-low);
-    border-radius: 4px;
-    padding: 2px;
-  }
-
-  &__segment {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.2rem;
-    background: transparent;
-    border: none;
-    padding: 0.45rem 0.5rem;
-    font-size: var(--font-down-2);
-    font-weight: 500;
-    color: var(--primary-medium);
-    border-radius: 3px;
-    cursor: pointer;
-
-    .d-icon {
-      font-size: 0.85rem;
-    }
-
-    &:hover:not(.--active) {
-      color: var(--primary);
-    }
-
-    &.--active {
-      background: var(--secondary);
-      color: var(--primary);
-      box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
-    }
+    width: 100%;
   }
 
   &__pair {
@@ -3167,35 +3137,13 @@ body.wireframe-active
     flex-direction: row-reverse;
   }
 
-  /* Editable column / row count fields shown in free mode. */
+  /* Editable column / row count fields shown in free mode — a label above a
+     stepper control. */
+
   &__number {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-
-    input[type="number"] {
-      margin: 0;
-      width: 100%;
-    }
-  }
-
-  &__slider-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    input[type="range"] {
-      flex: 1 1 auto;
-      margin: 0;
-    }
-  }
-
-  &__slider-value {
-    min-width: 3rem;
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-    color: var(--primary-medium);
-    font-size: var(--font-down-2);
   }
 
   &__advanced {
@@ -3242,6 +3190,127 @@ body.wireframe-active
     border-radius: 1px;
     min-width: 4px;
     min-height: 4px;
+  }
+}
+
+/* Shared inspector control primitives. Used by both the bespoke layout form and
+   the generic schema-driven form (the latter mounts them through FormKit's
+   custom slot), so they're styled once here rather than per surface. */
+
+.wireframe-dimension-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  /* With a slider, the slider takes the free space and the numeric entry stays
+     a fixed-width trailer on the right. */
+
+  &--with-slider .wireframe-dimension-field__slider {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+  }
+
+  &__entry {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex: 0 0 auto;
+  }
+
+  /* `[type="number"]` qualifier raises specificity above the global
+     `input[type=number]` rule so its `margin-bottom` doesn't offset the box. */
+
+  &__number[type="number"] {
+    width: 4rem;
+    margin: 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__suffix {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+  }
+
+  &__unit {
+    width: auto;
+    margin: 0;
+  }
+}
+
+/* Stepper: a −/number/+ trio rendered as three equal-height pills with a small
+   gap. Each keeps its own border (the number input keeps its native one; the
+   buttons are given a matching one) so there's no nested double-border, and
+   `align-items: stretch` keeps the buttons exactly the input's height. */
+
+.wireframe-stepper-field {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0.25rem;
+  width: 100%;
+
+  /* `[type="number"]` qualifier raises specificity above the global
+     `input[type=number]` rule, whose `margin-bottom` would otherwise offset the
+     input within the stretch row and break vertical alignment with the buttons. */
+
+  &__number[type="number"] {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+
+    /* The +/- buttons replace the native spinners, so hide those. */
+    appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      appearance: none;
+      margin: 0;
+    }
+  }
+
+  &__btn.btn-flat {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0 0.6rem;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    color: var(--primary-medium);
+    background: var(--secondary);
+
+    &:hover:not([disabled]) {
+      background: var(--primary-very-low);
+      color: var(--primary);
+    }
+  }
+}
+
+/* Core `DSegmentedControl` is tuned for the light admin surface and a roomier
+   layout; the inspector panel is dark and narrow. Stretch it to the panel width
+   with equal-width segments, and trim the per-segment horizontal padding so a
+   four-option control (e.g. alignment) can't push the panel into horizontal
+   scroll — `min-width: 0` lets the segments shrink, and the flex grow keeps them
+   filling the row evenly. The default height / vertical padding is kept. */
+
+.wireframe-layout-form,
+.wireframe-inspector-form {
+  .d-segmented-control {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+
+    .d-segmented-control__label {
+      flex: 1 1 0;
+      min-width: 0;
+      padding-inline: var(--space-2);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 
