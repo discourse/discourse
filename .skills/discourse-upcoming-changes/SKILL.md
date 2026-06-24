@@ -120,9 +120,9 @@ Ask user to provide an image, then process it using the skill's optimization scr
 
    This script:
 
-   - Converts any image format to PNG using Discourse's ImageMagick integration
+   - Converts any image format to PNG through Safe Image
    - Resizes to max 1200px width using `OptimizedImage.downsize`
-   - Compresses with pngquant via `FileHelper.optimize_image!`
+   - Compresses through the Safe Image-backed `FileHelper.optimize_image!`
 
 3. **Final path:** `public/images/upcoming_changes/<setting_name>.png`
    - Filename must match the setting name exactly

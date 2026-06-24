@@ -59,15 +59,7 @@ module Migrations
         end
 
         def configure_services
-          configure_logging
           configure_site_settings
-        end
-
-        def configure_logging
-          @original_exifr_logger = EXIFR.logger
-
-          # disable logging for EXIFR which is used by ImageOptim
-          EXIFR.logger = Logger.new(nil)
         end
 
         def configure_site_settings
@@ -76,7 +68,6 @@ module Migrations
 
         def cleanup_resources
           databases.values.each(&:close)
-          EXIFR.logger = @original_exifr_logger
         end
       end
     end

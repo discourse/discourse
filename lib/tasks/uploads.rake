@@ -1318,12 +1318,12 @@ task "uploads:downsize" => :environment do
     end
 
     begin
-      w, h = FastImage.size(path, raise_on_failure: true)
-    rescue FastImage::UnknownImageType
+      w, h = DiscourseImage.size(path, filename: upload.original_filename)
+    rescue SafeImage::UnsupportedFormatError, SafeImage::InvalidImageError
       log "Unknown image type"
       skipped += 1
       next
-    rescue FastImage::SizeNotFound
+    rescue SafeImage::Error, ArgumentError
       log "Size not found"
       skipped += 1
       next

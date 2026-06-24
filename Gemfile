@@ -59,7 +59,7 @@ gem "message_bus"
 
 gem "rails_multisite"
 
-gem "fastimage"
+gem "safe_image", "~> 0.5.0"
 
 gem "aws-sdk-s3", require: false
 gem "aws-sdk-sns", require: false
@@ -71,7 +71,6 @@ gem "unf", require: false
 
 gem "email_reply_trimmer"
 
-gem "image_optim"
 gem "multi_json"
 gem "mustache"
 gem "liquid", "5.12.0"
@@ -228,7 +227,7 @@ gem "rqrcode"
 
 gem "rubyzip", require: false
 
-gem "landlock", require: false
+gem "landlock", "~> 0.3.0", require: false
 
 gem "sshkey", require: false
 

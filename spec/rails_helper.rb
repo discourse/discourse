@@ -89,7 +89,7 @@ RSpec.configure do |config|
   config.include UploadsHelpers
   config.include BackupsHelpers
   config.include OneboxHelpers
-  config.include FastImageHelpers
+  config.include SafeImageHelpers
   config.include ServiceMatchers
   config.include I18nHelpers
   config.include TimeHelpers

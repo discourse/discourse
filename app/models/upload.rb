@@ -10,7 +10,6 @@ class Upload < ActiveRecord::Base
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX = %r{(/original/\dX[/\.\w]*/(\h+)[\.\w]*)}
   MAX_IDENTIFY_SECONDS = 5
-  DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS = 5
   # the maximum length of a base62 encoded sha1
   MAX_BASE62_SHA1_LENGTH = 27
 
@@ -155,7 +154,7 @@ class Upload < ActiveRecord::Base
   def get_optimized_image(width, height, opts = nil)
     opts ||= {}
 
-    fix_image_extension if !extension || extension.length == 0
+    fix_image_extension if extension.blank? || extension_mismatch_with_file?
 
     opts = opts.merge(raise_on_error: true)
     begin
@@ -189,15 +188,13 @@ class Upload < ActiveRecord::Base
       original_path = Discourse.store.path_for(self)
       original_path = Discourse.store.download(self) if original_path.blank?
 
-      image_info =
+      image_type =
         begin
-          image = FastImage.new(original_path)
-          image.type # eager load to rescue errors early
-          image
-        rescue StandardError
+          DiscourseImage.type(original_path, filename: original_filename)
+        rescue SafeImage::Error, ArgumentError
           nil
         end
-      new_extension = image_info&.type&.to_s || "unknown"
+      new_extension = image_type&.to_s || "unknown"
 
       if new_extension != extension
         update_columns(extension: new_extension)
@@ -207,6 +204,21 @@ class Upload < ActiveRecord::Base
       update_columns(extension: "unknown")
       true
     end
+  end
+
+  def extension_mismatch_with_file?
+    return false if extension == "unknown"
+
+    original_path = Discourse.store.path_for(self)
+    return false if original_path.blank?
+
+    actual_extension = DiscourseImage.sniff_extension(original_path)
+    return false if actual_extension.blank?
+
+    DiscourseImage.normalized_extension(actual_extension) !=
+      DiscourseImage.normalized_extension(extension)
+  rescue StandardError
+    false
   end
 
   def destroy
@@ -318,7 +330,7 @@ class Upload < ActiveRecord::Base
             [0, 0]
           end
       else
-        w, h = FastImage.new(path, raise_on_failure: true).size
+        w, h = DiscourseImage.size(path, filename: original_filename)
       end
 
       self.width = w || 0
@@ -394,37 +406,22 @@ class Upload < ActiveRecord::Base
 
       color ||=
         begin
-          data =
-            Discourse::Utils.execute_command(
-              "nice",
-              "-n",
-              "10",
-              "convert",
-              local_path,
-              "-depth",
-              "8",
-              "-resize",
-              "1x1",
-              "-define",
-              "histogram:unique-colors=true",
-              "-format",
-              "%c",
-              "histogram:info:",
-              timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
-            )
-
-          # Output format:
-          # 1: (110.873,116.226,93.8821) #6F745E srgb(43.4798%,45.5789%,36.8165%)
-
-          color = data[/#([0-9A-F]{6})/, 1]
-
-          raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
-
-          color
-        rescue Discourse::Utils::CommandError
-          # Timeout or unable to parse image
+          DiscourseImage.dominant_color(
+            local_path,
+            filename: original_filename,
+            max_pixels:
+              (
+                if SiteSetting.max_image_megapixels > 0
+                  SiteSetting.max_image_megapixels * 1_000_000
+                else
+                  nil
+                end
+              ),
+          )
+        rescue SafeImage::Error
+          # Timeout or unable to parse image.
           # This can happen due to bad user input - ignore and save
-          # an empty string to prevent re-evaluation
+          # an empty string to prevent re-evaluation.
           ""
         end
     end
@@ -437,21 +434,7 @@ class Upload < ActiveRecord::Base
   end
 
   def target_image_quality(local_path, test_quality)
-    @file_quality ||=
-      begin
-        Discourse::Utils.execute_command(
-          "identify",
-          "-ping",
-          "-format",
-          "%Q",
-          local_path,
-          timeout: MAX_IDENTIFY_SECONDS,
-        ).to_i
-      rescue StandardError
-        0
-      end
-
-    test_quality if @file_quality == 0 || @file_quality > test_quality
+    test_quality
   end
 
   def self.sha1_from_short_path(path)

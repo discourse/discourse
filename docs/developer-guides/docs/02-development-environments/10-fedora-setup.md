@@ -12,7 +12,7 @@ If you're looking to install Discourse for a **production environment**, prefer 
 
 ```sh
 sudo dnf update
-sudo dnf install -y "@development-tools" git rpm-build zlib-devel ruby-devel readline-devel libpq-devel ImageMagick sqlite sqlite-devel nodejs npm curl gcc g++ bzip2 openssl-devel libyaml-devel libffi-devel zlib-devel gdbm-devel ncurses-devel optipng pngquant jhead jpegoptim gifsicle oxipng
+sudo dnf install -y "@development-tools" git rpm-build zlib-devel ruby-devel readline-devel libpq-devel ImageMagick vips-devel sqlite sqlite-devel nodejs npm curl gcc g++ bzip2 openssl-devel libyaml-devel libffi-devel zlib-devel gdbm-devel ncurses-devel pngquant jpegoptim oxipng libjpeg-turbo-utils
 ```
 
 **Install required npm packages**

@@ -54,6 +54,7 @@ const DEFAULT_CONFIG = {
   useMultipartUploadsIfAvailable: false,
   uppyReady: null,
   onProgressUploadsChanged: null,
+  onUploadStateChanged: null,
   type: null,
 };
 
@@ -172,6 +173,7 @@ export default class UppyUpload {
           filesAwaitingUpload: !this.config.autoStartUploads,
           cancellable: isValid && this.config.autoStartUploads,
         });
+        this.#triggerUploadStateChanged();
         return isValid;
       },
 
@@ -216,6 +218,7 @@ export default class UppyUpload {
     this.uppyWrapper.uppyInstance.on("upload", (uploadId, files) => {
       this.uppyWrapper.addNeedProcessing(files.length);
       this.processing = true;
+      this.#triggerUploadStateChanged();
       this.cancellable = false;
       files.forEach((file) => {
         this.inProgressUploads.push(
@@ -246,6 +249,7 @@ export default class UppyUpload {
     this.uppyWrapper.uppyInstance.on("upload-success", (file, response) => {
       if (this.#usingS3Uploads) {
         Object.assign(this, { uploading: false, processing: true });
+        this.#triggerUploadStateChanged();
         this.#completeExternalUpload(file)
           .then((completeResponse) => {
             this.#removeInProgressUpload(file.id);
@@ -399,6 +403,7 @@ export default class UppyUpload {
       return;
     }
     this.uploading = true;
+    this.#triggerUploadStateChanged();
     return this.uppyWrapper.uppyInstance?.upload();
   }
 
@@ -544,6 +549,14 @@ export default class UppyUpload {
     }
   }
 
+  #triggerUploadStateChanged() {
+    this.config.onUploadStateChanged?.({
+      uploading: this.uploading,
+      processing: this.processing,
+      filesAwaitingUpload: this.filesAwaitingUpload,
+    });
+  }
+
   #reset() {
     this.uppyWrapper.uppyInstance?.cancelAll();
     Object.assign(this, {
@@ -556,6 +569,7 @@ export default class UppyUpload {
     if (this._fileInputEl) {
       this._fileInputEl.value = "";
     }
+    this.#triggerUploadStateChanged();
   }
 
   #removeInProgressUpload(fileId) {

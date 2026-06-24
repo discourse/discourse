@@ -266,13 +266,13 @@ RSpec.describe UploadsController do
         expect(data["errors"].first).to eq(I18n.t("upload.unauthorized", authorized_extensions: ""))
       end
 
-      it "returns an error when it could not determine the dimensions of an image" do
+      it "returns an error when the image is unsupported or corrupted" do
         post "/uploads.json", params: { file: fake_jpg, upload_type: "composer" }
 
         expect(response.status).to eq(422)
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
         message = response.parsed_body["errors"]
-        expect(message).to contain_exactly(I18n.t("upload.images.size_not_found"))
+        expect(message).to contain_exactly(I18n.t("upload.images.not_supported_or_corrupted"))
       end
     end
 

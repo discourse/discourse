@@ -25,7 +25,8 @@ You will need the following packages on your system:
 - [Node.js][node_link]
 - [pnpm][pnpm_link]
 - [MailHog][mh_link]\*\*
-- [ImageMagick][imagemagick_link]\*\*
+- [ImageMagick][imagemagick_link]
+- [libvips][libvips_link]
 
 _\*\* optional_
 
@@ -140,5 +141,6 @@ Happy hacking! And to get started with that, see [Beginner’s Guide to Creating
 [sqlite_link]: https://sqlite.org/
 [redis_link]: http://redis.io/
 [imagemagick_link]: http://www.imagemagick.org/
+[libvips_link]: https://www.libvips.org/
 [pnpm_link]: https://pnpm.io/
 [mh_link]: https://github.com/mailhog/MailHog

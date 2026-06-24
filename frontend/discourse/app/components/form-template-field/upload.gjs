@@ -17,6 +17,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class FormTemplateFieldUpload extends Component {
   @service appEvents;
+  @service composer;
 
   @resettableTracked uploadValue = this.args.value || "";
   @autoTrackedArray uploadedFiles = [];
@@ -26,6 +27,7 @@ export default class FormTemplateFieldUpload extends Component {
     id: this.args.id,
     type: "composer",
     uploadDone: this.uploadDone,
+    onUploadStateChanged: this.uploadStateChanged,
   });
 
   constructor() {
@@ -36,6 +38,8 @@ export default class FormTemplateFieldUpload extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off("composer:replace-text", this, this.handleReplaceText);
+    this.composer.clearFormTemplateUploadInProgress(this.fileUploadElementId);
+    this.uppyUpload.teardown();
   }
 
   @action
@@ -85,6 +89,14 @@ export default class FormTemplateFieldUpload extends Component {
       !fileTypes ||
       fileTypes.includes(`.${extension}`) ||
       fileTypes.includes(file.type)
+    );
+  }
+
+  @bind
+  uploadStateChanged({ uploading, processing }) {
+    this.composer.setFormTemplateUploadInProgress(
+      this.fileUploadElementId,
+      uploading || processing
     );
   }
 

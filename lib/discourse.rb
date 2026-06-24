@@ -297,10 +297,6 @@ module Discourse
   class SiteSettingMissing < StandardError
   end
 
-  # When ImageMagick is missing
-  class ImageMagickMissing < StandardError
-  end
-
   # When read-only mode is enabled
   class ReadOnly < StandardError
   end
@@ -1269,7 +1265,7 @@ module Discourse
         require "actionview_precompiler"
         ActionviewPrecompiler.precompile
       end,
-      Thread.new { LetterAvatar.image_magick_version },
+      Thread.new { LetterAvatar.renderer_version },
       Thread.new { SvgSprite.core_svgs },
       Thread.new { EmberAssets.script_chunks(exception: false) },
       Thread.new do

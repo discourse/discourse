@@ -5,8 +5,17 @@ class ProblemCheck::ImageMagick < ProblemCheck
 
   def call
     return no_problem if !SiteSetting.create_thumbnails
-    return no_problem if Kernel.system("command -v magick >/dev/null;")
+    return no_problem if safe_image_configured?
 
     problem
+  end
+
+  private
+
+  def safe_image_configured?
+    SafeImage.config
+    true
+  rescue SafeImage::Error
+    false
   end
 end

@@ -59,7 +59,7 @@ When taking screenshots of your theme:
 Keep your images under the 1MB size limit by:
 
 - Using WebP format, as it combines the advantages of JPEG and PNG, offering more efficient compression than both.
-- For PNG format, using optimization tools like [TinyPNG](https://tinypng.com/) or [ImageOptim](https://imageoptim.com/).
+- For PNG format, using optimization tools like [TinyPNG](https://tinypng.com/).
 - Removing unnecessary metadata from image files.
 - Considering slightly reduced dimensions if needed while maintaining the 16:9 ratio.
 

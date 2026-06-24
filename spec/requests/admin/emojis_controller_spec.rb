@@ -50,8 +50,8 @@ RSpec.describe Admin::EmojiController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      context "when upload is invalid" do
-        it "should publish the right error" do
+      context "when upload is unsupported or corrupted" do
+        it "publishes the right error" do
           post "/admin/config/emoji.json",
                params: {
                  name: "test",
@@ -60,7 +60,7 @@ RSpec.describe Admin::EmojiController do
 
           expect(response.status).to eq(422)
           parsed = response.parsed_body
-          expect(parsed["errors"]).to eq([I18n.t("upload.images.size_not_found")])
+          expect(parsed["errors"]).to eq([I18n.t("upload.images.not_supported_or_corrupted")])
         end
       end
 

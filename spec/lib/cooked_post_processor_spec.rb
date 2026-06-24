@@ -512,7 +512,7 @@ RSpec.describe CookedPostProcessor do
           end
 
           it "should not add lightbox" do
-            FastImage.expects(:size).returns([1750, 2000])
+            SafeImage.expects(:remote_size).returns([1750, 2000])
 
             cpp.post_process
 
@@ -532,7 +532,7 @@ RSpec.describe CookedPostProcessor do
           end
 
           it "should not add lightbox" do
-            FastImage.expects(:size).returns([1750, 2000])
+            SafeImage.expects(:remote_size).returns([1750, 2000])
 
             cpp.post_process
 
@@ -552,7 +552,7 @@ RSpec.describe CookedPostProcessor do
             end
 
             it "should not add lightbox" do
-              FastImage.expects(:size).returns([1750, 2000])
+              SafeImage.expects(:remote_size).returns([1750, 2000])
 
               cpp.post_process
 
@@ -655,7 +655,6 @@ RSpec.describe CookedPostProcessor do
 
           context "when the upload is attached to a different post" do
             before do
-              FastImage.size(upload.url)
               upload.update(
                 secure: true,
                 access_control_post: Fabricate(:post, user: user_with_auto_groups),
@@ -854,7 +853,7 @@ RSpec.describe CookedPostProcessor do
         let(:cpp) { CookedPostProcessor.new(post) }
 
         it "adds a topic image if there's one in the first post" do
-          FastImage.stubs(:size)
+          SafeImage.stubs(:remote_size)
           expect(post.topic.image_upload_id).to eq(nil)
 
           cpp.post_process
@@ -863,7 +862,7 @@ RSpec.describe CookedPostProcessor do
         end
 
         it "removes image if post is edited and no longer has an image" do
-          FastImage.stubs(:size)
+          SafeImage.stubs(:remote_size)
 
           cpp.post_process
           post.topic.reload
@@ -920,7 +919,7 @@ RSpec.describe CookedPostProcessor do
         let(:cpp) { CookedPostProcessor.new(reply) }
 
         it "adds a post image if there's one in the post" do
-          FastImage.stubs(:size)
+          SafeImage.stubs(:remote_size)
           expect(reply.image_upload_id).to eq(nil)
           cpp.post_process
           reply.reload
@@ -979,13 +978,13 @@ RSpec.describe CookedPostProcessor do
 
     it "resizes when only width is specified" do
       img = { "src" => "http://foo.bar/image3.png", "width" => 100 }
-      FastImage.expects(:size).returns([200, 400])
+      SafeImage.expects(:remote_size).returns([200, 400])
       expect(cpp.get_size_from_attributes(img)).to eq([100, 200])
     end
 
     it "resizes when only height is specified" do
       img = { "src" => "http://foo.bar/image3.png", "height" => 100 }
-      FastImage.expects(:size).returns([100, 300])
+      SafeImage.expects(:remote_size).returns([100, 300])
       expect(cpp.get_size_from_attributes(img)).to eq([33, 100])
     end
 
@@ -1027,7 +1026,7 @@ RSpec.describe CookedPostProcessor do
     end
 
     it "caches the results" do
-      FastImage.expects(:size).returns([200, 400])
+      SafeImage.expects(:remote_size).returns([200, 400])
       cpp.get_size("http://foo.bar/image3.png")
       expect(cpp.get_size("http://foo.bar/image3.png")).to eq([200, 400])
     end

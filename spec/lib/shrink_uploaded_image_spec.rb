@@ -10,6 +10,8 @@ RSpec.describe ShrinkUploadedImage do
   end
 
   context "when local uploads are enabled" do
+    before { SiteSetting.enable_s3_uploads = false }
+
     let(:upload) { Fabricate(:image_upload, width: 200, height: 200) }
 
     it "resizes the image" do
@@ -119,7 +121,7 @@ RSpec.describe ShrinkUploadedImage do
     it "returns false if the image is invalid" do
       post = Fabricate(:post, raw: "<img src='#{upload.url}'>")
       post.link_post_uploads
-      FastImage.stubs(:size).raises(FastImage::SizeNotFound.new)
+      DiscourseImage.stubs(:size).raises(SafeImage::InvalidImageError.new)
 
       result =
         ShrinkUploadedImage.new(
@@ -138,6 +140,12 @@ RSpec.describe ShrinkUploadedImage do
     before do
       setup_s3
       stub_s3_store
+    end
+
+    after do
+      Discourse.unstub(:store)
+      SiteSetting.enable_s3_uploads = false
+      SiteSetting.refresh!
     end
 
     it "resizes the image" do

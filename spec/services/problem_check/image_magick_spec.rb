@@ -6,20 +6,30 @@ RSpec.describe ProblemCheck::ImageMagick do
   describe ".call" do
     before do
       SiteSetting.stubs(create_thumbnails: enabled)
-      Kernel.stubs(system: installed)
+      if safe_image_config == :not_configured
+        SafeImage.stubs(:config).raises(SafeImage::NotConfiguredError)
+      else
+        SafeImage.stubs(:config).returns(safe_image_config)
+      end
     end
 
     context "when thumbnail creation is enabled" do
       let(:enabled) { true }
 
-      context "when Image Magick is installed" do
-        let(:installed) { true }
+      context "when Safe Image is configured" do
+        let(:safe_image_config) do
+          SafeImage::Config.new(
+            backend: :vips,
+            landlock: false,
+            max_pixels: SafeImage::DEFAULT_MAX_PIXELS,
+          )
+        end
 
         it { expect(check).to be_chill_about_it }
       end
 
-      context "when Image Magick is not installed" do
-        let(:installed) { false }
+      context "when Safe Image is not configured" do
+        let(:safe_image_config) { :not_configured }
 
         it do
           expect(check).to have_a_problem.with_priority("low").with_message(
@@ -31,7 +41,7 @@ RSpec.describe ProblemCheck::ImageMagick do
 
     context "when thumbnail creation is disabled" do
       let(:enabled) { false }
-      let(:installed) { false }
+      let(:safe_image_config) { :not_configured }
 
       it { expect(check).to be_chill_about_it }
     end

@@ -5,7 +5,7 @@ RSpec.describe OptimizedImage do
   before { upload.id = 42 }
 
   describe ".crop" do
-    it "should produce cropped images (requires ImageMagick 7)" do
+    it "produces cropped images" do
       tmp_path = "/tmp/cropped.png"
       desired_width = 5
       desired_height = 5
@@ -18,7 +18,7 @@ RSpec.describe OptimizedImage do
           desired_height,
         )
 
-        w, h = FastImage.size(tmp_path)
+        w, h = DiscourseImage.size(tmp_path)
         expect(w).to eq(desired_width)
         expect(h).to eq(desired_height)
 
@@ -43,7 +43,7 @@ RSpec.describe OptimizedImage do
           desired_height,
         )
 
-        w, h = FastImage.size(tmp_path)
+        w, h = DiscourseImage.size(tmp_path)
 
         expect(w).to eq(desired_width)
         expect(h).to eq(desired_height)
@@ -65,26 +65,12 @@ RSpec.describe OptimizedImage do
           desired_height,
         )
 
-        w, h = FastImage.size(tmp_path)
+        w, h = DiscourseImage.size(tmp_path)
 
         expect(w).to eq(desired_width)
         expect(h).to eq(desired_height)
       ensure
         File.delete(tmp_path) if File.exist?(tmp_path)
-      end
-    end
-
-    describe ".resize_instructions" do
-      let(:image) { "#{Rails.root.join("spec/fixtures/images/logo.png")}" }
-
-      it "doesn't return any color options by default" do
-        instructions = described_class.resize_instructions(image, image, "50x50")
-        expect(instructions).to_not include("-colors")
-      end
-
-      it "supports an optional color option" do
-        instructions = described_class.resize_instructions(image, image, "50x50", colors: 12)
-        expect(instructions).to include("-colors")
       end
     end
 
@@ -154,7 +140,7 @@ RSpec.describe OptimizedImage do
                 5,
                 raise_on_error: true,
               )
-            end.to raise_error(RuntimeError, /improper image header/)
+            end.to raise_error(SafeImage::UnsupportedFormatError)
           ensure
             File.delete(tmp_path) if File.exist?(tmp_path)
           end
@@ -163,7 +149,7 @@ RSpec.describe OptimizedImage do
     end
 
     describe ".downsize" do
-      it "should downsize logo (requires ImageMagick 7)" do
+      it "downsizes logo" do
         tmp_path = "/tmp/downsized.png"
 
         begin
@@ -173,9 +159,8 @@ RSpec.describe OptimizedImage do
             "100x100\>",
           )
 
-          info = FastImage.new(tmp_path)
-          expect(info.size).to eq([100, 27])
-          expect(File.size(tmp_path)).to be < 2300
+          expect(DiscourseImage.size(tmp_path)).to eq([100, 27])
+          expect(File.size(tmp_path)).to be < 3.kilobytes
         ensure
           File.delete(tmp_path) if File.exist?(tmp_path)
         end
@@ -257,8 +242,7 @@ RSpec.describe OptimizedImage do
         optimized_new = OptimizedImage.create_for(upload, 10, 10, format: "gif")
         expect(optimized_new.id).to eq(old_id)
 
-        path = Shellwords.escape(Discourse.store.path_for(optimized_new))
-        expect(`identify -format %m #{path}`.strip).to eq("GIF")
+        expect(DiscourseImage.type(Discourse.store.path_for(optimized_new))).to eq(:gif)
 
         # cleanup (which transaction rollback may miss)
         optimized_new.destroy
@@ -281,11 +265,10 @@ RSpec.describe OptimizedImage do
         File.read(Discourse.store.path_for(upload)),
       )
 
-      resized = upload.get_optimized_image(50, 50, format: "gif", raise_on_error: true)
-      expect(resized.extension).to eq(".gif")
-      # lets ensure we have a gif with the identify tool
-      path = Shellwords.escape(Discourse.store.path_for(resized))
-      expect(`identify -format %m #{path}`.strip).to eq("GIF")
+      expect(upload.get_optimized_image(50, 50, format: "gif")).to eq(nil)
+      expect {
+        OptimizedImage.create_for(upload, 50, 50, format: "gif", raise_on_error: true)
+      }.to raise_error(Discourse::InvalidAccess)
     end
 
     context "when using an internal store" do

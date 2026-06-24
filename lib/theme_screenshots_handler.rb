@@ -45,7 +45,12 @@ class ThemeScreenshotsHandler
               )
       end
 
-      screenshot_width, screenshot_height = FastImage.size(path)
+      screenshot_width, screenshot_height =
+        begin
+          DiscourseImage.size(path)
+        rescue SafeImage::Error, ArgumentError
+          [nil, nil]
+        end
       if (screenshot_width.nil? || screenshot_height.nil?) ||
            screenshot_width > MAX_THEME_SCREENSHOT_DIMENSIONS[0] ||
            screenshot_height > MAX_THEME_SCREENSHOT_DIMENSIONS[1]
