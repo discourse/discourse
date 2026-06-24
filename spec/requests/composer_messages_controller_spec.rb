@@ -28,6 +28,52 @@ RSpec.describe ComposerMessagesController do
         json = response.parsed_body
         expect(json["composer_messages"].first["id"]).to eq("education")
       end
+
+      it "does not include links from hidden posts in duplicate_lookup" do
+        reply =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: Fabricate(:user, refresh_auto_groups: true),
+            raw: "Check out https://example.com/private-doc for details",
+          )
+        TopicLink.extract_from(reply)
+        reply.hide!(PostActionType.types[:spam])
+
+        get "/composer_messages.json", params: { topic_id: topic.id, composer_action: "reply" }
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        duplicate_lookup = json["extras"]["duplicate_lookup"]
+        expect(duplicate_lookup).not_to have_key("example.com/private-doc")
+      end
+
+      it "does not include links from posts converted to whispers in duplicate_lookup" do
+        SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+        staff_user = Fabricate(:admin)
+        whisper_url = "https://staff.example.com/private-doc"
+        normalized_whisper_url = whisper_url.delete_prefix("https://")
+        reply =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: staff_user,
+            raw: "Check out #{whisper_url} for details",
+          )
+        TopicLink.extract_from(reply)
+
+        sign_in(staff_user)
+        put "/posts/#{reply.id}/post_type.json", params: { post_type: Post.types[:whisper] }
+        expect(response.status).to eq(200)
+
+        sign_in(user)
+        get "/composer_messages.json", params: { topic_id: topic.id, composer_action: "reply" }
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        duplicate_lookup = json["extras"]["duplicate_lookup"]
+        expect(duplicate_lookup).not_to have_key(normalized_whisper_url)
+      end
     end
   end
 
