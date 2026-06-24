@@ -464,7 +464,7 @@ describe "Post event" do
     expect(page).to have_css(".discourse-post-event")
 
     post_event_page.edit
-    find(".d-modal .d-modal__footer .advanced-settings").click
+    find(".d-modal .d-modal__footer .advanced-mode-btn").click
 
     form = PageObjects::Components::FormKit.new(".d-modal form")
     expect(form.field("eventType")).to have_value("private")

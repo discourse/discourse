@@ -6,6 +6,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
+import AdvancedModeToggle from "discourse/components/advanced-mode-toggle";
 import withEventValue from "discourse/helpers/with-event-value";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS } from "discourse/lib/constants";
@@ -704,15 +705,9 @@ export default class PollUiBuilderModal extends Component {
 
         <DButton @label="cancel" @action={{@closeModal}} class="btn-flat" />
 
-        <DButton
-          @action={{this.toggleAdvanced}}
-          @icon="gear"
-          @title={{if
-            this.showAdvanced
-            "poll.ui_builder.hide_advanced"
-            "poll.ui_builder.show_advanced"
-          }}
-          class="btn-default show-advanced"
+        <AdvancedModeToggle
+          @active={{this.showAdvanced}}
+          @onToggle={{this.toggleAdvanced}}
         />
 
       </:footer>
