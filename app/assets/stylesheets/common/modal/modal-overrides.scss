@@ -741,24 +741,20 @@
   }
 
   .incoming-email-content {
-    height: 300px;
     max-width: 100%;
-    width: 90vw; // forcing textarea wider
 
-    textarea,
     .incoming-email-html-part {
-      height: 95%;
       border: none;
       border-top: 1px solid var(--content-border-color);
       padding-top: 10px;
       width: 100%;
     }
 
-    textarea {
+    .incoming-email-raw {
       font-family: var(--d-font-family--monospace);
-      resize: none;
-      border-radius: 0;
-      box-shadow: none;
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
 
     .incoming-email-html-part {

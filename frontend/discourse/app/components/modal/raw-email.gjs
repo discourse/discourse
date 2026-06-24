@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { Textarea } from "@ember/component";
 import { action } from "@ember/object";
 import IframedHtml from "discourse/components/iframed-html";
 import Post from "discourse/models/post";
@@ -82,13 +81,13 @@ export default class RawEmailComponent extends Component {
         <div class="incoming-email-content">
           {{#if (eq this.tab "raw")}}
             {{#if this.rawEmail}}
-              <Textarea @value={{this.rawEmail}} />
+              <pre class="incoming-email-raw">{{this.rawEmail}}</pre>
             {{else}}
               {{i18n "raw_email.not_available"}}
             {{/if}}
           {{/if}}
           {{#if (eq this.tab "text_part")}}
-            <Textarea @value={{this.textPart}} />
+            <pre class="incoming-email-raw">{{this.textPart}}</pre>
           {{/if}}
           {{#if (eq this.tab "html_part")}}
             <IframedHtml
