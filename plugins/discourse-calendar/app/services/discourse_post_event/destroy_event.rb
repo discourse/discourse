@@ -14,9 +14,7 @@ module DiscoursePostEvent
     policy :can_act_on_event
 
     step :publish_event_update
-    # The payload must be captured before the event is destroyed, as it reads
-    # state (dates, post) that the deletion removes.
-    step :build_webhook_payload
+    model :webhook_payload, :build_webhook_payload
     transaction { step :destroy_event }
     step :enqueue_destroyed_webhooks
 
@@ -35,7 +33,7 @@ module DiscoursePostEvent
     end
 
     def build_webhook_payload(event:)
-      context[:webhook_payload] = WebHook.build_calendar_event_payload(event)
+      WebHook.build_calendar_event_payload(event)
     end
 
     def destroy_event(event:)
