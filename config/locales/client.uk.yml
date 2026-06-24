@@ -2993,6 +2993,8 @@ uk:
       email_label: "E-mail"
       continue_button: "Продовжити"
       verify_button: "Продовжити"
+      account_ready_continue: "Продовжити"
+      username_label: "Імʼя користувача"
     login:
       header_title: "З поверненням"
       title: "Вхід"

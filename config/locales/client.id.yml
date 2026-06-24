@@ -1549,6 +1549,8 @@ id:
       email_label: "Email"
       continue_button: "Lanjutkan"
       verify_button: "Lanjutkan"
+      account_ready_continue: "Lanjutkan"
+      username_label: "Nama Pengguna"
     login:
       title: "Log In"
       username: "Pengguna"

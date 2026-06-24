@@ -2470,6 +2470,8 @@ fr:
       email_label: "E-mail"
       continue_button: "Continuer"
       verify_button: "Continuer"
+      account_ready_continue: "Continuer"
+      username_label: "Nom d'utilisateur"
     login:
       header_title: "Ravi de vous revoir"
       title: "Se connecter"

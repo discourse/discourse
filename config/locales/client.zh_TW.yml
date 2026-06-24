@@ -2240,6 +2240,8 @@ zh_TW:
       email_label: "電子信箱"
       continue_button: "繼續"
       verify_button: "繼續"
+      account_ready_continue: "繼續"
+      username_label: "使用者名稱"
     login:
       header_title: "歡迎回來"
       title: "登入"

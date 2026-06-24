@@ -2587,6 +2587,8 @@ ug:
       email_label: "ئېلخەت"
       continue_button: "داۋاملاشتۇر"
       verify_button: "داۋاملاشتۇر"
+      account_ready_continue: "داۋاملاشتۇر"
+      username_label: "ئىشلەتكۈچى ئاتى"
     login:
       header_title: "قايتىپ خۇش كەپسىز"
       title: "تىزىمغا كىرىش"

@@ -2819,6 +2819,8 @@ cs:
       email_label: "Email"
       continue_button: "Pokračovat"
       verify_button: "Pokračovat"
+      account_ready_continue: "Pokračovat"
+      username_label: "Uživatelské jméno"
     login:
       header_title: "Vítejte zpět"
       title: "Přihlášení"

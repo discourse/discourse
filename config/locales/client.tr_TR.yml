@@ -2670,6 +2670,8 @@ tr_TR:
       email_label: "E-posta"
       continue_button: "Devam et"
       verify_button: "Devam et"
+      account_ready_continue: "Devam et"
+      username_label: "Kullanıcı Adı"
     login:
       header_title: "Tekrar hoş geldiniz"
       title: "Giriş Yap"
