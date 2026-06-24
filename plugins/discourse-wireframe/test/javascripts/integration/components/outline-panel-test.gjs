@@ -2,7 +2,9 @@ import { getOwner } from "@ember/owner";
 import { click, render, settled, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
+import Carousel from "discourse/blocks/builtin/carousel";
 import Heading from "discourse/blocks/builtin/heading";
+import Layout from "discourse/blocks/builtin/layout";
 import Section from "discourse/blocks/builtin/section";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
@@ -101,6 +103,57 @@ module(
       assert
         .dom(".outline-block__name")
         .exists({ count: 4 }, "the container plus its three children render");
+    });
+
+    test("numbers a carousel's child slides", async function (assert) {
+      await _renderBlocks(
+        "homepage-blocks",
+        [
+          {
+            block: Carousel,
+            args: {},
+            children: [
+              {
+                block: Layout,
+                args: {},
+                children: [{ block: Heading, args: { text: "A" } }],
+              },
+              {
+                block: Layout,
+                args: {},
+                children: [{ block: Heading, args: { text: "B" } }],
+              },
+            ],
+          },
+        ],
+        this.owner
+      );
+      const editor = this.owner.lookup("service:wireframe");
+      editor.siteSettings.wireframe_enabled = true;
+      logIn(this.owner);
+      editor.enter();
+
+      await render(
+        <template>
+          <div class="wireframe-shell"><OutlinePanel /></div>
+        </template>
+      );
+      await waitFor(".outline-block");
+      await settled();
+
+      const chips = [...document.querySelectorAll(".outline-block__slide")].map(
+        (el) => el.textContent.trim()
+      );
+      assert.deepEqual(
+        chips,
+        ["Slide 1", "Slide 2"],
+        "each carousel child row shows its slide ordinal"
+      );
+      // The headings nested inside the slides are not carousel children, so
+      // they carry no slide chip.
+      assert
+        .dom(".outline-block__slide")
+        .exists({ count: 2 }, "only the direct slides are numbered");
     });
 
     test("toggling a collapsed container reveals its children", async function (assert) {

@@ -386,5 +386,131 @@ module(
         "bottom edge"
       );
     });
+
+    /*
+     * Noun-framed container (e.g. a carousel). The container carries
+     * `data-wf-child-noun` / `-plural`, so drop messages name positions in
+     * slide terms by 1-based ordinal instead of by the neighbour's block name.
+     *   ┌─────┬─────┬─────┐
+     *   │  A  │  B  │  C  │
+     *   └─────┴─────┴─────┘
+     */
+    const Slides = <template>
+      <div
+        id="container"
+        data-wf-child-noun="slide"
+        data-wf-child-noun-plural="slides"
+        style="position: fixed; top: 0; left: 0; display: flex; height: 60px;"
+      >
+        <div class="wireframe-block-chrome-wrapper" style="width: 100px;">
+          <div
+            class="wireframe-block-chrome"
+            data-wf-block-key="A"
+            data-wf-block-name="paragraph"
+          ></div>
+        </div>
+        <div class="wireframe-block-chrome-wrapper" style="width: 100px;">
+          <div
+            class="wireframe-block-chrome"
+            data-wf-block-key="B"
+            data-wf-block-name="paragraph"
+          ></div>
+        </div>
+        <div class="wireframe-block-chrome-wrapper" style="width: 100px;">
+          <div
+            class="wireframe-block-chrome"
+            data-wf-block-key="C"
+            data-wf-block-name="paragraph"
+          ></div>
+        </div>
+      </div>
+    </template>;
+
+    test("noun-framed: an interior boundary names both slides by ordinal", async function (assert) {
+      await render(Slides);
+      const wireframe = stubWireframe();
+      const container = document.querySelector("#container");
+      const aWrap = container.children[0].getBoundingClientRect();
+
+      const seam = computeDescriptor({
+        wireframe,
+        container,
+        input: { clientX: aWrap.right, clientY: aWrap.top + aWrap.height / 2 },
+        containerKey: "carousel",
+        outletName: "test-outlet",
+        axis: "x",
+        source: PALETTE,
+      });
+
+      assert.strictEqual(
+        seam.label,
+        "Add paragraph in a new slide between slides 1 and 2"
+      );
+      assert.strictEqual(seam.dispatch.args.targetKey, "B");
+      assert.strictEqual(seam.dispatch.args.position, "before");
+    });
+
+    test("noun-framed: the end edge names the slide ordinal and block", async function (assert) {
+      await render(Slides);
+      const wireframe = stubWireframe();
+      const container = document.querySelector("#container");
+      const cWrap = container.children[2].getBoundingClientRect();
+
+      const end = computeDescriptor({
+        wireframe,
+        container,
+        input: cursorAt(cWrap, "x", 0.9),
+        containerKey: "carousel",
+        outletName: "test-outlet",
+        axis: "x",
+        source: PALETTE,
+      });
+
+      assert.strictEqual(
+        end.label,
+        "Add paragraph in a new slide after slide 3"
+      );
+      assert.strictEqual(end.dispatch.args.targetKey, "C");
+      assert.strictEqual(end.dispatch.args.position, "after");
+    });
+
+    test("noun-framed: nesting into a slide keeps the dragged block's name", async function (assert) {
+      await render(
+        <template>
+          <div
+            id="container"
+            data-wf-child-noun="slide"
+            data-wf-child-noun-plural="slides"
+            style="position: fixed; top: 0; left: 0; display: flex; height: 60px;"
+          >
+            <div class="wireframe-block-chrome-wrapper" style="width: 100px;">
+              <div
+                class="wireframe-block-chrome"
+                data-wf-block-key="S1"
+                data-wf-block-name="layout"
+              ></div>
+            </div>
+          </div>
+        </template>
+      );
+      const wireframe = stubWireframe({
+        lookupBlockMetadata: (block) => ({ isContainer: block === "S1" }),
+      });
+      const container = document.querySelector("#container");
+      const wrap = container.children[0].getBoundingClientRect();
+
+      const descriptor = computeDescriptor({
+        wireframe,
+        container,
+        input: cursorAt(wrap, "x", 0.5),
+        containerKey: "carousel",
+        outletName: "test-outlet",
+        axis: "x",
+        source: PALETTE,
+      });
+
+      assert.strictEqual(descriptor.kind, "inside");
+      assert.strictEqual(descriptor.label, "Add paragraph into slide 1");
+    });
   }
 );

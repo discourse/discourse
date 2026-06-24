@@ -23,10 +23,12 @@ const MAX_DOTS = 10;
  * it shows one slide (or `perView` slides) at a time with prev/next controls
  * and dot indicators; native scroll-snap provides touch swiping.
  *
- * In an editing context the ambient "edit presentation" capability is set, so
- * the carousel instead renders ALL slides stacked — each is a normal child
- * block, selectable and editable in place, and reorderable through the usual
- * child machinery — rather than hiding all but one behind the paged track.
+ * In an editing context the same paged track renders, so the live and edit
+ * presentations match. The prev/next/dot controls carry a marker that lets
+ * in-session editing tooling page the track on a click while keeping the block
+ * — and each slide — selectable and editable in place. Slides that are scrolled
+ * out of view stay reachable for selection and reordering through the usual
+ * child machinery.
  */
 @block("carousel", {
   container: true,
@@ -63,13 +65,17 @@ export default class Carousel extends Component {
   @tracked currentIndex = 0;
 
   /**
-   * Registers each slide element by index so navigation can scroll to it and
-   * the active-dot calculation can measure positions.
+   * Registers each slide element under its stable key so navigation can scroll
+   * to it and the active-slide calculation can measure it. Keying by the
+   * entry's stable key (not its index) means a structural edit never collides
+   * registrations: each element owns its key, so inserting or removing a slide
+   * only registers/unregisters that one — shifted siblings keep their key,
+   * element, and entry, and their modifier doesn't even re-run.
    */
-  registerSlide = modifier((element, [index]) => {
-    this.#slides.set(index, element);
+  registerSlide = modifier((element, [key]) => {
+    this.#slides.set(key, element);
     return () => {
-      this.#slides.delete(index);
+      this.#slides.delete(key);
     };
   });
 
@@ -92,9 +98,13 @@ export default class Carousel extends Component {
     element.addEventListener("scroll", onScroll, { passive: true });
     return () => element.removeEventListener("scroll", onScroll);
   });
+  /** @type {Map<string, HTMLElement>} Slide elements keyed by stable key. */
   #slides = new Map();
 
-  /** @returns {boolean} Whether the editor wants all slides revealed. */
+  /**
+   * @returns {boolean} Whether an editing context is active, used to mark the
+   *   nav controls as page-in-place affordances for in-session editing tooling.
+   */
   get isEditing() {
     return debugHooks.isEditPresentation;
   }
@@ -145,7 +155,7 @@ export default class Carousel extends Component {
 
   @action
   scrollToIndex(index) {
-    const slide = this.#slides.get(index);
+    const slide = this.#slides.get(this.slides[index]?.key);
     if (slide) {
       this.currentIndex = index;
       slide.scrollIntoView({
@@ -158,6 +168,13 @@ export default class Carousel extends Component {
 
   @action
   onKeyDown(event) {
+    // Only page when the viewport itself (it carries `tabindex="0"`) is the
+    // focused element. A key press that bubbles up from editable slide content
+    // is left alone, so arrow keys used while editing a slide's text move the
+    // caret instead of paging the carousel.
+    if (event.target !== event.currentTarget) {
+      return;
+    }
     if (event.key === "ArrowLeft") {
       event.preventDefault();
       this.scrollToIndex(this.prevIndex);
@@ -171,7 +188,11 @@ export default class Carousel extends Component {
     const center = track.scrollLeft + track.clientWidth / 2;
     let best = 0;
     let min = Infinity;
-    this.#slides.forEach((slide, index) => {
+    this.slides.forEach((child, index) => {
+      const slide = this.#slides.get(child.key);
+      if (!slide) {
+        return;
+      }
       const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
       const distance = Math.abs(slideCenter - center);
       if (distance < min) {
@@ -183,68 +204,81 @@ export default class Carousel extends Component {
   }
 
   <template>
-    {{#if this.isEditing}}
-      {{! Editing: reveal every slide stacked so each child is directly
-          selectable, editable, and reorderable through the usual machinery. }}
-      <div class="d-block-carousel d-block-carousel--editing">
-        {{#each this.slides key="key" as |child index|}}
-          <div class="d-block-carousel__slide" data-slide-index={{index}}>
+    {{! The same paged track renders live and in an editing context, so the two
+        presentations match. In an editing context the nav controls carry a
+        data attribute the editing tooling reads to let their clicks page the
+        track instead of treating them as a block selection; the attribute is
+        omitted on the live page. }}
+    <div class="d-block-carousel" style={{this.viewStyle}}>
+      {{! In an editing context the viewport is marked as the drop container so
+          in-session editing tooling projects drops onto the slides directly
+          (the slides are nested one level below, so the generic
+          first-child-wrapper heuristic would otherwise lock onto a single
+          slide). The horizontal axis makes the drop indicator read between
+          slides, and the slide nouns let the drop messages name positions in
+          slide terms. All omitted on the live page. }}
+      <div
+        class="d-block-carousel__viewport"
+        tabindex="0"
+        data-wf-drop-container={{if this.isEditing "true"}}
+        data-wf-drop-axis={{if this.isEditing "x"}}
+        data-wf-child-noun={{if
+          this.isEditing
+          (i18n "blocks.builtin.carousel.slide_noun")
+        }}
+        data-wf-child-noun-plural={{if
+          this.isEditing
+          (i18n "blocks.builtin.carousel.slide_noun_plural")
+        }}
+        {{this.setupTrack}}
+        {{on "keydown" this.onKeyDown}}
+      >
+        {{#each this.slides key="key" as |child|}}
+          <div class="d-block-carousel__slide" {{this.registerSlide child.key}}>
             <child.Component />
           </div>
         {{/each}}
       </div>
-    {{else}}
-      <div class="d-block-carousel" style={{this.viewStyle}}>
-        <div
-          class="d-block-carousel__viewport"
-          tabindex="0"
-          {{this.setupTrack}}
-          {{on "keydown" this.onKeyDown}}
-        >
-          {{#each this.slides key="key" as |child index|}}
-            <div class="d-block-carousel__slide" {{this.registerSlide index}}>
-              <child.Component />
+
+      {{#unless this.isSingle}}
+        <div class="d-block-carousel__controls">
+          <button
+            type="button"
+            class="d-block-carousel__nav d-block-carousel__nav--prev"
+            aria-label={{i18n "carousel.previous"}}
+            data-wf-carousel-nav={{if this.isEditing "true"}}
+            {{on "click" (fn this.scrollToIndex this.prevIndex)}}
+          >
+            {{dIcon "chevron-left"}}
+          </button>
+
+          {{#if this.showDots}}
+            <div class="d-block-carousel__dots">
+              {{#each this.slides key="key" as |_child index|}}
+                <button
+                  type="button"
+                  class="d-block-carousel__dot
+                    {{if (eq this.currentIndex index) 'is-active'}}"
+                  aria-label={{i18n "carousel.go_to_slide" index=index}}
+                  aria-current={{if (eq this.currentIndex index) "true"}}
+                  data-wf-carousel-nav={{if this.isEditing "true"}}
+                  {{on "click" (fn this.scrollToIndex index)}}
+                ></button>
+              {{/each}}
             </div>
-          {{/each}}
+          {{/if}}
+
+          <button
+            type="button"
+            class="d-block-carousel__nav d-block-carousel__nav--next"
+            aria-label={{i18n "carousel.next"}}
+            data-wf-carousel-nav={{if this.isEditing "true"}}
+            {{on "click" (fn this.scrollToIndex this.nextIndex)}}
+          >
+            {{dIcon "chevron-right"}}
+          </button>
         </div>
-
-        {{#unless this.isSingle}}
-          <div class="d-block-carousel__controls">
-            <button
-              type="button"
-              class="d-block-carousel__nav d-block-carousel__nav--prev"
-              aria-label={{i18n "carousel.previous"}}
-              {{on "click" (fn this.scrollToIndex this.prevIndex)}}
-            >
-              {{dIcon "chevron-left"}}
-            </button>
-
-            {{#if this.showDots}}
-              <div class="d-block-carousel__dots">
-                {{#each this.slides key="key" as |_child index|}}
-                  <button
-                    type="button"
-                    class="d-block-carousel__dot
-                      {{if (eq this.currentIndex index) 'is-active'}}"
-                    aria-label={{i18n "carousel.go_to_slide" index=index}}
-                    aria-current={{if (eq this.currentIndex index) "true"}}
-                    {{on "click" (fn this.scrollToIndex index)}}
-                  ></button>
-                {{/each}}
-              </div>
-            {{/if}}
-
-            <button
-              type="button"
-              class="d-block-carousel__nav d-block-carousel__nav--next"
-              aria-label={{i18n "carousel.next"}}
-              {{on "click" (fn this.scrollToIndex this.nextIndex)}}
-            >
-              {{dIcon "chevron-right"}}
-            </button>
-          </div>
-        {{/unless}}
-      </div>
-    {{/if}}
+      {{/unless}}
+    </div>
   </template>
 }

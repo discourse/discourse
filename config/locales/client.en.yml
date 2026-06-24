@@ -191,6 +191,9 @@ en:
           show_dots: "Show dots"
           loop: "Loop"
           per_view: "Slides per view"
+          slide_noun: "slide"
+          slide_noun_plural: "slides"
+          slide_number: "Slide %{number}"
         tabs:
           align: "Alignment"
           tab: "Tab"

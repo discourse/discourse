@@ -831,6 +831,13 @@ export default class OutlinePanel extends Component {
                       }}
                     </span>
                   {{/if}}
+                  {{#if row.slideOrdinal}}
+                    {{! A noun-framed container's child (e.g. a carousel slide)
+                        shows its 1-based position so slides are identifiable. }}
+                    <span class="outline-block__slide">
+                      {{i18n row.slideNumberKey number=row.slideOrdinal}}
+                    </span>
+                  {{/if}}
                   {{#if row.blockId}}
                     <span class="outline-block__id">#{{row.blockId}}</span>
                   {{/if}}

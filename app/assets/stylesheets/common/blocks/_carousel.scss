@@ -1,6 +1,6 @@
-/* Carousel block — a horizontal scroll-snapping slideshow. On the live page
-   slides page one (or `perView`) at a time; in an editing context the
-   `--editing` variant stacks every slide for direct manipulation. */
+/* Carousel block — a horizontal scroll-snapping slideshow. Slides page one (or
+   `perView`) at a time; the same paged track renders live and in an editing
+   context. */
 
 .d-block-carousel {
   position: relative;
@@ -26,17 +26,6 @@
     );
   scroll-snap-align: start;
   min-width: 0;
-}
-
-/* Editing: reveal every slide stacked. */
-.d-block-carousel--editing {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  .d-block-carousel__slide {
-    flex: none;
-  }
 }
 
 .d-block-carousel__controls {

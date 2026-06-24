@@ -155,7 +155,8 @@ export async function walkAllOutlets({ blocksService, alwaysInclude }) {
         [0, "children"],
         rows,
         blocksService,
-        metadataByName
+        metadataByName,
+        "layout"
       );
       result.push({
         outletName,
@@ -205,14 +206,28 @@ function touchStamps(entries) {
   }
 }
 
+// Containers whose children are numbered in the outline (e.g. a carousel's
+// slides), mapping the parent block name to the i18n key that renders the
+// per-child label. The outline resolves the key with `number = index + 1`.
+// Extensible to other noun-framed containers (tabs panels, etc.).
+const CHILD_NUMBER_KEY_BY_PARENT = Object.freeze({
+  carousel: "blocks.builtin.carousel.slide_number",
+});
+
 function walkEntries(
   entries,
   depth,
   path,
   rows,
   blocksService,
-  metadataByName
+  metadataByName,
+  parentBlockName = null
 ) {
+  // When the parent is a noun-framed container, each child row gets a 1-based
+  // ordinal label ("Slide 2") so the slides are identifiable in the tree.
+  const childNumberKey = parentBlockName
+    ? (CHILD_NUMBER_KEY_BY_PARENT[parentBlockName] ?? null)
+    : null;
   entries.forEach((entry, index) => {
     const entryPath = [...path, index];
 
@@ -267,6 +282,10 @@ function walkEntries(
       validationFailure: entry.__failureType ?? null,
       validationReason: entry.__failureReason ?? null,
       validationDetails: entry.__failureDetails ?? null,
+      // Per-child ordinal label for a noun-framed parent (e.g. "Slide 2");
+      // null otherwise. `slideNumberKey` is the i18n key the outline resolves.
+      slideOrdinal: childNumberKey ? index + 1 : null,
+      slideNumberKey: childNumberKey,
       hasChildren: !!(entry.children && entry.children.length) || hasParts,
       // Number of nested rows this container contributes (own children, or
       // synthesized composite parts). Drives the outline's "× N" count badge
@@ -281,7 +300,8 @@ function walkEntries(
         [...entryPath, "children"],
         rows,
         blocksService,
-        metadataByName
+        metadataByName,
+        blockName
       );
     } else if (partEntries) {
       walkEntries(
@@ -290,7 +310,8 @@ function walkEntries(
         [...entryPath, "parts"],
         rows,
         blocksService,
-        metadataByName
+        metadataByName,
+        blockName
       );
     }
   });

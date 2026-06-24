@@ -101,6 +101,19 @@ export default class ContainerDropTargetModifier extends Modifier {
       if (containerElement && chromeElement.contains(containerElement)) {
         return containerElement;
       }
+      // A block can mark the element whose direct children are the drop
+      // candidates with `data-wf-drop-container` — needed when those
+      // children sit a level below the chrome (e.g. each wrapped in a slide
+      // div), where the first-block-wrapper heuristic below would otherwise
+      // lock onto a single child. Scope to a marker that belongs to THIS
+      // chrome so a nested container's marker isn't picked up.
+      const marked = Array.from(
+        chromeElement.querySelectorAll("[data-wf-drop-container]")
+      ).find((el) => el.closest(".wireframe-block-chrome") === chromeElement);
+      if (marked) {
+        containerElement = marked;
+        return marked;
+      }
       const firstBlock = chromeElement.querySelector("[data-wf-block-key]");
       if (firstBlock) {
         const wrapper = firstBlock.closest(".wireframe-block-chrome-wrapper");
@@ -167,7 +180,9 @@ export default class ContainerDropTargetModifier extends Modifier {
         input,
         containerKey,
         outletName,
-        axis,
+        // A marked drop container may pin its own axis (e.g. a horizontal
+        // slide track) regardless of the chrome's `mode`-derived default.
+        axis: container.dataset?.wfDropAxis || axis,
         source,
       });
     };
@@ -251,6 +266,12 @@ export function computeDescriptor({
 
   const result = resolveLinearDrop(segments, cursor);
 
+  // A container may frame its children with a noun (e.g. "slide"), stamped on
+  // the drop container, so the drop message names positions in those terms
+  // ("between slides 1 and 2") rather than by the child block's own name.
+  const childNoun = container.dataset?.wfChildNoun || null;
+  const childNounPlural = container.dataset?.wfChildNounPlural || childNoun;
+
   if (result.kind === "gap") {
     const before = result.gap > 0 ? children[result.gap - 1] : null;
     const after = result.gap < children.length ? children[result.gap] : null;
@@ -263,6 +284,11 @@ export function computeDescriptor({
       containerKey,
       outletName,
       source,
+      childNoun,
+      childNounPlural,
+      // 1-based ordinals of the neighbours flanking this gap.
+      beforeOrdinal: result.gap,
+      afterOrdinal: result.gap + 1,
     });
   }
 
@@ -288,6 +314,8 @@ export function computeDescriptor({
       targetKey,
       blockName,
       source,
+      childNoun,
+      ordinal: result.index + 1,
     });
   }
   // Leaf block, middle third — no valid landing. Hide the overlay.
@@ -354,6 +382,10 @@ function buildBoundaryDescriptor({
   containerKey,
   outletName,
   source,
+  childNoun = null,
+  childNounPlural = null,
+  beforeOrdinal = null,
+  afterOrdinal = null,
 }) {
   const beforeKey = before?.chrome.getAttribute("data-wf-block-key") ?? null;
   const afterKey = after?.chrome.getAttribute("data-wf-block-key") ?? null;
@@ -396,7 +428,16 @@ function buildBoundaryDescriptor({
     // future variant styling key off.
     kind: targetKey ? "insert" : "inside",
     validity: validity.ok ? "valid" : "invalid",
-    label: boundaryLabel({ wireframe, source, beforeKey, afterKey }),
+    label: boundaryLabel({
+      wireframe,
+      source,
+      beforeKey,
+      afterKey,
+      childNoun,
+      childNounPlural,
+      beforeOrdinal,
+      afterOrdinal,
+    }),
     // No dispatch when invalid — `dispatchActiveDrop` no-ops on
     // descriptors without a `dispatch` payload, so the drop quietly
     // fails. The red overlay already communicated the rejection.
@@ -471,6 +512,8 @@ function buildInsideDescriptor({
   targetKey,
   blockName,
   source,
+  childNoun = null,
+  ordinal = null,
 }) {
   const validity = validateInsideDrop({ wireframe, source, targetKey });
   return {
@@ -482,7 +525,14 @@ function buildInsideDescriptor({
     },
     kind: "inside",
     validity: validity.ok ? "valid" : "invalid",
-    label: insideLabel({ wireframe, source, blockName, targetKey }),
+    label: insideLabel({
+      wireframe,
+      source,
+      blockName,
+      targetKey,
+      childNoun,
+      ordinal,
+    }),
     dispatch: validity.ok ? insideDispatch({ source, targetKey }) : null,
   };
 }
@@ -586,9 +636,54 @@ function validateInsideDrop({ wireframe, source, targetKey }) {
 /* Label builders — `i18n` keys with interpolations the descriptor
    carries pre-resolved (the overlay just renders the string). */
 
-function boundaryLabel({ wireframe, source, beforeKey, afterKey }) {
+function boundaryLabel({
+  wireframe,
+  source,
+  beforeKey,
+  afterKey,
+  childNoun = null,
+  childNounPlural = null,
+  beforeOrdinal = null,
+  afterOrdinal = null,
+}) {
   const name = sourceDisplayName(wireframe, source);
   const isPalette = source.type === "wf-palette-block";
+
+  // A noun-framed container ("slide") names the dragged block being placed in
+  // a NEW child at a 1-based position ("Add Hero in a new slide between slides
+  // 1 and 2"), rather than naming the neighbour blocks.
+  if (childNoun) {
+    const verb = isPalette
+      ? "wireframe.canvas.drop_preview.add_child"
+      : "wireframe.canvas.drop_preview.move_child";
+    // Interior boundary — "between slides 1 and 2".
+    if (beforeKey && afterKey) {
+      return translate(`${verb}_between`, {
+        name,
+        noun: childNoun,
+        noun_plural: childNounPlural,
+        before: beforeOrdinal,
+        after: afterOrdinal,
+      });
+    }
+    // Container start — "before slide 1".
+    if (afterKey) {
+      return translate(`${verb}_before`, {
+        name,
+        noun: childNoun,
+        ordinal: afterOrdinal,
+      });
+    }
+    // Container end — "after slide N".
+    if (beforeKey) {
+      return translate(`${verb}_after`, {
+        name,
+        noun: childNoun,
+        ordinal: beforeOrdinal,
+      });
+    }
+    // Empty container — fall through to the generic copy below.
+  }
 
   // Interior boundary — name both neighbours ("between A and B").
   if (beforeKey && afterKey) {
@@ -627,8 +722,30 @@ function boundaryLabel({ wireframe, source, beforeKey, afterKey }) {
     : translate("wireframe.canvas.drop_preview.move_here", { name });
 }
 
-function insideLabel({ wireframe, source, blockName, targetKey }) {
+function insideLabel({
+  wireframe,
+  source,
+  blockName,
+  targetKey,
+  childNoun = null,
+  ordinal = null,
+}) {
   const name = sourceDisplayName(wireframe, source);
+
+  // Nesting into a noun-framed child ("into slide 2") — the dragged block keeps
+  // its own name; the target is framed as the noun + 1-based ordinal.
+  if (childNoun) {
+    const key =
+      source.type === "wf-palette-block"
+        ? "wireframe.canvas.drop_preview.add_child_inside"
+        : "wireframe.canvas.drop_preview.move_child_inside";
+    return translate(key, {
+      name,
+      noun: childNoun,
+      ordinal,
+    });
+  }
+
   const container =
     targetDisplayName(wireframe, targetKey) || blockName || "container";
   return source.type === "wf-palette-block"

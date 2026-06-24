@@ -267,6 +267,46 @@ body.wireframe-active {
     .d-block-tabs__add-tab {
       pointer-events: auto;
     }
+
+    /* The carousel's prev/next/dot controls are editor navigation (page the
+       track), not inert block content — same case as the tabs strip above.
+       The `> *:not(...)` rule forces every descendant of the wrapped block to
+       `pointer-events: none`; re-enable it on the nav controls so a click (and
+       hover) reaches them and paging can fire, even on an UNSELECTED carousel.
+       The chrome's `onClick` lets these clicks page without re-selecting (it
+       matches their `data-wf-carousel-nav` marker). */
+
+    .d-block-carousel__nav,
+    .d-block-carousel__dot {
+      pointer-events: auto;
+    }
+
+    /* The carousel scrolls horizontally, so its `overflow-x: auto` (which
+       forces `overflow-y: auto`) would clip a selected slide's block toolbar,
+       which is anchored just above the slide. Reserve the ~2rem badge
+       clearance inside the scrollport so the toolbar stays visible. Editor-only
+       (scoped to the chrome); the live page is untouched. */
+
+    .d-block-carousel__viewport {
+      --wf-carousel-pad: 2rem;
+      padding-top: var(--wf-carousel-pad);
+
+      /* Signal that the reserved band is editor scaffolding, not rendered
+         content: a faint diagonal hatch confined to the top padding band. The
+         background is attached to the scroll container's box (not its content),
+         so it stays put as the slides scroll, and `no-repeat` + the band-height
+         size paint it only over the reserved band — the slides render below. */
+      background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 5px,
+        var(--primary-low) 5px,
+        var(--primary-low) 6px
+      );
+      background-repeat: no-repeat;
+      background-size: 100% var(--wf-carousel-pad);
+      background-position: top left;
+    }
   }
 
   /* Overlap badge — anchored to the chrome's top-right corner, always
@@ -1634,6 +1674,20 @@ body.wireframe-active {
       font-size: var(--font-down-2);
       font-weight: 400;
       text-transform: lowercase;
+    }
+
+    /* Per-slide ordinal chip on a noun-framed container's children
+       (e.g. a carousel slide), so each slide is identifiable in the tree.
+       Mirrors the mode chip, but keeps its label casing ("Slide 2"). */
+
+    .outline-block__slide {
+      padding: 0 0.35rem;
+      border-radius: 3px;
+      background: var(--primary-low);
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+      font-weight: 400;
+      font-variant-numeric: tabular-nums;
     }
 
     /* Hidden-child count shown on a collapsed container row (e.g. "× 12"),

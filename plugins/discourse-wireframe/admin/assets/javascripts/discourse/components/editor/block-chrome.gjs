@@ -1149,12 +1149,18 @@ export default class BlockChrome extends Component {
    * image, image-arg measurements, tooltip anchoring) and installs the
    * per-block URL-edit tooltips now that we have the DOM to query.
    *
+   * Also announces this element to the editor: a freshly inserted (and
+   * auto-selected) block can't be scrolled into view or flashed until its
+   * element exists, so the service defers that treatment and we trigger it
+   * here, the moment this block's chrome mounts.
+   *
    * @param {Element} element - The chrome's outer `<div>`.
    */
   @action
   captureChromeEl(element) {
     this.chromeEl = element;
     this.#setupUrlTooltips();
+    this.wireframe.notifyChromeInserted(this.args.blockKey, element);
   }
 
   /**
@@ -1352,6 +1358,14 @@ export default class BlockChrome extends Component {
         return;
       }
       this.wireframe.selectBlock({ key: panelKey });
+      return;
+    }
+
+    // A carousel nav control (prev / next / dot). The carousel's own click
+    // handler already paged the track during bubbling; swallow the chrome's
+    // selection so paging a slide into view is never mistaken for selecting or
+    // deselecting the block — it stays selectable by clicking its body.
+    if (event.target.closest?.("[data-wf-carousel-nav]")) {
       return;
     }
 
