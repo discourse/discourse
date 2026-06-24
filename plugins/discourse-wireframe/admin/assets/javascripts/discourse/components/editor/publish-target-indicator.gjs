@@ -44,6 +44,11 @@ export default class PublishTargetIndicator extends Component {
 
   /** Whether any target can't be published to directly. */
   get hasBlocked() {
+    // While the companion lookup is still in flight, don't show the blocked
+    // warning — it may resolve to a publishable companion.
+    if (this.wireframe.publishTargetResolving) {
+      return false;
+    }
     if (this.singleTarget) {
       return !this.singleTarget.publishable;
     }

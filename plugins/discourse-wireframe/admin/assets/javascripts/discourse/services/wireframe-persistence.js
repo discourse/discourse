@@ -210,7 +210,9 @@ export default class WireframePersistenceService extends Service {
    * @returns {Promise<{theme_id: number}>}
    */
   createCustomizationComponent(themeId) {
-    return ajax("/admin/customize/block-layouts/customization-component.json", {
+    // Companion creation + its parent↔component mapping is an editor concept, so it
+    // lives on the plugin endpoint rather than the core block-layouts controller.
+    return ajax("/admin/plugins/wireframe/customization-component.json", {
       type: "POST",
       data: { theme_id: themeId, drafts: this.#editedDrafts() },
     });

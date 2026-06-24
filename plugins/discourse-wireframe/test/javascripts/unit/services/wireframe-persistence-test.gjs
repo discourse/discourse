@@ -332,7 +332,7 @@ module(
       await enterEdited(this);
 
       pretender.post(
-        "/admin/customize/block-layouts/customization-component.json",
+        "/admin/plugins/wireframe/customization-component.json",
         (request) => {
           const body = parsePostData(request.requestBody);
           assert.strictEqual(body.theme_id, "5");

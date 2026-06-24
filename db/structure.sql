@@ -11781,6 +11781,38 @@ ALTER SEQUENCE public.web_hooks_id_seq OWNED BY public.web_hooks.id;
 
 
 --
+-- Name: wireframe_block_layout_companions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.wireframe_block_layout_companions (
+    id bigint NOT NULL,
+    parent_theme_id integer NOT NULL,
+    component_theme_id integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: wireframe_block_layout_companions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.wireframe_block_layout_companions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: wireframe_block_layout_companions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.wireframe_block_layout_companions_id_seq OWNED BY public.wireframe_block_layout_companions.id;
+
+
+--
 -- Name: wireframe_block_layout_drafts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -13927,6 +13959,13 @@ ALTER TABLE ONLY public.web_hook_events_daily_aggregates ALTER COLUMN id SET DEF
 --
 
 ALTER TABLE ONLY public.web_hooks ALTER COLUMN id SET DEFAULT nextval('public.web_hooks_id_seq'::regclass);
+
+
+--
+-- Name: wireframe_block_layout_companions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.wireframe_block_layout_companions ALTER COLUMN id SET DEFAULT nextval('public.wireframe_block_layout_companions_id_seq'::regclass);
 
 
 --
@@ -16430,6 +16469,14 @@ ALTER TABLE ONLY public.web_hook_events
 
 ALTER TABLE ONLY public.web_hooks
     ADD CONSTRAINT web_hooks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: wireframe_block_layout_companions wireframe_block_layout_companions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.wireframe_block_layout_companions
+    ADD CONSTRAINT wireframe_block_layout_companions_pkey PRIMARY KEY (id);
 
 
 --
@@ -21439,6 +21486,20 @@ CREATE INDEX index_web_hook_events_on_web_hook_id ON public.web_hook_events USIN
 
 
 --
+-- Name: index_wireframe_block_layout_companions_on_component_theme_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_wireframe_block_layout_companions_on_component_theme_id ON public.wireframe_block_layout_companions USING btree (component_theme_id);
+
+
+--
+-- Name: index_wireframe_block_layout_companions_on_parent_theme_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_wireframe_block_layout_companions_on_parent_theme_id ON public.wireframe_block_layout_companions USING btree (parent_theme_id);
+
+
+--
 -- Name: index_wireframe_block_layout_drafts_on_theme_id_and_outlet; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21860,6 +21921,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260624050813'),
 ('20260622153521'),
 ('20260619214923'),
 ('20260525105009'),

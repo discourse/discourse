@@ -130,6 +130,31 @@ module(
         .exists("the companion-component escape hatch is offered instead");
     });
 
+    test("re-entering a non-publishable theme that already has a companion targets the companion", async function (assert) {
+      // The companion lookup (on entry) returns an existing companion id, so the
+      // editor re-points to it instead of re-prompting to set one up.
+      this.editor.exit();
+      pretender.get("/admin/plugins/wireframe/companion.json", () =>
+        response({ companion_id: 7 })
+      );
+      this.editor.enter({ themeId: -1 });
+
+      await render(<template><EditorShell /></template>);
+
+      assert.strictEqual(
+        this.editor.activeThemeId,
+        7,
+        "activeThemeId re-points to the existing companion"
+      );
+      assert.true(
+        this.editor.activeThemeTarget.publishable,
+        "the companion is a publishable target"
+      );
+      assert
+        .dom(".wireframe-blocked-callout")
+        .doesNotExist("no set-up callout when a companion already exists");
+    });
+
     test("the drawer's Save draft disables after a successful save and re-enables on the next edit", async function (assert) {
       await makeDirty(this.editor);
       pretender.post(DRAFTS_URL, () => response({ success: true }));

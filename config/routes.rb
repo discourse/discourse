@@ -271,7 +271,6 @@ Discourse::Application.routes.draw do
         delete "block-layouts" => "block_layouts#destroy"
         post "block-layouts/export" => "block_layouts#export"
         post "block-layouts/duplicate" => "block_layouts#duplicate"
-        post "block-layouts/customization-component" => "block_layouts#create_component"
 
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"

@@ -24,7 +24,12 @@ export default class PublishBlockedCallout extends Component {
   }
 
   get isVisible() {
-    return !this.dismissed && this.target != null && !this.target.publishable;
+    return (
+      !this.dismissed &&
+      !this.wireframe.publishTargetResolving &&
+      this.target != null &&
+      !this.target.publishable
+    );
   }
 
   @action

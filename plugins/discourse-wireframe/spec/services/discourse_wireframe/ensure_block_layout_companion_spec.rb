@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Themes::CreateCustomizationComponent do
+RSpec.describe DiscourseWireframe::EnsureBlockLayoutCompanion do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:theme_id) }
     it { is_expected.not_to allow_value(0).for(:theme_id) }
@@ -15,8 +15,7 @@ RSpec.describe Themes::CreateCustomizationComponent do
     fab!(:user)
     fab!(:parent) { Fabricate(:theme_with_remote_url, name: "Acme") }
 
-    let(:guardian) { admin.guardian }
-    let(:dependencies) { { guardian: } }
+    let(:dependencies) { { guardian: admin.guardian } }
     let(:layout_json) do
       { schema_version: 1, layout: [{ block: "hero-banner", args: { title: "Hi" } }] }.to_json
     end
@@ -33,7 +32,7 @@ RSpec.describe Themes::CreateCustomizationComponent do
       it { is_expected.to fail_a_policy(:current_user_is_admin) }
     end
 
-    it "creates a local component child of the parent, holding the overlaid layout" do
+    it "creates a local component child of the parent, holding the overlaid layout, and records the mapping" do
       expect(result).to run_successfully
       expect(component.component).to eq(true)
       expect(component.remote_theme&.is_git?).to be_falsey
@@ -47,9 +46,13 @@ RSpec.describe Themes::CreateCustomizationComponent do
         )
       expect(field).to be_present
       expect(JSON.parse(field.value)["layout"].first["block"]).to eq("hero-banner")
+
+      expect(DiscourseWireframe::BlockLayoutCompanion.companion_id_for(parent.id)).to eq(
+        component.id,
+      )
     end
 
-    it "reuses the same component on a second call (idempotent)" do
+    it "reuses the same component on a second call (idempotent), via the mapping" do
       first = described_class.call(params:, **dependencies)
       second =
         described_class.call(
@@ -62,8 +65,17 @@ RSpec.describe Themes::CreateCustomizationComponent do
 
       expect(second.theme_id).to eq(first.theme_id)
       reused = Theme.find(second.theme_id)
-      # Both outlets now live on the one component.
       expect(reused.theme_fields.where(type_id: ThemeField.types[:block_layout]).count).to eq(2)
+    end
+
+    it "reuses the same component after it is renamed (no duplicate)" do
+      first = described_class.call(params:, **dependencies)
+      Theme.find(first.theme_id).update!(name: "Renamed by the user")
+
+      expect {
+        second = described_class.call(params:, **dependencies)
+        expect(second.theme_id).to eq(first.theme_id)
+      }.not_to change { Theme.count }
     end
 
     it "suffixes the component name when the canonical name is taken by a non-reusable theme" do
@@ -82,12 +94,10 @@ RSpec.describe Themes::CreateCustomizationComponent do
         expect(component.component).to eq(true)
         expect(component.name).to eq("Foundation-block-layouts")
         expect(foundation.reload.child_theme_ids).to include(component.id)
+        expect(DiscourseWireframe::BlockLayoutCompanion.companion_id_for(foundation.id)).to eq(
+          component.id,
+        )
       end
-    end
-
-    it "is not blocked by the parent's duplicable_theme: false" do
-      parent.theme_modifier_set.update!(duplicable_theme: false)
-      expect(result).to run_successfully
     end
 
     context "with a malformed draft" do

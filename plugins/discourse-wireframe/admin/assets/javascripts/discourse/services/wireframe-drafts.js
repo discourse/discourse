@@ -5,6 +5,7 @@ import { serializeLayoutForSave } from "../lib/mutate-layout";
 
 const SCHEMA_VERSION = 1;
 const DRAFTS_URL = "/admin/plugins/wireframe/block-layout-drafts.json";
+const COMPANION_URL = "/admin/plugins/wireframe/companion.json";
 
 /**
  * Owns all per-user block-layout draft I/O — read, save, and delete — against
@@ -17,6 +18,39 @@ const DRAFTS_URL = "/admin/plugins/wireframe/block-layout-drafts.json";
 export default class WireframeDraftsService extends Service {
   @service wireframe;
   @service wireframePersistence;
+
+  /** Per-session cache of `themeId → companion id (or null)`; the mapping is stable within a load. */
+  #companionCache = new Map();
+
+  /**
+   * The id of a theme's block-layout companion component (a publishable child that
+   * holds its overrides), or null when there is none. Lets the editor target an
+   * existing companion on re-entry instead of re-offering to set one up. Cached
+   * per session; a transport error degrades to null (no companion).
+   *
+   * @param {number} themeId
+   * @returns {Promise<number|null>}
+   */
+  async companionId(themeId) {
+    if (themeId == null) {
+      return null;
+    }
+    if (this.#companionCache.has(themeId)) {
+      return this.#companionCache.get(themeId);
+    }
+    let companionId = null;
+    try {
+      const response = await ajax(COMPANION_URL, {
+        type: "GET",
+        data: { theme_id: themeId },
+      });
+      companionId = response?.companion_id ?? null;
+    } catch {
+      companionId = null;
+    }
+    this.#companionCache.set(themeId, companionId);
+    return companionId;
+  }
 
   /**
    * Fetches the current user's drafts, optionally scoped to a set of theme ids

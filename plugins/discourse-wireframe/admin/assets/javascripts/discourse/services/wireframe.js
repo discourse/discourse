@@ -286,6 +286,18 @@ export default class WireframeService extends Service {
   @tracked reviewDrawerOpen = false;
 
   /**
+   * Whether the on-entry companion lookup is still in flight. Set true on entry
+   * only when the bound theme can't be published to directly, then cleared once
+   * the lookup settles (re-pointing `activeThemeId` to the companion if one is
+   * found). The blocked callout and the indicator's blocked state read this so
+   * they don't flash during the brief lookup — the callout appears only once it's
+   * settled that there is genuinely no companion.
+   *
+   * @type {boolean}
+   */
+  @tracked publishTargetResolving = false;
+
+  /**
    * Floating-panel rect (`{x, y, width, height}`) for the detached
    * conditions surface. Updated by the panel's drag and resize
    * handlers and persisted to localStorage. Null while no rect has
@@ -1127,6 +1139,9 @@ export default class WireframeService extends Service {
     // from a previous enter/exit so it can't write into this session.
     const generation = ++this.#enterGeneration;
     this.activeThemeId = themeId ?? this.#defaultThemeId();
+    // A theme that can't be published to directly may have a companion to retarget
+    // to; suppress the blocked callout until the after-render lookup settles.
+    this.publishTargetResolving = this.activeThemeTarget?.publishable === false;
     document.body.classList.add("wireframe-active");
     document.addEventListener("mousedown", this.#onCanvasMouseDown);
     document.addEventListener("mouseup", this.#onCanvasMouseUp);
@@ -1262,6 +1277,7 @@ export default class WireframeService extends Service {
 
     this.isActive = false;
     this.reviewDrawerOpen = false;
+    this.publishTargetResolving = false;
     this.activeThemeId = null;
     this.selectedBlockKey = null;
     this.selectedBlockData = null;
@@ -4665,6 +4681,35 @@ export default class WireframeService extends Service {
   }
 
   /**
+   * When the bound theme can't be published to directly, look up its companion
+   * component and re-point `activeThemeId` to it — so the editor targets the
+   * publishable companion the user already set up instead of the unpublishable
+   * parent. A no-op (and clears the resolving flag) when the theme is already
+   * publishable or has no companion. Generation-guarded so a late lookup never
+   * writes into a new session.
+   *
+   * @param {number} generation
+   * @returns {Promise<void>}
+   */
+  async #resolveCompanionTarget(generation) {
+    const target = this.activeThemeTarget;
+    if (!target || target.publishable) {
+      this.publishTargetResolving = false;
+      return;
+    }
+    const companionId = await this.wireframeDrafts.companionId(
+      this.activeThemeId
+    );
+    if (generation !== this.#enterGeneration || !this.isActive) {
+      return;
+    }
+    if (companionId != null) {
+      this.activeThemeId = companionId;
+    }
+    this.publishTargetResolving = false;
+  }
+
+  /**
    * Overlays any persisted per-user draft on top of the freshly materialized
    * live seeds. Runs after render (off the synchronous `enter()`), so it never
    * blocks first paint, and is generation-guarded so a fetch that resolves after
@@ -4675,6 +4720,13 @@ export default class WireframeService extends Service {
    * @returns {Promise<void>}
    */
   async #hydrateDrafts(generation) {
+    // Re-point to an existing companion BEFORE deriving theme ids, so default
+    // outlets, the indicator, publish targeting, and the draft fetch below all
+    // resolve against the companion the user already set up.
+    await this.#resolveCompanionTarget(generation);
+    if (generation !== this.#enterGeneration || !this.isActive) {
+      return;
+    }
     const themeIds = [
       ...new Set(
         this.editableOutlets

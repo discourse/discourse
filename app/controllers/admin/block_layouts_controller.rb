@@ -3,12 +3,14 @@
 # Publishing and resetting of the live `block_layout` ThemeField on behalf of
 # edit-driven tooling.
 #
-# - POST   block-layouts          → publish (live write + broadcast), 409 on a stale token
-# - DELETE block-layouts          → reset to default (delete the live field)
-# - POST   block-layouts/export   → produce the repo-file JSON for one outlet (download)
+# - POST   block-layouts           → publish (live write + broadcast), 409 on a stale token
+# - DELETE block-layouts           → reset to default (delete the live field)
+# - POST   block-layouts/export    → produce the repo-file JSON for one outlet (download)
+# - POST   block-layouts/duplicate → fork a Git theme into an editable copy
 #
-# Per-user drafts are a plugin concern (see the discourse-wireframe plugin's
-# block-layout-drafts endpoints); core only manages the live field.
+# Per-user drafts and the block-layout "companion" component are plugin concerns
+# (see the discourse-wireframe plugin's endpoints); core only manages live fields
+# and theme-level operations.
 class Admin::BlockLayoutsController < Admin::AdminController
   def publish
     Themes::SaveBlockLayout.call(service_params) do
@@ -110,24 +112,6 @@ class Admin::BlockLayoutsController < Admin::AdminController
       end
       on_failure do
         render json: failed_json.merge(errors: ["Failed to duplicate theme"]),
-               status: :unprocessable_entity
-      end
-    end
-  end
-
-  def create_component
-    Themes::CreateCustomizationComponent.call(service_params) do
-      on_success { |theme_id:| render json: { theme_id: } }
-      on_failed_contract do |contract|
-        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
-      end
-      on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }
-      on_model_not_found(:theme) { raise Discourse::NotFound }
-      on_failed_step(:validate_drafts) do |step|
-        render json: failed_json.merge(errors: [step.error]), status: :unprocessable_entity
-      end
-      on_failure do
-        render json: failed_json.merge(errors: ["Failed to create customization component"]),
                status: :unprocessable_entity
       end
     end
