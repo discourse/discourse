@@ -646,15 +646,32 @@
       white-space: nowrap;
     }
 
+    .commits-ahead {
+      font-size: 0.7em;
+      font-weight: normal;
+      color: var(--primary-medium);
+      cursor: help;
+    }
+
     h4 {
       font-size: var(--font-down-2);
       margin-bottom: 0.5em;
     }
 
-    .sha-link {
-      display: inline-flex;
-      font-size: var(--font-down-2);
-      font-weight: normal;
+    .version-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1em;
+      margin-top: 0.25em;
+
+      a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25em;
+        font-size: var(--font-down-3);
+        font-weight: normal;
+        white-space: nowrap;
+      }
     }
   }
 
@@ -685,7 +702,7 @@
     display: none;
   }
 
-  .fa {
+  .face .fa {
     font-size: var(--font-up-4);
   }
 
