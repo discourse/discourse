@@ -127,4 +127,41 @@ RSpec.describe DiscourseWorkflows::Executor::ParameterResolver do
     expression_resolver&.dispose
     sandbox&.dispose
   end
+
+  it "coerces boolean values using the property schema" do
+    resolver, expression_resolver, sandbox =
+      build_resolver(
+        {
+          "enabled" => "={{ $json.enabled }}",
+          "disabled" => "false",
+          "nested" => {
+            "enabled" => "1",
+          },
+        },
+        schema: {
+          enabled: {
+            type: :boolean,
+          },
+          disabled: {
+            type: :boolean,
+          },
+          nested: {
+            type: :object,
+            fields: {
+              enabled: {
+                type: :boolean,
+              },
+            },
+          },
+        },
+        items: [{ "json" => { "enabled" => "true" } }],
+      )
+
+    expect(resolver.resolve("enabled", 0)).to eq(true)
+    expect(resolver.resolve("disabled", 0)).to eq(false)
+    expect(resolver.resolve("nested.enabled", 0)).to eq(true)
+  ensure
+    expression_resolver&.dispose
+    sandbox&.dispose
+  end
 end

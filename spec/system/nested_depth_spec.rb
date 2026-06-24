@@ -13,6 +13,7 @@ RSpec.describe "Nested view depth and nesting" do
 
   before do
     SiteSetting.nested_replies_enabled = true
+    Fabricate(:nested_topic, topic: topic)
     sign_in(user)
   end
 

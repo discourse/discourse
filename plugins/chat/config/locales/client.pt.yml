@@ -141,12 +141,11 @@ pt:
         filter: "Filtrar"
       channel_edit_name_slug_modal:
         input_placeholder: Adicionar um nome
-        slug: Slug do canal (opcional)
       direct_message_creator:
         title: Nova Mensagem
         prefix: "Para:"
       create_channel:
-        slug: "Slug do canal (opcional)"
+        description: "Descrição"
         title: "Novo canal"
         type: "Tipo"
         types:
@@ -250,3 +249,12 @@ pt:
       start_new_dm:
         text: Iniciar novo DM
         title: Criar uma conversação pessoal
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Canal"
+      send_chat_message:
+        channel_id: "Canal"
+        message: "Mensagem"
+      chat_approval:
+        message: "Mensagem"
+        channel_id: "Canal"

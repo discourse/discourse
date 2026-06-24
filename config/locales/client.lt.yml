@@ -6,6 +6,16 @@
 
 lt:
   js:
+    user_api_key:
+      authorize: "Leisti"
+      deny: "Atšaukti"
+      copied: "Nukopijuota!"
+      otp_description: 'Ar norite leisti „%{application_name}“ pasiekti šią svetainę?'
+      no_trust_level: "Atsiprašome, jūs neturite reikiamo patikimumo lygio, kad galėtumėte pasiekti vartotojo API"
+      generic_error: "Atsiprašome, negalime išduoti vartotojo API raktų, šią funkciją gali išjungti svetainės administratorius"
+      device:
+        code: "Kodas"
+        continue: "Tęsti"
     blocks:
       ghost:
         status: "Statusas"
@@ -354,8 +364,6 @@ lt:
       pill: "Siūloma"
       pm_title: "Rekomenduojamos žinutės"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Galimas"
       start_posting:
         back: "Atgal"
     about:
@@ -1031,7 +1039,6 @@ lt:
             from_alias_hint: "Slapyvardis, naudojamas kaip siuntėjo adresas siunčiant grupinius SMTP el. laiškus. Atminkite, kad tai gali palaikyti ne visi pašto paslaugų teikėjai, todėl žr. savo pašto paslaugų teikėjo dokumentaciją."
         membership:
           title: Narystė
-          access: Prieiga
         categories:
           title: Kategorijos
           long_title: "Kategorijos numatytieji pranešimai"
@@ -1064,7 +1071,6 @@ lt:
         title: "Leidimai"
         none: "Su šia grupe susijusių kategorijų nėra."
         description: "Šios grupės nariai gali pasiekti šias kategorijas"
-      public_admission: "Leisti vartotojams laisvai prisijungti prie grupės (reikalauja viešai matomos grupės)"
       public_exit: "Leisti vartotojams laisvai išeiti iš grupės"
       empty:
         posts: "Šios grupės narių įrašų nėra"
@@ -1080,7 +1086,6 @@ lt:
       request: "Užklausa"
       message: "Žinutė"
       confirm_leave: "Ar tikrai norite palikti šią grupę?"
-      allow_membership_requests: "Leisti vartotojams siųsti narystės užklausas grupės savininkams (reikalinga viešai matoma grupė)"
       membership_request_template: "Pasirinktinis šablonas, kurį naudotojams galima rodyti siunčiant narystės užklausą"
       membership_request:
         submit: "Pateikti užklausą"
@@ -1475,6 +1480,9 @@ lt:
       undo_revoke_access: "Atstatyti atgal panaikintas teises"
       api_approved: "Patvirtinta:"
       api_last_used_at: "Paskutinį kartą naudota:"
+      api_expires_at: "Galiojimo laikas baigiasi:"
+      api_expired_at: "Baigėsi galiojimo laikas:"
+      api_expires_never: "niekada"
       theme: "Tema"
       save_to_change_theme: 'Tema bus atnaujinta spustelėjus „%{save_text}“'
       home: "Numatytasis pagrindinis puslapis"
@@ -2189,6 +2197,12 @@ lt:
       confirm_title: Tęsti į %{site_name}
       logging_in_as: Prisijungiama kaip %{email}
       confirm_button: Baigti prisijungimą
+    code_login:
+      email_label: "Epaštas"
+      continue_button: "Tęsti"
+      verify_button: "Tęsti"
+      account_ready_continue: "Tęsti"
+      username_label: "Naudotojo vardas"
     login:
       header_title: "Sveiki sugrįžę"
       title: "Prisijungti"
@@ -2427,7 +2441,7 @@ lt:
       discard: "Išmesti"
       title_placeholder: "Apibūdinkite apie ka bus ši diskusija vienu trumpu sakiniu"
       title_or_link_placeholder: "Įveskite pavadinimą, arba įklijuokite nuorodą čia"
-      edit_reason_placeholder: "kodėl jūs redaguojate?"
+      edit_reason_placeholder: "Kodėl jūs redaguojate?"
       topic_featured_link_placeholder: "Įveskite nuorodą, rodomą su pavadinimu."
       remove_featured_link: "Pašalinti nuorodą iš temos."
       reply_placeholder: "Įrašyti čia. "
@@ -2464,6 +2478,7 @@ lt:
         attribute_value: "Reikšmė"
         apply: "Kandidatuoti"
       help: "Markdown redagavimo pagalba"
+      edit_reason: "Kodėl jūs redaguojate?"
       modal_ok: "OK"
       cant_send_pm: "Atsiprašome, bet negalite siųsti žinučių %{username}."
       yourself_confirm:
@@ -2486,19 +2501,21 @@ lt:
           desc: Sukurkite naują pranešimą, pradedant nuo tų pačių gavėjų
         reply_to_topic:
           label: Atsakyti į temą
+          trigger: Tema
           desc: Atsakykite į temą, o ne į konkretų įrašą
+        reply_to_message:
+          trigger: Žinutės
         toggle_whisper:
           label: Visiškas gandas
-          desc: Gandai matomi tik valdytojams
         create_personal_message:
-          label: "Nauja žinutė"
           desc: "Sukurti naują asmeninę žinutę"
         shared_draft:
           label: "Bendrinami juodraščiai"
           desc: "Sukurkite temą, kuri bus matoma tik leidžiamiems vartotojams"
         toggle_topic_bump:
-          label: "Perjungti temos iškilimą"
           desc: "Atsakykite nekeisdami paskutinės atsakymo datos"
+        edit_post: "Redaguojamas įrašas"
+        unknown_user: "Narys"
       reload: "Įkelti iš naujo"
       ignore: "Ignoruoti"
       image: "paveikslėlis"
@@ -2760,6 +2777,21 @@ lt:
         dismiss_button: "Praleisti..."
         dismiss_tooltip: "Praleisti tik naujus įrašus ar nebesekti temos"
         also_dismiss_topics: "Nebesekti šių temų, kad jos niekada nebūtų rodomos, kaip neperskaitytos"
+        dismiss_new_topics_with_selected:
+          one: "Atsisakyti (%{count})"
+          few: "Atsisakyti (%{count})"
+          many: "Atsisakyti (%{count})"
+          other: "Atsisakyti (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Atsisakyti (%{count})"
+          few: "Atsisakyti (%{count})"
+          many: "Atsisakyti (%{count})"
+          other: "Atsisakyti (%{count})"
+        dismiss_all_with_selected:
+          one: "Atsisakyti (%{count})"
+          few: "Atsisakyti (%{count})"
+          many: "Atsisakyti (%{count})"
+          other: "Atsisakyti (%{count})"
         dismiss_new: "Praleisti Naujas"
         toggle: "perjungti temų pasirinkimus"
         actions: "Veiksmai"
@@ -2814,6 +2846,8 @@ lt:
       deleted_post_placeholder: "[ištrinta]"
       ignored_post_placeholder: "[nepaisoma]"
       pinned_reply: "Prisegta"
+    share_target:
+      new_message: "Nauja žinutė"
     topic:
       filter_to:
         one: "temoje %{count} įrašas"
@@ -4090,7 +4124,7 @@ lt:
         modal:
           cancel: "atšaukti"
           create: "Išsaugoti"
-          reason: "kodėl jūs redaguojate?"
+          reason: "Kodėl jūs redaguojate?"
       spreadsheet:
         show: "Rodyti"
         about: "Apie"
@@ -4354,6 +4388,11 @@ lt:
                 "2": "Narys"
                 "3": "Nuolatinės"
                 "4": "Lyderis"
+          search:
+            title: "Paieška"
+            table:
+              searches: "Paieškos"
+              status: "Statusas"
         reports_section:
           no_data: "Nėra rodomų duomenų"
           modal:
@@ -4423,7 +4462,6 @@ lt:
             email: Epaštas
             incoming_email: "Išskirtiniai ateinantys el. pašto adresai"
             incoming_email_placeholder: "įveskite elektoninio pašto adresą"
-            visibility: Matomumas
             visibility_levels:
               title: "Kas gali matyti šia grupę?"
               public: "Visi"
@@ -4616,6 +4654,8 @@ lt:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Vardas"
+          company_url: "Interneto svetainė"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupės"
           optional: "(pasoronktinai)"

@@ -21,36 +21,21 @@ module DiscourseDataExplorer
       end
     end
 
-    def self.list_all(search: nil, offset: 0, limit: nil)
-      persisted_total = persisted_scope(search: search).count
-      unpersisted = Query.unpersisted_defaults(search: search).sort_by { |q| q.name.to_s.downcase }
+    def self.list_all(search: nil, after: nil, limit: nil)
+      persisted =
+        persisted_after(search: search, after: after, limit: limit).map do |query|
+          build_resolved(query)
+        end
+      unpersisted =
+        seek(
+          Query.unpersisted_defaults(search: search).map { |query| build_resolved(query) },
+          after: after,
+          limit: limit,
+        )
 
-      results = []
-      remaining = limit
-
-      if offset < persisted_total
-        take =
-          if remaining
-            [remaining, persisted_total - offset].min
-          else
-            persisted_total - offset
-          end
-        results.concat(persisted_scope(search: search).offset(offset).limit(take).to_a)
-        remaining -= results.size if remaining
-      end
-
-      if remaining.nil? || remaining > 0
-        unpersisted_offset = [offset - persisted_total, 0].max
-        slice =
-          if remaining
-            unpersisted[unpersisted_offset, remaining]
-          else
-            unpersisted[unpersisted_offset..]
-          end
-        results.concat(Array(slice))
-      end
-
-      results.map { |q| build_resolved(q) }
+      merged =
+        (persisted + unpersisted).sort_by { |report| [report.title.to_s.downcase, report.key] }
+      limit ? merged.first(limit) : merged
     end
 
     def self.fetch_many(identifiers, guardian:, filters: {})
@@ -104,13 +89,34 @@ module DiscourseDataExplorer
     end
     private_class_method :load_queries
 
-    def self.persisted_scope(search:)
-      scope = Query.where(hidden: false).includes(:groups).order(:name)
-      scope = scope.where(<<~SQL, s: "%#{Query.sanitize_sql_like(search)}%") if search.present?
-        name ILIKE :s OR description ILIKE :s
-      SQL
-      scope
+    def self.persisted_after(search:, after:, limit:)
+      scope = Query.where(hidden: false)
+      if search.present?
+        scope =
+          scope.where(
+            "name ILIKE :pattern OR description ILIKE :pattern",
+            pattern: "%#{Query.sanitize_sql_like(search)}%",
+          )
+      end
+      if after
+        scope =
+          scope.where(
+            <<~SQL,
+              LOWER(name) COLLATE "C" > LOWER(:after_title)
+              OR (
+                LOWER(name) = LOWER(:after_title)
+                AND (:prefix || id::text) COLLATE "C" > :after_key
+              )
+            SQL
+            after_title: after[:title],
+            after_key: after[:key],
+            prefix: "#{SOURCE_NAME}:",
+          )
+      end
+      scope = scope.order(Arel.sql('LOWER(name) COLLATE "C" ASC, id::text COLLATE "C" ASC'))
+      scope = scope.limit(limit) if limit
+      scope.to_a
     end
-    private_class_method :persisted_scope
+    private_class_method :persisted_after
   end
 end

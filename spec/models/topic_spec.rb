@@ -2375,9 +2375,10 @@ RSpec.describe Topic do
     end
 
     it "sets topic status update user to topic creator if it is a TL4 user" do
-      tl4_topic = Fabricate.build(:topic, user: Fabricate.build(:trust_level_4, id: 998))
+      topic_creator = Fabricate(:trust_level_4)
+      tl4_topic = Fabricate.build(:topic, user: topic_creator)
       tl4_topic.set_or_create_timer(TopicTimer.types[:close], 3)
-      expect(tl4_topic.topic_timers.first.user_id).to eq(998)
+      expect(tl4_topic.topic_timers.first.user).to eq(topic_creator)
     end
 
     it "removes close topic status update if arg is nil" do
@@ -3565,6 +3566,13 @@ RSpec.describe Topic do
       third_post.update!(post_type: Post.types[:whisper])
 
       expect(Topic.reset_highest(topic.id)).to eq(2)
+    end
+
+    it "excludes small action posts from both the public and staff highest post number" do
+      third_post.update!(post_type: Post.types[:small_action])
+
+      expect(Topic.reset_highest(topic.id)).to eq(2)
+      expect(topic.reload.highest_staff_post_number).to eq(2)
     end
   end
 

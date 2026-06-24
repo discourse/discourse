@@ -1,6 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { createReteEditor } from "discourse/plugins/discourse-workflows/admin/components/workflows/canvas/rete-editor";
+import { buildConnectedOutputsIndex } from "discourse/plugins/discourse-workflows/admin/lib/workflows/graph-constants";
 
 const NODE_TYPES = [
   {
@@ -20,10 +21,22 @@ const NODE_TYPES = [
   },
   {
     identifier: "flow:loop_over_items",
+    inputs: [{ key: "main", multiple: true }],
     ports: [
       { key: "done", primary: true },
       { key: "loop", primary: false },
     ],
+  },
+  {
+    identifier: "flow:merge",
+    inputs: [
+      {
+        key: "main",
+        required: false,
+        multiple: true,
+      },
+    ],
+    ports: [{ key: "main", primary: true }],
   },
 ];
 
@@ -244,6 +257,181 @@ module("Unit | Canvas Bridge", function (hooks) {
     const connection = bridge.editor.getConnections()[0];
     assert.strictEqual(connection.sourceOutput, "loop");
     assert.strictEqual(connection.targetInput, "main");
+
+    bridge.destroy();
+  });
+
+  test("resolves arbitrary output keys to declared port indexes", async function (assert) {
+    const bridge = await createReteEditor(container, {
+      callbacks: noopCallbacks(),
+      nodeTypes: NODE_TYPES,
+    });
+
+    const nodes = [
+      {
+        clientId: "branch",
+        type: "action:data_table",
+        position: { x: 0, y: 0 },
+      },
+      {
+        clientId: "empty",
+        type: "action:http_request",
+        position: { x: 200, y: 0 },
+      },
+    ];
+    const connections = [
+      {
+        sourceClientId: "branch",
+        sourceOutput: "no_results",
+        targetClientId: "empty",
+      },
+    ];
+
+    await bridge.syncState(nodes, connections);
+
+    const connection = bridge.editor.getConnections()[0];
+    assert.strictEqual(connection.sourceOutput, "no_results");
+    assert.strictEqual(connection.sourceOutputIndex, 1);
+    assert.true(
+      buildConnectedOutputsIndex([connection]).get("branch").has(1),
+      "the second output is marked connected"
+    );
+
+    assert.strictEqual(
+      bridge.buildDesiredGraphConnections(connections)[0].sourceOutputIndex,
+      1
+    );
+
+    bridge.destroy();
+  });
+
+  test("connectioncreated reports the declared port index for arbitrary output keys", async function (assert) {
+    let createdConnection;
+
+    const bridge = await createReteEditor(container, {
+      callbacks: noopCallbacks({
+        onConnectionCreated(
+          source,
+          sourceOutput,
+          target,
+          targetInput,
+          sourceOutputIndex,
+          targetInputIndex
+        ) {
+          createdConnection = {
+            source,
+            sourceOutput,
+            target,
+            targetInput,
+            sourceOutputIndex,
+            targetInputIndex,
+          };
+        },
+      }),
+      nodeTypes: NODE_TYPES,
+    });
+
+    await bridge.syncState(
+      [
+        {
+          clientId: "branch",
+          type: "action:data_table",
+          position: { x: 0, y: 0 },
+        },
+        {
+          clientId: "empty",
+          type: "action:http_request",
+          position: { x: 200, y: 0 },
+        },
+      ],
+      []
+    );
+
+    await bridge.addConnection("branch", "no_results", "empty");
+
+    assert.deepEqual(createdConnection, {
+      source: "branch",
+      sourceOutput: "no_results",
+      target: "empty",
+      targetInput: "main",
+      sourceOutputIndex: 1,
+      targetInputIndex: 0,
+    });
+
+    bridge.destroy();
+  });
+
+  test("connectioncreated reports the next merge input index", async function (assert) {
+    let createdConnection;
+
+    const bridge = await createReteEditor(container, {
+      callbacks: noopCallbacks({
+        onConnectionCreated(
+          source,
+          sourceOutput,
+          target,
+          targetInput,
+          sourceOutputIndex,
+          targetInputIndex
+        ) {
+          createdConnection = {
+            source,
+            sourceOutput,
+            target,
+            targetInput,
+            sourceOutputIndex,
+            targetInputIndex,
+          };
+        },
+      }),
+      nodeTypes: NODE_TYPES,
+    });
+
+    await bridge.syncState(
+      [
+        {
+          clientId: "users",
+          type: "action:http_request",
+          position: { x: 0, y: 0 },
+        },
+        {
+          clientId: "groups",
+          type: "action:http_request",
+          position: { x: 0, y: 200 },
+        },
+        {
+          clientId: "merge",
+          type: "flow:merge",
+          position: { x: 200, y: 100 },
+        },
+      ],
+      [
+        {
+          sourceClientId: "users",
+          targetClientId: "merge",
+          targetInput: "main",
+          targetInputIndex: 0,
+        },
+      ]
+    );
+
+    await bridge.addConnection("groups", "main", "merge");
+
+    assert.deepEqual(createdConnection, {
+      source: "groups",
+      sourceOutput: "main",
+      target: "merge",
+      targetInput: "main",
+      sourceOutputIndex: 0,
+      targetInputIndex: 1,
+    });
+
+    assert.strictEqual(
+      bridge.editor.getConnections().find((connection) => {
+        return connection.source === "groups" && connection.target === "merge";
+      }).targetInputIndex,
+      1
+    );
 
     bridge.destroy();
   });

@@ -1,3 +1,4 @@
+import PreloadStore from "discourse/lib/preload-store";
 import { createSiteSettingsFromPreloaded } from "discourse/services/site-settings";
 
 const CLIENT_SETTING_TEST_OVERRIDES = {
@@ -13,9 +14,9 @@ const CLIENT_SETTING_TEST_OVERRIDES = {
   anon_polling_interval: 30000,
 };
 
-// window.CLIENT_SITE_SETTINGS_WITH_DEFAULTS is injected by `/bootstrap/site-settings-for-tests.js`
 const ORIGINAL_CLIENT_SITE_SETTINGS = {
-  ...window.CLIENT_SITE_SETTINGS_WITH_DEFAULTS,
+  ...PreloadStore.get("siteSettings"),
+  ...PreloadStore.get("themeSiteSettingOverrides"),
   ...CLIENT_SETTING_TEST_OVERRIDES,
 };
 

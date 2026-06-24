@@ -50,6 +50,9 @@ es:
             delete_ai_secret: "Eliminar secreto de IA"
             update_ai_spam_settings: "Actualizar ajustes de detección de spam de IA"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_agent": "Agente de IA"
     discourse_automation:
       scriptables:
         llm_report:
@@ -226,6 +229,9 @@ es:
               description: "Permitir etiquetar publicaciones creadas por el usuario del sistema."
     discourse_ai:
       title: "IA"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Agente"
       default_llm:
         title: "Modelo LLM por defecto"
         description: "El modelo LLM por defecto que se utilizará para todas las características de IA. Se usará si no se especifica ningún LLM en la configuración de características o en el agente. Si no se especifica ningún LLM por defecto, se usará el último LLM creado."
@@ -293,6 +299,9 @@ es:
             model_settings: "Ajustes del modelo"
             related_topics: "Temas relacionados"
             semantic_search: "Búsqueda semántica"
+        admin_dashboard:
+          setting_groups:
+            settings: "Ajustes básicos"
         discord:
           name: "Integración de Discord"
           description: "Añade la posibilidad de buscar canales de Discord"
@@ -968,7 +977,6 @@ es:
         title: "Sugerir cambios usando IA"
         description: "Elige una de las opciones siguientes y la IA te propondrá una nueva versión del texto."
         selection_hint: "Sugerencia: También puedes seleccionar una parte del texto antes de abrir el asistente para reescribir solo eso."
-        suggest: "Sugerir con IA"
         suggest_errors:
           too_many_tags:
             one: "Solo puedes tener hasta %{count} etiqueta"

@@ -6,7 +6,6 @@
 
 nl:
   site_settings:
-    enable_login_with_amazon: "Schakel verificatie via Aanmelden met Amazon in, vereist 'login with amazon client id' en 'login with amazon client secret'."
     login_with_amazon_client_id: "Client-ID voor Aanmelden met Amazon"
     login_with_amazon_client_secret: "Clientgeheim voor Aanmelden met Amazon"
     login_with_amazon_scope: "OAuth2-bereiken voor Aanmelden met Amazon (gescheiden door spaties)"

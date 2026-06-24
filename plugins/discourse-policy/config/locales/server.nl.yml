@@ -16,6 +16,8 @@ nl:
       group_not_found: "Groep niet gevonden voor beleid"
       no_policy: "Er is geen beleid voor bericht"
       staff_only: "Beleid mag alleen van toepassing zijn op berichten van medewerkers"
+      policy_group_inaccessible: "Dit beleid kan op dit moment niet worden geaccepteerd. Neem contact op met een sitebeheerder."
+      no_policy_permission: "Je hebt geen toestemming om het beleid in dit bericht te wijzigen."
     error:
       no_permission: "Niet geautoriseerd"
   reports:

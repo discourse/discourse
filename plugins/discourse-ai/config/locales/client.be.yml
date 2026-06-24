@@ -134,7 +134,7 @@ be:
         next:
           title: "Далей"
         tests:
-          success: "поспех!"
+          success: "Працуе!"
         providers:
           google: "Google"
       ai_helper:
@@ -153,7 +153,7 @@ be:
         delete: "Выдаліць"
         edit: "Рэдагаваць"
         tests:
-          success: "поспех!"
+          success: "Працуе!"
         display_name: "Імя"
         providers:
           google: "Google"

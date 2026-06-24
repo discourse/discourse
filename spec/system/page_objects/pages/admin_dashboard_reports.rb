@@ -21,13 +21,6 @@ module PageObjects
         has_no_css?("#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']")
       end
 
-      def remove_card(identifier)
-        within("#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']") do
-          find(".db-report__remove").click
-        end
-        self
-      end
-
       def has_add_tile?
         has_css?("#{SECTION_SELECTOR} .db-report__add-report")
       end

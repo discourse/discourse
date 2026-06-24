@@ -50,6 +50,9 @@ ar:
             delete_ai_secret: "حذف سر الذكاء الاصطناعي"
             update_ai_spam_settings: "تحديث إعدادات مكافحة الرسائل العشوائية بالذكاء الاصطناعي"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_agent": "وكيل الذكاء الاصطناعي"
     discourse_automation:
       scriptables:
         llm_report:
@@ -226,6 +229,9 @@ ar:
               description: "السماح بوضع الوسوم على المنشورات التي ينشئها مستخدم النظام."
     discourse_ai:
       title: "الذكاء الاصطناعي"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "الوكيل"
       default_llm:
         title: "نموذج اللغة الكبير الافتراضي"
         description: "نموذج اللغة الكبير الافتراضي المستخدم لجميع ميزات الذكاء الاصطناعي. سيتم استخدامه إذا لم يتم تحديد نموذج آخر في إعدادات الميزة أو الوكيل. وإذا لم يُحدد نموذج افتراضي، سيتم استخدام آخر نموذج تم إنشاؤه."
@@ -305,6 +311,10 @@ ar:
             model_settings: "إعدادات النموذج"
             related_topics: "الموضوعات ذات الصلة"
             semantic_search: "البحث الدلالي"
+        admin_dashboard:
+          highlights: "التمييزات"
+          setting_groups:
+            settings: "الإعدادات الأساسية"
         discord:
           name: "التكامل مع Discord"
           description: "يُمكّن من إجراء عمليات البحث داخل قنوات Discord"
@@ -1065,7 +1075,6 @@ ar:
         title: "اقتراح تغييرات باستخدام الذكاء الاصطناعي"
         description: "اختر أحد الخيارات أدناه، وسيقترح عليك الذكاء الاصطناعي نسخة جديدة من النص."
         selection_hint: "تلميح: يمكنك أيضًا تحديد جزء من النص قبل فتح أداة المساعدة لإعادة كتابة ذلك الجزء فقط."
-        suggest: "الاقتراح باستخدام الذكاء الاصطناعي"
         suggest_errors:
           too_many_tags:
             zero: "يمكن أن يكون لديك %{count} من الأوسمة فقط كحد أقصى"

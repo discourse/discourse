@@ -8,6 +8,7 @@ import "./module-shims";
 import "./discourse-common-loader-shims";
 import embroiderCompatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
+import { registerSettings } from "discourse/lib/theme-settings-store";
 import { defineModules } from "./lib/loader-shim";
 
 // Register Discourse's standard implicit injections on common framework classes.
@@ -100,7 +101,23 @@ async function loadPluginFromModulePreload(link) {
   }
 }
 
+function registerPreloadedThemeSettings() {
+  try {
+    const element = document.getElementById("data-preloaded");
+    const preloaded = JSON.parse(element.dataset.preloaded);
+    const activatedThemes = JSON.parse(preloaded.activatedThemes);
+    for (const [themeId, info] of Object.entries(activatedThemes)) {
+      registerSettings(parseInt(themeId, 10), info.settings);
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Failed to register preloaded theme settings", error);
+  }
+}
+
 export async function loadThemesAndPlugins() {
+  registerPreloadedThemeSettings();
+
   const promises = [
     ...[
       ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
@@ -116,7 +133,11 @@ export async function loadThemesAndPlugins() {
 export async function loadAdmin() {
   defineModules(
     "discourse/admin",
-    (await import("discourse/admin/compat-modules")).default
+    (
+      await import(
+        /* dynamicChunkName: "admin" */ "discourse/admin/compat-modules"
+      )
+    ).default
   );
 }
 

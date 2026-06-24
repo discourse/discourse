@@ -15,7 +15,6 @@ ar:
           kpi:
             accepted_solutions:
               label: "الحلول المقبولة"
-              tooltip: "عدد الموضوعات التي تم تمييز أحد منشوراتها كحلٍ للمشكلة خلال هذه الفترة."
   js:
     notifications:
       alt:
@@ -29,7 +28,6 @@ ar:
       allow_accepted_answers: "السماح لصاحب الموضوع وفريق العمل بوضع علامة على أحد الردود على أنه الحل"
       solved_topics_auto_close_hours: "إغلاق الموضوع تلقائيًا بعد مرور (n) من الساعات على آخر رد بمجرد وضع علامة على الموضوع على أنه محلول."
       notify_on_staff_accept_solved: "إخطار منشئ الموضوع عندما يحدد فريق العمل حلاً"
-      empty_box_on_unsolved: "عرض مربع اختيار فارغ بجانب الموضوعات غير المحلولة في قائمة الموضوعات"
       accept_answer: "التحديد إذا كان هذا الرد يحل المشكلة"
       accepted_description: "هذا هو الحل المقبول لهذا الموضوع"
       has_no_accepted_answer: "لا يوجد حل لهذا الموضوع"
@@ -75,6 +73,8 @@ ar:
       confirm_solved_removal: "سيؤدي هذا التغيير إلى تعطيل الحلول لهذا الموضوع وإزالة الحل المقبول."
       confirm_solved_removal_confirm: "تأكيد"
       confirm_solved_removal_cancel: "ألغِ"
+      shared_issue:
+        label_with_count: "‏%{label} ‏(%{count})"
       no_answer:
         title: هل تمت الإجابة على سؤالك؟
         description: "ميِّز الإجابة وساعد الآخرين عن طريق استخدام زر الحل أسفل الرد الصحيح."

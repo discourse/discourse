@@ -186,6 +186,19 @@ el:
     scriptables:
       send_chat_message:
         title: Αποστολή μηνύματος συνομιλίας
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Έγκριση"
+      default_deny_label: "Άρνηση"
+    errors:
+      send_chat_message:
+        invalid_params: "Μη έγκυρες παράμετροι: %{errors}"
+        channel_not_found: "Δεν βρέθηκε το κανάλι: %{channel_id}"
+        failed: "Αποτυχία αποστολής μηνύματος συνομιλίας."
+      chat_approval:
+        channel_not_found: "Το μήνυμα συνομιλίας απέτυχε: το κανάλι %{channel_id} δεν βρέθηκε."
+        invalid_params: "Το μήνυμα συνομιλίας απέτυχε: %{errors}"
+        failed: "Το μήνυμα συνομιλίας απέτυχε: %{steps}"
   reviewable_score_types:
     needs_review:
       title: "Χρειάζεται έλεγχο"

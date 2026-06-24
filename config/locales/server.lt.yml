@@ -354,7 +354,6 @@ lt:
       admins: "administratoriai"
       moderators: "moderatoriai"
       staff: "personalas"
-      anonymous: "anonimas"
       trust_level_0: "pasitikėjimo_lygis_0"
       trust_level_1: "pasitikėjimo_lygis_1"
       trust_level_2: "pasitikėjimo_lygis_2"
@@ -843,6 +842,9 @@ lt:
       write: "Rašyti visus"
       one_time_password: "Sukurkite vienkartinį prisijungimo raktą"
       bookmarks_calendar: "Skaityti žymių priminimus"
+    device:
+      code: "Kodas"
+      continue: "Tęsti"
     invalid_public_key: "Atsiprašome, viešasis raktas yra neteisingas."
     invalid_token: "Trūksta, netinkamas arba pasibaigęs prieigos raktas."
   flags:
@@ -1218,9 +1220,6 @@ lt:
   dashboard:
     problem:
       rails_env: "Jūsų serveris veikia %{env} režimu."
-    reports_section:
-      providers:
-        core_report: "Standartinis"
   site_settings:
     disabled: "uždrausta"
     display_local_time_in_user_card: "Rodyti vietinį laiką pagal vartotojo laiko juostą, kai atidaroma vartotojo kortelė."
@@ -1240,7 +1239,6 @@ lt:
     search_query_log_max_retention_days: "Maksimalus laikas, per kurį galima išlaikyti paieškos užklausas, dienomis."
     allow_uncategorized_topics: "Leisti kurti temas be kategorijos. ĮSPĖJIMAS: Jei yra temų, nepriskirtų kategorijoms, prieš išjungdami jas turite suskirstyti jas į kategorijas."
     allow_duplicate_topic_titles: "Leisti temas su identiškais, pasikartojančiais pavadinimais."
-    allow_duplicate_topic_titles_category: "Leisti temas su identiškais, pasikartojančiais pavadinimais, jei kategorija skiriasi. allow_duplicate_topic_titles turi būti išjungtas."
     unique_posts_mins: "Kiek minučių prieš vartotojas gali padaryti įrašą su tuo pačiu turiniu dar kartą"
     crawl_images: "Gaukite vaizdus iš nuotolinių URL, kad įterptumėte teisingus pločio ir aukščio matmenis."
     download_remote_images_threshold: "Minimali vieta diske, reikalinga nuotoliniams vaizdams atsisiųsti vietoje (procentais)"
@@ -1253,11 +1251,6 @@ lt:
     show_pinned_excerpt_mobile: "Rodyti ištrauką apie prisegtas temas mobiliojo įrenginio rodinyje."
     show_pinned_excerpt_desktop: "Rodyti ištrauką apie prisegtas temas darbalaukio rodinyje."
     logo: "Logotipo vaizdas viršutiniame kairiajame svetainės kampe. Naudokite platų stačiakampį vaizdą, kurio aukštis yra 120, o kraštinių santykis didesnis nei 3: 1. Jei jis paliekamas tuščias, bus rodomas svetainės pavadinimo tekstas."
-    digest_logo: "Alternatyvus logotipo vaizdas, naudojamas jūsų svetainės el. pašto suvestinės viršuje. Naudokite platų stačiakampį vaizdą. Nenaudokite SVG vaizdo. Jei paliksite tuščią, bus naudojamas vaizdas iš „logotipo“ nustatymo."
-    logo_dark: "Tamsios schemos alternatyva “logotipo” svetainės nustatymui."
-    logo_small_dark: "Tamsios schemos alternatyva „mažo logotipo“ svetainės nustatymui."
-    mobile_logo_dark: "Tamsios schemos alternatyva svetainės „mobiliojo logotipo“ nustatymui."
-    large_icon: "Vaizdas naudojamas kaip kitų metaduomenų piktogramų pagrindas. Idealiu atveju turėtų būti didesnis nei 512 x 512. Jei paliksite tuščią, bus naudojamas logotipas_mažas."
     force_https: "Priverskite savo svetainę naudoti tik HTTPS. ĮSPĖJIMAS: NEGALIMA to įjungti, kol nepatikrinate, kad HTTPS yra visiškai nustatytas ir veikia visiškai visur! Ar patikrinote savo CDN, visus socialinius prisijungimus ir visus išorinius logotipus / priklausomybes, kad įsitikintumėte, jog jie taip pat suderinami su HTTPS?"
     summary_score_threshold: "Minimalus balas, kurio reikia, kad įrašas būtų įtrauktas į „Apibendrinti šią temą“"
     summary_timeline_button: "Rodyti mygtuką “Apibendrinti” laiko juostoje"
@@ -1302,7 +1295,6 @@ lt:
     discourse_connect_not_approved_url: "Peradresuoti nepatvirtintas DiscourseConnect paskyras į šį URL"
     allow_new_registrations: "Leisti naujų vartotojų registracijas. Atžymėkite šį žymėjimą, kad niekas negalėtų sukurti naujos paskyros."
     enable_signup_cta: "Parodykite pranešimą grįžtantiems anoniminiams vartotojams, raginančius juos prisiregistruoti."
-    enable_facebook_logins: "Įgalinti Facebook autentifikavimą, reikia facebook_app_id ir facebook_app_secret. Žr. <a href='https://meta.discourse.org/t/13394' target='_blank'>Facebook“ prisijungimo konfigūravimas „Discourse“</a>."
     enable_discord_logins: "Leisti vartotojams autentifikuoti naudojant „Discord“?"
     discord_client_id: '„Discord“ kliento ID (reikia vieno? Apsilankykite <a href="https://discordapp.com/developers/applications/me">„Discord“ kūrėjų portale</a>)'
     enable_backups: "Leiskite administratoriams kurti forumo atsargines kopijas"
@@ -1401,7 +1393,6 @@ lt:
     enable_inline_emoji_translation: "Įgalinamas įterptųjų jaustukų vertimas (be tarpų ar skyrybos ženklų prieš tai)"
     approve_post_count: "Naujo arba pagrindinio naudotojo įrašų, kuriuos reikia patvirtinti, skaičius"
     auto_close_messages_post_count: "Maksimalus pranešimų skaičius, leidžiamas pranešime prieš jį automatiškai uždarant (0 išjungti)"
-    auto_close_topics_create_linked_topic: "Sukurkite naują susietą temą, kai tema automatiškai uždaroma pagal nustatymą „Automatiškai uždarytų temų įrašų skaičių“"
     returning_user_notice_tl: "Minimalus patikimumo lygis, reikalingas norint pamatyti grįžtančius vartotojo pašto pranešimus."
     returning_users_days: "Kiek dienų turėtų praeiti, kol vartotojas laikomas grįžtančiu."
     blur_tl0_flagged_posts_media: "Sulieti pažymėtų įrašų vaizdus, kad paslėptumėte potencialiai NSFW turinį."
@@ -1457,6 +1448,10 @@ lt:
     results_page: "Paieškos rezultatai ir '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Naujausi įrašai"
+      order_latest_topic: "Naujausios temos"
   discourse_connect:
     login_error: "Prisijungimo klaida"
     not_found: "Nepavyko rasti jūsų paskyros. Prašome susisiekti su svetainės administratoriumi."
@@ -1832,6 +1827,7 @@ lt:
     Norėdami atsisakyti šių el. laiškų prenumeratos, [spustelėkite čia](%{unsubscribe_url}).
   subject_re: "Dar kartą:"
   subject_pm: "[AŽ]"
+  email_from: "%{user_name}"
   user_notifications:
     previous_discussion: "Ankstesni atsakymai"
     in_reply_to: "Atsakant į"
@@ -2535,7 +2531,6 @@ lt:
     restricted_tag_disallowed: 'Jūs negalite naudoti žymos „%{tag}“.'
     restricted_tag_remove_disallowed: 'Negalite pašalinti žymos „%{tag}“.'
     forbidden:
-      in_this_category: '„%{tag_name}“ šioje kategorijoje negali būti naudojamas'
       has_synonyms: '„%{tag_name}“ negalima naudoti, nes jis turi sinonimų.'
     invalid_target_tag: "negali būti sinonimo sinonimas"
     synonyms_exist: "neleidžiama, kol yra sinonimų"
@@ -2571,6 +2566,8 @@ lt:
   search_logs:
     graph_title: "Ieškoti kontakto"
   onebox:
+    google_meet:
+      meeting_code: "Kodas:"
     github:
       closed: "uždaryta"
       status_date:

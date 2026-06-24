@@ -1392,6 +1392,47 @@ RSpec.describe Post do
       post.rebake!(invalidate_oneboxes: true)
     end
 
+    context "with content localization enabled" do
+      before { SiteSetting.content_localization_enabled = true }
+
+      it "enqueues a recook of each translation" do
+        post = create_post
+        localization =
+          Fabricate(:post_localization, post: post, locale: "ja", raw: "孫子", cooked: "stale")
+
+        expect_enqueued_with(
+          job: :process_localized_cooked,
+          args: {
+            post_localization_id: localization.id,
+            recook: true,
+          },
+        ) { post.rebake! }
+      end
+
+      it "refreshes the translation's cooked HTML from its raw" do
+        Jobs.run_immediately!
+        post = create_post
+        localization =
+          Fabricate(:post_localization, post: post, locale: "ja", raw: "孫子", cooked: "stale")
+
+        post.rebake!
+
+        expect(localization.reload.cooked).to include("孫子")
+        expect(localization.cooked).not_to eq("stale")
+      end
+
+      it "does not re-translate the localization raw" do
+        Jobs.run_immediately!
+        post = create_post
+        localization =
+          Fabricate(:post_localization, post: post, locale: "ja", raw: "孫子", cooked: "stale")
+
+        post.rebake!
+
+        expect(localization.reload.raw).to eq("孫子")
+      end
+    end
+
     it "does not publish to clients when skip_publish_rebaked_changes is true" do
       post = create_post
       post.expects(:publish_change_to_clients!).never

@@ -70,7 +70,7 @@ export default class TopicReplyChoiceDialog extends Component {
     <TopicLabelButton
       @action={{this.replyOnCurrent}}
       @topic={{@model.currentTopic}}
-      class="btn-reply-where btn-reply-here"
+      class="btn-reply-where btn-reply-here btn-default"
     />
   </template>
 }

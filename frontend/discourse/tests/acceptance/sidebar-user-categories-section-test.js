@@ -1064,7 +1064,7 @@ acceptance(
       navigation_menu: "sidebar",
     });
 
-    needs.user({ new_new_view_enabled: true });
+    needs.user({ unified_new_enabled: true });
 
     test("count shown next to category link when sidebar_show_count_of_new_items is true", async function (assert) {
       const categories = Site.current().categories;

@@ -100,10 +100,14 @@ module DiscourseAi
         if params[:topic_id]
           topic = Topic.find_by(id: params[:topic_id])
           guardian.ensure_can_see!(topic)
-          opts = { topic_id: topic.id }
+          opts = { topic_id: topic.id, category: topic.category, selected_tag_ids: topic.tag_ids }
         else
           input = get_text_param!
-          opts = { text: input }
+          opts = {
+            text: input,
+            category: suggestible_category,
+            selected_tag_ids: selected_tag_ids_param,
+          }
         end
 
         render json: DiscourseAi::AiHelper::SemanticCategorizer.new(current_user, opts).tags,
@@ -288,6 +292,15 @@ module DiscourseAi
 
       def get_post_param!
         params[:post_id].tap { |t| raise Discourse::InvalidParameters.new(:post_id) if t.blank? }
+      end
+
+      def suggestible_category
+        return if params[:category_id].blank?
+        Category.where(id: params[:category_id]).where(id: guardian.allowed_category_ids).first
+      end
+
+      def selected_tag_ids_param
+        Tag.where_name(Array(params[:selected_tags]).first(100)).pluck(:id)
       end
 
       def rate_limiter_performed!

@@ -393,7 +393,6 @@ gl:
       admins: "administradores"
       moderators: "moderadores"
       staff: "equipo"
-      anonymous: "anónimo"
       trust_level_0: "nivel_de_confianza_0"
       trust_level_1: "nivel_de_confianza_1"
       trust_level_2: "nivel_de_confianza_2"
@@ -825,6 +824,9 @@ gl:
       write: "Escribilo todo"
       one_time_password: "Crear un token de inicio de sesión dun só uso"
       bookmarks_calendar: "Ler recordatorios de marcadores"
+    device:
+      code: "Código"
+      continue: "Continuar"
     invalid_public_key: "Sentímolo, a chave pública non é válida."
     invalid_auth_redirect: "Sentímolo, este servidor auth_redirect non está permitido."
     invalid_token: "Token non válido, caducado ou ausente."
@@ -1283,7 +1285,6 @@ gl:
     delete_removed_posts_after: "As publicacións retiradas polo seu autor borraranse automaticamente despois de (n) horas. Se se estabelece en 0, as publicacións eliminaranse ao momento."
     responsive_post_image_sizes: "Cambiar o tamaño das imaxes da caixa para permitir a súa visualización en pantallas de alto DPI das seguintes proporcións de píxeles. Retire todos os valores para desactivar imaxes adaptativas."
     fixed_category_positions: "De estar marcado, poderá organizar as categorías nunha orde determinada. De non o estar, as categorías aparecerán listadas segundo a súa actividade recente."
-    fixed_category_positions_on_create: "De estar marcado, a orde das categorías manterase na caixa de diálogo da creación de temas (require fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Engadirlle a etiqueta rel nofollow a todo o contido inserido polos usuarios, agás para as ligazóns internas (incluídos os dominios pai). Se cambia isto, deberá reconstruír todas as publicacións con: «rake posts:rebake»'
     exclude_rel_nofollow_domains: "Unha listaxe de dominios a cuxas ligazóns non se lles engadirá a etiqueta nofollow. exemplo.com permitirá automaticamente sub.exemplo.com tamén. Como mínimo, debería engadir o dominio deste sitio para axudar os rastrexadores web a atoparen todo o contido. Se outras partes deste sitio web están noutros dominios, engádaos tamén."
     post_excerpt_maxlength: "Lonxitude máxima do resumo/extracto dunha publicación."
@@ -1296,15 +1297,7 @@ gl:
     facebook_app_access_token: "Un token xerado a partir do ID da súa app de Facebook e o seu segredo. Utilízase para xerar caixas (oneboxes) de Instagram."
     logo: "A imaxe do logotipo na parte superior esquerda do seu sitio. Utilice unha imaxe rectangular larga cunha altura de 120 e unha relación de aspecto superior a 3:1. Se se deixa en branco, mostrarase o texto do título do sitio."
     logo_small: "A imaxe pequena do logotipo na parte superior esquerda do seu sitio, visible ao desprazarse cara a abaixo. Utilice un cadrado de 120 x 120. Se se deixa en branco, mostrarase un glifo local."
-    digest_logo: "A imaxe de logotipo alternativa utilizada na parte superior do resumo de correo electrónico do seu sitio. Utilice un rectángulo largo. Non debe ser unha imaxe SVG. Se se deixa en branco, utilizarase a imaxe configurada como logotipo."
-    logo_dark: "Alternativa de esquema escuro para o axuste de «logo»."
-    logo_small_dark: "Alternativa de esquema escuro para o axuste do «logo pequeno»."
-    mobile_logo_dark: "Alternativa de esquema escuro para o axuste de «logo para móbil»."
-    large_icon: "Imaxe utilizada como base para outras iconas de metadatos. O ideal sería que fose maior que 512 x 512. Se se deixa en branco, utilizarase logo_small."
-    manifest_icon: "Imaxe utilizada como logo/imaxe de benvida en Android. Cambiarase automaticamente o tamaño a 512 × 512. Se se deixa en branco, utilizarase large_icon."
     manifest_screenshots: "Capturas de pantalla que presentan as funcionalidades da súa instalación e funcionalidade na páxina de arranque da instalación. Todas as imaxes deberían ser cargas en local e das mesmas dimensións."
-    favicon: "Unha favicona para o seu sitio, mire <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar correctamente sobre un CDN debe ser PNG. Redimensionarase automaticamente a 32x32. Se se deixa en branco, utilizarase large_icon."
-    opengraph_image: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada"
     notification_email: "O enderezo electrónico remitente utilizado ao enviar todos os correos electrónicos esenciais do sistema. O dominio especificado debe ter correctamente configurados os rexistros SPF, DKIM e PTR inversos para que os correos electrónicos se reciban correctamente."
     detailed_404: "Proporciónalles máis información aos usuarios sobre os motivos polos que non poden acceder a un tema en concreto. Nota: isto é menos seguro porque os usuarios saberán se o URL liga cun tema válido."
     force_https: "Forzar o sitio a utilizar só HTTPS. AVISO: NON active esta opción ata que verifique completamente a configuración e esta funcione correctamente en todas as partes! Comprobou tamén que o CDN, os inicios de sesión a través de redes sociais e calquera logo externo/dependencia son compatibles con HTTPS?"
@@ -1352,7 +1345,6 @@ gl:
     allowed_onebox_iframes: "Unha listase de dominios iframe src que se permiten a través de incorporación Onebox. \"*\" permitirá todos os motores Onebox predeterminados."
     allowed_crawler_user_agents: "Axentes de usuario de rastreadores web aos que se lles debería permitir o acceso ao sitio. AVISO! AO CONFIGURAR ISTO, VETARÁ TODOS OS RASTREXADORES NON LISTADOS AQUÍ!"
     blocked_crawler_user_agents: "Palabra única insensíbel a maiúsculas e minúsculas na cadea de axente de usuario que identifica rastrexadores web que non deberían ter permitido o acceso ao sitio. Non se lle aplica se está definida a listaxe de permitidos."
-    slow_down_crawler_rate: "Se slow_down_crawler_user_agents está especificado, este valor aplicarase a todos os rastrexadores (número de segundos de demora entre respostas)"
     content_security_policy_frame_ancestors: "Restrinxir quen pode incorporar este sitio en iframes mediante CSP. O control de servidores permitidos en <a href='%{base_path}/admin/customize/embedding'>Incorporación</a>"
     invalidate_inactive_admin_email_after_days: "As contas administrativas que non visiten o sitio neste número de días terán que volver validar o seu enderezo electrónico antes de iniciar sesión. Estabelecer en 0 para desactivalo."
     share_links: "Determinar que elementos aparecen no cadro de compartir e en que orde."
@@ -1371,7 +1363,6 @@ gl:
     email_token_valid_hours: "Os tokens para restabelecer o contrasinal ou activar a conta son válidos durante (n) horas."
     log_out_strict: "Ao pechar a sesión, pechar TODAS as sesións en todos os dispositivos do usuario"
     version_checks: "Faga ping ao Discourse Hub para obter actualizacións de versións e amose mensaxes de nova versión no panel de control do<a href='%{base_path}/admin' target='_blank'>/admin</a>"
-    new_version_emails: "Enviar un correo electrónico a contact_email address cando haxa dispoñible unha nova versión de Discourse."
     invite_expiry_days: "Tempo de validez das claves para convidar usuarios, en días"
     invite_only: "Todos os usuarios novos deben ser invitados directamente por usuarios de confianza ou membros do equipo. Os rexistros públicos están desactivados."
     login_required: "Requírese autenticación para ler contido neste sitio; deshabilitar o acceso anónimo."
@@ -1382,11 +1373,8 @@ gl:
     reserved_usernames: "Nomes de usuario que non están permitidos para rexistrarse. O asterisco * pódese utilizar para coincidir con calquera carácter cero ou máis veces."
     password_unique_characters: "Número mínimo de caracteres únicos que debe ter un contrasinal."
     block_common_passwords: "Non permitir contrasinais que estean entre os 10.000 contrasinais máis comúns."
-    auth_skip_create_confirm: Ao rexistrarse cun método de autenticación externo, saltar a xanela emerxente de creación de conta. Utilízase mellor xunto con auth_overrides_email, auth_overrides_username e auth_overrides_name.
-    auth_immediately: "Redirecciona automaticamente ao sistema de inicio de sesión externo sen a interacción do usuario. Isto só ten efecto cando login_required é unha variábel verdadeira e só hai un método de autenticación externo"
     enable_discourse_connect: "Activar o inicio de sesión a través de DiscourseConnect (anteriormente «Discourse SSO») (AVISO: OS ENDEREZOS DE CORREO DOS USUARIOS *DEBEN DE* SER VALIDADOS POLO SITIO EXTERNO!)"
     verbose_discourse_connect_logging: "Rexistrar diagnósticos detallados relacionados con DiscourseConnect en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_discourse_connect_provider: "Implementar o protocolo do fornecedor de DiscourseConnect (antes «Discourse SS0») no punto de destino en /session/sso_provider, require que se definan sso_provider_secrets"
     discourse_connect_secret: "Cadea secreta utilizada para autenticar criptograficamente a información de DiscourseConnect, asegúrese de que teña 10 caracteres ou máis"
     discourse_connect_provider_secrets: "Unha listaxe de pares de dominios secretos que utilizan DiscourseConnect. Asegúrese de que a clave secreta de DiscourseConnect teña 10 caracteres ou máis. O símbolo do comodín * pódese utilizar para facer coincidir calquera dominio ou só unha parte del (por exemplo, *.exemplo.com)."
     discourse_connect_overrides_bio: "Sobrescribe info biográfica do usuario no seu perfil e evita a posibilidade de que o usuario a cambie."
@@ -1403,13 +1391,10 @@ gl:
     google_oauth2_client_secret: "Clave secreta do cliente da súa aplicación de Google."
     google_oauth2_prompt: "Unha listaxe opcional de valores de cadea delimitada por espazos que especifica se o servidor solicita ao usuario a reautenticación e o consentimento. Revise <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> para os valores posibles."
     google_oauth2_hd: "Un dominio opcional hospedado por Google Apps limitará o inicio de sesión. Revise <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> para máis detalles."
-    enable_twitter_logins: "Activar a autenticación con Twitter require twitter_consumer_key e twitter_consumer_secret. Revise <a href='https://meta.discourse.org/t/13395' target='_blank'>a configuración do inicio de sesión mediante Twitter (e insercións) para Discourse</a>."
     twitter_consumer_key: "Clave de consumidor para a autenticación con Twitter, rexistrada en <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Segredo de consumidor para a autenticación con Twitter, rexistrado en <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_facebook_logins: "Activar a autenticación con Facebook require facebook_app_id e facebook_app_secret. Revise <a href='https://meta.discourse.org/t/13394' target='_blank'>a configuración do inicio de sesión mediante Facebook para Discourse</a>."
     facebook_app_id: "Id de aplicación para autenticación e compartición con Facebook, rexistrado en <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "Chave secreta para a autenticación mediante Facebook, rexistrada en <a href='https://developers.facebook.com/apps/' target='_blank'> https://developers.facebook.com/apps</a>"
-    enable_github_logins: "Activar a autenticación con GitHub, require github_client_id e github_client_secret. Véxase <a href='https://meta.discourse.org/t/13745' target='_blank'>Configurar o inicio de sesión con GitHub para Discourse</a>."
     github_client_id: "Id de cliente para a autenticación con GitHub, rexistrada en <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Segredo de cliente para a autenticación con GitHub, rexistrado en <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Permitir que os usuarios se autentiquen mediante Discord?"
@@ -1459,7 +1444,6 @@ gl:
     purge_deleted_uploads_grace_period_days: "Período de graza (en días) antes de que un ficheiro subido eliminado sexa borrado."
     purge_unactivated_users_grace_period_days: "Período de graza (en días) antes de que un usuario cuxa conta non ten actividade sexa eliminado. Estabelecer en 0 para que ningún usuario sen actividade sexa expulsado."
     enable_s3_uploads: "Colocar os ficheiros subidos no almacén Amazon S3. IMPORTANTE: require credenciais de S3 validas. (tanto a chave de acceso e a chave de acceso secreta)."
-    s3_use_iam_profile: 'Utilice un <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">perfil AWS EC2 da instancia</a> para conceder acceso ao contedor S3. NOTA: Para activar isto, requírese que Discourse estea funcionando nunha instancia EC2 configurada adecuadamente e sobrescribe a configuración de «clave de acceso s3»" e a de «clave de acceso segredo s3».'
     s3_upload_bucket: "O nome do contedor de Amazon S3 no que se cargarán os ficheiros. AVISO: debe ser en minúsculas, sen puntos, sen liñas de subliñado."
     s3_access_key_id: "A ID da chave de acceso de Amazon S3 que se utilizará para subir imaxes, ficheiros anexos e copias de seguranza."
     s3_secret_access_key: "A chave secreta de acceso a Amazon S3 que se utilizará para subir imaxes, ficheiros anexos e copias de seguranza."
@@ -1599,8 +1583,6 @@ gl:
     pop3_polling_delete_from_server: "Eliminar correos do servidor. NOTA: se desactiva isto, deberá limpar manualmente a caixa de entrada"
     log_mail_processing_failures: "Rexistrar todos os erros de procesamento do correo en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_smtp: "Active SMTP para enviar notificacións de mensaxes de grupo."
-    email_prefix: "A [label] utilizada no asunto dos correos. Será «título» se non se define."
-    email_site_title: "O título do sitio utilizado como remitente de correos electrónicos do sitio. Será o de «título» se non se estabelece. Se o seu «título» contén caracteres que non están permitidos nas cadeas do remitente de correo electrónico, utilice este axuste."
     find_related_post_with_key: "Utilice só a «clave de resposta» para atopar a publicación respondida. AVISO: desactivar isto permite a suplantación de identidade do usuario baseada no enderezo de correo electrónico."
     minimum_topics_similar: "Número de temas que ten que haber no foro para que ao ir crear outros novos se mostren temas similares."
     relative_date_duration: "Número de días posteriores a unha publicación a partir dos cales as datas se mostran como relativas (7 d) no canto de absolutas (20 feb)."
@@ -1648,9 +1630,7 @@ gl:
     header_dropdown_category_count: "Número de categorías que se poden amosar no menú despregable da cabeceira."
     permalink_normalizations: "Aplica a seguinte expresión regular antes de que coincidan con ligazóns permanentes, como por exemplo: /(topic.*)\\?.*/\\1 eliminará as cadeas de consulta das rutas temáticas. O formato é regex+string use \\1 etc. para acceder ás capturas"
     global_notice: "Amosar un aviso de báner global URXENTE, DE EMERXENCIA e non rexeitábel a todos os visitantes, cambialo a branco para agochalo (permítese HTML)."
-    disable_system_edit_notifications: "Desactiva as notificacións de edición por parte do usuario do sistema cando está activado «download_remote_images_to_local»."
     notification_consolidation_threshold: "Número de gústame ou solicitudes de adhesión recibidas antes de que as notificacións se fusionen nunha soa. Estabelecer en 0 para desactivar."
-    likes_notification_consolidation_window_mins: "Minutos durante os que as notificacións se consolidan nunha única notificación, unha vez que se alcance o limite. O límite pódese configurar en `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Soltar os temas automaticamente cando o usuario chega ao fondo."
     read_time_word_count: "Número de palabras por minuto para calcular o tempo estimado de lectura."
     topic_page_title_includes_category: "A <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>etiqueta do título</a> da páxina do tema inclúe o nome da categoría."
@@ -1677,7 +1657,6 @@ gl:
     notify_about_queued_posts_after: "Se hai publicacións que levan máis de varias horas agardando ser revisadas, envíese unha notificación a todos os moderadores. Estabelecer en 0 para desactivar estas notificacións."
     auto_close_messages_post_count: "Número máximo de publicacións permitidas nunha mensaxe antes do peche automático (0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicacións permitidas nun tema antes do peche automático (0 para desactivar)"
-    auto_close_topics_create_linked_topic: "Crear un novo tema ligado cando un tema se pecha automaticamente conforme o axuste de «número de publicacións para peche automático de temas»"
     code_formatting_style: "O botón de código no editor estabelecerá por defecto este estilo de formato de código"
     max_allowed_message_recipients: "Número máximo de destinatarios que se permiten nunha mensaxe."
     new_user_notice_tl: "Nivel de confianza mínimo requirido para ver avisos de novos usuarios."
@@ -1709,7 +1688,6 @@ gl:
     default_categories_tracking: "Listase de categorías que se seguen por defecto."
     default_categories_muted: "Listaxe de categorías que están silenciadas por defecto."
     default_categories_watching_first_post: "Listaxe de categorías en que se verá por defecto a primeira publicación de cada novo tema."
-    default_categories_normal: "Lista de categorías que non están silenciadas de modo predeterminado. Útil cando o axuste do sitio `mute_all_categories_by_default` está activada."
     mute_all_categories_by_default: "Estableza o nivel de notificación predeterminado de todas as categorías como silenciado. Requírelles aos usuarios que opten por categorías para que aparezan nas páxinas «últimas» e «categorías». Se desexa modificar os valores predeterminados para usuarios anónimos, configure os axustes «default_categories_»."
     default_tags_watching: "Listaxe de etiquetas que se vixían por defecto."
     default_tags_tracking: "Listaxe de etiquetas seguidas por defecto."
@@ -1789,6 +1767,10 @@ gl:
     results_page: "Buscar resultados para '%{term}'"
     audio: "[audio]"
     video: "[vídeo]"
+  posts_filter:
+    description:
+      order_latest: "Últimas publicacións"
+      order_latest_topic: "Últimos temas"
   discourse_connect:
     login_error: "Erro ao iniciar sesión"
     not_found: "Non se puido atopar a súa conta. Contacte co administrador do sitio."
@@ -3400,10 +3382,6 @@ gl:
       invalid:
         one: "A etiqueta que seleccionou non pode ser utilizada"
         other: "Ningunha das etiquetas que seleccionou pode ser utilizada"
-      in_this_category: '"%{tag_name}" non se pode utilizar nesta categoría'
-      restricted_to:
-        one: '«%{tag_name}» está restrinxida á categoría «%{category_names}»'
-        other: '"%{tag_name}" está restrinxida ás seguintes categorías: %{category_names}'
       has_synonyms: '"%{tag_name}" non se pode utilizar porque ten sinónimos.'
     invalid_target_tag: "non pode ser o sinónimo dun sinónimo"
     synonyms_exist: "non está permitido mentres existan sinónimos"
@@ -3441,6 +3419,8 @@ gl:
   search_logs:
     graph_title: "Análise das buscas"
   onebox:
+    google_meet:
+      meeting_code: "Código:"
     github:
       closed: "pechado"
       status_date:

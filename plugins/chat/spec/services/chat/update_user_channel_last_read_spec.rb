@@ -140,8 +140,6 @@ RSpec.describe Chat::UpdateUserChannelLastRead do
             ).message_instance
           end
 
-          before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
-
           it "marks DM reply thread memberships as read" do
             thread = reply_message.thread
             thread_membership = thread.membership_for(current_user)

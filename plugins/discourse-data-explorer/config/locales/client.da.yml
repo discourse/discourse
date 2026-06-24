@@ -45,6 +45,10 @@ da:
       save: "Gem ændringer"
       run: "Kør"
       delete: "Slet"
+      chart:
+        form:
+          label: "Diagramtype"
+          bar: "Bar"
       result_count:
         one: "%{count} resultat."
         other: "%{count} resultater."
@@ -57,3 +61,12 @@ da:
       search_placeholder: "Søg..."
     group:
       reports: "Rapporter"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Data Udforsker"
+      sql:
+        query_id: "Forespørgsel"
+        param_value: "værdi"
+        output:
+          results: "Resultater"
+          no_results: "Ingen resultater"

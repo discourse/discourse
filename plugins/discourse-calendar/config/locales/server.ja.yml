@@ -40,7 +40,6 @@ ja:
     map_events_to_color: "各タグまたはカテゴリに色を割り当てる。"
     map_events_title: "カテゴリごとに '今後のイベント' の 'イベント' を上書きします。"
     calendar_enabled: "discourse-calendar プラグインを有効にします。これにより、トピックの最初の投稿に [calendar][/calendar] タグのサポートが追加されます。"
-    discourse_post_event_enabled: "イベント機能を有効にします。注意: `calendar enabled` も有効である必要があります。"
     displayed_invitees_limit: "イベントに表示される招待者数を制限します。"
     display_post_event_date_on_topic_title: "トピックタイトルの後にイベントの日付を表示します。"
     use_local_event_date: "トピックタイトルの後に、相対時間ではなく、現地の日付を使用します。"

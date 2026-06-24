@@ -407,7 +407,6 @@ export default class InstallThemeModal extends Component {
                     type="text"
                     {{on "input" (withEventValue (fn (mut this.uploadUrl)))}}
                     value={{this.uploadUrl}}
-                    placeholder={{this.urlPlaceholder}}
                   />
                 </div>
                 <DButton
@@ -424,7 +423,9 @@ export default class InstallThemeModal extends Component {
                       type="text"
                       {{on "input" (withEventValue (fn (mut this.branch)))}}
                       value={{this.branch}}
-                      placeholder="main"
+                      placeholder={{i18n
+                        "admin.customize.theme.remote_branch_placeholder"
+                      }}
                     />
                   </div>
                 {{/if}}

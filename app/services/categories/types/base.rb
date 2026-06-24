@@ -28,6 +28,12 @@ module Categories
               "$ref" => "#/$defs/field_config",
             },
           },
+          "site_texts" => {
+            "type" => "object",
+            "additionalProperties" => {
+              "$ref" => "#/$defs/site_text_field_config",
+            },
+          },
         },
         "$defs" => {
           "general_field_config" => {
@@ -78,11 +84,33 @@ module Categories
               "required" => {
                 "type" => "boolean",
               },
+              "depends_on" => {
+                "type" => "string",
+                "minLength" => 1,
+              },
               "show_on_create" => {
                 "type" => "boolean",
               },
               "show_on_edit" => {
                 "type" => "boolean",
+              },
+            },
+          },
+          "site_text_field_config" => {
+            "type" => "object",
+            "required" => %w[label],
+            "additionalProperties" => false,
+            "properties" => {
+              "label" => {
+                "type" => "string",
+                "minLength" => 1,
+              },
+              "description" => {
+                "type" => "string",
+              },
+              "depends_on" => {
+                "type" => "string",
+                "minLength" => 1,
               },
             },
           },
@@ -122,6 +150,19 @@ module Categories
         #
         # This SHOULD be overridden by category types if they are related to a plugin.
         def enable_plugin
+        end
+
+        # Returns true if this type overrides enable_plugin with actual behavior.
+        # Used to determine if admin privileges are required to configure this type.
+        def enables_plugin?
+          method(:enable_plugin).owner != Categories::Types::Base.singleton_class
+        end
+
+        # Returns true if the plugin required by this category type is already enabled.
+        # This MUST be overridden by category types that define enable_plugin.
+        def plugin_enabled?
+          raise NotImplementedError if enables_plugin?
+          true
         end
 
         # Configure any category-specific settings or custom fields that are
@@ -206,6 +247,19 @@ module Categories
         #     category_settings: {
         #       # Same structure as category_custom_fields above.
         #     },
+        #
+        #     site_texts: {
+        #       # Fields backed by a translation override (site text), not stored
+        #       # on the category. Each key is the i18n key to edit. The value is
+        #       # a config Hash:
+        #       #   label:       (required) String — FormKit label shown in UI.
+        #       #   description: (optional) String — FormKit help text.
+        #       #   depends_on:  (optional) String — only show when this sibling
+        #       #                custom field / setting is truthy.
+        #       "js.solved.shared_issue.label" => {
+        #         label: "Shared issue label",
+        #       },
+        #     },
         #   }
         #
         # Use +validate_schema!+ to verify a schema conforms to this contract.
@@ -253,6 +307,14 @@ module Categories
         # based on certain conditions, mostly for Discourse hosting.
         def available?
           true
+        end
+
+        # Checks availability considering both the base available? check and
+        # guardian permissions. Types that enable plugins require admin access
+        # only when the plugin is not already enabled.
+        def available_for?(guardian = nil)
+          return false if enables_plugin? && !plugin_enabled? && guardian && !guardian.is_admin?
+          available?
         end
 
         # One level above available? to allow for more granular control over visibility.
@@ -328,9 +390,9 @@ module Categories
         end
 
         # Used when serializing the category configuration schema to the client.
-        def metadata
+        def metadata(guardian: nil)
           name = I18n.t("category_types.#{type_id}.name", default: type_id.to_s.titleize)
-          {
+          result = {
             id: type_id,
             name: name,
             title: I18n.t("category_types.#{type_id}.title", default: name),
@@ -339,7 +401,19 @@ module Categories
             available: available?,
             visible: visible?,
             configuration_schema: resolved_configuration_schema,
-          }.merge(additional_metadata)
+          }
+          if enables_plugin?
+            result[:required_plugin] = Categories::TypeRegistry.plugin_display_name(type_id)
+            result[:can_enable_plugin] = available_for?(guardian)
+            if !result[:can_enable_plugin]
+              result[:contact_admin_username] = most_recently_active_admin&.username
+            end
+          end
+          result.merge(additional_metadata)
+        end
+
+        def most_recently_active_admin
+          User.active_admins.order(last_seen_at: :desc).first
         end
 
         private
@@ -353,6 +427,7 @@ module Categories
             site_settings: [],
             category_settings: [],
             category_custom_fields: [],
+            site_texts: [],
           }
 
           schema[:general_category_settings]&.each do |setting_name, config|
@@ -415,7 +490,7 @@ module Categories
           end
 
           schema[:category_custom_fields]&.each do |field_name, config|
-            entries[:category_custom_fields] << {
+            entry = {
               key: field_name.to_s,
               default: config[:default],
               type: config[:type].to_s,
@@ -427,6 +502,26 @@ module Categories
               show_on_create: config[:show_on_create].nil? ? true : config[:show_on_create],
               show_on_edit: config[:show_on_edit].nil? ? true : config[:show_on_edit],
             }
+            entry[:depends_on] = config[:depends_on].to_s if config[:depends_on]
+            entries[:category_custom_fields] << entry
+          end
+
+          schema[:site_texts]&.each do |text_key, config|
+            entry = {
+              key: text_key.to_s,
+              # FormKit parses "." and "-" in field names as nested paths, so the
+              # form binds to this separator-free +name+ (already namespaced by
+              # the parent site_texts object) while +key+ stays the i18n key used
+              # by the site_texts API.
+              name: text_key.to_s.gsub(/\W/, "_"),
+              label: config[:label],
+              description: config[:description],
+              current: I18n.with_locale(SiteSetting.default_locale) { I18n.t(text_key) },
+              show_on_create: true,
+              show_on_edit: true,
+            }
+            entry[:depends_on] = config[:depends_on].to_s if config[:depends_on]
+            entries[:site_texts] << entry
           end
 
           entries

@@ -152,5 +152,15 @@ module PageObjects
         )
       end
     end
+
+    # Holds matching requests in-flight for the duration of the block.
+    def with_pending_requests(pattern)
+      page.driver.with_playwright_page do |pw_page|
+        pw_page.route(pattern, ->(_route, _request) {})
+        yield
+      ensure
+        pw_page.unroute(pattern)
+      end
+    end
   end
 end

@@ -44,8 +44,29 @@ function propertySegment(key) {
     : `[${JSON.stringify(key)}]`;
 }
 
-export function nodeItemJsonPath(nodeName) {
+export function nodeOutputFirstJsonPath(nodeName, { outputIndex = 0 } = {}) {
+  const branchArg = outputIndex === 0 ? "" : outputIndex;
+  return `$(${JSON.stringify(nodeName)}).first(${branchArg}).json`;
+}
+
+export function nodeOutputLinkedItemJsonPath(nodeName) {
   return `$(${JSON.stringify(nodeName)}).item.json`;
+}
+
+export function nodeOutputJsonPath(
+  runData,
+  nodeName,
+  { outputIndex = 0, node } = {}
+) {
+  const run = latestRunWithOutput(runData, nodeName, { node });
+  const output = outputForRun(run, outputIndex);
+  const itemCount = output?.item_count ?? output?.items?.length ?? 0;
+
+  if (itemCount === 1) {
+    return nodeOutputFirstJsonPath(nodeName, { outputIndex });
+  }
+
+  return nodeOutputLinkedItemJsonPath(nodeName);
 }
 
 export function nodeOutputItemJsonPath(
@@ -207,9 +228,42 @@ export function exemplarFromFields(fields = []) {
   return obj;
 }
 
-function latestSuccessfulRun(runData, nodeName) {
+function nodeRunMatches(run, node) {
+  if (!node) {
+    return true;
+  }
+
+  const nodeId = node.id ?? node.clientId;
+  if (run?.node_id && nodeId && run.node_id.toString() !== nodeId.toString()) {
+    return false;
+  }
+
+  if (run?.node_type && node.type && run.node_type !== node.type) {
+    return false;
+  }
+
+  return true;
+}
+
+function portSourceMatches(port, sourceNode, outputIndex) {
+  if (!sourceNode) {
+    return true;
+  }
+
+  const source = port?.source;
+  if (!source) {
+    return false;
+  }
+
+  return (
+    source.node_name === sourceNode.name &&
+    (source.output_index ?? 0).toString() === outputIndex.toString()
+  );
+}
+
+function latestSuccessfulRun(runData, nodeName, { node } = {}) {
   const runs = (runData?.[nodeName] || []).filter(
-    (run) => run.status === "success"
+    (run) => run.status === "success" && nodeRunMatches(run, node)
   );
   if (!runs?.length) {
     return null;
@@ -218,12 +272,21 @@ function latestSuccessfulRun(runData, nodeName) {
   return runs[runs.length - 1] || null;
 }
 
-export function latestRunWithOutput(runData, nodeName) {
-  return latestSuccessfulRun(runData, nodeName);
+export function latestRunWithOutput(runData, nodeName, { node } = {}) {
+  return latestSuccessfulRun(runData, nodeName, { node });
 }
 
-export function latestRunWithInput(runData, nodeName) {
-  return latestSuccessfulRun(runData, nodeName);
+export function latestRunWithInput(
+  runData,
+  nodeName,
+  { inputIndex = 0, node, sourceNode, outputIndex = 0 } = {}
+) {
+  const run = latestSuccessfulRun(runData, nodeName, { node });
+  if (!inputForRun(run, inputIndex, { sourceNode, outputIndex })) {
+    return null;
+  }
+
+  return run;
 }
 
 function portForRun(run, portKey, portIndex = 0) {
@@ -238,16 +301,68 @@ export function outputForRun(run, outputIndex = 0) {
   return portForRun(run, "outputs", outputIndex);
 }
 
-export function inputForRun(run, inputIndex = 0) {
-  return portForRun(run, "inputs", inputIndex);
+export function inputForRun(
+  run,
+  inputIndex = 0,
+  { sourceNode, outputIndex = 0 } = {}
+) {
+  const input = portForRun(run, "inputs", inputIndex);
+  if (!input || !portSourceMatches(input, sourceNode, outputIndex)) {
+    return null;
+  }
+
+  return input;
+}
+
+function connectedSourceOutputForInput(
+  runData,
+  nodeName,
+  { node, sourceNode, outputIndex = 0 } = {}
+) {
+  if (latestSuccessfulRun(runData, nodeName, { node }) || !sourceNode?.name) {
+    return null;
+  }
+
+  const sourceRun = latestRunWithOutput(runData, sourceNode.name, {
+    node: sourceNode,
+  });
+  return outputForRun(sourceRun, outputIndex);
+}
+
+function inputPreviewPort(
+  runData,
+  nodeName,
+  { inputIndex = 0, node, sourceNode, outputIndex = 0 } = {}
+) {
+  const run = latestRunWithInput(runData, nodeName, {
+    inputIndex,
+    node,
+    sourceNode,
+    outputIndex,
+  });
+  const input = inputForRun(run, inputIndex, { sourceNode, outputIndex });
+  if (input) {
+    return { port: input, source: "input" };
+  }
+
+  const output = connectedSourceOutputForInput(runData, nodeName, {
+    node,
+    sourceNode,
+    outputIndex,
+  });
+  if (output) {
+    return { port: output, source: "source_output" };
+  }
+
+  return { port: null, source: null };
 }
 
 export function schemaFieldsForNodeOutput(
   runData,
   nodeName,
-  { outputIndex = 0, prefix = "$json" } = {}
+  { outputIndex = 0, prefix = "$json", node } = {}
 ) {
-  const run = latestRunWithOutput(runData, nodeName, outputIndex);
+  const run = latestRunWithOutput(runData, nodeName, { node });
   const output = outputForRun(run, outputIndex);
   return schemaFieldsForItems(output?.items || [], { prefix });
 }
@@ -255,11 +370,15 @@ export function schemaFieldsForNodeOutput(
 export function schemaFieldsForNodeInput(
   runData,
   nodeName,
-  { inputIndex = 0, prefix = "$json" } = {}
+  { inputIndex = 0, prefix = "$json", node, sourceNode, outputIndex = 0 } = {}
 ) {
-  const run = latestRunWithInput(runData, nodeName, inputIndex);
-  const input = inputForRun(run, inputIndex);
-  return schemaFieldsForItems(input?.items || [], { prefix });
+  const { port } = inputPreviewPort(runData, nodeName, {
+    inputIndex,
+    node,
+    sourceNode,
+    outputIndex,
+  });
+  return schemaFieldsForItems(port?.items || [], { prefix });
 }
 
 function portSummary(port, indexKey) {
@@ -274,14 +393,33 @@ function portSummary(port, indexKey) {
   };
 }
 
-export function outputSummaryForNode(runData, nodeName, outputIndex = 0) {
-  const run = latestRunWithOutput(runData, nodeName, outputIndex);
+export function outputSummaryForNode(
+  runData,
+  nodeName,
+  outputIndex = 0,
+  { node } = {}
+) {
+  const run = latestRunWithOutput(runData, nodeName, { node });
   return portSummary(outputForRun(run, outputIndex), "outputIndex");
 }
 
-export function inputSummaryForNode(runData, nodeName, inputIndex = 0) {
-  const run = latestRunWithInput(runData, nodeName, inputIndex);
-  return portSummary(inputForRun(run, inputIndex), "inputIndex");
+export function inputSummaryForNode(
+  runData,
+  nodeName,
+  inputIndex = 0,
+  { node, sourceNode, outputIndex = 0 } = {}
+) {
+  const { port, source } = inputPreviewPort(runData, nodeName, {
+    inputIndex,
+    node,
+    sourceNode,
+    outputIndex,
+  });
+  const summary = portSummary(port, "inputIndex");
+  if (summary && source === "source_output") {
+    summary.inputIndex = inputIndex;
+  }
+  return summary;
 }
 
 function combinedPortSummary(ports, itemCount) {
@@ -313,7 +451,11 @@ function outputPreviewItemCount(outputs, items) {
   return items.length ? 1 : 0;
 }
 
-export function outputSchemaForNode(runData, nodeName, { pinnedItems } = {}) {
+export function outputSchemaForNode(
+  runData,
+  nodeName,
+  { pinnedItems, node } = {}
+) {
   if (Array.isArray(pinnedItems) && pinnedItems.length > 0) {
     return {
       summary: {
@@ -325,7 +467,7 @@ export function outputSchemaForNode(runData, nodeName, { pinnedItems } = {}) {
     };
   }
 
-  const run = latestRunWithOutput(runData, nodeName);
+  const run = latestRunWithOutput(runData, nodeName, { node });
   if (!run) {
     return { summary: null, fields: [] };
   }

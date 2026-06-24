@@ -93,7 +93,7 @@ export default class KpiTile extends Component {
         {{this.label}}
         <DTooltip
           class="db-kpi__tooltip"
-          @icon="circle-question"
+          @icon="far-circle-question"
           @content={{this.tooltip}}
           {{on "click" this.stopPropagation}}
         />

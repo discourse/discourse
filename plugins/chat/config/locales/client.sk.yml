@@ -391,7 +391,6 @@ sk:
         input_placeholder: Pridať meno
         slug_description: V adrese URL namiesto názvu kanála sa používa kanálový slug
         name: Názov kanála
-        slug: URL adresa kanála (voliteľné)
       channel_edit_description_modal:
         title: Upraviť popis
         input_placeholder: Pridanie popisu
@@ -478,9 +477,8 @@ sk:
             many: 'Používatelia v inej skupine %{group} a %{count} budú mať prístup k tomuto kanálu podľa nastavení zabezpečenia <a href="%{settingLink}" target="_blank"></a>'
             other: 'Používatelia v inej skupine %{group} a %{count} budú mať prístup k tomuto kanálu podľa nastavení zabezpečenia <a href="%{settingLink}" target="_blank"></a>'
         create: "Vytvorte kanál"
-        description: "Popis (nepovinné)"
+        description: "Popis"
         name: "Názov kanála"
-        slug: "URL adresa kanála (voliteľné)"
         title: "Nový kanál"
         type: "Typ"
         types:
@@ -818,3 +816,14 @@ sk:
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Odoslať chatovú správu"
+      chat_message_created:
+        channel_id: "Kanál"
+      send_chat_message:
+        channel_id: "Kanál"
+        message: "Správa"
+      chat_approval:
+        message: "Správa"
+        channel_id: "Kanál"

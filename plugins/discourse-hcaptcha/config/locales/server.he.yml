@@ -13,7 +13,5 @@ he:
       categories:
         discourse_hcaptcha: "תוסף hCaptcha"
   site_settings:
-    discourse_hcaptcha_enabled: "הפעלת התוסף hCaptcha (מבחן טיורינג). דורש חשבון ב־<a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>."
     hcaptcha_site_key: "מפתח אתר hCaptcha מחשבון ה־<a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> שלך"
     hcaptcha_secret_key: "מפתח סודי hCaptcha מחשבון ה־<a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> שלך"
-  h_captcha_verification_failed: "אימות hCaptcha נכשל"

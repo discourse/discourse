@@ -39,7 +39,7 @@ class DiscourseSolved::BuildSchemaMarkup
     topic.topic_answers.filter_map do |ta|
       post = ta.post
       next unless post.present? && guardian.can_see_post?(post)
-      post if post.cooked.present? && Nokogiri::HTML5.fragment(post.cooked).text.strip.present?
+      post if DiscourseSolved::SchemaUtils.eligible_answer?(post)
     end
   end
 
@@ -51,7 +51,7 @@ class DiscourseSolved::BuildSchemaMarkup
       .where(post_type: Post.types[:regular], hidden: false)
       .order(:post_number)
       .to_a
-      .select { |p| p.cooked.present? && Nokogiri::HTML5.fragment(p.cooked).text.strip.present? }
+      .select { |post| DiscourseSolved::SchemaUtils.eligible_answer?(post) }
   end
 
   def fetch_html(topic:, accepted_answers:, suggested_answers:)

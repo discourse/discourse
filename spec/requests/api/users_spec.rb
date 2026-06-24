@@ -61,7 +61,9 @@ RSpec.describe "users" do
         expected_response_schema = load_spec_schema("user_get_response")
         schema expected_response_schema
 
-        let(:username) { Fabricate(:user).username }
+        fab!(:featured_topic, :topic)
+        fab!(:user) { Fabricate(:user).tap { |u| u.user_profile.update!(featured_topic:) } }
+        let(:username) { user.username }
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
@@ -73,7 +75,14 @@ RSpec.describe "users" do
         expected_response_schema = load_spec_schema("user_get_response")
         schema expected_response_schema
 
-        let(:username) { Fabricate(:user, primary_group_id: Fabricate(:group).id).username }
+        fab!(:group)
+        fab!(:featured_topic, :topic)
+        fab!(:user) do
+          Fabricate(:user, primary_group_id: group.id).tap do |u|
+            u.user_profile.update!(featured_topic:)
+          end
+        end
+        let(:username) { user.username }
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
@@ -124,11 +133,13 @@ RSpec.describe "users" do
         expected_response_schema = load_spec_schema("user_get_response")
         schema expected_response_schema
 
-        let(:user) { Fabricate(:user) }
+        fab!(:featured_topic, :topic)
+        fab!(:user) { Fabricate(:user).tap { |u| u.user_profile.update!(featured_topic:) } }
         let(:external_id) { "1" }
 
         before do
           SiteSetting.discourse_connect_url = "http://someurl.com"
+          SiteSetting.discourse_connect_secret = "x" * 10
           SiteSetting.enable_discourse_connect = true
           user.create_single_sign_on_record(external_id: "1", last_payload: "")
         end
@@ -162,7 +173,8 @@ RSpec.describe "users" do
         expected_response_schema = load_spec_schema("user_get_response")
         schema expected_response_schema
 
-        let(:user) { Fabricate(:user) }
+        fab!(:featured_topic, :topic)
+        fab!(:user) { Fabricate(:user).tap { |u| u.user_profile.update!(featured_topic:) } }
         let(:provider) { "google_oauth2" }
         let(:external_id) { "myuid" }
 

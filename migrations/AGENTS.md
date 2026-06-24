@@ -1,50 +1,30 @@
-# Migrations Tooling - AI Agent Guide
+# Migrations Tooling — Agent Guide
 
-## Running Tests
+Start with **[README.md](README.md)** — it is the single source of truth for this
+project: gem layout and namespaces, the `disco` CLI, converters, the schema DSL,
+and the install / test / lint workflow.
 
-Tests must be run from the project root with `--default-path migrations/spec`:
+This file is reserved for **agent-specific** guidance that does not belong in the
+README (conventions, gotchas, do/don't notes for automated contributors).
 
-```bash
-bin/rspec --default-path migrations/spec
-bin/rspec --default-path migrations/spec migrations/spec/lib/database/schema/dsl/
-bin/rspec --default-path migrations/spec migrations/spec/path/to/file_spec.rb
-```
+## Gotchas
 
-## CLI
+- **Samovar reserves `name` on commands.** `Nested#parse` instantiates a
+  sub-command with `name:` (its invocation name), which Samovar stores and exposes
+  as `name`. So don't declare a positional `one :name` on a `disco` command — when
+  the argument is omitted the accessor silently reads back the command's own name
+  (e.g. a `schema add` command would read back `"add"`) instead of `nil`. Name the
+  positional something else (`one :table_name, …`).
 
-The CLI binary is at `migrations/bin/cli`:
+- **Samovar positionals are never required.** Don't use `one :x, required: true` —
+  it raises during parsing, before `call` runs, which breaks the `-h/--help`
+  handling. Leave positionals optional and validate them at the top of `call` with
+  `require_positional!` (see `Migrations::CLI::Command`); it raises a presentable
+  error, so the user gets a clean message instead of a backtrace.
 
-```bash
-migrations/bin/cli help
-migrations/bin/cli schema generate
-migrations/bin/cli schema validate
-migrations/bin/cli schema diff
-```
-
-## Schema DSL
-
-The schema DSL lives in `migrations/lib/database/schema/dsl/`. Config files are in `migrations/config/schema/`.
-
-Key files:
-- `table_builder.rb` - DSL for defining table configs
-- `schema_resolver.rb` - Resolves DSL config + DB introspection into final schema
-- `conventions_builder.rb` - Global column conventions (renames, type overrides)
-- `generator.rb` - Generates SQL, models, and enums from resolved schema
-- `validator.rb` - Validates DSL config
-- `resolved_schema_validator.rb` - Validates resolved schema before generation
-
-## Linting
-
-```bash
-bin/lint path/to/file
-bin/lint --fix path/to/file
-```
-
-Uses both rubocop and syntax_tree. Always lint changed files.
-
-## Gems
-
-```bash
-bundle config set --local with migrations
-bundle install
-```
+- **Don't give command groups a `-h/--help` option.** The option hoisting in
+  `Command#parse` moves recognized flags to the front, so a group-level help
+  option steals `--help` from the subcommands — `group sub --help` would run
+  the subcommand instead of printing its help. Leave groups without options;
+  a bare `group --help` surfaces as an unparsable token, which `Bootstrap`
+  turns into usage with exit 0.

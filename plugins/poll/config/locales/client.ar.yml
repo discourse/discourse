@@ -12,6 +12,7 @@ ar:
           poll: "استطلاع رأي Discourse"
   js:
     poll:
+      title: "استطلاع رأي"
       dynamic:
         enabled_hint: "يمكن إضافة الخيارات أو إزالتها."
       voters:

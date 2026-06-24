@@ -46,21 +46,21 @@ RSpec.describe "Nested view category default" do
     end
   end
 
-  describe "topic redirect" do
+  describe "topic routing" do
     before { sign_in(user) }
 
-    it "redirects to nested view when visiting a topic URL directly" do
+    it "renders nested view when visiting a topic URL directly" do
       page.visit("/t/#{topic.slug}/#{topic.id}")
 
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
     end
 
-    it "redirects to nested view when clicking a topic from the category page" do
+    it "renders nested view when clicking a topic from the category page" do
       page.visit("/c/#{nested_category.slug}/#{nested_category.id}")
       find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
 
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
     end
 
@@ -73,7 +73,7 @@ RSpec.describe "Nested view category default" do
 
       topic_list.visit_topic(topic)
 
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
       try_until_success { expect(page.evaluate_script("window.scrollY")).to eq(0) }
     end

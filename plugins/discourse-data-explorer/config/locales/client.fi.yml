@@ -50,6 +50,10 @@ fi:
       run: "Suorita"
       undo: "Hylkää muutokset"
       delete: "Poista"
+      chart:
+        form:
+          label: "Kuvaajan tyyppi"
+          bar: "Pylväs"
       others_dirty: "Kyselyyn tehdyt tallentamattomat muutokset menetetään, jos navigoit pois."
       run_time: "Kysely suoritettu %{value} millisekunnissa."
       result_count:
@@ -82,6 +86,16 @@ fi:
           descriptions:
             data_explorer:
               run_queries: "Suorita Dataselaimen kyselyitä. Rajoita API-avain tiettyihin kyselyihin määrittämällä kyselyiden tunnuksia."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Dataselain"
+      sql:
+        query_id: "Kysely"
+        add_param: "Lisää parametri"
+        param_value: "Arvo"
+        output:
+          results: "Tulokset"
+          no_results: "Ei tuloksia"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

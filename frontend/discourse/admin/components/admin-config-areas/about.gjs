@@ -35,6 +35,7 @@ export default class AdminConfigAreasAbout extends Component {
   get yourOrganization() {
     return {
       companyName: this.#lookupSettingFromData("company_name"),
+      companyURL: this.#lookupSettingFromData("company_url"),
       governingLaw: this.#lookupSettingFromData("governing_law"),
       cityForDisputes: this.#lookupSettingFromData("city_for_disputes"),
     };

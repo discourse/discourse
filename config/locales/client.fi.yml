@@ -6,6 +6,16 @@
 
 fi:
   js:
+    user_api_key:
+      authorize: "Anna käyttöoikeus"
+      deny: "Peruuta"
+      copied: "Kopioitiin!"
+      otp_description: 'Haluatko sallia sovellukselle "%{application_name}" pääsyn sivustolle?'
+      no_trust_level: "Luottamustasosi ei ole riittävä käyttäjä-APIn käyttämiseen"
+      generic_error: "Käyttäjä-API-avaimien luominen ei onnistunut, sivuston ylläpitäjä on saattanut poistaa ominaisuuden käytöstä"
+      device:
+        code: "Koodi"
+        continue: "Jatka"
     blocks:
       ghost:
         status: "Tila"
@@ -415,7 +425,7 @@ fi:
       pm_title: "Viestiehdotukset"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Käytössä"
+        enabled: "Valittu"
       start_posting:
         back: "Takaisin"
     about:
@@ -1077,7 +1087,8 @@ fi:
             from_alias_hint: "Lähettäjän osoitteena käytettävä alias lähetettäessä ryhmä-SMTP-sähköposteja. Huomioithan, että kaikki sähköpostipalveluntarjoajat eivät välttämättä tue tätä; katso tiedot sähköpostipalveluntarjoajasi ohjeista."
         membership:
           title: Jäsenyys
-          access: Pääsy
+          join_method:
+            invite: "Vain kutsusta"
         categories:
           title: Alueet
           long_title: "Alueen oletusilmoitustaso"
@@ -1110,7 +1121,6 @@ fi:
         title: "Oikeudet"
         none: "Tähän ryhmään ei ole liitetty alueita."
         description: "Tämän ryhmän jäsenet voivat käyttää näitä alueita"
-      public_admission: "Salli käyttäjien liittyä ryhmään vapaasti (ryhmän täytyy olla julkinen)"
       public_exit: "Salli käyttäjien poistua ryhmästä vapaasti"
       empty:
         posts: "Ryhmän jäsenet eivät ole lähettäneet viestejä"
@@ -1126,7 +1136,6 @@ fi:
       request: "Pyyntö"
       message: "Viesti"
       confirm_leave: "Haluatko varmasti poistua ryhmästä?"
-      allow_membership_requests: "Salli käyttäjän lähettää jäsenhakemuksia ryhmien isännille (Vaatii sen, että ryhmä on julkinen)"
       membership_request_template: "Mukautettu viestipohja, joka näytetään käyttäjälle, kun hän lähettää jäsenhakemusta ryhmään."
       membership_request:
         submit: "Lähetä hakemus"
@@ -1539,6 +1548,9 @@ fi:
       undo_revoke_access: "Peru käyttöoikeuden peruminen"
       api_approved: "Sallittu:"
       api_last_used_at: "Viimeksi käytetty:"
+      api_expires_at: "Vanhenee:"
+      api_expired_at: "Vanhentunut:"
+      api_expires_never: "ei koskaan"
       theme: "Teema"
       save_to_change_theme: 'Teema päivittyy, kun valitset "%{save_text}"'
       home: "Oletusaloitussivu"
@@ -2439,6 +2451,12 @@ fi:
       confirm_title: Jatka sivustolle %{site_name}
       logging_in_as: Kirjaudutaan käyttäjänä %{email}
       confirm_button: Kirjaudu
+    code_login:
+      email_label: "Sähköpostiosoite"
+      continue_button: "Jatka"
+      verify_button: "Jatka"
+      account_ready_continue: "Jatka"
+      username_label: "Käyttäjätunnus"
     login:
       header_title: "Tervetuloa takaisin"
       title: "Kirjaudu"
@@ -2748,7 +2766,7 @@ fi:
       users_placeholder: "Lisää käyttäjiä tai ryhmiä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä keskustelussa on kyse?"
       title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
-      edit_reason_placeholder: "miksi muokkaat viestiä?"
+      edit_reason_placeholder: "Miksi muokkaat viestiä?"
       topic_featured_link_placeholder: "Kirjoita otsikossa näkyvä linkki."
       remove_featured_link: "Poista linkki ketjusta."
       reply_placeholder: "Kirjoita tähän. Käytä Markdownia, BBCodea tai HTML:ää muotoiluun. Vedä tai pudota kuvia."
@@ -2804,6 +2822,7 @@ fi:
         attribute_value: "Arvo"
         apply: "Käytä"
       help: "Markdown-muokkausohje"
+      edit_reason: "Miksi muokkaat viestiä?"
       exit_fullscreen_prompt: "Poistu koko näytön tilasta painamalla <kbd>Esc</kbd>-näppäintä"
       modal_ok: "OK"
       cant_send_pm: "Et voi valitettavasti lähettää viestiä käyttäjälle %{username}."
@@ -2833,24 +2852,24 @@ fi:
           desc: Luo uusi viesti aloittaen samoista vastaanottajista
         reply_to_topic:
           label: Vastaa ketjuun
+          trigger: Ketju
           desc: Vastaa ketjuun, muttei mihinkään tiettyyn viestiin
+        reply_to_message:
+          trigger: Viesti
         toggle_whisper:
           label: Kuiskaus päälle/pois
-          desc: Kuiskaukset näkyvät vain henkilökunnan jäsenille
         create_topic:
-          label: "Uusi ketju"
           desc: Aloita uusi ketju
         create_personal_message:
-          label: "Uusi viesti"
           desc: "Luo uusi yksityisviesti"
         shared_draft:
           label: "Jaettu luonnos"
           desc: "Luonnostele ketju, joka näkyy vain määrätyille käyttäjille"
         toggle_topic_bump:
-          label: "Ketjun nosto päälle/pois"
           desc: "Vastaa muuttamatta ketjun viimeisimmän vastauksen päivämäärää"
         toggle_unlisted:
           label: Listaus päälle/pois
+        unknown_user: "Käyttäjä"
       reload: "Lataa uudelleen"
       ignore: "Ohita"
       image_alt_text:
@@ -3216,6 +3235,15 @@ fi:
         also_dismiss_topics: "Älä seuraa näitä ketjuja enää – ne eivät jatkossa lukemattomina"
         dismiss_new_topics: "Kuittaa uudet ketjut"
         dismiss_new_replies: "Kuittaa uudet vastaukset"
+        dismiss_new_topics_with_selected:
+          one: "Kuittaa (%{count})"
+          other: "Kuittaa (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Kuittaa (%{count})"
+          other: "Kuittaa (%{count})"
+        dismiss_all_with_selected:
+          one: "Kuittaa (%{count})"
+          other: "Kuittaa (%{count})"
         dismiss_new: "Kuittaa luetuksi"
         dismiss_new_modal:
           title: "Kuittaa uudet"
@@ -3264,7 +3292,7 @@ fi:
         education:
           topic_tracking_preferences: 'Voit tarkastella ja muuttaa uusien ketjujen seuranta-asetuksiasi <a href="%{basePath}/my/preferences/tracking">asetuksissasi</a>.'
           unread: "Mitään ei ole lukematta... vaikuttavaa!"
-          new_new: "Ei mitään uutta tällä hetkellä... palaa takaisin pian!"
+          unified_new: "Ei mitään uutta tällä hetkellä... palaa takaisin pian!"
           new: "Ei mitään uutta tällä hetkellä... palaa takaisin pian!"
     topic_bulk_actions:
       dismiss:
@@ -3315,6 +3343,9 @@ fi:
       deleted_post_placeholder: "[poistettu]"
       ignored_post_placeholder: "[sivuutettu]"
       pinned_reply: "Kiinnitetty"
+    share_target:
+      new_topic: "Uusi ketju"
+      new_message: "Uusi viesti"
     topic:
       filter_to:
         one: "%{count} viesti ketjussa"
@@ -4429,7 +4460,7 @@ fi:
         new_replies_tooltip: "Uudet vastaukset"
         replies: "Vastaukset"
         replies_with_count: "Vastaukset (%{count})"
-      new_new:
+      unified_new:
         help: "ketjut, jotka on luotu tai joihin on vastattu viime päivien aikana"
       posted:
         title: "Viestini"
@@ -5022,7 +5053,7 @@ fi:
           title: "Muokkaa taulukkoa"
           cancel: "peruuta"
           create: "Tallenna"
-          reason: "miksi muokkaat viestiä?"
+          reason: "Miksi muokkaat viestiä?"
           trigger_reason: "Lisää muokkauksen syy"
         default_edit_reason: "Päivitä taulukko taulukkoeditorilla"
       default_header:
@@ -5643,6 +5674,11 @@ fi:
                 "2": "Konkari"
                 "3": "Normaali"
                 "4": "Johtaja"
+          search:
+            title: "Haku"
+            table:
+              searches: "Hakuja"
+              status: "Tila"
         reports_section:
           modal:
             enabled_heading: "Käytössä"
@@ -5735,7 +5771,6 @@ fi:
             incoming_email: "Mukautettu saapuvan postin sähköpostiosoite"
             incoming_email_placeholder: "syötä sähköpostiosoite"
             incoming_email_tooltip: "Voit erottaa useita sähköpostiosoitteita |-merkillä."
-            visibility: Näkyvyys
             visibility_levels:
               title: "Ketkä voivat nähdä tämän ryhmän?"
               public: "Kaikki"
@@ -6159,9 +6194,10 @@ fi:
           your_organization: "Organisaatiosi"
           your_organization_description: "Käytämme näitä tietoja käyttöehdoissa ja tietosuojailmoituksessa näyttääksemme, kuka ylläpitää sivustoa ja millä lainkäyttöalueella."
           company_name: "Nimi"
-          company_name_placeholder: "Esimerkkiorganisaatio"
           company_name_warning: |
             Jos tämä jätetään tyhjäksi, käyttöehtojen tai tietosuojailmoituksen pohjaa ei tarjota.
+          company_url: "Verkkosivusto"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Sovellettava lainsäädäntö"
           governing_law_placeholder: "Maakunta, osavaltio tai maa"
           governing_law_help: |

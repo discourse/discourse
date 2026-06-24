@@ -9,7 +9,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
-import { eq } from "discourse/truth-helpers";
+import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DLoadMore from "discourse/ui-kit/d-load-more";
@@ -22,9 +22,152 @@ import { i18n } from "discourse-i18n";
 const VISIBLE_CAP = 10;
 const SEARCH_DEBOUNCE_MS = 200;
 
-export default class ManageReports extends Component {
+class ManageReportsRow extends Component {
   @service site;
 
+  @tracked dragCssClass;
+  dragCount = 0;
+
+  isAboveElement(event) {
+    const domRect = event.currentTarget.getBoundingClientRect();
+    return event.offsetY < domRect.height / 2;
+  }
+
+  @action
+  dragStart(event) {
+    event.dataTransfer.effectAllowed = "move";
+    this.args.onDragStart(this.args.row.key);
+    this.dragCssClass = "dragging";
+  }
+
+  @action
+  dragOver(event) {
+    if (!this.args.row.enabled) {
+      return;
+    }
+    event.preventDefault();
+    if (this.dragCssClass === "dragging") {
+      return;
+    }
+    this.dragCssClass = this.isAboveElement(event)
+      ? "drag-above"
+      : "drag-below";
+  }
+
+  @action
+  dragEnter() {
+    this.dragCount++;
+  }
+
+  @action
+  dragLeave() {
+    this.dragCount--;
+    if (
+      this.dragCount === 0 &&
+      (this.dragCssClass === "drag-above" || this.dragCssClass === "drag-below")
+    ) {
+      this.dragCssClass = null;
+    }
+  }
+
+  @action
+  drop(event) {
+    if (!this.args.row.enabled) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    this.dragCount = 0;
+    const dropAbove = this.isAboveElement(event);
+    this.dragCssClass = null;
+    this.args.onDrop(this.args.row.key, dropAbove);
+  }
+
+  @action
+  dragEnd() {
+    this.dragCount = 0;
+    this.dragCssClass = null;
+    this.args.onDragEnd();
+  }
+
+  <template>
+    <li
+      class={{dConcatClass
+        "manage-reports__row"
+        (if @row.enabled "--enabled")
+        this.dragCssClass
+      }}
+      data-identifier={{@row.key}}
+      draggable={{and @row.enabled @reorderable}}
+      {{on "dragstart" this.dragStart}}
+      {{on "dragover" this.dragOver}}
+      {{on "dragenter" this.dragEnter}}
+      {{on "dragleave" this.dragLeave}}
+      {{on "drop" this.drop}}
+      {{on "dragend" this.dragEnd}}
+    >
+
+      {{#unless this.site.mobileView}}
+        <span class="manage-reports__grip">
+          {{dIcon "grip-vertical"}}
+        </span>
+      {{/unless}}
+
+      {{#if this.site.mobileView}}
+        <div class="manage-reports__order-mobile">
+          <DButton
+            @icon="arrow-up"
+            @action={{fn @onMoveUp @row}}
+            @disabled={{eq @index 0}}
+            @translatedAriaLabel={{i18n
+              "admin.dashboard.reports_section.modal.move_up"
+              title=@row.title
+            }}
+            class="manage-reports__arrow btn-transparent"
+          />
+          <DButton
+            @icon="arrow-down"
+            @action={{fn @onMoveDown @row}}
+            @disabled={{eq @index @lastEnabledIndex}}
+            @translatedAriaLabel={{i18n
+              "admin.dashboard.reports_section.modal.move_down"
+              title=@row.title
+            }}
+            class="manage-reports__arrow btn-transparent"
+          />
+        </div>
+      {{/if}}
+
+      <div class="manage-reports__row-text">
+        <div class="manage-reports__row-heading">
+          <span class="manage-reports__title">{{@row.title}}</span>
+          {{#if @row.label}}
+            {{@row.label}}
+          {{/if}}
+        </div>
+        {{#if @row.description}}
+          <p class="manage-reports__description">{{@row.description}}</p>
+        {{/if}}
+      </div>
+
+      <DToggleSwitch
+        @state={{@row.enabled}}
+        disabled={{@toggleDisabled}}
+        aria-label={{i18n
+          (if
+            @row.enabled
+            "admin.dashboard.reports_section.modal.disable"
+            "admin.dashboard.reports_section.modal.enable"
+          )
+          title=@row.title
+        }}
+        {{on "click" (fn @onToggle @row)}}
+      />
+    </li>
+  </template>
+}
+
+export default class ManageReports extends Component {
   @tracked allKeys = [];
   @tracked enabledOrder = [];
   @tracked providers = [];
@@ -43,10 +186,6 @@ export default class ManageReports extends Component {
   constructor() {
     super(...arguments);
     this.load();
-  }
-
-  get showLabels() {
-    return this.providers.length > 1;
   }
 
   get enabledKeys() {
@@ -88,6 +227,14 @@ export default class ManageReports extends Component {
 
   get atCap() {
     return this.enabledOrder.length >= VISIBLE_CAP;
+  }
+
+  get reorderable() {
+    return this.enabledOrder.length > 1;
+  }
+
+  get lastEnabledIndex() {
+    return this.filteredEnabledRows.length - 1;
   }
 
   cacheItems(items) {
@@ -204,33 +351,35 @@ export default class ManageReports extends Component {
   }
 
   @action
-  onDragStart(row, event) {
-    this.draggedId = row.key;
-    event.dataTransfer.effectAllowed = "move";
+  onDragStart(key) {
+    this.draggedId = key;
   }
 
   @action
-  onDragOver(event) {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
-  }
-
-  @action
-  onDrop(target) {
-    if (!this.draggedId) {
-      return;
-    }
+  onDrop(targetKey, dropAbove) {
     const fromIndex = this.enabledOrder.indexOf(this.draggedId);
-    const toIndex = this.enabledOrder.indexOf(target.key);
-    if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) {
-      this.draggedId = null;
+    this.draggedId = null;
+    if (fromIndex < 0) {
       return;
     }
+
+    const targetIndex = this.enabledOrder.indexOf(targetKey);
+    if (targetIndex < 0) {
+      return;
+    }
+
+    let toIndex = dropAbove ? targetIndex : targetIndex + 1;
+    if (fromIndex < toIndex) {
+      toIndex -= 1;
+    }
+    if (fromIndex === toIndex) {
+      return;
+    }
+
     const next = [...this.enabledOrder];
     const [moved] = next.splice(fromIndex, 1);
     next.splice(toIndex, 0, moved);
     this.enabledOrder = next;
-    this.draggedId = null;
   }
 
   @action
@@ -294,82 +443,27 @@ export default class ManageReports extends Component {
       <:body>
 
         {{#if this.visibleRows.length}}
-          <ul class="manage-reports__list">
+          <ul
+            class={{dConcatClass
+              "manage-reports__list"
+              (if this.draggedId "--dragging")
+              (if this.reorderable "--reorderable")
+            }}
+          >
             {{#each this.visibleRows key="key" as |row index|}}
-              <li
-                class={{dConcatClass
-                  "manage-reports__row"
-                  (if row.enabled "--enabled")
-                }}
-                data-identifier={{row.key}}
-                draggable={{row.enabled}}
-                {{on "dragstart" (fn this.onDragStart row)}}
-                {{on "dragover" this.onDragOver}}
-                {{on "drop" (fn this.onDrop row)}}
-                {{on "dragend" this.onDragEnd}}
-              >
-
-                {{#unless this.site.mobileView}}
-                  <span class="manage-reports__grip">
-                    {{dIcon "grip-vertical"}}
-                  </span>
-                {{/unless}}
-
-                {{#if this.site.mobileView}}
-                  <div class="manage-reports__order-mobile">
-                    <DButton
-                      @icon="arrow-up"
-                      @action={{fn this.moveUp row}}
-                      @disabled={{eq index 0}}
-                      @translatedAriaLabel={{i18n
-                        "admin.dashboard.reports_section.modal.move_up"
-                        title=row.title
-                      }}
-                      class="manage-reports__arrow btn-transparent"
-                    />
-                    <DButton
-                      @icon="arrow-down"
-                      @action={{fn this.moveDown row}}
-                      @translatedAriaLabel={{i18n
-                        "admin.dashboard.reports_section.modal.move_down"
-                        title=row.title
-                      }}
-                      class="manage-reports__arrow btn-transparent"
-                    />
-                  </div>
-                {{/if}}
-
-                <div class="manage-reports__row-text">
-                  <div class="manage-reports__row-heading">
-                    <span class="manage-reports__title">{{row.title}}</span>
-                    {{#if this.showLabels}}
-                      <span
-                        class="manage-reports__label"
-                        data-source={{row.source}}
-                      >{{row.label}}</span>
-                    {{/if}}
-                  </div>
-                  {{#if row.description}}
-                    <p
-                      class="manage-reports__description"
-                    >{{row.description}}</p>
-                  {{/if}}
-                </div>
-
-                <DToggleSwitch
-                  @state={{row.enabled}}
-                  disabled={{this.toggleDisabled row}}
-                  aria-label={{i18n
-                    (if
-                      row.enabled
-                      "admin.dashboard.reports_section.modal.disable"
-                      "admin.dashboard.reports_section.modal.enable"
-                    )
-                    title=row.title
-                  }}
-                  {{on "click" (fn this.toggle row)}}
-                />
-              </li>
+              <ManageReportsRow
+                @row={{row}}
+                @index={{index}}
+                @lastEnabledIndex={{this.lastEnabledIndex}}
+                @reorderable={{this.reorderable}}
+                @toggleDisabled={{this.toggleDisabled row}}
+                @onToggle={{this.toggle}}
+                @onMoveUp={{this.moveUp}}
+                @onMoveDown={{this.moveDown}}
+                @onDragStart={{this.onDragStart}}
+                @onDrop={{this.onDrop}}
+                @onDragEnd={{this.onDragEnd}}
+              />
             {{/each}}
           </ul>
           <DLoadMore
@@ -392,13 +486,25 @@ export default class ManageReports extends Component {
       </:aboveFooter>
 
       <:footer>
-        <DButton
-          @label="admin.dashboard.reports_section.modal.apply"
-          @action={{this.apply}}
-          @disabled={{this.applying}}
-          @isLoading={{this.applying}}
-          class="btn-primary manage-reports__apply"
-        />
+        <p class="manage-reports__footer-note">
+          {{i18n "admin.dashboard.reports_section.modal.footer_note"}}
+        </p>
+        <div class="manage-reports__footer-actions">
+
+          <DButton
+            @label="js.cancel_value"
+            @action={{@closeModal}}
+            class="btn-transparent manage-reports__cancel"
+          />
+          <DButton
+            @label="admin.dashboard.reports_section.modal.apply"
+            @action={{this.apply}}
+            @disabled={{this.applying}}
+            @isLoading={{this.applying}}
+            class="btn-primary manage-reports__apply"
+          />
+        </div>
+
       </:footer>
     </DModal>
   </template>

@@ -1,0 +1,168 @@
+body.tag-livestream.chat-enabled {
+  .d-header-icons {
+    .livestream-header-icon {
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 9px;
+        right: 16px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: rgb(255, 0, 0);
+        animation: pulse-circle 3s infinite;
+      }
+
+      @keyframes pulse-circle {
+        0% {
+          transform: scale(1);
+          background-color: rgb(255, 0, 0, 0.9);
+        }
+
+        50% {
+          transform: scale(1.3);
+          background-color: rgb(255, 0, 0, 0.75);
+        }
+
+        100% {
+          transform: scale(1);
+          background-color: rgb(255, 0, 0, 0.9);
+        }
+      }
+    }
+  }
+
+  #custom-chat-container {
+    .livestream-chat-close {
+      display: none;
+    }
+
+    .chat-composer__wrapper {
+      border-top: 1px solid var(--primary-200);
+      background-color: var(--secondary);
+    }
+  }
+
+  #custom-chat-container.no-modal-mobile {
+    display: none;
+  }
+
+  #custom-chat-container.mobile.no-modal-mobile {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 50%;
+    height: 400px;
+    background: var(--d-content-background, var(--secondary));
+    z-index: 50;
+    resize: both;
+    border-top: 1px solid var(--primary-low);
+
+    html.keyboard-visible & {
+      max-height: none;
+      height: calc(var(--composer-vh, 1vh) * 100 - var(--header-offset, 0px));
+    }
+
+    // Fix for safari keyboard popup based on core: discourse/app/assets/stylesheets/common/base/compose.scss
+    html.keyboard-visible.ios-device & {
+      top: calc(var(--composer-vh, 1vh) * 100);
+      transform: translateY(-100%);
+      bottom: unset;
+    }
+
+    .c-navbar-container {
+      display: flex;
+      padding-top: 0.3rem;
+      padding-bottom: 0.3rem;
+      width: 100%;
+      height: 2rem;
+    }
+
+    .chat-drawer {
+      width: 100%;
+      height: 100%;
+
+      .chat-channel {
+        height: 100%;
+
+        .chat-messages-scroller {
+          width: 100%;
+        }
+
+        .chat-composer__wrapper {
+          position: relative;
+          bottom: 0;
+        }
+      }
+
+      html.keyboard-visible & {
+        min-height: 200px !important; // avoid losing the text box when virtual keyboard is visible
+      }
+    }
+
+    .c-navbar__close-drawer-button {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .chat-composer__wrapper {
+      position: fixed;
+      bottom: 0;
+      background: var(--d-content-background, var(--secondary));
+      width: 100%;
+
+      #channel-composer {
+        height: auto !important;
+      }
+    }
+  }
+
+  .livestream-chat-modal {
+    // don't blur the background when the livestream chat modal is open
+    & ~ .d-modal__backdrop {
+      background-color: unset;
+      animation: none;
+      bottom: 0;
+    }
+
+    .d-modal__container {
+      height: 400px;
+    }
+
+    .d-modal__body {
+      flex-grow: 1;
+      padding: 1em 0.4em 0.4em 0.4em;
+      overflow: hidden;
+    }
+
+    #custom-chat-container {
+      width: 100%;
+      height: 100%;
+
+      .chat-drawer {
+        height: 100%;
+        width: 100%;
+
+        .chat-channel {
+          height: 100%;
+        }
+      }
+
+      .chat-channel-preview-card p {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+body:not(.tag-livestream) .d-header-icons .livestream-header-icon {
+  display: none;
+}

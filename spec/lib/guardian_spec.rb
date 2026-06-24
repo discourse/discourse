@@ -40,10 +40,10 @@ RSpec.describe Guardian do
   describe "AnonymousUser#in_any_groups?" do
     let(:anon) { Guardian::AnonymousUser.new }
 
-    it "returns true when the anonymous auto group is in the list" do
-      expect(anon.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(true)
+    it "returns true when the anonymous_users auto group is in the list" do
+      expect(anon.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(true)
       expect(
-        anon.in_any_groups?([Group::AUTO_GROUPS[:admins], Group::AUTO_GROUPS[:anonymous]]),
+        anon.in_any_groups?([Group::AUTO_GROUPS[:admins], Group::AUTO_GROUPS[:anonymous_users]]),
       ).to eq(true)
     end
 
@@ -2294,6 +2294,7 @@ RSpec.describe Guardian do
     context "when SSO username override is active" do
       before do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         SiteSetting.auth_overrides_username = true
       end
@@ -2389,6 +2390,7 @@ RSpec.describe Guardian do
       before do
         SiteSetting.email_editable = false
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         SiteSetting.auth_overrides_email = true
       end
@@ -2485,6 +2487,7 @@ RSpec.describe Guardian do
       context "when SSO is enabled" do
         before do
           SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+          SiteSetting.discourse_connect_secret = "x" * 10
           SiteSetting.enable_discourse_connect = true
         end
 

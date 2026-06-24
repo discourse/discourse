@@ -27,7 +27,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
     end
 
-    it "creates an execution" do
+    it "returns a pending execution" do
       post "/admin/plugins/discourse-workflows/executions.json",
            params: {
              workflow_id: published_workflow.id,
@@ -35,6 +35,15 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
            }
 
       expect(response).to have_http_status(:created)
+      execution = DiscourseWorkflows::Execution.find(response.parsed_body.dig("execution", "id"))
+      expect(response.parsed_body["execution"]).to include(
+        "id" => execution.id,
+        "workflow_id" => published_workflow.id,
+      )
+      expect(execution.status).to eq("pending")
+
+      job_args = Jobs::DiscourseWorkflows::ExecuteManualWorkflow.jobs.last["args"].first
+      expect(job_args).to include("execution_id" => execution.id, "user_id" => admin.id)
     end
 
     it "returns 404 when trigger node does not exist" do
@@ -44,21 +53,6 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
              trigger_node_id: "nonexistent",
            }
       expect(response).to have_http_status(:not_found)
-    end
-
-    it "forwards the current user id in service params" do
-      DiscourseWorkflows::Workflow::ManualExecute
-        .expects(:call)
-        .with { |kwargs| kwargs.dig(:params, :user_id) == admin.id }
-        .returns(Service::Base::Context.build)
-
-      post "/admin/plugins/discourse-workflows/executions.json",
-           params: {
-             workflow_id: published_workflow.id,
-             trigger_node_id: "trigger-1",
-           }
-
-      expect(response).to have_http_status(:no_content)
     end
   end
 

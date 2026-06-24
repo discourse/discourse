@@ -33,6 +33,11 @@ uk:
             topic_id:
               label: ID теми
     discourse_calendar:
+      livestream:
+        chat:
+          going: "Натисніть «Продовжити»"
+          join_channel_header: "🌟 Приєднуйтесь до обговорення! 🌟"
+          join_channel_message: "Підтвердіть свою присутність та розблокуйте наш чат події. Зануртесь в обговорення, діліться своїми враженнями та спілкуйтеся з іншими учасниками!"
       invite_user_notification: "%{username} запросили Вас на: %{description}"
       preferences:
         all_events: "Discourse Календар - Усі події"
@@ -418,7 +423,6 @@ uk:
           this_and_following: "Ця подія і всі наступні події"
           leave_event: "Залишити подію"
           status:
-            unknown: "Не цікавить"
             going: "Йду"
             not_going: "Не йде"
             interested: "Цікавить"
@@ -468,6 +472,9 @@ uk:
           other: "Макс. %{count} учасників"
         no_rsvps_label: "Не збирається інформація про відвідуваність"
         description_placeholder: "Додати опис події"
+        event_title_placeholder: "Назва події"
+        create_event_button: "Створити подію"
+        action_title: "Створити нову подію"
         all_day: "Цілий день"
         reminder:
           units:
@@ -496,6 +503,13 @@ uk:
           notification_title: "Повідомляти учасників"
           bump_topic_title: "Тема автоматичного виведення"
           remove: "Видалити нагадування"
+      composer_actions:
+        create_event:
+          label: "Створити подію"
+          desc: "Створити нову подію в цій категорії"
+        create_topic:
+          label: "Створити тему"
+          desc: "Створити звичайну тему замість події"
       builder_modal:
         custom_fields:
           label: "Користувацькі поля"
@@ -524,6 +538,7 @@ uk:
           label: "Дата закінчення"
         all_day:
           label: "Подія на цілий день"
+          description: "У заходу, що триває цілий день, не буде конкретного часу, лише дата. Захід триватиме від початку до кінця дня."
         reminders:
           label: "Нагадування"
           types:
@@ -593,3 +608,4 @@ uk:
       invite_user_or_group:
         title: "Сповістити користувача(ів) або групу(и)"
         invite: "Надіслати"
+        success: "Запрошення надіслано"

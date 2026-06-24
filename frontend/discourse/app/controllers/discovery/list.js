@@ -195,7 +195,7 @@ export default class DiscoveryListController extends Controller {
 
   @action
   resetNew(overrides = {}) {
-    if (!this.currentUser.new_new_view_enabled) {
+    if (!this.currentUser.unified_new_enabled) {
       return this.callResetNew();
     }
 

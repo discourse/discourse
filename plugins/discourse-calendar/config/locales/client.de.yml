@@ -33,6 +33,11 @@ de:
             topic_id:
               label: Themen-ID
     discourse_calendar:
+      livestream:
+        chat:
+          going: "Klicke auf \"Dabei\""
+          join_channel_header: "🌟Mach mit! 🌟"
+          join_channel_message: "Bestätige deine Teilnahme und schalte unseren Event-Chat frei. Beteilige dich an Diskussionen, teile deine Begeisterung und vernetze dich mit anderen Teilnehmern!"
       invite_user_notification: "%{username} lädt dich ein zu: %{description}"
       preferences:
         all_events: "Discourse Kalender – Alle Ereignisse"
@@ -333,6 +338,7 @@ de:
       search: "Suche …"
       group_availability: "%{group} Verfügbarkeit"
     discourse_post_event:
+      new_event: "Neues Ereignis"
       notifications:
         before_event_reminder: "Ein Ereignis beginnt in Kürze"
         after_event_reminder: "Ein Ereignis wurde beendet"
@@ -397,6 +403,7 @@ de:
       upcoming_events_list:
         title: "Anstehende Ereignisse"
         empty: "Keine anstehenden Ereignisse"
+        all_day: "Ganztägig"
         error: "Ereignisse konnten nicht abgerufen werden"
         try_again: "Erneut versuchen"
         view_all: "Alle ansehen"
@@ -410,11 +417,12 @@ de:
       models:
         invitee:
           no_users: "Keine Benutzer gefunden"
+          this_event: "Dieser Termin"
+          this_and_following: "Dieser Termin und alle folgenden Termine"
           leave_event: "Ereignis verlassen"
           status:
-            unknown: "Nicht interessiert"
             going: "Dabei"
-            not_going: "Nimmt nicht teil"
+            not_going: "Nicht teilnehmen"
             interested: "Interessiert"
             going_count:
               one: "%{count} nimmt teil"
@@ -444,8 +452,18 @@ de:
               description: "An einem privaten Ereignis können nur eingeladene Benutzer teilnehmen."
       composer:
         name_placeholder: "Name des Ereignisses"
+        end_date_placeholder: "Enddatum"
         location_placeholder: "Ort oder URL hinzufügen"
+        max_attendees_placeholder: "Unbegrenzte Teilnehmeranzahl"
+        max_attendees_display:
+          one: "Max %{count} Teilnehmer"
+          other: "Max %{count} Teilnehmer"
+        no_rsvps_label: "Keine Anmeldung erforderlich"
         description_placeholder: "Beschreibung hinzufügen"
+        event_title_placeholder: "Name des Ereignisses"
+        create_event_button: "Ereignis erstellen"
+        action_title: "Erstelle ein neues Ereignis"
+        all_day: "Ganztägig"
         reminder:
           units:
             minutes:
@@ -460,6 +478,18 @@ de:
             weeks:
               one: "Woche"
               other: "Wochen"
+          before: "%{unit} bevor"
+          after: "%{unit} danach"
+          notification_title: "Benachrichtige Teilnehmer"
+          bump_topic_title: "Thema automatisch nach oben verschieben"
+          remove: "Benachrichtigung entfernen"
+      composer_actions:
+        create_event:
+          label: "Ereignis erstellen"
+          desc: "Erstelle ein neues Ereignis in dieser Kategorie"
+        create_topic:
+          label: "Erstelle ein neues Thema"
+          desc: "Erstelle ein reguläres Thema statt eines Ereignisses"
       builder_modal:
         custom_fields:
           label: "Benutzerdefinierte Felder"
@@ -484,10 +514,16 @@ de:
           remove_timezone: Keine Zeitzone (UTC)
         starts_at:
           label: "Startdatum"
+        ends_at:
+          label: "Enddatum"
         all_day:
           label: "Ganztägiges Ereignis"
+          description: "Ein ganztägiges Ereignis enthält keine Uhrzeiten, nur ein Datum. Da Ereignis läuft vom Tagesanfang bis -ende."
         reminders:
           label: "Erinnerungen"
+          types:
+            bump_topic: "Thema automatisch nach oben verschieben"
+            notification: "Benachrichtige Teilnehmer"
           units:
             minutes: "Minuten"
             hours: "Stunden"
@@ -496,17 +532,30 @@ de:
           periods:
             before: "vor"
             after: "nach"
+        recurrence_until:
+          label: "Bis (einschließlich dieses Datums)"
         recurrence:
           label: "Wiederholung"
           none: "Keine Wiederholung"
           every_day: "Täglich"
           every_weekday: "Jeden Wochentag"
+          every_week: "Jeden %{weekday}"
+          every_two_weeks: "Alle zwei Wochen am %{weekday}"
+          every_four_weeks: "Alle 4 Wochen am %{weekday}"
+          every_month: "Am %{ordinal} %{weekday} jeden Monat"
           ordinals:
-            last: "zuletzt gewählter Termin"
+            first: "ersten"
+            second: "zweiten"
+            third: "dritten"
+            fourth: "vierten"
+            last: "Zuletzt gewählter Termin"
         max_attendees:
           label: "Maximale Teilnehmerzahl"
           placeholder: "Keine Begrenzung"
         attendance:
+          label: "Wie viele Mitglieder können an diesem Event teilnehmen?"
+          unlimited: "unbegrenzt"
+          up_to: "Bis zu..."
           none: "Keine Auswahl"
         allow_chat:
           label: "Chat-Integration"
@@ -526,11 +575,17 @@ de:
         invitees:
           label: "Eingeladene Gruppen"
         event_type:
+          label: "Teilnahme Typ"
           public:
             title: "Öffentlich"
+            description: "Jeder kann teilnehmen."
+          private:
+            title: "Nur eingeladene können teilnehmen."
+            description: "Nur Mitglieder der ausgewählten Gruppe können teilnehmen."
         delete_confirmation_message: "Dieses Ereignis löschen?"
         image:
           label: "Ereignisbild"
       invite_user_or_group:
         title: "Benachrichtige Benutzer oder Gruppe(n)"
         invite: "Senden"
+        success: "Einladung gesendet"

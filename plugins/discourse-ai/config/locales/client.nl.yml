@@ -50,6 +50,9 @@ nl:
             delete_ai_secret: "AI-geheim verwijderen"
             update_ai_spam_settings: "AI-spaminstellingen bijwerken"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_agent": "AI-agent"
     discourse_automation:
       scriptables:
         llm_report:
@@ -226,6 +229,9 @@ nl:
               description: "Taggen van berichten die zijn gemaakt door de systeemgebruiker toestaan."
     discourse_ai:
       title: "AI"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Agent"
       default_llm:
         title: "Standaard LLM-model"
         description: "Het standaard LLM-model dat voor alle AI-functies wordt gebruikt. Dit model wordt gebruikt als er geen LLM is opgegeven in de functieconfiguratie of agent. Als er geen standaard-LLM is opgegeven, wordt de laatst gemaakte LLM gebruikt."
@@ -293,6 +299,9 @@ nl:
             model_settings: "Modelinstellingen"
             related_topics: "Gerelateerde topics"
             semantic_search: "Semantisch zoeken"
+        admin_dashboard:
+          setting_groups:
+            settings: "Basisinstellingen"
         discord:
           name: "Discord-integratie"
           description: "Voegt de mogelijkheid toe om in Discord-kanalen te zoeken"
@@ -886,9 +895,11 @@ nl:
           anthropic-claude-opus-4-7: "Het intelligentste model van Antropic"
           anthropic-claude-sonnet-4-6: "Optimale balans tussen snelheid en kosten"
           anthropic-claude-haiku-4-5: "Snel en kosteneffectief"
+          google-gemini-3-1-pro: "Het intelligentste model van Google"
           google-gemini-3-flash: "Snel en kostenefficiënt met multimodale redenering"
           open_ai-gpt-5-4: "Het vlaggenschipmodel van OpenAI. Het is zeer geschikt voor probleemoplossing in verschillende domeinen."
           open_ai-gpt-5-4-nano: "Snelste en meest kostenefficiënte GPT-5-model"
+          open_router-moonshotai-kimi-k2-6: "Het multimodale model van Moonshot met zichtmogelijkheden"
         preseeded_model_description: "Voorgeconfigureerd open-source model met %{model}"
         configured:
           title: "Geconfigureerde LLM's"
@@ -969,7 +980,6 @@ nl:
         title: "Stel wijzigingen voor met behulp van AI"
         description: "Kies een van de onderstaande opties, dan zal de AI je een nieuwe versie van de tekst voorstellen."
         selection_hint: "Tip: je kunt ook een deel van de tekst selecteren voordat je de hulp opent om alleen dat deel te herschrijven."
-        suggest: "Voorstellen met AI"
         suggest_errors:
           too_many_tags:
             one: "Je kunt maximaal %{count} tag hebben"
@@ -1174,12 +1184,14 @@ nl:
             one: "Bericht moet %{count} teken of langer zijn"
             other: "Bericht moet %{count} tekens of langer zijn"
           messages_sidebar_title: "Conversaties"
+          starred: "Met ster"
           today: "Vandaag"
           last_7_days: "Afgelopen 7 dagen"
           last_30_days: "Afgelopen 30 dagen"
           upload_files: "Bestanden uploaden"
           uploads_in_progress: "Kan niet verzenden terwijl het uploaden bezig is"
           scroll_to_bottom: "Naar beneden scrollen"
+          editing_post: "Bericht bewerken "
       sentiments:
         dashboard:
           title: "Sentiment"

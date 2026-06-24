@@ -31,8 +31,11 @@ en:
         title: Triage posts using AI
         description: "Triage posts using a large language model"
         flagged_post: |
-          <div>Response from the model:</div>
-          <p>%{llm_response}</p>
+          %{score_reason}
+          %{response}
+        flagged_post_response: |
+          <p>Response from the model: %{llm_response}</p>
+        flagged_post_score_reason: |
           <b>Triggered by the <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> rule.</b>
         notify_author_pm:
           subject: "Your post was temporarily removed for review"
@@ -117,6 +120,8 @@ en:
     ai_embeddings_semantic_related_age_time_scale: "Time scale in days for age penalty calculation. Topics inactive this many days receive ~50% penalty with penalty=1.0. Use 365 for yearly scale, 90 for quarterly scale."
     ai_embeddings_per_post_enabled: Generate embeddings for each post
 
+    ai_admin_dashboard_enabled: "Enable AI features on the admin dashboard."
+    ai_admin_dashboard_highlights_agent: "Agent that explains notable community shifts on the admin dashboard."
     ai_summarization_enabled: "Enable the summarize feature"
     ai_summarization_agent: "Agent to use for summarize feature"
     ai_pm_summarization_allowed_groups: "Groups allowed to create and view summaries in PMs."
@@ -271,6 +276,13 @@ en:
       copied: "Copied to clipboard"
     unknown_model: "Unknown AI model"
 
+    discourse_workflows:
+      ai_agent:
+        errors:
+          locked_default_llm_missing: "Agent '%{agent}' is locked to its default LLM, but no valid default LLM is configured"
+          llm_not_found: "LLM model with id %{llm_model_id} not found"
+          no_llm_configured: "No LLM is configured for agent '%{agent}'. Select an LLM model or configure an agent/site default LLM."
+
     tools:
       custom_name: "%{name} (custom)"
       presets:
@@ -395,6 +407,11 @@ en:
         cannot_delete_system_agent: "System agents cannot be deleted, please disable it instead"
         cannot_edit_system_agent: "System agents can only be renamed, you may not edit tools or system prompt, instead disable and make a copy"
         cannot_have_duplicate_tools: "Can not have duplicate tools"
+        native_tool_requires_forced_llm: "Provider-native tools require a default LLM with \"Force default LLM\" enabled"
+        native_tool_unsupported_by_llm: "The selected default LLM does not support one of the enabled provider-native tools"
+        admin_dashboard_highlights:
+          name: "Admin Dashboard Highlights"
+          description: "Writes the brief readout shown at the top of the admin dashboard, explaining what changed and what deserves attention this period"
         github_helper:
           name: "GitHub Helper"
           description: "AI Bot specialized in assisting with GitHub-related tasks and questions"
@@ -563,6 +580,13 @@ en:
           flag_type:
             name: "Flag Type"
             description: "Controls whether the post is reviewed, hidden, deleted, or treated as spam."
+      native_tools:
+        web_search:
+          name: "Web Search (native)"
+          help: "Lets the model search the web using the provider's built-in search, when the agent is forced to a supported LLM."
+        web_fetch:
+          name: "Web Fetch (native)"
+          help: "Lets the model open and read web pages using the provider's built-in web access, when the agent is forced to a supported LLM."
       tool_summary:
         read_artifact: "Read a web artifact"
         search_uploaded_documents: "Search uploaded documents"
@@ -589,6 +613,7 @@ en:
         grant_badge: "Grant badge"
         list_reviewables: "List review queue"
         perform_reviewable_action: "Review queue action"
+        add_reviewable_note: "Add review queue note"
         assign: "Assign topic"
         mark_as_solved: "Mark as solved"
         search: "Search"
@@ -634,6 +659,7 @@ en:
         grant_badge: "Grant a badge to a user"
         list_reviewables: "List pending review queue items with optional filtering"
         perform_reviewable_action: "Perform an action on a review queue item"
+        add_reviewable_note: "Add a note to a review queue item"
         assign: "Assign or unassign a topic to a user or group"
         mark_as_solved: "Mark or unmark a post as the accepted solution"
         search: "Search all public topics on the forum"
@@ -679,6 +705,7 @@ en:
         grant_badge: "Granting badge '%{badge_name}' to %{username}"
         list_reviewables: "Listing review queue items (type: %{type})"
         perform_reviewable_action: "Performing %{action} on reviewable %{reviewable_id}"
+        add_reviewable_note: "Adding note to reviewable %{reviewable_id}"
         assign: "Assigning topic %{topic_id} (assigned: %{assigned})"
         mark_as_solved: "Marking post %{post_id} as solved (solved: %{solved})"
         read: "Reading: <a href='%{url}'>%{title}</a>"
@@ -728,6 +755,7 @@ en:
         already_flagged: "Post is already flagged for review."
         flagged: "Post flagged for review."
         reason: "AI bot flagged this post.\n\nReason: %{reason}"
+        score_reason: "AI bot flagged this post."
 
       close_topic:
         errors:
@@ -855,6 +883,14 @@ en:
           action_failed: "Failed to perform the action"
         success: "Successfully performed '%{action}' on review queue item %{reviewable_id}"
 
+      add_reviewable_note:
+        errors:
+          not_allowed: "You are not allowed to access the review queue"
+          not_found: "Review queue item not found"
+          no_note: "A note is required to add a note to a review queue item"
+          failed: "Failed to add the note"
+        success: "Successfully added a note to review queue item %{reviewable_id}"
+
     reviewables:
       ai_tool_action:
         title: "AI Tool Action"
@@ -889,6 +925,10 @@ en:
           positive: "Positive"
           negative: "Negative"
           neutral: "Neutral"
+
+    discord:
+      configuration:
+        agent_user_required: "The Discord search agent must have an associated user before Discord agent mode can be enabled."
 
     llm:
       configuration:

@@ -19,6 +19,7 @@ import PostFlag from "discourse/lib/flag-targets/post-flag";
 import TopicFlag from "discourse/lib/flag-targets/topic-flag";
 import discourseLater from "discourse/lib/later";
 import { setTopicId } from "discourse/lib/topic-list-tracker";
+import topicTitleToken from "discourse/lib/topic-title-token";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -41,6 +42,9 @@ export default class TopicRoute extends DiscourseRoute {
     filter: { replace: true },
     username_filters: { replace: true },
     flat: { replace: true },
+    sort: { replace: true, refreshModel: true },
+    context: { refreshModel: true },
+    collapseReplies: { replace: true },
   };
 
   buildRouteInfoMetadata() {
@@ -50,47 +54,7 @@ export default class TopicRoute extends DiscourseRoute {
   }
 
   titleToken() {
-    const model = this.modelFor("topic");
-    if (model) {
-      if (model.get("errorHtml")) {
-        return model.get("errorTitle");
-      }
-
-      let result;
-
-      const titleLocalized = model.get("fancy_title_localized");
-      if (titleLocalized) {
-        const fancyTitle = model.get("fancy_title");
-        // doing this helps with decoding entities
-        // e.g., &ldquo; -> ", &mdash; -> —
-        const tempDiv = document.createElement("div");
-        tempDiv.innerHTML = fancyTitle;
-        result = tempDiv.textContent || tempDiv.innerText || fancyTitle;
-      } else {
-        result = model.get("unicode_title") || model.get("title");
-      }
-
-      const cat = model.get("category");
-      // Only display uncategorized in the title tag if it was renamed
-      if (
-        this.siteSettings.topic_page_title_includes_category &&
-        cat &&
-        !(
-          cat.get("isUncategorizedCategory") &&
-          cat.get("name").toLowerCase() === "uncategorized"
-        )
-      ) {
-        let catName = cat.get("name");
-
-        const parentCategory = cat.get("parentCategory");
-        if (parentCategory) {
-          catName = parentCategory.get("name") + " / " + catName;
-        }
-
-        return [result, catName];
-      }
-      return result;
-    }
+    return topicTitleToken(this.modelFor("topic"), this.siteSettings);
   }
 
   @action
@@ -246,7 +210,7 @@ export default class TopicRoute extends DiscourseRoute {
         multiSelect: topicController.multiSelect,
         selectedPostsCount: post ? 1 : topicController.selectedPostsCount,
         selectedPostIds: post ? [post.id] : topicController.selectedPostIds,
-        selectedPostUsername:
+        selectedPostsUsername:
           post?.username ?? topicController.selectedPostsUsername,
         toggleMultiSelect: topicController.toggleMultiSelect,
         topic: post?.topic ?? this.modelFor("topic"),
@@ -335,7 +299,7 @@ export default class TopicRoute extends DiscourseRoute {
 
     const currentPos = document.scrollingElement.scrollTop;
     if (currentPos === this.lastScrollPos) {
-      DiscourseURL.replaceState(url);
+      DiscourseURL.replaceState(`${url}${window.location.hash}`);
       return;
     }
 

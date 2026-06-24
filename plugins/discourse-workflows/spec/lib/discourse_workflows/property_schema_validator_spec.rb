@@ -75,6 +75,18 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
       expect(errors.first).to include(":rowz")
     end
 
+    it "accepts filter query ui metadata" do
+      schema = { query: { type: :string, ui: { control: :filter_query, filter: :posts } } }
+
+      expect(validate(schema)).to eq([])
+    end
+
+    it "accepts checkbox controls" do
+      schema = { enabled: { type: :boolean, ui: { control: :checkbox } } }
+
+      expect(validate(schema)).to eq([])
+    end
+
     it "flags unknown ui.control values" do
       errors = validate(title: { type: :string, ui: { control: :neon } })
       expect(errors.first).to include("title.ui.control")

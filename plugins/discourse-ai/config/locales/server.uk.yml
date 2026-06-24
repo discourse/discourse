@@ -38,10 +38,6 @@ uk:
       llm_triage:
         title: Сортування повідомлень за допомогою ШІ
         description: "Сортування повідомлень за допомогою великої мовної моделі"
-        flagged_post: |
-          <div>Відповідь від моделі:</div>
-          <p>%{llm_response}</p>
-          <b>Спрацьовує за правилом <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> правилом.</b>
         notify_author_pm:
           subject: "Вашу публікацію тимчасово видалено для перевірки"
           body: |
@@ -578,6 +574,7 @@ uk:
         grant_badge: "Гранта значок"
         list_reviewables: "Список черги на перегляд"
         perform_reviewable_action: "Дія черги перевірки"
+        add_reviewable_note: "Додати примітку до черги на перевірку"
         assign: "Призначити тему"
         mark_as_solved: "Позначити як вирішене"
         search: "Пошук"
@@ -623,6 +620,7 @@ uk:
         grant_badge: "Надання значка користувачеві"
         list_reviewables: "Список елементів черги, що очікують на розгляд, з додатковим фільтруванням"
         perform_reviewable_action: "Виконати дію над елементом черги на перегляд"
+        add_reviewable_note: "Додати примітку до елемента черги перевірки"
         assign: "Призначити або скасувати призначення теми користувачеві чи групі"
         mark_as_solved: "Позначити або скасувати позначку публікації як прийнятого рішення"
         search: "Пошук у всіх публічних темах на форумі"
@@ -670,6 +668,7 @@ uk:
         grant_badge: "Надання значка «%{badge_name}» %{username}"
         list_reviewables: "Перелік елементів черги перегляду (тип: %{type})"
         perform_reviewable_action: "Виконання %{action} на переглянутому %{reviewable_id}"
+        add_reviewable_note: "Додавання примітки до перегляду %{reviewable_id}"
         assign: "Призначення теми %{topic_id} (призначено: %{assigned})"
         mark_as_solved: "Позначення повідомлення %{post_id} як вирішеного (вирішено: %{solved})"
         read: "Читання: <a href='%{url}'>%{title}</a>"
@@ -847,6 +846,13 @@ uk:
           conflict: "Цей елемент черги відгуків був оновлений кимось іншим. Будь ласка, спробуйте ще раз"
           action_failed: "Не вдалося виконати дію"
         success: "Успішно виконано '%{action}' для елемента черги перегляду %{reviewable_id}"
+      add_reviewable_note:
+        errors:
+          not_allowed: "Вам не дозволено доступ до черги рецензування"
+          not_found: "Елемент черги рецензування не знайдено"
+          no_note: "Для додавання примітки до елемента черги перевірки, потрібно ввести її"
+          failed: "Не вдалося додати примітку"
+        success: "Примітку до елемента черги на перевірку додано успішно %{reviewable_id}"
     reviewables:
       ai_tool_action:
         title: "Дія інструменту ШІ"

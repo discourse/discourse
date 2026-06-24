@@ -185,7 +185,7 @@ da:
           label: "Vælg en kategori"
           none: "vælg en..."
         create: "Opret kanal"
-        description: "Beskrivelse (valgfrit)"
+        description: "Beskrivelse"
         name: "Kanal navn"
         title: "Ny kanal"
         type: "Type"
@@ -332,3 +332,12 @@ da:
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Meddelelse"
+      chat_approval:
+        message: "Meddelelse"
+        channel_id: "Kanal"

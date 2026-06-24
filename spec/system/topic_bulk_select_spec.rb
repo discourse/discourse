@@ -240,6 +240,75 @@ describe "Topic bulk select" do
         expect(topic_list).to have_topic_tags(topic, tags: [restricted_tag, tag1])
         expect(topic_list).to have_topic_tags(topic_2, tags: [restricted_tag, tag1])
       end
+
+      it "can remove and replace-away a restricted tag" do
+        restricted_tag_group = Fabricate(:tag_group)
+        restricted_to_remove = Fabricate(:tag)
+        restricted_to_replace = Fabricate(:tag)
+        [restricted_to_remove, restricted_to_replace].each do |t|
+          TagGroupMembership.create!(tag: t, tag_group: restricted_tag_group)
+        end
+        CategoryTagGroup.create!(category: category, tag_group: restricted_tag_group)
+        category.update!(allow_global_tags: true)
+        topic.update!(tags: [restricted_to_remove, restricted_to_replace])
+
+        modal = open_manage_tags_modal([topic, topic_2])
+
+        modal.remove_tags(restricted_to_remove.name)
+        modal.select_replace_from(restricted_to_replace.name)
+        modal.select_replace_to(tag1.name)
+
+        modal.click_confirm
+
+        expect(topic_list).to have_topic_tags(topic, tags: [tag1])
+      end
+    end
+
+    context "when selecting topics across multiple categories" do
+      fab!(:category_a, :category)
+      fab!(:category_b, :category)
+      fab!(:restricted_tag_group, :tag_group)
+      fab!(:restricted_tag, :tag)
+
+      before do
+        topic.update!(category_id: category_a.id)
+        topic_2.update!(category_id: category_b.id)
+        TagGroupMembership.create!(tag: restricted_tag, tag_group: restricted_tag_group)
+      end
+
+      it "lets a restricted tag be added when every selected category allows it" do
+        CategoryTagGroup.create!(category: category_a, tag_group: restricted_tag_group)
+        CategoryTagGroup.create!(category: category_b, tag_group: restricted_tag_group)
+
+        modal = open_manage_tags_modal([topic, topic_2])
+        modal.add_tags(restricted_tag.name)
+        modal.click_confirm
+
+        expect(topic_list).to have_topic_tags(topic, tags: [restricted_tag])
+        expect(topic_list).to have_topic_tags(topic_2, tags: [restricted_tag])
+      end
+
+      it "reports an error for topics whose category forbids the tag" do
+        CategoryTagGroup.create!(category: category_a, tag_group: restricted_tag_group)
+
+        modal = open_manage_tags_modal([topic, topic_2])
+        modal.add_tags(restricted_tag.name)
+        modal.click_confirm
+
+        expect(topic_bulk_actions_modal).to have_errors
+        expect(page).to have_css(
+          ".topic-bulk-actions-modal__errors .badge-category",
+          text: category_b.name,
+        )
+        expect(page).to have_css(
+          ".topic-bulk-actions-modal__errors .discourse-tag",
+          text: restricted_tag.name,
+        )
+        expect(page).to have_css("#bulk-topics-close")
+        expect(page).to have_no_css("#bulk-topics-confirm")
+        expect(topic.reload.tags).to include(restricted_tag)
+        expect(topic_2.reload.tags).not_to include(restricted_tag)
+      end
     end
   end
 
@@ -292,9 +361,10 @@ describe "Topic bulk select" do
         expect(topic_list).to have_closed_status(topics.third)
       end
 
-      # Check that the user did receive a new post notification badge
+      # The bulk close posts a small action, which no longer marks the topic
+      # unread, so the watching user does not get a new post notification badge.
       visit("/latest")
-      expect(topic_list).to have_unread_badge(topics.third)
+      expect(topic_list).to have_no_unread_badge(topics.third)
     end
 
     it "closes topics silently" do

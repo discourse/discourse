@@ -16,7 +16,7 @@ module DiscourseWorkflows
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
     model :workflow
     model :trigger_node
-    model :execution, :run_workflow
+    model :execution, :enqueue_workflow
 
     private
 
@@ -28,20 +28,19 @@ module DiscourseWorkflows
       workflow.find_node(params.trigger_node_id)
     end
 
-    def run_workflow(workflow:, trigger_node:, params:, guardian:)
-      options =
-        DiscourseWorkflows::Executor::ExecutionOptions.new(
-          user: guardian.user,
-          execution_mode: :manual,
-          draft_execution: true,
+    def enqueue_workflow(workflow:, trigger_node:, params:, guardian:)
+      execution =
+        DiscourseWorkflows::Execution.create_pending_manual!(
+          workflow: workflow,
+          trigger_node_id: params.trigger_node_id,
+          trigger_data: trigger_data(workflow:, trigger_node:, params:, user: guardian.user),
         )
-
-      DiscourseWorkflows::Executor.new(
-        workflow,
-        params.trigger_node_id,
-        trigger_data(workflow:, trigger_node:, params:, user: guardian.user),
-        options,
-      ).run
+      Jobs.enqueue(
+        Jobs::DiscourseWorkflows::ExecuteManualWorkflow,
+        execution_id: execution.id,
+        user_id: guardian.user.id,
+      )
+      execution
     end
 
     def trigger_data(workflow:, trigger_node:, params:, user:)

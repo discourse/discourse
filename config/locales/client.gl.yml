@@ -6,6 +6,16 @@
 
 gl:
   js:
+    user_api_key:
+      authorize: "Autorizar"
+      deny: "Cancelar"
+      copied: "Copiado!"
+      otp_description: 'Gustaríalle darlle permiso a "%{application_name}" para acceder a este sitio?'
+      no_trust_level: "Sentímolo, non ten o nivel de confianza que se necesita para acceder á API de usuario"
+      generic_error: "Sentimolo, non nos é posible emitir chaves API de usuario, pois esta funcionalidade debeu ser desactivada polo administrador do sitio"
+      device:
+        code: "Código"
+        continue: "Continuar"
     blocks:
       ghost:
         status: "Estado"
@@ -249,8 +259,6 @@ gl:
     suggested_topics:
       pm_title: "Mensaxes suxeridas"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Activado"
       start_posting:
         back: "Volver"
     about:
@@ -682,7 +690,6 @@ gl:
             allow_unknown_sender_topic_replies: "Permitir respostas ao tema de remitente descoñecido."
         membership:
           title: Incorporación
-          access: Acceso
         categories:
           title: Categorías
           long_title: "Notificacións predeterminadas de categoría"
@@ -715,7 +722,6 @@ gl:
         title: "Permisos"
         none: "Non hai categorías asociadas a este grupo."
         description: "Os membros deste grupo poden acceder a estas categorías"
-      public_admission: "Permitir que os usuarios se unan ao grupo libremente (require un grupo visíbel ao público)"
       public_exit: "Permitir que os usuarios abandonen o grupo libremente"
       empty:
         posts: "Non hai publicacións de membros deste grupo"
@@ -731,7 +737,6 @@ gl:
       request: "Petición"
       message: "Mensaxe"
       confirm_leave: "Confirma o abandono deste grupo?"
-      allow_membership_requests: "Permitirlles aos usuarios que envíen peticións de incorporación aos propietarios do grupo (require un grupo visíbel ao público)"
       membership_request_template: "Personalizar o modelo que se lles amosa aos usuarios cando se envía unha petición de incorporación"
       membership_request:
         submit: "Enviar petición"
@@ -1075,6 +1080,9 @@ gl:
       undo_revoke_access: "Desfacer a revogación de acceso"
       api_approved: "Aprobado:"
       api_last_used_at: "Último utilizado o:"
+      api_expires_at: "Caduca:"
+      api_expired_at: "Caducou:"
+      api_expires_never: "nunca"
       theme: "Tema"
       save_to_change_theme: 'Para actualizar o tema, prema "%{save_text}"'
       home: "Páxina de inicio predeterminada"
@@ -1646,6 +1654,12 @@ gl:
       confirm_title: Continuar a %{site_name}
       logging_in_as: Iniciar sesión como %{email}
       confirm_button: Finalizar inicio de sesión
+    code_login:
+      email_label: "Enderezo de correo"
+      continue_button: "Continuar"
+      verify_button: "Continuar"
+      account_ready_continue: "Continuar"
+      username_label: "Nome de usuario"
     login:
       title: "Acceder"
       username: "Usuario"
@@ -1830,7 +1844,7 @@ gl:
       discard: "Desbotar"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
-      edit_reason_placeholder: "por que o está editando?"
+      edit_reason_placeholder: "Por que o está editando?"
       topic_featured_link_placeholder: "Escriba a ligazón amosada co título."
       remove_featured_link: "Retirar a ligazón do tema."
       reply_placeholder: "Escriba aquí. Utilice Markdown, BBCode ou HTML para formatar. Arrastre ou pegue as imaxes."
@@ -1865,6 +1879,7 @@ gl:
         attribute_value: "Valor"
         apply: "Aplicar"
       help: "Axuda para a edición con Markdown"
+      edit_reason: "Por que o está editando?"
       modal_ok: "De acordo"
       cant_send_pm: "Sentímolo pero non pode enviar unha mensaxe a %{username}."
       yourself_confirm:
@@ -1886,19 +1901,20 @@ gl:
           label: Responder como nova mensaxe de grupo
         reply_to_topic:
           label: Responder ao tema
+          trigger: Tema
           desc: Responder ao tema, non a ningunha publicación específica
+        reply_to_message:
+          trigger: Mensaxe
         toggle_whisper:
           label: Trocar rumor
-          desc: Os rumores son visíbeis unicamente para os membros do equipo
         create_personal_message:
-          label: "Nova mensaxe"
           desc: "Crear unha nova mensaxe privada"
         shared_draft:
           label: "Borrador compartido"
           desc: "Facer borrador dun tema que soamente será visíbel por usuarios admitidos"
         toggle_topic_bump:
-          label: "Trocar a promoción do tema"
           desc: "Responder sen cambiar a data da última resposta"
+        unknown_user: "Usuario"
       reload: "Recargar"
       ignore: "Ignorar"
       image: "imaxe"
@@ -2167,6 +2183,8 @@ gl:
       deleted_post_placeholder: "[eliminado]"
       ignored_post_placeholder: "[ignorado]"
       pinned_reply: "Fixado"
+    share_target:
+      new_message: "Nova mensaxe"
     topic:
       filter_to:
         one: "%{count} publicación no tema"
@@ -3357,7 +3375,7 @@ gl:
         modal:
           cancel: "cancelar"
           create: "Gardar"
-          reason: "por que o está editando?"
+          reason: "Por que o está editando?"
       spreadsheet:
         show: "Amosar"
         about: "Verbo de"
@@ -3616,6 +3634,11 @@ gl:
                 "2": "Membro"
                 "3": "Normal"
                 "4": "Líder"
+          search:
+            title: "Buscar"
+            table:
+              searches: "Buscas"
+              status: "Estado"
         reports_section:
           no_data: "Non hai datos que amosar"
           modal:
@@ -3684,7 +3707,6 @@ gl:
             email: Correo electrónico
             incoming_email: "Personalizar enderezos de correo-e entrantes"
             incoming_email_placeholder: "introducir enderezos de correo"
-            visibility: Visibilidade
             visibility_levels:
               title: "Quen pode ver este grupo?"
               public: "Todos"
@@ -3881,6 +3903,8 @@ gl:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nome"
+          company_url: "Sitio web"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupos"
           optional: "(opcional)"

@@ -4,26 +4,36 @@ module DiscourseAi
   module Discord::Bot
     class AgentReplier < Base
       def initialize(body)
-        @agent =
+        super(body)
+
+        @agent_class =
           AiAgent
             .all_agents(enabled_only: false)
             .find { |p| p.id == SiteSetting.ai_discord_search_agent.to_i }
-            .new
+
+        @agent_user = User.find_by(id: @agent_class&.user_id)
+        return if @agent_class.nil? || @agent_user.nil?
+
+        @agent = @agent_class.new
         @bot =
           DiscourseAi::Agents::Bot.as(
-            Discourse.system_user,
+            @agent_user,
             agent: @agent,
             model: LlmModel.find(@agent.class.default_llm_id || SiteSetting.ai_default_llm_model),
           )
-        super(body)
       end
 
       def handle_interaction!
+        if @bot.nil?
+          return create_reply(I18n.t("discourse_ai.discord.configuration.agent_user_required"))
+        end
+
         last_update_sent_at = Time.now - 1
         reply = +""
 
         context =
           DiscourseAi::Agents::BotContext.new(
+            user: @agent_user,
             messages: [{ type: :user, content: @query }],
             skip_show_thinking: true,
           )

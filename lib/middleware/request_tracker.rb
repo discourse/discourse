@@ -132,7 +132,6 @@ class Middleware::RequestTracker
           ApplicationRequest.increment!(:page_view_anon_browser_beacon)
           ApplicationRequest.increment!(:page_view_anon_browser_mobile_beacon) if data[:is_mobile]
         end
-        trigger_beacon_browser_pageview_event(data)
       else
         if data[:is_embed]
           ApplicationRequest.increment!(:page_view_embed)
@@ -143,7 +142,6 @@ class Middleware::RequestTracker
           ApplicationRequest.increment!(:page_view_anon_browser)
           ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
         end
-        trigger_browser_pageview_event(data)
       end
 
       if data[:topic_id].present? && (!data[:has_auth_cookie] || data[:current_user_id].present?) &&
@@ -420,8 +418,11 @@ class Middleware::RequestTracker
 
   def log_later(data, env, request)
     Scheduler::Defer.later("Track view") do
-      unless Discourse.pg_readonly_mode?
+      if Discourse.pg_readonly_mode?
+        self.class.track_browser_pageview(data) if SiteSetting.persist_browser_pageview_events
+      else
         self.class.log_request(data)
+        self.class.track_browser_pageview(data)
         instrument_browser_page_view(env, request, data)
       end
     rescue ActiveRecord::ReadOnlyError
@@ -657,8 +658,10 @@ class Middleware::RequestTracker
   end
 
   def self.is_beacon_tracking_request?(request)
-    SiteSetting.use_beacon_for_browser_page_views && request.post? &&
-      request.path == Discourse.beacon_pv_tracking_path
+    UpcomingChanges.enabled?(:dashboard_improvements) &&
+      (
+        SiteSetting.persist_browser_pageview_events || SiteSetting.trigger_browser_pageview_events
+      ) && request.post? && request.path == Discourse.beacon_pv_tracking_path
   end
 
   def self.same_origin_beacon_request?(request)
@@ -712,12 +715,28 @@ class Middleware::RequestTracker
   end
   private_class_method :extract_beacon_view_tracking_data
 
-  def self.trigger_browser_pageview_event(data)
-    if SiteSetting.persist_browser_pageview_events
-      persist_browser_pageview_event(build_browser_pageview_event_payload(data))
-    elsif SiteSetting.trigger_browser_pageview_events
-      DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
+  def self.track_browser_pageview(data)
+    return if !tracks_browser_page_view?(data)
+    if !SiteSetting.persist_browser_pageview_events && !SiteSetting.trigger_browser_pageview_events
+      return
     end
+
+    payload = build_browser_pageview_event_payload(data)
+
+    persist_browser_pageview_event(payload) if SiteSetting.persist_browser_pageview_events
+
+    if data[:is_beacon]
+      trigger_beacon_browser_pageview_event(payload)
+    else
+      trigger_browser_pageview_event(payload)
+    end
+  end
+
+  def self.trigger_browser_pageview_event(payload)
+    return if SiteSetting.persist_browser_pageview_events
+    return if !SiteSetting.trigger_browser_pageview_events
+
+    DiscourseEvent.trigger(:browser_pageview, payload)
   end
   private_class_method :trigger_browser_pageview_event
 
@@ -728,22 +747,18 @@ class Middleware::RequestTracker
     end
 
     Scheduler::Defer.later "Create BrowserPageviewEvent" do
-      BrowserPageviewEvent.create!(
-        url: payload[:url],
-        ip_address: payload[:ip_address],
-        country_code: payload[:country_code],
-        asn: payload[:asn],
-        referrer: payload[:referrer],
-        normalized_referrer: BrowserPageviewReferrerInspector.normalize(payload[:referrer]),
-        user_agent: payload[:user_agent],
-        session_id: payload[:session_id],
-        user_id: payload[:user_id],
-        topic_id: payload[:topic_id],
-        created_at: payload[:occurred_at],
-      )
+      if Discourse.pg_readonly_mode?
+        queue_browser_pageview_event(payload)
+      else
+        BrowserPageviewEvent.create_from_payload!(payload)
+      end
+    rescue ActiveRecord::ReadOnlyError
+      Discourse.received_postgres_readonly!
+      queue_browser_pageview_event(payload)
     rescue ActiveRecord::StatementInvalid => e
-      if e.cause.is_a?(PG::ReadOnlySqlTransaction)
-        # Skip recording browser pageviews when PostgreSQL is in read-only transaction mode.
+      if BrowserPageviewEvent.postgres_readonly_error?(e)
+        Discourse.received_postgres_readonly!
+        queue_browser_pageview_event(payload)
       elsif e.cause.is_a?(PG::NotNullViolation) && e.cause.message.include?("ip_address")
         Rails.logger.debug("Discarding BrowserPageviewEvent: invalid IP #{payload[:ip_address]}")
       else
@@ -757,10 +772,19 @@ class Middleware::RequestTracker
   end
   private_class_method :persist_browser_pageview_event
 
-  def self.trigger_beacon_browser_pageview_event(data)
-    if SiteSetting.trigger_browser_pageview_events
-      DiscourseEvent.trigger(:beacon_browser_pageview, build_browser_pageview_event_payload(data))
-    end
+  def self.queue_browser_pageview_event(payload)
+    BrowserPageviewEvent.enqueue_for_later(
+      payload.merge(occurred_at: payload[:occurred_at].iso8601(6)),
+    )
+  end
+  private_class_method :queue_browser_pageview_event
+
+  def self.trigger_beacon_browser_pageview_event(payload)
+    return if !UpcomingChanges.enabled?(:dashboard_improvements)
+    return if SiteSetting.persist_browser_pageview_events
+    return if !SiteSetting.trigger_browser_pageview_events
+
+    DiscourseEvent.trigger(:beacon_browser_pageview, payload)
   end
   private_class_method :trigger_beacon_browser_pageview_event
 
@@ -777,6 +801,14 @@ class Middleware::RequestTracker
       session_id: data[:tracking_session_id],
       topic_id: data[:topic_id],
       occurred_at: data[:occurred_at],
+      source:
+        (
+          if data[:is_beacon]
+            BrowserPageviewEvent::SOURCE_BEACON
+          else
+            BrowserPageviewEvent::SOURCE_PIGGYBACK
+          end
+        ),
     }
   end
   private_class_method :build_browser_pageview_event_payload

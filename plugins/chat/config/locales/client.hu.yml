@@ -346,8 +346,6 @@ hu:
         input_placeholder: Név hozzáadása
         slug_description: Az URL-ben a csatornanév helyett egy csatorna azonosító szerepel
         name: Csatorna neve
-        slug: Csatornaazonosító (nem kötelező)
-        emoji: Csatorna emoji (opcionális)
         reset_emoji: Emoji visszaállítása
       channel_edit_description_modal:
         title: Leírás szerkesztése
@@ -405,16 +403,14 @@ hu:
             one: 'A %{group} és a %{count} egyéb csoport felhasználói a <a href="%{settingLink}" target="_blank">biztonsági beállítások</a> szerint hozzáférhetnek ehhez a csatornához.'
             other: 'A %{group} és a %{count} egyéb csoport felhasználói a <a href="%{settingLink}" target="_blank">biztonsági beállítások</a> szerint hozzáférhetnek ehhez a csatornához.'
         create: "Csatorna létrehozása"
-        description: "Leírás (nem kötelező)"
+        description: "Leírás"
         name: "Csatorna neve"
-        slug: "Csatornaazonosító (nem kötelező)"
         title: "Új csatorna"
         type: "Típus"
         types:
           category: "Kategória"
           topic: "Téma"
         emoji:
-          label: "Csatorna emoji (opcionális)"
           reset: "Emoji visszaállítása"
       reviewable:
         type: "Csevegőüzenet"
@@ -738,3 +734,14 @@ hu:
       panels:
         chat:
           label: "Csevegés"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Csevegőüzenet küldése"
+      chat_message_created:
+        channel_id: "Csatorna"
+      send_chat_message:
+        channel_id: "Csatorna"
+        message: "Üzenet"
+      chat_approval:
+        message: "Üzenet"
+        channel_id: "Csatorna"

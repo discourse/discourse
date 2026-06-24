@@ -33,7 +33,6 @@ de:
     chat_editing_grace_period_max_diff_low_trust: "Maximale Anzahl von Zeichenänderungen, die innerhalb der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das Schlagwort „(bearbeitet)“ in der Chat-Nachricht angezeigt (Vertrauensstufe 0 und 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximale Anzahl von Zeichenänderungen, die innerhalb der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das Schlagwort „(bearbeitet)“ in der Chat-Nachricht angezeigt (Vertrauensstufe 2 und höher)."
     chat_preferred_index: "Bevorzugte Registerkarte beim Laden von /chat."
-    allow_chat_in_anonymous_mode: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus die Nutzung des Chats zu ermöglichen. Für diese Einstellung muss die Einstellung „allow anonymous mode“ aktiviert sein."
     chat_search_enabled: "Aktiviere diese Einstellung, um Benutzern die Suche nach Chatnachrichten zu ermöglichen."
     errors:
       chat_default_channel: "Der Standard-Chat-Kanal muss ein öffentlicher Kanal sein."
@@ -240,6 +239,10 @@ de:
     scriptables:
       send_chat_message:
         title: Chat-Nachricht senden
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Genehmigen"
+      default_deny_label: "ablehnen"
   reviewable_score_types:
     needs_review:
       title: "Überprüfung erforderlich"

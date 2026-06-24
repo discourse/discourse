@@ -41,7 +41,7 @@ export default class NestedViewCacheService extends Service {
     this.#forceUseCache = true;
   }
 
-  consumeTraversal() {
+  consumeTraversal(options = null) {
     if (this.#forceUseCache) {
       this.#forceUseCache = false;
       this.#lastNavigationType = null;
@@ -49,6 +49,17 @@ export default class NestedViewCacheService extends Service {
       return true;
     }
 
+    const traversalSignal = this.#consumeTraversalSignal();
+    if (options) {
+      return Boolean(
+        options.isPoppedState || (options.allowLocalSignal && traversalSignal)
+      );
+    }
+
+    return traversalSignal;
+  }
+
+  #consumeTraversalSignal() {
     // Prefer Navigation API (explicit traversal type) when available
     if (this.#lastNavigationType != null) {
       const result = this.#lastNavigationType === "traverse";

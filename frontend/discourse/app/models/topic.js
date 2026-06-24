@@ -651,14 +651,11 @@ export default class Topic extends RestModel {
     return `${getURL("/t/")}${slug}/${this.id}`;
   }
 
-  @computed("id", "slug", "is_nested_view", "_forcedFlat")
+  @computed("id", "slug")
   get url() {
     let slug = this.slug || "";
     if (slug.trim().length === 0) {
       slug = "topic";
-    }
-    if (this.is_nested_view && !this._forcedFlat) {
-      return `${getURL("/n/")}${slug}/${this.id}`;
     }
     return `${getURL("/t/")}${slug}/${this.id}`;
   }

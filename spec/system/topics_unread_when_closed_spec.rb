@@ -25,7 +25,7 @@ describe "Topics unread when closed" do
       expect(topic_list).to have_no_unread_badge(topics.third)
     end
 
-    it "close notifications appear when enabled (the default)" do
+    it "close notifications do not appear even when enabled (the default)" do
       user.user_option.update!(topics_unread_when_closed: true)
       sign_in(user)
       topic = topics.third
@@ -36,9 +36,10 @@ describe "Topics unread when closed" do
       # Close the topic as an admin
       TopicStatusUpdater.new(topic, admin).update!("closed", true)
 
-      # Check that the user did receive a new post notification badge
+      # The close action is a small action, which no longer marks a topic unread,
+      # so the badge does not appear regardless of the topics_unread_when_closed preference.
       visit("/latest")
-      expect(topic_list).to have_unread_badge(topics.third)
+      expect(topic_list).to have_no_unread_badge(topics.third)
     end
   end
 end

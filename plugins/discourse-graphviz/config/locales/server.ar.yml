@@ -7,4 +7,3 @@
 ar:
   site_settings:
     discourse_graphviz_enabled: "تفعيل المكوِّن الإضافي Graphviz"
-    graphviz_default_svg: "الضبط افتراضيًا على عرض SVG بدلًا من عرض الصور، ويمكن تخصيص هذا الإعداد لكل رسم بياني باستخدام العنصر `svg=true|false`"

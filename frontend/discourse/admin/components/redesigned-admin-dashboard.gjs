@@ -1,95 +1,44 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
-import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ConfigureMenu from "discourse/admin/components/dashboard/configure-menu";
 import DashboardDateRange from "discourse/admin/components/dashboard/date-range";
 import DashboardEngagement from "discourse/admin/components/dashboard/engagement";
 import DashboardHighlights from "discourse/admin/components/dashboard/highlights";
 import DashboardReports from "discourse/admin/components/dashboard/reports";
+import DashboardSearch from "discourse/admin/components/dashboard/search";
+import DashboardSiteAdvice from "discourse/admin/components/dashboard/site-advice";
 import DashboardSkeleton from "discourse/admin/components/dashboard/skeleton";
 import DashboardTraffic from "discourse/admin/components/dashboard/traffic";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { deepEqual } from "discourse/lib/object";
 import { eq } from "discourse/truth-helpers";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default class RedesignedAdminDashboard extends Component {
   @service currentUser;
 
-  @tracked pendingSections;
-
-  _saving = false;
-  _opened = false;
-
-  constructor() {
-    super(...arguments);
-    this.pendingSections = this.#buildPendingSections(
-      this.args.loadedSections?.configuration?.sections
-    );
-  }
-
-  @action
-  onMenuOpen() {
-    this._opened = true;
-    this.pendingSections = this.#buildPendingSections(
-      this.args.loadedSections?.configuration?.sections
-    );
-  }
-
-  @action
-  toggleVisibility(id) {
-    this.pendingSections = this.pendingSections.map((s) =>
-      s.id === id ? { ...s, visible: !s.visible } : s
-    );
-  }
-
-  @action
-  reorder(fromIndex, toIndex) {
-    const next = [...this.pendingSections];
-    const [moved] = next.splice(fromIndex, 1);
-    next.splice(toIndex, 0, moved);
-    this.pendingSections = next;
-  }
-
-  @action
-  onMenuClose() {
-    if (this._saving || !this._opened) {
-      return;
-    }
-
-    const committedSections =
-      this.args.loadedSections?.configuration?.sections ?? [];
-
-    if (deepEqual(this.pendingSections, committedSections)) {
-      return;
-    }
-
-    this._saving = true;
-    this.args
-      .updateConfiguration(this.pendingSections)
-      .catch((e) => {
-        popupAjaxError(e);
-        this.pendingSections = this.#buildPendingSections(
-          this.args.loadedSections?.configuration?.sections
-        );
-      })
-      .finally(() => {
-        this._saving = false;
-      });
-  }
-
-  #buildPendingSections(sections) {
-    return sections?.map((section) => ({ ...section })) ?? [];
+  get configurationSections() {
+    return this.args.loadedSections?.configuration?.sections ?? [];
   }
 
   <template>
-    <div class="db-toolbar">
-      <h1>Dashboard</h1>
+    <DPageHeader
+      @titleLabel={{i18n "admin.dashboard.title"}}
+      @hideTabs={{true}}
+      @collapseActionsOnMobile={{false}}
+    >
+      <:breadcrumbs>
+        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem
+          @path="/admin"
+          @label={{i18n "admin.dashboard.title"}}
+        />
+      </:breadcrumbs>
 
-      <div class="db-toolbar__actions">
+      <:actions>
         <DashboardDateRange
           @period={{@requestedPeriod}}
           @startDate={{@requestedStartDate}}
@@ -97,7 +46,6 @@ export default class RedesignedAdminDashboard extends Component {
           @setPeriod={{@setPeriod}}
           @setCustomDateRange={{@setCustomDateRange}}
         />
-
         {{#if this.currentUser.admin}}
           <DMenu
             @identifier="db-configure"
@@ -106,23 +54,32 @@ export default class RedesignedAdminDashboard extends Component {
             @title={{i18n "admin.dashboard.configure.tooltip"}}
             @triggerClass="btn-default"
             @modalForMobile={{true}}
-            @onClose={{this.onMenuClose}}
-            @onShow={{this.onMenuOpen}}
           >
             <:content>
               <ConfigureMenu
-                @sections={{this.pendingSections}}
-                @onReorder={{this.reorder}}
-                @onToggleVisibility={{this.toggleVisibility}}
+                @sections={{this.configurationSections}}
+                @onReorder={{@reorderSections}}
+                @onToggleVisibility={{@toggleSection}}
               />
             </:content>
           </DMenu>
         {{/if}}
-      </div>
-    </div>
+      </:actions>
+    </DPageHeader>
+
+    <PluginOutlet
+      @name="redesigned-admin-dashboard-after-header"
+      @connectorTagName="div"
+    />
 
     <div class="db-main">
       {{#if @loadedSections}}
+        <DashboardSiteAdvice
+          @problems={{@problems}}
+          @onRefresh={{@onRefreshProblems}}
+          @onIgnore={{@onIgnoreProblem}}
+        />
+
         {{#each @loadedSections.sections key="id" as |section|}}
           {{#if (eq section.id "highlights")}}
             <DashboardHighlights
@@ -160,6 +117,17 @@ export default class RedesignedAdminDashboard extends Component {
               class={{concat "--" section.id}}
               data-section-id={{section.id}}
               @engagement={{section.data}}
+              @period={{@loadedSections.period}}
+              @loading={{@loadingSections}}
+              @fetchError={{@sectionsFetchError}}
+              @startDate={{@loadedSections.startDate}}
+              @endDate={{@loadedSections.endDate}}
+            />
+          {{else if (eq section.id "search")}}
+            <DashboardSearch
+              class={{concat "--" section.id}}
+              data-section-id={{section.id}}
+              @search={{section.data}}
               @period={{@loadedSections.period}}
               @loading={{@loadingSections}}
               @fetchError={{@sectionsFetchError}}

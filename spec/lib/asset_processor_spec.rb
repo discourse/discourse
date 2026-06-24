@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe AssetProcessor do
+  def entrypoint(result, name)
+    result.values.find { |chunk| chunk["name"] == name }
+  end
+
   describe "skip_module?" do
     it "returns false for empty strings" do
       expect(AssetProcessor.skip_module?(nil)).to eq(false)
@@ -121,11 +125,11 @@ RSpec.describe AssetProcessor do
           { entrypoints: { main: { modules: ["discourse/initializers/hello.gjs"] } } },
         )
 
-      code = result["main.js"]["code"]
+      code = entrypoint(result, "main")["code"]
       expect(code).to include('"hello world"')
       expect(code).to include("dt7948") # Decorator transform
 
-      expect(result["main.js"]["map"]).not_to be_nil
+      expect(entrypoint(result, "main")["map"]).not_to be_nil
     end
 
     it "supports decorators and class properties without error" do
@@ -147,7 +151,7 @@ RSpec.describe AssetProcessor do
           { "discourse/initializers/foo.js" => script },
           { entrypoints: { main: { modules: ["discourse/initializers/foo.js"] } } },
         )
-      expect(result["main.js"]["code"]).to include("dt7948.n")
+      expect(entrypoint(result, "main")["code"]).to include("dt7948.n")
     end
 
     it "supports object literal decorators without errors" do
@@ -167,7 +171,7 @@ RSpec.describe AssetProcessor do
           { "discourse/initializers/foo.js" => script },
           { entrypoints: { main: { modules: ["discourse/initializers/foo.js"] } } },
         )
-      expect(result["main.js"]["code"]).to include("dt7948")
+      expect(entrypoint(result, "main")["code"]).to include("dt7948")
     end
 
     it "can use themePrefix in a template" do
@@ -183,9 +187,31 @@ RSpec.describe AssetProcessor do
           { "discourse/initializers/foo.gjs" => script },
           { themeId: 22, entrypoints: { main: { modules: ["discourse/initializers/foo.gjs"] } } },
         )
-      expect(result["main.js"]["code"]).to include(
+      expect(entrypoint(result, "main")["code"]).to include(
         'window.moduleBroker.lookup("discourse/lib/theme-settings-store")',
       )
+    end
+
+    it "strips data-test-* attributes in production mode" do
+      script = <<~JS.chomp
+        export default class Foo {
+          <template>
+            <div data-test-my-element class="keep">hello</div>
+          </template>
+        }
+      JS
+
+      modules = { "discourse/components/foo.gjs" => script }
+      entrypoints = { main: { modules: ["discourse/components/foo.gjs"] } }
+
+      unminified = AssetProcessor.new.rollup(modules, { themeId: 22, entrypoints: entrypoints })
+      expect(entrypoint(unminified, "main")["code"]).to include("data-test-my-element")
+
+      minified =
+        AssetProcessor.new.rollup(modules, { minify: true, themeId: 22, entrypoints: entrypoints })
+      code = entrypoint(minified, "main")["code"]
+      expect(code).not_to include("data-test-my-element")
+      expect(code).to include("keep")
     end
 
     it "can use themePrefix not in a template" do
@@ -200,7 +226,7 @@ RSpec.describe AssetProcessor do
           { "discourse/initializers/foo.js" => script },
           { themeId: 22, entrypoints: { main: { modules: ["discourse/initializers/foo.js"] } } },
         )
-      expect(result["main.js"]["code"]).to include(
+      expect(entrypoint(result, "main")["code"]).to include(
         'window.moduleBroker.lookup("discourse/lib/theme-settings-store")',
       )
     end
@@ -223,7 +249,7 @@ RSpec.describe AssetProcessor do
           },
         },
       )
-    code = result["main.js"]["code"]
+    code = entrypoint(result, "main")["code"]
     expect(code).to include("createTemplateFactory")
     expect(code).to include("deprecated(")
     expect(code).to include('id: "discourse.hbs-extension"')
@@ -260,8 +286,8 @@ RSpec.describe AssetProcessor do
         },
       )
 
-    expect(result["main.js"]["code"]).to include("setComponentTemplate")
-    expect(result["main.js"]["code"]).to include(
+    expect(entrypoint(result, "main")["code"]).to include("setComponentTemplate")
+    expect(entrypoint(result, "main")["code"]).to include(
       "bar = setComponentTemplate(__COLOCATED_TEMPLATE__, templateOnly());",
     )
   end
@@ -298,10 +324,12 @@ RSpec.describe AssetProcessor do
         },
       )
 
-    expect(result["main.js"]["code"]).to include(
+    expect(entrypoint(result, "main")["code"]).to include(
       'compatModules["discourse/templates/connectors/foo"]',
     ).once
-    expect(result["main.js"]["code"]).to include('compatModules["discourse/connectors/foo"]').once
+    expect(entrypoint(result, "main")["code"]).to include(
+      'compatModules["discourse/connectors/foo"]',
+    ).once
   end
 
   it "handles relative imports from one module to another" do
@@ -330,7 +358,7 @@ RSpec.describe AssetProcessor do
         },
       )
 
-    expect(result["main.js"]["code"]).not_to include("../components/my-component")
+    expect(entrypoint(result, "main")["code"]).not_to include("../components/my-component")
   end
 
   it "handles relative import of index file" do
@@ -362,7 +390,7 @@ RSpec.describe AssetProcessor do
         },
       )
 
-    expect(result["main.js"]["code"]).not_to include("../components/my-component")
+    expect(entrypoint(result, "main")["code"]).not_to include("../components/my-component")
   end
 
   it "handles relative import of gjs index file" do
@@ -394,7 +422,7 @@ RSpec.describe AssetProcessor do
         },
       )
 
-    expect(result["main.js"]["code"]).not_to include("../components/my-component")
+    expect(entrypoint(result, "main")["code"]).not_to include("../components/my-component")
   end
 
   it "prioritizes exact match over /index match" do
@@ -425,8 +453,8 @@ RSpec.describe AssetProcessor do
         },
       )
 
-    expect(result["main.js"]["code"]).to include("module 1")
-    expect(result["main.js"]["code"]).to include("module 2")
+    expect(entrypoint(result, "main")["code"]).to include("module 1")
+    expect(entrypoint(result, "main")["code"]).to include("module 2")
   end
 
   it "returns the ember version" do
@@ -477,15 +505,15 @@ RSpec.describe AssetProcessor do
         },
       )
 
-    expect(result["main.js"]["imports"].length).to eq(1)
-    expect(result["main.js"]["imports"].first).to include("chunk")
-    expect(result["main.js"]["name"]).to eq("main")
-    expect(result["main.js"]["isEntry"]).to eq(true)
+    expect(entrypoint(result, "main")["imports"].length).to eq(1)
+    expect(entrypoint(result, "main")["imports"].first).to include("chunk")
+    expect(entrypoint(result, "main")["name"]).to eq("main")
+    expect(entrypoint(result, "main")["isEntry"]).to eq(true)
 
-    expect(result["admin.js"]["imports"].length).to eq(1)
-    expect(result["admin.js"]["imports"].first).to include("chunk")
-    expect(result["admin.js"]["name"]).to eq("admin")
-    expect(result["admin.js"]["isEntry"]).to eq(true)
+    expect(entrypoint(result, "admin")["imports"].length).to eq(1)
+    expect(entrypoint(result, "admin")["imports"].first).to include("chunk")
+    expect(entrypoint(result, "admin")["name"]).to eq("admin")
+    expect(entrypoint(result, "admin")["isEntry"]).to eq(true)
   end
 
   it "errors on missing relative imports" do

@@ -24,6 +24,8 @@ ru:
     ai:
       error_agent_not_configured: "Агент ИИ не настроен. Пожалуйста, проверьте настройки функций ИИ."
       error_no_sql_returned: "Искусственный интеллект не вернул корректный SQL-запрос. Пожалуйста, попробуйте еще раз или напишите запрос вручную."
+    errors:
+      tool_not_allowed: "Вам не разрешено использовать этот инструмент"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

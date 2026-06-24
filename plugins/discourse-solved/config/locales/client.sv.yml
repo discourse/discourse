@@ -44,6 +44,8 @@ sv:
       move_post_cancel: "Avbryt"
       confirm_solved_removal_confirm: "Bekräfta"
       confirm_solved_removal_cancel: "Avbryt"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Har din fråga besvarats?
         description: "Markera svaret och hjälp andra genom att använda lösningsknappen under det korrekta svaret."

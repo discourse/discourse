@@ -401,7 +401,6 @@ pt_BR:
           no_users: "Nenhum usuário(a) encontrado(a)"
           leave_event: "Sair do evento"
           status:
-            unknown: "Não tenho interesse"
             going: "Eu vou"
             interested: "Interessado"
             going_count:
@@ -434,6 +433,8 @@ pt_BR:
         name_placeholder: "Nome do evento"
         location_placeholder: "Adicionar local ou URL"
         description_placeholder: "Adicionar descrição do evento"
+        event_title_placeholder: "Nome do evento"
+        create_event_button: "Criar evento"
         reminder:
           units:
             minutes:
@@ -448,6 +449,9 @@ pt_BR:
             weeks:
               one: "semana"
               other: "semanas"
+      composer_actions:
+        create_event:
+          label: "Criar evento"
       builder_modal:
         custom_fields:
           label: "Campos personalizados"
@@ -518,3 +522,4 @@ pt_BR:
       invite_user_or_group:
         title: "Notificar usuário(s) ou grupo(s)"
         invite: "Enviar"
+        success: "Convite enviado"

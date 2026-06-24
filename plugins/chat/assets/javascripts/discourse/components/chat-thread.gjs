@@ -60,7 +60,7 @@ export default class ChatThread extends Component {
 
   paneState = new ChatPaneState(getOwner(this), {
     contextKey: this.pendingContextKey,
-    onUserPresent: this.debouncedUpdateLastReadMessage,
+    onUserPresent: this.maybeDebouncedUpdateLastReadMessage,
   });
 
   @action
@@ -91,16 +91,18 @@ export default class ChatThread extends Component {
     this.uploadDropZone = element;
 
     this.messagesManager.clear();
-    this.args.thread.draft =
-      this.chatDraftsManager.get(
-        this.args.thread.channel?.id,
-        this.args.thread.id
-      ) ||
-      ChatMessage.createDraftMessage(this.args.thread.channel, {
-        user: this.currentUser,
-        thread: this.args.thread,
-      });
-    this.chatThreadComposer.focus();
+    if (this.currentUser) {
+      this.args.thread.draft =
+        this.chatDraftsManager.get(
+          this.args.thread.channel?.id,
+          this.args.thread.id
+        ) ||
+        ChatMessage.createDraftMessage(this.args.thread.channel, {
+          user: this.currentUser,
+          thread: this.args.thread,
+        });
+      this.chatThreadComposer.focus();
+    }
     this.loadMessages();
   }
 
@@ -127,7 +129,7 @@ export default class ChatThread extends Component {
         state,
       });
       this.isScrolling = true;
-      this.debouncedUpdateLastReadMessage();
+      this.maybeDebouncedUpdateLastReadMessage();
 
       if (
         state.atTop ||
@@ -146,8 +148,11 @@ export default class ChatThread extends Component {
   onScrollEnd(state) {
     this.isScrolling = false;
     this.atBottom = state.atBottom;
+    this.paneState.updateLiveEdgeFromScrollState(state);
 
     if (state.atBottom) {
+      // Visible but unfocused panes can passively live-follow. Clear their
+      // pending affordance at the bottom while keeping hidden/away panes pending.
       if (this.paneState.userIsPresent) {
         this.paneState.clearPendingMessages();
       }
@@ -163,6 +168,13 @@ export default class ChatThread extends Component {
   }
 
   @bind
+  maybeDebouncedUpdateLastReadMessage() {
+    if (this.paneState.shouldMarkRead()) {
+      this.debouncedUpdateLastReadMessage();
+    }
+  }
+
+  @bind
   debouncedUpdateLastReadMessage() {
     this._debouncedUpdateLastReadMessageHandler = discourseDebounce(
       this,
@@ -173,7 +185,7 @@ export default class ChatThread extends Component {
 
   @bind
   updateLastReadMessage() {
-    if (!this.paneState.userIsPresent) {
+    if (!this.paneState.shouldMarkRead()) {
       return;
     }
 
@@ -219,7 +231,7 @@ export default class ChatThread extends Component {
   didResizePane() {
     this._ignoreNextScroll = true;
     this.debounceFillPaneAttempt();
-    this.debouncedUpdateLastReadMessage();
+    this.maybeDebouncedUpdateLastReadMessage();
     DatesSeparatorsPositioner.apply(this.scroller);
 
     this.paneState.updatePendingContentFromScrollerPosition({
@@ -295,11 +307,13 @@ export default class ChatThread extends Component {
   }
 
   @action
-  scrollToLatestMessage() {
+  async scrollToLatestMessage() {
     if (this.messagesLoader.canLoadMoreFuture) {
-      this.fetchMessages();
+      await this.fetchMessages({
+        target_message_id: this.args.thread.lastMessageId,
+      });
     } else if (this.messagesManager.messages.length > 0) {
-      this.scrollToBottom();
+      await this.scrollToBottom();
     }
   }
 
@@ -344,18 +358,24 @@ export default class ChatThread extends Component {
 
   @bind
   onNewMessage(message) {
+    const isOwnMessage = message.user.id === this.currentUser.id;
+
     this.paneState.handleIncomingMessage({
       scroller: this.scroller,
-      shouldAutoScroll: this.paneState.userIsPresent && this.atBottom,
+      shouldAutoScroll: this.paneState.shouldAutoScrollIncomingMessage({
+        isAtLiveEdge: this.paneState.isAtLiveEdge,
+        isOwnMessage,
+      }),
       addMessage: () => this.messagesManager.addMessages([message]),
-      onAutoAdd: () => this.debouncedUpdateLastReadMessage(),
+      onAutoAdd: () => this.maybeDebouncedUpdateLastReadMessage(),
+      isOwnMessage,
     });
   }
 
   @bind
   processMessages(thread, result) {
     const messages = result.messages.map((messageData) => {
-      const ignored = this.currentUser.ignored_users || [];
+      const ignored = this.currentUser?.ignored_users || [];
       const hidden = ignored.includes(messageData.user.username);
 
       return ChatMessage.create(thread.channel, {
@@ -514,6 +534,9 @@ export default class ChatThread extends Component {
   async scrollToBottom() {
     this._ignoreNextScroll = true;
     await scrollListToBottom(this.scroller);
+    if (this.paneState.shouldMarkRead()) {
+      this.debouncedUpdateLastReadMessage();
+    }
     this.paneState.clearPendingMessages();
   }
 

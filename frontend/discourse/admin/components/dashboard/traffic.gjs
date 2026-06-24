@@ -211,7 +211,7 @@ export default class DashboardTraffic extends Component {
                 <DTooltip
                   class="db-section__info"
                   @identifier="site-traffic-comparison-tooltip"
-                  @icon="circle-question"
+                  @icon="far-circle-question"
                 >
                   <:content>{{this.comparisonTooltipText}}</:content>
                 </DTooltip>
@@ -237,7 +237,7 @@ export default class DashboardTraffic extends Component {
                   <DTooltip
                     class="db-section__info"
                     @identifier="site-traffic-logged-in-share-tooltip"
-                    @icon="circle-question"
+                    @icon="far-circle-question"
                   >
                     <:content>
                       {{i18n
@@ -294,7 +294,21 @@ export default class DashboardTraffic extends Component {
               <div class="db-section__row">
                 <div class="db-section__row-block">
                   <h3 class="db-section__row-block-title">
-                    {{i18n "admin.dashboard.site_traffic.top_referrers.title"}}
+                    <LinkTo
+                      @route="adminReports.show"
+                      @model="top_referrers_by_browser_pageviews"
+                      @query={{hash
+                        start_date=this.reportQuery.start_date
+                        end_date=this.reportQuery.end_date
+                      }}
+                    >
+                      {{i18n
+                        "admin.dashboard.site_traffic.top_referrers.title"
+                      }}
+                      <span class="db-link-arrow" aria-hidden="true">
+                        {{dIcon "arrow-right"}}
+                      </span>
+                    </LinkTo>
                   </h3>
                   {{#if @traffic.top_referrers.error}}
                     <p class="db-traffic__list-error" role="status">
@@ -336,7 +350,21 @@ export default class DashboardTraffic extends Component {
 
                 <div class="db-section__row-block">
                   <h3 class="db-section__row-block-title">
-                    {{i18n "admin.dashboard.site_traffic.top_countries.title"}}
+                    <LinkTo
+                      @route="adminReports.show"
+                      @model="top_countries_by_browser_pageviews"
+                      @query={{hash
+                        start_date=this.reportQuery.start_date
+                        end_date=this.reportQuery.end_date
+                      }}
+                    >
+                      {{i18n
+                        "admin.dashboard.site_traffic.top_countries.title"
+                      }}
+                      <span class="db-link-arrow" aria-hidden="true">
+                        {{dIcon "arrow-right"}}
+                      </span>
+                    </LinkTo>
                   </h3>
                   {{#if @traffic.top_countries.error}}
                     <p class="db-traffic__list-error" role="status">

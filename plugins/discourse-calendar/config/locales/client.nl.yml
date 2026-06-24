@@ -412,7 +412,6 @@ nl:
           no_users: "Geen gebruikers gevonden"
           leave_event: "Evenement verlaten"
           status:
-            unknown: "Niet geïnteresseerd"
             going: "Gaan"
             interested: "Geïnteresseerd"
             going_count:
@@ -445,6 +444,8 @@ nl:
         name_placeholder: "Evenementnaam"
         location_placeholder: "Locatie of URL toevoegen"
         description_placeholder: "Evenementbeschrijving toevoegen"
+        event_title_placeholder: "Evenementnaam"
+        create_event_button: "Evenement maken"
         reminder:
           units:
             minutes:
@@ -459,6 +460,9 @@ nl:
             weeks:
               one: "week"
               other: "weken"
+      composer_actions:
+        create_event:
+          label: "Evenement maken"
       builder_modal:
         custom_fields:
           label: "Aangepaste velden"
@@ -533,3 +537,4 @@ nl:
       invite_user_or_group:
         title: "Gebruiker(s) of groep(en) informeren"
         invite: "Sturen"
+        success: "Uitnodiging gestuurd"

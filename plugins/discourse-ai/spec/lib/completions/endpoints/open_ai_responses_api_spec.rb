@@ -446,6 +446,33 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
     expect(parsed_body).to have_key(:input)
   end
 
+  it "requests web search sources when native web search is enabled" do
+    parsed_body = nil
+    stub_request(:post, "https://api.openai.com/v1/responses").with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: { output: [] }.to_json)
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are a bot",
+        messages: [type: :user, content: "hello"],
+      )
+    prompt.native_tools = ["web_search"]
+    dialect = DiscourseAi::Completions::Dialects::OpenAiResponses.new(prompt, model)
+
+    endpoint.perform_completion!(dialect, Discourse.system_user)
+
+    expect(parsed_body[:tools]).to include({ type: "web_search" })
+    expect(parsed_body[:include]).to contain_exactly(
+      "reasoning.encrypted_content",
+      "web_search_call.action.sources",
+    )
+  end
+
   it "includes service_tier in converted responses payload" do
     model.update!(provider_params: { service_tier: "flex" })
 

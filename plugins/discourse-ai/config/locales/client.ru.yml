@@ -50,6 +50,13 @@ ru:
             delete_ai_secret: "Удалить секрет ИИ"
             update_ai_spam_settings: "Обновить настройки AI-антиспама"
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_ai: "Для этого нужно включить плагин ИИ"
+      nodes:
+        "action:ai_agent": "ИИ Агент"
+      node_descriptions:
+        "action:ai_agent": "Запустите агента искусственного интеллекта для обработки данных или генерации контента."
     discourse_automation:
       scriptables:
         llm_report:
@@ -217,6 +224,10 @@ ru:
               description: "Разрешить добавление тегов к сообщениям, созданным пользователем системы."
     discourse_ai:
       title: "AI"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Агент"
+          select_agent: "Выберите агента..."
       default_llm:
         title: "Модель LLM по умолчанию"
         description: "Модель LLM по умолчанию для всех ИИ функций. Используется, если в настройке функции или персоны не указана конкретная модель LLM. При отсутствии модели по умолчанию используется последняя добавленная LLM."
@@ -243,7 +254,7 @@ ru:
         no_llm: "LLM не выбрана"
         no_agent: "Не установлено"
         no_groups: "Отсутствует"
-        edit: "настроек"
+        edit: "Настроек"
         expand_list:
           one: "(еще %{count})"
           few: "(еще %{count})"
@@ -286,6 +297,11 @@ ru:
             model_settings: "Настройки модели"
             related_topics: "Связанные темы"
             semantic_search: "Семантический поиск"
+        admin_dashboard:
+          name: "Панель администратора"
+          description: "Помогает менеджерам сообществ выявлять значимые изменения и решать, куда двигаться дальше."
+          setting_groups:
+            settings: "Основные настройки"
         discord:
           name: "Интеграция с Discord"
           description: "Добавляет возможность поиска по каналам Discord"
@@ -824,7 +840,6 @@ ru:
         title: "Предложить изменения с помощью AI"
         description: "Выберите один из вариантов ниже, и AI предложит новую версию текста."
         selection_hint: "Подсказка: чтобы переписать часть текста, выделите нужный фрагмент до запуска помощника."
-        suggest: "Подсказки от AI"
         suggest_errors:
           too_many_tags:
             one: "Максимальное количество тегов — %{count}."

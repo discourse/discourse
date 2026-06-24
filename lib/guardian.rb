@@ -102,7 +102,7 @@ class Guardian
     end
 
     def in_any_groups?(group_ids)
-      group_ids.include?(Group::AUTO_GROUPS[:anonymous])
+      group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
     end
   end
 

@@ -74,3 +74,6 @@ zh_CN:
           topic_list_between:
             title: "话题之间"
             description: "在每 N 个话题之间显示的广告。"
+          nested_roots_between:
+            title: "在嵌套的根之间"
+            description: "在嵌套回复视图中，每隔 N 个根回复之间显示广告。"

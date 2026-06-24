@@ -547,5 +547,33 @@ RSpec.describe Admin::ReportsController do
         expect(response.status).to eq(200)
       end
     end
+
+    context "with browser pageview reports" do
+      it "lets an admin run them only when persist_browser_pageview_events is enabled" do
+        sign_in(admin)
+
+        SiteSetting.persist_browser_pageview_events = false
+        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+          get "/admin/reports/#{report_type}.json"
+          expect(response.status).to eq(404)
+        end
+
+        SiteSetting.persist_browser_pageview_events = true
+        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+          get "/admin/reports/#{report_type}.json"
+          expect(response.status).to eq(200)
+        end
+      end
+
+      it "denies a moderator even when persist_browser_pageview_events is enabled" do
+        SiteSetting.persist_browser_pageview_events = true
+        sign_in(moderator)
+
+        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+          get "/admin/reports/#{report_type}.json"
+          expect(response.status).to eq(404)
+        end
+      end
+    end
   end
 end

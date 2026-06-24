@@ -18,9 +18,14 @@ export default class ChatFooter extends Component {
   @service site;
   @service chatChannelsManager;
   @service chatStateManager;
+  @service currentUser;
 
   get includeStarred() {
-    return this.chatChannelsManager.hasStarredChannels;
+    return this.currentUser && this.chatChannelsManager.hasStarredChannels;
+  }
+
+  get includeSearch() {
+    return this.currentUser && this.siteSettings.chat_search_enabled;
   }
 
   get includeThreads() {
@@ -125,7 +130,7 @@ export default class ChatFooter extends Component {
           </DButton>
         {{/if}}
 
-        {{#if this.siteSettings.chat_search_enabled}}
+        {{#if this.includeSearch}}
           <DButton
             @route="chat.search"
             @icon="magnifying-glass"

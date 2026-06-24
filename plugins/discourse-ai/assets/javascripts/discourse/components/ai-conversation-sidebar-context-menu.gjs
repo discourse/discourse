@@ -1,10 +1,15 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import { showShareConversationModal } from "../lib/ai-bot-helper";
 
 export default class AiConversationSidebarContextMenu extends Component {
+  @service currentUser;
+  @service modal;
+
   @tracked isTogglingStarred = false;
 
   get topic() {
@@ -17,6 +22,10 @@ export default class AiConversationSidebarContextMenu extends Component {
 
   get canStarConversations() {
     return this.manager.siteSettings.enable_ai_bot_starred_conversations;
+  }
+
+  get canShare() {
+    return this.currentUser?.can_share_ai_bot_conversations;
   }
 
   get isStarred() {
@@ -49,6 +58,16 @@ export default class AiConversationSidebarContextMenu extends Component {
     }
   }
 
+  @action
+  share() {
+    if (!this.canShare || !this.topic) {
+      return;
+    }
+
+    showShareConversationModal(this.modal, this.topic.id);
+    this.args.close();
+  }
+
   <template>
     <DDropdownMenu class="ai-conversation-sidebar-link-menu" as |dropdown|>
       {{#if this.canStarConversations}}
@@ -60,6 +79,17 @@ export default class AiConversationSidebarContextMenu extends Component {
             @label={{this.starLabel}}
             @title={{this.starLabel}}
             class="ai-conversation-sidebar-link-menu__star-conversation"
+          />
+        </dropdown.item>
+      {{/if}}
+      {{#if this.canShare}}
+        <dropdown.item>
+          <DButton
+            @action={{this.share}}
+            @icon="share-nodes"
+            @label="discourse_ai.ai_bot.share_ai_conversation.name"
+            @title="discourse_ai.ai_bot.share_ai_conversation.title"
+            class="ai-conversation-sidebar-link-menu__share-conversation"
           />
         </dropdown.item>
       {{/if}}

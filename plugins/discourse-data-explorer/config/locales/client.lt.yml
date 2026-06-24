@@ -25,6 +25,9 @@ lt:
           no: "Ne"
       save: "Išsaugoti pakeitimus"
       delete: "Pašalinti"
+      chart:
+        form:
+          bar: "Juosta"
       result_count:
         one: "%{count} rezultatas."
         few: "%{count} rezultatai."
@@ -37,3 +40,8 @@ lt:
       search_placeholder: "Paieška..."
     group:
       reports: "Pranešimai"
+    discourse_workflows:
+      sql:
+        param_value: "Reikšmė"
+        output:
+          results: "Rezultatai"

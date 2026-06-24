@@ -1425,6 +1425,27 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "group settings" do
+    fab!(:group)
+
+    it "stores a valid group id as a string" do
+      settings.setting(:test_group_setting, "", type: :group)
+      settings.test_group_setting = group.id.to_s
+      expect(settings.test_group_setting).to eq(group.id.to_s)
+    end
+
+    it "rejects a value that does not match an existing group" do
+      settings.setting(:test_group_setting, "", type: :group)
+      expect { settings.test_group_setting = "-9999" }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "allows a blank value" do
+      settings.setting(:test_group_setting, "", type: :group)
+      settings.test_group_setting = ""
+      expect(settings.test_group_setting).to eq("")
+    end
+  end
+
   describe "requires_confirmation settings" do
     it "returns 'simple' for settings that require confirmation with 'simple' type" do
       expect(
@@ -1432,6 +1453,14 @@ RSpec.describe SiteSettingExtension do
           :requires_confirmation
         ],
       ).to eq("simple")
+    end
+
+    it "returns 'simple_on_disable' for settings that require confirmation with 'simple_on_disable' type" do
+      expect(
+        SiteSetting.all_settings.find { |s| s[:setting] == :content_security_policy }[
+          :requires_confirmation
+        ],
+      ).to eq("simple_on_disable")
     end
 
     it "returns nil for settings that do not require confirmation" do
@@ -1778,43 +1807,6 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.ga_universal_auto_link_domains_map).to eq([])
       expect(SiteSetting.pm_tags_allowed_for_groups_map).to eq([])
       expect(SiteSetting.exclude_rel_nofollow_domains_map).to eq([])
-    end
-
-    describe "granular_anonymous_and_logged_in_groups_permissions read-time swap" do
-      let(:everyone_id) { Group::AUTO_GROUPS[:everyone] }
-      let(:logged_in_id) { Group::AUTO_GROUPS[:logged_in_users] }
-
-      it "returns the stored ids unchanged when the upcoming change is disabled" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
-        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|11"
-        expect(SiteSetting.experimental_new_new_view_groups_map).to eq([everyone_id, 11])
-      end
-
-      it "swaps 0 for logged_in_users when the upcoming change is enabled" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
-        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|11"
-        expect(SiteSetting.experimental_new_new_view_groups_map).to eq([logged_in_id, 11])
-      end
-
-      it "dedups when logged_in_users is already stored alongside everyone" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
-        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|#{logged_in_id}|1"
-        expect(SiteSetting.experimental_new_new_view_groups_map).to eq([logged_in_id, 1])
-      end
-
-      it "leaves the stored database value untouched" do
-        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|11"
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
-        SiteSetting.experimental_new_new_view_groups_map # trigger getter
-
-        expect(SiteSetting.experimental_new_new_view_groups).to eq("#{everyone_id}|11")
-      end
-
-      it "does not affect category_list settings" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
-        SiteSetting.digest_suppress_categories = "#{everyone_id}|4"
-        expect(SiteSetting.digest_suppress_categories_map).to eq([everyone_id, 4])
-      end
     end
   end
 

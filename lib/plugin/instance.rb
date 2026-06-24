@@ -250,8 +250,8 @@ class Plugin::Instance
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def add_report(name, &block)
-    reloadable_patch { |plugin| Report.add_report(name, &block) }
+  def add_report(name, exclude_from_dashboard: false, &block)
+    reloadable_patch { |plugin| Report.add_report(name, exclude_from_dashboard:, &block) }
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
@@ -1225,17 +1225,17 @@ class Plugin::Instance
   #   "chat_messages_30_days": 100,
   #   "chat_messages_count": 1000,
   # }
-  def register_stat(name, expose_via_api: false, &block)
+  def register_stat(name, expose_via_api: false, stat_type: nil, &block)
     # We do not want to register and display the same group multiple times.
     return if DiscoursePluginRegistry.stats.any? { |stat| stat.name == name }
 
-    stat = Stat.new(name, expose_via_api: expose_via_api, &block)
+    stat = Stat.new(name, expose_via_api: expose_via_api, stat_type: stat_type, &block)
     DiscoursePluginRegistry.register_stat(stat, self)
   end
 
   # Registers a KPI tile in the admin dashboard "Highlights" section
-  # (gated by SiteSetting.dashboard_improvements). The KPI is rendered as a
-  # tile linking to /admin/reports/:report.
+  # (gated by the dashboard_improvements upcoming change). The KPI is rendered
+  # as a tile linking to /admin/reports/:report.
   #
   # @param type [Symbol] unique identifier for the KPI. Used as the i18n key
   #   (admin.dashboard.highlights.kpi.<type>.label / .tooltip) and to

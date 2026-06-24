@@ -6,6 +6,15 @@
 
 pt:
   js:
+    user_api_key:
+      authorize: "Autorizar"
+      deny: "Cancelar"
+      copied: "Copiado!"
+      no_trust_level: "Desculpe, não tem o nível de confiança requerido para aceder à API de utilizador"
+      generic_error: "Desculpe, nós não conseguimos gerar as chaves de API do utilizador, esta funcionalidade poderá estar desativada pela administração do site"
+      device:
+        code: "Código"
+        continue: "Continuar"
     blocks:
       ghost:
         status: "Estado"
@@ -418,8 +427,6 @@ pt:
       pill: "Sugerido"
       pm_title: "Mensagens Sugeridas"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Ativado"
       start_posting:
         back: "Anterior"
     about:
@@ -1086,7 +1093,6 @@ pt:
             from_alias_hint: "Alias para usar como endereço de origem ao enviar e-mails SMTP de grupo. Nota que isto pode não ser suportado por todos os fornecedores de e-mails, por isso consulta a documentação do seu fornecedor de correio."
         membership:
           title: Filiação
-          access: Acesso
         categories:
           title: Categorias
           long_title: "Notificações padrão da categoria"
@@ -1119,7 +1125,6 @@ pt:
         title: "Permissões"
         none: "Não existem categorias associadas a este grupo."
         description: "Os membros deste grupo podem ter acesso a estas categorias"
-      public_admission: "Permitir entrada livre no grupo (Requer grupo publicamente visível)"
       public_exit: "Permitir que os utilizadores deixem o grupo livremente"
       empty:
         posts: "Não existem publicações por membros deste grupo"
@@ -1135,7 +1140,6 @@ pt:
       request: "Pedir"
       message: "Mensagem"
       confirm_leave: "Tem a certeza que pretende sair deste grupo?"
-      allow_membership_requests: "Permitir que os usuários enviem solicitações de adesão aos proprietários do grupo (requer grupo publicamente visível)"
       membership_request_template: "Template personalizado para mostrar aos utilizadores quando for enviado um pedido de adesão"
       membership_request:
         submit: "Submeter Pedido"
@@ -1549,6 +1553,9 @@ pt:
       undo_revoke_access: "Cancelar Rescissão de Acesso"
       api_approved: "Aprovado:"
       api_last_used_at: "Usado pela última vez em:"
+      api_expires_at: "Expira:"
+      api_expired_at: "Expirado:"
+      api_expires_never: "nunca"
       theme: "Tema"
       save_to_change_theme: 'O tema será atualizado após clicar em "%{save_text}"'
       home: "Página de Início Predefinida"
@@ -2458,6 +2465,12 @@ pt:
       confirm_title: Continuar para %{site_name}
       logging_in_as: Fazendo login como %{email}
       confirm_button: Concluir o Login
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Continuar"
+      verify_button: "Continuar"
+      account_ready_continue: "Continuar"
+      username_label: "Nome de Utilizador"
     login:
       header_title: "Bem-vindo de volta"
       title: "Iniciar Sessão"
@@ -2802,6 +2815,7 @@ pt:
       collapse: "Minimizar o painel de compositor"
       open: "Abrir o painel de compositor"
       abandon: "Fechar compositor e ignorar rascunho"
+      edit_reason: "Porque está a editar?"
       enter_fullscreen: "Entrar no modo de ecrã completo do compositor"
       exit_fullscreen: "Sair do modo de ecrã completo do compositor"
       exit_fullscreen_prompt: "Pressione <kbd>ESC</kbd> para sair do ecrã completo"
@@ -2832,22 +2846,22 @@ pt:
           desc: Criar nova mensagem começando com os mesmos destinatários
         reply_to_topic:
           label: Responder ao tópico
+          trigger: Tópico
           desc: Responder ao tópico, não a uma publicação especifica
+        reply_to_message:
+          trigger: Mensagem
         toggle_whisper:
           label: Alternar sussurro
-          desc: Os sussurros são apenas visíveis para os membros da equipa
         create_topic:
-          label: "Novo tópico"
           desc: Criar um novo tópico
         create_personal_message:
-          label: "Nova mensagem"
           desc: "Crie uma nova mensagem privada"
         shared_draft:
           label: "Rascunho Partilhado"
           desc: "Escrever um rascunho de tópico que só pode ser visível para usuários permitidos"
         toggle_topic_bump:
-          label: "Alterar possibilidade de bump de tópico"
           desc: "Responder sem alterar a data de última resposta"
+        unknown_user: "Utilizador"
       reload: "Recarregar"
       ignore: "Ignorar"
       image_alt_text:
@@ -3150,6 +3164,15 @@ pt:
         dismiss_tooltip: "rejeitar apenas as novas mensagens ou deixar de seguir os tópicos"
         also_dismiss_topics: "Parar de seguir estes tópicos para que estes nunca me apareçam como não lidos novamente"
         dismiss_new_replies: "Descartar respostas novas"
+        dismiss_new_topics_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_all_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
         dismiss_new: "Marcar Visto Novos"
         dismiss_new_modal:
           posts: "Descartar respostas novas"
@@ -3214,6 +3237,9 @@ pt:
       deleted_post_placeholder: "[eliminado]"
       ignored_post_placeholder: "[ignorados]"
       pinned_reply: "Fixado"
+    share_target:
+      new_topic: "Novo tópico"
+      new_message: "Nova mensagem"
     topic:
       filter_to:
         one: "%{count} publicação no tópico"
@@ -4802,6 +4828,11 @@ pt:
                 "2": "Membro"
                 "3": "Habitual"
                 "4": "Líder"
+          search:
+            title: "Procurar"
+            table:
+              searches: "Pesquisas"
+              status: "Estado"
         reports_section:
           no_data: "Sem dados para exibir"
           modal:
@@ -4869,7 +4900,6 @@ pt:
             email: E-mail
             incoming_email: "Endereço de email de entrada personalizado"
             incoming_email_placeholder: "introduza o endereço de email"
-            visibility: Visibilidade
             visibility_levels:
               title: "Quem pode ver este grupo?"
               public: "Todos"
@@ -5064,6 +5094,8 @@ pt:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nome"
+          company_url: "site"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupos"
           optional: "(opcional)"

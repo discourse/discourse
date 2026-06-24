@@ -6,6 +6,16 @@
 
 sk:
   js:
+    user_api_key:
+      authorize: "Autorizovať"
+      deny: "Zrušiť"
+      copied: "Skopírované!"
+      otp_description: 'Chcete povoliť prístup na túto stránku "%{application_name}"?'
+      no_trust_level: "Ľutujeme, nemáte dostatočný stupeň dôvery na prístup k používateľskému API"
+      generic_error: "Ľutujeme, nie je možné vystaviť používateľský API kľúč, táto možnosť môže byť vypnutá administrátorom."
+      device:
+        code: "Kód"
+        continue: "Pokračovať"
     blocks:
       ghost:
         status: "Stav"
@@ -379,7 +389,7 @@ sk:
       pm_title: "Odporúčané správy"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Povolené"
+        enabled: "Vybrané"
       start_posting:
         back: "Späť"
     about:
@@ -1121,7 +1131,8 @@ sk:
             from_alias_hint: "Alias, ktorý sa má použiť ako adresa odosielateľa pri odosielaní skupinových e-mailov SMTP. Upozorňujeme, že to nemusia podporovať všetci poskytovatelia pošty, pozrite si dokumentáciu poskytovateľa pošty."
         membership:
           title: Členstvo
-          access: Prístup
+          join_method:
+            invite: "Len na pozvánky"
         categories:
           title: Kategórie
           long_title: "Predvolené upozornenia kategórie"
@@ -1154,7 +1165,6 @@ sk:
         title: "Práva"
         none: "K tejto skupine nie sú priradené žiadne kategórie."
         description: "Členovia tejto skupiny majú prístup k týmto kategóriám"
-      public_admission: "Povoliť používateľom slobodne sa stať člen skupiny (kupina musí byť verejne viditeľná)"
       public_exit: "Povoliť používateľom slobodne opustiť skupinu."
       empty:
         posts: "Žiadne príspevky od členov tejto skupiny"
@@ -1170,7 +1180,6 @@ sk:
       request: "Požiadavka"
       message: "Správa"
       confirm_leave: "Naozaj chcete opustiť túto skupinu?"
-      allow_membership_requests: "Povoliť používateľom odosielať žiadosti o členstvo vlastníkom skupiny (vyžaduje verejne viditeľnú skupinu)"
       membership_request_template: "Vlastná šablóna, ktorá sa zobrazí používateľom pri posielaní žiadosti o členstvo"
       membership_request:
         submit: "Odošli požiadavku"
@@ -1600,6 +1609,9 @@ sk:
       undo_revoke_access: "Zrušiť odvolanie prístupu"
       api_approved: "Schválený:"
       api_last_used_at: "Naposledy použité:"
+      api_expires_at: "Platnosť vyprší:"
+      api_expired_at: "Vypršala platnosť:"
+      api_expires_never: "nikdy"
       theme: "Téma"
       save_to_change_theme: 'Téma bude aktualizovaná po kliknutí na "%{save_text}"'
       home: "Predvolená domovská stránka"
@@ -2596,6 +2608,12 @@ sk:
       confirm_title: Pokračujte na %{site_name}
       logging_in_as: Prihlásenie ako %{email}
       confirm_button: Dokončiť prihlásenie
+    code_login:
+      email_label: "Email"
+      continue_button: "Pokračovať"
+      verify_button: "Pokračovať"
+      account_ready_continue: "Pokračovať"
+      username_label: "Používateľské meno"
     login:
       header_title: "Vitajte späť"
       title: "Prihlásenie"
@@ -2923,7 +2941,7 @@ sk:
       users_placeholder: "Pridanie používateľov alebo skupín"
       title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
       title_or_link_placeholder: "Napíšte názov témy alebo tu skopírujte odkaz"
-      edit_reason_placeholder: "prečo upravujete?"
+      edit_reason_placeholder: "Prečo upravujete?"
       topic_featured_link_placeholder: "Zadajte odkaz zobrazený s názvom."
       remove_featured_link: "Odstrániť odkaz z témy."
       reply_placeholder: "Píšte sem. Formátujte pomocou Markdown, BBCode alebo HTML. Pretiahnite alebo vložte obrázky."
@@ -2976,6 +2994,7 @@ sk:
         attribute_value: "Hodnota"
         apply: "Použi"
       help: "Nápoveda úprav pre Markdown"
+      edit_reason: "Prečo upravujete?"
       exit_fullscreen_prompt: "Stlačením <kbd>ESC</kbd> ukončíte celú obrazovku"
       modal_ok: "OK"
       cant_send_pm: "Ľutujeme, nemôžete poslať správu používateľovi %{username}."
@@ -3005,23 +3024,22 @@ sk:
           desc: Vytvorenie novej správy začínajúcej s rovnakými príjemcami
         reply_to_topic:
           label: Odpovedať na tému
+          trigger: Téma
           desc: Odpovedzte na tému, nie na konkrétny príspevok
+        reply_to_message:
+          trigger: Správa
         toggle_whisper:
           label: Prepnúť šepot
-          desc: Šepot je viditeľný iba pre zamestnancov
         create_topic:
-          label: "Nová téma"
           desc: Vytvorte novú tému
-        create_personal_message:
-          label: "Nová správa"
         shared_draft:
           label: "Zdieľaný koncept"
           desc: "Navrhnite tému, ktorá bude viditeľná iba pre povolených používateľov"
         toggle_topic_bump:
-          label: "Prepnúť tému bump"
           desc: "Odpoveď bez zmeny dátumu poslednej odpovede"
         toggle_unlisted:
           label: Prepínanie nezaradených
+        unknown_user: "Používateľ"
       reload: "Znovu načítať"
       ignore: "Ignorovať"
       image_alt_text:
@@ -3439,6 +3457,21 @@ sk:
         also_dismiss_topics: "Prestať pozorovať tieto témy. Už sa nikdy nebudú ukazovať medzi neprečítanými"
         dismiss_new_topics: "Zamietnuť nové témy"
         dismiss_new_replies: "Skryť nové odpovede"
+        dismiss_new_topics_with_selected:
+          one: "Zamietnuť (%{count})"
+          few: "Zamietnuť (%{count})"
+          many: "Zamietnuť (%{count})"
+          other: "Zamietnuť (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Zamietnuť (%{count})"
+          few: "Zamietnuť (%{count})"
+          many: "Zamietnuť (%{count})"
+          other: "Zamietnuť (%{count})"
+        dismiss_all_with_selected:
+          one: "Zamietnuť (%{count})"
+          few: "Zamietnuť (%{count})"
+          many: "Zamietnuť (%{count})"
+          other: "Zamietnuť (%{count})"
         dismiss_new: "Zahodiť. Nová"
         dismiss_new_modal:
           title: "Zamietnuť nové"
@@ -3499,7 +3532,7 @@ sk:
         education:
           topic_tracking_preferences: 'Nastavenia sledovania novej témy si môžete pozrieť a zmeniť v <a href="%{basePath}/my/preferences/tracking">nastaveniach</a>.'
           unread: "Nič nezostalo neprečítané... pôsobivé!"
-          new_new: "Momentálne nič nové... čoskoro sa vráťte!"
+          unified_new: "Momentálne nič nové... skúste to znova neskôr!"
           new: "Momentálne nič nové... skúste to znova neskôr!"
     topic_bulk_actions:
       dismiss:
@@ -3550,6 +3583,9 @@ sk:
       no_replies: "Zatiaľ žiadne odpovede."
       ignored_post_placeholder: "[ignorovať]"
       pinned_reply: "Pripnutý"
+    share_target:
+      new_topic: "Nová téma"
+      new_message: "Nová správa"
     topic:
       filter_to:
         one: "%{count} príspevok k téme"
@@ -4780,7 +4816,7 @@ sk:
         new_replies_tooltip: "Nové odpovede"
         replies: "Odpovede"
         replies_with_count: "Odpovede (%{count})"
-      new_new:
+      unified_new:
         help: "témy vytvorené alebo zodpovedané za posledných niekoľko dní"
       posted:
         title: "Moje príspevky"
@@ -5422,7 +5458,7 @@ sk:
           title: "Upraviť tabuľku"
           cancel: "zrušiť"
           create: "Uložiť"
-          reason: "prečo upravujete?"
+          reason: "Prečo upravujete?"
           trigger_reason: "Pridať dôvod úpravy"
         default_edit_reason: "Aktualizujte tabuľku pomocou editora tabuliek"
       default_header:
@@ -6045,6 +6081,11 @@ sk:
                 "2": "Člen"
                 "3": "Bežné"
                 "4": "Vodca"
+          search:
+            title: "Hľadať"
+            table:
+              searches: "Vyhľadávania"
+              status: "Stav"
         reports_section:
           no_data: "Žiadne údaje na zobrazenie"
           modal:
@@ -6144,7 +6185,6 @@ sk:
             incoming_email: "Vlastná e-mailová adresa pre príchodziu poštu"
             incoming_email_placeholder: "zadajte emailovú adresu"
             incoming_email_tooltip: "Viacero e-mailových adries môžete oddeliť pomocou znaku |."
-            visibility: Viditeľnosť
             visibility_levels:
               title: "Kto môže vidieť túto skupinu?"
               public: "Každý"
@@ -6581,9 +6621,10 @@ sk:
           your_organization: "Vaša organizácia"
           your_organization_description: "Tieto informácie použijeme v podmienkach používania služby a v oznámení o ochrane osobných údajov, aby sme uviedli, kto prevádzkuje stránku a pod akou jurisdikciou."
           company_name: "Meno"
-          company_name_placeholder: "Organizácia Acme"
           company_name_warning: |
             Ak zostane prázdne, nebudú poskytnuté žiadne všeobecné podmienky služby ani oznámenie o ochrane osobných údajov.
+          company_url: "Webová stránka"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Platné právo"
           governing_law_placeholder: "Provincia, štát alebo krajina"
           governing_law_help: |

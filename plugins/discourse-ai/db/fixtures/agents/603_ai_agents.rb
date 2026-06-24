@@ -33,6 +33,8 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
     if agent_class == DiscourseAi::Agents::WebArtifactCreator
       # this is somewhat sensitive, so we default it to staff
       agent.allowed_group_ids = [Group::AUTO_GROUPS[:staff]]
+    elsif agent_class == DiscourseAi::Agents::AdminDashboardHighlights
+      agent.allowed_group_ids = [Group::AUTO_GROUPS[:admins]]
     elsif external_agent_ids.include?(id)
       agent.allowed_group_ids = [Group::AUTO_GROUPS[:admins]]
     elsif summarization_agents.include?(agent_class)
@@ -96,6 +98,14 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
   forced_tool_names = instance.force_tool_use.map { |tool| tool.to_s.split("::").last }
   agent.tools = tools.map { |name, value| [name, value, forced_tool_names.include?(name)] }
   agent.forced_tool_count = instance.forced_tool_count
+  agent.execution_mode = agent_class.execution_mode
+  agent.max_turn_tokens = agent_class.max_turn_tokens
+  agent.compression_threshold =
+    if agent.execution_mode == "agentic"
+      agent_class.compression_threshold || 85
+    else
+      agent_class.compression_threshold
+    end
 
   agent.response_format = instance.response_format
   agent.examples = instance.examples

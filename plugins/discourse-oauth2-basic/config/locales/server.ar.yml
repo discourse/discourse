@@ -27,7 +27,6 @@ ar:
     oauth2_json_email_verified_path: "المسار في ملف JSON للمستخدم لمصادقة OAuth2 إلى حالة التحقُّق من البريد الإلكتروني للمستخدم. على سبيل المثال: user.email.verified. يجب إيقاف oauth2_email_verified لهذا الإعداد ليحظى بأي تأثير"
     oauth2_json_avatar_path: "المسار في ملف JSON للمستخدم لمصادقة OAuth2 إلى الصورة الرمزية للمستخدم. على سبيل المثال: user.avatar_url"
     oauth2_email_verified: "تحقَّق من هذا إذا كان موقع OAuth2 قد تحقَّق من البريد الإلكتروني"
-    oauth2_overrides_email: "استبدال البريد الإلكتروني لـ Discourse بالبريد الإلكتروني البعيد في كل عملية تسجيل دخول. يعمل بإعداد `auth_overrides_email` نفسه، لكنه خاص بعمليات تسجيل الدخول من خلال OAuth2."
     oauth2_send_auth_header: "إرسال بيانات اعتماد العميل في رأس مصادقة HTTP"
     oauth2_send_auth_body: "إرسال بيانات اعتماد العميل في نص الطلب"
     oauth2_debug_auth: "تضمين معلومات تصحيح الأخطاء المنسَّقة في سجلاتك"

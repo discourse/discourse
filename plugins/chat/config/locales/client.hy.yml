@@ -85,6 +85,7 @@ hy:
           one: "%{count} անդամ"
           other: "%{count} անդամ"
       create_channel:
+        description: "Նկարագրություն"
         type: "Տիպը"
         types:
           category: "Կատեգորիա"
@@ -170,3 +171,12 @@ hy:
           fields:
             message:
               label: Նոր Հաղորդագրություն
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Ալիք"
+      send_chat_message:
+        channel_id: "Ալիք"
+        message: "Ուղարկել"
+      chat_approval:
+        message: "Ուղարկել"
+        channel_id: "Ալիք"

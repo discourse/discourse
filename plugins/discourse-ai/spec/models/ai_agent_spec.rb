@@ -74,6 +74,35 @@ RSpec.describe AiAgent do
     expect(basic_agent.errors[:tools]).to eq(["Can not have duplicate tools"])
   end
 
+  describe "provider-native tools" do
+    fab!(:gemini_model)
+    fab!(:openai_chat_model) do
+      Fabricate(:llm_model, url: "https://api.openai.com/v1/chat/completions")
+    end
+
+    it "requires a forced default LLM that supports the native tool" do
+      basic_agent.tools = ["native-web_search"]
+
+      # no forced default LLM
+      expect(basic_agent.valid?).to eq(false)
+      expect(basic_agent.errors[:tools]).to include(
+        I18n.t("discourse_ai.ai_bot.agents.native_tool_requires_forced_llm"),
+      )
+
+      # forced LLM whose provider does not support web search (chat completions)
+      basic_agent.default_llm = openai_chat_model
+      basic_agent.force_default_llm = true
+      expect(basic_agent.valid?).to eq(false)
+      expect(basic_agent.errors[:tools]).to include(
+        I18n.t("discourse_ai.ai_bot.agents.native_tool_unsupported_by_llm"),
+      )
+
+      # forced LLM that supports web search
+      basic_agent.default_llm = gemini_model
+      expect(basic_agent.valid?).to eq(true)
+    end
+  end
+
   it "allows creation of user" do
     user = basic_agent.create_user!
     expect(user.username).to eq("test_bot")

@@ -10,6 +10,7 @@ RSpec.describe "Nested view replying" do
 
   before do
     SiteSetting.nested_replies_enabled = true
+    Fabricate(:nested_topic, topic: topic)
     sign_in(user)
   end
 
@@ -30,7 +31,7 @@ RSpec.describe "Nested view replying" do
 
       expect(composer).to be_closed
       expect(nested_view).to have_nested_view
-      expect(page).to have_current_path(%r{/n/})
+      expect(page).to have_current_path(%r{/t/})
     end
   end
 
@@ -47,7 +48,7 @@ RSpec.describe "Nested view replying" do
 
       expect(composer).to be_closed
       expect(nested_view).to have_nested_view
-      expect(page).to have_current_path(%r{/n/})
+      expect(page).to have_current_path(%r{/t/})
     end
   end
 
@@ -57,10 +58,15 @@ RSpec.describe "Nested view replying" do
       expect(nested_view).to have_floating_reply_button
     end
 
-    it "is not visible for anonymous users" do
+    it "is visible for anonymous users and opens the login flow" do
       Capybara.reset_sessions!
       nested_view.visit_nested(topic)
-      expect(nested_view).to have_no_floating_reply_button
+
+      expect(nested_view).to have_floating_reply_button
+
+      nested_view.click_floating_reply_button
+
+      expect(page).to have_css("#login-account-name")
     end
 
     it "opens the composer for a top-level reply" do
@@ -73,7 +79,7 @@ RSpec.describe "Nested view replying" do
       expect(composer).to be_closed
 
       expect(nested_view).to have_nested_view
-      expect(page).to have_current_path(%r{/n/})
+      expect(page).to have_current_path(%r{/t/})
     end
 
     it "hides when the composer is open and reappears when closed" do
@@ -121,6 +127,22 @@ RSpec.describe "Nested view replying" do
 
       expect(nested_view).to have_no_collapsed_bar_for(root_reply)
       expect(nested_view).to have_children_visible_for(root_reply)
+    end
+
+    it "takes the user into the parent branch on mobile", mobile: true do
+      nested_view.visit_nested(topic)
+      expect(nested_view).to have_post(child_reply)
+
+      nested_view.click_reply_on_post(root_reply)
+      expect(composer).to be_opened
+
+      composer.fill_content("Reply from mobile")
+      composer.submit
+
+      expect(composer).to be_closed
+      expect(nested_view).to have_mobile_focus
+      expect(nested_view).to have_post(child_reply)
+      expect(nested_view).to have_post_text("Reply from mobile")
     end
   end
 

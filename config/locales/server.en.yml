@@ -364,7 +364,7 @@ en:
       page_publishing_requirements: "Page publishing cannot be enabled if secure uploads is enabled."
       s3_backup_requires_s3_settings: "You cannot use S3 as backup location unless you've provided the '%{setting_name}'."
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
-      secure_uploads_requirements: "S3 uploads and S3 ACLs must be enabled before enabling secure uploads."
+      secure_uploads_requirements: "S3 uploads must be enabled before enabling secure uploads."
       share_quote_facebook_requirements: "You must set a Facebook app id to enable quote sharing for Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "You cannot enforce 2FA if local logins are disabled."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "You cannot enforce 2FA if DiscourseConnect is enabled."
@@ -677,7 +677,7 @@ en:
       admins: "admins"
       moderators: "moderators"
       staff: "staff"
-      anonymous: "anonymous"
+      anonymous_users: "anonymous_users"
       logged_in_users: "logged_in_users"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
@@ -687,7 +687,7 @@ en:
     default_descriptions:
       everyone: "Automatic group including all members"
       staff: "Automatic group including admins and moderators"
-      anonymous: "Automatic pseudogroup representing unauthenticated visitors"
+      anonymous_users: "Automatic pseudogroup representing unauthenticated visitors"
       logged_in_users: "Automatic pseudogroup including every logged-in user"
       admins: "Responsible for configuring and maintaining this site, with access to all member and activity data"
       moderators: "Responsible for responding to flags, moderating discussions, and helping members with their accounts"
@@ -916,6 +916,7 @@ en:
 
   category_types:
     not_available: "Category type '%{type_name}' is not available"
+    requires_plugin: "Category type '%{type_name}' requires the '%{plugin_name}' plugin to be enabled. Ask an administrator to enable it or create this category."
     discussion:
       name: "Discussion"
       title: "discussion"
@@ -1056,6 +1057,9 @@ en:
   email_login:
     invalid_token: 'Oops! The link you used no longer works. You can <a href="%{base_url}/login">Log In</a> now. If you forgot your password, you can <a href="%{base_url}/password-reset">request a link</a> to reset it.'
     title: "Email login"
+
+  email_login_code:
+    invalid_code: "That code is incorrect or has expired. Request a new code and try again."
 
   user_auth_tokens:
     browser:
@@ -1286,6 +1290,7 @@ en:
     logged_in_as: "Logged in as"
     permissions_header: 'This will allow "%{application_name}" to:'
     redirect_warning: "Authorizing will redirect you to"
+    expiry_notice: 'This key for "%{application_name}" will expire on %{expires_at}.'
     write_scope_warning: "Full write access requested — this application will be able to post, edit, and delete content. Proceed only if you fully trust it."
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
     copy_key: "Copy Key"
@@ -1307,6 +1312,22 @@ en:
       one_time_password: "Create a one-time login token"
       bookmarks_calendar: "Read bookmark reminders"
       user_status: "Read and update user status"
+    device:
+      title: "Authorize an application"
+      enter_code: "Enter the code displayed in your application."
+      enter_full_code: "Enter the complete code to authorize this application."
+      code: "Code"
+      code_character: "Code character %{position}"
+      continue: "Continue"
+      invalid_code: "Sorry, that code is invalid. Check the code and try again."
+      expired_code: "Sorry, that code has expired or has already been used. Request a new code from the application and try again."
+      authorize_title: 'Authorize "%{application_name}"'
+      expiry_notice: 'This key for "%{application_name}" will expire on %{expires_at}.'
+      no_expiry_warning: "This key will not expire automatically. Only authorize this if you fully trust the application."
+      unregistered_app_warning: "This application is not registered or verified by this site. Only continue if you fully trust the source of the code."
+      complete: "Authorization complete"
+      denied: "Authorization denied"
+      return_to_cli: "You can now return to your terminal or application."
     invalid_public_key: "Sorry, the public key is invalid."
     invalid_auth_redirect: "Sorry, this auth_redirect host is not allowed."
     invalid_token: "Missing, invalid or expired token."
@@ -1790,6 +1811,7 @@ en:
       twitter_login: 'Twitter login appears to not be working at the moment. Check the credentials in <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">the Site Settings</a>.'
       group_email_credentials: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will be sent from the group inbox until this problem is addressed. %{error}'
       upcoming_change_stable_opted_out: 'Your site has opted-out of the "%{upcoming_change}" upcoming change. This change has now reached the "Stable" status and may soon be removed or made permanent. Visit <a href="%{base_path}/admin/config/upcoming-changes">the upcoming changes page</a> to review details about this change.'
+      content_security_policy_disabled: "The content-security-policy feature has been disabled. This is an important security feature, and should never be disabled in production environments. <a href='%{base_path}/admin/site_settings/category/all_results?filter=content_security_policy'>Re-enable it here</a>."
       rails_env: "Your server is running in %{env} mode."
       host_names: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
       sidekiq_check: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by Sidekiq. Please ensure at least one Sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
@@ -1799,6 +1821,7 @@ en:
       facebook_config: 'The server is configured to allow signup and login with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
       twitter_config: 'The server is configured to allow signup and login with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
       github_config: 'The server is configured to allow signup and login with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
+      github_onebox_backoff: "GitHub is rate-limiting the server, so GitHub links may not preview until the limit resets. Configuring {{setting:github_onebox_access_tokens}} raises the limit significantly."
       s3_upload_config: 'The server is configured to upload files to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
       s3_backup_config: 'The server is configured to upload backups to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
       s3_cdn: 'The server is configured to upload files to S3, but there is no S3 CDN configured. This can lead to expensive S3 costs and slower site performance. <a href="https://meta.discourse.org/t/-/148916" target="_blank">See "Using Object Storage for Uploads" to learn more</a>.'
@@ -1827,9 +1850,6 @@ en:
       admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
       starttls_disabled: "The outgoing email configuration has STARTTLS disabled. This is almost never necessary. Consider removing <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> from your environment. Please refer to <a href='https://meta.discourse.org/t/387286'>this topic</a> for more details."
     back_from_logster_text: "Back to site"
-    reports_section:
-      providers:
-        core_report: "Standard"
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -2024,7 +2044,7 @@ en:
     slow_down_crawler_user_agents: "User agents of web crawlers that should be rate limited as configured in the {{setting:slow_down_crawler_rate}} setting. Each value must be at least 3 characters long."
     slow_down_crawler_rate: "If {{setting:slow_down_crawler_user_agents}} is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
     llms_txt: "Upload a text file to be served at /llms.txt for LLM crawlers. See <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> for more information."
-    content_security_policy: "Enable Content-Security-Policy (CSP). CSP is an additional layer of security that helps to prevent certain types of attacks, including Cross Site Scripting (XSS) and data injection."
+    content_security_policy: "Enable Content-Security-Policy (CSP). CSP is an additional layer of security that helps to prevent certain types of attacks, including Cross Site Scripting (XSS) and data injection. It should only be disabled temporarily for debugging/testing purposes."
     content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
     content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP). Other host sources are ignored as strict-dynamic is enabled."
@@ -2122,6 +2142,7 @@ en:
 
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
+    enable_local_logins_via_code: "Send a one-time code instead of a login link when a user logs in via email, and let new users sign up with just an email address and that code. Requires 'enable local logins via email'."
     allow_passkeys_for_2fa: "Allow users to use a passkey to satisfy two-factor authentication when confirming a sensitive action."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
@@ -2307,6 +2328,7 @@ en:
     edit_all_post_groups: "Allow users in this group to edit other users' posts"
 
     create_topic_allowed_groups: "Groups that are allowed to create new topics. Admins and moderators can always create topics."
+    topic_timers_allowed_groups: "Groups that are allowed to set topic timers. Admins and moderators can always set topic timers."
     allow_flagging_staff: "If enabled, users can flag posts from staff accounts."
 
     edit_wiki_post_allowed_groups: "Groups that are allowed to edit posts marked as wiki. Admins and moderators can always edit posts marked as wiki."
@@ -2671,6 +2693,13 @@ en:
     enable_inline_emoji_translation: "Enables translation for inline emojis (without any space or punctuation before)"
     emoji_deny_list: "These emoji will not be available to use in menus or shortcodes."
     enable_gifs: "Adds a button to easily search and insert GIFs in posts."
+    klipy_api_key: "Klipy API key. Required to power GIF search. Note: this key is exposed to anyone viewing your site."
+    klipy_file_detail: "Image format to use. WebP has smaller files that load quicker, while GIF provides compatibility with older browsers."
+    klipy_content_filter: "Content safety level for GIF search results."
+    klipy_country: "Two-letter country code for GIF search results."
+    klipy_locale: "Language code for GIF search results, in xx_YY format (language plus optional country)."
+    klipy_limit_infinite_search_results: "Limit the number of GIF results returned as users scroll, to avoid hitting API rate limits."
+    klipy_max_results_limit: "When 'limit infinite search results' is enabled, stop loading after this many results. Each API call retrieves 24 GIFs."
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_allowed_groups: "Posts created by users not in these groups must be approved. Posts created by admins and moderators are always approved."
@@ -2765,6 +2794,8 @@ en:
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
     revoke_user_api_keys_unused_days: "Number of days since a user API key was last used before it is automatically revoked (0 for never)"
     revoke_user_api_keys_maxlife_days: "Number of days before a user API key is automatically revoked (0 for never)"
+    max_user_api_key_expiry_days: "Maximum expiry, in days, that clients can request for user API keys"
+    verbose_user_api_key_device_auth_logging: "Log detailed diagnostics for the user API key device authorization flow"
 
     tagging_enabled: "Enable tags on topics? See the <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Admin guide to tags on Meta</a> for more information."
     create_tag_allowed_groups: "Groups that are allowed to create tags. Admins and moderators can always create tags."
@@ -2788,6 +2819,7 @@ en:
     default_watched_precedence_over_muted: "Notify users about topics in categories or tags that they are watching that also belong to one they have muted"
 
     company_name: "Name of your company or organization. If left blank, no boilerplate Terms of Service or Privacy Notice will be provided."
+    company_url: "Website URL for your company or organization. Optional."
     governing_law: "Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Policy. This is typically the country or state where the company operating the site is registered or conducts business."
     city_for_disputes: "Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service."
 
@@ -2813,7 +2845,6 @@ en:
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
-    admin_dashboard_sections: "Sections shown on the redesigned admin dashboard, in display order. Managed via the Configure menu on the dashboard."
 
     gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
     gravatar_name: "Specify the name of the Gravatar service provider. This name is typically used to identify the source providing Gravatar avatars to the site."
@@ -2843,13 +2874,14 @@ en:
     navigation_menu: "Specify sidebar or header dropdown as the main navigation menu for your site. Sidebar is recommended."
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
-    experimental_new_new_view_groups: 'Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
+    enable_unified_new: "Replace the separate New and Unread lists with a single unified New list that makes it easier for members to distinguish between new topics and topics with new replies. When enabled, the /new route shows a combined view with subtabs for Topics (new topics) and Replies (tracked topics with new replies), and the unread option is removed from the top menu."
     enable_form_templates: "Enable the form templates feature. With it, you can enforce a structured form with data validation as part of the topic creation flow."
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
     enable_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
     enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
     enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."
+    enable_new_composer_actions: "Enable the redesigned composer actions menu and combo save button, with whisper, no-bump, and unlist toggles surfaced next to the save action."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
@@ -2884,8 +2916,8 @@ en:
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
     enable_horizon_high_context_topic_cards: "Shows richer topic cards in the Horizon theme, including topic excerpts, tags, and plugin extended information."
     reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
-    granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
-    dashboard_improvements: "Improvements to navigation, design, and usability for the Discourse admin dashboard."
+    granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous_users' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
+    dashboard_improvements: "Enables the redesigned admin dashboard that lets you pin custom reports and includes improved site traffic, engagement, and other analytics tied to community success and value."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -2903,6 +2935,7 @@ en:
       invalid_integer: "Value must be an integer."
       regex_mismatch: "Value doesn't match the required format."
       must_include_latest: "Top menu must include the 'latest' tab."
+      top_menu_unread_not_allowed_with_unified_new: "The 'unread' menu item cannot be used when unified new is enabled."
       invalid_string: "Invalid value."
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
       invalid_string_min:
@@ -2932,7 +2965,10 @@ en:
       staged_users_disabled: "You must first enable 'staged users' before enabling this setting."
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       discourse_connect_url_is_empty: "You must set a 'discourse connect url' before enabling this setting."
+      discourse_connect_secret_is_too_short: "You must set a 'discourse connect secret' of at least 10 characters before enabling this setting."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
+      enable_local_logins_via_email_disabled: "You must first enable 'enable local logins via email' before enabling this setting."
+      discourse_connect_enabled: "You must disable 'enable discourse connect' before enabling this setting."
       min_username_length_exists: "You cannot set 'min username length' above the shortest username (%{username})."
       min_group_name_length_exists: "You cannot set 'min username length' above the shortest group name (%{group_name})."
       min_username_length_range: "You cannot set 'min username length' above 'max username length'."
@@ -2988,6 +3024,53 @@ en:
     results_page: "Search results for '%{term}'"
     audio: "[audio]"
     video: "[video]"
+
+  posts_filter:
+    description:
+      category: "Show posts in a specific category"
+      category_any: "Show posts in any of the specified categories (comma-separated)"
+      exclude_category: "Exclude posts from a specific category"
+      category_without_subcategories: "Show posts only in the parent category, excluding subcategories"
+      exclude_category_without_subcategories: "Exclude posts only from the parent category, not subcategories"
+      tag: "Show posts with a specific tag"
+      tags_any: "Show posts with any of the specified tags (comma-separated)"
+      exclude_tag: "Exclude posts with a specific tag"
+      username: "Show posts by a specific user"
+      usernames_any: "Show posts by any of the specified users (comma-separated)"
+      group: "Show posts by members of a group"
+      groups_any: "Show posts by members of any specified group (comma-separated)"
+      topic: "Show posts in specific topics"
+      after: "Show posts created after a date (YYYY-MM-DD or days ago)"
+      before: "Show posts created before a date (YYYY-MM-DD or days ago)"
+      topic_after: "Show posts in topics created after a date (YYYY-MM-DD or days ago)"
+      topic_before: "Show posts in topics created before a date (YYYY-MM-DD or days ago)"
+      keywords: "Show posts containing any of the specified keywords"
+      topic_keywords: "Show posts in topics containing any of the specified keywords"
+      post_type: "Filter posts by type or position"
+      post_type_regular: "Regular posts only"
+      post_type_all: "All visible post types"
+      post_type_first: "First posts only"
+      post_type_reply: "Replies only"
+      post_type_moderator_action: "Moderator action posts only"
+      post_type_small_action: "Small action posts only"
+      post_type_whisper: "Whispers only"
+      status: "Filter posts by topic status"
+      status_open: "Open topics"
+      status_closed: "Closed topics"
+      status_archived: "Archived topics"
+      status_listed: "Listed topics"
+      status_unlisted: "Unlisted topics"
+      status_deleted: "Deleted topics"
+      status_public: "Topics in public categories"
+      status_noreplies: "Topics with no replies"
+      status_single_user: "Topics with a single user"
+      order: "Sort posts"
+      order_latest: "Latest posts"
+      order_oldest: "Oldest posts"
+      order_latest_topic: "Latest topics"
+      order_oldest_topic: "Oldest topics"
+      order_likes: "Most liked"
+      max_results: "Maximum number of posts to return"
 
   filter:
     description:
@@ -3343,6 +3426,16 @@ en:
 
 
       If you want to continue receiving email updates, you may ignore this email.
+
+  email_login_code_mailer:
+    title: "Email Login Code Mailer"
+    subject_template: "%{code} is your login code"
+    text_body_template: |
+      Use this code to finish logging in to %{site_name}:
+
+      ## %{code}
+
+      This code expires in %{minutes} minutes. If you didn't request it, you can safely ignore this email.
 
   invite_mailer:
     title: "Invite Mailer"
@@ -4318,6 +4411,9 @@ en:
 
   subject_re: "Re: "
   subject_pm: "[PM] "
+
+  email_from: "%{user_name}"
+  email_from_group: "%{group_name}"
 
   user_notifications:
     previous_discussion: "Previous Replies"
@@ -5716,6 +5812,9 @@ en:
     minimum_required_tags:
       one: "You must select at least %{count} tag."
       other: "You must select at least %{count} tags."
+    too_many_tags_for_topic:
+      one: "You can apply up to %{count} tag to a topic."
+      other: "You can apply up to %{count} tags to a topic."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
     bulk_create:
       invalid_params: "Invalid parameters. Please provide an array of tag names."
@@ -5730,16 +5829,20 @@ en:
       invalid:
         one: "The tag you selected cannot be used"
         other: "None of the tags you selected can be used"
-      in_this_category: '"%{tag_name}" cannot be used in this category'
-      not_allowed: '"%{tag_name}" cannot be used'
+      tag_not_allowed_in_category:
+        one: 'The "%{tags}" tag isn''t allowed in the "%{category}" category.'
+        other: 'The following tags aren''t allowed in the "%{category}" category: %{tags}.'
+      in_this_category: "Can't be used in this category"
+      not_allowed: "Can't be used"
       restricted_to:
-        one: '"%{tag_name}" is restricted to the "%{category_names}" category'
-        other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
-      restricted_to_truncated: '"%{tag_name}" is restricted to the following categories: %{category_names}, and %{more_count} more'
-      synonym: 'This is a synonym for "%{tag_name}". Use "%{tag_name}" instead.'
+        one: 'Only available in the "%{category_names}" category'
+        other: "Only available in: %{category_names}"
+      restricted_to_truncated: "Only available in: %{category_names}, and %{more_count} more"
+      synonym: 'Please use "%{tag_name}" instead'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
-      one_tag_per_topic_group: 'Only one tag from the "%{tag_group_name}" group is allowed per topic'
-      missing_parent_tag: 'Requires the "%{parent_tag_name}" tag to use tags from the "%{tag_group_name}" group'
+      one_tag_per_topic_group: 'Conflicts with "%{tag_names}" (only one allowed per topic)'
+      one_tag_per_topic_group_without_names: "Conflicts with a selected tag (only one allowed per topic)"
+      missing_parent_tag: 'Available after adding the "%{parent_tag_name}" tag'
       restricted_tags_cannot_be_used_in_category:
         one: 'The "%{tags}" tag cannot be used in the "%{category}" category. Please remove it.'
         other: 'The following tags cannot be used in the "%{category}" category: %{tags}. Please remove them.'
@@ -5833,6 +5936,11 @@ en:
   onebox:
     discourse:
       user_joined_community: "Joined %{date}"
+    google_meet:
+      title: "Google Meet meeting"
+      description: "Open this Google Meet link to join the call."
+      meeting_code: "Code:"
+      join: "Join meeting"
     gitlab:
       truncated_file: "This file has been truncated."
       show_original: "show original"

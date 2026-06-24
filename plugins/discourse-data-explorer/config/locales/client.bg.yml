@@ -24,6 +24,9 @@ bg:
           yes: "Да"
           no: "Не"
       delete: "Изтрий"
+      chart:
+        form:
+          bar: "Стълб"
       result_count:
         one: "%{count} резултат."
         other: "%{count} резултата."
@@ -31,3 +34,8 @@ bg:
       query_description: "Описание"
       reset_params: "Нулиране"
       search_placeholder: "Търсене ... "
+    discourse_workflows:
+      sql:
+        param_value: "Стойност"
+        output:
+          results: "Резултати"

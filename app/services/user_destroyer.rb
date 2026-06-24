@@ -122,10 +122,9 @@ class UserDestroyer
       end
     end
 
-    # After the user is deleted, remove the reviewable unless request comes from reviewable
-    return result if opts[:reviewable_id]
+    # The account reviewable's own perform step handles the deletion it initiated.
     reviewable = ReviewableUser.pending.find_by(target: user)
-    reviewable.perform(@actor, :delete_user) if reviewable
+    reviewable.perform(@actor, :delete_user) if reviewable && reviewable.id != opts[:reviewable_id]
 
     result
   end
@@ -145,7 +144,9 @@ class UserDestroyer
     ReviewableFlaggedPost
       .where(target_created_by: user)
       .find_each do |reviewable|
-        if reviewable.actions_for(@guardian).has?(:agree_and_keep)
+        actions = reviewable.actions_for(@guardian)
+
+        if actions.has?(:agree_and_keep) || actions.has?(:agree_and_keep_hidden)
           reviewable.perform(@actor, :agree_and_keep)
         end
       end
@@ -155,6 +156,14 @@ class UserDestroyer
       .find_each do |reviewable|
         if reviewable.actions_for(@guardian).has?(:reject_and_delete)
           reviewable.perform(@actor, :reject_and_delete)
+        end
+      end
+
+    ReviewableQueuedPost
+      .where(target_created_by: user)
+      .find_each do |reviewable|
+        if reviewable.actions_for(@guardian).has?(:reject_post)
+          reviewable.perform(@actor, :reject_post)
         end
       end
   end

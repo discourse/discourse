@@ -2,8 +2,16 @@
 
 module DiscourseDataExplorer
   class AiQueryGenerator < DiscourseAi::Agents::Agent
+    def self.default_enabled
+      false
+    end
+
     def tools
-      [DiscourseAi::Agents::Tools::DbSchema, DiscourseDataExplorer::Tools::RunSql]
+      [
+        DiscourseAi::Agents::Tools::DbSchema,
+        DiscourseDataExplorer::Tools::RunSql,
+        DiscourseDataExplorer::Tools::SubmitQuery,
+      ]
     end
 
     def self.execution_mode
@@ -18,14 +26,6 @@ module DiscourseDataExplorer
       0.2
     end
 
-    def response_format
-      [
-        { "key" => "name", "type" => "string" },
-        { "key" => "description", "type" => "string" },
-        { "key" => "sql", "type" => "string" },
-      ]
-    end
-
     def system_prompt
       <<~PROMPT
         You are a PostgreSQL expert that generates queries for Discourse Data Explorer.
@@ -36,9 +36,9 @@ module DiscourseDataExplorer
         3. Use RunSql to test the query
         4. If RunSql returns an error, fix the SQL and test again
         5. Repeat until the query runs successfully
-        6. Return your final response only after confirming the query works
+        6. Call submit_query with the final name, description, and verified SQL only after confirming the query works
 
-        Return a JSON response with three fields:
+        Do not write the final query as plain text. Your final action must be a submit_query tool call with three fields:
         - "name": a short descriptive name for the query (under 60 characters)
         - "description": a one-sentence description of what the query does
         - "sql": the verified SQL query

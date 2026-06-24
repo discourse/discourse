@@ -1,13 +1,20 @@
+import { and, or } from "discourse/truth-helpers";
 import VoteBox from "../../components/vote-box";
 
 <template>
-  {{#if @outletArgs.model.can_vote}}
-    {{#if @outletArgs.model.postStream.loaded}}
-      {{#if @outletArgs.model.postStream.firstPostPresent}}
-        <div class="voting title-voting">
-          <VoteBox @topic={{@outletArgs.model}} />
-        </div>
-      {{/if}}
+  {{#let @outletArgs.model as |topic|}}
+    {{#if
+      (and
+        topic.can_vote
+        (or
+          topic.is_nested_view
+          (and topic.postStream.loaded topic.postStream.firstPostPresent)
+        )
+      )
+    }}
+      <div class="voting title-voting">
+        <VoteBox @topic={{topic}} />
+      </div>
     {{/if}}
-  {{/if}}
+  {{/let}}
 </template>

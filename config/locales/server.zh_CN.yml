@@ -311,7 +311,7 @@ zh_CN:
       page_publishing_requirements: "如果启用了安全上传，则无法启用页面发布。"
       s3_backup_requires_s3_settings: "除非提供 '%{setting_name}'，否则无法将 S3 用作备份位置。"
       s3_bucket_reused: "您无法将同一个存储桶同时用作 's3_upload_bucket' 和 's3_backup_bucket'。请选择一个不同的存储桶或为每个存储桶使用不同的路径。"
-      secure_uploads_requirements: "在启用安全上传之前，必须先启用 S3 上传和 S3 ACL。"
+      secure_uploads_requirements: "必须先启用 S3 上传，然后才能启用安全上传。"
       share_quote_facebook_requirements: "您必须设置 Facebook 应用 ID 才能为 Facebook 启用引用共享。"
       second_factor_cannot_be_enforced_with_disabled_local_login: "如果禁用本地登录，则无法强制执行双重身份验证。"
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "如果启用了 DiscourseConnect，则无法强制执行双重身份验证。"
@@ -567,7 +567,6 @@ zh_CN:
       admins: "管理员"
       moderators: "版主"
       staff: "管理人员"
-      anonymous: "匿名"
       logged_in_users: "已登录用户"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
@@ -577,7 +576,7 @@ zh_CN:
     default_descriptions:
       everyone: "包括所有成员的自动群组"
       staff: "包括管理员和版主的自动群组"
-      anonymous: "匿名访客自动用户组"
+      anonymous_users: "匿名访客自动用户组"
       logged_in_users: "包含所有已登录用户的自动用户组"
       admins: "负责配置和维护此站点，并有权访问所有成员和活动数据"
       moderators: "负责回应举报、主持讨论并帮助成员管理帐户"
@@ -1119,6 +1118,10 @@ zh_CN:
       one_time_password: "创建一次性登录令牌"
       bookmarks_calendar: "读取书签提醒"
       user_status: "读取和更新用户状态"
+    device:
+      code: "代码"
+      continue: "继续"
+      authorize_title: '授权“%{application_name}”'
     invalid_public_key: "抱歉，该公钥无效。"
     invalid_auth_redirect: "抱歉，此 auth_redirect 主机不被允许。"
     invalid_token: "令牌缺失、无效或已过期。"
@@ -1582,13 +1585,14 @@ zh_CN:
       upcoming_change_stable_opted_out: '您的网站已选择退出即将推出的更改“%{upcoming_change}”。此更改现已进入“稳定”状态，可能很快就会被移除或设为永久。请访问<a href="%{base_path}/admin/config/upcoming-changes">"即将推出的更改页面</a>，查看有关此更改的详细信息。'
       rails_env: "您的服务器正在以%{env}模式运行。"
       host_names: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请将其更新为您的网站的主机名。"
-      sidekiq: 'Sidekiq 未运行。许多任务（例如发送电子邮件）都是由 Sidekiq 异步执行的。请确保至少一个 Sidekiq 进程正在运行。<a href="https://github.com/mperham/sidekiq" target="_blank">在此处了解 Sidekiq</a>。'
+      sidekiq_check: 'Sidekiq 未运行。许多任务（例如发送电子邮件）都是由 Sidekiq 异步执行的。请确保至少一个 Sidekiq 进程正在运行。<a href="https://github.com/mperham/sidekiq" target="_blank">在此处了解 Sidekiq</a>。'
       queue_size: "队列中有 %{queue_size} 个作业，比较多。这可能表明 Sidekiq 进程存在问题，或者需要添加更多 Sidekiq 工作进程。"
       ram: "您的服务器运行的总内存不足 1 GB。建议使用至少 1 GB 的内存。"
       google_oauth2_config: '服务器被配置为允许通过 Google OAuth2 注册和登录 (enable_google_oauth2_logins)，但是没有设置客户端 ID 和客户端密钥值。前往<a href="%{base_path}/admin/site_settings">网站设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">请参阅此指南以了解详情</a>。'
       facebook_config: '服务器被配置为允许通过 Facebook 注册和登录 (enable_facebook_logins)，但是没有设置应用 ID 和应用密钥值。前往<a href="%{base_path}/admin/site_settings">网站设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">请参阅此指南以了解详情</a>。'
       twitter_config: '服务器被配置为允许通过 Twitter 注册和登录 (enable_twitter_logins)，但是没有设置密钥和密钥值。前往<a href="%{base_path}/admin/site_settings">网站设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">请参阅此指南以了解详情</a>。'
       github_config: '服务器被配置为允许通过 GitHub 注册和登录 (enable_github_logins)，但是没有设置客户端 ID 和密钥值。前往<a href="%{base_path}/admin/site_settings">网站设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">请参阅此指南以了解详情</a>。'
+      github_onebox_backoff: "GitHub 对服务器进行了速率限制，因此在限制重置之前，GitHub 链接可能无法预览。配置 {{setting:github_onebox_access_tokens}} 可以显著提高限制。"
       s3_upload_config: '服务器被配置为将文件上传到 S3，但未设置以下设置中的至少一个：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_upload_bucket。前往<a href="%{base_path}/admin/site_settings">网站设置</a>并更新设置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">请参阅“如何设置将图片上传到 S3？”以了解详情</a>。'
       s3_backup_config: '服务器被配置为将备份上传到 S3，但未设置以下设置中的至少一个：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_backup_bucket。前往<a href="%{base_path}/admin/site_settings">网站设置</a>并更新设置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">请参阅“如何设置将图片上传到 S3？”以了解详情</a>。'
       s3_cdn: '服务器被配置为将文件上传到 S3，但未配置 S3 CDN。这可能会导致昂贵的 S3 成本和网站性能降低。<a href="https://meta.discourse.org/t/-/148916" target="_blank">请参阅“使用对象存储进行上传”以了解详情</a>。'
@@ -1615,9 +1619,6 @@ zh_CN:
       admin_sidebar_deprecation: "旧的管理布局已被替换为新的<a href='https://meta.discourse.org/t/-/289281'>边栏布局</a>，旧布局将在下一个版本中移除。您现在可以选择<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>配置</a>新的边栏布局。"
       starttls_disabled: "外发电子邮件配置已禁用 STARTTLS。这几乎没有必要。考虑从您的环境中移除 <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre>。有关详情，请参阅<a href='https://meta.discourse.org/t/387286'>此话题</a>。"
     back_from_logster_text: "返回网站"
-    reports_section:
-      providers:
-        core_report: "标准"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
@@ -1709,7 +1710,7 @@ zh_CN:
     logo_small: "您的网站左上角的小徽标图片，向下滚动后可见。使用 120×120 的方形图片。如果留空，将显示首页标志符号。"
     digest_logo: "在您网站的电子邮件总结顶部使用的备用徽标图片。使用宽矩形图片。不要使用 SVG 图片。如果留空，则使用 `logo` 设置中的图片。"
     mobile_logo: "您的站点的移动版本上使用的徽标。我们建议使用方形图标以避免标题拥挤，但您可以使用高度为 120 且宽高比大于 3:1 的宽矩形图片。如果留空，将使用徽标设置中的图片。"
-    logo_dark: "'logo' 网站设置的深色方案替代选择。"
+    logo_dark: "'mobile logo' 网站设置的深色方案替代选择。"
     logo_small_dark: "'logo small' 网站设置的深色方案替代选择。"
     mobile_logo_dark: "'mobile logo' 网站设置的深色方案替代选择。"
     large_icon: "用作其他元数据图标基础的图片。理想情况下应大于 512 x 512。如果留空，将使用 logo_small。"
@@ -1796,10 +1797,9 @@ zh_CN:
     allowed_iframes: "Discourse 允许在帖子中安全使用的 iframe src URL 前缀列表。* 可用于匹配任意数量的非 / 字符。"
     allowed_crawler_user_agents: "应被允许访问网站的网络抓取工具的用户代理。警告！设置此项将禁止此处未列出的所有抓取工具！"
     blocked_crawler_user_agents: "用户代理字符串中不区分大小写的唯一字词，用于标识不应被允许访问网站的网抓取工具。如果定义了许可名单，则不适用。"
-    slow_down_crawler_user_agents: '网络爬虫的用户代理应该按照“减慢爬虫速率”设置中的配置进行速率限制。每个值的长度必须至少为 3 个字符。'
+    slow_down_crawler_user_agents: "网络爬虫的用户代理应该按照“减慢爬虫速率”设置中的配置进行速率限制。每个值的长度必须至少为 3 个字符。"
     slow_down_crawler_rate: "如果指定了 slow_down_crawler_user_agents，则此速率将应用于所有抓取工具（请求之间的延迟秒数）"
     llms_txt: "上传一个文本文件，该文件将通过 /llms.txt 提供给 LLM 爬虫。有关详情，请参阅 <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a>。"
-    content_security_policy: "启用内容安全策略 (CSP)。CSP 是一个附加安全层，有助于防止某些类型的攻击，包括跨站脚本 (XSS) 和数据注入。"
     content_security_policy_report_only: "启用仅限内容安全策略报告 (CSP)"
     content_security_policy_frame_ancestors: "限制谁可以通过 CSP 将此网站嵌入 iframe 中。在<a href='%{base_path}/admin/customize/embedding'>嵌入</a>上控制允许的主机。"
     content_security_policy_script_src: "额外的允许脚本源。默认包括当前主机和 CDN。请参阅<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>使用内容安全策略 (CSP) 缓解 XSS 攻击</a>。启用 strict-dynamic 后，其他主机源将被忽略。"
@@ -1861,7 +1861,7 @@ zh_CN:
     min_admin_password_length: "指定管理员用户密码的最小长度。它可以确保所有管理员密码都满足一定的长度要求，以增强安全性。此设置对于保护管理员帐户免受潜在的未经授权访问至关重要。"
     password_unique_characters: "密码必须具有的最小唯一字符数。"
     block_common_passwords: "不允许使用 10,000 个最常见密码中的密码。"
-    auth_skip_create_confirm: 通过外部身份验证方法注册时，跳过“创建帐户”弹出窗口。最好与 auth_overrides_email、auth_overrides_username 和 auth_overrides_name 一起使用。
+    auth_skip_create_confirm: "通过外部身份验证方法注册时，跳过“创建帐户”弹出窗口。最好与 auth_overrides_email、auth_overrides_username 和 auth_overrides_name 一起使用。"
     auth_immediately: "自动重定向到外部登录系统，无需用户交互。仅在启用 login_required 并且只有一个外部身份验证方法时有效"
     auth_require_interaction: "通过 `/auth/*` 重定向到外部登录系统之前，需要用户交互。这可以深度防御“登录 CSRF”攻击。仅当您完全信任所有启用的身份验证方法都能够抵御登录 CSRF 攻击时，才禁用此设置。"
     enable_discourse_connect: "通过 DiscourseConnect（以前称为“Discourse SSO”）启用登录（警告：用户的电子邮件地址*必须*由外部网站验证！）"
@@ -1944,6 +1944,7 @@ zh_CN:
     max_edits_per_day: "每个用户每天的最大编辑次数。"
     max_topics_per_day: "用户每天可以创建的最大话题数。"
     max_personal_messages_per_day: "用户每天可以创建的新个人消息话题的最大数量。"
+    limit_admin_personal_messages_per_day: "管理员每天可创建的新个人消息话题数量上限。设置为 0 则无限制。"
     max_invites_per_day: "用户每天可以发送的最大邀请数。"
     max_topic_invitations_per_day: "用户每天可以发送的最大话题邀请数。"
     max_topic_invitations_per_minute: "用户每分钟可以发送的最大话题邀请数。"
@@ -2125,7 +2126,7 @@ zh_CN:
     allow_all_users_to_flag_illegal_content: "匿名用户将看到需要通过电子邮件向管理员举报非法内容的信息。此设置优先于“允许举报帖子的群组”。"
     email_address_to_report_illegal_content: "如果留空，将使用默认的网站管理员电子邮件地址。"
     cooldown_hours_until_reflag: "用户需要等待多长时间才能重新举报帖子"
-    slow_mode_prevents_editing: "在 'editing grace period' 之后，Slow mode' 是否会阻止编辑？"
+    slow_mode_prevents_editing: "在 editing_grace_period 之后，“慢速模式”会阻止编辑吗？"
     reply_by_email_enabled: "激活允许用户直接通过电子邮件回复话题的功能，无需他们登录网站。有关详情，请参阅 <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>Meta 上的指南</a> 。"
     reply_by_email_address: "通过传入电子邮件地址回复的模板。示例：%%{reply_key}@reply.example.com 或 replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "通过传入电子邮件地址回复的备用模板列表。示例：%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2220,7 +2221,7 @@ zh_CN:
     enable_group_directory: "提供群组目录以供浏览"
     enable_category_group_moderation: "允许群组审核特定类别的内容"
     group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为私信中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
-    allow_anonymous_mode: "启用可供用户切换到匿名发帖模式的选项。激活后，用户在网站上创建帖子或话题时可以选择隐藏身份。另请参阅 `allow anonymous likes`。"
+    allow_anonymous_mode: "启用用户切换到匿名模式发帖的选项。激活后，用户在网站上创建帖子或话题时可以选择隐藏身份。另请参阅 `allow_anonymous_likes`。"
     allow_likes_in_anonymous_mode: "启用此设置，允许匿名浏览您的站点的用户为帖子点赞。激活后，用户在为帖子或话题点赞时可以选择隐藏其身份。此设置需要先启用 `allow anonymous mode`。"
     anonymous_posting_allowed_groups: "可以启用匿名发帖的群组。此设置需要启用 `allow anonymous mode` 设置。"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
@@ -2254,8 +2255,8 @@ zh_CN:
     disable_category_edit_notifications: "禁用话题编辑的通知。包括“已发布”的话题（例如，共享草稿）。"
     disable_tags_edit_notifications: "禁用话题标签编辑的通知。包括“已发布”的话题（例如，共享草稿）。"
     notification_consolidation_threshold: "合并通知前，收到的赞或成员资格请求通知的数量。设置为 0 将禁用。"
-    likes_notification_consolidation_window_mins: "以分钟计的持续时间，被赞的通知在达到此阈值后会被合并到单个通知中。可以通过 `SiteSetting.notification_consolidation_threshold` 配置阈值。"
-    linked_notification_consolidation_window_mins: "一旦达到阈值，链接通知将合并为单个通知的持续时间（以分钟为单位）。可以通过 `SiteSetting.notification_consolidation_threshold` 配置阈值。"
+    likes_notification_consolidation_window_mins: "当达到阈值后，点赞的通知将合并为一条通知，持续时间为分钟。阈值可通过 {{setting:notification_consolidation_threshold}}进行配置。"
+    linked_notification_consolidation_window_mins: "当达到阈值时，关联的通知将合并为一条通知，持续时间为分钟。阈值可通过 {{setting:notification_consolidation_threshold}} 进行配置。"
     automatically_unpin_topics: "当用户到达底部时自动取消置顶话题。"
     read_time_word_count: "每分钟可阅读的字数，用于估算阅读时间。"
     topic_page_title_includes_category: "话题页面<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>标题标签</a>包含类别名称。"
@@ -2290,6 +2291,7 @@ zh_CN:
     allowed_embed_selectors: "嵌入中允许的 CSS 元素的逗号分隔列表。"
     allowed_href_schemes: "除了 http 和 https 之外，链接中允许的协议名称。"
     embed_full_app: "启用嵌入式评论的完整应用模式。启用后，嵌入式评论将在 iframe 中加载完整的 Discourse 应用程序，这样，用户能够直接与话题互动。"
+    embed_full_app_signin_flow: "启用完整应用模式后，拦截 iframe 内未登录用户的操作，并引导用户完成登录流程。该流程会打开一个顶级登录标签页，登录成功后自动关闭。仅当嵌入内容与宿主页面位于同一站点（例如，`blog.example.com` 上的 `forum.example.com`）或 ` {{setting:same_site_cookies}} ` 设置为 `None` 时才启用此功能——否则，登录后 iframe 将无法接收会话 cookie。"
     suppress_third_party_analytics_in_embed: "当 Discourse 在完整的应用嵌入 iframe 中加载时，跳过呈现第三方分析脚本（Google Tag Manager、Google Analytics（分析）、Adobe Analytics）。这可以防止在宿主页面已加载相同脚本的情况下重复浏览页面和触发标签。"
     embed_post_limit: "要嵌入的最大帖子数。"
     embed_username_required: "创建话题需要用户名。"
@@ -2405,6 +2407,7 @@ zh_CN:
     automatically_clean_unused_tags: "每天自动删除未在任何话题或个人消息中使用的标签。"
     default_watched_precedence_over_muted: "如果用户正在关注的类别或标签中有他们已设为免打扰的类别或标签，则通知他们"
     company_name: "您的公司或组织的名称。如果留空，将不会提供样板《服务条款》或《隐私声明》。"
+    company_url: "公司或机构的网站网址（可选）。"
     governing_law: "指定管辖网站法律方面（包括《服务条款》和《隐私政策》）的司法管辖区。这通常是运营网站的公司注册或开展业务的国家/地区或州。"
     city_for_disputes: "指定将用作解决与使用此论坛相关的任何争议的管辖城市。此信息通常包含在法律文件（例如论坛的《服务条款》）中。"
     shared_drafts_category: "通过为话题草稿指定类别来启用共享草稿功能。此类别中的话题将在管理人员用户的话题列表中被禁止。"
@@ -2447,13 +2450,14 @@ zh_CN:
     navigation_menu: "指定边栏或标题下拉菜单作为网站的主导航菜单。推荐使用边栏。"
     default_navigation_menu_categories: "所选类别默认将显示在导航菜单的“类别”版块下。"
     default_navigation_menu_tags: "所选标签默认将显示在导航菜单的“标签”版块下。"
-    experimental_new_new_view_groups: '启用新的话题列表，将未读话题与新话题合并，并使边栏中的“一切”链接指向该列表。'
+    enable_unified_new: "将“新建”和“未读”列表合并为一个统一的“新建”列表，以便成员更容易区分新主题和有新回复的主题。启用此功能后，/new 路由将显示一个包含“主题”（新主题）和“回复”（有新回复的已跟踪主题）子标签的合并视图，并且顶部菜单中的“未读”选项将被移除。"
     enable_form_templates: "启用表单模板功能。借助此功能，您可以在话题创建流程中强制执行结构化表单和数据验证。"
     show_preview_for_form_templates: "启用表单模板预览功能"
     lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
     enable_auto_grid_images: "在编辑器中上传 3 张或更多图片后，自动将图片包装在 [grid] 标记中。"
     enable_new_checkbox_style: "为 FormKit 复选框启用重新设计的复选框样式。"
     enable_new_post_reactions_menu: "启用重新设计的帖子点赞和回应菜单，支持无限滚动和原生移动体验。"
+    enable_new_composer_actions: "启用重新设计的作曲家操作菜单和组合保存按钮，保存操作旁边会显示轻声细语、无碰撞和取消列表切换按钮。"
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
@@ -2487,7 +2491,7 @@ zh_CN:
     enable_simplified_category_creation: "使用更少的选项和更简洁的界面简化类别创建流程。"
     modernize_foundation_theme: "此次更改对 Discourse 中的 Foundation 主题引入了设计修改。"
     reporting_improvements: "改进了 Discourse 管理员报告的导航、设计和实用性。"
-    dashboard_improvements: "改进了 Discourse 管理仪表盘的导航、设计和实用性。"
+    dashboard_improvements: "启用重新设计的管理仪表板，可让您固定自定义报告，并包含改进的网站流量、参与度和其他与社区成功和价值相关的分析。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_datetime: "日期时间格式无效。请确保输入有效的日期和时间。"
@@ -2504,6 +2508,7 @@ zh_CN:
       invalid_integer: "值必须是整数。"
       regex_mismatch: "值与所需格式不相符。"
       must_include_latest: "顶部菜单必须包含“最新”标签页。"
+      top_menu_unread_not_allowed_with_unified_new: "启用统一新建功能后，无法使用“未读”菜单项。"
       invalid_string: "无效值。"
       invalid_string_min_max: "必须介于 %{min} 和 %{max} 个字符之间。"
       invalid_string_min:
@@ -2531,6 +2536,7 @@ zh_CN:
       staged_users_disabled: "在启用此设置之前，您必须先启用 'staged users'。"
       reply_by_email_disabled: "在启用此设置之前，您必须先启用 'reply by email'。"
       discourse_connect_url_is_empty: "在启用此设置之前，您必须先设置 'discourse connect url'。"
+      discourse_connect_secret_is_too_short: "在启用此设置之前，您必须设置一个至少包含 10 个字符的“Discourse Connect 密钥”。"
       enable_local_logins_disabled: "在启用此设置之前，您必须先启用 'enable local logins'。"
       min_username_length_exists: "'min username length' 不能大于最短用户名 (%{username})。"
       min_group_name_length_exists: "'min username length' 不能大于最短群组名称 (%{group_name})。"
@@ -2583,6 +2589,43 @@ zh_CN:
     results_page: "'%{term}' 的搜索结果"
     audio: "[音频]"
     video: "[视频]"
+  posts_filter:
+    description:
+      category: "显示指定类别下的帖子"
+      category_any: "显示任意指定类别（以逗号分隔）中的帖子"
+      exclude_category: "排除指定类别中的帖子"
+      category_without_subcategories: "只显示父类别中的话题，排除子类别"
+      exclude_category_without_subcategories: "仅排除父类别中的话题，不排除子类别"
+      tag: "显示带有特定标签的帖子"
+      tags_any: "显示带有指定标签（以逗号分隔）的帖子"
+      exclude_tag: "排除带有特定标签的帖子"
+      username: "显示特定用户的帖子"
+      usernames_any: "显示指定用户发布的帖子（以逗号分隔）"
+      group: "显示群组成员发布的帖子"
+      groups_any: "显示指定群组成员发布的帖子（以逗号分隔）"
+      topic: "显示特定主题的帖子"
+      after: "显示特定日期（YYYY-MM-DD 或天数前）之后发布的帖子"
+      before: "显示指定日期（YYYY-MM-DD 或天数前）之前发布的帖子"
+      topic_after: "显示日期（YYYY-MM-DD 或天数）之后创建的主题中的帖子"
+      topic_before: "显示日期（YYYY-MM-DD 或天数前）之前创建的主题中的帖子"
+      keywords: "显示包含指定关键词的帖子"
+      topic_keywords: "显示包含指定关键词的主题中的帖子"
+      post_type: "显示首条帖子或回复"
+      post_type_first: "仅第一个帖子"
+      post_type_reply: "仅回复"
+      status: "按主题状态筛选帖子"
+      status_open: "打开话题"
+      status_closed: "关闭话题"
+      status_archived: "归档话题"
+      status_noreplies: "没有回应的话题"
+      status_single_user: "单个用户的话题"
+      order: "排序帖子"
+      order_latest: "最新帖子"
+      order_oldest: "最旧帖子"
+      order_latest_topic: "最新话题"
+      order_oldest_topic: "最旧话题"
+      order_likes: "赞最多"
+      max_results: "要返回的最大帖子数"
   filter:
     description:
       status: "按状态筛选话题"
@@ -2629,6 +2672,8 @@ zh_CN:
       status_unlisted: "显示取消公开的（隐藏）话题"
       status_deleted: "显示删除的话题（如果您有权限）"
       status_public: "显示公共类别的话题"
+      status_noreplies: "显示无人回复的话题"
+      status_single_user: "展示只有一个参与者的话题"
       in_pinned: "显示置顶的话题"
       in_bookmarked: "显示您添加了书签的话题"
       in_watching: "显示您正在关注的话题"
@@ -3782,6 +3827,8 @@ zh_CN:
     要退订这些电子邮件，请[点击此处](%{unsubscribe_url})。
   subject_re: "回复："
   subject_pm: "[私信]"
+  email_from: "%{user_name}"
+  email_from_group: "%{group_name}"
   user_notifications:
     previous_discussion: "以前的回复"
     reached_limit:
@@ -5076,6 +5123,8 @@ zh_CN:
     restricted_tag_remove_disallowed: '您不能移除标签“%{tag}”。'
     minimum_required_tags:
       other: "您必须至少选择 %{count} 个标签。"
+    too_many_tags_for_topic:
+      other: "您最多可以为一个话题添加 %{count} 标签。"
     upload_row_too_long: "CSV 文件的每行应该有一个标签。或者，标签后面可以跟一个逗号，然后是标签组名称。"
     bulk_create:
       invalid_params: "参数无效。请提供标签名称数组。"
@@ -5087,14 +5136,15 @@ zh_CN:
     forbidden:
       invalid:
         other: "您选择的标签均无法使用"
-      in_this_category: '“%{tag_name}”不能用于此类别'
+      in_this_category: "不能用于此类别"
+      not_allowed: "无法使用"
       restricted_to:
-        other: '“%{tag_name}”仅限于以下类别：%{category_names}'
-      restricted_to_truncated: '“%{tag_name}”仅限于以下类别：%{category_names}和其他 %{more_count} 个'
-      synonym: '这是“%{tag_name}”的同义词。请改用“%{tag_name}”。'
+        other: "仅在以下位置可用： %{category_names}"
+      restricted_to_truncated: "仅在以下版本中可用： %{category_names}和 %{more_count} 更多"
+      synonym: '请使用“%{tag_name}”代替'
       has_synonyms: '无法使用“%{tag_name}”，因为有同义词。'
-      one_tag_per_topic_group: '每个话题只允许使用“%{tag_group_name}”群组中的一个标签'
-      missing_parent_tag: '需要使用“%{parent_tag_name}”标签才能使用“%{tag_group_name}”群组中的标签'
+      one_tag_per_topic_group: '与“%{tag_names}”冲突（每个主题只允许一个）'
+      missing_parent_tag: '添加“%{parent_tag_name}”标签后即可使用'
       restricted_tags_cannot_be_used_in_category:
         other: '“%{tags}”标签不能在“%{category}”类别中使用。请将其移除。'
       category_does_not_allow_tags:
@@ -5180,6 +5230,8 @@ zh_CN:
   onebox:
     discourse:
       user_joined_community: "%{date}加入"
+    google_meet:
+      meeting_code: "代码:"
     gitlab:
       truncated_file: "此文件已被截断。"
       show_original: "显示原始文件"

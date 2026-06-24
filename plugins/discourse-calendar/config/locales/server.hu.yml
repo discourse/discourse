@@ -41,7 +41,6 @@ hu:
     map_events_to_color: "Rendeljen hozzá egy színt minden egyes címkéhez vagy kategóriához."
     map_events_title: "Kategóriánként felülírja az „Események” kifejezést a „Közelgő események” oldalsáv címében."
     calendar_enabled: "A discourse-calendar bővítmény engedélyezése. Ez támogatást biztosít a [calendar][/calendar] címkéhez a témák első hozzászólásában."
-    discourse_post_event_enabled: "Engedélyezi az eseményfunkciókat. Megjegyzés: a „calendar enabled” beállításnak is engedélyezve kell lennie."
     displayed_invitees_limit: "Korlátozza az eseményen megjelenített meghívottak számát."
     display_post_event_date_on_topic_title: "Az esemény dátumát a téma címe után jeleníti meg."
     use_local_event_date: "Helyi dátum használata a téma címe után a relatív idő helyett."

@@ -1,11 +1,15 @@
 import { getOwner } from "@ember/owner";
 import { click, render, settled, triggerEvent } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import Post from "discourse/components/post";
 import DMenus from "discourse/float-kit/components/d-menus";
+import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import { i18n } from "discourse-i18n";
 
 function renderComponent(
@@ -45,6 +49,10 @@ function renderComponent(
 
 module("Integration | Component | Post", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.afterEach(function () {
+    resetMobile();
+  });
 
   hooks.beforeEach(function () {
     this.siteSettings.post_menu_hidden_items = "";
@@ -299,13 +307,203 @@ module("Integration | Component | Post", function (hooks) {
 
     await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
     assert.dom(".post-language").includesText(
-      i18n("post.original_language", {
+      `${i18n("post.original_language", {
         language: "English (US)",
-      })
+      })}. ${i18n("post.click_to_show_original")}`
     );
     assert
       .dom(".post-language")
       .includesText(i18n("post.ai_translation_disclaimer"));
+  });
+
+  test("language click translates content on desktop", async function (assert) {
+    this.post.is_localized = true;
+    this.post.language = "en";
+    this.post.cooked = "<p>Translated post</p>";
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+    ];
+
+    pretender.get(`/posts/${this.post.id}/cooked.json`, () =>
+      response({ cooked: "<p>Original post</p>" })
+    );
+
+    await renderComponent(this.post);
+    await click(".fk-d-tooltip__trigger");
+
+    assert.strictEqual(
+      this.post.cooked,
+      "<p>Original post</p>",
+      "content is switched to original"
+    );
+
+    await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
+    assert
+      .dom(".post-language")
+      .includesText(
+        i18n("post.click_to_show_translation"),
+        "prompt invites showing the translation while the original is shown"
+      );
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert.strictEqual(
+      this.post.cooked,
+      "<p>Translated post</p>",
+      "content is switched back to translated"
+    );
+
+    await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
+    assert
+      .dom(".post-language")
+      .includesText(
+        i18n("post.click_to_show_original"),
+        "prompt invites showing the original while the translation is shown"
+      );
+  });
+
+  test("language indicator plugin outlet can render content before and after the icon", async function (assert) {
+    registerTemporaryModule(
+      "discourse/plugins/test-plugin/templates/connectors/post-language-indicator__before/label-before",
+      hbs`<span class="language-before">Before {{@outletArgs.language}}</span>`
+    );
+    registerTemporaryModule(
+      "discourse/plugins/test-plugin/templates/connectors/post-language-indicator__after/label-after",
+      hbs`<span class="language-after">After {{@outletArgs.language}}</span>`
+    );
+
+    this.post.is_localized = true;
+    this.post.language = "en";
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+    ];
+
+    await renderComponent(this.post);
+
+    assert
+      .dom(".fk-d-tooltip__trigger .language-before")
+      .hasText("Before English (US)");
+    assert
+      .dom(".fk-d-tooltip__trigger .fk-d-tooltip__icon")
+      .exists("core language icon renders");
+    assert
+      .dom(".fk-d-tooltip__trigger .language-after")
+      .hasText("After English (US)");
+    assert.deepEqual(
+      Array.from(
+        document.querySelectorAll(
+          ".fk-d-tooltip__trigger .language-before, .fk-d-tooltip__trigger .fk-d-tooltip__icon, .fk-d-tooltip__trigger .language-after"
+        )
+      ).map((element) => element.classList[0]),
+      ["language-before", "fk-d-tooltip__icon", "language-after"],
+      "connectors render around the icon inside the clickable trigger"
+    );
+  });
+
+  test("language indicator outlet content toggles the post when clicked", async function (assert) {
+    registerTemporaryModule(
+      "discourse/plugins/test-plugin/templates/connectors/post-language-indicator__before/label-before",
+      hbs`<span class="language-before">Before {{@outletArgs.language}}</span>`
+    );
+
+    this.post.is_localized = true;
+    this.post.language = "en";
+    this.post.cooked = "<p>Translated post</p>";
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+    ];
+
+    pretender.get(`/posts/${this.post.id}/cooked.json`, () =>
+      response({ cooked: "<p>Original post</p>" })
+    );
+
+    await renderComponent(this.post);
+
+    await click(".fk-d-tooltip__trigger .language-before");
+
+    assert.strictEqual(
+      this.post.cooked,
+      "<p>Original post</p>",
+      "clicking the injected outlet item toggles to the original"
+    );
+  });
+
+  test("language indicator outlet exposes whether the original is shown", async function (assert) {
+    registerTemporaryModule(
+      "discourse/plugins/test-plugin/templates/connectors/post-language-indicator__before/translation-only",
+      hbs`{{#unless @outletArgs.showingOriginal}}<span class="translation-only">Translation</span>{{/unless}}`
+    );
+
+    this.post.is_localized = true;
+    this.post.language = "en";
+    this.post.cooked = "<p>Translated post</p>";
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+    ];
+
+    pretender.get(`/posts/${this.post.id}/cooked.json`, () =>
+      response({ cooked: "<p>Original post</p>" })
+    );
+
+    await renderComponent(this.post);
+
+    assert
+      .dom(".translation-only")
+      .exists("outlet content shows while the translation is displayed");
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert
+      .dom(".translation-only")
+      .doesNotExist("outlet content hides while the original is displayed");
+  });
+
+  test("language tooltip on mobile translates when tapping the tooltip text", async function (assert) {
+    forceMobile();
+
+    this.post.is_localized = true;
+    this.post.language = "en";
+    this.post.cooked = "<p>Translated post</p>";
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+    ];
+
+    pretender.get(`/posts/${this.post.id}/cooked.json`, () =>
+      response({ cooked: "<p>Original post</p>" })
+    );
+
+    await renderComponent(this.post);
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert.dom(".post-language").includesText(
+      `${i18n("post.original_language", {
+        language: "English (US)",
+      })}. ${i18n("post.tap_to_show_original")}`,
+      "mobile tooltip uses tap copy"
+    );
+    assert.strictEqual(
+      this.post.cooked,
+      "<p>Translated post</p>",
+      "tapping the icon only opens the tooltip"
+    );
+
+    await click(".post-language__original-language");
+
+    assert.strictEqual(
+      this.post.cooked,
+      "<p>Original post</p>",
+      "content is switched after tapping tooltip text"
+    );
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert
+      .dom(".post-language__original-language")
+      .hasText(
+        new RegExp(i18n("post.tap_to_show_translation")),
+        "tap prompt invites showing the translation while the original is shown"
+      );
   });
 
   test("outdated localization", async function (assert) {
@@ -320,9 +518,9 @@ module("Integration | Component | Post", function (hooks) {
 
     await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
     assert.dom(".post-language").includesText(
-      i18n("post.original_language_and_outdated", {
+      `${i18n("post.original_language_and_outdated", {
         language: "English (US)",
-      })
+      })}. ${i18n("post.click_to_show_original")}`
     );
     assert
       .dom(".post-language")

@@ -6,6 +6,12 @@
 
 sr:
   js:
+    user_api_key:
+      deny: "Odustani"
+      write_scope_warning: "Zahtevan je pun pristup za pisanje — ova aplikacija će moći da objavljuje, uređuje i briše sadržaj. Nastavite samo ako joj potpuno verujete."
+      copied: "Kopirano!"
+      device:
+        continue: "Nastavi"
     blocks:
       ghost:
         status: "Status"
@@ -357,9 +363,6 @@ sr:
         description: "Izaberite početnu temu za svoju zajednicu"
         action: "Izaberi temu"
         modal_title: "Izaberite temu"
-        use_theme: "Koristi ovu temu"
-        enabled: "Omogućeno"
-        theme_set: "%{theme} je sada vaša podrazumevana tema"
         browse_all: "Upravljanje temama"
         show_light_screenshot: "Prikaži svetli snimak ekrana"
         show_dark_screenshot: "Prikaži tamni snimak ekrana"
@@ -1294,6 +1297,7 @@ sr:
       muted_users: "Utišano"
       tracked_topics_link: "Prikaži"
       api_approved: "Potvrđenji:"
+      api_expires_never: "nikada"
       staff_counters:
         suspensions:
           one: '<span class="%{className}">%{count}</span> suspenzija'
@@ -1715,6 +1719,12 @@ sr:
       login_link: "Preskoči lozinku; pošalji mi link za prijavu"
       complete_username_not_found: "Nema naloga koji odgovara korisničkom imenu <b>%{username}</b>"
       complete_email_not_found: "Nema naloga koji odgovara <b>%{email}</b>"
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Nastavi"
+      verify_button: "Nastavi"
+      account_ready_continue: "Nastavi"
+      username_label: "Korisničko Ime"
     login:
       header_title: "Dobro došli nazad"
       title: "Prijava"
@@ -1723,8 +1733,6 @@ sr:
       show_password: "Pokaži"
       hide_password: "Sakrij"
       hide_password_title: "Sakrij lozinku"
-      security_key_or_passkey_description: "Kada pripremite svoj bezbednosni ključ, passkey ili kompatibilni mobilni uređaj, pritisnite dugme ispod."
-      security_key_or_passkey_authenticate: "Autentifikuj se pomoću bezbednosnog ključa ili passkey-a"
       caps_lock_warning: "Caps Lock vam je uključen"
       error: "Nepoznata greška"
       rate_limit: "Molimo sačekajte pre nego pokušate opet da se prijavite."
@@ -1808,7 +1816,7 @@ sr:
       create_topic: "Kreiraj temu"
       discard: "Odbaci"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
-      edit_reason_placeholder: "zašto izmenjujete?"
+      edit_reason_placeholder: "Zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
       reply_placeholder_choose_category: "Odaberi kategoriju pre nego ovde pišeš"
       view_new_post: "Pogledajte svoju novu poruku."
@@ -1835,6 +1843,7 @@ sr:
         attribute_value: "Vriednost"
         apply: "Primeni"
       help: "Markdown pomoć pri izmenama"
+      edit_reason: "Zašto izmenjujete?"
       modal_ok: "U redu"
       yourself_confirm:
         title: "Da li ste zaboravili da dodate primaoce?"
@@ -1846,6 +1855,12 @@ sr:
         reply_as_new_topic:
           desc: Kreiraj novu temu povezanu na ovu temu
           confirm: Imate novi nacrt teme sačuvan, koji će biti obrisan ako stvorite povezanu temu.
+        reply_to_topic:
+          trigger: Tema
+        reply_to_message:
+          trigger: Privatna poruka
+        edit_post: "Uređivanje objave"
+        unknown_user: "Korisnik"
       image: "slika"
     notifications:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
@@ -2753,7 +2768,7 @@ sr:
         modal:
           cancel: "otkaži"
           create: "Sačuvaj"
-          reason: "zašto izmenjujete?"
+          reason: "Zašto izmenjujete?"
       spreadsheet:
         show: "Pokaži"
         about: "O nama"
@@ -2917,6 +2932,7 @@ sr:
         general_tab: "Opšti"
         security_tab: "Sigurnost"
         loading: "Učitavanje kontrolne table..."
+        stable: "stabilan"
         sections:
           highlights:
             title: "Istaknuto"
@@ -2962,7 +2978,6 @@ sr:
                   one: "-%{count} pad"
                   few: "-%{count} pada"
                   other: "-%{count} padova"
-                stable: "stabilan"
               moves_in_aria:
                 one: "%{count} član se pomerio gore"
                 few: "%{count} člana su se pomerila gore"
@@ -2991,6 +3006,14 @@ sr:
               no_signal:
                 title: "Još uvek nema dovoljno aktivnosti za sumiranje angažovanja."
                 summary: "Izaberite duži opseg datuma ili se vratite kada vaša zajednica bude imala više aktivnosti."
+              metrics:
+                new_signups: "Nove registracije"
+                dau_mau: "DAU / MAU lepljivost"
+                daily_engaged_users: "Dnevno angažovano"
+          search:
+            title: "Pretraži"
+            table:
+              status: "Status"
         reports_section:
           modal:
             enabled_heading: "Omogućeno"
@@ -3010,16 +3033,12 @@ sr:
           kpi:
             new_signups:
               label: "Nove registracije"
-              tooltip: "Nalozi kreirani u ovom periodu, uključujući neaktivirane i pripremne naloge."
             dau_mau:
               label: "DAU / MAU lepljivost"
-              tooltip: 'Udeo mesečno aktivnih korisnika koji su se vratili u zajednicu u poslednjem danu. Ovo pokazuje koliko je vaša zajednica "aktivna" na osnovu toga koliko se često ljudi vraćaju.'
             new_contributors:
               label: "Novi saradnici"
-              tooltip: "Broj članova koji su objavili svoju prvu objavu u ovom periodu."
             daily_engaged_users:
               label: "Dnevno angažovano"
-              tooltip: "Broj članova koji su lajkovali ili objavili u zajednici u poslednjem danu."
           comparison:
             last_7_days: "u odnosu na poslednjih 7 dana"
             last_30_days: "u odnosu na poslednjih 30 dana"
@@ -3183,6 +3202,7 @@ sr:
       config_areas:
         about:
           company_name: "Ime foruma"
+          company_url: "Website"
           extra_groups:
             groups: "Grupe"
           optional: "(opciono)"

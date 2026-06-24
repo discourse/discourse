@@ -61,8 +61,6 @@ module DiscourseWorkflows
                       exec_ctx.get_node_parameter("fields_to_include", item_index),
                     "destination_field_name" =>
                       exec_ctx.get_node_parameter("destination_field_name", item_index),
-                    "disable_dot_notation" =>
-                      exec_ctx.get_node_parameter("disable_dot_notation", item_index),
                   },
                 )
 
@@ -91,7 +89,6 @@ module DiscourseWorkflows
             include_mode: config.fetch("include") { "no_other_fields" },
             dest_names: dest_names,
             fields_to_include: parse_field_names(config["fields_to_include"]),
-            disable_dot_notation: truthy?(config["disable_dot_notation"]),
           }
         end
 
@@ -100,13 +97,7 @@ module DiscourseWorkflows
           value.to_s.split(",").filter_map { |v| v.strip.sub(/\A\$json\./, "").presence }
         end
 
-        def truthy?(value)
-          value == true || value.to_s == "true"
-        end
-
-        def fetch_field(hash, field_name, disable_dot_notation)
-          return hash.key?(field_name), hash[field_name] if disable_dot_notation
-
+        def fetch_field(hash, field_name)
           current = hash
           field_name
             .split(".")
@@ -119,12 +110,7 @@ module DiscourseWorkflows
           [true, current]
         end
 
-        def unset_field(hash, field_name, disable_dot_notation)
-          if disable_dot_notation
-            hash.delete(field_name)
-            return
-          end
-
+        def unset_field(hash, field_name)
           keys = field_name.split(".")
           current = hash
           keys[0..-2].each do |key|
@@ -149,7 +135,7 @@ module DiscourseWorkflows
 
           field_names.each_with_index do |field_name, field_index|
             field_tracker[field_name] = false unless field_tracker.key?(field_name)
-            exists, value = fetch_field(item_json, field_name, config[:disable_dot_notation])
+            exists, value = fetch_field(item_json, field_name)
             field_tracker[field_name] = true if exists
             next unless exists
 
@@ -188,7 +174,6 @@ module DiscourseWorkflows
                 config[:include_mode],
                 field_names,
                 config[:fields_to_include],
-                config[:disable_dot_notation],
               )
             wrap(json, paired_item:)
           end
@@ -212,18 +197,11 @@ module DiscourseWorkflows
           end
         end
 
-        def apply_include_mode(
-          entry,
-          item_json,
-          include_mode,
-          field_names,
-          fields_to_include,
-          disable_dot_notation
-        )
+        def apply_include_mode(entry, item_json, include_mode, field_names, fields_to_include)
           case include_mode
           when "all_other_fields"
             base = item_json.deep_dup
-            field_names.each { |f| unset_field(base, f, disable_dot_notation) }
+            field_names.each { |f| unset_field(base, f) }
             base.merge(entry)
           when "selected_other_fields"
             if fields_to_include.empty?
@@ -233,7 +211,7 @@ module DiscourseWorkflows
             end
 
             fields_to_include.each do |f|
-              _, val = fetch_field(item_json, f, disable_dot_notation)
+              _, val = fetch_field(item_json, f)
               entry[f] = val
             end
             entry

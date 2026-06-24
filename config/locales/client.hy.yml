@@ -6,6 +6,15 @@
 
 hy:
   js:
+    user_api_key:
+      authorize: "Նույնականացնել"
+      deny: "Չեղարկել"
+      copied: "Պատճենված է!"
+      no_trust_level: "Ներողություն, Դուք չունեք օգտատիրոջ API -ի համար պահանջվող վստահության մակարդակը "
+      generic_error: "Ներողություն, մենք չկարողացանք թողարկել օգտատիրոջ API key-եր, հնարավոր է՝ այս հատկանիշը անջատված է կայքի ադմինի կողմից:"
+      device:
+        code: "Կոդ"
+        continue: "Շարունակել"
     blocks:
       ghost:
         status: "Ստատուս"
@@ -891,7 +900,6 @@ hy:
             from_alias_hint: "Կեղծանունը, որը պետք է օգտագործել որպես ուղարկողի հասցե խմբային SMTP նամակներ ուղարկելիս։ Նշենք, որ սա հնարավոր է չաջակցվի բոլոր փոստային մատակարարների կողմից, խնդրում ենք ստուգել ձեր փոստային մատակարարի փաստաթղթերը։"
         membership:
           title: Անդամակցություն
-          access: Թույլտվություն
         categories:
           title: Կատեգորիաներ
           long_title: "Կատեգորիայի լռելյայն ծանուցումներ"
@@ -924,7 +932,6 @@ hy:
         title: "Թույլտվություններ"
         none: "Այս խմբի հետ կապված կատեգորիաներ չկան:"
         description: "Այս խմբի անդամներին հասանելի են այս կատեգորիաները"
-      public_admission: "Թույլ տալ օգտատերերին ազատ կերպով միանալ խմբին (Խումբը պետք է լինի հրապարակային)"
       public_exit: "Թույլ տալ օգտատերերին ազատ կերպով լքել խումբը"
       add: "Ավելացնել"
       join: "Միանալ"
@@ -932,7 +939,6 @@ hy:
       request: "Հարցում"
       message: "Հաղորդագրություն"
       confirm_leave: "Իսկապե՞ս ուզում եք լքել այս խումբը:"
-      allow_membership_requests: "Թույլատրել օգտատերերին՝ անդամակցության հարցումներ ուղարկել խմբի սեփականատերերին (Պահանջում է հրապարակայնորեն տեսանելի խումբ)"
       membership_request_template: "Մասնավոր ձևանմուշ, որը կցուցադրվի օգտատերերին՝ անդամակցության հարցում ուղարկելիս"
       membership_request:
         submit: "Ուղարկել Հարցում"
@@ -1323,6 +1329,9 @@ hy:
       undo_revoke_access: "Ետարկել Թույլտվության Հետկանչումը (Undo Revoke Access)"
       api_approved: "Հաստատված է՝"
       api_last_used_at: "Վերջին անգամ օգտագործվել է՝"
+      api_expires_at: "Ժամկետը լրանում է:"
+      api_expired_at: "Ժամկետանց:"
+      api_expires_never: "երբեք"
       theme: "Թեմա"
       save_to_change_theme: '«%{save_text}» սեղմելուց հետո թեման կթարմացվի'
       home: "Լռելյայն Գլխավոր Էջ"
@@ -2066,6 +2075,12 @@ hy:
       confirm_title: Շարունակել դեպի %{site_name}
       logging_in_as: Մուտք գործել որպես %{email}
       confirm_button: Ավարտել Մուտքը
+    code_login:
+      email_label: "Էլ. հասցե"
+      continue_button: "Շարունակել"
+      verify_button: "Շարունակել"
+      account_ready_continue: "Շարունակել"
+      username_label: "Օգտանուն"
     login:
       header_title: "Բարի վերադարձ"
       title: "Մուտք Գործել"
@@ -2290,6 +2305,7 @@ hy:
         attribute_value: "Արժեք"
         apply: "Կիրառել"
       help: "Markdown-ի խմբագրման օգնություն"
+      edit_reason: "Ո՞րն է խմբագրման պատճառը:"
       modal_ok: "Լավ"
       cant_send_pm: "Ներողություն, Դուք չեք կարող հաղորդագրություն ուղարկել %{username}-ին:"
       yourself_confirm:
@@ -2308,18 +2324,19 @@ hy:
           confirm: 'Ձեզ մոտ պահպանված է նոր թեմայի սևագիրը, որը կվերագրվի, եթե դրա հետ կապված թեմա ստեղծեք: '
         reply_to_topic:
           label: Պատասխանել թեմային
+          trigger: Թեմա
           desc: Պատասխանել թեմային, այլ ոչ թե որոշակի գրառման
+        reply_to_message:
+          trigger: Ուղարկել
         toggle_whisper:
           label: Փոխանջատել շշնջումը
-          desc: Շշուկները տեսանելի են միայն անձնակազմին
         create_personal_message:
-          label: "Նոր հաղորդագրություն"
           desc: "Գրել նոր անձնական նամակ"
         shared_draft:
           label: "Ստեղծել Կիսված Սևագիր"
         toggle_topic_bump:
-          label: "Փոխանջատել թեմայի բարձրացումը "
           desc: "Պատասխանել՝ առանց պատասխանի վերջին ամսաթիվը փոխելու"
+        unknown_user: "Օգտատեր"
       ignore: "Անտեսել"
       image: "նկար"
       link_toolbar:
@@ -2604,6 +2621,8 @@ hy:
       deleted_post_placeholder: "[ջնջված է]"
       ignored_post_placeholder: "[անտեսված]"
       pinned_reply: "Ամրակցված"
+    share_target:
+      new_message: "Նոր հաղորդագրություն"
     topic:
       filter_to:
         one: "%{count} հրապարակում թեմայում"
@@ -3999,6 +4018,11 @@ hy:
                 "2": "Անդամ"
                 "3": "Սովորական"
                 "4": "Առաջնորդ"
+          search:
+            title: "Որոնում"
+            table:
+              searches: "Որոնումներ"
+              status: "Ստատուս"
         reports_section:
           modal:
             all_heading: "Բոլոր հաշվետվությունները"
@@ -4069,7 +4093,6 @@ hy:
             email: Էլ. հասցե
             incoming_email: "Մուտքային մասնավոր էլ. հասցե"
             incoming_email_placeholder: "մուտքագրեք էլ. հասցե"
-            visibility: Տեսանելիություն
             visibility_levels:
               title: "Ո՞վ կարող է տեսնել այս խումբը:"
               public: "Բոլորը"
@@ -4248,6 +4271,8 @@ hy:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Անուն"
+          company_url: "Վեբ կայք"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Խմբեր"
           optional: "(ընտրովի)"

@@ -1260,6 +1260,7 @@ RSpec.describe CookedPostProcessor do
           invalidate_oneboxes: true,
           user_id: nil,
           category_id: post.topic.category_id,
+          locale: nil,
         )
         .returns("<div>GANGNAM STYLE</div>")
 
@@ -1497,6 +1498,7 @@ RSpec.describe CookedPostProcessor do
           invalidate_oneboxes: true,
           user_id: nil,
           category_id: post.topic.category_id,
+          locale: nil,
         )
         .returns(
           '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="noopener nofollow ugc">GANGNAM STYLE</a></aside>',
@@ -1528,6 +1530,7 @@ RSpec.describe CookedPostProcessor do
           invalidate_oneboxes: true,
           user_id: nil,
           category_id: post.topic.category_id,
+          locale: nil,
         )
         .returns(
           '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="noopener nofollow ugc">GANGNAM STYLE</a></aside>',
@@ -1555,6 +1558,7 @@ RSpec.describe CookedPostProcessor do
           invalidate_oneboxes: true,
           user_id: nil,
           category_id: post.topic.category_id,
+          locale: nil,
         )
         .returns(
           "<aside class='onebox'><div class='scale-images'><img src='/img.jpg' width='400' height='500'/></div></div>",
@@ -1575,6 +1579,7 @@ RSpec.describe CookedPostProcessor do
           invalidate_oneboxes: true,
           user_id: nil,
           category_id: post.topic.category_id,
+          locale: nil,
         )
         .returns(
           "<aside class='onebox'><div class='scale-images'><a href='https://example.com'><img src='/img.jpg' width='400' height='500'/></a></div></div>",

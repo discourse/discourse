@@ -8,7 +8,8 @@ de:
   category_types:
     events:
       name: "Ereignisse"
-      title: "ereignisse"
+      title: "Ereignisse"
+      description: "Hier können Mitglieder bevorstehende Veranstaltungen in einem gemeinsamen Kalender finden und besprechen."
   user_api_key:
     scopes:
       "discourse-calendar:events_calendar": "Feed mit Kalenderereignissen lesen"
@@ -44,7 +45,6 @@ de:
     map_events_to_color: "Weise jedem Schlagwort oder jeder Kategorie eine Farbe zu."
     map_events_title: "Überschreibt „Ereignisse“ im Titel der Seitenleiste „Anstehende Ereignisse“ pro Kategorie."
     calendar_enabled: "Aktiviere das discourse-calendar-Plug-in. Dadurch wird Unterstützung für einen [calendar][/calendar]-Tag im ersten Beitrag eines Themas hinzugefügt."
-    discourse_post_event_enabled: "Aktiviert die Ereignisfunktionen. Hinweis: `calendar enabled` muss ebenfalls aktiviert sein."
     displayed_invitees_limit: "Begrenzt die Anzahl der eingeladenen Personen, die für ein Ereignis angezeigt werden."
     display_post_event_date_on_topic_title: "Zeigt das Datum des Ereignisses nach dem Thementitel an."
     use_local_event_date: "Verwende das lokale Datum nach dem Titel des Themas anstatt der relativen Zeit."
@@ -70,14 +70,28 @@ de:
     event_participation_buttons: "Liste der Schaltflächen für die Teilnahme am Ereignis, die Benutzer verwenden können."
     sidebar_show_upcoming_events: "Zeige den Link für anstehende Ereignisse in der Seitenleiste unter „Mehr“."
     calendar_first_day_of_week: "Lege den ersten Wochentag für die Kalenderanzeige fest. Zur Auswahl stehen Samstag, Sonntag oder Montag."
-    enable_events_category_type_setup: "Aktiviert die Option „Kategorietyp Ereignisse“ bei der Einrichtung der Kategorieerstellung. Beachte, dass die Option „enable simplified category creation“ aktiviert sein muss, damit diese Einstellung wirksam wird."
   discourse_calendar:
     category_type:
       default_calendar_view:
+        label: "Standardansicht des Kalenders"
         day: "Tag"
         week: "Woche"
         month: "Monat"
         year: "Jahr"
+      display_weekends:
+        label: "Wochenenden anzeigen"
+      discourse_post_event_allowed_on_groups:
+        label: "Gruppen, die Ereignisse erstellen können"
+      use_local_event_date:
+        label: "Datumsformat des Ereignisses"
+        local: "Lokales Datum (z.B. 20. April)"
+        relative: "Relative Zeitangabe (z. B. in 2 Tagen)"
+      sort_categories_by_event_start_date_enabled:
+        label: "Themensortierung"
+        event_date: "Datum des Ereignisses"
+        latest_post: "Neueste Beitragsaktivität"
+      sidebar_show_upcoming_events:
+        label: 'Link „Anstehende Veranstaltungen“ im Navigationsmenü anzeigen'
     calendar_subscriptions:
       all_events_feed_name: "%{site_title} - Alle Ereignisse"
       my_events_feed_name: "%{site_title} - Meine Ereignisse"

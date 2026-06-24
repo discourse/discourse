@@ -42,6 +42,45 @@ RSpec.describe DiscourseWorkflows::Executor do
         }.by(1)
       end
 
+      it "uses an existing execution record when provided" do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:manual"
+            g.node "log-1", "action:log"
+            g.chain "trigger-1", "log-1"
+          end
+        workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
+        snapshot = DiscourseWorkflows::WorkflowSnapshot.from_workflow(workflow, published: false)
+        existing_execution =
+          Fabricate(
+            :discourse_workflows_execution,
+            workflow: workflow,
+            status: :running,
+            execution_mode: :manual,
+            trigger_node_id: "trigger-1",
+          )
+        Fabricate(
+          :discourse_workflows_execution_data,
+          execution: existing_execution,
+          workflow_data: snapshot.to_h,
+        )
+        options =
+          described_class::ExecutionOptions.new(
+            execution_mode: :manual,
+            workflow_snapshot: snapshot,
+            existing_execution: existing_execution,
+          )
+
+        expect { described_class.new(workflow, "trigger-1", {}, options).run }.not_to change {
+          DiscourseWorkflows::Execution.count
+        }
+
+        expect(existing_execution.reload.status).to eq("success")
+        expect(
+          existing_execution.execution_data.steps_array.map { |step| step["node_id"] },
+        ).to include("log-1")
+      end
+
       it "stores context with item arrays in the execution" do
         execution = described_class.new(workflow, "trigger-1", trigger_data).run
 
@@ -65,6 +104,24 @@ RSpec.describe DiscourseWorkflows::Executor do
         execution = described_class.new(workflow, "trigger-1", trigger_data).run
 
         expect(execution.status).to eq("skipped")
+      end
+
+      it "updates an existing execution when skipped before start" do
+        unpublish_workflow!(workflow)
+        existing_execution =
+          Fabricate(
+            :discourse_workflows_execution,
+            workflow: workflow,
+            status: :running,
+            trigger_node_id: "trigger-1",
+          )
+        options = described_class::ExecutionOptions.new(existing_execution: existing_execution)
+
+        expect {
+          described_class.new(workflow, "trigger-1", trigger_data, options).run
+        }.not_to change { DiscourseWorkflows::Execution.count }
+
+        expect(existing_execution.reload.status).to eq("skipped")
       end
 
       it "preloads dependencies from the active workflow snapshot" do
@@ -557,6 +614,33 @@ RSpec.describe DiscourseWorkflows::Executor do
         expect(second_execution.status).to eq("rate_limited")
         expect(second_execution.trigger_data).to eq("rate_limited" => true)
       end
+
+      it "updates an existing execution when limits are exceeded" do
+        SiteSetting.discourse_workflows_max_executions_per_minute_per_workflow = 1
+
+        graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
+        workflow =
+          Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+        trigger_data = { topic_id: topic.id, tags: [] }
+        expect(described_class.new(workflow, "trigger-1", trigger_data).run.status).to eq("success")
+
+        existing_execution =
+          Fabricate(
+            :discourse_workflows_execution,
+            workflow: workflow,
+            status: :running,
+            trigger_node_id: "trigger-1",
+          )
+        options = described_class::ExecutionOptions.new(existing_execution: existing_execution)
+
+        expect {
+          described_class.new(workflow, "trigger-1", trigger_data, options).run
+        }.not_to change { DiscourseWorkflows::Execution.count }
+
+        existing_execution.reload
+        expect(existing_execution.status).to eq("rate_limited")
+        expect(existing_execution.trigger_data).to eq("rate_limited" => true)
+      end
     end
 
     context "with an unavailable node" do
@@ -733,6 +817,16 @@ RSpec.describe DiscourseWorkflows::Executor do
         end
       end
 
+      let(:oversized_output_node_class) do
+        Class.new(DiscourseWorkflows::NodeType) do
+          description(name: "action:oversized_output_test", version: "1.0")
+
+          def execute(_exec_ctx)
+            [[{ "json" => { "body" => "x" * 200 } }, { "json" => { "body" => "small" } }]]
+          end
+        end
+      end
+
       before do
         plugin = Plugin::Instance.new
         DiscoursePluginRegistry.register_discourse_workflows_node(raw_array_node_class, plugin)
@@ -741,14 +835,21 @@ RSpec.describe DiscourseWorkflows::Executor do
           malformed_array_node_class,
           plugin,
         )
+        DiscoursePluginRegistry.register_discourse_workflows_node(
+          oversized_output_node_class,
+          plugin,
+        )
         DiscourseWorkflows::Registry.reset_indexes!
       end
 
       after do
         DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-          [raw_array_node_class, named_outputs_node_class, malformed_array_node_class].include?(
-            entry[:value],
-          )
+          [
+            raw_array_node_class,
+            named_outputs_node_class,
+            malformed_array_node_class,
+            oversized_output_node_class,
+          ].include?(entry[:value])
         end
         DiscourseWorkflows::Registry.reset_indexes!
       end
@@ -801,6 +902,31 @@ RSpec.describe DiscourseWorkflows::Executor do
 
         expect(execution.status).to eq("error")
         expect(execution.error).to include("execute must return Array<Array<Item>>")
+      end
+
+      it "truncates oversized node outputs before routing downstream" do
+        stub_const(described_class, :MAX_NODE_OUTPUT_BYTES, 100) do
+          graph =
+            build_workflow_graph do |g|
+              g.node "trigger-1", "trigger:topic_closed"
+              g.node "oversized-1", "action:oversized_output_test", name: "Oversized"
+              g.node "code-1", "action:code", configuration: { "code" => "return $input.all();" }
+              g.chain "trigger-1", "oversized-1", "code-1"
+            end
+          workflow =
+            Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+
+          execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+
+          expect(execution.status).to eq("success")
+
+          oversized_step = execution.execution_data.find_step(node_id: "oversized-1")
+          expect(oversized_step["output"]).to eq([])
+          expect(oversized_step.dig("metadata", "logs").first["message"]).to include(
+            "Node output truncated",
+          )
+          expect(execution.execution_data.find_step(node_id: "code-1")).to be_nil
+        end
       end
     end
   end

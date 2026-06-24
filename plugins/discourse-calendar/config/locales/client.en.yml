@@ -27,6 +27,11 @@ en:
             topic_id:
               label: Topic ID
     discourse_calendar:
+      livestream:
+        chat:
+          going: "Click Going"
+          join_channel_header: "🌟 Join the Buzz! 🌟"
+          join_channel_message: "Confirm your attendance and unlock our event chat. Dive into discussions, share your excitement, and connect with fellow attendees!"
       invite_user_notification: "%{username} invited you to: %{description}"
       preferences:
         all_events: "Discourse Calendar - All Events"
@@ -380,6 +385,7 @@ en:
         send_bulk_invites: "Send invites"
         group_selector_placeholder: "Choose a group..."
         user_selector_placeholder: "Choose user..."
+        attendance_label: "Attendance"
         inline_title: "Inline bulk invite"
         csv_title: "CSV bulk invite"
       upcoming_events:
@@ -410,7 +416,6 @@ en:
           this_and_following: "This event and all following events"
           leave_event: "Leave event"
           status:
-            unknown: "Not interested"
             going: "Going"
             not_going: "Not going"
             interested: "Interested"
@@ -489,7 +494,6 @@ en:
         create_event_title: "Create Event"
         update_event_title: "Edit Event"
         advanced_settings_title: "Advanced settings"
-        advanced_settings: "Advanced settings"
         confirm_delete: "Are you sure you want to delete this event?"
         confirm_close: "Are you sure you want to close this event?"
         confirm_open: "Are you sure you want to open this event?"
@@ -579,3 +583,4 @@ en:
       invite_user_or_group:
         title: "Notify user(s) or group(s)"
         invite: "Send"
+        success: "Invitation sent"

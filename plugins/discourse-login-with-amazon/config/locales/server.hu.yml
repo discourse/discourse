@@ -6,7 +6,6 @@
 
 hu:
   site_settings:
-    enable_login_with_amazon: "Az Amazon-alapú bejelentkezés engedélyezése; használatához szükséges a login with amazon client id és a login with amazon client secret megadása."
     login_with_amazon_client_id: "Bejelentkezés Amazon ügyfél-azonosítóval"
     login_with_amazon_client_secret: "Bejelentkezés Amazon kliens titkos adatával"
     login_with_amazon_scope: "Bejelentkezés Amazon OAuth2 hatókörökkel (szóközökkel elválasztva)"

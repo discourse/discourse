@@ -34,6 +34,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
 import { emojiUnescape } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import Badge from "discourse/models/badge";
@@ -54,6 +55,7 @@ export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
   BACKUP_CODE: 2,
   SECURITY_KEY: 3,
+  PASSKEY: 4,
 };
 
 export const MAX_SECOND_FACTOR_NAME_LENGTH = 300;
@@ -294,6 +296,11 @@ export default class User extends RestModel.extend(Evented) {
   @computed("staff", "isLeader")
   get canManageTopic() {
     return this.staff || this.isLeader;
+  }
+
+  @computed("can_set_topic_timer", "canManageTopic")
+  get canSetTopicTimer() {
+    return this.can_set_topic_timer ?? this.canManageTopic;
   }
 
   @computed("sidebar_category_ids")
@@ -1508,7 +1515,7 @@ User.reopenClass({
     return result;
   },
 
-  createAccount(attrs) {
+  async createAccount(attrs) {
     let data = {
       name: attrs.accountName,
       email: attrs.accountEmail,
@@ -1524,10 +1531,15 @@ User.reopenClass({
       data.invite_code = attrs.inviteCode;
     }
 
-    return ajax(userPath(), {
-      data,
-      type: "POST",
-    });
+    return applyBehaviorTransformer(
+      "create-account",
+      () =>
+        ajax(userPath(), {
+          data,
+          type: "POST",
+        }),
+      { data }
+    );
   },
 
   _saveTimezone(user) {

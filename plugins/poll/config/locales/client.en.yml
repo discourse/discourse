@@ -173,5 +173,3 @@ en:
           add: Add option
         automatic_close:
           label: Automatically close poll
-        show_advanced: "Show Advanced Options"
-        hide_advanced: "Hide Advanced Options"

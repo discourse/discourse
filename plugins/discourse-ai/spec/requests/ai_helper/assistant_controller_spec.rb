@@ -874,6 +874,39 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
           expect(response.status).to eq(403)
         end
       end
+
+      context "when the selected category restricts tags" do
+        fab!(:allowed_tag, :tag)
+        fab!(:restricted_tag, :tag)
+        fab!(:restricted_category) { Fabricate(:category, allowed_tags: [allowed_tag.name]) }
+        fab!(:topic)
+
+        before do
+          Fabricate(:topic_tag, topic:, tag: allowed_tag)
+          Fabricate(:topic_tag, topic:, tag: restricted_tag)
+
+          WebMock.stub_request(:post, embedding_definition.url).to_return(
+            status: 200,
+            body: JSON.dump([[0.0038493] * embedding_definition.dimensions]),
+          )
+
+          DiscourseAi::Embeddings::Vector.instance.generate_representation_from(topic)
+        end
+
+        it "does not suggest tags the category disallows" do
+          post "/discourse-ai/ai-helper/suggest_tags",
+               params: {
+                 text: "hello",
+                 category_id: restricted_category.id,
+               }
+
+          expect(response.status).to eq(200)
+
+          suggested = response.parsed_body["assistant"].map { |t| t["name"] }
+          expect(suggested).to include(allowed_tag.name)
+          expect(suggested).not_to include(restricted_tag.name)
+        end
+      end
     end
 
     describe "#semantic_categories" do

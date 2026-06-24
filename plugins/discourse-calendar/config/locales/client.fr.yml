@@ -400,7 +400,6 @@ fr:
           no_users: "Aucun utilisateur trouvé"
           leave_event: "Quitter l'événement"
           status:
-            unknown: "Pas intéressé(e)"
             going: "Participera"
             interested: "Intéressé(e)"
             going_count:
@@ -430,6 +429,8 @@ fr:
               description: "Un événement privé ne peut être rejoint que par les utilisateurs invités."
       composer:
         name_placeholder: "Nom de l'événement"
+        event_title_placeholder: "Nom de l'événement"
+        create_event_button: "Créer un événement"
         reminder:
           units:
             minutes:
@@ -444,6 +445,9 @@ fr:
             weeks:
               one: "semaine"
               other: "semaines"
+      composer_actions:
+        create_event:
+          label: "Créer un événement"
       builder_modal:
         custom_fields:
           label: "Champs personnalisés"
@@ -508,3 +512,4 @@ fr:
       invite_user_or_group:
         title: "Avertir les utilisateurs ou les groupes"
         invite: "Envoyer"
+        success: "Invitation envoyée"

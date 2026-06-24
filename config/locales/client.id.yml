@@ -6,6 +6,16 @@
 
 id:
   js:
+    user_api_key:
+      authorize: "Izinkan"
+      deny: "Batal"
+      copied: "Disalin!"
+      otp_description: 'Apakah Anda ingin mengizinkan "%{application_name}" untuk mengakses situs ini?'
+      no_trust_level: "Maaf, Anda tidak memiliki trust level yang diperlukan untuk mengakses API pengguna"
+      generic_error: "Maaf, kami tidak dapat mengeluarkan kunci API pengguna, fitur ini mungkin dinonaktifkan oleh admin situs"
+      device:
+        code: "Kode"
+        continue: "Lanjutkan"
     blocks:
       ghost:
         status: "Status"
@@ -258,7 +268,7 @@ id:
       pm_title: "Pesan Yang Disarankan"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Diaktifkan"
+        enabled: "Dipilih"
       start_posting:
         back: "Kembali"
     about:
@@ -759,7 +769,6 @@ id:
             title: "Pengaturan"
         membership:
           title: Keanggotaan
-          access: Mengakses
         categories:
           title: Kategori
           long_title: "Notifikasi default kategori"
@@ -778,7 +787,6 @@ id:
           to: "Kepada"
       permissions:
         title: "Izin"
-      public_admission: "Izinkan pengguna untuk bergabung dengan grup secara bebas (Membutuhkan grup yang dapat dilihat oleh umum)"
       public_exit: "Izinkan pengguna untuk meninggalkan grup dengan bebas"
       empty:
         posts: "Tidak ada pos oleh anggota grup ini"
@@ -794,7 +802,6 @@ id:
       request: "Pinta"
       message: "Pesan"
       confirm_leave: "Anda yakin ingin keluar dari grup ini?"
-      allow_membership_requests: "Izinkan pengguna mengirim permintaan keanggotaan ke pemilik grup (Membutuhkan grup yang dapat dilihat oleh umum)"
       membership_request:
         submit: "Ajukan Permintaan"
         title: "Permintaan untuk bergabung dengan @ %{group_name}"
@@ -1111,6 +1118,7 @@ id:
       undo_revoke_access: "Batalkan Cabut Akses"
       api_approved: "Disetujui:"
       api_last_used_at: "Terakhir digunakan pada:"
+      api_expires_never: "tidak pernah"
       theme: "Tema"
       home: "Halaman Utama"
       staff_counters:
@@ -1537,6 +1545,12 @@ id:
       confirm_title: Lanjut ke %{site_name}
       logging_in_as: Masuk sebagai %{email}
       confirm_button: Selesai Login
+    code_login:
+      email_label: "Email"
+      continue_button: "Lanjutkan"
+      verify_button: "Lanjutkan"
+      account_ready_continue: "Lanjutkan"
+      username_label: "Nama Pengguna"
     login:
       title: "Log In"
       username: "Pengguna"
@@ -1640,7 +1654,7 @@ id:
       discard: "Batalkan"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
-      edit_reason_placeholder: "mengapa Anda menyunting?"
+      edit_reason_placeholder: "Mengapa Anda menyunting?"
       topic_featured_link_placeholder: "Masukkan tautan yang terlihat dengan judul."
       remove_featured_link: "Hapus tautan dari topik"
       reply_placeholder: "Ketik disini. Gunakan Markdown, BBCode, atau HTML untuk memformat. Tarik atau tempel gambar."
@@ -1662,6 +1676,7 @@ id:
       upload_title: "Unggah"
       wrap_modal:
         apply: "menerapkan"
+      edit_reason: "Mengapa Anda menyunting?"
       modal_ok: "OK"
       cant_send_pm: "Maaf, anda tidak dapat mengirim pesan kepada %{username}"
       create_message_error: "Maaf, ada kesalahan dalam membuat pesan tersebut. Silakan coba lagi."
@@ -1677,12 +1692,15 @@ id:
           desc: Buat topik baru yang ditautkan dengan topik ini
         reply_to_topic:
           label: Balas ke topik
+          trigger: Topik
           desc: Membalas topik, bukan tulisan tertentu
+        reply_to_message:
+          trigger: pesan
         create_personal_message:
-          label: "Pesan baru"
           desc: "Buat pesan pribadi baru"
         shared_draft:
           label: "Konsep Bersama"
+        unknown_user: "Pengguna"
       ignore: "Abaikan"
       image: "gambar"
       toggle_image_grid: Beralih kisi gambar
@@ -1808,6 +1826,8 @@ id:
       no_replies: "Belum ada balasan"
       deleted_post_placeholder: "[dihapus]"
       ignored_post_placeholder: "[diabaikan]"
+    share_target:
+      new_message: "Pesan baru"
     topic:
       create: "Topik Baru"
       archive_message:
@@ -2352,7 +2372,7 @@ id:
         modal:
           cancel: "batal"
           create: "Simpan"
-          reason: "mengapa Anda menyunting?"
+          reason: "Mengapa Anda menyunting?"
       spreadsheet:
         show: "Tunjukkan"
         about: "Tentang"
@@ -2477,6 +2497,10 @@ id:
                 "0": "Baru"
                 "2": "Anggota"
                 "3": "Umum"
+          search:
+            title: "Cari"
+            table:
+              status: "Status"
         reports_section:
           modal:
             enabled_heading: "Diaktifkan"
@@ -2594,6 +2618,7 @@ id:
           community_name: "Nama komunitas"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nama"
+          company_url: "Situs web"
           extra_groups:
             groups: "Grup"
           optional: "(opsional)"

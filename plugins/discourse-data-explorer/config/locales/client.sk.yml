@@ -50,6 +50,9 @@ sk:
       run: "Spustiť"
       undo: "Zahodenie zmien"
       delete: "Odstrániť"
+      chart:
+        form:
+          bar: "Lišta"
       others_dirty: "Dotaz obsahuje neuložené zmeny, ktoré sa stratia, ak prejdete preč."
       run_time: "Dotaz bol dokončený za %{value} ms."
       result_count:
@@ -86,6 +89,16 @@ sk:
           descriptions:
             data_explorer:
               run_queries: "Spustite dotazy Data Explorer. Obmedzte kľúč API na súbor dotazov zadaním ID dotazov."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Prieskumník údajov"
+      sql:
+        query_id: "Dopyt"
+        add_param: "Pridať parameter"
+        param_value: "Hodnota"
+        output:
+          results: "Výsledky"
+          no_results: "Žiadne výsledky"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

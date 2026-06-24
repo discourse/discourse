@@ -31,11 +31,15 @@ uk:
       status_change: "Змінено статус призначення для %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Додайте фільтр «непризначені» до категорії"
+      additional_assign_allowed_groups: "Додаткові групи з дозволом на призначення"
+      additional_assign_allowed_groups_description: "Учасники цих груп можуть призначати теми в цій категорії. Групи, які вже дозволені глобально, відображаються тут і не можуть бути видалені. Налаштування батьківської категорії не застосовуються до підкатегорій."
       cant_act: "Ви не можете діяти на основі прапорів, призначених іншим користувачам"
       cant_act_unclaimed: "Ви повинні претендувати на цю тему, перш ніж реагувати на прапори."
       topic_search_placeholder: "Пошук тем за назвою або змістом публікації"
       sidebar_name_filter_placeholder: "Ім'я/Ім'я користувача"
       assigned: "Призначено"
+      group_no_assignments_title: "Немає завдань"
+      group_no_assignments_body: "Наразі для цієї групи немає активних завдань."
       group_everyone: "Усі"
       assigned_to: "Призначено для"
       assigned_topic_to: "Призначена тема для <a href='%{path}'>%{username}</a>"
@@ -206,3 +210,19 @@ uk:
       title: "Редагувати призначення"
       topic: "Тема"
       post: "Допис"
+    discourse_workflows:
+      node_unavailable:
+        requires_assign: "Потрібно ввімкнути плагін Assign"
+      nodes:
+        "action:assign_topic": "Призначити тему"
+        "trigger:assigned": "Призначено"
+      node_descriptions:
+        "action:assign_topic": "Призначити або скасувати призначення теми"
+      assign_topic:
+        operation: "Операція"
+        operations:
+          assign: "Призначити"
+          unassign: "Скасувати призначення"
+        topic_id: "ID теми"
+        assignee: "Правонаступник"
+        replace_existing: "Замінити існуюче завдання"

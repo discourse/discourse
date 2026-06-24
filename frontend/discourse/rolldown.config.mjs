@@ -1,6 +1,8 @@
 import * as fs from "fs";
 import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
+import discourseChunkNamesPlugin from "./lib/discourse-chunk-names.mjs";
+import dynamicChunkUrlPlugin from "./lib/dynamic-chunk-url-plugin.mjs";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
 import maybeBabel from "./lib/maybe-babel.mjs";
 import optimizedEmber from "./lib/optimized-ember.mjs";
@@ -8,7 +10,7 @@ import wrapTestModulesPlugin from "./lib/wrap-test-modules-plugin.mjs";
 
 writeResolverConfig(
   {
-    staticAppPaths: ["static", "admin"],
+    staticAppPaths: ["static", "admin", "workers"],
     splitAtRoutes: [{ type: "string", value: "wizard" }],
   },
   {
@@ -85,7 +87,6 @@ export function buildConfig({ devMode } = {}) {
     input: {
       discourse: "discourse.js",
       vendor: "vendor.js",
-      "media-optimization-bundle": "media-optimization-bundle.js",
       ...(!isProduction || process.env.FORCE_BUILD_TESTS
         ? {
             "test-entrypoint": "tests/test-entrypoint.js",
@@ -99,21 +100,16 @@ export function buildConfig({ devMode } = {}) {
       sourcemap: true,
       cleanDir: !devMode,
       hashCharacters: "base36",
-      assetFileNames: (asset) => {
-        if (asset.names?.some((n) => n.endsWith(".wasm"))) {
-          return "assets/wasm/[name]-[hash].digested[extname]";
-        }
-        return "assets/js/[name]-[hash].digested[extname]";
-      },
-      chunkFileNames: "assets/js/[name]-[hash].digested.js",
+      assetFileNames: "assets/js/[name]-[hash].digested[extname]",
+      chunkFileNames: "assets/js/[name]-[hash].digested.js", // See also: discourseChunkNamesPlugin
       entryFileNames: "assets/js/[name]-[hash].digested.js",
     },
     watch: {
       clearScreen: false,
     },
-    preserveEntrySignatures: "strict",
     plugins: [
       viteAliasPlugin({ entries: aliases }),
+      dynamicChunkUrlPlugin(),
       optimizedEmber(),
       viteImportGlobPlugin(),
       maybeBabel({
@@ -124,15 +120,20 @@ export function buildConfig({ devMode } = {}) {
         babelrc: false, // Skip per-file `.babelrc`/`.babelignore` checks
       }),
       wrapTestModulesPlugin(),
+      discourseChunkNamesPlugin(),
       {
-        name: "resolve-externals",
-        resolveId(source) {
-          if (
-            source.startsWith("/extra-locales/") ||
-            source.startsWith("/bootstrap/")
-          ) {
-            return { external: true, id: source };
-          }
+        name: "forbid-plugin-imports",
+        resolveId: {
+          filter: { id: /^discourse\/plugins\// },
+          handler(source, importer) {
+            this.error(
+              `Forbidden import of plugin module "${source}"` +
+                (importer
+                  ? ` from ${relative(import.meta.dirname, importer)}`
+                  : "") +
+                ". Core cannot import plugin modules."
+            );
+          },
         },
       },
       {
@@ -150,6 +151,7 @@ export function buildConfig({ devMode } = {}) {
                 document.head.append(style);
               `,
               moduleType: "js",
+              map: { mappings: "" },
             };
           },
         },

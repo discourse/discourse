@@ -170,14 +170,18 @@ html:not(.keyboard-visible).mobile-device {
       width: auto;
 
       &[type="text"],
-      &[type="password"] {
+      &[type="password"],
+      &[type="number"] {
         width: 100%;
       }
     }
 
     textarea {
       width: 100%;
-      height: 80px;
+
+      &:not(.--expandable) {
+        height: 80px;
+      }
     }
 
     .password-confirmation {

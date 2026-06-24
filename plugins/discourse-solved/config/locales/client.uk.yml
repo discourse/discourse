@@ -15,7 +15,6 @@ uk:
           kpi:
             accepted_solutions:
               label: "Прийняті рішення"
-              tooltip: "Кількість тем, у яких за цей період було позначено публікацію як рішення."
   js:
     notifications:
       alt:
@@ -29,7 +28,6 @@ uk:
       allow_accepted_answers: "Дозвольте власнику теми та персоналу позначити відповідь як рішення"
       solved_topics_auto_close_hours: "Автоматично закрити тему (n) годин після останньої відповіді, як тільки тема позначена як вирішена."
       notify_on_staff_accept_solved: "Сповіщення автора теми, коли співробітники позначають рішення"
-      empty_box_on_unsolved: "Відображати порожній прапорець біля невирішених тем у списку тем"
       accept_answer: "Виберіть, чи вирішує ця відповідь проблему"
       accepted_description: "Це прийняте рішення цієї теми"
       has_no_accepted_answer: "Ця тема не має рішення"
@@ -70,12 +68,8 @@ uk:
       confirm_solved_removal_confirm: "Підтвердити"
       confirm_solved_removal_cancel: "Скасувати"
       shared_issue:
-        label_zero: "Я теж"
-        label:
-          one: "Я теж (%{count})"
-          few: "Я теж (%{count})"
-          many: "Я теж (%{count})"
-          other: "Я теж (%{count})"
+        label: "Я теж"
+        label_with_count: "%{label} (%{count})"
         title: "Я також стикаюся з цією проблемою"
         author_title: "Ви розпочали цю тему"
       no_answer:

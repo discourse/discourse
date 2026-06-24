@@ -99,17 +99,11 @@ class PrivateMessageTopicTrackingState
   def self.publish_unread(post)
     topic = post.topic
     return unless topic.private_message?
+    return if post.small_action?
 
     scope = TopicUser.tracking(post.topic_id).includes(user: %i[user_stat user_option])
 
-    allowed_group_ids = topic.allowed_groups.pluck(:id)
-
-    group_ids =
-      if post.post_type == Post.types[:whisper] || post.post_type == Post.types[:small_action]
-        [Group::AUTO_GROUPS[:staff]]
-      else
-        allowed_group_ids
-      end
+    group_ids = post.whisper? ? [Group::AUTO_GROUPS[:staff]] : topic.allowed_groups.pluck(:id)
 
     if group_ids.present?
       scope =
@@ -142,7 +136,7 @@ class PrivateMessageTopicTrackingState
             last_read_post_number: tu.last_read_post_number,
             highest_post_number: post.post_number,
             notification_level: tu.notification_level,
-            group_ids: allowed_group_ids,
+            group_ids: group_ids,
             created_by_user_id: post.user_id,
           },
         }

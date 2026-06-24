@@ -1022,11 +1022,6 @@ section.details {
     width: 100%;
   }
 
-  div.ac-wrap {
-    width: 100% !important;
-    box-sizing: border-box;
-  }
-
   .dashboard-left,
   .dashboard-right {
     width: 100%;
@@ -1098,10 +1093,11 @@ table#user-badges {
 
     .value-input {
       box-sizing: border-box;
-      flex: 1 0 0px;
+      flex: 1 0 0;
       border-color: var(--primary-low);
       cursor: pointer;
       margin: 0;
+      min-width: 0;
 
       &:focus {
         border-color: var(--tertiary);
@@ -1111,6 +1107,7 @@ table#user-badges {
 
     .remove-value-btn {
       margin-right: 0.25em;
+      flex: 0 0 auto;
 
       @include value-btn;
     }
@@ -1151,6 +1148,8 @@ table#user-badges {
 
     .emoji-name {
       margin-left: 0.5em;
+
+      @include ellipsis;
     }
 
     &:not(.can-edit) {
@@ -1287,7 +1286,6 @@ a.inline-editable-field {
 @import "admin/search";
 @import "admin/admin_dashboard";
 @import "admin/admin-dashboard-skeleton";
-@import "admin/admin_table";
 @import "admin/admin_filter";
 @import "admin/admin_filter_controls";
 @import "admin/admin_reports";

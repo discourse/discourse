@@ -45,7 +45,7 @@ pl_PL:
     map_events_to_color: "Przypisz kolor do każdego tagu lub kategorii."
     map_events_title: "Nadpisuje „Wydarzenia” w tytule paska bocznego „Nadchodzące wydarzenia” dla każdej kategorii."
     calendar_enabled: "Włącz wtyczkę discourse-calendar. Spowoduje to dodanie obsługi tagu [calendar][/calendar] w pierwszym wpisie tematu."
-    discourse_post_event_enabled: "Włącza funkcje wydarzeń. Uwaga: wymagane jest również włączenie opcji „kalendarz włączony”."
+    discourse_post_event_enabled: "Włącza funkcje zdarzeń. Uwaga: wymagane jest również włączenie opcji {{setting:calendar_enabled}}."
     displayed_invitees_limit: "Ogranicza liczbę zaproszeń wyświetlanych w wydarzeniu."
     display_post_event_date_on_topic_title: "Wyświetla datę wydarzenia po tytule tematu."
     use_local_event_date: "Użyj daty lokalnej po tytule tematu zamiast czasu względnego."
@@ -71,7 +71,11 @@ pl_PL:
     event_participation_buttons: "Lista przycisków umożliwiających udział w wydarzeniu, z których mogą korzystać użytkownicy."
     sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
     calendar_first_day_of_week: "Ustaw pierwszy dzień tygodnia, w którym będzie wyświetlany kalendarz. Dostępne opcje to sobota, niedziela lub poniedziałek."
-    enable_events_category_type_setup: "Włącza opcję typu kategorii „Zdarzenia” podczas konfiguracji tworzenia kategorii. Uwaga: aby ta opcja zadziałała, opcja „Włącz uproszczone tworzenie kategorii” musi być włączona."
+    enable_events_category_type_setup: "Włącza opcję typu kategorii Wydarzenia podczas konfiguracji tworzenia kategorii."
+    livestream_enabled: "Włącz czat na żywo dla tematów oznaczonych tagiem „na żywo”."
+    livestream_chat_allowed_groups: "Tylko grupy znajdujące się na liście dozwolonych mogą czatować na kanale transmisji na żywo."
+    livestream_embeddable_chat_allowed_paths: "Dozwolone ścieżki dla osadzanego czatu na żywo."
+    livestream_enable_modal_chat_on_mobile: "Pokaż czat na żywo w oknie modalnym na urządzeniu mobilnym."
   discourse_calendar:
     category_type:
       default_calendar_view:
@@ -101,6 +105,7 @@ pl_PL:
     calendar_must_be_in_first_post: "Tag kalendarza może być użyty tylko w pierwszym poście tematu."
     more_than_one_calendar: "W poście nie można umieścić więcej niż jednego kalendarza."
     more_than_two_dates: "Post w temacie kalendarza nie może zawierać więcej niż dwóch dat."
+    whisper_not_allowed: "Szeptów nie można używać do tworzenia wydarzeń w kalendarzu."
     event_expired: "Wydarzenie wygasło"
     holiday_status:
       description: "Na świętach"

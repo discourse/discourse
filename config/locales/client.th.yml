@@ -6,10 +6,18 @@
 
 th:
   js:
+    user_api_key:
+      deny: "ยกเลิก"
+      copied: "คัดลอกแล้ว!"
+      device:
+        continue: "ดำเนินการต่อ"
     blocks:
       ghost:
         status: "สถานะ"
+        conditions: "เงื่อนไข"
+        in_location: "ใน"
         hidden: "ถูกซ่อน"
+        not_registered: "ไม่ได้ลงทะเบียน"
         failed: "ล้มเหลว"
     number:
       format:
@@ -114,6 +122,55 @@ th:
       presets:
         last_7_days: "7 วันที่ผ่านมา"
         last_30_days: "30 วันที่ผ่านมา"
+    languages:
+      ar:
+        name: ภาษาอาหรับ
+      be:
+        name: เบลารุส
+      bg:
+        name: บัลแกเรีย
+      bs_BA:
+        name: บอสเนีย
+      ca:
+        name: คาตาลัน
+      cs:
+        name: เช็ก
+      da:
+        name: เดนมาร์ก
+      de:
+        name: เยอรมัน
+      el:
+        name: กรีก
+      en:
+        name: อังกฤษ
+      en_GB:
+        name: อังกฤษ (สหราชอาณาจักร)
+      es:
+        name: สเปน
+      et:
+        name: เอสโตเนีย
+      fa_IR:
+        name: เปอร์เซีย
+      fi:
+        name: ฟินแลนด์
+      fr:
+        name: ฝรั่งเศส
+      gl:
+        name: กาลิเซีย
+      he:
+        name: ฮีบรู
+      hr:
+        name: โครเอเชีย
+      hu:
+        name: ฮังการี
+      hy:
+        name: อาร์เมเนีย
+      id:
+        name: อินโดนีเซีย
+      it:
+        name: อิตาลี
+      ja:
+        name: ญี่ปุ่น
     share:
       topic_html: 'กระทู้: <span class="topic-title">%{topicTitle}</span>'
       post: "โพสต์ #%{postNumber} โดย @%{username}"
@@ -121,6 +178,8 @@ th:
       facebook: "แชร์บนเฟสบุ๊ค"
       email: "ส่งทางอีเมล"
       url: "คัดลอกและแชร์ URL"
+    word_connector:
+      last_item: "และ"
     action_codes:
       public_topic: "ทำให้กระทู้นี้เป็นสาธารณะ %{when} "
       open_topic: "แปลงเป็นหัวเรื่องเมื่อ %{when}"
@@ -151,9 +210,15 @@ th:
       banner:
         enabled: "ทำให้เป็นแบนเนอร์%{when} จะปรากฏที่ด้านบนสุดของทุกหน้าจนกว่าจะผู้ใช้งานจะกดลบ"
         disabled: "ลบแบนเนอร์นี้%{when} จะไม่ปรากฏที่ด้านบนของหน้าใดๆ"
+      forwarded: "ส่งต่ออีเมลข้างต้น"
     topic_admin_menu: "การดำเนินการสำหรับหัวเรื่อง"
     skip_to_main_content: "ข้ามไปยังเนื้อหา"
+    skip_links_label: "ข้ามลิงก์นำทาง"
+    skip_to_last_reply: "ข้ามไปยังคำตอบสุดท้าย"
+    skip_to_top: "ข้ามไปที่ด้านบน"
+    skip_user_nav: "ข้ามไปยังเนื้อหาโปรไฟล์"
     emails_are_disabled: "อีเมลขาออกทั้งหมดถูกปิดโดยผู้ดูแลระบบ จะไม่มีอีเมลแจ้งเตือนใดๆถูกส่งออกไป"
+    emails_are_disabled_no_smtp: "ระบบส่งอีเมลขาออกทั้งหมดถูกปิดใช้งาน เนื่องจากไม่ได้ตั้งค่าเซิร์ฟเวอร์ SMTP ไว้ จึงไม่สามารถส่งอีเมลใดๆ ได้"
     emails_are_disabled_non_staff: "การส่งอีเมลออกถูกปิดใช้งานสำหรับผู้ใช้ที่ไม่ใช่เจ้าหน้าที่"
     software_update_prompt:
       dismiss: "ซ่อน"
@@ -165,6 +230,8 @@ th:
     themes:
       default_description: "ค่าเริ่มต้น"
       only_admins: "(ข้อความนี้จะแสดงเฉพาะผู้ดูแลไซต์เท่านั้น)"
+    dev_tools:
+      drag_to_move: "ลากเพื่อย้าย"
     s3:
       regions:
         ap_northeast_1: "เอเชียแปซิฟิก (โตเกียว)"
@@ -242,6 +309,10 @@ th:
     suggested_topics:
       pm_title: "ข้อความแนะนำ"
     admin_onboarding_banner:
+      select_theme:
+        use_theme: "ใช้ธีมที่เลือก"
+        enabled: "เลือก"
+        applying_theme: "กำลังใช้ธีม..."
       start_posting:
         back: "กลับ"
     about:
@@ -566,7 +637,6 @@ th:
             title: "การตั้งค่า"
         membership:
           title: การเป็นสมาชิก
-          access: การเข้าถึง
         categories:
           title: หมวดหมู่
         tags:
@@ -847,6 +917,7 @@ th:
       apps: "แอป"
       api_approved: "อนุมัติแล้ว:"
       api_last_used_at: "ใช้ครั้งสุดท้ายเมื่อ:"
+      api_expires_never: "ไม่เลย"
       theme: "ธีม"
       save_to_change_theme: 'ธีมจะถูกอัปเดตเมื่อคุณคลิก "%{save_text}"'
       home: "หน้าเริ่มต้น"
@@ -1274,6 +1345,12 @@ th:
       confirm_title: ดำเนินการต่อไปยัง %{site_name}
       logging_in_as: กำลังเข้าสู่ระบบด้วย %{email}
       confirm_button: เสร็จสิ้นการเข้าสู่ระบบ
+    code_login:
+      email_label: "อีเมล"
+      continue_button: "ดำเนินการต่อ"
+      verify_button: "ดำเนินการต่อ"
+      account_ready_continue: "ดำเนินการต่อ"
+      username_label: "ชื่อผู้ใช้"
     login:
       title: "เข้าสู่ระบบ"
       username: "ชื่อผู้ใช้"
@@ -1440,6 +1517,7 @@ th:
         attribute_value: "ค่า"
         apply: "นำไปใช้"
       help: "ช่วยเหลือการจัดรูปแบบ"
+      edit_reason: "ทำไมคุณถึงแก้ไข"
       modal_ok: "ตกลง"
       cant_send_pm: "ขออภัย คุณไม่สามารถส่งข้อความหา %{username} ได้"
       yourself_confirm:
@@ -1454,13 +1532,16 @@ th:
           desc: ตอบกลับโพสต์ที่เจาะจง
         reply_to_topic:
           label: ตอบกลับกระทู้
+          trigger: หัวข้อ
+        reply_to_message:
+          trigger: ข้อความ
         create_personal_message:
-          label: "ข้อความใหม่"
           desc: "สร้างข้อความส่วนตัวใหม่"
         shared_draft:
           label: "แบบร่างที่ถูกแบ่งปัน"
         toggle_topic_bump:
           desc: "ตอบกลับโดยไม่เปลี่ยนวันที่ตอบกลับล่าสุด"
+        unknown_user: "ผู้ใช้"
       ignore: "ไม่สนใจ"
       image: "รูปภาพ"
     notifications:
@@ -1668,11 +1749,14 @@ th:
         new: "ใหม่"
       collapsed_replies:
         other: "%{count} ตอบ"
+      collapsed_post: "โพสต์ที่ยุบ"
       collapse: "ย่อ"
       no_replies: "ยังไม่มีคำตอบ"
       deleted_post_placeholder: "[ลบ]"
       ignored_post_placeholder: "[ละเว้นแล้ว]"
       pinned_reply: "ปักหมุดแล้ว"
+    share_target:
+      new_message: "ข้อความใหม่"
     topic:
       filter_to:
         other: " %{count} โพสต์ในกระทู้"
@@ -2702,6 +2786,11 @@ th:
                 "0": "ใหม่"
                 "2": "สมาชิก"
                 "3": "ทั่วไป"
+          search:
+            title: "ค้นหา"
+            table:
+              searches: "ค้นหา"
+              status: "สถานะ"
         reports_section:
           modal:
             apply: "นำไปใช้"
@@ -2851,6 +2940,7 @@ th:
       config_areas:
         about:
           company_name: "ชื่อ"
+          company_url: "เว็บไซต์"
           extra_groups:
             groups: "กลุ่ม"
           optional: "(ทางเลือก)"

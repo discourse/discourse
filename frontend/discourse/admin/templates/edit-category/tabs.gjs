@@ -15,7 +15,7 @@ import EditCategoryTypeSchemaFields from "discourse/components/edit-category-typ
 import Form from "discourse/components/form";
 import { bind } from "discourse/lib/decorators";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
-import { or } from "discourse/truth-helpers";
+import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const TAB_COMPONENTS = {
@@ -63,7 +63,9 @@ export default class Tabs extends Component {
   }
 
   <template>
-    <div class="edit-category {{if @controller.expandedMenu 'expanded-menu'}}">
+    <div
+      class="edit-category-page {{if @controller.expandedMenu 'expanded-menu'}}"
+    >
       <EditCategoryTabsHorizontal
         @controller={{@controller}}
         class="edit-category-page-header"
@@ -79,7 +81,7 @@ export default class Tabs extends Component {
         as |form transientData|
       >
         <form.Section
-          class="edit-category-content edit-category-tab-{{@controller.selectedTab}}"
+          class="edit-category-tab edit-category-tab-{{@controller.selectedTab}}"
         >
           {{#let
             (this.componentFor
@@ -91,39 +93,61 @@ export default class Tabs extends Component {
               @selectedTab={{@controller.selectedTab}}
               @categoryType={{@controller.selectedTab}}
               @category={{@controller.model}}
+              @showAdvancedTabs={{@controller.showAdvancedTabs}}
               @registerValidator={{@controller.registerValidator}}
               @registerAfterReset={{@controller.registerAfterReset}}
               @transientData={{transientData}}
               @form={{form}}
               @setSelectedTab={{@controller.setSelectedTab}}
+              @availableLocales={{@controller.availableLocales}}
+              @siteTextsLocale={{@controller.siteTextsLocale}}
+              @switchSiteTextsLocale={{@controller.switchSiteTextsLocale}}
+              @isLoadingSiteTextsLocale={{@controller.isLoadingSiteTextsLocale}}
             />
           {{/let}}
         </form.Section>
 
-        {{#if @controller.showDeleteReason}}
-          <form.Alert @type="warning" class="edit-category-delete-warning">
-            {{trustHTML @controller.model.cannot_delete_reason}}
-          </form.Alert>
-        {{/if}}
+        {{#if (eq @controller.selectedTab "settings")}}
+          {{#if (or @controller.model.can_delete @controller.model.id)}}
+            <form.Section
+              @title={{i18n "category.danger_zone.title"}}
+              class="edit-category__footer"
+            >
+              {{#if @controller.model.can_delete}}
+                <div class="edit-category__delete">
+                  <div class="edit-category__delete-context">
+                    <h3 class="edit-category__delete-title">
+                      {{i18n "category.danger_zone.delete_title"}}
+                    </h3>
+                    <p class="edit-category__delete-description">
+                      {{i18n "category.danger_zone.delete_description"}}
+                    </p>
+                  </div>
+                  <div class="edit-category__delete-actions">
+                    <form.Button
+                      @action={{@controller.deleteCategory}}
+                      @icon="trash-can"
+                      @label="category.delete"
+                      class="btn-danger btn-small"
+                    />
 
-        {{#if (or @controller.model.can_delete @controller.model.id)}}
-          <form.Actions class="edit-category-footer">
-            {{#if @controller.model.can_delete}}
-              <form.Button
-                @action={{@controller.deleteCategory}}
-                @icon="trash-can"
-                @label="category.delete"
-                class="btn-danger btn-small"
-              />
-            {{else}}
-              <form.Button
-                @action={{@controller.toggleDeleteTooltip}}
-                @icon="circle-question"
-                @label="category.delete"
-                class="btn-default btn-small"
-              />
-            {{/if}}
-          </form.Actions>
+                  </div>
+                </div>
+              {{else}}
+                <div class="edit-category__delete --forbidden">
+                  <div class="edit-category__delete-context">
+                    <h3 class="edit-category__delete-title">
+                      {{i18n "category.danger_zone.delete_title_forbidden"}}
+                    </h3>
+                    <p class="edit-category__delete-description">
+                      {{trustHTML @controller.model.cannot_delete_reason}}
+                    </p>
+                  </div>
+                </div>
+              {{/if}}
+
+            </form.Section>
+          {{/if}}
         {{/if}}
       </Form>
 

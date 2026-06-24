@@ -28,3 +28,8 @@ sq:
       query_groups: "Grupet"
       query_description: "Përshkrimi"
       reset_params: "Rivendosni"
+    discourse_workflows:
+      sql:
+        param_value: "Vlera"
+        output:
+          results: "Results"

@@ -28,6 +28,8 @@ module Chat
     end
 
     def can_create_chat_message?
+      return false if anonymous?
+
       !SpamRule::AutoSilence.prevent_posting?(@user)
     end
 
@@ -38,8 +40,7 @@ module Chat
     def can_send_direct_message?(channel)
       return true if is_staff? || @user.bot?
 
-      can_chat? && can_direct_message? && channel.chatable.user_can_access?(@user) &&
-        !@user.suspended?
+      can_chat? && channel.chatable.user_can_access?(@user) && !@user.suspended?
     end
 
     def allowing_direct_messages?
@@ -222,6 +223,8 @@ module Chat
       return false if !can_modify_channel_message?(message.chat_channel)
 
       if message.user_id == current_user.id
+        return false if !can_preview_chat_channel?(message.chat_channel)
+
         can_delete_own_chats?(chatable)
       else
         can_delete_other_chats?(chatable)

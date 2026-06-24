@@ -6,6 +6,21 @@
 
 nl:
   js:
+    user_api_key:
+      title: '''%{application_name}'' autoriseren'
+      authorize: "Autoriseren"
+      deny: "Annuleren"
+      logged_in_as: "Aanmelden als"
+      permissions_header: 'Dit staat ''%{application_name}'' toe om:'
+      redirect_warning: "Autoriseren leidt je door om naar"
+      copied: "Gekopieerd!"
+      otp_description: 'Wil je ''%{application_name}'' toegang tot deze website geven?'
+      no_trust_level: "Sorry, je hebt niet het vereiste vertrouwensniveau voor toegang tot de gebruikers-API."
+      generic_error: "Sorry, we kunnen geen API-sleutels voor gebruikers uitgeven; deze functie is mogelijk uitgeschakeld door de websitebeheerder."
+      device:
+        code: "Code"
+        continue: "Doorgaan"
+        authorize_title: '''%{application_name}'' autoriseren'
     blocks:
       ghost:
         status: "Status"
@@ -459,7 +474,7 @@ nl:
       launch_in_easy_steps: "Start in %{step_count} eenvoudige stappen"
       congrats_onboarding_complete: "Gefeliciteerd met het voltooien van het onboardingproces!"
       select_theme:
-        enabled: "Ingeschakeld"
+        enabled: "Geselecteerd"
       invite_collaborators:
         title: "Deelnemers uitnodigen"
         description: "Vroege leden helpen je community tot leven te brengen"
@@ -675,6 +690,7 @@ nl:
       continue_as_guest: "Doorgaan als gast"
       be_first_to_reply: "Antwoord als eerste!"
       replying_to: "Antwoorden op %{username}"
+      editing_post: "Bericht bewerken "
       reply_placeholder: "Schrijf een antwoord..."
       signin_flow:
         cancel: "Annuleren"
@@ -1223,7 +1239,8 @@ nl:
             from_alias_hint: "Alias om te gebruiken als het van-adres bij het verzenden van groeps-SMTP-e-mails. Let op: dit wordt mogelijk niet door alle e-mailproviders ondersteund, raadpleeg de documentatie van je e-mailprovider."
         membership:
           title: Lidmaatschap
-          access: Toegang
+          join_method:
+            invite: "Alleen op uitnodiging"
         categories:
           title: Categorieën
           long_title: "Standaardmeldingen voor categorieën"
@@ -1256,7 +1273,6 @@ nl:
         title: "Toestemmingen"
         none: "Er zijn geen categorieën aan deze groep gekoppeld."
         description: "Leden van deze groep hebben toegang tot deze categorieën"
-      public_admission: "Gebruikers toestaan de groep te verlaten (vereist openbaar zichtbare groep)"
       public_exit: "Gebruikers toestaan de groep te verlaten"
       empty:
         posts: "Er zijn geen berichten van leden van deze groep"
@@ -1272,7 +1288,6 @@ nl:
       request: "Verzoek"
       message: "Bericht"
       confirm_leave: "Weet je zeker dat je deze groep wilt verlaten?"
-      allow_membership_requests: "Sta gebruikers toe om lidmaatschapsverzoeken naar groepseigenaren sturen (vereist een openbaar zichtbare groep)"
       membership_request_template: "Aangepaste sjabloon om aan gebruikers weer te geven bij het sturen van een lidmaatschapsverzoek"
       membership_request:
         submit: "Verzoek verzenden"
@@ -1623,7 +1638,6 @@ nl:
       enable_smart_lists: "Schakel slimme lijsten in bij schrijven in de editor"
       enable_defer: "Als gelezen markeren van topics inschakelen"
       enable_markdown_monospace_font: "Gebruik een monospace lettertype in de Markdown-modus van de editor"
-      show_original_content: "Geef originele content weer in plaats van vertaalde content. Kan ook worden in-/uitgeschakeld binnen topics."
       experimental_sidebar:
         enable: "Zijbalk inschakelen"
         options: "Opties"
@@ -1700,6 +1714,9 @@ nl:
       undo_revoke_access: "Toegang intrekken ongedaan maken"
       api_approved: "Goedgekeurd:"
       api_last_used_at: "Laatst gebruikt op:"
+      api_expires_at: "Verloopt:"
+      api_expired_at: "Verlopen:"
+      api_expires_never: "nooit"
       api_show_permissions:
         one: "Toestemming verleend (%{count})"
         other: "Toestemming verleend (%{count})"
@@ -2636,6 +2653,12 @@ nl:
       confirm_title: Doorgaan naar %{site_name}
       logging_in_as: Aanmelden als %{email}
       confirm_button: Aanmelding voltooien
+    code_login:
+      email_label: "E-mailadres"
+      continue_button: "Doorgaan"
+      verify_button: "Doorgaan"
+      account_ready_continue: "Doorgaan"
+      username_label: "Gebruikersnaam"
     login:
       header_title: "Welkom terug"
       title: "Aanmelden"
@@ -2879,6 +2902,10 @@ nl:
       publish: "Gedeeld concept publiceren"
       confirm_publish: "Weet je zeker dat je dit concept wilt publiceren?"
       publishing: "Topic publiceren…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metagegevens"
     composer:
       autocomplete:
         username_missing: "De gebruikersnaam ontbreekt in het geselecteerde automatisch ingevulde resultaat."
@@ -2971,7 +2998,7 @@ nl:
       users_placeholder: "Voeg gebruikers of groepen toe"
       title_placeholder: "Waar gaat deze discussie over in één korte zin?"
       title_or_link_placeholder: "Typ de titel of plak hier een link"
-      edit_reason_placeholder: "waarom bewerk je?"
+      edit_reason_placeholder: "Waarom bewerk je?"
       topic_featured_link_placeholder: "Voer de weergegeven link in met titel."
       remove_featured_link: "Link verwijderen uit topic."
       reply_placeholder: "Typ hier. Gebruik Markdown, BBCode of HTML voor opmaak. Sleep of plak afbeeldingen."
@@ -3041,7 +3068,7 @@ nl:
       collapse: "Editorpaneel minimaliseren"
       open: "Editorpaneel openen"
       abandon: "Editor sluiten en concept verwijderen"
-      edit_reason: "Voeg je reden voor de bewerking toe"
+      edit_reason: "Waarom bewerk je?"
       enter_fullscreen: "Editor openen in volledig scherm"
       exit_fullscreen: "Editor in volledig scherm afsluiten"
       exit_fullscreen_prompt: "Druk op <kbd>ESC</kbd> om het volledige scherm te sluiten"
@@ -3076,25 +3103,26 @@ nl:
           desc: Maak een nieuw bericht dat begint met dezelfde ontvangers
         reply_to_topic:
           label: Antwoorden op topic
+          trigger: Topic
           desc: Antwoord op het topic, niet een bepaald bericht
+        reply_to_message:
+          trigger: Bericht
         toggle_whisper:
           label: Fluisteren in-/uitschakelen
-          desc: Fluisterberichten zijn alleen zichtbaar voor medewerkers
         create_topic:
-          label: "Nieuw topic"
           desc: Maak een nieuw topic
         create_personal_message:
-          label: "Nieuw bericht"
           desc: "Een nieuw persoonlijk bericht maken"
         shared_draft:
           label: "Gedeeld concept"
           desc: "Maak een topicconcept dat alleen zichtbaar is voor toegestane gebruikers"
         toggle_topic_bump:
-          label: "Omhoog plaatsen van topic in-/uitschakelen"
           desc: "Antwoorden zonder datum van laatste antwoord te wijzigen"
         toggle_unlisted:
           label: Onzichtbaar schakelen
           desc: "Onzichtbare topics zijn alleen toegankelijk via een rechtstreekse link"
+        edit_post: "Bericht bewerken "
+        unknown_user: "Gebruiker"
       reload: "Opnieuw laden"
       ignore: "Negeren"
       image_alt_text:
@@ -3480,6 +3508,8 @@ nl:
         relist_topics: "Topics opnieuw zichtbaar maken"
         pin_topics: "Deze topics uitlichten"
         unpin_topics: "Topic losmaken"
+        enable_nested_replies: "Geneste antwoorden inschakelen"
+        disable_nested_replies: "Geneste antwoorden uitschakelen"
         reset_bump_dates: "Omhoogplaatsingsdatums resetten"
         defer: "Markeren als ongelezen"
         delete: "Topics verwijderen"
@@ -3505,6 +3535,15 @@ nl:
         also_dismiss_topics: "Volgen van deze topics stoppen, zodat ze nooit meer als ongelezen verschijnen voor mij"
         dismiss_new_topics: "Nieuwe topics negeren"
         dismiss_new_replies: "Nieuwe antwoorden sluiten"
+        dismiss_new_topics_with_selected:
+          one: "Negeren (%{count})"
+          other: "Negeren (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Negeren (%{count})"
+          other: "Negeren (%{count})"
+        dismiss_all_with_selected:
+          one: "Negeren (%{count})"
+          other: "Negeren (%{count})"
         dismiss_new: "Nieuwe negeren"
         dismiss_new_modal:
           title: "Nieuwe negeren"
@@ -3596,7 +3635,7 @@ nl:
         education:
           topic_tracking_preferences: 'Je kunt je nieuwe instellingen voor het volgen van topics bekijken en wijzigen in <a href="%{basePath}/my/preferences/tracking">je voorkeuren</a>.'
           unread: "Niets ongelezen gelaten... indrukwekkend!"
-          new_new: "Momenteel niets nieuws. Kom snel terug!"
+          unified_new: "Momenteel niets nieuws. Kom snel terug!"
           new: "Momenteel niets nieuws. Kom snel terug!"
           generic: "Niets te zien hier...kom snel terug!"
     topic_bulk_actions:
@@ -3622,6 +3661,10 @@ nl:
       manage_tags:
         add:
           title: "Tags toevoegen"
+        remove:
+          title: "Tags verwijderen"
+        replace:
+          title: "Tags vervangen"
       delete_topics:
         name: "Verwijderen"
         description: "Verwijder de geselecteerde topics permanent. Deze actie kan niet ongedaan worden gemaakt."
@@ -3647,6 +3690,10 @@ nl:
       unpin_topics:
         name: "Losmaken"
         description: "Maak alle geselecteerde topics los die zijn vastgemaakt aan een categorie of globaal zijn vastgemaakt"
+      enable_nested_replies:
+        name: "Geneste antwoorden inschakelen"
+      disable_nested_replies:
+        name: "Geneste antwoorden uitschakelen"
     nested_replies:
       nested_view: "Geneste weergave"
       flat_view: "Platte weergave"
@@ -3684,6 +3731,9 @@ nl:
         banner: "Je bekijkt een enkele thread van dit topic."
         view_full_topic: "Volledig topic weergeven"
         view_parent_context: "Bovenliggende context weergeven"
+    share_target:
+      new_topic: "Nieuw topic"
+      new_message: "Nieuw bericht"
     topic:
       filter_to:
         one: "%{count} bericht in topic"
@@ -4528,7 +4578,6 @@ nl:
         site_settings: "Site-instellingen"
       choose_type:
         title: "Kies categorietype"
-        requires_plugin: "Vereist plug-in"
       create_category: "Categorie maken"
       save: "Categorie opslaan"
       unsaved_changes: "Je hebt niet-opgeslagen wijzigingen"
@@ -4926,7 +4975,7 @@ nl:
         new_replies_tooltip: "Nieuwe antwoorden"
         replies: "Antwoorden"
         replies_with_count: "Antwoorden (%{count})"
-      new_new:
+      unified_new:
         help: "topics die de afgelopen dagen zijn gemaakt of beantwoord"
       posted:
         title: "Mijn berichten"
@@ -5029,6 +5078,7 @@ nl:
         blockquote: "Blokcitaat"
       bookmarks:
         title: "Bladwijzers maken"
+        enter: "Opslaan en sluiten"
         later_today: "Later vandaag"
         later_this_week: "Later deze week"
         tomorrow: "Morgen"
@@ -5043,6 +5093,7 @@ nl:
         reply_as_new_topic: "Antwoorden als gekoppeld topic"
         reply_topic: "Antwoorden op topic"
         flag: "Bericht markeren"
+        edit: "Bericht bewerken"
         delete: "Bericht verwijderen"
         mark_tracking: "Topic volgen"
         mark_watching: "Topic observeren"
@@ -5564,7 +5615,7 @@ nl:
           title: "Tabel bewerken"
           cancel: "annuleren"
           create: "Opslaan"
-          reason: "waarom bewerk je?"
+          reason: "Waarom bewerk je?"
           trigger_reason: "Reden voor bewerking toevoegen"
         default_edit_reason: "Tabel bijwerken met tabeleditor"
       default_header:
@@ -5677,12 +5728,6 @@ nl:
             bookmarks: "Topics in %{category} zonder tags waarvoor je een bladwijzer hebt"
             default: "%{filter} topics in %{category} zonder tags"
         categories: "Alle categorieën"
-    content_localization:
-      toggle_localized:
-        translated: "Pagina is machinaal vertaald. Klik om het origineel te bekijken."
-        not_translated: "Pagina is niet vertaald. Klik om te vertalen."
-        translations_enabled: "Vertalingen ingeschakeld"
-        translations_disabled: "Vertalingen uitgeschakeld"
     language_switcher:
       title: "Sitetaal wijzigen"
   admin_js:
@@ -6302,12 +6347,14 @@ nl:
         too_many_requests: Je hebt deze actie te vaak uitgevoerd. Wacht voordat je het opnieuw probeert.
         not_found_error: Dit rapport bestaat niet
         custom_date_range: Aangepast datumbereik
+        stable: "stabiel"
         sections:
           reports:
             title: "Rapporten"
           traffic:
             title: "Siteverkeer"
           engagement:
+            title: "Betrokkenheid"
             activity_by_category:
               category: "Categorie"
               topics: "Topics"
@@ -6323,6 +6370,11 @@ nl:
                 "2": "Lid"
                 "3": "Normaal"
                 "4": "Leider"
+          search:
+            title: "Zoeken"
+            table:
+              searches: "Zoekopdrachten"
+              status: "Status"
         reports_section:
           no_data: "Geen gegevens om weer te geven"
           modal:
@@ -6420,7 +6472,6 @@ nl:
             incoming_email: "Aangepast adres voor inkomende e-mail"
             incoming_email_placeholder: "voer e-mailadres in"
             incoming_email_tooltip: "Je kunt meerdere e-mailadressen scheiden met het teken |."
-            visibility: Zichtbaarheid
             visibility_levels:
               title: "Wie kan deze groep zien?"
               public: "Iedereen"
@@ -6849,9 +6900,10 @@ nl:
           your_organization: "Je organisatie"
           your_organization_description: "We gebruiken deze informatie in de Gebruiksvoorwaarden en Privacyverklaring om aan te geven wie de site beheert en in welk rechtsgebied."
           company_name: "Naam"
-          company_name_placeholder: "Acme-organisatie"
           company_name_warning: |
             Als dit leeg wordt gelaten worden er geen standaard Gebruiksvoorwaarden of Privacyverklaring verstrekt.
+          company_url: "Website"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Toepasselijk recht"
           governing_law_placeholder: "Provincie, staat of land"
           governing_law_help: |

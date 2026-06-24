@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+set -eu
+
+stale_after_days="${STALE_AFTER_DAYS:-14}"
+dry_run="${DRY_RUN:-true}"
+
+bin/rails runner script/upcoming_changes_status_report -- \
+  --stale-after-days "${stale_after_days}" \
+  --pretty > /tmp/upcoming_changes_status_report.json
+
+cat /tmp/upcoming_changes_status_report.json
+
+eligible_count="$(
+  ruby -rjson -e 'records = JSON.parse(File.read(ARGV.fetch(0))); puts records.count { |record| record["eligible"] }' /tmp/upcoming_changes_status_report.json
+)"
+echo "eligible_count=${eligible_count}" >> "${GITHUB_OUTPUT}"
+
+{
+  echo "### Upcoming change status report"
+  echo
+  echo "- Dry run: \`${dry_run}\`"
+  echo "- Stale after days: \`${stale_after_days}\`"
+  echo "- Eligible changes: \`${eligible_count}\`"
+  echo
+  ruby -rjson -e '
+    JSON.parse(File.read(ARGV.fetch(0))).select { |record| record["eligible"] }.each do |record|
+      puts "- `#{record["name"]}`: `#{record["current_status"]}` -> `#{record["next_status"]}` in `#{record["settings_path"]}`; last changed #{record["days_since_status_change"]} days ago"
+    end
+  ' /tmp/upcoming_changes_status_report.json
+} >> "${GITHUB_STEP_SUMMARY}"

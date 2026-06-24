@@ -18,6 +18,7 @@ RSpec.describe "Admin tag list site setting" do
     tag_chooser.select_row_by_name(tag_1.name)
     tag_chooser.search(tag_2.name)
     tag_chooser.select_row_by_name(tag_2.name)
+    tag_chooser.collapse
 
     expect(settings_page).to have_tags_in_setting("digest_suppress_tags", [tag_1, tag_2])
 

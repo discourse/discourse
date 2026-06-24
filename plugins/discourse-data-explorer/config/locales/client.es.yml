@@ -69,6 +69,10 @@ es:
       undo: "Descartar cambios"
       delete: "Eliminar"
       recover: "Recuperar consulta"
+      chart:
+        form:
+          label: "Tipo de gráfico"
+          bar: "Barras"
       others_dirty: "Una consulta tiene cambios no guardados que se perderán si sales."
       run_time: "Consulta completada en %{value} ms."
       cached_result_notice: "Mostrando resultados en caché de %{relative_time}."
@@ -105,6 +109,17 @@ es:
           descriptions:
             data_explorer:
               run_queries: "Ejecuta consultas del explorador de datos. Restringe la clave API a un conjunto de consultas especificando los ID de las mismas."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Explorador de datos"
+      sql:
+        queries: "Consultas"
+        query_id: "Consulta"
+        add_param: "Añadir parámetro"
+        param_value: "Valor"
+        output:
+          results: "Resultados"
+          no_results: "No hay resultados"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

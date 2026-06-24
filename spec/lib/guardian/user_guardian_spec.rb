@@ -532,6 +532,7 @@ RSpec.describe UserGuardian do
 
       it "isn't allowed when SSO is enabled" do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         expect(guardian.can_delete_user?(user)).to eq(false)
       end

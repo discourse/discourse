@@ -6,10 +6,11 @@
 
 zh_CN:
   js:
-    discourse_hCaptcha:
-      missing_token: "请完成 hCaptcha 验证。"
+    discourse_captcha:
+      missing_token: "请完成验证码挑战。"
+      verification_failed: "验证码验证失败，请重试。"
       placeholder: 占位符
-      contact_system_administrator: "hCaptcha 出错了，如果问题一直存在，请联系系统管理员"
+      contact_system_administrator: "您的验证码提供商出现问题，如果问题仍然存在，请联系系统管理员。"
   admin_js:
     admin:
       site_settings:

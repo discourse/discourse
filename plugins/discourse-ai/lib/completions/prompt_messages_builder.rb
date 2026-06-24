@@ -401,26 +401,34 @@ module DiscourseAi
         message[:id] = id.to_s if id
         message[:provider_data] = provider_data.deep_symbolize_keys if provider_data.present?
         if thinking
-          if thinking["message"] || thinking["provider_info"]
-            message[:thinking] = thinking["message"] if thinking["message"]
-            provider_info =
-              DiscourseAi::Completions::Thinking.normalize_provider_info(thinking["provider_info"])
-            message[:thinking_provider_info] = provider_info if provider_info.present?
-          else
-            legacy_provider_info = {}
-            if thinking["thinking_signature"]
-              legacy_provider_info[:anthropic] ||= {}
-              legacy_provider_info[:anthropic][:signature] = thinking["thinking_signature"]
-            end
-            if thinking["redacted_thinking_signature"]
-              legacy_provider_info[:anthropic] ||= {}
-              legacy_provider_info[:anthropic][:redacted_signature] = thinking[
-                "redacted_thinking_signature"
-              ]
-            end
+          if thinking.is_a?(Hash)
+            thinking = thinking.deep_symbolize_keys
 
-            message[:thinking] = thinking["thinking"] if thinking["thinking"]
-            message[:thinking_provider_info] = legacy_provider_info if legacy_provider_info.present?
+            if thinking[:message] || thinking[:provider_info]
+              message[:thinking] = thinking[:message] if thinking[:message]
+              provider_info =
+                DiscourseAi::Completions::Thinking.normalize_provider_info(thinking[:provider_info])
+              message[:thinking_provider_info] = provider_info if provider_info.present?
+            else
+              legacy_provider_info = {}
+              if thinking[:thinking_signature]
+                legacy_provider_info[:anthropic] ||= {}
+                legacy_provider_info[:anthropic][:signature] = thinking[:thinking_signature]
+              end
+              if thinking[:redacted_thinking_signature]
+                legacy_provider_info[:anthropic] ||= {}
+                legacy_provider_info[:anthropic][:redacted_signature] = thinking[
+                  :redacted_thinking_signature
+                ]
+              end
+
+              message[:thinking] = thinking[:thinking] if thinking[:thinking]
+              message[
+                :thinking_provider_info
+              ] = legacy_provider_info if legacy_provider_info.present?
+            end
+          else
+            message[:thinking] = thinking
           end
         end
 

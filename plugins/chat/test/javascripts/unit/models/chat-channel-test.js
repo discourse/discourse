@@ -35,6 +35,15 @@ module("Unit | Models | chat-channel", function (hooks) {
       assert.strictEqual(channel.unreadThreadsCountSinceLastViewed, 0);
     });
 
+    test("returns 0 when current user membership is missing", function (assert) {
+      const channel = new ChatFabricators(getOwner(this)).channel();
+      channel.threadingEnabled = true;
+      channel.currentUserMembership = null;
+      channel.threadsManager.markThreadUnread(1, new Date());
+
+      assert.strictEqual(channel.unreadThreadsCountSinceLastViewed, 0);
+    });
+
     test("returns count of threads since last viewed when threading is enabled", function (assert) {
       const channel = new ChatFabricators(getOwner(this)).channel();
       channel.threadingEnabled = true;

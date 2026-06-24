@@ -6,6 +6,21 @@
 
 de:
   js:
+    user_api_key:
+      title: 'Autorisiere „%{application_name}“'
+      authorize: "Genehmigen"
+      deny: "Abbrechen"
+      logged_in_as: "Angemeldet als"
+      permissions_header: 'Dies erlaubt „%{application_name}“:'
+      redirect_warning: "Bei der Autorisierung wirst du weitergeleitet zu"
+      copied: "Kopiert!"
+      otp_description: 'Möchtest du „%{application_name}“ erlauben, auf diese Website zuzugreifen?'
+      no_trust_level: "Entschuldige, du hast nicht die erforderliche Vertrauensstufe, um die Benutzer-API zu nutzen."
+      generic_error: "Entschuldige, leider können wir keine Benutzer-API-Schlüssel ausgeben. Diese Funktion wurde unter Umständen vom Website-Administrator deaktiviert."
+      device:
+        code: "Code"
+        continue: "Weiter"
+        authorize_title: 'Autorisiere „%{application_name}“'
     blocks:
       ghost:
         status: "Status"
@@ -161,6 +176,7 @@ de:
     date_range_picker:
       apply: "Anwenden"
       start_date: "Startdatum"
+      end_date: "Enddatum"
       presets:
         last_7_days: "Letzte 7 Tage"
         last_30_days: "Letzte 30 Tage"
@@ -459,7 +475,7 @@ de:
       launch_in_easy_steps: "Starte in %{step_count} einfachen Schritten"
       congrats_onboarding_complete: "Herzlichen Glückwunsch zum Abschluss des Onboarding-Prozesses!"
       select_theme:
-        enabled: "Aktiviert"
+        enabled: "Ausgewählt"
       invite_collaborators:
         title: "Mitwirkende einladen"
         description: "Die ersten Mitglieder tragen dazu bei, deine Community zum Leben zu erwecken"
@@ -1224,7 +1240,8 @@ de:
             from_alias_hint: "Alias, der beim Versenden von Gruppen-SMTP-E-Mails als Absenderadresse verwendet werden soll. Bitte beachte, dass dies nicht von allen E-Mail-Anbietern unterstützt wird; sieh in der Dokumentation deines E-Mail-Anbieters nach."
         membership:
           title: Mitgliedschaft
-          access: Zugriff
+          join_method:
+            invite: "Nur auf Einladung"
         categories:
           title: Kategorien
           long_title: "Standardbenachrichtigungen für Kategorien"
@@ -1257,7 +1274,6 @@ de:
         title: "Berechtigungen"
         none: "Dieser Gruppe sind keine Kategorien zugeordnet."
         description: "Mitglieder dieser Gruppe können auf diese Kategorien zugreifen"
-      public_admission: "Erlaube Benutzern, die Gruppe eigenständig zu betreten (erfordert, dass die Gruppe öffentlich sichtbar ist)"
       public_exit: "Erlaube Benutzern, die Gruppe eigenständig zu verlassen"
       empty:
         posts: "Es gibt keine Beiträge von Mitgliedern dieser Gruppe"
@@ -1273,7 +1289,6 @@ de:
       request: "Anfrage"
       message: "Nachricht"
       confirm_leave: "Willst du die Gruppe wirklich verlassen?"
-      allow_membership_requests: "Erlaube Benutzern, Mitgliedschaftsanfragen an Gruppeneigentümer zu senden (erfordert öffentlich sichtbare Gruppen)"
       membership_request_template: "Individuelle Vorlage, die Benutzern angezeigt wird, welche eine Mitgliedschaftsanfrage senden"
       membership_request:
         submit: "Anfrage abschicken"
@@ -1624,7 +1639,6 @@ de:
       enable_smart_lists: "Aktiviere intelligente Listen beim Schreiben im Composer"
       enable_defer: "„Themen als ungelesen markieren“ aktivieren"
       enable_markdown_monospace_font: "Monospace-Schriftart im Markdown-Modus des Editors verwenden"
-      show_original_content: "Zeige den Originalinhalt anstelle der übersetzten Inhalte. Die Einstellung kann auch innerhalb von Themen verändert werden."
       experimental_sidebar:
         enable: "Seitenleiste aktivieren"
         options: "Optionen"
@@ -1701,6 +1715,9 @@ de:
       undo_revoke_access: "Zugriffsrecht wiederherstellen"
       api_approved: "Genehmigt:"
       api_last_used_at: "Zuletzt benutzt am:"
+      api_expires_at: "Gültig bis:"
+      api_expired_at: "Abgelaufen:"
+      api_expires_never: "nie"
       api_show_permissions:
         one: "Berechtigung erteilt (%{count})"
         other: "Berechtigungen erteilt (%{count})"
@@ -2637,6 +2654,12 @@ de:
       confirm_title: Weiter zu %{site_name}
       logging_in_as: Anmeldung als %{email}
       confirm_button: Anmeldung fertigstellen
+    code_login:
+      email_label: "E-Mail"
+      continue_button: "Weiter"
+      verify_button: "Weiter"
+      account_ready_continue: "Weiter"
+      username_label: "Benutzername"
     login:
       header_title: "Willkommen zurück"
       title: "Anmelden"
@@ -2880,6 +2903,10 @@ de:
       publish: "Gemeinsamen Entwurf veröffentlichen"
       confirm_publish: "Bist du sicher, dass du diese Vorlage veröffentlichten möchtest?"
       publishing: "Thema wird veröffentlicht …"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metadaten"
     composer:
       autocomplete:
         username_missing: "Das ausgewählte Autovervollständigungsergebnis enthält keinen Benutzernamen."
@@ -3042,7 +3069,7 @@ de:
       collapse: "Editor minimieren"
       open: "Editor öffnen"
       abandon: "Editor schließen und Entwurf verwerfen"
-      edit_reason: "Füge den Bearbeitungsgrund hinzu"
+      edit_reason: "Welchen Grund gibt es für die Bearbeitung?"
       enter_fullscreen: "Vollbild-Editor öffnen"
       exit_fullscreen: "Vollbild-Editor verlassen"
       exit_fullscreen_prompt: "Drücke <kbd>ESC</kbd>, um den Vollbildmodus zu verlassen"
@@ -3077,25 +3104,26 @@ de:
           desc: Neue Nachricht erstellen, beginnend mit denselben Empfängern
         reply_to_topic:
           label: Auf Thema antworten
+          trigger: Thema
           desc: Antworte auf das Thema, nicht auf einen bestimmten Beitrag
+        reply_to_message:
+          trigger: Nachricht
         toggle_whisper:
           label: Flüstermodus umschalten
-          desc: Ein geflüsterter Beitrag ist nur für Team-Mitglieder sichtbar
         create_topic:
-          label: "Neues Thema"
           desc: Erstelle ein neues Thema
         create_personal_message:
-          label: "Neue Nachricht"
           desc: "Erstelle eine neue persönliche Nachricht"
         shared_draft:
           label: "Gemeinsamer Entwurf"
           desc: "Entwurf eines Themas, das nur für erlaubte Benutzer sichtbar ist"
         toggle_topic_bump:
-          label: "„Nach oben verschieben“ für Thema umschalten"
           desc: "Antworten, ohne das Datum der neuesten Antwort zu ändern"
         toggle_unlisted:
           label: Sichtbarkeit umschalten
           desc: "Nicht aufgelistete Themen sind nur über einen direkten Link zugänglich"
+        edit_post: "Beitrag wird bearbeitet "
+        unknown_user: "Nutzer"
       reload: "Neu laden"
       ignore: "Ignorieren"
       image_alt_text:
@@ -3508,6 +3536,15 @@ de:
         also_dismiss_topics: "Diese Themen nicht mehr verfolgen, sodass mir diese nicht mehr als ungelesen angezeigt werden"
         dismiss_new_topics: "Neue Themen verwerfen"
         dismiss_new_replies: "Neue Antworten verwerfen"
+        dismiss_new_topics_with_selected:
+          one: "Ignorieren (%{count}) "
+          other: "Ignorieren (%{count}) "
+        dismiss_new_replies_with_selected:
+          one: "Ignorieren (%{count}) "
+          other: "Ignorieren (%{count}) "
+        dismiss_all_with_selected:
+          one: "Ignorieren (%{count}) "
+          other: "Ignorieren (%{count}) "
         dismiss_new: "Neue Themen ignorieren"
         dismiss_new_modal:
           title: "Neue verwerfen"
@@ -3599,7 +3636,7 @@ de:
         education:
           topic_tracking_preferences: 'Du kannst deine Konfiguration für die Verfolgung neuer Themen in <a href="%{basePath}/my/preferences/tracking">deinen Einstellungen</a> einsehen und ändern.'
           unread: "Nichts ungelesen … beeindruckend!"
-          new_new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
+          unified_new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
           new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
           generic: "Hier gibt es nichts zu sehen … Schau bald wieder vorbei!"
     topic_bulk_actions:
@@ -3695,6 +3732,9 @@ de:
         banner: "Du betrachtest einen einzelnen Thread aus diesem Thema."
         view_full_topic: "Vollständiges Thema anzeigen"
         view_parent_context: "Übergeordneten Kontext anzeigen"
+    share_target:
+      new_topic: "Neues Thema"
+      new_message: "Neue Nachricht"
     topic:
       filter_to:
         one: "%{count} Beitrag im Thema"
@@ -4539,7 +4579,6 @@ de:
         site_settings: "Website-Einstellungen"
       choose_type:
         title: "Kategorietyp wählen"
-        requires_plugin: "Erfordert ein Plug-in"
       create_category: "Kategorie erstellen"
       save: "Kategorie speichern"
       unsaved_changes: "Du hast ungespeicherte Änderungen"
@@ -4937,7 +4976,7 @@ de:
         new_replies_tooltip: "Neue Antworten"
         replies: "Antworten"
         replies_with_count: "Antworten (%{count})"
-      new_new:
+      unified_new:
         help: "Themen, die in den letzten Tagen erstellt oder beantwortet wurden"
       posted:
         title: "Meine Beiträge"
@@ -5690,12 +5729,6 @@ de:
             bookmarks: "Themen in %{category} ohne Schlagwörter, die du mit einem Lesezeichen versehen hast"
             default: "%{filter} Themen in %{category} ohne Schlagwörter"
         categories: "Alle Kategorien"
-    content_localization:
-      toggle_localized:
-        translated: "Die Seite wurde maschinell übersetzt. Klicke, um das Original zu sehen."
-        not_translated: "Die Seite ist nicht übersetzt. Klicke zum Übersetzen."
-        translations_enabled: "Übersetzungen aktiviert"
-        translations_disabled: "Übersetzungen deaktiviert"
     language_switcher:
       title: "Sprache der Website ändern"
   admin_js:
@@ -6315,6 +6348,7 @@ de:
         too_many_requests: Du hast diese Aktion zu oft ausgeführt. Bitte warte, bevor du es erneut probierst.
         not_found_error: Entschuldige bitte, dieser Bericht existiert nicht
         custom_date_range: Benutzerdefinierter Datumsbereich
+        stable: "stabil"
         sections:
           reports:
             title: "Berichte"
@@ -6337,8 +6371,11 @@ de:
                 "2": "Mitglied"
                 "3": "Regulär"
                 "4": "Anführer"
-              trend:
-                stable: "stabil"
+          search:
+            title: "Suche"
+            table:
+              searches: "Suchen"
+              status: "Status"
         reports_section:
           no_data: "Keine Daten anzuzeigen"
           modal:
@@ -6436,7 +6473,6 @@ de:
             incoming_email: "Benutzerdefinierte Adresse für eingehende E-Mails"
             incoming_email_placeholder: "E-Mail-Adresse eingeben"
             incoming_email_tooltip: "Du kannst mehrere E-Mail-Adressen mit dem Zeichen | trennen."
-            visibility: Sichtbarkeit
             visibility_levels:
               title: "Wer kann diese Gruppe sehen?"
               public: "Jeder"
@@ -6865,9 +6901,10 @@ de:
           your_organization: "Deine Organisation"
           your_organization_description: "Wir verwenden diese Informationen in den Nutzungsbedingungen und im Datenschutzhinweis, um zu zeigen, wer die Website betreibt und unter welcher Gerichtsbarkeit."
           company_name: "Name"
-          company_name_placeholder: "Acme-Organisation"
           company_name_warning: |
             Wenn du nichts angibst, werden keine vorgefertigten allgemeinen Geschäftsbedingungen oder eine entsprechende Datenschutzrichtlinie bereitgestellt.
+          company_url: "Website"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Anzuwendendes Recht"
           governing_law_placeholder: "Provinz, Bundesland oder Land"
           governing_law_help: |

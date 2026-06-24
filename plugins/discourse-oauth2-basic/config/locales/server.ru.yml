@@ -27,7 +27,6 @@ ru:
     oauth2_json_email_verified_path: "Путь в OAuth2 User JSON к состоянию проверки электронной почты пользователя. Например: user.email.verified. oauth2_email_verified должен быть отключен, чтобы этот параметр имел какой-либо эффект"
     oauth2_json_avatar_path: "Путь в Oauth2 User JSON к аватару пользователя. например: user.avatar_url"
     oauth2_email_verified: "Включите эту настройку, если OAuth2-сайт подтвердил адрес электронной почты."
-    oauth2_overrides_email: "Заменять электронную почту Discourse удалённой электронной почтой при каждом входе в систему. Работает так же, как параметр `auth_overrides_email`, но только при входе в систему через OAuth2."
     oauth2_send_auth_header: "Отправлять учетные данные клиента в заголовке HTTP-запроса"
     oauth2_send_auth_body: "Отправлять учетные данные клиента в теле запроса"
     oauth2_debug_auth: "Добавлять в журнал расширенную отладочную информацию"

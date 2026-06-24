@@ -171,6 +171,9 @@ lt:
             model_settings: "Modelio nustatymai"
             related_topics: "Susijusios temos"
             semantic_search: "Semantinė paieška"
+        admin_dashboard:
+          setting_groups:
+            settings: "Pagrindiniai nustatymai"
         discord:
           setting_groups:
             settings: "Pagrindiniai nustatymai"

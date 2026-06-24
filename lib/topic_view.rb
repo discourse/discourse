@@ -777,6 +777,25 @@ class TopicView
     link_counts[post.id]&.select { |l| l[:reflection] && l[:title].present? }
   end
 
+  # Per-post localized title/preview for internal topic oneboxes the reader sees
+  # in their own language. See ContentLocalization::OneboxLocalizer for the full
+  # contract (including why "show original" is gated in the serializer, not here).
+  def localized_oneboxes
+    return @localized_oneboxes if defined?(@localized_oneboxes)
+
+    @localized_oneboxes =
+      if SiteSetting.content_localization_enabled
+        ContentLocalization::OneboxLocalizer.build(
+          posts:,
+          guardian: @guardian,
+          category:,
+          locale: I18n.locale,
+        )
+      else
+        {}
+      end
+  end
+
   def pm_params
     @pm_params ||= TopicQuery.new(@user).get_pm_params(topic)
   end

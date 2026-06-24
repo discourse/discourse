@@ -396,7 +396,6 @@ fi:
           no_users: "Käyttäjiä ei löydy"
           leave_event: "Poistu tapahtumasta"
           status:
-            unknown: "Ei kiinnostunut"
             going: "Menossa"
             interested: "Kiinnostunut"
             going_count:
@@ -426,6 +425,8 @@ fi:
               description: "Yksityiseen tapahtumaan voivat liittyä vain kutsutut käyttäjät."
       composer:
         name_placeholder: "Tapahtuman nimi"
+        event_title_placeholder: "Tapahtuman nimi"
+        create_event_button: "Luo tapahtuma"
         reminder:
           units:
             minutes:
@@ -440,6 +441,9 @@ fi:
             weeks:
               one: "viikko"
               other: "viikkoa"
+      composer_actions:
+        create_event:
+          label: "Luo tapahtuma"
       builder_modal:
         custom_fields:
           label: "Mukautetut kentät"
@@ -504,3 +508,4 @@ fi:
       invite_user_or_group:
         title: "Ilmoita käyttäjille tai ryhmille"
         invite: "Lähetä"
+        success: "Kutsu lähetetty"

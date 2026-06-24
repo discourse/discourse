@@ -5,7 +5,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Search - Full Page", function (needs) {
   needs.settings({ assign_enabled: true });
-  needs.user({ can_assign: true });
+  needs.user({ can_assign: true, can_assign_globally: true });
   needs.pretender((server, helper) => {
     server.get("/u/search/users", () => {
       return helper.response({

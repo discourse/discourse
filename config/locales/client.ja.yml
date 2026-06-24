@@ -6,6 +6,21 @@
 
 ja:
   js:
+    user_api_key:
+      title: '「%{application_name}」の承認'
+      authorize: "承認"
+      deny: "キャンセル"
+      logged_in_as: "ログイン中:"
+      permissions_header: 'これにより、「%{application_name}」で次を行えます:'
+      redirect_warning: "承認すると次の場所にリダイレクトされます:"
+      copied: "コピーしました！"
+      otp_description: '"%{application_name}" にこのサイトへのアクセスを許可しますか？'
+      no_trust_level: "ユーザー API にアクセスするために必要な信頼レベルがありません。"
+      generic_error: "ユーザー API キーを発行できませんでした。この機能はサイト管理者によって無効化されている可能性があります。"
+      device:
+        code: "コード"
+        continue: "続行"
+        authorize_title: '「%{application_name}」の承認'
     blocks:
       ghost:
         status: "ステータス"
@@ -397,7 +412,7 @@ ja:
       pm_title: "推奨メッセージ"
     admin_onboarding_banner:
       select_theme:
-        enabled: "有効"
+        enabled: "選択済み"
       start_posting:
         back: "戻る"
     about:
@@ -1069,7 +1084,8 @@ ja:
             from_alias_hint: "グループ SMTP メールを送信する際に送信元アドレスとして使用するエイリアス。すべてのメールプロバイダーでサポートされているわけではなことにご注意ください。メールプロバイダーのドキュメントを参照してください。"
         membership:
           title: メンバーシップ
-          access: アクセス
+          join_method:
+            invite: "招待のみ"
         categories:
           title: カテゴリ
           long_title: "カテゴリのデフォルト通知"
@@ -1102,7 +1118,6 @@ ja:
         title: "権限"
         none: "このグループに関連付けられているカテゴリはありません。"
         description: "このグループのメンバーはこれらのカテゴリにアクセスできます"
-      public_admission: "ユーザーがグループに自由に参加することを許可する (一般公開グループである必要があります)"
       public_exit: "ユーザーがグループから自由に退出することを許可する"
       empty:
         posts: "このグループのメンバーによる投稿はありません"
@@ -1118,7 +1133,6 @@ ja:
       request: "リクエスト"
       message: "メッセージ"
       confirm_leave: "このグループから退出してもよろしいですか？"
-      allow_membership_requests: "ユーザーがグループのオーナーにメンバーシップリクエストを送信することを許可する (一般公開グループである必要があります)"
       membership_request_template: "メンバーシップリクエスト送信時にユーザーに表示するカスタムテンプレート"
       membership_request:
         submit: "リクエストを送信"
@@ -1534,6 +1548,9 @@ ja:
       undo_revoke_access: "アクセスの取り消しを元に戻す"
       api_approved: "承認:"
       api_last_used_at: "最終使用時間:"
+      api_expires_at: "有効期限:"
+      api_expired_at: "期限切れ:"
+      api_expires_never: "送信しない"
       theme: "テーマ"
       save_to_change_theme: '「%{save_text}」をクリックするとテーマが更新されます'
       home: "デフォルトのホームページ"
@@ -2397,6 +2414,12 @@ ja:
       confirm_title: '%{site_name} に進む'
       logging_in_as: '%{email} としてログイン'
       confirm_button: ログイン完了
+    code_login:
+      email_label: "メールアドレス"
+      continue_button: "続行"
+      verify_button: "続行"
+      account_ready_continue: "続行"
+      username_label: "ユーザー名"
     login:
       header_title: "おかえりなさい"
       title: "ログイン"
@@ -2619,6 +2642,10 @@ ja:
       publish: "共有の下書きを公開"
       confirm_publish: "この下書きを公開してもよろしいですか？"
       publishing: "トピックを公開中…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "メタデータ"
     composer:
       autocomplete:
         username_missing: "選択した自動補完候補にはユーザー名がありません。"
@@ -2769,6 +2796,7 @@ ja:
       collapse: "作成ツールパネルを最小化する"
       open: "作成ツールパネルを開く"
       abandon: "作成ツールを閉じて下書きを破棄する"
+      edit_reason: "編集する理由は？"
       enter_fullscreen: "作成ツールの全画面表示を開始する"
       exit_fullscreen: "作成ツールの全画面表示を終了する"
       exit_fullscreen_prompt: "<kbd>ESC</kbd> を押して全画面表示を終了"
@@ -2803,25 +2831,26 @@ ja:
           desc: 同じ受信者で始まる新しいメッセージを作成します
         reply_to_topic:
           label: トピックへ返信
+          trigger: トピック
           desc: 特定の投稿ではなく、トピックに返信する
+        reply_to_message:
+          trigger: メッセージ
         toggle_whisper:
           label: ささやきを切り替える
-          desc: ささやきはスタッフメンバーにのみ表示されます
         create_topic:
-          label: "新規トピック"
           desc: 新しいトピックを作成します
         create_personal_message:
-          label: "新規メッセージ"
           desc: "新しい個人メッセージを作成する"
         shared_draft:
           label: "共有の下書き"
           desc: "許可されたユーザーにのみ表示されるトピックの下書きを作成します"
         toggle_topic_bump:
-          label: "トピックのバンプを切り替える"
           desc: "最新の返信日を変更せずに返信します"
         toggle_unlisted:
           label: 非表示の切り替え
           desc: "非表示のトピックはダイレクトリンクのみでアクセスできます"
+        edit_post: "投稿を編集中"
+        unknown_user: "ユーザー"
       reload: "再読み込み"
       ignore: "無視する"
       image_alt_text:
@@ -3183,6 +3212,12 @@ ja:
         also_dismiss_topics: "これらのトピックの追跡を停止して、未読として表示されないようにする"
         dismiss_new_topics: "新しいトピックを閉じる"
         dismiss_new_replies: "新しい返信を閉じる"
+        dismiss_new_topics_with_selected:
+          other: "閉じる (%{count})"
+        dismiss_new_replies_with_selected:
+          other: "閉じる (%{count})"
+        dismiss_all_with_selected:
+          other: "閉じる (%{count})"
         dismiss_new: "新規を閉じる"
         dismiss_new_modal:
           title: "新規を閉じる"
@@ -3225,7 +3260,7 @@ ja:
         education:
           topic_tracking_preferences: '新規トピックの追跡の設定は、<a href="%{basePath}/my/preferences/tracking">設定</a>で表示および変更できます。'
           unread: "未読はありません... お見事！"
-          new_new: "今のところ新着はありません... また後で確認してください！"
+          unified_new: "今のところ新着はありません... また後で確認してください！"
           new: "今のところ新着はありません... また後で確認してください！"
           generic: "ここには何もありません... また後で確認してください！"
     topic_bulk_actions:
@@ -3275,6 +3310,9 @@ ja:
       deleted_post_placeholder: "[削除済み]"
       ignored_post_placeholder: "[無視]"
       pinned_reply: "固定"
+    share_target:
+      new_topic: "新規トピック"
+      new_message: "新規メッセージ"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"
@@ -4396,7 +4434,7 @@ ja:
         new_replies_tooltip: "新しい返信"
         replies: "返信"
         replies_with_count: "返信 (%{count})"
-      new_new:
+      unified_new:
         help: "数日以内に作成または返信されたトピック"
       posted:
         title: "自分の投稿"
@@ -5104,10 +5142,6 @@ ja:
             bookmarks: "ブックマークしたタグのない %{category} のトピック"
             default: "タグのない %{category} の%{filter}トピック"
         categories: "すべてのカテゴリ"
-    content_localization:
-      toggle_localized:
-        translated: "ページは機械翻訳されています。クリックすると元のページが表示されます。"
-        not_translated: "ページが翻訳されていません。クリックして翻訳してください。"
     language_switcher:
       title: "サイト言語の変更"
   admin_js:
@@ -5688,6 +5722,7 @@ ja:
         too_many_requests: この操作の実行回数が多すぎます。しばらくしてからもう一度お試しください。
         not_found_error: このレポートは存在しません
         custom_date_range: カスタムの日付範囲
+        stable: "安定"
         sections:
           reports:
             title: "レポート"
@@ -5709,8 +5744,11 @@ ja:
                 "2": "メンバー"
                 "3": "レギュラー"
                 "4": "リーダー"
-              trend:
-                stable: "安定"
+          search:
+            title: "検索"
+            table:
+              searches: "検索数"
+              status: "ステータス"
         reports_section:
           modal:
             enabled_heading: "有効"
@@ -5803,7 +5841,6 @@ ja:
             incoming_email: "カスタム受信メールアドレス"
             incoming_email_placeholder: "メールアドレスを入力"
             incoming_email_tooltip: "複数のメールアドレスは「|」文字で区切ることができます。"
-            visibility: 表示状態
             visibility_levels:
               title: "誰がこのグループを閲覧できますか？"
               public: "全員"
@@ -6225,9 +6262,10 @@ ja:
           your_organization: "あなたの組織"
           your_organization_description: "この情報は、サイトの運営者と管轄地域を示すために、利用規約とプライバシーに関する通知に使用されます。"
           company_name: "名前"
-          company_name_placeholder: "あいうえお組織"
           company_name_warning: |
             空白の場合、定型の利用規約またはプライバシーに関する通知は提供されません。
+          company_url: "ウェブサイト"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "準拠法"
           governing_law_placeholder: "都道府県または国"
           governing_law_help: |

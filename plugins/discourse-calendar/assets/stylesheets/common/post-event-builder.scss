@@ -36,10 +36,6 @@
     background: transparent;
   }
 
-  .d-modal__footer .advanced-settings {
-    margin-left: auto;
-  }
-
   .reminders {
     .form-kit__container-content {
       flex-wrap: wrap;
@@ -66,16 +62,18 @@
         height: 100%;
       }
 
-      .reminder-type {
-        width: 320px;
-      }
+      @include viewport.from(sm) {
+        .reminder-type {
+          width: 320px;
+        }
 
-      .reminder-value {
-        width: 60px;
-      }
+        .reminder-value {
+          min-width: unset !important; // overrides another important
+        }
 
-      .reminder-unit {
-        width: 140px;
+        .reminder-unit {
+          width: 140px;
+        }
       }
 
       .reminder-period {
@@ -94,15 +92,6 @@
       align-self: flex-start;
       margin-top: var(--form-kit-gutter-y);
     }
-  }
-
-  .custom-field-label {
-    font-weight: 500;
-    margin: 0.5em 0 0.25em 0;
-  }
-
-  .custom-field-input {
-    width: 100%;
   }
 
   .d-date-time-input {

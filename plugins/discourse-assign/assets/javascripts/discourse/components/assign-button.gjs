@@ -5,7 +5,7 @@ import DButton from "discourse/ui-kit/d-button";
 
 export default class AssignButton extends Component {
   static shouldRender(args) {
-    return !args.post.firstPost;
+    return !args.post.firstPost && args.post.can_assign;
   }
 
   static hidden(args) {

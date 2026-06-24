@@ -6,6 +6,13 @@
 
 te:
   js:
+    user_api_key:
+      authorize: "అధికారం ఇవ్వండి"
+      deny: "రద్దుచేయండి"
+      copied: "కాపీ చేయబడింది!"
+      device:
+        code: "కోడ్"
+        continue: "కొనసాగించండి"
     blocks:
       ghost:
         status: "స్థితి"
@@ -299,7 +306,7 @@ te:
       pm_title: "సూచించిన సందేశాలు"
     admin_onboarding_banner:
       select_theme:
-        enabled: "ప్రారంభించబడింది"
+        enabled: "ఎంపిక చేయబడినవి"
       start_posting:
         back: "వెనుకకు"
     about:
@@ -818,7 +825,8 @@ te:
             from_alias_hint: "సమూహ SMTP ఇమెయిల్‌లను పంపేటప్పుడు చిరునామా నుండి ఉపయోగించే మారుపేరు. మెయిల్ ప్రొవైడర్లందరూ దీనికి మద్దతు ఇవ్వకపోవచ్చని గమనించండి. దయచేసి మీ మెయిల్ ప్రొవైడర్ డాక్యుమెంటేషన్‌ను సంప్రదించండి."
         membership:
           title: సభ్యత్వం
-          access: యాక్సెస్
+          join_method:
+            invite: "ఆహ్వానం మాత్రమే"
         categories:
           title: వర్గాలు
           long_title: "వర్గం డిఫాల్ట్ నోటిఫికేషన్‌లు"
@@ -851,7 +859,6 @@ te:
         title: "అనుమతులు"
         none: "ఈ సమూహంతో సంబంధం ఉన్న వర్గాలు లేవు."
         description: "ఈ సమూహంలోని సభ్యులు ఈ వర్గాలను యాక్సెస్ చేయవచ్చు"
-      public_admission: "సభ్యులను సమూహంలో స్వేచ్ఛగా చేరడానికి అనుమతించండి (బహిరంగంగా కనిపించే సమూహం అవసరం)"
       public_exit: "సభ్యులను సమూహాన్ని స్వేచ్ఛగా విడిచిపెట్టడానికి అనుమతించండి"
       add: "జోడించండి"
       join: "చేరండి"
@@ -859,7 +866,6 @@ te:
       request: "అభ్యర్థించండి"
       message: "సందేశం"
       confirm_leave: "మీరు ఈ సమూహాన్ని విడిచిపెట్టాలనుకుంటున్నారా?"
-      allow_membership_requests: "సమూహ యజమానులకు సభ్యత్వ అభ్యర్థనలను పంపడానికి సభ్యులను అనుమతించండి (బహిరంగంగా కనిపించే సమూహం అవసరం)"
       membership_request_template: "సభ్యత్వ అభ్యర్థనను పంపేటప్పుడు సబ్యులకు ప్రదర్శించడానికి అనుకూల టెంప్లేట్"
       membership_request:
         submit: "అభ్యర్థనను సమర్పించండి"
@@ -1249,6 +1255,7 @@ te:
       undo_revoke_access: "యాక్సెస్‌ ఉపసంహరణ ని రద్దు చేయండి"
       api_approved: "ఆమోదించబడింది:"
       api_last_used_at: "చివరిగా ఉపయోగించబడినది:"
+      api_expires_never: "ఎప్పటికీ వద్దు"
       theme: "థీమ్"
       save_to_change_theme: 'మీరు "%{save_text}" క్లిక్ చేసిన తర్వాత థీమ్ నవీకరించబడుతుంది'
       home: "డిఫాల్ట్ హోమ్ పేజీ"
@@ -1979,6 +1986,12 @@ te:
       confirm_title: '%{site_name} కు కొనసాగండి'
       logging_in_as: '%{email}గా లాగిన్ అవుతోంది'
       confirm_button: లాగిన్ ముగించండి
+    code_login:
+      email_label: "ఈమెయిల్"
+      continue_button: "కొనసాగించండి"
+      verify_button: "కొనసాగించండి"
+      account_ready_continue: "కొనసాగించండి"
+      username_label: "సభ్యనామం"
     login:
       header_title: "తిరిగి స్వాగతం"
       title: "లాగిన్"
@@ -2264,6 +2277,7 @@ te:
         attribute_value: "విలువ"
         apply: "దరఖాస్తు చేసుకోండి"
       help: "మార్క్ డైన్ సవరణ సహాయం"
+      edit_reason: "మీరెందుకు సవరిస్తున్నారు?"
       exit_fullscreen_prompt: "పూర్తి స్క్రీన్ నుండి నిష్క్రమించడానికి <kbd>ESC</kbd> నొక్కండి"
       modal_ok: "సరే"
       cant_send_pm: "క్షమించండి, మీరు %{username}కి సందేశం పంపలేరు."
@@ -2292,18 +2306,20 @@ te:
           desc: అదే గ్రహీతలతో ప్రారంభించి కొత్త సందేశాన్ని సృష్టించండి
         reply_to_topic:
           label: విషయానికి ప్రత్యుత్తరం ఇవ్వండి
+          trigger: విషయం
           desc: విషయానికి ప్రత్యుత్తరం ఇవ్వండి, ఏదైనా నిర్దిష్ట పోస్ట్ కాదు
+        reply_to_message:
+          trigger: సందేశం పంపించండి
         toggle_whisper:
           label: గుసగుసలను టోగుల్ చేయండి
-          desc: గుసగుసలు సిబ్బందికి మాత్రమే కనిపిస్తాయి
         create_topic:
           desc: కొత్త విషయం సృష్టించండి
         shared_draft:
           label: "షేర్ చేసిన చిత్తుప్రతి"
           desc: "అనుమతించబడిన సబ్యులకు మాత్రమే కనిపించే విషయాన్ని రాయండి"
         toggle_topic_bump:
-          label: "విషయం బంప్ను టోగుల్ చేయండి"
           desc: "తాజా ప్రత్యుత్తర తేదీని మార్చకుండా ప్రత్యుత్తరం ఇవ్వండి"
+        unknown_user: "సభ్యుడు"
       reload: "రీలోడ్ చేయండి"
       ignore: "విస్మరించండి"
       image_alt_text:
@@ -2639,6 +2655,15 @@ te:
         also_dismiss_topics: "ఈ విషయాలను ట్రాక్ చేయడం ఆపివేయండి, తద్వారా అవి నాకు చదవనివిగా మళ్లీ కనిపించవు"
         dismiss_new_topics: "కొత్త విషయాలను తీసివేయండి"
         dismiss_new_replies: "కొత్త ప్రత్యుత్తరాలను తీసివేయండి"
+        dismiss_new_topics_with_selected:
+          one: "తీసివేయండి (%{count})"
+          other: "తీసివేయండి (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "తీసివేయండి (%{count})"
+          other: "తీసివేయండి (%{count})"
+        dismiss_all_with_selected:
+          one: "తీసివేయండి (%{count})"
+          other: "తీసివేయండి (%{count})"
         dismiss_new: "కొత్తవి తుడువు"
         dismiss_new_modal:
           title: "కొత్తది తీసివేయండి"
@@ -4549,6 +4574,11 @@ te:
                 "2": "సభ్యుడు"
                 "3": "రెగ్యులరు"
                 "4": "లీడరు"
+          search:
+            title: "వెతుకు"
+            table:
+              searches: "శోధనలు"
+              status: "స్థితి"
         reports_section:
           modal:
             enabled_heading: "ప్రారంభించబడింది"
@@ -4620,7 +4650,6 @@ te:
             incoming_email: "కస్టమ్ ఇన్‌కమింగ్ ఇమెయిల్ చిరునామా"
             incoming_email_placeholder: "ఇమెయిల్ చిరునామాను నమోదు చెయ్యండి"
             incoming_email_tooltip: "మీరు | తో బహుళ ఇమెయిల్ చిరునామాలను వేరు చేయవచ్చు."
-            visibility: దృశ్యమానత
             visibility_levels:
               title: "ఈ సమూహాన్ని ఎవరు చూడగలరు?"
               public: "అందరూ"
@@ -4953,7 +4982,8 @@ te:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "మీ సంస్థ"
           company_name: "పేరు"
-          company_name_placeholder: "ఆక్మే సంస్థ"
+          company_url: "వెబ్సైట్"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "పాలక చట్టం"
           city_for_disputes: "వివాదాలకు నగరం"
           extra_groups:

@@ -42,10 +42,14 @@ export default class SolvedSharedIssueButton extends Component {
   }
 
   get label() {
+    const label = i18n("solved.shared_issue.label");
     if (this.count === 0) {
-      return i18n("solved.shared_issue.label_zero");
+      return label;
     }
-    return i18n("solved.shared_issue.label", { count: this.count });
+    return i18n("solved.shared_issue.label_with_count", {
+      label,
+      count: this.count,
+    });
   }
 
   @action

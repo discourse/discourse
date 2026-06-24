@@ -423,7 +423,6 @@ da:
       admins: "admins"
       moderators: "moderatorer"
       staff: "personale"
-      anonymous: "anonym"
       trust_level_0: "tillidsniveau_0"
       trust_level_1: "tillidsniveau_1"
       trust_level_2: "tillidsniveau_2"
@@ -880,6 +879,9 @@ da:
       write: "Skriv alt"
       one_time_password: "Opret et engangs login token"
       bookmarks_calendar: "Læse bogmærkepåmindelser"
+    device:
+      code: "Kode"
+      continue: "Fortsæt"
     invalid_public_key: "Beklager, den offentlige nøgle er ugyldig."
     invalid_auth_redirect: "Beklager, denne auth_redirect vært er ikke tilladt."
     invalid_token: "Manglede, ugyldigt eller udløbet token."
@@ -1300,9 +1302,6 @@ da:
       out_of_date_themes: "Opdateringer er tilgængelige for følgende temaer:%{themes_list}"
       google_analytics_version: "Din Discourse bruger i øjeblikket Google Analytics 3, som ikke længere vil blive understøttet efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Opgrader til Google Analytics 4</a> nu for fortsat at modtage værdifulde indsigter og analyser af dit websteds ydeevne."
     back_from_logster_text: "Tilbage til webstedet"
-    reports_section:
-      providers:
-        core_report: "Standard"
   site_settings:
     disabled: "deaktiveret"
     display_local_time_in_user_card: "Vis den lokale tid baseret på en brugers tidszone, når deres brugerkort åbnes."
@@ -1336,7 +1335,6 @@ da:
     edit_history_visible_to_public: "Tillad alle at se tidligere versioner af et redigeret indlæg. Når slået fra, kan kun administrator se dette."
     delete_removed_posts_after: "Indlæg, fjernet af forfatteren, vil blive automatisk slettet efter (n) hours. Såfremt værdien sat til 0 vil indlæg blive fjernet straks."
     fixed_category_positions: "Hvis afkrydset, vil du være i stand til at arrangere kategorier i en fast rækkefølge. Hvis ikke afkrydset vil de være listet i en rækkefølge baseret på aktivitet."
-    fixed_category_positions_on_create: "Hvis afkrydset vil kategori visning blive vedligeholdt baseret på emne (kræver manuelt valgt visning af kategorier)."
     add_rel_nofollow_to_user_content: 'Tilføj rel nofollow til alt indsendt brugerindhold, undtagen interne links (herunder overordnede domæner). Hvis du ændrer dette, skal du gen-bage alle indlæg med: "rake indlæg:rebake“'
     exclude_rel_nofollow_domains: "En liste over domæner, hvor nofollow ikke skal føjes til links. eksempel.dk tillader automatisk også sub.eksempel.dk. Som et minimum bør du tilføje domænet på dette websted for at hjælpe webcrawlere med at finde alt indhold. Hvis andre dele af dit websted er på andre domæner, bør du også tilføje dem."
     post_excerpt_maxlength: "Max længde på uddrag af indlæg / opsummering."
@@ -1346,7 +1344,6 @@ da:
     post_onebox_maxlength: "Max længde af Discourse indlæg i tegn"
     allowed_inline_onebox_domains: "En liste over domæner, der vil blive onebox'et i miniatureform, hvis de linkes uden en titel"
     facebook_app_access_token: "Et token genereret fra dit Facebook-app-id og hemmelighed. Bruges til at generere Instagram oneboxes."
-    favicon: "Et favicon til dit websted, se <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. For at fungere korrekt over et CDN skal det være en png. Ændres til 32x32. Hvis det er tomt, vil large_icon blive brugt."
     notification_email: "Afsender email adresse, anvendt når der sendes esentielle system emails. Domænet her skal have korrekt opsatte SPF, DKIM og 'PTR records', for succesfuld afskibning af mails."
     detailed_404: "Giver flere detaljer til brugerne om, hvorfor de ikke kan få adgang til et bestemt emne. Bemærk: Dette er mindre sikkert, fordi brugerne vil vide, om en URL oversættes til et gyldigt emne."
     force_https: "Tving din side til kun at anvende HTTPS. Slå ikke denne funktion til før det er sat helt op og virker overalt! Har du tjekket dit CDN, alle social logins, og eksterne logos og afhængigheder og sikret at de også er HTTPS kompatible?"
@@ -1386,7 +1383,6 @@ da:
     allowed_onebox_iframes: "En liste over iframe src-domæner som er tilladt via Onebox-integrering. `*` tillader alle standard Onebox moduler."
     allowed_crawler_user_agents: "Brugeragenter for webcrawlere, der skal have adgang til webstedet. ADVARSEL! INDSTILLES DETTE VIL ALLE CRAWLERE, DER IKKE ER ANGIVET HER BLIVE NÆGTET!"
     blocked_crawler_user_agents: "Entydigt store og små bogstaver i brugeragentstrengen, der identificerer webcrawlere, der ikke skal have adgang til webstedet. Gælder ikke, hvis tilladelsesliste er defineret."
-    slow_down_crawler_rate: "Hvis der er angivet slow_down_crawler_user_agents, gælder denne sats for alle crawlere (antal sekunders forsinkelse mellem anmodninger)"
     invalidate_inactive_admin_email_after_days: "Administratorkonti, der ikke har besøgt webstedet i dette antal dage, skal validere deres e-mailadresse igen, før de logger ind. Indstil til til 0 for at deaktivere."
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge."
     site_contact_username: "Et gyldigt personale-brugernavn, som alle automatiske meddelelser skal sendes fra. Hvis den er tom, bruges standard systemkontoen."
@@ -1400,7 +1396,6 @@ da:
     email_token_valid_hours: "Glemte password / konto aktiverings muligheder er gyldige i (n) timer."
     log_out_strict: "Når brugeren logger af, log da ud af alle sessioner, på alle enheder"
     version_checks: "Ping Discourse Hub for versionopdateringer, og vis meddelelser om ny version på instrumentbrættet <a href='%{base_path}/admin' target='_blank'>/admin</a>"
-    new_version_emails: "Send en email til contact_email adressen når der er en ny version af Discourse tilgængelig."
     invite_expiry_days: "Hvor længe brugerinvitationsnøgler er gyldige, i dage."
     invite_only: "Alle nye brugere skal udtrykkeligt inviteres af betroede brugere eller medarbejdere. Offentlig registrering er deaktiveret."
     login_required: "Kræv godkendelse til at læse indhold på dette site, og tillad ikke anonym adgang."
@@ -1411,11 +1406,8 @@ da:
     reserved_usernames: "Brugernavne, hvor tilmelding ikke er tilladt. Jokertegn * kan bruges til at matche ethvert tegn nul eller flere gange."
     password_unique_characters: "Minimum antal unikke tegn, som en adgangskode skal have."
     block_common_passwords: "Tillad ikke adgangskoder som findes i de 10.000 mest benyttede adgangskoder."
-    auth_skip_create_confirm: Ved tilmelding via ekstern godkendelse, skal popop'en oprettelse af konto springes over. Bedst brugt sammen med auth_overrides_email, auth_overrides_username og auth_overrides_name.
-    auth_immediately: "Omdiriger automatisk til det eksterne login-system uden brugerinteraktion. Dette træder kun i kraft, når login_required er sandt, og der kun er én ekstern godkendelsesmetode"
     enable_discourse_connect: "Aktivér loin via DiscourseConnect (tidligere 'Discourse SSO') (ADVARSEL: BRUGERNES e-mailadresser *SKAL* VALIDERES AF DEN EKSTERNE SIDE!)"
     verbose_discourse_connect_logging: "Log detaljeret DiscourseConnect relateret diagnostik til <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_discourse_connect_provider: "Implementer DiscourseConnect (tidligere 'Discourse SSO') providerprotokollen på /session/sso_provider slutpunktet, kræver, at discourse_connect_provider_secrets indstilles"
     discourse_connect_secret: "Hemmelig streng, der bruges til kryptografisk godkendelse af DiscourseConnect-oplysninger, sørg for at der er 10 tegn eller mere"
     discourse_connect_overrides_bio: "Tilsidesætter brugerbio i brugerprofilen og forhindrer brugeren i at ændre den"
     discourse_connect_overrides_groups: "Synkronisér alle manuelle gruppemedlemskaber med grupper angivet i grupper-attributten (ADVARSEL: hvis du ikke angiver grupper, vil alle manuelle gruppemedlemmer blive ryddet for brugeren)"
@@ -1427,13 +1419,10 @@ da:
     enable_google_oauth2_logins: "Aktiver Google Oauth2 godkendelse. Dette er den godkendelsesmetode, som Google i øjeblikket understøtter. Kræver nøgle og hemmelighed. Se <a href='https://meta.discourse.org/t/15858' target='_blank'>Konfigurer Google-login til Discourse</a>."
     google_oauth2_client_secret: "Klient hemmelighed til din Google-applikation."
     google_oauth2_prompt: "En valgfri mellemrums-afgrænset liste over strengværdier, der specificerer, om godkendelsesserveren beder brugeren om gen-godkendelse og samtykke. Se <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> for de mulige værdier."
-    enable_twitter_logins: "Aktivér Twitter-godkendelse, kræver twitter_consumer_key og twitter_consumer_secret. Se <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfiguration af Twitter-login (og rige indlejringer) for Discourse</a>."
     twitter_consumer_key: "Forbrugernøgle til Twitter-godkendelse, registreret på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Forbrugerhemmelighed til Twitter-godkendelse, registreret på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_facebook_logins: "Aktivér Facebook-godkendelse, kræver facebook_app_id og facebook_app_secret. Se <a href='https://meta.discourse.org/t/13394' target='_blank'>Konfiguration af Facebook-login til Discourse</a>."
     facebook_app_id: "App-id til Facebook godkendelse og deling, registreret på <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App hemmelighed til Facebook-godkendelse, registreret på <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
-    enable_github_logins: "Aktivér GitHub-godkendelse, kræver github_client_id og github_client_secret. Se <a href='https://meta.discourse.org/t/13745' target='_blank'>Konfiguration af GitHub-login til Discourse</a>."
     github_client_id: "Klient-id til GitHub-godkendelse, registreret på <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Klient hemmelighed til GitHub-godkendelse, registreret på <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Tillad brugere at godkende ved hjælp af Discord?"
@@ -1534,7 +1523,6 @@ da:
     pop3_polling_delete_from_server: "Slet e-mails fra serveren. BEMÆRK: Hvis du deaktiverer dette, skal du manuelt rense din postindbakke"
     log_mail_processing_failures: "Log alle e-mail-behandlingsfejl til <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_smtp: "Aktiver SMTP for afsendelse af notifikationer for gruppemeddelelser."
-    email_site_title: "Titlen på webstedet der bruges som afsender af e-mails fra webstedet. Standard er 'titel', hvis ikke angivet. Hvis din 'titel' indeholder tegn, der ikke er tilladt i e-mail-afsenderstrenge, så brug denne indstilling."
     delete_all_posts_max: "Det maksimale antal indlæg der kan slettes på én gang med “Slet alle indlæg”-knappen. Hvis en bruger har mere end dette antal indlæg, kan indlæggene ikke slettes på én gang og brugeren kan ikke slettes."
     email_editable: "Lad brugerne skifte deres e-mail-adresse efter oprettelsen."
     logout_redirect: "Placering at omdirigere browseren til efter logout (fx: https://example.dk/logud)"
@@ -1580,7 +1568,6 @@ da:
     default_categories_watching: "Liste over kategorier der som standard overvåges."
     default_categories_tracking: "Liste over kategorier der som standard følges."
     default_categories_muted: "Liste over kategorier der som standard har tavshed."
-    default_categories_normal: "Liste over kategorier som ikke er tavse som standard. Nyttigt når `mute_all_categories_by_default` webstedsindstilling er aktiveret."
     mute_all_categories_by_default: "Indstil standardniveauet for notifikationer for alle kategorier til tavshed. Kræv, at brugerne tilmelder sig kategorier for at de skal vises på 'seneste' og 'kategorisider'. Hvis du ønsker at ændre standardindstillingerne for anonyme brugere, skal du indstille 'default_category_settings'."
     default_tags_watching: "Liste over tags, der er overvåget som standard."
     default_tags_tracking: "Liste over tags, der spores som standard."
@@ -1636,6 +1623,10 @@ da:
     results_page: "Søgeresultater for '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Seneste indlæg"
+      order_latest_topic: "Seneste emner"
   discourse_connect:
     login_error: "Login fejl"
     not_found: "Din konto blev ikke fundet. Kontakt venligst webstedets administrator."
@@ -2325,6 +2316,7 @@ da:
     [Afmeld](%{unsubscribe_url}).
   subject_re: "Sv: "
   subject_pm: "[PM] "
+  email_from: "%{user_name}"
   user_notifications:
     previous_discussion: "Tidligere Svar"
     in_reply_to: "Som svar på"
@@ -3110,10 +3102,6 @@ da:
       invalid:
         one: "Det mærke, du valgte, kan ikke bruges"
         other: "Ingen af de tags, du har valgt, kan bruges"
-      in_this_category: '"%{tag_name}" kan ikke bruges i denne kategori'
-      restricted_to:
-        one: '"%{tag_name}" er begrænset til kategorien "%{category_names}"'
-        other: '"%{tag_name}" er begrænset til følgende kategorier: %{category_names}'
       has_synonyms: '"%{tag_name}" kan ikke bruges, fordi den har synonymer.'
     invalid_target_tag: "kan ikke være synonym for et synonym"
     synonyms_exist: "er ikke tilladt, mens synonymer eksisterer"
@@ -3151,6 +3139,8 @@ da:
   search_logs:
     graph_title: "Antal søgninger"
   onebox:
+    google_meet:
+      meeting_code: "Kode:"
     github:
       closed: "lukket"
       status_date:

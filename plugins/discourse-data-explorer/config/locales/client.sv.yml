@@ -45,6 +45,10 @@ sv:
       save: "Spara ändringar"
       run: "Kör"
       delete: "Ta bort"
+      chart:
+        form:
+          label: "Diagramtyp"
+          bar: "Stapel"
       others_dirty: "En sökning har ändringar som inte har sparats och kommer att förloras om du lämnar sidan."
       run_time: "Sökning slutförd efter %{value} ms."
       result_count:
@@ -72,3 +76,11 @@ sv:
           descriptions:
             data_explorer:
               run_queries: "Kör frågor för datautforskaren. Begränsa API-nyckeln till en viss uppsättning frågor genom att specificera fråge-ID:n."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Datautforskaren"
+      sql:
+        query_id: "Sökning"
+        param_value: "Värde"
+        output:
+          results: "Resultat"

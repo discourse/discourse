@@ -47,6 +47,8 @@ fr:
       move_post_cancel: "Annuler"
       confirm_solved_removal_confirm: "Confirmer"
       confirm_solved_removal_cancel: "Annuler"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Votre question a-t-elle reçu une réponse ?
         description: "Mettez la réponse en surbrillance et aidez les autres utilisateurs en utilisant le bouton de solution sous la réponse adéquate."

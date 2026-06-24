@@ -108,6 +108,7 @@ sq:
         title: Mesazh i ri
         prefix: "Për:"
       create_channel:
+        description: "Përshkrimi"
         type: "Lloji"
         types:
           category: "Kategori"
@@ -182,3 +183,10 @@ sq:
           fields:
             message:
               label: Mesazh
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Dërgoi një kanal mesazhi."
+      send_chat_message:
+        message: "Mesazh"
+      chat_approval:
+        message: "Mesazh"

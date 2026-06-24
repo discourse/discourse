@@ -66,7 +66,7 @@ RSpec.describe AnonymousShadowCreator do
       expect(shadow.id).to eq(shadow2.id)
 
       expect(shadow.trust_level).to eq(1)
-      expect(shadow.username).to eq("anonymous1")
+      expect(shadow.username).to eq("anonymous")
 
       expect(shadow.created_at).not_to eq_time(user.created_at)
 
@@ -99,7 +99,7 @@ RSpec.describe AnonymousShadowCreator do
 
       shadow = AnonymousShadowCreator.get(user)
 
-      expect(shadow.username).to eq("anonymous1")
+      expect(shadow.username).to eq("anonymous")
     end
   end
 end

@@ -9,7 +9,7 @@ en:
           kpi:
             accepted_solutions:
               label: "Accepted solutions"
-              tooltip: "The number of topics that had a post marked as the solution in this period."
+              tooltip: "The number of topics that had a post marked as the solution."
   js:
     notifications:
       alt:
@@ -24,7 +24,7 @@ en:
       allow_accepted_answers: "Allow topic owner and staff to mark a reply as the solution"
       solved_topics_auto_close_hours: "Auto close topic (n) hours after the last reply once the topic has been marked as solved."
       notify_on_staff_accept_solved: "Notify topic creator when staff marks a solution"
-      empty_box_on_unsolved: "Display an empty checkbox next to unsolved topics in the topic list"
+      empty_box_on_unsolved: "Display unsolved topic state in the topic list for supported themes"
       accept_answer: "Select if this reply solves the problem"
       accepted_description: "This is the accepted solution to this topic"
       has_no_accepted_answer: "This topic has no solution"
@@ -60,10 +60,8 @@ en:
       confirm_solved_removal_cancel: "Cancel"
 
       shared_issue:
-        label_zero: "Me too"
-        label:
-          one: "Me too (%{count})"
-          other: "Me too (%{count})"
+        label: "Me too"
+        label_with_count: "%{label} (%{count})"
         title: "I am also experiencing this issue"
         author_title: "You started this topic"
 

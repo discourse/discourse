@@ -13,7 +13,5 @@ tr_TR:
       categories:
         discourse_hcaptcha: "hCaptcha Eklentisi"
   site_settings:
-    discourse_hcaptcha_enabled: "hCaptcha Eklentisini etkinleştirin. <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> hesabı gerektirir."
     hcaptcha_site_key: "<a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> hesabınızdan hCaptcha Site Anahtarı"
     hcaptcha_secret_key: "<a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> hesabınızdan hCaptcha Gizli Anahtarı"
-  h_captcha_verification_failed: "hCaptcha doğrulaması başarısız oldu"

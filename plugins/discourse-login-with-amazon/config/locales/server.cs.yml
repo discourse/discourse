@@ -6,7 +6,6 @@
 
 cs:
   site_settings:
-    enable_login_with_amazon: "Povolit přihlášení pomocí ověřování Amazon, vyžaduje `login with amazon client id` a `login with amazon client secret`."
     login_with_amazon_client_id: "Login with Amazon client ID"
     login_with_amazon_client_secret: "Login with Amazon client secret"
     login_with_amazon_scope: "Login with Amazon OAuth2 scopes (oddělené mezerou)"

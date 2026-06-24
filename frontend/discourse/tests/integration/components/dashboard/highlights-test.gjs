@@ -109,68 +109,6 @@ module("Integration | Component | Dashboard | Highlights", function (hooks) {
     );
 
     assert.dom(".db-kpi").doesNotExist();
-    assert.dom(".db-highlights__comparison").doesNotExist();
-  });
-
-  test("renders the comparison label tied to the active period", async function (assert) {
-    const highlights = {
-      kpis: [
-        {
-          type: "new_signups",
-          value: 1100,
-          percent_change: 12,
-          report_type: "signups",
-          report_query: reportQuery,
-        },
-      ],
-    };
-
-    await render(
-      <template>
-        <DashboardHighlights
-          @highlights={{highlights}}
-          @period="last_30_days"
-          @startDate={{start}}
-          @endDate={{end}}
-        />
-      </template>
-    );
-
-    assert.dom(".db-highlights__comparison").hasText("vs last 30 days");
-    assert
-      .dom("a.db-kpi")
-      .hasAttribute(
-        "aria-label",
-        /vs last 30 days$/,
-        "comparison label flows into the child tile's aria-label"
-      );
-  });
-
-  test("falls back to 'vs previous period' for custom ranges", async function (assert) {
-    const highlights = {
-      kpis: [
-        {
-          type: "new_signups",
-          value: 1100,
-          percent_change: 12,
-          report_type: "signups",
-          report_query: reportQuery,
-        },
-      ],
-    };
-
-    await render(
-      <template>
-        <DashboardHighlights
-          @highlights={{highlights}}
-          @period="custom"
-          @startDate={{start}}
-          @endDate={{end}}
-        />
-      </template>
-    );
-
-    assert.dom(".db-highlights__comparison").hasText("vs previous period");
   });
 
   test("does not render a description headline", async function (assert) {

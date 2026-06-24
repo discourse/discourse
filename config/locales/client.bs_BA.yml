@@ -6,6 +6,12 @@
 
 bs_BA:
   js:
+    user_api_key:
+      deny: "Odustani"
+      copied: "Kopirano!"
+      device:
+        code: "Šifra"
+        continue: "Nastavi"
     blocks:
       ghost:
         status: "Status"
@@ -270,8 +276,6 @@ bs_BA:
     suggested_topics:
       pm_title: "Preporučene Poruke"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Omogućen"
       start_posting:
         back: "Prethodno"
     about:
@@ -682,7 +686,6 @@ bs_BA:
             title: "Postavke"
         membership:
           title: Članstvo
-          access: Pristup
         categories:
           title: Kategorije
           long_title: "Zadane obavijesti kategorije"
@@ -715,7 +718,6 @@ bs_BA:
         title: "Permisije"
         none: "Ne postoje kategorije povezane s ovom grupom."
         description: "Članovi ove grupe mogu pristupiti ovim kategorijama"
-      public_admission: "Omogući korisnicima da se mogu slobodno učlaniti u grupu (zahtjeva da grupa bude javno otvorena)"
       public_exit: "Omogući korisnicima da mogu slobodno napustiti grupu"
       empty:
         posts: "Ne postoje postovi člana ove grupe"
@@ -731,7 +733,6 @@ bs_BA:
       request: "Zatraži"
       message: "Poruka"
       confirm_leave: "Jeste li sigurni da želite napustiti ovu grupu?"
-      allow_membership_requests: "Dopusti korisnicima da smiju slati molbe za učlanjenje u grupu vlasnicima grupa (Potrebno je da je grupa javno vidljiva)"
       membership_request_template: "Prilagođeni memorandum kao priložak koji se prikazuje korisnicima prilikom slanja zahtjeva za učlanjenje"
       membership_request:
         submit: "Poslati zahtjev "
@@ -1040,6 +1041,8 @@ bs_BA:
       undo_revoke_access: "Poništi oduzeti pristup"
       api_approved: "Odobreno:"
       api_last_used_at: "Zadnje korišteno kod"
+      api_expires_at: "Ističe:"
+      api_expires_never: "nikad"
       theme: "Izgled"
       save_to_change_theme: 'Tema će biti ažurirana nakon što kliknete "%{save_text}"'
       home: "Uobičajena početna stranica"
@@ -1553,6 +1556,12 @@ bs_BA:
       confirm_title: Nastavi ka %{site_name}
       logging_in_as: Prijavite se kao %{email}
       confirm_button: Završi prijavu
+    code_login:
+      email_label: "Email"
+      continue_button: "Nastavi"
+      verify_button: "Nastavi"
+      account_ready_continue: "Nastavi"
+      username_label: "Nadimak"
     login:
       title: "Prijava"
       username: "Korisnik"
@@ -1705,7 +1714,7 @@ bs_BA:
       discard: "Odbaci"
       title_placeholder: "O čemu je ova diskusija u jednoj rečenici?"
       title_or_link_placeholder: "Ukucajte naziv, ili zalijepite link ovdje"
-      edit_reason_placeholder: "zašto pravite izmjenu?"
+      edit_reason_placeholder: "Zašto pravite izmjenu?"
       topic_featured_link_placeholder: "Unesite link prikazan sa nazivom"
       remove_featured_link: "Odstranite link sa teme."
       reply_placeholder: "Ovdje unesite vaš tekst. Koristite Markdown, BBcode ili HTML kako bi formatirali vaš tekst. Za postavljanje slika, sliku prevucite ili zalijepite u ovo polje."
@@ -1739,6 +1748,7 @@ bs_BA:
         attribute_value: "Value"
         apply: "Snimi"
       help: "Pomoć za Markdown"
+      edit_reason: "Zašto pravite izmjenu?"
       modal_ok: "OK"
       cant_send_pm: "Neuspješno, ne možete slati poruke ka %{username}."
       yourself_confirm:
@@ -1756,18 +1766,19 @@ bs_BA:
           desc: Kreiraj novu temu linkanu na ovu temu
         reply_to_topic:
           label: Odgovori na temu
+          trigger: Topic
           desc: Odgovori na temu, ne ciljajući na neku posebnu objavu
+        reply_to_message:
+          trigger: Privatna Poruka
         toggle_whisper:
           label: Uključi Šapat
-          desc: Šapati su vidljivi samo administratorima
         create_personal_message:
-          label: "Nova poruka"
           desc: "Kreiraj novu personalnu poruku"
         shared_draft:
           label: "Dijeljena skica"
         toggle_topic_bump:
-          label: "Toggle topic bump"
           desc: "Odgovori bez izmjene zadnjeg datuma odgovora"
+        unknown_user: "User"
       ignore: "Zanemari"
       image: "slika"
     notifications:
@@ -2013,6 +2024,8 @@ bs_BA:
       deleted_post_placeholder: "[isbrisano]"
       ignored_post_placeholder: "[ignorisano]"
       pinned_reply: "Zakačena"
+    share_target:
+      new_message: "Nova poruka"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -3106,7 +3119,7 @@ bs_BA:
         modal:
           cancel: "otkaži"
           create: "Save"
-          reason: "zašto pravite izmjenu?"
+          reason: "Zašto pravite izmjenu?"
       spreadsheet:
         show: "Show"
         about: "O nama"
@@ -3352,6 +3365,11 @@ bs_BA:
                 "2": "Član"
                 "3": "Normalno"
                 "4": "Vođa"
+          search:
+            title: "Pretraži"
+            table:
+              searches: "Pretraživanja"
+              status: "Status"
         reports_section:
           no_data: "Nema podataka za prikaz"
           modal:
@@ -3419,7 +3437,6 @@ bs_BA:
             email: Email
             incoming_email: "Prilagođena dolazna adresa e-pošte"
             incoming_email_placeholder: "unesite adresu e-pošte"
-            visibility: Vidljivost
             visibility_levels:
               title: "Ko može vidjeti ovu grupu?"
               public: "Svatko"
@@ -3584,6 +3601,8 @@ bs_BA:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Ime"
+          company_url: "Web stranica"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Groups"
           optional: "(opciono)"

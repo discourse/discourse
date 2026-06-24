@@ -50,6 +50,9 @@ de:
             delete_ai_secret: "KI-Geheimschlüssel löschen"
             update_ai_spam_settings: "KI-Spam-Einstellungen aktualisieren"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_agent": "KI-Agent"
     discourse_automation:
       scriptables:
         llm_report:
@@ -226,6 +229,9 @@ de:
               description: "Erlaubte das Hinzufügen von Schlagwörter zu Beiträgen des Systembenutzers"
     discourse_ai:
       title: "KI"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Agent"
       default_llm:
         title: "Standard-LLM-Modell"
         description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder im Agent kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
@@ -293,6 +299,9 @@ de:
             model_settings: "Modelleinstellungen"
             related_topics: "Verwandte Themen"
             semantic_search: "Semantische Suche"
+        admin_dashboard:
+          setting_groups:
+            settings: "Grundlegende Einstellungen"
         discord:
           name: "Discord-Integration"
           description: "Fügt die Möglichkeit hinzu, Discord-Kanäle zu durchsuchen"
@@ -562,7 +571,7 @@ de:
         allow_topic_mentions: "Themenerwähnungen zulassen"
         allow_topic_mentions_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen diesen Agenten in Themen erwähnen."
         require_approval: "Genehmigung für Moderationstools erforderlich"
-        require_approval_help: "Wenn diese Option aktiviert ist, werden Moderationsaktionen (Schließen, Löschen, Bearbeiten usw.) vor der Ausführung zur Genehmigung durch den Moderator an die Überprüfungswarteschlange gesendet."
+        require_approval_help: "Wenn diese Option aktiviert ist, werden Moderationsaktionen (Schließen, Löschen, Bearbeiten usw.) vor der Ausführung zur Genehmigung durch einen Moderator an die Überprüfungswarteschlange gesendet."
         force_default_llm: "Immer das Standard-Sprachmodell verwenden"
         save: "Speichern"
         saved: "Agent gespeichert"
@@ -679,7 +688,7 @@ de:
         name_help: "Der Name wird in der Discourse-Benutzeroberfläche angezeigt und ist die Kurzkennung, die du verwendest, um das Tool in verschiedenen Einstellungen zu finden. Er sollte eindeutig sein (er ist erforderlich)."
         new: "Neues Tool"
         tool_name: "Name des Tools"
-        tool_name_help: "Der Werkzeugname wird dem großen Sprachmodell präsentiert. Er ist nicht eindeutig, aber er ist für jeden Agenten eindeutig. (Agent validiert beim Speichern)"
+        tool_name_help: "Der Name des Tools wird dem großen Sprachmodell präsentiert. Er ist nicht eindeutig, aber er ist für jeden Agenten eindeutig. (Agent validiert beim Speichern)"
         description: "Beschreibung"
         description_help: "Eine klare Beschreibung des Zwecks des Tools für das Sprachmodell"
         subheader_description: "Tools und MCP-Server erweitern die Fähigkeiten von KI-Agenten."
@@ -971,7 +980,6 @@ de:
         title: "Änderungen mit KI vorschlagen"
         description: "Wähle eine der folgenden Optionen und die KI schlägt dir eine neue Version des Textes vor."
         selection_hint: "Tipp: Du kannst auch einen Teil des Textes auswählen, bevor du den Assistenten öffnest, um nur diesen Teil neu zu schreiben."
-        suggest: "Mit KI vorschlagen"
         suggest_errors:
           too_many_tags:
             one: "Du kannst höchstens %{count} Schlagwort haben."
@@ -1034,7 +1042,7 @@ de:
         short_title: "Einbettungen"
         description: "Einbettungen sind numerische Darstellungen von Daten, die Bedeutungen und Beziehungen erfassen und es Discourse-KI-Funktionen wie „Verwandte Themen“ und „KI-Suche“ ermöglichen, Inhalte zu verstehen und zu verknüpfen."
         new: "Neue Einbettung"
-        back: "Zurück zu den Einbettungen"
+        back: "Zurück zu Einbettungen"
         save: "Speichern"
         saved: "Einbettungskonfiguration gespeichert"
         delete: "Löschen"
@@ -1125,9 +1133,9 @@ de:
           this_turn: "Diese Runde:"
           whole_conversation: "Unterhaltung"
           tokens_summary: "%{request_tokens} eingehend → %{response_tokens} ausgehend"
-          cache_both: "(Cache %{read} lesen, %{write} schreiben)"
-          cache_read_only: "(Cache %{read} lesen)"
-          cache_write_only: "(Cache %{write} schreiben)"
+          cache_both: "(Cache %{read} gelesen, %{write} geschrieben)"
+          cache_read_only: "(Cache %{read} gelesen)"
+          cache_write_only: "(Cache %{write} geschrieben)"
           request: "Anfrage"
           response: "Antwort"
           next_log: "Weiter"

@@ -4,6 +4,7 @@ module DiscourseWorkflows
   class Executor
     MAX_ITERATIONS = 1000
     MAX_WAIT_DURATION_SECONDS = 30.days.to_i
+    MAX_NODE_OUTPUT_BYTES = 50.megabytes
 
     class WaitRequested < StandardError
       attr_reader :waiting_until
@@ -54,6 +55,7 @@ module DiscourseWorkflows
         )
       @steps = []
       @queue = []
+      @queue_index = 0
       @waiting_inputs = {}
       @waiting_input_sources = {}
       @waiting_input_targets = {}
@@ -89,6 +91,7 @@ module DiscourseWorkflows
         ExecutionOptions.new(
           user: user,
           execution_mode: execution.execution_mode.to_sym,
+          workflow_snapshot: snapshot,
           webhook_context: webhook_context,
         )
       new(workflow, trigger_node_id, execution.trigger_data, options).resume_from(
@@ -98,7 +101,8 @@ module DiscourseWorkflows
     end
 
     def run
-      unless @workflow.published? || @options.draft_execution || @options.workflow_version
+      unless @workflow.published? || @options.draft_execution || @options.workflow_version ||
+               @options.workflow_snapshot
         return @store.create_execution_with_status(:skipped)
       end
       return @store.create_rate_limited_execution unless rate_limiter.within_limits?
@@ -192,15 +196,15 @@ module DiscourseWorkflows
 
     def process_queue
       iterations = 0
-      queue_index = 0
+      @queue_index = 0
 
       loop do
-        while queue_index < @queue.length
+        while @queue_index < @queue.length
           iterations += 1
           raise "Max iterations (#{MAX_ITERATIONS}) exceeded" if iterations > MAX_ITERATIONS
 
-          node, input_groups, input_sources = @queue[queue_index]
-          queue_index += 1
+          node, input_groups, input_sources = @queue[@queue_index]
+          @queue_index += 1
           execute_node(node, input_groups, input_sources || {})
         end
 
@@ -266,8 +270,8 @@ module DiscourseWorkflows
         end
 
         step_log = collect_step_log(exec_ctx, resolver)
-        attach_step_log(step, step_log)
         if step_log&.errors?
+          attach_step_log(step, step_log)
           step.fail!(step_log.error_summary)
           raise StandardError, step.error
         end
@@ -275,6 +279,8 @@ module DiscourseWorkflows
         ports = node_type_class.ports(node.parameters)
         output_arrays = normalize_result(result, node, ports, input_groups)
         output_arrays = apply_always_output_data(output_arrays, node, input_groups)
+        output_arrays = enforce_node_output_budget(output_arrays, step_log)
+        attach_step_log(step, step_log)
         all_items = output_arrays.flatten(1)
         primary_empty = output_arrays.fetch(0) { [] }.empty?
 
@@ -295,11 +301,10 @@ module DiscourseWorkflows
       rescue WaitRequested
         raise
       rescue => e
-        unless step.metadata&.key?("logs")
-          attach_step_log(step, collect_step_log(exec_ctx, resolver))
-        end
-
         if (handled_outputs = continued_error_outputs(node, input_groups, e))
+          step_log = collect_step_log(exec_ctx, resolver)
+          handled_outputs = enforce_node_output_budget(handled_outputs, step_log)
+          attach_step_log(step, step_log)
           step.add_metadata("handled_error", error_metadata(e))
           all_items = handled_outputs.flatten(1)
           step.succeed!(output: all_items)
@@ -313,6 +318,10 @@ module DiscourseWorkflows
           )
           route_downstream(node, handled_outputs)
           return
+        end
+
+        unless step.metadata&.key?("logs")
+          attach_step_log(step, collect_step_log(exec_ctx, resolver))
         end
 
         step.fail!(e.message) unless step.error?
@@ -417,7 +426,12 @@ module DiscourseWorkflows
     def resolved_pin_data
       return {} unless @options.execution_mode == :manual
 
-      data = @workflow.respond_to?(:pin_data) ? @workflow.pin_data : nil
+      data =
+        if @options.workflow_snapshot
+          @options.workflow_snapshot.pin_data
+        elsif @workflow.respond_to?(:pin_data)
+          @workflow.pin_data
+        end
       return {} if data.blank?
 
       data.transform_keys(&:to_s)
@@ -469,6 +483,39 @@ module DiscourseWorkflows
       apply_item_linking_defaults!(result, input_groups:)
       ItemContract.validate_output_arrays!(result, source: source, ports: ports)
       result
+    end
+
+    def enforce_node_output_budget(output_arrays, step_log)
+      total_bytes = 0
+      truncated = false
+
+      bounded_arrays =
+        output_arrays.map do |items|
+          bounded_items = []
+
+          items.each do |item|
+            item_bytes = JSON.generate(item).bytesize
+
+            if total_bytes + item_bytes > MAX_NODE_OUTPUT_BYTES
+              truncated = true
+              break
+            end
+
+            total_bytes += item_bytes
+            bounded_items << item
+          end
+
+          bounded_items
+        end
+
+      if truncated
+        step_log&.warn(
+          "Node output truncated at #{bounded_arrays.flatten(1).length} items because serialized " \
+            "output exceeded #{MAX_NODE_OUTPUT_BYTES} bytes",
+        )
+      end
+
+      bounded_arrays
     end
 
     def apply_item_linking_defaults!(output_arrays, input_groups:)
@@ -773,6 +820,12 @@ module DiscourseWorkflows
       now = Time.current
       ceiling = now + MAX_WAIT_DURATION_SECONDS
       resolved = waiting_until.blank? ? ceiling : [waiting_until, ceiling].min
+      @context.store_pending_input_groups(
+        inputs: @waiting_inputs,
+        sources: @waiting_input_sources,
+        target_ids: @waiting_input_targets.keys,
+      )
+      @context.store_pending_queue(@queue.drop(@queue_index || 0))
 
       execution =
         @store.pause_waiting_execution!(node: @waiting_node, waiting_until: resolved, steps: @steps)
@@ -794,6 +847,7 @@ module DiscourseWorkflows
       @snapshot = @store.workflow_snapshot
       @steps = []
       @queue = []
+      @queue_index = 0
       @waiting_inputs = {}
       @waiting_input_sources = {}
       @waiting_input_targets = {}
@@ -805,10 +859,13 @@ module DiscourseWorkflows
       @snapshot = @store.workflow_snapshot
       @steps = restore_steps_from(execution)
       @queue = []
+      @queue_index = 0
       @waiting_inputs = {}
       @waiting_input_sources = {}
       @waiting_input_targets = {}
       @input_wait_requirements = {}
+      restore_pending_queue!
+      restore_pending_input_groups!
     end
 
     def clear_waiting!
@@ -820,6 +877,40 @@ module DiscourseWorkflows
     def restore_steps_from(execution)
       entries = execution.execution_data&.entries || {}
       entries.values.flatten.map { |h| Step.from_h(h) }
+    end
+
+    def restore_pending_input_groups!
+      @context.consume_pending_input_groups.each do |target_id, payload|
+        target = @snapshot.find_node(target_id)
+        next if target.nil?
+
+        @waiting_input_targets[target.id] = target
+        @waiting_inputs[target.id] = indexed_values_from_payload(payload["inputs"], "items")
+        @waiting_input_sources[target.id] = indexed_values_from_payload(
+          payload["sources"],
+          "source",
+        )
+      end
+    end
+
+    def restore_pending_queue!
+      @queue =
+        @context.consume_pending_queue.filter_map do |payload|
+          node = @snapshot.find_node(payload["node_id"])
+          next if node.nil?
+
+          [
+            node,
+            indexed_values_from_payload(payload["inputs"], "items"),
+            indexed_values_from_payload(payload["sources"], "source"),
+          ]
+        end
+    end
+
+    def indexed_values_from_payload(payload, value_key)
+      Array(payload).each_with_object({}) do |entry, values|
+        values[entry["index"].to_i] = entry[value_key]
+      end
     end
 
     def build_resolver_context(node, input_groups, node_context, input_sources)

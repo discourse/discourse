@@ -27,6 +27,7 @@ describe "Admin About Config Area Page" do
       SiteSetting.site_contact_group_name = admin.groups.first.name
 
       SiteSetting.company_name = "kitty company inc."
+      SiteSetting.company_url = "https://kitty.company"
       SiteSetting.governing_law = "kitty jurisdiction"
       SiteSetting.city_for_disputes = "no disputes allowed"
 
@@ -69,6 +70,9 @@ describe "Admin About Config Area Page" do
 
       expect(config_area.your_organization_section.company_name_input.value).to eq(
         "kitty company inc.",
+      )
+      expect(config_area.your_organization_section.company_url_input.value).to eq(
+        "https://kitty.company",
       )
       expect(config_area.your_organization_section.governing_law_input.value).to eq(
         "kitty jurisdiction",
@@ -223,6 +227,7 @@ describe "Admin About Config Area Page" do
       config_area.visit
 
       config_area.your_organization_section.company_name_input.fill_in("lil' company")
+      config_area.your_organization_section.company_url_input.fill_in("https://lil.company")
       config_area.your_organization_section.governing_law_input.fill_in("wild west law")
       config_area.your_organization_section.city_for_disputes_input.fill_in("teeb el shouq")
 
@@ -230,6 +235,7 @@ describe "Admin About Config Area Page" do
       expect(config_area.your_organization_section).to have_saved_successfully
 
       expect(SiteSetting.company_name).to eq("lil' company")
+      expect(SiteSetting.company_url).to eq("https://lil.company")
       expect(SiteSetting.governing_law).to eq("wild west law")
       expect(SiteSetting.city_for_disputes).to eq("teeb el shouq")
     end

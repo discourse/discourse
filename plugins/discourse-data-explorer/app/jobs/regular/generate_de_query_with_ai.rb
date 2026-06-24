@@ -38,16 +38,8 @@ module Jobs
           feature_name: "data_explorer_query_generation",
         )
 
-      structured_output = nil
-      result = +""
-      bot.reply(context) do |partial, _, type|
-        if type == :structured_output
-          structured_output = partial
-        elsif type.blank? && partial.is_a?(String)
-          result << partial
-        end
-      end
-      parsed = parse_structured_response(structured_output, result)
+      bot.reply(context)
+      parsed = context.feature_context[DiscourseDataExplorer::Tools::SubmitQuery::CONTEXT_KEY] || {}
 
       if parsed[:sql].blank?
         return(publish_error(user, I18n.t("discourse_data_explorer.ai.error_no_sql_returned")))
@@ -70,21 +62,6 @@ module Jobs
       if @generation_id
         Discourse.redis.del(DiscourseDataExplorer::AiQueryEnqueuer.redis_key(@generation_id))
       end
-    end
-
-    def parse_structured_response(structured_output, text)
-      if structured_output
-        {
-          sql: structured_output.read_buffered_property(:sql),
-          name: structured_output.read_buffered_property(:name),
-          description: structured_output.read_buffered_property(:description),
-        }
-      else
-        parsed = JSON.parse(text.strip).symbolize_keys
-        parsed.slice(:sql, :name, :description)
-      end
-    rescue JSON::ParserError
-      { sql: text.strip, name: nil, description: nil }
     end
 
     def publish_complete(user, sql:, name:, description:)

@@ -297,6 +297,7 @@ module(
       assert.true(firstTitle.includes("1 item"));
       assert.dom(".workflows-context-panel__item-title").doesNotExist();
       assert.true(keys.includes("result"));
+      assert.dom(".workflows-context-panel__empty").doesNotExist();
     });
 
     test("shows an empty input state when the input has no JSON fields", async function (assert) {
@@ -315,14 +316,15 @@ module(
         { sourceClientId: "previous-1", targetClientId: "current-1" },
       ];
       this.session.lastExecutionRunData = {
-        Previous: [
+        Current: [
           {
             status: "success",
-            outputs: [
+            inputs: [
               {
                 index: 0,
                 items: [{ json: {} }],
                 item_count: 1,
+                source: { node_name: "Previous", output_index: 0 },
               },
             ],
           },
@@ -425,6 +427,25 @@ module(
             ],
           },
         ],
+        Merge: [
+          {
+            status: "success",
+            inputs: [
+              {
+                index: 0,
+                items: [{ json: { left: true } }],
+                item_count: 1,
+                source: { node_name: "Left", output_index: 0 },
+              },
+              {
+                index: 1,
+                items: [{ json: { right: true } }],
+                item_count: 1,
+                source: { node_name: "Right", output_index: 0 },
+              },
+            ],
+          },
+        ],
       };
 
       await render(
@@ -484,7 +505,7 @@ module(
       );
     });
 
-    test("prefers the current node recorded input over the previous node output", async function (assert) {
+    test("uses current node recorded input when previous node output differs", async function (assert) {
       const logNode = {
         clientId: "log-1",
         type: "action:log",
@@ -546,6 +567,83 @@ module(
       assert.true(firstTitle.includes("1 item"));
       assert.dom(".workflows-context-panel__item-title").doesNotExist();
       assert.true(keys.includes("topic"));
+    });
+
+    test("shows no input data when recorded input source is stale", async function (assert) {
+      const postMovedNode = {
+        clientId: "post-moved",
+        type: "trigger:post_moved",
+        name: "Post moved",
+      };
+      const logNode = {
+        clientId: "log",
+        type: "action:log",
+        name: "Log",
+      };
+      const nodes = makeNodes(postMovedNode, logNode);
+      const connections = [
+        { sourceClientId: "post-moved", targetClientId: "log" },
+      ];
+      this.session.lastExecutionRunData = {
+        "Post moved": [
+          {
+            node_id: "post-moved",
+            node_type: "trigger:post_moved",
+            status: "success",
+            outputs: [
+              {
+                index: 0,
+                items: [{ json: { post: { id: 1 } } }],
+                item_count: 1,
+              },
+            ],
+          },
+        ],
+        Log: [
+          {
+            node_id: "log",
+            node_type: "action:log",
+            status: "success",
+            inputs: [
+              {
+                index: 0,
+                items: [{ json: { reviewable: { id: 1 } } }],
+                item_count: 1,
+                source: { node_name: "Approved reviewable", output_index: 0 },
+              },
+            ],
+          },
+        ],
+      };
+
+      await render(
+        <template>
+          <InputContext
+            @node={{logNode}}
+            @nodes={{nodes}}
+            @connections={{connections}}
+            @nodeTypes={{(Array)}}
+            @session={{this.session}}
+          />
+        </template>
+      );
+
+      const firstTitle = this.element
+        .querySelector(
+          ".workflows-context-panel__section .workflows-context-panel__title"
+        )
+        .textContent.trim();
+      const keys = [
+        ...this.element.querySelectorAll(".workflows-schema-field__key-title"),
+      ].map((el) => el.textContent.trim());
+
+      assert.true(firstTitle.includes("Post moved"));
+      assert.false(firstTitle.includes("1 item"));
+      assert.false(keys.includes("post"));
+      assert.false(keys.includes("reviewable"));
+      assert
+        .dom(".workflows-context-panel__empty")
+        .hasText("No input data yet. It will appear after the first run.");
     });
 
     test("hides the input section when there is no previous node", async function (assert) {
@@ -656,6 +754,23 @@ module(
       assert.true(
         sectionTitles.some((t) => t.includes("First Step")),
         "shows ancestor node as section"
+      );
+
+      const resultField = [
+        ...this.element.querySelectorAll(".workflows-schema-field__key"),
+      ].find((el) => el.textContent.trim() === "result");
+      const dragged = {};
+      const dataTransfer = {
+        setData(type, value) {
+          dragged[type] = value;
+        },
+      };
+
+      await triggerEvent(resultField, "dragstart", { dataTransfer });
+
+      assert.strictEqual(
+        JSON.parse(dragged[WORKFLOW_VARIABLE_MIME]).id,
+        '$("First Step").first().json.result'
       );
     });
 

@@ -297,14 +297,14 @@ class QunitRunner
     end
 
     if path.include?("/frontend/discourse/tests/")
-      return path.split("/frontend/discourse/").last
+      return path.split("/frontend/discourse/tests/").last
     elsif path.include?("/tests/")
-      return path.split("/tests/").last.prepend("tests/")
+      return path.split("/tests/").last
     end
 
     parts = path.split("/")
     if idx = parts.index("tests")
-      return parts[idx..-1].join("/")
+      return parts[(idx + 1)..-1].join("/")
     end
 
     file_path

@@ -124,12 +124,57 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
             expect(context.dig("__node_runs", "Topic created", 0, "outputs", 0)).to eq(items)
           end
 
-          context "when node_id matches the trigger's downstream" do
+          context "when the current node has no recorded input data" do
             let(:node_id) { "action-1" }
 
-            it "uses the upstream execution output for $json" do
+            it "uses the connected upstream output for input context" do
               expect(context["$json"]).to eq({ "title" => "From past run" })
+              expect(context["__input_item"]).to eq(items.first)
               expect(context["__input_items"]).to eq(items)
+              expect(context["__input_sources"]).to eq(
+                [{ "node_name" => "Topic created", "output_index" => 0 }],
+              )
+            end
+          end
+
+          context "when the current node only has a skipped run" do
+            let(:node_id) { "action-1" }
+
+            before do
+              execution.execution_data.update!(
+                data: {
+                  "entries" => {
+                  },
+                  "context" => {
+                  },
+                  "node_contexts" => {
+                  },
+                  "run_data" =>
+                    run_data_for(
+                      "trigger-1",
+                      node_name: "Topic created",
+                      node_type: "trigger:topic_created",
+                      items: items,
+                    ).deep_merge(
+                      run_data_for(
+                        "action-1",
+                        node_name: "Tag topic",
+                        node_type: "action:topic_tags",
+                        items: items,
+                        status: "skipped",
+                      ),
+                    ),
+                },
+              )
+            end
+
+            it "uses the connected upstream output for input context" do
+              expect(context["$json"]).to eq({ "title" => "From past run" })
+              expect(context["__input_item"]).to eq(items.first)
+              expect(context["__input_items"]).to eq(items)
+              expect(context["__input_sources"]).to eq(
+                [{ "node_name" => "Topic created", "output_index" => 0 }],
+              )
             end
           end
 
@@ -182,6 +227,53 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
               expect(context["__input_sources"]).to eq(
                 [{ "node_name" => "Topic created", "output_index" => 0 }],
               )
+            end
+          end
+
+          context "when recorded input came from another source" do
+            let(:node_id) { "action-1" }
+            let(:stale_items) { [{ "json" => { "reviewable" => { "id" => 1 } } }] }
+
+            before do
+              execution.execution_data.update!(
+                data: {
+                  "entries" => {
+                  },
+                  "context" => {
+                  },
+                  "node_contexts" => {
+                  },
+                  "run_data" =>
+                    run_data_for(
+                      "trigger-1",
+                      node_name: "Topic created",
+                      node_type: "trigger:topic_created",
+                      items: items,
+                    ).deep_merge(
+                      run_data_for(
+                        "action-1",
+                        node_name: "Tag topic",
+                        node_type: "action:topic_tags",
+                        items: [],
+                        inputs: [
+                          {
+                            "index" => 0,
+                            "items" => stale_items,
+                            "item_count" => stale_items.length,
+                            "source" => {
+                              "node_name" => "Approved reviewable",
+                              "output_index" => 0,
+                            },
+                          },
+                        ],
+                      ),
+                    ),
+                },
+              )
+            end
+
+            it "uses the default input context" do
+              expect(context["$json"]).to eq({})
             end
           end
         end
@@ -238,6 +330,24 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
                         "item_count" => rejected_items.length,
                       },
                     ],
+                  ).deep_merge(
+                    run_data_for(
+                      "action-1",
+                      node_name: "Log",
+                      node_type: "action:log",
+                      items: [],
+                      inputs: [
+                        {
+                          "index" => 0,
+                          "items" => rejected_items,
+                          "item_count" => rejected_items.length,
+                          "source" => {
+                            "node_name" => "Filter",
+                            "output_index" => 1,
+                          },
+                        },
+                      ],
+                    ),
                   ),
               },
             )

@@ -401,7 +401,6 @@ hu:
           no_users: "Nem található felhasználó"
           leave_event: "Kilépés az eseményről"
           status:
-            unknown: "Nem érdekli"
             going: "Megy"
             interested: "Érdeklődik"
             going_count:
@@ -434,6 +433,8 @@ hu:
         name_placeholder: "Esemény neve"
         location_placeholder: "Helyszín vagy URL hozzáadása"
         description_placeholder: "Esemény leírásának hozzáadása"
+        event_title_placeholder: "Esemény neve"
+        create_event_button: "Esemény létrehozása"
         reminder:
           units:
             minutes:
@@ -448,6 +449,9 @@ hu:
             weeks:
               one: "hét"
               other: "hetek"
+      composer_actions:
+        create_event:
+          label: "Esemény létrehozása"
       builder_modal:
         custom_fields:
           label: "Egyéni mezők"
@@ -516,3 +520,4 @@ hu:
       invite_user_or_group:
         title: "Felhasználók vagy csoportok értesítése"
         invite: "Küldés"
+        success: "Meghívó elküldve"

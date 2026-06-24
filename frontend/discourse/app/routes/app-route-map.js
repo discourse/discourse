@@ -20,10 +20,6 @@ export default function () {
 
   this.route("topicBySlugOrId", { path: "/t/:slug_or_id" });
 
-  // Nested replies routes
-  this.route("nested", { path: "/n/:slug/:topic_id" });
-  this.route("nestedPost", { path: "/n/:slug/:topic_id/:post_number" });
-
   this.route("discovery", { path: "/" }, function () {
     // top by periods - legacy route
     Site.currentProp("periods").forEach((period) => {
@@ -202,6 +198,10 @@ export default function () {
   this.route("login");
   this.route("email-login", { path: "/session/email-login/:token" });
   this.route("second-factor-auth", { path: "/session/2fa" });
+  this.route("user-api-key-new", { path: "/user-api-key/new" });
+  this.route("user-api-key-result", { path: "/user-api-key" });
+  this.route("user-api-key-activate", { path: "/user-api-key/activate" });
+  this.route("user-api-key-otp", { path: "/user-api-key/otp" });
   this.route("associate-account", { path: "/associate/:token" });
   this.route("login-preferences");
   this.route("forgot-password", { path: "/password-reset" });
@@ -217,6 +217,7 @@ export default function () {
   this.route("new-topic");
   this.route("new-message");
   this.route("new-invite");
+  this.route("share-target");
 
   this.route("badges", function () {
     this.route("show", { path: "/:id/:slug" });

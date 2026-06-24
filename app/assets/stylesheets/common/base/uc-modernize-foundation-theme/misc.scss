@@ -2,14 +2,4 @@
   .discourse-reactions-counter .reactions-counter {
     align-items: center;
   }
-
-  .user-primary-navigation .group-dropdown {
-    max-width: 15ch;
-
-    .name {
-      display: inline-block;
-
-      @include ellipsis;
-    }
-  }
 }

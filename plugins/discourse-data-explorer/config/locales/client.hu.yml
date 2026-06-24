@@ -59,6 +59,9 @@ hu:
       undo: "Változások elvetése"
       delete: "Törlés"
       recover: "Lekérdezés törlésének visszavonása"
+      chart:
+        form:
+          bar: "Oszlop"
       others_dirty: "A lekérdezés nem mentett módosításokat tartalmaz, amelyek elvesznek, ha elnavigál."
       run_time: "A lekérdezés %{value} ms alatt fejeződött be."
       result_count:
@@ -94,6 +97,16 @@ hu:
           descriptions:
             data_explorer:
               run_queries: "Adatkezelő lekérdezések futtatása. Az API-kulcsot lekérdezések egy halmazára korlátozhatja lekérdezésazonosítók megadásával."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Adatfelfedező"
+      sql:
+        queries: "Lekérdezések"
+        query_id: "Lekérdezés"
+        param_value: "Érték"
+        output:
+          results: "Eredmények"
+          no_results: "Nincs találat"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

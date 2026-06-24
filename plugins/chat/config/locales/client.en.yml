@@ -321,8 +321,11 @@ en:
         title: "Desktop chat notification sound"
       sounds:
         none: "None"
-        bell: "Bell"
-        ding: "Ding"
+        classic: "Classic and clean"
+        soft: "Soft marimba"
+        retro: "Retro 8-bit"
+        bubble: "Playful bubble"
+        ethereal: "Ethereal glass"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Attach a file"
@@ -411,8 +414,8 @@ en:
         input_placeholder: Add a name
         slug_description: A channel slug is used in the URL instead of the channel name
         name: Channel name
-        slug: Channel slug (optional)
-        emoji: Channel emoji (optional)
+        slug: Channel slug
+        emoji: Channel emoji
         reset_emoji: Reset emoji
 
       channel_edit_description_modal:
@@ -474,16 +477,16 @@ en:
             one: 'Users in %{group} and %{count} other group will have access to this channel per the <a href="%{settingLink}" target="_blank">security settings</a>'
             other: 'Users in %{group} and %{count} other groups will have access to this channel per the <a href="%{settingLink}" target="_blank">security settings</a>'
         create: "Create channel"
-        description: "Description (optional)"
+        description: "Description"
         name: "Channel name"
-        slug: "Channel slug (optional)"
+        slug: "Channel slug"
         title: "New channel"
         type: "Type"
         types:
           category: "Category"
           topic: "Topic"
         emoji:
-          label: "Channel emoji (optional)"
+          label: "Channel emoji"
           reset: "Reset emoji"
 
       reviewable:
@@ -842,9 +845,14 @@ en:
       nodes:
         "action:send_chat_message": "Send chat message"
         "action:chat_approval": "Chat approval"
+        "trigger:chat_message_created": "Chat message created"
       node_descriptions:
         "action:send_chat_message": "Send a message to a chat channel"
         "action:chat_approval": "Send an approval request to a chat channel and wait for a response"
+        "trigger:chat_message_created": "Fires when a new chat message is created"
+      chat_message_created:
+        channel_id: "Channel"
+        channel_id_description: "Leave blank to trigger for all chat channels."
       send_chat_message:
         channel_id: "Channel"
         message: "Message"

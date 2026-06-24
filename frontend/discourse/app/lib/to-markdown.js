@@ -10,7 +10,9 @@ async function ensureDefaultExtensions() {
   }
 
   // The module's side effect registers the defaults and marks them as registered
-  await import("discourse/static/prosemirror/extensions/register-default");
+  await import(
+    /* dynamicChunkName: "prosemirror-extensions" */ "discourse/static/prosemirror/extensions/register-default"
+  );
 }
 
 // Deprecated no-ops - kept for backward compatibility
@@ -51,12 +53,16 @@ export default async function toMarkdown(html) {
       { DOMParser: ProseMirrorDOMParser },
       { createSchema },
       { default: Serializer },
-      { transformWordListsHtml },
+      { transformWordHtml },
       { isBoundary },
     ] = await Promise.all([
       import("prosemirror-model"),
-      import("discourse/static/prosemirror/core/schema"),
-      import("discourse/static/prosemirror/core/serializer"),
+      import(
+        /* dynamicChunkName: "prosemirror-schema" */ "discourse/static/prosemirror/core/schema"
+      ),
+      import(
+        /* dynamicChunkName: "prosemirror-serializer" */ "discourse/static/prosemirror/core/serializer"
+      ),
       import("discourse/static/prosemirror/extensions/word-paste"),
       import("discourse/static/prosemirror/lib/plugin-utils"),
     ]);
@@ -67,7 +73,7 @@ export default async function toMarkdown(html) {
     const pluginParams = { utils: { isBoundary } };
     const serializer = new Serializer(extensions, pluginParams);
 
-    const processedHtml = transformWordListsHtml(html);
+    const processedHtml = transformWordHtml(html);
     const parsedDoc = new DOMParser().parseFromString(
       processedHtml,
       "text/html"

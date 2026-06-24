@@ -3,6 +3,7 @@
 describe "Tag Settings" do
   let(:tags_page) { PageObjects::Pages::Tag.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
+  let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
   let(:tag_settings_page) { PageObjects::Pages::TagSettings.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
 
@@ -52,6 +53,21 @@ describe "Tag Settings" do
       expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}")
     end
 
+    it "lets the user open tag settings from a direct placeholder slug URL in a new tab" do
+      sign_in(admin)
+
+      new_tab = open_new_window(:tab)
+      switch_to_window(new_tab)
+
+      page.visit "/tag/-/#{tag_1.id}/edit/general"
+
+      expect(tag_settings_page).to have_tag_settings_page
+      expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
+      expect(tag_settings_page).to have_name_value(tag_1.name)
+      expect(tag_settings_page).to have_slug_value(tag_1.slug)
+      expect(tag_settings_page).to have_description_value(tag_1.description)
+    end
+
     it "allows privileged users to edit tag, admin to delete tag" do
       sign_in(trust_level_4)
       tags_page.visit_tag(tag_1)
@@ -90,6 +106,17 @@ describe "Tag Settings" do
       tags_page.edit_tag_btn.click
       tag_settings_page.click_back
       expect(page).to have_current_path("/tag/custom-slug/#{tag_1.id}")
+    end
+
+    it "shows an error when the slug is invalid" do
+      sign_in(admin)
+
+      tag_settings_page.visit(tag_1)
+      tag_settings_page.fill_slug("a.a")
+      tag_settings_page.click_save
+
+      expect(form.field("slug")).to have_errors(I18n.t("js.tagging.settings.invalid_slug"))
+      expect(tag_1.reload.slug).to eq("design")
     end
 
     it "allows adding an existing tag as synonym" do

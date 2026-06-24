@@ -171,6 +171,7 @@ export default class VoteBox extends Component {
         @icon={{this.buttonIcon}}
         @onShow={{this.onShowMenu}}
         @onClose={{this.onCloseMenu}}
+        @title={{this.ariaLabel}}
         @ariaLabel={{this.ariaLabel}}
         class={{this.buttonClasses}}
         @onRegisterApi={{this.onRegisterApi}}
@@ -266,6 +267,7 @@ export default class VoteBox extends Component {
       <DButton
         @icon={{this.buttonIcon}}
         @action={{this.onShowMenu}}
+        @translatedTitle={{this.ariaLabel}}
         @translatedAriaLabel={{this.ariaLabel}}
         class={{this.buttonClasses}}
       />

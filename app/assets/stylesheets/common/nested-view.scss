@@ -1,7 +1,33 @@
 @use "lib/viewport";
 
+.selected-posts.nested-view__selected-posts {
+  @include viewport.from(sm) {
+    width: min(18rem, calc(100vw - 2rem));
+  }
+}
+
+// PostCookedHtml appends a selection barrier after the final block, so
+// `:last-child` does not usually match the final cooked paragraph.
+.nested-view__op-content,
+.nested-post__content {
+  .cooked > p {
+    &:last-child,
+    &:has(+ .cooked-selection-barrier:last-child) {
+      margin-bottom: 0;
+    }
+  }
+}
+
 // ── Top-level nested view ──────────────────────────────────────────
 .nested-view {
+  // Avatar size for the "small" PostAvatar used in nested posts.
+  // Also anchors the sticky controls/avatar spacing.
+  --nested-avatar-size: 24px;
+  --nested-controls-height: calc(
+    var(--nested-avatar-size) + var(--space-2) + var(--space-2)
+  );
+  --nested-sticky-avatar-top-gap: var(--space-1);
+  --nested-sticky-avatar-bottom-offset: calc(var(--space-2) + var(--space-1));
   background: var(--secondary);
   margin: 0 auto;
   padding: var(--space-4);
@@ -14,7 +40,6 @@
   &__header {
     margin-bottom: 1em;
     padding-bottom: 0.75em;
-    border-bottom: 1px solid var(--primary-low);
   }
 
   &__title {
@@ -134,6 +159,8 @@
     position: sticky;
     top: var(--header-offset, 0);
     z-index: z("timeline");
+    box-sizing: border-box;
+    min-height: var(--nested-controls-height);
     padding: 0.25em 0;
     background: var(--secondary);
     border-bottom: 1px solid var(--primary-low);
@@ -153,8 +180,11 @@
     margin-left: auto;
   }
 
-  &__activity-link {
+  &__activity-link.btn {
     font-size: var(--font-down-1);
+    padding: 0.35em 0.55em;
+    min-height: auto;
+    line-height: var(--line-height-small);
     white-space: nowrap;
   }
 
@@ -183,7 +213,6 @@
   &__op {
     margin-bottom: 1.5em;
     padding: 1em;
-    background: var(--primary-very-low);
     border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius);
 
@@ -196,6 +225,27 @@
       .read-state {
         right: -10px;
       }
+    }
+  }
+
+  &__op-article {
+    .select-posts {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      white-space: nowrap;
+
+      button {
+        background-color: var(--primary-low);
+        color: var(--primary);
+        box-shadow: var(--shadow-dropdown);
+      }
+    }
+
+    &.selected .select-posts button.select-post {
+      background-color: var(--tertiary);
+      color: var(--secondary);
+      border-color: var(--tertiary);
     }
   }
 
@@ -215,6 +265,37 @@
       padding: 0;
       margin-left: 0;
       font-size: var(--font-down-1);
+    }
+
+    @include viewport.from(sm) {
+      > .topic-avatar {
+        position: sticky;
+        top: calc(var(--header-offset) + var(--space-3));
+        align-self: flex-start;
+        margin-bottom: 25px;
+      }
+    }
+
+    @include viewport.until(sm) {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: start;
+      column-gap: 0.75em;
+      row-gap: 0.5em;
+
+      .nested-view__op-body {
+        display: contents;
+      }
+
+      .topic-meta-data {
+        align-self: center;
+      }
+
+      .nested-view__op-content,
+      .nested-view__op-menu,
+      .post-links-container {
+        grid-column: 1 / -1;
+      }
     }
   }
 
@@ -308,11 +389,47 @@
   }
 }
 
+// ── Context view ──────────────────────────────────────────────────
+.nested-context-view {
+  &__banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.75em 1em;
+    margin-bottom: 1em;
+    background: var(--tertiary-very-low);
+    border: 1px solid var(--tertiary-low);
+    border-radius: var(--d-border-radius);
+    font-size: var(--font-down-1);
+    position: sticky;
+    top: var(--header-offset, 0);
+    z-index: 9;
+  }
+
+  &__banner-icon {
+    color: var(--tertiary);
+
+    .d-icon {
+      width: 1em;
+      height: 1em;
+    }
+  }
+
+  &__banner-text {
+    color: var(--primary-high);
+    margin-right: auto;
+  }
+
+  &__nav {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+  }
+}
+
 // ── Nested post (single comment in tree) ───────────────────────────
 .nested-post {
-  // Avatar size for the "small" PostAvatar used in nested posts.
-  // Used to calculate horizontal connector positions.
-  --nested-avatar-size: 24px;
   --nested-column-gap: var(--space-2);
   --nested-connector-offset: var(--space-2);
   --nested-vertical-gap: 0.5em;
@@ -320,10 +437,17 @@
   --nested-line-offset: calc(
     var(--nested-connector-offset) + var(--nested-avatar-size) / 2
   );
-  --nested-load-more-left-adjust: 2px;
+  --nested-line-width: 1px;
+  --nested-line-center-adjust: 0.5px;
+  --nested-load-more-left-adjust: var(--nested-line-width);
+  --nested-sticky-avatar-top: calc(
+    var(--header-offset, 0px) + var(--nested-controls-height) +
+      var(--nested-sticky-avatar-top-gap)
+  );
 
-  // Grid splits article (row 1) from children (row 2) so the gutter's
-  // depth-line naturally stops at the article bottom.
+  // Grid splits article (row 1) from children (row 2) so the sticky avatar is
+  // bounded by the post itself and does not continue past the post menu into
+  // the reply subtree.
   display: grid;
   grid-template-columns: var(--nested-avatar-size) 1fr;
   column-gap: var(--nested-column-gap);
@@ -344,8 +468,8 @@
       height: calc(
         var(--nested-vertical-gap) + var(--nested-avatar-size) / 2 + 5px // +5px visually centers the hook on the avatar
       );
-      border-left: 2px solid var(--primary-low);
-      border-bottom: 2px solid var(--primary-low);
+      border-left: var(--nested-line-width) solid var(--primary-low);
+      border-bottom: var(--nested-line-width) solid var(--primary-low);
       border-radius: 0 0 0 12px;
       transition: border-color 0.15s ease;
     }
@@ -365,7 +489,7 @@
         var(--nested-vertical-gap) + var(--nested-avatar-size) / 2 + 1px - 10px
       );
       bottom: 0;
-      width: 2px;
+      width: var(--nested-line-width);
       background: var(--primary-low);
       transition: background-color 0.15s ease;
     }
@@ -411,16 +535,19 @@
     }
   }
 
-  // Left column: avatar on top, clickable depth line below.
-  // Grid row 1 only — does not extend into the children row.
+  // Left column: sticky avatar on top, clickable depth line below.
   &__gutter {
     grid-column: 1;
     grid-row: 1;
+    margin-bottom: var(--nested-sticky-avatar-bottom-offset);
     display: flex;
     flex-direction: column;
     align-items: center;
 
     .topic-avatar {
+      position: sticky;
+      top: var(--nested-sticky-avatar-top);
+      z-index: 2;
       border-top: none;
       float: none;
       width: auto;
@@ -456,8 +583,8 @@
       left: calc(var(--nested-avatar-size) / 2);
       top: 6px;
       bottom: 0;
-      width: 2px;
-      border-radius: 1px;
+      width: var(--nested-line-width);
+      border-radius: var(--nested-line-center-adjust);
       background: var(--primary-low);
       transition: background-color 0.15s ease;
     }
@@ -525,8 +652,8 @@
         width: calc(var(--nested-avatar-size) / 2);
         transform: none;
         background: none;
-        border-left: 2px solid var(--primary-low);
-        border-bottom: 2px solid var(--primary-low);
+        border-left: var(--nested-line-width) solid var(--primary-low);
+        border-bottom: var(--nested-line-width) solid var(--primary-low);
         border-radius: 0 0 0 12px;
         transition: border-color 0.15s ease;
       }
@@ -566,7 +693,7 @@
   &__depth-line-icon {
     position: absolute;
     bottom: 0;
-    left: calc(50% + 1px);
+    left: calc(50% + var(--nested-line-center-adjust));
     transform: translateX(-50%);
     z-index: 1;
     display: flex;
@@ -600,11 +727,30 @@
     .topic-meta-data {
       padding: 0;
     }
+
+    .select-posts {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      white-space: nowrap;
+
+      button {
+        background-color: var(--primary-low);
+        color: var(--primary);
+        box-shadow: var(--shadow-dropdown);
+      }
+    }
+  }
+
+  &.selected &__article .select-posts button.select-post {
+    background-color: var(--tertiary);
+    color: var(--secondary);
+    border-color: var(--tertiary);
   }
 
   &__header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.25em;
 
     // Hide the reply-to line, as the lines between posts already visually indicate the reply structure
@@ -623,6 +769,7 @@
 
     .post-infos {
       order: 1;
+      margin-inline-start: auto;
       font-size: var(--font-down-2);
       color: var(--primary-medium);
       transform: translateY(1px); // optical alignment with username baseline
@@ -801,6 +948,9 @@
   }
 
   &__placeholder-avatar {
+    position: sticky;
+    top: var(--nested-sticky-avatar-top);
+    z-index: 2;
     width: var(--nested-avatar-size);
     height: var(--nested-avatar-size);
     display: flex;
@@ -863,8 +1013,8 @@
       top: -1em;
       height: calc(50% + 1em);
       width: var(--nested-line-offset);
-      border-left: 2px solid var(--primary-low);
-      border-bottom: 2px solid var(--primary-low);
+      border-left: var(--nested-line-width) solid var(--primary-low);
+      border-bottom: var(--nested-line-width) solid var(--primary-low);
       border-radius: 0 0 0 12px;
       transition: border-color 0.15s ease;
     }
@@ -874,50 +1024,6 @@
     &.--parent-line-highlighted::before {
       border-color: var(--tertiary);
     }
-  }
-}
-
-// ── Context view ──────────────────────────────────────────────────
-.nested-context-view {
-  &__banner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5em;
-    padding: 0.75em 1em;
-    margin-bottom: 1em;
-    background: var(--tertiary-very-low);
-    border: 1px solid var(--tertiary-low);
-    border-radius: var(--d-border-radius);
-    font-size: var(--font-down-1);
-    position: sticky;
-    top: var(--header-offset, 0);
-    z-index: 9;
-  }
-
-  &__banner-icon {
-    color: var(--tertiary);
-
-    .d-icon {
-      width: 1em;
-      height: 1em;
-    }
-  }
-
-  &__banner-text {
-    color: var(--primary-high);
-    margin-right: auto;
-  }
-
-  &__nav {
-    display: flex;
-    gap: 0.5em;
-    align-items: center;
-  }
-
-  &__chain {
-    border-left: 3px solid var(--tertiary-low);
-    padding-left: 0.75em;
   }
 }
 
@@ -1026,14 +1132,6 @@
     flex-wrap: wrap;
   }
 
-  .nested-context-view__banner {
-    margin-left: -0.5em;
-    margin-right: -0.5em;
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-  }
-
   // Full-width cards: break out of container side padding
   .nested-view__op,
   .nested-view__roots {
@@ -1069,9 +1167,12 @@
   }
 
   .nested-view__mobile-focus {
+    --nested-mobile-ancestor-avatar-size: 24px;
     display: flex;
     flex-direction: column;
     gap: 0;
+    margin-left: -0.5em;
+    margin-right: -0.5em;
   }
 
   .nested-view__mobile-ancestors {
@@ -1088,7 +1189,7 @@
     gap: 0.5em;
     width: 100%;
     min-width: 0;
-    min-height: calc(var(--nested-avatar-size) + 1em);
+    min-height: calc(var(--nested-mobile-ancestor-avatar-size) + 1em);
     padding: 0.5em;
     color: var(--primary-medium);
     background: var(--secondary);
@@ -1117,8 +1218,24 @@
   .nested-view__mobile-ancestor {
     border-top: 1px solid var(--primary-low);
     font-size: var(--font-down-1);
-    min-height: calc(var(--nested-avatar-size) + 0.75em);
+    min-height: calc(var(--nested-mobile-ancestor-avatar-size) + 0.75em);
     padding-block: 0.375em;
+  }
+
+  .nested-view__mobile-ancestor-avatar {
+    display: flex;
+    flex: 0 0 var(--nested-mobile-ancestor-avatar-size);
+    align-items: center;
+    justify-content: center;
+    width: var(--nested-mobile-ancestor-avatar-size);
+    height: var(--nested-mobile-ancestor-avatar-size);
+
+    .avatar {
+      width: var(--nested-mobile-ancestor-avatar-size);
+      height: var(--nested-mobile-ancestor-avatar-size);
+      max-width: var(--nested-mobile-ancestor-avatar-size);
+      max-height: var(--nested-mobile-ancestor-avatar-size);
+    }
   }
 
   .nested-view__mobile-ancestor-meta {
@@ -1145,8 +1262,6 @@
   .nested-view__mobile-focused-branch {
     display: flex;
     flex-direction: column;
-    margin-left: -0.5em;
-    margin-right: -0.5em;
     margin-top: 0.5em;
   }
 
@@ -1192,35 +1307,49 @@
   }
 
   // ── Individual nested post overrides ──
-  // Gutter shrinks to a narrow line-only column (avatar rendered inline
-  // in the header instead). Lines run full subtree height.
+  // Gutter stays wide enough for the avatar so sticky avatars remain attached
+  // to the mobile rail, while children remain indented in the content column.
   .nested-post {
-    --nested-line-gutter: 14px;
-    --nested-column-gap: var(--space-2);
-    --nested-mobile-content-indent: calc(
-      var(--nested-avatar-size) + var(--nested-column-gap)
-    );
+    --nested-line-gutter: var(--nested-avatar-size);
+    --nested-column-gap: var(--space-1);
+    --nested-mobile-line-offset: calc(var(--nested-line-gutter) / 2);
+    --nested-line-center-adjust: var(--nested-line-width);
+    --nested-mobile-line-nudge: calc(-1 * var(--space-1));
+    --nested-mobile-line-start: calc(var(--nested-avatar-size) + 6px);
     grid-template-columns: var(--nested-line-gutter) 1fr;
-
-    // Explicit rows are required so grid-row: 1 / -1 on the gutter
-    // can resolve -1 to the end of the explicit grid (line 3).
-    // Without this, -1 falls back to line 1 and the gutter only spans row 1.
-    grid-template-rows: auto 1fr;
     column-gap: var(--nested-column-gap);
 
     // Tighter vertical spacing between siblings
     --nested-vertical-gap: 0.25em;
 
-    // Gutter spans all grid rows so the depth-line runs continuously
-    // through the article AND children areas
+    // Keep the gutter bounded to the post row on mobile too. The depth-line
+    // remains available as the collapse target for this post, but the sticky
+    // avatar stops with the post instead of following the entire child subtree.
     > .nested-post__gutter {
-      grid-row: 1 / -1;
+      grid-row: 1;
+      position: relative;
+      z-index: 1;
+      pointer-events: none;
+
+      .topic-avatar,
+      .nested-post__placeholder-avatar {
+        pointer-events: auto;
+      }
     }
 
-    // Depth-line: full-height vertical bar, no decorative hooks
+    // Depth-line: vertical bar under the avatar, no decorative hooks.
     > .nested-post__gutter .nested-post__depth-line {
+      position: absolute;
+      top: var(--nested-mobile-line-start);
+      bottom: 0;
+      left: var(--nested-mobile-line-nudge);
+      min-height: 0;
+      pointer-events: auto;
+
       &::after {
-        left: calc(var(--nested-line-gutter) / 2 - 1px);
+        left: calc(
+          var(--nested-mobile-line-offset) - var(--nested-line-center-adjust)
+        );
         top: 0;
         bottom: 0;
       }
@@ -1229,9 +1358,11 @@
       &--collapsed::after {
         border: none;
         background: var(--primary-low);
-        width: 2px;
+        width: var(--nested-line-width);
         border-radius: 0;
-        left: calc(var(--nested-line-gutter) / 2 - 1px);
+        left: calc(
+          var(--nested-mobile-line-offset) - var(--nested-line-center-adjust)
+        );
         bottom: 0;
       }
     }
@@ -1241,21 +1372,23 @@
       display: none;
     }
 
-    // Inline avatar in the post header (rendered via template)
-    .nested-post__header .topic-avatar {
-      border-top: none;
-      float: none;
-      width: auto;
-      padding-top: 0;
-      height: auto;
+    .nested-post__collapsed-bar {
+      padding-inline: 0;
     }
 
-    // Strip all decorative connectors (L-hooks, sibling lines)
+    // Mobile strips desktop connector hooks, so the desktop padding used to
+    // make room for those hooks must not shift the post's internal grid math.
     &:not(.--depth-0) {
+      padding-top: 0;
+
       &::before,
       &:not(:last-child)::after {
         content: none;
       }
+    }
+
+    &:not(.--depth-0) + &:not(.--depth-0) {
+      margin-top: var(--nested-vertical-gap);
     }
 
     // No hover interaction on touch — depth-line handles collapse
@@ -1281,14 +1414,6 @@
       .topic-meta-data {
         margin-left: 0;
       }
-    }
-
-    .nested-post__content,
-    .nested-post__menu,
-    .nested-post__controls,
-    .nested-post__expand-replies,
-    .post-links-container {
-      margin-left: var(--nested-mobile-content-indent);
     }
 
     .nested-post__content {

@@ -27,6 +27,9 @@ zh_TW:
           yes: "是"
           no: "否"
       delete: "刪除"
+      chart:
+        form:
+          bar: "長條圖"
       result_count:
         other: "%{count} 個結果."
       query_groups: "群組"
@@ -36,3 +39,9 @@ zh_TW:
       search_placeholder: "搜尋..."
     group:
       reports: "報告"
+    discourse_workflows:
+      sql:
+        param_value: "價值"
+        output:
+          results: "結果"
+          no_results: "沒有結果"

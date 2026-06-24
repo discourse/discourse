@@ -207,7 +207,7 @@ export default class ComposerContainer extends Component {
 
             <div class="reply-to">
               {{#unless this.composer.model.viewFullscreen}}
-                <div class="reply-details">
+                {{#if this.siteSettings.enable_new_composer_actions}}
                   <ComposerActionTitle
                     @model={{this.composer.model}}
                     @canWhisper={{this.composer.canWhisper}}
@@ -237,36 +237,68 @@ export default class ComposerContainer extends Component {
                     @name="composer-action-after"
                     @outletArgs={{lazyHash model=this.composer.model}}
                   />
+                {{else}}
+                  <div class="reply-details">
+                    <ComposerActionTitle
+                      @model={{this.composer.model}}
+                      @canWhisper={{this.composer.canWhisper}}
+                      @canUnlistTopic={{this.composer.canUnlistTopic}}
+                    />
 
-                  {{#if this.site.desktopView}}
-                    {{#if this.composer.model.unlistTopic}}
-                      <span class="unlist">({{i18n "composer.unlist"}})</span>
+                    {{#if this.composer.showTranslationSelector}}
+                      <DropdownSelectBox
+                        @nameProperty="name"
+                        @valueProperty="value"
+                        @value={{this.composer.selectedTranslationLocale}}
+                        @content={{this.availableContentLocalizationLocales}}
+                        @onChange={{this.updateSelectedTranslationLocale}}
+                        @options={{hash
+                          icon="language"
+                          showCaret=true
+                          filterable=true
+                          disabled=this.composer.loading
+                          placement="bottom-start"
+                          translatedNone=(i18n "composer.translations.select")
+                        }}
+                        class="translation-selector-dropdown btn-small"
+                      />
                     {{/if}}
-                    {{#if this.composer.isWhispering}}
-                      {{#if this.composer.model.noBump}}
-                        <span class="no-bump">{{dIcon "anchor"}}</span>
+
+                    <PluginOutlet
+                      @name="composer-action-after"
+                      @outletArgs={{lazyHash model=this.composer.model}}
+                    />
+
+                    {{#if this.site.desktopView}}
+                      {{#if this.composer.model.unlistTopic}}
+                        <span class="unlist">({{i18n "composer.unlist"}})</span>
+                      {{/if}}
+                      {{#if this.composer.isWhispering}}
+                        {{#if this.composer.model.noBump}}
+                          <span class="no-bump">{{dIcon "anchor"}}</span>
+                        {{/if}}
                       {{/if}}
                     {{/if}}
-                  {{/if}}
 
-                  {{#if this.composer.canEdit}}
-                    <LinkToInput
-                      @onClick={{this.composer.displayEditReason}}
-                      @showInput={{this.composer.showEditReason}}
-                      @icon="pen-to-square"
-                      class="display-edit-reason
-                        {{if this.composer.showEditReason '--active'}}"
-                      title={{i18n "composer.edit_reason"}}
-                    >
-                      <DTextField
-                        @value={{this.composer.editReason}}
-                        @id="edit-reason"
-                        @maxlength="255"
-                        @placeholderKey="composer.edit_reason_placeholder"
-                      />
-                    </LinkToInput>
-                  {{/if}}
-                </div>
+                    {{#if this.composer.canEdit}}
+                      <LinkToInput
+                        @onClick={{this.composer.displayEditReason}}
+                        @showInput={{this.composer.showEditReason}}
+                        @icon="pen-to-square"
+                        class="display-edit-reason
+                          {{if this.composer.showEditReason '--active'}}"
+                        title={{i18n "composer.edit_reason"}}
+                      >
+                        <DTextField
+                          @value={{this.composer.editReason}}
+                          @id="edit-reason"
+                          @maxlength="255"
+                          @placeholderKey="composer.edit_reason_placeholder"
+                        />
+                      </LinkToInput>
+                    {{/if}}
+                  </div>
+                {{/if}}
               {{/unless}}
 
               <PluginOutlet
@@ -441,10 +473,6 @@ export default class ComposerContainer extends Component {
                     class="discard-button btn-transparent"
                     @title={{this.composer.cancelLabel}}
                   />
-
-                  {{#if this.composer.model.noBump}}
-                    <span class="no-bump">{{dIcon "anchor"}}</span>
-                  {{/if}}
                 {{/if}}
 
                 <span>
@@ -553,7 +581,7 @@ export default class ComposerContainer extends Component {
                   @translatedTitle={{this.composer.toggleText}}
                   @icon="angles-left"
                   class={{dConcatClass
-                    "btn-transparent btn-mini-toggle toggle-preview"
+                    "btn-transparent btn-small toggle-preview"
                     (unless this.composer.isPreviewVisible "active")
                   }}
                 />

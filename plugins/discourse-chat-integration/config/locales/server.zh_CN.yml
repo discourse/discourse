@@ -78,6 +78,10 @@ zh_CN:
       added_and_removed: "添加了 %{added}，移除了 %{removed}"
       added: "添加了 %{added}"
       removed: "移除了 %{removed}"
+    errors:
+      provider_already_enabled: "提供商 '%{name}' 已启用"
+      provider_not_found: "找不到提供商 '%{name}'"
+      setting_update_failed: "无法更新设置：%{errors}"
     provider:
       slack:
         status:

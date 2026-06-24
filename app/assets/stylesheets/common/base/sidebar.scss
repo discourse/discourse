@@ -274,6 +274,11 @@
 
   .always-public-tooltip {
     padding-right: 0.5rem;
+
+    .fk-d-tooltip__trigger-container {
+      align-items: center;
+      gap: var(--space-1);
+    }
   }
 
   .d-modal__footer {

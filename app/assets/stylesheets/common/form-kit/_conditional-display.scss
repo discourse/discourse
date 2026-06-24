@@ -57,6 +57,17 @@
       cursor: not-allowed;
     }
 
+    // Like --disabled, but the option stays clickable.
+    &.--locked {
+      color: var(--primary-medium);
+      background: var(--d-input-bg-color--disabled);
+
+      .d-icon {
+        color: currentcolor;
+        display: inline-block;
+      }
+    }
+
     .d-icon {
       display: none;
     }

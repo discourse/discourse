@@ -10,10 +10,13 @@ en:
           description: "Generates SQL queries for Data Explorer from natural language"
       tool_help:
         run_sql: "Runs a SQL query and returns results"
+        submit_query: "Submits the final generated query"
       tool_summary:
         run_sql: "Running SQL query"
+        submit_query: "Submitting generated query"
       tool_description:
         run_sql: "Ran SQL query"
+        submit_query: "Submitted generated query %{name}"
   discourse_data_explorer:
     ai:
       error_agent_not_configured: "AI agent is not configured. Please check the AI features settings."

@@ -7,6 +7,7 @@ RSpec.describe SsoOverridesEmailValidator do
     describe "when 'email editable' is true" do
       before do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         SiteSetting.email_editable = true
       end
@@ -31,6 +32,7 @@ RSpec.describe SsoOverridesEmailValidator do
     describe "when 'email editable' is false" do
       before do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         SiteSetting.email_editable = false
       end

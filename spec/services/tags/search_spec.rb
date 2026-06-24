@@ -107,9 +107,41 @@ RSpec.describe(Tags::Search) do
         expect(disabled.map { |t| t[:name] }).to include("gamma")
       end
 
-      it "includes the one_per_topic reason" do
+      it "names the conflicting tag in the one_per_topic reason" do
         disabled = result[:tags].find { |t| t[:name] == "gamma" && t[:disabled] }
-        expect(disabled[:title]).to include("Exclusive Group")
+        expect(disabled[:title]).to eq(
+          I18n.t("tags.forbidden.one_tag_per_topic_group", tag_names: "alpha"),
+        )
+      end
+    end
+
+    context "with a hidden selected tag in a one_per_topic group" do
+      fab!(:staff_group) { Group[:staff] }
+      fab!(:private_category) { Fabricate(:private_category, group: staff_group) }
+      fab!(:hidden_selected_tag) { Fabricate(:tag, name: "secret-selected") }
+      fab!(:public_sibling_tag) { Fabricate(:tag, name: "public-sibling") }
+      fab!(:tag_group) do
+        Fabricate(
+          :tag_group,
+          name: "Exclusive Group",
+          one_per_topic: true,
+          tags: [hidden_selected_tag, public_sibling_tag],
+        )
+      end
+
+      before { CategoryTag.create!(category: private_category, tag: hidden_selected_tag) }
+
+      let(:params) do
+        { q: "public", filterForInput: true, selected_tag_ids: [hidden_selected_tag.id] }
+      end
+
+      it "uses a generic one_per_topic reason instead of leaking the hidden selected tag name" do
+        disabled = result[:tags].find { |tag| tag[:name] == "public-sibling" && tag[:disabled] }
+        expect(disabled).to be_present
+        expect(disabled[:title]).not_to include(hidden_selected_tag.name)
+        expect(disabled[:title]).to eq(
+          I18n.t("tags.forbidden.one_tag_per_topic_group_without_names"),
+        )
       end
     end
 
@@ -132,6 +164,12 @@ RSpec.describe(Tags::Search) do
       it "includes the missing parent tag reason" do
         disabled = result[:tags].find { |t| t[:name] == "childtag" && t[:disabled] }
         expect(disabled[:title]).to include("parent")
+      end
+
+      it "does not surface the tag when the term only matches mid-word" do
+        result =
+          described_class.call(params: { q: "hildtag", filterForInput: true }, **dependencies)
+        expect(result[:tags].map { |t| t[:name] }).not_to include("childtag")
       end
     end
 

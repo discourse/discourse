@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 th:
+  js:
+    discourse_reactions:
+      users_popup:
+        all: "ทั้งหมด"

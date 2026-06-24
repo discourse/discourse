@@ -76,6 +76,7 @@ th:
         title: สร้างข้อความใหม่
         prefix: "ถึง:"
       create_channel:
+        description: "รายละเอียด"
         type: "ชนิด"
         types:
           category: "หมวดหมู่"
@@ -157,3 +158,30 @@ th:
           fields:
             message:
               label: ข้อความ
+    discourse_workflows:
+      node_unavailable:
+        requires_chat: "จำเป็นต้องเปิดใช้งานปลั๊กอิน Chat"
+      nodes:
+        "action:send_chat_message": "ส่งข้อความแชท"
+        "action:chat_approval": "การอนุมัติแชท"
+      node_descriptions:
+        "action:send_chat_message": "ส่งข้อความไปยังช่องแชท"
+        "action:chat_approval": "ส่งคำขอการอนุมัติไปยังช่องแชทและรอการตอบกลับ"
+      chat_message_created:
+        channel_id: "ช่องทาง"
+      send_chat_message:
+        channel_id: "ช่องทาง"
+        message: "ข้อความ"
+      chat_approval:
+        message: "ข้อความ"
+        approve_label: "อนุมัติป้ายกำกับปุ่ม"
+        approve_label_description: "หากเว้นว่างไว้ ระบบจะแสดงคำว่า \"อนุมัติ\" เป็นค่าเริ่มต้น"
+        deny_label: "ปฏิเสธป้ายกำกับปุ่ม"
+        deny_label_description: "หากเว้นว่างไว้ ระบบจะแสดงคำว่า \"ปฏิเสธ\" เป็นค่าเริ่มต้น"
+        channel_id: "ช่องทาง"
+        channel_id_description: "ช่องทางแชทสำหรับส่งข้อความอนุมัติ"
+        timeout_minutes: "หมดเวลา (นาที)"
+        timeout_minutes_description: "เว้นว่างไว้หากไม่ต้องการให้หมดเวลา"
+        timeout_action: "เมื่อหมดเวลา"
+        timeout_action_description: "จะเกิดอะไรขึ้นเมื่อการอนุมัติหมดเวลาลง"
+        timeout_action_fail: "ขั้นตอนการทำงานล้มเหลว"

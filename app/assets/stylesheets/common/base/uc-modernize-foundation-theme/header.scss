@@ -16,7 +16,9 @@
   }
 
   .extra-info-wrapper .title-wrapper {
-    font-size: var(--font-down-1);
+    @include viewport.from(sm) {
+      font-size: var(--font-down-1);
+    }
   }
 
   .header-sidebar-toggle button,

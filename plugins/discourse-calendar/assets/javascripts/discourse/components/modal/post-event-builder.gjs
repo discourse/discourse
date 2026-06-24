@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { concat, fn, get } from "@ember/helper";
-import { on } from "@ember/modifier";
+import { cached, tracked } from "@glimmer/tracking";
+import { concat, fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
+import AdvancedModeToggle from "discourse/components/advanced-mode-toggle";
 import Form from "discourse/components/form";
 import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -18,9 +18,11 @@ import DDateInput from "discourse/ui-kit/d-date-input";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import { recurrenceContext } from "../../lib/event-recurrence";
 import {
   attendanceTransition,
   buildParams,
+  customFieldFormName,
   defaultEventState,
   defaultReminderFor,
   getCustomFieldNames,
@@ -115,11 +117,19 @@ export default class PostEventBuilder extends Component {
           : this.event.status || "public",
       rawInvitees: this.event.rawInvitees ?? [],
       recurrence: this.event.recurrence ?? null,
-      imageUpload: this.event.imageUpload ?? null,
+      imageUpload: this.event.imageUpload?.url ?? null,
       timezone: this.event.timezone ?? null,
-      // clone so the form draft owns its own reminders
       reminders: (this.event.reminders ?? []).map((r) => ({ ...r })),
+      customFields: this.#formCustomFields(),
     };
+  }
+
+  #formCustomFields() {
+    const fields = {};
+    for (const [key, value] of Object.entries(this.event.customFields ?? {})) {
+      fields[customFieldFormName(key)] = value;
+    }
+    return fields;
   }
 
   @action
@@ -202,8 +212,8 @@ export default class PostEventBuilder extends Component {
 
   @action
   handleImageChange(value, { set }) {
-    set("imageUpload", value);
-    this.event.imageUpload = value;
+    set("imageUpload", value?.url ?? null);
+    this.event.imageUpload = value ?? null;
   }
 
   @action
@@ -305,16 +315,7 @@ export default class PostEventBuilder extends Component {
   }
 
   get availableRecurrences() {
-    const ref = this.startsAt || moment();
-    const weekday = ref.format("dddd");
-    const dayOfMonth = ref.date();
-    const isLast = dayOfMonth + 7 > ref.daysInMonth();
-    const ordinalKey = isLast
-      ? "last"
-      : ["first", "second", "third", "fourth"][Math.ceil(dayOfMonth / 7) - 1];
-    const ordinal = i18n(
-      `discourse_post_event.builder_modal.recurrence.ordinals.${ordinalKey}`
-    );
+    const { weekday, ordinal } = recurrenceContext(this.startsAt || moment());
 
     return [
       {
@@ -357,8 +358,12 @@ export default class PostEventBuilder extends Component {
     ];
   }
 
+  @cached
   get allowedCustomFields() {
-    return getCustomFieldNames(this.siteSettings);
+    return getCustomFieldNames(this.siteSettings).map((field) => ({
+      field,
+      name: customFieldFormName(field),
+    }));
   }
 
   get addReminderDisabled() {
@@ -554,8 +559,8 @@ export default class PostEventBuilder extends Component {
   }
 
   @action
-  setCustomField(field, e) {
-    this.event.customFields[field] = e.target.value;
+  setCustomField(field, value) {
+    this.event.customFields[field] = value;
   }
 
   @action
@@ -747,6 +752,7 @@ export default class PostEventBuilder extends Component {
       }}
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @inline={{@inline}}
       class="post-event-builder-modal
         {{if this.isAdvancedScreen 'is-advanced' 'is-compact'}}"
     >
@@ -1222,27 +1228,26 @@ export default class PostEventBuilder extends Component {
                       "discourse_post_event.builder_modal.custom_fields.description"
                     }}
                     @format="full"
+                    class="form-kit__container-custom-fields"
                   >
-                    {{#each this.allowedCustomFields as |allowedCustomField|}}
-                      <span class="label custom-field-label">
-                        {{allowedCustomField}}
-                      </span>
-                      <input
-                        type="text"
-                        class="custom-field-input"
-                        value={{get
-                          @model.event.customFields
-                          allowedCustomField
-                        }}
-                        {{on
-                          "input"
-                          (fn this.setCustomField allowedCustomField)
-                        }}
-                        placeholder={{i18n
-                          "discourse_post_event.builder_modal.custom_fields.placeholder"
-                        }}
-                      />
-                    {{/each}}
+                    <form.Object @name="customFields" as |customFields|>
+                      {{#each this.allowedCustomFields as |customField|}}
+                        <customFields.Field
+                          @name={{customField.name}}
+                          @title={{customField.field}}
+                          @type="input"
+                          @format="full"
+                          @onSet={{fn this.setCustomField customField.field}}
+                          as |field|
+                        >
+                          <field.Control
+                            placeholder={{i18n
+                              "discourse_post_event.builder_modal.custom_fields.placeholder"
+                            }}
+                          />
+                        </customFields.Field>
+                      {{/each}}
+                    </form.Object>
                   </form.Container>
                 {{/if}}
 
@@ -1296,12 +1301,9 @@ export default class PostEventBuilder extends Component {
         {{/if}}
 
         {{#if this.showScreenToggle}}
-          <DButton
-            class="btn-default advanced-settings
-              {{if this.isAdvancedScreen 'is-active'}}"
-            @icon="gear"
-            @label="discourse_post_event.builder_modal.advanced_settings"
-            @action={{this.toggleAdvanced}}
+          <AdvancedModeToggle
+            @active={{this.isAdvancedScreen}}
+            @onToggle={{this.toggleAdvanced}}
           />
         {{/if}}
       </:footer>

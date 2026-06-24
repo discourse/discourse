@@ -78,6 +78,10 @@ ar:
       added_and_removed: "تمت إضافة %{added} وإزالة %{removed}"
       added: "تمت إضافة %{added}"
       removed: "تمت إزالة %{removed}"
+    errors:
+      provider_already_enabled: "مقدِّم خدمة \"%{name}\" مفعّل بالفعل"
+      provider_not_found: "مقدِّم خدمة \"%{name}\" غير موجود"
+      setting_update_failed: "فشل تحديث الإعدادات: %{errors}"
     provider:
       slack:
         status:

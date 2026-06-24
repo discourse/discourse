@@ -28,7 +28,6 @@ es:
       allow_accepted_answers: "Permitir al propietario del tema y al staff marcar una respuesta como la solución"
       solved_topics_auto_close_hours: "Cierre automático del tema (n) horas después de la última respuesta una vez que el tema se haya marcado como solucionado."
       notify_on_staff_accept_solved: "Notificar al creador del tema cuando el personal marque una solución"
-      empty_box_on_unsolved: "Mostrar una casilla de verificación vacía junto a los temas sin resolver en la lista de temas"
       accept_answer: "Seleccionar si esta respuesta resuelve el problema"
       accepted_description: "Esta es la solución aceptada para este tema"
       has_no_accepted_answer: "Este tema no tiene una solución"
@@ -62,6 +61,8 @@ es:
       confirm_solved_removal: "Este cambio desactivará las soluciones para este tema y eliminará la solución aceptada."
       confirm_solved_removal_confirm: "Confirmar"
       confirm_solved_removal_cancel: "Cancelar"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: '¿Se ha respondido a tu pregunta?'
         description: "Destaca la respuesta y ayuda a los demás utilizando el botón de solución que hay debajo de la respuesta correcta."

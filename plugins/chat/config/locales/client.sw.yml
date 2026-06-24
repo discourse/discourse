@@ -78,6 +78,7 @@ sw:
         title: Ujumbe Mpya
         prefix: "Kwenda:"
       create_channel:
+        description: "Maelezo"
         type: "Aina"
         types:
           category: "Kikundi"
@@ -159,3 +160,12 @@ sw:
           fields:
             message:
               label: Ujumbe
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Chaneli"
+      send_chat_message:
+        channel_id: "Chaneli"
+        message: "Ujumbe"
+      chat_approval:
+        message: "Ujumbe"
+        channel_id: "Chaneli"

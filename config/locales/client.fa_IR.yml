@@ -6,6 +6,16 @@
 
 fa_IR:
   js:
+    user_api_key:
+      authorize: "اجازه دادن"
+      deny: "لغو"
+      copied: "کپی شد!"
+      otp_description: 'آیا می خواهید به "%{application_name}" اجازه دسترسی به این سایت را بدهید؟'
+      no_trust_level: "با عرض پوزش٬ شما سطح اعتماد مورد نیاز با برای دسترسی به api کاربر ندارید."
+      generic_error: "با عرض پوزش، نمی‌توانیم کلید API کاربر را حل کنیم، شاید این ویژگی در قسمت مدیریت غیر‌فعال شده."
+      device:
+        code: "کد"
+        continue: "ادامه"
     blocks:
       ghost:
         status: "وضعیت"
@@ -353,7 +363,7 @@ fa_IR:
       pm_title: "پیام‌های پیشنهادی"
     admin_onboarding_banner:
       select_theme:
-        enabled: "فعال شده"
+        enabled: "انتخاب شده"
       start_posting:
         back: "بازگشت"
     about:
@@ -961,7 +971,6 @@ fa_IR:
             from_alias_hint: "نام مستعار برای استفاده به عنوان آدرس در فیلد «از» هنگام ارسال ایمیل های گروهی SMTP. توجه داشته باشید که این ممکن است توسط همه ارائه دهندگان ایمیل پشتیبانی نشود، لطفاً به اسناد ارائه دهنده ایمیل خود رجوع کنید."
         membership:
           title: عضویت
-          access: دسترسی
         categories:
           title: دسته‌بندی‌ها
           long_title: "آگاه‌سازی‌های پیش‌گزیدهٔ دسته"
@@ -994,7 +1003,6 @@ fa_IR:
         title: "دسترسی‌ها"
         none: "هیچ دسته بندی مرتبط با این گروه وجود ندارد."
         description: "اعضای این گروه می توانند به این دسته‌ها دسترسی داشته باشند"
-      public_admission: "به کاربران اجازه می دهد به اختیار عضو گروه ها شوند (به یک گروه قابل مشاهده برای عموم نیاز دارد)"
       public_exit: "اجازه دادن به کاربران برای ترک گروه به اختیار"
       empty:
         posts: "در این گروه هیچ نوشته ای توسط کاربران ارسال نشده"
@@ -1010,7 +1018,6 @@ fa_IR:
       request: "درخواست"
       message: "پیام"
       confirm_leave: "آیا از ترک این گروه مطمئن هستید؟"
-      allow_membership_requests: "به کاربرها اجازه ی ارسال درخواست عضویت به صاحبان گروه را بدهید\n(گروه باید برای عموم قابل دیدن باشد)"
       membership_request_template: "الگوی سفارشی برای نمایش به کاربران هنگام ارسال درخواست عضویت"
       membership_request:
         submit: "ارسال درخواست"
@@ -1416,6 +1423,9 @@ fa_IR:
       undo_revoke_access: "بازنشانی لغو دسترسی"
       api_approved: "تایید شده:"
       api_last_used_at: "آخرین بار استفاده شده در"
+      api_expires_at: "انقضاء:"
+      api_expired_at: "منقضی شده:"
+      api_expires_never: "هیچوقت"
       theme: "قالب"
       save_to_change_theme: 'پس از کلیک روی "%{save_text}" پوسته به روز خواهد شد'
       home: "صفحه خانگی پیشفرض"
@@ -2305,6 +2315,12 @@ fa_IR:
       confirm_title: ورود به %{site_name}
       logging_in_as: ورود با %{email}
       confirm_button: اتمام ورود
+    code_login:
+      email_label: "ایمیل"
+      continue_button: "ادامه"
+      verify_button: "ادامه"
+      account_ready_continue: "ادامه"
+      username_label: "نام‌کاربری"
     login:
       header_title: "خوش آمدید"
       title: "ورود"
@@ -2611,6 +2627,7 @@ fa_IR:
         attribute_value: "مقدار"
         apply: "اعمال کردن"
       help: "راهنمای ویرایش با Markdown"
+      edit_reason: "چرا ویرایش می‌کنید؟"
       exit_fullscreen_prompt: "برای خروج از تمام صفحه، دکمه <kbd>ESC</kbd> را فشار دهید"
       modal_ok: "تایید"
       cant_send_pm: "متاسفانه , شما نمیتوانید به %{username} پیام بفرستید."
@@ -2639,21 +2656,24 @@ fa_IR:
           desc: پیام جدیدی ایجاد کنید که از همان گیرندگان شروع شود
         reply_to_topic:
           label: پاسخ به مبحث
+          trigger: موضوع
           desc: به مبحث اصلی پاسخ بده و نه هیچ کدام از نوشته ها
+        reply_to_message:
+          trigger: پیام
         toggle_whisper:
           label: فعالسازی زمزمه
-          desc: زمزمه ها فقط توسط کارکنان قابل مشاهده است
         create_topic:
+          label: ایجاد موضوع
           desc: یک موضوع جدید ایجاد کنید
         create_personal_message:
-          label: "پیام جدید"
           desc: "یک پیام شخصی جدید بساز"
         shared_draft:
           label: "درفت اشتراکی"
           desc: "موضوعی را پیش‌نویس کنید که فقط برای کاربران مجاز قابل مشاهده باشد"
         toggle_topic_bump:
-          label: "فعالسازی بالا آوردن مبحث در لیست"
           desc: "بدون تغییر زمان اخرین پاسخ، پاسخ دهید."
+        edit_post: "در حال ویرایش نوشته"
+        unknown_user: "کاربر"
       reload: "بارگذاری مجدد"
       ignore: "چشم پوشی"
       image_alt_text:
@@ -3005,6 +3025,15 @@ fa_IR:
         also_dismiss_topics: "توقف پیگیری این موضوعات که دیگر به عنوان خوانده نشده برای من نمایش داده نشوند"
         dismiss_new_topics: "رد کردن موضوعات جدید"
         dismiss_new_replies: "رد کردن پاسخ های جدید"
+        dismiss_new_topics_with_selected:
+          one: "رد کردن (%{count})"
+          other: "رد کردن (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "رد کردن (%{count})"
+          other: "رد کردن (%{count})"
+        dismiss_all_with_selected:
+          one: "رد کردن (%{count})"
+          other: "رد کردن (%{count})"
         dismiss_new: "بستن جدید"
         dismiss_new_modal:
           title: "رد کردن جدید"
@@ -3096,6 +3125,8 @@ fa_IR:
       deleted_post_placeholder: "[حذف شده]"
       ignored_post_placeholder: "[صرف نظر شده]"
       pinned_reply: "سنجاق شده"
+    share_target:
+      new_message: "پیام جدید"
     topic:
       filter_to:
         one: "%{count} نوشته در این موضوع وجود دارد"
@@ -5147,6 +5178,11 @@ fa_IR:
                 "2": "عضو"
                 "3": "عادی"
                 "4": "رهبر"
+          search:
+            title: "جستجو"
+            table:
+              searches: "جستجوها"
+              status: "وضعیت"
         reports_section:
           modal:
             enabled_heading: "فعال شده"
@@ -5235,7 +5271,6 @@ fa_IR:
             incoming_email: "آدرس ایمیل های دریافتی سفارشی"
             incoming_email_placeholder: "آدرس ایمیل را وارد کنید"
             incoming_email_tooltip: "شما می‌توانید چندیدن آدرس ایمیل را با کارکتر | جدا کنید."
-            visibility: قابل مشاهده
             visibility_levels:
               title: "چه کسی می‌تواند این گروه را ببیند؟"
               public: "همه"
@@ -5642,9 +5677,10 @@ fa_IR:
           your_organization: "سازمان شما"
           your_organization_description: "ما از این اطلاعات در شرایط خدمات و اعلامیه حفظ حریم خصوصی استفاده خواهیم کرد تا نشان دهیم چه کسی سایت را اداره می‌کند و تحت چه حوزه قضایی قرار دارد."
           company_name: "نام"
-          company_name_placeholder: "درباره سازمان"
           company_name_warning: |
             اگر خالی باقی بماند، هیچ ضوابط خدمات یا اعلامیه حریم خصوصی ارائه نخواهد شد.
+          company_url: "وب‌سایت"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "قانون حاکم"
           governing_law_placeholder: "استان، ایالت یا کشور"
           governing_law_help: |

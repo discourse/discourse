@@ -24,10 +24,6 @@ Discourse::Application.routes.draw do
     match "/404", to: "exceptions#not_found", via: %i[get post]
     get "/404-body" => "exceptions#not_found_body"
 
-    if Rails.env.local?
-      get "/bootstrap/site-settings-for-tests.js" => "bootstrap#site_settings_for_tests"
-    end
-
     # This is not a valid production route and is causing routing errors to be raised in
     # the test env adding noise to the logs. Just handle it here so we eliminate the noise.
     get "/favicon.ico", to: proc { [200, {}, [""]] } if Rails.env.test?
@@ -439,6 +435,7 @@ Discourse::Application.routes.draw do
 
         # Needed for back-end routing to work.
         #
+        get "gifs" => "site_settings#index"
         get "navigation" => "site_settings#index"
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"
@@ -578,6 +575,8 @@ Discourse::Application.routes.draw do
     get "session/hp" => "session#get_honeypot_value"
     get "session/email-login/:token" => "session#email_login_info"
     post "session/email-login/:token" => "session#email_login"
+    post "session/login-code" => "session#create_login_code"
+    post "session/login-code/verify" => "session#verify_login_code"
     get "session/otp/:token" => "session#one_time_password", :constraints => { token: /[0-9a-f]+/ }
     post "session/otp/:token" => "session#one_time_password", :constraints => { token: /[0-9a-f]+/ }
     get "session/2fa" => "session#second_factor_auth_show"
@@ -910,10 +909,6 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
           }
       post "#{root_path}/action/send_activation_email" => "users#send_activation_email"
-      get "#{root_path}/:username/summary" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
-          }
       get "#{root_path}/:username/activity/topics.rss" => "list#user_topics_feed",
           :format => :rss,
           :constraints => {
@@ -1529,6 +1524,9 @@ Discourse::Application.routes.draw do
 
     get "new-topic" => "new_topic#index"
     get "new-message" => "new_topic#index"
+    # Landing page for the PWA Web Share Target. The service worker intercepts
+    # the incoming multipart POST, stashes the payload, and redirects here.
+    get "share-target" => "new_topic#index"
     get "new-invite" => "new_invite#index"
 
     # Topic routes
@@ -1706,6 +1704,8 @@ Discourse::Application.routes.draw do
 
     scope "/tag/:tag_id", constraints: { tag_id: /\d+/, format: :json } do
       get "/" => "tags#show", :as => "tag_show"
+      get "/edit" => "tags#show"
+      get "/edit/:tab" => "tags#show"
       get "/info" => "tags#info", :as => "tag_info"
       get "/notifications" => "tags#notifications", :as => "tag_notifications"
       put "/notifications" => "tags#update_notifications"
@@ -1884,6 +1884,12 @@ Discourse::Application.routes.draw do
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"
+    post "/user-api-key/device" => "user_api_keys#create_device_request"
+    post "/user-api-key/device/poll" => "user_api_keys#poll_device_request"
+    get "/user-api-key/activate" => "user_api_keys#activate"
+    post "/user-api-key/activate" => "user_api_keys#activate"
+    post "/user-api-key/device/authorize" => "user_api_keys#authorize_device_request"
+    post "/user-api-key/device/deny" => "user_api_keys#deny_device_request"
     post "/user-api-key/revoke" => "user_api_keys#revoke"
     post "/user-api-key/undo-revoke" => "user_api_keys#undo_revoke"
     get "/user-api-key/otp" => "user_api_keys#otp"

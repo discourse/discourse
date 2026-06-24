@@ -2242,6 +2242,27 @@ RSpec.describe Admin::UsersController do
       before { sign_in(admin) }
 
       include_examples "IP info retrieval possible"
+
+      it "returns IP info without hostname when reverse DNS is interrupted" do
+        ip = "81.2.69.142"
+
+        DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s)
+        Resolv::DNS.any_instance.stubs(:getname).with(ip).raises(Timeout::Error)
+
+        get "/admin/users/ip-info.json", params: { ip: ip }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.symbolize_keys).to eq(
+          city: "London",
+          country: "United Kingdom",
+          country_code: "GB",
+          geoname_ids: [6_255_148, 2_635_167, 2_643_743, 6_269_131],
+          location: "London, England, United Kingdom",
+          region: "England",
+          latitude: 51.5142,
+          longitude: -0.0931,
+        )
+      end
     end
 
     context "when logged in as a moderator" do
@@ -2419,11 +2440,11 @@ RSpec.describe Admin::UsersController do
     before do
       SiteSetting.email_editable = false
       SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.discourse_connect_secret = sso_secret
       SiteSetting.enable_discourse_connect = true
       SiteSetting.auth_overrides_email = true
       SiteSetting.auth_overrides_name = true
       SiteSetting.auth_overrides_username = true
-      SiteSetting.discourse_connect_secret = sso_secret
       sso.sso_secret = sso_secret
     end
 
@@ -2962,6 +2983,7 @@ RSpec.describe Admin::UsersController do
 
     before do
       SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.discourse_connect_secret = "x" * 10
       SiteSetting.enable_discourse_connect = true
     end
 

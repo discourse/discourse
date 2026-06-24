@@ -6,6 +6,16 @@
 
 zh_TW:
   js:
+    user_api_key:
+      authorize: "授權"
+      deny: "取消"
+      copied: "已複製!"
+      otp_description: '你要允許進入%{application_name}這個網站嗎？'
+      no_trust_level: "抱歉，你沒有使用使用者 API 所需要的信任等級"
+      generic_error: "抱歉，我們不能分發使用者 API 密鑰，該特性已經被站點管理員禁用"
+      device:
+        code: "代碼"
+        continue: "繼續"
     blocks:
       ghost:
         status: "狀態"
@@ -378,7 +388,7 @@ zh_TW:
       pm_title: "推薦訊息"
     admin_onboarding_banner:
       select_theme:
-        enabled: "啟用"
+        enabled: "已選"
       invite_collaborators:
         title: "邀請協作者"
       start_posting:
@@ -960,7 +970,8 @@ zh_TW:
             from_alias_hint: "傳送群組 SMTP 電子郵件時，用作寄件者位址的別名。請注意，並非所有郵件供應商都支援此功能，請參閱郵件供應商的說明文件。"
         membership:
           title: 會員身份
-          access: 存取
+          join_method:
+            invite: "僅限邀請"
         categories:
           title: 分類
           long_title: "類別預設通知"
@@ -993,7 +1004,6 @@ zh_TW:
         title: "權限"
         none: "此組沒有相關類別。"
         description: "此群組的成員可以存取這些類別"
-      public_admission: "允許使用者自由加入群組（需要將群組設為公開瀏覽）"
       public_exit: "允許使用者自由離開群組"
       empty:
         posts: "沒有此群組成員的貼文"
@@ -1009,7 +1019,6 @@ zh_TW:
       request: "請求"
       message: "訊息"
       confirm_leave: "您確定要離開此群組？"
-      allow_membership_requests: "允許使用者向群組擁有者發送加入請求 (需要公開可見的群組)"
       membership_request_template: "自定當使用者傳送加入要求時顯示的樣板"
       membership_request:
         submit: "送出請求"
@@ -1405,6 +1414,9 @@ zh_TW:
       undo_revoke_access: "解除撤銷許可"
       api_approved: "已通過審核："
       api_last_used_at: "最近使用於："
+      api_expires_at: "過期時間:"
+      api_expired_at: "已過期:"
+      api_expires_never: "永不"
       theme: "佈景主題"
       save_to_change_theme: '主題會在您點擊「%{save_text}」後更新。'
       home: "預設首頁"
@@ -2224,6 +2236,12 @@ zh_TW:
       confirm_title: 繼續連接至 %{site_name}
       logging_in_as: 以 %{email}登入
       confirm_button: 完成登入
+    code_login:
+      email_label: "電子信箱"
+      continue_button: "繼續"
+      verify_button: "繼續"
+      account_ready_continue: "繼續"
+      username_label: "使用者名稱"
     login:
       header_title: "歡迎回來"
       title: "登入"
@@ -2534,6 +2552,7 @@ zh_TW:
         attribute_value: "價值"
         apply: "套用"
       help: "Markdown 編輯說明"
+      edit_reason: "你為什麼做編輯?"
       exit_fullscreen_prompt: "按<kbd>ESC</kbd>離開全螢幕"
       modal_ok: "確定"
       cant_send_pm: "抱歉，你不能發訊息給 %{username} 。"
@@ -2563,21 +2582,22 @@ zh_TW:
           desc: 創建以相同收件人開頭的新訊息
         reply_to_topic:
           label: 回應話題
+          trigger: 話題
           desc: 回應本話題而非特定貼文
+        reply_to_message:
+          trigger: 訊息
         toggle_whisper:
           label: 切換為悄悄話
-          desc: 悄悄話只有管理員能見
         create_topic:
           desc: 開啟新話題
         create_personal_message:
-          label: "新增訊息"
           desc: "寫一則私訊"
         shared_draft:
           label: "共享草稿"
           desc: "建立僅允許使用者可見的話題草稿"
         toggle_topic_bump:
-          label: "回應但不讓貼文浮上來"
           desc: "回覆而不改變最新回應日期"
+        unknown_user: "使用者"
       reload: "重新載入"
       ignore: "忽略"
       image_alt_text:
@@ -2908,6 +2928,12 @@ zh_TW:
         also_dismiss_topics: "停止追蹤這些話題，這樣這些話題就不再顯示為未讀了"
         dismiss_new_topics: "關閉新主題"
         dismiss_new_replies: "忽略新回覆"
+        dismiss_new_topics_with_selected:
+          other: "忽略（%{count} 個）"
+        dismiss_new_replies_with_selected:
+          other: "忽略（%{count} 個）"
+        dismiss_all_with_selected:
+          other: "忽略（%{count} 個）"
         dismiss_new: "忽略新內容"
         dismiss_new_modal:
           title: "忽略新內容"
@@ -2994,6 +3020,8 @@ zh_TW:
       deleted_post_placeholder: "[刪除]"
       ignored_post_placeholder: "[已忽略]"
       pinned_reply: "已釘選"
+    share_target:
+      new_message: "新增訊息"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"
@@ -5023,6 +5051,11 @@ zh_TW:
                 "2": "成員"
                 "3": "活躍使用者"
                 "4": "資深"
+          search:
+            title: "搜索"
+            table:
+              searches: "搜尋結果"
+              status: "狀態"
         reports_section:
           modal:
             enabled_heading: "啟用"
@@ -5110,7 +5143,6 @@ zh_TW:
             incoming_email: "自訂電子郵件"
             incoming_email_placeholder: "輸入 email"
             incoming_email_tooltip: "您可以使用 | 字元分隔多個電子郵件地址。"
-            visibility: 能見度
             visibility_levels:
               title: "誰能看到這個群組？"
               public: "所有使用者"
@@ -5522,9 +5554,10 @@ zh_TW:
             受邀接收所有自動發送的私人訊息的群組。
           your_organization_description: "我們將在《服務條款》和《隱私聲明》中顯示此資訊來表明此網站的運營方和司法管轄區。"
           company_name: "名字"
-          company_name_placeholder: "Acme 組織"
           company_name_warning: |
             如果留空，則不會提供模板服務條款或隱私權通知。
+          company_url: "網站"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "適用於法律"
           governing_law_placeholder: "省、州或國家"
           governing_law_help: |

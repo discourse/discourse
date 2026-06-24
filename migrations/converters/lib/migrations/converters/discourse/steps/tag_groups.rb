@@ -1,0 +1,37 @@
+# frozen_string_literal: true
+
+module Migrations
+  module Converters
+    module Discourse
+      class TagGroups < Conversion::ProgressStep
+        source do
+          attr_accessor :source_db
+
+          def max_progress
+            @source_db.count <<~SQL
+              SELECT COUNT(*) FROM tag_groups
+            SQL
+          end
+
+          def items
+            @source_db.query <<~SQL
+              SELECT * FROM tag_groups
+            SQL
+          end
+        end
+
+        processor do
+          def process(item)
+            IntermediateDB::TagGroup.create(
+              original_id: item[:id],
+              created_at: item[:created_at],
+              name: item[:name],
+              one_per_topic: item[:one_per_topic],
+              parent_tag_id: item[:parent_tag_id],
+            )
+          end
+        end
+      end
+    end
+  end
+end

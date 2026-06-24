@@ -40,6 +40,8 @@ ro:
         unsolved: "nerezolvat"
       move_post_cancel: "Anulează"
       confirm_solved_removal_cancel: "Anulează"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
     topic_statuses:
       solved:

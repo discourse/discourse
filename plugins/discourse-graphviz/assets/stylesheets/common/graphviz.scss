@@ -1,22 +1,100 @@
-div.graphviz {
-  svg {
-    max-width: 100%;
-  }
+// Reserve the diagram box up-front (placeholder and rendered wrapper alike) so
+// the layout does not shift when the client renders the graph.
+div.graphviz.is-loading,
+.graphviz-wrapper {
+  margin: 1em 0;
+  aspect-ratio: 16 / 9;
+  background-color: var(--primary-50);
 
-  &.is-loading {
-    padding: 2em;
-    background: var(--primary-very-low);
-  }
-
-  .graph-error {
-    padding: 2em;
-    background-color: var(--danger-low);
-    margin: 0;
-    color: var(--danger);
-    text-align: center;
+  &:first-child {
+    margin-top: 0;
   }
 }
 
-svg.graphviz-svg-render {
-  max-width: 100%;
+// Hide the raw DOT source until the client replaces the placeholder.
+div.graphviz.is-loading {
+  font-size: 0;
+}
+
+.graphviz-wrapper {
+  position: relative;
+
+  .graphviz-diagram-controls {
+    position: absolute;
+    display: flex;
+    top: 0;
+    right: 0;
+    user-select: none;
+    z-index: 1;
+  }
+
+  html.no-touch & .graphviz-diagram-controls {
+    transition: opacity 0.3s;
+    opacity: 0;
+  }
+
+  html.no-touch &:hover .graphviz-diagram-controls {
+    opacity: 1;
+  }
+}
+
+.graphviz-diagram {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 1em;
+  display: flex;
+
+  // Centre the graph, but fall back to start-alignment (reachable by scroll)
+  // when it is larger than the box.
+  align-items: safe center;
+  justify-content: safe center;
+
+  > * {
+    flex: 0 0 auto;
+  }
+
+  > svg {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+
+.graph-error {
+  padding: 2em;
+  background-color: var(--danger-low);
+  margin: 0;
+  color: var(--danger);
+  text-align: center;
+}
+
+.d-modal.graphviz-fullscreen .d-modal__container {
+  width: 100%;
+  height: 100%;
+
+  --modal-max-width: 95vw;
+
+  .d-modal__body {
+    height: 100%;
+  }
+
+  .graphviz-diagram {
+    &.zoomable {
+      cursor: zoom-in;
+    }
+
+    &.zoomed {
+      cursor: zoom-out;
+
+      > svg {
+        max-width: none;
+        max-height: none;
+        width: auto;
+        height: auto;
+      }
+    }
+  }
 }

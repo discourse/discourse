@@ -15,7 +15,7 @@ pl_PL:
           kpi:
             accepted_solutions:
               label: "Zaakceptowane rozwiązania"
-              tooltip: "Liczba tematów, w których w tym okresie znajdował się wpis oznaczony jako rozwiązanie."
+              tooltip: "Liczba tematów, w których post został oznaczony jako rozwiązanie."
   js:
     notifications:
       alt:
@@ -29,7 +29,7 @@ pl_PL:
       allow_accepted_answers: "Pozwól użytkownikom na akceptowanie rozwiązań"
       solved_topics_auto_close_hours: "Zamknij temat automatycznie po (n) godzinach od ostatniej odpowiedzi, gdy temat został oznaczony jako rozwiązany."
       notify_on_staff_accept_solved: "Powiadom twórcę tematu, gdy personel oznaczy rozwiązanie"
-      empty_box_on_unsolved: "Wyświetl puste pole wyboru obok nierozwiązanych tematów na liście tematów"
+      empty_box_on_unsolved: "Wyświetl nierozwiązany stan tematu na liście tematów dla obsługiwanych motywów"
       accept_answer: "Zaznacz, jeśli ta odpowiedź rozwiązuje Twój problem"
       accepted_description: "To zaakceptowane rozwiązanie tego tematu."
       has_no_accepted_answer: "Ten temat nie ma rozwiązania"
@@ -70,12 +70,8 @@ pl_PL:
       confirm_solved_removal_confirm: "Potwierdź"
       confirm_solved_removal_cancel: "Anuluj"
       shared_issue:
-        label_zero: "Ja też"
-        label:
-          one: "Ja również (%{count})"
-          few: "Ja również (%{count})"
-          many: "Ja również (%{count})"
-          other: "Ja również (%{count})"
+        label: "Ja również"
+        label_with_count: "%{label} (%{count})"
         title: "Ja również mam ten problem"
         author_title: "Rozpocząłeś ten temat"
       no_answer:

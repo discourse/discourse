@@ -19,6 +19,10 @@ export default class AssignedToPost extends Component {
     }
   }
 
+  get canAssign() {
+    return this.args.post.can_assign;
+  }
+
   @action
   unassign() {
     this.taskActions.unassignPost(this.args.post);
@@ -48,30 +52,32 @@ export default class AssignedToPost extends Component {
       {{/if}}
     </a>
 
-    <DMenu
-      @identifier="post-assign-menu"
-      @icon="ellipsis"
-      class="btn-flat more-button"
-      @autofocus={{true}}
-    >
-      <DDropdownMenu as |dropdown|>
-        <dropdown.item>
-          <DButton
-            @action={{this.unassign}}
-            @icon="user-plus"
-            @label="discourse_assign.unassign.title"
-            class="btn-transparent unassign-btn"
-          />
-        </dropdown.item>
-        <dropdown.item>
-          <DButton
-            @action={{this.editAssignment}}
-            @icon="group-plus"
-            @label="discourse_assign.reassign.title_w_ellipsis"
-            class="btn-transparent edit-assignment-btn"
-          />
-        </dropdown.item>
-      </DDropdownMenu>
-    </DMenu>
+    {{#if this.canAssign}}
+      <DMenu
+        @identifier="post-assign-menu"
+        @icon="ellipsis"
+        class="btn-flat more-button"
+        @autofocus={{true}}
+      >
+        <DDropdownMenu as |dropdown|>
+          <dropdown.item>
+            <DButton
+              @action={{this.unassign}}
+              @icon="user-plus"
+              @label="discourse_assign.unassign.title"
+              class="btn-transparent unassign-btn"
+            />
+          </dropdown.item>
+          <dropdown.item>
+            <DButton
+              @action={{this.editAssignment}}
+              @icon="group-plus"
+              @label="discourse_assign.reassign.title_w_ellipsis"
+              class="btn-transparent edit-assignment-btn"
+            />
+          </dropdown.item>
+        </DDropdownMenu>
+      </DMenu>
+    {{/if}}
   </template>
 }

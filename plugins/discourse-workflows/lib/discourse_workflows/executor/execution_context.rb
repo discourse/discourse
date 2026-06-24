@@ -18,6 +18,8 @@ module DiscourseWorkflows
         __current_node_id
         __node_parameters_by_name
         __waiting_input_sources
+        __pending_input_groups
+        __pending_queue
         $json
         $itemIndex
       ].freeze
@@ -104,6 +106,50 @@ module DiscourseWorkflows
 
       def consume_waiting_input_sources
         @context.delete("__waiting_input_sources") || []
+      end
+
+      def store_pending_input_groups(inputs:, sources:, target_ids:)
+        payload =
+          target_ids.each_with_object({}) do |target_id, result|
+            target_inputs = inputs[target_id] || {}
+            next if target_inputs.blank?
+
+            result[target_id.to_s] = {
+              "inputs" => indexed_payload(target_inputs, "items"),
+              "sources" => indexed_payload(sources[target_id] || {}, "source"),
+            }
+          end
+
+        if payload.present?
+          @context["__pending_input_groups"] = payload
+        else
+          @context.delete("__pending_input_groups")
+        end
+      end
+
+      def consume_pending_input_groups
+        @context.delete("__pending_input_groups") || {}
+      end
+
+      def store_pending_queue(entries)
+        payload =
+          entries.map do |node, inputs, sources|
+            {
+              "node_id" => node.id.to_s,
+              "inputs" => indexed_payload(inputs, "items"),
+              "sources" => indexed_payload(sources || {}, "source"),
+            }
+          end
+
+        if payload.present?
+          @context["__pending_queue"] = payload
+        else
+          @context.delete("__pending_queue")
+        end
+      end
+
+      def consume_pending_queue
+        @context.delete("__pending_queue") || []
       end
 
       def resolver_context(extra_context = {})
@@ -221,6 +267,10 @@ module DiscourseWorkflows
 
       def graph_nodes
         @workflow_nodes || workflow.nodes
+      end
+
+      def indexed_payload(indexed_values, value_key)
+        indexed_values.map { |index, value| { "index" => index.to_i, value_key => value } }
       end
     end
   end

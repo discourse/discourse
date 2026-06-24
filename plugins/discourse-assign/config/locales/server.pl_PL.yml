@@ -22,6 +22,7 @@ pl_PL:
     remind_assigns_frequency: "Częstotliwość przypominania użytkownikom o przypisanych tematach."
     pending_assign_reminder_threshold: "Liczba oczekujących zadań, które powodują wysłanie przypomnienia."
     max_assigned_topics: "Maksymalna liczba tematów, jakie można przypisać użytkownikowi."
+    assign_allowed_on_groups: "Użytkownicy w tych grupach mogą przypisywać tematy. Dodatkowe grupy z uprawnieniami do przypisywania można określić w ustawieniach kategorii."
     enable_assign_status: "Dodaj pole statusu, które można dostosować do każdego zadania."
     assign_statuses: "Lista statusów dostępnych dla każdego zadania. Pierwszy status to domyślny status stosowany do każdego nowego zadania."
     ignore_solved_topics_in_assigned_reminder: "Zapobiegaj wyświetlaniu przypomnień o zadaniach zawierających rozwiązane tematy. Ma znaczenie tylko w przypadku korzystania z wtyczki discourse-solved."
@@ -44,6 +45,7 @@ pl_PL:
     already_assigned: "Temat jest już przypisany do @%{username}"
     too_many_assigns: "@%{username} osiągnął już maksimum przypisanych tematów (%{max})."
     too_many_assigns_for_topic: "Osiągnięto limit %{limit} przypisań na temat."
+    forbidden_assigner_not_allowed: "Możesz przypisywać tematy tylko do kategorii dozwolonych w Twoich grupach."
     forbidden_assign_to: "Nie można przypisać @%{username}, ponieważ nie należy do przypisanych dozwolonych grup."
     forbidden_assignee_not_pm_participant: "@%{username} nie może być przypisany, ponieważ nie ma dostępu do tej prywatnej wiadomości. Możesz przyznać dostęp @%{username}, zapraszając go do tej prywatnej wiadomości."
     forbidden_assignee_cant_see_topic: "Nie można przypisać @%{username}, ponieważ nie ma dostępu do tego tematu."
@@ -61,9 +63,13 @@ pl_PL:
       weekly: "tygodniowo"
       monthly: "miesięcznie"
       quarterly: "kwartalnie"
+    discourse_workflows:
+      assign_topic:
+        error: "Nie udało się przypisać tematu: %{reason}"
   assign_mailer:
     title: "Przypisz mailera"
     subject_template: "[%{email_prefix}] %{assignee_name} przypisał Cię do '%{topic_title}'!"
+    subject_template_improved: "%{email_prefix}: %{assignee_name} przypisał Cię do '%{topic_title}'!"
     text_body_template: |
       Hej, %{assignee_name} **przypisał** Cię do dyskusji
       > **%{topic_title}**

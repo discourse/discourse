@@ -50,6 +50,13 @@ uk:
             delete_ai_secret: "Видалити секрет ШІ"
             update_ai_spam_settings: "Оновити налаштування спаму ШІ"
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_ai: "Потрібно увімкнути плагін штучного інтелекту"
+      nodes:
+        "action:ai_agent": "Агент ШІ"
+      node_descriptions:
+        "action:ai_agent": "Запустити штучний інтелект для обробки даних або створення контенту"
     discourse_automation:
       scriptables:
         llm_report:
@@ -226,6 +233,11 @@ uk:
               description: "Дозволити тегування повідомлень, створених системним користувачем."
     discourse_ai:
       title: "ШІ"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Агент"
+          prompt: "Підказка"
+          select_agent: "Виберіть агента..."
       bot_chats:
         tab_label: "Чати ботів"
       default_llm:
@@ -302,6 +314,10 @@ uk:
             model_settings: "Налаштування моделі"
             related_topics: "Пов’язані теми"
             semantic_search: "Семантичний пошук"
+        admin_dashboard:
+          highlights: "Основні моменти"
+          setting_groups:
+            settings: "Основні налаштування"
         discord:
           name: "Інтеграція з Discord"
           description: "Додано можливість пошуку каналів Discord"
@@ -639,6 +655,7 @@ uk:
         confirm_delete: "Ви впевнені, що хочете видалити цього агента?"
         new: "Новий агент"
         no_agents: "Ви ще не створили жодного агента"
+        manage_agents: "Керування агентами"
         title: "Агенти"
         short_title: "Агенти"
         delete: "Видалити"
@@ -1032,7 +1049,6 @@ uk:
         title: "Пропонувати зміни за допомогою ШІ"
         description: "Виберіть один із варіантів нижче, і ШІ запропонує вам нову версію тексту."
         selection_hint: "Підказка: Ви також можете вибрати частину тексту перед відкриттям помічника, щоб переписати лише її."
-        suggest: "Підказки від ШІ"
         suggest_errors:
           too_many_tags:
             one: "Ви можете мати лише до %{count} тегу"

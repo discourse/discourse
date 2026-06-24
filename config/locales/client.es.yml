@@ -6,6 +6,21 @@
 
 es:
   js:
+    user_api_key:
+      title: 'Autorizar a «%{application_name}»'
+      authorize: "Autorizar"
+      deny: "Cancelar"
+      logged_in_as: "Sesión iniciada como"
+      permissions_header: 'Esto permitirá a «%{application_name}» hacer lo siguiente:'
+      redirect_warning: "Si lo autorizas, se te redireccionará a"
+      copied: "¡Copiado!"
+      otp_description: '¿Te gustaría permitir a «%{application_name}» acceder a este sitio?'
+      no_trust_level: "Lo sentimos, no tienes el nivel de confianza requerido para acceder a la API de usuario"
+      generic_error: "Lo sentimos, no pudimos emitir claves API de usuario, esta funcionalidad podría haber sido desactivada por el administrador del sitio"
+      device:
+        code: "Código"
+        continue: "Continuar"
+        authorize_title: 'Autorizar a «%{application_name}»'
     blocks:
       ghost:
         status: "Estado"
@@ -459,7 +474,7 @@ es:
       launch_in_easy_steps: "Empieza en %{step_count} sencillos pasos"
       congrats_onboarding_complete: "¡Enhorabuena por haber completado el proceso de incorporación!"
       select_theme:
-        enabled: "Activado"
+        enabled: "Seleccionado"
       invite_collaborators:
         title: "Invitar colaboradores"
         description: "Los primeros miembros ayudan a dar vida a tu comunidad"
@@ -1222,7 +1237,8 @@ es:
             from_alias_hint: "Alias que usar como la dirección de envío al enviar mensajes de grupo con SMTP. Ten en cuenta que no todos los proveedores de correo son compatibles con esta opción, consulta con el tuyo para saber si puedes usar los alias."
         membership:
           title: Membresía
-          access: Acceso
+          join_method:
+            invite: "Solo por invitación"
         categories:
           title: Categorías
           long_title: "Notificaciones predeterminadas de categoría"
@@ -1255,7 +1271,6 @@ es:
         title: "Permisos"
         none: "No hay categorías asociadas a este grupo."
         description: "Los miembros de este grupo pueden acceder a estas categorías"
-      public_admission: "Permitir que los usuarios se unan al grupo libremente (Se requiere que el grupo sea públicamente visible)"
       public_exit: "Permitir a los usuarios abandonar el grupo libremente"
       empty:
         posts: "No hay publicaciones por miembros de este grupo"
@@ -1271,7 +1286,6 @@ es:
       request: "Solicitar"
       message: "Mensaje"
       confirm_leave: "¿Seguro que quieres salir de este grupo?"
-      allow_membership_requests: "Permitir a los usuarios enviar solicitudes de membresía a propietarios de grupo (el grupo tiene que ser públicamente visible)"
       membership_request_template: "Plantilla personalizada que se muestra a los usuarios cuando envían una solicitud de membresía"
       membership_request:
         submit: "Enviar solicitud"
@@ -1622,7 +1636,6 @@ es:
       enable_smart_lists: "Activar listas inteligentes al escribir en el compositor"
       enable_defer: "Activar marcar temas como no leídos"
       enable_markdown_monospace_font: "Usar fuente monoespaciada en el modo Markdown del compositor"
-      show_original_content: "Mostrar el contenido original en lugar del traducido. También se puede activar o desactivar dentro de los temas."
       experimental_sidebar:
         enable: "Activar barra lateral"
         options: "Opciones"
@@ -1699,6 +1712,9 @@ es:
       undo_revoke_access: "Deshacer revocación de acceso"
       api_approved: "Fecha de aprobación:"
       api_last_used_at: "Fecha de último uso:"
+      api_expires_at: "Caduca:"
+      api_expired_at: "Caducado:"
+      api_expires_never: "nunca"
       api_show_permissions:
         one: "Permisos concedidos (%{count})"
         other: "Permisos concedidos (%{count})"
@@ -2635,6 +2651,12 @@ es:
       confirm_title: Continuar a %{site_name}
       logging_in_as: Iniciando sesión como %{email}
       confirm_button: Finalizar inicio de sesión
+    code_login:
+      email_label: "Correo electrónico"
+      continue_button: "Continuar"
+      verify_button: "Continuar"
+      account_ready_continue: "Continuar"
+      username_label: "Nombre de usuario"
     login:
       header_title: "Bienvenido/a de vuelta"
       title: "Iniciar sesión"
@@ -2878,6 +2900,10 @@ es:
       publish: "Publicar borrador compartido"
       confirm_publish: "¿Seguro que quieres publicar este borrador?"
       publishing: "Publicando tema…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metadatos"
     composer:
       autocomplete:
         username_missing: "Falta el nombre de usuario en el resultado de autocompletar seleccionado."
@@ -2969,7 +2995,7 @@ es:
       users_placeholder: "Añadir usuarios o grupos"
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
       title_or_link_placeholder: "Escribe un título o pega un enlace aquí"
-      edit_reason_placeholder: "¿Por qué lo estás editando?"
+      edit_reason_placeholder: "¿Por qué estás editando?"
       topic_featured_link_placeholder: "Introduce el enlace mostrado con el título."
       remove_featured_link: "Eliminar enlace del tema."
       reply_placeholder: "Escribe aquí. Usa Markdown, BBCode o HTML para darle formato. Arrastra o pega imágenes."
@@ -3038,7 +3064,7 @@ es:
       collapse: "Minimizar el panel de edición"
       open: "Abrir el panel de edición"
       abandon: "Cerrar el editor y descartar borrador"
-      edit_reason: "Añadir motivo de la edición"
+      edit_reason: "¿Por qué estás editando?"
       enter_fullscreen: "Abrir editor en pantalla completa"
       exit_fullscreen: "Salir del editor en pantalla completa"
       exit_fullscreen_prompt: "Pulsa <kbd>ESC</kbd> para salir del modo pantalla completa"
@@ -3073,25 +3099,26 @@ es:
           desc: Crear un nuevo mensaje con los mismos destinatarios
         reply_to_topic:
           label: Responder al tema
+          trigger: Tema
           desc: Responder al tema, no a una publicación específica
+        reply_to_message:
+          trigger: Mensaje
         toggle_whisper:
           label: Activar/desactivar susurro
-          desc: Los susurros son visibles solo para los miembros del personal
         create_topic:
-          label: "Nuevo tema"
           desc: Crear un nuevo tema
         create_personal_message:
-          label: "Nuevo mensaje"
           desc: "Crear un nuevo mensaje personal"
         shared_draft:
           label: "Borrador compartido"
           desc: "Inicia un tema-borrador que solo será visible por los usuarios permitidos"
         toggle_topic_bump:
-          label: "Alternar reflote del tema"
           desc: "Responder sin alterar la fecha de última respuesta"
         toggle_unlisted:
           label: Mostrar/ocultar no listados
           desc: "Los temas que no están incluidos en la lista solo son accesibles a través de su enlace directo"
+        edit_post: "Editando publicación"
+        unknown_user: "Usuario"
       reload: "Recargar"
       ignore: "Ignorar"
       image_alt_text:
@@ -3493,6 +3520,15 @@ es:
         also_dismiss_topics: "Dejar de seguir estos temas para que no aparezcan más en mis mensajes no leídos"
         dismiss_new_topics: "Rechazar nuevos temas"
         dismiss_new_replies: "Descartar nuevas respuestas"
+        dismiss_new_topics_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
+        dismiss_all_with_selected:
+          one: "Descartar (%{count})"
+          other: "Descartar (%{count})"
         dismiss_new: "Descartar nuevos"
         dismiss_new_modal:
           title: "Descartar nuevo"
@@ -3582,7 +3618,7 @@ es:
         education:
           topic_tracking_preferences: 'Puedes ver y cambiar tus nuevos ajustes para seguir temas en <a href="%{basePath}/my/preferences/tracking">tus preferencias</a>.'
           unread: "No tienes nada por leer... ¡Impresionante!"
-          new_new: "No hay nada nuevo en este momento... ¡Vuelve pronto!"
+          unified_new: "No hay nada nuevo en este momento... ¡Vuelve pronto!"
           new: "No hay nada nuevo en este momento... ¡Vuelve pronto!"
           generic: "No hay nada que ver aquí... ¡vuelve pronto!"
     topic_bulk_actions:
@@ -3651,6 +3687,9 @@ es:
       deleted_post_placeholder: "[eliminado]"
       ignored_post_placeholder: "[ignorados]"
       pinned_reply: "Anclado"
+    share_target:
+      new_topic: "Nuevo tema"
+      new_message: "Nuevo mensaje"
     topic:
       filter_to:
         one: "%{count} publicación en el tema"
@@ -4484,7 +4523,6 @@ es:
         site_settings: "Ajustes del sitio"
       choose_type:
         title: "Elegir el tipo de categoría"
-        requires_plugin: "Requiere plugin"
       create_category: "Crear categoría"
       save: "Guardar categoría"
       unsaved_changes: "Tienes cambios sin guardar"
@@ -4878,7 +4916,7 @@ es:
         new_replies_tooltip: "Respuestas nuevas"
         replies: "Respuestas"
         replies_with_count: "Respuestas (%{count})"
-      new_new:
+      unified_new:
         help: "temas creados o respondidos en los últimos días"
       posted:
         title: "Mis publicaciones"
@@ -5631,12 +5669,6 @@ es:
             bookmarks: "Temas en %{category} sin etiquetas que has añadido a marcadores"
             default: "%{filter} temas en %{category} sin etiquetas"
         categories: "Todas las categorías"
-    content_localization:
-      toggle_localized:
-        translated: "Esta página se ha traducido automáticamente. Haz clic para ver el original."
-        not_translated: "La página no está traducida. Haz clic para traducir."
-        translations_enabled: "Traducciones activadas"
-        translations_disabled: "Traducciones desactivadas"
     language_switcher:
       title: "Cambiar idioma del sitio"
   admin_js:
@@ -6246,6 +6278,7 @@ es:
         too_many_requests: Has realizado esta acción demasiadas veces. Por favor, espera antes de intentarlo de nuevo.
         not_found_error: Lo sentimos, este informe no existe
         custom_date_range: Rango de fechas personalizado
+        stable: "estable"
         sections:
           reports:
             title: "Informes"
@@ -6268,8 +6301,11 @@ es:
                 "2": "Miembro"
                 "3": "Habitual"
                 "4": "Líder"
-              trend:
-                stable: "estable"
+          search:
+            title: "Buscar"
+            table:
+              searches: "Búsquedas"
+              status: "Estado"
         reports_section:
           no_data: "No hay datos que mostrar"
           modal:
@@ -6367,7 +6403,6 @@ es:
             incoming_email: "Dirección de correo electrónico entrante personalizada"
             incoming_email_placeholder: "introduce la dirección de correo electrónico"
             incoming_email_tooltip: "Puedes separar varias direcciones de correo electrónico con el carácter |."
-            visibility: Visibilidad
             visibility_levels:
               title: "¿Quién puede ver este grupo?"
               public: "Todos"
@@ -6795,9 +6830,9 @@ es:
           your_organization: "Tu organización"
           your_organization_description: "Utilizaremos esta información en los Términos del servicio y en el Aviso de privacidad para mostrar quién opera el sitio y bajo qué jurisdicción."
           company_name: "Nombre"
-          company_name_placeholder: "Organización Acme"
           company_name_warning: |
             Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad.
+          company_url: "Página web"
           governing_law: "Ley que rige"
           governing_law_placeholder: "Provincia, Estado o País"
           governing_law_help: |

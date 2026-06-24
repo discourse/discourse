@@ -75,6 +75,7 @@ sr:
       direct_message_creator:
         title: Nova privatna poruka
       create_channel:
+        description: "Opis"
         type: "Tip"
         types:
           category: "Kategorija"
@@ -147,3 +148,8 @@ sr:
           fields:
             message:
               label: Privatna poruka
+    discourse_workflows:
+      send_chat_message:
+        message: "Privatna poruka"
+      chat_approval:
+        message: "Privatna poruka"

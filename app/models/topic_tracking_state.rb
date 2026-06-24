@@ -120,6 +120,7 @@ class TopicTrackingState
 
   def self.publish_unread(post)
     return unless post.topic.regular?
+    return if post.small_action?
     # TODO at high scale we are going to have to defer this,
     #   perhaps cut down to users that are around in the last 7 days as well
 
@@ -632,7 +633,7 @@ class TopicTrackingState
   end
 
   def self.report_totals(user)
-    if user.new_new_view_enabled?
+    if user.unified_new_enabled?
       { new: report(user).count }
     else
       new = report_count_by_type(user, type: "new")

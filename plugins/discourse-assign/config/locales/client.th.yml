@@ -27,3 +27,6 @@ th:
     edit_assignments_modal:
       topic: "หัวข้อ"
       post: "โพส"
+    discourse_workflows:
+      assign_topic:
+        topic_id: "หมายเลขกระทู้"

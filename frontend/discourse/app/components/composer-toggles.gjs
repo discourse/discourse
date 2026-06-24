@@ -49,9 +49,7 @@ export default class ComposerToggles extends Component {
 
   <template>
     <div class={{dConcatClass "composer-controls" this.additionalClasses}}>
-      <span>
-        <PluginOutlet @name="before-composer-toggles" @connectorTagName="div" />
-      </span>
+      <PluginOutlet @name="before-composer-toggles" @connectorTagName="div" />
 
       {{#if this.site.mobileView}}
         <DButton
@@ -59,7 +57,7 @@ export default class ComposerToggles extends Component {
           @action={{@toggleToolbar}}
           @title={{this.toggleToolbarTitle}}
           @preventFocus={{true}}
-          class="btn-transparent toggle-toolbar btn-mini-toggle"
+          class="btn-transparent toggle-toolbar btn-small"
         />
       {{/if}}
 
@@ -68,7 +66,7 @@ export default class ComposerToggles extends Component {
           @icon={{this.fullscreenIcon}}
           @action={{@toggleFullscreen}}
           @title={{this.fullscreenTitle}}
-          class="btn-transparent toggle-fullscreen btn-mini-toggle"
+          class="btn-transparent toggle-fullscreen btn-small"
         />
       {{/if}}
 
@@ -77,7 +75,7 @@ export default class ComposerToggles extends Component {
           @icon="angles-down"
           @action={{@toggleComposer}}
           @title="composer.collapse"
-          class="btn-transparent toggler toggle-minimize btn-mini-toggle"
+          class="btn-transparent toggler toggle-minimize btn-small"
         />
       {{/if}}
 
@@ -86,7 +84,7 @@ export default class ComposerToggles extends Component {
           @icon="xmark"
           @action={{@saveAndClose}}
           @title="composer.save_and_close"
-          class="btn-transparent toggler toggle-save-and-close btn-mini-toggle"
+          class="btn-transparent toggler toggle-save-and-close btn-small"
         />
       {{/if}}
     </div>

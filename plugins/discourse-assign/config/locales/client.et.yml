@@ -58,3 +58,11 @@ et:
     edit_assignments_modal:
       topic: "Teema"
       post: "Postitus"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "Määratud"
+      assign_topic:
+        operations:
+          assign: "Määra"
+          unassign: "Eemalda määramine"
+        topic_id: "Teema ID"

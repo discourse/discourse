@@ -6,6 +6,13 @@
 
 sw:
   js:
+    user_api_key:
+      authorize: "Idhini"
+      deny: "Batili"
+      no_trust_level: "Samahani, hauna kiwango cha uaminifu kinachohitajika kufikia API ya mtumiaji"
+      device:
+        code: "Kodi"
+        continue: "Endelea"
     blocks:
       ghost:
         hidden: "imefichwa"
@@ -211,8 +218,6 @@ sw:
     suggested_topics:
       pm_title: "Ujumbe Uliopendekezwa"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Imeruhusiwa"
       start_posting:
         back: "Iliyopita"
     about:
@@ -466,7 +471,6 @@ sw:
             title: "Mpangilio"
         membership:
           title: Uanachama
-          access: Ufikivu
         categories:
           title: Vikundi
         tags:
@@ -483,7 +487,6 @@ sw:
           to: "Kwenda"
       permissions:
         title: "Vibali"
-      public_admission: "ruhusu watumiaji wajiunge kwenye kikundi bure (kikundi kinabidi kionwe na umma)"
       public_exit: "ruhusu watumiaji waache kikundi bure"
       empty:
         posts: "Hakuna machapisho ya wanachama wa kikundi hiki"
@@ -746,6 +749,7 @@ sw:
       revoke_access: "Tengua ufikivu"
       undo_revoke_access: "Ondoa Utenguaji Fikivu"
       api_approved: "Imeidhinishwa"
+      api_expires_never: "kamwe"
       theme: "Mandhari"
       home: "Chaguo-msingi mwanzo"
       staged: "Sehemu ya kujaribu"
@@ -1153,6 +1157,12 @@ sw:
       complete_username_not_found: "Hakuna akaunti inayolingana na jina la mtumiaji <b>%{username}</b>"
       complete_email_not_found: "Hakuna akaunti inayolingana na <b>%{email}</b>"
       confirm_title: Endelea kwenye %{site_name}
+    code_login:
+      email_label: "Barua Pepe"
+      continue_button: "Endelea"
+      verify_button: "Endelea"
+      account_ready_continue: "Endelea"
+      username_label: "Jina la mtumiaji"
     login:
       title: "Ingia"
       username: "Mtumiaji"
@@ -1275,7 +1285,7 @@ sw:
       edit_shared_draft: "Hariri mgawanyo wa mswadajaribio"
       title_placeholder: "Kwa kifupi majadiliano haya yanahusu nini?"
       title_or_link_placeholder: "Andika kichwa cha habari, au bandika kiungo hapa"
-      edit_reason_placeholder: "kwa nini unahariri?"
+      edit_reason_placeholder: "Kwa nini unahariri?"
       topic_featured_link_placeholder: "Ingiza linki inayoonyeshwa na kichwa"
       remove_featured_link: "Ondoa kiungo kwenye mada."
       reply_placeholder: "Andika hapa. tumia Markdown, BBCode au HTML kuweka kwenye muundo mzuri. Vuta na kuweka picha"
@@ -1305,6 +1315,7 @@ sw:
         attribute_value: "Thamani"
         apply: "Tumia"
       help: "Msaada kwenye kuhariri MarkDown"
+      edit_reason: "Kwa nini unahariri?"
       modal_ok: "Sawa"
       cant_send_pm: "Samahani, hauwezi kutuma ujumbe kwenda kwa %{username}."
       yourself_confirm:
@@ -1322,14 +1333,15 @@ sw:
           desc: Tengeneza mada mpya itakayoungwa na hii mada
         reply_to_topic:
           label: Jibu mada
+          trigger: Mada
           desc: Jibu mada, sio chapisho lolote tu
-        toggle_whisper:
-          desc: Minong'ono inapatikana kwa wasaidizi tu
+        reply_to_message:
+          trigger: Ujumbe
         create_personal_message:
-          label: "Ujumbe mpya"
           desc: "Tengeneza ujumbe binafsi mpya"
         shared_draft:
           label: "Mswadajaribio Gawiza"
+        unknown_user: "Mtumiaji"
       ignore: "Puuzia"
       image: "picha"
     notifications:
@@ -1532,6 +1544,8 @@ sw:
       collapse: "Kunja"
       no_replies: "Bado hakuna majibu."
       pinned_reply: "Imebandikwa"
+    share_target:
+      new_message: "Ujumbe mpya"
     topic:
       filter_to:
         one: "%{count} chapisho kwenye mada"
@@ -2372,7 +2386,7 @@ sw:
         modal:
           cancel: "ghairi"
           create: "Hifadhi"
-          reason: "kwa nini unahariri?"
+          reason: "Kwa nini unahariri?"
       spreadsheet:
         show: "Onyesha"
         about: "Kuhusu"
@@ -2581,6 +2595,10 @@ sw:
                 "2": "Mwanachama"
                 "3": "Kawaida"
                 "4": "Kiongozi"
+          search:
+            title: "Tafuta"
+            table:
+              searches: "Utafiti"
         reports_section:
           modal:
             enabled_heading: "Imeruhusiwa"
@@ -2635,7 +2653,6 @@ sw:
             email: Barua Pepe
             incoming_email: "Barua Pepe inayoingia"
             incoming_email_placeholder: "andika anwani ya barua pepe"
-            visibility: Uonekanaji
             visibility_levels:
               title: "Nani anaweza kuona kikundi hiki?"
               public: "Kila Mtu"
@@ -2753,6 +2770,7 @@ sw:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Jina"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Makundi"
           optional: "(sio muhimu)"

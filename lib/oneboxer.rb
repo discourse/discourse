@@ -35,6 +35,7 @@ module Oneboxer
       "https://new.reddit.com",
       "https://www.youtube.com",
       "https://youtu.be",
+      "https://meet.google.com",
       "https://twitter.com",
       "https://x.com",
       Discourse.base_url,
@@ -410,22 +411,49 @@ module Oneboxer
 
       PrettyText.cook(quote)
     else
+      title, excerpt = localized_topic_onebox_content(topic, post, opts[:locale])
+
       args = {
         topic_id: topic.id,
         post_number: post.post_number,
         avatar: PrettyText.avatar_img(post.user.avatar_template_url, "tiny"),
         original_url: url,
-        title: PrettyText.unescape_emoji(CGI.escapeHTML(topic.title)),
+        title: PrettyText.unescape_emoji(CGI.escapeHTML(title)),
         category_html: CategoryBadge.html_for(topic.category),
-        quote:
-          PrettyText.unescape_emoji(
-            post.excerpt(SiteSetting.post_onebox_maxlength, keep_svg: true),
-          ),
+        quote: PrettyText.unescape_emoji(excerpt),
       }
 
       template = template("discourse_topic_onebox")
       Mustache.render(template, args)
     end
+  end
+
+  # Returns the [title, excerpt] for an internal topic onebox card, localized to
+  # +locale+ when a translation exists. The title and excerpt fall back to the
+  # original independently, so a translated title can sit above an untranslated
+  # preview. Used while cooking a translated post (see LocalizedCookedPostProcessor).
+  def self.localized_topic_onebox_content(topic, post, locale)
+    title = topic.title
+    excerpt = post.excerpt(SiteSetting.post_onebox_maxlength, keep_svg: true)
+
+    return title, excerpt if locale.blank? || !SiteSetting.content_localization_enabled
+
+    if (topic_localization = topic.get_localization(locale, fallback: false))
+      title = topic_localization.title.presence || title
+    end
+
+    if (post_localization = post.get_localization(locale, fallback: false)) &&
+         post_localization.cooked.present?
+      excerpt =
+        Post.excerpt(
+          post_localization.cooked,
+          SiteSetting.post_onebox_maxlength,
+          keep_svg: true,
+          post: post,
+        )
+    end
+
+    [title, excerpt]
   end
 
   def self.local_user_html(url, route)
@@ -493,100 +521,107 @@ module Oneboxer
   end
 
   def self.external_onebox(url, available_strategies = nil)
-    Discourse
-      .cache
-      .fetch(onebox_cache_key(url), expires_in: 1.day) do
-        uri = URI(url)
-        available_strategies ||= Oneboxer.ordered_strategies(uri.hostname)
-        strategy = available_strategies.shift
+    key = onebox_cache_key(url)
+    cached = Discourse.cache.read(key)
+    return cached if cached
 
-        max_redirects = 0 if SiteSetting.block_onebox_on_redirect
-        fd =
-          FinalDestination.new(
-            url,
-            get_final_destination_options(url, strategy).merge(
-              stop_at_blocked_pages: true,
-              max_redirects: max_redirects,
-              initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect,
-            ),
-          )
-        uri = fd.resolve
+    result = compute_external_onebox(url, available_strategies)
+    Discourse.cache.write(key, result, expires_in: external_onebox_ttl(result))
+    result
+  end
 
-        return blank_onebox if fd.status == :blocked_page
+  def self.external_onebox_ttl(result)
+    result[:onebox].blank? ? 1.minute : 1.day
+  end
 
-        if fd.status != :resolved
-          args = { link: url }
-          if fd.status == :invalid_address
-            args[:error_message] = I18n.t("errors.onebox.invalid_address", hostname: fd.hostname)
-          elsif (fd.status_code || uri.nil?) && available_strategies.present?
-            # Try a different oneboxing strategy, if we have any options left:
-            return external_onebox(url, available_strategies)
-          elsif fd.status_code
-            args[:error_message] = I18n.t(
-              "errors.onebox.error_response",
-              status_code: fd.status_code,
-            )
-          end
+  def self.compute_external_onebox(url, available_strategies = nil)
+    uri = URI(url)
+    available_strategies ||= Oneboxer.ordered_strategies(uri.hostname)
+    strategy = available_strategies.shift
 
-          error_box = blank_onebox
-          error_box[:preview] = preview_error_onebox(args)
-          return error_box
-        end
+    max_redirects = 0 if SiteSetting.block_onebox_on_redirect
+    fd =
+      FinalDestination.new(
+        url,
+        get_final_destination_options(url, strategy).merge(
+          stop_at_blocked_pages: true,
+          max_redirects: max_redirects,
+          initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect,
+        ),
+      )
+    uri = fd.resolve
 
-        return blank_onebox if uri.blank?
+    return blank_onebox if fd.status == :blocked_page
 
-        onebox_options = {
-          max_width: 695,
-          sanitize_config: Onebox::SanitizeConfig::DISCOURSE_ONEBOX,
-          allowed_iframe_origins: allowed_iframe_origins,
-          hostname: GlobalSetting.hostname,
-          facebook_app_access_token: SiteSetting.facebook_app_access_token,
-          disable_media_download_controls: SiteSetting.disable_onebox_media_download_controls,
-          content_type: fd.content_type,
-        }
-
-        onebox_options[:cookie] = fd.cookie if fd.cookie
-
-        preview_result = Onebox.preview(uri.to_s, onebox_options)
-        result = {
-          onebox: WordWatcher.censor(preview_result.to_s),
-          preview: WordWatcher.censor(preview_result.placeholder_html.to_s),
-        }
-
-        # NOTE: Call preview_result.errors after calling placeholder_html
-        if preview_result.errors.any?
-          error_keys = preview_result.errors.keys
-          skip_if_only_error = [:image]
-          unless error_keys.length == 1 && skip_if_only_error.include?(error_keys.first)
-            missing_attributes = error_keys.map(&:to_s).sort.join(I18n.t("word_connector.comma"))
-            error_message =
-              I18n.t(
-                "errors.onebox.missing_data",
-                missing_attributes: missing_attributes,
-                count: error_keys.size,
-              )
-            args = preview_result.verified_data.merge(error_message: error_message)
-
-            if result[:preview].blank?
-              result[:preview] = preview_error_onebox(args)
-            else
-              doc = Nokogiri::HTML5.fragment(result[:preview])
-              aside = doc.at("aside")
-
-              if aside
-                # Add an error message to the preview that was returned
-                error_fragment = preview_error_onebox_fragment(args)
-                aside.add_child(error_fragment)
-                result[:preview] = doc.to_html
-              end
-            end
-          end
-        end
-
-        Oneboxer.cache_preferred_strategy(uri.hostname, strategy)
-
-        result
+    if fd.status != :resolved
+      args = { link: url }
+      if fd.status == :invalid_address
+        args[:error_message] = I18n.t("errors.onebox.invalid_address", hostname: fd.hostname)
+      elsif (fd.status_code || uri.nil?) && available_strategies.present?
+        # Try a different oneboxing strategy, if we have any options left:
+        return compute_external_onebox(url, available_strategies)
+      elsif fd.status_code
+        args[:error_message] = I18n.t("errors.onebox.error_response", status_code: fd.status_code)
       end
+
+      error_box = blank_onebox
+      error_box[:preview] = preview_error_onebox(args)
+      return error_box
+    end
+
+    return blank_onebox if uri.blank?
+
+    onebox_options = {
+      max_width: 695,
+      sanitize_config: Onebox::SanitizeConfig::DISCOURSE_ONEBOX,
+      allowed_iframe_origins: allowed_iframe_origins,
+      hostname: GlobalSetting.hostname,
+      facebook_app_access_token: SiteSetting.facebook_app_access_token,
+      disable_media_download_controls: SiteSetting.disable_onebox_media_download_controls,
+      content_type: fd.content_type,
+    }
+
+    onebox_options[:cookie] = fd.cookie if fd.cookie
+
+    preview_result = Onebox.preview(uri.to_s, onebox_options)
+    result = {
+      onebox: WordWatcher.censor(preview_result.to_s),
+      preview: WordWatcher.censor(preview_result.placeholder_html.to_s),
+    }
+
+    # NOTE: Call preview_result.errors after calling placeholder_html
+    if preview_result.errors.any?
+      error_keys = preview_result.errors.keys
+      skip_if_only_error = [:image]
+      unless error_keys.length == 1 && skip_if_only_error.include?(error_keys.first)
+        missing_attributes = error_keys.map(&:to_s).sort.join(I18n.t("word_connector.comma"))
+        error_message =
+          I18n.t(
+            "errors.onebox.missing_data",
+            missing_attributes: missing_attributes,
+            count: error_keys.size,
+          )
+        args = preview_result.verified_data.merge(error_message: error_message)
+
+        if result[:preview].blank?
+          result[:preview] = preview_error_onebox(args)
+        else
+          doc = Nokogiri::HTML5.fragment(result[:preview])
+          aside = doc.at("aside")
+
+          if aside
+            # Add an error message to the preview that was returned
+            error_fragment = preview_error_onebox_fragment(args)
+            aside.add_child(error_fragment)
+            result[:preview] = doc.to_html
+          end
+        end
+      end
+    end
+
+    Oneboxer.cache_preferred_strategy(uri.hostname, strategy)
+
+    result
   end
 
   def self.preview_error_onebox(args, is_fragment = false)

@@ -129,7 +129,7 @@ export default class NavItem extends EmberObject {
     let items = args.siteSettings.top_menu.split("|");
 
     const user = getOwnerWithFallback(this).lookup("service:current-user");
-    if (user?.new_new_view_enabled) {
+    if (user?.unified_new_enabled) {
       items = items.filter((item) => item !== "unread");
     }
     const filterType = (args.filterMode || "").split("/").pop();
@@ -248,8 +248,8 @@ export default class NavItem extends EmberObject {
 
     let nameKey = this.name.replace("/", ".");
 
-    if (nameKey === "new" && this.currentUser?.new_new_view_enabled) {
-      nameKey = "new_new";
+    if (nameKey === "new" && this.currentUser?.unified_new_enabled) {
+      nameKey = "unified_new";
     }
 
     return i18n("filters." + nameKey + ".help", {});

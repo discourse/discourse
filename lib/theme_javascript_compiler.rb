@@ -15,12 +15,11 @@ class ThemeJavascriptCompiler
     @@terser_disabled = false
   end
 
-  def initialize(theme_id, theme_name, settings = {}, minify: true)
+  def initialize(theme_id, theme_name, minify: true)
     @theme_id = theme_id
     @input_tree = {}
     @theme_name = theme_name
     @minify = minify
-    @settings = settings
   end
 
   def compile!
@@ -41,7 +40,6 @@ class ThemeJavascriptCompiler
           @input_tree,
           {
             themeId: @theme_id,
-            settings: @settings,
             minify: @minify && !@@terser_disabled,
             entrypoints: {
               main: {
@@ -51,8 +49,9 @@ class ThemeJavascriptCompiler
           },
         )
 
-      @content = output["main.js"]["code"]
-      @source_map = output["main.js"]["map"]
+      main = output.values.find { |chunk| chunk["name"] == "main" }
+      @content = main["code"]
+      @source_map = main["map"]
     end
     [@content, @source_map]
   rescue AssetProcessor::TranspileError => e

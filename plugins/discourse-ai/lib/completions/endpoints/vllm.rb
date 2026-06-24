@@ -4,6 +4,10 @@ module DiscourseAi
   module Completions
     module Endpoints
       class Vllm < OpenAi
+        ENABLE_THINKING_PARSERS = %w[qwen3 gemma4 deepseek_v4].freeze
+        THINKING_PARSERS = %w[granite deepseek_v3 holo2].freeze
+        VLLM_REASONING_EFFORTS = %w[none low medium high].freeze
+
         def self.can_contact?(llm_model)
           llm_model.provider == "vllm"
         end
@@ -17,7 +21,8 @@ module DiscourseAi
           result = processor.process_message(parsed)
 
           if output_thinking
-            reasoning = parsed.dig(:choices, 0, :message, :reasoning_content)
+            reasoning = parsed.dig(:choices, 0, :message, :reasoning).presence
+            reasoning ||= parsed.dig(:choices, 0, :message, :reasoning_content)
             result.unshift(Thinking.new(message: reasoning)) if reasoning.present?
           end
 
@@ -30,7 +35,8 @@ module DiscourseAi
           elements = []
           (@decoder << chunk).each do |parsed_json|
             if output_thinking
-              reasoning = parsed_json.dig(:choices, 0, :delta, :reasoning_content)
+              reasoning = parsed_json.dig(:choices, 0, :delta, :reasoning).presence
+              reasoning ||= parsed_json.dig(:choices, 0, :delta, :reasoning_content)
               if reasoning.present?
                 if @thinking.nil?
                   @thinking = Thinking.new(message: reasoning.dup, partial: true)
@@ -74,11 +80,73 @@ module DiscourseAi
             payload[:stream_options] = { include_usage: true }
           end
 
-          if llm_model.lookup_custom_param("enable_thinking")
-            payload[:chat_template_kwargs] = { enable_thinking: true }
-          end
+          apply_thinking_template_kwargs(payload)
+          apply_thinking_token_budget(payload)
 
           payload
+        end
+
+        def apply_thinking_template_kwargs(payload)
+          template_kwargs = thinking_template_kwargs
+          return if template_kwargs.blank?
+
+          payload[:chat_template_kwargs] ||= {}
+          payload[:chat_template_kwargs].merge!(template_kwargs)
+        end
+
+        def thinking_template_kwargs
+          override = active_custom_param("thinking_override")
+
+          if override
+            return {} if !%w[on off].include?(override)
+
+            parser = active_custom_param("reasoning_parser")
+            thinking_enabled = override == "on"
+
+            if ENABLE_THINKING_PARSERS.include?(parser)
+              { enable_thinking: thinking_enabled }
+            elsif THINKING_PARSERS.include?(parser)
+              { thinking: thinking_enabled }
+            else
+              {}
+            end
+          elsif llm_model.lookup_custom_param("enable_thinking")
+            { enable_thinking: true }
+          else
+            {}
+          end
+        end
+
+        def apply_thinking_token_budget(payload)
+          return if active_custom_param("reasoning_parser").blank?
+          return if reasoning_effort == "none"
+
+          budget = llm_model.lookup_custom_param("thinking_token_budget").to_i
+          payload[:thinking_token_budget] = budget if budget.positive?
+        end
+
+        def active_custom_param(key)
+          value = llm_model.lookup_custom_param(key)
+          value = value.strip if value.respond_to?(:strip)
+          return nil if value.blank? || value == "default"
+
+          value
+        end
+
+        def reasoning_effort
+          return @reasoning_effort if defined?(@reasoning_effort)
+
+          @reasoning_effort = raw_custom_param("reasoning_effort")
+          @reasoning_effort = nil if !VLLM_REASONING_EFFORTS.include?(@reasoning_effort)
+          @reasoning_effort
+        end
+
+        def raw_custom_param(key)
+          value = llm_model.provider_params&.dig(key) || llm_model.provider_params&.dig(key.to_sym)
+          value = value.strip if value.respond_to?(:strip)
+          return nil if value.blank? || value == "default"
+
+          value
         end
 
         def prepare_request(payload)
@@ -86,6 +154,8 @@ module DiscourseAi
 
           api_key = llm_model&.api_key || SiteSetting.ai_vllm_api_key
           headers["Authorization"] = "Bearer #{api_key}" if api_key.present?
+
+          headers.merge!(extra_request_headers)
 
           Net::HTTP::Post.new(model_uri, headers).tap { |r| r.body = payload }
         end

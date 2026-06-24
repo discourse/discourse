@@ -79,7 +79,7 @@ class PollSerializer < ApplicationSerializer
   end
 
   def include_ranked_choice_outcome?
-    object.ranked_choice?
+    object.ranked_choice? && object.can_see_results?(scope.user)
   end
 
   def ranked_choice_outcome

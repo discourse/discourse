@@ -467,6 +467,7 @@ RSpec.describe Jobs::ExportCsvFile do
 
   it "exports sso data" do
     SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+    SiteSetting.discourse_connect_secret = "x" * 10
     SiteSetting.enable_discourse_connect = true
     user = Fabricate(:user)
     user.user_profile.update_column(:location, "La,La Land")

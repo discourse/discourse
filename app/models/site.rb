@@ -176,9 +176,12 @@ class Site
 
   def groups
     query =
-      Group.visible_groups(@guardian.user, "groups.name ASC", include_everyone: true).includes(
-        :flair_upload,
-      )
+      Group.visible_groups(
+        @guardian.user,
+        "groups.name ASC",
+        include_everyone: !SiteSetting.granular_anonymous_and_logged_in_groups_permissions,
+        include_pseudogroups: SiteSetting.granular_anonymous_and_logged_in_groups_permissions,
+      ).includes(:flair_upload)
     query = DiscoursePluginRegistry.apply_modifier(:site_groups_query, query, self)
 
     query
@@ -219,6 +222,7 @@ class Site
           full_name_visible_in_signup:,
           tos_url: Discourse.tos_url,
           privacy_policy_url: Discourse.privacy_policy_url,
+          upcoming_changes_with_css: UpcomingChanges.including_css,
         }.to_json
       )
     end

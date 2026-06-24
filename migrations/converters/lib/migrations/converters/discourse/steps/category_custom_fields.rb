@@ -1,0 +1,37 @@
+# frozen_string_literal: true
+
+module Migrations
+  module Converters
+    module Discourse
+      class CategoryCustomFields < Conversion::ProgressStep
+        source do
+          attr_accessor :source_db
+
+          def max_progress
+            @source_db.count <<~SQL
+              SELECT COUNT(*) FROM category_custom_fields
+            SQL
+          end
+
+          def items
+            @source_db.query <<~SQL
+              SELECT category_id, name, value
+              FROM category_custom_fields
+              ORDER BY category_id
+            SQL
+          end
+        end
+
+        processor do
+          def process(item)
+            IntermediateDB::CategoryCustomField.create(
+              category_id: item[:category_id],
+              name: item[:name],
+              value: item[:value],
+            )
+          end
+        end
+      end
+    end
+  end
+end

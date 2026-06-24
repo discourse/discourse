@@ -392,6 +392,8 @@ fa_IR:
               description: "فقط کاربران دعوت شده می‌توانند به رویداد خصوصی بپیوندند"
       composer:
         name_placeholder: "نام رویداد"
+        event_title_placeholder: "نام رویداد"
+        create_event_button: "ایجاد رویداد"
         reminder:
           units:
             minutes:
@@ -406,6 +408,9 @@ fa_IR:
             weeks:
               one: "هفته"
               other: "هفته"
+      composer_actions:
+        create_event:
+          label: "ایجاد رویداد"
       builder_modal:
         custom_fields:
           label: "فیلدهای سفارشی"

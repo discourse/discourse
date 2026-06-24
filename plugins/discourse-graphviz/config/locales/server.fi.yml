@@ -7,4 +7,3 @@
 fi:
   site_settings:
     discourse_graphviz_enabled: "Ota Graphviz-lisäosa käyttöön"
-    graphviz_default_svg: "Käytä oletuksena SVG-hahmontamista kuvahahmontamisen sijaan, voidaan mukauttaa kaaviokohtaisesti \"svg=true|false\"-elementillä."

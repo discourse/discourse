@@ -44,7 +44,7 @@ en:
         regenerate_placeholder: "e.g. Update the query to limit to 50 results"
         prompt_label: "Prompt"
         generate: "Generate"
-        regenerate: "Re-generate"
+        regenerate: "Update prompt"
         generating: "Generating query with AI..."
         generation_timeout: "AI query generation timed out. You can write the SQL manually."
         generation_error: "Something went wrong generating the query."
@@ -108,6 +108,15 @@ en:
       run_options: "More run options"
       view:
         label: "Result view"
+      chart:
+        form:
+          label: "Chart type"
+          line: "Line"
+          bar: "Bar"
+          stacked: "Stacked"
+          dual_axis: "Dual axis"
+        tooltip:
+          total: "Total: %{count}"
       chart_empty:
         no_rows: "No rows to chart."
         no_numeric: "This query has no numeric columns to chart."

@@ -5,7 +5,13 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  category_types:
+    ideas:
+      name: "想法"
+      title: "想法"
+      description: "成员可以在这里提交想法并投票选出他们最想要的想法。"
   site_settings:
+    enable_ideas_category_type_setup: "在创建类别设置期间启用“创意”类别类型选项。"
     topic_voting_enabled: '允许用户为话题投票？'
     topic_voting_enable_vote_limits: '根据信任级别限制每位用户的投票数'
     topic_voting_tl0_vote_limit: '信任级别为 0 的用户有多少次投票机会？'
@@ -17,6 +23,25 @@ zh_CN:
     topic_voting_show_votes_on_profile: '允许用户在活动源中查看其投票？'
     topic_voting_alert_votes_left: '当投票机会还有此数值时通知用户'
   topic_voting:
+    category_type:
+      show_who_voted:
+        label: "显示投票人"
+      show_votes_on_profile:
+        label: "在个人资料中显示投票"
+      enable_vote_limits:
+        label: "限制成员投票"
+      tl0_vote_limit:
+        label: "TL0 投票限制"
+      tl1_vote_limit:
+        label: "TL1 投票限制"
+      tl2_vote_limit:
+        label: "TL2 投票限制"
+      tl3_vote_limit:
+        label: "TL3 投票限制"
+      tl4_vote_limit:
+        label: "TL4 投票限制"
+      alert_votes_left:
+        label: "剩余选票时提醒"
     votes_moved:
       other: "%{count} 个投票已被移动。"
     duplicated_votes:
@@ -27,3 +52,20 @@ zh_CN:
         topic_votes_max: "最高话题投票数"
         order_topic_votes: "按得票最多对话题排序"
         order_topic_votes_asc: "按得票最少对话题排序"
+  badges:
+    daydreamer:
+      name: "灵感萌芽"
+      description: "您的话题获得 1 票"
+      long_description: "当您的某个话题获得投票时，授予此徽章。 :white_check_mark: 好主意。:+1:"
+    brainstormer:
+      name: "初见回响"
+      description: "您的话题获得 5 票"
+      long_description: "当您的某个话题获得 5 票时，授予此徽章。 :white_check_mark: 您的话题开始有反响了。"
+    innovator:
+      name: "广受认同"
+      description: "您的话题获得 15 票"
+      long_description: "当您的某个话题获得 15 票时，授予此徽章。:white_check_mark: 已经引起关注，大家都在看。"
+    visionary:
+      name: "引发共鸣"
+      description: "您的话题获得 25 票"
+      long_description: "当您的某个话题获得 25 票时，授予此徽章。 :white_check_mark: 大家正需要这样的内容！:clap:"

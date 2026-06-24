@@ -490,6 +490,10 @@ export default class ReviewableItem extends Component {
     if (this.remove && result.remove_reviewable_ids?.length > 0) {
       this.remove(result.remove_reviewable_ids);
     } else {
+      if (this.updateStatuses && result.reviewable_updates) {
+        this.updateStatuses(result.reviewable_updates);
+      }
+
       return this.store.find("reviewable", reviewable.id);
     }
   }

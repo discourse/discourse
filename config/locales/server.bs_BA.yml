@@ -185,7 +185,6 @@ bs_BA:
       admins: "admins"
       moderators: "moderators"
       staff: "staff"
-      anonymous: "anoniman"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -396,6 +395,9 @@ bs_BA:
       confirm_title: Nastavi ka %{site_name}
       logging_in_as: Prijavite se kao %{username}
       confirm_button: Završi prijavu
+    device:
+      code: "Šifra"
+      continue: "Nastavi"
   reports:
     default:
       labels:
@@ -696,7 +698,6 @@ bs_BA:
     topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
-    new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
@@ -771,8 +772,6 @@ bs_BA:
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
     pop3_polling_username: "The username for the POP3 account to poll for email."
     pop3_polling_password: "The password for the POP3 account to poll for email."
-    email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
-    email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
     minimum_topics_similar: "How many topics need to exist before similar topics are presented when composing new topics."
     relative_date_duration: "Number of days after posting where post dates will be shown as relative (7d) instead of absolute (20 Feb)."
     delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
@@ -783,7 +782,6 @@ bs_BA:
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
-    disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
     enable_names: "Allow showing user full names. Disable to hide full names."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
@@ -806,6 +804,9 @@ bs_BA:
       topic: "Rezultati"
       user: "Korisnici"
     results_page: "Pretraži za termin '%{term}'"
+  posts_filter:
+    description:
+      order_latest_topic: "Latest topics"
   original_poster: "Originalni Autor"
   most_recent_poster: "Posljednji Autor"
   frequent_poster: "Čest Autor"
@@ -1061,6 +1062,8 @@ bs_BA:
               private:
                 label: "Privatno"
   onebox:
+    google_meet:
+      meeting_code: "Šifra:"
     github:
       closed: "zatvoreno"
       status_date:

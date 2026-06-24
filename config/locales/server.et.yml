@@ -239,7 +239,6 @@ et:
       admins: "adminid"
       moderators: "moderaatorid"
       staff: "meeskond"
-      anonymous: "anonüümne"
       trust_level_0: "usaldustase_0"
       trust_level_1: "usaldustase_1"
       trust_level_2: "usaldustase_2"
@@ -524,6 +523,9 @@ et:
     scopes:
       read: "Loe kõiki"
       write: "Kirjuta kõikidesse"
+    device:
+      code: "Kood"
+      continue: "Jätka"
   reports:
     default:
       labels:
@@ -823,6 +825,10 @@ et:
     types:
       category: "Liigid"
       user: "Kasutajad"
+  posts_filter:
+    description:
+      order_latest: "Viimased postitused"
+      order_latest_topic: "Viimased teemad"
   original_poster: "Esialgne postitaja"
   most_recent_poster: "Viimane postitaja"
   frequent_poster: "Tihedam postitaja"
@@ -1079,6 +1085,8 @@ et:
               private:
                 label: "Privaatne"
   onebox:
+    google_meet:
+      meeting_code: "Kood:"
     github:
       closed: "suletud"
       status_date:

@@ -620,7 +620,6 @@ fi:
         title: "Ehdota muutoksia tekoälyn avulla"
         description: "Valitse yksi seuraavista vaihtoehdoista, niin tekoäly ehdottaa sinulle uutta versiota tekstistä."
         selection_hint: "Vihje: voit myös valita osan tekstistä ennen apuohjelman avaamista kirjoittaaksesi vain sen uudelleen."
-        suggest: "Ehdota tekoälyllä"
         suggest_errors:
           too_many_tags:
             one: "Sinulla voi olla enintään %{count} tunniste"

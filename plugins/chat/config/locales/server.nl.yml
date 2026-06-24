@@ -33,7 +33,6 @@ nl:
     chat_editing_grace_period_max_diff_low_trust: "Maximale aantal toegestane tekenwijzigingen in wachtperiode voor chatbewerking; bij meer wijzigingen wordt de tag (bewerkt) weergegeven naast het chatbericht (vertrouwensniveau 0 en 1)"
     chat_editing_grace_period_max_diff_high_trust: "Maximale aantal toegestane tekenwijzigingen in wachtperiode voor chatbewerking; bij meer wijzigingen wordt de tag (bewerkt) weergegeven naast het chatbericht (vertrouwensniveau 2 en hoger)"
     chat_preferred_index: "Voorkeurstabblad bij het laden van /chat."
-    allow_chat_in_anonymous_mode: "Schakel deze instelling in om gebruikers die anoniem op je site zijn toe te staan te chatten. Deze instelling vereist dat de instelling 'allow anonymous mode' is ingeschakeld."
     chat_search_enabled: "Schakel deze instelling in om gebruikers de mogelijkheid te geven chatberichten te zoeken."
     errors:
       chat_default_channel: "Het standaard chatkanaal moet een openbaar kanaal zijn."
@@ -240,6 +239,10 @@ nl:
     scriptables:
       send_chat_message:
         title: Chatbericht sturen
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Goedkeuren"
+      default_deny_label: "Weigeren"
   reviewable_score_types:
     needs_review:
       title: "Beoordeling nodig"

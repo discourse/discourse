@@ -118,7 +118,7 @@ module DiscourseWorkflows
       end
 
       def matches_condition?(condition, value)
-        operator = condition.is_a?(Hash) ? condition[:_cnd] || condition["_cnd"] : nil
+        operator = condition.is_a?(Hash) ? condition[:condition] || condition["condition"] : nil
         return condition == value if operator.blank?
 
         if operator.key?(:not) || operator.key?("not")

@@ -416,7 +416,6 @@ ar:
           no_users: "لم يتم العثور على المستخدمين"
           leave_event: "مغادرة الحدث"
           status:
-            unknown: "غير مهتم"
             going: "ذاهب"
             interested: "مهتم"
             going_count:
@@ -465,6 +464,8 @@ ar:
         name_placeholder: "اسم الحدث"
         location_placeholder: "أضف الموقع أو عنوان URL"
         description_placeholder: "أضف وصفًا للحدث"
+        event_title_placeholder: "اسم الحدث"
+        create_event_button: "إنشاء حدث"
         reminder:
           units:
             minutes:
@@ -495,6 +496,9 @@ ar:
               few: "أسابيع"
               many: "أسابيع"
               other: "أسابيع"
+      composer_actions:
+        create_event:
+          label: "إنشاء حدث"
       builder_modal:
         custom_fields:
           label: "الحقول المخصَّصة"
@@ -569,3 +573,4 @@ ar:
       invite_user_or_group:
         title: "إرسال إشعار إلى المستخدمين أو المجموعات"
         invite: "إرسال"
+        success: "تم إرسال الدعوة"

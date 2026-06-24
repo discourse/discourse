@@ -33,6 +33,11 @@ pl_PL:
             topic_id:
               label: ID tematu
     discourse_calendar:
+      livestream:
+        chat:
+          going: "Kliknij „Idę”"
+          join_channel_header: "🌟 Dołącz do nas! 🌟"
+          join_channel_message: "Potwierdź swoją obecność i odblokuj nasz czat wydarzenia. Zanurz się w dyskusjach, podziel się swoim entuzjazmem i połącz się z innymi uczestnikami!"
       invite_user_notification: "%{username} zaprosił Cię do: %{description}"
       preferences:
         all_events: "Kalendarz Discourse – wszystkie wydarzenia"
@@ -388,6 +393,7 @@ pl_PL:
         send_bulk_invites: "Wyślij zaproszenia"
         group_selector_placeholder: "Wybierz grupę..."
         user_selector_placeholder: "Wybierz użytkownika..."
+        attendance_label: "Obecność"
         inline_title: "Zaproszenie zbiorcze w trybie inline"
         csv_title: "Zaproszenie zbiorcze CSV"
       upcoming_events:
@@ -418,7 +424,6 @@ pl_PL:
           this_and_following: "To wydarzenie i wszystkie kolejne wydarzenia"
           leave_event: "Opuść wydarzenie"
           status:
-            unknown: "Nie zainteresowany"
             going: "Wezmę udział"
             not_going: "Nie idę"
             interested: "Zainteresowany"
@@ -468,6 +473,9 @@ pl_PL:
           other: "Maksymalnie %{count} uczestników"
         no_rsvps_label: "Nieodnotowywanie obecności"
         description_placeholder: "Dodaj opis wydarzenia"
+        event_title_placeholder: "Nazwa wydarzenia"
+        create_event_button: "Utwórz wydarzenie"
+        action_title: "Utwórz nowe wydarzenie"
         all_day: "Cały dzień"
         reminder:
           units:
@@ -496,6 +504,13 @@ pl_PL:
           notification_title: "Powiadom uczestników"
           bump_topic_title: "Automatycznie podbij temat"
           remove: "Usuń przypomnienie"
+      composer_actions:
+        create_event:
+          label: "Utwórz wydarzenie"
+          desc: "Utwórz nowe wydarzenie w tej kategorii"
+        create_topic:
+          label: "Utwórz temat"
+          desc: "Utwórz regularny temat zamiast wydarzenia"
       builder_modal:
         custom_fields:
           label: "Pola niestandardowe"
@@ -594,3 +609,4 @@ pl_PL:
       invite_user_or_group:
         title: "Powiadom użytkowników lub grupy"
         invite: "Wyślij"
+        success: "Zaproszenie wysłane"

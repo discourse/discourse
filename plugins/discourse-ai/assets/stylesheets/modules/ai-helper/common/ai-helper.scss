@@ -243,27 +243,6 @@
   #edit-title {
     padding-right: 2em;
   }
-
-  .category-chooser {
-    .select-kit-header-wrapper {
-      padding-right: 1.5em;
-    }
-  }
-
-  .mini-tag-chooser {
-    .multi-select-header {
-      padding-right: 2em;
-    }
-  }
-
-  .select-kit.is-expanded {
-    // need to raise the z-index so the sibling input buttons don't cover the dropdown
-    z-index: z("dropdown") + 1;
-
-    + button {
-      z-index: z("dropdown") + 1;
-    }
-  }
 }
 
 .suggestion-button {
@@ -291,6 +270,24 @@
   }
 }
 
+.suggest-titles-button {
+  #reply-control & {
+    background: var(--primary-low);
+    right: var(--space-1);
+    top: 50%;
+    transform: translateY(
+      calc(-50% - 0.25em)
+    ); // .25em = half of input margin-bottom padding
+    border-radius: var(--d-input-border-radius); // to match surrounding input
+    padding: 0.4em;
+    font-size: var(--font-down-1-rem);
+
+    .d-icon {
+      color: var(--tertiary);
+    }
+  }
+}
+
 #reply-control {
   .composer-actions.is-expanded,
   .composer-popup {
@@ -298,34 +295,6 @@
     // because we need another layer to put the AI icon above dropdowns
     // while also keeping them below the composer tips
     z-index: z("composer", "dropdown") + 2;
-  }
-
-  .with-category .showing-ai-suggestions .category-input {
-    flex-wrap: nowrap;
-    max-width: calc(50% - 0.2em);
-
-    .category-chooser {
-      min-width: 0;
-      flex: 1 1 auto;
-    }
-  }
-
-  .with-category:not(.with-tags) {
-    // when tagging is disabled
-    .showing-ai-suggestions .category-input {
-      max-width: 40%;
-    }
-  }
-
-  .with-tags {
-    .showing-ai-suggestions .tags-input {
-      display: flex;
-      max-width: calc(50% - 0.2em);
-
-      .mini-tag-chooser {
-        min-width: 0;
-      }
-    }
   }
 
   .showing-ai-suggestions {
@@ -381,10 +350,6 @@
   .suggest-titles-button {
     padding: 0.5rem;
   }
-}
-
-.suggest-tags-button + .ai-suggestions-menu {
-  top: 4.25rem;
 }
 
 @keyframes spin {
@@ -742,5 +707,65 @@
         )
       );
     }
+  }
+}
+
+// new inline AI helper
+.select-kit.mini-tag-chooser .select-kit-row,
+.select-kit.category-chooser .select-kit-row {
+  &.ai-category-suggest-row,
+  &.ai-tag-suggest-row,
+  &.ai-tag-exit-row {
+    position: sticky;
+    top: 0;
+    z-index: z("dropdown") + 1;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-1);
+    font-size: var(--font-down-1-rem);
+    border-bottom: 1px solid var(--primary-low);
+    background: var(--secondary);
+
+    .name {
+      margin: 0;
+      font-size: var(--font-0); // unset
+    }
+
+    .d-icon {
+      color: var(--tertiary);
+    }
+  }
+
+  &.ai-tag-exit-row {
+    font-weight: bold;
+  }
+
+  &.ai-category-suggest-row,
+  &.ai-tag-suggest-row {
+    color: var(--primary-medium);
+    font-style: italic;
+
+    .d-icon-spinner {
+      animation: spin 1s linear infinite;
+    }
+  }
+}
+
+.select-kit.category-chooser.is-loading:not(.is-expanded) {
+  .select-kit-header .angle-icon {
+    display: none;
+  }
+
+  .select-kit-header-wrapper::after {
+    content: "";
+    align-self: center;
+    margin-left: auto;
+    width: 0.9em;
+    height: 0.9em;
+    border: 2px solid var(--primary-low-mid);
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
   }
 }

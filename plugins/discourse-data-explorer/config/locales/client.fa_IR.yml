@@ -29,6 +29,9 @@ fa_IR:
       save: "ذخیر تغییرات"
       run: "اجرا"
       delete: "حذف"
+      chart:
+        form:
+          bar: "بار"
       result_count:
         one: "%{count} نتیجه."
         other: "%{count} نتیجه."
@@ -45,3 +48,9 @@ fa_IR:
       search_placeholder: "جستجو..."
     group:
       reports: "گزارش"
+    discourse_workflows:
+      sql:
+        param_value: "مقدار"
+        output:
+          results: "نتایج"
+          no_results: "هیچ نتیجه‌ای وجود ندارد"

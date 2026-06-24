@@ -41,6 +41,21 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         expect(response.parsed_body["thread"]["id"]).to eq(thread.id)
       end
 
+      context "as anonymous user" do
+        before do
+          sign_out
+          SiteSetting.chat_allowed_groups =
+            "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        end
+
+        it "returns a public category channel thread" do
+          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["thread"]["id"]).to eq(thread.id)
+        end
+      end
+
       context "with user status enabled" do
         before { SiteSetting.enable_user_status = true }
 

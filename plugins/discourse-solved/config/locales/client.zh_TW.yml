@@ -42,6 +42,8 @@ zh_TW:
       move_post_cancel: "取消"
       confirm_solved_removal_confirm: "確認"
       confirm_solved_removal_cancel: "取消"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: 您的問題已得到解答嗎？
         description: "在正確的回覆下方按下解答按鈕以突顯解決方案來幫助他人。"

@@ -111,6 +111,12 @@ export function propertyDescription(nodeDefinitionOrType, fieldName) {
   );
 }
 
+export function propertyTooltip(nodeDefinitionOrType, fieldName) {
+  return translatedOrNull(
+    `${i18nBase(nodeDefinitionOrType)}.${localeKeyPart(fieldName)}_tooltip`
+  );
+}
+
 export function propertyPlaceholder(nodeDefinitionOrType, fieldName) {
   return translatedOrNull(
     `${i18nBase(nodeDefinitionOrType)}.${localeKeyPart(fieldName)}_placeholder`
@@ -125,6 +131,8 @@ function dynamicValueKey(schema = {}, fieldName) {
   }
 
   switch (fieldControl(schema)) {
+    case "actor":
+      return "username";
     case "category":
       return "category_id";
     case "data_table_column_select":
@@ -132,11 +140,13 @@ function dynamicValueKey(schema = {}, fieldName) {
     case "data_table_select":
       return "data_table_id";
     case "group_select":
-      return "group_id";
+      return schema.control_options?.value_property === "name"
+        ? "group_names"
+        : "group_id";
     case "tags":
       return "tag_names";
     case "user":
-      return "username";
+      return ui.multiple ? "usernames" : "username";
     case "user_or_group":
       return "user_or_group_name";
     case "select":
@@ -291,6 +301,7 @@ export function propertyOptionLabel(nodeDefinitionOrType, fieldName, option) {
   return (
     translatedOrNull(`${base}.${key}_${valueKey}`) ||
     translatedOrNull(`${base}.${key}s.${valueKey}`) ||
+    (option.label_key ? translatedOrNull(option.label_key) : null) ||
     option.label ||
     option.name ||
     option.value
@@ -435,7 +446,7 @@ function matchesRule(expected, value) {
 }
 
 function matchesCondition(condition, value) {
-  const operator = condition?._cnd;
+  const operator = condition?.condition;
   if (!operator) {
     return condition === value;
   }

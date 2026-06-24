@@ -4,9 +4,10 @@ module DiscourseWorkflows
   module Nodes
     module Topic
       class V1 < NodeType
-        OPERATIONS = %w[create get list].freeze
+        OPERATIONS = %w[create get list close archive set_custom_fields].freeze
         MAX_LIMIT = 100
         DEFAULT_LIMIT = 30
+        CUSTOM_FIELD_OPTIONS_LIMIT = 100
 
         description(
           name: "action:topic",
@@ -31,7 +32,7 @@ module DiscourseWorkflows
               required: true,
               display_options: {
                 show: {
-                  operation: ["get"],
+                  operation: %w[get close archive set_custom_fields],
                 },
               },
             },
@@ -82,13 +83,62 @@ module DiscourseWorkflows
             },
             query: {
               type: :string,
-              required: true,
+              required: false,
               ui: {
                 control: :filter_query,
               },
               display_options: {
                 show: {
                   operation: ["list"],
+                },
+              },
+            },
+            custom_field_names: {
+              type: :multi_options,
+              required: false,
+              options: [],
+              default: [],
+              type_options: {
+                load_options_depends_on: %w[operation topic_id],
+                load_options_method: "topic_custom_fields",
+              },
+              display_options: {
+                show: {
+                  operation: %w[get list],
+                },
+              },
+              control_options: {
+                value_property: "id",
+                name_property: "name",
+                filterable: true,
+                none: "discourse_workflows.topic.custom_field_names_placeholder",
+              },
+            },
+            custom_fields: {
+              type: :fixed_collection,
+              required: false,
+              type_options: {
+                multiple_values: true,
+              },
+              options: [
+                {
+                  name: "values",
+                  values: {
+                    key: {
+                      type: :string,
+                      required: true,
+                      no_data_expression: true,
+                    },
+                    value: {
+                      type: :string,
+                      required: true,
+                    },
+                  },
+                },
+              ],
+              display_options: {
+                show: {
+                  operation: ["set_custom_fields"],
                 },
               },
             },
@@ -102,16 +152,47 @@ module DiscourseWorkflows
                 },
               },
             },
+            offset: {
+              type: :integer,
+              required: false,
+              default: 0,
+              display_options: {
+                show: {
+                  operation: ["list"],
+                },
+              },
+            },
             actor_username: {
               type: :string,
               required: false,
               default: "system",
               ui: {
-                control: :user,
+                control: :actor,
               },
             },
           },
         )
+
+        def self.load_options_context(context)
+          case context.method_name
+          when "topic_custom_fields"
+            custom_field_scope = ::TopicCustomField.where.not(name: [nil, ""])
+            if context.filter.present?
+              custom_field_scope =
+                custom_field_scope.where(
+                  "name ILIKE ?",
+                  "%#{ActiveRecord::Base.sanitize_sql_like(context.filter)}%",
+                )
+            end
+
+            custom_field_scope
+              .distinct
+              .order(:name)
+              .limit(CUSTOM_FIELD_OPTIONS_LIMIT)
+              .pluck(:name)
+              .map { |name| { id: name, name: name } }
+          end
+        end
 
         def execute(exec_ctx)
           items =
@@ -125,7 +206,12 @@ module DiscourseWorkflows
                 "category_id" => exec_ctx.get_node_parameter("category_id", item_index),
                 "tag_names" => exec_ctx.get_node_parameter("tag_names", item_index),
                 "query" => exec_ctx.get_node_parameter("query", item_index),
+                "custom_field_names" =>
+                  exec_ctx.get_node_parameter("custom_field_names", item_index, default: []),
+                "custom_fields" =>
+                  exec_ctx.get_node_parameter("custom_fields.values", item_index, default: []),
                 "limit" => exec_ctx.get_node_parameter("limit", item_index, default: DEFAULT_LIMIT),
+                "offset" => exec_ctx.get_node_parameter("offset", item_index, default: 0),
               }
 
               Array.wrap(execute_with_config(exec_ctx, config, item_index))
@@ -144,6 +230,12 @@ module DiscourseWorkflows
             wrap(get_topic(exec_ctx, config, item_index))
           when "list"
             list_topics(exec_ctx, config, item_index).map { |data| wrap(data) }
+          when "close"
+            wrap(close_topic(exec_ctx, config, item_index))
+          when "archive"
+            wrap(archive_topic(exec_ctx, config, item_index))
+          when "set_custom_fields"
+            wrap(set_custom_fields(exec_ctx, config, item_index))
           else
             raise_node_error!(
               I18n.t(
@@ -182,32 +274,130 @@ module DiscourseWorkflows
 
           topic = post.topic
 
-          { topic: topic_data(topic, guardian), post_id: post.id, post_number: post.post_number }
+          {
+            topic: exec_ctx.serialize_topic(topic, guardian: guardian),
+            post: post_data(post),
+            post_id: post.id,
+            post_number: post.post_number,
+          }
         end
 
         def get_topic(exec_ctx, config, item_index)
           topic = ::Topic.find(config["topic_id"])
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           actor.guardian.ensure_can_see!(topic)
-          { topic: topic_data(topic, actor.guardian) }
+          custom_field_names = config["custom_field_names"]
+          ::Topic.preload_custom_fields([topic], custom_field_names) if custom_field_names.present?
+
+          {
+            topic:
+              exec_ctx.serialize_topic(
+                topic,
+                guardian: actor.guardian,
+                custom_field_names: custom_field_names,
+              ),
+            post: post_data(topic.first_post),
+          }
         end
 
         def list_topics(exec_ctx, config, item_index)
           limit = [[Integer(config["limit"] || DEFAULT_LIMIT), 1].max, MAX_LIMIT].min
+          offset = [Integer(config["offset"] || 0), 0].max
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
-          topic_query = TopicQuery.new(actor, q: config["query"], per_page: limit)
+          topic_query =
+            TopicQuery.new(
+              actor.guardian.user,
+              q: config["query"],
+              per_page: [limit + offset, MAX_LIMIT].min,
+            )
           topic_list = topic_query.list_filter
 
-          posts = topic_list.topics.map(&:first_post).compact
+          topics = topic_list.topics.slice(offset, limit) || []
+          posts = topics.map(&:first_post).compact
           if posts.any?
             ActiveRecord::Associations::Preloader.new(records: posts, associations: :user).call
           end
 
-          topic_list.topics.map { |topic| { topic: topic_data(topic, actor.guardian) } }
+          custom_field_names = config["custom_field_names"]
+          ::Topic.preload_custom_fields(topics, custom_field_names) if custom_field_names.present?
+
+          topics.map do |topic|
+            {
+              topic:
+                exec_ctx.serialize_topic(
+                  topic,
+                  guardian: actor.guardian,
+                  custom_field_names: custom_field_names,
+                ),
+              post: post_data(topic.first_post),
+            }
+          end
         end
 
-        def topic_data(topic, guardian)
-          serialize_record(topic, TopicListItemSerializer, scope: guardian)
+        def close_topic(exec_ctx, config, item_index)
+          topic = ::Topic.find(config["topic_id"])
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          actor.guardian.ensure_can_close_topic!(topic)
+
+          topic.update_status("closed", true, actor)
+
+          topic.reload
+          {
+            topic: exec_ctx.serialize_topic(topic, guardian: actor.guardian),
+            post: post_data(topic.first_post),
+          }
+        end
+
+        def archive_topic(exec_ctx, config, item_index)
+          topic = ::Topic.find(config["topic_id"])
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          guardian = actor.guardian
+          guardian.ensure_can_archive_topic!(topic)
+
+          topic.update_status("archived", true, actor)
+
+          topic.reload
+          {
+            topic: exec_ctx.serialize_topic(topic, guardian: guardian),
+            post: post_data(topic.first_post),
+          }
+        end
+
+        def set_custom_fields(exec_ctx, config, item_index)
+          topic = ::Topic.find(config["topic_id"])
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          guardian = actor.guardian
+          guardian.ensure_can_edit_topic!(topic)
+
+          custom_fields = custom_fields_from_entries(config["custom_fields"])
+          if custom_fields.present?
+            custom_fields.each { |key, value| topic.custom_fields[key] = value }
+            topic.save_custom_fields
+          end
+
+          {
+            topic:
+              exec_ctx.serialize_topic(
+                topic,
+                guardian: guardian,
+                custom_field_names: custom_fields.keys,
+              ),
+          }
+        end
+
+        def custom_fields_from_entries(entries)
+          Array(entries).each_with_object({}) do |entry, fields|
+            key = entry["key"].to_s.strip
+            next if key.blank?
+
+            fields[key] = entry["value"]
+          end
+        end
+
+        def post_data(post)
+          return if post.blank?
+
+          serialize_record(post, WebHookPostSerializer)
         end
       end
     end

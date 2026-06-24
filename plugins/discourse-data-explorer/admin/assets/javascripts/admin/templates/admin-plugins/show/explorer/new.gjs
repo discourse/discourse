@@ -1,6 +1,7 @@
 import { on } from "@ember/modifier";
 import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
+import DSegmentedControl from "discourse/components/d-segmented-control";
 import Form from "discourse/components/form";
 import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -11,6 +12,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ExplorerSchema from "discourse/plugins/discourse-data-explorer/discourse/components/explorer-schema";
 import QueryModeSwitch from "discourse/plugins/discourse-data-explorer/discourse/components/query-mode-switch";
+import QueryResult from "discourse/plugins/discourse-data-explorer/discourse/components/query-result";
 
 export default <template>
   <div class="admin-detail">
@@ -79,16 +81,52 @@ export default <template>
         {{#if @controller.hasGenerated}}
           <hr class="query-new__divider" />
 
-          <label class="query-new__field-label">
-            {{i18n "explorer.ai.sql_label"}}
-          </label>
-          <div class="query-new__sql-editor">
-            <AceEditor
-              @content={{@controller.generatedSql}}
-              @onChange={{@controller.updateSql}}
-              @mode="sql"
+          <div class="query-new__result-bar">
+            {{#if @controller.previewSucceeded}}
+              <div class="query-new__result-about">
+                {{@controller.previewResultCount}}
+                {{@controller.previewDuration}}
+              </div>
+            {{/if}}
+
+            <DSegmentedControl
+              @name="query-result-view"
+              @value={{@controller.view}}
+              @items={{@controller.viewItems}}
+              @onSelect={{@controller.setView}}
+              @translatedLabel={{i18n "explorer.view.label"}}
+              class="query-results-modes"
             />
           </div>
+
+          {{#if (eq @controller.view "sql")}}
+            <div class="query-new__sql-editor">
+              <AceEditor
+                @content={{@controller.generatedSql}}
+                @onChange={{@controller.updateSql}}
+                @mode="sql"
+                @resizable={{true}}
+              />
+            </div>
+          {{else}}
+            <div class="query-new__preview query-results">
+              {{#if @controller.previewLoading}}
+                <DConditionalLoadingSpinner @condition={{true}} />
+              {{else if @controller.previewSucceeded}}
+                <QueryResult
+                  @content={{@controller.previewResults}}
+                  @view={{@controller.view}}
+                  @onSetView={{@controller.setView}}
+                  @hideHeaderActions={{true}}
+                  @showDownloads={{false}}
+                />
+              {{else if @controller.showPreview}}
+                {{#each @controller.previewResults.errors as |err|}}
+                  <pre class="query-error"><code>{{~err}}</code></pre>
+                {{/each}}
+              {{/if}}
+            </div>
+          {{/if}}
 
           <div class="query-new__fields">
             <label class="query-new__field-label">
@@ -115,10 +153,17 @@ export default <template>
 
           <div class="query-new__actions">
             <DButton
+              @action={{@controller.runPreview}}
+              @icon="play"
+              @label="explorer.run"
+              @disabled={{@controller.previewDisabled}}
+              class="btn-default query-new__run-btn"
+            />
+            <DButton
               @action={{@controller.saveQuery}}
               @label="explorer.ai.save_query"
               @disabled={{@controller.aiGenerating}}
-              class="btn-default"
+              class="btn-primary query-new__save-btn"
             />
           </div>
         {{/if}}

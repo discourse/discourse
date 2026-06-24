@@ -46,7 +46,7 @@ acceptance("GroupAssignments", function (needs) {
   });
 
   test("does not show the Assignments tab when group members are hidden", async function (assert) {
-    updateCurrentUser({ can_assign: true });
+    updateCurrentUser({ can_assign: true, can_assign_globally: true });
     canSeeMembers = false;
 
     await visit("/g/discourse");

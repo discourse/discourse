@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import {
   normalizeConnectionsForNodes,
-  normalizeMergeConfiguration,
+  normalizeNodeConfiguration,
   removeNodesFromGraph,
 } from "discourse/plugins/discourse-workflows/admin/components/workflows/editor/graph-utils";
 
@@ -369,37 +369,56 @@ module("Unit | Utility | workflows graph utils", function () {
     });
   });
 
-  test("normalizes merge target inputs for the selected mode", function (assert) {
+  test("normalizes indexed target inputs as hidden indexes", function (assert) {
+    const indexedInputNodeType = {
+      identifier: "flow:indexed_input",
+      inputs: [
+        {
+          key: "main",
+          multiple: true,
+        },
+      ],
+    };
+    const nodes = [
+      {
+        clientId: "indexed",
+        type: "flow:indexed_input",
+      },
+    ];
+    const nodeTypeForNode = () => indexedInputNodeType;
     const connections = [
       {
         sourceClientId: "a",
         sourceOutput: "main",
-        targetClientId: "merge",
+        targetClientId: "indexed",
         targetInput: "main",
       },
       {
         sourceClientId: "b",
         sourceOutput: "main",
-        targetClientId: "merge",
+        targetClientId: "indexed",
         targetInput: "main",
       },
       {
         sourceClientId: "c",
         sourceOutput: "main",
-        targetClientId: "merge",
+        targetClientId: "indexed",
         targetInput: "main",
       },
     ];
 
     assert.deepEqual(
-      normalizeConnectionsForNodes(connections, [
-        {
-          clientId: "merge",
-          type: "flow:merge",
-          configuration: { mode: "combine" },
-        },
-      ]).map((connection) => connection.targetInput),
-      ["input_1", "input_2"]
+      normalizeConnectionsForNodes(connections, nodes, nodeTypeForNode).map(
+        (connection) => ({
+          targetInput: connection.targetInput,
+          targetInputIndex: connection.targetInputIndex,
+        })
+      ),
+      [
+        { targetInput: "main", targetInputIndex: 0 },
+        { targetInput: "main", targetInputIndex: 1 },
+        { targetInput: "main", targetInputIndex: 2 },
+      ]
     );
 
     assert.deepEqual(
@@ -408,25 +427,26 @@ module("Unit | Utility | workflows graph utils", function () {
           {
             sourceClientId: "a",
             sourceOutput: "main",
-            targetClientId: "merge",
+            targetClientId: "indexed",
             targetInput: "main",
           },
           {
             sourceClientId: "b",
             sourceOutput: "main",
-            targetClientId: "merge",
+            targetClientId: "indexed",
             targetInput: "main",
           },
         ],
-        [
-          {
-            clientId: "merge",
-            type: "flow:merge",
-            configuration: { mode: "append" },
-          },
-        ]
-      ).map((connection) => connection.targetInput),
-      ["input_1", "input_2"]
+        nodes,
+        nodeTypeForNode
+      ).map((connection) => ({
+        targetInput: connection.targetInput,
+        targetInputIndex: connection.targetInputIndex,
+      })),
+      [
+        { targetInput: "main", targetInputIndex: 0 },
+        { targetInput: "main", targetInputIndex: 1 },
+      ]
     );
     assert.deepEqual(
       normalizeConnectionsForNodes(
@@ -434,50 +454,78 @@ module("Unit | Utility | workflows graph utils", function () {
           {
             sourceClientId: "a",
             sourceOutput: "main",
-            targetClientId: "merge",
+            targetClientId: "indexed",
             targetInputIndex: 1,
           },
           {
             sourceClientId: "b",
             sourceOutput: "main",
-            targetClientId: "merge",
+            targetClientId: "indexed",
             targetInput: "main",
           },
         ],
-        [
-          {
-            clientId: "merge",
-            type: "flow:merge",
-            configuration: { mode: "append" },
-          },
-        ]
-      ).map((connection) => connection.targetInputIndex),
-      [1, 0]
+        nodes,
+        nodeTypeForNode
+      ).map((connection) => ({
+        targetInput: connection.targetInput,
+        targetInputIndex: connection.targetInputIndex,
+      })),
+      [
+        { targetInput: "main", targetInputIndex: 1 },
+        { targetInput: "main", targetInputIndex: 0 },
+      ]
     );
   });
 
-  test("normalizes merge configuration to the selected mode", function (assert) {
+  test("normalizes configuration from node type metadata", function (assert) {
     assert.deepEqual(
-      normalizeMergeConfiguration({
-        mode: "choose_branch",
-        use_data_of_input: "input_2",
-        combine_by: "matching_fields",
-        fields_to_match: [{ field_1: "id", field_2: "id" }],
-      }),
+      normalizeNodeConfiguration(
+        {
+          type: "flow:no_configuration",
+          configuration: {
+            mode: "append",
+            notes: "Keep this visible on the canvas",
+            notesInFlow: true,
+          },
+        },
+        {
+          identifier: "flow:no_configuration",
+          properties: {},
+          credentials: [],
+        }
+      ),
       {
-        mode: "choose_branch",
-        use_data_of_input: "input_2",
-        use_data_of_input_index: 1,
-        choose_output: "specified_input",
+        type: "flow:no_configuration",
+        configuration: {
+          notes: "Keep this visible on the canvas",
+          notesInFlow: true,
+        },
       }
     );
 
     assert.deepEqual(
-      normalizeMergeConfiguration({
-        mode: "append",
-        use_data_of_input: "input_2",
-      }),
-      { mode: "append", number_inputs: 2 }
+      normalizeNodeConfiguration(
+        {
+          type: "action:configured",
+          configuration: {
+            operation: "list",
+          },
+        },
+        {
+          identifier: "action:configured",
+          properties: {
+            operation: {
+              type: "options",
+            },
+          },
+        }
+      ),
+      {
+        type: "action:configured",
+        configuration: {
+          operation: "list",
+        },
+      }
     );
   });
 });

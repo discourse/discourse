@@ -6,6 +6,13 @@
 
 et:
   js:
+    user_api_key:
+      authorize: "Autoriseeri"
+      deny: "Loobu"
+      copied: "Kopeeritud!"
+      device:
+        code: "Kood"
+        continue: "Jätka"
     blocks:
       ghost:
         status: "Staatus"
@@ -251,8 +258,6 @@ et:
       pill: "Soovitatud"
       pm_title: "Soovitatud sõnumid"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Sisse lülitatud"
       start_posting:
         back: "Tagasi"
     about:
@@ -600,7 +605,6 @@ et:
             title: "Seaded"
         membership:
           title: Liikmesus
-          access: Juurdepääs
         categories:
           title: Kategooriad
           watching_first_post_categories_instructions: "Kaustajaid teavitatakse esimesest postitusest igas uues teemas nendes kategooriates."
@@ -621,7 +625,6 @@ et:
         title: "Õigused"
         none: "Selle rühmaga pole seotud ühtegi kategooriat."
         description: "Selle rühma liikmed pääsevad ligi neile kategooriatele"
-      public_admission: "Luba kasutajatel rühmaga vabalt liituda (nõuab avalikult nähtavat rühma)"
       public_exit: "Luba kasutajatel vabalt rühmast lahkuda"
       empty:
         posts: "Selle rühma liikmed ei ole postitanud"
@@ -937,6 +940,7 @@ et:
       undo_revoke_access: "Tühista ligipääsu tühistamine"
       api_approved: "Heakskiidetud:"
       api_last_used_at: "Viimati kasutatud:"
+      api_expires_never: "mitte kunagi"
       theme: "Teema"
       save_to_change_theme: 'Teema uuendatakse pärast seda, kui klõpsad nuppu "%{save_text}”'
       home: "Vaikimisi avaleht"
@@ -1370,6 +1374,12 @@ et:
       complete_username_not_found: "Kasutajanimele <b>%{username}</b> ei vasta ükski konto"
       complete_email_not_found: "Meiliaadressile <b>%{email}</b> ei vasta ükski konto"
       confirm_title: Edasi saidile %{site_name}
+    code_login:
+      email_label: "E-post"
+      continue_button: "Jätka"
+      verify_button: "Jätka"
+      account_ready_continue: "Jätka"
+      username_label: "Kasutajanimi"
     login:
       title: "Logi sisse"
       username: "Kasutaja"
@@ -1481,7 +1491,7 @@ et:
       edit_shared_draft: "Muuda jagatud mustandit"
       title_placeholder: "Kuidas seda vestlust ühe lausega kirjeldada?"
       title_or_link_placeholder: "Kirjuta pealkiri või kleebi link siia"
-      edit_reason_placeholder: "miks sa seda muudad?"
+      edit_reason_placeholder: "Miks sa seda muudad?"
       topic_featured_link_placeholder: "Järgi pealkirjas näidatud viidet."
       remove_featured_link: "Eemalda teemast link."
       reply_placeholder: "Kirjuta siia. Vormindamiseks kasuta Markdowni, BBCode'i, või HTML-i. Pildid võid siia lohistada või kleepida."
@@ -1510,6 +1520,7 @@ et:
         attribute_value: "Väärtus"
         apply: "Rakenda"
       help: "Markdowni redigeerimisspikker"
+      edit_reason: "Miks sa seda muudad?"
       modal_ok: "Sobib"
       cant_send_pm: "Kahjuks ei saa sa kasutajale %{username} sõnumit saata."
       yourself_confirm:
@@ -1522,10 +1533,12 @@ et:
         edit: Muuda
         reply_to_topic:
           label: Vasta teemale
-        create_personal_message:
-          label: "Uus sõnum"
+          trigger: Teema
+        reply_to_message:
+          trigger: Sõnum
         shared_draft:
           label: "Jagatud mustand"
+        unknown_user: "Kasutaja"
       ignore: "Ignoreeri"
       image: "pilt"
     notifications:
@@ -1731,6 +1744,8 @@ et:
       no_replies: "Veel ei ole vastuseid."
       ignored_post_placeholder: "[ignoreeritud]"
       pinned_reply: "Esiletõstetud"
+    share_target:
+      new_message: "Uus sõnum"
     topic:
       filter_to:
         one: "%{count} postitus teemas"
@@ -2706,7 +2721,7 @@ et:
         modal:
           cancel: "tühista"
           create: "Salvesta"
-          reason: "miks sa seda muudad?"
+          reason: "Miks sa seda muudad?"
       spreadsheet:
         show: "Näita"
         about: "Teave"
@@ -2924,6 +2939,11 @@ et:
                 "2": "Liige"
                 "3": "Püsiliige"
                 "4": "Vedaja"
+          search:
+            title: "Otsi"
+            table:
+              searches: "Otsingud"
+              status: "Staatus"
         reports_section:
           no_data: "Pole andmeid, mida näidata"
           modal:
@@ -2978,7 +2998,6 @@ et:
             email: E-post
             incoming_email: "Individuaalne sissetuleva meili aadress"
             incoming_email_placeholder: "sisesta meiliaadress"
-            visibility: Nähtavus
             visibility_levels:
               title: "Kes näevad seda rühma?"
               public: "Kõik"
@@ -3116,6 +3135,8 @@ et:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nimi"
+          company_url: "Veebileht"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Rühmad"
           optional: "(valikuline)"

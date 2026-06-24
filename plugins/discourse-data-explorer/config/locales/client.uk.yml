@@ -50,7 +50,7 @@ uk:
         regenerate_placeholder: "Наприклад, оновіть запит, щоб обмежити його до 50 результатів"
         prompt_label: "Підказка"
         generate: "Згенерувати"
-        regenerate: "Перегенерувати"
+        regenerate: "Запит на оновлення"
         generating: "Створення запиту за допомогою ШІ..."
         generation_timeout: "Вичерпано час генерації запитів ШІ. Ви можете написати запит SQL вручну."
         generation_error: "Щось пішло не так при створенні запиту."
@@ -91,6 +91,12 @@ uk:
       run_options: "Більше варіантів запуску"
       view:
         label: "Перегляд результатів"
+      chart:
+        form:
+          label: "Тип діаграми"
+          bar: "Гістограма"
+        tooltip:
+          total: "Всього: %{count}"
       chart_empty:
         no_rows: "Немає рядків для діаграми."
         no_numeric: "Цей запит не має числових стовпців для діаграми."
@@ -143,6 +149,32 @@ uk:
           descriptions:
             data_explorer:
               run_queries: "Запустіть запити Data Explorer. Обмежте ключ API набором запитів, вказавши ідентифікатори запитів."
+    discourse_workflows:
+      node_unavailable:
+        requires_data_explorer: "Потрібно ввімкнути плагін Data Explorer"
+      nodes:
+        "action:sql": "Data Explorer"
+      node_descriptions:
+        "action:sql": "Запуск SQL-запиту лише для читання щодо бази даних"
+      sql:
+        operation: "Операція"
+        operation_description: "Як запустити запит"
+        queries: "Запити"
+        raw: "Необроблений SQL"
+        query_id: "Запит"
+        query_id_description: "Виберіть збережений запит для запуску"
+        query_params: "Параметри запиту"
+        query_params_description: "Заповніть параметри для вибраного запиту"
+        query: "SQL-запит"
+        query_description: "Напишіть SQL-запит лише для читання. Оголосіть параметри за допомогою синтаксису Data Explorer та зіставте їхні значення нижче."
+        params: "Параметри запиту"
+        params_description: "Параметри можна використовувати як :my_param у SQL-запиті."
+        add_param: "Додати параметр"
+        param_name: "Параметр"
+        param_value: "Значення"
+        output:
+          results: "Результати"
+          no_results: "Немає результатів"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

@@ -7,16 +7,11 @@ const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 export default {
   "virtual:entrypoint": async (
     moduleFilenames,
-    { themeId },
+    { themeId, pluginName },
     { basePath, context }
   ) => {
+    const label = pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
     let output = `const compatModules = {};`;
-
-    if (themeId) {
-      output += cleanMultiline(`
-        import "virtual:init-settings";
-      `);
-    }
 
     const moduleFilenamesSet = new Set(moduleFilenames);
     const exportedModules = new Set();
@@ -27,7 +22,7 @@ export default {
         !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
       ) {
         // Unsupported file type. Log a warning and skip
-        output += `console.warn("[THEME ${themeId}] Unsupported file type: ${moduleFilename}");\n`;
+        output += `console.warn("[${label}] Unsupported file type: ${moduleFilename}");\n`;
         continue;
       }
 
@@ -101,12 +96,6 @@ export default {
     output += "export default compatModules;\n";
 
     return output;
-  },
-  "virtual:init-settings": ({ themeId, settings }) => {
-    return (
-      `import { registerSettings } from "discourse/lib/theme-settings-store";\n\n` +
-      `registerSettings(${themeId}, ${JSON.stringify(settings, null, 2)});\n`
-    );
   },
   "virtual:theme": ({ themeId }) => {
     return cleanMultiline(`

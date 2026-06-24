@@ -50,6 +50,13 @@ pl_PL:
             delete_ai_secret: "Usuń sekret AI"
             update_ai_spam_settings: "Zaktualizuj ustawienia spamu AI"
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_ai: "Wymaga włączenia wtyczki AI"
+      nodes:
+        "action:ai_agent": "Agent AI"
+      node_descriptions:
+        "action:ai_agent": "Uruchom agenta AI, aby przetwarzać dane lub generować treści"
     discourse_automation:
       scriptables:
         llm_report:
@@ -226,6 +233,20 @@ pl_PL:
               description: "Zezwól na tagowanie wpisów tworzonych przez użytkownika systemowego."
     discourse_ai:
       title: "AI"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Agent"
+          forced_llm_notice_description: "Ten agent jest zablokowany na skonfigurowanym domyślnym LLM. Przepływ pracy nie może go zastąpić."
+          llm_model_id: "Model LLM"
+          llm_model_default: "Użyj ustawień domyślnych agenta"
+          llm_model_default_with_name: "Użyj ustawień domyślnych agenta (%{value})"
+          prompt: "Monit"
+          runner_username: "Uruchom jako"
+          runner_username_tooltip: "Użytkownik, którego uprawnienia służą do widoczności przesyłania i narzędzi agenta AI. Użyj systemu do automatyzacji przepływu pracy."
+          upload_ids: "Identyfikatory przesłania"
+          upload_ids_tooltip: "Opcjonalne identyfikatory przesyłania do dołączenia do monitu. Przesyłanie obrazów jest uwzględniane, gdy agent ma włączoną widoczność; przesyłanie dokumentów jest uwzględniane, gdy wybrany program LLM obsługuje ich typ pliku."
+          upload_ids_placeholder: "={{ $json.post.upload_ids }}"
+          select_agent: "Wybierz agenta..."
       bot_chats:
         tab_label: "Czaty botów"
       default_llm:
@@ -302,6 +323,12 @@ pl_PL:
             model_settings: "Ustawienia modelu"
             related_topics: "Powiązane tematy"
             semantic_search: "Wyszukiwanie semantyczne"
+        admin_dashboard:
+          name: "Panel administracyjny"
+          description: "Pomaga menedżerom społeczności dostrzegać znaczące zmiany i decydować, gdzie szukać dalej"
+          highlights: "Najważniejsze wydarzenia"
+          setting_groups:
+            settings: "Ustawienia podstawowe"
         discord:
           name: "Integracja z Discordem"
           description: "Dodaje możliwość wyszukiwania kanałów Discord"
@@ -441,6 +468,7 @@ pl_PL:
         spam_detected: "Wykryto spam"
         custom_instructions_placeholder: "Instrukcje dla AI specyficzne dla witryny, aby pomóc w dokładniejszej identyfikacji spamu"
         enable: "Włącz"
+        enabled_locked_tip: "Wykrywanie spamu AI nie może być wyłączone na tej stronie."
         spam_tip: "Wykrywanie spamu przez sztuczną inteligencję będzie skanować pierwsze 3 posty wszystkich nowych użytkowników w tematach publicznych. Oznaczy je do sprawdzenia i zablokuje użytkowników, jeśli istnieje prawdopodobieństwo, że są spamem."
         settings_saved: "Ustawienia zapisane"
         spam_description: "Identyfikuje potencjalny spam przy użyciu wybranego LLM i oznacza go dla moderatorów witryny w celu sprawdzenia w kolejce przeglądania."
@@ -519,6 +547,7 @@ pl_PL:
         credit_allocations: "Alokacje kredytów"
       ai_agent:
         ai_tools: "Narzędzia"
+        native_tools_help: "Narzędzia natywne dostawcy, takie jak wyszukiwanie w sieci lub pobieranie stron, pojawiają się, gdy włączona jest opcja „Zawsze używaj domyślnego modelu języka” i wybrany domyślny model języka je obsługuje."
         mcp_servers: "Serwery MCP"
         mcp_server_tools_help: "Wybrane serwery MCP domyślnie udostępniają wszystkie swoje narzędzia. Zawęż je dla każdego agenta, aby zmniejszyć zużycie tokenów i zapewnić sobie wybór narzędzi."
         mcp_server_tool_count:
@@ -638,6 +667,7 @@ pl_PL:
         confirm_delete: "Czy na pewno chcesz usunąć tego agenta?"
         new: "Nowy agent"
         no_agents: "Nie utworzono jeszcze żadnych agentów"
+        manage_agents: "Zarządzaj agentami"
         title: "Agenty"
         short_title: "Agenty"
         delete: "Usuń"
@@ -1011,6 +1041,9 @@ pl_PL:
           disable_streaming: "Wyłącz uzupełnianie strumieniowania (zmień żądania strumieniowe na żądania niestrumieniowe)"
           reasoning_effort: "Wysiłek rozumowania (dotyczy tylko modeli rozumowania)"
           service_tier: "Poziom usług (elastyczny = niższy koszt/większe opóźnienie, priorytet = szybsze przetwarzanie)"
+          reasoning_parser: "Analizator wnioskowania vLLM"
+          thinking_override: "Zastąpienie myślenia"
+          thinking_token_budget: "Budżet tokena myślenia"
           enable_reasoning: "Włącz wnioskowanie (dotyczy tylko modeli wnioskowania)"
           adaptive_thinking: "Włącz myślenie adaptacyjne (zalecane dla modeli Claude 4.6)"
           enable_thinking: "Włącz myślenie (modele Gemini 2.5 – wykorzystuje budżet tokenów)"
@@ -1024,6 +1057,11 @@ pl_PL:
           prompt_caching_tool_results: "Wyniki narzędzi – pamięć podręczna, gdy dostępne są wyniki narzędzi (zalecane)"
           prompt_caching_always: "Zawsze – zawsze używaj szybkiego buforowania"
           effort: "Poziom wysiłku"
+        provider_field_hints:
+          reasoning_parser: "Musi być zgodny z ustawieniem serwera vLLM --reasoning-parser. Discourse nie może zmieniać parserów podczas żądania; wykorzystuje to do kształtowania opcji żądania."
+          thinking_override: "Opcjonalnie wymuś obsługiwane szablony czatu vLLM, aby włączyć lub wyłączyć myślenie dla każdego żądania. Nieobsługiwane parsery zachowują domyślne ustawienia serwera."
+          reasoning_effort: "Wysyła opcję żądania reasoning_effort vLLM dla parserów, które ją obsługują."
+          thinking_token_budget: "Opcjonalny limit dla tokenów wnioskowania. Wymaga parsera wnioskowania vLLM i jest ignorowany, gdy wysiłek wnioskowania wynosi Brak."
       related_topics:
         title: "Powiązane tematy"
         pill: "Powiązane"
@@ -1031,7 +1069,9 @@ pl_PL:
         title: "Zaproponuj zmiany za pomocą AI"
         description: "Wybierz jedną z poniższych opcji, a sztuczna inteligencja zasugeruje Ci nową wersję tekstu."
         selection_hint: "Wskazówka: Możesz także zaznaczyć część tekstu przed otwarciem pomocnika, aby przepisać tylko ten fragment."
-        suggest: "Zasugeruj za pomocą AI"
+        suggest: "Pokaż sugestie AI"
+        choose: "Wybierz za mnie"
+        suggestions: "Sugestie"
         suggest_errors:
           too_many_tags:
             one: "Możesz mieć maksymalnie %{count} znacznik"

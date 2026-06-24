@@ -77,3 +77,11 @@ ko:
     edit_assignments_modal:
       topic: "글"
       post: "글"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "할당됨"
+      assign_topic:
+        operations:
+          assign: "할당"
+          unassign: "할당 해제"
+        topic_id: "글 ID"

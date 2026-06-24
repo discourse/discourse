@@ -190,7 +190,6 @@ sq:
       admins: "admins"
       moderators: "moderatorët"
       staff: "stafi"
-      anonymous: "anonim"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -430,6 +429,9 @@ sq:
       notifications: "Leximin dhe pastrimin e njoftimeve"
       push: "Njoftime \"push\" drejt shërbimeve të jashtme"
       session_info: "Leximin e informacionit të sesionit të llogarisë"
+    device:
+      code: "Kodi"
+      continue: "Vazhdoni"
   reports:
     default:
       labels:
@@ -707,7 +709,6 @@ sq:
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
-    fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: "rake posts:rebake"'
     post_excerpt_maxlength: "Gjatësia maksimale e një përmbledhjeje të një postimi. "
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
@@ -737,7 +738,6 @@ sq:
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
-    new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     block_common_passwords: "Mos lejo fjalëkalimet që gjenden në 10,000 fjalëkalimet më të përdorshme."
@@ -824,8 +824,6 @@ sq:
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
     pop3_polling_username: "The username for the POP3 account to poll for email."
     pop3_polling_password: "The password for the POP3 account to poll for email."
-    email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
-    email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
     minimum_topics_similar: "How many topics need to exist before similar topics are presented when composing new topics."
     relative_date_duration: "Number of days after posting where post dates will be shown as relative (7d) instead of absolute (20 Feb)."
     delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
@@ -840,7 +838,6 @@ sq:
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
-    disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
     automatically_unpin_topics: "Çngjiti temat automatikisht kur përdoruesi arrin fundin e faqes."
     read_time_word_count: "Numërimi i fjalëve për minutë për të llogaritur kohën e vlerësuar të leximit."
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
@@ -870,6 +867,10 @@ sq:
       category: "Categories"
       topic: "Results"
       user: "Users"
+  posts_filter:
+    description:
+      order_latest: "Postimet e fundit"
+      order_latest_topic: "Temat e fundit"
   original_poster: "Postuesi fillestar"
   most_recent_poster: "Postuesi i përgjigjes së fundit"
   frequent_poster: "Postues i shpeshtë"
@@ -1430,6 +1431,8 @@ sq:
               private:
                 label: "Private"
   onebox:
+    google_meet:
+      meeting_code: "Kodi:"
     github:
       status_date:
         approved: "aprovuar"

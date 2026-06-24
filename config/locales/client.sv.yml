@@ -6,6 +6,16 @@
 
 sv:
   js:
+    user_api_key:
+      authorize: "Godkänn"
+      deny: "Avbryt"
+      copied: "Kopierad!"
+      otp_description: 'Vill du tillåta att "%{application_name}" får tillträde till din sida?'
+      no_trust_level: "Tyvärr har du inte den nödvändiga förtroendenivån för att få tillgång till användar-API:n"
+      generic_error: "Tyvärr kan vi inte utfärda API-nycklar, denna funktion har kanske inaktiverats av administratören"
+      device:
+        code: "Kod"
+        continue: "Fortsätt"
     blocks:
       ghost:
         status: "Status"
@@ -307,7 +317,7 @@ sv:
       pm_title: "Föreslagna meddelanden"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Aktiverad"
+        enabled: "Markerat"
       start_posting:
         back: "Tillbaka"
     about:
@@ -838,7 +848,8 @@ sv:
             from_alias_hint: "Alias att använda som från adress när du skickar grupp SMTP e-post. Observera att detta kanske inte stöds av alla e-postleverantörer, vänligen konsultera dokumentationen från din e-postleverantör."
         membership:
           title: Medlemskap
-          access: Tillgång
+          join_method:
+            invite: "Endast med inbjudan"
         categories:
           title: Kategorier
           long_title: "Standardaviseringar för kategori"
@@ -871,7 +882,6 @@ sv:
         title: "Behörigheter"
         none: "Det finns inga kategorier kopplade till denna grupp."
         description: "Medlemmar i denna grupp kan komma åt dessa kategorier"
-      public_admission: "Tillåt användare att fritt gå med i grupp (Kräver offentligt synlig grupp)"
       public_exit: "Tillåt användare att fritt lämna grupp"
       empty:
         requests: "Det finns inga medlemsansökningar för denna grupp"
@@ -882,7 +892,6 @@ sv:
       request: "Förfrågning"
       message: "Nytt meddelande"
       confirm_leave: "Är du säker på att du vill lämna den här gruppen?"
-      allow_membership_requests: "Tillåt användare att sända medlemskapsförfrågan till gruppägare (Kräver offentligt synlig grupp)"
       membership_request_template: "Anpassa mallen som visas när användare skickar en medlemsansökan"
       membership_request:
         submit: "Skicka ansökan"
@@ -1273,6 +1282,9 @@ sv:
       undo_revoke_access: "Ångra återkallelse av åtkomst"
       api_approved: "Godkänd:"
       api_last_used_at: "Senast använd kl.:"
+      api_expires_at: "Utgår:"
+      api_expired_at: "Utgången:"
+      api_expires_never: "aldrig"
       theme: "Tema"
       save_to_change_theme: 'Tema kommer att uppdateras efter att du klickat på "%{save_text}"'
       home: "Standardhemsida"
@@ -2002,6 +2014,12 @@ sv:
       confirm_title: Fortsätt till %{site_name}
       logging_in_as: Loggar in som %{email}
       confirm_button: Avsluta inloggning
+    code_login:
+      email_label: "E-postadress"
+      continue_button: "Fortsätt"
+      verify_button: "Fortsätt"
+      account_ready_continue: "Fortsätt"
+      username_label: "Användarnamn"
     login:
       header_title: "Välkommen tillbaka"
       title: "Logga in"
@@ -2254,7 +2272,7 @@ sv:
       users_placeholder: "Lägg till användare eller grupper"
       title_placeholder: "Vad handlar ämnet om i en kort mening?"
       title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
-      edit_reason_placeholder: "varför redigerar du?"
+      edit_reason_placeholder: "Varför redigerar du?"
       topic_featured_link_placeholder: "Ange länken som visas med titeln."
       remove_featured_link: "Ta bort länk från ämne."
       reply_placeholder: "Skriv här. Använd Markdown, BBCode eller HTML för formatering. Släpp eller klistra in bilder."
@@ -2292,6 +2310,7 @@ sv:
         attribute_value: "Värde"
         apply: "Tillämpa"
       help: "Markdown-redigeringshjälp"
+      edit_reason: "Varför redigerar du?"
       exit_fullscreen_prompt: "Tryck på <kbd>ESC</kbd> för att lämna helskärmsläget"
       modal_ok: "OK"
       cant_send_pm: "Tyvärr, du kan inte skicka ett meddelande till %{username}."
@@ -2320,21 +2339,22 @@ sv:
           desc: Skapa nytt meddelande som börjar med samma mottagare
         reply_to_topic:
           label: Svara på ämne
+          trigger: Ämne
           desc: Svara på ämnet, inte ett specifikt inlägg
+        reply_to_message:
+          trigger: Meddelande
         toggle_whisper:
           label: Växla viskning
-          desc: Viskningar är enbart synliga för personal
         create_topic:
           desc: Skapa ett nytt ämne
         create_personal_message:
-          label: "Nytt meddelande"
           desc: "Skapa ett nytt personligt meddelande"
         shared_draft:
           label: "Delat utkast"
           desc: "Skapa ett utkast av ett ämne vilket enbart kommer vara synligt för tillåtna användare"
         toggle_topic_bump:
-          label: "Växla ämnesknuff"
           desc: "Svara utan att ändra senaste svarsdatum"
+        unknown_user: "Användare"
       reload: "Ladda om"
       ignore: "Ignorera"
       image_alt_text:
@@ -2670,6 +2690,15 @@ sv:
         also_dismiss_topics: "Sluta följa de här ämnena så att de aldrig syns som olästa för mig igen"
         dismiss_new_topics: "Avfärda nya ämnen"
         dismiss_new_replies: "Avfärda nya svar"
+        dismiss_new_topics_with_selected:
+          one: "Avfärda (%{count})"
+          other: "Avfärda (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Avfärda (%{count})"
+          other: "Avfärda (%{count})"
+        dismiss_all_with_selected:
+          one: "Avfärda (%{count})"
+          other: "Avfärda (%{count})"
         dismiss_new: "Avfärda nya"
         dismiss_new_modal:
           title: "Avfärda nya"
@@ -2749,6 +2778,8 @@ sv:
       deleted_post_placeholder: "[raderade]"
       ignored_post_placeholder: "[ignorerade]"
       pinned_reply: "Fäst"
+    share_target:
+      new_message: "Nytt meddelande"
     topic:
       filter_to:
         one: "%{count} inlägg i ämnet"
@@ -4292,7 +4323,7 @@ sv:
           title: "Redigera tabell"
           cancel: "avbryt"
           create: "Spara"
-          reason: "varför redigerar du?"
+          reason: "Varför redigerar du?"
           trigger_reason: "Lägg till orsak till redigering"
         default_edit_reason: "Uppdatera tabell med tabellredigerare"
       default_header:
@@ -4593,6 +4624,11 @@ sv:
                 "2": "Medlem"
                 "3": "Vanlig"
                 "4": "Ledare"
+          search:
+            title: "Sök"
+            table:
+              searches: "Sökningar"
+              status: "Status"
         reports_section:
           no_data: "Ingen data att visa"
           modal:
@@ -4667,7 +4703,6 @@ sv:
             incoming_email: "Egenvald inkommande e-postadress"
             incoming_email_placeholder: "Ange e-postadress"
             incoming_email_tooltip: "Du kan skilja på flera e-postadresser med tecknet |."
-            visibility: Synlighet
             visibility_levels:
               title: "Vem kan se denna grupp?"
               public: "Alla"
@@ -5001,7 +5036,8 @@ sv:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "Din organisation"
           company_name: "Namn"
-          company_name_placeholder: "Acme Organization"
+          company_url: "Webbplats"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Gällande lag"
           city_for_disputes: "Domstol vid tvister"
           extra_groups:

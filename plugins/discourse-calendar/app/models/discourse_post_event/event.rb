@@ -22,6 +22,8 @@ module DiscoursePostEvent
     scope :open, -> { where(closed: false) }
 
     before_save :chat_channel_sync
+    # prepend so it runs before `dependent: :delete_all` wipes the invitees
+    before_destroy :reset_invitees_topic_tracking, prepend: true
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
     after_save do
@@ -159,7 +161,12 @@ module DiscoursePostEvent
     end
 
     def raw_invitees_are_groups
-      if raw_invitees && User.select(:id).where(username: raw_invitees).limit(1).count > 0
+      return if raw_invitees.blank?
+
+      non_group_invitees = raw_invitees - Group.where(name: raw_invitees).pluck(:name)
+      return if non_group_invitees.blank?
+
+      if User.where(username: non_group_invitees).exists?
         errors.add(
           :base,
           I18n.t("discourse_post_event.errors.models.event.raw_invitees.only_group"),
@@ -277,7 +284,7 @@ module DiscoursePostEvent
     end
 
     def most_likely_going(limit = SiteSetting.displayed_invitees_limit)
-      going = invitees.order(%i[status user_id]).limit(limit)
+      going = invitees.order(%i[status created_at user_id]).limit(limit)
 
       if private? && going.count < limit
         # invitees are only created when an attendance is set
@@ -301,7 +308,10 @@ module DiscoursePostEvent
     end
 
     def enforce_private_invitees!
-      invitees.where.not(user_id: fetch_users.select(:id)).delete_all
+      pruned = invitees.where.not(user_id: fetch_users.select(:id))
+      pruned_user_ids = pruned.pluck(:user_id)
+      pruned.delete_all
+      Invitee.reset_topic_tracking!(user_ids: pruned_user_ids, topic_id: post.topic_id)
     end
 
     def can_user_update_attendance?(user)
@@ -443,6 +453,28 @@ module DiscoursePostEvent
       end
     end
 
+    SUGGESTED_USERS_LIMIT = 10
+
+    # Users that could be invited to this event, ranked by how closely their
+    # username matches +filter+ (exact match first). Already-invited users are
+    # excluded, optionally narrowed to a given attendance +type+.
+    def suggested_users(filter, type: nil)
+      excluded = type ? invitees.with_status(type) : invitees
+
+      missing_users(excluded.select(:user_id))
+        .where(
+          "LOWER(username) LIKE :filter",
+          filter: "%#{User.sanitize_sql_like(filter.downcase)}%",
+        )
+        .order(
+          DB.sql_fragment(
+            "CASE WHEN LOWER(username) = ? THEN 0 ELSE 1 END ASC, LOWER(username) ASC",
+            filter.downcase,
+          ),
+        )
+        .limit(SUGGESTED_USERS_LIMIT)
+    end
+
     def update_with_params!(params)
       case params[:status] ? params[:status].to_i : status
       when Event.statuses[:private]
@@ -517,6 +549,13 @@ module DiscoursePostEvent
     end
 
     private
+
+    def reset_invitees_topic_tracking
+      topic_id = post&.topic_id
+      return if topic_id.nil?
+
+      Invitee.reset_topic_tracking!(user_ids: invitees.pluck(:user_id), topic_id:)
+    end
 
     def dates_changed?
       saved_change_to_original_starts_at || saved_change_to_original_ends_at

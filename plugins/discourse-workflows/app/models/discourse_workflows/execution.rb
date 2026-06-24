@@ -26,6 +26,24 @@ module DiscourseWorkflows
     TERMINAL_STATUSES_FOR_PURGE = %i[success error rate_limited skipped].freeze
     PURGE_BATCH_SIZE = 5_000
 
+    def self.create_pending_manual!(workflow:, trigger_node_id:, trigger_data:)
+      transaction do
+        create!(
+          workflow: workflow,
+          workflow_version_id: workflow.version_id,
+          trigger_node_id: trigger_node_id,
+          trigger_data: trigger_data,
+          status: :pending,
+          execution_mode: :manual,
+        ).tap do |execution|
+          ExecutionData.create!(
+            execution: execution,
+            workflow_data: WorkflowSnapshot.from_workflow(workflow, published: false).to_h,
+          )
+        end
+      end
+    end
+
     def self.purge_old
       retention_days = SiteSetting.workflow_executions_retention_days
       return if retention_days <= 0
@@ -55,6 +73,22 @@ module DiscourseWorkflows
       return nil if affected.zero?
 
       execution.status = :running
+      execution.updated_at = now
+      execution
+    end
+
+    def self.claim_pending(execution)
+      now = Time.current
+      affected =
+        where(id: execution.id, status: :pending).update_all(
+          status: statuses[:running],
+          started_at: now,
+          updated_at: now,
+        )
+      return nil if affected.zero?
+
+      execution.status = :running
+      execution.started_at = now
       execution.updated_at = now
       execution
     end

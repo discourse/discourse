@@ -1,3 +1,5 @@
+import { i18n } from "discourse-i18n";
+
 function sectionHeader(name) {
   return () => {
     const header = document.createElement("div");
@@ -11,11 +13,26 @@ export function section(name, rank) {
   return { name, rank, header: sectionHeader(name) };
 }
 
-export const SECTION_RECOMMENDED = section("Recommended", 0);
-export const SECTION_PROPERTIES = section("Properties", 2);
-export const SECTION_METHODS = section("Methods", 3);
-export const SECTION_METADATA = section("Metadata", 4);
-export const SECTION_GLOBALS = section("Globals", 5);
+export const SECTION_RECOMMENDED = section(
+  i18n("codemirror.expression.sections.recommended"),
+  0
+);
+export const SECTION_PROPERTIES = section(
+  i18n("codemirror.expression.sections.properties"),
+  2
+);
+export const SECTION_METHODS = section(
+  i18n("codemirror.expression.sections.methods"),
+  3
+);
+export const SECTION_METADATA = section(
+  i18n("codemirror.expression.sections.metadata"),
+  4
+);
+export const SECTION_GLOBALS = section(
+  i18n("codemirror.expression.sections.globals"),
+  5
+);
 
 export function info(signature, description, example) {
   return () => {
@@ -45,457 +62,337 @@ export function info(signature, description, example) {
   };
 }
 
-export const STRING_METHODS = [
+// Builds method completions, deriving each description from the type and
+// label by convention: `codemirror.expression.methods.<type>.<label>`.
+// Signatures and examples stay literal — they are code, not translatable prose.
+function buildMethods(type, entries) {
+  return entries.map((entry) => ({
+    label: entry.label,
+    type: entry.type,
+    detail: entry.detail,
+    info: info(
+      entry.signature,
+      i18n(`codemirror.expression.methods.${type}.${entry.label}`),
+      entry.example
+    ),
+  }));
+}
+
+// Builds global completions, deriving each description by convention:
+// `codemirror.expression.globals.<label>`.
+function buildGlobals(entries) {
+  return entries.map((entry) => ({
+    label: entry.label,
+    type: entry.type,
+    detail: entry.detail,
+    info: i18n(`codemirror.expression.globals.${entry.label}`),
+  }));
+}
+
+export const STRING_METHODS = buildMethods("string", [
   {
     label: "length",
     type: "property",
     detail: "number",
-    info: info("str.length", "The number of characters in the string."),
+    signature: "str.length",
   },
   {
     label: "includes",
     type: "method",
     detail: "(str) => boolean",
-    info: info(
-      "str.includes(searchString, position?)",
-      "Returns true if the string contains the substring.",
-      '"hello".includes("ell") → true'
-    ),
+    signature: "str.includes(searchString, position?)",
+    example: '"hello".includes("ell") → true',
   },
   {
     label: "startsWith",
     type: "method",
     detail: "(str) => boolean",
-    info: info(
-      "str.startsWith(searchString, position?)",
-      "Returns true if the string starts with the given characters."
-    ),
+    signature: "str.startsWith(searchString, position?)",
   },
   {
     label: "endsWith",
     type: "method",
     detail: "(str) => boolean",
-    info: info(
-      "str.endsWith(searchString, length?)",
-      "Returns true if the string ends with the given characters."
-    ),
+    signature: "str.endsWith(searchString, length?)",
   },
   {
     label: "split",
     type: "method",
     detail: "(sep) => string[]",
-    info: info(
-      "str.split(separator, limit?)",
-      "Splits the string into an array of substrings.",
-      '"a,b,c".split(",") → ["a","b","c"]'
-    ),
+    signature: "str.split(separator, limit?)",
+    example: '"a,b,c".split(",") → ["a","b","c"]',
   },
   {
     label: "replaceAll",
     type: "method",
     detail: "(search, replace) => string",
-    info: info(
-      "str.replaceAll(search, replacement)",
-      "Replaces all occurrences of a search string."
-    ),
+    signature: "str.replaceAll(search, replacement)",
   },
   {
     label: "replace",
     type: "method",
     detail: "(search, replace) => string",
-    info: info(
-      "str.replace(search, replacement)",
-      "Replaces the first occurrence of a search string."
-    ),
+    signature: "str.replace(search, replacement)",
   },
   {
     label: "trim",
     type: "method",
     detail: "() => string",
-    info: info(
-      "str.trim()",
-      "Removes whitespace from both ends of the string."
-    ),
+    signature: "str.trim()",
   },
   {
     label: "trimStart",
     type: "method",
     detail: "() => string",
-    info: info(
-      "str.trimStart()",
-      "Removes whitespace from the beginning of the string."
-    ),
+    signature: "str.trimStart()",
   },
   {
     label: "trimEnd",
     type: "method",
     detail: "() => string",
-    info: info(
-      "str.trimEnd()",
-      "Removes whitespace from the end of the string."
-    ),
+    signature: "str.trimEnd()",
   },
   {
     label: "toLowerCase",
     type: "method",
     detail: "() => string",
-    info: info("str.toLowerCase()", "Converts the string to lowercase."),
+    signature: "str.toLowerCase()",
   },
   {
     label: "toUpperCase",
     type: "method",
     detail: "() => string",
-    info: info("str.toUpperCase()", "Converts the string to uppercase."),
+    signature: "str.toUpperCase()",
   },
   {
     label: "slice",
     type: "method",
     detail: "(start, end?) => string",
-    info: info(
-      "str.slice(start, end?)",
-      "Extracts a section of the string.",
-      '"hello".slice(1, 4) → "ell"'
-    ),
+    signature: "str.slice(start, end?)",
+    example: '"hello".slice(1, 4) → "ell"',
   },
   {
     label: "substring",
     type: "method",
     detail: "(start, end?) => string",
-    info: info(
-      "str.substring(start, end?)",
-      "Returns the part of the string between two indices."
-    ),
+    signature: "str.substring(start, end?)",
   },
   {
     label: "indexOf",
     type: "method",
     detail: "(str) => number",
-    info: info(
-      "str.indexOf(searchValue, fromIndex?)",
-      "Returns the index of the first occurrence, or -1 if not found."
-    ),
+    signature: "str.indexOf(searchValue, fromIndex?)",
   },
   {
     label: "match",
     type: "method",
     detail: "(regex) => array",
-    info: info(
-      "str.match(regexp)",
-      "Matches the string against a regular expression."
-    ),
+    signature: "str.match(regexp)",
   },
   {
     label: "concat",
     type: "method",
     detail: "(...strings) => string",
-    info: info("str.concat(...strings)", "Concatenates one or more strings."),
+    signature: "str.concat(...strings)",
   },
-];
+]);
 
-export const NUMBER_METHODS = [
+export const NUMBER_METHODS = buildMethods("number", [
   {
     label: "toFixed",
     type: "method",
     detail: "(digits?) => string",
-    info: info(
-      "num.toFixed(digits?)",
-      "Formats the number with a fixed number of decimal places.",
-      '(3.14159).toFixed(2) → "3.14"'
-    ),
+    signature: "num.toFixed(digits?)",
+    example: '(3.14159).toFixed(2) → "3.14"',
   },
   {
     label: "toString",
     type: "method",
     detail: "(radix?) => string",
-    info: info(
-      "num.toString(radix?)",
-      "Returns a string representation of the number."
-    ),
+    signature: "num.toString(radix?)",
   },
   {
     label: "toPrecision",
     type: "method",
     detail: "(precision?) => string",
-    info: info(
-      "num.toPrecision(precision?)",
-      "Formats the number to a specified precision."
-    ),
+    signature: "num.toPrecision(precision?)",
   },
   {
     label: "toLocaleString",
     type: "method",
     detail: "() => string",
-    info: info(
-      "num.toLocaleString(locales?, options?)",
-      "Returns a locale-sensitive string representation."
-    ),
+    signature: "num.toLocaleString(locales?, options?)",
   },
-];
+]);
 
-export const BOOLEAN_METHODS = [
+export const BOOLEAN_METHODS = buildMethods("boolean", [
   {
     label: "toString",
     type: "method",
     detail: "() => string",
-    info: info(
-      "bool.toString()",
-      "Converts true to 'true' and false to 'false'."
-    ),
+    signature: "bool.toString()",
   },
-];
+]);
 
-export const ARRAY_METHODS = [
+export const ARRAY_METHODS = buildMethods("array", [
   {
     label: "length",
     type: "property",
     detail: "number",
-    info: info("arr.length", "The number of elements in the array."),
+    signature: "arr.length",
   },
   {
     label: "map",
     type: "method",
     detail: "(fn) => array",
-    info: info(
-      "arr.map(callback)",
-      "Creates a new array with the results of calling a function on every element.",
-      "[1,2,3].map(x => x * 2) → [2,4,6]"
-    ),
+    signature: "arr.map(callback)",
+    example: "[1,2,3].map(x => x * 2) → [2,4,6]",
   },
   {
     label: "filter",
     type: "method",
     detail: "(fn) => array",
-    info: info(
-      "arr.filter(callback)",
-      "Creates a new array with elements that pass the test.",
-      "[1,2,3,4].filter(x => x > 2) → [3,4]"
-    ),
+    signature: "arr.filter(callback)",
+    example: "[1,2,3,4].filter(x => x > 2) → [3,4]",
   },
   {
     label: "find",
     type: "method",
     detail: "(fn) => item",
-    info: info(
-      "arr.find(callback)",
-      "Returns the first element that satisfies the testing function."
-    ),
+    signature: "arr.find(callback)",
   },
   {
     label: "includes",
     type: "method",
     detail: "(item) => boolean",
-    info: info(
-      "arr.includes(value, fromIndex?)",
-      "Returns true if the array contains the specified value."
-    ),
+    signature: "arr.includes(value, fromIndex?)",
   },
   {
     label: "join",
     type: "method",
     detail: "(sep?) => string",
-    info: info(
-      "arr.join(separator?)",
-      "Joins all elements into a string.",
-      '["a","b","c"].join("-") → "a-b-c"'
-    ),
+    signature: "arr.join(separator?)",
+    example: '["a","b","c"].join("-") → "a-b-c"',
   },
   {
     label: "slice",
     type: "method",
     detail: "(start, end?) => array",
-    info: info(
-      "arr.slice(start?, end?)",
-      "Returns a shallow copy of a portion of the array."
-    ),
+    signature: "arr.slice(start?, end?)",
   },
   {
     label: "sort",
     type: "method",
     detail: "(fn?) => array",
-    info: info(
-      "arr.sort(compareFn?)",
-      "Sorts the elements of the array in place."
-    ),
+    signature: "arr.sort(compareFn?)",
   },
   {
     label: "reverse",
     type: "method",
     detail: "() => array",
-    info: info("arr.reverse()", "Reverses the order of elements."),
+    signature: "arr.reverse()",
   },
   {
     label: "reduce",
     type: "method",
     detail: "(fn, init?) => any",
-    info: info(
-      "arr.reduce(callback, initialValue?)",
-      "Reduces the array to a single value.",
-      "[1,2,3].reduce((sum, x) => sum + x, 0) → 6"
-    ),
+    signature: "arr.reduce(callback, initialValue?)",
+    example: "[1,2,3].reduce((sum, x) => sum + x, 0) → 6",
   },
   {
     label: "indexOf",
     type: "method",
     detail: "(item) => number",
-    info: info(
-      "arr.indexOf(value, fromIndex?)",
-      "Returns the first index of the value, or -1 if not found."
-    ),
+    signature: "arr.indexOf(value, fromIndex?)",
   },
   {
     label: "concat",
     type: "method",
     detail: "(...arrays) => array",
-    info: info(
-      "arr.concat(...values)",
-      "Merges arrays and/or values into a new array."
-    ),
+    signature: "arr.concat(...values)",
   },
-];
+]);
 
-export const DATE_METHODS = [
+export const DATE_METHODS = buildMethods("date", [
   {
     label: "toISOString",
     type: "method",
     detail: "() => string",
-    info: info("date.toISOString()", "Returns the date as an ISO 8601 string."),
+    signature: "date.toISOString()",
   },
   {
     label: "toLocaleDateString",
     type: "method",
     detail: "() => string",
-    info: info(
-      "date.toLocaleDateString(locales?, options?)",
-      "Returns a locale-sensitive date string."
-    ),
+    signature: "date.toLocaleDateString(locales?, options?)",
   },
   {
     label: "getTime",
     type: "method",
     detail: "() => number",
-    info: info("date.getTime()", "Returns milliseconds since Unix epoch."),
+    signature: "date.getTime()",
   },
   {
     label: "getFullYear",
     type: "method",
     detail: "() => number",
-    info: info("date.getFullYear()", "Returns the four-digit year."),
+    signature: "date.getFullYear()",
   },
   {
     label: "getMonth",
     type: "method",
     detail: "() => number",
-    info: info("date.getMonth()", "Returns the month (0-11)."),
+    signature: "date.getMonth()",
   },
   {
     label: "getDate",
     type: "method",
     detail: "() => number",
-    info: info("date.getDate()", "Returns the day of the month (1-31)."),
+    signature: "date.getDate()",
   },
   {
     label: "getHours",
     type: "method",
     detail: "() => number",
-    info: info("date.getHours()", "Returns the hour (0-23)."),
+    signature: "date.getHours()",
   },
   {
     label: "getMinutes",
     type: "method",
     detail: "() => number",
-    info: info("date.getMinutes()", "Returns the minutes (0-59)."),
+    signature: "date.getMinutes()",
   },
   {
     label: "toLocaleString",
     type: "method",
     detail: "() => string",
-    info: info(
-      "date.toLocaleString(locales?, options?)",
-      "Returns a locale-sensitive date and time string."
-    ),
+    signature: "date.toLocaleString(locales?, options?)",
   },
-];
+]);
 
-export const GLOBAL_COMPLETIONS = [
-  {
-    label: "Math",
-    type: "variable",
-    detail: "object",
-    info: "Mathematical constants and functions (Math.round, Math.random, etc.)",
-  },
-  {
-    label: "JSON",
-    type: "variable",
-    detail: "object",
-    info: "JSON parsing and serialization (JSON.parse, JSON.stringify).",
-  },
-  {
-    label: "Object",
-    type: "variable",
-    detail: "object",
-    info: "Object utilities (Object.keys, Object.values, Object.entries).",
-  },
-  {
-    label: "Array",
-    type: "variable",
-    detail: "object",
-    info: "Array utilities (Array.isArray, Array.from).",
-  },
-  {
-    label: "String",
-    type: "variable",
-    detail: "object",
-    info: "String constructor and utilities.",
-  },
-  {
-    label: "Number",
-    type: "variable",
-    detail: "object",
-    info: "Number utilities (Number.isInteger, Number.parseFloat).",
-  },
-  {
-    label: "Date",
-    type: "variable",
-    detail: "object",
-    info: "Date constructor. Use new Date() to create dates.",
-  },
-  {
-    label: "parseInt",
-    type: "function",
-    detail: "(string, radix?) => number",
-    info: "Parses a string and returns an integer.",
-  },
-  {
-    label: "parseFloat",
-    type: "function",
-    detail: "(string) => number",
-    info: "Parses a string and returns a floating-point number.",
-  },
+export const GLOBAL_COMPLETIONS = buildGlobals([
+  { label: "Math", type: "variable", detail: "object" },
+  { label: "JSON", type: "variable", detail: "object" },
+  { label: "Object", type: "variable", detail: "object" },
+  { label: "Array", type: "variable", detail: "object" },
+  { label: "String", type: "variable", detail: "object" },
+  { label: "Number", type: "variable", detail: "object" },
+  { label: "Date", type: "variable", detail: "object" },
+  { label: "parseInt", type: "function", detail: "(string, radix?) => number" },
+  { label: "parseFloat", type: "function", detail: "(string) => number" },
   {
     label: "encodeURIComponent",
     type: "function",
     detail: "(string) => string",
-    info: "Encodes a URI component by replacing special characters.",
   },
   {
     label: "decodeURIComponent",
     type: "function",
     detail: "(string) => string",
-    info: "Decodes an encoded URI component.",
   },
-  {
-    label: "isNaN",
-    type: "function",
-    detail: "(value) => boolean",
-    info: "Returns true if the value is NaN.",
-  },
-  {
-    label: "isFinite",
-    type: "function",
-    detail: "(value) => boolean",
-    info: "Returns true if the value is a finite number.",
-  },
-];
+  { label: "isNaN", type: "function", detail: "(value) => boolean" },
+  { label: "isFinite", type: "function", detail: "(value) => boolean" },
+]);
 
 // Non-enumerable, so Object.keys won't find them — listed explicitly.
 export const GLOBAL_STATIC_METHODS = {

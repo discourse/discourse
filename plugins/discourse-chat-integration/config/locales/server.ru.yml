@@ -78,6 +78,10 @@ ru:
       added_and_removed: "Добавлено — %{added}, удалено — %{removed}"
       added: "Добавлено: %{added}"
       removed: "Удалено: %{removed}"
+    errors:
+      provider_already_enabled: "Поставщик '%{name}' уже включен"
+      provider_not_found: "Поставщик '%{name}' не найден"
+      setting_update_failed: "Не удалось обновить настройки: %{errors}"
     provider:
       slack:
         status:

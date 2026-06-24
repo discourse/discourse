@@ -513,6 +513,12 @@
     "email_configured": {
       "type": "boolean"
     },
+    "upcoming_changes_with_css": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "topic_featured_link_allowed_category_ids": {
       "type": "array",
       "items": {

@@ -54,7 +54,9 @@ export default {
               const chatAudioManager = container.lookup(
                 "service:chat-audio-manager"
               );
-              chatAudioManager.play(user.chat_sound);
+              chatAudioManager.play(user.chat_sound, {
+                type: isMention ? "mention" : "incoming",
+              });
             }
           });
         }

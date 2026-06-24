@@ -6,6 +6,16 @@
 
 it:
   js:
+    user_api_key:
+      authorize: "Autorizza"
+      deny: "Annulla"
+      copied: "Copiato!"
+      otp_description: 'Vuoi consentire a "%{application_name}" l''accesso al sito?'
+      no_trust_level: "Spiacenti, non hai il livello di attendibilità richiesto per accedere alle API utente"
+      generic_error: "Spiacenti, non siamo in grado di produrre user API keys, questa caratteristica potrebbe essere stata disabilitata dall'amministratore di sistema"
+      device:
+        code: "Codice"
+        continue: "Continua"
     blocks:
       ghost:
         status: "Stato"
@@ -415,7 +425,7 @@ it:
       pm_title: "Messaggi Suggeriti"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Abilitato"
+        enabled: "Selezionato"
       start_posting:
         back: "Indietro"
     about:
@@ -1077,7 +1087,8 @@ it:
             from_alias_hint: "Alias da usare come indirizzo di provenienza per l'invio di email SMTP di gruppo. Nota che questo potrebbe non essere supportato da tutti i provider di posta; consulta la documentazione del tuo provider di posta."
         membership:
           title: Iscrizione
-          access: Accesso
+          join_method:
+            invite: "Solo su invito"
         categories:
           title: Categorie
           long_title: "Notifiche predefinite di categoria"
@@ -1110,7 +1121,6 @@ it:
         title: "Autorizzazioni"
         none: "Non ci sono categorie associate a questo gruppo."
         description: "I membri di questo gruppo possono accedere a queste categorie"
-      public_admission: "Consenti agli utenti di unirsi al gruppo liberamente (richiede che il gruppo abbia visibilità pubblica)"
       public_exit: "Consenti agli utenti di lasciare il gruppo liberamente"
       empty:
         posts: "Non ci sono messaggi da membri di questo gruppo"
@@ -1126,7 +1136,6 @@ it:
       request: "Richiesta"
       message: "Messaggio"
       confirm_leave: "Vuoi abbandonare questo gruppo?"
-      allow_membership_requests: "Consenti agli utenti di inviare richieste di ammissione ai proprietari dei gruppi (richiede un gruppo visibile pubblicamente)"
       membership_request_template: "Modello personalizzato da mostrare agli utenti quando inviano una richiesta di adesione"
       membership_request:
         submit: "Invia Richiesta"
@@ -1539,6 +1548,9 @@ it:
       undo_revoke_access: "Annullare Revoca Accesso"
       api_approved: "Approvato:"
       api_last_used_at: "Ultimo utilizzo:"
+      api_expires_at: "Scadenza:"
+      api_expired_at: "Scaduto:"
+      api_expires_never: "mai"
       theme: "Tema"
       save_to_change_theme: 'Il tema verrà aggiornato dopo aver cliccato su "%{save_text}"'
       home: "Home Page Predefinita"
@@ -2439,6 +2451,12 @@ it:
       confirm_title: Procedi su %{site_name}
       logging_in_as: Accesso come %{email}
       confirm_button: Completa l'accesso
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Continua"
+      verify_button: "Continua"
+      account_ready_continue: "Continua"
+      username_label: "Nome utente"
     login:
       header_title: "Bentornato"
       title: "Accedi"
@@ -2745,7 +2763,7 @@ it:
       users_placeholder: "Aggiungi utenti o gruppi"
       title_placeholder: "In breve, di cosa tratta questa discussione?"
       title_or_link_placeholder: "Digita il titolo o incolla qui il collegamento"
-      edit_reason_placeholder: "perché stai scrivendo?"
+      edit_reason_placeholder: "Perché stai modificando?"
       topic_featured_link_placeholder: "Inserisci il collegamento mostrato con il titolo."
       remove_featured_link: "Rimuovi il collegamento dall'argomento."
       reply_placeholder: "Scrivi qui. Per formattare il testo usa Markdown, BBCode o HTML. Trascina o incolla le immagini."
@@ -2801,6 +2819,7 @@ it:
         attribute_value: "Valore"
         apply: "Applica"
       help: "Aiuto Inserimento Markdown"
+      edit_reason: "Perché stai modificando?"
       exit_fullscreen_prompt: "Premi <kbd>ESC</kbd> per uscire dallo schermo intero."
       modal_ok: "OK"
       cant_send_pm: "Spiacenti, non puoi inviare un messaggio a %{username}."
@@ -2830,24 +2849,24 @@ it:
           desc: Crea un nuovo messaggio iniziando con gli stessi destinatari
         reply_to_topic:
           label: Rispondi all'argomento
+          trigger: Argomento
           desc: Rispondi all'argomento, non a uno specifico messaggio
+        reply_to_message:
+          trigger: Messaggio
         toggle_whisper:
           label: Attiva/disattiva sussurri
-          desc: I Sussurri sono visibili solo ai membri dello staff
         create_topic:
-          label: "Nuovo argomento"
           desc: Crea un nuovo argomento
         create_personal_message:
-          label: "Nuovo messaggio"
           desc: "Crea un nuovo messaggio personale"
         shared_draft:
           label: "Bozza Condivisa"
           desc: "Crea una bozza di argomento che sarà visibile solo agli utenti autorizzati"
         toggle_topic_bump:
-          label: "Interruttore riproposizione argomenti"
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
         toggle_unlisted:
           label: Attiva/disattiva non in elenco
+        unknown_user: "Utente"
       reload: "Ricarica"
       ignore: "Ignora"
       image_alt_text:
@@ -3213,6 +3232,15 @@ it:
         also_dismiss_topics: "Smetti di seguire questi argomenti in modo che non vengano più visualizzati come non letti per me"
         dismiss_new_topics: "Ignora nuovi argomenti"
         dismiss_new_replies: "Ignora nuove risposte"
+        dismiss_new_topics_with_selected:
+          one: "Ignora (%{count})"
+          other: "Ignora (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Ignora (%{count})"
+          other: "Ignora (%{count})"
+        dismiss_all_with_selected:
+          one: "Ignora (%{count})"
+          other: "Ignora (%{count})"
         dismiss_new: "Ignora i nuovi messaggi"
         dismiss_new_modal:
           title: "Ignora nuovi"
@@ -3261,7 +3289,7 @@ it:
         education:
           topic_tracking_preferences: 'Puoi visualizzare e modificare le tue nuove impostazioni di monitoraggio degli argomenti nelle <a href="%{basePath}/my/preferences/tracking">preferenze</a>.'
           unread: "Non è rimasto nulla da leggere... impressionante!"
-          new_new: "Al momento non ci sono novità... torna presto a trovarci!"
+          unified_new: "Al momento non ci sono novità... torna presto a trovarci!"
           new: "Al momento non ci sono novità... torna presto a trovarci!"
     topic_bulk_actions:
       dismiss:
@@ -3312,6 +3340,9 @@ it:
       deleted_post_placeholder: "[eliminato]"
       ignored_post_placeholder: "[ignorato]"
       pinned_reply: "Appuntato"
+    share_target:
+      new_topic: "Nuovo argomento"
+      new_message: "Nuovo messaggio"
     topic:
       filter_to:
         one: "%{count} messaggio in questo argomento"
@@ -4426,7 +4457,7 @@ it:
         new_replies_tooltip: "Nuove risposte"
         replies: "Risposte"
         replies_with_count: "Risposte (%{count})"
-      new_new:
+      unified_new:
         help: "argomenti creati o a cui si è risposto negli ultimi giorni"
       posted:
         title: "I miei messaggi"
@@ -5019,7 +5050,7 @@ it:
           title: "Modifica tabella"
           cancel: "annulla"
           create: "Salva"
-          reason: "perché stai modificando?"
+          reason: "Perché stai modificando?"
           trigger_reason: "Aggiungi il motivo della modifica"
         default_edit_reason: "Aggiorna tabella con l'editor di tabelle"
       default_header:
@@ -5640,6 +5671,11 @@ it:
                 "2": "Membro"
                 "3": "Abituale"
                 "4": "Veterano"
+          search:
+            title: "Cerca"
+            table:
+              searches: "Ricerche"
+              status: "Stato"
         reports_section:
           no_data: "Non ci sono dati da mostrare"
           modal:
@@ -5733,7 +5769,6 @@ it:
             incoming_email: "Indirizzo email personalizzato"
             incoming_email_placeholder: "inserisci indirizzo email"
             incoming_email_tooltip: "Puoi separare più indirizzi e-mail con il carattere |."
-            visibility: Visibilità
             visibility_levels:
               title: "Chi può vedere questo Gruppo?"
               public: "Chiunque"
@@ -6158,9 +6193,10 @@ it:
           your_organization: "La tua organizzazione"
           your_organization_description: "Utilizzeremo queste informazioni nei Termini di servizio e nell'Informativa sulla privacy per indicare chi gestisce il sito e sotto quale giurisdizione."
           company_name: "Nome"
-          company_name_placeholder: "Organizzazione Acme"
           company_name_warning: |
             Se non compilato, non avrai a disposizione Termini di servizio o Informativa sulla privacy standard.
+          company_url: "Sito web"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Diritto applicabile"
           governing_law_placeholder: "Provincia, Stato o Paese"
           governing_law_help: |

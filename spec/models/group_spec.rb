@@ -418,9 +418,9 @@ RSpec.describe Group do
       expect(g.visibility_level).to eq(Group.visibility_levels[:staff])
     end
 
-    it "makes sure the anonymous and logged_in_users pseudogroups are hidden and have no members" do
-      anon = Group.refresh_automatic_group!(:anonymous)
-      expect(anon.id).to eq(Group::AUTO_GROUPS[:anonymous])
+    it "makes sure the anonymous_users and logged_in_users pseudogroups are hidden and have no members" do
+      anon = Group.refresh_automatic_group!(:anonymous_users)
+      expect(anon.id).to eq(Group::AUTO_GROUPS[:anonymous_users])
       expect(anon.visibility_level).to eq(Group.visibility_levels[:staff])
       expect(GroupUser.where(group_id: anon.id).count).to eq(0)
 
@@ -951,7 +951,7 @@ RSpec.describe Group do
       ).to eq(false)
     end
 
-    it "includes logged_in_users, anonymous and everyone groups when include_pseudogroups is true" do
+    it "includes logged_in_users, anonymous_users and everyone groups when include_pseudogroups is true" do
       expect(
         Group
           .visible_groups(admin, [], include_pseudogroups: true)
@@ -961,7 +961,7 @@ RSpec.describe Group do
       expect(
         Group
           .visible_groups(admin, [], include_pseudogroups: true)
-          .where(id: Group::AUTO_GROUPS[:anonymous])
+          .where(id: Group::AUTO_GROUPS[:anonymous_users])
           .exists?,
       ).to eq(true)
       expect(
@@ -972,12 +972,12 @@ RSpec.describe Group do
       ).to eq(true)
     end
 
-    it "does not include logged_in_users, anonymous and everyone groups by default" do
+    it "does not include logged_in_users, anonymous_users and everyone groups by default" do
       expect(
         Group.visible_groups(admin, []).where(id: Group::AUTO_GROUPS[:everyone]).exists?,
       ).to eq(false)
       expect(
-        Group.visible_groups(admin, []).where(id: Group::AUTO_GROUPS[:anonymous]).exists?,
+        Group.visible_groups(admin, []).where(id: Group::AUTO_GROUPS[:anonymous_users]).exists?,
       ).to eq(false)
       expect(
         Group.visible_groups(admin, []).where(id: Group::AUTO_GROUPS[:logged_in_users]).exists?,

@@ -4,6 +4,7 @@ module Reports::TopCountriesByBrowserPageviews
   extend ActiveSupport::Concern
 
   EXCLUDED_COUNTRY_CODES = %w[ZZ T1 A1 A2 O1 XX EU AP].freeze
+  MAX_ROWS = 200
 
   class_methods do
     def report_top_countries_by_browser_pageviews(report)
@@ -54,7 +55,7 @@ module Reports::TopCountriesByBrowserPageviews
             start_date: report.start_date,
             end_date_exclusive: end_date_exclusive,
             excluded_codes: EXCLUDED_COUNTRY_CODES,
-            limit: report.limit || 50,
+            limit: MAX_ROWS,
           )
           .map { |row| { country_code: row.country_code, count: row.count, percent: row.percent } }
     end

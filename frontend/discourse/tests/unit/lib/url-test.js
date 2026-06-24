@@ -90,7 +90,7 @@ module("Unit | Utility | url", function (hooks) {
   test("isInternalTopic", function (assert) {
     sinon.stub(DiscourseURL, "origin").get(() => "https://eviltrout.com");
     assert.true(DiscourseURL.isInternalTopic("https://eviltrout.com/t/123"));
-    assert.true(DiscourseURL.isInternalTopic("https://eviltrout.com/n/123"));
+    assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/n/123"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/admin"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/u/test"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/tamales"));
@@ -105,7 +105,7 @@ module("Unit | Utility | url", function (hooks) {
     assert.true(
       DiscourseURL.isInternalTopic("https://eviltrout.com/forum/t/123")
     );
-    assert.true(
+    assert.false(
       DiscourseURL.isInternalTopic("https://eviltrout.com/forum/n/123")
     );
     assert.false(

@@ -161,6 +161,10 @@ export default class SiteSetting extends EmberObject {
         const val = this.buffered?.get("value");
         return isSettingValueTrue(val);
       }
+      case SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple_on_disable: {
+        const val = this.buffered?.get("value");
+        return !isSettingValueTrue(val);
+      }
       default:
         return false;
     }

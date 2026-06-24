@@ -6,7 +6,6 @@
 
 tr_TR:
   site_settings:
-    enable_login_with_amazon: "Amazon kimlik doğrulaması ile Giriş'i etkinleştirin, \"login with amazon client id\" ve \"login with amazon client secret\" gerektirir."
     login_with_amazon_client_id: "Amazon istemci kimliği ile giriş yapın"
     login_with_amazon_client_secret: "Amazon istemci sırrı ile giriş yapın"
     login_with_amazon_scope: "Amazon OAuth2 kapsamları ile giriş yapın (boşlukla ayırarak)"

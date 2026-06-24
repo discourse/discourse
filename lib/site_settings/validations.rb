@@ -168,7 +168,7 @@ module SiteSettings::Validations
   end
 
   def validate_secure_uploads(new_val)
-    if new_val == "t" && (!SiteSetting.Upload.enable_s3_uploads || !SiteSetting.s3_use_acls)
+    if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
       validate_error :secure_uploads_requirements
     end
   end

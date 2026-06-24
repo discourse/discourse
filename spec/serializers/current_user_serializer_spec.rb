@@ -168,6 +168,19 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#can_set_topic_timer" do
+    let(:payload) { serializer.as_json }
+
+    it "reflects the topic_timers_allowed_groups setting" do
+      group = Fabricate(:group)
+      group.add(user)
+      user.reload
+      SiteSetting.topic_timers_allowed_groups = group.id.to_s
+
+      expect(payload[:can_set_topic_timer]).to eq(true)
+    end
+  end
+
   describe "#pending_posts_count" do
     subject(:pending_posts_count) { serializer.pending_posts_count }
 
@@ -454,7 +467,8 @@ RSpec.describe CurrentUserSerializer do
 
     it "is not included when the site is older than the max days setting" do
       SiteSetting.site_owner_onboarding_max_days = 5
-      Topic.update_all(created_at: 6.days.ago)
+      admin.created_at = 6.days.ago
+      admin.save!
       payload = admin_serializer.as_json
       expect(payload).not_to have_key(:show_site_owner_onboarding)
     end

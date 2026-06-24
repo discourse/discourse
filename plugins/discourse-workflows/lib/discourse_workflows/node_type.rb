@@ -184,8 +184,40 @@ module DiscourseWorkflows
       Item.wrap(data, paired_item:)
     end
 
-    def serialize_record(record, serializer, scope: Discourse.system_user.guardian, root: false)
-      MultiJson.load(serializer.new(record, scope:, root:).to_json).deep_symbolize_keys
+    def serialize_record(
+      record,
+      serializer,
+      scope: Discourse.system_user.guardian,
+      root: false,
+      **opts
+    )
+      MultiJson.load(serializer.new(record, scope:, root:, **opts).to_json).deep_symbolize_keys
+    end
+
+    def serialize_post(
+      post,
+      guardian: Discourse.system_user.guardian,
+      include_raw: true,
+      include_cooked: false
+    )
+      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_post(
+        post,
+        guardian: guardian,
+        include_raw: include_raw,
+        include_cooked: include_cooked,
+      )
+    end
+
+    def serialize_topic(topic, guardian: Discourse.system_user.guardian, custom_field_names: [])
+      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_topic(
+        topic,
+        guardian: guardian,
+        custom_field_names: custom_field_names,
+      )
+    end
+
+    def serialize_user(user, guardian: Discourse.system_user.guardian)
+      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_user(user, guardian: guardian)
     end
 
     def with_paired_item(item, paired_item)

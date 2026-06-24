@@ -291,14 +291,12 @@ class PostCreator
 
     post.word_count = post.raw.scan(/[[:word:]]+/).size
 
-    increase_posts_count =
-      !post.topic&.private_message? || post.post_type != Post.types[:small_action]
     post.post_number ||=
       Topic.next_post_number(
         post.topic_id,
         reply: post.reply_to_post_number.present?,
         post_type: post.post_type,
-        post: increase_posts_count,
+        post: true,
       )
 
     cooking_options = post.cooking_options || {}
@@ -521,11 +519,14 @@ class PostCreator
   def update_topic_stats
     attrs = { updated_at: Time.now }
 
-    if @post.post_type != Post.types[:whisper] && !@opts[:silent]
-      attrs[:last_posted_at] = @post.created_at
-      attrs[:last_post_user_id] = @post.user_id
-      attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
-      attrs[:excerpt] = @post.excerpt_for_topic if new_topic?
+    if !@post.whisper? && !@opts[:silent]
+      unless @post.small_action?
+        attrs[:last_posted_at] = @post.created_at
+        attrs[:last_post_user_id] = @post.user_id
+        attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
+        attrs[:excerpt] = @post.excerpt_for_topic if new_topic?
+      end
+
       attrs[:bumped_at] = @post.created_at unless @post.no_bump
     end
 
@@ -621,7 +622,7 @@ class PostCreator
 
     UserStatCountUpdater.increment!(@post) if !@post.hidden || @post.topic.visible
 
-    if !@topic.private_message? && @post.post_type != Post.types[:whisper]
+    if !@topic.private_message? && !@post.whisper? && !@post.small_action?
       @user.update(last_posted_at: @post.created_at)
     end
   end

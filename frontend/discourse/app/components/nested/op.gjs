@@ -87,6 +87,25 @@ export default class NestedOp extends Component {
     return this.currentUser && this.args.topic?.details?.can_create_post;
   }
 
+  get selected() {
+    return this.args.multiSelect && this.args.postSelected?.(this.args.post);
+  }
+
+  @action
+  togglePostSelection() {
+    return this.args.togglePostSelection?.(this.args.post);
+  }
+
+  @action
+  selectReplies() {
+    return this.args.selectReplies?.(this.args.post);
+  }
+
+  @action
+  selectBelow() {
+    return this.args.selectBelow?.(this.args.post);
+  }
+
   @action
   showLogin() {
     getOwner(this).lookup("route:application").send("showLogin");
@@ -98,7 +117,8 @@ export default class NestedOp extends Component {
         {{#let (lazyHash post=@post nestedReplyView=true) as |postOutletArgs|}}
           <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
             <article
-              class="nested-view__op-article boxed"
+              class="nested-view__op-article boxed
+                {{if this.selected 'selected'}}"
               data-post-id={{@post.id}}
               data-post-number={{@post.post_number}}
               {{@registerPost @post}}
@@ -117,7 +137,12 @@ export default class NestedOp extends Component {
                       <PostMetaData
                         @post={{@post}}
                         @editPost={{fn @editPost @post}}
+                        @multiSelect={{@multiSelect}}
+                        @selected={{this.selected}}
+                        @selectBelow={{this.selectBelow}}
+                        @selectReplies={{this.selectReplies}}
                         @showHistory={{fn @showHistory @post}}
+                        @togglePostSelection={{this.togglePostSelection}}
                       />
                     </PluginOutlet>
                     <div class="nested-view__op-content">
@@ -134,6 +159,7 @@ export default class NestedOp extends Component {
                       >
                         <PostMenu
                           @post={{@post}}
+                          @nestedReplyView={{true}}
                           @canCreatePost={{this.canCreatePost}}
                           @copyLink={{this.copyLink}}
                           @replyToPost={{@replyToPost}}

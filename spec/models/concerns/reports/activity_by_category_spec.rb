@@ -96,6 +96,22 @@ describe Reports::ActivityByCategory do
     expect(formatted).to end_with("%")
   end
 
+  it "computes share_change against the prior period" do
+    grew = Fabricate(:category)
+    shrank = Fabricate(:category)
+    # current period activity
+    3.times { Fabricate(:topic, category: grew, created_at: start_date + 1.day) }
+    Fabricate(:topic, category: shrank, created_at: start_date + 1.day)
+    # prior period activity (start_date - 1.day falls in [prior_start, start_date])
+    3.times { Fabricate(:topic, category: shrank, created_at: start_date - 1.day) }
+
+    report = build(filters: { category_ids: [grew.id, shrank.id] })
+
+    expect(row(report, grew.id)[:share_change]).to be > 0
+    expect(row(report, shrank.id)[:share_change]).to be < 0
+    expect(row(report, shrank.id)[:share_change_formatted]).not_to start_with("+")
+  end
+
   it "returns empty rows when an explicit filter resolves to no valid ids" do
     Fabricate(:category) # noise data — should NOT be returned via top-N fallback
     Fabricate(:topic, created_at: start_date + 1.day)

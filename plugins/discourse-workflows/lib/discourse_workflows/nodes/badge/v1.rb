@@ -56,7 +56,7 @@ module DiscourseWorkflows
               required: false,
               default: "system",
               ui: {
-                control: :user,
+                control: :actor,
               },
             },
           },
@@ -96,6 +96,7 @@ module DiscourseWorkflows
           user = exec_ctx.find_user(username: config["username"])
           badge = ::Badge.find(config["badge_id"])
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          raise Discourse::InvalidAccess if !actor.guardian.can_grant_badges?(user)
 
           case config["operation"]
           when "revoke"

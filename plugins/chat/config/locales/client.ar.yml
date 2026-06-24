@@ -349,6 +349,13 @@ ar:
         other: "لديك %{count} مناقشة غير مقروءة"
       scroll_to_bottom: "التمرير إلى الأسفل"
       scroll_to_new_messages: "عرض الرسائل الجديدة"
+      new_messages:
+        zero: "%{count} من الرسائل الجديدة"
+        one: "رسالة جديدة %{count}"
+        two: "رسالتان جديدتان %{count}"
+        few: "%{count} رسائل جديدة"
+        many: "%{count} رسالة جديدة"
+        other: "%{count} رسالة جديدة"
       sound:
         title: "صوت إشعارات دردشة سطح المكتب"
       sounds:
@@ -439,8 +446,6 @@ ar:
         input_placeholder: أضِف اسمًا
         slug_description: يتم استخدام مسار للقناة في عنوان URL بدلًا من اسم القناة
         name: اسم القناة
-        slug: مسار القناة (اختياري)
-        emoji: رمز تعبيري للقناة (اختياري)
         reset_emoji: إعادة تعيين الرمز التعبيري
       channel_edit_description_modal:
         title: تعديل الوصف
@@ -518,16 +523,14 @@ ar:
             many: 'سيتمكن المستخدمون في %{group} و%{count} مجموعة أخرى من الوصول إلى هذه القناة وفقًا <a href="%{settingLink}" target="_blank">لإعدادات الأمان</a>'
             other: 'سيتمكن المستخدمون في %{group} و%{count} مجموعة أخرى من الوصول إلى هذه القناة وفقًا <a href="%{settingLink}" target="_blank">لإعدادات الأمان</a>'
         create: "إنشاء قناة"
-        description: "الوصف (اختياري)"
+        description: "الوصف"
         name: "اسم القناة"
-        slug: "مسار القناة (اختياري)"
         title: "قناة جديدة"
         type: "النوع"
         types:
           category: "الفئة"
           topic: "الموضوع"
         emoji:
-          label: "رمز تعبيري للقناة (اختياري)"
           reset: "إعادة تعيين الرمز التعبيري"
       reviewable:
         type: "رسالة دردشة"
@@ -899,3 +902,14 @@ ar:
       panels:
         chat:
           label: "الدردشة"
+    discourse_workflows:
+      nodes:
+        "trigger:chat_message_created": "إنشاء رسالة دردشة"
+      chat_message_created:
+        channel_id: "القناة"
+      send_chat_message:
+        channel_id: "القناة"
+        message: "رسالة"
+      chat_approval:
+        message: "رسالة"
+        channel_id: "القناة"

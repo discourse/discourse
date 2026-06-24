@@ -32,6 +32,32 @@ RSpec.describe Chat::Api::ChannelThreadMessagesController do
           ]
         expect(thread_json).not_to have_key("original_message")
       end
+
+      context "as anonymous user" do
+        before do
+          sign_out
+          SiteSetting.chat_allowed_groups =
+            "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        end
+
+        it "returns messages for a public category channel thread" do
+          get "/chat/api/channels/#{thread.channel.id}/threads/#{thread.id}/messages"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["messages"].map { |message| message["id"] }).to eq(
+            [thread.original_message.id, message_1.id],
+          )
+        end
+
+        it "returns 404 when the thread original message is deleted" do
+          thread.original_message.trash!
+
+          get "/chat/api/channels/#{thread.channel.id}/threads/#{thread.id}/messages"
+
+          expect(response.status).to eq(404)
+          expect(response.parsed_body["error_type"]).to eq("not_found")
+        end
+      end
     end
 
     context "when thread doesn’t exist" do

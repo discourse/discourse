@@ -1271,7 +1271,7 @@ module Discourse
       end,
       Thread.new { LetterAvatar.image_magick_version },
       Thread.new { SvgSprite.core_svgs },
-      Thread.new { EmberCli.script_chunks(exception: false) },
+      Thread.new { EmberAssets.script_chunks(exception: false) },
       Thread.new do
         if GlobalSetting.mini_racer_single_threaded
           PrettyText.cook("warm up **pretty text**")

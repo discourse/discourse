@@ -30,6 +30,9 @@ cs:
       save: "Uložit změny"
       undo: "Zahodit změny"
       delete: "Smazat"
+      chart:
+        form:
+          bar: "Sloupcový"
       result_count:
         one: "%{count} výsledek."
         few: "%{count} výsledky."
@@ -47,3 +50,10 @@ cs:
           invalid_time: "%{time} je neplatný čas"
     group:
       reports: "Sestav"
+    discourse_workflows:
+      sql:
+        query_id: "Dotaz"
+        param_value: "Hodnota"
+        output:
+          results: "Výsledky"
+          no_results: "Žádné výsledky"

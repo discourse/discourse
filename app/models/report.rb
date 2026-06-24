@@ -36,7 +36,13 @@ class Report
     page_view_logged_in_reqs
   ]
 
-  ADMIN_ONLY_REPORTS = %w[admin_logins top_uploads topic_view_stats]
+  ADMIN_ONLY_REPORTS = %w[
+    admin_logins
+    top_uploads
+    topic_view_stats
+    top_referrers_by_browser_pageviews
+    top_countries_by_browser_pageviews
+  ]
   IP_ADDRESS_REPORTS = %w[suspicious_logins]
   BROWSER_PAGEVIEW_REPORTS = %w[
     top_countries_by_browser_pageviews
@@ -45,7 +51,9 @@ class Report
 
   def self.hidden?(type, guardian:)
     return true if !guardian.is_admin? && ADMIN_ONLY_REPORTS.include?(type)
-    return true if BROWSER_PAGEVIEW_REPORTS.include?(type)
+    if BROWSER_PAGEVIEW_REPORTS.include?(type) && !SiteSetting.persist_browser_pageview_events
+      return true
+    end
 
     hidden_reports =
       SiteSetting.use_legacy_pageviews ? HIDDEN_PAGEVIEW_REPORTS : HIDDEN_LEGACY_PAGEVIEW_REPORTS
@@ -246,8 +254,9 @@ class Report
 
   def self.wrap_slow_query(timeout = 20_000)
     ActiveRecord::Base.connection.transaction do
-      # Allows only read only transactions
-      DB.exec "SET TRANSACTION READ ONLY"
+      # Allows only read only transactions. Skipped in tests, where threads
+      # share one connection and read-only would break concurrent writes.
+      DB.exec "SET TRANSACTION READ ONLY" if !Rails.env.test?
       # Set a statement timeout so we can't tie up the server
       DB.exec "SET LOCAL statement_timeout = #{timeout}"
       yield
@@ -311,13 +320,21 @@ class Report
     end
   end
 
-  def Report.add_report(name, &block)
+  def Report.add_report(name, exclude_from_dashboard: false, &block)
     singleton_class.instance_eval { define_method("report_#{name}", &block) }
+    dashboard_excluded_report_types << name.to_s if exclude_from_dashboard
   end
 
   # Only used for testing.
   def Report.remove_report(name)
     singleton_class.instance_eval { remove_method("report_#{name}") }
+    dashboard_excluded_report_types.delete(name.to_s)
+  end
+
+  # Report types a plugin has marked as not mountable on the customisable
+  # admin dashboard. They remain available on the regular reports page.
+  def Report.dashboard_excluded_report_types
+    @dashboard_excluded_report_types ||= Set.new
   end
 
   def self._get(type, opts = nil)
@@ -458,8 +475,19 @@ class Report
   end
 
   def self.report_about(report, subject_class, report_method = :count_per_day)
-    basic_report_about report, subject_class, report_method, report.start_date, report.end_date
-    add_counts report, subject_class
+    data_start = report.facets.include?(:prev_period) ? report.prev_start_date : report.start_date
+    counts = subject_class.public_send(report_method, data_start, report.end_date)
+
+    prev_period_count = nil
+
+    if report.facets.include?(:prev_period)
+      counts, prev_counts = split_date_counts(counts, report.start_date)
+      prev_period_count = prev_counts.sum { |_date, count| count }
+    end
+
+    report.data = counts.map { |date, count| { x: date, y: count } }
+
+    add_counts report, subject_class, prev_period_count: prev_period_count
   end
 
   def self.basic_report_about(report, subject_class, report_method, *args)
@@ -470,6 +498,11 @@ class Report
       .each { |date, count| report.data << { x: date, y: count } }
   end
 
+  def self.split_date_counts(counts, current_start)
+    current_start_date = current_start.to_date
+    counts.partition { |date, _count| date.to_date >= current_start_date }
+  end
+
   def self.add_prev_data(report, subject_class, report_method, *args)
     if report.modes.include?(Report::MODES[:chart]) && report.facets.include?(:prev_period)
       prev_data = subject_class.public_send(report_method, *args)
@@ -477,16 +510,18 @@ class Report
     end
   end
 
-  def self.add_counts(report, subject_class, query_column = "created_at")
+  def self.add_counts(report, subject_class, query_column = "created_at", prev_period_count: nil)
     if report.facets.include?(:prev_period)
-      prev_data =
-        subject_class.where(
-          "#{query_column} >= ? and #{query_column} < ?",
-          report.prev_start_date,
-          report.prev_end_date,
-        )
-
-      report.prev_period = prev_data.count
+      report.prev_period =
+        if prev_period_count
+          prev_period_count
+        else
+          subject_class.where(
+            "#{query_column} >= ? and #{query_column} < ?",
+            report.prev_start_date,
+            report.prev_end_date,
+          ).count
+        end
     end
 
     report.total = subject_class.count if report.facets.include?(:total)

@@ -1,0 +1,22 @@
+.uc-modernize-foundation-theme {
+  &.archetype-private_message .topic-map {
+    section {
+      border-radius: var(--d-border-radius);
+      padding: var(--space-4) var(--space-4) 0;
+    }
+
+    .participants {
+      margin-bottom: 0;
+      padding-bottom: var(--space-4);
+
+      .user {
+        border: var(--d-button-default-border);
+        background: var(--d-button-default-bg-color);
+
+        .username:last-child {
+          margin-right: var(--space-1);
+        }
+      }
+    }
+  }
+}

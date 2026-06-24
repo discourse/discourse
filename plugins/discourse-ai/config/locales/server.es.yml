@@ -36,10 +36,6 @@ es:
       llm_triage:
         title: Triaje de publicaciones mediante IA
         description: "Triaje de publicaciones utilizando un gran modelo lingüístico"
-        flagged_post: |
-          <div>Respuesta del modelo:</div>
-          <p>%{llm_response}</p>
-          <b>Activada por la regla <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a>.</b>
         notify_author_pm:
           subject: "Tu publicación se ha eliminado temporalmente para revisarse"
           body: |
@@ -808,6 +804,10 @@ es:
           conflict: "Otra persona ha actualizado este elemento de la cola de revisión. Inténtalo de nuevo."
           action_failed: "Error al realizar la acción"
         success: "Se ha realizado correctamente «%{action}» en el elemento de la cola de revisión %{reviewable_id}."
+      add_reviewable_note:
+        errors:
+          not_allowed: "No tienes permiso para acceder a la cola de revisión"
+          not_found: "No se ha encontrado el elemento en la cola de revisión"
     reviewables:
       ai_tool_action:
         title: "Acción de herramienta de IA"

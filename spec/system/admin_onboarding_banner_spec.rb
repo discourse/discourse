@@ -2,8 +2,6 @@
 
 describe "Admin Onboarding Banner" do
   fab!(:admin)
-  # ensures there is at least one topic, otherwise the topic recent date check doesn't pass
-  fab!(:topic)
 
   let(:banner) { PageObjects::Components::AdminOnboardingBanner.new }
   let(:predefined_topics_modal) { PageObjects::Modals::AdminOnboardingPredefinedTopics.new }

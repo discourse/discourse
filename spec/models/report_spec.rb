@@ -1,6 +1,20 @@
 # frozen_string_literal: true
 
 RSpec.describe Report do
+  describe ".add_report" do
+    after { Report.remove_report("my_custom_report") }
+
+    it "records report types flagged as excluded from the dashboard" do
+      Report.add_report("my_custom_report", exclude_from_dashboard: true) { |report| }
+      expect(Report.dashboard_excluded_report_types).to include("my_custom_report")
+    end
+
+    it "does not record report types by default" do
+      Report.add_report("my_custom_report") { |report| }
+      expect(Report.dashboard_excluded_report_types).not_to include("my_custom_report")
+    end
+  end
+
   let(:user) { Fabricate(:user) }
   let(:category_1) { Fabricate(:category, user: user) }
   let(:category_2) { Fabricate(:category, parent_category: category_1, user: user) } # id: 2
@@ -576,6 +590,25 @@ RSpec.describe Report do
     end
   end
 
+  describe "signups report" do
+    it "returns the current data and previous period count" do
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 1, 12))
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 2, 12))
+      Fabricate(:user, created_at: Time.zone.local(2026, 3, 31, 12))
+
+      report =
+        Report.find(
+          "signups",
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          facets: [:prev_period],
+        )
+
+      expect(report.data.sum { |point| point[:y] }).to eq(2)
+      expect(report.prev_period).to eq(1)
+    end
+  end
+
   describe "new contributors report" do
     let(:report) { Report.find("new_contributors") }
 
@@ -599,6 +632,35 @@ RSpec.describe Report do
         expect(report.data[0][:y]).to eq 2
         expect(report.data[1][:y]).to eq 1
       end
+    end
+
+    it "returns the current data and previous period count" do
+      current_contributor = Fabricate(:user)
+      current_contributor.user_stat.update!(
+        new_since: Time.zone.local(2026, 4, 1, 12),
+        first_post_created_at: Time.zone.local(2026, 4, 1, 12),
+      )
+      another_current_contributor = Fabricate(:user)
+      another_current_contributor.user_stat.update!(
+        new_since: Time.zone.local(2026, 4, 2, 12),
+        first_post_created_at: Time.zone.local(2026, 4, 2, 12),
+      )
+      previous_contributor = Fabricate(:user)
+      previous_contributor.user_stat.update!(
+        new_since: Time.zone.local(2026, 3, 31, 12),
+        first_post_created_at: Time.zone.local(2026, 3, 31, 12),
+      )
+
+      report =
+        Report.find(
+          "new_contributors",
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          facets: [:prev_period],
+        )
+
+      expect(report.data.sum { |point| point[:y] }).to eq(2)
+      expect(report.prev_period).to eq(1)
     end
   end
 
@@ -692,6 +754,25 @@ RSpec.describe Report do
         expect(report.prev30Days).to eq(75)
       end
     end
+
+    it "returns the current data and previous period average" do
+      current_visitor = Fabricate(:user)
+      previous_visitor = Fabricate(:user)
+
+      current_visitor.user_visits.create!(visited_at: Time.zone.local(2026, 4, 11).to_date)
+      previous_visitor.user_visits.create!(visited_at: Time.zone.local(2026, 4, 9).to_date)
+
+      report =
+        Report.find(
+          "dau_by_mau",
+          start_date: Time.zone.local(2026, 4, 10).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 11).end_of_day,
+          facets: [:prev_period],
+        )
+
+      expect(report.data.map { |point| point[:x] }).to eq([Date.new(2026, 4, 11)])
+      expect(report.prev_period).to eq(100)
+    end
   end
 
   describe "Daily engaged users" do
@@ -720,25 +801,24 @@ RSpec.describe Report do
       end
     end
 
-    it "averages the previous period over the days that had engagement" do
-      freeze_time(Time.zone.local(2026, 4, 28, 12, 0, 0))
+    it "returns the current data and previous period average" do
+      current_user = Fabricate(:user)
+      previous_users = [Fabricate(:user), Fabricate(:user)]
 
-      two_on_first_day = [Fabricate(:user), Fabricate(:user)]
-      one_on_second_day = Fabricate(:user)
-      two_on_first_day.each do |engaged_user|
+      Fabricate(
+        :user_action,
+        user: current_user,
+        action_type: UserAction::LIKE,
+        created_at: Time.zone.local(2026, 4, 23, 12),
+      )
+      previous_users.each do |previous_user|
         Fabricate(
           :user_action,
-          user: engaged_user,
+          user: previous_user,
           action_type: UserAction::LIKE,
           created_at: Time.zone.local(2026, 4, 16, 12),
         )
       end
-      Fabricate(
-        :user_action,
-        user: one_on_second_day,
-        action_type: UserAction::LIKE,
-        created_at: Time.zone.local(2026, 4, 17, 12),
-      )
 
       report =
         Report.find(
@@ -748,7 +828,36 @@ RSpec.describe Report do
           facets: [:prev_period],
         )
 
-      expect(report.prev_period).to eq(1.5)
+      expect(report.data).to eq([{ x: Date.new(2026, 4, 23), y: 1 }])
+      expect(report.prev_period).to eq(2.0)
+    end
+  end
+
+  describe "signups" do
+    it "uses previous daily counts for the previous period" do
+      freeze_time(Time.zone.local(2026, 4, 28, 12, 0, 0))
+      Report.clear_cache
+
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 17, 12, 0, 0))
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 23, 12, 0, 0))
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 23, 13, 0, 0))
+
+      report =
+        Report.find(
+          "signups",
+          start_date: Time.zone.local(2026, 4, 22).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 28).end_of_day,
+          facets: %i[prev_period total prev30Days],
+        )
+
+      data = report.data.map { |data_point| [data_point[:x].to_date, data_point[:y]] }
+
+      aggregate_failures do
+        expect(data).to contain_exactly([Date.new(2026, 4, 23), 2])
+        expect(report.prev_period).to eq(1)
+        expect(report.total).to eq(3)
+        expect(report.prev30Days).to eq(1)
+      end
     end
   end
 
@@ -2220,9 +2329,29 @@ RSpec.describe Report do
       end
     end
 
-    it "always hides browser pageview reports" do
-      Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
-        expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(true)
+    context "with browser pageview reports" do
+      it "hides them from admins when persist_browser_pageview_events is disabled" do
+        SiteSetting.persist_browser_pageview_events = false
+
+        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(true)
+        end
+      end
+
+      it "exposes them to admins when persist_browser_pageview_events is enabled" do
+        SiteSetting.persist_browser_pageview_events = true
+
+        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(false)
+        end
+      end
+
+      it "always hides them from moderators, even when persist_browser_pageview_events is enabled" do
+        SiteSetting.persist_browser_pageview_events = true
+
+        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+          expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(true)
+        end
       end
     end
   end

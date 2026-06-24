@@ -141,6 +141,34 @@ describe Jobs::DiscourseAutomation::Tracker do
       end
     end
 
+    context "when send_pm raises an unexpected error" do
+      before { pending_pm.update!(execute_at: 2.hours.ago) }
+
+      it "destroys the pending pm so it isn't retried forever" do
+        DiscourseAutomation::Scriptable::Utils.stubs(:send_pm).raises(
+          StandardError.new("unexpected error"),
+        )
+
+        expect { Jobs::DiscourseAutomation::Tracker.new.execute }.to change {
+          automation.pending_pms.count
+        }.by(-1)
+      end
+    end
+
+    context "when send_pm raises RecordNotSaved" do
+      before { pending_pm.update!(execute_at: 2.hours.ago) }
+
+      it "destroys the pending pm" do
+        DiscourseAutomation::Scriptable::Utils.stubs(:send_pm).raises(
+          ActiveRecord::RecordNotSaved.new("not saved"),
+        )
+
+        expect { Jobs::DiscourseAutomation::Tracker.new.execute }.to change {
+          automation.pending_pms.count
+        }.by(-1)
+      end
+    end
+
     it "doesn't send multiple messages if the job is invoked multiple times concurrently" do
       pending_pm.update!(execute_at: 1.hour.from_now)
       expect do

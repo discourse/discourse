@@ -13,9 +13,10 @@ module Chat
     MATCH_QUALITY_PARTIAL = 3
 
     def self.structured(guardian, include_threads: false)
-      memberships = Chat::ChannelMembershipManager.all_for_user(guardian.user)
+      memberships = guardian.user ? Chat::ChannelMembershipManager.all_for_user(guardian.user) : []
       public_channels = secured_public_channels(guardian, status: :open, following: true)
-      direct_message_channels = secured_direct_message_channels(guardian.user.id, guardian)
+      direct_message_channels =
+        guardian.user ? secured_direct_message_channels(guardian.user.id, guardian) : []
       {
         public_channels:,
         direct_message_channels:,
@@ -43,9 +44,15 @@ module Chat
     end
 
     def self.generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: false)
+      category_scope =
+        if guardian.anonymous? && Chat.anonymous_public_channel_access_allowed?
+          Category.secured(guardian)
+        else
+          Category.post_create_allowed(guardian)
+        end
+
       category_channel_sql =
-        Category
-          .post_create_allowed(guardian)
+        category_scope
           .joins(
             "INNER JOIN chat_channels ON chat_channels.chatable_id = categories.id AND chat_channels.chatable_type = 'Category'",
           )
@@ -54,7 +61,7 @@ module Chat
 
       dm_channel_sql = ""
 
-      if !exclude_dm_channels
+      if !exclude_dm_channels && guardian.user
         dm_channel_sql = <<~SQL
       UNION
 
@@ -191,7 +198,7 @@ module Chat
         channels = channels.where("chat_channels.slug IN (:slugs)", slugs: options[:slugs])
       end
 
-      if options.key?(:following)
+      if options.key?(:following) && guardian.user
         if options[:following]
           channels =
             channels.joins(:user_chat_channel_memberships).where(
@@ -340,6 +347,8 @@ module Chat
     end
 
     def self.tracking_state(channel_ids, guardian, include_threads: false)
+      return Chat::TrackingStateReport.new if guardian.anonymous?
+
       Chat::TrackingState.call(
         guardian:,
         params: {

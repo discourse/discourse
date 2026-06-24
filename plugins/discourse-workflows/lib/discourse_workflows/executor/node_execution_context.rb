@@ -11,6 +11,46 @@ module DiscourseWorkflows
       JobResult = Data.define(:ok, :result, :error)
       WaitRequest = Data.define(:waiting_until)
 
+      def self.serialize_post(
+        post,
+        guardian: Discourse.system_user.guardian,
+        include_raw: true,
+        include_cooked: false
+      )
+        MultiJson.load(
+          DiscourseWorkflows::PostSerializer.new(
+            post,
+            scope: guardian,
+            root: false,
+            include_raw: include_raw,
+            include_cooked: include_cooked,
+          ).to_json,
+        ).deep_symbolize_keys
+      end
+
+      def self.serialize_topic(
+        topic,
+        guardian: Discourse.system_user.guardian,
+        custom_field_names: []
+      )
+        MultiJson.load(
+          DiscourseWorkflows::TopicSerializer.new(
+            topic,
+            scope: guardian,
+            root: false,
+            custom_field_names: custom_field_names,
+          ).to_json,
+        ).deep_symbolize_keys
+      end
+
+      def self.serialize_user(user, guardian: Discourse.system_user.guardian)
+        return if user.blank?
+
+        MultiJson.load(
+          DiscourseWorkflows::UserSerializer.new(user, scope: guardian, root: false).to_json,
+        ).deep_symbolize_keys
+      end
+
       class RuntimeState
         attr_reader :condition_step_details, :execution_hints, :log, :metadata, :wait_request
 
@@ -228,11 +268,22 @@ module DiscourseWorkflows
 
       def actor_from_parameter(path, item_index = 0, default: "system")
         username = get_node_parameter(path, item_index, default: default)
-        actor_from(username: username.presence || default, field: path.to_s, item_index: item_index)
+
+        if username.blank?
+          raise DiscourseWorkflows::NodeError,
+                I18n.t("discourse_workflows.errors.actor.blank", field: path.to_s)
+        end
+
+        actor_from(username: username, field: path.to_s, item_index: item_index)
       end
 
       def actor_from(username: nil, id: nil, field: nil, item_index: nil)
-        actor = find_user(username: username.presence, id: id)
+        actor =
+          if username == DiscourseWorkflows::AnonymousActor::USERNAME
+            DiscourseWorkflows::AnonymousActor.new
+          else
+            find_user(username: username.presence, id: id)
+          end
         ensure_actor_allowed!(actor, field: field, item_index: item_index)
         actor
       end
@@ -255,6 +306,65 @@ module DiscourseWorkflows
 
       def http_request(method:, url:, headers: {}, body: nil, options: {}, item_index: 0)
         HttpClient.new(self, item_index).request(method:, url:, headers:, body:, options:)
+      end
+
+      def create_post(user:, raw:, topic_id:, reply_to_post_number: nil, whisper: false)
+        topic = ::Topic.find(topic_id)
+        guardian = user.guardian
+        guardian.ensure_can_see!(topic)
+        raise Discourse::InvalidAccess if !guardian.can_create_post?(topic)
+
+        if topic.closed? || topic.archived?
+          raise DiscourseWorkflows::NodeError,
+                I18n.t("discourse_workflows.errors.post.topic_closed_or_archived")
+        end
+
+        post_args = {
+          topic_id: topic.id,
+          raw: raw,
+          reply_to_post_number: reply_to_post_number.presence,
+          skip_workflows: true,
+        }.compact
+
+        if ActiveModel::Type::Boolean.new.cast(whisper)
+          unless guardian.can_create_whisper?
+            raise Discourse::InvalidAccess.new(
+                    "invalid_whisper_access",
+                    nil,
+                    custom_message: "invalid_whisper_access",
+                  )
+          end
+
+          post_args[:post_type] = ::Post.types[:whisper]
+        end
+
+        PostCreator.new(user, post_args).create!
+      end
+
+      def edit_post(user:, post_id:, raw:)
+        post = ::Post.find(post_id)
+        raise Discourse::InvalidAccess if !user.guardian.can_edit_post?(post)
+
+        if !PostRevisor.new(post).revise!(user, { raw: raw }, skip_workflows: true)
+          errors = post.errors.full_messages.presence
+          raise DiscourseWorkflows::NodeError,
+                errors&.join(", ") || I18n.t("discourse_workflows.errors.post.edit_failed")
+        end
+
+        post.reload
+      end
+
+      def serialize_post(
+        post,
+        guardian: Discourse.system_user.guardian,
+        include_raw: true,
+        include_cooked: false
+      )
+        self.class.serialize_post(post, guardian:, include_raw:, include_cooked:)
+      end
+
+      def serialize_topic(topic, guardian: Discourse.system_user.guardian, custom_field_names: [])
+        self.class.serialize_topic(topic, guardian:, custom_field_names:)
       end
 
       def put_execution_to_wait(waiting_until = nil)

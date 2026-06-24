@@ -31,6 +31,13 @@
     gap: var(--space-3);
     padding: var(--space-3) var(--space-6);
     background: var(--secondary);
+    box-shadow:
+      inset 0 2px 0 0 transparent,
+      inset 0 -2px 0 0 transparent;
+
+    .manage-reports__list.--dragging & {
+      transition: box-shadow 0.1s ease;
+    }
 
     &:not(:last-child) {
       border-bottom: 1px solid var(--primary-low);
@@ -40,8 +47,26 @@
       cursor: grab;
     }
 
+    &.dragging {
+      opacity: 0.5;
+    }
+
+    &.drag-below,
+    &:not(.dragging):has(+ .manage-reports__row.drag-above) {
+      box-shadow:
+        inset 0 2px 0 0 transparent,
+        inset 0 -2px 0 0 var(--tertiary);
+    }
+
+    &:first-child.drag-above,
+    .manage-reports__row.dragging + &.drag-above {
+      box-shadow:
+        inset 0 2px 0 0 var(--tertiary),
+        inset 0 -2px 0 0 transparent;
+    }
+
     @include viewport.until(sm) {
-      padding-inline: var(--space-3) var(--space-6);
+      padding: var(--space-2) var(--space-3) var(--space-2) var(--space-6);
     }
   }
 
@@ -50,7 +75,7 @@
     color: var(--primary-low-mid);
     visibility: hidden;
 
-    .manage-reports__row.--enabled & {
+    .manage-reports__list.--reorderable .manage-reports__row.--enabled & {
       visibility: visible;
     }
   }
@@ -61,7 +86,7 @@
     gap: var(--space-2);
     visibility: hidden;
 
-    .manage-reports__row.--enabled & {
+    .manage-reports__list.--reorderable .manage-reports__row.--enabled & {
       visibility: visible;
     }
   }
@@ -89,20 +114,11 @@
     min-width: 0;
   }
 
-  &__label {
-    color: var(--primary-high);
-    background: var(--primary-low);
-    border-radius: 4px;
-    font-size: var(--font-down-3);
-    white-space: nowrap;
-    padding: var(--space-half) var(--space-2);
-    line-height: normal;
-  }
-
   &__description {
     margin: 0;
     color: var(--primary-medium);
     font-size: var(--font-down-1);
+    text-transform: capitalize;
   }
 
   &__arrow {
@@ -111,5 +127,24 @@
 
   .d-modal__footer {
     justify-content: flex-end;
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--space-2);
+    }
+  }
+
+  &__footer-note {
+    margin: 0;
+    margin-right: auto;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  .de-cta__description {
+    @include viewport.until(sm) {
+      display: none;
+    }
   }
 }

@@ -47,11 +47,12 @@ module DiscourseWorkflows
         keyword_init: true,
       )
 
-    attr_reader :nodes, :connections, :workflow_name
+    attr_reader :nodes, :connections, :pin_data, :workflow_name
 
     def initialize(workflow_data)
       data = workflow_data.deep_stringify_keys
       @workflow_name = data["name"]
+      @pin_data = data["pinData"] || {}
       @nodes =
         data
           .fetch("nodes") { [] }
@@ -183,6 +184,7 @@ module DiscourseWorkflows
             workflow_nodes,
             connections,
           ),
+        "pinData" => pin_data,
       }.compact
     end
 
@@ -190,7 +192,12 @@ module DiscourseWorkflows
       nodes = published ? workflow.published_nodes : workflow.nodes
       connections = published ? workflow.published_connections : workflow.connections
       workflow_name = published ? workflow.active_version&.name : workflow.name
-      new("name" => workflow_name || workflow.name, "nodes" => nodes, "connections" => connections)
+      new(
+        "name" => workflow_name || workflow.name,
+        "nodes" => nodes,
+        "connections" => connections,
+        "pinData" => workflow.pin_data || {},
+      )
     end
 
     def self.from_version(workflow, version)

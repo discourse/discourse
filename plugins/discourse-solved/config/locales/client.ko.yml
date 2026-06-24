@@ -37,6 +37,8 @@ ko:
       move_post_cancel: "취소"
       confirm_solved_removal_confirm: "확인"
       confirm_solved_removal_cancel: "취소"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
     topic_statuses:
       solved:
         help: "이 토픽에는 해결책이 있습니다"

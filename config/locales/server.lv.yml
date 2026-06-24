@@ -108,7 +108,6 @@ lv:
       admins: "administratori"
       moderators: "moderatori"
       staff: "personāls"
-      anonymous: "anonīmi"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -241,6 +240,9 @@ lv:
       confirm_title: Turpināt %{site_name}
       logging_in_as: Piesakoties kā %{username}
       confirm_button: Pabeigt pieteikšanos
+    device:
+      code: "Kods"
+      continue: "Turpināt"
   reports:
     default:
       labels:
@@ -465,6 +467,9 @@ lv:
       category: "Sadaļas"
       user: "Lietotāji"
     results_page: "Meklēšanas rezultāti vaicājumam “%{term}”"
+  posts_filter:
+    description:
+      order_latest_topic: "Jaunākās tēmas"
   login:
     security_key_description: "Kad esat sagatavojis savu fiziskās drošības atslēgu, nospiediet tālāk esošo pogu Autentificēt ar drošības atslēgu."
     security_key_alternative: "Izmēģiniet citu veidu"
@@ -544,6 +549,8 @@ lv:
               private:
                 label: "Privāts"
   onebox:
+    google_meet:
+      meeting_code: "Kods:"
     github:
       closed: "slēgts"
       status_date:

@@ -2,16 +2,19 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import moment from "moment";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
+import { recurrenceContext, recurrenceRef } from "../../lib/event-recurrence";
 import ChatChannel from "./chat-channel";
 import Creator from "./creator";
 import Dates from "./dates";
@@ -127,8 +130,10 @@ export default class DiscoursePostEvent extends Component {
     if (!this.event?.recurrence) {
       return null;
     }
+
     return i18n(
-      `discourse_post_event.builder_modal.recurrence.${this.event.recurrence}`
+      `discourse_post_event.builder_modal.recurrence.${this.event.recurrence}`,
+      recurrenceContext(recurrenceRef(this.event))
     );
   }
 
@@ -192,6 +197,9 @@ export default class DiscoursePostEvent extends Component {
               <Image
                 @imageUpload={{event.imageUpload}}
                 @alt={{this.eventName}}
+                @linkToPost={{@linkToPost}}
+                @postUrl={{event.post.url}}
+                @post={{@post}}
               />
               <header class="event-header" {{this.setupMessageBus}}>
                 <div class="event-date">
@@ -214,7 +222,7 @@ export default class DiscoursePostEvent extends Component {
                   <span class="name">
                     {{#if @linkToPost}}
                       <a
-                        href={{event.post.url}}
+                        href={{getURL event.post.url}}
                         rel="noopener noreferrer"
                       >{{dReplaceEmoji this.eventName}}</a>
                     {{else}}
@@ -282,7 +290,12 @@ export default class DiscoursePostEvent extends Component {
                   Status=(component Status event=event)
                   ChatChannel=(component ChatChannel event=event)
                   Image=(component
-                    Image imageUpload=event.imageUpload alt=this.eventName
+                    Image
+                    imageUpload=event.imageUpload
+                    alt=this.eventName
+                    linkToPost=@linkToPost
+                    postUrl=event.post.url
+                    post=@post
                   )
                 }}
               >

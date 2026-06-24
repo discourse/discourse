@@ -172,7 +172,7 @@ RSpec.describe ThemeJavascriptCompiler do
   end
 
   describe "terser compilation" do
-    let(:compiler) { ThemeJavascriptCompiler.new(1, "marks", {}, minify: true) }
+    let(:compiler) { ThemeJavascriptCompiler.new(1, "marks", minify: true) }
 
     it "applies terser and provides sourcemaps" do
       sources = {

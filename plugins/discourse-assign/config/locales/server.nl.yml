@@ -64,6 +64,7 @@ nl:
   assign_mailer:
     title: "Toewijzingsmailer"
     subject_template: "[%{email_prefix}] %{assignee_name} heeft je toegewezen aan '%{topic_title}'!"
+    subject_template_improved: "%{email_prefix}: %{assignee_name} heeft je toegewezen aan '%{topic_title}'!"
     text_body_template: |
       Hallo, %{assignee_name} heeft je **toegewezen** aan een discussie
       > **%{topic_title}**

@@ -13,7 +13,8 @@ module Reports::DauByMau
       report.average = true
       report.percent = true
 
-      data_points = UserVisit.count_by_active_users(report.start_date, report.end_date)
+      data_start = report.facets.include?(:prev_period) ? report.prev_start_date : report.start_date
+      data_points = UserVisit.count_by_active_users(data_start, report.end_date)
 
       report.data = []
 
@@ -27,24 +28,28 @@ module Reports::DauByMau
         end
 
       dau_avg =
-        Proc.new do |start_date, end_date|
-          data_points = UserVisit.count_by_active_users(start_date, end_date)
-          if !data_points.empty?
-            sum = data_points.sum { |data_point| compute_dau_by_mau.call(data_point) }
-            (sum.to_f / data_points.count.to_f).ceil(2)
+        Proc.new do |points|
+          if !points.empty?
+            sum = points.sum { |data_point| compute_dau_by_mau.call(data_point) }
+            (sum.to_f / points.count.to_f).ceil(2)
           end
         end
+
+      if report.facets.include?(:prev_period)
+        current_start = report.start_date.to_date
+        data_points, prev_data_points =
+          data_points.partition { |data_point| data_point["date"].to_date >= current_start }
+        report.prev_period = dau_avg.call(prev_data_points)
+      end
 
       data_points.each do |data_point|
         report.data << { x: data_point["date"], y: compute_dau_by_mau.call(data_point) }
       end
 
-      if report.facets.include?(:prev_period)
-        report.prev_period = dau_avg.call(report.prev_start_date, report.prev_end_date)
-      end
-
       if report.facets.include?(:prev30Days)
-        report.prev30Days = dau_avg.call(report.start_date - 30.days, report.start_date)
+        prev30_days_data =
+          UserVisit.count_by_active_users(report.start_date - 30.days, report.start_date)
+        report.prev30Days = dau_avg.call(prev30_days_data)
       end
     end
   end

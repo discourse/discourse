@@ -9,6 +9,7 @@ nl:
     user_notes:
       title: "Gebruikersnotities"
       attach: "Gebruikersnotitie toevoegen"
+      attach_note_description: "een notitie over deze gebruiker toevoegen die alleen medewerkers kunnen zien"
       remove: "Gebruikersnotitie verwijderen"
       show: "Gebruikersnotities (%{count})"
       delete_confirm: "Weet je zeker dat je die gebruikersnotitie wilt verwijderen?"

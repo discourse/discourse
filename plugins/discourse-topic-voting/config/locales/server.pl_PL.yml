@@ -5,7 +5,13 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  category_types:
+    ideas:
+      name: "Pomysły"
+      title: "pomysły"
+      description: "Miejsce, w którym członkowie mogą zgłaszać pomysły i głosować na te, które najbardziej im odpowiadają."
   site_settings:
+    enable_ideas_category_type_setup: "Włącz opcję typu kategorii Pomysły podczas konfiguracji tworzenia kategorii."
     topic_voting_enabled: 'Pozwolić użytkownikom głosować na tematy?'
     topic_voting_enable_vote_limits: 'Ogranicz liczbę głosów na użytkownika na podstawie poziomu zaufania'
     topic_voting_tl0_vote_limit: 'Ile głosów mogą oddać użytkownicy TL0?'
@@ -17,6 +23,25 @@ pl_PL:
     topic_voting_show_votes_on_profile: 'Czy głosy mają być widoczne w aktywności w proflu użytkownika?'
     topic_voting_alert_votes_left: 'Ostrzeż użytkownika, jesli pozostało mu tyle głosów'
   topic_voting:
+    category_type:
+      show_who_voted:
+        label: "Pokaż, kto głosował"
+      show_votes_on_profile:
+        label: "Pokaż głosy na profilu"
+      enable_vote_limits:
+        label: "Ogranicz głosy członków"
+      tl0_vote_limit:
+        label: "Ograniczenie głosów TL0"
+      tl1_vote_limit:
+        label: "Ograniczenie głosów TL1"
+      tl2_vote_limit:
+        label: "Ograniczenie głosów TL2"
+      tl3_vote_limit:
+        label: "Ograniczenie głosów TL3"
+      tl4_vote_limit:
+        label: "Ograniczenie głosów TL4"
+      alert_votes_left:
+        label: "Powiadomienie o pozostałych głosach"
     votes_moved:
       one: "Głos został przeniesiony."
       few: "%{count} głosy zostały przeniesione."
@@ -33,3 +58,20 @@ pl_PL:
         topic_votes_max: "Maksymalna liczba głosów w temacie"
         order_topic_votes: "Uporządkuj tematy według największej liczby głosów"
         order_topic_votes_asc: "Uporządkuj tematy według najmniejszej liczby głosów"
+  badges:
+    daydreamer:
+      name: "Marzyciel"
+      description: "Otrzymaj głos na swój temat"
+      long_description: "Tę odznakę przyznajemy za otrzymanie głosu w jednym z Twoich tematów. :white_check_mark: Świetny pomysł. :+1:"
+    brainstormer:
+      name: "Pomysłodawca"
+      description: "Otrzymaj 5 głosów na swój temat"
+      long_description: "Tę odznakę przyznajemy za otrzymanie 5 głosów w jednym z Twoich tematów. :white_check_mark: Twój temat zyskuje na popularności."
+    innovator:
+      name: "Nowator"
+      description: "Otrzymaj 15 głosów na swój temat"
+      long_description: "Odznakę tę przyznajemy za otrzymanie 15 głosów w jednym z Twoich tematów. :white_check_mark: Tak dobry, że nie można go zignorować."
+    visionary:
+      name: "Wizjoner"
+      description: "Otrzymaj 25 głosów na swój temat"
+      long_description: "Ta odznaka jest przyznawana za uzyskanie 25 głosów w jednym z Twoich tematów. :white_check_mark: Daj ludziom to, czego chcą! :clap:"

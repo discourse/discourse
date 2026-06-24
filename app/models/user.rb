@@ -10,6 +10,9 @@ class User < ActiveRecord::Base
 
   DEFAULT_FEATURED_BADGE_COUNT = 3
   MAX_SIMILAR_USERS = 10
+  STAFF_REASON_SANITIZER = Rails::Html::SafeListSanitizer.new
+  STAFF_REASON_ALLOWED_TAGS = %w[a br].freeze
+  STAFF_REASON_ALLOWED_ATTRIBUTES = %w[href rel target].freeze
 
   deprecate_column :flag_level, drop_from: "3.2"
 
@@ -565,8 +568,10 @@ class User < ActiveRecord::Base
     # from some strange edge case, this handles it.
     if is_system_user? &&
          (
-           (Group.auto_groups_between(:admins, :trust_level_4) - [Group::AUTO_GROUPS[:anonymous]]) &
-             group_ids
+           (
+             Group.auto_groups_between(:admins, :trust_level_4) -
+               [Group::AUTO_GROUPS[:anonymous_users]]
+           ) & group_ids
          ).any?
       return true
     end
@@ -932,19 +937,18 @@ class User < ActiveRecord::Base
       payload = nil
     end
 
-    # When silenced, only the user themselves and staff should see the status
-    if silenced?
+    if Guardian.new.can_see_user_status?(self)
+      MessageBus.publish(
+        "/user-status",
+        { id => payload },
+        group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+      )
+    elsif guardian.can_see_user_status?(self)
       MessageBus.publish(
         "/user-status",
         { id => payload },
         user_ids: [id],
         group_ids: [Group::AUTO_GROUPS[:staff]],
-      )
-    else
-      MessageBus.publish(
-        "/user-status",
-        { id => payload },
-        group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
       )
     end
   end
@@ -1371,7 +1375,7 @@ class User < ActiveRecord::Base
   def full_silence_reason
     text = silenced_record.try(:details) if silenced?
     return text if text.blank?
-    PrettyText.cleanup(text.gsub("\n", "<br>"))
+    sanitize_staff_reason(text)
   end
 
   def silence_reason
@@ -1397,7 +1401,7 @@ class User < ActiveRecord::Base
   def full_suspend_reason
     text = suspend_record.try(:details) if suspended?
     return text if text.blank?
-    PrettyText.cleanup(text.gsub("\n", "<br>"))
+    sanitize_staff_reason(text)
   end
 
   def suspend_reason
@@ -1406,6 +1410,14 @@ class User < ActiveRecord::Base
     end
 
     nil
+  end
+
+  def sanitize_staff_reason(text)
+    STAFF_REASON_SANITIZER.sanitize(
+      PrettyText.cleanup(text.gsub("\n", "<br>")),
+      tags: STAFF_REASON_ALLOWED_TAGS,
+      attributes: STAFF_REASON_ALLOWED_ATTRIBUTES,
+    )
   end
 
   def suspended_message
@@ -1981,8 +1993,8 @@ class User < ActiveRecord::Base
     user_status && !user_status.expired?
   end
 
-  def new_new_view_enabled?
-    in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
+  def unified_new_enabled?
+    upcoming_change_enabled?(:enable_unified_new)
   end
 
   def populated_required_custom_fields?

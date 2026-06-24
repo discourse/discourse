@@ -14,6 +14,7 @@ import { i18n } from "discourse-i18n";
 import {
   MIN_CHARACTER_COUNT,
   showSuggestionsError,
+  tagSuggestionParams,
 } from "../../lib/ai-helper-suggestions";
 
 export default class AiTagSuggester extends Component {
@@ -71,6 +72,10 @@ export default class AiTagSuggester extends Component {
 
     if (this.content) {
       data.text = this.content;
+      Object.assign(
+        data,
+        tagSuggestionParams(this.model?.categoryId, this.model?.get("tags"))
+      );
     } else {
       data.topic_id = this.args.buffered.content.id;
     }

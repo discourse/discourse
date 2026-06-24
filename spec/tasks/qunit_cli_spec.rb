@@ -63,7 +63,7 @@ describe "bin/qunit" do
         "--query",
         "target=core&testem=1",
         "--file-path",
-        core_test_file.sub("#{Rails.root.join("frontend/discourse/")}", ""),
+        core_test_file.sub("#{Rails.root.join("frontend/discourse/tests/")}", ""),
         "--random",
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",

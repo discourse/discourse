@@ -248,7 +248,7 @@ pt_BR:
           gists: "Resumos breves da lista de tópicos"
           setting_groups:
             settings: "Configurações básicas"
-            gists: "Gists"
+            gists: "Resumos"
             backfill: "Backfill"
         search:
           name: "Pesquisar"
@@ -264,6 +264,9 @@ pt_BR:
             model_settings: "Configurações de modelo"
             related_topics: "Tópicos relacionados"
             semantic_search: "Pesquisa semântica"
+        admin_dashboard:
+          setting_groups:
+            settings: "Configurações básicas"
         discord:
           name: "Integração com o Discourse"
           description: "Adiciona a possibilidade de pesquisar nos canais do Discord"
@@ -780,7 +783,6 @@ pt_BR:
         title: "Sugerir alterações com IA"
         description: "Escolha uma das opções abaixo, e a IA vai sugerir uma nova versão do texto."
         selection_hint: "Dica: antes de abrir o ajudante, você pode selecionar uma parte do texto para reescrever apenas ela."
-        suggest: "Sugestão com IA"
         suggest_errors:
           too_many_tags:
             one: "Você pode ter até %{count} etiqueta"

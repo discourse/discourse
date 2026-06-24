@@ -32,6 +32,10 @@ module PageObjects
         end
       end
 
+      def delete_user_from_reviewable(reviewable, action)
+        select_bundled_action(reviewable, action, bundle_index: 1)
+      end
+
       def click_post_body_toggle
         find(POST_BODY_TOGGLE_SELECTOR).click
       end
@@ -189,6 +193,12 @@ module PageObjects
 
       def click_insights_tab
         find(".action-list li.insights").click
+      end
+
+      def has_reviewable_with_status?(reviewable, status)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_css?(".review-item__status.--#{status}")
+        end
       end
 
       def has_reviewable_with_approved_status?(reviewable)

@@ -106,6 +106,21 @@ after_initialize do
       [DiscourseWorkflows::Nodes::SendChatMessage::V1, DiscourseWorkflows::Nodes::ChatApproval::V1]
     end
 
+    require_relative "lib/discourse_workflows/nodes/chat_message_created/v1"
+    DiscoursePluginRegistry.register_discourse_workflows_node(
+      DiscourseWorkflows::Nodes::ChatMessageCreated::V1,
+      self,
+    )
+
+    on(:chat_message_created) do |message, channel, user|
+      DiscourseWorkflows::EventListener.handle(
+        DiscourseWorkflows::Nodes::ChatMessageCreated::V1,
+        message,
+        channel,
+        user,
+      )
+    end
+
     on(:chat_message_interaction) do |interaction|
       next unless SiteSetting.discourse_workflows_enabled
 
