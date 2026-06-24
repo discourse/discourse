@@ -75,19 +75,16 @@ describe SiteSettingLocalization do
     expect(localization).to be_invalid
   end
 
-  it "supports settings that should not be automatically localized" do
+  it "supports localizing URL settings manually" do
     expect(described_class.localizable?("company_url")).to eq(true)
-    expect(described_class.automatically_localizable?("company_url")).to eq(false)
   end
 
-  it "returns only valid settings that support automatic localization" do
+  it "returns only valid localizable settings" do
     described_class.register(:missing_site_setting)
 
-    expect(described_class.automatically_localizable_setting_names).to include("title")
-    expect(described_class.automatically_localizable_setting_names).not_to include(
-      "company_url",
-      "missing_site_setting",
-    )
+    expect(described_class.localizable?("title")).to eq(true)
+    expect(described_class.localizable?("company_url")).to eq(true)
+    expect(described_class.localizable?("missing_site_setting")).to eq(false)
   ensure
     described_class.localizable_settings.delete("missing_site_setting")
   end

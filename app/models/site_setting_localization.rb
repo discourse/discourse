@@ -24,7 +24,6 @@ class SiteSettingLocalization < ActiveRecord::Base
       max_length: 255,
     },
     "company_url" => {
-      automatic: false,
       max_length: 2048,
     },
     "governing_law" => {
@@ -44,20 +43,12 @@ class SiteSettingLocalization < ActiveRecord::Base
       localizable_settings.keys
     end
 
-    def automatically_localizable_setting_names
-      localizable_setting_names.select { |setting_name| automatically_localizable?(setting_name) }
-    end
-
     def register(setting_name, **options)
       localizable_settings[setting_name.to_s] = options.symbolize_keys
     end
 
     def localizable?(setting_name)
       localizable_settings.key?(setting_name.to_s) && SiteSetting.respond_to?(setting_name)
-    end
-
-    def automatically_localizable?(setting_name)
-      localizable?(setting_name) && localizable_settings.dig(setting_name.to_s, :automatic) != false
     end
 
     def value_for(setting_name, locale:, cooked: false, fallback: nil, show_original: false)
