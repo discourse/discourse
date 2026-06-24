@@ -54,6 +54,7 @@ export default class WorkflowCanvas extends Component {
   #hasSetupStarted = false;
   #pendingSync = false;
   #syncTask = null;
+  #outsideClickAbort = null;
   #ZOOM_STEP = 0.1;
   #ZOOM_MIN = 0.25;
   #ZOOM_MAX = 4;
@@ -62,6 +63,7 @@ export default class WorkflowCanvas extends Component {
     super.willDestroy();
     this.rete?.destroy();
     this.keyboard?.teardown();
+    this.#outsideClickAbort?.abort();
   }
 
   get workflowPublished() {
@@ -396,10 +398,29 @@ export default class WorkflowCanvas extends Component {
     );
 
     this.args.onAreaReady?.(this.rete.area);
+    this.#forwardTrappedPointerdowns();
 
     await this.#queueSync();
     this.isLoading = false;
     element.focus();
+  }
+
+  // Left clicks are trapped on the canvas and never reach the document
+  // so we re-emit one to clean up any open menus outside of the canvas
+  #forwardTrappedPointerdowns() {
+    this.#outsideClickAbort = new AbortController();
+
+    this.containerElement.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (event.button === 0) {
+          document.body.dispatchEvent(
+            new PointerEvent("pointerdown", { bubbles: true })
+          );
+        }
+      },
+      { capture: true, signal: this.#outsideClickAbort.signal }
+    );
   }
 
   @action

@@ -1889,6 +1889,8 @@ bg:
       email_label: "Имейл"
       continue_button: "Напред"
       verify_button: "Напред"
+      account_ready_continue: "Напред"
+      username_label: "Потребителско име"
     login:
       header_title: "Добре дошли отново"
       title: "Вход"

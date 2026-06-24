@@ -21,7 +21,7 @@ jobs:
       - name: Set working directory owner
         run: chown root:root .
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
           token: ${{ secrets.GH_PUSH_TOKEN }}

@@ -2174,7 +2174,7 @@ pl_PL:
     discourse_connect_allowed_redirect_domains: "Ogranicz do tych domen dla return_paths dostarczanych przez DiscourseConnect (domyślna ścieżka zwrotna musi być na bieżącej stronie). Użyj * aby zezwolić na dowolną domenę dla ścieżki zwrotnej. Własne poddomeny (`*.foobar.com`) są niedozwolone."
     enable_local_logins: "Włącz konta oparte na loginach lokalnych i hasłach. OSTRZEŻENIE: jeśli opcja jest wyłączona, zalogowanie się może nie być możliwe, jeśli wcześniej nie skonfigurowano co najmniej jednej alternatywnej metody logowania."
     enable_local_logins_via_email: "Zezwalaj użytkownikom na żądanie linku logowania do jednego kliknięcia, który zostanie im przesłany pocztą e-mail."
-    enable_local_logins_via_code: "Wyślij jednorazowy kod zamiast linku do logowania, gdy użytkownik loguje się przez e-mail. Wymaga włączenia opcji „włącz lokalne logowanie przez e-mail”."
+    enable_local_logins_via_code: "Wyślij jednorazowy kod zamiast linku do logowania, gdy użytkownik loguje się przez e-mail, i pozwól nowym użytkownikom zarejestrować się, podając tylko adres e-mail i ten kod. Wymaga „włączenia lokalnego logowania przez e-mail”."
     allow_passkeys_for_2fa: "Zezwól użytkownikom na użycie klucza dostępu w celu spełnienia wymogów uwierzytelniania dwuskładnikowego podczas potwierdzania poufnej czynności."
     allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
     enable_signup_cta: "Pokazuj wiadomość dla powracających użytkowników anonimowych, zachęcającą ich do założenia konta."
@@ -2327,6 +2327,7 @@ pl_PL:
     edit_all_topic_groups: "Zezwalaj użytkownikom w tej grupie na edytowanie tytułów, tagów i kategorii tematów innych użytkowników"
     edit_all_post_groups: "Zezwalaj użytkownikom w tej grupie na edytowanie postów innych użytkowników"
     create_topic_allowed_groups: "Grupy, które mogą tworzyć nowe tematy. Administratorzy i moderatorzy zawsze mogą tworzyć tematy."
+    topic_timers_allowed_groups: "Grupy, które mogą ustawiać timery tematów. Administratorzy i moderatorzy zawsze mogą ustawiać timery tematów."
     allow_flagging_staff: "Jeżeli włączone, użytkownicy mogą flagować wpisy członków zespołu."
     edit_wiki_post_allowed_groups: "Grupy, które mogą edytować posty oznaczone jako wiki. Administratorzy i moderatorzy zawsze mogą edytować posty oznaczone jako wiki."
     edit_post_allowed_groups: "Grupy, które mogą edytować posty. Administratorzy i moderatorzy zawsze mogą edytować posty."
@@ -5565,6 +5566,11 @@ pl_PL:
       few: "Musisz wybrać co najmniej %{count} tagi."
       many: "Musisz wybrać co najmniej %{count} tagów."
       other: "Musisz wybrać co najmniej %{count} tagów."
+    too_many_tags_for_topic:
+      one: "Do tematu można zastosować %{count} znacznik."
+      few: "Do tematu można zastosować %{count} znaczniki."
+      many: "Do tematu można zastosować %{count} znaczników."
+      other: "Do tematu można zastosować %{count} znaczników."
     upload_row_too_long: "Plik CSV powinien zawierać jeden tag w każdym wierszu. Opcjonalnie po tagu można umieścić przecinek, a następnie nazwę grupy tagów."
     bulk_create:
       invalid_params: "Nieprawidłowe parametry. Podaj tablicę nazw tagów."

@@ -2551,6 +2551,8 @@ zh_CN:
       email_label: "电子邮件"
       continue_button: "继续"
       verify_button: "继续"
+      account_ready_continue: "继续"
+      username_label: "用户名"
     login:
       header_title: "欢迎回来"
       title: "登录"
@@ -6578,6 +6580,7 @@ zh_CN:
             invites:
               create: 发送电子邮件邀请或生成邀请链接。
             badges:
+              list: 获取徽章列表。
               create: 创建新徽章。
               show: 获取有关徽章的信息。
               update: 更新徽章。
@@ -7741,6 +7744,7 @@ zh_CN:
             change_site_setting_groups: "更改站点设置群组"
             discourse_id_regenerate_credentials: "重新生成 Discourse ID 凭据"
             configure_category_type: "配置类别类型"
+            unconfigure_category_type: "未配置类别类型"
         screened_emails:
           title: "已屏蔽的电子邮件地址"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"

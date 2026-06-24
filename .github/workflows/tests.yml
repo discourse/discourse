@@ -113,7 +113,7 @@ jobs:
             echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
           fi
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
@@ -193,7 +193,7 @@ jobs:
           fi
 
       - name: Fetch turbo_rspec_runtime.log cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         id: test-runtime-cache
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         with:

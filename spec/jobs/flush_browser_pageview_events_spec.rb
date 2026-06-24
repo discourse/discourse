@@ -17,6 +17,7 @@ RSpec.describe Jobs::FlushBrowserPageviewEvents do
       ip_address: "1.2.3.4",
       user_agent: "Mozilla/5.0",
       session_id: "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx",
+      source: BrowserPageviewEvent::SOURCE_BEACON,
       occurred_at: Time.zone.parse("2026-05-27 10:30:00").iso8601(6),
     }
   end

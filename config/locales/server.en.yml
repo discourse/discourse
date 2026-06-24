@@ -2138,7 +2138,7 @@ en:
 
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
-    enable_local_logins_via_code: "Send a one-time code instead of a login link when a user logs in via email. Requires 'enable local logins via email'."
+    enable_local_logins_via_code: "Send a one-time code instead of a login link when a user logs in via email, and let new users sign up with just an email address and that code. Requires 'enable local logins via email'."
     allow_passkeys_for_2fa: "Allow users to use a passkey to satisfy two-factor authentication when confirming a sensitive action."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
@@ -2324,6 +2324,7 @@ en:
     edit_all_post_groups: "Allow users in this group to edit other users' posts"
 
     create_topic_allowed_groups: "Groups that are allowed to create new topics. Admins and moderators can always create topics."
+    topic_timers_allowed_groups: "Groups that are allowed to set topic timers. Admins and moderators can always set topic timers."
     allow_flagging_staff: "If enabled, users can flag posts from staff accounts."
 
     edit_wiki_post_allowed_groups: "Groups that are allowed to edit posts marked as wiki. Admins and moderators can always edit posts marked as wiki."
@@ -5824,6 +5825,9 @@ en:
       invalid:
         one: "The tag you selected cannot be used"
         other: "None of the tags you selected can be used"
+      tag_not_allowed_in_category:
+        one: 'The "%{tags}" tag isn''t allowed in the "%{category}" category.'
+        other: 'The following tags aren''t allowed in the "%{category}" category: %{tags}.'
       in_this_category: "Can't be used in this category"
       not_allowed: "Can't be used"
       restricted_to:

@@ -497,6 +497,9 @@ en:
     age: "Age"
     joined: "Joined"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Advanced mode"
+      simple_mode: "Simple mode"
     show_more: "show more"
     show_help: "Options"
     links: "Links"
@@ -2929,6 +2932,18 @@ en:
       use_different_email: "Use a different email address"
       use_password_instead: "Log in with your password instead"
       email_me_code: "Email me a one-time login code"
+      signup_title: "Join this community"
+      signup_instructions: "Enter your email address to join this community. We'll send you a code to confirm it and you'll be on your way!"
+      user_fields_title: "Almost done"
+      user_fields_instructions: "Just a few more details to finish creating your account."
+      account_ready_title: "Your account is ready! 🎉"
+      account_ready_edit: "Pick your username and avatar"
+      account_ready_continue: "Continue"
+      username_label: "Username"
+      username_placeholder: "Choose a username"
+      change_avatar: "Change avatar"
+      username_taken: "That username is taken. Try another."
+      username_unavailable: "That username isn't available. Try %{suggestion}."
 
     login:
       header_title: "Welcome back"
@@ -4059,6 +4074,9 @@ en:
         error_topic_count:
           one: "%{count} topic"
           other: "%{count} topics"
+        tag_not_allowed_in_category:
+          one: "%{tags} isn't allowed in the %{category} category."
+          other: "These tags aren't allowed in the %{category} category: %{tags}."
 
       none:
         unread: "You have no unread topics."
@@ -5833,7 +5851,6 @@ en:
       category_restrictions:
         one: "It can only be used in the %{categories} category."
         other: "It can only be used in these categories: %{categories}."
-      restricted_to: "Restricted to"
       no_synonyms: "This tag has no synonyms."
       edit_synonyms: "Edit Synonyms"
       add_synonyms_label: "Add synonyms:"
@@ -5867,6 +5884,7 @@ en:
         slug: "Slug"
         name_placeholder: "Tag name"
         slug_placeholder: "Tag slug (optional, auto-generated from name)"
+        invalid_slug: "Use lowercase letters, numbers, and single hyphens between words."
         saved: "Tag settings saved"
         no_synonyms: "No synonyms defined for this tag."
         add_synonym_placeholder: "Search for tags to add as synonyms..."
@@ -7003,6 +7021,9 @@ en:
         discourse_last_updated: "Discourse updated:"
         version: "Version"
         up_to_date: "You're up to date!"
+        up_to_date_newer_commits:
+          one: "You're on the most recent release, but %{count} new change is available."
+          other: "You're on the most recent release, but %{count} new changes are available."
         critical_available: "A critical update is available."
         updates_available: "Updates are available."
         please_update: "Please update!"
@@ -7010,9 +7031,19 @@ en:
         stale_data: "A check for updates has not been performed lately. Ensure Sidekiq is running."
         version_check_pending: "Looks like you updated recently. Fantastic!"
         installed_version: "Installed"
-        latest_version: "Latest"
+        latest_version: "Available"
+        github: "GitHub"
+        commit_on_github: "View commit %{sha} on GitHub"
+        changelog: "Changelog"
+        commits_ahead:
+          one: "Running %{count} additional change since the start of this release series"
+          other: "Running %{count} additional changes since the start of this release series"
         problems_found: "Some advice based on your current site settings"
         dismiss_notice: "Ignore"
+        site_advice:
+          title:
+            one: "%{count} issue requires your attention based on your site configuration"
+            other: "%{count} issues require your attention based on your site configuration"
         new_features:
           title: "What's new?"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
@@ -8739,6 +8770,7 @@ en:
             change_site_setting_groups: "change site setting groups"
             discourse_id_regenerate_credentials: "regenerate Discourse ID credentials"
             configure_category_type: "configure category type"
+            unconfigure_category_type: "unconfigure category type"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

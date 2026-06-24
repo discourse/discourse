@@ -2059,6 +2059,8 @@ ro:
       email_label: "E-mail"
       continue_button: "Continuă"
       verify_button: "Continuă"
+      account_ready_continue: "Continuă"
+      username_label: "Nume utilizator"
     login:
       header_title: "Bine ai revenit"
       title: "Autentificare"

@@ -8,7 +8,7 @@ module Migrations
     @execute_parent_forks = true
 
     class << self
-      def batch_forks
+      def with_batched_forks
         @execute_parent_forks = false
         run_before_fork_hooks
 
@@ -25,7 +25,7 @@ module Migrations
         end
       end
 
-      def remove_before_fork_hook(block)
+      def remove_before_fork(block)
         @before_fork_hooks.delete(block)
       end
 
@@ -36,7 +36,7 @@ module Migrations
         end
       end
 
-      def remove_after_fork_parent_hook(block)
+      def remove_after_fork_parent(block)
         @after_fork_parent_hooks.delete(block)
       end
 
@@ -47,7 +47,7 @@ module Migrations
         end
       end
 
-      def remove_after_fork_child_hook(block)
+      def remove_after_fork_child(block)
         @after_fork_child_hooks.delete(block)
       end
 
@@ -65,7 +65,7 @@ module Migrations
         pid
       end
 
-      def size
+      def hook_count
         @before_fork_hooks.size + @after_fork_parent_hooks.size + @after_fork_child_hooks.size
       end
 

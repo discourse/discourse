@@ -9,12 +9,14 @@ import AddSynonymsConfirmation from "discourse/components/tag-settings/add-synon
 import TagSettingsLocalizations from "discourse/components/tag-settings/localizations";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { slugify } from "discourse/lib/utilities";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import TagDropdown from "discourse/select-kit/components/tag-dropdown";
 import { eq } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DPageHeader from "discourse/ui-kit/d-page-header";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 
 export default class TagSettings extends Component {
@@ -104,13 +106,14 @@ export default class TagSettings extends Component {
     }
 
     if (this.hasCategories) {
-      const categoriesHtml = this.args.tag.categories
-        .map(
-          (cat) =>
-            `<a href="/c/${cat.slug}/${cat.id}" class="badge-category">${cat.name}</a>`
-        )
-        .join(" ");
-      parts.push(`${i18n("tagging.restricted_to")} ${categoriesHtml}.`);
+      parts.push(
+        i18n("tagging.category_restrictions", {
+          count: this.args.tag.categories.length,
+          categories: this.args.tag.categories
+            .map((cat) => categoryBadgeHTML(cat))
+            .join(" "),
+        })
+      );
     } else if (this.isCategoryRestricted) {
       parts.push(i18n("tagging.category_restricted"));
     }
@@ -218,6 +221,16 @@ export default class TagSettings extends Component {
     return [this.args.tag?.name].filter(Boolean);
   }
 
+  @action
+  validateSlug(name, slug, { addError }) {
+    if (slug?.trim() && slug !== slugify(slug)) {
+      addError(name, {
+        title: i18n("tagging.settings.slug"),
+        message: i18n("tagging.settings.invalid_slug"),
+      });
+    }
+  }
+
   <template>
     <div class="tag-settings">
       <DPageHeader
@@ -323,6 +336,7 @@ export default class TagSettings extends Component {
             @type="input"
             @title={{i18n "tagging.settings.slug"}}
             @format="large"
+            @validate={{this.validateSlug}}
             as |field|
           >
             <field.Control

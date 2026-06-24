@@ -415,6 +415,35 @@ helloWorld();</code>consectetur.`;
     assert.strictEqual(await toMarkdown(html), markdown);
   });
 
+  test("converts quote style from word", async function (assert) {
+    const html = `Intro<!--StartFragment-->
+    <p class=MsoQuote style='margin-left:.5in'>First quoted line</p>
+    <p class=MsoQuote style='margin-left:.5in'>Second quoted line</p>
+    <!--EndFragment-->Outro`;
+    const markdown = `Intro\n\n> First quoted line\n>\n> Second quoted line\n\nOutro`;
+    assert.strictEqual(await toMarkdown(html), markdown);
+  });
+
+  test("strips word comments and tracked deletions", async function (assert) {
+    const html = `<!--StartFragment-->
+    <p class=MsoNormal>Identify significant accounts<a class=msocomanchor
+      href="#_msocom_1" style='mso-comment-reference:SK_1;mso-comment-date:1'><span
+      class=MsoCommentReference>[J1]</span></a> and relevant assertions.</p>
+    <p class=MsoNormal>This involves <del>old removed phrase </del>using risk procedures.</p>
+    <div style='mso-element:comment-list'><div style='mso-element:comment'>
+      <p class=MsoCommentText><a name="_msocom_1"></a>Consider removing.</p>
+    </div></div>
+    <!--EndFragment-->`;
+
+    const markdown = await toMarkdown(html);
+
+    assert.true(markdown.includes("Identify significant accounts and"));
+    assert.true(markdown.includes("This involves using risk procedures."));
+    assert.false(markdown.includes("[J1]"));
+    assert.false(markdown.includes("Consider removing."));
+    assert.false(markdown.includes("old removed phrase"));
+  });
+
   test("keeps mention/hash class", async function (assert) {
     const html = `
       <p>User mention: <a class="mention" href="/u/discourse">@discourse</a></p>

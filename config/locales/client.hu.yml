@@ -2628,6 +2628,8 @@ hu:
       email_label: "E-mail:"
       continue_button: "Folytatás"
       verify_button: "Folytatás"
+      account_ready_continue: "Folytatás"
+      username_label: "Felhasználónév"
     login:
       header_title: "Üdvözöljük újra"
       title: "Bejelentkezés"

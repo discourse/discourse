@@ -2612,6 +2612,8 @@ sk:
       email_label: "Email"
       continue_button: "Pokračovať"
       verify_button: "Pokračovať"
+      account_ready_continue: "Pokračovať"
+      username_label: "Používateľské meno"
     login:
       header_title: "Vitajte späť"
       title: "Prihlásenie"

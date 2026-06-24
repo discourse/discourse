@@ -597,10 +597,6 @@ basic:
   trigger_browser_pageview_events:
     default: false
     hidden: true
-  use_beacon_for_browser_page_views:
-    default: false
-    hidden: true
-    client: true
   persist_browser_pageview_events:
     default: true
     hidden: true
@@ -2645,6 +2641,14 @@ trust:
     area: "trust_levels"
   create_topic_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
+    type: group_list
+    allow_any: false
+    refresh: true
+    disallowed_groups: "4"
+    area: "group_permissions"
+  topic_timers_allowed_groups:
+    default: "1|2|14" # auto group admins, moderators, trust_level_4
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false

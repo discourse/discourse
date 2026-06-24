@@ -2151,6 +2151,8 @@ da:
       email_label: "E-mail"
       continue_button: "Fortsæt"
       verify_button: "Fortsæt"
+      account_ready_continue: "Fortsæt"
+      username_label: "Brugernavn"
     login:
       header_title: "Velkommen tilbage"
       title: "Log ind"

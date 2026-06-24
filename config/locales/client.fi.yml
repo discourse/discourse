@@ -2455,6 +2455,8 @@ fi:
       email_label: "Sähköpostiosoite"
       continue_button: "Jatka"
       verify_button: "Jatka"
+      account_ready_continue: "Jatka"
+      username_label: "Käyttäjätunnus"
     login:
       header_title: "Tervetuloa takaisin"
       title: "Kirjaudu"

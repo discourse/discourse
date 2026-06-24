@@ -468,6 +468,7 @@ pl_PL:
         spam_detected: "Wykryto spam"
         custom_instructions_placeholder: "Instrukcje dla AI specyficzne dla witryny, aby pomóc w dokładniejszej identyfikacji spamu"
         enable: "Włącz"
+        enabled_locked_tip: "Wykrywanie spamu AI nie może być wyłączone na tej stronie."
         spam_tip: "Wykrywanie spamu przez sztuczną inteligencję będzie skanować pierwsze 3 posty wszystkich nowych użytkowników w tematach publicznych. Oznaczy je do sprawdzenia i zablokuje użytkowników, jeśli istnieje prawdopodobieństwo, że są spamem."
         settings_saved: "Ustawienia zapisane"
         spam_description: "Identyfikuje potencjalny spam przy użyciu wybranego LLM i oznacza go dla moderatorów witryny w celu sprawdzenia w kolejce przeglądania."

@@ -2657,6 +2657,8 @@ nl:
       email_label: "E-mailadres"
       continue_button: "Doorgaan"
       verify_button: "Doorgaan"
+      account_ready_continue: "Doorgaan"
+      username_label: "Gebruikersnaam"
     login:
       header_title: "Welkom terug"
       title: "Aanmelden"

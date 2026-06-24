@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
+import AdvancedModeToggle from "discourse/components/advanced-mode-toggle";
 import Form from "discourse/components/form";
 import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -21,6 +22,7 @@ import { recurrenceContext } from "../../lib/event-recurrence";
 import {
   attendanceTransition,
   buildParams,
+  customFieldFormName,
   defaultEventState,
   defaultReminderFor,
   getCustomFieldNames,
@@ -118,11 +120,17 @@ export default class PostEventBuilder extends Component {
       recurrence: this.event.recurrence ?? null,
       imageUpload: this.event.imageUpload?.url ?? null,
       timezone: this.event.timezone ?? null,
-      // clone so the form draft owns its own reminders
       reminders: (this.event.reminders ?? []).map((r) => ({ ...r })),
-      // clone so the form draft owns the custom fields
-      customFields: { ...(this.event.customFields ?? {}) },
+      customFields: this.#formCustomFields(),
     };
+  }
+
+  #formCustomFields() {
+    const fields = {};
+    for (const [key, value] of Object.entries(this.event.customFields ?? {})) {
+      fields[customFieldFormName(key)] = value;
+    }
+    return fields;
   }
 
   @action
@@ -355,8 +363,12 @@ export default class PostEventBuilder extends Component {
     ];
   }
 
+  @cached
   get allowedCustomFields() {
-    return getCustomFieldNames(this.siteSettings);
+    return getCustomFieldNames(this.siteSettings).map((field) => ({
+      field,
+      name: customFieldFormName(field),
+    }));
   }
 
   get addReminderDisabled() {
@@ -1223,15 +1235,16 @@ export default class PostEventBuilder extends Component {
                       "discourse_post_event.builder_modal.custom_fields.description"
                     }}
                     @format="full"
+                    class="form-kit__container-custom-fields"
                   >
                     <form.Object @name="customFields" as |customFields|>
-                      {{#each this.allowedCustomFields as |allowedCustomField|}}
+                      {{#each this.allowedCustomFields as |customField|}}
                         <customFields.Field
-                          @name={{allowedCustomField}}
-                          @title={{allowedCustomField}}
+                          @name={{customField.name}}
+                          @title={{customField.field}}
                           @type="input"
                           @format="full"
-                          @onSet={{fn this.setCustomField allowedCustomField}}
+                          @onSet={{fn this.setCustomField customField.field}}
                           as |field|
                         >
                           <field.Control
@@ -1295,12 +1308,9 @@ export default class PostEventBuilder extends Component {
         {{/if}}
 
         {{#if this.showScreenToggle}}
-          <DButton
-            class="btn-default advanced-settings
-              {{if this.isAdvancedScreen 'is-active'}}"
-            @icon="gear"
-            @label="discourse_post_event.builder_modal.advanced_settings"
-            @action={{this.toggleAdvanced}}
+          <AdvancedModeToggle
+            @active={{this.isAdvancedScreen}}
+            @onToggle={{this.toggleAdvanced}}
           />
         {{/if}}
       </:footer>

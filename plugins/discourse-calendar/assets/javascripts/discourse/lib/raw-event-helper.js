@@ -261,6 +261,10 @@ export function getCustomFieldNames(siteSettings) {
     .filter(Boolean);
 }
 
+export function customFieldFormName(name) {
+  return name.replace(/[.-]/g, "_");
+}
+
 // anywhere that builds an event state should use this as the single source of truth for defaults
 export function defaultEventState() {
   return {
@@ -379,7 +383,7 @@ export function replaceRaw(params, raw) {
 export function camelCase(input) {
   return input
     .toLowerCase()
-    .replace(/-/g, "_")
+    .replace(/[-.]/g, "_")
     .replace(/_(.)/g, function (match, group1) {
       return group1.toUpperCase();
     });

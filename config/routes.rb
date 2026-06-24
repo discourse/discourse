@@ -908,10 +908,6 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
           }
       post "#{root_path}/action/send_activation_email" => "users#send_activation_email"
-      get "#{root_path}/:username/summary" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
-          }
       get "#{root_path}/:username/activity/topics.rss" => "list#user_topics_feed",
           :format => :rss,
           :constraints => {
@@ -1707,6 +1703,8 @@ Discourse::Application.routes.draw do
 
     scope "/tag/:tag_id", constraints: { tag_id: /\d+/, format: :json } do
       get "/" => "tags#show", :as => "tag_show"
+      get "/edit" => "tags#show"
+      get "/edit/:tab" => "tags#show"
       get "/info" => "tags#info", :as => "tag_info"
       get "/notifications" => "tags#notifications", :as => "tag_notifications"
       put "/notifications" => "tags#update_notifications"

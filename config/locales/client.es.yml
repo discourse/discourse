@@ -2655,6 +2655,8 @@ es:
       email_label: "Correo electrónico"
       continue_button: "Continuar"
       verify_button: "Continuar"
+      account_ready_continue: "Continuar"
+      username_label: "Nombre de usuario"
     login:
       header_title: "Bienvenido/a de vuelta"
       title: "Iniciar sesión"

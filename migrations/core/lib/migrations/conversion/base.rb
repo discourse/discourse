@@ -17,6 +17,9 @@ module Migrations
 
         create_database
 
+        @worker_pool = WorkerPool.new
+        @reporter = ConsoleReporter.new
+
         filter_steps(steps, only_steps, skip_steps).each do |step_class|
           step = create_step(step_class)
           before_step_execution(step)
@@ -28,17 +31,24 @@ module Migrations
         exit(1)
       ensure
         Database::IntermediateDB.close
+        @reporter&.close
       end
 
       def steps
         step_class = StepBase
         current_module = self.class.name.deconstantize.constantize
 
-        current_module
-          .constants
-          .map { |c| current_module.const_get(c) }
-          .select { |klass| klass.is_a?(Class) && klass < step_class }
-          .sort_by(&:to_s)
+        classes =
+          current_module
+            .constants
+            .map { |c| current_module.const_get(c) }
+            .select { |klass| klass.is_a?(Class) && klass < step_class }
+
+        # Unlike the importer, the full step set is sorted here and the
+        # `--only`/`--skip` filtering happens afterwards (see `filter_steps` in
+        # `run`). This is intentional: re-running a single step via `--only`
+        # has to keep working even when that step declares dependencies.
+        TopologicalSorter.sort(classes)
       end
 
       def before_step_execution(step)
@@ -48,12 +58,12 @@ module Migrations
       def execute_step(step)
         executor =
           if step.is_a?(ProgressStep)
-            ProgressStepExecutor
+            ProgressStepExecutor.new(step, pool: @worker_pool, reporter: @reporter)
           else
-            StepExecutor
+            StepExecutor.new(step, reporter: @reporter)
           end
 
-        executor.new(step).execute
+        executor.execute
       end
 
       def after_step_execution(step)

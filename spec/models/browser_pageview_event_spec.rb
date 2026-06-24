@@ -42,6 +42,7 @@ RSpec.describe BrowserPageviewEvent do
         user_agent: "Mozilla/5.0",
         session_id: "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx",
         topic_id: 123,
+        source: described_class::SOURCE_BEACON,
         occurred_at: occurred_at.iso8601(6),
       }
     end
@@ -67,6 +68,7 @@ RSpec.describe BrowserPageviewEvent do
       expect(event.asn).to eq(12_345)
       expect(event.normalized_referrer).to eq("example.com/path")
       expect(event.created_at).to eq_time(occurred_at)
+      expect(event.source).to eq("beacon")
       expect(described_class.queued_count).to eq(0)
     end
 
