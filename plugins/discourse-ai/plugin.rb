@@ -139,11 +139,29 @@ after_initialize do
     end
   end
 
-  on(:post_destroyed) { |post| DiscourseAi::AiApiAuditLogCleaner.delete_for_post(post.id) }
-
-  on(:topic_destroyed) { |topic| DiscourseAi::AiApiAuditLogCleaner.delete_for_topic(topic.id) }
-
+  # when an account is removed, clear the user's own logs and the logs tied to
+  # the content being deleted with the account. the content callback runs before
+  # discourse reassigns/soft-deletes the user's posts, so ownership is still intact.
   on(:user_destroyed) { |user| DiscourseAi::AiApiAuditLogCleaner.delete_for_user(user.id) }
+
+  register_user_destroyer_on_content_deletion_callback(
+    Proc.new { |user| DiscourseAi::AiApiAuditLogCleaner.delete_for_user_content(user) },
+  )
+
+  # outside account deletion, only purge logs once the content is permanently
+  # gone; a soft-deleted (trashed) post or topic is still recoverable, so its
+  # audit log must remain
+  on(:post_destroyed) do |post|
+    if !Post.with_deleted.exists?(post.id)
+      DiscourseAi::AiApiAuditLogCleaner.delete_for_post(post.id)
+    end
+  end
+
+  on(:topic_destroyed) do |topic|
+    if !Topic.with_deleted.exists?(topic.id)
+      DiscourseAi::AiApiAuditLogCleaner.delete_for_topic(topic.id)
+    end
+  end
 
   if Rails.env.test?
     require_relative "spec/support/embeddings_generation_stubs"
