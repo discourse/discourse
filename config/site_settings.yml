@@ -1363,8 +1363,10 @@ posting:
       impact: "other,all_members"
       allow_enabled_for:
         - everyone
-      # TODO: replace with the real Meta announcement topic once published.
-      learn_more_url: "https://meta.discourse.org/t/-/000000"
+      hide_settings:
+        - allow_uncategorized_topics
+        - suppress_uncategorized_badge
+      learn_more_url: "https://meta.discourse.org/t/-/123456"
   allow_duplicate_topic_titles:
     default: false
     area: "posts_and_topics"
