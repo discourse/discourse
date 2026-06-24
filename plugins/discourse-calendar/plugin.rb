@@ -284,7 +284,7 @@ after_initialize do
   ) { DiscoursePostEvent::EventSerializer.new(object.event, scope: scope, root: false) }
 
   on(:post_created) do |post|
-    DiscoursePostEvent::Event.update_from_raw(post)
+    DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
     post.association(:event).reload
     if SiteSetting.discourse_post_event_enabled && post.event
       WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
@@ -294,7 +294,7 @@ after_initialize do
   on(:post_edited) do |post|
     event_before = post.event
     had_image_before = event_before&.image_upload_id.present?
-    DiscoursePostEvent::Event.update_from_raw(post)
+    DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
     post.association(:event).reload
 
     if SiteSetting.discourse_post_event_enabled
