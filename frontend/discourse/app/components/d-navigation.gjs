@@ -36,7 +36,6 @@ export default class DNavigation extends Component {
     return this.siteSettings.fixed_category_positions;
   }
 
-  @computed("category", "site.shared_drafts_category_id")
   get createTopicLabel() {
     const defaultKey = "topic.create";
     let value = this.site.desktopView ? defaultKey : "";
