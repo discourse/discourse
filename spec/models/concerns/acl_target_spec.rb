@@ -17,6 +17,16 @@ RSpec.describe AclTarget do
     expect(target_class).to respond_to(:has_mandatory_acl?, :acl_is_mandatory?)
   end
 
+  it "registers loaded target classes" do
+    expect(described_class.target_classes).to include(target_class)
+  end
+
+  describe ".acl_target_key" do
+    it "returns the class name" do
+      expect(target_class.acl_target_key).to eq("AclTargetSpecTarget")
+    end
+  end
+
   describe ".has_mandatory_acl?" do
     it "returns false without mandatory acl entries" do
       expect(target_class).not_to have_mandatory_acl

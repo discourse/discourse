@@ -381,4 +381,85 @@ module("Integration | Component | DAccessControl", function (hooks) {
         "the mandatory row's permission select is disabled"
       );
   });
+
+  test("injects mandatory acl rows for the target", async function (assert) {
+    this.site.access_control = {
+      mandatory_acl: {
+        TestTarget: [{ type: "group", id: 42, permission: "edit" }],
+      },
+    };
+    const state = controlledState();
+
+    await render(
+      <template>
+        <DAccessControl
+          @groups={{GROUPS}}
+          @acl={{state.acl}}
+          @aclTarget="TestTarget"
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-access-control__row")
+      .exists({ count: 1 }, "renders the mandatory row");
+    assert
+      .dom(".d-access-control__row")
+      .hasClass("--mandatory", "marks the row as mandatory");
+    assert
+      .dom(".d-access-control__group-name")
+      .hasText("Team A", "renders the mandatory group's name");
+
+    assert.strictEqual(
+      document.querySelector(".d-access-control__permission .select-kit-header")
+        .dataset.value,
+      "edit",
+      "uses the mandatory permission"
+    );
+    assert.strictEqual(
+      state.onChangeCalls.length,
+      0,
+      "does not notify the parent during render"
+    );
+  });
+
+  test("mandatory acl replaces an existing row for the same group", async function (assert) {
+    this.site.access_control = {
+      mandatory_acl: {
+        TestTarget: [{ type: "group", id: 42, permission: "edit" }],
+      },
+    };
+    const state = controlledState([
+      {
+        type: "group",
+        id: 42,
+        permission: "view",
+        name: "Team A",
+        full_name: "Team A",
+      },
+    ]);
+
+    await render(
+      <template>
+        <DAccessControl
+          @groups={{GROUPS}}
+          @acl={{state.acl}}
+          @aclTarget="TestTarget"
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-access-control__row")
+      .exists({ count: 1 }, "does not render a duplicate group row");
+
+    assert.strictEqual(
+      document.querySelector(".d-access-control__permission .select-kit-header")
+        .dataset.value,
+      "edit",
+      "uses the mandatory permission"
+    );
+  });
 });

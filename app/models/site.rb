@@ -53,6 +53,29 @@ class Site
     UserField.includes(:user_field_options).order(:position).all
   end
 
+  def access_control
+    self.class.access_control
+  end
+
+  def self.access_control
+    target_classes =
+      (
+        AclTarget.target_classes +
+          DiscoursePluginRegistry.acl_target_classes.filter_map do |target_class|
+            target_class.is_a?(String) ? target_class.safe_constantize : target_class
+          end
+      ).uniq
+
+    {
+      mandatory_acl:
+        target_classes.each_with_object({}) do |target_class, mandatory_acl|
+          next if !target_class.has_mandatory_acl?
+
+          mandatory_acl[target_class.acl_target_key] = target_class.mandatory_acl
+        end,
+    }
+  end
+
   def self.categories_cache_key
     "site_categories_#{I18n.locale}_#{Discourse.git_version}"
   end

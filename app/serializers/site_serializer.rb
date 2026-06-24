@@ -54,6 +54,7 @@ class SiteSerializer < ApplicationSerializer
     :admin_config_login_routes,
     :email_configured,
     :upcoming_changes_with_css,
+    :access_control,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer

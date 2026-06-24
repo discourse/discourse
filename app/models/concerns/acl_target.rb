@@ -3,7 +3,17 @@
 module AclTarget
   extend ActiveSupport::Concern
 
+  def self.target_classes
+    loaded_target_classes
+  end
+
+  def self.loaded_target_classes
+    @loaded_target_classes ||= []
+  end
+
   included do
+    AclTarget.loaded_target_classes << self if !AclTarget.loaded_target_classes.include?(self)
+
     has_many :access_control_lists,
              as: :target,
              class_name: "AccessControlList",
@@ -20,6 +30,10 @@ module AclTarget
   end
 
   class_methods do
+    def acl_target_key
+      name
+    end
+
     def has_mandatory_acl?
       defined?(mandatory_acl).present? && mandatory_acl.length.positive?
     end

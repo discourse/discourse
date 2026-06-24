@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -48,6 +49,8 @@ function defaultPermissions() {
 }
 
 export default class DAccessControl extends Component {
+  @service site;
+
   @tracked addingGroup = false;
 
   constructor() {
@@ -84,7 +87,7 @@ export default class DAccessControl extends Component {
 
   get availableGroups() {
     const taken = new Set(this.selectedGroupIds);
-    return this.args.groups
+    return (this.args.groups || [])
       .filter((group) => !taken.has(group.id))
       .sort((a, b) => {
         if (a.automatic !== b.automatic) {
@@ -96,15 +99,59 @@ export default class DAccessControl extends Component {
   }
 
   get selectedGroupIds() {
-    return this.args.acl
+    return this.acl
       .filter((entry) => entry.type === "group")
       .map((entry) => entry.id);
+  }
+
+  get mandatoryAcl() {
+    if (!this.args.aclTarget) {
+      return [];
+    }
+
+    return this.site.access_control?.mandatory_acl?.[this.args.aclTarget] || [];
+  }
+
+  get acl() {
+    if (!this.mandatoryAcl.length) {
+      return this.args.acl || [];
+    }
+
+    const mandatoryEntryKeys = new Set(
+      this.mandatoryAcl.map((entry) => `${entry.type}-${entry.id}`)
+    );
+    const acl = (this.args.acl || []).filter(
+      (entry) => !mandatoryEntryKeys.has(`${entry.type}-${entry.id}`)
+    );
+
+    this.mandatoryAcl.forEach((entry) => {
+      if (entry.type !== "group") {
+        return;
+      }
+
+      const group = (this.args.groups || []).find((g) => g.id === entry.id);
+      if (group) {
+        acl.push({
+          type: "group",
+          id: entry.id,
+          name: group.name,
+          full_name: group.full_name,
+          permission: entry.permission,
+          metadata: {
+            auto_group: group.automatic,
+          },
+          mandatory: true,
+        });
+      }
+    });
+
+    return acl;
   }
 
   // TODO (martin) How are we going to deal with users that have the Owner permission
   // here if we don't want to expose that in the UI?
   get rows() {
-    return this.args.acl
+    return this.acl
       .map((entry) => ({
         key: `${entry.type}-${entry.id}`,
         id: entry.id,
@@ -118,7 +165,7 @@ export default class DAccessControl extends Component {
           return a.mandatory ? -1 : 1;
         }
 
-        return a.name.localeCompare(b.name);
+        return (a.name || "").localeCompare(b.name || "");
       });
   }
 
@@ -134,7 +181,7 @@ export default class DAccessControl extends Component {
       return;
     }
 
-    const selectedGroup = this.args.groups.find(
+    const selectedGroup = (this.args.groups || []).find(
       (group) => group.id === groupId
     );
 
@@ -151,7 +198,7 @@ export default class DAccessControl extends Component {
       },
     };
 
-    const next = [...this.args.acl, newPermission];
+    const next = [...this.acl, newPermission];
 
     this.args.onChange(next);
     this.addingGroup = false;
@@ -161,14 +208,14 @@ export default class DAccessControl extends Component {
   onPermissionChange(groupId, permission) {
     if (permission === REMOVE_ACTION.id) {
       this.args.onChange(
-        this.args.acl.filter(
+        this.acl.filter(
           (entry) => !(entry.type === "group" && entry.id === groupId)
         )
       );
       return;
     }
 
-    const next = this.args.acl.map((entry) =>
+    const next = this.acl.map((entry) =>
       entry.type === "group" && entry.id === groupId
         ? { ...entry, permission }
         : entry
