@@ -24,6 +24,13 @@ module Migrations
           end
 
         puts I18n.t("importer.done", runtime: DateHelper.human_readable_time(runtime))
+      rescue SignalException
+        @aborted = true
+        exit(130)
+      ensure
+        # `cleanup` (above) has already closed the reporter and restored the
+        # terminal, so this abort line lands cleanly below the reporter output.
+        STDERR.puts "\n#{I18n.t("cli.aborted")}" if @aborted
       end
 
       private
@@ -59,19 +66,27 @@ module Migrations
       end
 
       def execute_steps
-        max = step_classes.size
+        classes = step_classes
+        # Titles are handed to the reporter up front so it can reserve its title
+        # column before any step runs.
+        titles = classes.map(&:title)
+        @reporter = Reporting::Factory.build(titles:)
 
-        step_classes
-          .each
-          .with_index(1) do |step_class, index|
-            puts "#{step_class.title} [#{index}/#{max}]"
-            step = step_class.new(@intermediate_db, @discourse_db, @shared_data, @config)
+        classes.each_with_index do |step_class, index|
+          step_report = @reporter.start_step(titles[index])
+
+          step = step_class.new(@intermediate_db, @discourse_db, @shared_data, @config)
+          step.reporter = step_report
+          begin
             step.execute
-            puts ""
+          ensure
+            step_report.finish
           end
+        end
       end
 
       def cleanup
+        @reporter&.close
         @intermediate_db.close
         @discourse_db.close
       end
