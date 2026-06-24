@@ -64,15 +64,16 @@ class AccessControlList < ActiveRecord::Base
           if user.nil?
             allowing_any_group([Group::AUTO_GROUPS[:anonymous_users]])
           else
+            auto_group_ids = [Group::AUTO_GROUPS[:logged_in_users]]
+
+            # TODO (martin) Remove when granular_anonymous_and_logged_in_groups_permissions becomes permanent,
+            # it's similar logic to User.in_any_groups?
+            if !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+              auto_group_ids << Group::AUTO_GROUPS[:everyone]
+            end
+
             allowing_any_user([user.id]).or(
-              allowing_any_group(
-                user.belonging_to_group_ids +
-                  [
-                    Group::AUTO_GROUPS[:logged_in_users],
-                    # TODO (martin) Remove when granular_anonymous_and_logged_in_groups_permissions becomes permanent
-                    Group::AUTO_GROUPS[:everyone],
-                  ],
-              ),
+              allowing_any_group(user.belonging_to_group_ids + auto_group_ids),
             )
           end
         end
