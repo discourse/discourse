@@ -64,7 +64,16 @@ class AccessControlList < ActiveRecord::Base
           if user.nil?
             allowing_any_group([Group::AUTO_GROUPS[:anonymous_users]])
           else
-            allowing_any_user([user.id]).or(allowing_any_group(user.belonging_to_group_ids))
+            allowing_any_user([user.id]).or(
+              allowing_any_group(
+                user.belonging_to_group_ids +
+                  [
+                    Group::AUTO_GROUPS[:logged_in_users],
+                    # TODO (martin) Remove when granular_anonymous_and_logged_in_groups_permissions becomes permanent
+                    Group::AUTO_GROUPS[:everyone],
+                  ],
+              ),
+            )
           end
         end
 
@@ -99,21 +108,20 @@ class AccessControlList < ActiveRecord::Base
     permissions_expanded =
       list.each_with_object({}) do |entry, permissions|
         permissions[entry[:permission]] ||= {}
-        permissions[entry[:permission]][:allowed_user_ids] ||= []
+        # TODO (martin) Handle allowed_user_ids here too in a followup PR when we allow adding them in the UI.
         permissions[entry[:permission]][:allowed_group_ids] ||= []
 
         if entry[:type].to_sym == :group
           permissions[entry[:permission]][:allowed_group_ids] << entry[:id]
-        else
-          permissions[entry[:permission]][:allowed_user_ids] << entry[:id]
+          # TODO (martin) Handle allowed_user_ids here too in a followup PR when we allow adding them in the UI.
         end
       end
 
     permissions_expanded.map do |permission_name, permission|
       {
         permission: permission_name,
+        # TODO (martin) Handle allowed_user_ids here too in a followup PR when we allow adding them in the UI.
         allowed_group_ids: permission[:allowed_group_ids],
-        allowed_user_ids: permission[:allowed_user_ids],
         target_type: target.class.polymorphic_name,
         target_id: target.id,
         owner: owner,

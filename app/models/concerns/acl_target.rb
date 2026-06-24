@@ -18,6 +18,11 @@ module AclTarget
              as: :target,
              class_name: "AccessControlList",
              dependent: :destroy
+
+    def reload(options = nil)
+      @permission_acl = nil
+      super
+    end
   end
 
   def permission_acl

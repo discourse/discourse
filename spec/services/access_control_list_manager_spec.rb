@@ -3,7 +3,6 @@
 RSpec.describe AccessControlListManager do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:target) }
-    it { is_expected.to validate_presence_of(:flattened_acl) }
     it { is_expected.to validate_presence_of(:owner) }
     it { is_expected.to validate_length_of(:owner).is_at_most(100) }
   end
@@ -38,6 +37,12 @@ RSpec.describe AccessControlListManager do
       let(:owner) { "" }
 
       it { is_expected.to fail_a_contract }
+    end
+
+    context "when no ACLs are provided" do
+      let(:flattened_acl) { [] }
+
+      it { is_expected.to fail_a_policy(:has_at_least_one_acl) }
     end
 
     context "when everything is ok" do

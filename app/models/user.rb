@@ -587,22 +587,6 @@ class User < ActiveRecord::Base
     @permission_acl ||= AccessControlList.matching_user(self).user_acl
   end
 
-  def has_acl_permission?(target, permission)
-    permission_acl.has_target_permission?(target, permission)
-  end
-
-  def has_any_acl_permission?(target, permissions)
-    permission_acl.has_any_target_permission?(target, permissions)
-  end
-
-  def target_ids_with_acl_permission(target_klass, permission)
-    permission_acl.target_ids_with_permission(target_klass, permission)
-  end
-
-  def target_ids_with_any_acl_permissions(target_klass, permissions)
-    permission_acl.target_ids_with_any_permissions(target_klass, permissions)
-  end
-
   def group_granted_trust_level
     GroupUser.where(user_id: id).includes(:group).maximum("groups.grant_trust_level")
   end
