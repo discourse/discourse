@@ -11,8 +11,7 @@ class Admin::Config::LogoController < Admin::AdminController
 
     if !TopicOgImageGenerator.eligible?(topic)
       render json: {
-               error:
-                 "Cannot generate an OG image for personal messages or topics in private categories",
+               error: I18n.t("topic_og_image.preview_not_eligible"),
              },
              status: :unprocessable_entity
       return
@@ -21,7 +20,10 @@ class Admin::Config::LogoController < Admin::AdminController
     png_bytes = TopicOgImageGenerator.new(topic).generate_bytes
 
     if png_bytes.blank?
-      render json: { error: "Failed to generate preview image" }, status: :unprocessable_entity
+      render json: {
+               error: I18n.t("topic_og_image.preview_generation_failed"),
+             },
+             status: :unprocessable_entity
       return
     end
 

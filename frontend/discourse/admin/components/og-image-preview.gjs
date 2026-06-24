@@ -3,12 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
+import { extractError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 
 export default class OgImagePreview extends Component {
   @tracked imageUrl = null;
   @tracked loading = false;
-  @tracked error = false;
+  @tracked errorMessage = null;
 
   formData = { topic_id: "" };
 
@@ -18,7 +19,7 @@ export default class OgImagePreview extends Component {
       return;
     }
     this.loading = true;
-    this.error = false;
+    this.errorMessage = null;
     this.imageUrl = null;
     try {
       const response = await ajax("/admin/config/logo/og-image-preview", {
@@ -26,8 +27,10 @@ export default class OgImagePreview extends Component {
         data: { topic_id: data.topic_id },
       });
       this.imageUrl = response.url;
-    } catch {
-      this.error = true;
+    } catch (error) {
+      this.errorMessage =
+        extractError(error) ||
+        i18n("admin.config.logo.form.og_image_preview.error");
     } finally {
       this.loading = false;
     }
@@ -76,10 +79,8 @@ export default class OgImagePreview extends Component {
       <div class="og-image-preview__frame">
         {{#if this.loading}}
           <div class="og-image-preview__loading">{{i18n "loading"}}</div>
-        {{else if this.error}}
-          <div class="og-image-preview__error">{{i18n
-              "admin.config.logo.form.og_image_preview.error"
-            }}</div>
+        {{else if this.errorMessage}}
+          <div class="og-image-preview__error">{{this.errorMessage}}</div>
         {{else if this.imageUrl}}
           <img
             src={{this.imageUrl}}

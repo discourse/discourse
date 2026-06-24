@@ -177,31 +177,31 @@
 }
 
 .og-image-preview {
-  margin-top: 1em;
+  margin-top: var(--space-4);
 
   &__header {
-    margin-bottom: 0.25em;
+    margin-bottom: var(--space-1);
   }
 
   &__title {
-    font-weight: 700;
+    font-weight: bold;
     font-size: var(--font-0-rem);
   }
 
   &__description {
     color: var(--primary-medium);
     font-size: var(--font-down-1-rem);
-    margin-bottom: 0.75em;
+    margin-bottom: var(--space-3);
   }
 
   &__form {
-    margin-bottom: 0.75em;
+    margin-bottom: var(--space-3);
   }
 
   &__controls {
     display: flex;
     align-items: flex-end;
-    gap: 0.5em;
+    gap: var(--space-2);
 
     .form-kit__field {
       margin-bottom: 0;
@@ -210,7 +210,7 @@
 
   &__frame {
     border: 1px solid var(--primary-low);
-    border-radius: 0.5em;
+    border-radius: var(--d-border-radius-large);
     overflow: hidden;
     max-width: 600px;
     background: var(--secondary);

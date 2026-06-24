@@ -119,9 +119,9 @@ class TopicOgImageGenerator
 
   # Category pill size. Character-width heuristic is approximate and tuned for a
   # generic sans-serif at font-size 24; long / non-Latin names are truncated
-  # client-side and the rect is capped to the canvas width so we never render
-  # past the right edge. Non-Latin glyphs may not fill the pill perfectly but
-  # will stay visually contained.
+  # here and the rect is capped to the canvas width so we never render past the
+  # right edge. Non-Latin glyphs may not fill the pill perfectly but will stay
+  # visually contained.
   def category_pill_svg(name, color, x, y)
     return "" if name.blank?
 
@@ -328,21 +328,24 @@ class TopicOgImageGenerator
 
       File.write(svg_path, svg)
 
+      # Rasterize with rsvg-convert (ImageMagick's own configured SVG delegate)
+      # rather than `convert`/`magick`: ImageMagick's internal SVG renderer can't
+      # resolve generic font families like "sans-serif" and raises "unable to read
+      # font", whereas rsvg-convert resolves them via fontconfig.
       Discourse::Utils.execute_command(
         "nice",
         "-n",
         "10",
-        "convert",
-        "-background",
+        "rsvg-convert",
+        "--width",
+        OG_WIDTH.to_s,
+        "--height",
+        OG_HEIGHT.to_s,
+        "--background-color",
         "none",
-        "-size",
-        "#{OG_WIDTH}x#{OG_HEIGHT}",
-        svg_path,
-        "-depth",
-        "8",
-        "-define",
-        "png:compression-level=9",
+        "--output",
         png_path,
+        svg_path,
         timeout: 20_000,
       )
 
@@ -350,6 +353,9 @@ class TopicOgImageGenerator
       FileHelper.optimize_image!(png_path)
       File.binread(png_path)
     end
+  rescue Discourse::Utils::CommandError => e
+    Discourse.warn("Failed to render topic OG image", topic_id: @topic.id, error: e.message)
+    nil
   end
 
   def create_upload(png_bytes)

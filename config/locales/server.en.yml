@@ -465,6 +465,9 @@ en:
   invalid_access: "You are not permitted to view the requested resource."
   topic_converter:
     too_many_recipients: "Cannot convert: this topic has more participants than the max allowed (%{max})."
+  topic_og_image:
+    preview_not_eligible: "Cannot generate an OG image for personal messages or topics in private categories."
+    preview_generation_failed: "Failed to generate preview image."
   authenticator_not_found: "Authentication method does not exist, or has been disabled."
   authenticator_no_connect: "This authentication provider does not allow connection to an existing forum account."
   invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."

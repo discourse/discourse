@@ -6530,7 +6530,7 @@ en:
               description: "Preview of automatically generated OpenGraph images for topics without images. Enter a topic ID to test."
               generate: "Generate"
               topic_id_label: "Topic ID"
-              topic_id_placeholder: "auto"
+              topic_id_placeholder: "e.g. 123"
               placeholder: "Enter a topic ID and click Generate to preview."
               error: "Could not generate preview. Check the topic ID and try again."
             x_summary_large_image:
