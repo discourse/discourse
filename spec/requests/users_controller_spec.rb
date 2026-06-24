@@ -5714,7 +5714,7 @@ RSpec.describe UsersController do
               }
           expect(response.status).to eq(200)
           groups = response.parsed_body["groups"]
-          expect(groups).to eq([{ "name" => "admins", "full_name" => nil }])
+          expect(groups).to eq([{ "name" => "admins", "full_name" => "Admins" }])
 
           DiscoursePluginRegistry.reset!
         end
