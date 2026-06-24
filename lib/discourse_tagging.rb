@@ -243,7 +243,20 @@ module DiscourseTagging
         return false unless validate_required_tags_from_group(guardian, topic, category, tags)
 
         if tags.size == 0
-          topic.errors.add(:base, I18n.t("tags.forbidden.invalid", count: new_tag_names.size))
+          not_allowed = tag_names_not_allowed_in_category(category, new_tag_names)
+          if not_allowed.present?
+            topic.errors.add(
+              :base,
+              I18n.t(
+                "tags.forbidden.tag_not_allowed_in_category",
+                count: not_allowed.size,
+                tags: not_allowed.sort.join(", "),
+                category: category.name,
+              ),
+            )
+          else
+            topic.errors.add(:base, I18n.t("tags.forbidden.invalid", count: new_tag_names.size))
+          end
           return false
         end
 
@@ -326,23 +339,36 @@ module DiscourseTagging
     success
   end
 
+  def self.restricted_category_ids_by_tag_name(tag_names)
+    restricted_to = Hash.new { |h, k| h[k] = Set.new }
+    return restricted_to if tag_names.blank?
+
+    query = Tag.where(name: tag_names)
+    query
+      .joins(tag_groups: :categories)
+      .pluck(:name, "categories.id")
+      .each { |(name, category_id)| restricted_to[name] << category_id }
+    query
+      .joins(:categories)
+      .pluck(:name, "categories.id")
+      .each { |(name, category_id)| restricted_to[name] << category_id }
+    restricted_to
+  end
+
+  def self.tag_names_not_allowed_in_category(category, tag_names, restricted_to: nil)
+    return [] if category.blank? || tag_names.blank?
+
+    restricted_to ||= restricted_category_ids_by_tag_name(tag_names)
+    tag_names.select do |name|
+      restricted_to.key?(name) && !restricted_to[name].include?(category.id)
+    end
+  end
+
   def self.validate_category_restricted_tags(guardian, model, category, tags = [])
     return true if tags.blank? || category.blank?
 
     tags = tags.map(&:name) if Tag === tags[0]
-    tags_restricted_to_categories = Hash.new { |h, k| h[k] = Set.new }
-
-    query = Tag.where(name: tags)
-
-    query
-      .joins(tag_groups: :categories)
-      .pluck(:name, "categories.id")
-      .each { |(tag, cat_id)| tags_restricted_to_categories[tag] << cat_id }
-
-    query
-      .joins(:categories)
-      .pluck(:name, "categories.id")
-      .each { |(tag, cat_id)| tags_restricted_to_categories[tag] << cat_id }
+    tags_restricted_to_categories = restricted_category_ids_by_tag_name(tags)
 
     unallowed_tags =
       tags_restricted_to_categories.keys.select do |tag|

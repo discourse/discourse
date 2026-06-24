@@ -4074,6 +4074,9 @@ en:
         error_topic_count:
           one: "%{count} topic"
           other: "%{count} topics"
+        tag_not_allowed_in_category:
+          one: "%{tags} isn't allowed in the %{category} category."
+          other: "These tags aren't allowed in the %{category} category: %{tags}."
 
       none:
         unread: "You have no unread topics."
@@ -5848,7 +5851,6 @@ en:
       category_restrictions:
         one: "It can only be used in the %{categories} category."
         other: "It can only be used in these categories: %{categories}."
-      restricted_to: "Restricted to"
       no_synonyms: "This tag has no synonyms."
       edit_synonyms: "Edit Synonyms"
       add_synonyms_label: "Add synonyms:"
