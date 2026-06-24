@@ -338,6 +338,19 @@ RSpec.describe DiscoursePoll::Poll do
       )
     end
 
+    it "caps generated number poll options to the configured maximum" do
+      SiteSetting.poll_maximum_options = 3
+
+      raw = <<~RAW
+      [poll type=number min=1 max=100 step=1]
+      [/poll]
+      RAW
+
+      poll = DiscoursePoll::Poll.extract(raw, 2).first
+
+      expect(poll["options"].map { |option| option["html"] }).to eq(%w[1 2 3])
+    end
+
     it "extracts poll when there are multiple quotes in the post" do
       raw = <<~RAW
       [quote="user1, post:1, topic:123"]

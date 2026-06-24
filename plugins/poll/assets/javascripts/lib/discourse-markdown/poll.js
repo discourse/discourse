@@ -3,6 +3,7 @@ import { i18n } from "discourse-i18n";
 
 const DATA_PREFIX = "data-poll-";
 const DEFAULT_POLL = { name: "poll", status: "open" };
+const DEFAULT_MAXIMUM_OPTIONS = 20;
 const ALLOWED_ATTRIBUTES = [
   "chartType",
   "close",
@@ -19,10 +20,14 @@ const ALLOWED_ATTRIBUTES = [
   "dynamic",
 ];
 
-function addNumberListItems(state, pollTokens, min, max, step) {
+function addNumberListItems(state, pollTokens, min, max, step, maximumOptions) {
   pollTokens.push(new state.Token("bullet_list_open", "ul", 1));
 
-  for (let i = min; i <= max; i += step) {
+  for (
+    let i = min, count = 0;
+    i <= max && count < maximumOptions;
+    i += step, count++
+  ) {
     pollTokens.push(new state.Token("list_item_open", "li", 1));
 
     let token = new state.Token("text", "", 0);
@@ -144,13 +149,21 @@ const rule = {
       let min = parseInt(attrs.min, 10);
       let max = parseInt(attrs.max, 10);
       let step = parseInt(attrs.step, 10);
+      let maximumOptions = parseInt(
+        state.md.options.discourse.pollMaximumOptions,
+        10
+      );
+
+      if (isNaN(maximumOptions) || maximumOptions < 1) {
+        maximumOptions = DEFAULT_MAXIMUM_OPTIONS;
+      }
 
       if (isNaN(min)) {
         min = 1;
       }
 
       if (isNaN(max)) {
-        max = state.md.options.discourse.pollMaximumOptions;
+        max = maximumOptions;
       }
 
       if (isNaN(step) || step < 1) {
@@ -161,7 +174,7 @@ const rule = {
         state.tokens.splice(openTokenIndex, 1);
         return;
       } else if (min <= max) {
-        addNumberListItems(state, pollTokens, min, max, step);
+        addNumberListItems(state, pollTokens, min, max, step, maximumOptions);
       }
     }
 
