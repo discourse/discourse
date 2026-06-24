@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import AdvancedModeToggle from "discourse/components/advanced-mode-toggle";
@@ -8,12 +9,14 @@ module("Integration | Component | AdvancedModeToggle", function (hooks) {
   setupRenderingTest(hooks);
 
   test("label reflects @active and flips on toggle", async function (assert) {
-    let active = false;
-    const onToggle = () => (active = !active);
+    const state = new (class {
+      @tracked active = false;
+    })();
+    const onToggle = () => (state.active = !state.active);
 
     await render(
       <template>
-        <AdvancedModeToggle @active={{active}} @onToggle={{onToggle}} />
+        <AdvancedModeToggle @active={{state.active}} @onToggle={{onToggle}} />
       </template>
     );
 
