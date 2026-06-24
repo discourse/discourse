@@ -143,6 +143,31 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(post.topic.reload.assignment.assigned_to_id).to eq(allowed_user.id)
     end
 
+    it "does not assign to a group hidden from the acting user" do
+      hidden_group =
+        Fabricate(
+          :group,
+          visibility_level: Group.visibility_levels[:staff],
+          assignable_level: Group::ALIAS_LEVELS[:everyone],
+        )
+
+      sign_in(allowed_user)
+
+      get "/g/#{hidden_group.name}.json"
+      expect(response.status).to eq(404)
+
+      put "/assign/assign.json",
+          params: {
+            target_id: post.topic_id,
+            target_type: "Topic",
+            group_name: hidden_group.name,
+          }
+
+      expect(response.status).to eq(403)
+      expect(response.body).not_to include(hidden_group.name)
+      expect(post.topic.reload.assignment).to be_nil
+    end
+
     it "assigns topic with note to a user" do
       put "/assign/assign.json",
           params: {
@@ -420,6 +445,29 @@ RSpec.describe DiscourseAssign::AssignController do
 
       Fabricate(:topic_assignment, assigned_to: allowed_group, assigned_by_user: admin)
       Fabricate(:post_assignment, assigned_to: allowed_group, assigned_by_user: admin)
+    end
+
+    it "does not list members for a group hidden from the user" do
+      hidden_group =
+        Fabricate(
+          :group,
+          visibility_level: Group.visibility_levels[:staff],
+          members_visibility_level: Group.visibility_levels[:logged_on_users],
+        )
+      hidden_member = Fabricate(:user)
+      hidden_group.add(hidden_member)
+      Fabricate(:topic_assignment, assigned_to: hidden_member, assigned_by_user: admin)
+
+      sign_in(allowed_user)
+
+      get "/g/#{hidden_group.name}.json"
+      expect(response.status).to eq(404)
+
+      get "/assign/members/#{hidden_group.name}.json"
+      expect(response.status).to eq(403)
+      expect(
+        response.parsed_body.fetch("members", []).map { |member| member["username"] },
+      ).not_to include(hidden_member.username)
     end
 
     describe "members" do

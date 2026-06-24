@@ -49,6 +49,35 @@ describe Search do
       ).to eq(2)
     end
 
+    it "does not let assigned:<group> resolve a group the user cannot see" do
+      hidden_group =
+        Fabricate(
+          :group,
+          visibility_level: Group.visibility_levels[:staff],
+          assignable_level: Group::ALIAS_LEVELS[:everyone],
+        )
+      hidden_post = Fabricate(:post)
+      Assigner.new(hidden_post.topic, user).assign(hidden_group)
+
+      # An admin can see the group, so the filter resolves and narrows to its topic.
+      expect(
+        Search
+          .execute("assigned:#{hidden_group.name}", guardian: Guardian.new(Fabricate(:admin)))
+          .posts
+          .map(&:topic_id),
+      ).to include(hidden_post.topic_id)
+
+      # A non-staff assigner cannot see the group, so the name must not resolve: the
+      # filter becomes a no-op (identical to an unknown name) and never narrows the
+      # results to the hidden group's topics.
+      cannot_see = Guardian.new(user)
+      hidden_result = Search.execute("assigned:#{hidden_group.name}", guardian: cannot_see)
+      unknown_result = Search.execute("assigned:#{hidden_group.name}-unknown", guardian: cannot_see)
+
+      expect(hidden_result.posts.map(&:id).sort).to eq(unknown_result.posts.map(&:id).sort)
+      expect(hidden_result.posts.map(&:topic_id)).to include(post1.topic_id)
+    end
+
     it "serializes results" do
       guardian = Guardian.new(user)
       result = Search.execute("in:assigned", guardian: guardian)
