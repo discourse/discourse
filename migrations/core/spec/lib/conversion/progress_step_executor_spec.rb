@@ -5,7 +5,7 @@ RSpec.describe Migrations::Conversion::ProgressStepExecutor do
 
   let(:pool_size) { 2 }
   let(:pool) { Migrations::Conversion::WorkerPool.new(size: pool_size) }
-  let(:reporter) { Migrations::Conversion::ConsoleReporter.new }
+  let(:reporter) { Migrations::Reporting::Plain.new(output: StringIO.new) }
   let(:item_count) { 30 }
   let(:offline_connection) { Migrations::Database::OfflineConnection.new }
   let(:step) { step_class.new(settings: { item_count: }) }
@@ -85,11 +85,16 @@ RSpec.describe Migrations::Conversion::ProgressStepExecutor do
       let(:step_class) { define_fixture_step(false) }
       let(:events) { [] }
       let(:reporter) do
-        instance_double(Migrations::Conversion::ConsoleReporter).tap do |reporter|
-          allow(reporter).to receive(:start_step) { events << :start_step }
-          allow(reporter).to receive(:notice) { events << :notice }
-          allow(reporter).to receive(:with_progress) { events << :with_progress }
-          allow(reporter).to receive(:finish_step) { events << :finish_step }
+        handle = instance_double(Migrations::Reporting::Reporter::StepHandle)
+        allow(handle).to receive(:notice) { events << :notice }
+        allow(handle).to receive(:with_progress) { events << :with_progress }
+        allow(handle).to receive(:finish) { events << :finish }
+
+        instance_double(Migrations::Reporting::Plain).tap do |reporter|
+          allow(reporter).to receive(:start_step) do
+            events << :start_step
+            handle
+          end
         end
       end
 
@@ -98,7 +103,7 @@ RSpec.describe Migrations::Conversion::ProgressStepExecutor do
 
         executor.execute
 
-        expect(events).to eq(%i[start_step notice with_progress finish_step])
+        expect(events).to eq(%i[start_step notice with_progress finish])
       end
     end
 

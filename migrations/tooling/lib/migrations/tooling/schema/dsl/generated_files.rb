@@ -16,13 +16,11 @@ module Migrations
           # it, which is how generated files are told apart from them.
           MARKER = "This file is auto-generated from the"
 
-          module_function
-
           # Absolute paths of the model and enum files generation produces for
           # `resolved`, rooted at `root`. Manual models are hand-written, so they
           # are excluded. The SQL schema file is not included — callers that need
           # it add it themselves.
-          def expected_paths(resolved, output_config, root)
+          def self.expected_paths(resolved, output_config, root)
             models_dir = File.expand_path(output_config.models_directory, root)
             enums_dir = File.expand_path(output_config.enums_directory, root)
 
@@ -43,7 +41,7 @@ module Migrations
           # the auto-generated {MARKER} but are not in `expected` (the result of
           # {expected_paths} for the same `root`). Hand-written models lack the
           # marker and are never returned.
-          def stale_paths(output_config, root, expected)
+          def self.stale_paths(output_config, root, expected)
             expected = expected.to_set
 
             [output_config.models_directory, output_config.enums_directory].uniq.flat_map do |dir|
