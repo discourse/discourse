@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# frozen_string_literal: true
+#
+# Run mutation testing for the migration gems.
+#
+# Each gem that opts in ships a `.mutant.yml` listing its pure, non-`:rails`
+# subjects (mutant runs the gem's own spec suite, which excludes `:rails`
+# examples, so only isolated subjects can be killed). This wrapper runs mutant
+# inside each such gem's own bundle.
+#
+#   bin/mutant                 # all gems with a .mutant.yml
+#   bin/mutant tooling         # just one gem
+#   bin/mutant tooling --since main   # only subjects touched on this branch
+#
+# Anything after the gem name is passed straight through to `mutant run`.
+set -euo pipefail
+
+migrations_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+gem=""
+if [[ $# -gt 0 && -d "$migrations_dir/$1" ]]; then
+  gem="$1"
+  shift
+fi
+
+run_gem() {
+  local dir="$1"
+  shift
+  echo "==> mutant: $(basename "$dir")"
+  ( cd "$dir" && BUNDLE_GEMFILE="$dir/Gemfile" bundle exec mutant run --usage opensource "$@" )
+}
+
+status=0
+if [[ -n "$gem" ]]; then
+  run_gem "$migrations_dir/$gem" "$@" || status=$?
+else
+  for cfg in "$migrations_dir"/*/.mutant.yml; do
+    run_gem "$(dirname "$cfg")" "$@" || status=$?
+  done
+fi
+exit "$status"

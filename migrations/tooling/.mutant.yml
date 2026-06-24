@@ -1,0 +1,32 @@
+# Mutation-testing config for the tooling gem.
+#
+# Run with: bundle exec mutant run   (or ../../bin/mutant from the repo root)
+#
+# Only pure, non-`:rails` subjects belong here — mutant runs the gem's own spec
+# suite (which excludes `:rails` examples by default), so a subject whose specs
+# need a booted Discourse can't be killed and would just report noise. The
+# dividing line is exactly the `:rails` tag on the spec: no tag -> mutant target.
+integration:
+  name: rspec
+requires:
+  - migrations-tooling
+matcher:
+  subjects:
+    - "Migrations::Tooling::Coverage::CreateCallScanner"
+    - "Migrations::Tooling::Coverage::ConverterAnalyzer"
+    - "Migrations::Tooling::Coverage::ReferenceCheck"
+    - "Migrations::Tooling::Coverage::SchemaColumns"
+    - "Migrations::Tooling::Schema::DSL::TableBuilder"
+    - "Migrations::Tooling::Schema::DSL::ResolvedSchemaValidator"
+    - "Migrations::Tooling::Schema::DSL::PluginManifest"
+    - "Migrations::Tooling::Schema::DSL::PluginIntrospector"
+    - "Migrations::Tooling::Schema::DSL::Loader"
+    - "Migrations::Tooling::Schema::DSL::IgnoredFileEditor"
+    - "Migrations::Tooling::Schema::DSL::IgnoredBuilder"
+    - "Migrations::Tooling::Schema::DSL::Generator"
+    - "Migrations::Tooling::Schema::DSL::GeneratedFiles"
+    - "Migrations::Tooling::Schema::DSL::EnumBuilder"
+    - "Migrations::Tooling::Schema::DSL::ConventionsBuilder"
+    - "Migrations::Tooling::Schema::DSL::ConfigBuilder"
+    # Differ is excluded on purpose: its behavior is covered by `differ_spec.rb`
+    # (`:rails`), so mutant can't reach most of it from the isolated suite.

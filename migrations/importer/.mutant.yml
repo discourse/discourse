@@ -1,0 +1,14 @@
+# Mutation-testing config for the importer gem. See tooling/.mutant.yml for the
+# rationale; only pure, non-`:rails` subjects are listed here.
+#
+# Most of the importer (copy steps, uploads, executor, the name finders that
+# pull in SiteSetting/UserNameSuggester) is either DB/fork/IO-bound or
+# `:rails`-tagged, so it isn't a useful mutant target. SuffixFinder is the one
+# pure algorithm with isolated specs.
+integration:
+  name: rspec
+requires:
+  - migrations-importer
+matcher:
+  subjects:
+    - "Migrations::Importer::SuffixFinder"
