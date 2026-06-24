@@ -271,6 +271,22 @@ RSpec.describe Chat::ChatController do
       )
     end
 
+    it "serializes each reactor with the BasicUserSerializer fields plus the reaction" do
+      sign_in(user)
+      get "/chat/#{chat_channel.id}/#{chat_message.id}/reactions-users.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].first).to eq(
+        {
+          "id" => reactor_1.id,
+          "username" => reactor_1.username,
+          "name" => reactor_1.name,
+          "avatar_template" => reactor_1.avatar_template,
+          "reaction" => "heart",
+        },
+      )
+    end
+
     it "filters by the emoji param" do
       sign_in(user)
       get "/chat/#{chat_channel.id}/#{chat_message.id}/reactions-users.json",

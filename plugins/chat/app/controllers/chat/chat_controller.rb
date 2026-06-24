@@ -40,18 +40,7 @@ module Chat
           current_user_id: current_user.id,
         )
 
-      users =
-        rows.map do |row|
-          {
-            id: row.id,
-            username: row.username,
-            name: row.name,
-            avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
-            reaction: row.reaction,
-          }
-        end
-
-      render_json_dump(users: users, total_rows: total)
+      render_json_dump(users: serialize_data(rows, Chat::ReactionUserSerializer), total_rows: total)
     end
 
     def rebake
