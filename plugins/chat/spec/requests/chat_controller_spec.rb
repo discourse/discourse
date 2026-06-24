@@ -326,6 +326,13 @@ RSpec.describe Chat::ChatController do
       expect(response.status).to eq(404)
     end
 
+    it "returns a 404 when the message is trashed" do
+      chat_message.trash!
+      sign_in(user)
+      get "/chat/#{chat_channel.id}/#{chat_message.id}/reactions-users.json"
+      expect(response.status).to eq(404)
+    end
+
     it "returns a 403 for anonymous users" do
       get "/chat/#{chat_channel.id}/#{chat_message.id}/reactions-users.json"
       expect(response.status).to eq(403)

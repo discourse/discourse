@@ -26,7 +26,7 @@ module Chat
       params.require(:message_id)
 
       message = Chat::Message.find_by(id: params[:message_id], chat_channel_id: @chat_channel.id)
-      raise Discourse::NotFound if message.nil?
+      raise Discourse::NotFound if message.nil? || !guardian.can_see_chat_message?(message)
 
       page = params[:page].to_i.clamp(0..)
       limit = params[:limit].present? ? params[:limit].to_i.clamp(1, 50) : 30
