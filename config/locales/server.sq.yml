@@ -1431,6 +1431,8 @@ sq:
               private:
                 label: "Private"
   onebox:
+    google_meet:
+      meeting_code: "Kodi:"
     github:
       status_date:
         approved: "aprovuar"

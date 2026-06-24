@@ -5059,6 +5059,8 @@ sk:
   onebox:
     discourse:
       user_joined_community: "Pripojil sa k %{date}"
+    google_meet:
+      meeting_code: "Kód:"
     gitlab:
       truncated_file: "Tento súbor bol skrátený."
       show_original: "zobraziť originál"

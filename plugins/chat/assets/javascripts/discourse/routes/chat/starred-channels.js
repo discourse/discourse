@@ -4,6 +4,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default class ChatStarredChannelsRoute extends DiscourseRoute {
   @service chat;
   @service chatChannelsManager;
+  @service currentUser;
   @service router;
   @service site;
 
@@ -12,6 +13,10 @@ export default class ChatStarredChannelsRoute extends DiscourseRoute {
   }
 
   async beforeModel() {
+    if (!this.currentUser) {
+      return this.router.replaceWith("chat.channels");
+    }
+
     if (this.site.desktopView) {
       const channel = this.chat.activeChannel;
 

@@ -1986,6 +1986,12 @@ te:
       confirm_title: '%{site_name} కు కొనసాగండి'
       logging_in_as: '%{email}గా లాగిన్ అవుతోంది'
       confirm_button: లాగిన్ ముగించండి
+    code_login:
+      email_label: "ఈమెయిల్"
+      continue_button: "కొనసాగించండి"
+      verify_button: "కొనసాగించండి"
+      account_ready_continue: "కొనసాగించండి"
+      username_label: "సభ్యనామం"
     login:
       header_title: "తిరిగి స్వాగతం"
       title: "లాగిన్"

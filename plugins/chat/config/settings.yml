@@ -27,6 +27,7 @@ chat:
     default: "1|2|11" # @admins, @moderators, @trust_level_1
     mandatory_values: "1|2" # @admins, @moderators
     allow_any: false
+    client: true
     refresh: true
     area: "group_permissions"
   chat_threads_enabled:

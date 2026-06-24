@@ -64,7 +64,6 @@ ro:
       models:
         invitee:
           status:
-            unknown: "Nu sunt interesat"
             going: "Merg"
             interested: "Interesat"
         event:

@@ -2537,6 +2537,22 @@ RSpec.describe TopicsController do
             expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
           end
 
+          it "rejects tag arrays exceeding the configured per-topic limit" do
+            SiteSetting.max_tags_per_topic = 1
+
+            put "/t/#{topic.slug}/#{topic.id}.json",
+                params: {
+                  tags: [{ id: tag.id, name: tag.name }, {}],
+                },
+                as: :json
+
+            expect(response.status).to eq(422)
+            expect(response.parsed_body["errors"]).to contain_exactly(
+              I18n.t("tags.too_many_tags_for_topic", count: 1),
+            )
+            expect(topic.reload.tags).to be_empty
+          end
+
           it "can update tags when params are form-encoded as indexed hash" do
             expect do
               put "/t/#{topic.id}/tags.json",
@@ -5362,6 +5378,25 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(403)
     end
 
+    it "returns 404 for inaccessible private messages" do
+      sign_in(user_2)
+      private_message =
+        create_post(
+          user: user,
+          archetype: "private_message",
+          target_usernames: [user.username],
+        ).topic
+      missing_topic_id = Topic.maximum(:id) + 1
+
+      put "/t/#{private_message.id}/remove_bookmarks.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+
+      put "/t/#{missing_topic_id}/remove_bookmarks.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+    end
+
     it "should remove bookmarks properly from non first post" do
       sign_in(user)
 
@@ -5372,14 +5407,6 @@ RSpec.describe TopicsController do
 
       put "/t/#{post.topic_id}/remove_bookmarks.json"
       expect(Bookmark.where(user: user).count).to eq(0)
-    end
-
-    it "should disallow bookmarks on posts you have no access to" do
-      sign_in(Fabricate(:user))
-      pm = create_post(user: user, archetype: "private_message", target_usernames: [user.username])
-
-      put "/t/#{pm.topic_id}/bookmark.json"
-      expect(response).to be_forbidden
     end
 
     context "with bookmarks with reminders" do
@@ -5395,6 +5422,25 @@ RSpec.describe TopicsController do
 
   describe "#bookmark" do
     before { sign_in(user) }
+
+    it "returns 404 for inaccessible private messages" do
+      sign_in(user_2)
+      private_message =
+        create_post(
+          user: user,
+          archetype: "private_message",
+          target_usernames: [user.username],
+        ).topic
+      missing_topic_id = Topic.maximum(:id) + 1
+
+      put "/t/#{private_message.id}/bookmark.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+
+      put "/t/#{missing_topic_id}/bookmark.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+    end
 
     it "should create a new bookmark for the topic" do
       post = create_post
@@ -6341,6 +6387,32 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(403)
         expect(response.parsed_body["error_type"]).to eq("invalid_access")
+      end
+    end
+
+    context "when logged in as a user in the topic timers allowed groups" do
+      fab!(:topic_timer_group, :group)
+
+      before do
+        topic_timer_group.add(user)
+        user.reload
+        SiteSetting.topic_timers_allowed_groups = topic_timer_group.id.to_s
+        sign_in(user)
+      end
+
+      it "allows creating a topic timer" do
+        post "/t/#{topic.id}/timer.json", params: { time: "24", status_type: TopicTimer.types[1] }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.public_topic_timer.user).to eq(user)
+      end
+
+      it "requires delete permissions for destructive timers" do
+        post "/t/#{topic.id}/timer.json", params: { time: "24", status_type: "delete" }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(topic.reload.public_topic_timer).to eq(nil)
       end
     end
 

@@ -36,8 +36,11 @@ zh_CN:
         title: 使用 AI 对帖子进行分类
         description: "使用大语言模型对帖子进行分类"
         flagged_post: |
-          <div>模型的回答：</div>
-          <p>%{llm_response}</p>
+          %{score_reason}
+          %{response}
+        flagged_post_response: |
+          <p>模型响应： %{llm_response}</p>
+        flagged_post_score_reason: |
           <b>由 <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> 规则触发。</b>
         notify_author_pm:
           subject: "您的帖子已暂时移除供审核"
@@ -701,6 +704,7 @@ zh_CN:
         already_flagged: "该帖子已被标记待审核。"
         flagged: "帖子已被标记待审核。"
         reason: "AI 机器人标记了此帖子。\n\n原因：%{reason}"
+        score_reason: "AI 机器人标记了此帖子。"
       close_topic:
         errors:
           not_found: "找不到话题。"

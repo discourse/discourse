@@ -346,7 +346,7 @@ export default class ChatChannel extends Component {
     result?.messages?.forEach((messageData, index) => {
       messageData.firstOfResults = index === 0;
 
-      if (this.currentUser.ignored_users) {
+      if (this.currentUser?.ignored_users) {
         // If a message has been hidden it is because the current user is ignoring
         // the user who sent it, so we want to unconditionally hide it, even if
         // we are going directly to the target

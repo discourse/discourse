@@ -86,6 +86,30 @@ after_initialize do
     self,
   )
 
+  if defined?(DiscourseAi)
+    require_relative "lib/discourse_workflows/ai/tools/base"
+    require_relative "lib/discourse_workflows/ai/graph_digest"
+    require_relative "lib/discourse_workflows/ai/progress_publisher"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_node_catalog"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_ai_agent_catalog"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_graph_context"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_validate_patch"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_ask_questions"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_resolve_entity"
+    require_relative "lib/discourse_workflows/ai/tools/search_chat_channels"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_script_context"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_validate_script"
+    require_relative "lib/discourse_workflows/ai_workflow_author"
+
+    DiscourseAi.register_feature(
+      module_name: :discourse_workflows,
+      feature: :workflow_authoring,
+      agent_klass: DiscourseWorkflows::AiWorkflowAuthor,
+      enabled_by_setting: "discourse_workflows_ai_authoring_enabled",
+      plugin: self,
+    )
+  end
+
   add_to_serializer :site,
                     :topic_admin_button_workflows,
                     include_condition: -> { scope.is_admin? } do

@@ -112,6 +112,54 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       expect(topic.posts.order(:id).last.reply_to_post_number).to eq(first_post.post_number)
     end
 
+    it "creates a whisper when configured" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
+      topic = first_post.topic
+      result = nil
+
+      expect do
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "create",
+              "topic_id" => topic.id.to_s,
+              "raw" => "Workflow whisper",
+              "whisper" => true,
+              "author_username" => admin.username,
+            },
+            item: item,
+          )
+      end.to change { topic.posts.count }.by(1)
+
+      reply = topic.posts.order(:id).last
+      expect(reply.post_type).to eq(Post.types[:whisper])
+      expect(result["post"]).to include(
+        "id" => reply.id,
+        "post_type" => Post.types[:whisper],
+        "raw" => "Workflow whisper",
+      )
+    end
+
+    it "raises when the create author cannot whisper" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
+      topic = first_post.topic
+
+      expect do
+        execute_node(
+          configuration: {
+            "operation" => "create",
+            "topic_id" => topic.id.to_s,
+            "raw" => "Unauthorized whisper",
+            "whisper" => true,
+            "author_username" => user.username,
+          },
+          item: item,
+        )
+      end.to raise_error(Discourse::InvalidAccess).and not_change { topic.posts.count }
+    end
+
     it "raises when the create author cannot be found" do
       first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
 

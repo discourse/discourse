@@ -50,6 +50,12 @@ he:
       run: "הרצה"
       undo: "התעלמות מהשינויים"
       delete: "מחיקה"
+      chart:
+        form:
+          label: "סוג תרשים"
+          bar: "עמודות"
+        tooltip:
+          total: "סה״כ: %{count}"
       others_dirty: "בשאילתה נערכו שינויים שטרם נשמרו ועשויים ללכת לאיבוד עקב ניווט למקום אחר."
       run_time: "השאילתה הושלמה תוך %{value} מילישניות."
       result_count:

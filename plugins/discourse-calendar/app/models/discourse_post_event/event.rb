@@ -161,7 +161,12 @@ module DiscoursePostEvent
     end
 
     def raw_invitees_are_groups
-      if raw_invitees && User.select(:id).where(username: raw_invitees).limit(1).count > 0
+      return if raw_invitees.blank?
+
+      non_group_invitees = raw_invitees - Group.where(name: raw_invitees).pluck(:name)
+      return if non_group_invitees.blank?
+
+      if User.where(username: non_group_invitees).exists?
         errors.add(
           :base,
           I18n.t("discourse_post_event.errors.models.event.raw_invitees.only_group"),

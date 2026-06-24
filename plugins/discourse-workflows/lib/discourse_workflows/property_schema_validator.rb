@@ -63,6 +63,7 @@ module DiscourseWorkflows
       flat
       format
       hidden
+      multiple
       show_description
       show_label
       singular_name
@@ -103,6 +104,7 @@ module DiscourseWorkflows
       group_select
       icon
       multi_combo_box
+      multi_input
       notice
       password
       query_params

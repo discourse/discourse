@@ -298,6 +298,11 @@ export default class User extends RestModel.extend(Evented) {
     return this.staff || this.isLeader;
   }
 
+  @computed("can_set_topic_timer", "canManageTopic")
+  get canSetTopicTimer() {
+    return this.can_set_topic_timer ?? this.canManageTopic;
+  }
+
   @computed("sidebar_category_ids")
   get sidebarCategoryIds() {
     return this.sidebar_category_ids;

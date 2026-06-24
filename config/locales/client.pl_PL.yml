@@ -2985,6 +2985,30 @@ pl_PL:
       confirm_title: Przejdź do %{site_name}
       logging_in_as: Logowanie jako %{email}
       confirm_button: Dokończ logowanie
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Kontynuuj"
+      check_your_email: "Sprawdź swoją pocztę e-mail"
+      code_instructions: "Wysłaliśmy 6-cyfrowy kod na adres <b>%{email}</b>. Wprowadź go poniżej, aby kontynuować."
+      verify_button: "Kontynuuj"
+      resend: "Wyślij ponownie kod"
+      resend_countdown: "Wyślij ponownie kod (%{count}s)"
+      code_resent: "Wysłaliśmy nowy kod."
+      use_different_email: "Użyj innego adresu e-mail"
+      use_password_instead: "Zamiast tego zaloguj się za pomocą hasła"
+      email_me_code: "Wyślij mi na e-mail jednorazowy kod logowania"
+      signup_title: "Dołącz do tej społeczności"
+      signup_instructions: "Podaj swój adres e-mail, aby dołączyć do tej społeczności. Wyślemy Ci kod potwierdzający i gotowe!"
+      user_fields_title: "Prawie gotowe"
+      user_fields_instructions: "Jeszcze tylko kilka szczegółów, aby zakończyć tworzenie konta."
+      account_ready_title: "Twoje konto jest gotowe! 🎉"
+      account_ready_edit: "Wybierz swoją nazwę użytkownika i awatar"
+      account_ready_continue: "Kontynuuj"
+      username_label: "Nazwa użytkownika"
+      username_placeholder: "Wybierz nazwę użytkownika"
+      change_avatar: "Zmień awatar"
+      username_taken: "Ta nazwa użytkownika jest zajęta. Spróbuj innej."
+      username_unavailable: "Ta nazwa użytkownika jest niedostępna. Spróbuj %{suggestion}."
     login:
       header_title: "Witamy ponownie"
       title: "Zaloguj się"
@@ -3001,10 +3025,11 @@ pl_PL:
       second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
       second_factor: "Zaloguj się przy użyciu aplikacji Authenticator"
       security_key_description: "Gdy masz przygotowany fizyczny klucz bezpieczeństwa lub kompatybilne urządzenie mobilne, naciśnij znajdujący się poniżej przycisk Uwierzytelnij za pomocą klucza bezpieczeństwa."
-      security_key_or_passkey_description: "Gdy już przygotujesz klucz bezpieczeństwa, klucz dostępu lub kompatybilne urządzenie mobilne, naciśnij poniższy przycisk."
       security_key_alternative: "Spróbuj w inny sposób"
       security_key_authenticate: "Uwierzytelnij się za pomocą klucza bezpieczeństwa"
-      security_key_or_passkey_authenticate: "Uwierzytelnij się za pomocą klucza bezpieczeństwa lub klucza dostępu"
+      passkey_2fa_description: "Potwierdź swoją tożsamość za pomocą klucza."
+      use_passkey: "Użyj klucza dostępu"
+      use_security_key: "Użyj klucza bezpieczeństwa"
       security_key_not_allowed_error: "Upłynął limit czasu procesu uwierzytelniania klucza bezpieczeństwa lub został on anulowany."
       security_key_no_matching_credential_error: "W podanym kluczu zabezpieczeń nie znaleziono zgodnych poświadczeń."
       security_key_support_missing_error: "Twoje obecne urządzenie lub przeglądarka nie obsługuje używania kluczy bezpieczeństwa. Proszę użyć innej metody."
@@ -3079,6 +3104,7 @@ pl_PL:
         totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
         backup_code: "Zamiast tego użyj kodu zapasowego"
         security_key: "Zamiast tego użyj klucza zabezpieczeń"
+        passkey: "Zamiast tego użyj klucza dostępu"
       no_login_methods:
         title: "Brak metod logowania"
         description: "Nie skonfigurowano żadnych metod logowania. Administratorzy mogą odwiedzić <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a>, aby ponownie skonfigurować witrynę."
@@ -4340,6 +4366,13 @@ pl_PL:
         banner: "Przeglądasz pojedynczy wątek z tego tematu."
         view_full_topic: "Zobacz cały temat"
         view_parent_context: "Wyświetl kontekst nadrzędny"
+    share_target:
+      title: "Udostępniana treść"
+      description: "Co chcesz zrobić z udostępnioną treścią?"
+      new_topic: "Nowy temat"
+      new_message: "Nowa wiadomość"
+      add_to_reply: "Dodaj do odpowiedzi"
+      added_to_reply: "Zapisano. Treść zostanie dodana przy następnym otwarciu odpowiedzi."
     topic:
       filter_to:
         one: "%{count} post w temacie"
@@ -5234,6 +5267,8 @@ pl_PL:
       originally_written_in: "Język oryginalny: %{language}"
       click_to_show_original: "Kliknij, aby wyświetlić oryginał"
       tap_to_show_original: "Stuknij tutaj, aby wyświetlić oryginał"
+      click_to_show_translation: "Kliknij, aby wyświetlić tłumaczenie"
+      tap_to_show_translation: "Stuknij tutaj, aby wyświetlić tłumaczenie"
       ai_translation_disclaimer: "Tłumaczenia wygenerowane przez AI mogą być niedokładne."
     category:
       none: "(brak kategorii)"
@@ -5281,6 +5316,11 @@ pl_PL:
         tag_group: "Grupa tagów"
       topic_featured_link_allowed: "Zezwól na wybrane linki w tej kategorii"
       delete: "Usuń kategorię"
+      danger_zone:
+        title: "Strefa niebezpieczna"
+        delete_title: "Edytuj tę kategorię"
+        delete_description: "Po usunięciu tej kategorii i jej ustawień nie będzie można odzyskać. Tematy w niej zawarte będą musiały zostać wcześniej ponownie przypisane."
+        delete_title_forbidden: "Nie można usunąć tej kategorii"
       create: "Nowa kategoria"
       create_with_type: "Nowa kategoria %{typeName}"
       create_long: "Utwórz nową kategorię"
@@ -5291,6 +5331,9 @@ pl_PL:
         site_settings: "Ustawienia witryny"
       choose_type:
         title: "Wybierz typ kategorii"
+        requires_plugin: "Wymaga wtyczki „%{plugin_name}”"
+        unavailable: "Niedostępne"
+        ask_admin_to_enable_plugin: "Poproś administratora o włączenie wtyczki „%{plugin_name}”"
       create_category: "Utwórz kategorię"
       save: "Zapisz kategorię"
       unsaved_changes: "Masz niezapisane zmiany"
@@ -6053,6 +6096,7 @@ pl_PL:
         slug: "Identyfikator tekstowy"
         name_placeholder: "Nazwa tagu"
         slug_placeholder: "Identyfikator tekstowy tagu (opcjonalny, generowany automatycznie z nazwy)"
+        invalid_slug: "Używaj małych liter, cyfr i pojedynczych łączników między słowami."
         saved: "Zapisane ustawienia tagów"
         no_synonyms: "Dla tego tagu nie zdefiniowano synonimów."
         add_synonym_placeholder: "Wyszukaj tagi, które chcesz dodać jako synonimy..."
@@ -7191,6 +7235,12 @@ pl_PL:
         latest_version: "Najnowsza"
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
         dismiss_notice: "Ignoruj"
+        site_advice:
+          title:
+            one: "%{count} problem wymaga uwagi ze względu na konfigurację witryny"
+            few: "%{count} problemy wymagają uwagi ze względu na konfigurację witryny"
+            many: "%{count} problemów wymaga uwagi ze względu na konfigurację witryny"
+            other: "%{count} problemów wymaga uwagi ze względu na konfigurację witryny"
         new_features:
           title: "Co nowego?"
           subtitle: "Cały czas udostępniamy nowe funkcje i ulepszenia. Ta strona obejmuje najważniejsze z nich, ale możesz kliknąć 'Dowiedz się więcej', aby zobaczyć obszerne informacje o wersji."
@@ -7751,6 +7801,7 @@ pl_PL:
             invites:
               create: Wysyłaj zaproszenia e-mailem lub generuj linki do zaproszeń.
             badges:
+              list: Pobierz listę odznak.
               create: Utwórz nową odznakę.
               show: Uzyskaj informacje o odznace.
               update: Zaktualizuj odznakę.
@@ -8481,6 +8532,7 @@ pl_PL:
           updating: "Aktualizowanie…"
           update_success: "Aktualizacja motywu %{theme} zakończona"
           up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"
+          up_to_date_branch: "Motyw jest aktualny w gałęzi %{branch}, ostatnie sprawdzenie:"
           has_overwritten_history: "Bieżąca wersja motywu już nie istnieje, ponieważ historia Git została nadpisana przez wymuszony push."
           change_source:
             button: "Zmień źródło"
@@ -8506,6 +8558,11 @@ pl_PL:
             few: "Motyw jest %{count} aktualizacji w tyle!"
             many: "Motyw jest %{count} aktualizacji w tyle!"
             other: "Motyw jest %{count} aktualizacji w tyle!"
+          commits_behind_branch:
+            one: "Motyw znajduje się %{count} zatwierdzenie za gałęzią %{branch}"
+            few: "Motyw znajduje się %{count} zatwierdzenia za gałęzią %{branch}"
+            many: "Motyw znajduje się %{count} zatwierdzeń za gałęzią %{branch}"
+            other: "Motyw znajduje się %{count} zatwierdzeń za gałęzią %{branch}"
           compare_commits: "(Sprawdź nowe commity)"
           remote_theme_edits: "Jeśli chcesz edytować ten motyw, musisz <a href='%{repoURL}' target='_blank'>przesłać zmianę w jego repozytorium</a>"
           repo_unreachable: "Nie można skontaktować się z repozytorium Git tego motywu. Komunikat o błędzie:"
@@ -8948,6 +9005,7 @@ pl_PL:
             change_site_setting_groups: "zmień grupy ustawień witryny"
             discourse_id_regenerate_credentials: "wygeneruj ponownie dane uwierzytelniające Discourse ID"
             configure_category_type: "skonfiguruj typ kategorii"
+            unconfigure_category_type: "usuń konfigurację typu kategorii"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."

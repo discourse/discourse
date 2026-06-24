@@ -463,4 +463,27 @@ module UpcomingChanges
       upcoming_change if settings_provider.upcoming_change_metadata[upcoming_change][:body_class]
     end
   end
+
+  # Site settings to hide from admins because an upcoming change that declares
+  # `hide_settings:` (in its site_settings.yml metadata) is currently enabled.
+  # Legacy settings a change replaces stop making sense once the change is in
+  # effect, so they are hidden while it is enabled.
+  #
+  # Consulted by SiteSettings::HiddenProvider#all, which runs on every
+  # hidden_settings read. It is computed live rather than toggled at opt-in time
+  # so it tracks both opt-in paths (manual and auto-promotion) and is
+  # multisite-safe: the hidden set is process-global, but enabled? resolves
+  # per-site, so we never hide a setting for sites that haven't opted in.
+  #
+  # `enabled?` is only called for the (usually zero) changes that declare
+  # `hide_settings`, so the common case is a cheap metadata scan with no DB hit.
+  def self.settings_hidden_while_enabled
+    metadata = settings_provider.upcoming_change_metadata
+    return [] if metadata.empty?
+
+    metadata.each_with_object([]) do |(change_name, change_metadata), hidden|
+      next if change_metadata[:hide_settings].blank?
+      hidden.concat(change_metadata[:hide_settings]) if enabled?(change_name)
+    end
+  end
 end

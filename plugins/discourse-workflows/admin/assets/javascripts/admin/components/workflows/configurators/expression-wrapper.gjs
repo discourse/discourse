@@ -10,7 +10,10 @@ import {
   resolveVariableId,
   WORKFLOW_VARIABLE_MIME,
 } from "../../../lib/workflows/expression-context";
-import { isExpression } from "../../../lib/workflows/property-engine";
+import {
+  fieldType,
+  isExpression,
+} from "../../../lib/workflows/property-engine";
 import ExpressionInput from "./expression-input";
 
 const MODE_ITEMS = [
@@ -26,7 +29,7 @@ const MODE_ITEMS = [
   },
 ];
 
-function plainValueForModeToggle(value) {
+function plainTextValue(value) {
   if (value === null || value === undefined) {
     return "";
   }
@@ -40,6 +43,99 @@ function plainValueForModeToggle(value) {
   }
 
   return String(value);
+}
+
+function schemaType(schema) {
+  return fieldType(schema);
+}
+
+function wholeExpressionBody(value) {
+  const expressionBody = value.slice(1).trim();
+  const match = expressionBody.match(/^\{\{\s*([\s\S]*?)\s*\}\}$/);
+
+  return match?.[1]?.trim() || null;
+}
+
+function parseJsonLiteral(value) {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return undefined;
+  }
+}
+
+function splitListValue(value) {
+  return String(value)
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+}
+
+function arrayLiteralValue(value) {
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  if (value === null || value === undefined || value === "") {
+    return [];
+  }
+
+  return splitListValue(value);
+}
+
+function dynamicValueForModeToggle(value, schema = {}) {
+  if (typeof value === "string" && value.startsWith("=")) {
+    return value;
+  }
+
+  if (schemaType(schema) === "array" || Array.isArray(value)) {
+    return `={{ ${JSON.stringify(arrayLiteralValue(value))} }}`;
+  }
+
+  return `=${plainTextValue(value)}`;
+}
+
+function plainArrayValueForModeToggle(expressionValue) {
+  const parsedLiteral = parseJsonLiteral(
+    wholeExpressionBody(expressionValue) || ""
+  );
+
+  if (Array.isArray(parsedLiteral)) {
+    return parsedLiteral;
+  }
+
+  if (typeof parsedLiteral === "string") {
+    return splitListValue(parsedLiteral);
+  }
+
+  const rawExpression = expressionValue.slice(1).trim();
+  if (!rawExpression.includes("{{") && !rawExpression.includes("}}")) {
+    return splitListValue(rawExpression);
+  }
+
+  return [];
+}
+
+function plainValueForModeToggle(value, schema = {}) {
+  if (!(typeof value === "string" && value.startsWith("="))) {
+    return value;
+  }
+
+  const type = schemaType(schema);
+
+  if (type === "array") {
+    return plainArrayValueForModeToggle(value);
+  }
+
+  const body = wholeExpressionBody(value);
+  if (body) {
+    const parsedLiteral = parseJsonLiteral(body);
+    if (parsedLiteral !== undefined && typeof parsedLiteral !== "object") {
+      return parsedLiteral;
+    }
+  }
+
+  return value.slice(1);
 }
 
 export default class ExpressionWrapper extends Component {
@@ -57,25 +153,36 @@ export default class ExpressionWrapper extends Component {
   }
 
   get expressionMode() {
+    if (this.args.expressionMode !== undefined) {
+      return Boolean(this.args.expressionMode);
+    }
+
     return isExpression(this.args.field?.value);
+  }
+
+  get modeItems() {
+    return this.args.modeItems || MODE_ITEMS;
   }
 
   @action
   toggleMode(value) {
+    if (this.args.onModeChange) {
+      this.args.onModeChange(value);
+      return;
+    }
+
     const wantsDynamic = value === "dynamic";
     if (wantsDynamic === this.expressionMode) {
       return;
     }
 
-    const currentValue = plainValueForModeToggle(this.args.field.value);
-
     if (wantsDynamic) {
       this.args.field.set(
-        currentValue.startsWith("=") ? currentValue : `=${currentValue}`
+        dynamicValueForModeToggle(this.args.field.value, this.args.schema)
       );
     } else {
       this.args.field.set(
-        currentValue.startsWith("=") ? currentValue.slice(1) : currentValue
+        plainValueForModeToggle(this.args.field.value, this.args.schema)
       );
     }
   }
@@ -171,7 +278,7 @@ export default class ExpressionWrapper extends Component {
 
       {{#if @supportsExpression}}
         <DSegmentedControl
-          @items={{MODE_ITEMS}}
+          @items={{this.modeItems}}
           @value={{if this.expressionMode "dynamic" "plain"}}
           @onSelect={{this.toggleMode}}
           @size="small"

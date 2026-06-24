@@ -9,7 +9,6 @@ describe "Admin Dashboard Redesign | Search section" do
 
   before do
     SiteSetting.dashboard_improvements = true
-    SiteSetting.admin_dashboard_search_section_enabled = true
     AdminDashboardSectionConfiguration.update(
       [
         { id: "search", visible: true },

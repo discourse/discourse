@@ -385,6 +385,7 @@ en:
         send_bulk_invites: "Send invites"
         group_selector_placeholder: "Choose a group..."
         user_selector_placeholder: "Choose user..."
+        attendance_label: "Attendance"
         inline_title: "Inline bulk invite"
         csv_title: "CSV bulk invite"
       upcoming_events:
@@ -415,7 +416,6 @@ en:
           this_and_following: "This event and all following events"
           leave_event: "Leave event"
           status:
-            unknown: "Not interested"
             going: "Going"
             not_going: "Not going"
             interested: "Interested"

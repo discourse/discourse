@@ -1719,6 +1719,12 @@ sr:
       login_link: "Preskoči lozinku; pošalji mi link za prijavu"
       complete_username_not_found: "Nema naloga koji odgovara korisničkom imenu <b>%{username}</b>"
       complete_email_not_found: "Nema naloga koji odgovara <b>%{email}</b>"
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Nastavi"
+      verify_button: "Nastavi"
+      account_ready_continue: "Nastavi"
+      username_label: "Korisničko Ime"
     login:
       header_title: "Dobro došli nazad"
       title: "Prijava"
@@ -1727,8 +1733,6 @@ sr:
       show_password: "Pokaži"
       hide_password: "Sakrij"
       hide_password_title: "Sakrij lozinku"
-      security_key_or_passkey_description: "Kada pripremite svoj bezbednosni ključ, passkey ili kompatibilni mobilni uređaj, pritisnite dugme ispod."
-      security_key_or_passkey_authenticate: "Autentifikuj se pomoću bezbednosnog ključa ili passkey-a"
       caps_lock_warning: "Caps Lock vam je uključen"
       error: "Nepoznata greška"
       rate_limit: "Molimo sačekajte pre nego pokušate opet da se prijavite."

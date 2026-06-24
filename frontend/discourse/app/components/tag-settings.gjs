@@ -9,6 +9,7 @@ import AddSynonymsConfirmation from "discourse/components/tag-settings/add-synon
 import TagSettingsLocalizations from "discourse/components/tag-settings/localizations";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { slugify } from "discourse/lib/utilities";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import TagDropdown from "discourse/select-kit/components/tag-dropdown";
 import { eq } from "discourse/truth-helpers";
@@ -218,6 +219,16 @@ export default class TagSettings extends Component {
     return [this.args.tag?.name].filter(Boolean);
   }
 
+  @action
+  validateSlug(name, slug, { addError }) {
+    if (slug?.trim() && slug !== slugify(slug)) {
+      addError(name, {
+        title: i18n("tagging.settings.slug"),
+        message: i18n("tagging.settings.invalid_slug"),
+      });
+    }
+  }
+
   <template>
     <div class="tag-settings">
       <DPageHeader
@@ -323,6 +334,7 @@ export default class TagSettings extends Component {
             @type="input"
             @title={{i18n "tagging.settings.slug"}}
             @format="large"
+            @validate={{this.validateSlug}}
             as |field|
           >
             <field.Control

@@ -1561,6 +1561,12 @@ ca:
       confirm_title: Continua a %{site_name}
       logging_in_as: Iniciant sessió com a %{email}
       confirm_button: Acaba l'inici de sessió
+    code_login:
+      email_label: "Correu electrònic"
+      continue_button: "Continua"
+      verify_button: "Continua"
+      account_ready_continue: "Continua"
+      username_label: "Nom d'usuari "
     login:
       title: "Inicia la sessió"
       username: "Usuari"
@@ -2016,6 +2022,8 @@ ca:
       deleted_post_placeholder: "[suprimit]"
       ignored_post_placeholder: "[ignorat]"
       pinned_reply: "Afixat"
+    share_target:
+      new_message: "Missatge nou"
     topic:
       filter_to:
         one: "%{count} publicació en el tema"

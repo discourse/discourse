@@ -43,6 +43,14 @@ module DiscourseWorkflows
         ).deep_symbolize_keys
       end
 
+      def self.serialize_user(user, guardian: Discourse.system_user.guardian)
+        return if user.blank?
+
+        MultiJson.load(
+          DiscourseWorkflows::UserSerializer.new(user, scope: guardian, root: false).to_json,
+        ).deep_symbolize_keys
+      end
+
       class RuntimeState
         attr_reader :condition_step_details, :execution_hints, :log, :metadata, :wait_request
 
@@ -300,7 +308,7 @@ module DiscourseWorkflows
         HttpClient.new(self, item_index).request(method:, url:, headers:, body:, options:)
       end
 
-      def create_post(user:, raw:, topic_id:, reply_to_post_number: nil)
+      def create_post(user:, raw:, topic_id:, reply_to_post_number: nil, whisper: false)
         topic = ::Topic.find(topic_id)
         guardian = user.guardian
         guardian.ensure_can_see!(topic)
@@ -317,6 +325,18 @@ module DiscourseWorkflows
           reply_to_post_number: reply_to_post_number.presence,
           skip_workflows: true,
         }.compact
+
+        if ActiveModel::Type::Boolean.new.cast(whisper)
+          unless guardian.can_create_whisper?
+            raise Discourse::InvalidAccess.new(
+                    "invalid_whisper_access",
+                    nil,
+                    custom_message: "invalid_whisper_access",
+                  )
+          end
+
+          post_args[:post_type] = ::Post.types[:whisper]
+        end
 
         PostCreator.new(user, post_args).create!
       end

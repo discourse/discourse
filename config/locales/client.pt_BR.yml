@@ -2633,6 +2633,12 @@ pt_BR:
       confirm_title: Continuar para %{site_name}
       logging_in_as: Entrando como %{email}
       confirm_button: Terminar de entrar
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Continuar"
+      verify_button: "Continuar"
+      account_ready_continue: "Continuar"
+      username_label: "Nome de usuário(a)"
     login:
       header_title: "Boas-vindas outra vez"
       title: "Entrar"
@@ -3595,6 +3601,9 @@ pt_BR:
       deleted_post_placeholder: "[excluído]"
       pinned_reply: "Fixada"
       unpin_reply: "Desafixar"
+    share_target:
+      new_topic: "Novo tópico"
+      new_message: "Nova mensagem"
     topic:
       filter_to:
         one: "%{count} postagem no tópico"

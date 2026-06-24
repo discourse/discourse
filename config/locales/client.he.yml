@@ -2853,6 +2853,12 @@ he:
       confirm_title: להמשיך אל %{site_name}
       logging_in_as: מתבצעת כניסה בתור %{email}
       confirm_button: סיום הכניסה
+    code_login:
+      email_label: "דוא״ל"
+      continue_button: "המשך"
+      verify_button: "המשך"
+      account_ready_continue: "המשך"
+      username_label: "שם משתמש"
     login:
       header_title: "ברוך שובך"
       title: "כניסה"
@@ -3964,6 +3970,9 @@ he:
       context:
         view_full_topic: "הצגת הנושא במלואו"
         view_parent_context: "הצגת הקשר הורה"
+    share_target:
+      new_topic: "נושא חדש"
+      new_message: "הודעה חדשה"
     topic:
       filter_to:
         one: "פוסט אחד בנושא"

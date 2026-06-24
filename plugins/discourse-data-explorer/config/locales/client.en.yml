@@ -108,6 +108,15 @@ en:
       run_options: "More run options"
       view:
         label: "Result view"
+      chart:
+        form:
+          label: "Chart type"
+          line: "Line"
+          bar: "Bar"
+          stacked: "Stacked"
+          dual_axis: "Dual axis"
+        tooltip:
+          total: "Total: %{count}"
       chart_empty:
         no_rows: "No rows to chart."
         no_numeric: "This query has no numeric columns to chart."

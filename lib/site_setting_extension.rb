@@ -167,6 +167,11 @@ module SiteSettingExtension
   #       Omit to allow all options (the default permissive behavior).
   #     body_class: (optional) boolean to include CSS data-attrs for the upcoming change,
   #       useful for scoping style changes related to the change.
+  #     hide_settings: (optional) array of other site setting names to hide from
+  #       admins while this change is enabled (manual opt-in or auto-promotion).
+  #       Use for legacy settings that stop making sense once the change is in
+  #       effect. Hiding is computed per request so it is multisite-safe and
+  #       tracks both opt-in paths live. See UpcomingChanges.settings_hidden_while_enabled.
   def upcoming_change_metadata
     @upcoming_change_metadata ||= {}
   end
@@ -1305,13 +1310,16 @@ module SiteSettingExtension
         impact_type, impact_role = opts[:upcoming_change][:impact].split(",")
         allow_enabled_for = opts[:upcoming_change][:allow_enabled_for]
         allow_enabled_for = Array(allow_enabled_for).map(&:to_sym) if allow_enabled_for
+        hide_settings = opts[:upcoming_change][:hide_settings]
+        hide_settings = Array(hide_settings).map(&:to_sym) if hide_settings
         upcoming_change_metadata[name].merge!(
-          **opts[:upcoming_change].except(:impact, :allow_enabled_for),
+          **opts[:upcoming_change].except(:impact, :allow_enabled_for, :hide_settings),
           impact_type: impact_type,
           impact_role: impact_role,
           status: opts[:upcoming_change][:status].to_sym,
           allow_enabled_for: allow_enabled_for,
           body_class: opts[:upcoming_change][:body_class],
+          hide_settings: hide_settings,
         )
       end
 

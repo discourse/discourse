@@ -423,7 +423,6 @@ uk:
           this_and_following: "Ця подія і всі наступні події"
           leave_event: "Залишити подію"
           status:
-            unknown: "Не цікавить"
             going: "Йду"
             not_going: "Не йде"
             interested: "Цікавить"

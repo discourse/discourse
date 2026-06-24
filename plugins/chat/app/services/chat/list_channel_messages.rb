@@ -70,10 +70,17 @@ module Chat
     end
 
     def can_view_channel(guardian:, channel:)
+      if guardian.anonymous?
+        return false if !Chat.anonymous_public_channel_access_allowed?
+        return false if !channel&.category_channel?
+      end
+
       guardian.can_preview_chat_channel?(channel)
     end
 
     def fetch_membership(channel:, guardian:)
+      return if guardian.anonymous?
+
       channel.membership_for(guardian.user)
     end
 
@@ -92,13 +99,23 @@ module Chat
       )
     end
 
-    def fetch_messages(metadata:)
-      [
+    def fetch_messages(metadata:, guardian:)
+      messages = [
         metadata[:messages],
         metadata[:past_messages]&.reverse,
         (metadata[:target_message] unless metadata[:target_message]&.thread_reply?),
         metadata[:future_messages],
       ].flatten.compact
+
+      if guardian.user.blank?
+        messages.each do |message|
+          association = message.association(:bookmarks)
+          association.target = []
+          association.loaded!
+        end
+      end
+
+      messages
     end
 
     def fetch_thread_ids(messages:)
@@ -106,6 +123,8 @@ module Chat
     end
 
     def fetch_tracking(guardian:, thread_ids:)
+      return ::Chat::TrackingStateReport.new if guardian.anonymous?
+
       ::Chat::TrackingStateReportQuery.(guardian:, thread_ids:, include_threads: true)
     end
 
@@ -116,7 +135,7 @@ module Chat
     end
 
     def fetch_thread_memberships(guardian:, thread_ids:)
-      return if thread_ids.blank?
+      return if thread_ids.blank? || guardian.anonymous?
 
       ::Chat::UserChatThreadMembership.where(thread_id: thread_ids, user_id: guardian.user.id)
     end
@@ -128,6 +147,8 @@ module Chat
     end
 
     def update_user_last_channel(guardian:, channel:)
+      return if guardian.anonymous?
+
       Scheduler::Defer.later "Chat::ListChannelMessages - defer update_user_last_channel" do
         next if guardian.user.custom_fields[::Chat::LAST_CHAT_CHANNEL_ID] == channel.id
         guardian.user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel.id)

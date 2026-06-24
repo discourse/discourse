@@ -91,16 +91,18 @@ export default class ChatThread extends Component {
     this.uploadDropZone = element;
 
     this.messagesManager.clear();
-    this.args.thread.draft =
-      this.chatDraftsManager.get(
-        this.args.thread.channel?.id,
-        this.args.thread.id
-      ) ||
-      ChatMessage.createDraftMessage(this.args.thread.channel, {
-        user: this.currentUser,
-        thread: this.args.thread,
-      });
-    this.chatThreadComposer.focus();
+    if (this.currentUser) {
+      this.args.thread.draft =
+        this.chatDraftsManager.get(
+          this.args.thread.channel?.id,
+          this.args.thread.id
+        ) ||
+        ChatMessage.createDraftMessage(this.args.thread.channel, {
+          user: this.currentUser,
+          thread: this.args.thread,
+        });
+      this.chatThreadComposer.focus();
+    }
     this.loadMessages();
   }
 
@@ -373,7 +375,7 @@ export default class ChatThread extends Component {
   @bind
   processMessages(thread, result) {
     const messages = result.messages.map((messageData) => {
-      const ignored = this.currentUser.ignored_users || [];
+      const ignored = this.currentUser?.ignored_users || [];
       const hidden = ignored.includes(messageData.user.username);
 
       return ChatMessage.create(thread.channel, {

@@ -2815,6 +2815,12 @@ cs:
       confirm_title: Pokračovat na %{site_name}
       logging_in_as: Přihlášení jako %{email}
       confirm_button: Dokončit přihlášení
+    code_login:
+      email_label: "Email"
+      continue_button: "Pokračovat"
+      verify_button: "Pokračovat"
+      account_ready_continue: "Pokračovat"
+      username_label: "Uživatelské jméno"
     login:
       header_title: "Vítejte zpět"
       title: "Přihlášení"
@@ -3862,6 +3868,9 @@ cs:
       deleted_post_placeholder: "[smazáno]"
       ignored_post_placeholder: "[ignorováno]"
       pinned_reply: "Připnuto"
+    share_target:
+      new_topic: "Nové téma"
+      new_message: "Nová zpráva"
     topic:
       filter_to:
         one: "%{count} příspěvek v tématu"

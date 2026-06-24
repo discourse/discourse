@@ -1833,6 +1833,12 @@ sl:
       confirm_title: Nadaljujte na %{site_name}
       logging_in_as: Prijava kot %{email}
       confirm_button: Zaključi prijavo
+    code_login:
+      email_label: "E-naslov"
+      continue_button: "Nadaljuj"
+      verify_button: "Nadaljuj"
+      account_ready_continue: "Nadaljuj"
+      username_label: "Uporabniško ime"
     login:
       title: "Vpis"
       username: "Uporabnik"
@@ -2396,6 +2402,8 @@ sl:
       deleted_post_placeholder: "[izbrisano]"
       ignored_post_placeholder: "[prezrti]"
       pinned_reply: "Pripeto"
+    share_target:
+      new_message: "Novo ZS"
     topic:
       filter_to:
         one: "%{count} prispevek v temi"

@@ -43,7 +43,7 @@ RSpec.describe EmailLoginCode::Request do
       end
     end
 
-    context "when the email matches an existing user after normalization" do
+    context "when the email only matches an existing user after normalization" do
       let(:email) { "f.oo+anything@gmail.com" }
 
       before do
@@ -53,23 +53,27 @@ RSpec.describe EmailLoginCode::Request do
 
       it { is_expected.to run_successfully }
 
-      it "treats it as an existing account" do
-        events = DiscourseEvent.track_events(:before_email_login) { result }
+      it "does not treat it as an existing account" do
+        events = nil
 
-        expect(events).to contain_exactly(event_name: :before_email_login, params: [user])
-        expect(EmailLoginCode.for_email(email).count).to eq(1)
+        expect_not_enqueued_with(job: :send_email_login_code) do
+          events = DiscourseEvent.track_events(:before_email_login) { result }
+        end
+
+        expect(events).to be_empty
+        expect(EmailLoginCode.count).to eq(0)
       end
     end
 
-    context "when the email does not belong to a user" do
-      let(:email) { "nobody@example.com" }
+    context "when the email is unknown and signups are open" do
+      let(:email) { "newuser@example.com" }
 
       it { is_expected.to run_successfully }
 
-      it "does not generate a code or enqueue an email" do
-        expect_not_enqueued_with(job: :send_email_login_code) { result }
+      it "generates a login code and enqueues the email" do
+        expect_enqueued_with(job: :send_email_login_code, args: { to_address: email }) { result }
 
-        expect(EmailLoginCode.count).to eq(0)
+        expect(EmailLoginCode.for_email(email).count).to eq(1)
       end
 
       it "does not trigger the :before_email_login event" do
@@ -86,7 +90,79 @@ RSpec.describe EmailLoginCode::Request do
 
       it { is_expected.to run_successfully }
 
-      it "does not generate a code, since staged users cannot log in" do
+      it "treats it as a new registration, not an existing account" do
+        events = DiscourseEvent.track_events(:before_email_login) { result }
+
+        expect(events).to be_empty
+        expect(EmailLoginCode.for_email(email).count).to eq(1)
+      end
+
+      it "does not generate a code when registrations are closed" do
+        SiteSetting.allow_new_registrations = false
+
+        expect { result }.not_to change(EmailLoginCode, :count)
+        expect(result).to run_successfully
+      end
+    end
+
+    context "when the email is unknown and registrations are disabled" do
+      let(:email) { "newuser@example.com" }
+
+      before { SiteSetting.allow_new_registrations = false }
+
+      it { is_expected.to run_successfully }
+
+      it "does not generate a code or enqueue an email" do
+        expect_not_enqueued_with(job: :send_email_login_code) { result }
+
+        expect(EmailLoginCode.count).to eq(0)
+      end
+    end
+
+    context "when the email is unknown and the site is invite only" do
+      let(:email) { "newuser@example.com" }
+
+      before { SiteSetting.invite_only = true }
+
+      it { is_expected.to run_successfully }
+
+      it "does not generate a code" do
+        expect { result }.not_to change(EmailLoginCode, :count)
+      end
+    end
+
+    context "when the email is unknown and an invite code is required" do
+      let(:email) { "newuser@example.com" }
+
+      before { SiteSetting.invite_code = "SECRET" }
+
+      it { is_expected.to run_successfully }
+
+      it "does not generate a code" do
+        expect { result }.not_to change(EmailLoginCode, :count)
+      end
+    end
+
+    context "when the email domain is blocked" do
+      let(:email) { "newuser@blocked.com" }
+
+      before { SiteSetting.blocked_email_domains = "blocked.com" }
+
+      it { is_expected.to run_successfully }
+
+      it "does not generate a code" do
+        expect { result }.not_to change(EmailLoginCode, :count)
+      end
+    end
+
+    context "when the email is screened" do
+      let(:email) { "newuser@example.com" }
+
+      before { Fabricate(:screened_email, email:) }
+
+      it { is_expected.to run_successfully }
+
+      it "does not generate a code" do
         expect { result }.not_to change(EmailLoginCode, :count)
       end
     end

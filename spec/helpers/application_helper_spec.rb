@@ -2,6 +2,38 @@
 # frozen_string_literal: true
 
 RSpec.describe ApplicationHelper do
+  describe "#discourse_pageview_tracking_meta_tags" do
+    it "includes beacon tracking meta tags for anonymous users when dashboard_improvements is enabled" do
+      SiteSetting.dashboard_improvements = true
+      helper.stubs(:current_user).returns(nil)
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-track-view-session-id"')
+      expect(tags).to include('name="discourse-beacon-pageview-enabled"')
+    end
+
+    it "omits beacon tracking meta tags when dashboard_improvements is disabled" do
+      SiteSetting.dashboard_improvements = false
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-track-view-session-id"')
+      expect(tags).not_to include('name="discourse-beacon-pageview-enabled"')
+    end
+
+    it "includes beacon tracking meta tags for browser pageview event triggers" do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.persist_browser_pageview_events = false
+      SiteSetting.trigger_browser_pageview_events = true
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-track-view-session-id"')
+      expect(tags).to include('name="discourse-beacon-pageview-enabled"')
+    end
+  end
+
   describe "preload_script" do
     def script_tag(url, entrypoint, nonce)
       <<~HTML

@@ -499,6 +499,36 @@ describe "Post event" do
 
       expect(bulk_invite_modal_page).to be_closed
     end
+
+    it "keeps a single row when removing the last invitee" do
+      visit(post.topic.url)
+
+      post_event_page.open_bulk_invite_modal
+      bulk_invite_modal_page
+        .set_invitee_at_row(invitable_user_1.username, "going", 1)
+        .add_invitee
+        .set_invitee_at_row(invitable_user_2.username, "not_going", 2)
+        .remove_invitee_row(2)
+        .remove_invitee_row(1)
+
+      # the collection never collapses, an empty row is always available
+      expect(bulk_invite_modal_page).to have_invitee_rows(1)
+    end
+
+    it "closes the modal and shows a toast after a CSV bulk invite" do
+      visit(post.topic.url)
+
+      post_event_page.open_bulk_invite_modal
+      bulk_invite_modal_page.upload_csv(
+        "#{Rails.root.join("plugins/discourse-calendar/spec/fixtures/csv/bulk_invite.csv")}",
+      )
+      PageObjects::Components::Dialog.new.click_yes
+
+      expect(bulk_invite_modal_page).to be_closed
+      expect(PageObjects::Components::Toasts.new).to have_success(
+        I18n.t("js.discourse_post_event.bulk_invite_modal.success"),
+      )
+    end
   end
 
   context "when inviting a user or group" do

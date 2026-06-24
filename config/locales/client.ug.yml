@@ -2583,6 +2583,12 @@ ug:
       confirm_title: '%{site_name} زىيارىتىنى داۋاملاشتۇرىدۇ'
       logging_in_as: '%{email} دا تىزىمغا كىرىدۇ'
       confirm_button: تىزىمغا كىرىش تامام
+    code_login:
+      email_label: "ئېلخەت"
+      continue_button: "داۋاملاشتۇر"
+      verify_button: "داۋاملاشتۇر"
+      account_ready_continue: "داۋاملاشتۇر"
+      username_label: "ئىشلەتكۈچى ئاتى"
     login:
       header_title: "قايتىپ خۇش كەپسىز"
       title: "تىزىمغا كىرىش"
@@ -3519,6 +3525,9 @@ ug:
       no_replies: "تېخى جاۋاب يوق."
       ignored_post_placeholder: "[پەرۋا قىلمايدىغان]"
       pinned_reply: "چوققىلاندى"
+    share_target:
+      new_topic: "يېڭى تېما"
+      new_message: "يېڭى ئۇچۇر"
     topic:
       filter_to:
         one: "تېمىدىكى %{count} يازما"

@@ -2654,6 +2654,12 @@ de:
       confirm_title: Weiter zu %{site_name}
       logging_in_as: Anmeldung als %{email}
       confirm_button: Anmeldung fertigstellen
+    code_login:
+      email_label: "E-Mail"
+      continue_button: "Weiter"
+      verify_button: "Weiter"
+      account_ready_continue: "Weiter"
+      username_label: "Benutzername"
     login:
       header_title: "Willkommen zurück"
       title: "Anmelden"
@@ -3726,6 +3732,9 @@ de:
         banner: "Du betrachtest einen einzelnen Thread aus diesem Thema."
         view_full_topic: "Vollständiges Thema anzeigen"
         view_parent_context: "Übergeordneten Kontext anzeigen"
+    share_target:
+      new_topic: "Neues Thema"
+      new_message: "Neue Nachricht"
     topic:
       filter_to:
         one: "%{count} Beitrag im Thema"

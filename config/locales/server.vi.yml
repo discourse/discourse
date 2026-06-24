@@ -2419,6 +2419,8 @@ vi:
   onebox:
     discourse:
       user_joined_community: "Tham gia %{date}"
+    google_meet:
+      meeting_code: "Mã:"
     github:
       closed: "đã "
       status_date:

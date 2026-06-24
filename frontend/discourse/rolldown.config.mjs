@@ -122,14 +122,18 @@ export function buildConfig({ devMode } = {}) {
       wrapTestModulesPlugin(),
       discourseChunkNamesPlugin(),
       {
-        name: "resolve-externals",
-        resolveId(source) {
-          if (
-            source.startsWith("/extra-locales/") ||
-            source.startsWith("/bootstrap/")
-          ) {
-            return { external: true, id: source };
-          }
+        name: "forbid-plugin-imports",
+        resolveId: {
+          filter: { id: /^discourse\/plugins\// },
+          handler(source, importer) {
+            this.error(
+              `Forbidden import of plugin module "${source}"` +
+                (importer
+                  ? ` from ${relative(import.meta.dirname, importer)}`
+                  : "") +
+                ". Core cannot import plugin modules."
+            );
+          },
         },
       },
       {
@@ -147,6 +151,7 @@ export function buildConfig({ devMode } = {}) {
                 document.head.append(style);
               `,
               moduleType: "js",
+              map: { mappings: "" },
             };
           },
         },

@@ -56,6 +56,9 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
 
   describe "#output" do
     it "returns post and topic data" do
+      upload = Fabricate(:image_upload)
+      UploadReference.create!(target: reply, upload: upload)
+
       trigger = described_class.new(reply)
       output = trigger.output
 
@@ -65,6 +68,16 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
       expect(output[:post][:reply_to_post_number]).to eq(topic.first_post.post_number)
       expect(output[:post][:user_id]).to eq(reply_user.id)
       expect(output[:post][:username]).to eq(reply_user.username)
+      expect(output[:post][:upload_ids]).to contain_exactly(upload.id)
+      expect(output[:user]).to include(
+        id: reply_user.id,
+        username: reply_user.username,
+        trust_level: reply_user.trust_level,
+        trust_level_name: TrustLevel.name(reply_user.trust_level),
+        admin: false,
+        moderator: false,
+        staff: false,
+      )
       expect(output[:topic][:id]).to eq(topic.id)
       expect(output[:topic][:title]).to eq(topic.title)
       expect(output[:topic][:tags].map { |topic_tag| topic_tag[:name] }).to eq(["test-tag"])

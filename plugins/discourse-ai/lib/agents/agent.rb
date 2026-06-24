@@ -163,7 +163,9 @@ module DiscourseAi
         def sync_external_registry!
           configs = external_feature_configs
           signature = configs.hash
-          return if @external_registry_signature == signature
+          if @external_registry_signature == signature && @external_tools_by_name && @system_agents
+            return
+          end
 
           @external_registry_signature = signature
           external_agents = {}

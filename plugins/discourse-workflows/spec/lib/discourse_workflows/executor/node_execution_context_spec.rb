@@ -749,6 +749,27 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
       end.to change { topic.posts.count }.by(1)
     end
 
+    it "creates a whisper reply as a whisperer" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect do
+        post =
+          ctx.create_post(user: admin, raw: "Workflow whisper", topic_id: topic.id, whisper: true)
+
+        expect(post.post_type).to eq(Post.types[:whisper])
+      end.to change { topic.posts.count }.by(1)
+    end
+
+    it "requires the user to create whispers" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect do
+        ctx.create_post(user: user, raw: "Unauthorized whisper", topic_id: topic.id, whisper: true)
+      end.to raise_error(Discourse::InvalidAccess).and not_change { topic.posts.count }
+    end
+
     it "requires the user to see the topic" do
       group = Fabricate(:group)
       private_category = Fabricate(:private_category, group: group)

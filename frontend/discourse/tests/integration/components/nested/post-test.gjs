@@ -161,7 +161,7 @@ module("Integration | Component | Nested | Post", function (hooks) {
     );
   });
 
-  test("mobile collapsed posts keep an avatar in the collapsed bar", async function (assert) {
+  test("mobile collapsed posts keep an avatar in the gutter", async function (assert) {
     const site = getOwner(this).lookup("service:site");
     sinon.stub(site, "mobileView").value(true);
 
@@ -170,8 +170,11 @@ module("Integration | Component | Nested | Post", function (hooks) {
 
     assert.dom(".nested-post__article").doesNotExist("collapses the post body");
     assert
-      .dom(".nested-post__collapsed-avatar .avatar")
-      .exists("renders the post avatar in the mobile collapsed bar");
+      .dom(".nested-post__gutter .topic-avatar")
+      .exists("renders the post avatar area in the mobile gutter");
+    assert
+      .dom(".nested-post__collapsed-avatar")
+      .doesNotExist("does not duplicate the avatar in the collapsed bar");
   });
 
   test("post registration can update post topic", async function (assert) {

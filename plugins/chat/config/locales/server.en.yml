@@ -5,7 +5,7 @@ en:
     chat_pinned_messages: "Enable pinned messages in chat channels."
     enable_new_chat_reactions_menu: "Enable the redesigned reactions menu on chat messages, showing who reacted with infinite scroll and a native mobile experience."
     enable_public_channels: "Enable public channels based on categories."
-    chat_allowed_groups: "Users in these groups can chat. Note that admins and moderators can always access chat."
+    chat_allowed_groups: "Users in these groups can chat, except anonymous users who can only view chat when added to this setting. Note that admins and moderators can always access chat."
     chat_channel_retention_days: "Chat messages in regular channels will be retained for this many days. Set to '0' to retain messages forever."
     chat_dm_retention_days: "Chat messages in personal chat channels will be retained for this many days. Set to '0' to retain messages forever."
     chat_auto_silence_duration: "Number of minutes that users will be silenced for when they exceed the chat message creation rate limit. Set to '0' to disable auto-silencing."

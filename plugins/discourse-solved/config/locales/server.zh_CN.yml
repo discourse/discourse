@@ -20,8 +20,6 @@ zh_CN:
         description: "在被标记为已解决后，经过指定小时后自动关闭话题。设置为 0 可禁用此功能。"
       notify_on_staff_accept_solved:
         label: "当管理人员标记解决方案时通知话题创建者"
-      empty_box_on_unsolved:
-        label: "在未解决的话题列表旁边显示一个空复选框"
       solved_topics_auto_close_duration:
         label: "自动关闭已解决话题"
         description: "自上次回复起，经过此时长后自动关闭已解决的话题。设置为 0 可禁用此功能。"

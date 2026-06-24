@@ -46,6 +46,11 @@ function leafKey(fieldPath) {
   }
 
   let path = fieldPath;
+  if (typeof path === "object") {
+    path = path.value ?? path.id ?? path.label ?? "";
+  }
+  path = String(path);
+
   const exprMatch = path.match(/^=\{\{\s*(.*?)\s*\}\}$/);
   if (exprMatch) {
     path = exprMatch[1];

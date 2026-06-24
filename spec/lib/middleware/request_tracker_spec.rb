@@ -332,7 +332,8 @@ RSpec.describe Middleware::RequestTracker do
       end
 
       it "counts beacon pageview with embed flag as page_view_embed" do
-        SiteSetting.use_beacon_for_browser_page_views = true
+        SiteSetting.dashboard_improvements = true
+        SiteSetting.trigger_browser_pageview_events = true
         body = {
           session_id: "abc",
           url: "https://example.com/t/slug/1",
@@ -731,6 +732,10 @@ RSpec.describe Middleware::RequestTracker do
     end
 
     describe "browser_pageview event" do
+      def log_browser_pageview(data)
+        Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] }).log_later(data, {}, nil)
+      end
+
       context "when SiteSetting.trigger_browser_pageview_events is true" do
         before { SiteSetting.trigger_browser_pageview_events = true }
         it "triggers event for anonymous user page views when `login_required` site setting is false" do
@@ -749,10 +754,7 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          events =
-            DiscourseEvent.track_events(:browser_pageview) do
-              Middleware::RequestTracker.log_request(data)
-            end
+          events = DiscourseEvent.track_events(:browser_pageview) { log_browser_pageview(data) }
 
           expect(events.length).to eq(1)
           event = events[0][:params].first
@@ -781,10 +783,7 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          events =
-            DiscourseEvent.track_events(:browser_pageview) do
-              Middleware::RequestTracker.log_request(data)
-            end
+          events = DiscourseEvent.track_events(:browser_pageview) { log_browser_pageview(data) }
 
           expect(events).to be_empty
         end
@@ -805,10 +804,7 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          events =
-            DiscourseEvent.track_events(:browser_pageview) do
-              Middleware::RequestTracker.log_request(data)
-            end
+          events = DiscourseEvent.track_events(:browser_pageview) { log_browser_pageview(data) }
 
           expect(events.length).to eq(1)
           event = events[0][:params].first
@@ -843,10 +839,7 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          events =
-            DiscourseEvent.track_events(:browser_pageview) do
-              Middleware::RequestTracker.log_request(data)
-            end
+          events = DiscourseEvent.track_events(:browser_pageview) { log_browser_pageview(data) }
 
           expect(events.length).to eq(1)
           event = events[0][:params].first
@@ -866,10 +859,7 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          events =
-            DiscourseEvent.track_events(:browser_pageview) do
-              Middleware::RequestTracker.log_request(data)
-            end
+          events = DiscourseEvent.track_events(:browser_pageview) { log_browser_pageview(data) }
 
           expect(events.length).to eq(0)
         end
@@ -891,17 +881,27 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          events =
-            DiscourseEvent.track_events(:browser_pageview) do
-              Middleware::RequestTracker.log_request(data)
-            end
+          events = DiscourseEvent.track_events(:browser_pageview) { log_browser_pageview(data) }
 
           expect(events.length).to eq(0)
         end
       end
 
       context "when SiteSetting.persist_browser_pageview_events is true" do
-        before { SiteSetting.persist_browser_pageview_events = true }
+        before do
+          SiteSetting.persist_browser_pageview_events = true
+          BrowserPageviewEvent.clear_queued!
+          Discourse.clear_readonly!
+        end
+
+        after do
+          BrowserPageviewEvent.clear_queued!
+          Discourse.clear_readonly!
+        end
+
+        def flush_browser_pageview_events
+          Jobs::FlushBrowserPageviewEvents.new.execute({})
+        end
 
         it "creates a BrowserPageviewEvent row and does not fire the :browser_pageview event" do
           session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
@@ -922,12 +922,11 @@ RSpec.describe Middleware::RequestTracker do
 
           events =
             DiscourseEvent.track_events(:browser_pageview) do
-              expect { Middleware::RequestTracker.log_request(data) }.to change {
-                BrowserPageviewEvent.count
-              }.by(1)
+              expect { log_browser_pageview(data) }.to change { BrowserPageviewEvent.count }.by(1)
             end
 
           expect(events).to be_empty
+          expect(BrowserPageviewEvent.queued_count).to eq(0)
 
           event = BrowserPageviewEvent.last
           expect(event.session_id).to eq(session_id)
@@ -936,6 +935,9 @@ RSpec.describe Middleware::RequestTracker do
           expect(event.country_code).to eq("AU")
           expect(event.user_agent).to be_present
           expect(event.ip_address.to_s).to eq("1.2.3.4")
+          expect(BrowserPageviewEvent.sources[event.source]).to eq(
+            BrowserPageviewEvent::SOURCE_PIGGYBACK,
+          )
         end
 
         it "skips persisted browser pageviews without a URL" do
@@ -973,7 +975,7 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          Middleware::RequestTracker.log_request(data)
+          log_browser_pageview(data)
 
           event = BrowserPageviewEvent.last
           expect(event.referrer).to eq("https://www.example.com/path?utm_source=x")
@@ -996,7 +998,7 @@ RSpec.describe Middleware::RequestTracker do
               0.2,
             )
 
-          Middleware::RequestTracker.log_request(data)
+          log_browser_pageview(data)
 
           event = BrowserPageviewEvent.last
           expect(event.normalized_referrer).to be_nil
@@ -1020,12 +1022,35 @@ RSpec.describe Middleware::RequestTracker do
 
           events =
             DiscourseEvent.track_events(:browser_pageview) do
-              expect { Middleware::RequestTracker.log_request(data) }.to change {
-                BrowserPageviewEvent.count
-              }.by(1)
+              expect { log_browser_pageview(data) }.to change { BrowserPageviewEvent.count }.by(1)
             end
 
           expect(events).to be_empty
+        end
+
+        it "queues browser pageviews while PostgreSQL is readonly" do
+          session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+          Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+
+          data =
+            Middleware::RequestTracker.get_data(
+              env(
+                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => session_id,
+                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+                "action_dispatch.remote_ip" => "1.2.3.4",
+              ),
+              ["200", { "Content-Type" => "text/html" }],
+              0.2,
+            )
+
+          expect { log_browser_pageview(data) }.not_to change { BrowserPageviewEvent.count }
+          expect(BrowserPageviewEvent.queued_count).to eq(1)
+
+          Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+
+          expect { flush_browser_pageview_events }.to change { BrowserPageviewEvent.count }.by(1)
+          expect(BrowserPageviewEvent.queued_count).to eq(0)
         end
       end
     end
@@ -1033,7 +1058,8 @@ RSpec.describe Middleware::RequestTracker do
 
   describe "beacon pageview tracking via /srv/pv" do
     before do
-      SiteSetting.use_beacon_for_browser_page_views = true
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.trigger_browser_pageview_events = true
       freeze_time
       ApplicationRequest.clear_cache!
     end
@@ -1130,6 +1156,35 @@ RSpec.describe Middleware::RequestTracker do
       )
     end
 
+    it "persists beacon pageviews to browser_pageview_events with beacon source" do
+      SiteSetting.persist_browser_pageview_events = true
+      DiscourseIpInfo.stubs(:get).returns(country_code: "US")
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+
+      expect {
+        middleware.call(
+          beacon_env(
+            {
+              url: "https://test.com/t/topic/123",
+              referrer: "https://test.com/",
+              session_id: "abc123",
+              topic_id: 123,
+            },
+            same_origin.merge("action_dispatch.remote_ip" => "1.2.3.4"),
+          ),
+        )
+      }.to change { BrowserPageviewEvent.count }.by(1)
+
+      event = BrowserPageviewEvent.last
+      expect(event.url).to eq("https://test.com/t/topic/123")
+      expect(event.referrer).to eq("https://test.com/")
+      expect(event.session_id).to eq("abc123")
+      expect(event.topic_id).to eq(123)
+      expect(event.country_code).to eq("US")
+      expect(event.ip_address.to_s).to eq("1.2.3.4")
+      expect(event.source).to eq("beacon")
+    end
+
     it "increments legacy and BPV counters from non-beacon requests" do
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
       middleware.call(env("HTTP_DISCOURSE_TRACK_VIEW" => "1"))
@@ -1198,8 +1253,30 @@ RSpec.describe Middleware::RequestTracker do
       expect(status).to eq(204)
     end
 
-    context "when SiteSetting.use_beacon_for_browser_page_views is false" do
-      before { SiteSetting.use_beacon_for_browser_page_views = false }
+    context "when dashboard_improvements is disabled" do
+      before { SiteSetting.dashboard_improvements = false }
+
+      it "returns the app's response for beacon requests instead of 204" do
+        app_called = false
+        middleware =
+          Middleware::RequestTracker.new(
+            lambda do |env|
+              app_called = true
+              [404, {}, ["unknown app path"]]
+            end,
+          )
+        status, = middleware.call(beacon_env({}))
+
+        expect(status).to eq(404)
+        expect(app_called).to eq(true)
+      end
+    end
+
+    context "when browser pageview persistence and events are disabled" do
+      before do
+        SiteSetting.persist_browser_pageview_events = false
+        SiteSetting.trigger_browser_pageview_events = false
+      end
 
       it "returns the app's response for beacon requests instead of 204" do
         app_called = false

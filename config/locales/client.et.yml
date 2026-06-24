@@ -1374,6 +1374,12 @@ et:
       complete_username_not_found: "Kasutajanimele <b>%{username}</b> ei vasta ükski konto"
       complete_email_not_found: "Meiliaadressile <b>%{email}</b> ei vasta ükski konto"
       confirm_title: Edasi saidile %{site_name}
+    code_login:
+      email_label: "E-post"
+      continue_button: "Jätka"
+      verify_button: "Jätka"
+      account_ready_continue: "Jätka"
+      username_label: "Kasutajanimi"
     login:
       title: "Logi sisse"
       username: "Kasutaja"
@@ -1738,6 +1744,8 @@ et:
       no_replies: "Veel ei ole vastuseid."
       ignored_post_placeholder: "[ignoreeritud]"
       pinned_reply: "Esiletõstetud"
+    share_target:
+      new_message: "Uus sõnum"
     topic:
       filter_to:
         one: "%{count} postitus teemas"

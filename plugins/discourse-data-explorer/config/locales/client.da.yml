@@ -45,6 +45,10 @@ da:
       save: "Gem ændringer"
       run: "Kør"
       delete: "Slet"
+      chart:
+        form:
+          label: "Diagramtype"
+          bar: "Bar"
       result_count:
         one: "%{count} resultat."
         other: "%{count} resultater."

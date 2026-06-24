@@ -220,13 +220,17 @@ export default class ComboBoxField extends Component {
 
     const selectedOption =
       selectedItem ||
-      this.options.find((option) => String(option.id) === String(value));
+      this.options.find((option) => String(option.id) === String(value)) ||
+      null;
 
     for (const [fieldName, propertyName] of Object.entries(
       this.setFromOption
     )) {
-      const selectedOptionValue = selectedOption?.original?.[propertyName];
-      this.args.formApi?.set(fieldName, selectedOptionValue ?? "");
+      const selectedOptionValue =
+        selectedOption?.original?.[propertyName] ??
+        selectedOption?.[propertyName] ??
+        "";
+      this.args.formApi?.set(fieldName, selectedOptionValue);
     }
 
     const schema = this.args.nodeDefinition?.properties || {};
@@ -250,6 +254,7 @@ export default class ComboBoxField extends Component {
   <template>
     <ExpressionWrapper
       @field={{@field}}
+      @schema={{@schema}}
       @supportsExpression={{@supportsExpression}}
       @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}

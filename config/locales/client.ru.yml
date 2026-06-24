@@ -2904,6 +2904,12 @@ ru:
       confirm_title: Перейти на %{site_name}
       logging_in_as: Войти как %{email}
       confirm_button: Завершить вход
+    code_login:
+      email_label: "Эл. почта"
+      continue_button: "Продолжить"
+      verify_button: "Продолжить"
+      account_ready_continue: "Продолжить"
+      username_label: "Псевдоним"
     login:
       header_title: "С возвращением!"
       title: "Войти"
@@ -3995,6 +4001,9 @@ ru:
       pinned_reply: "Закреплена"
       pin_reply: "Закрепить вверху"
       unpin_reply: "Открепить"
+    share_target:
+      new_topic: "Новая тема"
+      new_message: "Личное сообщение"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -5576,7 +5585,7 @@ ru:
       edit: "Редактировать этот тег"
       description: "Описание"
       settings:
-        title: "настроек"
+        title: "Настроек"
         edit_title: "Редактировать тег: %{name}"
         edit_tag_prefix: "Редактировать тег:"
         select_tag: "Выберите тег для редактирования."
@@ -6277,7 +6286,7 @@ ru:
           header_description: "Настройте способ входа и аутентификации пользователей, идентификаторы ключей доступа и секретные ключи доступа, поставщиков OAuth2 и многое другое"
           sub_pages:
             common_settings:
-              title: "настроек"
+              title: "Настроек"
             discourse_id:
               title: "Discourse ID"
         discourse_id:
@@ -6497,7 +6506,7 @@ ru:
           header_description: "Отчеты — это мощный инструмент, помогающий понять, что происходит на вашем сайте. Они помогут вам выявить тенденции, обнаружить проблемы и принять решения на основе данных."
           sub_pages:
             settings:
-              title: "настроек"
+              title: "Настроек"
         badges:
           title: "Награды"
           header_description: "Награды выдаются пользователям за их действия, вклад и достижения, чтобы признавать, подтверждать и поощрять хорошее поведение и участие в жизни сообщества"
@@ -9064,7 +9073,7 @@ ru:
         sections:
           design: Дизайн
           query: Запрос
-          settings: настроек
+          settings: Настроек
         usage_heading: Использование
         allow_title: Разрешить использовать название награды в качестве титула
         multiple_grant: Может быть предоставлена несколько раз

@@ -420,7 +420,6 @@ zh_CN:
           this_and_following: "本次活动及所有后续活动"
           leave_event: "离开活动"
           status:
-            unknown: "不感兴趣"
             going: "参加"
             not_going: "不参加"
             interested: "感兴趣"

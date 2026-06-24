@@ -155,6 +155,8 @@ module DiscourseAi
           api_key = llm_model&.api_key || SiteSetting.ai_vllm_api_key
           headers["Authorization"] = "Bearer #{api_key}" if api_key.present?
 
+          headers.merge!(extra_request_headers)
+
           Net::HTTP::Post.new(model_uri, headers).tap { |r| r.body = payload }
         end
       end

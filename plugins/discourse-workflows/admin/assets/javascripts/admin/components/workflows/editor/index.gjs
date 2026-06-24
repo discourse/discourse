@@ -1358,7 +1358,7 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  handleWorkflowDiscarded(workflow) {
+  replaceWorkflow(workflow) {
     this.pendingSave = false;
     this.pendingGraphSnapshot = null;
     this.pendingSaveOptions = null;
@@ -1393,7 +1393,7 @@ export default class WorkflowsEditor extends Component {
         }
       );
 
-      this.handleWorkflowDiscarded(response.workflow);
+      this.replaceWorkflow(response.workflow);
     } catch (e) {
       popupAjaxError(e);
       throw e;
@@ -1403,7 +1403,6 @@ export default class WorkflowsEditor extends Component {
   async #saveWorkflow(options = {}) {
     this.saving = true;
     try {
-      const name = this.formApi.get("name");
       const nodes = this.formApi.get("nodes");
       const connections = normalizeConnectionsForNodes(
         this.formApi.get("connections"),
@@ -1413,14 +1412,21 @@ export default class WorkflowsEditor extends Component {
       const stickyNotes = this.formApi.get("stickyNotes");
       this.formApi.set("connections", connections);
 
-      this.args.workflow.setProperties({
-        name,
+      const workflowProperties = {
         nodes,
         connections,
         stickyNotes: stickyNotes || [],
-      });
+      };
 
-      const saveProperties = this.args.workflow.updateProperties();
+      if (this.args.isNew) {
+        workflowProperties.name = this.formApi.get("name");
+      }
+
+      this.args.workflow.setProperties(workflowProperties);
+
+      const saveProperties = this.args.isNew
+        ? this.args.workflow.createProperties()
+        : this.args.workflow.graphProperties();
       if (options.staticData !== undefined) {
         saveProperties.static_data = options.staticData;
       }
@@ -1503,7 +1509,6 @@ export default class WorkflowsEditor extends Component {
           @connections={{transientData.connections}}
           @stickyNotes={{transientData.stickyNotes}}
           @workflowId={{@workflow.id}}
-          @workflowName={{@workflow.name}}
           @autoArrangeRequest={{this.autoArrangeRequest}}
           @onUpdateNodePosition={{this.updateNodePosition}}
           @onEditNode={{this.editNode}}
@@ -1525,7 +1530,8 @@ export default class WorkflowsEditor extends Component {
           @onOpenNodePanel={{this.openNodePanel}}
           @onCloseNodePanel={{this.closeNodePanel}}
           @onBrowseTemplates={{this.browseTemplates}}
-          @onDiscardWorkflow={{this.handleWorkflowDiscarded}}
+          @onDiscardWorkflow={{this.replaceWorkflow}}
+          @onWorkflowUpdated={{this.replaceWorkflow}}
           @onImportNodes={{this.importNodes}}
           @onAddStickyNote={{this.addStickyNote}}
           @onStickyNoteBeforeMutation={{this.stickyNoteBeforeMutation}}

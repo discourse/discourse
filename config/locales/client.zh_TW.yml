@@ -2236,6 +2236,12 @@ zh_TW:
       confirm_title: 繼續連接至 %{site_name}
       logging_in_as: 以 %{email}登入
       confirm_button: 完成登入
+    code_login:
+      email_label: "電子信箱"
+      continue_button: "繼續"
+      verify_button: "繼續"
+      account_ready_continue: "繼續"
+      username_label: "使用者名稱"
     login:
       header_title: "歡迎回來"
       title: "登入"
@@ -3014,6 +3020,8 @@ zh_TW:
       deleted_post_placeholder: "[刪除]"
       ignored_post_placeholder: "[已忽略]"
       pinned_reply: "已釘選"
+    share_target:
+      new_message: "新增訊息"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"

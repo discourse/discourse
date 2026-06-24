@@ -401,7 +401,6 @@ hu:
           no_users: "Nem található felhasználó"
           leave_event: "Kilépés az eseményről"
           status:
-            unknown: "Nem érdekli"
             going: "Megy"
             interested: "Érdeklődik"
             going_count:

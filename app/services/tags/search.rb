@@ -199,20 +199,24 @@ class Tags::Search
 
       if group
         conflicting_tag_names =
-          Tag
+          visible_tags(guardian)
             .where(id: selected_ids)
             .joins(:tag_group_memberships)
             .where(tag_group_memberships: { tag_group_id: group.id })
             .order(:name)
             .pluck(:name)
 
-        return(
-          I18n.t(
-            "tags.forbidden.one_tag_per_topic_group",
-            tag_group_name: group.name,
-            tag_names: conflicting_tag_names.join(", "),
+        if conflicting_tag_names.present?
+          return(
+            I18n.t(
+              "tags.forbidden.one_tag_per_topic_group",
+              tag_group_name: group.name,
+              tag_names: conflicting_tag_names.join(", "),
+            )
           )
-        )
+        end
+
+        return I18n.t("tags.forbidden.one_tag_per_topic_group_without_names")
       end
     end
 

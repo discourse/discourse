@@ -2989,6 +2989,12 @@ uk:
       confirm_title: Продовжити у %{site_name}
       logging_in_as: Ввійти як %{email}
       confirm_button: Завершити Вхід
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Продовжити"
+      verify_button: "Продовжити"
+      account_ready_continue: "Продовжити"
+      username_label: "Імʼя користувача"
     login:
       header_title: "З поверненням"
       title: "Вхід"
@@ -3005,10 +3011,8 @@ uk:
       second_factor_backup_description: "Введіть один із резервних кодів:"
       second_factor: "Увійдіть за допомогою програми Authenticator"
       security_key_description: "Підготувавши фізичний ключ безпеки або сумісний мобільний пристрій, натисніть кнопку Автентифікувати за допомогою ключа безпеки нижче."
-      security_key_or_passkey_description: "Коли ви підготуєте ключ безпеки, пароль або сумісний мобільний пристрій, натисніть кнопку нижче."
       security_key_alternative: "Спробуйте інший спосіб"
       security_key_authenticate: "Автентифікація за допомогою ключа безпеки"
-      security_key_or_passkey_authenticate: "Автентифікація за допомогою ключа безпеки або ключа доступу"
       security_key_not_allowed_error: "Час перевірки автентичності ключа безпеки минув або дію було скасовано."
       security_key_no_matching_credential_error: "У зазначеному ключі безпеки не знайдено відповідних облікових даних."
       security_key_support_missing_error: "Ваше поточний пристрій або оглядач не підтримує використання ключів безпеки. Будь ласка, використовуйте інший метод."
@@ -4277,6 +4281,9 @@ uk:
         banner: "Ви переглядаєте одну тему в цій гілці."
         view_full_topic: "Переглянути всю тему"
         view_parent_context: "Переглянути батьківський контекст"
+    share_target:
+      new_topic: "Нова тема"
+      new_message: "Нове повідомлення"
     topic:
       filter_to:
         one: "%{count} допис в темі"

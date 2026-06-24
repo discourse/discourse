@@ -59,6 +59,9 @@ hu:
       undo: "Változások elvetése"
       delete: "Törlés"
       recover: "Lekérdezés törlésének visszavonása"
+      chart:
+        form:
+          bar: "Oszlop"
       others_dirty: "A lekérdezés nem mentett módosításokat tartalmaz, amelyek elvesznek, ha elnavigál."
       run_time: "A lekérdezés %{value} ms alatt fejeződött be."
       result_count:

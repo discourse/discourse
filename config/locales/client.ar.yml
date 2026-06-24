@@ -3198,6 +3198,12 @@ ar:
       confirm_title: المتابعة إلى %{site_name}
       logging_in_as: تسجيل الدخول بعنوان البريد الإلكتروني %{email}
       confirm_button: إنهاء تسجيل الدخول
+    code_login:
+      email_label: "البريد الإلكتروني"
+      continue_button: "متابعة"
+      verify_button: "متابعة"
+      account_ready_continue: "متابعة"
+      username_label: "اسم المستخدم"
     login:
       header_title: "مرحبًا بعودتك"
       title: "تسجيل الدخول"
@@ -3214,10 +3220,8 @@ ar:
       second_factor_backup_description: "يُرجى إدخال أحد الرموز الاحتياطية:"
       second_factor: "تسجيل الدخول باستخدام تطبيق المصادقة"
       security_key_description: "عندما يكون مفتاح الأمان المادي أو جهاز الجوَّال المتوافق جاهزًا، اضغط على زر \"المصادقة باستخدام مفتاح الأمان\" أدناه."
-      security_key_or_passkey_description: "عند تجهيز مفتاح الأمان أو مفتاح المرور أو جهاز محمول متوافق، اضغط على الزر أدناه."
       security_key_alternative: "جرِّب طريقة أخرى"
       security_key_authenticate: "المصادقة باستخدام مفتاح الأمان"
-      security_key_or_passkey_authenticate: "المصادقة باستخدام مفتاح أمان أو مفتاح مرور"
       security_key_not_allowed_error: "انتهت مهلة عملية المصادقة باستخدام مفتاح الأمان أو تم إلغاؤها."
       security_key_no_matching_credential_error: "تعذَّر العثور على بيانات اعتماد مطابقة في مفتاح الأمان المقدَّم."
       security_key_support_missing_error: "لا يدعم جهازك أو متصفحك الحالي استخدام مفاتيح الأمان. يُرجى استخدام طريقة مختلفة."
@@ -4601,6 +4605,9 @@ ar:
         banner: "أنت تشاهد سلسلة دردشة واحدة من هذا الموضوع."
         view_full_topic: "عرض الموضوع بالكامل"
         view_parent_context: "عرض السياق الأصلي"
+    share_target:
+      new_topic: "موضوع جديد"
+      new_message: "رسالة جديدة"
     topic:
       filter_to:
         zero: "%{count} منشور في الموضوع"

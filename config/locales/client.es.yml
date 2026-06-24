@@ -2651,6 +2651,12 @@ es:
       confirm_title: Continuar a %{site_name}
       logging_in_as: Iniciando sesión como %{email}
       confirm_button: Finalizar inicio de sesión
+    code_login:
+      email_label: "Correo electrónico"
+      continue_button: "Continuar"
+      verify_button: "Continuar"
+      account_ready_continue: "Continuar"
+      username_label: "Nombre de usuario"
     login:
       header_title: "Bienvenido/a de vuelta"
       title: "Iniciar sesión"
@@ -3681,6 +3687,9 @@ es:
       deleted_post_placeholder: "[eliminado]"
       ignored_post_placeholder: "[ignorados]"
       pinned_reply: "Anclado"
+    share_target:
+      new_topic: "Nuevo tema"
+      new_message: "Nuevo mensaje"
     topic:
       filter_to:
         one: "%{count} publicación en el tema"

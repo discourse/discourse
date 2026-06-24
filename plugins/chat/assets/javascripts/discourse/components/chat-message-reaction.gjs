@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -148,6 +149,11 @@ export default class ChatMessageReaction extends Component {
   @action
   handleClick(event) {
     event.stopPropagation();
+
+    if (!this.currentUser) {
+      getOwner(this).lookup("route:application").send("showLogin");
+      return;
+    }
 
     this.args.onReaction?.(
       this.args.reaction.emoji,
