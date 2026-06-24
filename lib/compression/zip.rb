@@ -30,9 +30,6 @@ module Compression
     private
 
     def extract_folder(entry, entry_path)
-      return unless entry.directory?
-      return if ::File.symlink?(entry_path) || ::Dir.exist?(entry_path)
-
       FileUtils.mkdir_p(entry_path)
     end
 
