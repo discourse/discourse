@@ -2,10 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const EDIT_PERMISSION = "edit";
@@ -87,6 +90,7 @@ export default class DAccessControl extends Component {
         if (a.automatic !== b.automatic) {
           return a.automatic ? -1 : 1;
         }
+
         return (a.full_name || a.name).localeCompare(b.full_name || b.name);
       });
   }
@@ -100,13 +104,22 @@ export default class DAccessControl extends Component {
   // TODO (martin) How are we going to deal with users that have the Owner permission
   // here if we don't want to expose that in the UI?
   get rows() {
-    return this.args.acl.map((entry) => ({
-      key: `${entry.type}-${entry.id}`,
-      id: entry.id,
-      permission: entry.permission,
-      name: entry.full_name,
-      type: entry.type,
-    }));
+    return this.args.acl
+      .map((entry) => ({
+        key: `${entry.type}-${entry.id}`,
+        id: entry.id,
+        permission: entry.permission,
+        name: entry.full_name,
+        type: entry.type,
+        mandatory: entry.mandatory,
+      }))
+      .sort((a, b) => {
+        if (a.mandatory !== b.mandatory) {
+          return a.mandatory ? -1 : 1;
+        }
+
+        return a.name.localeCompare(b.name);
+      });
   }
 
   @action
@@ -170,14 +183,35 @@ export default class DAccessControl extends Component {
       {{#if this.rows.length}}
         <div class="d-access-control__rows">
           {{#each this.rows key="key" as |row|}}
-            <div class="d-access-control__row" data-group-id={{row.groupId}}>
-              <span class="d-access-control__group-name">{{row.name}}</span>
+            <div
+              class={{dConcatClass
+                "d-access-control__row"
+                (if row.mandatory "--mandatory")
+              }}
+              data-group-id={{row.groupId}}
+            >
+              <span class="d-access-control__group-name">{{#if row.mandatory}}
+                  <DTooltip
+                    @content={{i18n
+                      "access_control.manage.mandatory_acl_tooltip"
+                    }}
+                  >
+                    <:trigger>
+                      {{dIcon "lock"}}
+                    </:trigger>
+                  </DTooltip>
+                {{/if}}
+                {{row.name}}</span>
               <DropdownSelectBox
                 class="d-access-control__permission"
                 @value={{row.permission}}
                 @content={{this.permissionOptions}}
                 @onChange={{fn this.onPermissionChange row.id}}
-                @options={{hash showCaret=true showFullTitle=true}}
+                @options={{hash
+                  showCaret=true
+                  showFullTitle=true
+                  disabled=row.mandatory
+                }}
               />
             </div>
           {{/each}}

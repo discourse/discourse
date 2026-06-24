@@ -5,15 +5,16 @@ class AccessControlListManager
 
   params do
     attribute :target
-    attribute :flattened_acls, :array
+    attribute :flattened_acl, :array
     attribute :owner, :string
 
     validates :target, presence: true
-    validates :flattened_acls, presence: true
+    validates :flattened_acl, presence: true
     validates :owner, presence: true, length: { maximum: 100 }
   end
 
   model :previous_permissions, optional: true
+  model :flattened_acl_with_mandatory
 
   transaction do
     step :destroy_acls
@@ -34,12 +35,14 @@ class AccessControlListManager
     previous_permissions.destroy_all
   end
 
-  def insert_acls(params:)
+  def fetch_flattened_acl_with_mandatory(params:)
+    AccessControlList.inject_mandatory_acl(params.flattened_acl, params.target)
+  end
+
+  def insert_acls(params:, flattened_acl_with_mandatory:)
     bulk_insert_list =
-      AccessControlList.expand_list(params.flattened_acls, params.target, params.owner)
-
-    @context[:new_permissions] = Acl::Target.new(params.flattened_acls).permission_lookup
-
+      AccessControlList.expand_list(flattened_acl_with_mandatory, params.target, params.owner)
+    @context[:new_permissions] = Acl::Target.new(flattened_acl_with_mandatory).permission_lookup
     AccessControlList.insert_all!(bulk_insert_list)
   end
 

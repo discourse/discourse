@@ -71,6 +71,23 @@ class AccessControlList < ActiveRecord::Base
   scope :matching_group,
         ->(group) { allowing_any_group([group.id]).or(allowing_users_in_group(group.id)) }
 
+  def self.inject_mandatory_acl(flattened_acl, target)
+    return flattened_acl if !target.class.has_mandatory_acl?
+
+    target.class.mandatory_acl.each do |mandatory_acl|
+      if flattened_acl.any? { |acl|
+           acl[:permission] == mandatory_acl[:permission] &&
+             acl[:type].to_sym == mandatory_acl[:type].to_sym && acl[:id] === mandatory_acl[:id]
+         }
+        next
+      end
+
+      flattened_acl << mandatory_acl
+    end
+
+    flattened_acl
+  end
+
   # Takes a list in this format, which is the same
   # format from flattened_list that will come from the UI:
   #
@@ -159,13 +176,20 @@ class AccessControlList < ActiveRecord::Base
 
       flattened_list = []
       each do |access_control_list|
+        target_klass = for_target ? for_target.class : access_control_list.target_type.constantize
+
         access_control_list.allowed_group_ids.each do |group_id|
           allowed_group =
             access_control_list.allowed_groups_preloaded.find { |ag| ag.id == group_id }
+          mandatory =
+            target_klass.acl_is_mandatory?(
+              { type: :group, id: group_id, permission: access_control_list.permission },
+            )
 
           list_entry = {
             type: :group,
             id: group_id,
+            mandatory:,
             permission: access_control_list.permission,
             name: allowed_group.name,
             full_name: allowed_group.full_name,
@@ -176,10 +200,10 @@ class AccessControlList < ActiveRecord::Base
 
           if for_target.present?
             list_entry[:target_id] = for_target.id
-            list_entry[:target_type] = for_target.class.polymorphic_name
+            list_entry[:target_type] = target_klass.polymorphic_name
           else
             list_entry[:target_id] = access_control_list.target_id
-            list_entry[:target_type] = access_control_list.target_type
+            list_entry[:target_type] = target_klass.polymorphic_name
           end
 
           flattened_list << list_entry

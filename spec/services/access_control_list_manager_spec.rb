@@ -3,7 +3,7 @@
 RSpec.describe AccessControlListManager do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:target) }
-    it { is_expected.to validate_presence_of(:flattened_acls) }
+    it { is_expected.to validate_presence_of(:flattened_acl) }
     it { is_expected.to validate_presence_of(:owner) }
     it { is_expected.to validate_length_of(:owner).is_at_most(100) }
   end
@@ -16,13 +16,13 @@ RSpec.describe AccessControlListManager do
     fab!(:group)
     fab!(:other_group, :group)
 
-    let(:params) { { target:, flattened_acls:, owner: } }
+    let(:params) { { target:, flattened_acl:, owner: } }
     let(:dependencies) { { guardian: } }
     let(:guardian) { admin.guardian }
     let(:target) { category }
     let(:owner) { "test_owner" }
 
-    let(:flattened_acls) do
+    let(:flattened_acl) do
       [
         { type: "group", id: group.id, permission: "view" },
         { type: "group", id: other_group.id, permission: "edit" },
@@ -97,6 +97,59 @@ RSpec.describe AccessControlListManager do
         expect(log.subject).to eq("Category (#{category.id})")
         expect(log.new_value).to include("view", "edit")
         expect(log.previous_value).to include("manage")
+      end
+    end
+
+    describe "mandatory ACL" do
+      context "when the target does not have mandatory ACLs" do
+        before { Category.stubs(:has_mandatory_acl?).returns(false) }
+
+        it "does not modify the flattened ACL" do
+          result
+
+          expect(AccessControlList.where(target: category).pluck(:permission)).to contain_exactly(
+            "edit",
+            "view",
+          )
+        end
+      end
+
+      context "when the target has mandatory ACLs" do
+        before do
+          Category.stubs(:has_mandatory_acl?).returns(true)
+          Category.stubs(:mandatory_acl).returns(
+            [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }],
+          )
+        end
+
+        it "injects the mandatory ACL into the list of ACLs to be created" do
+          result
+
+          expect(AccessControlList.where(target: category).pluck(:permission)).to contain_exactly(
+            "view",
+            "edit",
+            "manage",
+          )
+
+          manage_acl = AccessControlList.find_by(target: category, permission: "manage")
+          expect(manage_acl.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:admins])
+        end
+
+        context "when the mandatory ACL is already included in the flattened ACL" do
+          let(:flattened_acl) do
+            [
+              { type: "group", id: group.id, permission: "view" },
+              { type: "group", id: other_group.id, permission: "edit" },
+              { type: "group", id: Group::AUTO_GROUPS[:admins], permission: "manage" },
+            ]
+          end
+
+          it "does not create duplicate ACLs" do
+            result
+
+            expect(AccessControlList.where(target: category, permission: "manage").count).to eq(1)
+          end
+        end
       end
     end
   end

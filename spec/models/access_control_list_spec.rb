@@ -64,6 +64,34 @@ RSpec.describe AccessControlList do
     end
   end
 
+  describe ".inject_mandatory_acl" do
+    let(:mandatory_acl) { { type: :group, id: group.id, permission: "manage" } }
+
+    before do
+      target.class.stubs(:has_mandatory_acl?).returns(true)
+      target.class.stubs(:mandatory_acl).returns([mandatory_acl])
+    end
+
+    it "adds missing mandatory acl entries" do
+      flattened_acl = [{ type: "group", id: other_group.id, permission: "view" }]
+
+      result = described_class.inject_mandatory_acl(flattened_acl, target)
+
+      expect(result).to contain_exactly(
+        { type: "group", id: other_group.id, permission: "view" },
+        mandatory_acl,
+      )
+    end
+
+    it "does not duplicate mandatory acl entries" do
+      flattened_acl = [{ type: "group", id: group.id, permission: "manage" }]
+
+      result = described_class.inject_mandatory_acl(flattened_acl, target)
+
+      expect(result).to contain_exactly({ type: "group", id: group.id, permission: "manage" })
+    end
+  end
+
   describe ".flattened_list" do
     fab!(:view_acl) do
       Fabricate(
@@ -82,6 +110,8 @@ RSpec.describe AccessControlList do
         groups: [group, other_group],
       )
     end
+
+    before { target.class.stubs(:acl_is_mandatory?).returns(false) }
 
     it "returns one entry per group per acl with the group metadata" do
       list = described_class.where(target: target).flattened_list
@@ -118,6 +148,22 @@ RSpec.describe AccessControlList do
       entry = described_class.where(target: target, permission: "manage").flattened_list.first
 
       expect(entry[:metadata]).to eq({ auto_group: true })
+    end
+
+    it "marks mandatory acl entries" do
+      target
+        .class
+        .stubs(:acl_is_mandatory?)
+        .with({ type: :group, id: group.id, permission: "view" })
+        .returns(true)
+
+      list = described_class.where(target: target).flattened_list
+
+      expect(list.map { |entry| entry.slice(:id, :permission, :mandatory) }).to contain_exactly(
+        { id: group.id, permission: "view", mandatory: true },
+        { id: group.id, permission: "edit", mandatory: false },
+        { id: other_group.id, permission: "edit", mandatory: false },
+      )
     end
 
     it "returns an empty array when there are no acls" do

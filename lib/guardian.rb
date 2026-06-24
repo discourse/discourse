@@ -193,6 +193,10 @@ class Guardian
     @user.has_any_acl_permission?(target, permissions)
   end
 
+  def in_any_groups?(group_ids)
+    @user.in_any_groups?(group_ids)
+  end
+
   # Can the user see the object?
   def can_see?(obj)
     if obj

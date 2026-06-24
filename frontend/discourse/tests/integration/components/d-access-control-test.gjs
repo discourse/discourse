@@ -331,4 +331,47 @@ module("Integration | Component | DAccessControl", function (hooks) {
       "renders the default editor option"
     );
   });
+
+  test("puts mandatory permissions at the top of the rows and disables removing the permission", async function (assert) {
+    const state = controlledState([
+      {
+        type: "group",
+        id: 999,
+        permission: "view",
+        name: "Some Group",
+        full_name: "Some Group",
+        mandatory: true,
+      },
+      {
+        type: "group",
+        id: 1001,
+        permission: "edit",
+        name: "Another Group",
+        full_name: "Another Group",
+      },
+    ]);
+
+    await render(
+      <template>
+        <DAccessControl
+          @groups={{GROUPS}}
+          @acl={{state.acl}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    const rows = [...document.querySelectorAll(".d-access-control__row")];
+    assert.dom(rows[0]).hasClass("--mandatory", "the mandatory row is first");
+    assert
+      .dom(
+        rows[0].querySelector(
+          ".d-access-control__permission.dropdown-select-box"
+        )
+      )
+      .hasClass(
+        "is-disabled",
+        "the mandatory row's permission select is disabled"
+      );
+  });
 });
