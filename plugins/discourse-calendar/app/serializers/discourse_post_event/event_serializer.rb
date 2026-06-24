@@ -43,9 +43,7 @@ module DiscoursePostEvent
     end
 
     def livestream_onebox
-      cached = Oneboxer.cached_onebox(object.location)
-      Jobs.enqueue(:warm_livestream_onebox, url: object.location) if cached.blank?
-      cached.presence
+      Oneboxer.cached_onebox(object.location).presence
     end
 
     def channel

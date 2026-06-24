@@ -20,6 +20,51 @@ describe DiscoursePostEvent::Event do
     ).is_at_most(DiscoursePostEvent::Event::MAX_NAME_LENGTH)
   end
 
+  describe "#warm_livestream_onebox" do
+    let(:livestream_url) { "https://example.com/live" }
+
+    fab!(:topic) { Fabricate(:topic, category: nil) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before { Jobs.run_later! }
+
+    it "enqueues onebox warming for a livestream URL" do
+      expect_enqueued_with(
+        job: :warm_livestream_onebox,
+        args: {
+          event_id: post.id,
+          url: livestream_url,
+        },
+      ) { Fabricate(:event, post: post, livestream: true, location: livestream_url) }
+    end
+
+    it "skips onebox warming when the onebox is cached" do
+      Discourse.cache.write(
+        Oneboxer.onebox_cache_key(livestream_url),
+        { onebox: "<aside>cached</aside>" },
+      )
+
+      expect_not_enqueued_with(job: :warm_livestream_onebox) do
+        Fabricate(:event, post: post, livestream: true, location: livestream_url)
+      end
+    end
+  end
+
+  describe "#create_livestream_chat_channel" do
+    fab!(:category)
+    fab!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    it "creates the chat channel after the livestream event is committed" do
+      expect { Fabricate(:event, post: post, livestream: true) }.to change(
+        DiscourseCalendar::Livestream::TopicChatChannel,
+        :count,
+      ).by(1)
+
+      expect(post.topic.topic_chat_channel.chat_channel.chatable).to eq(category)
+    end
+  end
+
   describe "#raw_invitees_are_groups" do
     fab!(:user) { Fabricate(:user, admin: true) }
     fab!(:topic) { Fabricate(:topic, user: user) }
@@ -876,6 +921,8 @@ describe DiscoursePostEvent::Event do
     fab!(:upload)
 
     it "sets livestream from the bbcode attribute" do
+      Jobs.run_later!
+
       post.update!(
         raw:
           "[event start=\"2020-04-24 14:15\" livestream=\"true\" location=\"https://example.com/live\"]\n[/event]",

@@ -1,16 +1,14 @@
 import Component from "@glimmer/component";
-import { inject as controller } from "@ember/controller";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
 
 export default class JoinChannelMessage extends Component {
   @service embeddableChat;
-  @controller("topic") topicController;
 
   get shouldRenderJoinText() {
-    const topic = this.topicController?.model;
     return (
-      topic?.chat_channel_id && this.embeddableChat.topicHasLivestreamTag(topic)
+      this.embeddableChat.topicHasLivestream &&
+      this.embeddableChat.chatChannelId
     );
   }
 

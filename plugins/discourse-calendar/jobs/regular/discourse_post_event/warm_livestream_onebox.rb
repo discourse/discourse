@@ -6,7 +6,14 @@ module Jobs
   class WarmLivestreamOnebox < ::Jobs::Base
     def execute(args)
       url = args[:url]
-      Oneboxer.onebox(url) if url.present?
+      return if url.blank?
+
+      Oneboxer.onebox(url)
+
+      event = DiscoursePostEvent::Event.find_by(id: args[:event_id])
+      return if event.blank? || !event.livestream? || event.location != url
+
+      event.post&.publish_change_to_clients!(:revised)
     end
   end
 end

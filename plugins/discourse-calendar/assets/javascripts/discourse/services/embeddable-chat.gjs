@@ -3,8 +3,6 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 
-export const LIVESTREAM_TAG_NAME = "livestream";
-
 export default class EmbeddableChat extends Service {
   @service siteSettings;
   @service router;
@@ -50,17 +48,6 @@ export default class EmbeddableChat extends Service {
     this.isMobileChatVisible = !this.isMobileChatVisible;
   }
 
-  topicHasLivestreamTag(topic) {
-    return (
-      // TODO(https://github.com/discourse/discourse/pull/36678): The string check can be
-      // removed using .discourse-compatibility once the PR is merged.
-      topic?.tags?.some?.((tag) => {
-        const tagName = typeof tag === "string" ? tag : tag.name;
-        return tagName === LIVESTREAM_TAG_NAME;
-      }) || false
-    );
-  }
-
   get isMobileModal() {
     return (
       this.siteSettings.livestream_enable_modal_chat_on_mobile &&
@@ -72,7 +59,15 @@ export default class EmbeddableChat extends Service {
     return !this.capabilities.viewport.lg;
   }
 
+  get topic() {
+    return this.topicController?.model;
+  }
+
   get chatChannelId() {
-    return this.topicController?.model?.chat_channel_id;
+    return this.topic?.chat_channel_id;
+  }
+
+  get topicHasLivestream() {
+    return this.topic?.has_livestream;
   }
 }

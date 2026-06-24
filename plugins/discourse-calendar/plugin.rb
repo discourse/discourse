@@ -857,12 +857,8 @@ after_initialize do
     include_condition: -> { object.topic.topic_chat_channel.present? },
   ) { object.topic.topic_chat_channel.chat_channel_id }
 
-  on(:post_edited) do |post, _, _|
-    DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
-  end
-  on(:topic_created) do |topic, _, _|
-    DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(topic)
-  end
+  add_to_serializer(:topic_view, :has_livestream) { object.topic.first_post&.event&.livestream? }
+
   on(:chat_channel_trashed) do |channel, user|
     # If the chat channel is deleted, delete the related TopicChatChannel record
     DiscourseCalendar::Livestream::TopicChatChannel.where(chat_channel_id: channel.id).destroy_all

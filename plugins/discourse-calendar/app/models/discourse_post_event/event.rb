@@ -25,6 +25,7 @@ module DiscoursePostEvent
     # prepend so it runs before `dependent: :delete_all` wipes the invitees
     before_destroy :reset_invitees_topic_tracking, prepend: true
     after_commit :create_livestream_chat_channel, on: %i[create update]
+    after_commit :warm_livestream_onebox, on: %i[create update]
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
     after_save do
@@ -54,6 +55,14 @@ module DiscoursePostEvent
     def create_livestream_chat_channel
       return unless livestream?
       DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
+    end
+
+    def warm_livestream_onebox
+      return if !livestream? || location.blank?
+      return if !saved_change_to_livestream? && !saved_change_to_location?
+      return if Oneboxer.cached_onebox(location).present?
+
+      Jobs.enqueue(:warm_livestream_onebox, event_id: id, url: location)
     end
 
     def destroy_topic_custom_field
