@@ -2029,6 +2029,8 @@ class UsersController < ApplicationController
           ],
         )
         .to_a
+    unread_notifications =
+      Notification.filter_inaccessible_topic_notifications(guardian, unread_notifications)
 
     if unread_notifications.size < USER_MENU_LIST_LIMIT
       exclude_topic_ids = unread_notifications.filter_map(&:topic_id).uniq
@@ -2053,6 +2055,8 @@ class UsersController < ApplicationController
           .for_user_menu(current_user.id, limit: limit)
           .where(read: true, notification_type: Notification.types[:group_message_summary])
           .to_a
+      read_notifications =
+        Notification.filter_inaccessible_topic_notifications(guardian, read_notifications)
     end
 
     if unread_notifications.present?
