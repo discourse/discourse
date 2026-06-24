@@ -17,6 +17,23 @@ import { i18n } from "discourse-i18n";
 const VALID_MODES = ["stack", "row", "grid", "tiles"];
 const VALID_ALIGNS = ["start", "center", "end", "stretch"];
 const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
+const VALID_JUSTIFY_CONTENT = [
+  "start",
+  "center",
+  "end",
+  "space-between",
+  "space-around",
+  "space-evenly",
+];
+const VALID_JUSTIFY_ITEMS = ["start", "center", "end", "stretch"];
+const VALID_ALIGN_CONTENT = [
+  "start",
+  "center",
+  "end",
+  "space-between",
+  "space-around",
+  "stretch",
+];
 
 /**
  * Container layout block.
@@ -73,6 +90,36 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
         },
       },
     },
+    // Main-axis distribution. Applies to flex modes (stack / row) and to grid
+    // (inline-axis track distribution). `start` matches the current default in
+    // every mode, so it's a no-op for existing layouts.
+    justifyContent: {
+      type: "string",
+      default: "start",
+      enum: VALID_JUSTIFY_CONTENT,
+      ui: { label: i18n("blocks.builtin.layout.justify_content") },
+    },
+    // Reverses the visual order of children. Implemented by reversing the
+    // rendered children array (not CSS `*-reverse`), so DOM / tab / screen-reader
+    // order stays in step with the visual order. Flex modes only.
+    reverse: {
+      type: "boolean",
+      default: false,
+      ui: { control: "toggle", label: i18n("blocks.builtin.layout.reverse") },
+    },
+    // Row mode only: whether children wrap onto new lines. Default `wrap` matches
+    // the previously-hardcoded row behaviour. The responsive collapse forces wrap
+    // below its breakpoint regardless (see the stylesheet).
+    wrap: {
+      type: "string",
+      default: "wrap",
+      enum: ["wrap", "nowrap"],
+      ui: {
+        control: "segmented",
+        label: i18n("blocks.builtin.layout.wrap"),
+        conditional: { arg: "mode", equals: "row" },
+      },
+    },
     // Grid args. Ignored by stack / row modes.
     columns: {
       type: "number",
@@ -89,6 +136,41 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
       min: 1,
       max: 24,
       ui: { label: i18n("blocks.builtin.layout.rows") },
+    },
+    // Grid only: default inline-axis alignment of each cell within its track
+    // (the block-axis complement is the shared `align` arg). `stretch` matches
+    // the current grid default.
+    justifyItems: {
+      type: "string",
+      default: "stretch",
+      enum: VALID_JUSTIFY_ITEMS,
+      ui: {
+        control: "segmented",
+        label: i18n("blocks.builtin.layout.justify_items"),
+        conditional: { arg: "mode", equals: "grid" },
+      },
+    },
+    // Grid only: block-axis distribution of the tracks when the grid is shorter
+    // than its container. `stretch` matches the current grid default.
+    alignContent: {
+      type: "string",
+      default: "stretch",
+      enum: VALID_ALIGN_CONTENT,
+      ui: {
+        label: i18n("blocks.builtin.layout.align_content"),
+        conditional: { arg: "mode", equals: "grid" },
+      },
+    },
+    // Grid only: when true, the grid backfills earlier gaps with later items
+    // (`grid-auto-flow: row dense`).
+    dense: {
+      type: "boolean",
+      default: false,
+      ui: {
+        control: "toggle",
+        label: i18n("blocks.builtin.layout.dense"),
+        conditional: { arg: "mode", equals: "grid" },
+      },
     },
     columnTemplate: {
       type: "string",
@@ -204,10 +286,10 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
             control: "radio-group",
             label: i18n("blocks.builtin.layout.placement.grid_align"),
             optionIcons: {
-              start: "up-long",
-              center: "align-center",
-              end: "down-long",
-              stretch: "arrows-up-down",
+              start: "wf-align-start-horizontal",
+              center: "wf-align-center-horizontal",
+              end: "wf-align-end-horizontal",
+              stretch: "wf-stretch-horizontal",
             },
           },
         },
@@ -219,10 +301,10 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
             control: "radio-group",
             label: i18n("blocks.builtin.layout.placement.grid_justify"),
             optionIcons: {
-              start: "align-left",
-              center: "align-center",
-              end: "align-right",
-              stretch: "arrows-left-right",
+              start: "wf-align-start-vertical",
+              center: "wf-align-center-vertical",
+              end: "wf-align-end-vertical",
+              stretch: "wf-stretch-vertical",
             },
           },
         },
@@ -246,10 +328,10 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
             // Stack mode is a flex column, so `align-self` acts on the
             // horizontal (cross) axis: left / center / right / stretch.
             optionIcons: {
-              start: "align-left",
-              center: "align-center",
-              end: "align-right",
-              stretch: "arrows-left-right",
+              start: "wf-align-start-vertical",
+              center: "wf-align-center-vertical",
+              end: "wf-align-end-vertical",
+              stretch: "wf-stretch-vertical",
             },
           },
         },
@@ -281,10 +363,10 @@ const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
             // Row mode is a flex row, so `align-self` acts on the
             // vertical (cross) axis: top / center / bottom / stretch.
             optionIcons: {
-              start: "up-long",
-              center: "align-center",
-              end: "down-long",
-              stretch: "arrows-up-down",
+              start: "wf-align-start-horizontal",
+              center: "wf-align-center-horizontal",
+              end: "wf-align-end-horizontal",
+              stretch: "wf-stretch-horizontal",
             },
           },
         },
@@ -382,6 +464,7 @@ export default class Layout extends Component {
     const mode = this.resolvedMode;
     const gap = this.args.gap ?? 1;
     const align = this.args.align ?? "stretch";
+    const justifyContent = this.args.justifyContent ?? "start";
 
     if (mode === "grid") {
       // Derive the track count from the declared args AND the children's
@@ -420,11 +503,16 @@ export default class Layout extends Component {
       const gridTemplateRows =
         rowTemplate.length > 0 ? rowTemplate : `repeat(${rows}, ${rowHeight})`;
 
+      const autoFlow = this.args.dense ? "row dense" : "row";
       return trustHTML(
         `--d-block-layout-cols: ${gridTemplateColumns}; ` +
           `--d-block-layout-rows: ${gridTemplateRows}; ` +
           `--d-block-layout-gap: ${gap}rem; ` +
-          `--d-block-layout-align: ${align};`
+          `--d-block-layout-align: ${align}; ` +
+          `--d-block-layout-justify-content: ${justifyContent}; ` +
+          `--d-block-layout-justify-items: ${this.args.justifyItems ?? "stretch"}; ` +
+          `--d-block-layout-align-content: ${this.args.alignContent ?? "stretch"}; ` +
+          `--d-block-layout-auto-flow: ${autoFlow};`
       );
     }
 
@@ -441,9 +529,16 @@ export default class Layout extends Component {
       );
     }
 
-    return trustHTML(
-      `--d-block-layout-gap: ${gap}rem; --d-block-layout-align: ${align};`
-    );
+    // Stack / row (flex). Both carry gap / align / justify-content; only row
+    // exposes wrap (a column's flex-wrap is niche, so stack stays the implicit
+    // `nowrap` by not emitting the var).
+    let style =
+      `--d-block-layout-gap: ${gap}rem; --d-block-layout-align: ${align}; ` +
+      `--d-block-layout-justify-content: ${justifyContent};`;
+    if (mode === "row") {
+      style += ` --d-block-layout-wrap: ${this.args.wrap ?? "wrap"};`;
+    }
+    return trustHTML(style);
   }
 
   /**
@@ -526,6 +621,16 @@ export default class Layout extends Component {
         (child) => child.blockName !== LAYOUT_MERGED_CELL_BLOCK
       );
     }
+    // Flex reverse is done here by reordering the DOM (a reversed copy — the
+    // source array is owned upstream), NOT via CSS `flex-direction: *-reverse`,
+    // so tab and screen-reader order follow the visual order. Grid early-returns
+    // above, so its placement sort and merged-cell filter are untouched.
+    if (
+      (this.resolvedMode === "stack" || this.resolvedMode === "row") &&
+      this.args.reverse
+    ) {
+      return [...children].reverse();
+    }
     return children;
   }
 
@@ -561,18 +666,31 @@ export default class Layout extends Component {
         `sortedChildren` getter's JSDoc for why: keeps DOM order in
         sync with visual reading order so accessibility tooling and
         narrow-width auto-placement both behave correctly. }}
-      {{#each this.sortedChildren key="key" as |child|}}
-        {{#if (eq this.resolvedMode "grid")}}
+      {{#if (eq this.resolvedMode "grid")}}
+        {{#each this.sortedChildren key="key" as |child|}}
           <div
             class="d-block-layout__cell"
             style={{this.cellStyle child.containerArgs}}
           >
             <child.Component />
           </div>
-        {{else}}
+        {{/each}}
+      {{else if (eq this.resolvedMode "tiles")}}
+        {{#each this.sortedChildren key="key" as |child|}}
           <child.Component />
-        {{/if}}
-      {{/each}}
+        {{/each}}
+      {{else}}
+        {{! Stack / row: an inner flex wrapper holds the children. The flex
+          declarations live on this wrapper (not the outer element) so the
+          responsive-collapse container query can force flex-wrap on it — a
+          descendant of the query context, which the container element itself
+          can't be. }}
+        <div class="d-block-layout__flex">
+          {{#each this.sortedChildren key="key" as |child|}}
+            <child.Component />
+          {{/each}}
+        </div>
+      {{/if}}
     </div>
   </template>
 }

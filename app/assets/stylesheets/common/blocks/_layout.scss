@@ -18,24 +18,30 @@
   container-name: d-block-layout;
 }
 
-.d-block-layout--stack {
+/* Flex modes (stack / row) hold their children in an inner
+   `.d-block-layout__flex` wrapper. The flex declarations live on that wrapper
+   rather than on `.d-block-layout--*` so the responsive-collapse `@container`
+   rule can force `flex-wrap: wrap` on it — the query can restyle a descendant,
+   but never the container element itself (see the collapse block below). The
+   outer element is just a block box that establishes the container context.
+   `start` / `end` are CSS Box Alignment keywords (already relied on by
+   `align-items` here) — do not "fix" them to `flex-start` / `flex-end`. */
+
+.d-block-layout--stack > .d-block-layout__flex {
   display: flex;
   flex-direction: column;
   gap: var(--d-block-layout-gap, 1rem);
   align-items: var(--d-block-layout-align, stretch);
+  justify-content: var(--d-block-layout-justify-content, start);
 }
 
-.d-block-layout--row {
+.d-block-layout--row > .d-block-layout__flex {
   display: flex;
   flex-direction: row;
-
-  /* Allow wrapping so the per-child `flex-basis: 100%` override
-     emitted by the @container collapse rule below puts each child on
-     its own line. Without `wrap`, 100%-wide children would overflow
-     horizontally instead of stacking. */
-  flex-wrap: wrap;
+  flex-wrap: var(--d-block-layout-wrap, wrap);
   gap: var(--d-block-layout-gap, 1rem);
   align-items: var(--d-block-layout-align, stretch);
+  justify-content: var(--d-block-layout-justify-content, start);
 }
 
 .d-block-layout--grid {
@@ -43,7 +49,16 @@
   grid-template-columns: var(--d-block-layout-cols, repeat(6, 1fr));
   grid-template-rows: var(--d-block-layout-rows, repeat(2, minmax(80px, auto)));
   gap: var(--d-block-layout-gap, 1rem);
+
+  /* `align-items` / `justify-items` position each cell within its track; the
+     per-cell `place-items` rule below positions the child within its cell — a
+     different level. `*-content` distributes the tracks when the grid is
+     smaller than the container. */
   align-items: var(--d-block-layout-align, stretch);
+  justify-items: var(--d-block-layout-justify-items, stretch);
+  justify-content: var(--d-block-layout-justify-content, start);
+  align-content: var(--d-block-layout-align-content, stretch);
+  grid-auto-flow: var(--d-block-layout-auto-flow, row);
   transition:
     grid-template-columns 180ms ease,
     grid-template-rows 180ms ease,
@@ -106,10 +121,12 @@
    expressions can't read `var()` or SCSS interpolation, so each variant
    needs its own block.
 
-   Row mode: items need to wrap when each child takes 100% width.
-   `flex-wrap: wrap` declared on the base `.d-block-layout--row` rule
-   above so that the per-child `flex-basis: 100%` override below
-   actually puts each child onto its own line. */
+   Row mode: each child takes 100% width to stack, which only works if the
+   flex wrapper wraps. Because the author can set `nowrap`, the collapse must
+   force `flex-wrap: wrap` — and it can, because the flex container is now the
+   inner `.d-block-layout__flex` wrapper (a DESCENDANT of the queried container),
+   not the `.d-block-layout--row` element itself. So collapse always wins over a
+   `nowrap` setting at narrow widths. */
 
 @container d-block-layout (max-width: 40rem) {
   .d-block-layout--grid.d-block-layout--collapse-default
@@ -118,7 +135,14 @@
     grid-row: auto;
   }
 
-  .d-block-layout--row.d-block-layout--collapse-default > * {
+  .d-block-layout--row.d-block-layout--collapse-default
+    > .d-block-layout__flex {
+    flex-wrap: wrap;
+  }
+
+  .d-block-layout--row.d-block-layout--collapse-default
+    > .d-block-layout__flex
+    > * {
     flex-basis: 100%;
   }
 }
@@ -130,7 +154,14 @@
     grid-row: auto;
   }
 
-  .d-block-layout--row.d-block-layout--collapse-compact > * {
+  .d-block-layout--row.d-block-layout--collapse-compact
+    > .d-block-layout__flex {
+    flex-wrap: wrap;
+  }
+
+  .d-block-layout--row.d-block-layout--collapse-compact
+    > .d-block-layout__flex
+    > * {
     flex-basis: 100%;
   }
 }

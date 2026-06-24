@@ -50,9 +50,9 @@ const VALID_ALIGNS = ["start", "center", "end"];
         control: "radio-group",
         label: i18n("blocks.builtin.tabs.align"),
         optionIcons: {
-          start: "align-left",
-          center: "align-center",
-          end: "align-right",
+          start: "wf-align-left",
+          center: "wf-align-center",
+          end: "wf-align-right",
         },
       },
     },

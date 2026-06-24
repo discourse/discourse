@@ -28,9 +28,9 @@ const VALID_ALIGNMENTS = ["left", "center", "right"];
         control: "radio-group",
         label: i18n("blocks.builtin.paragraph.align"),
         optionIcons: {
-          left: "align-left",
-          center: "align-center",
-          right: "align-right",
+          left: "wf-align-left",
+          center: "wf-align-center",
+          right: "wf-align-right",
         },
       },
     },

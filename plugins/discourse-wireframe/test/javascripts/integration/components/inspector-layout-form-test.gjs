@@ -1,0 +1,107 @@
+import Service from "@ember/service";
+import { click, render } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import InspectorLayoutForm from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector-layout-form";
+
+// Minimal stand-in: the layout form reads the selected block's args and a few
+// grid helpers off the service, and writes through `updateSelectedArg`. The
+// grid helpers return inert values so the form mounts cleanly in every mode.
+class StubWireframeService extends Service {
+  #args;
+
+  constructor(owner, args) {
+    super(owner);
+    this.#args = args;
+    this.updateSelectedArgCalls = [];
+  }
+
+  get selectedBlockData() {
+    return { key: "layout:test", args: this.#args };
+  }
+
+  gridSizeFor() {
+    return { columns: 2, rows: 2 };
+  }
+
+  activeGridTemplate() {
+    return null;
+  }
+
+  canApplyGridTemplate() {
+    return true;
+  }
+
+  outOfBoundsSlotsIn() {
+    return [];
+  }
+
+  updateSelectedArg(name, value) {
+    this.updateSelectedArgCalls.push({ name, value });
+  }
+}
+
+function stubWireframe(owner, args) {
+  owner.unregister("service:wireframe");
+  owner.register("service:wireframe", new StubWireframeService(owner, args), {
+    instantiate: false,
+  });
+}
+
+module(
+  "Integration | Wireframe | InspectorLayoutForm | flex/grid controls",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("stack mode: justify-content + reverse, but no wrap control", async function (assert) {
+      stubWireframe(this.owner, { mode: "stack" });
+      await render(<template><InspectorLayoutForm /></template>);
+
+      assert
+        .dom("input[name='wireframe-layout-justify-content']")
+        .exists("justify-content renders as a segmented control");
+      assert.dom(".d-toggle-switch").exists("reverse toggle renders");
+      assert
+        .dom("input[name='wireframe-layout-wrap']")
+        .doesNotExist("wrap is not offered for stack (column)");
+    });
+
+    test("row mode: adds the wrap control", async function (assert) {
+      stubWireframe(this.owner, { mode: "row" });
+      await render(<template><InspectorLayoutForm /></template>);
+
+      assert
+        .dom("input[name='wireframe-layout-wrap']")
+        .exists("row offers the wrap segmented control");
+      assert.dom(".d-toggle-switch").exists("reverse toggle renders");
+    });
+
+    test("grid mode: justify-items, align-content, and dense", async function (assert) {
+      stubWireframe(this.owner, { mode: "grid" });
+      await render(<template><InspectorLayoutForm /></template>);
+
+      assert
+        .dom("input[name='wireframe-layout-justify-items']")
+        .exists("justify-items segmented renders");
+      assert
+        .dom("input[name='wireframe-layout-align-content']")
+        .exists("align-content segmented renders");
+      assert.dom(".d-toggle-switch").exists("dense toggle renders");
+      assert
+        .dom("input[name='wireframe-layout-wrap']")
+        .doesNotExist("no wrap control in grid mode");
+    });
+
+    test("toggling reverse writes the arg through the service", async function (assert) {
+      stubWireframe(this.owner, { mode: "row" });
+      await render(<template><InspectorLayoutForm /></template>);
+
+      await click(".d-toggle-switch__checkbox");
+
+      const service = this.owner.lookup("service:wireframe");
+      assert.deepEqual(service.updateSelectedArgCalls, [
+        { name: "reverse", value: true },
+      ]);
+    });
+  }
+);

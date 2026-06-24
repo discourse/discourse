@@ -5,15 +5,16 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DSegmentedControl from "discourse/components/d-segmented-control";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { GRID_TEMPLATES, parseGridAreas } from "../../lib/grid-templates";
 import InspectorDimensionField from "./inspector-dimension-field";
+import InspectorSegmentedField from "./inspector-segmented-field";
 import InspectorStepperField from "./inspector-stepper-field";
 
 /**
@@ -46,6 +47,78 @@ const AUTO_COLLAPSE_OPTIONS = [
 ];
 
 const ALIGNMENTS = ["start", "center", "end", "stretch"];
+const JUSTIFY_CONTENT = [
+  "start",
+  "center",
+  "end",
+  "space-between",
+  "space-around",
+  "space-evenly",
+];
+const JUSTIFY_ITEMS = ["start", "center", "end", "stretch"];
+const ALIGN_CONTENT = [
+  "start",
+  "center",
+  "end",
+  "space-between",
+  "space-around",
+  "stretch",
+];
+const WRAP = ["wrap", "nowrap"];
+
+// Lucide (`wf-`) icon glyphs keyed by axis orientation. A flex layout's main /
+// cross axis depends on its mode (stack = vertical main, row & grid = horizontal),
+// so alignment and distribution icons are chosen per orientation; the value's
+// label rides along as the tooltip / accessible name.
+const ALIGN_ICONS = {
+  horizontal: {
+    start: "wf-align-start-horizontal",
+    center: "wf-align-center-horizontal",
+    end: "wf-align-end-horizontal",
+    stretch: "wf-stretch-horizontal",
+  },
+  vertical: {
+    start: "wf-align-start-vertical",
+    center: "wf-align-center-vertical",
+    end: "wf-align-end-vertical",
+    stretch: "wf-stretch-vertical",
+  },
+};
+const JUSTIFY_CONTENT_ICONS = {
+  horizontal: {
+    start: "wf-align-horizontal-justify-start",
+    center: "wf-align-horizontal-justify-center",
+    end: "wf-align-horizontal-justify-end",
+    "space-between": "wf-align-horizontal-space-between",
+    "space-around": "wf-align-horizontal-space-around",
+    "space-evenly": "wf-align-horizontal-distribute-center",
+  },
+  vertical: {
+    start: "wf-align-vertical-justify-start",
+    center: "wf-align-vertical-justify-center",
+    end: "wf-align-vertical-justify-end",
+    "space-between": "wf-align-vertical-space-between",
+    "space-around": "wf-align-vertical-space-around",
+    "space-evenly": "wf-align-vertical-distribute-center",
+  },
+};
+// Grid only: per-cell alignment along the inline (horizontal) axis.
+const JUSTIFY_ITEMS_ICONS = {
+  start: "wf-align-start-vertical",
+  center: "wf-align-center-vertical",
+  end: "wf-align-end-vertical",
+  stretch: "wf-stretch-horizontal",
+};
+// Grid only: track distribution along the block (vertical) axis.
+const ALIGN_CONTENT_ICONS = {
+  start: "wf-align-vertical-justify-start",
+  center: "wf-align-vertical-justify-center",
+  end: "wf-align-vertical-justify-end",
+  "space-between": "wf-align-vertical-space-between",
+  "space-around": "wf-align-vertical-space-around",
+  stretch: "wf-stretch-vertical",
+};
+const WRAP_ICONS = { wrap: "wf-wrap-text", nowrap: "wf-move-horizontal" };
 
 const COLUMNS_MIN = 1;
 const COLUMNS_MAX = 12;
@@ -197,6 +270,40 @@ export default class InspectorLayoutForm extends Component {
     return this.#args.align ?? "stretch";
   }
 
+  get justifyContent() {
+    return this.#args.justifyContent ?? "start";
+  }
+
+  get wrap() {
+    return this.#args.wrap ?? "wrap";
+  }
+
+  get reverse() {
+    return this.#args.reverse ?? false;
+  }
+
+  get justifyItems() {
+    return this.#args.justifyItems ?? "stretch";
+  }
+
+  get alignContent() {
+    return this.#args.alignContent ?? "stretch";
+  }
+
+  get dense() {
+    return this.#args.dense ?? false;
+  }
+
+  /** @returns {boolean} `true` for the flex modes (stack / row). */
+  get isFlex() {
+    return this.mode === "stack" || this.mode === "row";
+  }
+
+  /** @returns {boolean} `true` only in row mode (where wrap is meaningful). */
+  get isRow() {
+    return this.mode === "row";
+  }
+
   get columnTemplate() {
     return this.#args.columnTemplate ?? "";
   }
@@ -219,34 +326,81 @@ export default class InspectorLayoutForm extends Component {
   }
 
   /**
-   * Segmented-control items for the mode picker — each MODE const mapped to the
-   * `{value, label, icon}` shape `DSegmentedControl` expects, with the label
-   * resolved from i18n.
+   * Glyph orientation for the alignment / justify icons: a stack's axes are the
+   * mirror of a row's (and grid reads like a row), so stack mode uses the
+   * vertical glyph set and everything else the horizontal one.
+   *
+   * @returns {"horizontal"|"vertical"}
+   */
+  get #glyphAxis() {
+    return this.mode === "stack" ? "vertical" : "horizontal";
+  }
+
+  /**
+   * Items for the unified enum field — `{value, label, icon, title}`. The label
+   * doubles as the tooltip / accessible name and the dropdown-fallback text.
    *
    * @returns {Array<{value: string, label: string, icon: string}>}
    */
   get modeItems() {
-    return MODES.map((mode) => ({
-      value: mode.id,
-      label: i18n(`wireframe.inspector.layout.${mode.labelKey}`),
-      icon: mode.icon,
-    }));
+    return MODES.map((mode) => {
+      const label = i18n(`wireframe.inspector.layout.${mode.labelKey}`);
+      return { value: mode.id, label, title: label, icon: mode.icon };
+    });
   }
 
   /** @returns {Array<{value: string, label: string}>} */
   get autoCollapseItems() {
-    return AUTO_COLLAPSE_OPTIONS.map((option) => ({
-      value: option.id,
-      label: i18n(`wireframe.inspector.layout.${option.labelKey}`),
-    }));
+    return AUTO_COLLAPSE_OPTIONS.map((option) => {
+      const label = i18n(`wireframe.inspector.layout.${option.labelKey}`);
+      return { value: option.id, label, title: label };
+    });
   }
 
-  /** @returns {Array<{value: string, label: string}>} */
+  /** @returns {Array<{value: string, label: string, icon: string}>} */
   get alignItems() {
-    return ALIGNMENTS.map((value) => ({
-      value,
-      label: i18n(`wireframe.inspector.layout.align_${value}`),
-    }));
+    const icons = ALIGN_ICONS[this.#glyphAxis];
+    return ALIGNMENTS.map((value) => {
+      const label = i18n(`wireframe.inspector.layout.align_${value}`);
+      return { value, label, title: label, icon: icons[value] };
+    });
+  }
+
+  /** @returns {Array<{value: string, label: string, icon: string}>} */
+  get justifyContentItems() {
+    const icons = JUSTIFY_CONTENT_ICONS[this.#glyphAxis];
+    return JUSTIFY_CONTENT.map((value) => {
+      const label = i18n(
+        `wireframe.inspector.layout.justify_${underscore(value)}`
+      );
+      return { value, label, title: label, icon: icons[value] };
+    });
+  }
+
+  /** @returns {Array<{value: string, label: string, icon: string}>} */
+  get alignContentItems() {
+    return ALIGN_CONTENT.map((value) => {
+      const label = i18n(
+        `wireframe.inspector.layout.align_content_${underscore(value)}`
+      );
+      return { value, label, title: label, icon: ALIGN_CONTENT_ICONS[value] };
+    });
+  }
+
+  /** @returns {Array<{value: string, label: string, icon: string}>} */
+  get justifyItemsItems() {
+    return JUSTIFY_ITEMS.map((value) => {
+      const label = i18n(`wireframe.inspector.layout.justify_items_${value}`);
+      return { value, label, title: label, icon: JUSTIFY_ITEMS_ICONS[value] };
+    });
+  }
+
+  /** @returns {Array<{value: string, label: string, icon: string}>} */
+  get wrapItems() {
+    return WRAP.map((value) => {
+      const label = i18n(`wireframe.inspector.layout.wrap_${value}`);
+      return { value, label, title: label, icon: WRAP_ICONS[value] };
+    });
   }
 
   @action
@@ -262,6 +416,36 @@ export default class InspectorLayoutForm extends Component {
   @action
   setAlign(value) {
     this.#set("align", value);
+  }
+
+  @action
+  setJustifyContent(value) {
+    this.#set("justifyContent", value);
+  }
+
+  @action
+  setAlignContent(value) {
+    this.#set("alignContent", value);
+  }
+
+  @action
+  setWrap(value) {
+    this.#set("wrap", value);
+  }
+
+  @action
+  setJustifyItems(value) {
+    this.#set("justifyItems", value);
+  }
+
+  @action
+  toggleReverse() {
+    this.#set("reverse", !this.reverse);
+  }
+
+  @action
+  toggleDense() {
+    this.#set("dense", !this.dense);
   }
 
   @action
@@ -422,12 +606,11 @@ export default class InspectorLayoutForm extends Component {
         <span class="wireframe-layout-form__legend">
           {{i18n "wireframe.inspector.layout.mode_legend"}}
         </span>
-        <DSegmentedControl
-          class="wireframe-layout-form__segmented"
+        <InspectorSegmentedField
           @items={{this.modeItems}}
           @value={{this.mode}}
           @name="wireframe-layout-mode"
-          @onSelect={{this.setMode}}
+          @onChange={{this.setMode}}
         />
       </div>
 
@@ -441,12 +624,11 @@ export default class InspectorLayoutForm extends Component {
           <span class="wireframe-layout-form__legend">
             {{i18n "wireframe.inspector.layout.auto_collapse_label"}}
           </span>
-          <DSegmentedControl
-            class="wireframe-layout-form__segmented"
+          <InspectorSegmentedField
             @items={{this.autoCollapseItems}}
             @value={{this.autoCollapse}}
             @name="wireframe-layout-auto-collapse"
-            @onSelect={{this.setAutoCollapse}}
+            @onChange={{this.setAutoCollapse}}
           />
           <p class="wireframe-layout-form__hint">
             {{dIcon "circle-info"}}
@@ -575,19 +757,99 @@ export default class InspectorLayoutForm extends Component {
         <span class="wireframe-layout-form__legend">
           {{i18n "wireframe.inspector.layout.align_legend"}}
         </span>
-        <DSegmentedControl
-          class="wireframe-layout-form__segmented"
+        <InspectorSegmentedField
           @items={{this.alignItems}}
           @value={{this.align}}
           @name="wireframe-layout-align"
-          @onSelect={{this.setAlign}}
+          @onChange={{this.setAlign}}
         />
       </div>
 
+      {{! Main-axis distribution. Icon segments by main axis; the unified field
+        falls back to a dropdown only if the row can't fit. Applies to flex and grid. }}
+      <div class="wireframe-layout-form__field">
+        <span class="wireframe-layout-form__legend">
+          {{i18n "wireframe.inspector.layout.justify_content_legend"}}
+        </span>
+        <InspectorSegmentedField
+          @items={{this.justifyContentItems}}
+          @value={{this.justifyContent}}
+          @name="wireframe-layout-justify-content"
+          @onChange={{this.setJustifyContent}}
+        />
+      </div>
+
+      {{#if this.isFlex}}
+        <div
+          class="wireframe-layout-form__field wireframe-layout-form__field--inline"
+        >
+          <span class="wireframe-layout-form__legend">
+            {{i18n "wireframe.inspector.layout.reverse_legend"}}
+          </span>
+          <DToggleSwitch
+            @state={{this.reverse}}
+            {{on "click" this.toggleReverse}}
+          />
+        </div>
+
+        {{#if this.isRow}}
+          <div class="wireframe-layout-form__field">
+            <span class="wireframe-layout-form__legend">
+              {{i18n "wireframe.inspector.layout.wrap_legend"}}
+            </span>
+            <InspectorSegmentedField
+              @items={{this.wrapItems}}
+              @value={{this.wrap}}
+              @name="wireframe-layout-wrap"
+              @onChange={{this.setWrap}}
+            />
+          </div>
+        {{/if}}
+      {{/if}}
+
       {{#if this.isGrid}}
-        {{! Disclosure body holds inputs/buttons by design. The
-            <summary> is the disclosure trigger; its descendants
-            stand on their own as form controls once expanded. }}
+        {{! Grid cell-alignment and flow controls — primary, so they sit in the
+          main panel; only the raw track-template escape hatches are tucked into
+          the Advanced disclosure below. }}
+        <div class="wireframe-layout-form__field">
+          <span class="wireframe-layout-form__legend">
+            {{i18n "wireframe.inspector.layout.justify_items_legend"}}
+          </span>
+          <InspectorSegmentedField
+            @items={{this.justifyItemsItems}}
+            @value={{this.justifyItems}}
+            @name="wireframe-layout-justify-items"
+            @onChange={{this.setJustifyItems}}
+          />
+        </div>
+
+        <div class="wireframe-layout-form__field">
+          <span class="wireframe-layout-form__legend">
+            {{i18n "wireframe.inspector.layout.align_content_legend"}}
+          </span>
+          <InspectorSegmentedField
+            @items={{this.alignContentItems}}
+            @value={{this.alignContent}}
+            @name="wireframe-layout-align-content"
+            @onChange={{this.setAlignContent}}
+          />
+        </div>
+
+        <div
+          class="wireframe-layout-form__field wireframe-layout-form__field--inline"
+        >
+          <span class="wireframe-layout-form__legend">
+            {{i18n "wireframe.inspector.layout.dense_legend"}}
+          </span>
+          <DToggleSwitch
+            @state={{this.dense}}
+            {{on "click" this.toggleDense}}
+          />
+        </div>
+
+        {{! Disclosure body holds inputs/buttons by design. The summary line is
+            the disclosure trigger; its descendants stand on their own as form
+            controls once expanded. }}
         <details class="wireframe-layout-form__advanced">
           <summary>{{i18n
               "wireframe.inspector.layout.advanced_templates"
@@ -774,4 +1036,10 @@ class TemplatePreview extends Component {
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
+}
+
+// Maps a CSS keyword to its i18n-key fragment (`space-between` →
+// `space_between`), since i18n keys can't contain hyphens.
+function underscore(value) {
+  return value.replace(/-/g, "_");
 }

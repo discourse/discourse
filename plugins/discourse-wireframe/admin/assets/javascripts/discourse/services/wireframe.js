@@ -82,6 +82,7 @@ import {
   wrapAsOutletRoot,
 } from "../lib/mutate-layout";
 import { diffLayouts } from "../lib/outlet-change-summary";
+import { isReversedFlexLayout } from "../lib/reversed-flex";
 import { inferSchemaFromValues } from "../lib/schema-to-fields";
 
 const FLUSH_DELAY_MS = 200;
@@ -1327,19 +1328,24 @@ export default class WireframeService extends Service {
    */
 
   /**
-   * Sibling-relative move helpers used by the floating block toolbar.
-   * Each looks up the selected entry's siblings and computes a
-   * `moveBlock` call against the previous / next sibling.
+   * Shared body for the floating block toolbar's move up / down buttons.
+   * Looks up the selected entry's siblings and computes a `moveBlock` call
+   * against the previous / next sibling in the direction the author SEES.
    *
-   * Returns `false` (no-op) when the block is already first / last in
-   * its parent, when no block is selected, or when the move would
-   * otherwise be rejected.
+   * A reversed flex parent (stack / row with `reverse`) renders its children
+   * in reverse, so a visual "up" is a move toward a LATER persisted index (and
+   * vice versa). The visual direction is mapped to the persisted one before
+   * picking the target sibling, so the buttons always move the block the way
+   * the author expects on screen.
+   *
+   * Returns `false` (no-op) when the block is already first / last (visually)
+   * in its parent, when no block is selected, or when the move is rejected.
    *
    * @param {string} blockKey
+   * @param {"up"|"down"} visualDirection
    * @returns {boolean}
    */
-  @action
-  moveBlockUp(blockKey) {
+  #moveBlockSibling(blockKey, visualDirection) {
     const located = this.findEntryAndOutletSync(blockKey);
     if (!located) {
       return false;
@@ -1349,14 +1355,32 @@ export default class WireframeService extends Service {
       return false;
     }
     const sibs = findEntrySiblings(layout, blockKey);
-    if (!sibs || sibs.index === 0) {
+    if (!sibs) {
       return false;
     }
-    const previousKey = entryKey(sibs.siblings[sibs.index - 1]);
+    const reversed = isReversedFlexLayout(this.findEntryParent(blockKey)?.args);
+    const goEarlier = reversed
+      ? visualDirection === "down"
+      : visualDirection === "up";
+
+    if (goEarlier) {
+      if (sibs.index === 0) {
+        return false;
+      }
+      return this.moveBlock({
+        sourceKey: blockKey,
+        targetKey: entryKey(sibs.siblings[sibs.index - 1]),
+        position: "before",
+        targetOutletName: located.outletName,
+      });
+    }
+    if (sibs.index >= sibs.siblings.length - 1) {
+      return false;
+    }
     return this.moveBlock({
       sourceKey: blockKey,
-      targetKey: previousKey,
-      position: "before",
+      targetKey: entryKey(sibs.siblings[sibs.index + 1]),
+      position: "after",
       targetOutletName: located.outletName,
     });
   }
@@ -1366,26 +1390,17 @@ export default class WireframeService extends Service {
    * @returns {boolean}
    */
   @action
+  moveBlockUp(blockKey) {
+    return this.#moveBlockSibling(blockKey, "up");
+  }
+
+  /**
+   * @param {string} blockKey
+   * @returns {boolean}
+   */
+  @action
   moveBlockDown(blockKey) {
-    const located = this.findEntryAndOutletSync(blockKey);
-    if (!located) {
-      return false;
-    }
-    const layout = this.readResolvedLayout(located.outletName);
-    if (!layout) {
-      return false;
-    }
-    const sibs = findEntrySiblings(layout, blockKey);
-    if (!sibs || sibs.index >= sibs.siblings.length - 1) {
-      return false;
-    }
-    const nextKey = entryKey(sibs.siblings[sibs.index + 1]);
-    return this.moveBlock({
-      sourceKey: blockKey,
-      targetKey: nextKey,
-      position: "after",
-      targetOutletName: located.outletName,
-    });
+    return this.#moveBlockSibling(blockKey, "down");
   }
 
   /**

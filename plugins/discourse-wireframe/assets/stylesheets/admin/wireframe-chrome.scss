@@ -2590,8 +2590,18 @@ body.wireframe-active
     grid-row: var(--d-block-cell-row, var(--wf-grid-cell-row, auto));
   }
 
-  .d-block-layout--row.d-block-layout--collapse-default > *,
-  .d-block-layout--row.d-block-layout--collapse-compact > * {
+  .d-block-layout--row.d-block-layout--collapse-default > .d-block-layout__flex,
+  .d-block-layout--row.d-block-layout--collapse-compact
+    > .d-block-layout__flex {
+    flex-wrap: var(--d-block-layout-wrap, wrap);
+  }
+
+  .d-block-layout--row.d-block-layout--collapse-default
+    > .d-block-layout__flex
+    > *,
+  .d-block-layout--row.d-block-layout--collapse-compact
+    > .d-block-layout__flex
+    > * {
     flex-basis: auto;
   }
 }
@@ -3061,6 +3071,17 @@ body.wireframe-active
     gap: 0.25rem;
   }
 
+  /* A boolean toggle reads best inline: label on the left, switch on the
+     right, on one row (the stacked legend-above layout is for the wider
+     segmented / dropdown controls). */
+
+  &__field--inline {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
   /* Out-of-bounds warning banner — surfaced when the layout loaded
      with slots whose explicit column/row references fall outside the
      declared `columns` × `rows`. Danger palette to match the
@@ -3104,13 +3125,10 @@ body.wireframe-active
   }
 
   /* The mode / align / auto-collapse pickers render core `DSegmentedControl`,
-     which owns its own track / slider / radio styling. We only stretch it to
-     the panel width; the dark-chrome palette adjustments live in the shared
-     `.wireframe-inspector` override block below. */
-
-  &__segmented {
-    width: 100%;
-  }
+     which owns its own track / slider / radio styling. The enum controls now
+     render via the shared `.wireframe-segmented-field` (icon segments with a
+     dropdown fallback); its width / dark-chrome adjustments live in that
+     block below. */
 
   &__pair {
     display: grid;
@@ -3365,6 +3383,20 @@ body.wireframe-active
       overflow: hidden;
       text-overflow: ellipsis;
     }
+  }
+
+  /* Segment glyphs (an option renders icon-only when it has an icon) get a
+     touch more presence than body text. */
+
+  .wireframe-segmented-field .d-segmented-control__text .d-icon {
+    font-size: var(--font-up-1);
+  }
+
+  /* The dropdown fallback (rare: an option set too wide for a segmented row)
+     fills the field width like the segments it replaces. */
+
+  .wireframe-segmented-field__dropdown {
+    width: 100%;
   }
 }
 

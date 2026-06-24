@@ -1,7 +1,6 @@
 // @ts-check
 import { get } from "@ember/helper";
-import { eq } from "discourse/truth-helpers";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { eq, or } from "discourse/truth-helpers";
 import { toFlatMarkdown } from "discourse/plugins/discourse-wireframe/discourse/lib/inline-rich-text";
 import InspectorCategoryField from "./inspector-category-field";
 import InspectorDimensionField from "./inspector-dimension-field";
@@ -32,7 +31,10 @@ export const FORM_KIT_TYPE_BY_CONTROL = Object.freeze({
   textarea: "textarea",
   toggle: "toggle",
   select: "select",
-  "radio-group": "radio-group",
+  // `radio-group` and `segmented` are the same single-select enum picker — the
+  // unified InspectorSegmentedField (icon segments with a dropdown fallback) —
+  // so both ride the `custom` slot and render the same branch below.
+  "radio-group": "custom",
   color: "color",
   icon: "icon",
   emoji: "emoji",
@@ -122,23 +124,19 @@ const InspectorField = <template>
           <select.Option @value={{option}}>{{option}}</select.Option>
         {{/each}}
       </formField.Control>
-    {{else if (eq @field.control "radio-group")}}
-      <formField.Control as |radio|>
-        {{#each @field.options as |option|}}
-          <radio.Radio @value={{option}} aria-label={{option}}>
-            {{#if @field.optionIcons}}
-              {{#let (get @field.optionIcons option) as |icon|}}
-                {{#if icon}}
-                  <span title={{option}}>{{dIcon icon}}</span>
-                {{else}}
-                  {{option}}
-                {{/if}}
-              {{/let}}
-            {{else}}
-              {{option}}
-            {{/if}}
-          </radio.Radio>
-        {{/each}}
+    {{else if
+      (or (eq @field.control "radio-group") (eq @field.control "segmented"))
+    }}
+      {{! Single-select enum. The unified field renders icon segments (with a
+          tooltip per option) and falls back to a dropdown when the options
+          don't fit a segmented row. Icons come from the arg's optionIcons map;
+          the value doubles as the label / tooltip. }}
+      <formField.Control>
+        <InspectorSegmentedField
+          @custom={{formField}}
+          @options={{@field.options}}
+          @optionIcons={{@field.optionIcons}}
+        />
       </formField.Control>
     {{else if (eq @field.control "image")}}
       {{! Image args own a bespoke custom control with Upload or URL
@@ -201,16 +199,6 @@ const InspectorField = <template>
         <InspectorStepperField
           @custom={{formField}}
           @schema={{@field.schema}}
-        />
-      </formField.Control>
-    {{else if (eq @field.control "segmented")}}
-      {{! An enum rendered as a single-select button group. Items come from the
-          arg's enum values and optional icon map. }}
-      <formField.Control>
-        <InspectorSegmentedField
-          @custom={{formField}}
-          @options={{@field.options}}
-          @optionIcons={{@field.optionIcons}}
         />
       </formField.Control>
     {{else if (eq @field.control "rich-inline")}}

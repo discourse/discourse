@@ -92,9 +92,9 @@ const VALID_CONTENT_WIDTHS = ["contained", "wide", "full"];
         control: "radio-group",
         label: i18n("blocks.builtin.section.content_align"),
         optionIcons: {
-          start: "align-left",
-          center: "align-center",
-          end: "align-right",
+          start: "wf-align-left",
+          center: "wf-align-center",
+          end: "wf-align-right",
         },
       },
     },

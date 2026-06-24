@@ -6,6 +6,10 @@ import { LAYOUT_MERGED_CELL_BLOCK } from "discourse/blocks";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 import { resolveLinearDrop } from "discourse/plugins/discourse-wireframe/discourse/lib/linear-drop";
+import {
+  flipPosition,
+  isReversedFlexLayout,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/reversed-flex";
 
 const ACCEPTED_KINDS = ["wf-block", "wf-palette-block"];
 
@@ -407,7 +411,16 @@ function buildBoundaryDescriptor({
   // to "after the leading neighbour" at the container's end. Both land
   // the block in the same gap.
   const targetKey = afterKey ?? beforeKey;
-  const position = afterKey ? "before" : "after";
+  // `before`/`after` are computed from VISUAL DOM order. A reversed flex
+  // container renders its children in reverse, so the visual side maps to the
+  // opposite persisted side — flip the dispatch position to land in the gap
+  // the author actually sees. The label/geometry stay visual (unchanged).
+  const visualPosition = afterKey ? "before" : "after";
+  const containerArgs =
+    wireframe.findEntryAndOutletSync(containerKey)?.entry?.args;
+  const position = isReversedFlexLayout(containerArgs)
+    ? flipPosition(visualPosition)
+    : visualPosition;
 
   const containerRect = container.getBoundingClientRect();
   const geometry = boundaryGeometry({ axis, containerRect, before, after });
