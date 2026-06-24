@@ -673,7 +673,8 @@ class TopicsController < ApplicationController
   end
 
   def remove_bookmarks
-    topic = Topic.find(params[:topic_id].to_i)
+    topic = find_visible_topic_from_topic_id
+
     BookmarkManager.new(current_user).destroy_for_topic(topic)
     render body: nil
   end
@@ -724,7 +725,7 @@ class TopicsController < ApplicationController
   end
 
   def bookmark
-    topic = Topic.find(params[:topic_id].to_i)
+    topic = find_visible_topic_from_topic_id
 
     bookmark_manager = BookmarkManager.new(current_user)
     bookmark_manager.create_for(bookmarkable_id: topic.id, bookmarkable_type: "Topic")
@@ -1354,6 +1355,13 @@ class TopicsController < ApplicationController
 
   def topic_params
     params.permit(:topic_id, :topic_time, timings: {})
+  end
+
+  def find_visible_topic_from_topic_id
+    topic = Topic.find_by(id: params[:topic_id].to_i)
+    raise Discourse::NotFound unless guardian.can_see?(topic)
+
+    topic
   end
 
   def fetch_topic_view(options)
