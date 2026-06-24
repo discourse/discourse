@@ -1,19 +1,16 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
+import optionalService from "discourse/lib/optional-service";
 
 export default class EmbeddableChat extends Service {
   @service siteSettings;
   @service router;
   @service currentUser;
   @service capabilities;
+  @optionalService chat;
 
   @tracked isMobileChatVisible = false;
-
-  get chat() {
-    return getOwner(this).lookup("service:chat");
-  }
 
   get userCanChat() {
     return this.chat?.userCanChat ?? false;
