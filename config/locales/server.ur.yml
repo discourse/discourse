@@ -458,6 +458,7 @@ ur:
       admins: "منتظمین"
       moderators: "نگرانوں"
       staff: "عملہ"
+      anonymous_users: "گمنام_زائرین"
       trust_level_0: "فعالیت_کا_درجہ_0"
       trust_level_1: "فعالیت_کا_درجہ_1"
       trust_level_2: "فعالیت_کا_درجہ_2"
@@ -1024,29 +1025,40 @@ ur:
       yaxis: "نئے شراکت داروں کی تعداد"
       description: "اِس عرصہ میں صارفین کی تعداد جنہوں نے اپنی پہلی پوسٹ شائع کی۔"
     activity_by_category:
+      description: "منتخب مدت میں ہر زمرے کے موضوعات، دھاگوں اور اراکین کی شرکت۔ درج شدہ زمرؤں میں کل سرگرمی کا یہ ہر زمرے میں فیصدی حصہ ہے؛ گزشتہ میں تبدیلی ہے جو برابر دورانیے والی پچھلی مدت کے مقابلے میں ہوئی ہے۔"
       labels:
         category: "زُمرَہ"
         topics: "موضوعات"
         posts: "دھاگے"
+        page_views: "صفحہ کے مشاہدات"
         share: "اشتراک"
+        vs_prior: "گزشتہ"
     posters_by_member_type:
+      title: "کون فعال ہے؟"
+      description: 'منتخب مدت میں رکن کی فعالیت کے لحاظ سے لکھے گئے دھاگوں کی درجہ بندی کی گئی۔ "نئے ارکان" اس مدت کے دوران شامل ہوئے، "دوبارہ جڑنے والے" اس سے پہلے شامل ہوئے، اور "عملہ" نگران یا منتظمین ہیں۔'
       labels:
+        member_type: "رکن کی فعالیت"
         count: "دھاگے"
         share: "اشتراک"
       types:
+        returning: "دوبارہ جڑنے والے"
         staff: "عملہ"
     trust_level_pipeline:
+      title: "فعالیت کے درجات کا کھاتہ"
+      description: "منتخب مدت میں اراکین کی مختلف فعالیت کے درجوں کے درمیان نقل و حرکت۔ یہ ہر فعالیت کے درجہ پر موجود اراکین کی تعداد، کل رکنیت میں ان کا حصہ، اور اس مدت کے دوران ہر فعالیت کے درجہ میں شامل یا خارج ہونے والے اراکین کی تعداد کو شمار کرتا ہے۔"
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
         level: "فعالیت کا درجہ"
         count: "ممبران"
         share: "اشتراک"
+        moves_in: "شامل ہوئے"
+        moves_out: "نکلے"
       levels:
-        "0": "نیا"
-        "1": "بنیادی"
-        "2": "ممبر"
-        "3": "رَیگولر"
-        "4": "لِیڈر"
+        "0": "نوارد"
+        "1": "آشنا"
+        "2": "معتمد"
+        "3": "معتبر"
+        "4": "مقتدر"
     trust_level_growth:
       title: "فعالیت کے درجہ میں اضافہ"
       xaxis:
@@ -1080,7 +1092,9 @@ ur:
       title: "سائٹ پر آمدو رفت"
       xaxis:
         page_view_anon_browser: "گمنام"
+        page_view_logged_in_browser: "لاگ ان شدہ"
         page_view_crawler: "کرالرز"
+        page_view_other: "دیگر ٹریفک"
       yaxis: "دن"
     dau_by_mau:
       xaxis: "دن"
@@ -1182,7 +1196,7 @@ ur:
       xaxis: "دن"
       yaxis: "پیغامات کی تعداد"
     top_referrers:
-      title: "ٹاپ تجویز کنندگان"
+      title: "سرفہرست حوالہ دہندگان"
       xaxis: "صارف"
       num_clicks: "کلِکس"
       num_topics: "موضوعات"
@@ -1192,10 +1206,15 @@ ur:
         num_topics: "موضوعات"
       description: "اُن کے شیئر کردہ رابطوں پر کلکس کی تعداد کے حساب سے اراکین کی فہرست۔"
     top_countries_by_browser_pageviews:
+      title: "سرفہرست ممالک"
+      description: "وہ ممالک جو منتخب مدت میں آپ کے فورم پر سب سے زیادہ صفحات کے دورے کرتے ہیں۔"
       labels:
+        country_code: "ملکی کوڈ"
         count: "زائرین کی تعداد"
     top_referrers_by_browser_pageviews:
+      title: "سرفہرست حوالہ دہندگان"
       labels:
+        normalized_referrer: "حوالہ دہندہ"
         count: "زائرین کی تعداد"
     top_traffic_sources:
       title: "ٹریفک کے ٹاپ ذرائع"

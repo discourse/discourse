@@ -167,7 +167,7 @@ class UserHistory < ActiveRecord::Base
         upcoming_change_toggled: 122,
         change_site_setting_groups: 123,
         upcoming_change_available: 124,
-        notified_about_composer_education: 125,
+        notified_about_composer_education: 125, # not used anymore
         recover_post: 126,
         change_access_control_list_permissions: 127,
       )

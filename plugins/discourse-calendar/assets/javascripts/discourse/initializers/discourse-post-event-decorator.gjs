@@ -62,7 +62,9 @@ function initializeDiscoursePostEventDecorator(api) {
 
         helper.renderGlimmer(
           wrapper,
-          <template><DiscoursePostEvent @event={{event}} /></template>
+          <template>
+            <DiscoursePostEvent @event={{event}} @post={{post}} />
+          </template>
         );
       }
     },

@@ -3,6 +3,8 @@
 module Migrations
   module Importer
     class Step
+      extend StepDependencies
+
       Enums = Database::IntermediateDB::Enums
 
       class << self
@@ -19,37 +21,6 @@ module Migrations
           end
 
           @title = value
-        end
-
-        def depends_on(*step_names)
-          steps_module = Steps
-          classes =
-            step_names.map do |name|
-              name = name.to_s.camelize
-              klass = steps_module.const_get(name) if steps_module.const_defined?(name)
-
-              unless klass.is_a?(Class) && klass < Step
-                raise NameError, "Class #{class_name} not found"
-              end
-
-              klass
-            end
-
-          @dependencies ||= []
-          @dependencies.concat(classes)
-        end
-
-        def dependencies
-          @dependencies || []
-        end
-
-        # stree-ignore
-        def priority(value = (getter = true; nil))
-          if getter
-            @priority
-          else
-            @priority = value
-          end
         end
 
         def requires_shared_data(*names)

@@ -479,6 +479,69 @@ RSpec.describe Admin::DashboardController do
       end
     end
 
+    describe "problems payload" do
+      before do
+        SiteSetting.dashboard_improvements = true
+        Discourse.cache.clear
+      end
+
+      fab!(:starttls_problem) do
+        Fabricate(:admin_notice, identifier: "starttls_disabled", priority: "high")
+      end
+
+      fab!(:host_names_problem) do
+        Fabricate(:admin_notice, identifier: "host_names", priority: "low")
+      end
+
+      it "returns every active problem check in a top-level problems key for an admin" do
+        sign_in(admin)
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["problems"]).to match_array(
+          [
+            {
+              "id" => starttls_problem.id,
+              "priority" => "high",
+              "message" => starttls_problem.message,
+              "identifier" => "starttls_disabled",
+            },
+            {
+              "id" => host_names_problem.id,
+              "priority" => "low",
+              "message" => host_names_problem.message,
+              "identifier" => "host_names",
+            },
+          ],
+        )
+      end
+
+      it "returns every active problem check in a top-level problems key for a moderator" do
+        sign_in(moderator)
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["problems"]).to match_array(
+          [
+            {
+              "id" => starttls_problem.id,
+              "priority" => "high",
+              "message" => starttls_problem.message,
+              "identifier" => "starttls_disabled",
+            },
+            {
+              "id" => host_names_problem.id,
+              "priority" => "low",
+              "message" => host_names_problem.message,
+              "identifier" => "host_names",
+            },
+          ],
+        )
+      end
+    end
+
     describe "configuration payload" do
       before do
         SiteSetting.dashboard_improvements = true

@@ -6360,6 +6360,32 @@ RSpec.describe TopicsController do
       end
     end
 
+    context "when logged in as a user in the topic timers allowed groups" do
+      fab!(:topic_timer_group, :group)
+
+      before do
+        topic_timer_group.add(user)
+        user.reload
+        SiteSetting.topic_timers_allowed_groups = topic_timer_group.id.to_s
+        sign_in(user)
+      end
+
+      it "allows creating a topic timer" do
+        post "/t/#{topic.id}/timer.json", params: { time: "24", status_type: TopicTimer.types[1] }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.public_topic_timer.user).to eq(user)
+      end
+
+      it "requires delete permissions for destructive timers" do
+        post "/t/#{topic.id}/timer.json", params: { time: "24", status_type: "delete" }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(topic.reload.public_topic_timer).to eq(nil)
+      end
+    end
+
     context "when time is in the past" do
       it "returns an error" do
         freeze_time

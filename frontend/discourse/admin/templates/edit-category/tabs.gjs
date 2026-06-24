@@ -63,7 +63,9 @@ export default class Tabs extends Component {
   }
 
   <template>
-    <div class="edit-category {{if @controller.expandedMenu 'expanded-menu'}}">
+    <div
+      class="edit-category-page {{if @controller.expandedMenu 'expanded-menu'}}"
+    >
       <EditCategoryTabsHorizontal
         @controller={{@controller}}
         class="edit-category-page-header"

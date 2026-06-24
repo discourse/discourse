@@ -34,11 +34,17 @@ module Migrations
         step_class = StepBase
         current_module = self.class.name.deconstantize.constantize
 
-        current_module
-          .constants
-          .map { |c| current_module.const_get(c) }
-          .select { |klass| klass.is_a?(Class) && klass < step_class }
-          .sort_by(&:to_s)
+        classes =
+          current_module
+            .constants
+            .map { |c| current_module.const_get(c) }
+            .select { |klass| klass.is_a?(Class) && klass < step_class }
+
+        # Unlike the importer, the full step set is sorted here and the
+        # `--only`/`--skip` filtering happens afterwards (see `filter_steps` in
+        # `run`). This is intentional: re-running a single step via `--only`
+        # has to keep working even when that step declares dependencies.
+        TopologicalSorter.sort(classes)
       end
 
       def before_step_execution(step)

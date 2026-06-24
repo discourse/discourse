@@ -1216,6 +1216,7 @@ export default class PostEventBuilder extends Component {
                       "discourse_post_event.builder_modal.custom_fields.description"
                     }}
                     @format="full"
+                    class="form-kit__container-custom-fields"
                   >
                     <form.Object @name="customFields" as |customFields|>
                       {{#each this.allowedCustomFields as |allowedCustomField|}}
