@@ -102,9 +102,12 @@ RSpec.describe Compression::Engine do
         engine = described_class.engine_for(zip_file)
         engine.decompress(extract_location, zip_file, available_size)
 
+        symlink_entry_path = "#{extract_location}/symlink-entry"
+
         expect(read_file("extract_location/child-file")).to eq("child file")
-        expect(File.exist?("#{extract_location}/symlink-entry")).to eq(false)
-        expect(File.symlink?("#{extract_location}/symlink-entry")).to eq(false)
+        expect(File.exist?(symlink_entry_path)).to eq(false)
+        expect(File.symlink?(symlink_entry_path)).to eq(false)
+        expect(Dir.exist?(symlink_entry_path)).to eq(false)
       end
 
       it "decompresses into symlinked directory" do
