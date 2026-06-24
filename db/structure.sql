@@ -18787,6 +18787,13 @@ CREATE INDEX index_external_upload_stubs_on_status ON public.external_upload_stu
 
 
 --
+-- Name: index_flags_on_name_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_flags_on_name_key ON public.flags USING btree (name_key);
+
+
+--
 -- Name: index_for_rebake_old; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22057,6 +22064,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260624140945'),
 ('20260617053237'),
 ('20260615084100'),
 ('20260615082047'),
