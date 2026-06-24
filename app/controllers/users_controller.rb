@@ -112,7 +112,7 @@ class UsersController < ApplicationController
                      ]
   skip_before_action :redirect_to_profile_if_required, only: %i[show staff_info update]
 
-  before_action :add_noindex_header, only: %i[show my_redirect]
+  before_action :add_noindex_header, only: %i[show summary my_redirect]
 
   allow_in_readonly_mode :admin_login
   allow_in_staff_writes_only_mode :email_login, :password_reset_update
@@ -516,8 +516,6 @@ class UsersController < ApplicationController
           current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts),
       )
     raise Discourse::NotFound unless guardian.can_see_profile?(@user)
-
-    response.headers["X-Robots-Tag"] = "noindex"
 
     respond_to do |format|
       format.html do
