@@ -25,7 +25,7 @@ export default class ChatMessageReaction extends Component {
   registerTooltip = modifier((element) => {
     if (
       this.args.disableTooltip ||
-      this.useReactionsUsersMenu ||
+      this.useReactionsUsersPopup ||
       !this.popoverContent?.length
     ) {
       return;
@@ -45,12 +45,12 @@ export default class ChatMessageReaction extends Component {
     };
   });
 
-  // With the new reactions menu enabled, hovering (desktop) or long-pressing
+  // With the new reactions popup enabled, hovering (desktop) or long-pressing
   // (mobile) a reaction opens a users popup centred on that reaction. Each
-  // reaction registers its own menu; the shared `groupIdentifier` ensures only
-  // one is open at a time, so moving to another reaction opens a fresh menu.
-  registerReactionsUsersMenu = modifier((element) => {
-    if (!this.useReactionsUsersMenu) {
+  // reaction registers its own popup; the shared `groupIdentifier` ensures only
+  // one is open at a time, so moving to another reaction opens a fresh popup.
+  registerReactionsUsersPopup = modifier((element) => {
+    if (!this.useReactionsUsersPopup) {
       return;
     }
 
@@ -68,68 +68,68 @@ export default class ChatMessageReaction extends Component {
         message: this.args.message,
         emoji: this.args.reaction.emoji,
         // Lets the popup keep itself open while the pointer is over it, so the
-        // hover-to-open menu only closes once the pointer leaves both the
+        // hover-to-open popup only closes once the pointer leaves both the
         // reaction and the popup.
         onContentPointerEnter: desktop
-          ? this.cancelCloseReactionsUsersMenu
+          ? this.cancelCloseReactionsUsersPopup
           : undefined,
         onContentPointerLeave: desktop
-          ? this.scheduleCloseReactionsUsersMenu
+          ? this.scheduleCloseReactionsUsersPopup
           : undefined,
       },
     });
-    this.#reactionsUsersMenuInstance = instance;
+    this.#reactionsUsersPopupInstance = instance;
 
     if (desktop) {
       element.addEventListener(
         "pointerenter",
-        this.cancelCloseReactionsUsersMenu,
+        this.cancelCloseReactionsUsersPopup,
         { passive: true }
       );
       element.addEventListener(
         "pointerleave",
-        this.scheduleCloseReactionsUsersMenu,
+        this.scheduleCloseReactionsUsersPopup,
         { passive: true }
       );
     }
 
     return () => {
-      cancel(this.#closeReactionsUsersMenuTimer);
+      cancel(this.#closeReactionsUsersPopupTimer);
       element.removeEventListener(
         "pointerenter",
-        this.cancelCloseReactionsUsersMenu
+        this.cancelCloseReactionsUsersPopup
       );
       element.removeEventListener(
         "pointerleave",
-        this.scheduleCloseReactionsUsersMenu
+        this.scheduleCloseReactionsUsersPopup
       );
       instance.destroy();
-      this.#reactionsUsersMenuInstance = null;
+      this.#reactionsUsersPopupInstance = null;
     };
   });
-  #reactionsUsersMenuInstance = null;
-  #closeReactionsUsersMenuTimer = null;
+  #reactionsUsersPopupInstance = null;
+  #closeReactionsUsersPopupTimer = null;
 
   // Close on a short delay so moving the pointer across the gap between the
   // reaction and the popup (or briefly off either) doesn't dismiss it.
   @bind
-  scheduleCloseReactionsUsersMenu() {
-    cancel(this.#closeReactionsUsersMenuTimer);
-    this.#closeReactionsUsersMenuTimer = discourseLater(() => {
-      this.#reactionsUsersMenuInstance?.close({ focusTrigger: false });
+  scheduleCloseReactionsUsersPopup() {
+    cancel(this.#closeReactionsUsersPopupTimer);
+    this.#closeReactionsUsersPopupTimer = discourseLater(() => {
+      this.#reactionsUsersPopupInstance?.close({ focusTrigger: false });
     }, 250);
   }
 
   @bind
-  cancelCloseReactionsUsersMenu() {
-    cancel(this.#closeReactionsUsersMenuTimer);
+  cancelCloseReactionsUsersPopup() {
+    cancel(this.#closeReactionsUsersPopupTimer);
   }
 
-  // When the new reactions menu is enabled the reaction opens a users popup, so
+  // When the new reactions popup is enabled the reaction opens a users popup, so
   // the names tooltip is suppressed here.
-  get useReactionsUsersMenu() {
+  get useReactionsUsersPopup() {
     return (
-      this.siteSettings.enable_new_chat_reactions_menu &&
+      this.siteSettings.enable_new_chat_reactions_popup &&
       !this.args.disableTooltip
     );
   }
@@ -175,7 +175,7 @@ export default class ChatMessageReaction extends Component {
       <button
         {{on "click" this.handleClick passive=true}}
         {{this.registerTooltip}}
-        {{this.registerReactionsUsersMenu}}
+        {{this.registerReactionsUsersPopup}}
         type="button"
         title={{this.emojiString}}
         data-emoji-name={{@reaction.emoji}}
