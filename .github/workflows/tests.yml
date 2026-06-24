@@ -193,7 +193,7 @@ jobs:
           fi
 
       - name: Fetch turbo_rspec_runtime.log cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         id: test-runtime-cache
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         with:
