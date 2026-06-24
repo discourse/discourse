@@ -109,7 +109,7 @@ module Migrations
 
         Process.warmup
 
-        ForkManager.batch_forks do
+        ForkManager.with_batched_forks do
           WORKER_COUNT.times do |index|
             job = ParallelJob.new(@step.create_processor)
             workers << Worker.new(index, work_queue, worker_output_queue, job).start
