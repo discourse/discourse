@@ -20,8 +20,8 @@ PATH
       i18n
       lru_redux
       oj
-      ruby-progressbar
       samovar
+      unicode-display_width
       zeitwerk
 
 PATH

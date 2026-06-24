@@ -13,7 +13,7 @@ module Migrations
       end
 
       def execute
-        @reporter.start_step(@step.class.title)
+        @step_report = @reporter.start_step(@step.class.title)
         @max_progress = calculate_max_progress
 
         if execute_in_parallel?
@@ -22,7 +22,7 @@ module Migrations
           execute_serially
         end
       ensure
-        @reporter.finish_step(@step.class.title)
+        @step_report.finish
       end
 
       private
@@ -46,7 +46,7 @@ module Migrations
         job = SerialJob.new(@step.create_processor)
         job.setup
 
-        @reporter.with_progress(max_progress: @max_progress) do |progress|
+        @step_report.with_progress(max_progress: @max_progress) do |progress|
           @source.items.each do |item|
             stats = job.run(item)
             progress.update(
@@ -80,7 +80,7 @@ module Migrations
         duration = Time.now - start_time
 
         if duration > PRINT_RUNTIME_AFTER_SECONDS
-          @reporter.notice(
+          @step_report.notice(
             I18n.t(
               "converter.max_progress_calculation",
               duration: DateHelper.human_readable_time(duration),
@@ -95,7 +95,7 @@ module Migrations
         Thread.new do
           Thread.current.name = "writer_thread"
 
-          @reporter.with_progress(max_progress: @max_progress) do |progress|
+          @step_report.with_progress(max_progress: @max_progress) do |progress|
             while (parametrized_insert_statements, stats = worker_output_queue.pop)
               parametrized_insert_statements.each do |sql, parameters|
                 Database::IntermediateDB.insert(sql, *parameters)
