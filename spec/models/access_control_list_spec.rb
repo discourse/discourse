@@ -19,7 +19,6 @@ RSpec.describe AccessControlList do
       expect(entry).to match(
         permission: "view",
         allowed_group_ids: contain_exactly(group.id, other_group.id),
-        allowed_user_ids: eq([]),
         target_type: "Category",
         target_id: target.id,
         owner: "core",

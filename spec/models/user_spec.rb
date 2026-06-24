@@ -4279,48 +4279,5 @@ RSpec.describe User do
         expect(acl_user.permission_acl).to equal(acl_user.permission_acl)
       end
     end
-
-    describe "#has_acl_permission?" do
-      it "is true when a group the user belongs to grants the permission" do
-        expect(acl_user.has_acl_permission?(viewable_category, "view")).to eq(true)
-      end
-
-      it "is false when the user's groups do not grant the permission on the target" do
-        expect(acl_user.has_acl_permission?(viewable_category, "edit")).to eq(false)
-      end
-
-      it "is falsey when there is no acl entry for the target" do
-        expect(acl_user.has_acl_permission?(Fabricate(:category), "view")).to be_falsey
-      end
-    end
-
-    describe "#has_any_acl_permission?" do
-      it "is true when any of the permissions are granted" do
-        expect(acl_user.has_any_acl_permission?(editable_category, %w[view edit])).to eq(true)
-      end
-
-      it "is false when none of the permissions are granted" do
-        expect(acl_user.has_any_acl_permission?(viewable_category, %w[edit manage])).to eq(false)
-      end
-    end
-
-    describe "#target_ids_with_acl_permission" do
-      it "returns the target ids of the class the user can access with the permission" do
-        expect(acl_user.target_ids_with_acl_permission(Category, "view")).to contain_exactly(
-          viewable_category.id,
-        )
-        expect(acl_user.target_ids_with_acl_permission(Category, "edit")).to contain_exactly(
-          editable_category.id,
-        )
-      end
-    end
-
-    describe "#target_ids_with_any_acl_permissions" do
-      it "returns the unique target ids across the permissions" do
-        expect(
-          acl_user.target_ids_with_any_acl_permissions(Category, %w[view edit]),
-        ).to contain_exactly(viewable_category.id, editable_category.id)
-      end
-    end
   end
 end
