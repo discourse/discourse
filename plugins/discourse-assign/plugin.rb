@@ -426,6 +426,7 @@ after_initialize do
 
   add_to_class(:list_controller, :group_topics_assigned) do
     group = Group.find_by("name = ?", params[:groupname])
+    guardian.ensure_can_see_group!(group)
     guardian.ensure_can_see_group_members!(group)
 
     raise Discourse::NotFound unless group
@@ -969,7 +970,12 @@ after_initialize do
       posts.where(<<~SQL, user_id)
         topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User' AND a.active)
       SQL
-    elsif group_id = Group.find_by(name: match)&.id
+    elsif group_id =
+          Group
+            .visible_groups(@guardian.user)
+            .members_visible_groups(@guardian.user)
+            .where(name: match)
+            .pick(:id)
       posts.where(<<~SQL, group_id)
         topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'Group' AND a.active)
       SQL
