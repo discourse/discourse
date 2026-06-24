@@ -4648,6 +4648,30 @@ RSpec.describe TopicsController do
   end
 
   describe "#remove_bookmarks" do
+    it "requires the user to be logged in" do
+      put "/t/1/remove_bookmarks.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "returns 404 for inaccessible private messages" do
+      sign_in(user_2)
+      private_message =
+        create_post(
+          user: user,
+          archetype: "private_message",
+          target_usernames: [user.username],
+        ).topic
+      missing_topic_id = Topic.maximum(:id) + 1
+
+      put "/t/#{private_message.id}/remove_bookmarks.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+
+      put "/t/#{missing_topic_id}/remove_bookmarks.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+    end
+
     it "should remove bookmarks properly from non first post" do
       sign_in(user)
 
@@ -4658,14 +4682,6 @@ RSpec.describe TopicsController do
 
       put "/t/#{post.topic_id}/remove_bookmarks.json"
       expect(Bookmark.where(user: user).count).to eq(0)
-    end
-
-    it "should disallow bookmarks on posts you have no access to" do
-      sign_in(Fabricate(:user))
-      pm = create_post(user: user, archetype: "private_message", target_usernames: [user.username])
-
-      put "/t/#{pm.topic_id}/bookmark.json"
-      expect(response).to be_forbidden
     end
 
     context "with bookmarks with reminders" do
@@ -4681,6 +4697,25 @@ RSpec.describe TopicsController do
 
   describe "#bookmark" do
     before { sign_in(user) }
+
+    it "returns 404 for inaccessible private messages" do
+      sign_in(user_2)
+      private_message =
+        create_post(
+          user: user,
+          archetype: "private_message",
+          target_usernames: [user.username],
+        ).topic
+      missing_topic_id = Topic.maximum(:id) + 1
+
+      put "/t/#{private_message.id}/bookmark.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+
+      put "/t/#{missing_topic_id}/bookmark.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+    end
 
     it "should create a new bookmark for the topic" do
       post = create_post
