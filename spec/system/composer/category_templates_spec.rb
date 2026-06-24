@@ -474,6 +474,8 @@ describe "Composer Form Templates" do
     attach_file "prescription-uploader",
                 "#{Rails.root.join("spec/fixtures/images/logo.png")}",
                 make_visible: true
+    expect(page).to have_css(".form-template-field__uploaded-files li", text: "logo.png")
+
     attach_file "additional-docs-uploader",
                 [
                   "#{Rails.root.join("spec/fixtures/media/small.mp3")}",
@@ -481,6 +483,14 @@ describe "Composer Form Templates" do
                   "#{Rails.root.join("spec/fixtures/pdf/small.pdf")}",
                 ],
                 make_visible: true
+
+    expect(page).to have_css(".form-template-field__uploaded-files li", count: 4)
+    expect(page).to have_field("prescription", with: /logo\.png/, visible: :all)
+    expect(page).to have_field("additional-docs", with: /small\.pdf/, visible: :all)
+    expect(page).to have_field("additional-docs", with: /small\.mp3/, visible: :all)
+    expect(page).to have_field("additional-docs", with: /small\.mp4/, visible: :all)
+    expect(page).to have_css(".d-editor-preview img[alt='logo.png']")
+
     composer.fill_title(topic_title)
     composer.fill_form_template_field("input", "Peter Parker}")
     composer.create

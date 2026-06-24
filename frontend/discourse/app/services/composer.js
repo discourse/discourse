@@ -132,12 +132,15 @@ export default class ComposerService extends Service {
   lastValidatedAt = null;
   isUploading = false;
   isProcessingUpload = false;
+  formTemplateUploadsInProgress = false;
   isCancellable;
   uploadProgress;
   topic = null;
   linkLookup = null;
 
   composerHeight = null;
+
+  #formTemplateUploadStates = new Map();
 
   @tracked _showPreview;
 
@@ -293,6 +296,7 @@ export default class ComposerService extends Service {
     "model.loading",
     "isUploading",
     "isProcessingUpload",
+    "formTemplateUploadsInProgress",
     "_disableSubmit"
   )
   get disableSubmit() {
@@ -300,12 +304,30 @@ export default class ComposerService extends Service {
       this.model?.loading ||
       this.isUploading ||
       this.isProcessingUpload ||
+      this.formTemplateUploadsInProgress ||
       this._disableSubmit
     );
   }
 
   set disableSubmit(value) {
     this.set("_disableSubmit", value);
+  }
+
+  setFormTemplateUploadInProgress(id, inProgress) {
+    this.#formTemplateUploadStates.set(id, inProgress);
+    this.#updateFormTemplateUploadsInProgress();
+  }
+
+  clearFormTemplateUploadInProgress(id) {
+    this.#formTemplateUploadStates.delete(id);
+    this.#updateFormTemplateUploadsInProgress();
+  }
+
+  #updateFormTemplateUploadsInProgress() {
+    this.set(
+      "formTemplateUploadsInProgress",
+      [...this.#formTemplateUploadStates.values()].some(Boolean)
+    );
   }
 
   @computed("model.category", "skipFormTemplate")
