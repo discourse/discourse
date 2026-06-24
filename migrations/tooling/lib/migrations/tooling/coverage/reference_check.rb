@@ -19,6 +19,26 @@ module Migrations
         # structural, not a configurable role, so it is hardcoded.
         REFERENCE_CONVERTER = "discourse"
 
+        # Tables whose schema lands before the converter writes that fill them,
+        # keyed by model name. This is a temporary exemption for a feature split
+        # across PRs: without it the coverage gate would stay red on the schema PR
+        # until the writer PR merges.
+        #
+        # It relaxes only the "writes every column" check, and only for these
+        # tables. The unknown-column and unknown-model checks still run, so typos
+        # are still caught. It also clears itself: once the reference converter
+        # covers a listed table in full, the stale-entry guard fails the check until
+        # the entry is removed. So we don't need to point at a PR or branch to track
+        # removal; each value just says why the table is pending.
+        PENDING_COVERAGE = {
+          "PostEvent" => "the Posts step that writes these rows lands after this schema",
+          "PostLink" => "the Posts step that writes these rows lands after this schema",
+          "PostMention" => "the Posts step that writes these rows lands after this schema",
+          "PostPoll" => "the Posts step that writes these rows lands after this schema",
+          "PostQuote" => "the Posts step that writes these rows lands after this schema",
+          "PostUpload" => "the Posts step that writes these rows lands after this schema",
+        }.freeze
+
         class Error < StandardError
           include Migrations::CLI::PresentableError
         end
@@ -27,12 +47,20 @@ module Migrations
           new.run
         end
 
+        # @param pending [Hash{String => String}] tables exempt from the reference
+        #   "writes every column" assertion, keyed by model name. Defaults to
+        #   {PENDING_COVERAGE}; injected in tests.
+        def initialize(pending: PENDING_COVERAGE)
+          @pending = pending
+        end
+
         def run
           converters = Migrations::Converters.names
           ensure_reference_present!(converters)
 
           results = converters.to_h { |name| [name, analyze(name)] }
           expected = SchemaColumns.call
+          reference_written = results.fetch(REFERENCE_CONVERTER).written_columns
 
           passed = true
 
@@ -49,23 +77,77 @@ module Migrations
             end
           end
 
-          # Only the reference is asserted against the full schema; every
-          # other converter writes a subset of the schema by design.
-          missing = missing_columns(expected, results.fetch(REFERENCE_CONVERTER).written_columns)
+          # A pending table the reference now covers in full (or that the schema no
+          # longer has) is a stale exemption. Fail until it's removed, so the
+          # relaxation can't hide a later regression.
+          stale = stale_pending(expected, reference_written)
+          if stale.any?
+            report_stale_pending(expected, stale)
+            passed = false
+          end
+
+          # Only the reference must cover the full schema. Pending tables are held
+          # out until their writes land (see PENDING_COVERAGE).
+          asserted = expected.reject { |model_name, _| pending?(model_name) }
+          missing = missing_columns(asserted, reference_written)
           if missing.any?
             report_missing(expected, missing)
             passed = false
           end
 
           if passed
-            column_count = expected.values.sum { |model| model.columns.size }
-            puts "✓ The #{REFERENCE_CONVERTER} converter covers all #{column_count} IntermediateDB columns across #{expected.size} tables.".green
+            column_count = asserted.values.sum { |model| model.columns.size }
+            puts "✓ The #{REFERENCE_CONVERTER} converter covers all #{column_count} IntermediateDB columns across #{asserted.size} tables.".green
+            report_pending(expected) if @pending.any?
           end
 
           passed
         end
 
         private
+
+        def pending?(model_name)
+          @pending.key?(model_name)
+        end
+
+        # @return [Array<String>] model names listed as pending that no longer
+        #   warrant it: either fully covered by the reference, or gone from the
+        #   schema entirely.
+        def stale_pending(expected, written)
+          @pending.keys.select do |model_name|
+            model = expected[model_name]
+            next true unless model
+
+            (model.columns - written.fetch(model_name, Set.new).to_a).empty?
+          end
+        end
+
+        def report_stale_pending(expected, stale)
+          puts "✗ The #{REFERENCE_CONVERTER} converter now covers tables still listed as pending coverage.".red
+          puts "  Remove these from PENDING_COVERAGE — the writes they waited on have landed:"
+          puts
+
+          stale
+            .sort_by { |model_name| expected[model_name]&.table_name || model_name }
+            .each do |model_name|
+              table = expected[model_name]&.table_name || model_name
+              puts "  #{table} — #{@pending.fetch(model_name)}"
+            end
+
+          puts
+        end
+
+        def report_pending(expected)
+          puts
+          puts "  #{@pending.size} #{"table".pluralize(@pending.size)} held out of the gate, pending their converter writes:".yellow
+          @pending
+            .keys
+            .sort_by { |model_name| expected[model_name]&.table_name || model_name }
+            .each do |model_name|
+              table = expected[model_name]&.table_name || model_name
+              puts "    #{table} — #{@pending.fetch(model_name)}".yellow
+            end
+        end
 
         # @return [Hash{String => Array<Symbol>}] uncovered columns per model,
         #   only for models that have at least one.
