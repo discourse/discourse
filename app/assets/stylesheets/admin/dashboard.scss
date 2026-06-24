@@ -647,7 +647,7 @@
     }
 
     .commits-ahead {
-      font-size: 0.7em;
+      font-size: var(--font-down-2-rem)
       font-weight: normal;
       color: var(--primary-medium);
       cursor: help;
@@ -661,13 +661,13 @@
     .version-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 1em;
-      margin-top: 0.25em;
+      gap: var(--space-4)
+      margin-top: var(--space-1)
 
       a {
         display: inline-flex;
         align-items: center;
-        gap: 0.25em;
+        gap: var(--space-1)
         font-size: var(--font-down-3);
         font-weight: normal;
         white-space: nowrap;
