@@ -3,6 +3,11 @@
 module AclTarget
   extend ActiveSupport::Concern
 
+  def self.acl_matches?(acl_a, acl_b)
+    acl_a[:type].to_sym == acl_b[:type].to_sym && acl_a[:id] == acl_b[:id] &&
+      acl_a[:permission].to_s == acl_b[:permission].to_s
+  end
+
   def self.target_classes
     loaded_target_classes
   end
@@ -45,10 +50,7 @@ module AclTarget
 
     def acl_is_mandatory?(acl)
       has_mandatory_acl? &&
-        mandatory_acl.any? do |mandatory_acl|
-          mandatory_acl[:type].to_sym == acl[:type] && mandatory_acl[:id] == acl[:id] &&
-            mandatory_acl[:permission] == acl[:permission]
-        end
+        mandatory_acl.any? { |mandatory_acl| AclTarget.acl_matches?(acl, mandatory_acl) }
     end
   end
 end

@@ -17,3 +17,9 @@ Fabricator(:access_control_list_with_groups, from: :access_control_list) do
   transient :groups
   allowed_group_ids { |attrs| attrs[:groups].map(&:id) }
 end
+
+Fabricator(:access_control_list_with_users_and_groups, from: :access_control_list) do
+  transient :users, :groups
+  allowed_user_ids { |attrs| attrs[:users].map(&:id) }
+  allowed_group_ids { |attrs| attrs[:groups].map(&:id) }
+end

@@ -28,13 +28,14 @@ module Acl
     end
 
     def target_ids_with_permission(target_class, permission)
-      (@permission_lookup[permission] || {}).dig(target_class.polymorphic_name) || []
+      ((@permission_lookup[permission] || {}).dig(target_class.polymorphic_name) || []).dup
     end
 
     def target_ids_with_any_permissions(target_class, permissions)
       permissions
         .flat_map { |permission| target_ids_with_permission(target_class, permission) }
         .uniq
+        .dup
     end
 
     private

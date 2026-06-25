@@ -169,6 +169,11 @@ RSpec.describe AccessControlList do
       expect(described_class.where(target: Fabricate(:category)).flattened_list).to eq([])
     end
 
+    it "does not error if one of the groups is deleted" do
+      group.destroy!
+      expect { described_class.where(target: target).flattened_list }.not_to raise_error
+    end
+
     context "when for_target is provided" do
       it "stamps every entry with the given target's id and type" do
         list = described_class.where(target: target).flattened_list(for_target: target)

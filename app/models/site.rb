@@ -62,13 +62,24 @@ class Site
       (
         AclTarget.target_classes +
           DiscoursePluginRegistry.acl_target_classes.filter_map do |target_class|
-            target_class.is_a?(String) ? target_class.safe_constantize : target_class
+            if target_class.is_a?(String)
+              target_class = target_class.safe_constantize
+              if target_class.nil?
+                Rails.logger.warn(
+                  "[ACL] Unknown target class in plugin registry for site (#{target_class}) maybe the plugin is gone, the class has been renamed, or the class does not include AclTarget",
+                )
+              end
+              target_class
+            else
+              target_class
+            end
           end
-      ).uniq
+      ).compact.uniq
 
     {
       mandatory_acl:
         target_classes.each_with_object({}) do |target_class, mandatory_acl|
+          next if !target_class.respond_to?(:has_mandatory_acl?)
           next if !target_class.has_mandatory_acl?
 
           mandatory_acl[target_class.acl_target_key] = target_class.mandatory_acl

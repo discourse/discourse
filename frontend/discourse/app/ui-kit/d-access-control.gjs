@@ -153,7 +153,7 @@ export default class DAccessControl extends Component {
   get rows() {
     return this.acl
       .map((entry) => ({
-        key: `${entry.type}-${entry.id}`,
+        key: `${entry.type}-${entry.id}-${entry.permission}`,
         id: entry.id,
         permission: entry.permission,
         name: entry.full_name,
@@ -235,7 +235,8 @@ export default class DAccessControl extends Component {
                 "d-access-control__row"
                 (if row.mandatory "--mandatory")
               }}
-              data-group-id={{row.groupId}}
+              data-row-type={{row.type}}
+              data-row-id={{row.id}}
             >
               <span class="d-access-control__group-name">{{#if row.mandatory}}
                   <DTooltip

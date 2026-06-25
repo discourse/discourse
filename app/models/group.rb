@@ -62,6 +62,7 @@ class Group < ActiveRecord::Base
 
   before_destroy :cache_group_users_for_destroyed_event, prepend: true
   after_destroy :expire_cache
+  after_destroy :clear_acls
   after_save :destroy_deletions
   after_save :update_primary_group
   after_save :update_title
@@ -86,6 +87,11 @@ class Group < ActiveRecord::Base
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
     SvgSprite.expire_cache
+  end
+
+  # TODO (martin) Also do this for User when following up access_control_list
+  def clear_acls
+    Jobs.enqueue(:cleanup_acls_for_deleted, group_id: id)
   end
 
   validate :name_format_validator

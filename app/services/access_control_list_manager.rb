@@ -27,6 +27,8 @@ class AccessControlListManager
     step :log_permission_changes
   end
 
+  step :reload_target
+
   private
 
   def fetch_previous_permissions(params:)
@@ -61,5 +63,9 @@ class AccessControlListManager
       previous_permissions,
       new_permissions,
     )
+  end
+
+  def reload_target(params:)
+    params.target.reload
   end
 end

@@ -34,7 +34,11 @@ class AccessControlList < ActiveRecord::Base
   end
 
   def allowed_groups
-    @allowed_groups ||= Group.where(id: allowed_group_ids).to_a
+    if @allowed_groups_preloaded.present?
+      @allowed_groups ||= @allowed_groups_preloaded
+    else
+      @allowed_groups ||= Group.where(id: allowed_group_ids).to_a
+    end
   end
 
   def self.relation
@@ -62,7 +66,15 @@ class AccessControlList < ActiveRecord::Base
   scope :matching_user,
         ->(user) do
           if user.nil?
-            allowing_any_group([Group::AUTO_GROUPS[:anonymous_users]])
+            auto_group_ids = [Group::AUTO_GROUPS[:anonymous_users]]
+
+            # TODO (martin) Remove when granular_anonymous_and_logged_in_groups_permissions becomes permanent,
+            # it's similar logic to User.in_any_groups?
+            if !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+              auto_group_ids << Group::AUTO_GROUPS[:everyone]
+            end
+
+            allowing_any_group(auto_group_ids)
           else
             auto_group_ids = [Group::AUTO_GROUPS[:logged_in_users]]
 
@@ -85,12 +97,7 @@ class AccessControlList < ActiveRecord::Base
     return flattened_acl if !target.class.has_mandatory_acl?
 
     target.class.mandatory_acl.each do |mandatory_acl|
-      if flattened_acl.any? { |acl|
-           acl[:permission] == mandatory_acl[:permission] &&
-             acl[:type].to_sym == mandatory_acl[:type].to_sym && acl[:id] === mandatory_acl[:id]
-         }
-        next
-      end
+      next if flattened_acl.any? { |acl| AclTarget.acl_matches?(acl, mandatory_acl) }
 
       flattened_acl << mandatory_acl
     end
@@ -185,11 +192,29 @@ class AccessControlList < ActiveRecord::Base
 
       flattened_list = []
       each do |access_control_list|
-        target_klass = for_target ? for_target.class : access_control_list.target_type.constantize
+        target_klass =
+          if for_target
+            for_target.class
+          else
+            constantized_target = access_control_list.target_type.safe_constantize
+
+            if constantized_target.nil?
+              Rails.logger.warn(
+                "[ACL] Unknown target type (#{access_control_list.target_type}) for ACL (#{access_control_list.id}), maybe the plugin is gone or the class has been renamed? Skipping...",
+              )
+            end
+
+            constantized_target
+          end
+
+        next if target_klass.nil?
 
         access_control_list.allowed_group_ids.each do |group_id|
           allowed_group =
             access_control_list.allowed_groups_preloaded.find { |ag| ag.id == group_id }
+
+          next if allowed_group.nil?
+
           mandatory =
             target_klass.acl_is_mandatory?(
               { type: :group, id: group_id, permission: access_control_list.permission },

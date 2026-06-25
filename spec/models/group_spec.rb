@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Group do
-  let(:admin) { Fabricate(:admin) }
-  let(:user) { Fabricate(:user) }
-  let(:group) { Fabricate(:group) }
+  fab!(:admin)
+  fab!(:user)
+  fab!(:group)
 
   it_behaves_like "it has custom fields"
 
@@ -1892,6 +1892,14 @@ RSpec.describe Group do
       expect(Group.find_by_email("abc@test.com")).to eq(group)
       expect(Group.find_by_email("somealias@test.com")).to eq(group)
       expect(Group.find_by_email("nope@test.com")).to eq(nil)
+    end
+  end
+
+  context "when a group is deleted" do
+    it "enqueues a job to update the associated access_control_list records" do
+      expect_enqueued_with(job: :cleanup_acls_for_deleted, args: { group_id: group.id }) do
+        group.destroy!
+      end
     end
   end
 end
