@@ -295,6 +295,7 @@ export function createContainerDropResolver({
     return computeDescriptor({
       wireframe,
       container,
+      chromeElement,
       input,
       containerKey,
       outletName,
@@ -335,6 +336,7 @@ export function createContainerDropResolver({
 export function computeDescriptor({
   wireframe,
   container,
+  chromeElement = null,
   input,
   containerKey,
   outletName,
@@ -392,6 +394,13 @@ export function computeDescriptor({
     return buildBoundaryDescriptor({
       wireframe,
       container,
+      // An empty container's drop fills its whole area; when the marked drop
+      // container is a small proxy strip (e.g. a tabs tablist) separate from the
+      // visible empty region, paint the indicator over the empty-state call to
+      // action instead — its placeholder if present, else the chrome — so it
+      // lands where the cursor and the prompt actually are.
+      emptyRect:
+        children.length === 0 ? emptyContainerRect(chromeElement) : null,
       axis,
       before,
       after,
@@ -524,6 +533,7 @@ function childIsContainer(wireframe, key) {
 function buildBoundaryDescriptor({
   wireframe,
   container,
+  emptyRect = null,
   axis,
   before,
   after,
@@ -567,7 +577,13 @@ function buildBoundaryDescriptor({
     : visualPosition;
 
   const containerRect = container.getBoundingClientRect();
-  const geometry = boundaryGeometry({ axis, containerRect, before, after });
+  const geometry = boundaryGeometry({
+    axis,
+    containerRect,
+    emptyRect,
+    before,
+    after,
+  });
 
   const validity = validateInsert({
     wireframe,
@@ -613,15 +629,17 @@ function buildBoundaryDescriptor({
 /**
  * Pixel geometry for a boundary indicator. A real boundary is a 4px
  * line centred in the gap; an empty container paints its whole rect so
- * the (otherwise easy-to-miss) landing is unmistakable.
+ * the (otherwise easy-to-miss) landing is unmistakable — over `emptyRect`
+ * (the visible empty-state area) when one is supplied, else the container.
  */
-function boundaryGeometry({ axis, containerRect, before, after }) {
+function boundaryGeometry({ axis, containerRect, emptyRect, before, after }) {
   if (!before && !after) {
+    const rect = emptyRect ?? containerRect;
     return {
-      top: containerRect.top,
-      left: containerRect.left,
-      width: containerRect.width,
-      height: containerRect.height,
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
     };
   }
 
@@ -641,6 +659,27 @@ function boundaryGeometry({ axis, containerRect, before, after }) {
     width: LINE,
     height: containerRect.height,
   };
+}
+
+/**
+ * The rect to paint an empty container's drop indicator over: the empty-state
+ * call-to-action placeholder when the chrome renders one, else the chrome
+ * itself. Used when the marked drop container is a small proxy strip (a tabs
+ * tablist) sitting apart from the visible empty region, so the indicator lands
+ * where the cursor and the prompt are. Returns `null` without a chrome (e.g. a
+ * unit test driving `computeDescriptor` directly), leaving the container rect.
+ *
+ * @param {HTMLElement|null} chromeElement
+ * @returns {DOMRect|null}
+ */
+function emptyContainerRect(chromeElement) {
+  if (!chromeElement) {
+    return null;
+  }
+  const placeholder = Array.from(
+    chromeElement.querySelectorAll(".wireframe-empty-drop-placeholder")
+  ).find((el) => el.closest(".wireframe-block-chrome") === chromeElement);
+  return (placeholder ?? chromeElement).getBoundingClientRect();
 }
 
 /**
