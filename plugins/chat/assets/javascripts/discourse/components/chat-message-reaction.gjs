@@ -61,6 +61,8 @@ export default class ChatMessageReaction extends Component {
       groupIdentifier: "chat-message-reaction-users",
       component: ChatMessageReactionsUsers,
       modalForMobile: true,
+      arrow: true,
+      offset: 15,
       placement: "bottom",
       fallbackPlacements: ["top"],
       triggers: desktop ? ["hover"] : ["hold"],
