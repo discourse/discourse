@@ -855,7 +855,9 @@ after_initialize do
   add_to_serializer(
     :topic_view,
     :chat_channel_id,
-    include_condition: -> { object.topic.topic_chat_channel.present? },
+    include_condition: -> do
+      object.topic.first_post&.event&.livestream? && object.topic.topic_chat_channel.present?
+    end,
   ) { object.topic.topic_chat_channel.chat_channel_id }
 
   add_to_serializer(:topic_view, :has_livestream) { object.topic.first_post&.event&.livestream? }
