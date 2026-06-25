@@ -545,12 +545,13 @@ class UsersController < ApplicationController
         fetch_user_from_params(
           include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts,
         )
+      can_see_invite_details = guardian.can_see_invite_details?(inviter)
 
       invites =
-        if filter == "pending" && guardian.can_see_invite_details?(inviter)
+        if filter == "pending" && can_see_invite_details
           Invite.includes(:topics, :groups).pending(inviter)
-        elsif filter == "expired"
-          Invite.expired(inviter)
+        elsif filter == "expired" && can_see_invite_details
+          Invite.includes(:topics, :groups).expired(inviter)
         elsif filter == "redeemed"
           Invite.redeemed_users(inviter)
         else
@@ -567,8 +568,8 @@ class UsersController < ApplicationController
         invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
       end
 
-      pending_count = Invite.pending(inviter).reorder(nil).count.to_i
-      expired_count = Invite.expired(inviter).reorder(nil).count.to_i
+      pending_count = can_see_invite_details ? Invite.pending(inviter).reorder(nil).count.to_i : 0
+      expired_count = can_see_invite_details ? Invite.expired(inviter).reorder(nil).count.to_i : 0
       redeemed_count = Invite.redeemed_users(inviter).reorder(nil).count.to_i
 
       render json:
