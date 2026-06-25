@@ -355,15 +355,17 @@
 
   &__floating-actions {
     position: sticky;
-    bottom: 2em;
-    float: right;
+    bottom: 0;
     z-index: z("header") - 2; // below header, above page content and footer-nav
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 1em;
     gap: 0.5em;
     transition:
       transform 0.3s ease,
-      opacity 0.3s ease;
+      opacity 0.3s ease,
+      bottom 0.3s ease;
 
     &.--hidden {
       opacity: 0;
@@ -1295,10 +1297,6 @@
     .nested-post-children {
       animation: nested-mobile-replies-in 160ms ease-out both;
     }
-  }
-
-  .nested-view__floating-actions {
-    bottom: 1em;
   }
 
   // Strip L-hook connectors on load-more buttons

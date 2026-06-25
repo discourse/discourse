@@ -15,22 +15,19 @@ const PAGE_SIZE = 30;
 const FALLBACK_SKELETON_ROWS = 3;
 
 const SkeletonRow = <template>
-  <div
-    class="post-users-popup__item post-users-popup__skeleton-item"
-    aria-hidden="true"
-  >
-    <div class="post-users-popup__skeleton-avatar"></div>
-    <div class="post-users-popup__user-info">
-      <div class="post-users-popup__skeleton-name"></div>
+  <div class="users-popup__item users-popup__skeleton-item" aria-hidden="true">
+    <div class="users-popup__skeleton-avatar"></div>
+    <div class="users-popup__user-info">
+      <div class="users-popup__skeleton-name"></div>
       {{#unless @prioritizeUsername}}
-        <div class="post-users-popup__skeleton-username"></div>
+        <div class="users-popup__skeleton-username"></div>
       {{/unless}}
     </div>
-    <div class="post-users-popup__skeleton-reaction"></div>
+    <div class="users-popup__skeleton-reaction"></div>
   </div>
 </template>;
 
-export default class PostUsersMenu extends Component {
+export default class UsersPopup extends Component {
   @service siteSettings;
   @service site;
 
@@ -46,12 +43,12 @@ export default class PostUsersMenu extends Component {
     } else {
       defaultName = user.username;
     }
-    return applyValueTransformer("post-user-display-name", defaultName, {
+    return applyValueTransformer("user-list-display-name", defaultName, {
       user,
     });
   };
   displayUsername = (user) => {
-    return applyValueTransformer("post-user-display-username", user.username, {
+    return applyValueTransformer("user-list-display-username", user.username, {
       user,
     });
   };
@@ -122,17 +119,17 @@ export default class PostUsersMenu extends Component {
   }
 
   <template>
-    <div class="post-users-popup">
-      <div class="post-users-popup__sticky-header">
+    <div class="users-popup" ...attributes>
+      <div class="users-popup__sticky-header">
         {{#if this.site.mobileView}}
-          <div class="post-users-popup__title">{{@titleText}}</div>
+          <div class="users-popup__title">{{@titleText}}</div>
         {{/if}}
 
         {{yield this.resetAndReload to="header"}}
       </div>
 
       <div
-        class="post-users-popup__body"
+        class="users-popup__body"
         style={{this.bodyStyle}}
         {{didInsert this.loadInitial}}
       >
@@ -143,23 +140,23 @@ export default class PostUsersMenu extends Component {
           @rootMargin="100px"
         >
           {{#each this.users as |user|}}
-            <div class="post-users-popup__item">
+            <div class="users-popup__item">
               {{#if (has-block "avatar")}}
                 {{yield user to="avatar"}}
               {{else}}
                 <DUserAvatar @user={{user}} @size="small" />
               {{/if}}
-              <div class="post-users-popup__user-info">
+              <div class="users-popup__user-info">
                 <DUserLink
                   @username={{user.username}}
-                  class="post-users-popup__name"
+                  class="users-popup__name"
                 >
                   {{this.displayName user}}
                 </DUserLink>
                 {{#unless this.siteSettings.prioritize_username_in_ux}}
                   <DUserLink
                     @username={{user.username}}
-                    class="post-users-popup__username"
+                    class="users-popup__username"
                   >
                     @{{this.displayUsername user}}
                   </DUserLink>
@@ -168,7 +165,7 @@ export default class PostUsersMenu extends Component {
               {{#if (has-block "reaction")}}
                 {{yield user to="reaction"}}
               {{else}}
-                {{dIcon "d-liked" class="post-users-popup__reaction"}}
+                {{dIcon "d-liked" class="users-popup__reaction"}}
               {{/if}}
             </div>
           {{/each}}

@@ -17,6 +17,10 @@ module Compression
         available_size = calculate_available_size(max_size)
 
         entries_of(compressed_file).each do |entry|
+          # only extract regular files and directories; skip symlinks,
+          # hardlinks, devices and any other special entry types
+          next if !is_file?(entry) && !is_directory?(entry)
+
           entry_path = build_entry_path(sanitized_dest_path, entry, sanitized_compressed_file_path)
           next if !is_safe_path_for_extraction?(entry_path, sanitized_dest_path)
 
@@ -48,6 +52,10 @@ module Compression
 
     def is_file?(entry)
       entry.file?
+    end
+
+    def is_directory?(entry)
+      entry.directory?
     end
 
     def chunk_size

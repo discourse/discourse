@@ -64,8 +64,7 @@ module DiscourseWorkflows
 
       def execution_url
         return nil unless @execution
-        "#{Discourse.base_url}/admin/plugins/discourse-workflows/workflows/" \
-          "#{@workflow.id}/executions/#{@execution.id}"
+        DiscourseWorkflows::Execution.admin_execution_url(@workflow.id, @execution.id)
       end
 
       def serialized_error(error)

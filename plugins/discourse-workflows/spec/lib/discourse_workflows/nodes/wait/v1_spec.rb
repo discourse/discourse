@@ -16,6 +16,12 @@ RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
     )
   end
 
+  describe ".capabilities" do
+    it "marks the node as not producing data" do
+      expect(described_class.capabilities).to include(produces_data: false)
+    end
+  end
+
   describe "#execute" do
     it "returns input items for interval mode" do
       config = { "resume" => "time_interval", "wait_amount" => 2, "wait_unit" => "hours" }

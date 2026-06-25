@@ -120,6 +120,17 @@ en:
         filter_required: "Filter must not be empty"
       workflow_version:
         referenced_by_workflow: "Cannot delete a workflow version that is still referenced as the current or active version."
+      workflow_call:
+        workflow_required: "Select a workflow to call."
+        self_reference: "%{node} cannot call its own workflow."
+        target_not_found: "The selected workflow could not be found."
+        target_not_callable: "The selected workflow must be published and contain a Workflow call trigger."
+        cycle: "%{node} creates a workflow call loop."
+        recursive_call: "Workflow call loop detected."
+        max_depth_exceeded: "Workflow call depth cannot exceed %{max}."
+        execution_failed: "Called workflow finished with status '%{status}'."
+        execution_failed_with_error: "Called workflow finished with status '%{status}': %{error}"
+        payload_too_large: "Workflow call payload exceeds the maximum size of %{max} bytes."
     pin_data:
       errors:
         unsupported_node: "Only nodes with a single output can have pinned data."
