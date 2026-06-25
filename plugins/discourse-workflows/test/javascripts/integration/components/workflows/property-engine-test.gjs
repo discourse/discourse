@@ -533,7 +533,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     assert.deepEqual(this.formApi.get("updates"), { title: "Updated title" });
 
-    await click(".workflows-property-engine__collection-delete button");
+    await click(".workflows-property-engine__collection-delete");
 
     assert.deepEqual(this.formApi.get("updates"), {});
   });
