@@ -36,7 +36,7 @@ import SimulationControls from "./simulation-controls";
  */
 export default class EditorShell extends Component {
   @service wireframe;
-  @service wireframeCarouselDragNav;
+  @service wireframeDragNav;
 
   @tracked warningsPanelOpen = false;
   @tracked leftPanelTab = "palette";
@@ -143,9 +143,9 @@ export default class EditorShell extends Component {
         {{dDragAndDropAutoScroll target="window" types=VE_DRAG_TYPES}}
         {{dDragAndDropMonitor
           types=VE_DRAG_TYPES
-          onDragStart=this.wireframeCarouselDragNav.handleDragStart
-          onDrag=this.wireframeCarouselDragNav.handleDrag
-          onDrop=this.wireframeCarouselDragNav.handleDrop
+          onDragStart=this.wireframeDragNav.handleDragStart
+          onDrag=this.wireframeDragNav.handleDrag
+          onDrop=this.wireframeDragNav.handleDrop
         }}
       >
         {{! Mounts a ProseMirror editor over whichever inline-edit region is

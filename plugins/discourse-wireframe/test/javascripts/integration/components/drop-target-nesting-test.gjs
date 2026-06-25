@@ -595,5 +595,121 @@ module(
       assert.strictEqual(descriptor.kind, "inside");
       assert.strictEqual(descriptor.label, "Add paragraph into slide 1");
     });
+
+    /*
+     * Proxy container (a tab strip). The children are key-carrying proxies
+     * (`data-wf-drop-child-key`) with no nested chrome — each stands in for the
+     * panel a drop would land beside. A boundary inserts a NEW tab; the middle
+     * third is reserved for the reveal navigation and accepts no drop.
+     *   [  Tab 1  ][  Tab 2  ]   ← buttons laid out on the x axis
+     */
+    const TabStrip = <template>
+      <div
+        id="strip"
+        data-wf-child-noun="tab"
+        data-wf-child-noun-plural="tabs"
+        style="position: fixed; top: 0; left: 0; display: flex; height: 40px;"
+      >
+        <button data-wf-drop-child-key="P1" style="width: 100px;">Tab 1</button>
+        <button data-wf-drop-child-key="P2" style="width: 100px;">Tab 2</button>
+      </div>
+    </template>;
+
+    test("proxy strip: a gap inserts a NEW tab beside the proxy, named in tab terms", async function (assert) {
+      await render(TabStrip);
+      const wireframe = stubWireframe();
+      const container = document.querySelector("#strip");
+      const t2 = container.children[1].getBoundingClientRect();
+
+      // First third of Tab 2 → the T1|T2 seam → insert before the trailing
+      // proxy (P2), i.e. a new tab between tabs 1 and 2.
+      const seam = computeDescriptor({
+        wireframe,
+        container,
+        input: cursorAt(t2, "x", 0.1),
+        containerKey: "tabs",
+        outletName: "test-outlet",
+        axis: "x",
+        source: PALETTE,
+      });
+      assert.strictEqual(seam.kind, "insert");
+      assert.strictEqual(seam.dispatch.action, "insertBlock");
+      assert.strictEqual(seam.dispatch.args.targetKey, "P2");
+      assert.strictEqual(seam.dispatch.args.position, "before");
+      assert.strictEqual(
+        seam.label,
+        "Add paragraph in a new tab between tabs 1 and 2"
+      );
+
+      // Cursor past the last proxy (where the "+" sits) → insert after the last
+      // tab.
+      const end = computeDescriptor({
+        wireframe,
+        container,
+        input: { clientX: t2.right + 20, clientY: t2.top + t2.height / 2 },
+        containerKey: "tabs",
+        outletName: "test-outlet",
+        axis: "x",
+        source: PALETTE,
+      });
+      assert.strictEqual(end.dispatch.args.targetKey, "P2");
+      assert.strictEqual(end.dispatch.args.position, "after");
+      assert.strictEqual(end.label, "Add paragraph in a new tab after tab 2");
+    });
+
+    test("proxy strip: the middle third of a tab accepts no drop (reserved for reveal)", async function (assert) {
+      await render(TabStrip);
+      // Even if a proxy's target resolved to a container, its middle third is a
+      // no-op — the reveal navigation owns it, and a drop INTO a tab happens in
+      // its visible panel, never blind through the proxy.
+      const wireframe = stubWireframe({
+        lookupBlockMetadata: () => ({ isContainer: true }),
+      });
+      const container = document.querySelector("#strip");
+      const t1 = container.children[0].getBoundingClientRect();
+
+      const middle = computeDescriptor({
+        wireframe,
+        container,
+        input: cursorAt(t1, "x", 0.5),
+        containerKey: "tabs",
+        outletName: "test-outlet",
+        axis: "x",
+        source: PALETTE,
+      });
+      assert.strictEqual(middle, null, "no descriptor over a proxy's center");
+    });
+
+    test("proxy strip: an empty container reads 'in a new tab', not the generic copy", async function (assert) {
+      await render(
+        <template>
+          <div
+            id="empty-strip"
+            data-wf-child-noun="tab"
+            data-wf-child-noun-plural="tabs"
+            style="position: fixed; top: 0; left: 0; display: flex; height: 40px; width: 200px;"
+          ></div>
+        </template>
+      );
+      const wireframe = stubWireframe();
+      const container = document.querySelector("#empty-strip");
+      const rect = container.getBoundingClientRect();
+
+      const descriptor = computeDescriptor({
+        wireframe,
+        container,
+        input: { clientX: rect.left + 10, clientY: rect.top + rect.height / 2 },
+        containerKey: "tabs",
+        outletName: "test-outlet",
+        axis: "x",
+        source: PALETTE,
+      });
+
+      assert.strictEqual(
+        descriptor.label,
+        "Add paragraph in a new tab",
+        "the first-tab drop names the noun instead of falling back to 'here'"
+      );
+    });
   }
 );

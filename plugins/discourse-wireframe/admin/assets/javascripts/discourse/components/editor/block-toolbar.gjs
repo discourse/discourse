@@ -83,6 +83,42 @@ export default class BlockToolbar extends Component {
   }
 
   /**
+   * Whether the block's siblings run horizontally (a tabs / carousel parent, or
+   * a `layout` in row mode), so the reorder arrows point left/right rather than
+   * up/down. The underlying move is the same "earlier / later sibling" in both
+   * orientations — only the icons and labels change.
+   *
+   * @returns {boolean}
+   */
+  get isHorizontalMove() {
+    return this.args.moveAxis === "horizontal";
+  }
+
+  /** @returns {string} Icon for moving to the earlier sibling. */
+  get moveBackIcon() {
+    return this.isHorizontalMove ? "arrow-left" : "arrow-up";
+  }
+
+  /** @returns {string} Icon for moving to the later sibling. */
+  get moveForwardIcon() {
+    return this.isHorizontalMove ? "arrow-right" : "arrow-down";
+  }
+
+  /** @returns {string} i18n key for the earlier-sibling move. */
+  get moveBackLabel() {
+    return this.isHorizontalMove
+      ? "wireframe.canvas.toolbar.move_left"
+      : "wireframe.canvas.toolbar.move_up";
+  }
+
+  /** @returns {string} i18n key for the later-sibling move. */
+  get moveForwardLabel() {
+    return this.isHorizontalMove
+      ? "wireframe.canvas.toolbar.move_right"
+      : "wireframe.canvas.toolbar.move_down";
+  }
+
+  /**
    * `true` when this toolbar should expose the "expand for editing"
    * toggle. Shown for `wf:layout` blocks whose `autoCollapse` isn't
    * `"never"` — i.e. the layout could actually collapse at narrow
@@ -345,7 +381,17 @@ export default class BlockToolbar extends Component {
           }}
         >
           {{dIcon "grip-lines"}}
-          <span>{{@displayName}}</span>
+          {{! The displayTitle arg carries a fuller name (e.g. a tab's own
+              label) for a block shown by ordinal; absent for ordinary blocks.
+              The displayChip arg, when present, is the block's position within
+              an ordinal-naming container (a tabs panel, a carousel slide),
+              shown as a chip beside the name. }}
+          <span title={{@displayTitle}}>{{@displayName}}</span>
+          {{#if @displayChip}}
+            <span
+              class="wireframe-block-toolbar__ordinal"
+            >{{@displayChip}}</span>
+          {{/if}}
         </span>
       {{/if}}
 
@@ -393,17 +439,17 @@ export default class BlockToolbar extends Component {
           {{#unless (or @isOutletRoot this.isPart)}}
             <DButton
               class="btn-flat wireframe-block-toolbar__btn"
-              @icon="arrow-up"
-              @title="wireframe.canvas.toolbar.move_up"
-              @ariaLabel="wireframe.canvas.toolbar.move_up"
+              @icon={{this.moveBackIcon}}
+              @title={{this.moveBackLabel}}
+              @ariaLabel={{this.moveBackLabel}}
               @disabled={{if this.canMoveUp false true}}
               @action={{this.moveUp}}
             />
             <DButton
               class="btn-flat wireframe-block-toolbar__btn"
-              @icon="arrow-down"
-              @title="wireframe.canvas.toolbar.move_down"
-              @ariaLabel="wireframe.canvas.toolbar.move_down"
+              @icon={{this.moveForwardIcon}}
+              @title={{this.moveForwardLabel}}
+              @ariaLabel={{this.moveForwardLabel}}
               @disabled={{if this.canMoveDown false true}}
               @action={{this.moveDown}}
             />

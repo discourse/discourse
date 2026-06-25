@@ -206,13 +206,52 @@ function touchStamps(entries) {
   }
 }
 
-// Containers whose children are numbered in the outline (e.g. a carousel's
-// slides), mapping the parent block name to the i18n key that renders the
-// per-child label. The outline resolves the key with `number = index + 1`.
-// Extensible to other noun-framed containers (tabs panels, etc.).
-const CHILD_NUMBER_KEY_BY_PARENT = Object.freeze({
+// Containers whose children are numbered by ordinal (e.g. a carousel's slides,
+// a tabs block's panels), mapping the parent block name to the i18n key that
+// renders the per-child label, resolved with `number = index + 1`. Shared by the
+// outline and the block toolbar so both name a child "Slide 2" / "Tab 2".
+export const CHILD_NUMBER_KEY_BY_PARENT = Object.freeze({
   carousel: "blocks.builtin.carousel.slide_number",
+  tabs: "blocks.builtin.tabs.tab_number",
 });
+
+// Containers whose children carry an author-set label preferred as a tooltip
+// over the ordinal — mapping the parent block name to the `containerArgs`
+// namespace holding a `label` rich-text field (e.g. a tab's own label). Empty
+// labels fall back to the ordinal above.
+export const CHILD_LABEL_NAMESPACE_BY_PARENT = Object.freeze({
+  tabs: "tab",
+});
+
+// Containers that frame their children with a noun, mapping the container block
+// name to the i18n key for that noun (singular). Lets the empty-state call to
+// action read "Add a tab to get started" / "Add a slide to get started" instead
+// of the generic "Drag a block here".
+export const CHILD_NOUN_KEY_BY_PARENT = Object.freeze({
+  carousel: "blocks.builtin.carousel.slide_noun",
+  tabs: "blocks.builtin.tabs.tab_noun",
+});
+
+/**
+ * Flattens an inline rich-text value to its plain text for compact display in
+ * the outline. The value is either a plain string or doc JSON with a `content`
+ * array of text runs (`{ type: "text", text }`); anything else yields "".
+ *
+ * @param {*} value - The rich-inline arg value.
+ * @returns {string}
+ */
+export function richInlineToPlainText(value) {
+  if (typeof value === "string") {
+    return value;
+  }
+  if (value && Array.isArray(value.content)) {
+    return value.content
+      .filter((run) => run?.type === "text" && typeof run.text === "string")
+      .map((run) => run.text)
+      .join("");
+  }
+  return "";
+}
 
 function walkEntries(
   entries,
@@ -227,6 +266,11 @@ function walkEntries(
   // ordinal label ("Slide 2") so the slides are identifiable in the tree.
   const childNumberKey = parentBlockName
     ? (CHILD_NUMBER_KEY_BY_PARENT[parentBlockName] ?? null)
+    : null;
+  // When the parent labels its children, the outline prefers that label over the
+  // ordinal (e.g. a tab named "Pricing" rather than "Tab 2").
+  const childLabelNamespace = parentBlockName
+    ? (CHILD_LABEL_NAMESPACE_BY_PARENT[parentBlockName] ?? null)
     : null;
   entries.forEach((entry, index) => {
     const entryPath = [...path, index];
@@ -251,6 +295,14 @@ function walkEntries(
     // same count it actually renders as rows.
     const partEntries = hasParts
       ? synthesizePartEntries(entry, metadata)
+      : null;
+    // An author-set child label (e.g. a tab's own label), used as the outline
+    // row's tooltip; null when the parent doesn't label its children or the
+    // label is empty.
+    const childLabel = childLabelNamespace
+      ? richInlineToPlainText(
+          entry.containerArgs?.[childLabelNamespace]?.label
+        ).trim() || null
       : null;
     rows.push({
       depth,
@@ -283,9 +335,14 @@ function walkEntries(
       validationReason: entry.__failureReason ?? null,
       validationDetails: entry.__failureDetails ?? null,
       // Per-child ordinal label for a noun-framed parent (e.g. "Slide 2");
-      // null otherwise. `slideNumberKey` is the i18n key the outline resolves.
+      // null otherwise. `slideNumberKey` is the i18n key the outline resolves
+      // and shows AS the row name in place of the block name.
       slideOrdinal: childNumberKey ? index + 1 : null,
       slideNumberKey: childNumberKey,
+      // The child's own author-set label (a tab's "Pricing"), used as the
+      // outline row's hover tooltip; null when unset. The block name + ordinal
+      // are already in the visible row text, so the tooltip only adds the label.
+      childLabel,
       hasChildren: !!(entry.children && entry.children.length) || hasParts,
       // Number of nested rows this container contributes (own children, or
       // synthesized composite parts). Drives the outline's "× N" count badge

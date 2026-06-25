@@ -810,7 +810,13 @@ export default class OutlinePanel extends Component {
                       {{dIcon (if row.isPart "circle-dashed" "cube")}}
                     </span>
                   {{/if}}
-                  <span class="outline-block__name">{{row.blockName}}</span>
+                  {{! The block name is the row's primary text; a child of an
+                      ordinal-naming container (a carousel slide, a tabs panel)
+                      gets its position as a separate chip below, and its own
+                      label as the row's hover tooltip. }}
+                  <span class="outline-block__name" title={{row.childLabel}}>
+                    {{row.blockName}}
+                  </span>
                   {{#if (this.isRowCollapsed row)}}
                     {{! Count badge surfacing how many child rows are hidden
                       while the container is collapsed — the compaction cue for
@@ -822,6 +828,14 @@ export default class OutlinePanel extends Component {
                       }}
                     </span>
                   {{/if}}
+                  {{#if row.slideOrdinal}}
+                    {{! A noun-framed container's child (a carousel slide, a tabs
+                        panel) shows its 1-based position as a chip beside the
+                        block name, ahead of the layout-mode chip. }}
+                    <span class="outline-block__ordinal">
+                      {{i18n row.slideNumberKey number=row.slideOrdinal}}
+                    </span>
+                  {{/if}}
                   {{#if row.layoutMode}}
                     <span class="outline-block__mode">
                       {{i18n
@@ -829,13 +843,6 @@ export default class OutlinePanel extends Component {
                           "wireframe.inspector.layout.mode_" row.layoutMode
                         )
                       }}
-                    </span>
-                  {{/if}}
-                  {{#if row.slideOrdinal}}
-                    {{! A noun-framed container's child (e.g. a carousel slide)
-                        shows its 1-based position so slides are identifiable. }}
-                    <span class="outline-block__slide">
-                      {{i18n row.slideNumberKey number=row.slideOrdinal}}
                     </span>
                   {{/if}}
                   {{#if row.blockId}}

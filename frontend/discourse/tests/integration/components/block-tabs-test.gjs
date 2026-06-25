@@ -160,6 +160,18 @@ module("Integration | Blocks | tabs", function (hooks) {
       .dom(".d-block-tabs__strip [data-wf-tab-panel-key]")
       .exists({ count: 2 }, "each tab carries its panel key");
 
+    // In an editing context the tablist also doubles as a horizontal insert
+    // track, and each tab proxies its panel so a drop between tabs lands a new
+    // tab at that position.
+    assert
+      .dom(
+        ".d-block-tabs__tablist[data-wf-drop-container][data-wf-drop-axis='x']"
+      )
+      .exists("the tablist is a horizontal drop container");
+    assert
+      .dom(".d-block-tabs__strip [data-wf-drop-child-key]")
+      .exists({ count: 2 }, "each tab proxies its panel key for inserts");
+
     // Only the ACTIVE tab is an inline-edit target, so the edit affordance
     // doesn't show on tabs the author isn't on.
     const labelHosts = [

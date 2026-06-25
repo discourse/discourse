@@ -5,11 +5,13 @@ import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import Modifier from "ember-modifier";
 
 /**
- * Module-private helper that wraps PDND's `draggable()` with the
- * source-payload normalisation, the `is-dragging` class on the source
- * element, and the consumer-onDrop deferral that hides PDND's
- * source-before-target dispatch ordering. Called by the default-
- * exported modifier below.
+ * Wraps PDND's `draggable()` with the source-payload normalisation, the
+ * `is-dragging` class on the source element, and the consumer-onDrop deferral
+ * that hides PDND's source-before-target dispatch ordering. Used by the
+ * default-exported modifier below, and exported so a consumer can register a
+ * drag source imperatively (when a template modifier doesn't fit — e.g. marking
+ * elements rendered inside another component as sources) without importing PDND
+ * — parallel to `registerDragAndDropTarget` / `registerDragAndDropMonitor`.
  *
  * Library-agnostic by design: `@atlaskit/pragmatic-drag-and-drop` is
  * imported only by the ui-kit modifier files.
@@ -26,7 +28,7 @@ import Modifier from "ember-modifier";
  * @returns {() => void} Cleanup function. Caller invokes it once on
  *   teardown.
  */
-function registerDragAndDropSource(element, getArgsRef) {
+export function registerDragAndDropSource(element, getArgsRef) {
   const cleanup = draggable({
     element,
     canDrag: ({ input }) => {

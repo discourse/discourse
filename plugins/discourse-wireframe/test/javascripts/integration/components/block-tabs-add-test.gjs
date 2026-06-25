@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { click, render } from "@ember/test-helpers";
+import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import BlockOutlet, {
   _renderBlocks,
@@ -127,6 +127,67 @@ module(
         firstKey,
         "clicking an inactive tab also selects its panel layout"
       );
+    });
+
+    test("a tab panel's toolbar reads its tab position with left/right move arrows", async function (assert) {
+      await render(<template><BlockOutlet @name={{OUTLET}} /></template>);
+
+      // Add a second tab; it auto-activates and is selected, so its toolbar
+      // (with move buttons) renders.
+      await click("[data-wf-append-child]");
+
+      // The move arrows on a horizontal container (a tabs strip) point
+      // left/right; only the selected block renders them.
+      assert
+        .dom("[title='Move left']")
+        .exists("a horizontal container shows a left move arrow");
+      assert
+        .dom("[title='Move right']")
+        .exists("a horizontal container shows a right move arrow");
+
+      // The selected panel's toolbar badge reads the block name plus a chip
+      // for its tab position.
+      const toolbar = document
+        .querySelector("[title='Move left']")
+        .closest(".wireframe-block-toolbar");
+      assert.strictEqual(
+        toolbar
+          ?.querySelector(".wireframe-block-toolbar__handle span")
+          ?.textContent.trim(),
+        "Layout",
+        "the badge reads the block name"
+      );
+      assert.strictEqual(
+        toolbar
+          ?.querySelector(".wireframe-block-toolbar__ordinal")
+          ?.textContent.trim(),
+        "Tab 2",
+        "the badge shows the tab position as a chip"
+      );
+    });
+
+    test("an empty tabs block shows the empty-state call to action with a tab message", async function (assert) {
+      await render(<template><BlockOutlet @name={{OUTLET}} /></template>);
+
+      // Remove the only tab, leaving the tabs block empty.
+      const panelKey = entryKey(tabsEntry(this.editor).children[0]);
+      this.editor.removeBlock(panelKey);
+      await settled();
+
+      const remainingPanels = tabsEntry(this.editor)?.children.length ?? 0;
+      assert.strictEqual(remainingPanels, 0, "the tabs block has no panels");
+      // The shared empty-state placeholder (drag-and-drop + click-to-pick), now
+      // also shown for a childBlocks-restricted container, with a tab message.
+      assert
+        .dom(".wireframe-empty-drop-placeholder__hint")
+        .hasText(
+          "Add a tab to get started",
+          "the empty-state placeholder frames the prompt in tab terms"
+        );
+      // The tab strip (and its add affordance) is still rendered alongside it.
+      assert
+        .dom(".d-block-tabs__strip [data-wf-append-child]")
+        .exists("the tab strip remains while the tabs block is empty");
     });
   }
 );

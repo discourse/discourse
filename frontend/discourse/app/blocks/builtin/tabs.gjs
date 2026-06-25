@@ -69,6 +69,7 @@ const VALID_ALIGNS = ["start", "center", "end"];
           type: "richInline",
           ui: {
             control: "rich-inline",
+            schema: "plain",
             label: i18n("blocks.builtin.tabs.tab_label"),
           },
         },
@@ -100,25 +101,27 @@ export default class Tabs extends Component {
     i18n("blocks.builtin.tabs.tab_number", { number: index + 1 });
 
   /**
-   * Activates a freshly added tab. A panel is only ever added to this container
-   * as a new tab, so a growth in the child count means a tab was just appended —
-   * switch to it, so an author who adds a tab lands on the (empty) panel they
-   * just created rather than staying on the old one.
-   *
-   * `#previousPanelCount` starts null so the very first render (0 → N) is not
-   * mistaken for growth; the assignment is deferred via `next` because it sets
-   * `activeIndex`, which the same render reads.
+   * Activates a freshly added tab so an author lands on the panel they just
+   * created. Tracks the SET of child keys across renders (not just the count),
+   * so an insert ANYWHERE — not only an append — reveals the tab that was
+   * actually added rather than always jumping to the last one. The assignment
+   * is deferred via `next` because it sets `activeIndex`, which the same render
+   * reads; `#previousPanelKeys` starts null so the first render (0 → N) is not
+   * mistaken for an insert.
    */
-  syncActiveOnAdd = modifier((element, [count]) => {
-    const total = Number(count);
-    if (this.#previousPanelCount !== null && total > this.#previousPanelCount) {
-      next(() => (this.activeIndex = total - 1));
+  revealAddedPanel = modifier(() => {
+    const keys = this.panels.map((panel) => panel.key);
+    if (this.#previousPanelKeys) {
+      const added = keys.find((key) => !this.#previousPanelKeys.has(key));
+      if (added != null) {
+        next(() => (this.activeIndex = keys.indexOf(added)));
+      }
     }
-    this.#previousPanelCount = total;
+    this.#previousPanelKeys = new Set(keys);
   });
 
-  /** @type {number | null} */
-  #previousPanelCount = null;
+  /** @type {Set<string> | null} */
+  #previousPanelKeys = null;
 
   /**
    * @returns {boolean} Whether the ambient edit-presentation capability is set,
@@ -166,7 +169,7 @@ export default class Tabs extends Component {
   }
 
   <template>
-    <div class={{this.rootClass}} {{this.syncActiveOnAdd this.panels.length}}>
+    <div class={{this.rootClass}} {{this.revealAddedPanel this.panels.length}}>
       <div class="d-block-tabs__strip">
         {{! The tabs live in their own tablist so the editor-only append
             affordance can sit in the strip without being inside the tablist
@@ -174,9 +177,28 @@ export default class Tabs extends Component {
             carries its panel key so a click can select that panel's layout;
             the inline-edit markers + editable region are added ONLY to the
             active tab, so the label of the tab you're on can be edited in place
-            while the others stay plain. All these attributes are omitted on the
-            live page. }}
-        <div class="d-block-tabs__tablist" role="tablist">
+            while the others stay plain.
+
+            In an edit-driven context the tablist also doubles as a horizontal
+            insert track: it is marked as a drop container on the x axis, and
+            each tab carries the panel's key so external tooling can resolve a
+            drop between tabs to a new panel at that position. The child-noun
+            attributes let the drop messages read in tab terms. All these
+            attributes are omitted on the live page. }}
+        <div
+          class="d-block-tabs__tablist"
+          role="tablist"
+          data-wf-drop-container={{if this.isEditing "true"}}
+          data-wf-drop-axis={{if this.isEditing "x"}}
+          data-wf-child-noun={{if
+            this.isEditing
+            (i18n "blocks.builtin.tabs.tab_noun")
+          }}
+          data-wf-child-noun-plural={{if
+            this.isEditing
+            (i18n "blocks.builtin.tabs.tab_noun_plural")
+          }}
+        >
           {{#each this.panels key="key" as |child index|}}
             {{#let (eq this.activePanelIndex index) as |isActive|}}
               <button
@@ -185,6 +207,7 @@ export default class Tabs extends Component {
                 role="tab"
                 aria-selected={{if isActive "true" "false"}}
                 data-wf-tab-panel-key={{if this.isEditing child.key}}
+                data-wf-drop-child-key={{if this.isEditing child.key}}
                 data-wf-container-arg-key={{if
                   (and this.isEditing isActive)
                   child.key

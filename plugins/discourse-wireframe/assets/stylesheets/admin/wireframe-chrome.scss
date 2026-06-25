@@ -758,6 +758,21 @@ body.wireframe-active {
       }
     }
 
+    /* Ordinal chip on the handle: a small pill reading the block's position in
+       an ordinal-naming container ("Tab 2" / "Slide 2"), beside the block name.
+       Translucent dark on the handle's colored background, mirroring the
+       outlet status chip. */
+
+    &__ordinal {
+      padding: 0 6px;
+      border-radius: 999px;
+      background: rgb(0 0 0 / 0.25);
+      color: white;
+      font-weight: normal;
+      text-shadow: none;
+      font-variant-numeric: tabular-nums;
+    }
+
     /* Action buttons sized to match the badge — overrides DButton's
        default `btn-icon` dimensions so the unified bar stays at the
        compact badge height instead of inflating. `btn-flat` keeps the
@@ -1686,11 +1701,11 @@ body.wireframe-active {
       text-transform: lowercase;
     }
 
-    /* Per-slide ordinal chip on a noun-framed container's children
-       (e.g. a carousel slide), so each slide is identifiable in the tree.
-       Mirrors the mode chip, but keeps its label casing ("Slide 2"). */
+    /* Per-child ordinal chip on a noun-framed container's children
+       (a carousel slide, a tabs panel), so each is identifiable in the tree.
+       Mirrors the mode chip, but keeps its label casing ("Slide 2" / "Tab 2"). */
 
-    .outline-block__slide {
+    .outline-block__ordinal {
       padding: 0 0.35rem;
       border-radius: 3px;
       background: var(--primary-low);

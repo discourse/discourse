@@ -44,9 +44,16 @@ import { imageArgEntries } from "../../lib/empty-image-upload";
 import { kindForArg } from "../../lib/kind-for-arg";
 import { entryKey } from "../../lib/mutate-layout";
 import { buildBlockPalette } from "../../lib/palette";
+import {
+  CHILD_LABEL_NAMESPACE_BY_PARENT,
+  CHILD_NOUN_KEY_BY_PARENT,
+  CHILD_NUMBER_KEY_BY_PARENT,
+  richInlineToPlainText,
+} from "../../lib/walk-layout";
 import containerDropTarget, {
   createContainerDropResolver,
 } from "../../modifiers/container-drop-target";
+import proxyDragSources from "../../modifiers/proxy-drag-sources";
 import { OUTLET_STATE } from "../../services/wireframe";
 import LinkEditPopover from "../link-edit-popover";
 import BlockToolbar from "./block-toolbar";
@@ -667,13 +674,6 @@ export default class BlockChrome extends Component {
     if (this.isGridLayout) {
       return false;
     }
-    // A container that forces its children to one kind renders its own "add"
-    // affordance (the append marker), so the generic drop hint would be
-    // redundant — and offering the full palette would be wrong, since only the
-    // declared kind belongs here. Skip the empty-container path for them.
-    if (this.metadata?.childBlocks?.length) {
-      return false;
-    }
     // Open a tracked dep on structuralVersion so this re-evaluates
     // after every layout mutation (insert / remove / move).
     // eslint-disable-next-line no-unused-vars
@@ -845,8 +845,24 @@ export default class BlockChrome extends Component {
     return this.wireframe.isOutletRoot(this.args.blockKey);
   }
 
-  /** @returns {string} */
+  /**
+   * The toolbar badge label — the block's own display name (e.g. "Layout", or
+   * the outlet name at the outlet root). A child of an ordinal-naming container
+   * shows its position ("Tab 2" / "Slide 2") as a SEPARATE chip via
+   * `childOrdinal` / the toolbar's `@displayChip`, not in this label.
+   *
+   * @returns {string}
+   */
   get displayName() {
+    return this.#baseDisplayName;
+  }
+
+  /**
+   * The block's own name, independent of any parent-aware ordinal override.
+   *
+   * @returns {string}
+   */
+  get #baseDisplayName() {
     // The implicit root layout reads as the outlet itself, not "Layout" —
     // show the outlet's friendly display name, falling back to its raw name.
     if (this.isOutletRoot) {
@@ -862,6 +878,104 @@ export default class BlockChrome extends Component {
       this.metadata?.shortName ??
       this.args.blockName
     );
+  }
+
+  /**
+   * The block's parent entry, the parent's block name, and the block's index
+   * among the parent's children — the basis for parent-aware naming and the
+   * reorder-axis decision. `null` when the block has no parent (outlet root).
+   *
+   * @returns {{ parent: Object, parentName: string|null, index: number }|null}
+   */
+  get #parentContext() {
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.wireframe.structuralVersion;
+    const parent = this.wireframe.findEntryParent(this.args.blockKey);
+    if (!parent) {
+      return null;
+    }
+    const index = (parent.children ?? []).findIndex(
+      (child) => entryKey(child) === this.args.blockKey
+    );
+    return { parent, parentName: this.wireframe.blockNameOf(parent), index };
+  }
+
+  /**
+   * For a child of an ordinal-naming container (a carousel slide, a tabs
+   * panel), its 1-based position ("Slide 2" / "Tab 2"); `null` otherwise. Shown
+   * as a chip beside the block name in the toolbar badge.
+   *
+   * @returns {string|null}
+   */
+  get childOrdinal() {
+    const ctx = this.#parentContext;
+    const numberKey = ctx?.parentName
+      ? CHILD_NUMBER_KEY_BY_PARENT[ctx.parentName]
+      : null;
+    if (!numberKey || ctx.index < 0) {
+      return null;
+    }
+    return i18n(numberKey, { number: ctx.index + 1 });
+  }
+
+  /**
+   * The hover tooltip for an ordinal-named child: its author-set label when the
+   * parent labels its children (a tab's "Pricing"). `null` when the child has no
+   * label (or isn't a labelled-container child), so the badge keeps its default
+   * title — the block name is already visible in the badge itself.
+   *
+   * @returns {string|null}
+   */
+  get childTooltip() {
+    const ctx = this.#parentContext;
+    const namespace = ctx?.parentName
+      ? CHILD_LABEL_NAMESPACE_BY_PARENT[ctx.parentName]
+      : null;
+    if (!namespace) {
+      return null;
+    }
+    const located = this.wireframe.findEntryAndOutletSync(this.args.blockKey);
+    const label = richInlineToPlainText(
+      located?.entry?.containerArgs?.[namespace]?.label
+    ).trim();
+    return label || null;
+  }
+
+  /**
+   * The axis along which the block's siblings are arranged, so the toolbar
+   * shows the matching reorder arrows: "horizontal" for a tabs / carousel
+   * parent and a `layout` in row mode, "vertical" otherwise (a grid keeps
+   * vertical arrows this round). Distinct from `parentLayoutAxis`, which drives
+   * drop-zone CSS for `layout` containers only.
+   *
+   * @returns {"horizontal"|"vertical"}
+   */
+  get siblingMoveAxis() {
+    const ctx = this.#parentContext;
+    const name = ctx?.parentName;
+    if (name === "tabs" || name === "carousel") {
+      return "horizontal";
+    }
+    if (name === "layout" && (ctx.parent.args?.mode ?? "stack") === "row") {
+      return "horizontal";
+    }
+    return "vertical";
+  }
+
+  /**
+   * The empty-state placeholder's hint. A container that frames its children
+   * with a noun (a tabs block, a carousel) reads "Add a tab to get started" /
+   * "Add a slide to get started"; any other empty container keeps the generic
+   * "Drag a block here".
+   *
+   * @returns {string}
+   */
+  get emptyHint() {
+    const nounKey = CHILD_NOUN_KEY_BY_PARENT[this.args.blockName];
+    if (nounKey) {
+      return i18n("wireframe.canvas.empty_hint_child", { noun: i18n(nounKey) });
+    }
+    return i18n("wireframe.canvas.empty_hint");
   }
 
   /**
@@ -1763,6 +1877,14 @@ export default class BlockChrome extends Component {
             outletName=@outletName
             mode=this.containerDropMode
           }}
+          {{! Makes a container's proxy children draggable so they can be
+            reordered (e.g. a tabs strip's buttons, which carry the
+            drop-child-key marker); a no-op for blocks that render none.
+            Re-scans on each structural edit. }}
+          {{proxyDragSources
+            outletName=@outletName
+            version=this.wireframe.structuralVersion
+          }}
           {{! Chrome-level external file drop. One target per chrome handles
             both paths: filling a passive background image arg, and creating a
             new image block when this chrome is a container slot. Per-image-arg
@@ -1793,6 +1915,9 @@ export default class BlockChrome extends Component {
               @blockKey={{@blockKey}}
               @outletName={{@outletName}}
               @displayName={{this.displayName}}
+              @displayTitle={{this.childTooltip}}
+              @displayChip={{this.childOrdinal}}
+              @moveAxis={{this.siblingMoveAxis}}
               @isOutletRoot={{this.isOutletRoot}}
               @outletState={{this.outletState}}
               @isOutletEditing={{this.isOutletEditing}}
@@ -1917,7 +2042,7 @@ export default class BlockChrome extends Component {
 
           {{#if this.isEmptyContainer}}
             <EditorEmptyDropPlaceholder
-              @hint={{i18n "wireframe.canvas.empty_hint"}}
+              @hint={{this.emptyHint}}
               @palette={{this.palette}}
               @onActivate={{this.selectSelf}}
               @onPick={{this.pickBlockForContainer}}

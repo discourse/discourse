@@ -141,18 +141,20 @@ module(
       await waitFor(".outline-block");
       await settled();
 
-      const chips = [...document.querySelectorAll(".outline-block__slide")].map(
-        (el) => el.textContent.trim()
-      );
+      // A noun-framed container's children show their position as a separate
+      // chip beside the block name, so a carousel's direct children get a
+      // "Slide 1" / "Slide 2" chip. The headings nested inside the slides are
+      // not carousel children, so they carry no chip.
+      const chips = [
+        ...document.querySelectorAll(".outline-block__ordinal"),
+      ].map((el) => el.textContent.trim());
       assert.deepEqual(
         chips,
         ["Slide 1", "Slide 2"],
-        "each carousel child row shows its slide ordinal"
+        "each carousel child row shows its slide ordinal as a chip"
       );
-      // The headings nested inside the slides are not carousel children, so
-      // they carry no slide chip.
       assert
-        .dom(".outline-block__slide")
+        .dom(".outline-block__ordinal")
         .exists({ count: 2 }, "only the direct slides are numbered");
     });
 

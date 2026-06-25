@@ -839,7 +839,9 @@ function boundaryLabel({
         ordinal: beforeOrdinal,
       });
     }
-    // Empty container — fall through to the generic copy below.
+    // Empty container — "Add Hero in a new tab" (the first child of its kind),
+    // rather than the generic "Add Hero here".
+    return translate(`${verb}_here`, { name, noun: childNoun });
   }
 
   // Interior boundary — name both neighbours ("between A and B").
