@@ -2123,26 +2123,38 @@ export default class WireframeService extends Service {
    * re-selected; a cancelable timer removes the class so the next flash can
    * replay it.
    *
+   * Scheduled in `afterRender` because a flash usually rides along with a
+   * selection change (outline selection, insert auto-select), and that
+   * selection toggles the chrome's class binding. Mutating the class after the
+   * render settles keeps Ember from rewriting the element's class attribute out
+   * from under us and wiping the flash class we just added.
+   *
    * @param {HTMLElement} el - The element to flash.
    */
   #flashElement(el) {
-    // Cancel any in-flight flash (possibly on a different block) so its
-    // pending removal doesn't strip the class we're about to add.
-    if (this.#flashTimer) {
-      cancel(this.#flashTimer);
-      this.#flashedEl?.classList.remove("--just-selected");
-    }
+    schedule("afterRender", () => {
+      if (!el.isConnected) {
+        return;
+      }
 
-    el.classList.remove("--just-selected");
-    void el.offsetWidth;
-    el.classList.add("--just-selected");
-    this.#flashedEl = el;
+      // Cancel any in-flight flash (possibly on a different block) so its
+      // pending removal doesn't strip the class we're about to add.
+      if (this.#flashTimer) {
+        cancel(this.#flashTimer);
+        this.#flashedEl?.classList.remove("--just-selected");
+      }
 
-    this.#flashTimer = discourseLater(() => {
       el.classList.remove("--just-selected");
-      this.#flashTimer = null;
-      this.#flashedEl = null;
-    }, FLASH_DURATION_MS);
+      void el.offsetWidth;
+      el.classList.add("--just-selected");
+      this.#flashedEl = el;
+
+      this.#flashTimer = discourseLater(() => {
+        el.classList.remove("--just-selected");
+        this.#flashTimer = null;
+        this.#flashedEl = null;
+      }, FLASH_DURATION_MS);
+    });
   }
 
   /**

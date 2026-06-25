@@ -1,4 +1,4 @@
-import { render, settled } from "@ember/test-helpers";
+import { render, rerender, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -58,6 +58,35 @@ module(
       assert.true(
         removeSpy.calledWith("--just-selected"),
         "removes the flash class once the flash is done"
+      );
+    });
+
+    test("the flash survives the selection-driven class re-render", async function (assert) {
+      await setupBlock(this.owner);
+      const wireframe = this.owner.lookup("service:wireframe");
+
+      // The outline's `selectRow` selects the block (which toggles the
+      // `--selected` class on the chrome, scheduling a re-render of its class
+      // binding) and then immediately flashes it. The render that follows must
+      // not wipe the just-added flash class.
+      wireframe.selectBlock({
+        key: BLOCK_KEY,
+        name: "button-link",
+        args: {},
+        metadata: null,
+        outletName: "test-outlet",
+      });
+      wireframe.flashBlock(BLOCK_KEY);
+
+      // `rerender` flushes the pending render (and `afterRender`) without
+      // advancing the timer that later clears the flash, so the class we
+      // observe is the one a user would actually see animate.
+      await rerender();
+
+      const el = document.querySelector(`[data-wf-block-key="${BLOCK_KEY}"]`);
+      assert.true(
+        el.classList.contains("--just-selected"),
+        "the flash class is still present after the selection re-render"
       );
     });
 
