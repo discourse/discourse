@@ -388,6 +388,7 @@ en:
         image_drop_replace_dark: "Replace dark variant"
         image_drop_add_dark: "Add dark variant"
         image_uploading: "Uploading… %{progress}%"
+        image_upload_failed: "Upload failed — click to retry"
         image_menu_replace: "Replace image"
         image_menu_remove: "Remove image"
         ghost:

@@ -115,6 +115,13 @@ export default class ImageArgOverlay extends Component {
    */
   @tracked markerFillsBlock = false;
 
+  /**
+   * `true` after an upload through this overlay's pipeline failed, until the
+   * next upload starts or succeeds. Drives the in-place "Upload failed" retry
+   * affordance on the empty card, so a failed drop / pick isn't silent.
+   */
+  @tracked uploadFailed = false;
+
   /** The overlay's outer `<div>`. Pinned on insert. */
   #overlayEl = null;
 
@@ -159,6 +166,16 @@ export default class ImageArgOverlay extends Component {
    */
   get isDragOver() {
     return this.overlayHovered || this.popoverHovered;
+  }
+
+  /**
+   * Whether to show the upload-error affordance: a failed upload on an
+   * empty arg (the interactive card the user can click to retry).
+   *
+   * @returns {boolean}
+   */
+  get showUploadError() {
+    return this.uploadFailed && this.args.isEmpty;
   }
 
   get label() {
@@ -343,13 +360,27 @@ export default class ImageArgOverlay extends Component {
     // Uppy still needs `setup()` so that upload can run.
     if (!this.isInteractiveEmpty) {
       this.#uppyUpload.setup();
+      this.#wireUploadFeedback();
     }
   }
 
   @action
   registerFileInput(el) {
     this.#fileInputEl = el;
-    this.#bootUppy().setup(el);
+    const upload = this.#bootUppy();
+    upload.setup(el);
+    this.#wireUploadFeedback();
+    // A file dropped onto an empty slot creates this image block and stages
+    // the file against its key; pick it up here so it uploads through this
+    // overlay's own pipeline (progress bar, error state, write to THIS block)
+    // exactly like a click-to-pick or a drop onto an existing arg.
+    const staged = this.wireframe.consumePendingDropFile?.(
+      this.args.blockKey,
+      this.args.argName
+    );
+    if (staged) {
+      upload.addFiles(staged);
+    }
   }
 
   @action
@@ -554,12 +585,30 @@ export default class ImageArgOverlay extends Component {
   }
 
   /**
+   * Tracks upload success / failure on this overlay's Uppy instance so a
+   * failed upload surfaces an in-place retry affordance instead of silently
+   * leaving the arg empty. Attached after `setup()`, once the underlying
+   * Uppy instance exists. `upload` (start) clears the flag so a retry hides
+   * the previous error; `upload-error` raises it. Success is cleared by
+   * `#applyUpload`.
+   */
+  #wireUploadFeedback() {
+    const uppy = this.#uppyUpload?.uppyWrapper?.uppyInstance;
+    if (!uppy) {
+      return;
+    }
+    uppy.on("upload", () => (this.uploadFailed = false));
+    uppy.on("upload-error", () => (this.uploadFailed = true));
+  }
+
+  /**
    * Routes an `uploadDone` payload into the LIGHT variant of the
    * image arg, preserving any existing dark variant.
    *
    * @param {{id: string, url: string, width: number, height: number}} upload
    */
   #applyUpload(upload) {
+    this.uploadFailed = false;
     const current = this.#liveValue();
     const variant = this.#variantFromUpload(upload);
     const existingDark = current?.dark;
@@ -728,7 +777,8 @@ export default class ImageArgOverlay extends Component {
         {{if this.markerPassive 'wireframe-image-arg-overlay--passive'}}
         {{if this.isCompact 'wireframe-image-arg-overlay--compact'}}
         {{if this.isDragOver 'wireframe-image-arg-overlay--drag-over'}}
-        {{if this.uploading 'wireframe-image-arg-overlay--uploading'}}"
+        {{if this.uploading 'wireframe-image-arg-overlay--uploading'}}
+        {{if this.showUploadError 'wireframe-image-arg-overlay--error'}}"
       data-block-arg={{@argName}}
       role={{if this.isInteractiveEmpty "button"}}
       tabindex={{if this.isInteractiveEmpty "0"}}
@@ -763,6 +813,13 @@ export default class ImageArgOverlay extends Component {
               "wireframe.canvas.image_uploading"
               progress=this.uploadProgress
             }}
+          </span>
+        </div>
+      {{else if this.showUploadError}}
+        <div class="wireframe-image-arg-overlay__content">
+          {{dIcon "triangle-exclamation"}}
+          <span class="wireframe-image-arg-overlay__label">
+            {{i18n "wireframe.canvas.image_upload_failed"}}
           </span>
         </div>
       {{else if this.showEmptyContent}}

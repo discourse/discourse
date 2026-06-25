@@ -255,7 +255,10 @@ export default class GridManipulator {
         return false;
       }
       svc.publishStructuralChange(located.outletName, result.layout);
-      svc.selectInsertedEntry(newEntry);
+      // `replaceEntryInPlace` clones `newEntry` (inheriting the cell's stable
+      // key) into the layout; select that placed clone, since the original
+      // `newEntry` never receives a stable key.
+      svc.selectInsertedEntry(result.entry ?? newEntry);
       return true;
     });
   }

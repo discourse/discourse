@@ -75,126 +75,14 @@ export default class ContainerDropTargetModifier extends Modifier {
     }
 
     const { wireframe } = this;
-    const isCell = mode === "cell";
-    const axis = mode === "row" ? "x" : "y";
-
-    // Find the container element where block-chrome-wrappers are
-    // direct siblings — that's the geometry `computeDescriptor`
-    // projects the cursor onto.
-    //
-    // - For a `wf:layout` chrome (stack / row mode): the wrappers
-    //   live inside the `.wf-layout` div, which is a DIRECT child
-    //   of the chrome.
-    // - For the outlet boundary: the wrappers live inside
-    //   `BlockOutletRootContainer`'s `__layout` div, three levels
-    //   below the boundary (boundary → div.outletName →
-    //   div.outletName__container → div.outletName__layout →
-    //   wrappers). Can't use a hardcoded selector because the
-    //   classnames are outlet-specific.
-    // - For empty cells: there's no inner container, the chrome IS the
-    //   drop area.
-    //
-    // Walk strategy: find any descendant chrome with
-    // `[data-wf-block-key]`, climb back up to its
-    // `.wireframe-block-chrome-wrapper`, and that wrapper's
-    // parent IS the container. Falls back to the chrome itself when
-    // there are no descendant blocks (empty container case).
-    let containerElement = null;
-    const resolveContainer = () => {
-      if (isCell) {
-        return chromeElement;
-      }
-      if (containerElement && chromeElement.contains(containerElement)) {
-        return containerElement;
-      }
-      // A block can mark the element whose direct children are the drop
-      // candidates with `data-wf-drop-container` — needed when those
-      // children sit a level below the chrome (e.g. each wrapped in a slide
-      // div), where the first-block-wrapper heuristic below would otherwise
-      // lock onto a single child. Scope to a marker that belongs to THIS
-      // chrome so a nested container's marker isn't picked up.
-      const marked = Array.from(
-        chromeElement.querySelectorAll("[data-wf-drop-container]")
-      ).find((el) => el.closest(".wireframe-block-chrome") === chromeElement);
-      if (marked) {
-        containerElement = marked;
-        return marked;
-      }
-      const firstBlock = chromeElement.querySelector("[data-wf-block-key]");
-      if (firstBlock) {
-        const wrapper = firstBlock.closest(".wireframe-block-chrome-wrapper");
-        if (
-          wrapper &&
-          chromeElement.contains(wrapper) &&
-          wrapper.parentElement
-        ) {
-          containerElement = wrapper.parentElement;
-          return containerElement;
-        }
-      }
-      containerElement = chromeElement;
-      return containerElement;
-    };
-
-    // Edge-band defer. When this modifier instance is on a CHROME
-    // (not the outlet boundary itself), drops within 12px of any
-    // outer edge fall through to the parent container so the user
-    // can insert a sibling AT THE PARENT level. Without this, a
-    // container chrome (e.g. wf:layout in stack mode at outlet
-    // root) consumes EVERY drop over its bbox, leaving no way to
-    // reach the outlet boundary's drop logic.
-    //
-    // Returning `false` from `canDrop` excludes this target from
-    // PDND's resolution, which then walks up to the next ancestor
-    // target — exactly the "fall through to parent" semantics we
-    // want. The outlet boundary (containerKey === null) is the
-    // root, so there's no parent to defer to; empty-cell chromes
-    // also opt out since the grid owns sibling moves at the parent
-    // level.
-    const shouldDeferToParent = (input) => {
-      // The outlet root (no parent) and cells (the grid owns their sibling
-      // moves) never defer — only nested container chromes do. The implicit
-      // root layout IS the outlet, so it doesn't defer either: there's no
-      // sibling level above it to fall through to, and deferring would leave
-      // a dead band along its edges where drops vanish.
-      if (
-        containerKey == null ||
-        isCell ||
-        wireframe.isOutletRoot(containerKey)
-      ) {
-        return false;
-      }
-      return isInEdgeBand(chromeElement.getBoundingClientRect(), input);
-    };
-
-    const descriptorFor = (source, input) => {
-      if (isOverExcludedRegion(chromeElement, input)) {
-        return null;
-      }
-      if (isCell) {
-        return buildCellChromeDescriptor({
-          wireframe,
-          chromeElement,
-          containerKey,
-          source,
-        });
-      }
-      const container = resolveContainer();
-      if (!container) {
-        return null;
-      }
-      return computeDescriptor({
+    const { resolveContainer, shouldDeferToParent, descriptorFor } =
+      createContainerDropResolver({
         wireframe,
-        container,
-        input,
+        chromeElement,
         containerKey,
         outletName,
-        // A marked drop container may pin its own axis (e.g. a horizontal
-        // slide track) regardless of the chrome's `mode`-derived default.
-        axis: container.dataset?.wfDropAxis || axis,
-        source,
+        mode,
       });
-    };
 
     this.#cleanup = registerDragAndDropTarget(chromeElement, () => ({
       accepts: ACCEPTED_KINDS,
@@ -261,6 +149,160 @@ export default class ContainerDropTargetModifier extends Modifier {
 }
 
 /**
+ * Builds the geometry helpers a chrome's drop handling needs:
+ *
+ *   - `resolveContainer()` — the element whose direct children are the
+ *     candidate landing sites (also the auto-scroll target).
+ *   - `shouldDeferToParent(input)` — whether a near-edge drop should fall
+ *     through to the parent container instead of landing here.
+ *   - `descriptorFor(source, input)` — the drop descriptor (preview +
+ *     dispatch) for the cursor position, or `null` when nothing can land.
+ *
+ * Shared by the `containerDropTarget` modifier (element block drags) and
+ * the block chrome's external file-drop handling (OS image files) so both
+ * resolve and place a drop the same way. Stateless across drags apart from
+ * a per-resolver cache of the resolved container element.
+ *
+ * @param {Object} options
+ * @param {Object} options.wireframe - The wireframe service.
+ * @param {HTMLElement} options.chromeElement - The block chrome element.
+ * @param {string|null} options.containerKey - The container's composite key
+ *   (`null` for the outlet boundary).
+ * @param {string} options.outletName - The outlet the container lives in.
+ * @param {string} options.mode - The container drop mode (`"stack"`,
+ *   `"row"`, or `"cell"`).
+ * @returns {{
+ *   resolveContainer: () => HTMLElement,
+ *   shouldDeferToParent: (input: Object) => boolean,
+ *   descriptorFor: (source: Object, input: Object) => (Object|null),
+ * }}
+ */
+export function createContainerDropResolver({
+  wireframe,
+  chromeElement,
+  containerKey,
+  outletName,
+  mode,
+}) {
+  const isCell = mode === "cell";
+  const axis = mode === "row" ? "x" : "y";
+
+  // Find the container element where block-chrome-wrappers are
+  // direct siblings — that's the geometry `computeDescriptor`
+  // projects the cursor onto.
+  //
+  // - For a `wf:layout` chrome (stack / row mode): the wrappers
+  //   live inside the `.wf-layout` div, which is a DIRECT child
+  //   of the chrome.
+  // - For the outlet boundary: the wrappers live inside
+  //   `BlockOutletRootContainer`'s `__layout` div, three levels
+  //   below the boundary (boundary → div.outletName →
+  //   div.outletName__container → div.outletName__layout →
+  //   wrappers). Can't use a hardcoded selector because the
+  //   classnames are outlet-specific.
+  // - For empty cells: there's no inner container, the chrome IS the
+  //   drop area.
+  //
+  // Walk strategy: find any descendant chrome with
+  // `[data-wf-block-key]`, climb back up to its
+  // `.wireframe-block-chrome-wrapper`, and that wrapper's
+  // parent IS the container. Falls back to the chrome itself when
+  // there are no descendant blocks (empty container case).
+  let containerElement = null;
+  const resolveContainer = () => {
+    if (isCell) {
+      return chromeElement;
+    }
+    if (containerElement && chromeElement.contains(containerElement)) {
+      return containerElement;
+    }
+    // A block can mark the element whose direct children are the drop
+    // candidates with `data-wf-drop-container` — needed when those
+    // children sit a level below the chrome (e.g. each wrapped in a slide
+    // div), where the first-block-wrapper heuristic below would otherwise
+    // lock onto a single child. Scope to a marker that belongs to THIS
+    // chrome so a nested container's marker isn't picked up.
+    const marked = Array.from(
+      chromeElement.querySelectorAll("[data-wf-drop-container]")
+    ).find((el) => el.closest(".wireframe-block-chrome") === chromeElement);
+    if (marked) {
+      containerElement = marked;
+      return marked;
+    }
+    const firstBlock = chromeElement.querySelector("[data-wf-block-key]");
+    if (firstBlock) {
+      const wrapper = firstBlock.closest(".wireframe-block-chrome-wrapper");
+      if (wrapper && chromeElement.contains(wrapper) && wrapper.parentElement) {
+        containerElement = wrapper.parentElement;
+        return containerElement;
+      }
+    }
+    containerElement = chromeElement;
+    return containerElement;
+  };
+
+  // Edge-band defer. When this resolver is on a CHROME (not the outlet
+  // boundary itself), drops within 12px of any outer edge fall through to
+  // the parent container so the user can insert a sibling AT THE PARENT
+  // level. Without this, a container chrome (e.g. wf:layout in stack mode
+  // at outlet root) consumes EVERY drop over its bbox, leaving no way to
+  // reach the outlet boundary's drop logic.
+  //
+  // Returning `false` from `canDrop` excludes this target from PDND's
+  // resolution, which then walks up to the next ancestor target — exactly
+  // the "fall through to parent" semantics we want. The outlet boundary
+  // (containerKey === null) is the root, so there's no parent to defer to;
+  // empty-cell chromes also opt out since the grid owns sibling moves at
+  // the parent level.
+  const shouldDeferToParent = (input) => {
+    // The outlet root (no parent) and cells (the grid owns their sibling
+    // moves) never defer — only nested container chromes do. The implicit
+    // root layout IS the outlet, so it doesn't defer either: there's no
+    // sibling level above it to fall through to, and deferring would leave
+    // a dead band along its edges where drops vanish.
+    if (
+      containerKey == null ||
+      isCell ||
+      wireframe.isOutletRoot(containerKey)
+    ) {
+      return false;
+    }
+    return isInEdgeBand(chromeElement.getBoundingClientRect(), input);
+  };
+
+  const descriptorFor = (source, input) => {
+    if (isOverExcludedRegion(chromeElement, input)) {
+      return null;
+    }
+    if (isCell) {
+      return buildCellChromeDescriptor({
+        wireframe,
+        chromeElement,
+        containerKey,
+        source,
+      });
+    }
+    const container = resolveContainer();
+    if (!container) {
+      return null;
+    }
+    return computeDescriptor({
+      wireframe,
+      container,
+      input,
+      containerKey,
+      outletName,
+      // A marked drop container may pin its own axis (e.g. a horizontal
+      // slide track) regardless of the chrome's `mode`-derived default.
+      axis: container.dataset?.wfDropAxis || axis,
+      source,
+    });
+  };
+
+  return { resolveContainer, shouldDeferToParent, descriptorFor };
+}
+
+/**
  * Picks the drop descriptor for the current cursor position inside
  * the container. Algorithm:
  *
@@ -299,8 +341,24 @@ export function computeDescriptor({
   // the layout-positioned element we want geometry from.
   const children = Array.from(container.children)
     .map((wrapper) => {
+      // A proxy container's children carry the target block key directly via
+      // `data-wf-drop-child-key`, with no nested chrome — e.g. a tab strip
+      // whose buttons stand in for the panels they page to. The wrapper itself
+      // is the geometry, and the key names the panel a boundary insert lands
+      // beside. Otherwise the child wraps a rendered block chrome as usual.
+      const proxyKey = wrapper.getAttribute?.("data-wf-drop-child-key");
+      if (proxyKey) {
+        return { wrapper, key: proxyKey, blockName: null, isProxy: true };
+      }
       const chrome = wrapper.querySelector(":scope [data-wf-block-key]");
-      return chrome ? { wrapper, chrome } : null;
+      return chrome
+        ? {
+            wrapper,
+            key: chrome.getAttribute("data-wf-block-key"),
+            blockName: chrome.getAttribute("data-wf-block-name"),
+            isProxy: false,
+          }
+        : null;
     })
     .filter(Boolean);
   const cursor = axis === "x" ? input.clientX : input.clientY;
@@ -344,9 +402,16 @@ export function computeDescriptor({
 
   // Middle third — INSIDE (container) / REPLACE (cell) / nothing (leaf).
   const child = children[result.index];
+  // A proxy child (e.g. a tab in a strip) only accepts a boundary insert: its
+  // middle third belongs to the navigation that reveals the target, and a drop
+  // INTO the target happens in its visible content, never blind through the
+  // proxy. So there's nothing to land here.
+  if (child.isProxy) {
+    return null;
+  }
   const rect = child.wrapper.getBoundingClientRect();
-  const targetKey = child.chrome.getAttribute("data-wf-block-key");
-  const blockName = child.chrome.getAttribute("data-wf-block-name");
+  const targetKey = child.key;
+  const blockName = child.blockName;
 
   if (blockName === LAYOUT_MERGED_CELL_BLOCK) {
     return buildReplaceCellDescriptor({
@@ -464,8 +529,8 @@ function buildBoundaryDescriptor({
   beforeOrdinal = null,
   afterOrdinal = null,
 }) {
-  const beforeKey = before?.chrome.getAttribute("data-wf-block-key") ?? null;
-  const afterKey = after?.chrome.getAttribute("data-wf-block-key") ?? null;
+  const beforeKey = before?.key ?? null;
+  const afterKey = after?.key ?? null;
 
   // Dropping a block onto a boundary it already occupies (immediately
   // next to itself) is a no-op — hide the overlay rather than offer a

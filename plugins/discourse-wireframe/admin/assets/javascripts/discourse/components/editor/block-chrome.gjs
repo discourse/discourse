@@ -29,6 +29,10 @@ import {
   GRID_LAYOUT_SELECTOR,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-dom-contract";
 import {
+  EXTERNAL_IMAGE_DROP_SOURCE,
+  firstImageFile,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/external-image-drop";
+import {
   cellAt,
   computeOccupation,
   computeSpanResize,
@@ -40,7 +44,9 @@ import { imageArgEntries } from "../../lib/empty-image-upload";
 import { kindForArg } from "../../lib/kind-for-arg";
 import { entryKey } from "../../lib/mutate-layout";
 import { buildBlockPalette } from "../../lib/palette";
-import containerDropTarget from "../../modifiers/container-drop-target";
+import containerDropTarget, {
+  createContainerDropResolver,
+} from "../../modifiers/container-drop-target";
 import { OUTLET_STATE } from "../../services/wireframe";
 import LinkEditPopover from "../link-edit-popover";
 import BlockToolbar from "./block-toolbar";
@@ -116,7 +122,6 @@ export default class BlockChrome extends Component {
   @tracked pendingBackgroundFile = null;
 
   acceptedDragKinds = ["wf-block", "wf-palette-block"];
-
   /**
    * Returns the chrome element ref for use as a drag image. Passed as a
    * getter (not a value) to the drag-source modifier so it resolves at
@@ -125,7 +130,6 @@ export default class BlockChrome extends Component {
    * @returns {Element|null}
    */
   getChromeEl = () => this.chromeEl;
-
   /**
    * Locates the parent grid layout's grid `<div>` element so the
    * resize modifier can measure cell sizes. Walks up from this chrome's
@@ -139,7 +143,6 @@ export default class BlockChrome extends Component {
     }
     return this.chromeEl.closest(GRID_LAYOUT_SELECTOR);
   };
-
   /**
    * Returns the ghost element rendered inside the parent grid by the
    * grid overlay. Re-queried on each pointerdown via this getter
@@ -151,7 +154,6 @@ export default class BlockChrome extends Component {
     const grid = this.getResizeGridElement();
     return grid?.querySelector(".wireframe-grid-ghost") ?? null;
   };
-
   /**
    * The set of grid cells occupied by SIBLING entries (this block excluded),
    * keyed `"row,col"`. Captured at the start of a span-resize so the gesture
@@ -184,7 +186,6 @@ export default class BlockChrome extends Component {
     );
     return computeOccupation(siblings, columns, rows);
   };
-
   /**
    * Finds the rendered image marker (`[data-block-arg="<argName>"]`)
    * inside the chrome. Used both as the resize-handle anchor (via
@@ -209,6 +210,12 @@ export default class BlockChrome extends Component {
       `img[data-block-arg="${escaped}"], picture[data-block-arg="${escaped}"]`
     );
   };
+  /**
+   * The container drop resolver built on external-drag enter and reused for
+   * the rest of that drag, so the drop preview tracks the cursor through the
+   * same geometry the block-drag path uses. Cleared on leave / drop.
+   */
+  #externalDropResolver = null;
 
   /**
    * Registered URL-edit tooltips for this block. Cleaned up in
@@ -1493,10 +1500,37 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Gate for the chrome-level external file drop. Engages only when the
-   * block renders a passive ("background") image marker, so every other
-   * block's chrome stays inert as a file drop target (no indicator, no
-   * drop handling).
+   * Gate for the chrome-level external file drop. A chrome accepts a
+   * dropped file in one of two ways:
+   *
+   *   - Background fill: the block renders a passive ("background") image
+   *     marker, so a body drop replaces that image.
+   *   - Slot insert: the chrome is a container slot (stack / row / cell),
+   *     so a body drop creates a new image block in the slot, treated like
+   *     dropping an image block from the palette.
+   *
+   * Every other chrome stays inert (no indicator, no drop handling) so
+   * PDND walks up to an ancestor that does accept.
+   *
+   * @param {{input: Object}} payload
+   * @returns {boolean}
+   */
+  @action
+  canDropExternalImageFile({ input }) {
+    if (this.canDropBackgroundFile()) {
+      return true;
+    }
+    if (this.#isImageDropSlot) {
+      // Defer a near-edge drop to the parent container, matching the
+      // block-drag path's edge-band behaviour.
+      return !this.#ensureExternalDropResolver().shouldDeferToParent(input);
+    }
+    return false;
+  }
+
+  /**
+   * Whether the block renders a passive ("background") image marker, gating
+   * the background-fill drop path.
    *
    * @returns {boolean}
    */
@@ -1506,21 +1540,92 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Tracks whether a file is dragged over the block body, driving the
-   * background overlay through `backgroundExternalDragOver`. Set on enter,
-   * cleared on leave / drop. Moving onto a foreground image (the avatar)
-   * is handled by `foregroundImageHovered` rather than relying on a leave
-   * here (PDND doesn't fire a reliable leave when the cursor enters a
-   * nested target while staying inside the chrome's bounds).
+   * Whether this chrome is a container slot that accepts a dropped file as
+   * a new image block (the slot-insert path). Grid surfaces are owned by
+   * the grid overlay and leaves defer to their parent, so neither qualifies.
+   *
+   * @returns {boolean}
+   */
+  get #isImageDropSlot() {
+    const mode = this.containerDropMode;
+    return mode === "stack" || mode === "row" || mode === "cell";
+  }
+
+  /**
+   * Builds (once per drag) the geometry resolver the slot-insert path uses
+   * to turn the cursor position into a drop descriptor — the same resolver
+   * the `containerDropTarget` modifier uses for block drags.
+   *
+   * @returns {Object}
+   */
+  #ensureExternalDropResolver() {
+    this.#externalDropResolver ||= createContainerDropResolver({
+      wireframe: this.wireframe,
+      chromeElement: this.chromeEl,
+      containerKey: this.args.blockKey,
+      outletName: this.args.outletName,
+      mode: this.containerDropMode,
+    });
+    return this.#externalDropResolver;
+  }
+
+  /**
+   * Publishes the slot-insert drop preview as a file is dragged over a
+   * container slot. The background-fill path instead toggles the body tint,
+   * which the passive overlay reads through `backgroundExternalDragOver`.
+   *
+   * Moving onto a foreground image (the avatar) is handled by
+   * `foregroundImageHovered` rather than relying on a leave here (PDND
+   * doesn't fire a reliable leave when the cursor enters a nested target
+   * while staying inside the chrome's bounds).
+   *
+   * @param {{location: {current: {input: Object}}}} payload
    */
   @action
-  onBackgroundDragEnter() {
-    this.externalDragOver = true;
+  onExternalImageDragEnter({ location }) {
+    if (this.canDropBackgroundFile()) {
+      this.externalDragOver = true;
+      return;
+    }
+    if (this.#isImageDropSlot) {
+      this.wireframe.setActiveDropPreview(
+        this.#ensureExternalDropResolver().descriptorFor(
+          EXTERNAL_IMAGE_DROP_SOURCE,
+          location.current.input
+        )
+      );
+    }
+  }
+
+  /**
+   * Tracks the cursor while a file is dragged over a container slot so the
+   * drop preview follows it; a no-op for the background-fill path.
+   *
+   * @param {{location: {current: {input: Object}}}} payload
+   */
+  @action
+  onExternalImageDrag({ location }) {
+    if (this.canDropBackgroundFile()) {
+      return;
+    }
+    if (this.#isImageDropSlot) {
+      this.wireframe.setActiveDropPreview(
+        this.#ensureExternalDropResolver().descriptorFor(
+          EXTERNAL_IMAGE_DROP_SOURCE,
+          location.current.input
+        )
+      );
+    }
   }
 
   @action
-  onBackgroundDragLeave() {
-    this.externalDragOver = false;
+  onExternalImageDragLeave() {
+    this.#externalDropResolver = null;
+    if (this.canDropBackgroundFile()) {
+      this.externalDragOver = false;
+      return;
+    }
+    this.wireframe.clearActiveDropPreview();
   }
 
   /**
@@ -1542,22 +1647,38 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Hands a file dropped anywhere on the block body to the block's
-   * passive ("background") image overlay, which uploads it through its
-   * own pipeline (progress bar, value write, block selection). Per-arg
-   * image overlays (e.g. the avatar slot) are deeper external drop
-   * targets, so PDND routes drops over them there instead — only body
-   * drops reach this handler.
+   * Routes a file dropped on the block body. For a background block the
+   * file fills the passive ("background") image arg through its overlay's
+   * own pipeline (progress bar, value write, block selection); for a
+   * container slot it creates a new image block at the previewed slot and
+   * uploads into it. Per-arg image overlays (e.g. the avatar slot) are
+   * deeper external drop targets, so PDND routes drops over them there
+   * instead — only body drops reach this handler.
    *
    * @param {{source: {getFiles: () => File[]}}} payload
    */
   @action
-  onBackgroundFileDrop({ source }) {
-    this.externalDragOver = false;
-    const file = source?.getFiles?.()?.[0];
-    if (file) {
-      this.pendingBackgroundFile = file;
+  onExternalImageDrop({ source }) {
+    this.#externalDropResolver = null;
+    if (this.canDropBackgroundFile()) {
+      this.externalDragOver = false;
+      const file = source?.getFiles?.()?.[0];
+      if (file) {
+        this.pendingBackgroundFile = file;
+      }
+      return;
     }
+    if (!this.#isImageDropSlot) {
+      return;
+    }
+    this.wireframe.clearActiveDropPreview();
+    // Per-file MIME isn't readable during the drag, so the preview shows for
+    // any file; a non-image release is a clean no-op here.
+    const file = firstImageFile(source.getFiles());
+    if (!file) {
+      return;
+    }
+    this.wireframe.completeExternalImageDrop(file);
   }
 
   /**
@@ -1733,18 +1854,20 @@ export default class BlockChrome extends Component {
             outletName=@outletName
             mode=this.containerDropMode
           }}
-          {{! Chrome-level external file drop: routes a file dropped on the
-            block body to its passive background image arg. Per-image-arg
+          {{! Chrome-level external file drop. One target per chrome handles
+            both paths: filling a passive background image arg, and creating a
+            new image block when this chrome is a container slot. Per-image-arg
             overlays (the avatar slot) are deeper external drop targets, so
             PDND sends drops over them there instead. The canDrop gate keeps
-            this inert for blocks that have no background. }}
+            this inert for blocks that are neither. }}
           {{dDragAndDropExternalTarget
             accepts="files"
             indicator=false
-            canDrop=this.canDropBackgroundFile
-            onDragEnter=this.onBackgroundDragEnter
-            onDragLeave=this.onBackgroundDragLeave
-            onDrop=this.onBackgroundFileDrop
+            canDrop=this.canDropExternalImageFile
+            onDragEnter=this.onExternalImageDragEnter
+            onDrag=this.onExternalImageDrag
+            onDragLeave=this.onExternalImageDragLeave
+            onDrop=this.onExternalImageDrop
           }}
           {{on "click" this.onClick}}
           role="button"

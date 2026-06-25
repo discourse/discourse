@@ -14,6 +14,7 @@ import {
   replaceEntryArgs,
   replaceEntryContainerArgs,
   replaceEntryId,
+  replaceEntryInPlace,
   revalidateEntryStamps,
   setEntryArg,
   wrapAsOutletRoot,
@@ -318,6 +319,56 @@ module("Unit | Discourse Wireframe | mutate-layout", function () {
       assert.false(changed);
       assert.strictEqual(next[1], layout[1]);
       assert.strictEqual(next[1].children, layout[1].children);
+    });
+  });
+
+  module("replaceEntryInPlace", function () {
+    test("returns the placed clone carrying the replaced entry's stable key", function (assert) {
+      const layout = makeLayout();
+      const newEntry = { block: "wf:mutate-test-leaf", args: { title: "New" } };
+
+      const {
+        layout: next,
+        changed,
+        entry,
+      } = replaceEntryInPlace(layout, "wf:mutate-test-leaf:1", newEntry);
+
+      assert.true(changed, "reports a change");
+      assert.notStrictEqual(
+        entry,
+        newEntry,
+        "the returned entry is the placed clone, not the caller's object"
+      );
+      assert.strictEqual(
+        entry,
+        next[0],
+        "the returned entry is the one now in the layout"
+      );
+      assert.strictEqual(
+        entry.__stableKey,
+        1,
+        "the placed clone inherits the replaced entry's stable key"
+      );
+      assert.strictEqual(
+        entryKey(entry),
+        "wf:mutate-test-leaf:1",
+        "so the caller can resolve and select the placed block"
+      );
+      assert.strictEqual(
+        newEntry.__stableKey,
+        undefined,
+        "the caller's original object is never stamped"
+      );
+    });
+
+    test("returns a null entry when nothing matched", function (assert) {
+      const layout = makeLayout();
+      const { changed, entry } = replaceEntryInPlace(layout, "nope:0", {
+        block: "wf:mutate-test-leaf",
+      });
+
+      assert.false(changed);
+      assert.strictEqual(entry, null);
     });
   });
 

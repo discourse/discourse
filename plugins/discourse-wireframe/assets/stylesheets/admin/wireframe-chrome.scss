@@ -595,6 +595,16 @@ body.wireframe-active {
       backdrop-filter: blur(2px);
     }
 
+    /* A failed upload keeps the empty card in place but recolours it to a
+       danger tint so the failure isn't silent; the card stays clickable to
+       retry (it's still `--empty`). */
+
+    &--error {
+      cursor: pointer;
+      color: var(--danger);
+      background: rgb(var(--danger-rgb), 0.1);
+    }
+
     &__content {
       display: flex;
       flex-direction: column;

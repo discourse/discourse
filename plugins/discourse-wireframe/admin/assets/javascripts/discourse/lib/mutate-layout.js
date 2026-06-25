@@ -200,10 +200,17 @@ export function replaceEntryContainerArgs(layout, key, namespace, updater) {
  * @param {Array<Object>} layout
  * @param {string} key
  * @param {Object} newEntry
- * @returns {{layout: Array<Object>, changed: boolean}}
+ * @returns {{layout: Array<Object>, changed: boolean, entry: Object|null}}
+ *   `entry` is the clone actually placed into the layout (with the replaced
+ *   entry's `__stableKey`), or `null` when nothing matched.
  */
 export function replaceEntryInPlace(layout, key, newEntry) {
   let changed = false;
+  // The clone actually inserted into the new layout. `newEntry` is cloned
+  // (inheriting the replaced entry's stable key), so callers that need to
+  // act on the placed entry — e.g. auto-selecting it — must use this, not
+  // the original `newEntry` (which never receives a stable key).
+  let inserted = null;
 
   function walk(entries) {
     let subtreeChanged = false;
@@ -211,7 +218,10 @@ export function replaceEntryInPlace(layout, key, newEntry) {
       if (entryKey(entry) === key) {
         changed = true;
         subtreeChanged = true;
-        return cloneEntryShell(newEntry, { __stableKey: entry.__stableKey });
+        inserted = cloneEntryShell(newEntry, {
+          __stableKey: entry.__stableKey,
+        });
+        return inserted;
       }
       if (entry.children?.length) {
         const newChildren = walk(entry.children);
@@ -226,7 +236,7 @@ export function replaceEntryInPlace(layout, key, newEntry) {
   }
 
   const newLayout = walk(layout);
-  return { layout: newLayout, changed };
+  return { layout: newLayout, changed, entry: inserted };
 }
 
 /**

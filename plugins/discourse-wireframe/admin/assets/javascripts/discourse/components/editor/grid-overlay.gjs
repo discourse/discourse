@@ -14,9 +14,14 @@ import {
 } from "discourse/blocks";
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { registerDragAndDropExternalTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 import { GRID_LAYOUT_SELECTOR } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-dom-contract";
+import {
+  EXTERNAL_IMAGE_DROP_SOURCE,
+  firstImageFile,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/external-image-drop";
 // `grid-drop` is the single rule chokepoint shared with the service: the
 // overlay's drop-validity check asks it whether an edge drop can cascade.
 import {
@@ -234,6 +239,12 @@ export default class GridOverlay extends Component {
    */
   #gridDropTargetCleanup = null;
 
+  /**
+   * Cleanup function for the grid's external (OS file) drop target, which
+   * mirrors the block-drop target for image files. Invoked once on destroy.
+   */
+  #gridExternalDropTargetCleanup = null;
+
   /** Resize ghost element ref, captured on its own insert. */
   #ghostElement = null;
 
@@ -275,6 +286,8 @@ export default class GridOverlay extends Component {
     super.willDestroy(...arguments);
     this.#gridDropTargetCleanup?.();
     this.#gridDropTargetCleanup = null;
+    this.#gridExternalDropTargetCleanup?.();
+    this.#gridExternalDropTargetCleanup = null;
     window.removeEventListener("resize", this.#invalidateDragGeometry);
     window.removeEventListener("scroll", this.#invalidateDragGeometry, true);
   }
@@ -611,6 +624,37 @@ export default class GridOverlay extends Component {
       },
       onDrop: this.handleDrop,
     }));
+    // Mirror the block-drop target for OS image files: a file dragged over
+    // the grid surface previews and lands like a palette image-block drag
+    // (synthetic source), then the drop creates the block and uploads the
+    // file into it. The external adapter is an independent PDND adapter, so
+    // it never double-fires with the element target above.
+    this.#gridExternalDropTargetCleanup = registerDragAndDropExternalTarget(
+      gridEl,
+      () => ({
+        accepts: "files",
+        indicator: false,
+        onDragEnter: ({ location }) =>
+          this.#publishFromDrag(EXTERNAL_IMAGE_DROP_SOURCE, location),
+        onDrag: ({ location }) =>
+          this.#publishFromDrag(EXTERNAL_IMAGE_DROP_SOURCE, location),
+        onDragLeave: () => {
+          this.#lastIntermediate = null;
+          this.wireframe.setActiveDropPreview(null);
+        },
+        onDrop: ({ source }) => {
+          this.#lastIntermediate = null;
+          // Per-file MIME isn't readable mid-drag, so the preview shows for
+          // any file; a non-image release is a clean no-op here.
+          const file = firstImageFile(source.getFiles());
+          if (!file) {
+            this.wireframe.setActiveDropPreview(null);
+            return;
+          }
+          this.wireframe.completeExternalImageDrop(file);
+        },
+      })
+    );
     // Refresh the per-drag geometry cache when the page reflows (any
     // resize) or when any scroll container moves (capture-phase
     // listener catches scrolls on nested overflow containers too, not

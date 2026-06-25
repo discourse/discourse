@@ -36,6 +36,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import { imageArgEntries } from "discourse/plugins/discourse-wireframe/discourse/lib/empty-image-upload";
 // `grid-math` holds the editor-only grid geometry. Absolute addon path
 // because this admin service crosses into the plugin's universal bundle.
 import {
@@ -469,6 +470,15 @@ export default class WireframeService extends Service {
    * @type {Object|null}
    */
   #lastDropPreview = null;
+
+  /**
+   * Files dropped onto an empty slot, staged by `"blockKey\0argName"` until
+   * the freshly-created block's `ImageArgOverlay` mounts and uploads them
+   * through its own pipeline. One-shot per entry; cleared on enter / exit.
+   *
+   * @type {Map<string, File>}
+   */
+  #pendingDropFiles = new Map();
 
   /**
    * Pending arg changes for the currently-selected block, accumulated across
@@ -1141,6 +1151,7 @@ export default class WireframeService extends Service {
       return;
     }
     this.isActive = true;
+    this.#pendingDropFiles.clear();
     // New session generation: invalidates any draft hydration still in flight
     // from a previous enter/exit so it can't write into this session.
     const generation = ++this.#enterGeneration;
@@ -1290,6 +1301,7 @@ export default class WireframeService extends Service {
     this.dragSourceKey = null;
     this.dragSourceOutlet = null;
     this.activeDropTarget = null;
+    this.#pendingDropFiles.clear();
     this.undoStack.length = 0;
     // Revert to the minimal rich-text renderer so admin pages without
     // an open editor render the same DOM as live.
@@ -1968,6 +1980,12 @@ export default class WireframeService extends Service {
     if (!blockKey) {
       return;
     }
+    // If the block sits inside an inactive tab whose button is already rendered
+    // (e.g. selecting it from the outline), switch to that tab so its panel can
+    // render. A freshly INSERTED tab's button isn't mounted this runloop, so
+    // this no-ops for inserts — the tabs block reveals a just-added panel itself
+    // (it re-renders with the new child at the right time, which this can't).
+    this.#revealContainingTabs(blockKey);
     const el = document.querySelector(
       `[data-wf-block-key="${CSS.escape(blockKey)}"]`
     );
@@ -1977,6 +1995,48 @@ export default class WireframeService extends Service {
     }
     // Not rendered yet — wait for the element to announce itself on mount.
     this.#pendingRevealKey = blockKey;
+  }
+
+  /**
+   * Switches every already-rendered tab on the path to `blockKey` to the panel
+   * that contains it, so selecting a block inside an inactive tab (e.g. from the
+   * outline) reveals it instead of leaving it unrendered. Reveal after an INSERT
+   * is the tabs block's own job (it re-renders with the new child and activates
+   * it) — its button isn't mounted when this runs, so this no-ops there.
+   *
+   * Drives the dumb tabs block through its own data attribute: each panel's tab
+   * button carries `data-wf-tab-panel-key`, and a synthesized click switches the
+   * panel without changing selection (the chrome ignores `detail === 0` clicks).
+   * Walks outermost to innermost; a deeply nested inner tab whose button hasn't
+   * mounted yet is a best-effort case (the common single level always resolves).
+   *
+   * @param {string} blockKey - The composite key of the block being revealed.
+   */
+  #revealContainingTabs(blockKey) {
+    const located = this.findEntryAndOutletSync(blockKey);
+    if (!located) {
+      return;
+    }
+    const layout = this.readResolvedLayout(located.outletName);
+    if (!layout) {
+      return;
+    }
+    const path = findAncestryPath(layout, blockKey);
+    if (!path) {
+      return;
+    }
+    for (const entry of path) {
+      const key = entryKey(entry);
+      if (!key) {
+        continue;
+      }
+      const button = document.querySelector(
+        `[data-wf-tab-panel-key="${CSS.escape(key)}"]`
+      );
+      if (button && button.getAttribute("aria-selected") !== "true") {
+        button.click();
+      }
+    }
   }
 
   /**
@@ -2382,6 +2442,79 @@ export default class WireframeService extends Service {
       upload.uppyWrapper?.uppyInstance?.on("upload-error", () => finish(null));
       upload.addFiles(file);
     });
+  }
+
+  /**
+   * Completes an OS image-file drop onto an empty, block-accepting slot.
+   * The dragover handlers have already published the drop preview (built
+   * from the synthetic image-block source), so this runs the pending drop
+   * the same way a palette drop does, then hands the dropped file to the
+   * freshly-created block.
+   *
+   * `dispatchActiveDrop` inserts and auto-selects an empty image block at
+   * the previewed slot synchronously. Rather than uploading here, the file
+   * is STAGED against the new block's key: the block's own `ImageArgOverlay`
+   * picks it up as it mounts and uploads it through the overlay pipeline, so
+   * the upload shows the per-block progress bar, surfaces errors, and writes
+   * only to that block (the overlay always uses its own live key — an upload
+   * can never land on a different block). A rejected / invalid drop
+   * dispatches nothing, so this is a no-op.
+   *
+   * @param {File} file - The image file to upload into the new block.
+   * @returns {boolean} `true` when a block was created and the file staged.
+   */
+  completeExternalImageDrop(file) {
+    if (!file) {
+      return false;
+    }
+    // Run the pending drop. A false return means the slot rejected the
+    // image block, so there's nothing to fill.
+    if (!this.dispatchActiveDrop()) {
+      return false;
+    }
+    const blockKey = this.selectedBlockKey;
+    if (!blockKey) {
+      return false;
+    }
+    // Derive the target arg from the inserted block's own schema rather
+    // than assuming a name, mirroring how the paste handler picks its arg.
+    const argName = imageArgEntries(this.selectedBlockData?.metadata?.args)[0]
+      ?.name;
+    if (!argName) {
+      return false;
+    }
+    this.stagePendingDropFile(blockKey, argName, file);
+    return true;
+  }
+
+  /**
+   * Stages a dropped file against a block's image arg so the block's
+   * `ImageArgOverlay` can upload it through its own pipeline once it mounts.
+   * One-shot: `consumePendingDropFile` reads and removes it.
+   *
+   * @param {string} blockKey
+   * @param {string} argName
+   * @param {File} file
+   */
+  stagePendingDropFile(blockKey, argName, file) {
+    this.#pendingDropFiles.set(JSON.stringify([blockKey, argName]), file);
+  }
+
+  /**
+   * Returns and removes the file staged for a block's image arg, or `null`
+   * when none was staged. Called by the arg's overlay as it sets up.
+   *
+   * @param {string} blockKey
+   * @param {string} argName
+   * @returns {File|null}
+   */
+  consumePendingDropFile(blockKey, argName) {
+    const key = JSON.stringify([blockKey, argName]);
+    const file = this.#pendingDropFiles.get(key) ?? null;
+    if (file) {
+      this.#pendingDropFiles.delete(key);
+    }
+    return file;
   }
 
   /**
@@ -4553,12 +4686,9 @@ export default class WireframeService extends Service {
     if (!blockKey) {
       return;
     }
-    const schema = this.selectedBlockData?.metadata?.args;
-    const imageArgs = schema
-      ? Object.entries(schema)
-          .filter(([, def]) => def?.type === "image")
-          .map(([name]) => name)
-      : [];
+    const imageArgs = imageArgEntries(
+      this.selectedBlockData?.metadata?.args
+    ).map((entry) => entry.name);
     if (imageArgs.length === 0) {
       return;
     }
