@@ -49,7 +49,6 @@ end
 #
 #  id                         :bigint           not null, primary key
 #  error                      :text
-#  parent_node_id             :string(100)      not null
 #  parent_resume_token        :string(64)       not null
 #  status                     :integer          default("pending"), not null
 #  trigger_data               :jsonb            not null
@@ -57,6 +56,7 @@ end
 #  updated_at                 :datetime         not null
 #  child_execution_id         :bigint
 #  parent_execution_id        :bigint           not null
+#  parent_node_id             :string(100)      not null
 #  target_workflow_id         :bigint           not null
 #  target_workflow_version_id :string(36)       not null
 #  user_id                    :bigint
