@@ -20,12 +20,28 @@ class InviteSerializer < ApplicationSerializer
   has_many :topics, embed: :object, serializer: BasicTopicSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
 
+  def include_invite_key?
+    can_see_invite_details?
+  end
+
+  def include_link?
+    can_see_invite_details?
+  end
+
+  def include_description?
+    can_see_invite_details?
+  end
+
   def include_email?
-    options[:show_emails] && !object.redeemed?
+    options[:show_emails] && !object.redeemed? && can_see_invite_emails?
+  end
+
+  def include_domain?
+    can_see_invite_details?
   end
 
   def include_emailed?
-    email.present?
+    email.present? && can_see_invite_details?
   end
 
   def emailed
@@ -37,18 +53,44 @@ class InviteSerializer < ApplicationSerializer
   end
 
   def include_custom_message?
-    email.present?
+    email.present? && can_see_invite_details?
   end
 
   def include_max_redemptions_allowed?
-    email.blank?
+    email.blank? && can_see_invite_details?
   end
 
   def include_redemption_count?
-    email.blank?
+    email.blank? && can_see_invite_details?
+  end
+
+  def include_topics?
+    can_see_invite_details?
+  end
+
+  def topics
+    object.topics.select { |topic| scope.can_see?(topic) }
+  end
+
+  def include_groups?
+    can_see_invite_details?
   end
 
   def expired
     object.expired?
+  end
+
+  private
+
+  def can_see_invite_details?
+    return @can_see_invite_details if defined?(@can_see_invite_details)
+
+    @can_see_invite_details = scope.can_see_invite_details?(object.invited_by)
+  end
+
+  def can_see_invite_emails?
+    return @can_see_invite_emails if defined?(@can_see_invite_emails)
+
+    @can_see_invite_emails = scope.can_see_invite_emails?(object.invited_by)
   end
 end
