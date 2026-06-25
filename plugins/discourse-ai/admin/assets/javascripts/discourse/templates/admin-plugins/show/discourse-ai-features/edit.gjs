@@ -4,7 +4,6 @@ import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import SettingDefinitionField from "discourse/components/setting-definition-field";
 import { i18n } from "discourse-i18n";
-import settingToDefinition from "discourse/plugins/discourse-ai/discourse/lib/ai-feature-setting-definition";
 
 export default <template>
   <BackButton
@@ -36,7 +35,7 @@ export default <template>
                       }}
                         {{#if setting}}
                           <SettingDefinitionField
-                            @definition={{settingToDefinition setting}}
+                            @definition={{setting.definition}}
                             @form={{form}}
                           />
                         {{/if}}
@@ -47,7 +46,7 @@ export default <template>
               {{else}}
                 {{#each @model.feature_settings as |setting|}}
                   <SettingDefinitionField
-                    @definition={{settingToDefinition setting}}
+                    @definition={{setting.definition}}
                     @form={{form}}
                   />
                 {{/each}}
