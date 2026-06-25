@@ -1173,6 +1173,17 @@ def fix_missing_s3
 
       if fix_error
         puts "Failed to fix upload #{fix_error}"
+      elsif fixed_upload.id != upload.id
+        # UploadCreator found an existing record for the same file -- the upload
+        # being fixed is a duplicate. Move all references to the canonical record
+        # and destroy the duplicate rather than leaving two records with the same URL.
+        puts "Upload #{upload.id} is a duplicate of #{fixed_upload.id}, merging references"
+        rebake_ids =
+          UploadReference.where(upload_id: upload.id, target_type: "Post").pluck(:target_id)
+        UploadReference.where(upload_id: upload.id).update_all(upload_id: fixed_upload.id)
+        OptimizedImage.where(upload_id: upload.id).destroy_all
+        upload.destroy!
+        Post.where(id: rebake_ids).each { |post| post.rebake! }
       else
         # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
         # we may end up breaking posts

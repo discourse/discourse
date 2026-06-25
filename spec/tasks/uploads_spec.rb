@@ -258,6 +258,53 @@ RSpec.describe "tasks/uploads" do
     end
   end
 
+  describe "uploads:fix_missing_s3" do
+    def invoke_task
+      capture_stdout { invoke_rake_task("uploads:fix_missing_s3") }
+    end
+
+    before { setup_s3 }
+
+    it "does not leave a duplicate upload record when the fixed file already exists as a non-secure upload" do
+      # Simulate the Zoe bug: a secure upload whose URL was corrupted to point at the same
+      # S3 object as a non-secure upload of the same file. fix_missing_s3 downloads the
+      # file, runs it through UploadCreator, gets back the existing non-secure record, and
+      # should merge rather than leave two records pointing at the same URL.
+      real_sha1 = "3e3cecf141a7312ec621608d6df0aef7436e3713"
+      fake_sha1 = "293e44361d7a706e6c1247e3326934d74a3837b9"
+      public_url = "//bucket.s3.amazonaws.com/original/2X/2/#{real_sha1}.png"
+
+      # The keeper: a normal non-secure upload with the correct sha1
+      keeper = Fabricate(:upload_s3, sha1: real_sha1, original_sha1: nil, secure: false)
+      keeper.update_columns(
+        url: public_url,
+        verification_status: Upload.verification_statuses[:verified],
+      )
+
+      # The orphan: a formerly-secure upload whose URL was corrupted to match the keeper's
+      orphan = Fabricate(:upload_s3, sha1: fake_sha1, original_sha1: real_sha1, secure: false)
+      orphan.update_columns(
+        url: public_url,
+        verification_status: Upload.verification_statuses[:invalid_etag],
+      )
+
+      post = Fabricate(:post)
+      UploadReference.create!(target: post, upload: orphan)
+
+      tempfile = Tempfile.new(%w[upload .png])
+      FileHelper.stubs(:download).returns(tempfile)
+
+      UploadCreator.any_instance.stubs(:create_for).returns(keeper)
+
+      invoke_task
+
+      # The orphan record should be gone, with no duplicate URL records remaining
+      expect(Upload.exists?(orphan.id)).to eq(false)
+      expect(Upload.where(url: public_url).count).to eq(1)
+      expect(Upload.where(url: public_url).first.id).to eq(keeper.id)
+    end
+  end
+
   describe "uploads:downsize" do
     def invoke_task
       capture_stdout { invoke_rake_task("uploads:downsize") }
