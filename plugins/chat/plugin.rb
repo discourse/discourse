@@ -90,6 +90,8 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:chat_sound)
   UserUpdater::OPTION_ATTR.push(:ignore_channel_wide_mention)
   UserUpdater::OPTION_ATTR.push(:show_thread_title_prompts)
+  UserUpdater::OPTION_ATTR.push(:chat_announce_new_messages)
+  UserUpdater::OPTION_ATTR.push(:chat_new_message_sound)
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
   UserUpdater::OPTION_ATTR.push(:chat_separate_sidebar_mode)
@@ -303,6 +305,16 @@ after_initialize do
   add_to_serializer(:current_user_option, :show_thread_title_prompts) do
     object.show_thread_title_prompts
   end
+
+  add_to_serializer(:user_option, :chat_announce_new_messages) { object.chat_announce_new_messages }
+
+  add_to_serializer(:current_user_option, :chat_announce_new_messages) do
+    object.chat_announce_new_messages
+  end
+
+  add_to_serializer(:user_option, :chat_new_message_sound) { object.chat_new_message_sound }
+
+  add_to_serializer(:current_user_option, :chat_new_message_sound) { object.chat_new_message_sound }
 
   add_to_serializer(:user_option, :chat_email_frequency) { object.chat_email_frequency }
 

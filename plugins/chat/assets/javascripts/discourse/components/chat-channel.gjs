@@ -49,6 +49,7 @@ export default class ChatChannel extends Component {
   @service capabilities;
   @service chatApi;
   @service chatChannelsManager;
+  @service chatNewMessageNotifier;
   @service chatDraftsManager;
   @service chatStateManager;
   @service chatChannelScrollPositions;
@@ -187,6 +188,13 @@ export default class ChatChannel extends Component {
   @bind
   onNewMessage(message) {
     const isOwnMessage = message.user.id === this.currentUser.id;
+
+    if (!isOwnMessage) {
+      this.chatNewMessageNotifier.notify(message, {
+        visible: this.paneState.isDocumentVisible,
+        active: this.paneState.isActiveReader,
+      });
+    }
 
     this.paneState.handleIncomingMessage({
       scroller: this.scroller,

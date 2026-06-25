@@ -9,7 +9,7 @@ export const CHAT_SOUNDS = {
   ethereal: {},
 };
 
-const DEFAULT_SOUND_NAME = "classic";
+export const DEFAULT_SOUND_NAME = "classic";
 
 const THROTTLE_TIME = 3000; // 3 seconds
 const MIN_GAIN = 0.001;

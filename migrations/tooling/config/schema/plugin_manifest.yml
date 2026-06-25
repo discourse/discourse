@@ -34,9 +34,11 @@ plugins:
       - user_chat_thread_memberships
     columns:
       user_options:
+        - chat_announce_new_messages
         - chat_email_frequency
         - chat_enabled
         - chat_header_indicator_preference
+        - chat_new_message_sound
         - chat_quick_reaction_type
         - chat_quick_reactions_custom
         - chat_send_shortcut
