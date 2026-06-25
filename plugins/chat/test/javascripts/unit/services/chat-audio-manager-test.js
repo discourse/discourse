@@ -95,6 +95,28 @@ module("Unit | Service | chat-audio-manager", function (hooks) {
     );
   });
 
+  test("throttles notification sounds by default", async function (assert) {
+    await this.subject.play("classic");
+    await this.subject.play("soft");
+
+    assert.strictEqual(
+      this.context.oscillators.length,
+      2,
+      "skips the second sound while throttled"
+    );
+  });
+
+  test("can bypass throttling for preference previews", async function (assert) {
+    await this.subject.play("classic", { throttle: false });
+    await this.subject.play("soft", { throttle: false });
+
+    assert.strictEqual(
+      this.context.oscillators.length,
+      4,
+      "plays each selected preview sound"
+    );
+  });
+
   test("normalizes legacy sound names to the default theme", function (assert) {
     assert.strictEqual(
       normalizeChatSoundName("ding"),
