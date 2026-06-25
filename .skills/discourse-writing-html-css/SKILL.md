@@ -32,7 +32,7 @@ and its `.scss`.
 - [references/layout-and-responsive.md](references/layout-and-responsive.md) — intrinsic layout
   and the `lib/viewport` breakpoint API.
 - [references/css-authoring.md](references/css-authoring.md) — native-CSS-vs-SASS swaps, local
-  custom properties (incl. theme interaction), shared mixins.
+  custom properties (incl. theme interaction), shared mixins, file organization, and buttons.
 - [references/css-repair.md](references/css-repair.md) — repairing existing CSS: stale selector
   deletion, selector scoping, overflow fixes, FormKit/token migration, mobile/desktop cleanup,
   and regression verification.
@@ -360,12 +360,14 @@ Discourse templates are **`.gjs`** (Glimmer components with inline `<template>`)
     element with ARIA. And don't add `<section>`/`<nav>` purely as styling hooks where they
     carry no role; a `<div>` is honest there.
   - Prefer existing `<DButton>` and other shared components — they get semantics and a11y right.
-- **`<DButton>` style variants — only when it should look like a button.** Use the shared
-  variant via `@class` (`btn-default`, `btn-primary`, `btn-danger`, `btn-flat`/`btn-transparent`,
-  `btn-small`) rather than restyling from scratch. Don't apply them to non-button-looking
-  controls (you'll override more than you saved), and don't fight a `<DButton>` into a shape it
-  resists — a plain semantic `<button class="my-thing">` is cleaner there. Variant when
-  button-shaped, naked button when not.
+- **Buttons: `<button>` for actions, `<a>` for navigation — then one standalone variant.** Choose
+  the element by behavior (anything that changes the URL is a link), not looks. A button-looking
+  control needs `.btn` **plus exactly one** mutually-exclusive variant (`btn-default`,
+  `btn-primary`, `btn-danger`, `btn-flat`/`btn-transparent`); `<DButton>` adds `.btn` for you, so
+  pass the variant via `@class`. **Only controls that look *and* function like a standard button
+  get these classes** — a `<button>` inside a dropdown, menu, tab, or list row is styled by its
+  own component and must not get a `.btn-*` variant. Full guidance:
+  [references/css-authoring.md](references/css-authoring.md).
 - **Use FormKit for forms — don't roll your own.** Build forms with the `<Form>` component
   (`import Form from "discourse/components/form"`), which yields field/row/submit pieces
   (`<form.Field>`, `<form.Row>`, `<form.Submit>`) and handles layout, validation, state, and the
@@ -394,12 +396,16 @@ Discourse templates are **`.gjs`** (Glimmer components with inline `<template>`)
   default font size — if the right heading looks wrong-sized, style it in CSS
   (`font-size: var(--font-up-1)`). An `<h1>` styled smaller is fine; an `<h3>` chosen because
   you wanted smaller text is not.
-- **Avoid "div-itis" — no wrapper without a job.** Pick the right element (`<span>` inline,
-  `<div>` for a block/structural container, a semantic element where one fits), and add one only
-  when it earns its place: its own `max-width`, a positioning context, a scroll area, or a real
-  semantic region. A stray wrapper between a flex/grid parent and its children breaks layout — the
-  items stop being direct children, so `gap`/`flex`/`grid-template` no longer reach them. No
-  style, role, or layout reason → delete it.
+- **Avoid "div-itis" — if you can't name what a wrapper does, drop it.** The test for every
+  wrapping element: state its layout or semantic job in a few words (its own `max-width`, a
+  positioning context, a scroll area, a flex/grid container, a real semantic region). If you
+  can't, delete it and let the child stand on its own. A lone `<button>` wrapped in a `<div>`, or
+  two or three nested `<div>`s that just pass content straight through, are the usual offenders —
+  the markup carries weight it doesn't earn. Pick the right element too (`<span>` inline, `<div>`
+  for a block/structural container, a semantic element where one fits). Beyond clutter, a stray
+  wrapper between a flex/grid parent and its children **breaks layout** — the items stop being
+  direct children, so `gap`/`flex`/`grid-template` no longer reach them. No style, role, or layout
+  reason → delete it.
 - **Components clean up after themselves — don't render empty containers.** If a container's
   contents are conditional, put the container inside the condition so it isn't emitted when
   empty — an empty-but-present element still counts as a flex/grid item and `gap` slot, leaving
