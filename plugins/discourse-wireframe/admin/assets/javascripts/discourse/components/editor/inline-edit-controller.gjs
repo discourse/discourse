@@ -231,8 +231,9 @@ export default class InlineEditController extends Component {
         // order. The service's `inlineEdit.start` implicitly commits the
         // current session, so chaining Tabs across fields produces one
         // undo entry per visited field. At the first / last field the
-        // command returns false so the browser's default Tab handling
-        // kicks in and focus leaves the editor naturally.
+        // command commits the current field, ends the session, and returns
+        // false so the browser's default Tab handling moves focus on to the
+        // next element — the editor exits instead of trapping focus.
         Tab: this.#tabToSiblingArg(1),
         "Shift-Tab": this.#tabToSiblingArg(-1),
       }),
@@ -314,17 +315,20 @@ export default class InlineEditController extends Component {
       if (event.target.closest?.(".wireframe-block-toolbar")) {
         return;
       }
-      // Clicks anywhere on the same block (e.g., the button padding
-      // around a button-link's label, the icon area, the block chrome
-      // gutter) are also "inside the edit" — the chrome's onClick
-      // routes those to the right handler (start a different arg,
-      // reselect the block), which transitions the session cleanly via
-      // `start()`'s implicit commit. Closing here on every padding
-      // click made cursor placement inside small fields fiddly.
+      // A click on a rich-inline field region of THIS block stays in edit:
+      // it's either the current field's own padding (cursor placement) or
+      // another field, which the chrome's onClick transitions to via
+      // `start()`'s implicit commit. The rAF guard below would otherwise
+      // race and stop that just-opened session. Any other same-block click
+      // (the icon area, the block chrome gutter, padding off the text) falls
+      // through and commits + exits.
       const editingBlock = this.activeRendererEl?.closest?.(
         "[data-wf-block-key]"
       );
-      if (editingBlock?.contains(event.target)) {
+      if (
+        editingBlock?.contains(event.target) &&
+        event.target.closest?.("[data-wf-inline-edit-arg]")
+      ) {
         return;
       }
       // Bail out if the edit session has already ended (e.g. a sibling
@@ -519,6 +523,11 @@ export default class InlineEditController extends Component {
       }
       const next = argEls[i + direction];
       if (!next) {
+        // No sibling field this direction: commit the current field and end
+        // the session. Returning false lets the browser's default Tab move
+        // focus on to the next element, so the editor exits cleanly instead
+        // of trapping focus.
+        this.wireframe.inlineEdit.stop({ commit: true });
         return false;
       }
       this.wireframe.inlineEdit.start(
