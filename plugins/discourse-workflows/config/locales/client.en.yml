@@ -119,6 +119,7 @@ en:
       leave_without_publishing: "Leave without publishing"
       keep_editing: "Keep editing"
       workflow_name: "Workflow name"
+      creator: "Creator"
       last_editor: "Last editor"
       last_update: "Last update"
       last_run: "Last run"
