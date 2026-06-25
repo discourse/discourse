@@ -48,6 +48,12 @@ by listing it under `matcher.subjects` in the gem's `.mutant.yml`.
   every mutation survives and the subject reads ~0% despite a fine spec. Use
   `def self.` / `class << self` instead (and see the no-`module_function` house
   style). `def self.` subjects score fine.
+- **`Data.define(...) do ... end` bodies are out of reach.** Methods defined
+  inside the block passed to `Data.define` can't be matched as a subject under
+  the constant name (e.g. `ConventionsConfig`/`IgnoredConfig` in the schema DSL),
+  so their logic — including hot precedence and validation code — is never
+  mutated. Don't assume a high gem-wide score means that logic is covered; if it
+  matters, move it to a named class or test it directly.
 - **`Generator` and friends can leak files** (generated `*.rb`) into the working
   tree when a mutation rewrites an output path. Delete strays after a run; the
   `.mutant/` incremental cache is gitignored.
