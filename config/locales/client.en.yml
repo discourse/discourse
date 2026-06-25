@@ -4287,25 +4287,25 @@ en:
           true {
             { UNREAD, plural,
                  =0 {}
-                one {There is <a href="{basePath}/unread"># unread</a>}
-              other {There are <a href="{basePath}/unread"># unread</a>}
+                one {There is <a href="{unreadUrl}"># unread</a>}
+              other {There are <a href="{unreadUrl}"># unread</a>}
             }
             { NEW, plural,
                  =0 {}
-                one { and <a href="{basePath}/new"># new</a> topic remaining,}
-              other { and <a href="{basePath}/new"># new</a> topics remaining,}
+                one { and <a href="{newUrl}"># new</a> topic remaining,}
+              other { and <a href="{newUrl}"># new</a> topics remaining,}
             }
           }
           false {
             { UNREAD, plural,
                  =0 {}
-                one {There is <a href="{basePath}/unread"># unread</a> topic remaining,}
-              other {There are <a href="{basePath}/unread"># unread</a> topics remaining,}
+                one {There is <a href="{unreadUrl}"># unread</a> topic remaining,}
+              other {There are <a href="{unreadUrl}"># unread</a> topics remaining,}
             }
             { NEW, plural,
                  =0 {}
-                one {There is <a href="{basePath}/new"># new</a> topic remaining,}
-              other {There are <a href="{basePath}/new"># new</a> topics remaining,}
+                one {There is <a href="{newUrl}"># new</a> topic remaining,}
+              other {There are <a href="{newUrl}"># new</a> topics remaining,}
             }
           }
           other {}
