@@ -35,7 +35,7 @@ module Acl
       ((@permission_lookup[permission] || {}).dig(:group_ids) || []).dup
     end
 
-    def multi_permission_group_ids(permissions)
+    def group_ids_with_any_permission(permissions)
       permissions.flat_map { |permission| permission_group_ids(permission) || [] }.uniq.dup
     end
   end

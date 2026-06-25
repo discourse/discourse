@@ -84,6 +84,9 @@ Keep permission copy aligned with backend semantics. If a displayed `manage` rol
 - Newly added regular groups default to `edit`.
 - Read-only default auto groups (`anonymous_users`, `everyone`, `trust_level_0`) default to `view`.
 - Already selected groups are removed from the add-group chooser.
+- Row DOM metadata uses `data-row-type` and `data-row-id`; tests should not rely on the old `data-group-id` attribute.
+
+The component remains group-first. It can display entries derived from mandatory ACL metadata for groups, but it does not provide user picking or complete user ACL editing.
 
 ## FormKit Integration
 
@@ -124,3 +127,4 @@ Consumer tests should cover:
 - mandatory rows are locked and not duplicated
 - `@onChange` updates parent/form state when the user changes a row
 - default ACL construction for new records includes expected groups, if the consumer builds defaults
+- selectors use `.d-access-control__row[data-row-type="group"][data-row-id="..."]` for row assertions

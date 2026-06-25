@@ -66,18 +66,24 @@ RSpec.describe Acl::Target do
       expect(target_acl.permission_group_ids("manage")).to eq([])
     end
 
-    it "returns nil for a permission that is not present" do
-      expect(target_acl.permission_group_ids("own")).to be_nil
+    it "returns an empty array for a permission that is not present" do
+      expect(target_acl.permission_group_ids("own")).to eq([])
     end
   end
 
-  describe "#multi_permission_group_ids" do
+  describe "#group_ids_with_any_permission" do
     it "returns the unique group ids across all the permissions" do
-      expect(target_acl.multi_permission_group_ids(%w[view edit])).to contain_exactly(group.id, 22)
+      expect(target_acl.group_ids_with_any_permission(%w[view edit])).to contain_exactly(
+        group.id,
+        22,
+      )
     end
 
     it "ignores permissions that are not present" do
-      expect(target_acl.multi_permission_group_ids(%w[view own])).to contain_exactly(group.id, 22)
+      expect(target_acl.group_ids_with_any_permission(%w[view own])).to contain_exactly(
+        group.id,
+        22,
+      )
     end
   end
 end

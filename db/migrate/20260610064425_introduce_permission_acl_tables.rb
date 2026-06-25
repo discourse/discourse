@@ -2,7 +2,7 @@
 class IntroducePermissionAclTables < ActiveRecord::Migration[8.0]
   def up
     create_table :access_control_lists do |t|
-      t.string :target_type, null: false
+      t.string :target_type, null: false, limit: 255
       t.bigint :target_id, null: false
 
       t.string :owner, null: false, limit: 100

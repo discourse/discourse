@@ -9,6 +9,7 @@ For target models:
 - Include `AclTarget`.
 - Cover `mandatory_acl` if the target defines one.
 - Cover domain helper methods such as `anonymous_can_read?` or `can_write?` that wrap `permission_acl`.
+- Cover `.with_acl_permission` and `.with_any_acl_permissions` when index/list actions depend on the shared scopes.
 
 For Guardian methods:
 
@@ -22,8 +23,22 @@ For services using `AccessControlListManager`:
 - Creation with `acl: []` persists mandatory ACLs or fails closed when no mandatory ACL exists.
 - Update with explicit `acl: []` replaces existing ACLs with mandatory ACLs.
 - Update with a non-empty ACL replaces old rows and logs/records permission history if the feature has history.
+- After a successful manager call, the target instance has been reloaded and should not retain a stale `permission_acl` cache.
 - Unauthorized actors fail before the manager mutates ACL rows.
 - Invalid group IDs fail at the service/contract boundary when user input can supply IDs.
+
+For cleanup behavior:
+
+- Destroying a group enqueues `:cleanup_acls_for_deleted`.
+- `Jobs::CleanupAclsForDeleted` removes the group id from ACL rows.
+- ACL rows with no remaining group or user ids are deleted.
+- ACL rows that still have user ids are preserved.
+
+For lookup objects:
+
+- `Acl::Target#permission_group_ids` returns `[]` for missing permissions and a defensive copy for present permissions.
+- `Acl::Target#group_ids_with_any_permission` replaces the older `multi_permission_group_ids` name.
+- `Acl::User#target_ids_with_permission` and `#target_ids_with_any_permissions` return defensive array copies.
 
 For migration specs:
 
@@ -54,10 +69,11 @@ Ask these questions during code review:
 - Are mandatory ACLs enforced in both backend writes and frontend display?
 - Does the UI `@aclTarget` string match the target's `acl_target_key`?
 - Is ACL serialization limited to users who can manage the specific target?
-- Are list/index queries using `guardian.target_ids_with_acl_permission` or `target_ids_with_any_acl_permissions` instead of ad hoc SQL?
+- Are list/index queries using `Target.with_acl_permission`, `Target.with_any_acl_permissions`, `guardian.target_ids_with_acl_permission`, or `target_ids_with_any_acl_permissions` instead of ad hoc SQL?
 - Are group IDs validated before persistence when they come from params?
 - Are plugin target classes registered with `DiscoursePluginRegistry.register_acl_target_class`?
 - Do tests cover anonymous users and pseudo-group semantics if `anonymous_users`, `logged_in_users`, or `everyone` can appear in ACLs?
+- Do tests cover stale group rows or missing plugin target classes if the code serializes ACLs that may outlive their original target or group?
 
 ## Known Sharp Edges
 
@@ -65,4 +81,4 @@ Ask these questions during code review:
 - Group support is complete enough for current UI; user ACL support is not.
 - `DAccessControl` injects mandatory rows for display but does not notify the parent on render.
 - Mandatory ACLs from site settings need extra care in migrations because raw stored settings may omit `mandatory_values`.
-- `flattened_list` dereferences group records, so stale group IDs can break serialization unless validated or cleaned up.
+- `flattened_list` skips stale group IDs and unknown target classes, so a missing row can disappear from serialized ACL output while cleanup or validation catches up.

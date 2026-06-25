@@ -273,7 +273,7 @@ end
 #  allowed_user_ids  :bigint           default([]), not null, is an Array
 #  owner             :string(100)      not null
 #  permission        :string(100)      not null
-#  target_type       :string           not null
+#  target_type       :string(255)      not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  target_id         :bigint           not null

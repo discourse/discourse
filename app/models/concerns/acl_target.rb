@@ -24,6 +24,28 @@ module AclTarget
              class_name: "AccessControlList",
              dependent: :destroy
 
+    scope :with_acl_permission,
+          ->(guardian, permission) do
+            where(
+              id:
+                AccessControlList
+                  .matching_user(guardian.user)
+                  .where(target_type: polymorphic_name, permission: permission)
+                  .select(:target_id),
+            )
+          end
+
+    scope :with_any_acl_permissions,
+          ->(guardian, permissions) do
+            where(
+              id:
+                AccessControlList
+                  .matching_user(guardian.user)
+                  .where(target_type: polymorphic_name, permission: Array.wrap(permissions))
+                  .select(:target_id),
+            )
+          end
+
     def reload(options = nil)
       @permission_acl = nil
       super

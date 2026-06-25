@@ -52,10 +52,13 @@ Pass `for_target:` only when every row is for the same target; mixed targets rai
 `AccessControlList.matching_user(user)` returns ACL rows applying to a user:
 
 - Anonymous users match `Group::AUTO_GROUPS[:anonymous_users]`.
+- Anonymous users also match `everyone` while `SiteSetting.granular_anonymous_and_logged_in_groups_permissions` is disabled.
 - Logged-in users match direct user rows, `user.belonging_to_group_ids`, and `logged_in_users`.
 - Logged-in users match `everyone` only while `SiteSetting.granular_anonymous_and_logged_in_groups_permissions` is disabled.
 
 `AccessControlList.matching_group(group)` returns ACL rows granted directly to the group or directly to users in that group.
+
+Use `AccessControlList.preload_allowed` before flattening relations that may include many rows. It batches group lookup and memoizes `allowed_groups_preloaded`; user preloading is still a TODO.
 
 ## Lookup Objects
 
@@ -65,8 +68,10 @@ Pass `for_target:` only when every row is for the same target; mixed targets rai
 target.permission_acl.group_has_permission?(group, "view")
 target.permission_acl.group_has_any_permission?(group.id, %w[edit manage])
 target.permission_acl.permission_group_ids("view")
-target.permission_acl.multi_permission_group_ids(%w[view edit manage])
+target.permission_acl.group_ids_with_any_permission(%w[view edit manage])
 ```
+
+`permission_group_ids` and `group_ids_with_any_permission` return defensive array copies. Missing permissions return `[]`, not `nil`.
 
 `AccessControlList#user_acl` builds `Acl::User` for a user:
 
@@ -89,6 +94,15 @@ guardian.has_any_acl_permission?(target, %w[edit manage])
 guardian.target_ids_with_acl_permission(TargetClass, "view")
 guardian.target_ids_with_any_acl_permissions(TargetClass, %w[view edit manage])
 ```
+
+Models that include `AclTarget` also get visibility scopes:
+
+```ruby
+Board.with_acl_permission(guardian, "view")
+Board.with_any_acl_permissions(guardian, %w[view edit manage])
+```
+
+Prefer these scopes for model index queries when they compose better with other filters. Use Guardian target-id helpers when the caller needs ids for more custom query construction.
 
 Build domain-specific Guardian methods around those helpers:
 
@@ -122,10 +136,14 @@ The concern provides:
 - `has_many :access_control_lists, as: :target, dependent: :destroy`
 - `permission_acl`, backed by `AccessControlList.where(target: self).target_acl(self)`
 - reload cache clearing for `@permission_acl`
+- `.with_acl_permission(guardian, permission)`
+- `.with_any_acl_permissions(guardian, permissions)`
 - `.acl_target_key`, defaulting to `name`
 - `.has_mandatory_acl?`
 - `.acl_is_mandatory?(acl)`
 - `mandatory_acl_as_expanded_list(owner)`
+
+`AclTarget.acl_matches?(acl_a, acl_b)` is the shared comparator for mandatory ACL matching. It normalizes `type` to symbols and compares `permission` as strings.
 
 ## Mandatory ACLs
 
@@ -145,3 +163,12 @@ Mandatory entries are consumed by both backend writes and frontend rendering:
 - `Site#access_control` exposes mandatory ACL metadata for registered targets.
 
 Keep mandatory ACLs group-based unless user ACL support has been completed end-to-end.
+
+## Stale References
+
+`flattened_list` is defensive around stale data:
+
+- Unknown `target_type` values are logged and skipped when no `for_target:` is provided.
+- Deleted groups are skipped instead of raising while flattening.
+
+This is a read-path fallback, not a substitute for validation. Validate group ids at the service/contract boundary, and rely on `Jobs::CleanupAclsForDeleted` to remove deleted group ids from persisted ACL rows.

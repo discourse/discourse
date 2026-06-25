@@ -168,7 +168,7 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.access_control_lists (
     id bigint NOT NULL,
-    target_type character varying NOT NULL,
+    target_type character varying(255) NOT NULL,
     target_id bigint NOT NULL,
     owner character varying(100) NOT NULL,
     permission character varying(100) NOT NULL,

@@ -34,6 +34,7 @@ Behavior:
 - destroys all current ACL rows for the target
 - inserts expanded ACL rows
 - logs a staff action with previous and new permission lookup data
+- reloads the target after the transaction so `AclTarget#permission_acl` is rebuilt on the caller's instance
 
 Important: the manager destructively replaces target ACL rows and does not currently authorize the actor itself. Authorize before calling it.
 
@@ -70,7 +71,7 @@ end
 
 The registry is declared as `acl_target_classes` in `DiscoursePluginRegistry`. `Site#access_control` combines loaded core `AclTarget.target_classes` with plugin-registered classes and exposes mandatory ACLs by `acl_target_key`.
 
-String registrations are allowed and resolved with `safe_constantize`; class registrations are preferred when the constant is available.
+String registrations are allowed and resolved with `safe_constantize`; class registrations are preferred when the constant is available. Unresolved strings and registered classes that do not respond to `has_mandatory_acl?` are skipped from site metadata, with unresolved strings logged for debugging.
 
 ## Site Metadata
 
@@ -106,7 +107,13 @@ def payload(target, include_acl:)
 end
 ```
 
-Use `guardian.target_ids_with_any_acl_permissions(TargetClass, permissions)` for index scopes where the user should see targets reachable through any of several permissions.
+Use `TargetClass.with_acl_permission(guardian, permission)` or `TargetClass.with_any_acl_permissions(guardian, permissions)` for index scopes where the user should see targets reachable through ACLs. Use `guardian.target_ids_with_any_acl_permissions(TargetClass, permissions)` only when the id array is the cleaner interface for a custom query.
+
+## Deleted Group Cleanup
+
+`Group#clear_acls` enqueues `Jobs::CleanupAclsForDeleted` after a group is destroyed. The job removes the deleted group id from `allowed_group_ids`, updates `updated_at`, and deletes ACL rows with no remaining `allowed_group_ids` or `allowed_user_ids`.
+
+User cleanup is not complete yet. Do not document deleted-user ACL cleanup as supported until the job handles `user_id`.
 
 ## Migrations
 
@@ -120,5 +127,6 @@ When migrating legacy permission columns into ACLs:
 ## Current Limitations
 
 - `AccessControlList.expand_list` is group-first. It does not fully handle `{ type: "user" }` authoring yet.
-- `flattened_list` expects referenced groups to exist. Validate group IDs at the service/contract boundary where user input enters.
+- `preload_allowed`, `expand_list`, cleanup, and `DAccessControl` are still group-first even though lower-level matching scopes understand `allowed_user_ids`.
+- `flattened_list` skips missing groups and unknown target classes defensively. Validate group IDs at the service/contract boundary where user input enters; do not rely on read-path skipping as data hygiene.
 - The manager has caller-side authorization. Future core work may add a target policy hook; until then, do not expose it directly to untrusted callers.
