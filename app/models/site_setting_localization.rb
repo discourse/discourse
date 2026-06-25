@@ -10,27 +10,9 @@ class SiteSettingLocalization < ActiveRecord::Base
     "site_description" => {
       max_length: 1000,
     },
-    "short_site_description" => {
-      max_length: 255,
-    },
     "extended_site_description" => {
       cooked: true,
       max_length: 10_000,
-    },
-    "community_owner" => {
-      max_length: 300,
-    },
-    "company_name" => {
-      max_length: 255,
-    },
-    "company_url" => {
-      max_length: 2048,
-    },
-    "governing_law" => {
-      max_length: 255,
-    },
-    "city_for_disputes" => {
-      max_length: 255,
     },
   }.freeze
 

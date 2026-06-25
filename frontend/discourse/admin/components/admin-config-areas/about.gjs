@@ -227,40 +227,40 @@ export default class AdminConfigAreasAbout extends Component {
                 />
               </:content>
             </AdminConfigAreaCard>
-            <AdminConfigAreaCard
-              @heading="admin.config_areas.about.contact_information"
-              @collapsable={{true}}
-              class="admin-config-area-about__contact-information-section"
-            >
-              <:content>
-                <AdminConfigAreasAboutContactInformation
-                  @contactInformation={{this.contactInformation}}
-                  @localizations={{this.localizations}}
-                  @locale={{this.selectedLocale}}
-                  @isDefaultLocale={{this.isDefaultLocale}}
-                  @setGlobalSavingStatus={{this.setSavingStatus}}
-                  @globalSavingStatus={{this.saving}}
-                />
-              </:content>
-            </AdminConfigAreaCard>
-            <AdminConfigAreaCard
-              @heading="admin.config_areas.about.your_organization"
-              @description="admin.config_areas.about.your_organization_description"
-              @collapsable={{true}}
-              class="admin-config-area-about__your-organization-section"
-            >
-              <:content>
-                <AdminConfigAreasAboutYourOrganization
-                  @yourOrganization={{this.yourOrganization}}
-                  @localizations={{this.localizations}}
-                  @locale={{this.selectedLocale}}
-                  @isDefaultLocale={{this.isDefaultLocale}}
-                  @setGlobalSavingStatus={{this.setSavingStatus}}
-                  @globalSavingStatus={{this.saving}}
-                />
-              </:content>
-            </AdminConfigAreaCard>
             {{#if this.isDefaultLocale}}
+              <AdminConfigAreaCard
+                @heading="admin.config_areas.about.contact_information"
+                @collapsable={{true}}
+                class="admin-config-area-about__contact-information-section"
+              >
+                <:content>
+                  <AdminConfigAreasAboutContactInformation
+                    @contactInformation={{this.contactInformation}}
+                    @localizations={{this.localizations}}
+                    @locale={{this.selectedLocale}}
+                    @isDefaultLocale={{this.isDefaultLocale}}
+                    @setGlobalSavingStatus={{this.setSavingStatus}}
+                    @globalSavingStatus={{this.saving}}
+                  />
+                </:content>
+              </AdminConfigAreaCard>
+              <AdminConfigAreaCard
+                @heading="admin.config_areas.about.your_organization"
+                @description="admin.config_areas.about.your_organization_description"
+                @collapsable={{true}}
+                class="admin-config-area-about__your-organization-section"
+              >
+                <:content>
+                  <AdminConfigAreasAboutYourOrganization
+                    @yourOrganization={{this.yourOrganization}}
+                    @localizations={{this.localizations}}
+                    @locale={{this.selectedLocale}}
+                    @isDefaultLocale={{this.isDefaultLocale}}
+                    @setGlobalSavingStatus={{this.setSavingStatus}}
+                    @globalSavingStatus={{this.saving}}
+                  />
+                </:content>
+              </AdminConfigAreaCard>
               <AdminConfigAreaCard
                 @heading="admin.config_areas.about.extra_groups.heading"
                 @description="admin.config_areas.about.extra_groups.description"

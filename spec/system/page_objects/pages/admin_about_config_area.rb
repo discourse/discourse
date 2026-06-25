@@ -33,6 +33,14 @@ module PageObjects
         has_no_css?(".admin-config-area-about__extra-groups-section")
       end
 
+      def has_no_contact_information_section?
+        has_no_css?(".admin-config-area-about__contact-information-section")
+      end
+
+      def has_no_your_organization_section?
+        has_no_css?(".admin-config-area-about__your-organization-section")
+      end
+
       def has_language_toolbar?
         has_css?(".admin-config-area__primary-content > .admin-config-area-about__language-toolbar")
       end

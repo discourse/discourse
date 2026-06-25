@@ -99,7 +99,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
       return setting.value;
     }
 
-    return this.args.localizations?.[settingName]?.value ?? setting.value;
+    return this.args.localizations?.[settingName]?.value ?? "";
   }
 
   <template>

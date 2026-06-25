@@ -68,7 +68,7 @@ describe Admin::Config::AboutController do
   end
 
   describe "#update_localizations" do
-    it "saves localized about settings" do
+    it "saves localized about settings and logs the change" do
       put "/admin/config/about/localizations.json",
           params: {
             locale: "ja",
@@ -95,10 +95,22 @@ describe Admin::Config::AboutController do
       expect(
         response.parsed_body.dig("localizations", "extended_site_description", "cooked"),
       ).to include("<strong>詳細</strong>")
-      expect(response.parsed_body["localizations"].keys).not_to include(
-        "about_banner_image",
-        "contact_email",
+
+      expect(response.parsed_body["localizations"].keys).to contain_exactly(
+        "extended_site_description",
+        "site_description",
+        "title",
       )
+
+      staff_action_log = UserHistory.where(action: UserHistory.actions[:custom_staff]).last
+
+      aggregate_failures do
+        expect(staff_action_log.custom_type).to eq("update_site_setting_localizations")
+        expect(staff_action_log.details).to include("locale: ja")
+        expect(staff_action_log.details).to include(
+          "setting_names: extended_site_description|site_description|title",
+        )
+      end
     end
 
     it "removes a localization when the value is blank" do

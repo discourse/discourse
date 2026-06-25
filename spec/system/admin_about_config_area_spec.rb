@@ -284,32 +284,23 @@ describe "Admin About Config Area Page" do
       config_area.select_locale("ja")
 
       expect(config_area.general_settings_section).to have_no_banner_image_field
-      expect(config_area.contact_information_section).to have_translation_fields_only
+      expect(config_area.general_settings_section).to have_no_community_title_field
+      expect(config_area).to have_no_contact_information_section
+      expect(config_area).to have_no_your_organization_section
       expect(config_area).to have_no_group_listing_section
       expect(config_area).to have_locale_description
 
       config_area.general_settings_section.community_name_input.fill_in("日本語コミュニティ")
       config_area.general_settings_section.community_summary_input.fill_in("日本語の概要")
       config_area.general_settings_section.community_description_editor.fill_in("日本語の **詳細** 説明")
-      config_area.general_settings_section.community_title_input.fill_in("日本語の短い説明")
       config_area.general_settings_section.submit
       expect(config_area.general_settings_section).to have_saved_successfully
-
-      config_area.contact_information_section.community_owner_input.fill_in("日本語の所有者")
-      config_area.contact_information_section.submit
-      expect(config_area.contact_information_section).to have_saved_successfully
-
-      config_area.your_organization_section.company_name_input.fill_in("日本語会社")
-      config_area.your_organization_section.submit
-      expect(config_area.your_organization_section).to have_saved_successfully
 
       page.refresh
       config_area.select_locale("ja")
 
       expect(config_area.general_settings_section.community_name_input.value).to eq("日本語コミュニティ")
       expect(config_area.general_settings_section.community_summary_input.value).to eq("日本語の概要")
-      expect(config_area.contact_information_section.community_owner_input.value).to eq("日本語の所有者")
-      expect(config_area.your_organization_section.company_name_input.value).to eq("日本語会社")
 
       sign_in(Fabricate(:user, locale: "ja"))
       about_page.visit

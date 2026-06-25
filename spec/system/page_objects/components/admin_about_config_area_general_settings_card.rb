@@ -27,6 +27,10 @@ module PageObjects
         form.has_no_field_with_name?("aboutBannerImage")
       end
 
+      def has_no_community_title_field?
+        form.has_no_field_with_name?("communityTitle")
+      end
+
       def submit
         form.submit
       end

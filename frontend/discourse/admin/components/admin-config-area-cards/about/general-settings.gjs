@@ -22,10 +22,7 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         "extended_site_description",
         this.args.generalSettings.extendedSiteDescription
       ),
-      communityTitle: this.#settingValue(
-        "short_site_description",
-        this.args.generalSettings.communityTitle
-      ),
+      communityTitle: this.args.generalSettings.communityTitle.value,
       aboutBannerImage: this.args.generalSettings.aboutBannerImage.value,
     };
   }
@@ -72,12 +69,12 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         name: data.name,
         summary: data.summary,
         extended_description: data.extendedDescription,
-        community_title: data.communityTitle,
       },
     };
 
     if (this.args.isDefaultLocale) {
       payload.general_settings.about_banner_image = data.aboutBannerImage;
+      payload.general_settings.community_title = data.communityTitle;
     }
 
     return payload;
@@ -132,16 +129,18 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         <field.Control />
       </form.Field>
 
-      <form.Field
-        @name="communityTitle"
-        @title={{i18n "admin.config_areas.about.community_title"}}
-        @description={{i18n "admin.config_areas.about.community_title_help"}}
-        @format="large"
-        @type="input"
-        as |field|
-      >
-        <field.Control />
-      </form.Field>
+      {{#if @isDefaultLocale}}
+        <form.Field
+          @name="communityTitle"
+          @title={{i18n "admin.config_areas.about.community_title"}}
+          @description={{i18n "admin.config_areas.about.community_title_help"}}
+          @format="large"
+          @type="input"
+          as |field|
+        >
+          <field.Control />
+        </form.Field>
+      {{/if}}
 
       {{#if @isDefaultLocale}}
         <form.Field

@@ -8,16 +8,6 @@ class Admin::Config::AboutController < Admin::AdminController
       name: "title",
       summary: "site_description",
       extended_description: "extended_site_description",
-      community_title: "short_site_description",
-    },
-    contact_information: {
-      community_owner: "community_owner",
-    },
-    your_organization: {
-      company_name: "company_name",
-      company_url: "company_url",
-      governing_law: "governing_law",
-      city_for_disputes: "city_for_disputes",
     },
   }.freeze
 
@@ -32,9 +22,10 @@ class Admin::Config::AboutController < Admin::AdminController
 
   def update_localizations
     locale = localization_locale
+    settings = localization_settings_from_params
 
     SiteSettingLocalization.transaction do
-      localization_settings_from_params.each do |setting|
+      settings.each do |setting|
         if setting[:value].blank?
           SiteSettingLocalization.where(setting_name: setting[:setting_name], locale:).destroy_all
         else
@@ -49,6 +40,8 @@ class Admin::Config::AboutController < Admin::AdminController
         end
       end
     end
+
+    log_localization_update(locale, settings) if settings.present?
 
     render json: localization_payload(locale)
   end
@@ -204,5 +197,13 @@ class Admin::Config::AboutController < Admin::AdminController
         end
 
     { locale:, localizations: }
+  end
+
+  def log_localization_update(locale, settings)
+    StaffActionLogger.new(current_user).log_custom(
+      "update_site_setting_localizations",
+      locale:,
+      setting_names: settings.map { |setting| setting[:setting_name] }.uniq.sort.join("|"),
+    )
   end
 end
