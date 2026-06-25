@@ -1,58 +1,15 @@
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { render, settled, triggerEvent } from "@ember/test-helpers";
+import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import {
+  centerOf,
+  dragEvent,
+  simulateDrag,
+} from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
-
-/** Center-point client coords of an element, for realistic drag events. */
-function centerOf(selector) {
-  const r = document.querySelector(selector).getBoundingClientRect();
-  return { clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 };
-}
-
-/**
- * Awaits one real animation frame. PDND batches its `onDragStart` and
- * `onDrag` consumer callbacks through `requestAnimationFrame` (via
- * `raf-schd`). Ember's `settled()` does not pump animation frames, so
- * immediately after a synthetic `dragstart` / `dragover` those callbacks
- * have not fired yet — and the `is-dragging` class (set in the source's
- * `onDragStart`) lags with them. Awaiting a frame lets the batched
- * callbacks run; our frame resolves after PDND's already-queued one, so
- * the queued callback is guaranteed to have fired.
- *
- * @returns {Promise<void>}
- */
-function flushFrame() {
-  return new Promise((resolve) => requestAnimationFrame(resolve));
-}
-
-/**
- * Drives a full HTML5 drag/drop cycle between a source and a target
- * through the test runner. PDND wraps the native DnD events under the
- * hood, so its callbacks fire when the matching DOM events are
- * dispatched. Every event carries finite client coords — the drag
- * monitor resolves the pointer via `elementsFromPoint`, which throws on
- * non-finite values (a real drag always has coords). A frame is flushed
- * after `dragstart` so the rAF-batched `onDragStart` fires before the move.
- *
- * @param {string} sourceSelector CSS selector for the source element.
- * @param {string} targetSelector CSS selector for the target element.
- * @param {{ dataTransfer: DataTransfer }} options Shared payload that
- *   must travel across every event so PDND can correlate them.
- * @returns {Promise<void>}
- */
-async function dragFromTo(sourceSelector, targetSelector, { dataTransfer }) {
-  const src = centerOf(sourceSelector);
-  const tgt = centerOf(targetSelector);
-  await triggerEvent(sourceSelector, "dragstart", { dataTransfer, ...src });
-  await flushFrame();
-  await triggerEvent(targetSelector, "dragenter", { dataTransfer, ...tgt });
-  await triggerEvent(targetSelector, "dragover", { dataTransfer, ...tgt });
-  await triggerEvent(targetSelector, "drop", { dataTransfer, ...tgt });
-  await triggerEvent(sourceSelector, "dragend", { dataTransfer, ...src });
-}
 
 module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
   setupRenderingTest(hooks);
@@ -75,7 +32,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     );
 
     const dataTransfer = new DataTransfer();
-    await dragFromTo("#src", "#tgt", { dataTransfer });
+    await simulateDrag("#src", "#tgt", { dataTransfer });
 
     assert.strictEqual(drops.length, 1, "onDrop fires once");
     assert.strictEqual(drops[0].position, "before");
@@ -103,7 +60,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     );
 
     const dataTransfer = new DataTransfer();
-    await dragFromTo("#src", "#tgt", { dataTransfer });
+    await simulateDrag("#src", "#tgt", { dataTransfer });
 
     assert.false(dropped, "onDrop is not called for foreign types");
   });
@@ -119,19 +76,9 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     );
 
     const dataTransfer = new DataTransfer();
-    await triggerEvent("#src", "dragstart", {
-      dataTransfer,
-      ...centerOf("#src"),
-    });
-    // The `is-dragging` class is applied in the source's `onDragStart`, which
-    // PDND batches through `requestAnimationFrame`. Flush a frame so it has
-    // fired before we assert (`settled()` alone does not pump frames).
-    await flushFrame();
+    await dragEvent("#src", "dragstart", { dataTransfer, ...centerOf("#src") });
     assert.dom("#src").hasClass("is-dragging");
-    await triggerEvent("#src", "dragend", {
-      dataTransfer,
-      ...centerOf("#src"),
-    });
+    await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
     assert.dom("#src").doesNotHaveClass("is-dragging");
   });
 
@@ -157,52 +104,43 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     const target = document.querySelector("#tgt");
     const rect = target.getBoundingClientRect();
 
-    await triggerEvent("#src", "dragstart", {
-      dataTransfer,
-      ...centerOf("#src"),
-    });
-    await triggerEvent("#tgt", "dragenter", {
-      dataTransfer,
-      ...centerOf("#tgt"),
-    });
-    await triggerEvent("#tgt", "dragover", {
+    await dragEvent("#src", "dragstart", { dataTransfer, ...centerOf("#src") });
+    await dragEvent("#tgt", "dragenter", { dataTransfer, ...centerOf("#tgt") });
+    await dragEvent("#tgt", "dragover", {
       dataTransfer,
       clientY: rect.top + 5,
       clientX: rect.left + 5,
     });
-    await triggerEvent("#tgt", "drop", {
+    await dragEvent("#tgt", "drop", {
       dataTransfer,
       clientY: rect.top + 5,
       clientX: rect.left + 5,
     });
-    await triggerEvent("#src", "dragend", {
-      dataTransfer,
-      ...centerOf("#src"),
-    });
+    await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
 
     assert.strictEqual(drops.at(-1).position, "before");
 
     drops.length = 0;
     const dataTransfer2 = new DataTransfer();
-    await triggerEvent("#src", "dragstart", {
+    await dragEvent("#src", "dragstart", {
       dataTransfer: dataTransfer2,
       ...centerOf("#src"),
     });
-    await triggerEvent("#tgt", "dragenter", {
+    await dragEvent("#tgt", "dragenter", {
       dataTransfer: dataTransfer2,
       ...centerOf("#tgt"),
     });
-    await triggerEvent("#tgt", "dragover", {
+    await dragEvent("#tgt", "dragover", {
       dataTransfer: dataTransfer2,
       clientY: rect.top + rect.height - 5,
       clientX: rect.left + 5,
     });
-    await triggerEvent("#tgt", "drop", {
+    await dragEvent("#tgt", "drop", {
       dataTransfer: dataTransfer2,
       clientY: rect.top + rect.height - 5,
       clientX: rect.left + 5,
     });
-    await triggerEvent("#src", "dragend", {
+    await dragEvent("#src", "dragend", {
       dataTransfer: dataTransfer2,
       ...centerOf("#src"),
     });
@@ -243,8 +181,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     );
 
     const dataTransfer = new DataTransfer();
-    await dragFromTo("#src", "#inner", { dataTransfer });
-    await settled();
+    await simulateDrag("#src", "#inner", { dataTransfer });
 
     assert.deepEqual(
       events,
@@ -283,7 +220,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     );
 
     let dataTransfer = new DataTransfer();
-    await dragFromTo("#src-row", "#tgt", { dataTransfer });
+    await simulateDrag("#src-row", "#tgt", { dataTransfer });
     assert.strictEqual(
       state.dropped,
       "row",
@@ -295,7 +232,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     await settled();
 
     dataTransfer = new DataTransfer();
-    await dragFromTo("#src-row", "#tgt", { dataTransfer });
+    await simulateDrag("#src-row", "#tgt", { dataTransfer });
     assert.strictEqual(
       state.dropped,
       null,
@@ -303,7 +240,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     );
 
     dataTransfer = new DataTransfer();
-    await dragFromTo("#src-card", "#tgt", { dataTransfer });
+    await simulateDrag("#src-card", "#tgt", { dataTransfer });
     assert.strictEqual(
       state.dropped,
       "card",
@@ -328,14 +265,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     assert.false(dnd.isDragging, "no drag in flight before dragstart");
 
     const dataTransfer = new DataTransfer();
-    await triggerEvent("#src", "dragstart", {
-      dataTransfer,
-      ...centerOf("#src"),
-    });
-    // The service populates `currentDrag` from its monitor's `onDragStart`,
-    // which PDND batches through `requestAnimationFrame`. Flush a frame so it
-    // has fired before we read the drag state.
-    await flushFrame();
+    await dragEvent("#src", "dragstart", { dataTransfer, ...centerOf("#src") });
 
     assert.true(dnd.isDragging, "isDragging is true during the drag");
     assert.true(dnd.accepts("row"), "accepts the in-flight type");
@@ -352,10 +282,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       "currentDrag.element is the source element"
     );
 
-    await triggerEvent("#src", "dragend", {
-      dataTransfer,
-      ...centerOf("#src"),
-    });
+    await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
 
     assert.strictEqual(dnd.currentDrag, null, "cleared once the drag ends");
     assert.false(dnd.isDragging, "isDragging is false after the drag");
@@ -375,29 +302,14 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     );
 
     const dataTransfer = new DataTransfer();
-    await triggerEvent("#src", "dragstart", {
-      dataTransfer,
-      ...centerOf("#src"),
-    });
-    // Flush the frame PDND batches `onDragStart` into, so `currentDrag` is set
-    // before we capture the reference.
-    await flushFrame();
+    await dragEvent("#src", "dragstart", { dataTransfer, ...centerOf("#src") });
     const first = dnd.currentDrag;
-    await triggerEvent("#src", "dragover", {
-      dataTransfer,
-      ...centerOf("#src"),
-    });
-    // And the frame `onDrag` is batched into, so any per-move rebuild of
-    // `currentDrag` would have happened before we re-read the reference.
-    await flushFrame();
+    await dragEvent("#src", "dragover", { dataTransfer, ...centerOf("#src") });
     assert.strictEqual(
       dnd.currentDrag,
       first,
       "the reference is unchanged across drag moves"
     );
-    await triggerEvent("#src", "dragend", {
-      dataTransfer,
-      ...centerOf("#src"),
-    });
+    await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
   });
 });
