@@ -208,8 +208,14 @@ export default class Carousel extends Component {
         presentations match. In an editing context the nav controls carry a
         data attribute the editing tooling reads to let their clicks page the
         track instead of treating them as a block selection; the attribute is
-        omitted on the live page. }}
-    <div class="d-block-carousel" style={{this.viewStyle}}>
+        omitted on the live page. The root also carries a marker so the tooling
+        can locate this carousel from one of its controls (walking from a
+        control to the root, then to the marked viewport). }}
+    <div
+      class="d-block-carousel"
+      style={{this.viewStyle}}
+      data-wf-carousel={{if this.isEditing "true"}}
+    >
       {{! In an editing context the viewport is marked as the drop container so
           in-session editing tooling projects drops onto the slides directly
           (the slides are nested one level below, so the generic
@@ -241,7 +247,14 @@ export default class Carousel extends Component {
       </div>
 
       {{#unless this.isSingle}}
-        <div class="d-block-carousel__controls">
+        {{! In an editing context the controls strip is marked as excluded from
+            drops, so in-session editing tooling neither previews nor lands a
+            drop on the nav controls (they page the track instead). Omitted on
+            the live page. }}
+        <div
+          class="d-block-carousel__controls"
+          data-wf-drop-exclude={{if this.isEditing "true"}}
+        >
           <button
             type="button"
             class="d-block-carousel__nav d-block-carousel__nav--prev"
@@ -262,6 +275,7 @@ export default class Carousel extends Component {
                   aria-label={{i18n "carousel.go_to_slide" index=index}}
                   aria-current={{if (eq this.currentIndex index) "true"}}
                   data-wf-carousel-nav={{if this.isEditing "true"}}
+                  data-wf-carousel-slide-index={{if this.isEditing index}}
                   {{on "click" (fn this.scrollToIndex index)}}
                 ></button>
               {{/each}}

@@ -96,6 +96,7 @@ import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
 import { _clearSnapshots } from "discourse/select-kit/components/composer-actions";
 import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
+import { resetDragAndDropForTesting } from "discourse/services/drag-and-drop";
 import {
   clearDisabledDefaultKeyboardBindings,
   clearExtraKeyboardShortcutHelp,
@@ -287,6 +288,7 @@ export function testCleanup(container, app) {
   _resetOutletLayoutsForTesting();
   resetBlockRegistryForTesting();
   resetDebugCallbacks();
+  resetDragAndDropForTesting();
 }
 
 function cleanupCssGeneratorTags() {

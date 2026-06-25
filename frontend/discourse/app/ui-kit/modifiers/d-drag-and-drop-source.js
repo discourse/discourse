@@ -1,7 +1,6 @@
 // @ts-check
 import { registerDestructor } from "@ember/destroyable";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import Modifier from "ember-modifier";
 
@@ -147,8 +146,6 @@ function registerDragAndDropSource(element, getArgsRef) {
  * `app/assets/stylesheets/common/foundation/draggable.scss`.
  */
 export default class DDragAndDropSourceModifier extends Modifier {
-  @service dragAndDrop;
-
   #cleanup = null;
   #element = null;
   #args = {};
@@ -169,26 +166,11 @@ export default class DDragAndDropSourceModifier extends Modifier {
       return;
     }
 
-    // Wrap the consumer's onDragStart / onDrop so the dragAndDrop
-    // service sees setCurrentDrag / clearCurrentDrag bracketed around
-    // the consumer's callbacks. The service interaction lives in the
-    // modifier (which has the `@service` injection); the helper
-    // itself is service-free.
-    const consumerOnDragStart = args.onDragStart;
-    const consumerOnDrop = args.onDrop;
-    this.#args = {
-      ...args,
-      onDragStart: (payload) => {
-        this.dragAndDrop.setCurrentDrag(payload.source);
-        consumerOnDragStart?.(payload);
-      },
-      onDrop: (payload) => {
-        // Runs after the helper's `next()` deferral — past PDND's full
-        // drop dispatch.
-        this.dragAndDrop.clearCurrentDrag();
-        consumerOnDrop?.(payload);
-      },
-    };
+    // The dragAndDrop service observes element drags first-hand via its own
+    // `monitorForElements`, so this modifier no longer brackets the consumer
+    // callbacks with setCurrentDrag / clearCurrentDrag — it passes them
+    // through. The helper stays service-free.
+    this.#args = args;
 
     if (!this.#cleanup) {
       this.#cleanup = registerDragAndDropSource(element, () => this.#args);

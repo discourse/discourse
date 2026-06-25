@@ -9,6 +9,7 @@ import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
+import dDragAndDropMonitor from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
 import { i18n } from "discourse-i18n";
 
 const VE_DRAG_TYPES = ["wf-block", "wf-palette-block"];
@@ -35,6 +36,7 @@ import SimulationControls from "./simulation-controls";
  */
 export default class EditorShell extends Component {
   @service wireframe;
+  @service wireframeCarouselDragNav;
 
   @tracked warningsPanelOpen = false;
   @tracked leftPanelTab = "palette";
@@ -139,6 +141,12 @@ export default class EditorShell extends Component {
         class={{this.shellClasses}}
         {{didInsert this.setupBodyClasses}}
         {{dDragAndDropAutoScroll target="window" types=VE_DRAG_TYPES}}
+        {{dDragAndDropMonitor
+          types=VE_DRAG_TYPES
+          onDragStart=this.wireframeCarouselDragNav.handleDragStart
+          onDrag=this.wireframeCarouselDragNav.handleDrag
+          onDrop=this.wireframeCarouselDragNav.handleDrop
+        }}
       >
         {{! Mounts a ProseMirror editor over whichever inline-edit region is
             active. Rendered as a no-DOM controller — its only visible output

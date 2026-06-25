@@ -3,6 +3,7 @@ import { registerDestructor } from "@ember/destroyable";
 import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 import { LAYOUT_MERGED_CELL_BLOCK } from "discourse/blocks";
+import { registerDragAndDropAutoScroll } from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 import { resolveLinearDrop } from "discourse/plugins/discourse-wireframe/discourse/lib/linear-drop";
@@ -54,6 +55,7 @@ const EDGE_BAND = 12;
 export default class ContainerDropTargetModifier extends Modifier {
   @service wireframe;
 
+  #autoScrollCleanup = null;
   #cleanup = null;
 
   constructor(owner, args) {
@@ -166,6 +168,9 @@ export default class ContainerDropTargetModifier extends Modifier {
     };
 
     const descriptorFor = (source, input) => {
+      if (isOverExcludedRegion(chromeElement, input)) {
+        return null;
+      }
       if (isCell) {
         return buildCellChromeDescriptor({
           wireframe,
@@ -195,22 +200,63 @@ export default class ContainerDropTargetModifier extends Modifier {
       accepts: ACCEPTED_KINDS,
       indicator: false,
       canDrop: ({ input }) => !shouldDeferToParent(input),
-      onDragEnter: ({ source, location }) =>
+      onDragEnter: ({ source, location }) => {
+        // A container that declares a scroll axis (e.g. a horizontal slide
+        // track) auto-scrolls when the cursor nears its edge, so a drag can
+        // reach an off-screen child. Registered lazily on first entry — the
+        // inner scroll element is resolved and present by drag time — and
+        // cleared on detach.
+        this.#enableAutoScroll(resolveContainer());
         wireframe.setActiveDropPreview(
           descriptorFor(source, location.current.input)
-        ),
+        );
+      },
       onDrag: ({ source, location }) =>
         wireframe.setActiveDropPreview(
           descriptorFor(source, location.current.input)
         ),
       onDragLeave: () => wireframe.clearActiveDropPreview(),
-      onDrop: () => wireframe.dispatchActiveDrop(),
+      onDrop: ({ location }) => {
+        // A release over an excluded region (e.g. the nav controls) is not a
+        // drop — `endDrag` clears the sticky descriptor afterwards, so nothing
+        // stale dispatches.
+        if (isOverExcludedRegion(chromeElement, location.current.input)) {
+          return;
+        }
+        wireframe.dispatchActiveDrop();
+      },
+    }));
+  }
+
+  /**
+   * Registers PDND auto-scroll on a container that declares a scroll axis
+   * (`data-wf-drop-axis`), so dragging toward its edge reveals off-screen
+   * children. A no-op for containers without an axis (the common stack/cell
+   * case) and idempotent — registered at most once per drag, then cleared on
+   * detach. PDND auto-scroll only engages while a matching drag is in flight,
+   * so leaving it registered for the rest of the drag is harmless.
+   *
+   * @param {HTMLElement|null} container - The resolved scroll element.
+   */
+  #enableAutoScroll(container) {
+    if (this.#autoScrollCleanup || !container?.dataset?.wfDropAxis) {
+      return;
+    }
+    const axis =
+      container.dataset.wfDropAxis === "x" ? "horizontal" : "vertical";
+    this.#autoScrollCleanup = registerDragAndDropAutoScroll(() => ({
+      types: ACCEPTED_KINDS,
+      axis,
+      target: "element",
+      element: container,
     }));
   }
 
   #detach() {
     this.#cleanup?.();
     this.#cleanup = null;
+    this.#autoScrollCleanup?.();
+    this.#autoScrollCleanup = null;
   }
 }
 
@@ -345,6 +391,33 @@ export function isInEdgeBand(rect, input, band = EDGE_BAND) {
     input.clientX < rect.left + band ||
     input.clientX > rect.right - band
   );
+}
+
+/**
+ * Is `input` over a region the container marked as excluded from drops with
+ * `data-wf-drop-exclude` (e.g. a carousel's nav controls, which page the track
+ * rather than accept a drop)? When true, the modifier produces no drop preview
+ * and a release dispatches nothing.
+ *
+ * Scoped to markers belonging to THIS chrome (`.closest(".wireframe-block-chrome")`
+ * === `chromeElement`) so a nested container's exclusion isn't picked up.
+ *
+ * @param {HTMLElement} chromeElement
+ * @param {{clientX: number, clientY: number}} input
+ * @returns {boolean}
+ */
+export function isOverExcludedRegion(chromeElement, input) {
+  return Array.from(chromeElement.querySelectorAll("[data-wf-drop-exclude]"))
+    .filter((el) => el.closest(".wireframe-block-chrome") === chromeElement)
+    .some((el) => {
+      const rect = el.getBoundingClientRect();
+      return (
+        input.clientX >= rect.left &&
+        input.clientX <= rect.right &&
+        input.clientY >= rect.top &&
+        input.clientY <= rect.bottom
+      );
+    });
 }
 
 /**

@@ -4,6 +4,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   computeDescriptor,
   isInEdgeBand,
+  isOverExcludedRegion,
 } from "discourse/plugins/discourse-wireframe/discourse/modifiers/container-drop-target";
 
 // These render real DOM at known geometry and drive the EXPORTED resolution
@@ -472,6 +473,88 @@ module(
       );
       assert.strictEqual(end.dispatch.args.targetKey, "C");
       assert.strictEqual(end.dispatch.args.position, "after");
+    });
+
+    /*
+     * Excluded region. A container can carve a sub-region out of its drop
+     * target with `data-wf-drop-exclude` (e.g. a carousel's nav controls). Over
+     * that region there is no preview and a release dispatches nothing — it's
+     * reserved for the block's own interaction (paging the track).
+     *   ┌── chrome ──────────────┐
+     *   │ ░░░░ viewport ░░░░░░░░  │  ← normal drop area
+     *   ├────────────────────────┤
+     *   │ ▓▓ controls (excluded) │  ← data-wf-drop-exclude
+     *   └────────────────────────┘
+     */
+    test("excluded region: reported over the marked strip, not over the drop area", async function (assert) {
+      await render(
+        <template>
+          <div
+            id="chrome"
+            class="wireframe-block-chrome"
+            style="position: fixed; top: 0; left: 0; width: 200px;"
+          >
+            <div data-wf-drop-container="true" style="height: 80px;">
+              <div id="viewport"></div>
+            </div>
+            <div
+              id="controls"
+              data-wf-drop-exclude="true"
+              style="height: 40px;"
+            ></div>
+          </div>
+        </template>
+      );
+      const chrome = document.querySelector("#chrome");
+      const controls = rectOf("#controls");
+      const dropArea = rectOf("[data-wf-drop-container]");
+
+      assert.true(
+        isOverExcludedRegion(chrome, {
+          clientX: controls.left + controls.width / 2,
+          clientY: controls.top + controls.height / 2,
+        }),
+        "cursor over the excluded controls is reported excluded"
+      );
+      assert.false(
+        isOverExcludedRegion(chrome, {
+          clientX: dropArea.left + dropArea.width / 2,
+          clientY: dropArea.top + dropArea.height / 2,
+        }),
+        "cursor over the normal drop area is not excluded"
+      );
+    });
+
+    test("excluded region: scoped to this chrome — a nested chrome's exclusion is ignored", async function (assert) {
+      await render(
+        <template>
+          <div
+            id="outer"
+            class="wireframe-block-chrome"
+            style="position: fixed; top: 0; left: 0; width: 200px;"
+          >
+            <div class="wireframe-block-chrome" style="height: 60px;">
+              <div
+                id="inner-controls"
+                data-wf-drop-exclude="true"
+                style="height: 60px;"
+              ></div>
+            </div>
+          </div>
+        </template>
+      );
+      const outer = document.querySelector("#outer");
+      const innerControls = rectOf("#inner-controls");
+
+      // The exclusion belongs to the NESTED chrome, so the outer chrome must
+      // not treat the cursor there as excluded.
+      assert.false(
+        isOverExcludedRegion(outer, {
+          clientX: innerControls.left + innerControls.width / 2,
+          clientY: innerControls.top + innerControls.height / 2,
+        }),
+        "a nested chrome's excluded region is not the outer chrome's concern"
+      );
     });
 
     test("noun-framed: nesting into a slide keeps the dragged block's name", async function (assert) {

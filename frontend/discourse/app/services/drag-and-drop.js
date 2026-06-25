@@ -2,6 +2,7 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import Service from "@ember/service";
+import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { monitorForExternal } from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
 import {
   containsFiles,
@@ -66,11 +67,10 @@ const EXTERNAL_KIND_PREDICATES = Object.freeze({
  * (files, URLs, HTML, text entering the window from outside) wired
  * via `dDragAndDropExternalTarget`.
  *
- * Element drag state is populated by `dDragAndDropSource` (which
- * already injects this service). External drag state is populated by
- * a singleton PDND `monitorForExternal` the service registers on
- * construction — per-element modifiers don't each carry their own
- * monitor; this is the one observer.
+ * Both element and external drag state are populated first-hand by
+ * singleton PDND monitors the service registers on construction
+ * (`monitorForElements` / `monitorForExternal`) — per-element modifiers
+ * don't each carry their own monitor; these are the observers.
  *
  * Lives as a service rather than a module slot so test setup
  * (`setupTest` / `setupRenderingTest`) gets a fresh instance per test,
@@ -85,13 +85,38 @@ export default class DragAndDropService extends Service {
 
   constructor() {
     super(...arguments);
-    // PDND's external adapter already binds its window-level listeners
-    // on module import (capture-phase `dragstart`); registering a
-    // monitor here just subscribes to that stream. Eager registration
-    // keeps the service's public state populated for any consumer that
-    // reads `currentExternalDrag` / `acceptsExternal(…)` without
+    // PDND's adapters bind their window-level listeners on module import;
+    // registering monitors here just subscribes to those streams. Eager
+    // registration keeps the service's public state populated for any consumer
+    // that reads `currentDrag` / `currentExternalDrag` / `accepts(…)` without
     // requiring them to opt in first.
-    const cleanup = monitorForExternal({
+    //
+    // The element monitor is the single observer of in-flight element drags —
+    // `dDragAndDropSource` no longer pushes the state; the service derives it
+    // first-hand here, mirroring the external monitor below. We only track our
+    // own drags (those whose `source.data.type` is set by `dDragAndDropSource`),
+    // so a foreign PDND draggable doesn't populate `currentDrag`.
+    const cleanupElements = monitorForElements({
+      canMonitor: ({ source }) =>
+        !this.isDestroying && !this.isDestroyed && source.data?.type != null,
+      onDragStart: ({ source }) => {
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
+        this.setCurrentDrag({
+          type: source.data.type,
+          data: source.data,
+          element: source.element,
+        });
+      },
+      onDrop: () => {
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
+        this.clearCurrentDrag();
+      },
+    });
+    const cleanupExternal = monitorForExternal({
       onDragStart: ({ source }) => {
         this.currentExternalDrag = this.#decorateExternalSource(source);
       },
@@ -99,7 +124,10 @@ export default class DragAndDropService extends Service {
         this.currentExternalDrag = null;
       },
     });
-    registerDestructor(this, () => cleanup());
+    registerDestructor(this, () => {
+      cleanupElements();
+      cleanupExternal();
+    });
   }
 
   /**
@@ -114,8 +142,8 @@ export default class DragAndDropService extends Service {
   }
 
   /**
-   * Stores the in-flight drag's payload. Called by `dDragAndDropSource`
-   * from its `onDragStart` callback.
+   * Stores the in-flight drag's payload. Called by the service's own
+   * `monitorForElements` on drag start.
    *
    * @param {DragPayload} payload
    */
@@ -124,9 +152,9 @@ export default class DragAndDropService extends Service {
   }
 
   /**
-   * Clears the in-flight drag. Called by `dDragAndDropSource` from its
-   * `onDrop` callback — fires regardless of whether the drop landed on
-   * a target or was cancelled.
+   * Clears the in-flight drag. Called by the service's own
+   * `monitorForElements` on drop — fires regardless of whether the drop
+   * landed on a target or was cancelled.
    */
   clearCurrentDrag() {
     this.currentDrag = null;
@@ -218,5 +246,30 @@ export default class DragAndDropService extends Service {
         getStringData: this.currentExternalDrag.getStringData,
       },
     });
+  }
+}
+
+/**
+ * Test-only: end any drag PDND still considers in flight.
+ *
+ * If a test starts a drag (`dragstart`) but the matching `dragend`/`drop`
+ * never reaches PDND — e.g. the source element is torn down first, or an
+ * assertion throws mid-drag — PDND's global drag state stays active and the
+ * NEXT test's `dragstart` is silently ignored (no second drag can start while
+ * one is live). Dispatching a `dragend` lets PDND's lifecycle listener tear the
+ * drag down. A no-op when nothing is in flight (the listener is only bound
+ * during a drag). Call from the global test teardown.
+ */
+export function resetDragAndDropForTesting() {
+  // PDND binds its drag-phase listeners on `window` (capture) only while a drag
+  // is active, and ends the drag from either `drop` (with no drop targets) or
+  // `dragend`. Dispatching both covers either path; both are no-ops when no
+  // drag is in flight (the listeners aren't bound).
+  const make = (type) =>
+    typeof DragEvent === "function"
+      ? new DragEvent(type, { bubbles: true })
+      : new Event(type, { bubbles: true });
+  for (const type of ["drop", "dragend"]) {
+    window.dispatchEvent(make(type));
   }
 }

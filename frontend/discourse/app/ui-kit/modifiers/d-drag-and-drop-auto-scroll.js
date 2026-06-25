@@ -6,9 +6,10 @@ import {
 import { modifier } from "ember-modifier";
 
 /**
- * Module-private helper that wraps PDND's `autoScrollForElements` /
- * `autoScrollWindowForElements` behind one shape. Called by the
- * default-exported modifier below.
+ * Wraps PDND's `autoScrollForElements` / `autoScrollWindowForElements` behind
+ * one shape. Used by the default-exported modifier below, and exported so a
+ * consumer can register auto-scroll imperatively (when a template modifier
+ * doesn't fit) without importing PDND — parallel to `registerDragAndDropMonitor`.
  *
  * Library-agnostic by design: PDND auto-scroll is imported only here.
  *
@@ -21,7 +22,7 @@ import { modifier } from "ember-modifier";
  * @returns {() => void} Cleanup function. Caller invokes it once on
  *   teardown.
  */
-function registerDragAndDropAutoScroll(getArgsRef) {
+export function registerDragAndDropAutoScroll(getArgsRef) {
   const matchesType = ({ source }) => {
     const types = getArgsRef().types;
     const list = Array.isArray(types) ? types : types ? [types] : [];
