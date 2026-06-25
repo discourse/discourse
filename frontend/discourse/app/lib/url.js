@@ -577,6 +577,20 @@ export function prefixProtocol(url) {
   return `https://${url}`;
 }
 
+export function isHttpUrl(value) {
+  const trimmed = value?.trim();
+  if (!trimmed) {
+    return false;
+  }
+
+  try {
+    const { protocol } = new URL(trimmed);
+    return protocol === "http:" || protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export function getCategoryAndTagUrl(category, subcategories, tag) {
   let url;
 

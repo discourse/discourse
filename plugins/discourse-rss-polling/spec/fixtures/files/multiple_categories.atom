@@ -11,8 +11,8 @@
 		<author>
 			<name>xrav3nz</name>
 		</author>
-		<category>spec</category>
-		<category>xrav3nz diary</category>
+		<category term="spec"/>
+		<category term="xrav3nz diary"/>
 		<link href="https://blog.discourse.org/2017/09/poll-feed-spec-fixture/" rel="alternate" type="text/html"/>
 		<published>2019-08-16T21:46:39Z</published>
 		<updated>2019-08-16T21:46:39Z</updated>
