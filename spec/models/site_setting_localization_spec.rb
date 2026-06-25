@@ -19,6 +19,17 @@ describe SiteSettingLocalization do
       )
     end
 
+    it "falls back to the site setting value when the localized value is blank" do
+      SiteSetting.site_description = "English description"
+      localization =
+        described_class.create!(setting_name: "site_description", locale: "ja", value: "日本語の説明")
+      localization.update_column(:value, "")
+
+      expect(described_class.value_for(:site_description, locale: "ja")).to eq(
+        "English description",
+      )
+    end
+
     it "falls back to a matching base locale" do
       SiteSetting.site_description = "English description"
       described_class.create!(

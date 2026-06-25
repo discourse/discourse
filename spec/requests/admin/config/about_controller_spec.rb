@@ -32,6 +32,17 @@ describe Admin::Config::AboutController do
       )
     end
 
+    it "does not return blank localizations" do
+      localization =
+        SiteSettingLocalization.create!(setting_name: "title", locale: "ja", value: "日本語タイトル")
+      localization.update_column(:value, "")
+
+      get "/admin/config/about/localizations.json", params: { locale: "ja" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["localizations"]).to be_empty
+    end
+
     it "normalizes hyphenated locale names" do
       get "/admin/config/about/localizations.json", params: { locale: "pt-BR" }
 

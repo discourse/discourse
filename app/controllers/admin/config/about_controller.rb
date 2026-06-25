@@ -197,6 +197,7 @@ class Admin::Config::AboutController < Admin::AdminController
     localizations =
       SiteSettingLocalization
         .where(locale:, setting_name: LOCALIZATION_PARAM_MAP.values.flat_map(&:values))
+        .where.not(value: "")
         .index_by(&:setting_name)
         .transform_values do |localization|
           { value: localization.value, cooked: localization.cooked }

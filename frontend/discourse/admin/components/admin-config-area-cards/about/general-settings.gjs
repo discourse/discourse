@@ -61,6 +61,10 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
     return "/admin/config/about/localizations.json";
   }
 
+  get nameValidation() {
+    return this.args.isDefaultLocale ? "required" : null;
+  }
+
   #saveData(data) {
     const payload = {
       locale: this.args.locale,
@@ -84,7 +88,7 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
       return setting.value;
     }
 
-    return this.args.localizations?.[settingName]?.value ?? setting.value;
+    return this.args.localizations?.[settingName]?.value ?? "";
   }
 
   @action
@@ -97,7 +101,7 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
       <form.Field
         @name="name"
         @title={{i18n "admin.config_areas.about.community_name"}}
-        @validation="required"
+        @validation={{this.nameValidation}}
         @format="large"
         @type="input"
         as |field|

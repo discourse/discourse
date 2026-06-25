@@ -318,6 +318,36 @@ describe "Admin About Config Area Page" do
       expect(about_page).to have_short_description("日本語の概要")
       expect(about_page).to have_extended_description("日本語の 詳細 説明")
     end
+
+    it "prevents clearing a required default field and lets admins clear a translated field" do
+      SiteSettingLocalization.create!(setting_name: "title", locale: "ja", value: "日本語コミュニティ")
+
+      config_area.visit
+
+      config_area.general_settings_section.community_name_input.fill_in("")
+      config_area.general_settings_section.submit
+
+      expect(config_area.general_settings_section.community_name_input).to have_errors(
+        I18n.t("js.form_kit.errors.required"),
+      )
+
+      config_area.select_locale("ja")
+
+      expect(config_area.general_settings_section.community_name_input.value).to eq("日本語コミュニティ")
+
+      config_area.general_settings_section.community_name_input.fill_in("")
+      config_area.general_settings_section.submit
+      expect(config_area.general_settings_section).to have_saved_successfully
+
+      page.refresh
+      config_area.select_locale("ja")
+
+      expect(config_area.general_settings_section.community_name_input.value).to eq("")
+
+      about_page.visit(locale: "ja")
+
+      expect(about_page).to have_header_title("English community")
+    end
   end
 
   it "keeps language controls hidden when content localization is disabled" do

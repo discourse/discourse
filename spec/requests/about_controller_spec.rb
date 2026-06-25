@@ -71,6 +71,19 @@ RSpec.describe AboutController do
         expect(response.parsed_body.dig("about", "description")).to eq("日本語の説明")
       end
 
+      it "falls back to default values when a localized value is blank" do
+        SiteSettingLocalization.find_by!(setting_name: "title", locale: "ja").update_column(
+          :value,
+          "",
+        )
+
+        get "/about.json", params: { Discourse::LOCALE_PARAM => "ja" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("about", "title")).to eq("English title")
+        expect(response.parsed_body.dig("about", "description")).to eq("日本語の説明")
+      end
+
       it "uses localized values in crawler metadata" do
         get "/about",
             params: {

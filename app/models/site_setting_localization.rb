@@ -66,7 +66,7 @@ class SiteSettingLocalization < ActiveRecord::Base
       if cooked
         localization.cooked.presence || fallback
       else
-        localization.value
+        localization.value.presence || fallback
       end
     end
 
