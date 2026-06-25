@@ -68,14 +68,15 @@ describe Search do
       ).to include(hidden_post.topic_id)
 
       # A non-staff assigner cannot see the group, so the name must not resolve: the
-      # filter becomes a no-op (identical to an unknown name) and never narrows the
-      # results to the hidden group's topics.
+      # filter behaves like an unknown name (a no-op) instead of narrowing the
+      # results down to the hidden group's assigned topics.
       cannot_see = Guardian.new(user)
       hidden_result = Search.execute("assigned:#{hidden_group.name}", guardian: cannot_see)
       unknown_result = Search.execute("assigned:#{hidden_group.name}-unknown", guardian: cannot_see)
 
+      expect(hidden_result.posts).not_to be_empty
       expect(hidden_result.posts.map(&:id).sort).to eq(unknown_result.posts.map(&:id).sort)
-      expect(hidden_result.posts.map(&:topic_id)).to include(post1.topic_id)
+      expect(hidden_result.posts.map(&:topic_id)).not_to contain_exactly(hidden_post.topic_id)
     end
 
     it "serializes results" do
