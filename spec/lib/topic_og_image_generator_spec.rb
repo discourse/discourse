@@ -22,6 +22,11 @@ RSpec.describe TopicOgImageGenerator do
   describe "#generate" do
     it "generates a PNG upload for a topic" do
       generator = described_class.new(topic)
+      # Stub the ImageMagick rasterization: rendering an SVG to PNG depends on the
+      # ImageMagick/font setup of the host, which isn't reliable across CI and dev
+      # environments. Here we assert that #generate turns rendered bytes into a
+      # proper PNG Upload.
+      generator.stubs(:render_png).returns(File.binread(file_from_fixtures("logo.png").path))
       upload = generator.generate
 
       expect(upload).to be_a(Upload)

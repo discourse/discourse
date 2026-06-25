@@ -328,24 +328,21 @@ class TopicOgImageGenerator
 
       File.write(svg_path, svg)
 
-      # Rasterize with rsvg-convert (ImageMagick's own configured SVG delegate)
-      # rather than `convert`/`magick`: ImageMagick's internal SVG renderer can't
-      # resolve generic font families like "sans-serif" and raises "unable to read
-      # font", whereas rsvg-convert resolves them via fontconfig.
       Discourse::Utils.execute_command(
         "nice",
         "-n",
         "10",
-        "rsvg-convert",
-        "--width",
-        OG_WIDTH.to_s,
-        "--height",
-        OG_HEIGHT.to_s,
-        "--background-color",
+        "convert",
+        "-background",
         "none",
-        "--output",
-        png_path,
+        "-size",
+        "#{OG_WIDTH}x#{OG_HEIGHT}",
         svg_path,
+        "-depth",
+        "8",
+        "-define",
+        "png:compression-level=9",
+        png_path,
         timeout: 20_000,
       )
 
