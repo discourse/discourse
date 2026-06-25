@@ -16,6 +16,7 @@ import { i18n } from "discourse-i18n";
 import PostEventBuilder from "discourse/plugins/discourse-calendar/discourse/components/modal/post-event-builder";
 import {
   defaultEventState,
+  isLivestreamUrl,
   reconcileDefaultReminder,
 } from "discourse/plugins/discourse-calendar/discourse/lib/raw-event-helper";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-calendar/discourse/models/discourse-post-event-event";
@@ -201,6 +202,10 @@ export default class CompactEventEditor extends Component {
     return this.args.urlTester?.(this.location) ?? false;
   }
 
+  get isLivestreamUrl() {
+    return this.hasLocation && isLivestreamUrl(this.location);
+  }
+
   get locationIcon() {
     return this.isLocationUrl ? "link" : "location-pin";
   }
@@ -301,8 +306,7 @@ export default class CompactEventEditor extends Component {
   onLocationInput(event) {
     const value = event.target.value;
     this.location = value === "" ? null : value;
-    // The livestream toggle is only meaningful when the location is a URL.
-    if (!this.isLocationUrl) {
+    if (!this.isLivestreamUrl) {
       this.livestream = false;
     }
     this.#emitChange();
@@ -808,7 +812,7 @@ export default class CompactEventEditor extends Component {
       </div>
     </section>
 
-    {{#if this.isLocationUrl}}
+    {{#if this.isLivestreamUrl}}
       <section class="composer-event__livestream">
         {{#if this.livestreamDisabled}}
           <DTooltip

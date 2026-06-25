@@ -22134,10 +22134,10 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20260624191619'),
 ('20260624140945'),
 ('20260623090824'),
 ('20260622201006'),
+('20260622201005'),
 ('20260617180115'),
 ('20260617053237'),
 ('20260615084100'),

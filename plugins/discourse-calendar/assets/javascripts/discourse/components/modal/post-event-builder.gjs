@@ -26,6 +26,7 @@ import {
   defaultEventState,
   defaultReminderFor,
   getCustomFieldNames,
+  isLivestreamUrl,
   reconcileDefaultReminder,
 } from "../../lib/raw-event-helper";
 import CompactEventEditor from "../compact-event-editor";
@@ -143,6 +144,17 @@ export default class PostEventBuilder extends Component {
   syncFieldToEvent(field, value, { set }) {
     set(field, value);
     this.event[field] = value;
+  }
+
+  @action
+  syncLocationToEvent(value, { set }) {
+    set("location", value);
+    this.event.location = value;
+
+    if (!isLivestreamUrl(value)) {
+      set("livestream", false);
+      this.event.livestream = false;
+    }
   }
 
   @action
@@ -311,12 +323,10 @@ export default class PostEventBuilder extends Component {
     ];
   }
 
-  get locationIsUrl() {
-    return this.urlTester(this.event.location ?? "");
-  }
-
   get showLivestream() {
-    return this.locationIsUrl && this.siteSettings.chat_enabled;
+    return (
+      isLivestreamUrl(this.event.location) && this.siteSettings.chat_enabled
+    );
   }
 
   get availableRecurrences() {
@@ -862,7 +872,7 @@ export default class PostEventBuilder extends Component {
                   }}
                   @type="input"
                   @format="full"
-                  @onSet={{fn this.syncFieldToEvent "location"}}
+                  @onSet={{this.syncLocationToEvent}}
                   as |field|
                 >
                   <field.Control

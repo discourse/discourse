@@ -7,6 +7,10 @@ class BackfillLivestreamFromTag < ActiveRecord::Migration[8.0]
   # Backfill the new column for those existing topics so they keep livestreaming after upgrade.
   # Livestream is now read from the topic's first-post event (topic.first_post.event.livestream?)
   # so only first-post events are updated.
+  #
+  # This must run BEFORE 20260622201006_cleanup_removed_livestream_site_settings, which deletes
+  # the `livestream_enabled` row we read below. The timestamp is intentionally one tick earlier
+  # so the ordering holds within the post-deploy phase.
   def up
     livestream_enabled =
       DB.query_single(

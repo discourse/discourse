@@ -1,3 +1,8 @@
+// must be an https link to livestream
+export function isLivestreamUrl(location) {
+  return /^https?:\/\//i.test(location ?? "");
+}
+
 export function defaultReminderFor({ startsAt, endsAt, allDay } = {}) {
   const start = startsAt ? moment(startsAt) : null;
   const end = endsAt ? moment(endsAt) : null;

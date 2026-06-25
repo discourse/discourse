@@ -55,6 +55,8 @@ describe DiscoursePostEvent::Event do
     fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:post) { Fabricate(:post, topic: topic) }
 
+    before { SiteSetting.chat_enabled = true }
+
     it "creates the chat channel after the livestream event is committed" do
       expect { Fabricate(:event, post: post, livestream: true) }.to change(
         DiscourseCalendar::Livestream::TopicChatChannel,
@@ -62,6 +64,24 @@ describe DiscoursePostEvent::Event do
       ).by(1)
 
       expect(post.topic.topic_chat_channel.chat_channel.chatable).to eq(category)
+    end
+
+    it "does not create a chat channel when chat is disabled" do
+      SiteSetting.chat_enabled = false
+
+      expect { Fabricate(:event, post: post, livestream: true) }.not_to change(
+        DiscourseCalendar::Livestream::TopicChatChannel,
+        :count,
+      )
+    end
+
+    it "does not create a chat channel for a livestream event on a reply" do
+      reply = Fabricate(:post, topic: topic)
+
+      expect { Fabricate(:event, post: reply, livestream: true) }.not_to change(
+        DiscourseCalendar::Livestream::TopicChatChannel,
+        :count,
+      )
     end
   end
 

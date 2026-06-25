@@ -54,7 +54,10 @@ module DiscoursePostEvent
     end
 
     def create_livestream_chat_channel
-      return unless livestream?
+      return unless livestream? && SiteSetting.chat_enabled
+      return unless post&.is_first_post?
+      return if post.topic.blank?
+
       DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
     end
 

@@ -4,6 +4,7 @@ import {
   buildEventBlock,
   buildParams,
   defaultReminderFor,
+  isLivestreamUrl,
   parseEventAttrs,
   parseEventBlock,
   parseReminders,
@@ -480,5 +481,17 @@ module("Unit | Lib | raw-event-helper", function () {
       parseEventAttrs({}).livestream,
       "parseEventAttrs defaults livestream to false"
     );
+  });
+
+  test("isLivestreamUrl only accepts http(s) URLs", function (assert) {
+    assert.true(isLivestreamUrl("https://example.com/live"), "accepts https");
+    assert.true(isLivestreamUrl("http://example.com/live"), "accepts http");
+    assert.true(isLivestreamUrl("HTTPS://EXAMPLE.COM"), "case-insensitive");
+
+    assert.false(isLivestreamUrl("www.example.com"), "rejects schemeless www");
+    assert.false(isLivestreamUrl("mailto:host@example.com"), "rejects mailto");
+    assert.false(isLivestreamUrl("Room 5"), "rejects plain text");
+    assert.false(isLivestreamUrl(null), "handles null");
+    assert.false(isLivestreamUrl(undefined), "handles undefined");
   });
 });

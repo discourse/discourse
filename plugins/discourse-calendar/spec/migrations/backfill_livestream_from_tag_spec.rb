@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require Rails.root.join(
-          "plugins/discourse-calendar/db/migrate/20260624191619_backfill_livestream_from_tag.rb",
+          "plugins/discourse-calendar/db/post_migrate/20260622201005_backfill_livestream_from_tag.rb",
         )
 
 RSpec.describe BackfillLivestreamFromTag do
