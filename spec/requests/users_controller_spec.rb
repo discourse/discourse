@@ -2529,6 +2529,25 @@ RSpec.describe UsersController do
           expect(invites[0]).to include("id" => invite.id)
         end
       end
+
+      context "with expired invites" do
+        it "returns an empty list without permission to see invite details" do
+          viewer = Fabricate(:user, trust_level: TrustLevel[2])
+          sign_in(viewer)
+          Fabricate(:invite, invited_by: inviter, expires_at: 1.day.ago)
+
+          get "/u/#{inviter.username}/invited/expired.json"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["can_see_invite_details"]).to eq(false)
+          expect(response.parsed_body["invites"]).to eq([])
+          expect(response.parsed_body["counts"]).to include(
+            "pending" => 0,
+            "expired" => 0,
+            "total" => 0,
+          )
+        end
+      end
     end
   end
 
