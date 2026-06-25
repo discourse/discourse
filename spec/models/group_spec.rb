@@ -561,20 +561,20 @@ RSpec.describe Group do
   end
 
   it "Can update moderator/staff/admin groups correctly" do
-    admin = Fabricate(:admin)
+    other_admin = Fabricate(:admin)
     moderator = Fabricate(:moderator)
 
     Group.refresh_automatic_groups!(:admins, :staff, :moderators)
 
-    expect(Group[:admins].human_users).to contain_exactly(admin)
+    expect(Group[:admins].human_users).to contain_exactly(admin, other_admin)
     expect(Group[:moderators].human_users).to contain_exactly(moderator)
-    expect(Group[:staff].human_users).to contain_exactly(moderator, admin)
+    expect(Group[:staff].human_users).to contain_exactly(moderator, admin, other_admin)
 
-    admin.admin = false
-    admin.save
+    other_admin.admin = false
+    other_admin.save
 
     Group.refresh_automatic_group!(:admins)
-    expect(Group[:admins].human_users).to be_empty
+    expect(Group[:admins].human_users).to contain_exactly(admin)
 
     moderator.revoke_moderation!
 
@@ -628,9 +628,9 @@ RSpec.describe Group do
   end
 
   it "Correctly updates all automatic groups upon request" do
-    admin = Fabricate(:admin)
-    user = Fabricate(:user)
-    user.change_trust_level!(TrustLevel[2])
+    other_admin = Fabricate(:admin)
+    other_user = Fabricate(:user)
+    other_user.change_trust_level!(TrustLevel[2])
 
     DB.exec("UPDATE groups SET user_count = 0 WHERE id = #{Group::AUTO_GROUPS[:trust_level_2]}")
 
@@ -641,19 +641,19 @@ RSpec.describe Group do
 
     g = Group[:admins]
     expect(g.human_users.count).to eq(g.user_count)
-    expect(g.human_users).to contain_exactly(admin)
+    expect(g.human_users).to contain_exactly(admin, other_admin)
 
     g = Group[:admins]
     expect(g.human_users.count).to eq(g.user_count)
-    expect(g.human_users).to contain_exactly(admin)
+    expect(g.human_users).to contain_exactly(admin, other_admin)
 
     g = Group[:trust_level_1]
     expect(g.human_users.count).to eq(g.user_count)
-    expect(g.human_users).to contain_exactly(admin, user)
+    expect(g.human_users).to contain_exactly(admin, other_admin, user, other_user)
 
     g = Group[:trust_level_2]
     expect(g.human_users.count).to eq(g.user_count)
-    expect(g.human_users).to contain_exactly(admin, user)
+    expect(g.human_users).to contain_exactly(admin, other_admin, other_user)
   end
 
   it "can set members via usernames helper" do
