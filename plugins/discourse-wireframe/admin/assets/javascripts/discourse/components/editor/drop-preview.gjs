@@ -4,8 +4,8 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 
 /**
- * The editor's single drop indicator. Reads
- * `wireframe.activeDropPreview` and paints exactly one
+ * The editor's single drop indicator. Reads the active slot-insert overlay
+ * from `wireframeDragOverlay.slotPreview` and paints exactly one
  * absolutely-positioned rectangle at the descriptor's geometry,
  * with the operation label rendered as a small badge in the
  * top-left corner.
@@ -26,10 +26,10 @@ import { trustHTML } from "@ember/template";
  * indicator disappears immediately.
  */
 export default class DropPreview extends Component {
-  @service wireframe;
+  @service wireframeDragOverlay;
 
   get preview() {
-    return this.wireframe.activeDropPreview;
+    return this.wireframeDragOverlay.slotPreview;
   }
 
   get style() {
@@ -46,7 +46,7 @@ export default class DropPreview extends Component {
   <template>
     {{#if this.preview}}
       <div
-        class="wireframe-drop-preview wireframe-drop-preview--{{this.preview.kind}}
+        class="wireframe-drop-preview wireframe-drop-preview--{{this.preview.previewKind}}
           wireframe-drop-preview--{{this.preview.validity}}"
         style={{this.style}}
         aria-hidden="true"

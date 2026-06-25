@@ -21,7 +21,7 @@ const EDGE_BAND = 12;
  * One drop target per layout container. Replaces the per-block
  * `--before` / `--after` / `--inside` strip zones with a single
  * dragover handler that decides where the user's drop would land
- * and writes the result to `wireframe.activeDropPreview`. The
+ * and claims the slot-insert overlay via `wireframeDragOverlay`. The
  * mounted `<DropPreview>` paints exactly one indicator off of
  * that — by construction there can never be more than one drop
  * indicator on screen.
@@ -54,9 +54,11 @@ const EDGE_BAND = 12;
  */
 export default class ContainerDropTargetModifier extends Modifier {
   @service wireframe;
+  @service wireframeDragOverlay;
 
   #autoScrollCleanup = null;
   #cleanup = null;
+  #releaseDrop = null;
 
   constructor(owner, args) {
     super(owner, args);
@@ -74,7 +76,7 @@ export default class ContainerDropTargetModifier extends Modifier {
       return;
     }
 
-    const { wireframe } = this;
+    const { wireframe, wireframeDragOverlay } = this;
     const { resolveContainer, shouldDeferToParent, descriptorFor } =
       createContainerDropResolver({
         wireframe,
@@ -83,6 +85,16 @@ export default class ContainerDropTargetModifier extends Modifier {
         outletName,
         mode,
       });
+
+    // Claim the single overlay slot for this container's drop preview. The
+    // descriptor (or `null` over an excluded region) is wrapped as a
+    // `slot-insert` affordance; an own-but-blank claim still replaces any stale
+    // ancestor claim, since enter/drag fire only on the deepest target.
+    const claim = (source, input) => {
+      this.#releaseDrop = wireframeDragOverlay.claimSlotInsert(
+        descriptorFor(source, input)
+      );
+    };
 
     this.#cleanup = registerDragAndDropTarget(chromeElement, () => ({
       accepts: ACCEPTED_KINDS,
@@ -95,23 +107,17 @@ export default class ContainerDropTargetModifier extends Modifier {
         // inner scroll element is resolved and present by drag time — and
         // cleared on detach.
         this.#enableAutoScroll(resolveContainer());
-        wireframe.setActiveDropPreview(
-          descriptorFor(source, location.current.input)
-        );
+        claim(source, location.current.input);
       },
-      onDrag: ({ source, location }) =>
-        wireframe.setActiveDropPreview(
-          descriptorFor(source, location.current.input)
-        ),
-      onDragLeave: () => wireframe.clearActiveDropPreview(),
+      onDrag: ({ source, location }) => claim(source, location.current.input),
+      onDragLeave: () => this.#releaseDrop?.(),
       onDrop: ({ location }) => {
         // A release over an excluded region (e.g. the nav controls) is not a
-        // drop — `endDrag` clears the sticky descriptor afterwards, so nothing
-        // stale dispatches.
+        // drop — cleanup runs afterwards, so nothing stale dispatches.
         if (isOverExcludedRegion(chromeElement, location.current.input)) {
           return;
         }
-        wireframe.dispatchActiveDrop();
+        wireframeDragOverlay.dispatch();
       },
     }));
   }
@@ -589,7 +595,7 @@ function buildBoundaryDescriptor({
       beforeOrdinal,
       afterOrdinal,
     }),
-    // No dispatch when invalid — `dispatchActiveDrop` no-ops on
+    // No dispatch when invalid — the coordinator's `dispatch()` no-ops on
     // descriptors without a `dispatch` payload, so the drop quietly
     // fails. The red overlay already communicated the rejection.
     dispatch: validity.ok
@@ -917,8 +923,8 @@ function cellDropLabel({ wireframe, source }) {
     : translate("wireframe.canvas.drop_preview.move_here", { name });
 }
 
-/* Dispatch payload builders — `dispatchActiveDrop` on the service
-   looks up `[action]` and calls it with `args`. */
+/* Dispatch payload builders — `wireframe.runDropDispatch` looks up
+   `[action]` and calls it with `args` at drop time. */
 
 function insertDispatch({
   source,

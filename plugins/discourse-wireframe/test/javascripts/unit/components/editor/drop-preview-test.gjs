@@ -5,29 +5,32 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DropPreview from "discourse/plugins/discourse-wireframe/discourse/components/editor/drop-preview";
 
 const DESCRIPTOR = {
+  kind: "slot-insert",
   geometry: { top: 10, left: 10, width: 100, height: 40 },
-  kind: "insert",
+  previewKind: "insert",
   validity: "valid",
   label: "Drop here",
 };
 
-/** Minimal stub exposing only the descriptor `DropPreview` reads. */
-class StubWireframeService extends Service {
-  activeDropPreview = null;
+/** Minimal stub exposing only the slot preview `DropPreview` reads. */
+class StubDragOverlayService extends Service {
+  slotPreview = null;
 }
 
-function stubWireframe(owner, descriptor) {
-  owner.unregister("service:wireframe");
-  const stub = new StubWireframeService(owner);
-  stub.activeDropPreview = descriptor;
-  owner.register("service:wireframe", stub, { instantiate: false });
+function stubDragOverlay(owner, descriptor) {
+  owner.unregister("service:wireframe-drag-overlay");
+  const stub = new StubDragOverlayService(owner);
+  stub.slotPreview = descriptor;
+  owner.register("service:wireframe-drag-overlay", stub, {
+    instantiate: false,
+  });
 }
 
 module("Integration | Wireframe | DropPreview", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders one overlay at the descriptor's geometry, with kind/validity", async function (assert) {
-    stubWireframe(this.owner, DESCRIPTOR);
+    stubDragOverlay(this.owner, DESCRIPTOR);
 
     await render(<template><DropPreview /></template>);
 
@@ -45,7 +48,7 @@ module("Integration | Wireframe | DropPreview", function (hooks) {
   });
 
   test("renders nothing when there is no descriptor", async function (assert) {
-    stubWireframe(this.owner, null);
+    stubDragOverlay(this.owner, null);
 
     await render(<template><DropPreview /></template>);
 

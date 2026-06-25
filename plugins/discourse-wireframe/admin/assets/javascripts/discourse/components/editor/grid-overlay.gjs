@@ -146,6 +146,7 @@ function descriptorsEqual(a, b) {
  */
 export default class GridOverlay extends Component {
   @service wireframe;
+  @service wireframeDragOverlay;
   @service blocks;
   @service dragAndDrop;
 
@@ -220,6 +221,13 @@ export default class GridOverlay extends Component {
    * the diff happens before geometry / dispatch builds.
    */
   #lastIntermediate = null;
+
+  /**
+   * Release callback for this grid's current overlay claim, or `null`. Stored
+   * each time the grid claims the drag-overlay slot so a dragleave can release
+   * exactly that claim (a stale leave after a deeper target claimed is a no-op).
+   */
+  #releaseDrop = null;
 
   /**
    * Refreshes the cached gridRect + isCollapsed without dropping the
@@ -620,7 +628,7 @@ export default class GridOverlay extends Component {
       onDrag: ({ source, location }) => this.#publishFromDrag(source, location),
       onDragLeave: () => {
         this.#lastIntermediate = null;
-        this.wireframe.setActiveDropPreview(null);
+        this.#releaseDrop?.();
       },
       onDrop: this.handleDrop,
     }));
@@ -640,7 +648,7 @@ export default class GridOverlay extends Component {
           this.#publishFromDrag(EXTERNAL_IMAGE_DROP_SOURCE, location),
         onDragLeave: () => {
           this.#lastIntermediate = null;
-          this.wireframe.setActiveDropPreview(null);
+          this.#releaseDrop?.();
         },
         onDrop: ({ source }) => {
           this.#lastIntermediate = null;
@@ -648,7 +656,7 @@ export default class GridOverlay extends Component {
           // any file; a non-image release is a clean no-op here.
           const file = firstImageFile(source.getFiles());
           if (!file) {
-            this.wireframe.setActiveDropPreview(null);
+            this.#releaseDrop?.();
             return;
           }
           this.wireframe.completeExternalImageDrop(file);
@@ -685,13 +693,13 @@ export default class GridOverlay extends Component {
    * via "closest ancestor target" resolution, since the grid div is
    * the sole PDND drop target for the surface. The dispatch payload
    * was already embedded in the active descriptor at hit-test time;
-   * `dispatchActiveDrop` runs it by action name. `endDrag` is
+   * the coordinator's `dispatch()` runs it by action name. `endDrag` is
    * dispatched by the source modifier's `onDrop` callback.
    */
   @action
   handleDrop() {
     this.#lastIntermediate = null;
-    this.wireframe.dispatchActiveDrop();
+    this.wireframeDragOverlay.dispatch();
   }
 
   @action
@@ -905,7 +913,7 @@ export default class GridOverlay extends Component {
 
   /**
    * Translates an internal (logical) grid descriptor into the
-   * unified `activeDropPreview` shape — viewport-coord geometry,
+   * unified slot-insert overlay shape — viewport-coord geometry,
    * unified `kind`, validity, label, and dispatch payload — and
    * writes it to the service. Called from `#publishFromDrag`
    * after the dragover-diff has confirmed the intermediate changed.
@@ -915,21 +923,24 @@ export default class GridOverlay extends Component {
    * rather than freezing on stale coords.
    */
   #publishUnified(intermediate, source) {
+    // An own-but-blank claim (null descriptor) when geometry can't be resolved:
+    // this grid stays the owner of the single slot (so a stale ancestor claim
+    // can't show) but renders nothing.
     if (!intermediate || !this.gridElement) {
-      this.wireframe.setActiveDropPreview(null);
+      this.#releaseDrop = this.wireframeDragOverlay.claimSlotInsert(null);
       return;
     }
     const gridRel = this.#computeOverlayGeometry(intermediate);
     if (!gridRel) {
-      this.wireframe.setActiveDropPreview(null);
+      this.#releaseDrop = this.wireframeDragOverlay.claimSlotInsert(null);
       return;
     }
     const gridRect = this.#getGridRect();
     if (!gridRect) {
-      this.wireframe.setActiveDropPreview(null);
+      this.#releaseDrop = this.wireframeDragOverlay.claimSlotInsert(null);
       return;
     }
-    this.wireframe.setActiveDropPreview({
+    this.#releaseDrop = this.wireframeDragOverlay.claimSlotInsert({
       geometry: {
         top: gridRect.top + gridRel.top,
         left: gridRect.left + gridRel.left,
@@ -938,9 +949,8 @@ export default class GridOverlay extends Component {
       },
       kind: this.#unifiedKindFor(intermediate),
       // The `_invalid` sentinel comes from `#descriptorFromCursor`'s
-      // validity gate (shift-plan check). It maps to the overlay's
-      // red styling AND to `dispatch: null` so `dispatchActiveDrop`
-      // no-ops at drop time.
+      // validity gate (shift-plan check). It maps to the overlay's red
+      // styling AND to `dispatch: null` so the drop dispatch no-ops.
       validity: intermediate._invalid ? "invalid" : "valid",
       label: this.#labelFor(intermediate, source),
       dispatch: intermediate._invalid
@@ -1042,14 +1052,13 @@ export default class GridOverlay extends Component {
    * descriptor. The overlay does NOT choose the action: it describes the
    * drop — the gesture (BESIDE for an edge line, INTO for a cell rect), its
    * anchor, and the source — as a single `applyGridDrop` request. The
-   * service's `dispatchActiveDrop` runs it, and the grid manipulator routes
+   * coordinator's `dispatch()` runs it, and the grid manipulator routes
    * it through `decideGridDrop`, which decides fill / swap / replace /
    * cascade / append. So the cursor zone can't disagree with the rules.
    *
    * Returns `null` when the descriptor doesn't carry enough info to
-   * dispatch (e.g. an unresolved cell). The mirror call above feeds `null`
-   * through to `setActiveDropPreview`, where `dispatchActiveDrop` no-ops at
-   * drop time.
+   * dispatch (e.g. an unresolved cell). It then lands as an own-but-blank
+   * claim, so the coordinator's `dispatch()` no-ops at drop time.
    */
   #buildDispatch(descriptor, source) {
     if (!descriptor || !source) {
@@ -1921,10 +1930,9 @@ export default class GridOverlay extends Component {
           @onResizeCancel={{this.onTrackResizeCancel}}
           @draggingClass="--dragging"
         />
-        {{! No local drop overlay — the shell-mounted `<DropPreview>`
-          is the single indicator. The dragover handler publishes
-          the unified descriptor directly to
-          `wireframe.setActiveDropPreview`. }}
+        {{! No local drop overlay — the shell-mounted drop preview is the
+          single indicator. The dragover handler claims the slot-insert
+          overlay through the wireframeDragOverlay coordinator. }}
       {{/in-element}}
     {{/if}}
   </template>

@@ -518,39 +518,6 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "body class is removed after drag"
       );
     });
-
-    test("setActiveDropTarget / clearActiveDropTarget round-trips", function (assert) {
-      assert.strictEqual(this.editor.activeDropTarget, null);
-      const target = {
-        targetKey: "wf:svc-test-tile:1",
-        position: "before",
-        outletName: "homepage-blocks",
-      };
-      this.editor.setActiveDropTarget(target);
-      assert.deepEqual(this.editor.activeDropTarget, target);
-      this.editor.clearActiveDropTarget(target);
-      assert.strictEqual(this.editor.activeDropTarget, null);
-    });
-
-    test("clearActiveDropTarget ignores stale targets", function (assert) {
-      const a = {
-        targetKey: "key-a",
-        position: "before",
-        outletName: "homepage-blocks",
-      };
-      const b = {
-        targetKey: "key-b",
-        position: "before",
-        outletName: "homepage-blocks",
-      };
-      this.editor.setActiveDropTarget(a);
-      this.editor.clearActiveDropTarget(b);
-      assert.deepEqual(
-        this.editor.activeDropTarget,
-        a,
-        "clearing a different target leaves the active one intact"
-      );
-    });
   });
 
   module("insertBlock", function (innerHooks) {

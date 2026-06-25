@@ -86,7 +86,9 @@ module(
     });
 
     test("creates the previewed image block and stages the file for it", function (assert) {
-      this.editor.setActiveDropPreview(insertPreview("wf:svc-img-drop-image"));
+      this.editor.wireframeDragOverlay.claimSlotInsert(
+        insertPreview("wf:svc-img-drop-image")
+      );
 
       const result = this.editor.completeExternalImageDrop(this.file);
 
@@ -114,7 +116,9 @@ module(
     });
 
     test("is a no-op with no file (does not dispatch or stage)", function (assert) {
-      this.editor.setActiveDropPreview(insertPreview("wf:svc-img-drop-image"));
+      this.editor.wireframeDragOverlay.claimSlotInsert(
+        insertPreview("wf:svc-img-drop-image")
+      );
 
       const result = this.editor.completeExternalImageDrop(null);
 
@@ -127,7 +131,7 @@ module(
     });
 
     test("is a no-op when the slot rejects the drop (no preview to dispatch)", function (assert) {
-      // No preview primed -> dispatchActiveDrop returns false.
+      // No preview claimed -> coordinator.dispatch() returns false.
       const result = this.editor.completeExternalImageDrop(this.file);
 
       assert.false(result);
@@ -139,7 +143,9 @@ module(
     });
 
     test("inserts but does not stage when the new block has no image arg", function (assert) {
-      this.editor.setActiveDropPreview(insertPreview("wf:svc-img-drop-tile"));
+      this.editor.wireframeDragOverlay.claimSlotInsert(
+        insertPreview("wf:svc-img-drop-tile")
+      );
 
       const result = this.editor.completeExternalImageDrop(this.file);
 

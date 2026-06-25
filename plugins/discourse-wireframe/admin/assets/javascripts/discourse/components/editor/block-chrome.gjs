@@ -84,6 +84,7 @@ export default class BlockChrome extends Component {
   @service menu;
   @service tooltip;
   @service wireframe;
+  @service wireframeDragOverlay;
 
   /**
    * Reference to the chrome's outer `<div>`, set on insert. Passed to
@@ -95,23 +96,6 @@ export default class BlockChrome extends Component {
    * div's `didInsert` fires, otherwise capturing a stale `null`).
    */
   @tracked chromeEl = null;
-
-  /**
-   * `true` while a file is dragged over the block body. Handed to the
-   * block's passive background `ImageArgOverlay`, which drives its own
-   * drag-over tint and dark-variant popover from it — the chrome only
-   * detects the drag (it can't host the interactive overlay itself
-   * without hijacking clicks meant for the block content).
-   */
-  @tracked externalDragOver = false;
-
-  /**
-   * `true` while a file is dragged over a FOREGROUND image overlay of
-   * this block (e.g. the avatar). Reported by those overlays via
-   * `onForegroundImageDrag`; gates the background overlay off so only one
-   * image-drop overlay shows at a time (the deeper foreground one wins).
-   */
-  @tracked foregroundImageHovered = false;
 
   /**
    * The most recent file dropped on the block body, handed to the
@@ -210,6 +194,14 @@ export default class BlockChrome extends Component {
       `img[data-block-arg="${escaped}"], picture[data-block-arg="${escaped}"]`
     );
   };
+
+  /**
+   * Release callback for this chrome's current drag-overlay claim, or `null`.
+   * Stored each time the chrome claims the single overlay slot (background
+   * fill or slot-insert) so a dragleave releases exactly that claim.
+   */
+  #releaseDrop = null;
+
   /**
    * The container drop resolver built on external-drag enter and reused for
    * the rest of that drag, so the drop preview tracks the cursor through the
@@ -723,19 +715,6 @@ export default class BlockChrome extends Component {
       ...e,
       key: `${e.name}:${e.isEmpty}`,
     }));
-  }
-
-  /**
-   * The body-drag state handed to the passive background overlay: a file
-   * is over the block body AND not over a foreground image (the avatar).
-   * Gating on `foregroundImageHovered` keeps a single image-drop overlay
-   * visible at a time — the avatar wins in its slot, the background
-   * elsewhere.
-   *
-   * @returns {boolean}
-   */
-  get backgroundExternalDragOver() {
-    return this.externalDragOver && !this.foregroundImageHovered;
   }
 
   /**
@@ -1430,24 +1409,6 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Whether a given before/after/inside drop zone for *this* block is
-   * currently active (cursor hovering over it during a drag). Drives the
-   * `--active` class so the user sees where the drop will land.
-   *
-   * @param {"before"|"after"|"inside"} position
-   * @returns {boolean}
-   */
-  @action
-  isDropZoneActive(position) {
-    const t = this.wireframe.activeDropTarget;
-    return (
-      t?.targetKey === this.args.blockKey &&
-      t?.position === position &&
-      t?.outletName === this.args.outletName
-    );
-  }
-
-  /**
    * Drop-target gate — rejects drops that would re-insert a block onto its
    * own zones (a no-op anyway) and consults the editor service for outlet-
    * level allowed/denied checks. The modifier filters drags whose `type`
@@ -1471,31 +1432,6 @@ export default class BlockChrome extends Component {
     }
     return this.wireframe.canDropAt({
       targetOutletName: this.args.outletName,
-    });
-  }
-
-  /**
-   * Forwards the drop-target's `position` straight to the service so the
-   * canvas can highlight the matching zone. The core modifier passes
-   * `position` in the callback payload (lifted from the modifier's own
-   * `position` arg) — we do NOT read `event.currentTarget.dataset`,
-   * because by the time `dragLeave` fires from inside its 10ms deferred
-   * clear the browser has already nulled out `event.currentTarget`.
-   */
-  @action
-  handleZoneDragEnter({ position }) {
-    this.wireframe.setActiveDropTarget({
-      targetKey: this.args.blockKey,
-      position,
-      outletName: this.args.outletName,
-    });
-  }
-
-  @action
-  handleZoneDragLeave({ position }) {
-    this.wireframe.clearActiveDropTarget({
-      targetKey: this.args.blockKey,
-      position,
     });
   }
 
@@ -1570,49 +1506,44 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Publishes the slot-insert drop preview as a file is dragged over a
-   * container slot. The background-fill path instead toggles the body tint,
-   * which the passive overlay reads through `backgroundExternalDragOver`.
-   *
-   * Moving onto a foreground image (the avatar) is handled by
-   * `foregroundImageHovered` rather than relying on a leave here (PDND
-   * doesn't fire a reliable leave when the cursor enters a nested target
-   * while staying inside the chrome's bounds).
+   * Claims the single drag-overlay slot as a file is dragged over this block.
+   * A background block claims the passive image-arg overlay (its tint then
+   * shows via the coordinator); a container slot claims the slot-insert
+   * preview. A foreground image overlay (e.g. the avatar) is a DEEPER external
+   * target, so its own claim lands over this one — that's what keeps a single
+   * overlay showing, replacing the old foreground/background bookkeeping.
    *
    * @param {{location: {current: {input: Object}}}} payload
    */
   @action
   onExternalImageDragEnter({ location }) {
-    if (this.canDropBackgroundFile()) {
-      this.externalDragOver = true;
-      return;
-    }
-    if (this.#isImageDropSlot) {
-      this.wireframe.setActiveDropPreview(
-        this.#ensureExternalDropResolver().descriptorFor(
-          EXTERNAL_IMAGE_DROP_SOURCE,
-          location.current.input
-        )
-      );
-    }
+    this.#claimExternalOverlay(location.current.input);
   }
 
   /**
-   * Tracks the cursor while a file is dragged over a container slot so the
-   * drop preview follows it; a no-op for the background-fill path.
+   * Re-claims as the cursor moves so the overlay tracks it.
    *
    * @param {{location: {current: {input: Object}}}} payload
    */
   @action
   onExternalImageDrag({ location }) {
+    this.#claimExternalOverlay(location.current.input);
+  }
+
+  #claimExternalOverlay(input) {
     if (this.canDropBackgroundFile()) {
+      this.#releaseDrop = this.wireframeDragOverlay.claimImageArg({
+        blockKey: this.args.blockKey,
+        argName: this.#passiveImageArgName(),
+        isPassive: true,
+      });
       return;
     }
     if (this.#isImageDropSlot) {
-      this.wireframe.setActiveDropPreview(
+      this.#releaseDrop = this.wireframeDragOverlay.claimSlotInsert(
         this.#ensureExternalDropResolver().descriptorFor(
           EXTERNAL_IMAGE_DROP_SOURCE,
-          location.current.input
+          input
         )
       );
     }
@@ -1621,29 +1552,7 @@ export default class BlockChrome extends Component {
   @action
   onExternalImageDragLeave() {
     this.#externalDropResolver = null;
-    if (this.canDropBackgroundFile()) {
-      this.externalDragOver = false;
-      return;
-    }
-    this.wireframe.clearActiveDropPreview();
-  }
-
-  /**
-   * Reported by this block's FOREGROUND image overlays (e.g. the avatar)
-   * as a file drag enters / leaves / drops on them, so only one image-drop
-   * overlay shows at a time: while a foreground image is the drag target,
-   * `backgroundExternalDragOver` goes false and the full-bleed background
-   * overlay (tint + dark popover) steps aside. A `"drop"` ends the drag,
-   * so it also clears the body drag state.
-   *
-   * @param {"enter"|"leave"|"drop"} phase
-   */
-  @action
-  onForegroundImageDrag(phase) {
-    this.foregroundImageHovered = phase === "enter";
-    if (phase === "drop") {
-      this.externalDragOver = false;
-    }
+    this.#releaseDrop?.();
   }
 
   /**
@@ -1661,7 +1570,7 @@ export default class BlockChrome extends Component {
   onExternalImageDrop({ source }) {
     this.#externalDropResolver = null;
     if (this.canDropBackgroundFile()) {
-      this.externalDragOver = false;
+      this.#releaseDrop?.();
       const file = source?.getFiles?.()?.[0];
       if (file) {
         this.pendingBackgroundFile = file;
@@ -1671,11 +1580,11 @@ export default class BlockChrome extends Component {
     if (!this.#isImageDropSlot) {
       return;
     }
-    this.wireframe.clearActiveDropPreview();
     // Per-file MIME isn't readable during the drag, so the preview shows for
     // any file; a non-image release is a clean no-op here.
     const file = firstImageFile(source.getFiles());
     if (!file) {
+      this.#releaseDrop?.();
       return;
     }
     this.wireframe.completeExternalImageDrop(file);
@@ -1967,9 +1876,7 @@ export default class BlockChrome extends Component {
               @argDef={{imageArg.def}}
               @isEmpty={{imageArg.isEmpty}}
               @getChromeEl={{this.getChromeEl}}
-              @externalDragOver={{this.backgroundExternalDragOver}}
               @pendingFile={{this.pendingBackgroundFile}}
-              @onForegroundDrag={{this.onForegroundImageDrag}}
             />
           {{/each}}
 

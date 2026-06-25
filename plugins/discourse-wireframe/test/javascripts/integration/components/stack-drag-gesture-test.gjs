@@ -8,9 +8,10 @@ import { simulateDrag } from "../../helpers/drag-helpers";
 
 // End-to-end gesture coverage for the stack/row drop pipeline: a real PDND
 // drag from a palette source, over the `containerDropTarget`, through
-// `computeDescriptor` → `setActiveDropPreview` → (drop) → `dispatchActiveDrop`.
-// This guards the WHOLE chain — if the target stopped registering, or the
-// descriptor/dispatch wiring broke, no dispatch would be captured.
+// `computeDescriptor` → `wireframeDragOverlay.claimSlotInsert` → (drop) →
+// `wireframeDragOverlay.dispatch`. This guards the WHOLE chain — if the target
+// stopped registering, or the descriptor/dispatch wiring broke, no dispatch
+// would be captured.
 //
 //   stack container (y-axis)         palette source
 //   ┌───────────────┐  A             ┌──────────┐
@@ -23,36 +24,39 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    // Minimal stand-in for the editor service: just the surface
-    // `computeDescriptor` + the drop dispatch touch. `dispatchActiveDrop`
-    // replays the dispatch the descriptor carried, captured at drop time.
+    // Minimal stand-in for the editor service: the `computeDescriptor` surface
+    // (wireframe) plus the overlay coordinator's claim/dispatch. `dispatch`
+    // replays the dispatch the claimed slot-insert carried, captured at drop.
     function stubWireframe(owner, onDispatch) {
       const wireframe = owner.lookup("service:wireframe");
+      const overlay = owner.lookup("service:wireframe-drag-overlay");
       let captured = null;
 
       // Several of these are `@action`-decorated on the real service, which
       // installs a getter-only accessor on the prototype — a plain assignment
       // would throw in strict mode. Define own data properties instead so the
       // stub shadows both plain methods and decorated accessors uniformly.
-      const stub = (name, fn) =>
-        Object.defineProperty(wireframe, name, {
+      const stub = (obj, name, fn) =>
+        Object.defineProperty(obj, name, {
           value: fn,
           configurable: true,
           writable: true,
         });
 
-      stub("findEntryAndOutletSync", (key) => ({
+      stub(wireframe, "findEntryAndOutletSync", (key) => ({
         entry: { block: key, id: null },
         outletName: "o",
       }));
-      stub("lookupBlockMetadata", () => ({ isContainer: false }));
-      stub("lookupBlockDisplayName", (block) => block);
-      stub("canInsertBlockAt", () => true);
-      stub("canDropAt", () => true);
-      stub("isOutletRoot", () => false);
-      stub("setActiveDropPreview", (descriptor) => (captured = descriptor));
-      stub("clearActiveDropPreview", () => (captured = null));
-      stub("dispatchActiveDrop", () => {
+      stub(wireframe, "lookupBlockMetadata", () => ({ isContainer: false }));
+      stub(wireframe, "lookupBlockDisplayName", (block) => block);
+      stub(wireframe, "canInsertBlockAt", () => true);
+      stub(wireframe, "canDropAt", () => true);
+      stub(wireframe, "isOutletRoot", () => false);
+      stub(overlay, "claimSlotInsert", (descriptor) => {
+        captured = descriptor;
+        return () => (captured = null);
+      });
+      stub(overlay, "dispatch", () => {
         if (captured?.dispatch) {
           onDispatch(captured.dispatch);
         }

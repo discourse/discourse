@@ -143,6 +143,7 @@ export default class WireframeService extends Service {
   @service site;
   @service siteSettings;
   @service wireframeDrafts;
+  @service wireframeDragOverlay;
   @service wireframePersistence;
 
   @tracked isActive = false;
@@ -191,11 +192,8 @@ export default class WireframeService extends Service {
   /**
    * Drag-and-drop session state. Set when the user grabs a block via
    * `editor-draggable`; cleared when the drag ends (success or cancel).
-   *
-   * `dragSourceKey` opens body-class `--wf-dragging` so the canvas can
-   * surface drop zones via CSS. `activeDropTarget` carries the most recent
-   * `onDragEnter` payload so the corresponding zone can render its hover
-   * styling without each zone needing its own listener.
+   * `dragSourceKey` opens body-class `wireframe-dragging` so the canvas can
+   * surface drop zones via CSS.
    *
    * @type {string|null}
    */
@@ -203,9 +201,6 @@ export default class WireframeService extends Service {
 
   /** @type {string|null} */
   @tracked dragSourceOutlet = null;
-
-  /** @type {{targetKey: string, position: string, outletName: string}|null} */
-  @tracked activeDropTarget = null;
 
   /**
    * Full drag-source descriptor during an in-flight drag. Browsers
@@ -219,41 +214,6 @@ export default class WireframeService extends Service {
    * @type {{type: string, data: Object}|null}
    */
   @tracked dragSource = null;
-
-  /**
-   * The single source of truth for the drag-time drop indicator. Set
-   * by the active scope's dragover handler (a container's
-   * `containerDropTarget` modifier OR the `GridOverlay`'s grid-level
-   * handler) to the descriptor of the drop that WOULD happen if the
-   * user released the mouse right now. The mounted `<DropPreview>`
-   * component renders one overlay element off of this; clearing it
-   * hides the overlay.
-   *
-   * Shape:
-   * ```
-   * {
-   *   geometry: { top, left, width, height }, // viewport-relative px
-   *   kind: "insert" | "inside" | "replace" | "swap" | "shift" | "occupy",
-   *   label: string, // human-readable, already i18n-resolved
-   *   variant: "valid",
-   *   // Caller-private dispatch payload — read at drop time so the
-   *   // drop handler can act on the same descriptor the user saw.
-   *   dispatch: {
-   *     action: "insertBlock" | "moveBlock" | "applyGridDrop" |
-   *             "placeBlockInCell" | "moveBlockIntoCell" | ...,
-   *     args: Object,
-   *   },
-   * }
-   * ```
-   *
-   * Invariant: only one descriptor is set at any time across the
-   * whole canvas. Scopes that compute a new descriptor MUST clear
-   * the previous one first via `setActiveDropPreview(null)` if their
-   * own computation yielded nothing.
-   *
-   * @type {Object|null}
-   */
-  @tracked activeDropPreview = null;
 
   /**
    * Simulation slot. When non-null, threads through the condition
@@ -459,17 +419,6 @@ export default class WireframeService extends Service {
    * @type {Map<string, string>}
    */
   #outletRootKeys = new Map();
-
-  /**
-   * Sticky mirror of `activeDropPreview` captured at the moment of
-   * the drop's `drop` event. The visible preview is cleared at
-   * dragleave / drop start (so the overlay disappears immediately on
-   * release), but the dispatch handler needs to read the descriptor
-   * one tick later.
-   *
-   * @type {Object|null}
-   */
-  #lastDropPreview = null;
 
   /**
    * Files dropped onto an empty slot, staged by `"blockKey\0argName"` until
@@ -1300,7 +1249,7 @@ export default class WireframeService extends Service {
     this.selectedBlockData = null;
     this.dragSourceKey = null;
     this.dragSourceOutlet = null;
-    this.activeDropTarget = null;
+    this.wireframeDragOverlay.clear();
     this.#pendingDropFiles.clear();
     this.undoStack.length = 0;
     // Revert to the minimal rich-text renderer so admin pages without
@@ -2451,9 +2400,9 @@ export default class WireframeService extends Service {
    * the same way a palette drop does, then hands the dropped file to the
    * freshly-created block.
    *
-   * `dispatchActiveDrop` inserts and auto-selects an empty image block at
-   * the previewed slot synchronously. Rather than uploading here, the file
-   * is STAGED against the new block's key: the block's own `ImageArgOverlay`
+   * `wireframeDragOverlay.dispatch()` inserts and auto-selects an empty image
+   * block at the previewed slot synchronously. Rather than uploading here, the
+   * file is STAGED against the new block's key: the block's own `ImageArgOverlay`
    * picks it up as it mounts and uploads it through the overlay pipeline, so
    * the upload shows the per-block progress bar, surfaces errors, and writes
    * only to that block (the overlay always uses its own live key — an upload
@@ -2469,7 +2418,7 @@ export default class WireframeService extends Service {
     }
     // Run the pending drop. A false return means the slot rejected the
     // image block, so there's nothing to fill.
-    if (!this.dispatchActiveDrop()) {
+    if (!this.wireframeDragOverlay.dispatch()) {
       return false;
     }
     const blockKey = this.selectedBlockKey;
@@ -3469,6 +3418,7 @@ export default class WireframeService extends Service {
    */
   @action
   startDrag({ blockKey, outletName }) {
+    this.wireframeDragOverlay.clear();
     this.dragSourceKey = blockKey;
     this.dragSourceOutlet = outletName;
     this.dragSource = {
@@ -3488,6 +3438,7 @@ export default class WireframeService extends Service {
    */
   @action
   startPaletteDrag({ blockName, defaultArgs }) {
+    this.wireframeDragOverlay.clear();
     this.dragSource = {
       type: "wf-palette-block",
       data: { blockName, defaultArgs },
@@ -3496,112 +3447,38 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Resets drag state at the end of a drag (drop OR cancellation —
-   * PDND's `draggable.onDrop` fires for both). Wired as the source
-   * modifier's `onDrop` consumer callback, which the modifier
-   * defers via `queueMicrotask` until after PDND's full dispatch
-   * chain plus any native bubble-phase listeners have fired. By the
-   * time this runs, every drop handler that could read shared
-   * state has already consumed it — clearing everything here is
-   * just final cleanup.
+   * Resets per-drag state at the end of an element drag (drop OR cancellation —
+   * PDND's `draggable.onDrop` fires for both). Wired as the source modifier's
+   * `onDrop` consumer callback, which the modifier defers via `queueMicrotask`
+   * until after PDND's full dispatch chain has fired — so a drop handler has
+   * already consumed the overlay via `wireframeDragOverlay.dispatch()` before
+   * this final cleanup runs.
    */
   @action
   endDrag() {
     this.dragSourceKey = null;
     this.dragSourceOutlet = null;
     this.dragSource = null;
-    this.activeDropTarget = null;
-    this.activeDropPreview = null;
-    this.#lastDropPreview = null;
+    this.wireframeDragOverlay.clear();
     document.body.classList.remove("wireframe-dragging");
   }
 
   /**
-   * Writes the unified drop-preview descriptor. The mounted
-   * `<DropPreview>` component reads `activeDropPreview` and paints
-   * exactly one overlay; null hides it. Sources call this from
-   * their dragover handlers; the `#lastDropPreview` mirror lets
-   * drop-time dispatch read the same descriptor after the visible
-   * one has been cleared.
+   * Executes a drop dispatch payload by action name. The single chokepoint
+   * `WireframeDragOverlay` holds the payload across the drag and calls this at
+   * drop time; the action methods it names (`insertBlock`, `applyGridDrop`,
+   * `placeBlockInCell`, …) live on this service.
    *
-   * @param {Object|null} descriptor
+   * @param {{action: string, args: Object}} payload
+   * @returns {boolean} `true` when the named action ran.
    */
-  @action
-  setActiveDropPreview(descriptor) {
-    this.activeDropPreview = descriptor;
-    if (descriptor) {
-      this.#lastDropPreview = descriptor;
-    }
-  }
-
-  /**
-   * Hides the drop overlay (`activeDropPreview = null`) but keeps
-   * `#lastDropPreview` populated for a tick so the drop handler
-   * still has the descriptor to dispatch against.
-   */
-  @action
-  clearActiveDropPreview() {
-    this.activeDropPreview = null;
-  }
-
-  /**
-   * Dispatches the operation described by `#lastDropPreview` (the
-   * sticky mirror captured at the most recent dragover). The drop
-   * handlers attached to container chromes / grid overlay call
-   * this on `drop` — by then the visible preview may have been
-   * cleared by a dragleave, but the dispatch payload is still
-   * available here.
-   *
-   * Returns `true` when an operation ran; `false` when there was no
-   * preview to dispatch against (e.g. dropped outside any
-   * registered scope).
-   *
-   * @returns {boolean}
-   */
-  @action
-  dispatchActiveDrop() {
-    const preview = this.#lastDropPreview;
-    this.#lastDropPreview = null;
-    this.activeDropPreview = null;
-    if (!preview?.dispatch) {
-      return false;
-    }
-    const { action: actionName, args } = preview.dispatch;
+  runDropDispatch({ action: actionName, args }) {
     const method = this[actionName];
     if (typeof method !== "function") {
       return false;
     }
     method.call(this, args);
     return true;
-  }
-
-  /**
-   * Highlights a drop zone as the dragged block hovers over it. The shell
-   * reads `activeDropTarget` and applies a `--active` class to the matching
-   * zone — keeps the per-zone modifier instances stateless.
-   *
-   * @param {{targetKey: string, position: string, outletName: string}} target
-   */
-  @action
-  setActiveDropTarget(target) {
-    this.activeDropTarget = target;
-  }
-
-  /**
-   * Clears the active drop-zone highlight when the cursor leaves it. We
-   * compare `targetKey` so a stale `dragLeave` from a zone we already moved
-   * away from doesn't wipe the highlight on the *current* zone.
-   *
-   * @param {{targetKey: string, position: string}} target
-   */
-  @action
-  clearActiveDropTarget(target) {
-    if (
-      this.activeDropTarget?.targetKey === target.targetKey &&
-      this.activeDropTarget?.position === target.position
-    ) {
-      this.activeDropTarget = null;
-    }
   }
 
   /**
@@ -4623,6 +4500,11 @@ export default class WireframeService extends Service {
         return;
       }
       event.preventDefault();
+      // Safety net for external (file) drags, which have no element source
+      // modifier to run `endDrag`: this bubbling-phase listener fires after
+      // PDND's capture-phase target `onDrop` (which already dispatched), so
+      // clearing the overlay here can't wipe an unconsumed dispatch.
+      this.wireframeDragOverlay.clear();
     };
     window.addEventListener("dragover", this._handleFileDragOver, false);
     window.addEventListener("drop", this._handleFileDrop, false);

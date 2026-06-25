@@ -61,29 +61,14 @@ import ImageVariantDropPopover from "./image-variant-drop-popover";
  *   on the parent chrome runs AFTER our `setupPositioning` for loaded
  *   layouts (the didInsert order is child-first when both modifiers
  *   are scheduled in the same render pass).
- * @property {boolean} [externalDragOver] - For a passive background
- *   marker only: `true` while a file is dragged over the block body. The
- *   chrome detects the drag; this drives the overlay's own drag handlers
- *   (tint + dark-variant popover) via `syncExternalDrag`.
  * @property {File} [pendingFile] - For a passive background marker only:
  *   a file the chrome handed off after a body drop, uploaded through this
  *   overlay's own Uppy pipeline via `uploadHandedFile`.
- * @property {(phase: "enter"|"leave"|"drop") => void} [onForegroundDrag] -
- *   Called by non-passive (foreground) overlays as a file drag enters /
- *   leaves / drops on them, so the chrome can suppress the passive
- *   background overlay while a foreground image is the drag target.
  */
 export default class ImageArgOverlay extends Component {
   @service menu;
   @service wireframe;
-
-  /**
-   * `true` while the cursor is over this overlay during an external
-   * drag. Paired with `popoverHovered`; the `isDragOver` getter
-   * unions the two so the overlay tint stays visible while the
-   * cursor travels between the two surfaces.
-   */
-  @tracked overlayHovered = false;
+  @service wireframeDragOverlay;
 
   /**
    * Marker rect (relative to the chrome) used to position the
@@ -93,20 +78,12 @@ export default class ImageArgOverlay extends Component {
   @tracked markerRect = null;
 
   /**
-   * `true` while the cursor is over the dark-variant popover. Lets
-   * the overlay keep its tint AND update its label text to reflect
-   * the impending dark replacement.
-   */
-  @tracked popoverHovered = false;
-
-  /**
    * `true` when the resolved marker carries `data-drop-passive` — a
    * full-bleed background behind the block content. Drives the
    * click-through BEM modifier. Read from the template, so it stays
    * unprefixed. Set during `measure`.
    */
   @tracked markerPassive = false;
-
   /**
    * `true` when the resolved marker carries `data-drop-fills-block` —
    * the image owns the whole block, so the overlay spans the chrome.
@@ -114,13 +91,19 @@ export default class ImageArgOverlay extends Component {
    * so it stays unprefixed. Set during `measure`.
    */
   @tracked markerFillsBlock = false;
-
   /**
    * `true` after an upload through this overlay's pipeline failed, until the
    * next upload starts or succeeds. Drives the in-place "Upload failed" retry
    * affordance on the empty card, so a failed drop / pick isn't silent.
    */
   @tracked uploadFailed = false;
+
+  /**
+   * Release callback for this overlay's current image-arg claim, or `null`.
+   * The tint itself renders off the coordinator (`isDragOver`); this is only
+   * held so a leave releases the exact claim this overlay made.
+   */
+  #releaseDrop = null;
 
   /** The overlay's outer `<div>`. Pinned on insert. */
   #overlayEl = null;
@@ -160,12 +143,31 @@ export default class ImageArgOverlay extends Component {
   @tracked _uppyReady = false;
 
   /**
-   * Union of `overlayHovered` and `popoverHovered`. Drives the BEM
-   * `--drag-over` modifier so the overlay tint persists while the
-   * cursor travels between the overlay and the popover.
+   * The identity this overlay claims and matches against in the coordinator:
+   * the image arg `(blockKey, argName)` plus whether it's the passive
+   * full-bleed background marker.
+   *
+   * @returns {{blockKey: string, argName: string, isPassive: boolean}}
+   */
+  get #imageArgIdentity() {
+    return {
+      blockKey: this.args.blockKey,
+      argName: this.args.argName,
+      isPassive: this.markerPassive,
+    };
+  }
+
+  /**
+   * Whether this overlay's image arg is the single active drag overlay
+   * (per the coordinator). Drives the BEM `--drag-over` tint. Matching by
+   * identity — not by which surface the cursor is on — means the tint stays
+   * while the cursor travels overlay -> dark popover, because the popover
+   * re-claims the same identity (only `variant` flips).
+   *
+   * @returns {boolean}
    */
   get isDragOver() {
-    return this.overlayHovered || this.popoverHovered;
+    return this.wireframeDragOverlay.isActiveImageArg(this.#imageArgIdentity);
   }
 
   /**
@@ -238,9 +240,9 @@ export default class ImageArgOverlay extends Component {
    * be available. Requires the arg to opt into dark variants, a
    * light image to already exist (dark without light is meaningless
    * — the renderer needs a fallback for the default color-scheme
-   * media query). Works for passive backgrounds too: the chrome's body
-   * drag drives `onExternalDragEnter` via `syncExternalDrag`, which opens
-   * the popover anchored to this (full-card) overlay.
+   * media query). Works for passive backgrounds too: the chrome claims this
+   * overlay's image-arg while a file is over the body, so `isDragOver` turns
+   * true and `syncPopover` opens the popover anchored to this (full-card) overlay.
    */
   get showsVariantPicker() {
     if (!this.args.argDef?.allowDark) {
@@ -333,12 +335,17 @@ export default class ImageArgOverlay extends Component {
   }
 
   /**
-   * Label text shown inside the filled overlay during a drag.
-   * Reflects which variant the drop will replace — light by
-   * default, dark when the cursor has moved onto the popover.
+   * Label text shown inside the filled overlay during a drag. Reflects which
+   * variant the drop will replace — light by default, dark when the active
+   * overlay's `variant` is dark (the cursor has moved onto the popover).
    */
   get dragOverLabel() {
-    if (this.popoverHovered) {
+    if (
+      this.wireframeDragOverlay.isActiveImageArg({
+        ...this.#imageArgIdentity,
+        variant: "dark",
+      })
+    ) {
       return this.hasDarkVariant
         ? i18n("wireframe.canvas.image_drop_replace_dark")
         : i18n("wireframe.canvas.image_drop_add_dark");
@@ -478,78 +485,55 @@ export default class ImageArgOverlay extends Component {
   /* File-drag visual hooks */
 
   /**
-   * Thin file-drag visual hooks layered on top of Uppy's own
-   * `@uppy/drop-target` listeners. Uppy owns the upload pipeline
-   * and calls `preventDefault` itself; these callbacks only toggle
-   * the BEM tint modifier and drive the variant popover's open /
-   * close timing through FloatKit's hover-grace API.
+   * Claims the single drag-overlay slot for this image arg as a file is
+   * dragged over it (foreground overlays only — the passive background is
+   * claimed by the chrome). Claiming replaces any slot-insert preview, so
+   * exactly one overlay shows. The tint itself renders off the coordinator
+   * via `isDragOver`; the popover's open/close is driven by `syncPopover`.
    *
-   * Wired via `{{dDragAndDropExternalTarget}}` (ui-kit modifier
-   * wrapping PDND's external adapter) instead of raw `{{on}}`. The
-   * modifier owns the deepest-target filter, so the
-   * `dragleave`-bubbling guard the `{{on}}` version needed goes away.
+   * Wired via `{{dDragAndDropExternalTarget}}`; the modifier's deepest-target
+   * filter means these fire only when this overlay is the innermost target.
    */
   @action
   onExternalDragEnter() {
-    // Report to the chrome so it can suppress the full-bleed background
-    // overlay while a foreground image (e.g. the avatar) is the drag
-    // target — only one image-drop overlay shows at a time. Passive
-    // backgrounds are the ones being suppressed, so they don't report.
-    if (!this.markerPassive) {
-      this.args.onForegroundDrag?.("enter");
-    }
-    this.overlayHovered = true;
-    // Cancel any pending close from a brief excursion onto the
-    // popover and back — we re-use FloatKit's own hover-grace
-    // primitive instead of rolling a parallel timer.
-    this.#variantMenu?.cancelHoverClose();
-    this.#openVariantPopover();
+    this.#claimImageArg("light");
   }
 
   @action
   onExternalDragLeave() {
-    if (!this.markerPassive) {
-      this.args.onForegroundDrag?.("leave");
-    }
-    this.overlayHovered = false;
-    // Only schedule a close when the popover isn't holding the
-    // hover state on its own. That guard makes the schedule /
-    // cancel pair order-independent: whichever of `onDragLeave` on
-    // the overlay and `onDragEnter` on the popover PDND dispatches
-    // first, the menu doesn't end up closing while the cursor is
-    // still on one of our targets.
-    if (!this.popoverHovered) {
-      this.#variantMenu?.scheduleHoverClose();
-    }
+    this.#releaseDrop?.();
   }
 
   @action
   onExternalDrop() {
-    if (!this.markerPassive) {
-      this.args.onForegroundDrag?.("drop");
-    }
-    this.overlayHovered = false;
+    this.#releaseDrop?.();
     this.#closeVariantPopover();
   }
 
+  #claimImageArg(variant) {
+    this.#releaseDrop = this.wireframeDragOverlay.claimImageArg({
+      ...this.#imageArgIdentity,
+      variant,
+    });
+  }
+
   /**
-   * Mirrors the chrome's body-drag state into this overlay's own drag
-   * handlers for a passive background. The chrome owns the drop (the
-   * overlay stays click-through), but the tint + dark-variant popover are
-   * the overlay's existing machinery — so a body drag drives them through
-   * the same `onExternalDragEnter` / `onExternalDragLeave` path the
-   * interactive overlays use. Non-passive overlays use their own drag
-   * events and ignore this. Wired to `@externalDragOver` via `didUpdate`.
+   * Opens / closes the dark-variant popover to follow the active overlay.
+   * Opens when this image arg becomes the active overlay (foreground drag OR
+   * the chrome's passive-background claim) and schedules a graced close when
+   * it stops being active. The popover's show/hide TIMING stays a FloatKit
+   * concern (hover-grace lets the cursor travel image -> popover); this only
+   * decides open-vs-close. Wired to `isDragOver` via `didUpdate`.
    */
   @action
-  syncExternalDrag() {
-    if (!this.markerPassive) {
-      return;
-    }
-    if (this.args.externalDragOver) {
-      this.onExternalDragEnter();
+  syncPopover() {
+    if (this.isDragOver) {
+      if (this.showsVariantPicker) {
+        this.#variantMenu?.cancelHoverClose();
+        this.#openVariantPopover();
+      }
     } else {
-      this.onExternalDragLeave();
+      this.#variantMenu?.scheduleHoverClose();
     }
   }
 
@@ -711,32 +695,30 @@ export default class ImageArgOverlay extends Component {
         hoverGracePeriod: 200,
         maxWidth: 240,
         onClose: () => {
-          // Keep `#variantMenu` and the hover bookkeeping coherent
-          // when the menu closes on its own — hover-grace timeout,
-          // Escape, or any future close path. Without this, the
-          // stale reference would block the next reopen.
+          // Clear the stale reference when the menu closes on its own
+          // (hover-grace timeout, Escape, …) so the next reopen isn't blocked.
           this.#variantMenu = null;
-          this.overlayHovered = false;
-          this.popoverHovered = false;
         },
         data: {
           blockKey: this.args.blockKey,
           argName: this.args.argName,
           hasDarkVariant: this.hasDarkVariant,
           onDarkUpload: (upload) => this.#applyDarkUpload(upload),
+          // Entering the popover re-claims the SAME image-arg identity with the
+          // dark variant, so the tint stays on (the overlay's `isDragOver`
+          // still matches) and the label flips to dark; leaving releases.
+          // `cancel`/`scheduleHoverClose` keep FloatKit's travel grace.
           onPopoverEnter: () => {
-            this.popoverHovered = true;
             this.#variantMenu?.cancelHoverClose();
+            this.#claimImageArg("dark");
           },
           onPopoverLeave: () => {
-            this.popoverHovered = false;
-            if (!this.overlayHovered) {
-              this.#variantMenu?.scheduleHoverClose();
-            }
+            this.#releaseDrop?.();
+            this.#variantMenu?.scheduleHoverClose();
           },
         },
       });
-      if (!this.overlayHovered && !this.popoverHovered) {
+      if (!this.isDragOver) {
         this.#variantMenu?.scheduleHoverClose();
       }
     } finally {
@@ -745,7 +727,6 @@ export default class ImageArgOverlay extends Component {
   }
 
   #closeVariantPopover() {
-    this.popoverHovered = false;
     if (this.#variantMenu) {
       this.#variantMenu.close();
       this.#variantMenu = null;
@@ -786,7 +767,7 @@ export default class ImageArgOverlay extends Component {
       {{didInsert this.registerOverlay}}
       {{didInsert this.setupPositioning}}
       {{didUpdate this.measure this.remeasureSignal}}
-      {{didUpdate this.syncExternalDrag @externalDragOver}}
+      {{didUpdate this.syncPopover this.isDragOver}}
       {{didUpdate this.uploadHandedFile @pendingFile}}
       {{willDestroy this.teardown}}
       {{on "click" this.onActivate}}
