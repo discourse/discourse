@@ -189,13 +189,20 @@ export default class Collection extends Component {
         <@form.Object @name={{@fieldName}} as |object item|>
           {{#each this.selectedOptions key="name" as |option|}}
             <div class={{this.collectionRowClass option}}>
-              <div class="workflows-property-engine__collection-delete">
-                <DButton
-                  @action={{fn this.removeOption option}}
-                  @icon="trash-can"
-                  class="btn-transparent btn-small btn-danger"
-                />
-              </div>
+
+              <DButton
+                @action={{fn this.removeOption option}}
+                @icon="xmark"
+                class="workflows-property-engine__collection-delete"
+                @translatedAriaLabel={{i18n
+                  "discourse_workflows.property_engine.remove_assignment"
+                  name=(this.optionLabel option)
+                }}
+                @translatedTitle={{i18n
+                  "discourse_workflows.property_engine.remove_assignment"
+                  name=(this.optionLabel option)
+                }}
+              />
 
               <div class="workflows-property-engine__collection-fields">
                 <Field
@@ -218,6 +225,7 @@ export default class Collection extends Component {
                 />
               </div>
             </div>
+
           {{/each}}
         </@form.Object>
 

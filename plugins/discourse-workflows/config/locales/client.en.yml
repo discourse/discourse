@@ -556,6 +556,7 @@ en:
         add_item: "Add item"
         add_option: "Add option"
         add_field: "Add field"
+        remove_assignment: "Remove %{name}"
         remove_item: "Remove item"
         dynamic_hint: "Must resolve to %{value}."
         assignment_types:
