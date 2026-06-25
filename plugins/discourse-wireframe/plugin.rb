@@ -24,5 +24,7 @@ require_relative "lib/discourse_wireframe/engine"
 # for a new concern) and wire it with a `<Module>.apply(self)` line below. Each
 # module's `apply` receives this plugin instance and runs its DSL calls on it.
 require_relative "lib/discourse_wireframe/plugin_setup/icons"
+require_relative "lib/discourse_wireframe/plugin_setup/draft_cleanup"
 
 DiscourseWireframe::PluginSetup::Icons.apply(self)
+DiscourseWireframe::PluginSetup::DraftCleanup.apply(self)

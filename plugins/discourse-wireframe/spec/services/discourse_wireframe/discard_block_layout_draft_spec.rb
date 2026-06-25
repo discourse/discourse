@@ -70,5 +70,23 @@ RSpec.describe DiscourseWireframe::DiscardBlockLayoutDraft do
       described_class.call(params:, **dependencies)
       expect(draft_for(user).count).to eq(1)
     end
+
+    it "prunes the draft's UploadReferences so its uploads become collectable" do
+      upload = Fabricate(:upload)
+      DiscourseWireframe::BlockLayoutDraft.create!(
+        user: admin,
+        theme: theme,
+        outlet: "homepage-blocks",
+        data: {
+          "layout" => [
+            { "args" => { "image" => { "source" => "upload", "upload_id" => upload.id } } },
+          ],
+        }.to_json,
+      )
+      expect(UploadReference.where(upload_id: upload.id)).to exist
+
+      expect(result).to be_a_success
+      expect(UploadReference.where(upload_id: upload.id)).not_to exist
+    end
   end
 end

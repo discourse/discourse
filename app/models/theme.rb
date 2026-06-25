@@ -95,6 +95,7 @@ class Theme < ActiveRecord::Base
   after_create :update_child_components
   before_update :check_editable_attributes, if: :system?
   before_destroy :raise_invalid_parameters, if: :system?
+  after_commit :trigger_theme_destroyed_event, on: :destroy
 
   scope :user_selectable, -> { where("user_selectable OR id = ?", SiteSetting.default_theme_id) }
 
@@ -238,6 +239,12 @@ class Theme < ActiveRecord::Base
     end
 
     Theme.expire_site_cache!
+  end
+
+  # Fired after the destroy transaction commits so external tooling can clean up
+  # records keyed by this theme.
+  def trigger_theme_destroyed_event
+    DiscourseEvent.trigger(:theme_destroyed, self)
   end
 
   def self.compiler_version

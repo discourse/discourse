@@ -33,6 +33,25 @@ module BlockLayoutUploads
     ids.uniq
   end
 
+  # Claims every upload embedded in a layout's JSON for the given target so the
+  # hourly `Jobs::CleanUpUploads` doesn't garbage-collect them as orphans. This
+  # is the single binding path shared by every table that stores layout JSON.
+  #
+  # `ensure_exist!` also prunes references this target previously held for
+  # uploads no longer present, so removing or swapping an image in a layout
+  # reconciles automatically. The ids are filtered against the current `Upload`
+  # table to skip any client-supplied id that points to a non-existent (or
+  # just-deleted) upload row.
+  #
+  # @param target [ActiveRecord::Base] the record that owns the layout JSON
+  # @param value [String, nil] the layout JSON string
+  # @return [void]
+  def self.sync!(target:, value:)
+    ids = extract(value)
+    ids = Upload.where(id: ids).pluck(:id) if ids.any?
+    UploadReference.ensure_exist!(upload_ids: ids, target:)
+  end
+
   def self.collect(node, ids)
     case node
     when Hash

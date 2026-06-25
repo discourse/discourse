@@ -15,8 +15,16 @@ module DiscourseWireframe
     belongs_to :user
     belongs_to :theme
 
+    has_many :upload_references, as: :target, dependent: :destroy
+
     validates :outlet, presence: true, format: { with: /\A[a-z0-9_:\-]+\z/ }
     validates :data, presence: true, length: { maximum: MAX_DATA_BYTES }
+
+    # Claim the uploads embedded in this draft's layout JSON so the orphaned
+    # upload cleanup job spares them while the draft is unpublished. Gated on a
+    # `data` change to skip metadata-only updates; `sync!` reconciles (prunes
+    # removed images, adds new ones) on every change.
+    after_save { BlockLayoutUploads.sync!(target: self, value: data) if saved_change_to_data? }
   end
 end
 

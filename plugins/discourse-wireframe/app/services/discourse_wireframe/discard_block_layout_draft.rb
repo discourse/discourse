@@ -26,11 +26,13 @@ module DiscourseWireframe
     end
 
     def delete_draft(params:, guardian:)
+      # `destroy_all` (not `delete_all`) so each draft's `dependent: :destroy`
+      # prunes its UploadReferences, freeing the uploads for the cleanup job.
       DiscourseWireframe::BlockLayoutDraft.where(
         user_id: guardian.user&.id,
         theme_id: params.theme_id,
         outlet: params.outlet_name,
-      ).delete_all
+      ).destroy_all
     end
   end
 end

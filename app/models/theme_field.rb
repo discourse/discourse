@@ -28,16 +28,7 @@ class ThemeField < ActiveRecord::Base
        ) && saved_change_to_upload_id?
       UploadReference.ensure_exist!(upload_ids: [upload_id], target: self)
     elsif type_id == ThemeField.types[:block_layout] && saved_change_to_value?
-      # Claim every upload embedded in the layout JSON so the hourly
-      # `Jobs::CleanUpUploads` doesn't garbage-collect them as orphans.
-      # `ensure_exist!` also prunes references this target previously held
-      # for uploads no longer present, so removing or swapping an image in
-      # a layout reconciles automatically. Ids are filtered against the
-      # current `Upload` table to skip any client-supplied id that points
-      # to a non-existent (or just-deleted) upload row.
-      ids = BlockLayoutUploads.extract(value)
-      ids = Upload.where(id: ids).pluck(:id) if ids.any?
-      UploadReference.ensure_exist!(upload_ids: ids, target: self)
+      BlockLayoutUploads.sync!(target: self, value:)
     end
   end
 
