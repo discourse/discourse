@@ -236,4 +236,111 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
     assert.dom("[data-name='my_list'] .list-setting").exists();
     assert.dom("[data-name='my_list']").containsText("Alpha");
   });
+
+  test("textarea renders a textarea with a placeholder", async function (assert) {
+    await render(
+      <template>
+        <Form @data={{hash my_text=""}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_text"
+              type="textarea"
+              label="My text"
+              placeholder="Type here"
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='my_text'] textarea")
+      .hasAttribute("placeholder", "Type here");
+  });
+
+  test("a control-typed entry (email) maps to the matching input type", async function (assert) {
+    await render(
+      <template>
+        <Form @data={{hash my_email=""}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash key="my_email" type="email" label="My email"}}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom("[data-name='my_email'] input").hasAttribute("type", "email");
+  });
+
+  test("radio-group renders a radio per choice", async function (assert) {
+    await render(
+      <template>
+        <Form @data={{hash my_choice="a"}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_choice"
+              type="radio-group"
+              label="My choice"
+              valid_values=(array
+                (hash value="a" name="Apple") (hash value="b" name="Banana")
+              )
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='my_choice'] input[type='radio'][value='a']")
+      .exists();
+    assert
+      .dom("[data-name='my_choice'] input[type='radio'][value='b']")
+      .exists();
+    assert.dom("[data-name='my_choice']").containsText("Apple");
+  });
+
+  test("placeholder is forwarded to a string control", async function (assert) {
+    await render(
+      <template>
+        <Form @data={{hash my_setting=""}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_setting"
+              type="string"
+              label="My setting"
+              placeholder="Enter a value"
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='my_setting'] input")
+      .hasAttribute("placeholder", "Enter a value");
+  });
+
+  test("a definition can override the registry entry format", async function (assert) {
+    await render(
+      <template>
+        <Form @data={{hash my_setting=""}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_setting"
+              type="string"
+              label="My setting"
+              format="full"
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom("[data-name='my_setting']").hasClass("--full");
+  });
 });
