@@ -2673,6 +2673,8 @@ ur:
       email_label: "ای میل"
       continue_button: "جاری رکھیں"
       verify_button: "جاری رکھیں"
+      account_ready_continue: "جاری رکھیں"
+      username_label: "اسمِ صارف"
     login:
       header_title: "خوش آمدید"
       title: "لاگ اِن"

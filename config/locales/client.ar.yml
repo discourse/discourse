@@ -3202,6 +3202,8 @@ ar:
       email_label: "البريد الإلكتروني"
       continue_button: "متابعة"
       verify_button: "متابعة"
+      account_ready_continue: "متابعة"
+      username_label: "اسم المستخدم"
     login:
       header_title: "مرحبًا بعودتك"
       title: "تسجيل الدخول"

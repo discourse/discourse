@@ -2658,6 +2658,8 @@ de:
       email_label: "E-Mail"
       continue_button: "Weiter"
       verify_button: "Weiter"
+      account_ready_continue: "Weiter"
+      username_label: "Benutzername"
     login:
       header_title: "Willkommen zurück"
       title: "Anmelden"

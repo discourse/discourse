@@ -2647,6 +2647,8 @@ el:
       email_label: "Διεύθυνση Email"
       continue_button: "Συνεχίστε"
       verify_button: "Συνεχίστε"
+      account_ready_continue: "Συνεχίστε"
+      username_label: "Όνομα χρήστη"
     login:
       header_title: "Καλώς ήρθατε και πάλι"
       title: "Σύνδεση"

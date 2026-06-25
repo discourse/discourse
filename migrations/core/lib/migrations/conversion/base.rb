@@ -17,6 +17,9 @@ module Migrations
 
         create_database
 
+        @worker_pool = WorkerPool.new
+        @reporter = ConsoleReporter.new
+
         filter_steps(steps, only_steps, skip_steps).each do |step_class|
           step = create_step(step_class)
           before_step_execution(step)
@@ -28,6 +31,7 @@ module Migrations
         exit(1)
       ensure
         Database::IntermediateDB.close
+        @reporter&.close
       end
 
       def steps
@@ -54,12 +58,12 @@ module Migrations
       def execute_step(step)
         executor =
           if step.is_a?(ProgressStep)
-            ProgressStepExecutor
+            ProgressStepExecutor.new(step, pool: @worker_pool, reporter: @reporter)
           else
-            StepExecutor
+            StepExecutor.new(step, reporter: @reporter)
           end
 
-        executor.new(step).execute
+        executor.execute
       end
 
       def after_step_execution(step)

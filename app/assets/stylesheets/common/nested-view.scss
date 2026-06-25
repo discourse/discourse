@@ -750,7 +750,7 @@
 
   &__header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.25em;
 
     // Hide the reply-to line, as the lines between posts already visually indicate the reply structure

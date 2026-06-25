@@ -1161,6 +1161,8 @@ sw:
       email_label: "Barua Pepe"
       continue_button: "Endelea"
       verify_button: "Endelea"
+      account_ready_continue: "Endelea"
+      username_label: "Jina la mtumiaji"
     login:
       title: "Ingia"
       username: "Mtumiaji"

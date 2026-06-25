@@ -1565,6 +1565,8 @@ ca:
       email_label: "Correu electrònic"
       continue_button: "Continua"
       verify_button: "Continua"
+      account_ready_continue: "Continua"
+      username_label: "Nom d'usuari "
     login:
       title: "Inicia la sessió"
       username: "Usuari"

@@ -1349,6 +1349,8 @@ th:
       email_label: "อีเมล"
       continue_button: "ดำเนินการต่อ"
       verify_button: "ดำเนินการต่อ"
+      account_ready_continue: "ดำเนินการต่อ"
+      username_label: "ชื่อผู้ใช้"
     login:
       title: "เข้าสู่ระบบ"
       username: "ชื่อผู้ใช้"

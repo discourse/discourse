@@ -2167,6 +2167,8 @@ nb_NO:
       email_label: "E-post"
       continue_button: "Fortsett"
       verify_button: "Fortsett"
+      account_ready_continue: "Fortsett"
+      username_label: "Brukernavn"
     login:
       header_title: "Velkommen tilbake"
       title: "Logg inn"

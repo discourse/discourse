@@ -1560,6 +1560,8 @@ bs_BA:
       email_label: "Email"
       continue_button: "Nastavi"
       verify_button: "Nastavi"
+      account_ready_continue: "Nastavi"
+      username_label: "Nadimak"
     login:
       title: "Prijava"
       username: "Korisnik"

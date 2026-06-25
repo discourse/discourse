@@ -2469,6 +2469,8 @@ pt:
       email_label: "E-mail"
       continue_button: "Continuar"
       verify_button: "Continuar"
+      account_ready_continue: "Continuar"
+      username_label: "Nome de Utilizador"
     login:
       header_title: "Bem-vindo de volta"
       title: "Iniciar Sessão"
