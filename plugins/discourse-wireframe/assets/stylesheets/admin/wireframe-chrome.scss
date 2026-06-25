@@ -1909,15 +1909,18 @@ body.wireframe-active {
   flex-direction: column;
   gap: 1.25rem;
 
-  /* FormKit's default "large input" width is 325px (see
-     `app/assets/stylesheets/common/form-kit/_variables.scss`). The
-     textarea control hard-codes `min-width: var(--form-kit-large-input)`
-     in `_control-textarea.scss`, which overflows the narrow inspector
-     side-panel horizontally regardless of any `max-width: 100%` we set
-     downstream. Override the variable inside the inspector context so
-     every FormKit control respects the panel's actual width. */
+  /* FormKit sizes a field's content area to a fixed input-width token —
+     large is 325px, medium is 200px (see
+     `app/assets/stylesheets/common/form-kit/_variables.scss`); `.form-kit__
+     container-content` defaults to the medium width. In the narrow inspector
+     side-panel every field should simply fill the column, so collapse both
+     tokens to 100%. Large also stops the textarea control (which hard-codes
+     `min-width: var(--form-kit-large-input)`) from overflowing; medium is what
+     keeps the `custom`-slot controls (segmented enum pickers, steppers) from
+     rendering at 200px instead of the full panel width. */
 
   --form-kit-large-input: 100%;
+  --form-kit-medium-input: 100%;
 
   .form-kit__section {
     gap: 0.75rem;
@@ -2044,9 +2047,26 @@ body.wireframe-active {
     }
   }
 
+  /* The field root (`.form-kit__container.form-kit__field`) is a flex column
+     with no width of its own, so it shrinks to its content. Force it to fill
+     the panel; otherwise every inner width (container-content, the stretched
+     control) resolves against a content-width box and the control stays narrow. */
+
   .form-kit__field {
+    width: 100%;
     max-width: 100%;
     min-width: 0;
+  }
+
+  /* FormKit's field content is itself a flex column with `align-items:
+     flex-start`, so a custom-slot control (our segmented / dimension / stepper
+     fields) collapses to its content width. The bespoke layout form used plain
+     flex-column field wrappers whose default `align-items: stretch` let every
+     control fill the width — restore that here so the controls span the panel.
+     Toggle fields are excluded: they intentionally right-align their switch. */
+
+  .form-kit__field:not(.form-kit__field-toggle) .form-kit__container-content {
+    align-items: stretch;
   }
 
   input,
@@ -2108,6 +2128,37 @@ body.wireframe-active {
 
 .wireframe-inspector-container-args > * + * {
   margin-top: 1rem;
+}
+
+/* Single source of truth for the inspector's control-label treatment: a
+   compact uppercase legend, applied uniformly across every inspector form.
+   FormKit titles (`.form-kit__container-title` / `-section-title`) are scoped
+   under `.wireframe-inspector-form`, the class every inspector Form carries —
+   the main block-args form, the placement form, and the layout form — so all
+   field labels read the same. The two bespoke surfaces that render their own
+   label markup (the layout form's source / template sections and the condition
+   editor, both via `__legend`) are folded into the same group so nothing
+   drifts. */
+
+.wireframe-layout-form__legend,
+.wireframe-condition-editor__legend,
+.wireframe-inspector-form .form-kit__container-title,
+.wireframe-inspector-form .form-kit__section-title {
+  color: var(--primary-medium);
+  font-size: var(--font-down-2);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* FormKit renders the titles as an <h2> / labelled element with their own
+   margins; reset them so they sit like the bespoke legend spans. */
+
+.wireframe-inspector-form {
+  .form-kit__container-title,
+  .form-kit__section-title {
+    margin: 0;
+  }
 }
 
 /* Transparent slot wrappers. The chrome's transparent branch renders
@@ -3065,21 +3116,16 @@ body.wireframe-active
   gap: 0.65rem;
   font-size: var(--font-down-1);
 
+  /* Bespoke field wrapper for the non-FormKit controls (the source picker and
+     the Advanced track-template inputs). Like the FormKit fields, it has to be
+     forced full-width — the form's children don't stretch on their own — so the
+     source picker and its template dropdown span the panel. */
+
   &__field {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-  }
-
-  /* A boolean toggle reads best inline: label on the left, switch on the
-     right, on one row (the stacked legend-above layout is for the wider
-     segmented / dropdown controls). */
-
-  &__field--inline {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
+    width: 100%;
   }
 
   /* Out-of-bounds warning banner — surfaced when the layout loaded
@@ -3116,24 +3162,25 @@ body.wireframe-active
     }
   }
 
-  &__legend {
-    color: var(--primary-medium);
-    font-size: var(--font-down-2);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    font-weight: 600;
-  }
-
   /* The mode / align / auto-collapse pickers render core `DSegmentedControl`,
      which owns its own track / slider / radio styling. The enum controls now
      render via the shared `.wireframe-segmented-field` (icon segments with a
      dropdown fallback); its width / dark-chrome adjustments live in that
      block below. */
 
+  /* Columns / rows sit on one row, each at its natural width, pushed to opposite
+     ends. The fields default to full width in the inspector, so reset them to
+     auto here or they'd each claim the whole row. */
+
   &__pair {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    justify-content: space-between;
     gap: 0.5rem;
+    width: 100%;
+
+    .form-kit__field {
+      width: auto;
+    }
   }
 
   /* Informational hint shown beneath the mode picker for grid / row
@@ -3207,15 +3254,6 @@ body.wireframe-active
   &__template-dropdown {
     justify-content: space-between;
     flex-direction: row-reverse;
-  }
-
-  /* Editable column / row count fields shown in free mode — a label above a
-     stepper control. */
-
-  &__number {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
   }
 
   &__advanced {
@@ -3320,15 +3358,19 @@ body.wireframe-active
   display: inline-flex;
   align-items: stretch;
   gap: 0.25rem;
-  width: 100%;
+
+  /* Content-width, not full-width: a small-integer stepper reads best compact.
+     Stretching it to the field would balloon the number box (e.g. a lone Grow
+     control spanning the whole panel). The number input is a fixed box; the
+     control sits at its natural width inside whatever cell holds it. */
 
   /* `[type="number"]` qualifier raises specificity above the global
      `input[type=number]` rule, whose `margin-bottom` would otherwise offset the
      input within the stretch row and break vertical alignment with the buttons. */
 
   &__number[type="number"] {
-    flex: 1 1 auto;
-    width: auto;
+    flex: 0 0 auto;
+    width: 3.5rem;
     min-width: 0;
     margin: 0;
     text-align: center;
@@ -4411,14 +4453,6 @@ body.wireframe-active {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-  }
-
-  &__legend {
-    color: var(--primary-medium);
-    font-size: var(--font-down-2);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    font-weight: 600;
   }
 
   /* Segmented control: a chip-toggle for short mutually-exclusive

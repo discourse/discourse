@@ -340,6 +340,7 @@ const VALID_ALIGN_CONTENT = [
           default: 0,
           min: 0,
           ui: {
+            control: "stepper",
             label: i18n("blocks.builtin.layout.placement.flex_grow"),
           },
         },
@@ -375,6 +376,7 @@ const VALID_ALIGN_CONTENT = [
           default: 0,
           min: 0,
           ui: {
+            control: "stepper",
             label: i18n("blocks.builtin.layout.placement.flex_grow"),
           },
         },

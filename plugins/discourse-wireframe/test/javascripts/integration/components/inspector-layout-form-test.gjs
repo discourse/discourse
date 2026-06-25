@@ -9,15 +9,33 @@ import InspectorLayoutForm from "discourse/plugins/discourse-wireframe/discourse
 // grid helpers return inert values so the form mounts cleanly in every mode.
 class StubWireframeService extends Service {
   #args;
+  #fieldErrors;
 
-  constructor(owner, args) {
+  constructor(owner, args, fieldErrors) {
     super(owner);
     this.#args = args;
+    this.#fieldErrors = fieldErrors ?? {};
     this.updateSelectedArgCalls = [];
   }
 
+  // The Form seeds its draft from `argsSnapshot`; the canvas-facing `args`
+  // mirror it here. `metadata.args` is the (empty) schema the form reads for
+  // labels, defaults, and validation rules.
   get selectedBlockData() {
-    return { key: "layout:test", args: this.#args };
+    return {
+      key: "layout:test",
+      args: this.#args,
+      argsSnapshot: this.#args,
+      metadata: { args: {} },
+    };
+  }
+
+  get selectedBlockFieldErrors() {
+    return this.#fieldErrors;
+  }
+
+  get selectedBlockNonFieldErrors() {
+    return [];
   }
 
   gridSizeFor() {
@@ -41,11 +59,13 @@ class StubWireframeService extends Service {
   }
 }
 
-function stubWireframe(owner, args) {
+function stubWireframe(owner, args, fieldErrors) {
   owner.unregister("service:wireframe");
-  owner.register("service:wireframe", new StubWireframeService(owner, args), {
-    instantiate: false,
-  });
+  owner.register(
+    "service:wireframe",
+    new StubWireframeService(owner, args, fieldErrors),
+    { instantiate: false }
+  );
 }
 
 module(
@@ -102,6 +122,22 @@ module(
       assert.deepEqual(service.updateSelectedArgCalls, [
         { name: "reverse", value: true },
       ]);
+    });
+
+    test("surfaces a service validation error on its field", async function (assert) {
+      stubWireframe(
+        this.owner,
+        { mode: "stack" },
+        { align: [{ message: "Bad alignment value" }] }
+      );
+      await render(<template><InspectorLayoutForm /></template>);
+
+      assert
+        .dom(".wireframe-layout-form")
+        .includesText(
+          "Bad alignment value",
+          "the field error pushed by the service renders in the form"
+        );
     });
   }
 );

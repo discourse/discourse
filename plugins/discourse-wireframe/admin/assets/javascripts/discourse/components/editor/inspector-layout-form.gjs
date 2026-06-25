@@ -1,18 +1,23 @@
 // @ts-check
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import Form from "discourse/components/form";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import { friendlyErrorMessage } from "discourse/plugins/discourse-wireframe/discourse/lib/friendly-error-message";
 import { GRID_TEMPLATES, parseGridAreas } from "../../lib/grid-templates";
+import { buildValidationRule } from "../../lib/schema-to-fields";
 import InspectorDimensionField from "./inspector-dimension-field";
 import InspectorSegmentedField from "./inspector-segmented-field";
 import InspectorStepperField from "./inspector-stepper-field";
@@ -133,6 +138,17 @@ export default class InspectorLayoutForm extends Component {
   @service dialog;
 
   /**
+   * FormKit's external-error API, captured from `<Form @onRegisterApi>`. Used
+   * by `syncErrors` to push the service's structured validation errors into the
+   * matching field's error slot. Plain field (not `@tracked`): the sync runs
+   * from the `{{didInsert}}` / `{{didUpdate}}` modifiers, never read from a
+   * template.
+   *
+   * @type {{addError: Function, removeErrors: Function}|null}
+   */
+  #formApi = null;
+
+  /**
    * Predicate the template menu uses to grey out templates that can't
    * fit the current layout (one with fewer spaces than the layout has
    * content blocks). Delegates to the service so the refusal logic
@@ -233,6 +249,55 @@ export default class InspectorLayoutForm extends Component {
     return this.wireframe.selectedBlockData?.args ?? {};
   }
 
+  /**
+   * The block's declared args schema for the current selection (its `ui` hints,
+   * defaults, and constraints). Empty when nothing is declared.
+   *
+   * @returns {Object}
+   */
+  get #schema() {
+    return this.wireframe.selectedBlockData?.metadata?.args ?? {};
+  }
+
+  /**
+   * Seed data for `<Form @data>`. Starts from each arg's schema default, then
+   * overlays the selection's `argsSnapshot` (a frozen plain copy captured once
+   * at selection). The defaults matter because the snapshot only carries
+   * explicitly-set args — without them a draft-bound control (align, gap, …)
+   * for an unset arg would render blank instead of its effective default.
+   *
+   * `@cached` so the reference stays stable for the life of a selection: Form
+   * seeds FKFormData once and only remounts when this reference changes, so we
+   * recompute solely when the selection (and thus the snapshot / schema) does,
+   * never per keystroke.
+   *
+   * @returns {Object}
+   */
+  @cached
+  get argsSnapshot() {
+    const snapshot = this.wireframe.selectedBlockData?.argsSnapshot ?? {};
+    const defaults = {};
+    for (const [name, def] of Object.entries(this.#schema)) {
+      if (def?.default !== undefined) {
+        defaults[name] = def.default;
+      }
+    }
+    return { ...defaults, ...snapshot };
+  }
+
+  /**
+   * Subscribes the surrounding tracking frame to the service's structured
+   * field-errors map, so the `{{didUpdate}}`-driven `syncErrors` re-runs when
+   * the validator's stamps change. Returns the map for iteration inside the
+   * sync without taking a second tracked dep.
+   *
+   * @returns {Object<string, Array<Object>>}
+   */
+  @cached
+  get fieldErrors() {
+    return this.wireframe.selectedBlockFieldErrors;
+  }
+
   get mode() {
     // Coerce the legacy `"free-grid"` mode value to `"grid"` so the
     // segmented control highlights the right segment and the rest of
@@ -260,38 +325,6 @@ export default class InspectorLayoutForm extends Component {
   get rows() {
     const data = this.wireframe.selectedBlockData;
     return data?.key ? this.wireframe.gridSizeFor(data.key).rows : 2;
-  }
-
-  get gap() {
-    return this.#args.gap ?? 1;
-  }
-
-  get align() {
-    return this.#args.align ?? "stretch";
-  }
-
-  get justifyContent() {
-    return this.#args.justifyContent ?? "start";
-  }
-
-  get wrap() {
-    return this.#args.wrap ?? "wrap";
-  }
-
-  get reverse() {
-    return this.#args.reverse ?? false;
-  }
-
-  get justifyItems() {
-    return this.#args.justifyItems ?? "stretch";
-  }
-
-  get alignContent() {
-    return this.#args.alignContent ?? "stretch";
-  }
-
-  get dense() {
-    return this.#args.dense ?? false;
   }
 
   /** @returns {boolean} `true` for the flex modes (stack / row). */
@@ -414,41 +447,6 @@ export default class InspectorLayoutForm extends Component {
   }
 
   @action
-  setAlign(value) {
-    this.#set("align", value);
-  }
-
-  @action
-  setJustifyContent(value) {
-    this.#set("justifyContent", value);
-  }
-
-  @action
-  setAlignContent(value) {
-    this.#set("alignContent", value);
-  }
-
-  @action
-  setWrap(value) {
-    this.#set("wrap", value);
-  }
-
-  @action
-  setJustifyItems(value) {
-    this.#set("justifyItems", value);
-  }
-
-  @action
-  toggleReverse() {
-    this.#set("reverse", !this.reverse);
-  }
-
-  @action
-  toggleDense() {
-    this.#set("dense", !this.dense);
-  }
-
-  @action
   setColumns(value) {
     if (!Number.isFinite(value)) {
       return;
@@ -506,13 +504,6 @@ export default class InspectorLayoutForm extends Component {
   }
 
   @action
-  setGap(value) {
-    if (Number.isFinite(value)) {
-      this.#set("gap", value);
-    }
-  }
-
-  @action
   setColumnTemplate(event) {
     this.#set("columnTemplate", event.target.value);
   }
@@ -545,6 +536,87 @@ export default class InspectorLayoutForm extends Component {
       gridKey: data.key,
       template,
     });
+  }
+
+  /**
+   * Per-field `@onSet` for the draft-bound controls. FormKit calls it with the
+   * new value and a context whose `set` applies it to FormKit's own draft. We
+   * invoke both: `set` keeps the input in sync, and `updateSelectedArg` pushes
+   * the change to the editor service so the canvas re-renders (debounced into
+   * one undo entry). The service-live controls (mode / columns / rows) bypass
+   * this and commit through their own actions.
+   *
+   * @param {*} value
+   * @param {{set: Function, name: string}} ctx
+   */
+  @action
+  async onFieldSet(value, ctx) {
+    const argDef = this.#schema?.[ctx.name];
+    // Treat an empty string as absence for string args without a default, so a
+    // cleared field deletes the override rather than writing a literal "".
+    const writeValue =
+      value === "" && argDef?.default === undefined ? null : value;
+    await ctx.set(ctx.name, value);
+    this.wireframe.updateSelectedArg(ctx.name, writeValue);
+  }
+
+  /**
+   * Captures FormKit's external-error API when the Form mounts. The first
+   * `syncErrors` runs immediately after via the host's `{{didInsert}}`.
+   *
+   * @param {{addError: Function, removeErrors: Function}} api
+   */
+  @action
+  registerFormApi(api) {
+    this.#formApi = api;
+  }
+
+  /**
+   * Pushes the service's structured validation errors into FormKit, which then
+   * renders each under its matching field and in the form-level summary. Runs
+   * on mount and whenever `fieldErrors` OR `mode` changes — re-running on a mode
+   * switch matters because FormKit drops a field's error when the field
+   * unregisters (a grid-only field hidden in stack mode), so we re-push after
+   * the visible field set changes. Non-field errors route through synthetic
+   * `_block:<n>` keys (no title) so the summary renders them form-level.
+   */
+  @action
+  syncErrors() {
+    if (!this.#formApi) {
+      return;
+    }
+    this.#formApi.removeErrors();
+    for (const [field, details] of Object.entries(this.fieldErrors ?? {})) {
+      const label = this.#schema?.[field]?.ui?.label ?? field;
+      for (const detail of details) {
+        this.#formApi.addError(field, {
+          title: label,
+          message: friendlyErrorMessage(detail),
+        });
+      }
+    }
+    (this.wireframe.selectedBlockNonFieldErrors ?? []).forEach((detail, i) => {
+      this.#formApi.addError(`_block:${i}`, {
+        message: friendlyErrorMessage(detail),
+      });
+    });
+  }
+
+  /**
+   * Builds the FormKit `@validation` rule string for an arg from its schema
+   * constraints (`min`/`max`/`minLength`/`maxLength`/`required`), or `undefined`
+   * when the arg declares none — so the prop can be omitted.
+   *
+   * @param {string} argName
+   * @returns {string|undefined}
+   */
+  @action
+  validationRuleFor(argName) {
+    const argDef = this.#schema?.[argName];
+    if (!argDef) {
+      return undefined;
+    }
+    return buildValidationRule({ required: argDef.required, schema: argDef });
   }
 
   #set(name, value) {
@@ -601,303 +673,351 @@ export default class InspectorLayoutForm extends Component {
   }
 
   <template>
-    <div class="wireframe-layout-form">
-      <div class="wireframe-layout-form__field">
-        <span class="wireframe-layout-form__legend">
-          {{i18n "wireframe.inspector.layout.mode_legend"}}
-        </span>
-        <InspectorSegmentedField
-          @items={{this.modeItems}}
-          @value={{this.mode}}
-          @name="wireframe-layout-mode"
-          @onChange={{this.setMode}}
-        />
-      </div>
+    {{! The host carries the error-sync side effect. It re-runs on mount, when
+      the validator's field errors change, and when mode changes, because
+      FormKit drops a field's pushed error when that field unregisters (a
+      grid-only field hidden in stack mode), so we re-push after the visible
+      field set changes. }}
+    <div
+      class="wireframe-layout-form"
+      {{didInsert this.syncErrors}}
+      {{didUpdate this.syncErrors this.fieldErrors this.mode}}
+    >
+      <Form
+        @data={{this.argsSnapshot}}
+        @onRegisterApi={{this.registerFormApi}}
+        class="wireframe-inspector-form"
+        as |form|
+      >
+        {{! Mode is service-live: it drives the conditional visibility below and
+          coerces the legacy free-grid value, so it reads the live getter rather
+          than the FormKit draft. }}
+        <form.Field
+          @name="mode"
+          @title={{i18n "wireframe.inspector.layout.mode_legend"}}
+          @type="custom"
+          as |f|
+        >
+          <f.Control>
+            <InspectorSegmentedField
+              @items={{this.modeItems}}
+              @value={{this.mode}}
+              @onChange={{this.setMode}}
+              @name="wireframe-layout-mode"
+            />
+          </f.Control>
+        </form.Field>
 
-      {{! Auto-collapse selector — surfaces the @container behaviour
-        from wireframe.scss and lets authors tune the threshold per
-        layout. Hidden for stack mode (which is already column-oriented
-        and has no @container rule). The help text under the segmented
-        buttons updates based on the active selection. }}
-      {{#unless (eq this.mode "stack")}}
-        <div class="wireframe-layout-form__field">
-          <span class="wireframe-layout-form__legend">
-            {{i18n "wireframe.inspector.layout.auto_collapse_label"}}
-          </span>
-          <InspectorSegmentedField
-            @items={{this.autoCollapseItems}}
-            @value={{this.autoCollapse}}
-            @name="wireframe-layout-auto-collapse"
-            @onChange={{this.setAutoCollapse}}
-          />
+        {{! Auto-collapse surfaces the responsive collapse behaviour and lets
+          authors tune the threshold per layout. Hidden in stack mode (already
+          column-oriented). Service-live so the dynamic help text below reads the
+          current value. }}
+        {{#unless (eq this.mode "stack")}}
+          <form.Field
+            @name="autoCollapse"
+            @title={{i18n "wireframe.inspector.layout.auto_collapse_label"}}
+            @type="custom"
+            as |f|
+          >
+            <f.Control>
+              <InspectorSegmentedField
+                @items={{this.autoCollapseItems}}
+                @value={{this.autoCollapse}}
+                @onChange={{this.setAutoCollapse}}
+                @name="wireframe-layout-auto-collapse"
+              />
+            </f.Control>
+          </form.Field>
           <p class="wireframe-layout-form__hint">
             {{dIcon "circle-info"}}
             <span>{{i18n this.autoCollapseHelpKey}}</span>
           </p>
-        </div>
-      {{/unless}}
+        {{/unless}}
 
-      {{#if this.isGrid}}
-        {{! Source: a free grid (you pick the column / row count) or a
-          preset template (picked from the dropdown). The active option
-          is derived from the grid's current shape, so it reflects hand
-          edits too — a uniform grid reads as Free. }}
-        <div class="wireframe-layout-form__field">
-          <span class="wireframe-layout-form__legend">
-            {{i18n "wireframe.inspector.layout.source_legend"}}
-          </span>
-          <div class="wireframe-layout-form__source" role="radiogroup">
-            <DButton
-              class={{dConcatClass
-                "wireframe-layout-form__source-option"
-                (if this.isFree "--active")
-              }}
-              @ariaPressed={{this.isFree}}
-              @icon="table-cells"
-              @label="wireframe.inspector.layout.free"
-              @action={{this.chooseFree}}
-            />
-            <DMenu
-              @identifier="wireframe-grid-templates"
-              @placement="bottom-start"
-              @icon="chevron-down"
-              @label={{this.templateButtonLabel}}
-              class={{dConcatClass
-                "wireframe-layout-form__source-option"
-                "wireframe-layout-form__template-dropdown"
-                (unless this.isFree "--active")
-              }}
-            >
-              <:content as |args|>
-                <TemplateMenuList
-                  @options={{this.templateOptions}}
-                  @onPick={{this.applyTemplate}}
-                  @close={{args.close}}
-                />
-              </:content>
-            </DMenu>
-          </div>
-        </div>
-
-        {{! Column / row counts stay editable in both Free and template
-          mode — editing a dimension diverges the shape from any matched
-          preset, so the control falls back to Free on its own. }}
-        {{! Plain divs, NOT label elements: a label associates with its first
-          labelable descendant (the stepper's minus button), so hovering the
-          label draws that button in its hover state and clicking the legend
-          would trigger it. The stepper's input carries the name via its
-          aria-label argument instead. }}
-        <div class="wireframe-layout-form__pair">
-          <div class="wireframe-layout-form__number">
+        {{#if this.isGrid}}
+          {{! Source picker: a bespoke widget (Free toggle plus a preset menu),
+            not a single arg, so it stays plain markup inside the form. The
+            active option is derived from the grid's current shape. }}
+          <div class="wireframe-layout-form__field">
             <span class="wireframe-layout-form__legend">
-              {{i18n "wireframe.inspector.layout.columns"}}
+              {{i18n "wireframe.inspector.layout.source_legend"}}
             </span>
-            <InspectorStepperField
-              @value={{this.columns}}
-              @onChange={{this.setColumns}}
-              @min={{COLUMNS_MIN}}
-              @max={{COLUMNS_MAX}}
-              @ariaLabel={{i18n "wireframe.inspector.layout.columns"}}
-            />
-          </div>
-          <div class="wireframe-layout-form__number">
-            <span class="wireframe-layout-form__legend">
-              {{i18n "wireframe.inspector.layout.rows"}}
-            </span>
-            <InspectorStepperField
-              @value={{this.rows}}
-              @onChange={{this.setRows}}
-              @min={{ROWS_MIN}}
-              @max={{ROWS_MAX}}
-              @ariaLabel={{i18n "wireframe.inspector.layout.rows"}}
-            />
-          </div>
-        </div>
-
-        {{! Loaded-with-bad-data warning: some cells reference positions
-          outside the current grid. We can't auto-clamp on load (the
-          user might have just opened a saved layout and not yet
-          touched anything), so show a banner with a manual "Fix"
-          action that routes through the same clamp helper. }}
-        {{#if this.hasOutOfBoundsSlots}}
-          <div class="wireframe-layout-form__warning" role="alert">
-            {{dIcon "triangle-exclamation"}}
-            <div class="wireframe-layout-form__warning-body">
-              <p>{{i18n
-                  "wireframe.inspector.layout.out_of_bounds_warning"
-                  count=this.outOfBoundsSlots.length
-                }}</p>
+            <div class="wireframe-layout-form__source" role="radiogroup">
               <DButton
-                class="btn-small btn-danger"
-                @label="wireframe.inspector.layout.out_of_bounds_fix"
-                @action={{this.fixOutOfBoundsSlots}}
+                class={{dConcatClass
+                  "wireframe-layout-form__source-option"
+                  (if this.isFree "--active")
+                }}
+                @ariaPressed={{this.isFree}}
+                @icon="table-cells"
+                @label="wireframe.inspector.layout.free"
+                @action={{this.chooseFree}}
               />
+              <DMenu
+                @identifier="wireframe-grid-templates"
+                @placement="bottom-start"
+                @icon="chevron-down"
+                @label={{this.templateButtonLabel}}
+                class={{dConcatClass
+                  "wireframe-layout-form__source-option"
+                  "wireframe-layout-form__template-dropdown"
+                  (unless this.isFree "--active")
+                }}
+              >
+                <:content as |args|>
+                  <TemplateMenuList
+                    @options={{this.templateOptions}}
+                    @onPick={{this.applyTemplate}}
+                    @close={{args.close}}
+                  />
+                </:content>
+              </DMenu>
             </div>
           </div>
+
+          {{! Columns and rows are service-live: the displayed value is the
+            derived grid size, and editing routes through a clamp-confirm flow,
+            so they read the live getters and commit through their own actions
+            rather than the FormKit draft. }}
+          <div class="wireframe-layout-form__pair">
+            <form.Field
+              @name="columns"
+              @title={{i18n "wireframe.inspector.layout.columns"}}
+              @type="custom"
+              as |f|
+            >
+              <f.Control>
+                <InspectorStepperField
+                  @value={{this.columns}}
+                  @onChange={{this.setColumns}}
+                  @min={{COLUMNS_MIN}}
+                  @max={{COLUMNS_MAX}}
+                  @ariaLabel={{i18n "wireframe.inspector.layout.columns"}}
+                />
+              </f.Control>
+            </form.Field>
+            <form.Field
+              @name="rows"
+              @title={{i18n "wireframe.inspector.layout.rows"}}
+              @type="custom"
+              as |f|
+            >
+              <f.Control>
+                <InspectorStepperField
+                  @value={{this.rows}}
+                  @onChange={{this.setRows}}
+                  @min={{ROWS_MIN}}
+                  @max={{ROWS_MAX}}
+                  @ariaLabel={{i18n "wireframe.inspector.layout.rows"}}
+                />
+              </f.Control>
+            </form.Field>
+          </div>
+
+          {{! Loaded-with-bad-data warning: some cells reference positions
+            outside the current grid. We cannot auto-clamp on load, so show a
+            banner with a manual fix action that routes through the clamp
+            helper. }}
+          {{#if this.hasOutOfBoundsSlots}}
+            <div class="wireframe-layout-form__warning" role="alert">
+              {{dIcon "triangle-exclamation"}}
+              <div class="wireframe-layout-form__warning-body">
+                <p>{{i18n
+                    "wireframe.inspector.layout.out_of_bounds_warning"
+                    count=this.outOfBoundsSlots.length
+                  }}</p>
+                <DButton
+                  class="btn-small btn-danger"
+                  @label="wireframe.inspector.layout.out_of_bounds_fix"
+                  @action={{this.fixOutOfBoundsSlots}}
+                />
+              </div>
+            </div>
+          {{/if}}
         {{/if}}
-      {{/if}}
 
-      <div class="wireframe-layout-form__field">
-        <span class="wireframe-layout-form__legend">
-          {{i18n "wireframe.inspector.layout.gap_legend"}}
-        </span>
-        <InspectorDimensionField
-          @value={{this.gap}}
-          @onChange={{this.setGap}}
-          @unitless={{true}}
-          @unit="rem"
-          @slider={{true}}
-          @min={{GAP_MIN}}
-          @max={{GAP_MAX}}
-          @step={{GAP_STEP}}
-        />
-      </div>
-
-      <div class="wireframe-layout-form__field">
-        <span class="wireframe-layout-form__legend">
-          {{i18n "wireframe.inspector.layout.align_legend"}}
-        </span>
-        <InspectorSegmentedField
-          @items={{this.alignItems}}
-          @value={{this.align}}
-          @name="wireframe-layout-align"
-          @onChange={{this.setAlign}}
-        />
-      </div>
-
-      {{! Main-axis distribution. Icon segments by main axis; the unified field
-        falls back to a dropdown only if the row can't fit. Applies to flex and grid. }}
-      <div class="wireframe-layout-form__field">
-        <span class="wireframe-layout-form__legend">
-          {{i18n "wireframe.inspector.layout.justify_content_legend"}}
-        </span>
-        <InspectorSegmentedField
-          @items={{this.justifyContentItems}}
-          @value={{this.justifyContent}}
-          @name="wireframe-layout-justify-content"
-          @onChange={{this.setJustifyContent}}
-        />
-      </div>
-
-      {{#if this.isFlex}}
-        <div
-          class="wireframe-layout-form__field wireframe-layout-form__field--inline"
+        {{! Gap, alignment, and distribution are draft-bound: the control reads
+          and writes the FormKit field value, and onFieldSet mirrors the change
+          to the editor service. The axis-aware item icons still come from the
+          component getters, so they flip with the current mode. }}
+        <form.Field
+          @name="gap"
+          @title={{i18n "wireframe.inspector.layout.gap_legend"}}
+          @type="custom"
+          @onSet={{this.onFieldSet}}
+          @validation={{this.validationRuleFor "gap"}}
+          as |f|
         >
-          <span class="wireframe-layout-form__legend">
-            {{i18n "wireframe.inspector.layout.reverse_legend"}}
-          </span>
-          <DToggleSwitch
-            @state={{this.reverse}}
-            {{on "click" this.toggleReverse}}
-          />
-        </div>
-
-        {{#if this.isRow}}
-          <div class="wireframe-layout-form__field">
-            <span class="wireframe-layout-form__legend">
-              {{i18n "wireframe.inspector.layout.wrap_legend"}}
-            </span>
-            <InspectorSegmentedField
-              @items={{this.wrapItems}}
-              @value={{this.wrap}}
-              @name="wireframe-layout-wrap"
-              @onChange={{this.setWrap}}
+          <f.Control>
+            <InspectorDimensionField
+              @custom={{f}}
+              @unitless={{true}}
+              @unit="rem"
+              @slider={{true}}
+              @min={{GAP_MIN}}
+              @max={{GAP_MAX}}
+              @step={{GAP_STEP}}
             />
-          </div>
-        {{/if}}
-      {{/if}}
+          </f.Control>
+        </form.Field>
 
-      {{#if this.isGrid}}
-        {{! Grid cell-alignment and flow controls — primary, so they sit in the
-          main panel; only the raw track-template escape hatches are tucked into
-          the Advanced disclosure below. }}
-        <div class="wireframe-layout-form__field">
-          <span class="wireframe-layout-form__legend">
-            {{i18n "wireframe.inspector.layout.justify_items_legend"}}
-          </span>
-          <InspectorSegmentedField
-            @items={{this.justifyItemsItems}}
-            @value={{this.justifyItems}}
-            @name="wireframe-layout-justify-items"
-            @onChange={{this.setJustifyItems}}
-          />
-        </div>
-
-        <div class="wireframe-layout-form__field">
-          <span class="wireframe-layout-form__legend">
-            {{i18n "wireframe.inspector.layout.align_content_legend"}}
-          </span>
-          <InspectorSegmentedField
-            @items={{this.alignContentItems}}
-            @value={{this.alignContent}}
-            @name="wireframe-layout-align-content"
-            @onChange={{this.setAlignContent}}
-          />
-        </div>
-
-        <div
-          class="wireframe-layout-form__field wireframe-layout-form__field--inline"
+        <form.Field
+          @name="align"
+          @title={{i18n "wireframe.inspector.layout.align_legend"}}
+          @type="custom"
+          @onSet={{this.onFieldSet}}
+          as |f|
         >
-          <span class="wireframe-layout-form__legend">
-            {{i18n "wireframe.inspector.layout.dense_legend"}}
-          </span>
-          <DToggleSwitch
-            @state={{this.dense}}
-            {{on "click" this.toggleDense}}
-          />
-        </div>
+          <f.Control>
+            <InspectorSegmentedField
+              @items={{this.alignItems}}
+              @custom={{f}}
+              @name="wireframe-layout-align"
+            />
+          </f.Control>
+        </form.Field>
 
-        {{! Disclosure body holds inputs/buttons by design. The summary line is
-            the disclosure trigger; its descendants stand on their own as form
-            controls once expanded. }}
-        <details class="wireframe-layout-form__advanced">
-          <summary>{{i18n
-              "wireframe.inspector.layout.advanced_templates"
-            }}</summary>
-          <div class="wireframe-layout-form__field">
-            <span class="wireframe-layout-form__legend">
-              {{i18n "wireframe.inspector.layout.column_template"}}
-            </span>
-            <div class="wireframe-layout-form__template-row">
-              <input
-                type="text"
-                value={{this.columnTemplate}}
-                placeholder="1fr 2fr 1fr"
-                {{on "input" this.setColumnTemplate}}
-              />
-              {{#if this.columnTemplate}}
-                <DButton
-                  class="btn-flat btn-small"
-                  @icon="rotate-left"
-                  @title="wireframe.inspector.layout.template_clear"
-                  @action={{this.clearColumnTemplate}}
+        <form.Field
+          @name="justifyContent"
+          @title={{i18n "wireframe.inspector.layout.justify_content_legend"}}
+          @type="custom"
+          @onSet={{this.onFieldSet}}
+          as |f|
+        >
+          <f.Control>
+            <InspectorSegmentedField
+              @items={{this.justifyContentItems}}
+              @custom={{f}}
+              @name="wireframe-layout-justify-content"
+            />
+          </f.Control>
+        </form.Field>
+
+        {{#if this.isFlex}}
+          <form.Field
+            @name="reverse"
+            @title={{i18n "wireframe.inspector.layout.reverse_legend"}}
+            @type="toggle"
+            @onSet={{this.onFieldSet}}
+            as |f|
+          >
+            <f.Control />
+          </form.Field>
+
+          {{#if this.isRow}}
+            <form.Field
+              @name="wrap"
+              @title={{i18n "wireframe.inspector.layout.wrap_legend"}}
+              @type="custom"
+              @onSet={{this.onFieldSet}}
+              as |f|
+            >
+              <f.Control>
+                <InspectorSegmentedField
+                  @items={{this.wrapItems}}
+                  @custom={{f}}
+                  @name="wireframe-layout-wrap"
                 />
-              {{/if}}
-            </div>
-          </div>
-          <div class="wireframe-layout-form__field">
-            <span class="wireframe-layout-form__legend">
-              {{i18n "wireframe.inspector.layout.row_template"}}
-            </span>
-            <div class="wireframe-layout-form__template-row">
-              <input
-                type="text"
-                value={{this.rowTemplate}}
-                placeholder="auto 1fr"
-                {{on "input" this.setRowTemplate}}
+              </f.Control>
+            </form.Field>
+          {{/if}}
+        {{/if}}
+
+        {{#if this.isGrid}}
+          <form.Field
+            @name="justifyItems"
+            @title={{i18n "wireframe.inspector.layout.justify_items_legend"}}
+            @type="custom"
+            @onSet={{this.onFieldSet}}
+            as |f|
+          >
+            <f.Control>
+              <InspectorSegmentedField
+                @items={{this.justifyItemsItems}}
+                @custom={{f}}
+                @name="wireframe-layout-justify-items"
               />
-              {{#if this.rowTemplate}}
-                <DButton
-                  class="btn-flat btn-small"
-                  @icon="rotate-left"
-                  @title="wireframe.inspector.layout.template_clear"
-                  @action={{this.clearRowTemplate}}
+            </f.Control>
+          </form.Field>
+
+          <form.Field
+            @name="alignContent"
+            @title={{i18n "wireframe.inspector.layout.align_content_legend"}}
+            @type="custom"
+            @onSet={{this.onFieldSet}}
+            as |f|
+          >
+            <f.Control>
+              <InspectorSegmentedField
+                @items={{this.alignContentItems}}
+                @custom={{f}}
+                @name="wireframe-layout-align-content"
+              />
+            </f.Control>
+          </form.Field>
+
+          <form.Field
+            @name="dense"
+            @title={{i18n "wireframe.inspector.layout.dense_legend"}}
+            @type="toggle"
+            @onSet={{this.onFieldSet}}
+            as |f|
+          >
+            <f.Control />
+          </form.Field>
+
+          {{! Advanced disclosure holds the raw track-template escape hatches.
+            They keep a bespoke clear button and write on every keystroke, so
+            they stay plain inputs rather than fields. }}
+          <details class="wireframe-layout-form__advanced">
+            <summary>{{i18n
+                "wireframe.inspector.layout.advanced_templates"
+              }}</summary>
+            <div class="wireframe-layout-form__field">
+              <span class="wireframe-layout-form__legend">
+                {{i18n "wireframe.inspector.layout.column_template"}}
+              </span>
+              <div class="wireframe-layout-form__template-row">
+                <input
+                  type="text"
+                  value={{this.columnTemplate}}
+                  placeholder="1fr 2fr 1fr"
+                  {{on "input" this.setColumnTemplate}}
                 />
-              {{/if}}
+                {{#if this.columnTemplate}}
+                  <DButton
+                    class="btn-flat btn-small"
+                    @icon="rotate-left"
+                    @title="wireframe.inspector.layout.template_clear"
+                    @action={{this.clearColumnTemplate}}
+                  />
+                {{/if}}
+              </div>
             </div>
-          </div>
-        </details>
-      {{/if}}
+            <div class="wireframe-layout-form__field">
+              <span class="wireframe-layout-form__legend">
+                {{i18n "wireframe.inspector.layout.row_template"}}
+              </span>
+              <div class="wireframe-layout-form__template-row">
+                <input
+                  type="text"
+                  value={{this.rowTemplate}}
+                  placeholder="auto 1fr"
+                  {{on "input" this.setRowTemplate}}
+                />
+                {{#if this.rowTemplate}}
+                  <DButton
+                    class="btn-flat btn-small"
+                    @icon="rotate-left"
+                    @title="wireframe.inspector.layout.template_clear"
+                    @action={{this.clearRowTemplate}}
+                  />
+                {{/if}}
+              </div>
+            </div>
+          </details>
+        {{/if}}
+      </Form>
     </div>
   </template>
 }
