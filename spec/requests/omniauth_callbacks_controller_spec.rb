@@ -727,7 +727,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       it "sanitizes custom failed auth result HTML" do
         link_html =
-          '<a href="https://pinterest.example/help" target="_blank" rel="noopener" onclick="alert(1)">Learn more</a>'
+          '<a href="https://example.com/help" target="_blank" rel="noopener" onclick="alert(1)">Learn more</a>'
         failed_result = Auth::Result.new
         failed_result.failed = true
         failed_result.failed_reason = [
@@ -750,7 +750,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         aggregate_failures do
           expect(response.status).to eq(200)
           expect(alert.text).to include("Partner accounts only.")
-          expect(link["href"]).to eq("https://pinterest.example/help")
+          expect(link["href"]).to eq("https://example.com/help")
           expect(link["target"]).to eq("_blank")
           expect(link["onclick"]).to be_nil
           expect(alert.to_html).not_to include("<script")
