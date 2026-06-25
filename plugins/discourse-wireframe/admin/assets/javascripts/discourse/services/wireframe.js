@@ -1930,10 +1930,12 @@ export default class WireframeService extends Service {
       return;
     }
     // If the block sits inside an inactive tab whose button is already rendered
-    // (e.g. selecting it from the outline), switch to that tab so its panel can
-    // render. A freshly INSERTED tab's button isn't mounted this runloop, so
-    // this no-ops for inserts — the tabs block reveals a just-added panel itself
-    // (it re-renders with the new child at the right time, which this can't).
+    // (e.g. selecting it from the outline, or after a reorder), switch to that
+    // tab so its panel can render. The tabs block tracks its active panel by
+    // key, so activating the button sticks to the right panel even before the
+    // reorder's re-render settles. A freshly INSERTED tab's button isn't mounted
+    // this runloop, so this no-ops for inserts — the tabs block reveals a
+    // just-added panel itself.
     this.#revealContainingTabs(blockKey);
     const el = document.querySelector(
       `[data-wf-block-key="${CSS.escape(blockKey)}"]`
@@ -3658,22 +3660,31 @@ export default class WireframeService extends Service {
         ? [source.outletName]
         : [source.outletName, targetOutletName];
     return this.recordStructural(outletsAffected, () => {
-      if (source.outletName === targetOutletName) {
-        return this.#moveWithinOutlet(
-          source.outletName,
-          sourceKey,
-          targetKey,
-          position
-        );
+      const moved =
+        source.outletName === targetOutletName
+          ? this.#moveWithinOutlet(
+              source.outletName,
+              sourceKey,
+              targetKey,
+              position
+            )
+          : this.moveAcrossOutlets({
+              sourceOutletName: source.outletName,
+              targetOutletName,
+              sourceEntry: source.entry,
+              sourceKey,
+              targetKey,
+              position,
+            });
+      // Focus the moved block so it's the active selection afterwards — the
+      // same treatment an inserted block gets. For a tabs / carousel child this
+      // brings the moved tab or slide to the front via the reveal-on-select
+      // path. A same-outlet move keeps the block's key; only select when the key
+      // still resolves, so a cross-outlet re-key doesn't clear the selection.
+      if (moved && this.findEntryAndOutletSync(sourceKey)) {
+        this.restoreSelection(sourceKey);
       }
-      return this.moveAcrossOutlets({
-        sourceOutletName: source.outletName,
-        targetOutletName,
-        sourceEntry: source.entry,
-        sourceKey,
-        targetKey,
-        position,
-      });
+      return moved;
     });
   }
 

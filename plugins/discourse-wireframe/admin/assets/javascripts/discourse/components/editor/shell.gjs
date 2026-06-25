@@ -35,6 +35,7 @@ import SimulationControls from "./simulation-controls";
  * receive editor input.
  */
 export default class EditorShell extends Component {
+  @service dragAndDrop;
   @service wireframe;
   @service wireframeDragNav;
 
@@ -49,7 +50,11 @@ export default class EditorShell extends Component {
   /**
    * CSS classes for the shell that drive the canvas grid template
    * (`--left-collapsed` / `--right-collapsed` from
-   * `wireframe.scss` adjust `grid-template-columns`).
+   * `wireframe.scss` adjust `grid-template-columns`). `--dragging` (set while a
+   * block drag is in flight) lets editor-only affordances opt out of pointer
+   * events during a drag — e.g. an empty container's call-to-action button,
+   * which would otherwise swallow the drop instead of letting it land on the
+   * container's drop target.
    */
   get shellClasses() {
     const classes = ["wireframe-shell"];
@@ -58,6 +63,9 @@ export default class EditorShell extends Component {
     }
     if (this.rightCollapsed) {
       classes.push("--right-collapsed");
+    }
+    if (this.dragAndDrop.isDragging) {
+      classes.push("--dragging");
     }
     return classes.join(" ");
   }

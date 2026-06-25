@@ -79,7 +79,14 @@ const VALID_ALIGNS = ["start", "center", "end"];
   },
 })
 export default class Tabs extends Component {
-  @tracked activeIndex = 0;
+  /**
+   * The key of the panel the author has activated, or `null` to fall back to the
+   * first panel. Tracked by KEY rather than a positional index so reordering the
+   * panels never shifts which one is active.
+   *
+   * @type {string | null}
+   */
+  @tracked activeKey = null;
 
   /**
    * The stored label value for a child (may be empty). `RichTextRenderer`
@@ -105,7 +112,7 @@ export default class Tabs extends Component {
    * created. Tracks the SET of child keys across renders (not just the count),
    * so an insert ANYWHERE — not only an append — reveals the tab that was
    * actually added rather than always jumping to the last one. The assignment
-   * is deferred via `next` because it sets `activeIndex`, which the same render
+   * is deferred via `next` because it sets `activeKey`, which the same render
    * reads; `#previousPanelKeys` starts null so the first render (0 → N) is not
    * mistaken for an insert.
    */
@@ -114,7 +121,7 @@ export default class Tabs extends Component {
     if (this.#previousPanelKeys) {
       const added = keys.find((key) => !this.#previousPanelKeys.has(key));
       if (added != null) {
-        next(() => (this.activeIndex = keys.indexOf(added)));
+        next(() => (this.activeKey = added));
       }
     }
     this.#previousPanelKeys = new Set(keys);
@@ -137,22 +144,27 @@ export default class Tabs extends Component {
   }
 
   /**
-   * The active index clamped to the current child count, so a stale
-   * `activeIndex` (e.g. after a panel is removed) never points past the end.
+   * The key of the panel currently shown — the activated key while it still
+   * matches a panel, otherwise the first panel's key. Resolving by key (rather
+   * than a stored index) keeps the right panel active across reorders, and
+   * falls back cleanly when the activated panel was removed.
    *
-   * @returns {number}
+   * @returns {string | undefined}
    */
-  get activePanelIndex() {
-    const count = this.panels.length;
-    if (count === 0) {
-      return 0;
+  get activePanelKey() {
+    const panels = this.panels;
+    if (
+      this.activeKey &&
+      panels.some((panel) => panel.key === this.activeKey)
+    ) {
+      return this.activeKey;
     }
-    return Math.min(Math.max(this.activeIndex, 0), count - 1);
+    return panels[0]?.key;
   }
 
   /** @returns {Object | undefined} The single child currently shown. */
   get activePanel() {
-    return this.panels[this.activePanelIndex];
+    return this.panels.find((panel) => panel.key === this.activePanelKey);
   }
 
   /** @returns {string} Root class carrying the strip-alignment modifier. */
@@ -164,8 +176,8 @@ export default class Tabs extends Component {
   }
 
   @action
-  selectTab(index) {
-    this.activeIndex = index;
+  selectTab(key) {
+    this.activeKey = key;
   }
 
   <template>
@@ -200,7 +212,7 @@ export default class Tabs extends Component {
           }}
         >
           {{#each this.panels key="key" as |child index|}}
-            {{#let (eq this.activePanelIndex index) as |isActive|}}
+            {{#let (eq child.key this.activePanelKey) as |isActive|}}
               <button
                 type="button"
                 class="d-block-tabs__tab {{if isActive 'is-active'}}"
@@ -220,7 +232,7 @@ export default class Tabs extends Component {
                   (and this.isEditing isActive)
                   "label"
                 }}
-                {{on "click" (fn this.selectTab index)}}
+                {{on "click" (fn this.selectTab child.key)}}
               >
                 <RichTextRenderer
                   @arg="label"

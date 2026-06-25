@@ -2546,6 +2546,15 @@ body.wireframe-active
    listeners never fire, so the visible label and the tooltip never
    appear simultaneously. */
 
+/* While a block drag is in flight, the empty-state call to action stops
+   capturing pointer events so the drag's release lands on the container's drop
+   target underneath (which creates the first child) instead of being swallowed
+   by this button. Click-to-pick still works when no drag is in progress. */
+
+.wireframe-shell.--dragging .wireframe-empty-drop-placeholder {
+  pointer-events: none;
+}
+
 .wireframe-empty-drop-placeholder {
   container-type: inline-size;
   container-name: wireframe-empty;

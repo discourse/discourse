@@ -189,5 +189,39 @@ module(
         .dom(".d-block-tabs__strip [data-wf-append-child]")
         .exists("the tab strip remains while the tabs block is empty");
     });
+
+    test("reordering a tab focuses the moved tab", async function (assert) {
+      await render(<template><BlockOutlet @name={{OUTLET}} /></template>);
+
+      // Add a second tab (now active), so there are two to reorder.
+      await click("[data-wf-append-child]");
+      const panels = tabsEntry(this.editor).children;
+      const firstKey = entryKey(panels[0]);
+      const secondKey = entryKey(panels[1]);
+
+      // Move the first (inactive) tab to after the second — the same dispatch a
+      // canvas reorder drop produces.
+      this.editor.moveBlock({
+        sourceKey: firstKey,
+        targetKey: secondKey,
+        position: "after",
+        targetOutletName: OUTLET,
+      });
+      await settled();
+
+      assert.strictEqual(
+        this.editor.selectedBlockKey,
+        firstKey,
+        "the moved tab's panel is selected"
+      );
+      const activeTab = document.querySelector(
+        '.d-block-tabs__tab[aria-selected="true"]'
+      );
+      assert.strictEqual(
+        activeTab?.dataset.wfTabPanelKey,
+        firstKey,
+        "the moved tab is brought to the front (active)"
+      );
+    });
   }
 );
