@@ -107,6 +107,28 @@ export default class InspectorRichTextField extends Component {
   }
 
   /**
+   * The value to seed (and re-seed) the editor from. Prefers the LIVE block-arg
+   * value off the entry's tracked args, so an external edit — the canvas inline
+   * editor committing the same arg, a paste, an undo — flows back into this
+   * editor; reading the property opens a tracked dep, and `structuralVersion`
+   * covers the entry being replaced under the selection. Falls back to the
+   * FormKit draft for non-block-arg fields (container args like tab labels,
+   * whose value lives outside `args`), which keep their selection-time value.
+   *
+   * @returns {string | object}
+   */
+  get liveValue() {
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.wireframe.structuralVersion;
+    const data = this.wireframe.selectedBlockData;
+    const name = this.args.custom?.name;
+    if (name && data?.metadata?.args && name in data.metadata.args) {
+      return data.args?.[name] ?? "";
+    }
+    return this.args.custom?.value ?? "";
+  }
+
+  /**
    * Active-mark flags for the current selection, or `null` when the toolbar
    * buttons should read inactive (no view, empty selection, or a schema with
    * no marks). Reading `_pmStateVersion` ties it to PM transactions.
@@ -154,7 +176,7 @@ export default class InspectorRichTextField extends Component {
 
     const variant = SCHEMAS[this.#schemaName];
     const schema = pm.createSchema(variant.extensions, false);
-    const seedValue = this.args.custom?.value ?? "";
+    const seedValue = this.liveValue;
     this.#committedValue = seedValue;
     const doc = pm.Node.fromJSON(schema, toDoc(seedValue));
 
@@ -224,6 +246,35 @@ export default class InspectorRichTextField extends Component {
     if (this.readOnly) {
       this.linkMode = false;
     }
+  }
+
+  /**
+   * Re-seeds the editor when the value changes from OUTSIDE this editor (e.g.
+   * the canvas committed an edit to the same arg) AND the editor isn't focused
+   * — so an external change flows in without disrupting an edit in progress
+   * here. No-op when the doc already matches. The editor remains its own source
+   * of truth while focused (the user's keystrokes win until they blur).
+   */
+  @action
+  reseed() {
+    const view = this.#view;
+    if (!view || view.hasFocus()) {
+      return;
+    }
+    const next = this.liveValue;
+    if (valuesEqual(toStorage(view.state.doc.toJSON()), next)) {
+      return;
+    }
+    const doc = this.#pm.Node.fromJSON(view.state.schema, toDoc(next));
+    view.updateState(
+      this.#pm.EditorState.create({
+        schema: view.state.schema,
+        doc,
+        plugins: view.state.plugins,
+      })
+    );
+    this.#committedValue = next;
+    this._pmStateVersion++;
   }
 
   /**
@@ -433,6 +484,7 @@ export default class InspectorRichTextField extends Component {
         {{didInsert this.mountEditor}}
         {{willDestroy this.unmountEditor}}
         {{didUpdate this.syncReadOnly this.readOnly}}
+        {{didUpdate this.reseed this.liveValue}}
       ></div>
     </div>
   </template>

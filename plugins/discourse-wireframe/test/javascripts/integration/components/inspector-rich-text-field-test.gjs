@@ -18,10 +18,14 @@ function makeCustom(value, name = "text") {
   };
 }
 
-// Stub wireframe service: only the inline-edit identity the read-only guard
-// reads is needed.
+// Stub wireframe service: the inline-edit identity the read-only guard reads,
+// plus the live-value lookup (`selectedBlockData` + `structuralVersion`) the
+// editor seeds from. `selectedBlockData` is null by default, so the editor
+// falls back to the FormKit draft (`@custom.value`).
 class StubWireframeService extends Service {
   selectedBlockKey = null;
+  selectedBlockData = null;
+  structuralVersion = 0;
   inlineEdit = { isActive: false, argName: null, blockKey: null };
 }
 
@@ -102,6 +106,32 @@ module("Integration | Wireframe | InspectorRichTextField", function (hooks) {
     assert
       .dom(".wireframe-inspector-rich-text__btn:not([disabled])")
       .doesNotExist("every toolbar button is disabled while inert");
+  });
+
+  test("seeds from the live block-arg value, not a stale FormKit draft", async function (assert) {
+    const stub = this.owner.lookup("service:wireframe");
+    stub.selectedBlockKey = "block-1";
+    // `text` is a declared block arg whose live value diverged from the draft
+    // (e.g. a canvas edit committed it). The editor must show the live value.
+    stub.selectedBlockData = {
+      metadata: { args: { text: {} } },
+      args: { text: "live value" },
+    };
+
+    const custom = makeCustom("stale draft");
+
+    await render(
+      <template>
+        <InspectorRichTextField @custom={{custom}} @schema="heading" />
+      </template>
+    );
+
+    assert
+      .dom(".wireframe-inspector-rich-text__editor .wf-inline-editor")
+      .hasText(
+        "live value",
+        "seeds from the live entry args, not the frozen FormKit draft"
+      );
   });
 
   test("does not commit when nothing changed", async function (assert) {
