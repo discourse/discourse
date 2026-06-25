@@ -37,12 +37,34 @@ module("Unit | lib | discourse-workflows | buildScope", function () {
     assert.strictEqual(scope.$json.post.raw, "");
   });
 
-  test("trigger aliases $json", function (assert) {
+  test("$trigger resolves to the trigger node output, distinct from $json", function (assert) {
     const scope = buildScope({
-      inputFields: [{ key: "title", type: "string" }],
+      inputFields: [{ key: "current", type: "string" }],
+      ancestorNodes: [
+        {
+          node: { name: "Topic Created", type: "trigger:topic_created" },
+          fields: [{ key: "topic_title", type: "string" }],
+        },
+      ],
     });
 
-    assert.strictEqual(scope.trigger, scope.$json);
+    // $trigger exposes the trigger node's own output...
+    assert.strictEqual(scope.$trigger.topic_title, "");
+    // ...not the current input ($json), which they only share when the
+    // trigger is the immediately preceding node.
+    assert.notStrictEqual(scope.$trigger, scope.$json);
+    assert.strictEqual(scope.$json.topic_title, undefined);
+    // The bare `trigger` name (which the runner never bound) is gone.
+    assert.strictEqual(scope.trigger, undefined);
+  });
+
+  test("$trigger is an empty object when no trigger ancestor is known", function (assert) {
+    const scope = buildScope({
+      inputFields: [{ key: "current", type: "string" }],
+    });
+
+    assert.deepEqual(Object.keys(scope.$trigger), []);
+    assert.strictEqual(scope.trigger, undefined);
   });
 
   test("$input.item.json aliases $json", function (assert) {

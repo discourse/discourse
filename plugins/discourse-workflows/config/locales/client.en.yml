@@ -542,7 +542,7 @@ en:
           input: "Current node input helpers. Use $input.item, $input.all(), $input.first(), $input.last(), or $input.params."
           item_index: "Index of the input item currently being processed."
           json: "JSON data of the current input item. Shorthand for $input.item.json."
-          trigger: "Alias for $json — the trigger node's output data."
+          trigger: "The trigger node's output data. Example: $trigger.topic.id"
           site_settings: "Access Discourse site settings. Example: $site_settings.title"
           current_user: "The user who triggered the workflow. Properties: id, username"
           workflow_vars: "Workflow variables defined in the admin panel."

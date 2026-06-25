@@ -326,16 +326,23 @@ export function buildScope({
   const $input = buildInputScope($json);
 
   const nodeOutputs = Object.create(null);
+  let triggerJson = null;
   for (const ancestor of ancestorNodes) {
     const json = buildScopeFromFields(ancestor.fields);
     nodeOutputs[ancestor.node.name] = buildNodeOutput(json);
+    if (!triggerJson && ancestor.node.type?.startsWith("trigger:")) {
+      triggerJson = json;
+    }
   }
 
   return cleanObject({
     $input,
     $itemIndex: 0,
     $json,
-    trigger: $json,
+    // The runner binds $trigger to the trigger node's output (distinct from
+    // the current input $json); mirror it here, resolved from the trigger
+    // ancestor's fields, so authoring matches what executes.
+    $trigger: triggerJson || Object.create(null),
     $site_settings: buildSiteSettingsScope(siteSettings),
     $current_user: cleanObject({ id: 0, username: "" }),
     $vars: buildVarsScope(workflowVars),
