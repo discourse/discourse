@@ -22,6 +22,7 @@ const VALID_ALIGNMENTS = ["left", "center", "right"];
       required: true,
       ui: {
         control: "rich-inline",
+        schema: "heading",
         label: i18n("blocks.builtin.heading.text"),
       },
     },

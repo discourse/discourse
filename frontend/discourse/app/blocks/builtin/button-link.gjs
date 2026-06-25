@@ -19,6 +19,7 @@ const VALID_VARIANTS = ["primary", "default", "danger"];
       type: "richInline",
       ui: {
         control: "rich-inline",
+        schema: "plain",
         label: i18n("blocks.builtin.button_link.label"),
       },
     },

@@ -76,6 +76,11 @@ const VALID_UI_PROPERTIES = Object.freeze([
   "hidden",
   "conditional",
   "optionIcons",
+  // Variant hint for a `richInline` arg ("plain" / "heading" / "paragraph") —
+  // selects the allowed marks / line breaks for the in-place and inspector
+  // rich-text editors. An opaque string to the core validator; consumers map it
+  // to their own editor configuration.
+  "schema",
   // Numeric-control configuration: the allowed units a value may carry, the
   // default unit, the increment step, and whether to show an inline slider.
   "units",
@@ -161,7 +166,14 @@ function validateUIHints(uiDef, argName, blockName, argLabel) {
     }
   }
 
-  for (const prop of ["label", "placeholder", "helpText", "group", "unit"]) {
+  for (const prop of [
+    "label",
+    "placeholder",
+    "helpText",
+    "group",
+    "unit",
+    "schema",
+  ]) {
     if (uiDef[prop] !== undefined && typeof uiDef[prop] !== "string") {
       raiseBlockError(
         `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.${prop}" value. Must be a string.`

@@ -34,6 +34,7 @@ const VALID_TONES = ["info", "success", "warning", "danger"];
       required: true,
       ui: {
         control: "rich-inline",
+        schema: "paragraph",
         label: i18n("blocks.builtin.callout.body"),
       },
     },

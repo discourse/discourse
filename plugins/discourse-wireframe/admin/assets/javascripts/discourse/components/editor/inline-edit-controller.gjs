@@ -7,6 +7,9 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
 import {
+  existingLinkHref,
+  hasMark,
+  insertHardBreak,
   SCHEMAS,
   toDoc,
   toStorage,
@@ -698,62 +701,4 @@ export default class InlineEditController extends Component {
       {{/in-element}}
     {{/if}}
   </template>
-}
-
-/**
- * Returns `true` when the current selection has the given mark applied
- * (or, for empty selections, when `storedMarks` carries it).
- *
- * @param {import("prosemirror-state").EditorState} state
- * @param {import("prosemirror-model").MarkType | undefined} markType
- * @returns {boolean}
- */
-function hasMark(state, markType) {
-  if (!markType) {
-    return false;
-  }
-  const { from, $from, to, empty } = state.selection;
-  if (empty) {
-    return !!markType.isInSet(state.storedMarks || $from.marks());
-  }
-  return state.doc.rangeHasMark(from, to, markType);
-}
-
-/**
- * Walks the current selection and returns the first link mark's `href`,
- * or `null` when no link mark touches the range. Used to prefill the
- * URL input when entering link-edit mode over an already-linked range.
- */
-function existingLinkHref(state, markType) {
-  if (!markType) {
-    return null;
-  }
-  const { from, to } = state.selection;
-  let href = null;
-  state.doc.nodesBetween(from, to, (node) => {
-    const mark = node.marks.find((m) => m.type === markType);
-    if (mark && href === null) {
-      href = mark.attrs?.href ?? null;
-    }
-  });
-  return href;
-}
-
-/**
- * PM keymap command that inserts a `hard_break` node at the cursor —
- * used by paragraph-schema Enter handling in non-`wf:paragraph`
- * blocks (callout body, banner content, media-card title, …) where
- * splitting into a new sibling has no semantic meaning.
- */
-function insertHardBreak(schema) {
-  return (state, dispatch) => {
-    if (!schema.nodes.hard_break) {
-      return false;
-    }
-    const br = schema.nodes.hard_break.create();
-    if (dispatch) {
-      dispatch(state.tr.replaceSelectionWith(br).scrollIntoView());
-    }
-    return true;
-  };
 }

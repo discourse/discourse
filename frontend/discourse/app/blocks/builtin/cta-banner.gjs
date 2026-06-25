@@ -32,6 +32,7 @@ const COOKIE_PREFIX = "discourse-cta-dismissed";
       required: true,
       ui: {
         control: "rich-inline",
+        schema: "heading",
         label: i18n("blocks.builtin.cta_banner.title"),
       },
     },
@@ -39,6 +40,7 @@ const COOKIE_PREFIX = "discourse-cta-dismissed";
       type: "richInline",
       ui: {
         control: "rich-inline",
+        schema: "paragraph",
         label: i18n("blocks.builtin.cta_banner.content"),
       },
     },

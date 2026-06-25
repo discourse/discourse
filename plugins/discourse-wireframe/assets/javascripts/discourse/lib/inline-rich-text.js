@@ -87,6 +87,71 @@ export function toFlatMarkdown(value) {
     .join("");
 }
 
+/**
+ * Returns `true` when the current selection has the given mark applied
+ * (or, for an empty selection, when `storedMarks` carries it). Shared by
+ * the canvas inline-edit controller and the inspector rich-text control.
+ *
+ * @param {import("prosemirror-state").EditorState} state
+ * @param {import("prosemirror-model").MarkType | undefined} markType
+ * @returns {boolean}
+ */
+export function hasMark(state, markType) {
+  if (!markType) {
+    return false;
+  }
+  const { from, $from, to, empty } = state.selection;
+  if (empty) {
+    return !!markType.isInSet(state.storedMarks || $from.marks());
+  }
+  return state.doc.rangeHasMark(from, to, markType);
+}
+
+/**
+ * Walks the current selection and returns the first link mark's `href`, or
+ * `null` when no link mark touches the range. Used to prefill the URL input
+ * when entering link-edit mode over an already-linked range.
+ *
+ * @param {import("prosemirror-state").EditorState} state
+ * @param {import("prosemirror-model").MarkType | undefined} markType
+ * @returns {string | null}
+ */
+export function existingLinkHref(state, markType) {
+  if (!markType) {
+    return null;
+  }
+  const { from, to } = state.selection;
+  let href = null;
+  state.doc.nodesBetween(from, to, (node) => {
+    const mark = node.marks.find((m) => m.type === markType);
+    if (mark && href === null) {
+      href = mark.attrs?.href ?? null;
+    }
+  });
+  return href;
+}
+
+/**
+ * Builds a ProseMirror keymap command that inserts a `hard_break` node at the
+ * cursor. Used by paragraph-schema Enter / Shift+Enter handling where a soft
+ * line break is the right gesture.
+ *
+ * @param {import("prosemirror-model").Schema} schema
+ * @returns {Function}
+ */
+export function insertHardBreak(schema) {
+  return (state, dispatch) => {
+    if (!schema.nodes.hard_break) {
+      return false;
+    }
+    const br = schema.nodes.hard_break.create();
+    if (dispatch) {
+      dispatch(state.tr.replaceSelectionWith(br).scrollIntoView());
+    }
+    return true;
+  };
+}
+
 const TEXT_NODE = {
   group: "inline",
   toDOM() {

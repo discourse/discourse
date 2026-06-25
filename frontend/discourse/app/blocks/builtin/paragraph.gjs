@@ -17,6 +17,7 @@ const VALID_ALIGNMENTS = ["left", "center", "right"];
       required: true,
       ui: {
         control: "rich-inline",
+        schema: "paragraph",
         label: i18n("blocks.builtin.paragraph.text"),
       },
     },

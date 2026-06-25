@@ -89,6 +89,12 @@ en:
         controls:
           decrement: "Decrease"
           increment: "Increase"
+          bold: "Bold"
+          italic: "Italic"
+          link: "Link"
+          link_apply: "Apply link"
+          link_remove: "Remove link"
+          link_cancel: "Cancel"
         multi:
           selected_count:
             one: "%{count} block selected"

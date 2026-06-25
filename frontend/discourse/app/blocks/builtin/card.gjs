@@ -40,6 +40,7 @@ const VALID_VARIANTS = ["vertical", "horizontal"];
       type: "richInline",
       ui: {
         control: "rich-inline",
+        schema: "paragraph",
         label: i18n("blocks.builtin.card.title"),
       },
     },
@@ -47,6 +48,7 @@ const VALID_VARIANTS = ["vertical", "horizontal"];
       type: "richInline",
       ui: {
         control: "rich-inline",
+        schema: "plain",
         label: i18n("blocks.builtin.card.meta"),
       },
     },
@@ -54,6 +56,7 @@ const VALID_VARIANTS = ["vertical", "horizontal"];
       type: "richInline",
       ui: {
         control: "rich-inline",
+        schema: "paragraph",
         label: i18n("blocks.builtin.card.body"),
       },
     },

@@ -230,6 +230,9 @@ const BlockComponentManager = new Proxy(
  * @property {{arg: string, equals?: *, notEmpty?: boolean}} [conditional] -
  *   Show this field only when another arg satisfies the predicate. At least
  *   one of `equals` or `notEmpty` must be set.
+ * @property {string} [schema] - Variant hint for a `richInline` arg
+ *   ("plain" / "heading" / "paragraph") selecting the allowed marks and line
+ *   breaks for the rich-text editors. Opaque to the validator.
  */
 
 /**

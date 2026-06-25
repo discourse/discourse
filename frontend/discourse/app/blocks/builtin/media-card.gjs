@@ -42,6 +42,7 @@ import { i18n } from "discourse-i18n";
       type: "richInline",
       ui: {
         control: "rich-inline",
+        schema: "plain",
         label: i18n("blocks.builtin.media_card.name"),
       },
     },
@@ -49,6 +50,7 @@ import { i18n } from "discourse-i18n";
       type: "richInline",
       ui: {
         control: "rich-inline",
+        schema: "plain",
         label: i18n("blocks.builtin.media_card.role"),
       },
     },
@@ -65,6 +67,7 @@ import { i18n } from "discourse-i18n";
       required: true,
       ui: {
         control: "rich-inline",
+        schema: "plain",
         label: i18n("blocks.builtin.media_card.badge_label"),
       },
     },
@@ -73,6 +76,7 @@ import { i18n } from "discourse-i18n";
       required: true,
       ui: {
         control: "rich-inline",
+        schema: "paragraph",
         label: i18n("blocks.builtin.media_card.title"),
       },
     },
@@ -81,6 +85,7 @@ import { i18n } from "discourse-i18n";
       required: true,
       ui: {
         control: "rich-inline",
+        schema: "plain",
         label: i18n("blocks.builtin.media_card.cta_label"),
       },
     },

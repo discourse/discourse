@@ -5282,6 +5282,82 @@ body.wireframe-active
   font-style: italic;
 }
 
+/* Editable inline rich-text control in the inspector: a small bold / italic /
+   link toolbar above a bordered box that hosts the constrained ProseMirror
+   editor. Mirrors the other inspector controls' dark-panel chrome. */
+
+.wireframe-inspector-rich-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  &__toolbar {
+    display: flex;
+    gap: 0.15rem;
+  }
+
+  &__btn {
+    padding: 0.25rem 0.4rem;
+    color: var(--primary-medium);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--d-border-radius);
+
+    &:hover {
+      color: var(--primary);
+      background: var(--primary-very-low);
+    }
+
+    &.--active {
+      color: var(--tertiary);
+      background: var(--tertiary-low);
+    }
+  }
+
+  &__link-input {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    input[type="url"] {
+      flex: 1 1 auto;
+      min-width: 0;
+      margin: 0;
+    }
+  }
+
+  &__editor {
+    padding: 0.4rem 0.5rem;
+    min-height: 2.5rem;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+
+    &:focus-within {
+      border-color: var(--tertiary);
+    }
+
+    .wf-inline-editor {
+      outline: none;
+      min-width: 0;
+      color: var(--primary);
+    }
+
+    /* Inert state while the same value is being edited on the canvas: the same
+       editor stays mounted (formatting preserved, no layout shift) but reads as
+       inactive — dimmed and non-interactive. */
+
+    &.--disabled {
+      opacity: 0.55;
+      pointer-events: none;
+
+      &:focus-within {
+        border-color: var(--primary-low);
+      }
+    }
+  }
+}
+
 /* Inline-format additions to the block-toolbar — bold / italic / link
    buttons appear in the same chrome strip as the move / duplicate /
    delete buttons when the user has a non-empty PM selection inside a

@@ -21,6 +21,7 @@ import { i18n } from "discourse-i18n";
       required: true,
       ui: {
         control: "rich-inline",
+        schema: "paragraph",
         label: i18n("blocks.builtin.quote.content"),
       },
     },
@@ -28,12 +29,17 @@ import { i18n } from "discourse-i18n";
       type: "richInline",
       ui: {
         control: "rich-inline",
+        schema: "plain",
         label: i18n("blocks.builtin.quote.attribution"),
       },
     },
     role: {
       type: "richInline",
-      ui: { control: "rich-inline", label: i18n("blocks.builtin.quote.role") },
+      ui: {
+        control: "rich-inline",
+        schema: "plain",
+        label: i18n("blocks.builtin.quote.role"),
+      },
     },
     avatar: {
       type: "image",

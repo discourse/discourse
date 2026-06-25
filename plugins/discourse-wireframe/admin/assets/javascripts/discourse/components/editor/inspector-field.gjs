@@ -1,12 +1,13 @@
 // @ts-check
 import { get } from "@ember/helper";
-import { eq, or } from "discourse/truth-helpers";
+import { and, eq, not, or } from "discourse/truth-helpers";
 import { toFlatMarkdown } from "discourse/plugins/discourse-wireframe/discourse/lib/inline-rich-text";
 import InspectorCategoryField from "./inspector-category-field";
 import InspectorDimensionField from "./inspector-dimension-field";
 import InspectorGroupField from "./inspector-group-field";
 import InspectorImageField from "./inspector-image-field";
 import InspectorRepeatableField from "./inspector-repeatable-field";
+import InspectorRichTextField from "./inspector-rich-text-field";
 import InspectorSegmentedField from "./inspector-segmented-field";
 import InspectorStepperField from "./inspector-stepper-field";
 import InspectorTagField from "./inspector-tag-field";
@@ -43,11 +44,11 @@ export const FORM_KIT_TYPE_BY_CONTROL = Object.freeze({
   // shape (`{ source, url, width?, height?, dark? }`).
   image: "custom",
   "rich-text": "composer",
-  // `rich-inline` is read-only in the inspector — editing happens on the
-  // canvas via the InlineEditController. The fallback FormKit type
-  // (`input-text`) is unused because the template renders a bespoke
-  // read-only branch instead.
-  "rich-inline": "input-text",
+  // `rich-inline` rides the `custom` slot: when the arg declares a schema
+  // variant (`ui.schema`) the branch below mounts the editable inline
+  // rich-text editor; otherwise it falls back to a read-only summary (the
+  // canvas inline editor remains the other edit surface either way).
+  "rich-inline": "custom",
   code: "code",
   "tag-chooser": "tag-chooser",
   // Entity pickers ride FormKit's `custom` slot: the template's
@@ -202,15 +203,27 @@ const InspectorField = <template>
         />
       </formField.Control>
     {{else if (eq @field.control "rich-inline")}}
-      {{! Read-only summary — authors edit this arg on the canvas.
-          Flattens any marks to inline markdown so what they see
-          here matches what they typed. }}
-      <div class="wireframe-inspector-rich-inline">
-        <span class="wireframe-inspector-rich-inline__summary">{{toFlatMarkdown
-            (get @values @field.name)
-          }}</span>
-        <span class="wireframe-inspector-rich-inline__hint">Edit on the canvas</span>
-      </div>
+      {{#if (and @field.schema.ui.schema (not @disabled))}}
+        {{! Editable inline rich-text editor (bold / italic / link), mounted in
+            the inspector for headless editing. Reads the schema variant from
+            the arg's ui.schema. }}
+        <formField.Control>
+          <InspectorRichTextField
+            @custom={{formField}}
+            @schema={{@field.schema.ui.schema}}
+          />
+        </formField.Control>
+      {{else}}
+        {{! Read-only summary — no schema variant declared, or the field is
+            disabled. Flattens any marks to inline markdown so what they see
+            here matches what they typed. }}
+        <div class="wireframe-inspector-rich-inline">
+          <span
+            class="wireframe-inspector-rich-inline__summary"
+          >{{toFlatMarkdown (get @values @field.name)}}</span>
+          <span class="wireframe-inspector-rich-inline__hint">Edit on the canvas</span>
+        </div>
+      {{/if}}
     {{else}}
       <formField.Control placeholder={{@field.placeholder}} />
     {{/if}}
