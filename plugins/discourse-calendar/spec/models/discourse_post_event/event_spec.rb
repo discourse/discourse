@@ -55,13 +55,15 @@ describe DiscoursePostEvent::Event do
     fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:post) { Fabricate(:post, topic: topic) }
 
-    before { SiteSetting.chat_enabled = true }
+    before do
+      SiteSetting.chat_enabled = true
+      Jobs.run_later!
+    end
 
     it "creates the chat channel after the livestream event is committed" do
-      expect { Fabricate(:event, post: post, livestream: true) }.to change(
-        DiscourseCalendar::Livestream::TopicChatChannel,
-        :count,
-      ).by(1)
+      expect {
+        Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+      }.to change(DiscourseCalendar::Livestream::TopicChatChannel, :count).by(1)
 
       expect(post.topic.topic_chat_channel.chat_channel.chatable).to eq(category)
     end
@@ -69,19 +71,49 @@ describe DiscoursePostEvent::Event do
     it "does not create a chat channel when chat is disabled" do
       SiteSetting.chat_enabled = false
 
-      expect { Fabricate(:event, post: post, livestream: true) }.not_to change(
-        DiscourseCalendar::Livestream::TopicChatChannel,
-        :count,
-      )
+      expect {
+        Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+      }.not_to change(DiscourseCalendar::Livestream::TopicChatChannel, :count)
     end
 
     it "does not create a chat channel for a livestream event on a reply" do
       reply = Fabricate(:post, topic: topic)
 
-      expect { Fabricate(:event, post: reply, livestream: true) }.not_to change(
-        DiscourseCalendar::Livestream::TopicChatChannel,
-        :count,
-      )
+      expect {
+        Fabricate(:event, post: reply, livestream: true, location: "https://example.com/live")
+      }.not_to change(DiscourseCalendar::Livestream::TopicChatChannel, :count)
+    end
+  end
+
+  describe "#reset_invalid_livestream" do
+    fab!(:post)
+
+    # enqueue (don't run) the onebox-warming job so it doesn't make a real request
+    before { Jobs.run_later! }
+
+    it "keeps livestream enabled for an http(s) location" do
+      event = Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+
+      expect(event.reload.livestream).to eq(true)
+    end
+
+    it "resets livestream when the location is not an http(s) URL" do
+      event = Fabricate(:event, post: post, livestream: true, location: "Room 5")
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "resets livestream when there is no location" do
+      event = Fabricate(:event, post: post, livestream: true)
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "resets livestream when the location is edited away from a URL" do
+      event = Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+      event.update!(location: "Room 5")
+
+      expect(event.reload.livestream).to eq(false)
     end
   end
 
@@ -956,6 +988,17 @@ describe DiscoursePostEvent::Event do
 
     it "defaults livestream to false when the attribute is absent" do
       post.update!(raw: "[event start=\"2020-04-24 14:15\"]\n[/event]")
+      post.rebake!
+      DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+      post.reload
+
+      expect(post.event.livestream).to eq(false)
+    end
+
+    it "ignores livestream=true when the location is not an http(s) URL" do
+      post.update!(
+        raw: "[event start=\"2020-04-24 14:15\" livestream=\"true\" location=\"Room 5\"]\n[/event]",
+      )
       post.rebake!
       DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
       post.reload

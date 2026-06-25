@@ -22,6 +22,7 @@ module DiscoursePostEvent
     scope :visible, -> { where(deleted_at: nil) }
     scope :open, -> { where(closed: false) }
 
+    before_validation :reset_invalid_livestream
     before_save :chat_channel_sync
     # prepend so it runs before `dependent: :delete_all` wipes the invitees
     before_destroy :reset_invitees_topic_tracking, prepend: true
@@ -51,6 +52,14 @@ module DiscoursePostEvent
 
     def self.attributes_protected_by_default
       super - %w[id]
+    end
+
+    def reset_invalid_livestream
+      self.livestream = false if livestream? && !livestream_location?
+    end
+
+    def livestream_location?
+      location.to_s.match?(%r{\Ahttps?://}i)
     end
 
     def create_livestream_chat_channel

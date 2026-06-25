@@ -35,7 +35,7 @@ RSpec.describe DiscourseCalendar::Livestream do
         before do
           SiteSetting.calendar_enabled = true
           post = Fabricate(:post, topic: topic)
-          Fabricate(:event, post: post, livestream: true)
+          Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
         end
 
         it "creates a chat channel" do
