@@ -1641,7 +1641,7 @@ posting:
     hidden: true
     area: "gifs"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/404829"
   klipy_api_key:
