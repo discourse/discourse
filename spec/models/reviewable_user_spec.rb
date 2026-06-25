@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableUser, type: :model do
-  fab!(:moderator)
   let(:user) do
     user = Fabricate(:user)
     user.activate
     user
   end
   fab!(:admin)
+  fab!(:moderator)
 
   describe "#actions_for" do
     fab!(:reviewable)
@@ -64,7 +64,6 @@ RSpec.describe ReviewableUser, type: :model do
   end
 
   describe "#update_fields" do
-    fab!(:moderator)
     fab!(:reviewable)
 
     it "doesn't raise errors with an empty update" do

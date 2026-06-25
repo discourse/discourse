@@ -195,20 +195,30 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
-    result = super { |r| r.remove_reviewable_ids += reviewable_ids }
+    reviewable_ids = reviewable_ids_visible_to(performed_by)
+    result =
+      super do |perform_result, deleted_user|
+        perform_result.remove_reviewable_ids |= reviewable_ids if deleted_user
+      end
     update_column(:target_created_by_id, nil)
     result
   end
 
   def perform_delete_and_block_user(performed_by, args)
-    reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
-    result = super { |r| r.remove_reviewable_ids += reviewable_ids }
+    reviewable_ids = reviewable_ids_visible_to(performed_by)
+    result =
+      super do |perform_result, deleted_user|
+        perform_result.remove_reviewable_ids |= reviewable_ids if deleted_user
+      end
     update_column(:target_created_by_id, nil)
     result
   end
 
   private
+
+  def reviewable_ids_visible_to(user)
+    Reviewable.viewable_by(user, preload: false).where(created_by: target_created_by).pluck(:id)
+  end
 
   def delete_opts
     {
