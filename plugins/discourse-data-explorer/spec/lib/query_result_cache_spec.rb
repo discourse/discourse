@@ -67,6 +67,25 @@ describe DiscourseDataExplorer::QueryResultCache do
         described_class::MAX_CACHE_ENTRIES,
       )
     end
+
+    it "caches new entries after old index members expire" do
+      index_key = described_class.cache_index_key(query.id)
+      stale_score = Time.now.to_f - described_class::CACHE_TTL - 1
+      stale_keys =
+        described_class::MAX_CACHE_ENTRIES.times.map do |i|
+          params = { "value" => i.to_s }
+          described_class.write(query.id, params, result_json)
+          described_class.cache_key(query.id, params)
+        end
+
+      Discourse.redis.del(*stale_keys)
+      stale_keys.each { |stale_key| Discourse.redis.zadd(index_key, stale_score, stale_key) }
+
+      fresh_params = { "value" => "fresh" }
+
+      expect(described_class.write(query.id, fresh_params, result_json)).to eq(true)
+      expect(described_class.read(query.id, fresh_params)).to be_present
+    end
   end
 
   describe ".cache_key" do
