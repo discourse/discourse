@@ -535,6 +535,20 @@ en:
         invalid: "Invalid JavaScript"
         warning: "Missing function call"
         pending: "Not resolved yet"
+      reference_pill:
+        source:
+          input: "Input"
+          trigger: "Trigger"
+          item_index: "Item index"
+          variable: "Variable"
+          current_user: "Current user"
+          site_setting: "Site setting"
+          execution: "Execution"
+        filter_placeholder: "Filter properties…"
+        no_properties: "No properties to drill into"
+        no_matches: "No matches"
+        edit_as_code: "Edit code"
+        pick_property: "Pick a property"
       expression_docs:
         sections:
           previous_nodes: "Previous nodes"

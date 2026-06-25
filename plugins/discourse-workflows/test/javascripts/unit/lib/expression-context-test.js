@@ -48,13 +48,10 @@ module("Unit | lib | discourse-workflows | buildScope", function () {
       ],
     });
 
-    // $trigger exposes the trigger node's own output...
     assert.strictEqual(scope.$trigger.topic_title, "");
-    // ...not the current input ($json), which they only share when the
-    // trigger is the immediately preceding node.
+    // Distinct from the current input, and the bare `trigger` name is gone.
     assert.notStrictEqual(scope.$trigger, scope.$json);
     assert.strictEqual(scope.$json.topic_title, undefined);
-    // The bare `trigger` name (which the runner never bound) is gone.
     assert.strictEqual(scope.trigger, undefined);
   });
 
@@ -333,6 +330,23 @@ module("Unit | lib | discourse-workflows | walkScope", function () {
       "a",
       "b",
     ]);
+  });
+
+  test("resolves array subscripts and bracket keys", function (assert) {
+    const scope = {
+      $json: { items: [{ id: 7 }, { id: 9 }], "weird key": "found" },
+    };
+    // Subscript on a nested property (the common array-index case).
+    assert.strictEqual(walkScope(scope, "$json.items[0].id"), 7);
+    assert.strictEqual(walkScope(scope, "$json.items[1].id"), 9);
+    // Bracket key on the root token.
+    assert.strictEqual(walkScope(scope, '$json["weird key"]'), "found");
+    // Known limitation: a bracket key containing a dot is split by the path
+    // parser, so it does not resolve (would need a bracket-aware tokenizer).
+    assert.strictEqual(
+      walkScope({ $json: { "a.b": 1 } }, '$json["a.b"]'),
+      undefined
+    );
   });
 
   test("resolves boolean values", function (assert) {

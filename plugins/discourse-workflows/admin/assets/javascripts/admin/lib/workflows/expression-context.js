@@ -29,6 +29,8 @@ export function resolveVariableId(variable, itemPrefix = "$json") {
 const NODE_REF_RE = /^\$\((?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)')\)/;
 const METHOD_CALL_RE = /^([A-Za-z_$][\w$]*)\((.*)\)$/;
 const METHOD_WITH_SUFFIX_RE = /^([A-Za-z_$][\w$]*)\((.*?)\)(.*)$/;
+// A property followed by one or more subscripts, e.g. `items[0]` or `map["k"]`.
+const PROP_WITH_SUFFIX_RE = /^([A-Za-z_$][\w$]*)(\[.+)$/;
 const BRACKET_SUFFIX_RE =
   /^\[((?:"(?:\\.|[^"\\])*")|(?:'(?:\\.|[^'\\])*')|[^\]]+)\](.*)$/;
 
@@ -58,7 +60,10 @@ export function walkScope(scope, path) {
   }
 
   const parts = path.split(".");
-  let target = scope[parts[0]];
+  const rootSuffix = PROP_WITH_SUFFIX_RE.exec(parts[0]);
+  let target = rootSuffix
+    ? resolveBracketSuffix(scope[rootSuffix[1]], rootSuffix[2], scope)
+    : scope[parts[0]];
   for (let i = 1; i < parts.length; i++) {
     if (target == null) {
       return undefined;
@@ -96,6 +101,15 @@ function resolvePathPart(target, part, scope) {
   const methodCall = METHOD_CALL_RE.exec(part);
   if (methodCall && typeof target[methodCall[1]] === "function") {
     return target[methodCall[1]](...parseMethodArgs(methodCall[2]));
+  }
+
+  const propWithSuffix = PROP_WITH_SUFFIX_RE.exec(part);
+  if (propWithSuffix) {
+    return resolveBracketSuffix(
+      target[propWithSuffix[1]],
+      propWithSuffix[2],
+      scope
+    );
   }
 
   return target[part];
@@ -339,9 +353,7 @@ export function buildScope({
     $input,
     $itemIndex: 0,
     $json,
-    // The runner binds $trigger to the trigger node's output (distinct from
-    // the current input $json); mirror it here, resolved from the trigger
-    // ancestor's fields, so authoring matches what executes.
+    // $trigger is the trigger node's output, distinct from $json.
     $trigger: triggerJson || Object.create(null),
     $site_settings: buildSiteSettingsScope(siteSettings),
     $current_user: cleanObject({ id: 0, username: "" }),
