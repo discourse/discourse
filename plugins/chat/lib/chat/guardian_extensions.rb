@@ -151,6 +151,13 @@ module Chat
       can_see_chatable?(chat_channel.chatable)
     end
 
+    def can_see_chat_message?(message)
+      return false if !can_preview_chat_channel?(message.chat_channel)
+      return true if !message.trashed?
+
+      message.user_id == @user.id || is_staff?
+    end
+
     def can_join_chat_channel?(chat_channel, post_allowed_category_ids: nil)
       return false if anonymous?
       return false unless can_chat?
