@@ -103,6 +103,7 @@ module DiscourseWorkflows
             end,
           capabilities: {
             waits_for_resume: true,
+            produces_data: false,
           },
         )
 

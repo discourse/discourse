@@ -381,7 +381,6 @@ RSpec.describe DiscourseWorkflows::Executor do
           g.node "log-1",
                  "action:log",
                  configuration: {
-                   "alwaysOutputData" => true,
                    "entries" => {
                      "values" => [{ "key" => "topic", "value" => "={{ $json.topic_id }}" }],
                    },
@@ -401,7 +400,7 @@ RSpec.describe DiscourseWorkflows::Executor do
       expect(logs.first).to include("key" => "topic", "value" => topic.id.to_s)
     end
 
-    it "does not route downstream when log returns no output" do
+    it "routes downstream with log input items" do
       graph =
         build_workflow_graph do |g|
           g.node "trigger-1", "trigger:topic_closed"
@@ -412,8 +411,16 @@ RSpec.describe DiscourseWorkflows::Executor do
                      "values" => [{ "key" => "topic", "value" => "={{ $json.topic_id }}" }],
                    },
                  }
-          g.node "code-1", "action:code", configuration: { "code" => "return $input.all();" }
-          g.chain "trigger-1", "log-1", "code-1"
+          g.node "set-fields-1",
+                 "action:set_fields",
+                 configuration: {
+                   "assignments" => {
+                     "assignments" => [
+                       { "name" => "logged", "value" => "true", "type" => "boolean" },
+                     ],
+                   },
+                 }
+          g.chain "trigger-1", "log-1", "set-fields-1"
         end
       workflow =
         Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
@@ -423,19 +430,23 @@ RSpec.describe DiscourseWorkflows::Executor do
 
       expect(execution.status).to eq("success")
 
+      expected_item = { "json" => trigger_data.stringify_keys, "pairedItem" => { "item" => 0 } }
       log_step = execution.execution_data.find_step(node_id: "log-1")
-      expect(log_step["output"]).to eq([])
+      expect(log_step["output"]).to eq([expected_item])
       expect(log_step.dig("metadata", "logs").first).to include(
         "key" => "topic",
         "value" => topic.id.to_s,
       )
 
-      expect(execution.execution_data.find_step(node_id: "code-1")).to be_nil
+      set_fields_step = execution.execution_data.find_step(node_id: "set-fields-1")
+      expect(set_fields_step["output"]).to eq(
+        [expected_item.deep_merge("json" => { "logged" => true })],
+      )
 
       run_data = execution.execution_data.run_data
-      expect(run_data.dig("Log-1", 0, "outputs", 0, "item_count")).to eq(0)
-      expect(run_data.dig("Log-1", 0, "outputs", 0, "items")).to eq([])
-      expect(run_data["Code-1"]).to be_nil
+      expect(run_data.dig("Log-1", 0, "outputs", 0, "item_count")).to eq(1)
+      expect(run_data.dig("Log-1", 0, "outputs", 0, "items")).to eq([expected_item])
+      expect(run_data.dig(set_fields_step["node_name"], 0, "inputs", 0, "item_count")).to eq(1)
     end
 
     it "fails the step when expression errors are logged" do

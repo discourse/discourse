@@ -114,6 +114,16 @@ module DiscourseWorkflows
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_model_not_found(:workflow) { raise Discourse::NotFound }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
+        on_failed_policy(:workflow_not_called_by_other_workflows) do
+          render(
+            json:
+              failed_json.merge(
+                type: "workflow_called_by_other_workflows",
+                referencing_workflows: result[:referencing_workflows],
+              ),
+            status: :unprocessable_entity,
+          )
+        end
       end
     end
 

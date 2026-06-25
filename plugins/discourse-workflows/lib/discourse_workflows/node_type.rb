@@ -37,6 +37,10 @@ module DiscourseWorkflows
       registered_nodes.select(&:waits_for_resume?).map(&:identifier)
     end
 
+    def self.find_in(nodes)
+      Array(nodes).find { |node| node["type"] == identifier }
+    end
+
     def self.description(value = nil)
       if value
         @description = DESCRIPTION_DEFAULTS.deep_merge(value.deep_symbolize_keys).freeze
