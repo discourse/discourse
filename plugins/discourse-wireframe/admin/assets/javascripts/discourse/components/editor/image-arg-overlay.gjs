@@ -462,7 +462,7 @@ export default class ImageArgOverlay extends Component {
       return;
     }
     event.stopPropagation();
-    this.wireframe.lastTouchedImageArg = this.args.argName;
+    this.wireframe.markImageArgTouched(this.args.argName);
     this.#fileInputEl?.click();
   }
 
@@ -479,7 +479,7 @@ export default class ImageArgOverlay extends Component {
 
   @action
   onPointerEnter() {
-    this.wireframe.lastTouchedImageArg = this.args.argName;
+    this.wireframe.markImageArgTouched(this.args.argName);
   }
 
   /* File-drag visual hooks */

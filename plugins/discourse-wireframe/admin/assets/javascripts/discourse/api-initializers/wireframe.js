@@ -50,11 +50,14 @@ export default apiInitializer((api) => {
   installSimulationContext(
     api.container.lookup("service:wireframe-simulation")
   );
-  // Instantiate the block-reveal, inline-edit, and arg-edit services at boot so
-  // they subscribe to the selection seam before any selection change can fire.
+  // Instantiate these services at boot so their constructors run before any
+  // user interaction: block-reveal/inline-edit/arg-edit subscribe to the
+  // selection seam before the first selection change, and image-upload installs
+  // its window/document file-drag + paste listeners before the first drag/paste.
   api.container.lookup("service:wireframe-block-reveal");
   api.container.lookup("service:wireframe-inline-edit");
   api.container.lookup("service:wireframe-arg-edit");
+  api.container.lookup("service:wireframe-image-upload");
   installVeThemeAutoEnter(api, editor);
   // The editor stays open across SPA navigation, so re-discover the new page's
   // outlets after each transition. `rediscoverOutlets` self-gates on

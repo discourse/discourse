@@ -2533,7 +2533,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       this.editor.enter();
     });
 
-    test("copySelected stores a clone with mode='copy'", function (assert) {
+    test("copySelected stashes the selected block with mode='copy'", function (assert) {
       const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
       this.editor.selectBlock({
@@ -2543,12 +2543,11 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       assert.true(this.editor.copySelected());
       assert.true(this.editor.hasClipboardEntry);
-      assert.strictEqual(this.editor._clipboard.mode, "copy");
-      assert.strictEqual(this.editor._clipboard.entry.args.title, "First");
+      // The clone's stripped __stableKey and preserved args are asserted
+      // observably by the paste tests below; here just pin the mode.
       assert.strictEqual(
-        this.editor._clipboard.entry.__stableKey,
-        undefined,
-        "clipboard entry strips __stableKey so paste mints a fresh one"
+        getOwner(this).lookup("service:wireframe-clipboard").clipboardMode,
+        "copy"
       );
     });
 
@@ -2566,7 +2565,10 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       assert.true(this.editor.cutSelected());
-      assert.strictEqual(this.editor._clipboard.mode, "cut");
+      assert.strictEqual(
+        getOwner(this).lookup("service:wireframe-clipboard").clipboardMode,
+        "cut"
+      );
       const after = outletChildren(this.editor);
       assert.strictEqual(after.length, 1);
       assert.strictEqual(after[0].args.title, "Second");

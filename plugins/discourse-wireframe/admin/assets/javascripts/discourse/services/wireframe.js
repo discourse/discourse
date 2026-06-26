@@ -24,9 +24,7 @@ import {
 import { VALID_BLOCK_ID_PATTERN } from "discourse/lib/blocks/-internals/patterns";
 import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
 import PreloadStore from "discourse/lib/preload-store";
-import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
-import { imageArgEntries } from "discourse/plugins/discourse-wireframe/discourse/lib/empty-image-upload";
 // `grid-math` holds the editor-only grid geometry. Absolute addon path
 // because this admin service crosses into the plugin's universal bundle.
 import {
@@ -109,16 +107,17 @@ export default class WireframeService extends Service {
   @service siteSettings;
   @service wireframeArgEdit;
   @service wireframeBlockReveal;
+  @service wireframeClipboard;
   @service wireframeDrafts;
   @service wireframeDragOverlay;
   @service wireframeEditEngine;
+  @service wireframeImageUpload;
   @service wireframeInlineEdit;
   @service wireframeLayoutQuery;
   @service wireframePersistence;
   @service wireframeRevision;
   @service wireframeSelection;
-
-  @tracked isActive = false;
+  @service wireframeSession;
 
   /**
    * The id of the theme this editor session is bound to. Set on `enter()`
@@ -191,17 +190,6 @@ export default class WireframeService extends Service {
   @tracked fieldEditor = null;
 
   /**
-   * Tracks the most recently interacted-with image arg name for the
-   * selected block. Used to route a paste to the right arg on
-   * multi-image blocks (e.g. media-card avatar vs cover image).
-   * Updated by the chrome's image-arg overlay on focus / hover / click;
-   * cleared on selection change.
-   *
-   * @type {string|null}
-   */
-  @tracked lastTouchedImageArg = null;
-
-  /**
    * Inline icon-edit session state + operations. Mirrors `inlineEdit`'s
    * separate-object split: opens a FloatKit popover anchored to the
    * clicked icon, hosting `DIconGridPickerContent` for the user to pick
@@ -259,15 +247,6 @@ export default class WireframeService extends Service {
     metadataFor: (entry) => this.layoutQuery.metadataFor(entry),
     metadataForName: (name) => this.layoutQuery.metadataForName(name),
   });
-
-  /**
-   * Files dropped onto an empty slot, staged by `"blockKey\0argName"` until
-   * the freshly-created block's `ImageArgOverlay` mounts and uploads them
-   * through its own pipeline. One-shot per entry; cleared on enter / exit.
-   *
-   * @type {Map<string, File>}
-   */
-  #pendingDropFiles = new Map();
 
   /**
    * Whether the drop-dispatch handler has been registered on
@@ -378,29 +357,13 @@ export default class WireframeService extends Service {
     this.selectBlock(null);
   };
 
-  /**
-   * Clipboard slot for the Cmd/Ctrl-C/X/V cycle and the future "duplicate"
-   * action. `mode: "copy"` lets paste re-clone the entry on every Cmd-V,
-   * while `mode: "cut"` is currently equivalent at paste time (the cut
-   * already removed the source). The distinction lets future polish
-   * surface different UI affordances (e.g. visually grey-out the cut
-   * source until paste fires).
-   *
-   * @type {{entry: Object, mode: "copy"|"cut"}|null}
-   */
-  @tracked _clipboard = null;
-
   constructor() {
     super(...arguments);
     this.#loadConditionsPanelState();
-    this.#installImagePasteListener();
-    this.#installFileDragGuard();
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.#uninstallImagePasteListener();
-    this.#uninstallFileDragGuard();
     // The canvas selection listeners are normally removed in `exit()`, but a
     // session torn down without an explicit exit (e.g. the owner being
     // destroyed) would otherwise leak them at the document level. Removing them
@@ -505,6 +468,26 @@ export default class WireframeService extends Service {
    */
   get structuralVersion() {
     return this.wireframeRevision.version;
+  }
+
+  /**
+   * Whether an editor session is currently open. Delegates to the session
+   * signal service; re-exposed here (with a setter) so the many components,
+   * templates, and internal readers that use `isActive` — plus tests that flip
+   * it to fake an active session — stay unchanged without injecting the service.
+   *
+   * @returns {boolean}
+   */
+  get isActive() {
+    return this.wireframeSession.active;
+  }
+
+  set isActive(value) {
+    if (value) {
+      this.wireframeSession.activate();
+    } else {
+      this.wireframeSession.deactivate();
+    }
   }
 
   /**
@@ -875,14 +858,13 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Indicates whether the clipboard currently holds anything that
-   * `pasteFromClipboard` could insert. Reactivity comes from `_clipboard`
-   * being tracked.
+   * Clipboard facade — delegates to `wireframeClipboard`. Indicates whether the
+   * clipboard currently holds anything that `pasteFromClipboard` could insert.
    *
    * @returns {boolean}
    */
   get hasClipboardEntry() {
-    return this._clipboard != null;
+    return this.wireframeClipboard.hasClipboardEntry;
   }
 
   /** Opens the publish review surface. */
@@ -924,8 +906,8 @@ export default class WireframeService extends Service {
     if (!this.canEdit) {
       return;
     }
-    this.isActive = true;
-    this.#pendingDropFiles.clear();
+    this.wireframeSession.activate();
+    this.wireframeImageUpload.clearPending();
     // Hand the overlay our drop dispatcher so it never reaches up into this
     // service. Synchronous + returns a boolean (the `completeExternalImageDrop`
     // contract). Registered once; the guard keeps re-entry from re-wrapping it.
@@ -1040,7 +1022,7 @@ export default class WireframeService extends Service {
     this.#enterGeneration++;
     this.#staleDraftQueue.length = 0;
 
-    this.isActive = false;
+    this.wireframeSession.deactivate();
     this.reviewDrawerOpen = false;
     this.publishTargetResolving = false;
     this.activeThemeId = null;
@@ -1051,7 +1033,7 @@ export default class WireframeService extends Service {
     this.dragSession.clear();
     this.wireframeDragOverlay.clear();
     this.wireframeBlockReveal.reset();
-    this.#pendingDropFiles.clear();
+    this.wireframeImageUpload.clearPending();
     // Revert to the minimal rich-text renderer so admin pages without
     // an open editor render the same DOM as live.
     resetBlockArgRenderer("rich-text");
@@ -1444,98 +1426,42 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Captures the currently-selected block onto the clipboard for later
-   * paste. The captured entry is a fresh deep clone with stable keys
-   * stripped, so subsequent mutations on the canvas don't leak into the
-   * clipboard payload.
+   * Clipboard facade — delegates to `wireframeClipboard`. Captures the
+   * currently-selected block onto the clipboard for later paste.
    *
    * @returns {boolean} true on success, false when no block is selected
    */
   @action
   copySelected() {
-    const key = this.selectedBlockKey;
-    if (!key) {
-      return false;
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(key);
-    if (!located) {
-      return false;
-    }
-    this._clipboard = {
-      entry: cloneEntryForPaste(located.entry),
-      mode: "copy",
-    };
-    return true;
+    return this.wireframeClipboard.copySelected();
   }
 
   /**
-   * Captures the currently-selected block onto the clipboard AND removes
-   * it from the canvas. The clipboard mode is `"cut"` so callers can
-   * differentiate from a pure copy if they want different UI
-   * affordances; at paste time the two modes behave identically (the
-   * source is already gone).
+   * Captures the currently-selected block onto the clipboard AND removes it from
+   * the canvas. Cut is a composition of two concerns: the clipboard stashes the
+   * entry (mode `"cut"`), and the kernel performs the structural removal, since
+   * `removeBlock` carries kernel-owned nuance (outlet-root guard, entry-removal
+   * helper, selection-clear). The key is captured before stashing — the stash
+   * doesn't change selection. If the stash fails (nothing selected / not
+   * locatable) the removal is skipped.
    *
    * @returns {boolean} true on success, false when no block is selected
    */
   @action
   cutSelected() {
     const key = this.selectedBlockKey;
-    if (!key) {
-      return false;
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(key);
-    if (!located) {
-      return false;
-    }
-    this._clipboard = {
-      entry: cloneEntryForPaste(located.entry),
-      mode: "cut",
-    };
-    return this.removeBlock(key);
+    return this.wireframeClipboard.cutSelected() && this.removeBlock(key);
   }
 
   /**
-   * Inserts a fresh clone of the clipboard entry adjacent to the current
-   * selection (after it, in the selected block's outlet). Each paste
-   * re-clones the clipboard payload, so multiple `Cmd+V` taps insert
-   * independent subtrees rather than aliasing the same node.
-   *
-   * Requires a selection. Returns false when there's nothing on the
-   * clipboard, no block is currently selected, or the insert otherwise
-   * no-ops (e.g. the selected block isn't locatable in the live layout).
+   * Clipboard facade — delegates to `wireframeClipboard`. Inserts a fresh clone
+   * of the clipboard entry after the current selection.
    *
    * @returns {boolean}
    */
   @action
   pasteFromClipboard() {
-    if (!this._clipboard) {
-      return false;
-    }
-    const targetKey = this.selectedBlockKey;
-    if (!targetKey) {
-      return false;
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(targetKey);
-    if (!located) {
-      return false;
-    }
-    return this.recordStructural([located.outletName], () => {
-      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
-      }
-      const insertion = insertEntryAt(
-        layout,
-        targetKey,
-        cloneEntryForPaste(this._clipboard.entry),
-        "after"
-      );
-      if (!insertion.changed) {
-        return false;
-      }
-      this.publishStructuralChange(located.outletName, insertion.layout);
-      return true;
-    });
+    return this.wireframeClipboard.pasteFromClipboard();
   }
 
   @action
@@ -1652,168 +1578,77 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Uploads a single File to the Discourse uploads endpoint and writes
-   * the result into a block's image arg. Used by the inline editing
-   * overlays (click-to-pick, drag-and-drop, paste) so the canvas can
-   * mutate image args without the inspector being open.
-   *
-   * Writes to the specific `blockKey` rather than the currently-selected
-   * block, so a slow upload doesn't race with the user clicking around
-   * the canvas.
-   *
-   * One-shot UppyUpload instance per call — uniquely id'd by argName +
-   * timestamp to avoid the duplicate-id error when multiple uploads
-   * race. The instance tears itself down on success or failure.
+   * Image-upload facade — delegates to `wireframeImageUpload`. Uploads a File
+   * and writes the result into a block's image arg.
    *
    * @param {File|Blob} file
-   * @param {Object} options
-   * @param {string} options.blockKey - The block whose arg to write.
-   * @param {string} options.argName - The image arg name on that block.
+   * @param {{blockKey: string, argName: string}} options
    * @returns {Promise<{url: string, width?: number, height?: number}|null>}
-   *   The upload result on success, `null` on failure (the consumer
-   *   surfaces its own error UI).
    */
-  uploadImageForArg(file, { blockKey, argName }) {
-    if (!file || !blockKey || !argName) {
-      return Promise.resolve(null);
-    }
-    const owner = getOwner(this);
-    const uploadId = `wireframe-image-${argName}-${Date.now()}`;
-    return new Promise((resolve) => {
-      let settled = false;
-      const finish = (result) => {
-        if (settled) {
-          return;
-        }
-        settled = true;
-        try {
-          upload.teardown();
-        } catch {
-          // Tearing down before Uppy fully boots can throw — safe to ignore.
-        }
-        resolve(result);
-      };
-
-      const upload = new UppyUpload(owner, {
-        id: uploadId,
-        type: "composer",
-        uploadDone: (result) => {
-          // Persist `upload_id` so the server-side cleanup can create an
-          // UploadReference for this image when the layout saves; without it
-          // the upload would be considered orphan and garbage-collected by
-          // Jobs::CleanUpUploads after the 48h grace period.
-          this.setImageArg(blockKey, argName, {
-            source: "upload",
-            upload_id: result.id,
-            url: result.url,
-            width: result.width,
-            height: result.height,
-          });
-          finish({
-            url: result.url,
-            width: result.width,
-            height: result.height,
-          });
-        },
-      });
-
-      upload.setup();
-      upload.uppyWrapper?.uppyInstance?.on("upload-error", () => finish(null));
-      upload.addFiles(file);
-    });
+  uploadImageForArg(file, options) {
+    return this.wireframeImageUpload.uploadImageForArg(file, options);
   }
 
   /**
-   * Completes an OS image-file drop onto an empty, block-accepting slot.
-   * The dragover handlers have already published the drop preview (built
-   * from the synthetic image-block source), so this runs the pending drop
-   * the same way a palette drop does, then hands the dropped file to the
-   * freshly-created block.
+   * Image-upload facade — delegates to `wireframeImageUpload`. Completes an OS
+   * image-file drop onto an empty slot (dispatch the previewed insert, stage the
+   * file for the new block).
    *
-   * `wireframeDragOverlay.dispatch()` inserts and auto-selects an empty image
-   * block at the previewed slot synchronously. Rather than uploading here, the
-   * file is STAGED against the new block's key: the block's own `ImageArgOverlay`
-   * picks it up as it mounts and uploads it through the overlay pipeline, so
-   * the upload shows the per-block progress bar, surfaces errors, and writes
-   * only to that block (the overlay always uses its own live key — an upload
-   * can never land on a different block). A rejected / invalid drop
-   * dispatches nothing, so this is a no-op.
-   *
-   * @param {File} file - The image file to upload into the new block.
-   * @returns {boolean} `true` when a block was created and the file staged.
+   * @param {File} file
+   * @returns {boolean}
    */
   completeExternalImageDrop(file) {
-    if (!file) {
-      return false;
-    }
-    // Run the pending drop. A false return means the slot rejected the
-    // image block, so there's nothing to fill.
-    if (!this.wireframeDragOverlay.dispatch()) {
-      return false;
-    }
-    const blockKey = this.selectedBlockKey;
-    if (!blockKey) {
-      return false;
-    }
-    // Derive the target arg from the inserted block's own schema rather
-    // than assuming a name, mirroring how the paste handler picks its arg.
-    const argName = imageArgEntries(this.selectedBlockData?.metadata?.args)[0]
-      ?.name;
-    if (!argName) {
-      return false;
-    }
-    this.stagePendingDropFile(blockKey, argName, file);
-    return true;
+    return this.wireframeImageUpload.completeExternalImageDrop(file);
   }
 
   /**
-   * Stages a dropped file against a block's image arg so the block's
-   * `ImageArgOverlay` can upload it through its own pipeline once it mounts.
-   * One-shot: `consumePendingDropFile` reads and removes it.
+   * Image-upload facade — delegates to `wireframeImageUpload`. Stages a dropped
+   * file against a block's image arg for its overlay to upload on mount.
    *
    * @param {string} blockKey
    * @param {string} argName
    * @param {File} file
    */
   stagePendingDropFile(blockKey, argName, file) {
-    this.#pendingDropFiles.set(JSON.stringify([blockKey, argName]), file);
+    return this.wireframeImageUpload.stagePendingDropFile(
+      blockKey,
+      argName,
+      file
+    );
   }
 
   /**
-   * Returns and removes the file staged for a block's image arg, or `null`
-   * when none was staged. Called by the arg's overlay as it sets up.
+   * Image-upload facade — delegates to `wireframeImageUpload`. Returns and
+   * removes the file staged for a block's image arg.
    *
    * @param {string} blockKey
    * @param {string} argName
    * @returns {File|null}
    */
   consumePendingDropFile(blockKey, argName) {
-    const key = JSON.stringify([blockKey, argName]);
-    const file = this.#pendingDropFiles.get(key) ?? null;
-    if (file) {
-      this.#pendingDropFiles.delete(key);
-    }
-    return file;
+    return this.wireframeImageUpload.consumePendingDropFile(blockKey, argName);
   }
 
   /**
-   * Writes a single arg value into the entry identified by `blockKey`,
-   * routing through the same write-path as inspector edits so undo /
-   * redo / persistence stay consistent. Resolves the entry
-   * synchronously via `findEntryAndOutletSync` so the canvas re-renders
-   * before the next paint instead of waiting for an async resolution.
-   *
-   * Low-level write-path shared by the image affordances: the inline
-   * image overlays and edit menu call this directly, and helpers like
-   * `uploadImageForArg` build the full image-value shape before routing
-   * here. Prefer those helpers when constructing a value from scratch.
+   * Image-upload facade — delegates to `wireframeImageUpload`. Writes a single
+   * image arg value through the engine's write-path.
    *
    * @param {string} blockKey
    * @param {string} argName
    * @param {*} value
    */
   setImageArg(blockKey, argName, value) {
-    this.setArg(blockKey, argName, value);
+    return this.wireframeImageUpload.setImageArg(blockKey, argName, value);
+  }
+
+  /**
+   * Image-upload facade — delegates to `wireframeImageUpload`. Records the most
+   * recently interacted-with image arg so a subsequent paste routes to it.
+   *
+   * @param {string} argName
+   */
+  markImageArgTouched(argName) {
+    return this.wireframeImageUpload.markImageArgTouched(argName);
   }
 
   /**
@@ -3089,187 +2924,6 @@ export default class WireframeService extends Service {
       target.closest(".fk-d-menu-modal") ||
       target.closest(".fk-d-tooltip__content")
     );
-  }
-
-  /**
-   * Window-level `dragover` / `drop` guard. Without this, the browser's
-   * default behaviour for an external file drag is to NAVIGATE to the
-   * dropped file when the user releases over any element that didn't
-   * call `event.preventDefault()`. Per-overlay drop handlers can't
-   * always reach their stopPropagation in time (e.g. if the user
-   * releases over the chrome outside an image marker), and the
-   * resulting full-page navigation throws the editor session away.
-   *
-   * The guard fires only while the editor is active and the drag
-   * carries files. It always calls `preventDefault` so the browser
-   * never gets to navigate; specific overlay handlers still receive
-   * the event via normal DOM bubbling and route uploads as needed.
-   */
-  #installFileDragGuard() {
-    if (typeof window === "undefined") {
-      return;
-    }
-    this._handleFileDragOver = (event) => {
-      if (!this.isActive) {
-        return;
-      }
-      if (!event.dataTransfer?.types?.includes?.("Files")) {
-        return;
-      }
-      event.preventDefault();
-    };
-    this._handleFileDrop = (event) => {
-      if (!this.isActive) {
-        return;
-      }
-      if (!event.dataTransfer?.types?.includes?.("Files")) {
-        return;
-      }
-      event.preventDefault();
-      // Safety net for external (file) drags, which have no element source
-      // modifier to run `endDrag`: this bubbling-phase listener fires after
-      // PDND's capture-phase target `onDrop` (which already dispatched), so
-      // clearing the overlay here can't wipe an unconsumed dispatch.
-      this.wireframeDragOverlay.clear();
-    };
-    window.addEventListener("dragover", this._handleFileDragOver, false);
-    window.addEventListener("drop", this._handleFileDrop, false);
-  }
-
-  #uninstallFileDragGuard() {
-    if (this._handleFileDragOver) {
-      window.removeEventListener("dragover", this._handleFileDragOver, false);
-      this._handleFileDragOver = null;
-    }
-    if (this._handleFileDrop) {
-      window.removeEventListener("drop", this._handleFileDrop, false);
-      this._handleFileDrop = null;
-    }
-  }
-
-  /**
-   * Installs a window-level `paste` listener that routes image data
-   * from the system clipboard into the selected block's image arg. The
-   * listener is always installed (it's cheap and only acts when a
-   * block with image args is selected), and torn down when the
-   * service is destroyed.
-   *
-   * Guarded so the handler ignores pastes that originate inside
-   * native text inputs / contenteditables outside the editor — those
-   * keep their default browser behaviour.
-   */
-  #installImagePasteListener() {
-    if (typeof document === "undefined") {
-      return;
-    }
-    this._handleImagePaste = (event) => {
-      this.#onImagePaste(event);
-    };
-    document.addEventListener("paste", this._handleImagePaste, true);
-  }
-
-  #uninstallImagePasteListener() {
-    if (this._handleImagePaste) {
-      document.removeEventListener("paste", this._handleImagePaste, true);
-      this._handleImagePaste = null;
-    }
-  }
-
-  /**
-   * Paste handler. No-ops unless all of:
-   *   - A block is selected on the canvas
-   *   - That block declares one or more image args
-   *   - The clipboard carries at least one image file
-   *   - The paste target isn't a text input outside the editor scope
-   *
-   * When everything lines up, the handler picks the target arg
-   * (`lastTouchedImageArg` if set and still valid, else the first
-   * image arg declared on the block) and routes the file through the
-   * shared upload helper.
-   *
-   * @param {ClipboardEvent} event
-   */
-  async #onImagePaste(event) {
-    const blockKey = this.selectedBlockKey;
-    if (!blockKey) {
-      return;
-    }
-    const imageArgs = imageArgEntries(
-      this.selectedBlockData?.metadata?.args
-    ).map((entry) => entry.name);
-    if (imageArgs.length === 0) {
-      return;
-    }
-    if (this.#pasteTargetIsTextInput(event.target)) {
-      return;
-    }
-    const file = this.#pickImageFromClipboard(event.clipboardData);
-    if (!file) {
-      return;
-    }
-    event.preventDefault();
-
-    const argName =
-      this.lastTouchedImageArg && imageArgs.includes(this.lastTouchedImageArg)
-        ? this.lastTouchedImageArg
-        : imageArgs[0];
-
-    await this.uploadImageForArg(file, { blockKey, argName });
-  }
-
-  /**
-   * Returns `true` when the paste's `event.target` is a native text
-   * surface (input, textarea, contenteditable) that isn't part of the
-   * editor's own chrome — in which case the native paste behaviour
-   * (insert text / image into the field) is the expected outcome and
-   * we shouldn't hijack it.
-   *
-   * Inputs INSIDE the editor chrome (e.g. an inspector field) are
-   * also skipped — the inspector already has its own image controls.
-   *
-   * @param {EventTarget|null} target
-   * @returns {boolean}
-   */
-  #pasteTargetIsTextInput(target) {
-    if (!(target instanceof Element)) {
-      return false;
-    }
-    if (target.closest("input, textarea, [contenteditable]")) {
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Pulls the first image File out of a clipboard payload. Falls back
-   * to `items` (where the file representation lives in some browsers
-   * for image-only pastes) when `files` is empty.
-   *
-   * @param {DataTransfer|null|undefined} clipboardData
-   * @returns {File|null}
-   */
-  #pickImageFromClipboard(clipboardData) {
-    if (!clipboardData) {
-      return null;
-    }
-    if (clipboardData.files?.length) {
-      for (const f of clipboardData.files) {
-        if (f.type?.startsWith("image/")) {
-          return f;
-        }
-      }
-    }
-    if (clipboardData.items?.length) {
-      for (const item of clipboardData.items) {
-        if (item.kind === "file" && item.type?.startsWith("image/")) {
-          const file = item.getAsFile();
-          if (file) {
-            return file;
-          }
-        }
-      }
-    }
-    return null;
   }
 
   /**

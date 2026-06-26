@@ -77,7 +77,7 @@ module(
       // Guard: the drop should STAGE the file for the new block's overlay,
       // not upload directly through the service.
       this.uploads = [];
-      this.editor.uploadImageForArg = (file, opts) => {
+      this.editor.wireframeImageUpload.uploadImageForArg = (file, opts) => {
         this.uploads.push({ file, opts });
         return Promise.resolve({ url: "/uploads/x.png", width: 1, height: 1 });
       };

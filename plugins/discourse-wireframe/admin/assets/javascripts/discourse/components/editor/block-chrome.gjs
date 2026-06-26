@@ -1784,7 +1784,7 @@ export default class BlockChrome extends Component {
    * @param {string} argName - The image arg name on this block.
    */
   async #openImageEditMenu(argEl, argName) {
-    this.wireframe.lastTouchedImageArg = argName;
+    this.wireframe.markImageArgTouched(argName);
     // The `close` callback captures `instance` by reference. At the
     // time the data object is created, `instance` is in the TDZ; by
     // the time the menu's Replace / Remove buttons can fire it the
