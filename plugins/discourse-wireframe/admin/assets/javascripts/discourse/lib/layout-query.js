@@ -10,6 +10,12 @@ import {
 } from "./mutate-layout";
 
 /**
+ * @typedef {import("discourse/blocks/block-outlet").LayoutEntry} LayoutEntry
+ *   The canonical layout-entry shape (`block`, `id`, `args`, `children`,
+ *   `containerArgs`, `__stableKey`, `__failure*`, …) owned by `block-outlet`.
+ */
+
+/**
  * The persistence state of an outlet, derived from the source that owns it
  * apart from any in-session edit (see `outletState`). `EDITING` is orthogonal —
  * an outlet in any of these states may also have unsaved edits.
@@ -61,7 +67,7 @@ export default class LayoutQuery {
 
   /**
    * @param {{
-   *   getResolvedLayout: (outletName: string, options?: {ignoreSessionDraft?: boolean}) => Array<Object>|null,
+   *   getResolvedLayout: (outletName: string, options?: {ignoreSessionDraft?: boolean}) => Array<LayoutEntry>|null,
    *   getResolvedLayouts: () => Map<string, Object>,
    *   getResolvedLayoutMeta: (outletName: string, options?: {ignoreSessionDraft?: boolean}) => Object|null,
    *   getBlock: (blockName: string) => Function|null,
@@ -93,7 +99,7 @@ export default class LayoutQuery {
    * @param {string} outletName
    * @param {Object} [options]
    * @param {boolean} [options.ignoreSessionDraft=false] - When true, skip the session-draft layer and resolve the underlying source.
-   * @returns {Array<Object>|null}
+   * @returns {Array<LayoutEntry>|null}
    */
   readResolvedLayout(outletName, { ignoreSessionDraft = false } = {}) {
     return this.#getResolvedLayout(outletName, { ignoreSessionDraft });
@@ -108,7 +114,7 @@ export default class LayoutQuery {
    * lookup is safe and avoids forcing every call site to be async.
    *
    * @param {string} key
-   * @returns {{entry: Object, outletName: string}|null}
+   * @returns {{entry: LayoutEntry, outletName: string}|null}
    */
   findEntryAndOutletSync(key) {
     const layoutMap = this.#getResolvedLayouts();
@@ -126,7 +132,7 @@ export default class LayoutQuery {
 
   /**
    * @param {string} key
-   * @returns {Object|null} The live entry, or `null` when no outlet resolves the key.
+   * @returns {LayoutEntry|null} The live entry, or `null` when no outlet resolves the key.
    */
   findEntryByKey(key) {
     return this.findEntryAndOutletSync(key)?.entry ?? null;
@@ -139,7 +145,7 @@ export default class LayoutQuery {
    * tell persistence which outlet just got dirty.
    *
    * @param {string} key
-   * @returns {Promise<{entry: Object, outletName: string}|null>}
+   * @returns {Promise<{entry: LayoutEntry, outletName: string}|null>}
    */
   async findEntryAndOutlet(key) {
     const layoutMap = this.#getResolvedLayouts();
@@ -167,7 +173,7 @@ export default class LayoutQuery {
    * resize handle only when the block sits inside a grid layout.
    *
    * @param {string} blockKey
-   * @returns {Object|null}
+   * @returns {LayoutEntry|null}
    */
   findEntryParent(blockKey) {
     const located = this.findEntryAndOutletSync(blockKey);
@@ -225,7 +231,7 @@ export default class LayoutQuery {
    * isn't a part key (or the composite can't be found).
    *
    * @param {string} key
-   * @returns {{compositeEntry: Object, compositeKey: string, outletName: string, idPath: string[], partPath: string}|null}
+   * @returns {{compositeEntry: LayoutEntry, compositeKey: string, outletName: string, idPath: string[], partPath: string}|null}
    */
   resolvePartContext(key) {
     if (!key || !key.includes(PART_KEY_SEGMENT)) {
@@ -267,7 +273,7 @@ export default class LayoutQuery {
    * reference (decorated blocks) or a string-ref (api.renderBlocks
    * factories) — this helper smooths over the two shapes.
    *
-   * @param {Object} entry
+   * @param {LayoutEntry} entry
    * @returns {string|null}
    */
   blockNameOf(entry) {
@@ -281,7 +287,7 @@ export default class LayoutQuery {
   }
 
   /**
-   * @param {Object} entry
+   * @param {LayoutEntry} entry
    * @returns {Object|null}
    */
   metadataFor(entry) {
@@ -396,7 +402,7 @@ export default class LayoutQuery {
    * the legacy `"free-grid"` mode value as an alias so existing saved
    * layouts (pre-rename) keep working.
    *
-   * @param {Object|null} entry
+   * @param {LayoutEntry|null} entry
    * @returns {boolean}
    */
   isGridContainer(entry) {
@@ -413,7 +419,7 @@ export default class LayoutQuery {
    * placement. Used by the editor to decide whether a given entry can
    * be placement-mutated (set its column/row, swap with a sibling, etc.).
    *
-   * @param {Object|null} entry
+   * @param {LayoutEntry|null} entry
    * @returns {boolean}
    */
   isGridCellEntry(entry) {
@@ -425,7 +431,7 @@ export default class LayoutQuery {
    * layout identified by `gridKey`. Used by the grid manipulator to tell a
    * same-grid source (re-placed in situ) from one arriving from elsewhere.
    *
-   * @param {Object} entry
+   * @param {LayoutEntry} entry
    * @param {string} gridKey
    * @returns {boolean}
    */
@@ -522,7 +528,7 @@ export default class LayoutQuery {
    * `resetAll` to decide which arg-snapshots to drop after a structural
    * rollback.
    *
-   * @param {Object} entry
+   * @param {LayoutEntry} entry
    * @returns {string|null}
    */
   outletForEntry(entry) {
@@ -554,8 +560,8 @@ export default class LayoutQuery {
   }
 
   /**
-   * @param {Array<Object>} layout
-   * @param {Object} target
+   * @param {Array<LayoutEntry>} layout
+   * @param {LayoutEntry} target
    * @returns {boolean}
    */
   #layoutContainsEntry(layout, target) {
