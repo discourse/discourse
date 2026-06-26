@@ -1673,6 +1673,7 @@ CREATE TABLE public.topics (
     external_id character varying,
     visibility_reason_id integer,
     locale character varying(20),
+    og_image_upload_id bigint,
     CONSTRAINT has_category_id CHECK (((category_id IS NOT NULL) OR ((archetype)::text <> 'regular'::text))),
     CONSTRAINT pm_has_no_category CHECK (((category_id IS NULL) OR ((archetype)::text <> 'private_message'::text)))
 );
@@ -22261,6 +22262,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260421061908'),
 ('20260420014648'),
 ('20260415082426'),
+('20260409225129'),
 ('20260408214007'),
 ('20260408165014'),
 ('20260407093145'),

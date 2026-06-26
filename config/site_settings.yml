@@ -192,6 +192,9 @@ branding:
     default: ""
     client: true
     type: upload
+  generate_topic_og_image:
+    default: false
+    client: true
   opengraph_image:
     default: ""
     client: true
@@ -1936,7 +1939,7 @@ nested_replies:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
   nested_replies_max_depth:
-    default: 10
+    default: 3
     client: true
     type: integer
     min: 1
@@ -1946,7 +1949,7 @@ nested_replies:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
   nested_replies_cap_nesting_depth:
-    default: false
+    default: true
     client: true
     area: "posts_and_topics"
     depends_on:

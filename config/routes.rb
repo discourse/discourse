@@ -450,6 +450,7 @@ Discourse::Application.routes.draw do
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
         get "/logo" => "logo#index"
+        get "/logo/og-image-preview" => "logo#og_image_preview"
         get "/fonts" => "fonts#index"
         get "/welcome-banner/themes-with-setting" => "welcome_banner#themes_with_setting"
         get "/welcome-banner" => "welcome_banner#index"
