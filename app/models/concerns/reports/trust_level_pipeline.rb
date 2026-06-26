@@ -14,23 +14,28 @@ module Reports::TrustLevelPipeline
           title: I18n.t("reports.trust_level_pipeline.labels.count"),
         },
         { property: :share_formatted, title: I18n.t("reports.trust_level_pipeline.labels.share") },
-        {
-          property: :moves_in,
-          type: :number,
-          title: I18n.t("reports.trust_level_pipeline.labels.moves_in"),
-        },
-        {
-          property: :moves_out,
-          type: :number,
-          title: I18n.t("reports.trust_level_pipeline.labels.moves_out"),
-        },
       ]
 
       snapshot = User.real.group(:trust_level).count
       total_members = snapshot.values.sum
 
-      moves_in_by_tl = Hash.new(0)
-      moves_out_by_tl = Hash.new(0)
+      # Members who joined this period. They arrive at the default trust level,
+      # which is the funnel's entry point: the dashboard shows this as that
+      # level's inflow, since members reach every other level by climbing but
+      # reach the entry level by signing up.
+      new_signups = User.real.where(created_at: report.start_date..report.end_date).count
+      entry_level = SiteSetting.default_trust_level
+
+      # A trust-level change is directional: moving to a higher level is a
+      # promotion, moving to a lower level a demotion. The same move is a
+      # departure from one level and an arrival at another, so we track all four
+      # flows per level. The dashboard funnel reads the "in" flows (how many
+      # members reached each level this period); the "out" flows are kept for
+      # the report table and tooltips.
+      promoted_in_by_tl = Hash.new(0)
+      promoted_out_by_tl = Hash.new(0)
+      demoted_in_by_tl = Hash.new(0)
+      demoted_out_by_tl = Hash.new(0)
       total_up = 0
       total_down = 0
 
@@ -63,11 +68,13 @@ module Reports::TrustLevelPipeline
         )
         .each do |row|
           next if row.new_tl == row.prev_tl
-          moves_in_by_tl[row.new_tl] += row.move_count
-          moves_out_by_tl[row.prev_tl] += row.move_count
           if row.new_tl > row.prev_tl
+            promoted_out_by_tl[row.prev_tl] += row.move_count
+            promoted_in_by_tl[row.new_tl] += row.move_count
             total_up += row.move_count
           else
+            demoted_out_by_tl[row.prev_tl] += row.move_count
+            demoted_in_by_tl[row.new_tl] += row.move_count
             total_down += row.move_count
           end
         end
@@ -82,8 +89,11 @@ module Reports::TrustLevelPipeline
             count: count,
             share: share,
             share_formatted: "#{share}%",
-            moves_in: moves_in_by_tl[tl],
-            moves_out: moves_out_by_tl[tl],
+            promoted_in: promoted_in_by_tl[tl],
+            promoted_out: promoted_out_by_tl[tl],
+            demoted_in: demoted_in_by_tl[tl],
+            demoted_out: demoted_out_by_tl[tl],
+            signups: tl == entry_level ? new_signups : 0,
           }
         end
 

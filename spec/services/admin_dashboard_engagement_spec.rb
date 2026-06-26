@@ -225,8 +225,11 @@ describe AdminDashboardEngagement do
           :trust_level,
           :count,
           :share,
-          :moves_in,
-          :moves_out,
+          :promoted_in,
+          :promoted_out,
+          :demoted_in,
+          :demoted_out,
+          :signups,
         )
         expect(pipeline[:trend]).to include(:direction, :net)
         expect(pipeline[:total_members]).to be >= 2
