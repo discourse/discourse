@@ -128,6 +128,47 @@ RSpec.describe Guardian do
       DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &allow_block)
     end
 
+    it "allows plugins to control a target-specific PM context" do
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
+      target_context_modifier = :guardian_can_send_private_message_to_target
+      target_context_block =
+        Proc.new do |allowed, params|
+          allowed ||
+            (
+              params[:guardian].user == user && params[:target] == another_user &&
+                params[:private_message_context] == :plugin_context
+            )
+        end
+
+      DiscoursePluginRegistry.register_modifier(
+        plugin,
+        target_context_modifier,
+        &target_context_block
+      )
+
+      expect(Guardian.new(user).can_send_private_message?(another_user)).to eq(false)
+      expect(
+        Guardian.new(user).can_send_private_message?(
+          another_user,
+          private_message_context: :plugin_context,
+        ),
+      ).to eq(true)
+
+      another_user.user_option.update!(allow_private_messages: false)
+      expect(
+        Guardian.new(user).can_send_private_message?(
+          another_user,
+          private_message_context: :plugin_context,
+        ),
+      ).to eq(false)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        target_context_modifier,
+        &target_context_block
+      )
+    end
+
     context "when personal_message_enabled_groups does not contain the user" do
       let(:group) { Fabricate(:group) }
       before { SiteSetting.personal_message_enabled_groups = group.id }
