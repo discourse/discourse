@@ -35,6 +35,7 @@ const SCHEMA_VERSION = 1;
 export default class WireframePersistenceService extends Service {
   @service wireframe;
   @service wireframeDrafts;
+  @service wireframeEditEngine;
 
   /** `${themeId}:${outlet}` -> last-observed live version token. */
   #versionTokens = new Map();
@@ -56,7 +57,7 @@ export default class WireframePersistenceService extends Service {
    */
   async publish(fallbackThemeId) {
     const result = { saved: [], errors: [], skipped: [] };
-    for (const outlet of [...this.wireframe.editedOutlets]) {
+    for (const outlet of this.wireframeEditEngine.editedOutletNames()) {
       await this.#publishOne(outlet, fallbackThemeId, result);
     }
     return result;
@@ -155,12 +156,12 @@ export default class WireframePersistenceService extends Service {
   }
 
   // Shared success path: collapse the just-published draft into the theme layer,
-  // capture the new live token, clear the outlet from `editedOutlets`, and drop
+  // capture the new live token, clear the outlet from the edited set, and drop
   // the now-redundant persisted draft (a failed cleanup is harmless).
   async #afterPublishSuccess(outlet, themeId, versionToken) {
     this.#publishToThemeLayer(outlet, themeId);
     this.#setToken(themeId, outlet, versionToken);
-    this.wireframe.editedOutlets.delete(outlet);
+    this.wireframeEditEngine.markOutletPublished(outlet);
     await this.wireframeDrafts.deleteDraft(themeId, outlet);
   }
 
@@ -249,7 +250,7 @@ export default class WireframePersistenceService extends Service {
   // The edited outlets as `{ outlet_name, layout_json }` rows for the duplicate
   // / customization-component endpoints, so no in-session edit is lost.
   #editedDrafts() {
-    return [...this.wireframe.editedOutlets].map((outlet) => ({
+    return this.wireframeEditEngine.editedOutletNames().map((outlet) => ({
       outlet_name: outlet,
       layout_json: this.#serializeLayoutJson(outlet),
     }));

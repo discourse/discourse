@@ -1145,6 +1145,33 @@ export function serializeLayoutForSave(layout) {
 }
 
 /**
+ * True when `prev` and `next` represent the same arg value. Plain strings
+ * (the common unformatted case) compare with `Object.is`. Non-string values
+ * may be doc-JSON — `toStorage(doc.toJSON())` returns a fresh object each
+ * commit, so reference equality always fails even when the content hasn't
+ * changed. Fall back to a deep-equal via `JSON.stringify`: doc-JSON is plain
+ * (no cycles, no functions) and is serialised with a deterministic key order
+ * for the same shape.
+ *
+ * Used to gate undo pushes so a no-op write (e.g. arrow-walking through a
+ * bolded paragraph, or re-selecting an icon that's already set) doesn't
+ * pollute the undo stack.
+ *
+ * @param {*} prev
+ * @param {*} next
+ * @returns {boolean}
+ */
+export function sameValue(prev, next) {
+  if (Object.is(prev, next)) {
+    return true;
+  }
+  if (typeof prev === "string" || typeof next === "string") {
+    return false;
+  }
+  return JSON.stringify(prev) === JSON.stringify(next);
+}
+
+/**
  * Serialises a single entry into the same JSON-safe shape
  * `serializeLayoutForSave` emits, but exported separately so callers
  * (e.g. the inspector's Raw JSON tab) can produce a clean view of one

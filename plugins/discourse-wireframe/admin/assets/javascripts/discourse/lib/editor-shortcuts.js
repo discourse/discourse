@@ -74,8 +74,8 @@ export function attachEditorShortcuts(editor) {
       event.preventDefault();
       // Under a multi-selection, remove the whole set in one undo step;
       // otherwise just the single selected block.
-      if (editor.selectedKeys.size > 1) {
-        editor.removeBlocks([...editor.selectedKeys]);
+      if (editor.selectionCount > 1) {
+        editor.removeBlocks(editor.selectedKeysSnapshot());
       } else {
         editor.removeBlock(key);
       }

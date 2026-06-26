@@ -24,8 +24,6 @@ module(
       const blockKey = "button-link:test";
 
       wireframe.isActive = true;
-      // The URL branch only fires for an already-selected block.
-      wireframe.selectedBlockKey = blockKey;
       // `LinkEditState.start` bails unless the block resolves to a real
       // layout entry, so stub the lookup — opening that session is exactly
       // the behavior we're asserting the guard suppresses.
@@ -33,6 +31,8 @@ module(
         entry: { args: {} },
         outletName: "test-outlet",
       });
+      // The URL branch only fires for an already-selected block.
+      await wireframe.selectBlock({ key: blockKey });
 
       await render(
         <template>

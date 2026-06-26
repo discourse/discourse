@@ -13,35 +13,9 @@ import {
   replaceEntryContainerArgs,
   resolvePartDef,
   revalidateEntryStamps,
+  sameValue,
   setPartOverride,
 } from "./mutate-layout";
-
-/**
- * True when `prev` and `next` represent the same inline-edit value.
- * Plain strings (the common unformatted case) compare with `Object.is`.
- * Non-string values are doc-JSON — `toStorage(doc.toJSON())` returns a
- * fresh object each commit, so reference equality always fails even
- * when the content hasn't changed. Fall back to a deep-equal via
- * `JSON.stringify`: doc-JSON is plain (no cycles, no functions) and
- * PM serialises keys in a deterministic order for the same shape.
- *
- * Used by `stop()` to gate the undo push so pure navigation (e.g.
- * arrow-walking through a bolded paragraph) doesn't pollute the stack
- * with no-op entries.
- *
- * @param {*} prev
- * @param {*} next
- * @returns {boolean}
- */
-function sameValue(prev, next) {
-  if (Object.is(prev, next)) {
-    return true;
-  }
-  if (typeof prev === "string" || typeof next === "string") {
-    return false;
-  }
-  return JSON.stringify(prev) === JSON.stringify(next);
-}
 
 /**
  * Owns all state and operations for an inline-text edit session: which
@@ -477,13 +451,13 @@ export default class InlineEditState {
 
     if (commit) {
       if (!sameValue(prevValue, nextValue)) {
-        this.service.undoStack.push({
+        this.service.wireframeEditEngine.pushUndoEntry({
           kind: "args",
           entry,
           prev: new Map([[argName, prevValue]]),
           next: new Map([[argName, nextValue]]),
         });
-        this.service.redoStack.length = 0;
+        this.service.wireframeEditEngine.clearRedoStack();
       }
     } else {
       this.service.writeArgs(entry, new Map([[argName, prevValue]]));
@@ -508,10 +482,9 @@ export default class InlineEditState {
    * spurious "PM emptied its doc during teardown" transactions that
    * clobbered `args.text` with `""`.
    *
-   * Keeps the existing dirty-tracking honest: registers the entry's
-   * outlet in `editedOutlets` so persistence knows what to save, and
-   * captures the initial-snapshot so `resetAll` rolls back the right
-   * pre-edit state.
+   * Keeps the existing dirty-tracking honest: flags the entry's outlet as
+   * arg-edited so persistence knows what to save, and captures the
+   * initial-snapshot so `resetAll` rolls back the right pre-edit state.
    *
    * @param {*} value - The new value (string for plain edits, doc-JSON
    *   for marked edits) produced by `toStorage(doc.toJSON())`.
@@ -531,7 +504,7 @@ export default class InlineEditState {
       return;
     }
     const { entry, outletName } = located;
-    this.service.editedOutlets.add(outletName);
+    this.service.wireframeEditEngine.markOutletArgEdited(outletName);
     const prevMap = new Map([[argName, entry.args?.[argName]]]);
     this.service.captureInitialSnapshot(entry, prevMap);
     // Empty edits (`""`, null, undefined) DELETE the key rather than
@@ -620,7 +593,7 @@ export default class InlineEditState {
         currentEntry.args.text = beforeValue;
       }
       clearValidatorStamps(currentEntry);
-      this.service.editedOutlets.add(outletName);
+      this.service.wireframeEditEngine.markOutletStructurallyEdited(outletName);
 
       const layout = this.service.ensureDraft(outletName);
       if (!layout) {
@@ -734,7 +707,7 @@ export default class InlineEditState {
         livePrev.args.text = mergedValue;
       }
       clearValidatorStamps(livePrev);
-      this.service.editedOutlets.add(outletName);
+      this.service.wireframeEditEngine.markOutletStructurallyEdited(outletName);
 
       const draft = this.service.ensureDraft(outletName);
       if (!draft) {
@@ -829,7 +802,7 @@ export default class InlineEditState {
       if (!result.changed) {
         return false;
       }
-      this.service.editedOutlets.add(outletName);
+      this.service.wireframeEditEngine.markOutletStructurallyEdited(outletName);
       this.service.publishStructuralChange(outletName, result.layout);
       return true;
     });
@@ -880,7 +853,7 @@ export default class InlineEditState {
       if (!result.changed) {
         return false;
       }
-      this.service.editedOutlets.add(outletName);
+      this.service.wireframeEditEngine.markOutletStructurallyEdited(outletName);
       this.service.publishStructuralChange(outletName, result.layout);
       return true;
     });

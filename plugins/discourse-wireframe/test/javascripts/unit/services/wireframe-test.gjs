@@ -2497,7 +2497,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         );
         this.editor.inlineEdit.applyChange("Seed");
         this.editor.inlineEdit.stop({ commit: true });
-        const undoCount = this.editor.undoStack.length;
+        const undoCount = this.editor.undoDepth;
 
         await this.editor.inlineEdit.startContainerArg(
           this.key,
@@ -2508,7 +2508,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         this.editor.inlineEdit.stop({ commit: true });
 
         assert.strictEqual(
-          this.editor.undoStack.length,
+          this.editor.undoDepth,
           undoCount,
           "re-committing the same label is a no-op on the undo stack"
         );
@@ -2886,11 +2886,11 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("selectBlock resets the selection to a single block", function (assert) {
       this.editor.selectBlock({ key: this.firstKey });
       this.editor.toggleBlockSelection({ key: this.secondKey });
-      assert.strictEqual(this.editor.selectedKeys.size, 2, "two selected");
+      assert.strictEqual(this.editor.selectionCount, 2, "two selected");
 
       this.editor.selectBlock({ key: this.firstKey });
       assert.strictEqual(
-        this.editor.selectedKeys.size,
+        this.editor.selectionCount,
         1,
         "a plain select collapses back to one"
       );
@@ -2924,7 +2924,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       this.editor.setSelectionRange([this.firstKey, this.secondKey], {
         key: this.secondKey,
       });
-      assert.strictEqual(this.editor.selectedKeys.size, 2);
+      assert.strictEqual(this.editor.selectionCount, 2);
       assert.true(this.editor.isBlockSelected(this.firstKey));
       assert.true(this.editor.isBlockSelected(this.secondKey));
       assert.strictEqual(this.editor.selectedBlockKey, this.secondKey);
@@ -3272,7 +3272,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.strictEqual(banner, null, "no error banner on success");
       assert.verifySteps(["draft:homepage-blocks"]);
       assert.true(
-        this.editor.editedOutlets.has("homepage-blocks"),
+        this.editor.isOutletEdited("homepage-blocks"),
         "the outlet stays edited — a draft never goes live"
       );
     });
@@ -3287,7 +3287,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "the failing outlet is named in the banner"
       );
       assert.true(
-        this.editor.editedOutlets.has("homepage-blocks"),
+        this.editor.isOutletEdited("homepage-blocks"),
         "a failed draft leaves the outlet edited"
       );
     });

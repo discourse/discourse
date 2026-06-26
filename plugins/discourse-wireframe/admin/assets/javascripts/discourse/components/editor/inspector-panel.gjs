@@ -135,7 +135,7 @@ export default class InspectorPanel extends Component {
 
   /** @returns {number} How many blocks are currently selected. */
   get selectionCount() {
-    return this.wireframe.selectedKeys.size;
+    return this.wireframe.selectionCount;
   }
 
   /**
@@ -275,7 +275,7 @@ export default class InspectorPanel extends Component {
 
   @action
   removeSelectedBlocks() {
-    this.wireframe.removeBlocks([...this.wireframe.selectedKeys]);
+    this.wireframe.removeBlocks(this.wireframe.selectedKeysSnapshot());
   }
 
   @action

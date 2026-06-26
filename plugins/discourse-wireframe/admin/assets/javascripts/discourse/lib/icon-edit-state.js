@@ -10,8 +10,8 @@ import IconEditPopover from "../components/icon-edit-popover";
  *
  * Lives outside `WireframeService` so the service stays focused on
  * layout / palette / clipboard / undo concerns, mirroring the
- * `InlineEditState` split. Service-owned utilities (layout lookup,
- * `writeArgs`, undo / redo stacks) are reached through `this.service`.
+ * `InlineEditState` split. Service-owned utilities (layout lookup, the
+ * edit engine's arg-edit recording) are reached through `this.service`.
  *
  * Plain JS class — NOT an Ember service. Instantiated once per
  * service instance at service construction and exposed via
@@ -145,20 +145,13 @@ export default class IconEditState {
       return;
     }
     const { entry, outletName } = located;
-    this.service.editedOutlets.add(outletName);
-    const prevMap = new Map([[argName, this.#prevValue]]);
-    this.service.captureInitialSnapshot(entry, prevMap);
-    this.service.writeArgs(entry, new Map([[argName, value || null]]));
-
-    if (this.#prevValue !== (value || null)) {
-      this.service.undoStack.push({
-        kind: "args",
-        entry,
-        prev: prevMap,
-        next: new Map([[argName, value || null]]),
-      });
-      this.service.redoStack.length = 0;
-    }
+    this.service.wireframeEditEngine.recordArgEdit({
+      entry,
+      outletName,
+      argName,
+      prevValue: this.#prevValue,
+      nextValue: value || null,
+    });
 
     // Close the popover; `#onMenuClosed` clears the session state.
     this.#menuInstance?.close();

@@ -135,7 +135,7 @@ export default class OutlinePanel extends Component {
     return new TrackedAsyncData(
       walkAllOutlets({
         blocksService: this.blocks,
-        alwaysInclude: this.wireframe.draftedOutlets,
+        alwaysInclude: new Set(this.wireframe.draftedOutletNames()),
       })
     );
   }

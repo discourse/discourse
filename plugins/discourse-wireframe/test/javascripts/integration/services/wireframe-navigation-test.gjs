@@ -81,7 +81,7 @@ module(
       editor.enter();
       await settled();
       assert.false(
-        editor.draftedOutlets.has("homepage-blocks"),
+        editor.draftedOutletNames().includes("homepage-blocks"),
         "an off-page, layout-less outlet is not materialized at enter"
       );
 
@@ -98,7 +98,7 @@ module(
       editor.rediscoverOutlets();
       await settled();
       assert.true(
-        editor.draftedOutlets.has("homepage-blocks"),
+        editor.draftedOutletNames().includes("homepage-blocks"),
         "rediscovery materializes the newly-mounted outlet so it can be built"
       );
     });
@@ -124,7 +124,7 @@ module(
       editor.enter();
       await settled();
       assert.false(
-        editor.draftedOutlets.has("homepage-blocks"),
+        editor.draftedOutletNames().includes("homepage-blocks"),
         "not drafted before navigation"
       );
 
@@ -136,7 +136,7 @@ module(
       await settled();
 
       assert.true(
-        editor.draftedOutlets.has("homepage-blocks"),
+        editor.draftedOutletNames().includes("homepage-blocks"),
         "the page:changed hook rediscovered and materialized the new outlet"
       );
     });
@@ -162,11 +162,11 @@ module(
       await settled();
 
       assert.true(
-        editor.draftedOutlets.has("homepage-blocks"),
+        editor.draftedOutletNames().includes("homepage-blocks"),
         "the outlet is seeded with an empty draft"
       );
       assert.false(
-        editor.editedOutlets.has("homepage-blocks"),
+        editor.isOutletEdited("homepage-blocks"),
         "seeding a draft is not an edit"
       );
 
@@ -204,7 +204,7 @@ module(
       await settled();
       await editTitle(editor, "homepage-blocks", "Edited");
       assert.true(
-        editor.editedOutlets.has("homepage-blocks"),
+        editor.isOutletEdited("homepage-blocks"),
         "the outlet is edited"
       );
 
@@ -216,7 +216,7 @@ module(
         "the edited outlet is no longer mounted"
       );
       assert.true(
-        editor.editedOutlets.has("homepage-blocks"),
+        editor.isOutletEdited("homepage-blocks"),
         "the edit survives unmounting"
       );
 

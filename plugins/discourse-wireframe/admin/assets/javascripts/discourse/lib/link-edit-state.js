@@ -98,20 +98,13 @@ export default class LinkEditState {
       return;
     }
     const { entry, outletName } = located;
-    this.service.editedOutlets.add(outletName);
-    const prevMap = new Map([[argName, this.#prevValue]]);
-    this.service.captureInitialSnapshot(entry, prevMap);
-    this.service.writeArgs(entry, new Map([[argName, value || null]]));
-
-    if (this.#prevValue !== (value || null)) {
-      this.service.undoStack.push({
-        kind: "args",
-        entry,
-        prev: prevMap,
-        next: new Map([[argName, value || null]]),
-      });
-      this.service.redoStack.length = 0;
-    }
+    this.service.wireframeEditEngine.recordArgEdit({
+      entry,
+      outletName,
+      argName,
+      prevValue: this.#prevValue,
+      nextValue: value || null,
+    });
 
     this.stop();
   }

@@ -2,11 +2,7 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import {
-  trackedArray,
-  trackedMap,
-  trackedSet,
-} from "@ember/reactive/collections";
+import { trackedMap, trackedSet } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import {
@@ -72,16 +68,12 @@ import {
   replaceEntryContainerArgs,
   replaceEntryId,
   replaceEntryInPlace,
-  resolvePartDef,
-  revalidateEntryStamps,
-  serializeEntryForSave,
   serializeLayoutForSave,
   setPartOverride,
   wrapAsOutletRoot,
 } from "../lib/mutate-layout";
 import { diffLayouts } from "../lib/outlet-change-summary";
 import { isReversedFlexLayout } from "../lib/reversed-flex";
-import { inferSchemaFromValues } from "../lib/schema-to-fields";
 import { OUTLET_STATE } from "../services/wireframe-layout-query";
 
 const FLUSH_DELAY_MS = 200;
@@ -123,12 +115,13 @@ export default class WireframeService extends Service {
   @service siteSettings;
   @service wireframeDrafts;
   @service wireframeDragOverlay;
+  @service wireframeEditEngine;
   @service wireframeLayoutQuery;
   @service wireframePersistence;
   @service wireframeRevision;
+  @service wireframeSelection;
 
   @tracked isActive = false;
-  @tracked selectedBlockKey = null;
 
   /**
    * The id of the theme this editor session is bound to. Set on `enter()`
@@ -144,20 +137,6 @@ export default class WireframeService extends Service {
    * @type {number|null}
    */
   @tracked activeThemeId = null;
-
-  /**
-   * Snapshot of the selected block populated by either the canvas chrome
-   * (on click) or the outline panel (on row click). The shape is a loose
-   * subset of `{ key, name, id, args, containerArgs, conditions, outletArgs,
-   * outletName, metadata }`. Some fields are only available from one entry
-   * point — for example, `containerArgs` and `outletArgs` are only set when
-   * the selection comes from a rendered block on the canvas.
-   *
-   * `args` here is the LIVE `entry.args` reference (a `trackedObject`); the
-   * inspector reads through it so reads auto-track and edit-time mutations
-   * are visible without us re-assigning `selectedBlockData`.
-   */
-  @tracked selectedBlockData = null;
 
   /**
    * Whether the inspector's conditions surface is detached from the
@@ -300,65 +279,6 @@ export default class WireframeService extends Service {
   });
 
   /**
-   * Undo / redo stacks for in-memory edits. Entries are discriminated by
-   * `kind`:
-   *
-   * - `{kind: "args", entry, prev, next}` — one batch of arg mutations on a
-   *   specific entry. Undo writes `prev` back into `entry.args`, redo flips
-   *   to `next`.
-   * - `{kind: "structural", changes, prevSelection, nextSelection}` — a
-   *   structural mutation (insert / remove / move / duplicate / paste /
-   *   conditions / raw-json edit). `changes` is an array of
-   *   `{outletName, prevLayout, nextLayout}` pairs. Undo re-publishes the
-   *   `prev` layouts; redo re-publishes `next`. Selection is restored
-   *   alongside because structural changes can delete or relocate the
-   *   selected block.
-   *
-   * @type {Array<Object>}
-   */
-  undoStack = trackedArray();
-  /** @type {Array<Object>} */
-  redoStack = trackedArray();
-  /**
-   * The full set of selected block keys. `selectedBlockKey` is the PRIMARY
-   * (anchor) of this set — the block whose form the inspector shows when
-   * exactly one is selected, and the anchor for shift-range selection.
-   * Single-select keeps this at `{ primaryKey }`; the outline's modifier
-   * gestures grow it. `isBlockSelected` reads it, so the canvas highlights
-   * every member. A `trackedSet`, so `.has` / `.size` reads auto-track.
-   */
-  selectedKeys = trackedSet();
-  /**
-   * For each entry we've ever mutated, the `entry.args` snapshot taken
-   * before the first mutation. Reset / exit walk this map and write those
-   * snapshots back into `entry.args`.
-   *
-   * Stored as a `trackedMap` so reads of `.size` (used by `isDirty`) open
-   * a tracked dependency on the collection — that's what keeps the toolbar's
-   * Save / Reset buttons reactive to the very first edit.
-   *
-   * @type {Map<Object, Map<string, *>>}
-   */
-  initialSnapshots = trackedMap();
-  /**
-   * Outlets where this editor session has materialised a `session-draft`
-   * layer. Tracked here (rather than re-derived from the block-outlet
-   * record) so `exit` clears exactly what the editor published without
-   * touching drafts produced elsewhere.
-   *
-   * @type {Set<string>}
-   */
-  draftedOutlets = new Set();
-  /**
-   * Names of every outlet whose draft layer has at least one in-memory
-   * mutation. Persistence iterates this set on Save to know which outlet
-   * layouts to POST. Cleared per-outlet by the persistence service after a
-   * successful save, and wholesale on `exit` / `resetAll`.
-   *
-   * @type {Set<string>}
-   */
-  editedOutlets = new Set();
-  /**
    * Reveal-into-view and the one-shot "just selected" flash. A dependency-free
    * leaf the kernel configures downward with the draft-aware layout readers; it
    * never reaches back here. Side-effecting (DOM + timers), so it stays private
@@ -390,6 +310,14 @@ export default class WireframeService extends Service {
   #dropDispatchRegistered = false;
 
   /**
+   * Whether this kernel's cross-concern selection hooks have been registered
+   * on `wireframeSelection`. Guards `enter()` so re-entry doesn't re-register
+   * (which would flush args / commit edits / reveal multiple times per
+   * selection change).
+   */
+  #selectionHooksRegistered = false;
+
+  /**
    * Pending arg changes for the currently-selected block, accumulated across
    * a burst of keystrokes and flushed by `#flushPendingArgs` after a short
    * idle delay. Keys are arg names; values are the latest value typed.
@@ -399,23 +327,11 @@ export default class WireframeService extends Service {
   #pendingArgs = new Map();
 
   /**
-   * Pristine clones of every drafted outlet's layout, captured at `enter()`
-   * time. Used by `resetAll()` to roll structural mutations (drag/drop,
-   * insert, delete) back to the page's pre-edit state.
-   *
-   * Stored as a separate clone from the draft itself so subsequent edits
-   * (which mutate the draft in place) never bleed into the snapshot.
-   *
-   * @type {Map<string, Array<Object>>}
-   */
-  #originalLayouts = new Map();
-
-  /**
    * The serialized layout of each outlet's last *persisted draft* — set when a
    * saved draft is hydrated on entry and after each successful draft save, and
    * cleared when the draft is discarded, reset, or published. This is the
-   * baseline for "are there unsaved draft edits?" — distinct from `#originalLayouts`
-   * (the published/at-entry layout used for discard and the publish-diff). It
+   * baseline for "are there unsaved draft edits?" — distinct from the engine's
+   * pristine at-entry layout (used for discard and the publish-diff). It
    * lets the editor tell "the canvas differs from my saved draft" even when the
    * canvas happens to match the published layout. A `trackedMap` so the
    * `hasUnsavedDraftEdits` getter re-evaluates when a baseline changes.
@@ -442,16 +358,6 @@ export default class WireframeService extends Service {
    * @type {Array<{outlet: string, themeId: number, layout: Array<Object>}>}
    */
   #staleDraftQueue = [];
-
-  /**
-   * Outlets whose draft has at least one structural mutation (block moved,
-   * inserted, deleted). A `trackedSet` so the toolbar's `isDirty` getter
-   * reactively responds to the first move — equivalent role to
-   * `initialSnapshots` for arg edits.
-   *
-   * @type {Set<string>}
-   */
-  #structurallyEditedOutlets = trackedSet();
 
   /**
    * `wf:layout` block keys that the author has explicitly asked to
@@ -649,21 +555,215 @@ export default class WireframeService extends Service {
     return this.wireframeLayoutQuery;
   }
 
+  /* Selection facade — the block-selection concern lives on
+   * `wireframeSelection`. These delegators keep every external consumer
+   * (panels, chrome, toolbar) and every kernel-internal reader unchanged
+   * while the state and commands moved out. The raw `selectedKeys` set is
+   * deliberately NOT re-exposed; consumers read `selectionCount` /
+   * `selectedKeysSnapshot` / `isBlockSelected` instead. */
+
+  /** @returns {string|null} */
+  get selectedBlockKey() {
+    return this.wireframeSelection.selectedBlockKey;
+  }
+
+  /** @returns {Object|null} */
+  get selectedBlockData() {
+    return this.wireframeSelection.selectedBlockData;
+  }
+
+  /** @returns {{failureType: string, failureReason: string}|null} */
+  get selectedBlockFailure() {
+    return this.wireframeSelection.selectedBlockFailure;
+  }
+
+  /** @returns {Object<string, Array<Object>>} */
+  get selectedBlockFieldErrors() {
+    return this.wireframeSelection.selectedBlockFieldErrors;
+  }
+
+  /** @returns {Array<Object>} */
+  get selectedBlockNonFieldErrors() {
+    return this.wireframeSelection.selectedBlockNonFieldErrors;
+  }
+
+  /** @returns {boolean} */
+  get selectedBlockHasErrors() {
+    return this.wireframeSelection.selectedBlockHasErrors;
+  }
+
+  /** @returns {boolean} */
+  get canMoveSelectedUp() {
+    return this.wireframeSelection.canMoveSelectedUp;
+  }
+
+  /** @returns {boolean} */
+  get canMoveSelectedDown() {
+    return this.wireframeSelection.canMoveSelectedDown;
+  }
+
+  /** @returns {Array<Object>} */
+  get selectedBlockAncestry() {
+    return this.wireframeSelection.selectedBlockAncestry;
+  }
+
+  /** @returns {Object|null} */
+  get selectedBlockRawEntry() {
+    return this.wireframeSelection.selectedBlockRawEntry;
+  }
+
+  /** @returns {Array|Object|null} */
+  get selectedBlockConditions() {
+    return this.wireframeSelection.selectedBlockConditions;
+  }
+
+  /** @returns {boolean} */
+  get hasMultiSelection() {
+    return this.wireframeSelection.hasMultiSelection;
+  }
+
+  /** @returns {number} */
+  get selectionCount() {
+    return this.wireframeSelection.selectionCount;
+  }
+
+  /* Edit-engine facade — the mutation / undo / dirty-tracking concern lives on
+   * `wireframeEditEngine`. These delegators keep every external consumer and
+   * every kernel-internal caller (the ~30 `recordStructural` sites, the
+   * grid-manipulator `svc.` and inline-editor `this.service.` callers, the
+   * toolbar's undo/redo actions) unchanged while the state and commands moved
+   * out. No raw state (the dirty sets, the undo/redo stacks, the snapshot map)
+   * is re-exposed; consumers read through the engine's query methods. */
+
   /** @returns {boolean} */
   get canUndo() {
-    return this.undoStack.length > 0;
+    return this.wireframeEditEngine.canUndo;
   }
 
   /** @returns {boolean} */
   get canRedo() {
-    return this.redoStack.length > 0;
+    return this.wireframeEditEngine.canRedo;
   }
 
   /** @returns {boolean} */
   get isDirty() {
-    return (
-      this.initialSnapshots.size > 0 || this.#structurallyEditedOutlets.size > 0
+    return this.wireframeEditEngine.isDirty;
+  }
+
+  /** @returns {number} The number of entries on the undo stack. */
+  get undoDepth() {
+    return this.wireframeEditEngine.undoDepth;
+  }
+
+  /** @returns {number} The number of entries on the redo stack. */
+  get redoDepth() {
+    return this.wireframeEditEngine.redoDepth;
+  }
+
+  /**
+   * The set of outlet names the editor has materialised a draft layer for, as a
+   * frozen array. Re-exposed so the outline panel can read it through the kernel
+   * without injecting the engine directly.
+   *
+   * @returns {ReadonlyArray<string>}
+   */
+  draftedOutletNames() {
+    return this.wireframeEditEngine.draftedOutletNames();
+  }
+
+  /**
+   * Whether an outlet has any unsaved edit — structural or arg-level. Facade
+   * over the engine so external readers go through the kernel.
+   *
+   * @param {string} outletName
+   * @returns {boolean}
+   */
+  isOutletEdited(outletName) {
+    return this.wireframeEditEngine.isOutletEdited(outletName);
+  }
+
+  /**
+   * Re-publishes a draft layout layer with structural changes applied and marks
+   * the outlet edited. Facade over the engine so the many structural-mutation
+   * call sites (here, the grid manipulator, the inline editors) are unchanged.
+   *
+   * @param {string} outletName
+   * @param {Array<Object>} newLayout
+   */
+  publishStructuralChange(outletName, newLayout) {
+    return this.wireframeEditEngine.publishStructuralChange(
+      outletName,
+      newLayout
     );
+  }
+
+  /**
+   * Wraps a structural mutation in undo/redo + dirty bookkeeping. Facade over
+   * the engine; the closures callers pass reach `publishStructuralChange` back
+   * through this same kernel facade, resolving to the one engine instance.
+   *
+   * @template T
+   * @param {string[]} outletNames
+   * @param {() => T} mutateFn
+   * @returns {T}
+   */
+  recordStructural(outletNames, mutateFn) {
+    return this.wireframeEditEngine.recordStructural(outletNames, mutateFn);
+  }
+
+  /**
+   * Writes a single arg value immediately (not keystroke-debounced) through the
+   * undo-aware write path. Facade over the engine.
+   *
+   * @param {string} blockKey
+   * @param {string} argName
+   * @param {*} value
+   */
+  setArg(blockKey, argName, value) {
+    return this.wireframeEditEngine.setArg(blockKey, argName, value);
+  }
+
+  /**
+   * Writes a `Map<argName, value>` of arg values into `entry.args`. Facade over
+   * the engine.
+   *
+   * @param {Object} entry
+   * @param {Map<string, *>} args
+   */
+  writeArgs(entry, args) {
+    return this.wireframeEditEngine.writeArgs(entry, args);
+  }
+
+  /**
+   * Captures an entry's pre-edit args the first time it's about to be mutated.
+   * Facade over the engine.
+   *
+   * @param {Object} entry
+   * @param {Map<string, *>} prev
+   */
+  captureInitialSnapshot(entry, prev) {
+    return this.wireframeEditEngine.captureInitialSnapshot(entry, prev);
+  }
+
+  /**
+   * Reverts the most recent mutation. Facade over the engine — returns the
+   * Promise so callers awaiting the result aren't left hanging.
+   *
+   * @returns {Promise<boolean>}
+   */
+  @action
+  undo() {
+    return this.wireframeEditEngine.undo();
+  }
+
+  /**
+   * Re-applies the most recently undone mutation. Facade over the engine.
+   *
+   * @returns {Promise<boolean>}
+   */
+  @action
+  redo() {
+    return this.wireframeEditEngine.redo();
   }
 
   /**
@@ -679,7 +779,7 @@ export default class WireframeService extends Service {
    */
   get hasUnsavedDraftEdits() {
     const outlets = new Set([
-      ...this.#editedOutletNames(),
+      ...this.wireframeEditEngine.editedOutletNames(),
       ...this.#persistedDraftLayouts.keys(),
     ]);
     for (const outletName of outlets) {
@@ -800,236 +900,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Soft-failure metadata for the currently-selected block, or `null` if
-   * the selection is healthy (or nothing is selected). Reads
-   * `__failureType` / `__failureReason` written by the validator when
-   * running in permissive mode — far more accurate than text-matching
-   * the whole-outlet warning list against the selected block's name.
-   *
-   * @returns {{failureType: string, failureReason: string}|null}
-   */
-  get selectedBlockFailure() {
-    // Republishes bump `structuralVersion`; in-place stamp clears
-    // propagate via the per-entry `trackedObject` wrap (the
-    // `entry.__failureType` read below opens a per-key dep).
-    void this.structuralVersion;
-    const key = this.selectedBlockKey;
-    if (!key) {
-      return null;
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(key);
-    const entry = located?.entry;
-    if (!entry?.__failureType) {
-      return null;
-    }
-    return {
-      failureType: entry.__failureType,
-      failureReason: entry.__failureReason ?? "",
-    };
-  }
-
-  /**
-   * Structured field-level errors for the selected block, keyed by arg
-   * name. Each value is an array of `{ code, field, value?, expected? }`
-   * details — permissive-mode validation accumulates every failure
-   * inside an entry, so a field can carry multiple details in principle
-   * (e.g. type + constraint).
-   *
-   * Details without a `field` are routed to `selectedBlockNonFieldErrors`
-   * instead (the inspector lists them in the top pill, not under a
-   * specific input).
-   *
-   * Drives FormKit's `addError` sync in the inspector — see
-   * `inspector-form.gjs`.
-   *
-   * @returns {Object<string, Array<Object>>}
-   */
-  get selectedBlockFieldErrors() {
-    void this.structuralVersion;
-    const key = this.selectedBlockKey;
-    if (!key) {
-      return {};
-    }
-    const entry = this.layoutQuery.findEntryAndOutletSync(key)?.entry;
-    const list = entry?.__failureDetails ?? [];
-    const byField = {};
-    for (const d of list) {
-      if (!d?.field) {
-        continue;
-      }
-      (byField[d.field] ??= []).push(d);
-    }
-    return byField;
-  }
-
-  /**
-   * Structured errors for the selected block that aren't tied to a
-   * single field — constraint violations, missing children, unknown
-   * block, duplicate IDs, etc. These render in the top-of-inspector
-   * pill since they have no specific control to hang under.
-   *
-   * @returns {Array<Object>}
-   */
-  get selectedBlockNonFieldErrors() {
-    void this.structuralVersion;
-    const key = this.selectedBlockKey;
-    if (!key) {
-      return [];
-    }
-    const entry = this.layoutQuery.findEntryAndOutletSync(key)?.entry;
-    return (entry?.__failureDetails ?? []).filter((d) => !d?.field);
-  }
-
-  /**
-   * Whether the selected block has any structured error (field-level
-   * or not). Used by the inspector to decide whether to render the
-   * compact errors pill.
-   *
-   * @returns {boolean}
-   */
-  get selectedBlockHasErrors() {
-    return (
-      Object.keys(this.selectedBlockFieldErrors).length > 0 ||
-      this.selectedBlockNonFieldErrors.length > 0
-    );
-  }
-
-  /**
-   * Whether the selected block has a sibling above it. Drives the
-   * `Move up` toolbar button's disabled state.
-   *
-   * @returns {boolean}
-   */
-  get canMoveSelectedUp() {
-    return this.#selectionSiblingIndex() > 0;
-  }
-
-  /**
-   * Whether the selected block has a sibling below it. Drives the
-   * `Move down` toolbar button's disabled state.
-   *
-   * @returns {boolean}
-   */
-  get canMoveSelectedDown() {
-    const idx = this.#selectionSiblingIndex();
-    if (idx < 0) {
-      return false;
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(
-      this.selectedBlockKey
-    );
-    if (!located) {
-      return false;
-    }
-    const layout = this.layoutQuery.readResolvedLayout(located.outletName);
-    const sibs = findEntrySiblings(layout, this.selectedBlockKey);
-    return sibs ? idx < sibs.siblings.length - 1 : false;
-  }
-
-  /**
-   * Path of ancestor segments from the outlet root down to the
-   * selected block. Used by the canvas-bottom breadcrumb. Each segment
-   * carries `{key, blockName, displayName, isOutlet, outletName}`.
-   * Outlet segment is first (`isOutlet: true`, `key: null`), nested
-   * containers follow, selected block is last.
-   *
-   * @returns {Array<{key: string|null, blockName: string|null, displayName: string, isOutlet: boolean, outletName: string|null}>}
-   */
-  get selectedBlockAncestry() {
-    // Read structuralVersion so this re-evaluates after every mutation.
-    // eslint-disable-next-line no-unused-vars
-    const _v = this.structuralVersion;
-    const key = this.selectedBlockKey;
-    if (!key) {
-      return [];
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(key);
-    if (!located) {
-      return [];
-    }
-    const layout = this.layoutQuery.readResolvedLayout(located.outletName);
-    if (!layout) {
-      return [];
-    }
-    const path = findAncestryPath(layout, key);
-    if (!path) {
-      return [];
-    }
-    return [
-      {
-        key: null,
-        blockName: null,
-        displayName: located.outletName,
-        isOutlet: true,
-        outletName: located.outletName,
-      },
-      ...path.map((entry) => {
-        const meta = this.layoutQuery.metadataFor(entry);
-        const blockName =
-          meta?.blockName ??
-          (typeof entry.block === "string" ? entry.block : "(block)");
-        return {
-          key: entryKey(entry),
-          blockName,
-          displayName: meta?.shortName ?? blockName,
-          isOutlet: false,
-          outletName: located.outletName,
-        };
-      }),
-    ];
-  }
-
-  /**
-   * The selected entry's current serialised form, for the Raw JSON
-   * inspector tab. Uses the same `serializeEntryForSave` that
-   * `persistance` uses for the wire format — so what you see in the
-   * Raw JSON tab matches what gets saved. Class references on
-   * `entry.block` are normalised to their registered name strings,
-   * and runtime-only fields (`__stableKey`, `__visible`, ...) are
-   * dropped. Reads `structuralVersion` to refresh on every mutation.
-   *
-   * @returns {Object|null}
-   */
-  get selectedBlockRawEntry() {
-    // eslint-disable-next-line no-unused-vars
-    const _v = this.structuralVersion;
-    const key = this.selectedBlockKey;
-    if (!key) {
-      return null;
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(key);
-    if (!located) {
-      return null;
-    }
-    return serializeEntryForSave(located.entry);
-  }
-
-  /**
-   * Live conditions tree for the currently-selected block. Re-resolves
-   * the entry on every read so structural changes (publishes from
-   * `updateSelectedConditions`, moves, etc.) are picked up automatically
-   * by the condition builder's `@cached get tree()` via the
-   * `structuralVersion` tracked dep.
-   *
-   * @returns {Array|Object|null}
-   */
-  get selectedBlockConditions() {
-    // Force a tracked read so consumers re-render when structural
-    // mutations re-publish.
-    // eslint-disable-next-line no-unused-vars
-    const _v = this.structuralVersion;
-    const key = this.selectedBlockKey;
-    if (!key) {
-      return null;
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(key);
-    if (!located) {
-      return this.selectedBlockData?.conditions ?? null;
-    }
-    return located.entry.conditions ?? null;
-  }
-
-  /**
    * Indicates whether the clipboard currently holds anything that
    * `pasteFromClipboard` could insert. Reactivity comes from `_clipboard`
    * being tracked.
@@ -1089,6 +959,32 @@ export default class WireframeService extends Service {
         this.runDropDispatch(payload)
       );
       this.#dropDispatchRegistered = true;
+    }
+    // Wire this kernel's cross-concern effects into the selection seam. The
+    // selection service owns "what is selected"; these hooks own the editor's
+    // reactions to a selection change. Registered once; the guard keeps
+    // re-entry from firing them more than once per change.
+    if (!this.#selectionHooksRegistered) {
+      this.wireframeSelection.registerBeforeChange(({ nextKey }) => {
+        // Flush anything still pending from the previous selection so we don't
+        // apply those keystrokes to the new block by accident.
+        if (this.#pendingArgs.size > 0) {
+          this.#flushPendingArgs();
+        }
+        // Switching selection to a different block commits any in-flight
+        // inline-edit session. Re-selecting the same block leaves it alone —
+        // that case is the second-click-to-edit gesture.
+        if (this.inlineEdit.blockKey && this.inlineEdit.blockKey !== nextKey) {
+          this.inlineEdit.stop({ commit: true });
+        }
+      });
+      this.wireframeSelection.registerAfterChange(({ key }) =>
+        // Bring the freshly selected block into view (outline selection,
+        // insert auto-select, undo/redo restore). No-ops when it's already
+        // visible, so clicking a block on the canvas doesn't jolt the page.
+        this.#blockReveal.revealSelection(key)
+      );
+      this.#selectionHooksRegistered = true;
     }
     // New session generation: invalidates any draft hydration still in flight
     // from a previous enter/exit so it can't write into this session.
@@ -1196,9 +1092,9 @@ export default class WireframeService extends Service {
       getOwner(this),
       { permissive: true }
     );
-    this.draftedOutlets.add(outletName);
+    this.wireframeEditEngine.markOutletDrafted(outletName);
     this.layoutQuery.recordOutletRoot(outletName);
-    this.#originalLayouts.set(
+    this.wireframeEditEngine.captureBaseline(
       outletName,
       cloneLayoutForDraft(this.layoutQuery.readResolvedLayout(outletName) ?? [])
     );
@@ -1207,24 +1103,20 @@ export default class WireframeService extends Service {
 
   @action
   exit() {
-    // Roll back any in-memory mutations recorded in initial snapshots. With
-    // session-drafts active, the underlying entries weren't actually
-    // mutated, so this is effectively a no-op for the production path
-    // (we're about to drop the drafts anyway). For test paths that bypass
-    // `enter()` and mutate code-default entries directly, this restores
-    // them so test isolation holds.
-    for (const [entry, snapshot] of this.initialSnapshots) {
-      this.writeArgs(entry, snapshot);
-    }
+    // Flush the engine's session edit state: it writes any in-memory arg
+    // snapshots back into their entries (a no-op for the production path with
+    // session-drafts active, but restores directly-mutated code-default entries
+    // so test isolation holds), clears every undo/dirty structure, and returns
+    // the outlets it had drafted so we can drop their draft layers below.
+    const draftedOutlets = this.wireframeEditEngine.flushSnapshotsAndReset();
 
     // Clear session-drafts. The underlying theme/code-default layer becomes
     // resolved again, displaying whatever was there before the editor
     // opened — in-memory mutations live ONLY on draft entries, so dropping
     // the drafts discards the mutations cleanly.
-    for (const outletName of this.draftedOutlets) {
+    for (const outletName of draftedOutlets) {
       _clearLayoutLayer(outletName, LAYOUT_LAYERS.SESSION_DRAFT);
     }
-    this.draftedOutlets.clear();
     this.layoutQuery.clearOutletRoots();
     // Invalidate any in-flight draft hydration and drop queued stale prompts.
     this.#enterGeneration++;
@@ -1234,23 +1126,19 @@ export default class WireframeService extends Service {
     this.reviewDrawerOpen = false;
     this.publishTargetResolving = false;
     this.activeThemeId = null;
-    this.selectedBlockKey = null;
-    this.selectedBlockData = null;
+    // Tear the selection down WITHOUT firing the select hooks (flush args,
+    // commit in-session edits, reveal-into-view) — they're meaningless once
+    // the session is ending, and `selectBlock(null)` would fire them.
+    this.wireframeSelection.reset();
     this.dragSession.clear();
     this.wireframeDragOverlay.clear();
     this.#blockReveal.reset();
     this.#pendingDropFiles.clear();
-    this.undoStack.length = 0;
     // Revert to the minimal rich-text renderer so admin pages without
     // an open editor render the same DOM as live.
     resetBlockArgRenderer("rich-text");
-    this.redoStack.length = 0;
-    this.initialSnapshots.clear();
     this.#pendingArgs.clear();
-    this.editedOutlets.clear();
-    this.#originalLayouts.clear();
     this.#persistedDraftLayouts.clear();
-    this.#structurallyEditedOutlets.clear();
     this.#forceExpandedKeys.clear();
     // Clear every editor body class, including the chrome's collapse / dim
     // modifiers. These are separate class tokens from `wireframe-active`, so
@@ -1742,123 +1630,16 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Selects a block as the PRIMARY (the inspector form + the multi-select
-   * anchor). By default this also collapses the multi-selection to just this
-   * block, so every existing caller stays single-select; the outline's
-   * `toggleBlockSelection` / `setSelectionRange` pass `preserveMultiSelection`
-   * to keep the surrounding set intact while moving the anchor.
+   * Selection facade — delegates to `wireframeSelection`. The kernel's
+   * cross-concern effects (flush pending args, commit an in-flight in-session
+   * edit, reveal the selection into view) run as before/after hooks registered
+   * in `enter()`.
    *
    * @param {Object|null} data - `{ key, ... }` (rest hydrated from the layout).
    * @param {{preserveMultiSelection?: boolean}} [options]
    */
-  @action
-  selectBlock(data, { preserveMultiSelection = false } = {}) {
-    // Flush anything still pending from a previous selection so we don't
-    // apply those keystrokes to the new block by accident.
-    if (this.#pendingArgs.size > 0) {
-      this.#flushPendingArgs();
-    }
-    // Switching selection to a different block commits any in-flight
-    // inline-edit session. Re-selecting the same block leaves it alone —
-    // that case is the second-click-to-edit gesture.
-    if (
-      this.inlineEdit.blockKey &&
-      this.inlineEdit.blockKey !== (data?.key ?? null)
-    ) {
-      this.inlineEdit.stop({ commit: true });
-    }
-    this.selectedBlockKey = data?.key ?? null;
-
-    // Unless a multi-select gesture is moving the anchor within an existing
-    // set, the primary IS the whole selection.
-    if (!preserveMultiSelection) {
-      this.selectedKeys.clear();
-      if (data?.key != null) {
-        this.selectedKeys.add(data.key);
-      }
-    }
-
-    if (!data) {
-      this.selectedBlockData = null;
-      return;
-    }
-
-    // Programmatic callers (drag-and-drop auto-select, command-palette,
-    // tests) may pass only `{ key }`. Resolve the rest from the live layout
-    // so the inspector has the block's real metadata. Without this the args
-    // would round-trip through `inferSchemaFromValues` and richly-typed
-    // controls (image, icon, color) would degrade to the generic "any" code
-    // editor.
-    const hydrated = this.#hydrateSelectionByKey(data);
-
-    // Bind `args` to the LIVE `entry.args` (a `trackedObject`) so consumers
-    // that need a live read (canvas-side, undo restoration, etc.) see
-    // current values. Walks `_getResolvedLayouts()`, which returns the
-    // resolved entry per outlet — so when session-drafts are active, we
-    // bind to the draft entry, not the underlying layer's.
-    const liveData = { ...hydrated };
-    this.#bindLiveArgs(liveData);
-
-    // Snapshot the args at selection time as a plain object. `argsSnapshot`
-    // is what we hand to FormKit's `<Form @data>` — FormKit's immer-based
-    // FKFormData rejects proxies, and reading `argsSnapshot` doesn't open
-    // tracked deps on the underlying `entry.args` trackedObject. That keeps
-    // the inspector's `values` getter from re-evaluating on every keystroke
-    // (which would otherwise trigger Form's render path, costing the input
-    // its focus).
-    liveData.argsSnapshot = liveData.args ? { ...liveData.args } : {};
-
-    // Same snapshot treatment for `containerArgs` — the inspector's
-    // placement form takes the bag as `<Form @data>` and re-rendering it on
-    // every keystroke would tear down inputs. We deep-snapshot one level
-    // per namespace so each form sees a stable plain object.
-    liveData.containerArgsSnapshot = liveData.containerArgs
-      ? Object.fromEntries(
-          Object.entries(liveData.containerArgs).map(([ns, bag]) => [
-            ns,
-            bag !== null && typeof bag === "object" ? { ...bag } : bag,
-          ])
-        )
-      : {};
-
-    // Resolve the parent's `childArgs` schema so the inspector can render
-    // a placement section per namespace the parent declares.
-    liveData.parentChildArgsSchema = this.#resolveParentChildArgsSchema(
-      liveData.key
-    );
-
-    // Snapshot the parent's `args` so the inspector form can evaluate
-    // `ui.conditional: { arg: "mode", equals: "grid" }` against the parent's
-    // current mode. Bumping the structural version doesn't matter here
-    // because changing the parent's mode strips this child's
-    // `containerArgs.grid`, which forces a re-selection anyway.
-    const parentEntry = this.layoutQuery.findEntryParent(liveData.key);
-    liveData.parentArgsSnapshot = parentEntry?.args
-      ? { ...parentEntry.args }
-      : {};
-
-    // Whether the editor recognises this block type. Unregistered blocks have
-    // no metadata, so the editor can't know their schema — the inspector shows
-    // their values read-only rather than offering schema-less edits it can't
-    // validate. Computed from the name (not the post-inference metadata, which
-    // `#withInferredMetadata` populates with a synthetic schema below).
-    liveData.isRegistered = liveData.name
-      ? this.layoutQuery.metadataForName(liveData.name) != null
-      : true;
-
-    // Augment metadata with an inferred args schema when the block didn't
-    // declare one. We do this at selection time (not in the inspector form)
-    // so the schema is a stable reference across the live keystroke session.
-    // Without this, the inspector would re-compute its schema on every edit,
-    // causing the FormKit `<form.Field>` components to remount — which would
-    // tear down the input the user is typing in and trigger
-    // "@name=... already in use" errors on rapid reselect.
-    this.selectedBlockData = this.#withInferredMetadata(liveData);
-
-    // Bring the freshly selected block into view (outline selection,
-    // insert auto-select, undo/redo restore). No-ops when it's already
-    // visible, so clicking a block on the canvas doesn't jolt the page.
-    this.#blockReveal.revealSelection(this.selectedBlockKey);
+  selectBlock(data, options) {
+    return this.wireframeSelection.selectBlock(data, options);
   }
 
   /**
@@ -1887,88 +1668,56 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Tells whether a given block key is part of the current selection. Reads the
-   * `selectedKeys` set (not just the primary), so under a multi-selection every
-   * selected block's chrome / outline row highlights. Used only for highlight;
-   * identity checks (e.g. "is this the block being inline-edited") read
-   * `selectedBlockKey` directly.
-   *
-   * Decorated with `@action` so that Glimmer template subexpressions like
-   * `(this.wireframe.isBlockSelected row.blockKey)` keep the correct
-   * `this` binding. Without it Glimmer extracts the bare function reference
-   * and calls it without context, which throws when the body reads `this`.
+   * Selection facade — delegates to `wireframeSelection`. Kept as `@action`
+   * because the outline binds it as a template subexpression
+   * (`(this.wireframe.isBlockSelected row.blockKey)`); without it Glimmer
+   * extracts the bare function and calls it without the correct `this`.
    *
    * @param {string|null} key - The composite block key (`${name}:${__stableKey}`).
    * @returns {boolean}
    */
   @action
   isBlockSelected(key) {
-    return key != null && this.selectedKeys.has(key);
-  }
-
-  /** @returns {boolean} Whether more than one block is currently selected. */
-  get hasMultiSelection() {
-    return this.selectedKeys.size > 1;
+    return this.wireframeSelection.isBlockSelected(key);
   }
 
   /**
-   * Toggles a block in/out of the multi-selection (the outline's cmd/ctrl-click
-   * gesture). Adding a block makes it the new primary; removing the primary
-   * re-anchors to a remaining member (or clears the selection entirely).
+   * Selection facade — delegates to `wireframeSelection`. A frozen, read-only
+   * copy of the selected keys for consumers that need the full set (e.g.
+   * multi-delete).
+   *
+   * @returns {ReadonlyArray<string>}
+   */
+  selectedKeysSnapshot() {
+    return this.wireframeSelection.selectedKeysSnapshot();
+  }
+
+  /**
+   * Selection facade — delegates to `wireframeSelection`.
    *
    * @param {Object} data - `{ key, ... }` for the toggled block.
    */
-  @action
   toggleBlockSelection(data) {
-    const key = data?.key;
-    if (key == null) {
-      return;
-    }
-    if (this.selectedKeys.has(key)) {
-      this.selectedKeys.delete(key);
-      if (this.selectedBlockKey === key) {
-        // Re-anchor the primary to any remaining member so the inspector still
-        // has a block to bind to (or clear when the set is now empty).
-        const next = [...this.selectedKeys][0] ?? null;
-        this.selectBlock(next ? { key: next } : null, {
-          preserveMultiSelection: true,
-        });
-      }
-    } else {
-      this.selectedKeys.add(key);
-      this.selectBlock(data, { preserveMultiSelection: true });
-    }
+    return this.wireframeSelection.toggleBlockSelection(data);
   }
 
   /**
-   * Replaces the multi-selection with `keys` and anchors the primary at
-   * `anchorData` (the outline's shift-click range gesture).
+   * Selection facade — delegates to `wireframeSelection`.
    *
    * @param {Array<string>} keys - The block keys to select.
    * @param {Object} anchorData - `{ key, ... }` for the anchor (clicked) block.
    */
-  @action
   setSelectionRange(keys, anchorData) {
-    this.selectedKeys.clear();
-    for (const key of keys) {
-      this.selectedKeys.add(key);
-    }
-    this.selectBlock(anchorData, { preserveMultiSelection: true });
+    return this.wireframeSelection.setSelectionRange(keys, anchorData);
   }
 
   /**
-   * Selects an outlet by selecting its implicit root `layout` block. The
-   * selection then hydrates through the normal block path, so the inspector
-   * surfaces the layout form (mode / gap / grid) for the outlet.
+   * Selection facade — delegates to `wireframeSelection`.
    *
    * @param {string} outletName
    */
-  @action
   selectOutlet(outletName) {
-    const key = this.layoutQuery.outletRootKey(outletName);
-    if (key) {
-      this.selectBlock({ key });
-    }
+    return this.wireframeSelection.selectOutlet(outletName);
   }
 
   /**
@@ -2157,40 +1906,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Writes a single arg value into the entry identified by `blockKey`,
-   * immediately (not keystroke-debounced) and through the same write-path as
-   * inspector edits so undo / redo / persistence stay consistent. The entry is
-   * resolved synchronously so the canvas re-renders before the next paint.
-   *
-   * General-purpose: the image affordances (`setImageArg`, `uploadImageForArg`)
-   * and the repeatable-array control route through here. Because the write is
-   * immediate, a consumer that derives the next value from the current
-   * `entry.args` (e.g. add-then-remove on an array) always reads a fresh value
-   * rather than a stale pre-flush one.
-   *
-   * @param {string} blockKey
-   * @param {string} argName
-   * @param {*} value
-   */
-  setArg(blockKey, argName, value) {
-    const located = this.layoutQuery.findEntryAndOutletSync(blockKey);
-    if (!located?.entry) {
-      return;
-    }
-    const { entry, outletName } = located;
-    this.editedOutlets.add(outletName);
-
-    const prev = new Map([[argName, entry.args?.[argName]]]);
-    this.captureInitialSnapshot(entry, prev);
-
-    const next = new Map([[argName, value]]);
-    this.writeArgs(entry, next);
-
-    this.undoStack.push({ kind: "args", entry, prev, next });
-    this.redoStack.length = 0;
-  }
-
-  /**
    * Updates one field inside a `containerArgs` namespace bag of the selected
    * entry (e.g. `containerArgs.grid.column`). Placement edits are rarer than
    * typography edits, so we route directly through `replaceEntryContainerArgs`
@@ -2233,107 +1948,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Reverts the most recent mutation. For `args` batches, writes the
-   * captured `prev` values back into `entry.args`. For `structural`
-   * batches, re-publishes the captured `prevLayout` on each affected
-   * outlet and restores the pre-mutation selection.
-   *
-   * @returns {Promise<boolean>}
-   */
-  @action
-  async undo() {
-    if (!this.canUndo) {
-      return false;
-    }
-    const batch = this.undoStack.pop();
-    if (batch.kind === "structural") {
-      this.#applyStructuralChanges(batch.changes, "prev");
-      this.restoreSelection(batch.prevSelection);
-      batch.changes.forEach((c) => this.#reconcileOutletEdited(c.outletName));
-    } else {
-      this.writeArgs(batch.entry, batch.prev);
-      this.#reconcileOutletEdited(this.layoutQuery.outletForEntry(batch.entry));
-    }
-    this.redoStack.push(batch);
-    return true;
-  }
-
-  /**
-   * Re-applies the most recently undone mutation. Mirror image of `undo()`.
-   *
-   * @returns {Promise<boolean>}
-   */
-  @action
-  async redo() {
-    if (!this.canRedo) {
-      return false;
-    }
-    const batch = this.redoStack.pop();
-    if (batch.kind === "structural") {
-      this.#applyStructuralChanges(batch.changes, "next");
-      this.restoreSelection(batch.nextSelection);
-      batch.changes.forEach((c) => this.#reconcileOutletEdited(c.outletName));
-    } else {
-      this.writeArgs(batch.entry, batch.next);
-      this.#reconcileOutletEdited(this.layoutQuery.outletForEntry(batch.entry));
-    }
-    this.undoStack.push(batch);
-    return true;
-  }
-
-  /**
-   * Wraps a structural mutation so that it pushes an undo entry capturing
-   * the pre/post layouts for every outlet it touches, plus the
-   * pre/post selection. The caller passes the list of outlets that
-   * `mutateFn` may write to; cross-outlet moves pass both source and
-   * target so undo restores them in lockstep.
-   *
-   * If `mutateFn` returns a falsy value (i.e. the mutation no-op'd), no
-   * undo entry is recorded and the falsy result propagates to the caller.
-   *
-   * @template T
-   * @param {string[]} outletNames
-   * @param {() => T} mutateFn
-   * @returns {T}
-   */
-  recordStructural(outletNames, mutateFn) {
-    const prevLayouts = new Map();
-    for (const name of outletNames) {
-      prevLayouts.set(name, this.#snapshotLayout(name));
-    }
-    const prevSelection = this.selectedBlockKey;
-    const result = mutateFn();
-    if (!result) {
-      return result;
-    }
-    const changes = [];
-    for (const [name, prevLayout] of prevLayouts) {
-      changes.push({
-        outletName: name,
-        prevLayout,
-        nextLayout: this.#snapshotLayout(name),
-      });
-    }
-    this.undoStack.push({
-      kind: "structural",
-      changes,
-      prevSelection,
-      nextSelection: this.selectedBlockKey,
-    });
-    this.redoStack.length = 0;
-    // A structural edit that lands the outlet back on its pristine layout (e.g.
-    // adding a block then removing it) must clear the edit bookkeeping, so the
-    // "editing" state and the save/publish verbs reflect reality. The mutators
-    // only ever flag an outlet as edited; this is the symmetric un-flag, mirroring
-    // what undo/redo already do. The undo entry above is kept intact, so the edit
-    // stays reversible even once the outlet reads as pristine.
-    for (const { outletName: name } of changes) {
-      this.#reconcileOutletEdited(name);
-    }
-    return result;
-  }
-
-  /**
    * Re-resolves the given block key against the current layout and rebinds
    * `selectedBlockKey` / `selectedBlockData`. If the key no longer exists,
    * clears the selection. Used after structural undo / redo to follow the
@@ -2342,48 +1956,19 @@ export default class WireframeService extends Service {
    * @param {string|null} blockKey
    */
   restoreSelection(blockKey) {
-    if (!blockKey) {
-      this.selectBlock(null);
-      return;
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(blockKey);
-    if (!located) {
-      this.selectBlock(null);
-      return;
-    }
-    const blockName = this.layoutQuery.blockNameOf(located.entry);
-    const metadata = blockName
-      ? this.layoutQuery.metadataForName(blockName)
-      : null;
-    this.selectBlock({
-      key: blockKey,
-      name: blockName,
-      args: located.entry.args,
-      metadata,
-      outletName: located.outletName,
-      conditions: located.entry.conditions ?? null,
-    });
+    return this.wireframeSelection.restoreSelection(blockKey);
   }
 
   /**
    * In-memory rollback of every touched outlet to its pristine pre-edit state,
-   * then clears the undo/redo history. Each outlet is reverted by
-   * `#rollbackOutletInMemory` (which handles both structural and arg edits); no
-   * server field is touched. Returns false when there's nothing to reset.
+   * then clears the undo/redo history. Facade over the engine — the toolbar's
+   * Reset action calls it through the kernel.
    *
    * @returns {Promise<boolean>}
    */
   @action
-  async resetAll() {
-    if (!this.isDirty) {
-      return false;
-    }
-    for (const outletName of this.#editedOutletNames()) {
-      this.#rollbackOutletInMemory(outletName);
-    }
-    this.undoStack.length = 0;
-    this.redoStack.length = 0;
-    return true;
+  resetAll() {
+    return this.wireframeEditEngine.resetAll();
   }
 
   /**
@@ -2397,11 +1982,11 @@ export default class WireframeService extends Service {
    */
   @action
   async discardOutlet(outletName) {
-    this.#rollbackOutletInMemory(outletName);
+    this.wireframeEditEngine.rollbackOutletInMemory(outletName);
     this.#persistedDraftLayouts.delete(outletName);
     // Drop the outlet's own undo/redo history so a later undo can't resurrect a
     // draft we just discarded.
-    this.#dropUndoEntriesForOutlet(outletName);
+    this.wireframeEditEngine.dropUndoEntriesForOutlet(outletName);
     await this.wireframeDrafts.deleteDraft(
       this.outletOwner(outletName).themeId ?? this.defaultThemeId,
       outletName
@@ -2420,11 +2005,10 @@ export default class WireframeService extends Service {
     if (!this.isDirty) {
       return false;
     }
-    for (const outletName of this.#editedOutletNames()) {
+    for (const outletName of this.wireframeEditEngine.editedOutletNames()) {
       await this.discardOutlet(outletName);
     }
-    this.undoStack.length = 0;
-    this.redoStack.length = 0;
+    this.wireframeEditEngine.clearStacks();
     return true;
   }
 
@@ -2454,16 +2038,10 @@ export default class WireframeService extends Service {
     // bookkeeping for this outlet so it resolves to the underlying default, then
     // re-seed a clean editable draft from that default (matching a fresh enter).
     _clearLayoutLayer(outletName, LAYOUT_LAYERS.SESSION_DRAFT);
-    this.draftedOutlets.delete(outletName);
-    this.#originalLayouts.delete(outletName);
+    // Drop the engine's baseline + edit bookkeeping for this outlet; the
+    // persisted-draft baseline is kernel-owned, cleared here.
+    this.wireframeEditEngine.dropOutlet(outletName);
     this.#persistedDraftLayouts.delete(outletName);
-    for (const [entry] of this.initialSnapshots) {
-      if (this.layoutQuery.outletForEntry(entry) === outletName) {
-        this.initialSnapshots.delete(entry);
-      }
-    }
-    this.#structurallyEditedOutlets.delete(outletName);
-    this.editedOutlets.delete(outletName);
     this.#materializeAllDrafts();
     return true;
   }
@@ -2514,7 +2092,7 @@ export default class WireframeService extends Service {
   async saveAllEditedDrafts() {
     const errors = [];
     const outlets = new Set([
-      ...this.#editedOutletNames(),
+      ...this.wireframeEditEngine.editedOutletNames(),
       ...this.#persistedDraftLayouts.keys(),
     ]);
     for (const outletName of outlets) {
@@ -2566,7 +2144,7 @@ export default class WireframeService extends Service {
     const themeId = this.outletOwner(outletName).themeId ?? this.defaultThemeId;
     try {
       await this.wireframePersistence.exportOutlet(themeId, outletName, {
-        useDraft: this.editedOutlets.has(outletName),
+        useDraft: this.wireframeEditEngine.isOutletEdited(outletName),
       });
       return null;
     } catch (error) {
@@ -2652,13 +2230,7 @@ export default class WireframeService extends Service {
    * @param {string} outletName
    */
   #clearOutletEditState(outletName) {
-    for (const [entry] of this.initialSnapshots) {
-      if (this.layoutQuery.outletForEntry(entry) === outletName) {
-        this.initialSnapshots.delete(entry);
-      }
-    }
-    this.#structurallyEditedOutlets.delete(outletName);
-    this.editedOutlets.delete(outletName);
+    this.wireframeEditEngine.clearOutletEditState(outletName);
     // Publishing deletes the server-side draft, so its baseline no longer applies.
     this.#persistedDraftLayouts.delete(outletName);
   }
@@ -2682,9 +2254,8 @@ export default class WireframeService extends Service {
     // Undo/redo references draft entries that no longer exist once everything is
     // published; clear it only when nothing is left edited, so a partial publish
     // keeps history for the outlets still open.
-    if (this.editedOutlets.size === 0) {
-      this.undoStack.length = 0;
-      this.redoStack.length = 0;
+    if (this.wireframeEditEngine.editedOutletsSize === 0) {
+      this.wireframeEditEngine.clearStacks();
     }
     const otherErrors = result.errors.filter((error) => !error.conflict);
     if (otherErrors.length === 0) {
@@ -2720,64 +2291,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Rolls a single outlet's session draft back to the pristine layout captured
-   * at `enter()` (or at draft hydration) and clears its edit bookkeeping. The
-   * `#originalLayouts` clone is re-published wholesale, so both structural and
-   * arg edits revert; for the rare case with no captured clone, the per-entry
-   * arg snapshots are written back instead. In-memory only — no server call.
-   *
-   * @param {string} outletName
-   */
-  #rollbackOutletInMemory(outletName) {
-    const original = this.#originalLayouts.get(outletName);
-    if (original) {
-      // Clone again so the snapshot stays pristine across repeated resets.
-      // Permissive matches the original publish in `#materializeAllDrafts`.
-      _setLayoutLayer(
-        outletName,
-        LAYOUT_LAYERS.SESSION_DRAFT,
-        cloneLayoutForDraft(original),
-        getOwner(this),
-        { permissive: true }
-      );
-      // The snapshot preserves the root layout's `__stableKey`, so the recorded
-      // root key normally stays valid — re-record defensively regardless.
-      this.layoutQuery.recordOutletRoot(outletName);
-    }
-    for (const [entry, snapshot] of this.initialSnapshots) {
-      if (this.layoutQuery.outletForEntry(entry) !== outletName) {
-        continue;
-      }
-      // With a re-published clone the fresh draft already carries pristine args,
-      // so just drop the (now-stale) snapshot; without one, write it back.
-      if (!original) {
-        this.writeArgs(entry, snapshot);
-      }
-      this.initialSnapshots.delete(entry);
-    }
-    this.#structurallyEditedOutlets.delete(outletName);
-    this.editedOutlets.delete(outletName);
-  }
-
-  /**
-   * The set of outlet names with any unsaved edit — structural or arg-level —
-   * computed from the edit bookkeeping. Snapshotted (a new Set) so callers can
-   * iterate while mutating the underlying bookkeeping.
-   *
-   * @returns {Set<string>}
-   */
-  #editedOutletNames() {
-    const names = new Set(this.#structurallyEditedOutlets);
-    for (const entry of this.initialSnapshots.keys()) {
-      const outletName = this.layoutQuery.outletForEntry(entry);
-      if (outletName) {
-        names.add(outletName);
-      }
-    }
-    return names;
-  }
-
-  /**
    * Turns a thrown save-draft failure into a human-readable banner string. The
    * ajax helper rejects with `{ jqXHR, textStatus, errorThrown }` — an object
    * with no `message` — so a bare `error.message` read would always fall back to
@@ -2797,64 +2310,6 @@ export default class WireframeService extends Service {
       return `HTTP ${error.jqXHR.status}`;
     }
     return error?.message || error?.name || String(error);
-  }
-
-  /**
-   * Writes a `Map<argName, value>` of arg values into `entry.args`. Used by
-   * the keystroke flush, undo, redo, and reset. Each assignment goes through
-   * the `trackedObject` proxy so reactive readers re-evaluate.
-   *
-   * `null` and `undefined` are treated as "no value" and delete the key
-   * instead of writing it. `""` / `0` / `false` are written as-is — they're
-   * valid scalar values for string / number / boolean args.
-   *
-   * Then re-runs arg + constraint validation for the entry against its
-   * new args and refreshes its soft-failure stamps (`revalidateEntryStamps`).
-   * The layer-wide validation pass only re-runs on republish, so without
-   * this the outline / inspector would keep showing a stale error after the
-   * author fixes the value — or, conversely, drop a still-valid error the
-   * moment any edit lands. Re-validating per write keeps the displayed
-   * errors honest between republishes.
-   */
-  writeArgs(entry, args) {
-    if (!entry?.args) {
-      return;
-    }
-    for (const [argName, value] of args) {
-      if (value == null) {
-        delete entry.args[argName];
-      } else {
-        entry.args[argName] = value;
-      }
-    }
-    revalidateEntryStamps(entry, { owner: getOwner(this) });
-  }
-
-  /**
-   * Captures an entry's pre-edit args the FIRST time it's about to be
-   * mutated, so `resetAll()` has a stable target regardless of how many
-   * later edits we apply on top. Caller MUST invoke this BEFORE applying
-   * the mutation — otherwise the snapshot captures the post-edit state.
-   */
-  captureInitialSnapshot(entry, prev) {
-    if (this.initialSnapshots.has(entry)) {
-      return;
-    }
-    // Snapshot the entire pre-edit args object so reset is a true
-    // round-trip even when later batches edit different keys. The `prev`
-    // map is layered in for any keys it carries that aren't already in
-    // the snapshot — defensive, since `prev` is built from `entry.args`
-    // reads in the same critical section.
-    const fullSnapshot = new Map();
-    for (const [k, v] of Object.entries(entry.args ?? {})) {
-      fullSnapshot.set(k, v);
-    }
-    for (const [k, v] of prev) {
-      if (!fullSnapshot.has(k)) {
-        fullSnapshot.set(k, v);
-      }
-    }
-    this.initialSnapshots.set(entry, fullSnapshot);
   }
 
   /**
@@ -2898,18 +2353,15 @@ export default class WireframeService extends Service {
    * path instead (a Git-managed or core "system" theme). Drives the publish
    * review surface and the toolbar target indicator.
    *
-   * Reactive: derives from `#editedOutletNames()` (which reads the tracked edit
-   * bookkeeping) and `outletOwner` (which reads the tracked layer store), so a
-   * template re-renders as edits and their owners change. Reads the edit
-   * bookkeeping through `#editedOutletNames()` rather than the plain
-   * `editedOutlets` Set on purpose — the Set is untracked and would not trigger
-   * a re-render.
+   * Reactive: derives from the engine's `editedOutletNames()` (which reads the
+   * tracked edit bookkeeping) and `outletOwner` (which reads the tracked layer
+   * store), so a template re-renders as edits and their owners change.
    *
    * @returns {Array<{themeId: (number|null), themeName: (string|null), isGit: boolean, isSystem: boolean, publishable: boolean, outlets: Array<string>}>}
    */
   get publishTargets() {
     const groups = new Map();
-    for (const outletName of this.#editedOutletNames()) {
+    for (const outletName of this.wireframeEditEngine.editedOutletNames()) {
       const owner = this.outletOwner(outletName);
       let group = groups.get(owner.themeId);
       if (!group) {
@@ -2994,18 +2446,7 @@ export default class WireframeService extends Service {
    * @returns {boolean}
    */
   isOutletEditing(outletName) {
-    if (this.#structurallyEditedOutlets.has(outletName)) {
-      return true;
-    }
-    if (this.initialSnapshots.size === 0) {
-      return false;
-    }
-    for (const entry of this.initialSnapshots.keys()) {
-      if (this.layoutQuery.outletForEntry(entry) === outletName) {
-        return true;
-      }
-    }
-    return false;
+    return this.wireframeEditEngine.isOutletEdited(outletName);
   }
 
   /**
@@ -3677,38 +3118,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Re-publishes a draft layout layer with structural changes applied and
-   * marks the outlet as edited so save/reset/isDirty all pick it up.
-   * Centralised so the same bookkeeping fires for every structural
-   * mutation.
-   */
-  publishStructuralChange(outletName, newLayout) {
-    // Enforce every implicit-child-kind container's invariant at the one point
-    // all structural mutations funnel through: a container declaring a single
-    // `childBlocks` kind (e.g. tabs forcing `layout` panels) gets any
-    // non-conforming child wrapped here, so insert / move / paste / drop /
-    // duplicate all keep the invariant without per-path handling. A no-op for
-    // layouts with no such container (returns the same reference).
-    newLayout = normalizeImplicitChildren(newLayout, (ref) =>
-      this.layoutQuery.lookupBlockMetadata(ref)
-    );
-    _setLayoutLayer(
-      outletName,
-      LAYOUT_LAYERS.SESSION_DRAFT,
-      newLayout,
-      getOwner(this),
-      // Permissive matches the initial draft publish — see comment on
-      // `#materializeAllDrafts`. Without this, dragging the only child
-      // out of a container produces an "EMPTY_CONTAINER" validation
-      // failure which would crash the page.
-      { permissive: true }
-    );
-    this.editedOutlets.add(outletName);
-    this.#structurallyEditedOutlets.add(outletName);
-    this.wireframeRevision.bump();
-  }
-
-  /**
    * The lock declaration for the currently-selected part, or null when the
    * selection isn't a part. `true` means the whole part is locked (no in-place
    * arg overrides); a string array lists the specific arg names that can't be
@@ -3717,11 +3126,7 @@ export default class WireframeService extends Service {
    * @returns {true|string[]|null}
    */
   partLockForSelection() {
-    const context = this.layoutQuery.resolvePartContext(this.selectedBlockKey);
-    if (!context) {
-      return null;
-    }
-    return resolvePartDef(context.compositeEntry, context.idPath)?.lock ?? null;
+    return this.wireframeSelection.partLockForSelection();
   }
 
   /**
@@ -4072,7 +3477,7 @@ export default class WireframeService extends Service {
   #materializeAllDrafts() {
     let materialized = 0;
     for (const outletName of this.editableOutlets) {
-      if (this.draftedOutlets.has(outletName)) {
+      if (this.wireframeEditEngine.isOutletDrafted(outletName)) {
         continue;
       }
       // A LOCKED outlet is owned by a non-overridable programmatic layout: it
@@ -4113,7 +3518,7 @@ export default class WireframeService extends Service {
         // validation as warned and keeps the layout rendering.
         { permissive: true }
       );
-      this.draftedOutlets.add(outletName);
+      this.wireframeEditEngine.markOutletDrafted(outletName);
       materialized++;
       // Record the root layout's key (minted by the publish above) so
       // selection / chrome can recognise it as the outlet.
@@ -4123,7 +3528,7 @@ export default class WireframeService extends Service {
       // and the minted root `__stableKey` — that keeps the recorded root key
       // valid after a reset re-publishes this snapshot. A separate clone so
       // in-place arg mutations on the draft never leak into the snapshot.
-      this.#originalLayouts.set(
+      this.wireframeEditEngine.captureBaseline(
         outletName,
         cloneLayoutForDraft(
           this.layoutQuery.readResolvedLayout(outletName) ?? []
@@ -4200,7 +3605,7 @@ export default class WireframeService extends Service {
       // hasn't started touching since enter — re-seeding would clobber a live
       // edit (committed or still in flight).
       if (
-        !this.draftedOutlets.has(outlet) ||
+        !this.wireframeEditEngine.isOutletDrafted(outlet) ||
         !this.#isOutletPristineSinceEnter(outlet)
       ) {
         continue;
@@ -4229,8 +3634,9 @@ export default class WireframeService extends Service {
   /**
    * Re-seeds an outlet's session draft from a persisted draft layout and marks
    * the outlet edited (so it is dirty, badged as editing, and a Save/Publish
-   * target). Leaves `#originalLayouts` untouched — it still holds the live
-   * clone, so a later discard reverts to the published layout, not the draft.
+   * target). Leaves the engine's pristine baseline untouched — it still holds
+   * the live clone, so a later discard reverts to the published layout, not the
+   * draft.
    *
    * @param {string} outlet
    * @param {Array<Object>} layout - the persisted draft layout.
@@ -4248,8 +3654,7 @@ export default class WireframeService extends Service {
       { permissive: true }
     );
     this.layoutQuery.recordOutletRoot(outlet);
-    this.editedOutlets.add(outlet);
-    this.#structurallyEditedOutlets.add(outlet);
+    this.wireframeEditEngine.markOutletStructurallyEdited(outlet);
     // Record what the saved draft holds, so an edit that returns the canvas to the
     // published layout is still recognized as differing from the persisted draft.
     this.#persistedDraftLayouts.set(
@@ -4268,8 +3673,7 @@ export default class WireframeService extends Service {
    */
   #isOutletPristineSinceEnter(outlet) {
     return (
-      !this.editedOutlets.has(outlet) &&
-      !this.#structurallyEditedOutlets.has(outlet) &&
+      !this.wireframeEditEngine.isOutletEdited(outlet) &&
       this.#pendingArgs.size === 0 &&
       this.inlineEdit.blockKey == null
     );
@@ -4326,31 +3730,6 @@ export default class WireframeService extends Service {
         this.#collectStampedWarnings(entry.children, outletName, warnings);
       }
     }
-  }
-
-  /**
-   * @returns {number} the selected block's index among its siblings, or
-   *   `-1` when nothing is selected / locatable.
-   */
-  #selectionSiblingIndex() {
-    // Read `structuralVersion` so this getter re-evaluates after every
-    // structural mutation — keeps the toolbar's move buttons reactive.
-    // eslint-disable-next-line no-unused-vars
-    const _v = this.structuralVersion;
-    const key = this.selectedBlockKey;
-    if (!key) {
-      return -1;
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(key);
-    if (!located) {
-      return -1;
-    }
-    const layout = this.layoutQuery.readResolvedLayout(located.outletName);
-    if (!layout) {
-      return -1;
-    }
-    const sibs = findEntrySiblings(layout, key);
-    return sibs?.index ?? -1;
   }
 
   /**
@@ -4425,115 +3804,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Fills in any selection fields that the caller didn't supply by resolving
-   * the key against the current layout. A no-op when the caller already
-   * passed full data (block-chrome's own click handler does, since it has
-   * the entry in hand).
-   *
-   * @param {{key: string}} data
-   * @returns {Object}
-   */
-  #hydrateSelectionByKey(data) {
-    if (!data?.key) {
-      return data;
-    }
-    const needsHydration =
-      data.name == null || data.args == null || data.metadata == null;
-    if (!needsHydration) {
-      return data;
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(data.key);
-    if (!located) {
-      return data;
-    }
-    const blockName = data.name ?? this.layoutQuery.blockNameOf(located.entry);
-    const metadata =
-      data.metadata ??
-      (blockName ? this.layoutQuery.metadataForName(blockName) : null) ??
-      null;
-    return {
-      ...data,
-      name: blockName,
-      args: data.args ?? located.entry.args,
-      metadata,
-      outletName: data.outletName ?? located.outletName,
-      conditions: data.conditions ?? located.entry.conditions ?? null,
-    };
-  }
-
-  /**
-   * Resolves `data.key` against the registered layouts and rebinds `data.args`
-   * to the live entry's `args` (a `trackedObject`). The `findEntry` walk is
-   * synchronous when validation has already completed (which it has by the
-   * time the user can click a block). On the rare path where validation is
-   * still pending we leave `data.args` as-is — the inspector renders against
-   * the snapshot the caller passed in, and the next mutation flush picks up
-   * the live binding.
-   */
-  #bindLiveArgs(data) {
-    if (!data?.key) {
-      return;
-    }
-    const layoutMap = _getResolvedLayouts();
-    for (const [, record] of layoutMap) {
-      const layout = record.layout;
-      if (!layout) {
-        continue;
-      }
-      const found = findEntry(layout, data.key);
-      if (found) {
-        data.args = found.args;
-        data.containerArgs = found.containerArgs ?? null;
-        return;
-      }
-    }
-  }
-
-  /**
-   * Resolves the parent block's `childArgs` schema for the selected entry,
-   * so the inspector can render a placement section (one form per top-level
-   * namespace declared by the parent). Returns `null` when the entry sits at
-   * the outlet root or when the parent doesn't declare a childArgs schema.
-   *
-   * Handles both forms of `parent.block`: a class reference (decorated
-   * blocks passed by class to `api.renderBlocks`) and a registered name
-   * string (everything that's been through serialisation, including
-   * theme-shipped layouts and the editor's own draft layer).
-   *
-   * @param {string} key
-   * @returns {Object|null}
-   */
-  #resolveParentChildArgsSchema(key) {
-    const parent = this.layoutQuery.findEntryParent(key);
-    if (!parent) {
-      return null;
-    }
-    const parentName = this.layoutQuery.blockNameOf(parent);
-    if (!parentName) {
-      return null;
-    }
-    return this.layoutQuery.metadataForName(parentName)?.childArgs ?? null;
-  }
-
-  #withInferredMetadata(data) {
-    const declared = data.metadata?.args;
-    if (declared && Object.keys(declared).length > 0) {
-      return data;
-    }
-    const args = data.args ?? {};
-    if (Object.keys(args).length === 0) {
-      return data;
-    }
-    return {
-      ...data,
-      metadata: {
-        ...(data.metadata ?? {}),
-        args: inferSchemaFromValues(args),
-      },
-    };
-  }
-
-  /**
    * Applies every pending arg change in one shot by mutating the resolved
    * entry's `args` directly. The block's reactive getters propagate the
    * change through Glimmer's autotracking — no layout swap, no DOM
@@ -4566,24 +3836,21 @@ export default class WireframeService extends Service {
       return false;
     }
     const { entry, outletName } = located;
-    this.editedOutlets.add(outletName);
 
-    const prev = new Map();
+    const prevMap = new Map();
     for (const [argName] of pending) {
-      prev.set(argName, entry.args?.[argName]);
+      prevMap.set(argName, entry.args?.[argName]);
     }
 
-    // Capture the FULL pre-edit snapshot before applying mutations so
-    // reset / exit have a complete picture of what to roll back to. Doing
-    // this after the mutation would capture the post-edit state and make
-    // rollback a no-op.
-    this.captureInitialSnapshot(entry, prev);
-
-    const next = new Map(pending);
-    this.writeArgs(entry, next);
-
-    this.undoStack.push({ kind: "args", entry, prev, next });
-    this.redoStack.length = 0;
+    // The engine flags the outlet, captures the FULL pre-edit snapshot before
+    // applying the mutation (so reset / exit have a complete rollback target),
+    // writes the new values, and pushes a single `args` undo entry.
+    this.wireframeEditEngine.recordArgBatch({
+      entry,
+      outletName,
+      prevMap,
+      nextMap: new Map(pending),
+    });
 
     return true;
   }
@@ -4629,110 +3896,6 @@ export default class WireframeService extends Service {
       this.publishStructuralChange(outletName, result.layout);
       return true;
     });
-  }
-
-  /**
-   * Captures a deep clone of `outletName`'s currently-resolved layout, or
-   * `null` when the outlet has no published layout yet (the latter happens
-   * when the editor is about to mint a fresh draft for an empty outlet).
-   * Used as the before/after snapshot in structural undo entries.
-   *
-   * @param {string} outletName
-   * @returns {Array<Object>|null}
-   */
-  #snapshotLayout(outletName) {
-    const layout = this.layoutQuery.readResolvedLayout(outletName);
-    return layout ? cloneLayoutForDraft(layout) : null;
-  }
-
-  /**
-   * Recomputes whether an outlet still counts as edited by comparing its current
-   * session draft to the pristine layout captured at `enter()` (`#originalLayouts`).
-   * When they match — e.g. after undoing every edit back to the starting point —
-   * the outlet's edit bookkeeping is cleared so the "Editing" badge and the
-   * save/publish verbs reflect reality. A real (non-pristine) edit is left marked;
-   * the mutators already flag those, so this only ever clears.
-   *
-   * @param {string} [outletName]
-   */
-  #reconcileOutletEdited(outletName) {
-    if (!outletName) {
-      return;
-    }
-    const original = this.#originalLayouts.get(outletName);
-    const current = this.layoutQuery.readResolvedLayout(outletName);
-    const isPristine =
-      JSON.stringify(serializeLayoutForSave(current ?? [])) ===
-      JSON.stringify(serializeLayoutForSave(original ?? []));
-    if (!isPristine) {
-      return;
-    }
-    this.#structurallyEditedOutlets.delete(outletName);
-    this.editedOutlets.delete(outletName);
-    for (const entry of [...this.initialSnapshots.keys()]) {
-      if (this.layoutQuery.outletForEntry(entry) === outletName) {
-        this.initialSnapshots.delete(entry);
-      }
-    }
-  }
-
-  /**
-   * Removes an outlet's own entries from the undo/redo stacks — the per-outlet
-   * counterpart to the global clear in `discardAll`. A structural batch is
-   * dropped only when EVERY change targets this outlet (a cross-outlet batch is
-   * left intact); an arg batch is dropped when its entry belongs to this outlet.
-   *
-   * @param {string} outletName
-   */
-  #dropUndoEntriesForOutlet(outletName) {
-    const referencesOnly = (batch) =>
-      batch.kind === "structural"
-        ? batch.changes.every((change) => change.outletName === outletName)
-        : this.layoutQuery.outletForEntry(batch.entry) === outletName;
-    for (const stack of [this.undoStack, this.redoStack]) {
-      for (let i = stack.length - 1; i >= 0; i--) {
-        if (referencesOnly(stack[i])) {
-          stack.splice(i, 1);
-        }
-      }
-    }
-  }
-
-  /**
-   * Republishes a list of `{outletName, prevLayout, nextLayout}` changes in
-   * the given direction. When the target snapshot is `null` (i.e. the
-   * outlet had no draft before the mutation), the SESSION_DRAFT layer is
-   * cleared instead of re-published, restoring the resolved layout chain
-   * to whatever lower layers (theme / code-default) carry.
-   *
-   * @param {Array<{outletName: string, prevLayout: Array<Object>|null, nextLayout: Array<Object>|null}>} changes
-   * @param {"prev"|"next"} direction
-   */
-  #applyStructuralChanges(changes, direction) {
-    for (const change of changes) {
-      const layout =
-        direction === "prev" ? change.prevLayout : change.nextLayout;
-      if (layout == null) {
-        _clearLayoutLayer(change.outletName, LAYOUT_LAYERS.SESSION_DRAFT);
-        // The outlet returns to its un-drafted state — drop bookkeeping
-        // so isDirty / save no longer flag it.
-        this.draftedOutlets.delete(change.outletName);
-        this.#structurallyEditedOutlets.delete(change.outletName);
-        this.editedOutlets.delete(change.outletName);
-        continue;
-      }
-      _setLayoutLayer(
-        change.outletName,
-        LAYOUT_LAYERS.SESSION_DRAFT,
-        cloneLayoutForDraft(layout),
-        getOwner(this),
-        { permissive: true }
-      );
-      this.draftedOutlets.add(change.outletName);
-      this.editedOutlets.add(change.outletName);
-      this.#structurallyEditedOutlets.add(change.outletName);
-    }
-    this.wireframeRevision.bump();
   }
 
   /**

@@ -1,8 +1,11 @@
+import { getOwner } from "@ember/owner";
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import BlockChrome from "discourse/plugins/discourse-wireframe/discourse/components/editor/block-chrome";
+import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
 
 // Selecting a block scrolls its rendered element into view. The outline
 // panel and insert auto-select both funnel through `wireframe.selectBlock`,
@@ -16,6 +19,13 @@ module(
   "Integration | discourse-wireframe | block selection scroll",
   function (hooks) {
     setupRenderingTest(hooks);
+    // The editor fetches the per-user drafts + companion endpoints on `enter()`;
+    // stub them so the test doesn't hit an unhandled request.
+    setupBlockLayoutDraftsStub(hooks);
+
+    hooks.afterEach(function () {
+      getOwner(this).lookup("service:wireframe").exit();
+    });
 
     // Renders a block chrome and returns the element carrying the block key
     // (the same node `selectBlock` looks up via `data-wf-block-key`), with a
@@ -24,7 +34,13 @@ module(
       const blockKey = "button-link:test";
 
       // The chrome only renders its keyed wrapper while the editor is active.
-      owner.lookup("service:wireframe").isActive = true;
+      // Enter the editor (rather than just flipping `isActive`) so the kernel
+      // registers its reveal-on-select hook — selection scrolls the block into
+      // view through that seam.
+      const wireframe = owner.lookup("service:wireframe");
+      wireframe.siteSettings.wireframe_enabled = true;
+      logIn(owner);
+      wireframe.enter();
 
       await render(
         <template>
