@@ -13,6 +13,7 @@ import InspectorRawJson from "discourse/plugins/discourse-wireframe/discourse/co
  * default so a single stub can back several different component renders.
  */
 class StubWireframeService extends Service {
+  // The query layer moved to a leaf the editor exposes as layoutQuery; returning
   #blockData;
 
   constructor(owner, blockData) {
@@ -21,6 +22,11 @@ class StubWireframeService extends Service {
     this.updateSelectedArgCalls = [];
     this.updateSelectedEntryIdCalls = [];
     this.removeBlockCalls = [];
+  }
+
+  // this makes wireframe.layoutQuery.<query> resolve to the stubbed methods below.
+  get layoutQuery() {
+    return this;
   }
 
   get selectedBlockData() {

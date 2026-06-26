@@ -19,14 +19,19 @@ import {
 // display names can key off the block key the markup carries.
 function stubWireframe(overrides = {}) {
   return {
+    get layoutQuery() {
+      return this;
+    },
     findEntryAndOutletSync: (key) => ({
       entry: { block: key, id: null },
       outletName: "test-outlet",
     }),
     lookupBlockMetadata: () => ({ isContainer: false }),
     lookupBlockDisplayName: (block) => block,
-    canInsertBlockAt: () => true,
-    canDropAt: () => true,
+    dropAuthority: {
+      canInsertBlockAt: () => true,
+      canDropAt: () => true,
+    },
     ...overrides,
   };
 }

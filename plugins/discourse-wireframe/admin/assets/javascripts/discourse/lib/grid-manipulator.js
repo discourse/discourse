@@ -91,8 +91,8 @@ export default class GridManipulator {
       shift,
       source,
     } = request;
-    const grid = svc.findEntryAndOutletSync(targetGridKey);
-    if (!grid || !svc.isGridContainer(grid.entry)) {
+    const grid = svc.layoutQuery.findEntryAndOutletSync(targetGridKey);
+    if (!grid || !svc.layoutQuery.isGridContainer(grid.entry)) {
       return false;
     }
     // Resolve an existing source up front (palette sources have no entry
@@ -100,7 +100,7 @@ export default class GridManipulator {
     // restores both sides atomically.
     const sourceLocated =
       source?.kind === "existing" && source.key
-        ? svc.findEntryAndOutletSync(source.key)
+        ? svc.layoutQuery.findEntryAndOutletSync(source.key)
         : null;
     if (source?.kind === "existing" && !sourceLocated) {
       return false;
@@ -108,7 +108,7 @@ export default class GridManipulator {
     if (source?.kind === "new") {
       if (
         !source.blockName ||
-        !svc.canInsertBlockAt({
+        !svc.dropAuthority.canInsertBlockAt({
           blockName: source.blockName,
           targetOutletName: grid.outletName,
         })
@@ -122,7 +122,7 @@ export default class GridManipulator {
         : [grid.outletName];
 
     return svc.recordStructural(outletsAffected, () => {
-      const layout = svc.readResolvedLayout(grid.outletName);
+      const layout = svc.layoutQuery.readResolvedLayout(grid.outletName);
       const gridEntry = layout && findEntry(layout, targetGridKey);
       if (!gridEntry) {
         return false;
@@ -178,8 +178,8 @@ export default class GridManipulator {
     if (sourceKey === cellKey) {
       return false;
     }
-    const sourceLocated = svc.findEntryAndOutletSync(sourceKey);
-    const cellLocated = svc.findEntryAndOutletSync(cellKey);
+    const sourceLocated = svc.layoutQuery.findEntryAndOutletSync(sourceKey);
+    const cellLocated = svc.layoutQuery.findEntryAndOutletSync(cellKey);
     if (!sourceLocated || !cellLocated) {
       return false;
     }
@@ -190,7 +190,7 @@ export default class GridManipulator {
       return false;
     }
     return svc.recordStructural([cellLocated.outletName], () => {
-      const layout = svc.readResolvedLayout(cellLocated.outletName);
+      const layout = svc.layoutQuery.readResolvedLayout(cellLocated.outletName);
       if (!layout) {
         return false;
       }
@@ -231,17 +231,20 @@ export default class GridManipulator {
    */
   placeInCell({ cellKey, blockName, defaultArgs = {} }) {
     const svc = this.service;
-    const located = svc.findEntryAndOutletSync(cellKey);
+    const located = svc.layoutQuery.findEntryAndOutletSync(cellKey);
     if (!located || !isMergedCell(located.entry)) {
       return false;
     }
     if (
-      !svc.canInsertBlockAt({ blockName, targetOutletName: located.outletName })
+      !svc.dropAuthority.canInsertBlockAt({
+        blockName,
+        targetOutletName: located.outletName,
+      })
     ) {
       return false;
     }
     return svc.recordStructural([located.outletName], () => {
-      const layout = svc.readResolvedLayout(located.outletName);
+      const layout = svc.layoutQuery.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
@@ -282,12 +285,12 @@ export default class GridManipulator {
    */
   mergeCells({ gridKey, rect }) {
     const svc = this.service;
-    const located = svc.findEntryAndOutletSync(gridKey);
+    const located = svc.layoutQuery.findEntryAndOutletSync(gridKey);
     if (!located) {
       return false;
     }
     return svc.recordStructural([located.outletName], () => {
-      const layout = svc.readResolvedLayout(located.outletName);
+      const layout = svc.layoutQuery.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
@@ -339,12 +342,12 @@ export default class GridManipulator {
    */
   splitCell({ cellKey }) {
     const svc = this.service;
-    const located = svc.findEntryAndOutletSync(cellKey);
+    const located = svc.layoutQuery.findEntryAndOutletSync(cellKey);
     if (!located || !isMergedCell(located.entry)) {
       return false;
     }
     return svc.recordStructural([located.outletName], () => {
-      const layout = svc.readResolvedLayout(located.outletName);
+      const layout = svc.layoutQuery.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
@@ -405,12 +408,12 @@ export default class GridManipulator {
    */
   resizeColumns({ gridKey, fractions }) {
     const svc = this.service;
-    const located = svc.findEntryAndOutletSync(gridKey);
+    const located = svc.layoutQuery.findEntryAndOutletSync(gridKey);
     if (!located) {
       return false;
     }
     return svc.recordStructural([located.outletName], () => {
-      const layout = svc.readResolvedLayout(located.outletName);
+      const layout = svc.layoutQuery.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
@@ -444,8 +447,8 @@ export default class GridManipulator {
    */
   resizeSlot({ slotKey, column, row }) {
     const svc = this.service;
-    const located = svc.findEntryAndOutletSync(slotKey);
-    if (!located || !svc.isGridCellEntry(located.entry)) {
+    const located = svc.layoutQuery.findEntryAndOutletSync(slotKey);
+    if (!located || !svc.layoutQuery.isGridCellEntry(located.entry)) {
       return false;
     }
     // An empty merged cell shrunk to a single base cell dissolves rather than
@@ -455,7 +458,7 @@ export default class GridManipulator {
       return this.splitCell({ cellKey: slotKey });
     }
     return svc.recordStructural([located.outletName], () => {
-      const layout = svc.readResolvedLayout(located.outletName);
+      const layout = svc.layoutQuery.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
@@ -618,7 +621,7 @@ export default class GridManipulator {
     const { column, row } = placement;
 
     if (source.kind === "new") {
-      const layout = svc.readResolvedLayout(outletName);
+      const layout = svc.layoutQuery.readResolvedLayout(outletName);
       if (!layout) {
         return false;
       }
@@ -643,13 +646,13 @@ export default class GridManipulator {
     // exact landing cell is written right after).
     const sameGrid =
       sourceLocated.outletName === outletName &&
-      svc.isCellInGrid(sourceLocated.entry, gridKey);
+      svc.layoutQuery.isCellInGrid(sourceLocated.entry, gridKey);
 
     // Snapshot the source's prior rect + grid before it moves, so a multi-cell
     // region it leaves behind is preserved as a merged cell (the same shape a
     // delete preserves) rather than shattering into derived single cells.
     const priorPlacement = parsePlacement(sourceLocated.entry.containerArgs);
-    const priorParent = svc.findEntryParent(source.key);
+    const priorParent = svc.layoutQuery.findEntryParent(source.key);
     const priorGridKey = sameGrid
       ? gridKey
       : priorParent
@@ -670,7 +673,7 @@ export default class GridManipulator {
         return false;
       }
     }
-    const layout = svc.readResolvedLayout(outletName);
+    const layout = svc.layoutQuery.readResolvedLayout(outletName);
     const result = replaceEntryContainerArgs(
       layout,
       source.key,
@@ -709,7 +712,7 @@ export default class GridManipulator {
     if (column.end - column.start <= 1 && row.end - row.start <= 1) {
       return;
     }
-    const layout = svc.readResolvedLayout(outletName);
+    const layout = svc.layoutQuery.readResolvedLayout(outletName);
     if (!layout) {
       return;
     }
@@ -757,7 +760,7 @@ export default class GridManipulator {
   #place(outletName, gridKey, source, sourceLocated, decision) {
     const svc = this.service;
     for (const move of decision.moves) {
-      const layout = svc.readResolvedLayout(outletName);
+      const layout = svc.layoutQuery.readResolvedLayout(outletName);
       const result = replaceEntryContainerArgs(
         layout,
         move.slotKey,
@@ -782,7 +785,10 @@ export default class GridManipulator {
     }
     svc.publishStructuralChange(
       outletName,
-      this.syncDeclaredToUsage(svc.readResolvedLayout(outletName), gridKey)
+      this.syncDeclaredToUsage(
+        svc.layoutQuery.readResolvedLayout(outletName),
+        gridKey
+      )
     );
     return true;
   }
@@ -800,7 +806,7 @@ export default class GridManipulator {
    */
   #replace(outletName, gridKey, source, sourceLocated, decision) {
     const svc = this.service;
-    const layout = svc.readResolvedLayout(outletName);
+    const layout = svc.layoutQuery.readResolvedLayout(outletName);
     const removal = removeEntry(layout, decision.swapWith);
     if (!removal.changed) {
       return false;
@@ -819,7 +825,10 @@ export default class GridManipulator {
     }
     svc.publishStructuralChange(
       outletName,
-      this.syncDeclaredToUsage(svc.readResolvedLayout(outletName), gridKey)
+      this.syncDeclaredToUsage(
+        svc.layoutQuery.readResolvedLayout(outletName),
+        gridKey
+      )
     );
     return true;
   }
@@ -839,13 +848,13 @@ export default class GridManipulator {
    */
   #swap(outletName, source, sourceLocated, decision) {
     const svc = this.service;
-    const occupant = svc.findEntryAndOutletSync(decision.swapWith);
+    const occupant = svc.layoutQuery.findEntryAndOutletSync(decision.swapWith);
     if (
       !sourceLocated ||
       !occupant ||
       occupant.outletName !== outletName ||
-      !svc.isGridCellEntry(sourceLocated.entry) ||
-      !svc.isGridCellEntry(occupant.entry)
+      !svc.layoutQuery.isGridCellEntry(sourceLocated.entry) ||
+      !svc.layoutQuery.isGridCellEntry(occupant.entry)
     ) {
       return false;
     }
@@ -857,9 +866,9 @@ export default class GridManipulator {
       column: occupant.entry.containerArgs?.grid?.column ?? "auto",
       row: occupant.entry.containerArgs?.grid?.row ?? "auto",
     };
-    const layout0 = svc.readResolvedLayout(outletName);
-    const sourceParent = svc.findEntryParent(source.key);
-    const occupantParent = svc.findEntryParent(decision.swapWith);
+    const layout0 = svc.layoutQuery.readResolvedLayout(outletName);
+    const sourceParent = svc.layoutQuery.findEntryParent(source.key);
+    const occupantParent = svc.layoutQuery.findEntryParent(decision.swapWith);
     const sourceParentKey = sourceParent ? entryKey(sourceParent) : null;
     const occupantParentKey = occupantParent ? entryKey(occupantParent) : null;
 

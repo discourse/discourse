@@ -73,7 +73,7 @@ export default class LinkEditState {
       this.stop();
     }
 
-    const located = this.service.findEntryAndOutletSync(blockKey);
+    const located = this.service.layoutQuery.findEntryAndOutletSync(blockKey);
     if (!located) {
       return;
     }

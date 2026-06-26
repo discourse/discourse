@@ -1,11 +1,11 @@
 // @ts-check
 import { trackedObject } from "@ember/reactive/collections";
-import Service, { service } from "@ember/service";
+import Service from "@ember/service";
 
 /**
  * @typedef {{ action: string, args: Object }} DropDispatch
- *   A layout mutation to run at drop time, executed by
- *   `wireframe.runDropDispatch`.
+ *   A layout mutation to run at drop time, executed by the kernel-registered
+ *   drop dispatcher (see `registerDispatcher`).
  *
  * @typedef {{ top: number, left: number, width: number, height: number }} OverlayGeometry
  *   Viewport-relative pixel rect for the slot-insert indicator.
@@ -65,8 +65,6 @@ import Service, { service } from "@ember/service";
  * with a slot preview.
  */
 export default class WireframeDragOverlay extends Service {
-  @service wireframe;
-
   /**
    * The one active drag overlay (`#state.active`), or `null` when no target owns
    * the slot. Held inside a `#`-private reactive wrapper so the live, mutable
@@ -93,6 +91,15 @@ export default class WireframeDragOverlay extends Service {
    * @type {{action: string, args: Object}|null}
    */
   #stickyDispatch = null;
+
+  /**
+   * The synchronous dispatcher the kernel registers via `registerDispatcher`.
+   * Given a drop payload it runs the layout mutation and returns whether one
+   * ran; `null` until registered.
+   *
+   * @type {((payload: {action: string, args: Object}) => boolean)|null}
+   */
+  #dispatcher = null;
 
   /**
    * The active slot-insert, projected as a frozen, read-only copy (never the
@@ -190,8 +197,24 @@ export default class WireframeDragOverlay extends Service {
   }
 
   /**
+   * Registers the synchronous dispatcher that runs a drop's layout mutation. The
+   * kernel registers a callback into its own dispatch logic, so this service
+   * never reaches up into the kernel. The dispatcher MUST be synchronous and
+   * return a boolean: `completeExternalImageDrop` branches on the result, then
+   * reads the selection the mutation set, so an async dispatcher would break
+   * that contract.
+   *
+   * @param {(payload: {action: string, args: Object}) => boolean} fn
+   */
+  registerDispatcher(fn) {
+    this.#dispatcher = fn;
+  }
+
+  /**
    * Runs the active slot-insert's dispatch at drop time, then clears it. Called
-   * from a target's `onDrop` (before the deferred `endDrag` cleanup runs).
+   * from a target's `onDrop` (before the deferred `endDrag` cleanup runs). Routes
+   * through the kernel-registered handler, so this service has no upward
+   * dependency; returns `false` when nothing is claimed or no handler is set.
    *
    * @returns {boolean} `true` when an operation ran.
    */
@@ -202,7 +225,7 @@ export default class WireframeDragOverlay extends Service {
     if (!payload) {
       return false;
     }
-    return this.wireframe.runDropDispatch(payload);
+    return this.#dispatcher?.(payload) ?? false;
   }
 
   /**

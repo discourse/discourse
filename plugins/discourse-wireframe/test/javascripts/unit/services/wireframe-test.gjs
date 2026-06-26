@@ -81,7 +81,7 @@ async function editArg(editor, argName, value) {
  * top-level array (which is just `[rootLayout]`).
  */
 function outletChildren(editor, outlet = "homepage-blocks") {
-  return editor.readResolvedLayout(outlet)?.[0]?.children ?? [];
+  return editor.layoutQuery.readResolvedLayout(outlet)?.[0]?.children ?? [];
 }
 
 module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
@@ -355,7 +355,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const entry = this.editor.selectedBlockData.args;
       // Look up the live entry (the bound args' parent) and stamp it
       // as the validator would.
-      const located = this.editor.findEntryAndOutletSync(
+      const located = this.editor.layoutQuery.findEntryAndOutletSync(
         this.editor.selectedBlockKey
       );
       located.entry.__failureType = "structural-invalid";
@@ -379,7 +379,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // the layer array (frozen at validation time) — so the
       // inspector banner clears as soon as the author edits the arg
       // that was failing.
-      const located = this.editor.findEntryAndOutletSync(
+      const located = this.editor.layoutQuery.findEntryAndOutletSync(
         this.editor.selectedBlockKey
       );
       located.entry.__failureType = "arg-invalid";
@@ -517,6 +517,22 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         document.body.classList.contains("wireframe-dragging"),
         "body class is removed after drag"
       );
+    });
+
+    test("startPaletteDrag does not set isDragging (palette drags aren't moves)", function (assert) {
+      this.editor.startPaletteDrag({
+        blockName: "wf:svc-test-tile",
+        defaultArgs: {},
+      });
+      assert.false(
+        this.editor.isDragging,
+        "a palette drag carries no source block"
+      );
+      assert.true(
+        document.body.classList.contains("wireframe-dragging"),
+        "but the canvas drag body class is still applied"
+      );
+      this.editor.endDrag();
     });
   });
 
@@ -762,7 +778,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     }
 
     function blockNameOf(editor, entry) {
-      return editor.lookupBlockMetadata(entry.block)?.blockName;
+      return editor.layoutQuery.lookupBlockMetadata(entry.block)?.blockName;
     }
 
     test("appendImplicitChild appends an empty layout panel and selects it", function (assert) {
@@ -796,7 +812,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         targetOutletName: "homepage-blocks",
       });
 
-      const inserted = this.editor.findEntryByKey(this.editor.selectedBlockKey);
+      const inserted = this.editor.layoutQuery.findEntryByKey(
+        this.editor.selectedBlockKey
+      );
       assert.strictEqual(
         blockNameOf(this.editor, inserted),
         "wf:svc-test-tabs",
@@ -883,7 +901,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("inserts into a grid layout annotate the entry with containerArgs.grid", function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks");
       const gridKey = `layout:${draft[0].__stableKey}`;
 
       const ok = this.editor.insertBlock({
@@ -895,7 +914,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       assert.true(ok);
-      const after = this.editor.readResolvedLayout("homepage-blocks");
+      const after =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks");
       const gridChildren = after[0].children ?? [];
       assert.strictEqual(
         gridChildren.length,
@@ -915,7 +935,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("resizeSlot updates a cell's column/row and is undoable", async function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks");
       const gridKey = `layout:${draft[0].__stableKey}`;
 
       // Seed a placed tile via a grid drop so we have a cell to reposition.
@@ -929,7 +950,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           defaultArgs: { title: "Movable" },
         },
       });
-      const afterInsert = this.editor.readResolvedLayout("homepage-blocks");
+      const afterInsert =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks");
       const cell = afterInsert[0].children.find(
         (c) => c.args?.title === "Movable"
       );
@@ -943,7 +965,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
       assert.true(ok);
 
-      const afterMove = this.editor.readResolvedLayout("homepage-blocks");
+      const afterMove =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks");
       const movedCell = afterMove[0].children.find(
         (c) => c.__stableKey === cell.__stableKey
       );
@@ -952,7 +975,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       // Undo: back to the previous placement.
       await this.editor.undo();
-      const undone = this.editor.readResolvedLayout("homepage-blocks");
+      const undone =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks");
       const undoneCell = undone[0].children.find(
         (c) => c.__stableKey === cell.__stableKey
       );
@@ -965,7 +989,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // declared track count — growth is reserved for drops. (The handle
       // clamps to the effective size; even if a placement past declared
       // reaches the manipulator, declared stays put.)
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks");
       const grid = draft[0];
       const seed = grid.children[0];
       const seedKey = `wf:svc-test-tile:${seed.__stableKey}`;
@@ -982,7 +1007,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
       assert.true(ok);
 
-      const after = this.editor.readResolvedLayout("homepage-blocks");
+      const after =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks");
       const resized = after[0].children.find(
         (c) => c.__stableKey === seed.__stableKey
       );
@@ -1036,11 +1062,11 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     function gridKeyOf(editor) {
-      return `layout:${editor.readResolvedLayout("homepage-blocks")[0].__stableKey}`;
+      return `layout:${editor.layoutQuery.readResolvedLayout("homepage-blocks")[0].__stableKey}`;
     }
 
     function mergedCellOf(editor) {
-      return editor
+      return editor.layoutQuery
         .readResolvedLayout("homepage-blocks")[0]
         .children.find((c) => c.block === "layout-merged-cell");
     }
@@ -1069,7 +1095,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "the merged cell stamps no args of its own"
       );
 
-      const grid = this.editor.readResolvedLayout("homepage-blocks")[0];
+      const grid =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
       assert.strictEqual(
         grid.args.rows,
         2,
@@ -1084,7 +1111,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
     test("mergeCells refuses a rect that overlaps existing content", function (assert) {
       const before =
-        this.editor.readResolvedLayout("homepage-blocks")[0].children.length;
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks")[0]
+          .children.length;
       const ok = this.editor.gridManipulator.mergeCells({
         gridKey: gridKeyOf(this.editor),
         // Columns 1–2 overlaps the seed at column 1.
@@ -1092,7 +1120,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
       assert.false(ok, "the overlapping merge is refused");
       assert.strictEqual(
-        this.editor.readResolvedLayout("homepage-blocks")[0].children.length,
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks")[0]
+          .children.length,
         before,
         "no entry was inserted"
       );
@@ -1114,7 +1143,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "the merged-cell entry is gone (1×1s stay derived)"
       );
       assert.strictEqual(
-        this.editor.readResolvedLayout("homepage-blocks")[0].args.columns,
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks")[0].args
+          .columns,
         3,
         "declared columns are preserved so the freed cells stay held open"
       );
@@ -1202,7 +1232,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("moving a spanning block to an empty cell leaves a merged cell at its old rect", function (assert) {
-      const grid = this.editor.readResolvedLayout("homepage-blocks")[0];
+      const grid =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
       const gridKey = `layout:${grid.__stableKey}`;
       const hero = grid.children.find((c) => c.args?.title === "Hero");
       const heroKey = `wf:svc-test-tile:${hero.__stableKey}`;
@@ -1216,7 +1247,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
       assert.true(ok);
 
-      const after = this.editor.readResolvedLayout("homepage-blocks")[0];
+      const after =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
       const moved = after.children.find(
         (c) => c.__stableKey === hero.__stableKey
       );
@@ -1299,7 +1331,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       test("dropping a block into a destination cell leaves the destination's existing cells in place", function (assert) {
-        const root = this.editor.readResolvedLayout("homepage-blocks")[0];
+        const root =
+          this.editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
         const [sourceGrid, destGrid] = root.children;
         const destGridKey = `layout:${destGrid.__stableKey}`;
         const sourceTile = sourceGrid.children[0];
@@ -1313,7 +1346,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         });
         assert.true(ok);
 
-        const afterRoot = this.editor.readResolvedLayout("homepage-blocks")[0];
+        const afterRoot =
+          this.editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
         const afterDest = afterRoot.children.find(
           (c) => c.__stableKey === destGrid.__stableKey
         );
@@ -1398,7 +1432,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // Performs the outline-style move (drop the source tile before the
       // resident cell of grid B) and returns the post-move grids.
       function dropSourceBeforeResident(editor) {
-        const root = editor.readResolvedLayout("homepage-blocks")[0];
+        const root =
+          editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
         const [sourceGrid, destGrid] = root.children;
         const residentKey = `wf:svc-test-tile:${destGrid.children[0].__stableKey}`;
         const sourceKey = `wf:svc-test-tile:${sourceGrid.children[0].__stableKey}`;
@@ -1408,7 +1443,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           position: "before",
           targetOutletName: "homepage-blocks",
         });
-        const afterRoot = editor.readResolvedLayout("homepage-blocks")[0];
+        const afterRoot =
+          editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
         return {
           ok,
           destGridKey: `layout:${destGrid.__stableKey}`,
@@ -1532,7 +1568,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       function refs(editor) {
-        const root = editor.readResolvedLayout("homepage-blocks")[0];
+        const root =
+          editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
         const grid = root.children.find((c) => c.args?.mode === "grid");
         const loose = root.children.find((c) => c.args?.title === "X");
         const cellOf = (title) =>
@@ -1555,7 +1592,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         });
         assert.true(ok);
 
-        const grid = this.editor
+        const grid = this.editor.layoutQuery
           .readResolvedLayout("homepage-blocks")[0]
           .children.find((c) => c.args?.mode === "grid");
         assert.strictEqual(grid.args.columns, 3, "declared columns grew 2 → 3");
@@ -1582,7 +1619,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         });
         assert.true(ok);
 
-        const grid = this.editor
+        const grid = this.editor.layoutQuery
           .readResolvedLayout("homepage-blocks")[0]
           .children.find((c) => c.args?.mode === "grid");
         assert.strictEqual(grid.args.rows, 2, "declared rows grew 1 → 2");
@@ -1654,7 +1691,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       test("dropping a block onto an occupied cell in another grid trades places", function (assert) {
-        const root = this.editor.readResolvedLayout("homepage-blocks")[0];
+        const root =
+          this.editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
         const [gridA, gridB] = root.children;
         const a1Key = `wf:svc-test-tile:${gridA.children[0].__stableKey}`;
 
@@ -1668,7 +1706,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         });
         assert.true(ok);
 
-        const after = this.editor.readResolvedLayout("homepage-blocks")[0];
+        const after =
+          this.editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
         const afterA = after.children.find(
           (c) => c.__stableKey === gridA.__stableKey
         );
@@ -1735,7 +1774,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       // Total content blocks across both grids — conservation guard.
       function countContent(editor) {
-        const root = editor.readResolvedLayout("homepage-blocks")[0];
+        const root =
+          editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
         return root.children.reduce(
           (n, grid) =>
             n + (grid.children ?? []).filter((c) => c.args?.title).length,
@@ -1744,7 +1784,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       }
 
       function refs(editor) {
-        const root = editor.readResolvedLayout("homepage-blocks")[0];
+        const root =
+          editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
         const [gridA, gridB] = root.children;
         const keyIn = (grid, title) =>
           `wf:svc-test-tile:${
@@ -1760,7 +1801,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       }
 
       function titlesByGrid(editor) {
-        const root = editor.readResolvedLayout("homepage-blocks")[0];
+        const root =
+          editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
         return root.children.map((grid) =>
           (grid.children ?? [])
             .map((c) => c.args?.title)
@@ -1878,7 +1920,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       test("dropping A before the empty cell yields A · empty · Important(2-span), grown to 4 columns", function (assert) {
-        const root = this.editor.readResolvedLayout("homepage-blocks")[0];
+        const root =
+          this.editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
         const grid = root.children.find((c) => c.args?.mode === "grid");
         const gridKey = `layout:${grid.__stableKey}`;
         const aKey = `wf:svc-test-tile:${
@@ -1895,7 +1938,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         });
         assert.true(ok);
 
-        const after = this.editor
+        const after = this.editor.layoutQuery
           .readResolvedLayout("homepage-blocks")[0]
           .children.find((c) => c.args?.mode === "grid");
         const at = (title) =>
@@ -1969,7 +2012,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       // Resolves the keys each operation needs from the seeded layout.
       function keys(editor) {
-        const root = editor.readResolvedLayout(OUTLET)[0];
+        const root = editor.layoutQuery.readResolvedLayout(OUTLET)[0];
         const [gridA, gridB] = root.children;
         const loose = root.children.find((c) => c.args?.title === "S");
         const tile = (grid, title) =>
@@ -2001,7 +2044,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
             walk(entry.children);
           }
         };
-        walk(editor.readResolvedLayout(OUTLET)[0].children);
+        walk(editor.layoutQuery.readResolvedLayout(OUTLET)[0].children);
         return counts;
       }
 
@@ -2609,7 +2652,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("permits inserts for blocks with no outlet restrictions", function (assert) {
       withTestBlockRegistration(() => registerBlock(TestTile));
       assert.true(
-        this.editor.canInsertBlockAt({
+        this.editor.dropAuthority.canInsertBlockAt({
           blockName: "wf:svc-test-tile",
           targetOutletName: "homepage-blocks",
         })
@@ -2622,13 +2665,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       withTestBlockRegistration(() => registerBlock(RestrictedTile));
       assert.false(
-        this.editor.canInsertBlockAt({
+        this.editor.dropAuthority.canInsertBlockAt({
           blockName: "wf:svc-test-restricted",
           targetOutletName: "homepage-blocks",
         })
       );
       assert.true(
-        this.editor.canInsertBlockAt({
+        this.editor.dropAuthority.canInsertBlockAt({
           blockName: "wf:svc-test-restricted",
           targetOutletName: "other-outlet",
         })
@@ -2641,7 +2684,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       withTestBlockRegistration(() => registerBlock(DeniedTile));
       assert.false(
-        this.editor.canInsertBlockAt({
+        this.editor.dropAuthority.canInsertBlockAt({
           blockName: "wf:svc-test-denied",
           targetOutletName: "homepage-blocks",
         })
@@ -2650,7 +2693,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
     test("is permissive for unknown block names (validator catches on save)", function (assert) {
       assert.true(
-        this.editor.canInsertBlockAt({
+        this.editor.dropAuthority.canInsertBlockAt({
           blockName: "wf:svc-test-unknown",
           targetOutletName: "homepage-blocks",
         })
@@ -2904,7 +2947,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("removeBlocks skips the outlet root", function (assert) {
-      const rootKey = this.editor.readResolvedLayout("homepage-blocks")[0];
+      const rootKey =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
       const rootEntryKey = `layout:${rootKey.__stableKey}`;
       this.editor.removeBlocks([rootEntryKey, this.firstKey]);
 
@@ -2963,7 +3007,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("enter() wraps the outlet's blocks in a single root layout", function (assert) {
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks");
       assert.strictEqual(draft.length, 1, "exactly one root entry");
       assert.strictEqual(
         draft[0].block,
@@ -2980,27 +3025,28 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("outletRootKey / isOutletRoot identify the implicit root", function (assert) {
-      const rootKey = this.editor.outletRootKey("homepage-blocks");
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const rootKey = this.editor.layoutQuery.outletRootKey("homepage-blocks");
+      const draft =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks");
       assert.strictEqual(rootKey, `layout:${draft[0].__stableKey}`);
       assert.true(
-        this.editor.isOutletRoot(rootKey),
+        this.editor.layoutQuery.isOutletRoot(rootKey),
         "the root key is recognised"
       );
 
       const childKey = `wf:svc-test-tile:${draft[0].children[0].__stableKey}`;
       assert.false(
-        this.editor.isOutletRoot(childKey),
+        this.editor.layoutQuery.isOutletRoot(childKey),
         "a child block is not the root"
       );
-      assert.false(this.editor.isOutletRoot(null));
+      assert.false(this.editor.layoutQuery.isOutletRoot(null));
     });
 
     test("selectOutlet selects the root layout so the layout form shows", function (assert) {
       this.editor.selectOutlet("homepage-blocks");
       assert.strictEqual(
         this.editor.selectedBlockKey,
-        this.editor.outletRootKey("homepage-blocks")
+        this.editor.layoutQuery.outletRootKey("homepage-blocks")
       );
       assert.strictEqual(
         this.editor.selectedBlockData.name,
@@ -3010,7 +3056,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("removeBlock is a no-op on the outlet root", function (assert) {
-      const rootKey = this.editor.outletRootKey("homepage-blocks");
+      const rootKey = this.editor.layoutQuery.outletRootKey("homepage-blocks");
       this.editor.selectOutlet("homepage-blocks");
 
       const removed = this.editor.removeBlock(rootKey);
@@ -3019,7 +3065,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         removed,
         "removeBlock reports no change for the outlet root"
       );
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks");
       assert.strictEqual(draft.length, 1, "the root layout still exists");
       assert.strictEqual(
         draft[0].block,
@@ -3045,7 +3092,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         new KeyboardEvent("keydown", { key: "Delete", bubbles: true })
       );
 
-      const draft = this.editor.readResolvedLayout("homepage-blocks");
+      const draft =
+        this.editor.layoutQuery.readResolvedLayout("homepage-blocks");
       assert.strictEqual(draft.length, 1, "the root layout still exists");
       assert.strictEqual(
         draft[0].block,
@@ -3062,9 +3110,15 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("exit() clears the recorded root key", function (assert) {
-      assert.notStrictEqual(this.editor.outletRootKey("homepage-blocks"), null);
+      assert.notStrictEqual(
+        this.editor.layoutQuery.outletRootKey("homepage-blocks"),
+        null
+      );
       this.editor.exit();
-      assert.strictEqual(this.editor.outletRootKey("homepage-blocks"), null);
+      assert.strictEqual(
+        this.editor.layoutQuery.outletRootKey("homepage-blocks"),
+        null
+      );
     });
   });
 

@@ -251,7 +251,7 @@ export default class InlineEditState {
     if (live !== undefined) {
       return live;
     }
-    const schema = this.service.metadataFor(entry)?.args;
+    const schema = this.service.layoutQuery.metadataFor(entry)?.args;
     return schema?.[this.argName]?.default;
   }
 
@@ -304,7 +304,7 @@ export default class InlineEditState {
     if (this.blockKey) {
       this.stop({ commit: true });
     }
-    const located = await this.service.findEntryAndOutlet(blockKey);
+    const located = await this.service.layoutQuery.findEntryAndOutlet(blockKey);
     if (located) {
       this.#located = located;
       this.#partContext = null;
@@ -316,7 +316,7 @@ export default class InlineEditState {
       // owning composite + override path so the session commits as a per-part
       // override. The pre-edit value is the part's effective arg (its
       // code-default merged with any current override).
-      const partContext = this.service.resolvePartContext(blockKey);
+      const partContext = this.service.layoutQuery.resolvePartContext(blockKey);
       const partDef = partContext
         ? resolvePartDef(partContext.compositeEntry, partContext.idPath)
         : null;
@@ -333,7 +333,9 @@ export default class InlineEditState {
         partPath: partContext.partPath,
       };
       this.#prevValue = resolvePartArgs(partDef, override)[argName];
-      this.#blockName = this.service.blockNameOf({ block: partDef.block });
+      this.#blockName = this.service.layoutQuery.blockNameOf({
+        block: partDef.block,
+      });
     }
     if (options.coords) {
       this.#initialSelection = { coords: options.coords };
@@ -379,7 +381,7 @@ export default class InlineEditState {
     if (this.blockKey) {
       this.stop({ commit: true });
     }
-    const located = await this.service.findEntryAndOutlet(childKey);
+    const located = await this.service.layoutQuery.findEntryAndOutlet(childKey);
     if (!located) {
       return false;
     }
@@ -588,7 +590,7 @@ export default class InlineEditState {
     if (!blockKey || argName !== "text") {
       return false;
     }
-    const located = this.service.findEntryAndOutletSync(blockKey);
+    const located = this.service.layoutQuery.findEntryAndOutletSync(blockKey);
     if (!located || located.entry.block !== "paragraph") {
       return false;
     }
@@ -701,12 +703,12 @@ export default class InlineEditState {
     if (!blockKey || argName !== "text") {
       return false;
     }
-    const located = this.service.findEntryAndOutletSync(blockKey);
+    const located = this.service.layoutQuery.findEntryAndOutletSync(blockKey);
     if (!located || located.entry.block !== "paragraph") {
       return false;
     }
     const { outletName } = located;
-    const layout = this.service.readResolvedLayout(outletName);
+    const layout = this.service.layoutQuery.readResolvedLayout(outletName);
     if (!layout) {
       return false;
     }
@@ -721,7 +723,7 @@ export default class InlineEditState {
       // Write the merged value into the prev entry. Match `applyChange`'s
       // contract of deleting the key on empty so the schema default
       // surfaces.
-      const livePrev = this.service.findEntryByKey(prevKey);
+      const livePrev = this.service.layoutQuery.findEntryByKey(prevKey);
       if (!livePrev) {
         return false;
       }
@@ -806,7 +808,7 @@ export default class InlineEditState {
     const { compositeKey, outletName, partPath } = this.#partContext;
     const argName = this.argName;
     this.service.recordStructural([outletName], () => {
-      const layout = this.service.readResolvedLayout(outletName);
+      const layout = this.service.layoutQuery.readResolvedLayout(outletName);
       if (!layout) {
         return false;
       }
@@ -857,7 +859,7 @@ export default class InlineEditState {
       return;
     }
     this.service.recordStructural([outletName], () => {
-      const layout = this.service.readResolvedLayout(outletName);
+      const layout = this.service.layoutQuery.readResolvedLayout(outletName);
       if (!layout) {
         return false;
       }
@@ -889,11 +891,13 @@ export default class InlineEditState {
     if (!blockKey) {
       return null;
     }
-    const located = this.service.findEntryAndOutletSync(blockKey);
+    const located = this.service.layoutQuery.findEntryAndOutletSync(blockKey);
     if (!located) {
       return null;
     }
-    const layout = this.service.readResolvedLayout(located.outletName);
+    const layout = this.service.layoutQuery.readResolvedLayout(
+      located.outletName
+    );
     if (!layout) {
       return null;
     }
@@ -940,7 +944,7 @@ export default class InlineEditState {
         `[data-wf-block-key="${CSS.escape(key)}"]`
       );
       if (found || attempts > 10) {
-        this.#located = this.service.findEntryAndOutletSync(key);
+        this.#located = this.service.layoutQuery.findEntryAndOutletSync(key);
         this.#prevValue = this.#located?.entry?.args?.[this.argName];
         this.#blockName = this.#located?.entry?.block ?? null;
         this.#initialSelection = initialSelection;

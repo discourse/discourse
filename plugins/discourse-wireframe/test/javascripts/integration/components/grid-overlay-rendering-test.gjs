@@ -112,7 +112,7 @@ module(
 
       // Any selection change recomputes `emptyCells` (it reads the tracked
       // selection). Selecting the grid is enough to trigger the rebuild path.
-      const grid = wireframe.readResolvedLayout(OUTLET)[0];
+      const grid = wireframe.layoutQuery.readResolvedLayout(OUTLET)[0];
       wireframe.selectBlock({ key: `layout:${grid.__stableKey}` });
       await settled();
 

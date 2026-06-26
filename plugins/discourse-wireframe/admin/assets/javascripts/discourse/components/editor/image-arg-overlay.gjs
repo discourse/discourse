@@ -650,7 +650,7 @@ export default class ImageArgOverlay extends Component {
   }
 
   #liveValue() {
-    const entry = this.wireframe.findEntryAndOutletSync(
+    const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
     return entry?.args?.[this.args.argName] ?? null;

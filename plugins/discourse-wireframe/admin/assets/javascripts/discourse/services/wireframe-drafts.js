@@ -123,7 +123,8 @@ export default class WireframeDraftsService extends Service {
    * @returns {Promise<void>}
    */
   saveDraftOutlet(themeId, outlet) {
-    const resolvedLayout = this.wireframe.readResolvedLayout(outlet);
+    const resolvedLayout =
+      this.wireframe.layoutQuery.readResolvedLayout(outlet);
     const layout = serializeLayoutForSave(resolvedLayout ?? []);
 
     // A null resolved read means the read path failed, not a deliberate empty

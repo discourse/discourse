@@ -43,15 +43,17 @@ module(
           writable: true,
         });
 
-      stub(wireframe, "findEntryAndOutletSync", (key) => ({
+      stub(wireframe.layoutQuery, "findEntryAndOutletSync", (key) => ({
         entry: { block: key, id: null },
         outletName: "o",
       }));
-      stub(wireframe, "lookupBlockMetadata", () => ({ isContainer: false }));
-      stub(wireframe, "lookupBlockDisplayName", (block) => block);
-      stub(wireframe, "canInsertBlockAt", () => true);
-      stub(wireframe, "canDropAt", () => true);
-      stub(wireframe, "isOutletRoot", () => false);
+      stub(wireframe.layoutQuery, "lookupBlockMetadata", () => ({
+        isContainer: false,
+      }));
+      stub(wireframe.layoutQuery, "lookupBlockDisplayName", (block) => block);
+      stub(wireframe.dropAuthority, "canInsertBlockAt", () => true);
+      stub(wireframe.dropAuthority, "canDropAt", () => true);
+      stub(wireframe.layoutQuery, "isOutletRoot", () => false);
       stub(overlay, "claimSlotInsert", (descriptor) => {
         captured = descriptor;
         return () => (captured = null);

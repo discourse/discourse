@@ -78,7 +78,7 @@ export default class LinkEditPopover extends Component {
     if (!blockKey || !argName) {
       return "";
     }
-    const located = this.wireframe.findEntryAndOutletSync(blockKey);
+    const located = this.wireframe.layoutQuery.findEntryAndOutletSync(blockKey);
     return located?.entry?.args?.[argName] ?? "";
   }
 

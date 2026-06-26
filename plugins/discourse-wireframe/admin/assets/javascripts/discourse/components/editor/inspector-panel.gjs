@@ -71,7 +71,9 @@ export default class InspectorPanel extends Component {
    * @returns {boolean}
    */
   get isOutletRoot() {
-    return this.wireframe.isOutletRoot(this.wireframe.selectedBlockKey);
+    return this.wireframe.layoutQuery.isOutletRoot(
+      this.wireframe.selectedBlockKey
+    );
   }
 
   /**

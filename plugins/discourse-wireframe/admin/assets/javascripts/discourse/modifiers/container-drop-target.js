@@ -269,7 +269,7 @@ export function createContainerDropResolver({
     if (
       containerKey == null ||
       isCell ||
-      wireframe.isOutletRoot(containerKey)
+      wireframe.layoutQuery.isOutletRoot(containerKey)
     ) {
       return false;
     }
@@ -509,11 +509,13 @@ function childIsContainer(wireframe, key) {
   if (!key) {
     return false;
   }
-  const located = wireframe.findEntryAndOutletSync(key);
+  const located = wireframe.layoutQuery.findEntryAndOutletSync(key);
   if (!located) {
     return false;
   }
-  const metadata = wireframe.lookupBlockMetadata?.(located.entry.block);
+  const metadata = wireframe.layoutQuery.lookupBlockMetadata?.(
+    located.entry.block
+  );
   return metadata?.isContainer === true;
 }
 
@@ -571,7 +573,7 @@ function buildBoundaryDescriptor({
   // the author actually sees. The label/geometry stay visual (unchanged).
   const visualPosition = afterKey ? "before" : "after";
   const containerArgs =
-    wireframe.findEntryAndOutletSync(containerKey)?.entry?.args;
+    wireframe.layoutQuery.findEntryAndOutletSync(containerKey)?.entry?.args;
   const position = isReversedFlexLayout(containerArgs)
     ? flipPosition(visualPosition)
     : visualPosition;
@@ -787,14 +789,14 @@ function buildReplaceCellDescriptor({ wireframe, rect, targetKey, source }) {
   };
 }
 
-/* Validation predicates — thin wrappers over the service's existing
+/* Validation predicates — thin wrappers over the drop-authority leaf's
    `canInsertBlockAt` / `canDropAt` so the modifier doesn't reach
    into the layout itself. */
 
 function validateInsert({ wireframe, source, outletName }) {
   if (source.type === "wf-palette-block") {
     return {
-      ok: wireframe.canInsertBlockAt({
+      ok: wireframe.dropAuthority.canInsertBlockAt({
         blockName: source.data.blockName,
         targetOutletName: outletName,
       }),
@@ -804,14 +806,10 @@ function validateInsert({ wireframe, source, outletName }) {
     if (source.data.blockKey == null) {
       return { ok: false };
     }
-    // Cross-outlet validation lives in `canDropAt`.
+    // Cross-outlet validation lives in `canDropAt` (it reads the active drag
+    // source from the drag-session leaf).
     return {
-      ok: wireframe.canDropAt
-        ? wireframe.canDropAt({
-            sourceKey: source.data.blockKey,
-            targetOutletName: outletName,
-          })
-        : true,
+      ok: wireframe.dropAuthority.canDropAt({ targetOutletName: outletName }),
     };
   }
   return { ok: false };
@@ -825,7 +823,8 @@ function validateInsideDrop({ wireframe, source, targetKey }) {
   return validateInsert({
     wireframe,
     source,
-    outletName: wireframe.findEntryAndOutletSync(targetKey)?.outletName,
+    outletName:
+      wireframe.layoutQuery.findEntryAndOutletSync(targetKey)?.outletName,
   });
 }
 
@@ -1046,16 +1045,19 @@ function cellDropDispatch({ source, targetKey }) {
 function sourceDisplayName(wireframe, source) {
   if (source.type === "wf-palette-block") {
     return (
-      wireframe.lookupBlockDisplayName?.(source.data.blockName) ||
+      wireframe.layoutQuery.lookupBlockDisplayName?.(source.data.blockName) ||
       source.data.blockName ||
       "block"
     );
   }
   if (source.type === "wf-block") {
-    const located = wireframe.findEntryAndOutletSync(source.data.blockKey);
+    const located = wireframe.layoutQuery.findEntryAndOutletSync(
+      source.data.blockKey
+    );
     if (located?.entry) {
       return decorateWithId(
-        wireframe.lookupBlockDisplayName?.(located.entry.block) || "block",
+        wireframe.layoutQuery.lookupBlockDisplayName?.(located.entry.block) ||
+          "block",
         located.entry.id
       );
     }
@@ -1064,11 +1066,13 @@ function sourceDisplayName(wireframe, source) {
 }
 
 function targetDisplayName(wireframe, targetKey) {
-  const located = wireframe.findEntryAndOutletSync(targetKey);
+  const located = wireframe.layoutQuery.findEntryAndOutletSync(targetKey);
   if (!located?.entry) {
     return null;
   }
-  const name = wireframe.lookupBlockDisplayName?.(located.entry.block);
+  const name = wireframe.layoutQuery.lookupBlockDisplayName?.(
+    located.entry.block
+  );
   return decorateWithId(name, located.entry.id);
 }
 

@@ -129,7 +129,9 @@ export default class BlockToolbar extends Component {
   get canForceExpand() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const located = this.wireframe.findEntryAndOutletSync(this.args.blockKey);
+    const located = this.wireframe.layoutQuery.findEntryAndOutletSync(
+      this.args.blockKey
+    );
     const entry = located?.entry;
     if (entry?.block !== "layout") {
       return false;
@@ -254,7 +256,7 @@ export default class BlockToolbar extends Component {
   get canDetach() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    return this.wireframe.isComposedComposite(this.args.blockKey);
+    return this.wireframe.layoutQuery.isComposedComposite(this.args.blockKey);
   }
 
   @action

@@ -33,7 +33,8 @@ class NavTestTile extends Component {
 // Marks an outlet as edited the way the inspector does: select one of its
 // blocks and change an arg, then let the debounced write flush.
 async function editTitle(editor, outlet, value) {
-  const tile = editor.readResolvedLayout(outlet)?.[0]?.children?.[0];
+  const tile =
+    editor.layoutQuery.readResolvedLayout(outlet)?.[0]?.children?.[0];
   editor.selectBlock({
     key: `wf:nav-test-tile:${tile.__stableKey}`,
     name: "wf:nav-test-tile",

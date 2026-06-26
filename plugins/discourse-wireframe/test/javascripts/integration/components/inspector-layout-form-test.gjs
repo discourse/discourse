@@ -8,7 +8,9 @@ import InspectorLayoutForm from "discourse/plugins/discourse-wireframe/discourse
 // grid helpers off the service, and writes through `updateSelectedArg`. The
 // grid helpers return inert values so the form mounts cleanly in every mode.
 class StubWireframeService extends Service {
+  // The query layer moved to a leaf the editor exposes as layoutQuery; returning
   #args;
+
   #fieldErrors;
 
   constructor(owner, args, fieldErrors) {
@@ -16,6 +18,11 @@ class StubWireframeService extends Service {
     this.#args = args;
     this.#fieldErrors = fieldErrors ?? {};
     this.updateSelectedArgCalls = [];
+  }
+
+  // this makes wireframe.layoutQuery.<query> resolve to the stubbed methods below.
+  get layoutQuery() {
+    return this;
   }
 
   // The Form seeds its draft from `argsSnapshot`; the canvas-facing `args`

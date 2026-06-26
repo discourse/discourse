@@ -402,7 +402,7 @@ function installBlockChrome(editor) {
     const isOutletRootGhost =
       isGhost &&
       blockData.failureType === FAILURE_TYPE.NO_VISIBLE_CHILDREN &&
-      editor.isOutletRoot(blockKey);
+      editor.layoutQuery.isOutletRoot(blockKey);
     const ghostName = isOutletRootGhost
       ? (context?.rootOutletName ?? context?.outletName)
       : blockData.name;

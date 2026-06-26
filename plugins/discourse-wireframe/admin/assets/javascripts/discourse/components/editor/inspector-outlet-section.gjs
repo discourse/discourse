@@ -3,7 +3,7 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
-import { OUTLET_STATE } from "../../services/wireframe";
+import { OUTLET_STATE } from "../../lib/layout-query";
 
 /**
  * The per-outlet section shown in the inspector when an outlet root is selected.
@@ -19,7 +19,7 @@ export default class InspectorOutletSection extends Component {
   @service wireframe;
 
   get state() {
-    return this.wireframe.outletState(this.args.outletName);
+    return this.wireframe.layoutQuery.outletState(this.args.outletName);
   }
 
   get isEditing() {

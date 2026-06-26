@@ -96,7 +96,7 @@ export default class IconEditState {
       await this.stop();
     }
 
-    const located = this.service.findEntryAndOutletSync(blockKey);
+    const located = this.service.layoutQuery.findEntryAndOutletSync(blockKey);
     if (!located) {
       return;
     }

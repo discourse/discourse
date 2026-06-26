@@ -26,8 +26,6 @@ import {
   LAYOUT_LAYERS,
   LAYOUT_SOURCE,
 } from "discourse/blocks/block-outlet";
-import { PART_KEY_SEGMENT } from "discourse/lib/blocks/-internals/composite";
-import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { VALID_BLOCK_ID_PATTERN } from "discourse/lib/blocks/-internals/patterns";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseLater from "discourse/lib/later";
@@ -50,6 +48,8 @@ import {
 import ConflictModal from "../components/editor/conflict-modal";
 import StaleDraftModal from "../components/editor/stale-draft-modal";
 import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-renderer";
+import DragSessionState from "../lib/drag-session-state";
+import DropAuthority from "../lib/drop-authority";
 import GridManipulator from "../lib/grid-manipulator";
 import {
   matchGridTemplate,
@@ -57,6 +57,7 @@ import {
 } from "../lib/grid-templates";
 import IconEditState from "../lib/icon-edit-state";
 import InlineEditState from "../lib/inline-edit-state";
+import LayoutQuery, { OUTLET_STATE } from "../lib/layout-query";
 import LinkEditState from "../lib/link-edit-state";
 import {
   cloneEntryForPaste,
@@ -65,7 +66,6 @@ import {
   entryKey,
   findAncestryPath,
   findEntry,
-  findEntryByStableKey,
   findEntrySiblings,
   insertEntryAt,
   moveEntry,
@@ -91,21 +91,6 @@ const FLUSH_DELAY_MS = 200;
 // Duration of the just-selected flash; mirror the CSS animation length in
 // `wireframe-chrome.scss` (`.wireframe-block-chrome.--just-selected`).
 const FLASH_DURATION_MS = 1100;
-
-/**
- * The persistence state of an outlet, derived from the source that owns it
- * apart from any in-session edit (see `outletState`). `EDITING` is orthogonal —
- * an outlet in any of these states may also have unsaved edits.
- *
- * - `LOCKED` — a non-overridable programmatic layout owns it; read-only.
- * - `DEFAULT` — an overridable in-code seed (or nothing published yet).
- * - `PUBLISHED` — a theme field owns it.
- */
-export const OUTLET_STATE = Object.freeze({
-  LOCKED: "locked",
-  DEFAULT: "default",
-  PUBLISHED: "published",
-});
 
 /**
  * Editor service. Holds the editor's session state and mediates the
@@ -188,32 +173,6 @@ export default class WireframeService extends Service {
    * @type {number}
    */
   @tracked structuralVersion = 0;
-
-  /**
-   * Drag-and-drop session state. Set when the user grabs a block via
-   * `editor-draggable`; cleared when the drag ends (success or cancel).
-   * `dragSourceKey` opens body-class `wireframe-dragging` so the canvas can
-   * surface drop zones via CSS.
-   *
-   * @type {string|null}
-   */
-  @tracked dragSourceKey = null;
-
-  /** @type {string|null} */
-  @tracked dragSourceOutlet = null;
-
-  /**
-   * Full drag-source descriptor during an in-flight drag. Browsers
-   * restrict `event.dataTransfer.getData()` to the `drop` event for
-   * security, so dragover-time consumers (the new
-   * `containerDropTarget` modifier, the grid overlay) read this
-   * instead. Set by every `dDragAndDropSource` site's
-   * `onDragStart` (palette + chrome + outline rows); cleared by
-   * `endDrag`.
-   *
-   * @type {{type: string, data: Object}|null}
-   */
-  @tracked dragSource = null;
 
   /**
    * Simulation slot. When non-null, threads through the condition
@@ -341,6 +300,53 @@ export default class WireframeService extends Service {
   gridManipulator = new GridManipulator(this);
 
   /**
+   * Drag-session state (what block / palette entry is being dragged). A pure
+   * dependency-free leaf the kernel drives one-way: `startDrag` /
+   * `startPaletteDrag` / `endDrag` mutate it and add the side effects (body
+   * class, overlay reset). Read externally only through the `dragSourceKey` /
+   * `isDragging` facade getters. See `../lib/drag-session-state.js`.
+   *
+   * @type {DragSessionState}
+   */
+  dragSession = new DragSessionState();
+
+  /**
+   * The outlet/layout query layer (entry/outlet lookups, block metadata,
+   * outlet state, grid/composite predicates, outlet-root identity). A pure-read
+   * leaf the kernel configures downward with the draft-aware resolved-layout
+   * readers plus the blocks-service lookups; it never reaches back here. Exposed
+   * directly (read-only) so callers read `wireframe.layoutQuery.X`, and internal
+   * kernel code calls `this.layoutQuery.X`. See `../lib/layout-query.js`.
+   *
+   * @type {LayoutQuery}
+   */
+  layoutQuery = new LayoutQuery({
+    getResolvedLayout: (outletName, options) =>
+      _getResolvedLayout(outletName, options),
+    getResolvedLayouts: () => _getResolvedLayouts(),
+    getResolvedLayoutMeta: (outletName, options) =>
+      this.blocks.resolvedLayoutMeta(outletName, options),
+    getBlock: (name) => this.blocks.getBlock(name),
+  });
+
+  /**
+   * Drop authorization (the per-dragover `canDropAt` / `canInsertBlockAt`
+   * allow/deny checks). A pure-read leaf the kernel configures downward with the
+   * drag-session leaf + opaque query lookups; it never reaches back here. Exposed
+   * directly (read-only) so drop targets call `wireframe.dropAuthority.canDropAt`.
+   * Declared after `dragSession` so that reference is set when this initializes.
+   * See `../lib/drop-authority.js`.
+   *
+   * @type {DropAuthority}
+   */
+  dropAuthority = new DropAuthority({
+    session: this.dragSession,
+    findEntryByKey: (key) => this.layoutQuery.findEntryByKey(key),
+    metadataFor: (entry) => this.layoutQuery.metadataFor(entry),
+    metadataForName: (name) => this.layoutQuery.metadataForName(name),
+  });
+
+  /**
    * Undo / redo stacks for in-memory edits. Entries are discriminated by
    * `kind`:
    *
@@ -406,21 +412,6 @@ export default class WireframeService extends Service {
   editedOutlets = new Set();
 
   /**
-   * Maps each drafted outlet to the composite key of its implicit root
-   * `layout` block. Every drafted outlet is normalised to a single root
-   * layout (see `wrapAsOutletRoot`); selecting that key is how the editor
-   * "selects the outlet", and `isOutletRoot` consults this map to suppress
-   * block-level affordances (move / duplicate / delete) on the root.
-   *
-   * Populated when the draft is materialised (`#materializeAllDrafts`,
-   * `ensureDraft`) and cleared on `exit`. Not persisted — the root key is
-   * re-derived from the published draft each session.
-   *
-   * @type {Map<string, string>}
-   */
-  #outletRootKeys = new Map();
-
-  /**
    * Files dropped onto an empty slot, staged by `"blockKey\0argName"` until
    * the freshly-created block's `ImageArgOverlay` mounts and uploads them
    * through its own pipeline. One-shot per entry; cleared on enter / exit.
@@ -428,6 +419,12 @@ export default class WireframeService extends Service {
    * @type {Map<string, File>}
    */
   #pendingDropFiles = new Map();
+
+  /**
+   * Whether the drop-dispatch handler has been registered on
+   * `wireframeDragOverlay`. Guards `enter()` so re-entry doesn't re-register.
+   */
+  #dropDispatchRegistered = false;
 
   /**
    * Pending arg changes for the currently-selected block, accumulated across
@@ -737,12 +734,14 @@ export default class WireframeService extends Service {
    */
   #outletHasUnsavedDraftEdits(outletName) {
     const current = this.#serializeBaseline(
-      this.readResolvedLayout(outletName)
+      this.layoutQuery.readResolvedLayout(outletName)
     );
     const baseline = this.#persistedDraftLayouts.has(outletName)
       ? this.#persistedDraftLayouts.get(outletName)
       : this.#serializeBaseline(
-          this.readResolvedLayout(outletName, { ignoreSessionDraft: true })
+          this.layoutQuery.readResolvedLayout(outletName, {
+            ignoreSessionDraft: true,
+          })
         );
     return current !== baseline;
   }
@@ -759,9 +758,20 @@ export default class WireframeService extends Service {
     return JSON.stringify(serializeLayoutForSave(layout ?? []));
   }
 
+  /**
+   * The block being dragged, or `null`. Read externally by the outline to
+   * highlight the drag source; delegates to the drag-session leaf (read-only —
+   * drag state is mutated only through `startDrag` / `endDrag`).
+   *
+   * @returns {?string}
+   */
+  get dragSourceKey() {
+    return this.dragSession.sourceKey;
+  }
+
   /** @returns {boolean} */
   get isDragging() {
-    return this.dragSourceKey != null;
+    return this.dragSession.isDragging;
   }
 
   /**
@@ -829,7 +839,7 @@ export default class WireframeService extends Service {
     if (!key) {
       return null;
     }
-    const located = this.findEntryAndOutletSync(key);
+    const located = this.layoutQuery.findEntryAndOutletSync(key);
     const entry = located?.entry;
     if (!entry?.__failureType) {
       return null;
@@ -862,7 +872,7 @@ export default class WireframeService extends Service {
     if (!key) {
       return {};
     }
-    const entry = this.findEntryAndOutletSync(key)?.entry;
+    const entry = this.layoutQuery.findEntryAndOutletSync(key)?.entry;
     const list = entry?.__failureDetails ?? [];
     const byField = {};
     for (const d of list) {
@@ -888,7 +898,7 @@ export default class WireframeService extends Service {
     if (!key) {
       return [];
     }
-    const entry = this.findEntryAndOutletSync(key)?.entry;
+    const entry = this.layoutQuery.findEntryAndOutletSync(key)?.entry;
     return (entry?.__failureDetails ?? []).filter((d) => !d?.field);
   }
 
@@ -927,11 +937,13 @@ export default class WireframeService extends Service {
     if (idx < 0) {
       return false;
     }
-    const located = this.findEntryAndOutletSync(this.selectedBlockKey);
+    const located = this.layoutQuery.findEntryAndOutletSync(
+      this.selectedBlockKey
+    );
     if (!located) {
       return false;
     }
-    const layout = this.readResolvedLayout(located.outletName);
+    const layout = this.layoutQuery.readResolvedLayout(located.outletName);
     const sibs = findEntrySiblings(layout, this.selectedBlockKey);
     return sibs ? idx < sibs.siblings.length - 1 : false;
   }
@@ -953,11 +965,11 @@ export default class WireframeService extends Service {
     if (!key) {
       return [];
     }
-    const located = this.findEntryAndOutletSync(key);
+    const located = this.layoutQuery.findEntryAndOutletSync(key);
     if (!located) {
       return [];
     }
-    const layout = this.readResolvedLayout(located.outletName);
+    const layout = this.layoutQuery.readResolvedLayout(located.outletName);
     if (!layout) {
       return [];
     }
@@ -974,7 +986,7 @@ export default class WireframeService extends Service {
         outletName: located.outletName,
       },
       ...path.map((entry) => {
-        const meta = this.metadataFor(entry);
+        const meta = this.layoutQuery.metadataFor(entry);
         const blockName =
           meta?.blockName ??
           (typeof entry.block === "string" ? entry.block : "(block)");
@@ -1007,7 +1019,7 @@ export default class WireframeService extends Service {
     if (!key) {
       return null;
     }
-    const located = this.findEntryAndOutletSync(key);
+    const located = this.layoutQuery.findEntryAndOutletSync(key);
     if (!located) {
       return null;
     }
@@ -1032,7 +1044,7 @@ export default class WireframeService extends Service {
     if (!key) {
       return null;
     }
-    const located = this.findEntryAndOutletSync(key);
+    const located = this.layoutQuery.findEntryAndOutletSync(key);
     if (!located) {
       return this.selectedBlockData?.conditions ?? null;
     }
@@ -1101,6 +1113,15 @@ export default class WireframeService extends Service {
     }
     this.isActive = true;
     this.#pendingDropFiles.clear();
+    // Hand the overlay our drop dispatcher so it never reaches up into this
+    // service. Synchronous + returns a boolean (the `completeExternalImageDrop`
+    // contract). Registered once; the guard keeps re-entry from re-wrapping it.
+    if (!this.#dropDispatchRegistered) {
+      this.wireframeDragOverlay.registerDispatcher((payload) =>
+        this.runDropDispatch(payload)
+      );
+      this.#dropDispatchRegistered = true;
+    }
     // New session generation: invalidates any draft hydration still in flight
     // from a previous enter/exit so it can't write into this session.
     const generation = ++this.#enterGeneration;
@@ -1188,13 +1209,13 @@ export default class WireframeService extends Service {
    * @returns {Array<Object>} the layout array (existing or freshly minted).
    */
   ensureDraft(outletName) {
-    const existing = this.readResolvedLayout(outletName);
+    const existing = this.layoutQuery.readResolvedLayout(outletName);
     if (existing) {
       return existing;
     }
     // A LOCKED outlet is read-only — never mint a draft for it. This is a
     // defensive backstop; the chrome already gates writes on `isOutletEditable`.
-    if (this.outletState(outletName) === OUTLET_STATE.LOCKED) {
+    if (this.layoutQuery.outletState(outletName) === OUTLET_STATE.LOCKED) {
       return existing ?? [];
     }
     // Seed the outlet with an empty root `layout` block so it's an implicit
@@ -1208,12 +1229,12 @@ export default class WireframeService extends Service {
       { permissive: true }
     );
     this.draftedOutlets.add(outletName);
-    this.#recordOutletRoot(outletName);
+    this.layoutQuery.recordOutletRoot(outletName);
     this.#originalLayouts.set(
       outletName,
-      cloneLayoutForDraft(this.readResolvedLayout(outletName) ?? [])
+      cloneLayoutForDraft(this.layoutQuery.readResolvedLayout(outletName) ?? [])
     );
-    return this.readResolvedLayout(outletName) ?? emptyDraft;
+    return this.layoutQuery.readResolvedLayout(outletName) ?? emptyDraft;
   }
 
   @action
@@ -1236,7 +1257,7 @@ export default class WireframeService extends Service {
       _clearLayoutLayer(outletName, LAYOUT_LAYERS.SESSION_DRAFT);
     }
     this.draftedOutlets.clear();
-    this.#outletRootKeys.clear();
+    this.layoutQuery.clearOutletRoots();
     // Invalidate any in-flight draft hydration and drop queued stale prompts.
     this.#enterGeneration++;
     this.#staleDraftQueue.length = 0;
@@ -1247,8 +1268,7 @@ export default class WireframeService extends Service {
     this.activeThemeId = null;
     this.selectedBlockKey = null;
     this.selectedBlockData = null;
-    this.dragSourceKey = null;
-    this.dragSourceOutlet = null;
+    this.dragSession.clear();
     this.wireframeDragOverlay.clear();
     this.#pendingDropFiles.clear();
     this.undoStack.length = 0;
@@ -1307,11 +1327,11 @@ export default class WireframeService extends Service {
    * @returns {boolean}
    */
   #moveBlockSibling(blockKey, visualDirection) {
-    const located = this.findEntryAndOutletSync(blockKey);
+    const located = this.layoutQuery.findEntryAndOutletSync(blockKey);
     if (!located) {
       return false;
     }
-    const layout = this.readResolvedLayout(located.outletName);
+    const layout = this.layoutQuery.readResolvedLayout(located.outletName);
     if (!layout) {
       return false;
     }
@@ -1319,7 +1339,9 @@ export default class WireframeService extends Service {
     if (!sibs) {
       return false;
     }
-    const reversed = isReversedFlexLayout(this.findEntryParent(blockKey)?.args);
+    const reversed = isReversedFlexLayout(
+      this.layoutQuery.findEntryParent(blockKey)?.args
+    );
     const goEarlier = reversed
       ? visualDirection === "down"
       : visualDirection === "up";
@@ -1377,13 +1399,13 @@ export default class WireframeService extends Service {
    */
   @action
   duplicateBlock(blockKey, count = 1) {
-    const located = this.findEntryAndOutletSync(blockKey);
+    const located = this.layoutQuery.findEntryAndOutletSync(blockKey);
     if (!located) {
       return false;
     }
     const copies = Math.max(1, Math.floor(count));
     return this.recordStructural([located.outletName], () => {
-      let layout = this.readResolvedLayout(located.outletName);
+      let layout = this.layoutQuery.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
@@ -1415,15 +1437,15 @@ export default class WireframeService extends Service {
     // toolbar and inspector already hide the affordance, and this guard
     // also closes the keyboard (Delete / Backspace) and cut (Cmd+X) paths
     // that reach `removeBlock` directly.
-    if (this.isOutletRoot(blockKey)) {
+    if (this.layoutQuery.isOutletRoot(blockKey)) {
       return false;
     }
-    const located = this.findEntryAndOutletSync(blockKey);
+    const located = this.layoutQuery.findEntryAndOutletSync(blockKey);
     if (!located) {
       return false;
     }
     return this.recordStructural([located.outletName], () => {
-      const layout = this.readResolvedLayout(located.outletName);
+      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
@@ -1456,8 +1478,8 @@ export default class WireframeService extends Service {
   @action
   removeBlocks(keys) {
     const located = (keys ?? [])
-      .filter((key) => !this.isOutletRoot(key))
-      .map((key) => ({ key, ...this.findEntryAndOutletSync(key) }))
+      .filter((key) => !this.layoutQuery.isOutletRoot(key))
+      .map((key) => ({ key, ...this.layoutQuery.findEntryAndOutletSync(key) }))
       .filter((entry) => entry.entry);
     if (located.length === 0) {
       return false;
@@ -1466,7 +1488,7 @@ export default class WireframeService extends Service {
     return this.recordStructural(outletNames, () => {
       let anyChanged = false;
       for (const outletName of outletNames) {
-        let layout = this.readResolvedLayout(outletName);
+        let layout = this.layoutQuery.readResolvedLayout(outletName);
         if (!layout) {
           continue;
         }
@@ -1542,12 +1564,12 @@ export default class WireframeService extends Service {
     if (!key) {
       return false;
     }
-    const located = this.findEntryAndOutletSync(key);
+    const located = this.layoutQuery.findEntryAndOutletSync(key);
     if (!located) {
       return false;
     }
     return this.recordStructural([located.outletName], () => {
-      const layout = this.readResolvedLayout(located.outletName);
+      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
@@ -1583,12 +1605,12 @@ export default class WireframeService extends Service {
     if (trimmed && !VALID_BLOCK_ID_PATTERN.test(trimmed)) {
       return { ok: false, error: "invalid-format" };
     }
-    const located = this.findEntryAndOutletSync(key);
+    const located = this.layoutQuery.findEntryAndOutletSync(key);
     if (!located) {
       return { ok: false, error: "not-found" };
     }
     const committed = this.recordStructural([located.outletName], () => {
-      const layout = this.readResolvedLayout(located.outletName);
+      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
@@ -1622,18 +1644,18 @@ export default class WireframeService extends Service {
     if (!key) {
       return false;
     }
-    const located = this.findEntryAndOutletSync(key);
+    const located = this.layoutQuery.findEntryAndOutletSync(key);
     if (!located) {
       return false;
     }
     // The outlet root must stay a single `layout` block. If a raw edit
     // changes its block away from `layout`, re-wrap so the invariant holds —
     // the edited entry then becomes the root layout's child.
-    const nextEntry = this.isOutletRoot(key)
+    const nextEntry = this.layoutQuery.isOutletRoot(key)
       ? wrapAsOutletRoot([parsed])[0]
       : parsed;
     return this.recordStructural([located.outletName], () => {
-      const layout = this.readResolvedLayout(located.outletName);
+      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
@@ -1660,7 +1682,7 @@ export default class WireframeService extends Service {
     if (!key) {
       return false;
     }
-    const located = this.findEntryAndOutletSync(key);
+    const located = this.layoutQuery.findEntryAndOutletSync(key);
     if (!located) {
       return false;
     }
@@ -1686,7 +1708,7 @@ export default class WireframeService extends Service {
     if (!key) {
       return false;
     }
-    const located = this.findEntryAndOutletSync(key);
+    const located = this.layoutQuery.findEntryAndOutletSync(key);
     if (!located) {
       return false;
     }
@@ -1718,12 +1740,12 @@ export default class WireframeService extends Service {
     if (!targetKey) {
       return false;
     }
-    const located = this.findEntryAndOutletSync(targetKey);
+    const located = this.layoutQuery.findEntryAndOutletSync(targetKey);
     if (!located) {
       return false;
     }
     return this.recordStructural([located.outletName], () => {
-      const layout = this.readResolvedLayout(located.outletName);
+      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
@@ -1882,7 +1904,7 @@ export default class WireframeService extends Service {
     // current mode. Bumping the structural version doesn't matter here
     // because changing the parent's mode strips this child's
     // `containerArgs.grid`, which forces a re-selection anyway.
-    const parentEntry = this.findEntryParent(liveData.key);
+    const parentEntry = this.layoutQuery.findEntryParent(liveData.key);
     liveData.parentArgsSnapshot = parentEntry?.args
       ? { ...parentEntry.args }
       : {};
@@ -1893,7 +1915,7 @@ export default class WireframeService extends Service {
     // validate. Computed from the name (not the post-inference metadata, which
     // `#withInferredMetadata` populates with a synthetic schema below).
     liveData.isRegistered = liveData.name
-      ? this.#metadataForName(liveData.name) != null
+      ? this.layoutQuery.metadataForName(liveData.name) != null
       : true;
 
     // Augment metadata with an inferred args schema when the block didn't
@@ -1964,11 +1986,11 @@ export default class WireframeService extends Service {
    * @param {string} blockKey - The composite key of the block being revealed.
    */
   #revealContainingTabs(blockKey) {
-    const located = this.findEntryAndOutletSync(blockKey);
+    const located = this.layoutQuery.findEntryAndOutletSync(blockKey);
     if (!located) {
       return;
     }
-    const layout = this.readResolvedLayout(located.outletName);
+    const layout = this.layoutQuery.readResolvedLayout(located.outletName);
     if (!layout) {
       return;
     }
@@ -2239,56 +2261,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Records the implicit root layout key for an outlet. Reads the just-
-   * published draft's first entry — every drafted outlet is normalised to a
-   * single root `layout` block, so `[0]` is always that root.
-   *
-   * @param {string} outletName
-   */
-  #recordOutletRoot(outletName) {
-    const root = this.readResolvedLayout(outletName)?.[0];
-    if (root) {
-      this.#outletRootKeys.set(outletName, entryKey(root));
-    }
-  }
-
-  /**
-   * The composite key of an outlet's implicit root `layout` block, or `null`
-   * when the outlet hasn't been drafted yet.
-   *
-   * @param {string} outletName
-   * @returns {string|null}
-   */
-  outletRootKey(outletName) {
-    return this.#outletRootKeys.get(outletName) ?? null;
-  }
-
-  /**
-   * Whether `key` identifies an outlet's implicit root `layout` block. The
-   * chrome and inspector consult this to present the root AS the outlet —
-   * suppressing block-level affordances (move / duplicate / delete) that
-   * don't apply to a page region.
-   *
-   * Decorated with `@action` so template subexpressions keep their `this`
-   * binding, mirroring `isBlockSelected`.
-   *
-   * @param {string|null} key
-   * @returns {boolean}
-   */
-  @action
-  isOutletRoot(key) {
-    if (key == null) {
-      return false;
-    }
-    for (const rootKey of this.#outletRootKeys.values()) {
-      if (rootKey === key) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
    * Selects an outlet by selecting its implicit root `layout` block. The
    * selection then hydrates through the normal block path, so the inspector
    * surfaces the layout form (mode / gap / grid) for the outlet.
@@ -2297,7 +2269,7 @@ export default class WireframeService extends Service {
    */
   @action
   selectOutlet(outletName) {
-    const key = this.outletRootKey(outletName);
+    const key = this.layoutQuery.outletRootKey(outletName);
     if (key) {
       this.selectBlock({ key });
     }
@@ -2505,7 +2477,7 @@ export default class WireframeService extends Service {
    * @param {*} value
    */
   setArg(blockKey, argName, value) {
-    const located = this.findEntryAndOutletSync(blockKey);
+    const located = this.layoutQuery.findEntryAndOutletSync(blockKey);
     if (!located?.entry) {
       return;
     }
@@ -2539,12 +2511,14 @@ export default class WireframeService extends Service {
     if (!this.selectedBlockKey || !namespace || !name) {
       return false;
     }
-    const located = this.findEntryAndOutletSync(this.selectedBlockKey);
+    const located = this.layoutQuery.findEntryAndOutletSync(
+      this.selectedBlockKey
+    );
     if (!located) {
       return false;
     }
     return this.recordStructural([located.outletName], () => {
-      const layout = this.readResolvedLayout(located.outletName);
+      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
@@ -2582,7 +2556,7 @@ export default class WireframeService extends Service {
       batch.changes.forEach((c) => this.#reconcileOutletEdited(c.outletName));
     } else {
       this.writeArgs(batch.entry, batch.prev);
-      this.#reconcileOutletEdited(this.#outletForEntry(batch.entry));
+      this.#reconcileOutletEdited(this.layoutQuery.outletForEntry(batch.entry));
     }
     this.redoStack.push(batch);
     return true;
@@ -2605,7 +2579,7 @@ export default class WireframeService extends Service {
       batch.changes.forEach((c) => this.#reconcileOutletEdited(c.outletName));
     } else {
       this.writeArgs(batch.entry, batch.next);
-      this.#reconcileOutletEdited(this.#outletForEntry(batch.entry));
+      this.#reconcileOutletEdited(this.layoutQuery.outletForEntry(batch.entry));
     }
     this.undoStack.push(batch);
     return true;
@@ -2676,13 +2650,15 @@ export default class WireframeService extends Service {
       this.selectBlock(null);
       return;
     }
-    const located = this.findEntryAndOutletSync(blockKey);
+    const located = this.layoutQuery.findEntryAndOutletSync(blockKey);
     if (!located) {
       this.selectBlock(null);
       return;
     }
-    const blockName = this.blockNameOf(located.entry);
-    const metadata = blockName ? this.#metadataForName(blockName) : null;
+    const blockName = this.layoutQuery.blockNameOf(located.entry);
+    const metadata = blockName
+      ? this.layoutQuery.metadataForName(blockName)
+      : null;
     this.selectBlock({
       key: blockKey,
       name: blockName,
@@ -2691,24 +2667,6 @@ export default class WireframeService extends Service {
       outletName: located.outletName,
       conditions: located.entry.conditions ?? null,
     });
-  }
-
-  /**
-   * Resolves an entry's block name. `entry.block` is either a class
-   * reference (decorated blocks) or a string-ref (api.renderBlocks
-   * factories) — this helper smooths over the two shapes.
-   *
-   * @param {Object} entry
-   * @returns {string|null}
-   */
-  blockNameOf(entry) {
-    if (!entry?.block) {
-      return null;
-    }
-    if (typeof entry.block === "string") {
-      return entry.block;
-    }
-    return this.metadataFor(entry)?.blockName ?? null;
   }
 
   /**
@@ -2788,7 +2746,7 @@ export default class WireframeService extends Service {
   async resetToDefault(outletName) {
     const owner = this.outletOwner(outletName);
     if (
-      this.outletState(outletName) !== OUTLET_STATE.PUBLISHED ||
+      this.layoutQuery.outletState(outletName) !== OUTLET_STATE.PUBLISHED ||
       owner.isGit
     ) {
       return false;
@@ -2804,7 +2762,7 @@ export default class WireframeService extends Service {
     this.#originalLayouts.delete(outletName);
     this.#persistedDraftLayouts.delete(outletName);
     for (const [entry] of this.initialSnapshots) {
-      if (this.#outletForEntry(entry) === outletName) {
+      if (this.layoutQuery.outletForEntry(entry) === outletName) {
         this.initialSnapshots.delete(entry);
       }
     }
@@ -2895,7 +2853,7 @@ export default class WireframeService extends Service {
     // outlet reads as having no unsaved draft edits until the next change.
     this.#persistedDraftLayouts.set(
       outletName,
-      this.#serializeBaseline(this.readResolvedLayout(outletName))
+      this.#serializeBaseline(this.layoutQuery.readResolvedLayout(outletName))
     );
   }
 
@@ -2999,7 +2957,7 @@ export default class WireframeService extends Service {
    */
   #clearOutletEditState(outletName) {
     for (const [entry] of this.initialSnapshots) {
-      if (this.#outletForEntry(entry) === outletName) {
+      if (this.layoutQuery.outletForEntry(entry) === outletName) {
         this.initialSnapshots.delete(entry);
       }
     }
@@ -3088,10 +3046,10 @@ export default class WireframeService extends Service {
       );
       // The snapshot preserves the root layout's `__stableKey`, so the recorded
       // root key normally stays valid — re-record defensively regardless.
-      this.#recordOutletRoot(outletName);
+      this.layoutQuery.recordOutletRoot(outletName);
     }
     for (const [entry, snapshot] of this.initialSnapshots) {
-      if (this.#outletForEntry(entry) !== outletName) {
+      if (this.layoutQuery.outletForEntry(entry) !== outletName) {
         continue;
       }
       // With a re-published clone the fresh draft already carries pristine args,
@@ -3115,7 +3073,7 @@ export default class WireframeService extends Service {
   #editedOutletNames() {
     const names = new Set(this.#structurallyEditedOutlets);
     for (const entry of this.initialSnapshots.keys()) {
-      const outletName = this.#outletForEntry(entry);
+      const outletName = this.layoutQuery.outletForEntry(entry);
       if (outletName) {
         names.add(outletName);
       }
@@ -3201,52 +3159,6 @@ export default class WireframeService extends Service {
       }
     }
     this.initialSnapshots.set(entry, fullSnapshot);
-  }
-
-  /**
-   * Returns the resolved layout array for an outlet, or null when no layout
-   * is registered. Used by the persistence service to grab the snapshot of
-   * an edited outlet that needs to be POSTed.
-   *
-   * Pass `ignoreSessionDraft: true` to resolve the underlying source's layout —
-   * what is live now, apart from any unsaved edit. Reading both (with and without
-   * the flag) yields the baseline and the edited layout for a change comparison.
-   *
-   * @param {string} outletName
-   * @param {Object} [options]
-   * @param {boolean} [options.ignoreSessionDraft=false] - When true, skip the session-draft layer and resolve the underlying source.
-   * @returns {Array<Object>|null}
-   */
-  readResolvedLayout(outletName, { ignoreSessionDraft = false } = {}) {
-    return _getResolvedLayout(outletName, { ignoreSessionDraft });
-  }
-
-  /**
-   * The persistence state of an outlet — one of `OUTLET_STATE`. Derived from
-   * the source that owns the outlet apart from any in-session edit (the draft
-   * layer is ignored on purpose, so this reflects what is actually published,
-   * not the unsaved edit on top). Whether the outlet has unsaved edits is
-   * reported separately by `isOutletEditing`.
-   *
-   * Reads the resolved provenance directly (one keyed, tracked map read), so a
-   * template binding re-runs when the outlet's layers change. Kept a plain
-   * method — never `@cached` — so it can't freeze on an untracked early read.
-   *
-   * @param {string} outletName
-   * @returns {string} One of `OUTLET_STATE`.
-   */
-  outletState(outletName) {
-    const meta = this.blocks.resolvedLayoutMeta(outletName, {
-      ignoreSessionDraft: true,
-    });
-    if (meta?.source === LAYOUT_SOURCE.THEME) {
-      return OUTLET_STATE.PUBLISHED;
-    }
-    if (meta?.source === LAYOUT_SOURCE.CODE && meta.overridable === false) {
-      return OUTLET_STATE.LOCKED;
-    }
-    // An overridable in-code seed, or no underlying layer at all, is the default.
-    return OUTLET_STATE.DEFAULT;
   }
 
   /**
@@ -3359,7 +3271,7 @@ export default class WireframeService extends Service {
     const before = this.blocks.resolvedLayout(outletName, {
       ignoreSessionDraft: true,
     });
-    const after = this.readResolvedLayout(outletName);
+    const after = this.layoutQuery.readResolvedLayout(outletName);
     return diffLayouts(before, after);
   }
 
@@ -3372,7 +3284,7 @@ export default class WireframeService extends Service {
    */
   outletLayoutJson(outletName) {
     const layout = serializeLayoutForSave(
-      this.readResolvedLayout(outletName) ?? []
+      this.layoutQuery.readResolvedLayout(outletName) ?? []
     );
     return JSON.stringify(layout, null, 2);
   }
@@ -3393,22 +3305,11 @@ export default class WireframeService extends Service {
       return false;
     }
     for (const entry of this.initialSnapshots.keys()) {
-      if (this.#outletForEntry(entry) === outletName) {
+      if (this.layoutQuery.outletForEntry(entry) === outletName) {
         return true;
       }
     }
     return false;
-  }
-
-  /**
-   * Whether an outlet may be edited. A LOCKED outlet is read-only; everything
-   * else is editable.
-   *
-   * @param {string} outletName
-   * @returns {boolean}
-   */
-  isOutletEditable(outletName) {
-    return this.outletState(outletName) !== OUTLET_STATE.LOCKED;
   }
 
   /**
@@ -3421,12 +3322,7 @@ export default class WireframeService extends Service {
   @action
   startDrag({ blockKey, outletName }) {
     this.wireframeDragOverlay.clear();
-    this.dragSourceKey = blockKey;
-    this.dragSourceOutlet = outletName;
-    this.dragSource = {
-      type: "wf-block",
-      data: { blockKey, outletName },
-    };
+    this.dragSession.beginBlock({ blockKey, outletName });
     document.body.classList.add("wireframe-dragging");
   }
 
@@ -3441,10 +3337,7 @@ export default class WireframeService extends Service {
   @action
   startPaletteDrag({ blockName, defaultArgs }) {
     this.wireframeDragOverlay.clear();
-    this.dragSource = {
-      type: "wf-palette-block",
-      data: { blockName, defaultArgs },
-    };
+    this.dragSession.beginPalette({ blockName, defaultArgs });
     document.body.classList.add("wireframe-dragging");
   }
 
@@ -3458,9 +3351,7 @@ export default class WireframeService extends Service {
    */
   @action
   endDrag() {
-    this.dragSourceKey = null;
-    this.dragSourceOutlet = null;
-    this.dragSource = null;
+    this.dragSession.clear();
     this.wireframeDragOverlay.clear();
     document.body.classList.remove("wireframe-dragging");
   }
@@ -3512,108 +3403,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Pulls the human-readable display name for a block from its
-   * metadata. The drop-preview overlay uses this so labels match
-   * the palette / outline vocabulary the author already sees
-   * elsewhere. Falls back to the block name itself when no
-   * display name is set.
-   *
-   * @param {string|Function} blockRef
-   * @returns {string|null}
-   */
-  lookupBlockDisplayName(blockRef) {
-    const name = this.#blockNameFor(blockRef);
-    if (!name) {
-      return null;
-    }
-    return this.#metadataForName(name)?.displayName ?? name;
-  }
-
-  /**
-   * Returns the block's metadata bag for any block-reference form
-   * (string registry name or class). Convenience over picking
-   * between `#metadataForName` (string) and `getBlockMetadata`
-   * (class) at the call site.
-   *
-   * @param {string|Function} blockRef
-   * @returns {Object|null}
-   */
-  lookupBlockMetadata(blockRef) {
-    if (typeof blockRef === "function") {
-      return getBlockMetadata(blockRef) ?? null;
-    }
-    return this.#metadataForName(blockRef);
-  }
-
-  /**
-   * Tells whether inserting a fresh entry of `blockName` into
-   * `targetOutletName` is compatible with the block class's outlet
-   * restrictions. Same shape as `canDropAt` but for the insert path,
-   * where there's no in-flight drag-source key to consult.
-   *
-   * @param {{blockName: string, targetOutletName: string}} target
-   * @returns {boolean}
-   */
-  canInsertBlockAt({ blockName, targetOutletName }) {
-    if (!blockName || !targetOutletName) {
-      return false;
-    }
-    const metadata = this.#metadataForName(blockName);
-    if (!metadata) {
-      // Unknown block — be permissive; the validator will catch it on save.
-      return true;
-    }
-    if (metadata.deniedOutlets?.includes(targetOutletName)) {
-      return false;
-    }
-    if (metadata.allowedOutlets?.length > 0) {
-      return metadata.allowedOutlets.includes(targetOutletName);
-    }
-    return true;
-  }
-
-  /**
-   * Tells whether dropping the currently-dragged block at `target` is
-   * compatible with the system's authorization rules (`allowedOutlets` /
-   * `deniedOutlets` declared on the block class). Same-outlet moves always
-   * pass; cross-outlet moves consult the block's metadata.
-   *
-   * Returns true when no source key is set (no drag in progress) — keeps
-   * `canDrop` calls cheap during normal operation.
-   *
-   * @param {{targetOutletName: string}} target
-   * @returns {boolean}
-   */
-  canDropAt({ targetOutletName }) {
-    if (!this.dragSourceKey) {
-      return true;
-    }
-    if (!targetOutletName || targetOutletName === this.dragSourceOutlet) {
-      return true;
-    }
-    const sourceEntry = this.findEntryByKey(this.dragSourceKey);
-    if (!sourceEntry) {
-      return false;
-    }
-    const metadata = this.metadataFor(sourceEntry);
-    if (!metadata) {
-      // No metadata = block class isn't registered. Be permissive — the
-      // server-side validator will catch it on save if it really is broken.
-      return true;
-    }
-    if (
-      metadata.deniedOutlets &&
-      metadata.deniedOutlets.includes(targetOutletName)
-    ) {
-      return false;
-    }
-    if (metadata.allowedOutlets?.length > 0) {
-      return metadata.allowedOutlets.includes(targetOutletName);
-    }
-    return true;
-  }
-
-  /**
    * Moves the entry identified by `sourceKey` to a new position in the
    * layout, applying the mutation to the relevant draft layer(s) and
    * recording the affected outlets so the toolbar's `isDirty`/Save and
@@ -3640,11 +3429,11 @@ export default class WireframeService extends Service {
    */
   @action
   moveBlock({ sourceKey, targetKey, position, targetOutletName }) {
-    const source = this.findEntryAndOutletSync(sourceKey);
+    const source = this.layoutQuery.findEntryAndOutletSync(sourceKey);
     if (!source) {
       return false;
     }
-    if (!this.canDropAt({ targetOutletName })) {
+    if (!this.dropAuthority.canDropAt({ targetOutletName })) {
       return false;
     }
     // An outlet-level drop (no target block) lands INSIDE the outlet's
@@ -3652,7 +3441,7 @@ export default class WireframeService extends Service {
     // "single root layout per outlet" invariant intact.
     if (targetKey == null) {
       this.ensureDraft(targetOutletName);
-      targetKey = this.outletRootKey(targetOutletName);
+      targetKey = this.layoutQuery.outletRootKey(targetOutletName);
       position = "inside";
     }
     const outletsAffected =
@@ -3681,7 +3470,7 @@ export default class WireframeService extends Service {
       // brings the moved tab or slide to the front via the reveal-on-select
       // path. A same-outlet move keeps the block's key; only select when the key
       // still resolves, so a cross-outlet re-key doesn't clear the selection.
-      if (moved && this.findEntryAndOutletSync(sourceKey)) {
+      if (moved && this.layoutQuery.findEntryAndOutletSync(sourceKey)) {
         this.restoreSelection(sourceKey);
       }
       return moved;
@@ -3721,7 +3510,7 @@ export default class WireframeService extends Service {
     position,
     targetOutletName,
   }) {
-    if (!this.canInsertBlockAt({ blockName, targetOutletName })) {
+    if (!this.dropAuthority.canInsertBlockAt({ blockName, targetOutletName })) {
       return false;
     }
     return this.recordStructural([targetOutletName], () => {
@@ -3736,7 +3525,7 @@ export default class WireframeService extends Service {
       // implicit root layout, preserving the single-root invariant. Resolved
       // after `ensureDraft` so a freshly-seeded outlet has its root key.
       if (targetKey == null) {
-        targetKey = this.outletRootKey(targetOutletName);
+        targetKey = this.layoutQuery.outletRootKey(targetOutletName);
         position = "inside";
       }
       // Mint a fresh entry. Spread the defaults so future mutations don't
@@ -3788,7 +3577,7 @@ export default class WireframeService extends Service {
    * @returns {boolean}
    */
   appendImplicitChild(containerKey) {
-    const located = this.findEntryAndOutletSync(containerKey);
+    const located = this.layoutQuery.findEntryAndOutletSync(containerKey);
     if (!located) {
       return false;
     }
@@ -3814,12 +3603,15 @@ export default class WireframeService extends Service {
    * @returns {string|null}
    */
   #implicitChildKind(blockRef) {
-    const childBlocks = this.lookupBlockMetadata(blockRef)?.childBlocks;
+    const childBlocks =
+      this.layoutQuery.lookupBlockMetadata(blockRef)?.childBlocks;
     if (childBlocks?.length !== 1) {
       return null;
     }
     const kind = childBlocks[0];
-    return this.lookupBlockMetadata(kind)?.isContainer ? kind : null;
+    return this.layoutQuery.lookupBlockMetadata(kind)?.isContainer
+      ? kind
+      : null;
   }
 
   /**
@@ -3854,13 +3646,13 @@ export default class WireframeService extends Service {
    * @returns {Array<{slotKey: string, column: string, row: string}>}
    */
   outOfBoundsSlotsIn(gridKey, maxColumns, maxRows) {
-    const located = this.findEntryAndOutletSync(gridKey);
-    if (!located || !this.isGridContainer(located.entry)) {
+    const located = this.layoutQuery.findEntryAndOutletSync(gridKey);
+    if (!located || !this.layoutQuery.isGridContainer(located.entry)) {
       return [];
     }
     const offenders = [];
     for (const slot of located.entry.children ?? []) {
-      if (!this.isGridCellEntry(slot)) {
+      if (!this.layoutQuery.isGridCellEntry(slot)) {
         continue;
       }
       const placement = parsePlacement(slot.containerArgs);
@@ -3897,8 +3689,8 @@ export default class WireframeService extends Service {
    */
   @action
   clampGridSlotPlacements({ gridKey, maxColumns, maxRows }) {
-    const located = this.findEntryAndOutletSync(gridKey);
-    if (!located || !this.isGridContainer(located.entry)) {
+    const located = this.layoutQuery.findEntryAndOutletSync(gridKey);
+    if (!located || !this.layoutQuery.isGridContainer(located.entry)) {
       return false;
     }
     const offenders = this.outOfBoundsSlotsIn(gridKey, maxColumns, maxRows);
@@ -3907,7 +3699,7 @@ export default class WireframeService extends Service {
     }
     return this.recordStructural([located.outletName], () => {
       for (const slot of located.entry.children ?? []) {
-        if (!this.isGridCellEntry(slot)) {
+        if (!this.layoutQuery.isGridCellEntry(slot)) {
           continue;
         }
         const placement = parsePlacement(slot.containerArgs);
@@ -3916,7 +3708,7 @@ export default class WireframeService extends Service {
         if (newColumn == null && newRow == null) {
           continue;
         }
-        const layout = this.readResolvedLayout(located.outletName);
+        const layout = this.layoutQuery.readResolvedLayout(located.outletName);
         const result = replaceEntryContainerArgs(
           layout,
           entryKey(slot),
@@ -3934,64 +3726,6 @@ export default class WireframeService extends Service {
       }
       return true;
     });
-  }
-
-  /**
-   * Locates the immediate parent entry of `blockKey` by walking the
-   * resolved layout. Returns `null` when the key isn't found or when
-   * the entry sits at the outlet root (no block-level parent).
-   *
-   * Used by chrome decoration to determine context — e.g. showing a
-   * resize handle only when the block sits inside a grid layout.
-   *
-   * @param {string} blockKey
-   * @returns {Object|null}
-   */
-  findEntryParent(blockKey) {
-    const located = this.findEntryAndOutletSync(blockKey);
-    if (!located) {
-      return null;
-    }
-    const layout = this.readResolvedLayout(located.outletName);
-    if (!layout) {
-      return null;
-    }
-    const path = findAncestryPath(layout, blockKey);
-    if (!path || path.length < 2) {
-      return null;
-    }
-    return path[path.length - 2];
-  }
-
-  /**
-   * Returns `true` when `ancestorKey` appears in `descendantKey`'s
-   * ancestry path. Used by chrome decoration to keep the grid overlay
-   * mounted while the user is editing one of the layout's children
-   * (the layout itself stops being `selectedBlockKey` once the user
-   * clicks into a cell, but the overlay should stay visible until they
-   * navigate fully away).
-   *
-   * @param {string} ancestorKey
-   * @param {string} descendantKey
-   * @returns {boolean}
-   */
-  isAncestorOf(ancestorKey, descendantKey) {
-    if (!ancestorKey || !descendantKey || ancestorKey === descendantKey) {
-      return false;
-    }
-    const located = this.findEntryAndOutletSync(descendantKey);
-    if (!located) {
-      return false;
-    }
-    const layout = this.readResolvedLayout(located.outletName);
-    if (!layout) {
-      return false;
-    }
-    const path = findAncestryPath(layout, descendantKey);
-    if (!path) {
-      return false;
-    }
-    return path.some((entry) => entryKey(entry) === ancestorKey);
   }
 
   /**
@@ -4016,7 +3750,7 @@ export default class WireframeService extends Service {
     if (!template) {
       return false;
     }
-    const located = this.findEntryAndOutletSync(gridKey);
+    const located = this.layoutQuery.findEntryAndOutletSync(gridKey);
     if (!located) {
       return false;
     }
@@ -4028,7 +3762,7 @@ export default class WireframeService extends Service {
       return false;
     }
     return this.recordStructural([located.outletName], () => {
-      const layout = this.readResolvedLayout(located.outletName);
+      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
@@ -4062,7 +3796,7 @@ export default class WireframeService extends Service {
     if (!template) {
       return false;
     }
-    const located = this.findEntryAndOutletSync(gridKey);
+    const located = this.layoutQuery.findEntryAndOutletSync(gridKey);
     if (!located) {
       return false;
     }
@@ -4082,7 +3816,7 @@ export default class WireframeService extends Service {
    * @returns {Object|null}
    */
   activeGridTemplate(gridKey) {
-    const located = this.findEntryAndOutletSync(gridKey);
+    const located = this.layoutQuery.findEntryAndOutletSync(gridKey);
     if (!located) {
       return null;
     }
@@ -4101,7 +3835,7 @@ export default class WireframeService extends Service {
    * @returns {{columns: number, rows: number}}
    */
   gridSizeFor(gridKey) {
-    const located = this.findEntryAndOutletSync(gridKey);
+    const located = this.layoutQuery.findEntryAndOutletSync(gridKey);
     const args = located?.entry.args ?? {};
     return gridDimensions(
       {
@@ -4126,7 +3860,7 @@ export default class WireframeService extends Service {
    */
   @action
   applyFreeGrid({ gridKey, columns, rows }) {
-    const located = this.findEntryAndOutletSync(gridKey);
+    const located = this.layoutQuery.findEntryAndOutletSync(gridKey);
     if (!located) {
       return false;
     }
@@ -4136,7 +3870,7 @@ export default class WireframeService extends Service {
       return false;
     }
     return this.recordStructural([located.outletName], () => {
-      const layout = this.readResolvedLayout(located.outletName);
+      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
@@ -4260,7 +3994,7 @@ export default class WireframeService extends Service {
     // duplicate all keep the invariant without per-path handling. A no-op for
     // layouts with no such container (returns the same reference).
     newLayout = normalizeImplicitChildren(newLayout, (ref) =>
-      this.lookupBlockMetadata(ref)
+      this.layoutQuery.lookupBlockMetadata(ref)
     );
     _setLayoutLayer(
       outletName,
@@ -4279,78 +4013,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Synchronous variant of `findEntryAndOutlet` — uses `record.layout`
-   * (already-resolved) instead of awaiting `record.validatedLayout`. Drag
-   * handlers fire after validation has long since completed, so the sync
-   * lookup is safe and avoids forcing every call site to be async.
-   *
-   * @param {string} key
-   * @returns {{entry: Object, outletName: string}|null}
-   */
-  findEntryAndOutletSync(key) {
-    const layoutMap = _getResolvedLayouts();
-    for (const [outletName, record] of layoutMap) {
-      if (!record.layout) {
-        continue;
-      }
-      const found = findEntry(record.layout, key);
-      if (found) {
-        return { entry: found, outletName };
-      }
-    }
-    return null;
-  }
-
-  /** @param {string} key */
-  findEntryByKey(key) {
-    return this.findEntryAndOutletSync(key)?.entry ?? null;
-  }
-
-  /**
-   * Resolves a synthesized part's selection key to the composite that owns it.
-   * A part has no persisted entry — its key encodes the owning composite's
-   * stable key plus a dot-path of part ids (e.g. `heading:42::part::title` or
-   * `button-link:42::part::actions::part::primary`). Returns the composite
-   * entry, its key, the outlet, and the override path, or null when the key
-   * isn't a part key (or the composite can't be found).
-   *
-   * @param {string} key
-   * @returns {{compositeEntry: Object, compositeKey: string, outletName: string, idPath: string[], partPath: string}|null}
-   */
-  resolvePartContext(key) {
-    if (!key || !key.includes(PART_KEY_SEGMENT)) {
-      return null;
-    }
-    const segments = key.split(PART_KEY_SEGMENT);
-    // The head is `${leafBlockName}:${compositeStableKey}`; the block name may
-    // itself contain ":" (plugin/theme blocks), so take the last ":" segment.
-    const head = segments[0];
-    const compositeStableKey = head.slice(head.lastIndexOf(":") + 1);
-    const idPath = segments.slice(1);
-
-    const layoutMap = _getResolvedLayouts();
-    for (const [outletName, record] of layoutMap) {
-      if (!record.layout) {
-        continue;
-      }
-      const compositeEntry = findEntryByStableKey(
-        record.layout,
-        compositeStableKey
-      );
-      if (compositeEntry) {
-        return {
-          compositeEntry,
-          compositeKey: entryKey(compositeEntry),
-          outletName,
-          idPath,
-          partPath: idPath.join("."),
-        };
-      }
-    }
-    return null;
-  }
-
-  /**
    * The lock declaration for the currently-selected part, or null when the
    * selection isn't a part. `true` means the whole part is locked (no in-place
    * arg overrides); a string array lists the specific arg names that can't be
@@ -4359,31 +4021,11 @@ export default class WireframeService extends Service {
    * @returns {true|string[]|null}
    */
   partLockForSelection() {
-    const context = this.resolvePartContext(this.selectedBlockKey);
+    const context = this.layoutQuery.resolvePartContext(this.selectedBlockKey);
     if (!context) {
       return null;
     }
     return resolvePartDef(context.compositeEntry, context.idPath)?.lock ?? null;
-  }
-
-  /**
-   * Whether the block at `blockKey` is a *composed* composite — a block that
-   * declares a `parts` composition and renders it (no `children` of its own).
-   * Drives the "Detach" affordance: only composed composites can be detached.
-   * A synthesized part (no persisted entry) and a detached composite (explicit
-   * `children`) both return false.
-   *
-   * @param {string} blockKey
-   * @returns {boolean}
-   */
-  isComposedComposite(blockKey) {
-    const entry = this.findEntryAndOutletSync(blockKey)?.entry;
-    if (!entry || entry.children != null) {
-      return false;
-    }
-    const name = this.blockNameOf(entry);
-    const metadata = name ? this.#metadataForName(name) : null;
-    return !!metadata?.parts;
   }
 
   /**
@@ -4401,12 +4043,12 @@ export default class WireframeService extends Service {
     if (!key) {
       return false;
     }
-    const located = this.findEntryAndOutletSync(key);
+    const located = this.layoutQuery.findEntryAndOutletSync(key);
     if (!located) {
       return false;
     }
     return this.recordStructural([located.outletName], () => {
-      const layout = this.readResolvedLayout(located.outletName);
+      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
       if (!layout) {
         return false;
       }
@@ -4417,19 +4059,6 @@ export default class WireframeService extends Service {
       this.publishStructuralChange(located.outletName, result.layout);
       return true;
     });
-  }
-
-  metadataFor(entry) {
-    if (!entry?.block) {
-      return null;
-    }
-    if (typeof entry.block === "string") {
-      // String-ref blocks (`api.renderBlocks(name, ...)` paths) expose their
-      // metadata via the registered class — looked up through the blocks
-      // service. Skipping for now keeps the perms check simple.
-      return null;
-    }
-    return getBlockMetadata(entry.block) ?? null;
   }
 
   isInsideAllowedScope(target) {
@@ -4448,32 +4077,6 @@ export default class WireframeService extends Service {
       target.closest(".fk-d-menu-modal") ||
       target.closest(".fk-d-tooltip__content")
     );
-  }
-
-  /**
-   * Walks every registered outlet's resolved layout looking for the entry
-   * whose composite key matches. Returns the live entry plus its containing
-   * outlet name so the caller can both mutate `entry.args` in place AND
-   * tell persistence which outlet just got dirty.
-   *
-   * @param {string} key
-   * @returns {Promise<{entry: Object, outletName: string}|null>}
-   */
-  async findEntryAndOutlet(key) {
-    const layoutMap = _getResolvedLayouts();
-    for (const [outletName, record] of layoutMap) {
-      let layout;
-      try {
-        layout = await record.validatedLayout;
-      } catch {
-        continue;
-      }
-      const found = findEntry(layout, key);
-      if (found) {
-        return { entry: found, outletName };
-      }
-    }
-    return null;
   }
 
   /**
@@ -4779,10 +4382,10 @@ export default class WireframeService extends Service {
       // A LOCKED outlet is owned by a non-overridable programmatic layout: it
       // stays read-only, so never seed a draft for it (the outline still lists
       // it via `editableOutlets`, but the chrome marks it non-editable).
-      if (this.outletState(outletName) === OUTLET_STATE.LOCKED) {
+      if (this.layoutQuery.outletState(outletName) === OUTLET_STATE.LOCKED) {
         continue;
       }
-      const layout = this.readResolvedLayout(outletName);
+      const layout = this.layoutQuery.readResolvedLayout(outletName);
       // Outlets that are mounted but have no registered layout get an
       // empty draft seeded here, so the outline lists them with zero
       // rows and the canvas accepts drops on the outlet boundary
@@ -4800,7 +4403,7 @@ export default class WireframeService extends Service {
       // up during editing.
       const draftLayout = normalizeImplicitChildren(
         wrapAsOutletRoot(layout ? cloneLayoutForDraft(layout) : []),
-        (ref) => this.lookupBlockMetadata(ref)
+        (ref) => this.layoutQuery.lookupBlockMetadata(ref)
       );
       _setLayoutLayer(
         outletName,
@@ -4818,7 +4421,7 @@ export default class WireframeService extends Service {
       materialized++;
       // Record the root layout's key (minted by the publish above) so
       // selection / chrome can recognise it as the outlet.
-      this.#recordOutletRoot(outletName);
+      this.layoutQuery.recordOutletRoot(outletName);
       // Rollback target for `resetAll()`. Cloned from the just-published
       // draft (not the pre-wrap layout) so it carries the normalised shape
       // and the minted root `__stableKey` — that keeps the recorded root key
@@ -4826,7 +4429,9 @@ export default class WireframeService extends Service {
       // in-place arg mutations on the draft never leak into the snapshot.
       this.#originalLayouts.set(
         outletName,
-        cloneLayoutForDraft(this.readResolvedLayout(outletName) ?? [])
+        cloneLayoutForDraft(
+          this.layoutQuery.readResolvedLayout(outletName) ?? []
+        )
       );
     }
     return materialized;
@@ -4937,7 +4542,7 @@ export default class WireframeService extends Service {
   #applyDraftToOutlet(outlet, layout) {
     const draftLayout = normalizeImplicitChildren(
       wrapAsOutletRoot(cloneLayoutForDraft(layout ?? [])),
-      (ref) => this.lookupBlockMetadata(ref)
+      (ref) => this.layoutQuery.lookupBlockMetadata(ref)
     );
     _setLayoutLayer(
       outlet,
@@ -4946,14 +4551,14 @@ export default class WireframeService extends Service {
       getOwner(this),
       { permissive: true }
     );
-    this.#recordOutletRoot(outlet);
+    this.layoutQuery.recordOutletRoot(outlet);
     this.editedOutlets.add(outlet);
     this.#structurallyEditedOutlets.add(outlet);
     // Record what the saved draft holds, so an edit that returns the canvas to the
     // published layout is still recognized as differing from the persisted draft.
     this.#persistedDraftLayouts.set(
       outlet,
-      this.#serializeBaseline(this.readResolvedLayout(outlet))
+      this.#serializeBaseline(this.layoutQuery.readResolvedLayout(outlet))
     );
   }
 
@@ -5040,11 +4645,11 @@ export default class WireframeService extends Service {
     if (!key) {
       return -1;
     }
-    const located = this.findEntryAndOutletSync(key);
+    const located = this.layoutQuery.findEntryAndOutletSync(key);
     if (!located) {
       return -1;
     }
-    const layout = this.readResolvedLayout(located.outletName);
+    const layout = this.layoutQuery.readResolvedLayout(located.outletName);
     if (!layout) {
       return -1;
     }
@@ -5176,14 +4781,14 @@ export default class WireframeService extends Service {
     if (!needsHydration) {
       return data;
     }
-    const located = this.findEntryAndOutletSync(data.key);
+    const located = this.layoutQuery.findEntryAndOutletSync(data.key);
     if (!located) {
       return data;
     }
-    const blockName = data.name ?? this.blockNameOf(located.entry);
+    const blockName = data.name ?? this.layoutQuery.blockNameOf(located.entry);
     const metadata =
       data.metadata ??
-      (blockName ? this.#metadataForName(blockName) : null) ??
+      (blockName ? this.layoutQuery.metadataForName(blockName) : null) ??
       null;
     return {
       ...data,
@@ -5238,15 +4843,15 @@ export default class WireframeService extends Service {
    * @returns {Object|null}
    */
   #resolveParentChildArgsSchema(key) {
-    const parent = this.findEntryParent(key);
+    const parent = this.layoutQuery.findEntryParent(key);
     if (!parent) {
       return null;
     }
-    const parentName = this.blockNameOf(parent);
+    const parentName = this.layoutQuery.blockNameOf(parent);
     if (!parentName) {
       return null;
     }
-    return this.#metadataForName(parentName)?.childArgs ?? null;
+    return this.layoutQuery.metadataForName(parentName)?.childArgs ?? null;
   }
 
   #withInferredMetadata(data) {
@@ -5290,12 +4895,12 @@ export default class WireframeService extends Service {
     // A selected composite part has no persisted entry: its edits are written
     // to the owning composite's per-part override map (a structural commit),
     // not into a tracked entry's args.
-    const partContext = this.resolvePartContext(key);
+    const partContext = this.layoutQuery.resolvePartContext(key);
     if (partContext) {
       return this.#flushPendingPartArgs(partContext, pending);
     }
 
-    const located = await this.findEntryAndOutlet(key);
+    const located = await this.layoutQuery.findEntryAndOutlet(key);
     if (!located) {
       return false;
     }
@@ -5337,7 +4942,7 @@ export default class WireframeService extends Service {
    */
   #flushPendingPartArgs({ compositeKey, outletName, partPath }, pending) {
     return this.recordStructural([outletName], () => {
-      const layout = this.readResolvedLayout(outletName);
+      const layout = this.layoutQuery.readResolvedLayout(outletName);
       if (!layout) {
         return false;
       }
@@ -5375,7 +4980,7 @@ export default class WireframeService extends Service {
    * @returns {Array<Object>|null}
    */
   #snapshotLayout(outletName) {
-    const layout = this.readResolvedLayout(outletName);
+    const layout = this.layoutQuery.readResolvedLayout(outletName);
     return layout ? cloneLayoutForDraft(layout) : null;
   }
 
@@ -5394,7 +4999,7 @@ export default class WireframeService extends Service {
       return;
     }
     const original = this.#originalLayouts.get(outletName);
-    const current = this.readResolvedLayout(outletName);
+    const current = this.layoutQuery.readResolvedLayout(outletName);
     const isPristine =
       JSON.stringify(serializeLayoutForSave(current ?? [])) ===
       JSON.stringify(serializeLayoutForSave(original ?? []));
@@ -5404,7 +5009,7 @@ export default class WireframeService extends Service {
     this.#structurallyEditedOutlets.delete(outletName);
     this.editedOutlets.delete(outletName);
     for (const entry of [...this.initialSnapshots.keys()]) {
-      if (this.#outletForEntry(entry) === outletName) {
+      if (this.layoutQuery.outletForEntry(entry) === outletName) {
         this.initialSnapshots.delete(entry);
       }
     }
@@ -5422,7 +5027,7 @@ export default class WireframeService extends Service {
     const referencesOnly = (batch) =>
       batch.kind === "structural"
         ? batch.changes.every((change) => change.outletName === outletName)
-        : this.#outletForEntry(batch.entry) === outletName;
+        : this.layoutQuery.outletForEntry(batch.entry) === outletName;
     for (const stack of [this.undoStack, this.redoStack]) {
       for (let i = stack.length - 1; i >= 0; i--) {
         if (referencesOnly(stack[i])) {
@@ -5470,74 +5075,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Best-effort lookup of the outlet name that owns `entry`. Walks the
-   * currently-resolved layout map; returns null when the entry is no longer
-   * present (e.g. it's been moved out of every published layer). Used by
-   * `resetAll` to decide which arg-snapshots to drop after a structural
-   * rollback.
-   *
-   * @param {Object} entry
-   * @returns {string|null}
-   */
-  #outletForEntry(entry) {
-    const layoutMap = _getResolvedLayouts();
-    for (const [outletName, record] of layoutMap) {
-      if (record.layout && this.#layoutContainsEntry(record.layout, entry)) {
-        return outletName;
-      }
-    }
-    return null;
-  }
-
-  #layoutContainsEntry(layout, target) {
-    for (const entry of layout) {
-      if (entry === target) {
-        return true;
-      }
-      if (
-        entry.children?.length &&
-        this.#layoutContainsEntry(entry.children, target)
-      ) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Resolves the metadata for a registered block by name. Returns null
-   * for unknown names or when the registry entry is a factory the block
-   * service hasn't materialised yet — same permissive contract as
-   * `metadataFor` for moves.
-   *
-   * @param {string} blockName
-   * @returns {Object|null}
-   */
-  #metadataForName(blockName) {
-    const klass = this.blocks.getBlock(blockName);
-    if (!klass || typeof klass !== "function") {
-      return null;
-    }
-    return getBlockMetadata(klass);
-  }
-
-  /**
-   * Resolves a block reference (either a registry name string or
-   * the decorated class itself, as it appears in layout entries)
-   * to its canonical block name string. Returns `null` for
-   * unresolvable references.
-   *
-   * @param {string|Function} blockRef
-   * @returns {string|null}
-   */
-  #blockNameFor(blockRef) {
-    if (typeof blockRef === "string") {
-      return blockRef;
-    }
-    return getBlockMetadata(blockRef)?.blockName ?? null;
-  }
-
-  /**
    * Looks up the composite key of a freshly inserted entry (after
    * `publishStructuralChange` has assigned its `__stableKey`) and routes
    * through `restoreSelection` so the editor's selection state — and the
@@ -5556,23 +5093,6 @@ export default class WireframeService extends Service {
     // Flash the freshly inserted block so the eye lands on it, the same way
     // outline selection does.
     this.flashBlock(key);
-  }
-
-  /**
-   * Whether `entry` is a grid-cell occupant whose direct parent is the
-   * layout identified by `gridKey`. Used by the grid manipulator to tell a
-   * same-grid source (re-placed in situ) from one arriving from elsewhere.
-   *
-   * @param {Object} entry
-   * @param {string} gridKey
-   * @returns {boolean}
-   */
-  isCellInGrid(entry, gridKey) {
-    if (!this.isGridCellEntry(entry)) {
-      return false;
-    }
-    const parent = this.findEntryParent(entryKey(entry));
-    return parent && entryKey(parent) === gridKey;
   }
 
   /**
@@ -5605,7 +5125,7 @@ export default class WireframeService extends Service {
     position,
     { syncGridOrder = true, placeEntering = true } = {}
   ) {
-    const layout = this.readResolvedLayout(outletName);
+    const layout = this.layoutQuery.readResolvedLayout(outletName);
     if (!layout) {
       return false;
     }
@@ -5736,7 +5256,7 @@ export default class WireframeService extends Service {
       targetKey,
       position,
     });
-    return this.isGridContainer(parent) ? entryKey(parent) : null;
+    return this.layoutQuery.isGridContainer(parent) ? entryKey(parent) : null;
   }
 
   /**
@@ -5802,7 +5322,7 @@ export default class WireframeService extends Service {
     // path is reached when a grid cell is dragged into a DIFFERENT grid in
     // the same outlet (e.g. via a cross-grid drop).
     if (sourceOutletName === targetOutletName) {
-      const layout = this.readResolvedLayout(sourceOutletName);
+      const layout = this.layoutQuery.readResolvedLayout(sourceOutletName);
       if (!layout) {
         return false;
       }
@@ -5844,7 +5364,7 @@ export default class WireframeService extends Service {
       return true;
     }
 
-    const sourceLayout = this.readResolvedLayout(sourceOutletName);
+    const sourceLayout = this.layoutQuery.readResolvedLayout(sourceOutletName);
     // Mint a draft for the target outlet if it doesn't have one yet —
     // the user may be dragging an existing block into a previously
     // empty outlet via the empty-outlet drop zone.
@@ -5931,7 +5451,7 @@ export default class WireframeService extends Service {
       targetKey,
       position,
     });
-    const enteringGrid = this.isGridContainer(parent);
+    const enteringGrid = this.layoutQuery.isGridContainer(parent);
 
     if (enteringGrid) {
       // Overwrite (don't merge) the grid bag so a carried span is dropped.
@@ -6000,34 +5520,5 @@ export default class WireframeService extends Service {
       return null;
     }
     return path[path.length - 2];
-  }
-
-  /**
-   * Whether the entry is a `wf:layout` in per-cell `grid` mode. Accepts
-   * the legacy `"free-grid"` mode value as an alias so existing saved
-   * layouts (pre-rename) keep working.
-   *
-   * @param {Object|null} entry
-   * @returns {boolean}
-   */
-  isGridContainer(entry) {
-    if (this.blockNameOf(entry) !== "layout") {
-      return false;
-    }
-    const mode = entry?.args?.mode;
-    return mode === "grid" || mode === "free-grid";
-  }
-
-  /**
-   * Whether the entry is a grid-cell occupant — a direct child of a
-   * `wf:layout` in grid mode, carrying its own `containerArgs.grid`
-   * placement. Used by the editor to decide whether a given entry can
-   * be placement-mutated (set its column/row, swap with a sibling, etc.).
-   *
-   * @param {Object|null} entry
-   * @returns {boolean}
-   */
-  isGridCellEntry(entry) {
-    return entry?.containerArgs?.grid != null;
   }
 }

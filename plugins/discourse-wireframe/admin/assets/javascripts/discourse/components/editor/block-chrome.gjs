@@ -42,6 +42,7 @@ import {
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import { imageArgEntries } from "../../lib/empty-image-upload";
 import { kindForArg } from "../../lib/kind-for-arg";
+import { OUTLET_STATE } from "../../lib/layout-query";
 import { entryKey } from "../../lib/mutate-layout";
 import { buildBlockPalette } from "../../lib/palette";
 import {
@@ -54,7 +55,6 @@ import containerDropTarget, {
   createContainerDropResolver,
 } from "../../modifiers/container-drop-target";
 import proxyDragSources from "../../modifiers/proxy-drag-sources";
-import { OUTLET_STATE } from "../../services/wireframe";
 import LinkEditPopover from "../link-edit-popover";
 import BlockToolbar from "./block-toolbar";
 import EditorEmptyDropPlaceholder from "./editor-empty-drop-placeholder";
@@ -157,7 +157,7 @@ export default class BlockChrome extends Component {
   getResizeOccupied = () => {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const grid = this.wireframe.findEntryParent(this.args.blockKey);
+    const grid = this.wireframe.layoutQuery.findEntryParent(this.args.blockKey);
     if (!grid) {
       return new Set();
     }
@@ -300,7 +300,7 @@ export default class BlockChrome extends Component {
   get gridPlacement() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const entry = this.wireframe.findEntryAndOutletSync(
+    const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
     return entry?.containerArgs?.grid ?? null;
@@ -351,7 +351,7 @@ export default class BlockChrome extends Component {
     }
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const entry = this.wireframe.findEntryAndOutletSync(
+    const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
     const mode = entry?.args?.mode ?? this.args.blockArgs?.mode ?? "stack";
@@ -403,7 +403,7 @@ export default class BlockChrome extends Component {
     }
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const entry = this.wireframe.findEntryAndOutletSync(
+    const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
     const mode = entry?.args?.mode ?? this.args.blockArgs?.mode ?? "stack";
@@ -459,7 +459,7 @@ export default class BlockChrome extends Component {
   get slotGridColumns() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const grid = this.wireframe.findEntryParent(this.args.blockKey);
+    const grid = this.wireframe.layoutQuery.findEntryParent(this.args.blockKey);
     return gridDimensions(
       {
         columns: grid?.args?.columns ?? DEFAULT_GRID_COLUMNS,
@@ -473,7 +473,7 @@ export default class BlockChrome extends Component {
   get slotGridRows() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const grid = this.wireframe.findEntryParent(this.args.blockKey);
+    const grid = this.wireframe.layoutQuery.findEntryParent(this.args.blockKey);
     return gridDimensions(
       {
         columns: grid?.args?.columns ?? DEFAULT_GRID_COLUMNS,
@@ -514,13 +514,13 @@ export default class BlockChrome extends Component {
       return false;
     }
     const myPlacement = parsePlacement(
-      this.wireframe.findEntryAndOutletSync(this.args.blockKey)?.entry
-        ?.containerArgs
+      this.wireframe.layoutQuery.findEntryAndOutletSync(this.args.blockKey)
+        ?.entry?.containerArgs
     );
     if (myPlacement.column.start == null || myPlacement.row.start == null) {
       return false;
     }
-    const grid = this.wireframe.findEntryParent(this.args.blockKey);
+    const grid = this.wireframe.layoutQuery.findEntryParent(this.args.blockKey);
     if (!grid?.children?.length) {
       return false;
     }
@@ -552,15 +552,15 @@ export default class BlockChrome extends Component {
     if (!this.isGridCell) {
       return false;
     }
-    const grid = this.wireframe.findEntryParent(this.args.blockKey);
+    const grid = this.wireframe.layoutQuery.findEntryParent(this.args.blockKey);
     if (!grid) {
       return false;
     }
     const maxColumns = Number(grid.args?.columns ?? DEFAULT_GRID_COLUMNS);
     const maxRows = Number(grid.args?.rows ?? DEFAULT_GRID_ROWS);
     const placement = parsePlacement(
-      this.wireframe.findEntryAndOutletSync(this.args.blockKey)?.entry
-        ?.containerArgs
+      this.wireframe.layoutQuery.findEntryAndOutletSync(this.args.blockKey)
+        ?.entry?.containerArgs
     );
     const colExceeds =
       placement.column.start != null &&
@@ -629,11 +629,13 @@ export default class BlockChrome extends Component {
   get parentLayoutAxis() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const parent = this.wireframe.findEntryParent(this.args.blockKey);
+    const parent = this.wireframe.layoutQuery.findEntryParent(
+      this.args.blockKey
+    );
     if (!parent) {
       return null;
     }
-    if (this.wireframe.blockNameOf(parent) !== "layout") {
+    if (this.wireframe.layoutQuery.blockNameOf(parent) !== "layout") {
       return null;
     }
     const mode = parent.args?.mode ?? "stack";
@@ -678,7 +680,7 @@ export default class BlockChrome extends Component {
     // after every layout mutation (insert / remove / move).
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const entry = this.wireframe.findEntryAndOutletSync(
+    const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
     // A composite renders a code-defined composition when it carries no
@@ -708,7 +710,7 @@ export default class BlockChrome extends Component {
   get imageArgEntries() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const entry = this.wireframe.findEntryAndOutletSync(
+    const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
     return imageArgEntries(this.metadata?.args, entry?.args).map((e) => ({
@@ -842,7 +844,7 @@ export default class BlockChrome extends Component {
    * @returns {boolean}
    */
   get isOutletRoot() {
-    return this.wireframe.isOutletRoot(this.args.blockKey);
+    return this.wireframe.layoutQuery.isOutletRoot(this.args.blockKey);
   }
 
   /**
@@ -890,14 +892,20 @@ export default class BlockChrome extends Component {
   get #parentContext() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const parent = this.wireframe.findEntryParent(this.args.blockKey);
+    const parent = this.wireframe.layoutQuery.findEntryParent(
+      this.args.blockKey
+    );
     if (!parent) {
       return null;
     }
     const index = (parent.children ?? []).findIndex(
       (child) => entryKey(child) === this.args.blockKey
     );
-    return { parent, parentName: this.wireframe.blockNameOf(parent), index };
+    return {
+      parent,
+      parentName: this.wireframe.layoutQuery.blockNameOf(parent),
+      index,
+    };
   }
 
   /**
@@ -934,7 +942,9 @@ export default class BlockChrome extends Component {
     if (!namespace) {
       return null;
     }
-    const located = this.wireframe.findEntryAndOutletSync(this.args.blockKey);
+    const located = this.wireframe.layoutQuery.findEntryAndOutletSync(
+      this.args.blockKey
+    );
     const label = richInlineToPlainText(
       located?.entry?.containerArgs?.[namespace]?.label
     ).trim();
@@ -985,7 +995,7 @@ export default class BlockChrome extends Component {
    * @returns {string}
    */
   get outletState() {
-    return this.wireframe.outletState(this.args.outletName);
+    return this.wireframe.layoutQuery.outletState(this.args.outletName);
   }
 
   /**
@@ -1020,7 +1030,7 @@ export default class BlockChrome extends Component {
     // layout mutation (the first dropped block flips it non-empty).
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    const entry = this.wireframe.findEntryAndOutletSync(
+    const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
     return !entry?.children?.length;
@@ -1536,7 +1546,7 @@ export default class BlockChrome extends Component {
   @action
   canDropOnThisBlock({ source }) {
     if (source?.type === "wf-palette-block") {
-      return this.wireframe.canInsertBlockAt({
+      return this.wireframe.dropAuthority.canInsertBlockAt({
         blockName: source.data?.blockName,
         targetOutletName: this.args.outletName,
       });
@@ -1544,7 +1554,7 @@ export default class BlockChrome extends Component {
     if (source?.data?.blockKey === this.args.blockKey) {
       return false;
     }
-    return this.wireframe.canDropAt({
+    return this.wireframe.dropAuthority.canDropAt({
       targetOutletName: this.args.outletName,
     });
   }

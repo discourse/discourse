@@ -10,18 +10,31 @@ import PublishReviewDrawer from "discourse/plugins/discourse-wireframe/discourse
  * the publish targets, the active theme target, and a per-outlet change summary.
  */
 class StubWireframeService extends Service {
+  // The query layer moved to a leaf the editor exposes as layoutQuery; returning
   isActive = true;
+
   reviewDrawerOpen = true;
+
   isDirty = true;
+
   hasUnsavedDraftEdits = true;
+
   activeThemeId = 5;
+
   hasValidationWarnings = false;
+
   validationWarnings = [];
+
   #config;
 
   constructor(owner, config) {
     super(owner);
     this.#config = config;
+  }
+
+  // this makes wireframe.layoutQuery.<query> resolve to the stubbed methods below.
+  get layoutQuery() {
+    return this;
   }
 
   get publishTargets() {

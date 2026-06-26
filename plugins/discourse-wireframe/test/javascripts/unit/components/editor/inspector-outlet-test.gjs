@@ -12,11 +12,17 @@ import InspectorPanel from "discourse/plugins/discourse-wireframe/discourse/comp
  * test can flip a selection into "this is the outlet" mode.
  */
 class StubWireframeService extends Service {
+  // The query layer moved to a leaf the editor exposes as layoutQuery; returning
   #blockData;
 
   constructor(owner, blockData) {
     super(owner);
     this.#blockData = blockData;
+  }
+
+  // this makes wireframe.layoutQuery.<query> resolve to the stubbed methods below.
+  get layoutQuery() {
+    return this;
   }
 
   get selectedBlockData() {

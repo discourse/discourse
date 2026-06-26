@@ -126,7 +126,7 @@ export default class InspectorImageField extends Component {
     if (!key) {
       return null;
     }
-    const entry = this.wireframe.findEntryAndOutletSync(key)?.entry;
+    const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(key)?.entry;
     return entry?.args?.[this.argName] ?? null;
   }
 

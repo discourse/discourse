@@ -70,7 +70,7 @@ export default class InspectorRepeatableField extends Component {
     if (!key) {
       return [];
     }
-    const entry = this.wireframe.findEntryAndOutletSync(key)?.entry;
+    const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(key)?.entry;
     const value = entry?.args?.[this.argName];
     return Array.isArray(value) ? value : [];
   }

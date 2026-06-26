@@ -17,7 +17,7 @@ const DRAFTS_URL = "/admin/plugins/wireframe/block-layout-drafts.json";
 const PUBLISH_URL = "/admin/customize/block-layouts.json";
 
 function outletChildren(editor) {
-  return editor.readResolvedLayout(OUTLET)?.[0]?.children ?? [];
+  return editor.layoutQuery.readResolvedLayout(OUTLET)?.[0]?.children ?? [];
 }
 
 module(

@@ -1,19 +1,6 @@
 import { getOwner } from "@ember/owner";
-import Service from "@ember/service";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-
-// Stub the wireframe service so the coordinator can be exercised in isolation
-// (the real wireframe service boots the whole editor). `runDropDispatch` is the
-// only method the coordinator calls on it.
-class StubWireframe extends Service {
-  dispatched = [];
-
-  runDropDispatch(payload) {
-    this.dispatched.push(payload);
-    return true;
-  }
-}
 
 module(
   "Unit | Discourse Wireframe | service:wireframe-drag-overlay",
@@ -21,10 +8,14 @@ module(
     setupTest(hooks);
 
     hooks.beforeEach(function () {
-      this.owner.unregister("service:wireframe");
-      this.owner.register("service:wireframe", StubWireframe);
       this.overlay = getOwner(this).lookup("service:wireframe-drag-overlay");
-      this.wireframe = getOwner(this).lookup("service:wireframe");
+      // The kernel normally registers this in `enter()`; in isolation we
+      // register a stub dispatcher that records what the overlay dispatches.
+      this.dispatched = [];
+      this.overlay.registerDispatcher((payload) => {
+        this.dispatched.push(payload);
+        return true;
+      });
     });
 
     test("claimSlotInsert exposes the slot preview as a frozen projection", function (assert) {
@@ -186,7 +177,7 @@ module(
       });
 
       assert.true(this.overlay.dispatch(), "returns true when a payload ran");
-      assert.deepEqual(this.wireframe.dispatched, [
+      assert.deepEqual(this.dispatched, [
         { action: "insertBlock", args: { x: 1 } },
       ]);
       assert.strictEqual(
@@ -203,7 +194,7 @@ module(
     test("dispatch no-ops for a blank claim", function (assert) {
       this.overlay.claimSlotInsert(null);
       assert.false(this.overlay.dispatch());
-      assert.strictEqual(this.wireframe.dispatched.length, 0);
+      assert.strictEqual(this.dispatched.length, 0);
     });
 
     test("clear resets the active overlay and the sticky dispatch", function (assert) {

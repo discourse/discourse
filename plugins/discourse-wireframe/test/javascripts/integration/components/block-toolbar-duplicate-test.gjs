@@ -11,7 +11,7 @@ import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-draf
 const OUTLET = "homepage-blocks";
 
 function outletChildren(editor) {
-  return editor.readResolvedLayout(OUTLET)?.[0]?.children ?? [];
+  return editor.layoutQuery.readResolvedLayout(OUTLET)?.[0]?.children ?? [];
 }
 
 module(

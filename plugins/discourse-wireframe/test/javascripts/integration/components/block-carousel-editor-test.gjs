@@ -18,7 +18,7 @@ const OUTLET = "homepage-blocks";
 // After `enter()` the outlet is wrapped in a single root `layout`; its first
 // child is the carousel under test.
 function carouselEntry(editor) {
-  return editor.readResolvedLayout(OUTLET)?.[0]?.children?.[0];
+  return editor.layoutQuery.readResolvedLayout(OUTLET)?.[0]?.children?.[0];
 }
 
 function slideLayout(text) {

@@ -17,7 +17,7 @@ import {
   registerBlock,
   withTestBlockRegistration,
 } from "discourse/tests/helpers/block-testing";
-import { OUTLET_STATE } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe";
+import { OUTLET_STATE } from "discourse/plugins/discourse-wireframe/discourse/lib/layout-query";
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
 
 @block("wf:state-test-tile", { args: { title: { type: "string" } } })
@@ -51,10 +51,10 @@ module(
       await _renderBlocks("homepage-blocks", tile("Seed"), getOwner(this));
       await settled();
       assert.strictEqual(
-        this.editor.outletState("homepage-blocks"),
+        this.editor.layoutQuery.outletState("homepage-blocks"),
         OUTLET_STATE.DEFAULT
       );
-      assert.true(this.editor.isOutletEditable("homepage-blocks"));
+      assert.true(this.editor.layoutQuery.isOutletEditable("homepage-blocks"));
     });
 
     test("a non-overridable code layout resolves to LOCKED", async function (assert) {
@@ -63,10 +63,10 @@ module(
       });
       await settled();
       assert.strictEqual(
-        this.editor.outletState("homepage-blocks"),
+        this.editor.layoutQuery.outletState("homepage-blocks"),
         OUTLET_STATE.LOCKED
       );
-      assert.false(this.editor.isOutletEditable("homepage-blocks"));
+      assert.false(this.editor.layoutQuery.isOutletEditable("homepage-blocks"));
     });
 
     test("a theme field resolves to PUBLISHED with the owning theme", async function (assert) {
@@ -83,7 +83,7 @@ module(
       await settled();
 
       assert.strictEqual(
-        this.editor.outletState("homepage-blocks"),
+        this.editor.layoutQuery.outletState("homepage-blocks"),
         OUTLET_STATE.PUBLISHED
       );
       const owner = this.editor.outletOwner("homepage-blocks");
@@ -112,7 +112,7 @@ module(
       // The draft wins live resolution, but the state reflects the published
       // source underneath it.
       assert.strictEqual(
-        this.editor.outletState("homepage-blocks"),
+        this.editor.layoutQuery.outletState("homepage-blocks"),
         OUTLET_STATE.PUBLISHED
       );
     });
@@ -179,7 +179,7 @@ module(
       await _renderBlocks("homepage-blocks", tile("Seed"), getOwner(this));
       await settled();
       assert.strictEqual(
-        this.editor.outletState("homepage-blocks"),
+        this.editor.layoutQuery.outletState("homepage-blocks"),
         OUTLET_STATE.DEFAULT
       );
 

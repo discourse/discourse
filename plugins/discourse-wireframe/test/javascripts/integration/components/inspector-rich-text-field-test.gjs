@@ -23,10 +23,19 @@ function makeCustom(value, name = "text") {
 // editor seeds from. `selectedBlockData` is null by default, so the editor
 // falls back to the FormKit draft (`@custom.value`).
 class StubWireframeService extends Service {
+  // The query layer moved to a leaf the editor exposes as layoutQuery; returning
   selectedBlockKey = null;
+
   selectedBlockData = null;
+
   structuralVersion = 0;
+
   inlineEdit = { isActive: false, argName: null, blockKey: null };
+
+  // this makes wireframe.layoutQuery.<query> resolve to the stubbed methods below.
+  get layoutQuery() {
+    return this;
+  }
 }
 
 module("Integration | Wireframe | InspectorRichTextField", function (hooks) {

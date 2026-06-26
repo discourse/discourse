@@ -6,7 +6,9 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import InspectorForm from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector-form";
 
 class StubWireframeService extends Service {
+  // The query layer moved to a leaf the editor exposes as layoutQuery; returning
   #blockData;
+
   #nonFieldErrors;
 
   constructor(owner, blockData, { nonFieldErrors = [] } = {}) {
@@ -14,6 +16,11 @@ class StubWireframeService extends Service {
     this.#blockData = blockData;
     this.#nonFieldErrors = nonFieldErrors;
     this.updateSelectedArgCalls = [];
+  }
+
+  // this makes wireframe.layoutQuery.<query> resolve to the stubbed methods below.
+  get layoutQuery() {
+    return this;
   }
 
   get selectedBlockData() {

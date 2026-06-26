@@ -306,7 +306,8 @@ export default class GridOverlay extends Component {
     // changes).
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframe.structuralVersion;
-    return this.wireframe.findEntryAndOutletSync(this.args.gridKey)?.entry;
+    return this.wireframe.layoutQuery.findEntryAndOutletSync(this.args.gridKey)
+      ?.entry;
   }
 
   /**
@@ -1029,18 +1030,22 @@ export default class GridOverlay extends Component {
   #sourceDisplayName(source) {
     if (source.type === "wf-palette-block") {
       return (
-        this.wireframe.lookupBlockDisplayName(source.data.blockName) ||
+        this.wireframe.layoutQuery.lookupBlockDisplayName(
+          source.data.blockName
+        ) ||
         source.data.blockName ||
         "block"
       );
     }
     if (source.type === "wf-block") {
-      const located = this.wireframe.findEntryAndOutletSync(
+      const located = this.wireframe.layoutQuery.findEntryAndOutletSync(
         source.data.blockKey
       );
       if (located?.entry) {
         return (
-          this.wireframe.lookupBlockDisplayName(located.entry.block) || "block"
+          this.wireframe.layoutQuery.lookupBlockDisplayName(
+            located.entry.block
+          ) || "block"
         );
       }
     }
@@ -1403,7 +1408,7 @@ export default class GridOverlay extends Component {
     if (sourceKey === targetKey) {
       return true;
     }
-    return this.wireframe.isAncestorOf(sourceKey, targetKey);
+    return this.wireframe.layoutQuery.isAncestorOf(sourceKey, targetKey);
   }
 
   /**
@@ -1527,8 +1532,11 @@ export default class GridOverlay extends Component {
     }
     return {
       before:
-        this.wireframe.lookupBlockDisplayName(beforeSlot.block) || "block",
-      after: this.wireframe.lookupBlockDisplayName(afterSlot.block) || "block",
+        this.wireframe.layoutQuery.lookupBlockDisplayName(beforeSlot.block) ||
+        "block",
+      after:
+        this.wireframe.layoutQuery.lookupBlockDisplayName(afterSlot.block) ||
+        "block",
     };
   }
 

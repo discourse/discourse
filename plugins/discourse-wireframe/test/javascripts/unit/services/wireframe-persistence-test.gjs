@@ -206,7 +206,7 @@ module(
 
     test("publish refuses to POST and keeps the draft when the resolved read fails", async function (assert) {
       await enterEdited(this);
-      this.editor.readResolvedLayout = () => null;
+      this.editor.layoutQuery.readResolvedLayout = () => null;
 
       pretender.post("/admin/customize/block-layouts.json", () => {
         assert.step("posted");

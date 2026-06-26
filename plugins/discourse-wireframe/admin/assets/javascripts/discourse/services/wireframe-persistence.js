@@ -235,7 +235,8 @@ export default class WireframePersistenceService extends Service {
   // all" (which resolves to a real empty array) — throw so a caller never
   // persists/exports nothing over the server's copy.
   #serializeLayoutJson(outlet) {
-    const resolvedLayout = this.wireframe.readResolvedLayout(outlet);
+    const resolvedLayout =
+      this.wireframe.layoutQuery.readResolvedLayout(outlet);
     const layout = serializeLayoutForSave(resolvedLayout ?? []);
     if (layout.length === 0 && resolvedLayout == null) {
       throw new Error(
@@ -260,7 +261,7 @@ export default class WireframePersistenceService extends Service {
   // tab via MessageBus). Cloned + permissive so a partial "save anyway" state
   // round-trips without re-throwing on exit.
   #publishToThemeLayer(outlet, themeId) {
-    const layout = this.wireframe.readResolvedLayout(outlet);
+    const layout = this.wireframe.layoutQuery.readResolvedLayout(outlet);
     if (!layout || !themeId) {
       return;
     }
