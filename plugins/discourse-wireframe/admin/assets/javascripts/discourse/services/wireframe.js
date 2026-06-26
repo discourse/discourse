@@ -7,7 +7,7 @@ import {
   trackedMap,
   trackedSet,
 } from "@ember/reactive/collections";
-import { cancel, schedule } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import {
   DEFAULT_GRID_COLUMNS,
@@ -28,11 +28,9 @@ import {
 } from "discourse/blocks/block-outlet";
 import { VALID_BLOCK_ID_PATTERN } from "discourse/lib/blocks/-internals/patterns";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseLater from "discourse/lib/later";
 import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
 import PreloadStore from "discourse/lib/preload-store";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import { prefersReducedMotion } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import { imageArgEntries } from "discourse/plugins/discourse-wireframe/discourse/lib/empty-image-upload";
 // `grid-math` holds the editor-only grid geometry. Absolute addon path
@@ -48,6 +46,7 @@ import {
 import ConflictModal from "../components/editor/conflict-modal";
 import StaleDraftModal from "../components/editor/stale-draft-modal";
 import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-renderer";
+import BlockReveal from "../lib/block-reveal";
 import DragSessionState from "../lib/drag-session-state";
 import DropAuthority from "../lib/drop-authority";
 import GridManipulator from "../lib/grid-manipulator";
@@ -88,10 +87,6 @@ import { inferSchemaFromValues } from "../lib/schema-to-fields";
 
 const FLUSH_DELAY_MS = 200;
 
-// Duration of the just-selected flash; mirror the CSS animation length in
-// `wireframe-chrome.scss` (`.wireframe-block-chrome.--just-selected`).
-const FLASH_DURATION_MS = 1100;
-
 /**
  * Editor service. Holds the editor's session state and mediates the
  * in-memory mutation pipeline.
@@ -130,6 +125,7 @@ export default class WireframeService extends Service {
   @service wireframeDrafts;
   @service wireframeDragOverlay;
   @service wireframePersistence;
+  @service wireframeSimulation;
 
   @tracked isActive = false;
   @tracked selectedBlockKey = null;
@@ -173,19 +169,6 @@ export default class WireframeService extends Service {
    * @type {number}
    */
   @tracked structuralVersion = 0;
-
-  /**
-   * Simulation slot. When non-null, threads through the condition
-   * evaluator's context (via the `EVAL_CONTEXT` debug hook) so
-   * condition-gated blocks render as if the simulated user / viewport
-   * were active. Block bodies themselves still render with the real
-   * user's data — simulation is condition-only.
-   *
-   * Shape: `{ user, viewport }` — each is null for "use the real value".
-   *
-   * @type {{user: Object|null, viewport: {viewport: Object, touch: boolean}|null}|null}
-   */
-  @tracked simulation = null;
 
   /**
    * Whether the inspector's conditions surface is detached from the
@@ -364,10 +347,8 @@ export default class WireframeService extends Service {
    * @type {Array<Object>}
    */
   undoStack = trackedArray();
-
   /** @type {Array<Object>} */
   redoStack = trackedArray();
-
   /**
    * The full set of selected block keys. `selectedBlockKey` is the PRIMARY
    * (anchor) of this set — the block whose form the inspector shows when
@@ -377,7 +358,6 @@ export default class WireframeService extends Service {
    * every member. A `trackedSet`, so `.has` / `.size` reads auto-track.
    */
   selectedKeys = trackedSet();
-
   /**
    * For each entry we've ever mutated, the `entry.args` snapshot taken
    * before the first mutation. Reset / exit walk this map and write those
@@ -390,7 +370,6 @@ export default class WireframeService extends Service {
    * @type {Map<Object, Map<string, *>>}
    */
   initialSnapshots = trackedMap();
-
   /**
    * Outlets where this editor session has materialised a `session-draft`
    * layer. Tracked here (rather than re-derived from the block-outlet
@@ -400,7 +379,6 @@ export default class WireframeService extends Service {
    * @type {Set<string>}
    */
   draftedOutlets = new Set();
-
   /**
    * Names of every outlet whose draft layer has at least one in-memory
    * mutation. Persistence iterates this set on Save to know which outlet
@@ -410,6 +388,21 @@ export default class WireframeService extends Service {
    * @type {Set<string>}
    */
   editedOutlets = new Set();
+  /**
+   * Reveal-into-view and the one-shot "just selected" flash. A dependency-free
+   * leaf the kernel configures downward with the draft-aware layout readers; it
+   * never reaches back here. Side-effecting (DOM + timers), so it stays private
+   * and the kernel drives it (the externally-called `notifyChromeInserted` /
+   * `flashBlock` are thin delegators below). See `../lib/block-reveal.js`.
+   *
+   * @type {BlockReveal}
+   */
+  #blockReveal = new BlockReveal({
+    findEntryAndOutletSync: (key) =>
+      this.layoutQuery.findEntryAndOutletSync(key),
+    readResolvedLayout: (outletName) =>
+      this.layoutQuery.readResolvedLayout(outletName),
+  });
 
   /**
    * Files dropped onto an empty slot, staged by `"blockKey\0argName"` until
@@ -434,11 +427,6 @@ export default class WireframeService extends Service {
    * @type {Map<string, *>}
    */
   #pendingArgs = new Map();
-
-  // Tracks the in-flight just-selected flash so a new flash can cancel the
-  // previous one's pending class removal (see `flashBlock`).
-  #flashTimer = null;
-  #flashedEl = null;
 
   /**
    * Pristine clones of every drafted outlet's layout, captured at `enter()`
@@ -558,11 +546,6 @@ export default class WireframeService extends Service {
     this.selectBlock(null);
   };
 
-  /** @type {string|null} A selected block awaiting its element to mount. */
-  #pendingRevealKey = null;
-
-  /** @type {string|null} A block awaiting its element to mount, to flash it. */
-  #pendingFlashKey = null;
   /**
    * Clipboard slot for the Cmd/Ctrl-C/X/V cycle and the future "duplicate"
    * action. `mode: "copy"` lets paste re-clone the entry on every Cmd-V,
@@ -580,12 +563,18 @@ export default class WireframeService extends Service {
     this.#loadConditionsPanelState();
     this.#installImagePasteListener();
     this.#installFileDragGuard();
+    // Let a simulation change bump our page-wide re-render dep without the
+    // simulation service ever reaching back into this kernel (one-way wiring).
+    this.wireframeSimulation.registerOnChange(() => {
+      this.structuralVersion = this.structuralVersion + 1;
+    });
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
     this.#uninstallImagePasteListener();
     this.#uninstallFileDragGuard();
+    this.#blockReveal.reset();
   }
 
   /**
@@ -1062,16 +1051,6 @@ export default class WireframeService extends Service {
     return this._clipboard != null;
   }
 
-  /**
-   * Whether simulation mode is currently active. True when either the
-   * persona or the viewport slot has been deliberately set (a slot
-   * holding `null` means "explicitly anonymous / explicitly real"
-   * rather than "unset"; absence of the key means "unset").
-   */
-  get isSimulating() {
-    return this.simulation != null;
-  }
-
   /** Opens the publish review surface. */
   @action
   openReviewDrawer() {
@@ -1270,6 +1249,7 @@ export default class WireframeService extends Service {
     this.selectedBlockData = null;
     this.dragSession.clear();
     this.wireframeDragOverlay.clear();
+    this.#blockReveal.reset();
     this.#pendingDropFiles.clear();
     this.undoStack.length = 0;
     // Revert to the minimal rich-text renderer so admin pages without
@@ -1763,47 +1743,6 @@ export default class WireframeService extends Service {
     });
   }
 
-  /**
-   * Sets the persona portion of the simulation.
-   *
-   * Three states:
-   *   - `undefined` → clears the persona slot (real `currentUser` is used).
-   *   - `null` → simulates an anonymous viewer.
-   *   - `{...}` → simulates that specific user object.
-   *
-   * @param {Object|null|undefined} user
-   */
-  @action
-  setSimulatedUser(user) {
-    this.simulation = this.#patchSimulation(this.simulation, "user", user);
-    this.#bumpStructuralVersion();
-  }
-
-  /**
-   * Sets the viewport portion of the simulation. Pass `undefined` to
-   * clear it and fall back to the real `capabilities` service.
-   *
-   * @param {{viewport: Object, touch: boolean}|null|undefined} viewport
-   */
-  @action
-  setSimulatedViewport(viewport) {
-    this.simulation = this.#patchSimulation(
-      this.simulation,
-      "viewport",
-      viewport
-    );
-    this.#bumpStructuralVersion();
-  }
-
-  /**
-   * Clears both the persona and viewport slots, exiting simulation mode.
-   */
-  @action
-  clearSimulation() {
-    this.simulation = null;
-    this.#bumpStructuralVersion();
-  }
-
   @action
   toggle() {
     if (this.isActive) {
@@ -1930,264 +1869,32 @@ export default class WireframeService extends Service {
     // Bring the freshly selected block into view (outline selection,
     // insert auto-select, undo/redo restore). No-ops when it's already
     // visible, so clicking a block on the canvas doesn't jolt the page.
-    this.#scrollSelectionIntoView(this.selectedBlockKey);
-  }
-
-  /**
-   * Brings the freshly selected block's element into view.
-   *
-   * When the element is already in the DOM (e.g. clicking a block on the
-   * canvas) it reveals it right away. When it isn't — a structural insert
-   * re-resolves the layout over a LATER revalidation, so a just-inserted
-   * block's element doesn't exist yet — the reveal is DEFERRED: the block's
-   * editor chrome calls `notifyChromeInserted` from its `didInsert` the moment
-   * it mounts (see `block-chrome.gjs`), and we reveal it then. No polling.
-   *
-   * @param {string|null} blockKey - The composite key of the selected block.
-   */
-  #scrollSelectionIntoView(blockKey) {
-    // A new selection supersedes any reveal still waiting on a mount.
-    this.#pendingRevealKey = null;
-    if (!blockKey) {
-      return;
-    }
-    // If the block sits inside an inactive tab whose button is already rendered
-    // (e.g. selecting it from the outline, or after a reorder), switch to that
-    // tab so its panel can render. The tabs block tracks its active panel by
-    // key, so activating the button sticks to the right panel even before the
-    // reorder's re-render settles. A freshly INSERTED tab's button isn't mounted
-    // this runloop, so this no-ops for inserts — the tabs block reveals a
-    // just-added panel itself.
-    this.#revealContainingTabs(blockKey);
-    const el = document.querySelector(
-      `[data-wf-block-key="${CSS.escape(blockKey)}"]`
-    );
-    if (el) {
-      this.#revealElement(el);
-      return;
-    }
-    // Not rendered yet — wait for the element to announce itself on mount.
-    this.#pendingRevealKey = blockKey;
-  }
-
-  /**
-   * Switches every already-rendered tab on the path to `blockKey` to the panel
-   * that contains it, so selecting a block inside an inactive tab (e.g. from the
-   * outline) reveals it instead of leaving it unrendered. Reveal after an INSERT
-   * is the tabs block's own job (it re-renders with the new child and activates
-   * it) — its button isn't mounted when this runs, so this no-ops there.
-   *
-   * Drives the dumb tabs block through its own data attribute: each panel's tab
-   * button carries `data-wf-tab-panel-key`, and a synthesized click switches the
-   * panel without changing selection (the chrome ignores `detail === 0` clicks).
-   * Walks outermost to innermost; a deeply nested inner tab whose button hasn't
-   * mounted yet is a best-effort case (the common single level always resolves).
-   *
-   * @param {string} blockKey - The composite key of the block being revealed.
-   */
-  #revealContainingTabs(blockKey) {
-    const located = this.layoutQuery.findEntryAndOutletSync(blockKey);
-    if (!located) {
-      return;
-    }
-    const layout = this.layoutQuery.readResolvedLayout(located.outletName);
-    if (!layout) {
-      return;
-    }
-    const path = findAncestryPath(layout, blockKey);
-    if (!path) {
-      return;
-    }
-    for (const entry of path) {
-      const key = entryKey(entry);
-      if (!key) {
-        continue;
-      }
-      const button = document.querySelector(
-        `[data-wf-tab-panel-key="${CSS.escape(key)}"]`
-      );
-      if (button && button.getAttribute("aria-selected") !== "true") {
-        button.click();
-      }
-    }
+    this.#blockReveal.revealSelection(this.selectedBlockKey);
   }
 
   /**
    * Called by a block's editor chrome from its `didInsert` once its element
-   * exists. Runs any "just appeared" treatment we deferred because the element
-   * wasn't in the DOM when the block was selected — a reveal-into-view and/or a
-   * flash — so a freshly inserted (and auto-selected) block gets both exactly
-   * when it renders, with no timers or polling.
+   * exists. Delegates to the reveal/flash leaf, which runs any reveal or flash
+   * that was deferred because the element wasn't in the DOM when the block was
+   * selected. See `../lib/block-reveal.js`.
    *
    * @param {string} blockKey - The mounting block's composite key.
    * @param {HTMLElement} element - The block's chrome element.
    */
   notifyChromeInserted(blockKey, element) {
-    if (!blockKey) {
-      return;
-    }
-    if (blockKey === this.#pendingRevealKey) {
-      this.#pendingRevealKey = null;
-      this.#revealElement(element);
-    }
-    if (blockKey === this.#pendingFlashKey) {
-      this.#pendingFlashKey = null;
-      this.#flashElement(element);
-    }
-  }
-
-  /**
-   * Scrolls `el` into view. Centers it when it fits the viewport; aligns to the
-   * top when it's taller. Skips scrolling when it's already adequately visible,
-   * so selecting an on-screen block doesn't jolt the page. Respects the
-   * reduced-motion preference. Runs in `afterRender` so sibling layout (e.g. a
-   * carousel track's widths) is settled before measuring.
-   *
-   * @param {HTMLElement} el - The element to reveal.
-   */
-  #revealElement(el) {
-    schedule("afterRender", () => {
-      if (!el.isConnected) {
-        return;
-      }
-
-      const rect = el.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const behavior = prefersReducedMotion() ? "auto" : "smooth";
-      // A block taller than the viewport can never be fully centered, so we
-      // only require its top to be on screen and align to the top on scroll.
-      const tallerThanViewport = rect.height > viewportHeight;
-
-      const vertVisible = tallerThanViewport
-        ? rect.top >= 0 && rect.top <= viewportHeight
-        : rect.top >= 0 && rect.bottom <= viewportHeight;
-
-      // Horizontal visibility within the nearest inline-scrollable ancestor
-      // (e.g. a carousel's slide track): a block can be vertically on screen
-      // yet scrolled out of view along the track. With no such ancestor there
-      // is nothing to reveal horizontally.
-      const scroller = this.#nearestInlineScroller(el);
-      let horizVisible = true;
-      if (scroller) {
-        const scrollerRect = scroller.getBoundingClientRect();
-        horizVisible =
-          rect.left >= scrollerRect.left && rect.right <= scrollerRect.right;
-      }
-
-      if (vertVisible && horizVisible) {
-        return;
-      }
-
-      el.scrollIntoView({
-        // Keep the vertical position when it's already visible, so revealing a
-        // horizontally-clipped slide doesn't also jolt the page vertically.
-        block: vertVisible
-          ? "nearest"
-          : tallerThanViewport
-            ? "start"
-            : "center",
-        // Align to the inline start, not "nearest": an inline scroller is
-        // typically a snap track (e.g. a carousel with `scroll-snap-type:
-        // x mandatory`), where a partial "nearest" scroll lands off a snap
-        // point and the browser snaps back. "start" matches the snap-aligned
-        // position the track scrolls to itself.
-        inline: "start",
-        behavior,
-      });
-    });
-  }
-
-  /**
-   * Walks up from an element to the nearest ancestor that scrolls on the inline
-   * (horizontal) axis and is actually overflowing — e.g. a carousel's slide
-   * track. Returns `null` when there is none.
-   *
-   * @param {HTMLElement} el - The element to search up from.
-   * @returns {HTMLElement|null}
-   */
-  #nearestInlineScroller(el) {
-    let node = el.parentElement;
-    while (node && node !== document.body) {
-      const overflowX = getComputedStyle(node).overflowX;
-      if (
-        (overflowX === "auto" || overflowX === "scroll") &&
-        node.scrollWidth > node.clientWidth
-      ) {
-        return node;
-      }
-      node = node.parentElement;
-    }
-    return null;
+    this.#blockReveal.notifyChromeInserted(blockKey, element);
   }
 
   /**
    * Briefly flashes the rendered element for the given block key to draw the
    * eye to it — used when selection originates somewhere other than a direct
-   * click on the block (outline selection, insert auto-select), where the
-   * block may have just scrolled into view.
-   *
-   * Flashes right away when the element is already in the DOM. When it isn't —
-   * a just-inserted block renders on a later autorun — the flash is DEFERRED:
-   * the block's editor chrome calls `notifyChromeInserted` on mount, which runs
-   * the flash then (the same element-announces-itself path the reveal uses).
+   * click on the block (outline selection, insert auto-select). Delegates to
+   * the reveal/flash leaf. See `../lib/block-reveal.js`.
    *
    * @param {string|null} blockKey - The composite key of the block to flash.
    */
   flashBlock(blockKey) {
-    // A new flash request supersedes any flash still waiting on a mount.
-    this.#pendingFlashKey = null;
-    if (!blockKey) {
-      return;
-    }
-    const el = document.querySelector(
-      `[data-wf-block-key="${CSS.escape(blockKey)}"]`
-    );
-    if (el) {
-      this.#flashElement(el);
-      return;
-    }
-    // Not rendered yet — wait for the element to announce itself on mount.
-    this.#pendingFlashKey = blockKey;
-  }
-
-  /**
-   * Replays the one-shot "just selected" flash on `el`. Toggling the class with
-   * a forced reflow restarts the animation even when the same block is
-   * re-selected; a cancelable timer removes the class so the next flash can
-   * replay it.
-   *
-   * Scheduled in `afterRender` because a flash usually rides along with a
-   * selection change (outline selection, insert auto-select), and that
-   * selection toggles the chrome's class binding. Mutating the class after the
-   * render settles keeps Ember from rewriting the element's class attribute out
-   * from under us and wiping the flash class we just added.
-   *
-   * @param {HTMLElement} el - The element to flash.
-   */
-  #flashElement(el) {
-    schedule("afterRender", () => {
-      if (!el.isConnected) {
-        return;
-      }
-
-      // Cancel any in-flight flash (possibly on a different block) so its
-      // pending removal doesn't strip the class we're about to add.
-      if (this.#flashTimer) {
-        cancel(this.#flashTimer);
-        this.#flashedEl?.classList.remove("--just-selected");
-      }
-
-      el.classList.remove("--just-selected");
-      void el.offsetWidth;
-      el.classList.add("--just-selected");
-      this.#flashedEl = el;
-
-      this.#flashTimer = discourseLater(() => {
-        el.classList.remove("--just-selected");
-        this.#flashTimer = null;
-        this.#flashedEl = null;
-      }, FLASH_DURATION_MS);
-    });
+    this.#blockReveal.flash(blockKey);
   }
 
   /**
@@ -4729,41 +4436,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Internal: applies a single-key patch to the simulation slot. Treats
-   * `undefined` as "delete the key" (since `null` is the meaningful
-   * sentinel for anonymous / real). When every slot is unset, returns
-   * `null` so `isSimulating` flips to `false` cleanly.
-   *
-   * @param {Object|null} current
-   * @param {string} key
-   * @param {*} value
-   * @returns {Object|null}
-   */
-  #patchSimulation(current, key, value) {
-    const next = { ...(current ?? {}) };
-    if (value === undefined) {
-      delete next[key];
-    } else {
-      next[key] = value;
-    }
-    if (!("user" in next) && !("viewport" in next)) {
-      return null;
-    }
-    return next;
-  }
-
-  /**
-   * Internal: bumps `structuralVersion` so any consumer subscribed to it
-   * (outline panel, outlets panel, etc.) re-renders against the new
-   * simulation. The condition evaluator itself reads the live
-   * `this.simulation` getter via the EVAL_CONTEXT callback, so its
-   * re-evaluation is also automatic via tracked reads.
-   */
-  #bumpStructuralVersion() {
-    this.structuralVersion = this.structuralVersion + 1;
-  }
-
-  /**
    * Fills in any selection fields that the caller didn't supply by resolving
    * the key against the current layout. A no-op when the caller already
    * passed full data (block-chrome's own click handler does, since it has
@@ -5092,7 +4764,7 @@ export default class WireframeService extends Service {
     this.restoreSelection(key);
     // Flash the freshly inserted block so the eye lands on it, the same way
     // outline selection does.
-    this.flashBlock(key);
+    this.#blockReveal.flash(key);
   }
 
   /**

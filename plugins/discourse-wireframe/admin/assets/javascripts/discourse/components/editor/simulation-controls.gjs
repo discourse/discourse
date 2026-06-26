@@ -38,10 +38,9 @@ const VIEWPORTS = Object.freeze({
 
 /**
  * Persona + viewport simulation toolbar controls for Phase 7. Both
- * dropdowns thread their picked value into the wireframe service's
- * `simulation` slot; that flows through to the condition evaluator's
- * context via the `EVAL_CONTEXT` debug hook (`api-initializer:
- * installSimulationContext`).
+ * dropdowns thread their picked value into the simulation service's
+ * slot; that flows through to the condition evaluator's context via the
+ * `EVAL_CONTEXT` debug hook (`api-initializer: installSimulationContext`).
  *
  * Block bodies themselves still render with the real user's data — see
  * the inline disclosure tooltip on the indicator. This is the
@@ -49,10 +48,10 @@ const VIEWPORTS = Object.freeze({
  * phase.
  */
 export default class SimulationControls extends Component {
-  @service wireframe;
+  @service wireframeSimulation;
 
   get currentPersona() {
-    const sim = this.wireframe.simulation;
+    const sim = this.wireframeSimulation.value;
     if (!sim || !("user" in sim)) {
       return "real";
     }
@@ -66,7 +65,7 @@ export default class SimulationControls extends Component {
   }
 
   get currentViewport() {
-    const sim = this.wireframe.simulation;
+    const sim = this.wireframeSimulation.value;
     if (!sim || !("viewport" in sim) || !sim.viewport) {
       return "real";
     }
@@ -87,40 +86,40 @@ export default class SimulationControls extends Component {
   handlePersonaChange(event) {
     const key = event.target.value;
     if (key === "real") {
-      this.wireframe.setSimulatedUser(undefined);
+      this.wireframeSimulation.setUser(undefined);
       return;
     }
     // PERSONAS["anonymous"] is `null` (explicit anonymous sentinel); the
     // rest map to user-shaped objects. Either way, this sets the slot
     // explicitly so `"user" in simulation` becomes true.
-    this.wireframe.setSimulatedUser(PERSONAS[key]);
+    this.wireframeSimulation.setUser(PERSONAS[key]);
   }
 
   @action
   handleViewportChange(event) {
     const key = event.target.value;
     if (key === "real") {
-      this.wireframe.setSimulatedViewport(undefined);
+      this.wireframeSimulation.setViewport(undefined);
       return;
     }
     const pick = VIEWPORTS[key];
     if (!pick) {
-      this.wireframe.setSimulatedViewport(undefined);
+      this.wireframeSimulation.setViewport(undefined);
       return;
     }
-    this.wireframe.setSimulatedViewport(buildSimulatedViewport(pick));
+    this.wireframeSimulation.setViewport(buildSimulatedViewport(pick));
   }
 
   @action
   clear() {
-    this.wireframe.clearSimulation();
+    this.wireframeSimulation.clear();
   }
 
   <template>
     <div
       class={{dConcatClass
         "wireframe-simulation"
-        (if this.wireframe.isSimulating "--active")
+        (if this.wireframeSimulation.isSimulating "--active")
       }}
     >
       <select
@@ -178,7 +177,7 @@ export default class SimulationControls extends Component {
         </option>
       </select>
 
-      {{#if this.wireframe.isSimulating}}
+      {{#if this.wireframeSimulation.isSimulating}}
         <span
           class="wireframe-simulation__dot"
           role="status"

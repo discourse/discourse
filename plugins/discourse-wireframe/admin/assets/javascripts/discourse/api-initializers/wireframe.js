@@ -46,7 +46,9 @@ export default apiInitializer((api) => {
   installOutletBoundary(editor);
   installGhostBlocksWhileEditing(editor);
   installEditPresentationWhileEditing(editor);
-  installSimulationContext(editor);
+  installSimulationContext(
+    api.container.lookup("service:wireframe-simulation")
+  );
   installVeThemeAutoEnter(api, editor);
   // The editor stays open across SPA navigation, so re-discover the new page's
   // outlets after each transition. `rediscoverOutlets` self-gates on
@@ -58,32 +60,31 @@ export default apiInitializer((api) => {
 });
 
 /**
- * Wires the wireframe's `simulation` slot into the condition
- * evaluator's per-block context via the `EVAL_CONTEXT` debug hook.
+ * Wires the simulation service's slot into the condition evaluator's
+ * per-block context via the `EVAL_CONTEXT` debug hook.
  *
- * The callback reads `editor.simulation` (a `@tracked` field) on every
- * invocation, so flipping the persona / viewport in the toolbar marks
- * the preprocessor's tracked getter dirty and triggers a re-evaluation
- * across the page. Returning `null` (when no simulation is active)
- * means the evaluator falls back to its real-service reads — no
- * overhead when sim mode is off.
+ * The callback reads the service's `@tracked` slot on every invocation, so
+ * flipping the persona / viewport in the toolbar marks the preprocessor's
+ * tracked getter dirty and triggers a re-evaluation across the page.
+ * Returning `null` (when no simulation is active) means the evaluator falls
+ * back to its real-service reads — no overhead when sim mode is off.
  *
  * Coexists with any pre-existing EVAL_CONTEXT callback by merging the
- * upstream payload with the editor's. Wireframe wins on collisions
+ * upstream payload with the simulation. Simulation wins on collisions
  * (the user explicitly enabled sim mode).
  *
- * @param {import("../services/wireframe").default} editor
+ * @param {import("../services/wireframe-simulation").default} simulation
  */
-function installSimulationContext(editor) {
+function installSimulationContext(simulation) {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.EVAL_CONTEXT);
   debugHooks.setCallback(DEBUG_CALLBACK.EVAL_CONTEXT, () => {
     const upstream = previous?.() ?? null;
-    if (!editor.isSimulating) {
+    if (!simulation.isSimulating) {
       return upstream;
     }
     return {
       ...(upstream ?? {}),
-      simulation: editor.simulation,
+      simulation: simulation.value,
     };
   });
 }

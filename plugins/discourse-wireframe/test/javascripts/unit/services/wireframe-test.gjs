@@ -3124,66 +3124,72 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
   module("simulation", function (innerHooks) {
     innerHooks.beforeEach(function () {
-      // The simulation slot is editor-session-state and survives without
-      // an active editor session; we still test from a clean state.
+      // The simulation slot lives in its own service (editor-session-state that
+      // survives without an active session); we still test from a clean state.
+      // `this.editor` is looked up in the outer beforeEach, which runs the
+      // kernel constructor that registers the structuralVersion bump handler.
+      this.sim = getOwner(this).lookup("service:wireframe-simulation");
     });
 
     innerHooks.afterEach(function () {
-      this.editor.clearSimulation();
+      this.sim.clear();
     });
 
     test("isSimulating is false by default", function (assert) {
-      assert.false(this.editor.isSimulating);
-      assert.strictEqual(this.editor.simulation, null);
+      assert.false(this.sim.isSimulating);
+      assert.strictEqual(this.sim.value, null);
     });
 
-    test("setSimulatedUser with a persona object marks isSimulating true", function (assert) {
-      this.editor.setSimulatedUser({ trust_level: 2, admin: false });
-      assert.true(this.editor.isSimulating);
-      assert.strictEqual(this.editor.simulation.user.trust_level, 2);
+    test("setUser with a persona object marks isSimulating true", function (assert) {
+      this.sim.setUser({ trust_level: 2, admin: false });
+      assert.true(this.sim.isSimulating);
+      assert.strictEqual(this.sim.value.user.trust_level, 2);
     });
 
-    test("setSimulatedUser(null) means anonymous, still isSimulating", function (assert) {
-      this.editor.setSimulatedUser(null);
-      assert.true(this.editor.isSimulating);
-      assert.true("user" in this.editor.simulation);
-      assert.strictEqual(this.editor.simulation.user, null);
+    test("setUser(null) means anonymous, still isSimulating", function (assert) {
+      this.sim.setUser(null);
+      assert.true(this.sim.isSimulating);
+      assert.true("user" in this.sim.value);
+      assert.strictEqual(this.sim.value.user, null);
     });
 
-    test("setSimulatedUser(undefined) clears the persona slot", function (assert) {
-      this.editor.setSimulatedUser({ trust_level: 4 });
-      this.editor.setSimulatedUser(undefined);
-      assert.false(this.editor.isSimulating);
+    test("setUser(undefined) clears the persona slot", function (assert) {
+      this.sim.setUser({ trust_level: 4 });
+      this.sim.setUser(undefined);
+      assert.false(this.sim.isSimulating);
     });
 
-    test("setSimulatedViewport(undefined) clears viewport but keeps persona", function (assert) {
-      this.editor.setSimulatedUser({ trust_level: 2 });
-      this.editor.setSimulatedViewport({
+    test("setViewport(undefined) clears viewport but keeps persona", function (assert) {
+      this.sim.setUser({ trust_level: 2 });
+      this.sim.setViewport({
         viewport: { sm: true },
         touch: true,
       });
-      assert.true(this.editor.isSimulating);
+      assert.true(this.sim.isSimulating);
 
-      this.editor.setSimulatedViewport(undefined);
-      assert.true(this.editor.isSimulating, "persona-only sim is still active");
-      assert.false("viewport" in this.editor.simulation);
+      this.sim.setViewport(undefined);
+      assert.true(this.sim.isSimulating, "persona-only sim is still active");
+      assert.false("viewport" in this.sim.value);
     });
 
-    test("clearSimulation resets everything to null", function (assert) {
-      this.editor.setSimulatedUser({ trust_level: 4 });
-      this.editor.setSimulatedViewport({
+    test("clear resets everything to null", function (assert) {
+      this.sim.setUser({ trust_level: 4 });
+      this.sim.setViewport({
         viewport: { sm: true },
         touch: true,
       });
-      this.editor.clearSimulation();
-      assert.false(this.editor.isSimulating);
-      assert.strictEqual(this.editor.simulation, null);
+      this.sim.clear();
+      assert.false(this.sim.isSimulating);
+      assert.strictEqual(this.sim.value, null);
     });
 
-    test("each sim change bumps structuralVersion (re-renders consumers)", function (assert) {
+    test("a sim change bumps the kernel's structuralVersion (re-renders consumers)", function (assert) {
       const before = this.editor.structuralVersion;
-      this.editor.setSimulatedUser({ trust_level: 2 });
-      assert.true(this.editor.structuralVersion > before);
+      this.sim.setUser({ trust_level: 2 });
+      assert.true(
+        this.editor.structuralVersion > before,
+        "the kernel-registered bump fired"
+      );
     });
   });
 
