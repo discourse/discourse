@@ -2,6 +2,7 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { next as nextRunloop } from "@ember/runloop";
+import Service, { service } from "@ember/service";
 import { resolvePartArgs } from "discourse/lib/blocks/-internals/composite";
 import { toStorage } from "discourse/plugins/discourse-wireframe/discourse/lib/inline-rich-text";
 import {
@@ -15,7 +16,7 @@ import {
   revalidateEntryStamps,
   sameValue,
   setPartOverride,
-} from "./mutate-layout";
+} from "../lib/mutate-layout";
 
 /**
  * Owns all state and operations for an inline-text edit session: which
@@ -24,16 +25,21 @@ import {
  * the next-mount selection hint, plus the structural ops (split, merge)
  * and sibling-lookup helpers consumed by the keymap.
  *
- * Lives outside `WireframeService` so the service file stays focused
- * on layout / palette / clipboard / undo concerns. Service-owned utilities
- * (layout lookup, draft management, structural recording, undo stack)
- * are reached through `this.service`.
+ * A peer service in the editor's acyclic dependency graph. It injects only the
+ * services that sit downstream of it — the mutation/undo engine (records the
+ * session's edits), the read-only layout query layer (entry/outlet lookups),
+ * and the selection concern (`restoreSelection` after a structural transition).
+ * It never reaches back up into the kernel that drives it; the kernel keeps a
+ * thin `inlineEdit` facade getter so its many consumers stay unchanged.
  *
- * Plain JS class — NOT an Ember service. Instantiated once per service
- * instance at service-construction time and exposed via
- * `wireframe.inlineEdit`.
+ * It subscribes to the selection seam itself: switching selection to a
+ * different block commits any in-flight session (see the constructor).
  */
-export default class InlineEditState {
+export default class WireframeInlineEditService extends Service {
+  @service wireframeEditEngine;
+  @service wireframeLayoutQuery;
+  @service wireframeSelection;
+
   /**
    * Currently-editing block key. `null` when no session is active.
    * Tracked so the controller's `activeRendererEl` getter recomputes
@@ -80,6 +86,7 @@ export default class InlineEditState {
    * @type {*}
    */
   #prevValue = null;
+
   /**
    * Block name (`wf:paragraph`, `wf:heading`, …) of the entry currently
    * being edited. Cached at session start so the PM keymap can branch
@@ -89,6 +96,7 @@ export default class InlineEditState {
    * @type {string|null}
    */
   #blockName = null;
+
   /**
    * Selection hint for the next `mountEditor` call. `"selectAll"` (the
    * default) preserves the "start typing to replace" affordance for
@@ -106,6 +114,7 @@ export default class InlineEditState {
    * @type {"start"|"end"|"selectAll"|{pos:number}|{coords:{x:number,y:number}}}
    */
   #initialSelection = "selectAll";
+
   /**
    * Callback the inline-edit controller registers via `registerCommit`.
    * Invoked from `stop({ commit: true })` BEFORE the editing state is
@@ -118,6 +127,7 @@ export default class InlineEditState {
    * @type {(() => void) | null}
    */
   #commitFn = null;
+
   /**
    * Set instead of `#located` when the edited target is a *child's
    * containerArg* (e.g. a `tabs` strip label, stored at
@@ -155,13 +165,22 @@ export default class InlineEditState {
    */
   @tracked _controller = null;
 
-  /**
-   * @param {object} service Back-reference to the owning
-   *   `WireframeService`. Used for layout lookup, draft management,
-   *   structural recording, undo stack access, and selection restore.
-   */
-  constructor(service) {
-    this.service = service;
+  constructor() {
+    super(...arguments);
+    // Own our reaction to selection changes: switching selection to a different
+    // block commits any in-flight inline-edit session. Re-selecting the same
+    // block leaves it alone — that's the second-click-to-edit gesture.
+    //
+    // Registered once at instantiation and permanent for the app lifetime (the
+    // seam has no unregister). It fires on every selection change regardless of
+    // editor active-state, which is safe: the guard no-ops when no session is
+    // active (`blockKey` is null). The composition root looks this service up
+    // at boot so the subscription exists before the first selection change.
+    this.wireframeSelection.registerBeforeChange(({ nextKey }) => {
+      if (this.blockKey && this.blockKey !== nextKey) {
+        this.stop({ commit: true });
+      }
+    });
   }
 
   /** @returns {boolean} */
@@ -225,7 +244,7 @@ export default class InlineEditState {
     if (live !== undefined) {
       return live;
     }
-    const schema = this.service.layoutQuery.metadataFor(entry)?.args;
+    const schema = this.wireframeLayoutQuery.metadataFor(entry)?.args;
     return schema?.[this.argName]?.default;
   }
 
@@ -278,7 +297,8 @@ export default class InlineEditState {
     if (this.blockKey) {
       this.stop({ commit: true });
     }
-    const located = await this.service.layoutQuery.findEntryAndOutlet(blockKey);
+    const located =
+      await this.wireframeLayoutQuery.findEntryAndOutlet(blockKey);
     if (located) {
       this.#located = located;
       this.#partContext = null;
@@ -290,7 +310,8 @@ export default class InlineEditState {
       // owning composite + override path so the session commits as a per-part
       // override. The pre-edit value is the part's effective arg (its
       // code-default merged with any current override).
-      const partContext = this.service.layoutQuery.resolvePartContext(blockKey);
+      const partContext =
+        this.wireframeLayoutQuery.resolvePartContext(blockKey);
       const partDef = partContext
         ? resolvePartDef(partContext.compositeEntry, partContext.idPath)
         : null;
@@ -307,7 +328,7 @@ export default class InlineEditState {
         partPath: partContext.partPath,
       };
       this.#prevValue = resolvePartArgs(partDef, override)[argName];
-      this.#blockName = this.service.layoutQuery.blockNameOf({
+      this.#blockName = this.wireframeLayoutQuery.blockNameOf({
         block: partDef.block,
       });
     }
@@ -355,7 +376,8 @@ export default class InlineEditState {
     if (this.blockKey) {
       this.stop({ commit: true });
     }
-    const located = await this.service.layoutQuery.findEntryAndOutlet(childKey);
+    const located =
+      await this.wireframeLayoutQuery.findEntryAndOutlet(childKey);
     if (!located) {
       return false;
     }
@@ -451,16 +473,19 @@ export default class InlineEditState {
 
     if (commit) {
       if (!sameValue(prevValue, nextValue)) {
-        this.service.wireframeEditEngine.pushUndoEntry({
+        this.wireframeEditEngine.pushUndoEntry({
           kind: "args",
           entry,
           prev: new Map([[argName, prevValue]]),
           next: new Map([[argName, nextValue]]),
         });
-        this.service.wireframeEditEngine.clearRedoStack();
+        this.wireframeEditEngine.clearRedoStack();
       }
     } else {
-      this.service.writeArgs(entry, new Map([[argName, prevValue]]));
+      this.wireframeEditEngine.writeArgs(
+        entry,
+        new Map([[argName, prevValue]])
+      );
     }
 
     this.#located = null;
@@ -504,9 +529,9 @@ export default class InlineEditState {
       return;
     }
     const { entry, outletName } = located;
-    this.service.wireframeEditEngine.markOutletArgEdited(outletName);
+    this.wireframeEditEngine.markOutletArgEdited(outletName);
     const prevMap = new Map([[argName, entry.args?.[argName]]]);
-    this.service.captureInitialSnapshot(entry, prevMap);
+    this.wireframeEditEngine.captureInitialSnapshot(entry, prevMap);
     // Empty edits (`""`, null, undefined) DELETE the key rather than
     // write an explicit empty string. The block decorator's reactive
     // getter (`createBlockArgsWithReactiveGetters` at
@@ -522,7 +547,7 @@ export default class InlineEditState {
     // Re-validate against the new value so the outline / inspector reflect
     // the block's current validity instead of clearing the error until the
     // next republish (e.g. emptying a required inline field re-flags it).
-    revalidateEntryStamps(entry, { owner: getOwner(this.service) });
+    revalidateEntryStamps(entry, { owner: getOwner(this) });
   }
 
   /**
@@ -563,7 +588,7 @@ export default class InlineEditState {
     if (!blockKey || argName !== "text") {
       return false;
     }
-    const located = this.service.layoutQuery.findEntryAndOutletSync(blockKey);
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(blockKey);
     if (!located || located.entry.block !== "paragraph") {
       return false;
     }
@@ -580,36 +605,42 @@ export default class InlineEditState {
     const newEntry = { block: "paragraph", args: afterArgs };
     let newKey = null;
 
-    const result = this.service.recordStructural([outletName], () => {
-      // Write the "before" doc back into the current entry. Direct
-      // mutation on the live entry is safe here — we're inside the
-      // structural-recording window, so the pre-state was already
-      // captured. Match `applyChange`'s contract of deleting the key
-      // on empty so the schema default surfaces.
-      const beforeValue = toStorage(beforeDoc);
-      if (beforeValue === "" || beforeValue == null) {
-        delete currentEntry.args.text;
-      } else {
-        currentEntry.args.text = beforeValue;
-      }
-      clearValidatorStamps(currentEntry);
-      this.service.wireframeEditEngine.markOutletStructurallyEdited(outletName);
+    const result = this.wireframeEditEngine.recordStructural(
+      [outletName],
+      () => {
+        // Write the "before" doc back into the current entry. Direct
+        // mutation on the live entry is safe here — we're inside the
+        // structural-recording window, so the pre-state was already
+        // captured. Match `applyChange`'s contract of deleting the key
+        // on empty so the schema default surfaces.
+        const beforeValue = toStorage(beforeDoc);
+        if (beforeValue === "" || beforeValue == null) {
+          delete currentEntry.args.text;
+        } else {
+          currentEntry.args.text = beforeValue;
+        }
+        clearValidatorStamps(currentEntry);
+        this.wireframeEditEngine.markOutletStructurallyEdited(outletName);
 
-      const layout = this.service.ensureDraft(outletName);
-      if (!layout) {
-        return false;
-      }
-      const insertion = insertEntryAt(layout, blockKey, newEntry, "after");
-      if (!insertion.changed) {
-        return false;
-      }
-      this.service.publishStructuralChange(outletName, insertion.layout);
+        const layout = this.wireframeEditEngine.ensureDraft(outletName);
+        if (!layout) {
+          return false;
+        }
+        const insertion = insertEntryAt(layout, blockKey, newEntry, "after");
+        if (!insertion.changed) {
+          return false;
+        }
+        this.wireframeEditEngine.publishStructuralChange(
+          outletName,
+          insertion.layout
+        );
 
-      // `publishStructuralChange` ran `assignStableKeys`, so the new
-      // entry now has its composite key.
-      newKey = entryKey(newEntry);
-      return !!newKey;
-    });
+        // `publishStructuralChange` ran `assignStableKeys`, so the new
+        // entry now has its composite key.
+        newKey = entryKey(newEntry);
+        return !!newKey;
+      }
+    );
     if (!result) {
       return false;
     }
@@ -676,12 +707,12 @@ export default class InlineEditState {
     if (!blockKey || argName !== "text") {
       return false;
     }
-    const located = this.service.layoutQuery.findEntryAndOutletSync(blockKey);
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(blockKey);
     if (!located || located.entry.block !== "paragraph") {
       return false;
     }
     const { outletName } = located;
-    const layout = this.service.layoutQuery.readResolvedLayout(outletName);
+    const layout = this.wireframeLayoutQuery.readResolvedLayout(outletName);
     if (!layout) {
       return false;
     }
@@ -692,34 +723,40 @@ export default class InlineEditState {
     const prevEntry = sibs.siblings[sibs.index - 1];
     const prevKey = entryKey(prevEntry);
 
-    const result = this.service.recordStructural([outletName], () => {
-      // Write the merged value into the prev entry. Match `applyChange`'s
-      // contract of deleting the key on empty so the schema default
-      // surfaces.
-      const livePrev = this.service.layoutQuery.findEntryByKey(prevKey);
-      if (!livePrev) {
-        return false;
-      }
-      const mergedValue = toStorage(mergedDoc);
-      if (mergedValue === "" || mergedValue == null) {
-        delete livePrev.args.text;
-      } else {
-        livePrev.args.text = mergedValue;
-      }
-      clearValidatorStamps(livePrev);
-      this.service.wireframeEditEngine.markOutletStructurallyEdited(outletName);
+    const result = this.wireframeEditEngine.recordStructural(
+      [outletName],
+      () => {
+        // Write the merged value into the prev entry. Match `applyChange`'s
+        // contract of deleting the key on empty so the schema default
+        // surfaces.
+        const livePrev = this.wireframeLayoutQuery.findEntryByKey(prevKey);
+        if (!livePrev) {
+          return false;
+        }
+        const mergedValue = toStorage(mergedDoc);
+        if (mergedValue === "" || mergedValue == null) {
+          delete livePrev.args.text;
+        } else {
+          livePrev.args.text = mergedValue;
+        }
+        clearValidatorStamps(livePrev);
+        this.wireframeEditEngine.markOutletStructurallyEdited(outletName);
 
-      const draft = this.service.ensureDraft(outletName);
-      if (!draft) {
-        return false;
+        const draft = this.wireframeEditEngine.ensureDraft(outletName);
+        if (!draft) {
+          return false;
+        }
+        const removal = removeEntry(draft, blockKey);
+        if (!removal.changed) {
+          return false;
+        }
+        this.wireframeEditEngine.publishStructuralChange(
+          outletName,
+          removal.layout
+        );
+        return true;
       }
-      const removal = removeEntry(draft, blockKey);
-      if (!removal.changed) {
-        return false;
-      }
-      this.service.publishStructuralChange(outletName, removal.layout);
-      return true;
-    });
+    );
     if (!result) {
       return false;
     }
@@ -780,8 +817,8 @@ export default class InlineEditState {
   #applyPartChange(value) {
     const { compositeKey, outletName, partPath } = this.#partContext;
     const argName = this.argName;
-    this.service.recordStructural([outletName], () => {
-      const layout = this.service.layoutQuery.readResolvedLayout(outletName);
+    this.wireframeEditEngine.recordStructural([outletName], () => {
+      const layout = this.wireframeLayoutQuery.readResolvedLayout(outletName);
       if (!layout) {
         return false;
       }
@@ -802,8 +839,11 @@ export default class InlineEditState {
       if (!result.changed) {
         return false;
       }
-      this.service.wireframeEditEngine.markOutletStructurallyEdited(outletName);
-      this.service.publishStructuralChange(outletName, result.layout);
+      this.wireframeEditEngine.markOutletStructurallyEdited(outletName);
+      this.wireframeEditEngine.publishStructuralChange(
+        outletName,
+        result.layout
+      );
       return true;
     });
   }
@@ -831,8 +871,8 @@ export default class InlineEditState {
     if (sameValue(prevValue, nextValue)) {
       return;
     }
-    this.service.recordStructural([outletName], () => {
-      const layout = this.service.layoutQuery.readResolvedLayout(outletName);
+    this.wireframeEditEngine.recordStructural([outletName], () => {
+      const layout = this.wireframeLayoutQuery.readResolvedLayout(outletName);
       if (!layout) {
         return false;
       }
@@ -853,8 +893,11 @@ export default class InlineEditState {
       if (!result.changed) {
         return false;
       }
-      this.service.wireframeEditEngine.markOutletStructurallyEdited(outletName);
-      this.service.publishStructuralChange(outletName, result.layout);
+      this.wireframeEditEngine.markOutletStructurallyEdited(outletName);
+      this.wireframeEditEngine.publishStructuralChange(
+        outletName,
+        result.layout
+      );
       return true;
     });
   }
@@ -864,11 +907,11 @@ export default class InlineEditState {
     if (!blockKey) {
       return null;
     }
-    const located = this.service.layoutQuery.findEntryAndOutletSync(blockKey);
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(blockKey);
     if (!located) {
       return null;
     }
-    const layout = this.service.layoutQuery.readResolvedLayout(
+    const layout = this.wireframeLayoutQuery.readResolvedLayout(
       located.outletName
     );
     if (!layout) {
@@ -917,12 +960,12 @@ export default class InlineEditState {
         `[data-wf-block-key="${CSS.escape(key)}"]`
       );
       if (found || attempts > 10) {
-        this.#located = this.service.layoutQuery.findEntryAndOutletSync(key);
+        this.#located = this.wireframeLayoutQuery.findEntryAndOutletSync(key);
         this.#prevValue = this.#located?.entry?.args?.[this.argName];
         this.#blockName = this.#located?.entry?.block ?? null;
         this.#initialSelection = initialSelection;
         this.blockKey = key;
-        this.service.restoreSelection(key);
+        this.wireframeSelection.restoreSelection(key);
         return;
       }
       requestAnimationFrame(() => transitionWhenReady(attempts + 1));

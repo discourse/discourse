@@ -17,7 +17,9 @@ import {
   revalidateEntryStamps,
   sameValue,
   serializeLayoutForSave,
+  wrapAsOutletRoot,
 } from "../lib/mutate-layout";
+import { OUTLET_STATE } from "./wireframe-layout-query";
 
 /**
  * Owns the editor's mutation + undo + dirty-tracking chokepoint — the single
@@ -274,6 +276,54 @@ export default class WireframeEditEngineService extends Service {
    */
   markOutletDrafted(outletName) {
     this.#draftedOutlets.add(outletName);
+  }
+
+  /**
+   * Ensures a session-draft layer exists for `outletName`. Used by mutation
+   * actions that target outlets the user is populating from scratch — those
+   * outlets have no published layout, but the empty-outlet drop zone lets
+   * authors add the first block. We mint an empty draft here so the subsequent
+   * `publishStructuralChange` has somewhere to land, mark the outlet drafted,
+   * and capture its baseline as the rollback target.
+   *
+   * Idempotent: bails when a draft already exists.
+   *
+   * @param {string} outletName
+   * @returns {Array<Object>} The layout array (existing or freshly minted).
+   */
+  ensureDraft(outletName) {
+    const existing = this.wireframeLayoutQuery.readResolvedLayout(outletName);
+    if (existing) {
+      return existing;
+    }
+    // A LOCKED outlet is read-only — never mint a draft for it. This is a
+    // defensive backstop; the chrome already gates writes on `isOutletEditable`.
+    if (
+      this.wireframeLayoutQuery.outletState(outletName) === OUTLET_STATE.LOCKED
+    ) {
+      return existing ?? [];
+    }
+    // Seed the outlet with an empty root `layout` block so it's an implicit
+    // layout from the first drop, matching `#materializeAllDrafts`.
+    const emptyDraft = wrapAsOutletRoot([]);
+    _setLayoutLayer(
+      outletName,
+      LAYOUT_LAYERS.SESSION_DRAFT,
+      emptyDraft,
+      getOwner(this),
+      { permissive: true }
+    );
+    this.markOutletDrafted(outletName);
+    this.wireframeLayoutQuery.recordOutletRoot(outletName);
+    this.captureBaseline(
+      outletName,
+      cloneLayoutForDraft(
+        this.wireframeLayoutQuery.readResolvedLayout(outletName) ?? []
+      )
+    );
+    return (
+      this.wireframeLayoutQuery.readResolvedLayout(outletName) ?? emptyDraft
+    );
   }
 
   /**

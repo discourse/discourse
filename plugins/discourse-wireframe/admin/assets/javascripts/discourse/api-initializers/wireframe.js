@@ -1,4 +1,5 @@
 // @ts-check
+import { registerDestructor } from "@ember/destroyable";
 import curryComponent from "ember-curry-component";
 import { apiInitializer } from "discourse/lib/api";
 import {
@@ -49,14 +50,24 @@ export default apiInitializer((api) => {
   installSimulationContext(
     api.container.lookup("service:wireframe-simulation")
   );
+  // Instantiate the block-reveal, inline-edit, and arg-edit services at boot so
+  // they subscribe to the selection seam before any selection change can fire.
+  api.container.lookup("service:wireframe-block-reveal");
+  api.container.lookup("service:wireframe-inline-edit");
+  api.container.lookup("service:wireframe-arg-edit");
   installVeThemeAutoEnter(api, editor);
   // The editor stays open across SPA navigation, so re-discover the new page's
   // outlets after each transition. `rediscoverOutlets` self-gates on
   // `editor.isActive`, so this is a no-op while the editor is closed.
   api.onPageChange(() => editor.rediscoverOutlets());
-  // The shortcut listener self-gates on `editor.isActive`, so we can
-  // install it once at boot — no need to attach/detach on editor enter.
-  attachEditorShortcuts(editor);
+  // The shortcut listener self-gates on `editor.isActive`, so we install it
+  // once rather than attach/detach on editor enter. Tie its removal to the
+  // editor service's teardown: in production that's app shutdown, but in tests
+  // — where the initializer boots once per owner — it stops a document
+  // `keydown` listener leaking per test. A leaked handler bound to a destroyed
+  // editor still fires on later keystrokes and throws when it resolves a
+  // service on its dead owner.
+  registerDestructor(editor, attachEditorShortcuts(editor));
 });
 
 /**

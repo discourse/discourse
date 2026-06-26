@@ -59,7 +59,13 @@ function isModifier(event) {
  */
 export function attachEditorShortcuts(editor) {
   function onKeyDown(event) {
-    if (!editor.isActive) {
+    // The listener lives at the document level for the editor's lifetime. If the
+    // editor's owner has been torn down (e.g. between tests, where the listener
+    // would otherwise leak), bail before reading anything off it — a destroyed
+    // service throws when a shortcut path resolves an injected dependency on the
+    // dead owner. `isDestroyed`/`isDestroying` are plain instance flags, so
+    // reading them never triggers a lookup.
+    if (editor.isDestroyed || editor.isDestroying || !editor.isActive) {
       return;
     }
     if (isTypingFocus()) {

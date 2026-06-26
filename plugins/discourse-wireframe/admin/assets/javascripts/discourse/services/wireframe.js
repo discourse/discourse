@@ -22,7 +22,6 @@ import {
   LAYOUT_SOURCE,
 } from "discourse/blocks/block-outlet";
 import { VALID_BLOCK_ID_PATTERN } from "discourse/lib/blocks/-internals/patterns";
-import discourseDebounce from "discourse/lib/debounce";
 import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
 import PreloadStore from "discourse/lib/preload-store";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
@@ -41,7 +40,6 @@ import {
 import ConflictModal from "../components/editor/conflict-modal";
 import StaleDraftModal from "../components/editor/stale-draft-modal";
 import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-renderer";
-import BlockReveal from "../lib/block-reveal";
 import DragSessionState from "../lib/drag-session-state";
 import DropAuthority from "../lib/drop-authority";
 import GridManipulator from "../lib/grid-manipulator";
@@ -50,7 +48,6 @@ import {
   resolveTemplateLayout,
 } from "../lib/grid-templates";
 import IconEditState from "../lib/icon-edit-state";
-import InlineEditState from "../lib/inline-edit-state";
 import LinkEditState from "../lib/link-edit-state";
 import {
   cloneEntryForPaste,
@@ -69,14 +66,11 @@ import {
   replaceEntryId,
   replaceEntryInPlace,
   serializeLayoutForSave,
-  setPartOverride,
   wrapAsOutletRoot,
 } from "../lib/mutate-layout";
 import { diffLayouts } from "../lib/outlet-change-summary";
 import { isReversedFlexLayout } from "../lib/reversed-flex";
 import { OUTLET_STATE } from "../services/wireframe-layout-query";
-
-const FLUSH_DELAY_MS = 200;
 
 /**
  * Editor service. Holds the editor's session state and mediates the
@@ -113,9 +107,12 @@ export default class WireframeService extends Service {
   @service modal;
   @service site;
   @service siteSettings;
+  @service wireframeArgEdit;
+  @service wireframeBlockReveal;
   @service wireframeDrafts;
   @service wireframeDragOverlay;
   @service wireframeEditEngine;
+  @service wireframeInlineEdit;
   @service wireframeLayoutQuery;
   @service wireframePersistence;
   @service wireframeRevision;
@@ -205,21 +202,6 @@ export default class WireframeService extends Service {
   @tracked lastTouchedImageArg = null;
 
   /**
-   * Inline-text-edit session state. Holds the active `(blockKey, argName)`,
-   * the cached entry location, the pre-edit snapshot for undo, the
-   * registered controller, structural ops (split / merge), and sibling
-   * lookups consumed by the keymap.
-   *
-   * Lives as a separate object so the service file stays focused on
-   * layout / palette / clipboard / undo concerns. Service-owned utilities
-   * (layout lookup, draft management, structural recording, undo stack)
-   * are reached back through `this` via the constructor back-reference.
-   *
-   * @type {InlineEditState}
-   */
-  inlineEdit = new InlineEditState(this);
-
-  /**
    * Inline icon-edit session state + operations. Mirrors `inlineEdit`'s
    * separate-object split: opens a FloatKit popover anchored to the
    * clicked icon, hosting `DIconGridPickerContent` for the user to pick
@@ -279,22 +261,6 @@ export default class WireframeService extends Service {
   });
 
   /**
-   * Reveal-into-view and the one-shot "just selected" flash. A dependency-free
-   * leaf the kernel configures downward with the draft-aware layout readers; it
-   * never reaches back here. Side-effecting (DOM + timers), so it stays private
-   * and the kernel drives it (the externally-called `notifyChromeInserted` /
-   * `flashBlock` are thin delegators below). See `../lib/block-reveal.js`.
-   *
-   * @type {BlockReveal}
-   */
-  #blockReveal = new BlockReveal({
-    findEntryAndOutletSync: (key) =>
-      this.layoutQuery.findEntryAndOutletSync(key),
-    readResolvedLayout: (outletName) =>
-      this.layoutQuery.readResolvedLayout(outletName),
-  });
-
-  /**
    * Files dropped onto an empty slot, staged by `"blockKey\0argName"` until
    * the freshly-created block's `ImageArgOverlay` mounts and uploads them
    * through its own pipeline. One-shot per entry; cleared on enter / exit.
@@ -308,23 +274,6 @@ export default class WireframeService extends Service {
    * `wireframeDragOverlay`. Guards `enter()` so re-entry doesn't re-register.
    */
   #dropDispatchRegistered = false;
-
-  /**
-   * Whether this kernel's cross-concern selection hooks have been registered
-   * on `wireframeSelection`. Guards `enter()` so re-entry doesn't re-register
-   * (which would flush args / commit edits / reveal multiple times per
-   * selection change).
-   */
-  #selectionHooksRegistered = false;
-
-  /**
-   * Pending arg changes for the currently-selected block, accumulated across
-   * a burst of keystrokes and flushed by `#flushPendingArgs` after a short
-   * idle delay. Keys are arg names; values are the latest value typed.
-   *
-   * @type {Map<string, *>}
-   */
-  #pendingArgs = new Map();
 
   /**
    * The serialized layout of each outlet's last *persisted draft* — set when a
@@ -410,6 +359,13 @@ export default class WireframeService extends Service {
   #onCanvasMouseUp = (event) => {
     const downTarget = this.#selectionMousedownTarget;
     this.#selectionMousedownTarget = null;
+    // Guard against a leaked listener firing after the owner is torn down: a
+    // destroyed service throws when reading `selectedBlockKey` resolves the
+    // selection injection on the dead owner. `isDestroyed`/`isDestroying` are
+    // plain instance flags, so reading them never triggers a lookup.
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
     if (!this.isActive || !this.selectedBlockKey) {
       return;
     }
@@ -445,7 +401,15 @@ export default class WireframeService extends Service {
     super.willDestroy(...arguments);
     this.#uninstallImagePasteListener();
     this.#uninstallFileDragGuard();
-    this.#blockReveal.reset();
+    // The canvas selection listeners are normally removed in `exit()`, but a
+    // session torn down without an explicit exit (e.g. the owner being
+    // destroyed) would otherwise leak them at the document level. Removing them
+    // here on teardown is idempotent and stops a leaked handler from firing
+    // against this destroyed service. `removeEventListener` is a no-op when the
+    // listener was never added or was already removed.
+    document.removeEventListener("mousedown", this.#onCanvasMouseDown);
+    document.removeEventListener("mouseup", this.#onCanvasMouseUp);
+    this.wireframeBlockReveal.reset();
   }
 
   /**
@@ -553,6 +517,17 @@ export default class WireframeService extends Service {
    */
   get layoutQuery() {
     return this.wireframeLayoutQuery;
+  }
+
+  /**
+   * The inline-text-edit session service. Re-exposed here so internal
+   * `this.inlineEdit.X` and external `wireframe.inlineEdit.X` consumers keep
+   * working without injecting the service directly.
+   *
+   * @returns {import("./wireframe-inline-edit").default}
+   */
+  get inlineEdit() {
+    return this.wireframeInlineEdit;
   }
 
   /* Selection facade — the block-selection concern lives on
@@ -960,32 +935,6 @@ export default class WireframeService extends Service {
       );
       this.#dropDispatchRegistered = true;
     }
-    // Wire this kernel's cross-concern effects into the selection seam. The
-    // selection service owns "what is selected"; these hooks own the editor's
-    // reactions to a selection change. Registered once; the guard keeps
-    // re-entry from firing them more than once per change.
-    if (!this.#selectionHooksRegistered) {
-      this.wireframeSelection.registerBeforeChange(({ nextKey }) => {
-        // Flush anything still pending from the previous selection so we don't
-        // apply those keystrokes to the new block by accident.
-        if (this.#pendingArgs.size > 0) {
-          this.#flushPendingArgs();
-        }
-        // Switching selection to a different block commits any in-flight
-        // inline-edit session. Re-selecting the same block leaves it alone —
-        // that case is the second-click-to-edit gesture.
-        if (this.inlineEdit.blockKey && this.inlineEdit.blockKey !== nextKey) {
-          this.inlineEdit.stop({ commit: true });
-        }
-      });
-      this.wireframeSelection.registerAfterChange(({ key }) =>
-        // Bring the freshly selected block into view (outline selection,
-        // insert auto-select, undo/redo restore). No-ops when it's already
-        // visible, so clicking a block on the canvas doesn't jolt the page.
-        this.#blockReveal.revealSelection(key)
-      );
-      this.#selectionHooksRegistered = true;
-    }
     // New session generation: invalidates any draft hydration still in flight
     // from a previous enter/exit so it can't write into this session.
     const generation = ++this.#enterGeneration;
@@ -1059,46 +1008,15 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Ensures a session-draft layer exists for `outletName`. Used by
-   * mutation actions that target outlets the user is populating from
-   * scratch — those outlets have no published layout (so
-   * `#materializeAllDrafts` skips them on `enter()`), but the
-   * editor's empty-outlet drop zone lets authors add the first
-   * block. We mint an empty draft `[]` here so the subsequent
-   * `publishStructuralChange` has somewhere to land.
-   *
-   * Idempotent: bails when a draft already exists.
+   * Ensures a session-draft layer exists for `outletName` — delegates to the
+   * edit-engine, which owns the draft + baseline bookkeeping. Kept as a thin
+   * facade so the kernel's structural-mutation callers stay unchanged.
    *
    * @param {string} outletName
    * @returns {Array<Object>} the layout array (existing or freshly minted).
    */
   ensureDraft(outletName) {
-    const existing = this.layoutQuery.readResolvedLayout(outletName);
-    if (existing) {
-      return existing;
-    }
-    // A LOCKED outlet is read-only — never mint a draft for it. This is a
-    // defensive backstop; the chrome already gates writes on `isOutletEditable`.
-    if (this.layoutQuery.outletState(outletName) === OUTLET_STATE.LOCKED) {
-      return existing ?? [];
-    }
-    // Seed the outlet with an empty root `layout` block so it's an implicit
-    // layout from the first drop, matching `#materializeAllDrafts`.
-    const emptyDraft = wrapAsOutletRoot([]);
-    _setLayoutLayer(
-      outletName,
-      LAYOUT_LAYERS.SESSION_DRAFT,
-      emptyDraft,
-      getOwner(this),
-      { permissive: true }
-    );
-    this.wireframeEditEngine.markOutletDrafted(outletName);
-    this.layoutQuery.recordOutletRoot(outletName);
-    this.wireframeEditEngine.captureBaseline(
-      outletName,
-      cloneLayoutForDraft(this.layoutQuery.readResolvedLayout(outletName) ?? [])
-    );
-    return this.layoutQuery.readResolvedLayout(outletName) ?? emptyDraft;
+    return this.wireframeEditEngine.ensureDraft(outletName);
   }
 
   @action
@@ -1132,12 +1050,12 @@ export default class WireframeService extends Service {
     this.wireframeSelection.reset();
     this.dragSession.clear();
     this.wireframeDragOverlay.clear();
-    this.#blockReveal.reset();
+    this.wireframeBlockReveal.reset();
     this.#pendingDropFiles.clear();
     // Revert to the minimal rich-text renderer so admin pages without
     // an open editor render the same DOM as live.
     resetBlockArgRenderer("rich-text");
-    this.#pendingArgs.clear();
+    this.wireframeArgEdit.clear();
     this.#persistedDraftLayouts.clear();
     this.#forceExpandedKeys.clear();
     // Clear every editor body class, including the chrome's collapse / dim
@@ -1646,25 +1564,25 @@ export default class WireframeService extends Service {
    * Called by a block's editor chrome from its `didInsert` once its element
    * exists. Delegates to the reveal/flash leaf, which runs any reveal or flash
    * that was deferred because the element wasn't in the DOM when the block was
-   * selected. See `../lib/block-reveal.js`.
+   * selected. See `../services/wireframe-block-reveal.js`.
    *
    * @param {string} blockKey - The mounting block's composite key.
    * @param {HTMLElement} element - The block's chrome element.
    */
   notifyChromeInserted(blockKey, element) {
-    this.#blockReveal.notifyChromeInserted(blockKey, element);
+    this.wireframeBlockReveal.notifyChromeInserted(blockKey, element);
   }
 
   /**
    * Briefly flashes the rendered element for the given block key to draw the
    * eye to it — used when selection originates somewhere other than a direct
    * click on the block (outline selection, insert auto-select). Delegates to
-   * the reveal/flash leaf. See `../lib/block-reveal.js`.
+   * the reveal/flash leaf. See `../services/wireframe-block-reveal.js`.
    *
    * @param {string|null} blockKey - The composite key of the block to flash.
    */
   flashBlock(blockKey) {
-    this.#blockReveal.flash(blockKey);
+    this.wireframeBlockReveal.flash(blockKey);
   }
 
   /**
@@ -1721,23 +1639,16 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Records a pending arg change for the currently-selected block and
-   * schedules a debounced flush. A burst of keystrokes within
-   * `FLUSH_DELAY_MS` collapses into a single batch — applied to
-   * `entry.args` at flush time. Because `entry.args` is a `trackedObject`
-   * and the curried block reads through reactive getters, the canvas
-   * updates without re-rendering anything else.
+   * Arg-edit facade — delegates to `wireframeArgEdit`, which owns the debounced
+   * inspector-arg pipeline. Kept as `@action` so template/handler consumers that
+   * bind `wireframe.updateSelectedArg` keep the correct `this`.
    *
    * @param {string} argName
    * @param {*} value
    */
   @action
   updateSelectedArg(argName, value) {
-    if (!this.selectedBlockKey) {
-      return;
-    }
-    this.#pendingArgs.set(argName, value);
-    discourseDebounce(this, this.#flushPendingArgs, FLUSH_DELAY_MS);
+    return this.wireframeArgEdit.updateSelectedArg(argName, value);
   }
 
   /**
@@ -1909,8 +1820,8 @@ export default class WireframeService extends Service {
    * Updates one field inside a `containerArgs` namespace bag of the selected
    * entry (e.g. `containerArgs.grid.column`). Placement edits are rarer than
    * typography edits, so we route directly through `replaceEntryContainerArgs`
-   * (structural commit) rather than the keystroke-debounced `#pendingArgs`
-   * pipeline used for `args`.
+   * (structural commit) rather than the keystroke-debounced arg-edit pipeline
+   * (`wireframeArgEdit`) used for `args`.
    *
    * @param {string} namespace - The childArgs namespace key (e.g. "grid").
    * @param {string} name - The field name inside the namespace.
@@ -3674,7 +3585,7 @@ export default class WireframeService extends Service {
   #isOutletPristineSinceEnter(outlet) {
     return (
       !this.wireframeEditEngine.isOutletEdited(outlet) &&
-      this.#pendingArgs.size === 0 &&
+      !this.wireframeArgEdit.hasPending &&
       this.inlineEdit.blockKey == null
     );
   }
@@ -3804,101 +3715,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Applies every pending arg change in one shot by mutating the resolved
-   * entry's `args` directly. The block's reactive getters propagate the
-   * change through Glimmer's autotracking — no layout swap, no DOM
-   * tear-down, no inspector remount.
-   *
-   * Captures the pre-edit snapshot BEFORE applying the mutation so reset /
-   * exit / undo have the original state to restore. Records the affected
-   * outlet in `editedOutlets` so persistence knows what to POST on Save.
-   *
-   * @returns {Promise<boolean>} True if the flush touched an entry.
-   */
-  async #flushPendingArgs() {
-    const key = this.selectedBlockKey;
-    if (!key || this.#pendingArgs.size === 0) {
-      return false;
-    }
-    const pending = [...this.#pendingArgs.entries()];
-    this.#pendingArgs.clear();
-
-    // A selected composite part has no persisted entry: its edits are written
-    // to the owning composite's per-part override map (a structural commit),
-    // not into a tracked entry's args.
-    const partContext = this.layoutQuery.resolvePartContext(key);
-    if (partContext) {
-      return this.#flushPendingPartArgs(partContext, pending);
-    }
-
-    const located = await this.layoutQuery.findEntryAndOutlet(key);
-    if (!located) {
-      return false;
-    }
-    const { entry, outletName } = located;
-
-    const prevMap = new Map();
-    for (const [argName] of pending) {
-      prevMap.set(argName, entry.args?.[argName]);
-    }
-
-    // The engine flags the outlet, captures the FULL pre-edit snapshot before
-    // applying the mutation (so reset / exit have a complete rollback target),
-    // writes the new values, and pushes a single `args` undo entry.
-    this.wireframeEditEngine.recordArgBatch({
-      entry,
-      outletName,
-      prevMap,
-      nextMap: new Map(pending),
-    });
-
-    return true;
-  }
-
-  /**
-   * Commits a batch of pending arg edits for a selected composite part by
-   * merging them into the owning composite entry's per-part override map. This
-   * is a structural commit (the synthesis reads `entry.overrides` at render
-   * time, and synthesized part args aren't tracked objects), so it routes
-   * through `recordStructural` for undo/redo and re-publishes the draft layer.
-   * Setting an arg to `null`/`undefined` removes it from the override (reverting
-   * that arg to the part's code default).
-   *
-   * @param {{compositeKey: string, outletName: string, partPath: string}} partContext
-   * @param {Array<[string, *]>} pending
-   * @returns {boolean}
-   */
-  #flushPendingPartArgs({ compositeKey, outletName, partPath }, pending) {
-    return this.recordStructural([outletName], () => {
-      const layout = this.layoutQuery.readResolvedLayout(outletName);
-      if (!layout) {
-        return false;
-      }
-      const result = setPartOverride(
-        layout,
-        compositeKey,
-        partPath,
-        (current) => {
-          const merged = { ...current };
-          for (const [argName, value] of pending) {
-            if (value == null) {
-              delete merged[argName];
-            } else {
-              merged[argName] = value;
-            }
-          }
-          return merged;
-        }
-      );
-      if (!result.changed) {
-        return false;
-      }
-      this.publishStructuralChange(outletName, result.layout);
-      return true;
-    });
-  }
-
-  /**
    * Looks up the composite key of a freshly inserted entry (after
    * `publishStructuralChange` has assigned its `__stableKey`) and routes
    * through `restoreSelection` so the editor's selection state — and the
@@ -3916,7 +3732,7 @@ export default class WireframeService extends Service {
     this.restoreSelection(key);
     // Flash the freshly inserted block so the eye lands on it, the same way
     // outline selection does.
-    this.#blockReveal.flash(key);
+    this.wireframeBlockReveal.flash(key);
   }
 
   /**

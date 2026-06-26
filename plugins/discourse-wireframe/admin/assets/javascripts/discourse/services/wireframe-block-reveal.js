@@ -1,9 +1,10 @@
 // @ts-check
 
 import { cancel, schedule } from "@ember/runloop";
+import Service, { service } from "@ember/service";
 import discourseLater from "discourse/lib/later";
 import { prefersReducedMotion } from "discourse/lib/utilities";
-import { entryKey, findAncestryPath } from "./mutate-layout";
+import { entryKey, findAncestryPath } from "../lib/mutate-layout";
 
 // Duration of the just-selected flash; mirror the CSS animation length in
 // `wireframe-chrome.scss` (`.wireframe-block-chrome.--just-selected`).
@@ -18,15 +19,14 @@ const FLASH_DURATION_MS = 1100;
  * chrome calls `notifyChromeInserted` from its `didInsert` the moment it mounts,
  * and the treatment runs then. No polling.
  *
- * A dependency-free leaf: the kernel constructs it with down-injected layout
- * readers, so it holds opaque capabilities and never reaches back into any
- * service. It owns transient presentation state (pending keys + the flash
- * timer) and has side effects (DOM + timers), so the kernel keeps it private
- * and drives it rather than exposing the instance.
+ * A peer service that reads the draft-aware layout via the layout-query service
+ * and subscribes itself to the selection seam — it never reaches back into the
+ * editor kernel. It owns transient presentation state (pending keys + the flash
+ * timer) and has side effects (DOM + timers).
  */
-export default class BlockReveal {
-  #findEntryAndOutletSync;
-  #readResolvedLayout;
+export default class WireframeBlockRevealService extends Service {
+  @service wireframeLayoutQuery;
+  @service wireframeSelection;
 
   /** @type {string|null} A selected block awaiting its element to mount. */
   #pendingRevealKey = null;
@@ -39,15 +39,18 @@ export default class BlockReveal {
   #flashTimer = null;
   #flashedEl = null;
 
-  /**
-   * @param {{
-   *   findEntryAndOutletSync: (key: string) => {entry: Object, outletName: string}|null,
-   *   readResolvedLayout: (outletName: string) => Array<Object>|null,
-   * }} deps
-   */
-  constructor({ findEntryAndOutletSync, readResolvedLayout }) {
-    this.#findEntryAndOutletSync = findEntryAndOutletSync;
-    this.#readResolvedLayout = readResolvedLayout;
+  constructor() {
+    super(...arguments);
+    // Own our reaction to selection changes: reveal the newly selected block.
+    // Registered once at instantiation and permanent for the app lifetime (the
+    // seam has no unregister). It fires on every selection change regardless of
+    // editor active-state, which is safe: `revealSelection` no-ops when the
+    // block element isn't in the DOM, and `reset()` clears any pending key
+    // across sessions. The composition root looks this service up at boot so
+    // the subscription exists before the first selection change.
+    this.wireframeSelection.registerAfterChange(({ key }) =>
+      this.revealSelection(key)
+    );
   }
 
   /**
@@ -172,11 +175,13 @@ export default class BlockReveal {
    * @param {string} blockKey - The composite key of the block being revealed.
    */
   #revealContainingTabs(blockKey) {
-    const located = this.#findEntryAndOutletSync(blockKey);
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(blockKey);
     if (!located) {
       return;
     }
-    const layout = this.#readResolvedLayout(located.outletName);
+    const layout = this.wireframeLayoutQuery.readResolvedLayout(
+      located.outletName
+    );
     if (!layout) {
       return;
     }
