@@ -5,17 +5,10 @@ module DiscourseWorkflows
     module User
       class V1 < NodeType
         OPERATIONS = %w[get edit].freeze
-        TRUST_LEVEL_OPTIONS = [
-          { value: "0", label_key: "trust_levels.names.newuser" },
-          { value: "1", label_key: "trust_levels.names.basic" },
-          { value: "2", label_key: "trust_levels.names.member" },
-          { value: "3", label_key: "trust_levels.names.regular" },
-          { value: "4", label_key: "trust_levels.names.leader" },
-        ].freeze
         UPDATE_OPTIONS = [
           { name: "bio_raw", type: :string, required: false, ui: { control: :textarea } },
           { name: "title", type: :string, required: false },
-          { name: "trust_level", type: :options, required: true, options: TRUST_LEVEL_OPTIONS },
+          { name: "trust_level", type: :options, required: true, options: trust_level_options },
           { name: "trust_level_locked", type: :boolean, required: false },
         ].freeze
         MISSING = DiscourseWorkflows::Executor::NodeExecutionContext::MISSING
