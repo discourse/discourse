@@ -397,6 +397,8 @@ class Topic < ActiveRecord::Base
   attr_accessor :skip_callbacks
   attr_accessor :advance_draft
 
+  OG_IMAGE_REGENERATION_COUNTER_STEP = 10
+
   before_create { initialize_default_values }
 
   after_create do
@@ -457,6 +459,33 @@ class Topic < ActiveRecord::Base
     else
       clear_generated_og_image!
     end
+  end
+
+  def self.regenerate_og_image_after_replies_change(topic_id, replies_count)
+    return if !og_image_counter_regeneration_needed?(replies_count - 1, replies_count)
+
+    Topic.find_by(id: topic_id)&.enqueue_og_image_regeneration_after_counter_change(
+      previous_count: replies_count - 1,
+      current_count: replies_count,
+    )
+  end
+
+  def self.og_image_counter_regeneration_needed?(previous_count, current_count)
+    previous_count = previous_count.to_i
+    current_count = current_count.to_i
+
+    current_count >= OG_IMAGE_REGENERATION_COUNTER_STEP &&
+      previous_count / OG_IMAGE_REGENERATION_COUNTER_STEP <
+        current_count / OG_IMAGE_REGENERATION_COUNTER_STEP
+  end
+
+  def enqueue_og_image_regeneration_after_counter_change(previous_count:, current_count:)
+    return if !SiteSetting.generate_topic_og_image
+    return if og_image_upload_id.blank?
+    return if !TopicOgImageGenerator.eligible?(self)
+    return if !self.class.og_image_counter_regeneration_needed?(previous_count, current_count)
+
+    Jobs.enqueue(:generate_topic_og_image, topic_id: id)
   end
 
   def clear_generated_og_image!
@@ -934,6 +963,7 @@ class Topic < ActiveRecord::Base
         WHERE id = ?
         RETURNING highest_staff_post_number
       SQL
+      return result.first.to_i
     else
       reply_sql = opts[:reply] ? ", reply_count = reply_count + 1" : ""
       posts_sql = opts[:post] ? ", posts_count = posts_count + 1" : ""
@@ -945,11 +975,17 @@ class Topic < ActiveRecord::Base
             #{reply_sql}
             #{posts_sql}
         WHERE id = :topic_id
-        RETURNING highest_post_number
+        RETURNING highest_post_number, posts_count
       SQL
     end
 
-    result.first.to_i
+    if opts[:post]
+      highest_post_number, posts_count = result
+      regenerate_og_image_after_replies_change(topic_id, posts_count.to_i - 1)
+      highest_post_number.to_i
+    else
+      result.first.to_i
+    end
   end
 
   def self.reset_all_highest!
@@ -1383,9 +1419,14 @@ class Topic < ActiveRecord::Base
   end
 
   def update_action_counts
-    update_column(
-      :like_count,
-      Post.where.not(post_type: Post.types[:whisper]).where(topic_id: id).sum(:like_count),
+    old_like_count = like_count
+    new_like_count =
+      Post.where.not(post_type: Post.types[:whisper]).where(topic_id: id).sum(:like_count)
+
+    update_column(:like_count, new_like_count)
+    enqueue_og_image_regeneration_after_counter_change(
+      previous_count: old_like_count,
+      current_count: new_like_count,
     )
   end
 
