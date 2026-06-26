@@ -465,6 +465,9 @@ en:
   invalid_access: "You are not permitted to view the requested resource."
   topic_converter:
     too_many_recipients: "Cannot convert: this topic has more participants than the max allowed (%{max})."
+  topic_og_image:
+    preview_not_eligible: "Cannot generate an OG image for personal messages or topics in private categories."
+    preview_generation_failed: "Failed to generate preview image."
   authenticator_not_found: "Authentication method does not exist, or has been disabled."
   authenticator_no_connect: "This authentication provider does not allow connection to an existing forum account."
   invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
@@ -1947,6 +1950,7 @@ en:
     manifest_icon: "Image used as logo/splash image on Android. Will be automatically resized to 512 × 512. If left blank, {{setting:large_icon}} will be used."
     manifest_screenshots: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, {{setting:large_icon}} will be used."
+    generate_topic_og_image: "Automatically generate OpenGraph preview images for topics that don't have an image. Uses topic title, category, and site colors."
     apple_touch_icon: "Icon used for Apple touch devices. A transparent background is not recommended. Will be automatically resized to 180x180. If left blank, {{setting:large_icon}} will be used."
     opengraph_image: "Default opengraph image, used when the page has no other suitable image. If left blank, {{setting:large_icon}} will be used"
     x_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the {{setting:opengraph_image}}, as long as that is not also a .svg"

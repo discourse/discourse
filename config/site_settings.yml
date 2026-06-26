@@ -192,6 +192,9 @@ branding:
     default: ""
     client: true
     type: upload
+  generate_topic_og_image:
+    default: false
+    client: true
   opengraph_image:
     default: ""
     client: true
