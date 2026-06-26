@@ -217,6 +217,7 @@ export default function () {
   this.route("new-topic");
   this.route("new-message");
   this.route("new-invite");
+  this.route("share-target");
 
   this.route("badges", function () {
     this.route("show", { path: "/:id/:slug" });

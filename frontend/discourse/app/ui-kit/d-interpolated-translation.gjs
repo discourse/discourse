@@ -59,6 +59,7 @@ export default class DInterpolatedTranslation extends Component {
     // Find all of the placeholders in the string we're looking at.
     const message = I18n.findTranslationWithFallback(this.args.key, {
       ...optionsArg,
+      needsPluralization: typeof optionsArg.count === "number",
     });
     const placeholderAppearance = I18n.findPlaceholders(message);
 

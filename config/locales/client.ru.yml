@@ -2904,6 +2904,12 @@ ru:
       confirm_title: Перейти на %{site_name}
       logging_in_as: Войти как %{email}
       confirm_button: Завершить вход
+    code_login:
+      email_label: "Эл. почта"
+      continue_button: "Продолжить"
+      verify_button: "Продолжить"
+      account_ready_continue: "Продолжить"
+      username_label: "Псевдоним"
     login:
       header_title: "С возвращением!"
       title: "Войти"
@@ -3157,6 +3163,10 @@ ru:
       modal_title: "Поиск GIF-изображений"
       composer_title: "Вставить GIF"
       no_results: "Введите ключевое слово выше для поиска GIF-файлов."
+    codemirror:
+      expression:
+        sections:
+          metadata: "Метаданные"
     composer:
       autocomplete:
         username_missing: "В выбранном результате автозаполнения отсутствует имя пользователя."
@@ -3991,6 +4001,9 @@ ru:
       pinned_reply: "Закреплена"
       pin_reply: "Закрепить вверху"
       unpin_reply: "Открепить"
+    share_target:
+      new_topic: "Новая тема"
+      new_message: "Личное сообщение"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -4905,7 +4918,6 @@ ru:
         site_settings: "Настройки сайта"
       choose_type:
         title: "Выберите тип категории"
-        requires_plugin: "Требуется плагин"
       create_category: "Создать категорию"
       save: "Сохранить категорию"
       unsaved_changes: "У вас есть несохраненные изменения"
@@ -5573,7 +5585,7 @@ ru:
       edit: "Редактировать этот тег"
       description: "Описание"
       settings:
-        title: "настроек"
+        title: "Настроек"
         edit_title: "Редактировать тег: %{name}"
         edit_tag_prefix: "Редактировать тег:"
         select_tag: "Выберите тег для редактирования."
@@ -6126,12 +6138,6 @@ ru:
             bookmarks: "Темы в категории «%{category}» без тегов, которые вы добавили в закладки"
             default: "%{filter} темы в категории «%{category}» без тегов"
         categories: "Все категории"
-    content_localization:
-      toggle_localized:
-        translated: "Страница переведена автоматически. Нажмите, чтобы увидеть оригинал."
-        not_translated: "Страница не переведена. Нажмите, чтобы перевести."
-        translations_enabled: "Переводы включены"
-        translations_disabled: "Переводы отключены"
     language_switcher:
       title: "Изменить язык сайта"
   admin_js:
@@ -6280,7 +6286,7 @@ ru:
           header_description: "Настройте способ входа и аутентификации пользователей, идентификаторы ключей доступа и секретные ключи доступа, поставщиков OAuth2 и многое другое"
           sub_pages:
             common_settings:
-              title: "настроек"
+              title: "Настроек"
             discourse_id:
               title: "Discourse ID"
         discourse_id:
@@ -6500,7 +6506,7 @@ ru:
           header_description: "Отчеты — это мощный инструмент, помогающий понять, что происходит на вашем сайте. Они помогут вам выявить тенденции, обнаружить проблемы и принять решения на основе данных."
           sub_pages:
             settings:
-              title: "настроек"
+              title: "Настроек"
         badges:
           title: "Награды"
           header_description: "Награды выдаются пользователям за их действия, вклад и достижения, чтобы признавать, подтверждать и поощрять хорошее поведение и участие в жизни сообщества"
@@ -9067,7 +9073,7 @@ ru:
         sections:
           design: Дизайн
           query: Запрос
-          settings: настроек
+          settings: Настроек
         usage_heading: Использование
         allow_title: Разрешить использовать название награды в качестве титула
         multiple_grant: Может быть предоставлена несколько раз

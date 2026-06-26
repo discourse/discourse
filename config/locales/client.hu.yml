@@ -2624,6 +2624,12 @@ hu:
       confirm_title: Tovább a(z) %{site_name} oldalra
       logging_in_as: Bejelentkezés mint %{email}
       confirm_button: Bejelentkezés befejezése
+    code_login:
+      email_label: "E-mail:"
+      continue_button: "Folytatás"
+      verify_button: "Folytatás"
+      account_ready_continue: "Folytatás"
+      username_label: "Felhasználónév"
     login:
       header_title: "Üdvözöljük újra"
       title: "Bejelentkezés"
@@ -2853,6 +2859,10 @@ hu:
       publish: "Megosztott vázlat közzététele"
       confirm_publish: "Biztos, hogy közzéteszi ezt a vázlatot?"
       publishing: "Téma közzététele…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metaadat"
     composer:
       autocomplete:
         username_missing: "A kiválasztott automatikus kiegészítési találatból hiányzik a felhasználónév."
@@ -3583,6 +3593,9 @@ hu:
       deleted_post_placeholder: "[törölve]"
       ignored_post_placeholder: "[figyelmen kívül hagyott]"
       pinned_reply: "Kiemelt"
+    share_target:
+      new_topic: "Új téma"
+      new_message: "Új üzenet"
     topic:
       filter_to:
         one: "%{count} bejegyzés a témában"
@@ -4401,7 +4414,6 @@ hu:
         site_settings: "Webhely beállítások"
       choose_type:
         title: "Válasszon kategóriatípust"
-        requires_plugin: "Szükséges bővítmény"
       create_category: "Kategória létrehozása"
       save: "Kategória mentése"
       unsaved_changes: "Nem mentett módosításai vannak"
@@ -5546,12 +5558,6 @@ hu:
             bookmarks: "%{category} kategória címke nélküli témái, amelyeket könyvjelzőhöz adtál"
             default: "%{filter} témák a(z) %{category} kategóriában címkék nélkül"
         categories: "Minden kategória"
-    content_localization:
-      toggle_localized:
-        translated: "Az oldal gépi fordítású. Kattintson az eredeti megtekintéséhez."
-        not_translated: "Az oldal nincs lefordítva. Kattintson a fordításhoz."
-        translations_enabled: "Fordítások engedélyezve"
-        translations_disabled: "Fordítások letiltva"
     language_switcher:
       title: "Oldal nyelvének módosítása"
   admin_js:

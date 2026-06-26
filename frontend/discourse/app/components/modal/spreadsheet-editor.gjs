@@ -132,7 +132,7 @@ export default class SpreadsheetEditor extends Component {
   async loadJspreadsheet() {
     const [jspreadsheetModule] = await waitForPromise(
       Promise.all([
-        import("jspreadsheet-ce"),
+        import(/* dynamicChunkName: "jspreadsheet" */ "jspreadsheet-ce"),
         import("jspreadsheet-ce/dist/jspreadsheet.css"),
         import("jsuites/dist/jsuites.css"),
       ])

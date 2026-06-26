@@ -4032,6 +4032,8 @@ sv:
   onebox:
     discourse:
       user_joined_community: "Gick med %{date}"
+    google_meet:
+      meeting_code: "Kod:"
     gitlab:
       truncated_file: "Den här filen har trunkerats."
       show_original: "visa original"

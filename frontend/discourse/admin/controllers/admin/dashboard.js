@@ -182,6 +182,7 @@ export default class AdminDashboardController extends Controller {
         sections: model.sections,
         configuration: model.configuration,
       };
+      this.problems = model.problems;
     } catch {
       if (id !== this._sectionsLoadId) {
         return;
@@ -267,7 +268,7 @@ export default class AdminDashboardController extends Controller {
           };
 
           if (versionChecks) {
-            properties.versionCheck = VersionCheck.create(model.version_check);
+            properties.versionCheck = new VersionCheck(model.version_check);
           }
 
           this.setProperties(properties);
@@ -304,5 +305,27 @@ export default class AdminDashboardController extends Controller {
   @action
   refreshProblems() {
     this._loadProblems();
+  }
+
+  @action
+  async refreshSiteAdvice() {
+    try {
+      const model = await AdminDashboard.fetchProblems();
+      this.problems = model.problems;
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async ignoreProblem(problem) {
+    try {
+      await ajax(`/admin/admin_notices/${problem.id}`, { type: "DELETE" });
+      this.problems = this.problems.filter(
+        (candidate) => candidate.id !== problem.id
+      );
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 }

@@ -2633,6 +2633,12 @@ pt_BR:
       confirm_title: Continuar para %{site_name}
       logging_in_as: Entrando como %{email}
       confirm_button: Terminar de entrar
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Continuar"
+      verify_button: "Continuar"
+      account_ready_continue: "Continuar"
+      username_label: "Nome de usuário(a)"
     login:
       header_title: "Boas-vindas outra vez"
       title: "Entrar"
@@ -2862,6 +2868,10 @@ pt_BR:
       publish: "Publicar rascunho compartilhado"
       confirm_publish: "Você tem certeza de que deseja publicar este rascunho?"
       publishing: "Publicando tópico…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metadados"
     composer:
       autocomplete:
         username_missing: "Nome de usuário(a) ausente no resultado do preenchimento automático selecionado."
@@ -3591,6 +3601,9 @@ pt_BR:
       deleted_post_placeholder: "[excluído]"
       pinned_reply: "Fixada"
       unpin_reply: "Desafixar"
+    share_target:
+      new_topic: "Novo tópico"
+      new_message: "Nova mensagem"
     topic:
       filter_to:
         one: "%{count} postagem no tópico"
@@ -4411,8 +4424,6 @@ pt_BR:
       create_long: "Criar uma nova categoria"
       type_settings_schema:
         site_settings: "Configurações do site"
-      choose_type:
-        requires_plugin: "Requer plugin"
       create_category: "Criar categoria"
       save: "Salvar categoria"
       unsaved_changes: "Você tem alterações não salvas"
@@ -5553,12 +5564,6 @@ pt_BR:
             bookmarks: "Tópicos em %{category} sem etiquetas que você adicionou aos favoritos"
             default: "Tópicos %{filter} em %{category} sem tags"
         categories: "Todas as categorias"
-    content_localization:
-      toggle_localized:
-        translated: "Esta página foi traduzida por máquina. Clique para ver o texto original."
-        not_translated: "Página não traduzida. Clique para traduzir."
-        translations_enabled: "Traduções ativadas"
-        translations_disabled: "Traduções desativadas"
     language_switcher:
       title: "Alterar o idioma do site"
   admin_js:

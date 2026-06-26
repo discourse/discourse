@@ -39,8 +39,11 @@ pl_PL:
         title: Oceniaj posty za pomocą sztucznej inteligencji
         description: "Oceniaj posty przy użyciu dużego modelu językowego"
         flagged_post: |
-          <div>Odpowiedź modelu:</div>
-          <p>%{llm_response}</p>
+          %{score_reason}
+          %{response}
+        flagged_post_response: |
+          <p>Odpowiedź modelu: %{llm_response}</p>
+        flagged_post_score_reason: |
           <b>Wyzwalane przez regułę <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
           subject: "Twój post został tymczasowo usunięty w celu sprawdzenia"
@@ -267,6 +270,12 @@ pl_PL:
       change_description: "Zmień opis"
       copied: "Skopiowano do schowka"
     unknown_model: "Nieznany model AI"
+    discourse_workflows:
+      ai_agent:
+        errors:
+          locked_default_llm_missing: "Agent „%{agent}” jest zablokowany na swoim domyślnym LLM, ale nie skonfigurowano żadnego prawidłowego domyślnego LLM"
+          llm_not_found: "Nie znaleziono modelu LLM o identyfikatorze %{llm_model_id}"
+          no_llm_configured: "Nie skonfigurowano LLM dla agenta „%{agent}”. Wybierz model LLM lub skonfiguruj domyślny LLM agenta/lokacji."
     tools:
       custom_name: "%{name} (niestandardowe)"
       presets:
@@ -387,6 +396,8 @@ pl_PL:
         cannot_delete_system_agent: "Nie można usunąć agentów systemowych, zamiast tego należy je wyłączyć"
         cannot_edit_system_agent: "Można zmienić tylko nazwy agentów systemowych, nie można edytować narzędzi ani komunikatów systemowych, zamiast tego należy je wyłączyć i utworzyć kopię"
         cannot_have_duplicate_tools: "Nie można mieć duplikatów narzędzi"
+        native_tool_requires_forced_llm: "Narzędzia natywne dostawcy wymagają domyślnego LLM z włączoną opcją „Wymuś domyślny LLM”"
+        native_tool_unsupported_by_llm: "Wybrany domyślny program LLM nie obsługuje żadnego z włączonych narzędzi natywnych dostawcy"
         admin_dashboard_highlights:
           name: "Najważniejsze informacje na temat panelu administracyjnego"
           description: "Wyświetla krótki odczyt wyświetlany na górze panelu administracyjnego, wyjaśniając, co się zmieniło i na co należy zwrócić uwagę w tym okresie"
@@ -557,6 +568,13 @@ pl_PL:
           flag_type:
             name: "Typ flagi"
             description: "Kontroluje, czy wpis jest sprawdzany, ukrywany, usuwany lub traktowany jako spam."
+      native_tools:
+        web_search:
+          name: "Wyszukiwanie w sieci (natywne)"
+          help: "Umożliwia modelowi przeszukiwanie sieci przy użyciu wbudowanej wyszukiwarki dostawcy, gdy agent jest zmuszony do korzystania z obsługiwanego LLM."
+        web_fetch:
+          name: "Pobieranie z sieci (natywne)"
+          help: "Umożliwia modelowi otwieranie i odczytywanie stron internetowych przy użyciu wbudowanego dostępu do sieci dostawcy, gdy agent jest wymuszony przez obsługiwany protokół LLM."
       tool_summary:
         read_artifact: "Przeczytaj artefakt sieciowy"
         search_uploaded_documents: "Wyszukaj przesłane dokumenty"
@@ -742,6 +760,7 @@ pl_PL:
         already_flagged: "Wpis został już oflagowany do sprawdzenia."
         flagged: "Wpis oflagowany do sprawdzenia."
         reason: "Bot AI oflagował ten wpis.\n\nPowód: %{reason}"
+        score_reason: "Bot AI oznaczył ten wpis."
       close_topic:
         errors:
           not_found: "Temat nie został znaleziony."
@@ -896,6 +915,9 @@ pl_PL:
           positive: "Pozytywne"
           negative: "Negatywne"
           neutral: "Neutralne"
+    discord:
+      configuration:
+        agent_user_required: "Aby można było włączyć tryb agenta Discord, agent wyszukiwania Discord musi mieć skojarzonego użytkownika."
     llm:
       configuration:
         create_llm: "Przed włączeniem tej funkcji należy skonfigurować LLM"

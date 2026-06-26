@@ -23,6 +23,8 @@ module DiscourseAi
       ].freeze
 
       MAX_SIGNALS = 6
+      MAX_LANDING_TOPIC_DAYS = 93
+      MAX_STAFF_RATIO_DAYS = 93
 
       METRIC_LABELS = {
         new_signups: "new sign-ups",
@@ -41,6 +43,7 @@ module DiscourseAi
         @start_date, @end_date = @end_date, @start_date if @start_date > @end_date
 
         length = (@end_date - @start_date).to_i
+        @period_days = length + 1
         @prev_end = @start_date - 1
         @prev_start = @start_date - (length + 1)
       end
@@ -51,6 +54,7 @@ module DiscourseAi
         signals =
           [
             hot_topic,
+            topic_volume,
             unanswered_gap,
             staff_ratio,
             traffic_volume,
@@ -63,7 +67,7 @@ module DiscourseAi
           period: {
             start_date: @start_date.to_s,
             end_date: @end_date.to_s,
-            days: (@end_date - @start_date).to_i + 1,
+            days: @period_days,
           },
           trend: trend(kpis),
           metrics: kpis.map { |kpi| metric_for(kpi) },
@@ -80,8 +84,26 @@ module DiscourseAi
       end
 
       def metric_for(kpi)
+        key = kpi[:type]&.to_sym
         label = METRIC_LABELS[kpi[:type]&.to_sym] || kpi[:type].to_s.tr("_", " ")
-        { label: label, value: kpi[:value], delta_pct: kpi[:percent_change] }
+        {
+          key: key,
+          category: metric_category(key),
+          label: label,
+          value: kpi[:value],
+          delta_pct: kpi[:percent_change],
+        }
+      end
+
+      def metric_category(key)
+        case key
+        when :new_signups
+          :acquisition
+        when :dau_mau, :new_contributors
+          :participation
+        when :accepted_solutions
+          :support
+        end
       end
 
       def trend(kpis)
@@ -99,11 +121,42 @@ module DiscourseAi
         (((current - previous).to_f / previous) * 100).round
       end
 
-      def signal(key, headline, score:)
-        { key: key, headline: headline, score: score }
+      def signal(key, headline, score:, category:)
+        { key: key, category: category, headline: headline, score: score }
       end
 
       # ---- internal signals --------------------------------------------------
+
+      def new_topics_count(start_date, end_date)
+        DB.query_single(<<~SQL, start_date: start_date, end_date: end_date).first.to_i
+            SELECT COUNT(*)
+            FROM topics t
+            JOIN users u ON u.id = t.user_id
+            WHERE t.created_at >= :start_date
+              AND t.created_at < (:end_date::date + 1)
+              AND t.deleted_at IS NULL
+              AND t.visible = true
+              AND t.archetype = 'regular'
+              AND NOT (u.admin OR u.moderator)
+          SQL
+      end
+
+      def topic_volume
+        current = new_topics_count(@start_date, @end_date)
+        previous = new_topics_count(@prev_start, @prev_end)
+        delta = delta_pct(current, previous)
+        return if delta.nil? || delta.abs < 30
+        return if delta.positive? && current < 5
+        return if delta.negative? && previous < 5
+
+        direction = delta.positive? ? "up" : "down"
+        signal(
+          :topic_volume,
+          "New topics were #{direction} #{delta.abs}% versus the previous period",
+          score: [delta.abs / 200.0, 0.8].min,
+          category: :participation,
+        )
+      end
 
       def hot_topic
         row = DB.query(<<~SQL, start_date: @start_date, end_date: @end_date).first
@@ -137,6 +190,7 @@ module DiscourseAi
           :hot_topic,
           "Busiest discussion: \"#{row.title}\" with #{row.replies} replies",
           score: 0.7,
+          category: :participation,
         )
       end
 
@@ -144,23 +198,33 @@ module DiscourseAi
         count = DB.query_single(<<~SQL, start_date: @start_date, end_date: @end_date).first.to_i
             SELECT COUNT(*)
             FROM topics t
+            JOIN users u ON u.id = t.user_id
             WHERE t.created_at >= :start_date
               AND t.created_at < (:end_date::date + 1)
               AND t.posts_count = 1
               AND t.deleted_at IS NULL
               AND t.visible = true
               AND t.archetype = 'regular'
+              AND NOT (u.admin OR u.moderator)
           SQL
         return if count < 5
 
+        total = new_topics_count(@start_date, @end_date)
+        share = total.positive? ? ((count.to_f / total) * 100).round : 0
+        headline = "#{count} new member-created topics received no reply"
+        headline = "#{headline} (#{share}% of member-created topics)" if share >= 10
+
         signal(
           :unanswered_gap,
-          "#{count} new topics received no reply",
-          score: [0.4 + (count / 100.0), 0.9].min,
+          headline,
+          score: [0.4 + (share / 100.0), 0.9].min,
+          category: :support,
         )
       end
 
       def staff_ratio
+        return if @period_days > MAX_STAFF_RATIO_DAYS
+
         row = DB.query(<<~SQL, start_date: @start_date, end_date: @end_date).first
             SELECT
               COUNT(*) FILTER (WHERE u.admin OR u.moderator) AS staff,
@@ -178,7 +242,12 @@ module DiscourseAi
         pct = ((row.staff.to_f / row.total) * 100).round
         return if pct < 40
 
-        signal(:staff_ratio, "Staff wrote #{pct}% of posts this period", score: pct / 100.0)
+        signal(
+          :staff_ratio,
+          "Staff wrote #{pct}% of posts this period",
+          score: pct / 100.0,
+          category: :participation,
+        )
       end
 
       # ---- external signals --------------------------------------------------
@@ -205,6 +274,7 @@ module DiscourseAi
           :traffic_volume,
           "Browser pageviews were #{direction} #{delta.abs}% versus the previous period",
           score: [delta.abs / 200.0, 0.8].min,
+          category: :acquisition,
         )
       end
 
@@ -226,7 +296,7 @@ module DiscourseAi
             "Traffic spiked on #{peak.date} (#{multiple}x the typical day)"
           end
 
-        signal(:traffic_spike, headline, score: [multiple / 10.0, 0.95].min)
+        signal(:traffic_spike, headline, score: [multiple / 10.0, 0.95].min, category: :acquisition)
       end
 
       def dominant_referrer_for(date)
@@ -275,11 +345,16 @@ module DiscourseAi
           :geography,
           "#{share}% of browser pageviews came from #{top.country_code}",
           score: share / 100.0,
+          category: :acquisition,
         )
       end
 
       def landing_topic
-        row = DB.query(<<~SQL, start_date: @start_date, end_date: @end_date).first
+        return if @period_days > MAX_LANDING_TOPIC_DAYS
+
+        row =
+          DB.query(
+            <<~SQL,
             SELECT e.topic_id, t.title, COUNT(*) AS visits
             FROM browser_pageview_events e
             JOIN topics t ON t.id = e.topic_id
@@ -287,16 +362,22 @@ module DiscourseAi
               AND e.created_at < (:end_date::date + 1)
               AND e.topic_id IS NOT NULL
               AND e.normalized_referrer IS NOT NULL
+              AND e.source = :source
             GROUP BY e.topic_id, t.title
             ORDER BY visits DESC
             LIMIT 1
           SQL
+            start_date: @start_date,
+            end_date: @end_date,
+            source: BrowserPageviewEvent.rollup_source,
+          ).first
         return if row.nil? || row.visits.to_i < 50
 
         signal(
           :landing_topic,
           "External visitors mostly landed on \"#{row.title}\" (#{row.visits} visits)",
           score: 0.6,
+          category: :acquisition,
         )
       end
     end

@@ -2055,6 +2055,12 @@ ro:
       confirm_title: Continuă la %{site_name}
       logging_in_as: Autentificare ca %{email}
       confirm_button: Finalizează autentificarea
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Continuă"
+      verify_button: "Continuă"
+      account_ready_continue: "Continuă"
+      username_label: "Nume utilizator"
     login:
       header_title: "Bine ai revenit"
       title: "Autentificare"
@@ -2609,6 +2615,9 @@ ro:
       deleted_post_placeholder: "[șters]"
       ignored_post_placeholder: "[ignorat]"
       pinned_reply: "Fixat"
+    share_target:
+      new_topic: "Subiect nou"
+      new_message: "Mesaj nou"
     topic:
       filter_to:
         one: "O postare în subiect"

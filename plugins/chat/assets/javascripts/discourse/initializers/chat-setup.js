@@ -48,6 +48,15 @@ class ChatSetupInit {
       });
 
       if (!this.chatService.userCanChat) {
+        // include chat elements for anons (except header icon)
+        if (
+          this.chatService.anonymousUserCanViewPublicChat &&
+          !EmbedMode.enabled
+        ) {
+          document.body.classList.add("chat-enabled");
+          api.addCardClickListenerSelector(".chat-drawer-outlet");
+        }
+
         return;
       }
 

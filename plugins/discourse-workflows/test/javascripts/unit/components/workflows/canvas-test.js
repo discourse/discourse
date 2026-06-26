@@ -61,7 +61,6 @@ module("Unit | Component | workflows canvas", function (hooks) {
       value: {
         workflow,
         workflowId: 1,
-        workflowName: "Workflow",
         nodes: [{ clientId: "node-1", type: "trigger:manual" }],
         get workflowPublished() {
           return workflow.activeVersionId;
@@ -131,7 +130,6 @@ module("Unit | Component | workflows canvas", function (hooks) {
       value: {
         workflow,
         workflowId: 1,
-        workflowName: "Workflow",
         nodes: [{ clientId: "node-1", type: "trigger:manual" }],
         get workflowPublished() {
           return workflow.activeVersionId;
@@ -246,7 +244,6 @@ module("Unit | Component | workflows canvas", function (hooks) {
     Object.defineProperty(canvas, "args", {
       value: {
         workflowId: 1,
-        workflowName: "Workflow",
         nodes: [],
         workflowPublished: null,
         hasUnpublishedChanges: true,

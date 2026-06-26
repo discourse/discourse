@@ -7,7 +7,7 @@ class Admin::DashboardController < Admin::StaffController
                 only: %i[available_reports update_reports_section update_configuration]
 
   def index
-    if dashboard_improvements?
+    if UpcomingChanges.enabled_for_user?(:dashboard_improvements, current_user)
       data = dashboard_sections_payload
     else
       data = AdminDashboardIndexData.fetch_cached_stats
@@ -42,7 +42,7 @@ class Admin::DashboardController < Admin::StaffController
   def problems
     ProblemCheck.realtime.run_all
 
-    render json: { problems: serialize_data(AdminNotice.problem.all, AdminNoticeSerializer) }
+    render json: { problems: serialized_problems }
   end
 
   def new_features
@@ -131,51 +131,30 @@ class Admin::DashboardController < Admin::StaffController
 
   private
 
+  def serialized_problems
+    serialize_data(AdminNotice.problem.order(:id), AdminNoticeSerializer)
+  end
+
   def dashboard_sections_payload
     visible_ids = AdminDashboardSectionConfiguration.visible_section_ids
-    data = { sections: visible_ids.map { |id| { id: id, data: section_data(id) } } }
+    data = {
+      sections:
+        AdminDashboardSectionLoader.build(
+          section_ids: visible_ids,
+          current_user: current_user,
+          start_date: params[:start_date],
+          end_date: params[:end_date],
+        ),
+      problems: serialized_problems,
+    }
     if current_user.admin?
       data[:configuration] = { sections: AdminDashboardSectionConfiguration.sections }
     end
     data
   end
 
-  def section_data(id)
-    case id
-    when "highlights"
-      AdminDashboardHighlights.build(start_date: params[:start_date], end_date: params[:end_date])
-    when "traffic"
-      AdminDashboardSiteTraffic.build(start_date: params[:start_date], end_date: params[:end_date])
-    when "engagement"
-      AdminDashboardEngagement.build(
-        start_date: params[:start_date],
-        end_date: params[:end_date],
-        current_user: current_user,
-      )
-    when "reports"
-      AdminDashboard::Reports::Section.build(guardian: guardian)
-    when "search"
-      AdminDashboardSearch.build(start_date: params[:start_date], end_date: params[:end_date])
-    end
-  end
-
   def mark_new_features_as_seen
     DiscourseUpdates.mark_new_features_as_seen(current_user.id)
-  end
-
-  def ensure_dashboard_improvements_enabled
-    raise Discourse::NotFound if !dashboard_improvements?
-  end
-
-  def dashboard_improvements?
-    dashboard_improvements_enabled =
-      UpcomingChanges.enabled_for_user?(:dashboard_improvements, current_user)
-
-    if params[:version] == "alt"
-      !dashboard_improvements_enabled
-    else
-      dashboard_improvements_enabled
-    end
   end
 
   def parse_reports_items_payload

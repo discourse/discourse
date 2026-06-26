@@ -597,10 +597,6 @@ basic:
   trigger_browser_pageview_events:
     default: false
     hidden: true
-  use_beacon_for_browser_page_views:
-    default: false
-    hidden: true
-    client: true
   persist_browser_pageview_events:
     default: true
     hidden: true
@@ -664,6 +660,12 @@ login:
     client: true
     default: true
     validator: "EnableLocalLoginsViaEmailValidator"
+    area: "login"
+  enable_local_logins_via_code:
+    client: true
+    default: false
+    hidden: true
+    validator: "EnableLocalLoginsViaCodeValidator"
     area: "login"
   enable_passkeys:
     client: true
@@ -1639,7 +1641,7 @@ posting:
     hidden: true
     area: "gifs"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/404829"
   klipy_api_key:
@@ -2027,7 +2029,7 @@ email:
     client: true
     hidden: true
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       allow_enabled_for:
         - everyone
@@ -2586,7 +2588,7 @@ files:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/402705"
       allow_enabled_for:
@@ -2639,6 +2641,14 @@ trust:
     area: "trust_levels"
   create_topic_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
+    type: group_list
+    allow_any: false
+    refresh: true
+    disallowed_groups: "4"
+    area: "group_permissions"
+  topic_timers_allowed_groups:
+    default: "1|2|14" # auto group admins, moderators, trust_level_4
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -4440,7 +4450,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/395768"
       allow_enabled_for:
@@ -4522,7 +4532,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/387322"
       body_class: true
@@ -4563,7 +4573,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/402843"
       allow_enabled_for:
@@ -4588,8 +4598,5 @@ experimental:
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/404528"
   admin_dashboard_reports_seeded:
-    default: false
-    hidden: true
-  admin_dashboard_search_section_enabled:
     default: false
     hidden: true

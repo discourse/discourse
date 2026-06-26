@@ -402,8 +402,6 @@ tr_TR:
         input_placeholder: Ad ekleyin
         slug_description: URL'de kanal adı yerine kanal slug'ı kullanılmış
         name: Kanal adı
-        slug: Kanal slug'ı (isteğe bağlı)
-        emoji: Kanal emojisi (isteğe bağlı)
         reset_emoji: Emojiyi sıfırla
       channel_edit_description_modal:
         title: Açıklamayı düzenle
@@ -461,16 +459,14 @@ tr_TR:
             one: '%{group} ve %{count} grupta daha bulunan kullanıcılar, <a href="%{settingLink}" target="_blank">güvenlik ayarları</a> uyarınca bu kanala erişebilecek'
             other: '%{group} ve %{count} grupta daha bulunan kullanıcılar, <a href="%{settingLink}" target="_blank">güvenlik ayarları</a> uyarınca bu kanala erişebilecek'
         create: "Kanal oluştur"
-        description: "Açıklama (isteğe bağlı)"
+        description: "Açıklama"
         name: "Kanal adı"
-        slug: "Kanal slug'ı (isteğe bağlı)"
         title: "Yeni kanal"
         type: "Tür"
         types:
           category: "Kategori"
           topic: "Konu"
         emoji:
-          label: "Kanal emojisi (isteğe bağlı)"
           reset: "Emojiyi sıfırla"
       reviewable:
         type: "Sohbet mesajı"

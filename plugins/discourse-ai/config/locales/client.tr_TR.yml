@@ -980,7 +980,6 @@ tr_TR:
         title: "YZ kullanarak değişiklik önerin"
         description: "Aşağıdaki seçeneklerden birini belirleyin ve YZ size metnin yeni bir versiyonunu önersin."
         selection_hint: "İpucu: Ayrıca, yalnızca onu yeniden yazmak için yardımcıyı açmadan önce metnin bir bölümünü de seçebilirsiniz."
-        suggest: "YZ ile öner"
         suggest_errors:
           too_many_tags:
             one: "En fazla sadece %{count} etikete sahip olabilirsiniz"

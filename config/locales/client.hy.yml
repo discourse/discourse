@@ -2075,6 +2075,12 @@ hy:
       confirm_title: Շարունակել դեպի %{site_name}
       logging_in_as: Մուտք գործել որպես %{email}
       confirm_button: Ավարտել Մուտքը
+    code_login:
+      email_label: "Էլ. հասցե"
+      continue_button: "Շարունակել"
+      verify_button: "Շարունակել"
+      account_ready_continue: "Շարունակել"
+      username_label: "Օգտանուն"
     login:
       header_title: "Բարի վերադարձ"
       title: "Մուտք Գործել"
@@ -2615,6 +2621,8 @@ hy:
       deleted_post_placeholder: "[ջնջված է]"
       ignored_post_placeholder: "[անտեսված]"
       pinned_reply: "Ամրակցված"
+    share_target:
+      new_message: "Նոր հաղորդագրություն"
     topic:
       filter_to:
         one: "%{count} հրապարակում թեմայում"

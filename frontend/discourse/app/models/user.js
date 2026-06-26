@@ -55,6 +55,7 @@ export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
   BACKUP_CODE: 2,
   SECURITY_KEY: 3,
+  PASSKEY: 4,
 };
 
 export const MAX_SECOND_FACTOR_NAME_LENGTH = 300;
@@ -295,6 +296,11 @@ export default class User extends RestModel.extend(Evented) {
   @computed("staff", "isLeader")
   get canManageTopic() {
     return this.staff || this.isLeader;
+  }
+
+  @computed("can_set_topic_timer", "canManageTopic")
+  get canSetTopicTimer() {
+    return this.can_set_topic_timer ?? this.canManageTopic;
   }
 
   @computed("sidebar_category_ids")

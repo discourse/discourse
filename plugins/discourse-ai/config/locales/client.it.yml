@@ -620,7 +620,6 @@ it:
         title: "Suggerisci modifiche utilizzando l'IA"
         description: "Scegli una delle opzioni seguenti e l'IA ti suggerirà una nuova versione del testo."
         selection_hint: "Suggerimento: puoi anche selezionare una parte del testo prima di aprire l'assistente per riscrivere solo quel pezzo."
-        suggest: "Suggerisci con l'IA"
         suggest_errors:
           too_many_tags:
             one: "Puoi avere solo fino a %{count} etichetta"

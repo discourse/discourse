@@ -646,7 +646,19 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
       end
     end
 
-    it "falls back to the default actor for blank actor fields" do
+    it "defaults to the system user when the actor field is not configured" do
+      resolver_context = { "$json" => {} }
+      sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
+      ctx = described_class.new(input_items: [], parameters: {}, resolver: resolver)
+
+      expect(ctx.actor_from_parameter("actor_username")).to eq(Discourse.system_user)
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+
+    it "raises when a configured actor field resolves to a blank value" do
       resolver_context = { "$json" => {} }
       sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
       resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
@@ -659,7 +671,54 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
           resolver: resolver,
         )
 
-      expect(ctx.actor_from_parameter("actor_username")).to eq(Discourse.system_user)
+      expect { ctx.actor_from_parameter("actor_username") }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        I18n.t("discourse_workflows.errors.actor.blank", field: "actor_username"),
+      )
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+
+    it "raises when an actor expression resolves to a blank value" do
+      resolver_context = { "$json" => { "actor" => "" } }
+      sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
+      ctx =
+        described_class.new(
+          input_items: [{ "json" => { "actor" => "" } }],
+          parameters: {
+            "actor_username" => "={{ $json.actor }}",
+          },
+          resolver: resolver,
+        )
+
+      expect { ctx.actor_from_parameter("actor_username") }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        I18n.t("discourse_workflows.errors.actor.blank", field: "actor_username"),
+      )
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+
+    it "resolves the anonymous sentinel to an anonymous guardian actor" do
+      resolver_context = { "$json" => {} }
+      sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
+      ctx =
+        described_class.new(
+          input_items: [],
+          parameters: {
+            "actor_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
+          },
+          resolver: resolver,
+        )
+
+      actor = ctx.actor_from_parameter("actor_username")
+
+      expect(actor).to be_a(DiscourseWorkflows::AnonymousActor)
+      expect(actor.guardian.anonymous?).to eq(true)
     ensure
       resolver&.dispose
       sandbox&.dispose
@@ -688,6 +747,27 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
         expect(post.user_id).to eq(admin.id)
         expect(post.reply_to_post_number).to eq(first_post.post_number)
       end.to change { topic.posts.count }.by(1)
+    end
+
+    it "creates a whisper reply as a whisperer" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect do
+        post =
+          ctx.create_post(user: admin, raw: "Workflow whisper", topic_id: topic.id, whisper: true)
+
+        expect(post.post_type).to eq(Post.types[:whisper])
+      end.to change { topic.posts.count }.by(1)
+    end
+
+    it "requires the user to create whispers" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect do
+        ctx.create_post(user: user, raw: "Unauthorized whisper", topic_id: topic.id, whisper: true)
+      end.to raise_error(Discourse::InvalidAccess).and not_change { topic.posts.count }
     end
 
     it "requires the user to see the topic" do

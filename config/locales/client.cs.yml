@@ -2815,6 +2815,12 @@ cs:
       confirm_title: Pokračovat na %{site_name}
       logging_in_as: Přihlášení jako %{email}
       confirm_button: Dokončit přihlášení
+    code_login:
+      email_label: "Email"
+      continue_button: "Pokračovat"
+      verify_button: "Pokračovat"
+      account_ready_continue: "Pokračovat"
+      username_label: "Uživatelské jméno"
     login:
       header_title: "Vítejte zpět"
       title: "Přihlášení"
@@ -3052,6 +3058,10 @@ cs:
       publish: "Zveřejnit sdílený koncept"
       confirm_publish: "Určitě chcete zveřejnit tento koncept?"
       publishing: "Publikování tématu…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metadata"
     composer:
       autocomplete:
         username_missing: "Vybranému výsledku automatického dokončování chybí uživatelské jméno."
@@ -3858,6 +3868,9 @@ cs:
       deleted_post_placeholder: "[smazáno]"
       ignored_post_placeholder: "[ignorováno]"
       pinned_reply: "Připnuto"
+    share_target:
+      new_topic: "Nové téma"
+      new_message: "Nová zpráva"
     topic:
       filter_to:
         one: "%{count} příspěvek v tématu"
@@ -4768,7 +4781,6 @@ cs:
         site_settings: "Nastavení webu"
       choose_type:
         title: "Vyberte typ kategorie"
-        requires_plugin: "Vyžaduje plugin"
       create_category: "Vytvořit kategorii"
       save: "Uložit kategorii"
       unsaved_changes: "Máte neuložené změny"
@@ -5978,10 +5990,6 @@ cs:
             bookmarks: "Témata v %{category} bez štítků, která jste si uložili do záložek"
             default: "%{filter} témata v %{category} bez štítků"
         categories: "Všechny kategorie"
-    content_localization:
-      toggle_localized:
-        translated: "Stránka je strojově přeložena. Klepnutím zobrazíte originál."
-        not_translated: "Stránka není přeložena. Kepnutím ji přeložíte."
     language_switcher:
       title: "Změna jazyka webu"
   admin_js:

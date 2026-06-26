@@ -9,7 +9,24 @@ class TopicsBulkAction
     @operation = operation
     @changed_ids = []
     @errors = Hash.new(0)
+    @restricted_tag_errors = Hash.new(0)
     @options = options
+  end
+
+  def tag_category_errors
+    return [] if @restricted_tag_errors.empty?
+
+    category_names =
+      Category.where(id: @restricted_tag_errors.keys.map(&:first).uniq).pluck(:id, :name).to_h
+
+    @restricted_tag_errors.map do |(category_id, tag_names), count|
+      {
+        category_id: category_id,
+        category_name: category_names[category_id],
+        tag_names: tag_names,
+        count: count,
+      }
+    end
   end
 
   def self.operations
@@ -374,9 +391,29 @@ class TopicsBulkAction
       @changed_ids << topic.id
       true
     else
-      topic.errors.full_messages.each { |msg| @errors[msg] += 1 }
+      not_allowed =
+        DiscourseTagging.tag_names_not_allowed_in_category(
+          topic.category,
+          tag_names,
+          restricted_to: restricted_category_ids_for(tag_names),
+        )
+      if topic.category && not_allowed.present?
+        @restricted_tag_errors[[topic.category_id, not_allowed.sort]] += 1
+      else
+        topic.errors.full_messages.each { |msg| @errors[msg] += 1 }
+      end
       false
     end
+  end
+
+  def restricted_category_ids_for(tag_names)
+    @restricted_tag_cache ||= {}
+    uncached = tag_names - @restricted_tag_cache.keys
+    if uncached.present?
+      found = DiscourseTagging.restricted_category_ids_by_tag_name(uncached)
+      uncached.each { |name| @restricted_tag_cache[name] = found.key?(name) ? found[name] : nil }
+    end
+    @restricted_tag_cache.slice(*tag_names).compact
   end
 
   def resolve_tag_names
@@ -411,7 +448,7 @@ class TopicsBulkAction
   end
 
   def topics_with_tags
-    @topics_with_tags ||= topics.includes(:first_post, :tags)
+    @topics_with_tags ||= topics.includes(:first_post, :tags, :category)
   end
 
   def dismiss_topics_since_date

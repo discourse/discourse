@@ -2237,6 +2237,12 @@ sq:
       confirm_title: Vazhdo tek %{site_name}
       logging_in_as: Identifikohuni si %{email}
       confirm_button: Përfundoni hyrjen
+    code_login:
+      email_label: "Email"
+      continue_button: "Vazhdoni"
+      verify_button: "Vazhdoni"
+      account_ready_continue: "Vazhdoni"
+      username_label: "Emri i përdoruesit"
     login:
       header_title: "Mirë se vini përsëri"
       title: "Identifikohu"

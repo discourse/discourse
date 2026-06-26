@@ -261,10 +261,14 @@ export default class ChatMessage extends Component {
   get show() {
     return (
       !this.args.message?.deletedAt ||
-      this.currentUser.id === this.args.message?.user?.id ||
-      this.currentUser.staff ||
+      this.currentUser?.id === this.args.message?.user?.id ||
+      this.currentUser?.staff ||
       this.args.message?.channel?.canModerate
     );
+  }
+
+  get isByCurrentUser() {
+    return this.currentUser?.id === this.args.message?.user?.id;
   }
 
   @action
@@ -521,8 +525,8 @@ export default class ChatMessage extends Component {
   get shouldRenderStopMessageStreamingButton() {
     return (
       this.args.message.streaming &&
-      (this.currentUser.admin ||
-        this.args.message.inReplyTo?.user?.id === this.currentUser.id)
+      (this.currentUser?.admin ||
+        this.args.message.inReplyTo?.user?.id === this.currentUser?.id)
     );
   }
 
@@ -565,8 +569,7 @@ export default class ChatMessage extends Component {
           (if @message.highlighted "-highlighted")
           (if @message.streaming "-streaming")
           (if (lt @message.user.id 0) "is-bot")
-          (if (eq @message.user.id this.currentUser.id) "is-by-current-user")
-          (if (eq @message.id this.currentUser.id) "is-by-current-user")
+          (if this.isByCurrentUser "is-by-current-user")
           (if
             (eq
               @message.id

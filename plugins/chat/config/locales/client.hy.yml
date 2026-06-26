@@ -85,6 +85,7 @@ hy:
           one: "%{count} անդամ"
           other: "%{count} անդամ"
       create_channel:
+        description: "Նկարագրություն"
         type: "Տիպը"
         types:
           category: "Կատեգորիա"

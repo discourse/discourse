@@ -71,7 +71,7 @@ async function initLightbox(elem, additionalData = {}) {
   const caps = helperContext().capabilities;
 
   const { default: PhotoSwipeLightbox } = await waitForPromise(
-    import("photoswipe/lightbox")
+    import(/* dynamicChunkName: "photoswipe-lightbox" */ "photoswipe/lightbox")
   );
   const isTestEnv = isTesting() || isRailsTesting();
   const canDownload =
@@ -106,7 +106,10 @@ async function initLightbox(elem, additionalData = {}) {
     escKey: false,
     tapAction,
     paddingFn,
-    pswpModule: async () => await waitForPromise(import("photoswipe")),
+    pswpModule: async () =>
+      await waitForPromise(
+        import(/* dynamicChunkName: "photoswipe" */ "photoswipe")
+      ),
     appendToEl: isTesting() && document.getElementById("ember-testing"),
   });
 

@@ -1869,7 +1869,7 @@ pl_PL:
       enable_smart_lists: "Włącz inteligentne listy podczas pisania w kompozytorze"
       enable_defer: "Włącz opcję oznaczania tematów jako nieprzeczytanych"
       enable_markdown_monospace_font: "Użyj czcionki o stałej szerokości w trybie Markdown kompozytora"
-      show_original_content: "Pokaż oryginalną treść zamiast przetłumaczonej. Można to również przełączać w obrębie tematów."
+      show_original_content: "Pokaż oryginalną treść zamiast przetłumaczonej."
       experimental_sidebar:
         enable: "Włącz pasek boczny"
         options: "Opcje"
@@ -2985,6 +2985,30 @@ pl_PL:
       confirm_title: Przejdź do %{site_name}
       logging_in_as: Logowanie jako %{email}
       confirm_button: Dokończ logowanie
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Kontynuuj"
+      check_your_email: "Sprawdź swoją pocztę e-mail"
+      code_instructions: "Wysłaliśmy 6-cyfrowy kod na adres <b>%{email}</b>. Wprowadź go poniżej, aby kontynuować."
+      verify_button: "Kontynuuj"
+      resend: "Wyślij ponownie kod"
+      resend_countdown: "Wyślij ponownie kod (%{count}s)"
+      code_resent: "Wysłaliśmy nowy kod."
+      use_different_email: "Użyj innego adresu e-mail"
+      use_password_instead: "Zamiast tego zaloguj się za pomocą hasła"
+      email_me_code: "Wyślij mi na e-mail jednorazowy kod logowania"
+      signup_title: "Dołącz do tej społeczności"
+      signup_instructions: "Podaj swój adres e-mail, aby dołączyć do tej społeczności. Wyślemy Ci kod potwierdzający i gotowe!"
+      user_fields_title: "Prawie gotowe"
+      user_fields_instructions: "Jeszcze tylko kilka szczegółów, aby zakończyć tworzenie konta."
+      account_ready_title: "Twoje konto jest gotowe! 🎉"
+      account_ready_edit: "Wybierz swoją nazwę użytkownika i awatar"
+      account_ready_continue: "Kontynuuj"
+      username_label: "Nazwa użytkownika"
+      username_placeholder: "Wybierz nazwę użytkownika"
+      change_avatar: "Zmień awatar"
+      username_taken: "Ta nazwa użytkownika jest zajęta. Spróbuj innej."
+      username_unavailable: "Ta nazwa użytkownika jest niedostępna. Spróbuj %{suggestion}."
     login:
       header_title: "Witamy ponownie"
       title: "Zaloguj się"
@@ -3001,10 +3025,11 @@ pl_PL:
       second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
       second_factor: "Zaloguj się przy użyciu aplikacji Authenticator"
       security_key_description: "Gdy masz przygotowany fizyczny klucz bezpieczeństwa lub kompatybilne urządzenie mobilne, naciśnij znajdujący się poniżej przycisk Uwierzytelnij za pomocą klucza bezpieczeństwa."
-      security_key_or_passkey_description: "Gdy już przygotujesz klucz bezpieczeństwa, klucz dostępu lub kompatybilne urządzenie mobilne, naciśnij poniższy przycisk."
       security_key_alternative: "Spróbuj w inny sposób"
       security_key_authenticate: "Uwierzytelnij się za pomocą klucza bezpieczeństwa"
-      security_key_or_passkey_authenticate: "Uwierzytelnij się za pomocą klucza bezpieczeństwa lub klucza dostępu"
+      passkey_2fa_description: "Potwierdź swoją tożsamość za pomocą klucza."
+      use_passkey: "Użyj klucza dostępu"
+      use_security_key: "Użyj klucza bezpieczeństwa"
       security_key_not_allowed_error: "Upłynął limit czasu procesu uwierzytelniania klucza bezpieczeństwa lub został on anulowany."
       security_key_no_matching_credential_error: "W podanym kluczu zabezpieczeń nie znaleziono zgodnych poświadczeń."
       security_key_support_missing_error: "Twoje obecne urządzenie lub przeglądarka nie obsługuje używania kluczy bezpieczeństwa. Proszę użyć innej metody."
@@ -3079,6 +3104,7 @@ pl_PL:
         totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
         backup_code: "Zamiast tego użyj kodu zapasowego"
         security_key: "Zamiast tego użyj klucza zabezpieczeń"
+        passkey: "Zamiast tego użyj klucza dostępu"
       no_login_methods:
         title: "Brak metod logowania"
         description: "Nie skonfigurowano żadnych metod logowania. Administratorzy mogą odwiedzić <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a>, aby ponownie skonfigurować witrynę."
@@ -3250,6 +3276,77 @@ pl_PL:
       bad_api_key: "Brak klucza API Klipy lub jest on nieprawidłowy. Sprawdź ustawienia klucza API dla plików GIF."
       error_rate_limit: "Osiągnęliśmy limity szybkości interfejsu GIF API. Poczekaj chwilę i spróbuj ponownie."
       error_search_too_long: "Skróć zapytanie wyszukiwania do mniej niż 50 znaków i spróbuj ponownie."
+    codemirror:
+      expression:
+        sections:
+          recommended: "Polecane"
+          properties: "Właściwości"
+          methods: "Metody"
+          metadata: "Metadane"
+          globals: "Globalne"
+        methods:
+          string:
+            length: "Liczba znaków w ciągu."
+            includes: "Zwraca wartość true, jeśli ciąg zawiera podciąg."
+            startsWith: "Zwraca wartość true, jeśli ciąg zaczyna się od podanych znaków."
+            endsWith: "Zwraca wartość true, jeśli ciąg kończy się podanymi znakami."
+            split: "Dzieli ciąg na tablicę podciągów."
+            replaceAll: "Zastępuje wszystkie wystąpienia szukanego ciągu."
+            replace: "Zastępuje pierwsze wystąpienie ciągu wyszukiwania."
+            trim: "Usuwa spacje z obu końców ciągu."
+            trimStart: "Usuwa odstępy z początku ciągu."
+            trimEnd: "Usuwa odstępy z końca ciągu."
+            toLowerCase: "Zamienia litery w ciągu na małe."
+            toUpperCase: "Zamienia litery w ciąg na wielkie."
+            slice: "Wyodrębnia fragment ciągu znaków."
+            substring: "Zwraca część ciągu pomiędzy dwoma indeksami."
+            indexOf: "Zwraca indeks pierwszego wystąpienia lub -1, jeśli nie zostanie znalezione."
+            match: "Porównuje ciąg znaków z wyrażeniem regularnym."
+            concat: "Łączy jeden lub więcej ciągów znaków."
+          number:
+            toFixed: "Formatuje liczbę, określając stałą liczbę miejsc dziesiętnych."
+            toString: "Zwraca ciąg znaków reprezentujący liczbę."
+            toPrecision: "Formatuje liczbę do określonej precyzji."
+            toLocaleString: "Zwraca reprezentację ciągu uwzględniającą ustawienia regionalne."
+          boolean:
+            toString: "Zmienia wartość „true” na „true”, a „false” na „false”."
+          array:
+            length: "Liczba elementów w tablicy."
+            map: "Tworzy nową tablicę zawierającą wyniki wywołania funkcji dla każdego elementu."
+            filter: "Tworzy nową tablicę z elementami, które przeszły test."
+            find: "Zwraca pierwszy element spełniający funkcję testującą."
+            includes: "Zwraca wartość true, jeśli tablica zawiera określoną wartość."
+            join: "Łączy wszystkie elementy w ciąg."
+            slice: "Zwraca płytką kopię części tablicy."
+            sort: "Sortuje elementy tablicy na swoim miejscu."
+            reverse: "Odwraca kolejność elementów."
+            reduce: "Zredukuje tablicę do pojedynczej wartości."
+            indexOf: "Zwraca pierwszy indeks wartości lub -1, jeśli nie zostanie znaleziony."
+            concat: "Łączy tablice i/lub wartości w nową tablicę."
+          date:
+            toISOString: "Zwraca datę jako ciąg ISO 8601."
+            toLocaleDateString: "Zwraca ciąg daty uwzględniający ustawienia regionalne."
+            getTime: "Zwraca liczbę milisekund od początku epoki Uniksa."
+            getFullYear: "Zwraca czterocyfrowy rok."
+            getMonth: "Zwraca miesiąc (0-11)."
+            getDate: "Zwraca dzień miesiąca (1-31)."
+            getHours: "Zwraca godzinę (0-23)."
+            getMinutes: "Zwraca minuty (0-59)."
+            toLocaleString: "Zwraca ciąg daty i godziny uwzględniający ustawienia regionalne."
+        globals:
+          Math: "Stałe i funkcje matematyczne (Math.round, Math.random itp.)"
+          JSON: "Analiza składniowa i serializacja JSON (JSON.parse, JSON.stringify)."
+          Object: "Narzędzia obiektowe (Object.keys, Object.values, Object.entries)."
+          Array: "Narzędzia tablicowe (Array.isArray, Array.from)."
+          String: "Konstruktory ciągów znaków i narzędzia pomocnicze."
+          Number: "Narzędzia liczbowe (Number.isInteger, Number.parseFloat)."
+          Date: "Konstruktor daty. Użyj nowej Date(), aby utworzyć daty."
+          parseInt: "Analizuje ciąg znaków i zwraca liczbę całkowitą."
+          parseFloat: "Analizuje ciąg znaków i zwraca liczbę zmiennoprzecinkową."
+          encodeURIComponent: "Koduje komponent URI poprzez zastąpienie znaków specjalnych."
+          decodeURIComponent: "Dekoduje zakodowany komponent URI."
+          isNaN: "Zwraca wartość true, jeśli wartość jest NaN."
+          isFinite: "Zwraca wartość true, jeżeli wartość jest liczbą skończoną."
     composer:
       autocomplete:
         username_missing: "W wybranym wyniku autouzupełniania brakuje nazwy użytkownika."
@@ -4265,6 +4362,17 @@ pl_PL:
         link: "Dziennik aktywności"
         title: "Dziennik aktywności tematu"
         empty: "Brak aktywności tematu do wyświetlenia."
+      context:
+        banner: "Przeglądasz pojedynczy wątek z tego tematu."
+        view_full_topic: "Zobacz cały temat"
+        view_parent_context: "Wyświetl kontekst nadrzędny"
+    share_target:
+      title: "Udostępniana treść"
+      description: "Co chcesz zrobić z udostępnioną treścią?"
+      new_topic: "Nowy temat"
+      new_message: "Nowa wiadomość"
+      add_to_reply: "Dodaj do odpowiedzi"
+      added_to_reply: "Zapisano. Treść zostanie dodana przy następnym otwarciu odpowiedzi."
     topic:
       filter_to:
         one: "%{count} post w temacie"
@@ -5156,6 +5264,11 @@ pl_PL:
         instructions: "Udostępnij link do tego posta:"
       original_language: "Ten post został pierwotnie napisany w %{language}"
       original_language_and_outdated: "Ten post został pierwotnie napisany w %{language}. Tłumaczenie może być nieaktualne"
+      originally_written_in: "Język oryginalny: %{language}"
+      click_to_show_original: "Kliknij, aby wyświetlić oryginał"
+      tap_to_show_original: "Stuknij tutaj, aby wyświetlić oryginał"
+      click_to_show_translation: "Kliknij, aby wyświetlić tłumaczenie"
+      tap_to_show_translation: "Stuknij tutaj, aby wyświetlić tłumaczenie"
       ai_translation_disclaimer: "Tłumaczenia wygenerowane przez AI mogą być niedokładne."
     category:
       none: "(brak kategorii)"
@@ -5203,6 +5316,11 @@ pl_PL:
         tag_group: "Grupa tagów"
       topic_featured_link_allowed: "Zezwól na wybrane linki w tej kategorii"
       delete: "Usuń kategorię"
+      danger_zone:
+        title: "Strefa niebezpieczna"
+        delete_title: "Edytuj tę kategorię"
+        delete_description: "Po usunięciu tej kategorii i jej ustawień nie będzie można odzyskać. Tematy w niej zawarte będą musiały zostać wcześniej ponownie przypisane."
+        delete_title_forbidden: "Nie można usunąć tej kategorii"
       create: "Nowa kategoria"
       create_with_type: "Nowa kategoria %{typeName}"
       create_long: "Utwórz nową kategorię"
@@ -5213,7 +5331,9 @@ pl_PL:
         site_settings: "Ustawienia witryny"
       choose_type:
         title: "Wybierz typ kategorii"
-        requires_plugin: "Wymaga wtyczki"
+        requires_plugin: "Wymaga wtyczki „%{plugin_name}”"
+        unavailable: "Niedostępne"
+        ask_admin_to_enable_plugin: "Poproś administratora o włączenie wtyczki „%{plugin_name}”"
       create_category: "Utwórz kategorię"
       save: "Zapisz kategorię"
       unsaved_changes: "Masz niezapisane zmiany"
@@ -5976,6 +6096,7 @@ pl_PL:
         slug: "Identyfikator tekstowy"
         name_placeholder: "Nazwa tagu"
         slug_placeholder: "Identyfikator tekstowy tagu (opcjonalny, generowany automatycznie z nazwy)"
+        invalid_slug: "Używaj małych liter, cyfr i pojedynczych łączników między słowami."
         saved: "Zapisane ustawienia tagów"
         no_synonyms: "Dla tego tagu nie zdefiniowano synonimów."
         add_synonym_placeholder: "Wyszukaj tagi, które chcesz dodać jako synonimy..."
@@ -6529,12 +6650,6 @@ pl_PL:
             bookmarks: "Tematy w %{category} bez tagów, które dodałeś do zakładek"
             default: "Tematów %{filter} w %{category} bez tagów"
         categories: "Wszystkie kategorie"
-    content_localization:
-      toggle_localized:
-        translated: "Strona jest tłumaczona maszynowo. Kliknij, aby wyświetlić oryginał."
-        not_translated: "Strona nie jest przetłumaczona. Kliknij, aby przetłumaczyć."
-        translations_enabled: "Tłumaczenia włączone"
-        translations_disabled: "Tłumaczenia wyłączone"
     language_switcher:
       title: "Zmień język witryny"
   admin_js:
@@ -7120,6 +7235,12 @@ pl_PL:
         latest_version: "Najnowsza"
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
         dismiss_notice: "Ignoruj"
+        site_advice:
+          title:
+            one: "%{count} problem wymaga uwagi ze względu na konfigurację witryny"
+            few: "%{count} problemy wymagają uwagi ze względu na konfigurację witryny"
+            many: "%{count} problemów wymaga uwagi ze względu na konfigurację witryny"
+            other: "%{count} problemów wymaga uwagi ze względu na konfigurację witryny"
         new_features:
           title: "Co nowego?"
           subtitle: "Cały czas udostępniamy nowe funkcje i ulepszenia. Ta strona obejmuje najważniejsze z nich, ale możesz kliknąć 'Dowiedz się więcej', aby zobaczyć obszerne informacje o wersji."
@@ -7279,14 +7400,14 @@ pl_PL:
             headline:
               no_signal_title: "Za mało aktywności wyszukiwania, aby dokonać podsumowania."
               no_signal: "Wybierz dłuższy przedział dat lub wróć, gdy członkowie przeszukają więcej tematów."
-              content_gaps: "Ponad 10% wyszukiwań zakończyło się w tym okresie bez kliknięcia. Sprawdź poniższe luki w treści, aby dowiedzieć się, czego brakuje."
+              content_gaps: "Ponad 10% wyszukiwań członków zakończyło się w tym okresie bez kliknięcia. Sprawdź poniższe luki w treściach, aby dowiedzieć się, czego brakuje."
               rate_climbing: "Wskaźnik braku rezultatów rośnie w porównaniu z poprzednim okresem. Zwróć uwagę na luki w treściach poniżej."
               shrinking: "W porównaniu z poprzednim okresem liczba wyszukiwań zmalała, jednak większość wyszukiwań nadal prowadzi do treści."
               healthy: "Użytkownicy wciąż znajdują to, czego szukają, a liczba wyszukiwań jest stała lub rośnie."
             kpi:
               total_searches:
                 label: "Łączna liczba wyszukiwań"
-                tooltip: "Liczba wyszukiwań wykonanych w Twojej społeczności."
+                tooltip: "Liczba wyszukiwań wykonanych przez członków społeczności."
               no_result_rate:
                 label: "Wskaźnik braku wyników"
                 tooltip: "Procent wyszukiwań, w których członkowie nie kliknęli żadnego wyniku (0% CTR). Oznacza to, że członkowie mogą szukać treści, których Twoja społeczność nie ma."
@@ -7296,7 +7417,7 @@ pl_PL:
               status: "Status"
             trending:
               title: "Popularne wyszukiwania"
-              tooltip: "Najpopularniejsze wyszukiwane hasła."
+              tooltip: "Najpopularniejsze wyszukiwane hasła wśród członków."
               empty: "Brak wyszukiwań w tym okresie."
             content_gaps:
               title: "Luki w treściach"
@@ -7322,6 +7443,7 @@ pl_PL:
             disable: "Wyłącz %{title}"
             move_up: "Przesuń %{title} w górę"
             move_down: "Przesuń %{title} w dół"
+            footer_note: "Zmiany te będą dotyczyć wszystkich użytkowników."
         configure:
           button: "Konfiguruj"
           tooltip: "Skonfiguruj sposób wyświetlania tego pulpitu nawigacyjnego dla wszystkich użytkowników tej witryny."
@@ -7679,6 +7801,7 @@ pl_PL:
             invites:
               create: Wysyłaj zaproszenia e-mailem lub generuj linki do zaproszeń.
             badges:
+              list: Pobierz listę odznak.
               create: Utwórz nową odznakę.
               show: Uzyskaj informacje o odznace.
               update: Zaktualizuj odznakę.
@@ -8409,6 +8532,7 @@ pl_PL:
           updating: "Aktualizowanie…"
           update_success: "Aktualizacja motywu %{theme} zakończona"
           up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"
+          up_to_date_branch: "Motyw jest aktualny w gałęzi %{branch}, ostatnie sprawdzenie:"
           has_overwritten_history: "Bieżąca wersja motywu już nie istnieje, ponieważ historia Git została nadpisana przez wymuszony push."
           change_source:
             button: "Zmień źródło"
@@ -8434,6 +8558,11 @@ pl_PL:
             few: "Motyw jest %{count} aktualizacji w tyle!"
             many: "Motyw jest %{count} aktualizacji w tyle!"
             other: "Motyw jest %{count} aktualizacji w tyle!"
+          commits_behind_branch:
+            one: "Motyw znajduje się %{count} zatwierdzenie za gałęzią %{branch}"
+            few: "Motyw znajduje się %{count} zatwierdzenia za gałęzią %{branch}"
+            many: "Motyw znajduje się %{count} zatwierdzeń za gałęzią %{branch}"
+            other: "Motyw znajduje się %{count} zatwierdzeń za gałęzią %{branch}"
           compare_commits: "(Sprawdź nowe commity)"
           remote_theme_edits: "Jeśli chcesz edytować ten motyw, musisz <a href='%{repoURL}' target='_blank'>przesłać zmianę w jego repozytorium</a>"
           repo_unreachable: "Nie można skontaktować się z repozytorium Git tego motywu. Komunikat o błędzie:"
@@ -8876,6 +9005,7 @@ pl_PL:
             change_site_setting_groups: "zmień grupy ustawień witryny"
             discourse_id_regenerate_credentials: "wygeneruj ponownie dane uwierzytelniające Discourse ID"
             configure_category_type: "skonfiguruj typ kategorii"
+            unconfigure_category_type: "usuń konfigurację typu kategorii"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -8913,6 +9043,7 @@ pl_PL:
             header: "Nagłówek"
             full_page: "Pełna strona"
             click_through_only: "wszystkie (tylko przeklikiwanie)"
+            logged_in_only: "Tylko zalogowani"
           header_search_results: "Wyniki wyszukiwania w nagłówku"
         logster:
           title: "Dzienniki błędów"

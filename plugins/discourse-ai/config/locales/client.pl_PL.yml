@@ -236,7 +236,16 @@ pl_PL:
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
+          forced_llm_notice_description: "Ten agent jest zablokowany na skonfigurowanym domyślnym LLM. Przepływ pracy nie może go zastąpić."
+          llm_model_id: "Model LLM"
+          llm_model_default: "Użyj ustawień domyślnych agenta"
+          llm_model_default_with_name: "Użyj ustawień domyślnych agenta (%{value})"
           prompt: "Monit"
+          runner_username: "Uruchom jako"
+          runner_username_tooltip: "Użytkownik, którego uprawnienia służą do widoczności przesyłania i narzędzi agenta AI. Użyj systemu do automatyzacji przepływu pracy."
+          upload_ids: "Identyfikatory przesłania"
+          upload_ids_tooltip: "Opcjonalne identyfikatory przesyłania do dołączenia do monitu. Przesyłanie obrazów jest uwzględniane, gdy agent ma włączoną widoczność; przesyłanie dokumentów jest uwzględniane, gdy wybrany program LLM obsługuje ich typ pliku."
+          upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Wybierz agenta..."
       bot_chats:
         tab_label: "Czaty botów"
@@ -459,6 +468,7 @@ pl_PL:
         spam_detected: "Wykryto spam"
         custom_instructions_placeholder: "Instrukcje dla AI specyficzne dla witryny, aby pomóc w dokładniejszej identyfikacji spamu"
         enable: "Włącz"
+        enabled_locked_tip: "Wykrywanie spamu AI nie może być wyłączone na tej stronie."
         spam_tip: "Wykrywanie spamu przez sztuczną inteligencję będzie skanować pierwsze 3 posty wszystkich nowych użytkowników w tematach publicznych. Oznaczy je do sprawdzenia i zablokuje użytkowników, jeśli istnieje prawdopodobieństwo, że są spamem."
         settings_saved: "Ustawienia zapisane"
         spam_description: "Identyfikuje potencjalny spam przy użyciu wybranego LLM i oznacza go dla moderatorów witryny w celu sprawdzenia w kolejce przeglądania."
@@ -537,6 +547,7 @@ pl_PL:
         credit_allocations: "Alokacje kredytów"
       ai_agent:
         ai_tools: "Narzędzia"
+        native_tools_help: "Narzędzia natywne dostawcy, takie jak wyszukiwanie w sieci lub pobieranie stron, pojawiają się, gdy włączona jest opcja „Zawsze używaj domyślnego modelu języka” i wybrany domyślny model języka je obsługuje."
         mcp_servers: "Serwery MCP"
         mcp_server_tools_help: "Wybrane serwery MCP domyślnie udostępniają wszystkie swoje narzędzia. Zawęż je dla każdego agenta, aby zmniejszyć zużycie tokenów i zapewnić sobie wybór narzędzi."
         mcp_server_tool_count:
@@ -1058,7 +1069,9 @@ pl_PL:
         title: "Zaproponuj zmiany za pomocą AI"
         description: "Wybierz jedną z poniższych opcji, a sztuczna inteligencja zasugeruje Ci nową wersję tekstu."
         selection_hint: "Wskazówka: Możesz także zaznaczyć część tekstu przed otwarciem pomocnika, aby przepisać tylko ten fragment."
-        suggest: "Zasugeruj za pomocą AI"
+        suggest: "Pokaż sugestie AI"
+        choose: "Wybierz za mnie"
+        suggestions: "Sugestie"
         suggest_errors:
           too_many_tags:
             one: "Możesz mieć maksymalnie %{count} znacznik"

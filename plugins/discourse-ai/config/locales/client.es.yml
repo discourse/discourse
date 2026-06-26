@@ -977,7 +977,6 @@ es:
         title: "Sugerir cambios usando IA"
         description: "Elige una de las opciones siguientes y la IA te propondrá una nueva versión del texto."
         selection_hint: "Sugerencia: También puedes seleccionar una parte del texto antes de abrir el asistente para reescribir solo eso."
-        suggest: "Sugerir con IA"
         suggest_errors:
           too_many_tags:
             one: "Solo puedes tener hasta %{count} etiqueta"

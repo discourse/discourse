@@ -15,6 +15,7 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -56,10 +57,24 @@ export default <template>
                 {{#if @controller.hasOverwrittenHistory}}
                   {{i18n "admin.customize.theme.has_overwritten_history"}}
                 {{else}}
-                  {{i18n
-                    "admin.customize.theme.commits_behind"
-                    count=@controller.model.remote_theme.commits_behind
-                  }}
+                  {{#if @controller.displayRemoteBranch}}
+                    <DInterpolatedTranslation
+                      @key="admin.customize.theme.commits_behind_branch"
+                      @options={{hash
+                        count=@controller.model.remote_theme.commits_behind
+                      }}
+                      as |Placeholder|
+                    >
+                      <Placeholder @name="branch">
+                        <code>{{@controller.displayRemoteBranch}}</code>
+                      </Placeholder>
+                    </DInterpolatedTranslation>
+                  {{else}}
+                    {{i18n
+                      "admin.customize.theme.commits_behind"
+                      count=@controller.model.remote_theme.commits_behind
+                    }}
+                  {{/if}}
                 {{/if}}
                 {{#if @controller.model.remote_theme.github_diff_link}}
                   <a href={{@controller.model.remote_theme.github_diff_link}}>
@@ -68,7 +83,18 @@ export default <template>
                 {{/if}}
               {{else}}
                 {{#unless @controller.showRemoteError}}
-                  {{i18n "admin.customize.theme.up_to_date"}}
+                  {{#if @controller.displayRemoteBranch}}
+                    <DInterpolatedTranslation
+                      @key="admin.customize.theme.up_to_date_branch"
+                      as |Placeholder|
+                    >
+                      <Placeholder @name="branch">
+                        <code>{{@controller.displayRemoteBranch}}</code>
+                      </Placeholder>
+                    </DInterpolatedTranslation>
+                  {{else}}
+                    {{i18n "admin.customize.theme.up_to_date"}}
+                  {{/if}}
                   {{dFormatDate
                     @controller.model.remote_theme.updated_at
                     leaveAgo="true"

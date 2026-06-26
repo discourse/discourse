@@ -234,109 +234,100 @@ export default class DashboardSearch extends Component {
                 </:content>
               </DTooltip>
             </h3>
-            <div class="db-activity">
-              {{#if @search.trending.length}}
-                <div class="db-activity__table-scroll-container">
-                  <table class="db-activity-table">
-                    <thead>
-                      <tr>
-                        <th>{{i18n
-                            "admin.dashboard.sections.search.table.term"
-                          }}</th>
-                        <th class="db-activity-table__col-number">
-                          {{i18n
-                            "admin.dashboard.sections.search.table.searches"
+            {{#if @search.trending.length}}
+              <table class="db-search-table">
+                <thead>
+                  <tr>
+                    <th>{{i18n
+                        "admin.dashboard.sections.search.table.term"
+                      }}</th>
+                    <th class="db-search-table__col-number">
+                      {{i18n "admin.dashboard.sections.search.table.searches"}}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each @search.trending as |row|}}
+                    <tr data-test-search-term-row>
+                      <td>
+                        <LinkTo
+                          @route="adminSearchLogs.term"
+                          @query={{hash
+                            term=row.term
+                            period=this.trendingTermPeriod
+                            searchType="logged_in_only"
                           }}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {{#each @search.trending as |row|}}
-                        <tr data-test-search-term-row>
-                          <td>
-                            <LinkTo
-                              @route="adminSearchLogs.term"
-                              @query={{hash
-                                term=row.term
-                                period=this.trendingTermPeriod
-                              }}
-                            >
-                              {{row.term}}
-                            </LinkTo>
-                          </td>
-                          <td class="db-activity-table__cell-number">
-                            {{formatCount row.searches}}
-                          </td>
-                        </tr>
-                      {{/each}}
-                    </tbody>
-                  </table>
-                </div>
-              {{else}}
-                <p class="db-activity__empty">
-                  {{i18n "admin.dashboard.sections.search.trending.empty"}}
-                </p>
-              {{/if}}
-            </div>
+                          title={{row.term}}
+                        >
+                          {{row.term}}
+                        </LinkTo>
+                      </td>
+                      <td class="db-search-table__cell-number">
+                        {{formatCount row.searches}}
+                      </td>
+                    </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            {{else}}
+              <p class="db-search-table__empty">
+                {{i18n "admin.dashboard.sections.search.trending.empty"}}
+              </p>
+            {{/if}}
           </div>
 
           <div class="db-section__row-block">
             <h3 class="db-section__row-block-title">
               {{i18n "admin.dashboard.sections.search.content_gaps.title"}}
             </h3>
-            <div class="db-activity">
-              {{#if @search.content_gaps.length}}
-                <div class="db-activity__table-scroll-container">
-                  <table class="db-activity-table">
-                    <thead>
-                      <tr>
-                        <th>{{i18n
-                            "admin.dashboard.sections.search.table.term"
-                          }}</th>
-                        <th>{{i18n
-                            "admin.dashboard.sections.search.table.status"
-                          }}</th>
-                        <th class="db-activity-table__col-number">
-                          {{i18n
-                            "admin.dashboard.sections.search.table.searches"
-                          }}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {{#each @search.content_gaps as |row|}}
-                        <tr data-test-search-term-row>
-                          <td>
-                            <LinkTo
-                              @route="full-page-search"
-                              @query={{hash q=row.term}}
-                            >
-                              {{row.term}}
-                            </LinkTo>
-                          </td>
-                          <td>
-                            <DTooltip
-                              class="db-pill --neg"
-                              @identifier="search-gap-badge-tooltip"
-                            >
-                              <:trigger>{{badgeLabel row.status}}</:trigger>
-                              <:content>{{badgeTooltip row.status}}</:content>
-                            </DTooltip>
-                          </td>
-                          <td class="db-activity-table__cell-number">
-                            {{formatCount row.searches}}
-                          </td>
-                        </tr>
-                      {{/each}}
-                    </tbody>
-                  </table>
-                </div>
-              {{else}}
-                <p class="db-activity__empty">
-                  {{i18n "admin.dashboard.sections.search.content_gaps.empty"}}
-                </p>
-              {{/if}}
-            </div>
+            {{#if @search.content_gaps.length}}
+              <table class="db-search-table">
+                <thead>
+                  <tr>
+                    <th>{{i18n
+                        "admin.dashboard.sections.search.table.term"
+                      }}</th>
+                    <th class="db-search-table__col-status">{{i18n
+                        "admin.dashboard.sections.search.table.status"
+                      }}</th>
+                    <th class="db-search-table__col-number">
+                      {{i18n "admin.dashboard.sections.search.table.searches"}}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each @search.content_gaps as |row|}}
+                    <tr data-test-search-term-row>
+                      <td>
+                        <LinkTo
+                          @route="full-page-search"
+                          @query={{hash q=row.term}}
+                          title={{row.term}}
+                        >
+                          {{row.term}}
+                        </LinkTo>
+                      </td>
+                      <td>
+                        <DTooltip
+                          class="db-pill --neg"
+                          @identifier="search-gap-badge-tooltip"
+                        >
+                          <:trigger>{{badgeLabel row.status}}</:trigger>
+                          <:content>{{badgeTooltip row.status}}</:content>
+                        </DTooltip>
+                      </td>
+                      <td class="db-search-table__cell-number">
+                        {{formatCount row.searches}}
+                      </td>
+                    </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            {{else}}
+              <p class="db-search-table__empty">
+                {{i18n "admin.dashboard.sections.search.content_gaps.empty"}}
+              </p>
+            {{/if}}
           </div>
         </div>
       {{/if}}

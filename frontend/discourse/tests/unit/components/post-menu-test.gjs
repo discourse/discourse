@@ -4,6 +4,7 @@ import { module, test } from "qunit";
 import PostMenu from "discourse/components/post/menu";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 const noop = () => {};
 
@@ -103,6 +104,38 @@ module("Unit | Component | PostMenu", function (hooks) {
       ["transformer called"],
       "behavior transformer was called"
     );
+  });
+
+  test("share and copy link buttons use distinct icons", async function (assert) {
+    const post = this.post;
+
+    await render(<template><PostMenu @post={{post}} /></template>);
+
+    assert
+      .dom(
+        ".post-action-menu__share svg.d-icon-d-post-share use[href='#arrow-up-from-bracket']"
+      )
+      .exists("share uses the share icon");
+
+    assert
+      .dom(".post-action-menu__copy-link svg.d-icon-link use[href='#link']")
+      .exists("copy link uses the link icon");
+  });
+
+  test("show more does not request who liked the post", async function (assert) {
+    this.siteSettings.post_menu_hidden_items = "bookmark|copyLink";
+
+    let requested = false;
+    pretender.get("/post_action_users", () => {
+      requested = true;
+      return response({ post_action_users: [] });
+    });
+
+    const post = this.post;
+    await render(<template><PostMenu @post={{post}} /></template>);
+    await click(".post-action-menu__show-more");
+
+    assert.false(requested, "no request is sent to /post_action_users");
   });
 
   module("post-menu value transformer", function () {

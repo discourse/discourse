@@ -1636,7 +1636,6 @@ es:
       enable_smart_lists: "Activar listas inteligentes al escribir en el compositor"
       enable_defer: "Activar marcar temas como no leídos"
       enable_markdown_monospace_font: "Usar fuente monoespaciada en el modo Markdown del compositor"
-      show_original_content: "Mostrar el contenido original en lugar del traducido. También se puede activar o desactivar dentro de los temas."
       experimental_sidebar:
         enable: "Activar barra lateral"
         options: "Opciones"
@@ -2652,6 +2651,12 @@ es:
       confirm_title: Continuar a %{site_name}
       logging_in_as: Iniciando sesión como %{email}
       confirm_button: Finalizar inicio de sesión
+    code_login:
+      email_label: "Correo electrónico"
+      continue_button: "Continuar"
+      verify_button: "Continuar"
+      account_ready_continue: "Continuar"
+      username_label: "Nombre de usuario"
     login:
       header_title: "Bienvenido/a de vuelta"
       title: "Iniciar sesión"
@@ -2895,6 +2900,10 @@ es:
       publish: "Publicar borrador compartido"
       confirm_publish: "¿Seguro que quieres publicar este borrador?"
       publishing: "Publicando tema…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metadatos"
     composer:
       autocomplete:
         username_missing: "Falta el nombre de usuario en el resultado de autocompletar seleccionado."
@@ -3678,6 +3687,9 @@ es:
       deleted_post_placeholder: "[eliminado]"
       ignored_post_placeholder: "[ignorados]"
       pinned_reply: "Anclado"
+    share_target:
+      new_topic: "Nuevo tema"
+      new_message: "Nuevo mensaje"
     topic:
       filter_to:
         one: "%{count} publicación en el tema"
@@ -4511,7 +4523,6 @@ es:
         site_settings: "Ajustes del sitio"
       choose_type:
         title: "Elegir el tipo de categoría"
-        requires_plugin: "Requiere plugin"
       create_category: "Crear categoría"
       save: "Guardar categoría"
       unsaved_changes: "Tienes cambios sin guardar"
@@ -5658,12 +5669,6 @@ es:
             bookmarks: "Temas en %{category} sin etiquetas que has añadido a marcadores"
             default: "%{filter} temas en %{category} sin etiquetas"
         categories: "Todas las categorías"
-    content_localization:
-      toggle_localized:
-        translated: "Esta página se ha traducido automáticamente. Haz clic para ver el original."
-        not_translated: "La página no está traducida. Haz clic para traducir."
-        translations_enabled: "Traducciones activadas"
-        translations_disabled: "Traducciones desactivadas"
     language_switcher:
       title: "Cambiar idioma del sitio"
   admin_js:

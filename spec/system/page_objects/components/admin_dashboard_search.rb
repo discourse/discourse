@@ -89,6 +89,12 @@ module PageObjects
         end
       end
 
+      def has_no_trending_term?(term)
+        within_block("Trending searches") do
+          has_no_css?("[data-test-search-term-row] a", text: term)
+        end
+      end
+
       def has_trending_empty_state?(message)
         within_block("Trending searches") { has_text?(message) }
       end

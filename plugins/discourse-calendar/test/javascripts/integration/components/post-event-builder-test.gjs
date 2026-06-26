@@ -67,4 +67,41 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
         "renders the upload url, not the raw object"
       );
   });
+
+  test("advanced screen renders a custom field whose name contains a dash", async function (assert) {
+    this.siteSettings.discourse_post_event_allowed_custom_fields = "field-aa";
+
+    const event = DiscoursePostEventEvent.create({
+      name: "My event",
+      starts_at: "2022-07-01T10:00:00Z",
+      ends_at: "2022-07-01T11:00:00Z",
+      timezone: "UTC",
+      status: "public",
+      reminders: [],
+      raw_invitees: [],
+      custom_fields: {},
+    });
+
+    const model = {
+      event,
+      initialScreen: "advanced",
+      onUpdate: () => {},
+      toolbarEvent: {},
+    };
+    const closeModal = () => {};
+
+    await render(
+      <template>
+        <PostEventBuilder
+          @inline={{true}}
+          @model={{model}}
+          @closeModal={{closeModal}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(`[data-name="customFields.field_aa"] input`)
+      .exists("renders the dashed custom field without crashing");
+  });
 });

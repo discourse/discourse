@@ -622,6 +622,7 @@ ar:
       congrats_onboarding_complete: "تهانينا على إكمال عملية الانضمام!"
       select_theme:
         enabled: "محدَّدة"
+        applying_theme: "يطبق السمة..."
       invite_collaborators:
         title: "دعوة المتعاونين"
         description: "يساهم الأعضاء الأوائل في إثراء مجتمعك"
@@ -1558,7 +1559,11 @@ ar:
             from_alias_hint: "اسم مستعار لاستخدامه في عنوان \"من\" عند إرسال رسائل بريد إلكتروني SMTP جماعية. لاحظ أن هذا قد لا يكون مدعومًا لدى كل مقدِّمي خدمة البريد الإلكتروني، يُرجى الرجوع إلى وثائق مقدِّم خدمة البريد الإلكتروني."
         membership:
           title: العضوية
+          visibility_and_access: "الوصول والرؤية"
+          join_method_title: "كيف يمكن للمستخدمين الانضمام؟"
           join_method:
+            free: "يمكن لأي شخص الانضمام مجانًا"
+            request: "يمكن لأي شخص طلب الانضمام"
             invite: "بدعوة فقط"
         categories:
           title: الفئات
@@ -2001,7 +2006,7 @@ ar:
       enable_smart_lists: "تفعيل القوائم الذكية عند الكتابة في أداة الإنشاء"
       enable_defer: "تفعيل وضع علامة على الموضوعات كغير مقروءة"
       enable_markdown_monospace_font: "اعرض النص بخط ثابت العرض عند استخدام وضع Markdown في أداة الإنشاء"
-      show_original_content: "عرض المحتوى الأصلي بدلًا من المحتوى المترجم. يمكن أيضًا التبديل داخل الموضوعات."
+      show_original_content: "اعرض المحتوى الأصلي بدلاً من المحتوى المترجم."
       experimental_sidebar:
         enable: "تفعيل الشريط الجانبي"
         options: "الخيارات"
@@ -2078,7 +2083,7 @@ ar:
       undo_revoke_access: "التراجع عن إلغاء الوصول"
       api_approved: "تمت الموافقة عليها:"
       api_last_used_at: "آخر استخدام في:"
-      api_expires_at: "وقت الانتهاء:"
+      api_expires_at: "ينتهي:"
       api_expired_at: "انتهى:"
       api_expires_never: "أبدًا"
       api_show_permissions:
@@ -3193,6 +3198,12 @@ ar:
       confirm_title: المتابعة إلى %{site_name}
       logging_in_as: تسجيل الدخول بعنوان البريد الإلكتروني %{email}
       confirm_button: إنهاء تسجيل الدخول
+    code_login:
+      email_label: "البريد الإلكتروني"
+      continue_button: "متابعة"
+      verify_button: "متابعة"
+      account_ready_continue: "متابعة"
+      username_label: "اسم المستخدم"
     login:
       header_title: "مرحبًا بعودتك"
       title: "تسجيل الدخول"
@@ -3209,10 +3220,8 @@ ar:
       second_factor_backup_description: "يُرجى إدخال أحد الرموز الاحتياطية:"
       second_factor: "تسجيل الدخول باستخدام تطبيق المصادقة"
       security_key_description: "عندما يكون مفتاح الأمان المادي أو جهاز الجوَّال المتوافق جاهزًا، اضغط على زر \"المصادقة باستخدام مفتاح الأمان\" أدناه."
-      security_key_or_passkey_description: "عند تجهيز مفتاح الأمان أو مفتاح المرور أو جهاز محمول متوافق، اضغط على الزر أدناه."
       security_key_alternative: "جرِّب طريقة أخرى"
       security_key_authenticate: "المصادقة باستخدام مفتاح الأمان"
-      security_key_or_passkey_authenticate: "المصادقة باستخدام مفتاح أمان أو مفتاح مرور"
       security_key_not_allowed_error: "انتهت مهلة عملية المصادقة باستخدام مفتاح الأمان أو تم إلغاؤها."
       security_key_no_matching_credential_error: "تعذَّر العثور على بيانات اعتماد مطابقة في مفتاح الأمان المقدَّم."
       security_key_support_missing_error: "لا يدعم جهازك أو متصفحك الحالي استخدام مفاتيح الأمان. يُرجى استخدام طريقة مختلفة."
@@ -3462,6 +3471,15 @@ ar:
       publish: "نشر المسودة المشتركة"
       confirm_publish: "هل تريد بالتأكيد نشر هذه المسودة؟"
       publishing: "جارٍ نشر الموضوع…"
+    gifs:
+      browse_categories: "تصفح حسب الفئة"
+      error_search_too_long: "يُرجى اختصار عبارة البحث إلى أقل من 50 حرفًا ثم المحاولة مرة أخرى."
+    codemirror:
+      expression:
+        sections:
+          recommended: "موصى به"
+          properties: "الخصائص"
+          metadata: "البيانات الوصفية"
     composer:
       autocomplete:
         username_missing: "النتيجة المختارة من الإكمال التلقائي تفتقد اسم المستخدم."
@@ -3670,6 +3688,8 @@ ar:
       open: "فتح لوحة أداة الإنشاء"
       abandon: "إغلاق أداة الإنشاء وتجاهل المسودة"
       edit_reason: "ما سبب التعديل؟"
+      whisper_indicator:
+        public: "مرئي"
       enter_fullscreen: "فتح أداة الإنشاء في وضع ملء الشاشة"
       exit_fullscreen: "اخرج من أداة الإنشاء في وضع ملء الشاشة"
       exit_fullscreen_prompt: "اضغط على <kbd>ESC</kbd> للخروج من وضع الشاشة الكاملة"
@@ -3708,21 +3728,26 @@ ar:
           desc: الرد على الموضوع، وليس أي منشور محدَّد
         reply_to_message:
           trigger: رسالة
+          desc: الرد على الرسالة، وليس على منشور معين
         toggle_whisper:
           label: تفعيل الهمس
         create_topic:
+          label: أنشئ موضوع
           desc: أنشئ موضوعًا جديدًا
         create_personal_message:
+          label: أنشئ رسالة
           desc: "إنشاء رسالة خاصة جديدة"
         shared_draft:
           label: "مسودة مشتركة"
           desc: "إنشاء مسودة الموضوع ستكون مرئية للمستخدمين المسموح لهم فقط"
         toggle_topic_bump:
           desc: "الرد دون تغيير تاريخ آخر رد"
+        create_unlisted_topic: "موضوع غير مدرج"
         toggle_unlisted:
           label: تفعيل إلغاء الإدراج
           desc: "لا يمكن الوصول إلى الموضوعات غير المدرجة إلا من خلال الرابط المباشر"
         edit_post: "تعديل المنشور"
+        no_actions_available: "لا توجد إجراءات متاحة"
         unknown_user: "المستخدم"
       reload: "إعادة التحميل"
       ignore: "تجاهل"
@@ -4556,6 +4581,7 @@ ar:
         few: "%{count} من الردود"
         many: "%{count} من الردود"
         other: "%{count} من الردود"
+      collapsed_post: "المنشور المطوي"
       collapse: "طي"
       collapse_parent: "طيّ سلسلة الدردشة الأصلية"
       category_settings:
@@ -4575,6 +4601,13 @@ ar:
         link: "سجل النشاط"
         title: "سجل نشاط الموضوع"
         empty: "لا يوجد نشاط في هذا الموضوع لعرضه"
+      context:
+        banner: "أنت تشاهد سلسلة دردشة واحدة من هذا الموضوع."
+        view_full_topic: "عرض الموضوع بالكامل"
+        view_parent_context: "عرض السياق الأصلي"
+    share_target:
+      new_topic: "موضوع جديد"
+      new_message: "رسالة جديدة"
     topic:
       filter_to:
         zero: "%{count} منشور في الموضوع"
@@ -5558,6 +5591,9 @@ ar:
         instructions: "شارِك رابطًا إلى هذا المنشور:"
       original_language: "اللغة الأصلية لهذا المنشور هي %{language}"
       original_language_and_outdated: "كُتب هذا المنشور أصلاً باللغة %{language}. من الممكن أن تكون الترجمة غير محدثة"
+      originally_written_in: "نُشر أصلاً في %{language}"
+      click_to_show_original: "انقر لعرض الأصل"
+      tap_to_show_original: "انقر هنا لعرض الأصل"
       ai_translation_disclaimer: "قد تكون الترجمات المُولَّدة بالذكاء الاصطناعي غير دقيقة."
     category:
       none: "(بلا فئة)"
@@ -5615,7 +5651,6 @@ ar:
         site_settings: "إعدادات الموقع"
       choose_type:
         title: "اختر نوع الفئة"
-        requires_plugin: "يتطلب مكوّنًا إضافيًا"
       create_category: "إنشاء فئة"
       save: "احفظ الفئة"
       unsaved_changes: "لديك تغييرات غير محفوظة"
@@ -5692,6 +5727,7 @@ ar:
         toggle_reply: "إذن تفعيل الرد"
         toggle_full: "إذن تفعيل الإنشاء"
         inherited: 'هذا الإذن مكتسب من "%{everyone_group}"'
+        remove_all: "أزِل الكل"
       special_warning: "هذه الفئة مصنَّفة مسبقًا ولا يمكن تعديل إعدادات الأمان لها. إذا كنت لا ترغب في استخدام هذه الفئة، فعليك حذفها بدلًا من إعادة توظيفها."
       uncategorized_security_warning: "هذه الفئة خاصة. وتهدف إلى جمع الموضوعات التي لا تنتمي إلى أي فئة، ولا يمكنك تعيين إعدادات حماية لها."
       uncategorized_general_warning: 'هذه الفئة خاصة. ويتم استخدامها كفئة افتراضية للموضوعات الجديدة التي لا تنتمي إلى أي فئة. إذا أردت منع هذا السلوك وفرض تحديد الفئة، <a href="%{settingLink}">يُرجى إيقاف هذا الإعداد من هنا</a>. إذا أردت تغيير اسم الفئة أو وصفها، فانتقل إلى <a href="%{customizeLink}">التخصيص/المحتوى النصي</a>.'
@@ -6938,12 +6974,6 @@ ar:
             bookmarks: "الموضوعات في %{category} بدون وسوم التي وضعت إشارة مرجعية عليها"
             default: "الموضوعات في %{category} وفق %{filter} بدون وسوم"
         categories: "كل الفئات"
-    content_localization:
-      toggle_localized:
-        translated: "تمت ترجمة الصفحة آليًا. انقر لعرض النسخة الأصلية."
-        not_translated: "الصفحة غير مترجمة. انقر للترجمة."
-        translations_enabled: "تم تفعيل الترجمات"
-        translations_disabled: "تم تعطيل الترجمات"
     language_switcher:
       title: "تغيير لغة الموقع"
   admin_js:
@@ -7610,9 +7640,22 @@ ar:
                 dau_mau: "معدل التفاعل DAU / MAU"
           search:
             title: "البحث"
+            kpi:
+              total_searches:
+                label: "إجمالي عمليات البحث"
+              no_result_rate:
+                tooltip: "النسبة المئوية لعمليات البحث التي لم ينقر فيها الأعضاء على أي نتيجة (معدل النقر 0٪). يشير هذا إلى أن الأعضاء ربما يبحثون عن محتوى لا يتوفر في مجتمعك."
             table:
+              term: "مصطلح البحث"
               searches: "عمليات البحث"
               status: "الحالة"
+            trending:
+              title: "عمليات البحث الشائعة"
+              empty: "لا توجد عمليات بحث في هذه الفترة."
+            content_gaps:
+              badge:
+                no_match: "لا يوجد تطابق"
+                poor_match: "تطابق ضعيف"
         reports_section:
           no_data: "لا توجد بيانات لعرضها"
           modal:
@@ -9783,6 +9826,7 @@ ar:
           disabled: "غير معروض في نموذج التسجيل"
         searchable:
           title: "قابل للبحث"
+          tooltip: "عند التفعيل، يمكن لأي شخص العثور على الأعضاء من خلال قيمة هذا الحقل ورؤيته في نتائج البحث، حتى لو لم يظهر في ملفهم الشخصي أو بطاقة المستخدم الخاصة بهم."
           enabled: "قابل للبحث"
           disabled: "غير قابل للبحث"
         field_types:
@@ -9970,6 +10014,9 @@ ar:
           can_permanently_delete:
             prompt: "يُمكّن تفعيل هذا الخيار المشرفين من حذف المنشورات والموضوعات ومراجعات المنشورات نهائيًا. لا يمكن استعادة البيانات المحذوفة بشكل دائم. وقد يؤثر ذلك أيضًا على تكامل البيانات ويتسبب في تعطل الروابط الحالية."
             confirm: "أفهم ذلك"
+          content_security_policy:
+            prompt: "تعطيل سياسة أمان المحتوى (CSP) يُزيل طبقة حماية مهمة ضد هجمات البرمجة النصية عبر المواقع (XSS) وغيرها من هجمات حقن المحتوى. سيجعل هذا موقعك عرضةً للاختراق، ويجب القيام بذلك فقط لأغراض تصحيح الأخطاء/الاختبار. لن يُساعد تعطيل CSP أبدًا في حل مشكلات CORS. أمتأكد من رغبتك في المتابعة؟"
+            confirm: "نعم، عطّل سياسة أمان المحتوى"
         job_status:
           completed: "اكتمل التحديث"
           enqueued: "التحديث قيد التقدم"

@@ -14,6 +14,50 @@ describe Chat::Api::CurrentUserChannelsController do
         get "/chat/api/me/channels"
         expect(response.status).to eq(403)
       end
+
+      context "when anonymous users can view public chat channels" do
+        before do
+          SiteSetting.chat_allowed_groups =
+            "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        end
+
+        it "returns public category channels without direct message channels" do
+          public_channel = Fabricate(:category_channel)
+          Fabricate(:chat_message, chat_channel: public_channel)
+          Fabricate(:private_category_channel)
+          Fabricate(:direct_message_channel)
+
+          get "/chat/api/me/channels"
+
+          expect(response.status).to eq(200)
+          public_channels = response.parsed_body["public_channels"]
+
+          expect(public_channels.map { |channel| channel["id"] }).to eq([public_channel.id])
+          expect(public_channels.first["meta"]["can_join_chat_channel"]).to eq(true)
+          expect(public_channels.first["meta"]["message_bus_last_ids"].keys).to eq(
+            %w[channel_message_bus_last_id],
+          )
+          expect(response.parsed_body["direct_message_channels"]).to be_blank
+        end
+
+        it "omits global presence channel state" do
+          Fabricate(:category_channel)
+
+          get "/chat/api/me/channels"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).not_to have_key("global_presence_channel_state")
+        end
+
+        it "returns an error when public channels are disabled" do
+          SiteSetting.enable_public_channels = false
+          Fabricate(:category_channel)
+
+          get "/chat/api/me/channels"
+
+          expect(response.status).to eq(403)
+        end
+      end
     end
 
     context "as disallowed user" do

@@ -2608,6 +2608,12 @@ sk:
       confirm_title: Pokračujte na %{site_name}
       logging_in_as: Prihlásenie ako %{email}
       confirm_button: Dokončiť prihlásenie
+    code_login:
+      email_label: "Email"
+      continue_button: "Pokračovať"
+      verify_button: "Pokračovať"
+      account_ready_continue: "Pokračovať"
+      username_label: "Používateľské meno"
     login:
       header_title: "Vitajte späť"
       title: "Prihlásenie"
@@ -3577,6 +3583,9 @@ sk:
       no_replies: "Zatiaľ žiadne odpovede."
       ignored_post_placeholder: "[ignorovať]"
       pinned_reply: "Pripnutý"
+    share_target:
+      new_topic: "Nová téma"
+      new_message: "Nová správa"
     topic:
       filter_to:
         one: "%{count} príspevok k téme"

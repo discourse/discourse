@@ -1885,6 +1885,12 @@ bg:
       confirm_title: Продължете към %{site_name}
       logging_in_as: Влизане като %{email}
       confirm_button: Завършете влизането
+    code_login:
+      email_label: "Имейл"
+      continue_button: "Напред"
+      verify_button: "Напред"
+      account_ready_continue: "Напред"
+      username_label: "Потребителско име"
     login:
       header_title: "Добре дошли отново"
       title: "Вход"
@@ -2425,6 +2431,8 @@ bg:
       deleted_post_placeholder: "[изтрита]"
       ignored_post_placeholder: "[игнориран]"
       pinned_reply: "Закована"
+    share_target:
+      new_message: "Ново съобщение"
     topic:
       create: "Нова тема"
       open_draft: "Довърши ревизия"

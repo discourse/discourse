@@ -14,7 +14,7 @@ export default class ThreadHeaderUnreadIndicator extends Component {
   }
 
   get showUnreadIndicator() {
-    return !this.currentUser.isInDoNotDisturb() && this.unreadCount > 0;
+    return !this.currentUser?.isInDoNotDisturb() && this.unreadCount > 0;
   }
 
   get cappedUnreadCount() {

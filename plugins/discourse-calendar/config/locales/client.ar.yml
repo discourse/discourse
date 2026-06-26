@@ -416,7 +416,6 @@ ar:
           no_users: "لم يتم العثور على المستخدمين"
           leave_event: "مغادرة الحدث"
           status:
-            unknown: "غير مهتم"
             going: "ذاهب"
             interested: "مهتم"
             going_count:

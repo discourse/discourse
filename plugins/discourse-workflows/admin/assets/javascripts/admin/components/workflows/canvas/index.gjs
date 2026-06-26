@@ -14,6 +14,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import BuildWithAiModal from "../build-with-ai-modal";
 import CanvasContextMenu from "./canvas-context-menu";
 import { exportWorkflowToFile, parseWorkflowImport } from "./canvas-file-io";
 import { setupCanvasKeyboard } from "./canvas-keyboard";
@@ -36,6 +37,7 @@ export default class WorkflowCanvas extends Component {
   @service router;
   @service workflowsNodeTypes;
   @service toasts;
+  @service siteSettings;
 
   @tracked isLoading = true;
   @tracked rete = null;
@@ -43,6 +45,7 @@ export default class WorkflowCanvas extends Component {
   @tracked workflowPublishedOverride = null;
   @tracked hasUnpublishedChangesOverride = null;
   @tracked selectionVersion = 0;
+  @tracked aiPanelOpen = false;
   copiedEntities = { nodes: [], stickyNotes: [] };
   pasteOffset = 0;
   isFirstSync = true;
@@ -51,6 +54,7 @@ export default class WorkflowCanvas extends Component {
   #hasSetupStarted = false;
   #pendingSync = false;
   #syncTask = null;
+  #outsideClickAbort = null;
   #ZOOM_STEP = 0.1;
   #ZOOM_MIN = 0.25;
   #ZOOM_MAX = 4;
@@ -59,6 +63,7 @@ export default class WorkflowCanvas extends Component {
     super.willDestroy();
     this.rete?.destroy();
     this.keyboard?.teardown();
+    this.#outsideClickAbort?.abort();
   }
 
   get workflowPublished() {
@@ -98,6 +103,23 @@ export default class WorkflowCanvas extends Component {
     return this.workflowPublished && this.hasUnpublishedChanges;
   }
 
+  get aiAuthoringAvailable() {
+    return (
+      this.siteSettings.discourse_workflows_ai_authoring_enabled &&
+      this.args.workflowId
+    );
+  }
+
+  @action
+  openAiPanel() {
+    this.aiPanelOpen = true;
+  }
+
+  @action
+  closeAiPanel() {
+    this.aiPanelOpen = false;
+  }
+
   @action
   isStickyNoteSelected(clientId) {
     this.selectionVersion;
@@ -119,7 +141,6 @@ export default class WorkflowCanvas extends Component {
           type: "PUT",
           data: {
             workflow: {
-              name: this.args.workflowName,
               published: true,
             },
           },
@@ -180,7 +201,6 @@ export default class WorkflowCanvas extends Component {
           type: "PUT",
           data: {
             workflow: {
-              name: this.args.workflowName,
               published: false,
             },
           },
@@ -378,10 +398,29 @@ export default class WorkflowCanvas extends Component {
     );
 
     this.args.onAreaReady?.(this.rete.area);
+    this.#forwardTrappedPointerdowns();
 
     await this.#queueSync();
     this.isLoading = false;
     element.focus();
+  }
+
+  // Left clicks are trapped on the canvas and never reach the document
+  // so we re-emit one to clean up any open menus outside of the canvas
+  #forwardTrappedPointerdowns() {
+    this.#outsideClickAbort = new AbortController();
+
+    this.containerElement.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (event.button === 0) {
+          document.body.dispatchEvent(
+            new PointerEvent("pointerdown", { bubbles: true })
+          );
+        }
+      },
+      { capture: true, signal: this.#outsideClickAbort.signal }
+    );
   }
 
   @action
@@ -811,112 +850,135 @@ export default class WorkflowCanvas extends Component {
         />
 
         {{#if @onOpenNodePanel}}
-          {{#if this.showUnpublishedChangesMessage}}
-            <div class="workflows-canvas__publish-status">
-              <span class="workflows-canvas__publish-status-body" role="status">
-                <span class="workflows-canvas__publish-status-icon">
-                  {{dIcon "triangle-exclamation"}}
-                </span>
-                <span class="workflows-canvas__publish-status-text">
-                  <span class="workflows-canvas__publish-status-title">
-                    {{i18n "discourse_workflows.unpublished_changes_message"}}
+          <div class="workflows-canvas__top-bar">
+            {{#if this.showUnpublishedChangesMessage}}
+              <div class="workflows-canvas__publish-status">
+                <span
+                  class="workflows-canvas__publish-status-body"
+                  role="status"
+                >
+                  <span class="workflows-canvas__publish-status-icon">
+                    {{dIcon "triangle-exclamation"}}
                   </span>
-                  <span class="workflows-canvas__publish-status-detail">
-                    {{i18n
-                      "discourse_workflows.unpublished_changes_message_detail"
-                    }}
+                  <span class="workflows-canvas__publish-status-text">
+                    <span class="workflows-canvas__publish-status-title">
+                      {{i18n "discourse_workflows.unpublished_changes_message"}}
+                    </span>
+                    <span class="workflows-canvas__publish-status-detail">
+                      {{i18n
+                        "discourse_workflows.unpublished_changes_message_detail"
+                      }}
+                    </span>
                   </span>
                 </span>
-              </span>
 
-              <span class="workflows-canvas__publish-status-actions">
+                <span class="workflows-canvas__publish-status-actions">
+                  <DButton
+                    @action={{this.publishWorkflow}}
+                    @translatedLabel={{i18n "discourse_workflows.publish"}}
+                    class="btn-primary btn-small workflows-canvas__publish-status-btn"
+                  />
+
+                  {{#if this.showDiscardChangesButton}}
+                    <DButton
+                      @action={{this.discardWorkflow}}
+                      @translatedLabel={{i18n
+                        "discourse_workflows.discard_changes"
+                      }}
+                      class="btn-default btn-small workflows-canvas__publish-status-btn"
+                    />
+                  {{/if}}
+                </span>
+              </div>
+            {{/if}}
+
+            <div class="workflows-canvas__toolbar-top-right">
+              {{#if this.showToolbarPublishButton}}
                 <DButton
                   @action={{this.publishWorkflow}}
                   @translatedLabel={{i18n "discourse_workflows.publish"}}
-                  class="btn-primary btn-small workflows-canvas__publish-status-btn"
+                  class="btn-primary workflows-canvas__publish-btn"
                 />
+              {{/if}}
 
-                {{#if this.showDiscardChangesButton}}
-                  <DButton
-                    @action={{this.discardWorkflow}}
-                    @translatedLabel={{i18n
-                      "discourse_workflows.discard_changes"
-                    }}
-                    class="btn-default btn-small workflows-canvas__publish-status-btn"
-                  />
-                {{/if}}
-              </span>
-            </div>
-          {{/if}}
+              {{#if this.aiAuthoringAvailable}}
+                <DButton
+                  @action={{this.openAiPanel}}
+                  @icon="discourse-sparkles"
+                  @translatedLabel={{i18n "discourse_workflows.ai.button"}}
+                  class="btn-default workflows-canvas__ai-btn"
+                />
+              {{/if}}
 
-          <div class="workflows-canvas__toolbar-top-right">
-            {{#if this.showToolbarPublishButton}}
               <DButton
-                @action={{this.publishWorkflow}}
-                @translatedLabel={{i18n "discourse_workflows.publish"}}
-                class="btn-primary workflows-canvas__publish-btn"
+                @action={{this.openNodePanelAtCenter}}
+                @icon="plus"
+                class="btn-default workflows-canvas__add-node-btn"
               />
-            {{/if}}
 
-            <DButton
-              @action={{this.openNodePanelAtCenter}}
-              @icon="plus"
-              class="btn-default workflows-canvas__add-node-btn"
-            />
-
-            <DMenu
-              @identifier="workflows-canvas-menu"
-              @icon="ellipsis-vertical"
-              class="btn-default workflows-canvas__menu-btn"
-            >
-              <:content as |args|>
-                <DDropdownMenu as |dropdown|>
-                  {{#if this.workflowPublished}}
+              <DMenu
+                @identifier="workflows-canvas-menu"
+                @icon="ellipsis-vertical"
+                class="btn-default workflows-canvas__menu-btn"
+              >
+                <:content as |args|>
+                  <DDropdownMenu as |dropdown|>
+                    {{#if this.workflowPublished}}
+                      <dropdown.item>
+                        <DButton
+                          @action={{fn this.unpublishWorkflow args.close}}
+                          @translatedLabel={{i18n
+                            "discourse_workflows.unpublish"
+                          }}
+                          class="btn-transparent"
+                        />
+                      </dropdown.item>
+                    {{/if}}
                     <dropdown.item>
                       <DButton
-                        @action={{fn this.unpublishWorkflow args.close}}
+                        @action={{fn this.addStickyNoteAtCenter args.close}}
+                        @icon="note-sticky"
                         @translatedLabel={{i18n
-                          "discourse_workflows.unpublish"
+                          "discourse_workflows.sticky_note.add"
                         }}
                         class="btn-transparent"
                       />
                     </dropdown.item>
-                  {{/if}}
-                  <dropdown.item>
-                    <DButton
-                      @action={{fn this.addStickyNoteAtCenter args.close}}
-                      @icon="note-sticky"
-                      @translatedLabel={{i18n
-                        "discourse_workflows.sticky_note.add"
-                      }}
-                      class="btn-transparent"
-                    />
-                  </dropdown.item>
-                  <dropdown.item>
-                    <DButton
-                      @action={{fn this.exportWorkflow args.close}}
-                      @icon="download"
-                      @translatedLabel={{i18n
-                        "discourse_workflows.canvas.export_nodes"
-                      }}
-                      @disabled={{this.showEmptyState}}
-                      class="btn-transparent"
-                    />
-                  </dropdown.item>
-                  <dropdown.item>
-                    <DButton
-                      @action={{fn this.openImportDialog args.close}}
-                      @icon="upload"
-                      @translatedLabel={{i18n
-                        "discourse_workflows.canvas.import_nodes"
-                      }}
-                      class="btn-transparent"
-                    />
-                  </dropdown.item>
-                </DDropdownMenu>
-              </:content>
-            </DMenu>
+                    <dropdown.item>
+                      <DButton
+                        @action={{fn this.exportWorkflow args.close}}
+                        @icon="download"
+                        @translatedLabel={{i18n
+                          "discourse_workflows.canvas.export_nodes"
+                        }}
+                        @disabled={{this.showEmptyState}}
+                        class="btn-transparent"
+                      />
+                    </dropdown.item>
+                    <dropdown.item>
+                      <DButton
+                        @action={{fn this.openImportDialog args.close}}
+                        @icon="upload"
+                        @translatedLabel={{i18n
+                          "discourse_workflows.canvas.import_nodes"
+                        }}
+                        class="btn-transparent"
+                      />
+                    </dropdown.item>
+                  </DDropdownMenu>
+                </:content>
+              </DMenu>
+            </div>
           </div>
+        {{/if}}
+
+        {{#if this.aiAuthoringAvailable}}
+          <BuildWithAiModal
+            @open={{this.aiPanelOpen}}
+            @workflowId={{@workflowId}}
+            @onApply={{@onWorkflowUpdated}}
+            @onClose={{this.closeAiPanel}}
+          />
         {{/if}}
 
         <CanvasContextMenu

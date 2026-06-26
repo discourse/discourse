@@ -497,6 +497,9 @@ en:
     age: "Age"
     joined: "Joined"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Advanced mode"
+      simple_mode: "Simple mode"
     show_more: "show more"
     show_help: "Options"
     links: "Links"
@@ -2917,6 +2920,31 @@ en:
       logging_in_as: Logging in as %{email}
       confirm_button: Finish Login
 
+    code_login:
+      email_label: "Email"
+      continue_button: "Continue"
+      check_your_email: "Check your email"
+      code_instructions: "We sent a 6-digit code to <b>%{email}</b>. Enter it below to continue."
+      verify_button: "Continue"
+      resend: "Resend code"
+      resend_countdown: "Resend code (%{count}s)"
+      code_resent: "We sent a new code."
+      use_different_email: "Use a different email address"
+      use_password_instead: "Log in with your password instead"
+      email_me_code: "Email me a one-time login code"
+      signup_title: "Join this community"
+      signup_instructions: "Enter your email address to join this community. We'll send you a code to confirm it and you'll be on your way!"
+      user_fields_title: "Almost done"
+      user_fields_instructions: "Just a few more details to finish creating your account."
+      account_ready_title: "Your account is ready! 🎉"
+      account_ready_edit: "Pick your username and avatar"
+      account_ready_continue: "Continue"
+      username_label: "Username"
+      username_placeholder: "Choose a username"
+      change_avatar: "Change avatar"
+      username_taken: "That username is taken. Try another."
+      username_unavailable: "That username isn't available. Try %{suggestion}."
+
     login:
       header_title: "Welcome back"
       title: "Log In"
@@ -2933,10 +2961,11 @@ en:
       second_factor_backup_description: "Please enter one of your backup codes:"
       second_factor: "Log in using Authenticator app"
       security_key_description: "When you have your physical security key or compatible mobile device prepared press the Authenticate with Security Key button below."
-      security_key_or_passkey_description: "When you have your security key, passkey, or compatible mobile device prepared press the button below."
       security_key_alternative: "Try another way"
       security_key_authenticate: "Authenticate with Security Key"
-      security_key_or_passkey_authenticate: "Authenticate with security key or passkey"
+      passkey_2fa_description: "Verify your identity with your passkey."
+      use_passkey: "Use passkey"
+      use_security_key: "Use security key"
       security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
       security_key_no_matching_credential_error: "No matching credentials could be found in the provided security key."
       security_key_support_missing_error: "Your current device or browser does not support the use of security keys. Please use a different method."
@@ -3013,6 +3042,7 @@ en:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
         security_key: "Use a security key instead"
+        passkey: "Use a passkey instead"
       no_login_methods:
         title: "No login methods"
         description: "No login methods are configured. Administrators can visit <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> to reconfigure the site."
@@ -4044,6 +4074,9 @@ en:
         error_topic_count:
           one: "%{count} topic"
           other: "%{count} topics"
+        tag_not_allowed_in_category:
+          one: "%{tags} isn't allowed in the %{category} category."
+          other: "These tags aren't allowed in the %{category} category: %{tags}."
 
       none:
         unread: "You have no unread topics."
@@ -4181,6 +4214,13 @@ en:
         banner: "You are viewing a single thread from this topic."
         view_full_topic: "View full topic"
         view_parent_context: "View parent context"
+    share_target:
+      title: "Shared content"
+      description: "What would you like to do with the shared content?"
+      new_topic: "New topic"
+      new_message: "New message"
+      add_to_reply: "Add to a reply"
+      added_to_reply: "Saved. The content will be added the next time you open a reply."
     topic:
       filter_to:
         one: "%{count} post in topic"
@@ -5044,6 +5084,8 @@ en:
       originally_written_in: "Originally in %{language}"
       click_to_show_original: "Click to show original"
       tap_to_show_original: "Tap here to show original"
+      click_to_show_translation: "Click to show translation"
+      tap_to_show_translation: "Tap here to show translation"
       ai_translation_disclaimer: "AI-generated translations may be inaccurate."
 
     category:
@@ -5092,6 +5134,11 @@ en:
         tag_group: "Tag group"
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete category"
+      danger_zone:
+        title: "Danger zone"
+        delete_title: "Delete this category"
+        delete_description: "Once deleted, this category and its settings cannot be recovered. Topics in it will need to be reassigned beforehand."
+        delete_title_forbidden: "Can't delete this category"
       create: "New category"
       create_with_type: "New %{typeName} category"
       create_long: "Create a new category"
@@ -5102,7 +5149,9 @@ en:
         site_settings: "Site settings"
       choose_type:
         title: "Choose category type"
-        requires_plugin: "Requires plugin"
+        requires_plugin: "Requires %{plugin_name} plugin"
+        unavailable: "Unavailable"
+        ask_admin_to_enable_plugin: "Ask an admin to enable the %{plugin_name} plugin"
       create_category: "Create category"
       save: "Save category"
       unsaved_changes: "You have unsaved changes"
@@ -5802,7 +5851,6 @@ en:
       category_restrictions:
         one: "It can only be used in the %{categories} category."
         other: "It can only be used in these categories: %{categories}."
-      restricted_to: "Restricted to"
       no_synonyms: "This tag has no synonyms."
       edit_synonyms: "Edit Synonyms"
       add_synonyms_label: "Add synonyms:"
@@ -5836,6 +5884,7 @@ en:
         slug: "Slug"
         name_placeholder: "Tag name"
         slug_placeholder: "Tag slug (optional, auto-generated from name)"
+        invalid_slug: "Use lowercase letters, numbers, and single hyphens between words."
         saved: "Tag settings saved"
         no_synonyms: "No synonyms defined for this tag."
         add_synonym_placeholder: "Search for tags to add as synonyms..."
@@ -6972,6 +7021,9 @@ en:
         discourse_last_updated: "Discourse updated:"
         version: "Version"
         up_to_date: "You're up to date!"
+        up_to_date_newer_commits:
+          one: "You're on the most recent release, but %{count} new change is available."
+          other: "You're on the most recent release, but %{count} new changes are available."
         critical_available: "A critical update is available."
         updates_available: "Updates are available."
         please_update: "Please update!"
@@ -6979,9 +7031,19 @@ en:
         stale_data: "A check for updates has not been performed lately. Ensure Sidekiq is running."
         version_check_pending: "Looks like you updated recently. Fantastic!"
         installed_version: "Installed"
-        latest_version: "Latest"
+        latest_version: "Available"
+        github: "GitHub"
+        commit_on_github: "View commit %{sha} on GitHub"
+        changelog: "Changelog"
+        commits_ahead:
+          one: "Running %{count} additional change since the start of this release series"
+          other: "Running %{count} additional changes since the start of this release series"
         problems_found: "Some advice based on your current site settings"
         dismiss_notice: "Ignore"
+        site_advice:
+          title:
+            one: "%{count} issue requires your attention based on your site configuration"
+            other: "%{count} issues require your attention based on your site configuration"
         new_features:
           title: "What's new?"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
@@ -7125,14 +7187,14 @@ en:
             headline:
               no_signal_title: "Not enough search activity to summarise yet."
               no_signal: "Pick a longer date range or come back once members have searched more."
-              content_gaps: "More than 10% of searches ended without a click this period. Review the content gaps below to see what's missing."
+              content_gaps: "More than 10% of member searches ended without a click this period. Review the content gaps below to see what's missing."
               rate_climbing: "The no-result rate is climbing compared with the previous period. Keep an eye on the content gaps below."
               shrinking: "Search volume is down compared with the previous period, while most searches still lead to content."
               healthy: "Members keep finding what they search for, and search volume is steady or growing."
             kpi:
               total_searches:
                 label: "Total searches"
-                tooltip: "The number of searches performed in your community."
+                tooltip: "The number of searches performed by members in your community."
               no_result_rate:
                 label: "No-result rate"
                 tooltip: "The percentage of searches where members didn't click any result (0% CTR). This indicates that members may be searching for content your community doesn't have."
@@ -7142,7 +7204,7 @@ en:
               status: "Status"
             trending:
               title: "Trending searches"
-              tooltip: "The most popular search terms."
+              tooltip: "The most popular search terms among members."
               empty: "No searches in this period."
             content_gaps:
               title: "Content gaps"
@@ -7168,6 +7230,7 @@ en:
             disable: "Disable %{title}"
             move_up: "Move %{title} up"
             move_down: "Move %{title} down"
+            footer_note: "These changes will apply for all users."
 
         configure:
           button: "Configure"
@@ -7510,6 +7573,7 @@ en:
             invites:
               create: Send email invites or generate invite links.
             badges:
+              list: Get a list of badges.
               create: Create a new badge.
               show: Obtain information about a badge.
               update: Update a badge.
@@ -8241,6 +8305,7 @@ en:
           updating: "Updating…"
           update_success: "%{theme} Update complete"
           up_to_date: "Theme is up-to-date, last checked:"
+          up_to_date_branch: "Theme is up-to-date with %{branch}, last checked:"
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           change_source:
             button: "Change source"
@@ -8264,6 +8329,9 @@ en:
           commits_behind:
             one: "Theme is %{count} commit behind!"
             other: "Theme is %{count} commits behind!"
+          commits_behind_branch:
+            one: "Theme is %{count} commit behind %{branch}"
+            other: "Theme is %{count} commits behind %{branch}"
           compare_commits: "(See new commits)"
           remote_theme_edits: "If you want to edit this theme, you must <a href='%{repoURL}' target='_blank'>submit a change on its repository</a>"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
@@ -8702,6 +8770,7 @@ en:
             change_site_setting_groups: "change site setting groups"
             discourse_id_regenerate_credentials: "regenerate Discourse ID credentials"
             configure_category_type: "configure category type"
+            unconfigure_category_type: "unconfigure category type"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -8739,6 +8808,7 @@ en:
             header: "Header"
             full_page: "Full page"
             click_through_only: "All (click through only)"
+            logged_in_only: "Logged in only"
           header_search_results: "Header search results"
         logster:
           title: "Error logs"

@@ -3549,6 +3549,8 @@ ko:
   search_logs:
     graph_title: "검색 횟수"
   onebox:
+    google_meet:
+      meeting_code: "코드:"
     github:
       opened: "열림"
       closed: "닫힘"

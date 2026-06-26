@@ -172,10 +172,13 @@ RSpec.describe Discourse do
 
       after { FileUtils.remove_entry(git_directory) }
 
-      it "returns the branch commit and ignores .discourse-compatibility" do
-        compat_branch_sha = `cd #{git_directory} && git rev-parse #{compat_branch_name}`.strip
+      it "returns the d-compat branch ref and ignores .discourse-compatibility" do
+        resource = Discourse.find_compatible_git_resource(git_directory)
 
-        expect(Discourse.find_compatible_git_resource(git_directory)).to eq(compat_branch_sha)
+        expect(resource).to eq("origin/#{compat_branch_name}")
+        expect(`cd #{git_directory} && git rev-parse #{resource}`.strip).to eq(
+          `cd #{git_directory} && git rev-parse #{compat_branch_name}`.strip,
+        )
       end
     end
 

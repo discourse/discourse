@@ -2642,6 +2642,38 @@ RSpec.describe PostsController do
       expect(response.status).to eq(400)
     end
 
+    context "when the id is passed as an array" do
+      fab!(:accessible_post) { Fabricate(:post, user: moderator) }
+      fab!(:inaccessible_post, :private_message_post)
+      fab!(:inaccessible_revision) do
+        Fabricate(
+          :post_revision,
+          post: inaccessible_post,
+          number: 2,
+          modifications: {
+            "raw" => ["previous private body", "current private body"],
+          },
+        )
+      end
+
+      before { sign_in(moderator) }
+
+      it "does not return a revision the user cannot see on another post" do
+        expect(accessible_post.id).to be < inaccessible_post.id
+        expect(moderator.guardian.can_see?(inaccessible_post)).to eq(false)
+
+        previous_raw = inaccessible_revision.modifications["raw"][0]
+
+        get "/posts/#{accessible_post.id}/revisions/2.json",
+            params: {
+              id: [accessible_post.id, inaccessible_post.id],
+            }
+
+        expect(response.status).to eq(404)
+        expect(response.body).not_to include(previous_raw)
+      end
+    end
+
     context "when diff generation exceeds the comparison budget" do
       let(:diff_error) do
         ONPDiff::DiffLimitExceeded.new(
@@ -3134,6 +3166,39 @@ RSpec.describe PostsController do
 
         expect(response.status).to eq(200)
         expect(post.reload.reply_to_post_number).to eq(earlier_post.post_number)
+      end
+    end
+
+    context "when the id is passed as an array" do
+      fab!(:accessible_post) { Fabricate(:post, user: moderator) }
+      fab!(:inaccessible_post, :private_message_post)
+      fab!(:inaccessible_revision) do
+        Fabricate(
+          :post_revision,
+          post: inaccessible_post,
+          number: 2,
+          modifications: {
+            "raw" => ["previous private body", "current private body"],
+          },
+        )
+      end
+
+      before { sign_in(moderator) }
+
+      it "does not revert using a revision the user cannot see on another post" do
+        expect(accessible_post.id).to be < inaccessible_post.id
+        expect(moderator.guardian.can_see?(inaccessible_post)).to eq(false)
+
+        previous_raw = inaccessible_revision.modifications["raw"][0]
+
+        put "/posts/#{accessible_post.id}/revisions/2/revert.json",
+            params: {
+              id: [accessible_post.id, inaccessible_post.id],
+            }
+
+        expect(response.status).to eq(404)
+        expect(response.body).not_to include(previous_raw)
+        expect(accessible_post.reload.raw).not_to include(previous_raw)
       end
     end
   end

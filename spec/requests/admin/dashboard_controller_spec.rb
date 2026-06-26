@@ -8,7 +8,6 @@ RSpec.describe Admin::DashboardController do
   before do
     AdminDashboardData.stubs(:fetch_cached_stats).returns(reports: [])
     Jobs::CallDiscourseHub.any_instance.stubs(:execute).returns(true)
-    SiteSetting.admin_dashboard_search_section_enabled = true
   end
 
   def configure_dashboard_sections(visible_ids)
@@ -255,28 +254,65 @@ RSpec.describe Admin::DashboardController do
             ],
           )
         end
+
+        it "does not expose admin-only browser pageview cards to moderators" do
+          SiteSetting.persist_browser_pageview_events = true
+          configure_dashboard_sections(%w[traffic])
+
+          country_code = "US"
+          normalized_referrer = "sensitive-referrer.example"
+          event_date = Time.zone.local(2026, 5, 2, 12)
+
+          2.times do
+            Fabricate(
+              :browser_pageview_event,
+              country_code: country_code,
+              normalized_referrer: normalized_referrer,
+              created_at: event_date,
+              source: "beacon",
+            )
+          end
+
+          rollup_range = {
+            start_date: Date.iso8601("2026-05-01"),
+            end_date: Date.iso8601("2026-05-03"),
+          }
+          BrowserPageviewCountryDailyRollup.aggregate(**rollup_range)
+          BrowserPageviewReferrerDailyRollup.aggregate(**rollup_range)
+
+          get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-03" }
+
+          expect(response.status).to eq(200)
+          admin_traffic_data =
+            response.parsed_body["sections"].find { |section| section["id"] == "traffic" }["data"]
+          expect(admin_traffic_data.dig("top_countries", "rows", 0, "country_code")).to eq(
+            country_code,
+          )
+          expect(admin_traffic_data.dig("top_referrers", "rows", 0, "normalized_referrer")).to eq(
+            normalized_referrer,
+          )
+
+          sign_in(moderator)
+
+          get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-03" }
+
+          expect(response.status).to eq(200)
+          moderator_traffic_data =
+            response.parsed_body["sections"].find { |section| section["id"] == "traffic" }["data"]
+          expect(moderator_traffic_data).not_to have_key("top_countries")
+          expect(moderator_traffic_data).not_to have_key("top_referrers")
+          expect(response.body).not_to include(normalized_referrer)
+        end
       end
 
       context "with search_data" do
         let(:search_data) { section_payloads["search"]&.dig("data") }
 
-        it "omits the search section while admin_dashboard_search_section_enabled is disabled" do
-          SiteSetting.admin_dashboard_search_section_enabled = false
-          configure_dashboard_sections(%w[search highlights])
-
-          get "/admin/dashboard.json"
-
-          expect(response.status).to eq(200)
-          expect(section_payloads.keys).not_to include("search")
-          configuration_ids =
-            response.parsed_body["configuration"]["sections"].map { |section| section["id"] }
-          expect(configuration_ids).not_to include("search")
-        end
-
         it "returns the search payload for the selected dates" do
           configure_dashboard_sections(%w[search])
-          Fabricate(:clicked_search_log, term: "ruby", created_at: "2026-05-02 10:00")
-          Fabricate(:search_log, term: "ruby", created_at: "2026-05-02 11:00")
+          member = Fabricate(:user)
+          Fabricate(:clicked_search_log, term: "ruby", user: member, created_at: "2026-05-02 10:00")
+          Fabricate(:search_log, term: "ruby", user: member, created_at: "2026-05-02 11:00")
 
           get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-07" }
 
@@ -331,25 +367,6 @@ RSpec.describe Admin::DashboardController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["sections"]).to be_present
         expect(response.parsed_body["configuration"]).to be_present
-      end
-
-      it "is returned with version=alt when the admin is not included" do
-        group = Fabricate(:group)
-        Fabricate(:site_setting_group, name: "dashboard_improvements", group_ids: group.id.to_s)
-
-        get "/admin/dashboard.json", params: { version: "alt" }
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["sections"]).to be_present
-        expect(response.parsed_body["configuration"]).to be_present
-      end
-
-      it "is omitted with version=alt when enabled for the admin" do
-        get "/admin/dashboard.json", params: { version: "alt" }
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["sections"]).to be_nil
-        expect(response.parsed_body["configuration"]).to be_nil
       end
 
       it "falls back to default dates when date params are malformed" do
@@ -459,6 +476,69 @@ RSpec.describe Admin::DashboardController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body).to have_key("version_check")
+      end
+    end
+
+    describe "problems payload" do
+      before do
+        SiteSetting.dashboard_improvements = true
+        Discourse.cache.clear
+      end
+
+      fab!(:starttls_problem) do
+        Fabricate(:admin_notice, identifier: "starttls_disabled", priority: "high")
+      end
+
+      fab!(:host_names_problem) do
+        Fabricate(:admin_notice, identifier: "host_names", priority: "low")
+      end
+
+      it "returns every active problem check in a top-level problems key for an admin" do
+        sign_in(admin)
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["problems"]).to match_array(
+          [
+            {
+              "id" => starttls_problem.id,
+              "priority" => "high",
+              "message" => starttls_problem.message,
+              "identifier" => "starttls_disabled",
+            },
+            {
+              "id" => host_names_problem.id,
+              "priority" => "low",
+              "message" => host_names_problem.message,
+              "identifier" => "host_names",
+            },
+          ],
+        )
+      end
+
+      it "returns every active problem check in a top-level problems key for a moderator" do
+        sign_in(moderator)
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["problems"]).to match_array(
+          [
+            {
+              "id" => starttls_problem.id,
+              "priority" => "high",
+              "message" => starttls_problem.message,
+              "identifier" => "starttls_disabled",
+            },
+            {
+              "id" => host_names_problem.id,
+              "priority" => "low",
+              "message" => host_names_problem.message,
+              "identifier" => "host_names",
+            },
+          ],
+        )
       end
     end
 

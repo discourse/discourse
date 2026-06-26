@@ -1592,7 +1592,6 @@ zh_CN:
       enable_smart_lists: "在编辑器中编写时启用智能列表"
       enable_defer: "启用将话题标记为未读"
       enable_markdown_monospace_font: "在输入框的 Markdown 模式下使用等宽字体"
-      show_original_content: "显示原文而非翻译内容。也可以在话题内切换。"
       experimental_sidebar:
         enable: "启用边栏"
         options: "选项"
@@ -2548,6 +2547,12 @@ zh_CN:
       confirm_title: 继续访问 %{site_name}
       logging_in_as: 以 %{email} 登录
       confirm_button: 完成登录
+    code_login:
+      email_label: "电子邮件"
+      continue_button: "继续"
+      verify_button: "继续"
+      account_ready_continue: "继续"
+      username_label: "用户名"
     login:
       header_title: "欢迎回来"
       title: "登录"
@@ -2564,10 +2569,8 @@ zh_CN:
       second_factor_backup_description: "请输入您的备份代码之一："
       second_factor: "使用身份验证器应用登录"
       security_key_description: "当您准备好实物安全密钥或兼容的移动设备后，请按下面的“使用安全密钥进行身份验证”按钮。"
-      security_key_or_passkey_description: "准备好安全密钥、通行密钥或兼容的移动设备后，请按下面的按钮。"
       security_key_alternative: "尝试另一种方式"
       security_key_authenticate: "使用安全密钥进行身份验证"
-      security_key_or_passkey_authenticate: "使用安全密钥或通行密钥进行身份验证"
       security_key_not_allowed_error: "安全密钥身份验证过程超时或被取消。"
       security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
       security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
@@ -2787,6 +2790,32 @@ zh_CN:
       publish: "发布共享草稿"
       confirm_publish: "确定要发布此草稿吗？"
       publishing: "正在发布话题…"
+    codemirror:
+      expression:
+        sections:
+          recommended: "推荐"
+          properties: "属性"
+          methods: "方法"
+          metadata: "元数据"
+          globals: "全局"
+        methods:
+          string:
+            length: "字符串中的字符数。"
+            includes: "如果字符串包含该子字符串，则返回 true。"
+            startsWith: "如果字符串以给定的字符开头，则返回 true。"
+            endsWith: "如果字符串以给定的字符结尾，则返回 true。"
+            split: "将字符串拆分成子字符串数组。"
+            replaceAll: "替换搜索字符串的所有出现位置。"
+            replace: "替换搜索字符串的第一次出现。"
+            trim: "删除字符串两端的空格。"
+            trimStart: "删除字符串开头的空格。"
+            trimEnd: "删除字符串末尾的空格。"
+            toLowerCase: "将字符串转换为小写。"
+            toUpperCase: "将字符串转换为大写。"
+            slice: "提取字符串的一部分。"
+            substring: "返回字符串中两个索引之间的部分。"
+            indexOf: "返回首次出现的位置索引；若未找到，则返回 -1。"
+            match: "将字符串与正则表达式进行匹配。"
     composer:
       autocomplete:
         username_missing: "所选自动补全结果缺少用户名。"
@@ -3604,6 +3633,13 @@ zh_CN:
         link: "活动日志"
         title: "主题活动日志"
         empty: "暂无主题活动显示。"
+      context:
+        banner: "您正在查看的是此话题中的单个消息串。"
+        view_full_topic: "查看完整话题"
+        view_parent_context: "查看父上下文"
+    share_target:
+      new_topic: "新建话题"
+      new_message: "新建消息"
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"
@@ -4348,6 +4384,7 @@ zh_CN:
         instructions: "分享此帖子的链接："
       original_language: "此帖子最初使用%{language}编写"
       original_language_and_outdated: "此帖子最初使用%{language}编写。译文可能已过时"
+      originally_written_in: "原始语言：%{language}"
       ai_translation_disclaimer: "AI 生成的译文可能不准确。"
     category:
       none: "（无类别）"
@@ -4395,6 +4432,11 @@ zh_CN:
         tag_group: "标签群组"
       topic_featured_link_allowed: "在此类别中允许精选链接"
       delete: "删除类别"
+      danger_zone:
+        title: "危险区域"
+        delete_title: "删除此类别"
+        delete_description: "删除后，此类别及其设置将无法恢复。其中的话题需要事先重新分配。"
+        delete_title_forbidden: "无法删除此类别"
       create: "新建类别"
       create_with_type: "新建%{typeName}类别"
       create_long: "创建新类别"
@@ -4405,7 +4447,6 @@ zh_CN:
         site_settings: "站点设置"
       choose_type:
         title: "选择类别类型"
-        requires_plugin: "需要插件"
       create_category: "创建类别"
       save: "保存类别"
       unsaved_changes: "您有未保存的更改"
@@ -4897,7 +4938,7 @@ zh_CN:
         go_to_unread_post: "前往第一篇未读帖子"
       application:
         title: "应用程序"
-        create: "创建新主题或发送私信"
+        create: "创建新话题或个人消息"
         notifications: "打开通知"
         hamburger_menu: "打开导航菜单"
         user_profile_menu: "打开用户菜单"
@@ -4952,16 +4993,29 @@ zh_CN:
         reply_topic: "回复话题"
         reply_post: "回复帖子"
         quote_post: "引用帖子"
+        like: "点赞帖子"
         flag: "标记帖子"
+        bookmark: "添加书签"
         edit: "编辑帖子"
         delete: "删除帖子"
+        mark_muted: "话题免打扰"
+        mark_regular: "常规（默认）话题"
         mark_tracking: "跟踪话题"
         mark_watching: "关注话题"
+        print: "打印话题"
         defer: "将话题标记为未读"
+        topic_admin_actions: "打开话题管理员操作"
+        archive_private_message: "切换存档个人消息"
       search_menu:
         title: "搜索菜单"
+        prev_next: "上下移动所选内容"
+        insert_url: "将所选内容插入到打开的编辑器中"
+        full_page_search: "启动完整页面搜索"
       admin:
         title: "管理员"
+        search_prev_next: "上下移动所选内容"
+        search_open: "打开管理员界面的搜索"
+        search_full_page: "打开整页管理员搜索"
     badges:
       earned_n_times:
         other: "已获得此徽章 %{count} 次"
@@ -5024,8 +5078,17 @@ zh_CN:
       staff_info: "要添加限制，请将此标签放入<a href=%{basePath}/tag_groups>标签组</a>。"
       category_restricted: "此标签仅限于您无权访问的类别。"
       synonyms: "同义词"
+      synonyms_description:
+        other: "同义词 %{synonyms} 将被替换为 %{base_tag_name}。"
       synonyms_inline: "这些同义词将被替换为 %{base_tag_name}："
+      synonym_hint: "→ %{tag_name}"
       save: "保存标签的名称和描述"
+      tag_groups_info:
+        other: "此标签属于以下标签组： %{tag_groups}。"
+      tag_groups_info_prefix:
+        other: "此标签属于以下标签组："
+      category_restrictions:
+        other: "它只能用于以下类别： %{categories}。"
       restricted_to: "限于"
       no_synonyms: "此标签没有同义词。"
       edit_synonyms: "编辑同义词"
@@ -5562,12 +5625,6 @@ zh_CN:
             bookmarks: "%{category}中您已添加为书签的无标签的话题"
             default: "%{category}中无标签的%{filter}话题"
         categories: "所有类别"
-    content_localization:
-      toggle_localized:
-        translated: "此页面为机器翻译。点击查看原文。"
-        not_translated: "此页面未翻译。点击进行翻译。"
-        translations_enabled: "已启用翻译"
-        translations_disabled: "已禁用翻译"
     language_switcher:
       title: "更改站点语言"
   admin_js:
@@ -5596,6 +5653,8 @@ zh_CN:
         group_moderation_and_security: "审核与安全"
         group_other: "其他"
         legacy_warning: "这是一份旧版报告，即将停用。如果您需要帮助寻找替代报告，请联系支持团队。"
+        chart:
+          total: "总计： %{count}"
       config_sections:
         account:
           title: "帐户"
@@ -6183,30 +6242,57 @@ zh_CN:
         too_many_requests: 您执行此操作的次数过多。请稍后再试。
         not_found_error: 抱歉，此报告不存在
         custom_date_range: 自定义日期范围
+        loading: "正在加载仪表盘…"
         stable: "稳定"
         sections:
+          highlights:
+            title: "高亮显示"
           reports:
             title: "举报"
           traffic:
             title: "网站流量"
           engagement:
             title: "参与度"
+            fetch_error: "互动数据加载失败。请尝试刷新页面。"
             activity_by_category:
+              title: "按类别显示的活动"
+              description: "各类别下的话题、帖子及成员参与情况。"
               category: "类别"
               topics: "话题"
               posts: "帖子"
+              page_views: "页面浏览量"
               share: "分享"
+              vs_prior: "与之前相比"
+              empty: "所选时间段内无任何活动。"
             whos_posting:
+              title: "谁在发帖？"
               all_categories: "所有类别"
+              include_subcategories: "包括子类别"
+              new_members: "新成员"
+              returning: "返回"
               staff: "管理人员"
+              empty: "所选时间段内没有帖子。"
             trust_level_pipeline:
+              title: "信任级别变化"
               trust_levels:
                 "0": "新"
                 "1": "基本用户"
                 "2": "成员"
                 "3": "常规"
                 "4": "领导者"
+              trend:
+                climbing:
+                  other: "+%{count} 升级"
+                dropping:
+                  other: "-%{count} 降级"
+              moves_in_aria:
+                other: "%{count} 成员升级"
+              moves_out_aria:
+                other: "%{count} 成员降级"
+              stable_aria: "不变"
             headline:
+              healthy_growth:
+                title: "成员们正在养成回来的习惯。"
               metrics:
                 new_signups: "新注册用户"
                 dau_mau: "日活跃用户（DAU）/月活跃用户（MAU）粘性"
@@ -6494,6 +6580,7 @@ zh_CN:
             invites:
               create: 发送电子邮件邀请或生成邀请链接。
             badges:
+              list: 获取徽章列表。
               create: 创建新徽章。
               show: 获取有关徽章的信息。
               update: 更新徽章。
@@ -7657,6 +7744,7 @@ zh_CN:
             change_site_setting_groups: "更改站点设置群组"
             discourse_id_regenerate_credentials: "重新生成 Discourse ID 凭据"
             configure_category_type: "配置类别类型"
+            unconfigure_category_type: "未配置类别类型"
         screened_emails:
           title: "已屏蔽的电子邮件地址"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"

@@ -42,7 +42,7 @@ jobs:
       LOAD_PLUGINS: "1"
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_PUSH_TOKEN || github.token }}
@@ -66,25 +66,10 @@ jobs:
 
       - name: Generate status report
         id: report
-        run: |
-          bin/rails runner script/upcoming_changes_status_report -- \
-            --stale-after-days "${{ steps.config.outputs.stale_after_days }}" \
-            --pretty > /tmp/upcoming_changes_status_report.json
-
-          cat /tmp/upcoming_changes_status_report.json
-
-          eligible_count="$(jq '[.[] | select(.eligible)] | length' /tmp/upcoming_changes_status_report.json)"
-          echo "eligible_count=${eligible_count}" >> "${GITHUB_OUTPUT}"
-
-          {
-            echo "### Upcoming change status report"
-            echo
-            echo "- Dry run: \`${{ steps.config.outputs.dry_run }}\`"
-            echo "- Stale after days: \`${{ steps.config.outputs.stale_after_days }}\`"
-            echo "- Eligible changes: \`${eligible_count}\`"
-            echo
-            jq -r '.[] | select(.eligible) | "- `\(.name)`: `\(.current_status)` -> `\(.next_status)` in `\(.settings_path)`; last changed \(.days_since_status_change) days ago"' /tmp/upcoming_changes_status_report.json
-          } >> "${GITHUB_STEP_SUMMARY}"
+        run: script/generate_upcoming_change_status_report
+        env:
+          DRY_RUN: ${{ steps.config.outputs.dry_run }}
+          STALE_AFTER_DAYS: ${{ steps.config.outputs.stale_after_days }}
 
       - name: Create or print pull requests
         if: steps.report.outputs.eligible_count != '0'

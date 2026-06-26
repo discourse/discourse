@@ -58,6 +58,29 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
       it { is_expected.to fail_a_policy(:meets_or_exceeds_status) }
     end
 
+    context "when the change should not be displayed on this site" do
+      before do
+        UpcomingChanges::ConditionalDisplay.stubs(
+          :should_display_enable_upload_debug_mode?,
+        ).returns(false)
+      end
+
+      it { is_expected.to fail_a_policy(:change_should_be_displayed) }
+
+      it "does not notify admins or create an event" do
+        expect { result }.to not_change {
+          Notification.where(
+            notification_type: Notification.types[:upcoming_change_automatically_promoted],
+          ).count
+        }.and not_change {
+                UpcomingChangeEvent.where(
+                  event_type: :admins_notified_automatic_promotion,
+                  upcoming_change_name: :enable_upload_debug_mode,
+                ).count
+              }
+      end
+    end
+
     context "when change has already been notified about promotion" do
       let(:changes_already_notified_about_promotion) { [:enable_upload_debug_mode] }
 

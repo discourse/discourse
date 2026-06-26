@@ -2805,6 +2805,8 @@ zh_TW:
   search_logs:
     graph_title: "搜尋計數"
   onebox:
+    google_meet:
+      meeting_code: "代碼:"
     github:
       opened: "已打開"
       closed: "不公開"

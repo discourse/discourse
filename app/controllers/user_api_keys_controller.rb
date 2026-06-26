@@ -692,6 +692,8 @@ class UserApiKeysController < ApplicationController
   end
 
   def one_time_password(public_key, username)
+    raise Discourse::InvalidAccess if is_api? || is_user_api?
+
     unless UserApiKey.allowed_scopes.superset?(Set.new(["one_time_password"]))
       raise Discourse::InvalidAccess
     end

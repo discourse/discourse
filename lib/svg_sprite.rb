@@ -22,6 +22,7 @@ module SvgSprite
         arrow-rotate-left
         arrow-rotate-right
         arrow-up
+        arrow-up-from-bracket
         arrows-rotate
         asterisk
         at
@@ -288,6 +289,7 @@ module SvgSprite
         user-shield
         user-xmark
         users
+        video
         wand-magic
         wrench
         xmark

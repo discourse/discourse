@@ -3000,6 +3000,8 @@ el:
   search_logs:
     graph_title: "Πλήθος αναζητήσεων"
   onebox:
+    google_meet:
+      meeting_code: "Κωδικός:"
     gitlab:
       show_original: "εμφάνιση πρωτότυπου"
     github:

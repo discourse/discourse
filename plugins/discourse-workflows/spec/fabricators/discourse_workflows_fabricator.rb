@@ -102,3 +102,14 @@ Fabricator(:discourse_workflows_credential, class_name: "DiscourseWorkflows::Cre
   credential_type "basic_auth"
   data { { "user" => "admin", "password" => "secret" } }
 end
+
+Fabricator(
+  :discourse_workflows_ai_authoring_session,
+  class_name: "DiscourseWorkflows::AiAuthoringSession",
+) do
+  user { Fabricate(:admin) }
+  status "drafting"
+  messages { [] }
+  latest_response { {} }
+  proposed_patch { {} }
+end

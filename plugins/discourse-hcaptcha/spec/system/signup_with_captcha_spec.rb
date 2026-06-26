@@ -9,7 +9,7 @@ RSpec.describe "Signup with captcha" do
     SiteSetting.discourse_captcha_enabled = true
   end
 
-  context "with hCaptcha" do
+  context "with hCaptcha", allow_network: %w[hcaptcha.com *.hcaptcha.com] do
     before do
       SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::HCAPTCHA
       SiteSetting.hcaptcha_site_key = "10000000-ffff-ffff-ffff-000000000001"
@@ -66,7 +66,7 @@ RSpec.describe "Signup with captcha" do
     end
   end
 
-  context "with reCaptcha" do
+  context "with reCaptcha", allow_network: %w[www.google.com www.gstatic.com] do
     before do
       SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::RECAPTCHA
       SiteSetting.recaptcha_site_key = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"

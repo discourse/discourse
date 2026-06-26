@@ -1323,6 +1323,73 @@ RSpec.describe CategoriesController do
           expect(response.status).to eq(200)
           expect(category.reload.locale).to be_nil
         end
+
+        context "when adding category_types that enable plugins" do
+          let(:test_type_class) do
+            Class.new(Categories::Types::Base) do
+              type_id :test_plugin_type
+
+              def self.enable_plugin
+              end
+
+              def self.plugin_enabled?
+                false
+              end
+
+              def self.category_matches?(category)
+                false
+              end
+
+              def self.find_matches
+                Category.none
+              end
+
+              def self.configure_category(category, guardian:, configuration_values: {})
+              end
+
+              def self.unconfigure_category(category, guardian:)
+              end
+            end
+          end
+
+          before do
+            SiteSetting.enable_simplified_category_creation = true
+            plugin = Plugin::Instance.new
+            plugin.stubs(:humanized_name).returns("Test")
+            Discourse.plugins_by_name["discourse-test-plugin"] = plugin
+            Categories::TypeRegistry.register(
+              test_type_class,
+              plugin_identifier: "discourse-test-plugin",
+            )
+          end
+
+          after do
+            Discourse.plugins_by_name.delete("discourse-test-plugin")
+            Categories::TypeRegistry.reset!
+          end
+
+          it "returns 422 when a moderator tries to add a plugin-enabling type" do
+            sign_in(Fabricate(:moderator))
+            SiteSetting.moderators_manage_categories = true
+
+            put "/categories/#{category.id}.json", params: { category_types: %w[test_plugin_type] }
+
+            expect(response.status).to eq(422)
+            expect(response.parsed_body["errors"]).to include(
+              I18n.t(
+                "category_types.requires_plugin",
+                type_name: "Test plugin type",
+                plugin_name: "Test",
+              ),
+            )
+          end
+
+          it "allows an admin to add a plugin-enabling type" do
+            put "/categories/#{category.id}.json", params: { category_types: %w[test_plugin_type] }
+
+            expect(response.status).to eq(200)
+          end
+        end
       end
     end
 

@@ -549,6 +549,8 @@ lv:
               private:
                 label: "Privāts"
   onebox:
+    google_meet:
+      meeting_code: "Kods:"
     github:
       closed: "slēgts"
       status_date:

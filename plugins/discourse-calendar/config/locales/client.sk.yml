@@ -397,7 +397,6 @@ sk:
           no_users: "Nenašli sa žiadni používatelia"
           leave_event: "Opustiť udalosť"
           status:
-            unknown: "Nemám záujem"
             going: "Idem"
             interested: "Záujem"
             going_count:

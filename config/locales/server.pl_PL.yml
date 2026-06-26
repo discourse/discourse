@@ -944,6 +944,7 @@ pl_PL:
     uncategorized_description: "Tematy które nie potrzebują kategorii, albo nie nadają się do żadnej innej."
   category_types:
     not_available: "Typ kategorii „%{type_name}” jest niedostępny"
+    requires_plugin: "Kategoria typu „%{type_name}” wymaga włączenia wtyczki „%{plugin_name}”. Poproś administratora o jej włączenie lub utwórz tę kategorię."
     discussion:
       name: "Dyskusja"
       title: "dyskusja"
@@ -1128,6 +1129,8 @@ pl_PL:
   email_login:
     invalid_token: 'Ups! Link, którego użyłeś, już nie działa. Możesz <a href="%{base_url}/login">zalogować się</a> teraz. Jeśli nie pamiętasz swojego hasła, możesz <a href="%{base_url}/password-reset">poprosić o łącze</a>, aby je zresetować.'
     title: "Logowanie e-mailem"
+  email_login_code:
+    invalid_code: "Ten kod jest niepoprawny lub wygasł. Poproś o nowy kod i spróbuj ponownie."
   user_auth_tokens:
     browser:
       chrome: "Google Chrome"
@@ -1870,6 +1873,7 @@ pl_PL:
       facebook_config: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą Facebooka (enable_facebook_logins), ale identyfikator aplikacji i jej sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
       twitter_config: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą Twittera (enable_twitter_logins), ale wartości dla klucza i sekretu nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
       github_config: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą GitHub (enable_github_logins), ale identyfikator klienta oraz jego sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
+      github_onebox_backoff: "GitHub ogranicza przepustowość serwera, więc linki GitHub mogą nie być dostępne do momentu zresetowania limitu. Skonfigurowanie {{setting:github_onebox_access_tokens}} znacznie zwiększa limit."
       s3_upload_config: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie ustawiono co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_upload_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a>.'
       s3_backup_config: 'Serwer jest skonfigurowany do przesyłania kopii zapasowych do S3, ale nie skonfigurowano co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_backup_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a>.'
       s3_cdn: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie skonfigurowano S3 CDN. Może to prowadzić do wysokich kosztów S3 i spowolnienia działania witryny. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Zobacz "Używanie Object Storage do wysyłania", aby dowiedzieć się więcej</a>.'
@@ -2170,6 +2174,7 @@ pl_PL:
     discourse_connect_allowed_redirect_domains: "Ogranicz do tych domen dla return_paths dostarczanych przez DiscourseConnect (domyślna ścieżka zwrotna musi być na bieżącej stronie). Użyj * aby zezwolić na dowolną domenę dla ścieżki zwrotnej. Własne poddomeny (`*.foobar.com`) są niedozwolone."
     enable_local_logins: "Włącz konta oparte na loginach lokalnych i hasłach. OSTRZEŻENIE: jeśli opcja jest wyłączona, zalogowanie się może nie być możliwe, jeśli wcześniej nie skonfigurowano co najmniej jednej alternatywnej metody logowania."
     enable_local_logins_via_email: "Zezwalaj użytkownikom na żądanie linku logowania do jednego kliknięcia, który zostanie im przesłany pocztą e-mail."
+    enable_local_logins_via_code: "Wyślij jednorazowy kod zamiast linku do logowania, gdy użytkownik loguje się przez e-mail, i pozwól nowym użytkownikom zarejestrować się, podając tylko adres e-mail i ten kod. Wymaga „włączenia lokalnego logowania przez e-mail”."
     allow_passkeys_for_2fa: "Zezwól użytkownikom na użycie klucza dostępu w celu spełnienia wymogów uwierzytelniania dwuskładnikowego podczas potwierdzania poufnej czynności."
     allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
     enable_signup_cta: "Pokazuj wiadomość dla powracających użytkowników anonimowych, zachęcającą ich do założenia konta."
@@ -2322,6 +2327,7 @@ pl_PL:
     edit_all_topic_groups: "Zezwalaj użytkownikom w tej grupie na edytowanie tytułów, tagów i kategorii tematów innych użytkowników"
     edit_all_post_groups: "Zezwalaj użytkownikom w tej grupie na edytowanie postów innych użytkowników"
     create_topic_allowed_groups: "Grupy, które mogą tworzyć nowe tematy. Administratorzy i moderatorzy zawsze mogą tworzyć tematy."
+    topic_timers_allowed_groups: "Grupy, które mogą ustawiać timery tematów. Administratorzy i moderatorzy zawsze mogą ustawiać timery tematów."
     allow_flagging_staff: "Jeżeli włączone, użytkownicy mogą flagować wpisy członków zespołu."
     edit_wiki_post_allowed_groups: "Grupy, które mogą edytować posty oznaczone jako wiki. Administratorzy i moderatorzy zawsze mogą edytować posty oznaczone jako wiki."
     edit_post_allowed_groups: "Grupy, które mogą edytować posty. Administratorzy i moderatorzy zawsze mogą edytować posty."
@@ -2797,7 +2803,6 @@ pl_PL:
     reporting_improvements: "Ulepszenia nawigacji, projektu i użyteczności raportów administracyjnych Discourse."
     granular_anonymous_and_logged_in_groups_permissions: "Wprowadza uprawnienia witryn oparte na grupach, które traktują „wszystkich” jako „wszystkich zalogowanych użytkowników” oraz włącza nowe pseudogrupy „anonimowi_użytkownicy” i „zalogowani_użytkownicy”, dzięki czemu administratorzy mogą wyraźnie określać mianem anonimowych odwiedzających i uwierzytelnionych użytkowników."
     dashboard_improvements: "Umożliwia dostęp do przeprojektowanego pulpitu administracyjnego, który umożliwia przypinanie niestandardowych raportów i obejmuje ulepszone dane dotyczące ruchu w witrynie, zaangażowania i inne analizy powiązane z sukcesem i wartością społeczności."
-    admin_dashboard_search_section_enabled: "Wyświetl sekcję wyszukiwania na nowym pulpicie administratora w trakcie testów."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_datetime: "Nieprawidłowy format daty i godziny. Upewnij się, że wprowadzono prawidłową datę i godzinę."
@@ -2850,6 +2855,8 @@ pl_PL:
       discourse_connect_url_is_empty: "Musisz ustawić 'discourse connect url' przed włączeniem tego ustawienia."
       discourse_connect_secret_is_too_short: "Przed włączeniem tego ustawienia należy podać klucz „Discourse Connect Secret” składający się z co najmniej 10 znaków."
       enable_local_logins_disabled: "Przed włączeniem tego ustawienia musisz najpierw włączyć opcję 'enable local logins'."
+      enable_local_logins_via_email_disabled: "Przed włączeniem tego ustawienia musisz najpierw włączyć opcję „Włącz lokalne logowanie za pomocą poczty e-mail”."
+      discourse_connect_enabled: "Przed włączeniem tego ustawienia musisz wyłączyć opcję „włącz Discourse Connect”."
       min_username_length_exists: "Nie można ustawić wartości „minimalnej długości nazwy użytkownika” wyższej niż najkrótsza nazwa użytkownika (%{username})."
       min_group_name_length_exists: "Nie można ustawić wartości „minimalnej długości nazwy użytkownika” wyższej niż najkrótsza nazwa grupy (%{group_name})."
       min_username_length_range: "Nie można ustawić wartości „minimalnej długości nazwy użytkownika” na poziomie wyższym niż „maksymalna długość nazwy użytkownika”."
@@ -2926,12 +2933,21 @@ pl_PL:
       keywords: "Pokaż wpisy zawierające dowolne ze wskazanych słów kluczowych"
       topic_keywords: "Pokaż wpisy w tematach zawierających dowolne ze wskazanych słów kluczowych"
       post_type: "Pokaż pierwsze wpisy lub odpowiedzi"
+      post_type_regular: "Tylko zwykłe wpisy"
+      post_type_all: "Wszystkie widoczne typy wpisów"
       post_type_first: "Tylko pierwsze wpisy"
       post_type_reply: "Tylko odpowiedzi"
+      post_type_moderator_action: "Tylko wpisy z działaniami moderatora"
+      post_type_small_action: "Tylko wpisy z niewielkimi działaniami"
+      post_type_whisper: "Tylko szepty"
       status: "Filtruj wpisy według statusu tematu"
       status_open: "Otwarte tematy"
       status_closed: "Zamknięte tematy"
       status_archived: "Zarchiwizowane tematy"
+      status_listed: "Tematy na liście"
+      status_unlisted: "Tematy usunięty z listy"
+      status_deleted: "Usunięte tematy"
+      status_public: "Tematy w kategoriach publicznych"
       status_noreplies: "Tematy bez odpowiedzi"
       status_single_user: "Tematy z jednym użytkownikiem"
       order: "Sortuj wpisy"
@@ -3325,6 +3341,15 @@ pl_PL:
       %{confirm_unsubscribe_link}
 
       Jeśli nadal chcesz otrzymywać powiadomienia e-mailowe, po prostu zignoruj ten e-mail.
+  email_login_code_mailer:
+    title: "Narzędzie do wysyłania kodów logowania e-mailem"
+    subject_template: "%{code} to Twój kod logowania"
+    text_body_template: |
+      Użyj tego kodu, aby dokończyć logowanie do %{site_name}:
+
+      ## %{code}
+
+      Ten kod wygasa za %{minutes} minut(y). Jeśli nie prosiłeś o jego otrzymanie, możesz zignorować tego e-maila.
   invite_mailer:
     title: "Zaproś mailera"
     subject_template: "%{inviter_name} zaprosił Cię do '%{topic_title}' na %{site_domain_name}"
@@ -5541,6 +5566,11 @@ pl_PL:
       few: "Musisz wybrać co najmniej %{count} tagi."
       many: "Musisz wybrać co najmniej %{count} tagów."
       other: "Musisz wybrać co najmniej %{count} tagów."
+    too_many_tags_for_topic:
+      one: "Do tematu można zastosować %{count} znacznik."
+      few: "Do tematu można zastosować %{count} znaczniki."
+      many: "Do tematu można zastosować %{count} znaczników."
+      other: "Do tematu można zastosować %{count} znaczników."
     upload_row_too_long: "Plik CSV powinien zawierać jeden tag w każdym wierszu. Opcjonalnie po tagu można umieścić przecinek, a następnie nazwę grupy tagów."
     bulk_create:
       invalid_params: "Nieprawidłowe parametry. Podaj tablicę nazw tagów."
@@ -5572,6 +5602,7 @@ pl_PL:
       synonym: 'Zamiast tego użyj „%{tag_name}”'
       has_synonyms: 'Nie można użyć "%{tag_name}", ponieważ zawiera synonimy.'
       one_tag_per_topic_group: 'Konflikty z „%{tag_names}” (dozwolony tylko jeden na temat)'
+      one_tag_per_topic_group_without_names: "Konflikty z wybranym tagiem (dozwolony tylko jeden na temat)"
       missing_parent_tag: 'Dostępne po dodaniu znacznika „%{parent_tag_name}”'
       restricted_tags_cannot_be_used_in_category:
         one: 'Tag "%{tags}" nie może być użyty w kategorii "%{category}". Usuń go.'
@@ -5667,6 +5698,11 @@ pl_PL:
   onebox:
     discourse:
       user_joined_community: "Dołączył %{date}"
+    google_meet:
+      title: "Spotkanie w Google Meet"
+      description: "Otwórz ten link Google Meet, aby dołączyć do rozmowy."
+      meeting_code: "Kod:"
+      join: "Dołącz do spotkania"
     gitlab:
       truncated_file: "Ten plik został obcięty."
       show_original: "pokaż oryginał"

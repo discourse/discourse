@@ -195,6 +195,7 @@ plugins:
     columns: {}
   discourse-workflows:
     tables:
+      - discourse_workflows_ai_authoring_sessions
       - discourse_workflows_credentials
       - discourse_workflows_data_tables
       - discourse_workflows_execution_data
@@ -243,7 +244,7 @@ plugin_checksums:
   discourse-templates: a131c89a3e2b765f1eb6ec811c0fecea
   discourse-topic-voting: 5464e186402b9589d71f338c704a7d21
   discourse-user-notes: 4c1e04fac5708b51c1b09bd8ed0d786c
-  discourse-workflows: d46c6b3562eb76d9352ee6c99e30707a
+  discourse-workflows: 4163c85f5edd2e854973b1601060df26
   discourse-zendesk-plugin: b78b305590ffedda38455574a19fdd38
   poll: 4af8698c5fcc1dc9a786b31ec8234171
   styleguide: 0fd92e5ef0c99ee047f206961a587544

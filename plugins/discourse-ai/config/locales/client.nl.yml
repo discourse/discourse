@@ -980,7 +980,6 @@ nl:
         title: "Stel wijzigingen voor met behulp van AI"
         description: "Kies een van de onderstaande opties, dan zal de AI je een nieuwe versie van de tekst voorstellen."
         selection_hint: "Tip: je kunt ook een deel van de tekst selecteren voordat je de hulp opent om alleen dat deel te herschrijven."
-        suggest: "Voorstellen met AI"
         suggest_errors:
           too_many_tags:
             one: "Je kunt maximaal %{count} tag hebben"

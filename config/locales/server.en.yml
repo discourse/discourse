@@ -913,6 +913,7 @@ en:
 
   category_types:
     not_available: "Category type '%{type_name}' is not available"
+    requires_plugin: "Category type '%{type_name}' requires the '%{plugin_name}' plugin to be enabled. Ask an administrator to enable it or create this category."
     discussion:
       name: "Discussion"
       title: "discussion"
@@ -1053,6 +1054,9 @@ en:
   email_login:
     invalid_token: 'Oops! The link you used no longer works. You can <a href="%{base_url}/login">Log In</a> now. If you forgot your password, you can <a href="%{base_url}/password-reset">request a link</a> to reset it.'
     title: "Email login"
+
+  email_login_code:
+    invalid_code: "That code is incorrect or has expired. Request a new code and try again."
 
   user_auth_tokens:
     browser:
@@ -2134,6 +2138,7 @@ en:
 
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
+    enable_local_logins_via_code: "Send a one-time code instead of a login link when a user logs in via email, and let new users sign up with just an email address and that code. Requires 'enable local logins via email'."
     allow_passkeys_for_2fa: "Allow users to use a passkey to satisfy two-factor authentication when confirming a sensitive action."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
@@ -2319,6 +2324,7 @@ en:
     edit_all_post_groups: "Allow users in this group to edit other users' posts"
 
     create_topic_allowed_groups: "Groups that are allowed to create new topics. Admins and moderators can always create topics."
+    topic_timers_allowed_groups: "Groups that are allowed to set topic timers. Admins and moderators can always set topic timers."
     allow_flagging_staff: "If enabled, users can flag posts from staff accounts."
 
     edit_wiki_post_allowed_groups: "Groups that are allowed to edit posts marked as wiki. Admins and moderators can always edit posts marked as wiki."
@@ -2908,7 +2914,6 @@ en:
     reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
     granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous_users' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
     dashboard_improvements: "Enables the redesigned admin dashboard that lets you pin custom reports and includes improved site traffic, engagement, and other analytics tied to community success and value."
-    admin_dashboard_search_section_enabled: "Show the Search section on the redesigned admin dashboard while it is in testing."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -2958,6 +2963,8 @@ en:
       discourse_connect_url_is_empty: "You must set a 'discourse connect url' before enabling this setting."
       discourse_connect_secret_is_too_short: "You must set a 'discourse connect secret' of at least 10 characters before enabling this setting."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
+      enable_local_logins_via_email_disabled: "You must first enable 'enable local logins via email' before enabling this setting."
+      discourse_connect_enabled: "You must disable 'enable discourse connect' before enabling this setting."
       min_username_length_exists: "You cannot set 'min username length' above the shortest username (%{username})."
       min_group_name_length_exists: "You cannot set 'min username length' above the shortest group name (%{group_name})."
       min_username_length_range: "You cannot set 'min username length' above 'max username length'."
@@ -3035,13 +3042,22 @@ en:
       topic_before: "Show posts in topics created before a date (YYYY-MM-DD or days ago)"
       keywords: "Show posts containing any of the specified keywords"
       topic_keywords: "Show posts in topics containing any of the specified keywords"
-      post_type: "Show first posts or replies"
+      post_type: "Filter posts by type or position"
+      post_type_regular: "Regular posts only"
+      post_type_all: "All visible post types"
       post_type_first: "First posts only"
       post_type_reply: "Replies only"
+      post_type_moderator_action: "Moderator action posts only"
+      post_type_small_action: "Small action posts only"
+      post_type_whisper: "Whispers only"
       status: "Filter posts by topic status"
       status_open: "Open topics"
       status_closed: "Closed topics"
       status_archived: "Archived topics"
+      status_listed: "Listed topics"
+      status_unlisted: "Unlisted topics"
+      status_deleted: "Deleted topics"
+      status_public: "Topics in public categories"
       status_noreplies: "Topics with no replies"
       status_single_user: "Topics with a single user"
       order: "Sort posts"
@@ -3406,6 +3422,16 @@ en:
 
 
       If you want to continue receiving email updates, you may ignore this email.
+
+  email_login_code_mailer:
+    title: "Email Login Code Mailer"
+    subject_template: "%{code} is your login code"
+    text_body_template: |
+      Use this code to finish logging in to %{site_name}:
+
+      ## %{code}
+
+      This code expires in %{minutes} minutes. If you didn't request it, you can safely ignore this email.
 
   invite_mailer:
     title: "Invite Mailer"
@@ -5782,6 +5808,9 @@ en:
     minimum_required_tags:
       one: "You must select at least %{count} tag."
       other: "You must select at least %{count} tags."
+    too_many_tags_for_topic:
+      one: "You can apply up to %{count} tag to a topic."
+      other: "You can apply up to %{count} tags to a topic."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
     bulk_create:
       invalid_params: "Invalid parameters. Please provide an array of tag names."
@@ -5796,6 +5825,9 @@ en:
       invalid:
         one: "The tag you selected cannot be used"
         other: "None of the tags you selected can be used"
+      tag_not_allowed_in_category:
+        one: 'The "%{tags}" tag isn''t allowed in the "%{category}" category.'
+        other: 'The following tags aren''t allowed in the "%{category}" category: %{tags}.'
       in_this_category: "Can't be used in this category"
       not_allowed: "Can't be used"
       restricted_to:
@@ -5805,6 +5837,7 @@ en:
       synonym: 'Please use "%{tag_name}" instead'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
       one_tag_per_topic_group: 'Conflicts with "%{tag_names}" (only one allowed per topic)'
+      one_tag_per_topic_group_without_names: "Conflicts with a selected tag (only one allowed per topic)"
       missing_parent_tag: 'Available after adding the "%{parent_tag_name}" tag'
       restricted_tags_cannot_be_used_in_category:
         one: 'The "%{tags}" tag cannot be used in the "%{category}" category. Please remove it.'
@@ -5899,6 +5932,11 @@ en:
   onebox:
     discourse:
       user_joined_community: "Joined %{date}"
+    google_meet:
+      title: "Google Meet meeting"
+      description: "Open this Google Meet link to join the call."
+      meeting_code: "Code:"
+      join: "Join meeting"
     gitlab:
       truncated_file: "This file has been truncated."
       show_original: "show original"

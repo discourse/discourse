@@ -2406,6 +2406,12 @@ vi:
       confirm_title: Tiếp tục tới %{site_name}
       logging_in_as: Đăng nhập bằng %{email}
       confirm_button: Kết thúc đăng nhập
+    code_login:
+      email_label: "Email"
+      continue_button: "Tiếp tục"
+      verify_button: "Tiếp tục"
+      account_ready_continue: "Tiếp tục"
+      username_label: "Tên người dùng"
     login:
       header_title: "Chào mừng trở lại"
       title: "Đăng nhập"
@@ -2628,6 +2634,10 @@ vi:
       publish: "Xuất bản bản nháp"
       confirm_publish: "Bạn có chắc chắn muốn xuất bản bản nháp này không?"
       publishing: "Đang đăng chủ đề…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metadata"
     composer:
       autocomplete:
         username_missing: "Kết quả tự động điền được chọn thiếu tên người dùng."
@@ -3290,6 +3300,9 @@ vi:
       deleted_post_placeholder: "[đã xóa]"
       ignored_post_placeholder: "[đã bỏ qua]"
       pinned_reply: "Đã ghim"
+    share_target:
+      new_topic: "Chủ đề mới"
+      new_message: "Tin nhắn mới"
     topic:
       filter_to:
         other: "%{count} tút trong chủ đề"
@@ -5121,10 +5134,6 @@ vi:
             bookmarks: "Các chủ đề trong %{category} không có thẻ mà bạn đã đánh dấu"
             default: "%{filter} chủ đề trong %{category} không có thẻ"
         categories: "Tất cả chuyên mục"
-    content_localization:
-      toggle_localized:
-        translated: "Trang này được dịch máy. Nhấn để xem bản gốc."
-        not_translated: "Trang này chưa được dịch. Nhấn để dịch."
     language_switcher:
       title: "Thay đổi ngôn ngữ"
   admin_js:

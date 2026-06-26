@@ -1639,7 +1639,6 @@ de:
       enable_smart_lists: "Aktiviere intelligente Listen beim Schreiben im Composer"
       enable_defer: "„Themen als ungelesen markieren“ aktivieren"
       enable_markdown_monospace_font: "Monospace-Schriftart im Markdown-Modus des Editors verwenden"
-      show_original_content: "Zeige den Originalinhalt anstelle der übersetzten Inhalte. Die Einstellung kann auch innerhalb von Themen verändert werden."
       experimental_sidebar:
         enable: "Seitenleiste aktivieren"
         options: "Optionen"
@@ -2655,6 +2654,12 @@ de:
       confirm_title: Weiter zu %{site_name}
       logging_in_as: Anmeldung als %{email}
       confirm_button: Anmeldung fertigstellen
+    code_login:
+      email_label: "E-Mail"
+      continue_button: "Weiter"
+      verify_button: "Weiter"
+      account_ready_continue: "Weiter"
+      username_label: "Benutzername"
     login:
       header_title: "Willkommen zurück"
       title: "Anmelden"
@@ -2898,6 +2903,10 @@ de:
       publish: "Gemeinsamen Entwurf veröffentlichen"
       confirm_publish: "Bist du sicher, dass du diese Vorlage veröffentlichten möchtest?"
       publishing: "Thema wird veröffentlicht …"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metadaten"
     composer:
       autocomplete:
         username_missing: "Das ausgewählte Autovervollständigungsergebnis enthält keinen Benutzernamen."
@@ -3719,6 +3728,13 @@ de:
       topic_admin_menu:
         enable_nested_replies: "Verschachtelte Antworten aktivieren"
         disable_nested_replies: "Verschachtelte Antworten deaktivieren"
+      context:
+        banner: "Du betrachtest einen einzelnen Thread aus diesem Thema."
+        view_full_topic: "Vollständiges Thema anzeigen"
+        view_parent_context: "Übergeordneten Kontext anzeigen"
+    share_target:
+      new_topic: "Neues Thema"
+      new_message: "Neue Nachricht"
     topic:
       filter_to:
         one: "%{count} Beitrag im Thema"
@@ -4563,7 +4579,6 @@ de:
         site_settings: "Website-Einstellungen"
       choose_type:
         title: "Kategorietyp wählen"
-        requires_plugin: "Erfordert ein Plug-in"
       create_category: "Kategorie erstellen"
       save: "Kategorie speichern"
       unsaved_changes: "Du hast ungespeicherte Änderungen"
@@ -5714,12 +5729,6 @@ de:
             bookmarks: "Themen in %{category} ohne Schlagwörter, die du mit einem Lesezeichen versehen hast"
             default: "%{filter} Themen in %{category} ohne Schlagwörter"
         categories: "Alle Kategorien"
-    content_localization:
-      toggle_localized:
-        translated: "Die Seite wurde maschinell übersetzt. Klicke, um das Original zu sehen."
-        not_translated: "Die Seite ist nicht übersetzt. Klicke zum Übersetzen."
-        translations_enabled: "Übersetzungen aktiviert"
-        translations_disabled: "Übersetzungen deaktiviert"
     language_switcher:
       title: "Sprache der Website ändern"
   admin_js:

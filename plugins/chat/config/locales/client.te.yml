@@ -81,6 +81,7 @@ te:
         title: కొత్త సందేశం
         no_results: ఫలితాలు లేవు
       create_channel:
+        description: "వివరణ"
         type: "రకం"
         types:
           category: "వర్గం"

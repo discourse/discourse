@@ -176,7 +176,10 @@ tr_TR:
     date_range_picker:
       apply: "Uygula"
       start_date: "Başlangıç tarihi"
+      end_date: "Bitiş tarihi"
+      date_placeholder: "yyyy/aa/gg"
       presets:
+        label: "Tarih aralığı ön ayarları"
         last_7_days: "Son 7 gün"
         last_30_days: "Son 30 gün"
         last_3_months: "Son 3 ay"
@@ -354,6 +357,9 @@ tr_TR:
       search_placeholder: "Ara"
     impersonation:
       notice: "%{username} kimliğine bürünüyorsunuz."
+      time_left:
+        one: "(%{count} dakika kaldı)"
+        other: "(%{count} dakika kaldı)"
       stop: "Kişiyi taklit etmeyi bırak"
     themes:
       default_description: "Varsayılan"
@@ -382,6 +388,11 @@ tr_TR:
         visual_overlay: "Görsel katman"
         ghost_blocks: "Hayalet bloklar"
         condition_debugging: "Durum hata ayıklama"
+      plugin_outlet_debug:
+        find_on_github: "GitHub'da bul"
+        wrapper: "(sarmalayıcı)"
+        outlet_args: "Çıkış argümanları"
+        no_outlet_args: "Bu çıkışa herhangi bir çıkış argümanı aktarılmadı"
       toggle_safe_mode: "Güvenli modu aç/kapat"
       toggle_verbose_localization: "Ayrıntılı yerelleştirmeyi aç/kapat"
       disable_dev_tools: "Geliştirici araçlarını devre dışı bırak"
@@ -1640,7 +1651,6 @@ tr_TR:
       enable_smart_lists: "Bestecide yazarken akıllı listeleri etkinleştirin"
       enable_defer: "Konuları okunmadı olarak işaretlemeyi etkinleştir"
       enable_markdown_monospace_font: "Bestecinin Markdown modunda monospace yazı tipini kullanın"
-      show_original_content: "Çevrilmiş içerik yerine orijinal içeriği göster. Konu içinde de bu ayar değiştirilebilir."
       experimental_sidebar:
         enable: "Kenar çubuğunu etkinleştir"
         options: "Seçenekler"
@@ -2656,6 +2666,12 @@ tr_TR:
       confirm_title: '%{site_name} adresine devam edin'
       logging_in_as: '%{email} olarak giriş yapılıyor'
       confirm_button: Giriş yapmayı bitir
+    code_login:
+      email_label: "E-posta"
+      continue_button: "Devam et"
+      verify_button: "Devam et"
+      account_ready_continue: "Devam et"
+      username_label: "Kullanıcı Adı"
     login:
       header_title: "Tekrar hoş geldiniz"
       title: "Giriş Yap"
@@ -2899,6 +2915,10 @@ tr_TR:
       publish: "Paylaşılan Taslağı Yayınla"
       confirm_publish: "Bu taslağı yayınlamak istediğinizden emin misiniz?"
       publishing: "Konu Yayınlanıyor…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Meta veri"
     composer:
       autocomplete:
         username_missing: "Seçili otomatik tamamlama sonucunda kullanıcı adı eksik."
@@ -3732,6 +3752,13 @@ tr_TR:
       topic_admin_menu:
         enable_nested_replies: "İç içe geçmiş yanıtları etkinleştir"
         disable_nested_replies: "İç içe geçmiş yanıtları devre dışı bırak"
+      context:
+        banner: "Bu konudan tek bir başlığı görüntülüyorsunuz."
+        view_full_topic: "Konunun tamamını görüntüle"
+        view_parent_context: "Üst bağlamı görüntüle"
+    share_target:
+      new_topic: "Yeni konu"
+      new_message: "Yeni İleti"
     topic:
       filter_to:
         one: "Konuda %{count} gönderi"
@@ -4576,7 +4603,6 @@ tr_TR:
         site_settings: "Site ayarları"
       choose_type:
         title: "Kategori türünü seçin"
-        requires_plugin: "Eklenti gerektirir"
       create_category: "Kategori oluştur"
       save: "Kategoriyi kaydet"
       unsaved_changes: "Kaydedilmemiş değişiklikleriniz var"
@@ -5727,12 +5753,6 @@ tr_TR:
             bookmarks: "Yer imi eklediğiniz %{category} kategorisindeki etiketsiz konular"
             default: "%{category} kategorisindeki etiketsiz %{filter} konuları"
         categories: "Tüm kategoriler"
-    content_localization:
-      toggle_localized:
-        translated: "Sayfa makine tarafından çevrilmiştir. Orijinali görüntülemek için tıklayın."
-        not_translated: "Sayfa çevrilmedi. Çevirmek için tıklayın."
-        translations_enabled: "Çeviriler etkinleştirildi"
-        translations_disabled: "Çeviriler devre dışı bırakıldı"
     language_switcher:
       title: "Site dilini değiştir"
   admin_js:

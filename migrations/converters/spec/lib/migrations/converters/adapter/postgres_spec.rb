@@ -28,12 +28,12 @@ RSpec.describe Migrations::Converters::Adapter::Postgres do
     end
 
     it "registers a fork hook on creation and removes it on `close`" do
-      expect(Migrations::ForkManager.size).to eq(0)
+      expect(Migrations::ForkManager.hook_count).to eq(0)
 
       create_adapter do |adapter|
-        expect(Migrations::ForkManager.size).to eq(1)
+        expect(Migrations::ForkManager.hook_count).to eq(1)
         adapter.close
-        expect(Migrations::ForkManager.size).to eq(0)
+        expect(Migrations::ForkManager.hook_count).to eq(0)
       end
     end
 
@@ -70,7 +70,7 @@ RSpec.describe Migrations::Converters::Adapter::Postgres do
 
           expect { adapter.close }.to_not raise_error
           expect(connection).to_not have_received(:finish)
-          expect(Migrations::ForkManager.size).to eq(0)
+          expect(Migrations::ForkManager.hook_count).to eq(0)
         end
       end
     end

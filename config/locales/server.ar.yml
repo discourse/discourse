@@ -5678,6 +5678,8 @@ ar:
   onebox:
     discourse:
       user_joined_community: "تاريخ الانضمام: %{date}"
+    google_meet:
+      meeting_code: "الرمز:"
     gitlab:
       truncated_file: "تم اقتطاع هذا الملف‎."
       show_original: "إظهار الأصل"

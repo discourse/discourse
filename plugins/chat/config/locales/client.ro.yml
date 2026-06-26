@@ -135,6 +135,7 @@ ro:
           few: "%{count}/%{max} membri"
           other: "%{count}/%{max} de membri"
       create_channel:
+        description: "Descriere"
         type: "Tip"
         types:
           category: "Categorie"

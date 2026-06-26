@@ -503,6 +503,8 @@ module Chat
     def self.permissions(channel)
       group_ids = channel.allowed_group_ids.presence
       if group_ids.blank? && channel.category_channel? && !channel.read_restricted?
+        return {} if Chat.anonymous_public_channel_access_allowed?
+
         group_ids = chat_allowed_group_ids
       end
 
@@ -511,8 +513,10 @@ module Chat
 
     def self.chat_allowed_group_ids
       pseudo_everyone_ids = [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:logged_in_users]]
+      excluded_group_ids = [Group::AUTO_GROUPS[:anonymous_users]]
       Chat
         .allowed_group_ids
+        .reject { |group_id| excluded_group_ids.include?(group_id) }
         .map do |group_id|
           pseudo_everyone_ids.include?(group_id) ? Group::AUTO_GROUPS[:trust_level_0] : group_id
         end

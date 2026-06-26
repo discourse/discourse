@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AssetProcessor
-  BASE_COMPILER_VERSION = 110
+  BASE_COMPILER_VERSION = 111
 
   PROCESSOR_DIR = "tmp/asset-processor"
   LOCK_FILE = "#{PROCESSOR_DIR}/build.lock"

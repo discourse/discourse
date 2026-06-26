@@ -40,6 +40,7 @@ en:
         description: When a category is created or edited the automation will be triggered
       recurring:
         title: Recurring
+        invalid_interval: The interval must be a positive number.
       point_in_time:
         title: Point in time
         description: When the date is reached the automation will be triggered

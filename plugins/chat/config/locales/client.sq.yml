@@ -108,6 +108,7 @@ sq:
         title: Mesazh i ri
         prefix: "Për:"
       create_channel:
+        description: "Përshkrimi"
         type: "Lloji"
         types:
           category: "Kategori"

@@ -80,6 +80,7 @@ gl:
         title: Nova mensaxe
         prefix: "A:"
       create_channel:
+        description: "Descrición"
         type: "Tipo"
         types:
           category: "Categoría"

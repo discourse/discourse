@@ -625,7 +625,6 @@ sk:
         title: "Navrhovanie zmien pomocou AI"
         description: "Vyberte jednu z nasledujúcich možností a AI vám navrhne novú verziu textu."
         selection_hint: "Tip: Pred otvorením pomocníka môžete tiež vybrať časť textu a prepísať iba túto časť."
-        suggest: "Navrhnúť s AI"
         suggest_errors:
           too_many_tags:
             one: "Môžete mať iba %{count} štítok"

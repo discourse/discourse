@@ -2669,6 +2669,12 @@ ur:
       confirm_title: '%{site_name} پر جاری رکھیں'
       logging_in_as: '%{email} کے طور پر لاگ اِن'
       confirm_button: لاگ اِن مکمل
+    code_login:
+      email_label: "ای میل"
+      continue_button: "جاری رکھیں"
+      verify_button: "جاری رکھیں"
+      account_ready_continue: "جاری رکھیں"
+      username_label: "اسمِ صارف"
     login:
       header_title: "خوش آمدید"
       title: "لاگ اِن"
@@ -2687,7 +2693,6 @@ ur:
       security_key_description: "جب آپ کے پاس اپنی فزیکل سیکیورٹی کلید یا ہم آہنگ موبائل ڈیوائس تیار ہو جائے تو نیچے سیکیورٹی کلید کے ساتھ تصدیق کریں بٹن کو دبائیں۔"
       security_key_alternative: "دوسرا راستہ آزمائیں"
       security_key_authenticate: "سیکیورٹی کی کے ساتھ تصدیق کریں"
-      security_key_or_passkey_authenticate: "سیکیورٹی کلید یا پاس کی کے ساتھ تصدیق کریں"
       security_key_not_allowed_error: "سیکیورٹی کی, کی تصدیق کا عمل یا تو ختم ہو گیا تھا یا منسوخ کردیا گیا تھا۔"
       security_key_no_matching_credential_error: "فراہم کردہ سیکیورٹی کی میں کوئی مماثلت نہیں مل سکی۔"
       security_key_support_missing_error: "آپ کا موجودہ آلہ یا براؤزر سیکیورٹی کیز کے استعمال کی حمایت نہیں کرتا ہے۔ براہ کرم کوئی مختلف طریقہ استعمال کریں۔"
@@ -2913,6 +2918,10 @@ ur:
       publish: "مشترکہ مسودہ شائع کریں"
       confirm_publish: "کیا آپ واقعی اِس ڈرافٹ کو شائع کرنا چاہتے ہیں؟"
       publishing: "اشاعت کا موضوع۔۔۔"
+    codemirror:
+      expression:
+        sections:
+          metadata: "میٹا ڈیٹا"
     composer:
       autocomplete:
         username_missing: "منتخب کردہ خودکار تکمیل کا نتیجہ اسمِ صارف سے عاری ہے۔"
@@ -3346,7 +3355,7 @@ ur:
         one: "<span class='term'>%{term}</span><span>کیلئے %{count} نتیجہ</span>"
         other: "<span class='term'>%{term}</span><span>کیلئے %{count}%{plus} نتائج</span>"
       title: "تلاش کریں"
-      full_page_title: "تلاش کریں"
+      full_page_title: "تلاش"
       results: "نتائج"
       no_results: "کوئی نتائج نہیں پائے گئے۔"
       no_more_results: "کوئی اور نتائج نہیں پائے گئے۔"
@@ -3742,6 +3751,13 @@ ur:
         link: "سرگرمی کا لاگ"
         title: "موضوع کی سرگرمی کا لاگ"
         empty: "موضوع کی دکھانے کے لیے سرگرمی نہیں ہے۔"
+      context:
+        banner: "آپ اس موضوع کے ایک واحد دھاگے کو دیکھ رہے ہیں۔"
+        view_full_topic: "مکمل موضوع دیکھیں"
+        view_parent_context: "بنیادی سیاق و سباق دیکھیں"
+    share_target:
+      new_topic: "نیا موضوع"
+      new_message: "نیا پیغام"
     topic:
       filter_to:
         one: "موضوع میں %{count} پوسٹ"
@@ -4586,7 +4602,6 @@ ur:
         site_settings: "سائٹ کی ترتیبات"
       choose_type:
         title: "زمرہ کی قسم منتخب کریں"
-        requires_plugin: "پلگ ان درکار ہے"
       create_category: "زمرہ بنائیں"
       save: "زمرہ محفوظ کریں"
       unsaved_changes: "آپ کی تبدلیاں محفوظ نہیں ہوئیں"
@@ -5670,10 +5685,6 @@ ur:
             bookmarks: "%{category} میں موضوعات ان دہجیوں کے بغیر جنہیں آپ نے بک مارک کیا"
             default: "%{filter} موضوعات %{category} میں بغیر دہجیوں کے"
         categories: "تمام زمرہ جات"
-    content_localization:
-      toggle_localized:
-        translated: "یہ صفحہ خودکار ترجمہ شدہ ہے۔ اصل دیکھنے کے لیے کلک کریں"
-        not_translated: "صفحہ ترجمہ شدہ نہیں ہے۔ ترجمہ کرنے کے لیے کلک کریں"
   admin_js:
     type_to_filter: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
     settings: "ترتیبات"
@@ -5872,6 +5883,7 @@ ur:
             modal_yes: "جی ہاں"
             modal_no: "نہیں، صرف آگے بڑھ پر لاگو ہو گا"
         welcome_banner:
+          header_description: "اپنی سائٹ پر مہمانوں کو دکھائی دینے والے سرچ بار والا بینر ترتیب دیں۔"
           form:
             text_color:
               label: "متن کا رنگ"
@@ -5887,6 +5899,7 @@ ur:
             text_section:
               locale_label: "زبان"
             header_new_members:
+              label: "نئے اراکین کے لیے ہیڈر"
               placeholder: "خوش آمدید، %{preferred_display_name}!"
             header_logged_in:
               placeholder: "دوبارہ خوش آمدید، %{preferred_display_name}!"
@@ -5908,7 +5921,7 @@ ur:
           title: "تلاش کی ترتیبات"
           header_description: "چینی اور جاپانی زبانوں کے لئے سرچ کی ترتیبات مع لاگنگ اور ٹوکنائزیشن کا تعین کریں"
         search_everything:
-          title: "تلاش کریں"
+          title: "تلاش"
           header_description: "انتظامیہ انٹرفیس میں کچھ بھی تلاش کریں۔ آپ نیچے دیئے گئے نتائج کو چھان سکتے ہیں، نیز آپ کی ترجیحات کو یاد رکھا جائے گا۔ اس تلاش کو انتظامیہ انٹرفیس میں کہیں بھی کھولنے کے لیے، دبائیں %{shortcutHTML}۔"
         security:
           title: "سیکورٹی"
@@ -6155,8 +6168,8 @@ ur:
         lastest_backup: "تازہ ترین: %{date}"
         traffic_short: "ٹریفک"
         traffic: "ایپلیکیشن ویب رِیکَویسٹس"
-        page_views: "صفحہ کے ملاحظات"
-        page_views_short: "صفحہ ملاحظات"
+        page_views: "صفحہ کے مشاہدات"
+        page_views_short: "صفحہ کے مشاہدات"
         show_traffic_report: "تفصیلی ٹریفک رپورٹ دکھائیں"
         community_health: کمیونٹی صحت
         moderators_activity: نگرانوں کی سرگرمی
@@ -6174,41 +6187,157 @@ ur:
         too_many_requests: آپ نے یہ کارروائی بہت زیادہ دفعہ کی ہے۔ براہ کرم دوبارہ کوشش کرنے سے قبل انتظار کریں۔
         not_found_error: معذرت، یہ رپورٹ موجود نہیں
         custom_date_range: حسبِ ضرورت تاریخ کی حد
+        loading: "ڈیش بورڈ کو ترتیب دیا جا رہا ہے…"
         sections:
+          highlights:
+            title: "نمایاں نکات"
           reports:
             title: "گزارشات"
           traffic:
             title: "سائٹ پر آمدو رفت"
           engagement:
+            title: "شراکت"
+            fetch_error: "شراکت کی ترتیب نہیں ہو سکی۔ براہِ کرم صفحہ ریفریش کریں۔"
             activity_by_category:
               category: "زُمرَہ"
               topics: "موضوعات"
               posts: "دھاگے"
+              page_views: "صفحہ کے مشاہدات"
               share: "اشتراک"
+              vs_prior: "گزشتہ"
             whos_posting:
+              title: "کون فعال ہے؟"
               all_categories: "تمام زُمرَہ جات"
+              include_subcategories: "ذیلی زمروں کو شامل کریں"
+              new_members: "نئے اراکین"
+              returning: "دوبارہ جڑنے والے"
               staff: "عملہ"
+              empty: "منتخب مدت میں کوئی فعال نہیں۔"
             trust_level_pipeline:
+              title: "فعالیت کے درجات کا کھاتہ"
               trust_levels:
-                "0": "نیا"
-                "1": "بنیادی"
-                "2": "ممبر"
-                "3": "رَیگولر"
-                "4": "لِیڈر"
+                "0": "نوارد"
+                "1": "آشنا"
+                "2": "معتمد"
+                "3": "معتبر"
+                "4": "مقتدر"
+              trend:
+                climbing:
+                  one: "+%{count} اوپر گیا"
+                  other: "+%{count} اوپر گیا"
+                dropping:
+                  one: "-%{count} گرا"
+                  other: "-%{count} گرا"
+              moves_in_aria:
+                one: "%{count} رکن آگے بڑھا"
+                other: "%{count} ارکان آگے بڑھے"
+              moves_out_aria:
+                one: "%{count} رکن نیچے گئے"
+                other: "%{count} ارکان نیچے گئے"
+              stable_aria: "کوئی حرکت نہیں"
+            headline:
+              engaged_but_shrinking:
+                title: "اراکین فعال ہیں، لیکن فورم سکڑ رہا ہے۔"
+                summary: "شراکت برقرار ہے، لیکن روزانہ کی مشغولیت یا نئے سائن اپ میں کمی آئی ہے۔"
+              growing_but_distracted:
+                title: "نئے ارکان شامل ہو رہے ہیں، لیکن وہ ٹھہر نہیں رہے۔"
+              metrics:
+                new_signups: "نئے جڑنے والے"
           search:
             title: "تلاش کریں"
+            count_headline:
+              last_7_days:
+                one: "اراکین نے گزشتہ 7 دنوں میں فورم پر %{formatted_count} تلاش کی"
+                other: "اراکین نے گزشتہ 7 دنوں میں فورم پر %{formatted_count} تلاشیں کیں۔"
+              last_30_days:
+                one: "اراکین نے گزشتہ 30 دنوں میں فورم پر %{formatted_count} تلاش کی۔"
+                other: "اراکین نے گزشتہ 30 دنوں میں فورم پر %{formatted_count} تلاشیں کیں۔"
+              last_3_months:
+                one: "اراکین نے گزشتہ 3 مہینوں میں فورم پر %{formatted_count} تلاش کی۔"
+                other: "اراکین نے گزشتہ 3 مہینوں میں فورم پر %{formatted_count} تلاشیں کیں۔"
+              selected_period:
+                one: "اراکین نے منتخب مدت میں فورم پر %{formatted_count} تلاش کی۔"
+                other: "اراکین نے منتخب مدت میں فورم پر %{formatted_count} تلاشیں کیں۔"
+            headline:
+              content_gaps: "اس عرصے میں 10% سے زیادہ اراکین تلاشیں بغیر کلک کے ختم ہوئیں۔ نیچے دیے گئے مواد کے خلاؤں کا جائزہ لیں تاکہ معلوم ہو سکے کہ کیا غائب ہے۔"
+            kpi:
+              total_searches:
+                label: "کل تلاش"
+              no_result_rate:
+                label: "بغیر نتیجہ کے شرح"
             table:
+              term: "تلاش کی اصطلاح"
               searches: "سرچز"
               status: "حیثیت"
+            trending:
+              title: "رجحان ساز تلاشیں"
+            content_gaps:
+              title: "مواد کا خلاء"
+              badge:
+                no_match: "مماثلت نہیں"
+                poor_match: "ناقص مماثلت"
         reports_section:
+          description: "اپنے فورم کے لیے اہم چیزوں پر نظر رکھنے کے لیے رپورٹس یا ڈیٹا ایکسپلورر کو پن کریں۔"
+          no_data: "دکھانے کے لیے کچھ نہیں"
           modal:
+            title: "رپورٹس کا انتظام کریں"
             enabled_heading: "فعال شدہ"
             all_heading: "تمام رپورٹیں"
             apply: "لاگو کریں"
+        configure:
+          button: "ترتیب دیں"
+          tooltip: "اس سائٹ پر ہر کسی کے لیے اس ڈیش بورڈ کی ظاہری شکل ترتیب دیں۔"
+          menu_title: "ڈیش بورڈ ترتیب دیں"
+          reorder_up: "%{label} کو اوپر منتقل کریں"
+          reorder_down: "%{label} کو نیچے منتقل کریں"
+          drag_handle: "دوبارہ ترتیب کے لیے %{label} کو گھسیٹیں"
+          toggle_visibility: "ڈیش بورڈ پر %{label} دکھائیں"
+          empty_state_admin: "دکھانے کے لیے کچھ نہیں۔ کسی سیکشن فعال کرنے کے لیے ترتیبیں دیکھیں۔"
+          empty_state_moderator: "کوئی سیکشن فعال نہیں۔ کسی منتظم سے فعالیت کے لیے مدد لیں۔"
+        highlights:
+          kpi:
+            new_signups:
+              label: "نئے جڑنے والے"
+            new_contributors:
+              label: "نئے شراکت دار"
+              tooltip: "اپنی پہلی پوسٹ کرنے والے اراکین کی تعداد۔"
+            daily_engaged_users:
+              label: "روزانہ کی شراکت"
+          comparison:
+            last_7_days: "گزشتہ 7 دنوں کے مقابلے میں"
+            last_30_days: "گزشتہ 30 دنوں کے مقابلے میں"
+            last_3_months: "گزشتہ 3 ماہ کے مقابلے میں"
         site_traffic:
+          headline:
+            last_7_days:
+              one: "گزشتہ 7 دنوں میں %{formatted_count} دورہ"
+              other: "گزشتہ 7 دنوں میں %{formatted_count} دورے"
+            last_30_days:
+              one: "گزشتہ 30 دنوں میں %{formatted_count} دورہ"
+              other: "گزشتہ 30 دنوں میں %{formatted_count} دورے"
+            last_3_months:
+              one: "گزشتہ 3 ماہ میں %{formatted_count} دورہ"
+              other: "گزشتہ 3 ماہ میں %{formatted_count} دورے"
+          comparison_tooltip:
+            previous_7_days: "گزشتہ 7 دنوں کے مقابلے میں (%{start} – %{end})"
+            previous_30_days: "گزشتہ 30 دنوں کے مقابلے میں (%{start} – %{end})"
+            previous_3_months: "گزشتہ 3 دنوں کے مقابلے میں (%{start} – %{end})"
+          kpi:
+            logged_in_share:
+              label: "لاگ ان شدہ شراکت"
+          top_countries:
+            title: "سرفہرست ممالک"
+            empty: "اس مدت کے لیے کسی ملک کا ریکارڈ نہیں ہے۔"
+            error: "سرفہرست ممالک کو لوڈ نہیں کیا جا سکا۔ صفحہ کو ریفریش کرنے کی کوشش کریں۔"
+          top_referrers:
+            title: "سرفہرست حوالہ دہندگان"
+            empty: "اس مدت کے لیے حوالہ دہندگان کا کوئی ریکارڈ نہیں۔"
+            error: "سرفہرست حوالہ دہندگان کو لوڈ نہیں کیا جا سکا۔ صفحہ کو ریفریش کرنے کی کوشش کریں۔"
           series:
+            logged_in: "لاگ ان شدہ"
             anonymous: "گمنام"
             crawlers: "کرالرز"
+          see_details: "تفصیلات دیکھیں"
         period:
           last_7_days: "پچھلے 7 دن"
           last_30_days: "پچھلے 30 دن"
@@ -6852,6 +6981,7 @@ ur:
         change_settings_short: "ترتیبات"
         howto: "میں پلَگ اِنز کیسے انسٹال کروں؟"
         official: "آفیشل ڈسکورس پلگ ان"
+        broken_route: "'%{name}' کے رابطہ کو ترتیب نہیں دی جا سکی۔ یقینی بنائیں کہ ایڈ بلاکرز غیر فعال ہیں اور صفحہ دوبارہ لوڈ کریں۔"
         author: "%{author} کی طرف سے"
         experimental_badge: "تجرباتی"
         learn_more: "مزید جانیں"
@@ -7265,6 +7395,7 @@ ur:
         html: "html"
         text: "ٹَیکسٹ"
         html_preview: "ای میل مواد کی جھلک دیکھیں"
+        last_seen_user: "آخری بار دیکھا گیا صارف:"
         no_result: "ڈائجسٹ کیلئے کوئی نتائج نہیں پائے گئے۔"
         incoming_emails:
           from_address: "سے"

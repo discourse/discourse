@@ -1962,7 +1962,7 @@ fr:
     simultaneous_uploads: "Nombre maximal de fichiers qui peuvent être glissés et déposés dans l'éditeur"
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! La modification de ce paramètre peut vous exposer à des contenus indésirables."
-    tl1_requires_topics_entered: "À combien de sujets un nouvel utilisateur doit avoir participé pour être promu au niveau de confiance 1."
+    tl1_requires_topics_entered: "À combien de sujets un nouvel utilisateur doit avoir accédé pour être promu au niveau de confiance 1."
     tl1_requires_read_posts: "Combien de messages un nouvel utilisateur doit avoir lus pour être promu au niveau de confiance 1."
     tl1_requires_time_spent_mins: "Combien de minutes un nouvel utilisateur doit avoir passées à lire des messages pour être promu au niveau de confiance 1."
     tl2_requires_topics_entered: "À combien de sujets un utilisateur doit avoir participé pour être promu au niveau de confiance 2."
@@ -4842,6 +4842,8 @@ fr:
   onebox:
     discourse:
       user_joined_community: "S'est inscrit(e) le %{date}"
+    google_meet:
+      meeting_code: "Code:"
     gitlab:
       truncated_file: "Ce fichier a été tronqué."
       show_original: "afficher l'original"

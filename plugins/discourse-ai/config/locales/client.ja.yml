@@ -742,7 +742,6 @@ ja:
         title: "AI を使用して変更を提案"
         description: "以下のいずれかのオプションを選択すると、AI が新しいバージョンのテキストを提案します。"
         selection_hint: "ヒント: ヘルパーを開く前にテキストの一部を選択すると、その部分のみを書き換えることもできます。"
-        suggest: "AI で提案"
         suggest_errors:
           too_many_tags:
             other: "最大 %{count} 個のタグのみを使用できます"

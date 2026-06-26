@@ -179,6 +179,7 @@ zh_TW:
         memberships_count:
           other: "%{count} 位成員"
       create_channel:
+        description: "描述"
         name: "變更名稱"
         type: "類型"
         types:

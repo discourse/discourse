@@ -385,8 +385,6 @@ zh_CN:
         input_placeholder: 添加名称
         slug_description: 在 URL 中使用频道缩略名而不是频道名称
         name: 频道名称
-        slug: 频道缩略名（可选）
-        emoji: 频道表情符号（可选）
         reset_emoji: 重置表情符号
       channel_edit_description_modal:
         title: 编辑描述
@@ -432,16 +430,14 @@ zh_CN:
           hint_multiple_groups:
             other: '%{group} 和其他 %{count} 个群组中的用户将根据<a href="%{settingLink}" target="_blank">安全</a>访问此频道'
         create: "创建频道"
-        description: "描述（可选）"
+        description: "描述"
         name: "频道名称"
-        slug: "频道缩略名（可选）"
         title: "新建频道"
         type: "类型"
         types:
           category: "类别"
           topic: "话题"
         emoji:
-          label: "频道表情符号（可选）"
           reset: "重置表情符号"
       reviewable:
         type: "聊天消息"

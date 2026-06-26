@@ -6,6 +6,7 @@ module DiscoursePostEvent
     MIN_NAME_LENGTH = 5
     MAX_NAME_LENGTH = 255
     MAX_DESCRIPTION_LENGTH = 1000
+    DEFAULT_TIMEZONE = "UTC"
 
     self.table_name = "discourse_post_event_events"
     self.ignored_columns = %w[starts_at ends_at]
@@ -161,7 +162,12 @@ module DiscoursePostEvent
     end
 
     def raw_invitees_are_groups
-      if raw_invitees && User.select(:id).where(username: raw_invitees).limit(1).count > 0
+      return if raw_invitees.blank?
+
+      non_group_invitees = raw_invitees - Group.where(name: raw_invitees).pluck(:name)
+      return if non_group_invitees.blank?
+
+      if User.where(username: non_group_invitees).exists?
         errors.add(
           :base,
           I18n.t("discourse_post_event.errors.models.event.raw_invitees.only_group"),
@@ -317,25 +323,6 @@ module DiscoursePostEvent
         (invitees.exists?(user_id: user.id) || (user.groups.pluck(:name) & raw_invitees).any?)
     end
 
-    def self.resolve_image_upload(image_param, post)
-      return if image_param.blank?
-
-      upload =
-        if image_param.start_with?("upload://")
-          sha1 = Upload.sha1_from_short_url(image_param)
-          Upload.find_by(sha1: sha1) if sha1
-        else
-          Upload.get_from_url(image_param)
-        end
-
-      return if upload.nil?
-
-      if !upload.secure? || upload.user_id == post.user_id ||
-           UserUpload.exists?(upload_id: upload.id, user_id: post.user_id)
-        upload
-      end
-    end
-
     def sync_image_to_post_and_topic(generate_thumbnails: false)
       return unless image_upload_id
 
@@ -362,71 +349,6 @@ module DiscoursePostEvent
       elsif !post.event && had_event_before
         payload = WebHook.build_calendar_event_payload(event_before)
         WebHook.enqueue_calendar_event_hooks(:calendar_event_destroyed, event_before, payload)
-      end
-    end
-
-    def self.update_from_raw(post)
-      events = DiscoursePostEvent::EventParser.extract_events(post)
-
-      if events.present?
-        event_params = events.first
-        event = post.event || DiscoursePostEvent::Event.new(id: post.id)
-
-        tz = ActiveSupport::TimeZone[event_params[:timezone] || "UTC"]
-        parsed_starts_at = tz.parse(event_params[:start])
-        parsed_ends_at = event_params[:end] ? tz.parse(event_params[:end]) : nil
-        parsed_recurrence_until =
-          event_params[:"recurrence-until"] ? tz.parse(event_params[:"recurrence-until"]) : nil
-
-        parsed_all_day = event_params[:"all-day"] == "true"
-        if parsed_all_day
-          parsed_starts_at = Time.utc(*event_params[:start].split("-").map(&:to_i))
-          parsed_ends_at =
-            (
-              if event_params[:end]
-                Time.utc(*event_params[:end].split("-").map(&:to_i)).end_of_day
-              else
-                nil
-              end
-            )
-        end
-
-        params = {
-          name: event_params[:name],
-          original_starts_at: parsed_starts_at,
-          original_ends_at: parsed_ends_at,
-          url: event_params[:url],
-          description: event_params[:description],
-          location: event_params[:location],
-          recurrence: event_params[:recurrence],
-          recurrence_until: parsed_recurrence_until,
-          timezone: event_params[:timezone],
-          show_local_time: event_params[:"show-local-time"] == "true",
-          status: Event.statuses[event_params[:status]&.to_sym] || event.status,
-          reminders: event_params[:reminders],
-          raw_invitees: event_params[:"allowed-groups"]&.split(","),
-          minimal: event_params[:minimal],
-          closed: event_params[:closed] || false,
-          chat_enabled: event_params[:"chat-enabled"]&.downcase == "true",
-          max_attendees: event_params[:"max-attendees"]&.to_i,
-          all_day: parsed_all_day,
-          image_upload_id: resolve_image_upload(event_params[:image], post)&.id,
-        }
-
-        params[:custom_fields] = {}
-        SiteSetting
-          .discourse_post_event_allowed_custom_fields
-          .split("|")
-          .each do |setting|
-            if event_params[setting.to_sym].present?
-              params[:custom_fields][setting] = event_params[setting.to_sym]
-            end
-          end
-
-        event.update_with_params!(params)
-        event.set_topic_bump
-      elsif post.event
-        post.event.destroy!
       end
     end
 
@@ -540,7 +462,7 @@ module DiscoursePostEvent
     end
 
     def rrule_timezone
-      timezone || "UTC"
+      timezone || DEFAULT_TIMEZONE
     end
 
     private

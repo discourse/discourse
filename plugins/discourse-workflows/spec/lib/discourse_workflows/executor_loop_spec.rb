@@ -131,6 +131,50 @@ RSpec.describe DiscourseWorkflows::Executor do
       )
     end
 
+    it "combines two branches into a single item by position" do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:manual"
+          g.node "left-1",
+                 "action:set_fields",
+                 configuration: {
+                   "mode" => "raw",
+                   "include_other_fields" => false,
+                   "json_output" => '{"id": 1, "left": "yes"}',
+                 }
+          g.node "right-1",
+                 "action:set_fields",
+                 configuration: {
+                   "mode" => "raw",
+                   "include_other_fields" => false,
+                   "json_output" => '{"topic_id": 1, "right": "yes"}',
+                 }
+          g.node "merge-1",
+                 "flow:merge",
+                 name: "Merge branches",
+                 configuration: {
+                   "mode" => "combine",
+                   "resolve_clash" => "prefer_last",
+                 }
+          g.connect "trigger-1", "left-1"
+          g.connect "trigger-1", "right-1"
+          g.connect "left-1", "merge-1", input: "input_1"
+          g.connect "right-1", "merge-1", input: "input_2"
+        end
+      workflow =
+        Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+
+      execution = described_class.new(workflow, "trigger-1", {}).run
+
+      expect(execution.status).to eq("success")
+      merge_steps =
+        execution.execution_data.steps_array.select { |step| step["node_id"] == "merge-1" }
+      expect(merge_steps.length).to eq(1)
+      expect(merge_steps.first["output"].map { |item| item["json"] }).to eq(
+        [{ "id" => 1, "left" => "yes", "topic_id" => 1, "right" => "yes" }],
+      )
+    end
+
     it "waits for all incoming branches before executing append merge" do
       graph =
         build_workflow_graph do |g|

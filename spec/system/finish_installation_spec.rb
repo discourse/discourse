@@ -46,8 +46,17 @@ RSpec.describe "Finish Installation" do
         end
 
         it "creates multiple admin users when multiple emails are configured" do
+          OmniAuth.config.test_mode = true
+          OmniAuth.config.mock_auth[:discourse_id] = OmniAuth::AuthHash.new(
+            provider: "discourse_id",
+            uid: "12345",
+            info: OmniAuth::AuthHash::InfoHash.new(email: "dev1@example.com", nickname: "dev1"),
+          )
+
           finish_installation_page.visit_page
           finish_installation_page.click_login_with_discourse_id
+
+          expect(page).to have_current_path("/wizard")
 
           user1 = User.find_by_email("dev1@example.com")
           user2 = User.find_by_email("dev2@example.com")
@@ -56,8 +65,8 @@ RSpec.describe "Finish Installation" do
           expect(user1.admin).to eq(true)
           expect(user2).to be_present
           expect(user2.admin).to eq(true)
-
-          expect(page.current_url).to include("id.discourse.com")
+        ensure
+          reset_omniauth_config(:discourse_id)
         end
 
         it "skips creating users that already exist" do

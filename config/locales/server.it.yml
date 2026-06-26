@@ -4432,6 +4432,8 @@ it:
   onebox:
     discourse:
       user_joined_community: "Iscrizione: %{date}"
+    google_meet:
+      meeting_code: "Codice:"
     gitlab:
       truncated_file: "Questo file è stato troncato."
       show_original: "mostra originale"

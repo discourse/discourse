@@ -402,8 +402,6 @@ de:
         input_placeholder: Einen Namen hinzufügen
         slug_description: In der URL wird anstelle des Kanalnamens ein Kanal-Kürzel verwendet
         name: Kanalname
-        slug: Kanal-Kürzel (optional)
-        emoji: Kanal-Emoji (optional)
         reset_emoji: Emoji zurücksetzen
       channel_edit_description_modal:
         title: Beschreibung bearbeiten
@@ -461,16 +459,14 @@ de:
             one: 'Benutzer in %{group} und %{count} anderen Gruppe haben gemäß den <a href="%{settingLink}" target="_blank">Sicherheitseinstellungen</a> Zugriff auf diesen Kanal'
             other: 'Benutzer in %{group} und %{count} anderen Gruppen haben gemäß den <a href="%{settingLink}" target="_blank">Sicherheitseinstellungen</a> Zugriff auf diesen Kanal'
         create: "Kanal erstellen"
-        description: "Beschreibung (optional)"
+        description: "Beschreibung"
         name: "Kanalname"
-        slug: "Kanal-Kürzel (optional)"
         title: "Neuer Kanal"
         type: "Typ"
         types:
           category: "Kategorie"
           topic: "Thema"
         emoji:
-          label: "Kanal-Emoji (optional)"
           reset: "Emoji zurücksetzen"
       reviewable:
         type: "Chat-Nachricht"

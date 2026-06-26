@@ -230,6 +230,7 @@ class RemoteTheme < ActiveRecord::Base
     else
       self.updated_at = Time.zone.now
       self.remote_version, self.commits_behind = importer.commits_since(local_version)
+      self.remote_compat_ref = importer.compatibility_resolved_ref
       self.last_error_text = nil
     ensure
       save!
@@ -377,6 +378,7 @@ class RemoteTheme < ActiveRecord::Base
       self.remote_updated_at = Time.zone.now
       self.remote_version = importer.version
       self.local_version = importer.version
+      self.local_compat_ref = self.remote_compat_ref = importer.compatibility_resolved_ref
       self.commits_behind = 0
     end
 
@@ -588,10 +590,12 @@ end
 #  commits_behind            :integer
 #  last_error_text           :text
 #  license_url               :string
+#  local_compat_ref          :string
 #  local_version             :string
 #  maximum_discourse_version :string
 #  minimum_discourse_version :string
 #  private_key               :text
+#  remote_compat_ref         :string
 #  remote_updated_at         :datetime
 #  remote_url                :string           not null
 #  remote_version            :string

@@ -349,7 +349,6 @@ sv:
         input_placeholder: Lägg till ett namn
         slug_description: Ett dynamiskt kanalfält används i URL:en istället för kanalnamnet
         name: Kanalnamn
-        slug: Dynamiskt kanalfält (valfritt)
       channel_edit_description_modal:
         title: Redigera beskrivning
         input_placeholder: Lägg till en beskrivning
@@ -406,9 +405,8 @@ sv:
             one: 'Användare i %{group} och ytterligare %{count} grupp kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningarna</a>'
             other: 'Användare i %{group} och ytterligare %{count} grupper kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningarna</a>'
         create: "Skapa kanal"
-        description: "Beskrivning (valfritt)"
+        description: "Beskrivning"
         name: "Kanalnamn"
-        slug: "Dynamiskt kanalfält (valfritt)"
         title: "Ny kanal"
         type: "Typ"
         types:

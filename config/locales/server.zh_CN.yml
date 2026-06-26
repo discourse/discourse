@@ -1592,6 +1592,7 @@ zh_CN:
       facebook_config: '服务器被配置为允许通过 Facebook 注册和登录 (enable_facebook_logins)，但是没有设置应用 ID 和应用密钥值。前往<a href="%{base_path}/admin/site_settings">网站设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">请参阅此指南以了解详情</a>。'
       twitter_config: '服务器被配置为允许通过 Twitter 注册和登录 (enable_twitter_logins)，但是没有设置密钥和密钥值。前往<a href="%{base_path}/admin/site_settings">网站设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">请参阅此指南以了解详情</a>。'
       github_config: '服务器被配置为允许通过 GitHub 注册和登录 (enable_github_logins)，但是没有设置客户端 ID 和密钥值。前往<a href="%{base_path}/admin/site_settings">网站设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">请参阅此指南以了解详情</a>。'
+      github_onebox_backoff: "GitHub 对服务器进行了速率限制，因此在限制重置之前，GitHub 链接可能无法预览。配置 {{setting:github_onebox_access_tokens}} 可以显著提高限制。"
       s3_upload_config: '服务器被配置为将文件上传到 S3，但未设置以下设置中的至少一个：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_upload_bucket。前往<a href="%{base_path}/admin/site_settings">网站设置</a>并更新设置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">请参阅“如何设置将图片上传到 S3？”以了解详情</a>。'
       s3_backup_config: '服务器被配置为将备份上传到 S3，但未设置以下设置中的至少一个：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_backup_bucket。前往<a href="%{base_path}/admin/site_settings">网站设置</a>并更新设置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">请参阅“如何设置将图片上传到 S3？”以了解详情</a>。'
       s3_cdn: '服务器被配置为将文件上传到 S3，但未配置 S3 CDN。这可能会导致昂贵的 S3 成本和网站性能降低。<a href="https://meta.discourse.org/t/-/148916" target="_blank">请参阅“使用对象存储进行上传”以了解详情</a>。'
@@ -1943,6 +1944,7 @@ zh_CN:
     max_edits_per_day: "每个用户每天的最大编辑次数。"
     max_topics_per_day: "用户每天可以创建的最大话题数。"
     max_personal_messages_per_day: "用户每天可以创建的新个人消息话题的最大数量。"
+    limit_admin_personal_messages_per_day: "管理员每天可创建的新个人消息话题数量上限。设置为 0 则无限制。"
     max_invites_per_day: "用户每天可以发送的最大邀请数。"
     max_topic_invitations_per_day: "用户每天可以发送的最大话题邀请数。"
     max_topic_invitations_per_minute: "用户每分钟可以发送的最大话题邀请数。"
@@ -5121,6 +5123,8 @@ zh_CN:
     restricted_tag_remove_disallowed: '您不能移除标签“%{tag}”。'
     minimum_required_tags:
       other: "您必须至少选择 %{count} 个标签。"
+    too_many_tags_for_topic:
+      other: "您最多可以为一个话题添加 %{count} 标签。"
     upload_row_too_long: "CSV 文件的每行应该有一个标签。或者，标签后面可以跟一个逗号，然后是标签组名称。"
     bulk_create:
       invalid_params: "参数无效。请提供标签名称数组。"
@@ -5226,6 +5230,8 @@ zh_CN:
   onebox:
     discourse:
       user_joined_community: "%{date}加入"
+    google_meet:
+      meeting_code: "代码:"
     gitlab:
       truncated_file: "此文件已被截断。"
       show_original: "显示原始文件"

@@ -2466,6 +2466,12 @@ fr:
       confirm_title: Continuer vers %{site_name}
       logging_in_as: Connexion en tant que %{email}
       confirm_button: Complétez la connexion
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Continuer"
+      verify_button: "Continuer"
+      account_ready_continue: "Continuer"
+      username_label: "Nom d'utilisateur"
     login:
       header_title: "Ravi de vous revoir"
       title: "Se connecter"
@@ -3352,6 +3358,9 @@ fr:
       deleted_post_placeholder: "[supprimés]"
       ignored_post_placeholder: "[ignoré]"
       pinned_reply: "Épinglé"
+    share_target:
+      new_topic: "Nouveau sujet"
+      new_message: "Nouveau message direct"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"

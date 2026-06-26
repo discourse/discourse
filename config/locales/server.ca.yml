@@ -2765,6 +2765,8 @@ ca:
   search_logs:
     graph_title: "Recompte de cerques"
   onebox:
+    google_meet:
+      meeting_code: "Codi:"
     github:
       closed: "tancat"
       status_date:

@@ -18,7 +18,7 @@ task "assets:precompile:build" do
       exec "#{compile_command} && SKIP_EMBER_CLI_COMPILE=1 bin/rake assets:precompile"
     else
       system compile_command, exception: true
-      EmberCli.clear_cache!
+      EmberAssets.clear_cache!
     end
   end
 end

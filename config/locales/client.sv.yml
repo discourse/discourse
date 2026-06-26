@@ -2014,6 +2014,12 @@ sv:
       confirm_title: Fortsätt till %{site_name}
       logging_in_as: Loggar in som %{email}
       confirm_button: Avsluta inloggning
+    code_login:
+      email_label: "E-postadress"
+      continue_button: "Fortsätt"
+      verify_button: "Fortsätt"
+      account_ready_continue: "Fortsätt"
+      username_label: "Användarnamn"
     login:
       header_title: "Välkommen tillbaka"
       title: "Logga in"
@@ -2772,6 +2778,8 @@ sv:
       deleted_post_placeholder: "[raderade]"
       ignored_post_placeholder: "[ignorerade]"
       pinned_reply: "Fäst"
+    share_target:
+      new_message: "Nytt meddelande"
     topic:
       filter_to:
         one: "%{count} inlägg i ämnet"

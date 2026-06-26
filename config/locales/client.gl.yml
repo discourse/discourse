@@ -1654,6 +1654,12 @@ gl:
       confirm_title: Continuar a %{site_name}
       logging_in_as: Iniciar sesión como %{email}
       confirm_button: Finalizar inicio de sesión
+    code_login:
+      email_label: "Enderezo de correo"
+      continue_button: "Continuar"
+      verify_button: "Continuar"
+      account_ready_continue: "Continuar"
+      username_label: "Nome de usuario"
     login:
       title: "Acceder"
       username: "Usuario"
@@ -2177,6 +2183,8 @@ gl:
       deleted_post_placeholder: "[eliminado]"
       ignored_post_placeholder: "[ignorado]"
       pinned_reply: "Fixado"
+    share_target:
+      new_message: "Nova mensaxe"
     topic:
       filter_to:
         one: "%{count} publicación no tema"

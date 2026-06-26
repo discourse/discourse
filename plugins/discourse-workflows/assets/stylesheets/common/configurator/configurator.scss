@@ -262,3 +262,16 @@
 .workflows-code-control {
   width: 100%;
 }
+
+.workflows-actor-control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+
+  .combo-box,
+  .user-chooser {
+    width: 100%;
+    min-width: 0;
+  }
+}

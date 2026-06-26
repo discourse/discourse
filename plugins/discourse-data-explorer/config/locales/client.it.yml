@@ -50,6 +50,10 @@ it:
       run: "Esegui"
       undo: "Annulla modifiche"
       delete: "Elimina"
+      chart:
+        form:
+          label: "Tipo di grafico"
+          bar: "Barra"
       others_dirty: "Una query ha modifiche non salvate che andranno perse se esci."
       run_time: "Query completata in %{value} ms."
       result_count:

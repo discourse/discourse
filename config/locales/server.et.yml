@@ -1085,6 +1085,8 @@ et:
               private:
                 label: "Privaatne"
   onebox:
+    google_meet:
+      meeting_code: "Kood:"
     github:
       closed: "suletud"
       status_date:

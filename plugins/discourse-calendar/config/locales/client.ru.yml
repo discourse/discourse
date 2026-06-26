@@ -422,7 +422,6 @@ ru:
           this_and_following: "Это событие и все последующие события"
           leave_event: "Покинуть мероприятие"
           status:
-            unknown: "Не интересует"
             going: "Участвую"
             not_going: "Не пойду"
             interested: "Интересно"

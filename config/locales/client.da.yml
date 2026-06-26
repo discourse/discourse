@@ -2147,6 +2147,12 @@ da:
       confirm_title: Fortsæt til %{site_name}
       logging_in_as: Logger ind som %{email}
       confirm_button: Gennemfør login
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Fortsæt"
+      verify_button: "Fortsæt"
+      account_ready_continue: "Fortsæt"
+      username_label: "Brugernavn"
     login:
       header_title: "Velkommen tilbage"
       title: "Log ind"
@@ -2844,6 +2850,9 @@ da:
       deleted_post_placeholder: "[slettet]"
       ignored_post_placeholder: "[ignorerede]"
       pinned_reply: "Fastgjort"
+    share_target:
+      new_topic: "Nyt emne"
+      new_message: "Ny meddelelse"
     topic:
       filter_to:
         one: "%{count} indlæg i emnet"

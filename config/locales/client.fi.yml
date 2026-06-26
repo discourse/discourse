@@ -2451,6 +2451,12 @@ fi:
       confirm_title: Jatka sivustolle %{site_name}
       logging_in_as: Kirjaudutaan käyttäjänä %{email}
       confirm_button: Kirjaudu
+    code_login:
+      email_label: "Sähköpostiosoite"
+      continue_button: "Jatka"
+      verify_button: "Jatka"
+      account_ready_continue: "Jatka"
+      username_label: "Käyttäjätunnus"
     login:
       header_title: "Tervetuloa takaisin"
       title: "Kirjaudu"
@@ -3337,6 +3343,9 @@ fi:
       deleted_post_placeholder: "[poistettu]"
       ignored_post_placeholder: "[sivuutettu]"
       pinned_reply: "Kiinnitetty"
+    share_target:
+      new_topic: "Uusi ketju"
+      new_message: "Uusi viesti"
     topic:
       filter_to:
         one: "%{count} viesti ketjussa"

@@ -5,6 +5,7 @@ module Roleable
 
   included do
     scope :admins, -> { where(admin: true) }
+    scope :active_admins, -> { real.admins.where(active: true) }
     scope :moderators, -> { where(moderator: true) }
     scope :staff, -> { where("moderator or admin ") }
   end

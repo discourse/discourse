@@ -402,8 +402,6 @@ nl:
         input_placeholder: Voeg een naam toe
         slug_description: Er wordt een kanaalslug gebruikt in de URL in plaats van de kanaalnaam
         name: Kanaalnaam
-        slug: Kanaalslug (optioneel)
-        emoji: Kanaalemoji (optioneel)
         reset_emoji: Emoji resetten
       channel_edit_description_modal:
         title: Beschrijving bewerken
@@ -461,16 +459,14 @@ nl:
             one: 'Gebruikers in %{group} en %{count} andere groep hebben toegang tot dit kanaal volgens de <a href="%{settingLink}" target="_blank">beveiligingsinstellingen</a>'
             other: 'Gebruikers in %{group} en %{count} andere groepen hebben toegang tot dit kanaal volgens de <a href="%{settingLink}" target="_blank">beveiligingsinstellingen</a>'
         create: "Kanaal maken"
-        description: "Beschrijving (optioneel)"
+        description: "Beschrijving"
         name: "Kanaalnaam"
-        slug: "Kanaalslug (optioneel)"
         title: "Nieuw kanaal"
         type: "Type"
         types:
           category: "Categorie"
           topic: "Topic"
         emoji:
-          label: "Kanaalemoji (optioneel)"
           reset: "Emoji resetten"
       reviewable:
         type: "Chatbericht"

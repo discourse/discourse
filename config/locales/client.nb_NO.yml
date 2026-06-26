@@ -2163,6 +2163,12 @@ nb_NO:
       confirm_title: Fortsett til %{site_name}
       logging_in_as: Logger inn som %{email}
       confirm_button: Fullfør innlogging
+    code_login:
+      email_label: "E-post"
+      continue_button: "Fortsett"
+      verify_button: "Fortsett"
+      account_ready_continue: "Fortsett"
+      username_label: "Brukernavn"
     login:
       header_title: "Velkommen tilbake"
       title: "Logg inn"
@@ -2949,6 +2955,8 @@ nb_NO:
       deleted_post_placeholder: "[slettet]"
       ignored_post_placeholder: "[ignorert]"
       pinned_reply: "Fastsatt"
+    share_target:
+      new_message: "Ny melding"
     topic:
       filter_to:
         one: "%{count} innlegg i emnet"

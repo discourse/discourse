@@ -21,6 +21,13 @@ RSpec.describe DiscourseGifs do
       expect(described_class.component_installed?).to eq(true)
     end
 
+    it "returns true when installed via the author's repo" do
+      remote_theme = RemoteTheme.create!(remote_url: "https://github.com/xfalcox/discourse-gifs")
+      Fabricate(:theme, component: true, remote_theme: remote_theme)
+
+      expect(described_class.component_installed?).to eq(true)
+    end
+
     it "returns false for forks or similarly-named repos that the migration task would not match" do
       remote_theme = RemoteTheme.create!(remote_url: "https://github.com/myorg/discourse-gifs.git")
       Fabricate(:theme, component: true, remote_theme: remote_theme)

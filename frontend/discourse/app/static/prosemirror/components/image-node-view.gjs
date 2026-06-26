@@ -703,7 +703,7 @@ async function openLightbox(editorElement, currentImage) {
   });
 
   const { default: PhotoSwipeLightbox } = await waitForPromise(
-    import("photoswipe/lightbox")
+    import(/* dynamicChunkName: "photoswipe-lightbox" */ "photoswipe/lightbox")
   );
   const isTestEnv = isTesting() || isRailsTesting();
 
@@ -714,7 +714,8 @@ async function openLightbox(editorElement, currentImage) {
     zoomTitle: i18n("lightbox.zoom"),
     arrowPrevTitle: i18n("lightbox.previous"),
     arrowNextTitle: i18n("lightbox.next"),
-    pswpModule: () => waitForPromise(import("photoswipe")),
+    pswpModule: () =>
+      waitForPromise(import(/* dynamicChunkName: "photoswipe" */ "photoswipe")),
     tapAction: (pt, e) => {
       if (e.target.classList.contains("pswp__img")) {
         lightbox.pswp?.element?.classList.toggle("pswp--ui-visible");

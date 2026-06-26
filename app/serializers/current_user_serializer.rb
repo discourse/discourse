@@ -53,6 +53,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :primary_group_id,
              :flair_group_id,
              :can_create_topic,
+             :can_set_topic_timer,
              :can_create_category,
              :can_create_group,
              :link_posting_access,
@@ -143,6 +144,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_create_topic
     scope.can_create_topic?(nil)
+  end
+
+  def can_set_topic_timer
+    scope.can_set_topic_timer?
   end
 
   def can_create_category

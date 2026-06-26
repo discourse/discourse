@@ -28,6 +28,12 @@ acceptance("Share and Invite modal", function (needs) {
       .dom("#topic-footer-button-share-and-invite")
       .exists("the button exists");
 
+    assert
+      .dom(
+        "#topic-footer-button-share-and-invite svg.d-icon-d-topic-share use[href='#arrow-up-from-bracket']"
+      )
+      .exists("the button uses the share icon");
+
     await click("#topic-footer-button-share-and-invite");
 
     assert.dom(".share-topic-modal").exists("shows the modal");

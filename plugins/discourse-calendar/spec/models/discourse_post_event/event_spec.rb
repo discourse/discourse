@@ -20,6 +20,44 @@ describe DiscoursePostEvent::Event do
     ).is_at_most(DiscoursePostEvent::Event::MAX_NAME_LENGTH)
   end
 
+  describe "#raw_invitees_are_groups" do
+    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    it "is invalid when an invitee matches a username that is not a group" do
+      Fabricate(:user, username: "not_a_group")
+      event =
+        Fabricate.build(
+          :event,
+          post: post,
+          original_starts_at: Time.now,
+          raw_invitees: ["not_a_group"],
+        )
+
+      expect(event).not_to be_valid
+      expect(event.errors[:base]).to include(
+        I18n.t("discourse_post_event.errors.models.event.raw_invitees.only_group"),
+      )
+    end
+
+    it "is valid when an invitee is a group whose name collides with a username" do
+      Fabricate(:user).update_columns(
+        username: DiscoursePostEvent::Event::PUBLIC_GROUP,
+        username_lower: DiscoursePostEvent::Event::PUBLIC_GROUP,
+      )
+      event =
+        Fabricate.build(
+          :event,
+          post: post,
+          original_starts_at: Time.now,
+          raw_invitees: [DiscoursePostEvent::Event::PUBLIC_GROUP],
+        )
+
+      expect(event).to be_valid
+    end
+  end
+
   describe "topic custom fields callback" do
     let(:user) { Fabricate(:user, admin: true) }
     let!(:notified_user) { Fabricate(:user) }
@@ -814,7 +852,7 @@ describe DiscoursePostEvent::Event do
     end
   end
 
-  describe ".update_from_raw" do
+  describe "syncing from raw" do
     fab!(:user) { Fabricate(:user, admin: true) }
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, topic: topic, user: user) }
@@ -826,7 +864,7 @@ describe DiscoursePostEvent::Event do
           raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
         )
         post.rebake!
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
       end
 
@@ -838,7 +876,7 @@ describe DiscoursePostEvent::Event do
       it "clears image_upload_id when image is removed" do
         post.update!(raw: "[event start=\"2020-04-24 14:15\"]\n[/event]")
         post.rebake!
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
 
         expect(post.event.image_upload_id).to be_nil
@@ -858,7 +896,7 @@ describe DiscoursePostEvent::Event do
             raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
           )
         post.rebake!
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
         CookedPostProcessor.new(post).post_process
 
@@ -872,7 +910,7 @@ describe DiscoursePostEvent::Event do
           raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
         )
         post.rebake!
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
         CookedPostProcessor.new(post).post_process
 
@@ -891,7 +929,7 @@ describe DiscoursePostEvent::Event do
             raw: "[event start=\"2020-04-24 14:15\"]\n[/event]\n![image](#{other_upload.url})",
           )
         post.rebake!
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
         CookedPostProcessor.new(post).post_process
 
@@ -930,7 +968,7 @@ describe DiscoursePostEvent::Event do
       end
 
       it "does not associate the upload" do
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
 
         expect(post.event.image_upload_id).to be_nil

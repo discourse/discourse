@@ -2197,6 +2197,12 @@ lt:
       confirm_title: Tęsti į %{site_name}
       logging_in_as: Prisijungiama kaip %{email}
       confirm_button: Baigti prisijungimą
+    code_login:
+      email_label: "Epaštas"
+      continue_button: "Tęsti"
+      verify_button: "Tęsti"
+      account_ready_continue: "Tęsti"
+      username_label: "Naudotojo vardas"
     login:
       header_title: "Sveiki sugrįžę"
       title: "Prisijungti"
@@ -2840,6 +2846,8 @@ lt:
       deleted_post_placeholder: "[ištrinta]"
       ignored_post_placeholder: "[nepaisoma]"
       pinned_reply: "Prisegta"
+    share_target:
+      new_message: "Nauja žinutė"
     topic:
       filter_to:
         one: "temoje %{count} įrašas"

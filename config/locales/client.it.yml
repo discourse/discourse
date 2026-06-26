@@ -2451,6 +2451,12 @@ it:
       confirm_title: Procedi su %{site_name}
       logging_in_as: Accesso come %{email}
       confirm_button: Completa l'accesso
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Continua"
+      verify_button: "Continua"
+      account_ready_continue: "Continua"
+      username_label: "Nome utente"
     login:
       header_title: "Bentornato"
       title: "Accedi"
@@ -3334,6 +3340,9 @@ it:
       deleted_post_placeholder: "[eliminato]"
       ignored_post_placeholder: "[ignorato]"
       pinned_reply: "Appuntato"
+    share_target:
+      new_topic: "Nuovo argomento"
+      new_message: "Nuovo messaggio"
     topic:
       filter_to:
         one: "%{count} messaggio in questo argomento"

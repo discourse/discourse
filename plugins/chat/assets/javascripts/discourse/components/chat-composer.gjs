@@ -175,6 +175,24 @@ export default class ChatComposer extends Component {
     );
   }
 
+  get disabled() {
+    return !this.currentUser || this.args.disabled;
+  }
+
+  @action
+  focusOrPromptLogin() {
+    if (!this.currentUser) {
+      this.showLogin();
+      return;
+    }
+
+    this.composer.focus();
+  }
+
+  showLogin() {
+    getOwner(this).lookup("route:application").send("showLogin");
+  }
+
   @action
   setup() {
     this.composer.scroller = this.args.scroller;
@@ -265,6 +283,11 @@ export default class ChatComposer extends Component {
 
   @action
   async onSend(event) {
+    if (!this.currentUser) {
+      this.showLogin();
+      return;
+    }
+
     if (!this.sendEnabled) {
       return;
     }
@@ -368,6 +391,11 @@ export default class ChatComposer extends Component {
 
   @action
   onTextareaFocusIn() {
+    if (!this.currentUser) {
+      this.showLogin();
+      return;
+    }
+
     this.forceScrollPosition();
     this.isFocused = true;
   }
@@ -771,7 +799,7 @@ export default class ChatComposer extends Component {
 
             <div
               class="chat-composer__input-container"
-              {{on "click" this.composer.focus}}
+              {{on "click" this.focusOrPromptLogin}}
             >
               <DTextarea
                 {{preventScrollOnFocus}}

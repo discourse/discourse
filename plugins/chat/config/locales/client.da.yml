@@ -185,7 +185,7 @@ da:
           label: "Vælg en kategori"
           none: "vælg en..."
         create: "Opret kanal"
-        description: "Beskrivelse (valgfrit)"
+        description: "Beskrivelse"
         name: "Kanal navn"
         title: "Ny kanal"
         type: "Type"
