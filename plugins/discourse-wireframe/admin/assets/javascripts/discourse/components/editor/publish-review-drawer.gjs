@@ -11,7 +11,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import { i18n } from "discourse-i18n";
-import { OUTLET_STATE } from "../../lib/layout-query";
+import { OUTLET_STATE } from "../../services/wireframe-layout-query";
 
 /**
  * The save-and-publish review surface: a right-docked drawer that consolidates

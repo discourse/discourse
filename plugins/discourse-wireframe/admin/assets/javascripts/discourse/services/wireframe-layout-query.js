@@ -1,5 +1,10 @@
 // @ts-check
-import { LAYOUT_SOURCE } from "discourse/blocks/block-outlet";
+import Service, { service } from "@ember/service";
+import {
+  _getResolvedLayout,
+  _getResolvedLayouts,
+  LAYOUT_SOURCE,
+} from "discourse/blocks/block-outlet";
 import { PART_KEY_SEGMENT } from "discourse/lib/blocks/-internals/composite";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import {
@@ -7,7 +12,7 @@ import {
   findAncestryPath,
   findEntry,
   findEntryByStableKey,
-} from "./mutate-layout";
+} from "../lib/mutate-layout";
 
 /**
  * @typedef {import("discourse/blocks/block-outlet").LayoutEntry} LayoutEntry
@@ -33,18 +38,20 @@ export const OUTLET_STATE = Object.freeze({
 /**
  * The outlet/layout query layer — the read path the editor funnels every
  * "where does this block live, what is it, can this outlet be edited" question
- * through. A pure-read, dependency-free leaf: the kernel constructs it with
- * down-injected resolved-layout / block-metadata lookups, so it reads the same
- * draft-aware layout the kernel sees without ever reaching back into any
- * service. Only query methods (no mutators beyond the outlet-root identity
- * bookkeeping the kernel drives), so the kernel may expose the instance
- * directly as `wireframe.layoutQuery`.
+ * through. A pure-read peer service: it reads the same draft-aware resolved
+ * layout the live page sees (via the core block-outlet readers, wrapped in the
+ * `_resolved*` seam methods below) plus block metadata from the `blocks`
+ * service, and never reaches back into the editor. It is mostly read-only; the
+ * one write surface is the outlet-root identity bookkeeping
+ * (`recordOutletRoot` / `clearOutletRoots`) the kernel drives.
  *
  * Kept un-cached on purpose: the resolved-layout reads feed off tracked sources
  * at call time, so a template binding re-runs when those layers change; caching
  * would freeze on an untracked early read.
  */
-export default class LayoutQuery {
+export default class WireframeLayoutQueryService extends Service {
+  @service blocks;
+
   /**
    * Maps each drafted outlet to the composite key of its implicit root
    * `layout` block. Every drafted outlet is normalised to a single root
@@ -59,31 +66,6 @@ export default class LayoutQuery {
    * @type {Map<string, string>}
    */
   #outletRootKeys = new Map();
-
-  #getResolvedLayout;
-  #getResolvedLayouts;
-  #getResolvedLayoutMeta;
-  #getBlock;
-
-  /**
-   * @param {{
-   *   getResolvedLayout: (outletName: string, options?: {ignoreSessionDraft?: boolean}) => Array<LayoutEntry>|null,
-   *   getResolvedLayouts: () => Map<string, Object>,
-   *   getResolvedLayoutMeta: (outletName: string, options?: {ignoreSessionDraft?: boolean}) => Object|null,
-   *   getBlock: (blockName: string) => Function|null,
-   * }} deps
-   */
-  constructor({
-    getResolvedLayout,
-    getResolvedLayouts,
-    getResolvedLayoutMeta,
-    getBlock,
-  }) {
-    this.#getResolvedLayout = getResolvedLayout;
-    this.#getResolvedLayouts = getResolvedLayouts;
-    this.#getResolvedLayoutMeta = getResolvedLayoutMeta;
-    this.#getBlock = getBlock;
-  }
 
   /* Resolved-layout reads */
 
@@ -102,7 +84,7 @@ export default class LayoutQuery {
    * @returns {Array<LayoutEntry>|null}
    */
   readResolvedLayout(outletName, { ignoreSessionDraft = false } = {}) {
-    return this.#getResolvedLayout(outletName, { ignoreSessionDraft });
+    return this._resolvedLayout(outletName, { ignoreSessionDraft });
   }
 
   /* Entry / outlet lookups */
@@ -117,7 +99,7 @@ export default class LayoutQuery {
    * @returns {{entry: LayoutEntry, outletName: string}|null}
    */
   findEntryAndOutletSync(key) {
-    const layoutMap = this.#getResolvedLayouts();
+    const layoutMap = this._resolvedLayouts();
     for (const [outletName, record] of layoutMap) {
       if (!record.layout) {
         continue;
@@ -148,7 +130,7 @@ export default class LayoutQuery {
    * @returns {Promise<{entry: LayoutEntry, outletName: string}|null>}
    */
   async findEntryAndOutlet(key) {
-    const layoutMap = this.#getResolvedLayouts();
+    const layoutMap = this._resolvedLayouts();
     for (const [outletName, record] of layoutMap) {
       let layout;
       try {
@@ -244,7 +226,7 @@ export default class LayoutQuery {
     const compositeStableKey = head.slice(head.lastIndexOf(":") + 1);
     const idPath = segments.slice(1);
 
-    const layoutMap = this.#getResolvedLayouts();
+    const layoutMap = this._resolvedLayouts();
     for (const [outletName, record] of layoutMap) {
       if (!record.layout) {
         continue;
@@ -313,7 +295,7 @@ export default class LayoutQuery {
    * @returns {Object|null}
    */
   metadataForName(blockName) {
-    const klass = this.#getBlock(blockName);
+    const klass = this._block(blockName);
     if (!klass || typeof klass !== "function") {
       return null;
     }
@@ -371,7 +353,7 @@ export default class LayoutQuery {
    * @returns {string} One of `OUTLET_STATE`.
    */
   outletState(outletName) {
-    const meta = this.#getResolvedLayoutMeta(outletName, {
+    const meta = this._resolvedLayoutMeta(outletName, {
       ignoreSessionDraft: true,
     });
     if (meta?.source === LAYOUT_SOURCE.THEME) {
@@ -532,7 +514,7 @@ export default class LayoutQuery {
    * @returns {string|null}
    */
   outletForEntry(entry) {
-    const layoutMap = this.#getResolvedLayouts();
+    const layoutMap = this._resolvedLayouts();
     for (const [outletName, record] of layoutMap) {
       if (record.layout && this.#layoutContainsEntry(record.layout, entry)) {
         return outletName;
@@ -577,5 +559,52 @@ export default class LayoutQuery {
       }
     }
     return false;
+  }
+
+  /* Core-reader seams (overridable for tests) */
+
+  /**
+   * The draft-aware resolved layout for an outlet. A thin seam over the core
+   * reader so tests can stub it with fixture layouts.
+   *
+   * @param {string} outletName
+   * @param {{ignoreSessionDraft?: boolean}} [options]
+   * @returns {Array<LayoutEntry>|null}
+   */
+  _resolvedLayout(outletName, options) {
+    return _getResolvedLayout(outletName, options);
+  }
+
+  /**
+   * The per-outlet resolved-layout record map. A thin seam over the core reader
+   * so tests can stub it.
+   *
+   * @returns {Map<string, Object>}
+   */
+  _resolvedLayouts() {
+    return _getResolvedLayouts();
+  }
+
+  /**
+   * The provenance metadata for an outlet's resolved layout. A thin seam over
+   * the blocks service so tests can stub it.
+   *
+   * @param {string} outletName
+   * @param {{ignoreSessionDraft?: boolean}} [options]
+   * @returns {Object|null}
+   */
+  _resolvedLayoutMeta(outletName, options) {
+    return this.blocks.resolvedLayoutMeta(outletName, options);
+  }
+
+  /**
+   * The registered block class for a name. A thin seam over the blocks service
+   * so tests can stub it.
+   *
+   * @param {string} name
+   * @returns {Function|null}
+   */
+  _block(name) {
+    return this.blocks.getBlock(name);
   }
 }

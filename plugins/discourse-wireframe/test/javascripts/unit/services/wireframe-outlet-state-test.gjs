@@ -17,7 +17,7 @@ import {
   registerBlock,
   withTestBlockRegistration,
 } from "discourse/tests/helpers/block-testing";
-import { OUTLET_STATE } from "discourse/plugins/discourse-wireframe/discourse/lib/layout-query";
+import { OUTLET_STATE } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
 
 @block("wf:state-test-tile", { args: { title: { type: "string" } } })

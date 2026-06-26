@@ -60,15 +60,15 @@ module(
       assert.strictEqual(this.sim.value, null);
     });
 
-    test("every mutation fires the registered onChange exactly once", function (assert) {
-      let changes = 0;
-      this.sim.registerOnChange(() => (changes += 1));
+    test("every mutation bumps the shared revision signal", function (assert) {
+      const revision = getOwner(this).lookup("service:wireframe-revision");
+      const before = revision.version;
       this.sim.setUser({ trust_level: 2 });
-      assert.strictEqual(changes, 1, "setUser signals");
+      assert.strictEqual(revision.version, before + 1, "setUser bumps");
       this.sim.setViewport({ viewport: { sm: true }, touch: true });
-      assert.strictEqual(changes, 2, "setViewport signals");
+      assert.strictEqual(revision.version, before + 2, "setViewport bumps");
       this.sim.clear();
-      assert.strictEqual(changes, 3, "clear signals");
+      assert.strictEqual(revision.version, before + 3, "clear bumps");
     });
   }
 );

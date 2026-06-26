@@ -1,7 +1,7 @@
 // @ts-check
 
 import { tracked } from "@glimmer/tracking";
-import Service from "@ember/service";
+import Service, { service } from "@ember/service";
 
 /**
  * Holds the editor's simulation slot — a `{user, viewport}` preview persona the
@@ -12,17 +12,13 @@ import Service from "@ember/service";
  *
  * A standalone service so any consumer (the simulation controls, the condition
  * evaluator wiring) injects it directly without reaching through the editor
- * kernel. It depends on nothing — to signal the kernel's page-wide re-render
- * dep on a change, the kernel registers a callback via `registerOnChange`
- * (one-way: the kernel knows this service, never the reverse), so there is no
- * dependency cycle.
+ * kernel. On a change it bumps the shared revision signal so every surface that
+ * tracks the resolved layout re-runs (a simulation toggle changes what
+ * condition-gated blocks resolve to). Its only dependency is that signal, which
+ * depends on nothing — so the graph stays acyclic.
  */
 export default class WireframeSimulationService extends Service {
-  // The kernel registers a callback here (via `registerOnChange`) so a
-  // simulation change can bump its page-wide `structuralVersion`. Null until
-  // registered; mutations no-op the signal until then (a missed bump only
-  // means no extra refresh, never wrong data).
-  #onChange = null;
+  @service wireframeRevision;
 
   // The slot, shape `{ user, viewport }` (each null for "use the real value")
   // or null when no slot is set. Reassigned wholesale on every change — never
@@ -49,17 +45,6 @@ export default class WireframeSimulationService extends Service {
   }
 
   /**
-   * Registers the callback the kernel uses to bump its page-wide re-render dep
-   * whenever the simulation changes. Called once by the kernel; a later call
-   * replaces the previous handler.
-   *
-   * @param {() => void} fn
-   */
-  registerOnChange(fn) {
-    this.#onChange = fn;
-  }
-
-  /**
    * Sets the persona portion of the simulation.
    *
    * Three states:
@@ -71,7 +56,7 @@ export default class WireframeSimulationService extends Service {
    */
   setUser(user) {
     this._simulation = this.#patch(this._simulation, "user", user);
-    this.#onChange?.();
+    this.wireframeRevision.bump();
   }
 
   /**
@@ -82,7 +67,7 @@ export default class WireframeSimulationService extends Service {
    */
   setViewport(viewport) {
     this._simulation = this.#patch(this._simulation, "viewport", viewport);
-    this.#onChange?.();
+    this.wireframeRevision.bump();
   }
 
   /**
@@ -90,7 +75,7 @@ export default class WireframeSimulationService extends Service {
    */
   clear() {
     this._simulation = null;
-    this.#onChange?.();
+    this.wireframeRevision.bump();
   }
 
   /**

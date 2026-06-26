@@ -3188,7 +3188,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       this.sim.setUser({ trust_level: 2 });
       assert.true(
         this.editor.structuralVersion > before,
-        "the kernel-registered bump fired"
+        "the revision bump propagates through the facade"
       );
     });
   });

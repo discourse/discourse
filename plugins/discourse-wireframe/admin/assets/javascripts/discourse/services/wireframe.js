@@ -20,7 +20,6 @@ import {
 } from "discourse/blocks";
 import {
   _clearLayoutLayer,
-  _getResolvedLayout,
   _getResolvedLayouts,
   _setLayoutLayer,
   LAYOUT_LAYERS,
@@ -56,7 +55,6 @@ import {
 } from "../lib/grid-templates";
 import IconEditState from "../lib/icon-edit-state";
 import InlineEditState from "../lib/inline-edit-state";
-import LayoutQuery, { OUTLET_STATE } from "../lib/layout-query";
 import LinkEditState from "../lib/link-edit-state";
 import {
   cloneEntryForPaste,
@@ -84,6 +82,7 @@ import {
 import { diffLayouts } from "../lib/outlet-change-summary";
 import { isReversedFlexLayout } from "../lib/reversed-flex";
 import { inferSchemaFromValues } from "../lib/schema-to-fields";
+import { OUTLET_STATE } from "../services/wireframe-layout-query";
 
 const FLUSH_DELAY_MS = 200;
 
@@ -124,8 +123,9 @@ export default class WireframeService extends Service {
   @service siteSettings;
   @service wireframeDrafts;
   @service wireframeDragOverlay;
+  @service wireframeLayoutQuery;
   @service wireframePersistence;
-  @service wireframeSimulation;
+  @service wireframeRevision;
 
   @tracked isActive = false;
   @tracked selectedBlockKey = null;
@@ -158,17 +158,6 @@ export default class WireframeService extends Service {
    * are visible without us re-assigning `selectedBlockData`.
    */
   @tracked selectedBlockData = null;
-
-  /**
-   * Monotonically increasing counter bumped on every structural mutation.
-   * Consumers (the outline panel, future condition evaluators) read it to
-   * open a tracked dep that fires *every* mutation — `_structurallyEdited
-   * Outlets.size` only changes on the *first* mutation per outlet, so it
-   * isn't enough on its own.
-   *
-   * @type {number}
-   */
-  @tracked structuralVersion = 0;
 
   /**
    * Whether the inspector's conditions surface is detached from the
@@ -292,25 +281,6 @@ export default class WireframeService extends Service {
    * @type {DragSessionState}
    */
   dragSession = new DragSessionState();
-
-  /**
-   * The outlet/layout query layer (entry/outlet lookups, block metadata,
-   * outlet state, grid/composite predicates, outlet-root identity). A pure-read
-   * leaf the kernel configures downward with the draft-aware resolved-layout
-   * readers plus the blocks-service lookups; it never reaches back here. Exposed
-   * directly (read-only) so callers read `wireframe.layoutQuery.X`, and internal
-   * kernel code calls `this.layoutQuery.X`. See `../lib/layout-query.js`.
-   *
-   * @type {LayoutQuery}
-   */
-  layoutQuery = new LayoutQuery({
-    getResolvedLayout: (outletName, options) =>
-      _getResolvedLayout(outletName, options),
-    getResolvedLayouts: () => _getResolvedLayouts(),
-    getResolvedLayoutMeta: (outletName, options) =>
-      this.blocks.resolvedLayoutMeta(outletName, options),
-    getBlock: (name) => this.blocks.getBlock(name),
-  });
 
   /**
    * Drop authorization (the per-dragover `canDropAt` / `canInsertBlockAt`
@@ -563,11 +533,6 @@ export default class WireframeService extends Service {
     this.#loadConditionsPanelState();
     this.#installImagePasteListener();
     this.#installFileDragGuard();
-    // Let a simulation change bump our page-wide re-render dep without the
-    // simulation service ever reaching back into this kernel (one-way wiring).
-    this.wireframeSimulation.registerOnChange(() => {
-      this.structuralVersion = this.structuralVersion + 1;
-    });
   }
 
   willDestroy() {
@@ -658,6 +623,30 @@ export default class WireframeService extends Service {
    */
   get activeThemeIsSystem() {
     return this.activeThemeId != null && this.activeThemeId < 0;
+  }
+
+  /**
+   * The resolved-layout revision beacon. Bumped on every structural mutation
+   * (and on a simulation toggle) so consumers reading it re-run on any change.
+   * Delegates to the revision service; re-exposed here so the components and
+   * internal getters that read `structuralVersion` need not inject it directly.
+   *
+   * @returns {number}
+   */
+  get structuralVersion() {
+    return this.wireframeRevision.version;
+  }
+
+  /**
+   * The outlet/layout query service (entry/outlet lookups, block metadata,
+   * outlet state, grid/composite predicates, outlet-root identity). Re-exposed
+   * here so internal `this.layoutQuery.X` and external `wireframe.layoutQuery.X`
+   * keep working without injecting the service directly.
+   *
+   * @returns {import("./wireframe-layout-query").default}
+   */
+  get layoutQuery() {
+    return this.wireframeLayoutQuery;
   }
 
   /** @returns {boolean} */
@@ -3716,7 +3705,7 @@ export default class WireframeService extends Service {
     );
     this.editedOutlets.add(outletName);
     this.#structurallyEditedOutlets.add(outletName);
-    this.structuralVersion++;
+    this.wireframeRevision.bump();
   }
 
   /**
@@ -4743,7 +4732,7 @@ export default class WireframeService extends Service {
       this.editedOutlets.add(change.outletName);
       this.#structurallyEditedOutlets.add(change.outletName);
     }
-    this.structuralVersion++;
+    this.wireframeRevision.bump();
   }
 
   /**

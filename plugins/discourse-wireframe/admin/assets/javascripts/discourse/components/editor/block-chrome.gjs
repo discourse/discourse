@@ -42,7 +42,6 @@ import {
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import { imageArgEntries } from "../../lib/empty-image-upload";
 import { kindForArg } from "../../lib/kind-for-arg";
-import { OUTLET_STATE } from "../../lib/layout-query";
 import { entryKey } from "../../lib/mutate-layout";
 import { buildBlockPalette } from "../../lib/palette";
 import {
@@ -55,6 +54,7 @@ import containerDropTarget, {
   createContainerDropResolver,
 } from "../../modifiers/container-drop-target";
 import proxyDragSources from "../../modifiers/proxy-drag-sources";
+import { OUTLET_STATE } from "../../services/wireframe-layout-query";
 import LinkEditPopover from "../link-edit-popover";
 import BlockToolbar from "./block-toolbar";
 import EditorEmptyDropPlaceholder from "./editor-empty-drop-placeholder";
