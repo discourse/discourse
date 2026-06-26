@@ -449,10 +449,22 @@ class Topic < ActiveRecord::Base
   end
 
   def regenerate_og_image
-    if (saved_changes[:title] || saved_changes[:category_id]) && og_image_upload_id.present? &&
-         SiteSetting.generate_topic_og_image
-      Jobs.enqueue(:generate_topic_og_image, topic_id: id) if TopicOgImageGenerator.eligible?(self)
+    return if !(saved_changes[:title] || saved_changes[:category_id])
+    return if og_image_upload_id.blank?
+
+    if SiteSetting.generate_topic_og_image && TopicOgImageGenerator.eligible?(self)
+      Jobs.enqueue(:generate_topic_og_image, topic_id: id)
+    else
+      clear_generated_og_image!
     end
+  end
+
+  def clear_generated_og_image!
+    old_upload_id = og_image_upload_id
+    return if old_upload_id.blank?
+
+    update_column(:og_image_upload_id, nil)
+    UploadReference.where(target: self, upload_id: old_upload_id).delete_all
   end
 
   def initialize_default_values

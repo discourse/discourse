@@ -12,7 +12,10 @@ module Jobs
 
       topic = Topic.find_by(id: topic_id)
       return if topic.nil?
-      return if topic.image_upload_id.present?
+      if topic.image_upload_id.present?
+        topic.clear_generated_og_image!
+        return
+      end
       return if !TopicOgImageGenerator.eligible?(topic)
 
       generator = TopicOgImageGenerator.new(topic)

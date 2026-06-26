@@ -160,6 +160,7 @@ class CookedPostProcessor
       @post.update_column(:image_upload_id, upload.id) # post
       if @post.is_first_post? # topic
         @post.topic.update_column(:image_upload_id, upload.id)
+        @post.topic.clear_generated_og_image!
         extra_sizes =
           ThemeModifierHelper.new(theme_ids: Theme.user_selectable.pluck(:id)).topic_thumbnail_sizes
         @post.topic.generate_thumbnails!(extra_sizes: extra_sizes)

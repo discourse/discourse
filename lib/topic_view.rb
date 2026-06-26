@@ -452,6 +452,7 @@ class TopicView
 
   def og_image_upload
     return unless SiteSetting.generate_topic_og_image
+    return if !TopicOgImageGenerator.eligible?(@topic)
     @topic.og_image_upload
   end
 

@@ -950,6 +950,22 @@ RSpec.describe CookedPostProcessor do
             Jobs::GenerateTopicOgImage.jobs.size
           }
         end
+
+        it "clears the generated OG image when the first post has an image" do
+          SiteSetting.generate_topic_og_image = true
+          FastImage.stubs(:size)
+          old_upload = Fabricate(:upload)
+          image_post = Fabricate(:post_with_uploaded_image, user: user_with_auto_groups)
+          image_post.topic.update_column(:og_image_upload_id, old_upload.id)
+          UploadReference.ensure_exist!(upload_ids: [old_upload.id], target: image_post.topic)
+
+          CookedPostProcessor.new(image_post).post_process
+
+          expect(image_post.topic.reload.og_image_upload_id).to be_nil
+          expect(UploadReference.exists?(upload_id: old_upload.id, target: image_post.topic)).to eq(
+            false,
+          )
+        end
       end
 
       it "prioritizes data-thumbnail images" do

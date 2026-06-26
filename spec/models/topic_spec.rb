@@ -2814,6 +2814,24 @@ RSpec.describe Topic do
     end
   end
 
+  describe "#regenerate_og_image" do
+    fab!(:topic)
+
+    before { SiteSetting.generate_topic_og_image = true }
+
+    it "clears generated OG images when the topic becomes ineligible" do
+      old_upload = Fabricate(:upload)
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      topic.update_column(:og_image_upload_id, old_upload.id)
+      UploadReference.ensure_exist!(upload_ids: [old_upload.id], target: topic)
+
+      topic.update!(category: private_category)
+
+      expect(topic.reload.og_image_upload_id).to be_nil
+      expect(UploadReference.exists?(upload_id: old_upload.id, target: topic)).to eq(false)
+    end
+  end
+
   describe "trash!" do
     fab!(:topic)
 
