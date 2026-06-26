@@ -189,6 +189,7 @@ class AiMcpServer < ActiveRecord::Base
       token_endpoint: oauth_token_endpoint,
       revocation_endpoint: oauth_revocation_endpoint,
       registration_endpoint: oauth_registration_endpoint,
+      token_endpoint_auth_methods_supported: oauth_token_endpoint_auth_methods_supported,
     )
   end
 
@@ -200,6 +201,8 @@ class AiMcpServer < ActiveRecord::Base
       oauth_registration_endpoint: discovery.registration_endpoint,
       oauth_issuer: discovery.issuer,
       oauth_resource_metadata_url: discovery.resource_metadata_url,
+      oauth_token_endpoint_auth_methods_supported:
+        Array(discovery.token_endpoint_auth_methods_supported),
       oauth_last_error: nil,
     )
   end
@@ -262,6 +265,7 @@ class AiMcpServer < ActiveRecord::Base
       oauth_token_endpoint: nil,
       oauth_revocation_endpoint: nil,
       oauth_registration_endpoint: nil,
+      oauth_token_endpoint_auth_methods_supported: [],
       oauth_issuer: nil,
       oauth_resource_metadata_url: nil,
       oauth_last_error: nil,
@@ -473,6 +477,7 @@ end
 #  oauth_scopes                     :string(2000)
 #  oauth_status                     :string(50)       default("disconnected"), not null
 #  oauth_token_endpoint             :string(1000)
+#  oauth_token_endpoint_auth_methods_supported :jsonb            not null
 #  oauth_token_params               :jsonb            not null
 #  oauth_token_type                 :string(100)
 #  protocol_version                 :string(100)
