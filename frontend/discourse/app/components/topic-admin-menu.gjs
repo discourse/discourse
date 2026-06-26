@@ -179,7 +179,6 @@ export default class TopicAdminMenu extends Component {
         data: { enabled: newValue },
       });
       topic.set("is_nested_view", newValue);
-      topic.set("_forcedFlat", !newValue);
 
       if (newValue) {
         DiscourseURL.routeTo(`/t/${slug}/${topicId}`);
