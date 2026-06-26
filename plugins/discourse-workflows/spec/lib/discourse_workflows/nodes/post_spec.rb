@@ -377,6 +377,33 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       )
     end
 
+    it "lists posts while excluding topics in the query field" do
+      included_topic =
+        Fabricate(:topic, category: category, user: user, title: "Included topic title")
+      included_post = Fabricate(:post, topic: included_topic, user: user, post_number: 1)
+      excluded_topic =
+        Fabricate(:topic, category: category, user: user, title: "Excluded topic title")
+      Fabricate(:post, topic: excluded_topic, user: user, post_number: 1)
+      other_excluded_topic =
+        Fabricate(:topic, category: category, user: user, title: "Other excluded title")
+      Fabricate(:post, topic: other_excluded_topic, user: user, post_number: 1)
+
+      result =
+        execute_node_output(
+          configuration: {
+            "operation" => "list",
+            "query" =>
+              "category:#{category.slug} -topic:#{excluded_topic.id},#{other_excluded_topic.id}",
+            "limit" => "10",
+          },
+          item: item,
+        ).first
+
+      expect(result.map { |output_item| output_item.dig("json", "post", "id") }).to contain_exactly(
+        included_post.id,
+      )
+    end
+
     it "lists posts matching the advanced filter" do
       matching_post = Fabricate(:post, user: user, raw: "advanced body")
       Fabricate(:post, user: other_user, raw: "ignored body")
