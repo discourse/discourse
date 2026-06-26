@@ -72,9 +72,13 @@ export default class DiscourseTemplatesButton extends Component {
 
     const slugPath = categorySlug.split(/[/:]/).filter(Boolean);
 
-    const category =
-      Category.findBySlugPath(slugPath) ||
-      (await Category.asyncFindBySlugPath(slugPath).catch(() => null));
+    let category = Category.findBySlugPath(slugPath);
+
+    if (!category?.canCreateTopic) {
+      category = await Category.asyncFindBySlugPath(slugPath.join("/")).catch(
+        () => null
+      );
+    }
 
     return category?.canCreateTopic ? category : null;
   }
