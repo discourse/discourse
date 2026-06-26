@@ -68,7 +68,7 @@ module DiscourseWorkflows
             end
           end
 
-          [[]]
+          [exec_ctx.input_items]
         end
 
         private

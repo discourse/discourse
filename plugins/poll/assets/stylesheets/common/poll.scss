@@ -19,9 +19,7 @@ div.poll-outer {
 
     ul,
     ol {
-      margin: 0;
-      padding: 0;
-      list-style: none;
+      @include unstyled-list;
       display: inline-block;
       width: 100%;
     }

@@ -90,6 +90,9 @@ RSpec.describe PostsFilter do
         description: I18n.t("posts_filter.description.post_type_whisper"),
       },
     )
+    expect(options.find { |option| option[:name] == "topic:" }).to include(
+      prefixes: [{ name: "-", description: I18n.t("posts_filter.description.exclude_topic") }],
+    )
     expect(options.find { |option| option[:name] == "order:" }).not_to include(
       :type,
       :extra_entries,
@@ -193,6 +196,15 @@ RSpec.describe PostsFilter do
     expect(filtered_post_ids("topic:#{feature_topic.id}")).to contain_exactly(
       feature_post.id,
       reply_post.id,
+    )
+    expect(filtered_post_ids("-topic:#{feature_topic.id}")).to contain_exactly(
+      bug_post.id,
+      feature_bug_post.id,
+      no_tag_post.id,
+    )
+    expect(filtered_post_ids("-topic:#{feature_topic.id},#{bug_topic.id}")).to contain_exactly(
+      feature_bug_post.id,
+      no_tag_post.id,
     )
     expect(filtered_post_ids("post_type:first")).to contain_exactly(
       feature_post.id,

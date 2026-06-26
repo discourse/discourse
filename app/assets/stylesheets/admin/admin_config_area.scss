@@ -102,6 +102,17 @@
   }
 }
 
+.admin-config-area-about {
+  &__locale-form {
+    margin: 0;
+    width: 100%;
+  }
+
+  &__locale-selector-dropdown {
+    width: 100%;
+  }
+}
+
 .admin-site-settings-filter-controls {
   border-bottom: 1px solid var(--content-border-color);
 }

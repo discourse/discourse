@@ -748,7 +748,8 @@ CREATE TABLE public.ai_mcp_servers (
     oauth_registration_endpoint character varying(1000),
     oauth_authorization_params jsonb DEFAULT '{}'::jsonb NOT NULL,
     oauth_token_params jsonb DEFAULT '{}'::jsonb NOT NULL,
-    oauth_require_refresh_token boolean DEFAULT false NOT NULL
+    oauth_require_refresh_token boolean DEFAULT false NOT NULL,
+    oauth_token_endpoint_auth_methods_supported jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -4548,6 +4549,46 @@ CREATE SEQUENCE public.discourse_workflows_webhooks_id_seq
 --
 
 ALTER SEQUENCE public.discourse_workflows_webhooks_id_seq OWNED BY public.discourse_workflows_webhooks.id;
+
+
+--
+-- Name: discourse_workflows_workflow_call_runs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_workflow_call_runs (
+    id bigint NOT NULL,
+    parent_execution_id bigint NOT NULL,
+    parent_node_id character varying(100) NOT NULL,
+    parent_resume_token character varying(64) NOT NULL,
+    child_execution_id bigint,
+    target_workflow_id bigint NOT NULL,
+    target_workflow_version_id character varying(36) NOT NULL,
+    user_id bigint,
+    trigger_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    error text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_workflow_call_runs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_workflow_call_runs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_workflow_call_runs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_workflow_call_runs_id_seq OWNED BY public.discourse_workflows_workflow_call_runs.id;
 
 
 --
@@ -8673,6 +8714,41 @@ ALTER SEQUENCE public.site_setting_groups_id_seq OWNED BY public.site_setting_gr
 
 
 --
+-- Name: site_setting_localizations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.site_setting_localizations (
+    id bigint NOT NULL,
+    setting_name character varying NOT NULL,
+    locale character varying(20) NOT NULL,
+    value text NOT NULL,
+    cooked text,
+    localizer_user_id integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: site_setting_localizations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.site_setting_localizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: site_setting_localizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.site_setting_localizations_id_seq OWNED BY public.site_setting_localizations.id;
+
+
+--
 -- Name: site_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -12704,6 +12780,13 @@ ALTER TABLE ONLY public.discourse_workflows_webhooks ALTER COLUMN id SET DEFAULT
 
 
 --
+-- Name: discourse_workflows_workflow_call_runs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflow_call_runs ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_workflow_call_runs_id_seq'::regclass);
+
+
+--
 -- Name: discourse_workflows_workflow_dependencies id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -13478,6 +13561,13 @@ ALTER TABLE ONLY public.single_sign_on_records ALTER COLUMN id SET DEFAULT nextv
 --
 
 ALTER TABLE ONLY public.site_setting_groups ALTER COLUMN id SET DEFAULT nextval('public.site_setting_groups_id_seq'::regclass);
+
+
+--
+-- Name: site_setting_localizations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.site_setting_localizations ALTER COLUMN id SET DEFAULT nextval('public.site_setting_localizations_id_seq'::regclass);
 
 
 --
@@ -14981,6 +15071,14 @@ ALTER TABLE ONLY public.discourse_workflows_webhooks
 
 
 --
+-- Name: discourse_workflows_workflow_call_runs discourse_workflows_workflow_call_runs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflow_call_runs
+    ADD CONSTRAINT discourse_workflows_workflow_call_runs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: discourse_workflows_workflow_dependencies discourse_workflows_workflow_dependencies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -15890,6 +15988,14 @@ ALTER TABLE ONLY public.single_sign_on_records
 
 ALTER TABLE ONLY public.site_setting_groups
     ADD CONSTRAINT site_setting_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: site_setting_localizations site_setting_localizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.site_setting_localizations
+    ADD CONSTRAINT site_setting_localizations_pkey PRIMARY KEY (id);
 
 
 --
@@ -16853,6 +16959,20 @@ CREATE INDEX idx_dwf_ai_sessions_on_user_id ON public.discourse_workflows_ai_aut
 --
 
 CREATE INDEX idx_dwf_ai_sessions_on_workflow_id ON public.discourse_workflows_ai_authoring_sessions USING btree (workflow_id);
+
+
+--
+-- Name: idx_dwf_call_runs_on_child_execution_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_call_runs_on_child_execution_id ON public.discourse_workflows_workflow_call_runs USING btree (child_execution_id) WHERE (child_execution_id IS NOT NULL);
+
+
+--
+-- Name: idx_dwf_call_runs_on_parent_execution_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_call_runs_on_parent_execution_id ON public.discourse_workflows_workflow_call_runs USING btree (parent_execution_id);
 
 
 --
@@ -20321,6 +20441,20 @@ CREATE UNIQUE INDEX index_site_setting_groups_on_name ON public.site_setting_gro
 
 
 --
+-- Name: index_site_setting_localizations_on_locale; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_site_setting_localizations_on_locale ON public.site_setting_localizations USING btree (locale);
+
+
+--
+-- Name: index_site_setting_localizations_on_setting_name_and_locale; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_site_setting_localizations_on_setting_name_and_locale ON public.site_setting_localizations USING btree (setting_name, locale);
+
+
+--
 -- Name: index_site_settings_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22065,7 +22199,10 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260626055145'),
 ('20260624140945'),
+('20260623090824'),
+('20260622140747'),
 ('20260617053237'),
 ('20260615084100'),
 ('20260615082047'),

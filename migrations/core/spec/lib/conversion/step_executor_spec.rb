@@ -3,7 +3,8 @@
 RSpec.describe Migrations::Conversion::StepExecutor do
   subject(:executor) { described_class.new(step, reporter:) }
 
-  let(:reporter) { Migrations::Conversion::ConsoleReporter.new }
+  let(:handle) { instance_double(Migrations::Reporting::Reporter::StepHandle, finish: nil) }
+  let(:reporter) { instance_double(Migrations::Reporting::Plain, start_step: handle) }
   let(:step_class) { Class.new(Migrations::Conversion::Step) { title "Fixture step" } }
   let(:step) { step_class.new(settings: {}) }
 
@@ -11,18 +12,17 @@ RSpec.describe Migrations::Conversion::StepExecutor do
     it "announces the step through the reporter and executes it" do
       allow(step).to receive(:execute)
 
-      expect { executor.execute }.to output("Fixture step\n").to_stdout
+      executor.execute
+
+      expect(reporter).to have_received(:start_step).with("Fixture step")
       expect(step).to have_received(:execute)
     end
 
-    it "reports the end of the step even when the step fails" do
-      reporter =
-        instance_double(Migrations::Conversion::ConsoleReporter, start_step: nil, finish_step: nil)
-      executor = described_class.new(step, reporter:)
+    it "finishes the step's handle even when the step fails" do
       allow(step).to receive(:execute).and_raise("boom")
 
       expect { executor.execute }.to raise_error("boom")
-      expect(reporter).to have_received(:finish_step).with("Fixture step")
+      expect(handle).to have_received(:finish)
     end
   end
 end

@@ -82,6 +82,145 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
       end
     end
 
+    context "when workflow calls reference other workflows" do
+      it "allows a draft workflow call node without a selected target" do
+        result =
+          described_class.call(
+            workflow: workflow,
+            nodes_data: [
+              { id: "trigger-1", type: "trigger:manual", name: "Manual" },
+              { id: "call-1", type: "action:workflow_call", name: "Call workflow", parameters: {} },
+            ],
+            connections_data: {
+              "Manual" => {
+                "main" => [[{ "node" => "Call workflow", "type" => "main", "index" => 0 }]],
+              },
+            },
+          )
+
+        expect(result).to eq(true)
+        expect(workflow.errors).to be_empty
+        expect(workflow.nodes.find { |node| node["id"] == "call-1" }["parameters"]).to eq({})
+      end
+
+      it "accepts a published callable workflow target" do
+        target_graph =
+          build_workflow_graph { |graph| graph.node "call-trigger", "trigger:workflow_call" }
+        target =
+          Fabricate(
+            :discourse_workflows_workflow,
+            created_by: workflow.created_by,
+            published: true,
+            **target_graph,
+          )
+
+        result =
+          described_class.call(
+            workflow: workflow,
+            nodes_data: [
+              { id: "trigger-1", type: "trigger:manual", name: "Manual" },
+              {
+                id: "call-1",
+                type: "action:workflow_call",
+                name: "Call workflow",
+                parameters: {
+                  "workflow_id" => target.id,
+                },
+              },
+            ],
+            connections_data: {
+              "Manual" => {
+                "main" => [[{ "node" => "Call workflow", "type" => "main", "index" => 0 }]],
+              },
+            },
+          )
+
+        expect(result).to eq(true)
+      end
+
+      it "rejects self references and non-callable targets" do
+        non_callable = Fabricate(:discourse_workflows_workflow, created_by: workflow.created_by)
+
+        result =
+          described_class.call(
+            workflow: workflow,
+            nodes_data: [
+              { id: "trigger-1", type: "trigger:manual", name: "Manual" },
+              {
+                id: "self-call",
+                type: "action:workflow_call",
+                name: "Self call",
+                parameters: {
+                  "workflow_id" => workflow.id,
+                },
+              },
+              {
+                id: "bad-call",
+                type: "action:workflow_call",
+                name: "Bad call",
+                parameters: {
+                  "workflow_id" => non_callable.id,
+                },
+              },
+            ],
+            connections_data: {
+            },
+          )
+
+        expect(result).to eq(false)
+        expect(workflow.errors.full_messages).to include(
+          I18n.t("discourse_workflows.errors.workflow_call.self_reference", node: "Self call"),
+          I18n.t("discourse_workflows.errors.workflow_call.target_not_callable"),
+        )
+      end
+
+      it "rejects workflow call cycles" do
+        cyclic_target_graph =
+          build_workflow_graph do |graph|
+            graph.node "call-trigger", "trigger:workflow_call"
+            graph.node "call-back",
+                       "action:workflow_call",
+                       configuration: {
+                         "workflow_id" => workflow.id,
+                       }
+            graph.chain "call-trigger", "call-back"
+          end
+        cyclic_target =
+          Fabricate(
+            :discourse_workflows_workflow,
+            created_by: workflow.created_by,
+            published: true,
+            **cyclic_target_graph,
+          )
+
+        result =
+          described_class.call(
+            workflow: workflow,
+            nodes_data: [
+              { id: "trigger-1", type: "trigger:workflow_call", name: "Workflow call" },
+              {
+                id: "cycle-call",
+                type: "action:workflow_call",
+                name: "Cycle call",
+                parameters: {
+                  "workflow_id" => cyclic_target.id,
+                },
+              },
+            ],
+            connections_data: {
+              "Workflow call" => {
+                "main" => [[{ "node" => "Cycle call", "type" => "main", "index" => 0 }]],
+              },
+            },
+          )
+
+        expect(result).to eq(false)
+        expect(workflow.errors.full_messages).to include(
+          I18n.t("discourse_workflows.errors.workflow_call.cycle", node: "Cycle call"),
+        )
+      end
+    end
+
     context "when nodes have invalid versions" do
       it "returns false and adds errors to the workflow" do
         result =

@@ -1074,6 +1074,83 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.strictEqual(this.formApi.get("llm_model_id"), null);
   });
 
+  test("renders combo box actions with the selected field value as a route model", async function (assert) {
+    const router = this.owner.lookup("service:router");
+    const transitionTo = sinon.stub(router, "transitionTo");
+
+    this.setProperties({
+      configuration: {
+        workflow_id: null,
+      },
+      nodeType: "action:workflow_call",
+      nodeTypes: [
+        {
+          identifier: "action:workflow_call",
+          metadata: {
+            callable_workflows: [{ id: 8, name: "Child workflow" }],
+          },
+        },
+      ],
+      schema: {
+        workflow_id: {
+          type: "integer",
+          required: true,
+          type_options: {
+            load_options_method: "callable_workflows",
+          },
+          no_data_expression: true,
+          ui: {
+            control: "combo_box",
+          },
+          control_options: {
+            action_icon: "up-right-from-square",
+            action_label: "discourse_workflows.workflow_call.open_workflow",
+            action_route: "adminPlugins.show.discourse-workflows.show",
+            action_route_models: [{ source: "field_value" }],
+            name_property: "name",
+            value_property: "id",
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".workflows-property-engine__select-with-action > .btn")
+      .doesNotExist();
+
+    const selector = selectKit(".combo-box");
+    await selector.expand();
+    await selector.selectRowByValue("8");
+
+    assert
+      .dom(".workflows-property-engine__select-with-action > .btn")
+      .hasText("Open workflow");
+
+    await click(".workflows-property-engine__select-with-action > .btn");
+
+    assert.true(
+      transitionTo.calledWith(
+        "adminPlugins.show.discourse-workflows.show",
+        sinon.match((value) => String(value) === "8", "selected workflow id")
+      )
+    );
+  });
+
   test("applies option patches from remote combo box options", async function (assert) {
     const requests = [];
     pretender.post(

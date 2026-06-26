@@ -499,9 +499,8 @@
 
     ul {
       color: var(--primary-medium);
-      list-style: none;
-      padding: 0;
-      margin: 0;
+
+      @include unstyled-list;
     }
 
     li {

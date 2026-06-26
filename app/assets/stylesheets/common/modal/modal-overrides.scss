@@ -516,9 +516,7 @@
   }
 
   .formats {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    @include unstyled-list;
 
     .format {
       .previewed-format {
@@ -749,6 +747,8 @@
       border-top: 1px solid var(--content-border-color);
       padding-top: 10px;
       width: 100%;
+      height: 100%;
+      box-sizing: border-box;
     }
 
     .incoming-email-raw {

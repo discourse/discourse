@@ -25,6 +25,10 @@
 #                         the setting is disabled).
 # themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
 #                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
+# localizable           - Set to true if content localization can translate this setting. Use a hash for translation-specific
+#                         options:
+#                          - max_length: maximum localized value length
+#                          - cooked: true when the localized value should be cooked markdown
 # upcoming_change_default_override - Allow an upcoming change to control the new default value of this setting.
 #                          - upcoming_change: The site setting of the upcoming change to control this
 #                          - new_default: The new default value when the upcoming change is enabled
@@ -88,9 +92,13 @@ required:
     client: true
     default: "Discourse"
     area: "about"
+    localizable:
+      max_length: 255
   site_description:
     default: ""
     area: "about"
+    localizable:
+      max_length: 1000
   short_site_description:
     default: ""
     client: true
@@ -579,6 +587,9 @@ basic:
     max: 10_000
     hidden: true
     area: "about"
+    localizable:
+      max_length: 10_000
+      cooked: true
   extended_site_description_cooked:
     default: ""
     hidden: true
@@ -1644,7 +1655,7 @@ posting:
     hidden: true
     area: "gifs"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/404829"
   klipy_api_key:

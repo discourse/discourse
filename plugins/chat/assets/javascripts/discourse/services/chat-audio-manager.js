@@ -180,9 +180,14 @@ const SOUND_SEQUENCES = {
 export default class ChatAudioManager extends Service {
   canPlay = true;
 
-  async play(name, { type = "incoming" } = {}) {
-    if (this.canPlay) {
+  async play(name, { throttle = true, type = "incoming" } = {}) {
+    if (!throttle || this.canPlay) {
       await this.#tryPlay(name, type);
+
+      if (!throttle) {
+        return;
+      }
+
       this.canPlay = false;
       setTimeout(() => {
         this.canPlay = true;
