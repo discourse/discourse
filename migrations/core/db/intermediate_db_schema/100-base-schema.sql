@@ -369,6 +369,7 @@ CREATE TABLE topics
     external_id          NUMERIC,
     featured_link        TEXT,
     locale               TEXT,
+    og_image_upload_id   TEXT,
     pinned_at            DATETIME,
     pinned_globally      BOOLEAN,
     pinned_until         DATETIME,

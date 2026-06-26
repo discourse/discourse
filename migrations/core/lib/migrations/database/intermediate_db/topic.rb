@@ -22,6 +22,7 @@ module Migrations
             external_id,
             featured_link,
             locale,
+            og_image_upload_id,
             pinned_at,
             pinned_globally,
             pinned_until,
@@ -34,7 +35,7 @@ module Migrations
             visible
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
@@ -53,6 +54,7 @@ module Migrations
         # @param external_id            [Integer, String, nil]
         # @param featured_link          [String, nil]
         # @param locale                 [String, nil]
+        # @param og_image_upload_id     [String, nil]
         # @param pinned_at              [Time, nil]
         # @param pinned_globally        [Boolean, nil]
         # @param pinned_until           [Time, nil]
@@ -78,6 +80,7 @@ module Migrations
           external_id: nil,
           featured_link: nil,
           locale: nil,
+          og_image_upload_id: nil,
           pinned_at: nil,
           pinned_globally: nil,
           pinned_until: nil,
@@ -103,6 +106,7 @@ module Migrations
             external_id,
             featured_link,
             locale,
+            og_image_upload_id,
             Migrations::Database.format_datetime(pinned_at),
             Migrations::Database.format_boolean(pinned_globally),
             Migrations::Database.format_datetime(pinned_until),
