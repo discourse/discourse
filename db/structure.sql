@@ -748,7 +748,8 @@ CREATE TABLE public.ai_mcp_servers (
     oauth_registration_endpoint character varying(1000),
     oauth_authorization_params jsonb DEFAULT '{}'::jsonb NOT NULL,
     oauth_token_params jsonb DEFAULT '{}'::jsonb NOT NULL,
-    oauth_require_refresh_token boolean DEFAULT false NOT NULL
+    oauth_require_refresh_token boolean DEFAULT false NOT NULL,
+    oauth_token_endpoint_auth_methods_supported jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -22133,6 +22134,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260626055145'),
 ('20260624140945'),
 ('20260623090824'),
 ('20260617053237'),
