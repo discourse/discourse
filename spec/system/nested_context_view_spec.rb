@@ -175,6 +175,8 @@ RSpec.describe "Nested context view" do
   end
 
   describe "in-route navigation between context views" do
+    before { SiteSetting.nested_replies_max_depth = 10 }
+
     # Navigating context A → context B in-app (without a full page reload)
     # keeps the same controller/component mounted. When the two chains
     # share a root ancestor, the chain root <NestedPost> would be reused
