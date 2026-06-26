@@ -55,7 +55,9 @@ module DiscoursePostEvent
     end
 
     def reset_invalid_livestream
-      self.livestream = false if livestream? && !livestream_location?
+      return unless livestream?
+
+      self.livestream = false unless livestream_location? && post&.is_first_post?
     end
 
     def livestream_location?

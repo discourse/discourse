@@ -115,6 +115,15 @@ describe DiscoursePostEvent::Event do
 
       expect(event.reload.livestream).to eq(false)
     end
+
+    it "resets livestream when the event is not on the first post" do
+      reply = Fabricate(:post, topic: post.topic)
+      expect(reply.is_first_post?).to be(false)
+
+      event = Fabricate(:event, post: reply, livestream: true, location: "https://example.com/live")
+
+      expect(event.reload.livestream).to eq(false)
+    end
   end
 
   describe "#raw_invitees_are_groups" do
