@@ -22,9 +22,12 @@ module DiscoursePostEvent
     scope :visible, -> { where(deleted_at: nil) }
     scope :open, -> { where(closed: false) }
 
+    before_validation :reset_invalid_livestream
     before_save :chat_channel_sync
     # prepend so it runs before `dependent: :delete_all` wipes the invitees
     before_destroy :reset_invitees_topic_tracking, prepend: true
+    after_commit :create_livestream_chat_channel, on: %i[create update]
+    after_commit :warm_livestream_onebox, on: %i[create update]
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
     after_save do
@@ -49,6 +52,32 @@ module DiscoursePostEvent
 
     def self.attributes_protected_by_default
       super - %w[id]
+    end
+
+    def reset_invalid_livestream
+      return unless livestream?
+
+      self.livestream = false unless livestream_location? && post&.is_first_post?
+    end
+
+    def livestream_location?
+      location.to_s.match?(%r{\Ahttps?://}i)
+    end
+
+    def create_livestream_chat_channel
+      return unless livestream? && SiteSetting.chat_enabled
+      return unless post&.is_first_post?
+      return if post.topic.blank?
+
+      DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
+    end
+
+    def warm_livestream_onebox
+      return if !livestream? || location.blank?
+      return if !saved_change_to_livestream? && !saved_change_to_location?
+      return if Oneboxer.cached_onebox(location).present?
+
+      Jobs.enqueue(:warm_livestream_onebox, event_id: id, url: location)
     end
 
     def destroy_topic_custom_field
@@ -313,6 +342,27 @@ module DiscoursePostEvent
       pruned_user_ids = pruned.pluck(:user_id)
       pruned.delete_all
       Invitee.reset_topic_tracking!(user_ids: pruned_user_ids, topic_id: post.topic_id)
+      unfollow_livestream_chat(pruned_user_ids)
+    end
+
+    # Unfollow users from the livestream chat channel once they are no longer
+    # attending (e.g. pruned when a private event's invited groups change). Chat
+    # following tracks attendance, so removed attendees should not keep the
+    # channel in their chat list.
+    def unfollow_livestream_chat(user_ids)
+      return if user_ids.blank?
+
+      channel = post.topic.topic_chat_channel&.chat_channel
+      return if channel.nil?
+
+      manager = Chat::ChannelMembershipManager.new(channel)
+      User
+        .where(id: user_ids)
+        .find_each do |user|
+          membership = manager.unfollow(user)
+          next if membership.nil?
+          DiscourseCalendar::Livestream.publish_livestream_chat_status(membership, user:)
+        end
     end
 
     def can_user_update_attendance?(user)
@@ -562,6 +612,7 @@ end
 #  custom_fields      :jsonb            not null
 #  deleted_at         :datetime
 #  description        :string(1000)
+#  livestream         :boolean          default(FALSE), not null
 #  location           :string(1000)
 #  max_attendees      :integer
 #  minimal            :boolean

@@ -459,6 +459,8 @@ en:
         create_event_button: "Create event"
         action_title: "Create a new event"
         all_day: "All day"
+        livestream: "Livestream"
+        livestream_chat_disabled: "Enable chat to create livestream channels."
         reminder:
           units:
             minutes:
@@ -555,11 +557,11 @@ en:
         allow_chat:
           label: "Chat integration"
           checkbox_label: "Create and manage event specific chat channel"
-        url:
-          label: "URL"
-          placeholder: "Optional"
+        livestream:
+          label: "Livestream"
+          checkbox_label: "Embed the URL as a video and open livestream chat for attendees"
         location:
-          label: "Location"
+          label: "Location or URL"
           placeholder: "Add a location, link or something."
         description:
           label: "Description"

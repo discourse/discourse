@@ -69,7 +69,7 @@ module ::DiscourseCalendar
     def self.handle_topic_chat_channel_creation(topic)
       return if topic.category.blank?
       return if DiscourseCalendar::Livestream::TopicChatChannel.exists?(topic_id: topic.id)
-      return if topic.tags.blank? || topic.tags.none? { |tag| tag.name == "livestream" }
+      return unless topic.first_post&.event&.livestream?
 
       channel =
         Chat::Channel.create!(
@@ -174,7 +174,7 @@ after_initialize do
   require_relative "jobs/regular/discourse_post_event/bulk_invite"
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
-  require_relative "jobs/regular/livestream/recalculate_user_channel_memberships"
+  require_relative "jobs/regular/discourse_post_event/warm_livestream_onebox"
   require_relative "lib/discourse_post_event/engine"
   require_relative "lib/discourse_post_event/event_finder"
   require_relative "lib/discourse_post_event/event_parser"
@@ -855,32 +855,19 @@ after_initialize do
   add_to_serializer(
     :topic_view,
     :chat_channel_id,
-    include_condition: -> { SiteSetting.livestream_enabled },
-  ) do
-    return nil if object.topic.topic_chat_channel.blank?
-    object.topic.topic_chat_channel.chat_channel_id
-  end
+    include_condition: -> do
+      object.topic.first_post&.event&.livestream? && object.topic.topic_chat_channel.present?
+    end,
+  ) { object.topic.topic_chat_channel.chat_channel_id }
 
-  on(:post_edited) do |post, _, _|
-    if SiteSetting.livestream_enabled
-      DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
-    end
-  end
-  on(:topic_created) do |topic, _, _|
-    if SiteSetting.livestream_enabled
-      DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(topic)
-    end
-  end
+  add_to_serializer(:topic_view, :has_livestream) { object.topic.first_post&.event&.livestream? }
+
   on(:chat_channel_trashed) do |channel, user|
-    if SiteSetting.livestream_enabled
-      # If the chat channel is deleted, delete the related TopicChatChannel record
-      DiscourseCalendar::Livestream::TopicChatChannel.where(chat_channel_id: channel.id).destroy_all
-    end
+    # If the chat channel is deleted, delete the related TopicChatChannel record
+    DiscourseCalendar::Livestream::TopicChatChannel.where(chat_channel_id: channel.id).destroy_all
   end
 
   on(:discourse_calendar_post_event_invitee_status_changed) do |invitee|
-    next if !SiteSetting.livestream_enabled
-
     topic = invitee.event.post.topic
     topic_chat_channel = topic.topic_chat_channel
 
@@ -890,21 +877,17 @@ after_initialize do
     channel = topic_chat_channel.chat_channel
     manager = Chat::ChannelMembershipManager.new(channel)
 
-    user_allowed_in_chat = user.in_any_groups?(SiteSetting.livestream_chat_allowed_groups_map)
-
+    # Attendance is the chat gate: anyone going is auto-followed into the
+    # livestream channel, anyone else is unfollowed.
     membership =
       if invitee.status == DiscoursePostEvent::Invitee.statuses[:going]
-        user_allowed_in_chat ? manager.follow(user) : manager.unfollow(user)
+        manager.follow(user)
       else
         manager.unfollow(user)
       end
 
-    DiscourseCalendar::Livestream.publish_livestream_chat_status(membership, user: user)
-  end
-
-  on(:site_setting_changed) do |name, old_val, new_val|
-    if name == :livestream_chat_allowed_groups && SiteSetting.livestream_enabled
-      Jobs::LivestreamRecalculateUserChannelMemberships.new.execute
+    if membership
+      DiscourseCalendar::Livestream.publish_livestream_chat_status(membership, user: user)
     end
   end
 end

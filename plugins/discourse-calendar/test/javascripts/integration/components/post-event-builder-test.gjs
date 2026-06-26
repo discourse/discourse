@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { render } from "@ember/test-helpers";
+import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import PostEventBuilder from "../../discourse/components/modal/post-event-builder";
@@ -103,5 +103,54 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
     assert
       .dom(`[data-name="customFields.field_aa"] input`)
       .exists("renders the dashed custom field without crashing");
+  });
+
+  test("clears livestream when the location stops being a URL", async function (assert) {
+    this.siteSettings.chat_enabled = true;
+
+    const event = DiscoursePostEventEvent.create({
+      name: "My event",
+      starts_at: "2022-07-01T10:00:00Z",
+      ends_at: "2022-07-01T11:00:00Z",
+      timezone: "UTC",
+      status: "public",
+      reminders: [],
+      raw_invitees: [],
+      custom_fields: {},
+      location: "https://example.com/live",
+      livestream: true,
+    });
+
+    const model = {
+      event,
+      initialScreen: "advanced",
+      onUpdate: () => {},
+      toolbarEvent: {},
+    };
+    const closeModal = () => {};
+
+    await render(
+      <template>
+        <PostEventBuilder
+          @inline={{true}}
+          @model={{model}}
+          @closeModal={{closeModal}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(`[data-name="livestream"]`)
+      .exists("the livestream field shows while the location is a URL");
+
+    await fillIn(`[data-name="location"] input`, "Room 5");
+
+    assert
+      .dom(`[data-name="livestream"]`)
+      .doesNotExist("the livestream field is hidden for a non-URL location");
+    assert.false(
+      event.livestream,
+      "livestream is reset so it is not submitted for a non-URL location"
+    );
   });
 });

@@ -3924,7 +3924,8 @@ CREATE TABLE public.discourse_post_event_events (
     description character varying(1000),
     max_attendees integer,
     all_day boolean DEFAULT false NOT NULL,
-    image_upload_id bigint
+    image_upload_id bigint,
+    livestream boolean DEFAULT false NOT NULL
 );
 
 
@@ -22202,7 +22203,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260626055145'),
 ('20260624140945'),
 ('20260623090824'),
+('20260622201006'),
+('20260622201005'),
 ('20260622140747'),
+('20260617180115'),
 ('20260617053237'),
 ('20260615084100'),
 ('20260615082047'),

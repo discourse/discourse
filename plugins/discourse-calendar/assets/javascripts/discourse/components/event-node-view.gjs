@@ -24,6 +24,7 @@ const CLEARABLE_ATTRS = [
   "showLocalTime",
   "minimal",
   "chatEnabled",
+  "livestream",
   "allDay",
   "allowedGroups",
   "reminders",
