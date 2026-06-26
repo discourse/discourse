@@ -11,15 +11,23 @@ module("Unit | Canvas Sticky Notes", function (hooks) {
   module("computeStickyNoteRects", function () {
     test("maps sticky notes to position/size rects", function (assert) {
       const notes = [
-        { position: { x: 10, y: 20 }, size: { width: 100, height: 50 } },
-        { position: { x: 30, y: 40 }, size: { width: 200, height: 150 } },
+        {
+          clientId: "sn1",
+          position: { x: 10, y: 20 },
+          size: { width: 100, height: 50 },
+        },
+        {
+          clientId: "sn2",
+          position: { x: 30, y: 40 },
+          size: { width: 200, height: 150 },
+        },
       ];
 
       const rects = computeStickyNoteRects(notes);
 
       assert.deepEqual(rects, [
-        { x: 10, y: 20, width: 100, height: 50 },
-        { x: 30, y: 40, width: 200, height: 150 },
+        { clientId: "sn1", x: 10, y: 20, width: 100, height: 50 },
+        { clientId: "sn2", x: 30, y: 40, width: 200, height: 150 },
       ]);
     });
 
@@ -56,6 +64,22 @@ module("Unit | Canvas Sticky Notes", function (hooks) {
 
       assert.strictEqual(movedId, "sn1");
       assert.deepEqual(movedPosition, { x: 110, y: 195 });
+    });
+
+    test("uses latest sticky notes from a getter", function (assert) {
+      let notes = [{ clientId: "sn1", position: { x: 0, y: 0 } }];
+      let movedPosition;
+      const handler = buildStickyNoteTranslateHandler(
+        () => notes,
+        (id, pos) => {
+          movedPosition = pos;
+        }
+      );
+
+      notes = [{ clientId: "sn1", position: { x: 20, y: 30 } }];
+      handler("sn1", 5, 10);
+
+      assert.deepEqual(movedPosition, { x: 25, y: 40 });
     });
 
     test("does nothing when note is not found", function (assert) {

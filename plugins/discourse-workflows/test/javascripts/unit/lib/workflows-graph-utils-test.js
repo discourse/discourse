@@ -65,6 +65,38 @@ module("Unit | Utility | workflows graph utils", function () {
     });
   });
 
+  test("can remove nodes without reconnecting neighbours", function (assert) {
+    const graph = removeNodesFromGraph(
+      [
+        { clientId: "trigger", type: "trigger:manual" },
+        { clientId: "action", type: "action:set_fields" },
+        { clientId: "done", type: "action:topic_tags" },
+      ],
+      [
+        {
+          sourceClientId: "trigger",
+          sourceOutput: "main",
+          targetClientId: "action",
+        },
+        {
+          sourceClientId: "action",
+          sourceOutput: "main",
+          targetClientId: "done",
+        },
+      ],
+      ["action"],
+      { reconnect: false }
+    );
+
+    assert.deepEqual(normalizeGraph(graph), {
+      nodes: [
+        { clientId: "done", type: "action:topic_tags" },
+        { clientId: "trigger", type: "trigger:manual" },
+      ],
+      connections: [],
+    });
+  });
+
   test("removing a loop node keeps the former body node standalone and reconnects the done path", function (assert) {
     const graph = removeNodesFromGraph(
       [
