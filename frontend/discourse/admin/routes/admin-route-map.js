@@ -268,6 +268,18 @@ export default function () {
           this.route("postsAndTopics", { path: "/posts-and-topics" });
           this.route("statsAndThresholds", { path: "/stats-and-thresholds" });
         });
+        this.route(
+          "categoryManagement",
+          { path: "/category-management" },
+          function () {
+            this.route("settings", {
+              path: "/",
+            });
+            this.route("type", {
+              path: "/:category_type_id",
+            });
+          }
+        );
         this.route("localization", function () {
           this.route("settings", {
             path: "/",
