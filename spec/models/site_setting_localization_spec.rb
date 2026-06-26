@@ -101,13 +101,13 @@ describe SiteSettingLocalization do
 
   it "loads localizable setting metadata from site settings" do
     expect(SiteSetting.localizable_settings).to include(
-      title: {
+      "title" => {
         max_length: 255,
       },
-      site_description: {
+      "site_description" => {
         max_length: 1000,
       },
-      extended_site_description: {
+      "extended_site_description" => {
         cooked: true,
         max_length: 10_000,
       },
@@ -125,6 +125,28 @@ describe SiteSettingLocalization do
         max_length: 10_000,
       },
     )
+  end
+
+  it "removes metadata when a setting is reloaded without localizable options" do
+    SiteSetting.send(
+      :setting,
+      :temporary_localizable_setting,
+      "default",
+      type: :string,
+      localizable: {
+        max_length: 20,
+      },
+    )
+
+    expect(SiteSetting.localizable_settings).to include(
+      "temporary_localizable_setting" => {
+        max_length: 20,
+      },
+    )
+
+    SiteSetting.send(:setting, :temporary_localizable_setting, "default", type: :string)
+
+    expect(SiteSetting.localizable_settings).not_to have_key("temporary_localizable_setting")
   end
 
   it "rejects cooked content for plain text settings" do

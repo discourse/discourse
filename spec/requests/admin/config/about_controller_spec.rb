@@ -2,6 +2,7 @@
 
 describe Admin::Config::AboutController do
   fab!(:admin)
+  fab!(:moderator)
 
   before do
     sign_in(admin)
@@ -64,6 +65,14 @@ describe Admin::Config::AboutController do
       get "/admin/config/about/localizations.json", params: { locale: "ja" }
 
       expect(response.status).to eq(403)
+    end
+
+    it "rejects moderators" do
+      sign_in(moderator)
+
+      get "/admin/config/about/localizations.json", params: { locale: "ja" }
+
+      expect(response.status).to eq(404)
     end
   end
 
@@ -156,6 +165,20 @@ describe Admin::Config::AboutController do
           }
 
       expect(response.status).to eq(403)
+    end
+
+    it "rejects moderator updates" do
+      sign_in(moderator)
+
+      put "/admin/config/about/localizations.json",
+          params: {
+            locale: "ja",
+            general_settings: {
+              name: "日本語タイトル",
+            },
+          }
+
+      expect(response.status).to eq(404)
     end
   end
 end

@@ -3,47 +3,34 @@
 class Admin::Config::AboutController < Admin::AdminController
   before_action :ensure_can_localize_site_settings, only: %i[localizations update_localizations]
 
-  LOCALIZATION_PARAM_MAP = {
-    general_settings: {
-      name: "title",
-      summary: "site_description",
-      extended_description: "extended_site_description",
-    },
-  }.freeze
-
   def index
   end
 
   def localizations
-    locale = localization_locale
-
-    render json: localization_payload(locale)
+    SiteSettingLocalizations::AboutConfig::Show.call(
+      service_params.deep_merge(params: { locale: params[:locale] }),
+    ) do
+      on_success { |payload:| render json: payload }
+      on_failed_contract { raise Discourse::InvalidParameters, :locale }
+      on_failed_policy(:can_localize_site_settings) { raise Discourse::InvalidAccess }
+      on_failed_policy(:locale_is_supported) { raise Discourse::InvalidParameters, :locale }
+    end
   end
 
   def update_localizations
-    locale = localization_locale
-    settings = localization_settings_from_params
-
-    SiteSettingLocalization.transaction do
-      settings.each do |setting|
-        if setting[:value].blank?
-          SiteSettingLocalization.where(setting_name: setting[:setting_name], locale:).destroy_all
-        else
-          localization =
-            SiteSettingLocalization.find_or_initialize_by(
-              setting_name: setting[:setting_name],
-              locale:,
-            )
-          localization.value = setting[:value]
-          localization.localizer_user_id = current_user.id
-          localization.save!
-        end
-      end
+    SiteSettingLocalizations::AboutConfig::Update.call(
+      service_params.deep_merge(
+        params: {
+          locale: params[:locale],
+          general_settings: params[:general_settings],
+        },
+      ),
+    ) do
+      on_success { |payload:| render json: payload }
+      on_failed_contract { raise Discourse::InvalidParameters, :locale }
+      on_failed_policy(:can_localize_site_settings) { raise Discourse::InvalidAccess }
+      on_failed_policy(:locale_is_supported) { raise Discourse::InvalidParameters, :locale }
     end
-
-    log_localization_update(locale, settings) if settings.present?
-
-    render json: localization_payload(locale)
   end
 
   def update
@@ -150,60 +137,5 @@ class Admin::Config::AboutController < Admin::AdminController
 
   def ensure_can_localize_site_settings
     guardian.ensure_can_localize_site_settings!
-  end
-
-  def localization_settings_from_params
-    settings = []
-
-    LOCALIZATION_PARAM_MAP.each do |section_name, param_map|
-      section_params = params[section_name]
-      next if section_params.blank?
-
-      param_map.each do |param_name, setting_name|
-        next if !section_params.key?(param_name)
-
-        settings << { setting_name:, value: section_params[param_name].to_s }
-      end
-    end
-
-    settings
-  end
-
-  def localization_locale
-    locale = SiteSettingLocalization.normalize_locale(params.require(:locale))
-    supported_locales =
-      SiteSetting
-        .content_localization_supported_locales
-        .to_s
-        .split("|")
-        .map { |supported_locale| SiteSettingLocalization.normalize_locale(supported_locale) }
-
-    if locale == SiteSettingLocalization.normalize_locale(SiteSetting.default_locale) ||
-         supported_locales.exclude?(locale)
-      raise Discourse::InvalidParameters, :locale
-    end
-
-    locale
-  end
-
-  def localization_payload(locale)
-    localizations =
-      SiteSettingLocalization
-        .where(locale:, setting_name: LOCALIZATION_PARAM_MAP.values.flat_map(&:values))
-        .where.not(value: "")
-        .index_by(&:setting_name)
-        .transform_values do |localization|
-          { value: localization.value, cooked: localization.cooked }
-        end
-
-    { locale:, localizations: }
-  end
-
-  def log_localization_update(locale, settings)
-    StaffActionLogger.new(current_user).log_custom(
-      "update_site_setting_localizations",
-      locale:,
-      setting_names: settings.map { |setting| setting[:setting_name] }.uniq.sort.join("|"),
-    )
   end
 end

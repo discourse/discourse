@@ -3,9 +3,17 @@
 class SiteSettingLocalization < ActiveRecord::Base
   include LocaleMatchable
 
+  ABOUT_CONFIG_PARAM_MAP = {
+    general_settings: {
+      name: "title",
+      summary: "site_description",
+      extended_description: "extended_site_description",
+    },
+  }.freeze
+
   class << self
     def localizable_settings
-      SiteSetting.localizable_settings.transform_keys(&:to_s).deep_merge(registered_settings)
+      SiteSetting.localizable_settings.deep_merge(registered_settings)
     end
 
     def registered_settings
@@ -51,6 +59,51 @@ class SiteSettingLocalization < ActiveRecord::Base
 
     def normalize_locale(locale)
       locale.to_s.tr("-", "_")
+    end
+
+    def supported_content_locale?(locale)
+      normalized_locale = normalize_locale(locale)
+      return false if normalized_locale == normalize_locale(SiteSetting.default_locale)
+
+      SiteSetting
+        .content_localization_supported_locales_map
+        .map { |supported_locale| normalize_locale(supported_locale) }
+        .include?(normalized_locale)
+    end
+
+    def about_config_setting_names
+      ABOUT_CONFIG_PARAM_MAP.values.flat_map(&:values)
+    end
+
+    def about_config_settings_from_params(params)
+      ABOUT_CONFIG_PARAM_MAP.flat_map do |section_name, param_map|
+        section_params = params[section_name.to_s] || params[section_name]
+        next [] if section_params.blank?
+
+        param_map.filter_map do |param_name, setting_name|
+          if section_params.key?(param_name.to_s) || section_params.key?(param_name)
+            value =
+              if section_params.key?(param_name.to_s)
+                section_params[param_name.to_s]
+              else
+                section_params[param_name]
+              end
+            { setting_name:, value: value.to_s }
+          end
+        end
+      end
+    end
+
+    def about_config_payload(locale)
+      localizations =
+        where(locale:, setting_name: about_config_setting_names)
+          .where.not(value: "")
+          .index_by(&:setting_name)
+          .transform_values do |localization|
+            { value: localization.value, cooked: localization.cooked }
+          end
+
+      { locale:, localizations: }
     end
   end
 
