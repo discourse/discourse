@@ -104,6 +104,8 @@ module NestedReplies
     end
 
     def batch_preload_tree(starting_posts, sort, max_depth:)
+      return batch_preload_hot_tree(starting_posts, max_depth: max_depth) if sort == "hot"
+
       all_posts = starting_posts.dup
       children_map = {}
 
@@ -115,7 +117,6 @@ module NestedReplies
         last_level = (depth + 1 >= max_depth) || (depth + 1 >= configured_max_depth)
 
         order_expr = NestedReplies::Sort.sql_order_expression(sort)
-        hot_join = sort == "hot" ? NestedReplies::Sort.hot_score_join_sql : ""
         child_ids =
           DB.query_single(
             <<~SQL,
@@ -123,7 +124,6 @@ module NestedReplies
                 SELECT posts.id,
                        ROW_NUMBER() OVER (PARTITION BY posts.reply_to_post_number ORDER BY #{order_expr}) AS rn
                 FROM posts
-                #{hot_join}
                 WHERE posts.topic_id = :topic_id
                   AND posts.reply_to_post_number IN (:parent_numbers)
                   AND #{visibility_sql}
@@ -142,13 +142,11 @@ module NestedReplies
 
         all_children = load_posts_for_tree(topic.posts.with_deleted.where(id: child_ids)).to_a
 
-        hot_scores = hot_scores_for_posts(all_children)
-
         next_level = []
         all_children
           .group_by(&:reply_to_post_number)
           .each do |parent_number, child_posts|
-            sorted = NestedReplies::Sort.sort_in_memory(child_posts, sort, hot_scores: hot_scores)
+            sorted = NestedReplies::Sort.sort_in_memory(child_posts, sort)
             children_map[parent_number] = sorted
             all_posts.concat(sorted)
             next_level.concat(sorted) unless last_level
@@ -158,6 +156,209 @@ module NestedReplies
       end
 
       { children_map: children_map, all_posts: all_posts }
+    end
+
+    def batch_preload_hot_tree(starting_posts, max_depth:)
+      all_posts = starting_posts.dup
+      children_map = {}
+      max_preload_depth = [max_depth, configured_max_depth].min
+      post_budget = hot_preload_post_budget
+      per_root_budget = hot_preload_per_root_budget
+      children_per_parent = hot_preload_children_per_parent
+
+      if starting_posts.empty? || max_preload_depth <= 0 || post_budget <= 0
+        return { children_map: children_map, all_posts: all_posts }
+      end
+
+      root_scores = hot_scores_for_posts(starting_posts)
+      candidates =
+        starting_posts.map do |post|
+          thread_hot_score, hot_score, relative_thread_hot_score, relative_hot_score =
+            NestedReplies::Sort.hot_score_values(post, root_scores[post.id])
+          {
+            post: post,
+            branch_post_number: post.post_number,
+            depth: 0,
+            priority: hot_preload_priority(thread_hot_score, relative_thread_hot_score, 0),
+            thread_hot_score: thread_hot_score,
+            hot_score: hot_score,
+            relative_thread_hot_score: relative_thread_hot_score,
+            relative_hot_score: relative_hot_score,
+          }
+        end
+
+      preloaded_count = 0
+      branch_preloaded_counts = Hash.new(0)
+      expanded_parent_numbers = {}
+
+      while candidates.any? && preloaded_count < post_budget
+        candidates.sort_by! do |candidate|
+          [
+            -candidate[:priority],
+            -candidate[:relative_thread_hot_score],
+            -candidate[:thread_hot_score],
+            -candidate[:hot_score],
+            candidate[:post].post_number,
+          ]
+        end
+
+        candidate = candidates.shift
+        parent_post = candidate[:post]
+        branch_post_number = candidate[:branch_post_number]
+
+        next if candidate[:depth] >= max_preload_depth
+        next if expanded_parent_numbers[parent_post.post_number]
+        next if branch_preloaded_counts[branch_post_number] >= per_root_budget
+
+        remaining_total_budget = post_budget - preloaded_count
+        remaining_branch_budget = per_root_budget - branch_preloaded_counts[branch_post_number]
+        limit = [children_per_parent, remaining_total_budget, remaining_branch_budget].min
+        next if limit <= 0
+
+        expanded_parent_numbers[parent_post.post_number] = true
+        child_data = load_hot_preload_children(parent_post.post_number, limit: limit)
+        child_posts = child_data[:posts]
+        next if child_posts.empty?
+
+        children_map[parent_post.post_number] = child_posts
+        all_posts.concat(child_posts)
+        preloaded_count += child_posts.size
+        branch_preloaded_counts[branch_post_number] += child_posts.size
+
+        child_depth = candidate[:depth] + 1
+        next if child_depth >= max_preload_depth
+
+        add_hot_preload_candidates(
+          candidates,
+          child_posts,
+          child_data[:hot_scores],
+          branch_post_number,
+          child_depth,
+        )
+      end
+
+      { children_map: children_map, all_posts: all_posts }
+    end
+
+    def hot_preload_post_budget
+      SiteSetting.nested_replies_hot_preload_post_budget.to_i
+    end
+
+    def hot_preload_per_root_budget
+      SiteSetting.nested_replies_hot_preload_per_root_budget.to_i
+    end
+
+    def hot_preload_children_per_parent
+      SiteSetting.nested_replies_hot_preload_children_per_parent.to_i
+    end
+
+    def hot_preload_min_relative_score
+      SiteSetting.nested_replies_hot_preload_min_relative_score.to_f
+    end
+
+    def hot_preload_depth_decay
+      SiteSetting.nested_replies_hot_preload_depth_decay.to_f
+    end
+
+    def hot_preload_priority(thread_hot_score, relative_thread_hot_score, depth)
+      priority_score =
+        relative_thread_hot_score.to_f.positive? ? relative_thread_hot_score : thread_hot_score
+      priority_score * (hot_preload_depth_decay**depth)
+    end
+
+    def load_hot_preload_children(parent_post_number, limit:)
+      rows =
+        DB.query(
+          <<~SQL,
+            SELECT posts.id,
+                   COALESCE(nested_view_post_stats.thread_hot_score, 0) AS thread_hot_score,
+                   COALESCE(nested_view_post_stats.hot_score, 0) AS hot_score,
+                   COALESCE(nested_view_post_stats.relative_thread_hot_score, 0) AS relative_thread_hot_score,
+                   COALESCE(nested_view_post_stats.relative_hot_score, 0) AS relative_hot_score
+            FROM posts
+            #{NestedReplies::Sort.hot_score_join_sql}
+            WHERE posts.topic_id = :topic_id
+              AND posts.reply_to_post_number = :parent_post_number
+              AND #{visibility_sql}
+              AND posts.post_number > 1
+            ORDER BY #{NestedReplies::Sort.sql_order_expression("hot")}
+            LIMIT :limit
+          SQL
+          topic_id: topic.id,
+          parent_post_number: parent_post_number,
+          post_types: visible_post_types,
+          whisper: Post.types[:whisper],
+          limit: limit,
+        )
+
+      return { posts: [], hot_scores: {} } if rows.empty?
+
+      post_ids = rows.map(&:id)
+      hot_scores =
+        rows.to_h do |row|
+          [
+            row.id,
+            [
+              row.thread_hot_score.to_f,
+              row.hot_score.to_f,
+              row.relative_thread_hot_score.to_f,
+              row.relative_hot_score.to_f,
+            ],
+          ]
+        end
+      posts_by_id =
+        load_posts_for_tree(topic.posts.with_deleted.where(id: post_ids)).to_a.index_by(&:id)
+      child_posts = post_ids.filter_map { |post_id| posts_by_id[post_id] }
+
+      {
+        posts: NestedReplies::Sort.sort_in_memory(child_posts, "hot", hot_scores: hot_scores),
+        hot_scores: hot_scores,
+      }
+    end
+
+    def add_hot_preload_candidates(candidates, child_posts, hot_scores, branch_post_number, depth)
+      scored_children =
+        child_posts.map do |post|
+          thread_hot_score, hot_score, relative_thread_hot_score, relative_hot_score =
+            NestedReplies::Sort.hot_score_values(post, hot_scores[post.id])
+          {
+            post: post,
+            thread_hot_score: thread_hot_score,
+            hot_score: hot_score,
+            relative_thread_hot_score: relative_thread_hot_score,
+            relative_hot_score: relative_hot_score,
+          }
+        end
+      best_thread_hot_score = scored_children.map { |child| child[:thread_hot_score] }.max.to_f
+      best_relative_thread_hot_score =
+        scored_children.map { |child| child[:relative_thread_hot_score] }.max.to_f
+      return if best_thread_hot_score <= 0.0 && best_relative_thread_hot_score <= 0.0
+
+      minimum_score_ratio = hot_preload_min_relative_score
+      minimum_thread_hot_score = best_thread_hot_score * minimum_score_ratio
+      minimum_relative_thread_hot_score = best_relative_thread_hot_score * minimum_score_ratio
+      scored_children.each do |child|
+        if child[:thread_hot_score] < minimum_thread_hot_score &&
+             child[:relative_thread_hot_score] < minimum_relative_thread_hot_score
+          next
+        end
+
+        candidates << {
+          post: child[:post],
+          branch_post_number: branch_post_number,
+          depth: depth,
+          priority:
+            hot_preload_priority(
+              child[:thread_hot_score],
+              child[:relative_thread_hot_score],
+              depth,
+            ),
+          thread_hot_score: child[:thread_hot_score],
+          hot_score: child[:hot_score],
+          relative_thread_hot_score: child[:relative_thread_hot_score],
+          relative_hot_score: child[:relative_hot_score],
+        }
+      end
     end
 
     def batch_load_siblings(ancestors, sort)
@@ -228,7 +429,7 @@ module NestedReplies
             AND posts.reply_to_post_number IS NOT DISTINCT FROM :parent_post_number
             AND #{visibility_sql}
             AND posts.post_number > 1
-          ORDER BY COALESCE(nested_view_post_stats.hot_score, 0) DESC, posts.post_number ASC
+          ORDER BY #{NestedReplies::Sort.sql_order_expression("hot")}
           OFFSET :offset
           LIMIT :limit
         SQL
@@ -439,7 +640,18 @@ module NestedReplies
     def hot_scores_for_posts(posts)
       return {} if posts.empty?
 
-      NestedViewPostStat.where(post_id: posts.map(&:id).uniq).pluck(:post_id, :hot_score).to_h
+      NestedViewPostStat
+        .where(post_id: posts.map(&:id).uniq)
+        .pluck(
+          :post_id,
+          :thread_hot_score,
+          :hot_score,
+          :relative_thread_hot_score,
+          :relative_hot_score,
+        )
+        .to_h do |post_id, thread_hot_score, hot_score, relative_thread_hot_score, relative_hot_score|
+          [post_id, [thread_hot_score, hot_score, relative_thread_hot_score, relative_hot_score]]
+        end
     end
   end
 end

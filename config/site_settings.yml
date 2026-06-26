@@ -1959,7 +1959,7 @@ nested_replies:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
   nested_replies_default_sort:
-    default: "hot"
+    default: "top"
     client: true
     type: enum
     choices:
@@ -1993,6 +1993,53 @@ nested_replies:
     type: integer
     min: 1
     max: 10000
+    hidden: true
+  nested_replies_hot_score_child_decay:
+    default: 0.85
+    type: float
+    min: 0
+    max: 1
+    hidden: true
+  nested_replies_relative_hot_score_min_spread:
+    default: 1.0
+    type: float
+    min: 0.0001
+    hidden: true
+  nested_replies_relative_hot_score_floor:
+    default: 0.0001
+    type: float
+    min: 0
+    max: 1
+    hidden: true
+  nested_replies_hot_preload_post_budget:
+    default: 60
+    type: integer
+    min: 0
+    max: 500
+    hidden: true
+  nested_replies_hot_preload_per_root_budget:
+    default: 15
+    type: integer
+    min: 0
+    max: 100
+    hidden: true
+  nested_replies_hot_preload_children_per_parent:
+    default: 3
+    type: integer
+    min: 0
+    max: 50
+    hidden: true
+  nested_replies_hot_preload_min_relative_score:
+    default: 0.85
+    type: float
+    min: 0
+    max: 1
+    hidden: true
+  nested_replies_hot_preload_depth_decay:
+    default: 0.85
+    type: float
+    min: 0
+    max: 1
     hidden: true
 
 email:

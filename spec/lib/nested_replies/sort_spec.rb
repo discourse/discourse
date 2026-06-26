@@ -39,10 +39,10 @@ RSpec.describe NestedReplies::Sort do
       expect(sorted.map(&:post_number)).to eq([2, 3, 4])
     end
 
-    it "sorts by hot (hot_score desc, post_number asc tiebreaker)" do
-      hot_scores = { 10 => 1.0, 11 => 2.0, 12 => 2.0 }
+    it "sorts by hot branch score, own score, then post number" do
+      hot_scores = { 10 => [1.0, 100.0], 11 => [2.0, 1.0], 12 => [2.0, 2.0] }
       sorted = described_class.sort_in_memory(posts, "hot", hot_scores: hot_scores)
-      expect(sorted.map(&:post_number)).to eq([3, 4, 2])
+      expect(sorted.map(&:post_number)).to eq([4, 3, 2])
     end
 
     it "raises on invalid algorithm" do
@@ -51,6 +51,13 @@ RSpec.describe NestedReplies::Sort do
   end
 
   describe ".sql_order_expression" do
+    it "orders hot by branch score, own score, then post number" do
+      expect(described_class.sql_order_expression("hot")).to eq(
+        "COALESCE(nested_view_post_stats.thread_hot_score, 0) DESC, " \
+          "COALESCE(nested_view_post_stats.hot_score, 0) DESC, posts.post_number ASC",
+      )
+    end
+
     it "raises on invalid algorithm" do
       expect { described_class.sql_order_expression("bogus") }.to raise_error(ArgumentError)
     end

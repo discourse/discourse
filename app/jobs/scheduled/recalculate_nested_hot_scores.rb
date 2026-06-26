@@ -22,6 +22,9 @@ module Jobs
                 AND (
                   s.post_id IS NULL OR
                   s.hot_score_updated_at IS NULL OR
+                  (s.thread_hot_score <= 0 AND s.hot_score > 0) OR
+                  (s.relative_thread_hot_score <= 0 AND s.relative_hot_score > 0) OR
+                  (s.relative_hot_score <= 0 AND s.hot_score > 0) OR
                   s.topic_id IS NULL OR
                   s.reply_to_post_number IS DISTINCT FROM p.reply_to_post_number OR
                   s.post_number IS DISTINCT FROM p.post_number OR
@@ -44,6 +47,14 @@ module Jobs
           .where("post_number > 1")
           .distinct
           .pluck(:reply_to_post_number)
+          .map do |reply_to_post_number|
+            if NestedReplies::HotScoreCalculator.root_sibling_group?(reply_to_post_number)
+              nil
+            else
+              reply_to_post_number
+            end
+          end
+          .uniq
 
       parent_numbers.each do |reply_to_post_number|
         NestedReplies::HotScoreCalculator.recalculate_for_sibling_group(
