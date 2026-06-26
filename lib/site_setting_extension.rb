@@ -130,6 +130,10 @@ module SiteSettingExtension
     @themeable ||= {}
   end
 
+  def localizable_settings
+    @localizable_settings ||= {}
+  end
+
   def areas
     @areas ||= {}
   end
@@ -1334,6 +1338,16 @@ module SiteSettingExtension
       categories[name] = opts[:category] || :uncategorized
 
       themeable[name] = opts[:themeable] ? true : false
+
+      if opts[:localizable]
+        localizable_settings[name] = (
+          if opts[:localizable].is_a?(Hash)
+            opts[:localizable].symbolize_keys
+          else
+            {}
+          end
+        )
+      end
 
       if opts[:area]
         split_areas = opts[:area].split("|")

@@ -3,22 +3,13 @@
 class SiteSettingLocalization < ActiveRecord::Base
   include LocaleMatchable
 
-  DEFAULT_LOCALIZABLE_SETTINGS = {
-    "title" => {
-      max_length: 255,
-    },
-    "site_description" => {
-      max_length: 1000,
-    },
-    "extended_site_description" => {
-      cooked: true,
-      max_length: 10_000,
-    },
-  }.freeze
-
   class << self
     def localizable_settings
-      @localizable_settings ||= DEFAULT_LOCALIZABLE_SETTINGS.deep_dup
+      SiteSetting.localizable_settings.transform_keys(&:to_s).deep_merge(registered_settings)
+    end
+
+    def registered_settings
+      @registered_settings ||= {}
     end
 
     def localizable_setting_names
@@ -26,7 +17,7 @@ class SiteSettingLocalization < ActiveRecord::Base
     end
 
     def register(setting_name, **options)
-      localizable_settings[setting_name.to_s] = options.symbolize_keys
+      registered_settings[setting_name.to_s] = options.symbolize_keys
     end
 
     def localizable?(setting_name)

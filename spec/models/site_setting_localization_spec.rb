@@ -96,7 +96,35 @@ describe SiteSettingLocalization do
     expect(described_class.localizable?("title")).to eq(true)
     expect(described_class.localizable?("missing_site_setting")).to eq(false)
   ensure
-    described_class.localizable_settings.delete("missing_site_setting")
+    described_class.registered_settings.delete("missing_site_setting")
+  end
+
+  it "loads localizable setting metadata from site settings" do
+    expect(SiteSetting.localizable_settings).to include(
+      title: {
+        max_length: 255,
+      },
+      site_description: {
+        max_length: 1000,
+      },
+      extended_site_description: {
+        cooked: true,
+        max_length: 10_000,
+      },
+    )
+
+    expect(described_class.localizable_settings).to include(
+      "title" => {
+        max_length: 255,
+      },
+      "site_description" => {
+        max_length: 1000,
+      },
+      "extended_site_description" => {
+        cooked: true,
+        max_length: 10_000,
+      },
+    )
   end
 
   it "rejects cooked content for plain text settings" do
