@@ -93,6 +93,34 @@ module(
       assert.dom("#a11y-announcements-polite").hasNoText();
     });
 
+    test("does not announce messages from ignored users", async function (assert) {
+      this.currentUser.ignored_users = ["otheruser"];
+
+      await render(
+        <template>
+          <ChatChannel @channel={{this.channel}} />
+          <A11yLiveRegions />
+        </template>
+      );
+
+      await publishSentMessage();
+
+      assert.dom("#a11y-announcements-polite").hasNoText();
+    });
+
+    test("does not announce hidden messages", async function (assert) {
+      await render(
+        <template>
+          <ChatChannel @channel={{this.channel}} />
+          <A11yLiveRegions />
+        </template>
+      );
+
+      await publishSentMessage({ hidden: true });
+
+      assert.dom("#a11y-announcements-polite").hasNoText();
+    });
+
     test("announces an image-only message as an image", async function (assert) {
       await render(
         <template>

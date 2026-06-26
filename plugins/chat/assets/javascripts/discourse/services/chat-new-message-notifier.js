@@ -27,6 +27,13 @@ export default class ChatNewMessageNotifier extends Service {
   }
 
   notify(message, { visible, active } = {}) {
+    if (
+      message.hidden ||
+      this.currentUser?.ignored_users?.includes(message.user?.username)
+    ) {
+      return;
+    }
+
     this.#maybeAnnounce(message, visible);
     this.#maybePlaySound(active);
   }
