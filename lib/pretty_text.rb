@@ -291,6 +291,16 @@ module PrettyText
       JS
   end
 
+  def self.sanitize(html, opts = {})
+    protect { v8.eval(<<~JS) }
+        (() => {
+          const AllowLister = require("pretty-text/allow-lister").default;
+          const sanitize = require("pretty-text/sanitizer").sanitize;
+          return sanitize(#{html.to_s.inspect}, new AllowLister(#{opts.to_json}));
+        })()
+      JS
+  end
+
   def self.unescape_emoji(title)
     return title unless SiteSetting.enable_emoji? && title
 
