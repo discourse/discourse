@@ -114,8 +114,9 @@ module(
       await render(<template><TrustLevelPipeline @data={{data}} /></template>);
 
       assert
-        .dom(".db-tl-pipeline__label .db-delta.--pos", rowAt(4))
-        .hasText("240");
+        .dom(".db-tl-pipeline__label .db-tl-pipeline__signups", rowAt(4))
+        .hasText("240 signups");
+      assert.dom(".db-delta.--pos", rowAt(4)).doesNotExist();
       assert
         .dom(".db-tl-pipeline__label .db-delta.--neg", rowAt(4))
         .hasText("5");

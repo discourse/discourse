@@ -131,14 +131,13 @@ export default class TrustLevelPipeline extends Component {
               {{#if row.showInlineDeltas}}
                 <span class="db-tl-pipeline__deltas">
                   {{#if row.hasClimbers}}
-                    <span
-                      class="db-delta --pos"
-                      aria-label={{i18n
-                        "admin.dashboard.sections.engagement.trust_level_pipeline.arrivals_aria"
-                        (hash count=row.climbedIn)
-                      }}
-                    >{{row.climbedInFormatted}}
-                      {{dIcon "arrow-up"}}</span>
+                    <span class="db-delta --signups">{{i18n
+                        "admin.dashboard.sections.engagement.trust_level_pipeline.signups"
+                        (hash
+                          count=row.climbedIn
+                          formattedCount=row.climbedInFormatted
+                        )
+                      }}</span>
                   {{/if}}
                   {{#if row.hasDroppers}}
                     <span
