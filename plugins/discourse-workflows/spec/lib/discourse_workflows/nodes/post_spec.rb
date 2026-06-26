@@ -286,6 +286,53 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       expect(result["post"]).not_to have_key("cooked")
     end
 
+    it "truncates selected body fields for get and list operations" do
+      raw = "abcdefghijklmnopqrstuvwxyz" * 2
+      post = Fabricate(:post, user: user, raw: raw, post_number: 1)
+      limit = 12
+      expected_truncation = ->(value) do
+        value.each_char.first(limit / 2).join + value.each_char.to_a.last(limit / 2).join
+      end
+      expected_raw = expected_truncation.call(raw)
+      expected_cooked = expected_truncation.call(post.cooked)
+
+      get_result =
+        execute_node(
+          configuration: {
+            "operation" => "get",
+            "post_id" => post.id.to_s,
+            "include_raw" => true,
+            "include_cooked" => true,
+            "body_character_limit" => limit.to_s,
+          },
+          item: item,
+        )
+      list_result =
+        execute_node_output(
+          configuration: {
+            "operation" => "list",
+            "topics" => post.topic_id.to_s,
+            "include_raw" => true,
+            "include_cooked" => true,
+            "body_character_limit" => limit.to_s,
+            "limit" => "10",
+          },
+          item: item,
+        ).first
+
+      expect(get_result["post"]).to include(
+        "raw" => expected_raw,
+        "raw_truncated" => true,
+        "raw_original_length" => raw.length,
+        "cooked" => expected_cooked,
+        "cooked_truncated" => true,
+        "cooked_original_length" => post.cooked.length,
+      )
+      expect(
+        list_result.map { |output_item| output_item.dig("json", "post", "raw") },
+      ).to contain_exactly(expected_raw)
+    end
+
     it "raises when the actor cannot see the post" do
       group = Fabricate(:group)
       private_category = Fabricate(:private_category, group: group)

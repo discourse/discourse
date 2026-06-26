@@ -4,7 +4,7 @@ module DiscourseWorkflows
   class Executor
     class ExecutionStore
       MAX_EXECUTION_DATA_SIZE = 5.megabytes
-      MAX_STEP_IO_SIZE = 128.kilobytes
+      MAX_STEP_IO_SIZE = 1280.kilobytes
       MAX_STEP_STRING_BYTES = 16.kilobytes
       MAX_STEP_COLLECTION_SIZE = 50
       MAX_STEP_IO_DEPTH = 8
