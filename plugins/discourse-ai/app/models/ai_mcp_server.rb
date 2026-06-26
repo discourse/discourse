@@ -450,46 +450,46 @@ end
 #
 # Table name: ai_mcp_servers
 #
-#  id                               :bigint           not null, primary key
-#  auth_header                      :string(100)      default("Authorization"), not null
-#  auth_scheme                      :string(100)      default("Bearer"), not null
-#  auth_type                        :string(50)       default("header_secret"), not null
-#  description                      :string(1000)     not null
-#  enabled                          :boolean          default(TRUE), not null
-#  last_checked_at                  :datetime
-#  last_health_error                :string(1000)
-#  last_health_status               :string(50)
-#  last_tools_synced_at             :datetime
-#  name                             :string(100)      not null
-#  oauth_access_token_expires_at    :datetime
-#  oauth_authorization_endpoint     :string(1000)
-#  oauth_authorization_params       :jsonb            not null
-#  oauth_client_registration        :string(50)       default("client_metadata_document")
-#  oauth_granted_scopes             :string(2000)
-#  oauth_issuer                     :string(1000)
-#  oauth_last_authorized_at         :datetime
-#  oauth_last_error                 :string(1000)
-#  oauth_last_refreshed_at          :datetime
-#  oauth_registration_endpoint      :string(1000)
-#  oauth_require_refresh_token      :boolean          default(FALSE), not null
-#  oauth_resource_metadata_url      :string(1000)
-#  oauth_revocation_endpoint        :string(1000)
-#  oauth_scopes                     :string(2000)
-#  oauth_status                     :string(50)       default("disconnected"), not null
-#  oauth_token_endpoint             :string(1000)
+#  id                                          :bigint           not null, primary key
+#  auth_header                                 :string(100)      default("Authorization"), not null
+#  auth_scheme                                 :string(100)      default("Bearer"), not null
+#  auth_type                                   :string(50)       default("header_secret"), not null
+#  description                                 :string(1000)     not null
+#  enabled                                     :boolean          default(TRUE), not null
+#  last_checked_at                             :datetime
+#  last_health_error                           :string(1000)
+#  last_health_status                          :string(50)
+#  last_tools_synced_at                        :datetime
+#  name                                        :string(100)      not null
+#  oauth_access_token_expires_at               :datetime
+#  oauth_authorization_endpoint                :string(1000)
+#  oauth_authorization_params                  :jsonb            not null
+#  oauth_client_registration                   :string(50)       default("client_metadata_document")
+#  oauth_granted_scopes                        :string(2000)
+#  oauth_issuer                                :string(1000)
+#  oauth_last_authorized_at                    :datetime
+#  oauth_last_error                            :string(1000)
+#  oauth_last_refreshed_at                     :datetime
+#  oauth_registration_endpoint                 :string(1000)
+#  oauth_require_refresh_token                 :boolean          default(FALSE), not null
+#  oauth_resource_metadata_url                 :string(1000)
+#  oauth_revocation_endpoint                   :string(1000)
+#  oauth_scopes                                :string(2000)
+#  oauth_status                                :string(50)       default("disconnected"), not null
+#  oauth_token_endpoint                        :string(1000)
 #  oauth_token_endpoint_auth_methods_supported :jsonb            not null
-#  oauth_token_params               :jsonb            not null
-#  oauth_token_type                 :string(100)
-#  protocol_version                 :string(100)
-#  server_capabilities              :jsonb            not null
-#  timeout_seconds                  :integer          default(30), not null
-#  url                              :string(1000)     not null
-#  created_at                       :datetime         not null
-#  updated_at                       :datetime         not null
-#  ai_secret_id                     :bigint
-#  created_by_id                    :integer
-#  oauth_client_id                  :string(1000)
-#  oauth_client_secret_ai_secret_id :bigint
+#  oauth_token_params                          :jsonb            not null
+#  oauth_token_type                            :string(100)
+#  protocol_version                            :string(100)
+#  server_capabilities                         :jsonb            not null
+#  timeout_seconds                             :integer          default(30), not null
+#  url                                         :string(1000)     not null
+#  created_at                                  :datetime         not null
+#  updated_at                                  :datetime         not null
+#  ai_secret_id                                :bigint
+#  created_by_id                               :integer
+#  oauth_client_id                             :string(1000)
+#  oauth_client_secret_ai_secret_id            :bigint
 #
 # Indexes
 #
