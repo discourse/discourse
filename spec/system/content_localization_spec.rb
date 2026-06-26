@@ -38,6 +38,7 @@ describe "Content Localization" do
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:translation_composer) { PageObjects::Components::TranslationComposer.new }
+  let(:about_page) { PageObjects::Pages::About.new }
   let(:post_1_obj) { PageObjects::Components::Post.new(1) }
   let(:post_3_obj) { PageObjects::Components::Post.new(3) }
   let(:post_4_obj) { PageObjects::Components::Post.new(4) }
@@ -195,6 +196,31 @@ describe "Content Localization" do
         visit("/t/#{topic.id}?tl=ja")
 
         expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+      end
+
+      it "lets anonymous users view the localized about page" do
+        SiteSetting.title = "English community"
+        SiteSetting.site_description = "English community description"
+        SiteSetting.extended_site_description = "English **extended** description"
+        SiteSetting.extended_site_description_cooked =
+          PrettyText.markdown(SiteSetting.extended_site_description)
+        SiteSettingLocalization.create!(setting_name: "title", locale: "ja", value: "日本語コミュニティ")
+        SiteSettingLocalization.create!(
+          setting_name: "site_description",
+          locale: "ja",
+          value: "日本語のコミュニティ説明",
+        )
+        SiteSettingLocalization.create!(
+          setting_name: "extended_site_description",
+          locale: "ja",
+          value: "日本語の **詳細** 説明",
+        )
+
+        about_page.visit(locale: "ja")
+
+        expect(about_page).to have_header_title("日本語コミュニティ")
+        expect(about_page).to have_short_description("日本語のコミュニティ説明")
+        expect(about_page).to have_extended_description("日本語の 詳細 説明")
       end
     end
 

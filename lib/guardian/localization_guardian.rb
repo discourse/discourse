@@ -9,6 +9,10 @@ module LocalizationGuardian
     @user.in_any_groups?(SiteSetting.content_localization_allowed_groups_map)
   end
 
+  def can_localize_site_settings?
+    SiteSetting.content_localization_enabled && is_admin?
+  end
+
   def can_localize_post?(post_or_post_id)
     return false if !SiteSetting.content_localization_enabled
     return false if anonymous?

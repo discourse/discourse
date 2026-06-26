@@ -1779,6 +1779,11 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.ga_universal_auto_link_domains_map).to eq(%w[test.com xy.com])
     end
 
+    it "handles splitting locale list settings" do
+      SiteSetting.content_localization_supported_locales = "ja|pt_BR"
+      expect(SiteSetting.content_localization_supported_locales_map).to eq(%w[ja pt_BR])
+    end
+
     it "handles splitting list settings with no type" do
       SiteSetting.post_menu = "read|like"
       expect(SiteSetting.post_menu_map).to eq(%w[read like])
