@@ -85,8 +85,10 @@
 }
 
 .db-delta {
-  font-size: var(--font-down-2-rem);
-  font-weight: bold;
+  &:not(table &) {
+    font-size: var(--font-down-2-rem);
+    font-weight: bold;
+  }
 
   &.--pos {
     color: var(--success);
