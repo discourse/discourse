@@ -2,3 +2,9 @@ inherit_from: ../.rubocop.yml
 
 Style/HashSyntax:
   EnforcedShorthandSyntax: always
+
+Style/ModuleFunction:
+  EnforcedStyle: forbidden
+
+Style/EndlessMethod:
+  EnforcedStyle: disallow

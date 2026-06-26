@@ -2498,6 +2498,17 @@ HTML
     expect(PrettyText.cook("<test>alert(42)</test>")).to eq "<p>alert(42)</p>"
   end
 
+  it "sanitizes html without cooking markdown" do
+    sanitized =
+      PrettyText.sanitize(
+        '<a href="https://example.com" target="_blank" rel="noopener" onclick="alert(1)">learn more</a><a href="javascript:alert(1)">bad</a><script>alert(1)</script>',
+      )
+
+    expect(sanitized).to eq(
+      '<a href="https://example.com" target="_blank">learn more</a><a>bad</a>',
+    )
+  end
+
   it "should not onebox magically linked urls" do
     expect(PrettyText.cook("[url]site.com[/url]")).not_to include("onebox")
   end
