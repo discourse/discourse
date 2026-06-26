@@ -3,11 +3,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { block } from "discourse/blocks";
-import { URL_PATTERN } from "discourse/lib/blocks";
+import { ICON_NAME_PATTERN, URL_PATTERN } from "discourse/lib/blocks";
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import cookie from "discourse/lib/cookie";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const COOKIE_PREFIX = "discourse-cta-dismissed";
@@ -27,6 +28,11 @@ const COOKIE_PREFIX = "discourse-cta-dismissed";
   description:
     "A banner with title, body text, optional CTA button, and optional dismiss.",
   args: {
+    icon: {
+      type: "string",
+      pattern: ICON_NAME_PATTERN,
+      ui: { control: "icon", label: i18n("blocks.builtin.cta_banner.icon") },
+    },
     title: {
       type: "richInline",
       required: true,
@@ -58,6 +64,15 @@ const COOKIE_PREFIX = "discourse-cta-dismissed";
       ui: {
         control: "url",
         label: i18n("blocks.builtin.cta_banner.link_href"),
+      },
+    },
+    external: {
+      type: "boolean",
+      default: false,
+      ui: {
+        control: "toggle",
+        label: i18n("blocks.builtin.cta_banner.external"),
+        helpText: i18n("blocks.builtin.cta_banner.external_help"),
       },
     },
     dismissable: {
@@ -145,6 +160,11 @@ export default class CtaBanner extends Component {
     {{#if this.shouldShow}}
       <div class="d-block-cta-banner">
         <div class="d-block-cta-banner__content">
+          {{#if @icon}}
+            <div class="d-block-cta-banner__icon" data-block-arg="icon">
+              {{dIcon @icon}}
+            </div>
+          {{/if}}
           <RichTextRenderer
             @arg="title"
             @schema="heading"
@@ -184,6 +204,8 @@ export default class CtaBanner extends Component {
                 class="btn btn-primary"
                 @href={{@linkHref}}
                 @translatedLabel={{@linkLabel}}
+                target={{if @external "_blank"}}
+                rel={{if @external "noopener"}}
                 data-block-arg="linkHref"
               />
             {{/if}}

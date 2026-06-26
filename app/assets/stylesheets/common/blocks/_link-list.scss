@@ -19,3 +19,13 @@
   gap: 0.5em;
   align-items: center;
 }
+
+.d-block-link-list__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.d-block-link-list__description {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}

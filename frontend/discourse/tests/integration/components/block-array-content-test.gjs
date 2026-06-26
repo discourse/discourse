@@ -23,7 +23,12 @@ module("Integration | Blocks | array content", function (hooks) {
           block: LinkList,
           args: {
             items: [
-              { label: "Docs", url: "/docs", icon: "book" },
+              {
+                label: "Docs",
+                url: "/docs",
+                icon: "book",
+                description: "Read the guides",
+              },
               { label: "API", url: "/api" },
             ],
           },
@@ -45,6 +50,16 @@ module("Integration | Blocks | array content", function (hooks) {
     assert
       .dom(".d-block-link-list__item:last-child .d-block-inline-icon")
       .doesNotExist("omits the icon when none is set");
+    assert
+      .dom(
+        ".d-block-link-list__item:first-child .d-block-link-list__description"
+      )
+      .hasText("Read the guides", "renders the per-item description when set");
+    assert
+      .dom(
+        ".d-block-link-list__item:last-child .d-block-link-list__description"
+      )
+      .doesNotExist("omits the description when none is set");
   });
 
   test("stats renders value/label items and links the ones with an href", async function (assert) {

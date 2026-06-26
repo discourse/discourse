@@ -2,8 +2,13 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
-import { HEX_COLOR_PATTERN, URL_PATTERN } from "discourse/lib/blocks";
+import {
+  HEX_COLOR_PATTERN,
+  ICON_NAME_PATTERN,
+  URL_PATTERN,
+} from "discourse/lib/blocks";
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const VALID_VARIANTS = ["vertical", "horizontal"];
@@ -35,6 +40,11 @@ const VALID_VARIANTS = ["vertical", "horizontal"];
       aspectRatio: "auto",
       defaultFit: "cover",
       ui: { label: i18n("blocks.builtin.card.image") },
+    },
+    icon: {
+      type: "string",
+      pattern: ICON_NAME_PATTERN,
+      ui: { control: "icon", label: i18n("blocks.builtin.card.icon") },
     },
     title: {
       type: "richInline",
@@ -98,6 +108,17 @@ const VALID_VARIANTS = ["vertical", "horizontal"];
         conditional: { arg: "href", notEmpty: true },
       },
     },
+    external: {
+      type: "boolean",
+      default: false,
+      ui: {
+        control: "toggle",
+        group: "Link",
+        label: i18n("blocks.builtin.card.external"),
+        helpText: i18n("blocks.builtin.card.external_help"),
+        conditional: { arg: "href", notEmpty: true },
+      },
+    },
   },
 })
 export default class Card extends Component {
@@ -147,6 +168,12 @@ export default class Card extends Component {
       {{/if}}
 
       <div class="d-block-card__body">
+        {{#if @icon}}
+          <div class="d-block-card__icon" data-block-arg="icon">
+            {{dIcon @icon}}
+          </div>
+        {{/if}}
+
         <RichTextRenderer
           @arg="title"
           @schema="paragraph"
@@ -197,6 +224,8 @@ export default class Card extends Component {
         <a
           class="d-block-stretched-link"
           href={{@href}}
+          target={{if @external "_blank"}}
+          rel={{if @external "noopener"}}
           aria-label={{@linkLabel}}
           data-block-arg="href"
         ></a>

@@ -22,6 +22,11 @@
     flex: 1;
   }
 
+  &__icon {
+    font-size: var(--font-up-3);
+    color: var(--tertiary);
+  }
+
   &__title {
     margin: 0;
     padding-right: 2rem;

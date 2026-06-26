@@ -64,6 +64,12 @@ const VALID_LAYOUTS = ["vertical", "horizontal"];
             label: i18n("blocks.builtin.link_list.item_icon"),
           },
         },
+        description: {
+          type: "string",
+          ui: {
+            label: i18n("blocks.builtin.link_list.item_description"),
+          },
+        },
       },
       ui: {
         control: "repeatable",
@@ -108,7 +114,14 @@ export default class LinkList extends Component {
               {{#if item.icon}}
                 <span class="d-block-inline-icon">{{dIcon item.icon}}</span>
               {{/if}}
-              <span class="d-block-link-list__label">{{item.label}}</span>
+              <span class="d-block-link-list__text">
+                <span class="d-block-link-list__label">{{item.label}}</span>
+                {{#if item.description}}
+                  <span
+                    class="d-block-link-list__description"
+                  >{{item.description}}</span>
+                {{/if}}
+              </span>
             </a>
           </li>
         {{/each}}

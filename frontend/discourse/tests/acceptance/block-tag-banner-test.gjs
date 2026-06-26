@@ -26,6 +26,22 @@ acceptance("Blocks | tag-banner", function (needs) {
         },
       })
     );
+    server.get("/tag/test/info.json", () =>
+      helper.response({
+        tag_info: {
+          id: 42,
+          name: "test",
+          slug: "test",
+          description: "All about testing",
+          topic_count: 1,
+          staff: false,
+          synonyms: [],
+          tag_group_names: [],
+          category_ids: [],
+        },
+        categories: [],
+      })
+    );
   });
 
   test("renders the tag name on a tag route and nothing off it", async function (assert) {
@@ -45,5 +61,30 @@ acceptance("Blocks | tag-banner", function (needs) {
     assert
       .dom(".d-block-tag-banner")
       .doesNotExist("the banner renders nothing off a tag route");
+  });
+
+  test("renders the tag description when showDescription is on", async function (assert) {
+    _renderBlocks("sidebar-discovery", [
+      { block: TagBanner, args: { showDescription: true } },
+    ]);
+
+    await visit("/tag/test/42");
+    assert
+      .dom(".d-block-tag-banner__description")
+      .hasText("All about testing", "shows the fetched tag description");
+  });
+
+  test("hides the description when showDescription is off", async function (assert) {
+    _renderBlocks("sidebar-discovery", [
+      { block: TagBanner, args: { showDescription: false } },
+    ]);
+
+    await visit("/tag/test/42");
+    assert
+      .dom(".d-block-tag-banner")
+      .exists("the banner still renders the tag name");
+    assert
+      .dom(".d-block-tag-banner__description")
+      .doesNotExist("no description region when the toggle is off");
   });
 });

@@ -34,6 +34,7 @@ en:
           media_card_title: "A short headline describing this card"
           media_card_cta_label: "Learn more"
           button_link_label: "Learn more"
+          new_topic_button_label: "Ask a question"
           card_title: "Card title"
           card_meta: "Meta"
           card_body: "A short description for this card"
@@ -57,6 +58,14 @@ en:
           href: "Link URL"
           variant: "Style"
           icon: "Icon"
+        new_topic_button:
+          label: "Label"
+          category_id: "Category"
+          tags: "Tags"
+          prefill_title: "Prefilled title"
+          prefill_title_help: "Optional title the composer opens with."
+          variant: "Style"
+          icon: "Icon"
         divider:
           style: "Style"
           color: "Color"
@@ -69,10 +78,13 @@ en:
           link_label: "Link URL"
           caption_label: "Caption"
         cta_banner:
+          icon: "Icon"
           title: "Title"
           content: "Content"
           link_label: "Button label"
           link_href: "Button link"
+          external: "Open in new tab"
+          external_help: "Opens the button link in a new browser tab."
           dismissable: "Allow dismiss"
           cookie_key: "Dismiss key"
           cookie_key_help: "Identifier for this banner's dismiss cookie. Required so each dismissable banner has independent dismissal state."
@@ -86,6 +98,8 @@ en:
         category_banner:
           show_logo: "Show logo"
           show_icon: "Show icon / emoji"
+          show_description: "Show description"
+        tag_banner:
           show_description: "Show description"
         recent_topics:
           title: "Title"
@@ -104,6 +118,14 @@ en:
           tag: "Tag"
           link_label: "Link label"
           link_href: "Link href"
+        topic_card:
+          topic_id: "Topic ID"
+          topic_id_help: "The numeric ID of the topic to feature."
+          image: "Image override"
+          image_help: "Overrides the topic's own image."
+          show_excerpt: "Show excerpt"
+          show_excerpt_help: "Shows a short excerpt when the card has no image."
+          empty: "Choose a topic to feature."
         media_card:
           avatar_url: "Avatar"
           name: "Name"
@@ -165,6 +187,7 @@ en:
           link_label_help: "Accessible name announced for the whole-section link."
         card:
           image: "Image"
+          icon: "Icon"
           title: "Title"
           meta: "Meta"
           body: "Body"
@@ -174,6 +197,8 @@ en:
           href_help: "Make the whole card a link."
           link_label: "Link description"
           link_label_help: "Accessible name announced for the whole-card link."
+          external: "Open in new tab"
+          external_help: "Opens the card link in a new browser tab."
         link_list:
           layout: "Layout"
           gap: "Gap (rem)"
@@ -181,6 +206,7 @@ en:
           item_label: "Label"
           item_url: "URL"
           item_icon: "Icon"
+          item_description: "Description"
         stats:
           columns: "Columns"
           gap: "Gap (rem)"

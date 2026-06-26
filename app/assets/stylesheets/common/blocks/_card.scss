@@ -40,6 +40,11 @@
   padding: 1rem;
 }
 
+.d-block-card__icon {
+  font-size: var(--font-up-2);
+  color: var(--tertiary);
+}
+
 .d-block-card__title {
   margin: 0;
 }

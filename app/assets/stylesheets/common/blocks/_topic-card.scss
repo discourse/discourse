@@ -1,0 +1,69 @@
+/* Single-topic card block. The whole card links to the topic via the
+   stretched-link affordance, so it establishes a positioning context. With an
+   image it shows a title over the image; without one it shows an excerpt. */
+
+.d-block-topic-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  min-height: 100%;
+  border-radius: var(--d-border-radius, 0.5rem);
+  border: 1px solid var(--primary-low);
+}
+
+.d-block-topic-card__background {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.d-block-topic-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgb(0 0 0 / 0.7) 0%,
+    rgb(0 0 0 / 0.1) 100%
+  );
+}
+
+.d-block-topic-card__details {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+/* When the card carries a background image, the details sit over the overlay,
+   so the title flips to the reverse text colour for contrast. */
+
+.d-block-topic-card__background ~ .d-block-topic-card__details {
+  .d-block-topic-card__title {
+    color: var(--secondary);
+  }
+}
+
+.d-block-topic-card__title {
+  margin: 0;
+}
+
+.d-block-topic-card__excerpt {
+  margin: 0;
+  color: var(--primary-medium);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.d-block-topic-card__empty {
+  padding: 1rem;
+  color: var(--primary-medium);
+}

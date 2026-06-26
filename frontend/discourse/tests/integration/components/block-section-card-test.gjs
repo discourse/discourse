@@ -87,6 +87,49 @@ module("Integration | Blocks | section card tiles", function (hooks) {
       .hasAttribute("href", "https://example.com");
   });
 
+  test("card renders a leading icon and an external new-tab link", async function (assert) {
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        {
+          block: Card,
+          args: {
+            title: "A card",
+            icon: "star",
+            href: "https://example.com",
+            external: true,
+          },
+        },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+    assert
+      .dom(".d-block-card__icon[data-block-arg='icon'] .d-icon-star")
+      .exists("the leading icon renders from the icon arg");
+    assert
+      .dom(".d-block-card .d-block-stretched-link")
+      .hasAttribute("target", "_blank", "the external link opens in a new tab")
+      .hasAttribute("rel", "noopener");
+  });
+
+  test("card omits the icon marker when no icon is set", async function (assert) {
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        { block: Card, args: { title: "A card" } },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+    assert
+      .dom(".d-block-card__icon")
+      .doesNotExist("no icon marker without an icon arg");
+    assert
+      .dom(".d-block-card .d-block-stretched-link")
+      .doesNotExist("no stretched link without an href");
+  });
+
   test("layout Tiles mode renders a placement-free auto-fit grid", async function (assert) {
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
