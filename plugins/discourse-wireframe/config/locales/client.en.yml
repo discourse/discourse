@@ -435,6 +435,7 @@ en:
           link_cancel: "Cancel"
           image_fill: "Fill block with image"
           image_reset: "Reset image to natural size"
+          more: "More actions"
       theme_admin:
         open_button: "Wireframe"
         open_button_title: "Open the wireframe for this theme"

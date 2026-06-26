@@ -728,12 +728,24 @@ body.wireframe-active {
     box-shadow: var(--shadow-card);
     pointer-events: none;
     overflow: hidden; /* clip the handle's bg into the rounded corners */
+
+    /* Cap the bar to the block width so a wide selected bar can't spill past a
+       narrow block; the `toolbar-fit` service folds the actions into the
+       hamburger before it would clip. The bar is `position: absolute` (out of
+       flow) and MUST carry no margin — otherwise its size could feed back into
+       the chrome width the fit observer watches. */
+    max-width: 100%;
     transition: opacity 80ms ease-out;
 
     &__handle {
       display: inline-flex;
       align-items: center;
       gap: 4px;
+
+      /* Never shrink inside the width-capped bar — a shrunk handle wraps its
+         name/ordinal and, worse, makes the fit measurement under-report; the
+         tier collapse (not flex shrink) is what handles a narrow block. */
+      flex: none;
       padding: var(--wireframe-badge-padding);
       background: var(--wireframe-block-color);
       color: white;
@@ -863,6 +875,93 @@ body.wireframe-active {
       padding: var(--wireframe-badge-padding);
       line-height: 1;
       min-height: 0;
+    }
+
+    /* Collapsible structural-action row. Carries `width: max-content` so its
+       `offsetWidth` reports the true intrinsic width whether it's in flow (full
+       tier) or parked off-tier (narrow / narrower) — the fit service reads it
+       without ever toggling a style. */
+
+    &__actions {
+      display: inline-flex;
+      align-items: stretch;
+
+      /* Keep the intrinsic width (no flex shrink) so the fit measurement is
+         truthful and the buttons don't squeeze/wrap inside the capped bar. */
+      flex: none;
+      width: max-content;
+    }
+
+    /* The hamburger that holds the folded actions. Off-tier (hidden but still
+       measurable) at the full tier; the data-attr rules below put it in flow
+       once the actions fold away. */
+
+    &__more {
+      position: absolute;
+      visibility: hidden;
+      flex: none;
+      width: max-content;
+    }
+
+    /* Inline-format buttons stay inline whenever they show (they never collapse
+       into the hamburger — a menu can't preserve the ProseMirror selection). */
+
+    &__format {
+      display: inline-flex;
+      align-items: stretch;
+      flex: none;
+    }
+
+    /* The handle's name label truncates gracefully rather than clipping hard.
+       The `max-width` cap keeps the measured handle width truthful (the fit
+       service reads the rendered, capped width) while letting an over-long name
+       ellipsize. Excludes the ordinal chip and the outlet status chip. */
+
+    &__handle
+      > span:not(
+        .wireframe-block-toolbar__ordinal,
+        .wireframe-block-toolbar__status
+      ) {
+      max-width: 16em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  /* Toolbar fit tiers, keyed off the attribute the `wireframe-toolbar-fit`
+     service writes on the chrome. The off-tier element is absolutely positioned
+     + `visibility: hidden`: out of flow (so it can't widen the bar or force a
+     line break) and out of the a11y tree / tab order, yet still measurable at
+     `width: max-content`. Swapping tiers is therefore a single, flicker-free
+     style change with no measurement toggling. Default (no attribute) is the
+     full tier — actions inline, hamburger parked. */
+
+  .wireframe-block-chrome[data-wf-toolbar-fit="narrow"],
+  .wireframe-block-chrome[data-wf-toolbar-fit="narrower"] {
+    .wireframe-block-toolbar__actions {
+      position: absolute;
+      visibility: hidden;
+    }
+
+    .wireframe-block-toolbar__more {
+      position: static;
+      visibility: visible;
+    }
+  }
+
+  /* Narrower: even handle + hamburger doesn't fit, so drop the name (it stays
+     available as the handle's `title` tooltip) and the ordinal chip — only the
+     grip (still the drag source) and the hamburger remain. */
+
+  .wireframe-block-chrome[data-wf-toolbar-fit="narrower"] {
+    .wireframe-block-toolbar__handle
+      > span:not(
+        .wireframe-block-toolbar__ordinal,
+        .wireframe-block-toolbar__status
+      ),
+    .wireframe-block-toolbar__ordinal {
+      display: none;
     }
   }
 

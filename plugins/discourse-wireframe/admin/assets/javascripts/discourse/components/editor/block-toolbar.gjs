@@ -1,13 +1,14 @@
 // @ts-check
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { isPartKey } from "discourse/lib/blocks/-internals/composite";
-import { or } from "discourse/truth-helpers";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -15,6 +16,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { i18n } from "discourse-i18n";
+import toolbarFit from "../../modifiers/toolbar-fit";
 
 // Quick-pick copy counts offered by the Duplicate button's dropdown, alongside
 // a custom field. Stamping out a row of identical cards is then one gesture
@@ -40,6 +42,15 @@ const DUPLICATE_PRESETS = [2, 3, 5, 10];
  * (`bottom: 100%; left: ~-border-width` against the chrome) — same
  * anchor as the outlet badge.
  *
+ * On a narrow block the bar would overflow, so its collapsible (structural)
+ * actions fold into a hamburger as space runs out. The `toolbar-fit` modifier
+ * registers this bar's chrome with the `wireframe-toolbar-fit` coordinator,
+ * which measures the chrome's width and writes a `data-wf-toolbar-fit` tier on
+ * it; the stylesheet keys off that to swap the inline action row for the
+ * hamburger and, when even that doesn't fit, drop the handle's name to its
+ * tooltip. The inline buttons and the hamburger menu render from one
+ * `actionItems` descriptor list, so the two can't drift.
+ *
  * Inline-format buttons (bold / italic / link) appear when the user
  * has entered an inline-edit session on this block AND has a non-empty
  * text selection inside it. The controller (`InlineEditController`)
@@ -50,8 +61,11 @@ const DUPLICATE_PRESETS = [2, 3, 5, 10];
  * Inline-format buttons use `@preventFocus={{true}}` on `DButton` so
  * the mousedown's default focus shift is suppressed — ProseMirror
  * keeps focus and the selection highlight stays visible while the
- * mark applies. The block-action buttons (move/duplicate/delete) don't
- * need this because they have no PM selection to preserve.
+ * mark applies. They are deliberately NOT collapsed into the hamburger:
+ * a menu item click can't preserve the ProseMirror selection the way
+ * `@preventFocus` does, so they stay inline whenever they show. The
+ * block-action buttons (move/duplicate/delete) don't need this because
+ * they have no PM selection to preserve.
  */
 export default class BlockToolbar extends Component {
   @service wireframe;
@@ -190,6 +204,184 @@ export default class BlockToolbar extends Component {
     return this.wireframe.fieldEditor?.kind === "url";
   }
 
+  /**
+   * `true` when this toolbar belongs to a synthesized composite part (which
+   * has no persisted entry). Structural actions — move, duplicate, delete,
+   * drag-to-reorder — are meaningless for a part, so the toolbar hides them.
+   *
+   * @returns {boolean}
+   */
+  get isPart() {
+    return isPartKey(this.args.blockKey);
+  }
+
+  /**
+   * `true` for an ordinary movable block — neither the outlet root (a page
+   * region) nor a composite part. Only movable blocks carry the structural
+   * actions that fold into the hamburger, so only they collapse.
+   *
+   * @returns {boolean}
+   */
+  get isCollapsible() {
+    return !this.args.isOutletRoot && !this.isPart;
+  }
+
+  /**
+   * `true` when this bar should be width-tracked for collapse: it's the
+   * selected block, it's a movable block (the only kind with a foldable action
+   * set), and it isn't in the URL-edit sub-mode (which renders its own inline
+   * surface that doesn't collapse).
+   *
+   * @returns {boolean}
+   */
+  get fitActive() {
+    return (
+      this.args.isSelected && this.isCollapsible && !this.isUrlFieldEditing
+    );
+  }
+
+  /**
+   * `true` when this block is a composed composite (renders a code-defined
+   * `parts` composition) and can therefore be detached into explicit,
+   * freely-editable children.
+   *
+   * @returns {boolean}
+   */
+  get canDetach() {
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.wireframe.structuralVersion;
+    return this.wireframe.layoutQuery.isComposedComposite(this.args.blockKey);
+  }
+
+  /**
+   * The single, ordered source of truth for the bar's collapsible (structural)
+   * actions. Both the inline action row and the hamburger menu render from this
+   * list, so they can never drift. Each descriptor is one of:
+   *
+   *   - a plain icon button: `{ id, group, icon, title, action, disabled?,
+   *     active?, danger? }`,
+   *   - the duplicate split-button: `{ id, group, type: "duplicate" }`, which
+   *     both renderers special-case.
+   *
+   * `separatorBefore` is computed from `group` transitions so the inline row
+   * reproduces the visual grouping. Outlet roots and parts omit the structural
+   * actions (move/duplicate/detach/delete), leaving only whatever applies (e.g.
+   * the force-expand toggle on a layout), and never collapse.
+   *
+   * @returns {Array<Object>}
+   */
+  @cached
+  get actionItems() {
+    const items = [];
+
+    if (this.isCollapsible) {
+      items.push({
+        id: "move-back",
+        group: "primary",
+        icon: this.moveBackIcon,
+        title: this.moveBackLabel,
+        disabled: !this.canMoveUp,
+        action: this.moveUp,
+      });
+      items.push({
+        id: "move-forward",
+        group: "primary",
+        icon: this.moveForwardIcon,
+        title: this.moveForwardLabel,
+        disabled: !this.canMoveDown,
+        action: this.moveDown,
+      });
+      items.push({ id: "duplicate", group: "primary", type: "duplicate" });
+      if (this.canDetach) {
+        items.push({
+          id: "detach",
+          group: "primary",
+          icon: "object-group",
+          title: "wireframe.canvas.toolbar.detach",
+          action: this.detach,
+        });
+      }
+    }
+
+    if (this.canForceExpand) {
+      items.push({
+        id: "force-expand",
+        group: "primary",
+        icon: this.isForceExpanded
+          ? "down-left-and-up-right-to-center"
+          : "up-right-and-down-left-from-center",
+        title: this.isForceExpanded
+          ? "wireframe.canvas.toolbar.collapse_for_preview"
+          : "wireframe.canvas.toolbar.expand_for_editing",
+        active: this.isForceExpanded,
+        action: this.toggleForceExpand,
+      });
+    }
+
+    if (this.args.canFillImage) {
+      items.push({
+        id: "image-fill",
+        group: "image",
+        icon: "expand",
+        title: "wireframe.canvas.toolbar.image_fill",
+        action: this.args.onFillImage,
+      });
+    }
+    if (this.args.canResetImage) {
+      items.push({
+        id: "image-reset",
+        group: "image",
+        icon: "arrows-rotate",
+        title: "wireframe.canvas.toolbar.image_reset",
+        action: this.args.onResetImage,
+      });
+    }
+
+    if (this.isCollapsible) {
+      items.push({
+        id: "delete",
+        group: "danger",
+        icon: "trash-can",
+        title: "wireframe.canvas.toolbar.delete",
+        danger: true,
+        action: this.remove,
+      });
+    }
+
+    // A separator marks each group boundary, reproducing the inline grouping.
+    let prevGroup = null;
+    for (const item of items) {
+      item.separatorBefore = prevGroup !== null && item.group !== prevGroup;
+      prevGroup = item.group;
+    }
+
+    return items;
+  }
+
+  /**
+   * A string that changes whenever the bar's rendered content changes width:
+   * the handle's name / ordinal, the URL-edit and inline-format sub-modes, and
+   * the identity / disabled / active / icon of every action. The `toolbar-fit`
+   * modifier reads this so it re-measures on a content change; a plain resize
+   * is caught by the coordinator's observer instead.
+   *
+   * @returns {string}
+   */
+  get fitFingerprint() {
+    const parts = [
+      this.args.displayName,
+      this.args.displayChip,
+      this.isUrlFieldEditing ? "url" : "",
+      this.showInlineFormat ? "fmt" : "",
+    ];
+    for (const item of this.actionItems) {
+      parts.push(
+        `${item.id}:${item.disabled ? 1 : 0}:${item.active ? 1 : 0}:${item.icon ?? ""}`
+      );
+    }
+    return parts.join("|");
+  }
+
   @action
   toggleForceExpand() {
     this.wireframe.toggleForceExpand(this.args.blockKey);
@@ -235,33 +427,35 @@ export default class BlockToolbar extends Component {
     this.wireframe.removeBlock(this.args.blockKey);
   }
 
-  /**
-   * `true` when this toolbar belongs to a synthesized composite part (which
-   * has no persisted entry). Structural actions — move, duplicate, delete,
-   * drag-to-reorder — are meaningless for a part, so the toolbar hides them.
-   *
-   * @returns {boolean}
-   */
-  get isPart() {
-    return isPartKey(this.args.blockKey);
-  }
-
-  /**
-   * `true` when this block is a composed composite (renders a code-defined
-   * `parts` composition) and can therefore be detached into explicit,
-   * freely-editable children.
-   *
-   * @returns {boolean}
-   */
-  get canDetach() {
-    // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
-    return this.wireframe.layoutQuery.isComposedComposite(this.args.blockKey);
-  }
-
   @action
   detach() {
     this.wireframe.detachSelectedComposite();
+  }
+
+  /**
+   * Runs a hamburger-menu action, closing the menu first so the action (which
+   * may unmount this toolbar, e.g. delete) doesn't fire against a torn-down
+   * menu portal.
+   *
+   * @param {() => void} actionFn - The descriptor's action.
+   * @param {() => void} [close] - The menu's close callback.
+   */
+  @action
+  invokeFromMenu(actionFn, close) {
+    close?.();
+    actionFn?.();
+  }
+
+  /**
+   * Duplicates the block N times from the hamburger menu, closing the menu first.
+   *
+   * @param {number} count - How many copies to make.
+   * @param {() => void} [close] - The menu's close callback.
+   */
+  @action
+  duplicateFromMenu(count, close) {
+    close?.();
+    this.wireframe.duplicateBlock(this.args.blockKey, count);
   }
 
   @action
@@ -329,12 +523,20 @@ export default class BlockToolbar extends Component {
   }
 
   <template>
-    <div class="wireframe-block-toolbar" role="toolbar">
+    <div
+      class="wireframe-block-toolbar"
+      role="toolbar"
+      {{toolbarFit
+        chromeEl=@chromeEl
+        active=this.fitActive
+        fingerprint=this.fitFingerprint
+      }}
+    >
       {{! Handle region — always present so block identity stays
         visible whenever the bar is shown, and so the drag-source
         modifier's registration is stable across hover transitions.
-        `dragPreview` is the chrome's outer div (passed in by
-        BlockChrome via `@chromeEl`) so the browser shows a
+        The drag-preview arg is the chrome's outer div (passed in by
+        BlockChrome via the chromeEl arg) so the browser shows a
         translucent copy of the actual block during the drag instead
         of the small handle tab.
 
@@ -371,9 +573,13 @@ export default class BlockToolbar extends Component {
           <span>{{@displayName}}</span>
         </span>
       {{else}}
+        {{! The handle title carries the block name (not a drag hint) so the
+            identity stays discoverable at the Narrower tier, where the name
+            text is dropped and only the grip + hamburger remain. The grip icon
+            and grab cursor still signal that it drags. }}
         <span
           class="wireframe-block-toolbar__handle"
-          title={{i18n "wireframe.canvas.drag_handle_title"}}
+          title={{@displayName}}
           {{dDragAndDropSource
             type="wf-block"
             data=(hash blockKey=@blockKey outletName=@outletName)
@@ -436,199 +642,219 @@ export default class BlockToolbar extends Component {
             @preventFocus={{true}}
           />
         {{else}}
-          {{! Move / duplicate / delete don't apply to the outlet root —
-            a page region can't be reordered, copied, or removed. }}
-          {{#unless (or @isOutletRoot this.isPart)}}
-            <DButton
-              class="btn-flat wireframe-block-toolbar__btn"
-              @icon={{this.moveBackIcon}}
-              @title={{this.moveBackLabel}}
-              @ariaLabel={{this.moveBackLabel}}
-              @disabled={{if this.canMoveUp false true}}
-              @action={{this.moveUp}}
-            />
-            <DButton
-              class="btn-flat wireframe-block-toolbar__btn"
-              @icon={{this.moveForwardIcon}}
-              @title={{this.moveForwardLabel}}
-              @ariaLabel={{this.moveForwardLabel}}
-              @disabled={{if this.canMoveDown false true}}
-              @action={{this.moveDown}}
-            />
-            <DComboButton class="wireframe-block-toolbar__duplicate" as |combo|>
-              <combo.Button
-                class="btn-flat wireframe-block-toolbar__btn"
-                @icon="copy"
-                @title="wireframe.canvas.toolbar.duplicate"
-                @ariaLabel="wireframe.canvas.toolbar.duplicate"
-                @action={{this.duplicate}}
-              />
-              <combo.Menu
-                class="btn-flat wireframe-block-toolbar__btn"
-                @identifier="wireframe-duplicate-count"
-                @title={{i18n "wireframe.canvas.toolbar.duplicate_count"}}
-                @ariaLabel={{i18n "wireframe.canvas.toolbar.duplicate_count"}}
-                @onRegisterApi={{this.registerDuplicateMenu}}
-              >
-                <DDropdownMenu as |dropdown|>
-                  {{#each DUPLICATE_PRESETS as |n|}}
-                    <dropdown.item>
-                      <DButton
-                        class="btn-flat"
-                        @translatedLabel={{i18n
-                          "wireframe.canvas.toolbar.duplicate_n"
-                          count=n
-                        }}
-                        @action={{fn this.duplicateTimes n}}
-                      />
-                    </dropdown.item>
-                  {{/each}}
-                  <dropdown.item
-                    class="wireframe-block-toolbar__duplicate-custom"
+          {{! Collapsible structural actions. The inline row and the hamburger
+              below render from the same actions list. CSS swaps which is in
+              flow via the chrome's fit data attribute; whichever is off-tier
+              sits absolutely positioned and hidden but still measurable. }}
+          <div class="wireframe-block-toolbar__actions">
+            {{#each this.actionItems as |item|}}
+              {{#if item.separatorBefore}}
+                <span
+                  class="wireframe-block-toolbar__separator"
+                  aria-hidden="true"
+                ></span>
+              {{/if}}
+              {{#if (eq item.type "duplicate")}}
+                <DComboButton
+                  class="wireframe-block-toolbar__duplicate"
+                  as |combo|
+                >
+                  <combo.Button
+                    class="btn-flat wireframe-block-toolbar__btn"
+                    @icon="copy"
+                    @title="wireframe.canvas.toolbar.duplicate"
+                    @ariaLabel="wireframe.canvas.toolbar.duplicate"
+                    @action={{this.duplicate}}
+                  />
+                  <combo.Menu
+                    class="btn-flat wireframe-block-toolbar__btn"
+                    @identifier="wireframe-duplicate-count"
+                    @title={{i18n "wireframe.canvas.toolbar.duplicate_count"}}
+                    @ariaLabel={{i18n
+                      "wireframe.canvas.toolbar.duplicate_count"
+                    }}
+                    @onRegisterApi={{this.registerDuplicateMenu}}
                   >
-                    {{! The dropdown content renders in a FloatKit portal, so
-                      this input isn't actually nested inside the toolbar in the
-                      DOM — the lexical nesting is a false positive. }}
-                    {{! eslint-disable-next-line ember/template-no-nested-interactive }}
-                    <input
-                      type="number"
-                      min="1"
-                      aria-label={{i18n
-                        "wireframe.canvas.toolbar.duplicate_custom"
-                      }}
-                      value={{this.customDuplicateCount}}
-                      {{on "input" this.updateCustomDuplicateCount}}
-                    />
-                    <DButton
-                      class="btn-flat"
-                      @label="wireframe.canvas.toolbar.duplicate_apply"
-                      @action={{fn
-                        this.duplicateTimes
-                        this.customDuplicateCount
-                      }}
-                    />
-                  </dropdown.item>
+                    <DDropdownMenu as |dropdown|>
+                      {{#each DUPLICATE_PRESETS as |n|}}
+                        <dropdown.item>
+                          <DButton
+                            class="btn-flat"
+                            @translatedLabel={{i18n
+                              "wireframe.canvas.toolbar.duplicate_n"
+                              count=n
+                            }}
+                            @action={{fn this.duplicateTimes n}}
+                          />
+                        </dropdown.item>
+                      {{/each}}
+                      <dropdown.item
+                        class="wireframe-block-toolbar__duplicate-custom"
+                      >
+                        {{! The dropdown content renders in a FloatKit portal, so
+                          this input isn't actually nested inside the toolbar in the
+                          DOM — the lexical nesting is a false positive. }}
+                        {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+                        <input
+                          type="number"
+                          min="1"
+                          aria-label={{i18n
+                            "wireframe.canvas.toolbar.duplicate_custom"
+                          }}
+                          value={{this.customDuplicateCount}}
+                          {{on "input" this.updateCustomDuplicateCount}}
+                        />
+                        <DButton
+                          class="btn-flat"
+                          @label="wireframe.canvas.toolbar.duplicate_apply"
+                          @action={{fn
+                            this.duplicateTimes
+                            this.customDuplicateCount
+                          }}
+                        />
+                      </dropdown.item>
+                    </DDropdownMenu>
+                  </combo.Menu>
+                </DComboButton>
+              {{else}}
+                <DButton
+                  class={{dConcatClass
+                    "btn-flat"
+                    "wireframe-block-toolbar__btn"
+                    (if item.active "--active")
+                    (if item.danger "wireframe-block-toolbar__btn--danger")
+                  }}
+                  @icon={{item.icon}}
+                  @title={{item.title}}
+                  @ariaLabel={{item.title}}
+                  @disabled={{item.disabled}}
+                  @ariaPressed={{item.active}}
+                  @action={{item.action}}
+                />
+              {{/if}}
+            {{/each}}
+          </div>
+
+          {{! Hamburger — the collapsed home for the actions above. Only movable
+              blocks collapse, so outlet roots and parts render no hamburger
+              (their few actions stay inline). The menu renders the same actions
+              list as text items. }}
+          {{#if this.isCollapsible}}
+            <DMenu
+              class="btn-flat wireframe-block-toolbar__btn wireframe-block-toolbar__more"
+              @identifier="wireframe-toolbar-more"
+              @icon="bars"
+              @placement="bottom-start"
+              @title="wireframe.canvas.toolbar.more"
+              @ariaLabel="wireframe.canvas.toolbar.more"
+              aria-haspopup="menu"
+            >
+              <:content as |args|>
+                <DDropdownMenu as |dropdown|>
+                  {{#each this.actionItems as |item|}}
+                    {{#if (eq item.type "duplicate")}}
+                      <dropdown.item>
+                        <DButton
+                          class="btn-flat"
+                          @icon="copy"
+                          @label="wireframe.canvas.toolbar.duplicate"
+                          @action={{fn
+                            this.invokeFromMenu
+                            this.duplicate
+                            args.close
+                          }}
+                        />
+                      </dropdown.item>
+                      {{#each DUPLICATE_PRESETS as |n|}}
+                        <dropdown.item>
+                          <DButton
+                            class="btn-flat"
+                            @translatedLabel={{i18n
+                              "wireframe.canvas.toolbar.duplicate_n"
+                              count=n
+                            }}
+                            @action={{fn this.duplicateFromMenu n args.close}}
+                          />
+                        </dropdown.item>
+                      {{/each}}
+                    {{else}}
+                      <dropdown.item>
+                        <DButton
+                          class={{dConcatClass
+                            "btn-flat"
+                            (if item.active "--active")
+                            (if
+                              item.danger "wireframe-block-toolbar__btn--danger"
+                            )
+                          }}
+                          @icon={{item.icon}}
+                          @translatedLabel={{i18n item.title}}
+                          @disabled={{item.disabled}}
+                          @action={{fn
+                            this.invokeFromMenu
+                            item.action
+                            args.close
+                          }}
+                        />
+                      </dropdown.item>
+                    {{/if}}
+                  {{/each}}
                 </DDropdownMenu>
-              </combo.Menu>
-            </DComboButton>
-            {{#if this.canDetach}}
-              <DButton
-                class="btn-flat wireframe-block-toolbar__btn"
-                @icon="object-group"
-                @title="wireframe.canvas.toolbar.detach"
-                @ariaLabel="wireframe.canvas.toolbar.detach"
-                @action={{this.detach}}
-              />
-            {{/if}}
-          {{/unless}}
-          {{#if this.canForceExpand}}
-            <DButton
-              class={{if
-                this.isForceExpanded
-                "btn-flat wireframe-block-toolbar__btn --active"
-                "btn-flat wireframe-block-toolbar__btn"
-              }}
-              @icon={{if
-                this.isForceExpanded
-                "down-left-and-up-right-to-center"
-                "up-right-and-down-left-from-center"
-              }}
-              @title={{if
-                this.isForceExpanded
-                "wireframe.canvas.toolbar.collapse_for_preview"
-                "wireframe.canvas.toolbar.expand_for_editing"
-              }}
-              @ariaLabel={{if
-                this.isForceExpanded
-                "wireframe.canvas.toolbar.collapse_for_preview"
-                "wireframe.canvas.toolbar.expand_for_editing"
-              }}
-              @ariaPressed={{this.isForceExpanded}}
-              @action={{this.toggleForceExpand}}
-            />
+              </:content>
+            </DMenu>
           {{/if}}
-          {{#if (or @canFillImage @canResetImage)}}
-            <span
-              class="wireframe-block-toolbar__separator"
-              aria-hidden="true"
-            ></span>
-            {{#if @canFillImage}}
-              <DButton
-                class="btn-flat wireframe-block-toolbar__btn"
-                @icon="expand"
-                @title="wireframe.canvas.toolbar.image_fill"
-                @ariaLabel="wireframe.canvas.toolbar.image_fill"
-                @action={{@onFillImage}}
-              />
-            {{/if}}
-            {{#if @canResetImage}}
-              <DButton
-                class="btn-flat wireframe-block-toolbar__btn"
-                @icon="arrows-rotate"
-                @title="wireframe.canvas.toolbar.image_reset"
-                @ariaLabel="wireframe.canvas.toolbar.image_reset"
-                @action={{@onResetImage}}
-              />
-            {{/if}}
-          {{/if}}
+
+          {{! Inline-format buttons stay inline whenever they show (never
+              collapse) so the FloatKit menu can't steal the ProseMirror
+              selection. The preventFocus arg keeps PM focused while a mark
+              applies. }}
           {{#if this.showInlineFormat}}
-            <span
-              class="wireframe-block-toolbar__separator"
-              aria-hidden="true"
-            ></span>
-            <DButton
-              class={{if
-                this.markState.strong
-                "btn-flat wireframe-block-toolbar__btn --active"
-                "btn-flat wireframe-block-toolbar__btn"
-              }}
-              @icon="bold"
-              @title="wireframe.canvas.toolbar.bold"
-              @ariaLabel="wireframe.canvas.toolbar.bold"
-              @ariaPressed={{this.markState.strong}}
-              @action={{this.toggleBold}}
-              @preventFocus={{true}}
-            />
-            <DButton
-              class={{if
-                this.markState.em
-                "btn-flat wireframe-block-toolbar__btn --active"
-                "btn-flat wireframe-block-toolbar__btn"
-              }}
-              @icon="italic"
-              @title="wireframe.canvas.toolbar.italic"
-              @ariaLabel="wireframe.canvas.toolbar.italic"
-              @ariaPressed={{this.markState.em}}
-              @action={{this.toggleItalic}}
-              @preventFocus={{true}}
-            />
-            <DButton
-              class={{if
-                this.markState.link
-                "btn-flat wireframe-block-toolbar__btn --active"
-                "btn-flat wireframe-block-toolbar__btn"
-              }}
-              @icon="link"
-              @title="wireframe.canvas.toolbar.link"
-              @ariaLabel="wireframe.canvas.toolbar.link"
-              @ariaPressed={{this.markState.link}}
-              @action={{this.startLinkEdit}}
-              @preventFocus={{true}}
-            />
+            <div class="wireframe-block-toolbar__format">
+              <span
+                class="wireframe-block-toolbar__separator"
+                aria-hidden="true"
+              ></span>
+              <DButton
+                class={{if
+                  this.markState.strong
+                  "btn-flat wireframe-block-toolbar__btn --active"
+                  "btn-flat wireframe-block-toolbar__btn"
+                }}
+                @icon="bold"
+                @title="wireframe.canvas.toolbar.bold"
+                @ariaLabel="wireframe.canvas.toolbar.bold"
+                @ariaPressed={{this.markState.strong}}
+                @action={{this.toggleBold}}
+                @preventFocus={{true}}
+              />
+              <DButton
+                class={{if
+                  this.markState.em
+                  "btn-flat wireframe-block-toolbar__btn --active"
+                  "btn-flat wireframe-block-toolbar__btn"
+                }}
+                @icon="italic"
+                @title="wireframe.canvas.toolbar.italic"
+                @ariaLabel="wireframe.canvas.toolbar.italic"
+                @ariaPressed={{this.markState.em}}
+                @action={{this.toggleItalic}}
+                @preventFocus={{true}}
+              />
+              <DButton
+                class={{if
+                  this.markState.link
+                  "btn-flat wireframe-block-toolbar__btn --active"
+                  "btn-flat wireframe-block-toolbar__btn"
+                }}
+                @icon="link"
+                @title="wireframe.canvas.toolbar.link"
+                @ariaLabel="wireframe.canvas.toolbar.link"
+                @ariaPressed={{this.markState.link}}
+                @action={{this.startLinkEdit}}
+                @preventFocus={{true}}
+              />
+            </div>
           {{/if}}
-          {{#unless (or @isOutletRoot this.isPart)}}
-            <span
-              class="wireframe-block-toolbar__separator"
-              aria-hidden="true"
-            ></span>
-            <DButton
-              class="btn-flat wireframe-block-toolbar__btn wireframe-block-toolbar__btn--danger"
-              @icon="trash-can"
-              @title="wireframe.canvas.toolbar.delete"
-              @ariaLabel="wireframe.canvas.toolbar.delete"
-              @action={{this.remove}}
-            />
-          {{/unless}}
         {{/if}}
       {{/if}}
     </div>
