@@ -4162,6 +4162,11 @@ en:
       all_replies: "All replies"
       category_settings:
         default_nested_view: "Use nested view as default for topics in this category"
+        convert_existing: "Convert existing topics"
+        convert_existing_description: "Existing topics in this category will not use nested replies until you convert them. Run this once to switch them to nested view."
+        convert_existing_confirm: "Convert all existing topics in this category to nested replies?"
+        convert_existing_complete: "Existing topics have been converted to nested replies."
+        save_first: "Save this category setting before converting existing topics."
       no_replies: "No replies yet."
       deleted_post_placeholder: "[deleted]"
       ignored_post_placeholder: "[ignored]"
