@@ -415,3 +415,9 @@ $hpad: 0.65em;
     }
   }
 }
+
+@mixin unstyled-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

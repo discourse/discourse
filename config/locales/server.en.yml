@@ -3036,6 +3036,7 @@ en:
       group: "Show posts by members of a group"
       groups_any: "Show posts by members of any specified group (comma-separated)"
       topic: "Show posts in specific topics"
+      exclude_topic: "Exclude posts from specific topics"
       after: "Show posts created after a date (YYYY-MM-DD or days ago)"
       before: "Show posts created before a date (YYYY-MM-DD or days ago)"
       topic_after: "Show posts in topics created after a date (YYYY-MM-DD or days ago)"

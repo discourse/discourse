@@ -127,9 +127,7 @@
   padding: var(--space-4);
 
   &__list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    @include unstyled-list;
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
@@ -700,9 +698,7 @@
   gap: var(--space-2);
 
   &__rows {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    @include unstyled-list;
     display: flex;
     flex-direction: column;
     gap: var(--space-5);
@@ -993,9 +989,8 @@
     grid-template-columns: 1fr auto;
     column-gap: var(--space-4);
     row-gap: var(--space-2);
-    list-style: none;
-    margin: 0;
-    padding: 0;
+
+    @include unstyled-list;
     font-size: var(--font-down-1-rem);
   }
 
