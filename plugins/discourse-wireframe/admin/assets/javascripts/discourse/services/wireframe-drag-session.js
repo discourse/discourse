@@ -1,16 +1,17 @@
 // @ts-check
 import { trackedObject } from "@ember/reactive/collections";
+import Service from "@ember/service";
 
 /**
- * Pure drag-session state for the block editor: which block (or palette entry)
- * is being dragged right now.
+ * Drag-session state for the block editor: which block (or palette entry) is
+ * being dragged right now.
  *
- * A dependency-free leaf — the kernel owns it and drives it one-way; it never
- * reaches back into any service. The `begin*`/`clear` methods record state ONLY;
+ * A dependency-free peer service driven one-way by the kernel; it never reaches
+ * back into any other service. The `begin*`/`clear` methods record state ONLY;
  * the kernel's `startDrag`/`startPaletteDrag`/`endDrag` wrap them with the side
  * effects (the `wireframe-dragging` body class, resetting the drag overlay).
  */
-export default class DragSessionState {
+export default class WireframeDragSessionService extends Service {
   /**
    * Private drag state. `sourceKey`/`sourceOutlet` are read through the getters
    * below; `source` (the full `{type, data}` descriptor) is currently write-only

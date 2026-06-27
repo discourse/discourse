@@ -1,22 +1,21 @@
 // @ts-check
+import Service, { service } from "@ember/service";
 import {
   DEFAULT_GRID_COLUMNS,
   DEFAULT_GRID_ROWS,
-  gridDimensions,
   LAYOUT_MERGED_CELL_BLOCK,
-  normalizeFractions,
   parsePlacement,
 } from "discourse/blocks";
 import {
   decideGridDrop,
   GRID_DROP_ACTIONS,
-  GRID_DROP_GESTURES,
   rectIsFree,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-drop";
 import {
   formatTrack,
   isMergedCell,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
+import { syncDeclaredToUsage } from "../lib/grid-placement";
 import {
   entryKey,
   findEntry,
@@ -24,7 +23,7 @@ import {
   removeEntry,
   replaceEntryContainerArgs,
   replaceEntryInPlace,
-} from "./mutate-layout";
+} from "../lib/mutate-layout";
 
 /**
  * Owns block placement into a grid `wf:layout` so the drop rules can't be
@@ -35,22 +34,23 @@ import {
  * column tracks (`resizeColumns`), and filling an explicit merged cell
  * placeholder (`placeInCell` / `moveIntoCell`) — but those target an
  * explicit rect, so they don't consult the decider. (Whole-grid template /
- * dimension reshaping stays on the service as its own subsystem.)
+ * dimension reshaping stays on the editor session service as its own
+ * subsystem.)
  *
- * The editor service instantiates one of these and delegates to it, the same
- * way it does for `InlineEditState` / `IconEditState`. The manipulator calls
- * back into the service for outlet resolution, undo wrapping, and publishing;
- * the pure layout transforms below need none of that and operate on plain
- * layout arrays.
+ * A peer command service in the editor's acyclic dependency graph: it injects
+ * the read-only layout query layer (outlet / entry resolution), the
+ * mutation/undo engine (undo wrapping + publishing), the selection concern,
+ * the block-mutation commands (the cross-outlet relocation primitive +
+ * selecting an inserted entry), and the drop authority (insert permission). It
+ * never reaches back into the editor session service; the pure layout
+ * transforms it calls operate on plain layout arrays.
  */
-export default class GridManipulator {
-  /**
-   * @param {Object} service - The editor (`wireframe`) service. Held for the
-   *   outlet / undo / publish primitives the drop pipeline needs.
-   */
-  constructor(service) {
-    this.service = service;
-  }
+export default class WireframeGridManipulatorService extends Service {
+  @service wireframeBlockMutations;
+  @service wireframeDropAuthority;
+  @service wireframeEditEngine;
+  @service wireframeLayoutQuery;
+  @service wireframeSelection;
 
   /**
    * The single entry point for dropping a block into a grid. Callers
@@ -81,7 +81,6 @@ export default class GridManipulator {
    * @returns {boolean}
    */
   drop(request) {
-    const svc = this.service;
     const {
       targetGridKey,
       gesture,
@@ -91,8 +90,9 @@ export default class GridManipulator {
       shift,
       source,
     } = request;
-    const grid = svc.layoutQuery.findEntryAndOutletSync(targetGridKey);
-    if (!grid || !svc.layoutQuery.isGridContainer(grid.entry)) {
+    const grid =
+      this.wireframeLayoutQuery.findEntryAndOutletSync(targetGridKey);
+    if (!grid || !this.wireframeLayoutQuery.isGridContainer(grid.entry)) {
       return false;
     }
     // Resolve an existing source up front (palette sources have no entry
@@ -100,7 +100,7 @@ export default class GridManipulator {
     // restores both sides atomically.
     const sourceLocated =
       source?.kind === "existing" && source.key
-        ? svc.layoutQuery.findEntryAndOutletSync(source.key)
+        ? this.wireframeLayoutQuery.findEntryAndOutletSync(source.key)
         : null;
     if (source?.kind === "existing" && !sourceLocated) {
       return false;
@@ -108,7 +108,7 @@ export default class GridManipulator {
     if (source?.kind === "new") {
       if (
         !source.blockName ||
-        !svc.dropAuthority.canInsertBlockAt({
+        !this.wireframeDropAuthority.canInsertBlockAt({
           blockName: source.blockName,
           targetOutletName: grid.outletName,
         })
@@ -121,8 +121,10 @@ export default class GridManipulator {
         ? [sourceLocated.outletName, grid.outletName]
         : [grid.outletName];
 
-    return svc.recordStructural(outletsAffected, () => {
-      const layout = svc.layoutQuery.readResolvedLayout(grid.outletName);
+    return this.wireframeEditEngine.recordStructural(outletsAffected, () => {
+      const layout = this.wireframeLayoutQuery.readResolvedLayout(
+        grid.outletName
+      );
       const gridEntry = layout && findEntry(layout, targetGridKey);
       if (!gridEntry) {
         return false;
@@ -174,12 +176,13 @@ export default class GridManipulator {
    * @returns {boolean}
    */
   moveIntoCell({ sourceKey, cellKey }) {
-    const svc = this.service;
     if (sourceKey === cellKey) {
       return false;
     }
-    const sourceLocated = svc.layoutQuery.findEntryAndOutletSync(sourceKey);
-    const cellLocated = svc.layoutQuery.findEntryAndOutletSync(cellKey);
+    const sourceLocated =
+      this.wireframeLayoutQuery.findEntryAndOutletSync(sourceKey);
+    const cellLocated =
+      this.wireframeLayoutQuery.findEntryAndOutletSync(cellKey);
     if (!sourceLocated || !cellLocated) {
       return false;
     }
@@ -189,35 +192,43 @@ export default class GridManipulator {
     if (!isMergedCell(cellLocated.entry)) {
       return false;
     }
-    return svc.recordStructural([cellLocated.outletName], () => {
-      const layout = svc.layoutQuery.readResolvedLayout(cellLocated.outletName);
-      if (!layout) {
-        return false;
+    return this.wireframeEditEngine.recordStructural(
+      [cellLocated.outletName],
+      () => {
+        const layout = this.wireframeLayoutQuery.readResolvedLayout(
+          cellLocated.outletName
+        );
+        if (!layout) {
+          return false;
+        }
+        const removal = removeEntry(layout, sourceKey);
+        if (!removal.changed || !removal.removed) {
+          return false;
+        }
+        // Drop the source's `__stableKey` — the cell's stableKey wins
+        // (`replaceEntryInPlace` keeps the matched entry's stableKey), the
+        // right identity for re-render continuity at the cell's position.
+        const { __stableKey, ...sourceData } = removal.removed;
+        void __stableKey;
+        const movedEntry = {
+          ...sourceData,
+          containerArgs: cellLocated.entry.containerArgs,
+        };
+        const replacement = replaceEntryInPlace(
+          removal.layout,
+          cellKey,
+          movedEntry
+        );
+        if (!replacement.changed) {
+          return false;
+        }
+        this.wireframeEditEngine.publishStructuralChange(
+          cellLocated.outletName,
+          replacement.layout
+        );
+        return true;
       }
-      const removal = removeEntry(layout, sourceKey);
-      if (!removal.changed || !removal.removed) {
-        return false;
-      }
-      // Drop the source's `__stableKey` — the cell's stableKey wins
-      // (`replaceEntryInPlace` keeps the matched entry's stableKey), the
-      // right identity for re-render continuity at the cell's position.
-      const { __stableKey, ...sourceData } = removal.removed;
-      void __stableKey;
-      const movedEntry = {
-        ...sourceData,
-        containerArgs: cellLocated.entry.containerArgs,
-      };
-      const replacement = replaceEntryInPlace(
-        removal.layout,
-        cellKey,
-        movedEntry
-      );
-      if (!replacement.changed) {
-        return false;
-      }
-      svc.publishStructuralChange(cellLocated.outletName, replacement.layout);
-      return true;
-    });
+    );
   }
 
   /**
@@ -230,40 +241,49 @@ export default class GridManipulator {
    * @returns {boolean}
    */
   placeInCell({ cellKey, blockName, defaultArgs = {} }) {
-    const svc = this.service;
-    const located = svc.layoutQuery.findEntryAndOutletSync(cellKey);
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(cellKey);
     if (!located || !isMergedCell(located.entry)) {
       return false;
     }
     if (
-      !svc.dropAuthority.canInsertBlockAt({
+      !this.wireframeDropAuthority.canInsertBlockAt({
         blockName,
         targetOutletName: located.outletName,
       })
     ) {
       return false;
     }
-    return svc.recordStructural([located.outletName], () => {
-      const layout = svc.layoutQuery.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
+    return this.wireframeEditEngine.recordStructural(
+      [located.outletName],
+      () => {
+        const layout = this.wireframeLayoutQuery.readResolvedLayout(
+          located.outletName
+        );
+        if (!layout) {
+          return false;
+        }
+        const newEntry = {
+          block: blockName,
+          args: { ...defaultArgs },
+          containerArgs: located.entry.containerArgs,
+        };
+        const result = replaceEntryInPlace(layout, cellKey, newEntry);
+        if (!result.changed) {
+          return false;
+        }
+        this.wireframeEditEngine.publishStructuralChange(
+          located.outletName,
+          result.layout
+        );
+        // `replaceEntryInPlace` clones `newEntry` (inheriting the cell's stable
+        // key) into the layout; select that placed clone, since the original
+        // `newEntry` never receives a stable key.
+        this.wireframeBlockMutations.selectInsertedEntry(
+          result.entry ?? newEntry
+        );
+        return true;
       }
-      const newEntry = {
-        block: blockName,
-        args: { ...defaultArgs },
-        containerArgs: located.entry.containerArgs,
-      };
-      const result = replaceEntryInPlace(layout, cellKey, newEntry);
-      if (!result.changed) {
-        return false;
-      }
-      svc.publishStructuralChange(located.outletName, result.layout);
-      // `replaceEntryInPlace` clones `newEntry` (inheriting the cell's stable
-      // key) into the layout; select that placed clone, since the original
-      // `newEntry` never receives a stable key.
-      svc.selectInsertedEntry(result.entry ?? newEntry);
-      return true;
-    });
+    );
   }
 
   /**
@@ -284,49 +304,56 @@ export default class GridManipulator {
    * @returns {boolean}
    */
   mergeCells({ gridKey, rect }) {
-    const svc = this.service;
-    const located = svc.layoutQuery.findEntryAndOutletSync(gridKey);
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(gridKey);
     if (!located) {
       return false;
     }
-    return svc.recordStructural([located.outletName], () => {
-      const layout = svc.layoutQuery.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
-      }
-      const grid = findEntry(layout, gridKey);
-      if (!grid) {
-        return false;
-      }
-      // Refuse a merge that would overlap existing content. Occupancy is
-      // single-sourced through `rectIsFree`, so this is the same verdict the
-      // decider reaches — no second, divergent overlap rule.
-      if (!rectIsFree(grid.children ?? [], rect)) {
-        return false;
-      }
-      const cellEntry = {
-        block: LAYOUT_MERGED_CELL_BLOCK,
-        args: {},
-        containerArgs: {
-          grid: {
-            column: formatTrack(rect.column),
-            row: formatTrack(rect.row),
-            align: "stretch",
-            justify: "stretch",
+    return this.wireframeEditEngine.recordStructural(
+      [located.outletName],
+      () => {
+        const layout = this.wireframeLayoutQuery.readResolvedLayout(
+          located.outletName
+        );
+        if (!layout) {
+          return false;
+        }
+        const grid = findEntry(layout, gridKey);
+        if (!grid) {
+          return false;
+        }
+        // Refuse a merge that would overlap existing content. Occupancy is
+        // single-sourced through `rectIsFree`, so this is the same verdict the
+        // decider reaches — no second, divergent overlap rule.
+        if (!rectIsFree(grid.children ?? [], rect)) {
+          return false;
+        }
+        const cellEntry = {
+          block: LAYOUT_MERGED_CELL_BLOCK,
+          args: {},
+          containerArgs: {
+            grid: {
+              column: formatTrack(rect.column),
+              row: formatTrack(rect.row),
+              align: "stretch",
+              justify: "stretch",
+            },
           },
-        },
-      };
-      const insertion = insertEntryAt(layout, gridKey, cellEntry, "inside");
-      if (!insertion.changed) {
-        return false;
+        };
+        const insertion = insertEntryAt(layout, gridKey, cellEntry, "inside");
+        if (!insertion.changed) {
+          return false;
+        }
+        // A merge can extend past the declared tracks (it's a create, like a
+        // drop), so grow declared to fit — keeping effective ≤ declared.
+        const synced = syncDeclaredToUsage(insertion.layout, gridKey);
+        this.wireframeEditEngine.publishStructuralChange(
+          located.outletName,
+          synced
+        );
+        this.wireframeBlockMutations.selectInsertedEntry(cellEntry);
+        return true;
       }
-      // A merge can extend past the declared tracks (it's a create, like a
-      // drop), so grow declared to fit — keeping effective ≤ declared.
-      const synced = this.syncDeclaredToUsage(insertion.layout, gridKey);
-      svc.publishStructuralChange(located.outletName, synced);
-      svc.selectInsertedEntry(cellEntry);
-      return true;
-    });
+    );
   }
 
   /**
@@ -341,60 +368,33 @@ export default class GridManipulator {
    * @returns {boolean}
    */
   splitCell({ cellKey }) {
-    const svc = this.service;
-    const located = svc.layoutQuery.findEntryAndOutletSync(cellKey);
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(cellKey);
     if (!located || !isMergedCell(located.entry)) {
       return false;
     }
-    return svc.recordStructural([located.outletName], () => {
-      const layout = svc.layoutQuery.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
+    return this.wireframeEditEngine.recordStructural(
+      [located.outletName],
+      () => {
+        const layout = this.wireframeLayoutQuery.readResolvedLayout(
+          located.outletName
+        );
+        if (!layout) {
+          return false;
+        }
+        const removal = removeEntry(layout, cellKey);
+        if (!removal.changed) {
+          return false;
+        }
+        if (this.wireframeSelection.selectedBlockKey === cellKey) {
+          this.wireframeSelection.selectBlock(null);
+        }
+        this.wireframeEditEngine.publishStructuralChange(
+          located.outletName,
+          removal.layout
+        );
+        return true;
       }
-      const removal = removeEntry(layout, cellKey);
-      if (!removal.changed) {
-        return false;
-      }
-      if (svc.selectedBlockKey === cellKey) {
-        svc.selectBlock(null);
-      }
-      svc.publishStructuralChange(located.outletName, removal.layout);
-      return true;
-    });
-  }
-
-  /**
-   * Positions a block that just entered a grid (its foreign span already
-   * discarded by the caller). The gesture is read from how it was dropped — a
-   * "before" / "after" drop relative to a specific cell is a BESIDE cascade;
-   * an "inside" / container-level drop is a GENERIC append — and the actual
-   * placement is decided by `decideGridDrop`, the single rule chokepoint. The
-   * decision is then applied to the layout.
-   *
-   * @param {Array<Object>} layout
-   * @param {string} gridKey
-   * @param {string} entryKeyValue - The just-inserted entry's key.
-   * @param {string|null} targetKey - The cell the drop was relative to.
-   * @param {"before"|"after"|"inside"} position
-   * @returns {Array<Object>} The layout with the entry placed + dims synced.
-   */
-  positionEntering(layout, gridKey, entryKeyValue, targetKey, position) {
-    const grid = findEntry(layout, gridKey);
-    if (!grid) {
-      return layout;
-    }
-    const decision = decideGridDrop({
-      children: grid.children ?? [],
-      declared: {
-        columns: grid.args?.columns ?? DEFAULT_GRID_COLUMNS,
-        rows: grid.args?.rows ?? DEFAULT_GRID_ROWS,
-      },
-      // The entry is already a child of the grid at this point, so it counts
-      // as an in-grid source (its auto cell is credited as free).
-      source: { kind: "existing", key: entryKeyValue },
-      drop: this.#classifyGridDrop(gridKey, targetKey, position),
-    });
-    return this.#applyGridDecision(layout, gridKey, entryKeyValue, decision);
+    );
   }
 
   /**
@@ -407,26 +407,33 @@ export default class GridManipulator {
    * @returns {boolean}
    */
   resizeColumns({ gridKey, fractions }) {
-    const svc = this.service;
-    const located = svc.layoutQuery.findEntryAndOutletSync(gridKey);
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(gridKey);
     if (!located) {
       return false;
     }
-    return svc.recordStructural([located.outletName], () => {
-      const layout = svc.layoutQuery.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
+    return this.wireframeEditEngine.recordStructural(
+      [located.outletName],
+      () => {
+        const layout = this.wireframeLayoutQuery.readResolvedLayout(
+          located.outletName
+        );
+        if (!layout) {
+          return false;
+        }
+        const result = replaceEntryInPlace(layout, gridKey, {
+          ...located.entry,
+          args: { ...located.entry.args, columnFractions: fractions },
+        });
+        if (!result.changed) {
+          return false;
+        }
+        this.wireframeEditEngine.publishStructuralChange(
+          located.outletName,
+          result.layout
+        );
+        return true;
       }
-      const result = replaceEntryInPlace(layout, gridKey, {
-        ...located.entry,
-        args: { ...located.entry.args, columnFractions: fractions },
-      });
-      if (!result.changed) {
-        return false;
-      }
-      svc.publishStructuralChange(located.outletName, result.layout);
-      return true;
-    });
+    );
   }
 
   /**
@@ -446,9 +453,8 @@ export default class GridManipulator {
    * @returns {boolean}
    */
   resizeSlot({ slotKey, column, row }) {
-    const svc = this.service;
-    const located = svc.layoutQuery.findEntryAndOutletSync(slotKey);
-    if (!located || !svc.layoutQuery.isGridCellEntry(located.entry)) {
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(slotKey);
+    if (!located || !this.wireframeLayoutQuery.isGridCellEntry(located.entry)) {
       return false;
     }
     // An empty merged cell shrunk to a single base cell dissolves rather than
@@ -457,149 +463,31 @@ export default class GridManipulator {
     if (isMergedCell(located.entry) && this.#isSingleCell(column, row)) {
       return this.splitCell({ cellKey: slotKey });
     }
-    return svc.recordStructural([located.outletName], () => {
-      const layout = svc.layoutQuery.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
+    return this.wireframeEditEngine.recordStructural(
+      [located.outletName],
+      () => {
+        const layout = this.wireframeLayoutQuery.readResolvedLayout(
+          located.outletName
+        );
+        if (!layout) {
+          return false;
+        }
+        const result = replaceEntryContainerArgs(
+          layout,
+          slotKey,
+          "grid",
+          (current) => ({ ...current, column, row })
+        );
+        if (!result.changed) {
+          return false;
+        }
+        this.wireframeEditEngine.publishStructuralChange(
+          located.outletName,
+          result.layout
+        );
+        return true;
       }
-      const result = replaceEntryContainerArgs(
-        layout,
-        slotKey,
-        "grid",
-        (current) => ({ ...current, column, row })
-      );
-      if (!result.changed) {
-        return false;
-      }
-      svc.publishStructuralChange(located.outletName, result.layout);
-      return true;
-    });
-  }
-
-  /**
-   * Writes a grid's declared `args.columns` / `args.rows` up to match what its
-   * children actually occupy (per core's `gridDimensions`), so the rendered
-   * (effective) size never exceeds the declared size and no out-of-bounds
-   * badge can arise from an editor operation. Only ever grows — a deliberate
-   * dimension-field shrink below content is left alone so its warning still
-   * surfaces. When columns grow, the stored `columnFractions` are renormalized
-   * to the new count so the rendered track list can't desync.
-   *
-   * @param {Array<Object>} layout
-   * @param {string} gridKey
-   * @returns {Array<Object>}
-   */
-  syncDeclaredToUsage(layout, gridKey) {
-    const grid = findEntry(layout, gridKey);
-    if (!grid) {
-      return layout;
-    }
-    const declared = {
-      columns: grid.args?.columns ?? DEFAULT_GRID_COLUMNS,
-      rows: grid.args?.rows ?? DEFAULT_GRID_ROWS,
-    };
-    const effective = gridDimensions(declared, grid.children);
-    if (
-      effective.columns === declared.columns &&
-      effective.rows === declared.rows
-    ) {
-      return layout;
-    }
-    const nextArgs = {
-      ...grid.args,
-      columns: effective.columns,
-      rows: effective.rows,
-    };
-    if (
-      effective.columns !== declared.columns &&
-      Array.isArray(grid.args?.columnFractions) &&
-      grid.args.columnFractions.length > 0
-    ) {
-      nextArgs.columnFractions = normalizeFractions(
-        grid.args.columnFractions,
-        effective.columns
-      );
-    }
-    const result = replaceEntryInPlace(layout, gridKey, {
-      ...grid,
-      args: nextArgs,
-    });
-    return result.changed ? result.layout : layout;
-  }
-
-  /**
-   * Applies a `decideGridDrop` decision that places a single entry inside a
-   * grid — the `fill` / `append` / `cascade` outcomes, where the entry is
-   * already a child and only its placement (and any cascaded neighbours')
-   * changes. Cascaded neighbours move first, then the source lands at the
-   * decision's placement, then the grid's declared size is synced to usage.
-   * `swap` / `replace` are two-entry trades handled separately, so they don't
-   * pass through here.
-   *
-   * @param {Array<Object>} layout
-   * @param {string} gridKey
-   * @param {string} entryKeyValue - The entry being placed.
-   * @param {import("discourse/plugins/discourse-wireframe/discourse/lib/grid-drop").GridDropDecision} decision
-   * @returns {Array<Object>}
-   */
-  #applyGridDecision(layout, gridKey, entryKeyValue, decision) {
-    let next = layout;
-    for (const move of decision.moves) {
-      const result = replaceEntryContainerArgs(
-        next,
-        move.slotKey,
-        "grid",
-        (current) => ({ ...current, column: move.column, row: move.row })
-      );
-      if (result.changed) {
-        next = result.layout;
-      }
-    }
-    if (decision.placement) {
-      const placed = replaceEntryContainerArgs(
-        next,
-        entryKeyValue,
-        "grid",
-        (current) => ({
-          align: "stretch",
-          justify: "stretch",
-          ...current,
-          column: decision.placement.column,
-          row: decision.placement.row,
-        })
-      );
-      if (placed.changed) {
-        next = placed.layout;
-      }
-    }
-    return this.syncDeclaredToUsage(next, gridKey);
-  }
-
-  /**
-   * Classifies an enter-style drop (`before` / `after` / `inside` a target)
-   * into the normalized gesture `decideGridDrop` consumes. A before / after
-   * drop beside a specific cell is BESIDE, anchored on that cell (so a
-   * spanning anchor's full rect drives the cascade); everything else —
-   * including a drop on the grid container itself — is GENERIC.
-   *
-   * @param {string} gridKey
-   * @param {string|null} targetKey
-   * @param {"before"|"after"|"inside"} position
-   * @returns {{gesture: string, anchorKey?: string, direction?: string}}
-   */
-  #classifyGridDrop(gridKey, targetKey, position) {
-    if (
-      (position === "before" || position === "after") &&
-      targetKey &&
-      targetKey !== gridKey
-    ) {
-      return {
-        gesture: GRID_DROP_GESTURES.BESIDE,
-        anchorKey: targetKey,
-        direction: position === "before" ? "left" : "right",
-      };
-    }
-    return { gesture: GRID_DROP_GESTURES.GENERIC };
+    );
   }
 
   /**
@@ -617,11 +505,10 @@ export default class GridManipulator {
    * @returns {boolean}
    */
   #landSourceAt(outletName, gridKey, source, sourceLocated, placement) {
-    const svc = this.service;
     const { column, row } = placement;
 
     if (source.kind === "new") {
-      const layout = svc.layoutQuery.readResolvedLayout(outletName);
+      const layout = this.wireframeLayoutQuery.readResolvedLayout(outletName);
       if (!layout) {
         return false;
       }
@@ -636,8 +523,11 @@ export default class GridManipulator {
       if (!insertion.changed) {
         return false;
       }
-      svc.publishStructuralChange(outletName, insertion.layout);
-      svc.selectInsertedEntry(cellEntry);
+      this.wireframeEditEngine.publishStructuralChange(
+        outletName,
+        insertion.layout
+      );
+      this.wireframeBlockMutations.selectInsertedEntry(cellEntry);
       return true;
     }
 
@@ -646,13 +536,13 @@ export default class GridManipulator {
     // exact landing cell is written right after).
     const sameGrid =
       sourceLocated.outletName === outletName &&
-      svc.layoutQuery.isCellInGrid(sourceLocated.entry, gridKey);
+      this.wireframeLayoutQuery.isCellInGrid(sourceLocated.entry, gridKey);
 
     // Snapshot the source's prior rect + grid before it moves, so a multi-cell
     // region it leaves behind is preserved as a merged cell (the same shape a
     // delete preserves) rather than shattering into derived single cells.
     const priorPlacement = parsePlacement(sourceLocated.entry.containerArgs);
-    const priorParent = svc.layoutQuery.findEntryParent(source.key);
+    const priorParent = this.wireframeLayoutQuery.findEntryParent(source.key);
     const priorGridKey = sameGrid
       ? gridKey
       : priorParent
@@ -661,7 +551,7 @@ export default class GridManipulator {
     const priorOutlet = sourceLocated.outletName;
 
     if (!sameGrid) {
-      const moved = svc.moveAcrossOutlets({
+      const moved = this.wireframeBlockMutations.moveAcrossOutlets({
         sourceOutletName: sourceLocated.outletName,
         targetOutletName: outletName,
         sourceKey: source.key,
@@ -673,7 +563,7 @@ export default class GridManipulator {
         return false;
       }
     }
-    const layout = svc.layoutQuery.readResolvedLayout(outletName);
+    const layout = this.wireframeLayoutQuery.readResolvedLayout(outletName);
     const result = replaceEntryContainerArgs(
       layout,
       source.key,
@@ -681,7 +571,10 @@ export default class GridManipulator {
       (current) => ({ ...current, column, row })
     );
     if (result.changed) {
-      svc.publishStructuralChange(outletName, result.layout);
+      this.wireframeEditEngine.publishStructuralChange(
+        outletName,
+        result.layout
+      );
     }
     if (priorGridKey) {
       this.#restoreVacatedSpan(priorOutlet, priorGridKey, priorPlacement);
@@ -704,7 +597,6 @@ export default class GridManipulator {
    * @returns {void}
    */
   #restoreVacatedSpan(outletName, gridKey, priorPlacement) {
-    const svc = this.service;
     const { column, row } = priorPlacement;
     if (column.start == null || row.start == null) {
       return;
@@ -712,7 +604,7 @@ export default class GridManipulator {
     if (column.end - column.start <= 1 && row.end - row.start <= 1) {
       return;
     }
-    const layout = svc.layoutQuery.readResolvedLayout(outletName);
+    const layout = this.wireframeLayoutQuery.readResolvedLayout(outletName);
     if (!layout) {
       return;
     }
@@ -737,9 +629,9 @@ export default class GridManipulator {
     };
     const insertion = insertEntryAt(layout, gridKey, cellEntry, "inside");
     if (insertion.changed) {
-      svc.publishStructuralChange(
+      this.wireframeEditEngine.publishStructuralChange(
         outletName,
-        this.syncDeclaredToUsage(insertion.layout, gridKey)
+        syncDeclaredToUsage(insertion.layout, gridKey)
       );
     }
   }
@@ -758,9 +650,8 @@ export default class GridManipulator {
    * @returns {boolean}
    */
   #place(outletName, gridKey, source, sourceLocated, decision) {
-    const svc = this.service;
     for (const move of decision.moves) {
-      const layout = svc.layoutQuery.readResolvedLayout(outletName);
+      const layout = this.wireframeLayoutQuery.readResolvedLayout(outletName);
       const result = replaceEntryContainerArgs(
         layout,
         move.slotKey,
@@ -770,7 +661,10 @@ export default class GridManipulator {
       if (!result.changed) {
         return false;
       }
-      svc.publishStructuralChange(outletName, result.layout);
+      this.wireframeEditEngine.publishStructuralChange(
+        outletName,
+        result.layout
+      );
     }
     if (
       !this.#landSourceAt(
@@ -783,10 +677,10 @@ export default class GridManipulator {
     ) {
       return false;
     }
-    svc.publishStructuralChange(
+    this.wireframeEditEngine.publishStructuralChange(
       outletName,
-      this.syncDeclaredToUsage(
-        svc.layoutQuery.readResolvedLayout(outletName),
+      syncDeclaredToUsage(
+        this.wireframeLayoutQuery.readResolvedLayout(outletName),
         gridKey
       )
     );
@@ -805,13 +699,15 @@ export default class GridManipulator {
    * @returns {boolean}
    */
   #replace(outletName, gridKey, source, sourceLocated, decision) {
-    const svc = this.service;
-    const layout = svc.layoutQuery.readResolvedLayout(outletName);
+    const layout = this.wireframeLayoutQuery.readResolvedLayout(outletName);
     const removal = removeEntry(layout, decision.swapWith);
     if (!removal.changed) {
       return false;
     }
-    svc.publishStructuralChange(outletName, removal.layout);
+    this.wireframeEditEngine.publishStructuralChange(
+      outletName,
+      removal.layout
+    );
     if (
       !this.#landSourceAt(
         outletName,
@@ -823,10 +719,10 @@ export default class GridManipulator {
     ) {
       return false;
     }
-    svc.publishStructuralChange(
+    this.wireframeEditEngine.publishStructuralChange(
       outletName,
-      this.syncDeclaredToUsage(
-        svc.layoutQuery.readResolvedLayout(outletName),
+      syncDeclaredToUsage(
+        this.wireframeLayoutQuery.readResolvedLayout(outletName),
         gridKey
       )
     );
@@ -847,14 +743,15 @@ export default class GridManipulator {
    * @returns {boolean}
    */
   #swap(outletName, source, sourceLocated, decision) {
-    const svc = this.service;
-    const occupant = svc.layoutQuery.findEntryAndOutletSync(decision.swapWith);
+    const occupant = this.wireframeLayoutQuery.findEntryAndOutletSync(
+      decision.swapWith
+    );
     if (
       !sourceLocated ||
       !occupant ||
       occupant.outletName !== outletName ||
-      !svc.layoutQuery.isGridCellEntry(sourceLocated.entry) ||
-      !svc.layoutQuery.isGridCellEntry(occupant.entry)
+      !this.wireframeLayoutQuery.isGridCellEntry(sourceLocated.entry) ||
+      !this.wireframeLayoutQuery.isGridCellEntry(occupant.entry)
     ) {
       return false;
     }
@@ -866,9 +763,11 @@ export default class GridManipulator {
       column: occupant.entry.containerArgs?.grid?.column ?? "auto",
       row: occupant.entry.containerArgs?.grid?.row ?? "auto",
     };
-    const layout0 = svc.layoutQuery.readResolvedLayout(outletName);
-    const sourceParent = svc.layoutQuery.findEntryParent(source.key);
-    const occupantParent = svc.layoutQuery.findEntryParent(decision.swapWith);
+    const layout0 = this.wireframeLayoutQuery.readResolvedLayout(outletName);
+    const sourceParent = this.wireframeLayoutQuery.findEntryParent(source.key);
+    const occupantParent = this.wireframeLayoutQuery.findEntryParent(
+      decision.swapWith
+    );
     const sourceParentKey = sourceParent ? entryKey(sourceParent) : null;
     const occupantParentKey = occupantParent ? entryKey(occupantParent) : null;
 
@@ -908,7 +807,10 @@ export default class GridManipulator {
       if (!insOccupant.changed) {
         return false;
       }
-      svc.publishStructuralChange(outletName, insOccupant.layout);
+      this.wireframeEditEngine.publishStructuralChange(
+        outletName,
+        insOccupant.layout
+      );
       return true;
     }
 
@@ -939,7 +841,7 @@ export default class GridManipulator {
     if (!second.changed) {
       return false;
     }
-    svc.publishStructuralChange(outletName, second.layout);
+    this.wireframeEditEngine.publishStructuralChange(outletName, second.layout);
     return true;
   }
 

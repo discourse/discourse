@@ -1,4 +1,5 @@
 // @ts-check
+import Service, { service } from "@ember/service";
 
 /**
  * @typedef {{ allowedOutlets?: string[], deniedOutlets?: string[] }} BlockMetadata
@@ -10,31 +11,14 @@
  * Decides whether a drag/insert is allowed into a target outlet — the
  * per-dragover authorization the drop targets consult.
  *
- * A pure-read, dependency-free leaf: the kernel constructs it with the
- * drag-session leaf plus down-injected lookup functions, so it holds opaque
- * capabilities and never reaches back into any service. Only query methods (no
- * mutators), so the kernel may expose the instance directly.
+ * A pure-read peer service: it injects the drag-session signal (the in-flight
+ * source block) and the read-only layout query layer (entry + block metadata
+ * lookups). Only query methods (no mutators), so the kernel exposes the instance
+ * directly through its `dropAuthority` facade.
  */
-export default class DropAuthority {
-  #session;
-  #findEntryByKey;
-  #metadataFor;
-  #metadataForName;
-
-  /**
-   * @param {{
-   *   session: import("./drag-session-state").default,
-   *   findEntryByKey: (key: string) => Object|null,
-   *   metadataFor: (entry: Object) => BlockMetadata|null,
-   *   metadataForName: (blockName: string) => BlockMetadata|null,
-   * }} deps
-   */
-  constructor({ session, findEntryByKey, metadataFor, metadataForName }) {
-    this.#session = session;
-    this.#findEntryByKey = findEntryByKey;
-    this.#metadataFor = metadataFor;
-    this.#metadataForName = metadataForName;
-  }
+export default class WireframeDropAuthorityService extends Service {
+  @service wireframeDragSession;
+  @service wireframeLayoutQuery;
 
   /**
    * Whether dropping the currently-dragged block into `targetOutletName` is
@@ -45,19 +29,22 @@ export default class DropAuthority {
    * @returns {boolean}
    */
   canDropAt({ targetOutletName }) {
-    const sourceKey = this.#session.sourceKey;
+    const sourceKey = this.wireframeDragSession.sourceKey;
     if (!sourceKey) {
       return true;
     }
-    if (!targetOutletName || targetOutletName === this.#session.sourceOutlet) {
+    if (
+      !targetOutletName ||
+      targetOutletName === this.wireframeDragSession.sourceOutlet
+    ) {
       return true;
     }
-    const sourceEntry = this.#findEntryByKey(sourceKey);
+    const sourceEntry = this.wireframeLayoutQuery.findEntryByKey(sourceKey);
     if (!sourceEntry) {
       return false;
     }
     return this.#outletAllowed(
-      this.#metadataFor(sourceEntry),
+      this.wireframeLayoutQuery.metadataFor(sourceEntry),
       targetOutletName
     );
   }
@@ -75,7 +62,7 @@ export default class DropAuthority {
       return false;
     }
     return this.#outletAllowed(
-      this.#metadataForName(blockName),
+      this.wireframeLayoutQuery.metadataForName(blockName),
       targetOutletName
     );
   }

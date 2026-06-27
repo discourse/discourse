@@ -2256,20 +2256,19 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("manipulator's public surface is the known set", function (assert) {
       const editor = getOwner(this).lookup("service:wireframe");
       const expected = [
-        // Decided placement — routes through `decideGridDrop`.
+        // Decided placement — routes through `decideGridDrop`. (The pure
+        // `positionEntering` / `syncDeclaredToUsage` placement transforms now
+        // live in `lib/grid-placement.js`, not on the manipulator.)
         "drop",
-        "positionEntering",
         // Direct cell ops — validate occupancy via the shared `rectIsFree`
         // (`mergeCells`) or operate on an explicit chosen cell.
         "mergeCells",
         "moveIntoCell",
         "placeInCell",
         "splitCell",
-        // Deterministic resizes / declared-size sync — explicit rects, no
-        // decider.
+        // Deterministic resizes — explicit rects, no decider.
         "resizeColumns",
         "resizeSlot",
-        "syncDeclaredToUsage",
       ];
       const found = Object.getOwnPropertyNames(
         Object.getPrototypeOf(editor.gridManipulator)
