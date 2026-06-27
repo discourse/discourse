@@ -21,7 +21,6 @@ import {
   LAYOUT_LAYERS,
   LAYOUT_SOURCE,
 } from "discourse/blocks/block-outlet";
-import { VALID_BLOCK_ID_PATTERN } from "discourse/lib/blocks/-internals/patterns";
 import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
 import PreloadStore from "discourse/lib/preload-store";
 import { i18n } from "discourse-i18n";
@@ -50,7 +49,6 @@ import LinkEditState from "../lib/link-edit-state";
 import {
   cloneEntryForPaste,
   cloneLayoutForDraft,
-  detachComposite,
   entryKey,
   findAncestryPath,
   findEntry,
@@ -59,9 +57,7 @@ import {
   moveEntry,
   normalizeImplicitChildren,
   removeEntry,
-  replaceEntryConditions,
   replaceEntryContainerArgs,
-  replaceEntryId,
   replaceEntryInPlace,
   serializeLayoutForSave,
   wrapAsOutletRoot,
@@ -108,9 +104,11 @@ export default class WireframeService extends Service {
   @service wireframeArgEdit;
   @service wireframeBlockReveal;
   @service wireframeClipboard;
+  @service wireframeConditionsPanel;
   @service wireframeDrafts;
   @service wireframeDragOverlay;
   @service wireframeEditEngine;
+  @service wireframeEntryEdits;
   @service wireframeImageUpload;
   @service wireframeInlineEdit;
   @service wireframeLayoutQuery;
@@ -135,16 +133,6 @@ export default class WireframeService extends Service {
   @tracked activeThemeId = null;
 
   /**
-   * Whether the inspector's conditions surface is detached from the
-   * right rail and rendered in a floating panel. Toggled by the
-   * inspector's `↗` button and the panel's `↙` redock button.
-   * Persisted to localStorage so the preference survives reloads.
-   *
-   * @type {boolean}
-   */
-  @tracked conditionsDetached = false;
-
-  /**
    * Whether the publish review surface (the save/publish drawer) is open. Held
    * here, not on a single chrome component, because several entry points open it
    * (the toolbar Save button, the publish-target indicator, the blocked callout).
@@ -164,16 +152,6 @@ export default class WireframeService extends Service {
    * @type {boolean}
    */
   @tracked publishTargetResolving = false;
-
-  /**
-   * Floating-panel rect (`{x, y, width, height}`) for the detached
-   * conditions surface. Updated by the panel's drag and resize
-   * handlers and persisted to localStorage. Null while no rect has
-   * been chosen yet — the panel renders centred on first open.
-   *
-   * @type {{x: number, y: number, width: number, height: number}|null}
-   */
-  @tracked conditionsPanelRect = null;
 
   /**
    * Contextual toolbar slot — when non-null, the block toolbar
@@ -359,7 +337,6 @@ export default class WireframeService extends Service {
 
   constructor() {
     super(...arguments);
-    this.#loadConditionsPanelState();
   }
 
   willDestroy() {
@@ -867,6 +844,25 @@ export default class WireframeService extends Service {
     return this.wireframeClipboard.hasClipboardEntry;
   }
 
+  /**
+   * Conditions-panel facade — whether the condition builder is detached into a
+   * floating panel.
+   *
+   * @returns {boolean}
+   */
+  get conditionsDetached() {
+    return this.wireframeConditionsPanel.detached;
+  }
+
+  /**
+   * Conditions-panel facade — the floating panel's last position/size, or `null`.
+   *
+   * @returns {Object|null}
+   */
+  get conditionsPanelRect() {
+    return this.wireframeConditionsPanel.rect;
+  }
+
   /** Opens the publish review surface. */
   @action
   openReviewDrawer() {
@@ -880,25 +876,31 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Toggles the conditions detach state. Reads / writes localStorage
-   * so the preference survives reloads.
+   * Conditions-panel facade — delegates to `wireframeConditionsPanel`. Toggles
+   * the condition builder between docked and detached (floating).
    */
   @action
   toggleConditionsDetached() {
-    this.conditionsDetached = !this.conditionsDetached;
-    this.#persistConditionsPanelState();
+    this.wireframeConditionsPanel.toggleDetached();
   }
 
+  /**
+   * Conditions-panel facade — collapses the floating panel back into the
+   * inspector.
+   */
   @action
   closeConditionsPanel() {
-    this.conditionsDetached = false;
-    this.#persistConditionsPanelState();
+    this.wireframeConditionsPanel.close();
   }
 
+  /**
+   * Conditions-panel facade — records the floating panel's new position/size.
+   *
+   * @param {Object} rect
+   */
   @action
   updateConditionsPanelRect(rect) {
-    this.conditionsPanelRect = rect;
-    this.#persistConditionsPanelState();
+    this.wireframeConditionsPanel.updateRect(rect);
   }
 
   @action
@@ -1293,136 +1295,40 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Replaces the `conditions` tree on the currently-selected block.
-   * Used by the visual condition builder in the inspector to push edits
-   * back to the layout. Pass `null` to clear all conditions.
-   *
-   * Conditions affect *whether* a block renders, so this is a structural
-   * change — routes through `publishStructuralChange` to keep
-   * `isDirty`, `structuralVersion`, and the outline's row count in
-   * lockstep with the canvas.
-   *
-   * NOTE: we deliberately do NOT reassign `selectedBlockData` here. The
-   * inspector's args form (`<InspectorForm>`) reads
-   * `selectedBlockData.argsSnapshot` as `<Form @data>`; spreading into a
-   * new object would force FormKit to remount and re-register its
-   * fields, hitting "name already in use" duplicate-registration errors.
-   * Instead, callers that need the freshest conditions tree read
-   * through `selectedBlockConditions` — a live getter that resolves the
-   * latest entry on every read.
+   * Entry-edits facade — delegates to `wireframeEntryEdits`. Replaces the
+   * `conditions` tree on the currently-selected block (used by the inspector's
+   * condition builder; `null` clears all conditions).
    *
    * @param {Array|Object|null} newConditions
-   * @returns {boolean} true on success, false when no block is selected
-   *   or the selection isn't locatable in the live layout.
+   * @returns {boolean}
    */
   @action
   updateSelectedConditions(newConditions) {
-    const key = this.selectedBlockKey;
-    if (!key) {
-      return false;
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(key);
-    if (!located) {
-      return false;
-    }
-    return this.recordStructural([located.outletName], () => {
-      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
-      }
-      const result = replaceEntryConditions(layout, key, newConditions);
-      if (!result.changed) {
-        return false;
-      }
-      this.publishStructuralChange(located.outletName, result.layout);
-      return true;
-    });
+    return this.wireframeEntryEdits.updateSelectedConditions(newConditions);
   }
 
   /**
-   * Sets the `id` property on the selected entry. Validates against
-   * `VALID_BLOCK_ID_PATTERN` (lowercase letters / digits / hyphens,
-   * starting with a letter — same shape as block names). Empty / null
-   * clears the property entirely.
-   *
-   * Returns `{ ok, error }` so the caller (the inspector's metadata
-   * section) can show inline validation feedback without poking the
-   * service for state.
+   * Entry-edits facade — delegates to `wireframeEntryEdits`. Sets/clears the
+   * selected entry's `id`, returning `{ ok, error }` for inline validation.
    *
    * @param {string|null} nextId
    * @returns {{ok: boolean, error: string|null}}
    */
   @action
   updateSelectedEntryId(nextId) {
-    const key = this.selectedBlockKey;
-    if (!key) {
-      return { ok: false, error: "no-selection" };
-    }
-    const trimmed = typeof nextId === "string" ? nextId.trim() : nextId;
-    if (trimmed && !VALID_BLOCK_ID_PATTERN.test(trimmed)) {
-      return { ok: false, error: "invalid-format" };
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(key);
-    if (!located) {
-      return { ok: false, error: "not-found" };
-    }
-    const committed = this.recordStructural([located.outletName], () => {
-      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
-      }
-      const result = replaceEntryId(layout, key, trimmed || null);
-      if (!result.changed) {
-        return false;
-      }
-      this.publishStructuralChange(located.outletName, result.layout);
-      return true;
-    });
-    return { ok: !!committed, error: null };
+    return this.wireframeEntryEdits.updateSelectedEntryId(nextId);
   }
 
   /**
-   * Replaces the selected entry with a wholly new entry object. Used
-   * by the inspector's Raw JSON tab — the author edits the entry's
-   * serialised form and commits the parsed result.
+   * Entry-edits facade — delegates to `wireframeEntryEdits`. Replaces the
+   * selected entry with a parsed entry object (inspector Raw JSON tab).
    *
-   * Routes through `publishStructuralChange` because changes can
-   * touch any field (args / conditions / classNames / id), and the
-   * outline / canvas need to refresh.
-   *
-   * @param {Object} parsed - The parsed JSON, already validated by
-   *   the caller (`InspectorRawJson` rejects invalid JSON without
-   *   calling us).
+   * @param {Object} parsed
    * @returns {boolean}
    */
   @action
   replaceSelectedEntryRaw(parsed) {
-    const key = this.selectedBlockKey;
-    if (!key) {
-      return false;
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(key);
-    if (!located) {
-      return false;
-    }
-    // The outlet root must stay a single `layout` block. If a raw edit
-    // changes its block away from `layout`, re-wrap so the invariant holds —
-    // the edited entry then becomes the root layout's child.
-    const nextEntry = this.layoutQuery.isOutletRoot(key)
-      ? wrapAsOutletRoot([parsed])[0]
-      : parsed;
-    return this.recordStructural([located.outletName], () => {
-      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
-      }
-      const result = replaceEntryInPlace(layout, key, nextEntry);
-      if (!result.changed) {
-        return false;
-      }
-      this.publishStructuralChange(located.outletName, result.layout);
-      return true;
-    });
+    return this.wireframeEntryEdits.replaceSelectedEntryRaw(parsed);
   }
 
   /**
@@ -2876,36 +2782,15 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Detaches the selected composite: materialises its code-defined parts (with
-   * current overrides) into explicit `children` and drops the override map, so
-   * it becomes a plain container the author can restructure. Peels exactly one
-   * layer — a composite child stays composed. Structural commit (undo/redo +
-   * draft re-publish). Manual only; never automatic.
+   * Entry-edits facade — delegates to `wireframeEntryEdits`. Detaches the
+   * selected composite into a plain container (materialises its parts, drops the
+   * override map).
    *
    * @returns {boolean}
    */
   @action
   detachSelectedComposite() {
-    const key = this.selectedBlockKey;
-    if (!key) {
-      return false;
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(key);
-    if (!located) {
-      return false;
-    }
-    return this.recordStructural([located.outletName], () => {
-      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
-      }
-      const result = detachComposite(layout, key);
-      if (!result.changed) {
-        return false;
-      }
-      this.publishStructuralChange(located.outletName, result.layout);
-      return true;
-    });
+    return this.wireframeEntryEdits.detachSelectedComposite();
   }
 
   isInsideAllowedScope(target) {
@@ -2924,44 +2809,6 @@ export default class WireframeService extends Service {
       target.closest(".fk-d-menu-modal") ||
       target.closest(".fk-d-tooltip__content")
     );
-  }
-
-  /**
-   * Hydrates the conditions panel state from localStorage on service
-   * init. Tolerates missing / malformed entries by leaving the
-   * defaults in place.
-   */
-  #loadConditionsPanelState() {
-    try {
-      const raw = localStorage.getItem("wireframe.conditions-panel");
-      if (!raw) {
-        return;
-      }
-      const parsed = JSON.parse(raw);
-      if (typeof parsed?.detached === "boolean") {
-        this.conditionsDetached = parsed.detached;
-      }
-      if (parsed?.rect && typeof parsed.rect === "object") {
-        this.conditionsPanelRect = parsed.rect;
-      }
-    } catch {
-      // Corrupt JSON in localStorage — ignore, keep defaults.
-    }
-  }
-
-  #persistConditionsPanelState() {
-    try {
-      localStorage.setItem(
-        "wireframe.conditions-panel",
-        JSON.stringify({
-          detached: this.conditionsDetached,
-          rect: this.conditionsPanelRect,
-        })
-      );
-    } catch {
-      // QuotaExceeded / disabled storage — non-fatal, the preference
-      // just won't survive the session.
-    }
   }
 
   /**
