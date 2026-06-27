@@ -476,6 +476,81 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     expect(parsed.dig(:generationConfig, :thinkingConfig)).to be_nil
   end
 
+  it "adds configured service tier using the Gemini API field name" do
+    response = gemini_mock.response("Configured service tier").to_json
+    url = "#{model.url}:generateContent?key=123"
+
+    captured_bodies = []
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          captured_bodies << JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    {
+      "default" => nil,
+      "standard" => "standard",
+      "flex" => "flex",
+      "priority" => "priority",
+    }.each do |configured_tier, expected_tier|
+      model.update!(provider_params: { service_tier: configured_tier })
+
+      DiscourseAi::Completions::Llm.proxy(model).generate("Hello", user: user)
+
+      payload = captured_bodies.last
+      if expected_tier
+        expect(payload[:serviceTier]).to eq(expected_tier)
+      else
+        expect(payload).not_to have_key(:serviceTier)
+      end
+      expect(payload).not_to have_key(:service_tier)
+    end
+  end
+
+  it "omits service tier when it is not configured" do
+    response = gemini_mock.response("No service tier").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate("Hello", user: user)
+
+    expect(JSON.parse(req_body, symbolize_names: true)).not_to have_key(:serviceTier)
+  end
+
+  it "omits service tier when it is invalid" do
+    model.update!(provider_params: { service_tier: "invalid" })
+
+    response = gemini_mock.response("Invalid service tier").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate("Hello", user: user)
+
+    expect(JSON.parse(req_body, symbolize_names: true)).not_to have_key(:serviceTier)
+  end
+
   it "strips temperature when thinking_level is set" do
     model.update!(provider_params: { enable_thinking: true, thinking_level: "high" })
 

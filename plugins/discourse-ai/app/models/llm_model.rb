@@ -258,6 +258,11 @@ class LlmModel < ActiveRecord::Base
           hidden_if: :enable_thinking,
         },
         disable_top_p: :checkbox,
+        service_tier: {
+          type: :enum,
+          values: %w[default standard flex priority],
+          default: "default",
+        },
       },
       azure: {
         disable_native_tools: :checkbox,

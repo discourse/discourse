@@ -15,6 +15,8 @@ class AiApiAuditLogSerializer < ApplicationSerializer
              :feature_name,
              :llm_id,
              :language_model,
+             :response_status,
+             :retry_attempt_statuses,
              :created_at,
              :prev_log_id,
              :next_log_id,
@@ -24,6 +26,14 @@ class AiApiAuditLogSerializer < ApplicationSerializer
              :conversation_cache_read_tokens,
              :conversation_cache_write_tokens,
              :conversation_spending
+
+  def retry_attempt_statuses
+    object.retry_attempt_statuses
+  end
+
+  def include_retry_attempt_statuses?
+    object.has_attribute?(:retry_attempt_statuses)
+  end
 
   def spending
     object.llm_model&.spending_for(object)

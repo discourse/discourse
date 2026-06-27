@@ -139,7 +139,17 @@ module DiscourseAi
             payload[:generationConfig][:thinkingConfig][:includeThoughts] = true
           end
 
+          payload[:serviceTier] = service_tier if service_tier.present?
+
           payload
+        end
+
+        def service_tier
+          return @service_tier if defined?(@service_tier)
+
+          @service_tier = llm_model.lookup_custom_param("service_tier")
+          @service_tier = nil if !%w[standard flex priority].include?(@service_tier)
+          @service_tier
         end
 
         def prepare_request(payload)
