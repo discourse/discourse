@@ -56,11 +56,6 @@ module AclTarget
     @permission_acl ||= AccessControlList.where(target: self).target_acl(self)
   end
 
-  def mandatory_acl_as_expanded_list(owner)
-    return [] if !self.class.has_mandatory_acl?
-    AccessControlList.expand_list(self.class.mandatory_acl, self, owner)
-  end
-
   class_methods do
     def acl_target_key
       name

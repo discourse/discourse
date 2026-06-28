@@ -20,7 +20,7 @@ Use this skill before adding or reviewing ACL-backed resource permissions in Dis
 
 - Put authorization at the caller boundary before `AccessControlListManager.call`; the manager is a destructive replacement service and currently assumes the caller already authorized the actor.
 - Always call `AccessControlListManager` for writes, including empty submitted ACL arrays, so mandatory ACLs are injected and old rows are replaced intentionally.
-- Treat `AccessControlList.flattened_list` as the API shape for UI/client payloads and `AccessControlList.expand_list` as the DB insert shape.
+- Treat `AccessControlList.flattened_list` as the API shape for UI/client payloads and `AccessControlList.expand_list_for_bulk_insert` as the DB insert shape.
 - Use Guardian ACL helpers or `AclTarget` visibility scopes for checks and target scopes instead of hand-querying ACL tables in controllers.
 - Register plugin ACL targets with `DiscoursePluginRegistry.register_acl_target_class` so `Site#access_control` exposes mandatory ACL metadata to the frontend.
 - Do not claim user ACL support is complete. Current authoring and UI flows are group-first; `allowed_user_ids` and user entries exist in lower layers but are not fully wired by `expand_list`, `preload_allowed`, cleanup jobs, or `DAccessControl`.

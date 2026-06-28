@@ -5,14 +5,14 @@ RSpec.describe AccessControlList do
   fab!(:group) { Fabricate(:group, name: "marketing", full_name: "Marketing Team") }
   fab!(:other_group) { Fabricate(:group, name: "support", full_name: "Support Team") }
 
-  describe ".expand_list" do
+  describe ".expand_list_for_bulk_insert" do
     it "collapses multiple groups sharing a permission into one record" do
       list = [
         { type: "group", id: group.id, permission: "view" },
         { type: "group", id: other_group.id, permission: "view" },
       ]
 
-      result = described_class.expand_list(list, target, "core")
+      result = described_class.expand_list_for_bulk_insert(list, target, "core")
 
       expect(result.size).to eq(1)
       entry = result.first
@@ -31,7 +31,7 @@ RSpec.describe AccessControlList do
         { type: "group", id: group.id, permission: "edit" },
       ]
 
-      result = described_class.expand_list(list, target, "core")
+      result = described_class.expand_list_for_bulk_insert(list, target, "core")
 
       expect(result.map { |entry| entry[:permission] }).to contain_exactly("view", "edit")
       expect(result.find { |entry| entry[:permission] == "edit" }[:allowed_group_ids]).to(
@@ -42,7 +42,7 @@ RSpec.describe AccessControlList do
     it "accepts a symbol type and a custom owner" do
       list = [{ type: :group, id: group.id, permission: "view" }]
 
-      result = described_class.expand_list(list, target, "chat")
+      result = described_class.expand_list_for_bulk_insert(list, target, "chat")
 
       expect(result.first[:allowed_group_ids]).to contain_exactly(group.id)
       expect(result.first[:owner]).to eq("chat")
@@ -54,7 +54,7 @@ RSpec.describe AccessControlList do
         { type: "group", id: other_group.id, permission: "edit" },
       ]
 
-      described_class.insert_all!(described_class.expand_list(list, target, "core"))
+      described_class.insert_all!(described_class.expand_list_for_bulk_insert(list, target, "core"))
 
       acls = described_class.where(target: target)
       expect(acls.pluck(:permission)).to contain_exactly("view", "edit")
