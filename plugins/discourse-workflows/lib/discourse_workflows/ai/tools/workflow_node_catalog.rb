@@ -66,6 +66,21 @@ module DiscourseWorkflows
           "user.staff" => "boolean",
         }.freeze
 
+        USER_ACTION_SCHEMA =
+          USER_SCHEMA.merge(
+            "user" => "Discourse user lookup/update payload",
+            "user.title" => "string|null",
+            "user.bio_raw" => "string|null",
+            "user.manual_locked_trust_level" => "integer|null",
+            "user.trust_level_locked" => "boolean",
+            "user.user_fields" => "object",
+            "user.groups" => "array<object>",
+            "user.groups[].id" => "integer",
+            "user.groups[].name" => "string",
+            "user.groups[].full_name" => "string|null",
+            "user.groups[].automatic" => "boolean",
+          ).freeze
+
         GROUP_MEMBERSHIP_SCHEMA = {
           "group_membership" => "Group membership check result",
           "group_membership.group_id" => "integer",
@@ -89,6 +104,7 @@ module DiscourseWorkflows
             "tag_names" => "array<string>",
           },
           "action:post" => POST_SCHEMA,
+          "action:user" => USER_ACTION_SCHEMA,
           "action:send_personal_message" => TOPIC_LIST_ITEM_SCHEMA.merge(POST_SCHEMA),
           "action:send_chat_message" => {
             "channel_id" => "integer",
@@ -191,6 +207,29 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:user" => [
+            {
+              name: "Look up a post author",
+              parameters: {
+                operation: "get",
+                username: "={{ $json.user.username }}",
+                actor_username: "system",
+              },
+            },
+            {
+              name: "Set a user title and trust level",
+              parameters: {
+                operation: "edit",
+                username: "={{ $json.user.username }}",
+                updates: {
+                  title: "Member",
+                  trust_level: "2",
+                  trust_level_locked: true,
+                },
+                actor_username: "system",
+              },
+            },
+          ],
           "action:topic" => [
             {
               name: "Get trigger topic details",
@@ -265,6 +304,8 @@ module DiscourseWorkflows
           "action:ai_agent" =>
             "ai agent bot llm classify summarize generate sentiment triage runner run as permissions uploads attachments",
           "action:group" => "group membership member belongs friend friends",
+          "action:user" =>
+            "user profile bio title trust level lock groups fields lookup edit update",
         }.freeze
 
         def self.signature

@@ -128,6 +128,28 @@ RSpec.describe DiscourseWorkflows::Executor::ParameterResolver do
     sandbox&.dispose
   end
 
+  it "resolves collection option values with their option schemas" do
+    resolver, expression_resolver, sandbox =
+      build_resolver(
+        { "updates" => { "title" => "={{ $json.title }}", "trust_level_locked" => "false" } },
+        schema: {
+          updates: {
+            type: :collection,
+            options: [
+              { name: "title", type: :string },
+              { name: "trust_level_locked", type: :boolean },
+            ],
+          },
+        },
+        items: [{ "json" => { "title" => "Member" } }],
+      )
+
+    expect(resolver.resolve("updates", 0)).to eq("title" => "Member", "trust_level_locked" => false)
+  ensure
+    expression_resolver&.dispose
+    sandbox&.dispose
+  end
+
   it "coerces boolean values using the property schema" do
     resolver, expression_resolver, sandbox =
       build_resolver(
