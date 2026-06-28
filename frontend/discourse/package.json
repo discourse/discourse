@@ -51,7 +51,7 @@
     "@glint/ember-tsc": "^1.2.3",
     "@glint/template": "^1.7.7",
     "@highlightjs/cdn-assets": "11.11.1",
-    "@json-editor/json-editor": "2.15.2",
+    "@json-editor/json-editor": "2.17.1",
     "@lezer/common": "^1.5.2",
     "@lezer/highlight": "^1.2.3",
     "@lezer/javascript": "^1.5.4",
