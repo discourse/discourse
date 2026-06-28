@@ -9,12 +9,15 @@
 # unreachable under `RAILS_TEST_LOG_LEVEL=error` (CI) - pure overhead paid
 # hundreds of times per page the system specs drive. Neutralize them in CI.
 #
-# Everything here is gated on `ENV["CI"]` and individually restorable via
+# Gated on `DISCOURSE_REDUCE_REQUEST_CPU=1`, which the workflow sets only for
+# system-test jobs: backend specs assert directly on MethodProfiler, request
+# timing (X-Runtime), and the notification instrumentation neutralized here, so
+# they must keep it intact. Individually restorable via
 # `DISCOURSE_KEEP_AR_QUERY_LOGS=1` / `DISCOURSE_KEEP_METHOD_PROFILER=1`.
 # Query-counting helpers (`spec/support/helpers.rb#track_sql_queries`) attach
 # transient subscribers, so they continue to observe queries unchanged.
 
-if ENV["CI"] && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
+if ENV["DISCOURSE_REDUCE_REQUEST_CPU"] == "1" && !ENV["DISCOURSE_KEEP_AR_QUERY_LOGS"]
   # ActiveRecord query log tags + verbose query logs are enabled in
   # config/environments/test.rb, but their output is unreachable under
   # RAILS_TEST_LOG_LEVEL=error. The compute is not: every AR query runs the
@@ -101,7 +104,8 @@ end
 # GC.stats are skipped, and stop/transfer return nil. Every consumer
 # (RequestTracker, Hijack, Jobs::Base, lograge) is already nil-guarded on that
 # path. Restore with DISCOURSE_KEEP_METHOD_PROFILER=1.
-if ENV["CI"] && !ENV["DISCOURSE_KEEP_METHOD_PROFILER"] && defined?(MethodProfiler)
+if ENV["DISCOURSE_REDUCE_REQUEST_CPU"] == "1" && !ENV["DISCOURSE_KEEP_METHOD_PROFILER"] &&
+     defined?(MethodProfiler)
   MethodProfiler.singleton_class.prepend(
     Module.new do
       def start(_transfer = nil)

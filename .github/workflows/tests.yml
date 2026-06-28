@@ -74,6 +74,11 @@ jobs:
       # builds by default). Negligible bundle-size cost, all other production
       # optimizations intact.
       KEEP_TEST_SELECTORS: ${{ matrix.build_type == 'system' && '1' || '' }}
+      # Neutralize per-request server-side instrumentation that only feeds logs
+      # dropped at RAILS_TEST_LOG_LEVEL=error (see spec/support/ci_request_cpu.rb).
+      # Scoped to system jobs: backend specs assert on MethodProfiler / request
+      # timing / notification instrumentation and must keep it intact.
+      DISCOURSE_REDUCE_REQUEST_CPU: ${{ matrix.build_type == 'system' && '1' || '' }}
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
