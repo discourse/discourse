@@ -317,6 +317,17 @@ jobs:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
           path: ./frontend/discourse/test-execution-*.json
 
+      # The test image bakes only the full Chromium build (`playwright install
+      # --no-shell chromium`). Install the headless shell next to it so the
+      # system-spec driver (SystemDrivers.headless_shell_available?) picks the
+      # lighter purpose-built headless binary instead of full Chromium's "new
+      # headless" mode (~8% less browser CPU, fewer crashpad processes). Scoped
+      # to the core system job; jobs without the binary keep launching full
+      # Chromium unchanged.
+      - name: Install Playwright headless shell
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        run: pnpm playwright install chromium-headless-shell
+
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:

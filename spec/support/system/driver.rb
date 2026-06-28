@@ -42,10 +42,33 @@ module SystemDrivers
     driver.join("_").to_sym
   end
 
+  # Playwright runs headless browsers on its purpose-built
+  # chromium-headless-shell by default; pinning `channel: :chromium` opts into
+  # full Chromium's heavier "new headless" mode instead (two extra crashpad
+  # processes per browser and ~8% more browser CPU / ~2% more wall per spec
+  # file in interleaved A/B runs, same Chromium build revision). Prefer the
+  # shell wherever its binary is installed - CI installs it alongside the
+  # image's full build, while dev installs (`playwright install --no-shell`)
+  # don't have it and keep today's behavior. Headful runs
+  # (PLAYWRIGHT_HEADLESS=0) always use the full build; Playwright only
+  # substitutes the shell when launching headless. Set
+  # PLAYWRIGHT_FULL_CHROMIUM=1 to force the full build back for headless runs.
+  def self.headless_shell_available?
+    return false if ENV["PLAYWRIGHT_FULL_CHROMIUM"] == "1"
+
+    browsers_path = ENV["PLAYWRIGHT_BROWSERS_PATH"].presence
+    return false if browsers_path == "0"
+    browsers_path ||= File.join(Dir.home, ".cache", "ms-playwright")
+
+    Dir.glob(
+      File.join(browsers_path, "chromium_headless_shell-*", "chrome-linux", "headless_shell"),
+    ).any?
+  end
+
   def self.register!(example)
     base_options = {
       browser_type: :chromium,
-      channel: :chromium,
+      **(headless_shell_available? ? {} : { channel: :chromium }),
       headless: (ENV["PLAYWRIGHT_HEADLESS"].presence || ENV["SELENIUM_HEADLESS"].presence) != "0",
       acceptDownloads: true,
       downloadsPath: Downloads::FOLDER,
