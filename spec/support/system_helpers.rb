@@ -122,7 +122,20 @@ module SystemHelpers
     SiteSetting.global_notice = ""
     SiteSetting.force_hostname = Capybara.server_host
     SiteSetting.port = Capybara.server_port
-    SiteSetting.external_system_avatars_url = ""
+    # Pin every system avatar to ONE local letter-avatar URL instead of the
+    # default per-username path. Fabricated usernames are unique, so
+    # per-username URLs are permanently cache-cold: every file's first
+    # navigations fetch each poster's avatar through the full Rails stack
+    # (`UserAvatarsController#show_letter` takes a Redis-backed DistributedMutex
+    # per request even on disk-cache hits) while the `load` event Capybara waits
+    # on blocks behind them. `show_letter` already stamps `immutable_for(1.year)`
+    # and the browser is reused for the worker's lifetime, so collapsing to one
+    # URL makes avatars a single warm fetch per worker. The path keeps the
+    # `/letter_avatar/` shape page objects match on and resolves through the
+    # real controller; `{size}` is substituted client-side. Uploaded avatars
+    # (`/user_avatar/`) are unaffected, and specs that configure avatars
+    # explicitly override this setting per-example as before.
+    SiteSetting.external_system_avatars_url = "/letter_avatar/a/{size}/#{LetterAvatar.version}.png"
     SiteSetting.enable_user_tips = false
     SiteSetting.allowed_internal_hosts =
       (
