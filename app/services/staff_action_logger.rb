@@ -350,6 +350,34 @@ class StaffActionLogger
     )
   end
 
+  def log_access_control_list_permission_change(
+    target,
+    previous_permissions,
+    new_permissions,
+    opts = {}
+  )
+    previous_permissions_details =
+      previous_permissions.map { |permission_name, permission| <<~STR }.join("\n")
+     #{permission_name}:
+     -> #{permission.map { |k, v| "#{k}: #{v.join(", ")}" }.join(",")}
+    STR
+
+    new_permissions_details =
+      new_permissions.map { |permission_name, permission| <<~STR }.join("\n")
+      #{permission_name}:
+      -> #{permission.map { |k, v| "#{k}: #{v.join(", ")}" }.join(",")}
+    STR
+
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[:change_access_control_list_permissions],
+        subject: "#{target.class.polymorphic_name} (#{target.id})",
+        previous_value: previous_permissions_details,
+        new_value: new_permissions_details,
+      ),
+    )
+  end
+
   def theme_json(theme)
     ThemeSerializer.new(theme, root: false, include_theme_field_values: true).to_json
   end

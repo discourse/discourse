@@ -169,6 +169,7 @@ class UserHistory < ActiveRecord::Base
         upcoming_change_available: 124,
         notified_about_composer_education: 125, # not used anymore
         recover_post: 126,
+        change_access_control_list_permissions: 127,
       )
   end
 
@@ -297,6 +298,7 @@ class UserHistory < ActiveRecord::Base
       upcoming_change_toggled
       change_site_setting_groups
       upcoming_change_available
+      change_access_control_list_permissions
     ]
   end
 
