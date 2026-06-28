@@ -56,6 +56,7 @@ module(
     hooks.beforeEach(function () {
       this.editor = getOwner(this).lookup("service:wireframe");
       this.persistence = getOwner(this).lookup("service:wireframe-persistence");
+      this.theme = getOwner(this).lookup("service:wireframe-theme");
     });
 
     hooks.afterEach(function () {
@@ -104,7 +105,7 @@ module(
       await enterEdited(this);
       stubDraftsDelete();
       // The outlet resolves to theme 7 as its owner; the fallback (5) must not win.
-      this.editor.outletOwner = () => ({ themeId: 7, isGit: false });
+      this.theme.outletOwner = () => ({ themeId: 7, isGit: false });
 
       pretender.post("/admin/customize/block-layouts.json", (request) => {
         assert.strictEqual(parsePostData(request.requestBody).theme_id, "7");
@@ -119,7 +120,7 @@ module(
 
     test("publish skips a Git-owned outlet and preserves its edit", async function (assert) {
       await enterEdited(this);
-      this.editor.outletOwner = () => ({ themeId: 9, isGit: true });
+      this.theme.outletOwner = () => ({ themeId: 9, isGit: true });
 
       pretender.post("/admin/customize/block-layouts.json", () => {
         assert.step("posted");

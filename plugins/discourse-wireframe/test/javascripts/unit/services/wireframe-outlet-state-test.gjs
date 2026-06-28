@@ -185,7 +185,7 @@ module(
 
       // The session was entered against theme 7, so that's the save target —
       // not a computed default theme.
-      this.editor.activeThemeId = 7;
+      getOwner(this).lookup("service:wireframe-theme").setActiveTheme(7);
       assert.strictEqual(
         this.editor.outletOwner("homepage-blocks").themeId,
         7,

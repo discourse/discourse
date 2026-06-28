@@ -16,7 +16,7 @@ const COMPANION_URL = "/admin/plugins/wireframe/companion.json";
  * so a later session can tell whether the live layout moved on underneath it.
  */
 export default class WireframeDraftsService extends Service {
-  @service wireframe;
+  @service wireframeLayoutQuery;
   @service wireframePersistence;
 
   /** Per-session cache of `themeId → companion id (or null)`; the mapping is stable within a load. */
@@ -123,8 +123,7 @@ export default class WireframeDraftsService extends Service {
    * @returns {Promise<void>}
    */
   saveDraftOutlet(themeId, outlet) {
-    const resolvedLayout =
-      this.wireframe.layoutQuery.readResolvedLayout(outlet);
+    const resolvedLayout = this.wireframeLayoutQuery.readResolvedLayout(outlet);
     const layout = serializeLayoutForSave(resolvedLayout ?? []);
 
     // A null resolved read means the read path failed, not a deliberate empty

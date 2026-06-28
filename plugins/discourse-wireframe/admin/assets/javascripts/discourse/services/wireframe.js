@@ -2,7 +2,7 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { trackedMap, trackedSet } from "@ember/reactive/collections";
+import { trackedMap } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import {
@@ -16,13 +16,10 @@ import {
 } from "discourse/blocks";
 import {
   _clearLayoutLayer,
-  _getResolvedLayouts,
   _setLayoutLayer,
   LAYOUT_LAYERS,
-  LAYOUT_SOURCE,
 } from "discourse/blocks/block-outlet";
 import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
-import PreloadStore from "discourse/lib/preload-store";
 import { i18n } from "discourse-i18n";
 // `grid-math` holds the editor-only grid geometry. Absolute addon path
 // because this admin service crosses into the plugin's universal bundle.
@@ -85,7 +82,6 @@ export default class WireframeService extends Service {
   @service blocks;
   @service currentUser;
   @service modal;
-  @service site;
   @service siteSettings;
   @service wireframeArgEdit;
   @service wireframeBlockMutations;
@@ -98,6 +94,7 @@ export default class WireframeService extends Service {
   @service wireframeDropAuthority;
   @service wireframeEditEngine;
   @service wireframeEntryEdits;
+  @service wireframeForceExpand;
   @service wireframeGridManipulator;
   @service wireframeImageUpload;
   @service wireframeInlineEdit;
@@ -106,21 +103,8 @@ export default class WireframeService extends Service {
   @service wireframeRevision;
   @service wireframeSelection;
   @service wireframeSession;
-
-  /**
-   * The id of the theme this editor session is bound to. Set on `enter()`
-   * — explicit `themeId` argument takes precedence; otherwise we fall back
-   * to whichever user-selectable theme is marked default on the site. The
-   * persistence service uses this when posting saves; if it remains null,
-   * the toolbar's Save button stays disabled.
-   *
-   * The URL-based theme chooser sets this via `enter({ themeId })` so
-   * admins picking a theme from the admin show page land here with
-   * the right target.
-   *
-   * @type {number|null}
-   */
-  @tracked activeThemeId = null;
+  @service wireframeTheme;
+  @service wireframeValidation;
 
   /**
    * Whether the publish review surface (the save/publish drawer) is open. Held
@@ -215,21 +199,6 @@ export default class WireframeService extends Service {
    * @type {Array<{outlet: string, themeId: number, layout: Array<Object>}>}
    */
   #staleDraftQueue = [];
-
-  /**
-   * `wf:layout` block keys that the author has explicitly asked to
-   * render in their full multi-column layout regardless of the
-   * `@container` collapse threshold. Editor-only session state — never
-   * persisted, cleared on `exit()`. The chrome wrapper picks up the
-   * `--force-expanded` modifier class when its block key is in this
-   * set, which defeats the universal `@container` collapse rule via
-   * specificity so the author can edit the full grid structure.
-   *
-   * Per-block so authors can independently toggle different layouts.
-   *
-   * @type {Set<string>}
-   */
-  #forceExpandedKeys = trackedSet();
 
   /**
    * Tracks the mousedown target so the deselect handler can require
@@ -363,27 +332,34 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * The theme an outlet publishes to when nothing yet owns it (a pure in-code
-   * default with no live field). Exposed publicly so the persistence and drafts
-   * services can resolve a fallback publish target without reaching into the
-   * private resolver.
+   * Theme facade — delegates to `wireframeTheme`. The id of the theme this
+   * session is bound to (set on enter, repointed to a companion, cleared on
+   * exit). Null while no session is active.
+   *
+   * @returns {number|null}
+   */
+  get activeThemeId() {
+    return this.wireframeTheme.activeThemeId;
+  }
+
+  /**
+   * Theme facade — delegates to `wireframeTheme`. The fallback publish target
+   * for an outlet nothing owns yet.
    *
    * @returns {number|null}
    */
   get defaultThemeId() {
-    return this.#defaultThemeId();
+    return this.wireframeTheme.defaultThemeId;
   }
 
   /**
-   * Whether the editor is bound to a core "system" theme (Foundation, Horizon),
-   * which have negative ids. Such themes can't be published to directly — the
-   * editor offers an installable companion component instead — so the toolbar
-   * uses this to disable the direct Publish action.
+   * Theme facade — delegates to `wireframeTheme`. Whether the bound theme is a
+   * core "system" theme (negative id) that can't be published to directly.
    *
    * @returns {boolean}
    */
   get activeThemeIsSystem() {
-    return this.activeThemeId != null && this.activeThemeId < 0;
+    return this.wireframeTheme.activeThemeIsSystem;
   }
 
   /**
@@ -773,50 +749,19 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Validation warnings across every outlet the editor is currently
-   * drafting. Walks each outlet's resolved layout and harvests the
-   * per-entry `__failureReason` stamps the permissive validator leaves
-   * behind (paired 1:1 with the layer-level warnings — see
-   * `validation/layout.js`'s `markEntrySoftFailure` + `context.warnings`).
-   *
-   * Reading the stamps rather than the layer record's frozen
-   * `validationWarnings` array is what lets the inspector banner clear
-   * the moment the author fixes a failing arg: in-place arg writes go
-   * through `writeArgs`, which deletes the entry's stamps but doesn't
-   * touch the layer array. The two surfaces (per-block ghost chrome,
-   * outlet-wide banner) now agree on the live state.
-   *
-   * Reactivity: reads `structuralVersion` so structural republishes
-   * re-evaluate; entry stamp reads (on the trackedObject-wrapped entry)
-   * open their own deps so arg-edit stamp clears propagate too.
-   * Validation itself is async (`validatedLayout` is a lazy Promise
-   * resolved after `BlockOutlet` first reads it); on the very first
-   * render after a publish, stamps may not yet be populated and this
-   * getter returns an empty list until the next tick.
+   * Validation facade — delegates to `wireframeValidation`. The flat list of
+   * `{outletName, message}` warnings across every outlet, derived live from the
+   * validator's per-entry `__failureReason` stamps.
    *
    * @returns {Array<{outletName: string, message: string}>}
    */
   get validationWarnings() {
-    // `structuralVersion` covers republishes (validation re-runs against
-    // the freshly-published layer). In-place stamp changes propagate via
-    // the per-entry `trackedObject` wrap — each `entry.__failureReason`
-    // read below opens a per-key dep that fires when `revalidateEntryStamps`
-    // rewrites or deletes `entry.__failureReason` on an arg edit.
-    void this.structuralVersion;
-    const layoutMap = _getResolvedLayouts();
-    const warnings = [];
-    for (const [outletName, record] of layoutMap) {
-      if (!record?.layout) {
-        continue;
-      }
-      this.#collectStampedWarnings(record.layout, outletName, warnings);
-    }
-    return warnings;
+    return this.wireframeValidation.validationWarnings;
   }
 
   /** @returns {boolean} */
   get hasValidationWarnings() {
-    return this.validationWarnings.length > 0;
+    return this.wireframeValidation.hasValidationWarnings;
   }
 
   /**
@@ -907,7 +852,7 @@ export default class WireframeService extends Service {
     // New session generation: invalidates any draft hydration still in flight
     // from a previous enter/exit so it can't write into this session.
     const generation = ++this.#enterGeneration;
-    this.activeThemeId = themeId ?? this.#defaultThemeId();
+    this.wireframeTheme.setActiveTheme(themeId);
     // A theme that can't be published to directly may have a companion to retarget
     // to; suppress the blocked callout until the after-render lookup settles.
     this.publishTargetResolving = this.activeThemeTarget?.publishable === false;
@@ -1012,7 +957,7 @@ export default class WireframeService extends Service {
     this.wireframeSession.deactivate();
     this.reviewDrawerOpen = false;
     this.publishTargetResolving = false;
-    this.activeThemeId = null;
+    this.wireframeTheme.reset();
     // Tear the selection down WITHOUT firing the select hooks (flush args,
     // commit in-session edits, reveal-into-view) — they're meaningless once
     // the session is ending, and `selectBlock(null)` would fire them.
@@ -1026,7 +971,7 @@ export default class WireframeService extends Service {
     resetBlockArgRenderer("rich-text");
     this.wireframeArgEdit.clear();
     this.#persistedDraftLayouts.clear();
-    this.#forceExpandedKeys.clear();
+    this.wireframeForceExpand.reset();
     // Clear every editor body class, including the chrome's collapse / dim
     // modifiers. These are separate class tokens from `wireframe-active`, so
     // leaving them would keep the live page dimmed after the editor closes.
@@ -1659,19 +1604,13 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Hard-navigates the editor onto a different theme by reloading the current
-   * page with `?wf_theme=<id>`. A full document load is required (not an SPA
-   * transition) so the boot preload re-seeds the new theme's block layouts and
-   * per-theme metadata; the entry pill then auto-enters bound to it. Used after
-   * duplicate / create-customization-component so the new owner takes effect and
-   * Publish enables. Isolated here as a thin, stubbable seam.
+   * Theme facade — delegates to `wireframeTheme`. Hard-navigates the editor onto
+   * a different theme (full reload with `?wf_theme=<id>`).
    *
    * @param {number} themeId
    */
   navigateToEditTheme(themeId) {
-    const url = new URL(window.location.href);
-    url.searchParams.set("wf_theme", themeId);
-    window.location.assign(url.toString());
+    return this.wireframeTheme.navigateToEditTheme(themeId);
   }
 
   // Pulls the server's error message out of a failed git-action request, falling
@@ -1773,98 +1712,34 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * The theme that owns an outlet (where Publish writes its live field) plus
-   * the metadata needed to badge and gate it. For a published outlet the owner
-   * is the theme that holds the field (the most-derived theme, resolved by the
-   * core layer resolver); for a default/locked outlet nothing owns it yet, so
-   * the target is this session's `activeThemeId` — the theme the editor was
-   * entered against (an explicit `enter({ themeId })`) or, for the pill, the
-   * current theme. `themeName` and `isGit` come from the per-theme metadata
-   * preload.
+   * Theme facade — delegates to `wireframeTheme`. The theme that owns an outlet
+   * (where Publish writes its live field) plus the badge/gate metadata.
    *
    * @param {string} outletName
    * @returns {{themeId: (number|null), themeName: (string|null), isGit: boolean, stackIndex: (number|undefined), layer: string}}
    */
   outletOwner(outletName) {
-    const meta = this.blocks.resolvedLayoutMeta(outletName, {
-      ignoreSessionDraft: true,
-    });
-    const themeId =
-      meta?.source === LAYOUT_SOURCE.THEME
-        ? Number(meta.sourceId)
-        : (this.activeThemeId ?? this.defaultThemeId);
-    const themeMeta = this.#themeMeta(themeId);
-    return {
-      themeId,
-      themeName: themeMeta?.name ?? null,
-      isGit: themeMeta?.is_git ?? false,
-      stackIndex:
-        meta?.source === LAYOUT_SOURCE.THEME
-          ? meta.themeStackIndex
-          : themeMeta?.stack_index,
-      layer: meta?.source ?? null,
-    };
+    return this.wireframeTheme.outletOwner(outletName);
   }
 
   /**
-   * The edited outlets grouped by the theme that owns them — the publish plan.
-   * Each group names its target theme and whether that theme can be published to
-   * directly (a local, non-Git theme) or needs the companion/duplicate/export
-   * path instead (a Git-managed or core "system" theme). Drives the publish
-   * review surface and the toolbar target indicator.
-   *
-   * Reactive: derives from the engine's `editedOutletNames()` (which reads the
-   * tracked edit bookkeeping) and `outletOwner` (which reads the tracked layer
-   * store), so a template re-renders as edits and their owners change.
+   * Theme facade — delegates to `wireframeTheme`. The edited outlets grouped by
+   * owning theme — the publish plan.
    *
    * @returns {Array<{themeId: (number|null), themeName: (string|null), isGit: boolean, isSystem: boolean, publishable: boolean, outlets: Array<string>}>}
    */
   get publishTargets() {
-    const groups = new Map();
-    for (const outletName of this.wireframeEditEngine.editedOutletNames()) {
-      const owner = this.outletOwner(outletName);
-      let group = groups.get(owner.themeId);
-      if (!group) {
-        const isSystem = owner.themeId != null && owner.themeId < 0;
-        group = {
-          themeId: owner.themeId,
-          themeName: owner.themeName,
-          isGit: owner.isGit,
-          isSystem,
-          publishable: !owner.isGit && !isSystem,
-          outlets: [],
-        };
-        groups.set(owner.themeId, group);
-      }
-      group.outlets.push(outletName);
-    }
-    return [...groups.values()];
+    return this.wireframeTheme.publishTargets;
   }
 
   /**
-   * The theme this session would publish to before anything is edited — the
-   * theme the editor was entered against (or the default target). Used by the
-   * toolbar target indicator to name the destination up front, with the same
-   * `publishable` shape as a `publishTargets` group so the indicator can render
-   * either uniformly. Null when no target can be resolved.
+   * Theme facade — delegates to `wireframeTheme`. The theme this session would
+   * publish to before anything is edited.
    *
    * @returns {{themeId: number, themeName: (string|null), isGit: boolean, isSystem: boolean, publishable: boolean}|null}
    */
   get activeThemeTarget() {
-    const themeId = this.activeThemeId ?? this.defaultThemeId;
-    if (themeId == null) {
-      return null;
-    }
-    const themeMeta = this.#themeMeta(themeId);
-    const isSystem = themeId < 0;
-    const isGit = themeMeta?.is_git ?? false;
-    return {
-      themeId,
-      themeName: themeMeta?.name ?? null,
-      isGit,
-      isSystem,
-      publishable: !isGit && !isSystem,
-    };
+    return this.wireframeTheme.activeThemeTarget;
   }
 
   /**
@@ -1976,27 +1851,19 @@ export default class WireframeService extends Service {
    * @returns {boolean}
    */
   isForceExpanded(blockKey) {
-    return blockKey ? this.#forceExpandedKeys.has(blockKey) : false;
+    return this.wireframeForceExpand.isForceExpanded(blockKey);
   }
 
   /**
-   * Flips the force-expand state for a single `wf:layout` block. The
-   * change is reactive — the chrome wrapper's class list re-renders
-   * immediately to add or remove `--force-expanded`, and `GridOverlay`
-   * sees an `isCollapsed` flip on its next dragover.
+   * Force-expand facade — delegates to `wireframeForceExpand`. Flips the
+   * force-expand state for a single `wf:layout` block (the chrome wrapper's
+   * `--force-expanded` class re-renders reactively).
    *
    * @param {string} blockKey
    */
   @action
   toggleForceExpand(blockKey) {
-    if (!blockKey) {
-      return;
-    }
-    if (this.#forceExpandedKeys.has(blockKey)) {
-      this.#forceExpandedKeys.delete(blockKey);
-    } else {
-      this.#forceExpandedKeys.add(blockKey);
-    }
+    return this.wireframeForceExpand.toggleForceExpand(blockKey);
   }
 
   /**
@@ -2443,66 +2310,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Picks a default theme id for editor sessions that didn't supply one (the
-   * pill entry, vs. an explicit `enter({ themeId })`). This is the theme the
-   * page actually renders against — the parent of the active stack, which is
-   * `stack_index 0` in `Theme.transform_ids` — so edits to an outlet nothing
-   * owns yet save back to the current theme.
-   *
-   * Derived from the `themeBlockLayoutMeta` preload, which carries each stack
-   * theme's `stack_index` and includes seeded default themes (negative ids like
-   * Foundation `-1`). NOT from `activatedThemes`: that is an unordered
-   * `{ id: name }` map, and a numeric-key lookup would both lose the stack order
-   * and skip the negative-id parent.
-   *
-   * Falls back to the user-selectable themes list when the meta preload is
-   * unavailable or empty. Returns null when no themes are available, in which
-   * case the Save / Publish control stays disabled.
-   *
-   * @returns {number|null}
-   */
-  #defaultThemeId() {
-    const meta = PreloadStore.get("themeBlockLayoutMeta");
-    if (meta && typeof meta === "object") {
-      let parentId = null;
-      let minRank = Infinity;
-      for (const [id, info] of Object.entries(meta)) {
-        const rank = info?.stack_index ?? Infinity;
-        if (rank < minRank) {
-          minRank = rank;
-          parentId = Number(id);
-        }
-      }
-      if (parentId != null) {
-        return parentId;
-      }
-    }
-    const themes = this.site?.user_themes ?? [];
-    return (
-      themes.find((t) => t.default)?.theme_id ?? themes[0]?.theme_id ?? null
-    );
-  }
-
-  /**
-   * Per-theme metadata from the boot preload (display name, git status, stack
-   * rank), keyed by theme id. The preload is JSON, so its keys are strings;
-   * coerce the lookup id to a string. Returns null when the theme is absent.
-   *
-   * @param {number|string|null} themeId
-   * @returns {?{name: string, component: boolean, is_git: boolean, stack_index: number}}
-   */
-  #themeMeta(themeId) {
-    if (themeId == null) {
-      return null;
-    }
-    const meta = PreloadStore.get("themeBlockLayoutMeta");
-    if (!meta || typeof meta !== "object") {
-      return null;
-    }
-    return meta[String(themeId)] ?? null;
-  }
-
-  /**
    * Eagerly publishes a `session-draft` layer for every outlet that has a
    * resolved layout. After this runs, `_getResolvedLayouts()` returns draft
    * entries for those outlets — the rest of the editor session mutates
@@ -2605,7 +2412,7 @@ export default class WireframeService extends Service {
       return;
     }
     if (companionId != null) {
-      this.activeThemeId = companionId;
+      this.wireframeTheme.setActiveTheme(companionId);
     }
     this.publishTargetResolving = false;
   }
@@ -2751,27 +2558,6 @@ export default class WireframeService extends Service {
       }
       // Dismissed (no choice): keep the live seed and leave the draft in place
       // so the prompt returns next session.
-    }
-  }
-
-  /**
-   * Recursively walks `entries` and pushes one `{outletName, message}`
-   * warning for every entry carrying a `__failureReason` stamp. Reads
-   * `__failureReason` rather than the truthy stamp pair (`__failureType`
-   * is also set) because the message is what the UI surfaces.
-   *
-   * @param {Array<Object>} entries
-   * @param {string} outletName
-   * @param {Array<{outletName: string, message: string}>} warnings
-   */
-  #collectStampedWarnings(entries, outletName, warnings) {
-    for (const entry of entries) {
-      if (entry?.__failureReason) {
-        warnings.push({ outletName, message: entry.__failureReason });
-      }
-      if (entry?.children?.length) {
-        this.#collectStampedWarnings(entry.children, outletName, warnings);
-      }
     }
   }
 

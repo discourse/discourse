@@ -33,9 +33,10 @@ const SCHEMA_VERSION = 1;
  * service calls it for post-publish cleanup.
  */
 export default class WireframePersistenceService extends Service {
-  @service wireframe;
   @service wireframeDrafts;
   @service wireframeEditEngine;
+  @service wireframeLayoutQuery;
+  @service wireframeTheme;
 
   /** `${themeId}:${outlet}` -> last-observed live version token. */
   #versionTokens = new Map();
@@ -119,9 +120,9 @@ export default class WireframePersistenceService extends Service {
   }
 
   async #publishOne(outlet, fallbackThemeId, result) {
-    const owner = this.wireframe.outletOwner(outlet);
+    const owner = this.wireframeTheme.outletOwner(outlet);
     const themeId =
-      owner.themeId ?? fallbackThemeId ?? this.wireframe.defaultThemeId;
+      owner.themeId ?? fallbackThemeId ?? this.wireframeTheme.defaultThemeId;
 
     if (owner.isGit) {
       // Never write a Git-managed theme's live field (Export/Duplicate is a
@@ -236,8 +237,7 @@ export default class WireframePersistenceService extends Service {
   // all" (which resolves to a real empty array) — throw so a caller never
   // persists/exports nothing over the server's copy.
   #serializeLayoutJson(outlet) {
-    const resolvedLayout =
-      this.wireframe.layoutQuery.readResolvedLayout(outlet);
+    const resolvedLayout = this.wireframeLayoutQuery.readResolvedLayout(outlet);
     const layout = serializeLayoutForSave(resolvedLayout ?? []);
     if (layout.length === 0 && resolvedLayout == null) {
       throw new Error(
@@ -262,7 +262,7 @@ export default class WireframePersistenceService extends Service {
   // tab via MessageBus). Cloned + permissive so a partial "save anyway" state
   // round-trips without re-throwing on exit.
   #publishToThemeLayer(outlet, themeId) {
-    const layout = this.wireframe.layoutQuery.readResolvedLayout(outlet);
+    const layout = this.wireframeLayoutQuery.readResolvedLayout(outlet);
     if (!layout || !themeId) {
       return;
     }
