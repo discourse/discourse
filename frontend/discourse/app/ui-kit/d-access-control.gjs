@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -98,12 +98,19 @@ export default class DAccessControl extends Component {
       });
   }
 
+  // TODO (martin) Handle user type ACLs here in next PR
   get selectedGroupIds() {
     return this.acl
       .filter((entry) => entry.type === "group")
       .map((entry) => entry.id);
   }
 
+  /**
+   * Mandatory permissions are defined per-target server-side via a mandatory_acl
+   * method, which is attached to the Site JSON. Any mandatory permissions will
+   * be added to the ACL and cannot be removed or changed in the UI.
+   */
+  @cached
   get mandatoryAcl() {
     if (!this.args.aclTarget) {
       return [];
@@ -112,6 +119,27 @@ export default class DAccessControl extends Component {
     return this.site.access_control?.mandatory_acl?.[this.args.aclTarget] || [];
   }
 
+  /**
+   * Banned permissions are defined per-target server-side via a banned_acl
+   * method, similar to mandatory_acl, which is attached to the Site JSON.
+   * Any banned permisions will be filtered out, e.g. the `edit` permission might
+   * be banned for the `anonymous_users` auto group ID.
+   */
+  @cached
+  get bannedAcl() {
+    if (!this.args.aclTarget) {
+      return [];
+    }
+
+    return this.site.access_control?.banned_acl?.[this.args.aclTarget] || [];
+  }
+
+  /**
+   * Construct the ACL for the target by combining the mandatory ACL with the
+   * ACL passed in via args.  The ACL passed in via args will be whatever is
+   * saved to the database for the target, so for new records this will be an
+   * empty array.
+   */
   get acl() {
     if (!this.mandatoryAcl.length) {
       return this.args.acl || [];
@@ -124,6 +152,7 @@ export default class DAccessControl extends Component {
       (entry) => !mandatoryEntryKeys.has(`${entry.type}-${entry.id}`)
     );
 
+    // TODO (martin) Handle user type ACLs here in next PR
     this.mandatoryAcl.forEach((entry) => {
       if (entry.type !== "group") {
         return;
@@ -204,6 +233,7 @@ export default class DAccessControl extends Component {
     this.addingGroup = false;
   }
 
+  // TODO (martin) Handle user type ACLs here in next PR
   @action
   onPermissionChange(groupId, permission) {
     if (permission === REMOVE_ACTION.id) {
@@ -222,6 +252,23 @@ export default class DAccessControl extends Component {
     );
     this.args.onChange(next);
   }
+
+  @action
+  excludeBannedPermissions(permissions, grantee) {
+    if (!this.bannedAcl.length) {
+      return permissions;
+    }
+
+    return permissions.filter((permission) => {
+      return !this.bannedAcl.some(
+        (banned) =>
+          banned.permission === permission.id &&
+          banned.type === grantee.type &&
+          banned.id === grantee.id
+      );
+    });
+  }
+
   // TODO (martin) How are we going to deal with users that have the Owner permission
   // here if we don't want to expose that in the UI?
 
@@ -253,7 +300,10 @@ export default class DAccessControl extends Component {
               <DropdownSelectBox
                 class="d-access-control__permission"
                 @value={{row.permission}}
-                @content={{this.permissionOptions}}
+                @content={{this.excludeBannedPermissions
+                  this.permissionOptions
+                  row
+                }}
                 @onChange={{fn this.onPermissionChange row.id}}
                 @options={{hash
                   showCaret=true
