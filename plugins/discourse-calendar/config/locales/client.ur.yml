@@ -108,11 +108,6 @@ ur:
           none: "کوئی نہیں"
         allow_chat:
           label: "چیٹ انٹیگریشن"
-        url:
-          label: "URL"
-          placeholder: "اختیاری"
-        location:
-          label: "محل وقوع"
         description:
           label: "تفصیل"
         event_type:

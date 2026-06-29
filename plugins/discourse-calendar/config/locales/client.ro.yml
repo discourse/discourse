@@ -116,11 +116,6 @@ ro:
           placeholder: "Fără limită"
         attendance:
           none: "Nimic"
-        url:
-          label: "URL"
-          placeholder: "Opțional"
-        location:
-          label: "Locație"
         description:
           label: "Descriere"
         event_type:

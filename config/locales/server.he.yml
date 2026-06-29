@@ -700,6 +700,13 @@ he:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "כולם"
+      admins: "מנהלים ראשיים"
+      moderators: "מפקחים"
+      staff: "סגל"
+      anonymous_users: "משתמשים אלמוניים"
+      logged_in_users: "משתמשים שנכנסו ונמצאים כרגע במערכת"
     default_descriptions:
       everyone: "קבוצה אוטומטית שכוללת את כל החברים"
       staff: "קבוצה אוטומטית שכוללת מנהלים ומפקחים"

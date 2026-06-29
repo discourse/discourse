@@ -22,6 +22,10 @@ da:
         in_location: "i"
         hidden: "skjult"
         failed: "fejlet"
+    access_control:
+      manage:
+        access_permission_editor: "Redaktør"
+        access_permission_remove: "Fjern"
     number:
       format:
         separator: "."
@@ -375,6 +379,9 @@ da:
     age: "Alder"
     joined: "Tilmeldt"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Avanceret tilstand"
+      simple_mode: "Enkel tilstand"
     show_more: "vis mere"
     show_help: "Indstillinger"
     links: "Links"
@@ -4431,6 +4438,9 @@ da:
               title: "Apple touch-ikon"
             opengraph_image:
               title: "OpenGraph billede"
+            og_image_preview:
+              generate: "Generér"
+              topic_id_label: "Emne ID"
         fonts:
           title: "Skrifttyper"
           form:
@@ -4578,7 +4588,7 @@ da:
         stale_data: "Der er ikke blevet søgt efter opdateringer på det seneste. Kontrollér om sidekiq kører."
         version_check_pending: "Det ser ud til, at du har opdateret for nylig. Fantastisk!"
         installed_version: "Installeret"
-        latest_version: "Seneste version"
+        github: "GitHub"
         problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"
         dismiss_notice: "Ignorér"
         new_features:

@@ -76,11 +76,6 @@ sq:
             after: "pas"
         attendance:
           none: "Asnjë"
-        url:
-          label: "URL"
-          placeholder: "Fakultative"
-        location:
-          label: "Vendndodhja"
         description:
           label: "Përshkrimi"
         event_type:

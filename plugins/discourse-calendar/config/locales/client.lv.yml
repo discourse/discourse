@@ -68,11 +68,6 @@ lv:
           every_day: "Katru dienu"
         attendance:
           none: "Nav"
-        url:
-          label: "URL"
-          placeholder: "Pēc izvēles"
-        location:
-          label: "Atrašanās vieta"
         description:
           label: "Apraksts"
         event_type:

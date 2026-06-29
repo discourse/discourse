@@ -105,5 +105,3 @@ ko:
           add: 옵션 추가
         automatic_close:
           label: 설문 조사 자동 종료
-        show_advanced: "고급 옵션 표시"
-        hide_advanced: "고급 옵션 숨기기"

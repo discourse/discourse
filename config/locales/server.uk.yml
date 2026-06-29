@@ -724,6 +724,13 @@ uk:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Усі"
+      admins: "Адміни"
+      moderators: "Модератори"
+      staff: "Команда обслуговування"
+      anonymous_users: "Анонімні користувачі"
+      logged_in_users: "Зареєстровані користувачі"
     default_descriptions:
       everyone: "Автоматична група разом з усіма учасниками"
       staff: "Автоматична група, включаючи адміністраторів та модераторів"

@@ -320,8 +320,6 @@ nl:
         title: "Geluid bureaubladmelding chat"
       sounds:
         none: "Geen"
-        bell: "Bel"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Voeg een bestand toe"
@@ -480,6 +478,10 @@ nl:
           other: "<span>Jij, %{commaSeparatedUsernames} en %{count} anderen hebben gereageerd met </span>:%{emoji}:"
         single_user: "<span>%{username} heeft gereageerd met </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} en %{username} hebben gereageerd met </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} reactie"
+            other: "%{count} reacties"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} en %{count} ander hebben gereageerd met </span>:%{emoji}:"
           other: "<span>%{commaSeparatedUsernames} en %{count} anderen hebben gereageerd met </span>:%{emoji}:"

@@ -37,6 +37,10 @@ tr_TR:
         no_visible_children_hint: "Bu konteyner bloğu, hiçbir alt öğesi görünür olmadığı için görüntülenmez."
         condition_failed_hint: "Bu blok, koşulları karşılanmadığı için görüntülenmez."
         head_hidden_tail_hint: "Bu blok, `head` konteynerinde başka bir blok önce işlendiği için işlenmez."
+    access_control:
+      manage:
+        access_permission_editor: "Düzenleyici"
+        access_permission_remove: "Kaldır"
     carousel:
       go_to_slide: "%{index} numaralı slayta git"
       previous: "Önceki slayt"
@@ -440,6 +444,9 @@ tr_TR:
     age: "Yaş"
     joined: "Katılma Tarihi"
     admin_title: "Yönetici"
+    advanced_mode_toggle:
+      advanced_mode: "Gelişmiş mod"
+      simple_mode: "Basit mod"
     show_more: "daha fazla göster"
     show_help: "Seçenekler"
     links: "Bağlantılar"
@@ -3812,39 +3819,6 @@ tr_TR:
       read_more: "Daha fazla okumak ister misiniz? <a href='%{categoryLink}'>Tüm kategorilere göz atın</a> veya <a href='%{latestLink}'>en son konuları görüntüleyin</a>."
       unread_indicator: "Bu konunun son gönderisini henüz hiçbir üye okumadı."
       participant_groups: "Katılımcı grupları"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one { <a href="{basePath}/unread"># okunmamış</a>}
-              other { <a href="{basePath}/unread"># okunmamış</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { ve <a href="{basePath}/new"># yeni</a> konu kaldı}
-              other { ve <a href="{basePath}/new"># yeni</a> konu kaldı}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one { <a href="{basePath}/unread"># okunmamış</a> konu kaldı}
-              other { <a href="{basePath}/unread"># okunmamış</a> konu kaldı}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { <a href="{basePath}/new"># yeni</a> konu kaldı}
-              other { <a href="{basePath}/new"># yeni</a> konu kaldı}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { veya diğer konulara göz atın {categoryLink}}
-          false { veya <a href="{basePath}/latest">en son konuları görüntüleyin</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} yanıt, ilk gönderiye atla"
         other: "%{count} yanıt, ilk gönderiye atla"
@@ -5198,7 +5172,6 @@ tr_TR:
       synonyms: "Eş Anlamlılar"
       synonyms_inline: "Bu eşanlamlılar %{base_tag_name} ile değiştirilecektir:"
       save: "Etiketin adını ve açıklamasını kaydedin"
-      restricted_to: "Sınırlı"
       no_synonyms: "Bu etiketin eşanlamlısı yoktur."
       edit_synonyms: "Eş Anlamlıları Düzenle"
       add_synonyms_label: "Eş anlamlı ekleyin:"
@@ -5996,6 +5969,9 @@ tr_TR:
             opengraph_image:
               title: "OpenGraph görüntüsü"
               description: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır."
+            og_image_preview:
+              generate: "Oluştur"
+              topic_id_label: "Konu kimliği"
             x_summary_large_image:
               title: "X özeti büyük görüntü"
               description: "X kartı \"özet büyük görüntü\". Boş bırakılırsa aynı zamanda bir .svg olmadığı sürece OpenGraph_image kullanılarak normal kart meta verileri oluşturulur."
@@ -6324,7 +6300,7 @@ tr_TR:
         stale_data: "Son zamanlarda güncelleme kontrolü yapılmadı. Sidekiq'in çalıştığından emin olun."
         version_check_pending: "Yakın zamanda güncellemişsiniz gibi görünüyor. Harika!"
         installed_version: "Yüklendi"
-        latest_version: "En son"
+        github: "Github"
         problems_found: "Mevcut site ayarlarınıza dayalı bazı tavsiyeler"
         dismiss_notice: "Yok say"
         new_features:
@@ -6945,6 +6921,8 @@ tr_TR:
             initial_members: "Genişletilmiş üyeler"
             initial_members_description: "Daha fazlasını görüntüle düğmesi eklenmeden önce gösterilecek grup üyesi sayısı."
             show_description: "Açıklamayı dâhil et"
+          locale_selector:
+            title: "Dil"
           optional: "(isteğe bağlı)"
           update: "Güncelle"
           toasts:

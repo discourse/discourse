@@ -37,6 +37,10 @@ es:
         no_visible_children_hint: "Este bloque contenedor no se representa porque ninguno de sus elementos secundarios es visible."
         condition_failed_hint: "Este bloque no se representa porque no se cumplen sus condiciones."
         head_hidden_tail_hint: "Este bloque no se representa porque otro bloque se representó primero en el contenedor «head»."
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Eliminar"
     carousel:
       go_to_slide: "Ir a la diapositiva %{index}"
       previous: "Diapositiva anterior"
@@ -427,6 +431,9 @@ es:
     age: "Edad"
     joined: "Registrado"
     admin_title: "Administrador"
+    advanced_mode_toggle:
+      advanced_mode: "Modo avanzado"
+      simple_mode: "Modo simple"
     show_more: "mostrar más"
     show_help: "Opciones"
     links: "Enlaces"
@@ -3743,39 +3750,6 @@ es:
       read_more: "¿Quieres leer más? <a href='%{categoryLink}'>Examina todas las categorías</a> o <a href='%{latestLink}'>consulta los últimos temas</a>."
       unread_indicator: "Ningún miembro ha leído todavía la última publicación de este tema."
       participant_groups: "Grupos participantes"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Hay <a href="{basePath}/unread"># sin leer</a>}
-              other {Hay <a href="{basePath}/unread"># sin leer</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { y <a href="{basePath}/new"># tema nuevo</a> restante,}
-              other { y <a href="{basePath}/new"># temas nuevos</a> restantes,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Hay <a href="{basePath}/unread"># tema nuevo</a> restante,}
-              other {Hay <a href="{basePath}/unread"># temas nuevos</a> restantes,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Hay <a href="{basePath}/new"># nuevo</a> restante,}
-              other {Hay <a href="{basePath}/new"># nuevos</a> restantes,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { o explora otros temas en {categoryLink}}
-          false { o <a href="{basePath}/latest">consulta otros temas</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} respuesta, ve a la primera publicación"
         other: "%{count} respuestas, ve a la primera publicación"
@@ -5114,7 +5088,6 @@ es:
       synonyms: "Sinónimos"
       synonyms_inline: "Estos sinónimos se sustituirán por %{base_tag_name}:"
       save: "Guardar el nombre y la descripción de la etiqueta"
-      restricted_to: "Restringido a"
       no_synonyms: "Esta etiqueta no tiene sinónimos."
       edit_synonyms: "Editar sinónimos"
       add_synonyms_label: "Añadir sinónimos:"
@@ -5911,6 +5884,9 @@ es:
             opengraph_image:
               title: "Imagen de OpenGraph"
               description: "Imagen de gráfico abierto por defecto, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon."
+            og_image_preview:
+              generate: "Generar clave de API"
+              topic_id_label: "ID del tema"
             x_summary_large_image:
               title: "Imagen grande de resumen de X"
               description: "Tarjeta de X «imagen grande de resumen». Si se deja en blanco, se generan metadatos de tarjeta normales usando OpenGraph_image, siempre y cuando no sea también un archivo .svg."
@@ -6232,7 +6208,7 @@ es:
         stale_data: "No se ha realizado recientemente ninguna revisión de actualizaciones. Asegúrate de que sidekiq esté funcionando."
         version_check_pending: "Parece que has actualizado recientemente. ¡Fantástico!"
         installed_version: "Instalada"
-        latest_version: "Última"
+        github: "GitHub"
         problems_found: "Algunos consejos con base en tus ajustes actuales"
         dismiss_notice: "Ignorar"
         new_features:
@@ -6849,6 +6825,8 @@ es:
             initial_members: "Ampliación de miembros"
             initial_members_description: "Número de miembros del grupo que se muestran antes de añadir un botón Ver más."
             show_description: "Incluir descripción"
+          locale_selector:
+            title: "Idioma"
           optional: "(opcional)"
           update: "Actualizar"
           toasts:

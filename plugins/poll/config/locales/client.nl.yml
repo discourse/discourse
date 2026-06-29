@@ -160,5 +160,3 @@ nl:
           add: Optie toevoegen
         automatic_close:
           label: Poll automatisch sluiten
-        show_advanced: "Geavanceerde opties weergeven"
-        hide_advanced: "Geavanceerde opties verbergen"

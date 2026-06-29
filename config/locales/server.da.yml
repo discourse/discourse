@@ -428,6 +428,13 @@ da:
       trust_level_2: "tillidsniveau_2"
       trust_level_3: "tillidsniveau_3"
       trust_level_4: "tillidsniveau_4"
+    default_full_names:
+      everyone: "Alle"
+      admins: "Admins"
+      moderators: "Moderatorer"
+      staff: "Personale"
+      anonymous_users: "Anonyme brugere"
+      logged_in_users: "Brugere logget på"
     request_membership_pm:
       title: "Anmodning om medlemskab af @%{group_name}"
     request_accepted_pm:

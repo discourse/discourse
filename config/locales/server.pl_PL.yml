@@ -484,6 +484,9 @@ pl_PL:
   invalid_access: "Nie jesteś uprawniony, by zobaczyć żądane źródło."
   topic_converter:
     too_many_recipients: "Nie można przekonwertować: ten temat ma więcej uczestników niż maksymalna dozwolona liczba (%{max})."
+  topic_og_image:
+    preview_not_eligible: "Nie można wygenerować obrazu OG dla wiadomości osobistych lub tematów w prywatnych kategoriach."
+    preview_generation_failed: "Nie udało się wygenerować obrazu podglądu."
   authenticator_not_found: "Metoda uwierzytelnienia nie istnieje albo została zablokowana."
   authenticator_no_connect: "Ten dostawca uwierzytelniania nie zezwala na połączenie z istniejącym kontem forum."
   invalid_api_credentials: "Nie masz dostępu do żądanego zasobu. Nazwa użytkownika lub klucz API jest nieprawidłowy."
@@ -724,6 +727,18 @@ pl_PL:
       trust_level_2: "poziom_zaufania_2"
       trust_level_3: "poziom_zaufania_3"
       trust_level_4: "poziom_zaufania_4"
+    default_full_names:
+      everyone: "Wszyscy"
+      admins: "Administratorzy"
+      moderators: "Moderatorzy"
+      staff: "Zespół"
+      anonymous_users: "Anonimowych użytkowników"
+      logged_in_users: "Zalogowanych użytkowników"
+      trust_level_0: "Poziom zaufania 0"
+      trust_level_1: "Poziom zaufania 1"
+      trust_level_2: "Poziom zaufania 2"
+      trust_level_3: "Poziom zaufania 3"
+      trust_level_4: "Poziom zaufania 4"
     default_descriptions:
       everyone: "Automatyczna grupa obejmująca wszystkich członków"
       staff: "Automatyczna grupa zawierająca administratorów i moderatorów"
@@ -2004,6 +2019,7 @@ pl_PL:
     manifest_icon: "Obraz używany jako logo/obraz powitalny w systemie Android. Zostanie automatycznie zmieniony na rozmiar 512 × 512. Jeśli pole pozostanie puste, zostanie użyte pole {{setting:large_icon}}."
     manifest_screenshots: "Zrzuty ekranu, które pokazują możliwości i funkcjonalność Twojej instancji na stronie instalacyjnej. Wszystkie obrazy powinny być przesłane lokalnie i o tych samych wymiarach."
     favicon: "Favicona dla Twojej witryny znajdziesz na stronie <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Aby działał poprawnie w sieci CDN, musi mieć format PNG. Rozmiar zostanie zmieniony na 32x32. Jeśli pozostawisz puste pole, zostanie użyty format {{setting:large_icon}}."
+    generate_topic_og_image: "Automatycznie generuj obrazy podglądu OpenGraph dla tematów, które nie mają obrazu. Używaj kolorów tytułu tematu, kategorii i witryny."
     apple_touch_icon: "Ikona używana w urządzeniach dotykowych Apple. Przezroczyste tło nie jest zalecane. Rozmiar zostanie automatycznie zmieniony na 180x180. Jeśli pole pozostanie puste, zostanie użyte pole {{setting:large_icon}}."
     opengraph_image: "Domyślny obraz OpenGraph, używany, gdy strona nie ma innego odpowiedniego obrazu. Jeśli pole pozostanie puste, zostanie użyte {{setting:large_icon}}."
     x_summary_large_image: "Karta Twittera „duży obraz podsumowania” (powinna mieć co najmniej 280 cali szerokości i co najmniej 150 cali wysokości, nie może być w formacie .svg). Jeśli pole pozostanie puste, standardowe metadane karty zostaną wygenerowane za pomocą {{setting:opengraph_image}}, o ile nie jest to również plik .svg."
@@ -2926,6 +2942,7 @@ pl_PL:
       group: "Pokaż wpisy członków grupy"
       groups_any: "Pokaż wpisy członków dowolnej określonej grupy (rozdzielone przecinkami)"
       topic: "Pokaż wpisy w określonych tematach"
+      exclude_topic: "Wyklucz wpisy z określonych tematów"
       after: "Pokaż wpisy utworzone po określonej dacie (RRRR-MM-DD lub dni temu)"
       before: "Pokaż wpisy utworzone przed datą (RRRR-MM-DD lub dni temu)"
       topic_after: "Pokaż wpisy w tematach utworzonych po określonej dacie (RRRR-MM-DD lub dni temu)"
@@ -5591,6 +5608,11 @@ pl_PL:
         few: "Nie można użyć wybranych tagów"
         many: "Nie można użyć wybranych tagów"
         other: "Nie można użyć wybranych tagów"
+      tag_not_allowed_in_category:
+        one: 'Tag „%{tags}” nie jest dozwolony w kategorii „%{category}”.'
+        few: 'Następujące tagi nie są dozwolone w kategorii „%{category}”: %{tags}'
+        many: 'Następujące tagi nie są dozwolone w kategorii „%{category}”: %{tags}'
+        other: 'Następujące tagi nie są dozwolone w kategorii „%{category}”: %{tags}'
       in_this_category: "Nie można używać w tej kategorii"
       not_allowed: "Nie można używać"
       restricted_to:

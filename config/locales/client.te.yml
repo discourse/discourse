@@ -18,6 +18,10 @@ te:
         status: "స్థితి"
         in_location: "లో"
         failed: "విఫలం"
+    access_control:
+      manage:
+        access_permission_editor: "ఎడిటరు"
+        access_permission_remove: "తొలగించు"
     number:
       format:
         separator: "."
@@ -2794,39 +2798,6 @@ te:
       read_more: "మరింత చదవాలనుకుంటున్నారా? <a href='%{categoryLink}'>అన్ని వర్గాలను బ్రౌజ్ చేయండి</a> లేదా <a href='%{latestLink}'>తాజా విషయాలను వీక్షించండి</a>."
       unread_indicator: "ఈ విషయం యొక్క చివరి పోస్ట్‌ను సభ్యులు ఎవరూ ఇంకా చదవలేదు."
       participant_groups: "పాల్గొనే సమూహాలు"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {<a href="{basePath}/unread"># చదవనిది</a> ఉంది}
-              other {<a href="{basePath}/unread"># చదవనివి</a> ఉన్నాయి}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { మరియు <a href="{basePath}/new"># కొత్త</a> విషయం మిగిలి ఉంది,}
-              other { మరియు <a href="{basePath}/new"># కొత్త</a> విషయాలు మిగిలి ఉన్నాయి,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {<a href="{basePath}/unread"># చదవని</a> విషయం మిగిలి ఉంది,}
-              other { <a href="{basePath}/unread"># చదవని</a> విషయాలు మిగిలి ఉన్నాయి,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {<a href="{basePath}/new"># కొత్త</a> విషయం మిగిలి ఉంది,}
-              other {<a href="{basePath}/new"># కొత్త</a> విషయాలు మిగిలి ఉన్నాయి,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { లేదా {categoryLink} లో ఇతర విషయాలను బ్రౌజ్ చేయండి}
-          false { లేదా <a href="{basePath}/latest">తాజా విషయాలను వీక్షించండి</a>}
-          other {}
-        }
       created_at: "సృష్టించబడింది: %{date}"
       bumped_at: "తాజాది: %{date}"
       suggest_create_topic: <a href>కొత్త సంభాషణను ప్రారంభించడానికి</a> సిద్ధంగా ఉన్నారా?
@@ -4411,6 +4382,9 @@ te:
             email: "మెయిల్"
             manifest_screenshots:
               description: "దాని ఇన్‌స్టాల్ ప్రాంప్ట్ పేజీలో మీ ఇన్‌స్టాన్స్ ఫీచర్‌లు మరియు ఫంక్షనాలిటీని ప్రదర్శించే స్క్రీన్‌షాట్‌లు. అన్ని చిత్రాలు స్థానిక అప్‌లోడ్‌లు మరియు ఒకే కొలతలు కలిగి ఉండాలి."
+            og_image_preview:
+              generate: "ఉత్పత్తించు"
+              topic_id_label: "విషయపు ఐడీ"
         fonts:
           form:
             heading_font:
@@ -4511,7 +4485,7 @@ te:
         no_check_performed: "ఉన్నతీకరణల కోసం పరికింపు జరగలేదు. sidekiq నడుస్తున్నట్టు సరిచూడండి."
         stale_data: "ఉన్నతీకరణల కోసం పరికింపు జరగలేదు. sidekiq నడుస్తున్నట్టు సరిచూడండి."
         installed_version: "ప్రతిష్టించబడింది"
-        latest_version: "తాజా"
+        github: "గిట్ హబ్"
         problems_found: "మీ ప్రస్తుత సైట్ సెట్టింగ్‌ల ఆధారంగా కొన్ని సలహాలు"
         dismiss_notice: "విస్మరించండి"
         new_features:
@@ -4988,6 +4962,8 @@ te:
           city_for_disputes: "వివాదాలకు నగరం"
           extra_groups:
             groups: "సమూహాలు"
+          locale_selector:
+            title: "భాష"
           optional: "(ఐచ్ఛికం)"
           update: "నవీకరించండి"
           saved: "సేవ్ చేయబడింది!"

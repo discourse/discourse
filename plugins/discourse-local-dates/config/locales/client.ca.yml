@@ -17,8 +17,6 @@ ca:
       create:
         form:
           insert: Insereix
-          advanced_mode: Mode avançat
-          simple_mode: Mode simple
           timezones_title: Zones horàries que s'han de mostrar
           timezones_description: Les zones horàries es faran servir per a mostrar les dates en previsualització i recurs (fallback).
           recurring_title: Recurrència

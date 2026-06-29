@@ -332,6 +332,11 @@ ro:
       trust_level_2: "nivel_de_încredere_2"
       trust_level_3: "nivel_de_încredere_3"
       trust_level_4: "nivel_de_încredere_4"
+    default_full_names:
+      everyone: "Toată lumea"
+      admins: "Admini"
+      moderators: "Moderatori"
+      staff: "Echipa"
     default_descriptions:
       everyone: "Grup automat care include toți membrii"
       staff: "Grup automat, inclusiv administratori și moderatori"

@@ -620,6 +620,13 @@ de:
       trust_level_2: "Vertrauensstufe_2"
       trust_level_3: "Vertrauensstufe_3"
       trust_level_4: "Vertrauensstufe_4"
+    default_full_names:
+      everyone: "Alle"
+      admins: "Administratoren"
+      moderators: "Moderatoren"
+      staff: "Team"
+      anonymous_users: "Anonyme Benutzer"
+      logged_in_users: "Angemeldete Benutzer"
     default_descriptions:
       everyone: "Automatische Gruppe mit allen Mitgliedern"
       staff: "Automatische Gruppe mit Administratoren und Moderatoren"

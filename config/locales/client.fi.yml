@@ -22,6 +22,10 @@ fi:
         in_location: "kohteessa"
         hidden: "piilotettu"
         failed: "epäonnistui"
+    access_control:
+      manage:
+        access_permission_editor: "Muokkaaja"
+        access_permission_remove: "Poista"
     number:
       format:
         separator: ","
@@ -380,6 +384,9 @@ fi:
     age: "Ikä"
     joined: "Liittynyt"
     admin_title: "Ylläpitäjä"
+    advanced_mode_toggle:
+      advanced_mode: "Lisäasetukset"
+      simple_mode: "Piilota lisäasetukset"
     show_more: "näytä lisää"
     show_help: "Asetukset"
     links: "Linkit"
@@ -3398,39 +3405,6 @@ fi:
       read_more: "Haluatko lukea lisää? <a href='%{categoryLink}'>Selaa kaikkia alueita</a> tai <a href='%{latestLink}'>katso viimeisimmät ketjut</a>."
       unread_indicator: "Kukaan jäsen ei ole lukenut ketjun viimeistä viestiä vielä."
       participant_groups: "Osallistujaryhmät"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Jäljellä on <a href="{basePath}/unread"># lukematon</a>}
-              other {Jäljellä on <a href="{basePath}/unread"># lukematonta</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { ja <a href="{basePath}/new"># uusi</a> ketju,}
-              other { ja <a href="{basePath}/new"># uutta</a> ketjua,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Jäljellä on <a href="{basePath}/unread"># lukematon</a> ketju,}
-              other {Jäljellä on <a href="{basePath}/unread"># lukematonta</a> ketjua,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Jäljellä on <a href="{basePath}/new"># uusi</a> ketju,}
-              other {Jäljellä on <a href="{basePath}/new"># uutta</a> ketjua,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { tai selaa muita ketjuja alueella {categoryLink}}
-          false { tai <a href="{basePath}/latest">katso viimeisimmät ketjut</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} vastaus, siirry ensimmäiseen viestiin"
         other: "%{count} vastausta, siirry ensimmäiseen viestiin"
@@ -5329,6 +5303,9 @@ fi:
             opengraph_image:
               title: "OpenGraph-kuva"
               description: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään."
+            og_image_preview:
+              generate: "Luo"
+              topic_id_label: "Ketjun tunnus"
             x_summary_large_image:
               title: "X-yhteenveto suuri kuva"
               description: "X-kortin suuri yhteenvetokuva. Jos tämä jätetään tyhjäksi, tavalliset kortin metatiedot luodaan OpenGraph_image-kuvan avulla, kunhan se ei ole myös .svg-tiedosto."
@@ -5607,7 +5584,7 @@ fi:
         stale_data: "Pävityksiä ei ole tarkistettu viime aikoina. Varmista, että sidekiq on käynnissä."
         version_check_pending: "Näyttää siltä, että olet päivittänyt lähiaikoina. Hienoa!"
         installed_version: "Asennettu"
-        latest_version: "Uusin"
+        github: "GitHub"
         problems_found: "Joitakin suosituksia nykyisiin sivustoasetuksiisi pohjautuen"
         dismiss_notice: "Ohita"
         new_features:
@@ -6214,6 +6191,8 @@ fi:
             initial_members: "Laajennetut jäsenet"
             initial_members_description: "Näytettävien ryhmän jäsenten lukumäärä ennen Näytä lisää -painikkeen lisäämistä."
             show_description: "Sisällytä kuvaus"
+          locale_selector:
+            title: "Kieli"
           optional: "(valinnainen)"
           update: "Päivitä"
           toasts:

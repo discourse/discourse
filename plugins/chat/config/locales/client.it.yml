@@ -294,8 +294,6 @@ it:
         title: "Suono di notifica della chat desktop"
       sounds:
         none: "Nessuno"
-        bell: "Campanello"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Allega un file"

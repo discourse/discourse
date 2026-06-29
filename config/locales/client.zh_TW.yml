@@ -21,6 +21,10 @@ zh_TW:
         status: "狀態"
         in_location: "在"
         failed: "失敗"
+    access_control:
+      manage:
+        access_permission_editor: "編輯"
+        access_permission_remove: "移除"
     number:
       format:
         separator: "."
@@ -347,6 +351,9 @@ zh_TW:
     age: "已建立"
     joined: "加入時間"
     admin_title: "管理員"
+    advanced_mode_toggle:
+      advanced_mode: "進階模式"
+      simple_mode: "簡單模式"
     show_more: "顯示更多"
     show_help: "選項"
     links: "連結"
@@ -3069,35 +3076,6 @@ zh_TW:
       read_more: "想要閱讀更多？<a href='%{categoryLink}'>瀏覽所有類別</a>或<a href='%{latestLink}'>檢視最新主題</a>。"
       unread_indicator: "尚無成員閱讀過該主題的最後一篇貼文。"
       participant_groups: "參與者群組"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-              other {有 <a href="{basePath}/unread"># 個未讀</a>話題}
-            }
-            { NEW, plural,
-                 =0 {}
-              other {和 <a href="{basePath}/new"># 個新</a>話題，}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-              other {還有 <a href="{basePath}/unread"># 個未讀</a>話題，}
-            }
-            { NEW, plural,
-                 =0 {}
-              other {還有 <a href="{basePath}/new"># 個新</a>話題，}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true {或瀏覽 {categoryLink} 中的其他話題}
-          false {或<a href="{basePath}/latest">查看最新話題</a>}
-          other {}
-        }
       created_at: "創建日期： %{date}"
       bumped_at: "最新：%{date}"
       suggest_create_topic: 準備好 <a href>開始新的對話了嗎？</a>
@@ -4792,6 +4770,9 @@ zh_TW:
             opengraph_image:
               title: "OpenGraph 影像"
               description: "預設的 opengraph 圖像，當頁面沒有其他合適的圖像時使用。如果保留空白，將使用大圖標。"
+            og_image_preview:
+              generate: "產生"
+              topic_id_label: "話題 ID"
             x_summary_large_image:
               title: "X 摘要大圖片"
               description: "X 卡片的「摘要大圖像」。如果留空，只要 OpenGraph_image 不是 .svg，就會使用 OpenGraph_image 產生一般的卡片元資料。"
@@ -4987,7 +4968,7 @@ zh_TW:
         stale_data: "最近未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"
         version_check_pending: "看起來您最近更新了。極好的！"
         installed_version: "已安裝"
-        latest_version: "最新版本"
+        github: "GitHub"
         problems_found: "根據您現在網站設定的建議"
         dismiss_notice: "忽略"
         new_features:
@@ -5568,6 +5549,8 @@ zh_TW:
             指定解決與該論壇相關的法律糾紛的城市。
           extra_groups:
             groups: "群組"
+          locale_selector:
+            title: "語言"
           optional: "(選擇性)"
           update: "更新"
           toasts:

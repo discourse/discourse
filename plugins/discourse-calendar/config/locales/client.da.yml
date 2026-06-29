@@ -411,11 +411,6 @@ da:
             last: "sidste"
         attendance:
           none: "Ingen"
-        url:
-          label: "URL"
-          placeholder: "Valgfri"
-        location:
-          label: "Sted"
         description:
           label: "Beskrivelse"
         name:
