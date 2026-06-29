@@ -84,14 +84,19 @@ export function attachEditorShortcuts(editor) {
         return;
       }
       event.preventDefault();
+      // Resolve the block-mutations service lazily — only after the
+      // destroyed/active gate above has confirmed the owner is still alive.
+      const mutations = getOwner(editor).lookup(
+        "service:wireframe-block-mutations"
+      );
       // Under a multi-selection, remove the whole set in one undo step;
       // otherwise just the single selected block.
       if (editor.wireframeSelection.selectionCount > 1) {
-        editor.wireframeBlockMutations.removeBlocks(
+        mutations.removeBlocks(
           editor.wireframeSelection.selectedKeysSnapshot()
         );
       } else {
-        editor.wireframeBlockMutations.removeBlock(key);
+        mutations.removeBlock(key);
       }
       return;
     }

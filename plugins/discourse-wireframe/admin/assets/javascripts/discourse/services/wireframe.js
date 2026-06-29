@@ -59,14 +59,12 @@ import { OUTLET_STATE } from "../services/wireframe-layout-query";
 export default class WireframeService extends Service {
   @service modal;
   @service wireframeArgEdit;
-  @service wireframeBlockMutations;
   @service wireframeBlockReveal;
   @service wireframeDrafts;
   @service wireframeDragOverlay;
   @service wireframeDragSession;
   @service wireframeEditEngine;
   @service wireframeForceExpand;
-  @service wireframeGridManipulator;
   @service wireframeImageUpload;
   @service wireframeInlineEdit;
   @service wireframeLayoutQuery;
@@ -96,12 +94,6 @@ export default class WireframeService extends Service {
    * @type {boolean}
    */
   @tracked publishTargetResolving = false;
-
-  /**
-   * Whether the drop-dispatch handler has been registered on
-   * `wireframeDragOverlay`. Guards `enter()` so re-entry doesn't re-register.
-   */
-  #dropDispatchRegistered = false;
 
   /**
    * The serialized layout of each outlet's last *persisted draft* — set when a
@@ -232,15 +224,6 @@ export default class WireframeService extends Service {
     }
     this.wireframeSession.activate();
     this.wireframeImageUpload.clearPending();
-    // Hand the overlay our drop dispatcher so it never reaches up into this
-    // service. Synchronous + returns a boolean (the `completeExternalImageDrop`
-    // contract). Registered once; the guard keeps re-entry from re-wrapping it.
-    if (!this.#dropDispatchRegistered) {
-      this.wireframeDragOverlay.registerDispatcher((payload) =>
-        this.runDropDispatch(payload)
-      );
-      this.#dropDispatchRegistered = true;
-    }
     // New session generation: invalidates any draft hydration still in flight
     // from a previous enter/exit so it can't write into this session.
     const generation = ++this.#enterGeneration;
@@ -705,34 +688,6 @@ export default class WireframeService extends Service {
       return `HTTP ${error.jqXHR.status}`;
     }
     return error?.message || error?.name || String(error);
-  }
-
-  /**
-   * Executes a drop dispatch payload by action name. The single chokepoint:
-   * `WireframeDragOverlay` holds the payload across the drag and calls this at
-   * drop time. Each action name resolves to the method on its owning service —
-   * block insertion / relocation on the block-mutations service, every grid
-   * placement through the grid manipulator (which routes the request through
-   * `decideGridDrop`, so no drop surface can place into a grid without the
-   * decider). The table is the entire set of drop-channel actions; an unknown
-   * name is a no-op that reports failure.
-   *
-   * @param {{action: string, args: Object}} payload
-   * @returns {boolean} `true` when the named action ran.
-   */
-  runDropDispatch({ action: actionName, args }) {
-    const handler = {
-      insertBlock: (a) => this.wireframeBlockMutations.insertBlock(a),
-      moveBlock: (a) => this.wireframeBlockMutations.moveBlock(a),
-      applyGridDrop: (a) => this.wireframeGridManipulator.drop(a),
-      moveBlockIntoCell: (a) => this.wireframeGridManipulator.moveIntoCell(a),
-      placeBlockInCell: (a) => this.wireframeGridManipulator.placeInCell(a),
-    }[actionName];
-    if (!handler) {
-      return false;
-    }
-    handler(args);
-    return true;
   }
 
   /**

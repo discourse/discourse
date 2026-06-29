@@ -277,9 +277,9 @@ module(
       // Delete the extra block so the canvas now matches the published one-block
       // layout — but the persisted draft still has two blocks.
       const extra = outletChildren(this.editor)[1];
-      this.editor.wireframeBlockMutations.removeBlock(
-        `heading:${extra.__stableKey}`
-      );
+      this.owner
+        .lookup("service:wireframe-block-mutations")
+        .removeBlock(`heading:${extra.__stableKey}`);
       await settled();
 
       assert.strictEqual(

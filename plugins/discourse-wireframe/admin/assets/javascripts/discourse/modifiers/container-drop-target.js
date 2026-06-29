@@ -980,7 +980,7 @@ function cellDropLabel({ layoutQuery, source }) {
     : translate("wireframe.canvas.drop_preview.move_here", { name });
 }
 
-/* Dispatch payload builders — `wireframe.runDropDispatch` looks up
+/* Dispatch payload builders — `wireframeDropDispatch.run` looks up
    `[action]` and calls it with `args` at drop time. */
 
 function insertDispatch({

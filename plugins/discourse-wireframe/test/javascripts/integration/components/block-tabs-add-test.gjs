@@ -173,7 +173,9 @@ module(
 
       // Remove the only tab, leaving the tabs block empty.
       const panelKey = entryKey(tabsEntry(this.editor).children[0]);
-      this.editor.wireframeBlockMutations.removeBlock(panelKey);
+      this.owner
+        .lookup("service:wireframe-block-mutations")
+        .removeBlock(panelKey);
       await settled();
 
       const remainingPanels = tabsEntry(this.editor)?.children.length ?? 0;
@@ -203,7 +205,7 @@ module(
 
       // Move the first (inactive) tab to after the second — the same dispatch a
       // canvas reorder drop produces.
-      this.editor.wireframeBlockMutations.moveBlock({
+      this.owner.lookup("service:wireframe-block-mutations").moveBlock({
         sourceKey: firstKey,
         targetKey: secondKey,
         position: "after",

@@ -1,3 +1,5 @@
+import { getOwner, setOwner } from "@ember/owner";
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { attachEditorShortcuts } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-shortcuts";
 
@@ -7,6 +9,8 @@ import { attachEditorShortcuts } from "discourse/plugins/discourse-wireframe/dis
 // when a shortcut path resolves a service on the dead owner. These tests pin
 // the destroyed-editor guard so a leaked listener can't fire after teardown.
 module("Unit | Discourse Wireframe | lib:editor-shortcuts", function (hooks) {
+  setupTest(hooks);
+
   let detach;
 
   hooks.afterEach(function () {
@@ -17,10 +21,22 @@ module("Unit | Discourse Wireframe | lib:editor-shortcuts", function (hooks) {
   // Minimal stand-in for the wireframe service exposing only what the Delete
   // shortcut reads. `removed` records whether the shortcut acted. The shortcut
   // reads the selection off `wireframeSession`/`wireframeSelection` and removes
-  // through `wireframeBlockMutations`, exactly as the kernel injects them.
-  function buildEditor(overrides = {}) {
+  // through the block-mutations service, which it resolves off the editor's
+  // owner — so the stub is registered there and the stub editor carries the
+  // owner via `setOwner`.
+  function buildEditor(owner, overrides = {}) {
     const removed = [];
-    return {
+    owner.unregister("service:wireframe-block-mutations");
+    owner.register(
+      "service:wireframe-block-mutations",
+      {
+        removeBlock: (key) => removed.push(key),
+        removeBlocks: (keys) => removed.push(...keys),
+      },
+      { instantiate: false }
+    );
+
+    const editor = {
       wireframeSession: { active: true },
       isDestroyed: false,
       isDestroying: false,
@@ -30,16 +46,10 @@ module("Unit | Discourse Wireframe | lib:editor-shortcuts", function (hooks) {
         selectedKeysSnapshot: () => ["para:1"],
       },
       removed,
-      wireframeBlockMutations: {
-        removeBlock(key) {
-          removed.push(key);
-        },
-        removeBlocks(keys) {
-          removed.push(...keys);
-        },
-      },
       ...overrides,
     };
+    setOwner(editor, owner);
+    return editor;
   }
 
   function pressDelete() {
@@ -49,7 +59,7 @@ module("Unit | Discourse Wireframe | lib:editor-shortcuts", function (hooks) {
   }
 
   test("Delete removes the selected block for a live editor", function (assert) {
-    const editor = buildEditor();
+    const editor = buildEditor(getOwner(this));
     detach = attachEditorShortcuts(editor);
 
     pressDelete();
@@ -58,7 +68,7 @@ module("Unit | Discourse Wireframe | lib:editor-shortcuts", function (hooks) {
   });
 
   test("a destroyed editor's leaked listener does not act", function (assert) {
-    const editor = buildEditor();
+    const editor = buildEditor(getOwner(this));
     detach = attachEditorShortcuts(editor);
 
     // The owner is torn down: the service is marked destroyed but the leaked
@@ -75,7 +85,7 @@ module("Unit | Discourse Wireframe | lib:editor-shortcuts", function (hooks) {
   });
 
   test("an editor mid-destruction's leaked listener does not act", function (assert) {
-    const editor = buildEditor();
+    const editor = buildEditor(getOwner(this));
     detach = attachEditorShortcuts(editor);
 
     editor.isDestroying = true;
