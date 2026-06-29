@@ -15,18 +15,17 @@ import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-sourc
  * distinguish a palette-driven insert from a chrome-to-chrome move.
  */
 export default class PaletteEntry extends Component {
-  @service wireframe;
+  @service wireframeDragSession;
 
   /**
-   * Drag-start callback. Pushes the palette entry into the editor
-   * service's `dragSource` so dragover-time consumers (the unified
-   * drop coordinator) can build labels like "Add Heading here"
-   * before the drop fires. The legacy chrome `dragSourceKey` stays
-   * null — palette drags aren't moves.
+   * Drag-start callback. Records the palette entry as the drag source so
+   * dragover-time consumers (the unified drop coordinator) can build labels like
+   * "Add Heading here" before the drop fires. `sourceKey` stays null — palette
+   * drags aren't moves.
    */
   @action
   handleDragStart({ source }) {
-    this.wireframe.startPaletteDrag(source.data);
+    this.wireframeDragSession.startPaletteDrag(source.data);
   }
 
   <template>
@@ -40,7 +39,7 @@ export default class PaletteEntry extends Component {
         type="wf-palette-block"
         data=(hash blockName=@entry.name)
         onDragStart=this.handleDragStart
-        onDrop=this.wireframe.endDrag
+        onDrop=this.wireframeDragSession.endDrag
       }}
     >
       <span class="wireframe-palette-entry__icon">

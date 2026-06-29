@@ -119,7 +119,7 @@ export function attachEditorShortcuts(editor) {
         return;
       }
       event.preventDefault();
-      editor.cutSelected();
+      clipboard.cutSelected();
       return;
     }
     if (key === "v") {

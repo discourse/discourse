@@ -14,14 +14,14 @@ module(
 
     test("makes each proxy child a wf-block drag source for its own block", async function (assert) {
       const drags = [];
-      const wireframe = this.owner.lookup("service:wireframe");
+      const dragSession = this.owner.lookup("service:wireframe-drag-session");
       // `startDrag` / `endDrag` are `@action`s (getter-only accessors), so spy
       // by redefining the configurable property rather than assigning.
-      Object.defineProperty(wireframe, "startDrag", {
+      Object.defineProperty(dragSession, "startDrag", {
         configurable: true,
         value: (data) => drags.push(data),
       });
-      Object.defineProperty(wireframe, "endDrag", {
+      Object.defineProperty(dragSession, "endDrag", {
         configurable: true,
         value: () => {},
       });

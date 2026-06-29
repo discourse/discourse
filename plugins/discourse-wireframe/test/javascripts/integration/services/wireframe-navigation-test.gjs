@@ -93,7 +93,10 @@ module(
       state.onHomepage = true;
       await settled();
       assert.true(
-        editor.blocks.mountedOutletNames().has("homepage-blocks"),
+        getOwner(editor)
+          .lookup("service:blocks")
+          .mountedOutletNames()
+          .has("homepage-blocks"),
         "the new outlet is mounted after navigation"
       );
 
@@ -224,7 +227,10 @@ module(
       state.visible = false;
       await settled();
       assert.false(
-        editor.blocks.mountedOutletNames().has("homepage-blocks"),
+        getOwner(editor)
+          .lookup("service:blocks")
+          .mountedOutletNames()
+          .has("homepage-blocks"),
         "the edited outlet is no longer mounted"
       );
       assert.true(

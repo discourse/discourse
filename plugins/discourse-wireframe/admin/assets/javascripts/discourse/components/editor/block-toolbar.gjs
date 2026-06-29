@@ -68,8 +68,8 @@ const DUPLICATE_PRESETS = [2, 3, 5, 10];
  * they have no PM selection to preserve.
  */
 export default class BlockToolbar extends Component {
-  @service wireframe;
   @service wireframeBlockMutations;
+  @service wireframeDragSession;
   @service wireframeEntryEdits;
   @service wireframeForceExpand;
   @service wireframeInlineEdit;
@@ -526,7 +526,7 @@ export default class BlockToolbar extends Component {
 
   @action
   startDrag({ source }) {
-    this.wireframe.startDrag(source.data);
+    this.wireframeDragSession.startDrag(source.data);
   }
 
   <template>
@@ -592,7 +592,7 @@ export default class BlockToolbar extends Component {
             data=(hash blockKey=@blockKey outletName=@outletName)
             dragPreview=@chromeEl
             onDragStart=this.startDrag
-            onDrop=this.wireframe.endDrag
+            onDrop=this.wireframeDragSession.endDrag
           }}
         >
           {{dIcon "grip-lines"}}

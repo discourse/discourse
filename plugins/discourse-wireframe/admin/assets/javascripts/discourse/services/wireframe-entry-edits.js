@@ -4,6 +4,7 @@ import { VALID_BLOCK_ID_PATTERN } from "discourse/lib/blocks/-internals/patterns
 import {
   detachComposite,
   replaceEntryConditions,
+  replaceEntryContainerArgs,
   replaceEntryId,
   replaceEntryInPlace,
   wrapAsOutletRoot,
@@ -11,17 +12,16 @@ import {
 
 /**
  * Owns the "edit the selected entry in place" structural commands — conditions,
- * id, raw-JSON replacement, and composite detach. Each is a single structural
- * mutation of the selected block routed through the engine's record/publish
- * chokepoint, so they're undoable and keep the canvas, outline, and dirty state
- * in lockstep.
+ * id, container-args (placement), raw-JSON replacement, and composite detach.
+ * Each is a single structural mutation of the selected block routed through the
+ * engine's record/publish chokepoint, so they're undoable and keep the canvas,
+ * outline, and dirty state in lockstep.
  *
  * A peer command service in the editor's acyclic dependency graph: it injects
  * the mutation/undo engine (records the change), the read-only layout query
  * layer (locating the selected entry), and the selection concern (which entry is
- * selected). It never reaches back up into the kernel; the kernel keeps thin
- * facades so its consumers (the inspector tabs, the condition tree, the toolbar)
- * stay unchanged.
+ * selected). It never reaches back up into the kernel; its consumers (the
+ * inspector tabs, the condition tree, the toolbar) inject it directly.
  */
 export default class WireframeEntryEditsService extends Service {
   @service wireframeEditEngine;
@@ -56,6 +56,53 @@ export default class WireframeEntryEditsService extends Service {
           return false;
         }
         const result = detachComposite(layout, key);
+        if (!result.changed) {
+          return false;
+        }
+        this.wireframeEditEngine.publishStructuralChange(
+          located.outletName,
+          result.layout
+        );
+        return true;
+      }
+    );
+  }
+
+  /**
+   * Updates one field inside a `containerArgs` namespace bag of the selected
+   * entry (e.g. `containerArgs.grid.column`). Placement edits are rarer than
+   * typography edits, so this routes directly through `replaceEntryContainerArgs`
+   * (structural commit) rather than the keystroke-debounced arg-edit pipeline.
+   *
+   * @param {string} namespace - The childArgs namespace key (e.g. "grid").
+   * @param {string} name - The field name inside the namespace.
+   * @param {*} value
+   * @returns {boolean}
+   */
+  updateSelectedContainerArg(namespace, name, value) {
+    const key = this.wireframeSelection.selectedBlockKey;
+    if (!key || !namespace || !name) {
+      return false;
+    }
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(key);
+    if (!located) {
+      return false;
+    }
+    return this.wireframeEditEngine.recordStructural(
+      [located.outletName],
+      () => {
+        const layout = this.wireframeLayoutQuery.readResolvedLayout(
+          located.outletName
+        );
+        if (!layout) {
+          return false;
+        }
+        const result = replaceEntryContainerArgs(
+          layout,
+          key,
+          namespace,
+          (current) => ({ ...current, [name]: value })
+        );
         if (!result.changed) {
           return false;
         }

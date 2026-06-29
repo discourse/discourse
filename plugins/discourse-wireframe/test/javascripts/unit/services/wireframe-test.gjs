@@ -538,7 +538,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "service:wireframe-drag-session"
       );
       assert.false(dragSession.isDragging);
-      this.editor.startDrag({
+      dragSession.startDrag({
         blockKey: "wf:svc-test-tile:1",
         outletName: "homepage-blocks",
       });
@@ -547,7 +547,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         document.body.classList.contains("wireframe-dragging"),
         "body class is added during drag"
       );
-      this.editor.endDrag();
+      dragSession.endDrag();
       assert.false(dragSession.isDragging);
       assert.false(
         document.body.classList.contains("wireframe-dragging"),
@@ -559,7 +559,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const dragSession = getOwner(this.editor).lookup(
         "service:wireframe-drag-session"
       );
-      this.editor.startPaletteDrag({
+      dragSession.startPaletteDrag({
         blockName: "wf:svc-test-tile",
         defaultArgs: {},
       });
@@ -571,7 +571,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         document.body.classList.contains("wireframe-dragging"),
         "but the canvas drag body class is still applied"
       );
-      this.editor.endDrag();
+      dragSession.endDrag();
     });
   });
 
@@ -656,7 +656,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("adding a block then undoing clears the outlet's editing state", async function (assert) {
-      assert.false(this.editor.isOutletEditing("homepage-blocks"));
+      assert.false(
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
+      );
 
       this.editor.wireframeBlockMutations.insertBlock({
         blockName: "wf:svc-test-tile",
@@ -665,13 +667,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         targetOutletName: "homepage-blocks",
       });
       assert.true(
-        this.editor.isOutletEditing("homepage-blocks"),
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
         "the outlet is editing right after the insert"
       );
 
       await this.editor.wireframeEditEngine.undo();
       assert.false(
-        this.editor.isOutletEditing("homepage-blocks"),
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
         "undo back to the pristine layout clears the editing state"
       );
       assert.false(
@@ -681,7 +683,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("adding a block then removing it clears the outlet's editing state", function (assert) {
-      assert.false(this.editor.isOutletEditing("homepage-blocks"));
+      assert.false(
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
+      );
 
       const ok = this.editor.wireframeBlockMutations.insertBlock({
         blockName: "wf:svc-test-tile",
@@ -695,7 +699,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // block we just added regardless of where it landed in the children.
       const insertedKey = this.editor.wireframeSelection.selectedBlockKey;
       assert.true(
-        this.editor.isOutletEditing("homepage-blocks"),
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
         "the outlet is editing right after the insert"
       );
 
@@ -704,7 +708,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "the inserted block is removed"
       );
       assert.false(
-        this.editor.isOutletEditing("homepage-blocks"),
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
         "removing the block back to the pristine layout clears the editing state"
       );
       assert.false(
@@ -721,11 +725,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         targetOutletName: "homepage-blocks",
       });
       await this.editor.wireframeEditEngine.undo();
-      assert.false(this.editor.isOutletEditing("homepage-blocks"));
+      assert.false(
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
+      );
 
       await this.editor.wireframeEditEngine.redo();
       assert.true(
-        this.editor.isOutletEditing("homepage-blocks"),
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
         "redo restores the edit, so the outlet is editing again"
       );
     });
@@ -739,11 +745,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         metadata: { args: { title: { type: "string" } } },
       });
       await editArg(this.editor, "title", "Changed");
-      assert.true(this.editor.isOutletEditing("homepage-blocks"));
+      assert.true(
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
+      );
 
       await this.editor.wireframeEditEngine.undo();
       assert.false(
-        this.editor.isOutletEditing("homepage-blocks"),
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
         "undo of the arg edit clears editing"
       );
     });
@@ -769,7 +777,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         this.editor.wireframeEditEngine.canUndo,
         "discarding the outlet removes its undo entry"
       );
-      assert.false(this.editor.isOutletEditing("homepage-blocks"));
+      assert.false(
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
+      );
     });
 
     test("default args don't bleed back into the source object", function (assert) {
@@ -2666,7 +2676,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         name: "wf:svc-test-tile",
       });
 
-      assert.true(this.editor.cutSelected());
+      assert.true(this.clipboard.cutSelected());
       assert.strictEqual(
         getOwner(this).lookup("service:wireframe-clipboard").clipboardMode,
         "cut"
@@ -3410,17 +3420,17 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // safety check must match `__content` for clicks inside an
       // interactive tooltip (the URL-edit chip) to NOT deselect.
       const child = appendScope("fk-d-tooltip__content");
-      assert.true(this.editor.isInsideAllowedScope(child));
+      assert.true(this.editor.wireframeSelection.isInsideAllowedScope(child));
     });
 
     test("a click target inside a FloatKit menu stays in-scope", function (assert) {
       const child = appendScope("fk-d-menu");
-      assert.true(this.editor.isInsideAllowedScope(child));
+      assert.true(this.editor.wireframeSelection.isInsideAllowedScope(child));
     });
 
     test("a click target outside any editor scope is out-of-scope", function (assert) {
       const child = appendScope("");
-      assert.false(this.editor.isInsideAllowedScope(child));
+      assert.false(this.editor.wireframeSelection.isInsideAllowedScope(child));
     });
   });
 

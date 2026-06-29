@@ -29,6 +29,7 @@ import { inferSchemaFromValues } from "../lib/schema-to-fields";
 export default class WireframeSelectionService extends Service {
   @service wireframeRevision;
   @service wireframeLayoutQuery;
+  @service wireframeSession;
 
   /**
    * The PRIMARY (anchor) selected block key — the block whose form the
@@ -82,6 +83,62 @@ export default class WireframeSelectionService extends Service {
    * @type {Array<Function>}
    */
   #afterChange = [];
+
+  /**
+   * Tracks the mousedown target so the deselect handler can require BOTH the
+   * down and up events to land outside the allowed scope. Without this, dragging
+   * to select text inside an input (mousedown on input, mouseup outside its
+   * bounds) would synthesise a `click` on the common ancestor — often `<body>` —
+   * and trigger an accidental deselect.
+   *
+   * @type {EventTarget|null}
+   */
+  #selectionMousedownTarget = null;
+  #onCanvasMouseDown = (event) => {
+    this.#selectionMousedownTarget = event.target;
+  };
+
+  /**
+   * Document-level mouseup handler that clears the selection when BOTH the
+   * mousedown and mouseup landed outside the allowed scope. Installed once at
+   * construction and gated on `wireframeSession.active`, so it's a no-op outside
+   * an editor session. Guards on `isDestroyed`/`isDestroying` (plain instance
+   * flags, no service lookup) so a leaked listener firing after teardown bails.
+   *
+   * @param {MouseEvent} event
+   */
+  #onCanvasMouseUp = (event) => {
+    const downTarget = this.#selectionMousedownTarget;
+    this.#selectionMousedownTarget = null;
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
+    if (!this.wireframeSession.active || !this.selectedBlockKey) {
+      return;
+    }
+    if (this.isInsideAllowedScope(downTarget)) {
+      return;
+    }
+    if (this.isInsideAllowedScope(event.target)) {
+      return;
+    }
+    this.selectBlock(null);
+  };
+
+  constructor() {
+    super(...arguments);
+    // Document-level so a click anywhere off the editor surface can deselect.
+    // The handler self-gates on the session, so it's harmless while inactive;
+    // removed on teardown (willDestroy) so it never leaks past the owner.
+    document.addEventListener("mousedown", this.#onCanvasMouseDown);
+    document.addEventListener("mouseup", this.#onCanvasMouseUp);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    document.removeEventListener("mousedown", this.#onCanvasMouseDown);
+    document.removeEventListener("mouseup", this.#onCanvasMouseUp);
+  }
 
   /**
    * Soft-failure metadata for the currently-selected block, or `null` if
@@ -595,6 +652,29 @@ export default class WireframeSelectionService extends Service {
     this.selectedBlockKey = null;
     this.selectedBlockData = null;
     this.#selectedKeys.clear();
+  }
+
+  /**
+   * Whether `target` is inside an editor surface where a click must NOT
+   * deselect — block chrome, the editor shell, the conditions floating panel,
+   * or any Float-Kit portal (menus / modals / tooltips mount at body level,
+   * outside the shell, but are conceptually part of the editor).
+   *
+   * @param {EventTarget} target
+   * @returns {boolean}
+   */
+  isInsideAllowedScope(target) {
+    if (!(target instanceof Element)) {
+      return false;
+    }
+    return Boolean(
+      target.closest(".wireframe-block-chrome") ||
+      target.closest(".wireframe-shell") ||
+      target.closest(".wireframe-conditions-floating-panel") ||
+      target.closest(".fk-d-menu") ||
+      target.closest(".fk-d-menu-modal") ||
+      target.closest(".fk-d-tooltip__content")
+    );
   }
 
   /**

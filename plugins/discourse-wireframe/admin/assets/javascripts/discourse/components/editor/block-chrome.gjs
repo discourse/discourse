@@ -90,10 +90,11 @@ export default class BlockChrome extends Component {
   @service blocks;
   @service menu;
   @service tooltip;
-  @service wireframe;
   @service wireframeBlockMutations;
+  @service wireframeBlockReveal;
   @service wireframeDragOverlay;
   @service wireframeDropAuthority;
+  @service wireframeEditEngine;
   @service wireframeForceExpand;
   @service wireframeGridManipulator;
   @service wireframeIconEdit;
@@ -1024,7 +1025,7 @@ export default class BlockChrome extends Component {
 
   /** @returns {boolean} */
   get isOutletEditing() {
-    return this.wireframe.isOutletEditing(this.args.outletName);
+    return this.wireframeEditEngine.isOutletEdited(this.args.outletName);
   }
 
   /**
@@ -1286,7 +1287,7 @@ export default class BlockChrome extends Component {
   captureChromeEl(element) {
     this.chromeEl = element;
     this.#setupUrlTooltips();
-    this.wireframe.notifyChromeInserted(this.args.blockKey, element);
+    this.wireframeBlockReveal.notifyChromeInserted(this.args.blockKey, element);
   }
 
   /**

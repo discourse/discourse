@@ -41,8 +41,8 @@ const CHILD_COUNT_THRESHOLD = 6;
  */
 export default class OutlinePanel extends Component {
   @service blocks;
-  @service wireframe;
   @service wireframeBlockMutations;
+  @service wireframeBlockReveal;
   @service wireframeDragSession;
   @service wireframeEditEngine;
   @service wireframeRevision;
@@ -275,7 +275,7 @@ export default class OutlinePanel extends Component {
 
     // Flash the block on the canvas so the eye lands on it after it scrolls
     // into view — the outline row is far from the rendered block.
-    this.wireframe.flashBlock(row.blockKey);
+    this.wireframeBlockReveal.flash(row.blockKey);
   }
 
   /**
@@ -363,7 +363,7 @@ export default class OutlinePanel extends Component {
     if (source?.data?.isPart) {
       return;
     }
-    this.wireframe.startDrag(source.data);
+    this.wireframeDragSession.startDrag(source.data);
   }
 
   /**
@@ -382,7 +382,7 @@ export default class OutlinePanel extends Component {
     // A synthesized composite part isn't a real layout position — dropping
     // onto/around it can't move or insert anything, so ignore the drop.
     if (row.isPart) {
-      this.wireframe.endDrag();
+      this.wireframeDragSession.endDrag();
       return;
     }
     const { source } = target;
@@ -402,7 +402,7 @@ export default class OutlinePanel extends Component {
         targetOutletName: outletName,
       });
     }
-    this.wireframe.endDrag();
+    this.wireframeDragSession.endDrag();
   }
 
   @action
@@ -783,7 +783,7 @@ export default class OutlinePanel extends Component {
                       isPart=row.isPart
                     )
                     onDragStart=this.handleRowDragStart
-                    onDrop=this.wireframe.endDrag
+                    onDrop=this.wireframeDragSession.endDrag
                   }}
                   {{dDragAndDropTarget
                     accepts=this.acceptedDragKinds

@@ -10,26 +10,27 @@ import { i18n } from "discourse-i18n";
  * pages with at least one Block Outlet.
  *
  * Hidden when:
- *  - the user is not permitted (see `wireframe.canEdit`)
+ *  - the user is not permitted (see `wireframeSession.canEdit`)
  *  - there are no editable outlets on this page
  *  - the editor is already active
  */
 export default class EntryPill extends Component {
   @service wireframe;
+  @service wireframeLayoutQuery;
   @service wireframeSession;
 
   get visible() {
-    if (!this.wireframe.canEdit) {
+    if (!this.wireframeSession.canEdit) {
       return false;
     }
     if (this.wireframeSession.active) {
       return false;
     }
-    return this.wireframe.editableOutlets.length > 0;
+    return this.wireframeLayoutQuery.editableOutlets.length > 0;
   }
 
   get label() {
-    const count = this.wireframe.editableOutlets.length;
+    const count = this.wireframeLayoutQuery.editableOutlets.length;
     return i18n("wireframe.pill.enter_with_count", { count });
   }
 

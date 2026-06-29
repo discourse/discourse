@@ -4,10 +4,10 @@ import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import BlockChrome from "discourse/plugins/discourse-wireframe/discourse/components/editor/block-chrome";
 
-// `flashBlock` briefly toggles the `--just-selected` class on a block's
-// rendered element to draw the eye to it. It's invoked explicitly from the
-// outline / insert paths — NOT from `selectBlock` — so a plain canvas-click
-// selection stays quiet.
+// `flash` briefly toggles the `--just-selected` class on a block's rendered
+// element to draw the eye to it. It's invoked explicitly from the outline /
+// insert paths — NOT from `selectBlock` — so a plain canvas-click selection
+// stays quiet.
 const WrappedBlock = <template>
   <div data-block-arg="label">Block</div>
 </template>;
@@ -47,7 +47,7 @@ module(
     test("flashing a block toggles the just-selected class on and off", async function (assert) {
       const { addSpy, removeSpy } = await setupBlock(this.owner);
 
-      this.owner.lookup("service:wireframe").flashBlock(BLOCK_KEY);
+      this.owner.lookup("service:wireframe-block-reveal").flash(BLOCK_KEY);
       await settled();
 
       assert.true(
@@ -63,20 +63,21 @@ module(
 
     test("the flash survives the selection-driven class re-render", async function (assert) {
       await setupBlock(this.owner);
-      const wireframe = this.owner.lookup("service:wireframe");
+      const selection = this.owner.lookup("service:wireframe-selection");
+      const blockReveal = this.owner.lookup("service:wireframe-block-reveal");
 
       // The outline's `selectRow` selects the block (which toggles the
       // `--selected` class on the chrome, scheduling a re-render of its class
       // binding) and then immediately flashes it. The render that follows must
       // not wipe the just-added flash class.
-      wireframe.wireframeSelection.selectBlock({
+      selection.selectBlock({
         key: BLOCK_KEY,
         name: "button-link",
         args: {},
         metadata: null,
         outletName: "test-outlet",
       });
-      wireframe.flashBlock(BLOCK_KEY);
+      blockReveal.flash(BLOCK_KEY);
 
       // `rerender` flushes the pending render (and `afterRender`) without
       // advancing the timer that later clears the flash, so the class we

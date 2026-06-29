@@ -1,17 +1,20 @@
 // @ts-check
+import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
-import Service from "@ember/service";
+import Service, { service } from "@ember/service";
 
 /**
  * Drag-session state for the block editor: which block (or palette entry) is
- * being dragged right now.
+ * being dragged right now, plus the drag lifecycle entry points the drag
+ * sources call.
  *
- * A dependency-free peer service driven one-way by the kernel; it never reaches
- * back into any other service. The `begin*`/`clear` methods record state ONLY;
- * the kernel's `startDrag`/`startPaletteDrag`/`endDrag` wrap them with the side
- * effects (the `wireframe-dragging` body class, resetting the drag overlay).
+ * The `begin*`/`clear` methods record state ONLY; the public
+ * `startDrag`/`startPaletteDrag`/`endDrag` wrap them with the side effects (the
+ * `wireframe-dragging` body class, resetting the drag overlay).
  */
 export default class WireframeDragSessionService extends Service {
+  @service wireframeDragOverlay;
+
   /**
    * Private drag state. `sourceKey`/`sourceOutlet` are read through the getters
    * below; `source` (the full `{type, data}` descriptor) is currently write-only
@@ -84,5 +87,44 @@ export default class WireframeDragSessionService extends Service {
     this.#state.sourceKey = null;
     this.#state.sourceOutlet = null;
     this.#state.source = null;
+  }
+
+  /**
+   * Begins an existing-block drag: resets any stale preview, records the source,
+   * and flags the editor as dragging via the body class.
+   *
+   * @param {{ blockKey: string, outletName: string }} payload
+   */
+  @action
+  startDrag({ blockKey, outletName }) {
+    this.wireframeDragOverlay.clear();
+    this.beginBlock({ blockKey, outletName });
+    document.body.classList.add("wireframe-dragging");
+  }
+
+  /**
+   * Begins a palette (new-block) drag. Mirrors `startDrag` with the
+   * `wf-palette-block` type so dragover-time consumers pick the right label /
+   * dispatch action.
+   *
+   * @param {{ blockName: string, defaultArgs: Object }} payload
+   */
+  @action
+  startPaletteDrag({ blockName, defaultArgs }) {
+    this.wireframeDragOverlay.clear();
+    this.beginPalette({ blockName, defaultArgs });
+    document.body.classList.add("wireframe-dragging");
+  }
+
+  /**
+   * Resets per-drag state at the end of a drag (drop OR cancel). Wired as the
+   * source modifier's `onDrop` consumer, deferred until after the drop handler
+   * has consumed the overlay via `dispatch()`.
+   */
+  @action
+  endDrag() {
+    this.clear();
+    this.wireframeDragOverlay.clear();
+    document.body.classList.remove("wireframe-dragging");
   }
 }

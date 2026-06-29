@@ -67,6 +67,24 @@ export default class WireframeLayoutQueryService extends Service {
    */
   #outletRootKeys = new Map();
 
+  /**
+   * The names of every block outlet that's editable on the current page — either
+   * one that already has a registered layout or one whose `<BlockOutlet>` is
+   * mounted in the DOM with no layout yet. Including the empty-mounted case makes
+   * "start a layout from scratch" possible — the entry pill surfaces even when no
+   * code path has called `api.renderBlocks(...)` for that outlet. Mounted outlets
+   * that aren't registered are silently ignored (they can't have a layout).
+   *
+   * @returns {string[]}
+   */
+  get editableOutlets() {
+    const registered = this.blocks.listOutlets();
+    const mounted = this.blocks.mountedOutletNames();
+    return registered.filter(
+      (name) => this.blocks.hasLayout(name) || mounted.has(name)
+    );
+  }
+
   /* Resolved-layout reads */
 
   /**

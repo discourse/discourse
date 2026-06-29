@@ -19,13 +19,13 @@ import InspectorField from "./inspector-field";
  * with `conditional: { arg: "mode", equals: "grid" }` only appears when
  * the parent layout is actually in grid mode.
  *
- * Edits commit via `wireframe.updateSelectedContainerArg(namespace, name,
- * value)`, which routes through `replaceEntryContainerArgs` as a structural
- * mutation. Placement edits are rare relative to typography, so the
+ * Edits commit via `wireframeEntryEdits.updateSelectedContainerArg(namespace,
+ * name, value)`, which routes through `replaceEntryContainerArgs` as a
+ * structural mutation. Placement edits are rare relative to typography, so the
  * keystroke-debounced path used for `args` isn't necessary here.
  */
 export default class InspectorContainerArgsForm extends Component {
-  @service wireframe;
+  @service wireframeEntryEdits;
   @service wireframeSelection;
 
   get parentChildArgsSchema() {
@@ -94,7 +94,11 @@ export default class InspectorContainerArgsForm extends Component {
   @action
   async onFieldSet(namespace, value, ctx) {
     await ctx.set(ctx.name, value);
-    this.wireframe.updateSelectedContainerArg(namespace, ctx.name, value);
+    this.wireframeEntryEdits.updateSelectedContainerArg(
+      namespace,
+      ctx.name,
+      value
+    );
   }
 
   <template>

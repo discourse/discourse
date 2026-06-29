@@ -28,7 +28,7 @@ import { registerDragAndDropSource } from "discourse/ui-kit/modifiers/d-drag-and
  *    re-run this modifier so the source set tracks the current children.
  */
 export default class ProxyDragSourcesModifier extends Modifier {
-  @service wireframe;
+  @service wireframeDragSession;
 
   #cleanups = [];
 
@@ -53,8 +53,9 @@ export default class ProxyDragSourcesModifier extends Modifier {
         registerDragAndDropSource(proxy, () => ({
           type: "wf-block",
           data: { blockKey, outletName },
-          onDragStart: ({ source }) => this.wireframe.startDrag(source.data),
-          onDrop: () => this.wireframe.endDrag(),
+          onDragStart: ({ source }) =>
+            this.wireframeDragSession.startDrag(source.data),
+          onDrop: () => this.wireframeDragSession.endDrag(),
         }))
       );
     }

@@ -12,20 +12,19 @@ import { cloneEntryForPaste, insertEntryAt } from "../lib/mutate-layout";
  * A peer service in the editor's acyclic dependency graph: it injects the
  * mutation/undo engine (paste rides the structural chokepoint), the read-only
  * layout query layer (entry/outlet lookups), and the selection concern (copy /
- * cut / paste all act on the selected block). It never reaches back up into the
- * kernel; the kernel keeps thin facades so its consumers stay unchanged.
+ * cut / paste all act on the selected block).
  *
  * It is purely command-driven — `copySelected` / `cutSelected` /
  * `pasteFromClipboard` are invoked imperatively (the keyboard shortcuts) — so,
  * unlike the reveal / inline-edit / arg-edit services, it does NOT subscribe to
  * the selection seam and needs no boot-time instantiation.
  *
- * Cut is intentionally only HALF here: `cutSelected` stashes the entry, but the
- * removal is a structural operation the kernel still owns (`removeBlock` carries
- * the outlet-root guard, the entry-removal helper, and the selection-clear). The
- * kernel orchestrates the two halves; this service is the clipboard alone.
+ * Cut is a composition: this service stashes the entry (mode `"cut"`) and then
+ * removes it via `wireframeBlockMutations.removeBlock`, which carries the
+ * structural nuance (outlet-root guard, entry-removal helper, selection-clear).
  */
 export default class WireframeClipboardService extends Service {
+  @service wireframeBlockMutations;
   @service wireframeEditEngine;
   @service wireframeLayoutQuery;
   @service wireframeSelection;
@@ -76,18 +75,17 @@ export default class WireframeClipboardService extends Service {
   }
 
   /**
-   * Captures the currently-selected block onto the clipboard with mode `"cut"`.
-   * This ONLY stashes — the caller (the kernel) performs the structural removal,
-   * because removal carries kernel-owned nuance (outlet-root guard,
-   * selection-clear). Stashes unconditionally once the entry is located, so a
-   * cut whose removal later no-ops (e.g. an outlet root) still mirrors the
-   * original behaviour.
+   * Captures the currently-selected block onto the clipboard with mode `"cut"`
+   * and removes it from the canvas. The key is captured before stashing (the
+   * stash doesn't change selection); if the stash fails (nothing selected / not
+   * locatable) the removal is skipped.
    *
    * @returns {boolean} true on success, false when no block is selected
    */
   @action
   cutSelected() {
-    return this.#stash("cut");
+    const key = this.wireframeSelection.selectedBlockKey;
+    return this.#stash("cut") && this.wireframeBlockMutations.removeBlock(key);
   }
 
   /**

@@ -132,7 +132,9 @@ module(
       this.editor.enter({ themeId: 5 });
       await settled();
 
-      assert.false(this.editor.isOutletEditing("homepage-blocks"));
+      assert.false(
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
+      );
 
       this.editor.wireframeSelection.selectBlock({
         key: `wf:state-test-tile:${stableKey}`,
@@ -145,7 +147,9 @@ module(
         .updateSelectedArg("title", "Edited");
       await settled();
 
-      assert.true(this.editor.isOutletEditing("homepage-blocks"));
+      assert.true(
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
+      );
     });
 
     test("defaultThemeId is the current theme (min stack_index), including a negative-id parent", function (assert) {
@@ -164,7 +168,9 @@ module(
     test("an outlet mounted on the page is editable even with no layout", function (assert) {
       // Nothing rendered + nothing reset means no layout for this outlet.
       assert.false(
-        this.editor.editableOutlets.includes("homepage-blocks"),
+        this.editor.wireframeLayoutQuery.editableOutlets.includes(
+          "homepage-blocks"
+        ),
         "not editable when it has neither a layout nor a mounted boundary"
       );
 
@@ -173,7 +179,9 @@ module(
       _registerMountedOutlet("homepage-blocks");
       try {
         assert.true(
-          this.editor.editableOutlets.includes("homepage-blocks"),
+          this.editor.wireframeLayoutQuery.editableOutlets.includes(
+            "homepage-blocks"
+          ),
           "a mounted, layout-less outlet is editable so it can be rebuilt"
         );
       } finally {

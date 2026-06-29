@@ -98,7 +98,7 @@ class StubWireframeService extends Service {
     );
   }
 
-  isOutletEditing() {
+  isOutletEdited() {
     return this.#blockData?.isOutletEditing ?? false;
   }
 }
@@ -121,6 +121,11 @@ function stubWireframe(owner, blockData) {
   });
   owner.unregister("service:wireframe-arg-edit");
   owner.register("service:wireframe-arg-edit", stub, { instantiate: false });
+  // The per-outlet section reads its editing flag from the edit engine.
+  owner.unregister("service:wireframe-edit-engine");
+  owner.register("service:wireframe-edit-engine", stub, {
+    instantiate: false,
+  });
 }
 
 module(

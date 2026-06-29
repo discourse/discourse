@@ -22,7 +22,6 @@ import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-rende
 import {
   cloneLayoutForDraft,
   normalizeImplicitChildren,
-  replaceEntryContainerArgs,
   serializeLayoutForSave,
   wrapAsOutletRoot,
 } from "../lib/mutate-layout";
@@ -58,14 +57,10 @@ import { OUTLET_STATE } from "../services/wireframe-layout-query";
  * re-render at save time.
  */
 export default class WireframeService extends Service {
-  @service blocks;
-  @service currentUser;
   @service modal;
-  @service siteSettings;
   @service wireframeArgEdit;
   @service wireframeBlockMutations;
   @service wireframeBlockReveal;
-  @service wireframeClipboard;
   @service wireframeDrafts;
   @service wireframeDragOverlay;
   @service wireframeDragSession;
@@ -141,138 +136,11 @@ export default class WireframeService extends Service {
    */
   #staleDraftQueue = [];
 
-  /**
-   * Tracks the mousedown target so the deselect handler can require
-   * BOTH the down and up events to land outside the allowed scope.
-   * Without this, dragging to select text inside an input (mousedown
-   * on input, mouseup outside the input's bounds) would synthesise
-   * a `click` on the common ancestor — often `<body>` — and trigger
-   * an accidental deselect even though the user's intent was to
-   * edit, not click elsewhere.
-   *
-   * @type {EventTarget|null}
-   */
-  #selectionMousedownTarget = null;
-  #onCanvasMouseDown = (event) => {
-    this.#selectionMousedownTarget = event.target;
-  };
-
-  /**
-   * Document-level mouseup handler that clears the current selection
-   * when BOTH the mousedown and mouseup landed outside the allowed
-   * scope (block chrome, editor shell, the conditions floating
-   * panel, or any Float-Kit portal — menus / modals / tooltips
-   * mount their content at body level via portals, so they're
-   * physically outside the shell even though they're conceptually
-   * part of it). Block chromes already stop propagation on their
-   * own click handler — we use mouseup rather than click here so
-   * the input-text-selection case (described in
-   * `#selectionMousedownTarget`) doesn't deselect.
-   *
-   * Bound once in `enter()` and removed in `exit()` so the editor
-   * adds no global handler weight when inactive.
-   *
-   * @param {MouseEvent} event
-   */
-  #onCanvasMouseUp = (event) => {
-    const downTarget = this.#selectionMousedownTarget;
-    this.#selectionMousedownTarget = null;
-    // Guard against a leaked listener firing after the owner is torn down: a
-    // destroyed service throws when reading `selectedBlockKey` resolves the
-    // selection injection on the dead owner. `isDestroyed`/`isDestroying` are
-    // plain instance flags, so reading them never triggers a lookup.
-    if (this.isDestroyed || this.isDestroying) {
-      return;
-    }
-    if (
-      !this.wireframeSession.active ||
-      !this.wireframeSelection.selectedBlockKey
-    ) {
-      return;
-    }
-    if (this.isInsideAllowedScope(downTarget)) {
-      return;
-    }
-    if (this.isInsideAllowedScope(event.target)) {
-      return;
-    }
-    this.wireframeSelection.selectBlock(null);
-  };
-
-  constructor() {
-    super(...arguments);
-  }
-
   willDestroy() {
     super.willDestroy(...arguments);
-    // The canvas selection listeners are normally removed in `exit()`, but a
-    // session torn down without an explicit exit (e.g. the owner being
-    // destroyed) would otherwise leak them at the document level. Removing them
-    // here on teardown is idempotent and stops a leaked handler from firing
-    // against this destroyed service. `removeEventListener` is a no-op when the
-    // listener was never added or was already removed.
-    document.removeEventListener("mousedown", this.#onCanvasMouseDown);
-    document.removeEventListener("mouseup", this.#onCanvasMouseUp);
+    // Defensive: a session torn down without an explicit exit (e.g. the owner
+    // being destroyed) should still drop any pending reveal/flash timer.
     this.wireframeBlockReveal.reset();
-  }
-
-  /**
-   * Whether the current user is allowed to use the editor. Staff are always
-   * allowed. Non-staff users must belong to at least one of the groups listed
-   * in the `wireframe_allowed_groups` site setting. The plugin must also
-   * be enabled via `wireframe_enabled`.
-   *
-   * @returns {boolean}
-   */
-  get canEdit() {
-    if (!this.siteSettings.wireframe_enabled) {
-      return false;
-    }
-    if (!this.currentUser) {
-      return false;
-    }
-    if (this.currentUser.staff) {
-      return true;
-    }
-    // Group-list site settings serialize as a pipe-delimited string of
-    // group ids ("1|11|41"). Empty values produce empty strings, hence the
-    // filter to drop them.
-    const allowed = (this.siteSettings.wireframe_allowed_groups || "")
-      .split("|")
-      .filter(Boolean);
-    if (allowed.length === 0) {
-      return false;
-    }
-    const userGroupIds = (this.currentUser.groups || []).map((g) =>
-      String(g.id)
-    );
-    return allowed.some((id) => userGroupIds.includes(String(id)));
-  }
-
-  /**
-   * The names of every block outlet that's editable on the current page —
-   * either one that already has a registered layout or one whose
-   * `<BlockOutlet>` is mounted in the DOM with no layout yet.
-   * Including the empty-mounted case makes "start a layout from
-   * scratch" possible — the entry pill surfaces even when no code
-   * path has called `api.renderBlocks(...)` for that outlet.
-   *
-   * Mounted outlets that aren't registered are silently ignored (they
-   * can't have a layout, so they shouldn't appear in the editor).
-   *
-   * @returns {string[]}
-   */
-  get editableOutlets() {
-    const registered = this.blocks.listOutlets();
-    // Which outlets are actually on this page — the blocks service's
-    // mounted-outlet registry, populated by each `<BlockOutlet>`'s lifecycle at
-    // page render (no DOM scan, no enter-time race). An outlet is editable when
-    // it has a layout OR is mounted here (so an empty outlet can be built from
-    // scratch).
-    const mounted = this.blocks.mountedOutletNames();
-    return registered.filter(
-      (name) => this.blocks.hasLayout(name) || mounted.has(name)
-    );
   }
 
   /**
@@ -359,7 +227,7 @@ export default class WireframeService extends Service {
 
   @action
   enter({ themeId } = {}) {
-    if (!this.canEdit) {
+    if (!this.wireframeSession.canEdit) {
       return;
     }
     this.wireframeSession.activate();
@@ -377,13 +245,11 @@ export default class WireframeService extends Service {
     // from a previous enter/exit so it can't write into this session.
     const generation = ++this.#enterGeneration;
     this.wireframeTheme.setActiveTheme(themeId);
-    // A theme that can't be published to directly may have a companion to retarget
+    // A theme that can't be published to directly may have a companion to retarget/
     // to; suppress the blocked callout until the after-render lookup settles.
     this.publishTargetResolving =
       this.wireframeTheme.activeThemeTarget?.publishable === false;
     document.body.classList.add("wireframe-active");
-    document.addEventListener("mousedown", this.#onCanvasMouseDown);
-    document.addEventListener("mouseup", this.#onCanvasMouseUp);
     // Swap in the editor-aware rich-text renderer so every richInline
     // arg gains its click-to-edit scaffold. The minimal (live-style)
     // renderer is restored in `exit()`. Icon args carry their own
@@ -494,29 +360,6 @@ export default class WireframeService extends Service {
       "wireframe-active--right-collapsed",
       "wireframe-active--dim-non-editable"
     );
-    document.removeEventListener("mousedown", this.#onCanvasMouseDown);
-    document.removeEventListener("mouseup", this.#onCanvasMouseUp);
-    this.#selectionMousedownTarget = null;
-  }
-
-  /**
-   * Captures the currently-selected block onto the clipboard AND removes it from
-   * the canvas. Cut is a composition of two concerns: the clipboard stashes the
-   * entry (mode `"cut"`), and the kernel performs the structural removal, since
-   * `removeBlock` carries kernel-owned nuance (outlet-root guard, entry-removal
-   * helper, selection-clear). The key is captured before stashing — the stash
-   * doesn't change selection. If the stash fails (nothing selected / not
-   * locatable) the removal is skipped.
-   *
-   * @returns {boolean} true on success, false when no block is selected
-   */
-  @action
-  cutSelected() {
-    const key = this.wireframeSelection.selectedBlockKey;
-    return (
-      this.wireframeClipboard.cutSelected() &&
-      this.wireframeBlockMutations.removeBlock(key)
-    );
   }
 
   @action
@@ -526,81 +369,6 @@ export default class WireframeService extends Service {
     } else {
       this.enter();
     }
-  }
-
-  /**
-   * Called by a block's editor chrome from its `didInsert` once its element
-   * exists. Delegates to the reveal/flash leaf, which runs any reveal or flash
-   * that was deferred because the element wasn't in the DOM when the block was
-   * selected. See `../services/wireframe-block-reveal.js`.
-   *
-   * @param {string} blockKey - The mounting block's composite key.
-   * @param {HTMLElement} element - The block's chrome element.
-   */
-  notifyChromeInserted(blockKey, element) {
-    this.wireframeBlockReveal.notifyChromeInserted(blockKey, element);
-  }
-
-  /**
-   * Briefly flashes the rendered element for the given block key to draw the
-   * eye to it — used when selection originates somewhere other than a direct
-   * click on the block (outline selection, insert auto-select). Delegates to
-   * the reveal/flash leaf. See `../services/wireframe-block-reveal.js`.
-   *
-   * @param {string|null} blockKey - The composite key of the block to flash.
-   */
-  flashBlock(blockKey) {
-    this.wireframeBlockReveal.flash(blockKey);
-  }
-
-  /**
-   * Updates one field inside a `containerArgs` namespace bag of the selected
-   * entry (e.g. `containerArgs.grid.column`). Placement edits are rarer than
-   * typography edits, so we route directly through `replaceEntryContainerArgs`
-   * (structural commit) rather than the keystroke-debounced arg-edit pipeline
-   * (`wireframeArgEdit`) used for `args`.
-   *
-   * @param {string} namespace - The childArgs namespace key (e.g. "grid").
-   * @param {string} name - The field name inside the namespace.
-   * @param {*} value
-   * @returns {boolean}
-   */
-  @action
-  updateSelectedContainerArg(namespace, name, value) {
-    if (!this.wireframeSelection.selectedBlockKey || !namespace || !name) {
-      return false;
-    }
-    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(
-      this.wireframeSelection.selectedBlockKey
-    );
-    if (!located) {
-      return false;
-    }
-    return this.wireframeEditEngine.recordStructural(
-      [located.outletName],
-      () => {
-        const layout = this.wireframeLayoutQuery.readResolvedLayout(
-          located.outletName
-        );
-        if (!layout) {
-          return false;
-        }
-        const result = replaceEntryContainerArgs(
-          layout,
-          this.wireframeSelection.selectedBlockKey,
-          namespace,
-          (current) => ({ ...current, [name]: value })
-        );
-        if (!result.changed) {
-          return false;
-        }
-        this.wireframeEditEngine.publishStructuralChange(
-          located.outletName,
-          result.layout
-        );
-        return true;
-      }
-    );
   }
 
   /**
@@ -940,62 +708,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Whether an outlet has unsaved in-session edits. Reads the tracked edit
-   * bookkeeping directly so a template binding (the EDITING pill) re-runs as
-   * edits come and go.
-   *
-   * @param {string} outletName
-   * @returns {boolean}
-   */
-  isOutletEditing(outletName) {
-    return this.wireframeEditEngine.isOutletEdited(outletName);
-  }
-
-  /**
-   * Records the start of a drag. The `editor-draggable` modifier feeds this
-   * via its `onDragStart` callback. The body class lights up the canvas's
-   * drop-zone CSS (zones are `display: none` until the body has the class).
-   *
-   * @param {{blockKey: string, outletName: string}} payload
-   */
-  @action
-  startDrag({ blockKey, outletName }) {
-    this.wireframeDragOverlay.clear();
-    this.wireframeDragSession.beginBlock({ blockKey, outletName });
-    document.body.classList.add("wireframe-dragging");
-  }
-
-  /**
-   * Records the start of a palette-driven drag. Mirrors `startDrag`
-   * but with the `wf-palette-block` type so dragover-time consumers
-   * can pick the right label / dispatch action. Called from
-   * `PaletteEntry`'s `onDragStart`.
-   *
-   * @param {{blockName: string, defaultArgs: Object}} payload
-   */
-  @action
-  startPaletteDrag({ blockName, defaultArgs }) {
-    this.wireframeDragOverlay.clear();
-    this.wireframeDragSession.beginPalette({ blockName, defaultArgs });
-    document.body.classList.add("wireframe-dragging");
-  }
-
-  /**
-   * Resets per-drag state at the end of an element drag (drop OR cancellation —
-   * PDND's `draggable.onDrop` fires for both). Wired as the source modifier's
-   * `onDrop` consumer callback, which the modifier defers via `queueMicrotask`
-   * until after PDND's full dispatch chain has fired — so a drop handler has
-   * already consumed the overlay via `wireframeDragOverlay.dispatch()` before
-   * this final cleanup runs.
-   */
-  @action
-  endDrag() {
-    this.wireframeDragSession.clear();
-    this.wireframeDragOverlay.clear();
-    document.body.classList.remove("wireframe-dragging");
-  }
-
-  /**
    * Executes a drop dispatch payload by action name. The single chokepoint:
    * `WireframeDragOverlay` holds the payload across the drag and calls this at
    * drop time. Each action name resolves to the method on its owning service —
@@ -1023,24 +735,6 @@ export default class WireframeService extends Service {
     return true;
   }
 
-  isInsideAllowedScope(target) {
-    if (!(target instanceof Element)) {
-      return false;
-    }
-    return Boolean(
-      target.closest(".wireframe-block-chrome") ||
-      target.closest(".wireframe-shell") ||
-      target.closest(".wireframe-conditions-floating-panel") ||
-      // Float-Kit portals (menus / modals / tooltips) mount at body
-      // level, outside the shell. They're conceptually part of the
-      // editor surface (an icon picker, a colour swatch dropdown,
-      // a hover tooltip) so clicks inside them must NOT deselect.
-      target.closest(".fk-d-menu") ||
-      target.closest(".fk-d-menu-modal") ||
-      target.closest(".fk-d-tooltip__content")
-    );
-  }
-
   /**
    * Eagerly publishes a `session-draft` layer for every outlet that has a
    * resolved layout. After this runs, `_getResolvedLayouts()` returns draft
@@ -1058,7 +752,7 @@ export default class WireframeService extends Service {
    */
   #materializeAllDrafts() {
     let materialized = 0;
-    for (const outletName of this.editableOutlets) {
+    for (const outletName of this.wireframeLayoutQuery.editableOutlets) {
       if (this.wireframeEditEngine.isOutletDrafted(outletName)) {
         continue;
       }
@@ -1172,7 +866,7 @@ export default class WireframeService extends Service {
     }
     const themeIds = [
       ...new Set(
-        this.editableOutlets
+        this.wireframeLayoutQuery.editableOutlets
           .map((name) => this.wireframeTheme.outletOwner(name).themeId)
           .filter((id) => id != null)
       ),

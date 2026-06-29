@@ -16,7 +16,7 @@ import { OUTLET_STATE } from "../../services/wireframe-layout-query";
  * section is read-only status only.
  */
 export default class InspectorOutletSection extends Component {
-  @service wireframe;
+  @service wireframeEditEngine;
   @service wireframeLayoutQuery;
   @service wireframeTheme;
 
@@ -25,7 +25,7 @@ export default class InspectorOutletSection extends Component {
   }
 
   get isEditing() {
-    return this.wireframe.isOutletEditing(this.args.outletName);
+    return this.wireframeEditEngine.isOutletEdited(this.args.outletName);
   }
 
   get isPublished() {
