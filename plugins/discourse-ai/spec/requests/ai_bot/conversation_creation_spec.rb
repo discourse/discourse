@@ -92,7 +92,7 @@ RSpec.describe "AI bot conversation creation" do
     expect(response.parsed_body["topic_id"]).to eq(topic.id)
   end
 
-  it "rejects a forged agent without PM access" do
+  it "rejects a forged visible agent that is not allowed in personal messages" do
     bot_user = llm_model.reload.user
     forged_agent =
       Fabricate(

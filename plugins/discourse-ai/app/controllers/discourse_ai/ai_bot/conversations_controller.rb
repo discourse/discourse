@@ -97,13 +97,14 @@ module DiscourseAi
       def create_topic_custom_fields
         return {} if params[:ai_agent_id].blank?
 
+        agent_id = params[:ai_agent_id].to_i
         agent =
-          DiscourseAi::Agents::Agent.find_by(user: current_user, id: params[:ai_agent_id].to_i)
-        if agent.blank? || !agent.allow_personal_messages
-          raise Discourse::InvalidParameters.new(:ai_agent_id)
-        end
+          ::AiAgent
+            .allowed_modalities(user: current_user, allow_personal_messages: true)
+            .find { |allowed_agent| allowed_agent[:id] == agent_id }
+        raise Discourse::InvalidParameters.new(:ai_agent_id) if agent.blank?
 
-        { "ai_agent_id" => agent.id }
+        { "ai_agent_id" => agent[:id] }
       end
 
       def star_service_params
