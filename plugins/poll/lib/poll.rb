@@ -191,8 +191,23 @@ class DiscoursePoll::Poll
         return
       end
 
-      poll.status = status
-      poll.save!
+      if poll.status != status
+        poll.status = status
+
+        if poll.closed?
+          poll.closed_by = user
+          poll.closed_at = Time.zone.now
+          log_action = "poll_closed"
+        else
+          poll.closed_by = nil
+          poll.closed_at = nil
+          log_action = "poll_opened"
+        end
+
+        poll.save!
+
+        StaffActionLogger.new(user).log_custom(log_action, { post_id:, subject: poll_name })
+      end
 
       serialized_poll = PollSerializer.new(poll, root: false, scope: guardian).as_json
 

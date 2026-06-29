@@ -7151,7 +7151,9 @@ CREATE TABLE public.polls (
     chart_type integer DEFAULT 0 NOT NULL,
     groups character varying,
     title character varying,
-    dynamic boolean DEFAULT false NOT NULL
+    dynamic boolean DEFAULT false NOT NULL,
+    closed_by_id integer,
+    closed_at timestamp(6) without time zone
 );
 
 
@@ -22279,6 +22281,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260622201005'),
 ('20260622140747'),
 ('20260617180115'),
+('20260617104005'),
 ('20260617053237'),
 ('20260615084100'),
 ('20260615082047'),

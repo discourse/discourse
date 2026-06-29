@@ -276,6 +276,8 @@ class UserHistory < ActiveRecord::Base
       deleted_tag
       chat_channel_status_change
       chat_auto_remove_membership
+      poll_closed
+      poll_opened
       create_watched_word_group
       update_watched_word_group
       delete_watched_word_group

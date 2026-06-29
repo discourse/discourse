@@ -636,8 +636,8 @@ export default class PollComponent extends Component {
             status,
           },
         })
-          .then(() => {
-            this.poll.status = status;
+          .then(({ poll }) => {
+            Object.assign(this.poll, poll);
 
             if (
               this.poll.results === ON_CLOSE ||
@@ -777,6 +777,7 @@ export default class PollComponent extends Component {
         @isMultiple={{this.isMultiple}}
         @close={{this.close}}
         @closed={{this.closed}}
+        @closedBy={{this.poll.closed_by}}
         @results={{this.poll.results}}
         @showResults={{this.showResults}}
         @postUserId={{this.poll.post.user_id}}
