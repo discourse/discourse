@@ -46,8 +46,10 @@ module("Integration | Wireframe | InspectorRichTextField", function (hooks) {
     // it with one stub instance registered under both ids so the tests can
     // mutate it through either lookup.
     const wireframe = new StubWireframeService(this.owner);
-    this.owner.unregister("service:wireframe");
-    this.owner.register("service:wireframe", wireframe, { instantiate: false });
+    this.owner.unregister("service:wireframe-workspace");
+    this.owner.register("service:wireframe-workspace", wireframe, {
+      instantiate: false,
+    });
     this.owner.unregister("service:wireframe-selection");
     this.owner.register("service:wireframe-selection", wireframe, {
       instantiate: false,
@@ -92,7 +94,7 @@ module("Integration | Wireframe | InspectorRichTextField", function (hooks) {
   });
 
   test("goes inert (dimmed, formatting kept, buttons disabled) while the canvas edits this target", async function (assert) {
-    const stub = this.owner.lookup("service:wireframe");
+    const stub = this.owner.lookup("service:wireframe-workspace");
     stub.selectedBlockKey = "block-1";
     const inlineEdit = this.owner.lookup("service:wireframe-inline-edit");
     inlineEdit.isActive = true;
@@ -127,7 +129,7 @@ module("Integration | Wireframe | InspectorRichTextField", function (hooks) {
   });
 
   test("seeds from the live block-arg value, not a stale FormKit draft", async function (assert) {
-    const stub = this.owner.lookup("service:wireframe");
+    const stub = this.owner.lookup("service:wireframe-workspace");
     stub.selectedBlockKey = "block-1";
     // `text` is a declared block arg whose live value diverged from the draft
     // (e.g. a canvas edit committed it). The editor must show the live value.

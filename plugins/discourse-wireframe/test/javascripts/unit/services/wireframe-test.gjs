@@ -109,7 +109,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
   setupBlockLayoutDraftsStub(hooks);
 
   hooks.beforeEach(function () {
-    this.editor = getOwner(this).lookup("service:wireframe");
+    this.editor = getOwner(this).lookup("service:wireframe-workspace");
   });
 
   hooks.afterEach(function () {
@@ -473,7 +473,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // editor with editing enabled.
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.editor.enter();
     });
 
@@ -601,7 +601,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.editor.enter();
     });
 
@@ -833,7 +833,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.editor.enter();
     });
 
@@ -960,7 +960,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.editor.enter();
     });
 
@@ -1121,7 +1121,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.editor.enter();
     });
 
@@ -1308,7 +1308,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.editor.enter();
     });
 
@@ -1409,7 +1409,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         );
         this.editor.siteSettings.wireframe_enabled = true;
         logIn(getOwner(this));
-        this.editor = getOwner(this).lookup("service:wireframe");
+        this.editor = getOwner(this).lookup("service:wireframe-workspace");
         this.editor.enter();
       });
 
@@ -1510,7 +1510,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         );
         this.editor.siteSettings.wireframe_enabled = true;
         logIn(getOwner(this));
-        this.editor = getOwner(this).lookup("service:wireframe");
+        this.editor = getOwner(this).lookup("service:wireframe-workspace");
         this.editor.enter();
       });
 
@@ -1649,7 +1649,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         );
         this.editor.siteSettings.wireframe_enabled = true;
         logIn(getOwner(this));
-        this.editor = getOwner(this).lookup("service:wireframe");
+        this.editor = getOwner(this).lookup("service:wireframe-workspace");
         this.editor.enter();
       });
 
@@ -1781,7 +1781,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         );
         this.editor.siteSettings.wireframe_enabled = true;
         logIn(getOwner(this));
-        this.editor = getOwner(this).lookup("service:wireframe");
+        this.editor = getOwner(this).lookup("service:wireframe-workspace");
         this.editor.enter();
       });
 
@@ -1865,7 +1865,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         );
         this.editor.siteSettings.wireframe_enabled = true;
         logIn(getOwner(this));
-        this.editor = getOwner(this).lookup("service:wireframe");
+        this.editor = getOwner(this).lookup("service:wireframe-workspace");
         this.editor.enter();
       });
 
@@ -2009,7 +2009,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         );
         this.editor.siteSettings.wireframe_enabled = true;
         logIn(getOwner(this));
-        this.editor = getOwner(this).lookup("service:wireframe");
+        this.editor = getOwner(this).lookup("service:wireframe-workspace");
         this.editor.enter();
       });
 
@@ -2101,7 +2101,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         );
         this.editor.siteSettings.wireframe_enabled = true;
         logIn(getOwner(this));
-        this.editor = getOwner(this).lookup("service:wireframe");
+        this.editor = getOwner(this).lookup("service:wireframe-workspace");
         this.editor.enter();
       });
 
@@ -2400,7 +2400,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.inlineEdit = getOwner(this).lookup("service:wireframe-inline-edit");
       this.editor.enter();
     });
@@ -2447,7 +2447,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         );
         this.editor.siteSettings.wireframe_enabled = true;
         logIn(getOwner(this));
-        this.editor = getOwner(this).lookup("service:wireframe");
+        this.editor = getOwner(this).lookup("service:wireframe-workspace");
         this.inlineEdit = getOwner(this).lookup(
           "service:wireframe-inline-edit"
         );
@@ -2525,7 +2525,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         );
         this.editor.siteSettings.wireframe_enabled = true;
         logIn(getOwner(this));
-        this.editor = getOwner(this).lookup("service:wireframe");
+        this.editor = getOwner(this).lookup("service:wireframe-workspace");
         this.inlineEdit = getOwner(this).lookup(
           "service:wireframe-inline-edit"
         );
@@ -2623,7 +2623,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.clipboard = getOwner(this).lookup("service:wireframe-clipboard");
       this.editor.enter();
     });
@@ -2818,7 +2818,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.editor.enter();
 
       const draft = outletChildren(this.editor);
@@ -2905,7 +2905,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.editor.enter();
 
       const draft = outletChildren(this.editor);
@@ -3177,7 +3177,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.editor.enter();
     });
 
@@ -3410,7 +3410,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       await registerTestLayout(getOwner(this));
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.editor.enter();
 
       // Edit the outlet's tile so the outlet counts as edited.

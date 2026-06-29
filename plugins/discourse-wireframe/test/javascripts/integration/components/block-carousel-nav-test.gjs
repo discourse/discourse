@@ -25,7 +25,7 @@ module(
     setupRenderingTest(hooks);
 
     test("a nav-control click pages without selecting the block", async function (assert) {
-      const wireframe = this.owner.lookup("service:wireframe");
+      const wireframe = this.owner.lookup("service:wireframe-workspace");
       this.owner.lookup("service:wireframe-session").activate();
 
       // `selectBlock` is an `@action` (a getter-only accessor), so record its

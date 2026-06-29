@@ -41,7 +41,7 @@ export default apiInitializer((api) => {
   api.renderInOutlet("after-main-outlet", EntryPill);
   api.renderInOutlet("after-main-outlet", EditorShell);
 
-  const editor = api.container.lookup("service:wireframe");
+  const editor = api.container.lookup("service:wireframe-workspace");
   installBlockChrome(editor);
   installGhostChildrenCreator();
   installOutletBoundary(editor);
@@ -115,7 +115,7 @@ function installSimulationContext(simulation) {
  * editor users, and toggling the editor off doesn't kill it for dev-
  * tools users.
  *
- * @param {import("../services/wireframe").default} editor
+ * @param {import("../services/wireframe-workspace").default} editor
  */
 function installGhostBlocksWhileEditing(editor) {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.GHOST_BLOCKS);
@@ -134,7 +134,7 @@ function installGhostBlocksWhileEditing(editor) {
  * at a time. Preserves any pre-existing callback via the same save-and-OR
  * pattern as the ghost-blocks installer.
  *
- * @param {import("../services/wireframe").default} editor
+ * @param {import("../services/wireframe-workspace").default} editor
  */
 function installEditPresentationWhileEditing(editor) {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.EDIT_PRESENTATION);
@@ -159,7 +159,7 @@ function installEditPresentationWhileEditing(editor) {
  * page change because the SPA's URL changes don't reload the bundle.
  *
  * @param {import("discourse/lib/plugin-api").default} api
- * @param {import("../services/wireframe").default} editor
+ * @param {import("../services/wireframe-workspace").default} editor
  */
 function installVeThemeAutoEnter(api, editor) {
   const tryEnter = (url) => {
@@ -367,7 +367,7 @@ function installGhostChildrenCreator() {
  * registered (e.g. dev-tools' info component) when the editor is inactive,
  * so nothing breaks for other consumers.
  *
- * @param {import("../services/wireframe").default} editor
+ * @param {import("../services/wireframe-workspace").default} editor
  */
 function installOutletBoundary(editor) {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT);

@@ -29,7 +29,7 @@ import { OUTLET_STATE } from "../../services/wireframe-layout-query";
  * the drawer.
  */
 export default class PublishReviewDrawer extends Component {
-  @service wireframe;
+  @service wireframeWorkspace;
   @service dialog;
   @service wireframeEditEngine;
   @service wireframeLayoutQuery;
@@ -232,7 +232,7 @@ export default class PublishReviewDrawer extends Component {
     // author lands back on the live page showing what they just published. On a
     // failure the banner stays and the drawer stays open to retry.
     if (this.saveError == null) {
-      this.wireframe.exit();
+      this.wireframeWorkspace.exit();
     }
   }
 

@@ -67,8 +67,8 @@ class StubWireframeService extends Service {
 
 function stubWireframe(owner, blockData, options) {
   const stub = new StubWireframeService(owner, blockData, options);
-  owner.unregister("service:wireframe");
-  owner.register("service:wireframe", stub, { instantiate: false });
+  owner.unregister("service:wireframe-workspace");
+  owner.register("service:wireframe-workspace", stub, { instantiate: false });
   owner.unregister("service:wireframe-selection");
   owner.register("service:wireframe-selection", stub, { instantiate: false });
   owner.unregister("service:wireframe-layout-query");
@@ -320,7 +320,7 @@ module(
 
       await render(<template><InspectorForm /></template>);
 
-      const stub = this.owner.lookup("service:wireframe");
+      const stub = this.owner.lookup("service:wireframe-workspace");
       await click('input[type="radio"][value="3"]');
 
       const lastCall = stub.updateSelectedArgCalls.at(-1);

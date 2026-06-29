@@ -65,7 +65,7 @@ module(
         registerBlock(TestImageBlock);
         registerBlock(TestTile);
       });
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.imageUpload = getOwner(this).lookup(
         "service:wireframe-image-upload"
       );

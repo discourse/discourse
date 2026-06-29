@@ -93,9 +93,9 @@ class StubWireframeService extends Service {
 }
 
 function stubWireframe(owner, blockData) {
-  owner.unregister("service:wireframe");
+  owner.unregister("service:wireframe-workspace");
   const stub = new StubWireframeService(owner, blockData);
-  owner.register("service:wireframe", stub, { instantiate: false });
+  owner.register("service:wireframe-workspace", stub, { instantiate: false });
   owner.unregister("service:wireframe-layout-query");
   owner.register("service:wireframe-layout-query", stub, {
     instantiate: false,
@@ -214,7 +214,7 @@ module(
 
       await click(".wireframe-inspector__unregistered-notice-action");
 
-      const service = this.owner.lookup("service:wireframe");
+      const service = this.owner.lookup("service:wireframe-workspace");
       assert.deepEqual(
         service.removeBlockCalls,
         ["wf:gone:1"],

@@ -51,7 +51,7 @@ function seedGrid() {
 // wraps the grid and mounts `GridOverlay`. Returns the editor service.
 async function renderGridInEditMode(owner) {
   seedGrid();
-  const wireframe = owner.lookup("service:wireframe");
+  const wireframe = owner.lookup("service:wireframe-workspace");
   wireframe.siteSettings.wireframe_enabled = true;
   logIn(owner);
 

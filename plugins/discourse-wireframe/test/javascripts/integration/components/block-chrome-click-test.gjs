@@ -21,7 +21,7 @@ module(
     setupRenderingTest(hooks);
 
     test("ignores keyboard-synthesized clicks on a URL arg", async function (assert) {
-      const wireframe = this.owner.lookup("service:wireframe");
+      const wireframe = this.owner.lookup("service:wireframe-workspace");
       const linkEdit = this.owner.lookup("service:wireframe-link-edit");
       const blockKey = "button-link:test";
 

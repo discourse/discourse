@@ -68,8 +68,8 @@ class StubWireframeService extends Service {
 
 function stubWireframe(owner, args, fieldErrors) {
   const stub = new StubWireframeService(owner, args, fieldErrors);
-  owner.unregister("service:wireframe");
-  owner.register("service:wireframe", stub, { instantiate: false });
+  owner.unregister("service:wireframe-workspace");
+  owner.register("service:wireframe-workspace", stub, { instantiate: false });
   owner.unregister("service:wireframe-selection");
   owner.register("service:wireframe-selection", stub, { instantiate: false });
   // The form writes arg edits through the arg-edit service and reads grid-shape
@@ -132,7 +132,7 @@ module(
 
       await click(".d-toggle-switch__checkbox");
 
-      const service = this.owner.lookup("service:wireframe");
+      const service = this.owner.lookup("service:wireframe-workspace");
       assert.deepEqual(service.updateSelectedArgCalls, [
         { name: "reverse", value: true },
       ]);

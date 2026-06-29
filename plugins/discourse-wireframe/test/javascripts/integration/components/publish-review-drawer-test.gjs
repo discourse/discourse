@@ -81,9 +81,9 @@ class StubWireframeService extends Service {
 }
 
 function stubWireframe(owner, config) {
-  owner.unregister("service:wireframe");
+  owner.unregister("service:wireframe-workspace");
   const stub = new StubWireframeService(owner, config);
-  owner.register("service:wireframe", stub, { instantiate: false });
+  owner.register("service:wireframe-workspace", stub, { instantiate: false });
   owner.unregister("service:wireframe-layout-query");
   owner.register("service:wireframe-layout-query", stub, {
     instantiate: false,

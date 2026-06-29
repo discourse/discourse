@@ -56,7 +56,7 @@ function isModifier(event) {
  * from an effect-style observer that runs whenever the editor's
  * `wireframeSession.active` flips.
  *
- * @param {import("../services/wireframe").default} editor
+ * @param {import("../services/wireframe-workspace").default} editor
  * @returns {() => void}
  */
 export function attachEditorShortcuts(editor) {

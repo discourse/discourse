@@ -36,7 +36,7 @@ import SimulationControls from "./simulation-controls";
  */
 export default class EditorShell extends Component {
   @service dragAndDrop;
-  @service wireframe;
+  @service wireframeWorkspace;
   @service wireframeDragNav;
   @service wireframeEditEngine;
   @service wireframeSession;
@@ -119,7 +119,7 @@ export default class EditorShell extends Component {
 
   @action
   exit() {
-    this.wireframe.exit();
+    this.wireframeWorkspace.exit();
   }
 
   @action

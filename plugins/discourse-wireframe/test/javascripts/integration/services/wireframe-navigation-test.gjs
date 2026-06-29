@@ -54,7 +54,7 @@ module(
     setupBlockLayoutDraftsStub(hooks);
 
     hooks.beforeEach(function () {
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
     });

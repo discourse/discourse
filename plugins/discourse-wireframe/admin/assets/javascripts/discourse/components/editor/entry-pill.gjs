@@ -15,7 +15,7 @@ import { i18n } from "discourse-i18n";
  *  - the editor is already active
  */
 export default class EntryPill extends Component {
-  @service wireframe;
+  @service wireframeWorkspace;
   @service wireframeLayoutQuery;
   @service wireframeSession;
 
@@ -36,7 +36,7 @@ export default class EntryPill extends Component {
 
   @action
   enter() {
-    this.wireframe.enter();
+    this.wireframeWorkspace.enter();
   }
 
   <template>

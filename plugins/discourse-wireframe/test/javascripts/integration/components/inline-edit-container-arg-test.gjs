@@ -57,7 +57,7 @@ module(
         ],
         getOwner(this)
       );
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.inlineEdit = getOwner(this).lookup("service:wireframe-inline-edit");
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));

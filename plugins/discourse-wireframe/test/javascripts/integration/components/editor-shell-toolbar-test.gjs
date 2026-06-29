@@ -33,12 +33,12 @@ module(
         [{ block: Heading, args: { text: "Title" } }],
         getOwner(this)
       );
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
       // Re-look up after logging in so the editor sees the staff user and
       // `enter()` actually enables editing (matches the service-test setup).
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       // Pass an explicit theme id: there's no boot preload in a rendering test,
       // so the editor can't derive a default target and the toolbar's Save
       // button (which requires `activeThemeId` via `isDirty`) would stay disabled.

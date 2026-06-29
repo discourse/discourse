@@ -29,7 +29,7 @@ async function setupOutline(owner, count) {
     [{ block: Section, args: {}, children: headings(count) }],
     owner
   );
-  const editor = owner.lookup("service:wireframe");
+  const editor = owner.lookup("service:wireframe-workspace");
   editor.siteSettings.wireframe_enabled = true;
   logIn(owner);
   editor.enter();
@@ -40,7 +40,7 @@ async function setupOutline(owner, count) {
 // `count` sibling depth-0 rows to multi-select between.
 async function setupSiblings(owner, count) {
   await _renderBlocks("homepage-blocks", headings(count), owner);
-  const editor = owner.lookup("service:wireframe");
+  const editor = owner.lookup("service:wireframe-workspace");
   editor.siteSettings.wireframe_enabled = true;
   logIn(owner);
   editor.enter();
@@ -60,7 +60,7 @@ module(
     setupBlockLayoutDraftsStub(hooks);
 
     hooks.afterEach(function () {
-      getOwner(this).lookup("service:wireframe").exit();
+      getOwner(this).lookup("service:wireframe-workspace").exit();
     });
 
     test("auto-collapses a container past the threshold and shows a count badge", async function (assert) {
@@ -128,7 +128,7 @@ module(
         ],
         this.owner
       );
-      const editor = this.owner.lookup("service:wireframe");
+      const editor = this.owner.lookup("service:wireframe-workspace");
       editor.siteSettings.wireframe_enabled = true;
       logIn(this.owner);
       editor.enter();

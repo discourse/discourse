@@ -26,7 +26,7 @@ import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-rende
  * layer and the publish/save/discard workflow; the session service owns the
  * is-open/can-edit signal everything else reads.
  */
-export default class WireframeService extends Service {
+export default class WireframeWorkspaceService extends Service {
   @service wireframeArgEdit;
   @service wireframeBlockReveal;
   @service wireframeDragOverlay;

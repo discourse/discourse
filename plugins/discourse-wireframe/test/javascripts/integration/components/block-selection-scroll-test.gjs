@@ -24,7 +24,7 @@ module(
     setupBlockLayoutDraftsStub(hooks);
 
     hooks.afterEach(function () {
-      getOwner(this).lookup("service:wireframe").exit();
+      getOwner(this).lookup("service:wireframe-workspace").exit();
     });
 
     // Renders a block chrome and returns the element carrying the block key
@@ -38,7 +38,7 @@ module(
       // mounts the block and the draft layers are seeded; the block-reveal
       // service subscribes to the selection seam at boot and scrolls the
       // selected block into view through it.
-      const wireframe = owner.lookup("service:wireframe");
+      const wireframe = owner.lookup("service:wireframe-workspace");
       wireframe.siteSettings.wireframe_enabled = true;
       logIn(owner);
       wireframe.enter();
@@ -71,7 +71,7 @@ module(
     }
 
     function select(owner, blockKey) {
-      const wireframe = owner.lookup("service:wireframe");
+      const wireframe = owner.lookup("service:wireframe-workspace");
       return wireframe.wireframeSelection.selectBlock({
         key: blockKey,
         name: "button-link",

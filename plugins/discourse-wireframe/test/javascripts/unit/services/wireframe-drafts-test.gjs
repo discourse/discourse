@@ -32,7 +32,7 @@ module(
     setupTest(hooks);
 
     hooks.beforeEach(function () {
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.drafts = getOwner(this).lookup("service:wireframe-drafts");
     });
 

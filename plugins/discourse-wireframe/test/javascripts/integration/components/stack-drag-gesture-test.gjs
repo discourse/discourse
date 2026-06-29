@@ -29,7 +29,7 @@ module(
     // (wireframe) plus the overlay coordinator's claim/dispatch. `dispatch`
     // replays the dispatch the claimed slot-insert carried, captured at drop.
     function stubWireframe(owner, onDispatch) {
-      const wireframe = owner.lookup("service:wireframe");
+      const wireframe = owner.lookup("service:wireframe-workspace");
       const dropAuthority = owner.lookup("service:wireframe-drop-authority");
       const overlay = owner.lookup("service:wireframe-drag-overlay");
       let captured = null;

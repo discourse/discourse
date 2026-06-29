@@ -29,7 +29,7 @@ module(
     setupRenderingTest(hooks);
 
     test("a synthesized (detail 0) tab click reveals without selecting; a real click selects", async function (assert) {
-      const wireframe = this.owner.lookup("service:wireframe");
+      const wireframe = this.owner.lookup("service:wireframe-workspace");
       this.owner.lookup("service:wireframe-session").activate();
 
       // `selectBlock` is an `@action` (a getter-only accessor), so record its

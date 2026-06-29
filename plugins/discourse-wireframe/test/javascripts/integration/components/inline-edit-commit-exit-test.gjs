@@ -81,7 +81,7 @@ module(
         ],
         owner
       );
-      const editor = owner.lookup("service:wireframe");
+      const editor = owner.lookup("service:wireframe-workspace");
       const inlineEdit = owner.lookup("service:wireframe-inline-edit");
       editor.siteSettings.wireframe_enabled = true;
       logIn(owner);

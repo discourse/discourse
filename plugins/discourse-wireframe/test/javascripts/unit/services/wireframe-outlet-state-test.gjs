@@ -35,7 +35,7 @@ module(
     setupBlockLayoutDraftsStub(hooks);
 
     hooks.beforeEach(function () {
-      this.editor = getOwner(this).lookup("service:wireframe");
+      this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.theme = getOwner(this).lookup("service:wireframe-theme");
       withTestBlockRegistration(() => registerBlock(StateTile));
     });
