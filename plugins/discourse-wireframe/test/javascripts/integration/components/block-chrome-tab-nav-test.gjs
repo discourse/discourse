@@ -30,7 +30,7 @@ module(
 
     test("a synthesized (detail 0) tab click reveals without selecting; a real click selects", async function (assert) {
       const wireframe = this.owner.lookup("service:wireframe");
-      wireframe.isActive = true;
+      this.owner.lookup("service:wireframe-session").activate();
 
       // `selectBlock` is an `@action` (a getter-only accessor), so record its
       // calls by redefining the configurable property rather than assigning.

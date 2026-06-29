@@ -26,7 +26,7 @@ module(
 
     test("a nav-control click pages without selecting the block", async function (assert) {
       const wireframe = this.owner.lookup("service:wireframe");
-      wireframe.isActive = true;
+      this.owner.lookup("service:wireframe-session").activate();
 
       // `selectBlock` is an `@action` (a getter-only accessor), so record its
       // calls by redefining the configurable property rather than assigning.

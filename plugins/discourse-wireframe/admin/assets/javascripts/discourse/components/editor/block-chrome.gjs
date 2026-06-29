@@ -98,6 +98,7 @@ export default class BlockChrome extends Component {
   @service wireframeImageUpload;
   @service wireframeInlineEdit;
   @service wireframeLinkEdit;
+  @service wireframeSession;
 
   /**
    * Reference to the chrome's outer `<div>`, set on insert. Passed to
@@ -1415,7 +1416,7 @@ export default class BlockChrome extends Component {
    */
   @action
   onClick(event) {
-    if (!this.wireframe.isActive) {
+    if (!this.wireframeSession.active) {
       return;
     }
     // A LOCKED outlet is read-only — swallow the click so nothing inside it can
@@ -1853,7 +1854,7 @@ export default class BlockChrome extends Component {
   }
 
   <template>
-    {{#if this.wireframe.isActive}}
+    {{#if this.wireframeSession.active}}
       {{! Outer wrapper hosts the sibling drop zones (before/after) for
         stack / row layouts and the bordered chrome frame in between.
         Grid cell occupants skip the sibling drop zones — their

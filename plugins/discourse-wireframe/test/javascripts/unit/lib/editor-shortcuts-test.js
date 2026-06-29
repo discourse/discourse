@@ -18,7 +18,7 @@ module("Unit | Discourse Wireframe | lib:editor-shortcuts", function (hooks) {
   // shortcut reads. `removed` records whether the shortcut acted.
   function buildEditor(overrides = {}) {
     return {
-      isActive: true,
+      wireframeSession: { active: true },
       isDestroyed: false,
       isDestroying: false,
       selectedBlockKey: "para:1",

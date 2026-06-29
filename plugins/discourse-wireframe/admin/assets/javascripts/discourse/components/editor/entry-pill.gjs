@@ -16,12 +16,13 @@ import { i18n } from "discourse-i18n";
  */
 export default class EntryPill extends Component {
   @service wireframe;
+  @service wireframeSession;
 
   get visible() {
     if (!this.wireframe.canEdit) {
       return false;
     }
-    if (this.wireframe.isActive) {
+    if (this.wireframeSession.active) {
       return false;
     }
     return this.wireframe.editableOutlets.length > 0;

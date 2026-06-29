@@ -17,7 +17,7 @@ const DEFAULT_HEIGHT = 560;
 /**
  * Detachable floating panel that hosts the conditions surface when
  * the inspector's `↗` button is clicked. Renders only when
- * `wireframe.conditionsDetached` is true; mounted once at the
+ * `wireframeConditionsPanel.detached` is true; mounted once at the
  * shell level so the panel survives tab switches.
  *
  * The panel is dragged via its header bar and resized via a corner
@@ -30,8 +30,8 @@ const DEFAULT_HEIGHT = 560;
  * but stays below DMenu's content layer.
  */
 export default class ConditionsFloatingPanel extends Component {
-  @service wireframe;
   @service wireframeConditionsPanel;
+  @service wireframeSession;
 
   /**
    * Track resize via ResizeObserver — the `resize: both` corner grip
@@ -100,7 +100,9 @@ export default class ConditionsFloatingPanel extends Component {
   }
 
   get isOpen() {
-    return this.wireframe.isActive && this.wireframeConditionsPanel.detached;
+    return (
+      this.wireframeSession.active && this.wireframeConditionsPanel.detached
+    );
   }
 
   /**

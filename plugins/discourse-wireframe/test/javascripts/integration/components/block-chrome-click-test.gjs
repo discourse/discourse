@@ -24,7 +24,7 @@ module(
       const linkEdit = this.owner.lookup("service:wireframe-link-edit");
       const blockKey = "button-link:test";
 
-      wireframe.isActive = true;
+      this.owner.lookup("service:wireframe-session").activate();
       // `LinkEditState.start` bails unless the block resolves to a real
       // layout entry, so stub the lookup — opening that session is exactly
       // the behavior we're asserting the guard suppresses.

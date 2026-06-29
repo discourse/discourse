@@ -32,6 +32,7 @@ export default class PublishReviewDrawer extends Component {
   @service wireframe;
   @service dialog;
   @service wireframePublishPreview;
+  @service wireframeSession;
   @service wireframeValidation;
 
   /** In-flight save or publish; disables the action buttons while awaiting. */
@@ -59,7 +60,7 @@ export default class PublishReviewDrawer extends Component {
   #expandedRaw = trackedSet();
 
   get isOpen() {
-    return this.wireframe.isActive && this.wireframe.reviewDrawerOpen;
+    return this.wireframeSession.active && this.wireframe.reviewDrawerOpen;
   }
 
   /** The edited outlets grouped by owner theme — the publish plan. */

@@ -10,9 +10,6 @@ import PublishReviewDrawer from "discourse/plugins/discourse-wireframe/discourse
  * the publish targets, the active theme target, and a per-outlet change summary.
  */
 class StubWireframeService extends Service {
-  // The query layer moved to a leaf the editor exposes as layoutQuery; returning
-  isActive = true;
-
   reviewDrawerOpen = true;
 
   isDirty = true;
@@ -87,6 +84,9 @@ function stubWireframe(owner, config) {
   owner.register("service:wireframe", new StubWireframeService(owner, config), {
     instantiate: false,
   });
+  // The drawer reads session state off the session signal service, not the
+  // wireframe stub, so flip it active to mirror an open editor.
+  owner.lookup("service:wireframe-session").activate();
 }
 
 module(

@@ -61,9 +61,9 @@ export default apiInitializer((api) => {
   installVeThemeAutoEnter(api, editor);
   // The editor stays open across SPA navigation, so re-discover the new page's
   // outlets after each transition. `rediscoverOutlets` self-gates on
-  // `editor.isActive`, so this is a no-op while the editor is closed.
+  // `editor.wireframeSession.active`, so this is a no-op while the editor is closed.
   api.onPageChange(() => editor.rediscoverOutlets());
-  // The shortcut listener self-gates on `editor.isActive`, so we install it
+  // The shortcut listener self-gates on `editor.wireframeSession.active`, so we install it
   // once rather than attach/detach on editor enter. Tie its removal to the
   // editor service's teardown: in production that's app shutdown, but in tests
   // — where the initializer boots once per owner — it stops a document
@@ -118,7 +118,7 @@ function installSimulationContext(simulation) {
 function installGhostBlocksWhileEditing(editor) {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.GHOST_BLOCKS);
   debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => {
-    if (editor.isActive) {
+    if (editor.wireframeSession.active) {
       return true;
     }
     return previous ? previous() : false;
@@ -137,7 +137,7 @@ function installGhostBlocksWhileEditing(editor) {
 function installEditPresentationWhileEditing(editor) {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.EDIT_PRESENTATION);
   debugHooks.setCallback(DEBUG_CALLBACK.EDIT_PRESENTATION, () => {
-    if (editor.isActive) {
+    if (editor.wireframeSession.active) {
       return true;
     }
     return previous ? previous() : false;
@@ -165,7 +165,7 @@ function installVeThemeAutoEnter(api, editor) {
     if (themeId == null) {
       return;
     }
-    if (editor.isActive && editor.activeThemeId === themeId) {
+    if (editor.wireframeSession.active && editor.activeThemeId === themeId) {
       return;
     }
     editor.enter({ themeId });
@@ -367,7 +367,7 @@ function installGhostChildrenCreator() {
 function installOutletBoundary(editor) {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT);
   debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT, () => {
-    if (editor.isActive) {
+    if (editor.wireframeSession.active) {
       return OutletBoundary;
     }
     return previous ? previous() : null;

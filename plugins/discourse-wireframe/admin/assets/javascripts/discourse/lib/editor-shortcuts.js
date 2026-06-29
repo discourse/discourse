@@ -54,7 +54,7 @@ function isModifier(event) {
  * Installs the document-level keydown listener and returns a `detach`
  * thunk the caller can invoke to remove it. Designed for ergonomic use
  * from an effect-style observer that runs whenever the editor's
- * `isActive` flips.
+ * `wireframeSession.active` flips.
  *
  * @param {import("../services/wireframe").default} editor
  * @returns {() => void}
@@ -67,7 +67,11 @@ export function attachEditorShortcuts(editor) {
     // service throws when a shortcut path resolves an injected dependency on the
     // dead owner. `isDestroyed`/`isDestroying` are plain instance flags, so
     // reading them never triggers a lookup.
-    if (editor.isDestroyed || editor.isDestroying || !editor.isActive) {
+    if (
+      editor.isDestroyed ||
+      editor.isDestroying ||
+      !editor.wireframeSession.active
+    ) {
       return;
     }
     if (isTypingFocus()) {

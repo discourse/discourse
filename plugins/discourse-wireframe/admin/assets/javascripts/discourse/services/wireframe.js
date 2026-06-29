@@ -185,7 +185,7 @@ export default class WireframeService extends Service {
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
-    if (!this.isActive || !this.selectedBlockKey) {
+    if (!this.wireframeSession.active || !this.selectedBlockKey) {
       return;
     }
     if (this.isInsideAllowedScope(downTarget)) {
@@ -314,26 +314,6 @@ export default class WireframeService extends Service {
    */
   get structuralVersion() {
     return this.wireframeRevision.version;
-  }
-
-  /**
-   * Whether an editor session is currently open. Delegates to the session
-   * signal service; re-exposed here (with a setter) so the many components,
-   * templates, and internal readers that use `isActive` — plus tests that flip
-   * it to fake an active session — stay unchanged without injecting the service.
-   *
-   * @returns {boolean}
-   */
-  get isActive() {
-    return this.wireframeSession.active;
-  }
-
-  set isActive(value) {
-    if (value) {
-      this.wireframeSession.activate();
-    } else {
-      this.wireframeSession.deactivate();
-    }
   }
 
   /**
@@ -702,7 +682,7 @@ export default class WireframeService extends Service {
    */
   @action
   rediscoverOutlets() {
-    if (!this.isActive) {
+    if (!this.wireframeSession.active) {
       return;
     }
     // Defer to after render so the just-navigated page's `<BlockOutlet>`s have
@@ -718,7 +698,7 @@ export default class WireframeService extends Service {
   #rediscoverMountedOutlets() {
     // The session may have ended (or the page changed again) between scheduling
     // and running.
-    if (!this.isActive) {
+    if (!this.wireframeSession.active) {
       return;
     }
     const materialized = this.#materializeAllDrafts();
@@ -911,7 +891,7 @@ export default class WireframeService extends Service {
 
   @action
   toggle() {
-    if (this.isActive) {
+    if (this.wireframeSession.active) {
       this.exit();
     } else {
       this.enter();
@@ -1734,7 +1714,7 @@ export default class WireframeService extends Service {
     const companionId = await this.wireframeDrafts.companionId(
       this.activeThemeId
     );
-    if (generation !== this.#enterGeneration || !this.isActive) {
+    if (generation !== this.#enterGeneration || !this.wireframeSession.active) {
       return;
     }
     if (companionId != null) {
@@ -1758,7 +1738,7 @@ export default class WireframeService extends Service {
     // outlets, the indicator, publish targeting, and the draft fetch below all
     // resolve against the companion the user already set up.
     await this.#resolveCompanionTarget(generation);
-    if (generation !== this.#enterGeneration || !this.isActive) {
+    if (generation !== this.#enterGeneration || !this.wireframeSession.active) {
       return;
     }
     const themeIds = [
@@ -1770,7 +1750,7 @@ export default class WireframeService extends Service {
     ];
     const drafts = await this.wireframeDrafts.fetchDrafts(themeIds);
     // Bail if the user exited or re-entered while the fetch was in flight.
-    if (generation !== this.#enterGeneration || !this.isActive) {
+    if (generation !== this.#enterGeneration || !this.wireframeSession.active) {
       return;
     }
 

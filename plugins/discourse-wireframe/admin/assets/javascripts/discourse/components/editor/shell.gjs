@@ -38,6 +38,7 @@ export default class EditorShell extends Component {
   @service dragAndDrop;
   @service wireframe;
   @service wireframeDragNav;
+  @service wireframeSession;
   @service wireframeValidation;
 
   @tracked warningsPanelOpen = false;
@@ -145,7 +146,7 @@ export default class EditorShell extends Component {
   }
 
   <template>
-    {{#if this.wireframe.isActive}}
+    {{#if this.wireframeSession.active}}
       <div
         class={{this.shellClasses}}
         {{didInsert this.setupBodyClasses}}

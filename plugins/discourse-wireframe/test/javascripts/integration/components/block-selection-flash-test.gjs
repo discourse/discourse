@@ -24,7 +24,7 @@ module(
     // after its timed removal.
     async function setupBlock(owner) {
       // The chrome only renders its keyed wrapper while the editor is active.
-      owner.lookup("service:wireframe").isActive = true;
+      owner.lookup("service:wireframe-session").activate();
 
       await render(
         <template>
