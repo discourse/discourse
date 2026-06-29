@@ -305,6 +305,7 @@ class User < ActiveRecord::Base
   scope :suspended, -> { where("suspended_till IS NOT NULL AND suspended_till > ?", Time.zone.now) }
   scope :not_suspended, -> { where("suspended_till IS NULL OR suspended_till <= ?", Time.zone.now) }
   scope :activated, -> { where(active: true) }
+  scope :not_activated, -> { where(active: false) }
   scope :not_staged, -> { where(staged: false) }
   scope :approved, -> { where(approved: true) }
 
@@ -583,6 +584,10 @@ class User < ActiveRecord::Base
     @belonging_to_group_ids ||= group_users.pluck(:group_id)
   end
 
+  def permission_acl
+    @permission_acl ||= AccessControlList.matching_user(self).user_acl
+  end
+
   def group_granted_trust_level
     GroupUser.where(user_id: id).includes(:group).maximum("groups.grant_trust_level")
   end
@@ -676,6 +681,7 @@ class User < ActiveRecord::Base
     @ignored_user_ids = nil
     @muted_user_ids = nil
     @belonging_to_group_ids = nil
+    @permission_acl = nil
     super
   end
 
@@ -1368,22 +1374,29 @@ class User < ActiveRecord::Base
     !!(silenced_till && silenced_till > Time.zone.now)
   end
 
+  def self.format_penalty_reason(details)
+    return if details.blank?
+    sanitize_staff_reason(details).split("<br>").first
+  end
+
+  def self.sanitize_staff_reason(text)
+    STAFF_REASON_SANITIZER.sanitize(
+      PrettyText.cleanup(text.gsub("\n", "<br>")),
+      tags: STAFF_REASON_ALLOWED_TAGS,
+      attributes: STAFF_REASON_ALLOWED_ATTRIBUTES,
+    )
+  end
+
   def silenced_record
     user_histories.where(action: UserHistory.actions[:silence_user]).order("id DESC").first
   end
 
   def full_silence_reason
-    text = silenced_record.try(:details) if silenced?
-    return text if text.blank?
-    sanitize_staff_reason(text)
+    full_penalty_reason(silenced_record) if silenced?
   end
 
   def silence_reason
-    if details = full_silence_reason
-      return details.split("<br>")[0]
-    end
-
-    nil
+    full_silence_reason&.split("<br>")&.first
   end
 
   def silenced_at
@@ -1399,25 +1412,17 @@ class User < ActiveRecord::Base
   end
 
   def full_suspend_reason
-    text = suspend_record.try(:details) if suspended?
-    return text if text.blank?
-    sanitize_staff_reason(text)
+    full_penalty_reason(suspend_record) if suspended?
   end
 
   def suspend_reason
-    if details = full_suspend_reason
-      return details.split("<br>")[0]
-    end
-
-    nil
+    full_suspend_reason&.split("<br>")&.first
   end
 
-  def sanitize_staff_reason(text)
-    STAFF_REASON_SANITIZER.sanitize(
-      PrettyText.cleanup(text.gsub("\n", "<br>")),
-      tags: STAFF_REASON_ALLOWED_TAGS,
-      attributes: STAFF_REASON_ALLOWED_ATTRIBUTES,
-    )
+  def full_penalty_reason(record)
+    text = record&.details
+    return if text.blank?
+    User.sanitize_staff_reason(text)
   end
 
   def suspended_message
@@ -1784,6 +1789,7 @@ class User < ActiveRecord::Base
       end
 
     @belonging_to_group_ids = nil
+    @permission_acl = nil
   end
 
   def email

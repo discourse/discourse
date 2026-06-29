@@ -620,6 +620,13 @@ nl:
       trust_level_2: "vertrouwensniveau_2"
       trust_level_3: "vertrouwensniveau_3"
       trust_level_4: "vertrouwensniveau_4"
+    default_full_names:
+      everyone: "Iedereen"
+      admins: "Beheerders"
+      moderators: "Moderators"
+      staff: "Medewerker"
+      anonymous_users: "Anonieme gebruikers"
+      logged_in_users: "Aangemelde gebruikers"
     default_descriptions:
       everyone: "Automatische groep inclusief alle leden"
       staff: "Automatische groep inclusief beheerders en moderators"

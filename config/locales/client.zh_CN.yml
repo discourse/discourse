@@ -38,6 +38,10 @@ zh_CN:
         no_visible_children_hint: "由于所有子元素都不可见，此容器块不会呈现。"
         condition_failed_hint: "由于条件不满足，此代码块不会呈现。"
         head_hidden_tail_hint: "由于 `head` 容器中已先呈现了另一个代码块，此代码块不会呈现。"
+    access_control:
+      manage:
+        access_permission_editor: "编辑者"
+        access_permission_remove: "移除"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -416,6 +420,9 @@ zh_CN:
     age: "年龄"
     joined: "加入日期："
     admin_title: "管理员"
+    advanced_mode_toggle:
+      advanced_mode: "高级模式"
+      simple_mode: "简单模式"
     show_more: "显示更多"
     show_help: "选项"
     links: "链接"
@@ -2551,6 +2558,8 @@ zh_CN:
       email_label: "电子邮件"
       continue_button: "继续"
       verify_button: "继续"
+      account_ready_continue: "继续"
+      username_label: "用户名"
     login:
       header_title: "欢迎回来"
       title: "登录"
@@ -3688,35 +3697,6 @@ zh_CN:
       read_more: "想阅读更多？请<a href='%{categoryLink}'>浏览所有类别</a>或<a href='%{latestLink}'>查看最新话题</a>。"
       unread_indicator: "还没有成员读过此话题的最新帖子。"
       participant_groups: "参与者群组"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-              other {有 <a href="{basePath}/unread"># 个未读</a>话题}
-            }
-            { NEW, plural,
-                 =0 {}
-              other {和 <a href="{basePath}/new"># 个新</a>话题，}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-              other {还有 <a href="{basePath}/unread"># 个未读</a>话题，}
-            }
-            { NEW, plural,
-                 =0 {}
-              other {还有 <a href="{basePath}/new"># 个新</a>话题，}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true {或浏览{categoryLink}中的其他话题}
-          false {或<a href="{basePath}/latest">查看最新话题</a>}
-          other {}
-        }
       reply_count_link:
         other: "%{count} 条回复，跳转到第一个帖子"
       created_at: "创建日期：%{date}"
@@ -4430,6 +4410,11 @@ zh_CN:
         tag_group: "标签群组"
       topic_featured_link_allowed: "在此类别中允许精选链接"
       delete: "删除类别"
+      danger_zone:
+        title: "危险区域"
+        delete_title: "删除此类别"
+        delete_description: "删除后，此类别及其设置将无法恢复。其中的话题需要事先重新分配。"
+        delete_title_forbidden: "无法删除此类别"
       create: "新建类别"
       create_with_type: "新建%{typeName}类别"
       create_long: "创建新类别"
@@ -5082,7 +5067,6 @@ zh_CN:
         other: "此标签属于以下标签组："
       category_restrictions:
         other: "它只能用于以下类别： %{categories}。"
-      restricted_to: "限于"
       no_synonyms: "此标签没有同义词。"
       edit_synonyms: "编辑同义词"
       add_synonyms_label: "添加同义词："
@@ -5862,6 +5846,9 @@ zh_CN:
             opengraph_image:
               title: "OpenGraph 图片"
               description: "默认 opengraph 图片，当页面没有其他合适的图片时使用。如果留空，将使用 large_icon。"
+            og_image_preview:
+              generate: "生成"
+              topic_id_label: "话题 ID"
             x_summary_large_image:
               title: "X 摘要大图"
               description: "X 卡摘要大图。如果留空，则使用 OpenGraph_image（只要它不是 .svg）生成常规卡片元数据。"
@@ -6188,7 +6175,7 @@ zh_CN:
         stale_data: "最近尚未执行更新检查。确保 sidekiq 正在运行。"
         version_check_pending: "看起来您最近更新了。太棒了！"
         installed_version: "已安装"
-        latest_version: "最新"
+        github: "GitHub"
         problems_found: "基于您当前网站设置的一些建议"
         dismiss_notice: "忽略"
         new_features:
@@ -6573,6 +6560,7 @@ zh_CN:
             invites:
               create: 发送电子邮件邀请或生成邀请链接。
             badges:
+              list: 获取徽章列表。
               create: 创建新徽章。
               show: 获取有关徽章的信息。
               update: 更新徽章。
@@ -6843,6 +6831,8 @@ zh_CN:
             initial_members: "展开成员"
             initial_members_description: "添加“查看更多”按钮之前要显示的群组成员数量。"
             show_description: "包括描述"
+          locale_selector:
+            title: "语言"
           optional: "（可选）"
           update: "更新"
           toasts:
@@ -7736,6 +7726,7 @@ zh_CN:
             change_site_setting_groups: "更改站点设置群组"
             discourse_id_regenerate_credentials: "重新生成 Discourse ID 凭据"
             configure_category_type: "配置类别类型"
+            unconfigure_category_type: "未配置类别类型"
         screened_emails:
           title: "已屏蔽的电子邮件地址"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"

@@ -312,8 +312,6 @@ sk:
         title: "Zvuk oznámenia chatu na ploche"
       sounds:
         none: "Žiadny"
-        bell: "zvonček"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Priložiť súbor"

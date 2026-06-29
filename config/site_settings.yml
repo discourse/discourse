@@ -25,6 +25,10 @@
 #                         the setting is disabled).
 # themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
 #                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
+# localizable           - Set to true if content localization can translate this setting. Use a hash for translation-specific
+#                         options:
+#                          - max_length: maximum localized value length
+#                          - cooked: true when the localized value should be cooked markdown
 # upcoming_change_default_override - Allow an upcoming change to control the new default value of this setting.
 #                          - upcoming_change: The site setting of the upcoming change to control this
 #                          - new_default: The new default value when the upcoming change is enabled
@@ -88,9 +92,13 @@ required:
     client: true
     default: "Discourse"
     area: "about"
+    localizable:
+      max_length: 255
   site_description:
     default: ""
     area: "about"
+    localizable:
+      max_length: 1000
   short_site_description:
     default: ""
     client: true
@@ -184,6 +192,9 @@ branding:
     default: ""
     client: true
     type: upload
+  generate_topic_og_image:
+    default: false
+    client: true
   opengraph_image:
     default: ""
     client: true
@@ -295,6 +306,11 @@ basic:
     upcoming_change_default_override:
       upcoming_change: "enable_unified_new"
       new_default: "latest|new|hot|categories"
+  custom_homepage_crawler_route:
+    type: enum
+    default: "latest"
+    choices: "TopMenu.crawler_homepage_choices"
+    area: "interface"
   post_menu:
     client: true
     type: list
@@ -576,6 +592,9 @@ basic:
     max: 10_000
     hidden: true
     area: "about"
+    localizable:
+      max_length: 10_000
+      cooked: true
   extended_site_description_cooked:
     default: ""
     hidden: true
@@ -597,10 +616,6 @@ basic:
   trigger_browser_pageview_events:
     default: false
     hidden: true
-  use_beacon_for_browser_page_views:
-    default: false
-    hidden: true
-    client: true
   persist_browser_pageview_events:
     default: true
     hidden: true
@@ -1645,7 +1660,7 @@ posting:
     hidden: true
     area: "gifs"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/404829"
   klipy_api_key:
@@ -1929,7 +1944,7 @@ nested_replies:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
   nested_replies_max_depth:
-    default: 10
+    default: 3
     client: true
     type: integer
     min: 1
@@ -1939,7 +1954,7 @@ nested_replies:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
   nested_replies_cap_nesting_depth:
-    default: false
+    default: true
     client: true
     area: "posts_and_topics"
     depends_on:
@@ -2645,6 +2660,14 @@ trust:
     area: "trust_levels"
   create_topic_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
+    type: group_list
+    allow_any: false
+    refresh: true
+    disallowed_groups: "4"
+    area: "group_permissions"
+  topic_timers_allowed_groups:
+    default: "1|2|14" # auto group admins, moderators, trust_level_4
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false

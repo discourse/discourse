@@ -2,6 +2,10 @@
 
 module DiscourseDataExplorer
   class AiQueryGenerator < DiscourseAi::Agents::Agent
+    def self.default_enabled
+      false
+    end
+
     def tools
       [
         DiscourseAi::Agents::Tools::DbSchema,

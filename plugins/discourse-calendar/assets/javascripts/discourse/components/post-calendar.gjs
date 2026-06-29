@@ -3,9 +3,8 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import { trustHTML } from "@ember/template";
 import getURL from "discourse/lib/get-url";
-import { escapeExpression } from "discourse/lib/utilities";
+import { excerpt } from "discourse/lib/text";
 import { colorToHex, contrastColor, stringToColor } from "../lib/colors";
 import FullCalendar from "./full-calendar";
 
@@ -263,11 +262,7 @@ export default class PostCalendar extends Component {
       event.textColor = contrastColor(color);
     }
 
-    let popupText = detail.message.slice(0, 100);
-    if (detail.message.length > 100) {
-      popupText += "…";
-    }
-    event.extendedProps.htmlContent = trustHTML(escapeExpression(popupText));
+    event.extendedProps.htmlContent = excerpt(detail.message, 100);
     event.title = event.title.replace(/<img[^>]*>/g, "");
     event.participantCount = 1;
 

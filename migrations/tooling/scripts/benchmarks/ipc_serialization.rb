@@ -68,44 +68,82 @@ StepStats = Struct.new(:progress, :warning_count, :error_count)
 module Codecs
   # today's Worker implementation
   class OjObject
-    def name = "Oj :object"
+    def name
+      "Oj :object"
+    end
 
-    def dump(data) = Oj.dump(data, OJ_OBJECT_SETTINGS)
-    def load(string) = Oj.load(string, OJ_OBJECT_SETTINGS)
+    def dump(data)
+      Oj.dump(data, OJ_OBJECT_SETTINGS)
+    end
+    def load(string)
+      Oj.load(string, OJ_OBJECT_SETTINGS)
+    end
 
-    def write(io, data) = Oj.to_stream(io, data, OJ_OBJECT_SETTINGS)
-    def each(io, &) = Oj.load(io, OJ_OBJECT_SETTINGS, &)
+    def write(io, data)
+      Oj.to_stream(io, data, OJ_OBJECT_SETTINGS)
+    end
+    def each(io, &)
+      Oj.load(io, OJ_OBJECT_SETTINGS, &)
+    end
   end
 
   class OjCompat
-    def name = "Oj :compat"
+    def name
+      "Oj :compat"
+    end
 
-    def dump(data) = Oj.dump(data, OJ_COMPAT_DUMP_SETTINGS)
-    def load(string) = Oj.load(string, OJ_COMPAT_LOAD_SETTINGS)
+    def dump(data)
+      Oj.dump(data, OJ_COMPAT_DUMP_SETTINGS)
+    end
+    def load(string)
+      Oj.load(string, OJ_COMPAT_LOAD_SETTINGS)
+    end
 
-    def write(io, data) = Oj.to_stream(io, data, OJ_COMPAT_DUMP_SETTINGS)
-    def each(io, &) = Oj.load(io, OJ_COMPAT_LOAD_SETTINGS, &)
+    def write(io, data)
+      Oj.to_stream(io, data, OJ_COMPAT_DUMP_SETTINGS)
+    end
+    def each(io, &)
+      Oj.load(io, OJ_COMPAT_LOAD_SETTINGS, &)
+    end
   end
 
   # like OjCompat, but raises TypeError if a non-primitive value leaks into a
   # payload -- the enforcing option for a primitive-only wire contract
   class OjStrict
-    def name = "Oj :strict"
+    def name
+      "Oj :strict"
+    end
 
-    def dump(data) = Oj.dump(data, OJ_STRICT_DUMP_SETTINGS)
-    def load(string) = Oj.load(string, OJ_STRICT_LOAD_SETTINGS)
+    def dump(data)
+      Oj.dump(data, OJ_STRICT_DUMP_SETTINGS)
+    end
+    def load(string)
+      Oj.load(string, OJ_STRICT_LOAD_SETTINGS)
+    end
 
-    def write(io, data) = Oj.to_stream(io, data, OJ_STRICT_DUMP_SETTINGS)
-    def each(io, &) = Oj.load(io, OJ_STRICT_LOAD_SETTINGS, &)
+    def write(io, data)
+      Oj.to_stream(io, data, OJ_STRICT_DUMP_SETTINGS)
+    end
+    def each(io, &)
+      Oj.load(io, OJ_STRICT_LOAD_SETTINGS, &)
+    end
   end
 
   class JsonLines
-    def name = "JSON (NDJSON)"
+    def name
+      "JSON (NDJSON)"
+    end
 
-    def dump(data) = JSON.generate(data)
-    def load(string) = JSON.parse(string, symbolize_names: true)
+    def dump(data)
+      JSON.generate(data)
+    end
+    def load(string)
+      JSON.parse(string, symbolize_names: true)
+    end
 
-    def write(io, data) = io.write(JSON.generate(data) << "\n")
+    def write(io, data)
+      io.write(JSON.generate(data) << "\n")
+    end
 
     def each(io)
       io.each_line { |line| yield JSON.parse(line, symbolize_names: true) }
@@ -115,12 +153,20 @@ module Codecs
   # rubocop:disable Security/MarshalLoad -- benchmark data comes from our own
   # fork; the trust level matches today's Oj `:object` mode
   class RubyMarshal
-    def name = "Marshal"
+    def name
+      "Marshal"
+    end
 
-    def dump(data) = ::Marshal.dump(data)
-    def load(string) = ::Marshal.load(string)
+    def dump(data)
+      ::Marshal.dump(data)
+    end
+    def load(string)
+      ::Marshal.load(string)
+    end
 
-    def write(io, data) = ::Marshal.dump(data, io)
+    def write(io, data)
+      ::Marshal.dump(data, io)
+    end
 
     def each(io)
       loop { yield ::Marshal.load(io) }
@@ -131,12 +177,20 @@ module Codecs
   # rubocop:enable Security/MarshalLoad
 
   class Msgpack
-    def name = "msgpack"
+    def name
+      "msgpack"
+    end
 
-    def dump(data) = MessagePack.pack(data)
-    def load(string) = MessagePack.unpack(string, symbolize_keys: true)
+    def dump(data)
+      MessagePack.pack(data)
+    end
+    def load(string)
+      MessagePack.unpack(string, symbolize_keys: true)
+    end
 
-    def write(io, data) = io.write(MessagePack.pack(data))
+    def write(io, data)
+      io.write(MessagePack.pack(data))
+    end
 
     def each(io, &)
       MessagePack::Unpacker.new(io, symbolize_keys: true).each(&)

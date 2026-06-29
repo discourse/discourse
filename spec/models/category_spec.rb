@@ -1636,6 +1636,55 @@ RSpec.describe Category do
     end
   end
 
+  describe "category hashtag remapping" do
+    it "enqueues a remap job when the slug changes" do
+      category = Fabricate(:category, slug: "support")
+
+      expect_enqueued_with(
+        job: :remap_category_hashtag,
+        args: {
+          category_id: category.id,
+          old_ref: "support",
+          new_ref: "help",
+        },
+      ) { category.update!(slug: "help") }
+    end
+
+    it "enqueues a remap job when the parent changes" do
+      category = Fabricate(:category, slug: "bucks")
+      parent_category = Fabricate(:category, slug: "support")
+
+      expect_enqueued_with(
+        job: :remap_category_hashtag,
+        args: {
+          category_id: category.id,
+          old_ref: "bucks",
+          new_ref: "support:bucks",
+        },
+      ) { category.update!(parent_category: parent_category) }
+    end
+
+    it "enqueues child remap jobs when the slug changes" do
+      parent_category = Fabricate(:category, slug: "support")
+      category = Fabricate(:category, slug: "bucks", parent_category: parent_category)
+
+      expect_enqueued_with(
+        job: :remap_category_hashtag,
+        args: {
+          category_id: category.id,
+          old_ref: "support:bucks",
+          new_ref: "help:bucks",
+        },
+      ) { parent_category.update!(slug: "help") }
+    end
+
+    it "does not enqueue a remap job for unrelated changes" do
+      category = Fabricate(:category, slug: "support")
+
+      expect_not_enqueued_with(job: :remap_category_hashtag) { category.update!(color: "ABCDEF") }
+    end
+  end
+
   describe ".ancestors_of" do
     fab!(:category)
     fab!(:subcategory) { Fabricate(:category, parent_category: category) }

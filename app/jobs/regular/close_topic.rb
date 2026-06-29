@@ -11,7 +11,7 @@ module Jobs
         return
       end
 
-      if !Guardian.new(user).can_close_topic?(topic)
+      if !Guardian.new(user).can_set_topic_timer?(topic)
         topic_timer.destroy!
         topic.reload
 

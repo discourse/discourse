@@ -17,6 +17,10 @@ be:
       ghost:
         status: "Статус"
         failed: "памылка"
+    access_control:
+      manage:
+        access_permission_editor: "рэдактар"
+        access_permission_remove: "Выдаліць"
     number:
       format:
         separator: ","
@@ -1272,6 +1276,8 @@ be:
       email_label: "Электронная пошта"
       continue_button: "Працягнуць"
       verify_button: "Працягнуць"
+      account_ready_continue: "Працягнуць"
+      username_label: "Імя карыстальніка"
     login:
       title: "Уваход"
       username: "Карыстальнік"
@@ -2083,6 +2089,9 @@ be:
             email: "Электронная пошта"
             opengraph_image:
               description: "Прадвызначаны відарыс OpenGraph, які выкарыстоўваецца, калі на старонцы няма іншага адпаведнага відарыса. Калі пакінуць пустым, будзе выкарыстоўвацца large_icon."
+            og_image_preview:
+              generate: "Згенерыраваць"
+              topic_id_label: "Ідэнтыфікатар тэмы"
         fonts:
           backfill_modal:
             modal_yes: "Так"
@@ -2168,7 +2177,6 @@ be:
         no_check_performed: "Праверка абнаўленняў не была выканана. Пераканайцеся, што Sidekiq працуе."
         stale_data: "Праверка абнаўленняў не праводзілася апошнім часам. Пераканайцеся, што Sidekiq працуе."
         installed_version: "Усталяваная"
-        latest_version: "Апошняя"
         dismiss_notice: "Ігнараваць"
         new_features:
           learn_more: "Даведацца больш..."

@@ -176,5 +176,3 @@ pl_PL:
           add: Dodaj opcję
         automatic_close:
           label: Automatycznie zamknij ankietę
-        show_advanced: "Pokaż opcje zaawansowane"
-        hide_advanced: "Ukryj opcje zaawansowane"

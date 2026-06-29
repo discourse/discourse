@@ -164,12 +164,12 @@ RSpec.describe Migrations::Database::Connection do
     end
 
     it "cleans up fork hooks when connection gets closed" do
-      expect(Migrations::ForkManager.size).to eq(0)
+      expect(Migrations::ForkManager.hook_count).to eq(0)
 
       create_connection do |connection|
-        expect(Migrations::ForkManager.size).to eq(2)
+        expect(Migrations::ForkManager.hook_count).to eq(2)
         connection.close
-        expect(Migrations::ForkManager.size).to eq(0)
+        expect(Migrations::ForkManager.hook_count).to eq(0)
       end
     end
   end

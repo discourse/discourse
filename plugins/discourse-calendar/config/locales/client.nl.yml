@@ -471,7 +471,6 @@ nl:
         create_event_title: "Evenement maken"
         update_event_title: "Evenement bewerken"
         advanced_settings_title: "Geavanceerde instellingen"
-        advanced_settings: "Geavanceerde instellingen"
         confirm_delete: "Weet je zeker dat je dit evenement wilt verwijderen?"
         confirm_close: "Weet je zeker dat je dit evenement wilt sluiten?"
         confirm_open: "Weet je zeker dat je dit evenement wilt openen?"
@@ -514,11 +513,7 @@ nl:
         allow_chat:
           label: "Chatintegratie"
           checkbox_label: "Evenementspecifiek chatkanaal maken en beheren"
-        url:
-          label: "URL"
-          placeholder: "Optioneel"
         location:
-          label: "Locatie"
           placeholder: "Voeg een locatie, link of iets anders toe."
         description:
           label: "Beschrijving"

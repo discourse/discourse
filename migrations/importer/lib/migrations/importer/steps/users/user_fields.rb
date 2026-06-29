@@ -82,7 +82,7 @@ module Migrations
           description = row[:description]
 
           if description.empty?
-            puts "    User field '#{name}' description cannot be empty"
+            notice("User field '#{name}' description cannot be empty")
 
             return nil
           end

@@ -553,6 +553,12 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
       expect(ctx.find_user(username: user.username)).to eq(user)
     end
 
+    it "finds a user by mixed-case username" do
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect(ctx.find_user(username: user.username.upcase)).to eq(user)
+    end
+
     it "finds a user by id" do
       ctx = described_class.new(input_items: [], resolver: nil)
 

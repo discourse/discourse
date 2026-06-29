@@ -9,6 +9,23 @@ module DiscourseAi
         CompletionFailed = Class.new(StandardError)
         FAIL_THRESHOLD = 5
         FAIL_TTL = 1.hour
+
+        # Read-only context handed to request header providers. Lets plugins
+        # contribute provider-agnostic, per-request HTTP headers (e.g. routing
+        # hints for a proxy) without reaching into endpoint internals.
+        RequestHeaderContext =
+          Struct.new(
+            :llm_model,
+            :feature_name,
+            :feature_context,
+            :has_images,
+            :streaming,
+            keyword_init: true,
+          )
+
+        # Mutated in place (<<, clear) but never reassigned, so the single array
+        # is shared across Base and all endpoint subclasses via constant lookup.
+        REQUEST_HEADERS_PROVIDERS = []
         # 6 minutes
         # Reasoning LLMs can take a very long time to respond, generally it will be under 5 minutes
         # The alternative is to have per LLM timeouts but that would make it extra confusing for people
@@ -43,6 +60,22 @@ module DiscourseAi
 
           def can_contact?(_llm_model)
             raise NotImplementedError
+          end
+
+          # Register a block that returns a Hash of extra HTTP headers to send
+          # with each completion request. The block receives a
+          # RequestHeaderContext and must not raise (errors are swallowed and
+          # logged so a header bug can never break inference).
+          def register_request_headers_provider(&block)
+            REQUEST_HEADERS_PROVIDERS << block
+          end
+
+          def request_headers_providers
+            REQUEST_HEADERS_PROVIDERS
+          end
+
+          def reset_request_headers_providers!
+            REQUEST_HEADERS_PROVIDERS.clear
           end
         end
 
@@ -95,6 +128,8 @@ module DiscourseAi
           @forced_json_through_prefill = false
           @partial_tool_calls = partial_tool_calls
           @output_thinking = output_thinking
+          @feature_name = feature_name
+          @feature_context = feature_context
 
           max_tokens = enforce_max_output_tokens(model_params[:max_tokens])
           model_params[:max_tokens] = max_tokens if max_tokens
@@ -127,6 +162,7 @@ module DiscourseAi
           @streaming_mode = block_given?
 
           prompt = dialect.translate
+          @request_has_images = prompt_has_images?(prompt)
 
           structured_output = nil
 
@@ -396,10 +432,54 @@ module DiscourseAi
 
         attr_reader :llm_model
 
+        # Extra HTTP headers contributed by registered providers for this
+        # request. Endpoints that want them merge the result into their request
+        # headers. Provider failures are isolated so they can never break a
+        # completion.
+        def extra_request_headers
+          providers = self.class.request_headers_providers
+          return {} if providers.blank?
+
+          context =
+            RequestHeaderContext.new(
+              llm_model: llm_model,
+              feature_name: @feature_name,
+              feature_context: @feature_context,
+              has_images: @request_has_images,
+              streaming: @streaming_mode,
+            )
+
+          providers.each_with_object({}) do |provider, headers|
+            result = provider.call(context)
+            headers.merge!(result.stringify_keys) if result.is_a?(Hash)
+          rescue StandardError => e
+            Discourse.warn_exception(
+              e,
+              message: "Discourse AI request header provider raised an error; skipping it",
+            )
+          end
+        end
+
         protected
 
         def tokenizer
           llm_model.tokenizer_class
+        end
+
+        # Detects whether the translated prompt carries image content, so
+        # providers can flag vision requests. Mirrors the OpenAI-compatible
+        # shape (messages with an array content holding "image_url" parts) used
+        # by the providers that consume this; degrades to false otherwise.
+        def prompt_has_images?(translated_prompt)
+          return false if !translated_prompt.is_a?(Array)
+
+          translated_prompt.any? do |message|
+            content = message[:content] if message.is_a?(Hash)
+            content.is_a?(Array) &&
+              content.any? { |part| part.is_a?(Hash) && part[:type] == "image_url" }
+          end
+        rescue StandardError
+          false
         end
 
         # should normalize temperature, max_tokens, stop_words to endpoint specific values

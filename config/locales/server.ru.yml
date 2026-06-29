@@ -716,6 +716,13 @@ ru:
       trust_level_2: "уровень_доверия_2"
       trust_level_3: "уровень_доверия_3"
       trust_level_4: "уровень_доверия_4"
+    default_full_names:
+      everyone: "Все"
+      admins: "Администраторы"
+      moderators: "Модераторы"
+      staff: "Персонал"
+      anonymous_users: "Анонимные пользователи"
+      logged_in_users: "Вошедшие пользователи"
     default_descriptions:
       everyone: "Автоматическая группа, включающая всех участников"
       staff: "Автоматическая группа, включающая администраторов и модераторов"

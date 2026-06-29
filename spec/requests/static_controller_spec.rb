@@ -194,6 +194,54 @@ RSpec.describe StaticController do
       end
     end
 
+    it "renders the localized guidelines post" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.set_locale_from_param = true
+      post = create_post(raw: "Original guidelines body")
+      post.update!(locale: "en")
+      localization =
+        Fabricate(
+          :post_localization,
+          post:,
+          locale: "ja",
+          raw: "翻訳されたガイドライン本文",
+          cooked: "<p>翻訳されたガイドライン本文</p>",
+        )
+      SiteSetting.guidelines_topic_id = post.topic.id
+
+      get "/guidelines", params: { tl: "ja" }
+
+      aggregate_failures do
+        expect(response.status).to eq(200)
+        expect(response.body).to include(localization.cooked)
+        expect(response.body).not_to include(post.cooked)
+      end
+    end
+
+    it "renders the localized TOS post" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.set_locale_from_param = true
+      post = create_post(raw: "Original TOS body")
+      post.update!(locale: "en")
+      localization =
+        Fabricate(
+          :post_localization,
+          post:,
+          locale: "ja",
+          raw: "翻訳された利用規約本文",
+          cooked: "<p>翻訳された利用規約本文</p>",
+        )
+      SiteSetting.tos_topic_id = post.topic.id
+
+      get "/tos", params: { tl: "ja" }
+
+      aggregate_failures do
+        expect(response.status).to eq(200)
+        expect(response.body).to include(localization.cooked)
+        expect(response.body).not_to include(post.cooked)
+      end
+    end
+
     context "with a missing file" do
       it "should respond 404" do
         get "/static/does-not-exist"

@@ -33,6 +33,23 @@ RSpec.describe DiscourseWorkflows::Workflow::Destroy do
       it { is_expected.to fail_a_policy(:can_manage_workflows) }
     end
 
+    context "when another workflow calls this workflow" do
+      fab!(:caller_workflow) do
+        graph =
+          build_workflow_graph do |workflow_graph|
+            workflow_graph.node "trigger-1", "trigger:manual"
+            workflow_graph.node "call-1",
+                                "action:workflow_call",
+                                configuration: {
+                                  "workflow_id" => workflow.id,
+                                }
+          end
+        Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+      end
+
+      it { is_expected.to fail_a_policy(:workflow_not_called_by_other_workflows) }
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 

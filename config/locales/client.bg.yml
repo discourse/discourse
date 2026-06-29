@@ -18,6 +18,10 @@ bg:
         in_location: "в"
         hidden: "скрит"
         failed: "провалени"
+    access_control:
+      manage:
+        access_permission_editor: "Редактор"
+        access_permission_remove: "Премахване"
     number:
       format:
         separator: "."
@@ -1889,6 +1893,8 @@ bg:
       email_label: "Имейл"
       continue_button: "Напред"
       verify_button: "Напред"
+      account_ready_continue: "Напред"
+      username_label: "Потребителско име"
     login:
       header_title: "Добре дошли отново"
       title: "Вход"
@@ -3506,6 +3512,9 @@ bg:
           form:
             mobile: "Мобилен"
             email: "Имейл "
+            og_image_preview:
+              generate: "Генраирай"
+              topic_id_label: "Тема ID "
         fonts:
           backfill_modal:
             modal_yes: "Да"
@@ -3591,7 +3600,7 @@ bg:
         no_check_performed: "Не е направена проверка за нова версия. Убедете се, че sidekiq работи."
         stale_data: "Скоро не е правена проверка за нова версия. Убедете се, че sidekiq работи."
         installed_version: "Инсталирани"
-        latest_version: "Последни"
+        github: "GitHub"
         dismiss_notice: "Игнорирай"
         new_features:
           learn_more: "Научете повече..."

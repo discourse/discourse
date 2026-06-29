@@ -965,6 +965,13 @@ export default class Nested extends Component {
         @outletArgs={{lazyHash model=@topic}}
       />
 
+      {{#unless this.isMobileFocused}}
+        <NestedFloatingActions
+          @topic={{@topic}}
+          @replyAction={{fn @replyToPost @opPost 0}}
+        />
+      {{/unless}}
+
       {{#if (and (not this.isMobileFocused) (not @hasMoreRoots))}}
         <PluginOutlet
           @name="topic-above-suggested"
@@ -987,10 +994,6 @@ export default class Nested extends Component {
         @outletArgs={{lazyHash model=@topic}}
       />
 
-      <NestedFloatingActions
-        @topic={{@topic}}
-        @replyAction={{fn @replyToPost @opPost 0}}
-      />
     </div>
   </template>
 }

@@ -14,6 +14,7 @@ module DiscourseWorkflowsSpecHelper
       Jobs::DiscourseWorkflows::ExecuteManualWorkflow.jobs.clear
       Jobs::DiscourseWorkflows::ResumeWebhookWaiting.jobs.clear
       Jobs::DiscourseWorkflows::ResumeWaitingExecution.jobs.clear
+      Jobs::DiscourseWorkflows::RunWorkflowCall.jobs.clear
     end
   end
 end

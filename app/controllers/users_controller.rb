@@ -112,7 +112,7 @@ class UsersController < ApplicationController
                      ]
   skip_before_action :redirect_to_profile_if_required, only: %i[show staff_info update]
 
-  before_action :add_noindex_header, only: %i[show my_redirect]
+  before_action :add_noindex_header, only: %i[show summary my_redirect]
 
   allow_in_readonly_mode :admin_login
   allow_in_staff_writes_only_mode :email_login, :password_reset_update
@@ -517,8 +517,6 @@ class UsersController < ApplicationController
       )
     raise Discourse::NotFound unless guardian.can_see_profile?(@user)
 
-    response.headers["X-Robots-Tag"] = "noindex"
-
     respond_to do |format|
       format.html do
         @restrict_fields = guardian.restrict_user_fields?(@user)
@@ -545,12 +543,13 @@ class UsersController < ApplicationController
         fetch_user_from_params(
           include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts,
         )
+      can_see_invite_details = guardian.can_see_invite_details?(inviter)
 
       invites =
-        if filter == "pending" && guardian.can_see_invite_details?(inviter)
+        if filter == "pending" && can_see_invite_details
           Invite.includes(:topics, :groups).pending(inviter)
-        elsif filter == "expired"
-          Invite.expired(inviter)
+        elsif filter == "expired" && can_see_invite_details
+          Invite.includes(:topics, :groups).expired(inviter)
         elsif filter == "redeemed"
           Invite.redeemed_users(inviter)
         else
@@ -567,8 +566,8 @@ class UsersController < ApplicationController
         invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
       end
 
-      pending_count = Invite.pending(inviter).reorder(nil).count.to_i
-      expired_count = Invite.expired(inviter).reorder(nil).count.to_i
+      pending_count = can_see_invite_details ? Invite.pending(inviter).reorder(nil).count.to_i : 0
+      expired_count = can_see_invite_details ? Invite.expired(inviter).reorder(nil).count.to_i : 0
       redeemed_count = Invite.redeemed_users(inviter).reorder(nil).count.to_i
 
       render json:
@@ -2029,6 +2028,8 @@ class UsersController < ApplicationController
           ],
         )
         .to_a
+    unread_notifications =
+      Notification.filter_inaccessible_topic_notifications(guardian, unread_notifications)
 
     if unread_notifications.size < USER_MENU_LIST_LIMIT
       exclude_topic_ids = unread_notifications.filter_map(&:topic_id).uniq
@@ -2053,6 +2054,8 @@ class UsersController < ApplicationController
           .for_user_menu(current_user.id, limit: limit)
           .where(read: true, notification_type: Notification.types[:group_message_summary])
           .to_a
+      read_notifications =
+        Notification.filter_inaccessible_topic_notifications(guardian, read_notifications)
     end
 
     if unread_notifications.present?

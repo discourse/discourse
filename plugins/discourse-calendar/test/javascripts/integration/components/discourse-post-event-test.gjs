@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { render, waitFor } from "@ember/test-helpers";
+import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DiscoursePostEvent from "../../discourse/components/discourse-post-event";
@@ -65,6 +65,53 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
       .hasText(
         "The first Thursday of every month",
         "renders both the ordinal and weekday placeholders"
+      );
+  });
+
+  test("wires up the event image lightbox inside a topic", async function (assert) {
+    stubApi.call(
+      this,
+      buildEvent({
+        image_upload: { url: "/uploads/default/original/1X/event.png" },
+      })
+    );
+
+    const event = { id: 1, startsAt: "2026-06-04T14:00:00Z" };
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-image a.lightbox");
+    await click(".event-image a.lightbox");
+    await waitFor(".pswp--open");
+
+    assert.dom(".pswp--open").exists("opens the PhotoSwipe lightbox");
+
+    await click(".pswp__button--close");
+  });
+
+  test("links the event image to the post when linkToPost is set", async function (assert) {
+    stubApi.call(
+      this,
+      buildEvent({
+        image_upload: { url: "/uploads/default/original/1X/event.png" },
+      })
+    );
+
+    const event = { id: 1, startsAt: "2026-06-04T14:00:00Z" };
+    await render(
+      <template>
+        <DiscoursePostEvent @event={{event}} @linkToPost={{true}} />
+      </template>
+    );
+    await waitFor(".event-image");
+
+    assert
+      .dom(".event-image a.lightbox")
+      .doesNotExist("does not wire up a lightbox in calendar contexts");
+    assert
+      .dom(".event-image a")
+      .hasAttribute(
+        "href",
+        "/t/foo/1",
+        "links the image to the event topic instead"
       );
   });
 

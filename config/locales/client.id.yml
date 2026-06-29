@@ -20,6 +20,10 @@ id:
       ghost:
         status: "Status"
         failed: "gagal"
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Hapus"
     number:
       format:
         separator: ","
@@ -229,6 +233,9 @@ id:
     age: "Umur"
     joined: "Bergabung"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Mode lanjutan"
+      simple_mode: "Mode sederhana"
     show_more: "tampilkan lebih banyak"
     show_help: "Opsi"
     links: "Tautan"
@@ -1549,6 +1556,8 @@ id:
       email_label: "Email"
       continue_button: "Lanjutkan"
       verify_button: "Lanjutkan"
+      account_ready_continue: "Lanjutkan"
+      username_label: "Nama Pengguna"
     login:
       title: "Log In"
       username: "Pengguna"
@@ -2420,6 +2429,8 @@ id:
         logo:
           form:
             email: "Surel"
+            og_image_preview:
+              topic_id_label: "ID Topik"
         fonts:
           backfill_modal:
             modal_yes: "Ya"
@@ -2469,7 +2480,7 @@ id:
       dashboard:
         please_update: "Harap perbarui!"
         version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"
-        latest_version: "Terbaru"
+        github: "GitHub"
         dismiss_notice: "Abaikan"
         last_checked: "Terakhir dicek"
         refresh_problems: "Segarkan"

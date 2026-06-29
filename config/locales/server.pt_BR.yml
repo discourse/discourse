@@ -617,6 +617,13 @@ pt_BR:
       trust_level_2: "nivel_de_confianca_2"
       trust_level_3: "nivel_de_confianca_3"
       trust_level_4: "nivel_de_confianca_4"
+    default_full_names:
+      everyone: "Todos(as)"
+      admins: "Administradores(as):"
+      moderators: "Moderadores(as)"
+      staff: "Equipe"
+      anonymous_users: "Usuários(as) anônimos(as)"
+      logged_in_users: "Usuários(as) que entraram com a conta"
     default_descriptions:
       everyone: "Grupo automático incluindo todos os membros"
       staff: "Grupo automático incluindo a moderação e a administração"

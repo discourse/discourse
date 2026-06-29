@@ -77,11 +77,6 @@ bg:
             after: "след"
         attendance:
           none: "Без"
-        url:
-          label: "URL"
-          placeholder: "По избор"
-        location:
-          label: "Локация"
         description:
           label: "Описание"
         event_type:

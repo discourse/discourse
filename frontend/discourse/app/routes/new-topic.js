@@ -33,8 +33,13 @@ export default class extends DiscourseRoute {
       return;
     }
 
-    // When navigating from another ember route
-    if (transition.from) {
+    // When navigating from another Ember route, open the composer in-place —
+    // unless a docked composer is active, in which case #reply-control is hidden
+    // and aborting the transition corrupts the layout.
+    if (
+      transition.from &&
+      !document.body.classList.contains("has-ai-bot-docked-composer")
+    ) {
       transition.abort();
       this.#openComposer(params);
       return;

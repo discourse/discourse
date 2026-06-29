@@ -1,3 +1,8 @@
+// must be an https link to livestream
+export function isLivestreamUrl(location) {
+  return /^https?:\/\//i.test(location ?? "");
+}
+
 export function defaultReminderFor({ startsAt, endsAt, allDay } = {}) {
   const start = startsAt ? moment(startsAt) : null;
   const end = endsAt ? moment(endsAt) : null;
@@ -161,6 +166,10 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
     params.chatEnabled = "true";
   }
 
+  if (event.livestream) {
+    params.livestream = "true";
+  }
+
   if (event.maxAttendees) {
     params.maxAttendees = `${event.maxAttendees}`;
   }
@@ -257,6 +266,10 @@ export function getCustomFieldNames(siteSettings) {
     .filter(Boolean);
 }
 
+export function customFieldFormName(name) {
+  return name.replace(/[.-]/g, "_");
+}
+
 // anywhere that builds an event state should use this as the single source of truth for defaults
 export function defaultEventState() {
   return {
@@ -274,6 +287,7 @@ export function defaultEventState() {
     recurrenceUntil: null,
     showLocalTime: false,
     chatEnabled: false,
+    livestream: false,
     minimal: false,
     url: null,
     image: null,
@@ -311,6 +325,7 @@ export function parseEventAttrs(
     recurrenceUntil: attrs.recurrenceUntil || null,
     showLocalTime: attrs.showLocalTime === "true",
     chatEnabled: attrs.chatEnabled === "true",
+    livestream: attrs.livestream === "true",
     minimal: attrs.minimal === "true",
     url: attrs.url || null,
     image: attrs.image || null,
@@ -334,6 +349,7 @@ export function stateToEventInput(state) {
     showLocalTime: state.showLocalTime,
     minimal: state.minimal,
     chatEnabled: state.chatEnabled,
+    livestream: state.livestream,
     maxAttendees: state.maxAttendees,
     rawInvitees: state.allowedGroups ? state.allowedGroups.split(",") : [],
     reminders: state.reminders,
@@ -372,7 +388,7 @@ export function replaceRaw(params, raw) {
 export function camelCase(input) {
   return input
     .toLowerCase()
-    .replace(/-/g, "_")
+    .replace(/[-.]/g, "_")
     .replace(/_(.)/g, function (match, group1) {
       return group1.toUpperCase();
     });

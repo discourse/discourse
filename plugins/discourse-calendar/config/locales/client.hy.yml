@@ -85,11 +85,6 @@ hy:
             last: "օգտագործել ամսաթվի և ժամանակի վերջին գրառումը  "
         attendance:
           none: "Ոչ մի"
-        url:
-          label: "URL"
-          placeholder: "Ընտրովի"
-        location:
-          label: "Տեղակայություն"
         description:
           label: "Նկարագրություն"
         event_type:

@@ -191,4 +191,26 @@ describe DiscoursePostEvent::EventParser do
       expect(events[0][:baz]).to eq(nil)
     end
   end
+
+  context "with mixed-case custom fields" do
+    before do
+      SiteSetting.discourse_post_event_allowed_custom_fields =
+        "field_aa|fieldbb|field_CC|fieldDD|my.field"
+    end
+
+    it "parses fields regardless of case or separators" do
+      post_event = build_post user, <<~TXT
+        [event start="2020" fieldAa="1" fieldbb="2" fieldCc="3" fielddd="4" myField="5"]
+        [/event]
+      TXT
+
+      event = parser.extract_events(post_event)[0]
+
+      expect(event[:field_aa]).to eq("1")
+      expect(event[:fieldbb]).to eq("2")
+      expect(event[:field_CC]).to eq("3")
+      expect(event[:fieldDD]).to eq("4")
+      expect(event[:"my.field"]).to eq("5")
+    end
+  end
 end

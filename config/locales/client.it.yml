@@ -22,6 +22,10 @@ it:
         in_location: "in"
         hidden: "nascosto"
         failed: "non riuscito"
+    access_control:
+      manage:
+        access_permission_editor: "Redattore"
+        access_permission_remove: "Rimuovi"
     number:
       format:
         separator: ","
@@ -380,6 +384,9 @@ it:
     age: "Età"
     joined: "Iscritto"
     admin_title: "Amministrazione"
+    advanced_mode_toggle:
+      advanced_mode: "Modalità avanzata"
+      simple_mode: "Modalità semplice"
     show_more: "mostra altro"
     show_help: "Opzioni"
     links: "Collegamenti"
@@ -2455,6 +2462,8 @@ it:
       email_label: "E-mail"
       continue_button: "Continua"
       verify_button: "Continua"
+      account_ready_continue: "Continua"
+      username_label: "Nome utente"
     login:
       header_title: "Bentornato"
       title: "Accedi"
@@ -3393,39 +3402,6 @@ it:
       read_more: "Vuoi saperne di più? <a href='%{categoryLink}'>Sfoglia tutte le categorie</a> o <a href='%{latestLink}'>visualizza gli argomenti più recenti</a>."
       unread_indicator: "Nessun utente ha ancora letto l'ultimo messaggio di questo Argomento."
       participant_groups: "Gruppi partecipanti"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {C'è <a href="{basePath}/unread"># argomento non letto</a>}
-              other {Ci sono <a href="{basePath}/unread"># argomenti non letti</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { e <a href="{basePath}/new"># nuovo</a> argomento rimanente,}
-              other { e <a href="{basePath}/new"># nuovi</a> argomenti rimanenti,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {C'è <a href="{basePath}/unread"># argomento non letto</a> rimanente,}
-              other {Ci sono <a href="{basePath}/unread"># argomenti non letti</a> rimanenti,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {C'è <a href="{basePath}/new"># nuovo</a> argomento rimanente,}
-              other {Ci sono <a href="{basePath}/new"># nuovi</a> argomenti rimanenti,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { oppure puoi sfogliare altri argomenti in {categoryLink}}
-          false { oppure puoi <a href="{basePath}/latest">visualizzare gli argomenti più recenti</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} risposta, vai al primo messaggio"
         other: "%{count} risposte, vai al primo messaggio"
@@ -5324,6 +5300,9 @@ it:
             opengraph_image:
               title: "Immagine OpenGraph"
               description: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon."
+            og_image_preview:
+              generate: "Genera"
+              topic_id_label: "ID dell'argomento"
             x_summary_large_image:
               title: "Immagine grande riepilogo X"
               description: "Scheda X 'summary large image'. Se vuota, verranno generati i metadati della scheda normale usando OpenGraph_image, purché non sia un file .svg."
@@ -5602,7 +5581,7 @@ it:
         stale_data: "Non è stato effettuato un controllo recente sugli aggiornamenti. Assicurati che sidekiq sia attivo."
         version_check_pending: "Hai effettuato l'aggiornamento di recente. Ottimo!"
         installed_version: "Versione Installata"
-        latest_version: "Ultima"
+        github: "GitHub"
         problems_found: "Alcuni consigli basati sulle attuali impostazioni del sito"
         dismiss_notice: "Ignora"
         new_features:
@@ -6211,6 +6190,8 @@ it:
             initial_members: "Membri ampliati"
             initial_members_description: "Numero di membri del gruppo da visualizzare prima del pulsante Mostra altro."
             show_description: "Includi descrizione"
+          locale_selector:
+            title: "Lingua"
           optional: "(opzionale)"
           update: "Aggiorna"
           toasts:

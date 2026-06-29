@@ -18,6 +18,7 @@ module DiscoursePostEvent
       :minimal,
       :closed,
       :"chat-enabled",
+      :livestream,
       :"max-attendees",
       :"all-day",
       :image,
@@ -25,18 +26,15 @@ module DiscoursePostEvent
 
     def self.extract_events(post)
       cooked = PrettyText.cook(post.raw, topic_id: post.topic_id, user_id: post.user_id)
-      valid_options = VALID_OPTIONS.map { |o| "data-#{o}" }
+      valid_options = valid_option_attributes
 
-      valid_custom_fields = []
-      SiteSetting
-        .discourse_post_event_allowed_custom_fields
-        .split("|")
-        .each do |setting|
-          valid_custom_fields << {
-            original: "data-#{setting}",
-            normalized: "data-#{setting.gsub(/_/, "-")}",
-          }
-        end
+      valid_custom_fields =
+        SiteSetting
+          .discourse_post_event_allowed_custom_fields
+          .split("|")
+          .map do |setting|
+            { original: "data-#{setting}", normalized: custom_field_data_attribute(setting) }
+          end
 
       Nokogiri
         .HTML(cooked)
@@ -69,6 +67,16 @@ module DiscoursePostEvent
           event
         end
         .compact
+    end
+
+    def self.valid_option_attributes
+      VALID_OPTIONS.map { |option| "data-#{option}" }
+    end
+
+    def self.custom_field_data_attribute(setting)
+      camelized = setting.downcase.gsub(/[-.]/, "_").gsub(/_(.)/) { $1.upcase }
+      dasherized = camelized.gsub(/[A-Z]/) { |char| "-#{char.downcase}" }.sub(/\A-/, "")
+      "data-#{dasherized}"
     end
 
     def self.linkify_description(text, post: nil)

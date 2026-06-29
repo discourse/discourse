@@ -103,6 +103,11 @@ th:
       admins: "ผู้ดูแลระบบ"
       moderators: "ผู้ดูแล"
       staff: "ทีมงาน"
+    default_full_names:
+      everyone: "ทุกคน"
+      admins: "แอดมิน"
+      moderators: "ผู้ดูแลระบบ"
+      staff: "ทีมงาน"
   education:
     until_posts:
       other: "%{count} โพส"

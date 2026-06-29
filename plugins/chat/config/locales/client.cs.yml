@@ -322,8 +322,6 @@ cs:
         title: "Zvuk upozornění na ploše"
       sounds:
         none: "Žádná"
-        bell: "Zvonek"
-        ding: "Cink"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Připojit soubor"

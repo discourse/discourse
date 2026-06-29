@@ -68,7 +68,6 @@ const TOPIC_QUERY_PARAMS = [
   "filter",
   "username_filters",
   "replies_to_post_number",
-  "flat",
   "sort",
   "context",
   { collapseReplies: "collapse_replies" },
@@ -125,7 +124,6 @@ export default class TopicController extends Controller {
   username_filters = null;
   replies_to_post_number = null;
   filter = null;
-  flat = null;
   sort = null;
   context = null;
   collapseReplies = false;
@@ -162,7 +160,6 @@ export default class TopicController extends Controller {
     "filter",
     "username_filters",
     "replies_to_post_number",
-    "flat",
     "sort",
     "context",
     "collapseReplies"
@@ -171,19 +168,9 @@ export default class TopicController extends Controller {
     return getProperties(this, TOPIC_PAGE_QUERY_PARAM_PROPERTIES);
   }
 
-  @computed("flat", "model._forcedFlat")
-  get forceFlatView() {
-    return (
-      this.flat === true ||
-      this.flat === "true" ||
-      this.flat === "1" ||
-      this.model?._forcedFlat
-    );
-  }
-
-  @computed("model.is_nested_view", "forceFlatView")
+  @computed("model.is_nested_view")
   get shouldRenderNestedView() {
-    return this.model?.is_nested_view && !this.forceFlatView;
+    return this.model?.is_nested_view;
   }
 
   @computed("model.isPrivateMessage")

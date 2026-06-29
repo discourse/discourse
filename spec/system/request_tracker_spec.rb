@@ -350,8 +350,8 @@ describe "Request tracking" do
       expect(event[:session_id]).to be_present
     end
 
-    context "when use_beacon_for_browser_page_views is enabled" do
-      before { SiteSetting.use_beacon_for_browser_page_views = true }
+    context "when dashboard_improvements is enabled" do
+      before { SiteSetting.dashboard_improvements = true }
 
       it "tracks an anonymous visit correctly" do
         all_events =
@@ -695,8 +695,8 @@ describe "Request tracking" do
       end
     end
 
-    context "when use_beacon_for_browser_page_views is enabled" do
-      before { SiteSetting.use_beacon_for_browser_page_views = true }
+    context "when dashboard_improvements is enabled" do
+      before { SiteSetting.dashboard_improvements = true }
 
       context "when logged in" do
         before { sign_in(current_user) }
@@ -861,7 +861,7 @@ describe "Request tracking" do
     fab!(:post) { Fabricate(:post, topic: topic) }
 
     before do
-      SiteSetting.use_beacon_for_browser_page_views = true
+      SiteSetting.dashboard_improvements = true
       Middleware::RequestTracker.bpv_notifications_enabled = true
     end
 

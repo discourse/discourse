@@ -153,6 +153,20 @@ export default class SiteSetting extends EmberObject {
     };
   }
 
+  get definition() {
+    return {
+      key: this.setting,
+      label: this.humanized_name,
+      description: this.description,
+      type: this.type,
+      list_type: this.list_type,
+      min: this.min,
+      max: this.max,
+      choices: this.choices,
+      valid_values: this.valid_values,
+    };
+  }
+
   get requiresConfirmation() {
     switch (this.requires_confirmation) {
       case SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple:

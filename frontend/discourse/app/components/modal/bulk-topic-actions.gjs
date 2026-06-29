@@ -10,6 +10,8 @@ import { Promise } from "rsvp";
 import ManageTagsForm from "discourse/components/modal/bulk-topic-actions/manage-tags-form";
 import BulkPinOptions from "discourse/components/modal/feature-topic/bulk-pin-options";
 import { topicLevels } from "discourse/lib/notification-levels";
+import renderTag from "discourse/lib/render-tag";
+import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
@@ -17,6 +19,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import DModal from "discourse/ui-kit/d-modal";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
@@ -102,6 +105,7 @@ export default class BulkTopicActions extends Component {
     const topicChunks = this._generateTopicChunks(allTopics);
     const topicIds = [];
     const mergedErrors = {};
+    const mergedTagCategoryErrors = {};
     const options = {};
 
     if (this.model.allowSilent && !this.notifyUsers) {
@@ -129,7 +133,14 @@ export default class BulkTopicActions extends Component {
             allTopics.find((value) => value.id === id)
           );
           const errors = Object.keys(mergedErrors).length ? mergedErrors : null;
-          return resolve({ topics, errors });
+          const tagCategoryErrors = Object.values(mergedTagCategoryErrors);
+          return resolve({
+            topics,
+            errors,
+            tagCategoryErrors: tagCategoryErrors.length
+              ? tagCategoryErrors
+              : null,
+          });
         }
 
         const task = tasks.shift();
@@ -142,6 +153,16 @@ export default class BulkTopicActions extends Component {
           if (result?.errors) {
             for (const [msg, count] of Object.entries(result.errors)) {
               mergedErrors[msg] = (mergedErrors[msg] || 0) + count;
+            }
+          }
+          if (result?.tag_category_errors) {
+            for (const error of result.tag_category_errors) {
+              const key = `${error.category_id}:${error.tag_names.join(",")}`;
+              if (mergedTagCategoryErrors[key]) {
+                mergedTagCategoryErrors[key].count += error.count;
+              } else {
+                mergedTagCategoryErrors[key] = { ...error };
+              }
             }
           }
           resolveNextTask();
@@ -281,17 +302,36 @@ export default class BulkTopicActions extends Component {
   }
 
   get failedTopicCount() {
-    if (!this.failureMessages) {
-      return 0;
-    }
-    return this.failureMessages.reduce((sum, e) => sum + e.count, 0);
+    return (this.failureMessages || []).reduce((sum, e) => sum + e.count, 0);
   }
 
-  _showErrors(errors, successCount, totalCount) {
-    this.failureMessages = Object.entries(errors).map(([message, count]) => ({
-      message,
-      count,
-    }));
+  get hasFailures() {
+    return this.failedTopicCount > 0;
+  }
+
+  _buildTagCategoryError(error) {
+    const category = Category.findById(error.category_id);
+    return i18n("topics.bulk.tag_not_allowed_in_category", {
+      count: error.tag_names.length,
+      tags: error.tag_names.map((name) => renderTag(name)).join(" "),
+      category: category
+        ? categoryBadgeHTML(category)
+        : escapeExpression(error.category_name),
+    });
+  }
+
+  _showErrors(errors, tagCategoryErrors, successCount, totalCount) {
+    this.failureMessages = [
+      ...(tagCategoryErrors || []).map((error) => ({
+        message: this._buildTagCategoryError(error),
+        count: error.count,
+        trustHtml: true,
+      })),
+      ...Object.entries(errors || {}).map(([message, count]) => ({
+        message,
+        count,
+      })),
+    ];
     this.successTopicCount = successCount;
     this.skippedTopicCount = totalCount - successCount - this.failedTopicCount;
     this.loading = false;
@@ -311,11 +351,11 @@ export default class BulkTopicActions extends Component {
     const result = await this.perform(operation);
 
     if (result) {
-      const { topics, errors } = result;
+      const { topics, errors, tagCategoryErrors } = result;
       topics.forEach(cb);
 
-      if (errors) {
-        this._showErrors(errors, topics.length, totalCount);
+      if (errors || tagCategoryErrors) {
+        this._showErrors(errors, tagCategoryErrors, topics.length, totalCount);
       } else {
         this.model.refreshClosure?.();
         this.args.closeModal();
@@ -332,9 +372,9 @@ export default class BulkTopicActions extends Component {
     const result = await this.perform(operation);
 
     if (result) {
-      const { topics, errors } = result;
-      if (errors) {
-        this._showErrors(errors, topics.length, totalCount);
+      const { topics, errors, tagCategoryErrors } = result;
+      if (errors || tagCategoryErrors) {
+        this._showErrors(errors, tagCategoryErrors, topics.length, totalCount);
       } else {
         this.model.refreshClosure?.().then(() => {
           this.args.closeModal();
@@ -436,7 +476,7 @@ export default class BulkTopicActions extends Component {
           @isLoading={{this.loading}}
           @title={{i18n "topics.bulk.performing"}}
         >
-          {{#if this.failureMessages}}
+          {{#if this.hasFailures}}
             <div class="topic-bulk-actions-modal__errors">
               {{#if this.successTopicCount}}
                 <p>{{trustHTML
@@ -457,7 +497,12 @@ export default class BulkTopicActions extends Component {
                 }}</p>
               <ul>
                 {{#each this.failureMessages as |error|}}
-                  <li>{{error.message}}
+                  <li>
+                    {{#if error.trustHtml}}
+                      {{trustHTML error.message}}
+                    {{else}}
+                      {{error.message}}
+                    {{/if}}
                     ({{i18n
                       "topics.bulk.error_topic_count"
                       count=error.count
@@ -542,7 +587,7 @@ export default class BulkTopicActions extends Component {
       </:body>
 
       <:footer>
-        {{#if this.failureMessages}}
+        {{#if this.hasFailures}}
           <DButton
             @action={{this.closeWithRefresh}}
             @label="close"

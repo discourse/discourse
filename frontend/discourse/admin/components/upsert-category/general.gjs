@@ -70,6 +70,7 @@ export default class UpsertCategoryGeneral extends Component {
 
   constructor() {
     super(...arguments);
+
     this.categoryTypes = [...this.categoryTypeChooser.allTypes].map((type) => ({
       ...type,
       preventRemoval: type.id === DISCUSSION_TYPE_ID,
@@ -620,12 +621,13 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   <template>
-    {{#if this.isEditingExistingCategory}}
+    {{#if (or this.isEditingExistingCategory @showAdvancedTabs)}}
       <@form.Field
         @name="category_types"
         @title={{i18n "category.category_types"}}
         @format="max"
         @type="custom"
+        @showOptional={{false}}
         as |field|
       >
         <field.Control>

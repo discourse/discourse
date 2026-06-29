@@ -9,7 +9,12 @@ module DiscourseWorkflows
       RUN_ONCE_FOR_EACH_ITEM = CodeRunner::RUN_ONCE_FOR_EACH_ITEM
       JAVASCRIPT_UNDEFINED = CodeRunner::JAVASCRIPT_UNDEFINED
       JobResult = Data.define(:ok, :result, :error)
-      WaitRequest = Data.define(:waiting_until)
+      WaitRequest =
+        Data.define(:waiting_until, :kind, :payload) do
+          def workflow_call?
+            kind == "workflow_call"
+          end
+        end
 
       def self.serialize_post(
         post,
@@ -62,8 +67,8 @@ module DiscourseWorkflows
           @wait_request = nil
         end
 
-        def request_wait(waiting_until)
-          @wait_request = WaitRequest.new(waiting_until)
+        def request_wait(waiting_until, kind: "default", payload: {})
+          @wait_request = WaitRequest.new(waiting_until, kind.to_s, payload.deep_stringify_keys)
         end
 
         def add_condition_details(details)
@@ -86,7 +91,7 @@ module DiscourseWorkflows
         end
       end
 
-      attr_reader :user, :vars, :execution_id, :node_id, :webhook_ctx
+      attr_reader :user, :vars, :execution_id, :node_id, :webhook_ctx, :workflow_call_stack
 
       def initialize(
         input_items:,
@@ -113,6 +118,7 @@ module DiscourseWorkflows
         workflow_dependencies: nil,
         workflow_snapshot: nil,
         webhook_context: nil,
+        workflow_call_stack: [],
         runtime_state: RuntimeState.new,
         static_data_state: nil
       )
@@ -147,6 +153,7 @@ module DiscourseWorkflows
         @workflow_dependencies = workflow_dependencies
         @workflow_snapshot = workflow_snapshot
         @webhook_ctx = webhook_context
+        @workflow_call_stack = Array(workflow_call_stack).map(&:to_s)
         @static_data_state = static_data_state
       end
 
@@ -294,7 +301,7 @@ module DiscourseWorkflows
         end
 
         if username.present?
-          user = User.find_by(username: username)
+          user = User.find_by_username(username)
           raise DiscourseWorkflows::NodeError, "User '#{username}' not found" if user.nil?
         else
           user = User.find_by(id: id)
@@ -367,8 +374,8 @@ module DiscourseWorkflows
         self.class.serialize_topic(topic, guardian:, custom_field_names:)
       end
 
-      def put_execution_to_wait(waiting_until = nil)
-        @runtime_state.request_wait(waiting_until)
+      def put_execution_to_wait(waiting_until = nil, kind: "default", payload: {})
+        @runtime_state.request_wait(waiting_until, kind: kind, payload: payload)
       end
 
       def resume_action_id(action)
@@ -426,6 +433,17 @@ module DiscourseWorkflows
         paired_item = { "item" => item_index_for(item, input_index:) }
         paired_item["input"] = input_index if input_index != 0
         paired_item
+      end
+
+      def ensure_workflow_call_access!(workflow_id)
+        workflow_id = workflow_id.to_s
+        if @workflow && @node_id
+          return if workflow_references_dependency?("workflow_call", workflow_id)
+        elsif @parameters["workflow_id"].to_s == workflow_id
+          return
+        end
+
+        raise Discourse::InvalidAccess
       end
 
       private

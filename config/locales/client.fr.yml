@@ -22,6 +22,10 @@ fr:
         in_location: "dans"
         hidden: "masqué"
         failed: "échec"
+    access_control:
+      manage:
+        access_permission_editor: "Éditeur"
+        access_permission_remove: "Supprimer"
     number:
       format:
         separator: ","
@@ -385,6 +389,9 @@ fr:
     age: "Âge"
     joined: "Inscrit(e)"
     admin_title: "Administration"
+    advanced_mode_toggle:
+      advanced_mode: "Mode avancé"
+      simple_mode: "Mode simple"
     show_more: "afficher plus"
     show_help: "Options"
     links: "Liens"
@@ -2470,6 +2477,8 @@ fr:
       email_label: "E-mail"
       continue_button: "Continuer"
       verify_button: "Continuer"
+      account_ready_continue: "Continuer"
+      username_label: "Nom d'utilisateur"
     login:
       header_title: "Ravi de vous revoir"
       title: "Se connecter"
@@ -3411,39 +3420,6 @@ fr:
       read_more: "Vous voulez en savoir plus ? <a href='%{categoryLink}'>Parcourez toutes les catégories</a> ou <a href='%{latestLink}'>affichez les derniers sujets</a>."
       unread_indicator: "Aucun membre n'a encore lu le dernier message de ce sujet."
       participant_groups: "Groupes de participants"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Il y a <a href="{basePath}/unread"># message non lu</a>}
-              other {Il y a <a href="{basePath}/unread"># messages non lus</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { et il reste <a href="{basePath}/new"># nouveau</a> sujet,}
-              other { et il reste <a href="{basePath}/new"># nouveaux</a> sujets,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Il reste <a href="{basePath}/unread"># sujet</a> non lu,}
-              other {Il reste <a href="{basePath}/unread"># sujets</a> non lus,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Il reste <a href="{basePath}/new"># nouveau</a> sujet,}
-              other {Il reste <a href="{basePath}/new"># nouveaux</a> sujets,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { ou parcourez d'autres sujets dans {categoryLink}}
-          false { ou <a href="{basePath}/latest">consultez les derniers sujets</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} réponse. Passer à la première publication"
         other: "%{count} réponses. Passer à la première publication"
@@ -5353,6 +5329,9 @@ fr:
             opengraph_image:
               title: "Image OpenGraph"
               description: "Image OpenGraph par défaut, utilisée lorsque la page ne contient aucune autre image appropriée. Si ce champ est laissé vide, l'icône large_icon sera utilisée."
+            og_image_preview:
+              generate: "Générer"
+              topic_id_label: "ID du sujet"
             x_summary_large_image:
               title: "Résumé X « summary large image »"
               description: "Carte X « summary large image ». Si ce champ est laissé vide, les métadonnées de carte normales sont générées à partir d'OpenGraph_image, à condition qu'il ne s'agisse pas non plus d'un fichier .svg."
@@ -5631,7 +5610,7 @@ fr:
         stale_data: "Une vérification de mises à jour n'a pas été effectuée récemment. Vérifiez que sidekiq est en cours d'exécution."
         version_check_pending: "Il semble que vous avez effectué une mise à jour récemment. Fantastique !"
         installed_version: "Installée"
-        latest_version: "Dernière"
+        github: "GitHub"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
         dismiss_notice: "Ignorer"
         new_features:
@@ -6240,6 +6219,8 @@ fr:
             initial_members: "Liste étendue des membres"
             initial_members_description: "Nombre de membres du groupe à afficher avant d'ajouter un bouton Afficher plus."
             show_description: "Inclure une description"
+          locale_selector:
+            title: "Langue "
           optional: "(facultatif)"
           update: "Mettre à jour"
           toasts:

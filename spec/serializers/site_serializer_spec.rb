@@ -32,6 +32,73 @@ RSpec.describe SiteSerializer do
     end
   end
 
+  describe "#access_control" do
+    let(:target_class) do
+      Class.new(ActiveRecord::Base) do
+        include AclTarget
+
+        self.table_name = "posts"
+
+        def self.name
+          "SiteSerializerSpecTarget"
+        end
+
+        def self.mandatory_acl
+          [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
+        end
+
+        def self.banned_acl
+          [{ type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" }]
+        end
+      end
+    end
+
+    after { DiscoursePluginRegistry.reset_register!(:acl_target_classes) }
+
+    it "includes mandatory ACLs by target class" do
+      target_class
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized.dig(:access_control, :mandatory_acl)).to include(
+        "SiteSerializerSpecTarget" => [
+          { type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" },
+        ],
+      )
+    end
+
+    it "includes banned ACLs by target class" do
+      target_class
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized.dig(:access_control, :banned_acl)).to include(
+        "SiteSerializerSpecTarget" => [
+          { type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" },
+        ],
+      )
+    end
+
+    it "includes plugin-registered target classes" do
+      Object.const_set(:SiteSerializerSpecTarget, target_class)
+      AclTarget.loaded_target_classes.delete(target_class)
+      DiscoursePluginRegistry.register_acl_target_class(
+        "SiteSerializerSpecTarget",
+        Plugin::Instance.new,
+      )
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized.dig(:access_control, :mandatory_acl)).to include(
+        "SiteSerializerSpecTarget" => [
+          { type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" },
+        ],
+      )
+    ensure
+      Object.send(:remove_const, :SiteSerializerSpecTarget) if defined?(SiteSerializerSpecTarget)
+    end
+  end
+
   it "includes category custom fields only if its preloaded" do
     category.custom_fields["enable_marketplace"] = true
     category.save_custom_fields

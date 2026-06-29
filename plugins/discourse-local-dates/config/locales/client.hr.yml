@@ -22,8 +22,6 @@ hr:
       create:
         form:
           insert: Umetni
-          advanced_mode: Napredni način rada
-          simple_mode: Jednostavni način rada
           format_description: "Format koji se koristi za prikaz datuma korisniku. Pomoću Z možete prikazati pomak i zz za naziv vremenske zone."
           timezones_title: Vremenske zone za prikazati
           timezones_description: Vremenske zone će se koristiti za prikaz datuma u predprikazu i rezervnom prikazu.

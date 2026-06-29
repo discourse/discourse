@@ -352,8 +352,6 @@ uk:
         title: "Звук сповіщення у чаті"
       sounds:
         none: "Немає"
-        bell: "Дзвоник"
-        ding: "Дзень!"
       title: "чат"
       title_capitalized: "Чат"
       upload: "Прикріпити файл"
@@ -546,6 +544,12 @@ uk:
           other: "<span>Ви, %{commaSeparatedUsernames} та %{count} та інші відреагували на </span>:%{emoji}:"
         single_user: "<span>%{username} відреагували на </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} і %{username} відреагували </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} реакція"
+            few: "%{count} реакції"
+            many: "%{count} реакцій"
+            other: "%{count} реакцій"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} та %{count} інший відреагували з </span>:%{emoji}:"
           few: "<span>%{commaSeparatedUsernames} та %{count} інших відреагували з </span>:%{emoji}:"

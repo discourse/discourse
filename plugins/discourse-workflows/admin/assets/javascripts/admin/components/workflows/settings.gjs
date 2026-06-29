@@ -8,6 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { i18n } from "discourse-i18n";
 import ErrorWorkflowChooser from "./error-workflow-chooser";
+import InUseDialog from "./in-use-dialog";
 
 export default class WorkflowSettings extends Component {
   @service router;
@@ -42,7 +43,20 @@ export default class WorkflowSettings extends Component {
             "adminPlugins.show.discourse-workflows.index"
           );
         } catch (e) {
-          popupAjaxError(e);
+          const body = e.jqXHR?.responseJSON;
+          if (body?.type === "workflow_called_by_other_workflows") {
+            this.dialog.alert({
+              title: i18n("discourse_workflows.in_use_title"),
+              bodyComponent: InUseDialog,
+              bodyComponentModel: {
+                description: i18n("discourse_workflows.in_use_description"),
+                workflows: body.referencing_workflows,
+                close: () => this.dialog.cancel(),
+              },
+            });
+          } else {
+            popupAjaxError(e);
+          }
         }
       },
     });

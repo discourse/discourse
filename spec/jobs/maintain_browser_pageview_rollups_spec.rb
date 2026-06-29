@@ -34,6 +34,40 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         ).to eq(1)
       end
 
+      it "uses beacon source for rollups when dashboard_improvements is enabled" do
+        SiteSetting.dashboard_improvements = false
+        Fabricate(
+          :browser_pageview_event,
+          country_code: "US",
+          normalized_referrer: "google.com",
+          source: BrowserPageviewEvent::SOURCE_PIGGYBACK,
+        )
+        Fabricate(
+          :browser_pageview_event,
+          country_code: "GB",
+          normalized_referrer: "reddit.com",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+        )
+
+        job.execute({})
+
+        expect(BrowserPageviewCountryDailyRollup.pluck(:country_code, :count)).to eq([["US", 1]])
+        expect(BrowserPageviewReferrerDailyRollup.pluck(:normalized_referrer, :count)).to eq(
+          [["google.com", 1]],
+        )
+
+        SiteSetting.dashboard_improvements = true
+        job.execute({})
+
+        expect(BrowserPageviewCountryDailyRollup.pluck(:country_code, :count)).to contain_exactly(
+          ["US", 1],
+          ["GB", 1],
+        )
+        expect(
+          BrowserPageviewReferrerDailyRollup.pluck(:normalized_referrer, :count),
+        ).to contain_exactly(["google.com", 1], ["reddit.com", 1])
+      end
+
       it "backfills from the earliest event date on the first run when rollups are empty" do
         Fabricate(:browser_pageview_event, country_code: "US", created_at: 60.days.ago)
         Fabricate(:browser_pageview_event, country_code: "GB", created_at: 5.days.ago)
@@ -72,6 +106,30 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
           BrowserPageviewReferrerInspector.normalize(raw),
         )
         expect(event.normalized_referrer_version).to eq(BrowserPageviewReferrerInspector::VERSION)
+      end
+
+      it "only backfills referrers from the active source" do
+        SiteSetting.dashboard_improvements = true
+        piggyback_event =
+          Fabricate(
+            :browser_pageview_event_with_unnormalized_referrer,
+            referrer: "https://www.google.com/",
+            source: BrowserPageviewEvent::SOURCE_PIGGYBACK,
+          )
+        beacon_event =
+          Fabricate(
+            :browser_pageview_event_with_unnormalized_referrer,
+            referrer: "https://www.reddit.com/",
+            source: BrowserPageviewEvent::SOURCE_BEACON,
+          )
+
+        job.execute({})
+
+        expect(piggyback_event.reload.normalized_referrer_version).to be_nil
+        expect(beacon_event.reload.normalized_referrer).to eq("reddit.com")
+        expect(beacon_event.normalized_referrer_version).to eq(
+          BrowserPageviewReferrerInspector::VERSION,
+        )
       end
 
       it "leaves rows without a referrer untouched and does not let them block completion" do

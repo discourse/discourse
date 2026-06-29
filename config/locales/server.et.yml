@@ -244,6 +244,11 @@ et:
       trust_level_2: "usaldustase_2"
       trust_level_3: "usaldustase_3"
       trust_level_4: "usaldustase_4"
+    default_full_names:
+      everyone: "Kõik"
+      admins: "Adminnid"
+      moderators: "Moderaatorid"
+      staff: "Meeskond"
   education:
     until_posts:
       one: "%{count} postitus"

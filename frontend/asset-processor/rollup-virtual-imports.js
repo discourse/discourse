@@ -7,9 +7,10 @@ const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 export default {
   "virtual:entrypoint": async (
     moduleFilenames,
-    { themeId },
+    { themeId, pluginName },
     { basePath, context }
   ) => {
+    const label = pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
     let output = `const compatModules = {};`;
 
     const moduleFilenamesSet = new Set(moduleFilenames);
@@ -21,7 +22,7 @@ export default {
         !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
       ) {
         // Unsupported file type. Log a warning and skip
-        output += `console.warn("[THEME ${themeId}] Unsupported file type: ${moduleFilename}");\n`;
+        output += `console.warn("[${label}] Unsupported file type: ${moduleFilename}");\n`;
         continue;
       }
 

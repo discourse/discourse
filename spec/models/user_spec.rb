@@ -4245,4 +4245,39 @@ RSpec.describe User do
       end
     end
   end
+
+  describe "acl permissions" do
+    fab!(:acl_user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:acl_group) { Fabricate(:group).tap { |group| group.add(acl_user) } }
+    fab!(:viewable_category, :category)
+    fab!(:editable_category, :category)
+    fab!(:view_acl) do
+      Fabricate(
+        :access_control_list_with_groups,
+        target: viewable_category,
+        permission: "view",
+        groups: [acl_group],
+      )
+    end
+    fab!(:edit_acl) do
+      Fabricate(
+        :access_control_list_with_groups,
+        target: editable_category,
+        permission: "edit",
+        groups: [acl_group],
+      )
+    end
+
+    before do
+      Category.stubs(:has_mandatory_acl?).returns(true)
+      Category.stubs(:acl_is_mandatory?).returns(true)
+    end
+
+    describe "#permission_acl" do
+      it "builds an Acl::User from the acls matching the user and memoizes it" do
+        expect(acl_user.permission_acl).to be_a(Acl::User)
+        expect(acl_user.permission_acl).to equal(acl_user.permission_acl)
+      end
+    end
+  end
 end

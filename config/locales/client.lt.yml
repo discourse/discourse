@@ -22,6 +22,10 @@ lt:
         in_location: "į"
         hidden: "paslėptas"
         failed: "nepavyko"
+    access_control:
+      manage:
+        access_permission_editor: "Redaguotojas"
+        access_permission_remove: "Pašalinti"
     carousel:
       go_to_slide: "Eiti į skaidrę %{index}"
       previous: "Ankstesnė skaidrė"
@@ -312,6 +316,9 @@ lt:
     age: "Amžius"
     joined: "Prisijungė"
     admin_title: "Administratorius"
+    advanced_mode_toggle:
+      advanced_mode: "Išplėstinis režimas"
+      simple_mode: "Paprastas režimas"
     show_more: "rodyti daugiau"
     show_help: "Nustatymai"
     links: "Nuorodos"
@@ -2201,6 +2208,8 @@ lt:
       email_label: "Epaštas"
       continue_button: "Tęsti"
       verify_button: "Tęsti"
+      account_ready_continue: "Tęsti"
+      username_label: "Naudotojo vardas"
     login:
       header_title: "Sveiki sugrįžę"
       title: "Prisijungti"
@@ -4223,6 +4232,9 @@ lt:
             email: "El. paštas"
             manifest_screenshots:
               title: "Manifesto ekrano kopijos"
+            og_image_preview:
+              generate: "Generuoti"
+              topic_id_label: "Temos ID"
         fonts:
           form:
             heading_font:
@@ -4327,7 +4339,7 @@ lt:
         no_check_performed: "Atnaujinimų patikrinimas neįvykdytas. Patikrinkite ar veikia sidekiq."
         stale_data: "Artimiausiu metu atnaujinimų patikrinimas nebuvo įvykdytas. Patikrinkite ar veikia sidekiq."
         installed_version: "Įrašyta"
-        latest_version: "Naujausia"
+        github: "GitHub"
         problems_found: "Keletas patarimų, pagrįstų dabartiniais svetainės nustatymais"
         dismiss_notice: "Ignoruoti"
         new_features:

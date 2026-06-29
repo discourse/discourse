@@ -1,3 +1,7 @@
+.form-kit__object:has(.workflows-property-engine__collection-row) {
+  --form-kit-gutter-y: var(--space-6);
+}
+
 .workflows-configurator {
   &__tabs {
     display: flex;
@@ -76,20 +80,6 @@
     display: none;
   }
 
-  .form-kit__errors-summary {
-    width: 100%;
-    max-width: none;
-  }
-
-  .form-kit__control-custom {
-    width: 100%;
-  }
-
-  .form-kit__field-toggle {
-    width: 100%;
-    position: relative;
-  }
-
   .form-kit__section > .btn-default {
     width: 100%;
     justify-content: center;
@@ -135,15 +125,14 @@
 
   &__mode-control {
     position: absolute;
-    top: calc(-1 * var(--space-1));
+    inset-block-start: calc(-1 * var(--space-1));
     transform: translateY(-100%);
-    right: 0;
-    z-index: 2;
+    inset-inline-end: 0;
 
     &.--toggle {
-      top: 50%;
+      inset-block-start: 50%;
       transform: translateY(-50%);
-      right: 50px;
+      inset-inline-end: 50px;
     }
   }
 
@@ -169,21 +158,34 @@
   }
 
   &__collection-row {
-    display: flex;
-    align-items: start;
-
-    + .workflows-property-engine__collection-row {
-      border-top: 2px solid var(--primary-low-mid);
-      padding-top: var(--space-4);
-      margin-top: var(--space-4);
-    }
+    position: relative;
+    border: 1px dashed var(--primary-low);
+    padding: var(--space-5) var(--space-2) var(--space-4);
+    border-radius: var(--d-border-radius-large);
+    background: var(--primary-very-low);
   }
 
   &__collection-delete {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    padding-top: var(--space-1);
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    transform: translate(25%, -50%);
+    padding: var(--space-half);
+    border-radius: 6px;
+    font-size: var(--font-down-1-rem);
+    background: var(--secondary);
+    border: 1px solid var(--primary-low-mid);
+
+    &:hover {
+      .discourse-no-touch & {
+        background: var(--secondary);
+        border: 1px solid var(--primary-low-mid);
+
+        .d-icon {
+          color: var(--danger);
+        }
+      }
+    }
   }
 
   &__collection-fields {

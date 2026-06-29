@@ -6,8 +6,28 @@
   }
 }
 
+// PostCookedHtml appends a selection barrier after the final block, so
+// `:last-child` does not usually match the final cooked paragraph.
+.nested-view__op-content,
+.nested-post__content {
+  .cooked > p {
+    &:last-child,
+    &:has(+ .cooked-selection-barrier:last-child) {
+      margin-bottom: 0;
+    }
+  }
+}
+
 // ── Top-level nested view ──────────────────────────────────────────
 .nested-view {
+  // Avatar size for the "small" PostAvatar used in nested posts.
+  // Also anchors the sticky controls/avatar spacing.
+  --nested-avatar-size: 24px;
+  --nested-controls-height: calc(
+    var(--nested-avatar-size) + var(--space-2) + var(--space-2)
+  );
+  --nested-sticky-avatar-top-gap: var(--space-1);
+  --nested-sticky-avatar-bottom-offset: calc(var(--space-2) + var(--space-1));
   background: var(--secondary);
   margin: 0 auto;
   padding: var(--space-4);
@@ -20,7 +40,6 @@
   &__header {
     margin-bottom: 1em;
     padding-bottom: 0.75em;
-    border-bottom: 1px solid var(--primary-low);
   }
 
   &__title {
@@ -140,6 +159,8 @@
     position: sticky;
     top: var(--header-offset, 0);
     z-index: z("timeline");
+    box-sizing: border-box;
+    min-height: var(--nested-controls-height);
     padding: 0.25em 0;
     background: var(--secondary);
     border-bottom: 1px solid var(--primary-low);
@@ -159,8 +180,11 @@
     margin-left: auto;
   }
 
-  &__activity-link {
+  &__activity-link.btn {
     font-size: var(--font-down-1);
+    padding: 0.35em 0.55em;
+    min-height: auto;
+    line-height: var(--line-height-small);
     white-space: nowrap;
   }
 
@@ -189,7 +213,6 @@
   &__op {
     margin-bottom: 1.5em;
     padding: 1em;
-    background: var(--primary-very-low);
     border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius);
 
@@ -242,6 +265,37 @@
       padding: 0;
       margin-left: 0;
       font-size: var(--font-down-1);
+    }
+
+    @include viewport.from(sm) {
+      > .topic-avatar {
+        position: sticky;
+        top: calc(var(--header-offset) + var(--space-3));
+        align-self: flex-start;
+        margin-bottom: 25px;
+      }
+    }
+
+    @include viewport.until(sm) {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: start;
+      column-gap: 0.75em;
+      row-gap: 0.5em;
+
+      .nested-view__op-body {
+        display: contents;
+      }
+
+      .topic-meta-data {
+        align-self: center;
+      }
+
+      .nested-view__op-content,
+      .nested-view__op-menu,
+      .post-links-container {
+        grid-column: 1 / -1;
+      }
     }
   }
 
@@ -301,15 +355,17 @@
 
   &__floating-actions {
     position: sticky;
-    bottom: 2em;
-    float: right;
+    bottom: 0;
     z-index: z("header") - 2; // below header, above page content and footer-nav
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 1em;
     gap: 0.5em;
     transition:
       transform 0.3s ease,
-      opacity 0.3s ease;
+      opacity 0.3s ease,
+      bottom 0.3s ease;
 
     &.--hidden {
       opacity: 0;
@@ -376,9 +432,6 @@
 
 // ── Nested post (single comment in tree) ───────────────────────────
 .nested-post {
-  // Avatar size for the "small" PostAvatar used in nested posts.
-  // Used to calculate horizontal connector positions.
-  --nested-avatar-size: 24px;
   --nested-column-gap: var(--space-2);
   --nested-connector-offset: var(--space-2);
   --nested-vertical-gap: 0.5em;
@@ -389,9 +442,14 @@
   --nested-line-width: 1px;
   --nested-line-center-adjust: 0.5px;
   --nested-load-more-left-adjust: var(--nested-line-width);
+  --nested-sticky-avatar-top: calc(
+    var(--header-offset, 0px) + var(--nested-controls-height) +
+      var(--nested-sticky-avatar-top-gap)
+  );
 
-  // Grid splits article (row 1) from children (row 2) so the gutter's
-  // depth-line naturally stops at the article bottom.
+  // Grid splits article (row 1) from children (row 2) so the sticky avatar is
+  // bounded by the post itself and does not continue past the post menu into
+  // the reply subtree.
   display: grid;
   grid-template-columns: var(--nested-avatar-size) 1fr;
   column-gap: var(--nested-column-gap);
@@ -479,16 +537,19 @@
     }
   }
 
-  // Left column: avatar on top, clickable depth line below.
-  // Grid row 1 only — does not extend into the children row.
+  // Left column: sticky avatar on top, clickable depth line below.
   &__gutter {
     grid-column: 1;
     grid-row: 1;
+    margin-bottom: var(--nested-sticky-avatar-bottom-offset);
     display: flex;
     flex-direction: column;
     align-items: center;
 
     .topic-avatar {
+      position: sticky;
+      top: var(--nested-sticky-avatar-top);
+      z-index: 2;
       border-top: none;
       float: none;
       width: auto;
@@ -691,7 +752,7 @@
 
   &__header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.25em;
 
     // Hide the reply-to line, as the lines between posts already visually indicate the reply structure
@@ -822,26 +883,6 @@
     color: var(--primary-low-mid);
   }
 
-  &__collapsed-avatar {
-    display: flex;
-    flex: 0 0 var(--nested-avatar-size);
-    align-items: center;
-    justify-content: center;
-    width: var(--nested-avatar-size);
-    height: var(--nested-avatar-size);
-    color: var(--primary-low-mid);
-
-    .avatar {
-      width: var(--nested-avatar-size);
-      height: var(--nested-avatar-size);
-    }
-
-    .d-icon {
-      width: 14px;
-      height: 14px;
-    }
-  }
-
   &__collapsed-username {
     color: var(--primary-high-or-secondary-low);
   }
@@ -909,6 +950,9 @@
   }
 
   &__placeholder-avatar {
+    position: sticky;
+    top: var(--nested-sticky-avatar-top);
+    z-index: 2;
     width: var(--nested-avatar-size);
     height: var(--nested-avatar-size);
     display: flex;
@@ -1008,9 +1052,7 @@
   }
 
   &__list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    @include unstyled-list;
   }
 
   &__item {
@@ -1255,45 +1297,40 @@
     }
   }
 
-  .nested-view__floating-actions {
-    bottom: 1em;
-  }
-
   // Strip L-hook connectors on load-more buttons
   .nested-post-children__load-more::before {
     content: none;
   }
 
   // ── Individual nested post overrides ──
-  // Gutter becomes a compact rail column. The post article spans the rail and
-  // content columns because mobile renders the avatar inline in the header,
-  // while children remain indented in the content column.
+  // Gutter stays wide enough for the avatar so sticky avatars remain attached
+  // to the mobile rail, while children remain indented in the content column.
   .nested-post {
-    --nested-line-gutter: 14px;
+    --nested-line-gutter: var(--nested-avatar-size);
     --nested-column-gap: var(--space-1);
     --nested-mobile-line-offset: calc(var(--nested-line-gutter) / 2);
+    --nested-line-center-adjust: var(--nested-line-width);
+    --nested-mobile-line-nudge: calc(-1 * var(--space-1));
     --nested-mobile-line-start: calc(var(--nested-avatar-size) + 6px);
-    --nested-mobile-content-indent: calc(
-      var(--nested-avatar-size) + var(--space-1)
-    );
     grid-template-columns: var(--nested-line-gutter) 1fr;
-
-    // Explicit rows are required so grid-row: 1 / -1 on the gutter
-    // can resolve -1 to the end of the explicit grid (line 3).
-    // Without this, -1 falls back to line 1 and the gutter only spans row 1.
-    grid-template-rows: auto 1fr;
     column-gap: var(--nested-column-gap);
 
     // Tighter vertical spacing between siblings
     --nested-vertical-gap: 0.25em;
 
-    // Gutter spans all grid rows so the depth-line runs continuously
-    // through the article and children areas.
+    // Keep the gutter bounded to the post row on mobile too. The depth-line
+    // remains available as the collapse target for this post, but the sticky
+    // avatar stops with the post instead of following the entire child subtree.
     > .nested-post__gutter {
-      grid-row: 1 / -1;
+      grid-row: 1;
       position: relative;
       z-index: 1;
       pointer-events: none;
+
+      .topic-avatar,
+      .nested-post__placeholder-avatar {
+        pointer-events: auto;
+      }
     }
 
     // Depth-line: vertical bar under the avatar, no decorative hooks.
@@ -1301,7 +1338,7 @@
       position: absolute;
       top: var(--nested-mobile-line-start);
       bottom: 0;
-      left: 0;
+      left: var(--nested-mobile-line-nudge);
       min-height: 0;
       pointer-events: auto;
 
@@ -1329,21 +1366,6 @@
     // Hide the collapse icon — tapping the line itself collapses
     .nested-post__depth-line-icon {
       display: none;
-    }
-
-    // Inline avatar in the post header (rendered via template)
-    .nested-post__header .topic-avatar {
-      align-self: flex-start;
-      border-top: none;
-      float: none;
-      width: auto;
-      padding-top: 0;
-      height: auto;
-    }
-
-    .nested-post__article,
-    .nested-post__collapsed-bar {
-      grid-column: 1 / -1;
     }
 
     .nested-post__collapsed-bar {
@@ -1388,17 +1410,6 @@
       .topic-meta-data {
         margin-left: 0;
       }
-    }
-
-    .nested-post__content,
-    .nested-post__menu,
-    .nested-post__controls,
-    .post-links-container {
-      margin-left: var(--nested-mobile-content-indent);
-    }
-
-    .nested-post__expand-replies {
-      margin-left: var(--nested-mobile-content-indent);
     }
 
     .nested-post__content {

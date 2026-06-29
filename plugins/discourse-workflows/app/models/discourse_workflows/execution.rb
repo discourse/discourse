@@ -11,6 +11,11 @@ module DiscourseWorkflows
             foreign_key: "execution_id",
             dependent: :destroy
 
+    has_many :initiated_workflow_call_runs,
+             class_name: "DiscourseWorkflows::WorkflowCallRun",
+             foreign_key: "parent_execution_id",
+             dependent: :delete_all
+
     enum :status,
          { pending: 0, running: 1, success: 2, error: 3, waiting: 4, rate_limited: 5, skipped: 6 }
     enum :execution_mode, { normal: 0, error_mode: 1, manual: 2 }
@@ -25,6 +30,11 @@ module DiscourseWorkflows
 
     TERMINAL_STATUSES_FOR_PURGE = %i[success error rate_limited skipped].freeze
     PURGE_BATCH_SIZE = 5_000
+
+    def self.admin_execution_url(workflow_id, execution_id)
+      "#{Discourse.base_url}/admin/plugins/discourse-workflows/workflows/" \
+        "#{workflow_id}/executions/#{execution_id}"
+    end
 
     def self.create_pending_manual!(workflow:, trigger_node_id:, trigger_data:)
       transaction do
@@ -60,6 +70,7 @@ module DiscourseWorkflows
         break if ids.empty?
 
         ExecutionData.where(execution_id: ids).delete_all
+        WorkflowCallRun.remove_execution_references(ids)
         where(id: ids).delete_all
       end
     end
@@ -147,6 +158,8 @@ module DiscourseWorkflows
           message,
         )
       end
+
+      DiscourseWorkflows::WorkflowCallContinuation.child_failed!(reload) if claimed
 
       claimed
     end
