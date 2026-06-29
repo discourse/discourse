@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "etc"
+
 module Migrations
   module Conversion
     class Base
@@ -9,7 +11,7 @@ module Migrations
         @settings = settings
       end
 
-      def run(only_steps: [], skip_steps: [])
+      def run(only_steps: [], skip_steps: [], max_parallel_steps: nil, no_fork: false)
         if respond_to?(:setup)
           puts "Initializing..."
           setup
@@ -17,26 +19,28 @@ module Migrations
 
         create_database
 
-        @worker_pool = WorkerPool.new
-
         # Titles are known from the step classes (no instantiation, no queries),
         # so the reporter can reserve its title column up front. The steps
-        # themselves are built and sized lazily in the loop — each step's count
-        # is computed only when it runs.
+        # themselves are built and sized lazily. Each step's source is opened
+        # and counted in its own fork when it runs.
         step_classes = filter_steps(steps, only_steps, skip_steps)
         @reporter = Reporting::Factory.build(titles: step_classes.map(&:title))
 
-        step_classes.each do |step_class|
-          step = create_step(step_class)
-          before_step_execution(step)
-          execute_step(step)
-          after_step_execution(step)
-        end
+        StepScheduler.new(
+          step_classes:,
+          reporter: @reporter,
+          step_factory: method(:create_step),
+          shard_manager: @shard_manager,
+          budget: Etc.nprocessors - 1, # leave one core for the parent + merges
+          max_parallel_steps:,
+          no_fork:,
+        ).run
       rescue SignalException
         @aborted = true
         exit(130)
       ensure
         Database::IntermediateDB.close
+        @shard_manager&.cleanup
         # Restore the terminal (and flush the final frame) before printing the
         # run-level abort line, so it lands cleanly below the reporter output
         # instead of fighting the live region.
@@ -45,7 +49,7 @@ module Migrations
       end
 
       def steps
-        step_class = StepBase
+        step_class = Step
         current_module = self.class.name.deconstantize.constantize
 
         classes =
@@ -61,25 +65,6 @@ module Migrations
         TopologicalSorter.sort(classes)
       end
 
-      def before_step_execution(step)
-        # do nothing
-      end
-
-      def execute_step(step)
-        executor =
-          if step.is_a?(ProgressStep)
-            ProgressStepExecutor.new(step, pool: @worker_pool, reporter: @reporter)
-          else
-            StepExecutor.new(step, reporter: @reporter)
-          end
-
-        executor.execute
-      end
-
-      def after_step_execution(step)
-        # do nothing
-      end
-
       def step_args(step_class)
         {}
       end
@@ -90,8 +75,8 @@ module Migrations
         db_path = File.expand_path(settings[:intermediate_db][:path], Migrations.root_path)
         Database.migrate(db_path, migrations_path: Database::INTERMEDIATE_DB_SCHEMA_PATH)
 
-        db = Database.connect(db_path)
-        Database::IntermediateDB.setup(db)
+        @shard_manager = ShardManager.new(canonical_path: db_path)
+        Database::IntermediateDB.setup(Database::DbWriter.new(path: db_path))
       end
 
       def create_step(step_class)

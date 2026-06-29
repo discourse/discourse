@@ -26,8 +26,9 @@ module Migrations
         # Columns of a live row. ETA is left-aligned (it has its own "ETA " label);
         # the rest are right-aligned. A bold percent takes the place of a progress
         # bar: it lines up in columns, works for several steps at once, and avoids
-        # block characters that don't look the same on every terminal.
-        COLUMNS = %i[percent count elapsed eta rate].freeze
+        # block characters that don't look the same on every terminal. Concurrency
+        # sits last so it can't shift the columns the collapsed (finished) rows share.
+        COLUMNS = %i[percent count elapsed eta rate concurrency].freeze
         LEFT_ALIGNED = %i[eta].freeze
 
         Step =
@@ -44,6 +45,7 @@ module Migrations
             :rate,
             :rate_sampled_at,
             :rate_sampled_current,
+            :concurrency,
             keyword_init: true,
           )
 
@@ -76,6 +78,7 @@ module Migrations
             elapsed: TIME_WIDTH,
             eta: 0,
             rate: 0,
+            concurrency: 0,
           }
         end
 
@@ -149,7 +152,12 @@ module Migrations
               rate: nil,
               rate_sampled_at: nil,
               rate_sampled_current: 0,
+              concurrency: 1,
             )
+          when :concurrency
+            _, id, count = event
+            step = @steps[id]
+            step.concurrency = count if step
           when :progress_begin
             _, id, max_progress = event
             step = @steps[id]
@@ -293,6 +301,7 @@ module Migrations
             elapsed: "",
             eta: "",
             rate: "",
+            concurrency: concurrency_cell(step.concurrency),
             annot: "",
           }
 
@@ -456,6 +465,14 @@ module Migrations
 
         def spinner
           SPINNER[(now * SPINNER_RATE).to_i % SPINNER.size]
+        end
+
+        def concurrency_cell(count)
+          return "" if count <= 1
+
+          label = "#{count}×"
+          return label unless @color
+          "#{Ansi::MAGENTA}#{label}#{Ansi::RESET}"
         end
 
         def terminal_columns

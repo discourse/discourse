@@ -66,6 +66,10 @@ module Migrations
         @mutex.synchronize { @steps[id].total = max_progress if @steps[id] }
       end
 
+      def report_concurrency(_id, _count)
+        # No-op: the plain log skips the live fork/CPU count.
+      end
+
       def report_progress(id, current, skip_count, warning_count, error_count)
         @mutex.synchronize do
           step = @steps[id]

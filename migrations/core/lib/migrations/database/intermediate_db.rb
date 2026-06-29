@@ -23,6 +23,10 @@ module Migrations
         @db.insert(sql, parameters)
       end
 
+      def self.merge_shard(shard_path)
+        @db.merge_shard(shard_path)
+      end
+
       def self.close
         @db.close if @db
       end

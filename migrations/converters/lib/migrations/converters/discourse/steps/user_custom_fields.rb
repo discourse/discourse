@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class UserCustomFields < Conversion::ProgressStep
+      class UserCustomFields < Conversion::Step
         source do
           def max_progress
             @source_db.count <<~SQL

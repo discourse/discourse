@@ -161,7 +161,7 @@ RSpec.describe Migrations::Database do
           number: 123,
           date: DateTime.new(2023, 10, 5, 17, 30, 0),
         ),
-      ).to eq(%q|{"text":"foo","number":123,"date":"2023-10-05T17:30:00.000+00:00"}|)
+      ).to eq(%q|{"text":"foo","number":123,"date":"2023-10-05T17:30:00+00:00"}|)
     end
 
     it "returns nil for nil input" do
