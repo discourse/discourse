@@ -617,6 +617,13 @@ hu:
       trust_level_2: "bizalmi_szint_2"
       trust_level_3: "bizalmi_szint_3"
       trust_level_4: "bizalmi_szint_4"
+    default_full_names:
+      everyone: "Mindenki"
+      admins: "Adminisztrátorok"
+      moderators: "Moderátorok"
+      staff: "Stáb"
+      anonymous_users: "Névtelen felhasználók"
+      logged_in_users: "Bejelentkezett felhasználók"
     default_descriptions:
       everyone: "Automatikus csoport, beleértve az összes tagot"
       staff: "Automatikus csoport, beleértve az adminokat és moderátorokat"

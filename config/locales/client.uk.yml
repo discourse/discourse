@@ -51,6 +51,10 @@ uk:
         no_visible_children_hint: "Цей блок контейнера не рендериться, оскільки жоден з його дочірніх блоків не є видимим."
         condition_failed_hint: "Цей блок не відтворюється, оскільки його умови не виконані."
         head_hidden_tail_hint: "Цей блок не відтворюється, оскільки інший блок був відтворений спочатку в контейнері `head`."
+    access_control:
+      manage:
+        access_permission_editor: "Редактор"
+        access_permission_remove: "Вилучити"
     carousel:
       go_to_slide: "Перейти до слайда %{index}"
       previous: "Попередній слайд"
@@ -516,6 +520,9 @@ uk:
     age: "Вік"
     joined: "Приєднався(-лась)"
     admin_title: "Адміністратор"
+    advanced_mode_toggle:
+      advanced_mode: "Розширений режим"
+      simple_mode: "Простий режим"
     show_more: "показати більше"
     show_help: "Параметри"
     links: "Посилання"
@@ -4349,47 +4356,6 @@ uk:
       read_more: "Хочете прочитати більше? <a href='%{categoryLink}'>Перегляньте всі категорії</a> або <a href='%{latestLink}'>перегляньте останні теми</a>."
       unread_indicator: "Поки що ніхто з учасників не прочитав останній допис цієї теми."
       participant_groups: "Групи учасників"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Є <a href="{basePath}/unread"># непрочитана</a>}
-                 few {Є <a href="{basePath}/unread"># непрочитані</a>}
-                 many {Є <a href="{basePath}/unread"># непрочитані</a>}
-              other {Є <a href="{basePath}/unread"># непрочитані</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { і <a href="{basePath}/new"># залишилася нова</a> тема,}
-                 few { і <a href="{basePath}/new"># нові</a> теми залишилися,}
-                 many { і <a href="{basePath}/new"># нові</a> теми залишилися,}
-              other { і <a href="{basePath}/new"># нові</a> теми залишилися,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Залишилася <a href="{basePath}/unread"># непрочитана</a> тема,}
-                 few {Залишилося <a href="{basePath}/unread"># непрочитані</a> теми,}
-                 many {Залишилося <a href="{basePath}/unread"># непрочитані</a> теми,}
-              other {Залишилося <a href="{basePath}/unread"># непрочитані</a> теми,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Залишилася <a href="{basePath}/new"># нова</a> тема,}
-                 few {Залишилося <a href="{basePath}/new"># нових</a> теми,}
-                 many {Залишилося <a href="{basePath}/new"># нові</a> теми,}
-              other {Залишилося <a href="{basePath}/new"># нові</a> теми,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { або перегляньте інші теми в {categoryLink}}
-          false { або <a href="{basePath}/latest">переглянути останні теми</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} відповідь, перейти до першого допису"
         few: "%{count} відповіді, перейти до першого допису"
@@ -5956,7 +5922,6 @@ uk:
         few: "Доступно тільки в категоріях %{categories}."
         many: "Доступно тільки в категоріях %{categories}."
         other: "Доступно тільки в категоріях %{categories}."
-      restricted_to: "Обмежено для"
       no_synonyms: "Цей тег не має синонімів."
       edit_synonyms: "Редагувати синоніми"
       add_synonyms_label: "Додайте синоніми:"
@@ -6796,6 +6761,9 @@ uk:
             opengraph_image:
               title: "Зображення OpenGraph"
               description: "Типове зображення opengraph, використовується, коли на сторінці немає іншого відповідного зображення. Якщо залишити порожнім, буде використовуватися large_icon."
+            og_image_preview:
+              generate: "Згенерувати"
+              topic_id_label: "ID теми"
             x_summary_large_image:
               title: "X підсумкове велике зображення"
               description: "Картка X «підсумкове велике зображення». Якщо залишити порожнім, звичайні метадані картки генеруються за допомогою OpenGraph_Image, якщо це також не файл.svg."
@@ -7131,7 +7099,7 @@ uk:
         stale_data: "Останнім часом не здійснювалось перевірок на наявність оновлень. Перевірте, чи працює sidekiq."
         version_check_pending: "Схоже, ви нещодавно оновилися. Фантастика!"
         installed_version: "Встановлена"
-        latest_version: "Остання"
+        github: "GitHub"
         problems_found: "Кілька порад по вашим поточним налаштуванням сайту"
         dismiss_notice: "Ігнорувати"
         new_features:

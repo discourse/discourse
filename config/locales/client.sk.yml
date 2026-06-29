@@ -22,6 +22,10 @@ sk:
         in_location: "v"
         hidden: "skryté"
         failed: "nepodarilo sa"
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Odstrániť"
     number:
       format:
         separator: ","
@@ -336,6 +340,9 @@ sk:
     age: "Vek"
     joined: "Registrovaný"
     admin_title: "Administrácia"
+    advanced_mode_toggle:
+      advanced_mode: "Pokročilý režim"
+      simple_mode: "Jednoduchý režim"
     show_more: "zobraz viac"
     show_help: "Možnosti"
     links: "Odkazy"
@@ -3648,39 +3655,6 @@ sk:
       read_more: "Chcete si prečítať viac? <a href='%{categoryLink}'>Prezrite si všetky kategórie</a> alebo <a href='%{latestLink}'>najnovšie témy</a>."
       unread_indicator: "Posledný príspevok v tejto téme si zatiaľ neprečítal žiadny člen."
       participant_groups: "Skupiny účastníkov"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Je <a href="{basePath}/unread"># neprečítaná</a>}
-              other {Sú <a href="{basePath}/unread"># neprečítané</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { a <a href="{basePath}/new"># nová</a> téma zostávajúca,}
-              other { a <a href="{basePath}/new"># nové</a> témy zostávajúce,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Je <a href="{basePath}/unread"># neprečítaná</a> téma zostávajúca,}
-              other {Sú <a href="{basePath}/unread"># neprečítané</a> témy zostávajúce,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Je <a href="{basePath}/new"># nová</a> téma zostávajúca,}
-              other {Sú <a href="{basePath}/new"># nové</a> témy zostávajúce,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { alebo prehliadajte ďalšie témy v {categoryLink}}
-          false { alebo <a href="{basePath}/latest">zobraziť najnovšie témy</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} odpoveď, skok na prvý príspevok"
         few: "%{count} odpovedí, skok na prvý príspevok"
@@ -5734,6 +5708,9 @@ sk:
             opengraph_image:
               title: "Obrázok OpenGraph"
               description: "Predvolený obrázok opengraph, ktorý sa používa, ak stránka nemá iný vhodný obrázok. Ak zostane prázdny, použije sa large_icon."
+            og_image_preview:
+              generate: "Generovať"
+              topic_id_label: "ID témy"
             x_summary_large_image:
               title: "X súhrnný veľký obrázok"
               description: "X karta \"súhrnný veľký obrázok\". Ak zostanú prázdne, bežné metadáta karty sa generujú pomocou OpenGraph_image, pokiaľ to nie je zároveň .svg."
@@ -6012,7 +5989,7 @@ sk:
         stale_data: "V poslednej dobe neprebehlo zisťovanie aktualizácií. Uistite sa že je spustený sidekiq."
         version_check_pending: "Vyzerá to, že ste nedávno aktualizovali. Fantastické!"
         installed_version: "Nainštalované"
-        latest_version: "Najnovšie"
+        github: "GitHub"
         problems_found: "Niekoľko rád na základe aktuálnych nastavení vášho webu"
         dismiss_notice: "Ignorovať"
         new_features:
@@ -6641,6 +6618,8 @@ sk:
             initial_members: "Rozšírenie počtu členov"
             initial_members_description: "Počet členov skupiny, ktorí sa majú zobraziť pred pridaním tlačidla Zobraziť viac."
             show_description: "Zahrnúť popis"
+          locale_selector:
+            title: "Jazyk"
           optional: "(nepovinné)"
           update: "Aktualizovať"
           toasts:

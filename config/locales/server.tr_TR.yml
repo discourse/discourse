@@ -620,6 +620,13 @@ tr_TR:
       trust_level_2: "güven_seviyesi_2"
       trust_level_3: "güven_seviyesi_3"
       trust_level_4: "güven_seviyesi_4"
+    default_full_names:
+      everyone: "Herkes"
+      admins: "Yöneticiler"
+      moderators: "Moderatörler"
+      staff: "Personel"
+      anonymous_users: "Anonim kullanıcılar"
+      logged_in_users: "Giriş yapmış kullanıcılar"
     default_descriptions:
       everyone: "Tüm üyeleri içeren otomatik grup"
       staff: "Yöneticiler ve moderatörler dâhil otomatik grup"

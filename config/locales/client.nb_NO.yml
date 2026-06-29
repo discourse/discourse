@@ -21,6 +21,10 @@ nb_NO:
         in_location: "i"
         hidden: "skjult"
         failed: "feilet"
+    access_control:
+      manage:
+        access_permission_editor: "Tekstbehandler"
+        access_permission_remove: "Fjern"
     number:
       format:
         separator: "."
@@ -269,6 +273,9 @@ nb_NO:
     age: "Alder"
     joined: "Ble medlem"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Avansert modus"
+      simple_mode: "Enkel modus"
     show_more: "vis mer"
     show_help: "Alternativer"
     links: "Lenker"
@@ -3009,39 +3016,6 @@ nb_NO:
       read_more: "Vil du lese mer? <a href='%{categoryLink}'>Se alle kategorier</a> eller <a href='%{latestLink}'>se de nyeste emnene</a>."
       unread_indicator: "Ingen medlem har lest den siste posten i dette emnet ennå."
       participant_groups: "Deltakergrupper"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Det er <a href="{basePath}/unread"># ulest</a>}
-              other {Det er <a href="{basePath}/unread"># ulest</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { og <a href="{basePath}/new"># nytt</a> emne igjen,}
-              other { og <a href="{basePath}/new"># nye</a> emner igjen,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Det er <a href="{basePath}/unread"># ulest</a> emne igjen,}
-              other {Det er <a href="{basePath}/unread"># uleste</a> emner igjen,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Det er <a href="{basePath}/new"># nytt</a> emne igjen,}
-              other {Det er <a href="{basePath}/new"># nye</a> emner igjen,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { eller bla gjennom andre emner i {categoryLink}}
-          false { eller <a href="{basePath}/latest">se de nyeste emnene</a>}
-          other {}
-        }
       created_at: "Opprettet: %{date}"
       bumped_at: "Siste: %{date}"
       suggest_create_topic: Klar til å <a href>starte en ny samtale?</a>
@@ -4396,6 +4370,9 @@ nb_NO:
           form:
             mobile: "Mobil"
             email: "E-post"
+            og_image_preview:
+              generate: "Generer API-nøkkel"
+              topic_id_label: "Emne-ID"
         fonts:
           backfill_modal:
             modal_yes: "Ja"
@@ -4499,7 +4476,7 @@ nb_NO:
         no_check_performed: "En sjekk for oppdateringer har ikke blitt utført. Verifiser at sidekiq kjører."
         stale_data: "Det har ikke vært sjekket for oppdateringer på en stund. Sjekk at sidekiq kjører."
         installed_version: "Installert"
-        latest_version: "Siste"
+        github: "GitHub"
         problems_found: "Noen råd basert på gjeldende sideinnstillinger"
         dismiss_notice: "Ignorer"
         new_features:

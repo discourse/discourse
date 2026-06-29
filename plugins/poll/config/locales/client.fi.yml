@@ -155,5 +155,3 @@ fi:
           add: Lisää vaihtoehto
         automatic_close:
           label: Sulje kysely automaattisesti
-        show_advanced: "Näytä lisäasetukset"
-        hide_advanced: "Piilota lisäasetukset"

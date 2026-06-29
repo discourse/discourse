@@ -18,6 +18,10 @@ sl:
         status: "Status"
         hidden: "skrito"
         failed: "spodletelo"
+    access_control:
+      manage:
+        access_permission_editor: "Urednik"
+        access_permission_remove: "Odstrani"
     number:
       format:
         separator: ","
@@ -266,6 +270,9 @@ sl:
     age: "Starost"
     joined: "Pridružen"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Napredni način"
+      simple_mode: "Enostavni način"
     show_more: "Več"
     show_help: "Možnosti"
     links: "Povezave"
@@ -3786,6 +3793,9 @@ sl:
           form:
             mobile: "Mobilno"
             email: "E-naslov"
+            og_image_preview:
+              generate: "Ustvari"
+              topic_id_label: "ID teme"
         fonts:
           backfill_modal:
             modal_yes: "Ja"
@@ -3879,7 +3889,7 @@ sl:
         no_check_performed: "Preverjanje posodobitev se ni izvedlo. Preverite da sidekiq teče."
         stale_data: "Zadnje čase se preverjanje posodobitev ni izvedlo. Preverite ali se sidekiq izvaja."
         installed_version: "Nameščeno"
-        latest_version: "Najnovejše"
+        github: "GitHub"
         problems_found: "Nekaj priporočil glede na vaše trenutne nastavitve strani"
         dismiss_notice: "Prezri"
         new_features:

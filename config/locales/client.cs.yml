@@ -27,6 +27,10 @@ cs:
         in_location: "v"
         hidden: "skrytý"
         failed: "neúspěšný"
+    access_control:
+      manage:
+        access_permission_editor: "Uživatel"
+        access_permission_remove: "Smazat"
     carousel:
       go_to_slide: "Přejít na snímek č. %{index}"
       previous: "Předchozí snímek"
@@ -456,6 +460,9 @@ cs:
     age: "Věk"
     joined: "Účet vytvořen"
     admin_title: "Administrace"
+    advanced_mode_toggle:
+      advanced_mode: "Pokročilý mód"
+      simple_mode: "Jednoduchý mód"
     show_more: "zobrazit více"
     show_help: "Možnosti"
     links: "Odkazy"
@@ -3933,47 +3940,6 @@ cs:
       read_more: "Chcete si přečíst více? <a href='%{categoryLink}'>Projděte všechny kategorie</a> nebo <a href='%{latestLink}'>zobrazte nejnovější témata</a>."
       unread_indicator: "Žádný člen zatím nečetl poslední příspěvek tohoto tématu."
       participant_groups: "Skupiny účastníků"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Zbývá vám <a href="{basePath}/unread"># nepřečtené</a>}
-                 few {Zbývají vám <a href="{basePath}/unread"># nepřečtené</a>}
-                 many {Zbývá vám <a href="{basePath}/unread"># nepřečtených</a>}
-              other {Zbývá vám <a href="{basePath}/unread"># nepřečtených</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { a <a href="{basePath}/new"># nové</a> téma,}
-                 few { a <a href="{basePath}/new"># nová</a> témata,}
-                 many { a <a href="{basePath}/new"># nových</a> témat,}
-              other { a <a href="{basePath}/new"># nových</a> témat,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Zbývá vám <a href="{basePath}/unread"># nepřečtené</a> téma,}
-                 few {Zbývají vám <a href="{basePath}/unread"># nepřečtená</a> témata,}
-                 many {Zbývá vám <a href="{basePath}/unread"># nepřečtených</a> témat,}
-              other {Zbývá vám <a href="{basePath}/unread"># nepřečtených</a> témat,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Zbývá vám <a href="{basePath}/new"># nové</a> téma,}
-                 few {Zbývají vám <a href="{basePath}/new"># nová</a> témata,}
-                 many {Zbývá vám <a href="{basePath}/new"># nových</a> témat,}
-              other {Zbývá vám <a href="{basePath}/new"># nových</a> témat,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { nebo si prohlédněte další témata v kategorii {categoryLink}}
-          false { nebo si <a href="{basePath}/latest">prohlédněte nejnovější témata</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} odpověď, přejít na první příspěvek"
         few: "%{count} odpovědi, přejít na první příspěvek"
@@ -6214,6 +6180,9 @@ cs:
             opengraph_image:
               title: "Obrázek OpenGraph"
               description: "Výchozí obrázek opengraph, který se použije, pokud stránka nemá jiný vhodný obrázek. Pokud zůstane prázdný, použije se large_icon."
+            og_image_preview:
+              generate: "Vygenerovat API klíč"
+              topic_id_label: "ID tématu"
             x_summary_large_image:
               title: "Velký obrázek souhrnu X"
               description: "'summary large image' pro kartu X. Pokud se toto pole ponechá prázdné, budou generována běžná metadata karty pomocí OpenGraph_image, pokud se nejedná zároveň o .svg."
@@ -6534,7 +6503,7 @@ cs:
         stale_data: "V poslední době neproběhal kontrola aktualizací. Ujistěte se, že běží služby sidekiq."
         version_check_pending: "Zdá se, že jste nedávno aktualizovali. Báječné!"
         installed_version: "Nainstalováno"
-        latest_version: "Poslední verze"
+        github: "GitHub"
         problems_found: "Několik rad na základě vašeho aktuálního nastavení webu"
         dismiss_notice: "ignorovat"
         new_features:
@@ -7168,6 +7137,8 @@ cs:
             initial_members: "Viditelní členové"
             initial_members_description: "Počet členů skupiny, který se má zobrazit před přidáním tlačítka Zobrazit více."
             show_description: "Zahrnout popis"
+          locale_selector:
+            title: "Jazyk"
           optional: "(volitelné)"
           update: "Aktualizovat"
           toasts:

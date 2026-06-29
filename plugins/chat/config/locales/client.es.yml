@@ -320,8 +320,6 @@ es:
         title: "Sonido de notificación de chat de escritorio"
       sounds:
         none: "Ninguno"
-        bell: "Campana"
-        ding: "Timbre"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Adjuntar un archivo"
@@ -480,6 +478,10 @@ es:
           other: "<span>Tú, %{commaSeparatedUsernames} y %{count} otros reaccionasteis con </span>:%{emoji}:"
         single_user: "<span>%{username} reaccionó con </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} y %{username} reaccionaron con </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} reacción"
+            other: "%{count} reacciones"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} y otro reaccionaron con </span>:%{emoji}:"
           other: "<span>%{commaSeparatedUsernames} y %{count} otros reaccionaron con </span>:%{emoji}:"

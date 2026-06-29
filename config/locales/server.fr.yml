@@ -608,6 +608,13 @@ fr:
       trust_level_2: "niveau_confiance_2"
       trust_level_3: "niveau_confiance_3"
       trust_level_4: "niveau_confiance_4"
+    default_full_names:
+      everyone: "Tout le monde"
+      admins: "Administrateurs "
+      moderators: "Modérateurs"
+      staff: "Responsable"
+      anonymous_users: "Utilisateurs anonymes"
+      logged_in_users: "Utilisateurs connectés"
     default_descriptions:
       everyone: "Groupe automatique comprenant tous les membres"
       staff: "Groupe automatique comprenant les administrateurs et les modérateurs"

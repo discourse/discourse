@@ -565,6 +565,13 @@ ja:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "全員"
+      admins: "管理者"
+      moderators: "モデレーター"
+      staff: "スタッフ"
+      anonymous_users: "匿名ユーザー"
+      logged_in_users: "ログインユーザー"
     default_descriptions:
       everyone: "すべてのメンバーを含む自動グループ"
       staff: "管理者とモデレーターを含む自動グループ"

@@ -518,7 +518,6 @@ uk:
         create_event_title: "Створити подію"
         update_event_title: "Редагувати подію"
         advanced_settings_title: "Розширені налаштування"
-        advanced_settings: "Розширені налаштування"
         confirm_delete: "Ви впевнені, що хочете видалити цю подію?"
         confirm_close: "Ви впевнені, що хочете закрити цю подію?"
         confirm_open: "Ви впевнені, що хочете відкрити цю подію?"
@@ -580,11 +579,7 @@ uk:
         allow_chat:
           label: "Інтеграція з чатом"
           checkbox_label: "Створення та керування каналом чату для конкретних подій"
-        url:
-          label: "Посилання"
-          placeholder: "Опціонально"
         location:
-          label: "Місцезнаходження"
           placeholder: "Додайте місце розташування, посилання або щось інше."
         description:
           label: "Опис"

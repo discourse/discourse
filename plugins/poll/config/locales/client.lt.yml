@@ -100,5 +100,3 @@ lt:
           add: Pridėti parinktį
         automatic_close:
           label: Automatiškai uždaryti apklausą
-        show_advanced: "Rodyti išplėstines parinktis"
-        hide_advanced: "Slėpti išplėstines parinktis"

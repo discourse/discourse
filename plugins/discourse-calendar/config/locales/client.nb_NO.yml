@@ -84,11 +84,6 @@ nb_NO:
           every_day: "Hver dag"
         attendance:
           none: "Ingen"
-        url:
-          label: "URL"
-          placeholder: "Valgfritt"
-        location:
-          label: "Sted"
         description:
           label: "Beskrivelse"
         event_type:

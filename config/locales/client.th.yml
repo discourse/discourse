@@ -19,6 +19,9 @@ th:
         hidden: "ถูกซ่อน"
         not_registered: "ไม่ได้ลงทะเบียน"
         failed: "ล้มเหลว"
+    access_control:
+      manage:
+        access_permission_remove: "ลบ"
     number:
       format:
         separator: "."
@@ -273,6 +276,9 @@ th:
     age: "อายุ"
     joined: "เข้าร่วมแล้ว"
     admin_title: "ผู้ดูแลระบบ"
+    advanced_mode_toggle:
+      advanced_mode: "โหมดขั้นสูง"
+      simple_mode: "โหมดอย่างง่าย"
     show_more: "แสดงเพิ่มเติม"
     show_help: "ตัวเลือก"
     links: "ลิงก์"
@@ -2679,6 +2685,8 @@ th:
           form:
             mobile: "โทรศัพท์"
             email: "อีเมล"
+            og_image_preview:
+              topic_id_label: "หมายเลขกระทู้"
         fonts:
           backfill_modal:
             modal_yes: "ใช่"
@@ -2748,7 +2756,7 @@ th:
         critical_available: "การอัพเดตที่สำคัญมีให้อัพเดต"
         updates_available: "มีการอัปเดต"
         installed_version: "ติดตั้งแล้ว"
-        latest_version: "ล่าสุด"
+        github: "กิตฮับ"
         dismiss_notice: "ไม่สนใจ"
         new_features:
           learn_more: "เรียนรู้เพิ่มเติม..."

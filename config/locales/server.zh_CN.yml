@@ -573,6 +573,13 @@ zh_CN:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "所有人"
+      admins: "管理员"
+      moderators: "版主"
+      staff: "管理人员"
+      anonymous_users: "匿名用户"
+      logged_in_users: "登录用户"
     default_descriptions:
       everyone: "包括所有成员的自动群组"
       staff: "包括管理员和版主的自动群组"
