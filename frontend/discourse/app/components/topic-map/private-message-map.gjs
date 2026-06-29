@@ -72,7 +72,7 @@ class PmMapUserGroup extends Component {
   }
 
   <template>
-    <div class="user group" data-id={{@model.id}}>
+    <div class="user group btn-default" data-id={{@model.id}}>
       <a href={{this.groupUrl}} class="group-link">
         {{dIcon "users"}}
         <span class="group-name">{{@model.name}}</span>
@@ -95,7 +95,7 @@ class PmRemoveGroupLink extends Component {
 
   <template>
     <DButton
-      class="remove-invited btn-small"
+      class="btn-transparent remove-invited btn-small"
       @action={{this.removeGroup}}
       @icon="xmark"
     />
@@ -150,7 +150,7 @@ class PmRemoveLink extends Component {
 
   <template>
     <DButton
-      class="remove-invited btn-small"
+      class="btn-transparent remove-invited btn-small"
       @action={{this.removeUser}}
       @icon="xmark"
     />
