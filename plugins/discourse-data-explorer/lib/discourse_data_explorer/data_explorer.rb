@@ -5,6 +5,15 @@ module DiscourseDataExplorer
     # Used for ftype calls, see https://www.rubydoc.info/gems/pg/0.17.1/PG%2FResult:ftype
     # and /usr/include/postgresql/server/catalog/pg_type_d.h
     PG_TYPE_OID_JSON = 114
+    PG_TYPE_OID_JSON_ARRAY = 199
+    PG_TYPE_OID_JSONB = 3802
+    PG_TYPE_OID_JSONB_ARRAY = 3807
+    PG_TYPE_OIDS_JSON = [
+      PG_TYPE_OID_JSON,
+      PG_TYPE_OID_JSON_ARRAY,
+      PG_TYPE_OID_JSONB,
+      PG_TYPE_OID_JSONB_ARRAY,
+    ]
 
     # Run a data explorer query on the currently connected database.
     #
@@ -177,7 +186,8 @@ module DiscourseDataExplorer
           needed_classes[cls] << idx
         elsif col =~ /^\w+_url$/
           col_map[idx] = "url"
-        elsif col =~ /^\w+_payload$/ || col == "payload" || pg_result.ftype(idx) == PG_TYPE_OID_JSON
+        elsif col =~ /^\w+_payload$/ || col == "payload" ||
+              PG_TYPE_OIDS_JSON.include?(pg_result.ftype(idx))
           col_map[idx] = "json"
         end
       end
