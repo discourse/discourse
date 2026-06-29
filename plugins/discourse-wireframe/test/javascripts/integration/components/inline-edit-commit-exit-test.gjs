@@ -86,7 +86,7 @@ module(
       logIn(owner);
       editor.enter();
 
-      const inner = editor.layoutQuery.readResolvedLayout(OUTLET)[0];
+      const inner = editor.wireframeLayoutQuery.readResolvedLayout(OUTLET)[0];
       return {
         editor,
         inlineEdit,
@@ -103,9 +103,8 @@ module(
     }
 
     function argOf(editor, key, name) {
-      return editor.layoutQuery.findEntryAndOutletSync(key)?.entry?.args?.[
-        name
-      ];
+      return editor.wireframeLayoutQuery.findEntryAndOutletSync(key)?.entry
+        ?.args?.[name];
     }
 
     test("Tab walks to the next rich-inline field on the same block", async function (assert) {

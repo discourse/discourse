@@ -70,6 +70,7 @@ export default class ImageArgOverlay extends Component {
   @service wireframe;
   @service wireframeDragOverlay;
   @service wireframeImageUpload;
+  @service wireframeLayoutQuery;
   @service wireframeRevision;
 
   /**
@@ -660,7 +661,7 @@ export default class ImageArgOverlay extends Component {
   }
 
   #liveValue() {
-    const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(
+    const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
     return entry?.args?.[this.args.argName] ?? null;

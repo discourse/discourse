@@ -18,11 +18,13 @@ const OUTLET = "homepage-blocks";
 // After `enter()` the outlet is wrapped in a single root `layout`; its first
 // child is the tabs block under test.
 function tabsEntry(editor) {
-  return editor.layoutQuery.readResolvedLayout(OUTLET)?.[0]?.children?.[0];
+  return editor.wireframeLayoutQuery.readResolvedLayout(OUTLET)?.[0]
+    ?.children?.[0];
 }
 
 function panelBlockName(editor, panel) {
-  return editor.layoutQuery.lookupBlockMetadata(panel.block)?.blockName;
+  return editor.wireframeLayoutQuery.lookupBlockMetadata(panel.block)
+    ?.blockName;
 }
 
 module(

@@ -103,7 +103,7 @@ module(
 
       const call = (clientY) =>
         computeDescriptor({
-          wireframe,
+          layoutQuery: wireframe.layoutQuery,
           dropAuthority: wireframe.dropAuthority,
           container,
           input: { clientX: aWrap.left + aWrap.width / 2, clientY },
@@ -140,7 +140,7 @@ module(
 
       //   ◆ 10% into A → before the first child (gap 0)
       const start = computeDescriptor({
-        wireframe,
+        layoutQuery: wireframe.layoutQuery,
         dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(aWrap, "y", 0.1),
@@ -155,7 +155,7 @@ module(
 
       //   ◆ 90% down B → after the last child (gap 2)
       const end = computeDescriptor({
-        wireframe,
+        layoutQuery: wireframe.layoutQuery,
         dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(bWrap, "y", 0.9),
@@ -177,7 +177,7 @@ module(
 
       //   drag B, hover the A|B seam → B is already there → null
       const descriptor = computeDescriptor({
-        wireframe,
+        layoutQuery: wireframe.layoutQuery,
         dropAuthority: wireframe.dropAuthority,
         container,
         input: { clientX: aWrap.left + 5, clientY: aWrap.bottom },
@@ -227,7 +227,7 @@ module(
 
       const call = (clientX) =>
         computeDescriptor({
-          wireframe,
+          layoutQuery: wireframe.layoutQuery,
           dropAuthority: wireframe.dropAuthority,
           container,
           input: { clientX, clientY: aWrap.top + aWrap.height / 2 },
@@ -280,7 +280,7 @@ module(
       const wrap = container.children[0].getBoundingClientRect();
 
       const descriptor = computeDescriptor({
-        wireframe,
+        layoutQuery: wireframe.layoutQuery,
         dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(wrap, "y", 0.5),
@@ -320,7 +320,7 @@ module(
       const wrap = container.children[0].getBoundingClientRect();
 
       const descriptor = computeDescriptor({
-        wireframe,
+        layoutQuery: wireframe.layoutQuery,
         dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(wrap, "y", 0.5),
@@ -356,7 +356,7 @@ module(
       const wrap = container.children[0].getBoundingClientRect();
 
       const descriptor = computeDescriptor({
-        wireframe,
+        layoutQuery: wireframe.layoutQuery,
         dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(wrap, "y", 0.5),
@@ -447,7 +447,7 @@ module(
       const aWrap = container.children[0].getBoundingClientRect();
 
       const seam = computeDescriptor({
-        wireframe,
+        layoutQuery: wireframe.layoutQuery,
         dropAuthority: wireframe.dropAuthority,
         container,
         input: { clientX: aWrap.right, clientY: aWrap.top + aWrap.height / 2 },
@@ -472,7 +472,7 @@ module(
       const cWrap = container.children[2].getBoundingClientRect();
 
       const end = computeDescriptor({
-        wireframe,
+        layoutQuery: wireframe.layoutQuery,
         dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(cWrap, "x", 0.9),
@@ -598,7 +598,7 @@ module(
       const wrap = container.children[0].getBoundingClientRect();
 
       const descriptor = computeDescriptor({
-        wireframe,
+        layoutQuery: wireframe.layoutQuery,
         dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(wrap, "x", 0.5),
@@ -640,7 +640,7 @@ module(
       // First third of Tab 2 → the T1|T2 seam → insert before the trailing
       // proxy (P2), i.e. a new tab between tabs 1 and 2.
       const seam = computeDescriptor({
-        wireframe,
+        layoutQuery: wireframe.layoutQuery,
         dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(t2, "x", 0.1),
@@ -661,7 +661,7 @@ module(
       // Cursor past the last proxy (where the "+" sits) → insert after the last
       // tab.
       const end = computeDescriptor({
-        wireframe,
+        layoutQuery: wireframe.layoutQuery,
         dropAuthority: wireframe.dropAuthority,
         container,
         input: { clientX: t2.right + 20, clientY: t2.top + t2.height / 2 },
@@ -687,7 +687,7 @@ module(
       const t1 = container.children[0].getBoundingClientRect();
 
       const middle = computeDescriptor({
-        wireframe,
+        layoutQuery: wireframe.layoutQuery,
         dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(t1, "x", 0.5),
@@ -715,7 +715,7 @@ module(
       const rect = container.getBoundingClientRect();
 
       const descriptor = computeDescriptor({
-        wireframe,
+        layoutQuery: wireframe.layoutQuery,
         dropAuthority: wireframe.dropAuthority,
         container,
         input: { clientX: rect.left + 10, clientY: rect.top + rect.height / 2 },

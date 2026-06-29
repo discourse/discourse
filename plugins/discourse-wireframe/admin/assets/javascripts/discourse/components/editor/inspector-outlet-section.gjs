@@ -17,10 +17,11 @@ import { OUTLET_STATE } from "../../services/wireframe-layout-query";
  */
 export default class InspectorOutletSection extends Component {
   @service wireframe;
+  @service wireframeLayoutQuery;
   @service wireframeTheme;
 
   get state() {
-    return this.wireframe.layoutQuery.outletState(this.args.outletName);
+    return this.wireframeLayoutQuery.outletState(this.args.outletName);
   }
 
   get isEditing() {

@@ -34,7 +34,7 @@ class NavTestTile extends Component {
 // blocks and change an arg, then let the debounced write flush.
 async function editTitle(editor, outlet, value) {
   const tile =
-    editor.layoutQuery.readResolvedLayout(outlet)?.[0]?.children?.[0];
+    editor.wireframeLayoutQuery.readResolvedLayout(outlet)?.[0]?.children?.[0];
   editor.selectBlock({
     key: `wf:nav-test-tile:${tile.__stableKey}`,
     name: "wf:nav-test-tile",

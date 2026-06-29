@@ -12,7 +12,6 @@ import InspectorPanel from "discourse/plugins/discourse-wireframe/discourse/comp
  * test can flip a selection into "this is the outlet" mode.
  */
 class StubWireframeService extends Service {
-  // The query layer moved to a leaf the editor exposes as layoutQuery; returning
   #blockData;
 
   constructor(owner, blockData) {
@@ -20,7 +19,8 @@ class StubWireframeService extends Service {
     this.#blockData = blockData;
   }
 
-  // this makes wireframe.layoutQuery.<query> resolve to the stubbed methods below.
+  // The stub is registered as service:wireframe-layout-query too, so a
+  // component injecting wireframeLayoutQuery resolves these query methods.
   get layoutQuery() {
     return this;
   }
@@ -107,6 +107,10 @@ function stubWireframe(owner, blockData) {
   const stub = new StubWireframeService(owner, blockData);
   owner.unregister("service:wireframe");
   owner.register("service:wireframe", stub, { instantiate: false });
+  owner.unregister("service:wireframe-layout-query");
+  owner.register("service:wireframe-layout-query", stub, {
+    instantiate: false,
+  });
   // The layout form reads grid-shape helpers + writes args through the peer
   // services; point them at the same stub so its inert defaults/recorders apply.
   owner.unregister("service:wireframe-grid-template");

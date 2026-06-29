@@ -13,7 +13,6 @@ import InspectorRawJson from "discourse/plugins/discourse-wireframe/discourse/co
  * default so a single stub can back several different component renders.
  */
 class StubWireframeService extends Service {
-  // The query layer moved to a leaf the editor exposes as layoutQuery; returning
   #blockData;
 
   constructor(owner, blockData) {
@@ -24,7 +23,8 @@ class StubWireframeService extends Service {
     this.removeBlockCalls = [];
   }
 
-  // this makes wireframe.layoutQuery.<query> resolve to the stubbed methods below.
+  // The stub is registered as service:wireframe-layout-query too, so a
+  // component injecting wireframeLayoutQuery resolves these query methods.
   get layoutQuery() {
     return this;
   }
@@ -96,6 +96,10 @@ function stubWireframe(owner, blockData) {
   owner.unregister("service:wireframe");
   const stub = new StubWireframeService(owner, blockData);
   owner.register("service:wireframe", stub, { instantiate: false });
+  owner.unregister("service:wireframe-layout-query");
+  owner.register("service:wireframe-layout-query", stub, {
+    instantiate: false,
+  });
   // The inspector removes through the injected block-mutations service; back it
   // with the same stub so `removeBlock` still records onto `removeBlockCalls`.
   owner.unregister("service:wireframe-block-mutations");

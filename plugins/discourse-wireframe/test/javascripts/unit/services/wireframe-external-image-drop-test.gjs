@@ -32,7 +32,9 @@ class TestTile extends Component {
 }
 
 function outletChildren(editor, outlet = "homepage-blocks") {
-  return editor.layoutQuery.readResolvedLayout(outlet)?.[0]?.children ?? [];
+  return (
+    editor.wireframeLayoutQuery.readResolvedLayout(outlet)?.[0]?.children ?? []
+  );
 }
 
 // Stands in for the descriptor the dragover handlers publish — an insert of

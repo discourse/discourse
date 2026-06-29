@@ -273,18 +273,6 @@ export default class WireframeService extends Service {
     );
   }
 
-  /**
-   * The outlet/layout query service (entry/outlet lookups, block metadata,
-   * outlet state, grid/composite predicates, outlet-root identity). Re-exposed
-   * here so internal `this.layoutQuery.X` and external `wireframe.layoutQuery.X`
-   * keep working without injecting the service directly.
-   *
-   * @returns {import("./wireframe-layout-query").default}
-   */
-  get layoutQuery() {
-    return this.wireframeLayoutQuery;
-  }
-
   /* Selection facade — the block-selection concern lives on
    * `wireframeSelection`. These delegators keep every external consumer
    * (panels, chrome, toolbar) and every kernel-internal reader unchanged
@@ -542,12 +530,12 @@ export default class WireframeService extends Service {
    */
   #outletHasUnsavedDraftEdits(outletName) {
     const current = this.#serializeBaseline(
-      this.layoutQuery.readResolvedLayout(outletName)
+      this.wireframeLayoutQuery.readResolvedLayout(outletName)
     );
     const baseline = this.#persistedDraftLayouts.has(outletName)
       ? this.#persistedDraftLayouts.get(outletName)
       : this.#serializeBaseline(
-          this.layoutQuery.readResolvedLayout(outletName, {
+          this.wireframeLayoutQuery.readResolvedLayout(outletName, {
             ignoreSessionDraft: true,
           })
         );
@@ -695,7 +683,7 @@ export default class WireframeService extends Service {
     for (const outletName of draftedOutlets) {
       _clearLayoutLayer(outletName, LAYOUT_LAYERS.SESSION_DRAFT);
     }
-    this.layoutQuery.clearOutletRoots();
+    this.wireframeLayoutQuery.clearOutletRoots();
     // Invalidate any in-flight draft hydration and drop queued stale prompts.
     this.#enterGeneration++;
     this.#staleDraftQueue.length = 0;
@@ -906,14 +894,16 @@ export default class WireframeService extends Service {
     if (!this.selectedBlockKey || !namespace || !name) {
       return false;
     }
-    const located = this.layoutQuery.findEntryAndOutletSync(
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(
       this.selectedBlockKey
     );
     if (!located) {
       return false;
     }
     return this.recordStructural([located.outletName], () => {
-      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
+      const layout = this.wireframeLayoutQuery.readResolvedLayout(
+        located.outletName
+      );
       if (!layout) {
         return false;
       }
@@ -1011,7 +1001,8 @@ export default class WireframeService extends Service {
   async resetToDefault(outletName) {
     const owner = this.wireframeTheme.outletOwner(outletName);
     if (
-      this.layoutQuery.outletState(outletName) !== OUTLET_STATE.PUBLISHED ||
+      this.wireframeLayoutQuery.outletState(outletName) !==
+        OUTLET_STATE.PUBLISHED ||
       owner.isGit
     ) {
       return false;
@@ -1117,7 +1108,9 @@ export default class WireframeService extends Service {
     // outlet reads as having no unsaved draft edits until the next change.
     this.#persistedDraftLayouts.set(
       outletName,
-      this.#serializeBaseline(this.layoutQuery.readResolvedLayout(outletName))
+      this.#serializeBaseline(
+        this.wireframeLayoutQuery.readResolvedLayout(outletName)
+      )
     );
   }
 
@@ -1438,10 +1431,13 @@ export default class WireframeService extends Service {
       // A LOCKED outlet is owned by a non-overridable programmatic layout: it
       // stays read-only, so never seed a draft for it (the outline still lists
       // it via `editableOutlets`, but the chrome marks it non-editable).
-      if (this.layoutQuery.outletState(outletName) === OUTLET_STATE.LOCKED) {
+      if (
+        this.wireframeLayoutQuery.outletState(outletName) ===
+        OUTLET_STATE.LOCKED
+      ) {
         continue;
       }
-      const layout = this.layoutQuery.readResolvedLayout(outletName);
+      const layout = this.wireframeLayoutQuery.readResolvedLayout(outletName);
       // Outlets that are mounted but have no registered layout get an
       // empty draft seeded here, so the outline lists them with zero
       // rows and the canvas accepts drops on the outlet boundary
@@ -1459,7 +1455,7 @@ export default class WireframeService extends Service {
       // up during editing.
       const draftLayout = normalizeImplicitChildren(
         wrapAsOutletRoot(layout ? cloneLayoutForDraft(layout) : []),
-        (ref) => this.layoutQuery.lookupBlockMetadata(ref)
+        (ref) => this.wireframeLayoutQuery.lookupBlockMetadata(ref)
       );
       _setLayoutLayer(
         outletName,
@@ -1477,7 +1473,7 @@ export default class WireframeService extends Service {
       materialized++;
       // Record the root layout's key (minted by the publish above) so
       // selection / chrome can recognise it as the outlet.
-      this.layoutQuery.recordOutletRoot(outletName);
+      this.wireframeLayoutQuery.recordOutletRoot(outletName);
       // Rollback target for `resetAll()`. Cloned from the just-published
       // draft (not the pre-wrap layout) so it carries the normalised shape
       // and the minted root `__stableKey` — that keeps the recorded root key
@@ -1486,7 +1482,7 @@ export default class WireframeService extends Service {
       this.wireframeEditEngine.captureBaseline(
         outletName,
         cloneLayoutForDraft(
-          this.layoutQuery.readResolvedLayout(outletName) ?? []
+          this.wireframeLayoutQuery.readResolvedLayout(outletName) ?? []
         )
       );
     }
@@ -1599,7 +1595,7 @@ export default class WireframeService extends Service {
   #applyDraftToOutlet(outlet, layout) {
     const draftLayout = normalizeImplicitChildren(
       wrapAsOutletRoot(cloneLayoutForDraft(layout ?? [])),
-      (ref) => this.layoutQuery.lookupBlockMetadata(ref)
+      (ref) => this.wireframeLayoutQuery.lookupBlockMetadata(ref)
     );
     _setLayoutLayer(
       outlet,
@@ -1608,13 +1604,15 @@ export default class WireframeService extends Service {
       getOwner(this),
       { permissive: true }
     );
-    this.layoutQuery.recordOutletRoot(outlet);
+    this.wireframeLayoutQuery.recordOutletRoot(outlet);
     this.wireframeEditEngine.markOutletStructurallyEdited(outlet);
     // Record what the saved draft holds, so an edit that returns the canvas to the
     // published layout is still recognized as differing from the persisted draft.
     this.#persistedDraftLayouts.set(
       outlet,
-      this.#serializeBaseline(this.layoutQuery.readResolvedLayout(outlet))
+      this.#serializeBaseline(
+        this.wireframeLayoutQuery.readResolvedLayout(outlet)
+      )
     );
   }
 

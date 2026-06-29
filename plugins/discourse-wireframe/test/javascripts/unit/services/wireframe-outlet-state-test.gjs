@@ -52,10 +52,12 @@ module(
       await _renderBlocks("homepage-blocks", tile("Seed"), getOwner(this));
       await settled();
       assert.strictEqual(
-        this.editor.layoutQuery.outletState("homepage-blocks"),
+        this.editor.wireframeLayoutQuery.outletState("homepage-blocks"),
         OUTLET_STATE.DEFAULT
       );
-      assert.true(this.editor.layoutQuery.isOutletEditable("homepage-blocks"));
+      assert.true(
+        this.editor.wireframeLayoutQuery.isOutletEditable("homepage-blocks")
+      );
     });
 
     test("a non-overridable code layout resolves to LOCKED", async function (assert) {
@@ -64,10 +66,12 @@ module(
       });
       await settled();
       assert.strictEqual(
-        this.editor.layoutQuery.outletState("homepage-blocks"),
+        this.editor.wireframeLayoutQuery.outletState("homepage-blocks"),
         OUTLET_STATE.LOCKED
       );
-      assert.false(this.editor.layoutQuery.isOutletEditable("homepage-blocks"));
+      assert.false(
+        this.editor.wireframeLayoutQuery.isOutletEditable("homepage-blocks")
+      );
     });
 
     test("a theme field resolves to PUBLISHED with the owning theme", async function (assert) {
@@ -84,7 +88,7 @@ module(
       await settled();
 
       assert.strictEqual(
-        this.editor.layoutQuery.outletState("homepage-blocks"),
+        this.editor.wireframeLayoutQuery.outletState("homepage-blocks"),
         OUTLET_STATE.PUBLISHED
       );
       const owner = this.theme.outletOwner("homepage-blocks");
@@ -113,7 +117,7 @@ module(
       // The draft wins live resolution, but the state reflects the published
       // source underneath it.
       assert.strictEqual(
-        this.editor.layoutQuery.outletState("homepage-blocks"),
+        this.editor.wireframeLayoutQuery.outletState("homepage-blocks"),
         OUTLET_STATE.PUBLISHED
       );
     });
@@ -182,7 +186,7 @@ module(
       await _renderBlocks("homepage-blocks", tile("Seed"), getOwner(this));
       await settled();
       assert.strictEqual(
-        this.editor.layoutQuery.outletState("homepage-blocks"),
+        this.editor.wireframeLayoutQuery.outletState("homepage-blocks"),
         OUTLET_STATE.DEFAULT
       );
 

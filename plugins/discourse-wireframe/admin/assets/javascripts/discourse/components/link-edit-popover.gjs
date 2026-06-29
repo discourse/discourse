@@ -38,7 +38,7 @@ import { i18n } from "discourse-i18n";
  * edited where they live.
  */
 export default class LinkEditPopover extends Component {
-  @service wireframe;
+  @service wireframeLayoutQuery;
   @service wireframeLinkEdit;
 
   /**
@@ -79,7 +79,7 @@ export default class LinkEditPopover extends Component {
     if (!blockKey || !argName) {
       return "";
     }
-    const located = this.wireframe.layoutQuery.findEntryAndOutletSync(blockKey);
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(blockKey);
     return located?.entry?.args?.[argName] ?? "";
   }
 

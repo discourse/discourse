@@ -31,6 +31,7 @@ import { OUTLET_STATE } from "../../services/wireframe-layout-query";
 export default class PublishReviewDrawer extends Component {
   @service wireframe;
   @service dialog;
+  @service wireframeLayoutQuery;
   @service wireframePublishPreview;
   @service wireframeSession;
   @service wireframeTheme;
@@ -49,13 +50,13 @@ export default class PublishReviewDrawer extends Component {
   isTabActive = (tab) => this.activeTab === tab;
   isRawExpanded = (outletName) => this.#expandedRaw.has(outletName);
   outletState = (outletName) =>
-    this.wireframe.layoutQuery.outletState(outletName);
+    this.wireframeLayoutQuery.outletState(outletName);
   summaryFor = (outletName) =>
     this.wireframePublishPreview.outletChangeSummary(outletName);
   layoutJsonFor = (outletName) =>
     this.wireframePublishPreview.outletLayoutJson(outletName);
   isOutletPublished = (outletName) =>
-    this.wireframe.layoutQuery.outletState(outletName) ===
+    this.wireframeLayoutQuery.outletState(outletName) ===
     OUTLET_STATE.PUBLISHED;
   /** Outlets whose raw-layout view is expanded on the Changes tab. */
   #expandedRaw = trackedSet();

@@ -53,9 +53,9 @@ const EDGE_BAND = 12;
  * so re-registration on rare arg changes is fine.
  */
 export default class ContainerDropTargetModifier extends Modifier {
-  @service wireframe;
   @service wireframeDragOverlay;
   @service wireframeDropAuthority;
+  @service wireframeLayoutQuery;
 
   #autoScrollCleanup = null;
   #cleanup = null;
@@ -77,10 +77,14 @@ export default class ContainerDropTargetModifier extends Modifier {
       return;
     }
 
-    const { wireframe, wireframeDragOverlay, wireframeDropAuthority } = this;
+    const {
+      wireframeLayoutQuery,
+      wireframeDragOverlay,
+      wireframeDropAuthority,
+    } = this;
     const { resolveContainer, shouldDeferToParent, descriptorFor } =
       createContainerDropResolver({
-        wireframe,
+        layoutQuery: wireframeLayoutQuery,
         dropAuthority: wireframeDropAuthority,
         chromeElement,
         containerKey,
@@ -172,7 +176,7 @@ export default class ContainerDropTargetModifier extends Modifier {
  * a per-resolver cache of the resolved container element.
  *
  * @param {Object} options
- * @param {Object} options.wireframe - The wireframe service.
+ * @param {Object} options.layoutQuery - The layout-query service.
  * @param {Object} options.dropAuthority - The drop-authority service that
  *   decides whether a drop is permitted at a given location.
  * @param {HTMLElement} options.chromeElement - The block chrome element.
@@ -188,7 +192,7 @@ export default class ContainerDropTargetModifier extends Modifier {
  * }}
  */
 export function createContainerDropResolver({
-  wireframe,
+  layoutQuery,
   dropAuthority,
   chromeElement,
   containerKey,
@@ -274,7 +278,7 @@ export function createContainerDropResolver({
     if (
       containerKey == null ||
       isCell ||
-      wireframe.layoutQuery.isOutletRoot(containerKey)
+      layoutQuery.isOutletRoot(containerKey)
     ) {
       return false;
     }
@@ -287,7 +291,7 @@ export function createContainerDropResolver({
     }
     if (isCell) {
       return buildCellChromeDescriptor({
-        wireframe,
+        layoutQuery,
         chromeElement,
         containerKey,
         source,
@@ -298,7 +302,7 @@ export function createContainerDropResolver({
       return null;
     }
     return computeDescriptor({
-      wireframe,
+      layoutQuery,
       dropAuthority,
       container,
       chromeElement,
@@ -340,7 +344,7 @@ export function createContainerDropResolver({
  * @returns {Object|null}
  */
 export function computeDescriptor({
-  wireframe,
+  layoutQuery,
   dropAuthority,
   container,
   chromeElement = null,
@@ -399,7 +403,7 @@ export function computeDescriptor({
     const before = result.gap > 0 ? children[result.gap - 1] : null;
     const after = result.gap < children.length ? children[result.gap] : null;
     return buildBoundaryDescriptor({
-      wireframe,
+      layoutQuery,
       dropAuthority,
       container,
       // An empty container's drop fills its whole area; when the marked drop
@@ -438,16 +442,16 @@ export function computeDescriptor({
 
   if (blockName === LAYOUT_MERGED_CELL_BLOCK) {
     return buildReplaceCellDescriptor({
-      wireframe,
+      layoutQuery,
       rect,
       targetKey,
       blockName,
       source,
     });
   }
-  if (childIsContainer(wireframe, targetKey)) {
+  if (childIsContainer(layoutQuery, targetKey)) {
     return buildInsideDescriptor({
-      wireframe,
+      layoutQuery,
       dropAuthority,
       rect,
       targetKey,
@@ -510,21 +514,19 @@ export function isOverExcludedRegion(chromeElement, input) {
 }
 
 /**
- * Returns true when the entry at `key` is a container in the
- * service's live layout. Reads through the editor service so the
- * check honours soft-failures / draft state without DOM peeking.
+ * Returns true when the entry at `key` is a container in the live
+ * layout. Reads through the layout-query service so the check honours
+ * soft-failures / draft state without DOM peeking.
  */
-function childIsContainer(wireframe, key) {
+function childIsContainer(layoutQuery, key) {
   if (!key) {
     return false;
   }
-  const located = wireframe.layoutQuery.findEntryAndOutletSync(key);
+  const located = layoutQuery.findEntryAndOutletSync(key);
   if (!located) {
     return false;
   }
-  const metadata = wireframe.layoutQuery.lookupBlockMetadata?.(
-    located.entry.block
-  );
+  const metadata = layoutQuery.lookupBlockMetadata?.(located.entry.block);
   return metadata?.isContainer === true;
 }
 
@@ -542,7 +544,7 @@ function childIsContainer(wireframe, key) {
  * naturally.
  */
 function buildBoundaryDescriptor({
-  wireframe,
+  layoutQuery,
   dropAuthority,
   container,
   emptyRect = null,
@@ -583,7 +585,7 @@ function buildBoundaryDescriptor({
   // the author actually sees. The label/geometry stay visual (unchanged).
   const visualPosition = afterKey ? "before" : "after";
   const containerArgs =
-    wireframe.layoutQuery.findEntryAndOutletSync(containerKey)?.entry?.args;
+    layoutQuery.findEntryAndOutletSync(containerKey)?.entry?.args;
   const position = isReversedFlexLayout(containerArgs)
     ? flipPosition(visualPosition)
     : visualPosition;
@@ -614,7 +616,7 @@ function buildBoundaryDescriptor({
     kind: targetKey ? "insert" : "inside",
     validity: validity.ok ? "valid" : "invalid",
     label: boundaryLabel({
-      wireframe,
+      layoutQuery,
       source,
       beforeKey,
       afterKey,
@@ -715,7 +717,7 @@ function boundaryCenter(axis, before, after) {
 }
 
 function buildInsideDescriptor({
-  wireframe,
+  layoutQuery,
   dropAuthority,
   rect,
   targetKey,
@@ -725,7 +727,7 @@ function buildInsideDescriptor({
   ordinal = null,
 }) {
   const validity = validateInsideDrop({
-    wireframe,
+    layoutQuery,
     dropAuthority,
     source,
     targetKey,
@@ -740,7 +742,7 @@ function buildInsideDescriptor({
     kind: "inside",
     validity: validity.ok ? "valid" : "invalid",
     label: insideLabel({
-      wireframe,
+      layoutQuery,
       source,
       blockName,
       targetKey,
@@ -762,7 +764,7 @@ function buildInsideDescriptor({
  * itself, since the modifier is attached to the cell's chrome.
  */
 function buildCellChromeDescriptor({
-  wireframe,
+  layoutQuery,
   chromeElement,
   containerKey,
   source,
@@ -780,12 +782,12 @@ function buildCellChromeDescriptor({
     },
     kind: "replace",
     validity: "valid",
-    label: cellDropLabel({ wireframe, source }),
+    label: cellDropLabel({ layoutQuery, source }),
     dispatch: cellDropDispatch({ source, targetKey: containerKey }),
   };
 }
 
-function buildReplaceCellDescriptor({ wireframe, rect, targetKey, source }) {
+function buildReplaceCellDescriptor({ layoutQuery, rect, targetKey, source }) {
   // Cell replace — no validation gate beyond "source isn't the
   // cell itself", since an empty cell's only purpose is to be filled.
   if (source.type === "wf-block" && source.data.blockKey === targetKey) {
@@ -800,7 +802,7 @@ function buildReplaceCellDescriptor({ wireframe, rect, targetKey, source }) {
     },
     kind: "replace",
     validity: "valid",
-    label: cellDropLabel({ wireframe, source }),
+    label: cellDropLabel({ layoutQuery, source }),
     dispatch: cellDropDispatch({ source, targetKey }),
   };
 }
@@ -831,7 +833,7 @@ function validateInsert({ dropAuthority, source, outletName }) {
   return { ok: false };
 }
 
-function validateInsideDrop({ wireframe, dropAuthority, source, targetKey }) {
+function validateInsideDrop({ layoutQuery, dropAuthority, source, targetKey }) {
   // Don't allow dropping a container inside itself.
   if (source.type === "wf-block" && source.data.blockKey === targetKey) {
     return { ok: false };
@@ -839,8 +841,7 @@ function validateInsideDrop({ wireframe, dropAuthority, source, targetKey }) {
   return validateInsert({
     dropAuthority,
     source,
-    outletName:
-      wireframe.layoutQuery.findEntryAndOutletSync(targetKey)?.outletName,
+    outletName: layoutQuery.findEntryAndOutletSync(targetKey)?.outletName,
   });
 }
 
@@ -848,7 +849,7 @@ function validateInsideDrop({ wireframe, dropAuthority, source, targetKey }) {
    carries pre-resolved (the overlay just renders the string). */
 
 function boundaryLabel({
-  wireframe,
+  layoutQuery,
   source,
   beforeKey,
   afterKey,
@@ -857,7 +858,7 @@ function boundaryLabel({
   beforeOrdinal = null,
   afterOrdinal = null,
 }) {
-  const name = sourceDisplayName(wireframe, source);
+  const name = sourceDisplayName(layoutQuery, source);
   const isPalette = source.type === "wf-palette-block";
 
   // A noun-framed container ("slide") names the dragged block being placed in
@@ -905,8 +906,8 @@ function boundaryLabel({
       : "wireframe.canvas.drop_preview.move_between";
     return translate(key, {
       name,
-      before: targetDisplayName(wireframe, beforeKey),
-      after: targetDisplayName(wireframe, afterKey),
+      before: targetDisplayName(layoutQuery, beforeKey),
+      after: targetDisplayName(layoutQuery, afterKey),
     });
   }
   // Container start — "before <first child>".
@@ -916,7 +917,7 @@ function boundaryLabel({
       : "wireframe.canvas.drop_preview.move_before";
     return translate(key, {
       name,
-      target: targetDisplayName(wireframe, afterKey),
+      target: targetDisplayName(layoutQuery, afterKey),
     });
   }
   // Container end — "after <last child>".
@@ -926,7 +927,7 @@ function boundaryLabel({
       : "wireframe.canvas.drop_preview.move_after";
     return translate(key, {
       name,
-      target: targetDisplayName(wireframe, beforeKey),
+      target: targetDisplayName(layoutQuery, beforeKey),
     });
   }
   // Empty container — no neighbours; fall back to the ambient copy.
@@ -936,14 +937,14 @@ function boundaryLabel({
 }
 
 function insideLabel({
-  wireframe,
+  layoutQuery,
   source,
   blockName,
   targetKey,
   childNoun = null,
   ordinal = null,
 }) {
-  const name = sourceDisplayName(wireframe, source);
+  const name = sourceDisplayName(layoutQuery, source);
 
   // Nesting into a noun-framed child ("into slide 2") — the dragged block keeps
   // its own name; the target is framed as the noun + 1-based ordinal.
@@ -960,7 +961,7 @@ function insideLabel({
   }
 
   const container =
-    targetDisplayName(wireframe, targetKey) || blockName || "container";
+    targetDisplayName(layoutQuery, targetKey) || blockName || "container";
   return source.type === "wf-palette-block"
     ? translate("wireframe.canvas.drop_preview.add_inside", {
         name,
@@ -972,8 +973,8 @@ function insideLabel({
       });
 }
 
-function cellDropLabel({ wireframe, source }) {
-  const name = sourceDisplayName(wireframe, source);
+function cellDropLabel({ layoutQuery, source }) {
+  const name = sourceDisplayName(layoutQuery, source);
   return source.type === "wf-palette-block"
     ? translate("wireframe.canvas.drop_preview.add_here", { name })
     : translate("wireframe.canvas.drop_preview.move_here", { name });
@@ -1058,22 +1059,19 @@ function cellDropDispatch({ source, targetKey }) {
    source / target so the overlay text matches what the palette and
    outline already show for the same blocks. */
 
-function sourceDisplayName(wireframe, source) {
+function sourceDisplayName(layoutQuery, source) {
   if (source.type === "wf-palette-block") {
     return (
-      wireframe.layoutQuery.lookupBlockDisplayName?.(source.data.blockName) ||
+      layoutQuery.lookupBlockDisplayName?.(source.data.blockName) ||
       source.data.blockName ||
       "block"
     );
   }
   if (source.type === "wf-block") {
-    const located = wireframe.layoutQuery.findEntryAndOutletSync(
-      source.data.blockKey
-    );
+    const located = layoutQuery.findEntryAndOutletSync(source.data.blockKey);
     if (located?.entry) {
       return decorateWithId(
-        wireframe.layoutQuery.lookupBlockDisplayName?.(located.entry.block) ||
-          "block",
+        layoutQuery.lookupBlockDisplayName?.(located.entry.block) || "block",
         located.entry.id
       );
     }
@@ -1081,14 +1079,12 @@ function sourceDisplayName(wireframe, source) {
   return "block";
 }
 
-function targetDisplayName(wireframe, targetKey) {
-  const located = wireframe.layoutQuery.findEntryAndOutletSync(targetKey);
+function targetDisplayName(layoutQuery, targetKey) {
+  const located = layoutQuery.findEntryAndOutletSync(targetKey);
   if (!located?.entry) {
     return null;
   }
-  const name = wireframe.layoutQuery.lookupBlockDisplayName?.(
-    located.entry.block
-  );
+  const name = layoutQuery.lookupBlockDisplayName?.(located.entry.block);
   return decorateWithId(name, located.entry.id);
 }
 

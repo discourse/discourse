@@ -30,6 +30,7 @@ export default class InspectorPanel extends Component {
   @service wireframe;
   @service wireframeBlockMutations;
   @service wireframeConditionsPanel;
+  @service wireframeLayoutQuery;
 
   isTabActive = (tab) => this.currentTab === tab;
   @tracked _activeTab = "args";
@@ -73,7 +74,7 @@ export default class InspectorPanel extends Component {
    * @returns {boolean}
    */
   get isOutletRoot() {
-    return this.wireframe.layoutQuery.isOutletRoot(
+    return this.wireframeLayoutQuery.isOutletRoot(
       this.wireframe.selectedBlockKey
     );
   }

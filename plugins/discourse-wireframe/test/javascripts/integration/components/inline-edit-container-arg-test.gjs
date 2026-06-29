@@ -65,7 +65,8 @@ module(
       // Our single root Layout satisfies the outlet's single-root-layout
       // invariant, so `enter()` adds no extra wrapper: the resolved layout's
       // first entry IS our Layout, and the two leaves are its children.
-      const inner = this.editor.layoutQuery.readResolvedLayout(OUTLET)[0];
+      const inner =
+        this.editor.wireframeLayoutQuery.readResolvedLayout(OUTLET)[0];
       const keyA = entryKey(inner.children[0]);
       const keyB = entryKey(inner.children[1]);
 

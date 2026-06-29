@@ -48,6 +48,7 @@ const ASPECT_RATIO_EPSILON = 0.02;
 export default class InspectorImageField extends Component {
   @service wireframe;
   @service wireframeImageUpload;
+  @service wireframeLayoutQuery;
   @service wireframeRevision;
 
   /**
@@ -129,7 +130,7 @@ export default class InspectorImageField extends Component {
     if (!key) {
       return null;
     }
-    const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(key)?.entry;
+    const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(key)?.entry;
     return entry?.args?.[this.argName] ?? null;
   }
 

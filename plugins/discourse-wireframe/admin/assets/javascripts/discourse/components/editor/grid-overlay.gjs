@@ -149,6 +149,7 @@ export default class GridOverlay extends Component {
   @service wireframeDragOverlay;
   @service wireframeGridManipulator;
   @service wireframeImageUpload;
+  @service wireframeLayoutQuery;
   @service wireframeRevision;
   @service blocks;
   @service dragAndDrop;
@@ -309,7 +310,7 @@ export default class GridOverlay extends Component {
     // changes).
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframeRevision.version;
-    return this.wireframe.layoutQuery.findEntryAndOutletSync(this.args.gridKey)
+    return this.wireframeLayoutQuery.findEntryAndOutletSync(this.args.gridKey)
       ?.entry;
   }
 
@@ -1033,7 +1034,7 @@ export default class GridOverlay extends Component {
   #sourceDisplayName(source) {
     if (source.type === "wf-palette-block") {
       return (
-        this.wireframe.layoutQuery.lookupBlockDisplayName(
+        this.wireframeLayoutQuery.lookupBlockDisplayName(
           source.data.blockName
         ) ||
         source.data.blockName ||
@@ -1041,12 +1042,12 @@ export default class GridOverlay extends Component {
       );
     }
     if (source.type === "wf-block") {
-      const located = this.wireframe.layoutQuery.findEntryAndOutletSync(
+      const located = this.wireframeLayoutQuery.findEntryAndOutletSync(
         source.data.blockKey
       );
       if (located?.entry) {
         return (
-          this.wireframe.layoutQuery.lookupBlockDisplayName(
+          this.wireframeLayoutQuery.lookupBlockDisplayName(
             located.entry.block
           ) || "block"
         );
@@ -1411,7 +1412,7 @@ export default class GridOverlay extends Component {
     if (sourceKey === targetKey) {
       return true;
     }
-    return this.wireframe.layoutQuery.isAncestorOf(sourceKey, targetKey);
+    return this.wireframeLayoutQuery.isAncestorOf(sourceKey, targetKey);
   }
 
   /**
@@ -1535,10 +1536,10 @@ export default class GridOverlay extends Component {
     }
     return {
       before:
-        this.wireframe.layoutQuery.lookupBlockDisplayName(beforeSlot.block) ||
+        this.wireframeLayoutQuery.lookupBlockDisplayName(beforeSlot.block) ||
         "block",
       after:
-        this.wireframe.layoutQuery.lookupBlockDisplayName(afterSlot.block) ||
+        this.wireframeLayoutQuery.lookupBlockDisplayName(afterSlot.block) ||
         "block",
     };
   }

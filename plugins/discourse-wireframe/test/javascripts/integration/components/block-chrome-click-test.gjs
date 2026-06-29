@@ -28,7 +28,7 @@ module(
       // `LinkEditState.start` bails unless the block resolves to a real
       // layout entry, so stub the lookup — opening that session is exactly
       // the behavior we're asserting the guard suppresses.
-      wireframe.layoutQuery.findEntryAndOutletSync = () => ({
+      wireframe.wireframeLayoutQuery.findEntryAndOutletSync = () => ({
         entry: { args: {} },
         outletName: "test-outlet",
       });

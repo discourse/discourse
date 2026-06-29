@@ -6,7 +6,6 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import InspectorForm from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector-form";
 
 class StubWireframeService extends Service {
-  // The query layer moved to a leaf the editor exposes as layoutQuery; returning
   #blockData;
 
   #nonFieldErrors;
@@ -18,7 +17,8 @@ class StubWireframeService extends Service {
     this.updateSelectedArgCalls = [];
   }
 
-  // this makes wireframe.layoutQuery.<query> resolve to the stubbed methods below.
+  // The stub is registered as service:wireframe-layout-query too, so a
+  // component injecting wireframeLayoutQuery resolves these query methods.
   get layoutQuery() {
     return this;
   }
@@ -69,6 +69,10 @@ function stubWireframe(owner, blockData, options) {
   const stub = new StubWireframeService(owner, blockData, options);
   owner.unregister("service:wireframe");
   owner.register("service:wireframe", stub, { instantiate: false });
+  owner.unregister("service:wireframe-layout-query");
+  owner.register("service:wireframe-layout-query", stub, {
+    instantiate: false,
+  });
   // The form writes arg edits through the arg-edit service; point it at the
   // same stub so `updateSelectedArgCalls` records them.
   owner.unregister("service:wireframe-arg-edit");

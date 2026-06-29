@@ -29,7 +29,8 @@ class StubWireframeService extends Service {
     this.#config = config;
   }
 
-  // this makes wireframe.layoutQuery.<query> resolve to the stubbed methods below.
+  // The stub is registered as service:wireframe-layout-query too, so a
+  // component injecting wireframeLayoutQuery resolves these query methods.
   get layoutQuery() {
     return this;
   }
@@ -83,6 +84,10 @@ function stubWireframe(owner, config) {
   owner.unregister("service:wireframe");
   const stub = new StubWireframeService(owner, config);
   owner.register("service:wireframe", stub, { instantiate: false });
+  owner.unregister("service:wireframe-layout-query");
+  owner.register("service:wireframe-layout-query", stub, {
+    instantiate: false,
+  });
   // The drawer reads the publish plan (publishTargets / activeThemeTarget /
   // activeThemeId) off the theme service, so back it with the same stub instance.
   owner.unregister("service:wireframe-theme");

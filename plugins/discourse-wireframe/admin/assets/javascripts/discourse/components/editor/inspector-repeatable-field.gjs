@@ -26,6 +26,7 @@ import { schemaToFields } from "../../lib/schema-to-fields";
  */
 export default class InspectorRepeatableField extends Component {
   @service wireframe;
+  @service wireframeLayoutQuery;
   @service wireframeRevision;
 
   /** Draft text for the JSON import box; committed on demand. */
@@ -71,7 +72,7 @@ export default class InspectorRepeatableField extends Component {
     if (!key) {
       return [];
     }
-    const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(key)?.entry;
+    const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(key)?.entry;
     const value = entry?.args?.[this.argName];
     return Array.isArray(value) ? value : [];
   }

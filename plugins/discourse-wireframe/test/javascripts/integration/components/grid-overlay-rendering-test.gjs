@@ -112,7 +112,7 @@ module(
 
       // Any selection change recomputes `emptyCells` (it reads the tracked
       // selection). Selecting the grid is enough to trigger the rebuild path.
-      const grid = wireframe.layoutQuery.readResolvedLayout(OUTLET)[0];
+      const grid = wireframe.wireframeLayoutQuery.readResolvedLayout(OUTLET)[0];
       wireframe.selectBlock({ key: `layout:${grid.__stableKey}` });
       await settled();
 
@@ -173,7 +173,7 @@ module(
         1,
         "the release commits the new span through wireframeGridManipulator.resizeSlot"
       );
-      const grid = wireframe.layoutQuery.readResolvedLayout(OUTLET)[0];
+      const grid = wireframe.wireframeLayoutQuery.readResolvedLayout(OUTLET)[0];
       const cellKey = `grid-overlay-rendering-leaf:${grid.children[0].__stableKey}`;
       assert.strictEqual(
         calls[0].slotKey,
