@@ -449,10 +449,8 @@ class ListController < ApplicationController
     @description_meta =
       if @category.uncategorized?
         I18n.t("category.uncategorized_description", locale: SiteSetting.default_locale)
-      elsif @category.description_text.present?
-        @category.description_text
       else
-        SiteSetting.site_description
+        @category.plain_text_description || SiteSetting.site_description
       end
 
     if use_crawler_layout?

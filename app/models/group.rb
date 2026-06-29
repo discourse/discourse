@@ -392,6 +392,17 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def bio_summary
+    PrettyText.excerpt(
+      bio_cooked,
+      300,
+      strip_links: true,
+      strip_images: true,
+      text_entities: true,
+      plain_hashtags: true,
+    ).presence
+  end
+
   def record_email_setting_changes!(user)
     if (previous_changes.keys & SMTP_SETTING_ATTRIBUTES).any?
       self.smtp_updated_at = Time.zone.now

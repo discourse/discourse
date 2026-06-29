@@ -605,9 +605,17 @@ class Category < ActiveRecord::Base
 
     @@cache_text ||= LruRedux::ThreadSafeCache.new(1000)
     @@cache_text.getset(description) do
-      text = Nokogiri::HTML5.fragment(description).text.strip
-      ERB::Util.html_escape(text).html_safe
+      ERB::Util.html_escape(plain_text_description.to_s).html_safe
     end
+  end
+
+  def plain_text_description
+    return nil unless description
+
+    @@cache_plain_text ||= LruRedux::ThreadSafeCache.new(1000)
+    @@cache_plain_text
+      .getset(description) { Nokogiri::HTML5.fragment(description).text.strip }
+      .presence
   end
 
   def description_excerpt
