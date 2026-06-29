@@ -159,7 +159,8 @@
     &__column-header {
       &--username,
       &---email,
-      &--silence-reason {
+      &--silence-reason,
+      &--suspend-reason {
         .header-contents {
           text-align: left;
         }
@@ -178,7 +179,8 @@
       margin-right: 1em;
     }
 
-    &__cell.silence_reason {
+    &__cell.silence_reason,
+    &__cell.suspend_reason {
       text-align: left;
       justify-content: start;
 
@@ -202,6 +204,20 @@
   &__controls {
     display: flex;
     gap: 1em;
+  }
+
+  &__search {
+    flex: 1 1 auto;
+  }
+
+  &__activation-filter.d-select {
+    flex: 0 1 auto;
+    max-width: 14em;
+    height: auto;
+
+    @media screen and (width <= 500px) {
+      max-width: none;
+    }
   }
 }
 
