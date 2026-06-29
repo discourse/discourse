@@ -7319,6 +7319,9 @@ en:
             logged_in_share:
               label: "Logged-in share"
               tooltip: "The share of pageviews from logged-in members."
+            direct_traffic:
+              label: "Direct traffic"
+              tooltip: "The share of pageviews that came directly to your community, such as by typing your URL or using a browser bookmark."
           top_countries:
             title: "Top countries"
             empty: "No country data for this period."
