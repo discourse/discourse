@@ -504,18 +504,21 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("dragging state toggles via startDrag/endDrag", function (assert) {
-      assert.false(this.editor.isDragging);
+      const dragSession = getOwner(this.editor).lookup(
+        "service:wireframe-drag-session"
+      );
+      assert.false(dragSession.isDragging);
       this.editor.startDrag({
         blockKey: "wf:svc-test-tile:1",
         outletName: "homepage-blocks",
       });
-      assert.true(this.editor.isDragging);
+      assert.true(dragSession.isDragging);
       assert.true(
         document.body.classList.contains("wireframe-dragging"),
         "body class is added during drag"
       );
       this.editor.endDrag();
-      assert.false(this.editor.isDragging);
+      assert.false(dragSession.isDragging);
       assert.false(
         document.body.classList.contains("wireframe-dragging"),
         "body class is removed after drag"
@@ -523,12 +526,15 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("startPaletteDrag does not set isDragging (palette drags aren't moves)", function (assert) {
+      const dragSession = getOwner(this.editor).lookup(
+        "service:wireframe-drag-session"
+      );
       this.editor.startPaletteDrag({
         blockName: "wf:svc-test-tile",
         defaultArgs: {},
       });
       assert.false(
-        this.editor.isDragging,
+        dragSession.isDragging,
         "a palette drag carries no source block"
       );
       assert.true(
@@ -2565,6 +2571,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
       this.editor = getOwner(this).lookup("service:wireframe");
+      this.clipboard = getOwner(this).lookup("service:wireframe-clipboard");
       this.editor.enter();
     });
 
@@ -2576,8 +2583,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         name: "wf:svc-test-tile",
       });
 
-      assert.true(this.editor.copySelected());
-      assert.true(this.editor.hasClipboardEntry);
+      assert.true(this.clipboard.copySelected());
+      assert.true(this.clipboard.hasClipboardEntry);
       // The clone's stripped __stableKey and preserved args are asserted
       // observably by the paste tests below; here just pin the mode.
       assert.strictEqual(
@@ -2587,8 +2594,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("copySelected returns false when nothing is selected", function (assert) {
-      assert.false(this.editor.copySelected());
-      assert.false(this.editor.hasClipboardEntry);
+      assert.false(this.clipboard.copySelected());
+      assert.false(this.clipboard.hasClipboardEntry);
     });
 
     test("cutSelected stores the entry and removes it from the canvas", function (assert) {
@@ -2616,8 +2623,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         key: firstKey,
         name: "wf:svc-test-tile",
       });
-      this.editor.copySelected();
-      assert.true(this.editor.pasteFromClipboard());
+      this.clipboard.copySelected();
+      assert.true(this.clipboard.pasteFromClipboard());
 
       const after = outletChildren(this.editor);
       assert.strictEqual(after.length, 3);
@@ -2637,8 +2644,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         key: firstKey,
         name: "wf:svc-test-tile",
       });
-      this.editor.copySelected();
-      this.editor.pasteFromClipboard();
+      this.clipboard.copySelected();
+      this.clipboard.pasteFromClipboard();
 
       const after = outletChildren(this.editor);
       const sourceKey = after[0].__stableKey;
@@ -2653,9 +2660,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         key: firstKey,
         name: "wf:svc-test-tile",
       });
-      this.editor.copySelected();
-      this.editor.pasteFromClipboard();
-      this.editor.pasteFromClipboard();
+      this.clipboard.copySelected();
+      this.clipboard.pasteFromClipboard();
+      this.clipboard.pasteFromClipboard();
 
       const after = outletChildren(this.editor);
       assert.strictEqual(after.length, 4);
@@ -2668,7 +2675,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         key: firstKey,
         name: "wf:svc-test-tile",
       });
-      assert.false(this.editor.pasteFromClipboard());
+      assert.false(this.clipboard.pasteFromClipboard());
     });
 
     test("pasteFromClipboard returns false when no block is selected", function (assert) {
@@ -2678,10 +2685,10 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         key: firstKey,
         name: "wf:svc-test-tile",
       });
-      this.editor.copySelected();
+      this.clipboard.copySelected();
       this.editor.selectBlock(null);
 
-      assert.false(this.editor.pasteFromClipboard());
+      assert.false(this.clipboard.pasteFromClipboard());
     });
   });
 

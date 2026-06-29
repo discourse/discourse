@@ -1,5 +1,7 @@
 // @ts-check
 
+import { getOwner } from "@ember/owner";
+
 /**
  * Keyboard-shortcut bindings for the wireframe. Attaches a `keydown`
  * listener at the document level while the editor is active. Each
@@ -92,13 +94,18 @@ export function attachEditorShortcuts(editor) {
       return;
     }
 
+    // Resolve the clipboard service lazily — only on a modifier shortcut, and
+    // only after the destroyed/active gate above has confirmed the owner is
+    // still alive (a lookup on a torn-down owner would throw).
+    const clipboard = getOwner(editor).lookup("service:wireframe-clipboard");
+
     const key = event.key.toLowerCase();
     if (key === "c") {
       if (!editor.selectedBlockKey) {
         return;
       }
       event.preventDefault();
-      editor.copySelected();
+      clipboard.copySelected();
       return;
     }
     if (key === "x") {
@@ -110,11 +117,11 @@ export function attachEditorShortcuts(editor) {
       return;
     }
     if (key === "v") {
-      if (!editor.hasClipboardEntry || !editor.selectedBlockKey) {
+      if (!clipboard.hasClipboardEntry || !editor.selectedBlockKey) {
         return;
       }
       event.preventDefault();
-      editor.pasteFromClipboard();
+      clipboard.pasteFromClipboard();
     }
   }
 

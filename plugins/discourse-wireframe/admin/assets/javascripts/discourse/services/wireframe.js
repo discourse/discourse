@@ -656,42 +656,6 @@ export default class WireframeService extends Service {
     return JSON.stringify(serializeLayoutForSave(layout ?? []));
   }
 
-  /**
-   * The drag-session signal service. Re-exposed so internal `this.dragSession.X`
-   * (startDrag/endDrag) and any external reader keep working without injecting it.
-   *
-   * @returns {import("./wireframe-drag-session").default}
-   */
-  get dragSession() {
-    return this.wireframeDragSession;
-  }
-
-  /**
-   * The block being dragged, or `null`. Read externally by the outline to
-   * highlight the drag source; delegates to the drag-session service (read-only —
-   * drag state is mutated only through `startDrag` / `endDrag`).
-   *
-   * @returns {?string}
-   */
-  get dragSourceKey() {
-    return this.dragSession.sourceKey;
-  }
-
-  /** @returns {boolean} */
-  get isDragging() {
-    return this.dragSession.isDragging;
-  }
-
-  /**
-   * Clipboard facade — delegates to `wireframeClipboard`. Indicates whether the
-   * clipboard currently holds anything that `pasteFromClipboard` could insert.
-   *
-   * @returns {boolean}
-   */
-  get hasClipboardEntry() {
-    return this.wireframeClipboard.hasClipboardEntry;
-  }
-
   /** Opens the publish review surface. */
   @action
   openReviewDrawer() {
@@ -833,7 +797,7 @@ export default class WireframeService extends Service {
     // commit in-session edits, reveal-into-view) — they're meaningless once
     // the session is ending, and `selectBlock(null)` would fire them.
     this.wireframeSelection.reset();
-    this.dragSession.clear();
+    this.wireframeDragSession.clear();
     this.wireframeDragOverlay.clear();
     this.wireframeBlockReveal.reset();
     this.wireframeImageUpload.clearPending();
@@ -956,17 +920,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Clipboard facade — delegates to `wireframeClipboard`. Captures the
-   * currently-selected block onto the clipboard for later paste.
-   *
-   * @returns {boolean} true on success, false when no block is selected
-   */
-  @action
-  copySelected() {
-    return this.wireframeClipboard.copySelected();
-  }
-
-  /**
    * Captures the currently-selected block onto the clipboard AND removes it from
    * the canvas. Cut is a composition of two concerns: the clipboard stashes the
    * entry (mode `"cut"`), and the kernel performs the structural removal, since
@@ -981,17 +934,6 @@ export default class WireframeService extends Service {
   cutSelected() {
     const key = this.selectedBlockKey;
     return this.wireframeClipboard.cutSelected() && this.removeBlock(key);
-  }
-
-  /**
-   * Clipboard facade — delegates to `wireframeClipboard`. Inserts a fresh clone
-   * of the clipboard entry after the current selection.
-   *
-   * @returns {boolean}
-   */
-  @action
-  pasteFromClipboard() {
-    return this.wireframeClipboard.pasteFromClipboard();
   }
 
   @action
@@ -1622,7 +1564,7 @@ export default class WireframeService extends Service {
   @action
   startDrag({ blockKey, outletName }) {
     this.wireframeDragOverlay.clear();
-    this.dragSession.beginBlock({ blockKey, outletName });
+    this.wireframeDragSession.beginBlock({ blockKey, outletName });
     document.body.classList.add("wireframe-dragging");
   }
 
@@ -1637,7 +1579,7 @@ export default class WireframeService extends Service {
   @action
   startPaletteDrag({ blockName, defaultArgs }) {
     this.wireframeDragOverlay.clear();
-    this.dragSession.beginPalette({ blockName, defaultArgs });
+    this.wireframeDragSession.beginPalette({ blockName, defaultArgs });
     document.body.classList.add("wireframe-dragging");
   }
 
@@ -1651,7 +1593,7 @@ export default class WireframeService extends Service {
    */
   @action
   endDrag() {
-    this.dragSession.clear();
+    this.wireframeDragSession.clear();
     this.wireframeDragOverlay.clear();
     document.body.classList.remove("wireframe-dragging");
   }

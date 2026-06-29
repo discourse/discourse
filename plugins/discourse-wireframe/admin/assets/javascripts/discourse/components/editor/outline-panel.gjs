@@ -42,6 +42,7 @@ const CHILD_COUNT_THRESHOLD = 6;
 export default class OutlinePanel extends Component {
   @service blocks;
   @service wireframe;
+  @service wireframeDragSession;
 
   /** "tree" — flat per-block view (default); "outlets" — per-outlet summary. */
   @tracked viewMode = "tree";
@@ -401,7 +402,7 @@ export default class OutlinePanel extends Component {
 
   @action
   isRowDragSource(blockKey) {
-    return this.wireframe.dragSourceKey === blockKey;
+    return this.wireframeDragSession.sourceKey === blockKey;
   }
 
   @action
