@@ -247,7 +247,7 @@ plugin_checksums:
   discourse-user-notes: 4c1e04fac5708b51c1b09bd8ed0d786c
   discourse-workflows: 5644f9ffebcee089e85b16edab52a6a3
   discourse-zendesk-plugin: b78b305590ffedda38455574a19fdd38
-  poll: 4af8698c5fcc1dc9a786b31ec8234171
+  poll: e481f2cfa0e7c22778dee12a1e9c33c6
   styleguide: 0fd92e5ef0c99ee047f206961a587544
 failed_plugins: []
 incomplete: false
