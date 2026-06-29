@@ -30,6 +30,7 @@ Behavior:
 - validates `target` and `owner`
 - fetches previous target permissions
 - injects mandatory ACLs into `flattened_acl`
+- fails `has_no_banned_acl` if any final flattened ACL entry matches the target class's `banned_acl`
 - fails `has_at_least_one_acl` if the final ACL list is empty
 - destroys all current ACL rows for the target
 - inserts expanded ACL rows
@@ -86,10 +87,17 @@ Shape:
       { type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" },
     ],
   },
+  banned_acl: {
+    "DiscourseKanban::Board" => [
+      { type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" },
+    ],
+  },
 }
 ```
 
 The key is `target_class.acl_target_key`, which defaults to the class name. If a frontend passes `@aclTarget`, it must match this key exactly.
+
+`mandatory_acl` and `banned_acl` are both always present in the serialized `access_control` payload. Each map only includes target classes that define non-empty metadata for that ACL type.
 
 ## Serializing Target ACLs
 
