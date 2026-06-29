@@ -21,7 +21,7 @@ RSpec.describe Emoji do
       SiteSetting.s3_upload_bucket = "my-bucket"
       SiteSetting.s3_cdn_url = "https://cdn.my-site.com"
 
-      Discourse.store.stubs(:cdn_url).with("//my-bucket.s3.amazonaws.com/images/my-emoji.png").returns("https://cdn.my-site.com/images/my-emoji.png")
+      allow(Discourse.store).to receive(:cdn_url).with("//my-bucket.s3.amazonaws.com/images/my-emoji.png").and_return("https://cdn.my-site.com/images/my-emoji.png")
 
       # fab! is standard for Discourse system specs, but here we can just fabricate normally
       upload = Fabricate(:upload, url: "//my-bucket.s3.amazonaws.com/images/my-emoji.png")
