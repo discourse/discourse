@@ -1,21 +1,26 @@
 // @ts-check
 import { tracked } from "@glimmer/tracking";
+import Service, { service } from "@ember/service";
 
 /**
  * Owns the state of an inline URL-edit session for a block-arg: which
  * (blockKey, argName) is being edited, plus the pre-edit snapshot used
  * to push a single undo entry on commit.
  *
- * The UI lives in the anchored `LinkEditPopover` (a FloatKit tooltip
- * registered on each rendered link element) which calls `start` on
- * editing, `applyChange` on confirm, and `stop` on cancel / unmount.
- * The popover renders its own input — this state object only tracks
- * which (blockKey, argName) is in flight and the pre-edit snapshot.
- *
- * Plain JS class — NOT an Ember service. Instantiated once per service
- * instance at service construction and exposed via `wireframe.linkEdit`.
+ * A peer command service in the editor's acyclic graph: it injects the
+ * read-only layout query layer (entry lookup), the mutation/undo engine
+ * (records the arg edit), and the inline rich-text edit session (closed
+ * on start as a session boundary). The UI lives in the anchored
+ * `LinkEditPopover` (a FloatKit tooltip registered on each rendered link
+ * element) which calls `start` on editing, `applyChange` on confirm, and
+ * `stop` on cancel / unmount. This service only tracks which (blockKey,
+ * argName) is in flight and the pre-edit snapshot.
  */
-export default class LinkEditState {
+export default class WireframeLinkEditService extends Service {
+  @service wireframeEditEngine;
+  @service wireframeInlineEdit;
+  @service wireframeLayoutQuery;
+
   /**
    * Currently-editing block key. `null` when no session is active.
    *
@@ -49,13 +54,6 @@ export default class LinkEditState {
   #prevValue = null;
 
   /**
-   * @param {import("../services/wireframe").default} service
-   */
-  constructor(service) {
-    this.service = service;
-  }
-
-  /**
    * Begins a URL-edit session for `(blockKey, argName)`. Captures the
    * current value as the pre-edit snapshot so the eventual undo entry
    * records the net change.
@@ -66,14 +64,14 @@ export default class LinkEditState {
    * @param {{blockKey: string, argName: string}} args
    */
   start({ blockKey, argName }) {
-    if (this.service.inlineEdit.blockKey) {
-      this.service.inlineEdit.stop({ commit: true });
+    if (this.wireframeInlineEdit.blockKey) {
+      this.wireframeInlineEdit.stop({ commit: true });
     }
     if (this.blockKey) {
       this.stop();
     }
 
-    const located = this.service.layoutQuery.findEntryAndOutletSync(blockKey);
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(blockKey);
     if (!located) {
       return;
     }
@@ -98,7 +96,7 @@ export default class LinkEditState {
       return;
     }
     const { entry, outletName } = located;
-    this.service.wireframeEditEngine.recordArgEdit({
+    this.wireframeEditEngine.recordArgEdit({
       entry,
       outletName,
       argName,

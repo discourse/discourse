@@ -6,11 +6,6 @@ import { trackedMap } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import {
-  DEFAULT_GRID_COLUMNS,
-  DEFAULT_GRID_ROWS,
-  gridDimensions,
-  LAYOUT_MERGED_CELL_BLOCK,
-  parsePlacement,
   registerBlockArgRenderer,
   resetBlockArgRenderer,
 } from "discourse/blocks";
@@ -21,32 +16,16 @@ import {
 } from "discourse/blocks/block-outlet";
 import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
 import { i18n } from "discourse-i18n";
-// `grid-math` holds the editor-only grid geometry. Absolute addon path
-// because this admin service crosses into the plugin's universal bundle.
-import {
-  cellsForFree,
-  contentCells,
-  reflowChildrenIntoCells,
-} from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import ConflictModal from "../components/editor/conflict-modal";
 import StaleDraftModal from "../components/editor/stale-draft-modal";
 import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-renderer";
 import {
-  matchGridTemplate,
-  resolveTemplateLayout,
-} from "../lib/grid-templates";
-import IconEditState from "../lib/icon-edit-state";
-import LinkEditState from "../lib/link-edit-state";
-import {
   cloneLayoutForDraft,
-  entryKey,
   normalizeImplicitChildren,
   replaceEntryContainerArgs,
-  replaceEntryInPlace,
   serializeLayoutForSave,
   wrapAsOutletRoot,
 } from "../lib/mutate-layout";
-import { diffLayouts } from "../lib/outlet-change-summary";
 import { OUTLET_STATE } from "../services/wireframe-layout-query";
 
 /**
@@ -96,10 +75,14 @@ export default class WireframeService extends Service {
   @service wireframeEntryEdits;
   @service wireframeForceExpand;
   @service wireframeGridManipulator;
+  @service wireframeGridTemplate;
+  @service wireframeIconEdit;
   @service wireframeImageUpload;
   @service wireframeInlineEdit;
   @service wireframeLayoutQuery;
+  @service wireframeLinkEdit;
   @service wireframePersistence;
+  @service wireframePublishPreview;
   @service wireframeRevision;
   @service wireframeSelection;
   @service wireframeSession;
@@ -126,40 +109,6 @@ export default class WireframeService extends Service {
    * @type {boolean}
    */
   @tracked publishTargetResolving = false;
-
-  /**
-   * Contextual toolbar slot — when non-null, the block toolbar
-   * transitions into a field-editing mode driven by this state instead
-   * of showing default block actions. Generic shape:
-   * `{ kind, value, apply, cancel, remove? }`. PM's link-mark editing
-   * AND block-arg URL editing both populate this with `kind: "url"`;
-   * future kinds (e.g. `"color"`, `"image"`) plug into the same slot
-   * without re-architecting. Exactly one slot is active at a time —
-   * a new source setting it implicitly closes the previous session.
-   *
-   * @type {Object|null}
-   */
-  @tracked fieldEditor = null;
-
-  /**
-   * Inline icon-edit session state + operations. Mirrors `inlineEdit`'s
-   * separate-object split: opens a FloatKit popover anchored to the
-   * clicked icon, hosting `DIconGridPickerContent` for the user to pick
-   * from. See `../lib/icon-edit-state.js`.
-   *
-   * @type {IconEditState}
-   */
-  iconEdit = new IconEditState(this);
-
-  /**
-   * Inline URL-edit session state + operations. Same separate-object
-   * split: when started, populates `fieldEditor` with the URL slot so
-   * the block toolbar transitions into URL-edit mode. See
-   * `../lib/link-edit-state.js`.
-   *
-   * @type {LinkEditState}
-   */
-  linkEdit = new LinkEditState(this);
 
   /**
    * Whether the drop-dispatch handler has been registered on
@@ -415,6 +364,42 @@ export default class WireframeService extends Service {
    */
   get inlineEdit() {
     return this.wireframeInlineEdit;
+  }
+
+  /**
+   * The inline icon-edit session service. Re-exposed here so external
+   * `wireframe.iconEdit.X` consumers keep working without injecting it.
+   *
+   * @returns {import("./wireframe-icon-edit").default}
+   */
+  get iconEdit() {
+    return this.wireframeIconEdit;
+  }
+
+  /**
+   * The inline link/URL-edit session service. Re-exposed here so external
+   * `wireframe.linkEdit.X` consumers keep working without injecting it.
+   *
+   * @returns {import("./wireframe-link-edit").default}
+   */
+  get linkEdit() {
+    return this.wireframeLinkEdit;
+  }
+
+  /**
+   * Contextual toolbar field-editor slot. Re-exposed here (read + write) so the
+   * inline-edit controller and the block toolbar keep using
+   * `wireframe.fieldEditor` while the state lives on the inline-edit service.
+   *
+   * @returns {Object|null}
+   */
+  get fieldEditor() {
+    return this.wireframeInlineEdit.fieldEditor;
+  }
+
+  /** @param {Object|null} descriptor */
+  set fieldEditor(descriptor) {
+    this.wireframeInlineEdit.setFieldEditor(descriptor);
   }
 
   /* Selection facade — the block-selection concern lives on
@@ -1743,33 +1728,25 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * The structural change summary for an outlet — how its edited layout differs
-   * from the live (published or default) baseline. Compares the underlying source
-   * (resolved with `ignoreSessionDraft`) against the in-session draft on top.
+   * Publish-preview facade — delegates to `wireframePublishPreview`. The
+   * structural change summary for an outlet (edited layout vs the live baseline).
    *
    * @param {string} outletName
    * @returns {{added: number, removed: number, moved: number, edited: number, reliable: boolean}}
    */
   outletChangeSummary(outletName) {
-    const before = this.blocks.resolvedLayout(outletName, {
-      ignoreSessionDraft: true,
-    });
-    const after = this.layoutQuery.readResolvedLayout(outletName);
-    return diffLayouts(before, after);
+    return this.wireframePublishPreview.outletChangeSummary(outletName);
   }
 
   /**
-   * The pretty-printed JSON of an outlet's edited layout, for the raw-layout view.
-   * Uses the canonical save serializer so it matches what a publish would persist.
+   * Publish-preview facade — delegates to `wireframePublishPreview`. The
+   * pretty-printed save JSON of an outlet's edited layout (raw-layout view).
    *
    * @param {string} outletName
    * @returns {string}
    */
   outletLayoutJson(outletName) {
-    const layout = serializeLayoutForSave(
-      this.layoutQuery.readResolvedLayout(outletName) ?? []
-    );
-    return JSON.stringify(layout, null, 2);
+    return this.wireframePublishPreview.outletLayoutJson(outletName);
   }
 
   /**
@@ -1919,13 +1896,8 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Returns the slot children of a grid `wf:layout` whose explicit
-   * column / row placements would fall outside the given bounds. Each
-   * entry yields the slot's composite key and the offending placement
-   * for diagnostic / clamping callers.
-   *
-   * Auto-placed slots (no explicit column / row) are excluded — CSS
-   * Grid auto-flow handles them regardless of the bounds change.
+   * Grid-template facade — delegates to `wireframeGridTemplate`. The grid slots
+   * whose explicit placement falls outside the given bounds.
    *
    * @param {string} gridKey
    * @param {number} maxColumns
@@ -1933,312 +1905,80 @@ export default class WireframeService extends Service {
    * @returns {Array<{slotKey: string, column: string, row: string}>}
    */
   outOfBoundsSlotsIn(gridKey, maxColumns, maxRows) {
-    const located = this.layoutQuery.findEntryAndOutletSync(gridKey);
-    if (!located || !this.layoutQuery.isGridContainer(located.entry)) {
-      return [];
-    }
-    const offenders = [];
-    for (const slot of located.entry.children ?? []) {
-      if (!this.layoutQuery.isGridCellEntry(slot)) {
-        continue;
-      }
-      const placement = parsePlacement(slot.containerArgs);
-      const colExceeds =
-        placement.column.start != null &&
-        placement.column.end != null &&
-        placement.column.end > maxColumns + 1;
-      const rowExceeds =
-        placement.row.start != null &&
-        placement.row.end != null &&
-        placement.row.end > maxRows + 1;
-      if (colExceeds || rowExceeds) {
-        offenders.push({
-          slotKey: entryKey(slot),
-          column: slot.containerArgs?.grid?.column ?? "auto",
-          row: slot.containerArgs?.grid?.row ?? "auto",
-        });
-      }
-    }
-    return offenders;
+    return this.wireframeGridTemplate.outOfBoundsSlotsIn(
+      gridKey,
+      maxColumns,
+      maxRows
+    );
   }
 
   /**
-   * Clamps every slot in a grid layout so its placement fits inside
-   * the given bounds. Slots whose end lines exceed the new max get
-   * their spans truncated; slots whose start lines exceed it get
-   * snapped back to the last valid cell with span 1.
-   *
-   * Runs as a single structural-undo entry so the whole clamp can be
-   * reverted with one Cmd+Z (e.g. after a "Reduce columns" confirm).
+   * Grid-template facade — delegates to `wireframeGridTemplate`. Clamps every
+   * slot in a grid to fit new bounds (one structural-undo entry).
    *
    * @param {{gridKey: string, maxColumns: number, maxRows: number}} args
    * @returns {boolean}
    */
   @action
-  clampGridSlotPlacements({ gridKey, maxColumns, maxRows }) {
-    const located = this.layoutQuery.findEntryAndOutletSync(gridKey);
-    if (!located || !this.layoutQuery.isGridContainer(located.entry)) {
-      return false;
-    }
-    const offenders = this.outOfBoundsSlotsIn(gridKey, maxColumns, maxRows);
-    if (offenders.length === 0) {
-      return false;
-    }
-    return this.recordStructural([located.outletName], () => {
-      for (const slot of located.entry.children ?? []) {
-        if (!this.layoutQuery.isGridCellEntry(slot)) {
-          continue;
-        }
-        const placement = parsePlacement(slot.containerArgs);
-        const newColumn = this.#clampTrack(placement.column, maxColumns);
-        const newRow = this.#clampTrack(placement.row, maxRows);
-        if (newColumn == null && newRow == null) {
-          continue;
-        }
-        const layout = this.layoutQuery.readResolvedLayout(located.outletName);
-        const result = replaceEntryContainerArgs(
-          layout,
-          entryKey(slot),
-          "grid",
-          (current) => ({
-            ...current,
-            ...(newColumn != null && { column: newColumn }),
-            ...(newRow != null && { row: newRow }),
-          })
-        );
-        if (!result.changed) {
-          continue;
-        }
-        this.publishStructuralChange(located.outletName, result.layout);
-      }
-      return true;
-    });
+  clampGridSlotPlacements(args) {
+    return this.wireframeGridTemplate.clampGridSlotPlacements(args);
   }
 
   /**
-   * Applies a preset grid template to an existing `wf:layout` block.
-   * The template resolves to an ordered list of cells (its declared
-   * rects). Existing content is reflowed into those cells in reading
-   * order; a block dropped into a spanning cell adopts the span.
-   * Leftover spanning cells become empty merged-cell entries; leftover
-   * single cells are surfaced by the grid overlay. The only refusal is
-   * "more content than the template has room for", so switching between
-   * templates stays free as long as the content fits — no template
-   * disables another just by being applied.
-   *
-   * Wrapped in a single structural-undo entry so the whole switch
-   * can be reverted with one Cmd+Z.
+   * Grid-template facade — delegates to `wireframeGridTemplate`. Applies a preset
+   * grid template, reflowing content into its cells.
    *
    * @param {{gridKey: string, template: Object}} args
    * @returns {boolean}
    */
   @action
-  applyGridTemplate({ gridKey, template }) {
-    if (!template) {
-      return false;
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(gridKey);
-    if (!located) {
-      return false;
-    }
-    const { args: templateArgs, slotEntries } = resolveTemplateLayout(template);
-    const cells = this.#cellsFor(templateArgs, slotEntries);
-    const content = this.#contentChildren(located.entry);
-    // More content than the template can hold: refuse before mutating.
-    if (content.length > cells.length) {
-      return false;
-    }
-    return this.recordStructural([located.outletName], () => {
-      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
-      }
-      const result = replaceEntryInPlace(layout, gridKey, {
-        ...located.entry,
-        // Drop any resized `columnFractions` — the new shape defines its
-        // own (even) tracks.
-        args: { ...located.entry.args, ...templateArgs, columnFractions: [] },
-        children: this.#reflowIntoCells(content, cells),
-      });
-      if (!result.changed) {
-        return false;
-      }
-      this.publishStructuralChange(located.outletName, result.layout);
-      return true;
-    });
+  applyGridTemplate(args) {
+    return this.wireframeGridTemplate.applyGridTemplate(args);
   }
 
   /**
-   * Returns `true` when `applyGridTemplate` would succeed for the given
-   * template against the currently-selected `wf:layout` — i.e. the
-   * layout's content fits the template's number of cells. Pure-read;
-   * the inspector calls this to disable a template option that can't
-   * hold the current content. Mirrors the refusal predicate inside
-   * `applyGridTemplate`.
+   * Grid-template facade — delegates to `wireframeGridTemplate`. Whether
+   * `applyGridTemplate` would succeed (content fits the template).
    *
    * @param {{gridKey: string, template: Object}} args
    * @returns {boolean}
    */
-  canApplyGridTemplate({ gridKey, template }) {
-    if (!template) {
-      return false;
-    }
-    const located = this.layoutQuery.findEntryAndOutletSync(gridKey);
-    if (!located) {
-      return false;
-    }
-    const { args: templateArgs, slotEntries } = resolveTemplateLayout(template);
-    const cells = this.#cellsFor(templateArgs, slotEntries);
-    return this.#contentChildren(located.entry).length <= cells.length;
+  canApplyGridTemplate(args) {
+    return this.wireframeGridTemplate.canApplyGridTemplate(args);
   }
 
   /**
-   * The preset template whose shape matches the given grid's current
-   * shape, or `null` when it matches none (which the inspector reads as
-   * "Free"). Pure-read; drives the inspector's Free / Template control
-   * and the active-preset highlight. Derived from geometry rather than a
-   * stored id, so it never goes stale against hand edits.
+   * Grid-template facade — delegates to `wireframeGridTemplate`. The preset
+   * template matching the grid's current shape, or null ("Free").
    *
    * @param {string} gridKey
    * @returns {Object|null}
    */
   activeGridTemplate(gridKey) {
-    const located = this.layoutQuery.findEntryAndOutletSync(gridKey);
-    if (!located) {
-      return null;
-    }
-    const { columns, rows } = this.gridSizeFor(gridKey);
-    return matchGridTemplate(located.entry.children ?? [], columns, rows);
+    return this.wireframeGridTemplate.activeGridTemplate(gridKey);
   }
 
   /**
-   * The effective `{columns, rows}` of a grid layout — the larger of its
-   * declared args and what its children occupy (see core's
-   * `gridDimensions`). The inspector reads this for its column / row
-   * fields and for shape-matching, so the displayed size always matches
-   * the rendered grid rather than a bare default that can drift.
+   * Grid-template facade — delegates to `wireframeGridTemplate`. The effective
+   * `{columns, rows}` of a grid (declared vs occupied).
    *
    * @param {string} gridKey
    * @returns {{columns: number, rows: number}}
    */
   gridSizeFor(gridKey) {
-    const located = this.layoutQuery.findEntryAndOutletSync(gridKey);
-    const args = located?.entry.args ?? {};
-    return gridDimensions(
-      {
-        columns: args.columns ?? DEFAULT_GRID_COLUMNS,
-        rows: args.rows ?? DEFAULT_GRID_ROWS,
-      },
-      located?.entry.children
-    );
+    return this.wireframeGridTemplate.gridSizeFor(gridKey);
   }
 
   /**
-   * Switches a `wf:layout` into free mode at the given dimensions: the
-   * grid becomes `columns × rows` single cells and existing content is
-   * reflowed into them in reading order. This is the "Free" counterpart
-   * to `applyGridTemplate` — picking Free, or changing the column / row
-   * count while in Free, both route here so blocks rearrange to fit
-   * rather than spilling out of bounds. Refuses when there's more
-   * content than `columns × rows` cells.
+   * Grid-template facade — delegates to `wireframeGridTemplate`. Switches a grid
+   * into free `columns × rows` mode, reflowing content.
    *
    * @param {{gridKey: string, columns: number, rows: number}} args
    * @returns {boolean}
    */
   @action
-  applyFreeGrid({ gridKey, columns, rows }) {
-    const located = this.layoutQuery.findEntryAndOutletSync(gridKey);
-    if (!located) {
-      return false;
-    }
-    const cells = cellsForFree(columns, rows);
-    const content = this.#contentChildren(located.entry);
-    if (content.length > cells.length) {
-      return false;
-    }
-    return this.recordStructural([located.outletName], () => {
-      const layout = this.layoutQuery.readResolvedLayout(located.outletName);
-      if (!layout) {
-        return false;
-      }
-      const result = replaceEntryInPlace(layout, gridKey, {
-        ...located.entry,
-        // Free mode is even tracks — drop any resized `columnFractions`.
-        args: {
-          ...located.entry.args,
-          mode: "grid",
-          columns,
-          rows,
-          columnFractions: [],
-        },
-        children: this.#reflowIntoCells(content, cells),
-      });
-      if (!result.changed) {
-        return false;
-      }
-      this.publishStructuralChange(located.outletName, result.layout);
-      return true;
-    });
-  }
-
-  /**
-   * The layout entry's content children — everything except the empty
-   * merged-cell placeholders, which are regenerated by the reflow rather
-   * than carried across.
-   *
-   * @param {Object} entry
-   * @returns {Array<Object>}
-   */
-  #contentChildren(entry) {
-    return contentCells(entry.children);
-  }
-
-  /**
-   * The ordered list of target cells for a template's resolved args.
-   * A template with declared areas hands back its rects; a frame-only
-   * preset (no areas) fills every cell of its grid.
-   *
-   * @param {Object} templateArgs
-   * @param {Array<Object>} slotEntries
-   * @returns {Array<{column: string, row: string}>}
-   */
-  #cellsFor(templateArgs, slotEntries) {
-    if (slotEntries.length > 0) {
-      return slotEntries.map((entry) => ({
-        column: entry.containerArgs.grid.column,
-        row: entry.containerArgs.grid.row,
-      }));
-    }
-    return cellsForFree(templateArgs.columns ?? 3, templateArgs.rows ?? 1);
-  }
-
-  /**
-   * Reflows `content` into `cells`, with a container-validity guard: a
-   * grid must have at least one child, but the reflow leaves single
-   * empty cells derived (no entry). When the result would be empty (no
-   * content and only single cells), materialise every cell as an empty
-   * merged cell so the grid keeps a body and shows its shape.
-   *
-   * @param {Array<Object>} content
-   * @param {Array<{column: string, row: string}>} cells
-   * @returns {Array<Object>}
-   */
-  #reflowIntoCells(content, cells) {
-    const reflowed = reflowChildrenIntoCells(content, cells);
-    if (reflowed && reflowed.length > 0) {
-      return reflowed;
-    }
-    return cells.map((cell) => ({
-      block: LAYOUT_MERGED_CELL_BLOCK,
-      containerArgs: {
-        grid: {
-          column: cell.column,
-          row: cell.row,
-          align: "stretch",
-          justify: "stretch",
-        },
-      },
-    }));
+  applyFreeGrid(args) {
+    return this.wireframeGridTemplate.applyFreeGrid(args);
   }
 
   /**
@@ -2569,29 +2309,6 @@ export default class WireframeService extends Service {
    */
   selectInsertedEntry(entry) {
     return this.wireframeBlockMutations.selectInsertedEntry(entry);
-  }
-
-  /**
-   * Returns a clamped CSS Grid track shorthand, or `null` if the track
-   * is already within bounds (so callers can skip writing it). Auto
-   * placements pass through unchanged.
-   *
-   * @param {{start: number|null, end: number|null}} track
-   * @param {number} max
-   * @returns {string|null}
-   */
-  #clampTrack(track, max) {
-    if (track.start == null) {
-      return null;
-    }
-    const lastLine = max + 1;
-    const start = Math.min(track.start, max);
-    const end = track.end == null ? start + 1 : Math.min(track.end, lastLine);
-    const safeEnd = Math.max(end, start + 1);
-    if (start === track.start && safeEnd === track.end) {
-      return null;
-    }
-    return safeEnd <= start + 1 ? `${start}` : `${start} / ${safeEnd}`;
   }
 
   /**

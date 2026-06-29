@@ -1,6 +1,6 @@
 // @ts-check
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/owner";
+import Service, { service } from "@ember/service";
 import IconEditPopover from "../components/icon-edit-popover";
 
 /**
@@ -8,16 +8,19 @@ import IconEditPopover from "../components/icon-edit-popover";
  * argName) is being edited, the pre-edit snapshot for undo, and the
  * open FloatKit menu instance hosting the icon picker.
  *
- * Lives outside `WireframeService` so the service stays focused on
- * layout / palette / clipboard / undo concerns, mirroring the
- * `InlineEditState` split. Service-owned utilities (layout lookup, the
- * edit engine's arg-edit recording) are reached through `this.service`.
- *
- * Plain JS class — NOT an Ember service. Instantiated once per
- * service instance at service construction and exposed via
- * `wireframe.iconEdit`.
+ * A peer command service in the editor's acyclic graph: it injects the
+ * menu service (hosts the picker), the read-only layout query layer
+ * (entry lookup), the mutation/undo engine (records the arg edit), and
+ * the inline rich-text edit session (closed on start as a session
+ * boundary). The UI lives in `IconEditPopover`, mounted via the menu;
+ * this service only tracks the session metadata.
  */
-export default class IconEditState {
+export default class WireframeIconEditService extends Service {
+  @service menu;
+  @service wireframeEditEngine;
+  @service wireframeInlineEdit;
+  @service wireframeLayoutQuery;
+
   /**
    * Currently-editing block key. `null` when no session is active.
    *
@@ -59,18 +62,6 @@ export default class IconEditState {
   #menuInstance = null;
 
   /**
-   * @param {import("../services/wireframe").default} service
-   */
-  constructor(service) {
-    this.service = service;
-    // Look up the menu service via the owner instead of having the
-    // wireframe service inject it — this state class is plain JS, so
-    // it can't use `@service`, and routing the menu through the
-    // wireframe service would force a passthrough field there.
-    this.menu = getOwner(service).lookup("service:menu");
-  }
-
-  /**
    * Begins an icon-edit session for `(blockKey, argName)`. Captures
    * the current value as the pre-edit snapshot and opens a FloatKit
    * menu anchored to `anchorEl` with the icon picker inside.
@@ -89,14 +80,14 @@ export default class IconEditState {
    */
   async start({ blockKey, argName, anchorEl }) {
     // Close any other inline-edit session first.
-    if (this.service.inlineEdit.blockKey) {
-      this.service.inlineEdit.stop({ commit: true });
+    if (this.wireframeInlineEdit.blockKey) {
+      this.wireframeInlineEdit.stop({ commit: true });
     }
     if (this.blockKey) {
       await this.stop();
     }
 
-    const located = this.service.layoutQuery.findEntryAndOutletSync(blockKey);
+    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(blockKey);
     if (!located) {
       return;
     }
@@ -145,7 +136,7 @@ export default class IconEditState {
       return;
     }
     const { entry, outletName } = located;
-    this.service.wireframeEditEngine.recordArgEdit({
+    this.wireframeEditEngine.recordArgEdit({
       entry,
       outletName,
       argName,

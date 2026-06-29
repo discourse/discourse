@@ -165,6 +165,23 @@ export default class WireframeInlineEditService extends Service {
    */
   @tracked _controller = null;
 
+  /**
+   * Contextual toolbar slot — when non-null, the block toolbar transitions
+   * into a field-editing mode driven by this state instead of showing default
+   * block actions. Generic shape: `{ kind, value, apply, cancel, remove? }`.
+   * PM's link-mark editing AND block-arg URL editing both populate this with
+   * `kind: "url"`; future kinds (e.g. `"color"`, `"image"`) plug into the same
+   * slot without re-architecting. Exactly one slot is active at a time — a new
+   * source setting it implicitly closes the previous session.
+   *
+   * Held here (rather than a separate concern) because it's inline-edit state:
+   * the PM link-mark controller drives it. Read-only via `fieldEditor`; written
+   * via `setFieldEditor`.
+   *
+   * @type {Object|null}
+   */
+  @tracked _fieldEditor = null;
+
   constructor() {
     super(...arguments);
     // Own our reaction to selection changes: switching selection to a different
@@ -181,6 +198,16 @@ export default class WireframeInlineEditService extends Service {
         this.stop({ commit: true });
       }
     });
+  }
+
+  /**
+   * The active contextual toolbar field-editor slot, or `null`. See
+   * `_fieldEditor`.
+   *
+   * @returns {Object|null}
+   */
+  get fieldEditor() {
+    return this._fieldEditor;
   }
 
   /** @returns {boolean} */
@@ -257,6 +284,16 @@ export default class WireframeInlineEditService extends Service {
    */
   get controller() {
     return this._controller;
+  }
+
+  /**
+   * Sets (or clears, with `null`) the contextual toolbar field-editor slot.
+   * Replaces any previously active descriptor (the slot holds exactly one).
+   *
+   * @param {Object|null} descriptor - `{ kind, value, apply, cancel, remove? }`.
+   */
+  setFieldEditor(descriptor) {
+    this._fieldEditor = descriptor;
   }
 
   /**
