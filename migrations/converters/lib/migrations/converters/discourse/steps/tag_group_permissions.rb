@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class TagGroupPermissions < Conversion::ProgressStep
+      class TagGroupPermissions < Conversion::Step
         source { reads_table "tag_group_permissions" }
 
         processor do
