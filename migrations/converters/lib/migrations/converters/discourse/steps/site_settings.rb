@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class SiteSettings < Conversion::ProgressStep
+      class SiteSettings < Conversion::Step
         source do
           def max_progress
             @source_db.count <<~SQL

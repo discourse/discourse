@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class UserEmails < Conversion::ProgressStep
+      class UserEmails < Conversion::Step
         source { reads_table "user_emails", where: "user_id > 0" }
 
         processor do

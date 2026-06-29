@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class UserAssociatedAccounts < Conversion::ProgressStep
+      class UserAssociatedAccounts < Conversion::Step
         source { reads_table "user_associated_accounts", where: "user_id > 0" }
 
         processor do
