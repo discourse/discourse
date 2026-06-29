@@ -38,7 +38,6 @@ if defined?(DiscourseWorkflows)
                   filterable: true,
                   value_property: :id,
                   name_property: :name,
-                  resets: %w[llm_model_id],
                   set_from_option: {
                     agent_name: "name",
                     agent_force_default_llm: "force_default_llm",
