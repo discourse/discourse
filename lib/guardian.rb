@@ -104,6 +104,10 @@ class Guardian
     def in_any_groups?(group_ids)
       group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
     end
+
+    def permission_acl
+      @permission_acl ||= AccessControlList.matching_user(nil).user_acl
+    end
   end
 
   attr_reader :request
@@ -171,6 +175,26 @@ class Guardian
 
   def is_anonymous?
     @user.anonymous?
+  end
+
+  def has_acl_permission?(target, permission)
+    @user.permission_acl.has_target_permission?(target, permission)
+  end
+
+  def has_any_acl_permission?(target, permissions)
+    @user.permission_acl.has_any_target_permission?(target, permissions)
+  end
+
+  def target_ids_with_acl_permission(target_klass, permission)
+    @user.permission_acl.target_ids_with_permission(target_klass, permission)
+  end
+
+  def target_ids_with_any_acl_permissions(target_klass, permissions)
+    @user.permission_acl.target_ids_with_any_permissions(target_klass, permissions)
+  end
+
+  def in_any_groups?(group_ids)
+    @user.in_any_groups?(group_ids)
   end
 
   # Can the user see the object?

@@ -5,6 +5,7 @@ export default class AdminUsersListShowRoute extends DiscourseRoute {
     order: { refreshModel: true },
     asc: { refreshModel: true },
     username: { refreshModel: true },
+    activation: { refreshModel: true },
   };
 
   // TODO: this has been introduced to fix a bug in admin-users-list-show
@@ -23,6 +24,10 @@ export default class AdminUsersListShowRoute extends DiscourseRoute {
           asc: transition.to.queryParams.asc,
           listFilter: transition.to.queryParams.username,
           query: params.filter,
+          activation:
+            params.filter === "new"
+              ? transition.to.queryParams.activation
+              : null,
           refreshing: false,
           bulkSelectedUsersMap: {},
           bulkSelectedUserIdsSet: new Set(),

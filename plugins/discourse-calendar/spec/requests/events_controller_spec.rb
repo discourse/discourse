@@ -239,6 +239,65 @@ module DiscoursePostEvent
         expect(response.body).to include("SUMMARY:Valid Event")
       end
 
+      describe "with all-day events" do
+        before { freeze_time Time.utc(2026, 3, 1, 12) }
+
+        it "emits all-day events as DATE values with an exclusive end date" do
+          Fabricate(
+            :event,
+            original_starts_at: Time.utc(2026, 3, 12),
+            original_ends_at: Time.utc(2026, 3, 14).end_of_day,
+            all_day: true,
+            name: "All Day Conference",
+          )
+
+          get "/discourse-post-event/events.ics"
+
+          expect(response.status).to eq(200)
+          body = response.body
+          expect(body).to include("SUMMARY:All Day Conference")
+          expect(body).to include("DTSTART;VALUE=DATE:20260312")
+          expect(body).to include("DTEND;VALUE=DATE:20260315")
+          expect(body).not_to include("DTSTART:20260312T000000Z")
+        end
+
+        it "emits a single-day all-day event spanning one day" do
+          Fabricate(
+            :event,
+            original_starts_at: Time.utc(2026, 3, 12),
+            original_ends_at: nil,
+            all_day: true,
+            name: "All Day Holiday",
+          )
+
+          get "/discourse-post-event/events.ics"
+
+          expect(response.status).to eq(200)
+          body = response.body
+          expect(body).to include("DTSTART;VALUE=DATE:20260312")
+          expect(body).to include("DTEND;VALUE=DATE:20260313")
+        end
+
+        it "emits recurring all-day occurrences as DATE values" do
+          Fabricate(
+            :event,
+            original_starts_at: Time.utc(2026, 3, 12),
+            all_day: true,
+            recurrence: "every_week",
+            name: "Weekly All Day",
+          )
+
+          get "/discourse-post-event/events.ics"
+
+          expect(response.status).to eq(200)
+          body = response.body
+          expect(body.scan("DTSTART;VALUE=DATE:").size).to be > 1
+          expect(body).not_to match(/DTSTART:\d{8}T\d{6}Z/)
+          expect(body).to include("DTSTART;VALUE=DATE:20260312")
+          expect(body).to include("DTEND;VALUE=DATE:20260313")
+        end
+      end
+
       context "when include_interested is requested for an attending user" do
         fab!(:target_user, :user)
         fab!(:going_event) do
@@ -320,6 +379,22 @@ module DiscoursePostEvent
         expect(event["starts_at"]).to eq("2026-03-12")
         expect(event["ends_at"]).to eq("2026-03-14")
         expect(event["all_day"]).to eq(true)
+      end
+
+      it "serializes recurring no-end occurrences as a single day" do
+        freeze_time Time.utc(2026, 3, 1, 12)
+        Fabricate(
+          :event,
+          original_starts_at: Time.utc(2026, 2, 1),
+          all_day: true,
+          recurrence: "every_week",
+        )
+
+        get "/discourse-post-event/events.json"
+
+        expect(response.status).to eq(200)
+        occurrence = response.parsed_body["events"].first["occurrences"].first
+        expect(occurrence["ends_at"]).to eq(occurrence["starts_at"])
       end
     end
 

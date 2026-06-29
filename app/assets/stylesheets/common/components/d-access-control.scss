@@ -1,0 +1,62 @@
+.d-access-control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+
+  &__chooser {
+    width: 100%;
+  }
+
+  &__rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-2);
+    border-bottom: 1px solid var(--content-border-color);
+
+    &.--mandatory {
+      color: var(--d-input-text-color--disabled);
+    }
+  }
+
+  &__group-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+
+    svg.d-icon {
+      margin-right: var(--space-1);
+    }
+  }
+
+  &__permission {
+    flex: 0 0 auto;
+    width: auto;
+  }
+
+  &__permission-divider {
+    border-top: 1px solid var(--content-border-color);
+  }
+
+  &__permission-remove {
+    .texts span {
+      color: var(--danger) !important;
+    }
+  }
+
+  &__add {
+    width: 100%;
+  }
+}

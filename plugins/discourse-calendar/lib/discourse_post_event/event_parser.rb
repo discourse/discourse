@@ -18,6 +18,7 @@ module DiscoursePostEvent
       :minimal,
       :closed,
       :"chat-enabled",
+      :livestream,
       :"max-attendees",
       :"all-day",
       :image,

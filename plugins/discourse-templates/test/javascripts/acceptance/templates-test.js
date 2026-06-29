@@ -33,6 +33,18 @@ async function selectCategory() {
   await categoryChooser.selectRowByValue(2);
 }
 
+function categoryFixture(attrs) {
+  return {
+    color: "0088CC",
+    name: attrs.slug,
+    permission: PermissionType.FULL,
+    read_restricted: false,
+    text_color: "FFFFFF",
+    topic_count: 1,
+    ...attrs,
+  };
+}
+
 acceptance("discourse-templates", function (needs) {
   needs.settings({
     discourse_templates_enabled: true,
@@ -429,6 +441,8 @@ acceptance("keyboard shortcut", function (needs) {
 });
 
 acceptance("buttons on topics", function (needs) {
+  let categoriesBySlugPath;
+  let categoryFindRequests;
   let templateBody;
   let templateCategory;
 
@@ -439,6 +453,8 @@ acceptance("buttons on topics", function (needs) {
     tagging_enabled: true,
   });
   needs.hooks.beforeEach(() => {
+    categoriesBySlugPath = {};
+    categoryFindRequests = [];
     templateBody = "post raw content";
     templateCategory = "dev";
   });
@@ -458,10 +474,22 @@ tags: security, minor-security-fix
 
 ${templateBody}`,
     ]);
+    server.get("/categories/find", (request) => {
+      categoryFindRequests.push(request.queryParams);
+
+      const categories = categoriesBySlugPath[request.queryParams.slug_path];
+
+      if (categories) {
+        return helper.response({ categories });
+      }
+
+      return helper.response(404, {});
+    });
   });
 
   test("Can open composer using button on topic", async function (assert) {
     await visit("/t/280");
+    Category.findById(7).set("permission", PermissionType.FULL);
 
     await click(".template-new-topic");
     assert
@@ -484,9 +512,8 @@ ${templateBody}`,
   });
 
   test("Does not select a category the user cannot create topics in", async function (assert) {
-    Category.findById(7).set("permission", PermissionType.READONLY);
-
     await visit("/t/280");
+    Category.findById(7).set("permission", PermissionType.READONLY);
 
     await click(".template-new-topic");
 
@@ -528,6 +555,68 @@ ${templateBody}`,
       tags.header().value(),
       "security,minor-security-fix",
       "still selects tags from the template options"
+    );
+  });
+
+  test("Selects a category that is loaded asynchronously", async function (assert) {
+    templateCategory = "async-category";
+    categoriesBySlugPath["async-category"] = [
+      categoryFixture({
+        id: 30,
+        name: "Async category",
+        slug: "async-category",
+      }),
+    ];
+
+    await visit("/t/280");
+
+    await click(".template-new-topic");
+
+    assert.deepEqual(
+      categoryFindRequests,
+      [{ slug_path: "async-category" }],
+      "loads the category by slug path"
+    );
+
+    const categoryChooser = selectKit(".category-chooser");
+    assert.strictEqual(
+      categoryChooser.header().value(),
+      "30",
+      "selects the asynchronously loaded category"
+    );
+  });
+
+  test("Selects a subcategory that is loaded asynchronously", async function (assert) {
+    templateCategory = "async-parent/async-child";
+    categoriesBySlugPath["async-parent/async-child"] = [
+      categoryFixture({
+        id: 30,
+        name: "Async parent",
+        slug: "async-parent",
+      }),
+      categoryFixture({
+        id: 31,
+        name: "Async child",
+        parent_category_id: 30,
+        slug: "async-child",
+      }),
+    ];
+
+    await visit("/t/280");
+
+    await click(".template-new-topic");
+
+    assert.deepEqual(
+      categoryFindRequests,
+      [{ slug_path: "async-parent/async-child" }],
+      "loads the subcategory by slug path"
+    );
+
+    const categoryChooser = selectKit(".category-chooser");
+    assert.strictEqual(
+      categoryChooser.header().value(),
+      "31",
+      "selects the asynchronously loaded subcategory"
     );
   });
 

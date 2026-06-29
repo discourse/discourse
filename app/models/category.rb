@@ -248,7 +248,7 @@ class Category < ActiveRecord::Base
                 :subcategory_count
 
   # Allows us to skip creating the category definition topic in tests.
-  attr_accessor :skip_category_definition
+  attr_accessor :skip_category_definition, :skip_publish
 
   enum :style_type, { square: 0, icon: 1, emoji: 2 }
 
@@ -665,6 +665,8 @@ class Category < ActiveRecord::Base
   end
 
   def publish_category
+    return if skip_publish
+
     if read_restricted
       group_ids = groups.pluck(:id)
 

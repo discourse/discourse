@@ -22,8 +22,6 @@ cs:
       create:
         form:
           insert: Vložit
-          advanced_mode: Pokročilý mód
-          simple_mode: Jednoduchý mód
           format_description: "Formát použitý pro zobrazení data uživateli. Použijte Z pro zobrazení posunu a zz pro název časové zóny."
           timezones_title: Časová pásma k zobrazení
           timezones_description: Pro zobrazení dat v náhledu a záložním zobrazení se použijí časová pásma.

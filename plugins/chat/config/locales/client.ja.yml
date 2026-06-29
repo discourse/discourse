@@ -289,8 +289,6 @@ ja:
         title: "デスクトップチャットの通知音"
       sounds:
         none: "なし"
-        bell: "ベル"
-        ding: "ゴーン"
       title: "チャット"
       title_capitalized: "チャット"
       upload: "ファイルを添付する"

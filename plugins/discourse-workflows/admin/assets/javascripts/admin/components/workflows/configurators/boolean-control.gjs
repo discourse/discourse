@@ -107,6 +107,7 @@ export default class BooleanControl extends Component {
         @name={{@fieldName}}
         @title={{this.label}}
         @showTitle={{true}}
+        @showOptional={{@showOptional}}
         @type="custom"
         @format={{this.format}}
         @onSet={{@onSet}}
@@ -133,6 +134,7 @@ export default class BooleanControl extends Component {
         @tooltip={{this.tooltip}}
         @type="toggle"
         @format={{this.format}}
+        @showOptional={{@showOptional}}
         @validation={{this.validation}}
         as |field|
       >

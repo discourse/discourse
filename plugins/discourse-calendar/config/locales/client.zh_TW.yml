@@ -83,11 +83,6 @@ zh_TW:
           every_day: "每天"
         attendance:
           none: "無"
-        url:
-          label: "網址"
-          placeholder: "可選"
-        location:
-          label: "位置"
         description:
           label: "描述"
         event_type:

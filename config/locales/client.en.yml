@@ -48,6 +48,16 @@ en:
         no_visible_children_hint: "This container block is not rendered because none of its children are visible."
         condition_failed_hint: "This block is not rendered because its conditions failed."
         head_hidden_tail_hint: "This block is not rendered because another block was rendered first in the `head` container."
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_editor_description: "Can create and edit content for this entity"
+        access_permission_viewer: "Viewer"
+        access_permission_viewer_description: "Can view content for this entity"
+        access_permission_remove: "Remove"
+        access_permission_remove_description: "Remove permission for this group"
+        add_group: "Add group"
+        mandatory_acl_tooltip: "This permission is mandatory for this entity and cannot be removed"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -6689,9 +6699,25 @@ en:
               title: "Digest logo"
               description: "The alternate logo image used at the top of your site's email summary. If left blank, the image from the `logo` setting will be used."
               help_text: "Use a wide rectangle image. Don't use an SVG image."
+            og_image_source:
+              title: "OpenGraph image source"
+              description: "Choose how OpenGraph preview images are provided for topics that don't have their own image."
+              uploaded: "Use an uploaded image"
+              generated: "Generate an image per topic"
             opengraph_image:
               title: "OpenGraph image"
               description: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used."
+            generate_topic_og_image:
+              title: "Generate topic OG images"
+              description: "Automatically generate OpenGraph preview images for topics that don't have an image. Uses topic title, category, and site colors."
+            og_image_preview:
+              title: "Generated OG image preview"
+              description: "Preview of automatically generated OpenGraph images for topics without images. Enter a topic ID to test."
+              generate: "Generate"
+              topic_id_label: "Topic ID"
+              topic_id_placeholder: "e.g. 123"
+              placeholder: "Enter a topic ID and click Generate to preview."
+              error: "Could not generate preview. Check the topic ID and try again."
             x_summary_large_image:
               title: "X summary large image"
               description: "X card 'summary large image'. If left blank, regular card metadata is generated using the OpenGraph_image, as long as that is not also a .svg."
@@ -8774,6 +8800,7 @@ en:
             discourse_id_regenerate_credentials: "regenerate Discourse ID credentials"
             configure_category_type: "configure category type"
             unconfigure_category_type: "unconfigure category type"
+            change_access_control_list_permissions: "change access control list permissions"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -8983,13 +9010,33 @@ en:
         show_emails: "Show emails"
         hide_emails: "Hide emails"
         silence_reason: "Silence reason"
+        suspend_reason: "Suspend reason"
         bulk_actions:
           title: "Bulk actions"
-          admin_cant_be_deleted: "This user can't be deleted because they're an admin"
-          too_many_or_old_posts: "This user can't be deleted they have too many posts or a very old post"
+          select_all: "Select all"
+          clear_all: "Clear all"
+          staff_cant_be_actioned: "This user can't be deleted or suspended because they're a staff member"
+          no_users_can_be_deleted: "None of the selected users can be deleted."
+          no_users_can_be_suspended: "None of the selected users can be suspended."
           too_many_selected_users:
-            one: "You've reached the %{count} user limit for bulk deletion"
-            other: "You've reached the %{count} users limit for bulk deletion"
+            one: "You've reached the %{count} user limit for bulk actions"
+            other: "You've reached the %{count} users limit for bulk actions"
+          suspend:
+            label: "Suspend users…"
+            confirmation_modal:
+              prompt_text:
+                one: "You're about to suspend %{count} user. Set a duration and reason below:"
+                other: "You're about to suspend %{count} users. Set a duration and reason below:"
+              close: "Close"
+              confirm: "Suspend"
+              title:
+                one: "Suspend %{count} user"
+                other: "Suspend %{count} users"
+              bulk_suspend_starting: "Starting bulk suspend…"
+              user_suspend_succeeded: "[%{position}/%{total}] Successfully suspended @%{username}"
+              user_suspend_failed: "[%{position}/%{total}] Failed to suspend @%{username} - %{error}"
+              bulk_suspend_finished: "Bulk suspend operation completed."
+              failed_to_suspend_users: "The following users failed to be suspended:"
           delete:
             label: "Delete users…"
             confirmation_modal:
@@ -9017,6 +9064,11 @@ en:
           suspended: "Suspended"
           silenced: "Silenced"
           staged: "Staged"
+        activation_filter:
+          label: "Activation status"
+          all: "All users"
+          activated: "Activated"
+          not_activated: "Not activated"
         approved: "Approved?"
         titles:
           active: "Active users"

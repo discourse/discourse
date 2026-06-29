@@ -22,8 +22,6 @@ es:
       create:
         form:
           insert: Insertar
-          advanced_mode: Modo avanzado
-          simple_mode: Modo simple
           format_description: "Formato usado para mostrarle la fecha a los usuarios. Usa Z para mostrar la diferencia horaria y zz para el nombre de la zona horaria."
           timezones_title: Zonas horarias que se muestran
           timezones_description: Las zonas horarias se usarán para mostrar las fechas en vista previa y retrospectiva.

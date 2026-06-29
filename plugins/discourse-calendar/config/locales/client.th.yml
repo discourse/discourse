@@ -67,11 +67,6 @@ th:
             last: "ล่าสุด"
         attendance:
           none: "ไม่มี"
-        url:
-          label: "URL"
-          placeholder: "ทางเลือก"
-        location:
-          label: "ที่อยู่"
         description:
           label: "รายละเอียด"
         event_type:

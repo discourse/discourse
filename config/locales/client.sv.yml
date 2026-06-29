@@ -22,6 +22,10 @@ sv:
         in_location: "i"
         hidden: "dold"
         failed: "misslyckad"
+    access_control:
+      manage:
+        access_permission_editor: "Redigerare"
+        access_permission_remove: "Ta bort"
     number:
       format:
         separator: "."
@@ -273,6 +277,9 @@ sv:
     age: "Ålder"
     joined: "Gick med"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Avancerat läge"
+      simple_mode: "Enkelt läge"
     show_more: "visa mer"
     show_help: "Alternativ"
     links: "Länkar"
@@ -2829,39 +2836,6 @@ sv:
       read_more: "Vill du läsa mer? <a href='%{categoryLink}'>Bläddra bland alla kategorier</a> eller <a href='%{latestLink}'>visa senaste ämnen</a>."
       unread_indicator: "Ingen medlem har läst det senaste inlägget ännu."
       participant_groups: "Deltagargrupper"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Det finns <a href="{basePath}/unread"># oläst</a>}
-              other {Det finns <a href="{basePath}/unread"># olästa</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { och <a href="{basePath}/new"># nytt</a> ämne kvar,}
-              other { och <a href="{basePath}/new"># nya</a> ämnen kvar,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Det finns <a href="{basePath}/unread"># olästa</a> ämnen kvar,}
-              other {Det finns <a href="{basePath}/unread"># olästa</a> ämnen kvar,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Det finns <a href="{basePath}/new"># nytt</a> ämne kvar,}
-              other {Det finns <a href="{basePath}/new"># nya</a> ämnen kvar,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { eller bläddra i andra ämnen i {categoryLink}}
-          false { eller <a href="{basePath}/latest">visa senaste ämnen</a>}
-          other {}
-        }
       created_at: "Skapad: %{date}"
       bumped_at: "Senaste: %{date}"
       suggest_create_topic: Redo att <a href>starta ett nytt samtal?</a>
@@ -4452,6 +4426,9 @@ sv:
             email: "E-postadress"
             manifest_screenshots:
               description: "Skärmdumpar som visar dina instansfunktioner och funktionaliteten på dess installationsfrågesida. Alla bilder ska vara lokala uppladdningar, med samma dimensioner."
+            og_image_preview:
+              generate: "Generera"
+              topic_id_label: "Ämnes-ID"
         fonts:
           title: "Typsnitt"
           form:
@@ -4561,7 +4538,7 @@ sv:
         no_check_performed: "En sökning efter uppdateringar har ej genomförts. Kontrollera att sidekiq körs."
         stale_data: "En sökning efter uppdateringar har inte genomförts på sistone. Kontrollera att sidekiq körs."
         installed_version: "Installerad"
-        latest_version: "Senaste"
+        github: "GitHub"
         problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"
         dismiss_notice: "Ignorera"
         new_features:
@@ -5042,6 +5019,8 @@ sv:
           city_for_disputes: "Domstol vid tvister"
           extra_groups:
             groups: "Grupper"
+          locale_selector:
+            title: "Språk"
           optional: "(valfri)"
           update: "Uppdatera"
           saved: "sparat!"

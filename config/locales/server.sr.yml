@@ -143,6 +143,11 @@ sr:
       moderators: "moderatori"
       staff: "osoblje"
       logged_in_users: "prijavljeni_korisnici"
+    default_full_names:
+      everyone: "Svi"
+      admins: "Admini"
+      moderators: "Moderatori"
+      staff: "Osoblje"
     default_descriptions:
       staff: "Automatska grupa koja uključuje administratore i moderatore"
       anonymous_users: "Automatska pseudogrupa koja predstavlja neautentifikovane posetioce"

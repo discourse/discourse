@@ -447,11 +447,6 @@ fa_IR:
             last: "آخرین"
         attendance:
           none: "هیچ‌کدام"
-        url:
-          label: "نشانی اینترنتی"
-          placeholder: "اختیاری"
-        location:
-          label: "موقعیت"
         description:
           label: "توضیح"
         name:

@@ -95,11 +95,6 @@ lt:
           every_day: "Kiekvieną dieną"
         attendance:
           none: "Nieko"
-        url:
-          label: "Nuoroda"
-          placeholder: "Pasirinktinai"
-        location:
-          label: "Vieta"
         description:
           label: "Aprašymas"
         event_type:

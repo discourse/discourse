@@ -703,6 +703,13 @@ sk:
       trust_level_2: "stupen_dovery_2"
       trust_level_3: "stupen_dovery_3"
       trust_level_4: "stupen_dovery_4"
+    default_full_names:
+      everyone: "Každý"
+      admins: "Administrátori"
+      moderators: "Moderátori"
+      staff: "Personál"
+      anonymous_users: "Anonymní používatelia"
+      logged_in_users: "Prihlásení užívatelia"
     default_descriptions:
       everyone: "Automatická skupina vrátane všetkých členov"
       staff: "Automatická skupina vrátane administrátorov a moderátorov"

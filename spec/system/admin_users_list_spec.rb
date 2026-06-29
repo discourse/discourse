@@ -16,10 +16,25 @@ describe "Admin Users Page" do
     expect(admin_users_page).to have_correct_breadcrumbs
   end
 
+  it "selects and clears all actionable users with the bulk select buttons" do
+    admin_users_page.visit
+    admin_users_page.bulk_select_button.click
+
+    admin_users_page.bulk_select_all_button.click
+    expect(admin_users_page.user_row(user_1.id).bulk_select_checkbox).to be_checked
+    expect(admin_users_page.user_row(user_2.id).bulk_select_checkbox).to be_checked
+    expect(admin_users_page.user_row(user_3.id).bulk_select_checkbox).to be_checked
+    expect(admin_users_page).to have_bulk_actions_dropdown
+
+    admin_users_page.bulk_clear_all_button.click
+    expect(admin_users_page.user_row(user_1.id).bulk_select_checkbox).not_to be_checked
+    expect(admin_users_page).to have_no_bulk_actions_dropdown
+  end
+
   describe "bulk user delete" do
     let(:confirmation_modal) { PageObjects::Modals::BulkUserDeleteConfirmation.new }
 
-    it "disables checkboxes for users that can't be deleted" do
+    it "disables checkboxes for users that can't be deleted or suspended" do
       admin_users_page.visit
 
       admin_users_page.bulk_select_button.click
@@ -29,8 +44,8 @@ describe "Admin Users Page" do
       expect(admin_users_page.user_row(user_1.id).bulk_select_checkbox.disabled?).to eq(false)
 
       admin_users_page.user_row(another_admin.id).bulk_select_checkbox.hover
-      expect(PageObjects::Components::Tooltips.new("bulk-delete-unavailable-reason")).to be_present(
-        text: I18n.t("admin_js.admin.users.bulk_actions.admin_cant_be_deleted"),
+      expect(PageObjects::Components::Tooltips.new("bulk-action-unavailable-reason")).to be_present(
+        text: I18n.t("admin_js.admin.users.bulk_actions.staff_cant_be_actioned"),
       )
     end
 
@@ -103,7 +118,7 @@ describe "Admin Users Page" do
       expect(confirmation_modal).to have_confirm_button_enabled
     end
 
-    xit "remembers selected users when the user list refreshes due to search" do
+    it "remembers selected users when the user list refreshes due to search" do
       admin_users_page.visit
       admin_users_page.bulk_select_button.click
       admin_users_page.search_input.fill_in(with: user_1.username)
@@ -190,6 +205,45 @@ describe "Admin Users Page" do
       expect(
         ScreenedEmail.exists?(email: user_1.email, action_type: ScreenedEmail.actions[:block]),
       ).to be_truthy
+    end
+  end
+
+  describe "bulk user suspend" do
+    let(:confirmation_modal) { PageObjects::Modals::BulkUserSuspendConfirmation.new }
+
+    it "can suspend multiple users" do
+      admin_users_page.visit
+      admin_users_page.bulk_select_button.click
+
+      admin_users_page.user_row(user_1.id).bulk_select_checkbox.click
+      admin_users_page.user_row(user_2.id).bulk_select_checkbox.click
+      admin_users_page.bulk_actions_dropdown.expand
+      admin_users_page.bulk_actions_dropdown.option(".bulk-suspend").click
+
+      expect(confirmation_modal).to be_open
+      expect(confirmation_modal).to have_confirm_button_disabled
+
+      confirmation_modal.set_future_date("tomorrow")
+      confirmation_modal.fill_in_reason("spamming")
+      expect(confirmation_modal).to have_confirm_button_enabled
+
+      confirmation_modal.confirm
+
+      expect(confirmation_modal).to have_successful_log_entry_for_user(
+        user: user_1,
+        position: 1,
+        total: 2,
+      )
+      expect(confirmation_modal).to have_successful_log_entry_for_user(
+        user: user_2,
+        position: 2,
+        total: 2,
+      )
+      expect(confirmation_modal).to have_no_error_log_entries
+
+      confirmation_modal.close
+
+      expect(User.where(id: [user_1.id, user_2.id]).where.not(suspended_till: nil).count).to eq(2)
     end
   end
 

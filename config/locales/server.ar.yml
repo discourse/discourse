@@ -813,6 +813,13 @@ ar:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "الجميع"
+      admins: "المسؤولون"
+      moderators: "المشرفون"
+      staff: "فريق العمل"
+      anonymous_users: "المستخدمون المجهولون"
+      logged_in_users: "المستخدمون الذين سجَّلوا الدخول"
     default_descriptions:
       everyone: "مجموعة تلقائية تضم جميع الأعضاء"
       staff: "مجموعة تلقائية تضم المسؤولين والمشرفين"

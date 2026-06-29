@@ -29,12 +29,22 @@ module DiscoursePostEvent
     attributes :location
     attributes :watching_invitee
     attributes :chat_enabled
+    attributes :livestream
+    attributes :livestream_onebox
     attributes :channel
     attributes :rrule
     attributes :max_attendees
     attributes :at_capacity
 
     has_one :image_upload, embed: :object, serializer: UploadSerializer
+
+    def include_livestream_onebox?
+      object.livestream? && object.location.present?
+    end
+
+    def livestream_onebox
+      Oneboxer.cached_onebox(object.location).presence
+    end
 
     def channel
       ::Chat::ChannelSerializer.new(

@@ -131,4 +131,41 @@ RSpec.describe TopicViewSerializer do
       end
     end
   end
+
+  describe "#chat_channel_id" do
+    fab!(:category)
+    let(:topic) { Fabricate(:topic, category:) }
+
+    before do
+      SiteSetting.chat_enabled = true
+      # enqueue (don't run) the onebox-warming job so it doesn't make a real request
+      Jobs.run_later!
+      first_post
+    end
+
+    def create_event(livestream:)
+      DiscoursePostEvent::Event.create!(
+        id: first_post.id,
+        original_starts_at: 1.hour.from_now,
+        original_ends_at: 2.hours.from_now,
+        location: "https://example.com/live",
+        livestream:,
+      )
+    end
+
+    it "is included while the event is a livestream" do
+      create_event(livestream: true)
+
+      expect(topic.topic_chat_channel).to be_present
+      expect(parsed_json["chat_channel_id"]).to eq(topic.topic_chat_channel.chat_channel_id)
+    end
+
+    it "is not included once livestream is disabled, even if the channel row remains" do
+      event = create_event(livestream: true)
+      event.update!(livestream: false)
+
+      expect(topic.reload.topic_chat_channel).to be_present
+      expect(parsed_json).not_to have_key("chat_channel_id")
+    end
+  end
 end

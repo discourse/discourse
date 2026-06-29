@@ -151,6 +151,12 @@ module DiscourseWorkflows
         .filter_map { |name| name.strip.presence }
     end
 
+    def self.trust_level_options
+      TrustLevel.levels.map do |name, level|
+        { value: level.to_s, label_key: "trust_levels.names.#{name}" }
+      end
+    end
+
     def initialize(**)
     end
 

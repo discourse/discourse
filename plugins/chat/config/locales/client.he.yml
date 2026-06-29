@@ -324,8 +324,6 @@ he:
         title: "צליל התראת צ׳אט שולחן עבודה"
       sounds:
         none: "ללא"
-        bell: "פעמון"
-        ding: "דינג"
       title: "צ׳אט"
       title_capitalized: "צ׳אט"
       upload: "צירוף קובץ"

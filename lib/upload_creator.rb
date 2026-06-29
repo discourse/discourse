@@ -368,6 +368,7 @@ class UploadCreator
   end
 
   def convert_to_jpeg!
+    return if @opts[:type] == "topic_og_image"
     return if @opts[:for_site_setting] || ADMIN_ASSET_TYPES.include?(@opts[:type])
     return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
 

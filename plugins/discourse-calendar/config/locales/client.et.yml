@@ -77,11 +77,6 @@ et:
             last: "viimane"
         attendance:
           none: "Pole"
-        url:
-          label: "URL"
-          placeholder: "Valikuline"
-        location:
-          label: "Asukoht"
         description:
           label: "Kirjeldus"
         event_type:

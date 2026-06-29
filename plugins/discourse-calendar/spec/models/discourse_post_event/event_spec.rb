@@ -20,6 +20,112 @@ describe DiscoursePostEvent::Event do
     ).is_at_most(DiscoursePostEvent::Event::MAX_NAME_LENGTH)
   end
 
+  describe "#warm_livestream_onebox" do
+    let(:livestream_url) { "https://example.com/live" }
+
+    fab!(:topic) { Fabricate(:topic, category: nil) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before { Jobs.run_later! }
+
+    it "enqueues onebox warming for a livestream URL" do
+      expect_enqueued_with(
+        job: :warm_livestream_onebox,
+        args: {
+          event_id: post.id,
+          url: livestream_url,
+        },
+      ) { Fabricate(:event, post: post, livestream: true, location: livestream_url) }
+    end
+
+    it "skips onebox warming when the onebox is cached" do
+      Discourse.cache.write(
+        Oneboxer.onebox_cache_key(livestream_url),
+        { onebox: "<aside>cached</aside>" },
+      )
+
+      expect_not_enqueued_with(job: :warm_livestream_onebox) do
+        Fabricate(:event, post: post, livestream: true, location: livestream_url)
+      end
+    end
+  end
+
+  describe "#create_livestream_chat_channel" do
+    fab!(:category)
+    fab!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before do
+      SiteSetting.chat_enabled = true
+      Jobs.run_later!
+    end
+
+    it "creates the chat channel after the livestream event is committed" do
+      expect {
+        Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+      }.to change(DiscourseCalendar::Livestream::TopicChatChannel, :count).by(1)
+
+      expect(post.topic.topic_chat_channel.chat_channel.chatable).to eq(category)
+    end
+
+    it "does not create a chat channel when chat is disabled" do
+      SiteSetting.chat_enabled = false
+
+      expect {
+        Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+      }.not_to change(DiscourseCalendar::Livestream::TopicChatChannel, :count)
+    end
+
+    it "does not create a chat channel for a livestream event on a reply" do
+      reply = Fabricate(:post, topic: topic)
+
+      expect {
+        Fabricate(:event, post: reply, livestream: true, location: "https://example.com/live")
+      }.not_to change(DiscourseCalendar::Livestream::TopicChatChannel, :count)
+    end
+  end
+
+  describe "#reset_invalid_livestream" do
+    fab!(:post)
+
+    # enqueue (don't run) the onebox-warming job so it doesn't make a real request
+    before { Jobs.run_later! }
+
+    it "keeps livestream enabled for an http(s) location" do
+      event = Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+
+      expect(event.reload.livestream).to eq(true)
+    end
+
+    it "resets livestream when the location is not an http(s) URL" do
+      event = Fabricate(:event, post: post, livestream: true, location: "Room 5")
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "resets livestream when there is no location" do
+      event = Fabricate(:event, post: post, livestream: true)
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "resets livestream when the location is edited away from a URL" do
+      event = Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+      event.update!(location: "Room 5")
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "resets livestream when the event is not on the first post" do
+      reply = Fabricate(:post, topic: post.topic)
+      expect(reply.is_first_post?).to be(false)
+
+      event = Fabricate(:event, post: reply, livestream: true, location: "https://example.com/live")
+
+      expect(event.reload.livestream).to eq(false)
+    end
+  end
+
   describe "#raw_invitees_are_groups" do
     fab!(:user) { Fabricate(:user, admin: true) }
     fab!(:topic) { Fabricate(:topic, user: user) }
@@ -656,6 +762,23 @@ describe DiscoursePostEvent::Event do
             TopicUser.notification_levels[:regular],
           )
         end
+
+        it "unfollows the pruned invitee from the livestream chat channel" do
+          channel = Fabricate(:category_channel)
+          Fabricate(:topic_chat_channel, topic: post_1.topic, chat_channel: channel)
+          membership =
+            Fabricate(
+              :user_chat_channel_membership,
+              user: user_1,
+              chat_channel: channel,
+              following: true,
+            )
+
+          event_1.update_with_params!(raw_invitees: [group_2.name])
+
+          expect(event_1.invitees.find_by(user_id: user_1.id)).to be_nil
+          expect(membership.reload.following).to eq(false)
+        end
       end
     end
   end
@@ -857,6 +980,40 @@ describe DiscoursePostEvent::Event do
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, topic: topic, user: user) }
     fab!(:upload)
+
+    it "sets livestream from the bbcode attribute" do
+      Jobs.run_later!
+
+      post.update!(
+        raw:
+          "[event start=\"2020-04-24 14:15\" livestream=\"true\" location=\"https://example.com/live\"]\n[/event]",
+      )
+      post.rebake!
+      DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+      post.reload
+
+      expect(post.event.livestream).to eq(true)
+    end
+
+    it "defaults livestream to false when the attribute is absent" do
+      post.update!(raw: "[event start=\"2020-04-24 14:15\"]\n[/event]")
+      post.rebake!
+      DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+      post.reload
+
+      expect(post.event.livestream).to eq(false)
+    end
+
+    it "ignores livestream=true when the location is not an http(s) URL" do
+      post.update!(
+        raw: "[event start=\"2020-04-24 14:15\" livestream=\"true\" location=\"Room 5\"]\n[/event]",
+      )
+      post.rebake!
+      DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+      post.reload
+
+      expect(post.event.livestream).to eq(false)
+    end
 
     context "with image" do
       before do

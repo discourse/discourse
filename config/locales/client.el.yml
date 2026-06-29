@@ -41,6 +41,10 @@ el:
         no_visible_children_hint: "Αυτό το μπλοκ κοντέινερ δεν απεικονίζεται επειδή κανένα από τα παιδιά του δεν είναι ορατό."
         condition_failed_hint: "Αυτό το μπλοκ δεν απεικονίζεται επειδή οι συνθήκες του απέτυχαν."
         head_hidden_tail_hint: "Αυτό το μπλοκ δεν απεικονίζεται επειδή ένα άλλο μπλοκ απεικονίστηκε πρώτο στο κοντέινερ `head`."
+    access_control:
+      manage:
+        access_permission_editor: "Επεξεργαστής"
+        access_permission_remove: "Αφαίρεση"
     carousel:
       go_to_slide: "Μετάβαση στη διαφάνεια %{index}"
       previous: "Προηγούμενη διαφάνεια"
@@ -440,6 +444,9 @@ el:
     age: "Ηλικία"
     joined: "Έγινε μέλος"
     admin_title: "Διαχειριστής"
+    advanced_mode_toggle:
+      advanced_mode: "Λειτουργία για προχωρημένους"
+      simple_mode: "Απλή λειτουργία"
     show_more: "περισσότερα"
     show_help: "Επιλογές"
     links: "Σύνδεσμοι"
@@ -3811,39 +3818,6 @@ el:
       read_more: "Θέλετε να διαβάσετε περισσότερα; <a href='%{categoryLink}'>Περιηγηθείτε σε όλες τις κατηγορίες</a> ή <a href='%{latestLink}'>δείτε τα τελευταία θέματα</a>."
       unread_indicator: "Κανένα μέλος δεν έχει διαβάσει ακόμη την τελευταία ανάρτηση αυτού του θέματος."
       participant_groups: "Συμμετέχουσες ομάδες"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Απομένει <a href="{basePath}/unread"># αδιάβαστο</a>}
-              other {Απομένουν <a href="{basePath}/unread"># αδιάβαστα</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { και <a href="{basePath}/new"># νέο</a> θέμα,}
-              other { και <a href="{basePath}/new"># νέα</a> θέματα,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Απομένει <a href="{basePath}/unread"># αδιάβαστο</a> θέμα,}
-              other {Απομένουν <a href="{basePath}/unread"># αδιάβαστα</a> θέματα,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Απομένει <a href="{basePath}/new"># νέο</a> θέμα,}
-              other {Απομένουν <a href="{basePath}/new"># νέα</a> θέματα,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { ή δες άλλα θέματα στο {categoryLink}}
-          false { ή <a href="{basePath}/latest">δες τα τελευταία θέματα</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} απάντηση, μετάβαση στην πρώτη ανάρτηση"
         other: "%{count} απαντήσεις, μετάβαση στην πρώτη ανάρτηση"
@@ -5215,7 +5189,6 @@ el:
       category_restrictions:
         one: "Μπορεί να χρησιμοποιηθεί μόνο στην κατηγορία %{categories}."
         other: "Μπορεί να χρησιμοποιηθεί μόνο στις εξής κατηγορίες: %{categories}."
-      restricted_to: "Περιορίζεται σε"
       no_synonyms: "Αυτή η ετικέτα δεν έχει συνώνυμα."
       edit_synonyms: "Επεξεργασία συνωνύμων"
       add_synonyms_label: "Προσθήκη συνωνύμων:"
@@ -5945,6 +5918,9 @@ el:
               help_text: "Χρησιμοποιήστε μια ευρεία ορθογώνια εικόνα. Μην χρησιμοποιείτε εικόνα SVG."
             opengraph_image:
               title: "Εικόνα OpenGraph"
+            og_image_preview:
+              generate: "Δημιουργία"
+              topic_id_label: "ID Θέματος"
             x_summary_large_image:
               help_text: "το συνιστώμενο μέγεθος είναι τουλάχιστον 280 x 150 pixel. Μην χρησιμοποιείτε εικόνα SVG."
         fonts:
@@ -6218,7 +6194,7 @@ el:
         stale_data: "Δεν έγινε έλεγχος για ενημερώσεις τον τελευταίο καιρό. Βεβαιωθείτε ότι το Sidekiq εκτελείται."
         version_check_pending: "Φαίνεται ότι ενημερώσατε πρόσφατα. Φανταστικά!"
         installed_version: "Εγκατεστημένα"
-        latest_version: "Τελευταία"
+        github: "GitHub"
         problems_found: "Μερικές συμβουλές με βάση τις τρέχουσες ρυθμίσεις του ιστότοπού σας"
         dismiss_notice: "Αγνόηση"
         new_features:
@@ -6893,6 +6869,8 @@ el:
             groups: "Ομάδες"
             order: "Σειρά ταξινόμησης"
             show_description: "Συμπερίληψη περιγραφής"
+          locale_selector:
+            title: "Γλώσσα"
           optional: "(προαιρετικό)"
           update: "Ενημέρωση"
           toasts:

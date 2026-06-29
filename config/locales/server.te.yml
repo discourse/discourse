@@ -300,6 +300,12 @@ te:
       trust_level_2: "నమ్మకం_స్థాయి_2"
       trust_level_3: "నమ్మకం_స్థాయి_3"
       trust_level_4: "నమ్మకం_స్థాయి_4"
+    default_full_names:
+      everyone: "అందరూ"
+      moderators: "నిర్వాహకులు"
+      staff: "సిబ్బంది"
+      anonymous_users: "అనామక సభ్యులు"
+      logged_in_users: "లాగిన్ చేసిన సభ్యులు"
   education:
     until_posts:
       one: "%{count} పోస్ట్"

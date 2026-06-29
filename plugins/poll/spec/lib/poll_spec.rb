@@ -279,6 +279,74 @@ RSpec.describe DiscoursePoll::Poll do
     end
   end
 
+  describe ".toggle_status" do
+    fab!(:admin)
+
+    it "records who closed the poll and logs a staff action" do
+      DiscoursePoll::Poll.toggle_status(admin, post_with_regular_poll.id, "poll", "closed")
+
+      poll = post_with_regular_poll.polls.first
+      expect(poll.closed?).to eq(true)
+      expect(poll.closed_by_id).to eq(admin.id)
+      expect(poll.closed_at).to be_present
+
+      log = UserHistory.last
+      expect(log.action).to eq(UserHistory.actions[:custom_staff])
+      expect(log.custom_type).to eq("poll_closed")
+      expect(log.acting_user_id).to eq(admin.id)
+      expect(log.subject).to eq("poll")
+    end
+
+    it "logs a poll_opened staff action when a poll is reopened" do
+      DiscoursePoll::Poll.toggle_status(admin, post_with_regular_poll.id, "poll", "closed")
+      DiscoursePoll::Poll.toggle_status(admin, post_with_regular_poll.id, "poll", "open")
+
+      expect(UserHistory.last.custom_type).to eq("poll_opened")
+    end
+
+    it "clears the closer when the poll is reopened" do
+      DiscoursePoll::Poll.toggle_status(admin, post_with_regular_poll.id, "poll", "closed")
+      DiscoursePoll::Poll.toggle_status(admin, post_with_regular_poll.id, "poll", "open")
+
+      poll = post_with_regular_poll.polls.first
+      expect(poll.closed?).to eq(false)
+      expect(poll.closed_by_id).to eq(nil)
+      expect(poll.closed_at).to eq(nil)
+    end
+
+    it "always serializes closed_by and closed_at so reopened polls clear stale values" do
+      json =
+        PollSerializer.new(
+          post_with_regular_poll.polls.first,
+          root: false,
+          scope: Guardian.new,
+        ).as_json
+      expect(json).to include(closed_by: nil, closed_at: nil)
+    end
+
+    it "does not surface the system user as the closer when a poll is automatically closed" do
+      DiscoursePoll::Poll.toggle_status(
+        Discourse.system_user,
+        post_with_regular_poll.id,
+        "poll",
+        "closed",
+      )
+
+      poll = post_with_regular_poll.polls.first
+      expect(poll.closed_by_id).to eq(Discourse.system_user.id)
+
+      json = PollSerializer.new(poll, root: false, scope: Guardian.new).as_json
+      expect(json[:closed_by]).to eq(nil)
+      expect(json[:closed_at]).to be_present
+    end
+
+    it "does not log when the status is unchanged" do
+      expect do
+        DiscoursePoll::Poll.toggle_status(admin, post_with_regular_poll.id, "poll", "open")
+      end.not_to change { UserHistory.count }
+    end
+  end
+
   describe "post_created" do
     it "publishes on message bus if a there are polls" do
       first_post = Fabricate(:post)

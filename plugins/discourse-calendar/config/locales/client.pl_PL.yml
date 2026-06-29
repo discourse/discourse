@@ -477,6 +477,8 @@ pl_PL:
         create_event_button: "Utwórz wydarzenie"
         action_title: "Utwórz nowe wydarzenie"
         all_day: "Cały dzień"
+        livestream: "Transmisja na żywo"
+        livestream_chat_disabled: "Włącz czat, aby tworzyć kanały transmisji na żywo."
         reminder:
           units:
             minutes:
@@ -519,7 +521,6 @@ pl_PL:
         create_event_title: "Utwórz wydarzenie"
         update_event_title: "Edytuj wydarzenie"
         advanced_settings_title: "Ustawienia zaawansowane"
-        advanced_settings: "Ustawienia zaawansowane"
         confirm_delete: "Czy na pewno chcesz usunąć to wydarzenie?"
         confirm_close: "Czy na pewno chcesz zamknąć to wydarzenie?"
         confirm_open: "Czy na pewno chcesz otworzyć to wydarzenie?"
@@ -581,11 +582,11 @@ pl_PL:
         allow_chat:
           label: "Integracja czatu"
           checkbox_label: "Twórz i zarządzaj kanałami czatu specyficznymi dla wydarzenia"
-        url:
-          label: "URL"
-          placeholder: "Opcjonalnie"
+        livestream:
+          label: "Transmisja na żywo"
+          checkbox_label: "Osadź adres URL jako wideo i otwórz czat na żywo dla uczestników"
         location:
-          label: "Lokalizacja"
+          label: "Lokalizacja lub adres URL"
           placeholder: "Dodaj lokalizację, link lub coś takiego."
         description:
           label: "Opis"

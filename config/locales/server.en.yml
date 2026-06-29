@@ -465,6 +465,9 @@ en:
   invalid_access: "You are not permitted to view the requested resource."
   topic_converter:
     too_many_recipients: "Cannot convert: this topic has more participants than the max allowed (%{max})."
+  topic_og_image:
+    preview_not_eligible: "Cannot generate an OG image for personal messages or topics in private categories."
+    preview_generation_failed: "Failed to generate preview image."
   authenticator_not_found: "Authentication method does not exist, or has been disabled."
   authenticator_no_connect: "This authentication provider does not allow connection to an existing forum account."
   invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
@@ -681,6 +684,18 @@ en:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Everyone"
+      admins: "Admins"
+      moderators: "Moderators"
+      staff: "Staff"
+      anonymous_users: "Anonymous users"
+      logged_in_users: "Logged in users"
+      trust_level_0: "Trust level 0"
+      trust_level_1: "Trust level 1"
+      trust_level_2: "Trust level 2"
+      trust_level_3: "Trust level 3"
+      trust_level_4: "Trust level 4"
     default_descriptions:
       everyone: "Automatic group including all members"
       staff: "Automatic group including admins and moderators"
@@ -1947,6 +1962,7 @@ en:
     manifest_icon: "Image used as logo/splash image on Android. Will be automatically resized to 512 × 512. If left blank, {{setting:large_icon}} will be used."
     manifest_screenshots: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, {{setting:large_icon}} will be used."
+    generate_topic_og_image: "Automatically generate OpenGraph preview images for topics that don't have an image. Uses topic title, category, and site colors."
     apple_touch_icon: "Icon used for Apple touch devices. A transparent background is not recommended. Will be automatically resized to 180x180. If left blank, {{setting:large_icon}} will be used."
     opengraph_image: "Default opengraph image, used when the page has no other suitable image. If left blank, {{setting:large_icon}} will be used"
     x_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the {{setting:opengraph_image}}, as long as that is not also a .svg"
@@ -2050,6 +2066,7 @@ en:
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
     top_menu: "Determine which items appear in the homepage navigation, and in what order."
+    custom_homepage_crawler_route: "Route shown to web crawlers when a custom homepage is enabled."
     post_menu: "Configure the visibility and order of default post menu items. Additional items added by plugins or themes are managed separately and won’t appear in this list."
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on. Additional items added by plugins or themes are managed separately and won’t appear in this list."
     share_links: "Determine which items appear on the share dialog, and in what order."
@@ -3410,6 +3427,7 @@ en:
       one: "User %{username} has %{count} post in a public topic or personal message, so they can't be deleted."
       other: "User %{username} has %{count} posts in public topics or personal messages, so they can't be deleted."
     cannot_bulk_delete: "One or more users cannot be deleted either because they're an admin, have too many posts or have a very old post."
+    cannot_bulk_suspend: "One or more of the selected users can't be suspended."
     cannot_remove_all_auth: "You must have at least one associated account, a passkey, or a password set."
 
   unsubscribe_mailer:

@@ -471,7 +471,6 @@ tr_TR:
         create_event_title: "Etkinlik oluşturun"
         update_event_title: "Etkinliği düzenleyin"
         advanced_settings_title: "Gelişmiş ayarlar"
-        advanced_settings: "Gelişmiş ayarlar"
         confirm_delete: "Bu etkinliği silmek istediğinizden emin misiniz?"
         confirm_close: "Bu etkinliği kapatmak istediğinizden emin misiniz?"
         confirm_open: "Bu etkinliği açmak istediğinizden emin misiniz?"
@@ -514,11 +513,7 @@ tr_TR:
         allow_chat:
           label: "Sohbet entegrasyonu"
           checkbox_label: "Etkinliğe özel sohbet kanalı oluşturun ve yönetin"
-        url:
-          label: "URL"
-          placeholder: "İsteğe bağlı"
         location:
-          label: "Konum"
           placeholder: "Konum, bağlantı veya başka bir şey ekleyin."
         description:
           label: "Açıklama"

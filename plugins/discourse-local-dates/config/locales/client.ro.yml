@@ -22,8 +22,6 @@ ro:
       create:
         form:
           insert: Introdu
-          advanced_mode: Mod avansat
-          simple_mode: Mod simplu
           format_description: "Format utilizat pentru a afișa data utilizatorului. Folosește Z pentru a afișa decalajul și zz pentru numele fusului orar."
           timezones_title: Fusuri orare de afișat
           timezones_description: Fusurile orare vor fi utilizate pentru a afișa datele în previzualizare și în rezervă.
