@@ -99,7 +99,9 @@ module DiscourseAi
 
         agent =
           DiscourseAi::Agents::Agent.find_by(user: current_user, id: params[:ai_agent_id].to_i)
-        raise Discourse::InvalidParameters.new(:ai_agent_id) if agent.blank?
+        if agent.blank? || !agent.allow_personal_messages
+          raise Discourse::InvalidParameters.new(:ai_agent_id)
+        end
 
         { "ai_agent_id" => agent.id }
       end
