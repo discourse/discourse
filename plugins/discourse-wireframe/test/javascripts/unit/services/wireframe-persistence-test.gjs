@@ -133,7 +133,9 @@ module(
       assert.strictEqual(result.saved.length, 0);
       assert.strictEqual(result.skipped.length, 1);
       assert.strictEqual(result.skipped[0].reason, "git");
-      assert.true(this.editor.isOutletEdited("homepage-blocks"));
+      assert.true(
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
+      );
       assert.verifySteps([]);
     });
 
@@ -141,7 +143,9 @@ module(
       await enterEdited(this);
       stubDraftsDelete();
 
-      assert.true(this.editor.isOutletEdited("homepage-blocks"));
+      assert.true(
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
+      );
 
       pretender.post("/admin/customize/block-layouts.json", () =>
         response({ success: true, theme_id: 5, version_token: "v1" })
@@ -150,7 +154,7 @@ module(
       await this.persistence.publish(5);
 
       assert.false(
-        this.editor.isOutletEdited("homepage-blocks"),
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
         "edited-outlet bookkeeping cleared after publish"
       );
 
@@ -181,7 +185,7 @@ module(
       assert.strictEqual(result.errors[0].currentVersion, "server-token");
       assert.strictEqual(result.errors[0].publishedAt, "2026-06-19T12:00:00Z");
       assert.true(
-        this.editor.isOutletEdited("homepage-blocks"),
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
         "the edit is preserved on conflict"
       );
     });
@@ -220,7 +224,9 @@ module(
       assert.strictEqual(result.saved.length, 0);
       assert.strictEqual(result.errors.length, 1);
       assert.true(result.errors[0].message.includes("empty/unreadable"));
-      assert.true(this.editor.isOutletEdited("homepage-blocks"));
+      assert.true(
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
+      );
       assert.verifySteps([]);
     });
 
@@ -244,7 +250,9 @@ module(
         "server-token"
       );
       assert.true(ok);
-      assert.false(this.editor.isOutletEdited("homepage-blocks"));
+      assert.false(
+        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
+      );
       assert.verifySteps(["overwritten"]);
     });
 

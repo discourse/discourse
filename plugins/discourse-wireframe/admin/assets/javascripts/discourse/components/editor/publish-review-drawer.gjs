@@ -31,6 +31,7 @@ import { OUTLET_STATE } from "../../services/wireframe-layout-query";
 export default class PublishReviewDrawer extends Component {
   @service wireframe;
   @service dialog;
+  @service wireframeEditEngine;
   @service wireframeLayoutQuery;
   @service wireframePublishPreview;
   @service wireframeSession;
@@ -482,7 +483,7 @@ export default class PublishReviewDrawer extends Component {
           <DButton
             class="btn-flat wireframe-review__discard"
             @label="wireframe.review.discard_all"
-            @disabled={{unless this.wireframe.isDirty true}}
+            @disabled={{unless this.wireframeEditEngine.isDirty true}}
             @action={{this.discardAll}}
           />
           <DButton

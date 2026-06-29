@@ -17,7 +17,7 @@ import { i18n } from "discourse-i18n";
  * trees) without leaving the editor.
  *
  * Edit model:
- *   - The textarea seeds from `wireframe.selectedBlockRawEntry`
+ *   - The textarea seeds from `wireframeSelection.selectedBlockRawEntry`
  *     pretty-printed.
  *   - Local `@tracked draft` tracks unsaved keystrokes.
  *   - Apply button parses the draft. Invalid JSON → inline error
@@ -30,7 +30,7 @@ import { i18n } from "discourse-i18n";
  * from `<pre>` JSON editors elsewhere in Discourse.
  */
 export default class InspectorRawJson extends Component {
-  @service wireframe;
+  @service wireframeEntryEdits;
   @service wireframeSelection;
 
   @tracked draft = "";
@@ -108,7 +108,7 @@ export default class InspectorRawJson extends Component {
       this.error = e.message;
       return;
     }
-    const ok = this.wireframe.replaceSelectedEntryRaw(parsed);
+    const ok = this.wireframeEntryEdits.replaceSelectedEntryRaw(parsed);
     if (!ok) {
       this.error = i18n("wireframe.inspector.raw_json.apply_failed");
       return;

@@ -218,7 +218,7 @@ module(
       await render(<template><EditorShell /></template>);
 
       assert.true(
-        this.editor.isDirty,
+        this.editor.wireframeEditEngine.isDirty,
         "the hydrated draft marks the outlet edited"
       );
 

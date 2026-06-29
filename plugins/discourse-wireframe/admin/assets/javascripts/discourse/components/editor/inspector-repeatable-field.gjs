@@ -15,8 +15,8 @@ import { schemaToFields } from "../../lib/schema-to-fields";
  * (`type: "array", itemType: "object", itemSchema: {...}`).
  *
  * Like the image control, it bypasses FormKit's draft: it reads the live array
- * from `entry.args` via the wireframe service and writes the whole array back
- * with `setArg` (an immediate write, so add-then-remove reads a fresh value
+ * from `entry.args` and writes the whole array back via
+ * `wireframeEditEngine.setArg` (an immediate write, so add-then-remove reads a fresh value
  * rather than a stale pre-flush one). The inspector and canvas stay in sync.
  *
  * Each item is one row; each row's fields are derived from the arg's
@@ -25,7 +25,7 @@ import { schemaToFields } from "../../lib/schema-to-fields";
  * added, removed, and reordered, and a whole array can be pasted in as JSON.
  */
 export default class InspectorRepeatableField extends Component {
-  @service wireframe;
+  @service wireframeEditEngine;
   @service wireframeLayoutQuery;
   @service wireframeRevision;
   @service wireframeSelection;
@@ -160,7 +160,7 @@ export default class InspectorRepeatableField extends Component {
     if (!this.blockKey) {
       return;
     }
-    this.wireframe.setArg(this.blockKey, this.argName, next);
+    this.wireframeEditEngine.setArg(this.blockKey, this.argName, next);
   }
 
   /**

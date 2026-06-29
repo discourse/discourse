@@ -38,6 +38,7 @@ export default class EditorShell extends Component {
   @service dragAndDrop;
   @service wireframe;
   @service wireframeDragNav;
+  @service wireframeEditEngine;
   @service wireframeSession;
   @service wireframeValidation;
 
@@ -122,12 +123,12 @@ export default class EditorShell extends Component {
 
   @action
   undo() {
-    this.wireframe.undo();
+    this.wireframeEditEngine.undo();
   }
 
   @action
   redo() {
-    this.wireframe.redo();
+    this.wireframeEditEngine.redo();
   }
 
   #syncBodyClasses() {
@@ -195,14 +196,14 @@ export default class EditorShell extends Component {
               class="wireframe-btn-undo"
               @icon="arrow-rotate-left"
               @title="wireframe.chrome.undo"
-              @disabled={{if this.wireframe.canUndo false true}}
+              @disabled={{if this.wireframeEditEngine.canUndo false true}}
               @action={{this.undo}}
             />
             <DButton
               class="wireframe-btn-redo"
               @icon="arrow-rotate-right"
               @title="wireframe.chrome.redo"
-              @disabled={{if this.wireframe.canRedo false true}}
+              @disabled={{if this.wireframeEditEngine.canRedo false true}}
               @action={{this.redo}}
             />
             <PublishTargetIndicator />

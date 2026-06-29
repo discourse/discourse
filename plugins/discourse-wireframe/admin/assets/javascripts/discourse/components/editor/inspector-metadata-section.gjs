@@ -20,7 +20,7 @@ import { i18n } from "discourse-i18n";
  * edit rides the regular structural-undo stack.
  */
 export default class InspectorMetadataSection extends Component {
-  @service wireframe;
+  @service wireframeEntryEdits;
   @service wireframeSelection;
 
   /**
@@ -66,7 +66,7 @@ export default class InspectorMetadataSection extends Component {
       return;
     }
     this.error = null;
-    const result = this.wireframe.updateSelectedEntryId(value);
+    const result = this.wireframeEntryEdits.updateSelectedEntryId(value);
     if (!result.ok && result.error === "invalid-format") {
       this.error = i18n("wireframe.inspector.metadata.id_invalid_format");
     }

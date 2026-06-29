@@ -44,6 +44,7 @@ export default class OutlinePanel extends Component {
   @service wireframe;
   @service wireframeBlockMutations;
   @service wireframeDragSession;
+  @service wireframeEditEngine;
   @service wireframeRevision;
   @service wireframeSelection;
   @service wireframeSession;
@@ -140,7 +141,7 @@ export default class OutlinePanel extends Component {
     return new TrackedAsyncData(
       walkAllOutlets({
         blocksService: this.blocks,
-        alwaysInclude: new Set(this.wireframe.draftedOutletNames()),
+        alwaysInclude: new Set(this.wireframeEditEngine.draftedOutletNames()),
       })
     );
   }

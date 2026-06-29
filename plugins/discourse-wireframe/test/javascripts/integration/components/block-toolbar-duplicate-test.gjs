@@ -94,7 +94,10 @@ module(
         "the original heading plus three clones"
       );
       await settled();
-      assert.true(this.editor.canUndo, "the ×N duplicate is undoable");
+      assert.true(
+        this.editor.wireframeEditEngine.canUndo,
+        "the ×N duplicate is undoable"
+      );
     });
   }
 );

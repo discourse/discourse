@@ -70,6 +70,7 @@ const DUPLICATE_PRESETS = [2, 3, 5, 10];
 export default class BlockToolbar extends Component {
   @service wireframe;
   @service wireframeBlockMutations;
+  @service wireframeEntryEdits;
   @service wireframeForceExpand;
   @service wireframeInlineEdit;
   @service wireframeLayoutQuery;
@@ -435,7 +436,7 @@ export default class BlockToolbar extends Component {
 
   @action
   detach() {
-    this.wireframe.detachSelectedComposite();
+    this.wireframeEntryEdits.detachSelectedComposite();
   }
 
   /**

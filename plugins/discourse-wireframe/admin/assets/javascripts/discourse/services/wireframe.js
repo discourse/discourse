@@ -70,7 +70,6 @@ export default class WireframeService extends Service {
   @service wireframeDragOverlay;
   @service wireframeDragSession;
   @service wireframeEditEngine;
-  @service wireframeEntryEdits;
   @service wireframeForceExpand;
   @service wireframeGridManipulator;
   @service wireframeImageUpload;
@@ -276,145 +275,6 @@ export default class WireframeService extends Service {
     );
   }
 
-  /* Edit-engine facade — the mutation / undo / dirty-tracking concern lives on
-   * `wireframeEditEngine`. These delegators keep every external consumer and
-   * every kernel-internal caller (the ~30 `recordStructural` sites, the
-   * grid-manipulator `svc.` and inline-editor `this.service.` callers, the
-   * toolbar's undo/redo actions) unchanged while the state and commands moved
-   * out. No raw state (the dirty sets, the undo/redo stacks, the snapshot map)
-   * is re-exposed; consumers read through the engine's query methods. */
-
-  /** @returns {boolean} */
-  get canUndo() {
-    return this.wireframeEditEngine.canUndo;
-  }
-
-  /** @returns {boolean} */
-  get canRedo() {
-    return this.wireframeEditEngine.canRedo;
-  }
-
-  /** @returns {boolean} */
-  get isDirty() {
-    return this.wireframeEditEngine.isDirty;
-  }
-
-  /** @returns {number} The number of entries on the undo stack. */
-  get undoDepth() {
-    return this.wireframeEditEngine.undoDepth;
-  }
-
-  /** @returns {number} The number of entries on the redo stack. */
-  get redoDepth() {
-    return this.wireframeEditEngine.redoDepth;
-  }
-
-  /**
-   * The set of outlet names the editor has materialised a draft layer for, as a
-   * frozen array. Re-exposed so the outline panel can read it through the kernel
-   * without injecting the engine directly.
-   *
-   * @returns {ReadonlyArray<string>}
-   */
-  draftedOutletNames() {
-    return this.wireframeEditEngine.draftedOutletNames();
-  }
-
-  /**
-   * Whether an outlet has any unsaved edit — structural or arg-level. Facade
-   * over the engine so external readers go through the kernel.
-   *
-   * @param {string} outletName
-   * @returns {boolean}
-   */
-  isOutletEdited(outletName) {
-    return this.wireframeEditEngine.isOutletEdited(outletName);
-  }
-
-  /**
-   * Re-publishes a draft layout layer with structural changes applied and marks
-   * the outlet edited. Facade over the engine so the many structural-mutation
-   * call sites (here, the grid manipulator, the inline editors) are unchanged.
-   *
-   * @param {string} outletName
-   * @param {Array<Object>} newLayout
-   */
-  publishStructuralChange(outletName, newLayout) {
-    return this.wireframeEditEngine.publishStructuralChange(
-      outletName,
-      newLayout
-    );
-  }
-
-  /**
-   * Wraps a structural mutation in undo/redo + dirty bookkeeping. Facade over
-   * the engine; the closures callers pass reach `publishStructuralChange` back
-   * through this same kernel facade, resolving to the one engine instance.
-   *
-   * @template T
-   * @param {string[]} outletNames
-   * @param {() => T} mutateFn
-   * @returns {T}
-   */
-  recordStructural(outletNames, mutateFn) {
-    return this.wireframeEditEngine.recordStructural(outletNames, mutateFn);
-  }
-
-  /**
-   * Writes a single arg value immediately (not keystroke-debounced) through the
-   * undo-aware write path. Facade over the engine.
-   *
-   * @param {string} blockKey
-   * @param {string} argName
-   * @param {*} value
-   */
-  setArg(blockKey, argName, value) {
-    return this.wireframeEditEngine.setArg(blockKey, argName, value);
-  }
-
-  /**
-   * Writes a `Map<argName, value>` of arg values into `entry.args`. Facade over
-   * the engine.
-   *
-   * @param {Object} entry
-   * @param {Map<string, *>} args
-   */
-  writeArgs(entry, args) {
-    return this.wireframeEditEngine.writeArgs(entry, args);
-  }
-
-  /**
-   * Captures an entry's pre-edit args the first time it's about to be mutated.
-   * Facade over the engine.
-   *
-   * @param {Object} entry
-   * @param {Map<string, *>} prev
-   */
-  captureInitialSnapshot(entry, prev) {
-    return this.wireframeEditEngine.captureInitialSnapshot(entry, prev);
-  }
-
-  /**
-   * Reverts the most recent mutation. Facade over the engine — returns the
-   * Promise so callers awaiting the result aren't left hanging.
-   *
-   * @returns {Promise<boolean>}
-   */
-  @action
-  undo() {
-    return this.wireframeEditEngine.undo();
-  }
-
-  /**
-   * Re-applies the most recently undone mutation. Facade over the engine.
-   *
-   * @returns {Promise<boolean>}
-   */
-  @action
-  redo() {
-    return this.wireframeEditEngine.redo();
-  }
-
   /**
    * Whether any outlet's current layout differs from its last persisted draft —
    * i.e. there are edits that Save draft would write. Computed by comparing the
@@ -448,7 +308,7 @@ export default class WireframeService extends Service {
    * @returns {boolean}
    */
   get canOpenReview() {
-    return this.isDirty || this.hasUnsavedDraftEdits;
+    return this.wireframeEditEngine.isDirty || this.hasUnsavedDraftEdits;
   }
 
   /**
@@ -586,18 +446,6 @@ export default class WireframeService extends Service {
     }
   }
 
-  /**
-   * Ensures a session-draft layer exists for `outletName` — delegates to the
-   * edit-engine, which owns the draft + baseline bookkeeping. Kept as a thin
-   * facade so the kernel's structural-mutation callers stay unchanged.
-   *
-   * @param {string} outletName
-   * @returns {Array<Object>} the layout array (existing or freshly minted).
-   */
-  ensureDraft(outletName) {
-    return this.wireframeEditEngine.ensureDraft(outletName);
-  }
-
   @action
   exit() {
     // Flush the engine's session edit state: it writes any in-memory arg
@@ -649,43 +497,6 @@ export default class WireframeService extends Service {
     document.removeEventListener("mousedown", this.#onCanvasMouseDown);
     document.removeEventListener("mouseup", this.#onCanvasMouseUp);
     this.#selectionMousedownTarget = null;
-  }
-
-  /**
-   * Entry-edits facade — delegates to `wireframeEntryEdits`. Replaces the
-   * `conditions` tree on the currently-selected block (used by the inspector's
-   * condition builder; `null` clears all conditions).
-   *
-   * @param {Array|Object|null} newConditions
-   * @returns {boolean}
-   */
-  @action
-  updateSelectedConditions(newConditions) {
-    return this.wireframeEntryEdits.updateSelectedConditions(newConditions);
-  }
-
-  /**
-   * Entry-edits facade — delegates to `wireframeEntryEdits`. Sets/clears the
-   * selected entry's `id`, returning `{ ok, error }` for inline validation.
-   *
-   * @param {string|null} nextId
-   * @returns {{ok: boolean, error: string|null}}
-   */
-  @action
-  updateSelectedEntryId(nextId) {
-    return this.wireframeEntryEdits.updateSelectedEntryId(nextId);
-  }
-
-  /**
-   * Entry-edits facade — delegates to `wireframeEntryEdits`. Replaces the
-   * selected entry with a parsed entry object (inspector Raw JSON tab).
-   *
-   * @param {Object} parsed
-   * @returns {boolean}
-   */
-  @action
-  replaceSelectedEntryRaw(parsed) {
-    return this.wireframeEntryEdits.replaceSelectedEntryRaw(parsed);
   }
 
   /**
@@ -765,37 +576,31 @@ export default class WireframeService extends Service {
     if (!located) {
       return false;
     }
-    return this.recordStructural([located.outletName], () => {
-      const layout = this.wireframeLayoutQuery.readResolvedLayout(
-        located.outletName
-      );
-      if (!layout) {
-        return false;
+    return this.wireframeEditEngine.recordStructural(
+      [located.outletName],
+      () => {
+        const layout = this.wireframeLayoutQuery.readResolvedLayout(
+          located.outletName
+        );
+        if (!layout) {
+          return false;
+        }
+        const result = replaceEntryContainerArgs(
+          layout,
+          this.wireframeSelection.selectedBlockKey,
+          namespace,
+          (current) => ({ ...current, [name]: value })
+        );
+        if (!result.changed) {
+          return false;
+        }
+        this.wireframeEditEngine.publishStructuralChange(
+          located.outletName,
+          result.layout
+        );
+        return true;
       }
-      const result = replaceEntryContainerArgs(
-        layout,
-        this.wireframeSelection.selectedBlockKey,
-        namespace,
-        (current) => ({ ...current, [name]: value })
-      );
-      if (!result.changed) {
-        return false;
-      }
-      this.publishStructuralChange(located.outletName, result.layout);
-      return true;
-    });
-  }
-
-  /**
-   * In-memory rollback of every touched outlet to its pristine pre-edit state,
-   * then clears the undo/redo history. Facade over the engine — the toolbar's
-   * Reset action calls it through the kernel.
-   *
-   * @returns {Promise<boolean>}
-   */
-  @action
-  resetAll() {
-    return this.wireframeEditEngine.resetAll();
+    );
   }
 
   /**
@@ -830,7 +635,7 @@ export default class WireframeService extends Service {
    */
   @action
   async discardAll() {
-    if (!this.isDirty) {
+    if (!this.wireframeEditEngine.isDirty) {
       return false;
     }
     for (const outletName of this.wireframeEditEngine.editedOutletNames()) {
@@ -1216,18 +1021,6 @@ export default class WireframeService extends Service {
     }
     handler(args);
     return true;
-  }
-
-  /**
-   * Entry-edits facade — delegates to `wireframeEntryEdits`. Detaches the
-   * selected composite into a plain container (materialises its parts, drops the
-   * override map).
-   *
-   * @returns {boolean}
-   */
-  @action
-  detachSelectedComposite() {
-    return this.wireframeEntryEdits.detachSelectedComposite();
   }
 
   isInsideAllowedScope(target) {
