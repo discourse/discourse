@@ -583,6 +583,10 @@ class User < ActiveRecord::Base
     @belonging_to_group_ids ||= group_users.pluck(:group_id)
   end
 
+  def permission_acl
+    @permission_acl ||= AccessControlList.matching_user(self).user_acl
+  end
+
   def group_granted_trust_level
     GroupUser.where(user_id: id).includes(:group).maximum("groups.grant_trust_level")
   end
@@ -676,6 +680,7 @@ class User < ActiveRecord::Base
     @ignored_user_ids = nil
     @muted_user_ids = nil
     @belonging_to_group_ids = nil
+    @permission_acl = nil
     super
   end
 
@@ -1784,6 +1789,7 @@ class User < ActiveRecord::Base
       end
 
     @belonging_to_group_ids = nil
+    @permission_acl = nil
   end
 
   def email

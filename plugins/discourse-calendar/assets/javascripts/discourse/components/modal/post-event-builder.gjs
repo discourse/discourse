@@ -26,6 +26,7 @@ import {
   defaultEventState,
   defaultReminderFor,
   getCustomFieldNames,
+  isLivestreamUrl,
   reconcileDefaultReminder,
 } from "../../lib/raw-event-helper";
 import CompactEventEditor from "../compact-event-editor";
@@ -109,6 +110,7 @@ export default class PostEventBuilder extends Component {
       allDay: !!this.event.allDay,
       showLocalTime: !!this.event.showLocalTime,
       chatEnabled: !!this.event.chatEnabled,
+      livestream: !!this.event.livestream,
       attendanceMode: this.attendanceMode,
       maxAttendees: this.event.maxAttendees ?? null,
       eventType:
@@ -142,6 +144,17 @@ export default class PostEventBuilder extends Component {
   syncFieldToEvent(field, value, { set }) {
     set(field, value);
     this.event[field] = value;
+  }
+
+  @action
+  syncLocationToEvent(value, { set }) {
+    set("location", value);
+    this.event.location = value;
+
+    if (!isLivestreamUrl(value)) {
+      set("livestream", false);
+      this.event.livestream = false;
+    }
   }
 
   @action
@@ -310,8 +323,10 @@ export default class PostEventBuilder extends Component {
     ];
   }
 
-  get shouldRenderUrl() {
-    return this.args.model.event.url !== undefined;
+  get showLivestream() {
+    return (
+      isLivestreamUrl(this.event.location) && this.siteSettings.chat_enabled
+    );
   }
 
   get availableRecurrences() {
@@ -419,6 +434,7 @@ export default class PostEventBuilder extends Component {
       recurrenceUntil: this.event.recurrenceUntil ?? null,
       showLocalTime: !!this.event.showLocalTime,
       chatEnabled: !!this.event.chatEnabled,
+      livestream: !!this.event.livestream,
       minimal: !!this.event.minimal,
       url: this.event.url ?? null,
       image:
@@ -446,6 +462,7 @@ export default class PostEventBuilder extends Component {
     this.event.maxAttendees = state.maxAttendees;
     this.event.showLocalTime = state.showLocalTime;
     this.event.chatEnabled = state.chatEnabled;
+    this.event.livestream = state.livestream;
     this.event.minimal = state.minimal;
     this.event.url = state.url;
     this.event.recurrence = state.recurrence;
@@ -855,7 +872,7 @@ export default class PostEventBuilder extends Component {
                   }}
                   @type="input"
                   @format="full"
-                  @onSet={{fn this.syncFieldToEvent "location"}}
+                  @onSet={{this.syncLocationToEvent}}
                   as |field|
                 >
                   <field.Control
@@ -865,22 +882,22 @@ export default class PostEventBuilder extends Component {
                   />
                 </form.Field>
 
-                {{#if this.shouldRenderUrl}}
+                {{#if this.showLivestream}}
                   <form.Field
-                    @name="url"
+                    @name="livestream"
                     @title={{i18n
-                      "discourse_post_event.builder_modal.url.label"
+                      "discourse_post_event.builder_modal.livestream.label"
                     }}
-                    @type="input-url"
+                    @type="checkbox"
                     @format="full"
-                    @onSet={{fn this.syncFieldToEvent "url"}}
+                    @onSet={{fn this.syncFieldToEvent "livestream"}}
                     as |field|
                   >
-                    <field.Control
-                      placeholder={{i18n
-                        "discourse_post_event.builder_modal.url.placeholder"
+                    <field.Control>
+                      {{i18n
+                        "discourse_post_event.builder_modal.livestream.checkbox_label"
                       }}
-                    />
+                    </field.Control>
                   </form.Field>
                 {{/if}}
 

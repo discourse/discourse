@@ -80,6 +80,21 @@ describe ListController do
       sign_in(user)
     end
 
+    it "returns 403 for a group hidden from the acting user" do
+      hidden_group =
+        Fabricate(
+          :group,
+          visibility_level: Group.visibility_levels[:staff],
+          assignable_level: Group::ALIAS_LEVELS[:everyone],
+        )
+
+      get "/g/#{hidden_group.name}.json"
+      expect(response.status).to eq(404)
+
+      get "/topics/group-topics-assigned/#{hidden_group.name}.json"
+      expect(response.status).to eq(403)
+    end
+
     it "returns user-assigned-topics-list of users in the assigned_allowed_group and doesn't include deleted topic" do
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
       expect(

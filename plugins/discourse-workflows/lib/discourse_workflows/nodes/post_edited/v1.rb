@@ -5,13 +5,6 @@ module DiscourseWorkflows
     module PostEdited
       class V1 < NodeType
         POST_SCOPE_OPTIONS = %w[first_post replies all_posts].freeze
-        TRUST_LEVEL_OPTIONS = [
-          { value: "0", label_key: "trust_levels.names.newuser" },
-          { value: "1", label_key: "trust_levels.names.basic" },
-          { value: "2", label_key: "trust_levels.names.member" },
-          { value: "3", label_key: "trust_levels.names.regular" },
-          { value: "4", label_key: "trust_levels.names.leader" },
-        ].freeze
 
         description(
           name: "trigger:post_edited",
@@ -46,7 +39,7 @@ module DiscourseWorkflows
             trust_levels: {
               type: :multi_options,
               required: false,
-              options: TRUST_LEVEL_OPTIONS,
+              options: trust_level_options,
             },
           },
         )

@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import moment from "moment";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -22,6 +23,7 @@ import Description from "./description";
 import EventStatus from "./event-status";
 import Image from "./image";
 import Invitees from "./invitees";
+import Livestream from "./livestream";
 import Location from "./location";
 import MoreMenu from "./more-menu";
 import Status from "./status";
@@ -308,7 +310,10 @@ export default class DiscoursePostEvent extends Component {
                     {{this.recurrenceLabel}}
                   </InfoSection>
                 {{/if}}
-                <Location @location={{event.location}} />
+                <Location
+                  @location={{event.location}}
+                  @livestream={{event.livestream}}
+                />
                 <Url @url={{event.url}} />
                 <ChatChannel @event={{event}} />
                 <Invitees @event={{event}} />
@@ -323,6 +328,11 @@ export default class DiscoursePostEvent extends Component {
                 {{#if this.showStatus}}
                   <Status @event={{event}} />
                 {{/if}}
+
+                {{#if event.livestream}}
+                  {{bodyClass "livestream-topic"}}
+                {{/if}}
+                <Livestream @event={{event}} />
               </PluginOutlet>
             {{/if}}
           </div>

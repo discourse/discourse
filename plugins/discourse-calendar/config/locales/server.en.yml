@@ -73,11 +73,9 @@ en:
     sidebar_show_upcoming_events: "Show upcoming events link in the sidebar under 'More'."
     calendar_first_day_of_week: "Set the first day of the week for calendar display. Options are Saturday, Sunday, or Monday."
     enable_events_category_type_setup: "Enables the Events category type option during category creation setup."
-    livestream_enabled: "Enable livestream chat for topics tagged 'livestream'."
     livestream_zoom_enabled: "Enable Zoom video embedding for livestream topics."
     livestream_zoom_sdk_key: "Zoom Meeting SDK client ID."
     livestream_zoom_sdk_secret: "Zoom Meeting SDK client secret."
-    livestream_chat_allowed_groups: "Only allowlisted groups can chat in the livestream channel."
     livestream_embeddable_chat_allowed_paths: "Allowed paths for the embeddable livestream chat."
     livestream_enable_modal_chat_on_mobile: "Show livestream chat in a modal on mobile."
 

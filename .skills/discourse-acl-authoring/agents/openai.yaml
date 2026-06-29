@@ -1,0 +1,7 @@
+interface:
+  display_name: "Discourse ACL Authoring"
+  short_description: "Build Discourse ACL-backed features"
+  default_prompt: "Use $discourse-acl-authoring to add or review ACL-backed access control in Discourse."
+
+policy:
+  allow_implicit_invocation: true

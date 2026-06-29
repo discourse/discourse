@@ -33,6 +33,37 @@ module DiscourseWorkflows
           "workflow_name" => {
             type: :string,
           },
+          "called_by" => {
+            type: :object,
+            fields: {
+              "workflow_id" => {
+                type: :integer,
+              },
+              "workflow_name" => {
+                type: :string,
+              },
+              "execution_id" => {
+                type: :integer,
+              },
+              "execution_url" => {
+                type: :string,
+              },
+              "node_id" => {
+                type: :string,
+              },
+              "node_name" => {
+                type: :string,
+              },
+              "node_type" => {
+                type: :string,
+              },
+            },
+            display_options: {
+              show: {
+                node_present: [{ type: "trigger:workflow_call" }],
+              },
+            },
+          },
           "resume_url" => {
             type: :string,
             display_options: {

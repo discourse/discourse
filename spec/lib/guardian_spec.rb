@@ -55,6 +55,78 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "acl permissions" do
+    fab!(:acl_user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:acl_group) { Fabricate(:group).tap { |group| group.add(acl_user) } }
+    fab!(:member_category, :category)
+    fab!(:anon_category, :category)
+    fab!(:member_acl) do
+      Fabricate(
+        :access_control_list_with_groups,
+        target: member_category,
+        permission: "view",
+        groups: [acl_group],
+      )
+    end
+    fab!(:anon_acl) do
+      Fabricate(
+        :access_control_list,
+        target: anon_category,
+        permission: "view",
+        allowed_group_ids: [Group::AUTO_GROUPS[:anonymous_users]],
+      )
+    end
+
+    before do
+      Category.stubs(:has_mandatory_acl?).returns(false)
+      Category.stubs(:acl_is_mandatory?).returns(false)
+    end
+
+    describe "#has_acl_permission?" do
+      it "is true when a group the user belongs to grants the permission" do
+        expect(acl_user.guardian.has_acl_permission?(member_category, "view")).to eq(true)
+      end
+
+      it "is false when the user's groups do not grant the permission" do
+        expect(acl_user.guardian.has_acl_permission?(member_category, "edit")).to eq(false)
+      end
+
+      it "is falsey when there is no acl entry matching the user for the target" do
+        expect(acl_user.guardian.has_acl_permission?(anon_category, "view")).to be_falsey
+      end
+
+      it "grants anonymous users permissions via the anonymous_users group" do
+        expect(Guardian.new.has_acl_permission?(anon_category, "view")).to eq(true)
+      end
+
+      it "does not grant anonymous users permissions from member-only groups" do
+        expect(Guardian.new.has_acl_permission?(member_category, "view")).to be_falsey
+      end
+    end
+
+    describe "#has_any_acl_permission?" do
+      it "is true when any of the permissions are granted" do
+        expect(acl_user.guardian.has_any_acl_permission?(member_category, %w[edit view])).to eq(
+          true,
+        )
+      end
+
+      it "is false when none of the permissions are granted" do
+        expect(acl_user.guardian.has_any_acl_permission?(member_category, %w[edit manage])).to eq(
+          false,
+        )
+      end
+
+      it "is true for anonymous users when the anonymous group grants one" do
+        expect(Guardian.new.has_any_acl_permission?(anon_category, %w[edit view])).to eq(true)
+      end
+
+      it "is false for anonymous users without a matching group" do
+        expect(Guardian.new.has_any_acl_permission?(member_category, %w[edit view])).to eq(false)
+      end
+    end
+  end
+
   describe "can_enable_safe_mode" do
     fab!(:user)
     fab!(:moderator)

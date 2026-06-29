@@ -25,6 +25,7 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
         "id",
         "workflow_id",
         "workflow_name",
+        "called_by",
         "resume_url",
         "resumeFormUrl",
       )
@@ -44,6 +45,15 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
       expect(field[:display_options]).to eq(
         show: {
           node_present: [{ type: "action:form", parameters: { page_type: "page" } }],
+        },
+      )
+    end
+
+    it "marks called_by as conditionally visible for workflow call triggers" do
+      field = described_class.environment_symbols.dig("$execution", :fields, "called_by")
+      expect(field[:display_options]).to eq(
+        show: {
+          node_present: [{ type: "trigger:workflow_call" }],
         },
       )
     end
@@ -145,6 +155,21 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
     ensure
       resolver&.dispose
       sandbox&.dispose
+    end
+
+    it "omits $execution.called_by for normal executions" do
+      execution =
+        Fabricate(:discourse_workflows_execution, status: :running, started_at: Time.current)
+      context =
+        DiscourseWorkflows::Executor::ExecutionContext.new(
+          workflow: execution.workflow,
+          trigger_data: {
+          },
+          user: user,
+          execution: execution,
+        )
+
+      expect(context.resolver_context["__execution"]).not_to have_key("called_by")
     end
 
     it "ExpressionResolver exposes current-input helpers" do

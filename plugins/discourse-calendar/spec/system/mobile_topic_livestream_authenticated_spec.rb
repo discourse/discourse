@@ -12,7 +12,6 @@ describe "Discourse Livestream - Topic Livestream - Mobile - Authenticated", mob
   before do
     SiteSetting.calendar_enabled = true
     SiteSetting.chat_enabled = true
-    SiteSetting.livestream_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     sign_in(admin)
   end
@@ -39,9 +38,8 @@ describe "Discourse Livestream - Topic Livestream - Mobile - Authenticated", mob
       expect(topic_page).to have_css(".chat-channel-preview-card")
     end
 
-    context "when user in allowlisted group" do
-      it "opens the chat channel and allows to chat after clicking the header icon" do
-        SiteSetting.livestream_chat_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+    context "when the user is going to the event" do
+      it "opens the chat channel and allows chatting after clicking the header icon" do
         topic_livestream.create_livestream_event_topic(composer, topic_page, livestream_tag)
 
         find(".going-button").click
@@ -50,22 +48,6 @@ describe "Discourse Livestream - Topic Livestream - Mobile - Authenticated", mob
         expect(topic_page).to have_css(".chat-drawer")
 
         expect(topic_page).to have_css(".chat-composer")
-      end
-    end
-
-    context "when user not in allowlisted group" do
-      fab!(:group)
-
-      it "opens the chat channel and allows to chat after clicking the header icon" do
-        SiteSetting.livestream_chat_allowed_groups = group.id.to_s
-        topic_livestream.create_livestream_event_topic(composer, topic_page, livestream_tag)
-
-        find(".going-button").click
-        find(".livestream-header-icon").click
-        expect(topic_page).to have_css("#custom-chat-container")
-        expect(topic_page).to have_css(".chat-drawer")
-
-        expect(topic_page).not_to have_css(".chat-composer")
       end
     end
   end

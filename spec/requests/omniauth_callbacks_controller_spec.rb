@@ -725,6 +725,38 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(user.email).to eq("anotheremail@example.com")
       end
 
+      it "sanitizes custom failed auth result HTML" do
+        link_html =
+          '<a href="https://example.com/help" target="_blank" rel="noopener" onclick="alert(1)">Learn more</a>'
+        failed_result = Auth::Result.new
+        failed_result.failed = true
+        failed_result.failed_reason = [
+          "Partner accounts only.",
+          link_html,
+          "<script>alert(1)</script>",
+        ].join("\n")
+
+        Auth::GoogleOAuth2Authenticator
+          .any_instance
+          .stubs(:after_authenticate)
+          .returns(failed_result)
+
+        get "/auth/google_oauth2/callback"
+
+        document = Nokogiri.HTML5(response.body)
+        alert = document.at_css(".alert-error")
+        link = alert.at_css("a")
+
+        aggregate_failures do
+          expect(response.status).to eq(200)
+          expect(alert.text).to include("Partner accounts only.")
+          expect(link["href"]).to eq("https://example.com/help")
+          expect(link["target"]).to eq("_blank")
+          expect(link["onclick"]).to be_nil
+          expect(alert.to_html).not_to include("<script")
+        end
+      end
+
       context "when user has TOTP enabled" do
         before { user.create_totp(enabled: true) }
 

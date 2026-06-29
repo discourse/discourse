@@ -469,6 +469,141 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.strictEqual(document.activeElement, keyInput);
   });
 
+  test("renders collection options as addable fields", async function (assert) {
+    this.setProperties({
+      configuration: { updates: {} },
+      formApi: null,
+      nodeType: "action:user",
+      schema: {
+        updates: {
+          type: "collection",
+          type_options: {
+            add_optional_field_button_text:
+              "discourse_workflows.property_engine.add_field",
+          },
+          options: [
+            {
+              name: "title",
+              type: "string",
+              required: false,
+            },
+          ],
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".workflows-property-engine__collection-row").doesNotExist();
+    assert
+      .dom(".workflows-property-engine__add-attrs-btn")
+      .hasText("Add field");
+
+    await click(".workflows-property-engine__add-attrs-btn");
+    await waitFor(".dropdown-menu__item .btn-transparent");
+    await click(findAll(".dropdown-menu__item .btn-transparent")[0]);
+
+    assert.dom(".workflows-property-engine__collection-row input").exists();
+    assert.dom(".form-kit__container-optional").doesNotExist();
+
+    await fillIn(
+      ".workflows-property-engine__collection-row input",
+      "Updated title"
+    );
+
+    assert.deepEqual(this.formApi.get("updates"), { title: "Updated title" });
+
+    await click(".workflows-property-engine__collection-delete");
+
+    assert.deepEqual(this.formApi.get("updates"), {});
+  });
+
+  test("renders collection boolean options inline", async function (assert) {
+    this.setProperties({
+      configuration: { updates: {} },
+      formApi: null,
+      nodeType: "action:user",
+      schema: {
+        updates: {
+          type: "collection",
+          options: [
+            {
+              name: "trust_level_locked",
+              type: "boolean",
+              required: false,
+            },
+          ],
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    await click(".workflows-property-engine__add-attrs-btn");
+    await waitFor(".dropdown-menu__item .btn-transparent");
+    await click(findAll(".dropdown-menu__item .btn-transparent")[0]);
+
+    assert
+      .dom(".workflows-property-engine__collection-row")
+      .hasClass("--inline-control", "boolean rows use the inline row modifier");
+    assert
+      .dom(
+        ".workflows-property-engine__collection-row .d-toggle-switch__checkbox"
+      )
+      .hasAttribute("aria-checked", "false");
+    assert.deepEqual(this.formApi.get("updates"), {
+      trust_level_locked: false,
+    });
+
+    await click(
+      ".workflows-property-engine__collection-row .d-toggle-switch__checkbox"
+    );
+
+    assert.deepEqual(this.formApi.get("updates"), {
+      trust_level_locked: true,
+    });
+  });
+
   test("renders fixed collections with missing group data", async function (assert) {
     this.setProperties({
       configuration: { entries: {} },
@@ -1072,6 +1207,83 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.false(this.formApi.get("agent_force_default_llm"));
     assert.strictEqual(this.formApi.get("agent_name"), "Support Bot");
     assert.strictEqual(this.formApi.get("llm_model_id"), null);
+  });
+
+  test("renders combo box actions with the selected field value as a route model", async function (assert) {
+    const router = this.owner.lookup("service:router");
+    const transitionTo = sinon.stub(router, "transitionTo");
+
+    this.setProperties({
+      configuration: {
+        workflow_id: null,
+      },
+      nodeType: "action:workflow_call",
+      nodeTypes: [
+        {
+          identifier: "action:workflow_call",
+          metadata: {
+            callable_workflows: [{ id: 8, name: "Child workflow" }],
+          },
+        },
+      ],
+      schema: {
+        workflow_id: {
+          type: "integer",
+          required: true,
+          type_options: {
+            load_options_method: "callable_workflows",
+          },
+          no_data_expression: true,
+          ui: {
+            control: "combo_box",
+          },
+          control_options: {
+            action_icon: "up-right-from-square",
+            action_label: "discourse_workflows.workflow_call.open_workflow",
+            action_route: "adminPlugins.show.discourse-workflows.show",
+            action_route_models: [{ source: "field_value" }],
+            name_property: "name",
+            value_property: "id",
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".workflows-property-engine__select-with-action > .btn")
+      .doesNotExist();
+
+    const selector = selectKit(".combo-box");
+    await selector.expand();
+    await selector.selectRowByValue("8");
+
+    assert
+      .dom(".workflows-property-engine__select-with-action > .btn")
+      .hasText("Open workflow");
+
+    await click(".workflows-property-engine__select-with-action > .btn");
+
+    assert.true(
+      transitionTo.calledWith(
+        "adminPlugins.show.discourse-workflows.show",
+        sinon.match((value) => String(value) === "8", "selected workflow id")
+      )
+    );
   });
 
   test("applies option patches from remote combo box options", async function (assert) {

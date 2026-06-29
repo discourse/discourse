@@ -9,10 +9,10 @@ module Migrations
       end
 
       def execute
-        @reporter.start_step(@step.class.title)
+        step_report = @reporter.start_step(@step.class.title)
         @step.execute
       ensure
-        @reporter.finish_step(@step.class.title)
+        step_report.finish
       end
     end
   end

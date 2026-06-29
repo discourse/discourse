@@ -4,7 +4,7 @@ module DiscourseWorkflows
   class Executor
     class ExecutionStore
       MAX_EXECUTION_DATA_SIZE = 5.megabytes
-      MAX_STEP_IO_SIZE = 128.kilobytes
+      MAX_STEP_IO_SIZE = 1280.kilobytes
       MAX_STEP_STRING_BYTES = 16.kilobytes
       MAX_STEP_COLLECTION_SIZE = 50
       MAX_STEP_IO_DEPTH = 8
@@ -60,6 +60,9 @@ module DiscourseWorkflows
           timeout_action: nil,
         )
         publish_execution_run_data
+        if @options.workflow_call_child?
+          DiscourseWorkflows::WorkflowCallContinuation.child_succeeded!(execution)
+        end
         execution
       end
 
@@ -79,6 +82,9 @@ module DiscourseWorkflows
         publish_execution_run_data(
           force: @options.draft_execution || @options.workflow_snapshot.present?,
         )
+        if @options.workflow_call_child?
+          DiscourseWorkflows::WorkflowCallContinuation.child_failed!(execution)
+        end
         execution
       end
 
@@ -131,7 +137,17 @@ module DiscourseWorkflows
           started_at: @execution.started_at || Time.current,
           finished_at: finished_at,
         )
+        attach_workflow_call_run!
         @execution
+      end
+
+      def attach_workflow_call_run!
+        return if @options.workflow_call_run_id.blank?
+
+        DiscourseWorkflows::WorkflowCallRun.where(id: @options.workflow_call_run_id).update_all(
+          child_execution_id: @execution.id,
+          updated_at: Time.current,
+        )
       end
 
       def execution_workflow_version_id

@@ -32,6 +32,14 @@ function optionName(option, nameProperty) {
   return option[nameProperty] ?? option.name ?? option.label;
 }
 
+function hasValue(value) {
+  return value !== null && value !== undefined && value !== "";
+}
+
+function usesFieldValue(model) {
+  return model?.source === "field_value";
+}
+
 export default class ComboBoxField extends Component {
   @service router;
   @service workflowsNodeTypes;
@@ -145,7 +153,9 @@ export default class ComboBoxField extends Component {
       return [];
     }
 
-    return Array.isArray(models) ? models : [models];
+    return (Array.isArray(models) ? models : [models]).map((model) =>
+      usesFieldValue(model) ? this.args.field.value : model
+    );
   }
 
   get actionIcon() {
@@ -154,6 +164,19 @@ export default class ComboBoxField extends Component {
 
   get actionLabel() {
     return this.controlOptions.action_label;
+  }
+
+  get actionRequiresValue() {
+    const models = this.controlOptions.action_route_models;
+
+    return (Array.isArray(models) ? models : [models]).some(usesFieldValue);
+  }
+
+  get showActionButton() {
+    return (
+      this.actionRoute &&
+      (!this.actionRequiresValue || hasValue(this.args.field.value))
+    );
   }
 
   get options() {
@@ -248,6 +271,10 @@ export default class ComboBoxField extends Component {
 
   @action
   performAction() {
+    if (!this.showActionButton) {
+      return;
+    }
+
     this.router.transitionTo(this.actionRoute, ...this.actionRouteModels);
   }
 
@@ -260,7 +287,7 @@ export default class ComboBoxField extends Component {
       @dynamicValueHint={{@dynamicValueHint}}
       @session={{@session}}
     >
-      {{#if this.actionRoute}}
+      {{#if this.showActionButton}}
         <div class="workflows-property-engine__select-with-action">
           <DynamicOptionsComboBox
             @content={{this.options}}

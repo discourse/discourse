@@ -1,27 +1,25 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
-
-export const LIVESTREAM_TAG_NAME = "livestream";
+import optionalService from "discourse/lib/optional-service";
 
 export default class EmbeddableChat extends Service {
   @service siteSettings;
   @service router;
   @service currentUser;
   @service capabilities;
-  @service chat;
+  @optionalService chat;
 
   @tracked isMobileChatVisible = false;
   // TODO (martin) Make sure this is set everywhere that loads the embeddable chat e.g. topic routes
   @tracked chatChannelId;
 
   get userCanChat() {
-    return this.chat.userCanChat;
+    return this.chat?.userCanChat ?? false;
   }
 
   canRenderChatChannel(mobileViewAllowed = false) {
     if (
-      this.siteSettings.livestream_enabled &&
       this.isMobileViewport === mobileViewAllowed &&
       this.siteSettings.chat_enabled &&
       this.currentUser &&
@@ -48,17 +46,6 @@ export default class EmbeddableChat extends Service {
     this.isMobileChatVisible = !this.isMobileChatVisible;
   }
 
-  topicHasLivestreamTag(topic) {
-    return (
-      // TODO(https://github.com/discourse/discourse/pull/36678): The string check can be
-      // removed using .discourse-compatibility once the PR is merged.
-      topic?.tags?.some?.((tag) => {
-        const tagName = typeof tag === "string" ? tag : tag.name;
-        return tagName === LIVESTREAM_TAG_NAME;
-      }) || false
-    );
-  }
-
   get isMobileModal() {
     return (
       this.siteSettings.livestream_enable_modal_chat_on_mobile &&
@@ -68,5 +55,18 @@ export default class EmbeddableChat extends Service {
 
   get isMobileViewport() {
     return !this.capabilities.viewport.lg;
+  }
+
+  // TODO (martin) Fix these
+  get topic() {
+    return this.topicController?.model;
+  }
+
+  get chatChannelId() {
+    return this.topic?.chat_channel_id;
+  }
+
+  get topicHasLivestream() {
+    return this.topic?.has_livestream;
   }
 }

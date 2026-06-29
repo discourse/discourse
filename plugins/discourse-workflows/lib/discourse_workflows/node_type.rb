@@ -37,6 +37,10 @@ module DiscourseWorkflows
       registered_nodes.select(&:waits_for_resume?).map(&:identifier)
     end
 
+    def self.find_in(nodes)
+      Array(nodes).find { |node| node["type"] == identifier }
+    end
+
     def self.description(value = nil)
       if value
         @description = DESCRIPTION_DEFAULTS.deep_merge(value.deep_symbolize_keys).freeze
@@ -145,6 +149,12 @@ module DiscourseWorkflows
         .wrap(value)
         .flat_map { |name| name.to_s.split(",") }
         .filter_map { |name| name.strip.presence }
+    end
+
+    def self.trust_level_options
+      TrustLevel.levels.map do |name, level|
+        { value: level.to_s, label_key: "trust_levels.names.#{name}" }
+      end
     end
 
     def initialize(**)

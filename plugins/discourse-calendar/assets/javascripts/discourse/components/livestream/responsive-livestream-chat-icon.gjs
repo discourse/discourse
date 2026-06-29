@@ -8,11 +8,7 @@ export default class ResponsiveLivestreamChatIcon extends Component {
   @service embeddableChat;
 
   get shouldShow() {
-    return (
-      this.siteSettings.livestream_enabled &&
-      !this.capabilities.viewport.lg &&
-      this.embeddableChat.chatChannelId
-    );
+    return !this.capabilities.viewport.lg && this.embeddableChat.chatChannelId;
   }
 
   <template>

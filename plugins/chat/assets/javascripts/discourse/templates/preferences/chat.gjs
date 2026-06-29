@@ -139,7 +139,7 @@ export default class Chat extends Component {
   @action
   handleChatSoundSet(sound, { set, name }) {
     if (sound) {
-      this.chatAudioManager?.play(sound);
+      this.chatAudioManager?.play(sound, { throttle: false });
     }
     set(name, sound == null ? null : sound);
   }
