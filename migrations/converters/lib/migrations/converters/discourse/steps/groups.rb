@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class Groups < Conversion::ProgressStep
+      class Groups < Conversion::Step
         source do
           def max_progress
             @source_db.count <<~SQL

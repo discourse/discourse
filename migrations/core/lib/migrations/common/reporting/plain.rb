@@ -66,6 +66,10 @@ module Migrations
         @mutex.synchronize { @steps[id].total = max_progress if @steps[id] }
       end
 
+      def report_concurrency(_id, _count)
+        # No-op: the plain log skips the live fork/CPU count.
+      end
+
       def report_progress(id, current, skip_count, warning_count, error_count)
         @mutex.synchronize do
           step = @steps[id]
@@ -96,6 +100,21 @@ module Migrations
           line << " — #{I18n.t("progressbar.#{outcome}")}" unless outcome == :done
           line << annotations(step)
           @output.puts(line)
+        end
+      end
+
+      def report_finalizing_begin
+        @mutex.synchronize { @output.puts(I18n.t("progressbar.finishing_up")) }
+      end
+
+      def report_summary(runtime:, total:, failed:, skipped:)
+        tally = [I18n.t("progressbar.steps", count: total, number: total)]
+        tally << I18n.t("progressbar.steps_failed", number: failed) if failed > 0
+        tally << I18n.t("progressbar.steps_skipped", number: skipped) if skipped > 0
+        @mutex.synchronize do
+          @output.puts(
+            "#{I18n.t("progressbar.total")}: #{tally.join(", ")} (#{format_duration(runtime)})",
+          )
         end
       end
 
