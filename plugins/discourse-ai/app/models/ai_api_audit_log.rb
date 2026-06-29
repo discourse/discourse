@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class AiApiAuditLog < ActiveRecord::Base
-  self.ignored_columns = %w[cached_tokens] # TODO: Remove when 20251118000500_drop_cached_tokens_from_ai_api_audit_logs has been promoted to pre-deploy
+  self.ignored_columns += [
+    "cached_tokens", # TODO: Remove when 20251118000500_drop_cached_tokens_from_ai_api_audit_logs has been promoted to pre-deploy
+  ]
   belongs_to :post
   belongs_to :topic
   belongs_to :user
@@ -64,6 +66,7 @@ end
 #  language_model       :string(255)
 #  raw_request_payload  :string
 #  raw_response_payload :string
+#  request_attempts     :jsonb
 #  request_tokens       :integer
 #  response_status      :integer
 #  response_tokens      :integer

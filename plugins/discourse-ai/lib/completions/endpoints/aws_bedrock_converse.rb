@@ -176,6 +176,7 @@ module DiscourseAi
               response_data
             end
           rescue Aws::BedrockRuntime::Errors::ServiceError => e
+            log.response_status = e.context&.http_response&.status_code if log
             Rails.logger.error("#{self.class.name}: #{e.class}: #{e.message}")
             raise CompletionFailed, e.message
           ensure
@@ -190,7 +191,7 @@ module DiscourseAi
               log.cache_write_tokens =
                 processor.cache_write_input_tokens if processor.cache_write_input_tokens
               log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
-              log.response_status ||= 200
+              log.response_status ||= 200 if call_status == :success
               log.created_at = start_time
               log.updated_at = Time.now
               log.duration_msecs = (Time.now - start_time) * 1000
@@ -277,6 +278,9 @@ module DiscourseAi
 
           region = llm_model.lookup_custom_param("region")
           client_options = { region: region, http_read_timeout: TIMEOUT }
+          # AWS SDK already retries modeled throttling, 5xx, and networking failures
+          # by default. Keep Bedrock Converse on SDK-managed retries to avoid
+          # double-retrying request streams in Discourse's HTTP retry loop.
 
           role_arn = llm_model.lookup_custom_param("role_arn")
           access_key_id = llm_model.lookup_custom_param("access_key_id")

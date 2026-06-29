@@ -139,13 +139,43 @@ module DiscourseAi
             payload[:generationConfig][:thinkingConfig][:includeThoughts] = true
           end
 
+          payload[:serviceTier] = service_tier if service_tier.present?
+
           payload
+        end
+
+        def service_tier
+          return @service_tier if defined?(@service_tier)
+
+          @service_tier = llm_model.lookup_custom_param("service_tier")
+          @service_tier = nil if !%w[standard flex priority].include?(@service_tier)
+          @service_tier
         end
 
         def prepare_request(payload)
           headers = { "Content-Type" => "application/json" }
 
           Net::HTTP::Post.new(model_uri, headers).tap { |r| r.body = payload }
+        end
+
+        def retry_delay_from_response_body(body)
+          return if body.blank? || body.bytesize >= 10_000
+
+          retry_info =
+            Array(JSON.parse(body).dig("error", "details")).find do |detail|
+              detail["@type"] == "type.googleapis.com/google.rpc.RetryInfo"
+            end
+
+          retry_delay = retry_info&.[]("retryDelay")
+          match = retry_delay.to_s.match(/\A(?<seconds>\d+(?:\.\d+)?)s\z/)
+          return if !match
+
+          delay = match[:seconds].to_f
+          return if delay <= 0
+
+          [delay, MAX_RETRY_AFTER_SECONDS].min
+        rescue StandardError
+          nil
         end
 
         def extract_completion_from(response_raw)

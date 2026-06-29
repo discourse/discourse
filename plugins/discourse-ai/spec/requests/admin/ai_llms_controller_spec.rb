@@ -84,6 +84,18 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       expect(vllm_params).not_to have_key("enable_thinking")
     end
 
+    it "includes Gemini service tier metadata" do
+      get "/admin/plugins/discourse-ai/ai-llms.json"
+      expect(response).to be_successful
+
+      google_params = response.parsed_body.dig("meta", "provider_params", "google")
+      expect(google_params["service_tier"]).to include(
+        "type" => "enum",
+        "values" => %w[default standard flex priority],
+        "default" => "default",
+      )
+    end
+
     it "lists enabled features on appropriate LLMs" do
       SiteSetting.ai_bot_enabled = true
       SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s

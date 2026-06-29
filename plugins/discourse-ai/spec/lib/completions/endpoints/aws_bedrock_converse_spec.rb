@@ -312,6 +312,23 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
       expect { llm.generate("hello", user: user) }.to raise_error(
         DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
       )
+      expect(AiApiAuditLog.last.response_status).to be_nil
+    end
+    it "records SDK error response status when available" do
+      client = instance_double(Aws::BedrockRuntime::Client)
+      context = Seahorse::Client::RequestContext.new
+      context.http_response.status_code = 429
+      allow(client).to receive(:converse).and_raise(
+        Aws::BedrockRuntime::Errors::ThrottlingException.new(context, "Rate exceeded"),
+      )
+      allow(Aws::BedrockRuntime::Client).to receive(:new).and_return(client)
+
+      llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+
+      expect { llm.generate("hello", user: user) }.to raise_error(
+        DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
+      )
+      expect(AiApiAuditLog.last.response_status).to eq(429)
     end
   end
 end
