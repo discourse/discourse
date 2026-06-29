@@ -78,4 +78,39 @@ module("Spoiler Alert | Unit | apply-spoiler", function (hooks) {
       details.remove();
     }
   });
+
+  test("clicking an interactive descendant does not re-blur the spoiler", function (assert) {
+    const spoiler = buildSpoiler();
+    spoiler.textContent = "";
+    const link = document.createElement("a");
+    link.href = "#";
+    link.textContent = "a link";
+    link.addEventListener("click", (event) => event.preventDefault());
+    spoiler.appendChild(link);
+    document.body.appendChild(spoiler);
+
+    try {
+      applySpoiler(spoiler);
+
+      spoiler.click();
+      assert
+        .dom(spoiler)
+        .hasAttribute(
+          "data-spoiler-state",
+          "revealed",
+          "reveals on first click"
+        );
+
+      link.click();
+      assert
+        .dom(spoiler)
+        .hasAttribute(
+          "data-spoiler-state",
+          "revealed",
+          "clicking an interactive descendant does not re-blur the spoiler"
+        );
+    } finally {
+      spoiler.remove();
+    }
+  });
 });
