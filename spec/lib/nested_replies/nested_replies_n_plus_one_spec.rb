@@ -9,6 +9,13 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
 
   before { SiteSetting.nested_replies_enabled = true }
 
+  def nested_reply_counter_stat_queries(queries)
+    queries.count do |query|
+      query.include?("nested_view_post_stats") &&
+        (query.include?("direct_reply_count") || query.include?("total_descendant_count"))
+    end
+  end
+
   describe "no re-parenting on create" do
     before do
       SiteSetting.nested_replies_cap_nesting_depth = true
@@ -52,9 +59,10 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
           )
         end
 
-      stats_queries_3 = queries_3.count { |q| q.include?("nested_view_post_stats") }
-      stats_queries_10 = queries_10.count { |q| q.include?("nested_view_post_stats") }
-      expect(stats_queries_3).to eq(stats_queries_10)
+      counter_stat_queries_3 = nested_reply_counter_stat_queries(queries_3)
+      counter_stat_queries_10 = nested_reply_counter_stat_queries(queries_10)
+      expect(counter_stat_queries_3).to be_positive
+      expect(counter_stat_queries_3).to eq(counter_stat_queries_10)
     end
 
     it "increments direct_reply_count on parent only and total_descendant_count on all ancestors" do
@@ -135,9 +143,10 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
         Fabricate(:post, topic: topic2, user: user, reply_to_post_number: chain_10.last.post_number)
       queries_10 = track_sql_queries { leaf_10.destroy! }
 
-      stats_queries_3 = queries_3.count { |q| q.include?("nested_view_post_stats") }
-      stats_queries_10 = queries_10.count { |q| q.include?("nested_view_post_stats") }
-      expect(stats_queries_3).to eq(stats_queries_10)
+      counter_stat_queries_3 = nested_reply_counter_stat_queries(queries_3)
+      counter_stat_queries_10 = nested_reply_counter_stat_queries(queries_10)
+      expect(counter_stat_queries_3).to be_positive
+      expect(counter_stat_queries_3).to eq(counter_stat_queries_10)
     end
 
     it "clamps stats at zero" do
