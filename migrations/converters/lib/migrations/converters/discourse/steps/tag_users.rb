@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class TagUsers < Conversion::ProgressStep
+      class TagUsers < Conversion::Step
         source { reads_table "tag_users", where: "user_id > 0" }
 
         processor do

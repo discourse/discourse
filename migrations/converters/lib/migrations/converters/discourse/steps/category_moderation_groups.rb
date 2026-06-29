@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class CategoryModerationGroups < Conversion::ProgressStep
+      class CategoryModerationGroups < Conversion::Step
         source { reads_table "category_moderation_groups", where: "group_id > 0" }
 
         processor do

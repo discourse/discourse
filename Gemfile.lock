@@ -18,8 +18,8 @@ PATH
       digest-xxhash
       extralite-bundle
       i18n
+      json
       lru_redux
-      oj
       samovar
       unicode-display_width
       zeitwerk

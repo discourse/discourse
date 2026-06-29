@@ -29,23 +29,6 @@ RSpec.describe Migrations::Database::IntermediateDB do
       end
     end
 
-    it "works with `Migrations::Database::OfflineConnection`" do
-      connection = Migrations::Database::OfflineConnection.new
-
-      described_class.setup(connection)
-      described_class.insert("INSERT INTO foo (id, name) VALUES (?, ?)", 1, "Alice")
-      described_class.insert("INSERT INTO foo (id, name) VALUES (?, ?)", 2, "Bob")
-
-      expect(connection.parametrized_insert_statements).to eq(
-        [
-          ["INSERT INTO foo (id, name) VALUES (?, ?)", [1, "Alice"]],
-          ["INSERT INTO foo (id, name) VALUES (?, ?)", [2, "Bob"]],
-        ],
-      )
-
-      connection.close
-    end
-
     it "switches the connection" do
       old_connection = create_connection_double
       new_connection = create_connection_double

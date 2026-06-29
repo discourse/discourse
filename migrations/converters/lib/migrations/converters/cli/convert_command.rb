@@ -22,6 +22,14 @@ module Migrations
                  "Skip the specified steps (comma-separated).",
                  default: [],
                  type: STEP_LIST
+          option "--max-parallel-steps <count>",
+                 "Maximum number of steps to run at the same time. " \
+                   "Caps the source DB connections a run opens; defaults to the worker pool size.",
+                 type: Integer
+          option "--no-fork",
+                 "Run each step inline in one process instead of forking workers. " \
+                   "Forces serial execution; meant for debugging (a breakpoint in a " \
+                   "step's `process` stops in the main run, not an unreachable child)."
         end
 
         one :converter_type, "The converter to run (e.g. discourse)."
@@ -42,7 +50,12 @@ module Migrations
           Database.reset!(settings[:intermediate_db][:path]) if @options[:reset]
 
           converter = "migrations/converters/#{type}/converter".camelize.constantize
-          converter.new(settings).run(only_steps: @options[:only], skip_steps: @options[:skip])
+          converter.new(settings).run(
+            only_steps: @options[:only],
+            skip_steps: @options[:skip],
+            max_parallel_steps: @options[:max_parallel_steps],
+            no_fork: @options[:no_fork] || false,
+          )
         end
 
         private

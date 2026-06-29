@@ -15,6 +15,7 @@ module Migrations
         YELLOW = "\e[33m"
         RED = "\e[31m"
         CYAN = "\e[36m"
+        MAGENTA = "\e[35m"
         DIM = "\e[90m"
         ERASE_LINE = "\e[2K" # erase the whole line (also clears the terminal's wrap flag)
         ERASE_BELOW = "\e[0J" # erase from the cursor to the end of the screen

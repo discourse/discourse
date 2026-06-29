@@ -3,7 +3,7 @@
 require "date"
 require "extralite"
 require "ipaddr"
-require "oj"
+require "json"
 
 module Migrations
   module Database
@@ -74,7 +74,7 @@ module Migrations
 
     def self.to_json(value)
       return nil if value.nil?
-      Oj.dump(value, mode: :compat)
+      JSON.generate(value)
     end
 
     def self.to_date(text)
