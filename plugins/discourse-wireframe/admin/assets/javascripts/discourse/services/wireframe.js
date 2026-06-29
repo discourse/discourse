@@ -69,12 +69,10 @@ export default class WireframeService extends Service {
   @service wireframeDrafts;
   @service wireframeDragOverlay;
   @service wireframeDragSession;
-  @service wireframeDropAuthority;
   @service wireframeEditEngine;
   @service wireframeEntryEdits;
   @service wireframeForceExpand;
   @service wireframeGridManipulator;
-  @service wireframeGridTemplate;
   @service wireframeImageUpload;
   @service wireframeInlineEdit;
   @service wireframeLayoutQuery;
@@ -666,30 +664,6 @@ export default class WireframeService extends Service {
    */
   get dragSession() {
     return this.wireframeDragSession;
-  }
-
-  /**
-   * The drop-authorization service (`canDropAt` / `canInsertBlockAt`). Re-exposed
-   * so internal `this.dropAuthority.X` and external `wireframe.dropAuthority.X`
-   * (drop targets, block-chrome, grid-manipulator) keep working unchanged.
-   *
-   * @returns {import("./wireframe-drop-authority").default}
-   */
-  get dropAuthority() {
-    return this.wireframeDropAuthority;
-  }
-
-  /**
-   * The grid-manipulator service (grid `wf:layout` placement + the
-   * deterministic cell / column ops). Re-exposed so internal
-   * `this.gridManipulator.X` (the drop-dispatch delegators) and external
-   * `wireframe.gridManipulator.X` (grid overlay, block chrome) keep working
-   * without injecting the service directly.
-   *
-   * @returns {import("./wireframe-grid-manipulator").default}
-   */
-  get gridManipulator() {
-    return this.wireframeGridManipulator;
   }
 
   /**
@@ -1749,93 +1723,7 @@ export default class WireframeService extends Service {
    */
   @action
   applyGridDrop(request) {
-    return this.gridManipulator.drop(request);
-  }
-
-  /**
-   * Grid-template facade — delegates to `wireframeGridTemplate`. The grid slots
-   * whose explicit placement falls outside the given bounds.
-   *
-   * @param {string} gridKey
-   * @param {number} maxColumns
-   * @param {number} maxRows
-   * @returns {Array<{slotKey: string, column: string, row: string}>}
-   */
-  outOfBoundsSlotsIn(gridKey, maxColumns, maxRows) {
-    return this.wireframeGridTemplate.outOfBoundsSlotsIn(
-      gridKey,
-      maxColumns,
-      maxRows
-    );
-  }
-
-  /**
-   * Grid-template facade — delegates to `wireframeGridTemplate`. Clamps every
-   * slot in a grid to fit new bounds (one structural-undo entry).
-   *
-   * @param {{gridKey: string, maxColumns: number, maxRows: number}} args
-   * @returns {boolean}
-   */
-  @action
-  clampGridSlotPlacements(args) {
-    return this.wireframeGridTemplate.clampGridSlotPlacements(args);
-  }
-
-  /**
-   * Grid-template facade — delegates to `wireframeGridTemplate`. Applies a preset
-   * grid template, reflowing content into its cells.
-   *
-   * @param {{gridKey: string, template: Object}} args
-   * @returns {boolean}
-   */
-  @action
-  applyGridTemplate(args) {
-    return this.wireframeGridTemplate.applyGridTemplate(args);
-  }
-
-  /**
-   * Grid-template facade — delegates to `wireframeGridTemplate`. Whether
-   * `applyGridTemplate` would succeed (content fits the template).
-   *
-   * @param {{gridKey: string, template: Object}} args
-   * @returns {boolean}
-   */
-  canApplyGridTemplate(args) {
-    return this.wireframeGridTemplate.canApplyGridTemplate(args);
-  }
-
-  /**
-   * Grid-template facade — delegates to `wireframeGridTemplate`. The preset
-   * template matching the grid's current shape, or null ("Free").
-   *
-   * @param {string} gridKey
-   * @returns {Object|null}
-   */
-  activeGridTemplate(gridKey) {
-    return this.wireframeGridTemplate.activeGridTemplate(gridKey);
-  }
-
-  /**
-   * Grid-template facade — delegates to `wireframeGridTemplate`. The effective
-   * `{columns, rows}` of a grid (declared vs occupied).
-   *
-   * @param {string} gridKey
-   * @returns {{columns: number, rows: number}}
-   */
-  gridSizeFor(gridKey) {
-    return this.wireframeGridTemplate.gridSizeFor(gridKey);
-  }
-
-  /**
-   * Grid-template facade — delegates to `wireframeGridTemplate`. Switches a grid
-   * into free `columns × rows` mode, reflowing content.
-   *
-   * @param {{gridKey: string, columns: number, rows: number}} args
-   * @returns {boolean}
-   */
-  @action
-  applyFreeGrid(args) {
-    return this.wireframeGridTemplate.applyFreeGrid(args);
+    return this.wireframeGridManipulator.drop(request);
   }
 
   /**
@@ -1848,7 +1736,7 @@ export default class WireframeService extends Service {
    */
   @action
   moveBlockIntoCell(args) {
-    return this.gridManipulator.moveIntoCell(args);
+    return this.wireframeGridManipulator.moveIntoCell(args);
   }
 
   /**
@@ -1861,7 +1749,7 @@ export default class WireframeService extends Service {
    */
   @action
   placeBlockInCell(args) {
-    return this.gridManipulator.placeInCell(args);
+    return this.wireframeGridManipulator.placeInCell(args);
   }
 
   /**

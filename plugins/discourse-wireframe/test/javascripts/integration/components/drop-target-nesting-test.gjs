@@ -104,6 +104,7 @@ module(
       const call = (clientY) =>
         computeDescriptor({
           wireframe,
+          dropAuthority: wireframe.dropAuthority,
           container,
           input: { clientX: aWrap.left + aWrap.width / 2, clientY },
           containerKey: "stack",
@@ -140,6 +141,7 @@ module(
       //   ◆ 10% into A → before the first child (gap 0)
       const start = computeDescriptor({
         wireframe,
+        dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(aWrap, "y", 0.1),
         containerKey: "stack",
@@ -154,6 +156,7 @@ module(
       //   ◆ 90% down B → after the last child (gap 2)
       const end = computeDescriptor({
         wireframe,
+        dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(bWrap, "y", 0.9),
         containerKey: "stack",
@@ -175,6 +178,7 @@ module(
       //   drag B, hover the A|B seam → B is already there → null
       const descriptor = computeDescriptor({
         wireframe,
+        dropAuthority: wireframe.dropAuthority,
         container,
         input: { clientX: aWrap.left + 5, clientY: aWrap.bottom },
         containerKey: "stack",
@@ -224,6 +228,7 @@ module(
       const call = (clientX) =>
         computeDescriptor({
           wireframe,
+          dropAuthority: wireframe.dropAuthority,
           container,
           input: { clientX, clientY: aWrap.top + aWrap.height / 2 },
           containerKey: "row",
@@ -276,6 +281,7 @@ module(
 
       const descriptor = computeDescriptor({
         wireframe,
+        dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(wrap, "y", 0.5),
         containerKey: "stack",
@@ -315,6 +321,7 @@ module(
 
       const descriptor = computeDescriptor({
         wireframe,
+        dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(wrap, "y", 0.5),
         containerKey: "stack",
@@ -350,6 +357,7 @@ module(
 
       const descriptor = computeDescriptor({
         wireframe,
+        dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(wrap, "y", 0.5),
         containerKey: "stack",
@@ -440,6 +448,7 @@ module(
 
       const seam = computeDescriptor({
         wireframe,
+        dropAuthority: wireframe.dropAuthority,
         container,
         input: { clientX: aWrap.right, clientY: aWrap.top + aWrap.height / 2 },
         containerKey: "carousel",
@@ -464,6 +473,7 @@ module(
 
       const end = computeDescriptor({
         wireframe,
+        dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(cWrap, "x", 0.9),
         containerKey: "carousel",
@@ -589,6 +599,7 @@ module(
 
       const descriptor = computeDescriptor({
         wireframe,
+        dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(wrap, "x", 0.5),
         containerKey: "carousel",
@@ -630,6 +641,7 @@ module(
       // proxy (P2), i.e. a new tab between tabs 1 and 2.
       const seam = computeDescriptor({
         wireframe,
+        dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(t2, "x", 0.1),
         containerKey: "tabs",
@@ -650,6 +662,7 @@ module(
       // tab.
       const end = computeDescriptor({
         wireframe,
+        dropAuthority: wireframe.dropAuthority,
         container,
         input: { clientX: t2.right + 20, clientY: t2.top + t2.height / 2 },
         containerKey: "tabs",
@@ -675,6 +688,7 @@ module(
 
       const middle = computeDescriptor({
         wireframe,
+        dropAuthority: wireframe.dropAuthority,
         container,
         input: cursorAt(t1, "x", 0.5),
         containerKey: "tabs",
@@ -702,6 +716,7 @@ module(
 
       const descriptor = computeDescriptor({
         wireframe,
+        dropAuthority: wireframe.dropAuthority,
         container,
         input: { clientX: rect.left + 10, clientY: rect.top + rect.height / 2 },
         containerKey: "tabs",

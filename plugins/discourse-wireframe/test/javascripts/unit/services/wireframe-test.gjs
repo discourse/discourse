@@ -961,11 +961,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const cellKey = `wf:svc-test-tile:${cell.__stableKey}`;
       assert.strictEqual(cell.containerArgs.grid.column, "2");
 
-      const ok = this.editor.gridManipulator.resizeSlot({
-        slotKey: cellKey,
-        column: "3",
-        row: "2",
-      });
+      const ok = getOwner(this)
+        .lookup("service:wireframe-grid-manipulator")
+        .resizeSlot({
+          slotKey: cellKey,
+          column: "3",
+          row: "2",
+        });
       assert.true(ok);
 
       const afterMove =
@@ -1003,11 +1005,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "grid starts at 4 declared columns"
       );
 
-      const ok = this.editor.gridManipulator.resizeSlot({
-        slotKey: seedKey,
-        column: "1 / 6", // trailing edge (line 6) reaches past the 4 columns
-        row: "1",
-      });
+      const ok = getOwner(this)
+        .lookup("service:wireframe-grid-manipulator")
+        .resizeSlot({
+          slotKey: seedKey,
+          column: "1 / 6", // trailing edge (line 6) reaches past the 4 columns
+          row: "1",
+        });
       assert.true(ok);
 
       const after =
@@ -1075,12 +1079,14 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     }
 
     test("mergeCells inserts a spanning merged cell and grows declared to fit", function (assert) {
-      const ok = this.editor.gridManipulator.mergeCells({
-        gridKey: gridKeyOf(this.editor),
-        // Columns 2–3, rows 1–2 — free, and the second row is past the
-        // declared single row, so declared must grow.
-        rect: { column: { start: 2, end: 4 }, row: { start: 1, end: 3 } },
-      });
+      const ok = getOwner(this)
+        .lookup("service:wireframe-grid-manipulator")
+        .mergeCells({
+          gridKey: gridKeyOf(this.editor),
+          // Columns 2–3, rows 1–2 — free, and the second row is past the
+          // declared single row, so declared must grow.
+          rect: { column: { start: 2, end: 4 }, row: { start: 1, end: 3 } },
+        });
       assert.true(ok);
 
       const cell = mergedCellOf(this.editor);
@@ -1116,11 +1122,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const before =
         this.editor.layoutQuery.readResolvedLayout("homepage-blocks")[0]
           .children.length;
-      const ok = this.editor.gridManipulator.mergeCells({
-        gridKey: gridKeyOf(this.editor),
-        // Columns 1–2 overlaps the seed at column 1.
-        rect: { column: { start: 1, end: 3 }, row: { start: 1, end: 2 } },
-      });
+      const ok = getOwner(this)
+        .lookup("service:wireframe-grid-manipulator")
+        .mergeCells({
+          gridKey: gridKeyOf(this.editor),
+          // Columns 1–2 overlaps the seed at column 1.
+          rect: { column: { start: 1, end: 3 }, row: { start: 1, end: 2 } },
+        });
       assert.false(ok, "the overlapping merge is refused");
       assert.strictEqual(
         this.editor.layoutQuery.readResolvedLayout("homepage-blocks")[0]
@@ -1131,14 +1139,18 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("splitCell dissolves a merged cell, leaving declared untouched", function (assert) {
-      this.editor.gridManipulator.mergeCells({
-        gridKey: gridKeyOf(this.editor),
-        rect: { column: { start: 2, end: 4 }, row: { start: 1, end: 2 } },
-      });
+      getOwner(this)
+        .lookup("service:wireframe-grid-manipulator")
+        .mergeCells({
+          gridKey: gridKeyOf(this.editor),
+          rect: { column: { start: 2, end: 4 }, row: { start: 1, end: 2 } },
+        });
       const cell = mergedCellOf(this.editor);
       const cellKey = `layout-merged-cell:${cell.__stableKey}`;
 
-      const ok = this.editor.gridManipulator.splitCell({ cellKey });
+      const ok = getOwner(this)
+        .lookup("service:wireframe-grid-manipulator")
+        .splitCell({ cellKey });
       assert.true(ok);
       assert.strictEqual(
         mergedCellOf(this.editor),
@@ -1154,18 +1166,22 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("resizeSlot shrinking a merged cell to 1×1 dissolves it", function (assert) {
-      this.editor.gridManipulator.mergeCells({
-        gridKey: gridKeyOf(this.editor),
-        rect: { column: { start: 2, end: 4 }, row: { start: 1, end: 2 } },
-      });
+      getOwner(this)
+        .lookup("service:wireframe-grid-manipulator")
+        .mergeCells({
+          gridKey: gridKeyOf(this.editor),
+          rect: { column: { start: 2, end: 4 }, row: { start: 1, end: 2 } },
+        });
       const cell = mergedCellOf(this.editor);
       const cellKey = `layout-merged-cell:${cell.__stableKey}`;
 
-      const ok = this.editor.gridManipulator.resizeSlot({
-        slotKey: cellKey,
-        column: "2",
-        row: "1",
-      });
+      const ok = getOwner(this)
+        .lookup("service:wireframe-grid-manipulator")
+        .resizeSlot({
+          slotKey: cellKey,
+          column: "2",
+          row: "1",
+        });
       assert.true(ok);
       assert.strictEqual(
         mergedCellOf(this.editor),
@@ -1175,18 +1191,22 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("resizeSlot keeps a merged cell that stays multi-cell", function (assert) {
-      this.editor.gridManipulator.mergeCells({
-        gridKey: gridKeyOf(this.editor),
-        rect: { column: { start: 2, end: 4 }, row: { start: 1, end: 2 } },
-      });
+      getOwner(this)
+        .lookup("service:wireframe-grid-manipulator")
+        .mergeCells({
+          gridKey: gridKeyOf(this.editor),
+          rect: { column: { start: 2, end: 4 }, row: { start: 1, end: 2 } },
+        });
       const cell = mergedCellOf(this.editor);
       const cellKey = `layout-merged-cell:${cell.__stableKey}`;
 
-      const ok = this.editor.gridManipulator.resizeSlot({
-        slotKey: cellKey,
-        column: "2 / 4",
-        row: "1 / 3",
-      });
+      const ok = getOwner(this)
+        .lookup("service:wireframe-grid-manipulator")
+        .resizeSlot({
+          slotKey: cellKey,
+          column: "2 / 4",
+          row: "1 / 3",
+        });
       assert.true(ok);
 
       const resized = mergedCellOf(this.editor);
@@ -1479,7 +1499,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       test("R5: the destination grid does not grow to contain a foreign span", function (assert) {
         const { destGridKey } = dropSourceBeforeResident(this.editor);
         assert.strictEqual(
-          this.editor.gridSizeFor(destGridKey).columns,
+          getOwner(this)
+            .lookup("service:wireframe-grid-template")
+            .gridSizeFor(destGridKey).columns,
           3,
           "grid B stays 3 columns wide"
         );
@@ -1606,10 +1628,15 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         assert.strictEqual(col("A"), "2", "A cascaded right");
         assert.strictEqual(col("B"), "3", "B cascaded into the grown column");
         // R5: declared now matches the effective size (no drift).
-        assert.deepEqual(this.editor.gridSizeFor(gridKey), {
-          columns: 3,
-          rows: 1,
-        });
+        assert.deepEqual(
+          getOwner(this)
+            .lookup("service:wireframe-grid-template")
+            .gridSizeFor(gridKey),
+          {
+            columns: 3,
+            rows: 1,
+          }
+        );
       });
 
       test("a generic drop into a full grid adds a row (R3)", function (assert) {
@@ -1632,10 +1659,15 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           "2",
           "X landed on a new row"
         );
-        assert.deepEqual(this.editor.gridSizeFor(gridKey), {
-          columns: 2,
-          rows: 2,
-        });
+        assert.deepEqual(
+          getOwner(this)
+            .lookup("service:wireframe-grid-template")
+            .gridSizeFor(gridKey),
+          {
+            columns: 2,
+            rows: 2,
+          }
+        );
       });
     }
   );
@@ -2257,7 +2289,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     // primitive. A NEW public method turns this red, forcing a decision about
     // which path it belongs to before it can silently bypass the rules.
     test("manipulator's public surface is the known set", function (assert) {
-      const editor = getOwner(this).lookup("service:wireframe");
+      const gridManipulator = getOwner(this).lookup(
+        "service:wireframe-grid-manipulator"
+      );
       const expected = [
         // Decided placement — routes through `decideGridDrop`. (The pure
         // `positionEntering` / `syncDeclaredToUsage` placement transforms now
@@ -2274,11 +2308,10 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "resizeSlot",
       ];
       const found = Object.getOwnPropertyNames(
-        Object.getPrototypeOf(editor.gridManipulator)
+        Object.getPrototypeOf(gridManipulator)
       ).filter(
         (name) =>
-          name !== "constructor" &&
-          typeof editor.gridManipulator[name] === "function"
+          name !== "constructor" && typeof gridManipulator[name] === "function"
       );
       assert.deepEqual(
         found.sort(),
@@ -2656,10 +2689,12 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("permits inserts for blocks with no outlet restrictions", function (assert) {
       withTestBlockRegistration(() => registerBlock(TestTile));
       assert.true(
-        this.editor.dropAuthority.canInsertBlockAt({
-          blockName: "wf:svc-test-tile",
-          targetOutletName: "homepage-blocks",
-        })
+        getOwner(this)
+          .lookup("service:wireframe-drop-authority")
+          .canInsertBlockAt({
+            blockName: "wf:svc-test-tile",
+            targetOutletName: "homepage-blocks",
+          })
       );
     });
 
@@ -2669,16 +2704,20 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       withTestBlockRegistration(() => registerBlock(RestrictedTile));
       assert.false(
-        this.editor.dropAuthority.canInsertBlockAt({
-          blockName: "wf:svc-test-restricted",
-          targetOutletName: "homepage-blocks",
-        })
+        getOwner(this)
+          .lookup("service:wireframe-drop-authority")
+          .canInsertBlockAt({
+            blockName: "wf:svc-test-restricted",
+            targetOutletName: "homepage-blocks",
+          })
       );
       assert.true(
-        this.editor.dropAuthority.canInsertBlockAt({
-          blockName: "wf:svc-test-restricted",
-          targetOutletName: "other-outlet",
-        })
+        getOwner(this)
+          .lookup("service:wireframe-drop-authority")
+          .canInsertBlockAt({
+            blockName: "wf:svc-test-restricted",
+            targetOutletName: "other-outlet",
+          })
       );
     });
 
@@ -2688,19 +2727,23 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       withTestBlockRegistration(() => registerBlock(DeniedTile));
       assert.false(
-        this.editor.dropAuthority.canInsertBlockAt({
-          blockName: "wf:svc-test-denied",
-          targetOutletName: "homepage-blocks",
-        })
+        getOwner(this)
+          .lookup("service:wireframe-drop-authority")
+          .canInsertBlockAt({
+            blockName: "wf:svc-test-denied",
+            targetOutletName: "homepage-blocks",
+          })
       );
     });
 
     test("is permissive for unknown block names (validator catches on save)", function (assert) {
       assert.true(
-        this.editor.dropAuthority.canInsertBlockAt({
-          blockName: "wf:svc-test-unknown",
-          targetOutletName: "homepage-blocks",
-        })
+        getOwner(this)
+          .lookup("service:wireframe-drop-authority")
+          .canInsertBlockAt({
+            blockName: "wf:svc-test-unknown",
+            targetOutletName: "homepage-blocks",
+          })
       );
     });
   });

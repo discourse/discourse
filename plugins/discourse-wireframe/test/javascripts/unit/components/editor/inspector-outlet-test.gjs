@@ -104,12 +104,17 @@ class StubWireframeService extends Service {
 }
 
 function stubWireframe(owner, blockData) {
+  const stub = new StubWireframeService(owner, blockData);
   owner.unregister("service:wireframe");
-  owner.register(
-    "service:wireframe",
-    new StubWireframeService(owner, blockData),
-    { instantiate: false }
-  );
+  owner.register("service:wireframe", stub, { instantiate: false });
+  // The layout form reads grid-shape helpers + writes args through the peer
+  // services; point them at the same stub so its inert defaults/recorders apply.
+  owner.unregister("service:wireframe-grid-template");
+  owner.register("service:wireframe-grid-template", stub, {
+    instantiate: false,
+  });
+  owner.unregister("service:wireframe-arg-edit");
+  owner.register("service:wireframe-arg-edit", stub, { instantiate: false });
 }
 
 module(

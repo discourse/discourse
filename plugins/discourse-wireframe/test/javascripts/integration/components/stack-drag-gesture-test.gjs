@@ -29,6 +29,7 @@ module(
     // replays the dispatch the claimed slot-insert carried, captured at drop.
     function stubWireframe(owner, onDispatch) {
       const wireframe = owner.lookup("service:wireframe");
+      const dropAuthority = owner.lookup("service:wireframe-drop-authority");
       const overlay = owner.lookup("service:wireframe-drag-overlay");
       let captured = null;
 
@@ -51,8 +52,8 @@ module(
         isContainer: false,
       }));
       stub(wireframe.layoutQuery, "lookupBlockDisplayName", (block) => block);
-      stub(wireframe.dropAuthority, "canInsertBlockAt", () => true);
-      stub(wireframe.dropAuthority, "canDropAt", () => true);
+      stub(dropAuthority, "canInsertBlockAt", () => true);
+      stub(dropAuthority, "canDropAt", () => true);
       stub(wireframe.layoutQuery, "isOutletRoot", () => false);
       stub(overlay, "claimSlotInsert", (descriptor) => {
         captured = descriptor;

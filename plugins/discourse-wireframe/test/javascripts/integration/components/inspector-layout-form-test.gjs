@@ -70,10 +70,14 @@ function stubWireframe(owner, args, fieldErrors) {
   const stub = new StubWireframeService(owner, args, fieldErrors);
   owner.unregister("service:wireframe");
   owner.register("service:wireframe", stub, { instantiate: false });
-  // The form writes arg edits through the arg-edit service; point it at the
-  // same stub so `updateSelectedArgCalls` records them.
+  // The form writes arg edits through the arg-edit service and reads grid-shape
+  // helpers off the grid-template service; point both at the same stub.
   owner.unregister("service:wireframe-arg-edit");
   owner.register("service:wireframe-arg-edit", stub, { instantiate: false });
+  owner.unregister("service:wireframe-grid-template");
+  owner.register("service:wireframe-grid-template", stub, {
+    instantiate: false,
+  });
 }
 
 module(

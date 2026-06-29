@@ -147,6 +147,7 @@ function descriptorsEqual(a, b) {
 export default class GridOverlay extends Component {
   @service wireframe;
   @service wireframeDragOverlay;
+  @service wireframeGridManipulator;
   @service blocks;
   @service dragAndDrop;
 
@@ -481,7 +482,7 @@ export default class GridOverlay extends Component {
    */
   @action
   commitColumnFractions(fractions) {
-    this.wireframe.gridManipulator.resizeColumns({
+    this.wireframeGridManipulator.resizeColumns({
       gridKey: this.args.gridKey,
       fractions,
     });
@@ -839,7 +840,7 @@ export default class GridOverlay extends Component {
       next.column.end - next.column.start > 1 ||
       next.row.end - next.row.start > 1;
     if (spansMultipleCells) {
-      this.wireframe.gridManipulator.mergeCells({
+      this.wireframeGridManipulator.mergeCells({
         gridKey: this.args.gridKey,
         rect: next,
       });

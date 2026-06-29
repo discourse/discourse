@@ -92,6 +92,7 @@ export default class BlockChrome extends Component {
   @service tooltip;
   @service wireframe;
   @service wireframeDragOverlay;
+  @service wireframeDropAuthority;
   @service wireframeForceExpand;
   @service wireframeIconEdit;
   @service wireframeLinkEdit;
@@ -1370,7 +1371,7 @@ export default class BlockChrome extends Component {
     const next = this.#gridResize?.next;
     this.#endGridResize();
     if (next) {
-      this.wireframe.gridManipulator.resizeSlot({
+      this.wireframeGridManipulator.resizeSlot({
         slotKey: this.args.blockKey,
         column: formatTrack(next.column),
         row: formatTrack(next.row),
@@ -1549,7 +1550,7 @@ export default class BlockChrome extends Component {
   @action
   canDropOnThisBlock({ source }) {
     if (source?.type === "wf-palette-block") {
-      return this.wireframe.dropAuthority.canInsertBlockAt({
+      return this.wireframeDropAuthority.canInsertBlockAt({
         blockName: source.data?.blockName,
         targetOutletName: this.args.outletName,
       });
@@ -1557,7 +1558,7 @@ export default class BlockChrome extends Component {
     if (source?.data?.blockKey === this.args.blockKey) {
       return false;
     }
-    return this.wireframe.dropAuthority.canDropAt({
+    return this.wireframeDropAuthority.canDropAt({
       targetOutletName: this.args.outletName,
     });
   }
@@ -1624,6 +1625,7 @@ export default class BlockChrome extends Component {
   #ensureExternalDropResolver() {
     this.#externalDropResolver ||= createContainerDropResolver({
       wireframe: this.wireframe,
+      dropAuthority: this.wireframeDropAuthority,
       chromeElement: this.chromeEl,
       containerKey: this.args.blockKey,
       outletName: this.args.outletName,

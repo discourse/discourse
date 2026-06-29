@@ -136,6 +136,7 @@ const GAP_STEP = 0.25;
 export default class InspectorLayoutForm extends Component {
   @service wireframe;
   @service wireframeArgEdit;
+  @service wireframeGridTemplate;
   @service dialog;
 
   /**
@@ -160,7 +161,7 @@ export default class InspectorLayoutForm extends Component {
     if (!data?.key) {
       return false;
     }
-    return this.wireframe.canApplyGridTemplate({
+    return this.wireframeGridTemplate.canApplyGridTemplate({
       gridKey: data.key,
       template,
     });
@@ -179,7 +180,7 @@ export default class InspectorLayoutForm extends Component {
     if (!data?.key) {
       return null;
     }
-    return this.wireframe.activeGridTemplate(data.key);
+    return this.wireframeGridTemplate.activeGridTemplate(data.key);
   }
 
   /**
@@ -239,7 +240,11 @@ export default class InspectorLayoutForm extends Component {
     if (!data?.key) {
       return [];
     }
-    return this.wireframe.outOfBoundsSlotsIn(data.key, this.columns, this.rows);
+    return this.wireframeGridTemplate.outOfBoundsSlotsIn(
+      data.key,
+      this.columns,
+      this.rows
+    );
   }
 
   get hasOutOfBoundsSlots() {
@@ -320,12 +325,16 @@ export default class InspectorLayoutForm extends Component {
    */
   get columns() {
     const data = this.wireframe.selectedBlockData;
-    return data?.key ? this.wireframe.gridSizeFor(data.key).columns : 3;
+    return data?.key
+      ? this.wireframeGridTemplate.gridSizeFor(data.key).columns
+      : 3;
   }
 
   get rows() {
     const data = this.wireframe.selectedBlockData;
-    return data?.key ? this.wireframe.gridSizeFor(data.key).rows : 2;
+    return data?.key
+      ? this.wireframeGridTemplate.gridSizeFor(data.key).rows
+      : 2;
   }
 
   /** @returns {boolean} `true` for the flex modes (stack / row). */
@@ -479,7 +488,7 @@ export default class InspectorLayoutForm extends Component {
     if (!data?.key) {
       return;
     }
-    this.wireframe.applyFreeGrid({
+    this.wireframeGridTemplate.applyFreeGrid({
       gridKey: data.key,
       columns: this.columns,
       rows: this.rows,
@@ -497,7 +506,7 @@ export default class InspectorLayoutForm extends Component {
     if (!data?.key) {
       return;
     }
-    this.wireframe.clampGridSlotPlacements({
+    this.wireframeGridTemplate.clampGridSlotPlacements({
       gridKey: data.key,
       maxColumns: this.columns,
       maxRows: this.rows,
@@ -533,7 +542,7 @@ export default class InspectorLayoutForm extends Component {
     // Templates always switch the layout into `grid` mode — applying
     // one to a stack/row layout is the natural way to "convert" it.
     // The service reflows existing content into the new shape.
-    this.wireframe.applyGridTemplate({
+    this.wireframeGridTemplate.applyGridTemplate({
       gridKey: data.key,
       template,
     });
@@ -638,7 +647,7 @@ export default class InspectorLayoutForm extends Component {
     if (!data?.key) {
       return;
     }
-    const offenders = this.wireframe.outOfBoundsSlotsIn(
+    const offenders = this.wireframeGridTemplate.outOfBoundsSlotsIn(
       data.key,
       columns,
       rows
@@ -654,7 +663,7 @@ export default class InspectorLayoutForm extends Component {
       confirmButtonLabel:
         "wireframe.inspector.layout.clamp_slots_confirm_action",
       didConfirm: () => {
-        this.wireframe.clampGridSlotPlacements({
+        this.wireframeGridTemplate.clampGridSlotPlacements({
           gridKey: data.key,
           maxColumns: columns,
           maxRows: rows,

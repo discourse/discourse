@@ -55,6 +55,7 @@ const EDGE_BAND = 12;
 export default class ContainerDropTargetModifier extends Modifier {
   @service wireframe;
   @service wireframeDragOverlay;
+  @service wireframeDropAuthority;
 
   #autoScrollCleanup = null;
   #cleanup = null;
@@ -76,10 +77,11 @@ export default class ContainerDropTargetModifier extends Modifier {
       return;
     }
 
-    const { wireframe, wireframeDragOverlay } = this;
+    const { wireframe, wireframeDragOverlay, wireframeDropAuthority } = this;
     const { resolveContainer, shouldDeferToParent, descriptorFor } =
       createContainerDropResolver({
         wireframe,
+        dropAuthority: wireframeDropAuthority,
         chromeElement,
         containerKey,
         outletName,
@@ -171,6 +173,8 @@ export default class ContainerDropTargetModifier extends Modifier {
  *
  * @param {Object} options
  * @param {Object} options.wireframe - The wireframe service.
+ * @param {Object} options.dropAuthority - The drop-authority service that
+ *   decides whether a drop is permitted at a given location.
  * @param {HTMLElement} options.chromeElement - The block chrome element.
  * @param {string|null} options.containerKey - The container's composite key
  *   (`null` for the outlet boundary).
@@ -185,6 +189,7 @@ export default class ContainerDropTargetModifier extends Modifier {
  */
 export function createContainerDropResolver({
   wireframe,
+  dropAuthority,
   chromeElement,
   containerKey,
   outletName,
@@ -294,6 +299,7 @@ export function createContainerDropResolver({
     }
     return computeDescriptor({
       wireframe,
+      dropAuthority,
       container,
       chromeElement,
       input,
@@ -335,6 +341,7 @@ export function createContainerDropResolver({
  */
 export function computeDescriptor({
   wireframe,
+  dropAuthority,
   container,
   chromeElement = null,
   input,
@@ -393,6 +400,7 @@ export function computeDescriptor({
     const after = result.gap < children.length ? children[result.gap] : null;
     return buildBoundaryDescriptor({
       wireframe,
+      dropAuthority,
       container,
       // An empty container's drop fills its whole area; when the marked drop
       // container is a small proxy strip (e.g. a tabs tablist) separate from the
@@ -440,6 +448,7 @@ export function computeDescriptor({
   if (childIsContainer(wireframe, targetKey)) {
     return buildInsideDescriptor({
       wireframe,
+      dropAuthority,
       rect,
       targetKey,
       blockName,
@@ -534,6 +543,7 @@ function childIsContainer(wireframe, key) {
  */
 function buildBoundaryDescriptor({
   wireframe,
+  dropAuthority,
   container,
   emptyRect = null,
   axis,
@@ -588,7 +598,7 @@ function buildBoundaryDescriptor({
   });
 
   const validity = validateInsert({
-    wireframe,
+    dropAuthority,
     source,
     containerKey,
     outletName,
@@ -706,6 +716,7 @@ function boundaryCenter(axis, before, after) {
 
 function buildInsideDescriptor({
   wireframe,
+  dropAuthority,
   rect,
   targetKey,
   blockName,
@@ -713,7 +724,12 @@ function buildInsideDescriptor({
   childNoun = null,
   ordinal = null,
 }) {
-  const validity = validateInsideDrop({ wireframe, source, targetKey });
+  const validity = validateInsideDrop({
+    wireframe,
+    dropAuthority,
+    source,
+    targetKey,
+  });
   return {
     geometry: {
       top: rect.top,
@@ -793,10 +809,10 @@ function buildReplaceCellDescriptor({ wireframe, rect, targetKey, source }) {
    `canInsertBlockAt` / `canDropAt` so the modifier doesn't reach
    into the layout itself. */
 
-function validateInsert({ wireframe, source, outletName }) {
+function validateInsert({ dropAuthority, source, outletName }) {
   if (source.type === "wf-palette-block") {
     return {
-      ok: wireframe.dropAuthority.canInsertBlockAt({
+      ok: dropAuthority.canInsertBlockAt({
         blockName: source.data.blockName,
         targetOutletName: outletName,
       }),
@@ -809,19 +825,19 @@ function validateInsert({ wireframe, source, outletName }) {
     // Cross-outlet validation lives in `canDropAt` (it reads the active drag
     // source from the drag-session leaf).
     return {
-      ok: wireframe.dropAuthority.canDropAt({ targetOutletName: outletName }),
+      ok: dropAuthority.canDropAt({ targetOutletName: outletName }),
     };
   }
   return { ok: false };
 }
 
-function validateInsideDrop({ wireframe, source, targetKey }) {
+function validateInsideDrop({ wireframe, dropAuthority, source, targetKey }) {
   // Don't allow dropping a container inside itself.
   if (source.type === "wf-block" && source.data.blockKey === targetKey) {
     return { ok: false };
   }
   return validateInsert({
-    wireframe,
+    dropAuthority,
     source,
     outletName:
       wireframe.layoutQuery.findEntryAndOutletSync(targetKey)?.outletName,
