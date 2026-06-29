@@ -22,20 +22,15 @@ RSpec.describe Emoji do
 
       # 1. Create a single dummy store
       dummy_store = FileStore::LocalStore.new
-      
+
       # 2. Force Discourse to always return this exact dummy store instance
-      allow(Discourse)
-        .to receive(:store)
-        .and_return(dummy_store)
-      
+      allow(Discourse).to receive(:store).and_return(dummy_store)
+
       # 3. Safely mock the cdn_url method for our specific emoji upload
-      allow(dummy_store)
-        .to receive(:cdn_url)
-        .and_call_original
-      allow(dummy_store)
-        .to receive(:cdn_url)
-        .with(upload.url)
-        .and_return("https://cdn.my-site.com/images/my-emoji.png")
+      allow(dummy_store).to receive(:cdn_url).and_call_original
+      allow(dummy_store).to receive(:cdn_url).with(upload.url).and_return(
+        "https://cdn.my-site.com/images/my-emoji.png",
+      )
 
       Emoji.clear_cache
       emoji = Emoji.load_custom.find { |e| e.name == "my_s3_emoji" }
