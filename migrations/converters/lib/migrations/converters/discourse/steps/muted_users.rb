@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class MutedUsers < Conversion::ProgressStep
+      class MutedUsers < Conversion::Step
         source { reads_table "muted_users" }
 
         processor do

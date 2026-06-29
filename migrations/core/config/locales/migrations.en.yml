@@ -15,6 +15,13 @@ en:
     errors:
       one: "%{number} error"
       other: "%{number} errors"
+    finishing_up: "Finishing up…"
+    total: "Total"
+    steps:
+      one: "%{number} step"
+      other: "%{number} steps"
+    steps_failed: "%{number} failed"
+    steps_skipped: "%{number} skipped"
 
   cli:
     aborted: "Aborted"

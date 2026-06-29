@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class Topics < Conversion::ProgressStep
+      class Topics < Conversion::Step
         source do
           def max_progress
             @source_db.count <<~SQL
@@ -20,6 +20,7 @@ module Migrations
                      up.user_id           AS og_image_user_id
               FROM topics t
                    LEFT JOIN uploads up ON t.og_image_upload_id = up.id
+              ORDER BY t.id
             SQL
           end
         end
