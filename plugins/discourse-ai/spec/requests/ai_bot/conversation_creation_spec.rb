@@ -92,6 +92,29 @@ RSpec.describe "AI bot conversation creation" do
     expect(response.parsed_body["topic_id"]).to eq(topic.id)
   end
 
+  it "allows a PM-enabled agent without a bot user" do
+    bot_user = llm_model.reload.user
+    agent =
+      Fabricate(
+        :ai_agent,
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        allow_personal_messages: true,
+      )
+
+    expect do
+      post "/discourse-ai/ai-bot/conversations.json",
+           params: {
+             raw: "Please run this PM-enabled agent in a bot conversation.",
+             target_username: bot_user.username,
+             ai_agent_id: agent.id,
+           }
+    end.to change { Topic.private_messages_for_user(current_user).count }.by(1)
+
+    expect(response.status).to eq(200)
+    topic = Topic.find(response.parsed_body["topic_id"])
+    expect(topic.custom_fields["ai_agent_id"]).to eq(agent.id.to_s)
+  end
+
   it "rejects a forged visible agent that is not allowed in personal messages" do
     bot_user = llm_model.reload.user
     forged_agent =
