@@ -154,7 +154,8 @@ Migrations::Tooling::Schema.ignored do
          :browser_pageview_country_daily_rollups,
          :browser_pageview_referrer_daily_rollups
 
-  tables :admin_notices,
+  tables :access_control_lists,
+         :admin_notices,
          :api_key_scopes,
          :api_keys,
          :application_requests,
