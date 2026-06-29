@@ -2,13 +2,9 @@
 
 module Migrations
   module Conversion
-    # Wraps a processor's `setup` so it can't create IntermediateDB records:
-    # for the duration of the call the IntermediateDB connection is replaced
-    # by one that raises on insert. Without the guard such writes would be
-    # silently discarded in parallel mode (each worker's `OfflineConnection`
-    # is cleared before the first item) but persisted in serial mode — the
-    # guard makes both modes fail loudly and identically, with a backtrace
-    # pointing at the offending write.
+    # Wraps a processor's `setup` so a write to the IntermediateDB raises instead
+    # of slipping through: `setup` builds per-worker state, not rows, so a stray
+    # write there would land outside the per-item error handling.
     module SetupGuard
       class SetupError < StandardError
       end

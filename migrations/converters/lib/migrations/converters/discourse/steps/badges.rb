@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class Badges < Conversion::ProgressStep
+      class Badges < Conversion::Step
         source do
           def max_progress
             @source_db.count <<~SQL
