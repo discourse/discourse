@@ -315,7 +315,8 @@ RSpec.describe DiscourseAi::Completions::Llm do
         expect(llm.generate("Hello", user:)).to eq("ok")
       end
 
-      it "caps unreasonable retry-after values" do
+      it "caps retry-after values after adding jitter" do
+        DiscourseAi::Completions::Endpoints::Base.any_instance.stubs(:retry_jitter).returns(1)
         DiscourseAi::Completions::Endpoints::Base
           .any_instance
           .expects(:sleep_before_retry)

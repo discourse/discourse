@@ -868,7 +868,7 @@ module DiscourseAi
               retry_delay_from_response_body(response.body),
             ].compact.max
 
-            return [delay, retry_after_delay].compact.max + retry_jitter
+            return retry_delay_with_jitter([delay, retry_after_delay].compact.max)
           end
 
           if transient_error_status?(status) &&
@@ -879,7 +879,7 @@ module DiscourseAi
               retry_delay_from_response_body(response.body),
             ].compact.max
 
-            return [delay, retry_after_delay].compact.max + retry_jitter
+            return retry_delay_with_jitter([delay, retry_after_delay].compact.max)
           end
 
           nil
@@ -889,6 +889,10 @@ module DiscourseAi
           return if retry_count_transient >= TRANSIENT_ERROR_RETRY_DELAYS.length
 
           TRANSIENT_ERROR_RETRY_DELAYS[retry_count_transient] + retry_jitter
+        end
+
+        def retry_delay_with_jitter(delay)
+          [delay + retry_jitter, MAX_RETRY_AFTER_SECONDS].min
         end
 
         def transient_error_status?(status)
