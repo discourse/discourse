@@ -165,14 +165,26 @@ export default class WireframeStagingService extends Service {
   }
 
   /**
-   * Clears the staging service's own session state: bumps the generation (which
-   * invalidates any draft hydration still in flight), drops the stale-draft queue
-   * and the persisted-draft baseline, and resets the review-drawer and
-   * publish-target-resolving flags. Driven one-way by the orchestrator's
-   * `exit()`, which first flushes the engine and drops the session-draft layers
-   * (the layer teardown the seeding here mirrors).
+   * Tears the staging session down (the mirror of `beginSession`). Flushes the
+   * engine's edit state and drops every session-draft layer this seeded, so the
+   * underlying theme/code-default layer resolves again — in-memory mutations live
+   * ONLY on draft entries, so dropping the drafts discards them cleanly. Then
+   * bumps the generation (which invalidates any draft hydration still in flight),
+   * drops the stale-draft queue and the persisted-draft baseline, and resets the
+   * review-drawer and publish-target-resolving flags. Driven one-way by the
+   * orchestrator's `exit()`.
    */
   endSession() {
+    // `flushSnapshotsAndReset` writes any in-memory arg snapshots back into their
+    // entries (a no-op for the production path with session-drafts active, but it
+    // restores directly-mutated code-default entries so test isolation holds),
+    // clears the undo/dirty structures, and returns the drafted outlets so their
+    // draft layers can be cleared.
+    const draftedOutlets = this.wireframeEditEngine.flushSnapshotsAndReset();
+    for (const outletName of draftedOutlets) {
+      _clearLayoutLayer(outletName, LAYOUT_LAYERS.SESSION_DRAFT);
+    }
+    this.wireframeLayoutQuery.clearOutletRoots();
     this.#generation++;
     this.#staleDraftQueue.length = 0;
     this.#persistedDraftLayouts.clear();

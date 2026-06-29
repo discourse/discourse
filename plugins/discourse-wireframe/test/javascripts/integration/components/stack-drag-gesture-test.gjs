@@ -5,6 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import containerDropTarget from "discourse/plugins/discourse-wireframe/discourse/modifiers/container-drop-target";
 import { simulateDrag } from "../../helpers/drag-helpers";
+import { queryOf } from "../../helpers/wireframe-peers";
 
 // End-to-end gesture coverage for the stack/row drop pipeline: a real PDND
 // drag from a palette source, over the `containerDropTarget`, through
@@ -44,21 +45,17 @@ module(
           writable: true,
         });
 
-      stub(wireframe.wireframeLayoutQuery, "findEntryAndOutletSync", (key) => ({
+      stub(queryOf(wireframe), "findEntryAndOutletSync", (key) => ({
         entry: { block: key, id: null },
         outletName: "o",
       }));
-      stub(wireframe.wireframeLayoutQuery, "lookupBlockMetadata", () => ({
+      stub(queryOf(wireframe), "lookupBlockMetadata", () => ({
         isContainer: false,
       }));
-      stub(
-        wireframe.wireframeLayoutQuery,
-        "lookupBlockDisplayName",
-        (block) => block
-      );
+      stub(queryOf(wireframe), "lookupBlockDisplayName", (block) => block);
       stub(dropAuthority, "canInsertBlockAt", () => true);
       stub(dropAuthority, "canDropAt", () => true);
-      stub(wireframe.wireframeLayoutQuery, "isOutletRoot", () => false);
+      stub(queryOf(wireframe), "isOutletRoot", () => false);
       stub(overlay, "claimSlotInsert", (descriptor) => {
         captured = descriptor;
         return () => (captured = null);

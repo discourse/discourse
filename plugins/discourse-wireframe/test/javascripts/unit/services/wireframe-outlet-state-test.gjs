@@ -19,6 +19,7 @@ import {
 } from "discourse/tests/helpers/block-testing";
 import { OUTLET_STATE } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
+import { engineOf, queryOf } from "../../helpers/wireframe-peers";
 
 @block("wf:state-test-tile", { args: { title: { type: "string" } } })
 class StateTile extends Component {
@@ -52,12 +53,10 @@ module(
       await _renderBlocks("homepage-blocks", tile("Seed"), getOwner(this));
       await settled();
       assert.strictEqual(
-        this.editor.wireframeLayoutQuery.outletState("homepage-blocks"),
+        queryOf(this.editor).outletState("homepage-blocks"),
         OUTLET_STATE.DEFAULT
       );
-      assert.true(
-        this.editor.wireframeLayoutQuery.isOutletEditable("homepage-blocks")
-      );
+      assert.true(queryOf(this.editor).isOutletEditable("homepage-blocks"));
     });
 
     test("a non-overridable code layout resolves to LOCKED", async function (assert) {
@@ -66,12 +65,10 @@ module(
       });
       await settled();
       assert.strictEqual(
-        this.editor.wireframeLayoutQuery.outletState("homepage-blocks"),
+        queryOf(this.editor).outletState("homepage-blocks"),
         OUTLET_STATE.LOCKED
       );
-      assert.false(
-        this.editor.wireframeLayoutQuery.isOutletEditable("homepage-blocks")
-      );
+      assert.false(queryOf(this.editor).isOutletEditable("homepage-blocks"));
     });
 
     test("a theme field resolves to PUBLISHED with the owning theme", async function (assert) {
@@ -88,7 +85,7 @@ module(
       await settled();
 
       assert.strictEqual(
-        this.editor.wireframeLayoutQuery.outletState("homepage-blocks"),
+        queryOf(this.editor).outletState("homepage-blocks"),
         OUTLET_STATE.PUBLISHED
       );
       const owner = this.theme.outletOwner("homepage-blocks");
@@ -117,7 +114,7 @@ module(
       // The draft wins live resolution, but the state reflects the published
       // source underneath it.
       assert.strictEqual(
-        this.editor.wireframeLayoutQuery.outletState("homepage-blocks"),
+        queryOf(this.editor).outletState("homepage-blocks"),
         OUTLET_STATE.PUBLISHED
       );
     });
@@ -132,9 +129,7 @@ module(
       this.editor.enter({ themeId: 5 });
       await settled();
 
-      assert.false(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
-      );
+      assert.false(engineOf(this.editor).isOutletEdited("homepage-blocks"));
 
       this.editor.wireframeSelection.selectBlock({
         key: `wf:state-test-tile:${stableKey}`,
@@ -147,9 +142,7 @@ module(
         .updateSelectedArg("title", "Edited");
       await settled();
 
-      assert.true(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
-      );
+      assert.true(engineOf(this.editor).isOutletEdited("homepage-blocks"));
     });
 
     test("defaultThemeId is the current theme (min stack_index), including a negative-id parent", function (assert) {
@@ -168,9 +161,7 @@ module(
     test("an outlet mounted on the page is editable even with no layout", function (assert) {
       // Nothing rendered + nothing reset means no layout for this outlet.
       assert.false(
-        this.editor.wireframeLayoutQuery.editableOutlets.includes(
-          "homepage-blocks"
-        ),
+        queryOf(this.editor).editableOutlets.includes("homepage-blocks"),
         "not editable when it has neither a layout nor a mounted boundary"
       );
 
@@ -179,9 +170,7 @@ module(
       _registerMountedOutlet("homepage-blocks");
       try {
         assert.true(
-          this.editor.wireframeLayoutQuery.editableOutlets.includes(
-            "homepage-blocks"
-          ),
+          queryOf(this.editor).editableOutlets.includes("homepage-blocks"),
           "a mounted, layout-less outlet is editable so it can be rebuilt"
         );
       } finally {
@@ -194,7 +183,7 @@ module(
       await _renderBlocks("homepage-blocks", tile("Seed"), getOwner(this));
       await settled();
       assert.strictEqual(
-        this.editor.wireframeLayoutQuery.outletState("homepage-blocks"),
+        queryOf(this.editor).outletState("homepage-blocks"),
         OUTLET_STATE.DEFAULT
       );
 

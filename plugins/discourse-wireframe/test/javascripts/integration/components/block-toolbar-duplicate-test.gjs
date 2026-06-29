@@ -7,13 +7,12 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import BlockToolbar from "discourse/plugins/discourse-wireframe/discourse/components/editor/block-toolbar";
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
+import { engineOf, queryOf } from "../../helpers/wireframe-peers";
 
 const OUTLET = "homepage-blocks";
 
 function outletChildren(editor) {
-  return (
-    editor.wireframeLayoutQuery.readResolvedLayout(OUTLET)?.[0]?.children ?? []
-  );
+  return queryOf(editor).readResolvedLayout(OUTLET)?.[0]?.children ?? [];
 }
 
 module(
@@ -95,7 +94,7 @@ module(
       );
       await settled();
       assert.true(
-        this.editor.wireframeEditEngine.canUndo,
+        engineOf(this.editor).canUndo,
         "the ×N duplicate is undoable"
       );
     });

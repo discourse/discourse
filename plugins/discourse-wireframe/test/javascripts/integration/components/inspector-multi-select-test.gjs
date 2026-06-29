@@ -7,13 +7,12 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import InspectorPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector-panel";
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
+import { queryOf } from "../../helpers/wireframe-peers";
 
 const OUTLET = "homepage-blocks";
 
 function outletChildren(editor) {
-  return (
-    editor.wireframeLayoutQuery.readResolvedLayout(OUTLET)?.[0]?.children ?? []
-  );
+  return queryOf(editor).readResolvedLayout(OUTLET)?.[0]?.children ?? [];
 }
 
 module(

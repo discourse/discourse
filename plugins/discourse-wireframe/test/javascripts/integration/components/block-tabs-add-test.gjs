@@ -12,19 +12,18 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/mutate-layout";
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
+import { queryOf } from "../../helpers/wireframe-peers";
 
 const OUTLET = "homepage-blocks";
 
 // After `enter()` the outlet is wrapped in a single root `layout`; its first
 // child is the tabs block under test.
 function tabsEntry(editor) {
-  return editor.wireframeLayoutQuery.readResolvedLayout(OUTLET)?.[0]
-    ?.children?.[0];
+  return queryOf(editor).readResolvedLayout(OUTLET)?.[0]?.children?.[0];
 }
 
 function panelBlockName(editor, panel) {
-  return editor.wireframeLayoutQuery.lookupBlockMetadata(panel.block)
-    ?.blockName;
+  return queryOf(editor).lookupBlockMetadata(panel.block)?.blockName;
 }
 
 module(

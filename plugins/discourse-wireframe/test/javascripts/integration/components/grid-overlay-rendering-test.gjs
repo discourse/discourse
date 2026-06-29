@@ -10,6 +10,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
+import { queryOf } from "../../helpers/wireframe-peers";
 
 // Renders the REAL editor overlay over a grid in edit mode. Unit + service
 // tests never mount `GridOverlay`, so a render-time throw in it (a getter that
@@ -112,7 +113,7 @@ module(
 
       // Any selection change recomputes `emptyCells` (it reads the tracked
       // selection). Selecting the grid is enough to trigger the rebuild path.
-      const grid = wireframe.wireframeLayoutQuery.readResolvedLayout(OUTLET)[0];
+      const grid = queryOf(wireframe).readResolvedLayout(OUTLET)[0];
       wireframe.wireframeSelection.selectBlock({
         key: `layout:${grid.__stableKey}`,
       });
@@ -175,7 +176,7 @@ module(
         1,
         "the release commits the new span through wireframeGridManipulator.resizeSlot"
       );
-      const grid = wireframe.wireframeLayoutQuery.readResolvedLayout(OUTLET)[0];
+      const grid = queryOf(wireframe).readResolvedLayout(OUTLET)[0];
       const cellKey = `grid-overlay-rendering-leaf:${grid.children[0].__stableKey}`;
       assert.strictEqual(
         calls[0].slotKey,

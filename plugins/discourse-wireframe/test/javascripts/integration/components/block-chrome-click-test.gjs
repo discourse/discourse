@@ -2,6 +2,7 @@ import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import BlockChrome from "discourse/plugins/discourse-wireframe/discourse/components/editor/block-chrome";
+import { queryOf } from "../../helpers/wireframe-peers";
 
 // A minimal stand-in for the wrapped block. The chrome derives a click's
 // edit "kind" from the registered block metadata (keyed by `@blockName`),
@@ -28,7 +29,7 @@ module(
       // `LinkEditState.start` bails unless the block resolves to a real
       // layout entry, so stub the lookup — opening that session is exactly
       // the behavior we're asserting the guard suppresses.
-      wireframe.wireframeLayoutQuery.findEntryAndOutletSync = () => ({
+      queryOf(wireframe).findEntryAndOutletSync = () => ({
         entry: { args: {} },
         outletName: "test-outlet",
       });

@@ -10,6 +10,7 @@ import {
 } from "discourse/tests/helpers/block-testing";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
+import { queryOf } from "../../helpers/wireframe-peers";
 
 // A block with an image-typed arg stands in for the builtin `image` block:
 // `completeExternalImageDrop` derives the target arg from whatever block the
@@ -32,9 +33,7 @@ class TestTile extends Component {
 }
 
 function outletChildren(editor, outlet = "homepage-blocks") {
-  return (
-    editor.wireframeLayoutQuery.readResolvedLayout(outlet)?.[0]?.children ?? []
-  );
+  return queryOf(editor).readResolvedLayout(outlet)?.[0]?.children ?? [];
 }
 
 // Stands in for the descriptor the dragover handlers publish — an insert of

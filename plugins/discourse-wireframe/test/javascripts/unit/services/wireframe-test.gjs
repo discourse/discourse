@@ -22,6 +22,7 @@ import { attachEditorShortcuts } from "discourse/plugins/discourse-wireframe/dis
 import { GRID_DROP_GESTURES } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-drop";
 import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/mutate-layout";
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
+import { engineOf, queryOf } from "../../helpers/wireframe-peers";
 
 @block("wf:svc-test-tile", { args: { title: { type: "string" } } })
 class TestTile extends Component {
@@ -83,9 +84,7 @@ async function editArg(editor, argName, value) {
  * top-level array (which is just `[rootLayout]`).
  */
 function outletChildren(editor, outlet = "homepage-blocks") {
-  return (
-    editor.wireframeLayoutQuery.readResolvedLayout(outlet)?.[0]?.children ?? []
-  );
+  return queryOf(editor).readResolvedLayout(outlet)?.[0]?.children ?? [];
 }
 
 // Block insertion / relocation and grid placement live on their own peer
@@ -305,59 +304,59 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("an edit pushes onto the undo stack and clears redo", async function (assert) {
-      assert.false(this.editor.wireframeEditEngine.canUndo);
+      assert.false(engineOf(this.editor).canUndo);
       await editArg(this.editor, "title", "Edited");
-      assert.true(this.editor.wireframeEditEngine.canUndo);
-      assert.false(this.editor.wireframeEditEngine.canRedo);
+      assert.true(engineOf(this.editor).canUndo);
+      assert.false(engineOf(this.editor).canRedo);
     });
 
     test("undo restores the previous value and enables redo", async function (assert) {
       await editArg(this.editor, "title", "Edited");
-      const undone = await this.editor.wireframeEditEngine.undo();
+      const undone = await engineOf(this.editor).undo();
       assert.true(undone);
       assert.strictEqual(
         this.editor.wireframeSelection.selectedBlockData.args.title,
         "Original"
       );
-      assert.true(this.editor.wireframeEditEngine.canRedo);
-      assert.false(this.editor.wireframeEditEngine.canUndo);
+      assert.true(engineOf(this.editor).canRedo);
+      assert.false(engineOf(this.editor).canUndo);
     });
 
     test("redo re-applies the most recently undone edit", async function (assert) {
       await editArg(this.editor, "title", "Edited");
-      await this.editor.wireframeEditEngine.undo();
-      const redone = await this.editor.wireframeEditEngine.redo();
+      await engineOf(this.editor).undo();
+      const redone = await engineOf(this.editor).redo();
       assert.true(redone);
       assert.strictEqual(
         this.editor.wireframeSelection.selectedBlockData.args.title,
         "Edited"
       );
-      assert.true(this.editor.wireframeEditEngine.canUndo);
-      assert.false(this.editor.wireframeEditEngine.canRedo);
+      assert.true(engineOf(this.editor).canUndo);
+      assert.false(engineOf(this.editor).canRedo);
     });
 
     test("a fresh edit after undo discards the redo stack", async function (assert) {
       await editArg(this.editor, "title", "First");
-      await this.editor.wireframeEditEngine.undo();
-      assert.true(this.editor.wireframeEditEngine.canRedo);
+      await engineOf(this.editor).undo();
+      assert.true(engineOf(this.editor).canRedo);
       await editArg(this.editor, "title", "Second");
-      assert.false(this.editor.wireframeEditEngine.canRedo);
+      assert.false(engineOf(this.editor).canRedo);
     });
 
     test("isDirty flips on the first edit and back off after resetAll", async function (assert) {
-      assert.false(this.editor.wireframeEditEngine.isDirty);
+      assert.false(engineOf(this.editor).isDirty);
       await editArg(this.editor, "title", "Edited");
-      assert.true(this.editor.wireframeEditEngine.isDirty);
-      const reset = await this.editor.wireframeEditEngine.resetAll();
+      assert.true(engineOf(this.editor).isDirty);
+      const reset = await engineOf(this.editor).resetAll();
       assert.true(reset);
-      assert.false(this.editor.wireframeEditEngine.isDirty);
-      assert.false(this.editor.wireframeEditEngine.canUndo);
-      assert.false(this.editor.wireframeEditEngine.canRedo);
+      assert.false(engineOf(this.editor).isDirty);
+      assert.false(engineOf(this.editor).canUndo);
+      assert.false(engineOf(this.editor).canRedo);
     });
 
     test("undo / redo return false when their stacks are empty", async function (assert) {
-      assert.false(await this.editor.wireframeEditEngine.undo());
-      assert.false(await this.editor.wireframeEditEngine.redo());
+      assert.false(await engineOf(this.editor).undo());
+      assert.false(await engineOf(this.editor).redo());
     });
 
     test("setting an arg to null deletes the key", async function (assert) {
@@ -404,7 +403,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const entry = this.editor.wireframeSelection.selectedBlockData.args;
       // Look up the live entry (the bound args' parent) and stamp it
       // as the validator would.
-      const located = this.editor.wireframeLayoutQuery.findEntryAndOutletSync(
+      const located = queryOf(this.editor).findEntryAndOutletSync(
         this.editor.wireframeSelection.selectedBlockKey
       );
       located.entry.__failureType = "structural-invalid";
@@ -429,7 +428,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // inspector banner clears as soon as the author edits the arg
       // that was failing.
       const validation = getOwner(this).lookup("service:wireframe-validation");
-      const located = this.editor.wireframeLayoutQuery.findEntryAndOutletSync(
+      const located = queryOf(this.editor).findEntryAndOutletSync(
         this.editor.wireframeSelection.selectedBlockKey
       );
       located.entry.__failureType = "arg-invalid";
@@ -504,7 +503,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
       const secondKey = `wf:svc-test-tile:${draft[1].__stableKey}`;
 
-      assert.false(this.editor.wireframeEditEngine.isDirty);
+      assert.false(engineOf(this.editor).isDirty);
       // Move "First" AFTER "Second" — a genuine reorder. (A no-op move that
       // leaves the layout identical to its pristine state intentionally does
       // NOT dirty the outlet, since the reconcile pass clears it again.)
@@ -514,7 +513,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         position: "after",
         targetOutletName: "homepage-blocks",
       });
-      assert.true(this.editor.wireframeEditEngine.isDirty);
+      assert.true(engineOf(this.editor).isDirty);
     });
 
     test("resetAll restores the pre-edit layout after a move", async function (assert) {
@@ -529,12 +528,12 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         targetOutletName: "homepage-blocks",
       });
 
-      const ok = await this.editor.wireframeEditEngine.resetAll();
+      const ok = await engineOf(this.editor).resetAll();
       assert.true(ok);
       const restored = outletChildren(this.editor);
       assert.strictEqual(restored[0].args.title, "First");
       assert.strictEqual(restored[1].args.title, "Second");
-      assert.false(this.editor.wireframeEditEngine.isDirty);
+      assert.false(engineOf(this.editor).isDirty);
     });
 
     test("rejects moves with an unknown source key", function (assert) {
@@ -645,14 +644,14 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("isDirty flips on after an insert", function (assert) {
-      assert.false(this.editor.wireframeEditEngine.isDirty);
+      assert.false(engineOf(this.editor).isDirty);
       mutationsOf(this.editor).insertBlock({
         blockName: "wf:svc-test-tile",
         targetKey: null,
         position: "after",
         targetOutletName: "homepage-blocks",
       });
-      assert.true(this.editor.wireframeEditEngine.isDirty);
+      assert.true(engineOf(this.editor).isDirty);
     });
 
     test("resetAll restores the pre-insert layout", async function (assert) {
@@ -664,18 +663,16 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         targetOutletName: "homepage-blocks",
       });
 
-      const ok = await this.editor.wireframeEditEngine.resetAll();
+      const ok = await engineOf(this.editor).resetAll();
       assert.true(ok);
       const restored = outletChildren(this.editor);
       assert.strictEqual(restored.length, 1);
       assert.strictEqual(restored[0].args.title, "Existing");
-      assert.false(this.editor.wireframeEditEngine.isDirty);
+      assert.false(engineOf(this.editor).isDirty);
     });
 
     test("adding a block then undoing clears the outlet's editing state", async function (assert) {
-      assert.false(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
-      );
+      assert.false(engineOf(this.editor).isOutletEdited("homepage-blocks"));
 
       mutationsOf(this.editor).insertBlock({
         blockName: "wf:svc-test-tile",
@@ -684,25 +681,23 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         targetOutletName: "homepage-blocks",
       });
       assert.true(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
+        engineOf(this.editor).isOutletEdited("homepage-blocks"),
         "the outlet is editing right after the insert"
       );
 
-      await this.editor.wireframeEditEngine.undo();
+      await engineOf(this.editor).undo();
       assert.false(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
+        engineOf(this.editor).isOutletEdited("homepage-blocks"),
         "undo back to the pristine layout clears the editing state"
       );
       assert.false(
-        this.editor.wireframeEditEngine.isDirty,
+        engineOf(this.editor).isDirty,
         "the editor is no longer dirty"
       );
     });
 
     test("adding a block then removing it clears the outlet's editing state", function (assert) {
-      assert.false(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
-      );
+      assert.false(engineOf(this.editor).isOutletEdited("homepage-blocks"));
 
       const ok = mutationsOf(this.editor).insertBlock({
         blockName: "wf:svc-test-tile",
@@ -716,7 +711,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // block we just added regardless of where it landed in the children.
       const insertedKey = this.editor.wireframeSelection.selectedBlockKey;
       assert.true(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
+        engineOf(this.editor).isOutletEdited("homepage-blocks"),
         "the outlet is editing right after the insert"
       );
 
@@ -725,11 +720,11 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "the inserted block is removed"
       );
       assert.false(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
+        engineOf(this.editor).isOutletEdited("homepage-blocks"),
         "removing the block back to the pristine layout clears the editing state"
       );
       assert.false(
-        this.editor.wireframeEditEngine.isDirty,
+        engineOf(this.editor).isDirty,
         "the editor is no longer dirty"
       );
     });
@@ -741,14 +736,12 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         position: "after",
         targetOutletName: "homepage-blocks",
       });
-      await this.editor.wireframeEditEngine.undo();
-      assert.false(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
-      );
+      await engineOf(this.editor).undo();
+      assert.false(engineOf(this.editor).isOutletEdited("homepage-blocks"));
 
-      await this.editor.wireframeEditEngine.redo();
+      await engineOf(this.editor).redo();
       assert.true(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
+        engineOf(this.editor).isOutletEdited("homepage-blocks"),
         "redo restores the edit, so the outlet is editing again"
       );
     });
@@ -762,13 +755,11 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         metadata: { args: { title: { type: "string" } } },
       });
       await editArg(this.editor, "title", "Changed");
-      assert.true(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
-      );
+      assert.true(engineOf(this.editor).isOutletEdited("homepage-blocks"));
 
-      await this.editor.wireframeEditEngine.undo();
+      await engineOf(this.editor).undo();
       assert.false(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
+        engineOf(this.editor).isOutletEdited("homepage-blocks"),
         "undo of the arg edit clears editing"
       );
     });
@@ -785,18 +776,16 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         targetOutletName: "homepage-blocks",
       });
       assert.true(
-        this.editor.wireframeEditEngine.canUndo,
+        engineOf(this.editor).canUndo,
         "undo is available after the insert"
       );
 
       await stagingOf(this.editor).discardOutlet("homepage-blocks");
       assert.false(
-        this.editor.wireframeEditEngine.canUndo,
+        engineOf(this.editor).canUndo,
         "discarding the outlet removes its undo entry"
       );
-      assert.false(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
-      );
+      assert.false(engineOf(this.editor).isOutletEdited("homepage-blocks"));
     });
 
     test("default args don't bleed back into the source object", function (assert) {
@@ -853,8 +842,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     }
 
     function blockNameOf(editor, entry) {
-      return editor.wireframeLayoutQuery.lookupBlockMetadata(entry.block)
-        ?.blockName;
+      return queryOf(editor).lookupBlockMetadata(entry.block)?.blockName;
     }
 
     test("appendImplicitChild appends an empty layout panel and selects it", function (assert) {
@@ -888,7 +876,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         targetOutletName: "homepage-blocks",
       });
 
-      const inserted = this.editor.wireframeLayoutQuery.findEntryByKey(
+      const inserted = queryOf(this.editor).findEntryByKey(
         this.editor.wireframeSelection.selectedBlockKey
       );
       assert.strictEqual(
@@ -977,8 +965,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("inserts into a grid layout annotate the entry with containerArgs.grid", function (assert) {
-      const draft =
-        this.editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks");
+      const draft = queryOf(this.editor).readResolvedLayout("homepage-blocks");
       const gridKey = `layout:${draft[0].__stableKey}`;
 
       const ok = mutationsOf(this.editor).insertBlock({
@@ -990,8 +977,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       assert.true(ok);
-      const after =
-        this.editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks");
+      const after = queryOf(this.editor).readResolvedLayout("homepage-blocks");
       const gridChildren = after[0].children ?? [];
       assert.strictEqual(
         gridChildren.length,
@@ -1011,8 +997,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("resizeSlot updates a cell's column/row and is undoable", async function (assert) {
-      const draft =
-        this.editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks");
+      const draft = queryOf(this.editor).readResolvedLayout("homepage-blocks");
       const gridKey = `layout:${draft[0].__stableKey}`;
 
       // Seed a placed tile via a grid drop so we have a cell to reposition.
@@ -1026,8 +1011,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           defaultArgs: { title: "Movable" },
         },
       });
-      const afterInsert =
-        this.editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks");
+      const afterInsert = queryOf(this.editor).readResolvedLayout(
+        "homepage-blocks"
+      );
       const cell = afterInsert[0].children.find(
         (c) => c.args?.title === "Movable"
       );
@@ -1043,8 +1029,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         });
       assert.true(ok);
 
-      const afterMove =
-        this.editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks");
+      const afterMove = queryOf(this.editor).readResolvedLayout(
+        "homepage-blocks"
+      );
       const movedCell = afterMove[0].children.find(
         (c) => c.__stableKey === cell.__stableKey
       );
@@ -1052,9 +1039,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.strictEqual(movedCell.containerArgs.grid.row, "2");
 
       // Undo: back to the previous placement.
-      await this.editor.wireframeEditEngine.undo();
-      const undone =
-        this.editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks");
+      await engineOf(this.editor).undo();
+      const undone = queryOf(this.editor).readResolvedLayout("homepage-blocks");
       const undoneCell = undone[0].children.find(
         (c) => c.__stableKey === cell.__stableKey
       );
@@ -1067,8 +1053,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // declared track count — growth is reserved for drops. (The handle
       // clamps to the effective size; even if a placement past declared
       // reaches the manipulator, declared stays put.)
-      const draft =
-        this.editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks");
+      const draft = queryOf(this.editor).readResolvedLayout("homepage-blocks");
       const grid = draft[0];
       const seed = grid.children[0];
       const seedKey = `wf:svc-test-tile:${seed.__stableKey}`;
@@ -1087,8 +1072,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         });
       assert.true(ok);
 
-      const after =
-        this.editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks");
+      const after = queryOf(this.editor).readResolvedLayout("homepage-blocks");
       const resized = after[0].children.find(
         (c) => c.__stableKey === seed.__stableKey
       );
@@ -1142,11 +1126,11 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     function gridKeyOf(editor) {
-      return `layout:${editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks")[0].__stableKey}`;
+      return `layout:${queryOf(editor).readResolvedLayout("homepage-blocks")[0].__stableKey}`;
     }
 
     function mergedCellOf(editor) {
-      return editor.wireframeLayoutQuery
+      return queryOf(editor)
         .readResolvedLayout("homepage-blocks")[0]
         .children.find((c) => c.block === "layout-merged-cell");
     }
@@ -1177,10 +1161,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "the merged cell stamps no args of its own"
       );
 
-      const grid =
-        this.editor.wireframeLayoutQuery.readResolvedLayout(
-          "homepage-blocks"
-        )[0];
+      const grid = queryOf(this.editor).readResolvedLayout(
+        "homepage-blocks"
+      )[0];
       assert.strictEqual(
         grid.args.rows,
         2,
@@ -1194,10 +1177,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("mergeCells refuses a rect that overlaps existing content", function (assert) {
-      const before =
-        this.editor.wireframeLayoutQuery.readResolvedLayout(
-          "homepage-blocks"
-        )[0].children.length;
+      const before = queryOf(this.editor).readResolvedLayout(
+        "homepage-blocks"
+      )[0].children.length;
       const ok = getOwner(this)
         .lookup("service:wireframe-grid-manipulator")
         .mergeCells({
@@ -1207,9 +1189,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         });
       assert.false(ok, "the overlapping merge is refused");
       assert.strictEqual(
-        this.editor.wireframeLayoutQuery.readResolvedLayout(
-          "homepage-blocks"
-        )[0].children.length,
+        queryOf(this.editor).readResolvedLayout("homepage-blocks")[0].children
+          .length,
         before,
         "no entry was inserted"
       );
@@ -1235,9 +1216,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "the merged-cell entry is gone (1×1s stay derived)"
       );
       assert.strictEqual(
-        this.editor.wireframeLayoutQuery.readResolvedLayout(
-          "homepage-blocks"
-        )[0].args.columns,
+        queryOf(this.editor).readResolvedLayout("homepage-blocks")[0].args
+          .columns,
         3,
         "declared columns are preserved so the freed cells stay held open"
       );
@@ -1333,10 +1313,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("moving a spanning block to an empty cell leaves a merged cell at its old rect", function (assert) {
-      const grid =
-        this.editor.wireframeLayoutQuery.readResolvedLayout(
-          "homepage-blocks"
-        )[0];
+      const grid = queryOf(this.editor).readResolvedLayout(
+        "homepage-blocks"
+      )[0];
       const gridKey = `layout:${grid.__stableKey}`;
       const hero = grid.children.find((c) => c.args?.title === "Hero");
       const heroKey = `wf:svc-test-tile:${hero.__stableKey}`;
@@ -1350,10 +1329,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
       assert.true(ok);
 
-      const after =
-        this.editor.wireframeLayoutQuery.readResolvedLayout(
-          "homepage-blocks"
-        )[0];
+      const after = queryOf(this.editor).readResolvedLayout(
+        "homepage-blocks"
+      )[0];
       const moved = after.children.find(
         (c) => c.__stableKey === hero.__stableKey
       );
@@ -1436,10 +1414,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       test("dropping a block into a destination cell leaves the destination's existing cells in place", function (assert) {
-        const root =
-          this.editor.wireframeLayoutQuery.readResolvedLayout(
-            "homepage-blocks"
-          )[0];
+        const root = queryOf(this.editor).readResolvedLayout(
+          "homepage-blocks"
+        )[0];
         const [sourceGrid, destGrid] = root.children;
         const destGridKey = `layout:${destGrid.__stableKey}`;
         const sourceTile = sourceGrid.children[0];
@@ -1453,10 +1430,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         });
         assert.true(ok);
 
-        const afterRoot =
-          this.editor.wireframeLayoutQuery.readResolvedLayout(
-            "homepage-blocks"
-          )[0];
+        const afterRoot = queryOf(this.editor).readResolvedLayout(
+          "homepage-blocks"
+        )[0];
         const afterDest = afterRoot.children.find(
           (c) => c.__stableKey === destGrid.__stableKey
         );
@@ -1541,8 +1517,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // Performs the outline-style move (drop the source tile before the
       // resident cell of grid B) and returns the post-move grids.
       function dropSourceBeforeResident(editor) {
-        const root =
-          editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks")[0];
+        const root = queryOf(editor).readResolvedLayout("homepage-blocks")[0];
         const [sourceGrid, destGrid] = root.children;
         const residentKey = `wf:svc-test-tile:${destGrid.children[0].__stableKey}`;
         const sourceKey = `wf:svc-test-tile:${sourceGrid.children[0].__stableKey}`;
@@ -1553,7 +1528,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           targetOutletName: "homepage-blocks",
         });
         const afterRoot =
-          editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks")[0];
+          queryOf(editor).readResolvedLayout("homepage-blocks")[0];
         return {
           ok,
           destGridKey: `layout:${destGrid.__stableKey}`,
@@ -1679,8 +1654,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       function refs(editor) {
-        const root =
-          editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks")[0];
+        const root = queryOf(editor).readResolvedLayout("homepage-blocks")[0];
         const grid = root.children.find((c) => c.args?.mode === "grid");
         const loose = root.children.find((c) => c.args?.title === "X");
         const cellOf = (title) =>
@@ -1703,7 +1677,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         });
         assert.true(ok);
 
-        const grid = this.editor.wireframeLayoutQuery
+        const grid = queryOf(this.editor)
           .readResolvedLayout("homepage-blocks")[0]
           .children.find((c) => c.args?.mode === "grid");
         assert.strictEqual(grid.args.columns, 3, "declared columns grew 2 → 3");
@@ -1735,7 +1709,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         });
         assert.true(ok);
 
-        const grid = this.editor.wireframeLayoutQuery
+        const grid = queryOf(this.editor)
           .readResolvedLayout("homepage-blocks")[0]
           .children.find((c) => c.args?.mode === "grid");
         assert.strictEqual(grid.args.rows, 2, "declared rows grew 1 → 2");
@@ -1812,10 +1786,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       test("dropping a block onto an occupied cell in another grid trades places", function (assert) {
-        const root =
-          this.editor.wireframeLayoutQuery.readResolvedLayout(
-            "homepage-blocks"
-          )[0];
+        const root = queryOf(this.editor).readResolvedLayout(
+          "homepage-blocks"
+        )[0];
         const [gridA, gridB] = root.children;
         const a1Key = `wf:svc-test-tile:${gridA.children[0].__stableKey}`;
 
@@ -1829,10 +1802,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         });
         assert.true(ok);
 
-        const after =
-          this.editor.wireframeLayoutQuery.readResolvedLayout(
-            "homepage-blocks"
-          )[0];
+        const after = queryOf(this.editor).readResolvedLayout(
+          "homepage-blocks"
+        )[0];
         const afterA = after.children.find(
           (c) => c.__stableKey === gridA.__stableKey
         );
@@ -1899,8 +1871,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       // Total content blocks across both grids — conservation guard.
       function countContent(editor) {
-        const root =
-          editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks")[0];
+        const root = queryOf(editor).readResolvedLayout("homepage-blocks")[0];
         return root.children.reduce(
           (n, grid) =>
             n + (grid.children ?? []).filter((c) => c.args?.title).length,
@@ -1909,8 +1880,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       }
 
       function refs(editor) {
-        const root =
-          editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks")[0];
+        const root = queryOf(editor).readResolvedLayout("homepage-blocks")[0];
         const [gridA, gridB] = root.children;
         const keyIn = (grid, title) =>
           `wf:svc-test-tile:${
@@ -1926,8 +1896,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       }
 
       function titlesByGrid(editor) {
-        const root =
-          editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks")[0];
+        const root = queryOf(editor).readResolvedLayout("homepage-blocks")[0];
         return root.children.map((grid) =>
           (grid.children ?? [])
             .map((c) => c.args?.title)
@@ -2045,10 +2014,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       test("dropping A before the empty cell yields A · empty · Important(2-span), grown to 4 columns", function (assert) {
-        const root =
-          this.editor.wireframeLayoutQuery.readResolvedLayout(
-            "homepage-blocks"
-          )[0];
+        const root = queryOf(this.editor).readResolvedLayout(
+          "homepage-blocks"
+        )[0];
         const grid = root.children.find((c) => c.args?.mode === "grid");
         const gridKey = `layout:${grid.__stableKey}`;
         const aKey = `wf:svc-test-tile:${
@@ -2065,7 +2033,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         });
         assert.true(ok);
 
-        const after = this.editor.wireframeLayoutQuery
+        const after = queryOf(this.editor)
           .readResolvedLayout("homepage-blocks")[0]
           .children.find((c) => c.args?.mode === "grid");
         const at = (title) =>
@@ -2139,7 +2107,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       // Resolves the keys each operation needs from the seeded layout.
       function keys(editor) {
-        const root = editor.wireframeLayoutQuery.readResolvedLayout(OUTLET)[0];
+        const root = queryOf(editor).readResolvedLayout(OUTLET)[0];
         const [gridA, gridB] = root.children;
         const loose = root.children.find((c) => c.args?.title === "S");
         const tile = (grid, title) =>
@@ -2171,9 +2139,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
             walk(entry.children);
           }
         };
-        walk(
-          editor.wireframeLayoutQuery.readResolvedLayout(OUTLET)[0].children
-        );
+        walk(queryOf(editor).readResolvedLayout(OUTLET)[0].children);
         return counts;
       }
 
@@ -2505,7 +2471,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         const opened = await this.inlineEdit.start(this.key, "title");
         assert.true(opened);
         assert.false(
-          this.editor.wireframeEditEngine.canUndo,
+          engineOf(this.editor).canUndo,
           "no undo entry before commit"
         );
 
@@ -2522,7 +2488,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         this.inlineEdit.stop({ commit: true });
 
         assert.false(
-          this.editor.wireframeEditEngine.canUndo,
+          engineOf(this.editor).canUndo,
           "no spurious undo entry for an unchanged doc-JSON commit"
         );
       });
@@ -2540,7 +2506,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         this.inlineEdit.stop({ commit: true });
 
         assert.true(
-          this.editor.wireframeEditEngine.canUndo,
+          engineOf(this.editor).canUndo,
           "real content changes still push undo entries"
         );
       });
@@ -2590,7 +2556,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       test("commit writes the label into the child's containerArgs and is undoable", async function (assert) {
         await this.inlineEdit.startContainerArg(this.key, "tab", "label");
         assert.false(
-          this.editor.wireframeEditEngine.canUndo,
+          engineOf(this.editor).canUndo,
           "nothing on the undo stack yet"
         );
 
@@ -2604,7 +2570,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           "the label lands in the child's containerArgs"
         );
         assert.true(
-          this.editor.wireframeEditEngine.canUndo,
+          engineOf(this.editor).canUndo,
           "the structural commit is undoable"
         );
       });
@@ -2629,14 +2595,14 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         await this.inlineEdit.startContainerArg(this.key, "tab", "label");
         this.inlineEdit.applyChange("Seed");
         this.inlineEdit.stop({ commit: true });
-        const undoCount = this.editor.wireframeEditEngine.undoDepth;
+        const undoCount = engineOf(this.editor).undoDepth;
 
         await this.inlineEdit.startContainerArg(this.key, "tab", "label");
         this.inlineEdit.applyChange("Seed");
         this.inlineEdit.stop({ commit: true });
 
         assert.strictEqual(
-          this.editor.wireframeEditEngine.undoDepth,
+          engineOf(this.editor).undoDepth,
           undoCount,
           "re-committing the same label is a no-op on the undo stack"
         );
@@ -2874,7 +2840,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       const draft = outletChildren(this.editor);
       assert.deepEqual(draft[0].conditions, next);
-      assert.true(this.editor.wireframeEditEngine.isDirty);
+      assert.true(engineOf(this.editor).isDirty);
     });
 
     test("clears conditions when passed null", function (assert) {
@@ -2954,15 +2920,12 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         position: "after",
         targetOutletName: "homepage-blocks",
       });
-      assert.true(
-        this.editor.wireframeEditEngine.canUndo,
-        "undo stack is populated"
-      );
+      assert.true(engineOf(this.editor).canUndo, "undo stack is populated");
 
       const moved = outletChildren(this.editor);
       assert.strictEqual(moved[0].args.title, "Second");
 
-      const undone = await this.editor.wireframeEditEngine.undo();
+      const undone = await engineOf(this.editor).undo();
       assert.true(undone);
 
       const restored = outletChildren(this.editor);
@@ -2977,8 +2940,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         position: "after",
         targetOutletName: "homepage-blocks",
       });
-      await this.editor.wireframeEditEngine.undo();
-      const redone = await this.editor.wireframeEditEngine.redo();
+      await engineOf(this.editor).undo();
+      const redone = await engineOf(this.editor).redo();
       assert.true(redone);
 
       const after = outletChildren(this.editor);
@@ -2997,7 +2960,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const afterInsert = outletChildren(this.editor);
       assert.strictEqual(afterInsert.length, 3);
 
-      await this.editor.wireframeEditEngine.undo();
+      await engineOf(this.editor).undo();
       const restored = outletChildren(this.editor);
       assert.strictEqual(restored.length, 2);
       assert.strictEqual(restored[0].args.title, "First");
@@ -3013,7 +2976,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       let after = outletChildren(this.editor);
       assert.strictEqual(after.length, 1);
 
-      await this.editor.wireframeEditEngine.undo();
+      await engineOf(this.editor).undo();
       after = outletChildren(this.editor);
       assert.strictEqual(after.length, 2);
       assert.strictEqual(after[1].args.title, "Second");
@@ -3024,7 +2987,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       let after = outletChildren(this.editor);
       assert.strictEqual(after.length, 3);
 
-      await this.editor.wireframeEditEngine.undo();
+      await engineOf(this.editor).undo();
       after = outletChildren(this.editor);
       assert.strictEqual(after.length, 2);
     });
@@ -3038,7 +3001,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "three clones added to the two blocks"
       );
 
-      await this.editor.wireframeEditEngine.undo();
+      await engineOf(this.editor).undo();
       after = outletChildren(this.editor);
       assert.strictEqual(
         after.length,
@@ -3145,7 +3108,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "both blocks removed"
       );
 
-      await this.editor.wireframeEditEngine.undo();
+      await engineOf(this.editor).undo();
       assert.strictEqual(
         outletChildren(this.editor).length,
         2,
@@ -3154,10 +3117,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("removeBlocks skips the outlet root", function (assert) {
-      const rootKey =
-        this.editor.wireframeLayoutQuery.readResolvedLayout(
-          "homepage-blocks"
-        )[0];
+      const rootKey = queryOf(this.editor).readResolvedLayout(
+        "homepage-blocks"
+      )[0];
       const rootEntryKey = `layout:${rootKey.__stableKey}`;
       mutationsOf(this.editor).removeBlocks([rootEntryKey, this.firstKey]);
 
@@ -3182,7 +3144,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           .updateSelectedConditions(next)
       );
 
-      const undone = await this.editor.wireframeEditEngine.undo();
+      const undone = await engineOf(this.editor).undo();
       assert.true(undone);
       const after = outletChildren(this.editor);
       assert.strictEqual(after[0].conditions, undefined);
@@ -3195,10 +3157,10 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         position: "after",
         targetOutletName: "homepage-blocks",
       });
-      this.editor.wireframeEditEngine.undo();
-      assert.true(this.editor.wireframeEditEngine.canRedo);
+      engineOf(this.editor).undo();
+      assert.true(engineOf(this.editor).canRedo);
       mutationsOf(this.editor).duplicateBlock(this.firstKey);
-      assert.false(this.editor.wireframeEditEngine.canRedo);
+      assert.false(engineOf(this.editor).canRedo);
     });
   });
 
@@ -3220,8 +3182,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("enter() wraps the outlet's blocks in a single root layout", function (assert) {
-      const draft =
-        this.editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks");
+      const draft = queryOf(this.editor).readResolvedLayout("homepage-blocks");
       assert.strictEqual(draft.length, 1, "exactly one root entry");
       assert.strictEqual(
         draft[0].block,
@@ -3238,29 +3199,27 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("outletRootKey / isOutletRoot identify the implicit root", function (assert) {
-      const rootKey =
-        this.editor.wireframeLayoutQuery.outletRootKey("homepage-blocks");
-      const draft =
-        this.editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks");
+      const rootKey = queryOf(this.editor).outletRootKey("homepage-blocks");
+      const draft = queryOf(this.editor).readResolvedLayout("homepage-blocks");
       assert.strictEqual(rootKey, `layout:${draft[0].__stableKey}`);
       assert.true(
-        this.editor.wireframeLayoutQuery.isOutletRoot(rootKey),
+        queryOf(this.editor).isOutletRoot(rootKey),
         "the root key is recognised"
       );
 
       const childKey = `wf:svc-test-tile:${draft[0].children[0].__stableKey}`;
       assert.false(
-        this.editor.wireframeLayoutQuery.isOutletRoot(childKey),
+        queryOf(this.editor).isOutletRoot(childKey),
         "a child block is not the root"
       );
-      assert.false(this.editor.wireframeLayoutQuery.isOutletRoot(null));
+      assert.false(queryOf(this.editor).isOutletRoot(null));
     });
 
     test("selectOutlet selects the root layout so the layout form shows", function (assert) {
       this.editor.wireframeSelection.selectOutlet("homepage-blocks");
       assert.strictEqual(
         this.editor.wireframeSelection.selectedBlockKey,
-        this.editor.wireframeLayoutQuery.outletRootKey("homepage-blocks")
+        queryOf(this.editor).outletRootKey("homepage-blocks")
       );
       assert.strictEqual(
         this.editor.wireframeSelection.selectedBlockData.name,
@@ -3270,8 +3229,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("removeBlock is a no-op on the outlet root", function (assert) {
-      const rootKey =
-        this.editor.wireframeLayoutQuery.outletRootKey("homepage-blocks");
+      const rootKey = queryOf(this.editor).outletRootKey("homepage-blocks");
       this.editor.wireframeSelection.selectOutlet("homepage-blocks");
 
       const removed = mutationsOf(this.editor).removeBlock(rootKey);
@@ -3280,8 +3238,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         removed,
         "removeBlock reports no change for the outlet root"
       );
-      const draft =
-        this.editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks");
+      const draft = queryOf(this.editor).readResolvedLayout("homepage-blocks");
       assert.strictEqual(draft.length, 1, "the root layout still exists");
       assert.strictEqual(
         draft[0].block,
@@ -3307,8 +3264,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         new KeyboardEvent("keydown", { key: "Delete", bubbles: true })
       );
 
-      const draft =
-        this.editor.wireframeLayoutQuery.readResolvedLayout("homepage-blocks");
+      const draft = queryOf(this.editor).readResolvedLayout("homepage-blocks");
       assert.strictEqual(draft.length, 1, "the root layout still exists");
       assert.strictEqual(
         draft[0].block,
@@ -3326,12 +3282,12 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
     test("exit() clears the recorded root key", function (assert) {
       assert.notStrictEqual(
-        this.editor.wireframeLayoutQuery.outletRootKey("homepage-blocks"),
+        queryOf(this.editor).outletRootKey("homepage-blocks"),
         null
       );
       this.editor.exit();
       assert.strictEqual(
-        this.editor.wireframeLayoutQuery.outletRootKey("homepage-blocks"),
+        queryOf(this.editor).outletRootKey("homepage-blocks"),
         null
       );
     });
@@ -3488,7 +3444,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.strictEqual(banner, null, "no error banner on success");
       assert.verifySteps(["draft:homepage-blocks"]);
       assert.true(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
+        engineOf(this.editor).isOutletEdited("homepage-blocks"),
         "the outlet stays edited — a draft never goes live"
       );
     });
@@ -3503,7 +3459,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "the failing outlet is named in the banner"
       );
       assert.true(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
+        engineOf(this.editor).isOutletEdited("homepage-blocks"),
         "a failed draft leaves the outlet edited"
       );
     });

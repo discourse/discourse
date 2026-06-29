@@ -19,6 +19,7 @@ import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import { engineOf, queryOf } from "../../helpers/wireframe-peers";
 
 const DRAFTS_URL = "/admin/plugins/wireframe/block-layout-drafts.json";
 
@@ -133,9 +134,7 @@ module(
       assert.strictEqual(result.saved.length, 0);
       assert.strictEqual(result.skipped.length, 1);
       assert.strictEqual(result.skipped[0].reason, "git");
-      assert.true(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
-      );
+      assert.true(engineOf(this.editor).isOutletEdited("homepage-blocks"));
       assert.verifySteps([]);
     });
 
@@ -143,9 +142,7 @@ module(
       await enterEdited(this);
       stubDraftsDelete();
 
-      assert.true(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
-      );
+      assert.true(engineOf(this.editor).isOutletEdited("homepage-blocks"));
 
       pretender.post("/admin/customize/block-layouts.json", () =>
         response({ success: true, theme_id: 5, version_token: "v1" })
@@ -154,7 +151,7 @@ module(
       await this.persistence.publish(5);
 
       assert.false(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
+        engineOf(this.editor).isOutletEdited("homepage-blocks"),
         "edited-outlet bookkeeping cleared after publish"
       );
 
@@ -185,7 +182,7 @@ module(
       assert.strictEqual(result.errors[0].currentVersion, "server-token");
       assert.strictEqual(result.errors[0].publishedAt, "2026-06-19T12:00:00Z");
       assert.true(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
+        engineOf(this.editor).isOutletEdited("homepage-blocks"),
         "the edit is preserved on conflict"
       );
     });
@@ -213,7 +210,7 @@ module(
 
     test("publish refuses to POST and keeps the draft when the resolved read fails", async function (assert) {
       await enterEdited(this);
-      this.editor.wireframeLayoutQuery.readResolvedLayout = () => null;
+      queryOf(this.editor).readResolvedLayout = () => null;
 
       pretender.post("/admin/customize/block-layouts.json", () => {
         assert.step("posted");
@@ -224,9 +221,7 @@ module(
       assert.strictEqual(result.saved.length, 0);
       assert.strictEqual(result.errors.length, 1);
       assert.true(result.errors[0].message.includes("empty/unreadable"));
-      assert.true(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
-      );
+      assert.true(engineOf(this.editor).isOutletEdited("homepage-blocks"));
       assert.verifySteps([]);
     });
 
@@ -250,9 +245,7 @@ module(
         "server-token"
       );
       assert.true(ok);
-      assert.false(
-        this.editor.wireframeEditEngine.isOutletEdited("homepage-blocks")
-      );
+      assert.false(engineOf(this.editor).isOutletEdited("homepage-blocks"));
       assert.verifySteps(["overwritten"]);
     });
 

@@ -18,6 +18,7 @@ import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import InlineEditController from "discourse/plugins/discourse-wireframe/discourse/components/editor/inline-edit-controller";
 import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/mutate-layout";
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
+import { queryOf } from "../../helpers/wireframe-peers";
 
 // A two-field block stands in for a multi-field rich block (e.g. a media-card):
 // Tab walks title -> subtitle -> exit. A single-field block covers the heading
@@ -86,7 +87,7 @@ module(
       logIn(owner);
       editor.enter();
 
-      const inner = editor.wireframeLayoutQuery.readResolvedLayout(OUTLET)[0];
+      const inner = queryOf(editor).readResolvedLayout(OUTLET)[0];
       return {
         editor,
         inlineEdit,
@@ -103,8 +104,7 @@ module(
     }
 
     function argOf(editor, key, name) {
-      return editor.wireframeLayoutQuery.findEntryAndOutletSync(key)?.entry
-        ?.args?.[name];
+      return queryOf(editor).findEntryAndOutletSync(key)?.entry?.args?.[name];
     }
 
     test("Tab walks to the next rich-inline field on the same block", async function (assert) {

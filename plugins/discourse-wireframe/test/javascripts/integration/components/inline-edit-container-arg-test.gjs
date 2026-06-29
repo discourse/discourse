@@ -13,6 +13,7 @@ import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import InlineEditController from "discourse/plugins/discourse-wireframe/discourse/components/editor/inline-edit-controller";
 import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/mutate-layout";
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
+import { queryOf } from "../../helpers/wireframe-peers";
 
 @block("wf:cae-test-leaf", { args: { title: { type: "string" } } })
 class Leaf extends Component {
@@ -65,8 +66,7 @@ module(
       // Our single root Layout satisfies the outlet's single-root-layout
       // invariant, so `enter()` adds no extra wrapper: the resolved layout's
       // first entry IS our Layout, and the two leaves are its children.
-      const inner =
-        this.editor.wireframeLayoutQuery.readResolvedLayout(OUTLET)[0];
+      const inner = queryOf(this.editor).readResolvedLayout(OUTLET)[0];
       const keyA = entryKey(inner.children[0]);
       const keyB = entryKey(inner.children[1]);
 

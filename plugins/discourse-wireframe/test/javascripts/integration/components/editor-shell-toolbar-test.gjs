@@ -11,15 +11,14 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import EditorShell from "discourse/plugins/discourse-wireframe/discourse/components/editor/shell";
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
+import { engineOf, queryOf } from "../../helpers/wireframe-peers";
 
 const OUTLET = "homepage-blocks";
 const DRAFTS_URL = "/admin/plugins/wireframe/block-layout-drafts.json";
 const PUBLISH_URL = "/admin/customize/block-layouts.json";
 
 function outletChildren(editor) {
-  return (
-    editor.wireframeLayoutQuery.readResolvedLayout(OUTLET)?.[0]?.children ?? []
-  );
+  return queryOf(editor).readResolvedLayout(OUTLET)?.[0]?.children ?? [];
 }
 
 module(
@@ -218,7 +217,7 @@ module(
       await render(<template><EditorShell /></template>);
 
       assert.true(
-        this.editor.wireframeEditEngine.isDirty,
+        engineOf(this.editor).isDirty,
         "the hydrated draft marks the outlet edited"
       );
 

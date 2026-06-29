@@ -6,10 +6,6 @@ import {
   registerBlockArgRenderer,
   resetBlockArgRenderer,
 } from "discourse/blocks";
-import {
-  _clearLayoutLayer,
-  LAYOUT_LAYERS,
-} from "discourse/blocks/block-outlet";
 import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
 import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-renderer";
 
@@ -35,10 +31,8 @@ export default class WireframeService extends Service {
   @service wireframeBlockReveal;
   @service wireframeDragOverlay;
   @service wireframeDragSession;
-  @service wireframeEditEngine;
   @service wireframeForceExpand;
   @service wireframeImageUpload;
-  @service wireframeLayoutQuery;
   @service wireframeSelection;
   @service wireframeSession;
   @service wireframeStaging;
@@ -107,22 +101,10 @@ export default class WireframeService extends Service {
 
   @action
   exit() {
-    // Flush the engine's session edit state and drop every session-draft layer
-    // it seeded. `flushSnapshotsAndReset` writes any in-memory arg snapshots back
-    // into their entries (a no-op for the production path with session-drafts
-    // active, but restores directly-mutated code-default entries so test
-    // isolation holds), clears the undo/dirty structures, and returns the
-    // drafted outlets so their draft layers can be cleared — the underlying
-    // theme/code-default layer then resolves again, discarding the in-memory
-    // mutations cleanly. Runs before the peer resets below so the drafts are gone
-    // before the selection that pointed into them is cleared.
-    const draftedOutlets = this.wireframeEditEngine.flushSnapshotsAndReset();
-    for (const outletName of draftedOutlets) {
-      _clearLayoutLayer(outletName, LAYOUT_LAYERS.SESSION_DRAFT);
-    }
-    this.wireframeLayoutQuery.clearOutletRoots();
-    // Clear the staging service's own session state (draft baseline, generation
-    // guard, stale-draft queue, review-drawer state).
+    // Tear down the staging session: flush the engine, drop every session-draft
+    // layer, and clear the draft baseline / review-drawer state. Runs before the
+    // peer resets below so the drafts are gone before the selection that pointed
+    // into them is cleared.
     this.wireframeStaging.endSession();
 
     this.wireframeSession.deactivate();

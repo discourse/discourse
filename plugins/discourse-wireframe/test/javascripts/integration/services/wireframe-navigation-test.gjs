@@ -19,6 +19,7 @@ import pretender, {
 } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
+import { engineOf, queryOf } from "../../helpers/wireframe-peers";
 
 const PUBLISH_URL = "/admin/customize/block-layouts.json";
 const DRAFTS_URL = "/admin/plugins/wireframe/block-layout-drafts.json";
@@ -33,8 +34,7 @@ class NavTestTile extends Component {
 // Marks an outlet as edited the way the inspector does: select one of its
 // blocks and change an arg, then let the debounced write flush.
 async function editTitle(editor, outlet, value) {
-  const tile =
-    editor.wireframeLayoutQuery.readResolvedLayout(outlet)?.[0]?.children?.[0];
+  const tile = queryOf(editor).readResolvedLayout(outlet)?.[0]?.children?.[0];
   editor.wireframeSelection.selectBlock({
     key: `wf:nav-test-tile:${tile.__stableKey}`,
     name: "wf:nav-test-tile",
@@ -83,9 +83,7 @@ module(
       editor.enter();
       await settled();
       assert.false(
-        editor.wireframeEditEngine
-          .draftedOutletNames()
-          .includes("homepage-blocks"),
+        engineOf(editor).draftedOutletNames().includes("homepage-blocks"),
         "an off-page, layout-less outlet is not materialized at enter"
       );
 
@@ -105,9 +103,7 @@ module(
       editor.rediscoverOutlets();
       await settled();
       assert.true(
-        editor.wireframeEditEngine
-          .draftedOutletNames()
-          .includes("homepage-blocks"),
+        engineOf(editor).draftedOutletNames().includes("homepage-blocks"),
         "rediscovery materializes the newly-mounted outlet so it can be built"
       );
     });
@@ -133,9 +129,7 @@ module(
       editor.enter();
       await settled();
       assert.false(
-        editor.wireframeEditEngine
-          .draftedOutletNames()
-          .includes("homepage-blocks"),
+        engineOf(editor).draftedOutletNames().includes("homepage-blocks"),
         "not drafted before navigation"
       );
 
@@ -147,9 +141,7 @@ module(
       await settled();
 
       assert.true(
-        editor.wireframeEditEngine
-          .draftedOutletNames()
-          .includes("homepage-blocks"),
+        engineOf(editor).draftedOutletNames().includes("homepage-blocks"),
         "the page:changed hook rediscovered and materialized the new outlet"
       );
     });
@@ -175,13 +167,11 @@ module(
       await settled();
 
       assert.true(
-        editor.wireframeEditEngine
-          .draftedOutletNames()
-          .includes("homepage-blocks"),
+        engineOf(editor).draftedOutletNames().includes("homepage-blocks"),
         "the outlet is seeded with an empty draft"
       );
       assert.false(
-        editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
+        engineOf(editor).isOutletEdited("homepage-blocks"),
         "seeding a draft is not an edit"
       );
 
@@ -221,7 +211,7 @@ module(
       await settled();
       await editTitle(editor, "homepage-blocks", "Edited");
       assert.true(
-        editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
+        engineOf(editor).isOutletEdited("homepage-blocks"),
         "the outlet is edited"
       );
 
@@ -236,7 +226,7 @@ module(
         "the edited outlet is no longer mounted"
       );
       assert.true(
-        editor.wireframeEditEngine.isOutletEdited("homepage-blocks"),
+        engineOf(editor).isOutletEdited("homepage-blocks"),
         "the edit survives unmounting"
       );
 
