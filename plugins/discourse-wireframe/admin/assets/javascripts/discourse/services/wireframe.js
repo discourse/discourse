@@ -746,67 +746,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Block-mutations facade — delegates to `wireframeBlockMutations`. Moves the
-   * selected block one step earlier in its parent (visually up).
-   *
-   * @param {string} blockKey
-   * @returns {boolean}
-   */
-  @action
-  moveBlockUp(blockKey) {
-    return this.wireframeBlockMutations.moveBlockUp(blockKey);
-  }
-
-  /**
-   * Block-mutations facade — delegates to `wireframeBlockMutations`. Moves the
-   * selected block one step later in its parent (visually down).
-   *
-   * @param {string} blockKey
-   * @returns {boolean}
-   */
-  @action
-  moveBlockDown(blockKey) {
-    return this.wireframeBlockMutations.moveBlockDown(blockKey);
-  }
-
-  /**
-   * Block-mutations facade — delegates to `wireframeBlockMutations`. Inserts
-   * `count` clones of the block immediately after it (one undo step).
-   *
-   * @param {string} blockKey
-   * @param {number} [count=1]
-   * @returns {boolean}
-   */
-  @action
-  duplicateBlock(blockKey, count = 1) {
-    return this.wireframeBlockMutations.duplicateBlock(blockKey, count);
-  }
-
-  /**
-   * Block-mutations facade — delegates to `wireframeBlockMutations`. Removes a
-   * single block (no-op on the outlet root).
-   *
-   * @param {string} blockKey
-   * @returns {boolean}
-   */
-  @action
-  removeBlock(blockKey) {
-    return this.wireframeBlockMutations.removeBlock(blockKey);
-  }
-
-  /**
-   * Block-mutations facade — delegates to `wireframeBlockMutations`. Removes
-   * several blocks in one undo step (outlet roots skipped).
-   *
-   * @param {Array<string>} keys
-   * @returns {boolean}
-   */
-  @action
-  removeBlocks(keys) {
-    return this.wireframeBlockMutations.removeBlocks(keys);
-  }
-
-  /**
    * Entry-edits facade — delegates to `wireframeEntryEdits`. Replaces the
    * `conditions` tree on the currently-selected block (used by the inspector's
    * condition builder; `null` clears all conditions).
@@ -857,7 +796,10 @@ export default class WireframeService extends Service {
   @action
   cutSelected() {
     const key = this.selectedBlockKey;
-    return this.wireframeClipboard.cutSelected() && this.removeBlock(key);
+    return (
+      this.wireframeClipboard.cutSelected() &&
+      this.wireframeBlockMutations.removeBlock(key)
+    );
   }
 
   @action
@@ -1416,99 +1358,31 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Executes a drop dispatch payload by action name. The single chokepoint
+   * Executes a drop dispatch payload by action name. The single chokepoint:
    * `WireframeDragOverlay` holds the payload across the drag and calls this at
-   * drop time; the action methods it names (`insertBlock`, `applyGridDrop`,
-   * `placeBlockInCell`, …) live on this service.
+   * drop time. Each action name resolves to the method on its owning service —
+   * block insertion / relocation on the block-mutations service, every grid
+   * placement through the grid manipulator (which routes the request through
+   * `decideGridDrop`, so no drop surface can place into a grid without the
+   * decider). The table is the entire set of drop-channel actions; an unknown
+   * name is a no-op that reports failure.
    *
    * @param {{action: string, args: Object}} payload
    * @returns {boolean} `true` when the named action ran.
    */
   runDropDispatch({ action: actionName, args }) {
-    const method = this[actionName];
-    if (typeof method !== "function") {
+    const handler = {
+      insertBlock: (a) => this.wireframeBlockMutations.insertBlock(a),
+      moveBlock: (a) => this.wireframeBlockMutations.moveBlock(a),
+      applyGridDrop: (a) => this.wireframeGridManipulator.drop(a),
+      moveBlockIntoCell: (a) => this.wireframeGridManipulator.moveIntoCell(a),
+      placeBlockInCell: (a) => this.wireframeGridManipulator.placeInCell(a),
+    }[actionName];
+    if (!handler) {
       return false;
     }
-    method.call(this, args);
+    handler(args);
     return true;
-  }
-
-  /**
-   * Block-mutations facade — delegates to `wireframeBlockMutations`. Moves an
-   * entry to a new position / outlet (drag, outline reorder, move buttons).
-   *
-   * @param {{sourceKey: string, targetKey: string|null, position: "before"|"after"|"inside", targetOutletName: string}} args
-   * @returns {boolean}
-   */
-  @action
-  moveBlock(args) {
-    return this.wireframeBlockMutations.moveBlock(args);
-  }
-
-  /**
-   * Block-mutations facade — delegates to `wireframeBlockMutations`. Inserts a
-   * freshly-synthesised block at the target position (palette drop, add).
-   *
-   * @param {{blockName: string, defaultArgs?: Object, targetKey: string|null, position: "before"|"after"|"inside", targetOutletName: string}} args
-   * @returns {boolean}
-   */
-  @action
-  insertBlock(args) {
-    return this.wireframeBlockMutations.insertBlock(args);
-  }
-
-  /**
-   * Block-mutations facade — delegates to `wireframeBlockMutations`. Appends a
-   * fresh child of the container's implicit-child kind and selects it.
-   *
-   * @param {string} containerKey
-   * @returns {boolean}
-   */
-  appendImplicitChild(containerKey) {
-    return this.wireframeBlockMutations.appendImplicitChild(containerKey);
-  }
-
-  /**
-   * The dispatch entry for every grid drop. Drop surfaces (the grid overlay,
-   * the container drop target) hand a request that DESCRIBES the drop — the
-   * target grid, the gesture, and the source — without choosing an action.
-   * This delegates to the grid manipulator, which routes the request through
-   * `decideGridDrop` and into the matching executor. Wired into the
-   * `{action, args}` drop channel as the single grid action, so no drop
-   * surface can place into a grid without the decider.
-   *
-   * @param {Object} request - See the grid-manipulator service's `drop`.
-   * @returns {boolean}
-   */
-  @action
-  applyGridDrop(request) {
-    return this.wireframeGridManipulator.drop(request);
-  }
-
-  /**
-   * Dispatch shim for moving a canvas block onto an empty merged cell — the
-   * collapsed-grid drop channel calls this by name. The logic lives in the
-   * grid manipulator (`moveIntoCell`).
-   *
-   * @param {{sourceKey: string, cellKey: string}} args
-   * @returns {boolean}
-   */
-  @action
-  moveBlockIntoCell(args) {
-    return this.wireframeGridManipulator.moveIntoCell(args);
-  }
-
-  /**
-   * Dispatch shim for replacing an empty merged cell with a fresh block — the
-   * collapsed-grid drop channel and the empty-cell picker call this by name.
-   * The logic lives in the grid manipulator (`placeInCell`).
-   *
-   * @param {{cellKey: string, blockName: string, defaultArgs?: Object}} args
-   * @returns {boolean}
-   */
-  @action
-  placeBlockInCell(args) {
-    return this.wireframeGridManipulator.placeInCell(args);
   }
 
   /**
@@ -1803,27 +1677,5 @@ export default class WireframeService extends Service {
       // Dismissed (no choice): keep the live seed and leave the draft in place
       // so the prompt returns next session.
     }
-  }
-
-  /**
-   * Block-mutations facade — delegates to `wireframeBlockMutations`. Selects a
-   * freshly inserted entry (by its assigned stable key) and flashes it.
-   *
-   * @param {Object} entry
-   */
-  selectInsertedEntry(entry) {
-    return this.wireframeBlockMutations.selectInsertedEntry(entry);
-  }
-
-  /**
-   * Block-mutations facade — delegates to `wireframeBlockMutations`. Moves an
-   * entry across outlets (or between grids in one outlet), wrapping / unwrapping
-   * for the destination and claiming a grid cell on a grid landing.
-   *
-   * @param {{sourceOutletName: string, targetOutletName: string, sourceKey: string, targetKey: string|null, position: "before"|"after"|"inside", autoPosition?: boolean}} args
-   * @returns {boolean}
-   */
-  moveAcrossOutlets(args) {
-    return this.wireframeBlockMutations.moveAcrossOutlets(args);
   }
 }

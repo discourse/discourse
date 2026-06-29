@@ -86,15 +86,22 @@ class StubWireframeService extends Service {
   removeBlock(key) {
     this.removeBlockCalls.push(key);
   }
+
+  removeBlocks(keys) {
+    this.removeBlockCalls.push(...keys);
+  }
 }
 
 function stubWireframe(owner, blockData) {
   owner.unregister("service:wireframe");
-  owner.register(
-    "service:wireframe",
-    new StubWireframeService(owner, blockData),
-    { instantiate: false }
-  );
+  const stub = new StubWireframeService(owner, blockData);
+  owner.register("service:wireframe", stub, { instantiate: false });
+  // The inspector removes through the injected block-mutations service; back it
+  // with the same stub so `removeBlock` still records onto `removeBlockCalls`.
+  owner.unregister("service:wireframe-block-mutations");
+  owner.register("service:wireframe-block-mutations", stub, {
+    instantiate: false,
+  });
 }
 
 module(

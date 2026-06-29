@@ -28,6 +28,7 @@ import InspectorRawJson from "./inspector-raw-json";
 export default class InspectorPanel extends Component {
   @service blocks;
   @service wireframe;
+  @service wireframeBlockMutations;
   @service wireframeConditionsPanel;
 
   isTabActive = (tab) => this.currentTab === tab;
@@ -271,12 +272,14 @@ export default class InspectorPanel extends Component {
   removeSelectedBlock() {
     // The only recovery for an unregistered block is to replace its name or
     // drop it; the notice surfaces the latter as a one-click action.
-    this.wireframe.removeBlock(this.wireframe.selectedBlockKey);
+    this.wireframeBlockMutations.removeBlock(this.wireframe.selectedBlockKey);
   }
 
   @action
   removeSelectedBlocks() {
-    this.wireframe.removeBlocks(this.wireframe.selectedKeysSnapshot());
+    this.wireframeBlockMutations.removeBlocks(
+      this.wireframe.selectedKeysSnapshot()
+    );
   }
 
   @action

@@ -91,9 +91,11 @@ export default class BlockChrome extends Component {
   @service menu;
   @service tooltip;
   @service wireframe;
+  @service wireframeBlockMutations;
   @service wireframeDragOverlay;
   @service wireframeDropAuthority;
   @service wireframeForceExpand;
+  @service wireframeGridManipulator;
   @service wireframeIconEdit;
   @service wireframeImageUpload;
   @service wireframeInlineEdit;
@@ -1223,15 +1225,15 @@ export default class BlockChrome extends Component {
 
   /**
    * Fills this empty cell with the block the user picked from the
-   * palette placeholder. Routes through `placeBlockInCell` so the cell
-   * entry is REPLACED by the new block rather than inserted alongside
-   * it.
+   * palette placeholder. Delegates to the grid manipulator's `placeInCell`
+   * so the cell entry is REPLACED by the new block rather than inserted
+   * alongside it.
    *
    * @param {{name: string}} blockEntry - Palette entry the user selected.
    */
   @action
   pickBlockForCell(blockEntry) {
-    this.wireframe.placeBlockInCell({
+    this.wireframeGridManipulator.placeInCell({
       cellKey: this.args.blockKey,
       blockName: blockEntry.name,
     });
@@ -1246,7 +1248,7 @@ export default class BlockChrome extends Component {
    */
   @action
   pickBlockForContainer(blockEntry) {
-    this.wireframe.insertBlock({
+    this.wireframeBlockMutations.insertBlock({
       blockName: blockEntry.name,
       targetKey: this.args.blockKey,
       position: "inside",
@@ -1437,7 +1439,7 @@ export default class BlockChrome extends Component {
     // button by keyboard (Space / Enter) is a legitimate "add" gesture, and
     // synthesized clicks (tests) carry `detail === 0` too.
     if (event.target.closest?.("[data-wf-append-child]")) {
-      this.wireframe.appendImplicitChild(this.args.blockKey);
+      this.wireframeBlockMutations.appendImplicitChild(this.args.blockKey);
       return;
     }
 

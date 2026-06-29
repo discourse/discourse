@@ -439,7 +439,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
       const secondKey = `wf:svc-test-tile:${draft[1].__stableKey}`;
 
-      const ok = this.editor.moveBlock({
+      const ok = this.editor.wireframeBlockMutations.moveBlock({
         sourceKey: firstKey,
         targetKey: secondKey,
         position: "after",
@@ -461,7 +461,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // Move "First" AFTER "Second" — a genuine reorder. (A no-op move that
       // leaves the layout identical to its pristine state intentionally does
       // NOT dirty the outlet, since the reconcile pass clears it again.)
-      this.editor.moveBlock({
+      this.editor.wireframeBlockMutations.moveBlock({
         sourceKey: firstKey,
         targetKey: secondKey,
         position: "after",
@@ -475,7 +475,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
       const secondKey = `wf:svc-test-tile:${draft[1].__stableKey}`;
 
-      this.editor.moveBlock({
+      this.editor.wireframeBlockMutations.moveBlock({
         sourceKey: firstKey,
         targetKey: secondKey,
         position: "after",
@@ -494,7 +494,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const draft = outletChildren(this.editor);
       const realKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
 
-      const ok = this.editor.moveBlock({
+      const ok = this.editor.wireframeBlockMutations.moveBlock({
         sourceKey: "absent:0",
         targetKey: realKey,
         position: "after",
@@ -563,7 +563,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const draft = outletChildren(this.editor);
       const targetKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
 
-      const ok = this.editor.insertBlock({
+      const ok = this.editor.wireframeBlockMutations.insertBlock({
         blockName: "wf:svc-test-tile",
         defaultArgs: { title: "Inserted" },
         targetKey,
@@ -579,7 +579,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("inserts inside the outlet root layout when targetKey is null", function (assert) {
-      const ok = this.editor.insertBlock({
+      const ok = this.editor.wireframeBlockMutations.insertBlock({
         blockName: "wf:svc-test-tile",
         defaultArgs: { title: "Appended" },
         targetKey: null,
@@ -599,7 +599,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
     test("isDirty flips on after an insert", function (assert) {
       assert.false(this.editor.isDirty);
-      this.editor.insertBlock({
+      this.editor.wireframeBlockMutations.insertBlock({
         blockName: "wf:svc-test-tile",
         targetKey: null,
         position: "after",
@@ -609,7 +609,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("resetAll restores the pre-insert layout", async function (assert) {
-      this.editor.insertBlock({
+      this.editor.wireframeBlockMutations.insertBlock({
         blockName: "wf:svc-test-tile",
         defaultArgs: { title: "Throwaway" },
         targetKey: null,
@@ -628,7 +628,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("adding a block then undoing clears the outlet's editing state", async function (assert) {
       assert.false(this.editor.isOutletEditing("homepage-blocks"));
 
-      this.editor.insertBlock({
+      this.editor.wireframeBlockMutations.insertBlock({
         blockName: "wf:svc-test-tile",
         targetKey: null,
         position: "after",
@@ -650,7 +650,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("adding a block then removing it clears the outlet's editing state", function (assert) {
       assert.false(this.editor.isOutletEditing("homepage-blocks"));
 
-      const ok = this.editor.insertBlock({
+      const ok = this.editor.wireframeBlockMutations.insertBlock({
         blockName: "wf:svc-test-tile",
         defaultArgs: { title: "Throwaway" },
         targetKey: null,
@@ -667,7 +667,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
 
       assert.true(
-        this.editor.removeBlock(insertedKey),
+        this.editor.wireframeBlockMutations.removeBlock(insertedKey),
         "the inserted block is removed"
       );
       assert.false(
@@ -678,7 +678,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("redo re-marks the outlet as editing", async function (assert) {
-      this.editor.insertBlock({
+      this.editor.wireframeBlockMutations.insertBlock({
         blockName: "wf:svc-test-tile",
         targetKey: null,
         position: "after",
@@ -717,7 +717,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "/admin/plugins/wireframe/block-layout-drafts.json",
         () => response({ success: true })
       );
-      this.editor.insertBlock({
+      this.editor.wireframeBlockMutations.insertBlock({
         blockName: "wf:svc-test-tile",
         targetKey: null,
         position: "after",
@@ -736,7 +736,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("default args don't bleed back into the source object", function (assert) {
       const defaults = { title: "Shared" };
 
-      this.editor.insertBlock({
+      this.editor.wireframeBlockMutations.insertBlock({
         blockName: "wf:svc-test-tile",
         defaultArgs: defaults,
         targetKey: null,
@@ -793,7 +793,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("appendImplicitChild appends an empty layout panel and selects it", function (assert) {
       const before = tabsEntry(this.editor).children.length;
 
-      const ok = this.editor.appendImplicitChild(
+      const ok = this.editor.wireframeBlockMutations.appendImplicitChild(
         entryKey(tabsEntry(this.editor))
       );
       assert.true(ok);
@@ -814,7 +814,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("inserting an implicit-child container seeds one panel of its kind", function (assert) {
-      this.editor.insertBlock({
+      this.editor.wireframeBlockMutations.insertBlock({
         blockName: "wf:svc-test-tabs",
         targetKey: null,
         position: "inside",
@@ -842,7 +842,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("a non-layout block inserted into the container is wrapped and stays selected", function (assert) {
-      const ok = this.editor.insertBlock({
+      const ok = this.editor.wireframeBlockMutations.insertBlock({
         blockName: "wf:svc-test-tile",
         defaultArgs: { title: "Bare" },
         targetKey: entryKey(tabsEntry(this.editor)),
@@ -914,7 +914,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         this.editor.layoutQuery.readResolvedLayout("homepage-blocks");
       const gridKey = `layout:${draft[0].__stableKey}`;
 
-      const ok = this.editor.insertBlock({
+      const ok = this.editor.wireframeBlockMutations.insertBlock({
         blockName: "wf:svc-test-tile",
         defaultArgs: { title: "In grid" },
         targetKey: gridKey,
@@ -949,7 +949,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const gridKey = `layout:${draft[0].__stableKey}`;
 
       // Seed a placed tile via a grid drop so we have a cell to reposition.
-      this.editor.applyGridDrop({
+      this.editor.wireframeGridManipulator.drop({
         targetGridKey: gridKey,
         gesture: GRID_DROP_GESTURES.INTO,
         cell: { column: 2, row: 1 },
@@ -1268,7 +1268,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const heroKey = `wf:svc-test-tile:${hero.__stableKey}`;
 
       // Move the spanning hero to an empty single cell at column 3, row 2.
-      const ok = this.editor.applyGridDrop({
+      const ok = this.editor.wireframeGridManipulator.drop({
         targetGridKey: gridKey,
         gesture: GRID_DROP_GESTURES.INTO,
         cell: { column: 3, row: 2 },
@@ -1367,7 +1367,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         const sourceTile = sourceGrid.children[0];
         const sourceKey = `wf:svc-test-tile:${sourceTile.__stableKey}`;
 
-        const ok = this.editor.applyGridDrop({
+        const ok = this.editor.wireframeGridManipulator.drop({
           targetGridKey: destGridKey,
           gesture: GRID_DROP_GESTURES.INTO,
           cell: { column: 1, row: 3 },
@@ -1466,7 +1466,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         const [sourceGrid, destGrid] = root.children;
         const residentKey = `wf:svc-test-tile:${destGrid.children[0].__stableKey}`;
         const sourceKey = `wf:svc-test-tile:${sourceGrid.children[0].__stableKey}`;
-        const ok = editor.moveBlock({
+        const ok = editor.wireframeBlockMutations.moveBlock({
           sourceKey,
           targetKey: residentKey,
           position: "before",
@@ -1615,7 +1615,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       test("dropping before a cell in a full row grows a column (R2)", function (assert) {
         const { gridKey, xKey, aKey } = refs(this.editor);
-        const ok = this.editor.moveBlock({
+        const ok = this.editor.wireframeBlockMutations.moveBlock({
           sourceKey: xKey,
           targetKey: aKey,
           position: "before",
@@ -1647,7 +1647,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       test("a generic drop into a full grid adds a row (R3)", function (assert) {
         const { gridKey, xKey } = refs(this.editor);
-        const ok = this.editor.moveBlock({
+        const ok = this.editor.wireframeBlockMutations.moveBlock({
           sourceKey: xKey,
           targetKey: gridKey,
           position: "inside",
@@ -1739,7 +1739,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
         // Drag A1 onto B1's cell (column 2, the occupant). An INTO drop onto
         // an occupied cell decides SWAP, which trades the two across grids.
-        const ok = this.editor.applyGridDrop({
+        const ok = this.editor.wireframeGridManipulator.drop({
           targetGridKey: `layout:${gridB.__stableKey}`,
           gesture: GRID_DROP_GESTURES.INTO,
           cell: { column: 2, row: 1 },
@@ -1855,7 +1855,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       test("a cross-grid edge drop (same outlet) relocates the block without duplicating it", function (assert) {
         const before = countContent(this.editor);
         const { gridA, gridB, gridBKey, keyIn } = refs(this.editor);
-        const ok = this.editor.applyGridDrop({
+        const ok = this.editor.wireframeGridManipulator.drop({
           targetGridKey: gridBKey,
           gesture: GRID_DROP_GESTURES.BESIDE,
           anchorKey: keyIn(gridB, "B1"),
@@ -1878,7 +1878,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       test("a same-grid edge drop rotates without duplicating", function (assert) {
         const before = countContent(this.editor);
         const { gridA, gridAKey, keyIn } = refs(this.editor);
-        const ok = this.editor.applyGridDrop({
+        const ok = this.editor.wireframeGridManipulator.drop({
           targetGridKey: gridAKey,
           gesture: GRID_DROP_GESTURES.BESIDE,
           anchorKey: keyIn(gridA, "A1"),
@@ -1897,7 +1897,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       test("a palette edge drop mints exactly one new block", function (assert) {
         const before = countContent(this.editor);
         const { gridB, gridBKey, keyIn } = refs(this.editor);
-        const ok = this.editor.applyGridDrop({
+        const ok = this.editor.wireframeGridManipulator.drop({
           targetGridKey: gridBKey,
           gesture: GRID_DROP_GESTURES.BESIDE,
           anchorKey: keyIn(gridB, "B1"),
@@ -1970,7 +1970,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         }`;
 
         // Drop A before the empty cell at column 1, row 1 (left edge → cascade).
-        const ok = this.editor.applyGridDrop({
+        const ok = this.editor.wireframeGridManipulator.drop({
           targetGridKey: gridKey,
           gesture: GRID_DROP_GESTURES.BESIDE,
           cell: { column: 1, row: 1 },
@@ -2097,7 +2097,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           name: "moveBlock — cross-grid, same outlet (outline before)",
           delta: 0,
           run: (e, k) =>
-            e.moveBlock({
+            e.wireframeBlockMutations.moveBlock({
               sourceKey: k.a1,
               targetKey: k.b1,
               position: "before",
@@ -2108,7 +2108,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           name: "moveBlock — from stack into a grid (inside)",
           delta: 0,
           run: (e, k) =>
-            e.moveBlock({
+            e.wireframeBlockMutations.moveBlock({
               sourceKey: k.s,
               targetKey: k.gridA,
               position: "inside",
@@ -2119,7 +2119,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           name: "moveBlock — same-grid before a cell (cascade, not reflow)",
           delta: 0,
           run: (e, k) =>
-            e.moveBlock({
+            e.wireframeBlockMutations.moveBlock({
               sourceKey: k.a2,
               targetKey: k.a1,
               position: "before",
@@ -2130,7 +2130,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           name: "applyGridDrop — into a cross-grid empty cell (fill)",
           delta: 0,
           run: (e, k) =>
-            e.applyGridDrop({
+            e.wireframeGridManipulator.drop({
               targetGridKey: k.gridB,
               gesture: GRID_DROP_GESTURES.INTO,
               cell: { column: 3, row: 2 },
@@ -2141,13 +2141,16 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           name: "moveBlockIntoCell — cross-grid empty cell",
           delta: 0,
           run: (e, k) =>
-            e.moveBlockIntoCell({ sourceKey: k.a1, cellKey: k.emptyCell }),
+            e.wireframeGridManipulator.moveIntoCell({
+              sourceKey: k.a1,
+              cellKey: k.emptyCell,
+            }),
         },
         {
           name: "applyGridDrop — beside a cross-grid cell (cascade)",
           delta: 0,
           run: (e, k) =>
-            e.applyGridDrop({
+            e.wireframeGridManipulator.drop({
               targetGridKey: k.gridB,
               gesture: GRID_DROP_GESTURES.BESIDE,
               anchorKey: k.b1,
@@ -2159,7 +2162,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           name: "applyGridDrop — same-grid rotation (cascade)",
           delta: 0,
           run: (e, k) =>
-            e.applyGridDrop({
+            e.wireframeGridManipulator.drop({
               targetGridKey: k.gridA,
               gesture: GRID_DROP_GESTURES.BESIDE,
               anchorKey: k.a1,
@@ -2172,7 +2175,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           delta: 0,
           run: (e, k) =>
             // B1 sits at column 1; an INTO drop onto it decides SWAP.
-            e.applyGridDrop({
+            e.wireframeGridManipulator.drop({
               targetGridKey: k.gridB,
               gesture: GRID_DROP_GESTURES.INTO,
               cell: { column: 1, row: 1 },
@@ -2183,7 +2186,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           name: "applyGridDrop — palette beside a cell (cascade, new block)",
           delta: 1,
           run: (e, k) =>
-            e.applyGridDrop({
+            e.wireframeGridManipulator.drop({
               targetGridKey: k.gridB,
               gesture: GRID_DROP_GESTURES.BESIDE,
               anchorKey: k.b1,
@@ -2199,7 +2202,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           name: "applyGridDrop — palette into an empty cell (fill)",
           delta: 1,
           run: (e, k) =>
-            e.applyGridDrop({
+            e.wireframeGridManipulator.drop({
               targetGridKey: k.gridB,
               gesture: GRID_DROP_GESTURES.INTO,
               cell: { column: 3, row: 2 },
@@ -2215,7 +2218,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           delta: -1,
           run: (e, k) =>
             // A2 sits at column 2; a Shift-held INTO drop onto it removes A2.
-            e.applyGridDrop({
+            e.wireframeGridManipulator.drop({
               targetGridKey: k.gridA,
               gesture: GRID_DROP_GESTURES.INTO,
               cell: { column: 2, row: 1 },
@@ -2252,16 +2255,18 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
   );
 
   module("drop-action coverage (exhaustiveness guard)", function () {
-    // Tripwire: grid placement is funneled through `applyGridDrop` → the grid
-    // manipulator → the decider, so no method on the service should place a
-    // block into a grid on its own. The methods matching the placement-verb
-    // pattern below are the legitimately-remaining ones — linear moves,
-    // cell-content swaps, and the resize writer. A NEW `move*`/`insert*`/etc.
-    // method turns this red, forcing a deliberate decision about whether it
+    // Tripwire: grid placement is funneled through the drop dispatch → the grid
+    // manipulator → the decider, so no method on the block-mutations service
+    // should place a block into a grid on its own. The methods matching the
+    // placement-verb pattern below are the legitimately-remaining ones — linear
+    // moves and the cross-outlet relocation primitive. A NEW `move*`/`insert*`/
+    // etc. method turns this red, forcing a deliberate decision about whether it
     // belongs on the service at all or should route through the manipulator.
     // Introspects the prototype rather than a static list that drifts.
     test("no unrecognized grid-mutating method exists", function (assert) {
-      const editor = getOwner(this).lookup("service:wireframe");
+      const blockMutations = getOwner(this).lookup(
+        "service:wireframe-block-mutations"
+      );
       const expected = [
         "insertBlock",
         // Relocation primitive shared by `moveBlock` and the grid
@@ -2270,16 +2275,14 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "moveAcrossOutlets",
         "moveBlock",
         "moveBlockDown",
-        "moveBlockIntoCell",
         "moveBlockUp",
-        "placeBlockInCell",
-        "replaceSelectedEntryRaw",
       ];
       const pattern = /^(move|insert|place|swap|replace|setSlot)/;
       const found = Object.getOwnPropertyNames(
-        Object.getPrototypeOf(editor)
+        Object.getPrototypeOf(blockMutations)
       ).filter(
-        (name) => pattern.test(name) && typeof editor[name] === "function"
+        (name) =>
+          pattern.test(name) && typeof blockMutations[name] === "function"
       );
       assert.deepEqual(
         found.sort(),
@@ -2819,7 +2822,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("moveBlock pushes an undoable structural entry", async function (assert) {
-      this.editor.moveBlock({
+      this.editor.wireframeBlockMutations.moveBlock({
         sourceKey: this.firstKey,
         targetKey: this.secondKey,
         position: "after",
@@ -2839,7 +2842,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("redo re-applies a structural move", async function (assert) {
-      this.editor.moveBlock({
+      this.editor.wireframeBlockMutations.moveBlock({
         sourceKey: this.firstKey,
         targetKey: this.secondKey,
         position: "after",
@@ -2855,7 +2858,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("insertBlock can be undone, removing the inserted entry", async function (assert) {
-      this.editor.insertBlock({
+      this.editor.wireframeBlockMutations.insertBlock({
         blockName: "wf:svc-test-tile",
         defaultArgs: { title: "Inserted" },
         targetKey: this.secondKey,
@@ -2877,7 +2880,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         key: this.secondKey,
         name: "wf:svc-test-tile",
       });
-      this.editor.removeBlock(this.secondKey);
+      this.editor.wireframeBlockMutations.removeBlock(this.secondKey);
       let after = outletChildren(this.editor);
       assert.strictEqual(after.length, 1);
 
@@ -2888,7 +2891,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("duplicateBlock can be undone", async function (assert) {
-      this.editor.duplicateBlock(this.firstKey);
+      this.editor.wireframeBlockMutations.duplicateBlock(this.firstKey);
       let after = outletChildren(this.editor);
       assert.strictEqual(after.length, 3);
 
@@ -2898,7 +2901,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("duplicateBlock(key, count) inserts that many clones in one undo step", async function (assert) {
-      this.editor.duplicateBlock(this.firstKey, 3);
+      this.editor.wireframeBlockMutations.duplicateBlock(this.firstKey, 3);
       let after = outletChildren(this.editor);
       assert.strictEqual(
         after.length,
@@ -2916,7 +2919,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("duplicateBlock clamps a non-positive count to one clone", function (assert) {
-      this.editor.duplicateBlock(this.firstKey, 0);
+      this.editor.wireframeBlockMutations.duplicateBlock(this.firstKey, 0);
       assert.strictEqual(
         outletChildren(this.editor).length,
         3,
@@ -2972,7 +2975,10 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("removeBlocks deletes the whole selection in one undo step", async function (assert) {
-      this.editor.removeBlocks([this.firstKey, this.secondKey]);
+      this.editor.wireframeBlockMutations.removeBlocks([
+        this.firstKey,
+        this.secondKey,
+      ]);
       assert.strictEqual(
         outletChildren(this.editor).length,
         0,
@@ -2991,7 +2997,10 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const rootKey =
         this.editor.layoutQuery.readResolvedLayout("homepage-blocks")[0];
       const rootEntryKey = `layout:${rootKey.__stableKey}`;
-      this.editor.removeBlocks([rootEntryKey, this.firstKey]);
+      this.editor.wireframeBlockMutations.removeBlocks([
+        rootEntryKey,
+        this.firstKey,
+      ]);
 
       const after = outletChildren(this.editor);
       assert.strictEqual(after.length, 1, "the non-root block is removed");
@@ -3017,7 +3026,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("a fresh structural mutation clears the redo stack", function (assert) {
-      this.editor.moveBlock({
+      this.editor.wireframeBlockMutations.moveBlock({
         sourceKey: this.firstKey,
         targetKey: this.secondKey,
         position: "after",
@@ -3025,7 +3034,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
       this.editor.undo();
       assert.true(this.editor.canRedo);
-      this.editor.duplicateBlock(this.firstKey);
+      this.editor.wireframeBlockMutations.duplicateBlock(this.firstKey);
       assert.false(this.editor.canRedo);
     });
   });
@@ -3100,7 +3109,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const rootKey = this.editor.layoutQuery.outletRootKey("homepage-blocks");
       this.editor.selectOutlet("homepage-blocks");
 
-      const removed = this.editor.removeBlock(rootKey);
+      const removed = this.editor.wireframeBlockMutations.removeBlock(rootKey);
 
       assert.false(
         removed,

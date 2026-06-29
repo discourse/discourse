@@ -87,9 +87,11 @@ export function attachEditorShortcuts(editor) {
       // Under a multi-selection, remove the whole set in one undo step;
       // otherwise just the single selected block.
       if (editor.selectionCount > 1) {
-        editor.removeBlocks(editor.selectedKeysSnapshot());
+        editor.wireframeBlockMutations.removeBlocks(
+          editor.selectedKeysSnapshot()
+        );
       } else {
-        editor.removeBlock(key);
+        editor.wireframeBlockMutations.removeBlock(key);
       }
       return;
     }

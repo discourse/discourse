@@ -106,7 +106,7 @@ module(
       // index-keyed slide registry could desync on a mid-list insert, leaving
       // the nav controls unable to page to the shifted/new slides.
       const firstSlideKey = entryKey(carouselEntry(this.editor).children[0]);
-      this.editor.insertBlock({
+      this.editor.wireframeBlockMutations.insertBlock({
         blockName: "heading",
         targetKey: firstSlideKey,
         position: "after",

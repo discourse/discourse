@@ -69,6 +69,7 @@ const DUPLICATE_PRESETS = [2, 3, 5, 10];
  */
 export default class BlockToolbar extends Component {
   @service wireframe;
+  @service wireframeBlockMutations;
   @service wireframeForceExpand;
   @service wireframeInlineEdit;
 
@@ -391,17 +392,17 @@ export default class BlockToolbar extends Component {
 
   @action
   moveUp() {
-    this.wireframe.moveBlockUp(this.args.blockKey);
+    this.wireframeBlockMutations.moveBlockUp(this.args.blockKey);
   }
 
   @action
   moveDown() {
-    this.wireframe.moveBlockDown(this.args.blockKey);
+    this.wireframeBlockMutations.moveBlockDown(this.args.blockKey);
   }
 
   @action
   duplicate() {
-    this.wireframe.duplicateBlock(this.args.blockKey);
+    this.wireframeBlockMutations.duplicateBlock(this.args.blockKey);
   }
 
   @action
@@ -421,12 +422,12 @@ export default class BlockToolbar extends Component {
   @action
   async duplicateTimes(count) {
     await this.#duplicateMenu?.close();
-    this.wireframe.duplicateBlock(this.args.blockKey, count);
+    this.wireframeBlockMutations.duplicateBlock(this.args.blockKey, count);
   }
 
   @action
   remove() {
-    this.wireframe.removeBlock(this.args.blockKey);
+    this.wireframeBlockMutations.removeBlock(this.args.blockKey);
   }
 
   @action
@@ -457,7 +458,7 @@ export default class BlockToolbar extends Component {
   @action
   duplicateFromMenu(count, close) {
     close?.();
-    this.wireframe.duplicateBlock(this.args.blockKey, count);
+    this.wireframeBlockMutations.duplicateBlock(this.args.blockKey, count);
   }
 
   @action

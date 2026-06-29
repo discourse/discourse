@@ -707,7 +707,7 @@ export default class GridOverlay extends Component {
 
   @action
   pickBlockForCell(cell, blockEntry) {
-    this.wireframe.applyGridDrop({
+    this.wireframeGridManipulator.drop({
       targetGridKey: this.args.gridKey,
       gesture: GRID_DROP_GESTURES.INTO,
       cell: { column: cell.column, row: cell.row },

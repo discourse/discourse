@@ -42,6 +42,7 @@ const CHILD_COUNT_THRESHOLD = 6;
 export default class OutlinePanel extends Component {
   @service blocks;
   @service wireframe;
+  @service wireframeBlockMutations;
   @service wireframeDragSession;
   @service wireframeSession;
 
@@ -383,7 +384,7 @@ export default class OutlinePanel extends Component {
     }
     const { source } = target;
     if (source?.type === "wf-palette-block") {
-      this.wireframe.insertBlock({
+      this.wireframeBlockMutations.insertBlock({
         blockName: source.data.blockName,
         defaultArgs: source.data.defaultArgs,
         targetKey: row.blockKey,
@@ -391,7 +392,7 @@ export default class OutlinePanel extends Component {
         targetOutletName: outletName,
       });
     } else {
-      this.wireframe.moveBlock({
+      this.wireframeBlockMutations.moveBlock({
         sourceKey: source.data.blockKey,
         targetKey: row.blockKey,
         position: "before",

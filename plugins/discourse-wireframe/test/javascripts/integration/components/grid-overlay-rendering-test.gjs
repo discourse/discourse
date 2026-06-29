@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { find, render, settled } from "@ember/test-helpers";
+import { find, render, settled, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
 import BlockOutlet, {
@@ -121,6 +121,64 @@ module(
         before,
         after,
         "the empty cell's DOM node is reused across the selection change, not rebuilt"
+      );
+    });
+
+    test("releasing a filled cell's resize handle commits through the grid manipulator", async function (assert) {
+      // Regression: BlockChrome's `onGridResizeEnd` calls
+      // `wireframeGridManipulator.resizeSlot`, so the component must inject that
+      // service. It once read `this.wireframeGridManipulator` without an
+      // `@service` declaration, so the pointer-up threw and the span-resize
+      // silently died. Unit / service tests never mount the chrome, and the
+      // missing injection doesn't throw at render — only on the release — so it
+      // takes an interaction test through the real handle to catch it.
+      const wireframe = await renderGridInEditMode(this.owner);
+
+      const manipulator = this.owner.lookup(
+        "service:wireframe-grid-manipulator"
+      );
+      const calls = [];
+      manipulator.resizeSlot = (args) => calls.push(args);
+
+      const handle = find(
+        ".wireframe-block-chrome-wrapper.--in-grid-cell .wireframe-block-chrome__resize-handle"
+      );
+      const rect = handle.getBoundingClientRect();
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + rect.height / 2;
+
+      // Drive the pointer-drag the handle binds (pointerdown → move → up).
+      // Synthetic events ignore the CSS pointer-events gating, so no hover /
+      // selection is needed; any move makes the span-resize compute a placement,
+      // so the release commits through `resizeSlot`.
+      await triggerEvent(handle, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: startX,
+        clientY: startY,
+      });
+      await triggerEvent(handle, "pointermove", {
+        pointerId: 1,
+        clientX: startX + 120,
+        clientY: startY + 120,
+      });
+      await triggerEvent(handle, "pointerup", {
+        pointerId: 1,
+        clientX: startX + 120,
+        clientY: startY + 120,
+      });
+
+      assert.strictEqual(
+        calls.length,
+        1,
+        "the release commits the new span through wireframeGridManipulator.resizeSlot"
+      );
+      const grid = wireframe.layoutQuery.readResolvedLayout(OUTLET)[0];
+      const cellKey = `grid-overlay-rendering-leaf:${grid.children[0].__stableKey}`;
+      assert.strictEqual(
+        calls[0].slotKey,
+        cellKey,
+        "the resize targets the dragged cell's slot"
       );
     });
   }

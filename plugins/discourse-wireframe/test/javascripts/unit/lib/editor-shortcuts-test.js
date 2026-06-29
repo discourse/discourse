@@ -15,17 +15,26 @@ module("Unit | Discourse Wireframe | lib:editor-shortcuts", function (hooks) {
   });
 
   // Minimal stand-in for the wireframe service exposing only what the Delete
-  // shortcut reads. `removed` records whether the shortcut acted.
+  // shortcut reads. `removed` records whether the shortcut acted. The shortcut
+  // removes through the injected block-mutations service, so the stub exposes it
+  // under `wireframeBlockMutations` exactly as the kernel does.
   function buildEditor(overrides = {}) {
+    const removed = [];
     return {
       wireframeSession: { active: true },
       isDestroyed: false,
       isDestroying: false,
       selectedBlockKey: "para:1",
       selectionCount: 1,
-      removed: [],
-      removeBlock(key) {
-        this.removed.push(key);
+      selectedKeysSnapshot: () => ["para:1"],
+      removed,
+      wireframeBlockMutations: {
+        removeBlock(key) {
+          removed.push(key);
+        },
+        removeBlocks(keys) {
+          removed.push(...keys);
+        },
       },
       ...overrides,
     };
