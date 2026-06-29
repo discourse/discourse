@@ -259,7 +259,6 @@ class Emoji
 
   def self.load_custom
     result = []
-
     if !GlobalSetting.skip_db?
       CustomEmoji
         .includes(:upload)
@@ -267,10 +266,8 @@ class Emoji
         .each do |emoji|
           result << Emoji.new.tap do |e|
             e.name = emoji.name
-            
             raw_url = emoji.upload&.url
             e.url = raw_url.present? ? Discourse.store.cdn_url(raw_url) : nil
-            
             e.group = emoji.group || DEFAULT_GROUP
             e.created_by = User.where(id: emoji.user_id).pick(:username)
           end
@@ -282,9 +279,7 @@ class Emoji
         result << Emoji.new.tap do |e|
           e.name = name
           url = (Discourse.base_path + url) if url[%r{\A/[^/]}]
-          
           e.url = url.present? ? Discourse.store.cdn_url(url) : nil
-          
           e.group = group || DEFAULT_GROUP
         end
       end
