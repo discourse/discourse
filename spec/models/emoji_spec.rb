@@ -15,6 +15,23 @@ RSpec.describe Emoji do
       expect(emoji.name).to eq("test")
       expect(emoji.url).to be_nil
     end
+
+    it "applies the CDN url to custom emojis when configured" do
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.s3_upload_bucket = "my-bucket"
+      SiteSetting.s3_cdn_url = "https://cdn.my-site.com"
+
+      Discourse.store.stubs(:cdn_url).with("//my-bucket.s3.amazonaws.com/images/my-emoji.png").returns("https://cdn.my-site.com/images/my-emoji.png")
+
+      # fab! is standard for Discourse system specs, but here we can just fabricate normally
+      upload = Fabricate(:upload, url: "//my-bucket.s3.amazonaws.com/images/my-emoji.png")
+      CustomEmoji.create!(name: "my_s3_emoji", upload: upload)
+
+      Emoji.clear_cache
+      emoji = Emoji.load_custom.find { |e| e.name == "my_s3_emoji" }
+
+      expect(emoji.url).to eq("https://cdn.my-site.com/images/my-emoji.png")
+    end
   end
 
   describe ".unicode_replacements" do
