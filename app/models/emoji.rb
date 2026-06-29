@@ -267,7 +267,7 @@ class Emoji
         .each do |emoji|
           result << Emoji.new.tap do |e|
             e.name = emoji.name
-            e.url = emoji.upload&.url
+            e.url = Discourse.store.cdn_url(emoji.upload&.url)
             e.group = emoji.group || DEFAULT_GROUP
             e.created_by = User.where(id: emoji.user_id).pick(:username)
           end
@@ -279,7 +279,7 @@ class Emoji
         result << Emoji.new.tap do |e|
           e.name = name
           url = (Discourse.base_path + url) if url[%r{\A/[^/]}]
-          e.url = url
+          e.url = Discourse.store.cdn_url(url)
           e.group = group || DEFAULT_GROUP
         end
       end
