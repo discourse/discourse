@@ -1,0 +1,132 @@
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import { processBrowserAttentionChange } from "discourse/lib/user-presence";
+
+const SESSION_ID = "S".repeat(32);
+
+// The tracker leans on user-presence's attention signal, whose own DOM
+// listeners are disabled under isTesting(); drive the signal directly.
+function blur(context) {
+  context.focused = false;
+  processBrowserAttentionChange();
+}
+
+function focus(context) {
+  context.focused = true;
+  processBrowserAttentionChange();
+}
+
+function hide(context) {
+  context.visibility = "hidden";
+  processBrowserAttentionChange();
+}
+
+function pagehide() {
+  window.dispatchEvent(new Event("pagehide"));
+}
+
+module("Unit | Service | human-activity-tracker", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.clock = { ms: 0 };
+    this.focused = true;
+    this.visibility = "visible";
+    this.sent = [];
+
+    Object.defineProperty(document, "visibilityState", {
+      configurable: true,
+      get: () => this.visibility,
+    });
+    sinon.stub(document, "hasFocus").callsFake(() => this.focused);
+
+    this.meta = document.createElement("meta");
+    this.meta.name = "discourse-track-view-session-id";
+    this.meta.content = SESSION_ID;
+    document.head.appendChild(this.meta);
+
+    this.tracker = this.owner.lookup("service:human-activity-tracker");
+    this.tracker.now = () => this.clock.ms;
+    this.tracker.transport = (body) => this.sent.push(body);
+    this.tracker.start();
+  });
+
+  hooks.afterEach(function () {
+    this.tracker?.stop();
+    this.meta.remove();
+    delete document.visibilityState;
+  });
+
+  test("sends nothing when there was no interaction", function (assert) {
+    pagehide();
+
+    assert.strictEqual(this.sent.length, 0);
+  });
+
+  test("counts interaction events and reports them on flush", function (assert) {
+    window.dispatchEvent(new KeyboardEvent("keydown"));
+    window.dispatchEvent(new MouseEvent("mousedown"));
+    window.dispatchEvent(new Event("scroll"));
+    pagehide();
+
+    const payload = this.sent.at(-1);
+    assert.strictEqual(payload.session_id, SESSION_ID);
+    assert.strictEqual(payload.key_events, 1);
+    assert.strictEqual(payload.click_events, 1);
+    assert.strictEqual(payload.scroll_events, 1);
+  });
+
+  test("counts continuous mouse movement but ignores teleporting jumps", function (assert) {
+    window.dispatchEvent(
+      new MouseEvent("mousemove", { clientX: 10, clientY: 10 })
+    );
+    // Within MAX_HUMAN_STEP of the previous point — counted.
+    window.dispatchEvent(
+      new MouseEvent("mousemove", { clientX: 30, clientY: 30 })
+    );
+    // A large jump — ignored.
+    window.dispatchEvent(
+      new MouseEvent("mousemove", { clientX: 900, clientY: 900 })
+    );
+    pagehide();
+
+    assert.strictEqual(this.sent.at(-1).mouse_move_events, 1);
+  });
+
+  test("reports the time to the first interaction", function (assert) {
+    this.clock.ms = 2500;
+    window.dispatchEvent(new KeyboardEvent("keydown"));
+
+    this.clock.ms = 9000;
+    pagehide();
+
+    assert.strictEqual(this.sent.at(-1).time_to_first_interaction_ms, 2500);
+  });
+
+  test("accumulates only visible-and-focused time as engaged duration", function (assert) {
+    window.dispatchEvent(new KeyboardEvent("keydown"));
+
+    this.clock.ms = 4000;
+    blur(this);
+
+    this.clock.ms = 10_000;
+    focus(this);
+
+    this.clock.ms = 13_000;
+    pagehide();
+
+    // Engaged 0–4000ms and 10000–13000ms => 7000ms.
+    assert.strictEqual(this.sent.at(-1).engaged_duration_ms, 7000);
+  });
+
+  test("flushes the latest snapshot when the tab is hidden", function (assert) {
+    window.dispatchEvent(new KeyboardEvent("keydown"));
+
+    this.clock.ms = 5000;
+    hide(this);
+
+    assert.strictEqual(this.sent.length, 1);
+    assert.strictEqual(this.sent.at(-1).engaged_duration_ms, 5000);
+  });
+});
