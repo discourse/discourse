@@ -20,7 +20,7 @@ const FLUSH_DELAY_MS = 3 * 60 * 1000;
 export default {
   initialize() {
     const enabled =
-      document.querySelector("meta[name=discourse-beacon-pageview-enabled]")
+      document.querySelector("meta[name=discourse-engagement-tracking-enabled]")
         ?.content === "true";
     this.sessionId = document.querySelector(
       "meta[name=discourse-track-view-session-id]"
