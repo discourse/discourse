@@ -723,6 +723,29 @@ RSpec.describe AdminDashboardSiteTraffic do
         )
       end
 
+      it "reports zero direct traffic when every tracked pageview had a referrer" do
+        4.times do
+          Fabricate(
+            :browser_pageview_event,
+            normalized_referrer: "google.com",
+            created_at: "2026-05-01",
+          )
+        end
+        aggregate_referrer_rollups
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+          browser_pageviews: {
+            value: 0,
+          },
+          logged_in_share: {
+            value: 0,
+          },
+          direct_traffic: {
+            value: 0,
+          },
+        )
+      end
+
       it "computes the share from logged-in pageviews only when login is required" do
         SiteSetting.login_required = true
         member = Fabricate(:user)
