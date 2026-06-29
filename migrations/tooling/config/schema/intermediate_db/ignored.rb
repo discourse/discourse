@@ -208,6 +208,7 @@ Migrations::Tooling::Schema.ignored do
          :sidebar_sections,
          :sidebar_urls,
          :site_setting_groups,
+         :site_setting_localizations,
          :sitemaps,
          :skipped_email_logs,
          :stylesheet_cache,
