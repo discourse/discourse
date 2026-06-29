@@ -686,5 +686,107 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(second[:top_countries][:rows].first[:country_code]).to eq("US")
       end
     end
+
+    context "for direct traffic share" do
+      before { SiteSetting.persist_browser_pageview_events = true }
+
+      def aggregate_referrer_rollups
+        BrowserPageviewReferrerDailyRollup.aggregate(
+          start_date: "2026-05-01".to_date,
+          end_date: "2026-05-01".to_date,
+        )
+      end
+
+      it "returns the rounded share of pageviews that arrived with no referrer" do
+        3.times do
+          Fabricate(:browser_pageview_event, normalized_referrer: nil, created_at: "2026-05-01")
+        end
+        9.times do
+          Fabricate(
+            :browser_pageview_event,
+            normalized_referrer: "google.com",
+            created_at: "2026-05-01",
+          )
+        end
+        aggregate_referrer_rollups
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+          browser_pageviews: {
+            value: 0,
+          },
+          logged_in_share: {
+            value: 0,
+          },
+          direct_traffic: {
+            value: 25,
+          },
+        )
+      end
+
+      it "computes the share from logged-in pageviews only when login is required" do
+        SiteSetting.login_required = true
+        member = Fabricate(:user)
+
+        Fabricate(
+          :browser_pageview_event,
+          normalized_referrer: nil,
+          user_id: member.id,
+          created_at: "2026-05-01",
+        )
+        Fabricate(
+          :browser_pageview_event,
+          normalized_referrer: nil,
+          user_id: nil,
+          created_at: "2026-05-01",
+        )
+        2.times do
+          Fabricate(
+            :browser_pageview_event,
+            normalized_referrer: "google.com",
+            user_id: member.id,
+            created_at: "2026-05-01",
+          )
+        end
+        aggregate_referrer_rollups
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+          browser_pageviews: {
+            value: 0,
+          },
+          direct_traffic: {
+            value: 33,
+          },
+        )
+      end
+
+      it "omits direct traffic when persist_browser_pageview_events is disabled" do
+        SiteSetting.persist_browser_pageview_events = false
+
+        3.times do
+          Fabricate(:browser_pageview_event, normalized_referrer: nil, created_at: "2026-05-01")
+        end
+        aggregate_referrer_rollups
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+          browser_pageviews: {
+            value: 0,
+          },
+          logged_in_share: {
+            value: 0,
+          },
+        )
+      end
+
+      it "omits direct traffic when no pageviews were tracked in the period" do
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+          browser_pageviews: {
+            value: 0,
+          },
+          logged_in_share: {
+            value: 0,
+          },
+        )
+      end
+    end
   end
 end
