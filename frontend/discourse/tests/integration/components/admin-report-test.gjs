@@ -1,4 +1,4 @@
-import { click, fillIn, render } from "@ember/test-helpers";
+import { click, fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import AdminReport from "discourse/admin/components/admin-report";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -9,12 +9,7 @@ module("Integration | Component | AdminReport", function (hooks) {
 
   test("default", async function (assert) {
     await render(
-      <template>
-        <AdminReport
-          @dataSourceName="signups"
-          @showDescriptionInTooltip={{false}}
-        />
-      </template>
+      <template><AdminReport @dataSourceName="signups" /></template>
     );
 
     assert.dom(".admin-report.signups").exists();
@@ -22,11 +17,13 @@ module("Integration | Component | AdminReport", function (hooks) {
     assert
       .dom(".d-page-subheader .d-page-subheader__title")
       .hasText("Signups", "has a title");
+
+    await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
     assert
-      .dom(".d-page-subheader .d-page-subheader__description")
-      .hasText(
+      .dom(".fk-d-tooltip__content")
+      .includesText(
         "New account registrations for this period",
-        "has a description"
+        "shows the description in a tooltip"
       );
 
     assert

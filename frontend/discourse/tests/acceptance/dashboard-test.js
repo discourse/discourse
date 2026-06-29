@@ -1,4 +1,4 @@
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -114,40 +114,12 @@ acceptance("Dashboard", function (needs) {
       .exists();
   });
 
-  test("reports tab", async function (assert) {
+  test("reports tab navigates to the reports page", async function (assert) {
     await visit("/admin");
     await click(".dashboard .navigation-item.reports .navigation-link");
 
-    assert
-      .dom(
-        ".dashboard .admin-reports-list .admin-section-landing-item__content"
-      )
-      .exists({ count: 1 });
-
-    await fillIn(".dashboard .admin-filter-controls__input", "flags");
-
-    assert
-      .dom(
-        ".dashboard .admin-reports-list .admin-section-landing-item__content"
-      )
-      .doesNotExist();
-
-    await click(".dashboard .navigation-item.security .navigation-link");
-    await click(".dashboard .navigation-item.reports .navigation-link");
-
-    assert
-      .dom(
-        ".dashboard .admin-reports-list .admin-section-landing-item__content"
-      )
-      .exists({ count: 1 }, "navigating back and forth resets filter");
-
-    await fillIn(".dashboard .admin-filter-controls__input", "activities");
-
-    assert
-      .dom(
-        ".dashboard .admin-reports-list .admin-section-landing-item__content"
-      )
-      .exists({ count: 1 }, "filter is case insensitive");
+    assert.strictEqual(currentURL(), "/admin/reports");
+    assert.dom(".admin-reports-group").exists("shows the grouped reports");
   });
 
   test("reports filters", async function (assert) {

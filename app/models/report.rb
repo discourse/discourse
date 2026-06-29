@@ -355,7 +355,7 @@ class Report
     report.guardian ||= report.current_user&.guardian
     report.labels = Report.default_labels
 
-    report.legacy = LEGACY_REPORTS.include?(type) if SiteSetting.reporting_improvements
+    report.legacy = LEGACY_REPORTS.include?(type)
 
     report
   end

@@ -356,8 +356,6 @@
     padding: 0.65em 0.25em;
   }
 
-  .admin-report .main,
-  //temp fix for reporting upcoming changes
   .admin-report .chart__body {
     border: 1px solid var(--content-border-color);
 
@@ -366,11 +364,8 @@
     }
   }
 
-  // temp fix for reporting upcoming changes
   .alert {
-    .uc-reporting-improvements & {
-      margin-bottom: 0;
-    }
+    margin-bottom: 0;
   }
 
   .admin-report:not(:last-child) {

@@ -26,11 +26,7 @@ import { i18n } from "discourse-i18n";
     {{#unless @report.isHidden}}
       <DConditionalLoadingSection @isLoading={{@report.isLoading}}>
         {{#if @report.showHeader}}
-          {{#if
-            (and
-              @report.siteSettings.reporting_improvements @report.model.legacy
-            )
-          }}
+          {{#if @report.model.legacy}}
             <div class="alert alert-info">
               {{dIcon "triangle-exclamation"}}
               <span>{{i18n "admin.reports.legacy_warning"}}</span>

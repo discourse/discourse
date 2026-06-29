@@ -26,16 +26,6 @@ RSpec.describe Admin::ReportsController do
           *Report::ADMIN_ONLY_REPORTS,
         )
       end
-
-      it "includes suspicious logins when IP viewing is disabled" do
-        SiteSetting.moderators_view_ips = false
-
-        get "/admin/reports.json"
-
-        expect(response.parsed_body["reports"].map { |r| r["type"] }).to include(
-          "suspicious_logins",
-        )
-      end
     end
 
     before { sign_in(admin) }

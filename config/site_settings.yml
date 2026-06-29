@@ -4464,19 +4464,6 @@ dashboard:
     client: true
 
 experimental:
-  reporting_improvements:
-    default: false
-    client: true
-    hidden: true
-    area: "experimental"
-    upcoming_change:
-      status: "beta"
-      impact: "feature,staff"
-      learn_more_url: "https://meta.discourse.org/t/-/395768"
-      allow_enabled_for:
-        - staff
-        - specific_groups
-      body_class: true
   enable_auto_grid_images:
     default: true
     client: true
