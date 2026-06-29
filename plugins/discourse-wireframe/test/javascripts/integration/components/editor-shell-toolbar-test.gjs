@@ -143,13 +143,14 @@ module(
 
       await render(<template><EditorShell /></template>);
 
+      const theme = getOwner(this.editor).lookup("service:wireframe-theme");
       assert.strictEqual(
-        this.editor.activeThemeId,
+        theme.activeThemeId,
         7,
         "activeThemeId re-points to the existing companion"
       );
       assert.true(
-        this.editor.activeThemeTarget.publishable,
+        theme.activeThemeTarget.publishable,
         "the companion is a publishable target"
       );
       assert

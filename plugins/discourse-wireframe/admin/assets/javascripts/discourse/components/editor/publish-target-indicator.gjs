@@ -16,9 +16,10 @@ import { i18n } from "discourse-i18n";
  */
 export default class PublishTargetIndicator extends Component {
   @service wireframe;
+  @service wireframeTheme;
 
   get targets() {
-    return this.wireframe.publishTargets;
+    return this.wireframeTheme.publishTargets;
   }
 
   /**
@@ -32,14 +33,16 @@ export default class PublishTargetIndicator extends Component {
       return this.targets[0];
     }
     if (this.targets.length === 0) {
-      return this.wireframe.activeThemeTarget;
+      return this.wireframeTheme.activeThemeTarget;
     }
     return null;
   }
 
   /** Whether there's anything to show (a resolvable target). */
   get hasTarget() {
-    return this.targets.length > 0 || this.wireframe.activeThemeTarget != null;
+    return (
+      this.targets.length > 0 || this.wireframeTheme.activeThemeTarget != null
+    );
   }
 
   /** Whether any target can't be published to directly. */

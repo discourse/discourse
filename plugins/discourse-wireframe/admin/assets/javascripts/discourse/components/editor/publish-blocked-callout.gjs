@@ -16,11 +16,12 @@ import { i18n } from "discourse-i18n";
  */
 export default class PublishBlockedCallout extends Component {
   @service wireframe;
+  @service wireframeTheme;
 
   @tracked dismissed = false;
 
   get target() {
-    return this.wireframe.activeThemeTarget;
+    return this.wireframeTheme.activeThemeTarget;
   }
 
   get isVisible() {

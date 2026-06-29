@@ -81,9 +81,12 @@ class StubWireframeService extends Service {
 
 function stubWireframe(owner, config) {
   owner.unregister("service:wireframe");
-  owner.register("service:wireframe", new StubWireframeService(owner, config), {
-    instantiate: false,
-  });
+  const stub = new StubWireframeService(owner, config);
+  owner.register("service:wireframe", stub, { instantiate: false });
+  // The drawer reads the publish plan (publishTargets / activeThemeTarget /
+  // activeThemeId) off the theme service, so back it with the same stub instance.
+  owner.unregister("service:wireframe-theme");
+  owner.register("service:wireframe-theme", stub, { instantiate: false });
   // The drawer reads session state off the session signal service, not the
   // wireframe stub, so flip it active to mirror an open editor.
   owner.lookup("service:wireframe-session").activate();

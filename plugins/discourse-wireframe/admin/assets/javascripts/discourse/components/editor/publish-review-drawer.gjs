@@ -33,6 +33,7 @@ export default class PublishReviewDrawer extends Component {
   @service dialog;
   @service wireframePublishPreview;
   @service wireframeSession;
+  @service wireframeTheme;
   @service wireframeValidation;
 
   /** In-flight save or publish; disables the action buttons while awaiting. */
@@ -65,7 +66,7 @@ export default class PublishReviewDrawer extends Component {
 
   /** The edited outlets grouped by owner theme — the publish plan. */
   get targets() {
-    return this.wireframe.publishTargets;
+    return this.wireframeTheme.publishTargets;
   }
 
   /** A flat list of every edited outlet, for the Changes tab. */
@@ -82,12 +83,12 @@ export default class PublishReviewDrawer extends Component {
    * @returns {boolean}
    */
   get showActiveThemeEscapeHatch() {
-    const target = this.wireframe.activeThemeTarget;
+    const target = this.wireframeTheme.activeThemeTarget;
     return target != null && !target.publishable;
   }
 
   get activeThemeTarget() {
-    return this.wireframe.activeThemeTarget;
+    return this.wireframeTheme.activeThemeTarget;
   }
 
   /** Whether at least one edited outlet can be published directly. */
@@ -100,7 +101,7 @@ export default class PublishReviewDrawer extends Component {
     return (
       !this.isSaving &&
       this.wireframe.hasUnsavedDraftEdits &&
-      this.wireframe.activeThemeId != null
+      this.wireframeTheme.activeThemeId != null
     );
   }
 
@@ -238,7 +239,7 @@ export default class PublishReviewDrawer extends Component {
     try {
       const { themeId, error } = await produce();
       if (themeId) {
-        this.wireframe.navigateToEditTheme(themeId);
+        this.wireframeTheme.navigateToEditTheme(themeId);
       } else {
         this.actionError = error;
       }

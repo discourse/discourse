@@ -35,6 +35,7 @@ module(
 
     hooks.beforeEach(function () {
       this.editor = getOwner(this).lookup("service:wireframe");
+      this.theme = getOwner(this).lookup("service:wireframe-theme");
       withTestBlockRegistration(() => registerBlock(StateTile));
     });
 
@@ -86,7 +87,7 @@ module(
         this.editor.layoutQuery.outletState("homepage-blocks"),
         OUTLET_STATE.PUBLISHED
       );
-      const owner = this.editor.outletOwner("homepage-blocks");
+      const owner = this.theme.outletOwner("homepage-blocks");
       assert.strictEqual(owner.themeId, 7);
       assert.strictEqual(owner.themeName, "Acme");
       assert.true(owner.isGit, "git status comes from the metadata preload");
@@ -153,7 +154,7 @@ module(
         5: { name: "Block Layout", is_git: false, stack_index: 2 },
       });
 
-      assert.strictEqual(this.editor.defaultThemeId, -1);
+      assert.strictEqual(this.theme.defaultThemeId, -1);
     });
 
     test("an outlet mounted on the page is editable even with no layout", function (assert) {
@@ -189,7 +190,7 @@ module(
       // not a computed default theme.
       getOwner(this).lookup("service:wireframe-theme").setActiveTheme(7);
       assert.strictEqual(
-        this.editor.outletOwner("homepage-blocks").themeId,
+        this.theme.outletOwner("homepage-blocks").themeId,
         7,
         "the owner of an unowned outlet is the active (entered) theme"
       );

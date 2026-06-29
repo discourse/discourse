@@ -17,6 +17,7 @@ import { OUTLET_STATE } from "../../services/wireframe-layout-query";
  */
 export default class InspectorOutletSection extends Component {
   @service wireframe;
+  @service wireframeTheme;
 
   get state() {
     return this.wireframe.layoutQuery.outletState(this.args.outletName);
@@ -37,7 +38,7 @@ export default class InspectorOutletSection extends Component {
    * @returns {string|null}
    */
   get ownerName() {
-    return this.wireframe.outletOwner(this.args.outletName).themeName;
+    return this.wireframeTheme.outletOwner(this.args.outletName).themeName;
   }
 
   <template>

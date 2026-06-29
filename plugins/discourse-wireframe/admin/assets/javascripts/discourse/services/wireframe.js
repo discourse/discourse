@@ -94,8 +94,9 @@ export default class WireframeService extends Service {
   /**
    * Whether the on-entry companion lookup is still in flight. Set true on entry
    * only when the bound theme can't be published to directly, then cleared once
-   * the lookup settles (re-pointing `activeThemeId` to the companion if one is
-   * found). The blocked callout and the indicator's blocked state read this so
+   * the lookup settles (re-pointing `wireframeTheme.activeThemeId` to the
+   * companion if one is found). The blocked callout and the indicator's blocked
+   * state read this so
    * they don't flash during the brief lookup — the callout appears only once it's
    * settled that there is genuinely no companion.
    *
@@ -271,37 +272,6 @@ export default class WireframeService extends Service {
     return registered.filter(
       (name) => this.blocks.hasLayout(name) || mounted.has(name)
     );
-  }
-
-  /**
-   * Theme facade — delegates to `wireframeTheme`. The id of the theme this
-   * session is bound to (set on enter, repointed to a companion, cleared on
-   * exit). Null while no session is active.
-   *
-   * @returns {number|null}
-   */
-  get activeThemeId() {
-    return this.wireframeTheme.activeThemeId;
-  }
-
-  /**
-   * Theme facade — delegates to `wireframeTheme`. The fallback publish target
-   * for an outlet nothing owns yet.
-   *
-   * @returns {number|null}
-   */
-  get defaultThemeId() {
-    return this.wireframeTheme.defaultThemeId;
-  }
-
-  /**
-   * Theme facade — delegates to `wireframeTheme`. Whether the bound theme is a
-   * core "system" theme (negative id) that can't be published to directly.
-   *
-   * @returns {boolean}
-   */
-  get activeThemeIsSystem() {
-    return this.wireframeTheme.activeThemeIsSystem;
   }
 
   /**
@@ -643,7 +613,8 @@ export default class WireframeService extends Service {
     this.wireframeTheme.setActiveTheme(themeId);
     // A theme that can't be published to directly may have a companion to retarget
     // to; suppress the blocked callout until the after-render lookup settles.
-    this.publishTargetResolving = this.activeThemeTarget?.publishable === false;
+    this.publishTargetResolving =
+      this.wireframeTheme.activeThemeTarget?.publishable === false;
     document.body.classList.add("wireframe-active");
     document.addEventListener("mousedown", this.#onCanvasMouseDown);
     document.addEventListener("mouseup", this.#onCanvasMouseUp);
@@ -1072,7 +1043,8 @@ export default class WireframeService extends Service {
     // draft we just discarded.
     this.wireframeEditEngine.dropUndoEntriesForOutlet(outletName);
     await this.wireframeDrafts.deleteDraft(
-      this.outletOwner(outletName).themeId ?? this.defaultThemeId,
+      this.wireframeTheme.outletOwner(outletName).themeId ??
+        this.wireframeTheme.defaultThemeId,
       outletName
     );
   }
@@ -1108,7 +1080,7 @@ export default class WireframeService extends Service {
    */
   @action
   async resetToDefault(outletName) {
-    const owner = this.outletOwner(outletName);
+    const owner = this.wireframeTheme.outletOwner(outletName);
     if (
       this.layoutQuery.outletState(outletName) !== OUTLET_STATE.PUBLISHED ||
       owner.isGit
@@ -1140,7 +1112,9 @@ export default class WireframeService extends Service {
    */
   @action
   async publishEditedOutlets() {
-    const result = await this.wireframePersistence.publish(this.activeThemeId);
+    const result = await this.wireframePersistence.publish(
+      this.wireframeTheme.activeThemeId
+    );
     return this.#processPublishResult(result);
   }
 
@@ -1156,7 +1130,7 @@ export default class WireframeService extends Service {
   async publishOutlet(outletName) {
     const result = await this.wireframePersistence.publishOutlet(
       outletName,
-      this.activeThemeId
+      this.wireframeTheme.activeThemeId
     );
     return this.#processPublishResult(result);
   }
@@ -1206,7 +1180,10 @@ export default class WireframeService extends Service {
    */
   @action
   async saveDraftOutlet(outletName) {
-    await this.wireframeDrafts.saveDraftOutlet(this.activeThemeId, outletName);
+    await this.wireframeDrafts.saveDraftOutlet(
+      this.wireframeTheme.activeThemeId,
+      outletName
+    );
     // The persisted draft now matches the canvas — advance the baseline so the
     // outlet reads as having no unsaved draft edits until the next change.
     this.#persistedDraftLayouts.set(
@@ -1225,7 +1202,9 @@ export default class WireframeService extends Service {
    */
   @action
   async exportOutlet(outletName) {
-    const themeId = this.outletOwner(outletName).themeId ?? this.defaultThemeId;
+    const themeId =
+      this.wireframeTheme.outletOwner(outletName).themeId ??
+      this.wireframeTheme.defaultThemeId;
     try {
       await this.wireframePersistence.exportOutlet(themeId, outletName, {
         useDraft: this.wireframeEditEngine.isOutletEdited(outletName),
@@ -1247,7 +1226,7 @@ export default class WireframeService extends Service {
   async duplicateForEditing() {
     try {
       const { theme_id } = await this.wireframePersistence.duplicateTheme(
-        this.activeThemeId
+        this.wireframeTheme.activeThemeId
       );
       return { themeId: theme_id };
     } catch (error) {
@@ -1269,7 +1248,7 @@ export default class WireframeService extends Service {
     try {
       const { theme_id } =
         await this.wireframePersistence.createCustomizationComponent(
-          this.activeThemeId
+          this.wireframeTheme.activeThemeId
         );
       return { themeId: theme_id };
     } catch (error) {
@@ -1280,16 +1259,6 @@ export default class WireframeService extends Service {
         ),
       };
     }
-  }
-
-  /**
-   * Theme facade — delegates to `wireframeTheme`. Hard-navigates the editor onto
-   * a different theme (full reload with `?wf_theme=<id>`).
-   *
-   * @param {number} themeId
-   */
-  navigateToEditTheme(themeId) {
-    return this.wireframeTheme.navigateToEditTheme(themeId);
   }
 
   // Pulls the server's error message out of a failed git-action request, falling
@@ -1388,37 +1357,6 @@ export default class WireframeService extends Service {
       return `HTTP ${error.jqXHR.status}`;
     }
     return error?.message || error?.name || String(error);
-  }
-
-  /**
-   * Theme facade — delegates to `wireframeTheme`. The theme that owns an outlet
-   * (where Publish writes its live field) plus the badge/gate metadata.
-   *
-   * @param {string} outletName
-   * @returns {{themeId: (number|null), themeName: (string|null), isGit: boolean, stackIndex: (number|undefined), layer: string}}
-   */
-  outletOwner(outletName) {
-    return this.wireframeTheme.outletOwner(outletName);
-  }
-
-  /**
-   * Theme facade — delegates to `wireframeTheme`. The edited outlets grouped by
-   * owning theme — the publish plan.
-   *
-   * @returns {Array<{themeId: (number|null), themeName: (string|null), isGit: boolean, isSystem: boolean, publishable: boolean, outlets: Array<string>}>}
-   */
-  get publishTargets() {
-    return this.wireframeTheme.publishTargets;
-  }
-
-  /**
-   * Theme facade — delegates to `wireframeTheme`. The theme this session would
-   * publish to before anything is edited.
-   *
-   * @returns {{themeId: number, themeName: (string|null), isGit: boolean, isSystem: boolean, publishable: boolean}|null}
-   */
-  get activeThemeTarget() {
-    return this.wireframeTheme.activeThemeTarget;
   }
 
   /**
@@ -1696,7 +1634,7 @@ export default class WireframeService extends Service {
 
   /**
    * When the bound theme can't be published to directly, look up its companion
-   * component and re-point `activeThemeId` to it — so the editor targets the
+   * component and re-point `wireframeTheme.activeThemeId` to it — so the editor targets the
    * publishable companion the user already set up instead of the unpublishable
    * parent. A no-op (and clears the resolving flag) when the theme is already
    * publishable or has no companion. Generation-guarded so a late lookup never
@@ -1706,13 +1644,13 @@ export default class WireframeService extends Service {
    * @returns {Promise<void>}
    */
   async #resolveCompanionTarget(generation) {
-    const target = this.activeThemeTarget;
+    const target = this.wireframeTheme.activeThemeTarget;
     if (!target || target.publishable) {
       this.publishTargetResolving = false;
       return;
     }
     const companionId = await this.wireframeDrafts.companionId(
-      this.activeThemeId
+      this.wireframeTheme.activeThemeId
     );
     if (generation !== this.#enterGeneration || !this.wireframeSession.active) {
       return;
@@ -1744,7 +1682,7 @@ export default class WireframeService extends Service {
     const themeIds = [
       ...new Set(
         this.editableOutlets
-          .map((name) => this.outletOwner(name).themeId)
+          .map((name) => this.wireframeTheme.outletOwner(name).themeId)
           .filter((id) => id != null)
       ),
     ];

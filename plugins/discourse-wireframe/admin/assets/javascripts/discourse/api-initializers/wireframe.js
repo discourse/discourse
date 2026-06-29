@@ -165,7 +165,10 @@ function installVeThemeAutoEnter(api, editor) {
     if (themeId == null) {
       return;
     }
-    if (editor.wireframeSession.active && editor.activeThemeId === themeId) {
+    if (
+      editor.wireframeSession.active &&
+      editor.wireframeTheme.activeThemeId === themeId
+    ) {
       return;
     }
     editor.enter({ themeId });
