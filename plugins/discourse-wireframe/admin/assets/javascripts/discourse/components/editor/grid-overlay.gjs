@@ -149,6 +149,7 @@ export default class GridOverlay extends Component {
   @service wireframeDragOverlay;
   @service wireframeGridManipulator;
   @service wireframeImageUpload;
+  @service wireframeRevision;
   @service blocks;
   @service dragAndDrop;
 
@@ -303,11 +304,11 @@ export default class GridOverlay extends Component {
   }
 
   get gridEntry() {
-    // Open a tracked dep on structuralVersion so re-renders fire on
+    // Open a tracked dep on wireframeRevision.version so re-renders fire on
     // every layout mutation (slot insertions / removals / placement
     // changes).
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     return this.wireframe.layoutQuery.findEntryAndOutletSync(this.args.gridKey)
       ?.entry;
   }
@@ -317,7 +318,7 @@ export default class GridOverlay extends Component {
    * what the children occupy (core's `gridDimensions`), so the overlay's
    * empty-cell math and resize handles always agree with the rendered
    * grid rather than a bare default. Reads `gridEntry` for its
-   * `structuralVersion` dependency.
+   * `wireframeRevision.version` dependency.
    */
   get columns() {
     const entry = this.gridEntry;

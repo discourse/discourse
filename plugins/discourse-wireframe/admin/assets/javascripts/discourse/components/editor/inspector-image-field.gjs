@@ -48,6 +48,7 @@ const ASPECT_RATIO_EPSILON = 0.02;
 export default class InspectorImageField extends Component {
   @service wireframe;
   @service wireframeImageUpload;
+  @service wireframeRevision;
 
   /**
    * URL-tab drafts per variant. Keep the field populated while the
@@ -116,14 +117,14 @@ export default class InspectorImageField extends Component {
    * Live image-arg value off of `entry.args`. Reading via the
    * trackedObject opens a tracked dep, so any mutation — inspector
    * commit, paste, drop, replace menu — re-renders this field. Also
-   * touches `structuralVersion` so the entry lookup itself
+   * touches `wireframeRevision.version` so the entry lookup itself
    * re-evaluates after layout mutations (insert / move / replace).
    *
    * @returns {ImageValue|null}
    */
   get liveValue() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const key = this.blockKey;
     if (!key) {
       return null;

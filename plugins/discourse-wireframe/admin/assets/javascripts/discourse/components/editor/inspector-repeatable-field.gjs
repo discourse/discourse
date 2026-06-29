@@ -26,6 +26,7 @@ import { schemaToFields } from "../../lib/schema-to-fields";
  */
 export default class InspectorRepeatableField extends Component {
   @service wireframe;
+  @service wireframeRevision;
 
   /** Draft text for the JSON import box; committed on demand. */
   @tracked importDraft = "";
@@ -59,13 +60,13 @@ export default class InspectorRepeatableField extends Component {
 
   /**
    * Live array value off `entry.args`. Reading through the trackedObject (and
-   * touching `structuralVersion`) re-renders this control on any mutation.
+   * touching `wireframeRevision.version`) re-renders this control on any mutation.
    *
    * @returns {Array<Object>}
    */
   get items() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const key = this.blockKey;
     if (!key) {
       return [];

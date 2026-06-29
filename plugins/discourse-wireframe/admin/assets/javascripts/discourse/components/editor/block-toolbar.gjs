@@ -72,6 +72,7 @@ export default class BlockToolbar extends Component {
   @service wireframeBlockMutations;
   @service wireframeForceExpand;
   @service wireframeInlineEdit;
+  @service wireframeRevision;
 
   /**
    * Working value of the URL input while a field-editor slot is
@@ -145,7 +146,7 @@ export default class BlockToolbar extends Component {
    */
   get canForceExpand() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const located = this.wireframe.layoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     );
@@ -252,7 +253,7 @@ export default class BlockToolbar extends Component {
    */
   get canDetach() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     return this.wireframe.layoutQuery.isComposedComposite(this.args.blockKey);
   }
 

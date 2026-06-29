@@ -62,6 +62,7 @@ function valuesEqual(a, b) {
 export default class InspectorRichTextField extends Component {
   @service wireframe;
   @service wireframeInlineEdit;
+  @service wireframeRevision;
 
   @tracked linkMode = false;
   @tracked linkValue = "";
@@ -111,7 +112,7 @@ export default class InspectorRichTextField extends Component {
    * The value to seed (and re-seed) the editor from. Prefers the LIVE block-arg
    * value off the entry's tracked args, so an external edit — the canvas inline
    * editor committing the same arg, a paste, an undo — flows back into this
-   * editor; reading the property opens a tracked dep, and `structuralVersion`
+   * editor; reading the property opens a tracked dep, and `wireframeRevision.version`
    * covers the entry being replaced under the selection. Falls back to the
    * FormKit draft for non-block-arg fields (container args like tab labels,
    * whose value lives outside `args`), which keep their selection-time value.
@@ -120,7 +121,7 @@ export default class InspectorRichTextField extends Component {
    */
   get liveValue() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const data = this.wireframe.selectedBlockData;
     const name = this.args.custom?.name;
     if (name && data?.metadata?.args && name in data.metadata.args) {

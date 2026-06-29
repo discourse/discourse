@@ -3176,9 +3176,10 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     innerHooks.beforeEach(function () {
       // The simulation slot lives in its own service (editor-session-state that
       // survives without an active session); we still test from a clean state.
-      // `this.editor` is looked up in the outer beforeEach, which runs the
-      // kernel constructor that registers the structuralVersion bump handler.
+      // The simulation service bumps the revision signal directly on a change,
+      // so consumers re-render — assert that through the revision service.
       this.sim = getOwner(this).lookup("service:wireframe-simulation");
+      this.revision = getOwner(this).lookup("service:wireframe-revision");
     });
 
     innerHooks.afterEach(function () {
@@ -3233,12 +3234,12 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.strictEqual(this.sim.value, null);
     });
 
-    test("a sim change bumps the kernel's structuralVersion (re-renders consumers)", function (assert) {
-      const before = this.editor.structuralVersion;
+    test("a sim change bumps the revision signal (re-renders consumers)", function (assert) {
+      const before = this.revision.version;
       this.sim.setUser({ trust_level: 2 });
       assert.true(
-        this.editor.structuralVersion > before,
-        "the revision bump propagates through the facade"
+        this.revision.version > before,
+        "the simulation change bumps the revision signal"
       );
     });
   });

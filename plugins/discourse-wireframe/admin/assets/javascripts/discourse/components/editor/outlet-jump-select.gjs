@@ -21,18 +21,18 @@ import { walkAllOutlets } from "../../lib/walk-layout";
  */
 export default class OutletJumpSelect extends Component {
   @service blocks;
-  @service wireframe;
+  @service wireframeRevision;
 
   /**
    * Async walk wrapped in `TrackedAsyncData` so the options list
    * recomputes purely from tracked deps — no `didUpdate` / refresh
-   * round-trip. Re-runs on `structuralVersion` bumps and (via the
+   * round-trip. Re-runs on `wireframeRevision.version` bumps and (via the
    * sync stamp-touch prefix inside `walkAllOutlets`) on any per-entry
    * soft-failure stamp change.
    */
   @cached
   get walkData() {
-    void this.wireframe.structuralVersion;
+    void this.wireframeRevision.version;
     return new TrackedAsyncData(walkAllOutlets({ blocksService: this.blocks }));
   }
 

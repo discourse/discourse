@@ -131,7 +131,7 @@ function computeImageResize({
  * @property {(dims: {width: number, height: number}) => void} onCommit
  */
 export default class ImageResizeOverlay extends Component {
-  @service wireframe;
+  @service wireframeRevision;
 
   /**
    * The marker's rect relative to the chrome's outer div, in CSS pixels. `null`
@@ -199,10 +199,10 @@ export default class ImageResizeOverlay extends Component {
    */
   @action
   measure() {
-    // structuralVersion is bumped on layout mutations; touching it opens a
+    // wireframeRevision.version is bumped on layout mutations; touching it opens a
     // tracked dep so this getter re-evaluates on those too.
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const marker = this.args.getMarkerEl?.();
     const chrome = this.args.getChromeEl?.();
     if (!marker || !chrome) {

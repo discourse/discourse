@@ -77,7 +77,6 @@ export default class WireframeService extends Service {
   @service wireframeInlineEdit;
   @service wireframeLayoutQuery;
   @service wireframePersistence;
-  @service wireframeRevision;
   @service wireframeSelection;
   @service wireframeSession;
   @service wireframeTheme;
@@ -272,18 +271,6 @@ export default class WireframeService extends Service {
     return registered.filter(
       (name) => this.blocks.hasLayout(name) || mounted.has(name)
     );
-  }
-
-  /**
-   * The resolved-layout revision beacon. Bumped on every structural mutation
-   * (and on a simulation toggle) so consumers reading it re-run on any change.
-   * Delegates to the revision service; re-exposed here so the components and
-   * internal getters that read `structuralVersion` need not inject it directly.
-   *
-   * @returns {number}
-   */
-  get structuralVersion() {
-    return this.wireframeRevision.version;
   }
 
   /**

@@ -44,6 +44,7 @@ export default class OutlinePanel extends Component {
   @service wireframe;
   @service wireframeBlockMutations;
   @service wireframeDragSession;
+  @service wireframeRevision;
   @service wireframeSession;
 
   /** "tree" — flat per-block view (default); "outlets" — per-outlet summary. */
@@ -118,7 +119,7 @@ export default class OutlinePanel extends Component {
    * a `didUpdate`-driven `refresh()`. Recomputes when:
    *
    *   - `wireframeSession.active` flips (editor opens / closes)
-   *   - `structuralVersion` bumps (structural mutation lands; the layer
+   *   - `wireframeRevision.version` bumps (structural mutation lands; the layer
    *     is republished and validation re-runs against the fresh entries)
    *   - any entry's soft-failure stamp changes — `walkAllOutlets`'s sync
    *     prefix touches `__failureType` / `__failureReason` on every
@@ -134,7 +135,7 @@ export default class OutlinePanel extends Component {
   @cached
   get outletsData() {
     void this.wireframeSession.active;
-    void this.wireframe.structuralVersion;
+    void this.wireframeRevision.version;
     return new TrackedAsyncData(
       walkAllOutlets({
         blocksService: this.blocks,

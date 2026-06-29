@@ -100,6 +100,7 @@ export default class BlockChrome extends Component {
   @service wireframeImageUpload;
   @service wireframeInlineEdit;
   @service wireframeLinkEdit;
+  @service wireframeRevision;
   @service wireframeSession;
 
   /**
@@ -159,13 +160,13 @@ export default class BlockChrome extends Component {
    * keyed `"row,col"`. Captured at the start of a span-resize so the gesture
    * can clamp a growing edge at the first occupied neighbour and never commit
    * an overlapping placement. Reads through the service (opens a tracked dep
-   * on `structuralVersion`) so it reflects the live layout.
+   * on `wireframeRevision.version`) so it reflects the live layout.
    *
    * @returns {Set<string>}
    */
   getResizeOccupied = () => {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const grid = this.wireframe.layoutQuery.findEntryParent(this.args.blockKey);
     if (!grid) {
       return new Set();
@@ -300,7 +301,7 @@ export default class BlockChrome extends Component {
   /**
    * Live `containerArgs.grid` for this block, or `null` when the block
    * doesn't sit in a grid. Reads through the wireframe service
-   * (opens a tracked dep on `structuralVersion`) so placement commits
+   * (opens a tracked dep on `wireframeRevision.version`) so placement commits
    * trigger re-evaluation; the curried `@blockArgs` snapshot taken at
    * chrome-curry time wouldn't pick up the change.
    *
@@ -308,7 +309,7 @@ export default class BlockChrome extends Component {
    */
   get gridPlacement() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
@@ -349,7 +350,7 @@ export default class BlockChrome extends Component {
    * Accepts the legacy `"free-grid"` mode value as an alias for
    * `"grid"` so existing saved layouts keep working.
    *
-   * Opens a tracked dep on `structuralVersion` so this re-evaluates
+   * Opens a tracked dep on `wireframeRevision.version` so this re-evaluates
    * every time the layout changes.
    *
    * @returns {boolean}
@@ -359,7 +360,7 @@ export default class BlockChrome extends Component {
       return false;
     }
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
@@ -411,7 +412,7 @@ export default class BlockChrome extends Component {
       return "stack";
     }
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
@@ -467,7 +468,7 @@ export default class BlockChrome extends Component {
    */
   get slotGridColumns() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const grid = this.wireframe.layoutQuery.findEntryParent(this.args.blockKey);
     return gridDimensions(
       {
@@ -481,7 +482,7 @@ export default class BlockChrome extends Component {
   /** @returns {number} */
   get slotGridRows() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const grid = this.wireframe.layoutQuery.findEntryParent(this.args.blockKey);
     return gridDimensions(
       {
@@ -637,7 +638,7 @@ export default class BlockChrome extends Component {
    */
   get parentLayoutAxis() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const parent = this.wireframe.layoutQuery.findEntryParent(
       this.args.blockKey
     );
@@ -685,10 +686,10 @@ export default class BlockChrome extends Component {
     if (this.isGridLayout) {
       return false;
     }
-    // Open a tracked dep on structuralVersion so this re-evaluates
+    // Open a tracked dep on wireframeRevision.version so this re-evaluates
     // after every layout mutation (insert / remove / move).
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
@@ -718,7 +719,7 @@ export default class BlockChrome extends Component {
    */
   get imageArgEntries() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
@@ -837,7 +838,7 @@ export default class BlockChrome extends Component {
       return false;
     }
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const rect = this.chromeEl.getBoundingClientRect();
     return (
       rect.width > arg.value.width + 1 || rect.height > arg.value.height + 1
@@ -900,7 +901,7 @@ export default class BlockChrome extends Component {
    */
   get #parentContext() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const parent = this.wireframe.layoutQuery.findEntryParent(
       this.args.blockKey
     );
@@ -1035,10 +1036,10 @@ export default class BlockChrome extends Component {
     if (!this.isOutletRoot) {
       return false;
     }
-    // Open a tracked dep on structuralVersion so this re-evaluates after every
+    // Open a tracked dep on wireframeRevision.version so this re-evaluates after every
     // layout mutation (the first dropped block flips it non-empty).
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframe.structuralVersion;
+    const _v = this.wireframeRevision.version;
     const entry = this.wireframe.layoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
@@ -1907,7 +1908,7 @@ export default class BlockChrome extends Component {
             Re-scans on each structural edit. }}
           {{proxyDragSources
             outletName=@outletName
-            version=this.wireframe.structuralVersion
+            version=this.wireframeRevision.version
           }}
           {{! Chrome-level external file drop. One target per chrome handles
             both paths: filling a passive background image arg, and creating a

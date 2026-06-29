@@ -70,6 +70,7 @@ export default class ImageArgOverlay extends Component {
   @service wireframe;
   @service wireframeDragOverlay;
   @service wireframeImageUpload;
+  @service wireframeRevision;
 
   /**
    * Marker rect (relative to the chrome) used to position the
@@ -311,7 +312,7 @@ export default class ImageArgOverlay extends Component {
   get remeasureSignal() {
     const selected =
       this.wireframe.selectedBlockKey === this.args.blockKey ? "1" : "0";
-    return `${selected}:${this.wireframe.structuralVersion}`;
+    return `${selected}:${this.wireframeRevision.version}`;
   }
 
   /**
