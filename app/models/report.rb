@@ -3,7 +3,7 @@
 class Report
   # Change this line each time report format change
   # and you want to ensure cache is reset
-  SCHEMA_VERSION = 4
+  SCHEMA_VERSION = 5
 
   FILTERS = %i[
     name
