@@ -188,7 +188,209 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     }
   end
 
+  def gemini_rate_limit_body(retry_delay: "45s")
+    {
+      error: {
+        code: 429,
+        message: "quota exceeded",
+        status: "RESOURCE_EXHAUSTED",
+        details: [{ "@type": "type.googleapis.com/google.rpc.RetryInfo", retryDelay: retry_delay }],
+      },
+    }.to_json
+  end
+
   before { enable_current_plugin }
+
+  it "uses Gemini RetryInfo retryDelay from rate limit response bodies" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(45, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    request =
+      stub_request(:post, url).to_return(
+        { status: 429, body: gemini_rate_limit_body(retry_delay: "45s") },
+        { status: 200, body: gemini_mock.response("ok").to_json },
+      )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+    expect(request).to have_been_requested.times(2)
+    expect(AiApiAuditLog.last.request_attempts).to eq(
+      [{ "status" => 429, "delay_ms" => 0 }, { "status" => 200, "delay_ms" => 45_000 }],
+    )
+  end
+
+  it "caps Gemini RetryInfo retryDelay from rate limit response bodies" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(60, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    stub_request(:post, url).to_return(
+      { status: 429, body: gemini_rate_limit_body(retry_delay: "120s") },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
+
+  it "ignores oversized Gemini rate limit response bodies when extracting retry delays" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(2, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    stub_request(:post, url).to_return(
+      { status: 429, body: gemini_rate_limit_body(retry_delay: "45s") + (" " * 10_000) },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
+
+  it "uses the larger retry delay from Gemini RetryInfo and Retry-After" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(10, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    stub_request(:post, url).to_return(
+      {
+        status: 429,
+        body: gemini_rate_limit_body(retry_delay: "10s"),
+        headers: {
+          "Retry-After" => "5",
+        },
+      },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
+
+  it "uses Gemini RetryInfo retryDelay for transient errors" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(12, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    stub_request(:post, url).to_return(
+      { status: 503, body: gemini_rate_limit_body(retry_delay: "12s") },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
+
+  it "supports fractional Gemini RetryInfo retryDelay values" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(2.5, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    stub_request(:post, url).to_return(
+      { status: 429, body: gemini_rate_limit_body(retry_delay: "2.5s") },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
+
+  it "ignores non-positive Gemini RetryInfo retryDelay values" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(2, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    stub_request(:post, url).to_return(
+      { status: 429, body: gemini_rate_limit_body(retry_delay: "0s") },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
+
+  it "finds Gemini RetryInfo among other error details" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(7, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    body = {
+      error: {
+        code: 429,
+        details: [
+          { "@type": "type.googleapis.com/google.rpc.Help" },
+          { "@type": "type.googleapis.com/google.rpc.RetryInfo", retryDelay: "7s" },
+        ],
+      },
+    }.to_json
+    stub_request(:post, url).to_return(
+      { status: 429, body: body },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
+
+  it "ignores invalid Gemini rate limit response bodies when extracting retry delays" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(2, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    stub_request(:post, url).to_return(
+      { status: 429, body: "{" },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
 
   it "correctly configures thinking when enabled" do
     model.update!(provider_params: { enable_thinking: "true", thinking_tokens: "10000" })

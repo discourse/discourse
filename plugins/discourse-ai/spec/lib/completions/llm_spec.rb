@@ -229,7 +229,14 @@ RSpec.describe DiscourseAi::Completions::Llm do
         expect(result).to eq("ok")
         expect(request).to have_been_requested.times(4)
         expect(AiApiAuditLog.last.response_status).to eq(200)
-        expect(AiApiAuditLog.last.retry_attempt_statuses).to eq([429, 429, 429])
+        expect(AiApiAuditLog.last.request_attempts).to eq(
+          [
+            { "status" => 429, "delay_ms" => 0 },
+            { "status" => 429, "delay_ms" => 2000 },
+            { "status" => 429, "delay_ms" => 8000 },
+            { "status" => 200, "delay_ms" => 16_000 },
+          ],
+        )
       end
 
       it "does not retry non-retryable client errors" do
@@ -241,7 +248,7 @@ RSpec.describe DiscourseAi::Completions::Llm do
         )
         expect(request).to have_been_requested.once
         expect(AiApiAuditLog.last.response_status).to eq(401)
-        expect(AiApiAuditLog.last.retry_attempt_statuses).to eq([])
+        expect(AiApiAuditLog.last.request_attempts).to be_nil
       end
 
       it "includes retry waits in audit duration" do
@@ -264,6 +271,9 @@ RSpec.describe DiscourseAi::Completions::Llm do
         )
 
         expect(llm.generate("Hello", user:)).to eq("ok")
+        expect(AiApiAuditLog.last.request_attempts).to eq(
+          [{ "status" => 429, "delay_ms" => 0 }, { "status" => 200, "delay_ms" => 2000 }],
+        )
         expect(AiApiAuditLog.last.duration_msecs).to be >= 2000
       end
 
@@ -329,7 +339,14 @@ RSpec.describe DiscourseAi::Completions::Llm do
         )
         expect(request).to have_been_requested.times(4)
         expect(AiApiAuditLog.last.response_status).to eq(429)
-        expect(AiApiAuditLog.last.retry_attempt_statuses).to eq([429, 429, 429])
+        expect(AiApiAuditLog.last.request_attempts).to eq(
+          [
+            { "status" => 429, "delay_ms" => 0 },
+            { "status" => 429, "delay_ms" => 2000 },
+            { "status" => 429, "delay_ms" => 8000 },
+            { "status" => 429, "delay_ms" => 16_000 },
+          ],
+        )
       end
 
       it "retries streaming responses after rate limits" do
@@ -344,6 +361,9 @@ RSpec.describe DiscourseAi::Completions::Llm do
 
         expect(result).to eq("Hi")
         expect(request).to have_been_requested.times(2)
+        expect(AiApiAuditLog.last.request_attempts).to eq(
+          [{ "status" => 429, "delay_ms" => 0 }, { "status" => 200, "delay_ms" => 2000 }],
+        )
       end
 
       it "does not retry streaming responses after output has started" do
@@ -367,7 +387,7 @@ RSpec.describe DiscourseAi::Completions::Llm do
         expect(result).to eq("partial")
         expect(request).to have_been_requested.once
         expect(AiApiAuditLog.last.response_status).to eq(200)
-        expect(AiApiAuditLog.last.retry_attempt_statuses).to eq([])
+        expect(AiApiAuditLog.last.request_attempts).to be_nil
       end
 
       it "retries streaming structured output after rate limits" do
@@ -397,7 +417,9 @@ RSpec.describe DiscourseAi::Completions::Llm do
         expect(result).to be_a(DiscourseAi::Completions::StructuredOutput)
         expect(result.to_s).to eq('{"message":"ok"}')
         expect(request).to have_been_requested.times(2)
-        expect(AiApiAuditLog.last.retry_attempt_statuses).to eq([429])
+        expect(AiApiAuditLog.last.request_attempts).to eq(
+          [{ "status" => 429, "delay_ms" => 0 }, { "status" => 200, "delay_ms" => 2000 }],
+        )
       end
 
       it "returns structured output after rate limits" do
@@ -439,7 +461,13 @@ RSpec.describe DiscourseAi::Completions::Llm do
 
         expect(llm.generate("Hello", user:)).to eq("ok")
         expect(request).to have_been_requested.times(3)
-        expect(AiApiAuditLog.last.retry_attempt_statuses).to eq([0, 0])
+        expect(AiApiAuditLog.last.request_attempts).to eq(
+          [
+            { "status" => 0, "delay_ms" => 0 },
+            { "status" => 0, "delay_ms" => 500 },
+            { "status" => 200, "delay_ms" => 1000 },
+          ],
+        )
       end
 
       it "raises network errors after two retries" do
@@ -450,7 +478,13 @@ RSpec.describe DiscourseAi::Completions::Llm do
         )
         expect(request).to have_been_requested.times(3)
         expect(AiApiAuditLog.last.response_status).to be_nil
-        expect(AiApiAuditLog.last.retry_attempt_statuses).to eq([0, 0])
+        expect(AiApiAuditLog.last.request_attempts).to eq(
+          [
+            { "status" => 0, "delay_ms" => 0 },
+            { "status" => 0, "delay_ms" => 500 },
+            { "status" => 0, "delay_ms" => 1000 },
+          ],
+        )
       end
 
       it "retries request timeouts twice" do
@@ -463,6 +497,13 @@ RSpec.describe DiscourseAi::Completions::Llm do
 
         expect(llm.generate("Hello", user:)).to eq("ok")
         expect(request).to have_been_requested.times(3)
+        expect(AiApiAuditLog.last.request_attempts).to eq(
+          [
+            { "status" => 408, "delay_ms" => 0 },
+            { "status" => 408, "delay_ms" => 500 },
+            { "status" => 200, "delay_ms" => 1000 },
+          ],
+        )
       end
 
       it "retries lock timeouts twice" do
@@ -513,9 +554,12 @@ RSpec.describe DiscourseAi::Completions::Llm do
         )
 
         expect(llm.generate("Hello", user:)).to eq("ok")
+        expect(AiApiAuditLog.last.request_attempts).to eq(
+          [{ "status" => 503, "delay_ms" => 0 }, { "status" => 200, "delay_ms" => 5000 }],
+        )
       end
 
-      it "tracks mixed retry attempt statuses" do
+      it "tracks mixed request attempts" do
         request =
           WebMock.stub_request(:post, model.url).to_return(
             { status: 503, body: "unavailable" },
@@ -525,7 +569,13 @@ RSpec.describe DiscourseAi::Completions::Llm do
 
         expect(llm.generate("Hello", user:)).to eq("ok")
         expect(request).to have_been_requested.times(3)
-        expect(AiApiAuditLog.last.retry_attempt_statuses).to eq([503, 429])
+        expect(AiApiAuditLog.last.request_attempts).to eq(
+          [
+            { "status" => 503, "delay_ms" => 0 },
+            { "status" => 429, "delay_ms" => 500 },
+            { "status" => 200, "delay_ms" => 2000 },
+          ],
+        )
       end
 
       it "raises server errors after two retries" do
@@ -536,24 +586,41 @@ RSpec.describe DiscourseAi::Completions::Llm do
         )
         expect(request).to have_been_requested.times(3)
         expect(AiApiAuditLog.last.response_status).to eq(503)
-        expect(AiApiAuditLog.last.retry_attempt_statuses).to eq([503, 503])
+        expect(AiApiAuditLog.last.request_attempts).to eq(
+          [
+            { "status" => 503, "delay_ms" => 0 },
+            { "status" => 503, "delay_ms" => 500 },
+            { "status" => 503, "delay_ms" => 1000 },
+          ],
+        )
       end
     end
 
     context "when sleeping before retries" do
+      it "sleeps normally without a cancel manager" do
+        endpoint = DiscourseAi::Completions::Endpoints::Base.new(model)
+        endpoint.expects(:sleep).with(3).once
+
+        endpoint.send(:sleep_before_retry, 3, nil)
+      end
+
       it "stops when cancelled" do
         cancel_manager = DiscourseAi::Completions::CancelManager.new
         endpoint = DiscourseAi::Completions::Endpoints::Base.new(model)
-        sleeps = []
+        waiting = Queue.new
 
-        endpoint.define_singleton_method(:sleep) do |interval|
-          sleeps << interval
-          cancel_manager.cancel!
-        end
+        sleep_thread =
+          Thread.new do
+            waiting << true
+            endpoint.send(:sleep_before_retry, 60, cancel_manager)
+          end
 
-        endpoint.send(:sleep_before_retry, 60, cancel_manager)
+        waiting.pop
+        cancel_manager.cancel!
 
-        expect(sleeps).to eq([0.5])
+        expect(sleep_thread.join(1)).to eq(sleep_thread)
+      ensure
+        sleep_thread&.kill
       end
     end
 

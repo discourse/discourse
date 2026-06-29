@@ -518,7 +518,7 @@ CREATE TABLE public.ai_api_audit_logs (
     cache_read_tokens integer,
     llm_id bigint,
     response_status integer,
-    retry_attempt_statuses integer[] DEFAULT '{}'::integer[] NOT NULL
+    request_attempts jsonb
 );
 
 
@@ -22273,7 +22273,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20260627004508'),
+('20260629022807'),
+('20260629022603'),
 ('20260626055145'),
 ('20260624140945'),
 ('20260623090824'),

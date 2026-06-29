@@ -158,6 +158,26 @@ module DiscourseAi
           Net::HTTP::Post.new(model_uri, headers).tap { |r| r.body = payload }
         end
 
+        def retry_delay_from_response_body(body)
+          return if body.blank? || body.bytesize >= 10_000
+
+          retry_info =
+            Array(JSON.parse(body).dig("error", "details")).find do |detail|
+              detail["@type"] == "type.googleapis.com/google.rpc.RetryInfo"
+            end
+
+          retry_delay = retry_info&.[]("retryDelay")
+          match = retry_delay.to_s.match(/\A(?<seconds>\d+(?:\.\d+)?)s\z/)
+          return if !match
+
+          delay = match[:seconds].to_f
+          return if delay <= 0
+
+          [delay, MAX_RETRY_AFTER_SECONDS].min
+        rescue StandardError
+          nil
+        end
+
         def extract_completion_from(response_raw)
           parsed =
             if @streaming_mode

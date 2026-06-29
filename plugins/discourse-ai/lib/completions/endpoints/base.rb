@@ -15,7 +15,7 @@ module DiscourseAi
         RETRY_JITTER_MAX_SECONDS = 1.0
         TRANSIENT_ERROR_RETRY_DELAYS = [0.5, 1.0]
         MAX_RETRY_AFTER_SECONDS = 60
-        # Stored in AiApiAuditLog#retry_attempt_statuses for retried network failures,
+        # Stored in AiApiAuditLog#request_attempts for retried network failures,
         # which do not have an HTTP status code. 0 is intentionally outside the HTTP range.
         NETWORK_ERROR_RETRY_STATUS = 0
         RETRIABLE_NETWORK_ERRORS = [
@@ -247,7 +247,20 @@ module DiscourseAi
           retry_count_429 = 0
           # 408/409/5xx and network errors share one transient budget.
           retry_count_transient = 0
-          retry_attempt_statuses = []
+          request_attempts = []
+          retried = false
+          next_attempt_delay_ms = 0
+          @forced_json_through_prefill = false
+          request_body = prepare_payload(prompt, model_params, dialect).to_json
+          log =
+            start_completion_log(
+              request_body: request_body,
+              dialect: dialect,
+              prompt: prompt,
+              user: user,
+              feature_name: feature_name,
+              feature_context: feature_context,
+            )
 
           loop do
             call_status = :error
@@ -256,26 +269,16 @@ module DiscourseAi
 
             # Needed to response token calculations. Cannot rely on response_data due to function buffering.
             partials_raw = +""
-            @forced_json_through_prefill = false
             structured_output = build_structured_output(model_params)
-            request_body = prepare_payload(prompt, model_params, dialect).to_json
 
             request = prepare_request(request_body)
             retrying = false
             retry_delay = nil
             retry_status = nil
+            current_attempt_delay_ms = next_attempt_delay_ms
+            next_attempt_delay_ms = 0
             response_output_started = false
             cancel_manager_callback = nil
-
-            log =
-              start_completion_log(
-                request_body: request_body,
-                dialect: dialect,
-                prompt: prompt,
-                user: user,
-                feature_name: feature_name,
-                feature_context: feature_context,
-              )
 
             if cancelled || cancel_manager&.cancelled?
               call_status = :cancelled
@@ -391,7 +394,9 @@ module DiscourseAi
               retrying = !retry_delay.nil?
 
               if retrying
-                retry_attempt_statuses << retry_status
+                request_attempts << request_attempt(retry_status, current_attempt_delay_ms)
+                retried = true
+                next_attempt_delay_ms = retry_delay_to_ms(retry_delay)
                 retry_count_transient += 1
                 sleep_before_retry(retry_delay, cancel_manager) if retry_delay.positive?
                 next
@@ -400,7 +405,11 @@ module DiscourseAi
               raise CompletionFailed, e.message
             rescue CompletionFailed
               if retrying && !cancelled
-                retry_attempt_statuses << retry_status if retry_status
+                if retry_status
+                  request_attempts << request_attempt(retry_status, current_attempt_delay_ms)
+                  retried = true
+                  next_attempt_delay_ms = retry_delay_to_ms(retry_delay)
+                end
 
                 if retry_status == 429
                   retry_count_429 += 1
@@ -417,11 +426,21 @@ module DiscourseAi
               should_log = log && call_status != :cancelled && !retrying
 
               if should_log
+                if retried
+                  final_attempt_status = log.response_status || retry_status
+                  if final_attempt_status
+                    request_attempts << request_attempt(
+                      final_attempt_status,
+                      current_attempt_delay_ms,
+                    )
+                  end
+                end
+
                 persist_completion_log!(
                   log,
                   response_raw: response_raw,
                   partials_raw: partials_raw,
-                  retry_attempt_statuses: retry_attempt_statuses,
+                  request_attempts: request_attempts.presence,
                   call_status: call_status,
                   start_time: request_started_at,
                   feature_name: feature_name,
@@ -581,6 +600,16 @@ module DiscourseAi
           )
         end
 
+        # Populated only once retrying occurs. Each entry represents an issued request in
+        # the retried sequence, and delay_ms is the planned wait before that request.
+        def request_attempt(status, delay_ms)
+          { "status" => status, "delay_ms" => delay_ms }
+        end
+
+        def retry_delay_to_ms(retry_delay)
+          (retry_delay.to_f * 1000).round
+        end
+
         def failed_response_retry_status_and_delay(
           response,
           response_raw,
@@ -719,7 +748,7 @@ module DiscourseAi
           log,
           response_raw:,
           partials_raw:,
-          retry_attempt_statuses:,
+          request_attempts:,
           call_status:,
           start_time:,
           feature_name:,
@@ -727,9 +756,7 @@ module DiscourseAi
           execution_context:
         )
           log.raw_response_payload = response_raw
-          if log.has_attribute?(:retry_attempt_statuses)
-            log.retry_attempt_statuses = retry_attempt_statuses
-          end
+          log.request_attempts = request_attempts if log.has_attribute?(:request_attempts)
           final_log_update(log)
           log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
           log.response_status ||= 200 if call_status == :success
@@ -836,7 +863,10 @@ module DiscourseAi
 
           if status == 429 && retry_count_429 < RATE_LIMIT_RETRY_DELAYS.length
             delay = RATE_LIMIT_RETRY_DELAYS[retry_count_429]
-            retry_after_delay = retry_after_delay(response["Retry-After"])
+            retry_after_delay = [
+              retry_after_delay(response["Retry-After"]),
+              retry_delay_from_response_body(response.body),
+            ].compact.max
 
             return [delay, retry_after_delay].compact.max + retry_jitter
           end
@@ -844,7 +874,10 @@ module DiscourseAi
           if transient_error_status?(status) &&
                retry_count_transient < TRANSIENT_ERROR_RETRY_DELAYS.length
             delay = TRANSIENT_ERROR_RETRY_DELAYS[retry_count_transient]
-            retry_after_delay = retry_after_delay(response["Retry-After"])
+            retry_after_delay = [
+              retry_after_delay(response["Retry-After"]),
+              retry_delay_from_response_body(response.body),
+            ].compact.max
 
             return [delay, retry_after_delay].compact.max + retry_jitter
           end
@@ -863,14 +896,10 @@ module DiscourseAi
         end
 
         def sleep_before_retry(delay, cancel_manager = nil)
-          remaining_delay = delay
-
-          while remaining_delay.positive?
-            break if cancel_manager&.cancelled?
-
-            interval = [remaining_delay, 0.5].min
-            sleep(interval)
-            remaining_delay -= interval
+          if cancel_manager
+            cancel_manager.wait_for_cancel(delay) if !cancel_manager.cancelled?
+          else
+            sleep(delay)
           end
         end
 
@@ -888,6 +917,10 @@ module DiscourseAi
 
           [delay, MAX_RETRY_AFTER_SECONDS].min
         rescue StandardError
+          nil
+        end
+
+        def retry_delay_from_response_body(_body)
           nil
         end
 
