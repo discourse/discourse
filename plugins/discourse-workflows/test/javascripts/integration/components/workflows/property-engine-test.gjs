@@ -1209,6 +1209,169 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.strictEqual(this.formApi.get("llm_model_id"), null);
   });
 
+  test("refreshes stale combo box option patches on render", async function (assert) {
+    this.setProperties({
+      configuration: {
+        agent_force_default_llm: true,
+        agent_id: 1,
+        agent_name: "Outdated Bot",
+        llm_model_id: 99,
+      },
+      formApi: null,
+      nodeType: "action:ai_agent",
+      nodeTypes: [
+        {
+          identifier: "action:ai_agent",
+          metadata: {
+            agents: [{ id: 1, name: "Support Bot", force_default_llm: false }],
+          },
+        },
+      ],
+      schema: {
+        agent_id: {
+          type: "integer",
+          required: true,
+          type_options: {
+            load_options_method: "agents",
+          },
+          no_data_expression: true,
+          ui: {
+            control: "combo_box",
+          },
+          control_options: {
+            name_property: "name",
+            none: "discourse_ai.discourse_workflows.ai_agent.select_agent",
+            resets: ["llm_model_id"],
+            set_from_option: {
+              agent_force_default_llm: "force_default_llm",
+              agent_name: "name",
+            },
+            value_property: "id",
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.false(
+      this.formApi.get("agent_force_default_llm"),
+      "stale derived boolean is refreshed from the selected option"
+    );
+    assert.strictEqual(
+      this.formApi.get("agent_name"),
+      "Support Bot",
+      "stale derived label is refreshed from the selected option"
+    );
+    assert.strictEqual(
+      this.formApi.get("llm_model_id"),
+      99,
+      "refreshing derived fields does not reset dependent fields"
+    );
+  });
+
+  test("clears combo box option patches when the selected option is cleared", async function (assert) {
+    this.setProperties({
+      configuration: {
+        agent_force_default_llm: true,
+        agent_id: 1,
+        agent_name: "Support Bot",
+        llm_model_id: 99,
+      },
+      formApi: null,
+      nodeType: "action:ai_agent",
+      nodeTypes: [
+        {
+          identifier: "action:ai_agent",
+          metadata: {
+            agents: [{ id: 1, name: "Support Bot", force_default_llm: true }],
+          },
+        },
+      ],
+      schema: {
+        agent_id: {
+          type: "integer",
+          required: false,
+          type_options: {
+            load_options_method: "agents",
+          },
+          no_data_expression: true,
+          ui: {
+            control: "combo_box",
+          },
+          control_options: {
+            name_property: "name",
+            none: "discourse_ai.discourse_workflows.ai_agent.select_agent",
+            resets: ["llm_model_id"],
+            set_from_option: {
+              agent_force_default_llm: "force_default_llm",
+              agent_name: "name",
+            },
+            value_property: "id",
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const selector = selectKit(".combo-box");
+
+    await selector.expand();
+    assert
+      .dom(".select-kit-row.none")
+      .exists("the selected agent can be cleared");
+
+    await selector.selectNoneRow();
+
+    assert.strictEqual(this.formApi.get("agent_id"), null);
+    assert.strictEqual(this.formApi.get("agent_force_default_llm"), "");
+    assert.strictEqual(this.formApi.get("agent_name"), "");
+    assert.strictEqual(this.formApi.get("llm_model_id"), null);
+  });
+
   test("renders combo box actions with the selected field value as a route model", async function (assert) {
     const router = this.owner.lookup("service:router");
     const transitionTo = sinon.stub(router, "transitionTo");
