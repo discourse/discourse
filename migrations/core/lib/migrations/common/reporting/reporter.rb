@@ -47,6 +47,10 @@ module Migrations
         raise NotImplementedError
       end
 
+      def report_concurrency(_id, _count)
+        raise NotImplementedError
+      end
+
       def report_progress(_id, _current, _skip_count, _warning_count, _error_count)
         raise NotImplementedError
       end
@@ -68,11 +72,19 @@ module Migrations
           @reporter.report_notice(@id, message)
         end
 
+        def report_concurrency(count)
+          @reporter.report_concurrency(@id, count)
+        end
+
+        def begin_progress(max_progress:)
+          @reporter.report_progress_begin(@id, max_progress)
+          Progress.new(@reporter, @id)
+        end
+
         # Yields a {Progress}. You may call its `update` from any thread. Pass
         # `max_progress: nil` when the total is not known.
         def with_progress(max_progress:)
-          @reporter.report_progress_begin(@id, max_progress)
-          yield Progress.new(@reporter, @id)
+          yield begin_progress(max_progress:)
         end
 
         # Ends the step. It runs from an `ensure`, so `$!` (the exception in

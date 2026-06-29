@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class TagGroupMemberships < Conversion::ProgressStep
+      class TagGroupMemberships < Conversion::Step
         source { reads_table "tag_group_memberships" }
 
         processor do

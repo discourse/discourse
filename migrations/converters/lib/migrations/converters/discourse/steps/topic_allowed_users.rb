@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class TopicAllowedUsers < Conversion::ProgressStep
+      class TopicAllowedUsers < Conversion::Step
         source { reads_table "topic_allowed_users", where: "user_id > 0" }
 
         processor do

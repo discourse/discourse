@@ -35,11 +35,7 @@ module Migrations
       private
 
       def new_database?
-        @db.query_single_splat(<<~SQL) == 0
-          SELECT COUNT(*)
-          FROM sqlite_schema
-          WHERE type = 'table' AND name = 'schema_migrations'
-        SQL
+        !@db.tables.include?("schema_migrations")
       end
 
       def find_performed_migrations
