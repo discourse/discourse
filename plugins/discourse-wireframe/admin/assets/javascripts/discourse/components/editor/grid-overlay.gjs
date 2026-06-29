@@ -145,12 +145,12 @@ function descriptorsEqual(a, b) {
  *  - `@outletName` — the outlet the layout lives in.
  */
 export default class GridOverlay extends Component {
-  @service wireframe;
   @service wireframeDragOverlay;
   @service wireframeGridManipulator;
   @service wireframeImageUpload;
   @service wireframeLayoutQuery;
   @service wireframeRevision;
+  @service wireframeSelection;
   @service blocks;
   @service dragAndDrop;
 
@@ -553,7 +553,7 @@ export default class GridOverlay extends Component {
    * @returns {?{column: number, row: number}}
    */
   get selectedEmptyCell() {
-    if (this.wireframe.selectedBlockKey !== this.args.gridKey) {
+    if (this.wireframeSelection.selectedBlockKey !== this.args.gridKey) {
       return null;
     }
     return this._selectedEmptyCell;
@@ -725,7 +725,7 @@ export default class GridOverlay extends Component {
    */
   @action
   selectGrid() {
-    this.wireframe.selectBlock({ key: this.args.gridKey });
+    this.wireframeSelection.selectBlock({ key: this.args.gridKey });
   }
 
   /**

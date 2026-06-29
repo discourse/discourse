@@ -28,6 +28,7 @@ export default class InspectorRepeatableField extends Component {
   @service wireframe;
   @service wireframeLayoutQuery;
   @service wireframeRevision;
+  @service wireframeSelection;
 
   /** Draft text for the JSON import box; committed on demand. */
   @tracked importDraft = "";
@@ -35,7 +36,7 @@ export default class InspectorRepeatableField extends Component {
 
   /** @returns {string|null} */
   get blockKey() {
-    return this.wireframe.selectedBlockKey;
+    return this.wireframeSelection.selectedBlockKey;
   }
 
   /** @returns {string} The arg name, carried on FormKit's field wrapper. */

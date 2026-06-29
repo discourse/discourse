@@ -26,17 +26,22 @@ import InspectorField from "./inspector-field";
  */
 export default class InspectorContainerArgsForm extends Component {
   @service wireframe;
+  @service wireframeSelection;
 
   get parentChildArgsSchema() {
-    return this.wireframe.selectedBlockData?.parentChildArgsSchema ?? null;
+    return (
+      this.wireframeSelection.selectedBlockData?.parentChildArgsSchema ?? null
+    );
   }
 
   get parentArgs() {
-    return this.wireframe.selectedBlockData?.parentArgsSnapshot ?? {};
+    return this.wireframeSelection.selectedBlockData?.parentArgsSnapshot ?? {};
   }
 
   get containerArgsSnapshot() {
-    return this.wireframe.selectedBlockData?.containerArgsSnapshot ?? {};
+    return (
+      this.wireframeSelection.selectedBlockData?.containerArgsSnapshot ?? {}
+    );
   }
 
   /**
@@ -47,7 +52,7 @@ export default class InspectorContainerArgsForm extends Component {
    * @returns {boolean}
    */
   get disabled() {
-    return this.wireframe.selectedBlockData?.isRegistered === false;
+    return this.wireframeSelection.selectedBlockData?.isRegistered === false;
   }
 
   /**

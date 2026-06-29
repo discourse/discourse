@@ -185,7 +185,10 @@ export default class WireframeService extends Service {
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
-    if (!this.wireframeSession.active || !this.selectedBlockKey) {
+    if (
+      !this.wireframeSession.active ||
+      !this.wireframeSelection.selectedBlockKey
+    ) {
       return;
     }
     if (this.isInsideAllowedScope(downTarget)) {
@@ -194,7 +197,7 @@ export default class WireframeService extends Service {
     if (this.isInsideAllowedScope(event.target)) {
       return;
     }
-    this.selectBlock(null);
+    this.wireframeSelection.selectBlock(null);
   };
 
   constructor() {
@@ -271,78 +274,6 @@ export default class WireframeService extends Service {
     return registered.filter(
       (name) => this.blocks.hasLayout(name) || mounted.has(name)
     );
-  }
-
-  /* Selection facade — the block-selection concern lives on
-   * `wireframeSelection`. These delegators keep every external consumer
-   * (panels, chrome, toolbar) and every kernel-internal reader unchanged
-   * while the state and commands moved out. The raw `selectedKeys` set is
-   * deliberately NOT re-exposed; consumers read `selectionCount` /
-   * `selectedKeysSnapshot` / `isBlockSelected` instead. */
-
-  /** @returns {string|null} */
-  get selectedBlockKey() {
-    return this.wireframeSelection.selectedBlockKey;
-  }
-
-  /** @returns {Object|null} */
-  get selectedBlockData() {
-    return this.wireframeSelection.selectedBlockData;
-  }
-
-  /** @returns {{failureType: string, failureReason: string}|null} */
-  get selectedBlockFailure() {
-    return this.wireframeSelection.selectedBlockFailure;
-  }
-
-  /** @returns {Object<string, Array<Object>>} */
-  get selectedBlockFieldErrors() {
-    return this.wireframeSelection.selectedBlockFieldErrors;
-  }
-
-  /** @returns {Array<Object>} */
-  get selectedBlockNonFieldErrors() {
-    return this.wireframeSelection.selectedBlockNonFieldErrors;
-  }
-
-  /** @returns {boolean} */
-  get selectedBlockHasErrors() {
-    return this.wireframeSelection.selectedBlockHasErrors;
-  }
-
-  /** @returns {boolean} */
-  get canMoveSelectedUp() {
-    return this.wireframeSelection.canMoveSelectedUp;
-  }
-
-  /** @returns {boolean} */
-  get canMoveSelectedDown() {
-    return this.wireframeSelection.canMoveSelectedDown;
-  }
-
-  /** @returns {Array<Object>} */
-  get selectedBlockAncestry() {
-    return this.wireframeSelection.selectedBlockAncestry;
-  }
-
-  /** @returns {Object|null} */
-  get selectedBlockRawEntry() {
-    return this.wireframeSelection.selectedBlockRawEntry;
-  }
-
-  /** @returns {Array|Object|null} */
-  get selectedBlockConditions() {
-    return this.wireframeSelection.selectedBlockConditions;
-  }
-
-  /** @returns {boolean} */
-  get hasMultiSelection() {
-    return this.wireframeSelection.hasMultiSelection;
-  }
-
-  /** @returns {number} */
-  get selectionCount() {
-    return this.wireframeSelection.selectionCount;
   }
 
   /* Edit-engine facade — the mutation / undo / dirty-tracking concern lives on
@@ -770,7 +701,7 @@ export default class WireframeService extends Service {
    */
   @action
   cutSelected() {
-    const key = this.selectedBlockKey;
+    const key = this.wireframeSelection.selectedBlockKey;
     return (
       this.wireframeClipboard.cutSelected() &&
       this.wireframeBlockMutations.removeBlock(key)
@@ -784,19 +715,6 @@ export default class WireframeService extends Service {
     } else {
       this.enter();
     }
-  }
-
-  /**
-   * Selection facade — delegates to `wireframeSelection`. The kernel's
-   * cross-concern effects (flush pending args, commit an in-flight in-session
-   * edit, reveal the selection into view) run as before/after hooks registered
-   * in `enter()`.
-   *
-   * @param {Object|null} data - `{ key, ... }` (rest hydrated from the layout).
-   * @param {{preserveMultiSelection?: boolean}} [options]
-   */
-  selectBlock(data, options) {
-    return this.wireframeSelection.selectBlock(data, options);
   }
 
   /**
@@ -825,59 +743,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Selection facade — delegates to `wireframeSelection`. Kept as `@action`
-   * because the outline binds it as a template subexpression
-   * (`(this.wireframe.isBlockSelected row.blockKey)`); without it Glimmer
-   * extracts the bare function and calls it without the correct `this`.
-   *
-   * @param {string|null} key - The composite block key (`${name}:${__stableKey}`).
-   * @returns {boolean}
-   */
-  @action
-  isBlockSelected(key) {
-    return this.wireframeSelection.isBlockSelected(key);
-  }
-
-  /**
-   * Selection facade — delegates to `wireframeSelection`. A frozen, read-only
-   * copy of the selected keys for consumers that need the full set (e.g.
-   * multi-delete).
-   *
-   * @returns {ReadonlyArray<string>}
-   */
-  selectedKeysSnapshot() {
-    return this.wireframeSelection.selectedKeysSnapshot();
-  }
-
-  /**
-   * Selection facade — delegates to `wireframeSelection`.
-   *
-   * @param {Object} data - `{ key, ... }` for the toggled block.
-   */
-  toggleBlockSelection(data) {
-    return this.wireframeSelection.toggleBlockSelection(data);
-  }
-
-  /**
-   * Selection facade — delegates to `wireframeSelection`.
-   *
-   * @param {Array<string>} keys - The block keys to select.
-   * @param {Object} anchorData - `{ key, ... }` for the anchor (clicked) block.
-   */
-  setSelectionRange(keys, anchorData) {
-    return this.wireframeSelection.setSelectionRange(keys, anchorData);
-  }
-
-  /**
-   * Selection facade — delegates to `wireframeSelection`.
-   *
-   * @param {string} outletName
-   */
-  selectOutlet(outletName) {
-    return this.wireframeSelection.selectOutlet(outletName);
-  }
-
-  /**
    * Updates one field inside a `containerArgs` namespace bag of the selected
    * entry (e.g. `containerArgs.grid.column`). Placement edits are rarer than
    * typography edits, so we route directly through `replaceEntryContainerArgs`
@@ -891,11 +756,11 @@ export default class WireframeService extends Service {
    */
   @action
   updateSelectedContainerArg(namespace, name, value) {
-    if (!this.selectedBlockKey || !namespace || !name) {
+    if (!this.wireframeSelection.selectedBlockKey || !namespace || !name) {
       return false;
     }
     const located = this.wireframeLayoutQuery.findEntryAndOutletSync(
-      this.selectedBlockKey
+      this.wireframeSelection.selectedBlockKey
     );
     if (!located) {
       return false;
@@ -909,7 +774,7 @@ export default class WireframeService extends Service {
       }
       const result = replaceEntryContainerArgs(
         layout,
-        this.selectedBlockKey,
+        this.wireframeSelection.selectedBlockKey,
         namespace,
         (current) => ({ ...current, [name]: value })
       );
@@ -919,18 +784,6 @@ export default class WireframeService extends Service {
       this.publishStructuralChange(located.outletName, result.layout);
       return true;
     });
-  }
-
-  /**
-   * Re-resolves the given block key against the current layout and rebinds
-   * `selectedBlockKey` / `selectedBlockData`. If the key no longer exists,
-   * clears the selection. Used after structural undo / redo to follow the
-   * selection across layout snapshots.
-   *
-   * @param {string|null} blockKey
-   */
-  restoreSelection(blockKey) {
-    return this.wireframeSelection.restoreSelection(blockKey);
   }
 
   /**
@@ -1363,18 +1216,6 @@ export default class WireframeService extends Service {
     }
     handler(args);
     return true;
-  }
-
-  /**
-   * The lock declaration for the currently-selected part, or null when the
-   * selection isn't a part. `true` means the whole part is locked (no in-place
-   * arg overrides); a string array lists the specific arg names that can't be
-   * overridden in place. Drives the inspector's disabling of locked fields.
-   *
-   * @returns {true|string[]|null}
-   */
-  partLockForSelection() {
-    return this.wireframeSelection.partLockForSelection();
   }
 
   /**

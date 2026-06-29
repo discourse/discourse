@@ -49,7 +49,7 @@ module(
         getOwner(context)
       );
       const stableKey = layout[0].__stableKey;
-      context.editor.selectBlock({
+      context.editor.wireframeSelection.selectBlock({
         key: `wf:drafts-test-tile:${stableKey}`,
         name: "wf:drafts-test-tile",
         args: { title: "Original" },

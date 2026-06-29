@@ -69,6 +69,8 @@ function stubWireframe(owner, blockData, options) {
   const stub = new StubWireframeService(owner, blockData, options);
   owner.unregister("service:wireframe");
   owner.register("service:wireframe", stub, { instantiate: false });
+  owner.unregister("service:wireframe-selection");
+  owner.register("service:wireframe-selection", stub, { instantiate: false });
   owner.unregister("service:wireframe-layout-query");
   owner.register("service:wireframe-layout-query", stub, {
     instantiate: false,

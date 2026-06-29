@@ -102,6 +102,7 @@ export default class BlockChrome extends Component {
   @service wireframeLayoutQuery;
   @service wireframeLinkEdit;
   @service wireframeRevision;
+  @service wireframeSelection;
   @service wireframeSession;
 
   /**
@@ -274,7 +275,7 @@ export default class BlockChrome extends Component {
 
   /** @returns {boolean} */
   get isSelected() {
-    return this.wireframe.isBlockSelected(this.args.blockKey);
+    return this.wireframeSelection.isBlockSelected(this.args.blockKey);
   }
 
   /** @returns {boolean} */
@@ -1471,7 +1472,7 @@ export default class BlockChrome extends Component {
       const isActive = tabEl.getAttribute("aria-selected") === "true";
       if (
         isActive &&
-        this.wireframe.selectedBlockKey === panelKey &&
+        this.wireframeSelection.selectedBlockKey === panelKey &&
         tabEl.dataset.wfContainerArgKey
       ) {
         this.wireframeInlineEdit.startContainerArg(
@@ -1482,7 +1483,7 @@ export default class BlockChrome extends Component {
         );
         return;
       }
-      this.wireframe.selectBlock({ key: panelKey });
+      this.wireframeSelection.selectBlock({ key: panelKey });
       return;
     }
 
@@ -1503,7 +1504,7 @@ export default class BlockChrome extends Component {
     // / remove menu directly. Selecting the block is a side effect so
     // the inspector tracks the change.
     if (argEl && kind === "image") {
-      if (this.wireframe.selectedBlockKey !== this.args.blockKey) {
+      if (this.wireframeSelection.selectedBlockKey !== this.args.blockKey) {
         this.#selectThisBlock();
       }
       this.#openImageEditMenu(argEl, argName);
@@ -1515,7 +1516,10 @@ export default class BlockChrome extends Component {
     // anchoring a popover requires the click to be on the already-
     // selected block, otherwise the first click is interpreted as
     // selection.
-    if (argEl && this.wireframe.selectedBlockKey === this.args.blockKey) {
+    if (
+      argEl &&
+      this.wireframeSelection.selectedBlockKey === this.args.blockKey
+    ) {
       switch (kind) {
         case "rich-text":
           this.wireframeInlineEdit.start(this.args.blockKey, argName, {
@@ -1827,7 +1831,7 @@ export default class BlockChrome extends Component {
    * path can re-use it without duplicating the data payload.
    */
   #selectThisBlock() {
-    this.wireframe.selectBlock({
+    this.wireframeSelection.selectBlock({
       key: this.args.blockKey,
       name: this.args.blockName,
       id: this.args.blockId,

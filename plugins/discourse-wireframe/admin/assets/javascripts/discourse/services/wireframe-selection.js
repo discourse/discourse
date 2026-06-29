@@ -1,5 +1,6 @@
 // @ts-check
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { trackedSet } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
 import {
@@ -336,6 +337,7 @@ export default class WireframeSelectionService extends Service {
    * @param {string|null} key - The composite block key (`${name}:${__stableKey}`).
    * @returns {boolean}
    */
+  @action
   isBlockSelected(key) {
     return key != null && this.#selectedKeys.has(key);
   }

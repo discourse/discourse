@@ -70,12 +70,12 @@ module(
       await click(".d-block-carousel__slide .d-block-heading", { detail: 1 });
 
       assert.strictEqual(
-        this.editor.selectedBlockKey,
+        this.editor.wireframeSelection.selectedBlockKey,
         headingKey,
         "clicking inside the first slide selects the heading inside it"
       );
       assert.notStrictEqual(
-        this.editor.selectedBlockKey,
+        this.editor.wireframeSelection.selectedBlockKey,
         carouselKey,
         "the click does not get captured by the carousel itself"
       );

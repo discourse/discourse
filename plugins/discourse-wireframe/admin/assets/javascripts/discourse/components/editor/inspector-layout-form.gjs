@@ -134,9 +134,9 @@ const GAP_MAX = 4;
 const GAP_STEP = 0.25;
 
 export default class InspectorLayoutForm extends Component {
-  @service wireframe;
   @service wireframeArgEdit;
   @service wireframeGridTemplate;
+  @service wireframeSelection;
   @service dialog;
 
   /**
@@ -157,7 +157,7 @@ export default class InspectorLayoutForm extends Component {
    * lives next to `applyGridTemplate` and the two stay in lockstep.
    */
   #canApplyTemplate = (template) => {
-    const data = this.wireframe.selectedBlockData;
+    const data = this.wireframeSelection.selectedBlockData;
     if (!data?.key) {
       return false;
     }
@@ -176,7 +176,7 @@ export default class InspectorLayoutForm extends Component {
    * @returns {Object|null}
    */
   get #activeTemplate() {
-    const data = this.wireframe.selectedBlockData;
+    const data = this.wireframeSelection.selectedBlockData;
     if (!data?.key) {
       return null;
     }
@@ -236,7 +236,7 @@ export default class InspectorLayoutForm extends Component {
     if (!this.isGrid) {
       return [];
     }
-    const data = this.wireframe.selectedBlockData;
+    const data = this.wireframeSelection.selectedBlockData;
     if (!data?.key) {
       return [];
     }
@@ -252,7 +252,7 @@ export default class InspectorLayoutForm extends Component {
   }
 
   get #args() {
-    return this.wireframe.selectedBlockData?.args ?? {};
+    return this.wireframeSelection.selectedBlockData?.args ?? {};
   }
 
   /**
@@ -262,7 +262,7 @@ export default class InspectorLayoutForm extends Component {
    * @returns {Object}
    */
   get #schema() {
-    return this.wireframe.selectedBlockData?.metadata?.args ?? {};
+    return this.wireframeSelection.selectedBlockData?.metadata?.args ?? {};
   }
 
   /**
@@ -281,7 +281,8 @@ export default class InspectorLayoutForm extends Component {
    */
   @cached
   get argsSnapshot() {
-    const snapshot = this.wireframe.selectedBlockData?.argsSnapshot ?? {};
+    const snapshot =
+      this.wireframeSelection.selectedBlockData?.argsSnapshot ?? {};
     const defaults = {};
     for (const [name, def] of Object.entries(this.#schema)) {
       if (def?.default !== undefined) {
@@ -301,7 +302,7 @@ export default class InspectorLayoutForm extends Component {
    */
   @cached
   get fieldErrors() {
-    return this.wireframe.selectedBlockFieldErrors;
+    return this.wireframeSelection.selectedBlockFieldErrors;
   }
 
   get mode() {
@@ -324,14 +325,14 @@ export default class InspectorLayoutForm extends Component {
    * @returns {number}
    */
   get columns() {
-    const data = this.wireframe.selectedBlockData;
+    const data = this.wireframeSelection.selectedBlockData;
     return data?.key
       ? this.wireframeGridTemplate.gridSizeFor(data.key).columns
       : 3;
   }
 
   get rows() {
-    const data = this.wireframe.selectedBlockData;
+    const data = this.wireframeSelection.selectedBlockData;
     return data?.key
       ? this.wireframeGridTemplate.gridSizeFor(data.key).rows
       : 2;
@@ -484,7 +485,7 @@ export default class InspectorLayoutForm extends Component {
     if (this.isFree) {
       return;
     }
-    const data = this.wireframe.selectedBlockData;
+    const data = this.wireframeSelection.selectedBlockData;
     if (!data?.key) {
       return;
     }
@@ -502,7 +503,7 @@ export default class InspectorLayoutForm extends Component {
    */
   @action
   fixOutOfBoundsSlots() {
-    const data = this.wireframe.selectedBlockData;
+    const data = this.wireframeSelection.selectedBlockData;
     if (!data?.key) {
       return;
     }
@@ -535,7 +536,7 @@ export default class InspectorLayoutForm extends Component {
 
   @action
   applyTemplate(template) {
-    const data = this.wireframe.selectedBlockData;
+    const data = this.wireframeSelection.selectedBlockData;
     if (!data?.key) {
       return;
     }
@@ -605,11 +606,13 @@ export default class InspectorLayoutForm extends Component {
         });
       }
     }
-    (this.wireframe.selectedBlockNonFieldErrors ?? []).forEach((detail, i) => {
-      this.#formApi.addError(`_block:${i}`, {
-        message: friendlyErrorMessage(detail),
-      });
-    });
+    (this.wireframeSelection.selectedBlockNonFieldErrors ?? []).forEach(
+      (detail, i) => {
+        this.#formApi.addError(`_block:${i}`, {
+          message: friendlyErrorMessage(detail),
+        });
+      }
+    );
   }
 
   /**
@@ -643,7 +646,7 @@ export default class InspectorLayoutForm extends Component {
    * @param {{columns: number, rows: number}} next
    */
   #applyDimensionChange({ columns, rows }) {
-    const data = this.wireframe.selectedBlockData;
+    const data = this.wireframeSelection.selectedBlockData;
     if (!data?.key) {
       return;
     }

@@ -8,7 +8,7 @@ import BlockChrome from "discourse/plugins/discourse-wireframe/discourse/compone
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
 
 // Selecting a block scrolls its rendered element into view. The outline
-// panel and insert auto-select both funnel through `wireframe.selectBlock`,
+// panel and insert auto-select both funnel through `wireframeSelection.selectBlock`,
 // so exercising the service directly covers both entry points; what varies
 // is the scroll decision, driven by the element's geometry.
 const WrappedBlock = <template>
@@ -72,7 +72,7 @@ module(
 
     function select(owner, blockKey) {
       const wireframe = owner.lookup("service:wireframe");
-      return wireframe.selectBlock({
+      return wireframe.wireframeSelection.selectBlock({
         key: blockKey,
         name: "button-link",
         args: {},

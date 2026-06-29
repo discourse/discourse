@@ -102,7 +102,7 @@ module(
       await click(tab, { detail: 1 });
 
       assert.strictEqual(
-        this.editor.selectedBlockKey,
+        this.editor.wireframeSelection.selectedBlockKey,
         panelKey,
         "the tab's panel layout is selected (so the inspector targets it)"
       );
@@ -125,7 +125,7 @@ module(
       await click(firstTab, { detail: 1 });
 
       assert.strictEqual(
-        this.editor.selectedBlockKey,
+        this.editor.wireframeSelection.selectedBlockKey,
         firstKey,
         "clicking an inactive tab also selects its panel layout"
       );
@@ -212,7 +212,7 @@ module(
       await settled();
 
       assert.strictEqual(
-        this.editor.selectedBlockKey,
+        this.editor.wireframeSelection.selectedBlockKey,
         firstKey,
         "the moved tab's panel is selected"
       );

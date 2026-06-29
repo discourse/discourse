@@ -21,6 +21,7 @@ import { i18n } from "discourse-i18n";
  */
 export default class InspectorMetadataSection extends Component {
   @service wireframe;
+  @service wireframeSelection;
 
   /**
    * Section starts open when the selected entry already has an `id` —
@@ -28,12 +29,12 @@ export default class InspectorMetadataSection extends Component {
    * collapsed so the metadata row doesn't compete with the args form
    * for vertical space.
    */
-  @tracked expanded = !!this.wireframe.selectedBlockData?.id;
+  @tracked expanded = !!this.wireframeSelection.selectedBlockData?.id;
 
   @tracked error = null;
 
   get currentId() {
-    return this.wireframe.selectedBlockData?.id ?? "";
+    return this.wireframeSelection.selectedBlockData?.id ?? "";
   }
 
   /**
@@ -45,7 +46,7 @@ export default class InspectorMetadataSection extends Component {
    * @returns {boolean}
    */
   get disabled() {
-    return this.wireframe.selectedBlockData?.isRegistered === false;
+    return this.wireframeSelection.selectedBlockData?.isRegistered === false;
   }
 
   get helpText() {

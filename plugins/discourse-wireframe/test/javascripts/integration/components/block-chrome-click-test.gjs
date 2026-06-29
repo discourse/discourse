@@ -33,7 +33,7 @@ module(
         outletName: "test-outlet",
       });
       // The URL branch only fires for an already-selected block.
-      await wireframe.selectBlock({ key: blockKey });
+      await wireframe.wireframeSelection.selectBlock({ key: blockKey });
 
       await render(
         <template>

@@ -46,7 +46,7 @@ module(
     });
 
     test("shows the per-block form for a single selection", async function (assert) {
-      this.editor.selectBlock({ key: this.firstKey });
+      this.editor.wireframeSelection.selectBlock({ key: this.firstKey });
 
       await render(
         <template>
@@ -63,8 +63,10 @@ module(
     });
 
     test("shows a bulk-action panel that deletes the whole selection", async function (assert) {
-      this.editor.selectBlock({ key: this.firstKey });
-      this.editor.toggleBlockSelection({ key: this.secondKey });
+      this.editor.wireframeSelection.selectBlock({ key: this.firstKey });
+      this.editor.wireframeSelection.toggleBlockSelection({
+        key: this.secondKey,
+      });
 
       await render(
         <template>

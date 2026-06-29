@@ -71,7 +71,7 @@ module(
       const layout = await registerLayout(getOwner(context));
       const stableKey = layout[0].__stableKey;
 
-      context.editor.selectBlock({
+      context.editor.wireframeSelection.selectBlock({
         key: `wf:persist-test-tile:${stableKey}`,
         name: "wf:persist-test-tile",
         args: { title: "Original" },

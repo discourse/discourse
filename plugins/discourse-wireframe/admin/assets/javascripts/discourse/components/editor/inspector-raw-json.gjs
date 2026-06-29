@@ -31,6 +31,7 @@ import { i18n } from "discourse-i18n";
  */
 export default class InspectorRawJson extends Component {
   @service wireframe;
+  @service wireframeSelection;
 
   @tracked draft = "";
   @tracked error = null;
@@ -43,7 +44,7 @@ export default class InspectorRawJson extends Component {
    * in render, which ember/no-side-effects rejects).
    */
   get serialised() {
-    const entry = this.wireframe.selectedBlockRawEntry;
+    const entry = this.wireframeSelection.selectedBlockRawEntry;
     if (!entry) {
       return "";
     }
@@ -56,7 +57,7 @@ export default class InspectorRawJson extends Component {
    * fires and seeds `draft` with the new entry's serialised form.
    */
   get selectionKey() {
-    return this.wireframe.selectedBlockKey;
+    return this.wireframeSelection.selectedBlockKey;
   }
 
   get isDirty() {
@@ -72,7 +73,7 @@ export default class InspectorRawJson extends Component {
    * @returns {boolean}
    */
   get readonly() {
-    return this.wireframe.selectedBlockData?.isRegistered === false;
+    return this.wireframeSelection.selectedBlockData?.isRegistered === false;
   }
 
   /**

@@ -103,32 +103,42 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
   module("selectBlock / isBlockSelected", function () {
     test("selectBlock stores the key and the snapshot", function (assert) {
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: "wf:svc-test-tile:1",
         name: "wf:svc-test-tile",
       });
-      assert.strictEqual(this.editor.selectedBlockKey, "wf:svc-test-tile:1");
       assert.strictEqual(
-        this.editor.selectedBlockData.name,
+        this.editor.wireframeSelection.selectedBlockKey,
+        "wf:svc-test-tile:1"
+      );
+      assert.strictEqual(
+        this.editor.wireframeSelection.selectedBlockData.name,
         "wf:svc-test-tile"
       );
     });
 
     test("selectBlock(null) clears the selection", function (assert) {
-      this.editor.selectBlock({ key: "x", name: "y" });
-      this.editor.selectBlock(null);
-      assert.strictEqual(this.editor.selectedBlockKey, null);
-      assert.strictEqual(this.editor.selectedBlockData, null);
+      this.editor.wireframeSelection.selectBlock({ key: "x", name: "y" });
+      this.editor.wireframeSelection.selectBlock(null);
+      assert.strictEqual(this.editor.wireframeSelection.selectedBlockKey, null);
+      assert.strictEqual(
+        this.editor.wireframeSelection.selectedBlockData,
+        null
+      );
     });
 
     test("isBlockSelected matches the stored key only", function (assert) {
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: "wf:svc-test-tile:7",
         name: "wf:svc-test-tile",
       });
-      assert.true(this.editor.isBlockSelected("wf:svc-test-tile:7"));
-      assert.false(this.editor.isBlockSelected("wf:svc-test-tile:8"));
-      assert.false(this.editor.isBlockSelected(null));
+      assert.true(
+        this.editor.wireframeSelection.isBlockSelected("wf:svc-test-tile:7")
+      );
+      assert.false(
+        this.editor.wireframeSelection.isBlockSelected("wf:svc-test-tile:8")
+      );
+      assert.false(this.editor.wireframeSelection.isBlockSelected(null));
     });
 
     test("selectBlock({ key }) resolves name, args, and metadata from the layout", async function (assert) {
@@ -142,30 +152,36 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // the inspector sees the real schema — without it the args render via
       // inferSchemaFromValues and image / icon / etc. controls degrade to
       // the generic "any" code editor.
-      this.editor.selectBlock({ key });
+      this.editor.wireframeSelection.selectBlock({ key });
 
-      assert.strictEqual(this.editor.selectedBlockKey, key);
+      assert.strictEqual(this.editor.wireframeSelection.selectedBlockKey, key);
       assert.strictEqual(
-        this.editor.selectedBlockData.name,
+        this.editor.wireframeSelection.selectedBlockData.name,
         "wf:svc-test-tile"
       );
-      assert.deepEqual(this.editor.selectedBlockData.argsSnapshot, {
-        title: "Original",
-      });
-      assert.deepEqual(this.editor.selectedBlockData.metadata?.args, {
-        title: { type: "string" },
-      });
+      assert.deepEqual(
+        this.editor.wireframeSelection.selectedBlockData.argsSnapshot,
+        {
+          title: "Original",
+        }
+      );
+      assert.deepEqual(
+        this.editor.wireframeSelection.selectedBlockData.metadata?.args,
+        {
+          title: { type: "string" },
+        }
+      );
     });
 
     test("selectBlock flags a registered block as isRegistered", function (assert) {
       withTestBlockRegistration(() => registerBlock(TestTile));
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: "wf:svc-test-tile:1",
         name: "wf:svc-test-tile",
         args: { title: "Hi" },
       });
       assert.true(
-        this.editor.selectedBlockData.isRegistered,
+        this.editor.wireframeSelection.selectedBlockData.isRegistered,
         "a block whose type is in the registry is editable"
       );
     });
@@ -173,17 +189,17 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("selectBlock flags an unknown block type as not registered", function (assert) {
       // No registration — the editor has no schema for this type, so its
       // inspector fields must be read-only.
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: "wf:never-registered:1",
         name: "wf:never-registered",
         args: { title: "Hi" },
       });
       assert.false(
-        this.editor.selectedBlockData.isRegistered,
+        this.editor.wireframeSelection.selectedBlockData.isRegistered,
         "an unregistered block type is locked"
       );
       assert.deepEqual(
-        this.editor.selectedBlockData.argsSnapshot,
+        this.editor.wireframeSelection.selectedBlockData.argsSnapshot,
         { title: "Hi" },
         "its values still snapshot through so the inspector can show them"
       );
@@ -192,9 +208,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("selectBlock leaves a nameless selection editable", function (assert) {
       // Defensive: a selection with no resolvable name (eg. outlet-style
       // entries) shouldn't be over-locked into read-only.
-      this.editor.selectBlock({ key: "x:1" });
+      this.editor.wireframeSelection.selectBlock({ key: "x:1" });
       assert.notStrictEqual(
-        this.editor.selectedBlockData.isRegistered,
+        this.editor.wireframeSelection.selectedBlockData.isRegistered,
         false,
         "a nameless selection isn't treated as unregistered"
       );
@@ -212,7 +228,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         getOwner(this)
       );
       const stableKey = layout[0].__stableKey;
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: `wf:svc-test-constrained:${stableKey}`,
         name: "wf:svc-test-constrained",
       });
@@ -220,7 +236,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
     test("a constraint error appears and clears as the args change, without a republish", async function (assert) {
       assert.deepEqual(
-        this.editor.selectedBlockNonFieldErrors,
+        this.editor.wireframeSelection.selectedBlockNonFieldErrors,
         [],
         "valid to start"
       );
@@ -228,19 +244,19 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // Clear the only provided arg → the atLeastOne constraint now fails.
       await editArg(this.editor, "label", null);
       assert.strictEqual(
-        this.editor.selectedBlockNonFieldErrors.length,
+        this.editor.wireframeSelection.selectedBlockNonFieldErrors.length,
         1,
         "the constraint violation surfaces live"
       );
       assert.strictEqual(
-        this.editor.selectedBlockNonFieldErrors[0].code,
+        this.editor.wireframeSelection.selectedBlockNonFieldErrors[0].code,
         "constraint-violation"
       );
 
       // Satisfy the constraint via the other arg → the error clears live.
       await editArg(this.editor, "icon", "house");
       assert.deepEqual(
-        this.editor.selectedBlockNonFieldErrors,
+        this.editor.wireframeSelection.selectedBlockNonFieldErrors,
         [],
         "fixing the block clears the error without republishing"
       );
@@ -255,7 +271,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // `_resetOutletLayoutsForTesting` resets between tests, so we
       // can't hardcode the suffix — read it back from the layout.
       const stableKey = layout[0].__stableKey;
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: `wf:svc-test-tile:${stableKey}`,
         name: "wf:svc-test-tile",
         args: { title: "Original" },
@@ -265,7 +281,10 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
     test("updateSelectedArg refreshes the selection snapshot", async function (assert) {
       await editArg(this.editor, "title", "Edited");
-      assert.strictEqual(this.editor.selectedBlockData.args.title, "Edited");
+      assert.strictEqual(
+        this.editor.wireframeSelection.selectedBlockData.args.title,
+        "Edited"
+      );
     });
 
     test("an edit pushes onto the undo stack and clears redo", async function (assert) {
@@ -279,7 +298,10 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       await editArg(this.editor, "title", "Edited");
       const undone = await this.editor.undo();
       assert.true(undone);
-      assert.strictEqual(this.editor.selectedBlockData.args.title, "Original");
+      assert.strictEqual(
+        this.editor.wireframeSelection.selectedBlockData.args.title,
+        "Original"
+      );
       assert.true(this.editor.canRedo);
       assert.false(this.editor.canUndo);
     });
@@ -289,7 +311,10 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       await this.editor.undo();
       const redone = await this.editor.redo();
       assert.true(redone);
-      assert.strictEqual(this.editor.selectedBlockData.args.title, "Edited");
+      assert.strictEqual(
+        this.editor.wireframeSelection.selectedBlockData.args.title,
+        "Edited"
+      );
       assert.true(this.editor.canUndo);
       assert.false(this.editor.canRedo);
     });
@@ -325,7 +350,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       await editArg(this.editor, "title", "Edited");
       await editArg(this.editor, "title", null);
       assert.false(
-        "title" in this.editor.selectedBlockData.args,
+        "title" in this.editor.wireframeSelection.selectedBlockData.args,
         "the title key is absent from args"
       );
     });
@@ -334,7 +359,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       await editArg(this.editor, "title", "Edited");
       await editArg(this.editor, "title", undefined);
       assert.false(
-        "title" in this.editor.selectedBlockData.args,
+        "title" in this.editor.wireframeSelection.selectedBlockData.args,
         "the title key is absent from args"
       );
     });
@@ -344,10 +369,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // Only `null` / `undefined` are stripped.
       await editArg(this.editor, "title", "");
       assert.true(
-        "title" in this.editor.selectedBlockData.args,
+        "title" in this.editor.wireframeSelection.selectedBlockData.args,
         "the title key stays present"
       );
-      assert.strictEqual(this.editor.selectedBlockData.args.title, "");
+      assert.strictEqual(
+        this.editor.wireframeSelection.selectedBlockData.args.title,
+        ""
+      );
     });
 
     test("editing an arg clears stale validator soft-failure stamps", async function (assert) {
@@ -356,11 +384,11 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // problem. They persist past the underlying fix until the next
       // layer republish; the live arg-write needs to clear them so
       // the outline / inspector stop showing the stale error.
-      const entry = this.editor.selectedBlockData.args;
+      const entry = this.editor.wireframeSelection.selectedBlockData.args;
       // Look up the live entry (the bound args' parent) and stamp it
       // as the validator would.
       const located = this.editor.wireframeLayoutQuery.findEntryAndOutletSync(
-        this.editor.selectedBlockKey
+        this.editor.wireframeSelection.selectedBlockKey
       );
       located.entry.__failureType = "structural-invalid";
       located.entry.__failureReason = "stale";
@@ -385,7 +413,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // that was failing.
       const validation = getOwner(this).lookup("service:wireframe-validation");
       const located = this.editor.wireframeLayoutQuery.findEntryAndOutletSync(
-        this.editor.selectedBlockKey
+        this.editor.wireframeSelection.selectedBlockKey
       );
       located.entry.__failureType = "arg-invalid";
       located.entry.__failureReason =
@@ -662,7 +690,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.true(ok);
       // insertBlock auto-selects the freshly inserted entry, so this is the
       // block we just added regardless of where it landed in the children.
-      const insertedKey = this.editor.selectedBlockKey;
+      const insertedKey = this.editor.wireframeSelection.selectedBlockKey;
       assert.true(
         this.editor.isOutletEditing("homepage-blocks"),
         "the outlet is editing right after the insert"
@@ -698,7 +726,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
     test("editing a block's arg then undoing clears the outlet's editing state", async function (assert) {
       const tile = outletChildren(this.editor)[0];
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: `wf:svc-test-tile:${tile.__stableKey}`,
         name: "wf:svc-test-tile",
         args: { title: "Existing" },
@@ -810,7 +838,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "the new panel is a layout"
       );
       assert.strictEqual(
-        this.editor.selectedBlockKey,
+        this.editor.wireframeSelection.selectedBlockKey,
         entryKey(added),
         "the new panel is selected"
       );
@@ -825,7 +853,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       const inserted = this.editor.wireframeLayoutQuery.findEntryByKey(
-        this.editor.selectedBlockKey
+        this.editor.wireframeSelection.selectedBlockKey
       );
       assert.strictEqual(
         blockNameOf(this.editor, inserted),
@@ -868,7 +896,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "the dropped block is the wrapper's child"
       );
       assert.strictEqual(
-        this.editor.selectedBlockKey,
+        this.editor.wireframeSelection.selectedBlockKey,
         entryKey(inner),
         "the dropped block stays selected through the wrap (same reference)"
       );
@@ -2592,7 +2620,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("copySelected stashes the selected block with mode='copy'", function (assert) {
       const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: firstKey,
         name: "wf:svc-test-tile",
       });
@@ -2615,7 +2643,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("cutSelected stores the entry and removes it from the canvas", function (assert) {
       const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: firstKey,
         name: "wf:svc-test-tile",
       });
@@ -2633,7 +2661,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("pasteFromClipboard inserts a fresh clone after the selection", function (assert) {
       const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: firstKey,
         name: "wf:svc-test-tile",
       });
@@ -2654,7 +2682,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("pasteFromClipboard mints a fresh stable key for the paste", function (assert) {
       const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: firstKey,
         name: "wf:svc-test-tile",
       });
@@ -2670,7 +2698,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("multiple pastes insert independent subtrees", function (assert) {
       const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: firstKey,
         name: "wf:svc-test-tile",
       });
@@ -2685,7 +2713,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("pasteFromClipboard returns false when clipboard is empty", function (assert) {
       const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: firstKey,
         name: "wf:svc-test-tile",
       });
@@ -2695,12 +2723,12 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("pasteFromClipboard returns false when no block is selected", function (assert) {
       const draft = outletChildren(this.editor);
       const firstKey = `wf:svc-test-tile:${draft[0].__stableKey}`;
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: firstKey,
         name: "wf:svc-test-tile",
       });
       this.clipboard.copySelected();
-      this.editor.selectBlock(null);
+      this.editor.wireframeSelection.selectBlock(null);
 
       assert.false(this.clipboard.pasteFromClipboard());
     });
@@ -2784,7 +2812,10 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       const draft = outletChildren(this.editor);
       const key = `wf:svc-test-tile:${draft[0].__stableKey}`;
-      this.editor.selectBlock({ key, name: "wf:svc-test-tile" });
+      this.editor.wireframeSelection.selectBlock({
+        key,
+        name: "wf:svc-test-tile",
+      });
       this.firstKey = key;
     });
 
@@ -2806,7 +2837,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("returns false when no block is selected", function (assert) {
-      this.editor.selectBlock(null);
+      this.editor.wireframeSelection.selectBlock(null);
       assert.false(
         this.editor.updateSelectedConditions({ type: "user", loggedIn: true })
       );
@@ -2815,12 +2846,18 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("selectedBlockConditions live-resolves the latest tree", function (assert) {
       const next = { type: "user", admin: true };
       this.editor.updateSelectedConditions(next);
-      assert.deepEqual(this.editor.selectedBlockConditions, next);
+      assert.deepEqual(
+        this.editor.wireframeSelection.selectedBlockConditions,
+        next
+      );
     });
 
     test("selectedBlockConditions returns null when no selection", function (assert) {
-      this.editor.selectBlock(null);
-      assert.strictEqual(this.editor.selectedBlockConditions, null);
+      this.editor.wireframeSelection.selectBlock(null);
+      assert.strictEqual(
+        this.editor.wireframeSelection.selectedBlockConditions,
+        null
+      );
     });
   });
 
@@ -2900,7 +2937,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("removeBlock can be undone, restoring the deleted entry", async function (assert) {
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: this.secondKey,
         name: "wf:svc-test-tile",
       });
@@ -2952,50 +2989,84 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("selectBlock resets the selection to a single block", function (assert) {
-      this.editor.selectBlock({ key: this.firstKey });
-      this.editor.toggleBlockSelection({ key: this.secondKey });
-      assert.strictEqual(this.editor.selectionCount, 2, "two selected");
-
-      this.editor.selectBlock({ key: this.firstKey });
+      this.editor.wireframeSelection.selectBlock({ key: this.firstKey });
+      this.editor.wireframeSelection.toggleBlockSelection({
+        key: this.secondKey,
+      });
       assert.strictEqual(
-        this.editor.selectionCount,
+        this.editor.wireframeSelection.selectionCount,
+        2,
+        "two selected"
+      );
+
+      this.editor.wireframeSelection.selectBlock({ key: this.firstKey });
+      assert.strictEqual(
+        this.editor.wireframeSelection.selectionCount,
         1,
         "a plain select collapses back to one"
       );
-      assert.true(this.editor.isBlockSelected(this.firstKey));
-      assert.false(this.editor.isBlockSelected(this.secondKey));
+      assert.true(
+        this.editor.wireframeSelection.isBlockSelected(this.firstKey)
+      );
+      assert.false(
+        this.editor.wireframeSelection.isBlockSelected(this.secondKey)
+      );
     });
 
     test("toggleBlockSelection adds, re-anchors, and removes", function (assert) {
-      this.editor.selectBlock({ key: this.firstKey });
+      this.editor.wireframeSelection.selectBlock({ key: this.firstKey });
 
-      this.editor.toggleBlockSelection({ key: this.secondKey });
-      assert.true(this.editor.hasMultiSelection, "now multi-selected");
-      assert.true(this.editor.isBlockSelected(this.firstKey));
-      assert.true(this.editor.isBlockSelected(this.secondKey));
+      this.editor.wireframeSelection.toggleBlockSelection({
+        key: this.secondKey,
+      });
+      assert.true(
+        this.editor.wireframeSelection.hasMultiSelection,
+        "now multi-selected"
+      );
+      assert.true(
+        this.editor.wireframeSelection.isBlockSelected(this.firstKey)
+      );
+      assert.true(
+        this.editor.wireframeSelection.isBlockSelected(this.secondKey)
+      );
       assert.strictEqual(
-        this.editor.selectedBlockKey,
+        this.editor.wireframeSelection.selectedBlockKey,
         this.secondKey,
         "the newly added block becomes the primary"
       );
 
-      this.editor.toggleBlockSelection({ key: this.secondKey });
-      assert.false(this.editor.isBlockSelected(this.secondKey), "removed");
+      this.editor.wireframeSelection.toggleBlockSelection({
+        key: this.secondKey,
+      });
+      assert.false(
+        this.editor.wireframeSelection.isBlockSelected(this.secondKey),
+        "removed"
+      );
       assert.strictEqual(
-        this.editor.selectedBlockKey,
+        this.editor.wireframeSelection.selectedBlockKey,
         this.firstKey,
         "removing the primary re-anchors to a remaining member"
       );
     });
 
     test("setSelectionRange selects every key and anchors the primary", function (assert) {
-      this.editor.setSelectionRange([this.firstKey, this.secondKey], {
-        key: this.secondKey,
-      });
-      assert.strictEqual(this.editor.selectionCount, 2);
-      assert.true(this.editor.isBlockSelected(this.firstKey));
-      assert.true(this.editor.isBlockSelected(this.secondKey));
-      assert.strictEqual(this.editor.selectedBlockKey, this.secondKey);
+      this.editor.wireframeSelection.setSelectionRange(
+        [this.firstKey, this.secondKey],
+        {
+          key: this.secondKey,
+        }
+      );
+      assert.strictEqual(this.editor.wireframeSelection.selectionCount, 2);
+      assert.true(
+        this.editor.wireframeSelection.isBlockSelected(this.firstKey)
+      );
+      assert.true(
+        this.editor.wireframeSelection.isBlockSelected(this.secondKey)
+      );
+      assert.strictEqual(
+        this.editor.wireframeSelection.selectedBlockKey,
+        this.secondKey
+      );
     });
 
     test("removeBlocks deletes the whole selection in one undo step", async function (assert) {
@@ -3038,7 +3109,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("updateSelectedConditions feeds the undo stack", async function (assert) {
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: this.firstKey,
         name: "wf:svc-test-tile",
       });
@@ -3120,13 +3191,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("selectOutlet selects the root layout so the layout form shows", function (assert) {
-      this.editor.selectOutlet("homepage-blocks");
+      this.editor.wireframeSelection.selectOutlet("homepage-blocks");
       assert.strictEqual(
-        this.editor.selectedBlockKey,
+        this.editor.wireframeSelection.selectedBlockKey,
         this.editor.wireframeLayoutQuery.outletRootKey("homepage-blocks")
       );
       assert.strictEqual(
-        this.editor.selectedBlockData.name,
+        this.editor.wireframeSelection.selectedBlockData.name,
         "layout",
         "the inspector keys off name === 'layout' to show the layout form"
       );
@@ -3135,7 +3206,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("removeBlock is a no-op on the outlet root", function (assert) {
       const rootKey =
         this.editor.wireframeLayoutQuery.outletRootKey("homepage-blocks");
-      this.editor.selectOutlet("homepage-blocks");
+      this.editor.wireframeSelection.selectOutlet("homepage-blocks");
 
       const removed = this.editor.wireframeBlockMutations.removeBlock(rootKey);
 
@@ -3164,7 +3235,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // `{{#unless @isOutletRoot}}` gate. This is the exact reproduction of
       // the reported bug (selecting the outlet and pressing Delete).
       const detach = attachEditorShortcuts(this.editor);
-      this.editor.selectOutlet("homepage-blocks");
+      this.editor.wireframeSelection.selectOutlet("homepage-blocks");
 
       document.dispatchEvent(
         new KeyboardEvent("keydown", { key: "Delete", bubbles: true })
@@ -3322,7 +3393,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       // Edit the outlet's tile so the outlet counts as edited.
       const tile = outletChildren(this.editor)[0];
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: `wf:svc-test-tile:${tile.__stableKey}`,
         name: "wf:svc-test-tile",
         args: { title: "Original" },

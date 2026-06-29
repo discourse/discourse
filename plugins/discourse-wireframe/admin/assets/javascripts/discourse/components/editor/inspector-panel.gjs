@@ -27,10 +27,10 @@ import InspectorRawJson from "./inspector-raw-json";
  */
 export default class InspectorPanel extends Component {
   @service blocks;
-  @service wireframe;
   @service wireframeBlockMutations;
   @service wireframeConditionsPanel;
   @service wireframeLayoutQuery;
+  @service wireframeSelection;
 
   isTabActive = (tab) => this.currentTab === tab;
   @tracked _activeTab = "args";
@@ -62,7 +62,7 @@ export default class InspectorPanel extends Component {
    * @returns {boolean}
    */
   get isPart() {
-    return isPartKey(this.wireframe.selectedBlockKey);
+    return isPartKey(this.wireframeSelection.selectedBlockKey);
   }
 
   /**
@@ -75,7 +75,7 @@ export default class InspectorPanel extends Component {
    */
   get isOutletRoot() {
     return this.wireframeLayoutQuery.isOutletRoot(
-      this.wireframe.selectedBlockKey
+      this.wireframeSelection.selectedBlockKey
     );
   }
 
@@ -123,7 +123,7 @@ export default class InspectorPanel extends Component {
    * @returns {boolean}
    */
   get hasSelection() {
-    return this.wireframe.selectedBlockData != null;
+    return this.wireframeSelection.selectedBlockData != null;
   }
 
   /**
@@ -133,12 +133,12 @@ export default class InspectorPanel extends Component {
    * @returns {boolean}
    */
   get hasMultiSelection() {
-    return this.wireframe.hasMultiSelection;
+    return this.wireframeSelection.hasMultiSelection;
   }
 
   /** @returns {number} How many blocks are currently selected. */
   get selectionCount() {
-    return this.wireframe.selectionCount;
+    return this.wireframeSelection.selectionCount;
   }
 
   /**
@@ -149,7 +149,7 @@ export default class InspectorPanel extends Component {
    * @returns {Object|null}
    */
   get data() {
-    return this.wireframe.selectedBlockData;
+    return this.wireframeSelection.selectedBlockData;
   }
 
   /**
@@ -266,20 +266,22 @@ export default class InspectorPanel extends Component {
     if (this.isUnregistered) {
       return false;
     }
-    return this.wireframe.selectedBlockHasErrors;
+    return this.wireframeSelection.selectedBlockHasErrors;
   }
 
   @action
   removeSelectedBlock() {
     // The only recovery for an unregistered block is to replace its name or
     // drop it; the notice surfaces the latter as a one-click action.
-    this.wireframeBlockMutations.removeBlock(this.wireframe.selectedBlockKey);
+    this.wireframeBlockMutations.removeBlock(
+      this.wireframeSelection.selectedBlockKey
+    );
   }
 
   @action
   removeSelectedBlocks() {
     this.wireframeBlockMutations.removeBlocks(
-      this.wireframe.selectedKeysSnapshot()
+      this.wireframeSelection.selectedKeysSnapshot()
     );
   }
 

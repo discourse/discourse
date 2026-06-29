@@ -18,22 +18,14 @@ function makeCustom(value, name = "text") {
   };
 }
 
-// Stub wireframe service: the selection identity the read-only guard compares
-// against, plus the live-value lookup (`selectedBlockData` + `structuralVersion`)
-// the editor seeds from. `selectedBlockData` is null by default, so the editor
-// falls back to the FormKit draft (`@custom.value`).
+// Stub selection service: the selection identity the read-only guard compares
+// against, plus the live-value lookup (`selectedBlockData`) the editor seeds
+// from. `selectedBlockData` is null by default, so the editor falls back to the
+// FormKit draft (`@custom.value`).
 class StubWireframeService extends Service {
-  // The query layer moved to a leaf the editor exposes as layoutQuery; returning
   selectedBlockKey = null;
 
   selectedBlockData = null;
-
-  structuralVersion = 0;
-
-  // this makes wireframe.layoutQuery.<query> resolve to the stubbed methods below.
-  get layoutQuery() {
-    return this;
-  }
 }
 
 // Stub inline-edit service: the read-only guard reads the session identity
@@ -50,8 +42,16 @@ module("Integration | Wireframe | InspectorRichTextField", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
+    // The field reads the selection identity off the selection service; back
+    // it with one stub instance registered under both ids so the tests can
+    // mutate it through either lookup.
+    const wireframe = new StubWireframeService(this.owner);
     this.owner.unregister("service:wireframe");
-    this.owner.register("service:wireframe", StubWireframeService);
+    this.owner.register("service:wireframe", wireframe, { instantiate: false });
+    this.owner.unregister("service:wireframe-selection");
+    this.owner.register("service:wireframe-selection", wireframe, {
+      instantiate: false,
+    });
     this.owner.unregister("service:wireframe-inline-edit");
     this.owner.register("service:wireframe-inline-edit", StubInlineEditService);
   });

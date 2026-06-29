@@ -35,7 +35,7 @@ module(
       // `selectBlock` is an `@action` (a getter-only accessor), so record its
       // calls by redefining the configurable property rather than assigning.
       const selected = [];
-      Object.defineProperty(wireframe, "selectBlock", {
+      Object.defineProperty(wireframe.wireframeSelection, "selectBlock", {
         configurable: true,
         value: (data) => selected.push(data),
       });

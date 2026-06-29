@@ -79,16 +79,16 @@ export function attachEditorShortcuts(editor) {
     }
 
     if (event.key === "Delete" || event.key === "Backspace") {
-      const key = editor.selectedBlockKey;
+      const key = editor.wireframeSelection.selectedBlockKey;
       if (!key) {
         return;
       }
       event.preventDefault();
       // Under a multi-selection, remove the whole set in one undo step;
       // otherwise just the single selected block.
-      if (editor.selectionCount > 1) {
+      if (editor.wireframeSelection.selectionCount > 1) {
         editor.wireframeBlockMutations.removeBlocks(
-          editor.selectedKeysSnapshot()
+          editor.wireframeSelection.selectedKeysSnapshot()
         );
       } else {
         editor.wireframeBlockMutations.removeBlock(key);
@@ -107,7 +107,7 @@ export function attachEditorShortcuts(editor) {
 
     const key = event.key.toLowerCase();
     if (key === "c") {
-      if (!editor.selectedBlockKey) {
+      if (!editor.wireframeSelection.selectedBlockKey) {
         return;
       }
       event.preventDefault();
@@ -115,7 +115,7 @@ export function attachEditorShortcuts(editor) {
       return;
     }
     if (key === "x") {
-      if (!editor.selectedBlockKey) {
+      if (!editor.wireframeSelection.selectedBlockKey) {
         return;
       }
       event.preventDefault();
@@ -123,7 +123,10 @@ export function attachEditorShortcuts(editor) {
       return;
     }
     if (key === "v") {
-      if (!clipboard.hasClipboardEntry || !editor.selectedBlockKey) {
+      if (
+        !clipboard.hasClipboardEntry ||
+        !editor.wireframeSelection.selectedBlockKey
+      ) {
         return;
       }
       event.preventDefault();

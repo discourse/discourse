@@ -134,7 +134,7 @@ module(
 
       assert.false(this.editor.isOutletEditing("homepage-blocks"));
 
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: `wf:state-test-tile:${stableKey}`,
         name: "wf:state-test-tile",
         args: { title: "Original" },

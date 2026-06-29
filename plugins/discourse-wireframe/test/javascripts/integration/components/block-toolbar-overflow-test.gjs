@@ -35,7 +35,10 @@ module(
 
       const draft = outletChildren(this.editor);
       this.blockKey = `heading:${draft[0].__stableKey}`;
-      this.editor.selectBlock({ key: this.blockKey, name: "heading" });
+      this.editor.wireframeSelection.selectBlock({
+        key: this.blockKey,
+        name: "heading",
+      });
     });
 
     hooks.afterEach(function () {

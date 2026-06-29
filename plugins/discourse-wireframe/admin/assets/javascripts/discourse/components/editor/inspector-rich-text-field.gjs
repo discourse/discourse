@@ -60,9 +60,9 @@ function valuesEqual(a, b) {
  *            allowed marks / line breaks. Supplied from the arg's `ui.schema`.
  */
 export default class InspectorRichTextField extends Component {
-  @service wireframe;
   @service wireframeInlineEdit;
   @service wireframeRevision;
+  @service wireframeSelection;
 
   @tracked linkMode = false;
   @tracked linkValue = "";
@@ -104,7 +104,7 @@ export default class InspectorRichTextField extends Component {
     return !!(
       inlineEdit?.isActive &&
       inlineEdit.argName === this.args.custom?.name &&
-      inlineEdit.blockKey === this.wireframe.selectedBlockKey
+      inlineEdit.blockKey === this.wireframeSelection.selectedBlockKey
     );
   }
 
@@ -122,7 +122,7 @@ export default class InspectorRichTextField extends Component {
   get liveValue() {
     // eslint-disable-next-line no-unused-vars
     const _v = this.wireframeRevision.version;
-    const data = this.wireframe.selectedBlockData;
+    const data = this.wireframeSelection.selectedBlockData;
     const name = this.args.custom?.name;
     if (name && data?.metadata?.args && name in data.metadata.args) {
       return data.args?.[name] ?? "";

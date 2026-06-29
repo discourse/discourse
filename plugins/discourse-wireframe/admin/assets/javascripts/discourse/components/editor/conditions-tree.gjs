@@ -38,6 +38,7 @@ import ConditionRule from "./condition-rule";
  */
 export default class ConditionsTree extends Component {
   @service wireframe;
+  @service wireframeSelection;
   @service blocks;
 
   /**
@@ -77,7 +78,7 @@ export default class ConditionsTree extends Component {
    */
   @cached
   get tree() {
-    return this.wireframe.selectedBlockConditions;
+    return this.wireframeSelection.selectedBlockConditions;
   }
 
   /**

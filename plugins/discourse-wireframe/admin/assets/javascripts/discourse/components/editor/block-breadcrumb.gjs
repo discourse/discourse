@@ -17,13 +17,13 @@ import { i18n } from "discourse-i18n";
  *
  * Hidden when nothing is selected.
  *
- * The path itself is derived in the wireframe service via
+ * The path itself is derived in the selection service via
  * `selectedBlockAncestry`, which walks the live layout from the
  * outlet root to the selected key and returns an array of
  * `{key, blockName, displayName, isOutlet, outletName}` segments.
  */
 export default class BlockBreadcrumb extends Component {
-  @service wireframe;
+  @service wireframeSelection;
 
   /**
    * Ordered list of ancestry segments from the outlet root down to the
@@ -34,7 +34,7 @@ export default class BlockBreadcrumb extends Component {
    */
   @cached
   get segments() {
-    return this.wireframe.selectedBlockAncestry;
+    return this.wireframeSelection.selectedBlockAncestry;
   }
 
   /**
@@ -57,10 +57,10 @@ export default class BlockBreadcrumb extends Component {
   @action
   pickSegment(segment) {
     if (segment.isOutlet) {
-      this.wireframe.selectBlock(null);
+      this.wireframeSelection.selectBlock(null);
       return;
     }
-    this.wireframe.selectBlock({
+    this.wireframeSelection.selectBlock({
       key: segment.key,
       name: segment.blockName,
     });

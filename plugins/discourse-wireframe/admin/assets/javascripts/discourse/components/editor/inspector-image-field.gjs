@@ -46,10 +46,10 @@ const ASPECT_RATIO_EPSILON = 0.02;
  * @property {ImageValue} [dark]
  */
 export default class InspectorImageField extends Component {
-  @service wireframe;
   @service wireframeImageUpload;
   @service wireframeLayoutQuery;
   @service wireframeRevision;
+  @service wireframeSelection;
 
   /**
    * URL-tab drafts per variant. Keep the field populated while the
@@ -102,7 +102,7 @@ export default class InspectorImageField extends Component {
    * commit time.
    */
   get blockKey() {
-    return this.wireframe.selectedBlockKey;
+    return this.wireframeSelection.selectedBlockKey;
   }
 
   /**

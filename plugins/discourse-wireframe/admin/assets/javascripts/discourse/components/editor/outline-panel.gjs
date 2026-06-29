@@ -45,6 +45,7 @@ export default class OutlinePanel extends Component {
   @service wireframeBlockMutations;
   @service wireframeDragSession;
   @service wireframeRevision;
+  @service wireframeSelection;
   @service wireframeSession;
 
   /** "tree" — flat per-block view (default); "outlets" — per-outlet summary. */
@@ -87,7 +88,7 @@ export default class OutlinePanel extends Component {
    * @returns {boolean}
    */
   isOutletSelected = (rootKey) => {
-    return rootKey != null && this.wireframe.isBlockSelected(rootKey);
+    return rootKey != null && this.wireframeSelection.isBlockSelected(rootKey);
   };
   /**
    * Explicit per-row collapse choices keyed by `blockKey` (`true` = collapsed,
@@ -259,16 +260,16 @@ export default class OutlinePanel extends Component {
     const data = this.#rowData(outletName, row);
 
     if (event?.metaKey || event?.ctrlKey) {
-      this.wireframe.toggleBlockSelection(data);
+      this.wireframeSelection.toggleBlockSelection(data);
     } else if (event?.shiftKey) {
       const keys = this.#rangeKeys(outletName, row);
       if (keys) {
-        this.wireframe.setSelectionRange(keys, data);
+        this.wireframeSelection.setSelectionRange(keys, data);
       } else {
-        this.wireframe.selectBlock(data);
+        this.wireframeSelection.selectBlock(data);
       }
     } else {
-      this.wireframe.selectBlock(data);
+      this.wireframeSelection.selectBlock(data);
     }
 
     // Flash the block on the canvas so the eye lands on it after it scrolls
@@ -308,7 +309,7 @@ export default class OutlinePanel extends Component {
    * @returns {Array<string>|null}
    */
   #rangeKeys(outletName, toRow) {
-    const anchorKey = this.wireframe.selectedBlockKey;
+    const anchorKey = this.wireframeSelection.selectedBlockKey;
     if (!anchorKey) {
       return null;
     }
@@ -332,7 +333,7 @@ export default class OutlinePanel extends Component {
    */
   @action
   selectOutletRoot(outletName) {
-    this.wireframe.selectOutlet(outletName);
+    this.wireframeSelection.selectOutlet(outletName);
   }
 
   lookupMetadataFor(blockName) {
@@ -761,7 +762,8 @@ export default class OutlinePanel extends Component {
                   class={{dConcatClass
                     "outline-block"
                     (if
-                      (this.wireframe.isBlockSelected row.blockKey) "--selected"
+                      (this.wireframeSelection.isBlockSelected row.blockKey)
+                      "--selected"
                     )
                     (if (this.isRowDragSource row.blockKey) "--dragging")
                     (if row.hasError "--error")

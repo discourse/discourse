@@ -69,7 +69,7 @@ module(
       // `--selected` class on the chrome, scheduling a re-render of its class
       // binding) and then immediately flashes it. The render that follows must
       // not wipe the just-added flash class.
-      wireframe.selectBlock({
+      wireframe.wireframeSelection.selectBlock({
         key: BLOCK_KEY,
         name: "button-link",
         args: {},
@@ -94,7 +94,7 @@ module(
       const { addSpy } = await setupBlock(this.owner);
 
       // A bare `selectBlock` is the canvas-click path; it must not flash.
-      this.owner.lookup("service:wireframe").selectBlock({
+      this.owner.lookup("service:wireframe-selection").selectBlock({
         key: BLOCK_KEY,
         name: "button-link",
         args: {},

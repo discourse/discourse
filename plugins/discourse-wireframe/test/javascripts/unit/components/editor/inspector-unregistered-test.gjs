@@ -100,6 +100,9 @@ function stubWireframe(owner, blockData) {
   owner.register("service:wireframe-layout-query", stub, {
     instantiate: false,
   });
+  // The inspector reads the selection identity off the selection service.
+  owner.unregister("service:wireframe-selection");
+  owner.register("service:wireframe-selection", stub, { instantiate: false });
   // The inspector removes through the injected block-mutations service; back it
   // with the same stub so `removeBlock` still records onto `removeBlockCalls`.
   owner.unregister("service:wireframe-block-mutations");

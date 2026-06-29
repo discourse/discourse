@@ -67,11 +67,11 @@ import ImageVariantDropPopover from "./image-variant-drop-popover";
  */
 export default class ImageArgOverlay extends Component {
   @service menu;
-  @service wireframe;
   @service wireframeDragOverlay;
   @service wireframeImageUpload;
   @service wireframeLayoutQuery;
   @service wireframeRevision;
+  @service wireframeSelection;
 
   /**
    * Marker rect (relative to the chrome) used to position the
@@ -217,7 +217,7 @@ export default class ImageArgOverlay extends Component {
    * @returns {boolean}
    */
   get isSelected() {
-    return this.wireframe.selectedBlockKey === this.args.blockKey;
+    return this.wireframeSelection.selectedBlockKey === this.args.blockKey;
   }
 
   /**
@@ -312,7 +312,9 @@ export default class ImageArgOverlay extends Component {
    */
   get remeasureSignal() {
     const selected =
-      this.wireframe.selectedBlockKey === this.args.blockKey ? "1" : "0";
+      this.wireframeSelection.selectedBlockKey === this.args.blockKey
+        ? "1"
+        : "0";
     return `${selected}:${this.wireframeRevision.version}`;
   }
 
@@ -642,10 +644,10 @@ export default class ImageArgOverlay extends Component {
    * up click. Idempotent if the block is already selected.
    */
   #selectOwningBlock() {
-    if (this.wireframe.selectedBlockKey === this.args.blockKey) {
+    if (this.wireframeSelection.selectedBlockKey === this.args.blockKey) {
       return;
     }
-    this.wireframe.selectBlock({ key: this.args.blockKey });
+    this.wireframeSelection.selectBlock({ key: this.args.blockKey });
   }
 
   #variantFromUpload(upload) {

@@ -60,8 +60,8 @@ function coerceToSchemaType(value, argDef) {
  * supported extension point — see `fk/field-data.gjs:71`.)
  */
 export default class InspectorForm extends Component {
-  @service wireframe;
   @service wireframeArgEdit;
+  @service wireframeSelection;
 
   /**
    * FormKit API exposed via `<Form @onRegisterApi>`. Used to push the
@@ -92,7 +92,7 @@ export default class InspectorForm extends Component {
    */
   @cached
   get fieldErrors() {
-    return this.wireframe.selectedBlockFieldErrors;
+    return this.wireframeSelection.selectedBlockFieldErrors;
   }
 
   /**
@@ -104,7 +104,7 @@ export default class InspectorForm extends Component {
    * to declare a schema.
    */
   get schema() {
-    const declared = this.wireframe.selectedBlockData?.metadata?.args;
+    const declared = this.wireframeSelection.selectedBlockData?.metadata?.args;
     if (declared && Object.keys(declared).length > 0) {
       return declared;
     }
@@ -126,7 +126,7 @@ export default class InspectorForm extends Component {
    * @returns {boolean}
    */
   get disabled() {
-    return this.wireframe.selectedBlockData?.isRegistered === false;
+    return this.wireframeSelection.selectedBlockData?.isRegistered === false;
   }
 
   /**
@@ -138,7 +138,7 @@ export default class InspectorForm extends Component {
    * @returns {"all"|Set<string>|null}
    */
   get lockedArgs() {
-    const lock = this.wireframe.partLockForSelection();
+    const lock = this.wireframeSelection.partLockForSelection();
     if (lock === true) {
       return "all";
     }
@@ -162,7 +162,7 @@ export default class InspectorForm extends Component {
    * required here — the snapshot reaches FormKit verbatim.
    */
   get values() {
-    return this.wireframe.selectedBlockData?.argsSnapshot ?? {};
+    return this.wireframeSelection.selectedBlockData?.argsSnapshot ?? {};
   }
 
   /**
@@ -318,7 +318,7 @@ export default class InspectorForm extends Component {
       }
     }
 
-    this.wireframe.selectedBlockNonFieldErrors.forEach((d, i) => {
+    this.wireframeSelection.selectedBlockNonFieldErrors.forEach((d, i) => {
       this.#formApi.addError(`_block:${i}`, {
         message: friendlyErrorMessage(d),
       });

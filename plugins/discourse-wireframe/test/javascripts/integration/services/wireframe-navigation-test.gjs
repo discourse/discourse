@@ -35,7 +35,7 @@ class NavTestTile extends Component {
 async function editTitle(editor, outlet, value) {
   const tile =
     editor.wireframeLayoutQuery.readResolvedLayout(outlet)?.[0]?.children?.[0];
-  editor.selectBlock({
+  editor.wireframeSelection.selectBlock({
     key: `wf:nav-test-tile:${tile.__stableKey}`,
     name: "wf:nav-test-tile",
     args: { title: tile.args?.title },

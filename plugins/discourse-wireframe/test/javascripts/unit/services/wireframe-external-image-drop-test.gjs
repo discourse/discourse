@@ -103,7 +103,7 @@ module(
         children.some((c) => c.block === "wf:svc-img-drop-image"),
         "an image block was inserted at the slot"
       );
-      const blockKey = this.editor.selectedBlockKey;
+      const blockKey = this.editor.wireframeSelection.selectedBlockKey;
       assert.true(
         blockKey?.startsWith("wf:svc-img-drop-image:"),
         "the new image block is selected"
@@ -154,7 +154,7 @@ module(
 
       const result = this.imageUpload.completeExternalImageDrop(this.file);
 
-      const blockKey = this.editor.selectedBlockKey;
+      const blockKey = this.editor.wireframeSelection.selectedBlockKey;
       assert.true(
         blockKey?.startsWith("wf:svc-img-drop-tile:"),
         "the block was still inserted and selected"

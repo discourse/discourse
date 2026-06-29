@@ -54,7 +54,7 @@ module(
     // Edits the outlet's heading so the toolbar's Save button enables.
     async function makeDirty(editor) {
       const draft = outletChildren(editor);
-      editor.selectBlock({
+      editor.wireframeSelection.selectBlock({
         key: `heading:${draft[0].__stableKey}`,
         name: "heading",
       });
@@ -178,7 +178,7 @@ module(
 
       // A further edit re-enables it.
       const draft = outletChildren(this.editor);
-      this.editor.selectBlock({
+      this.editor.wireframeSelection.selectBlock({
         key: `heading:${draft[0].__stableKey}`,
         name: "heading",
       });

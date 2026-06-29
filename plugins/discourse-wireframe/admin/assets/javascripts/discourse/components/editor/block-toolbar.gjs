@@ -74,6 +74,7 @@ export default class BlockToolbar extends Component {
   @service wireframeInlineEdit;
   @service wireframeLayoutQuery;
   @service wireframeRevision;
+  @service wireframeSelection;
 
   /**
    * Working value of the URL input while a field-editor slot is
@@ -94,11 +95,11 @@ export default class BlockToolbar extends Component {
   #duplicateMenu = null;
 
   get canMoveUp() {
-    return this.wireframe.canMoveSelectedUp;
+    return this.wireframeSelection.canMoveSelectedUp;
   }
 
   get canMoveDown() {
-    return this.wireframe.canMoveSelectedDown;
+    return this.wireframeSelection.canMoveSelectedDown;
   }
 
   /**
