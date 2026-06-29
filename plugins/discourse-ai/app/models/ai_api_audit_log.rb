@@ -55,26 +55,26 @@ end
 #
 # Table name: ai_api_audit_logs
 #
-#  id                      :bigint           not null, primary key
-#  cache_read_tokens       :integer
-#  cache_write_tokens      :integer
-#  duration_msecs          :integer
-#  feature_context         :jsonb
-#  feature_name            :string(255)
-#  language_model          :string(255)
-#  raw_request_payload     :string
-#  raw_response_payload    :string
-#  request_tokens          :integer
-#  response_status         :integer
-#  response_tokens         :integer
-#  retry_attempt_statuses  :integer          default([]), not null, is an Array
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  llm_id                  :bigint
-#  post_id                 :integer
-#  provider_id             :integer          not null
-#  topic_id                :integer
-#  user_id                 :integer
+#  id                     :bigint           not null, primary key
+#  cache_read_tokens      :integer
+#  cache_write_tokens     :integer
+#  duration_msecs         :integer
+#  feature_context        :jsonb
+#  feature_name           :string(255)
+#  language_model         :string(255)
+#  raw_request_payload    :string
+#  raw_response_payload   :string
+#  request_tokens         :integer
+#  response_status        :integer
+#  response_tokens        :integer
+#  retry_attempt_statuses :integer          default([]), not null, is an Array
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  llm_id                 :bigint
+#  post_id                :integer
+#  provider_id            :integer          not null
+#  topic_id               :integer
+#  user_id                :integer
 #
 # Indexes
 #
