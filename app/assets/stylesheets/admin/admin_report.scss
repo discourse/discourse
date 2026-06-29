@@ -129,20 +129,9 @@
 }
 
 .rtl .admin-report {
-  .filters {
-    margin-left: 0;
-    margin-right: 1em;
-  }
-
   .trend {
     margin-left: unset;
     margin-right: auto;
-  }
-}
-
-.admin-report.storage-stats {
-  .main {
-    flex: 1 1 auto;
   }
 }
 

@@ -4,10 +4,10 @@ import EmberObject, { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
+import AdminReportBody from "discourse/admin/components/admin-report-body";
 import AdminReportChart from "discourse/admin/components/admin-report-chart";
 import AdminReportCounters from "discourse/admin/components/admin-report-counters";
 import AdminReportInlineTable from "discourse/admin/components/admin-report-inline-table";
-import AdminReportNew from "discourse/admin/components/admin-report-new";
 import AdminReportRadar from "discourse/admin/components/admin-report-radar";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import AdminReportStackedLineChart from "discourse/admin/components/admin-report-stacked-line-chart";
@@ -587,5 +587,7 @@ export default class AdminReport extends Component {
     return Report.create(jsonReport);
   }
 
-  <template><AdminReportNew @report={{this}} @filters={{@filters}} /></template>
+  <template>
+    <AdminReportBody @report={{this}} @filters={{@filters}} />
+  </template>
 }

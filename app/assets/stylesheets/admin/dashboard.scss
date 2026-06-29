@@ -369,7 +369,7 @@
   }
 
   .admin-report:not(:last-child) {
-    .main {
+    .chart__body {
       border-bottom: 0;
     }
 
@@ -398,7 +398,7 @@
     }
   }
 
-  .admin-report .main .report-alert {
+  .admin-report .chart__body .report-alert {
     display: flex;
     flex-direction: row;
     padding: 0.5em 0.25em;

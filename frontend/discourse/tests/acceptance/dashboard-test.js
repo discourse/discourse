@@ -122,6 +122,12 @@ acceptance("Dashboard", function (needs) {
     assert.dom(".admin-reports-group").exists("shows the grouped reports");
   });
 
+  test("old dashboard reports URL redirects to the reports page", async function (assert) {
+    await visit("/admin/dashboard/reports");
+
+    assert.strictEqual(currentURL(), "/admin/reports");
+  });
+
   test("reports filters", async function (assert) {
     await visit(
       '/admin/reports/signups_with_groups?end_date=2018-07-16&filters=%7B"group"%3A88%7D&start_date=2018-06-16'
