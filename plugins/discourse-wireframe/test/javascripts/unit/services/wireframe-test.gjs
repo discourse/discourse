@@ -99,6 +99,12 @@ function gridOf(editor) {
   return getOwner(editor).lookup("service:wireframe-grid-manipulator");
 }
 
+// The publish/save/discard workflow + the in-session draft layer live on the
+// staging service; the kernel only delegates to it via begin/end session.
+function stagingOf(editor) {
+  return getOwner(editor).lookup("service:wireframe-staging");
+}
+
 module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
   setupTest(hooks);
   setupBlockLayoutDraftsStub(hooks);
@@ -783,7 +789,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "undo is available after the insert"
       );
 
-      await this.editor.discardOutlet("homepage-blocks");
+      await stagingOf(this.editor).discardOutlet("homepage-blocks");
       assert.false(
         this.editor.wireframeEditEngine.canUndo,
         "discarding the outlet removes its undo entry"
@@ -3477,7 +3483,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         return response({});
       });
 
-      const banner = await this.editor.saveAllEditedDrafts();
+      const banner = await stagingOf(this.editor).saveAllEditedDrafts();
 
       assert.strictEqual(banner, null, "no error banner on success");
       assert.verifySteps(["draft:homepage-blocks"]);
@@ -3490,7 +3496,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("returns a banner naming an outlet whose draft fails", async function (assert) {
       pretender.post(DRAFTS_URL, () => response(500, {}));
 
-      const banner = await this.editor.saveAllEditedDrafts();
+      const banner = await stagingOf(this.editor).saveAllEditedDrafts();
 
       assert.true(
         banner?.includes("homepage-blocks"),

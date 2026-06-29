@@ -92,6 +92,10 @@ function stubWireframe(owner, config) {
   // activeThemeId) off the theme service, so back it with the same stub instance.
   owner.unregister("service:wireframe-theme");
   owner.register("service:wireframe-theme", stub, { instantiate: false });
+  // The drawer reads the draft state + publish/save/discard workflow off the
+  // staging service, so back it with the same stub instance.
+  owner.unregister("service:wireframe-staging");
+  owner.register("service:wireframe-staging", stub, { instantiate: false });
   // The drawer reads session state off the session signal service, not the
   // wireframe stub, so flip it active to mirror an open editor.
   owner.lookup("service:wireframe-session").activate();

@@ -40,6 +40,7 @@ export default class EditorShell extends Component {
   @service wireframeDragNav;
   @service wireframeEditEngine;
   @service wireframeSession;
+  @service wireframeStaging;
   @service wireframeValidation;
 
   @tracked warningsPanelOpen = false;
@@ -211,8 +212,8 @@ export default class EditorShell extends Component {
               class="btn-primary wireframe-btn-save"
               @icon="cloud-arrow-up"
               @label="wireframe.review.open"
-              @disabled={{unless this.wireframe.canOpenReview true}}
-              @action={{this.wireframe.openReviewDrawer}}
+              @disabled={{unless this.wireframeStaging.canOpenReview true}}
+              @action={{this.wireframeStaging.openReviewDrawer}}
             />
             <DButton
               @icon="xmark"

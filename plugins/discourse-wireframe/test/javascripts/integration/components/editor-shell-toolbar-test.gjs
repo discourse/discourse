@@ -288,7 +288,7 @@ module(
         "back to the published one-block layout"
       );
       assert.true(
-        this.editor.hasUnsavedDraftEdits,
+        this.owner.lookup("service:wireframe-staging").hasUnsavedDraftEdits,
         "the persisted draft still differs from the canvas, so there are unsaved draft edits"
       );
       assert
@@ -308,7 +308,7 @@ module(
 
       assert.true(drafted, "Save draft writes the updated draft to the server");
       assert.false(
-        this.editor.hasUnsavedDraftEdits,
+        this.owner.lookup("service:wireframe-staging").hasUnsavedDraftEdits,
         "after saving, the draft baseline matches the canvas"
       );
     });

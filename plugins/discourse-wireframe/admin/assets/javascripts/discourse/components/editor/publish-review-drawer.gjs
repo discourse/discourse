@@ -23,7 +23,7 @@ import { OUTLET_STATE } from "../../services/wireframe-layout-query";
  * edited layout differs from what is live, with an optional raw-layout view.
  *
  * Opened from the toolbar Save button, the publish-target indicator, and the
- * blocked callout; all three flip `wireframe.reviewDrawerOpen`. Mounted once at
+ * blocked callout; all three flip `wireframeStaging.reviewDrawerOpen`. Mounted once at
  * the shell level so it survives tab switches. Save/publish/discard and the
  * escape hatches all live here — the toolbar carries only the button that opens
  * the drawer.
@@ -35,6 +35,7 @@ export default class PublishReviewDrawer extends Component {
   @service wireframeLayoutQuery;
   @service wireframePublishPreview;
   @service wireframeSession;
+  @service wireframeStaging;
   @service wireframeTheme;
   @service wireframeValidation;
 
@@ -63,7 +64,9 @@ export default class PublishReviewDrawer extends Component {
   #expandedRaw = trackedSet();
 
   get isOpen() {
-    return this.wireframeSession.active && this.wireframe.reviewDrawerOpen;
+    return (
+      this.wireframeSession.active && this.wireframeStaging.reviewDrawerOpen
+    );
   }
 
   /** The edited outlets grouped by owner theme — the publish plan. */
@@ -102,7 +105,7 @@ export default class PublishReviewDrawer extends Component {
   get canSaveDraft() {
     return (
       !this.isSaving &&
-      this.wireframe.hasUnsavedDraftEdits &&
+      this.wireframeStaging.hasUnsavedDraftEdits &&
       this.wireframeTheme.activeThemeId != null
     );
   }
@@ -119,7 +122,7 @@ export default class PublishReviewDrawer extends Component {
 
   @action
   close() {
-    this.wireframe.closeReviewDrawer();
+    this.wireframeStaging.closeReviewDrawer();
   }
 
   @action
@@ -133,7 +136,7 @@ export default class PublishReviewDrawer extends Component {
 
   @action
   discardAll() {
-    this.wireframe.discardAll();
+    this.wireframeStaging.discardAll();
   }
 
   @action
@@ -171,13 +174,13 @@ export default class PublishReviewDrawer extends Component {
       title: i18n("wireframe.outlet.reset_confirm_title"),
       message: i18n("wireframe.outlet.reset_confirm_message"),
       confirmButtonLabel: "wireframe.outlet.reset_confirm_button",
-      didConfirm: () => this.wireframe.resetToDefault(outletName),
+      didConfirm: () => this.wireframeStaging.resetToDefault(outletName),
     });
   }
 
   @action
   async exportOutlet(outletName) {
-    this.actionError = await this.wireframe.exportOutlet(outletName);
+    this.actionError = await this.wireframeStaging.exportOutlet(outletName);
   }
 
   @action
@@ -188,7 +191,7 @@ export default class PublishReviewDrawer extends Component {
       confirmButtonLabel: "wireframe.outlet.create_component_confirm_button",
       didConfirm: () =>
         this.#runThemeAction(() =>
-          this.wireframe.createCustomizationComponent()
+          this.wireframeStaging.createCustomizationComponent()
         ),
     });
   }
@@ -200,7 +203,7 @@ export default class PublishReviewDrawer extends Component {
       message: i18n("wireframe.outlet.duplicate_confirm_message"),
       confirmButtonLabel: "wireframe.outlet.duplicate_confirm_button",
       didConfirm: () =>
-        this.#runThemeAction(() => this.wireframe.duplicateForEditing()),
+        this.#runThemeAction(() => this.wireframeStaging.duplicateForEditing()),
     });
   }
 
@@ -208,7 +211,7 @@ export default class PublishReviewDrawer extends Component {
     this.isSaving = true;
     this.saveError = null;
     try {
-      this.saveError = await this.wireframe.saveAllEditedDrafts();
+      this.saveError = await this.wireframeStaging.saveAllEditedDrafts();
     } finally {
       this.isSaving = false;
     }
@@ -221,7 +224,7 @@ export default class PublishReviewDrawer extends Component {
       // The service owns the per-outlet owner targeting, the stale-version
       // conflict prompt, and the edit-state reconciliation; a banner string comes
       // back for any non-conflict error, or null on success.
-      this.saveError = await this.wireframe.publishEditedOutlets();
+      this.saveError = await this.wireframeStaging.publishEditedOutlets();
     } finally {
       this.isSaving = false;
     }

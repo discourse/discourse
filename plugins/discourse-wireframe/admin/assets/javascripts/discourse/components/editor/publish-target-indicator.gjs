@@ -15,7 +15,7 @@ import { i18n } from "discourse-i18n";
  * to set up a companion.
  */
 export default class PublishTargetIndicator extends Component {
-  @service wireframe;
+  @service wireframeStaging;
   @service wireframeTheme;
 
   get targets() {
@@ -49,7 +49,7 @@ export default class PublishTargetIndicator extends Component {
   get hasBlocked() {
     // While the companion lookup is still in flight, don't show the blocked
     // warning — it may resolve to a publishable companion.
-    if (this.wireframe.publishTargetResolving) {
+    if (this.wireframeStaging.publishTargetResolving) {
       return false;
     }
     if (this.singleTarget) {
@@ -79,7 +79,7 @@ export default class PublishTargetIndicator extends Component {
         }}
         @icon={{if this.hasBlocked "triangle-exclamation" "cloud-arrow-up"}}
         @translatedLabel={{this.label}}
-        @action={{this.wireframe.openReviewDrawer}}
+        @action={{this.wireframeStaging.openReviewDrawer}}
       />
     {{/if}}
   </template>

@@ -191,7 +191,9 @@ module(
         assert.step(`publish:${body.outlet_name}`);
         return response({});
       });
-      await editor.publishEditedOutlets();
+      await getOwner(editor)
+        .lookup("service:wireframe-staging")
+        .publishEditedOutlets();
       assert.verifySteps([], "nothing is published when nothing was edited");
     });
 
@@ -246,7 +248,9 @@ module(
       });
       // A successful publish discards the now-live draft.
       pretender.delete(DRAFTS_URL, () => response({ success: true }));
-      await editor.publishEditedOutlets();
+      await getOwner(editor)
+        .lookup("service:wireframe-staging")
+        .publishEditedOutlets();
       assert.verifySteps(
         ["publish:homepage-blocks"],
         "the edited-but-unmounted outlet is still published"

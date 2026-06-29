@@ -15,7 +15,7 @@ import { i18n } from "discourse-i18n";
  * it renders nothing when the active theme is directly publishable.
  */
 export default class PublishBlockedCallout extends Component {
-  @service wireframe;
+  @service wireframeStaging;
   @service wireframeTheme;
 
   @tracked dismissed = false;
@@ -27,7 +27,7 @@ export default class PublishBlockedCallout extends Component {
   get isVisible() {
     return (
       !this.dismissed &&
-      !this.wireframe.publishTargetResolving &&
+      !this.wireframeStaging.publishTargetResolving &&
       this.target != null &&
       !this.target.publishable
     );
@@ -54,7 +54,7 @@ export default class PublishBlockedCallout extends Component {
         <DButton
           class="btn-primary btn-small wireframe-blocked-callout__setup"
           @label="wireframe.review.set_up"
-          @action={{this.wireframe.openReviewDrawer}}
+          @action={{this.wireframeStaging.openReviewDrawer}}
         />
         <DButton
           class="btn-flat btn-small wireframe-blocked-callout__dismiss"
