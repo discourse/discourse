@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "extralite"
+require "fileutils"
 
 module Migrations
   module Database
@@ -77,8 +78,28 @@ module Migrations
         query_value(sql, *parameters)
       end
 
+      def tables
+        @db.tables
+      end
+
       def execute(sql, *parameters)
         @db.execute(sql, *parameters)
+      end
+
+      # `ATTACH` can't run inside a transaction, so commit any open batch first.
+      def merge_database(other_path, tables:)
+        commit_transaction
+        @db.execute("ATTACH DATABASE ? AS merge_source", other_path)
+        begin
+          tables.each do |table|
+            quoted = quote_identifier(table)
+            @db.execute("INSERT OR IGNORE INTO main.#{quoted} SELECT * FROM merge_source.#{quoted}")
+          end
+        ensure
+          @db.execute("DETACH DATABASE merge_source")
+        end
+
+        nil
       end
 
       def begin_transaction
@@ -93,6 +114,10 @@ module Migrations
       end
 
       private
+
+      def quote_identifier(name)
+        %("#{name.gsub('"', '""')}")
+      end
 
       def close_connection(keep_path:)
         return if @db.nil?
