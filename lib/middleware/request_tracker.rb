@@ -702,7 +702,18 @@ class Middleware::RequestTracker
     return unless payload.is_a?(Hash)
 
     Scheduler::Defer.later("Track session engagement") do
-      BrowserPageviewSessionEngagement.upsert_from_payload(payload)
+      BrowserPageviewSessionEngagement.upsert_from_payload(
+        session_id:
+          payload["session_id"]&.slice(0, BrowserPageviewSessionEngagement::MAX_SESSION_ID_LENGTH),
+        mouse_move_events: payload["mouse_move_events"].to_i,
+        click_events: payload["click_events"].to_i,
+        key_events: payload["key_events"].to_i,
+        scroll_events: payload["scroll_events"].to_i,
+        touch_events: payload["touch_events"].to_i,
+        back_forward_events: payload["back_forward_events"].to_i,
+        engaged_duration_ms: payload["engaged_duration_ms"].to_i,
+        time_to_first_interaction_ms: payload["time_to_first_interaction_ms"].to_i,
+      )
     end
   end
 

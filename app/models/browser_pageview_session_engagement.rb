@@ -3,25 +3,36 @@
 class BrowserPageviewSessionEngagement < ActiveRecord::Base
   MAX_SESSION_ID_LENGTH = 32
 
-  METRIC_COLUMNS = %i[
-    mouse_move_events
-    click_events
-    key_events
-    scroll_events
-    touch_events
-    back_forward_events
-    engaged_duration_ms
-    time_to_first_interaction_ms
-  ]
+  def self.upsert_from_payload(
+    session_id:,
+    mouse_move_events:,
+    click_events:,
+    key_events:,
+    scroll_events:,
+    touch_events:,
+    back_forward_events:,
+    engaged_duration_ms:,
+    time_to_first_interaction_ms:
+  )
+    return if session_id.blank?
 
-  def self.upsert_from_payload(payload)
-    payload = payload.with_indifferent_access
-    return if payload[:session_id].blank?
-
-    row = { session_id: payload[:session_id].slice(0, MAX_SESSION_ID_LENGTH) }
-    METRIC_COLUMNS.each { |col| row[col] = payload[col].to_i }
-
-    upsert_all([row], unique_by: :session_id, record_timestamps: true)
+    upsert_all(
+      [
+        {
+          session_id:,
+          mouse_move_events:,
+          click_events:,
+          key_events:,
+          scroll_events:,
+          touch_events:,
+          back_forward_events:,
+          engaged_duration_ms:,
+          time_to_first_interaction_ms:,
+        },
+      ],
+      unique_by: :session_id,
+      record_timestamps: true,
+    )
   end
 end
 
