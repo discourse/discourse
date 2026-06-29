@@ -427,7 +427,7 @@ module DiscourseAi
 
               if should_log
                 if retried
-                  final_attempt_status = log.response_status || retry_status
+                  final_attempt_status = retry_status || log.response_status
                   if final_attempt_status
                     request_attempts << request_attempt(
                       final_attempt_status,
