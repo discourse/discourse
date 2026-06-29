@@ -96,6 +96,8 @@ class AccessControlList < ActiveRecord::Base
   def self.inject_mandatory_acl(flattened_acl, target)
     return flattened_acl if !target.class.has_mandatory_acl?
 
+    flattened_acl = dedup_flattened_list(flattened_acl)
+
     target.class.mandatory_acl.each do |mandatory_acl|
       next if flattened_acl.any? { |acl| AclTarget.acl_matches?(acl, mandatory_acl) }
 
@@ -105,14 +107,32 @@ class AccessControlList < ActiveRecord::Base
     flattened_acl
   end
 
+  # Convenience method to expand & insert a flattened ACL in the following format:
+  #
+  # [{ type: "group", id: 3, permission: "edit" }]
+  #
+  # Converting it to include the allowed_group_ids, allowed_user_ids,
+  # owner, and so on.
+  def self.bulk_insert_flattened_acl!(flattened_acl, target, owner)
+    bulk_insert_list = expand_list_for_bulk_insert(flattened_acl, target, owner)
+    insert_all!(bulk_insert_list)
+  end
+
   # Takes a list in this format, which is the same
   # format from flattened_list that will come from the UI:
   #
-  # { type: "group", id: 3, permission: "edit" }]
+  # [{ type: "group", id: 3, permission: "edit" }]
   #
   # And converts into ACL records that can be inserted into the DB with
-  # .insert_all
-  def self.expand_list(list, target, owner)
+  # .insert_all, ending up in a format like so:
+  #
+  # [{ permission: "edit", allowed_group_ids: [3], target_type: "Category", target_id: 123, owner: "core" }]
+  #
+  # The created_at and updated_at dates are automatically added
+  # by AR when .insert_all! is used
+  def self.expand_list_for_bulk_insert(list, target, owner)
+    list = dedup_flattened_list(list)
+
     permissions_expanded =
       list.each_with_object({}) do |entry, permissions|
         permissions[entry[:permission]] ||= {}
@@ -135,6 +155,28 @@ class AccessControlList < ActiveRecord::Base
         owner: owner,
       }
     end
+  end
+
+  # Takes a flattened_list in this format below and removes
+  # any duplicate entries, where duplicates are defined as having the same
+  # type, id, and permission.
+  #
+  # [{ type: "group", id: 3, permission: "edit" }, { type: "group", id: 3, permission: "edit" }]
+  #
+  # Would be deduplicated to:
+  #
+  # [{ type: "group", id: 3, permission: "edit" }]
+  def self.dedup_flattened_list(flattened_acl)
+    flattened_acl.uniq { |acl| [acl[:type].to_sym, acl[:id], acl[:permission].to_s] }
+  end
+
+  # Takes a Group or User model instance and a provided permission and
+  # converts it to the minimum needed format for a flattened ACL list
+  # item like so:
+  #
+  # { type: :group, id: 3, permission: "edit" }
+  def self.flat_acl_for(group_or_user, permission)
+    { type: group_or_user.is_a?(Group) ? :group : :user, id: group_or_user.id, permission: }
   end
 
   module AccessControlListRelationMethods

@@ -27,7 +27,7 @@ The frontend and service params use flattened entries:
 ]
 ```
 
-`AccessControlList.expand_list(list, target, owner)` groups those entries by permission and returns rows suitable for `insert_all!`.
+`AccessControlList.expand_list_for_bulk_insert(list, target, owner)` groups those entries by permission and returns rows suitable for `insert_all!`.
 
 `AccessControlList.where(target: target).flattened_list` returns one entry per group per permission, including group metadata:
 

@@ -52,7 +52,11 @@ class AccessControlListManager
 
   def insert_acls(params:, flattened_acl_with_mandatory:)
     bulk_insert_list =
-      AccessControlList.expand_list(flattened_acl_with_mandatory, params.target, params.owner)
+      AccessControlList.expand_list_for_bulk_insert(
+        flattened_acl_with_mandatory,
+        params.target,
+        params.owner,
+      )
     @context[:new_permissions] = Acl::Target.new(flattened_acl_with_mandatory).permission_lookup
     AccessControlList.insert_all!(bulk_insert_list)
   end

@@ -126,7 +126,7 @@ When migrating legacy permission columns into ACLs:
 
 ## Current Limitations
 
-- `AccessControlList.expand_list` is group-first. It does not fully handle `{ type: "user" }` authoring yet.
+- `AccessControlList.expand_list_for_bulk_insert` is group-first. It does not fully handle `{ type: "user" }` authoring yet.
 - `preload_allowed`, `expand_list`, cleanup, and `DAccessControl` are still group-first even though lower-level matching scopes understand `allowed_user_ids`.
 - `flattened_list` skips missing groups and unknown target classes defensively. Validate group IDs at the service/contract boundary where user input enters; do not rely on read-path skipping as data hygiene.
 - The manager has caller-side authorization. Future core work may add a target policy hook; until then, do not expose it directly to untrusted callers.
