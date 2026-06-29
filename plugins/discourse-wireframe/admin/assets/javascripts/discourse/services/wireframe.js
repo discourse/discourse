@@ -66,7 +66,6 @@ export default class WireframeService extends Service {
   @service wireframeBlockMutations;
   @service wireframeBlockReveal;
   @service wireframeClipboard;
-  @service wireframeConditionsPanel;
   @service wireframeDrafts;
   @service wireframeDragOverlay;
   @service wireframeDragSession;
@@ -76,18 +75,14 @@ export default class WireframeService extends Service {
   @service wireframeForceExpand;
   @service wireframeGridManipulator;
   @service wireframeGridTemplate;
-  @service wireframeIconEdit;
   @service wireframeImageUpload;
   @service wireframeInlineEdit;
   @service wireframeLayoutQuery;
-  @service wireframeLinkEdit;
   @service wireframePersistence;
-  @service wireframePublishPreview;
   @service wireframeRevision;
   @service wireframeSelection;
   @service wireframeSession;
   @service wireframeTheme;
-  @service wireframeValidation;
 
   /**
    * Whether the publish review surface (the save/publish drawer) is open. Held
@@ -364,26 +359,6 @@ export default class WireframeService extends Service {
    */
   get inlineEdit() {
     return this.wireframeInlineEdit;
-  }
-
-  /**
-   * The inline icon-edit session service. Re-exposed here so external
-   * `wireframe.iconEdit.X` consumers keep working without injecting it.
-   *
-   * @returns {import("./wireframe-icon-edit").default}
-   */
-  get iconEdit() {
-    return this.wireframeIconEdit;
-  }
-
-  /**
-   * The inline link/URL-edit session service. Re-exposed here so external
-   * `wireframe.linkEdit.X` consumers keep working without injecting it.
-   *
-   * @returns {import("./wireframe-link-edit").default}
-   */
-  get linkEdit() {
-    return this.wireframeLinkEdit;
   }
 
   /**
@@ -734,22 +709,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Validation facade — delegates to `wireframeValidation`. The flat list of
-   * `{outletName, message}` warnings across every outlet, derived live from the
-   * validator's per-entry `__failureReason` stamps.
-   *
-   * @returns {Array<{outletName: string, message: string}>}
-   */
-  get validationWarnings() {
-    return this.wireframeValidation.validationWarnings;
-  }
-
-  /** @returns {boolean} */
-  get hasValidationWarnings() {
-    return this.wireframeValidation.hasValidationWarnings;
-  }
-
-  /**
    * Clipboard facade — delegates to `wireframeClipboard`. Indicates whether the
    * clipboard currently holds anything that `pasteFromClipboard` could insert.
    *
@@ -757,25 +716,6 @@ export default class WireframeService extends Service {
    */
   get hasClipboardEntry() {
     return this.wireframeClipboard.hasClipboardEntry;
-  }
-
-  /**
-   * Conditions-panel facade — whether the condition builder is detached into a
-   * floating panel.
-   *
-   * @returns {boolean}
-   */
-  get conditionsDetached() {
-    return this.wireframeConditionsPanel.detached;
-  }
-
-  /**
-   * Conditions-panel facade — the floating panel's last position/size, or `null`.
-   *
-   * @returns {Object|null}
-   */
-  get conditionsPanelRect() {
-    return this.wireframeConditionsPanel.rect;
   }
 
   /** Opens the publish review surface. */
@@ -788,34 +728,6 @@ export default class WireframeService extends Service {
   @action
   closeReviewDrawer() {
     this.reviewDrawerOpen = false;
-  }
-
-  /**
-   * Conditions-panel facade — delegates to `wireframeConditionsPanel`. Toggles
-   * the condition builder between docked and detached (floating).
-   */
-  @action
-  toggleConditionsDetached() {
-    this.wireframeConditionsPanel.toggleDetached();
-  }
-
-  /**
-   * Conditions-panel facade — collapses the floating panel back into the
-   * inspector.
-   */
-  @action
-  closeConditionsPanel() {
-    this.wireframeConditionsPanel.close();
-  }
-
-  /**
-   * Conditions-panel facade — records the floating panel's new position/size.
-   *
-   * @param {Object} rect
-   */
-  @action
-  updateConditionsPanelRect(rect) {
-    this.wireframeConditionsPanel.updateRect(rect);
   }
 
   @action
@@ -1206,19 +1118,6 @@ export default class WireframeService extends Service {
    */
   selectOutlet(outletName) {
     return this.wireframeSelection.selectOutlet(outletName);
-  }
-
-  /**
-   * Arg-edit facade — delegates to `wireframeArgEdit`, which owns the debounced
-   * inspector-arg pipeline. Kept as `@action` so template/handler consumers that
-   * bind `wireframe.updateSelectedArg` keep the correct `this`.
-   *
-   * @param {string} argName
-   * @param {*} value
-   */
-  @action
-  updateSelectedArg(argName, value) {
-    return this.wireframeArgEdit.updateSelectedArg(argName, value);
   }
 
   /**
@@ -1728,28 +1627,6 @@ export default class WireframeService extends Service {
   }
 
   /**
-   * Publish-preview facade — delegates to `wireframePublishPreview`. The
-   * structural change summary for an outlet (edited layout vs the live baseline).
-   *
-   * @param {string} outletName
-   * @returns {{added: number, removed: number, moved: number, edited: number, reliable: boolean}}
-   */
-  outletChangeSummary(outletName) {
-    return this.wireframePublishPreview.outletChangeSummary(outletName);
-  }
-
-  /**
-   * Publish-preview facade — delegates to `wireframePublishPreview`. The
-   * pretty-printed save JSON of an outlet's edited layout (raw-layout view).
-   *
-   * @param {string} outletName
-   * @returns {string}
-   */
-  outletLayoutJson(outletName) {
-    return this.wireframePublishPreview.outletLayoutJson(outletName);
-  }
-
-  /**
    * Whether an outlet has unsaved in-session edits. Reads the tracked edit
    * bookkeeping directly so a template binding (the EDITING pill) re-runs as
    * edits come and go.
@@ -1821,26 +1698,6 @@ export default class WireframeService extends Service {
     }
     method.call(this, args);
     return true;
-  }
-
-  /**
-   * @param {string} blockKey
-   * @returns {boolean}
-   */
-  isForceExpanded(blockKey) {
-    return this.wireframeForceExpand.isForceExpanded(blockKey);
-  }
-
-  /**
-   * Force-expand facade — delegates to `wireframeForceExpand`. Flips the
-   * force-expand state for a single `wf:layout` block (the chrome wrapper's
-   * `--force-expanded` class re-renders reactively).
-   *
-   * @param {string} blockKey
-   */
-  @action
-  toggleForceExpand(blockKey) {
-    return this.wireframeForceExpand.toggleForceExpand(blockKey);
   }
 
   /**

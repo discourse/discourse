@@ -31,6 +31,7 @@ const DEFAULT_HEIGHT = 560;
  */
 export default class ConditionsFloatingPanel extends Component {
   @service wireframe;
+  @service wireframeConditionsPanel;
 
   /**
    * Track resize via ResizeObserver — the `resize: both` corner grip
@@ -43,12 +44,12 @@ export default class ConditionsFloatingPanel extends Component {
       for (const entry of entries) {
         const w = Math.round(entry.contentRect.width);
         const h = Math.round(entry.contentRect.height);
-        const current = this.wireframe.conditionsPanelRect ?? {};
+        const current = this.wireframeConditionsPanel.rect ?? {};
         if (current.width === w && current.height === h) {
           continue;
         }
         const rect = element.getBoundingClientRect();
-        this.wireframe.updateConditionsPanelRect({
+        this.wireframeConditionsPanel.updateRect({
           x: Math.round(rect.left),
           y: Math.round(rect.top),
           width: w,
@@ -84,7 +85,7 @@ export default class ConditionsFloatingPanel extends Component {
       width: Math.round(this.#dragStart.width),
       height: Math.round(this.#dragStart.height),
     };
-    this.wireframe.updateConditionsPanelRect(next);
+    this.wireframeConditionsPanel.updateRect(next);
   };
   #endDrag = () => {
     this._dragging = false;
@@ -99,7 +100,7 @@ export default class ConditionsFloatingPanel extends Component {
   }
 
   get isOpen() {
-    return this.wireframe.isActive && this.wireframe.conditionsDetached;
+    return this.wireframe.isActive && this.wireframeConditionsPanel.detached;
   }
 
   /**
@@ -108,7 +109,7 @@ export default class ConditionsFloatingPanel extends Component {
    * so drag updates flow through the tracking system.
    */
   get panelStyle() {
-    const rect = this.wireframe.conditionsPanelRect;
+    const rect = this.wireframeConditionsPanel.rect;
     const w = rect?.width ?? DEFAULT_WIDTH;
     const h = rect?.height ?? DEFAULT_HEIGHT;
     const x = rect?.x ?? Math.max(0, Math.floor((window.innerWidth - w) / 2));
@@ -144,7 +145,7 @@ export default class ConditionsFloatingPanel extends Component {
 
   @action
   redock() {
-    this.wireframe.closeConditionsPanel();
+    this.wireframeConditionsPanel.close();
   }
 
   <template>

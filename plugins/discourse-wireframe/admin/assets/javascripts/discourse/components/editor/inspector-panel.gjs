@@ -28,6 +28,7 @@ import InspectorRawJson from "./inspector-raw-json";
 export default class InspectorPanel extends Component {
   @service blocks;
   @service wireframe;
+  @service wireframeConditionsPanel;
 
   isTabActive = (tab) => this.currentTab === tab;
   @tracked _activeTab = "args";
@@ -285,7 +286,7 @@ export default class InspectorPanel extends Component {
 
   @action
   toggleDetachConditions() {
-    this.wireframe.toggleConditionsDetached();
+    this.wireframeConditionsPanel.toggleDetached();
   }
 
   <template>
@@ -398,12 +399,12 @@ export default class InspectorPanel extends Component {
             <DButton
               class="btn-flat wireframe-inspector__detach-btn"
               @icon={{if
-                this.wireframe.conditionsDetached
+                this.wireframeConditionsPanel.detached
                 "down-left-and-up-right-to-center"
                 "up-right-and-down-left-from-center"
               }}
               @label={{if
-                this.wireframe.conditionsDetached
+                this.wireframeConditionsPanel.detached
                 "wireframe.inspector.conditions.redock_panel"
                 "wireframe.inspector.conditions.detach_panel"
               }}
@@ -411,7 +412,7 @@ export default class InspectorPanel extends Component {
               @action={{this.toggleDetachConditions}}
             />
           </div>
-          {{#if this.wireframe.conditionsDetached}}
+          {{#if this.wireframeConditionsPanel.detached}}
             <p class="wireframe-inspector__conditions-stub">
               {{i18n "wireframe.inspector.conditions.detached_stub"}}
             </p>

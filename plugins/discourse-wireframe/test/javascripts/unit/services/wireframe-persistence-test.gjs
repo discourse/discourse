@@ -38,7 +38,9 @@ async function registerLayout(owner) {
 }
 
 async function editArg(editor, argName, value) {
-  editor.updateSelectedArg(argName, value);
+  getOwner(editor)
+    .lookup("service:wireframe-arg-edit")
+    .updateSelectedArg(argName, value);
   await settled();
 }
 

@@ -31,6 +31,8 @@ import { OUTLET_STATE } from "../../services/wireframe-layout-query";
 export default class PublishReviewDrawer extends Component {
   @service wireframe;
   @service dialog;
+  @service wireframePublishPreview;
+  @service wireframeValidation;
 
   /** In-flight save or publish; disables the action buttons while awaiting. */
   @tracked isSaving = false;
@@ -46,8 +48,10 @@ export default class PublishReviewDrawer extends Component {
   isRawExpanded = (outletName) => this.#expandedRaw.has(outletName);
   outletState = (outletName) =>
     this.wireframe.layoutQuery.outletState(outletName);
-  summaryFor = (outletName) => this.wireframe.outletChangeSummary(outletName);
-  layoutJsonFor = (outletName) => this.wireframe.outletLayoutJson(outletName);
+  summaryFor = (outletName) =>
+    this.wireframePublishPreview.outletChangeSummary(outletName);
+  layoutJsonFor = (outletName) =>
+    this.wireframePublishPreview.outletLayoutJson(outletName);
   isOutletPublished = (outletName) =>
     this.wireframe.layoutQuery.outletState(outletName) ===
     OUTLET_STATE.PUBLISHED;
@@ -141,12 +145,12 @@ export default class PublishReviewDrawer extends Component {
     if (!this.canPublish) {
       return;
     }
-    if (this.wireframe.hasValidationWarnings) {
+    if (this.wireframeValidation.hasValidationWarnings) {
       // Publishing goes live, so an invalid (mid-edit) layout shouldn't ship by
       // accident — confirm first. Save draft skips this; a draft is private.
       this.dialog.confirm({
         message: i18n("wireframe.chrome.publish_with_warnings_confirm", {
-          count: this.wireframe.validationWarnings.length,
+          count: this.wireframeValidation.validationWarnings.length,
         }),
         confirmButtonLabel: "wireframe.chrome.publish_anyway",
         didConfirm: () => this.#performPublish(),

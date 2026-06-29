@@ -21,6 +21,7 @@ module(
 
     test("ignores keyboard-synthesized clicks on a URL arg", async function (assert) {
       const wireframe = this.owner.lookup("service:wireframe");
+      const linkEdit = this.owner.lookup("service:wireframe-link-edit");
       const blockKey = "button-link:test";
 
       wireframe.isActive = true;
@@ -57,7 +58,7 @@ module(
       await settled();
 
       assert.strictEqual(
-        wireframe.linkEdit.blockKey,
+        linkEdit.blockKey,
         null,
         "keyboard-synthesized click does not open a URL-edit session"
       );
@@ -69,7 +70,7 @@ module(
       await settled();
 
       assert.strictEqual(
-        wireframe.linkEdit.blockKey,
+        linkEdit.blockKey,
         blockKey,
         "pointer click opens the URL-edit session for the block"
       );

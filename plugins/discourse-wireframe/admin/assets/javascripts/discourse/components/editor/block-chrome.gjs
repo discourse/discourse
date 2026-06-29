@@ -92,6 +92,9 @@ export default class BlockChrome extends Component {
   @service tooltip;
   @service wireframe;
   @service wireframeDragOverlay;
+  @service wireframeForceExpand;
+  @service wireframeIconEdit;
+  @service wireframeLinkEdit;
 
   /**
    * Reference to the chrome's outer `<div>`, set on insert. Passed to
@@ -370,7 +373,7 @@ export default class BlockChrome extends Component {
   get isForceExpanded() {
     return (
       this.args.blockName === "layout" &&
-      this.wireframe.isForceExpanded(this.args.blockKey)
+      this.wireframeForceExpand.isForceExpanded(this.args.blockKey)
     );
   }
 
@@ -1508,14 +1511,14 @@ export default class BlockChrome extends Component {
           });
           return;
         case "icon":
-          this.wireframe.iconEdit.start({
+          this.wireframeIconEdit.start({
             blockKey: this.args.blockKey,
             argName,
             anchorEl: argEl,
           });
           return;
         case "url":
-          this.wireframe.linkEdit.start({
+          this.wireframeLinkEdit.start({
             blockKey: this.args.blockKey,
             argName,
           });

@@ -55,7 +55,9 @@ module(
         args: { title: "Original" },
         metadata: { args: { title: { type: "string" } } },
       });
-      context.editor.updateSelectedArg("title", "Edited");
+      getOwner(context.editor)
+        .lookup("service:wireframe-arg-edit")
+        .updateSelectedArg("title", "Edited");
       await settled();
     }
 

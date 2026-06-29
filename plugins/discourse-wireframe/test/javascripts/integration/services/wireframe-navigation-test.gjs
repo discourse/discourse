@@ -41,7 +41,9 @@ async function editTitle(editor, outlet, value) {
     args: { title: tile.args?.title },
     metadata: { args: { title: { type: "string" } } },
   });
-  editor.updateSelectedArg("title", value);
+  getOwner(editor)
+    .lookup("service:wireframe-arg-edit")
+    .updateSelectedArg("title", value);
   await settled();
 }
 

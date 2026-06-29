@@ -69,6 +69,7 @@ const DUPLICATE_PRESETS = [2, 3, 5, 10];
  */
 export default class BlockToolbar extends Component {
   @service wireframe;
+  @service wireframeForceExpand;
 
   /**
    * Working value of the URL input while a field-editor slot is
@@ -159,7 +160,7 @@ export default class BlockToolbar extends Component {
    * @returns {boolean}
    */
   get isForceExpanded() {
-    return this.wireframe.isForceExpanded(this.args.blockKey);
+    return this.wireframeForceExpand.isForceExpanded(this.args.blockKey);
   }
 
   /**
@@ -384,7 +385,7 @@ export default class BlockToolbar extends Component {
 
   @action
   toggleForceExpand() {
-    this.wireframe.toggleForceExpand(this.args.blockKey);
+    this.wireframeForceExpand.toggleForceExpand(this.args.blockKey);
   }
 
   @action

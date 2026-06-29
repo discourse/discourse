@@ -56,7 +56,9 @@ module(
         key: `heading:${draft[0].__stableKey}`,
         name: "heading",
       });
-      editor.updateSelectedArg("text", "Edited");
+      getOwner(editor)
+        .lookup("service:wireframe-arg-edit")
+        .updateSelectedArg("text", "Edited");
       await settled();
     }
 
@@ -177,7 +179,9 @@ module(
         key: `heading:${draft[0].__stableKey}`,
         name: "heading",
       });
-      this.editor.updateSelectedArg("text", "Edited again");
+      getOwner(this.editor)
+        .lookup("service:wireframe-arg-edit")
+        .updateSelectedArg("text", "Edited again");
       await settled();
 
       assert

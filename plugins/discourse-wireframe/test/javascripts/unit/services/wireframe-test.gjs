@@ -70,7 +70,9 @@ function registerTestLayout(owner) {
  * assertions observe the committed args.
  */
 async function editArg(editor, argName, value) {
-  editor.updateSelectedArg(argName, value);
+  getOwner(editor)
+    .lookup("service:wireframe-arg-edit")
+    .updateSelectedArg(argName, value);
   await settled();
 }
 
@@ -379,6 +381,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       // the layer array (frozen at validation time) — so the
       // inspector banner clears as soon as the author edits the arg
       // that was failing.
+      const validation = getOwner(this).lookup("service:wireframe-validation");
       const located = this.editor.layoutQuery.findEntryAndOutletSync(
         this.editor.selectedBlockKey
       );
@@ -387,7 +390,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         'Arg "title" must be a string, got number.';
 
       assert.deepEqual(
-        this.editor.validationWarnings.map((w) => w.message),
+        validation.validationWarnings.map((w) => w.message),
         ['Arg "title" must be a string, got number.'],
         "the stamp surfaces as a warning"
       );
@@ -395,7 +398,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       await editArg(this.editor, "title", "Edited");
 
       assert.deepEqual(
-        this.editor.validationWarnings,
+        validation.validationWarnings,
         [],
         "fixing the arg drops the warning in lockstep with the stamp clear"
       );

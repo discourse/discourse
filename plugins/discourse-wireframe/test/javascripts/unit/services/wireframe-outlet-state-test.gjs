@@ -135,7 +135,9 @@ module(
         args: { title: "Original" },
         metadata: { args: { title: { type: "string" } } },
       });
-      this.editor.updateSelectedArg("title", "Edited");
+      getOwner(this)
+        .lookup("service:wireframe-arg-edit")
+        .updateSelectedArg("title", "Edited");
       await settled();
 
       assert.true(this.editor.isOutletEditing("homepage-blocks"));

@@ -39,6 +39,7 @@ import { i18n } from "discourse-i18n";
  */
 export default class LinkEditPopover extends Component {
   @service wireframe;
+  @service wireframeLinkEdit;
 
   /**
    * Live working copy of the URL while editing. Seeded from the
@@ -61,8 +62,8 @@ export default class LinkEditPopover extends Component {
       return false;
     }
     return (
-      this.wireframe.linkEdit.blockKey === blockKey &&
-      this.wireframe.linkEdit.argName === argName
+      this.wireframeLinkEdit.blockKey === blockKey &&
+      this.wireframeLinkEdit.argName === argName
     );
   }
 
@@ -91,24 +92,24 @@ export default class LinkEditPopover extends Component {
     if (!blockKey || !argName) {
       return;
     }
-    this.wireframe.linkEdit.start({ blockKey, argName });
+    this.wireframeLinkEdit.start({ blockKey, argName });
   }
 
   @action
   applyEdit() {
-    this.wireframe.linkEdit.applyChange(this.value || null);
+    this.wireframeLinkEdit.applyChange(this.value || null);
     this.value = "";
   }
 
   @action
   removeEdit() {
-    this.wireframe.linkEdit.applyChange(null);
+    this.wireframeLinkEdit.applyChange(null);
     this.value = "";
   }
 
   @action
   cancelEdit() {
-    this.wireframe.linkEdit.stop();
+    this.wireframeLinkEdit.stop();
     this.value = "";
   }
 
@@ -149,7 +150,7 @@ export default class LinkEditPopover extends Component {
   @action
   onTeardown() {
     if (this.editing) {
-      this.wireframe.linkEdit.stop();
+      this.wireframeLinkEdit.stop();
     }
   }
 

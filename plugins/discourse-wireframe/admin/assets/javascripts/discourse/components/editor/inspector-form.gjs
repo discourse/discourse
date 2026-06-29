@@ -61,6 +61,7 @@ function coerceToSchemaType(value, argDef) {
  */
 export default class InspectorForm extends Component {
   @service wireframe;
+  @service wireframeArgEdit;
 
   /**
    * FormKit API exposed via `<Form @onRegisterApi>`. Used to push the
@@ -254,7 +255,7 @@ export default class InspectorForm extends Component {
       coerced === "" && argDef?.default === undefined ? null : coerced;
 
     await ctx.set(ctx.name, coerced);
-    this.wireframe.updateSelectedArg(ctx.name, writeValue);
+    this.wireframeArgEdit.updateSelectedArg(ctx.name, writeValue);
   }
 
   /**

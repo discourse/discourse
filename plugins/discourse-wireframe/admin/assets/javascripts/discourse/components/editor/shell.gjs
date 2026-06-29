@@ -38,6 +38,7 @@ export default class EditorShell extends Component {
   @service dragAndDrop;
   @service wireframe;
   @service wireframeDragNav;
+  @service wireframeValidation;
 
   @tracked warningsPanelOpen = false;
   @tracked leftPanelTab = "palette";
@@ -177,14 +178,14 @@ export default class EditorShell extends Component {
               @title="wireframe.chrome.dim_non_editable_title"
               @action={{this.toggleDimNonEditable}}
             />
-            {{#if this.wireframe.hasValidationWarnings}}
+            {{#if this.wireframeValidation.hasValidationWarnings}}
               <DButton
                 class={{dConcatClass
                   "btn-flat wireframe-btn-warnings"
                   (if this.warningsPanelOpen "--open")
                 }}
                 @icon="triangle-exclamation"
-                @translatedLabel={{this.wireframe.validationWarnings.length}}
+                @translatedLabel={{this.wireframeValidation.validationWarnings.length}}
                 @title="wireframe.chrome.warnings_button_title"
                 @action={{this.toggleWarningsPanel}}
               />
@@ -227,11 +228,11 @@ export default class EditorShell extends Component {
               {{dIcon "triangle-exclamation"}}
               <span>{{i18n
                   "wireframe.chrome.warnings_panel_title"
-                  count=this.wireframe.validationWarnings.length
+                  count=this.wireframeValidation.validationWarnings.length
                 }}</span>
             </div>
             <ul class="wireframe-warnings-panel__list">
-              {{#each this.wireframe.validationWarnings as |w|}}
+              {{#each this.wireframeValidation.validationWarnings as |w|}}
                 <li>
                   <code>{{w.outletName}}</code>
                   <span>{{w.message}}</span>
