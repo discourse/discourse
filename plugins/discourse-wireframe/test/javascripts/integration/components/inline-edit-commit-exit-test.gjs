@@ -54,7 +54,9 @@ module(
     setupBlockLayoutDraftsStub(hooks);
 
     hooks.afterEach(function () {
-      this.editor?.inlineEdit?.stop({ commit: false });
+      getOwner(this)?.lookup("service:wireframe-inline-edit")?.stop({
+        commit: false,
+      });
       this.editor?.exit();
       _resetOutletLayoutsForTesting();
     });
@@ -79,6 +81,7 @@ module(
         owner
       );
       const editor = owner.lookup("service:wireframe");
+      const inlineEdit = owner.lookup("service:wireframe-inline-edit");
       editor.siteSettings.wireframe_enabled = true;
       logIn(owner);
       editor.enter();
@@ -86,6 +89,7 @@ module(
       const inner = editor.layoutQuery.readResolvedLayout(OUTLET)[0];
       return {
         editor,
+        inlineEdit,
         cardKey: entryKey(inner.children[0]),
         leafKey: entryKey(inner.children[1]),
       };
@@ -94,8 +98,8 @@ module(
     // Bolds the whole (selected-on-mount) doc so the committed value becomes
     // doc-JSON rather than the seed string — a clear signal the PM doc actually
     // flowed back into `entry.args` on exit (a commit, not a revert).
-    function boldAll(editor) {
-      editor.inlineEdit.controller.toggleMark("strong");
+    function boldAll(inlineEdit) {
+      inlineEdit.controller.toggleMark("strong");
     }
 
     function argOf(editor, key, name) {
@@ -105,7 +109,9 @@ module(
     }
 
     test("Tab walks to the next rich-inline field on the same block", async function (assert) {
-      const { editor, cardKey, leafKey } = await prepare(getOwner(this));
+      const { editor, inlineEdit, cardKey, leafKey } = await prepare(
+        getOwner(this)
+      );
       this.editor = editor;
 
       await render(
@@ -133,10 +139,10 @@ module(
         </template>
       );
 
-      await editor.inlineEdit.start(cardKey, "title");
+      await inlineEdit.start(cardKey, "title");
       await settled();
       assert.strictEqual(
-        editor.inlineEdit.argName,
+        inlineEdit.argName,
         "title",
         "session opened on the first field"
       );
@@ -147,16 +153,18 @@ module(
       await flushRaf();
       await settled();
 
-      assert.true(editor.inlineEdit.isActive, "still editing after Tab");
+      assert.true(inlineEdit.isActive, "still editing after Tab");
       assert.strictEqual(
-        editor.inlineEdit.argName,
+        inlineEdit.argName,
         "subtitle",
         "Tab moved to the next field on the same block"
       );
     });
 
     test("Tab past the last field commits and exits", async function (assert) {
-      const { editor, cardKey, leafKey } = await prepare(getOwner(this));
+      const { editor, inlineEdit, cardKey, leafKey } = await prepare(
+        getOwner(this)
+      );
       this.editor = editor;
 
       await render(
@@ -184,15 +192,15 @@ module(
         </template>
       );
 
-      await editor.inlineEdit.start(cardKey, "subtitle");
+      await inlineEdit.start(cardKey, "subtitle");
       await settled();
-      boldAll(editor);
+      boldAll(inlineEdit);
       await settled();
 
       await triggerKeyEvent(".wf-inline-editor", "keydown", "Tab");
 
       assert.false(
-        editor.inlineEdit.isActive,
+        inlineEdit.isActive,
         "Tab past the last field exited the session"
       );
       assert.strictEqual(
@@ -203,7 +211,9 @@ module(
     });
 
     test("Shift-Tab past the first field commits and exits", async function (assert) {
-      const { editor, cardKey, leafKey } = await prepare(getOwner(this));
+      const { editor, inlineEdit, cardKey, leafKey } = await prepare(
+        getOwner(this)
+      );
       this.editor = editor;
 
       await render(
@@ -231,9 +241,9 @@ module(
         </template>
       );
 
-      await editor.inlineEdit.start(cardKey, "title");
+      await inlineEdit.start(cardKey, "title");
       await settled();
-      boldAll(editor);
+      boldAll(inlineEdit);
       await settled();
 
       await triggerKeyEvent(".wf-inline-editor", "keydown", "Tab", {
@@ -241,7 +251,7 @@ module(
       });
 
       assert.false(
-        editor.inlineEdit.isActive,
+        inlineEdit.isActive,
         "Shift-Tab past the first field exited the session"
       );
       assert.strictEqual(
@@ -252,7 +262,9 @@ module(
     });
 
     test("Tab in a single-field block commits and exits", async function (assert) {
-      const { editor, cardKey, leafKey } = await prepare(getOwner(this));
+      const { editor, inlineEdit, cardKey, leafKey } = await prepare(
+        getOwner(this)
+      );
       this.editor = editor;
 
       await render(
@@ -275,15 +287,15 @@ module(
         </template>
       );
 
-      await editor.inlineEdit.start(leafKey, "text");
+      await inlineEdit.start(leafKey, "text");
       await settled();
-      boldAll(editor);
+      boldAll(inlineEdit);
       await settled();
 
       await triggerKeyEvent(".wf-inline-editor", "keydown", "Tab");
 
       assert.false(
-        editor.inlineEdit.isActive,
+        inlineEdit.isActive,
         "Tab in a single-field block exited the session"
       );
       assert.strictEqual(
@@ -294,7 +306,9 @@ module(
     });
 
     test("clicking elsewhere on the same block commits and exits", async function (assert) {
-      const { editor, cardKey, leafKey } = await prepare(getOwner(this));
+      const { editor, inlineEdit, cardKey, leafKey } = await prepare(
+        getOwner(this)
+      );
       this.editor = editor;
 
       await render(
@@ -323,9 +337,9 @@ module(
         </template>
       );
 
-      await editor.inlineEdit.start(cardKey, "title");
+      await inlineEdit.start(cardKey, "title");
       await settled();
-      boldAll(editor);
+      boldAll(inlineEdit);
       await settled();
 
       // The padding sits inside the editing block but is NOT a rich-inline
@@ -335,7 +349,7 @@ module(
       await settled();
 
       assert.false(
-        editor.inlineEdit.isActive,
+        inlineEdit.isActive,
         "clicking off the text on the same block exited the session"
       );
       assert.strictEqual(
@@ -346,7 +360,9 @@ module(
     });
 
     test("clicking another field region on the same block does not exit", async function (assert) {
-      const { editor, cardKey, leafKey } = await prepare(getOwner(this));
+      const { editor, inlineEdit, cardKey, leafKey } = await prepare(
+        getOwner(this)
+      );
       this.editor = editor;
 
       await render(
@@ -374,7 +390,7 @@ module(
         </template>
       );
 
-      await editor.inlineEdit.start(cardKey, "title");
+      await inlineEdit.start(cardKey, "title");
       await settled();
 
       // Mousedown on another rich-inline field region: the chrome's own click
@@ -386,18 +402,20 @@ module(
       await settled();
 
       assert.true(
-        editor.inlineEdit.isActive,
+        inlineEdit.isActive,
         "clicking another field region did not exit the session"
       );
       assert.strictEqual(
-        editor.inlineEdit.argName,
+        inlineEdit.argName,
         "title",
         "no spurious exit transition fired"
       );
     });
 
     test("clicking the block toolbar keeps the session active", async function (assert) {
-      const { editor, cardKey, leafKey } = await prepare(getOwner(this));
+      const { editor, inlineEdit, cardKey, leafKey } = await prepare(
+        getOwner(this)
+      );
       this.editor = editor;
 
       await render(
@@ -423,7 +441,7 @@ module(
         </template>
       );
 
-      await editor.inlineEdit.start(cardKey, "title");
+      await inlineEdit.start(cardKey, "title");
       await settled();
 
       await triggerEvent(".tb-btn", "mousedown");
@@ -431,13 +449,15 @@ module(
       await settled();
 
       assert.true(
-        editor.inlineEdit.isActive,
+        inlineEdit.isActive,
         "clicking a format toolbar button stayed in the edit session"
       );
     });
 
     test("Escape commits and exits", async function (assert) {
-      const { editor, cardKey, leafKey } = await prepare(getOwner(this));
+      const { editor, inlineEdit, cardKey, leafKey } = await prepare(
+        getOwner(this)
+      );
       this.editor = editor;
 
       await render(
@@ -460,14 +480,14 @@ module(
         </template>
       );
 
-      await editor.inlineEdit.start(cardKey, "title");
+      await inlineEdit.start(cardKey, "title");
       await settled();
-      boldAll(editor);
+      boldAll(inlineEdit);
       await settled();
 
       await triggerKeyEvent(".wf-inline-editor", "keydown", "Escape");
 
-      assert.false(editor.inlineEdit.isActive, "Escape exited the session");
+      assert.false(inlineEdit.isActive, "Escape exited the session");
       assert.strictEqual(
         typeof argOf(editor, cardKey, "title"),
         "object",

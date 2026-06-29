@@ -95,6 +95,7 @@ export default class BlockChrome extends Component {
   @service wireframeDropAuthority;
   @service wireframeForceExpand;
   @service wireframeIconEdit;
+  @service wireframeInlineEdit;
   @service wireframeLinkEdit;
 
   /**
@@ -1463,7 +1464,7 @@ export default class BlockChrome extends Component {
         this.wireframe.selectedBlockKey === panelKey &&
         tabEl.dataset.wfContainerArgKey
       ) {
-        this.wireframe.inlineEdit.startContainerArg(
+        this.wireframeInlineEdit.startContainerArg(
           tabEl.dataset.wfContainerArgKey,
           tabEl.dataset.wfContainerArgNamespace,
           tabEl.dataset.wfContainerArgField,
@@ -1507,7 +1508,7 @@ export default class BlockChrome extends Component {
     if (argEl && this.wireframe.selectedBlockKey === this.args.blockKey) {
       switch (kind) {
         case "rich-text":
-          this.wireframe.inlineEdit.start(this.args.blockKey, argName, {
+          this.wireframeInlineEdit.start(this.args.blockKey, argName, {
             coords: { x: event.clientX, y: event.clientY },
           });
           return;

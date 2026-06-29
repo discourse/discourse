@@ -2344,6 +2344,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
       this.editor = getOwner(this).lookup("service:wireframe");
+      this.inlineEdit = getOwner(this).lookup("service:wireframe-inline-edit");
       this.editor.enter();
     });
 
@@ -2351,10 +2352,10 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const draft = outletChildren(this.editor);
       const key = `wf:svc-test-tile:${draft[0].__stableKey}`;
 
-      const opened = await this.editor.inlineEdit.start(key, "title");
+      const opened = await this.inlineEdit.start(key, "title");
       assert.true(opened);
 
-      this.editor.inlineEdit.applyChange("Typed");
+      this.inlineEdit.applyChange("Typed");
 
       const after = outletChildren(this.editor);
       assert.strictEqual(after[0].args?.title, "Typed");
@@ -2364,10 +2365,10 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const draft = outletChildren(this.editor);
       const key = `wf:svc-test-tile:${draft[0].__stableKey}`;
 
-      const opened = await this.editor.inlineEdit.start(key, "title");
+      const opened = await this.inlineEdit.start(key, "title");
       assert.true(opened);
 
-      this.editor.inlineEdit.applyChange("");
+      this.inlineEdit.applyChange("");
 
       const after = outletChildren(this.editor);
       assert.false(
@@ -2390,6 +2391,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         this.editor.siteSettings.wireframe_enabled = true;
         logIn(getOwner(this));
         this.editor = getOwner(this).lookup("service:wireframe");
+        this.inlineEdit = getOwner(this).lookup(
+          "service:wireframe-inline-edit"
+        );
         this.editor.enter();
 
         // Swap in a doc-JSON value post-render to mimic marked inline
@@ -2407,7 +2411,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       test("committing an unchanged doc-JSON value doesn't push undo", async function (assert) {
-        const opened = await this.editor.inlineEdit.start(this.key, "title");
+        const opened = await this.inlineEdit.start(this.key, "title");
         assert.true(opened);
         assert.false(this.editor.canUndo, "no undo entry before commit");
 
@@ -2415,13 +2419,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         // `toStorage(doc.toJSON())` produces on every commit for marked
         // text. `Object.is` returns false; only a deep-equal comparator
         // recognizes the no-op.
-        this.editor.inlineEdit.applyChange({
+        this.inlineEdit.applyChange({
           type: "doc",
           content: [
             { type: "text", text: "hello", marks: [{ type: "strong" }] },
           ],
         });
-        this.editor.inlineEdit.stop({ commit: true });
+        this.inlineEdit.stop({ commit: true });
 
         assert.false(
           this.editor.canUndo,
@@ -2430,16 +2434,16 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       test("committing a CHANGED doc-JSON value DOES push undo", async function (assert) {
-        const opened = await this.editor.inlineEdit.start(this.key, "title");
+        const opened = await this.inlineEdit.start(this.key, "title");
         assert.true(opened);
 
-        this.editor.inlineEdit.applyChange({
+        this.inlineEdit.applyChange({
           type: "doc",
           content: [
             { type: "text", text: "world", marks: [{ type: "strong" }] },
           ],
         });
-        this.editor.inlineEdit.stop({ commit: true });
+        this.inlineEdit.stop({ commit: true });
 
         assert.true(
           this.editor.canUndo,
@@ -2462,40 +2466,39 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         this.editor.siteSettings.wireframe_enabled = true;
         logIn(getOwner(this));
         this.editor = getOwner(this).lookup("service:wireframe");
+        this.inlineEdit = getOwner(this).lookup(
+          "service:wireframe-inline-edit"
+        );
         this.editor.enter();
         const draft = outletChildren(this.editor);
         this.key = `wf:svc-test-tile:${draft[0].__stableKey}`;
       });
 
       test("start snapshots the child's containerArg value", async function (assert) {
-        const opened = await this.editor.inlineEdit.startContainerArg(
+        const opened = await this.inlineEdit.startContainerArg(
           this.key,
           "tab",
           "label"
         );
         assert.true(opened, "the session opens");
         assert.strictEqual(
-          this.editor.inlineEdit.argValue,
+          this.inlineEdit.argValue,
           undefined,
           "snapshots the (absent) label as the pre-edit value"
         );
         assert.deepEqual(
-          this.editor.inlineEdit.containerArgContext,
+          this.inlineEdit.containerArgContext,
           { childKey: this.key, namespace: "tab", field: "label" },
           "exposes the containerArg target to the controller"
         );
       });
 
       test("commit writes the label into the child's containerArgs and is undoable", async function (assert) {
-        await this.editor.inlineEdit.startContainerArg(
-          this.key,
-          "tab",
-          "label"
-        );
+        await this.inlineEdit.startContainerArg(this.key, "tab", "label");
         assert.false(this.editor.canUndo, "nothing on the undo stack yet");
 
-        this.editor.inlineEdit.applyChange("First tab");
-        this.editor.inlineEdit.stop({ commit: true });
+        this.inlineEdit.applyChange("First tab");
+        this.inlineEdit.stop({ commit: true });
 
         const after = outletChildren(this.editor);
         assert.strictEqual(
@@ -2507,21 +2510,13 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       test("committing an empty value removes the label", async function (assert) {
-        await this.editor.inlineEdit.startContainerArg(
-          this.key,
-          "tab",
-          "label"
-        );
-        this.editor.inlineEdit.applyChange("Seed");
-        this.editor.inlineEdit.stop({ commit: true });
+        await this.inlineEdit.startContainerArg(this.key, "tab", "label");
+        this.inlineEdit.applyChange("Seed");
+        this.inlineEdit.stop({ commit: true });
 
-        await this.editor.inlineEdit.startContainerArg(
-          this.key,
-          "tab",
-          "label"
-        );
-        this.editor.inlineEdit.applyChange("");
-        this.editor.inlineEdit.stop({ commit: true });
+        await this.inlineEdit.startContainerArg(this.key, "tab", "label");
+        this.inlineEdit.applyChange("");
+        this.inlineEdit.stop({ commit: true });
 
         const after = outletChildren(this.editor);
         assert.false(
@@ -2531,22 +2526,14 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
 
       test("committing an unchanged value doesn't push an undo entry", async function (assert) {
-        await this.editor.inlineEdit.startContainerArg(
-          this.key,
-          "tab",
-          "label"
-        );
-        this.editor.inlineEdit.applyChange("Seed");
-        this.editor.inlineEdit.stop({ commit: true });
+        await this.inlineEdit.startContainerArg(this.key, "tab", "label");
+        this.inlineEdit.applyChange("Seed");
+        this.inlineEdit.stop({ commit: true });
         const undoCount = this.editor.undoDepth;
 
-        await this.editor.inlineEdit.startContainerArg(
-          this.key,
-          "tab",
-          "label"
-        );
-        this.editor.inlineEdit.applyChange("Seed");
-        this.editor.inlineEdit.stop({ commit: true });
+        await this.inlineEdit.startContainerArg(this.key, "tab", "label");
+        this.inlineEdit.applyChange("Seed");
+        this.inlineEdit.stop({ commit: true });
 
         assert.strictEqual(
           this.editor.undoDepth,

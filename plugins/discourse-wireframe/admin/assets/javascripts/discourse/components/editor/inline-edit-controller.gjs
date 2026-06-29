@@ -19,7 +19,7 @@ import {
  * Mounts a ProseMirror editor over the currently-edited inline text region
  * and exposes its commands to the block-toolbar.
  *
- * Watches `wireframe.inlineEdit.blockKey` + `argName`. When set, it
+ * Watches `wireframeInlineEdit.blockKey` + `argName`. When set, it
  * locates the matching renderer span via a DOM query against the canvas
  * (`[data-wf-block-key="..."] [data-block-arg="..."]`), reads the
  * schema variant off `data-block-arg-schema`, and mounts a constrained
@@ -29,7 +29,7 @@ import {
  *
  * The bold / italic / link UI lives in `block-toolbar.gjs` (shared with the
  * block move/duplicate/delete buttons). The block-toolbar reaches this
- * controller via `wireframe.inlineEdit.controller` and calls its methods
+ * controller via `wireframeInlineEdit.controller` and calls its methods
  * (`toggleMark`, `enterLinkMode`, etc.); a tracked `_pmStateVersion`
  * counter bumps on every PM transaction so the toolbar's `markState`
  * getter (which depends on PM state) re-evaluates reactively.
@@ -38,7 +38,7 @@ import {
  * edit session — see `discourse/lib/load-inline-rich-editor`.
  */
 export default class InlineEditController extends Component {
-  @service wireframe;
+  @service wireframeInlineEdit;
 
   #view = null;
   #pm = null;
@@ -57,17 +57,17 @@ export default class InlineEditController extends Component {
 
   constructor() {
     super(...arguments);
-    this.wireframe.inlineEdit.registerController(this);
+    this.wireframeInlineEdit.registerController(this);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.wireframe.inlineEdit.unregisterController(this);
+    this.wireframeInlineEdit.unregisterController(this);
   }
 
   /**
    * The renderer span the editor should mount into, looked up off the
-   * service's `inlineEdit.(blockKey, argName)`. Returns `null` when no
+   * service's `wireframeInlineEdit.(blockKey, argName)`. Returns `null` when no
    * session is active or when the renderer hasn't rendered yet (the
    * canvas may be in the middle of swapping blocks).
    *
@@ -75,7 +75,7 @@ export default class InlineEditController extends Component {
    * rich-text renderer emits — NOT the generic `data-block-arg` (which
    * also tags image / URL / icon args). This is a structural guard: the
    * editor can only ever mount into a real rich-text field, so a stray
-   * `inlineEdit.start` on a non-text arg resolves to `null` and mounts
+   * `wireframeInlineEdit.start` on a non-text arg resolves to `null` and mounts
    * nothing.
    *
    * @returns {HTMLElement | null}
@@ -90,14 +90,14 @@ export default class InlineEditController extends Component {
     // mounted there while later commits write to the new session target (the
     // tab-label value bled into other tabs / paragraphs). `blockKey` is set to
     // the child key on each container-arg session, so it changes per target.
-    const { blockKey, argName } = this.wireframe.inlineEdit;
+    const { blockKey, argName } = this.wireframeInlineEdit;
 
     // ContainerArg session (e.g. a tab-strip label): the editable span lives in
     // the PARENT's render, not the child's chrome, so it's resolved by a
     // dedicated `[data-wf-container-arg-key]` marker rather than the child's
     // `data-wf-block-key` (which also tags the child's panel chrome — reusing it
     // would be ambiguous).
-    const containerArg = this.wireframe.inlineEdit.containerArgContext;
+    const containerArg = this.wireframeInlineEdit.containerArgContext;
     if (containerArg) {
       const { childKey, namespace, field } = containerArg;
       const host =
@@ -133,7 +133,7 @@ export default class InlineEditController extends Component {
    * active-mark flags for the current PM selection, or `null` when the
    * inline-format buttons should be hidden (no view, empty selection,
    * or schema that doesn't allow marks). Reached via
-   * `wireframe.inlineEdit.controller.markState`.
+   * `wireframeInlineEdit.controller.markState`.
    *
    * `@cached` + reading `_pmStateVersion` makes this reactive to PM
    * transactions without making PM's state itself tracked.
@@ -183,7 +183,7 @@ export default class InlineEditController extends Component {
     const schema = pm.createSchema(variant.extensions, false);
     const doc = pm.Node.fromJSON(
       schema,
-      toDoc(this.wireframe.inlineEdit.argValue)
+      toDoc(this.wireframeInlineEdit.argValue)
     );
 
     const plugins = [
@@ -197,7 +197,7 @@ export default class InlineEditController extends Component {
           "Mod-i": pm.toggleMark(schema.marks.em),
         }),
         Escape: () => {
-          this.wireframe.inlineEdit.stop({ commit: true });
+          this.wireframeInlineEdit.stop({ commit: true });
           return true;
         },
         Enter: this.#enterCommand(schema),
@@ -212,7 +212,7 @@ export default class InlineEditController extends Component {
         // default delete-a-char behavior). Other schemas / blocks
         // get no special handling; Backspace stays a plain delete.
         Backspace:
-          this.wireframe.inlineEdit.blockName === "paragraph"
+          this.wireframeInlineEdit.blockName === "paragraph"
             ? this.#mergeWithPrevAtStart()
             : undefined,
         // Cross-block arrow nav between sibling `wf:paragraph` blocks.
@@ -221,14 +221,14 @@ export default class InlineEditController extends Component {
         // All four return false (and PM's default arrow handling
         // takes over) when the cursor isn't at the edge or the
         // adjacent sibling isn't a `wf:paragraph`.
-        ...(this.wireframe.inlineEdit.blockName === "paragraph" && {
+        ...(this.wireframeInlineEdit.blockName === "paragraph" && {
           ArrowLeft: this.#walkToSibling("prev", "horizontal"),
           ArrowRight: this.#walkToSibling("next", "horizontal"),
           ArrowUp: this.#walkToSibling("prev", "vertical"),
           ArrowDown: this.#walkToSibling("next", "vertical"),
         }),
         // Tab walks between rich-inline fields on the same block in DOM
-        // order. The service's `inlineEdit.start` implicitly commits the
+        // order. The service's `wireframeInlineEdit.start` implicitly commits the
         // current session, so chaining Tabs across fields produces one
         // undo entry per visited field. At the first / last field the
         // command commits the current field, ends the session, and returns
@@ -255,13 +255,13 @@ export default class InlineEditController extends Component {
       },
     });
 
-    this.wireframe.inlineEdit.registerCommit(() => {
+    this.wireframeInlineEdit.registerCommit(() => {
       const finalView = this.#view;
       if (!finalView) {
         return;
       }
       const docJson = finalView.state.doc.toJSON();
-      this.wireframe.inlineEdit.applyChange(toStorage(docJson));
+      this.wireframeInlineEdit.applyChange(toStorage(docJson));
     });
 
     // Initial selection. `"selectAll"` (the default) is the "start
@@ -278,7 +278,7 @@ export default class InlineEditController extends Component {
     // on consumption.
     const initialDoc = this.#view.state.doc;
     const end = initialDoc.content.size;
-    const hint = this.wireframe.inlineEdit.consumeInitialSelectionHint();
+    const hint = this.wireframeInlineEdit.consumeInitialSelectionHint();
     let range;
     if (hint && typeof hint === "object" && hint.coords) {
       const coordResult = this.#view.posAtCoords({
@@ -332,11 +332,11 @@ export default class InlineEditController extends Component {
         return;
       }
       // Bail out if the edit session has already ended (e.g. a sibling
-      // click handler called `inlineEdit.stop` first). `activeRendererEl`
+      // click handler called `wireframeInlineEdit.stop` first). `activeRendererEl`
       // returns `null` when there's no active session.
       requestAnimationFrame(() => {
         if (this.activeRendererEl) {
-          this.wireframe.inlineEdit.stop({ commit: true });
+          this.wireframeInlineEdit.stop({ commit: true });
         }
       });
     };
@@ -345,7 +345,7 @@ export default class InlineEditController extends Component {
 
   @action
   unmountEditor() {
-    this.wireframe.inlineEdit.registerCommit(null);
+    this.wireframeInlineEdit.registerCommit(null);
 
     const view = this.#view;
     this.#view = null;
@@ -359,8 +359,8 @@ export default class InlineEditController extends Component {
     this.#savedLinkRange = null;
     // Clear the toolbar slot if this controller owned a URL session
     // (e.g. user closed PM mid-link-edit).
-    if (this.wireframe.fieldEditor?.kind === "url") {
-      this.wireframe.fieldEditor = null;
+    if (this.wireframeInlineEdit.fieldEditor?.kind === "url") {
+      this.wireframeInlineEdit.setFieldEditor(null);
     }
     // Force a re-evaluation of `markState` so the toolbar hides cleanly.
     this._pmStateVersion++;
@@ -369,7 +369,7 @@ export default class InlineEditController extends Component {
   /**
    * Toggles `strong` or `em` over the current PM selection. Called by
    * the block-toolbar's inline-format buttons (via
-   * `wireframe.inlineEdit.controller.toggleMark`).
+   * `wireframeInlineEdit.controller.toggleMark`).
    *
    * Explicitly re-sets the selection on the transaction so PM re-renders
    * the DOM selection highlight after dispatch — without this, focus
@@ -405,7 +405,7 @@ export default class InlineEditController extends Component {
 
   /**
    * Transitions the block toolbar into URL-edit mode for the current
-   * non-empty PM selection by populating `wireframe.fieldEditor` with
+   * non-empty PM selection by populating `wireframeInlineEdit.fieldEditor` with
    * a URL slot that wires apply / cancel / remove back to the PM
    * mark mutations below. The selection range is captured so those
    * mutations land on the correct positions even after focus moves
@@ -424,13 +424,13 @@ export default class InlineEditController extends Component {
     this.#savedLinkRange = { from, to };
     const existing =
       existingLinkHref(view.state, view.state.schema.marks.link) ?? "";
-    this.wireframe.fieldEditor = {
+    this.wireframeInlineEdit.setFieldEditor({
       kind: "url",
       value: existing,
       apply: (newValue) => this.#applyLink(newValue),
       cancel: () => this.#cancelLink(),
       remove: () => this.#removeLink(),
-    };
+    });
   }
 
   /**
@@ -484,8 +484,8 @@ export default class InlineEditController extends Component {
 
   #exitLinkMode() {
     this.#savedLinkRange = null;
-    if (this.wireframe.fieldEditor?.kind === "url") {
-      this.wireframe.fieldEditor = null;
+    if (this.wireframeInlineEdit.fieldEditor?.kind === "url") {
+      this.wireframeInlineEdit.setFieldEditor(null);
     }
   }
 
@@ -514,7 +514,7 @@ export default class InlineEditController extends Component {
       const argEls = Array.from(
         blockEl.querySelectorAll("[data-wf-inline-edit-arg]")
       );
-      const currentArg = this.wireframe.inlineEdit.argName;
+      const currentArg = this.wireframeInlineEdit.argName;
       const i = argEls.findIndex(
         (el) => el.dataset.wfInlineEditArg === currentArg
       );
@@ -527,10 +527,10 @@ export default class InlineEditController extends Component {
         // the session. Returning false lets the browser's default Tab move
         // focus on to the next element, so the editor exits cleanly instead
         // of trapping focus.
-        this.wireframe.inlineEdit.stop({ commit: true });
+        this.wireframeInlineEdit.stop({ commit: true });
         return false;
       }
-      this.wireframe.inlineEdit.start(
+      this.wireframeInlineEdit.start(
         blockEl.dataset.wfBlockKey,
         next.dataset.wfInlineEditArg
       );
@@ -559,11 +559,11 @@ export default class InlineEditController extends Component {
   #enterCommand(schema) {
     if (this.schemaName !== "paragraph") {
       return () => {
-        this.wireframe.inlineEdit.stop({ commit: true });
+        this.wireframeInlineEdit.stop({ commit: true });
         return true;
       };
     }
-    if (this.wireframe.inlineEdit.blockName === "paragraph") {
+    if (this.wireframeInlineEdit.blockName === "paragraph") {
       return this.#splitParagraphAtCursor();
     }
     return insertHardBreak(schema);
@@ -572,7 +572,7 @@ export default class InlineEditController extends Component {
   /**
    * Builds a PM keymap command for paragraph-block Enter: slices the
    * current PM doc at the cursor into a `before` doc-JSON and an
-   * `after` doc-JSON, then hands them to the service's `inlineEdit.splitAt`
+   * `after` doc-JSON, then hands them to the service's `wireframeInlineEdit.splitAt`
    * action. PM's `Node.cut(from, to)` returns a doc-shaped node
    * containing the slice — calling `toJSON()` on each gives the
    * storage-ready doc-JSON the service writes back via `toStorage`.
@@ -590,7 +590,7 @@ export default class InlineEditController extends Component {
       const cursor = selection.from;
       const beforeDoc = doc.cut(0, cursor).toJSON();
       const afterDoc = doc.cut(cursor, doc.content.size).toJSON();
-      return this.wireframe.inlineEdit.splitAt({ beforeDoc, afterDoc });
+      return this.wireframeInlineEdit.splitAt({ beforeDoc, afterDoc });
     };
   }
 
@@ -621,14 +621,14 @@ export default class InlineEditController extends Component {
       if (!selection.empty || selection.from !== 0) {
         return false;
       }
-      const prev = this.wireframe.inlineEdit.prevSiblingInfo();
+      const prev = this.wireframeInlineEdit.prevSiblingInfo();
       if (!prev || prev.block !== "paragraph") {
         return false;
       }
       const prevDoc = schema.nodeFromJSON(toDoc(prev.value));
       const joinPos = prevDoc.content.size;
       const mergedDoc = prevDoc.replace(joinPos, joinPos, doc.slice(0));
-      return this.wireframe.inlineEdit.mergeWithPrev({
+      return this.wireframeInlineEdit.mergeWithPrev({
         mergedDoc: mergedDoc.toJSON(),
         joinPos,
       });
@@ -651,7 +651,7 @@ export default class InlineEditController extends Component {
    * Returns `false` (PM's default arrow handling takes over) when the
    * selection isn't a collapsed cursor at the relevant edge, no
    * sibling exists, or the sibling isn't a `wf:paragraph`. On a
-   * successful walk, `inlineEdit.start` commits the current session
+   * successful walk, `wireframeInlineEdit.start` commits the current session
    * (one undo entry), opens a session on the sibling with an `"end"`
    * (prev) / `"start"` (next) initial-selection hint, and the cursor
    * lands at the matching edge of the sibling's doc.
@@ -677,12 +677,12 @@ export default class InlineEditController extends Component {
       }
       const sibling =
         direction === "prev"
-          ? this.wireframe.inlineEdit.prevSiblingInfo()
-          : this.wireframe.inlineEdit.nextSiblingInfo();
+          ? this.wireframeInlineEdit.prevSiblingInfo()
+          : this.wireframeInlineEdit.nextSiblingInfo();
       if (!sibling || sibling.block !== "paragraph") {
         return false;
       }
-      this.wireframe.inlineEdit.start(sibling.key, "text", {
+      this.wireframeInlineEdit.start(sibling.key, "text", {
         initialSelection: direction === "prev" ? "end" : "start",
       });
       return true;

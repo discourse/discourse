@@ -18,9 +18,9 @@ function makeCustom(value, name = "text") {
   };
 }
 
-// Stub wireframe service: the inline-edit identity the read-only guard reads,
-// plus the live-value lookup (`selectedBlockData` + `structuralVersion`) the
-// editor seeds from. `selectedBlockData` is null by default, so the editor
+// Stub wireframe service: the selection identity the read-only guard compares
+// against, plus the live-value lookup (`selectedBlockData` + `structuralVersion`)
+// the editor seeds from. `selectedBlockData` is null by default, so the editor
 // falls back to the FormKit draft (`@custom.value`).
 class StubWireframeService extends Service {
   // The query layer moved to a leaf the editor exposes as layoutQuery; returning
@@ -30,12 +30,20 @@ class StubWireframeService extends Service {
 
   structuralVersion = 0;
 
-  inlineEdit = { isActive: false, argName: null, blockKey: null };
-
   // this makes wireframe.layoutQuery.<query> resolve to the stubbed methods below.
   get layoutQuery() {
     return this;
   }
+}
+
+// Stub inline-edit service: the read-only guard reads the session identity
+// (`isActive` / `argName` / `blockKey`) off the inline-edit leaf directly.
+class StubInlineEditService extends Service {
+  isActive = false;
+
+  argName = null;
+
+  blockKey = null;
 }
 
 module("Integration | Wireframe | InspectorRichTextField", function (hooks) {
@@ -44,6 +52,8 @@ module("Integration | Wireframe | InspectorRichTextField", function (hooks) {
   hooks.beforeEach(function () {
     this.owner.unregister("service:wireframe");
     this.owner.register("service:wireframe", StubWireframeService);
+    this.owner.unregister("service:wireframe-inline-edit");
+    this.owner.register("service:wireframe-inline-edit", StubInlineEditService);
   });
 
   test("heading schema mounts the editor with a formatting toolbar", async function (assert) {
@@ -84,11 +94,10 @@ module("Integration | Wireframe | InspectorRichTextField", function (hooks) {
   test("goes inert (dimmed, formatting kept, buttons disabled) while the canvas edits this target", async function (assert) {
     const stub = this.owner.lookup("service:wireframe");
     stub.selectedBlockKey = "block-1";
-    stub.inlineEdit = {
-      isActive: true,
-      argName: "text",
-      blockKey: "block-1",
-    };
+    const inlineEdit = this.owner.lookup("service:wireframe-inline-edit");
+    inlineEdit.isActive = true;
+    inlineEdit.argName = "text";
+    inlineEdit.blockKey = "block-1";
 
     const custom = makeCustom({
       type: "doc",

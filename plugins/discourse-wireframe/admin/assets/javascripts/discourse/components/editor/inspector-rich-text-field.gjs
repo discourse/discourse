@@ -61,6 +61,7 @@ function valuesEqual(a, b) {
  */
 export default class InspectorRichTextField extends Component {
   @service wireframe;
+  @service wireframeInlineEdit;
 
   @tracked linkMode = false;
   @tracked linkValue = "";
@@ -98,7 +99,7 @@ export default class InspectorRichTextField extends Component {
    * @returns {boolean}
    */
   get readOnly() {
-    const inlineEdit = this.wireframe.inlineEdit;
+    const inlineEdit = this.wireframeInlineEdit;
     return !!(
       inlineEdit?.isActive &&
       inlineEdit.argName === this.args.custom?.name &&

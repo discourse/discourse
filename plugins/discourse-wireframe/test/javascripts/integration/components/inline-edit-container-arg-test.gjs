@@ -57,6 +57,7 @@ module(
         getOwner(this)
       );
       this.editor = getOwner(this).lookup("service:wireframe");
+      this.inlineEdit = getOwner(this).lookup("service:wireframe-inline-edit");
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
       this.editor.enter();
@@ -90,17 +91,17 @@ module(
         </template>
       );
 
-      const controller = this.editor.inlineEdit.controller;
+      const controller = this.inlineEdit.controller;
       assert.true(Boolean(controller), "the inline-edit controller registered");
 
-      await this.editor.inlineEdit.startContainerArg(keyA, "tab", "label");
+      await this.inlineEdit.startContainerArg(keyA, "tab", "label");
       await settled();
       const elA = controller.activeRendererEl;
       assert
         .dom(elA)
         .hasClass("host-a", "session A resolves child A's editable");
 
-      await this.editor.inlineEdit.startContainerArg(keyB, "tab", "label");
+      await this.inlineEdit.startContainerArg(keyB, "tab", "label");
       await settled();
       const elB = controller.activeRendererEl;
       assert
@@ -115,7 +116,7 @@ module(
         "the cached element did not stick on the first target (the bleed)"
       );
 
-      this.editor.inlineEdit.stop({ commit: false });
+      this.inlineEdit.stop({ commit: false });
     });
   }
 );

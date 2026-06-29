@@ -348,33 +348,6 @@ export default class WireframeService extends Service {
     return this.wireframeLayoutQuery;
   }
 
-  /**
-   * The inline-text-edit session service. Re-exposed here so internal
-   * `this.inlineEdit.X` and external `wireframe.inlineEdit.X` consumers keep
-   * working without injecting the service directly.
-   *
-   * @returns {import("./wireframe-inline-edit").default}
-   */
-  get inlineEdit() {
-    return this.wireframeInlineEdit;
-  }
-
-  /**
-   * Contextual toolbar field-editor slot. Re-exposed here (read + write) so the
-   * inline-edit controller and the block toolbar keep using
-   * `wireframe.fieldEditor` while the state lives on the inline-edit service.
-   *
-   * @returns {Object|null}
-   */
-  get fieldEditor() {
-    return this.wireframeInlineEdit.fieldEditor;
-  }
-
-  /** @param {Object|null} descriptor */
-  set fieldEditor(descriptor) {
-    this.wireframeInlineEdit.setFieldEditor(descriptor);
-  }
-
   /* Selection facade — the block-selection concern lives on
    * `wireframeSelection`. These delegators keep every external consumer
    * (panels, chrome, toolbar) and every kernel-internal reader unchanged
@@ -1952,7 +1925,7 @@ export default class WireframeService extends Service {
     return (
       !this.wireframeEditEngine.isOutletEdited(outlet) &&
       !this.wireframeArgEdit.hasPending &&
-      this.inlineEdit.blockKey == null
+      this.wireframeInlineEdit.blockKey == null
     );
   }
 

@@ -54,7 +54,7 @@ const DUPLICATE_PRESETS = [2, 3, 5, 10];
  * Inline-format buttons (bold / italic / link) appear when the user
  * has entered an inline-edit session on this block AND has a non-empty
  * text selection inside it. The controller (`InlineEditController`)
- * registers itself with the service as `inlineEdit.controller`; we
+ * registers itself with the service as `wireframeInlineEdit.controller`; we
  * read its `markState` (a tracked-on-PM-transactions getter) and call
  * its commands.
  *
@@ -70,10 +70,11 @@ const DUPLICATE_PRESETS = [2, 3, 5, 10];
 export default class BlockToolbar extends Component {
   @service wireframe;
   @service wireframeForceExpand;
+  @service wireframeInlineEdit;
 
   /**
    * Working value of the URL input while a field-editor slot is
-   * active. Seeded from `wireframe.fieldEditor.value` when the input
+   * active. Seeded from `wireframeInlineEdit.fieldEditor.value` when the input
    * mounts (see `seedFieldEditorValue`). The slot's `value` is the
    * INITIAL value; this is the live edit-in-progress string the user
    * is typing.
@@ -168,7 +169,7 @@ export default class BlockToolbar extends Component {
    * session is open.
    */
   get inlineController() {
-    return this.wireframe.inlineEdit.controller;
+    return this.wireframeInlineEdit.controller;
   }
 
   /**
@@ -181,7 +182,7 @@ export default class BlockToolbar extends Component {
   get showInlineFormat() {
     return (
       !!this.inlineController &&
-      this.wireframe.inlineEdit.blockKey === this.args.blockKey &&
+      this.wireframeInlineEdit.blockKey === this.args.blockKey &&
       this.inlineController.markState !== null
     );
   }
@@ -194,7 +195,7 @@ export default class BlockToolbar extends Component {
    * `true` when the toolbar should render its URL-edit surface for
    * the inline rich-text link mark — i.e. PM has entered link-mark
    * mode (`enterLinkMode` in `inline-edit-controller.gjs`), which
-   * populates `wireframe.fieldEditor` with `kind === "url"`.
+   * populates `wireframeInlineEdit.fieldEditor` with `kind === "url"`.
    *
    * Block-arg URL edits (e.g. a button's `href`) are no longer routed
    * through here — those open an anchored `LinkEditPopover` next to
@@ -202,7 +203,7 @@ export default class BlockToolbar extends Component {
    * anchor of its own, so it stays on the toolbar.
    */
   get isUrlFieldEditing() {
-    return this.wireframe.fieldEditor?.kind === "url";
+    return this.wireframeInlineEdit.fieldEditor?.kind === "url";
   }
 
   /**
@@ -476,17 +477,17 @@ export default class BlockToolbar extends Component {
 
   @action
   applyFieldEditor() {
-    this.wireframe.fieldEditor?.apply?.(this.editorValue);
+    this.wireframeInlineEdit.fieldEditor?.apply?.(this.editorValue);
   }
 
   @action
   removeFieldEditor() {
-    this.wireframe.fieldEditor?.remove?.();
+    this.wireframeInlineEdit.fieldEditor?.remove?.();
   }
 
   @action
   cancelFieldEditor() {
-    this.wireframe.fieldEditor?.cancel?.();
+    this.wireframeInlineEdit.fieldEditor?.cancel?.();
   }
 
   @action
@@ -513,7 +514,7 @@ export default class BlockToolbar extends Component {
    */
   @action
   seedFieldEditorValue(element) {
-    this.editorValue = this.wireframe.fieldEditor?.value ?? "";
+    this.editorValue = this.wireframeInlineEdit.fieldEditor?.value ?? "";
     element.focus();
     element.select();
   }
@@ -624,7 +625,7 @@ export default class BlockToolbar extends Component {
             @action={{this.applyFieldEditor}}
             @preventFocus={{true}}
           />
-          {{#if this.wireframe.fieldEditor.remove}}
+          {{#if this.wireframeInlineEdit.fieldEditor.remove}}
             <DButton
               class="btn-flat wireframe-block-toolbar__btn"
               @icon="link-slash"
