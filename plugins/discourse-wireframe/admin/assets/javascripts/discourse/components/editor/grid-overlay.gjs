@@ -148,6 +148,7 @@ export default class GridOverlay extends Component {
   @service wireframe;
   @service wireframeDragOverlay;
   @service wireframeGridManipulator;
+  @service wireframeImageUpload;
   @service blocks;
   @service dragAndDrop;
 
@@ -661,7 +662,7 @@ export default class GridOverlay extends Component {
             this.#releaseDrop?.();
             return;
           }
-          this.wireframe.completeExternalImageDrop(file);
+          this.wireframeImageUpload.completeExternalImageDrop(file);
         },
       })
     );

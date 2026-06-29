@@ -95,6 +95,7 @@ export default class BlockChrome extends Component {
   @service wireframeDropAuthority;
   @service wireframeForceExpand;
   @service wireframeIconEdit;
+  @service wireframeImageUpload;
   @service wireframeInlineEdit;
   @service wireframeLinkEdit;
 
@@ -1148,7 +1149,11 @@ export default class BlockChrome extends Component {
       naturalWidth,
       naturalHeight,
     };
-    this.wireframe.setImageArg(this.args.blockKey, arg.name, nextValue);
+    this.wireframeImageUpload.setImageArg(
+      this.args.blockKey,
+      arg.name,
+      nextValue
+    );
   }
 
   /**
@@ -1162,7 +1167,7 @@ export default class BlockChrome extends Component {
     if (!arg?.value?.naturalWidth || !arg?.value?.naturalHeight) {
       return;
     }
-    this.wireframe.setImageArg(this.args.blockKey, arg.name, {
+    this.wireframeImageUpload.setImageArg(this.args.blockKey, arg.name, {
       ...arg.value,
       width: arg.value.naturalWidth,
       height: arg.value.naturalHeight,
@@ -1206,7 +1211,7 @@ export default class BlockChrome extends Component {
       height = rect.height;
       width = rect.height * imageAspect;
     }
-    this.wireframe.setImageArg(this.args.blockKey, arg.name, {
+    this.wireframeImageUpload.setImageArg(this.args.blockKey, arg.name, {
       ...arg.value,
       width: Math.round(width),
       height: Math.round(height),
@@ -1717,7 +1722,7 @@ export default class BlockChrome extends Component {
       this.#releaseDrop?.();
       return;
     }
-    this.wireframe.completeExternalImageDrop(file);
+    this.wireframeImageUpload.completeExternalImageDrop(file);
   }
 
   /**
@@ -1790,7 +1795,7 @@ export default class BlockChrome extends Component {
    * @param {string} argName - The image arg name on this block.
    */
   async #openImageEditMenu(argEl, argName) {
-    this.wireframe.markImageArgTouched(argName);
+    this.wireframeImageUpload.markImageArgTouched(argName);
     // The `close` callback captures `instance` by reference. At the
     // time the data object is created, `instance` is in the TDZ; by
     // the time the menu's Replace / Remove buttons can fire it the

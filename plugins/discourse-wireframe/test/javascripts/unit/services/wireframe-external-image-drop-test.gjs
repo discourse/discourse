@@ -65,6 +65,9 @@ module(
         registerBlock(TestTile);
       });
       this.editor = getOwner(this).lookup("service:wireframe");
+      this.imageUpload = getOwner(this).lookup(
+        "service:wireframe-image-upload"
+      );
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
       await _renderBlocks(
@@ -77,7 +80,7 @@ module(
       // Guard: the drop should STAGE the file for the new block's overlay,
       // not upload directly through the service.
       this.uploads = [];
-      this.editor.wireframeImageUpload.uploadImageForArg = (file, opts) => {
+      this.imageUpload.uploadImageForArg = (file, opts) => {
         this.uploads.push({ file, opts });
         return Promise.resolve({ url: "/uploads/x.png", width: 1, height: 1 });
       };
@@ -90,7 +93,7 @@ module(
         insertPreview("wf:svc-img-drop-image")
       );
 
-      const result = this.editor.completeExternalImageDrop(this.file);
+      const result = this.imageUpload.completeExternalImageDrop(this.file);
 
       assert.true(result, "the drop reports success");
       const children = outletChildren(this.editor);
@@ -109,7 +112,7 @@ module(
         "the service does not upload directly"
       );
       assert.strictEqual(
-        this.editor.consumePendingDropFile(blockKey, "image"),
+        this.imageUpload.consumePendingDropFile(blockKey, "image"),
         this.file,
         "the dropped file is staged for the new block's image arg"
       );
@@ -120,7 +123,7 @@ module(
         insertPreview("wf:svc-img-drop-image")
       );
 
-      const result = this.editor.completeExternalImageDrop(null);
+      const result = this.imageUpload.completeExternalImageDrop(null);
 
       assert.false(result);
       assert.strictEqual(
@@ -132,7 +135,7 @@ module(
 
     test("is a no-op when the slot rejects the drop (no preview to dispatch)", function (assert) {
       // No preview claimed -> coordinator.dispatch() returns false.
-      const result = this.editor.completeExternalImageDrop(this.file);
+      const result = this.imageUpload.completeExternalImageDrop(this.file);
 
       assert.false(result);
       assert.strictEqual(
@@ -147,7 +150,7 @@ module(
         insertPreview("wf:svc-img-drop-tile")
       );
 
-      const result = this.editor.completeExternalImageDrop(this.file);
+      const result = this.imageUpload.completeExternalImageDrop(this.file);
 
       const blockKey = this.editor.selectedBlockKey;
       assert.true(
@@ -156,7 +159,7 @@ module(
       );
       assert.false(result, "the drop reports no staging");
       assert.strictEqual(
-        this.editor.consumePendingDropFile(blockKey, "image"),
+        this.imageUpload.consumePendingDropFile(blockKey, "image"),
         null,
         "nothing is staged when there's no image arg to fill"
       );

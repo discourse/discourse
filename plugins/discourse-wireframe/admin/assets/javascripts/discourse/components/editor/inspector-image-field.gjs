@@ -17,8 +17,9 @@ const ASPECT_RATIO_EPSILON = 0.02;
  * Custom FormKit control for `type: "image"` args.
  *
  * Bypasses FormKit's draft entirely: reads the current value live from
- * `entry.args` via the wireframe service, and writes via the service's
- * `setImageArg`. That keeps the inspector and the canvas perfectly in
+ * `entry.args` via the wireframe service, and writes via
+ * `wireframeImageUpload.setImageArg`. That keeps the inspector and the canvas
+ * perfectly in
  * sync — paste / drop / click-to-pick mutations made on the canvas
  * show up immediately, and inspector edits land in the canvas with
  * the same code path as those external sources.
@@ -46,6 +47,7 @@ const ASPECT_RATIO_EPSILON = 0.02;
  */
 export default class InspectorImageField extends Component {
   @service wireframe;
+  @service wireframeImageUpload;
 
   /**
    * URL-tab drafts per variant. Keep the field populated while the
@@ -320,7 +322,7 @@ export default class InspectorImageField extends Component {
       return;
     }
     if (next == null) {
-      this.wireframe.setImageArg(this.blockKey, this.argName, null);
+      this.wireframeImageUpload.setImageArg(this.blockKey, this.argName, null);
       return;
     }
     const merged = { ...next };
@@ -328,7 +330,7 @@ export default class InspectorImageField extends Component {
     if (existingDark) {
       merged.dark = existingDark;
     }
-    this.wireframe.setImageArg(this.blockKey, this.argName, merged);
+    this.wireframeImageUpload.setImageArg(this.blockKey, this.argName, merged);
   }
 
   #commitDark(next) {
@@ -345,7 +347,7 @@ export default class InspectorImageField extends Component {
     } else {
       merged.dark = next;
     }
-    this.wireframe.setImageArg(this.blockKey, this.argName, merged);
+    this.wireframeImageUpload.setImageArg(this.blockKey, this.argName, merged);
   }
 
   #uploadToVariant(upload) {

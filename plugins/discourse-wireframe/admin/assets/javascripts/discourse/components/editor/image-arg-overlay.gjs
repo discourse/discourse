@@ -69,6 +69,7 @@ export default class ImageArgOverlay extends Component {
   @service menu;
   @service wireframe;
   @service wireframeDragOverlay;
+  @service wireframeImageUpload;
 
   /**
    * Marker rect (relative to the chrome) used to position the
@@ -381,7 +382,7 @@ export default class ImageArgOverlay extends Component {
     // the file against its key; pick it up here so it uploads through this
     // overlay's own pipeline (progress bar, error state, write to THIS block)
     // exactly like a click-to-pick or a drop onto an existing arg.
-    const staged = this.wireframe.consumePendingDropFile?.(
+    const staged = this.wireframeImageUpload.consumePendingDropFile?.(
       this.args.blockKey,
       this.args.argName
     );
@@ -462,7 +463,7 @@ export default class ImageArgOverlay extends Component {
       return;
     }
     event.stopPropagation();
-    this.wireframe.markImageArgTouched(this.args.argName);
+    this.wireframeImageUpload.markImageArgTouched(this.args.argName);
     this.#fileInputEl?.click();
   }
 
@@ -479,7 +480,7 @@ export default class ImageArgOverlay extends Component {
 
   @action
   onPointerEnter() {
-    this.wireframe.markImageArgTouched(this.args.argName);
+    this.wireframeImageUpload.markImageArgTouched(this.args.argName);
   }
 
   /* File-drag visual hooks */
@@ -597,7 +598,11 @@ export default class ImageArgOverlay extends Component {
     const variant = this.#variantFromUpload(upload);
     const existingDark = current?.dark;
     const next = existingDark ? { ...variant, dark: existingDark } : variant;
-    this.wireframe.setImageArg(this.args.blockKey, this.args.argName, next);
+    this.wireframeImageUpload.setImageArg(
+      this.args.blockKey,
+      this.args.argName,
+      next
+    );
     this.#selectOwningBlock();
   }
 
@@ -617,10 +622,14 @@ export default class ImageArgOverlay extends Component {
     const light = { ...current };
     delete light.dark;
     const dark = this.#variantFromUpload(upload);
-    this.wireframe.setImageArg(this.args.blockKey, this.args.argName, {
-      ...light,
-      dark,
-    });
+    this.wireframeImageUpload.setImageArg(
+      this.args.blockKey,
+      this.args.argName,
+      {
+        ...light,
+        dark,
+      }
+    );
     this.#selectOwningBlock();
     this.#closeVariantPopover();
   }

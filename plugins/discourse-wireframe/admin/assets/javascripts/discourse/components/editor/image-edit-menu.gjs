@@ -21,7 +21,7 @@ import { i18n } from "discourse-i18n";
  *                           per-instance options).
  */
 export default class ImageEditMenu extends Component {
-  @service wireframe;
+  @service wireframeImageUpload;
 
   /**
    * Hidden file input ref used by the Replace action. Triggered
@@ -51,7 +51,7 @@ export default class ImageEditMenu extends Component {
     }
     input.value = "";
 
-    await this.wireframe.uploadImageForArg(file, {
+    await this.wireframeImageUpload.uploadImageForArg(file, {
       blockKey: this.args.data.blockKey,
       argName: this.args.data.argName,
     });
@@ -60,7 +60,7 @@ export default class ImageEditMenu extends Component {
 
   @action
   remove() {
-    this.wireframe.setImageArg(
+    this.wireframeImageUpload.setImageArg(
       this.args.data.blockKey,
       this.args.data.argName,
       null
