@@ -1,8 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
@@ -41,9 +39,6 @@ function hasValue(value) {
 function usesFieldValue(model) {
   return model?.source === "field_value";
 }
-
-// Keep a stable reference for didUpdate dependencies when remote options are used.
-const EMPTY_METADATA_OPTIONS = Object.freeze([]);
 
 export default class ComboBoxField extends Component {
   @service router;
@@ -94,7 +89,7 @@ export default class ComboBoxField extends Component {
     if (this.localOptions) {
       return this.localOptions;
     }
-    return EMPTY_METADATA_OPTIONS;
+    return [];
   }
 
   get controlOptions() {
@@ -213,44 +208,6 @@ export default class ComboBoxField extends Component {
     }));
   }
 
-  selectedOption(value = this.args.field.value) {
-    if (!hasValue(value)) {
-      return null;
-    }
-
-    return (
-      this.options.find((option) => String(option.id) === String(value)) || null
-    );
-  }
-
-  setOptionDerivedFields(selectedOption) {
-    if (!this.args.formApi || Object.keys(this.setFromOption).length === 0) {
-      return;
-    }
-
-    for (const [fieldName, propertyName] of Object.entries(
-      this.setFromOption
-    )) {
-      const selectedOptionValue = selectedOption
-        ? (selectedOption.original?.[propertyName] ??
-          selectedOption[propertyName] ??
-          "")
-        : "";
-
-      if (this.args.formApi.get(fieldName) !== selectedOptionValue) {
-        this.args.formApi.set(fieldName, selectedOptionValue);
-      }
-    }
-  }
-
-  @action
-  syncOptionDerivedFields() {
-    const selectedOption = this.selectedOption();
-    if (selectedOption) {
-      this.setOptionDerivedFields(selectedOption);
-    }
-  }
-
   remoteOptionsContext(filter = null) {
     const context = {
       path: this.args.fieldName,
@@ -284,9 +241,20 @@ export default class ComboBoxField extends Component {
   handleChange(value, selectedItem = null) {
     this.args.field.set(value);
 
-    const selectedOption = selectedItem || this.selectedOption(value);
+    const selectedOption =
+      selectedItem ||
+      this.options.find((option) => String(option.id) === String(value)) ||
+      null;
 
-    this.setOptionDerivedFields(selectedOption);
+    for (const [fieldName, propertyName] of Object.entries(
+      this.setFromOption
+    )) {
+      const selectedOptionValue =
+        selectedOption?.original?.[propertyName] ??
+        selectedOption?.[propertyName] ??
+        "";
+      this.args.formApi?.set(fieldName, selectedOptionValue);
+    }
 
     const schema = this.args.nodeDefinition?.properties || {};
     for (const fieldName of this.resets) {
@@ -319,15 +287,6 @@ export default class ComboBoxField extends Component {
       @dynamicValueHint={{@dynamicValueHint}}
       @session={{@session}}
     >
-      <span
-        hidden
-        {{didInsert this.syncOptionDerivedFields}}
-        {{didUpdate
-          this.syncOptionDerivedFields
-          @field.value
-          this.metadataOptions
-        }}
-      ></span>
       {{#if this.showActionButton}}
         <div class="workflows-property-engine__select-with-action">
           <DynamicOptionsComboBox
