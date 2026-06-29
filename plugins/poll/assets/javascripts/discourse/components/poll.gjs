@@ -4,7 +4,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
@@ -59,6 +61,10 @@ export default class PollComponent extends Component {
       (this.closed && !this.staffOnly));
 
   @tracked showTally = false;
+
+  registerPollButtons = (element) => {
+    this.pollButtonsElement = element;
+  };
 
   checkUserGroups = (user, poll) => {
     const pollGroups =
@@ -374,7 +380,25 @@ export default class PollComponent extends Component {
 
   @action
   toggleResults() {
+    const anchor = this.pollButtonsElement;
+    const anchorTop = anchor?.getBoundingClientRect().top;
+
     this.showResults = !this.showResults;
+
+    if (anchorTop == null) {
+      return;
+    }
+
+    schedule("afterRender", () => {
+      if (!anchor.isConnected) {
+        return;
+      }
+
+      const shift = anchor.getBoundingClientRect().top - anchorTop;
+      if (shift !== 0) {
+        window.scrollBy(0, shift);
+      }
+    });
   }
 
   get canCastVotes() {
@@ -761,7 +785,7 @@ export default class PollComponent extends Component {
         @hasVoted={{this.hasVoted}}
         @voters={{this.voters}}
       />
-      <div class="poll-buttons">
+      <div class="poll-buttons" {{didInsert this.registerPollButtons}}>
         {{#if this.showCastVotesButton}}
           <button
             class={{this.castVotesButtonClass}}
