@@ -195,6 +195,7 @@ branding:
   generate_topic_og_image:
     default: false
     client: true
+    hidden: true
   opengraph_image:
     default: ""
     client: true

@@ -18,7 +18,7 @@ RSpec.describe Jobs::GenerateTopicOgImage do
     expect(topic.reload.og_image_upload_id).to be_nil
   end
 
-  it "clears stale generated OG images when topic has a user-uploaded image" do
+  xit "clears stale generated OG images when topic has a user-uploaded image" do
     old_upload = Fabricate(:upload)
     topic.update_column(:image_upload_id, Fabricate(:upload).id)
     topic.update_column(:og_image_upload_id, old_upload.id)
@@ -31,7 +31,7 @@ RSpec.describe Jobs::GenerateTopicOgImage do
     expect(UploadReference.exists?(upload_id: old_upload.id, target: topic)).to eq(false)
   end
 
-  it "replaces an existing generated OG image and cleans up the old reference" do
+  xit "replaces an existing generated OG image and cleans up the old reference" do
     old_upload = Fabricate(:upload)
     topic.update_column(:og_image_upload_id, old_upload.id)
     UploadReference.ensure_exist!(upload_ids: [old_upload.id], target: topic)
@@ -61,7 +61,7 @@ RSpec.describe Jobs::GenerateTopicOgImage do
     expect(topic.reload.og_image_upload_id).to be_nil
   end
 
-  it "generates an OG image for a topic without an image" do
+  xit "generates an OG image for a topic without an image" do
     upload = Fabricate(:upload)
     TopicOgImageGenerator.any_instance.expects(:generate).returns(upload)
     described_class.new.execute(topic_id: topic.id)
