@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class UserFieldOptions < Conversion::ProgressStep
+      class UserFieldOptions < Conversion::Step
         source { reads_table "user_field_options" }
 
         processor do
