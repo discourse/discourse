@@ -154,11 +154,7 @@ module("Integration | Component | AdminReport", function (hooks) {
     assert.dom(".alert-error.not-found").exists("displays a not found error");
   });
 
-  module("grouping date range updates", function (nestedHooks) {
-    nestedHooks.beforeEach(function () {
-      this.siteSettings.reporting_improvements = true;
-    });
-
+  module("grouping date range updates", function () {
     test("changing grouping to weekly updates date range to 3 months", async function (assert) {
       const refreshArgs = [];
       const refreshCallback = (options) => {
