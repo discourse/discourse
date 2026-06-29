@@ -1763,6 +1763,19 @@ RSpec.describe PrettyText do
 
       expect(PrettyText.cook("hello :trout:")).to match(/<img src[^>]+trout[^>]+>/)
     end
+
+    it "rewrites a custom emoji's S3 url through the configured CDN" do
+      setup_s3
+      SiteSetting.s3_cdn_url = "https://cdn.example.com"
+
+      raw_url = "#{SiteSetting.Upload.absolute_base_url}/original/1X/trout.png"
+      CustomEmoji.create!(name: "trout", upload: Fabricate(:upload, url: raw_url))
+      Emoji.clear_cache
+
+      cooked = PrettyText.cook("hello :trout:")
+      expect(cooked).to include("https://cdn.example.com/original/1X/trout.png")
+      expect(cooked).not_to include(raw_url)
+    end
   end
 
   describe "custom emoji translation" do
