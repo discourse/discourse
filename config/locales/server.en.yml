@@ -2930,7 +2930,6 @@ en:
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
     enable_horizon_high_context_topic_cards: "Shows richer topic cards in the Horizon theme, including topic excerpts, tags, and plugin extended information."
-    reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
     granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous_users' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
     dashboard_improvements: "Enables the redesigned admin dashboard that lets you pin custom reports and includes improved site traffic, engagement, and other analytics tied to community success and value."
 

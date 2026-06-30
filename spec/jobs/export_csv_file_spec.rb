@@ -233,14 +233,14 @@ RSpec.describe Jobs::ExportCsvFile do
       report = export_report
 
       expect(report.length).to eq(2)
-      expect(report.first).to contain_exactly("Day", "Count")
-      expect(report.second).to contain_exactly("2010-01-03", "1")
+      expect(report.first).to contain_exactly("Day", "Desktop", "Mobile")
+      expect(report.second).to contain_exactly("2010-01-03", "1", "")
     end
 
     it "works with single-column reports with default label" do
-      user.user_visits.create!(visited_at: "2010-01-01")
-      Fabricate(:user).user_visits.create!(visited_at: "2010-01-03")
-      exporter.extra["name"] = "visits"
+      user.user_visits.create!(visited_at: "2010-01-01", mobile: true)
+      Fabricate(:user).user_visits.create!(visited_at: "2010-01-03", mobile: true)
+      exporter.extra["name"] = "mobile_visits"
 
       report = export_report
 
