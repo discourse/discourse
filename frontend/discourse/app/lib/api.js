@@ -1,4 +1,5 @@
 // @ts-check
+import { splitSourceArgs } from "discourse/lib/customization-source";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 let _apiInitializerId = 0;
@@ -10,15 +11,19 @@ let _apiInitializerId = 0;
  * @param {object} [opts] - Optional additional options to pass to the callback function.
  */
 export function apiInitializer(apiCodeCallback, opts) {
-  if (typeof arguments[0] === "string") {
-    // Old path. First argument is the version string. Silently ignore.
-    [, apiCodeCallback, opts] = arguments;
-  }
+  // The asset processor appends a branded customization-source descriptor to
+  // calls made from plugin/theme code; splitSourceArgs strips it (and any legacy
+  // version string) so it can be forwarded to `withPluginApi`.
+  let source;
+  ({ apiCodeCallback, opts, source } = splitSourceArgs(Array.from(arguments)));
+
   return {
     name: `api-initializer${_apiInitializerId++}`,
     after: "inject-objects",
     initialize() {
-      return withPluginApi(apiCodeCallback, opts);
+      // A trailing undefined source is harmless: withPluginApi only treats a
+      // branded descriptor as the source.
+      return withPluginApi(apiCodeCallback, opts, source);
     },
   };
 }

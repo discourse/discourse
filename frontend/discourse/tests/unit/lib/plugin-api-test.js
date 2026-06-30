@@ -5,7 +5,9 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
+import { apiInitializer } from "discourse/lib/api";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
+import { SOURCE_BRAND } from "discourse/lib/customization-source";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   getBlockEntry,
@@ -360,6 +362,188 @@ module("Unit | Utility | plugin-api", function (hooks) {
           );
         });
       });
+    });
+  });
+
+  module("Customization source", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      resetBlockRegistryForTesting();
+    });
+
+    function pluginSource(name) {
+      return { [SOURCE_BRAND]: true, type: "plugin", name };
+    }
+
+    function themeSource(id) {
+      return { [SOURCE_BRAND]: true, type: "theme", id };
+    }
+
+    test("binds the build-injected source to the api and strips it from opts", function (assert) {
+      let boundSource, receivedOpts;
+
+      withPluginApi(
+        (api, opts) => {
+          boundSource = api.source;
+          receivedOpts = opts;
+        },
+        { foo: 1 },
+        pluginSource("chat")
+      );
+
+      assert.strictEqual(boundSource.type, "plugin");
+      assert.strictEqual(boundSource.name, "chat");
+      assert.strictEqual(receivedOpts.foo, 1, "user opts are preserved");
+      assert.false(
+        SOURCE_BRAND in receivedOpts,
+        "the source descriptor does not leak into opts"
+      );
+    });
+
+    test("core code (no descriptor) gets the singleton with a core source", function (assert) {
+      let api;
+      withPluginApi((a) => (api = a));
+
+      assert.deepEqual(api.source, { type: "core" });
+      assert.strictEqual(
+        typeof api.getCurrentUser,
+        "function",
+        "the singleton's methods are available"
+      );
+    });
+
+    test("caches one bound api per source; each exposes the full api", function (assert) {
+      let first, second, other, core;
+
+      withPluginApi((api) => (first = api), {}, pluginSource("chat"));
+      withPluginApi((api) => (second = api), {}, pluginSource("chat"));
+      withPluginApi((api) => (other = api), {}, themeSource(1));
+      withPluginApi((api) => (core = api));
+
+      assert.strictEqual(first, second, "same source reuses one bound api");
+      assert.notStrictEqual(first, other, "different sources are distinct");
+      assert.notStrictEqual(
+        first,
+        core,
+        "bound api differs from the singleton"
+      );
+      assert.strictEqual(
+        typeof first.getCurrentUser,
+        "function",
+        "bound api exposes the full PluginApi surface"
+      );
+    });
+
+    test("legacy version-string signature still binds the source", function (assert) {
+      let boundSource;
+
+      withPluginApi(
+        // eslint-disable-next-line discourse/plugin-api-no-version -- intentionally exercising the legacy version-string signature
+        "1.0",
+        (api) => (boundSource = api.source),
+        {},
+        pluginSource("chat")
+      );
+
+      assert.strictEqual(boundSource.type, "plugin");
+      assert.strictEqual(boundSource.name, "chat");
+    });
+
+    test("apiInitializer forwards the source to the callback", function (assert) {
+      let boundSource;
+
+      const initializer = apiInitializer(
+        (api) => (boundSource = api.source),
+        {},
+        pluginSource("chat")
+      );
+      initializer.initialize();
+
+      assert.strictEqual(boundSource.type, "plugin");
+      assert.strictEqual(boundSource.name, "chat");
+    });
+
+    test("attribution comes from the descriptor, not the call stack", function (assert) {
+      // The descriptor alone decides the source. Code with no descriptor is
+      // treated as core (and may use any namespace) regardless of whatever
+      // frames happen to be on the stack — this is the regression guard for the
+      // monkey-patched-stack misattribution bug.
+      @block("any-namespace-block")
+      class CoreNamespacedBlock extends Component {}
+
+      withPluginApi((api) => api.registerBlock(CoreNamespacedBlock));
+      assert.true(
+        hasBlock("any-namespace-block"),
+        "core code may register any name"
+      );
+
+      // A plugin descriptor enforces the plugin namespace.
+      @block("unnamespaced-from-plugin")
+      class PluginBlock extends Component {}
+
+      withPluginApi(
+        (api) => {
+          assert.throws(
+            () => api.registerBlock(PluginBlock),
+            /Plugin blocks must use the "namespace:block-name" format/
+          );
+        },
+        {},
+        pluginSource("chat")
+      );
+
+      // The same plugin can register a correctly namespaced block.
+      @block("chat:source-block")
+      class NamespacedPluginBlock extends Component {}
+
+      withPluginApi(
+        (api) => api.registerBlock(NamespacedPluginBlock),
+        {},
+        pluginSource("chat")
+      );
+      assert.true(hasBlock("chat:source-block"));
+    });
+
+    test("source-bound api can invoke methods that use private members", function (assert) {
+      // The source-bound api must be a real PluginApi instance, not a prototype
+      // proxy: methods like modifyClass touch a #private, which brand-checks
+      // against real instances and throws "Receiver must be an instance of
+      // class" on anything created via Object.create.
+      class SourceThing {}
+      getOwner(this).register("source-thing:main", SourceThing);
+
+      withPluginApi(
+        (api) => {
+          api.modifyClass(
+            "source-thing:main",
+            (Superclass) => class extends Superclass {}
+          );
+        },
+        {},
+        pluginSource("chat")
+      );
+
+      assert.true(true, "modifyClass works on a source-bound api");
+    });
+
+    test("source is read-only and frozen", function (assert) {
+      let api;
+      withPluginApi((a) => (api = a), {}, pluginSource("chat"));
+
+      assert.throws(
+        () => (api.source = { type: "plugin", name: "evil" }),
+        TypeError,
+        "the source binding cannot be reassigned"
+      );
+      assert.throws(
+        () => (api.source.name = "evil"),
+        TypeError,
+        "the source object cannot be mutated"
+      );
+      assert.strictEqual(
+        api.source.name,
+        "chat",
+        "the source is unchanged after both attempts"
+      );
     });
   });
 });

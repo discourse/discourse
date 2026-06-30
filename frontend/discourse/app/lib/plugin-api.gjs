@@ -60,6 +60,11 @@ import classPrepend, {
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import {
+  CORE_SOURCE,
+  resolveSourceId,
+  splitSourceArgs,
+} from "discourse/lib/customization-source";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -3530,10 +3535,10 @@ class _PluginApi {
           `registerBlock("${blockOrName}", ...) requires a factory function as second argument.`
         );
       }
-      _registerBlockFactory(blockOrName, factory);
+      _registerBlockFactory(blockOrName, factory, this.source);
     } else {
       // Direct class: registerBlock(BlockClass)
-      _registerBlock(blockOrName);
+      _registerBlock(blockOrName, this.source);
     }
   }
 
@@ -3567,7 +3572,7 @@ class _PluginApi {
    * ```
    */
   registerBlockOutlet(outletName, options) {
-    _registerOutlet(outletName, options);
+    _registerOutlet(outletName, options, this.source);
   }
 
   /**
@@ -3615,7 +3620,7 @@ class _PluginApi {
    * ```
    */
   registerBlockConditionType(ConditionClass) {
-    _registerConditionType(ConditionClass);
+    _registerConditionType(ConditionClass, this.source);
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -3638,6 +3643,14 @@ function getPluginApi() {
 
   if (!pluginApi) {
     pluginApi = new _PluginApi(owner);
+    // The shared instance is core's view; plugins/themes get their own via
+    // getSourceBoundApi. Read-only so it cannot be reassigned.
+    Object.defineProperty(pluginApi, "source", {
+      value: CORE_SOURCE,
+      writable: false,
+      configurable: false,
+      enumerable: false,
+    });
     owner.registry.register("plugin-api:main", pluginApi, {
       instantiate: false,
     });
@@ -3649,6 +3662,68 @@ function getPluginApi() {
   return pluginApi;
 }
 
+// Per-owner cache of source-bound API instances, keyed by the shared PluginApi
+// instance so it is collected together with its owner.
+const sourceBoundApiCache = new WeakMap();
+
+/**
+ * Returns a source-bound view of the PluginApi for the given customization
+ * source. The view is a real `_PluginApi` instance (so private members work and
+ * brand checks pass) sharing the singleton's container and exposing a read-only
+ * `source` descriptor. Views are cached per source (keyed by the singleton in a
+ * module-level WeakMap) and their container is kept in sync with the singleton.
+ * Returns the singleton unchanged for core code (no source).
+ *
+ * @param {_PluginApi} api - The shared PluginApi instance.
+ * @param {import("discourse/lib/customization-source").CustomizationSource|undefined} source - The build-injected source.
+ * @returns {_PluginApi} The source-bound view, or the singleton for core.
+ */
+function getSourceBoundApi(api, source) {
+  const sourceId = resolveSourceId(source);
+  if (!sourceId) {
+    return api;
+  }
+
+  let bySource = sourceBoundApiCache.get(api);
+  if (!bySource) {
+    bySource = new Map();
+    sourceBoundApiCache.set(api, bySource);
+  }
+
+  let boundApi = bySource.get(sourceId);
+  if (!boundApi) {
+    boundApi = new _PluginApi(api.container);
+    // Read-only and frozen so plugins/themes can neither reassign `api.source`
+    // nor mutate it.
+    Object.defineProperty(boundApi, "source", {
+      value: publicSourceFor(source),
+      writable: false,
+      configurable: false,
+      enumerable: false,
+    });
+    bySource.set(sourceId, boundApi);
+  } else {
+    // Keep the container current, mirroring getPluginApi's refresh.
+    boundApi.container = api.container;
+  }
+  return boundApi;
+}
+
+/**
+ * Builds the frozen, public-facing descriptor exposed as `api.source`. Kept as
+ * an explicit allowlist (no internal brand symbol, no incidental fields).
+ *
+ * @param {import("discourse/lib/customization-source").CustomizationSource} descriptor - The build-injected source.
+ * @returns {Readonly<import("discourse/lib/customization-source").CustomizationSource>}
+ */
+function publicSourceFor(descriptor) {
+  return Object.freeze(
+    descriptor.type === "plugin"
+      ? { type: "plugin", name: descriptor.name }
+      : { type: "theme", id: descriptor.id }
+  );
+}
+
 /**
  * Executes the provided callback function with the `PluginApi` object.
  *
@@ -3657,12 +3732,11 @@ function getPluginApi() {
  * @returns {any} The result of the `callback` function, if executed
  */
 export function withPluginApi(apiCodeCallback, opts) {
-  if (typeof arguments[0] === "string") {
-    // Old path. First argument is the version string. Silently ignore.
-    [, apiCodeCallback, opts] = arguments;
-  }
+  // The asset processor appends a branded customization-source descriptor to
+  // calls made from plugin/theme code; splitSourceArgs strips it (and any legacy
+  // version string) so it never leaks into `opts`.
+  let source;
+  ({ apiCodeCallback, opts, source } = splitSourceArgs(Array.from(arguments)));
 
-  opts = opts || {};
-
-  return apiCodeCallback(getPluginApi(), opts);
+  return apiCodeCallback(getSourceBoundApi(getPluginApi(), source), opts || {});
 }

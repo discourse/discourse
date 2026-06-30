@@ -19,6 +19,7 @@ import Application from "@ember/application";
 import { VERSION } from "@ember/version";
 import setupInspector from "@embroider/legacy-inspector-support/ember-source-4.12";
 import { importSync } from "@embroider/macros";
+import { runWithExpectedSourceId } from "discourse/lib/customization-source";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -327,7 +328,13 @@ function resolveDiscourseInitializer(moduleName, themeId) {
 
   initializer.initialize = (app) => {
     try {
-      return oldInitialize.call(initializer, app.__container__, app);
+      // Record the authoritative source (from the unspoofable module name) so a
+      // development-only check can flag registrations whose build-injected
+      // source went missing. A no-op in production.
+      return runWithExpectedSourceId(
+        expectedSourceIdForModule(moduleName, themeId),
+        () => oldInitialize.call(initializer, app.__container__, app)
+      );
     } catch (error) {
       if (!themeId || isTesting()) {
         throw error;
@@ -338,6 +345,18 @@ function resolveDiscourseInitializer(moduleName, themeId) {
   };
 
   return initializer;
+}
+
+function expectedSourceIdForModule(moduleName, themeId) {
+  // Only consumed by the development-only check in runWithExpectedSourceId.
+  if (!DEBUG) {
+    return null;
+  }
+  if (themeId != null) {
+    return `theme:${themeId}`;
+  }
+  const match = moduleName.match(/^discourse\/plugins\/([^/]+)\//);
+  return match ? `plugin:${match[1]}` : null;
 }
 
 let printedDebugInfo = false;

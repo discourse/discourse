@@ -328,6 +328,7 @@ export function _freezeBlockRegistry() {
  * via `getBlockMetadata()`.
  *
  * @param {BlockClass} BlockClass - The block component class
+ * @param {import("discourse/lib/customization-source").CustomizationSource} [source] - The build-injected source of the calling code.
  * @throws {Error} If called after registry is locked, or if block is invalid
  *
  * @example
@@ -345,7 +346,7 @@ export function _freezeBlockRegistry() {
  * };
  * ```
  */
-export function _registerBlock(BlockClass) {
+export function _registerBlock(BlockClass, source) {
   const blockName = getBlockMetadata(BlockClass)?.blockName;
 
   if (
@@ -370,7 +371,9 @@ export function _registerBlock(BlockClass) {
     return;
   }
 
-  if (!validateSourceNamespace({ name: blockName, entityType: "block" })) {
+  if (
+    !validateSourceNamespace({ name: blockName, entityType: "block", source })
+  ) {
     return;
   }
 
@@ -389,6 +392,7 @@ export function _registerBlock(BlockClass) {
  *
  * @param {string} name - The name to register the block under.
  * @param {BlockFactory} factory - Factory function returning Promise<BlockClass>.
+ * @param {import("discourse/lib/customization-source").CustomizationSource} [source] - The build-injected source of the calling code.
  * @throws {Error} If registry is locked, name is invalid, or factory is not a function.
  *
  * @example
@@ -398,7 +402,7 @@ export function _registerBlock(BlockClass) {
  *
  * @internal
  */
-export function _registerBlockFactory(name, factory) {
+export function _registerBlockFactory(name, factory, source) {
   if (
     !assertRegistryNotFrozen({
       frozen: registryFrozen,
@@ -421,7 +425,7 @@ export function _registerBlockFactory(name, factory) {
     return;
   }
 
-  if (!validateSourceNamespace({ name, entityType: "block" })) {
+  if (!validateSourceNamespace({ name, entityType: "block", source })) {
     return;
   }
 

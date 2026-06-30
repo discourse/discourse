@@ -91,6 +91,7 @@ export function _freezeConditionTypeRegistry() {
  * The condition class must be decorated with `@blockCondition`
  *
  * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass - The condition class to register.
+ * @param {import("discourse/lib/customization-source").CustomizationSource} [source] - The build-injected source of the calling code.
  *
  * @example
  * ```javascript
@@ -108,7 +109,7 @@ export function _freezeConditionTypeRegistry() {
  *
  * @internal
  */
-export function _registerConditionType(ConditionClass) {
+export function _registerConditionType(ConditionClass, source) {
   if (
     !assertRegistryNotFrozen({
       frozen: conditionTypeRegistryFrozen,
@@ -137,7 +138,9 @@ export function _registerConditionType(ConditionClass) {
   }
 
   // Validate namespace requirements for plugins/themes and enforce consistency
-  if (!validateSourceNamespace({ name: type, entityType: "condition" })) {
+  if (
+    !validateSourceNamespace({ name: type, entityType: "condition", source })
+  ) {
     return;
   }
 
